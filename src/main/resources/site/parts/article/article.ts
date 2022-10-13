@@ -1,7 +1,6 @@
-import { Content } from 'enonic-types/content'
-import { Request, Response } from 'enonic-types/controller'
+import { get, Content } from '/lib/xp/content'
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
-import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
+import {render, RenderResponse} from '/lib/enonic/react4xp'
 import { Article } from '../../content-types/article/article'
 
 const {
@@ -9,9 +8,6 @@ const {
     forceArray
   }
 } = __non_webpack_require__('/lib/util')
-const {
-  get
-} = __non_webpack_require__('/lib/xp/content')
 const {
   getContent, pageUrl, processHtml
 } = __non_webpack_require__('/lib/xp/portal')
@@ -25,9 +21,9 @@ const {
   isEnabled
 } = __non_webpack_require__('/lib/featureToggle')
 
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
-exports.get = (req: Request): React4xpResponse | Response => {
+
+exports.get = (req: XP.Request): RenderResponse | XP.Response => {
   try {
     return renderPart(req)
   } catch (e) {
@@ -35,7 +31,7 @@ exports.get = (req: Request): React4xpResponse | Response => {
   }
 }
 
-function renderPart(req: Request): React4xpResponse {
+function renderPart(req: XP.Request): RenderResponse {
   const page: Content<Article> = getContent()
   const language: string = page.language === 'en' || page.language === 'nn' ? page.language : 'nb'
   const phrases: object = getPhrases(page)
@@ -85,7 +81,7 @@ function renderPart(req: Request): React4xpResponse {
     isbn: isEnabled('article-isbn', true) && page.data.isbnNumber
   }
 
-  return React4xp.render('site/parts/article/article', props, req)
+  return render('site/parts/article/article', props, req)
 }
 
 function getAssociatedStatisticsLinks(associatedStatisticsConfig: Article['associatedStatistics']): Array<AssociatedLink> | [] {

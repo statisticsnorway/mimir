@@ -1,32 +1,25 @@
-import {Request, Response} from "enonic-types/controller";
-import {React4xpObject, React4xpResponse} from "../../../lib/types/react4xp";
-import {Component} from "enonic-types/portal";
-import {CategoryLinksPartConfig} from "./categoryLinks-part-config";
-import {Content} from "enonic-types/content";
-import {Language, Phrases} from "../../../lib/types/language";
+import { render, RenderResponse } from '/lib/enonic/react4xp'
+import { getComponent,
+  getContent,
+  pageUrl,
+  Component } from '/lib/xp/portal'
+import { CategoryLinksPartConfig } from './categoryLinks-part-config'
+import { Content } from '/lib/xp/content'
+import { Language, Phrases } from '../../../lib/types/language'
 
 const {
   data
 } = __non_webpack_require__('/lib/util')
-const {
-  getComponent,
-  getContent,
-  pageUrl
-} = __non_webpack_require__('/lib/xp/portal')
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
+
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
-const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+
 const {
   getLanguage
 } = __non_webpack_require__('/lib/ssb/utils/language')
 
-const view = resolve('./categoryLinks.html')
-
-exports.get = function(req: Request) {
+exports.get = function(req: XP.Request): XP.Response | RenderResponse {
   try {
     return renderPart(req)
   } catch (e) {
@@ -34,14 +27,14 @@ exports.get = function(req: Request) {
   }
 }
 
-exports.preview = (req: Request) => renderPart(req)
+exports.preview = (req: XP.Request): XP.Response | RenderResponse => renderPart(req)
 
 const NO_LINKS_FOUND = {
   body: '',
   contentType: 'text/html'
 }
 
-function renderPart(req: Request): Response | React4xpResponse {
+function renderPart(req: XP.Request): XP.Response | RenderResponse {
   const part: Component<CategoryLinksPartConfig> = getComponent()
   const page: Content = getContent()
   const language: Language = getLanguage(page)
@@ -54,9 +47,9 @@ function renderPart(req: Request): Response | React4xpResponse {
       methodsAndDocumentationUrl = methodsAndDocumentation.urlSource.url
     }
 
-    if (methodsAndDocumentation
-        && methodsAndDocumentation._selected == 'relatedSource'
-        && methodsAndDocumentation.relatedSource.content) {
+    if (methodsAndDocumentation &&
+        methodsAndDocumentation._selected == 'relatedSource' &&
+        methodsAndDocumentation.relatedSource.content) {
       methodsAndDocumentationUrl = pageUrl({
         id: methodsAndDocumentation.relatedSource.content
       })
@@ -64,8 +57,9 @@ function renderPart(req: Request): Response | React4xpResponse {
   }
 
   if (links && links.length) {
-    const categoryLinksComponent: React4xpObject = new React4xp('CategoryLinks')
-      .setProps({
+    const categoryLinksComponent: RenderResponse = render(
+      'CategoryLinks',
+      {
         links: links.map((link) => {
           return {
             href: pageUrl({
@@ -77,20 +71,14 @@ function renderPart(req: Request): Response | React4xpResponse {
         }),
         methodsAndDocumentationUrl,
         methodsAndDocumentationLabel: phrases.methodsAndDocumentation
+      },
+      req,
+      {
+        id: 'categoryLink',
+        body: `<section class="xp-part part-category-link"></section>`
       })
-      .setId('categoryLink')
-      .uniqueId()
 
-    const body = render(view, {
-      categoryId: categoryLinksComponent.react4xpId
-    })
-
-    return {
-      body: categoryLinksComponent.renderBody({
-        body
-      }),
-      pageContributions: categoryLinksComponent.renderPageContributions()
-    }
+    return categoryLinksComponent
   }
   return NO_LINKS_FOUND
 }

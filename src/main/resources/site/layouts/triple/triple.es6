@@ -1,5 +1,6 @@
+import { render } from '/lib/thymeleaf'
+
 const portal = __non_webpack_require__('/lib/xp/portal')
-const thymeleaf = __non_webpack_require__('/lib/thymeleaf')
 
 const view = resolve('triple.html')
 
@@ -18,7 +19,7 @@ exports.get = function(req) {
     rightRegion: component.regions.right
   }
 
-  const body = thymeleaf.render(view, model)
+  const body = render(view, model)
 
   return {
     body

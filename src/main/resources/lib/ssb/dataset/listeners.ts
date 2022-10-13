@@ -1,16 +1,8 @@
-import { Content, QueryResponse } from 'enonic-types/content'
-import { EnonicEvent, EnonicEventData } from 'enonic-types/event'
+import { query, Content, QueryResponse } from '/lib/xp/content'
+import { listener, EnonicEvent, EnonicEventData } from '/lib/xp/event'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
+import { run } from '/lib/xp/context'
 
-const {
-  listener
-} = __non_webpack_require__('/lib/xp/event')
-const {
-  query
-} = __non_webpack_require__('/lib/xp/content')
-const {
-  run
-} = __non_webpack_require__('/lib/xp/context')
 const {
   refreshDataset
 } = __non_webpack_require__('/lib/ssb/dataset/dataset')
@@ -41,7 +33,7 @@ export function setupFetchDataOnCreateListener(): void {
       runOnMasterOnly(() => {
         const nodes: EnonicEventData['nodes'] = event.data.nodes.filter((n) => n.repo === ENONIC_CMS_DEFAULT_REPO )
         if (nodes.length > 0) {
-          const contentWithDataSource: QueryResponse<DataSource> = query({
+          const contentWithDataSource: QueryResponse<DataSource, object> = query({
             count: nodes.length,
             query: `_id IN(${nodes.map((n) => `'${n.id}'`).join(',')}) AND 
                 (

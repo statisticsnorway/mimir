@@ -1,23 +1,17 @@
-import { Response } from 'enonic-types/controller'
-import { Content, QueryResponse } from 'enonic-types/content'
-import { ResourceKey } from 'enonic-types/thymeleaf'
+import { query, Content, QueryResponse } from '/lib/xp/content'
+import { ResourceKey, render } from '/lib/thymeleaf'
 
-const {
-  query
-} = __non_webpack_require__('/lib/xp/content')
 const {
   moment
 } = __non_webpack_require__('/lib/vendor/moment')
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
+
 
 const yesterday: string = moment().subtract(1, 'days').format('YYYY-MM-DD')
 const baseUrl: string = app.config && app.config['ssb.baseUrl'] ? app.config['ssb.baseUrl'] : 'https://www.ssb.no'
 
 
-exports.get = (): Response => {
-  const changedContent: QueryResponse<Content> = query({
+exports.get = (): XP.Response => {
+  const changedContent: QueryResponse<Content, object> = query({
     start: 0,
     count: 100,
     sort: 'modifiedTime DESC',

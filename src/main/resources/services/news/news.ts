@@ -1,5 +1,4 @@
-import { Response } from 'enonic-types/controller'
-import { Content } from 'enonic-types/content'
+import { query, Content } from '/lib/xp/content'
 import { Page } from '../../site/content-types/page/page'
 import { DefaultPageConfig } from '../../site/pages/default/default-page-config'
 import { Article } from '../../site/content-types/article/article'
@@ -9,9 +8,6 @@ import { Statistic } from '../../site/mixins/statistic/statistic'
 const {
   moment
 } = __non_webpack_require__('/lib/vendor/moment')
-const {
-  query
-} = __non_webpack_require__('/lib/xp/content')
 const {
   fetchStatisticsWithReleaseToday
 } = __non_webpack_require__('/lib/ssb/statreg/statistics')
@@ -25,7 +21,7 @@ const {
   xmlEscape
 } = __non_webpack_require__('/lib/text-encoding')
 
-function get(): Response {
+function get(): XP.Response {
   const rssNewsEnabled: boolean = isEnabled('rss-news', true, 'ssb')
   const rssStatisticsEnabled: boolean = isEnabled('rss-news-statistics', false, 'ssb')
   const mainSubjects: Array<Content<Page, DefaultPageConfig>> = rssNewsEnabled ? query({
@@ -66,12 +62,12 @@ function getNews(mainSubjects: Array<Content<Page, DefaultPageConfig>>): Array<N
 
   const news: Array<News> = []
   mainSubjects.forEach((mainSubject) => {
-    const articles: Array<Content<Article, object, SEO>> = query({
+    const articles: Array<Content<Article, SEO>> = query({
       start: 0,
       count: 1000,
       contentTypes: [`${app.name}:article`],
       query: `_path LIKE "/content${mainSubject._path}/*" AND range("publish.from", instant("${from}"), instant("${to}"))`
-    }).hits as unknown as Array<Content<Article, object, SEO>>
+    }).hits as unknown as Array<Content<Article, SEO>>
     articles.forEach((article) => {
       const pubDate: string | undefined = article.publish?.first ?
         moment(article.publish?.first).utcOffset(serverOffsetInMinutes / 1000 / 60).format() :
@@ -103,11 +99,11 @@ function getStatisticsNews(mainSubjects: Array<Content<Page, DefaultPageConfig>>
   const statisticsNews: Array<News> = []
   if (statregStatistics.length > 0) {
     mainSubjects.forEach((mainSubject) => {
-      const statistics: Array<Content<Statistics & Statistic, object, SEO>> = query({
+      const statistics: Array<Content<Statistics & Statistic, SEO>> = query({
         start: 0,
         count: 100,
         query: `_path LIKE "/content${mainSubject._path}/*" AND data.statistic IN(${statregStatistics.map((s) => `"${s.id}"`).join(',')})`
-      }).hits as unknown as Array<Content<Statistics & Statistic, object, SEO>>
+      }).hits as unknown as Array<Content<Statistics & Statistic, SEO>>
 
       const baseUrl: string = app.config && app.config['ssb.baseUrl'] || ''
       const serverOffsetInMS: number = app.config && app.config['serverOffsetInMs'] || 0
@@ -145,8 +141,14 @@ function getStatisticsNews(mainSubjects: Array<Content<Page, DefaultPageConfig>>
 }
 
 export interface SEO {
-  seoDescription?: string;
-  seoImage?: string
+  seoDescription: string;
+  seoImage: string;
+  'com-enonic-app-metafields': {
+    'meta-data': {
+      seoImage: string;
+      seoDescription: string;
+    }
+  };
 }
 
 interface News {

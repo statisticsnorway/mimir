@@ -1,12 +1,8 @@
 import { Article } from '../../../site/content-types/article/article'
-import { Content, QueryResponse } from 'enonic-types/content'
+import { query, Content, QueryResponse } from '/lib/xp/content'
 import { SubjectItem } from '../utils/subjectUtils'
-import { Request } from 'enonic-types/controller'
 import { formatDate } from './dateUtils'
 
-const {
-  query
-} = __non_webpack_require__('/lib/xp/content')
 const {
   pageUrl
 } = __non_webpack_require__('/lib/xp/portal')
@@ -17,7 +13,7 @@ const {
   getMainSubjects
 } = __non_webpack_require__( '/lib/ssb/utils/subjectUtils')
 
-export function getChildArticles(currentPath: string, subTopicId: string, start: number, count: number, sort: string): QueryResponse<Article> {
+export function getChildArticles(currentPath: string, subTopicId: string, start: number, count: number, sort: string): QueryResponse<Article, object> {
   const toDay: string = moment().toISOString()
   return query({
     start: start,
@@ -28,7 +24,7 @@ export function getChildArticles(currentPath: string, subTopicId: string, start:
   })
 }
 
-export function getAllArticles(req: Request, language: string, start: 0, count: 50):
+export function getAllArticles(req: XP.Request, language: string, start: 0, count: 50):
 ArticleResult {
   const mainSubjects: Array<SubjectItem> = getMainSubjects(req, language)
   const languageQuery: string = language !== 'en' ? 'AND language != "en"' : 'AND language = "en"'
@@ -38,7 +34,7 @@ ArticleResult {
   const subjectQuery: string = `(${pagePaths.join(' OR ')})`
   const queryString: string = `${publishFromQuery} AND ${subjectQuery} ${languageQuery}`
 
-  const articlesContent: QueryResponse<Article> = query({
+  const articlesContent: QueryResponse<Article, object> = query({
     start: start,
     count: count,
     query: queryString,
@@ -52,7 +48,7 @@ ArticleResult {
   }
 }
 
-export function prepareArticles(articles: QueryResponse<Article>, language: string): Array<PreparedArticles> {
+export function prepareArticles(articles: QueryResponse<Article, object>, language: string): Array<PreparedArticles> {
   return articles.hits.map((article: Content<Article>) => {
     return {
       title: article.displayName,
@@ -66,9 +62,9 @@ export function prepareArticles(articles: QueryResponse<Article>, language: stri
   })
 }
 export interface ArticleUtilsLib {
-  getChildArticles: (currentPath: string, subTopicId: string, start: number, count: number, sort: string) => QueryResponse<Article>;
-  prepareArticles: (articles: QueryResponse<Article>, language: string) => Array<PreparedArticles>;
-  getAllArticles: (req: Request, language: string, start: number, count: number) => ArticleResult;
+  getChildArticles: (currentPath: string, subTopicId: string, start: number, count: number, sort: string) => QueryResponse<Article, object>;
+  prepareArticles: (articles: QueryResponse<Article, object>, language: string) => Array<PreparedArticles>;
+  getAllArticles: (req: XP.Request, language: string, start: number, count: number) => ArticleResult;
 }
 
 export interface PreparedArticles {

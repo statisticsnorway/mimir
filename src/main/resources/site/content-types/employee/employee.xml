@@ -14,6 +14,14 @@
                         <alignment>right</alignment>
                     </config>
                 </input>
+                <input type="TextLine" name="name">
+                    <label>Fornavn</label>
+                    <occurrences minimum="1" maximum="1"/>
+                </input>
+                <input type="TextLine" name="surname">
+                    <label>Etternavn</label>
+                    <occurrences minimum="1" maximum="1"/>
+                </input>
                 <input type="TextLine" name="position">
                     <label>Stilling</label>
                     <occurrences minimum="0" maximum="1"/>
@@ -38,7 +46,7 @@
                     <label>Kort om meg</label>
                 </input>
                 <input name="profileImages" type="ImageSelector">
-                    <label>Profilbilder</label>
+                    <label>Pressebilder</label>
                     <occurrences minimum="0" maximum="4"/>
                 </input>
             </items>

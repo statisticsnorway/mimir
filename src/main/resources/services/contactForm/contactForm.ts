@@ -1,14 +1,7 @@
-import { Request, Response } from 'enonic-types/controller'
-import { EmailParams } from 'enonic-types/mail'
-import { HttpRequestParams, HttpResponse } from 'enonic-types/http'
-const {
-  request
-} = __non_webpack_require__('/lib/http-client')
-const {
-  send
-} = __non_webpack_require__('/lib/xp/mail')
+import { send, EmailParams } from '/lib/xp/mail'
+import { request, HttpRequestParams, HttpResponse } from '/lib/http-client'
 
-exports.post = (req: Request): Response => {
+exports.post = (req: XP.Request): XP.Response => {
   const formData: ContactFormData = JSON.parse(req.body)
 
   log.info('\n\n## data\n--------------\n%s\n', JSON.stringify(formData, null, 4))
@@ -62,7 +55,7 @@ interface RecaptchaResponse {
   action: string;
 }
 
-function postMail(formData: ContactFormData): Response {
+function postMail(formData: ContactFormData): XP.Response {
   const emailParams: EmailParams = {
     from: 'noreply@ssb.no',
     to: getReceiverEmail(formData.receiver.id),

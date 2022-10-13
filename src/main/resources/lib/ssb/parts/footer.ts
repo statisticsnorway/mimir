@@ -1,14 +1,11 @@
 import { MenuItem } from '../../../site/content-types/menuItem/menuItem'
 import { Language } from '../../types/language'
 import { Link } from './menu'
-import { Content } from 'enonic-types/content'
+import { get, Content } from '/lib/xp/content'
 import { Footer } from '../../../site/content-types/footer/footer'
 const {
   assetUrl
 } = __non_webpack_require__('/lib/xp/portal')
-const {
-  get
-} = __non_webpack_require__('/lib/xp/content')
 const {
   createMenuTree,
   parseGlobalLinks

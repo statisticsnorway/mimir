@@ -1,12 +1,13 @@
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
-import { Content } from 'enonic-types/content'
+import { get as getContent, Content } from '/lib/xp/content'
 import { Statistics } from '../../../site/content-types/statistics/statistics'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { DatasetRepoNode } from '../repo/dataset'
 import { StatisticInListing, ReleaseDatesVariant } from '../dashboard/statreg/types'
 import { JobEventNode, JobInfoNode, StatisticsPublishResult, DataSourceStatisticsPublishResult } from '../repo/job'
-import { NodeQueryHit } from 'enonic-types/node'
+import { NodeQueryHit } from '/lib/xp/node'
 import { Statistic } from '../../../site/mixins/statistic/statistic'
+import { send } from '/lib/xp/event'
 
 const {
   moment
@@ -19,9 +20,6 @@ const {
   getDataSourceIdsFromStatistics,
   getStatisticsContent
 } = __non_webpack_require__('/lib/ssb/dashboard/statistic')
-const {
-  get: getContent
-} = __non_webpack_require__('/lib/xp/content')
 const {
   getStatisticByIdFromRepo,
   getReleaseDatesByVariants
@@ -57,9 +55,6 @@ const {
 const {
   cronJobLog
 } = __non_webpack_require__('/lib/ssb/utils/serverLog')
-const {
-  send
-} = __non_webpack_require__('/lib/xp/event')
 
 
 const jobs: {[key: string]: JobEventNode | JobInfoNode} = {}

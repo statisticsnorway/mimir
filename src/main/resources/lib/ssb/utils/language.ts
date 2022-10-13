@@ -1,4 +1,4 @@
-import { Content, Site } from 'enonic-types/content'
+import { exists, Content, Site } from '/lib/xp/content'
 import { SiteConfig } from '../../../site/site-config'
 import { Language, AlternativeLanguages, Phrases } from '../../types/language'
 
@@ -6,9 +6,6 @@ const i18n = __non_webpack_require__('/lib/xp/i18n')
 const {
   getSite, getSiteConfig, pageUrl
 } = __non_webpack_require__('/lib/xp/portal')
-const {
-  exists
-} = __non_webpack_require__('/lib/xp/content')
 
 let english: Phrases | undefined
 let norwegian: Phrases | undefined

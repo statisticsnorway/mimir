@@ -1,24 +1,21 @@
-import { Content } from 'enonic-types/content'
-import { PageContributions, Request, Response } from 'enonic-types/controller'
-import { ResourceKey } from 'enonic-types/thymeleaf'
+import { get, Content } from '/lib/xp/content'
+import { ResourceKey, render } from '/lib/thymeleaf'
 import { TableSourceList, TableView } from '../../../lib/ssb/parts/table'
 import { SourceList, SourcesConfig } from '../../../lib/ssb/utils/utils'
 import { DropdownItem as TableDownloadDropdownItem, DropdownItems as TableDownloadDropdownItems } from '../../../lib/types/components'
 import { Language, Phrases } from '../../../lib/types/language'
-import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
+import { render as r4xpRender, RenderResponse } from '/lib/enonic/react4xp'
 import { Statistics } from '../../content-types/statistics/statistics'
 import { Table } from '../../content-types/table/table'
 import { GA_TRACKING_ID } from '../../pages/default/default'
 import { TablePartConfig } from './table-part-config'
 import { DataSource as DataSourceType } from '../../../lib/ssb/repo/dataset'
 
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+
 const {
   getContent, getComponent, pageUrl, assetUrl
 } = __non_webpack_require__('/lib/xp/portal')
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
+
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
@@ -34,9 +31,6 @@ const {
   }
 } = __non_webpack_require__('/lib/util')
 const {
-  get
-} = __non_webpack_require__('/lib/xp/content')
-const {
   getLanguage, getPhrases
 } = __non_webpack_require__('/lib/ssb/utils/language')
 const {
@@ -49,7 +43,7 @@ const {
 
 const view: ResourceKey = resolve('./table.html') as ResourceKey
 
-exports.get = function(req: Request): Response {
+exports.get = function(req: XP.Request): XP.Response {
   try {
     const config: TablePartConfig = getComponent().config
     const page: Content<Statistics> = getContent()
@@ -60,11 +54,11 @@ exports.get = function(req: Request): Response {
   }
 }
 
-exports.preview = (req: Request, id?: string): Response => {
+exports.preview = (req: XP.Request, id?: string): XP.Response => {
   return renderPart(req, id)
 }
 
-function getProps(req: Request, tableId?: string): TableProps {
+function getProps(req: XP.Request, tableId?: string): TableProps {
   const page: Content<Table> = getContent()
   const language: Language = getLanguage(page) as Language
   const phrases: Phrases = getPhrases(page) as Phrases
@@ -141,7 +135,7 @@ function getProps(req: Request, tableId?: string): TableProps {
 }
 exports.getProps = getProps
 
-function renderPart(req: Request, tableId?: string): Response {
+function renderPart(req: XP.Request, tableId?: string): XP.Response {
   const page: Content<Table> = getContent()
   const phrases: Phrases = getPhrases(page) as Phrases
 
@@ -159,18 +153,13 @@ function renderPart(req: Request, tableId?: string): Response {
     }
   }
 
-  const tableReact: React4xpObject = new React4xp('Table')
-    .setProps(getProps(req, tableId))
-    .setId('table')
-    .uniqueId()
-
-  return {
-    body: tableReact.renderBody(),
-    pageContributions: tableReact.renderPageContributions({
+  return r4xpRender('Table',
+    getProps(req, tableId),
+    req,
+    {
       clientRender: req.mode !== 'edit'
-    }) as PageContributions,
-    contentType: 'text/html'
-  }
+      // id: 'table'
+    })
 }
 
 function getDownloadTableOptions(): TableDownloadDropdownItems {

@@ -1,14 +1,12 @@
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 
-import { Content } from 'enonic-types/content'
-import { Request, Response } from 'enonic-types/controller'
+import { Content } from '/lib/xp/content'
 import { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/types'
-import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
-import { Component } from 'enonic-types/portal'
+import { render, RenderResponse } from '/lib/enonic/react4xp'
+import { Component } from '/lib/xp/portal'
 import { ReleasedStatisticsPartConfig } from './releasedStatistics-part-config'
 import { YearReleases } from '../../../lib/ssb/utils/variantUtils'
 
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
 const {
   localize
@@ -41,7 +39,7 @@ const {
   prepareStatisticRelease
 } = __non_webpack_require__('/lib/ssb/utils/variantUtils')
 
-exports.get = function(req: Request): React4xpResponse | Response {
+exports.get = function(req: XP.Request): RenderResponse | XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -49,9 +47,9 @@ exports.get = function(req: Request): React4xpResponse | Response {
   }
 }
 
-exports.preview = (req: Request): React4xpResponse => renderPart(req)
+exports.preview = (req: XP.Request): RenderResponse => renderPart(req)
 
-export function renderPart(req: Request): React4xpResponse {
+export function renderPart(req: XP.Request): RenderResponse {
   const content: Content = getContent()
   const currentLanguage: string = content.language ? content.language : 'nb'
   const part: Component<ReleasedStatisticsPartConfig> = getComponent()
@@ -69,7 +67,7 @@ export function renderPart(req: Request): React4xpResponse {
     }),
     language: currentLanguage
   }
-  return React4xp.render('ReleasedStatistics', props, req)
+  return render('ReleasedStatistics', props, req)
 }
 
 function getGroupedWithMonthNames(part: Component<ReleasedStatisticsPartConfig>, currentLanguage: string): Array<YearReleases> {

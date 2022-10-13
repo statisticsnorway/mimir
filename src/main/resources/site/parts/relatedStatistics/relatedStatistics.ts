@@ -1,8 +1,7 @@
-import { Content } from 'enonic-types/content'
-import { PageContributions, Request, Response } from 'enonic-types/controller'
-import { ResourceKey } from 'enonic-types/thymeleaf'
+import { get, Content } from '/lib/xp/content'
+import { ResourceKey, render } from '/lib/thymeleaf'
 import { Phrases } from '../../../lib/types/language'
-import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
+import { render as r4xpRender } from '/lib/enonic/react4xp'
 import { SEO } from '../../../services/news/news'
 import { Statistics } from '../../content-types/statistics/statistics'
 
@@ -12,28 +11,20 @@ const {
   }
 } = __non_webpack_require__('/lib/util')
 const {
-  get
-} = __non_webpack_require__('/lib/xp/content')
-const {
   getContent,
   pageUrl
 } = __non_webpack_require__('/lib/xp/portal')
 const {
   getPhrases
 } = __non_webpack_require__('/lib/ssb/utils/language')
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
+
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
-const {
-  hasPath
-} = __non_webpack_require__('/lib/vendor/ramda')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+
 const view: ResourceKey = resolve('./relatedStatistics.html')
 
-exports.get = (req: Request): Response => {
+exports.get = (req: XP.Request): XP.Response => {
   try {
     return renderPart(req)
   } catch (e) {
@@ -41,9 +32,9 @@ exports.get = (req: Request): Response => {
   }
 }
 
-exports.preview = (req: Request): Response => renderPart(req)
+exports.preview = (req: XP.Request): XP.Response => renderPart(req)
 
-function renderPart(req: Request): Response {
+function renderPart(req: XP.Request): XP.Response {
   const page: Content<Statistics> = getContent()
   const relatedStatistics: Statistics['relatedStatisticsOptions'] = page.data.relatedStatisticsOptions
   const phrases: Phrases = getPhrases(page)
@@ -59,13 +50,21 @@ function renderPart(req: Request): Response {
     }
   }
 
-  return renderRelatedStatistics(statisticsTitle, parseRelatedContent(relatedStatistics ? forceArray(relatedStatistics) : []), phrases)
+  return renderRelatedStatistics(req, statisticsTitle, parseRelatedContent(relatedStatistics ? forceArray(relatedStatistics) : []), phrases)
 }
 
-function renderRelatedStatistics(statisticsTitle: string, relatedStatisticsContent: Array<RelatedStatisticsContent>, phrases: Phrases): Response {
+function renderRelatedStatistics(req: XP.Request,
+  statisticsTitle: string,
+  relatedStatisticsContent: Array<RelatedStatisticsContent>,
+  phrases: Phrases): XP.Response {
   if (relatedStatisticsContent && relatedStatisticsContent.length) {
-    const relatedStatisticsXP: React4xpObject = new React4xp('StatisticsCards')
-      .setProps({
+    const id: string = 'related-statistics'
+    const body: string = render(view, {
+      relatedStatisticsId: id
+    })
+
+    return r4xpRender('StatisticsCards',
+      {
         headerTitle: statisticsTitle,
         statistics: relatedStatisticsContent.map((statisticsContent) => {
           return {
@@ -74,20 +73,12 @@ function renderRelatedStatistics(statisticsTitle: string, relatedStatisticsConte
         }),
         showAll: phrases.showAll,
         showLess: phrases.showLess
+      },
+      req,
+      {
+        id: id,
+        body: body
       })
-      .uniqueId()
-
-    const body: string = render(view, {
-      relatedStatisticsId: relatedStatisticsXP.react4xpId,
-      label: statisticsTitle
-    })
-
-    return {
-      body: relatedStatisticsXP.renderBody({
-        body
-      }),
-      pageContributions: relatedStatisticsXP.renderPageContributions() as PageContributions
-    }
   }
   return {
     body: null,
@@ -100,12 +91,12 @@ function parseRelatedContent(relatedStatistics: Statistics['relatedStatisticsOpt
     return relatedStatistics.map((statistics) => {
       if (statistics._selected === 'xp') {
         const statisticsContentId: string | undefined = statistics.xp.contentId
-        const relatedStatisticsContent: Content<Statistics, object, SEO> | null = statisticsContentId ? get({
+        const relatedStatisticsContent: Content<Statistics, SEO> | null = statisticsContentId ? get({
           key: statisticsContentId
         }) : null
 
         let preamble: string | undefined
-        if (relatedStatisticsContent && hasPath(['x', 'com-enonic-app-metafields', 'meta-data', 'seoDescription'], relatedStatisticsContent)) {
+        if (relatedStatisticsContent) {
           preamble = relatedStatisticsContent.x['com-enonic-app-metafields']['meta-data'].seoDescription
         }
 

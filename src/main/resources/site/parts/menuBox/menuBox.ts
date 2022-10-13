@@ -1,8 +1,7 @@
-import { Content, ContentLibrary } from 'enonic-types/content'
-import { Request, Response } from 'enonic-types/controller'
-import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
-import { ResourceKey } from 'enonic-types/thymeleaf'
-import { Component } from 'enonic-types/portal'
+import { get, Content } from '/lib/xp/content'
+import {render as r4XpRender, RenderResponse} from '/lib/enonic/react4xp'
+import { ResourceKey, render } from '/lib/thymeleaf'
+import { Component } from '/lib/xp/portal'
 import { MenuBoxPartConfig } from '../menuBox/menuBox-part-config'
 import { MenuBox } from '../../content-types/menuBox/menuBox'
 
@@ -11,9 +10,7 @@ const {
   imageUrl,
   pageUrl
 } = __non_webpack_require__('/lib/xp/portal')
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
+
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
@@ -26,11 +23,10 @@ const {
   }
 } = __non_webpack_require__('/lib/util')
 
-const content: ContentLibrary = __non_webpack_require__('/lib/xp/content')
 const view: ResourceKey = resolve('./menuBox.html')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp') as React4xp
 
-exports.get = function(req:Request):Response | React4xpResponse | string {
+
+exports.get = function(req:XP.Request):XP.Response | RenderResponse | string {
   try {
     return renderPart(req)
   } catch (e) {
@@ -38,11 +34,11 @@ exports.get = function(req:Request):Response | React4xpResponse | string {
   }
 }
 
-exports.preview = function(req:Request):Response | React4xpResponse | string {
+exports.preview = function(req:XP.Request):XP.Response | RenderResponse | string {
   return renderPart(req)
 }
 
-function renderPart(req:Request):Response | React4xpResponse | string {
+function renderPart(req:XP.Request):XP.Response | RenderResponse | string {
   const part:Component<MenuBoxPartConfig> = getComponent()
   const menuBoxId: string = part.config.menu
   const height: string = part.config.height ? part.config.height as string : 'default'
@@ -58,7 +54,7 @@ function renderPart(req:Request):Response | React4xpResponse | string {
       throw new Error('MenuBox - Missing Id')
     }
   }
-  const menuBoxContent: Content<MenuBox> | null = content.get({
+  const menuBoxContent: Content<MenuBox> | null = get({
     key: menuBoxId
   })
   if (!menuBoxContent) throw new Error(`MenuBox with id ${menuBoxId} doesn't exist`)
@@ -70,7 +66,7 @@ function renderPart(req:Request):Response | React4xpResponse | string {
     height
   }
 
-  return React4xp.render('MenuBox', props, req)
+  return r4XpRender('MenuBox', props, req)
 }
 
 function buildMenu(menuBoxContent: Content<MenuBox> ): Array<MenuItem> {

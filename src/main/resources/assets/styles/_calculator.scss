@@ -340,8 +340,9 @@
 
    .calculator-form {
 
-    .submit-one-year {
+    .submit-one-year, .submit-last-period {
       margin-right: 20px;
+      width: auto;
     }
 
     @include media-breakpoint-down(md) {

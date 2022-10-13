@@ -1,4 +1,4 @@
-import { Content } from 'enonic-types/content'
+import { Content } from '/lib/xp/content'
 import { CreateOrUpdateStatus } from '../dataset/dataset'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { RSSFilterLogData } from './rss'

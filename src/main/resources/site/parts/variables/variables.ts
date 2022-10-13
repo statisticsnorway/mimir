@@ -1,7 +1,5 @@
-import { Content } from 'enonic-types/content'
-import { PageContributions, Request, Response } from 'enonic-types/controller'
-import { ResourceKey } from 'enonic-types/thymeleaf'
-import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
+import { getChildren, query, Content } from '/lib/xp/content'
+import { render, RenderResponse } from '/lib/enonic/react4xp'
 import { Article } from '../../content-types/article/article'
 
 const {
@@ -13,24 +11,17 @@ const {
   pageUrl,
   processHtml
 } = __non_webpack_require__('/lib/xp/portal')
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
+
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
 
-const contentLib = __non_webpack_require__('/lib/xp/content')
 const i18nLib = __non_webpack_require__('/lib/xp/i18n')
 const {
   moment
 } = __non_webpack_require__('/lib/vendor/moment')
 
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
-
-const view: ResourceKey = resolve('./variables.html')
-
-exports.get = function(req: Request): Response {
+exports.get = function(req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -38,34 +29,34 @@ exports.get = function(req: Request): Response {
   }
 }
 
-exports.preview = (req: Request): Response => renderPart(req)
+exports.preview = (req: XP.Request): XP.Response => renderPart(req)
 
 const MAX_VARIABLES: number = 9999
-const NO_VARIABLES_FOUND: Response = {
+const NO_VARIABLES_FOUND: XP.Response = {
   body: '',
   contentType: 'text/html'
 }
 
-function renderPart(req: Request): Response {
+function renderPart(req: XP.Request): XP.Response {
   const page: Content = getContent()
   const language: string = page.language ? page.language === 'en' ? 'en-gb' : page.language : 'nb'
 
-  const hits: Array<Content<Article>> = contentLib.getChildren({
+  const hits: Array<Content<Article>> = getChildren({
     key: page._path,
     count: MAX_VARIABLES
   }).hits as unknown as Array<Content<Article>>
 
-  return renderVariables(contentArrayToVariables(hits ? data.forceArray(hits) : [], language))
+  return renderVariables(req, contentArrayToVariables(hits ? data.forceArray(hits) : [], language))
 }
 
-function renderVariables(variables: Array<Variables>): Response {
+function renderVariables(req: XP.Request, variables: Array<Variables>): XP.Response {
   if (variables && variables.length) {
     const download: string = i18nLib.localize({
       key: 'variables.download'
     })
 
-    const variablesXP: React4xpObject = new React4xp('variables/Variables')
-      .setProps({
+    return render('variables/Variables',
+      {
         variables: variables.map(({
           title, description, fileHref, fileModifiedDate, href
         }) => {
@@ -77,20 +68,11 @@ function renderVariables(variables: Array<Variables>): Response {
             href
           }
         })
+      },
+      req,
+      {
+        body: '<section class="xp-part part-variableCardsList container"/>'
       })
-      .uniqueId()
-
-    const body: string = render(view, {
-      variablesListId: variablesXP.react4xpId
-    })
-
-    return {
-      body: variablesXP.renderBody({
-        body
-      }),
-      pageContributions: variablesXP.renderPageContributions() as PageContributions,
-      contentType: 'text/html'
-    }
   }
 
   return NO_VARIABLES_FOUND
@@ -98,7 +80,7 @@ function renderVariables(variables: Array<Variables>): Response {
 
 function contentArrayToVariables(content: Array<Content<Article>>, language: string): Array<Variables> {
   return content.map((variable) => {
-    const files: Array<Content<Article>> = contentLib.query({
+    const files: Array<Content<Article>> = query({
       count: 1,
       sort: 'modifiedTime DESC',
       query: `_path LIKE '/content${variable._path}/*' `,
