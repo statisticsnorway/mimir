@@ -15,9 +15,9 @@ export function solrSearch(term: string,
   contentType: string,
   sortParam: string | undefined): SolrPrepResultAndTotal {
   const lang: string = language === 'en' ? 'en' : 'no'
-  const languageQuery: string = `fq=sprak:"${lang}"`
-  const contentTypeQuery: string = contentType ? `&fq=innholdstype:"${contentType}"` : ''
-  const subjectQuery: string = mainSubject ? `&fq=hovedemner:"${mainSubject}"` : ''
+  const languageQuery: string = `fq=sprak:${lang}`
+  const contentTypeQuery: string = contentType ? `&fq=innholdstype:${contentType}` : ''
+  const subjectQuery: string = mainSubject ? `&fq=hovedemner:${mainSubject}` : ''
   const sortQuery: string = sortParam ? `&sort=${sortParam}+desc` : ''
   const searchResult: SolrResult | undefined = querySolr({
     query: createQuery(term, numberOfHits, start, languageQuery, contentTypeQuery, subjectQuery, sortQuery)
