@@ -1,4 +1,6 @@
-const { request } = __non_webpack_require__('/lib/http-client')
+const {
+  request
+} = __non_webpack_require__('/lib/http-client')
 
 const {
   pageUrl,
@@ -53,16 +55,20 @@ exports.filter = function(req, next) {
   })
 
   const targetResponse = fromFilterCache(req, targetId, req.path, () => {
+    const headers = req.headers
+    delete req.headers['Connection'] // forbidden header name for http/2 and http/3
+    delete req.headers['Host']
+
     return request({
       url: `http://localhost:8080${targetUrl}`,
-      headers: req.headers,
+      headers,
       cookies: req.cookies,
       params: {
         selfRequest: true,
         municipality: JSON.stringify(municipality),
         pageTitle
       },
-      connectionTimeout: 5000,
+      connectionTimeout: 10000,
       readTimeout: 60000
     })
   })
