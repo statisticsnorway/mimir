@@ -1,0 +1,17 @@
+.project{
+  .title-max-width {
+    max-width: 680px;
+  }
+  @media (min-width: 1261px) {
+    .center{
+      margin-left: auto!important;
+      margin-right: auto!important;
+    }
+  }
+  @media (max-width: 1260px) {
+    .top-padding {
+      padding-top: 30px;
+      padding-bottom: 10px;
+    }
+  }
+}
