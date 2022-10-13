@@ -80,6 +80,21 @@ function renderRelatedFactPage(req: XP.Request, page: Content, relatedFactPageCo
   const showAll: string = phrases.showAll
   const showLess: string = phrases.showLess
 
+  if (!relatedFactPageConfig) {
+    // Render title only on page templates in edit mode
+    if (req.mode === 'edit' && page.type !== `${app.name}:article` && page.type !== `${app.name}:statistics`) {
+      return render('site/parts/relatedFactPage/relatedFactPage', {
+        mainTitle
+      }, req, {
+        body: `<section class="xp-part part-picture-card"></section>`
+      })
+    } else {
+      return {
+        body: null
+      }
+    }
+  }
+
   const firstRelatedContents: RelatedFactPages = parseRelatedFactPageData(relatedFactPageConfig, 0, 4)
 
   const relatedFactPageServiceUrl: string = serviceUrl({
@@ -95,24 +110,9 @@ function renderRelatedFactPage(req: XP.Request, page: Content, relatedFactPageCo
     showLess
   }
 
-  if (relatedFactPageConfig) {
-    return render('site/parts/relatedFactPage/relatedFactPage', props, req, {
-      body: `<section class="xp-part part-picture-card"></section>`
-    })
-  } else {
-    // Render title only on page templates in edit mode
-    if (req.mode === 'edit' && page.type !== `${app.name}:article` && page.type !== `${app.name}:statistics`) {
-      return render('site/parts/relatedFactPage/relatedFactPage', {
-        mainTitle
-      }, req, {
-        body: `<section class="xp-part part-picture-card"></section>`
-      })
-    } else {
-      return {
-        body: null
-      }
-    }
-  }
+  return render('site/parts/relatedFactPage/relatedFactPage', props, req, {
+    body: `<section class="xp-part part-picture-card"></section>`
+  })
 }
 
 export function parseRelatedFactPageData(relatedFactPageConfig: RelatedFactPageConfig | undefined, start: number, count: number): RelatedFactPages {
