@@ -13,11 +13,15 @@ jobs:
     name: 'Deploy artifact'
     runs-on: ubuntu-latest
     steps:
+      # - name: Download workflow artifact
+      #   uses: dawidd6/action-download-artifact@v2.23.0
+      #   with:
+      #     workflow: deploy_to_test.yaml
+      #     run_number: ${{ github.event.inputs.gh_run_number }}
       - name: Download workflow artifact
-        uses: dawidd6/action-download-artifact@v2.23.0
+        uses: actions/download-artifact@v3
         with:
-          workflow: deploy_to_test.yaml
-          run_number: ${{ github.event.inputs.gh_run_number }}
+          name: mimir-test-${{ github.event.inputs.gh_run_number }}
       - name: display downloads
         run: ls -R
       - id: deploy_app_to_XP
