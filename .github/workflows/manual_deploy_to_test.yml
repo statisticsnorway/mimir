@@ -18,6 +18,8 @@ jobs:
       #   with:
       #     workflow: deploy_to_test.yaml
       #     run_number: ${{ github.event.inputs.gh_run_number }}
+      - name: Git checkout
+        uses: actions/checkout@v3
       - name: Download workflow artifact
         uses: actions/download-artifact@v3
         with:
