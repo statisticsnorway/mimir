@@ -23,7 +23,7 @@ jobs:
       - name: Download workflow artifact
         uses: actions/download-artifact@v3
         with:
-          name: mimir-test-${{ github.event.inputs.gh_run_number }}ß
+          name: mimir-qa-${{ github.event.inputs.gh_run_number }}
       - name: display downloads
         run: ls -R
       - id: deploy_app_to_XP
