@@ -89,60 +89,60 @@ steps:
         {{/success}}
     when:
       status: [success, failure]
-# ---
-# kind: pipeline
-# type: docker
-# name: "QA Environment - Push to master"
-# # Deploy to qa on push to master
-# trigger:
-#   branch:
-#     - master
-#   event:
-#     include:
-#       - push
-# steps:
-#   - name: build & test
-#     image: enonic/enonic-ci:7.7-node
-#     commands:
-#       - /setup_sandbox.sh
-#       - enonic project build
-#   - name: deploy
-#     image: enonic/enonic-ci:7.7-node
-#     environment:
-#       ENONIC_CLI_REMOTE_URL:
-#         from_secret: ssb-xp7q-url
-#       ENONIC_CLI_REMOTE_USER:
-#         from_secret: ssb-xp7q-user
-#       ENONIC_CLI_REMOTE_PASS:
-#         from_secret: ssb-xp7q-pass
-#     commands:
-#       - enonic app install --file build/libs/*.jar
-#   - name: mabl end-to-end test
-#     image: enonic/enonic-ci:7.7-node
-#     environment:
-#       MABL_API_KEY:
-#         from_secret: mabl-api-key
-#       MABL_APP_ID:
-#         from_secret: mabl-application-id
-#       MABL_ENV_ID_QA:
-#         from_secret: mabl-env-qa
-#     commands:
-#       - npm install -g @mablhq/mabl-cli
-#       - mabl deployments create --api-key $MABL_API_KEY --application-id $MABL_APP_ID --environment-id $MABL_ENV_ID_QA --labels MIMIR --await-completion
-#   - name: slack
-#     image: plugins/slack
-#     settings:
-#       webhook:
-#         from_secret: slack_webhook_mimir_utv
-#       channel: mimir_utv
-#       template: >
-#         {{#success build.status}}
-#           🛠Build {{build.number}} deploy to QA succeeded. Good job.
-#         {{else}}
-#           💣Build {{build.number}} failed. {{build.author}} triggered the build. Maybe do a fix? Here's the failed build: {{build.link}}
-#         {{/success}}
-#     when:
-#       status: [success, failure]
+---
+kind: pipeline
+type: docker
+name: "QA Environment - Push to master"
+# Deploy to qa on push to master
+trigger:
+  branch:
+    - master
+  event:
+    include:
+      - push
+steps:
+  - name: build & test
+    image: enonic/enonic-ci:7.7-node
+    commands:
+      - /setup_sandbox.sh
+      - enonic project build
+  - name: deploy
+    image: enonic/enonic-ci:7.7-node
+    environment:
+      ENONIC_CLI_REMOTE_URL:
+        from_secret: ssb-xp7q-url
+      ENONIC_CLI_REMOTE_USER:
+        from_secret: ssb-xp7q-user
+      ENONIC_CLI_REMOTE_PASS:
+        from_secret: ssb-xp7q-pass
+    commands:
+      - enonic app install --file build/libs/*.jar
+  - name: mabl end-to-end test
+    image: enonic/enonic-ci:7.7-node
+    environment:
+      MABL_API_KEY:
+        from_secret: mabl-api-key
+      MABL_APP_ID:
+        from_secret: mabl-application-id
+      MABL_ENV_ID_QA:
+        from_secret: mabl-env-qa
+    commands:
+      - npm install -g @mablhq/mabl-cli
+      - mabl deployments create --api-key $MABL_API_KEY --application-id $MABL_APP_ID --environment-id $MABL_ENV_ID_QA --labels MIMIR --await-completion
+  - name: slack
+    image: plugins/slack
+    settings:
+      webhook:
+        from_secret: slack_webhook_mimir_utv
+      channel: mimir_utv
+      template: >
+        {{#success build.status}}
+          🛠Build {{build.number}} deploy to QA succeeded. Good job.
+        {{else}}
+          💣Build {{build.number}} failed. {{build.author}} triggered the build. Maybe do a fix? Here's the failed build: {{build.link}}
+        {{/success}}
+    when:
+      status: [success, failure]
 ---
 kind: pipeline
 type: docker
