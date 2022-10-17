@@ -17,7 +17,8 @@ jobs:
         uses: dawidd6/action-download-artifact@v2.24.0
         with:
           workflow: deploy_to_qa.yaml
-          run_number: ${{ github.event.inputs.gh_run_number }}
+          # run_number: ${{ github.event.inputs.gh_run_number }}
+          name: mimir-qa-${{ github.event.inputs.gh_run_number }}
       - name: display downloads
         run: ls -R
       - id: deploy_app_to_XP
