@@ -1,6 +1,6 @@
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
+const  { render } =  __non_webpack_require__('/lib/thymeleaf')
+
+const {render: r4xpRender} = __non_webpack_require__('/lib/enonic/react4xp')
 const {
   getSite,
   assetUrl
@@ -8,54 +8,42 @@ const {
 const {
   getLanguage
 } = __non_webpack_require__('/lib/ssb/utils/language')
-const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+
 const i18nLib = __non_webpack_require__('/lib/xp/i18n')
 
 const fourOFourView = resolve('./404.html')
 const mainErrorView = resolve('./error.html')
 const genericErrorView = resolve('./generic.html')
-
+const { randomUnsafeString } = require('../../lib/ssb/utils/utils')
 exports.handle404 = function(err) {
   // getting language from site because 404 page is not connected to any content.
   // So unless we stop setting language via menu and start to set it via site, this will always show as 'nb'
   // TODO: find another way to find and set locale of 404 page
   const page = getSite()
   const language = getLanguage(page)
+  const searchId = 'searchBox-' + randomUnsafeString()
 
-  const searchComponent = new React4xp('Search')
-    .setProps({
+  const fourOFourModel = {
+    ...getFourOFourAssets(),
+    ...getFourOFourLocalizations(),
+    searchBoxId: searchId
+  }
+  const fourOFourBody = render(fourOFourView, fourOFourModel)
+  return r4xpRender('Search',
+    {
       searchText: i18nLib.localize({
         key: 'menuSearch'
       }),
       searchResultPageUrl: 'https://www.ssb.no/sok',
       className: 'show'
-    })
-    .setId('searchBox')
-    .uniqueId()
-
-  const fourOFourModel = {
-    ...getFourOFourAssets(),
-    ...getFourOFourLocalizations(),
-    searchBoxId: searchComponent.react4xpId
-  }
-  const fourOFourBody = render(fourOFourView, fourOFourModel)
-
-  const body = searchComponent.renderBody({
-    body: getMainErrorBody(err.status, fourOFourBody, language),
-    clientRender: err.request.mode !== 'edit'
-  })
-
-  const pageContributions = searchComponent.renderPageContributions({
-    pageContributions,
-    clientRender: err.request.mode !== 'edit'
-  })
-
-  return {
-    body,
-    pageContributions,
-    contentType: 'text/html',
-    postProcess: true
-  }
+    },
+    undefined,
+    {
+      id: searchId,
+      body: getMainErrorBody(err.status, fourOFourBody, language),
+      clientRender: err.request.mode !== 'edit'
+    }
+  )
 }
 
 exports.handleError = function(err) {

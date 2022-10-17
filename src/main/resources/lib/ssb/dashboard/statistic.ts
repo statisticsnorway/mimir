@@ -1,11 +1,13 @@
+import { DefaultPageConfig } from '../../../site/pages/default/default-page-config'
+
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 import { EventInfo } from '../repo/query'
 import { Socket, SocketEmitter } from '../../types/socket'
-import { Content, QueryResponse } from 'enonic-types/content'
+import { query, get as getContent, Content, QueryResponse } from '/lib/xp/content'
 import { StatisticInListing, VariantInListing } from './statreg/types'
 import { Statistics } from '../../../site/content-types/statistics/statistics'
 import { ProcessXml, RefreshDatasetResult, DashboardJobInfo } from './dashboard'
-import { RunContext } from 'enonic-types/context'
+import { run, RunContext } from '/lib/xp/context'
 import { DatasetRepoNode } from '../repo/dataset'
 import { Highchart } from '../../../site/content-types/highchart/highchart'
 import { Table } from '../../../site/content-types/table/table'
@@ -13,17 +15,14 @@ import { KeyFigure } from '../../../site/content-types/keyFigure/keyFigure'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { Source, TbmlDataUniform } from '../../types/xmlParser'
 import { JobEventNode, JobInfoNode, JobNames, JobStatus } from '../repo/job'
-import { NodeQueryResponse } from 'enonic-types/node'
-import { User } from 'enonic-types/auth'
+import { NodeQueryResponse } from '/lib/xp/node'
+import { hasRole, User } from '/lib/xp/auth'
 import { Statistic } from '../../../site/mixins/statistic/statistic'
+import { ContextAttributes } from '*/lib/xp/context'
 
 const {
   hasWritePermissions
 } = __non_webpack_require__('/lib/ssb/parts/permissions')
-const {
-  query,
-  get: getContent
-} = __non_webpack_require__('/lib/xp/content')
 const {
   fetchStatisticsWithRelease,
   getAllStatisticsFromRepo,
@@ -40,9 +39,6 @@ const {
 const {
   users
 } = __non_webpack_require__('/lib/ssb/dashboard/dashboardUtils')
-const {
-  run
-} = __non_webpack_require__('/lib/xp/context')
 const {
   getTbprocessor,
   getTbprocessorKey
@@ -71,16 +67,13 @@ const {
 const {
   executeFunction
 } = __non_webpack_require__('/lib/xp/task')
-const {
-  hasRole
-} = __non_webpack_require__('/lib/xp/auth')
 
 export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): void {
   socket.on('get-statistics', () => {
     executeFunction({
       description: 'get-statistics',
       func: () => {
-        const context: RunContext = {
+        const context: RunContext<ContextAttributes> = {
           branch: 'master',
           repository: ENONIC_CMS_DEFAULT_REPO,
           // principals: ['role:system.admin'],
@@ -184,7 +177,7 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
           const datasetIdsToUpdate: Array<string> = getDataSourceIdsFromStatistics(statistic)
           const processXmls: Array<ProcessXml> | undefined = data.owners ? processXmlFromOwners(data.owners) : undefined
           if (datasetIdsToUpdate.length > 0) {
-            const context: RunContext = {
+            const context: RunContext<ContextAttributes> = {
               branch: 'master',
               repository: ENONIC_CMS_DEFAULT_REPO,
               principals: ['role:system.admin'],
@@ -306,7 +299,7 @@ function getSourcesForUserFromStatistic(sources: Array<SourceList>): Array<Owner
 }
 
 function getDatasetFromContentId(contentId: string): DatasetRepoNode<TbmlDataUniform> | null {
-  const queryResult: QueryResponse<DataSource> = query({
+  const queryResult: QueryResponse<DataSource, DefaultPageConfig> = query({
     query: `_id = '${contentId}'`,
     count: 1,
     filters: {
@@ -442,7 +435,7 @@ function getAdminStatistics(): Array<StatisticDashboard> {
 }
 
 function getUserStatistics(): Array<StatisticDashboard> {
-  const userStatisticsResult: QueryResponse<Statistics> = query({
+  const userStatisticsResult: QueryResponse<Statistics, DefaultPageConfig> = query({
     query: `data.statistic LIKE '*'`,
     contentTypes: [`${app.name}:statistics`],
     count: 1000
@@ -557,7 +550,7 @@ function getStatisticsSearchList(): Array<StatisticSearch> {
 
 export function getStatisticsContent(): Array<Content<Statistics>> {
   let hits: Array<Content<Statistics>> = []
-  const result: QueryResponse<Statistics> = query({
+  const result: QueryResponse<Statistics, DefaultPageConfig> = query({
     contentTypes: [`${app.name}:statistics`],
     query: `data.statistic LIKE "*"`,
     count: 1000

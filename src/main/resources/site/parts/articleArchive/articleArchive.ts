@@ -1,31 +1,21 @@
+import { render, RenderResponse } from '/lib/enonic/react4xp'
+import { query, Content, QueryResponse } from '/lib/xp/content'
+import { getContent, imageUrl, pageUrl, processHtml, serviceUrl } from '/lib/xp/portal'
+import { localize } from '/lib/xp/i18n'
+
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
-import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
-import { Request, Response } from 'enonic-types/controller'
-import { Content, QueryResponse } from 'enonic-types/content'
 import { Article } from '../../content-types/article/article'
 import { ArticleArchive } from '../../content-types/articleArchive/articleArchive'
 
 const {
-  getContent, imageUrl, pageUrl, processHtml, serviceUrl
-} = __non_webpack_require__('/lib/xp/portal')
-const {
-  query
-} = __non_webpack_require__('/lib/xp/content')
-const {
   getImageAlt
 } = __non_webpack_require__('/lib/ssb/utils/imageUtils')
 const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
-const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
-const {
-  localize
-} = __non_webpack_require__('/lib/xp/i18n')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
-exports.get = (req: Request): Response | React4xpResponse => {
+
+exports.get = function(req: XP.Request): XP.Response | RenderResponse {
   try {
     return renderPart(req)
   } catch (e) {
@@ -33,9 +23,9 @@ exports.get = (req: Request): Response | React4xpResponse => {
   }
 }
 
-exports.preview = (req: Request) => renderPart(req)
+exports.preview = (req: XP.Request): RenderResponse => renderPart(req)
 
-function renderPart(req: Request):React4xpResponse {
+function renderPart(req: XP.Request): RenderResponse {
   const page: Content<ArticleArchive> = getContent()
   const language: string = page.language === 'en' || page.language === 'nn' ? page.language : 'nb'
   const listOfArticlesTitle: string = localize({
@@ -83,7 +73,7 @@ function renderPart(req: Request):React4xpResponse {
     })
   }
 
-  return React4xp.render('ArticleArchive', props, req, {
+  return render('ArticleArchive', props, req, {
     body: '<section class="xp-part article-archive"></section>'
   })
 }
@@ -110,7 +100,7 @@ export function parseArticleData(pageId: string, start: number, count: number, l
     locale: language
   })
 
-  const articles: QueryResponse<Article> = query({
+  const articles: QueryResponse<Article, object> = query({
     start,
     count,
     sort: 'publish.from DESC',

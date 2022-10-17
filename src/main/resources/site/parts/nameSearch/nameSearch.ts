@@ -1,7 +1,6 @@
-import { Response, Request } from 'enonic-types/controller'
-import { Component } from 'enonic-types/portal'
+import { Component } from '/lib/xp/portal'
 import { renderError } from '../../../lib/ssb/error/error'
-import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
+import {render, RenderResponse} from '/lib/enonic/react4xp'
 import { GA_TRACKING_ID } from '../../pages/default/default'
 import { NameSearchPartConfig } from './nameSearch-part-config'
 
@@ -17,10 +16,10 @@ const {
 const {
   localize
 } = __non_webpack_require__('/lib/xp/i18n')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
 
-exports.get = (req: Request): React4xpResponse | Response => {
+
+exports.get = (req: XP.Request): RenderResponse | XP.Response => {
   try {
     return renderPart(req)
   } catch (e) {
@@ -28,9 +27,9 @@ exports.get = (req: Request): React4xpResponse | Response => {
   }
 }
 
-exports.preview = (req: Request): React4xpResponse => renderPart(req)
+exports.preview = (req: XP.Request): RenderResponse => renderPart(req)
 
-function renderPart(req: Request): React4xpResponse {
+function renderPart(req: XP.Request): RenderResponse {
   const component: Component<NameSearchPartConfig> = getComponent()
   const locale: string = getLanguageShortName(getContent())
   const isNotInEditMode: boolean = req.mode !== 'edit'
@@ -54,7 +53,7 @@ function renderPart(req: Request): React4xpResponse {
     GA_TRACKING_ID: GA_TRACKING_ID
   }
 
-  return React4xp.render('site/parts/nameSearch/nameSearch', props, req, {
+  return render('site/parts/nameSearch/nameSearch', props, req, {
     clientRender: isNotInEditMode
   })
 }

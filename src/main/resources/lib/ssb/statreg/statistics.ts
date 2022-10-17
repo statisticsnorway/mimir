@@ -1,7 +1,7 @@
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 import { StatRegNode } from '../repo/statreg'
 import { StatisticInListing, VariantInListing, ReleasesInListing, ReleaseDatesVariant } from '../dashboard/statreg/types'
-import { HttpResponse } from 'enonic-types/http'
+import { HttpResponse } from '/lib/http-client'
 
 const {
   moment

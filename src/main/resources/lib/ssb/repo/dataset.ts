@@ -1,6 +1,6 @@
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
-import { RepoNode } from 'enonic-types/node'
-import { RepositoryConfig } from 'enonic-types/repo'
+import { RepoNode } from '/lib/xp/node'
+import { RepositoryConfig } from '/lib/xp/repo'
 
 const {
   getRepo,
@@ -106,9 +106,6 @@ export function deleteDataset(dataSourceType: string, branch: string, key: strin
 
 export interface DatasetRepoNode<T> extends RepoNode {
   data?: string | T;
-  _ts?: string;
-  _name: string;
-  _path?: string;
 }
 
 export interface RepoDatasetLib {

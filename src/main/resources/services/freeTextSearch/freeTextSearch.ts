@@ -1,4 +1,3 @@
-import { Request, Response } from 'enonic-types/controller'
 import { SolrPrepResultAndTotal } from '../../lib/ssb/utils/solrUtils'
 
 const {
@@ -9,7 +8,7 @@ const {
   sanitizeForSolr
 } = __non_webpack_require__('/lib/ssb/utils/textUtils')
 
-export function get(req: Request): Response {
+export function get(req: XP.Request): XP.Response {
   const searchTerm: string | undefined = req.params.sok ? sanitizeForSolr(req.params.sok) : undefined
   const language: string = req.params.language ? req.params.language : 'nb'
   const count: number = req.params.count ? parseInt(req.params.count) : 15

@@ -1,16 +1,12 @@
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
-import { Content } from 'enonic-types/content'
-import { Request, Response } from 'enonic-types/controller'
-import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
+import { get, Content } from '/lib/xp/content'
+import { render, RenderResponse } from '/lib/enonic/react4xp'
 import { Phrases } from '../../../lib/types/language'
 import { Statistics } from '../../content-types/statistics/statistics'
 import { OmStatistikken } from '../../content-types/omStatistikken/omStatistikken'
 import { ReleaseDatesVariant, StatisticInListing, VariantInListing } from '../../../lib/ssb/dashboard/statreg/types'
 import { Accordion, AccordionItem } from '../../../lib/types/components'
 
-const {
-  get
-} = __non_webpack_require__('/lib/xp/content')
 const {
   getContent, processHtml
 } = __non_webpack_require__('/lib/xp/portal')
@@ -34,10 +30,9 @@ const {
     forceArray
   }
 } = __non_webpack_require__('/lib/util')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp') as React4xp
 
 
-exports.get = function(req:Request):Response | React4xpResponse {
+exports.get = function(req:XP.Request):XP.Response | RenderResponse {
   try {
     const statisticPage: Content<Statistics> = getContent()
     return renderPart(req, statisticPage.data.aboutTheStatistics)
@@ -46,13 +41,13 @@ exports.get = function(req:Request):Response | React4xpResponse {
   }
 }
 
-exports.preview = (req: Request, id: string | undefined):Response | React4xpResponse => renderPart(req, id)
+exports.preview = (req: XP.Request, id: string | undefined):XP.Response | RenderResponse => renderPart(req, id)
 
-function renderPart(req:Request, aboutTheStatisticsId: string | undefined):Response | React4xpResponse {
+function renderPart(req:XP.Request, aboutTheStatisticsId: string | undefined):XP.Response | RenderResponse {
   const page: Content = getContent()
   if (!aboutTheStatisticsId) {
     if (req.mode === 'edit' && page.type !== `${app.name}:statistics`) {
-      return React4xp.render('site/parts/omStatistikken/omStatistikken', {
+      return render('site/parts/omStatistikken/omStatistikken', {
         accordions: [],
         label: 'Om statistikken',
         ingress: ''
@@ -76,7 +71,7 @@ function renderPart(req:Request, aboutTheStatisticsId: string | undefined):Respo
   }
 }
 
-function getOmStatistikken(req:Request, page: Content<any>, aboutTheStatisticsId: string | undefined ): Response | React4xpResponse {
+function getOmStatistikken(req:XP.Request, page: Content<any>, aboutTheStatisticsId: string | undefined ): XP.Response | RenderResponse {
   const phrases: Phrases = getPhrases(page) as Phrases
   const language: string = page.language === 'en' || page.language === 'nn' ? page.language : 'nb'
   let nextRelease: string = phrases.notYetDetermined
@@ -106,7 +101,7 @@ function getOmStatistikken(req:Request, page: Content<any>, aboutTheStatisticsId
     ingress: aboutTheStatisticsData && aboutTheStatisticsData.ingress ? aboutTheStatisticsData.ingress : ''
   }
 
-  return React4xp.render('site/parts/omStatistikken/omStatistikken', props, req, {
+  return render('site/parts/omStatistikken/omStatistikken', props, req, {
     // for now, this needs to be a section, so we get correct spacing between parts
     body: `<section id="om-statistikken" class="xp-part part-om-statistikken container-fluid"></section>`,
     id: 'om-statistikken'

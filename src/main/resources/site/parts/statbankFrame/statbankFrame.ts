@@ -1,7 +1,6 @@
-import { Request } from 'enonic-types/controller'
-import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
-import { Content } from 'enonic-types/content'
-import {SiteConfig} from "../../site-config";
+import { render, RenderResponse } from '/lib/enonic/react4xp'
+import { Content } from '/lib/xp/content'
+import { SiteConfig } from '../../site-config'
 
 const {
   getContent,
@@ -11,15 +10,14 @@ const {
   localize
 } = __non_webpack_require__('/lib/xp/i18n')
 
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
-exports.get = (req: Request): React4xpResponse => {
+exports.get = (req: XP.Request): RenderResponse => {
   return renderPart(req)
 }
 
-exports.preview = (req: Request): React4xpResponse => renderPart(req)
+exports.preview = (req: XP.Request): RenderResponse => renderPart(req)
 
-function renderPart(req: Request): React4xpResponse {
+function renderPart(req: XP.Request): RenderResponse {
   const page: Content = getContent()
 
   const pageLanguage: string = page.language ? page.language : 'nb'
@@ -53,7 +51,7 @@ function renderPart(req: Request): React4xpResponse {
     statbankHelpLink
   }
 
-  return React4xp.render('site/parts/statbankFrame/statbankFrame', props, req)
+  return render('site/parts/statbankFrame/statbankFrame', props, req)
 }
 
 interface PartProperties {

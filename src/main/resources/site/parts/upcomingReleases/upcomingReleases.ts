@@ -1,7 +1,6 @@
-import { Request } from 'enonic-types/controller'
-import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
-import { Content } from 'enonic-types/content'
-import { Component } from 'enonic-types/portal'
+import { render, RenderResponse } from '/lib/enonic/react4xp'
+import { query, Content } from '/lib/xp/content'
+import { Component } from '/lib/xp/portal'
 import { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/types'
 import { GroupedBy, PreparedStatistics, YearReleases, Release } from '../../../lib/ssb/utils/variantUtils'
 import { UpcomingReleasesPartConfig } from './upcomingReleases-part-config'
@@ -12,16 +11,13 @@ import { formatDate } from '../../../lib/ssb/utils/dateUtils'
 const {
   moment
 } = __non_webpack_require__('/lib/vendor/moment')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+
 const {
   getContent,
   getComponent,
   processHtml,
   serviceUrl
 } = __non_webpack_require__('/lib/xp/portal')
-const {
-  query
-} = __non_webpack_require__('/lib/xp/content')
 const {
   addMonthNames,
   groupStatisticsByYearMonthAndDay,
@@ -42,13 +38,13 @@ const {
   getMainSubjects, getMainSubjectById
 } = __non_webpack_require__( '/lib/ssb/utils/subjectUtils')
 
-exports.get = (req: Request): React4xpResponse => {
+exports.get = (req: XP.Request): RenderResponse => {
   return renderPart(req)
 }
 
-exports.preview = (req: Request): React4xpResponse => renderPart(req)
+exports.preview = (req: XP.Request): RenderResponse => renderPart(req)
 
-function renderPart(req: Request): React4xpResponse {
+function renderPart(req: XP.Request): RenderResponse {
   const content: Content = getContent()
   const component: Component<UpcomingReleasesPartConfig> = getComponent()
   const currentLanguage: string = content.language ? content.language : 'nb'
@@ -87,7 +83,7 @@ function renderPart(req: Request): React4xpResponse {
     return addMonthNames(groupedByYearMonthAndDay, currentLanguage)
   })
 
-  const contentReleases: Array<PreparedUpcomingRelease> = query<UpcomingRelease>({
+  const contentReleases: Array<PreparedUpcomingRelease> = query<UpcomingRelease, object>({
     start: 0,
     count: 500,
     query: `type = "${app.name}:upcomingRelease" AND language = "${currentLanguage}" AND data.date >= "${moment().format('YYYY-MM-DD')}"`
@@ -128,7 +124,7 @@ function renderPart(req: Request): React4xpResponse {
     contentReleases
   }
 
-  return React4xp.render('site/parts/upcomingReleases/upcomingReleases', props, req)
+  return render('site/parts/upcomingReleases/upcomingReleases', props, req)
 }
 
 /*

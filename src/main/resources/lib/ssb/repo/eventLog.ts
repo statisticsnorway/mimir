@@ -1,4 +1,4 @@
-import { NodeCreateParams, NodeQueryHit, NodeQueryResponse, RepoNode } from 'enonic-types/node'
+import { NodeCreateParams, NodeQueryHit, NodeQueryResponse, RepoNode } from '/lib/xp/node'
 import { EventInfo, QueryInfo } from './query'
 
 const {
@@ -64,7 +64,7 @@ export function updateEventLog<T>(key: string, editor: EditorCallback<T> ): T & 
 
 export function getQueryChildNodesStatus<T>(queryId: string): ReadonlyArray<LogSummary> | undefined {
   if (nodeExists(EVENT_LOG_REPO, EVENT_LOG_BRANCH, queryId)) {
-    const childNodeIds: NodeQueryResponse<never> = getChildNodes(EVENT_LOG_REPO, EVENT_LOG_BRANCH, queryId)
+    const childNodeIds: NodeQueryResponse = getChildNodes(EVENT_LOG_REPO, EVENT_LOG_BRANCH, queryId)
     return childNodeIds.hits.map((hit: NodeQueryHit) => {
       const nodes: ReadonlyArray<QueryInfo> | QueryInfo | null = getNode<QueryInfo>(EVENT_LOG_REPO, EVENT_LOG_BRANCH, hit.id)
       return Array.isArray(nodes) ? nodes[0] : nodes

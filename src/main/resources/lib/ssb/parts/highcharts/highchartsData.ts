@@ -1,7 +1,6 @@
 import { PreliminaryData, TbmlDataUniform } from '../../../types/xmlParser'
-import { Request } from 'enonic-types/controller'
 import { Highchart } from '../../../../site/content-types/highchart/highchart'
-import { Content } from 'enonic-types/content'
+import { Content } from '/lib/xp/content'
 import { JSONstat } from '../../../types/jsonstat-toolkit'
 import { DataSource } from '../../../../site/mixins/dataSource/dataSource'
 import { RowValue } from '../../utils/utils'
@@ -28,7 +27,7 @@ const {
 } = __non_webpack_require__('/lib/ssb/utils/utils')
 
 export function prepareHighchartsData(
-  req: Request,
+  req: XP.Request,
   highchartsContent: Content<Highchart>,
   data: JSONstat | TbmlDataUniform | object | string | undefined,
   dataSource: DataSource['dataSource']): SeriesAndCategories | undefined {
@@ -43,7 +42,7 @@ export function prepareHighchartsData(
 
 
 export function getSeriesAndCategories(
-  req: Request,
+  req: XP.Request,
   highchart: Content<Highchart>,
   data: JSONstat | TbmlDataUniform | object | string | undefined,
   dataSource: DataSource['dataSource']): SeriesAndCategories | undefined {
@@ -132,12 +131,12 @@ export interface PieData {
 
 export interface HighchartsDataLib {
   prepareHighchartsData: (
-    req: Request,
+    req: XP.Request,
     highchartsContent: Content<Highchart>,
     data: JSONstat | TbmlDataUniform | object | string | undefined,
     dataSource: DataSource['dataSource']) => SeriesAndCategories | undefined;
   getSeriesAndCategories: (
-    req: Request,
+    req: XP.Request,
     highchart: Content<Highchart>,
     data: JSONstat | TbmlDataUniform | object | string | undefined,
     dataSource: DataSource['dataSource']) => SeriesAndCategories | undefined;

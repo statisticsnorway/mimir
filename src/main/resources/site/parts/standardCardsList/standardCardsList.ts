@@ -1,19 +1,16 @@
-import { Content, MediaImage } from 'enonic-types/content'
-import { PageContributions, Request, Response } from 'enonic-types/controller'
-import { ResourceKey } from 'enonic-types/thymeleaf'
-import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
+import { get, Content, MediaImage } from '/lib/xp/content'
+import { ResourceKey, render } from '/lib/thymeleaf'
+import { render as r4xpRender, RenderResponse } from '/lib/enonic/react4xp'
 import { SEO } from '../../../services/news/news'
 import { Statistics } from '../../content-types/statistics/statistics'
 import { StandardCardsListPartConfig } from './standardCardsList-part-config'
+import { randomUnsafeString } from '/lib/ssb/utils/utils'
 
 const {
   data: {
     forceArray
   }
 } = __non_webpack_require__('/lib/util')
-const {
-  get
-} = __non_webpack_require__('/lib/xp/content')
 const {
   getComponent,
   imageUrl,
@@ -23,9 +20,7 @@ const {
   getImageCaption,
   getImageAlt
 } = __non_webpack_require__('/lib/ssb/utils/imageUtils')
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
+
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
@@ -33,10 +28,10 @@ const {
   hasPath
 } = __non_webpack_require__('/lib/vendor/ramda')
 
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+
 const view: ResourceKey = resolve('standardCardsList.html')
 
-exports.get = (req: Request): Response => {
+exports.get = (req: XP.Request): XP.Response => {
   try {
     return renderPart(req)
   } catch (e) {
@@ -44,9 +39,9 @@ exports.get = (req: Request): Response => {
   }
 }
 
-exports.preview = (req: Request): Response => renderPart(req)
+exports.preview = (req: XP.Request): XP.Response => renderPart(req)
 
-function renderPart(req: Request): Response {
+function renderPart(req: XP.Request): XP.Response {
   const config: StandardCardsListPartConfig = getComponent().config
   const standardCardsListConfig: StandardCardsListPartConfig['statisticsItemSet'] = config.statisticsItemSet ? forceArray(config.statisticsItemSet) : []
 
@@ -61,33 +56,30 @@ function renderPart(req: Request): Response {
     }
   }
 
-  return renderStandardCardsList(statisticsTitle, parseContent(standardCardsListConfig))
+  return renderStandardCardsList(req, statisticsTitle, parseContent(standardCardsListConfig))
 }
 
-function renderStandardCardsList(statisticsTitle: string | undefined, standardCardsListContent: StandardCardsListPartConfig['statisticsItemSet']): Response {
+function renderStandardCardsList(req: XP.Request, statisticsTitle: string | undefined, standardCardsListContent: StandardCardsListPartConfig['statisticsItemSet']): XP.Response {
   if (standardCardsListContent && standardCardsListContent.length) {
-    const standardCardsComponent: React4xpObject = new React4xp('StatisticsCards')
-      .setProps({
+    const id: string = 'standard-card-list-' + randomUnsafeString()
+    const body: string = render(view, {
+      standardCardsListComponentId: id,
+      statisticsTitle
+    })
+    return r4xpRender('StatisticsCards',
+      {
         headerTitle: statisticsTitle,
         statistics: standardCardsListContent.map((statisticsContent) => {
           return {
             ...statisticsContent
           }
         })
+      },
+      req,
+      {
+        id: id,
+        body: body
       })
-      .uniqueId()
-
-    const body: string = render(view, {
-      standardCardsListComponentId: standardCardsComponent.react4xpId,
-      statisticsTitle
-    })
-
-    return {
-      body: standardCardsComponent.renderBody({
-        body
-      }),
-      pageContributions: standardCardsComponent.renderPageContributions() as PageContributions
-    }
   }
   return {
     body: undefined,
@@ -109,13 +101,13 @@ function parseContent(standardCardsListContent: StandardCardsListPartConfig['sta
 
       if (standardCard.contentXP) {
         const standardCardContentId: string = standardCard.contentXP
-        const pageContent: Content<Statistics, object, SEO> | null = standardCardContentId ? get({
+        const pageContent: Content<Statistics, SEO> | null = standardCardContentId ? get({
           key: standardCardContentId
         }) : null
 
         let preamble: string = ''
-        if (hasPath(['x', 'com-enonic-app-metafields', 'meta-data', 'seoDescription'], pageContent) && pageContent) {
-          preamble = pageContent.x['com-enonic-app-metafields']['meta-data'].seoDescription as string
+        if ( pageContent) {
+          preamble = pageContent.x['com-enonic-app-metafields']['meta-data'].seoDescription
         }
 
         return {

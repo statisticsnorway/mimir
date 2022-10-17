@@ -1,7 +1,4 @@
-import { HttpRequestParams, HttpResponse } from 'enonic-types/http'
-import { Request, Response } from 'enonic-types/controller'
-import { Dataset } from '../../lib/types/jsonstat-toolkit'
-import { Content } from 'enonic-types/content'
+import { Content } from '/lib/xp/content'
 import { CalculatorConfig } from '../../site/content-types/calculatorConfig/calculatorConfig'
 import { DatasetRepoNode } from '../../lib/ssb/repo/dataset'
 
@@ -16,14 +13,11 @@ import JSONstat from 'jsonstat-toolkit/import.mjs'
 
 import validator from 'validator'
 const {
-  request
-} = __non_webpack_require__('/lib/http-client')
-const {
   isEnabled
 } = __non_webpack_require__('/lib/featureToggle')
 
 
-export function get(req: Request): Response {
+export function get(req: XP.Request): XP.Response {
   if (!req.params.name) {
     return {
       body: {

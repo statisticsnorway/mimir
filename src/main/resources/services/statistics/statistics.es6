@@ -1,3 +1,4 @@
+import { run } from '/lib/xp/context'
 
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 const {
@@ -14,10 +15,6 @@ const {
 const {
   cronContext
 } = __non_webpack_require__('/lib/ssb/cron/cron')
-
-const {
-  run
-} = __non_webpack_require__('/lib/xp/context')
 
 const toOption = (stat) => ({
   ...stat,

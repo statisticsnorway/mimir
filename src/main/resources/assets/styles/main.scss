@@ -82,6 +82,7 @@ $container-max-widths: (
 @import "./staticVisualization";
 @import "./employee";
 @import "./project";
+@import "./researcherList";
 
 body {
   -moz-osx-font-smoothing: grayscale;

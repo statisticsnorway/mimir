@@ -24,7 +24,7 @@ return {
 
 - [ ] dashboard
 - [x] articleArchive
-- [ ] attachmentTablesFigures
+- [x] attachmentTablesFigures
 - [ ] bkibolCalculator
 - [ ] contactForm
 - [x] divider

@@ -10,20 +10,16 @@ const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
 const {
-  get
-} = __non_webpack_require__('/lib/xp/content')
-const {
   getSources
 } = __non_webpack_require__('/lib/ssb/utils/utils')
 const {
   getPhrases
 } = __non_webpack_require__('/lib/ssb/utils/language')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 
-import { Content, MediaImage } from 'enonic-types/content'
-import { Request, Response } from 'enonic-types/controller'
+
+import { get, Content, MediaImage } from '/lib/xp/content'
 import { SourceList, SourcesConfig } from '../../../lib/ssb/utils/utils'
-import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
+import {render, RenderResponse} from '/lib/enonic/react4xp'
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import { Base64 } from 'js-base64'
@@ -31,7 +27,7 @@ import { InfoGraphicsPartConfig } from './infoGraphics-part-config'
 import { DefaultPageConfig } from '../../pages/default/default-page-config'
 
 
-exports.get = function(req: Request): Response | React4xpResponse {
+exports.get = function(req: XP.Request): XP.Response | RenderResponse {
   try {
     const config: InfoGraphicsPartConfig = getComponent().config
     return renderPart(req)
@@ -40,9 +36,9 @@ exports.get = function(req: Request): Response | React4xpResponse {
   }
 }
 
-exports.preview = (req: Request): Response | React4xpResponse => renderPart(req)
+exports.preview = (req: XP.Request): XP.Response | RenderResponse => renderPart(req)
 
-function renderPart(req: Request): React4xpResponse {
+function renderPart(req: XP.Request): RenderResponse {
   const page: DefaultPage = getContent() as DefaultPage
   const phrases: {source: string; descriptionStaticVisualization: string} = getPhrases(page)
   const sourcesLabel: string = phrases.source
@@ -52,7 +48,7 @@ function renderPart(req: Request): React4xpResponse {
   const sourceConfig: InfoGraphicsPartConfig['sources'] = config.sources ? forceArray(config.sources) : []
 
   // Encodes string to base64 and turns it into a dataURI
-  const desc: string = Base64.encodeURI(config.longDesc)
+  const desc: string = Base64.encodeURI(config.longDesc ? config.longDesc : '')
   const longDesc: string = 'data:text/html;charset=utf-8;base64,' + desc
 
   const imageSrc: string | null = imageUrl({
@@ -77,7 +73,7 @@ function renderPart(req: Request): React4xpResponse {
     oldContent: true
   }
 
-  return React4xp.render('site/parts/infoGraphics/infoGraphics', props, req)
+  return render('site/parts/infoGraphics/infoGraphics', props, req)
 }
 
 interface DefaultPage {

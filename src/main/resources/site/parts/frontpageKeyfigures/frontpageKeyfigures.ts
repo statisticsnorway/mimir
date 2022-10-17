@@ -1,22 +1,12 @@
-import {ResourceKey} from "enonic-types/thymeleaf";
-import {Request, Response} from "enonic-types/controller";
-import {React4xpObject, React4xpResponse} from "../../../lib/types/react4xp";
-import {Component} from "enonic-types/portal";
+import {render, ResourceKey} from '/lib/thymeleaf'
+import {render as r4XpRender, RenderResponse} from '/lib/enonic/react4xp'
+import {Component, getComponent} from "/lib/xp/portal";
 import {FrontpageKeyfiguresPartConfig} from "./frontpageKeyfigures-part-config";
-import {Content} from "enonic-types/content";
+import {Content, get} from "/lib/xp/content";
 import {KeyFigure} from "../../content-types/keyFigure/keyFigure";
 import {KeyFigureView} from "../../../lib/ssb/parts/keyFigure";
 
-const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
-const {
-  getComponent
-} = __non_webpack_require__('/lib/xp/portal')
-const {
-  get
-} = __non_webpack_require__('/lib/xp/content')
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
+
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
@@ -32,7 +22,7 @@ const {
 
 const view: ResourceKey = resolve('./frontpageKeyfigures.html')
 
-exports.get = function(req: Request) {
+exports.get = function(req: XP.Request) {
   try {
     return renderPart(req)
   } catch (e) {
@@ -40,13 +30,13 @@ exports.get = function(req: Request) {
   }
 }
 
-exports.preview = (req: Request) => renderPart(req)
+exports.preview = (req: XP.Request) => renderPart(req)
 
 const isKeyfigureData = (data: FrontPageKeyFigureData | undefined): data is FrontPageKeyFigureData => {
   return !!data
 } // user-defined type guards <3
 
-function renderPart(req: Request): Response | React4xpResponse {
+function renderPart(req: XP.Request): XP.Response | RenderResponse {
   const part: Component<FrontpageKeyfiguresPartConfig> = getComponent()
   const keyFiguresPart: Array<FrontpageKeyfigure> = part.config.keyfiguresFrontpage ? data.forceArray(part.config.keyfiguresFrontpage) : []
 
@@ -77,30 +67,20 @@ function renderPart(req: Request): Response | React4xpResponse {
   }
 }
 
-function renderFrontpageKeyfigures(req: Request, frontpageKeyfigures: Array<FrontPageKeyFigureData> ): React4xpResponse {
-  const frontpageKeyfiguresReact: React4xpObject = new React4xp('FrontpageKeyfigures')
-    .setProps({
-      keyFigures: frontpageKeyfigures.map((frontpageKeyfigure) => {
-        return {
-          ...frontpageKeyfigure
-        }
+function renderFrontpageKeyfigures(req: XP.Request, frontpageKeyfigures: Array<FrontPageKeyFigureData> ): RenderResponse {
+  return r4XpRender('FrontpageKeyfigures',
+      {
+        keyFigures: frontpageKeyfigures.map((frontpageKeyfigure) => {
+          return {
+            ...frontpageKeyfigure
+          }
+        })
+      },
+      req,
+      {
+        body: render(view),
+        clientRender: req.mode !== 'edit'
       })
-    })
-    .uniqueId()
-
-  const body: string = render(view, {
-    frontpageKeyfiguresId: frontpageKeyfiguresReact.react4xpId
-  })
-
-  return {
-    body: frontpageKeyfiguresReact.renderBody({
-      body,
-      clientRender: req.mode !== 'edit'
-    }),
-    pageContributions: frontpageKeyfiguresReact.renderPageContributions({
-      clientRender: req.mode !== 'edit'
-    })
-  }
 }
 
 interface FrontpageKeyfigure {
