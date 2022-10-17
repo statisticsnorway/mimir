@@ -200,12 +200,7 @@ export function addMonthNames(groupedByYearMonthAndDay: GroupedBy<GroupedBy<Grou
 
       const a: MonthReleases = {
         month: monthNumber,
-        monthName: moment().locale(language).set({
-          year: parseInt(year),
-          month: parseInt(monthNumber),
-          date: 2
-        })
-          .format('MMM'),
+        monthName: moment().locale(language).month(monthNumber).format('MMM'),
         releases: dayReleases
       }
       return a
