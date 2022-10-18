@@ -108,7 +108,7 @@ const Employee = (props) => {
     return (
       <aside className="employee-attachments mobile-display-none col-12 col-md-3" role="complementary">
         <div className="instructions">
-          <h2>{pressPicturesPhrase}</h2>
+          <h3>{pressPicturesPhrase}</h3>
           <p>{pressPicturesDescrPhrase}</p>
         </div>
         {renderPortraitImages()}
