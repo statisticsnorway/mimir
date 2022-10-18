@@ -1,5 +1,5 @@
-name: 'Manual deploy to PROD'
-# Action that will download previously created artifact and deploy it to the production environment
+name: 'Manual deploy to QA'
+# Action that will download previously created artifact and deploy it to the QA environment
 on:
   workflow_dispatch:
    # We need the Github Action Run number to select which artifact to download
@@ -13,22 +13,28 @@ jobs:
     name: 'Deploy artifact'
     runs-on: ubuntu-latest
     steps:
+      # - name: Download workflow artifact
+      #   uses: dawidd6/action-download-artifact@v2.23.0
+      #   with:
+      #     workflow: deploy_to_qa.yaml
+      #     run_number: ${{ github.event.inputs.gh_run_number }}
+      - name: Git checkout
+        uses: actions/checkout@v3
       - name: Download workflow artifact
-        uses: dawidd6/action-download-artifact@v2.23.0
+        uses: actions/download-artifact@v3
         with:
-          workflow: deploy_to_qa.yaml
-          run_number: ${{ github.event.inputs.gh_run_number }}
+          name: mimir-qa-${{ github.event.inputs.gh_run_number }}
       - name: display downloads
         run: ls -R
       - id: deploy_app_to_XP
         uses: 'enonic/action-app-deploy@main'
         with:
           # Secrets from Github repository
-          url: ${{ secrets.ENONIC_PROD_URL }}
-          username: ${{ secrets.ENONIC_PROD_USER }}
-          password: ${{ secrets.ENONIC_PROD_PASS }}
-          client_cert: ${{ secrets.ENONIC_PROD_CERT }}
-          client_key: ${{ secrets.ENONIC_PROD_KEY }}
+          url: ${{ secrets.ENONIC_QA_URL }}
+          username: ${{ secrets.ENONIC_QA_USER }}
+          password: ${{ secrets.ENONIC_QA_PASS }}
+          client_cert: ${{ secrets.ENONIC_QA_CERT }}
+          client_key: ${{ secrets.ENONIC_QA_KEY }}
           app_jar: "*.jar"
       - name: Send result message to Slack
         id: slack_message
