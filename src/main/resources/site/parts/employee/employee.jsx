@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button, Title, Link, LeadParagraph, Paragraph, Accordion } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
-import { Share2, Send, Smartphone, Eye, Download, Image } from 'react-feather'
+import { Share2, Send, Smartphone, Eye, Home, Download, Image } from 'react-feather'
 
 const Employee = (props) => {
   const {
@@ -80,7 +80,7 @@ const Employee = (props) => {
           </div>
         </div>
         <div className="details-block">
-          <Eye size={30} />
+          {isResearcher ? <Eye size={30} /> : <Home size={30} />}
           <div>
             <div>{isResearcher ? researchAreaPhrase : departmentPhrase}</div>
             {area ? <Link href={area.href} linkType="profiled">{area.title}</Link> : null}
