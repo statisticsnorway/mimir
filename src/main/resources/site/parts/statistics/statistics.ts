@@ -1,11 +1,11 @@
-import { Content } from 'enonic-types/content'
-import { PageContributions, Request, Response } from 'enonic-types/controller'
-import { ResourceKey } from 'enonic-types/thymeleaf'
+import { Content } from '/lib/xp/content'
+import { ResourceKey, render } from '/lib/thymeleaf'
 import { ReleaseDatesVariant, StatisticInListing, VariantInListing } from '../../../lib/ssb/dashboard/statreg/types'
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
-import { React4xp, React4xpObject, React4xpPageContributionOptions } from '../../../lib/types/react4xp'
+import { render as r4xpRender } from '/lib/enonic/react4xp'
 import { Statistics } from '../../content-types/statistics/statistics'
 import { Phrases } from '../../../lib/types/language'
+import { randomUnsafeString } from '/lib/ssb/utils/utils'
 
 const {
   getContent, pageUrl
@@ -16,9 +16,7 @@ const {
 const {
   getPhrases
 } = __non_webpack_require__('/lib/ssb/utils/language')
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
+
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
@@ -42,13 +40,13 @@ const {
   isEnabled
 } = __non_webpack_require__('/lib/featureToggle')
 
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+
 const {
   moment
 } = __non_webpack_require__('/lib/vendor/moment')
 const view: ResourceKey = resolve('./statistics.html')
 
-exports.get = (req: Request): Response => {
+exports.get = (req: XP.Request): XP.Response => {
   try {
     return renderPart(req)
   } catch (e) {
@@ -56,9 +54,9 @@ exports.get = (req: Request): Response => {
   }
 }
 
-exports.preview = (req: Request): Response => renderPart(req)
+exports.preview = (req: XP.Request): XP.Response => renderPart(req)
 
-function renderPart(req: Request): Response {
+function renderPart(req: XP.Request): XP.Response {
   const page: Content<Statistics> = getContent()
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   // eslint-disable-next-line @typescript-eslint/no-unsafe-call
@@ -84,7 +82,7 @@ function renderPart(req: Request): Response {
   let previousRelease: string | undefined = phrases.notAvailable
   let nextRelease: string | undefined = phrases.notYetDetermined
   let previewNextRelease: string | undefined = phrases.notYetDetermined
-  let statisticsKeyFigure: Response | undefined
+  let statisticsKeyFigure: XP.Response | undefined
   let changeDate: string | undefined
   let nextReleaseDate: string | undefined
   let previousReleaseDate: string | undefined
@@ -133,14 +131,7 @@ function renderPart(req: Request): Response {
     }
   }
 
-  const modifiedDateComponent: React4xpObject = new React4xp('ModifiedDate')
-    .setProps({
-      explanation: modifiedText,
-      className: '',
-      children: changeDate
-    })
-    .setId('modifiedDate')
-    .uniqueId()
+  const id: string = 'modifiedDate' + randomUnsafeString()
 
   const model: StatisticsProps = {
     title,
@@ -151,26 +142,31 @@ function renderPart(req: Request): Response {
     modifiedText,
     previousRelease: paramShowDraft && showPreviewDraft ? nextRelease : previousRelease,
     nextRelease: paramShowDraft && showPreviewDraft ? previewNextRelease : nextRelease,
-    modifiedDateId: modifiedDateComponent.react4xpId,
+    modifiedDateId: id,
     statisticsKeyFigure: statisticsKeyFigure ? statisticsKeyFigure.body : null,
     showPreviewDraft,
     draftUrl,
     draftButtonText
   }
 
-  let body: string = render(view, model)
-  let pageContributions: PageContributions = {
+  const body: string = render(view, model)
+  const pageContributions: XP.PageContributions = {
     bodyEnd: statisticsKeyFigure && statisticsKeyFigure.pageContributions ? statisticsKeyFigure.pageContributions.bodyEnd : []
   }
 
   if (changeDate) {
-    body = modifiedDateComponent.renderBody({
-      body
-    })
-
-    pageContributions = modifiedDateComponent.renderPageContributions({
-      pageContributions: pageContributions as React4xpPageContributionOptions
-    }) as PageContributions
+    return r4xpRender('ModifiedDate',
+      {
+        explanation: modifiedText,
+        className: '',
+        children: changeDate
+      },
+      req,
+      {
+        id: id,
+        body: body,
+        pageContributions
+      })
   }
 
   return {

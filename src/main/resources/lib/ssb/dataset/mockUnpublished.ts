@@ -1,12 +1,8 @@
-import { Content, QueryResponse } from 'enonic-types/content'
+import { query, get as getContent, Content, QueryResponse } from '/lib/xp/content'
 import { Statistics } from '../../../site/content-types/statistics/statistics'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { UNPUBLISHED_DATASET_BRANCH } from '../repo/dataset'
 
-const {
-  query,
-  get: getContent
-} = __non_webpack_require__('/lib/xp/content')
 const {
   getDataSourceIdsFromStatistics
 } = __non_webpack_require__('/lib/ssb/dashboard/statistic')
@@ -15,7 +11,7 @@ const {
 } = __non_webpack_require__('/lib/ssb/dataset/dataset')
 
 export function updateUnpublishedMockTbml(): void {
-  const res: QueryResponse<Statistics> = query({
+  const res: QueryResponse<Statistics, object> = query({
     query: `data.statistic = "0"`,
     count: 1
   })

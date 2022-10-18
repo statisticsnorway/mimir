@@ -1,9 +1,7 @@
-import { Content } from 'enonic-types/content'
-import { PageContributions, Request, Response } from 'enonic-types/controller'
-import { ResourceKey } from 'enonic-types/thymeleaf'
+import { Content } from '/lib/xp/content'
 import { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/types'
 import { Phrases } from '../../../lib/types/language'
-import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
+import { render } from '/lib/enonic/react4xp'
 import { Statistics } from '../../content-types/statistics/statistics'
 import { StatbankBoxPartConfig } from './statbankBox-part-config'
 
@@ -21,15 +19,11 @@ const {
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
+
 
 const STATBANKWEB_URL: string = app.config && app.config['ssb.statbankweb.baseUrl'] ? app.config['ssb.statbankweb.baseUrl'] : 'https://www.ssb.no/statbank'
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
-const view: ResourceKey = resolve('./statbankBox.html')
 
-exports.get = function(req: Request): Response {
+exports.get = function(req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -37,37 +31,27 @@ exports.get = function(req: Request): Response {
   }
 }
 
-exports.preview = (req: Request): Response => renderPart(req)
+exports.preview = (req: XP.Request): XP.Response => renderPart(req)
 
-function renderPart(req: Request): Response {
+function renderPart(req: XP.Request): XP.Response {
   const page: Content<Statistics> = getContent()
   const config: StatbankBoxPartConfig = getComponent().config
   const phrases: Phrases = getPhrases(page)
 
   const isNotInEditMode: boolean = req.mode !== 'edit'
-  return renderStatbankBox(parseStatbankBoxContent(page, config, phrases), isNotInEditMode)
+  return renderStatbankBox(req, parseStatbankBoxContent(page, config, phrases), isNotInEditMode)
 }
 
-function renderStatbankBox(statbankBoxContent: StatbankBoxProps, isNotInEditMode: boolean): Response {
-  const statbankBoxComponent: React4xpObject = new React4xp('StatbankBox')
-    .setProps({
+function renderStatbankBox(req: XP.Request, statbankBoxContent: StatbankBoxProps, isNotInEditMode: boolean): XP.Response {
+  return render('StatbankBox',
+    {
       ...statbankBoxContent
+    },
+    req,
+    {
+      body: '<section class="xp-part part-statbank-box"></section>',
+      clientRender: isNotInEditMode
     })
-    .uniqueId()
-
-  const body: string = render(view, {
-    statbankBoxId: statbankBoxComponent.react4xpId
-  })
-
-  return {
-    body: statbankBoxComponent.renderBody({
-      body,
-      clientRender: isNotInEditMode
-    }),
-    pageContributions: statbankBoxComponent.renderPageContributions({
-      clientRender: isNotInEditMode
-    }) as PageContributions
-  }
 }
 
 function parseStatbankBoxContent(page: Content<Statistics>, config: StatbankBoxPartConfig, phrases: Phrases): StatbankBoxProps {

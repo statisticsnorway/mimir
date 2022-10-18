@@ -1,6 +1,5 @@
-import { Content, Page } from 'enonic-types/content'
-import { PageContributions, Request, Response } from 'enonic-types/controller'
-import { ResourceKey } from 'enonic-types/thymeleaf'
+import { query, Content } from '/lib/xp/content'
+import { ResourceKey, render } from '/lib/thymeleaf'
 import { ReleaseDatesVariant, StatisticInListing, VariantInListing } from '../../../lib/ssb/dashboard/statreg/types'
 import { MunicipalityWithCounty } from '../../../lib/ssb/dataset/klass/municipalities'
 import { FooterContent } from '../../../lib/ssb/parts/footer'
@@ -8,27 +7,22 @@ import { AlertType, InformationAlertOptions, MunicipalityOptions } from '../../.
 import { Breadcrumbs } from '../../../lib/ssb/utils/breadcrumbsUtils'
 import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
 import { Language } from '../../../lib/types/language'
-import { React4xp, React4xpObject, React4xpPageContributionOptions } from '../../../lib/types/react4xp'
-import { SEO } from '../../../services/news/news'
+import { render as r4xpRender, RenderResponse } from '/lib/enonic/react4xp'
 import { Statistics } from '../../content-types/statistics/statistics'
 import { SiteConfig } from '../../site-config'
 import { DefaultPageConfig } from './default-page-config'
-import { HeaderContent } from '../../../lib/ssb/parts/header'
+import { Component,
+  getContent,
+  processHtml,
+  assetUrl,
+  getSiteConfig } from '/lib/xp/portal'
+import { SEO } from '../../../services/news/news'
 
 const {
   data: {
     forceArray
   }
 } = __non_webpack_require__('/lib/util')
-const {
-  query
-} = __non_webpack_require__('/lib/xp/content')
-const {
-  getContent,
-  processHtml,
-  assetUrl,
-  getSiteConfig
-} = __non_webpack_require__('/lib/xp/portal')
 const {
   getLanguage
 } = __non_webpack_require__('/lib/ssb/utils/language')
@@ -59,9 +53,7 @@ const {
 const {
   fromMenuCache
 } = __non_webpack_require__('/lib/ssb/cache/cache')
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
+
 const {
   isEnabled
 } = __non_webpack_require__('/lib/featureToggle')
@@ -91,11 +83,11 @@ const previewOverride: object = {
 
 export const GA_TRACKING_ID: string | null = app.config && app.config.GA_TRACKING_ID ? app.config.GA_TRACKING_ID : null
 
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+
 const view: ResourceKey = resolve('default.html')
 
-exports.get = function(req: Request): Response {
-  const page: DefaultPage = getContent()
+exports.get = function(req: XP.Request): XP.Response {
+  const page: DefaultPage = getContent() as DefaultPage
   const pageConfig: DefaultPageConfig = page.page.config
 
   const ingress: string | undefined = page.data.ingress ? processHtml({
@@ -104,7 +96,7 @@ exports.get = function(req: Request): Response {
   const showIngress: string | boolean | undefined = ingress && page.type === 'mimir:page'
 
   // Create preview if available
-  let preview: Response | undefined
+  let preview: XP.Response | undefined
   if (partsWithPreview.includes(page.type)) {
     let name: string = page.type.replace(/^.*:/, '')
     // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
@@ -146,61 +138,53 @@ exports.get = function(req: Request): Response {
     path: '/js/ie.js'
   })
 
-  let pageContributions: React4xpPageContributionOptions | PageContributions | string | undefined
+  let pageContributions: XP.PageContributions | undefined
   if (preview && preview.pageContributions) {
     pageContributions = preview.pageContributions
   }
 
-  const language: Language = getLanguage(page)
+  const language: Language = getLanguage(page) as Language
   const menuCacheLanguage: string = language.code === 'en' ? 'en' : 'nb'
   const headerContent: MenuContent | unknown = fromMenuCache(req, `header_${menuCacheLanguage}`, () => {
     return getHeaderContent(language)
   })
-  const headerComponent: React4xpObject = new React4xp('Header')
-    .setProps({
+  const header: RenderResponse = r4xpRender('Header',
+    {
       ...headerContent as object,
       language: language,
       searchResult: req.params.sok
-    })
-    .setId('header')
-
-  const header: MenuContent = {
-    body: headerComponent.renderBody({
-      body: '<div id="header"></div>'
-    }),
-    component: headerComponent
-  }
-
-  if (header && header.component) {
-    pageContributions = header.component.renderPageContributions({
-      pageContributions: pageContributions as React4xpPageContributionOptions
-
-    })
-  }
-
-  const footer: MenuContent | unknown = fromMenuCache(req, `footer_${menuCacheLanguage}`, () => {
-    const footerContent: FooterContent | undefined = getFooterContent(language )
-    if (footerContent) {
-      const footerComponent: React4xpObject = new React4xp('Footer')
-        .setProps({
-          ...footerContent,
-          language: language
-        })
-        .setId('footer')
-      return {
-        body: footerComponent.renderBody({
-          body: '<footer id="footer"></footer>'
-        }),
-        component: footerComponent
-      }
+    },
+    req,
+    {
+      id: 'header',
+      body: '<div id="header"></div>',
+      pageContributions
     }
-    return undefined
-  })
+  )
 
-  if (footer && (footer as MenuContent).component) {
-    pageContributions = (footer as MenuContent).component.renderPageContributions({
-      pageContributions: pageContributions as React4xpPageContributionOptions
-    })
+  if (header) {
+    pageContributions = header.pageContributions
+  }
+
+
+  const footerContent: FooterContent | unknown = fromMenuCache(req, `footer_${menuCacheLanguage}`, () => {
+    return getFooterContent(language )
+  })
+  const footer: RenderResponse = r4xpRender('Footer',
+    {
+      ...footerContent as object,
+      language: language
+    },
+    req,
+    {
+      id: 'footer',
+      body: '<footer id="footer"></footer>',
+      pageContributions
+    }
+  )
+
+  if (footer) {
+    pageContributions = footer.pageContributions
   }
 
   let municipality: MunicipalityWithCounty | undefined
@@ -228,14 +212,7 @@ exports.get = function(req: Request): Response {
   const statBankContent: StatbankFrameData = parseStatbankFrameContent(statbankFane, req, page)
 
   const breadcrumbs: Breadcrumbs = getBreadcrumbs(page, municipality, statbankFane ? statBankContent : undefined)
-
-  const breadcrumbComponent: React4xpObject = new React4xp('Breadcrumb')
-  breadcrumbComponent.setProps({
-    items: breadcrumbs
-  })
-    .setId('breadcrumbs')
-    .uniqueId()
-
+  const breadcrumbId: string = 'breadcrumbs'
   const hideBreadcrumb: boolean = !!(pageConfig).hide_breadcrumb
   const innrapporteringRegexp: RegExp = /^\/ssb(\/en)?\/innrapportering/ // Skal matche alle sider under /innrapportering på norsk og engelsk
   const model: DefaultModel = {
@@ -254,24 +231,31 @@ exports.get = function(req: Request): Response {
     ...statBankContent,
     GA_TRACKING_ID,
     headerBody: header ? header.body : undefined,
-    footerBody: footer ? (footer as MenuContent).body : undefined,
+    footerBody: footer ? footer.body : undefined,
     ...metaInfo,
-    breadcrumbsReactId: breadcrumbComponent.react4xpId,
+    breadcrumbsReactId: breadcrumbId,
     hideBreadcrumb,
     enabledEnalyzerScript: isEnabled('enable-enalyzer-script', true, 'ssb'),
     enabledChatScript: isEnabled('enable-chat-script', true, 'ssb') && innrapporteringRegexp.exec(page._path)
   }
 
-  const thymeleafRenderBody: Response['body'] = render(view, model)
+  const thymeleafRenderBody: XP.Response['body'] = render(view, model)
 
-  const bodyWithBreadCrumbs: string | boolean = !hideBreadcrumb && breadcrumbComponent.renderBody({
-    body: thymeleafRenderBody
-  })
+  const breadcrumbComponent: RenderResponse = r4xpRender('Breadcrumb',
+    {
+      items: breadcrumbs
+    },
+    req,
+    {
+      id: breadcrumbId,
+      body: thymeleafRenderBody,
+      pageContributions
+    })
+
+  const bodyWithBreadCrumbs: string | boolean = !hideBreadcrumb && breadcrumbComponent.body
 
   if (!hideBreadcrumb) {
-    pageContributions = breadcrumbComponent.renderPageContributions({
-      pageContributions: pageContributions as React4xpPageContributionOptions
-    })
+    pageContributions = breadcrumbComponent.pageContributions
   }
 
   const alertOptions: MunicipalityOptions | InformationAlertOptions = pageConfig && (pageConfig).pageType === 'municipality' ? {
@@ -285,12 +269,12 @@ exports.get = function(req: Request): Response {
 
   const alerts: AlertType = alertsForContext(pageConfig, alertOptions)
   const body: string = bodyWithBreadCrumbs ? bodyWithBreadCrumbs : thymeleafRenderBody
-  const bodyWithAlerts: Response = alerts.length ?
-    addAlerts(alerts, body, pageContributions as React4xpPageContributionOptions) :
+  const bodyWithAlerts: XP.Response = alerts.length ?
+    addAlerts(alerts, body, pageContributions, req) :
     {
       body,
       pageContributions
-    } as Response
+    } as XP.Response
 
   return {
     body: `<!DOCTYPE html>${bodyWithAlerts.body}`,
@@ -298,7 +282,7 @@ exports.get = function(req: Request): Response {
     headers: {
       'x-content-key': page._id
     }
-  } as Response
+  } as XP.Response
 }
 
 function prepareRegions(isFragment: boolean, page: DefaultPage): RegionsContent {
@@ -314,8 +298,9 @@ function prepareRegions(isFragment: boolean, page: DefaultPage): RegionsContent 
     }
   }
   configRegions.forEach((configRegion) => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     configRegion.components = regions[configRegion.region] ? forceArray(regions[configRegion.region].components) : []
   })
 
@@ -332,7 +317,7 @@ function parseMetaInfoData(
   pageType: string,
   page: DefaultPage,
   language: Language,
-  req: Request): MetaInfoData {
+  req: XP.Request): MetaInfoData {
   let addMetaInfoSearch: boolean = true
   let metaInfoSearchId: string | undefined = page._id
   let metaInfoSearchContentType: string | undefined
@@ -344,8 +329,8 @@ function parseMetaInfoData(
 
   if (pageType === 'municipality') {
     metaInfoSearchContentType = 'kommunefakta'
-    metaInfoSearchKeywords = 'kommune, kommuneprofil',
-    metaInfoDescription = (getContent() as Content<Content, object, SEO>).x['com-enonic-app-metafields']['meta-data'].seoDescription
+    metaInfoSearchKeywords = 'kommune, kommuneprofil'
+    metaInfoDescription = page.x['com-enonic-app-metafields']['meta-data'].seoDescription
   }
 
   if (pageType === 'municipality' && municipality) {
@@ -373,7 +358,7 @@ function parseMetaInfoData(
       metaInfoSearchPublishFrom = previousRelease ? new Date(previousRelease).toISOString() : new Date().toISOString()
     }
     metaInfoSearchContentType = 'statistikk'
-    metaInfoDescription = (getContent() as Content<Content, object, SEO>).x['com-enonic-app-metafields']['meta-data'].seoDescription || ''
+    metaInfoDescription = page.x['com-enonic-app-metafields']['meta-data'].seoDescription || ''
     metaInfoSearchKeywords = page.data.keywords ? page.data.keywords : ''
   }
 
@@ -399,7 +384,7 @@ function parseMetaInfoData(
   }
 }
 
-function getSubjectsPage(page: DefaultPage, req: Request, language: string): Array<string> {
+function getSubjectsPage(page: DefaultPage, req: XP.Request, language: string): Array<string> {
   const allMainSubjects: Array<SubjectItem> = getMainSubjects(req, language === 'en' ? 'en' : 'nb')
   const allSubSubjects: Array<SubjectItem> = getSubSubjects(req, language === 'en' ? 'en' : 'nb')
   const subjects: Array<string> = []
@@ -436,7 +421,7 @@ function getSecondaryMainSubject(subtopicsContent: Array<string>, mainSubjects: 
   return secondaryMainSubjects
 }
 
-function parseStatbankFrameContent(statbankFane: boolean, req: Request, page: DefaultPage): StatbankFrameData {
+function parseStatbankFrameContent(statbankFane: boolean, req: XP.Request, page: DefaultPage): StatbankFrameData {
   const baseUrl: string = app.config && app.config['ssb.baseUrl'] ? app.config['ssb.baseUrl'] : 'https://www.ssb.no'
   let pageLanguage: string | undefined = page.language ? page.language : 'nb'
 
@@ -508,20 +493,17 @@ function parseStatbankFrameContent(statbankFane: boolean, req: Request, page: De
   }
 }
 
-function addAlerts(alerts: AlertType, body: string, pageContributions: React4xpPageContributionOptions | undefined): Response {
-  const alertComponent: React4xpObject = new React4xp('Alerts')
-    .setProps({
+function addAlerts(alerts: AlertType, body: string, pageContributions: XP.PageContributions | undefined, req: XP.Request): XP.Response {
+  return r4xpRender('Alerts',
+    {
       alerts
+    },
+    req,
+    {
+      id: 'alerts',
+      body: body,
+      pageContributions: pageContributions
     })
-    .setId('alerts')
-  return {
-    body: alertComponent.renderBody({
-      body
-    }),
-    pageContributions: alertComponent.renderPageContributions({
-      pageContributions
-    }) as PageContributions | undefined
-  }
 }
 
 interface DefaultPage extends Content {
@@ -529,6 +511,7 @@ interface DefaultPage extends Content {
     regions: Regions;
     config: DefaultPageConfig;
   };
+  x:SEO,
   data: {
     ingress: string;
     keywords: string;
@@ -539,7 +522,7 @@ interface DefaultPage extends Content {
   page: ExtendedPage;
 }
 
-interface ExtendedPage extends Page<object>{
+interface ExtendedPage extends Component<object>{
   config: DefaultPageConfig;
 }
 
@@ -556,12 +539,12 @@ interface RegionData {
   descriptor: string;
 }
 interface Controller {
-  preview: (req: Request, id: string) => Response;
+  preview: (req: XP.Request, id: string) => XP.Response;
 }
 
 interface MenuContent {
   body: string;
-  component: React4xpObject;
+  component: RenderResponse;
 }
 
 interface RegionsContent {
@@ -595,7 +578,7 @@ interface DefaultModel {
   page: Content;
   ingress: string | undefined;
   showIngress: string | boolean | undefined;
-  preview: Response | undefined;
+  preview: XP.Response | undefined;
   bodyClasses: string;
   stylesUrl: string;
   jsLibsUrl: string;

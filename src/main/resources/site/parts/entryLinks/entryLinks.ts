@@ -1,10 +1,9 @@
-import { Request, Response } from 'enonic-types/controller'
-import { React4xp, React4xpObject, React4xpResponse } from '../../../lib/types/react4xp'
-import { Component } from 'enonic-types/portal'
+import { render as r4XpRender, RenderResponse } from '/lib/enonic/react4xp'
+import { Component, getComponent, getContent, imageUrl } from '/lib/xp/portal'
 import { EntryLinksPartConfig } from './entryLinks-part-config'
-import { Content, Image } from 'enonic-types/content'
+import { Content, get, MediaImage } from '/lib/xp/content'
 import { Phrases } from '../../../lib/types/language'
-import { ResourceKey } from 'enonic-types/thymeleaf'
+import { render, ResourceKey } from '/lib/thymeleaf'
 
 const {
   data: {
@@ -12,19 +11,9 @@ const {
   }
 } = __non_webpack_require__('/lib/util')
 const {
-  get
-} = __non_webpack_require__('/lib/xp/content')
-const {
-  getContent,
-  getComponent,
-  imageUrl
-} = __non_webpack_require__('/lib/xp/portal')
-const {
   getPhrases
 } = __non_webpack_require__('/lib/ssb/utils/language')
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
+
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
@@ -32,10 +21,10 @@ const {
   getAttachmentContent
 } = __non_webpack_require__('/lib/ssb/utils/utils')
 
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+
 const view: ResourceKey = resolve('./entryLinks.html') as ResourceKey
 
-exports.get = (req: Request) => {
+exports.get = (req: XP.Request) => {
   try {
     return renderPart(req)
   } catch (e) {
@@ -43,9 +32,9 @@ exports.get = (req: Request) => {
   }
 }
 
-exports.preview = (req: Request) => renderPart(req)
+exports.preview = (req: XP.Request) => renderPart(req)
 
-function renderPart(req: Request): Response | React4xpResponse {
+function renderPart(req: XP.Request): XP.Response | RenderResponse {
   const page: Content = getContent()
   const part: Component<EntryLinksPartConfig> = getComponent()
   const phrases: Phrases = getPhrases(page) as Phrases
@@ -62,37 +51,29 @@ function renderPart(req: Request): Response | React4xpResponse {
     }
   }
 
-  const isNotInEditMode: boolean = req.mode !== 'edit'
-  return renderEntryLinks(headerTitle, entryLinksContent, isNotInEditMode)
+  return renderEntryLinks(req, headerTitle, entryLinksContent)
 }
 
-function renderEntryLinks(headerTitle: string, entryLinksContent: EntryLinksPartConfig['entryLinks'], isNotInEditMode: boolean): React4xpResponse {
+function renderEntryLinks(req: XP.Request, headerTitle: string, entryLinksContent: EntryLinksPartConfig['entryLinks']): RenderResponse {
   if ( entryLinksContent && entryLinksContent.length > 0) {
-    const entryLinksComponent: React4xpObject = new React4xp('EntryLinks')
-      .setProps({
+    return r4XpRender(
+      'EntryLinks',
+      {
         headerTitle,
         entryLinks: parseEntryLinks(entryLinksContent)
+      },
+      req,
+      {
+        id: 'entry-links',
+        body: render(view, {
+          entryLinksId: 'entry-links'
+        }),
+        clientRender: req.mode !== 'edit'
       })
-      .uniqueId()
-
-    const body: string = render(view, {
-      entryLinksId: entryLinksComponent.react4xpId,
-      label: headerTitle
-    })
-
-    return {
-      body: entryLinksComponent.renderBody({
-        body,
-        clientRender: isNotInEditMode
-      }),
-      pageContributions: entryLinksComponent.renderPageContributions({
-        clientRender: isNotInEditMode
-      })
-    }
   } else {
     return {
       body: '',
-      pageContributions: ''
+      pageContributions: {}
     }
   }
 }
@@ -101,7 +82,7 @@ function parseEntryLinks(entryLinksContent: EntryLinksPartConfig['entryLinks']):
   return entryLinksContent && entryLinksContent.map(({
     title, href, icon, mobileIcon
   }) => {
-    const iconData: Content<Image> | null = get({
+    const iconData: Content<MediaImage> | null = get({
       key: icon
     })
 

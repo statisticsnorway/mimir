@@ -1,9 +1,8 @@
-import { Content } from 'enonic-types/content'
-import { PageContributions, Request, Response } from 'enonic-types/controller'
-import { ResourceKey } from 'enonic-types/thymeleaf'
+import { Content } from '/lib/xp/content'
+import { ResourceKey, render } from '/lib/thymeleaf'
 import { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/types'
 import { Phrases } from '../../../lib/types/language'
-import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
+import { render as r4xpRender, RenderResponse } from '/lib/enonic/react4xp'
 import { Statistics } from '../../content-types/statistics/statistics'
 
 const {
@@ -15,10 +14,8 @@ const {
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+
+
 const util = __non_webpack_require__('/lib/util')
 const view: ResourceKey = resolve('./statbankLinkList.html')
 const STATBANKWEB_URL: string = app.config && app.config['ssb.statbankweb.baseUrl'] ? app.config['ssb.statbankweb.baseUrl'] : 'https://www.ssb.no/statbank'
@@ -26,7 +23,7 @@ const {
   getPhrases
 } = __non_webpack_require__('/lib/ssb/utils/language')
 
-exports.get = function(req: Request): Response {
+exports.get = function(req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -34,9 +31,9 @@ exports.get = function(req: Request): Response {
   }
 }
 
-exports.preview = (req: Request): Response => renderPart(req)
+exports.preview = (req: XP.Request): XP.Response => renderPart(req)
 
-function renderPart(req: Request): Response {
+function renderPart(req: XP.Request): XP.Response {
   const page: Content<Statistics> = getContent()
   const statistic: StatisticInListing = (page.data.statistic && getStatisticByIdFromRepo(page.data.statistic)) as StatisticInListing
   const shortName: string | undefined = statistic && statistic.shortName ? statistic.shortName : undefined
@@ -70,28 +67,22 @@ function renderPart(req: Request): Response {
     statbankLinks: util.data.forceArray(statbankLinkItemSet)
   }
 
-  const statbankLinkComponent: React4xpObject = new React4xp('StatbankLinkList')
-    .setProps({
+  const body: string = render(view, model)
+
+  return r4xpRender('StatbankLinkList',
+    {
       href: statbankLinkHref,
       iconType: 'arrowRight',
       className: 'statbank-link',
       children: linkTitleWithNumber,
       linkType: 'profiled'
+    },
+    req,
+    {
+      id: 'statbankLinkId',
+      body: body,
+      clientRender: req.mode !== 'edit'
     })
-    .setId('statbankLinkId')
-
-  const body: string = render(view, model)
-
-  return {
-    body: statbankLinkComponent.renderBody({
-      body,
-      clientRender: req.mode !== 'edit'
-    }),
-    pageContributions: statbankLinkComponent.renderPageContributions({
-      clientRender: req.mode !== 'edit'
-    }) as PageContributions,
-    contentType: 'text/html'
-  }
 }
 
 interface StatbankLinkListModel {

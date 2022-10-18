@@ -1,6 +1,4 @@
-import { PageContributions, Request, Response } from 'enonic-types/controller'
-import { ResourceKey } from 'enonic-types/thymeleaf'
-import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
+import {render} from '/lib/enonic/react4xp'
 import { ProfiledLinkIconPartConfig } from './profiledLinkIcon-part-config'
 
 const {
@@ -10,17 +8,12 @@ const {
   getComponent,
   pageUrl
 } = __non_webpack_require__('/lib/xp/portal')
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
+
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
 
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
-const view: ResourceKey = resolve('./profiledLinkIcon.html')
-
-exports.get = function(req: Request): Response {
+exports.get = function(req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -28,46 +21,39 @@ exports.get = function(req: Request): Response {
   }
 }
 
-exports.preview = (req: Request): Response => renderPart(req)
+exports.preview = (req: XP.Request): XP.Response => renderPart(req)
 
 const NO_LINKS_FOUND: object = {
   body: '',
   contentType: 'text/html'
 }
 
-function renderPart(req: Request): Response {
+function renderPart(req: XP.Request): XP.Response {
   const config: ProfiledLinkIconPartConfig = getComponent().config
 
-  return renderProfiledLinks(config.profiledLinkItemSet ? data.forceArray(config.profiledLinkItemSet) : [])
+  return renderProfiledLinks(req,config.profiledLinkItemSet ? data.forceArray(config.profiledLinkItemSet) : [])
 }
 
-function renderProfiledLinks(links: ProfiledLinkIconPartConfig['profiledLinkItemSet']): Response {
+function renderProfiledLinks(req: XP.Request, links: ProfiledLinkIconPartConfig['profiledLinkItemSet']): XP.Response {
   if (links && links.length) {
-    const profiledLinkIconsXP: React4xpObject = new React4xp('Links')
-      .setProps({
-        links: links.map((link) => {
-          return {
-            children: link.text,
-            href: link.href ? pageUrl({
-              id: link.href
-            }) : '',
-            iconType: 'arrowRight',
-            linkType: 'profiled'
-          }
-        })
-      })
-      .uniqueId()
-
-    const body: string = render(view, {
-      profiledLinksId: profiledLinkIconsXP.react4xpId
-    })
-
-    return {
-      body: profiledLinkIconsXP.renderBody({
-        body
-      }),
-      pageContributions: profiledLinkIconsXP.renderPageContributions() as PageContributions
-    }
+    return render('Links',
+        {
+          links: links.map((link) => {
+            return {
+              children: link.text,
+              href: link.href ? pageUrl({
+                id: link.href
+              }) : '',
+              iconType: 'arrowRight',
+              linkType: 'profiled'
+            }
+          })
+        },
+        req,
+        {
+          body: '<section class="xp-part part-profiledLinkIcon"></section>'
+        }
+    )
   }
   return NO_LINKS_FOUND
 }

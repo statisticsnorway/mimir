@@ -1,32 +1,32 @@
-import { Request, Response } from 'enonic-types/controller'
 import { Article } from '../../content-types/article/article'
-import { Component } from 'enonic-types/portal'
+import { pageUrl, getContent, getComponent, Component } from '/lib/xp/portal'
 import { ArticleListPartConfig } from './articleList-part-config'
-import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
-import { AggregationsResponseEntry, Content } from 'enonic-types/content'
+import {render, RenderResponse} from '/lib/enonic/react4xp'
+import { query, AggregationsResponseEntry, Content } from '/lib/xp/content'
 import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
-// import { fromPartCache } from '../../../lib/ssb/cache/partCache'
-import { renderError } from '../../../lib/ssb/error/error'
 
 const {
   localize
 } = __non_webpack_require__('/lib/xp/i18n')
-const {
-  query
-} = __non_webpack_require__('/lib/xp/content')
-const {
-  pageUrl, getContent, getComponent
-} = __non_webpack_require__('/lib/xp/portal')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+
 const {
   moment
 } = __non_webpack_require__('/lib/vendor/moment')
 const {
   getSubSubjects
 } = __non_webpack_require__('/lib/ssb/utils/subjectUtils')
+const {
+  renderError
+} = __non_webpack_require__('/lib/ssb/error/error')
+const {
+  fromPartCache
+} = __non_webpack_require__('/lib/ssb/cache/partCache')
+const {
+  isEnabled
+} = __non_webpack_require__('/lib/featureToggle')
 
-exports.get = (req: Request): React4xpResponse | Response => {
+exports.get = (req: XP.Request): RenderResponse | XP.Response => {
   try {
     return renderPart(req)
   } catch (e) {
@@ -34,20 +34,19 @@ exports.get = (req: Request): React4xpResponse | Response => {
   }
 }
 
-exports.preview = (req: Request): React4xpResponse => renderPart(req)
+exports.preview = (req: XP.Request): RenderResponse => renderPart(req)
 
-function renderPart(req: Request): React4xpResponse {
+function renderPart(req: XP.Request): RenderResponse {
   const content: Content = getContent()
-  // TODO: Temporarily comment out part cache code until cache issues are resolved
-  // if (req.mode === 'edit' || req.mode === 'inline') {
-  //   return getArticleList(req, content)
-  // } else {
-  //   return fromPartCache(req, `${content._id}-articleList`, () => getArticleList(req, content))
-  // }
-  return getArticleList(req, content)
+  const articleListCacheDisabled: boolean = isEnabled('deactivate-part-cache-article-list', true, 'ssb')
+  if (req.mode === 'edit' || req.mode === 'inline' || articleListCacheDisabled) {
+    return getArticleList(req, content)
+  } else {
+    return fromPartCache(req, `${content._id}-articleList`, () => getArticleList(req, content))
+  }
 }
 
-function getArticleList(req: Request, content: Content): React4xpResponse {
+function getArticleList(req: XP.Request, content: Content): RenderResponse {
   const component: Component<ArticleListPartConfig> = getComponent()
   const language: string = content.language ? content.language : 'nb'
   const articles: Array<Content<Article>> = getArticles(req, language)
@@ -69,10 +68,10 @@ function getArticleList(req: Request, content: Content): React4xpResponse {
     archiveLinkUrl: component.config.pubArchiveUrl ? component.config.pubArchiveUrl : '#'
   }
 
-  return React4xp.render('site/parts/articleList/articleList', props, req)
+  return render('site/parts/articleList/articleList', props, req)
 }
 
-function getArticles(req: Request, language: string): Array<Content<Article>> {
+function getArticles(req: XP.Request, language: string): Array<Content<Article>> {
   const subjectItems: Array<SubjectItem> = getSubSubjects(req, language)
   const pagePaths: Array<string> = subjectItems.map((sub) => `_parentPath LIKE "/content${sub.path}/*"`)
   const languageQuery: string = language !== 'en' ? 'AND language != "en"' : 'AND language = "en"'

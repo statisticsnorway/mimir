@@ -12,7 +12,8 @@ function AttachmentTableFigures(props) {
     accordions,
     freeText,
     showAll,
-    showLess
+    showLess,
+    title
   } = props
 
   function toggleBox() {
@@ -95,31 +96,35 @@ function AttachmentTableFigures(props) {
   const anchor = location && location.hash !== '' ? location.hash.substr(1) : undefined
 
   return (
-    <section className="xp-part part-accordion container">
-      <div className="row">
-        {
-          accordions.map((accordion, index) => {
-            return (
-              <Accordion
-                key={index}
-                className={`col-12 ${getBreakpoint(index)}`}
-                id={accordion.id}
-                header={accordion.open}
-                subHeader={accordion.subHeader}
-                openByDefault={anchor && accordion.id && accordion.id === anchor}
-                onToggle={(isOpen) => toggleAccordion(isOpen, index)}
-              >
-                {renderAccordionBody(accordion)}
-              </Accordion>
-            )
-          }
-          )}
-      </div>
-      <div className={`row free-text-wrapper ${getFreeTextBreakpoint()}`}>
-        <div className="col-12 col-lg-6" dangerouslySetInnerHTML={createMarkup(freeText)}></div>
-      </div>
-      {renderShowMoreButton()}
-    </section>
+    <React.Fragment>
+      <h2>{title}</h2>
+      {accordions &&
+        <div className="xp-part part-accordion container">
+          <div className="row">
+            {
+              accordions.map((accordion, index) => {
+                return (
+                  <Accordion
+                    key={index}
+                    className={`col-12 ${getBreakpoint(index)}`}
+                    id={accordion.id}
+                    header={accordion.open}
+                    subHeader={accordion.subHeader}
+                    openByDefault={anchor && accordion.id && accordion.id === anchor}
+                    onToggle={(isOpen) => toggleAccordion(isOpen, index)}
+                  >
+                    {renderAccordionBody(accordion)}
+                  </Accordion>
+                )
+              }
+              )}
+          </div>
+          <div className={`row free-text-wrapper ${getFreeTextBreakpoint()}`}>
+            <div className="col-12 col-lg-6" dangerouslySetInnerHTML={createMarkup(freeText)}></div>
+          </div>
+          {renderShowMoreButton()}
+        </div>}
+    </React.Fragment>
   )
 }
 
@@ -138,7 +143,8 @@ AttachmentTableFigures.propTypes = {
   showAll: PropTypes.string,
   showLess: PropTypes.string,
   appName: PropTypes.string,
-  GA_TRACKING_ID: PropTypes.string
+  GA_TRACKING_ID: PropTypes.string,
+  title: PropTypes.string
 }
 
 export default (props) => <AttachmentTableFigures {...props} />

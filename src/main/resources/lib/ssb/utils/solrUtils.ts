@@ -1,4 +1,4 @@
-import { HttpResponse } from 'enonic-types/http'
+import { request, HttpResponse } from '/lib/http-client'
 import { formatDate } from './dateUtils'
 
 const SOLR_PARAM_QUERY: string = 'q'
@@ -6,10 +6,6 @@ const SOLR_FORMAT: string = 'json'
 const SOLR_BASE_URL: string = app.config && app.config['ssb.solrFreeTextSearch.baseUrl'] ? app.config['ssb.solrFreeTextSearch.baseUrl'] :
   'https://www.ssb.no/solr/fritekstsok/select'
 
-
-const {
-  request
-} = __non_webpack_require__('/lib/http-client')
 
 export function solrSearch(term: string,
   language: string,

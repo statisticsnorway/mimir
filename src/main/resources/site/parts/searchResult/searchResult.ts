@@ -1,15 +1,14 @@
-import { Request, Response } from 'enonic-types/controller'
-import { Component } from 'enonic-types/portal'
-import { Content } from 'enonic-types/content'
+import { Component } from '/lib/xp/portal'
+import { get, Content } from '/lib/xp/content'
 import { SearchResultPartConfig } from './searchResult-part-config'
-import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
+import { render, RenderResponse } from '/lib/enonic/react4xp'
 import { PreparedSearchResult, SolrPrepResultAndTotal, Facet } from '../../../lib/ssb/utils/solrUtils'
 import { queryNodes, getNode } from '../../../lib/ssb/repo/common'
-import { NodeQueryResponse, RepoNode } from 'enonic-types/node'
+import { NodeQueryResponse, RepoNode } from '/lib/xp/node'
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
 import { BestBetContent } from '../../../lib/ssb/repo/bestbet'
 
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+
 const {
   solrSearch
 } = __non_webpack_require__('/lib/ssb/utils/solrUtils')
@@ -31,11 +30,8 @@ const {
 const {
   isEnabled
 } = __non_webpack_require__('/lib/featureToggle')
-const {
-  get
-} = __non_webpack_require__('/lib/xp/content')
 
-exports.get = function(req: Request): React4xpResponse | Response {
+exports.get = function(req: XP.Request): RenderResponse | XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -43,7 +39,7 @@ exports.get = function(req: Request): React4xpResponse | Response {
   }
 }
 
-exports.preview = (req: Request): React4xpResponse | Response => {
+exports.preview = (req: XP.Request): RenderResponse | XP.Response => {
   try {
     return renderPart(req)
   } catch (e) {
@@ -51,7 +47,7 @@ exports.preview = (req: Request): React4xpResponse | Response => {
   }
 }
 
-export function renderPart(req: Request): React4xpResponse {
+export function renderPart(req: XP.Request): RenderResponse {
   /* collect data */
   const content: Content = getContent()
   const part: Component<SearchResultPartConfig> = getComponent()
@@ -323,7 +319,7 @@ export function renderPart(req: Request): React4xpResponse {
     subjectUrlParam: req.params.emne
   }
 
-  return React4xp.render('site/parts/searchResult/searchResultView', props, req)
+  return render('site/parts/searchResult/searchResultView', props, req)
 }
 
 interface BestBet extends RepoNode {

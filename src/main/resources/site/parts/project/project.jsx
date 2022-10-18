@@ -87,7 +87,7 @@ const Project = (props) => {
         return (
             <div className="row">
                 <div className="col-7 col-md-7 row-gutter-mobile center">
-                    <h2 className="title-max-width ssb-title padding-top">Deltakere</h2>
+                    <h2 className="title-max-width ssb-title top-padding">Deltakere</h2>
                     <Accordion header='Prosjektdeltakere' className="employee-attachments">
                         <div className="ssb-paragraph lh-lg"
                              dangerouslySetInnerHTML={{

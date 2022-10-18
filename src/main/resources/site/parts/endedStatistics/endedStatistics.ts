@@ -1,19 +1,15 @@
-import { Request, Response } from 'enonic-types/controller'
-import { React4xp, React4xpObject, React4xpResponse } from '../../../lib/types/react4xp'
+import { render, RenderResponse } from '/lib/enonic/react4xp'
 import { EndedStatisticsPartConfig } from './endedStatistics-part-config'
-import { Content } from 'enonic-types/content'
+import { get, Content } from '/lib/xp/content'
 import { Phrases } from '../../../lib/types/language'
 import { Statistics } from '../../content-types/statistics/statistics'
-import { ResourceKey } from 'enonic-types/thymeleaf'
+import { SEO } from 'services/news/news'
 
 const {
   data: {
     forceArray
   }
 } = __non_webpack_require__('/lib/util')
-const {
-  get
-} = __non_webpack_require__('/lib/xp/content')
 const {
   getContent,
   getComponent,
@@ -22,9 +18,7 @@ const {
 const {
   getPhrases
 } = __non_webpack_require__('/lib/ssb/utils/language')
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
+
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
@@ -32,10 +26,7 @@ const {
   hasPath
 } = __non_webpack_require__('/lib/vendor/ramda')
 
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
-const view: ResourceKey = resolve('./endedStatistics.html') as ResourceKey
-
-exports.get = (req: Request) => {
+exports.get = (req: XP.Request) => {
   try {
     return renderPart(req)
   } catch (e) {
@@ -43,22 +34,22 @@ exports.get = (req: Request) => {
   }
 }
 
-exports.preview = (req: Request) => renderPart(req)
+exports.preview = (req: XP.Request) => renderPart(req)
 
-function renderPart(req: Request): Response | React4xpResponse {
+function renderPart(req: XP.Request): XP.Response | RenderResponse {
   const page: Content = getContent()
   const part: EndedStatisticsPartConfig = getComponent().config
   const endedStatistics: EndedStatisticsPartConfig['relatedStatisticsOptions'] = part.relatedStatisticsOptions ? forceArray(part.relatedStatisticsOptions) : []
 
   const phrases: Phrases = getPhrases(page) as Phrases
 
-  return renderEndedStatistics(parseContent(endedStatistics), phrases)
+  return renderEndedStatistics(req, parseContent(endedStatistics), phrases)
 }
 
-function renderEndedStatistics(endedStatisticsContent: Array<EndedStatistic | undefined>, phrases: Phrases): React4xpResponse {
+function renderEndedStatistics(req: XP.Request, endedStatisticsContent: Array<EndedStatistic | undefined>, phrases: Phrases): RenderResponse {
   if (endedStatisticsContent && endedStatisticsContent.length) {
-    const endedStatisticsXP: React4xpObject = new React4xp('EndedStatistics')
-      .setProps({
+    return render('EndedStatistics',
+      {
         endedStatistics: endedStatisticsContent.map((statisticsContent) => {
           return {
             ...statisticsContent
@@ -66,23 +57,16 @@ function renderEndedStatistics(endedStatisticsContent: Array<EndedStatistic | un
         }),
         iconText: phrases.endedCardText,
         buttonText: phrases.endedStatistics
-      })
-      .uniqueId()
-
-    const body: string = render(view, {
-      endedStatisticsId: endedStatisticsXP.react4xpId
-    })
-
-    return {
-      body: endedStatisticsXP.renderBody({
-        body
-      }),
-      pageContributions: endedStatisticsXP.renderPageContributions()
-    }
+      },
+      req,
+      {
+        body: '<section class="xp-part part-ended-statistics"></section>'
+      }
+    )
   } else {
     return {
       body: '',
-      pageContributions: ''
+      pageContributions: {}
     }
   }
 }
@@ -92,17 +76,12 @@ function parseContent(endedStatistics: EndedStatisticsPartConfig['relatedStatist
     return endedStatistics.map((statistics) => {
       if (statistics._selected === 'xp' && statistics.xp.contentId) {
         const statisticsContentId: string = statistics.xp.contentId
-        const endedStatisticsContent: Content<Statistics> | null = statisticsContentId ? get({
+        const endedStatisticsContent: Content<Statistics, SEO> | null = statisticsContentId ? get({
           key: statisticsContentId
         }) : null
 
-        let preamble: string = ''
-        if (hasPath(['x', 'com-enonic-app-metafields', 'meta-data', 'seoDescription'], endedStatisticsContent)) {
-          // TS gets confused here, the field totally exists. Promise.
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          preamble = endedStatisticsContent?.x['com-enonic-app-metafields']['meta-data'].seoDescription as string
-        }
+        const preamble: string = endedStatisticsContent?.x['com-enonic-app-metafields']['meta-data'].seoDescription as string
+
 
         return {
           title: endedStatisticsContent ? endedStatisticsContent.displayName : '',

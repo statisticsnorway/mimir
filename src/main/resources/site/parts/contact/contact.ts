@@ -1,19 +1,12 @@
-import { Content } from 'enonic-types/content'
-import { Request, Response } from 'enonic-types/controller'
-import { Component } from 'enonic-types/portal'
-import {ResourceKey} from 'enonic-types/thymeleaf'
+import { Content } from '/lib/xp/content'
+import { getContent, getComponent, Component } from '/lib/xp/portal'
+import { ResourceKey, render } from '/lib/thymeleaf'
 import { Phrases } from '../../../lib/types/language'
 import { Contact } from '../../../lib/ssb/dashboard/statreg/types'
 import { ContactPartConfig } from './contact-part-config'
 import {Article} from '../../content-types/article/article';
 import {Statistics} from '../../content-types/statistics/statistics';
 
-const {
-  getContent, getComponent
-} = __non_webpack_require__('/lib/xp/portal')
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
@@ -32,7 +25,7 @@ const {
 
 const view: ResourceKey = resolve('./contact.html') as ResourceKey
 
-exports.get = function(req: Request) {
+exports.get = function(req: XP.Request) {
   try {
     return renderPart(req)
   } catch (e) {
@@ -40,7 +33,7 @@ exports.get = function(req: Request) {
   }
 }
 
-exports.preview = (req: Request) => renderPart(req)
+exports.preview = (req: XP.Request) => renderPart(req)
 
 // split 8-digit phone numbers into groups of 2 digits each dvs. "12345678" => "12 34 56 78"
 function treatPhoneNumber (phone: string): string {
@@ -65,7 +58,7 @@ function transformContact(contact: Contact, language: string): TransformedContac
 }
 
 
-function renderPart(req: Request): Response {
+function renderPart(req: XP.Request): XP.Response {
   const WIDTH: number = 4 // how many boxes in a row
   const page: Content<Article|Statistics> = getContent()
   const pageLanguage: string = page.language ? page.language : 'nb'

@@ -1,3 +1,5 @@
+const { request } = __non_webpack_require__('/lib/http-client')
+
 const {
   pageUrl,
   getSite
@@ -5,9 +7,6 @@ const {
 const {
   get
 } = __non_webpack_require__('/lib/xp/content')
-const {
-  request
-} = __non_webpack_require__('/lib/http-client')
 const {
   fromFilterCache
 } = __non_webpack_require__('/lib/ssb/cache/cache')

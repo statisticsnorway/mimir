@@ -1,27 +1,20 @@
-import { Request, Response } from 'enonic-types/controller'
-import { Content } from 'enonic-types/content'
+import { get, Content } from '/lib/xp/content'
 import { Button } from '../../content-types/button/button'
-import { Component } from 'enonic-types/portal'
-import { ButtonPartConfig } from './button-part-config'
-import { ResourceKey } from 'enonic-types/thymeleaf'
-
-const {
-  attachmentUrl,
+import { attachmentUrl,
   getComponent,
-  pageUrl
-} = __non_webpack_require__('/lib/xp/portal')
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
+  pageUrl,
+  Component } from '/lib/xp/portal'
+import { ButtonPartConfig } from './button-part-config'
+import { ResourceKey, render } from '/lib/thymeleaf'
+
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
 
-const content = __non_webpack_require__('/lib/xp/content')
 const util = __non_webpack_require__('/lib/util')
 const view: ResourceKey = resolve('./button.html') as ResourceKey
 
-exports.get = function(req: Request): Response {
+exports.get = function(req: XP.Request): XP.Response {
   try {
     const part: Component<ButtonPartConfig> = getComponent()
     const buttonsIds: Array<string> = part.config.button ? util.data.forceArray(part.config.button) : []
@@ -31,18 +24,18 @@ exports.get = function(req: Request): Response {
   }
 }
 
-exports.preview = (req: Request, id: string) => renderPart(req, [id])
+exports.preview = (req: XP.Request, id: string) => renderPart(req, [id])
 
-function renderPart(req: Request, buttonIds: Array<string>): Response {
+function renderPart(req: XP.Request, buttonIds: Array<string>): XP.Response {
   const buttons: Array<ButtonShape> = []
 
   buttonIds.map((key: string) => {
-    const button: Content<Button> | null = content.get({
+    const button: Content<Button> | null = get({
       key
     })
 
     if (button && button.data.link) {
-      const target: Content | null = content.get({
+      const target: Content | null = get({
         key: button.data.link
       })
 

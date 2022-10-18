@@ -1,5 +1,6 @@
+import { render } from '/lib/thymeleaf'
+
 const portal = __non_webpack_require__('/lib/xp/portal')
-const thymeleaf = __non_webpack_require__('/lib/thymeleaf')
 const {
   pageMode
 } = __non_webpack_require__('/lib/ssb/utils/utils')
@@ -20,7 +21,7 @@ exports.get = function(req) {
     mainRegion: component.regions.main,
     mode
   }
-  const body = thymeleaf.render(view, model)
+  const body = render(view, model)
   return {
     body
   }

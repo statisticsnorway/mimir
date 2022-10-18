@@ -1,12 +1,7 @@
-import { ByteSource, Content } from 'enonic-types/content'
-import { PageContributions, Request } from 'enonic-types/controller'
+import { get, getAttachmentStream, ByteSource, Content } from '/lib/xp/content'
 import { Header } from '../../../site/content-types/header/header'
 import { PreliminaryData } from '../../types/xmlParser'
 
-const {
-  get,
-  getAttachmentStream
-} = __non_webpack_require__('/lib/xp/content')
 const {
   getContent, pageUrl
 } = __non_webpack_require__('/lib/xp/portal')
@@ -65,7 +60,7 @@ export function getRowValue(value: number | string | PreliminaryData| Array<numb
 export type RowValue = number | string
 
 // Returns page mode for Kommunefakta page based on request mode or request path
-export function pageMode(req: Request): string {
+export function pageMode(req: XP.Request): string {
   return req.params.municipality ? 'municipality' : 'map'
 }
 
@@ -137,10 +132,16 @@ export function getAttachment(attachmentContent: Content | null): string | undef
 }
 
 // For admin tool applications
-export function parseContributions(contributions: PageContributions): PageContributions {
+export function parseContributions(contributions: XP.PageContributions): XP.PageContributions {
   contributions.headEnd = contributions.headEnd && (contributions.headEnd as Array<string>).map((script: string) => script.replace(' defer ', ' defer="" '))
   contributions.bodyEnd = contributions.bodyEnd && (contributions.bodyEnd as Array<string>).map((script: string) => script.replace(' defer ', ' defer="" '))
   return contributions
+}
+
+// Generates 10 character random string, useful for unique ID's for elements etc.
+// Cryptographically UNSAFE due to math.random, do NOT use for encryption or security.
+export function randomUnsafeString(): string {
+  return Math.random().toString(36).substring(2)
 }
 
 export interface SourcesConfig {
@@ -175,10 +176,10 @@ export interface UtilsLib {
   isUrl: (urlOrId: string | undefined) => boolean | undefined;
   isNumber: (str: number | string | undefined) => boolean;
   getRowValue: (value: number | string | PreliminaryData | Array<number | string | PreliminaryData>) => RowValue;
-  pageMode: (req: Request) => string;
+  pageMode: (req: XP.Request) => string;
   pathFromStringOrContent: (urlSrc: Header['searchResultPage']) => string | undefined;
   getSources: (sourceConfig: Array<SourcesConfig>) => SourceList;
   getAttachmentContent: (contentId: string | undefined) => string | undefined;
   getAttachment: (attachmentContent: Content | null) => string | undefined;
-  parseContributions: (contributions: PageContributions) => PageContributions;
+  parseContributions: (contributions: XP.PageContributions) => XP.PageContributions;
 }

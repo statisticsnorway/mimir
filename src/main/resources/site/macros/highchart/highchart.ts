@@ -1,4 +1,3 @@
-import { MacroContext, Response } from 'enonic-types/controller'
 import { HighchartConfig } from './highchart-config'
 
 const {
@@ -12,14 +11,14 @@ const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
 
-exports.macro = function(context: MacroContext): Response {
+exports.macro = function(context: XP.MacroContext): XP.Response {
   try {
-    const divider: Response = dividerControllerPreview(context, {
+    const divider: XP.Response = dividerControllerPreview(context, {
       dark: false
     })
 
     const config: HighchartConfig = context.params
-    const highchart: Response = highchartControllerPreview(context, config.highchart)
+    const highchart: XP.Response = highchartControllerPreview(context, config.highchart)
 
     if (highchart.status && highchart.status !== 200) throw new Error(`Highchart with id ${config.highchart} missing`)
     highchart.body = divider.body as string + highchart.body + divider.body
