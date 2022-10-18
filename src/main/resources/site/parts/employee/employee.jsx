@@ -25,6 +25,12 @@ const Employee = (props) => {
     return Math.round(bytes / 1000)
   }
 
+  const sanitizeMobileNo = (number) => {
+    const spacesRemoved = number.split(" ").join('')
+    const numberMatchesInTwo = spacesRemoved.match(/.{1,2}/g)
+    return numberMatchesInTwo.join(' ')
+  }
+
   const renderPortraitImages = () => {
     return (
       <div className="grid-row">
@@ -73,31 +79,31 @@ const Employee = (props) => {
     return (
       <div className="employee-details">
         <div className="details-block">
-          <Share2 size={30} transform='rotate(90)'/>
+          <Share2 size={24} transform='rotate(90)'/>
           <div>
             <div>{positionPhrase}</div>
             <span>{position}</span>
           </div>
         </div>
         <div className="details-block">
-          {isResearcher ? <Eye size={30} /> : <Home size={30} />}
+          {isResearcher ? <Eye size={24} /> : <Home size={24} />}
           <div>
             <div>{isResearcher ? researchAreaPhrase : departmentPhrase}</div>
             {area ? <Link href={area.href} linkType="profiled">{area.title}</Link> : null}
           </div>
         </div>
         <div className="details-block">
-          <Send size={30} />
+          <Send size={24} />
           <div>
             <div>{emailPhrase}</div>
             {email ? <Link href={'mailto:' + email} linkType="profiled">{email}</Link> : null}
           </div>
         </div>
         <div className="details-block">
-          <Smartphone size={30} />
+          <Smartphone size={24} />
           <div>
             <div>{phonePhrase}</div>
-            {phone ? <Link href={'tel:' + phone} linkType="profiled">{phone}</Link> : null}
+            {phone ? <Link href={'tel:' + phone} linkType="profiled">{sanitizeMobileNo(phone)}</Link> : null}
           </div>
         </div>
       </div>
@@ -120,7 +126,7 @@ const Employee = (props) => {
   const renderAttachmentsForMobile = () => {
     const accordionHeader = (
       <React.Fragment>
-        <Image size={30} /> {pressPicturesPhrase}
+        <Image size={24} /> {pressPicturesPhrase}
       </React.Fragment>
     )
 

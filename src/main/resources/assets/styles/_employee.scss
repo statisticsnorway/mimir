@@ -30,15 +30,19 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    margin: 1.2rem 0;
-    padding-bottom: 1.5rem;
+    margin: 1.875rem 0 .5rem;
+    padding-bottom: 2.5rem;
     border-bottom: 1px solid #c3dcdc;
 
     .details-block {
       width: 24%;
-      padding-top: 1.5rem;
+      padding-top: 1.25rem;
       border-top: 1px solid #c3dcdc;
       display: flex;
+
+      svg {
+        margin: 0.3rem 0.3rem 0 0;
+      }
 
       > div {
         margin-left: .5rem;
@@ -56,8 +60,6 @@
     }
 
     .ssb-link {
-      display: inline-flex;
-      height: 44px;
       font-size: 20px;
     }
   }
