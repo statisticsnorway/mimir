@@ -20,6 +20,10 @@
         object-fit: cover;
       }
     }
+
+    .employee-title {
+      margin-left: 1.33%;
+    }
   }
 
   .employee-details {
@@ -160,6 +164,10 @@
     .employee-head {
       flex-direction: column;
       align-items: flex-start;
+
+      .employee-title {
+        margin-left: 0;
+      }
     }
 
     .employee-details {
