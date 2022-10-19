@@ -41,17 +41,17 @@
       display: flex;
 
       svg {
-        margin: 0.3rem 0.3rem 0 0;
+        margin: 0.3rem 1rem 0 0;
       }
 
       > div {
-        margin-left: .5rem;
         font-family: $font-open-sans;
         font-size: 20px;
         line-height: 1.6;
 
         > span {
           font-weight: 800;
+          // text-decoration: underline;
           a {
             font-weight: 800;
           }
@@ -61,6 +61,7 @@
 
     .ssb-link {
       font-size: 20px;
+      padding-bottom: 0;
     }
   }
 
