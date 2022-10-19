@@ -101,7 +101,7 @@
       margin-top: 2.5rem;
 
       button svg {
-        margin-right: 0.25rem;
+        margin-right: 0.75rem;
       }
     }
   }
@@ -168,19 +168,20 @@
       align-items: flex-start;
 
       .employee-title {
-        margin-left: 0;
+        margin: 1.5rem 0 .75rem;
       }
     }
 
     .employee-details {
       flex-direction: column;
-      padding-bottom: 0rem;
+      padding-bottom: 0;
       border-bottom: none;
-      margin-bottom: 0px;
+      margin-bottom: 0;
+      margin-top: 0;
       
       .details-block {
         width: 100%;
-        padding: 1rem 0;
+        padding: 1.25rem 0;
       }
     }
 
