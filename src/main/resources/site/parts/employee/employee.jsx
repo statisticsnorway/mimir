@@ -58,7 +58,7 @@ const Employee = (props) => {
     return (
       myCV ?
         <div className="downloadCv">
-          <Button onClick={() => downloadPDF(myCV)}><Download size="24" /> &nbsp; {downloadPdfPhrase} ({calculateCvSize(cvInformation.size)} kB) </Button>
+          <Button onClick={() => downloadPDF(myCV)}><Download size="24" />{downloadPdfPhrase} ({calculateCvSize(cvInformation.size)} kB)</Button>
         </div> : null
     )
   }
