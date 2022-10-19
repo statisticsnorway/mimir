@@ -186,6 +186,10 @@
       }
     }
 
+    .desktop-display-none > div > button > span > span > svg {
+      margin-right: .8rem;
+    }
+
     .mobile-display-none {
       display: none;
     }
@@ -218,6 +222,10 @@
 
     .employee-description .desktop-display-none > div > button {
       margin: 0;
+
+      svg {
+        margin-right: 0.75rem;
+      }
     }
 
     div .row-gutter-mobile {
