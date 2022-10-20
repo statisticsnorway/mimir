@@ -43,8 +43,12 @@ export function isNumber(str: number | string | undefined): boolean {
   return ((str != null) && (str !== '') && !isNaN(str as number))
 }
 
+function isNonBreakingSpace(str: string): boolean {
+  return str.charCodeAt(0) == 160 && str.length === 1
+}
+
 export function getRowValue(value: number | string | PreliminaryData| Array<number | string | PreliminaryData>): RowValue {
-  if (typeof value === 'string' && isNumber(value)) {
+  if (typeof value === 'string' && isNumber(value) && !isNonBreakingSpace(value)) {
     return Number(value)
   }
   if (typeof value === 'object') {
