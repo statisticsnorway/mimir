@@ -186,9 +186,13 @@
         padding: 1.25rem 0;
       }
     }
+    
+    .desktop-display-none {
+      padding-top: 0.875rem;
 
-    .desktop-display-none > div > button > span > span > svg {
-      margin-right: .8rem;
+      > div > button > span > span > svg {
+        margin-right: .7rem;
+      }
     }
 
     .mobile-display-none {
@@ -219,6 +223,10 @@
           font-size: 12px;
         }
       }
+    }
+
+    .employee-description {
+      margin: 2.5rem 0 3.75rem;
     }
 
     .employee-description .desktop-display-none > div > button {
