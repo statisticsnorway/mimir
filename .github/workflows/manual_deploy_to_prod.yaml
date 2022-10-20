@@ -31,9 +31,9 @@ jobs:
           client_cert: ${{ secrets.ENONIC_PROD_CERT }}
           client_key: ${{ secrets.ENONIC_PROD_KEY }}
           app_jar: "*.jar"
-      - name: Send result message to Slack
-        id: slack_message
-        if: ${{ always() }}
+      - name: Send success message to Slack
+        id: slack_success
+        if: success()
         uses: slackapi/slack-github-action@v1
         with:
           # Using Github block kit (https://api.slack.com/reference/block-kit/blocks) to configure the Slack message, see https://docs.github.com/en/actions/learn-github-actions/contexts
@@ -66,7 +66,48 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "Deploy of build ${{ github.event.inputs.gh_run_number }} is a *${{ job.status }}*, well done!\n<https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|workflow output>"
+                    "text": "🛠 Build ${{ github.event.inputs.gh_run_number }} is a *${{ job.status }}*, well done!"
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_MIMIR_UTV }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+      - name: Send failure message to Slack
+        id: slack_failure
+        if: failure()
+        uses: slackapi/slack-github-action@v1
+        with:
+          payload: |
+            {
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "${{ github.workflow }}"
+                  }
+                },
+                {
+                  "type": "context",
+                  "elements": [
+                    {
+                      "type": "image",
+                      "image_url": "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
+                      "alt_text" : "Github logo"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "Run by: *${{ github.actor }}* on: *${{ github.ref_name }}*"
+                    }
+                  ]
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "💣 Build ${{ github.event.inputs.gh_run_number }} is a *${{ job.status }}*, and that's cool!\nIf you want to fix it, start by looking at the <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|workflow output>"
                   }
                 }
               ]
