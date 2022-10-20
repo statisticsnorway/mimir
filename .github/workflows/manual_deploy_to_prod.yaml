@@ -66,7 +66,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "🛠 Build ${{ github.event.inputs.gh_run_number }} is a *${{ job.status }}*, well done!"
+                    "text": "🛠 Build ${{ github.event.inputs.gh_run_number }} is a *${{ job.status }}*, well done!\n<https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|workflow output>"
                   }
                 }
               ]
