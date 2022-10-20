@@ -79,28 +79,28 @@ const Employee = (props) => {
     return (
       <div className="employee-details">
         <div className="details-block">
-          <Share2 size={24} transform='rotate(90)'/>
+          <div><Share2 size={24} transform='rotate(90)' /></div>
           <div>
             <div>{positionPhrase}</div>
-            <span>{position}</span>
+            <div className="position-text">{position}</div>
           </div>
         </div>
         <div className="details-block">
-          {isResearcher ? <Eye size={24} /> : <Home size={24} />}
+          <div>{isResearcher ? <Eye size={24} /> : <Home size={24} />}</div>
           <div>
             <div>{isResearcher ? researchAreaPhrase : departmentPhrase}</div>
             {area ? <Link href={area.href} linkType="profiled">{area.title}</Link> : null}
           </div>
         </div>
         <div className="details-block">
-          <Send size={24} />
+        <div><Send size={24} /></div>
           <div>
             <div>{emailPhrase}</div>
             {email ? <Link href={'mailto:' + email} linkType="profiled">{email}</Link> : null}
           </div>
         </div>
         <div className="details-block">
-          <Smartphone size={24} />
+          <div><Smartphone size={24} /></div>
           <div>
             <div>{phonePhrase}</div>
             {phone ? <Link href={'tel:' + phone} linkType="profiled">{sanitizeMobileNo(phone)}</Link> : null}

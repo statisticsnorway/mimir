@@ -41,7 +41,8 @@
       display: flex;
 
       svg {
-        margin: 0.3rem 1rem 0 0;
+        margin: 0 1rem 0 0;
+        stroke-width: 2.5;
       }
 
       > div {
@@ -49,12 +50,9 @@
         font-size: 20px;
         line-height: 1.6;
 
-        > span {
-          font-weight: 800;
-          // text-decoration: underline;
-          a {
-            font-weight: 800;
-          }
+        .position-text {
+          hyphens: auto;
+          font-weight: 700;
         }
       }
     }
@@ -99,16 +97,16 @@
     }
     
     .downloadCv {
-      margin-top: 2.5rem;
+      margin-top: 3.125rem;
 
       button svg {
-        margin-right: 0.75rem;
+        margin-right: 0.5rem;
       }
     }
   }
 
   .employee-description {
-    margin: 2rem 0;
+    margin: 2rem 0 2.75rem 0;
 
     > div {
       
@@ -125,6 +123,9 @@
   }
 
   .employee-projects {
+    h2 {
+      margin-bottom: 0;  
+    }
 
     > ul {
       list-style: none;
@@ -132,7 +133,7 @@
     }
 
     > ul li {
-      margin-top: 1rem;
+      padding: 1.25rem 0;
 
       a span {
         display: inline-block;
@@ -224,7 +225,7 @@
       margin: 0;
 
       svg {
-        margin-right: 0.75rem;
+        margin-right: 0.5rem;
       }
     }
 
