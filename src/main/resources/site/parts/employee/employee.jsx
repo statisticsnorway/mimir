@@ -75,65 +75,55 @@ const Employee = (props) => {
     )
   }
 
-  const renderEmployeeDetails = () => {
-    const widthRatio = position && email && phone ?
-      '24%' : position && email || phone ?
-        '32%' : position ?
-          '48%' : '100%'
 
+  const renderEmployeeDetails = () => {
     return (
-      <div className="employee-details">
-        {
-          position ?
-            <div className="details-block" style={{
-              width: widthRatio
-            }}>
-              <div><Share2 size={24} transform='rotate(90)' /></div>
+      <div className="employee-details col-12">
+        <div className="row w-100">
+          {
+            position ?
+              <div className="details-block col-lg col-12">
+                <div><Share2 size={24} transform='rotate(90)' /></div>
+                <div>
+                  <div>{positionPhrase}</div>
+                  <div className="position-text">{position}</div>
+                </div>
+              </div> :
+              null
+          }
+          { area ?
+            <div className="details-block col-lg col-12">
+              <div>{isResearcher ? <Eye size={24} /> : <Home size={24} />}</div>
               <div>
-                <div>{positionPhrase}</div>
-                <div className="position-text">{position}</div>
+                <div>{isResearcher ? researchAreaPhrase : departmentPhrase}</div>
+                <Link href={area.href} linkType="profiled">{area.title}</Link>
               </div>
             </div> :
             null
-        }
-        { area ?
-          <div className="details-block" style={{
-            width: widthRatio
-          }}>
-            <div>{isResearcher ? <Eye size={24} /> : <Home size={24} />}</div>
-            <div>
-              <div>{isResearcher ? researchAreaPhrase : departmentPhrase}</div>
-              <Link href={area.href} linkType="profiled">{area.title}</Link>
-            </div>
-          </div> :
-          null
-        }
-        {
-          email ?
-            <div className="details-block" style={{
-              width: widthRatio
-            }}>
-              <div><Send size={24} /></div>
-              <div>
-                <div>{emailPhrase}</div>
-                <span className="position-text"><Link href={'mailto:' + email} linkType="profiled">{email}</Link></span>
-              </div>
-            </div> :
-            null
-        }
-        {
-          phone ?
-            <div className="details-block" style={{
-              width: widthRatio
-            }}>
-              <div><Smartphone size={24} /></div>
-              <div>
-                <div>{phonePhrase}</div>
-                <Link href={'tel:' + phone} linkType="profiled">{sanitizeMobileNo(phone)}</Link>
-              </div>
-            </div> :
-            null
-        }
+          }
+          {
+            email ?
+              <div className="details-block col-lg col-12">
+                <div><Send size={24} /></div>
+                <div>
+                  <div>{emailPhrase}</div>
+                  <span className="position-text"><Link href={'mailto:' + email} linkType="profiled">{email}</Link></span>
+                </div>
+              </div> :
+              null
+          }
+          {
+            phone ?
+              <div className="details-block col-lg col-12">
+                <div><Smartphone size={24} /></div>
+                <div>
+                  <div>{phonePhrase}</div>
+                  <Link href={'tel:' + phone} linkType="profiled">{sanitizeMobileNo(phone)}</Link>
+                </div>
+              </div> :
+              null
+          }
+        </div>
       </div>
     )
   }

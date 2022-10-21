@@ -39,6 +39,14 @@
       border-top: 1px solid #c3dcdc;
       display: flex;
 
+      @include media-breakpoint-up(lg) {
+        margin-left: 1rem;
+        
+        &:first-child {
+          margin-left: 0.625rem;
+        }
+      }
+
       svg {
         margin: 0 1rem 0 0;
         stroke-width: 2.5;
@@ -181,7 +189,6 @@
       margin-top: 0;
       
       .details-block {
-        width: 100% !important;
         padding: 1.25rem 0;
       }
     }
