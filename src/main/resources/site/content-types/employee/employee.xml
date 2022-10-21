@@ -27,11 +27,11 @@
                     <occurrences minimum="0" maximum="1"/>
                 </input>
                 <input type="TextLine" name="email">
-                    <label>Epostadresse</label>
+                    <label>E-post</label>
                     <occurrences minimum="0" maximum="1"/>
                 </input>
                 <input type="TextLine" name="phone">
-                    <label>Telefonnummer</label>
+                    <label>Telefon</label>
                     <occurrences minimum="0" maximum="1"/>
                 </input>
                 <input name="area" type="ContentSelector">
@@ -39,14 +39,17 @@
                     <help-text>Som forsker velger du forskningsområde, som ansatt velger du avdeling</help-text>
                     <occurrences minimum="0" maximum="1"/>
                     <config>
+                        <allowPath>${site}/forskning/</allowPath>
+                        <allowPath>${site}/omssb/ssbs-virksomhet/organisasjon/</allowPath>
                         <treeMode>true</treeMode>
                     </config>
                 </input>
                 <input name="description" type="TextArea">
-                    <label>Kort om meg</label>
+                    <label>Kort om</label>
                 </input>
                 <input name="profileImages" type="ImageSelector">
                     <label>Pressebilder</label>
+                    <help-text>Det første bildet vil bli brukt som profilbilde. Flytt bilder for å justere profilbildet.</help-text>
                     <occurrences minimum="0" maximum="4"/>
                 </input>
             </items>
