@@ -26,7 +26,7 @@ const Employee = (props) => {
   }
 
   const sanitizeMobileNo = (number) => {
-    const spacesRemoved = number.split(" ").join('')
+    const spacesRemoved = number.split(' ').join('')
     const numberMatchesInTwo = spacesRemoved.match(/.{1,2}/g)
     return numberMatchesInTwo.join(' ')
   }
@@ -76,36 +76,64 @@ const Employee = (props) => {
   }
 
   const renderEmployeeDetails = () => {
+    const widthRatio = position && email && phone ?
+      '24%' : position && email || phone ?
+        '32%' : position ?
+          '48%' : '100%'
+
     return (
       <div className="employee-details">
-        <div className="details-block">
-          <div><Share2 size={24} transform='rotate(90)' /></div>
-          <div>
-            <div>{positionPhrase}</div>
-            <div className="position-text">{position}</div>
-          </div>
-        </div>
-        <div className="details-block">
-          <div>{isResearcher ? <Eye size={24} /> : <Home size={24} />}</div>
-          <div>
-            <div>{isResearcher ? researchAreaPhrase : departmentPhrase}</div>
-            {area ? <Link href={area.href} linkType="profiled">{area.title}</Link> : null}
-          </div>
-        </div>
-        <div className="details-block">
-        <div><Send size={24} /></div>
-          <div>
-            <div>{emailPhrase}</div>
-            {email ? <Link href={'mailto:' + email} linkType="profiled">{email}</Link> : null}
-          </div>
-        </div>
-        <div className="details-block">
-          <div><Smartphone size={24} /></div>
-          <div>
-            <div>{phonePhrase}</div>
-            {phone ? <Link href={'tel:' + phone} linkType="profiled">{sanitizeMobileNo(phone)}</Link> : null}
-          </div>
-        </div>
+        {
+          position ?
+            <div className="details-block" style={{
+              width: widthRatio
+            }}>
+              <div><Share2 size={24} transform='rotate(90)' /></div>
+              <div>
+                <div>{positionPhrase}</div>
+                <div className="position-text">{position}</div>
+              </div>
+            </div> :
+            null
+        }
+        { area ?
+          <div className="details-block" style={{
+            width: widthRatio
+          }}>
+            <div>{isResearcher ? <Eye size={24} /> : <Home size={24} />}</div>
+            <div>
+              <div>{isResearcher ? researchAreaPhrase : departmentPhrase}</div>
+              <Link href={area.href} linkType="profiled">{area.title}</Link>
+            </div>
+          </div> :
+          null
+        }
+        {
+          email ?
+            <div className="details-block" style={{
+              width: widthRatio
+            }}>
+              <div><Send size={24} /></div>
+              <div>
+                <div>{emailPhrase}</div>
+                <Link href={'mailto:' + email} linkType="profiled">{email}</Link>
+              </div>
+            </div> :
+            null
+        }
+        {
+          phone ?
+            <div className="details-block" style={{
+              width: widthRatio
+            }}>
+              <div><Smartphone size={24} /></div>
+              <div>
+                <div>{phonePhrase}</div>
+                <Link href={'tel:' + phone} linkType="profiled">{sanitizeMobileNo(phone)}</Link>
+              </div>
+            </div> :
+            null
+        }
       </div>
     )
   }
