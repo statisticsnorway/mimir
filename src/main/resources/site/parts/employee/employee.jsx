@@ -116,7 +116,7 @@ const Employee = (props) => {
               <div><Send size={24} /></div>
               <div>
                 <div>{emailPhrase}</div>
-                <Link href={'mailto:' + email} linkType="profiled">{email}</Link>
+                <span className="position-text"><Link href={'mailto:' + email} linkType="profiled">{email}</Link></span>
               </div>
             </div> :
             null
