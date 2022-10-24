@@ -221,9 +221,9 @@ exports.get = function(req: XP.Request): XP.Response {
   const baseUrl: string = app.config && app.config['ssb.baseUrl'] ? app.config['ssb.baseUrl'] as string : 'https://www.ssb.no'
   const model: DefaultModel = {
     pageTitle: 'SSB', // not really used on normal pages because of SEO app (404 still uses this)
-    pageUrl: !statbankFane ? `${baseUrl}${pageUrl({
+    pageUrl: `${baseUrl}${pageUrl({
       id: page._id
-    })}` : undefined,
+    })}`,
     page,
     ...regions,
     ingress,
