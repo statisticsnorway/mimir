@@ -6,7 +6,7 @@ export interface Project {
   projectTitle: string;
 
   /**
-   * Prosjekt/modele ansvarlig
+   * Prosjekt/modellansvarlig
    */
   manager?: string;
 
