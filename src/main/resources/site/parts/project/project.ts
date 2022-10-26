@@ -1,119 +1,116 @@
-import {Content, get} from '/lib/xp/content'
-import {render, RenderResponse} from '/lib/enonic/react4xp'
-import {localize} from '/lib/xp/i18n'
-import {Project} from '../../content-types/project/project'
-
+import { Content, get } from '/lib/xp/content'
+import { render, RenderResponse } from '/lib/enonic/react4xp'
+import { localize } from '/lib/xp/i18n'
+import { Project } from '../../content-types/project/project'
+import { getContent, pageUrl, processHtml } from '/lib/xp/portal'
 
 const {
-    getContent, pageUrl, processHtml
-} = __non_webpack_require__('/lib/xp/portal')
-const {
-    renderError
+  renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
 
 exports.get = (req: XP.Request): RenderResponse | XP.Response => {
-    try {
-        return renderPart(req)
-    } catch (e) {
-        return renderError(req, 'Error in part: ', e)
-    }
+  try {
+    return renderPart(req)
+  } catch (e) {
+    return renderError(req, 'Error in part: ', e)
+  }
 }
 
 function renderPart(req: XP.Request): RenderResponse {
-    const page: Content<Project> = getContent()
-    const managerConfig: string | undefined = page.data.manager || undefined
-    const language: string = page.language ? page.language : 'nb'
+  const page: Content<Project> = getContent()
+  const managerConfig: string | undefined = page.data.manager || undefined
+  const language: string = page.language ? page.language : 'nb'
 
-    const projectManagerPhrase: string = localize({
-        key: 'project.projectManager',
-        locale: language
-    })
+  const projectManagerPhrase: string = localize({
+    key: 'project.projectManager',
+    locale: language
+  })
 
-    const modelManagerPhrase: string = localize({
-        key: 'project.modelManager',
-        locale: language
-    })
+  const modelManagerPhrase: string = localize({
+    key: 'project.modelManager',
+    locale: language
+  })
 
-    const periodPhrase: string = localize({
-        key: 'project.period',
-        locale: language
-    })
+  const periodPhrase: string = localize({
+    key: 'project.period',
+    locale: language
+  })
 
-    const financierPhrase: string = localize({
-        key: 'project.financier',
-        locale: language
-    })
+  const financierPhrase: string = localize({
+    key: 'project.financier',
+    locale: language
+  })
 
-    const aboutPhrase: string = localize({
-        key: 'project.aboutProject',
-        locale: language
-    })
+  const aboutPhrase: string = localize({
+    key: 'project.aboutProject',
+    locale: language
+  })
 
-    const participantsPhrase: string = localize({
-        key: 'project.participants',
-        locale: language
-    })
+  const participantsPhrase: string = localize({
+    key: 'project.participants',
+    locale: language
+  })
 
-    const projectParticipantsPhrase: string = localize({
-        key: 'project.projectParticipants',
-        locale: language
-    })
+  const projectParticipantsPhrase: string = localize({
+    key: 'project.projectParticipants',
+    locale: language
+  })
 
-    const collaboratorsPhrase: string = localize({
-        key: 'project.collaborators',
-        locale: language
-    })
+  const collaboratorsPhrase: string = localize({
+    key: 'project.collaborators',
+    locale: language
+  })
 
-    const publicationsPhrase: string = localize({
-        key: 'project.publications',
-        locale: language
-    })
+  const publicationsPhrase: string = localize({
+    key: 'project.publications',
+    locale: language
+  })
 
-    const props: ProjectProps = {
-        projectTitle: page.data.projectTitle,
-        manager: getManager(managerConfig),
-        projectType: page.data.projectType === 'model' ? modelManagerPhrase : projectManagerPhrase,
-        projectPeriod: page.data.projectPeriod,
-        financier: page.data.financier,
-        ingress: page.data.ingress ? processHtml({
-            value: page.data.ingress
-        }) : undefined,
-        body: page.data.body ? processHtml({
-            value: page.data.body
-        }) : undefined,
-        participants: page.data.participants ? processHtml({
-            value: page.data.participants
-        }) : undefined,
-        collaborators: page.data.collaborators ? processHtml({
-            value: page.data.collaborators
-        }) : undefined,
-        periodPhrase,
-        financierPhrase,
-        aboutPhrase,
-        participantsPhrase,
-        projectParticipantsPhrase,
-        collaboratorsPhrase,
-        publicationsPhrase
-    }
+  const props: ProjectProps = {
+    projectTitle: page.data.projectTitle,
+    manager: getManager(managerConfig),
+    projectType: page.data.projectType === 'model' ? modelManagerPhrase : projectManagerPhrase,
+    projectPeriod: page.data.projectPeriod,
+    financier: page.data.financier,
+    ingress: page.data.ingress ? processHtml({
+      value: page.data.ingress
+    }) : undefined,
+    body: page.data.body ? processHtml({
+      value: page.data.body
+    }) : undefined,
+    participants: page.data.participants ? processHtml({
+      value: page.data.participants
+    }) : undefined,
+    collaborators: page.data.collaborators ? processHtml({
+      value: page.data.collaborators
+    }) : undefined,
+    periodPhrase,
+    financierPhrase,
+    aboutPhrase,
+    participantsPhrase,
+    projectParticipantsPhrase,
+    collaboratorsPhrase,
+    publicationsPhrase
+  }
 
-    return render('site/parts/project/project', props, req)
+  return render('site/parts/project/project', props, req)
 }
 
 function getManager(managerId: string | undefined): ManagerLink | undefined {
-    if (managerId) {
-        const managerContent: Content | null = get({
-            key: managerId
+  if (managerId) {
+    const managerContent: Content | null = get({
+      key: managerId
+    })
+    if (managerContent) {
+      return {
+        text: managerContent.displayName,
+        href: pageUrl({
+          path: managerContent._path
         })
-        if (managerContent) {
-            return {
-                text: managerContent.displayName,
-                href: pageUrl({
-                    path: managerContent._path
-                })
-            }
-        }
+      }
     }
-    return undefined
+  }
+  return undefined
 }
 
 interface ManagerLink {
