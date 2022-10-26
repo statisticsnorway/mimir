@@ -15,7 +15,8 @@ import { Component,
   getContent,
   processHtml,
   assetUrl,
-  getSiteConfig } from '/lib/xp/portal'
+  getSiteConfig,
+  pageUrl } from '/lib/xp/portal'
 import { SEO } from '../../../services/news/news'
 
 const {
@@ -53,9 +54,6 @@ const {
 const {
   fromMenuCache
 } = __non_webpack_require__('/lib/ssb/cache/cache')
-const {
-  pageUrl
-} = __non_webpack_require__('/lib/xp/portal')
 
 const {
   isEnabled
@@ -218,7 +216,7 @@ exports.get = function(req: XP.Request): XP.Response {
   const breadcrumbId: string = 'breadcrumbs'
   const hideBreadcrumb: boolean = !!(pageConfig).hide_breadcrumb
   const innrapporteringRegexp: RegExp = /^\/ssb(\/en)?\/innrapportering/ // Skal matche alle sider under /innrapportering på norsk og engelsk
-  const baseUrl: string = app.config && app.config['ssb.baseUrl'] ? app.config['ssb.baseUrl'] as string : 'https://www.ssb.no'
+  const baseUrl: string = app.config['ssb.baseUrl'] ? app.config['ssb.baseUrl'] as string : 'https://www.ssb.no'
   const model: DefaultModel = {
     pageTitle: 'SSB', // not really used on normal pages because of SEO app (404 still uses this)
     pageUrl: `${baseUrl}${pageUrl({
