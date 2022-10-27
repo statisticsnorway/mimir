@@ -1,46 +1,6 @@
 ---
 kind: pipeline
 type: docker
-name: "Test Environment"
-# Builds and tests on pull request. Required success before merge can happen.
-trigger:
-  branch:
-    - master
-  event:
-    include:
-      - pull_request
-steps:
-  - name: build & test
-    image: enonic/enonic-ci:7.7-node
-    commands:
-      - /setup_sandbox.sh
-      - enonic project build
-  - name: deploy
-    image: enonic/enonic-ci:7.7-node
-    environment:
-      ENONIC_CLI_REMOTE_URL:
-        from_secret: ssb-xp7t-url
-      ENONIC_CLI_REMOTE_USER:
-        from_secret: ssb-xp7t-user
-      ENONIC_CLI_REMOTE_PASS:
-        from_secret: ssb-xp7t-pass
-    commands:
-      - enonic app install --file build/libs/*.jar
-  - name: mabl create and test branch - test.ssb.no
-    image: enonic/enonic-ci:7.7-node
-    environment:
-      MABL_API_KEY:
-        from_secret: mabl-api-key
-      MABL_APP_ID:
-        from_secret: mabl-application-id
-      MABL_ENV_ID_TEST:
-        from_secret: mabl-env-test
-    commands:
-      - npm install -g @mablhq/mabl-cli 
-      - mabl deployments create --api-key $MABL_API_KEY --application-id $MABL_APP_ID --labels MIMIR_SMOKE --environment-id $MABL_ENV_ID_TEST --revision $DRONE_COMMIT_SHA --await-completion --mabl-branch ${DRONE_SOURCE_BRANCH} --auto-branch true
----
-kind: pipeline
-type: docker
 name: "QA Environment - promote"
 # Deploy to qa on promoted builds
 trigger:

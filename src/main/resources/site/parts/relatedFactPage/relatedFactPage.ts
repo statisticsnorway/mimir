@@ -64,7 +64,7 @@ exports.preview = (req: XP.Request, relatedFactPageConfig: RelatedFactPageConfig
 
 function renderPart(req: XP.Request, relatedFactPageConfig: RelatedFactPageConfig | undefined): XP.Response | RenderResponse {
   const page: Content<Article> = getContent()
-  if (req.mode === 'edit' || req.mode === 'inline') {
+  if (req.mode === 'edit' || req.mode === 'inline' || !relatedFactPageConfig) {
     return renderRelatedFactPage(req, page, relatedFactPageConfig)
   } else {
     return fromPartCache(req, `${page._id}-relatedFactPage`, () => {
@@ -79,6 +79,21 @@ function renderRelatedFactPage(req: XP.Request, page: Content, relatedFactPageCo
   const mainTitle: string = config.title ? config.title : phrases.relatedFactPagesHeading
   const showAll: string = phrases.showAll
   const showLess: string = phrases.showLess
+
+  if (!relatedFactPageConfig) {
+    // Render title only on page templates in edit mode
+    if (req.mode === 'edit' && page.type !== `${app.name}:article` && page.type !== `${app.name}:statistics`) {
+      return render('site/parts/relatedFactPage/relatedFactPage', {
+        mainTitle
+      }, req, {
+        body: `<section class="xp-part part-picture-card"></section>`
+      })
+    } else {
+      return {
+        body: null
+      }
+    }
+  }
 
   const firstRelatedContents: RelatedFactPages = parseRelatedFactPageData(relatedFactPageConfig, 0, 4)
 
@@ -95,24 +110,9 @@ function renderRelatedFactPage(req: XP.Request, page: Content, relatedFactPageCo
     showLess
   }
 
-  if (relatedFactPageConfig) {
-    return render('site/parts/relatedFactPage/relatedFactPage', props, req, {
-      body: `<section class="xp-part part-picture-card"></section>`
-    })
-  } else {
-    // Render title only on page templates in edit mode
-    if (req.mode === 'edit' && page.type !== `${app.name}:article` && page.type !== `${app.name}:statistics`) {
-      return render('site/parts/relatedFactPage/relatedFactPage', {
-        mainTitle
-      }, req, {
-        body: `<section class="xp-part part-picture-card"></section>`
-      })
-    } else {
-      return {
-        body: null
-      }
-    }
-  }
+  return render('site/parts/relatedFactPage/relatedFactPage', props, req, {
+    body: `<section class="xp-part part-picture-card"></section>`
+  })
 }
 
 export function parseRelatedFactPageData(relatedFactPageConfig: RelatedFactPageConfig | undefined, start: number, count: number): RelatedFactPages {
