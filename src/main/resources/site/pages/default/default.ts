@@ -15,7 +15,8 @@ import { Component,
   getContent,
   processHtml,
   assetUrl,
-  getSiteConfig } from '/lib/xp/portal'
+  getSiteConfig,
+  pageUrl } from '/lib/xp/portal'
 import { SEO } from '../../../services/news/news'
 
 const {
@@ -216,8 +217,12 @@ exports.get = function(req: XP.Request): XP.Response {
   const breadcrumbId: string = 'breadcrumbs'
   const hideBreadcrumb: boolean = !!(pageConfig).hide_breadcrumb
   const innrapporteringRegexp: RegExp = /^\/ssb(\/en)?\/innrapportering/ // Skal matche alle sider under /innrapportering på norsk og engelsk
+  const baseUrl: string = app.config && app.config['ssb.baseUrl'] ? app.config['ssb.baseUrl'] as string : 'https://www.ssb.no'
   const model: DefaultModel = {
     pageTitle: 'SSB', // not really used on normal pages because of SEO app (404 still uses this)
+    pageUrl: `${baseUrl}${pageUrl({
+      id: page._id
+    })}`,
     page,
     ...regions,
     ingress,
@@ -576,6 +581,7 @@ export interface StatbankFrameData {
 
 interface DefaultModel {
   pageTitle: string;
+  pageUrl: string | undefined;
   page: Content;
   ingress: string | undefined;
   showIngress: string | boolean | undefined;
