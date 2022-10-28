@@ -1,5 +1,5 @@
 import { MunicipalityWithCounty } from '/lib/ssb/dataset/klass/municipalities'
-import { get, Site, Content } from '/lib/xp/content'
+import { get, Content } from '/lib/xp/content'
 
 const {
   request
@@ -66,7 +66,7 @@ exports.filter = function(req: XP.Request, next: (req: XP.Request) => XP.Respons
         municipality: JSON.stringify(municipality),
         pageTitle
       },
-      connectionTimeout: 10000,
+      connectionTimeout: 20000,
       readTimeout: 60000
     })
   })
