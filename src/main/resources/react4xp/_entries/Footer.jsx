@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Accordion, Button, Link, Title } from '@statisticsnorway/ssb-component-library'
+import { Accordion, Button, Link } from '@statisticsnorway/ssb-component-library'
 import { ArrowRight, ArrowUp, Facebook, Twitter, Rss, Linkedin } from 'react-feather'
 
 class Footer extends React.Component {
@@ -29,7 +29,7 @@ class Footer extends React.Component {
     return footerNavigation.map((topMenuItem, index) => {
       if (topMenuItem && topMenuItem.title) {
         const titleId = topMenuItem.title.replace(' ', '-').toLowerCase()
-        const listTitle = `footer-link-title-${titleId}`
+        const listTitle = `footer-mobile-link-title-${titleId}`
         return (
           <Accordion key={index} header={topMenuItem.title}>
             <h3 className="sr-only sr-only-focusable" id={listTitle}>{topMenuItem.title}</h3>
