@@ -53,11 +53,6 @@ function renderPart(req: XP.Request): RenderResponse {
     locale: language
   })
 
-  const publicationsPhrase: string = localize({
-    key: 'project.publications',
-    locale: language
-  })
-
   const props: ProjectProps = {
     projectTitle: page.data.projectTitle,
     manager: getManager(managerConfig),
