@@ -1,10 +1,9 @@
 import React from 'react'
-import {Title, Accordion} from '@statisticsnorway/ssb-component-library'
+import {Title, Accordion, Link} from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
-import {User, Calendar, Settings} from "react-feather";
+import {User, Calendar, Settings} from 'react-feather';
 
 const Project = (props) => {
-
     const {
         projectTitle,
         manager,
@@ -20,8 +19,7 @@ const Project = (props) => {
         aboutPhrase,
         participantsPhrase,
         projectParticipantsPhrase,
-        collaboratorsPhrase,
-        publicationsPhrase
+        collaboratorsPhrase
     } = props
 
     const renderTitle = () => {
@@ -36,28 +34,28 @@ const Project = (props) => {
 
     const renderProjectInfo = () => {
         return (
-            <div className="project-details row">
-                <div className="details-block">
-                    <User size={30}/>
+            <div className="row project-details py-4">
+                <div className="col-md-4 col-sm-12 py-4 details-block">
                     <div>
-                        <div>{projectType}</div>
-                        <a className='ssb-link' href={manager.href}>
-                            <span>{manager.text}</span>
-                        </a>
+                        <User size={30}/>
+                        <span className="p-1">{projectType}</span>
+                        <div>
+                          <Link className='ms-4 ms-sm-4 detail-info' href={manager.href}>{manager.text}</Link>
+                        </div>
                     </div>
                 </div>
-                <div className="details-block">
-                    <Calendar size={30}/>
+                <div className="col-md-4 col-sm-12 py-4 details-block">
                     <div>
-                        <div>{periodPhrase}</div>
-                        <span>{projectPeriod}</span>
+                        <Calendar size={30}/>
+                        <span className="p-1">{periodPhrase}</span>
+                        <div className="detail-info ps-4">{projectPeriod}</div>
                     </div>
                 </div>
-                <div className="details-block">
-                    <Settings size={30}/>
+                <div className="col-md-4 col-sm-12 py-4 details-block">
                     <div>
-                        <div>{financierPhrase}</div>
-                        <span>{financier}</span>
+                        <Settings size={30}/>
+                        <span className="p-1">{financierPhrase}</span>
+                        <div className="detail-info ps-4">{financier}</div>
                     </div>
                 </div>
             </div>
@@ -66,9 +64,9 @@ const Project = (props) => {
     const renderProjectDescription = () => {
         if (ingress || body) {
             return (
-                <div className="row">
+                <div className="row center">
                     <div className="col-12 col-md-12 row-gutter-mobile">
-                        <h2 className="title-max-width ssb-title center title-padding">{aboutPhrase}</h2>
+                        <h2 className="ssb-title py-4">{aboutPhrase}</h2>
                     </div>
                     <div className="col-12 col-md-12 row-gutter-mobile">
                         <div className="project-ingress"
@@ -92,11 +90,11 @@ const Project = (props) => {
     const renderParticipantAccordion = () => {
         if (participants || collaborators) {
             return (
-                <div className="row">
-                    <div className="col-7 col-md-7 row-gutter-mobile center">
-                        <h2 className="title-max-width ssb-title top-padding">{participantsPhrase}</h2>
+                <div className="row center">
+                    <div className="col-12 col-md-12 row-gutter-mobile center-accordion">
+                        <h2 className="mw-680 ssb-title top-padding">{participantsPhrase}</h2>
                         <Accordion header={projectParticipantsPhrase}
-                                   className={`${!participants ? 'hide-empty-block' : ''}`}>
+                                   className={`${!participants ? 'd-none' : ''}`}>
                             <div className="ssb-paragraph lh-lg"
                                  dangerouslySetInnerHTML={{
                                      __html: participants
@@ -104,7 +102,7 @@ const Project = (props) => {
                             />
                         </Accordion>
                         <Accordion header={collaboratorsPhrase}
-                                   className={`${!collaborators ? 'hide-empty-block' : ''}`} style={{width: '60%'}}>
+                                   className={`${!collaborators ? 'd-none' : ''}`} style={{width: '60%'}}>
                             <div className="ssb-paragraph lh-lg"
                                  dangerouslySetInnerHTML={{
                                      __html: collaborators
@@ -119,7 +117,7 @@ const Project = (props) => {
 
     return (
         <div className='project'>
-            <section className="xp-part container p-0 mb-5">
+                <section className="xp-part container p-0 mb-5">
                 {renderTitle()}
                 {renderProjectInfo()}
                 {renderProjectDescription()}
@@ -145,8 +143,6 @@ Project.propTypes = {
     participantsPhrase: PropTypes.string,
     projectParticipantsPhrase: PropTypes.string,
     collaboratorsPhrase: PropTypes.string,
-    publicationsPhrase: PropTypes.string,
 }
 
 export default (props) => <Project {...props} />
-

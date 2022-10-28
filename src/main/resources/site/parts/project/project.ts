@@ -1,19 +1,11 @@
-import { Content, get } from '/lib/xp/content'
+import { Content, get as getTheContent } from '/lib/xp/content'
 import { render, RenderResponse } from '/lib/enonic/react4xp'
 import { localize } from '/lib/xp/i18n'
 import { Project } from '../../content-types/project/project'
 import { getContent, pageUrl, processHtml } from '/lib/xp/portal'
 
-const {
-  renderError
-} = __non_webpack_require__('/lib/ssb/error/error')
-
-exports.get = (req: XP.Request): RenderResponse | XP.Response => {
-  try {
-    return renderPart(req)
-  } catch (e) {
-    return renderError(req, 'Error in part: ', e)
-  }
+export function get(req: XP.Request): RenderResponse {
+  return renderPart(req)
 }
 
 function renderPart(req: XP.Request): RenderResponse {
@@ -89,8 +81,7 @@ function renderPart(req: XP.Request): RenderResponse {
     aboutPhrase,
     participantsPhrase,
     projectParticipantsPhrase,
-    collaboratorsPhrase,
-    publicationsPhrase
+    collaboratorsPhrase
   }
 
   return render('site/parts/project/project', props, req)
@@ -98,7 +89,7 @@ function renderPart(req: XP.Request): RenderResponse {
 
 function getManager(managerId: string | undefined): ManagerLink | undefined {
   if (managerId) {
-    const managerContent: Content | null = get({
+    const managerContent: Content | null = getTheContent({
       key: managerId
     })
     if (managerContent) {
@@ -134,5 +125,4 @@ interface ProjectProps {
     participantsPhrase: string;
     projectParticipantsPhrase: string;
     collaboratorsPhrase: string;
-    publicationsPhrase: string;
 }
