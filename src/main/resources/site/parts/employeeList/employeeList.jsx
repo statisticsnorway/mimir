@@ -78,12 +78,12 @@ function EmployeeList(props) {
       <div className="row banner">
         <div className="container">
           <h1>{pageTitle}</h1>
-          <div dangerouslySetInnerHTML={{ __html: pageDescription }}></div>
+          <div className="page-description" dangerouslySetInnerHTML={{ __html: pageDescription }}></div>
         </div>
       </div>
       <div className="row">
         <div className="container">
-          <div className="mb-3"><p>Det er {total} personer i Forskningsavdelingen</p></div>
+          <div className="mb-3"><p>Det er {total} personer i avdelingen</p></div>
           {researchers != [] ? renderResearchers() : null}
         </div>
       </div>

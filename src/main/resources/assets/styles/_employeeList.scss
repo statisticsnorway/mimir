@@ -3,7 +3,7 @@
 	.row .container {
 		max-width: 1180px;
 
-		p {
+		.page-description p {
 			inline-size: 66%;
 			font-size: 20px;
 			line-height: 32px;
@@ -11,9 +11,9 @@
 	}
 
 	.banner {
-		height: 404px;
-		margin: 2rem 0;
-		padding: 4rem 0;
+		height: 304px;
+		margin-bottom: 3.75rem;
+		padding: 3.75rem 0 5rem;
 		background-color: #f0f8f9;
 	}
 	
