@@ -1,13 +1,13 @@
-import { get, Content } from '/lib/xp/content'
+import { get as getOne, type Content } from '/lib/xp/content'
 import { getContent, processHtml } from '/lib/xp/portal'
-import { DatasetRepoNode } from '../../../lib/ssb/repo/dataset'
-import { JSONstat } from '../../../lib/types/jsonstat-toolkit'
-import { Phrases } from '../../../lib/types/language'
-import { render as r4XpRender, RenderResponse } from '/lib/enonic/react4xp'
-import { TbmlDataUniform } from '../../../lib/types/xmlParser'
-import { Statistics } from '../../content-types/statistics/statistics'
+import type { DatasetRepoNode } from '/lib/ssb/repo/dataset'
+import type { JSONstat } from '/lib/types/jsonstat-toolkit'
+import type { Phrases } from '/lib/types/language'
+import { render as r4XpRender, type RenderResponse } from '/lib/enonic/react4xp'
+import type { TbmlDataUniform } from '/lib/types/xmlParser'
+import type { Statistics } from '../../content-types/statistics/statistics'
 import { GA_TRACKING_ID } from '../../pages/default/default'
-import { AccordionData } from '../accordion/accordion'
+import type { AccordionData } from '../accordion/accordion'
 const {
   data: {
     forceArray
@@ -30,7 +30,7 @@ const {
 const tableController: { getProps: (req: XP.Request, tableId: string) => object } = __non_webpack_require__('../table/table')
 const highchartController: { preview: (req: XP.Request, id: string) => XP.Response } = __non_webpack_require__('../highchart/highchart')
 
-exports.get = function(req: XP.Request): XP.Response {
+export function get(req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -38,7 +38,9 @@ exports.get = function(req: XP.Request): XP.Response {
   }
 }
 
-exports.preview = (req: XP.Request): XP.Response => renderPart(req)
+export function preview(req: XP.Request): XP.Response {
+  return renderPart(req)
+}
 
 function renderPart(req: XP.Request): XP.Response {
   const page: Content<Statistics> = getContent()
@@ -116,7 +118,7 @@ function getTablesAndFigures(attachmentTablesAndFigures: Array<string>, req: XP.
     return attachmentTablesAndFigures
       .filter((tableOrFigure) => !!tableOrFigure)
       .map((id, index) => {
-        const content: Content | null = get({
+        const content: Content | null = getOne({
           key: id
         })
         if (content && content.type === `${app.name}:table`) {

@@ -1,7 +1,7 @@
-import { get, Content } from '/lib/xp/content'
-import { formatDate } from '../../../lib/ssb/utils/dateUtils'
-import {render, RenderResponse} from '/lib/enonic/react4xp'
-import { Article } from '../../content-types/article/article'
+import { get as getOne, type Content } from '/lib/xp/content'
+import { formatDate } from '/lib/ssb/utils/dateUtils'
+import { render, type RenderResponse } from '/lib/enonic/react4xp'
+import type { Article } from '../../content-types/article/article'
 
 const {
   data: {
@@ -21,9 +21,7 @@ const {
   isEnabled
 } = __non_webpack_require__('/lib/featureToggle')
 
-
-
-exports.get = (req: XP.Request): RenderResponse | XP.Response => {
+export function get(req: XP.Request): RenderResponse | XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -89,7 +87,7 @@ function getAssociatedStatisticsLinks(associatedStatisticsConfig: Article['assoc
     return associatedStatisticsConfig.map((option) => {
       if (option?._selected === 'XP') {
         const associatedStatisticsXP: string | undefined = option.XP?.content
-        const associatedStatisticsXPContent: Content | null = associatedStatisticsXP ? get({
+        const associatedStatisticsXPContent: Content | null = associatedStatisticsXP ? getOne({
           key: associatedStatisticsXP
         }) : null
 
@@ -118,7 +116,7 @@ function getAssociatedStatisticsLinks(associatedStatisticsConfig: Article['assoc
 function getAssociatedArticleArchiveLinks(associatedArticleArchivesConfig: Article['articleArchive']): Array<AssociatedLink> | [] {
   if (associatedArticleArchivesConfig && associatedArticleArchivesConfig.length) {
     return associatedArticleArchivesConfig.map((articleArchive: string) => {
-      const articleArchiveContent: Content | null = articleArchive ? get({
+      const articleArchiveContent: Content | null = articleArchive ? getOne({
         key: articleArchive
       }) : null
 

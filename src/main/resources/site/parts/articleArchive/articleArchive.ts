@@ -1,11 +1,10 @@
-import { render, RenderResponse } from '/lib/enonic/react4xp'
-import { query, Content, QueryResponse } from '/lib/xp/content'
+import { render, type RenderResponse } from '/lib/enonic/react4xp'
+import { query, type Content, type QueryResponse } from '/lib/xp/content'
 import { getContent, imageUrl, pageUrl, processHtml, serviceUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
-
-import { formatDate } from '../../../lib/ssb/utils/dateUtils'
-import { Article } from '../../content-types/article/article'
-import { ArticleArchive } from '../../content-types/articleArchive/articleArchive'
+import { formatDate } from '/lib/ssb/utils/dateUtils'
+import type { Article } from '../../content-types/article/article'
+import type { ArticleArchive } from '../../content-types/articleArchive/articleArchive'
 
 const {
   getImageAlt
@@ -14,8 +13,7 @@ const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
 
-
-exports.get = function(req: XP.Request): XP.Response | RenderResponse {
+export function get(req: XP.Request): RenderResponse | XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -23,7 +21,9 @@ exports.get = function(req: XP.Request): XP.Response | RenderResponse {
   }
 }
 
-exports.preview = (req: XP.Request): RenderResponse => renderPart(req)
+export function preview(req: XP.Request): RenderResponse {
+  return renderPart(req)
+}
 
 function renderPart(req: XP.Request): RenderResponse {
   const page: Content<ArticleArchive> = getContent()

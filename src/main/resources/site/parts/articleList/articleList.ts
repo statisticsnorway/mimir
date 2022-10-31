@@ -1,10 +1,10 @@
-import { Article } from '../../content-types/article/article'
-import { pageUrl, getContent, getComponent, Component } from '/lib/xp/portal'
-import { ArticleListPartConfig } from './articleList-part-config'
-import {render, RenderResponse} from '/lib/enonic/react4xp'
-import { query, AggregationsResponseEntry, Content } from '/lib/xp/content'
-import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
-import { formatDate } from '../../../lib/ssb/utils/dateUtils'
+import type { Article } from '../../content-types/article/article'
+import { pageUrl, getContent, getComponent, type Component } from '/lib/xp/portal'
+import type { ArticleListPartConfig } from './articleList-part-config'
+import { render, type RenderResponse } from '/lib/enonic/react4xp'
+import { query, type AggregationsResponseEntry, type Content } from '/lib/xp/content'
+import type { SubjectItem } from '/lib/ssb/utils/subjectUtils'
+import { formatDate } from '/lib/ssb/utils/dateUtils'
 
 const {
   localize
@@ -26,7 +26,7 @@ const {
   isEnabled
 } = __non_webpack_require__('/lib/featureToggle')
 
-exports.get = (req: XP.Request): RenderResponse | XP.Response => {
+export function get(req: XP.Request): RenderResponse | XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -34,7 +34,9 @@ exports.get = (req: XP.Request): RenderResponse | XP.Response => {
   }
 }
 
-exports.preview = (req: XP.Request): RenderResponse => renderPart(req)
+export function preview(req: XP.Request): RenderResponse {
+  return renderPart(req)
+}
 
 function renderPart(req: XP.Request): RenderResponse {
   const content: Content = getContent()

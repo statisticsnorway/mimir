@@ -1,7 +1,7 @@
-import { get, Content } from '/lib/xp/content'
-import {render, RenderResponse} from '/lib/enonic/react4xp'
-import { Accordion } from '../../content-types/accordion/accordion'
-import { AccordionConfig } from '../../macros/accordion/accordion-config'
+import { get as getOne, type Content } from '/lib/xp/content'
+import { render, type RenderResponse } from '/lib/enonic/react4xp'
+import type { Accordion } from '../../content-types/accordion/accordion'
+import type { AccordionConfig } from '../../macros/accordion/accordion-config'
 
 const {
   data: {
@@ -21,7 +21,7 @@ const {
 } = __non_webpack_require__('/lib/ssb/error/error')
 
 
-exports.get = function(req: XP.Request): RenderResponse | XP.Response {
+export function get(req: XP.Request): RenderResponse | XP.Response {
   try {
     const config: AccordionConfig = getComponent().config
     const accordionIds: Array<string> = config ? forceArray(config.accordion) : []
@@ -31,7 +31,7 @@ exports.get = function(req: XP.Request): RenderResponse | XP.Response {
   }
 }
 
-exports.preview = function(req: XP.Request, accordionIds: Array<string> | string): RenderResponse | XP.Response {
+export function preview(req: XP.Request, accordionIds: Array<string> | string): RenderResponse | XP.Response {
   try {
     const page: Content<Accordion> = getContent()
     return page.type === `${app.name}:accordion` ? renderPart(req, [accordionIds as string]) : renderPart(req, accordionIds as Array<string>)
@@ -44,7 +44,7 @@ function renderPart(req: XP.Request, accordionIds: Array<string>): RenderRespons
   const accordions: Array<AccordionData> = []
 
   accordionIds.map((key) => {
-    const accordion: Content<Accordion> | null = key ? get({
+    const accordion: Content<Accordion> | null = key ? getOne({
       key
     }) : null
 
