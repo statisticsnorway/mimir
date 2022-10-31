@@ -1,10 +1,11 @@
 import { Content, QueryResponse, get, query } from '/lib/xp/content'
 import { Employee } from '../../content-types/employee/employee'
 import { DefaultPageConfig } from '../../pages/default/default-page-config'
-import { getContent, pageUrl } from '/lib/xp/portal'
+import { getContent, Component, getComponent, pageUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 import { RenderResponse, render } from '/lib/enonic/react4xp'
 import { Page } from '../../content-types/page/page'
+import { EmployeeListPartConfig } from '../employeeList/employeeList-part-config'
 
 const {
   renderError
@@ -22,27 +23,18 @@ exports.preview = (req: XP.Request): RenderResponse => renderPart(req)
 
 function renderPart(req: XP.Request): RenderResponse {
   const content: Content<Page, object> = getContent()
+  const part: Component<EmployeeListPartConfig> = getComponent()
   const language: string = content.language ? content.language : 'nb'
 
   const queryResults: QueryResponse<Employee, object> = getResearchers()
   const preparedResults: Array<IPreparedResearcher> = prepareResearchers(queryResults.hits)
   const alphabeticalResearchersList: Array<IResearcherMap> = createAlphabeticalResearchersList(preparedResults)
 
-  const pageHeadingPhrase: string = localize({
-    key: 'researcherList.pageHeading',
-    locale: language
-  })
-
-  const pageDescriptionPhrase: string = localize({
-    key: 'researcherList.pageDescription',
-    locale: language
-  })
-
   const props: IPartProps = {
     researchers: alphabeticalResearchersList,
     total: queryResults.total,
-    pageHeadingPhrase,
-    pageDescriptionPhrase
+    pageTitle: content.displayName,
+    pageDescription: part.config.ingress || ''
   }
 
   return render('site/parts/employeeList/employeeList', props, req)
@@ -118,8 +110,8 @@ function createAlphabeticalResearchersList(preparedResults: IPreparedResearcher[
 interface IPartProps {
   researchers: IResearcherMap[],
   total: number,
-  pageHeadingPhrase: string,
-  pageDescriptionPhrase: string
+  pageTitle: string,
+  pageDescription: string
 }
 
 interface IPreparedResearcher {

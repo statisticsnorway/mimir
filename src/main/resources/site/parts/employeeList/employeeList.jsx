@@ -5,7 +5,7 @@ import { ArrowRight } from 'react-feather'
 
 function EmployeeList(props) {
   const {
-    researchers, total, pageHeadingPhrase, pageDescriptionPhrase
+    researchers, total, pageTitle, pageDescription
   } = props
 
   const letterBlock = (index, alphabetLetter) => {
@@ -77,8 +77,8 @@ function EmployeeList(props) {
     <section className="xp-part researchers p-0 mb-5">
       <div className="row banner">
         <div className="container">
-          <h1>{pageHeadingPhrase}</h1>
-          <LeadParagraph>{pageDescriptionPhrase}</LeadParagraph>
+          <h1>{pageTitle}</h1>
+          <div dangerouslySetInnerHTML={{ __html: pageDescription }}></div>
         </div>
       </div>
       <div className="row">
@@ -106,6 +106,6 @@ EmployeeList.propTypes = {
     }),
   ),
   total: PropTypes.number,
-  pageHeadingPhrase: PropTypes.string,
-  pageDescriptionPhrase: PropTypes.string
+  pageTitle: PropTypes.string,
+  pageDescription: PropTypes.string
 }
