@@ -2,7 +2,6 @@ import { Content, QueryResponse, get, query } from '/lib/xp/content'
 import { Employee } from '../../content-types/employee/employee'
 import { DefaultPageConfig } from '../../pages/default/default-page-config'
 import { getContent, Component, getComponent, pageUrl } from '/lib/xp/portal'
-import { localize } from '/lib/xp/i18n'
 import { RenderResponse, render } from '/lib/enonic/react4xp'
 import { Page } from '../../content-types/page/page'
 import { EmployeeListPartConfig } from '../employeeList/employeeList-part-config'
@@ -24,7 +23,6 @@ exports.preview = (req: XP.Request): RenderResponse => renderPart(req)
 function renderPart(req: XP.Request): RenderResponse {
   const content: Content<Page, object> = getContent()
   const part: Component<EmployeeListPartConfig> = getComponent()
-  const language: string = content.language ? content.language : 'nb'
 
   const queryResults: QueryResponse<Employee, object> = getResearchers()
   const preparedResults: Array<IPreparedResearcher> = prepareResearchers(queryResults.hits)
