@@ -4,6 +4,10 @@ import { localize } from '/lib/xp/i18n'
 import { Project } from '../../content-types/project/project'
 import { getContent, pageUrl, processHtml } from '/lib/xp/portal'
 
+export function preview(req: XP.Request): RenderResponse {
+  return renderPart(req)
+}
+
 export function get(req: XP.Request): RenderResponse {
   return renderPart(req)
 }
