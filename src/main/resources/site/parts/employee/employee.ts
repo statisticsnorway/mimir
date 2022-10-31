@@ -2,9 +2,7 @@ import { Content, get } from '/lib/xp/content'
 import { Employee } from '../../content-types/employee/employee'
 import { DefaultPageConfig } from '../../pages/default/default-page-config'
 import { localize } from '/lib/xp/i18n'
-import {
-  getContent, pageUrl, imageUrl, attachmentUrl
-} from '/lib/xp/portal'
+import { getContent, pageUrl, imageUrl, attachmentUrl } from '/lib/xp/portal'
 import { render, RenderResponse } from '/lib/enonic/react4xp'
 import { Page } from 'site/content-types/page/page'
 import { SEO } from 'services/news/news'
@@ -17,9 +15,6 @@ const {
     forceArray
   }
 } = __non_webpack_require__('/lib/util')
-const {
-  hasPath
-} = __non_webpack_require__('/lib/vendor/ramda')
 
 exports.get = function(req: XP.Request): RenderResponse | XP.Response {
   try {

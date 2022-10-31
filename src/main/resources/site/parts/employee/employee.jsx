@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button, Title, Link, LeadParagraph, Paragraph, Accordion } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
-import { Share2, Send, Smartphone, Eye, Download, Image } from 'react-feather'
+import { Share2, Send, Smartphone, Eye, Home, Download, Image } from 'react-feather'
 
 const Employee = (props) => {
   const {
@@ -23,6 +23,12 @@ const Employee = (props) => {
 
   const calculateCvSize = (bytes) => {
     return Math.round(bytes / 1000)
+  }
+
+  const sanitizeMobileNo = (number) => {
+    const spacesRemoved = number.split(' ').join('')
+    const numberMatchesInTwo = spacesRemoved.match(/.{1,2}/g)
+    return numberMatchesInTwo.join(' ')
   }
 
   const renderPortraitImages = () => {
@@ -52,7 +58,7 @@ const Employee = (props) => {
     return (
       myCV ?
         <div className="downloadCv">
-          <Button onClick={() => downloadPDF(myCV)}><Download size="18" /> &nbsp; {downloadPdfPhrase} ({calculateCvSize(cvInformation.size)} kB) </Button>
+          <Button onClick={() => downloadPDF(myCV)}><Download size="24" />{downloadPdfPhrase} ({calculateCvSize(cvInformation.size)} kB)</Button>
         </div> : null
     )
   }
@@ -64,41 +70,59 @@ const Employee = (props) => {
           <div className="employee-image">
             <img alt={`${profilePicturePhrase} ${title}`} src={props.profileImages[0]} />
           </div> : null}
-        <div><Title size="1">{title}</Title></div>
+        <div className="employee-title"><Title size="1">{title}</Title></div>
       </div>
     )
   }
 
+
   const renderEmployeeDetails = () => {
     return (
-      <div className="employee-details">
-        <div className="details-block">
-          <Share2 size={30} transform='rotate(90)'/>
-          <div>
-            <div>{positionPhrase}</div>
-            <span>{position}</span>
-          </div>
-        </div>
-        <div className="details-block">
-          <Eye size={30} />
-          <div>
-            <div>{isResearcher ? researchAreaPhrase : departmentPhrase}</div>
-            {area ? <Link href={area.href} linkType="profiled">{area.title}</Link> : null}
-          </div>
-        </div>
-        <div className="details-block">
-          <Send size={30} />
-          <div>
-            <div>{emailPhrase}</div>
-            {email ? <Link href={'mailto:' + email} linkType="profiled">{email}</Link> : null}
-          </div>
-        </div>
-        <div className="details-block">
-          <Smartphone size={30} />
-          <div>
-            <div>{phonePhrase}</div>
-            {phone ? <Link href={'tel:' + phone} linkType="profiled">{phone}</Link> : null}
-          </div>
+      <div className="employee-details col-12">
+        <div className="row w-100">
+          {
+            position ?
+              <div className="details-block col-lg col-12">
+                <div><Share2 size={24} transform='rotate(90)' /></div>
+                <div>
+                  <div>{positionPhrase}</div>
+                  <div className="position-text">{position}</div>
+                </div>
+              </div> :
+              null
+          }
+          { area ?
+            <div className="details-block col-lg col-12">
+              <div>{isResearcher ? <Eye size={24} /> : <Home size={24} />}</div>
+              <div>
+                <div>{isResearcher ? researchAreaPhrase : departmentPhrase}</div>
+                <Link href={area.href} linkType="profiled">{area.title}</Link>
+              </div>
+            </div> :
+            null
+          }
+          {
+            email ?
+              <div className="details-block col-lg col-12">
+                <div><Send size={24} /></div>
+                <div>
+                  <div>{emailPhrase}</div>
+                  <span className="position-text"><Link href={'mailto:' + email} linkType="profiled">{email}</Link></span>
+                </div>
+              </div> :
+              null
+          }
+          {
+            phone ?
+              <div className="details-block col-lg col-12">
+                <div><Smartphone size={24} /></div>
+                <div>
+                  <div>{phonePhrase}</div>
+                  <Link href={'tel:' + phone} linkType="profiled">{sanitizeMobileNo(phone)}</Link>
+                </div>
+              </div> :
+              null
+          }
         </div>
       </div>
     )
@@ -108,7 +132,7 @@ const Employee = (props) => {
     return (
       <aside className="employee-attachments mobile-display-none col-12 col-md-3" role="complementary">
         <div className="instructions">
-          <h2>{pressPicturesPhrase}</h2>
+          <h3>{pressPicturesPhrase}</h3>
           <p>{pressPicturesDescrPhrase}</p>
         </div>
         {renderPortraitImages()}
@@ -120,7 +144,7 @@ const Employee = (props) => {
   const renderAttachmentsForMobile = () => {
     const accordionHeader = (
       <React.Fragment>
-        <Image size={30} /> {pressPicturesPhrase}
+        <Image size={24} /> {pressPicturesPhrase}
       </React.Fragment>
     )
 
