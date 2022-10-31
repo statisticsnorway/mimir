@@ -10,7 +10,6 @@ const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
 
-
 exports.get = (req: XP.Request): RenderResponse | XP.Response => {
   try {
     return renderPart(req)
@@ -46,7 +45,7 @@ function renderPart(req: XP.Request): RenderResponse {
     pageDescriptionPhrase
   }
 
-  return render('site/parts/researcherList/researcherList', props, req)
+  return render('site/parts/employeeList/employeeList', props, req)
 }
 
 function getResearchers() {

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { Link, Divider, Text, LeadParagraph } from '@statisticsnorway/ssb-component-library'
 import { ArrowRight } from 'react-feather'
 
-function ResearcherList(props) {
+function EmployeeList(props) {
   const {
     researchers, total, pageHeadingPhrase, pageDescriptionPhrase
   } = props
@@ -91,9 +91,9 @@ function ResearcherList(props) {
   )
 }
 
-export default (props) => <ResearcherList {...props} />
+export default (props) => <EmployeeList {...props} />
 
-ResearcherList.propTypes = {
+EmployeeList.propTypes = {
   researchers: PropTypes.arrayOf(
     PropTypes.shape({
       surname: PropTypes.string,
