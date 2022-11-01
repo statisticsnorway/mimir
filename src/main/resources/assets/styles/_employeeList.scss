@@ -1,5 +1,4 @@
 .employees-list {
-
 	.row .container {
 		max-width: 1180px;
 
@@ -89,7 +88,6 @@
 			}
 		}
 	}
-	
 }
 
 @include media-breakpoint-down(md) {
@@ -116,7 +114,6 @@
 		.row .container div p { 
 			inline-size: 100%;
 		}
-		
 		
 		.letter-list-container .letter-list {
 			max-width: 100%;
