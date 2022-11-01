@@ -156,6 +156,7 @@ export function init() {
       if ($('table#highcharts-datatable-' + highchartsContentKey)) {
         config.title.style.fontSize = h1Size
 
+
         if (canvas.data('type') === 'barNegative') {
           config.yAxis.labels.formatter = function(a) {
             return Math.abs(a.value)
@@ -309,7 +310,7 @@ export function init() {
         Highcharts.chart(chart, config)
 
         // Hide data table when highchart is loaded
-        $('.highcharts-data-table').hide()
+        $('.highcharts-data-table').addClass('hide-div')
         $('.highcharts-data-table').find('table').addClass('statistics')
 
         const graph = $('#figure-' + highchartsContentKey + ' .highcharts-canvas')
@@ -320,17 +321,22 @@ export function init() {
         buttonShowDataTable.on('click', (e) => {
           buttonShowDataTable.addClass('active')
           buttonShowGraph.removeClass('active')
-          dataTable.show()
-          graph.hide()
+          dataTable.removeClass('hide-div')
+          dataTable.addClass('show-div')
+          graph.removeClass('show-div')
+          graph.addClass('hide-div')
         })
 
         buttonShowGraph.on('click', (e) => {
           buttonShowGraph.addClass('active')
           buttonShowDataTable.removeClass('active')
-          dataTable.hide()
-          graph.show()
+          dataTable.removeClass('show-div')
+          dataTable.addClass('hide-div')
+          graph.addClass('show-div')
         })
       }
     })
   })
 }
+
+
