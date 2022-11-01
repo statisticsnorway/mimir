@@ -23,9 +23,9 @@ function EmployeeList(props) {
         {researcher.position ? <div className="position"><Text small>{researcher.position}</Text></div> : null}
         <div className="contact-details">
           <Text small>
-            {researcher.phone != '' ? <><Link href={'tel:' + researcher.phone}>{researcher.phone}</Link><span> / </span> </> : null}
+            {researcher.phone != '' ? <><Link href={'tel:' + researcher.phone}>{researcher.phone}</Link><span className="dash-space"> / </span> </> : null}
             {researcher.email != '' ? <><Link href={'mailto:' + researcher.email}>{researcher.email}</Link></> : null}
-            {researcher.area.title == undefined || researcher.email == '' ? null : <span> / </span>}
+            {researcher.area.title == undefined || researcher.email == '' ? null : <span className="dash-space"> / </span>}
             {researcher.area.title != '' ? researcher.area.title : null}
           </Text>
         </div>
