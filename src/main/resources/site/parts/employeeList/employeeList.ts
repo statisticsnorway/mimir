@@ -1,4 +1,4 @@
-import { Content, QueryResponse, get, query } from '/lib/xp/content'
+import { Content, getChildren, QueryResponse, get } from '/lib/xp/content'
 import { Employee } from '../../content-types/employee/employee'
 import { DefaultPageConfig } from '../../pages/default/default-page-config'
 import { getContent, Component, getComponent, pageUrl } from '/lib/xp/portal'
@@ -24,7 +24,12 @@ function renderPart(req: XP.Request): RenderResponse {
   const content: Content<Page, object> = getContent()
   const part: Component<EmployeeListPartConfig> = getComponent()
 
-  const queryResults: QueryResponse<Employee, object> = getResearchers()
+  const queryResults: QueryResponse<Employee, object> = getChildren({
+    key: content._path,
+    count: 500,
+    sort: 'data.surname ASC'
+  })
+
   const preparedResults: Array<IPreparedResearcher> = prepareResearchers(queryResults.hits)
   const alphabeticalResearchersList: Array<IResearcherMap> = createAlphabeticalResearchersList(preparedResults)
 
@@ -36,29 +41,6 @@ function renderPart(req: XP.Request): RenderResponse {
   }
 
   return render('site/parts/employeeList/employeeList', props, req)
-}
-
-function getResearchers() {
-  return query<Employee>({
-    start: 0,
-    count: 500,
-    sort: 'data.surname ASC',
-    filters: {
-      boolean: {
-        must: [
-          {
-            hasValue: {
-              field: 'data.isResearcher',
-              values: [true]
-            }
-          }
-        ]
-      }
-    },
-    contentTypes: [
-      `${app.name}:employee`
-    ]
-  })
 }
 
 function prepareResearchers(results: readonly Content<Employee>[]) {
@@ -109,7 +91,7 @@ interface IPartProps {
   researchers: IResearcherMap[],
   total: number,
   pageTitle: string,
-  pageDescription: string
+  pageDescription: string,
 }
 
 interface IPreparedResearcher {

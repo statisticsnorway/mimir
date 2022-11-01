@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Link, Divider, Text, LeadParagraph } from '@statisticsnorway/ssb-component-library'
+import { Link, Divider, Text } from '@statisticsnorway/ssb-component-library'
 
 function EmployeeList(props) {
   const {
@@ -68,7 +68,9 @@ function EmployeeList(props) {
       <div className="row banner">
         <div className="container">
           <h1 className="page-title">{pageTitle}</h1>
-          <div className="page-description" dangerouslySetInnerHTML={{ __html: pageDescription }}></div>
+          <div className="page-description" dangerouslySetInnerHTML={{
+            __html: pageDescription
+          }}></div>
         </div>
       </div>
       <div className="row">
