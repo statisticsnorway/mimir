@@ -1,12 +1,9 @@
-import { ResourceKey, render } from '/lib/thymeleaf'
-import { Content } from '/lib/xp/content'
-import { getContent,
-  getComponent,
-  imageUrl,
-  Component } from '/lib/xp/portal'
-import { BannerPartConfig } from './banner-part-config'
-import { MunicipalityWithCounty } from '../../../lib/ssb/dataset/klass/municipalities'
-import { Page } from '../../content-types/page/page'
+import { type ResourceKey, render } from '/lib/thymeleaf'
+import type { Content } from '/lib/xp/content'
+import { getContent, getComponent, imageUrl, type Component } from '/lib/xp/portal'
+import type { BannerPartConfig } from './banner-part-config'
+import type { MunicipalityWithCounty } from '../../../lib/ssb/dataset/klass/municipalities'
+import type { Page } from '../../content-types/page/page'
 
 const {
   getMunicipality, removeCountyFromMunicipalityName
@@ -21,7 +18,7 @@ const {
 const i18nLib = __non_webpack_require__('/lib/xp/i18n')
 const view: ResourceKey = resolve('./banner.html') as ResourceKey
 
-exports.get = function(req: XP.Request) {
+export function get(req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -29,7 +26,9 @@ exports.get = function(req: XP.Request) {
   }
 }
 
-exports.preview = (req: XP.Request): XP.Response => renderPart(req)
+export function preview(req: XP.Request): XP.Response {
+  return renderPart(req)
+}
 
 function renderPart(req: XP.Request): XP.Response {
   const page: Content<Page> = getContent()

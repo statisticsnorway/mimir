@@ -1,11 +1,8 @@
-import { get, Content } from '/lib/xp/content'
-import { Button } from '../../content-types/button/button'
-import { attachmentUrl,
-  getComponent,
-  pageUrl,
-  Component } from '/lib/xp/portal'
-import { ButtonPartConfig } from './button-part-config'
-import { ResourceKey, render } from '/lib/thymeleaf'
+import { get as getOne, type Content } from '/lib/xp/content'
+import type { Button } from '../../content-types/button/button'
+import { attachmentUrl, getComponent, pageUrl, type Component } from '/lib/xp/portal'
+import type { ButtonPartConfig } from './button-part-config'
+import { type ResourceKey, render } from '/lib/thymeleaf'
 
 const {
   renderError
@@ -14,7 +11,7 @@ const {
 const util = __non_webpack_require__('/lib/util')
 const view: ResourceKey = resolve('./button.html') as ResourceKey
 
-exports.get = function(req: XP.Request): XP.Response {
+export function get(req: XP.Request): XP.Response {
   try {
     const part: Component<ButtonPartConfig> = getComponent()
     const buttonsIds: Array<string> = part.config.button ? util.data.forceArray(part.config.button) : []
@@ -23,22 +20,23 @@ exports.get = function(req: XP.Request): XP.Response {
     return renderError(req, 'Error in part', e)
   }
 }
-
-exports.preview = (req: XP.Request, id: string) => renderPart(req, [id])
+export function preview(req: XP.Request, id: string): XP.Response {
+  return renderPart(req, [id])
+}
 
 function renderPart(req: XP.Request, buttonIds: Array<string>): XP.Response {
   const buttons: Array<ButtonShape> = []
 
   buttonIds.map((key: string) => {
-    const button: Content<Button> | null = get({
+    const button: Content<Button> | null = getOne({
       key
     })
 
+
     if (button && button.data.link) {
-      const target: Content | null = get({
+      const target: Content | null = getOne({
         key: button.data.link
       })
-
 
       if (target) {
         const href: string = getHref(target)

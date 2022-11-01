@@ -1,17 +1,13 @@
-import { render as r4XpRender, RenderResponse } from '/lib/enonic/react4xp'
-import { getComponent,
-  getContent,
-  serviceUrl,
-  pageUrl,
-  Component } from '/lib/xp/portal'
-import { BkibolCalculatorPartConfig } from './bkibolCalculator-part-config'
-import { Dataset, Dimension } from '../../../lib/types/jsonstat-toolkit'
-import { Content } from '/lib/xp/content'
-import { CalculatorConfig } from '../../content-types/calculatorConfig/calculatorConfig'
-import { Language, Phrases } from '../../../lib/types/language'
-import { allMonths, nextPeriod } from '../../../lib/ssb/utils/calculatorUtils'
-import { CalculatorPeriod } from '../../../lib/types/calculator'
-import { DropdownItem, DropdownItems } from '../../../lib/types/components'
+import { render as r4XpRender, type RenderResponse } from '/lib/enonic/react4xp'
+import { getComponent, getContent, serviceUrl, pageUrl, type Component } from '/lib/xp/portal'
+import type { BkibolCalculatorPartConfig } from './bkibolCalculator-part-config'
+import type { Dataset, Dimension } from '/lib/types/jsonstat-toolkit'
+import type { Content } from '/lib/xp/content'
+import type { CalculatorConfig } from '../../content-types/calculatorConfig/calculatorConfig'
+import type { Language, Phrases } from '/lib/types/language'
+import { allMonths, nextPeriod } from '/lib/ssb/utils/calculatorUtils'
+import type { CalculatorPeriod } from '/lib/types/calculator'
+import type { DropdownItem, DropdownItems } from '/lib/types/components'
 
 const {
   renderError
@@ -28,7 +24,7 @@ const {
 } = __non_webpack_require__('/lib/ssb/cache/partCache')
 const i18nLib = __non_webpack_require__('/lib/xp/i18n')
 
-exports.get = function(req: XP.Request): RenderResponse | XP.Response {
+export function get(req: XP.Request): RenderResponse | XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -36,7 +32,7 @@ exports.get = function(req: XP.Request): RenderResponse | XP.Response {
   }
 }
 
-exports.preview = function(req: XP.Request): RenderResponse | XP.Response {
+export function preview(req: XP.Request): RenderResponse | XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
