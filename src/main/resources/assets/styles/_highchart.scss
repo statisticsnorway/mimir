@@ -26,6 +26,7 @@
     }
   }
 }
+
 .btn-highchart-export {
   z-index: 200;
   bottom: 60px;
@@ -111,4 +112,12 @@
 
 .highcharts-source {
   margin-top: 32px;
+}
+
+.hide-div {
+  display: none!important;
+}
+
+.show-div {
+  display: block!important;
 }
