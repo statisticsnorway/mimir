@@ -33,14 +33,6 @@ function EmployeeList(props) {
     )
   }
 
-  const arrowLink = (href, name) => {
-    return (
-      <div className="list-arrow">
-        <Link href={href} icon={<ArrowRight size="30" />} title={'link to ' + name}></Link>
-      </div>
-    )
-  }
-
   const createListItems = (list) => {
     return list.record.map((researcher, i) => {
       return (
@@ -49,7 +41,6 @@ function EmployeeList(props) {
             {letterBlock(i, list.alphabet)}
             <div className="researcher-info">
               {researcherDetails(researcher)}
-              {arrowLink(researcher.path, researcher.name)}
             </div>
           </li>
           <Divider light />

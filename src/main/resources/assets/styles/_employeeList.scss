@@ -75,12 +75,6 @@
 				> div > div > span > a > .link-text {
 					font-size: 14px;
 				}
-
-				.list-arrow {
-					display: flex;
-					align-items: center;
-					justify-content: flex-end;
-				}
 			}
 		}
 	}
@@ -90,16 +84,18 @@
 	.researchers {
 
 		.banner {
-			height: 388px;
+			height: 288px;
 			width: 100vw;
       position: relative;
       left: 50%;
       margin-left: -50vw;
+			padding: 2rem 0 0;
+			margin-bottom: 2.5rem;
 
 			.container {
 				padding: 0 20px;
 
-				p {
+				.page-description p {
 					inline-size: 100%;
 				}
 			}
@@ -129,10 +125,6 @@
 
 			.empty-letter {
 				margin: 0;
-				display: none;
-			}
-
-			.researcher-info .list-arrow {
 				display: none;
 			}
 		}
