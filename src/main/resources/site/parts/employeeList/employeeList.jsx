@@ -1,7 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Link, Divider, Text, LeadParagraph } from '@statisticsnorway/ssb-component-library'
-import { ArrowRight } from 'react-feather'
 
 function EmployeeList(props) {
   const {
@@ -55,7 +54,7 @@ function EmployeeList(props) {
     })
 
     return (
-      <div>
+      <div className="letter-list-container">
         <Divider dark />
         <ul className="letter-list">
           {listItems}
