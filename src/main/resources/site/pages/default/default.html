@@ -1,7 +1,7 @@
 <html data-th-lang="${language.code}">
 <head>
   <!-- UA GA tracking script with added GA4 gtag config -->
-  <script async data-th-if="${GA_TRACKING_ID}" data-th-src="|https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}|"></script>
+  <script async="async" data-th-if="${GA_TRACKING_ID}" data-th-src="|https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}|"></script>
   <script th:inline="javascript" data-th-if="${GA_TRACKING_ID}">
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
@@ -9,7 +9,7 @@
     gtag('config', /*[[${GA_TRACKING_ID}]]*/);
     gtag('config', 'G-RWG24LNZ9T', { 'anonymize_ip': true });
   </script>
-  <script data-th-src="${jsLibsUrl}" defer></script>
+  <script data-th-src="${jsLibsUrl}" defer="defer"></script>
   <script data-th-if="${enabledEnalyzerScript}"
     type='text/javascript' 
     id='enalyzer-embed' 
@@ -102,7 +102,7 @@
     </div>
 
     <!-- preview -->
-    <div class="container pt-5" data-th-if="${preview}" data-th-utext="${preview.body}">
+    <div class="container pt-2" data-th-if="${preview}" data-th-utext="${preview.body}">
     </div>
 
     <div

@@ -88,7 +88,8 @@ function getTablesAndFiguresComponent(page: Content<Statistics>, req: XP.Request
     req,
     {
       id: 'accordion',
-      body: `<section class="xp-part attachment-tables-figures"></section>`
+      body: `<section class="xp-part attachment-tables-figures"></section>`,
+      clientRender: req.mode !== 'edit'
     })
 
   const accordionBody: string | null = accordionComponent.body

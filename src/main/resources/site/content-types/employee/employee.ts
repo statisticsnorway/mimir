@@ -21,12 +21,12 @@ export interface Employee {
   position?: string;
 
   /**
-   * Epostadresse
+   * E-post
    */
   email?: string;
 
   /**
-   * Telefonnummer
+   * Telefon
    */
   phone?: string;
 
@@ -36,7 +36,7 @@ export interface Employee {
   area?: string;
 
   /**
-   * Kort om meg
+   * Kort om
    */
   description?: string;
 
