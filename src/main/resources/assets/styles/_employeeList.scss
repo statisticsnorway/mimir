@@ -1,4 +1,4 @@
-.researchers {
+.employees-list {
 
 	.row .container {
 		max-width: 1180px;
@@ -64,7 +64,7 @@
 					margin: .5rem 1rem 0 0;
 				}
 				
-				.researcher-info {
+				.employee-info {
 					width: 100%;
 					min-height: 94.78px;
 					display: flex;
@@ -93,7 +93,7 @@
 }
 
 @include media-breakpoint-down(md) {
-	.researchers {
+	.employees-list {
 
 		.banner {
 			height: 288px;
@@ -150,7 +150,7 @@
 }
 
 @include media-breakpoint-down(xl) {
-  .researchers {
+  .employees-list {
 		.row .container {
 			max-width: 960px;
 		}
@@ -158,7 +158,7 @@
 }
 
 @include media-breakpoint-down(lg) {
-  .researchers {
+  .employees-list {
 		.row .container {
 			max-width: 760px;
 		}

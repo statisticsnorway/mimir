@@ -30,11 +30,11 @@ function renderPart(req: XP.Request): RenderResponse {
     sort: 'data.surname ASC'
   })
 
-  const preparedResults: Array<IPreparedResearcher> = prepareResearchers(queryResults.hits)
-  const alphabeticalResearchersList: Array<IResearcherMap> = createAlphabeticalResearchersList(preparedResults)
+  const preparedResults: Array<IPreparedEmployee> = prepareEmployees(queryResults.hits)
+  const alphabeticalEmployeesList: Array<IEmployeeMap> = createAlphabeticalEmployeesList(preparedResults)
 
   const props: IPartProps = {
-    researchers: alphabeticalResearchersList,
+    employees: alphabeticalEmployeesList,
     total: queryResults.total,
     pageTitle: content.displayName,
     pageDescription: part.config.ingress || ''
@@ -43,7 +43,7 @@ function renderPart(req: XP.Request): RenderResponse {
   return render('site/parts/employeeList/employeeList', props, req)
 }
 
-function prepareResearchers(results: readonly Content<Employee>[]) {
+function prepareEmployees(results: readonly Content<Employee>[]) {
   return results.map((result) => {
     const areaContent: Content<DefaultPageConfig> | null = result.data.area ? get({
       key: result.data.area
@@ -68,33 +68,33 @@ function prepareResearchers(results: readonly Content<Employee>[]) {
   })
 }
 
-function createAlphabeticalResearchersList(preparedResults: IPreparedResearcher[]):Array<IResearcherMap> {
-  const data: IObjectKeys = preparedResults.reduce((result: IObjectKeys, researcher: IPreparedResearcher) => {
-    const alphabet: string = researcher.surname[0].toUpperCase()
+function createAlphabeticalEmployeesList(preparedResults: IPreparedEmployee[]):Array<IEmployeeMap> {
+  const data: IObjectKeys = preparedResults.reduce((result: IObjectKeys, employee: IPreparedEmployee) => {
+    const alphabet: string = employee.surname[0].toUpperCase()
     if (!result[alphabet]) {
       result[alphabet] = {
         alphabet,
-        record: [researcher]
+        record: [employee]
       }
     } else {
-      result[alphabet].record.push(researcher)
+      result[alphabet].record.push(employee)
     }
     return result
   }, {
   })
 
-  const result: Array<IResearcherMap> = Object.keys(data).map((key) => data[key])
+  const result: Array<IEmployeeMap> = Object.keys(data).map((key) => data[key])
   return result
 }
 
 interface IPartProps {
-  researchers: IResearcherMap[],
+  employees: IEmployeeMap[],
   total: number,
   pageTitle: string,
   pageDescription: string,
 }
 
-interface IPreparedResearcher {
+interface IPreparedEmployee {
   surname: string,
   name: string,
   position: string,
@@ -110,10 +110,10 @@ interface Area {
 }
 
 interface IObjectKeys {
-  [key: string]: IResearcherMap;
+  [key: string]: IEmployeeMap;
 }
 
-interface IResearcherMap {
+interface IEmployeeMap {
   alphabet: string;
-  record: IPreparedResearcher[]
+  record: IPreparedEmployee[]
 }

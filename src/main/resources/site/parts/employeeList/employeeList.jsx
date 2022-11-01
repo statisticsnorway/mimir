@@ -4,7 +4,7 @@ import { Link, Divider, Text } from '@statisticsnorway/ssb-component-library'
 
 function EmployeeList(props) {
   const {
-    researchers, total, pageTitle, pageDescription
+    employees, total, pageTitle, pageDescription
   } = props
 
   const letterBlock = (index, alphabetLetter) => {
@@ -15,17 +15,17 @@ function EmployeeList(props) {
     )
   }
 
-  const researcherDetails = (researcher) => {
+  const employeeDetails = (employee) => {
     return (
       <div>
-        <Link href={researcher.path} linkType="header">{researcher.surname}, {researcher.name}</Link>
-        {researcher.position ? <div className="position"><Text small>{researcher.position}</Text></div> : null}
+        <Link href={employee.path} linkType="header">{employee.surname}, {employee.name}</Link>
+        {employee.position ? <div className="position"><Text small>{employee.position}</Text></div> : null}
         <div className="contact-details">
           <Text small>
-            {researcher.phone != '' ? <><Link href={'tel:' + researcher.phone}>{researcher.phone}</Link><span className="dash-space"> / </span> </> : null}
-            {researcher.email != '' ? <><Link href={'mailto:' + researcher.email}>{researcher.email}</Link></> : null}
-            {researcher.area.title == undefined || researcher.email == '' ? null : <span className="dash-space"> / </span>}
-            {researcher.area.title != '' ? <Link href={researcher.area.href}>{researcher.area.title}</Link> : null}
+            {employee.phone != '' ? <><Link href={'tel:' + employee.phone}>{employee.phone}</Link><span className="dash-space"> / </span> </> : null}
+            {employee.email != '' ? <><Link href={'mailto:' + employee.email}>{employee.email}</Link></> : null}
+            {employee.area.title == undefined || employee.email == '' ? null : <span className="dash-space"> / </span>}
+            {employee.area.title != '' ? <Link href={employee.area.href}>{employee.area.title}</Link> : null}
           </Text>
         </div>
       </div>
@@ -33,13 +33,13 @@ function EmployeeList(props) {
   }
 
   const createListItems = (list) => {
-    return list.record.map((researcher, i) => {
+    return list.record.map((employee, i) => {
       return (
         <>
           <li className="list-item" role="listitem">
             {letterBlock(i, list.alphabet)}
-            <div className="researcher-info">
-              {researcherDetails(researcher)}
+            <div className="employee-info">
+              {employeeDetails(employee)}
             </div>
           </li>
           <Divider light />
@@ -48,9 +48,9 @@ function EmployeeList(props) {
     })
   }
 
-  const renderResearchers = () => {
-    const listItems = researchers.map((researchersByLetter) => {
-      return createListItems(researchersByLetter)
+  const renderEmployees = () => {
+    const listItems = employees.map((employeesByLetter) => {
+      return createListItems(employeesByLetter)
     })
 
     return (
@@ -64,7 +64,7 @@ function EmployeeList(props) {
   }
 
   return (
-    <section className="xp-part researchers p-0 mb-5">
+    <section className="xp-part employees-list p-0 mb-5">
       <div className="row banner">
         <div className="container">
           <h1 className="page-title">{pageTitle}</h1>
@@ -76,7 +76,7 @@ function EmployeeList(props) {
       <div className="row">
         <div className="container">
           <div className="mb-3"><p>Det er {total} personer i avdelingen</p></div>
-          {researchers != [] ? renderResearchers() : null}
+          {employees != [] ? renderEmployees() : null}
         </div>
       </div>
     </section>
@@ -86,7 +86,7 @@ function EmployeeList(props) {
 export default (props) => <EmployeeList {...props} />
 
 EmployeeList.propTypes = {
-  researchers: PropTypes.arrayOf(
+  employees: PropTypes.arrayOf(
     PropTypes.shape({
       surname: PropTypes.string,
       name: PropTypes.string,
