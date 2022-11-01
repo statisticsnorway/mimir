@@ -1,10 +1,10 @@
-import { query, Content } from '/lib/xp/content'
-import { Statistics } from '../../../site/content-types/statistics/statistics'
-import { EndedStatisticList } from '../../../site/content-types/endedStatisticList/endedStatisticList'
-import { StatisticInListing } from '../dashboard/statreg/types'
-import { Statistic } from '../../../site/mixins/statistic/statistic'
-import { Subtopic } from '../../../site/mixins/subtopic/subtopic'
-import { DefaultPage } from '/lib/types/defaultPage'
+import { query, type Content } from '/lib/xp/content'
+import type { Statistics } from '../../../site/content-types/statistics/statistics'
+import type { EndedStatisticList } from '../../../site/content-types/endedStatisticList/endedStatisticList'
+import type { StatisticInListing } from '../dashboard/statreg/types'
+import type { Statistic } from '../../../site/mixins/statistic/statistic'
+import type { Subtopic } from '../../../site/mixins/subtopic/subtopic'
+import type { DefaultPage } from '/lib/types/defaultPage'
 const {
   getAllStatisticsFromRepo
 } = __non_webpack_require__('/lib/ssb/statreg/statistics')
@@ -20,24 +20,54 @@ const {
 
 
 export function getMainSubjects(request: XP.Request, language?: string): Array<SubjectItem> {
-  return fromSubjectCache<SubjectItem>(request, `mainsubject-${language ? language : 'all'}`, () => {
-    const lang: string = language ? language !== 'en' ? 'AND language != "en"' : 'AND language = "en"' : ''
-    const mainSubjectsContent: Array<DefaultPage> = query({
-      start: 0,
-      count: 200,
-      sort: 'displayName ASC',
-      query: `components.page.config.mimir.default.subjectType LIKE "mainSubject" ${lang}`
-    }).hits as unknown as Array<DefaultPage>
+  return fromSubjectCache<SubjectItem>(request, `mainsubject-${language ? language : 'all'}`, () => queryForMainSubjects({ language }))
+}
 
-    return mainSubjectsContent.map((m) =>({
-      id: m._id,
-      title: m.displayName,
-      subjectCode: m.page.config.subjectCode ? m.page.config.subjectCode : '',
-      path: m._path,
-      language: m.language && m.language === 'en' ? 'en' : 'no',
-      name: m._name
-    }))
-  })
+export function queryForMainSubjects({
+  language
+}: QueryForMainSubjectsParams): SubjectItem[] {
+  return query({
+    count: 200,
+    sort: 'displayName ASC',
+    filters: {
+      boolean: {
+        must: [
+          {
+            hasValue: {
+              field: 'language',
+              values: language === 'en' ? ['en'] : ['no', 'nb', 'nn']
+            }
+          },
+          {
+            hasValue: {
+              field: 'components.page.config.mimir.default.subjectType',
+              values: ['mainSubject']
+            }
+          }
+        ]
+      }
+    }
+  }).hits
+    .filter((hit) => {
+      const page: DefaultPage['page'] = hit.page as DefaultPage['page']
+      return page.config.subjectCode !== undefined
+    })
+    .map((hit) => {
+      const page: DefaultPage['page'] = hit.page as DefaultPage['page']
+
+      return {
+        id: hit._id,
+        title: hit.displayName,
+        subjectCode: page.config.subjectCode,
+        path: hit._path,
+        language: hit?.language === 'en' ? 'en' : 'no',
+        name: hit._name
+      }
+    })
+}
+
+interface QueryForMainSubjectsParams {
+  language?: string | undefined;
 }
 
 export function getMainSubjectById(mainSubjects: Array<SubjectItem>, id: string): SubjectItem | null {
@@ -303,16 +333,5 @@ interface EndedStatistic {
   hideFromList: boolean;
 }
 
-export interface SubjectUtilsLib {
-    getMainSubjects: (request: XP.Request, language?: string) => Array<SubjectItem>;
-    getMainSubjectById: (mainSubjects: Array<SubjectItem>, id: string) => SubjectItem;
-    getSubSubjects: (request: XP.Request, language?: string) => Array<SubjectItem>;
-    getSubSubjectsByPath: (subjects: Array<SubjectItem>, path: string) => Array<SubjectItem>;
-    getSubjectStructur: (request: XP.Request, language: string) => Array<MainSubject>;
-    getStatistics: (statregStatistics: Array<StatisticInListing>) => Array<StatisticItem>;
-    getStatisticsByPath: (statistics: Array<StatisticItem>, path: string) => Array<StatisticItem>;
-    getEndedStatisticsByPath: (path: string, statregStatistics: Array<StatisticInListing>, hideStatistics: boolean) => Array<StatisticItem>;
-    getSecondaryStatisticsBySubject: (statistics: Array<StatisticItem>, subject: SubjectItem) => Array<StatisticItem>;
-    getMainSubjectBySubSubject: (subSubject: SubjectItem, mainSubjects: Array<SubjectItem>) => SubjectItem | undefined;
-  }
+export type SubjectUtilsLib = typeof import('./subjectUtils')
 
