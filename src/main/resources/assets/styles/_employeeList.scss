@@ -3,6 +3,10 @@
 	.row .container {
 		max-width: 1180px;
 
+		.page-title {
+			margin-bottom: 1.25rem;
+		}
+
 		.page-description p {
 			inline-size: 66%;
 			font-size: 20px;
