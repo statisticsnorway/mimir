@@ -14,7 +14,6 @@ import { capitalize } from '/lib/ssb/utils/stringUtils'
 import { calculatePeriod } from '/lib/ssb/utils/variantUtils'
 import { SubjectItem } from '/lib/ssb/utils/subjectUtils'
 import { ReleasesInListing } from '/lib/ssb/dashboard/statreg/types'
-import { DATASET_REPO, DatasetRepoNode } from '/lib/ssb/repo/dataset'
 
 const {
   queryForMainSubjects
@@ -24,7 +23,7 @@ export const REPO_ID_STATREG_STATISTICS: 'no.ssb.statreg.statistics.variants' = 
 
 const LANGUAGES: ReadonlyArray<'en' | 'nb'> = ['nb', 'en'] as const
 
-export function init(): void {
+export function createOrUpdateStatisticsRepo(): void {
   log.info(`Initiating "${REPO_ID_STATREG_STATISTICS}"`)
   run({
     user: {
@@ -79,15 +78,38 @@ export function fillRepo(statistics: Array<StatisticInListing>) {
         undefined
 
       forceArray(statistic.variants).forEach((variant) => {
-        // Check if exists, and then do update instead if changed
-        connection.create<ContentLight<Release>>(createContentStatisticVariant({
+        const path: string = `/${statistic.shortName}-${variant.id}–${language}`
+        const exists: Array<string> = connection.exists(path)
+        log.info('Finnes denne: ' + variant.id + ' ' + JSON.stringify(exists, null, 4))
+
+        const content: ContentLight<Release> = createContentStatisticVariant({
           statistic,
           variant,
           language,
           statisticsContent,
           aboutTheStatisticsContent,
           allMainSubjects
-        }))
+        })
+
+        // Check if exists, and then do update instead if changed
+        if (!exists) {
+          // create<NodeData>(a: NodeData & NodeCreateParams): NodeData & RepoNode;
+          connection.create<ContentLight<Release>>(content)
+        } else {
+          // modify<NodeData>(params: NodeModifyParams<NodeData>): NodeData & RepoNode;
+          connection.modify<ContentLight<Release>>({
+            key: path,
+            editor: (node) => {
+              return {
+                ...node,
+                data: {
+                  ...node.data,
+                  ...content.data
+                }
+              }
+            }
+          })
+        }
       })
     })
   })
