@@ -25,6 +25,10 @@ try {
     setupTaskListener
   } = __non_webpack_require__('/lib/ssb/dataset/publish')
 
+  const {
+    init
+  } = __non_webpack_require__('/lib/ssb/repo/statisticVariant')
+
   log.info('Application ' + app.name + ' started') // Log application started
   __.disposer(() => log.info('Application ' + app.name + ' stopped')) // Log application stoppped
 
@@ -104,6 +108,8 @@ try {
       ]
     }
   ])
+
+  init()
 
   const now = new Date()
   log.info(`Startup script complete: ${now.toISOString()}`)

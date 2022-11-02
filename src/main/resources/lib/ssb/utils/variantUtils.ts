@@ -29,7 +29,7 @@ const {
   moment
 } = __non_webpack_require__('/lib/vendor/moment')
 
-function calculatePeriod(frequency: string, previousFrom: string, previousTo: string, language: string): string {
+export function calculatePeriod(frequency: string, previousFrom: string, previousTo: string, language: string): string {
   switch (frequency) {
   case 'År':
     return calculateYear(previousFrom, previousTo, language)
@@ -200,7 +200,8 @@ export function addMonthNames(groupedByYearMonthAndDay: GroupedBy<GroupedBy<Grou
 
       const a: MonthReleases = {
         month: monthNumber,
-        monthName: moment().locale(language).month(monthNumber).format('MMM'),
+        monthName: moment().locale(language).month(monthNumber)
+          .format('MMM'),
         releases: dayReleases
       }
       return a
