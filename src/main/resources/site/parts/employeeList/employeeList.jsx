@@ -7,7 +7,13 @@ function EmployeeList(props) {
     employees, total, pageTitle, pageDescription
   } = props
 
-  const letterBlock = (index, alphabetLetter) => {
+  const sanitizeMobileNo = (number) => {
+    const spacesRemoved = number.split(' ').join('')
+    const numberMatchesInTwo = spacesRemoved.match(/.{1,2}/g)
+    return numberMatchesInTwo.join(' ')
+  }
+
+  const renderLetterBlock = (index, alphabetLetter) => {
     return (
       <>
         {index == 0 ? <div className="letter"><h2>{alphabetLetter}</h2></div> : <div className="empty-letter"></div>}
@@ -22,7 +28,7 @@ function EmployeeList(props) {
         {employee.position ? <div className="position"><Text small>{employee.position}</Text></div> : null}
         <div className="contact-details">
           <Text small>
-            {employee.phone != '' ? <><Link href={'tel:' + employee.phone}>{employee.phone}</Link><span className="dash-space"> / </span> </> : null}
+            {employee.phone != '' ? <><Link href={'tel:' + employee.phone}>{sanitizeMobileNo(employee.phone)}</Link><span className="dash-space"> / </span> </> : null}
             {employee.email != '' ? <><Link href={'mailto:' + employee.email}>{employee.email}</Link></> : null}
             {employee.area.title == undefined || employee.email == '' ? null : <span className="dash-space"> / </span>}
             {employee.area.title != '' ? <Link href={employee.area.href}>{employee.area.title}</Link> : null}
@@ -37,7 +43,7 @@ function EmployeeList(props) {
       return (
         <>
           <li className="list-item" role="listitem">
-            {letterBlock(i, list.alphabet)}
+            {renderLetterBlock(i, list.alphabet)}
             <div className="employee-info">
               {employeeDetails(employee)}
             </div>
