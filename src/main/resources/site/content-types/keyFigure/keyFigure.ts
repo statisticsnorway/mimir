@@ -8,7 +8,7 @@ export interface KeyFigure {
         /**
          * Selected
          */
-        _selected: "tbprocessor";
+        _selected: 'tbprocessor'
 
         /**
          * Tall fra tabellbygger
@@ -17,14 +17,14 @@ export interface KeyFigure {
           /**
            * URL eller TBML-id
            */
-          urlOrId?: string;
-        };
+          urlOrId?: string
+        }
       }
     | {
         /**
          * Selected
          */
-        _selected: "statbankApi";
+        _selected: 'statbankApi'
 
         /**
          * Api-spørring mot statistikkbanken
@@ -33,50 +33,49 @@ export interface KeyFigure {
           /**
            * URL eller tabell-id
            */
-          urlOrId?: string;
+          urlOrId?: string
 
           /**
            * API-spørring mot statistikkbanken (JSON-format)
            */
-          json?: string;
+          json?: string
 
           /**
            * Navn på x-akse dimensjon
            */
-          xAxisLabel?: string;
+          xAxisLabel?: string
 
           /**
            * Navn på y-akse dimensjon
            */
-          yAxisLabel?: string;
+          yAxisLabel?: string
 
           /**
            * Filtrering på dataset
            */
-          datasetFilterOptions?:
-            | {
-                /**
-                 * Selected
-                 */
-                _selected: "municipalityFilter";
+          datasetFilterOptions?: {
+            /**
+             * Selected
+             */
+            _selected: 'municipalityFilter'
 
-                /**
-                 * Filtrer på kommune
-                 */
-                municipalityFilter: {
-                  /**
-                   * Hvilken dimensjon skal filtreres på kommunenummer
-                   */
-                  municipalityDimension: string;
-                };
-              };
-        };
+            /**
+             * Filtrer på kommune
+             */
+            municipalityFilter: {
+              /**
+               * Hvilken dimensjon skal filtreres på kommunenummer
+               */
+              municipalityDimension: string
+            }
+          }
+        }
       }
     | {
         /**
          * Selected
          */
-        _selected: "statbankSaved";
+        _selected: 'statbankSaved'
 
         /**
          * Lagrede spørringer mot statistikkbanken
@@ -85,14 +84,14 @@ export interface KeyFigure {
           /**
            * URL eller tabell-id
            */
-          urlOrId?: string;
-        };
+          urlOrId?: string
+        }
       }
     | {
         /**
          * Selected
          */
-        _selected: "htmlTable";
+        _selected: 'htmlTable'
 
         /**
          * Excel (Kun på innholdstype Tabell)
@@ -101,19 +100,19 @@ export interface KeyFigure {
           /**
            * Kildetabell limt inn fra Excel
            */
-          html?: string;
+          html?: string
 
           /**
            * Fotnote-tekst
            */
-          footnoteText?: Array<string>;
-        };
+          footnoteText?: Array<string>
+        }
       }
     | {
         /**
          * Selected
          */
-        _selected: "dataset";
+        _selected: 'dataset'
 
         /**
          * (Ikke i bruk) Ferdige dataset
@@ -122,19 +121,19 @@ export interface KeyFigure {
           /**
            * ID
            */
-          id?: string;
+          id?: string
 
           /**
            * Format
            */
-          format: "json" | "csv";
-        };
+          format: 'json' | 'csv'
+        }
       }
     | {
         /**
          * Selected
          */
-        _selected: "klass";
+        _selected: 'klass'
 
         /**
          * Klass
@@ -143,24 +142,24 @@ export interface KeyFigure {
           /**
            * URL
            */
-          urlOrId?: string;
-        };
-      };
+          urlOrId?: string
+        }
+      }
 
   /**
    * Manuell verdi
    */
-  manualSource?: string;
+  manualSource?: string
 
   /**
    * Benevning
    */
-  denomination?: string;
+  denomination?: string
 
   /**
    * Størrelse
    */
-  size?: "small" | "medium" | "large";
+  size?: 'small' | 'medium' | 'large'
 
   /**
    * Endringstall
@@ -169,18 +168,18 @@ export interface KeyFigure {
     /**
      * Benevning på endringstall
      */
-    denomination?: string;
-  };
+    denomination?: string
+  }
 
   /**
    * Vis som grønn boks
    */
-  greenBox: boolean;
+  greenBox: boolean
 
   /**
    * Ordforklaring
    */
-  glossaryText?: string;
+  glossaryText?: string
 
   /**
    * Kilde
@@ -189,21 +188,21 @@ export interface KeyFigure {
     /**
      * Tittel
      */
-    title?: string;
+    title?: string
 
     /**
      * URL
      */
-    url?: string;
-  };
+    url?: string
+  }
 
   /**
    * Ikon
    */
-  icon?: string;
+  icon?: string
 
   /**
    * Standardverdi
    */
-  default?: string;
+  default?: string
 }

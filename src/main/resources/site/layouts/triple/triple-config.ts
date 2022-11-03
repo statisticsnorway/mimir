@@ -3,10 +3,10 @@ export interface TripleConfig {
   /**
    * Tittel
    */
-  title?: string;
+  title?: string
 
   /**
    * Skjul tittel
    */
-  hideTitle: boolean;
+  hideTitle: boolean
 }

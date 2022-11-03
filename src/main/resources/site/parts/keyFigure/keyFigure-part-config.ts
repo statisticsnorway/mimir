@@ -3,17 +3,17 @@ export interface KeyFigurePartConfig {
   /**
    * Tittel
    */
-  title?: string;
+  title?: string
 
   /**
    * Nøkkeltall
    */
-  figure?: Array<string>;
+  figure?: Array<string>
 
   /**
    * Vis i kolonner
    */
-  columns: boolean;
+  columns: boolean
 
   /**
    * Kilde
@@ -22,11 +22,11 @@ export interface KeyFigurePartConfig {
     /**
      * Tittel
      */
-    title?: string;
+    title?: string
 
     /**
      * URL
      */
-    url?: string;
-  };
+    url?: string
+  }
 }

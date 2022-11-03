@@ -19,13 +19,13 @@ const Project = (props) => {
     aboutPhrase,
     participantsPhrase,
     projectParticipantsPhrase,
-    collaboratorsPhrase
+    collaboratorsPhrase,
   } = props
 
   const renderTitle = () => {
     return (
-      <div className="row">
-        <Title className="col-12" size='3'>
+      <div className='row'>
+        <Title className='col-12' size='3'>
           {projectTitle}
         </Title>
       </div>
@@ -34,28 +34,30 @@ const Project = (props) => {
 
   const renderProjectInfo = () => {
     return (
-      <div className="row project-details py-4">
-        <div className="col-md-4 col-sm-12 py-4 details-block">
+      <div className='row project-details py-4'>
+        <div className='col-md-4 col-sm-12 py-4 details-block'>
           <div>
-            <User size={30}/>
-            <span className="p-1">{projectType}</span>
+            <User size={30} />
+            <span className='p-1'>{projectType}</span>
             <div>
-              <Link className='ms-4 ms-sm-4 detail-info' href={manager.href}>{manager.text}</Link>
+              <Link className='ms-4 ms-sm-4 detail-info' href={manager.href}>
+                {manager.text}
+              </Link>
             </div>
           </div>
         </div>
-        <div className="col-md-4 col-sm-12 py-4 details-block">
+        <div className='col-md-4 col-sm-12 py-4 details-block'>
           <div>
-            <Calendar size={30}/>
-            <span className="p-1">{periodPhrase}</span>
-            <div className="detail-info ps-4">{projectPeriod}</div>
+            <Calendar size={30} />
+            <span className='p-1'>{periodPhrase}</span>
+            <div className='detail-info ps-4'>{projectPeriod}</div>
           </div>
         </div>
-        <div className="col-md-4 col-sm-12 py-4 details-block">
+        <div className='col-md-4 col-sm-12 py-4 details-block'>
           <div>
-            <Settings size={30}/>
-            <span className="p-1">{financierPhrase}</span>
-            <div className="detail-info ps-4">{financier}</div>
+            <Settings size={30} />
+            <span className='p-1'>{financierPhrase}</span>
+            <div className='detail-info ps-4'>{financier}</div>
           </div>
         </div>
       </div>
@@ -64,21 +66,23 @@ const Project = (props) => {
   const renderProjectDescription = () => {
     if (ingress || body) {
       return (
-        <div className="row center">
-          <div className="col-12 col-md-12 row-gutter-mobile">
-            <h2 className="ssb-title py-4">{aboutPhrase}</h2>
+        <div className='row center'>
+          <div className='col-12 col-md-12 row-gutter-mobile'>
+            <h2 className='ssb-title py-4'>{aboutPhrase}</h2>
           </div>
-          <div className="col-12 col-md-12 row-gutter-mobile">
-            <div className="project-ingress"
+          <div className='col-12 col-md-12 row-gutter-mobile'>
+            <div
+              className='project-ingress'
               dangerouslySetInnerHTML={{
-                __html: ingress
+                __html: ingress,
               }}
             />
           </div>
-          <div className="col-12 col-md-12 row-gutter-mobile">
-            <div className="project-paragraph"
+          <div className='col-12 col-md-12 row-gutter-mobile'>
+            <div
+              className='project-paragraph'
               dangerouslySetInnerHTML={{
-                __html: body
+                __html: body,
               }}
             />
           </div>
@@ -90,25 +94,28 @@ const Project = (props) => {
   const renderParticipantAccordion = () => {
     if (participants || collaborators) {
       return (
-        <div className="row center">
-          <div className="col-12 col-md-12 row-gutter-mobile center-accordion">
-            <h2 className="mw-680 ssb-title top-padding">{participantsPhrase}</h2>
-            <Accordion header={projectParticipantsPhrase}
-              className={`${!participants ? 'd-none' : ''}`}>
-              <div className="ssb-paragraph lh-lg"
+        <div className='row center'>
+          <div className='col-12 col-md-12 row-gutter-mobile center-accordion'>
+            <h2 className='mw-680 ssb-title top-padding'>{participantsPhrase}</h2>
+            <Accordion header={projectParticipantsPhrase} className={`${!participants ? 'd-none' : ''}`}>
+              <div
+                className='ssb-paragraph lh-lg'
                 dangerouslySetInnerHTML={{
-                  __html: participants
+                  __html: participants,
                 }}
               />
             </Accordion>
-            <Accordion header={collaboratorsPhrase}
+            <Accordion
+              header={collaboratorsPhrase}
               className={`${!collaborators ? 'd-none' : ''}`}
               style={{
-                width: '60%'
-              }}>
-              <div className="ssb-paragraph lh-lg"
+                width: '60%',
+              }}
+            >
+              <div
+                className='ssb-paragraph lh-lg'
                 dangerouslySetInnerHTML={{
-                  __html: collaborators
+                  __html: collaborators,
                 }}
               />
             </Accordion>
@@ -120,7 +127,7 @@ const Project = (props) => {
 
   return (
     <div className='project'>
-      <section className="xp-part container p-0 mb-5">
+      <section className='xp-part container p-0 mb-5'>
         {renderTitle()}
         {renderProjectInfo()}
         {renderProjectDescription()}
@@ -145,7 +152,7 @@ Project.propTypes = {
   aboutPhrase: PropTypes.string,
   participantsPhrase: PropTypes.string,
   projectParticipantsPhrase: PropTypes.string,
-  collaboratorsPhrase: PropTypes.string
+  collaboratorsPhrase: PropTypes.string,
 }
 
 export default (props) => <Project {...props} />

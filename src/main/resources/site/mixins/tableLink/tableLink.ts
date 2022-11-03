@@ -3,20 +3,20 @@ export interface TableLink {
   /**
    * Tittel
    */
-  title?: string;
+  title?: string
 
   /**
    * Lenketekst
    */
-  description?: string;
+  description?: string
 
   /**
    * Url
    */
-  url?: string;
+  url?: string
 
   /**
    * Relatert innhold
    */
-  relatedContent?: string;
+  relatedContent?: string
 }

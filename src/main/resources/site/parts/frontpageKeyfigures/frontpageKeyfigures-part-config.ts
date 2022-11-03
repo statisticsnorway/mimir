@@ -7,16 +7,16 @@ export interface FrontpageKeyfiguresPartConfig {
     /**
      * Nøkkeltall
      */
-    keyfigure?: string;
+    keyfigure?: string
 
     /**
      * Lenketekst
      */
-    urlText: string;
+    urlText: string
 
     /**
      * Lenke på nøkkeltall
      */
-    url: string;
-  }>;
+    url: string
+  }>
 }

@@ -3,5 +3,5 @@ export interface MapPartConfig {
   /**
    * Kart
    */
-  map: Array<string>;
+  map: Array<string>
 }

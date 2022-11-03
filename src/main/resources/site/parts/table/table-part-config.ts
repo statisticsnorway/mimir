@@ -3,5 +3,5 @@ export interface TablePartConfig {
   /**
    * Velg tabell
    */
-  table?: string;
+  table?: string
 }

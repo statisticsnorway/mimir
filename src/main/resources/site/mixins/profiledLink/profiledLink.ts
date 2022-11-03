@@ -3,20 +3,20 @@ export interface ProfiledLink {
   /**
    * Lenketekst
    */
-  text?: string;
+  text?: string
 
   /**
    * Med ikon
    */
-  withIcon: boolean;
+  withIcon: boolean
 
   /**
    * URL
    */
-  profiledLinkHref?: string;
+  profiledLinkHref?: string
 
   /**
    * Innhold
    */
-  contentUrl?: string;
+  contentUrl?: string
 }

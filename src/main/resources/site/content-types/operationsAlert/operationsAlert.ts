@@ -3,5 +3,5 @@ export interface OperationsAlert {
   /**
    * Tekst
    */
-  message: string;
+  message: string
 }

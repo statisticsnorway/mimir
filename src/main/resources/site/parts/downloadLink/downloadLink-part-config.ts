@@ -3,10 +3,10 @@ export interface DownloadLinkPartConfig {
   /**
    * Tekst
    */
-  text?: string;
+  text?: string
 
   /**
    * Innhold
    */
-  file?: string;
+  file?: string
 }

@@ -1,45 +1,17 @@
 import { RepoNode } from '/lib/xp/node'
 import { StatisticInListing, StatRegBase } from '../dashboard/statreg/types'
 
-const {
-  equals
-} = __non_webpack_require__('/lib/vendor/ramda')
-const {
-  createNode,
-  getNode,
-  modifyNode
-} = __non_webpack_require__('/lib/ssb/repo/common')
-const {
-  repoExists,
-  createRepo
-} = __non_webpack_require__('/lib/ssb/repo/repo')
-const {
-  STATREG_REPO_CONTACTS_KEY,
-  fetchContacts
-} = __non_webpack_require__('/lib/ssb/statreg/contacts')
-const {
-  STATREG_REPO_STATISTICS_KEY,
-  fetchStatistics,
-  createMimirMockReleaseStatreg
-} = __non_webpack_require__('/lib/ssb/statreg/statistics')
-const {
-  STATREG_REPO_PUBLICATIONS_KEY,
-  fetchPublications
-} = __non_webpack_require__('/lib/ssb/statreg/publications')
-const {
-  STATREG_BRANCH,
-  STATREG_REPO
-} = __non_webpack_require__('/lib/ssb/dashboard/statreg/config')
-const {
-  Events,
-  logUserDataQuery
-} = __non_webpack_require__('/lib/ssb/repo/query')
-const {
-  ensureArray
-} = __non_webpack_require__('/lib/ssb/utils/arrayUtils')
-const {
-  cronJobLog
-} = __non_webpack_require__('/lib/ssb/utils/serverLog')
+const { equals } = __non_webpack_require__('/lib/vendor/ramda')
+const { createNode, getNode, modifyNode } = __non_webpack_require__('/lib/ssb/repo/common')
+const { repoExists, createRepo } = __non_webpack_require__('/lib/ssb/repo/repo')
+const { STATREG_REPO_CONTACTS_KEY, fetchContacts } = __non_webpack_require__('/lib/ssb/statreg/contacts')
+const { STATREG_REPO_STATISTICS_KEY, fetchStatistics, createMimirMockReleaseStatreg } =
+  __non_webpack_require__('/lib/ssb/statreg/statistics')
+const { STATREG_REPO_PUBLICATIONS_KEY, fetchPublications } = __non_webpack_require__('/lib/ssb/statreg/publications')
+const { STATREG_BRANCH, STATREG_REPO } = __non_webpack_require__('/lib/ssb/dashboard/statreg/config')
+const { Events, logUserDataQuery } = __non_webpack_require__('/lib/ssb/repo/query')
+const { ensureArray } = __non_webpack_require__('/lib/ssb/utils/arrayUtils')
+const { cronJobLog } = __non_webpack_require__('/lib/ssb/utils/serverLog')
 
 const STATREG_CONTACTS_NODE: StatRegNodeConfig = configureNode(STATREG_REPO_CONTACTS_KEY, fetchContacts)
 const STATREG_STATISTICS_NODE: StatRegNodeConfig = configureNode(STATREG_REPO_STATISTICS_KEY, fetchStatistics)
@@ -48,13 +20,13 @@ const STATREG_PUBLICATIONS_NODE: StatRegNodeConfig = configureNode(STATREG_REPO_
 export const STATREG_NODES: Array<StatRegNodeConfig> = [
   STATREG_CONTACTS_NODE,
   STATREG_STATISTICS_NODE,
-  STATREG_PUBLICATIONS_NODE
+  STATREG_PUBLICATIONS_NODE,
 ]
 
 function configureNode(key: string, fetcher: () => Array<StatRegBase> | null): StatRegNodeConfig {
   return {
     key,
-    fetcher
+    fetcher,
   }
 }
 
@@ -81,7 +53,7 @@ function setupStatRegFetcher(statRegFetcher: StatRegNodeConfig): StatRegRefreshR
     logUserDataQuery(statRegFetcher.key, {
       file: '/lib/repo/statreg.ts',
       function: 'setupStatRegFetcher',
-      message: Events.GET_DATA_STARTED
+      message: Events.GET_DATA_STARTED,
     })
     const result: Array<StatRegBase> | null = statRegFetcher.fetcher()
     if (result) {
@@ -99,18 +71,18 @@ function setupStatRegFetcher(statRegFetcher: StatRegNodeConfig): StatRegRefreshR
         file: '/lib/repo/statreg.ts',
         function: 'setupStatRegFetcher',
         message: status,
-        result: res
+        result: res,
       })
       return {
         key: statRegFetcher.key,
         status,
-        info: res
+        info: res,
       }
     } else {
       logUserDataQuery(statRegFetcher.key, {
         file: '/lib/repo/statreg.ts',
         function: 'setupStatRegFetcher',
-        message: Events.FAILED_TO_GET_DATA
+        message: Events.FAILED_TO_GET_DATA,
       })
       return {
         key: statRegFetcher.key,
@@ -119,8 +91,8 @@ function setupStatRegFetcher(statRegFetcher: StatRegNodeConfig): StatRegRefreshR
           changed: 0,
           added: 0,
           deleted: 0,
-          total: node && node.data ? node.data.length : 0
-        }
+          total: node && node.data ? node.data.length : 0,
+        },
       }
     }
   } catch (err) {
@@ -128,7 +100,7 @@ function setupStatRegFetcher(statRegFetcher: StatRegNodeConfig): StatRegRefreshR
     logUserDataQuery(statRegFetcher.key, {
       file: '/lib/repo/statreg.ts',
       function: 'setupStatRegFetcher',
-      message: Events.FAILED_TO_REFRESH_DATASET
+      message: Events.FAILED_TO_REFRESH_DATASET,
     })
     return {
       key: statRegFetcher.key,
@@ -137,17 +109,17 @@ function setupStatRegFetcher(statRegFetcher: StatRegNodeConfig): StatRegRefreshR
         changed: 0,
         added: 0,
         deleted: 0,
-        total: node && node.data ? node.data.length : 0
-      }
+        total: node && node.data ? node.data.length : 0,
+      },
     }
   }
 }
 
 function compareResult(node: StatRegNode | null, result: Array<StatRegBase>): StatRegCompareResult {
-  let added: number = 0
-  let deleted: number = 0
-  let changed: number = 0
-  let total: number = 0
+  let added = 0
+  let deleted = 0
+  let changed = 0
+  let total = 0
   if (!node || !node.data) {
     added = result.length
     total = added
@@ -156,7 +128,7 @@ function compareResult(node: StatRegNode | null, result: Array<StatRegBase>): St
       if (o.variants) {
         return {
           ...o,
-          variants: ensureArray(o.variants)
+          variants: ensureArray(o.variants),
         }
       } else {
         return o
@@ -185,7 +157,7 @@ function compareResult(node: StatRegNode | null, result: Array<StatRegBase>): St
     added,
     deleted,
     changed,
-    total
+    total,
   }
 }
 
@@ -193,7 +165,7 @@ function createStatRegNode(name: string, content: object): void {
   createNode(STATREG_REPO, STATREG_BRANCH, {
     _path: name,
     _name: name,
-    data: content
+    data: content,
   })
 }
 
@@ -206,7 +178,7 @@ function modifyStatRegNode(key: string, content: Array<StatRegBase>): StatRegNod
   return modifyNode<StatRegNode>(STATREG_REPO, STATREG_BRANCH, key, (node) => {
     return {
       ...node,
-      data: content
+      data: content,
     }
   })
 }
@@ -227,40 +199,40 @@ export function updateMimirMockRelease(): void {
     modifyNode<StatRegNode>(STATREG_REPO, STATREG_BRANCH, statisticNode._id, (node) => {
       return {
         ...node,
-        data: statisticData
+        data: statisticData,
       }
     })
   }
 }
 
-export type StatRegNode = RepoNode & StatRegContent;
+export type StatRegNode = RepoNode & StatRegContent
 export interface StatRegNodeConfig {
-  key: string;
-  fetcher: () => Array<StatRegBase> | null;
+  key: string
+  fetcher: () => Array<StatRegBase> | null
 }
 
 interface StatRegCompareResult {
-  added: number;
-  deleted: number;
-  changed: number;
-  total: number;
+  added: number
+  deleted: number
+  changed: number
+  total: number
 }
 
 export interface StatRegContent {
-  data: Array<StatRegBase>;
-  _ts: string;
+  data: Array<StatRegBase>
+  _ts: string
 }
 
 export interface StatRegRefreshResult {
-  key: string;
-  status: string;
-  info: StatRegCompareResult;
+  key: string
+  status: string
+  info: StatRegCompareResult
 }
 
 export interface StatRegRepoLib {
-  setupStatRegRepo: () => void;
-  refreshStatRegData(nodeConfig?: Array<StatRegNodeConfig>): Array<StatRegRefreshResult>;
-  getStatRegNode: (key: string) => StatRegNode | null;
-  STATREG_NODES: Array<StatRegNodeConfig>;
-  updateMimirMockRelease: () => void;
+  setupStatRegRepo: () => void
+  refreshStatRegData(nodeConfig?: Array<StatRegNodeConfig>): Array<StatRegRefreshResult>
+  getStatRegNode: (key: string) => StatRegNode | null
+  STATREG_NODES: Array<StatRegNodeConfig>
+  updateMimirMockRelease: () => void
 }

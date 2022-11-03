@@ -3,15 +3,15 @@ export interface RelatedFactPagePartConfig {
   /**
    * Tittel
    */
-  title?: string;
+  title?: string
 
   /**
    * Innholdsliste
    */
-  itemList?: string;
+  itemList?: string
 
   /**
    * Faktasider
    */
-  relatedFactPages?: Array<string>;
+  relatedFactPages?: Array<string>
 }

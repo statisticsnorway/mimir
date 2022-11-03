@@ -4,24 +4,15 @@ import { County } from './counties'
 import { DatasetRepoNode } from '../../repo/dataset'
 import { DataSource } from '../../../../site/mixins/dataSource/dataSource'
 
-const {
-  sanitize
-} = __non_webpack_require__('/lib/xp/common')
-const {
-  getSiteConfig
-} = __non_webpack_require__('/lib/xp/portal')
-const {
-  list: countyList
-} = __non_webpack_require__('/lib/ssb/dataset/klass/counties')
-const {
-  getDataset,
-  extractKey
-} = __non_webpack_require__('/lib/ssb/dataset/dataset')
+const { sanitize } = __non_webpack_require__('/lib/xp/common')
+const { getSiteConfig } = __non_webpack_require__('/lib/xp/portal')
+const { list: countyList } = __non_webpack_require__('/lib/ssb/dataset/klass/counties')
+const { getDataset, extractKey } = __non_webpack_require__('/lib/ssb/dataset/dataset')
 const {
   fromDatasetRepoCache,
   fromParsedMunicipalityCache,
   fromMunicipalityWithCodeCache,
-  fromMunicipalityWithNameCache
+  fromMunicipalityWithNameCache,
 } = __non_webpack_require__('/lib/ssb/cache/cache')
 
 /**
@@ -34,22 +25,27 @@ export const list: () => Array<MunicipalCode> = () => getMunicipalsFromContent()
  * @param {string} queryString
  * @return {array} a set of municipals containing the querystring in municiaplity code or name
  */
-export const query: (queryString: string) => Array<MunicipalCode> = (queryString) => getMunicipalsFromContent()
-  .filter( (municipal) => RegExp(queryString.toLowerCase()).test(`${municipal.code} ${municipal.name.toLowerCase()}` ))
+export const query: (queryString: string) => Array<MunicipalCode> = (queryString) =>
+  getMunicipalsFromContent().filter((municipal) =>
+    RegExp(queryString.toLowerCase()).test(`${municipal.code} ${municipal.name.toLowerCase()}`)
+  )
 
 function getMunicipalsFromContent(): Array<MunicipalCode> {
   const siteConfig: SiteConfig = getSiteConfig()
   const key: string | undefined = siteConfig.municipalDataContentId
   if (key) {
     const dataSource: Content<DataSource> | null = getContent({
-      key
+      key,
     })
     if (dataSource) {
-      const dataset: DatasetRepoNode<object> | undefined = fromDatasetRepoCache(`${dataSource.data.dataSource?._selected}/${extractKey(dataSource)}`, () => {
-        return getDataset(dataSource)
-      })
+      const dataset: DatasetRepoNode<object> | undefined = fromDatasetRepoCache(
+        `${dataSource.data.dataSource?._selected}/${extractKey(dataSource)}`,
+        () => {
+          return getDataset(dataSource)
+        }
+      )
       if (dataset && dataset.data) {
-        const data: {codes: Array<MunicipalCode>} = dataset.data as {codes: Array<MunicipalCode>}
+        const data: { codes: Array<MunicipalCode> } = dataset.data as { codes: Array<MunicipalCode> }
         return data.codes
       }
     }
@@ -72,27 +68,36 @@ export function municipalsWithCounties(): Array<MunicipalityWithCounty> {
   const counties: Array<County> = countyList()
   const municipalities: Array<MunicipalCode> = list()
   // Caching this since it is a bit heavy
-  return fromParsedMunicipalityCache('parsedMunicipality', () => municipalities.map((municipality: MunicipalCode) => {
-    const getTwoFirstDigits: RegExp = /^(\d\d).*$/
-    const currentCounty: County = counties.filter((county: County) => county.code === municipality.code.replace(getTwoFirstDigits, '$1'))[0]
-    const numMunicipalsWithSameName: number = municipalities.filter( (mun) => mun.name === municipality.name).length
+  return fromParsedMunicipalityCache('parsedMunicipality', () =>
+    municipalities.map((municipality: MunicipalCode) => {
+      const getTwoFirstDigits = /^(\d\d).*$/
+      const currentCounty: County = counties.filter(
+        (county: County) => county.code === municipality.code.replace(getTwoFirstDigits, '$1')
+      )[0]
+      const numMunicipalsWithSameName: number = municipalities.filter((mun) => mun.name === municipality.name).length
 
-    return {
-      code: municipality.code,
-      displayName: numMunicipalsWithSameName === 1 ? municipality.name : `${municipality.name} i ${currentCounty.name}`,
-      county: {
-        name: currentCounty.name
-      },
-      path: numMunicipalsWithSameName === 1 ? createPath(municipality.name) : createPath(municipality.name, currentCounty.name)
-    }
-  }))
+      return {
+        code: municipality.code,
+        displayName:
+          numMunicipalsWithSameName === 1 ? municipality.name : `${municipality.name} i ${currentCounty.name}`,
+        county: {
+          name: currentCounty.name,
+        },
+        path:
+          numMunicipalsWithSameName === 1
+            ? createPath(municipality.name)
+            : createPath(municipality.name, currentCounty.name),
+      }
+    })
+  )
 }
 
-export function getMunicipality(req: RequestWithCode): MunicipalityWithCounty|undefined {
+export function getMunicipality(req: RequestWithCode): MunicipalityWithCounty | undefined {
   let municipality: MunicipalityWithCounty | undefined
   if (req.params && req.params.selfRequest && req.params.municipality) {
     // TODO: Figure out why municipality is duplicated in params!
-    if (Array.isArray(req.params.municipality)) municipality = JSON.parse(req.params.municipality[0]) as MunicipalityWithCounty
+    if (Array.isArray(req.params.municipality))
+      municipality = JSON.parse(req.params.municipality[0]) as MunicipalityWithCounty
     else municipality = JSON.parse(req.params.municipality) as MunicipalityWithCounty
     if (municipality) {
       return municipality
@@ -123,14 +128,21 @@ export function getMunicipality(req: RequestWithCode): MunicipalityWithCounty|un
  * @return {*}
  */
 
-function getMunicipalityByCode(municipalities: Array<MunicipalityWithCounty>, municipalityCode: string): MunicipalityWithCounty|undefined {
+function getMunicipalityByCode(
+  municipalities: Array<MunicipalityWithCounty>,
+  municipalityCode: string
+): MunicipalityWithCounty | undefined {
   return fromMunicipalityWithCodeCache(`municipality_${municipalityCode}`, () => {
     const changes: Array<MunicipalityChange> | undefined = changesWithMunicipalityCode(municipalityCode)
-    const municipality: Array<MunicipalityWithCounty> = municipalities.filter((municipality) => municipality.code === municipalityCode)
-    return municipality.length > 0 ? {
-      ...municipality[0],
-      changes
-    } : undefined
+    const municipality: Array<MunicipalityWithCounty> = municipalities.filter(
+      (municipality) => municipality.code === municipalityCode
+    )
+    return municipality.length > 0
+      ? {
+          ...municipality[0],
+          changes,
+        }
+      : undefined
   })
 }
 
@@ -141,26 +153,33 @@ function getMunicipalityByCode(municipalities: Array<MunicipalityWithCounty>, mu
  * @return {*}
  */
 
-export function getMunicipalityByName(municipalities: Array<MunicipalityWithCounty>, municipalityName: string): MunicipalityWithCounty|undefined {
+export function getMunicipalityByName(
+  municipalities: Array<MunicipalityWithCounty>,
+  municipalityName: string
+): MunicipalityWithCounty | undefined {
   return fromMunicipalityWithNameCache(`municipality_${municipalityName}`, () => {
-    const municipality: Array<MunicipalityWithCounty> = municipalities.filter((municipality) => municipality.path === `/${municipalityName}`)
+    const municipality: Array<MunicipalityWithCounty> = municipalities.filter(
+      (municipality) => municipality.path === `/${municipalityName}`
+    )
 
     if (municipality.length > 0) {
-      const changes: Array<MunicipalityChange> | undefined = changesWithMunicipalityCode(municipality[0].code )
+      const changes: Array<MunicipalityChange> | undefined = changesWithMunicipalityCode(municipality[0].code)
       return {
         ...municipality[0],
-        changes
+        changes,
       }
     }
     return undefined
   })
 }
 
-function changesWithMunicipalityCode(municipalityCode: string): Array<MunicipalityChange>|undefined {
+function changesWithMunicipalityCode(municipalityCode: string): Array<MunicipalityChange> | undefined {
   const changeList: Array<MunicipalityChange> = getMunicipalityChanges().codeChanges
-  const changes: Array<MunicipalityChange> = changeList.filter( (change) => {
-    return (change.oldCode === municipalityCode || change.newCode === municipalityCode) &&
-        removeCountyFromMunicipalityName(change.oldName) === removeCountyFromMunicipalityName(change.newName)
+  const changes: Array<MunicipalityChange> = changeList.filter((change) => {
+    return (
+      (change.oldCode === municipalityCode || change.newCode === municipalityCode) &&
+      removeCountyFromMunicipalityName(change.oldName) === removeCountyFromMunicipalityName(change.newName)
+    )
   })
   return changes
 }
@@ -169,12 +188,15 @@ function getMunicipalityChanges(): MunicipalityChangeList {
   const changeListId: string | undefined = getSiteConfig<SiteConfig>().municipalChangeListContentId
   if (changeListId) {
     const dataSource: Content<DataSource> | null = getContent({
-      key: changeListId
+      key: changeListId,
     })
     if (dataSource) {
-      const dataset: DatasetRepoNode<object> | undefined = fromDatasetRepoCache(`${dataSource.data.dataSource?._selected}/${extractKey(dataSource)}`, () => {
-        return getDataset(dataSource)
-      })
+      const dataset: DatasetRepoNode<object> | undefined = fromDatasetRepoCache(
+        `${dataSource.data.dataSource?._selected}/${extractKey(dataSource)}`,
+        () => {
+          return getDataset(dataSource)
+        }
+      )
       if (dataset && dataset.data) {
         const data: MunicipalityChangeList = dataset.data as MunicipalityChangeList
         return data
@@ -183,7 +205,7 @@ function getMunicipalityChanges(): MunicipalityChangeList {
   }
 
   return {
-    codeChanges: []
+    codeChanges: [],
   }
 }
 
@@ -192,49 +214,51 @@ export function removeCountyFromMunicipalityName(municipalityName: string): stri
 }
 
 export interface MunicipalityChangeList {
-  codeChanges: Array<MunicipalityChange>;
+  codeChanges: Array<MunicipalityChange>
 }
 
 export interface MunicipalityChange {
-  oldCode: string;
-  oldName: string;
-  oldShortName?: string;
-  newCode: string;
-  newName: string;
-  newShortName?: string;
-  changeOccurred: string;
+  oldCode: string
+  oldName: string
+  oldShortName?: string
+  newCode: string
+  newName: string
+  newShortName?: string
+  changeOccurred: string
 }
 
 export interface MunicipalitiesLib {
-  list: () => Array<MunicipalCode>;
-  query: (queryString: string) => Array<MunicipalCode>;
-  createPath (municipalName: string, countyName?: string): string;
-  municipalsWithCounties (): Array<MunicipalityWithCounty>;
-  getMunicipality (req: XP.Request): MunicipalityWithCounty|undefined;
-  getMunicipalityByName: (municipalities: Array<MunicipalityWithCounty>, municipalityName: string) => MunicipalityWithCounty|undefined;
-  removeCountyFromMunicipalityName: (municipalityName: string) => string;
+  list: () => Array<MunicipalCode>
+  query: (queryString: string) => Array<MunicipalCode>
+  createPath(municipalName: string, countyName?: string): string
+  municipalsWithCounties(): Array<MunicipalityWithCounty>
+  getMunicipality(req: XP.Request): MunicipalityWithCounty | undefined
+  getMunicipalityByName: (
+    municipalities: Array<MunicipalityWithCounty>,
+    municipalityName: string
+  ) => MunicipalityWithCounty | undefined
+  removeCountyFromMunicipalityName: (municipalityName: string) => string
 }
 
 interface RequestWithCode extends XP.Request {
-  code: string;
+  code: string
 }
 
 export interface MunicipalCode {
-  code: string;
-  parentCode: string;
-  level: string;
-  name: string;
-  shortName: string;
-  presentationName: string;
+  code: string
+  parentCode: string
+  level: string
+  name: string
+  shortName: string
+  presentationName: string
 }
 
 export interface MunicipalityWithCounty {
-  code: string;
-  displayName: string;
+  code: string
+  displayName: string
   county: {
-    name: string;
-  };
-  path: string;
-  changes?: Array<MunicipalityChange>;
+    name: string
+  }
+  path: string
+  changes?: Array<MunicipalityChange>
 }
-

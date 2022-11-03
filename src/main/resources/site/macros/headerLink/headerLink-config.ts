@@ -3,10 +3,10 @@ export interface HeaderLinkConfig {
   /**
    * Innhold
    */
-  linkedContent: string;
+  linkedContent: string
 
   /**
    * Lenketekst
    */
-  linkText: string;
+  linkText: string
 }

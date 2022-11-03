@@ -3,32 +3,32 @@ export interface ProfiledBoxPartConfig {
   /**
    * Retning
    */
-  cardOrientation: "horizontal" | "vertical";
+  cardOrientation: 'horizontal' | 'vertical'
 
   /**
    * Bilde
    */
-  image: string;
+  image: string
 
   /**
    * Innhold
    */
-  content?: string;
+  content?: string
 
   /**
    * Dato
    */
-  date?: string;
+  date?: string
 
   /**
    * Tittel
    */
-  title: string;
+  title: string
 
   /**
    * Ingress
    */
-  preamble: string;
+  preamble: string
 
   /**
    * Lenke
@@ -38,7 +38,7 @@ export interface ProfiledBoxPartConfig {
         /**
          * Selected
          */
-        _selected: "optionLink";
+        _selected: 'optionLink'
 
         /**
          * URL
@@ -47,14 +47,14 @@ export interface ProfiledBoxPartConfig {
           /**
            * Lenke
            */
-          link?: string;
-        };
+          link?: string
+        }
       }
     | {
         /**
          * Selected
          */
-        _selected: "optionXPContent";
+        _selected: 'optionXPContent'
 
         /**
          * XP-innhold
@@ -63,7 +63,7 @@ export interface ProfiledBoxPartConfig {
           /**
            * Innhold i XP
            */
-          xpContent?: string;
-        };
-      };
+          xpContent?: string
+        }
+      }
 }

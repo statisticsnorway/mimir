@@ -3,10 +3,10 @@ export interface ContactPartConfig {
   /**
    * Overskrift på kontaktområde
    */
-  label?: string;
+  label?: string
 
   /**
    * Kontakter
    */
-  contacts?: Array<string>;
+  contacts?: Array<string>
 }

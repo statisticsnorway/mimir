@@ -3,12 +3,12 @@ export interface Footer {
   /**
    * Footer Menypunkter
    */
-  footerContentId?: string;
+  footerContentId?: string
 
   /**
    * Lenke Copyright
    */
-  copyrightUrl: string;
+  copyrightUrl: string
 
   /**
    * Bunn lenker
@@ -17,7 +17,7 @@ export interface Footer {
     /**
      * Lenketittel
      */
-    linkTitle: string;
+    linkTitle: string
 
     /**
      * Lenkemål
@@ -27,7 +27,7 @@ export interface Footer {
           /**
            * Selected
            */
-          _selected: "manual";
+          _selected: 'manual'
 
           /**
            * Url lenke
@@ -36,14 +36,14 @@ export interface Footer {
             /**
              * Kildelenke
              */
-            url?: string;
-          };
+            url?: string
+          }
         }
       | {
           /**
            * Selected
            */
-          _selected: "content";
+          _selected: 'content'
 
           /**
            * Lenke til internt innhold
@@ -52,28 +52,28 @@ export interface Footer {
             /**
              * Relatert innhold
              */
-            contentId?: string;
-          };
-        };
-  }>;
+            contentId?: string
+          }
+        }
+  }>
 
   /**
    * Lenke Facebook
    */
-  facebookUrl: string;
+  facebookUrl: string
 
   /**
    * Lenke Twitter
    */
-  twitterUrl: string;
+  twitterUrl: string
 
   /**
    * Lenke Linkedin
    */
-  linkedinUrl: string;
+  linkedinUrl: string
 
   /**
    * Lenke RSS
    */
-  rssUrl: string;
+  rssUrl: string
 }

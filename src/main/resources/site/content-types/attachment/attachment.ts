@@ -3,10 +3,10 @@ export interface Attachment {
   /**
    * Lenketekst innhold
    */
-  label?: string;
+  label?: string
 
   /**
    * Fil
    */
-  file?: string;
+  file?: string
 }

@@ -3,5 +3,5 @@ export interface DividerPartConfig {
   /**
    * Farge
    */
-  dividerColor?: "dark" | "light";
+  dividerColor?: 'dark' | 'light'
 }

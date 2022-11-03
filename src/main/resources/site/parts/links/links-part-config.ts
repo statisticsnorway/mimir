@@ -8,7 +8,7 @@ export interface LinksPartConfig {
         /**
          * Selected
          */
-        _selected: "tableLink";
+        _selected: 'tableLink'
 
         /**
          * Tabell lenke
@@ -17,29 +17,29 @@ export interface LinksPartConfig {
           /**
            * Tittel
            */
-          title?: string;
+          title?: string
 
           /**
            * Lenketekst
            */
-          description?: string;
+          description?: string
 
           /**
            * Url
            */
-          url?: string;
+          url?: string
 
           /**
            * Relatert innhold
            */
-          relatedContent?: string;
-        };
+          relatedContent?: string
+        }
       }
     | {
         /**
          * Selected
          */
-        _selected: "headerLink";
+        _selected: 'headerLink'
 
         /**
          * Uthevet lenke
@@ -48,24 +48,24 @@ export interface LinksPartConfig {
           /**
            * Lenketekst
            */
-          linkText?: string;
+          linkText?: string
 
           /**
            * URL
            */
-          headerLinkHref?: string;
+          headerLinkHref?: string
 
           /**
            * Innhold
            */
-          linkedContent?: string;
-        };
+          linkedContent?: string
+        }
       }
     | {
         /**
          * Selected
          */
-        _selected: "profiledLink";
+        _selected: 'profiledLink'
 
         /**
          * Profilert lenke
@@ -74,22 +74,22 @@ export interface LinksPartConfig {
           /**
            * Lenketekst
            */
-          text?: string;
+          text?: string
 
           /**
            * Med ikon
            */
-          withIcon: boolean;
+          withIcon: boolean
 
           /**
            * URL
            */
-          profiledLinkHref?: string;
+          profiledLinkHref?: string
 
           /**
            * Innhold
            */
-          contentUrl?: string;
-        };
-      };
+          contentUrl?: string
+        }
+      }
 }

@@ -3,10 +3,10 @@ export interface SearchResultPartConfig {
   /**
    * Side for søkeresultat
    */
-  searchResultPage?: string;
+  searchResultPage?: string
 
   /**
    * Antall treff pr side
    */
-  numberOfHits: string;
+  numberOfHits: string
 }

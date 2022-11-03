@@ -3,17 +3,17 @@ export interface StaticVisualization {
   /**
    * Legg til infografikk eller visualisering
    */
-  image: string;
+  image: string
 
   /**
    * Beskrivende hjelpetekst
    */
-  longDesc?: string;
+  longDesc?: string
 
   /**
    * Tabelldata
    */
-  tableData?: string;
+  tableData?: string
 
   /**
    * Kilder
@@ -23,7 +23,7 @@ export interface StaticVisualization {
         /**
          * Selected
          */
-        _selected: "urlSource";
+        _selected: 'urlSource'
 
         /**
          * Kilde fra url
@@ -32,19 +32,19 @@ export interface StaticVisualization {
           /**
            * Tekst til kildelenke
            */
-          urlText: string;
+          urlText: string
 
           /**
            * Kildelenke
            */
-          url: string;
-        };
+          url: string
+        }
       }
     | {
         /**
          * Selected
          */
-        _selected: "relatedSource";
+        _selected: 'relatedSource'
 
         /**
          * Kilde fra XP
@@ -53,18 +53,18 @@ export interface StaticVisualization {
           /**
            * Tekst til kildelenke
            */
-          urlText?: string;
+          urlText?: string
 
           /**
            * Relatert innhold
            */
-          sourceSelector?: string;
-        };
+          sourceSelector?: string
+        }
       }
-  >;
+  >
 
   /**
    * Fotnote-tekst
    */
-  footNote?: Array<string>;
+  footNote?: Array<string>
 }

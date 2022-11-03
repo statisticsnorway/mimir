@@ -2,7 +2,7 @@ import { createSlice } from '../../utils/@reduxjs/toolkit'
 
 export const initialState = {
   jobs: [],
-  loading: true
+  loading: true,
 }
 
 const jobsSlice = createSlice({
@@ -16,10 +16,8 @@ const jobsSlice = createSlice({
     jobsLoaded(state, action) {
       state.jobs = action.jobs
       state.loading = false
-    }
-  }
+    },
+  },
 })
 
-export const {
-  actions, reducer, name: sliceKey
-} = jobsSlice
+export const { actions, reducer, name: sliceKey } = jobsSlice

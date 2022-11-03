@@ -3,15 +3,15 @@ export interface KpiCalculatorPartConfig {
   /**
    * Artikkel Kpi kalkulator
    */
-  kpiCalculatorArticle?: string;
+  kpiCalculatorArticle?: string
 
   /**
    * Bruk på Forside
    */
-  frontPage: boolean;
+  frontPage: boolean
 
   /**
    * Ingress kalkulator Forside
    */
-  ingressFrontpage?: string;
+  ingressFrontpage?: string
 }

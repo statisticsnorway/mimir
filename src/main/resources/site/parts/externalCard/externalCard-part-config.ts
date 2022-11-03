@@ -7,21 +7,21 @@ export interface ExternalCardPartConfig {
     /**
      * Bilde
      */
-    image: string;
+    image: string
 
     /**
      * Tekst
      */
-    content: string;
+    content: string
 
     /**
      * Lenke tekst
      */
-    linkText: string;
+    linkText: string
 
     /**
      * Lenke url
      */
-    linkUrl: string;
-  }>;
+    linkUrl: string
+  }>
 }

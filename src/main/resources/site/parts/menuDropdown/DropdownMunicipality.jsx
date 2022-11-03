@@ -23,12 +23,14 @@ const onSelectMunicipality = (e, baseUrl) => {
 
 DropdownMunicipality.propTypes = {
   ariaLabel: PropTypes.string,
-  items: PropTypes.arrayOf(PropTypes.shape({
-    title: PropTypes.string,
-    id: PropTypes.string
-  })),
+  items: PropTypes.arrayOf(
+    PropTypes.shape({
+      title: PropTypes.string,
+      id: PropTypes.string,
+    })
+  ),
   placeholder: PropTypes.string,
-  baseUrl: PropTypes.string
+  baseUrl: PropTypes.string,
 }
 
 export default DropdownMunicipality

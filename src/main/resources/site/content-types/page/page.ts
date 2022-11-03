@@ -3,5 +3,5 @@ export interface Page {
   /**
    * Tittel
    */
-  title?: string;
+  title?: string
 }

@@ -3,58 +3,57 @@ export interface Statistics {
   /**
    * Statistikk
    */
-  statistic?: string;
+  statistic?: string
 
   /**
    * Endringsdato
    */
-  showModifiedDate?:
-    | {
-        /**
-         * Selected
-         */
-        _selected: "modifiedOption";
+  showModifiedDate?: {
+    /**
+     * Selected
+     */
+    _selected: 'modifiedOption'
 
-        /**
-         * Endringsmelding
-         */
-        modifiedOption: {
-          /**
-           * Dato og tid
-           */
-          lastModified?: string;
+    /**
+     * Endringsmelding
+     */
+    modifiedOption: {
+      /**
+       * Dato og tid
+       */
+      lastModified?: string
 
-          /**
-           * Endringstekst
-           */
-          modifiedText?: string;
-        };
-      };
+      /**
+       * Endringstekst
+       */
+      modifiedText?: string
+    }
+  }
 
   /**
    * Tabell
    */
-  mainTable?: string;
+  mainTable?: string
 
   /**
    * Vedleggstabell eller figur
    */
-  attachmentTablesFigures?: Array<string>;
+  attachmentTablesFigures?: Array<string>
 
   /**
    * Fritekstfelt
    */
-  freeTextAttachmentTablesFigures?: string;
+  freeTextAttachmentTablesFigures?: string
 
   /**
    * Om Statistikken
    */
-  aboutTheStatistics?: string;
+  aboutTheStatistics?: string
 
   /**
    * Nøkkeltall
    */
-  statisticsKeyFigure?: string;
+  statisticsKeyFigure?: string
 
   /**
    * Lenker til tabeller i statistikkbanken
@@ -63,26 +62,25 @@ export interface Statistics {
     /**
      * Lenketekst
      */
-    urlText: string;
+    urlText: string
 
     /**
      * URL
      */
-    url: string;
-  }>;
+    url: string
+  }>
 
   /**
    * Antall tabeller i statbank
    */
-  linkNumber?: string;
-
+  linkNumber?: string
 
   relatedStatisticsOptions?: Array<
     | {
         /**
          * Selected
          */
-        _selected: "xp";
+        _selected: 'xp'
 
         /**
          * Statistikk fra XP
@@ -91,14 +89,14 @@ export interface Statistics {
           /**
            * Statistikk
            */
-          contentId?: string;
-        };
+          contentId?: string
+        }
       }
     | {
         /**
          * Selected
          */
-        _selected: "cms";
+        _selected: 'cms'
 
         /**
          * Statistikk fra 4.7
@@ -107,20 +105,20 @@ export interface Statistics {
           /**
            * Tittel
            */
-          title: string;
+          title: string
 
           /**
            * Profileringstekst
            */
-          profiledText: string;
+          profiledText: string
 
           /**
            * URL
            */
-          url: string;
-        };
+          url: string
+        }
       }
-  >;
+  >
 
   /**
    * Relaterte eksterne lenker
@@ -129,13 +127,13 @@ export interface Statistics {
     /**
      * Lenketekst
      */
-    urlText: string;
+    urlText: string
 
     /**
      * URL
      */
-    url: string;
-  }>;
+    url: string
+  }>
 
   /**
    * Relaterte artikler
@@ -145,7 +143,7 @@ export interface Statistics {
         /**
          * Selected
          */
-        _selected: "article";
+        _selected: 'article'
 
         /**
          * Artikkel
@@ -154,14 +152,14 @@ export interface Statistics {
           /**
            * Artikkel fra XP
            */
-          article: string;
-        };
+          article: string
+        }
       }
     | {
         /**
          * Selected
          */
-        _selected: "externalArticle";
+        _selected: 'externalArticle'
 
         /**
          * Artikkel fra 4.7-CMS
@@ -170,58 +168,58 @@ export interface Statistics {
           /**
            * URL
            */
-          url: string;
+          url: string
 
           /**
            * Tittel
            */
-          title: string;
+          title: string
 
           /**
            * Type
            */
-          type?: string;
+          type?: string
 
           /**
            * Dato
            */
-          date?: string;
+          date?: string
 
           /**
            * Ingress
            */
-          preface: string;
+          preface: string
 
           /**
            * Bilde
            */
-          image: string;
-        };
+          image: string
+        }
       }
-  >;
+  >
 
   /**
    * Faktasider
    */
-  relatedFactPages?: Array<string>;
+  relatedFactPages?: Array<string>
 
   /**
    * Kontakter
    */
-  contacts?: Array<string>;
+  contacts?: Array<string>
 
   /**
    * Stikkord
    */
-  keywords?: string;
+  keywords?: string
 
   /**
    * Delemner
    */
-  subtopic?: Array<string>;
+  subtopic?: Array<string>
 
   /**
    * Skjul statistikk fra statbank emnetre
    */
-  hideFromList: boolean;
+  hideFromList: boolean
 }

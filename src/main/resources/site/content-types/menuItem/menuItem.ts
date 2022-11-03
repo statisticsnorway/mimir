@@ -3,12 +3,12 @@ export interface MenuItem {
   /**
    * Ikon
    */
-  icon?: string;
+  icon?: string
 
   /**
    * Kortnavn
    */
-  shortName?: string;
+  shortName?: string
 
   /**
    * Menymål
@@ -18,7 +18,7 @@ export interface MenuItem {
         /**
          * Selected
          */
-        _selected: "manual";
+        _selected: 'manual'
 
         /**
          * Url lenke
@@ -27,14 +27,14 @@ export interface MenuItem {
           /**
            * Kildelenke
            */
-          url?: string;
-        };
+          url?: string
+        }
       }
     | {
         /**
          * Selected
          */
-        _selected: "content";
+        _selected: 'content'
 
         /**
          * Lenke til internt innhold
@@ -43,7 +43,7 @@ export interface MenuItem {
           /**
            * Relatert innhold
            */
-          contentId?: string;
-        };
-      };
+          contentId?: string
+        }
+      }
 }

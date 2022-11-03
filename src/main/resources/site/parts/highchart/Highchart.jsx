@@ -13,18 +13,18 @@ require('highcharts/modules/data')(Highcharts)
 require('highcharts/modules/no-data-to-display')(Highcharts)
 
 /* TODO list
-* Display highcharts in edit mode
-* Show highcharts draft in content type edit mode button
-* Perfomance - highcharts react takes a bit longer to load
-* --- UU improvements ---
-* Show figure as highchart table functionality
-* Fix open xls exported file without dangerous file popup
-* Thousand seperator and decimal point corrections to highchart table
-* Option to replace Category in highchart table row
-* Show last point symbol for line graphs
-* ...etc
-* --- Rest ---
-* Cleanup - are there any files and lines of code we can delete after full conversion?
+ * Display highcharts in edit mode
+ * Show highcharts draft in content type edit mode button
+ * Perfomance - highcharts react takes a bit longer to load
+ * --- UU improvements ---
+ * Show figure as highchart table functionality
+ * Fix open xls exported file without dangerous file popup
+ * Thousand seperator and decimal point corrections to highchart table
+ * Option to replace Category in highchart table row
+ * Show last point symbol for line graphs
+ * ...etc
+ * --- Rest ---
+ * Cleanup - are there any files and lines of code we can delete after full conversion?
  */
 function Highchart(props) {
   const [showDraft, setShowDraft] = useState(false)
@@ -38,17 +38,17 @@ function Highchart(props) {
           chartContainerLabel: '{title} Interaktiv graf',
           exporting: {
             chartMenuLabel: 'Last ned graf',
-            menuButtonLabel: 'Velg format for å laste ned {chartTitle}'
+            menuButtonLabel: 'Velg format for å laste ned {chartTitle}',
           },
           screenReaderSection: {
             beforeRegionLabel: 'Diagram skjermleser-informasjon for {chartTitle}.',
-            endOfChartMarker: ''
+            endOfChartMarker: '',
           },
           legend: {
             legendItem: 'Vis {itemName}',
             legendLabel: 'Forklaring av diagram: {legendTitle}',
-            legendLabelNoTitle: 'Bytt synlighet på serie, {chartTitle}'
-          }
+            legendLabelNoTitle: 'Bytt synlighet på serie, {chartTitle}',
+          },
         },
         chartTypes: {
           barMultiple: 'Søylediagram med {numSeries} serier.',
@@ -68,37 +68,50 @@ function Highchart(props) {
           scatterSingle: 'Spredningsplott diagram med {numPoints} {#plural(numPoints, points, point)}.',
           splineMultiple: 'Linjediagram med {numSeries} linjer.',
           splineSingle: 'linjediagram med {numPoints} datapunkter {#plural(numPoints, points, point)}.',
-          unknownMap: 'Kart med {numSeries} dataserier.'
+          unknownMap: 'Kart med {numSeries} dataserier.',
         },
         series: {
           xAxisDescription: 'X-akse, {name}',
           yAxisDescription: 'Y-akse , {name}',
           summary: {
             bar: '{name}, stolpediagram {ix} av {numSeries} med {numPoints} {#plural(numPoints, bars, bar)}.',
-            barCombination: '{name}, serie {ix} av {numSeries}. stolpediagram med {numPoints} {#plural(numPoints, bars, bar)}.',
+            barCombination:
+              '{name}, serie {ix} av {numSeries}. stolpediagram med {numPoints} {#plural(numPoints, bars, bar)}.',
             boxplot: '{name}, boksdiagram {ix} av {numSeries} med {numPoints} {#plural(numPoints, boxes, box)}.',
-            boxplotCombination: '{name}, serie {ix} av {numSeries}. Boksdiagram med {numPoints} {#plural(numPoints, boxes, box)}.',
+            boxplotCombination:
+              '{name}, serie {ix} av {numSeries}. Boksdiagram med {numPoints} {#plural(numPoints, boxes, box)}.',
             bubble: '{name}, boblediagram {ix} av {numSeries} med {numPoints} {#plural(numPoints, bubbles, bubble)}.',
-            bubbleCombination: '{name}, serie {ix} av {numSeries}. Boblediagram serie med {numPoints} {#plural(numPoints, bubbles, bubble)}.',
+            bubbleCombination:
+              '{name}, serie {ix} av {numSeries}. Boblediagram serie med {numPoints} {#plural(numPoints, bubbles, bubble)}.',
             column: '{name}, stolpediagram {ix} av {numSeries} med {numPoints} {#plural(numPoints, bars, bar)}.',
-            columnCombination: '{name}, serie {ix} av {numSeries}. Stolpediagram med {numPoints} {#plural(numPoints, bars, bar)}.',
+            columnCombination:
+              '{name}, serie {ix} av {numSeries}. Stolpediagram med {numPoints} {#plural(numPoints, bars, bar)}.',
             default: '{name}, serie {ix} av {numSeries} med {numPoints} data {#plural(numPoints, points, point)}.',
-            defaultCombination: '{name}, serie {ix} av {numSeries} med {numPoints} data {#plural(numPoints, points, point)}.',
+            defaultCombination:
+              '{name}, serie {ix} av {numSeries} med {numPoints} data {#plural(numPoints, points, point)}.',
             line: '{name}, linje {ix} av {numSeries} med {numPoints} data {#plural(numPoints, points, point)}.',
-            lineCombination: '{name}, serie {ix} av {numSeries}. Linje med {numPoints} data {#plural(numPoints, points, point)}.',
+            lineCombination:
+              '{name}, serie {ix} av {numSeries}. Linje med {numPoints} data {#plural(numPoints, points, point)}.',
             map: '{name}, kart {ix} av {numSeries} med {numPoints} {#plural(numPoints, areas, area)}.',
-            mapbubble: '{name}, Boblediagram {ix} av {numSeries} med {numPoints} {#plural(numPoints, bubbles, bubble)}.',
-            mapbubbleCombination: '{name}, serie {ix} av {numSeries}. Boblediagram serie med {numPoints} {#plural(numPoints, bubbles, bubble)}.',
-            mapCombination: '{name}, serie {ix} av {numSeries}. Kart med {numPoints} {#plural(numPoints, areas, area)}.',
+            mapbubble:
+              '{name}, Boblediagram {ix} av {numSeries} med {numPoints} {#plural(numPoints, bubbles, bubble)}.',
+            mapbubbleCombination:
+              '{name}, serie {ix} av {numSeries}. Boblediagram serie med {numPoints} {#plural(numPoints, bubbles, bubble)}.',
+            mapCombination:
+              '{name}, serie {ix} av {numSeries}. Kart med {numPoints} {#plural(numPoints, areas, area)}.',
             mapline: '{name}, linje {ix} av {numSeries} med {numPoints} data {#plural(numPoints, points, point)}.',
-            maplineCombination: '{name}, serie {ix} av {numSeries}. Linje med {numPoints} data {#plural(numPoints, points, point)}.',
+            maplineCombination:
+              '{name}, serie {ix} av {numSeries}. Linje med {numPoints} data {#plural(numPoints, points, point)}.',
             pie: '{name}, Kake {ix} av {numSeries} med {numPoints} {#plural(numPoints, slices, slice)}.',
-            pieCombination: '{name}, serie {ix} av {numSeries}. Kake med {numPoints} {#plural(numPoints, slices, slice)}.',
+            pieCombination:
+              '{name}, serie {ix} av {numSeries}. Kake med {numPoints} {#plural(numPoints, slices, slice)}.',
             scatter: '{name}, spredningsplott {ix} av {numSeries} med {numPoints} {#plural(numPoints, points, point)}.',
-            scatterCombination: '{name}, serie {ix} av {numSeries}, spredningsplott med {numPoints} {#plural(numPoints, points, point)}.',
+            scatterCombination:
+              '{name}, serie {ix} av {numSeries}, spredningsplott med {numPoints} {#plural(numPoints, points, point)}.',
             spline: '{name}, linje {ix} av {numSeries} med {numPoints} data {#plural(numPoints, points, point)}.',
-            splineCombination: '{name}, serie {ix} av {numSeries}. Linje med {numPoints} data {#plural(numPoints, points, point)}.'
-          }
+            splineCombination:
+              '{name}, serie {ix} av {numSeries}. Linje med {numPoints} data {#plural(numPoints, points, point)}.',
+          },
         },
         svgContainerLabel: 'Interaktiv graf',
         defaultChartTitle: 'Graf',
@@ -117,8 +130,8 @@ function Highchart(props) {
         printChart: 'Skriv ut graf',
         resetZoom: 'Nullstill zoom',
         resetZoomTitle: 'Nullstill zoom',
-        thousandsSep: ' '
-      }
+        thousandsSep: ' ',
+      },
     })
   }, [])
 
@@ -126,12 +139,27 @@ function Highchart(props) {
     // TODO: Reimplement functionality; currently only changes name on button
     if (props.pageType === `${props.appName}:highchart`) {
       return (
-        <Col className="col-12 mb-3">
-          {highchart.config.draft && <div className="alert alert-info mb-4" role="alert">Tallet i figuren nedenfor er upublisert</div>}
-          {highchart.config.noDraftAvailable &&
-            <div className="alert alert-warning mb-4" role="alert">Det finnes ingen upubliserte tall for denne figuren</div>}
-          {!showDraft && <Button primary onClick={() => setShowDraft(true)}>Vis upubliserte tall</Button>}
-          {showDraft && <Button primary onClick={() => setShowDraft(false)}>Vis publiserte tall</Button>}
+        <Col className='col-12 mb-3'>
+          {highchart.config.draft && (
+            <div className='alert alert-info mb-4' role='alert'>
+              Tallet i figuren nedenfor er upublisert
+            </div>
+          )}
+          {highchart.config.noDraftAvailable && (
+            <div className='alert alert-warning mb-4' role='alert'>
+              Det finnes ingen upubliserte tall for denne figuren
+            </div>
+          )}
+          {!showDraft && (
+            <Button primary onClick={() => setShowDraft(true)}>
+              Vis upubliserte tall
+            </Button>
+          )}
+          {showDraft && (
+            <Button primary onClick={() => setShowDraft(false)}>
+              Vis publiserte tall
+            </Button>
+          )}
         </Col>
       )
     }
@@ -149,40 +177,39 @@ function Highchart(props) {
 
   function renderHighchartsTab() {
     return (
-      <Col className="col-12 mb-3">
+      <Col className='col-12 mb-3'>
         <Tabs
-          className="pl-4"
-          activeOnInit="highcharts-figure/"
+          className='pl-4'
+          activeOnInit='highcharts-figure/'
           items={[
             {
               title: props.phrases['highcharts.showAsGraph'],
-              path: 'highcharts-figure/'
+              path: 'highcharts-figure/',
             },
             {
               title: props.phrases['highcharts.showAsTable'],
-              path: 'highcharts-table/'
-            }
+              path: 'highcharts-table/',
+            },
           ]}
           onClick={handleHighchartsTabOnClick}
         />
-        <Divider light={false} className="mb-3"/>
+        <Divider light={false} className='mb-3' />
       </Col>
     )
   }
 
   function renderHighchartsSources(highchart) {
     return (
-      <Col className="col-12">
-        { highchart.footnoteText ?
-          <Row className="col-12 footnote">
-            {highchart.footnoteText}
-          </Row> :
-          null }
-        { highchart.creditsEnabled ?
-          <Row className="mt-4 mt-md-5 highcharts-source">
-            <Col className="col-12 fw-bold mb-0">{props.phrases.source}:</Col>
-            <Col className="col-12"><Link href={highchart.creditsHref}>{highchart.creditsText}</Link></Col>
-          </Row> : null }
+      <Col className='col-12'>
+        {highchart.footnoteText ? <Row className='col-12 footnote'>{highchart.footnoteText}</Row> : null}
+        {highchart.creditsEnabled ? (
+          <Row className='mt-4 mt-md-5 highcharts-source'>
+            <Col className='col-12 fw-bold mb-0'>{props.phrases.source}:</Col>
+            <Col className='col-12'>
+              <Link href={highchart.creditsHref}>{highchart.creditsText}</Link>
+            </Col>
+          </Row>
+        ) : null}
       </Col>
     )
   }
@@ -202,71 +229,71 @@ function Highchart(props) {
             menuItemDefinitions: {
               printChart: {
                 text: props.phrases['highcharts.printChart'],
-                onclick: function() {
+                onclick: function () {
                   const label = `${highchart.config.title.text} - Skriv ut graf`
                   if (props.GA_TRACKING_ID) {
                     addGtagForEvent(props.GA_TRACKING_ID, action, category, label)
                   }
 
                   this.print()
-                }
+                },
               },
               downloadPNG: {
                 text: props.phrases['highcharts.downloadPNG'],
-                onclick: function() {
+                onclick: function () {
                   const label = `${highchart.config.title.text} - Last ned som PNG`
                   if (props.GA_TRACKING_ID) {
                     addGtagForEvent(props.GA_TRACKING_ID, action, category, label)
                   }
 
                   this.exportChart({
-                    type: 'png'
+                    type: 'png',
                   })
-                }
+                },
               },
               downloadJPEG: {
                 text: props.phrases['highcharts.downloadJPEG'],
-                onclick: function() {
+                onclick: function () {
                   const label = `${highchart.config.title.text} - Last ned som JPEG`
                   if (props.GA_TRACKING_ID) {
                     addGtagForEvent(props.GA_TRACKING_ID, action, category, label)
                   }
 
                   this.exportChart({
-                    type: 'jpeg'
+                    type: 'jpeg',
                   })
-                }
+                },
               },
               downloadPDF: {
                 text: props.phrases['highcharts.downloadPDF'],
-                onclick: function() {
+                onclick: function () {
                   const label = `${highchart.config.title.text} - Last ned som PDF`
                   if (props.GA_TRACKING_ID) {
                     addGtagForEvent(props.GA_TRACKING_ID, action, category, label)
                   }
 
                   this.exportChart({
-                    type: 'application/pdf'
+                    type: 'application/pdf',
                   })
-                }
+                },
               },
               downloadSVG: {
                 text: props.phrases['highcharts.downloadSVG'],
-                onclick: function() {
+                onclick: function () {
                   const label = `${highchart.config.title.text} - Last ned som SVG`
                   if (props.GA_TRACKING_ID) {
                     addGtagForEvent(props.GA_TRACKING_ID, action, category, label)
                   }
 
                   this.exportChart({
-                    type: 'svg'
+                    type: 'svg',
                   })
-                }
+                },
               },
               downloadXLS: {
                 text: props.phrases['highcharts.downloadXLS'],
 
-                onclick: function() {
+                onclick: function () {
                   const label = `${highchart.config.title.text} - Last ned som XLS`
                   if (props.GA_TRACKING_ID) {
                     addGtagForEvent(props.GA_TRACKING_ID, action, category, label)
@@ -274,36 +301,33 @@ function Highchart(props) {
 
                   // TODO: Re-implement zipcelx fix (are there other alternatives for react?)
                   this.downloadXLS()
-                }
+                },
               },
               downloadCSV: {
                 text: props.phrases['highcharts.downloadCSV'],
-                onclick: function() {
+                onclick: function () {
                   const label = `${highchart.config.title.text} - Last ned som CSV`
                   if (props.GA_TRACKING_ID) {
                     addGtagForEvent(props.GA_TRACKING_ID, action, category, label)
                   }
 
                   this.downloadCSV()
-                }
-              }
-            }
-          }
+                },
+              },
+            },
+          },
         }
 
         return (
           <Row key={`highchart-${highchart.contentKey}`}>
             {renderHighchartToggleDraft(highchart)}
-            <Col className="col-12">
+            <Col className='col-12'>
               <Title size={3}>{config.title.text}</Title>
-              {config.subtitle.text ? <p className="highchart-subtitle mb-1">{config.subtitle.text}</p> : null}
+              {config.subtitle.text ? <p className='highchart-subtitle mb-1'>{config.subtitle.text}</p> : null}
             </Col>
             {renderHighchartsTab()}
-            <Col className="col-12">
-              <HighchartsReact
-                highcharts={Highcharts}
-                options={config}
-              />
+            <Col className='col-12'>
+              <HighchartsReact highcharts={Highcharts} options={config} />
             </Col>
             {renderHighchartsSources(highchart)}
           </Row>
@@ -312,11 +336,7 @@ function Highchart(props) {
     }
   }
 
-  return (
-    <Container>
-      {renderHighcharts()}
-    </Container>
-  )
+  return <Container>{renderHighcharts()}</Container>
 }
 
 Highchart.propTypes = {
@@ -330,13 +350,13 @@ Highchart.propTypes = {
       creditsEnabled: PropTypes.boolean,
       creditsHref: PropTypes.string,
       creditsText: PropTypes.string,
-      hideTitle: PropTypes.boolean
+      hideTitle: PropTypes.boolean,
     })
   ),
   phrases: PropTypes.object,
   appName: PropTypes.string,
   pageType: PropTypes.string,
-  GA_TRACKING_ID: PropTypes.string
+  GA_TRACKING_ID: PropTypes.string,
 }
 
-export default (props) => <Highchart {...props}/>
+export default (props) => <Highchart {...props} />

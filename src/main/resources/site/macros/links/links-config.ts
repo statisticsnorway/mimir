@@ -3,60 +3,60 @@ export interface LinksConfig {
   /**
    * Velg lenketype
    */
-  linkTypes: "tableLink" | "headerLink" | "profiledLink";
+  linkTypes: 'tableLink' | 'headerLink' | 'profiledLink'
 
   /**
    * Tittel
    */
-  title?: string;
+  title?: string
 
   /**
    * Lenketekst
    */
-  description?: string;
+  description?: string
 
   /**
    * Url
    */
-  url?: string;
+  url?: string
 
   /**
    * Relatert innhold
    */
-  relatedContent?: string;
+  relatedContent?: string
 
   /**
    * Lenketekst
    */
-  linkText?: string;
+  linkText?: string
 
   /**
    * URL
    */
-  headerLinkHref?: string;
+  headerLinkHref?: string
 
   /**
    * Innhold
    */
-  linkedContent?: string;
+  linkedContent?: string
 
   /**
    * Lenketekst
    */
-  text?: string;
+  text?: string
 
   /**
    * Med ikon
    */
-  withIcon: boolean;
+  withIcon: boolean
 
   /**
    * URL
    */
-  profiledLinkHref?: string;
+  profiledLinkHref?: string
 
   /**
    * Innhold
    */
-  contentUrl?: string;
+  contentUrl?: string
 }

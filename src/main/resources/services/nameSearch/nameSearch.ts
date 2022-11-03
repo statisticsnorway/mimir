@@ -9,26 +9,23 @@ import { DatasetRepoNode } from '../../lib/ssb/repo/dataset'
 import JSONstat from 'jsonstat-toolkit/import.mjs'
 import validator from 'validator'
 
-const {
-  getCalculatorConfig, getNameSearchGraphData
-} = __non_webpack_require__('/lib/ssb/dataset/calculator')
-const {
-  isEnabled
-} = __non_webpack_require__('/lib/featureToggle')
-
+const { getCalculatorConfig, getNameSearchGraphData } = __non_webpack_require__('/lib/ssb/dataset/calculator')
+const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
 
 export function get(req: XP.Request): XP.Response {
   if (!req.params.name) {
     return {
       body: {
-        message: 'name parameter missing'
+        message: 'name parameter missing',
       },
-      contentType: 'application/json'
+      contentType: 'application/json',
     }
   }
 
-  const solrBaseUrl: string = app.config && app.config['ssb.solrNameSearch.baseUrl'] ?
-    app.config['ssb.solrNameSearch.baseUrl'] : 'https://www.ssb.no/solr/navnesok/select'
+  const solrBaseUrl: string =
+    app.config && app.config['ssb.solrNameSearch.baseUrl']
+      ? app.config['ssb.solrNameSearch.baseUrl']
+      : 'https://www.ssb.no/solr/navnesok/select'
 
   const name: string = req.params.name.trim()
 
@@ -38,14 +35,14 @@ export function get(req: XP.Request): XP.Response {
     contentType: 'application/json',
     headers: {
       'Cache-Control': 'no-cache',
-      'Accept': 'application/json'
+      Accept: 'application/json',
     },
     connectionTimeout: 20000,
     readTimeout: 10000,
     params: {
       q: prepareQuery(sanitizeQuery(name)),
-      wt: 'json'
-    }
+      wt: 'json',
+    },
   }
 
   try {
@@ -55,7 +52,7 @@ export function get(req: XP.Request): XP.Response {
     return {
       body: preparedBody,
       status: result.status,
-      contentType: 'application/json'
+      contentType: 'application/json',
     }
   } catch (err) {
     log.error(`Failed to fetch data from solr name search: ${solrBaseUrl}. ${err}`)
@@ -63,7 +60,7 @@ export function get(req: XP.Request): XP.Response {
     return {
       body: err,
       status: err.status ? err.status : 500,
-      contentType: 'application/json'
+      contentType: 'application/json',
     }
   }
 }
@@ -95,10 +92,17 @@ function checkKeysForValue(object: Keyable, value: string): boolean {
   return !!Object.keys(object).find((key) => object[key] === preparedName)
 }
 
-
 function prepareQuery(input: string): string {
   if (input.split(' ').length == 1) return input
-  else return pad(input) + '+' + input.split(' ').map((word) => pad(word)).join('+')
+  else
+    return (
+      pad(input) +
+      '+' +
+      input
+        .split(' ')
+        .map((word) => pad(word))
+        .join('+')
+    )
 }
 
 function pad(word: string): string {
@@ -106,12 +110,13 @@ function pad(word: string): string {
 }
 
 function sanitizeQuery(name: string): string {
-  const approved: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ '
+  const approved = 'ABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ '
   return validator.whitelist(replaceCharacters(name.toUpperCase()), approved)
 }
 
 function replaceCharacters(name: string): string {
-  return name.replace(/[ÈÉË]/, 'E')
+  return name
+    .replace(/[ÈÉË]/, 'E')
     .replace(/[ÔÒÓ]/, 'O')
     .replace("'", '')
     .replace('Ä', 'Æ')
@@ -122,11 +127,10 @@ function replaceCharacters(name: string): string {
 }
 
 interface ResultType {
-  originalName: string;
-  nameGraph?: boolean;
+  originalName: string
+  nameGraph?: boolean
 }
 
 interface Keyable {
-  [key: string]: string;
+  [key: string]: string
 }
-

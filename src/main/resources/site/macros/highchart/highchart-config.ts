@@ -3,5 +3,5 @@ export interface HighchartConfig {
   /**
    * Highchart
    */
-  highchart: string;
+  highchart: string
 }

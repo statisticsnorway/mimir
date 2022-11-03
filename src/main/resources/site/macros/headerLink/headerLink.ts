@@ -1,11 +1,8 @@
 import { HeaderLinkConfig } from './headerLink-config'
-import {render, RenderResponse} from '/lib/enonic/react4xp'
+import { render, RenderResponse } from '/lib/enonic/react4xp'
 import { get, Content } from '/lib/xp/content'
 
-const {
-  attachmentUrl, pageUrl
-} = __non_webpack_require__('/lib/xp/portal')
-
+const { attachmentUrl, pageUrl } = __non_webpack_require__('/lib/xp/portal')
 
 exports.macro = (context: XP.MacroContext): RenderResponse => {
   return renderPart(context)
@@ -14,28 +11,26 @@ exports.macro = (context: XP.MacroContext): RenderResponse => {
 exports.preview = (context: XP.MacroContext): RenderResponse => renderPart(context)
 
 function renderPart(context: XP.MacroContext): RenderResponse {
-  const {
-    linkedContent, linkText
-  } = context.params
+  const { linkedContent, linkText } = context.params
 
   const content: Content | null = get({
-    key: linkedContent
+    key: linkedContent,
   })
 
   let contentUrl: string
   if (content && Object.keys(content.attachments).length > 0) {
     contentUrl = attachmentUrl({
-      id: linkedContent
+      id: linkedContent,
     })
   } else {
     contentUrl = pageUrl({
-      id: linkedContent
+      id: linkedContent,
     })
   }
 
   const props: HeaderLinkConfig = {
     linkText: content ? prepareText(content, linkText) : '',
-    linkedContent: contentUrl
+    linkedContent: contentUrl,
   }
 
   return render('site/macros/headerLink/headerLink', props)
@@ -50,20 +45,20 @@ function prepareText(content: Content, linkText: string): string {
   let finalText: string
 
   if (attachmentSize) {
-    if (attachmentSize > 1.049e+6) {
+    if (attachmentSize > 1.049e6) {
       notation = 'MB'
-      finalText = (attachmentSize / 1.049e+6).toFixed(1)
+      finalText = (attachmentSize / 1.049e6).toFixed(1)
     } else {
       notation = 'KB'
-      finalText = (attachmentSize / 1024 ).toFixed(1)
+      finalText = (attachmentSize / 1024).toFixed(1)
     }
-    return `${linkText} (${finalText } ${notation})`
+    return `${linkText} (${finalText} ${notation})`
   }
 
   return linkText
 }
 
 interface PartProperties {
-    linkText: string;
-    linkedContent: string;
+  linkText: string
+  linkedContent: string
 }

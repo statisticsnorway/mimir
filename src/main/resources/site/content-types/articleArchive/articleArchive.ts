@@ -3,20 +3,20 @@ export interface ArticleArchive {
   /**
    * Ingress
    */
-  preamble?: string;
+  preamble?: string
 
   /**
    * Bilde
    */
-  image?: string;
+  image?: string
 
   /**
    * Fritekst
    */
-  freeText?: string;
+  freeText?: string
 
   /**
    * ISSN-nummer
    */
-  issnNumber?: string;
+  issnNumber?: string
 }

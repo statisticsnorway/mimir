@@ -3,20 +3,20 @@ export interface MunicipalityAlert {
   /**
    * Tekst
    */
-  message: string;
+  message: string
 
   /**
    * Velg hvilke sidetype varselet skal vises på
    */
-  municipalPageType: "kommunefakta" | "kommuneareal" | "barn-og-unge" | "showOnAll";
+  municipalPageType: 'kommunefakta' | 'kommuneareal' | 'barn-og-unge' | 'showOnAll'
 
   /**
    * Velg hvilken kommuner det gjelder her.
    */
-  municipalCodes?: Array<string>;
+  municipalCodes?: Array<string>
 
   /**
    * Velg for å gjelde alle kommuner
    */
-  selectAllMunicipals: boolean;
+  selectAllMunicipals: boolean
 }

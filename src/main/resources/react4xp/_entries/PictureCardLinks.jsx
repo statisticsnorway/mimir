@@ -23,7 +23,7 @@ function useHover() {
         }
       }
     },
-    [hoverRef],
+    [hoverRef]
   )
 
   return [hoverRef, value]
@@ -33,15 +33,17 @@ const PictureLink = (props) => {
   const [hoverRef, hovered] = useHover()
   return (
     <a className={`ssb-picture-card vertical ${props.className || ''}`} ref={hoverRef} href={props.href}>
-      <div className="image-background">
-        <img src={props.imageSrc} alt={props.imageSrc} aria-hidden="true" />
+      <div className='image-background'>
+        <img src={props.imageSrc} alt={props.imageSrc} aria-hidden='true' />
       </div>
-      <div className="overlay w-100">
-        <span className="il-title">{props.title}</span>
-        <span className="il-type">{props.subTitle}</span>
-        {hovered ?
-          <ArrowRightCircle className="arrow-icon" size={32} /> :
-          <ArrowRight className="arrow-icon" size={32} />}
+      <div className='overlay w-100'>
+        <span className='il-title'>{props.title}</span>
+        <span className='il-type'>{props.subTitle}</span>
+        {hovered ? (
+          <ArrowRightCircle className='arrow-icon' size={32} />
+        ) : (
+          <ArrowRight className='arrow-icon' size={32} />
+        )}
       </div>
     </a>
   )
@@ -53,7 +55,7 @@ PictureLink.propTypes = {
   href: PropTypes.string,
   imageSrc: PropTypes.string,
   imageAlt: PropTypes.string,
-  className: PropTypes.string
+  className: PropTypes.string,
 }
 
 const PictureCardLinks = (props) => {
@@ -64,28 +66,30 @@ const PictureCardLinks = (props) => {
   }
 
   return (
-    <div className="row">
+    <div className='row'>
       {props.pictureCardLinks.map((pictureCard, index) => {
-        return <div
-          key={`picture-card-link-${props.react4xpId}-${index}`}
-          className={getColSize(props.pictureCardLinks.length, index) + ' col-12 mb-4 mb-md-0'}
-        >
-          <PictureLink
-            className="w-100"
-            title={pictureCard.title}
-            subTitle={pictureCard.subTitle}
-            href={pictureCard.href}
-            imageSrc={pictureCard.imageSrc}
-            imageAlt={pictureCard.imageAlt}
-          />
-        </div>
+        return (
+          <div
+            key={`picture-card-link-${props.react4xpId}-${index}`}
+            className={getColSize(props.pictureCardLinks.length, index) + ' col-12 mb-4 mb-md-0'}
+          >
+            <PictureLink
+              className='w-100'
+              title={pictureCard.title}
+              subTitle={pictureCard.subTitle}
+              href={pictureCard.href}
+              imageSrc={pictureCard.imageSrc}
+              imageAlt={pictureCard.imageAlt}
+            />
+          </div>
+        )
       })}
     </div>
   )
 }
 
 PictureCardLinks.defaultProps = {
-  pictureCardLinks: []
+  pictureCardLinks: [],
 }
 
 PictureCardLinks.propTypes = {
@@ -95,10 +99,10 @@ PictureCardLinks.propTypes = {
       subTitle: PropTypes.string,
       href: PropTypes.string,
       imageSrc: PropTypes.string,
-      imageAlt: PropTypes.string
+      imageAlt: PropTypes.string,
     })
   ),
-  react4xpId: PropTypes.string
+  react4xpId: PropTypes.string,
 }
 
 export default (props) => <PictureCardLinks {...props} />

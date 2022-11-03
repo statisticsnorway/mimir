@@ -9,8 +9,8 @@ class HeaderLink extends React.Component {
 
   render() {
     return (
-      <section className="headerLinkDownload">
-        <Link href={this.props.linkedContent} isExternal={true} className="ssb-link header">
+      <section className='headerLinkDownload'>
+        <Link href={this.props.linkedContent} isExternal={true} className='ssb-link header'>
           {this.props.linkText}
         </Link>
       </section>
@@ -22,5 +22,5 @@ export default (props) => <HeaderLink {...props} />
 
 HeaderLink.propTypes = {
   linkText: PropTypes.string,
-  linkedContent: PropTypes.string
+  linkedContent: PropTypes.string,
 }

@@ -15,9 +15,9 @@ import XLSX from 'xlsx/dist/xlsx.core.min'
  */
 
 export function init() {
-  (function($) {
+  ;(function ($) {
     $.fn.extend({
-      tableExport: function(options) {
+      tableExport: function (options) {
         const defaults = {
           consoleLog: false,
           csvEnclosure: '"',
@@ -40,7 +40,7 @@ export function init() {
               left: 20,
               right: 10,
               top: 10,
-              bottom: 10
+              bottom: 10,
             },
             autotable: {
               styles: {
@@ -52,36 +52,36 @@ export function init() {
                 fontStyle: 'normal', // normal, bold, italic, bolditalic or 'inherit' to use css font-weight and fonst-style from html table
                 overflow: 'ellipsize', // visible, hidden, ellipsize or linebreak
                 halign: 'left', // left, center, right
-                valign: 'middle' // top, middle, bottom
+                valign: 'middle', // top, middle, bottom
               },
               headerStyles: {
                 fillColor: [52, 73, 94],
                 textColor: 255,
                 fontStyle: 'bold',
-                halign: 'center'
+                halign: 'center',
               },
               alternateRowStyles: {
-                fillColor: 245
+                fillColor: 245,
               },
               tableExport: {
                 onAfterAutotable: null,
                 onBeforeAutotable: null,
                 onAutotableText: null,
                 onTable: null,
-                outputImages: true
-              }
-            }
+                outputImages: true,
+              },
+            },
           },
           numbers: {
             html: {
               decimalMark: '.',
-              thousandsSeparator: ','
+              thousandsSeparator: ',',
             },
-            output: // set to false to not format numbers in exported output
-                          {
-                            decimalMark: '.',
-                            thousandsSeparator: ','
-                          }
+            // set to false to not format numbers in exported output
+            output: {
+              decimalMark: '.',
+              thousandsSeparator: ',',
+            },
           },
           onCellData: null,
           onCellHtmlData: null,
@@ -92,10 +92,10 @@ export function init() {
             docDefinition: {
               pageOrientation: 'portrait', // 'portrait' or 'landscape'
               defaultStyle: {
-                font: 'Roboto' // default is 'Roboto', for arabic font set this option to 'Mirza' and include mirza_fonts.js
-              }
+                font: 'Roboto', // default is 'Roboto', for arabic font set this option to 'Mirza' and include mirza_fonts.js
+              },
             },
-            fonts: {}
+            fonts: {},
           },
           tbodySelector: 'tr',
           tfootSelector: 'tr', // set empty ('') to prevent export of tfoot rows
@@ -103,7 +103,7 @@ export function init() {
           tableName: 'myTableName',
           type: 'csv', // 'csv', 'tsv', 'txt', 'sql', 'json', 'xml', 'excel', 'doc', 'png' or 'pdf'
           worksheetName: 'Worksheet',
-          jsxlsx: XLSX
+          jsxlsx: XLSX,
         }
 
         const FONT_ROW_RATIO = 1.15
@@ -132,7 +132,7 @@ export function init() {
             if (cell !== null) {
               const dataString = parseString(cell, rowIndex, colIndex)
 
-              const csvValue = (dataString === null || dataString === '') ? '' : dataString.toString()
+              const csvValue = dataString === null || dataString === '' ? '' : dataString.toString()
 
               if (defaults.type == 'tsv') {
                 if (dataString instanceof Date) {
@@ -143,8 +143,8 @@ export function init() {
                 // are fields that contain tabs not allowable in tsv encoding
                 result = replaceAll(csvValue, '\t', ' ')
               } else {
-              // Takes a string and encapsulates it (by default in double-quotes) if it
-              // contains the csv field separator, spaces, or linebreaks.
+                // Takes a string and encapsulates it (by default in double-quotes) if it
+                // contains the csv field separator, spaces, or linebreaks.
                 if (dataString instanceof Date) {
                   result = defaults.csvEnclosure + dataString.toLocaleString() + defaults.csvEnclosure
                 } else {
@@ -160,13 +160,12 @@ export function init() {
             return result
           }
 
-          const CollectCsvData = function($rows, rowselector, length) {
-            $rows.each(function() {
+          const CollectCsvData = function ($rows, rowselector, length) {
+            $rows.each(function () {
               trData = ''
-              ForEachVisibleCell(this, rowselector, rowIndex, length + $rows.length,
-                function(cell, row, col) {
-                  trData += csvString(cell, row, col) + (defaults.type == 'tsv' ? '\t' : defaults.csvSeparator)
-                })
+              ForEachVisibleCell(this, rowselector, rowIndex, length + $rows.length, function (cell, row, col) {
+                trData += csvString(cell, row, col) + (defaults.type == 'tsv' ? '\t' : defaults.csvSeparator)
+              })
               trData = $.trim(trData).substring(0, trData.length - 1)
               if (trData.length > 0) {
                 if (csvData.length > 0) {
@@ -181,14 +180,14 @@ export function init() {
             return $rows.length
           }
 
-          rowlength += CollectCsvData($(el).find('thead').first()
-            .find(defaults.theadSelector), 'th,td', rowlength)
-          $(el).find('tbody').each(function() {
-            rowlength += CollectCsvData($(this).find(defaults.tbodySelector), 'td,th', rowlength)
-          })
+          rowlength += CollectCsvData($(el).find('thead').first().find(defaults.theadSelector), 'th,td', rowlength)
+          $(el)
+            .find('tbody')
+            .each(function () {
+              rowlength += CollectCsvData($(this).find(defaults.tbodySelector), 'td,th', rowlength)
+            })
           if (defaults.tfootSelector.length) {
-            CollectCsvData($(el).find('tfoot').first()
-              .find(defaults.tfootSelector), 'td,th', rowlength)
+            CollectCsvData($(el).find('tfoot').first().find(defaults.tfootSelector), 'td,th', rowlength)
           }
 
           csvData += '\n'
@@ -213,43 +212,51 @@ export function init() {
 
           try {
             blob = new Blob([csvData], {
-              type: 'text/' + (defaults.type == 'csv' ? 'csv' : 'plain') + ';charset=utf-8'
+              type: 'text/' + (defaults.type == 'csv' ? 'csv' : 'plain') + ';charset=utf-8',
             })
-            saveAs(blob, defaults.fileName + '.' + defaults.type, (defaults.type != 'csv' || defaults.csvUseBOM === false))
+            saveAs(
+              blob,
+              defaults.fileName + '.' + defaults.type,
+              defaults.type != 'csv' || defaults.csvUseBOM === false
+            )
           } catch (e) {
-            downloadFile(defaults.fileName + '.' + defaults.type,
-              'data:text/' + (defaults.type == 'csv' ? 'csv' : 'plain') + ';charset=utf-8,' + ((defaults.type == 'csv' && defaults.csvUseBOM) ? '\ufeff' : ''),
-              csvData)
+            downloadFile(
+              defaults.fileName + '.' + defaults.type,
+              'data:text/' +
+                (defaults.type == 'csv' ? 'csv' : 'plain') +
+                ';charset=utf-8,' +
+                (defaults.type == 'csv' && defaults.csvUseBOM ? '\ufeff' : ''),
+              csvData
+            )
           }
         } else if (defaults.type == 'sql') {
-        // Header
+          // Header
           rowIndex = 0
           let tdData = 'INSERT INTO `' + defaults.tableName + '` ('
-          $hrows = $(el).find('thead').first()
-            .find(defaults.theadSelector)
-          $hrows.each(function() {
-            ForEachVisibleCell(this, 'th,td', rowIndex, $hrows.length,
-              function(cell, row, col) {
-                tdData += "'" + parseString(cell, row, col) + "',"
-              })
+          $hrows = $(el).find('thead').first().find(defaults.theadSelector)
+          $hrows.each(function () {
+            ForEachVisibleCell(this, 'th,td', rowIndex, $hrows.length, function (cell, row, col) {
+              tdData += "'" + parseString(cell, row, col) + "',"
+            })
             rowIndex++
             tdData = $.trim(tdData)
             tdData = $.trim(tdData).substring(0, tdData.length - 1)
           })
           tdData += ') VALUES '
           // Row vs Column
-          $(el).find('tbody').each(function() {
-            $rows.push.apply($rows, $(this).find(defaults.tbodySelector))
-          })
+          $(el)
+            .find('tbody')
+            .each(function () {
+              $rows.push.apply($rows, $(this).find(defaults.tbodySelector))
+            })
           if (defaults.tfootSelector.length) {
             $rows.push.apply($rows, $(el).find('tfoot').find(defaults.tfootSelector))
           }
-          $($rows).each(function() {
+          $($rows).each(function () {
             trData = ''
-            ForEachVisibleCell(this, 'td,th', rowIndex, $hrows.length + $rows.length,
-              function(cell, row, col) {
-                trData += "'" + parseString(cell, row, col) + "',"
-              })
+            ForEachVisibleCell(this, 'td,th', rowIndex, $hrows.length + $rows.length, function (cell, row, col) {
+              trData += "'" + parseString(cell, row, col) + "',"
+            })
             if (trData.length > 3) {
               tdData += '(' + trData
               tdData = $.trim(tdData).substring(0, tdData.length - 1)
@@ -276,48 +283,45 @@ export function init() {
 
           try {
             blob = new Blob([tdData], {
-              type: 'text/plain;charset=utf-8'
+              type: 'text/plain;charset=utf-8',
             })
             saveAs(blob, defaults.fileName + '.sql')
           } catch (e) {
-            downloadFile(defaults.fileName + '.sql',
-              'data:application/sql;charset=utf-8,',
-              tdData)
+            downloadFile(defaults.fileName + '.sql', 'data:application/sql;charset=utf-8,', tdData)
           }
         } else if (defaults.type == 'json') {
           const jsonHeaderArray = []
-          $hrows = $(el).find('thead').first()
-            .find(defaults.theadSelector)
-          $hrows.each(function() {
+          $hrows = $(el).find('thead').first().find(defaults.theadSelector)
+          $hrows.each(function () {
             const jsonArrayTd = []
 
-            ForEachVisibleCell(this, 'th,td', rowIndex, $hrows.length,
-              function(cell, row, col) {
-                jsonArrayTd.push(parseString(cell, row, col))
-              })
+            ForEachVisibleCell(this, 'th,td', rowIndex, $hrows.length, function (cell, row, col) {
+              jsonArrayTd.push(parseString(cell, row, col))
+            })
             jsonHeaderArray.push(jsonArrayTd)
           })
 
           const jsonArray = []
-          $(el).find('tbody').each(function() {
-            $rows.push.apply($rows, $(this).find(defaults.tbodySelector))
-          })
+          $(el)
+            .find('tbody')
+            .each(function () {
+              $rows.push.apply($rows, $(this).find(defaults.tbodySelector))
+            })
           if (defaults.tfootSelector.length) {
             $rows.push.apply($rows, $(el).find('tfoot').find(defaults.tfootSelector))
           }
-          $($rows).each(function() {
+          $($rows).each(function () {
             const jsonObjectTd = {}
 
             let colIndex = 0
-            ForEachVisibleCell(this, 'td,th', rowIndex, $hrows.length + $rows.length,
-              function(cell, row, col) {
-                if (jsonHeaderArray.length) {
-                  jsonObjectTd[jsonHeaderArray[jsonHeaderArray.length - 1][colIndex]] = parseString(cell, row, col)
-                } else {
-                  jsonObjectTd[colIndex] = parseString(cell, row, col)
-                }
-                colIndex++
-              })
+            ForEachVisibleCell(this, 'td,th', rowIndex, $hrows.length + $rows.length, function (cell, row, col) {
+              if (jsonHeaderArray.length) {
+                jsonObjectTd[jsonHeaderArray[jsonHeaderArray.length - 1][colIndex]] = parseString(cell, row, col)
+              } else {
+                jsonObjectTd[colIndex] = parseString(cell, row, col)
+              }
+              colIndex++
+            })
             if ($.isEmptyObject(jsonObjectTd) === false) {
               jsonArray.push(jsonObjectTd)
             }
@@ -331,11 +335,11 @@ export function init() {
             sdata = JSON.stringify(jsonHeaderArray)
           } else if (defaults.jsonScope == 'data') {
             sdata = JSON.stringify(jsonArray)
-          } else // all
-          {
+          } // all
+          else {
             sdata = JSON.stringify({
               header: jsonHeaderArray,
-              data: jsonArray
+              data: jsonArray,
             })
           }
 
@@ -353,13 +357,11 @@ export function init() {
 
           try {
             blob = new Blob([sdata], {
-              type: 'application/json;charset=utf-8'
+              type: 'application/json;charset=utf-8',
             })
             saveAs(blob, defaults.fileName + '.json')
           } catch (e) {
-            downloadFile(defaults.fileName + '.json',
-              'data:application/json;charset=utf-8;base64,',
-              sdata)
+            downloadFile(defaults.fileName + '.json', 'data:application/json;charset=utf-8;base64,', sdata)
           }
         } else if (defaults.type === 'xml') {
           rowIndex = 0
@@ -367,33 +369,32 @@ export function init() {
           xml += '<tabledata><fields>'
 
           // Header
-          $hrows = $(el).find('thead').first()
-            .find(defaults.theadSelector)
-          $hrows.each(function() {
-            ForEachVisibleCell(this, 'th,td', rowIndex, $hrows.length,
-              function(cell, row, col) {
-                xml += '<field>' + parseString(cell, row, col) + '</field>'
-              })
+          $hrows = $(el).find('thead').first().find(defaults.theadSelector)
+          $hrows.each(function () {
+            ForEachVisibleCell(this, 'th,td', rowIndex, $hrows.length, function (cell, row, col) {
+              xml += '<field>' + parseString(cell, row, col) + '</field>'
+            })
             rowIndex++
           })
           xml += '</fields><data>'
 
           // Row Vs Column
           let rowCount = 1
-          $(el).find('tbody').each(function() {
-            $rows.push.apply($rows, $(this).find(defaults.tbodySelector))
-          })
+          $(el)
+            .find('tbody')
+            .each(function () {
+              $rows.push.apply($rows, $(this).find(defaults.tbodySelector))
+            })
           if (defaults.tfootSelector.length) {
             $rows.push.apply($rows, $(el).find('tfoot').find(defaults.tfootSelector))
           }
-          $($rows).each(function() {
+          $($rows).each(function () {
             let colCount = 1
             trData = ''
-            ForEachVisibleCell(this, 'td,th', rowIndex, $hrows.length + $rows.length,
-              function(cell, row, col) {
-                trData += '<column-' + colCount + '>' + parseString(cell, row, col) + '</column-' + colCount + '>'
-                colCount++
-              })
+            ForEachVisibleCell(this, 'td,th', rowIndex, $hrows.length + $rows.length, function (cell, row, col) {
+              trData += '<column-' + colCount + '>' + parseString(cell, row, col) + '</column-' + colCount + '>'
+              colCount++
+            })
             if (trData.length > 0 && trData != '<column-1></column-1>') {
               xml += '<row id="' + rowCount + '">' + trData + '</row>'
               rowCount++
@@ -418,22 +419,21 @@ export function init() {
 
           try {
             blob = new Blob([xml], {
-              type: 'application/xml;charset=utf-8'
+              type: 'application/xml;charset=utf-8',
             })
             saveAs(blob, defaults.fileName + '.xml')
           } catch (e) {
-            downloadFile(defaults.fileName + '.xml',
-              'data:application/xml;charset=utf-8;base64,',
-              xml)
+            downloadFile(defaults.fileName + '.xml', 'data:application/xml;charset=utf-8;base64,', xml)
           }
         } else if (defaults.type === 'excel' && defaults.excelFileFormat === 'xmlss') {
-          var $tables = $(el).filter(function() {
-            return $(this).data('tableexport-display') != 'none' &&
-                          ($(this).is(':visible') ||
-                              $(this).data('tableexport-display') == 'always')
+          var $tables = $(el).filter(function () {
+            return (
+              $(this).data('tableexport-display') != 'none' &&
+              ($(this).is(':visible') || $(this).data('tableexport-display') == 'always')
+            )
           })
           const docDatas = []
-          $tables.each(function() {
+          $tables.each(function () {
             const $table = $(this)
             let docData = ''
             rowIndex = 0
@@ -443,15 +443,14 @@ export function init() {
 
             // Header
             let cols = 0
-            $hrows.each(function() {
+            $hrows.each(function () {
               trData = ''
-              ForEachVisibleCell(this, 'th,td', rowIndex, $hrows.length,
-                function(cell, row, col) {
-                  if (cell !== null) {
-                    trData += '<Cell><Data ss:Type="String">' + parseString(cell, row, col) + '</Data></Cell>'
-                    cols++
-                  }
-                })
+              ForEachVisibleCell(this, 'th,td', rowIndex, $hrows.length, function (cell, row, col) {
+                if (cell !== null) {
+                  trData += '<Cell><Data ss:Type="String">' + parseString(cell, row, col) + '</Data></Cell>'
+                  cols++
+                }
+              })
               if (trData.length > 0) {
                 docData += '<Row>' + trData + '</Row>'
               }
@@ -460,41 +459,40 @@ export function init() {
 
             // Row Vs Column, support multiple tbodys
             $rows = []
-            $table.find('tbody').each(function() {
+            $table.find('tbody').each(function () {
               $rows.push.apply($rows, $(this).find(defaults.tbodySelector))
             })
 
             // if (defaults.tfootSelector.length)
             //    $rows.push.apply($rows, $table.find('tfoot').find(defaults.tfootSelector));
 
-            $($rows).each(function() {
+            $($rows).each(function () {
               const $row = $(this)
               trData = ''
-              ForEachVisibleCell(this, 'td,th', rowIndex, $hrows.length + $rows.length,
-                function(cell, row, col) {
-                  if (cell !== null) {
-                    let type = 'String'
-                    let style = ''
-                    let data = parseString(cell, row, col)
+              ForEachVisibleCell(this, 'td,th', rowIndex, $hrows.length + $rows.length, function (cell, row, col) {
+                if (cell !== null) {
+                  let type = 'String'
+                  let style = ''
+                  let data = parseString(cell, row, col)
 
-                    if (jQuery.isNumeric(data) !== false) {
+                  if (jQuery.isNumeric(data) !== false) {
+                    type = 'Number'
+                  } else {
+                    number = parsePercent(data)
+                    if (number !== false) {
+                      data = number
                       type = 'Number'
-                    } else {
-                      number = parsePercent(data)
-                      if (number !== false) {
-                        data = number
-                        type = 'Number'
-                        style = ' ss:StyleID="pct1"'
-                      }
+                      style = ' ss:StyleID="pct1"'
                     }
-
-                    if (type !== 'Number') {
-                      data = data.replace(/\n/g, '<br>')
-                    }
-
-                    trData += '<Cell' + style + '><Data ss:Type="' + type + '">' + data + '</Data></Cell>'
                   }
-                })
+
+                  if (type !== 'Number') {
+                    data = data.replace(/\n/g, '<br>')
+                  }
+
+                  trData += '<Cell' + style + '><Data ss:Type="' + type + '">' + data + '</Data></Cell>'
+                }
+              })
               if (trData.length > 0) {
                 docData += '<Row>' + trData + '</Row>'
               }
@@ -510,50 +508,53 @@ export function init() {
           })
 
           const CreationDate = new Date().toISOString()
-          var docFile = '<?xml version="1.0" encoding="UTF-8"?><?mso-application progid="Excel.Sheet"?> ' +
-                      '<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" ' +
-                      'xmlns:o="urn:schemas-microsoft-com:office:office" ' +
-                      'xmlns:x="urn:schemas-microsoft-com:office:excel" ' +
-                      'xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet" ' +
-                      'xmlns:html="http://www.w3.org/TR/REC-html40"> ' +
-                      '<DocumentProperties xmlns="urn:schemas-microsoft-com:office:office"> ' +
-                      '<Created>' + CreationDate + '</Created> ' +
-                      '</DocumentProperties> ' +
-                      '<OfficeDocumentSettings xmlns="urn:schemas-microsoft-com:office:office"> ' +
-                      '<AllowPNG/> ' +
-                      '</OfficeDocumentSettings> ' +
-                      '<ExcelWorkbook xmlns="urn:schemas-microsoft-com:office:excel"> ' +
-                      '<WindowHeight>9000</WindowHeight> ' +
-                      '<WindowWidth>13860</WindowWidth> ' +
-                      '<WindowTopX>0</WindowTopX> ' +
-                      '<WindowTopY>0</WindowTopY> ' +
-                      '<ProtectStructure>False</ProtectStructure> ' +
-                      '<ProtectWindows>False</ProtectWindows> ' +
-                      '</ExcelWorkbook> ' +
-                      '<Styles> ' +
-                      '<Style ss:ID="Default" ss:Name="Default"> ' +
-                      '<Alignment ss:Vertical="Center"/> ' +
-                      '<Borders/> ' +
-                      '<Font/> ' +
-                      '<Interior/> ' +
-                      '<NumberFormat/> ' +
-                      '<Protection/> ' +
-                      '</Style> ' +
-                      '<Style ss:ID="Normal" ss:Name="Normal"/> ' +
-                      '<Style ss:ID="pct1"> ' +
-                      '  <NumberFormat ss:Format="Percent"/> ' +
-                      '</Style> ' +
-                      '</Styles>'
+          var docFile =
+            '<?xml version="1.0" encoding="UTF-8"?><?mso-application progid="Excel.Sheet"?> ' +
+            '<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" ' +
+            'xmlns:o="urn:schemas-microsoft-com:office:office" ' +
+            'xmlns:x="urn:schemas-microsoft-com:office:excel" ' +
+            'xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet" ' +
+            'xmlns:html="http://www.w3.org/TR/REC-html40"> ' +
+            '<DocumentProperties xmlns="urn:schemas-microsoft-com:office:office"> ' +
+            '<Created>' +
+            CreationDate +
+            '</Created> ' +
+            '</DocumentProperties> ' +
+            '<OfficeDocumentSettings xmlns="urn:schemas-microsoft-com:office:office"> ' +
+            '<AllowPNG/> ' +
+            '</OfficeDocumentSettings> ' +
+            '<ExcelWorkbook xmlns="urn:schemas-microsoft-com:office:excel"> ' +
+            '<WindowHeight>9000</WindowHeight> ' +
+            '<WindowWidth>13860</WindowWidth> ' +
+            '<WindowTopX>0</WindowTopX> ' +
+            '<WindowTopY>0</WindowTopY> ' +
+            '<ProtectStructure>False</ProtectStructure> ' +
+            '<ProtectWindows>False</ProtectWindows> ' +
+            '</ExcelWorkbook> ' +
+            '<Styles> ' +
+            '<Style ss:ID="Default" ss:Name="Default"> ' +
+            '<Alignment ss:Vertical="Center"/> ' +
+            '<Borders/> ' +
+            '<Font/> ' +
+            '<Interior/> ' +
+            '<NumberFormat/> ' +
+            '<Protection/> ' +
+            '</Style> ' +
+            '<Style ss:ID="Normal" ss:Name="Normal"/> ' +
+            '<Style ss:ID="pct1"> ' +
+            '  <NumberFormat ss:Format="Percent"/> ' +
+            '</Style> ' +
+            '</Styles>'
 
           for (let j = 0; j < docDatas.length; j++) {
-            const ssName = typeof defaults.worksheetName === 'string' ? defaults.worksheetName + ' ' + (j + 1) :
-              typeof defaults.worksheetName[j] !== 'undefined' ? defaults.worksheetName[j] :
-                'Table ' + (j + 1)
+            const ssName =
+              typeof defaults.worksheetName === 'string'
+                ? defaults.worksheetName + ' ' + (j + 1)
+                : typeof defaults.worksheetName[j] !== 'undefined'
+                ? defaults.worksheetName[j]
+                : 'Table ' + (j + 1)
 
-            docFile += '<Worksheet ss:Name="' + ssName + '">' +
-                          docDatas[j] +
-                          '<WorksheetOptions/> ' +
-                          '</Worksheet>'
+            docFile += '<Worksheet ss:Name="' + ssName + '">' + docDatas[j] + '<WorksheetOptions/> ' + '</Worksheet>'
           }
 
           docFile += '</Workbook>'
@@ -572,26 +573,30 @@ export function init() {
 
           try {
             blob = new Blob([docFile], {
-              type: 'application/xml;charset=utf-8'
+              type: 'application/xml;charset=utf-8',
             })
             saveAs(blob, defaults.fileName + '.xml')
           } catch (e) {
-            downloadFile(defaults.fileName + '.xml',
-              'data:application/xml;charset=utf-8;base64,',
-              xml)
+            downloadFile(defaults.fileName + '.xml', 'data:application/xml;charset=utf-8;base64,', xml)
           }
-        } else if (defaults.type == 'excel' || defaults.type == 'xls' || defaults.type == 'word' || defaults.type == 'doc') {
-          const MSDocType = (defaults.type == 'excel' || defaults.type == 'xls') ? 'excel' : 'word'
-          const MSDocExt = (MSDocType == 'excel') ? 'xls' : 'doc'
+        } else if (
+          defaults.type == 'excel' ||
+          defaults.type == 'xls' ||
+          defaults.type == 'word' ||
+          defaults.type == 'doc'
+        ) {
+          const MSDocType = defaults.type == 'excel' || defaults.type == 'xls' ? 'excel' : 'word'
+          const MSDocExt = MSDocType == 'excel' ? 'xls' : 'doc'
           const MSDocSchema = 'xmlns:x="urn:schemas-microsoft-com:office:' + MSDocType + '"'
-          var $tables = $(el).filter(function() {
-            return $(this).data('tableexport-display') != 'none' &&
-                          ($(this).is(':visible') ||
-                              $(this).data('tableexport-display') == 'always')
+          var $tables = $(el).filter(function () {
+            return (
+              $(this).data('tableexport-display') != 'none' &&
+              ($(this).is(':visible') || $(this).data('tableexport-display') == 'always')
+            )
           })
           let docData = ''
 
-          $tables.each(function() {
+          $tables.each(function () {
             const $table = $(this)
             rowIndex = 0
             colNames = GetColumnNames(this)
@@ -599,34 +604,33 @@ export function init() {
             docData += '<table><thead>'
             // Header
             $hrows = $table.find('thead').first().find(defaults.theadSelector)
-            $hrows.each(function() {
+            $hrows.each(function () {
               trData = ''
-              ForEachVisibleCell(this, 'th,td', rowIndex, $hrows.length,
-                function(cell, row, col) {
-                  if (cell !== null) {
-                    let thstyle = ''
-                    trData += '<th'
-                    for (const styles in defaults.excelstyles) {
-                      if (defaults.excelstyles.hasOwnProperty(styles)) {
-                        const thcss = $(cell).css(defaults.excelstyles[styles])
-                        if (thcss !== '' && thcss != '0px none rgb(0, 0, 0)' && thcss != 'rgba(0, 0, 0, 0)') {
-                          thstyle += (thstyle === '') ? 'style="' : ';'
-                          thstyle += defaults.excelstyles[styles] + ':' + thcss
-                        }
+              ForEachVisibleCell(this, 'th,td', rowIndex, $hrows.length, function (cell, row, col) {
+                if (cell !== null) {
+                  let thstyle = ''
+                  trData += '<th'
+                  for (const styles in defaults.excelstyles) {
+                    if (defaults.excelstyles.hasOwnProperty(styles)) {
+                      const thcss = $(cell).css(defaults.excelstyles[styles])
+                      if (thcss !== '' && thcss != '0px none rgb(0, 0, 0)' && thcss != 'rgba(0, 0, 0, 0)') {
+                        thstyle += thstyle === '' ? 'style="' : ';'
+                        thstyle += defaults.excelstyles[styles] + ':' + thcss
                       }
                     }
-                    if (thstyle !== '' ) {
-                      trData += ' ' + thstyle + '"'
-                    }
-                    if ($(cell).is('[colspan]')) {
-                      trData += ' colspan="' + $(cell).attr('colspan') + '"'
-                    }
-                    if ($(cell).is('[rowspan]')) {
-                      trData += ' rowspan="' + $(cell).attr('rowspan') + '"'
-                    }
-                    trData += '>' + parseString(cell, row, col) + '</th>'
                   }
-                })
+                  if (thstyle !== '') {
+                    trData += ' ' + thstyle + '"'
+                  }
+                  if ($(cell).is('[colspan]')) {
+                    trData += ' colspan="' + $(cell).attr('colspan') + '"'
+                  }
+                  if ($(cell).is('[rowspan]')) {
+                    trData += ' rowspan="' + $(cell).attr('rowspan') + '"'
+                  }
+                  trData += '>' + parseString(cell, row, col) + '</th>'
+                }
+              })
               if (trData.length > 0) {
                 docData += '<tr>' + trData + '</tr>'
               }
@@ -635,56 +639,55 @@ export function init() {
 
             docData += '</thead><tbody>'
             // Row Vs Column, support multiple tbodys
-            $table.find('tbody').each(function() {
+            $table.find('tbody').each(function () {
               $rows.push.apply($rows, $(this).find(defaults.tbodySelector))
             })
             if (defaults.tfootSelector.length) {
               $rows.push.apply($rows, $table.find('tfoot').find(defaults.tfootSelector))
             }
 
-            $($rows).each(function() {
+            $($rows).each(function () {
               const $row = $(this)
               trData = ''
-              ForEachVisibleCell(this, 'td,th', rowIndex, $hrows.length + $rows.length,
-                function(cell, row, col) {
-                  if (cell !== null) {
-                    let tdstyle = ''
-                    let tdcss = $(cell).data('tableexport-msonumberformat')
+              ForEachVisibleCell(this, 'td,th', rowIndex, $hrows.length + $rows.length, function (cell, row, col) {
+                if (cell !== null) {
+                  let tdstyle = ''
+                  let tdcss = $(cell).data('tableexport-msonumberformat')
 
-                    if (typeof tdcss == 'undefined' && typeof defaults.onMsoNumberFormat === 'function') {
-                      tdcss = defaults.onMsoNumberFormat(cell, row, col)
-                    }
+                  if (typeof tdcss == 'undefined' && typeof defaults.onMsoNumberFormat === 'function') {
+                    tdcss = defaults.onMsoNumberFormat(cell, row, col)
+                  }
 
-                    if (typeof tdcss != 'undefined' && tdcss !== '') {
-                      tdstyle = 'style="mso-number-format:\'' + tdcss + '\''
-                    }
+                  if (typeof tdcss != 'undefined' && tdcss !== '') {
+                    tdstyle = 'style="mso-number-format:\'' + tdcss + "'"
+                  }
 
-                    for (const cssStyle in defaults.excelstyles) {
-                      if (defaults.excelstyles.hasOwnProperty(cssStyle)) {
-                        tdcss = $(cell).css(defaults.excelstyles[cssStyle])
-                        if (tdcss === '') {
-                          tdcss = $row.css(defaults.excelstyles[cssStyle])
-                        }
+                  for (const cssStyle in defaults.excelstyles) {
+                    if (defaults.excelstyles.hasOwnProperty(cssStyle)) {
+                      tdcss = $(cell).css(defaults.excelstyles[cssStyle])
+                      if (tdcss === '') {
+                        tdcss = $row.css(defaults.excelstyles[cssStyle])
+                      }
 
-                        if (tdcss !== '' && tdcss != '0px none rgb(0, 0, 0)' && tdcss != 'rgba(0, 0, 0, 0)') {
-                          tdstyle += (tdstyle === '') ? 'style="' : ';'
-                          tdstyle += defaults.excelstyles[cssStyle] + ':' + tdcss
-                        }
+                      if (tdcss !== '' && tdcss != '0px none rgb(0, 0, 0)' && tdcss != 'rgba(0, 0, 0, 0)') {
+                        tdstyle += tdstyle === '' ? 'style="' : ';'
+                        tdstyle += defaults.excelstyles[cssStyle] + ':' + tdcss
                       }
                     }
-                    trData += '<td'
-                    if (tdstyle !== '' ) {
-                      trData += ' ' + tdstyle + '"'
-                    }
-                    if ($(cell).is('[colspan]')) {
-                      trData += ' colspan="' + $(cell).attr('colspan') + '"'
-                    }
-                    if ($(cell).is('[rowspan]')) {
-                      trData += ' rowspan="' + $(cell).attr('rowspan') + '"'
-                    }
-                    trData += '>' + parseString(cell, row, col).replace(/\n/g, '<br>') + '</td>'
                   }
-                })
+                  trData += '<td'
+                  if (tdstyle !== '') {
+                    trData += ' ' + tdstyle + '"'
+                  }
+                  if ($(cell).is('[colspan]')) {
+                    trData += ' colspan="' + $(cell).attr('colspan') + '"'
+                  }
+                  if ($(cell).is('[rowspan]')) {
+                    trData += ' rowspan="' + $(cell).attr('rowspan') + '"'
+                  }
+                  trData += '>' + parseString(cell, row, col).replace(/\n/g, '<br>') + '</td>'
+                }
+              })
               if (trData.length > 0) {
                 docData += '<tr>' + trData + '</tr>'
               }
@@ -692,7 +695,10 @@ export function init() {
             })
 
             if (defaults.displayTableName) {
-              docData += '<tr><td></td></tr><tr><td></td></tr><tr><td>' + parseString($('<p>' + defaults.tableName + '</p>')) + '</td></tr>'
+              docData +=
+                '<tr><td></td></tr><tr><td></td></tr><tr><td>' +
+                parseString($('<p>' + defaults.tableName + '</p>')) +
+                '</td></tr>'
             }
 
             docData += '</tbody></table>'
@@ -702,7 +708,10 @@ export function init() {
             }
           })
 
-          var docFile = '<html xmlns:o="urn:schemas-microsoft-com:office:office" ' + MSDocSchema + ' xmlns="http://www.w3.org/TR/REC-html40">'
+          var docFile =
+            '<html xmlns:o="urn:schemas-microsoft-com:office:office" ' +
+            MSDocSchema +
+            ' xmlns="http://www.w3.org/TR/REC-html40">'
           docFile += '<meta http-equiv="content-type" content="application/vnd.ms-' + MSDocType + '; charset=UTF-8">'
           docFile += '<head>'
           if (MSDocType === 'excel') {
@@ -744,70 +753,77 @@ export function init() {
 
           try {
             blob = new Blob([docFile], {
-              type: 'application/vnd.ms-' + defaults.type
+              type: 'application/vnd.ms-' + defaults.type,
             })
             saveAs(blob, defaults.fileName + '.' + MSDocExt)
           } catch (e) {
-            downloadFile(defaults.fileName + '.' + MSDocExt,
+            downloadFile(
+              defaults.fileName + '.' + MSDocExt,
               'data:application/vnd.ms-' + MSDocType + ';base64,',
-              docFile)
+              docFile
+            )
           }
         } else if (defaults.type == 'xlsx') {
           const data = []
           const ranges = []
           rowIndex = 0
 
-          $rows = $(el).find('thead').first()
-            .find(defaults.theadSelector)
-          $(el).find('tbody').each(function() {
-            $rows.push.apply($rows, $(this).find(defaults.tbodySelector))
-          })
+          $rows = $(el).find('thead').first().find(defaults.theadSelector)
+          $(el)
+            .find('tbody')
+            .each(function () {
+              $rows.push.apply($rows, $(this).find(defaults.tbodySelector))
+            })
           if (defaults.tfootSelector.length) {
             $rows.push.apply($rows, $(el).find('tfoot').find(defaults.tfootSelector))
           }
 
-          $($rows).each(function() {
+          $($rows).each(function () {
             const cols = []
-            ForEachVisibleCell(this, 'th,td', rowIndex, $rows.length,
-              function(cell, row, col) {
-                if (typeof cell !== 'undefined' && cell !== null) {
-                  let colspan = parseInt(cell.getAttribute('colspan'))
-                  let rowspan = parseInt(cell.getAttribute('rowspan'))
+            ForEachVisibleCell(this, 'th,td', rowIndex, $rows.length, function (cell, row, col) {
+              if (typeof cell !== 'undefined' && cell !== null) {
+                let colspan = parseInt(cell.getAttribute('colspan'))
+                let rowspan = parseInt(cell.getAttribute('rowspan'))
 
-                  let cellValue = parseString(cell, row, col)
+                let cellValue = parseString(cell, row, col)
 
-                  if (cellValue !== '' && cellValue == +cellValue) cellValue = +cellValue
+                if (cellValue !== '' && cellValue == +cellValue) cellValue = +cellValue
 
-                  // Skip ranges
-                  ranges.forEach(function(range) {
-                    if (rowIndex >= range.s.r && rowIndex <= range.e.r && cols.length >= range.s.c && cols.length <= range.e.c) {
-                      for (let i = 0; i <= range.e.c - range.s.c; ++i) cols.push(null)
-                    }
-                  })
-
-                  // Handle Row Span
-                  if (rowspan || colspan) {
-                    rowspan = rowspan || 1
-                    colspan = colspan || 1
-                    ranges.push({
-                      s: {
-                        r: rowIndex,
-                        c: cols.length
-                      },
-                      e: {
-                        r: rowIndex + rowspan - 1,
-                        c: cols.length + colspan - 1
-                      }
-                    })
+                // Skip ranges
+                ranges.forEach(function (range) {
+                  if (
+                    rowIndex >= range.s.r &&
+                    rowIndex <= range.e.r &&
+                    cols.length >= range.s.c &&
+                    cols.length <= range.e.c
+                  ) {
+                    for (let i = 0; i <= range.e.c - range.s.c; ++i) cols.push(null)
                   }
+                })
 
-                  // Handle Value
-                  cols.push(cellValue !== '' ? cellValue : null)
-
-                  // Handle Colspan
-                  if (colspan) for (let k = 0; k < colspan - 1; ++k) cols.push(null)
+                // Handle Row Span
+                if (rowspan || colspan) {
+                  rowspan = rowspan || 1
+                  colspan = colspan || 1
+                  ranges.push({
+                    s: {
+                      r: rowIndex,
+                      c: cols.length,
+                    },
+                    e: {
+                      r: rowIndex + rowspan - 1,
+                      c: cols.length + colspan - 1,
+                    },
+                  })
                 }
-              })
+
+                // Handle Value
+                cols.push(cellValue !== '' ? cellValue : null)
+
+                // Handle Colspan
+                if (colspan) for (let k = 0; k < colspan - 1; ++k) cols.push(null)
+              }
+            })
             data.push(cols)
             rowIndex++
           })
@@ -829,104 +845,104 @@ export function init() {
           const wbout = defaults.jsxlsx.write(wb, {
             bookType: defaults.type,
             bookSST: false,
-            type: 'binary'
+            type: 'binary',
           })
 
           try {
             blob = new Blob([jx_s2ab(wbout)], {
-              type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8'
+              type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8',
             })
             saveAs(blob, defaults.fileName + '.' + defaults.type)
           } catch (e) {
-            downloadFile(defaults.fileName + '.' + defaults.type,
+            downloadFile(
+              defaults.fileName + '.' + defaults.type,
               'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8,',
-              blob)
+              blob
+            )
           }
         } else if (defaults.type == 'png') {
-        // html2canvas($(el)[0], {
-        //  onrendered: function (canvas) {
-          html2canvas($(el)[0]).then(
-            function(canvas) {
-              const image = canvas.toDataURL()
-              const byteString = atob(image.substring(22)) // remove data stuff
-              const buffer = new ArrayBuffer(byteString.length)
-              const intArray = new Uint8Array(buffer)
+          // html2canvas($(el)[0], {
+          //  onrendered: function (canvas) {
+          html2canvas($(el)[0]).then(function (canvas) {
+            const image = canvas.toDataURL()
+            const byteString = atob(image.substring(22)) // remove data stuff
+            const buffer = new ArrayBuffer(byteString.length)
+            const intArray = new Uint8Array(buffer)
 
-              for (let i = 0; i < byteString.length; i++) {
-                intArray[i] = byteString.charCodeAt(i)
-              }
+            for (let i = 0; i < byteString.length; i++) {
+              intArray[i] = byteString.charCodeAt(i)
+            }
 
-              if (defaults.consoleLog === true) {
-                console.log(byteString)
-              }
+            if (defaults.consoleLog === true) {
+              console.log(byteString)
+            }
 
-              if (defaults.outputMode === 'string') {
-                return byteString
-              }
+            if (defaults.outputMode === 'string') {
+              return byteString
+            }
 
-              if (defaults.outputMode === 'base64') {
-                return base64encode(image)
-              }
+            if (defaults.outputMode === 'base64') {
+              return base64encode(image)
+            }
 
-              if (defaults.outputMode === 'window') {
-                window.open(image)
-                return
-              }
+            if (defaults.outputMode === 'window') {
+              window.open(image)
+              return
+            }
 
-              try {
-                blob = new Blob([buffer], {
-                  type: 'image/png'
-                })
-                saveAs(blob, defaults.fileName + '.png')
-              } catch (e) {
-                downloadFile(defaults.fileName + '.png', 'data:image/png,', blob)
-              }
+            try {
+              blob = new Blob([buffer], {
+                type: 'image/png',
+              })
+              saveAs(blob, defaults.fileName + '.png')
+            } catch (e) {
+              downloadFile(defaults.fileName + '.png', 'data:image/png,', blob)
+            }
             // }
-            })
+          })
         } else if (defaults.type == 'pdf') {
           if (defaults.pdfmake.enabled === true) {
-          // pdf output using pdfmake
-          // https://github.com/bpampuch/pdfmake
+            // pdf output using pdfmake
+            // https://github.com/bpampuch/pdfmake
 
             const widths = []
             const body = []
             rowIndex = 0
 
-            const CollectPdfmakeData = function($rows, colselector, length) {
+            const CollectPdfmakeData = function ($rows, colselector, length) {
               let rlength = 0
 
-              $($rows).each(function() {
+              $($rows).each(function () {
                 const r = []
 
-                ForEachVisibleCell(this, colselector, rowIndex, length,
-                  function(cell, row, col) {
-                    if (typeof cell !== 'undefined' && cell !== null) {
-                      let colspan = parseInt(cell.getAttribute('colspan'))
-                      let rowspan = parseInt(cell.getAttribute('rowspan'))
+                ForEachVisibleCell(this, colselector, rowIndex, length, function (cell, row, col) {
+                  if (typeof cell !== 'undefined' && cell !== null) {
+                    let colspan = parseInt(cell.getAttribute('colspan'))
+                    let rowspan = parseInt(cell.getAttribute('rowspan'))
 
-                      const cellValue = parseString(cell, row, col) || ' '
+                    const cellValue = parseString(cell, row, col) || ' '
 
-                      if (colspan > 1 || rowspan > 1) {
-                        colspan = colspan || 1
-                        rowspan = rowspan || 1
-                        r.push({
-                          colSpan: colspan,
-                          rowSpan: rowspan,
-                          text: cellValue
-                        })
-                      } else {
-                        r.push(cellValue)
-                      }
+                    if (colspan > 1 || rowspan > 1) {
+                      colspan = colspan || 1
+                      rowspan = rowspan || 1
+                      r.push({
+                        colSpan: colspan,
+                        rowSpan: rowspan,
+                        text: cellValue,
+                      })
                     } else {
-                      r.push(' ')
+                      r.push(cellValue)
                     }
-                  })
+                  } else {
+                    r.push(' ')
+                  }
+                })
 
                 if (r.length) {
                   body.push(r)
                 }
 
-                if ( rlength < r.length ) {
+                if (rlength < r.length) {
                   rlength = r.length
                 }
 
@@ -936,8 +952,7 @@ export function init() {
               return rlength
             }
 
-            $hrows = $(this).find('thead').first()
-              .find(defaults.theadSelector)
+            $hrows = $(this).find('thead').first().find(defaults.theadSelector)
 
             const colcount = CollectPdfmakeData($hrows, 'th,td', $hrows.length)
 
@@ -945,9 +960,11 @@ export function init() {
               widths.push('*')
             }
 
-            $(this).find('tbody').each(function() {
-              $rows.push.apply($rows, $(this).find(defaults.tbodySelector))
-            })
+            $(this)
+              .find('tbody')
+              .each(function () {
+                $rows.push.apply($rows, $(this).find(defaults.tbodySelector))
+              })
             if (defaults.tfootSelector.length) {
               $rows.push.apply($rows, $(this).find('tfoot').find(defaults.tfootSelector))
             }
@@ -955,13 +972,15 @@ export function init() {
             CollectPdfmakeData($rows, 'th,td', $hrows.length + $rows.length)
 
             const docDefinition = {
-              content: [{
-                table: {
-                  headerRows: $hrows.length,
-                  widths: widths,
-                  body: body
-                }
-              }]
+              content: [
+                {
+                  table: {
+                    headerRows: $hrows.length,
+                    widths: widths,
+                    body: body,
+                  },
+                },
+              ],
             }
 
             $.extend(true, docDefinition, defaults.pdfmake.docDefinition)
@@ -971,47 +990,47 @@ export function init() {
                 normal: 'Roboto-Regular.ttf',
                 bold: 'Roboto-Medium.ttf',
                 italics: 'Roboto-Italic.ttf',
-                bolditalics: 'Roboto-MediumItalic.ttf'
-              }
+                bolditalics: 'Roboto-MediumItalic.ttf',
+              },
             }
 
             $.extend(true, pdfMake.fonts, defaults.pdfmake.fonts)
 
-            pdfMake.createPdf(docDefinition).getBuffer(function(buffer) {
+            pdfMake.createPdf(docDefinition).getBuffer(function (buffer) {
               try {
                 const blob = new Blob([buffer], {
-                  type: 'application/pdf'
+                  type: 'application/pdf',
                 })
                 saveAs(blob, defaults.fileName + '.pdf')
               } catch (e) {
-                downloadFile(defaults.fileName + '.pdf',
-                  'data:application/pdf;base64,',
-                  buffer)
+                downloadFile(defaults.fileName + '.pdf', 'data:application/pdf;base64,', buffer)
               }
             })
           } else if (defaults.jspdf.autotable === false) {
-          // pdf output using jsPDF's core html support
+            // pdf output using jsPDF's core html support
 
             const addHtmlOptions = {
               dim: {
                 w: getPropertyUnitValue($(el).first().get(0), 'width', 'mm'),
-                h: getPropertyUnitValue($(el).first().get(0), 'height', 'mm')
+                h: getPropertyUnitValue($(el).first().get(0), 'height', 'mm'),
               },
-              pagesplit: false
+              pagesplit: false,
             }
 
             const doc = new jsPDF(defaults.jspdf.orientation, defaults.jspdf.unit, defaults.jspdf.format)
-            doc.addHTML($(el).first(),
+            doc.addHTML(
+              $(el).first(),
               defaults.jspdf.margins.left,
               defaults.jspdf.margins.top,
               addHtmlOptions,
-              function() {
+              function () {
                 jsPdfOutput(doc, false)
-              })
-          // delete doc;
+              }
+            )
+            // delete doc;
           } else {
-          // pdf output using jsPDF AutoTable plugin
-          // https://github.com/simonbengtsson/jsPDF-AutoTable
+            // pdf output using jsPDF AutoTable plugin
+            // https://github.com/simonbengtsson/jsPDF-AutoTable
 
             const teOptions = defaults.jspdf.autotable.tableExport
 
@@ -1020,344 +1039,380 @@ export function init() {
             // (or tables in multitable mode) completely fits without column adjustment
             if (typeof defaults.jspdf.format === 'string' && defaults.jspdf.format.toLowerCase() === 'bestfit') {
               const pageFormats = {
-                'a0': [2383.94, 3370.39],
-                'a1': [1683.78, 2383.94],
-                'a2': [1190.55, 1683.78],
-                'a3': [841.89, 1190.55],
-                'a4': [595.28, 841.89]
+                a0: [2383.94, 3370.39],
+                a1: [1683.78, 2383.94],
+                a2: [1190.55, 1683.78],
+                a3: [841.89, 1190.55],
+                a4: [595.28, 841.89],
               }
-              let rk = ''; let ro = ''
+              let rk = ''
+              let ro = ''
               let mw = 0
 
-              $(el).filter(':visible').each(function() {
-                if ($(this).css('display') != 'none') {
-                  const w = getPropertyUnitValue($(this).get(0), 'width', 'pt')
+              $(el)
+                .filter(':visible')
+                .each(function () {
+                  if ($(this).css('display') != 'none') {
+                    const w = getPropertyUnitValue($(this).get(0), 'width', 'pt')
 
-                  if (w > mw) {
-                    if (w > pageFormats.a0[0]) {
-                      rk = 'a0'
-                      ro = 'l'
-                    }
-                    for (const key in pageFormats) {
-                      if (pageFormats.hasOwnProperty(key)) {
-                        if (pageFormats[key][1] > w) {
-                          rk = key
-                          ro = 'l'
-                          if (pageFormats[key][0] > w) {
-                            ro = 'p'
+                    if (w > mw) {
+                      if (w > pageFormats.a0[0]) {
+                        rk = 'a0'
+                        ro = 'l'
+                      }
+                      for (const key in pageFormats) {
+                        if (pageFormats.hasOwnProperty(key)) {
+                          if (pageFormats[key][1] > w) {
+                            rk = key
+                            ro = 'l'
+                            if (pageFormats[key][0] > w) {
+                              ro = 'p'
+                            }
                           }
                         }
                       }
+                      mw = w
                     }
-                    mw = w
                   }
-                }
-              })
-              defaults.jspdf.format = (rk === '' ? 'a4' : rk)
-              defaults.jspdf.orientation = (ro === '' ? 'w' : ro)
+                })
+              defaults.jspdf.format = rk === '' ? 'a4' : rk
+              defaults.jspdf.orientation = ro === '' ? 'w' : ro
             }
 
             // The jsPDF doc object is stored in defaults.jspdf.autotable.tableExport,
             // thus it can be accessed from any callback function
-            teOptions.doc = new jsPDF(defaults.jspdf.orientation,
-              defaults.jspdf.unit,
-              defaults.jspdf.format)
+            teOptions.doc = new jsPDF(defaults.jspdf.orientation, defaults.jspdf.unit, defaults.jspdf.format)
 
             if (teOptions.outputImages === true) {
               teOptions.images = {}
             }
 
             if (typeof teOptions.images != 'undefined') {
-              $(el).filter(function() {
-                return $(this).data('tableexport-display') != 'none' &&
-                                  ($(this).is(':visible') ||
-                                      $(this).data('tableexport-display') == 'always')
-              }).each(function() {
-                let rowCount = 0
-
-                $hrows = $(this).find('thead').find(defaults.theadSelector)
-                $(this).find('tbody').each(function() {
-                  $rows.push.apply($rows, $(this).find(defaults.tbodySelector))
+              $(el)
+                .filter(function () {
+                  return (
+                    $(this).data('tableexport-display') != 'none' &&
+                    ($(this).is(':visible') || $(this).data('tableexport-display') == 'always')
+                  )
                 })
-                if (defaults.tfootSelector.length) {
-                  $rows.push.apply($rows, $(this).find('tfoot').find(defaults.tfootSelector))
-                }
+                .each(function () {
+                  let rowCount = 0
 
-                $($rows).each(function() {
-                  ForEachVisibleCell(this, 'td,th', $hrows.length + rowCount, $hrows.length + $rows.length,
-                    function(cell, row, col) {
-                      if (typeof cell !== 'undefined' && cell !== null) {
-                        const kids = $(cell).children()
-                        if (typeof kids != 'undefined' && kids.length > 0) {
-                          collectImages(cell, kids, teOptions)
+                  $hrows = $(this).find('thead').find(defaults.theadSelector)
+                  $(this)
+                    .find('tbody')
+                    .each(function () {
+                      $rows.push.apply($rows, $(this).find(defaults.tbodySelector))
+                    })
+                  if (defaults.tfootSelector.length) {
+                    $rows.push.apply($rows, $(this).find('tfoot').find(defaults.tfootSelector))
+                  }
+
+                  $($rows).each(function () {
+                    ForEachVisibleCell(
+                      this,
+                      'td,th',
+                      $hrows.length + rowCount,
+                      $hrows.length + $rows.length,
+                      function (cell, row, col) {
+                        if (typeof cell !== 'undefined' && cell !== null) {
+                          const kids = $(cell).children()
+                          if (typeof kids != 'undefined' && kids.length > 0) {
+                            collectImages(cell, kids, teOptions)
+                          }
                         }
                       }
-                    })
-                  rowCount++
+                    )
+                    rowCount++
+                  })
                 })
-              })
 
               $hrows = []
               $rows = []
             }
 
-            loadImages( teOptions, function(imageCount) {
-              $(el).filter(function() {
-                return $(this).data('tableexport-display') != 'none' &&
-                                  ($(this).is(':visible') ||
-                                      $(this).data('tableexport-display') == 'always')
-              }).each(function() {
-                let colKey
-                let rowIndex = 0
+            loadImages(teOptions, function (imageCount) {
+              $(el)
+                .filter(function () {
+                  return (
+                    $(this).data('tableexport-display') != 'none' &&
+                    ($(this).is(':visible') || $(this).data('tableexport-display') == 'always')
+                  )
+                })
+                .each(function () {
+                  let colKey
+                  let rowIndex = 0
 
-                colNames = GetColumnNames(this)
+                  colNames = GetColumnNames(this)
 
-                teOptions.columns = []
-                teOptions.rows = []
-                teOptions.rowoptions = {}
+                  teOptions.columns = []
+                  teOptions.rows = []
+                  teOptions.rowoptions = {}
 
-                // onTable: optional callback function for every matching table that can be used
-                // to modify the tableExport options or to skip the output of a particular table
-                // if the table selector targets multiple tables
-                if (typeof teOptions.onTable === 'function') {
-                  if (teOptions.onTable($(this), defaults) === false) {
-                    return true
-                  }
-                } // continue to next iteration step (table)
+                  // onTable: optional callback function for every matching table that can be used
+                  // to modify the tableExport options or to skip the output of a particular table
+                  // if the table selector targets multiple tables
+                  if (typeof teOptions.onTable === 'function') {
+                    if (teOptions.onTable($(this), defaults) === false) {
+                      return true
+                    }
+                  } // continue to next iteration step (table)
 
-                // each table works with an own copy of AutoTable options
-                defaults.jspdf.autotable.tableExport = null // avoid deep recursion error
-                const atOptions = $.extend(true, {}, defaults.jspdf.autotable)
-                defaults.jspdf.autotable.tableExport = teOptions
+                  // each table works with an own copy of AutoTable options
+                  defaults.jspdf.autotable.tableExport = null // avoid deep recursion error
+                  const atOptions = $.extend(true, {}, defaults.jspdf.autotable)
+                  defaults.jspdf.autotable.tableExport = teOptions
 
-                atOptions.margin = {}
-                $.extend(true, atOptions.margin, defaults.jspdf.margins)
-                atOptions.tableExport = teOptions
+                  atOptions.margin = {}
+                  $.extend(true, atOptions.margin, defaults.jspdf.margins)
+                  atOptions.tableExport = teOptions
 
-                // Fix jsPDF Autotable's row height calculation
-                if (typeof atOptions.beforePageContent !== 'function') {
-                  atOptions.beforePageContent = function(data) {
-                    if (data.pageCount == 1) {
-                      const all = data.table.rows.concat(data.table.headerRow)
-                      all.forEach(function(row) {
-                        if ( row.height > 0 ) {
-                          row.height += (2 - FONT_ROW_RATIO) / 2 * row.styles.fontSize
-                          data.table.height += (2 - FONT_ROW_RATIO) / 2 * row.styles.fontSize
-                        }
-                      })
+                  // Fix jsPDF Autotable's row height calculation
+                  if (typeof atOptions.beforePageContent !== 'function') {
+                    atOptions.beforePageContent = function (data) {
+                      if (data.pageCount == 1) {
+                        const all = data.table.rows.concat(data.table.headerRow)
+                        all.forEach(function (row) {
+                          if (row.height > 0) {
+                            row.height += ((2 - FONT_ROW_RATIO) / 2) * row.styles.fontSize
+                            data.table.height += ((2 - FONT_ROW_RATIO) / 2) * row.styles.fontSize
+                          }
+                        })
+                      }
                     }
                   }
-                }
 
-                if (typeof atOptions.createdHeaderCell !== 'function') {
-                // apply some original css styles to pdf header cells
-                  atOptions.createdHeaderCell = function(cell, data) {
-                  // jsPDF AutoTable plugin v2.0.14 fix: each cell needs its own styles object
-                    cell.styles = $.extend({}, data.row.styles)
+                  if (typeof atOptions.createdHeaderCell !== 'function') {
+                    // apply some original css styles to pdf header cells
+                    atOptions.createdHeaderCell = function (cell, data) {
+                      // jsPDF AutoTable plugin v2.0.14 fix: each cell needs its own styles object
+                      cell.styles = $.extend({}, data.row.styles)
 
-                    if (typeof teOptions.columns [data.column.dataKey] != 'undefined') {
-                      const col = teOptions.columns [data.column.dataKey]
+                      if (typeof teOptions.columns[data.column.dataKey] != 'undefined') {
+                        const col = teOptions.columns[data.column.dataKey]
 
-                      if (typeof col.rect != 'undefined') {
-                        let rh
+                        if (typeof col.rect != 'undefined') {
+                          let rh
 
-                        cell.contentWidth = col.rect.width
+                          cell.contentWidth = col.rect.width
 
-                        if (typeof teOptions.heightRatio == 'undefined' || teOptions.heightRatio === 0) {
-                          if (data.row.raw [data.column.dataKey].rowspan) {
-                            rh = data.row.raw [data.column.dataKey].rect.height / data.row.raw [data.column.dataKey].rowspan
-                          } else {
-                            rh = data.row.raw [data.column.dataKey].rect.height
+                          if (typeof teOptions.heightRatio == 'undefined' || teOptions.heightRatio === 0) {
+                            if (data.row.raw[data.column.dataKey].rowspan) {
+                              rh =
+                                data.row.raw[data.column.dataKey].rect.height /
+                                data.row.raw[data.column.dataKey].rowspan
+                            } else {
+                              rh = data.row.raw[data.column.dataKey].rect.height
+                            }
+
+                            teOptions.heightRatio = cell.styles.rowHeight / rh
                           }
 
-                          teOptions.heightRatio = cell.styles.rowHeight / rh
+                          rh = data.row.raw[data.column.dataKey].rect.height * teOptions.heightRatio
+                          if (rh > cell.styles.rowHeight) {
+                            cell.styles.rowHeight = rh
+                          }
                         }
 
-                        rh = data.row.raw [data.column.dataKey].rect.height * teOptions.heightRatio
-                        if (rh > cell.styles.rowHeight) {
-                          cell.styles.rowHeight = rh
+                        if (typeof col.style != 'undefined' && col.style.hidden !== true) {
+                          cell.styles.halign = col.style.align
+                          if (atOptions.styles.fillColor === 'inherit') {
+                            cell.styles.fillColor = col.style.bcolor
+                          }
+                          if (atOptions.styles.textColor === 'inherit') {
+                            cell.styles.textColor = col.style.color
+                          }
+                          if (atOptions.styles.fontStyle === 'inherit') {
+                            cell.styles.fontStyle = col.style.fstyle
+                          }
                         }
                       }
+                    }
+                  }
 
-                      if (typeof col.style != 'undefined' && col.style.hidden !== true) {
-                        cell.styles.halign = col.style.align
+                  if (typeof atOptions.createdCell !== 'function') {
+                    // apply some original css styles to pdf table cells
+                    atOptions.createdCell = function (cell, data) {
+                      const rowopt = teOptions.rowoptions[data.row.index + ':' + data.column.dataKey]
+
+                      if (
+                        typeof rowopt != 'undefined' &&
+                        typeof rowopt.style != 'undefined' &&
+                        rowopt.style.hidden !== true
+                      ) {
+                        cell.styles.halign = rowopt.style.align
                         if (atOptions.styles.fillColor === 'inherit') {
-                          cell.styles.fillColor = col.style.bcolor
+                          cell.styles.fillColor = rowopt.style.bcolor
                         }
                         if (atOptions.styles.textColor === 'inherit') {
-                          cell.styles.textColor = col.style.color
+                          cell.styles.textColor = rowopt.style.color
                         }
                         if (atOptions.styles.fontStyle === 'inherit') {
-                          cell.styles.fontStyle = col.style.fstyle
+                          cell.styles.fontStyle = rowopt.style.fstyle
                         }
                       }
                     }
                   }
-                }
 
-                if (typeof atOptions.createdCell !== 'function') {
-                // apply some original css styles to pdf table cells
-                  atOptions.createdCell = function(cell, data) {
-                    const rowopt = teOptions.rowoptions [data.row.index + ':' + data.column.dataKey]
+                  if (typeof atOptions.drawHeaderCell !== 'function') {
+                    atOptions.drawHeaderCell = function (cell, data) {
+                      const colopt = teOptions.columns[data.column.dataKey]
 
-                    if (typeof rowopt != 'undefined' &&
-                                          typeof rowopt.style != 'undefined' &&
-                                          rowopt.style.hidden !== true) {
-                      cell.styles.halign = rowopt.style.align
-                      if (atOptions.styles.fillColor === 'inherit') {
-                        cell.styles.fillColor = rowopt.style.bcolor
-                      }
-                      if (atOptions.styles.textColor === 'inherit') {
-                        cell.styles.textColor = rowopt.style.color
-                      }
-                      if (atOptions.styles.fontStyle === 'inherit') {
-                        cell.styles.fontStyle = rowopt.style.fstyle
-                      }
-                    }
-                  }
-                }
-
-                if (typeof atOptions.drawHeaderCell !== 'function') {
-                  atOptions.drawHeaderCell = function(cell, data) {
-                    const colopt = teOptions.columns [data.column.dataKey]
-
-                    if ((colopt.style.hasOwnProperty('hidden') !== true || colopt.style.hidden !== true) &&
-                                          colopt.rowIndex >= 0 ) {
-                      return prepareAutoTableText(cell, data, colopt)
-                    } else {
-                      return false
-                    } // cell is hidden
-                  }
-                }
-
-                if (typeof atOptions.drawCell !== 'function') {
-                  atOptions.drawCell = function(cell, data) {
-                    const rowopt = teOptions.rowoptions [data.row.index + ':' + data.column.dataKey]
-                    if ( prepareAutoTableText(cell, data, rowopt) ) {
-                      teOptions.doc.rect(cell.x, cell.y, cell.width, cell.height, cell.styles.fillStyle)
-
-                      if (typeof rowopt != 'undefined' && typeof rowopt.kids != 'undefined' && rowopt.kids.length > 0) {
-                        const dh = cell.height / rowopt.rect.height
-                        if (dh > teOptions.dh || typeof teOptions.dh == 'undefined') {
-                          teOptions.dh = dh
-                        }
-                        teOptions.dw = cell.width / rowopt.rect.width
-
-                        const y = cell.textPos.y
-                        drawAutotableElements(cell, rowopt.kids, teOptions)
-                        cell.textPos.y = y
-                        drawAutotableText(cell, rowopt.kids, teOptions)
+                      if (
+                        (colopt.style.hasOwnProperty('hidden') !== true || colopt.style.hidden !== true) &&
+                        colopt.rowIndex >= 0
+                      ) {
+                        return prepareAutoTableText(cell, data, colopt)
                       } else {
-                        drawAutotableText(cell, {}, teOptions)
-                      }
+                        return false
+                      } // cell is hidden
                     }
-                    return false
                   }
-                }
 
-                // collect header and data rows
-                teOptions.headerrows = []
-                $hrows = $(this).find('thead').find(defaults.theadSelector)
-                $hrows.each(function() {
-                  colKey = 0
+                  if (typeof atOptions.drawCell !== 'function') {
+                    atOptions.drawCell = function (cell, data) {
+                      const rowopt = teOptions.rowoptions[data.row.index + ':' + data.column.dataKey]
+                      if (prepareAutoTableText(cell, data, rowopt)) {
+                        teOptions.doc.rect(cell.x, cell.y, cell.width, cell.height, cell.styles.fillStyle)
 
-                  teOptions.headerrows[rowIndex] = []
+                        if (
+                          typeof rowopt != 'undefined' &&
+                          typeof rowopt.kids != 'undefined' &&
+                          rowopt.kids.length > 0
+                        ) {
+                          const dh = cell.height / rowopt.rect.height
+                          if (dh > teOptions.dh || typeof teOptions.dh == 'undefined') {
+                            teOptions.dh = dh
+                          }
+                          teOptions.dw = cell.width / rowopt.rect.width
 
-                  ForEachVisibleCell(this, 'th,td', rowIndex, $hrows.length,
-                    function(cell, row, col) {
+                          const y = cell.textPos.y
+                          drawAutotableElements(cell, rowopt.kids, teOptions)
+                          cell.textPos.y = y
+                          drawAutotableText(cell, rowopt.kids, teOptions)
+                        } else {
+                          drawAutotableText(cell, {}, teOptions)
+                        }
+                      }
+                      return false
+                    }
+                  }
+
+                  // collect header and data rows
+                  teOptions.headerrows = []
+                  $hrows = $(this).find('thead').find(defaults.theadSelector)
+                  $hrows.each(function () {
+                    colKey = 0
+
+                    teOptions.headerrows[rowIndex] = []
+
+                    ForEachVisibleCell(this, 'th,td', rowIndex, $hrows.length, function (cell, row, col) {
                       const obj = getCellStyles(cell)
                       obj.title = parseString(cell, row, col)
                       obj.key = colKey++
                       obj.rowIndex = rowIndex
                       teOptions.headerrows[rowIndex].push(obj)
                     })
-                  rowIndex++
-                })
+                    rowIndex++
+                  })
 
-                if (rowIndex > 0) {
-                // iterate through last row
-                  let lastrow = rowIndex - 1
-                  while (lastrow >= 0) {
-                    $.each(teOptions.headerrows[lastrow], function() {
-                      let obj = this
+                  if (rowIndex > 0) {
+                    // iterate through last row
+                    let lastrow = rowIndex - 1
+                    while (lastrow >= 0) {
+                      $.each(teOptions.headerrows[lastrow], function () {
+                        let obj = this
 
-                      if (lastrow > 0 && this.rect === null) {
-                        obj = teOptions.headerrows[lastrow - 1][this.key]
-                      }
-
-                      if (obj !== null && obj.rowIndex >= 0 &&
-                                              (obj.style.hasOwnProperty('hidden') !== true || obj.style.hidden !== true)) {
-                        teOptions.columns.push(obj)
-                      }
-                    })
-
-                    lastrow = (teOptions.columns.length > 0) ? -1 : lastrow - 1
-                  }
-                }
-
-                let rowCount = 0
-                $rows = []
-                $(this).find('tbody').each(function() {
-                  $rows.push.apply($rows, $(this).find(defaults.tbodySelector))
-                })
-                if (defaults.tfootSelector.length) {
-                  $rows.push.apply($rows, $(this).find('tfoot').find(defaults.tfootSelector))
-                }
-                $($rows).each(function() {
-                  const rowData = []
-                  colKey = 0
-
-                  ForEachVisibleCell(this, 'td,th', rowIndex, $hrows.length + $rows.length,
-                    function(cell, row, col) {
-                      if (typeof teOptions.columns[colKey] === 'undefined') {
-                      // jsPDF-Autotable needs columns. Thus define hidden ones for tables without thead
-                        var obj = {
-                          title: '',
-                          key: colKey,
-                          style: {
-                            hidden: true
-                          }
+                        if (lastrow > 0 && this.rect === null) {
+                          obj = teOptions.headerrows[lastrow - 1][this.key]
                         }
-                        teOptions.columns.push(obj)
-                      }
-                      if (typeof cell !== 'undefined' && cell !== null) {
-                        var obj = getCellStyles(cell)
-                        obj.kids = $(cell).children()
-                        teOptions.rowoptions [rowCount + ':' + colKey++] = obj
-                      } else {
-                        var obj = $.extend(true, {}, teOptions.rowoptions [rowCount + ':' + (colKey - 1)])
-                        obj.colspan = -1
-                        teOptions.rowoptions [rowCount + ':' + colKey++] = obj
-                      }
 
-                      rowData.push(parseString(cell, row, col))
-                    })
-                  if (rowData.length) {
-                    teOptions.rows.push(rowData)
-                    rowCount++
+                        if (
+                          obj !== null &&
+                          obj.rowIndex >= 0 &&
+                          (obj.style.hasOwnProperty('hidden') !== true || obj.style.hidden !== true)
+                        ) {
+                          teOptions.columns.push(obj)
+                        }
+                      })
+
+                      lastrow = teOptions.columns.length > 0 ? -1 : lastrow - 1
+                    }
                   }
-                  rowIndex++
+
+                  let rowCount = 0
+                  $rows = []
+                  $(this)
+                    .find('tbody')
+                    .each(function () {
+                      $rows.push.apply($rows, $(this).find(defaults.tbodySelector))
+                    })
+                  if (defaults.tfootSelector.length) {
+                    $rows.push.apply($rows, $(this).find('tfoot').find(defaults.tfootSelector))
+                  }
+                  $($rows).each(function () {
+                    const rowData = []
+                    colKey = 0
+
+                    ForEachVisibleCell(
+                      this,
+                      'td,th',
+                      rowIndex,
+                      $hrows.length + $rows.length,
+                      function (cell, row, col) {
+                        if (typeof teOptions.columns[colKey] === 'undefined') {
+                          // jsPDF-Autotable needs columns. Thus define hidden ones for tables without thead
+                          var obj = {
+                            title: '',
+                            key: colKey,
+                            style: {
+                              hidden: true,
+                            },
+                          }
+                          teOptions.columns.push(obj)
+                        }
+                        if (typeof cell !== 'undefined' && cell !== null) {
+                          var obj = getCellStyles(cell)
+                          obj.kids = $(cell).children()
+                          teOptions.rowoptions[rowCount + ':' + colKey++] = obj
+                        } else {
+                          var obj = $.extend(true, {}, teOptions.rowoptions[rowCount + ':' + (colKey - 1)])
+                          obj.colspan = -1
+                          teOptions.rowoptions[rowCount + ':' + colKey++] = obj
+                        }
+
+                        rowData.push(parseString(cell, row, col))
+                      }
+                    )
+                    if (rowData.length) {
+                      teOptions.rows.push(rowData)
+                      rowCount++
+                    }
+                    rowIndex++
+                  })
+
+                  // onBeforeAutotable: optional callback function before calling
+                  // jsPDF AutoTable that can be used to modify the AutoTable options
+                  if (typeof teOptions.onBeforeAutotable === 'function') {
+                    teOptions.onBeforeAutotable($(this), teOptions.columns, teOptions.rows, atOptions)
+                  }
+
+                  teOptions.doc.autoTable(teOptions.columns, teOptions.rows, atOptions)
+
+                  // onAfterAutotable: optional callback function after returning
+                  // from jsPDF AutoTable that can be used to modify the AutoTable options
+                  if (typeof teOptions.onAfterAutotable === 'function') {
+                    teOptions.onAfterAutotable($(this), atOptions)
+                  }
+
+                  // set the start position for the next table (in case there is one)
+                  defaults.jspdf.autotable.startY = teOptions.doc.autoTableEndPosY() + atOptions.margin.top
                 })
 
-                // onBeforeAutotable: optional callback function before calling
-                // jsPDF AutoTable that can be used to modify the AutoTable options
-                if (typeof teOptions.onBeforeAutotable === 'function') {
-                  teOptions.onBeforeAutotable($(this), teOptions.columns, teOptions.rows, atOptions)
-                }
-
-                teOptions.doc.autoTable(teOptions.columns, teOptions.rows, atOptions)
-
-                // onAfterAutotable: optional callback function after returning
-                // from jsPDF AutoTable that can be used to modify the AutoTable options
-                if (typeof teOptions.onAfterAutotable === 'function') {
-                  teOptions.onAfterAutotable($(this), atOptions)
-                }
-
-                // set the start position for the next table (in case there is one)
-                defaults.jspdf.autotable.startY = teOptions.doc.autoTableEndPosY() + atOptions.margin.top
-              })
-
-              jsPdfOutput(teOptions.doc, (typeof teOptions.images != 'undefined' && jQuery.isEmptyObject(teOptions.images) === false))
+              jsPdfOutput(
+                teOptions.doc,
+                typeof teOptions.images != 'undefined' && jQuery.isEmptyObject(teOptions.images) === false
+              )
 
               if (typeof teOptions.headerrows != 'undefined') {
                 teOptions.headerrows.length = 0
@@ -1376,7 +1431,7 @@ export function init() {
 
         function FindColObject(objects, colIndex, rowIndex) {
           let result = null
-          $.each(objects, function() {
+          $.each(objects, function () {
             if (this.rowIndex == rowIndex && this.key == colIndex) {
               result = this
               return false
@@ -1387,9 +1442,11 @@ export function init() {
 
         function GetColumnNames(table) {
           const result = []
-          $(table).find('thead').first()
+          $(table)
+            .find('thead')
+            .first()
             .find('th')
-            .each(function(index, el) {
+            .each(function (index, el) {
               if ($(el).attr('data-field') !== undefined) {
                 result[index] = $(el).attr('data-field')
               } else {
@@ -1409,8 +1466,10 @@ export function init() {
                 }
               }
             } else if (typeof defaults.ignoreColumn[0] == 'number') {
-              if ($.inArray(colIndex, defaults.ignoreColumn) != -1 ||
-                              $.inArray(colIndex - rowLength, defaults.ignoreColumn) != -1) {
+              if (
+                $.inArray(colIndex, defaults.ignoreColumn) != -1 ||
+                $.inArray(colIndex - rowLength, defaults.ignoreColumn) != -1
+              ) {
                 result = true
               }
             }
@@ -1419,25 +1478,35 @@ export function init() {
         }
 
         function ForEachVisibleCell(tableRow, selector, rowIndex, rowCount, cellcallback) {
-          if ($.inArray(rowIndex, defaults.ignoreRow) == -1 &&
-                      $.inArray(rowIndex - rowCount, defaults.ignoreRow) == -1) {
-            const $row = $(tableRow).filter(function() {
-              return $(this).data('tableexport-display') != 'none' &&
-                              ($(this).is(':visible') ||
-                                  $(this).data('tableexport-display') == 'always' ||
-                                  $(this).closest('table').data('tableexport-display') == 'always')
-            }).find(selector)
+          if (
+            $.inArray(rowIndex, defaults.ignoreRow) == -1 &&
+            $.inArray(rowIndex - rowCount, defaults.ignoreRow) == -1
+          ) {
+            const $row = $(tableRow)
+              .filter(function () {
+                return (
+                  $(this).data('tableexport-display') != 'none' &&
+                  ($(this).is(':visible') ||
+                    $(this).data('tableexport-display') == 'always' ||
+                    $(this).closest('table').data('tableexport-display') == 'always')
+                )
+              })
+              .find(selector)
 
             let rowColspan = 0
 
-            $row.each(function(colIndex) {
-              if ($(this).data('tableexport-display') == 'always' ||
-                              ($(this).css('display') != 'none' &&
-                                  $(this).css('visibility') != 'hidden' &&
-                                  $(this).data('tableexport-display') != 'none')) {
-                if (typeof (cellcallback) === 'function') {
-                  let c; let Colspan = 1
-                  let r; let Rowspan = 1
+            $row.each(function (colIndex) {
+              if (
+                $(this).data('tableexport-display') == 'always' ||
+                ($(this).css('display') != 'none' &&
+                  $(this).css('visibility') != 'hidden' &&
+                  $(this).data('tableexport-display') != 'none')
+              ) {
+                if (typeof cellcallback === 'function') {
+                  let c
+                  let Colspan = 1
+                  let r
+                  let Rowspan = 1
                   let rowLength = $row.length
 
                   // handle rowspans from previous rows
@@ -1465,7 +1534,7 @@ export function init() {
                   }
 
                   if (isColumnIgnored(rowLength, colIndex + rowColspan) === false) {
-                  // output content of current cell
+                    // output content of current cell
                     cellcallback(this, rowIndex, colIndex)
 
                     // handle colspan of current cell
@@ -1525,20 +1594,22 @@ export function init() {
             var blob = doc.output('blob')
             saveAs(blob, defaults.fileName + '.pdf')
           } catch (e) {
-            downloadFile(defaults.fileName + '.pdf',
+            downloadFile(
+              defaults.fileName + '.pdf',
               'data:application/pdf' + (hasimages ? '' : ';base64') + ',',
-              hasimages ? blob : doc.output())
+              hasimages ? blob : doc.output()
+            )
           }
         }
 
         function prepareAutoTableText(cell, data, cellopt) {
           let cs = 0
-          if ( typeof cellopt != 'undefined' ) {
+          if (typeof cellopt != 'undefined') {
             cs = cellopt.colspan
           }
 
-          if ( cs >= 0 ) {
-          // colspan handling
+          if (cs >= 0) {
+            // colspan handling
             let cellWidth = cell.width
             let textPosX = cell.textPos.x
             const i = data.table.columns.indexOf(data.column)
@@ -1548,10 +1619,10 @@ export function init() {
               cellWidth += column.width
             }
 
-            if ( cs > 1 ) {
-              if ( cell.styles.halign === 'right' ) {
+            if (cs > 1) {
+              if (cell.styles.halign === 'right') {
                 textPosX = cell.textPos.x + cellWidth - cell.width
-              } else if ( cell.styles.halign === 'center' ) {
+              } else if (cell.styles.halign === 'center') {
                 textPosX = cell.textPos.x + (cellWidth - cell.width) / 2
               }
             }
@@ -1559,16 +1630,16 @@ export function init() {
             cell.width = cellWidth
             cell.textPos.x = textPosX
 
-            if ( typeof cellopt != 'undefined' && cellopt.rowspan > 1 ) {
+            if (typeof cellopt != 'undefined' && cellopt.rowspan > 1) {
               cell.height = cell.height * cellopt.rowspan
             }
 
             // fix jsPDF's calculation of text position
-            if ( cell.styles.valign === 'middle' || cell.styles.valign === 'bottom' ) {
+            if (cell.styles.valign === 'middle' || cell.styles.valign === 'bottom') {
               const splittedText = typeof cell.text === 'string' ? cell.text.split(/\r\n|\r|\n/g) : cell.text
               const lineCount = splittedText.length || 1
               if (lineCount > 2) {
-                cell.textPos.y -= ((2 - FONT_ROW_RATIO) / 2 * data.row.styles.fontSize) * (lineCount - 2) / 3
+                cell.textPos.y -= (((2 - FONT_ROW_RATIO) / 2) * data.row.styles.fontSize * (lineCount - 2)) / 3
               }
             }
             return true
@@ -1579,15 +1650,15 @@ export function init() {
 
         function collectImages(cell, elements, teOptions) {
           if (typeof teOptions.images != 'undefined') {
-            elements.each(function() {
+            elements.each(function () {
               const kids = $(this).children()
 
-              if ( $(this).is('img') ) {
+              if ($(this).is('img')) {
                 const hash = strHashCode(this.src)
 
                 teOptions.images[hash] = {
                   url: this.src,
-                  src: this.src
+                  src: this.src,
                 }
               }
 
@@ -1613,7 +1684,7 @@ export function init() {
             const img = new Image()
             imageCount = ++x
             img.crossOrigin = 'Anonymous'
-            img.onerror = img.onload = function() {
+            img.onerror = img.onload = function () {
               if (img.complete) {
                 if (img.src.indexOf('data:image/') === 0) {
                   img.width = image.width || img.width || 0
@@ -1626,7 +1697,7 @@ export function init() {
 
                   canvas.width = img.width
                   canvas.height = img.height
-                  ctx.drawImage( img, 0, 0 )
+                  ctx.drawImage(img, 0, 0)
 
                   image.src = canvas.toDataURL('image/jpeg')
                 }
@@ -1650,10 +1721,10 @@ export function init() {
         }
 
         function drawAutotableElements(cell, elements, teOptions) {
-          elements.each(function() {
+          elements.each(function () {
             const kids = $(this).children()
 
-            if ( $(this).is('div') ) {
+            if ($(this).is('div')) {
               const bcolor = rgb2array(getStyle(this, 'background-color'), [255, 255, 255])
               const lcolor = rgb2array(getStyle(this, 'border-top-color'), [0, 0, 0])
               const lwidth = getPropertyUnitValue(this, 'border-top-width', defaults.jspdf.unit)
@@ -1668,7 +1739,7 @@ export function init() {
               teOptions.doc.setFillColor.apply(undefined, bcolor)
               teOptions.doc.setLineWidth(lwidth)
               teOptions.doc.rect(cell.x + ux, cell.y + uy, uw, uh, lwidth ? 'FD' : 'F')
-            } else if ( $(this).is('img') ) {
+            } else if ($(this).is('img')) {
               if (typeof teOptions.images != 'undefined') {
                 const hash = strHashCode(this.src)
                 const image = teOptions.images[hash]
@@ -1678,15 +1749,15 @@ export function init() {
                   const arImg = this.width / this.height
                   let imgWidth = cell.width
                   let imgHeight = cell.height
-                  const px2pt = 0.264583 * 72 / 25.4
+                  const px2pt = (0.264583 * 72) / 25.4
                   var uy = 0
 
                   if (arImg <= arCell) {
                     imgHeight = Math.min(cell.height, this.height)
-                    imgWidth = this.width * imgHeight / this.height
+                    imgWidth = (this.width * imgHeight) / this.height
                   } else if (arImg > arCell) {
                     imgWidth = Math.min(cell.width, this.width)
-                    imgHeight = this.height * imgWidth / this.width
+                    imgHeight = (this.height * imgWidth) / this.width
                   }
 
                   imgWidth *= px2pt
@@ -1699,7 +1770,7 @@ export function init() {
                   try {
                     teOptions.doc.addImage(image.src, cell.textPos.x, cell.y + uy, imgWidth, imgHeight)
                   } catch (e) {
-                  // TODO: IE -> convert png to jpeg
+                    // TODO: IE -> convert png to jpeg
                   }
                   cell.textPos.x += imgWidth
                 }
@@ -1720,7 +1791,7 @@ export function init() {
             let y = cell.textPos.y
             const style = {
               halign: cell.styles.halign,
-              valign: cell.styles.valign
+              valign: cell.styles.valign,
             }
 
             if (texttags.length) {
@@ -1729,14 +1800,16 @@ export function init() {
                 tag = tag.previousSibling
               }
 
-              let b = false; let i = false
+              let b = false
+              let i = false
 
               while (tag) {
                 let txt = tag.innerText || tag.textContent || ''
 
-                txt = ((txt.length && txt[0] == ' ') ? ' ' : '') +
-                                  $.trim(txt) +
-                                  ((txt.length > 1 && txt[txt.length - 1] == ' ') ? ' ' : '')
+                txt =
+                  (txt.length && txt[0] == ' ' ? ' ' : '') +
+                  $.trim(txt) +
+                  (txt.length > 1 && txt[txt.length - 1] == ' ' ? ' ' : '')
 
                 if ($(tag).is('br')) {
                   x = cell.textPos.x
@@ -1750,19 +1823,22 @@ export function init() {
                 }
 
                 if (b || i) {
-                  teOptions.doc.setFontType((b && i) ? 'bolditalic' : b ? 'bold' : 'italic')
+                  teOptions.doc.setFontType(b && i ? 'bolditalic' : b ? 'bold' : 'italic')
                 }
 
                 let w = teOptions.doc.getStringUnitWidth(txt) * teOptions.doc.internal.getFontSize()
 
                 if (w) {
-                  if (cell.styles.overflow === 'linebreak' &&
-                                      x > cell.textPos.x && (x + w) > (cell.textPos.x + cell.width)) {
+                  if (
+                    cell.styles.overflow === 'linebreak' &&
+                    x > cell.textPos.x &&
+                    x + w > cell.textPos.x + cell.width
+                  ) {
                     const chars = '.,!%*;:=-'
                     if (chars.indexOf(txt.charAt(0)) >= 0) {
                       const s = txt.charAt(0)
                       w = teOptions.doc.getStringUnitWidth(s) * teOptions.doc.internal.getFontSize()
-                      if ((x + w) <= (cell.textPos.x + cell.width)) {
+                      if (x + w <= cell.textPos.x + cell.width) {
                         teOptions.doc.autoTableText(s, x, y, style)
                         txt = txt.substring(1, txt.length)
                       }
@@ -1772,7 +1848,7 @@ export function init() {
                     y += teOptions.doc.internal.getFontSize()
                   }
 
-                  while (txt.length && (x + w) > (cell.textPos.x + cell.width)) {
+                  while (txt.length && x + w > cell.textPos.x + cell.width) {
                     txt = txt.substring(0, txt.length - 1)
                     w = teOptions.doc.getStringUnitWidth(txt) * teOptions.doc.internal.getFontSize()
                   }
@@ -1788,7 +1864,7 @@ export function init() {
                     i = false
                   }
 
-                  teOptions.doc.setFontType((!b && !i) ? 'normal' : b ? 'bold' : 'italic')
+                  teOptions.doc.setFontType(!b && !i ? 'normal' : b ? 'bold' : 'italic')
                 }
 
                 tag = tag.nextSibling
@@ -1844,20 +1920,26 @@ export function init() {
               if (typeof defaults.onCellHtmlData === 'function') {
                 htmlData = defaults.onCellHtmlData($cell, rowIndex, colIndex, htmlData)
               } else if (htmlData != '') {
-                const html = $.parseHTML( htmlData )
+                const html = $.parseHTML(htmlData)
                 let inputidx = 0
                 let selectidx = 0
 
                 htmlData = ''
-                $.each( html, function() {
-                  if ( $(this).is('input') ) {
-                    htmlData += $cell.find('input').eq(inputidx++).val()
-                  } else if ( $(this).is('select') ) {
-                    htmlData += $cell.find('select option:selected').eq(selectidx++).text()
+                $.each(html, function () {
+                  if ($(this).is('input')) {
+                    htmlData += $cell
+                      .find('input')
+                      .eq(inputidx++)
+                      .val()
+                  } else if ($(this).is('select')) {
+                    htmlData += $cell
+                      .find('select option:selected')
+                      .eq(selectidx++)
+                      .text()
                   } else {
-                    if ( typeof $(this).html() === 'undefined' ) {
+                    if (typeof $(this).html() === 'undefined') {
                       htmlData += $(this).text()
-                    } else if ( jQuery().bootstrapTable === undefined || $(this).hasClass('filterControl') !== true ) {
+                    } else if (jQuery().bootstrapTable === undefined || $(this).hasClass('filterControl') !== true) {
                       htmlData += $(this).html()
                     }
                   }
@@ -1871,41 +1953,48 @@ export function init() {
               let text = htmlData.replace(/\n/g, '\u2028').replace(/<br\s*[\/]?>/gi, '\u2060')
               const obj = $('<div/>').html(text).contents()
               text = ''
-              $.each(obj.text().split('\u2028'), function(i, v) {
+              $.each(obj.text().split('\u2028'), function (i, v) {
                 if (i > 0) {
                   text += ' '
                 }
                 text += $.trim(v)
               })
 
-              $.each(text.split('\u2060'), function(i, v) {
+              $.each(text.split('\u2060'), function (i, v) {
                 if (i > 0) {
                   result += '\n'
                 }
                 result += $.trim(v).replace(/\u00AD/g, '') // remove soft hyphens
               })
 
-              if (defaults.type == 'json' ||
-                              (defaults.type === 'excel' && defaults.excelFileFormat === 'xmlss') ||
-                              defaults.numbers.output === false) {
+              if (
+                defaults.type == 'json' ||
+                (defaults.type === 'excel' && defaults.excelFileFormat === 'xmlss') ||
+                defaults.numbers.output === false
+              ) {
                 var number = parseNumber(result)
 
                 if (number !== false) {
                   result = Number(number)
                 }
-              } else if (defaults.numbers.html.decimalMark != defaults.numbers.output.decimalMark ||
-                              defaults.numbers.html.thousandsSeparator != defaults.numbers.output.thousandsSeparator) {
+              } else if (
+                defaults.numbers.html.decimalMark != defaults.numbers.output.decimalMark ||
+                defaults.numbers.html.thousandsSeparator != defaults.numbers.output.thousandsSeparator
+              ) {
                 var number = parseNumber(result)
 
-                if ( number !== false ) {
+                if (number !== false) {
                   const frac = ('' + number).split('.')
-                  if ( frac.length == 1 ) {
+                  if (frac.length == 1) {
                     frac[1] = ''
                   }
                   const mod = frac[0].length > 3 ? frac[0].length % 3 : 0
 
-                  result = (defaults.numbers.output.thousandsSeparator ? ((mod ? frac[0].substr(0, mod) + defaults.numbers.output.thousandsSeparator : '') + frac[0].substr(mod).replace(/(\d{3})(?=\d)/g, '$1' + defaults.numbers.output.thousandsSeparator)) : frac[0]) +
-                                      (frac[1].length ? defaults.numbers.output.decimalMark + frac[1] : '')
+                  result =
+                    (defaults.numbers.output.thousandsSeparator
+                      ? (mod ? frac[0].substr(0, mod) + defaults.numbers.output.thousandsSeparator : '') +
+                        frac[0].substr(mod).replace(/(\d{3})(?=\d)/g, '$1' + defaults.numbers.output.thousandsSeparator)
+                      : frac[0]) + (frac[1].length ? defaults.numbers.output.decimalMark + frac[1] : '')
                 }
               }
             }
@@ -1959,17 +2048,17 @@ export function init() {
               align: a,
               bcolor: rgb2array(getStyle(cell, 'background-color'), [255, 255, 255]),
               color: rgb2array(getStyle(cell, 'color'), [0, 0, 0]),
-              fstyle: f
+              fstyle: f,
             },
-            colspan: (parseInt($(cell).attr('colspan')) || 0),
-            rowspan: (parseInt($(cell).attr('rowspan')) || 0)
+            colspan: parseInt($(cell).attr('colspan')) || 0,
+            rowspan: parseInt($(cell).attr('rowspan')) || 0,
           }
 
           if (cell !== null) {
             const r = cell.getBoundingClientRect()
             result.rect = {
               width: r.width,
-              height: r.height
+              height: r.height,
             }
           }
 
@@ -1979,16 +2068,17 @@ export function init() {
         // get computed style property
         function getStyle(target, prop) {
           try {
-            if (window.getComputedStyle) { // gecko and webkit
+            if (window.getComputedStyle) {
+              // gecko and webkit
               prop = prop.replace(/([a-z])([A-Z])/, hyphenate) // requires hyphenated, not camel
               return window.getComputedStyle(target, null).getPropertyValue(prop)
             }
-            if (target.currentStyle) { // ie
+            if (target.currentStyle) {
+              // ie
               return target.currentStyle[prop]
             }
             return target.style[prop]
-          } catch (e) {
-          }
+          } catch (e) {}
           return ''
         }
 
@@ -2006,7 +2096,7 @@ export function init() {
 
           parent.removeChild(temp) // clean up
 
-          return (value * factor)
+          return value * factor
         }
 
         function getPropertyUnitValue(target, prop, unit) {
@@ -2030,7 +2120,7 @@ export function init() {
         function jx_s2ab(s) {
           const buf = new ArrayBuffer(s.length)
           const view = new Uint8Array(buf)
-          for (let i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF
+          for (let i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xff
           return buf
         }
 
@@ -2045,12 +2135,12 @@ export function init() {
           const range = {
             s: {
               c: 10000000,
-              r: 10000000
+              r: 10000000,
             },
             e: {
               c: 0,
-              r: 0
-            }
+              r: 0,
+            },
           }
           for (let R = 0; R != data.length; ++R) {
             for (let C = 0; C != data[R].length; ++C) {
@@ -2059,18 +2149,19 @@ export function init() {
               if (range.e.r < R) range.e.r = R
               if (range.e.c < C) range.e.c = C
               const cell = {
-                v: data[R][C]
+                v: data[R][C],
               }
               if (cell.v === null) continue
               const cell_ref = defaults.jsxlsx.utils.encode_cell({
                 c: C,
-                r: R
+                r: R,
               })
 
               if (typeof cell.v === 'number') cell.t = 'n'
               else if (typeof cell.v === 'boolean') cell.t = 'b'
               else if (cell.v instanceof Date) {
-                cell.t = 'n'; cell.z = defaults.jsxlsx.SSF._table[14]
+                cell.t = 'n'
+                cell.z = defaults.jsxlsx.SSF._table[14]
                 cell.v = jx_datenum(cell.v)
               } else cell.t = 's'
               ws[cell_ref] = cell
@@ -2082,11 +2173,14 @@ export function init() {
         }
 
         function strHashCode(str) {
-          let hash = 0; let i; let chr; let len
+          let hash = 0
+          let i
+          let chr
+          let len
           if (str.length === 0) return hash
           for (i = 0, len = str.length; i < len; i++) {
             chr = str.charCodeAt(i)
-            hash = ((hash << 5) - hash) + chr
+            hash = (hash << 5) - hash + chr
             hash |= 0 // Convert to 32bit integer
           }
           return hash
@@ -2098,9 +2192,9 @@ export function init() {
             if (window.navigator.msSaveOrOpenBlob) {
               window.navigator.msSaveOrOpenBlob(new Blob([data]), filename)
             } else {
-            // Internet Explorer (<= 9) workaround by Darryl (https://github.com/dawiong/tableExport.jquery.plugin)
-            // based on sampopes answer on http://stackoverflow.com/questions/22317951
-            // ! Not working for json and pdf format !
+              // Internet Explorer (<= 9) workaround by Darryl (https://github.com/dawiong/tableExport.jquery.plugin)
+              // based on sampopes answer on http://stackoverflow.com/questions/22317951
+              // ! Not working for json and pdf format !
               const frame = document.createElement('iframe')
 
               if (frame) {
@@ -2128,7 +2222,7 @@ export function init() {
                 DownloadLink.target = '_blank'
               }
 
-              if ( typeof data == 'object' ) {
+              if (typeof data == 'object') {
                 blobUrl = window.URL.createObjectURL(data)
                 DownloadLink.href = blobUrl
               } else if (header.toLowerCase().indexOf('base64,') >= 0) {
@@ -2168,7 +2262,7 @@ export function init() {
             const c = string.charCodeAt(n)
             if (c < 128) {
               utftext += String.fromCharCode(c)
-            } else if ((c > 127) && (c < 2048)) {
+            } else if (c > 127 && c < 2048) {
               utftext += String.fromCharCode((c >> 6) | 192)
               utftext += String.fromCharCode((c & 63) | 128)
             } else {
@@ -2183,7 +2277,13 @@ export function init() {
         function base64encode(input) {
           const keyStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/='
           let output = ''
-          let chr1; let chr2; let chr3; let enc1; let enc2; let enc3; let enc4
+          let chr1
+          let chr2
+          let chr3
+          let enc1
+          let enc2
+          let enc3
+          let enc4
           let i = 0
           input = utf8Encode(input)
           while (i < input.length) {
@@ -2199,15 +2299,13 @@ export function init() {
             } else if (isNaN(chr3)) {
               enc4 = 64
             }
-            output = output +
-                          keyStr.charAt(enc1) + keyStr.charAt(enc2) +
-                          keyStr.charAt(enc3) + keyStr.charAt(enc4)
+            output = output + keyStr.charAt(enc1) + keyStr.charAt(enc2) + keyStr.charAt(enc3) + keyStr.charAt(enc4)
           }
           return output
         }
 
         return this
-      }
+      },
     })
   })(jQuery)
 }

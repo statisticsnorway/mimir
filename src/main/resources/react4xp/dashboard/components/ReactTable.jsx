@@ -5,17 +5,13 @@ import { ChevronUp, ChevronDown } from 'react-feather'
 import PropTypes from 'prop-types'
 
 export function ReactTable(props) {
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow
-  } = useTable({
-    columns: props.columns,
-    data: props.data
-  },
-  useSortBy)
+  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
+    {
+      columns: props.columns,
+      data: props.data,
+    },
+    useSortBy
+  )
 
   return (
     <Table bordered {...getTableProps()}>
@@ -26,12 +22,20 @@ export function ReactTable(props) {
               <th key={index} {...column.getHeaderProps(column.getSortByToggleProps())}>
                 <span>
                   {column.render('Header')}
-                  {column.disableSortBy ? '' :
-                    column.isSorted ?
-                      (column.isSortedDesc ?
-                        <ChevronDown size={12} /> :
-                        <ChevronUp size={12} />
-                      ) : <span><ChevronUp size={12} /><ChevronDown size={12} /></span>}
+                  {column.disableSortBy ? (
+                    ''
+                  ) : column.isSorted ? (
+                    column.isSortedDesc ? (
+                      <ChevronDown size={12} />
+                    ) : (
+                      <ChevronUp size={12} />
+                    )
+                  ) : (
+                    <span>
+                      <ChevronUp size={12} />
+                      <ChevronDown size={12} />
+                    </span>
+                  )}
                 </span>
               </th>
             ))}
@@ -42,10 +46,12 @@ export function ReactTable(props) {
         {rows.map((row, index) => {
           prepareRow(row)
           return (
-            <tr key={index} {...row.getRowProps()} className="small">
+            <tr key={index} {...row.getRowProps()} className='small'>
               {row.cells.map((cell, i) => {
                 return (
-                  <td key={i} {...cell.getCellProps}>{cell.render('Cell')}</td>
+                  <td key={i} {...cell.getCellProps}>
+                    {cell.render('Cell')}
+                  </td>
                 )
               })}
             </tr>
@@ -58,9 +64,7 @@ export function ReactTable(props) {
 
 ReactTable.propTypes = {
   columns: PropTypes.array,
-  data: PropTypes.array
+  data: PropTypes.array,
 }
 
 export default (props) => <ReactTable {...props} />
-
-

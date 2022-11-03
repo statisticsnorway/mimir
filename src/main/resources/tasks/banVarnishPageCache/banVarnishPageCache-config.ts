@@ -3,5 +3,5 @@ export interface BanVarnishPageCacheConfig {
   /**
    * ID of content to clear
    */
-  pageId: string;
+  pageId: string
 }

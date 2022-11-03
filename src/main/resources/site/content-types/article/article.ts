@@ -3,12 +3,12 @@ export interface Article {
   /**
    * Stikktittel
    */
-  introTitle?: string;
+  introTitle?: string
 
   /**
    * Vis publiseringsdato
    */
-  showPublishDate: boolean;
+  showPublishDate: boolean
 
   /**
    * Endringsdato
@@ -17,8 +17,8 @@ export interface Article {
     /**
      * Selected
      */
-    _selected: Array<"dateOption">;
-    
+    _selected: Array<'dateOption'>
+
     /**
      * Skal det vises dato?
      */
@@ -26,14 +26,14 @@ export interface Article {
       /**
        * Vis klokkeslett for publisering
        */
-      showModifiedTime: boolean;
+      showModifiedTime: boolean
 
       /**
        * Tidspunkt for endring
        */
-      modifiedDate?: string;
-    };
-  };
+      modifiedDate?: string
+    }
+  }
 
   /**
    * Forfattere
@@ -42,23 +42,23 @@ export interface Article {
     /**
      * Navn
      */
-    name?: string;
+    name?: string
 
     /**
      * E-post
      */
-    email?: string;
-  }>;
+    email?: string
+  }>
 
   /**
    * Ingress
    */
-  ingress?: string;
+  ingress?: string
 
   /**
    * Artikkeltekst
    */
-  articleText?: string;
+  articleText?: string
 
   /**
    * Tilhørende statistikk
@@ -68,7 +68,7 @@ export interface Article {
         /**
          * Selected
          */
-        _selected: "XP";
+        _selected: 'XP'
 
         /**
          * Lenke til tilhørende statistikk (XP)
@@ -77,14 +77,14 @@ export interface Article {
           /**
            * Statistikk
            */
-          content?: string;
-        };
+          content?: string
+        }
       }
     | {
         /**
          * Selected
          */
-        _selected: "CMS";
+        _selected: 'CMS'
 
         /**
          * Lenke til tilhørende statistikk (4.7.)
@@ -93,28 +93,27 @@ export interface Article {
           /**
            * URL
            */
-          href?: string;
+          href?: string
 
           /**
            * Tittel
            */
-          title?: string;
-        };
+          title?: string
+        }
       }
-  >;
+  >
 
   /**
    * Arkiv
    */
-  articleArchive?: Array<string>;
-
+  articleArchive?: Array<string>
 
   relatedStatisticsOptions?: Array<
     | {
         /**
          * Selected
          */
-        _selected: "xp";
+        _selected: 'xp'
 
         /**
          * Statistikk fra XP
@@ -123,14 +122,14 @@ export interface Article {
           /**
            * Statistikk
            */
-          contentId?: string;
-        };
+          contentId?: string
+        }
       }
     | {
         /**
          * Selected
          */
-        _selected: "cms";
+        _selected: 'cms'
 
         /**
          * Statistikk fra 4.7
@@ -139,20 +138,20 @@ export interface Article {
           /**
            * Tittel
            */
-          title: string;
+          title: string
 
           /**
            * Profileringstekst
            */
-          profiledText: string;
+          profiledText: string
 
           /**
            * URL
            */
-          url: string;
-        };
+          url: string
+        }
       }
-  >;
+  >
 
   /**
    * Relaterte eksterne lenker
@@ -161,13 +160,13 @@ export interface Article {
     /**
      * Lenketekst
      */
-    urlText: string;
+    urlText: string
 
     /**
      * URL
      */
-    url: string;
-  }>;
+    url: string
+  }>
 
   /**
    * Relaterte artikler
@@ -177,7 +176,7 @@ export interface Article {
         /**
          * Selected
          */
-        _selected: "article";
+        _selected: 'article'
 
         /**
          * Artikkel
@@ -186,14 +185,14 @@ export interface Article {
           /**
            * Artikkel fra XP
            */
-          article: string;
-        };
+          article: string
+        }
       }
     | {
         /**
          * Selected
          */
-        _selected: "externalArticle";
+        _selected: 'externalArticle'
 
         /**
          * Artikkel fra 4.7-CMS
@@ -202,68 +201,68 @@ export interface Article {
           /**
            * URL
            */
-          url: string;
+          url: string
 
           /**
            * Tittel
            */
-          title: string;
+          title: string
 
           /**
            * Type
            */
-          type?: string;
+          type?: string
 
           /**
            * Dato
            */
-          date?: string;
+          date?: string
 
           /**
            * Ingress
            */
-          preface: string;
+          preface: string
 
           /**
            * Bilde
            */
-          image: string;
-        };
+          image: string
+        }
       }
-  >;
+  >
 
   /**
    * Faktasider
    */
-  relatedFactPages?: Array<string>;
+  relatedFactPages?: Array<string>
 
   /**
    * Kontakter
    */
-  contacts?: Array<string>;
+  contacts?: Array<string>
 
   /**
    * Innholdstype
    */
-  articleType?: "report" | "note" | "analysis" | "economicTrends" | "discussionPaper";
+  articleType?: 'report' | 'note' | 'analysis' | 'economicTrends' | 'discussionPaper'
 
   /**
    * Løpenummer
    */
-  serialNumber?: string;
+  serialNumber?: string
 
   /**
    * ISBN-nummer
    */
-  isbnNumber?: string;
+  isbnNumber?: string
 
   /**
    * Prioritert visning på forside
    */
-  frontPagePriority: "0" | "1";
+  frontPagePriority: '0' | '1'
 
   /**
    * Delemner
    */
-  subtopic?: Array<string>;
+  subtopic?: Array<string>
 }

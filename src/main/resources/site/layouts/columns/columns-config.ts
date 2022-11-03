@@ -3,20 +3,20 @@ export interface ColumnsConfig {
   /**
    * Tittel
    */
-  title?: string;
+  title?: string
 
   /**
    * Skjul tittel
    */
-  hideTitle: boolean;
+  hideTitle: boolean
 
   /**
    * Vis som grid
    */
-  isGrid: boolean;
+  isGrid: boolean
 
   /**
    * Kolonnestørrelse
    */
-  size: "a" | "b" | "c";
+  size: 'a' | 'b' | 'c'
 }

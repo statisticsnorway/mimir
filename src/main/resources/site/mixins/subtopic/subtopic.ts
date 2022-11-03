@@ -3,5 +3,5 @@ export interface Subtopic {
   /**
    * Delemner
    */
-  subtopic?: Array<string>;
+  subtopic?: Array<string>
 }

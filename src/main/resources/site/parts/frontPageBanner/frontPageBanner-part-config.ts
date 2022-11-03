@@ -3,10 +3,10 @@ export interface FrontPageBannerPartConfig {
   /**
    * banner tekst
    */
-  text: string;
+  text: string
 
   /**
    * Bilde
    */
-  image: string;
+  image: string
 }

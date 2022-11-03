@@ -7,17 +7,17 @@ export interface MenuBox {
     /**
      * Tittel
      */
-    title?: string;
+    title?: string
 
     /**
      * Undertittel
      */
-    subtitle?: string;
+    subtitle?: string
 
     /**
      * Bilde
      */
-    image?: string;
+    image?: string
 
     /**
      * Lenkemål
@@ -27,7 +27,7 @@ export interface MenuBox {
           /**
            * Selected
            */
-          _selected: "manual";
+          _selected: 'manual'
 
           /**
            * Url
@@ -36,14 +36,14 @@ export interface MenuBox {
             /**
              * Kildelenke
              */
-            url: string;
-          };
+            url: string
+          }
         }
       | {
           /**
            * Selected
            */
-          _selected: "content";
+          _selected: 'content'
 
           /**
            * Lenke til internt innhold
@@ -52,8 +52,8 @@ export interface MenuBox {
             /**
              * Relatert innhold
              */
-            contentId: string;
-          };
-        };
-  }>;
+            contentId: string
+          }
+        }
+  }>
 }

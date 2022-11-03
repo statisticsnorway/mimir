@@ -14,7 +14,7 @@ export function nextPeriod(month: string, year: string): CalculatorPeriod {
 
   return {
     month: nextPeriodMonth,
-    year: nextPeriodYear
+    year: nextPeriodYear,
   }
 }
 
@@ -22,58 +22,58 @@ export function allMonths(phrases: Phrases, frontPage?: boolean, type?: string):
   const months: MonthDropdownItems = [
     {
       id: '01',
-      title: phrases.january
+      title: phrases.january,
     },
     {
       id: '02',
-      title: phrases.february
+      title: phrases.february,
     },
     {
       id: '03',
-      title: phrases.march
+      title: phrases.march,
     },
     {
       id: '04',
-      title: phrases.april
+      title: phrases.april,
     },
     {
       id: '05',
-      title: phrases.may
+      title: phrases.may,
     },
     {
       id: '06',
-      title: phrases.june
+      title: phrases.june,
     },
     {
       id: '07',
-      title: phrases.july
+      title: phrases.july,
     },
     {
       id: '08',
-      title: phrases.august
+      title: phrases.august,
     },
     {
       id: '09',
-      title: phrases.september
+      title: phrases.september,
     },
     {
       id: '10',
-      title: phrases.october
+      title: phrases.october,
     },
     {
       id: '11',
-      title: phrases.november
+      title: phrases.november,
     },
     {
       id: '12',
-      title: phrases.december
-    }
+      title: phrases.december,
+    },
   ]
 
   if (type !== 'husleie') {
     const placeholderItem: MonthDropdownItem = {
       id: '90',
-      title: frontPage ? phrases.calculatorMonthAverageFrontpage : phrases.calculatorMonthAverage
+      title: frontPage ? phrases.calculatorMonthAverageFrontpage : phrases.calculatorMonthAverage,
     }
 
     return [placeholderItem, ...months]
@@ -97,10 +97,10 @@ export function lastPeriodKpi(kpiDataMonth: Dataset | null): CalculatorPeriod {
   const lastYear: string = dataYear[dataYear.length - 1]
   const dataLastYearMnd: Array<string> = []
 
-  dataMonth.forEach(function(month) {
+  dataMonth.forEach(function (month) {
     const kpiMonthData: Data | null = kpiDataMonth?.Data({
-      'Tid': lastYear,
-      'Maaned': month
+      Tid: lastYear,
+      Maaned: month,
     }) as Data
     const verdi: Data['value'] = kpiMonthData?.value
     if (verdi != null) {
@@ -111,13 +111,13 @@ export function lastPeriodKpi(kpiDataMonth: Dataset | null): CalculatorPeriod {
 
   return {
     month: lastMonth,
-    year: lastYear
+    year: lastYear,
   }
 }
 
 export interface CalculatorUtilsLib {
-    nextPeriod: (month: string, year: string) => CalculatorPeriod;
-    allMonths: (phrases: Phrases, frontPage?: boolean, type?: string) => MonthDropdownItems;
-    monthLabel: (months: MonthDropdownItems, language: string | undefined, month: number | string) => string;
-    lastPeriodKpi: (kpiDataMonth: Dataset | null) => CalculatorPeriod;
+  nextPeriod: (month: string, year: string) => CalculatorPeriod
+  allMonths: (phrases: Phrases, frontPage?: boolean, type?: string) => MonthDropdownItems
+  monthLabel: (months: MonthDropdownItems, language: string | undefined, month: number | string) => string
+  lastPeriodKpi: (kpiDataMonth: Dataset | null) => CalculatorPeriod
 }

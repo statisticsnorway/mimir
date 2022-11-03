@@ -3,5 +3,5 @@ export interface HighmapPartConfig {
   /**
    * Highmap
    */
-  highmapId?: string;
+  highmapId?: string
 }

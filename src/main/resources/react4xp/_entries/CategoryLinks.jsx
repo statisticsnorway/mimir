@@ -10,21 +10,15 @@ class CategoryLinks extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <div className="container">
-          <div className="row justify-content-start">
+        <div className='container'>
+          <div className='row justify-content-start'>
             {this.props.links.map((link, index) => {
               return (
-                <div className="col-12 col-md-6 mb-4" key={index}>
-                  <CategoryLink
-                    href={link.href}
-                    titleText={link.titleText}
-                    subText={link.subText}
-                    className=''
-                  />
+                <div className='col-12 col-md-6 mb-4' key={index}>
+                  <CategoryLink href={link.href} titleText={link.titleText} subText={link.subText} className='' />
                 </div>
               )
-            }
-            )}
+            })}
             {this.addMethodAndDocumentation()}
           </div>
         </div>
@@ -33,12 +27,10 @@ class CategoryLinks extends React.Component {
   }
 
   addMethodAndDocumentation() {
-    const {
-      methodsAndDocumentationUrl, methodsAndDocumentationLabel
-    } = this.props
+    const { methodsAndDocumentationUrl, methodsAndDocumentationLabel } = this.props
     if (methodsAndDocumentationUrl && methodsAndDocumentationUrl !== '') {
       return (
-        <div className="col-12 col-md-6 mb-4">
+        <div className='col-12 col-md-6 mb-4'>
           <CategoryLink
             href={methodsAndDocumentationUrl}
             titleText={methodsAndDocumentationLabel}
@@ -55,11 +47,11 @@ CategoryLinks.propTypes = {
     PropTypes.shape({
       href: PropTypes.string.isRequired,
       titleText: PropTypes.string.isRequired,
-      subText: PropTypes.string.isRequired
+      subText: PropTypes.string.isRequired,
     })
   ),
   methodsAndDocumentationUrl: PropTypes.string,
-  methodsAndDocumentationLabel: PropTypes.string
+  methodsAndDocumentationLabel: PropTypes.string,
 }
 
-export default (props) => <CategoryLinks {...props}/>
+export default (props) => <CategoryLinks {...props} />

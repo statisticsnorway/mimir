@@ -11,27 +11,27 @@ function KpiCalculator(props) {
   const [startValue, setStartValue] = useState({
     error: false,
     errorMsg: props.phrases.calculatorValidateAmountNumber,
-    value: ''
+    value: '',
   })
   const [startMonth, setStartMonth] = useState({
     error: false,
     errorMsg: props.lastNumberText,
-    value: '90'
+    value: '90',
   })
   const [startYear, setStartYear] = useState({
     error: false,
     errorMsg: `${props.phrases.kpiValidateYear} ${validMaxYear}`,
-    value: ''
+    value: '',
   })
   const [endMonth, setEndMonth] = useState({
     error: false,
     errorMsg: props.lastNumberText,
-    value: '90'
+    value: '90',
   })
   const [endYear, setEndYear] = useState({
     error: false,
     errorMsg: `${props.phrases.kpiValidateYear} ${validMaxYear}`,
-    value: ''
+    value: '',
   })
   const [errorMessage, setErrorMessage] = useState(null)
   const [loading, setLoading] = useState(false)
@@ -49,15 +49,14 @@ function KpiCalculator(props) {
   const scrollAnchor = React.useRef(null)
   function scrollToResult() {
     scrollAnchor.current.focus({
-      preventScroll: true
+      preventScroll: true,
     })
     scrollAnchor.current.scrollIntoView({
       behavior: 'smooth',
       block: 'end',
-      inline: 'nearest'
+      inline: 'nearest',
     })
   }
-
 
   function closeResult() {
     setEndValue(null)
@@ -76,19 +75,20 @@ function KpiCalculator(props) {
     }
     setErrorMessage(null)
     setLoading(true)
-    axios.get(props.kpiServiceUrl, {
-      params: {
-        startValue: startValue.value,
-        startYear: startYear.value,
-        startMonth: startMonth.value,
-        endYear: endYear.value,
-        endMonth: endMonth.value,
-        language: language
-      }
-    })
+    axios
+      .get(props.kpiServiceUrl, {
+        params: {
+          startValue: startValue.value,
+          startYear: startYear.value,
+          startMonth: startMonth.value,
+          endYear: endYear.value,
+          endMonth: endMonth.value,
+          language: language,
+        },
+      })
       .then((res) => {
         const changeVal = (res.data.change * 100).toFixed(1)
-        const endVal = (res.data.endValue).toFixed(2)
+        const endVal = res.data.endValue.toFixed(2)
         const startPeriod = getPeriod(startYear.value, startMonth.value)
         const endPeriod = getPeriod(endYear.value, endMonth.value)
         setChange(changeVal)
@@ -104,7 +104,7 @@ function KpiCalculator(props) {
           setErrorMessage(err.toString())
         }
       })
-      .finally(()=> {
+      .finally(() => {
         setLoading(false)
         scrollToResult()
       })
@@ -139,11 +139,11 @@ function KpiCalculator(props) {
 
   function isStartMonthValid(value) {
     const startMonthValue = value || startMonth.value
-    const startMonthValid = !((startYear.value === validMaxYear) && (startMonthValue > validMaxMonth))
+    const startMonthValid = !(startYear.value === validMaxYear && startMonthValue > validMaxMonth)
     if (!startMonthValid) {
       setStartMonth({
         ...startMonth,
-        error: true
+        error: true,
       })
     }
     return startMonthValid
@@ -152,11 +152,14 @@ function KpiCalculator(props) {
   function isEndMonthValid(value) {
     const endMonthValue = value || endMonth.value
     const maxYearAverage = Number(validMaxMonth) === 12 ? validMaxYear : Number(validMaxYear) - 1
-    const endMonthValid = endMonthValue === '90' ? (endYear.value <= maxYearAverage) : !((endYear.value === validMaxYear) && (endMonthValue > validMaxMonth))
+    const endMonthValid =
+      endMonthValue === '90'
+        ? endYear.value <= maxYearAverage
+        : !(endYear.value === validMaxYear && endMonthValue > validMaxMonth)
     if (!endMonthValid) {
       setEndMonth({
         ...endMonth,
-        error: true
+        error: true,
       })
     }
     return endMonthValid
@@ -164,98 +167,98 @@ function KpiCalculator(props) {
 
   function onBlur(id) {
     switch (id) {
-    case 'start-value': {
-      setStartValue({
-        ...startValue,
-        error: !isStartValueValid()
-      })
-      break
-    }
-    case 'start-year': {
-      setStartYear({
-        ...startYear,
-        error: !isStartYearValid()
-      })
-      break
-    }
-    case 'end-year': {
-      setEndYear({
-        ...endYear,
-        error: !isEndYearValid()
-      })
-      break
-    }
-    default: {
-      break
-    }
+      case 'start-value': {
+        setStartValue({
+          ...startValue,
+          error: !isStartValueValid(),
+        })
+        break
+      }
+      case 'start-year': {
+        setStartYear({
+          ...startYear,
+          error: !isStartYearValid(),
+        })
+        break
+      }
+      case 'end-year': {
+        setEndYear({
+          ...endYear,
+          error: !isEndYearValid(),
+        })
+        break
+      }
+      default: {
+        break
+      }
     }
   }
 
   function onChange(id, value) {
     switch (id) {
-    case 'start-value': {
-      value = value.replace(/,/g, '.')
-      setStartValue({
-        ...startValue,
-        value,
-        error: startValue.error ? !isStartValueValid(value) : startValue.error
-      })
-      break
-    }
-    case 'start-month': {
-      setStartMonth({
-        ...startMonth,
-        value: value.id,
-        error: startMonth.error ? !isStartMonthValid(value.id) : startMonth.error
-      })
-      break
-    }
-    case 'start-year': {
-      if (startMonth.error) {
+      case 'start-value': {
+        value = value.replace(/,/g, '.')
+        setStartValue({
+          ...startValue,
+          value,
+          error: startValue.error ? !isStartValueValid(value) : startValue.error,
+        })
+        break
+      }
+      case 'start-month': {
         setStartMonth({
           ...startMonth,
-          error: false
+          value: value.id,
+          error: startMonth.error ? !isStartMonthValid(value.id) : startMonth.error,
         })
+        break
       }
-      setStartYear({
-        ...startYear,
-        value,
-        error: startYear.error ? !isStartYearValid(value) : startYear.error
-      })
-      break
-    }
-    case 'end-month': {
-      setEndMonth({
-        ...endMonth,
-        value: value.id,
-        error: endMonth.error ? !isEndMonthValid(value.id) : endMonth.error
-      })
-      break
-    }
-    case 'end-year': {
-      if (endMonth.error) {
+      case 'start-year': {
+        if (startMonth.error) {
+          setStartMonth({
+            ...startMonth,
+            error: false,
+          })
+        }
+        setStartYear({
+          ...startYear,
+          value,
+          error: startYear.error ? !isStartYearValid(value) : startYear.error,
+        })
+        break
+      }
+      case 'end-month': {
         setEndMonth({
           ...endMonth,
-          error: false
+          value: value.id,
+          error: endMonth.error ? !isEndMonthValid(value.id) : endMonth.error,
         })
+        break
       }
-      setEndYear({
-        ...endYear,
-        value,
-        error: endYear.error ? !isEndYearValid(value) : endYear.error
-      })
-      break
-    }
-    default: {
-      break
-    }
+      case 'end-year': {
+        if (endMonth.error) {
+          setEndMonth({
+            ...endMonth,
+            error: false,
+          })
+        }
+        setEndYear({
+          ...endYear,
+          value,
+          error: endYear.error ? !isEndYearValid(value) : endYear.error,
+        })
+        break
+      }
+      default: {
+        break
+      }
     }
   }
 
   function addDropdownMonth(id) {
     return (
       <Dropdown
-        className="month"
+        className='month'
         id={id}
         header={props.phrases.chooseMonth}
         onSelect={(value) => {
@@ -265,7 +268,7 @@ function KpiCalculator(props) {
         errorMessage={startMonth.errorMsg}
         selectedItem={{
           title: props.frontPage ? props.phrases.calculatorMonthAverageFrontpage : props.phrases.calculatorMonthAverage,
-          id: '90'
+          id: '90',
         }}
         items={props.months}
       />
@@ -275,7 +278,7 @@ function KpiCalculator(props) {
   function addDropdownEndMonth(id) {
     return (
       <Dropdown
-        className="month"
+        className='month'
         id={id}
         header={props.phrases.chooseMonth}
         onSelect={(value) => {
@@ -285,7 +288,7 @@ function KpiCalculator(props) {
         errorMessage={endMonth.errorMsg}
         selectedItem={{
           title: props.frontPage ? props.phrases.calculatorMonthAverageFrontpage : props.phrases.calculatorMonthAverage,
-          id: '90'
+          id: '90',
         }}
         items={props.months}
       />
@@ -303,18 +306,19 @@ function KpiCalculator(props) {
 
   function renderNumberValute(value) {
     if (endValue && change) {
-      const valute = (language === 'en') ? 'NOK' : 'kr'
-      const decimalSeparator = (language === 'en') ? '.' : ','
+      const valute = language === 'en' ? 'NOK' : 'kr'
+      const decimalSeparator = language === 'en' ? '.' : ','
       return (
         <React.Fragment>
           <NumberFormat
-            value={ Number(value) }
+            value={Number(value)}
             displayType={'text'}
             thousandSeparator={' '}
             decimalSeparator={decimalSeparator}
             decimalScale={2}
             fixedDecimalScale={true}
-          /> {valute}
+          />{' '}
+          {valute}
         </React.Fragment>
       )
     }
@@ -323,17 +327,18 @@ function KpiCalculator(props) {
   function renderNumberChangeValue() {
     if (endValue && change) {
       const changeValue = change.charAt(0) === '-' ? change.replace('-', '') : change
-      const decimalSeparator = (language === 'en') ? '.' : ','
+      const decimalSeparator = language === 'en' ? '.' : ','
       return (
         <React.Fragment>
           <NumberFormat
-            value={ Number(changeValue) }
+            value={Number(changeValue)}
             displayType={'text'}
             thousandSeparator={' '}
             decimalSeparator={decimalSeparator}
             decimalScale={1}
             fixedDecimalScale={true}
-          /> %
+          />{' '}
+          %
         </React.Fragment>
       )
     }
@@ -342,52 +347,52 @@ function KpiCalculator(props) {
   function calculatorResult() {
     const priceChangeLabel = change.charAt(0) === '-' ? props.phrases.priceDecrease : props.phrases.priceIncrease
     return (
-      <Container className="calculator-result" ref={scrollAnchor} tabIndex="0">
-        <Row className="mb-5">
-          <Col className="amount-equal align-self-end col-12 col-md-4">
+      <Container className='calculator-result' ref={scrollAnchor} tabIndex='0'>
+        <Row className='mb-5'>
+          <Col className='amount-equal align-self-end col-12 col-md-4'>
             <Title size={3}>{props.phrases.kpiAmountEqualled}</Title>
           </Col>
-          <Col className="end-value col-12 col-md-8">
-            <span className="float-start float-md-end">
-              {renderNumberValute(endValue)}
-            </span>
+          <Col className='end-value col-12 col-md-8'>
+            <span className='float-start float-md-end'>{renderNumberValute(endValue)}</span>
           </Col>
-          <Col className="col-12">
-            <Divider dark/>
+          <Col className='col-12'>
+            <Divider dark />
           </Col>
         </Row>
-        <Row className="mb-5">
-          <Col className="price-increase col-12 col-lg-4">
+        <Row className='mb-5'>
+          <Col className='price-increase col-12 col-lg-4'>
             <span>{priceChangeLabel}</span>
-            <span className="float-end">
-              {renderNumberChangeValue()}
-            </span>
-            <Divider dark/>
+            <span className='float-end'>{renderNumberChangeValue()}</span>
+            <Divider dark />
           </Col>
-          <Col className="start-value col-12 col-lg-4">
-            <span>{props.phrases.amount} {startPeriod}</span>
-            <span className="float-end">
-              {renderNumberValute(startValueResult)}
+          <Col className='start-value col-12 col-lg-4'>
+            <span>
+              {props.phrases.amount} {startPeriod}
             </span>
-            <Divider dark/>
+            <span className='float-end'>{renderNumberValute(startValueResult)}</span>
+            <Divider dark />
           </Col>
-          <Col className="amount col-12 col-lg-4">
-            <span>{props.phrases.amount} {endPeriod}</span>
-            <span className="float-end">
-              {renderNumberValute(endValue)}
+          <Col className='amount col-12 col-lg-4'>
+            <span>
+              {props.phrases.amount} {endPeriod}
             </span>
-            <Divider dark/>
+            <span className='float-end'>{renderNumberValute(endValue)}</span>
+            <Divider dark />
           </Col>
         </Row>
-        <Row className="my-4">
-          <Col className="col-12 col-md-8">
-            <span className="info-title">{props.phrases.kpiCalculatorInfoTitle}</span>
-            <p className="info-text">{props.phrases.kpiCalculatorInfoText}</p>
+        <Row className='my-4'>
+          <Col className='col-12 col-md-8'>
+            <span className='info-title'>{props.phrases.kpiCalculatorInfoTitle}</span>
+            <p className='info-text'>{props.phrases.kpiCalculatorInfoText}</p>
           </Col>
         </Row>
         <Row>
-          <Col className="md-6">
-            <Button className="close-button" onClick={() => closeResult()} type="button"> <X size="18"/>{props.phrases.close}</Button>
+          <Col className='md-6'>
+            <Button className='close-button' onClick={() => closeResult()} type='button'>
+              {' '}
+              <X size='18' />
+              {props.phrases.close}
+            </Button>
           </Col>
         </Row>
       </Container>
@@ -397,31 +402,31 @@ function KpiCalculator(props) {
   function calculatorResultFrontpage() {
     const priceChangeLabel = change.charAt(0) === '-' ? props.phrases.priceDecrease : props.phrases.priceIncrease
     return (
-      <Container className="calculator-result-frontpage" ref={scrollAnchor} tabIndex="0">
-        <Row className="mb-3">
-          <Col className="amount-equal align-self-end col-12 col-lg-5">
+      <Container className='calculator-result-frontpage' ref={scrollAnchor} tabIndex='0'>
+        <Row className='mb-3'>
+          <Col className='amount-equal align-self-end col-12 col-lg-5'>
             <Title size={3}>{props.phrases.kpiAmountEqualled}</Title>
           </Col>
-          <Col className="end-value col-12 col-lg-7">
-            <span className="float-lg-end">
-              {renderNumberValute(endValue)}
-            </span>
+          <Col className='end-value col-12 col-lg-7'>
+            <span className='float-lg-end'>{renderNumberValute(endValue)}</span>
           </Col>
-          <Col className="col-12">
-            <Divider dark/>
+          <Col className='col-12'>
+            <Divider dark />
           </Col>
         </Row>
         <Row>
-          <Col className="price-increase col-12">
+          <Col className='price-increase col-12'>
             <span>{priceChangeLabel} </span>
-            <span>
-              {renderNumberChangeValue()}
-            </span>
+            <span>{renderNumberChangeValue()}</span>
           </Col>
         </Row>
         <Row>
-          <Col className="md-6">
-            <Button className="close-button" onClick={() => closeResult()} type="button"> <X size="18"/>{props.phrases.close}</Button>
+          <Col className='md-6'>
+            <Button className='close-button' onClick={() => closeResult()} type='button'>
+              {' '}
+              <X size='18' />
+              {props.phrases.close}
+            </Button>
           </Col>
         </Row>
       </Container>
@@ -432,33 +437,36 @@ function KpiCalculator(props) {
     if (loading) {
       return (
         <Container>
-          <span className="spinner-border spinner-border" />
+          <span className='spinner-border spinner-border' />
         </Container>
       )
     }
     if (errorMessage !== null) {
       return (
-        <Container className="calculator-error" >
+        <Container className='calculator-error'>
           <Row>
             <Col>
-              <FormError errorMessages={[errorMessage || props.phrases.kpiErrorUnknownError]} title={props.phrases.kpiErrorCalculationFailed} />
+              <FormError
+                errorMessages={[errorMessage || props.phrases.kpiErrorUnknownError]}
+                title={props.phrases.kpiErrorCalculationFailed}
+              />
             </Col>
           </Row>
         </Container>
       )
     }
     if (endValue && change) {
-      return (
-        props.frontPage ? calculatorResultFrontpage() : calculatorResult()
-      )
+      return props.frontPage ? calculatorResultFrontpage() : calculatorResult()
     }
   }
 
   function renderLinkArticle() {
     if (props.calculatorArticleUrl) {
       return (
-        <Col className="article-link align-self-center col-12 col-md-6">
-          <Link className="float-md-end" href={props.calculatorArticleUrl}>{props.phrases.readAboutCalculator}</Link>
+        <Col className='article-link align-self-center col-12 col-md-6'>
+          <Link className='float-md-end' href={props.calculatorArticleUrl}>
+            {props.phrases.readAboutCalculator}
+          </Link>
         </Col>
       )
     }
@@ -467,8 +475,10 @@ function KpiCalculator(props) {
   function renderLinkArticleFrontpage() {
     if (props.calculatorArticleUrl) {
       return (
-        <Col className="article-link col-12 col-lg-6 d-lg-flex align-self-center justify-content-end">
-          <Link className="float-lg-end" href={props.calculatorArticleUrl}>{props.phrases.readAboutCalculator}</Link>
+        <Col className='article-link col-12 col-lg-6 d-lg-flex align-self-center justify-content-end'>
+          <Link className='float-lg-end' href={props.calculatorArticleUrl}>
+            {props.phrases.readAboutCalculator}
+          </Link>
         </Col>
       )
     }
@@ -477,9 +487,10 @@ function KpiCalculator(props) {
   function renderIngressFrontpage() {
     if (props.frontPageIngress) {
       return (
-        <div className="publish-text pb-2"
+        <div
+          className='publish-text pb-2'
           dangerouslySetInnerHTML={{
-            __html: props.frontPageIngress
+            __html: props.frontPageIngress,
           }}
         />
       )
@@ -506,41 +517,41 @@ function KpiCalculator(props) {
 
   function renderForm() {
     return (
-      <div className="calculator-form">
+      <div className='calculator-form'>
         <Row>
-          <Col className="col-12 col-md-6">
+          <Col className='col-12 col-md-6'>
             <Title size={2}>{props.phrases.calculatePriceChange}</Title>
           </Col>
           {renderLinkArticle()}
         </Row>
         <Row>
-          <Col className="col-12 col-md-8">
-            <p className="publish-text">{props.nextPublishText}</p>
+          <Col className='col-12 col-md-8'>
+            <p className='publish-text'>{props.nextPublishText}</p>
           </Col>
         </Row>
         <Form onSubmit={onSubmit}>
           <Container>
             <Row>
-              <Col className="input-amount">
-                <h3 id="enter-amount">{props.phrases.enterAmount}</h3>
+              <Col className='input-amount'>
+                <h3 id='enter-amount'>{props.phrases.enterAmount}</h3>
                 <Input
-                  className="start-value"
+                  className='start-value'
                   handleChange={(value) => onChange('start-value', value)}
                   error={startValue.error}
                   errorMessage={startValue.errorMsg}
                   onBlur={() => onBlur('start-value')}
-                  ariaLabelledBy="enter-amount"
+                  ariaLabelledBy='enter-amount'
                 />
               </Col>
             </Row>
             <Row>
-              <Col className="calculate-from col-12 col-md-6">
+              <Col className='calculate-from col-12 col-md-6'>
                 <Title size={3}>{props.phrases.calculatePriceChangeFrom}</Title>
                 <Container>
                   <Row>
-                    <Col className="select-year col-sm-5">
+                    <Col className='select-year col-sm-5'>
                       <Input
-                        className="input-year"
+                        className='input-year'
                         label={props.phrases.fromYear}
                         handleChange={(value) => onChange('start-year', value)}
                         error={startYear.error}
@@ -548,19 +559,17 @@ function KpiCalculator(props) {
                         onBlur={() => onBlur('start-year')}
                       />
                     </Col>
-                    <Col className="select-month col-sm-7">
-                      {addDropdownMonth('start-month')}
-                    </Col>
+                    <Col className='select-month col-sm-7'>{addDropdownMonth('start-month')}</Col>
                   </Row>
                 </Container>
               </Col>
-              <Col className="calculate-to col-12 col-md-6">
+              <Col className='calculate-to col-12 col-md-6'>
                 <Title size={3}>{props.phrases.calculatePriceChangeTo}</Title>
                 <Container>
                   <Row>
-                    <Col className="select-year col-sm-5">
+                    <Col className='select-year col-sm-5'>
                       <Input
-                        className="input-year"
+                        className='input-year'
                         label={props.phrases.toYear}
                         handleChange={(value) => onChange('end-year', value)}
                         error={endYear.error}
@@ -568,16 +577,16 @@ function KpiCalculator(props) {
                         onBlur={() => onBlur('end-year')}
                       />
                     </Col>
-                    <Col className="select-month col-sm-7">
-                      {addDropdownEndMonth('end-month')}
-                    </Col>
+                    <Col className='select-month col-sm-7'>{addDropdownEndMonth('end-month')}</Col>
                   </Row>
                 </Container>
               </Col>
             </Row>
-            <Row className="submit">
+            <Row className='submit'>
               <Col>
-                <Button className="submit-button" primary type="submit" disabled={loading}>{props.phrases.seePriceChange}</Button>
+                <Button className='submit-button' primary type='submit' disabled={loading}>
+                  {props.phrases.seePriceChange}
+                </Button>
               </Col>
             </Row>
           </Container>
@@ -588,20 +597,20 @@ function KpiCalculator(props) {
 
   function renderFormFrontpage() {
     return (
-      <Row className="calculator-form-frontpage">
-        <Col className="col-12">
-          <Row className="d-flex flex-column">
-            <Col className="col-12 col-lg-10 p-0">
+      <Row className='calculator-form-frontpage'>
+        <Col className='col-12'>
+          <Row className='d-flex flex-column'>
+            <Col className='col-12 col-lg-10 p-0'>
               <Title size={2}>{props.phrases.calculatePriceChange}</Title>
               {renderIngressFrontpage()}
             </Col>
           </Row>
         </Col>
-        <Form onSubmit={onSubmit} className="col-12 p-0">
-          <Row className="calculator-input">
-            <Col className="input-amount col-12 col-lg-4">
+        <Form onSubmit={onSubmit} className='col-12 p-0'>
+          <Row className='calculator-input'>
+            <Col className='input-amount col-12 col-lg-4'>
               <Input
-                className="start-value"
+                className='start-value'
                 label={props.phrases.enterAmount}
                 handleChange={(value) => onChange('start-value', value)}
                 error={startValue.error}
@@ -609,11 +618,11 @@ function KpiCalculator(props) {
                 onBlur={() => onBlur('start-value')}
               />
             </Col>
-            <Col className="calculate-from col-12 col-lg-4">
+            <Col className='calculate-from col-12 col-lg-4'>
               <Row>
-                <Col className="select-year">
+                <Col className='select-year'>
                   <Input
-                    className="input-year"
+                    className='input-year'
                     label={props.phrases.fromYear}
                     handleChange={(value) => onChange('start-year', value)}
                     error={startYear.error}
@@ -621,16 +630,14 @@ function KpiCalculator(props) {
                     onBlur={() => onBlur('start-year')}
                   />
                 </Col>
-                <Col className="select-month">
-                  {addDropdownMonth('start-month')}
-                </Col>
+                <Col className='select-month'>{addDropdownMonth('start-month')}</Col>
               </Row>
             </Col>
-            <Col className="calculate-to col-12 col-lg-4">
+            <Col className='calculate-to col-12 col-lg-4'>
               <Row>
-                <Col className="select-year">
+                <Col className='select-year'>
                   <Input
-                    className="input-year"
+                    className='input-year'
                     label={props.phrases.toYear}
                     handleChange={(value) => onChange('end-year', value)}
                     error={endYear.error}
@@ -638,15 +645,15 @@ function KpiCalculator(props) {
                     onBlur={() => onBlur('end-year')}
                   />
                 </Col>
-                <Col className="select-month">
-                  {addDropdownEndMonth('end-month')}
-                </Col>
+                <Col className='select-month'>{addDropdownEndMonth('end-month')}</Col>
               </Row>
             </Col>
           </Row>
-          <Row className="submit">
+          <Row className='submit'>
             <Col>
-              <Button className="submit-button" primary type="submit" disabled={loading}>{props.phrases.seePriceChange}</Button>
+              <Button className='submit-button' primary type='submit' disabled={loading}>
+                {props.phrases.seePriceChange}
+              </Button>
             </Col>
             {renderLinkArticleFrontpage()}
           </Row>
@@ -655,14 +662,12 @@ function KpiCalculator(props) {
     )
   }
 
-  return (
-    renderCalculator()
-  )
+  return renderCalculator()
 }
 
 KpiCalculator.defaultValue = {
   kpiServiceUrl: null,
-  language: 'nb'
+  language: 'nb',
 }
 
 KpiCalculator.propTypes = {
@@ -671,7 +676,7 @@ KpiCalculator.propTypes = {
   months: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string,
-      title: PropTypes.string
+      title: PropTypes.string,
     })
   ),
   phrases: PropTypes.object,
@@ -680,10 +685,10 @@ KpiCalculator.propTypes = {
   lastNumberText: PropTypes.string,
   lastUpdated: PropTypes.shape({
     month: PropTypes.string,
-    year: PropTypes.string
+    year: PropTypes.string,
   }),
   frontPage: PropTypes.bool,
-  frontPageIngress: PropTypes.string
+  frontPageIngress: PropTypes.string,
 }
 
 export default (props) => <KpiCalculator {...props} />

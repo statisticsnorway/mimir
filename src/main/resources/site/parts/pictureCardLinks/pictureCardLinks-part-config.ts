@@ -7,21 +7,21 @@ export interface PictureCardLinksPartConfig {
     /**
      * Tittel
      */
-    title: string;
+    title: string
 
     /**
      * Ingress
      */
-    subTitle: string;
+    subTitle: string
 
     /**
      * Lenke
      */
-    href: string;
+    href: string
 
     /**
      * Bilde
      */
-    image: string;
-  }>;
+    image: string
+  }>
 }

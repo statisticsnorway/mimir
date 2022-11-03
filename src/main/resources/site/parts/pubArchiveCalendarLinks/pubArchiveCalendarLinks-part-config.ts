@@ -3,10 +3,10 @@ export interface PubArchiveCalendarLinksPartConfig {
   /**
    * Lenke til Publikasjonsarkiv
    */
-  pubArchiveUrl: string;
+  pubArchiveUrl: string
 
   /**
    * Lenke til Statistikk kalender
    */
-  statCalendarUrl: string;
+  statCalendarUrl: string
 }

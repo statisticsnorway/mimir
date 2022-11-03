@@ -8,7 +8,7 @@ export interface Sources {
         /**
          * Selected
          */
-        _selected: "urlSource";
+        _selected: 'urlSource'
 
         /**
          * Kilde fra url
@@ -17,19 +17,19 @@ export interface Sources {
           /**
            * Tekst til kildelenke
            */
-          urlText: string;
+          urlText: string
 
           /**
            * Kildelenke
            */
-          url: string;
-        };
+          url: string
+        }
       }
     | {
         /**
          * Selected
          */
-        _selected: "relatedSource";
+        _selected: 'relatedSource'
 
         /**
          * Kilde fra XP
@@ -38,13 +38,13 @@ export interface Sources {
           /**
            * Tekst til kildelenke
            */
-          urlText?: string;
+          urlText?: string
 
           /**
            * Relatert innhold
            */
-          sourceSelector?: string;
-        };
+          sourceSelector?: string
+        }
       }
-  >;
+  >
 }

@@ -3,5 +3,5 @@ export interface MathsPartConfig {
   /**
    * Formel
    */
-  mathsFormula: string;
+  mathsFormula: string
 }

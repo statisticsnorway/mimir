@@ -7,11 +7,9 @@ import { variableType } from './types'
 export const DISPLAY_TYPE_CARDS = 'CARDS'
 export const DISPLAY_TYPE_TABLE = 'TABLE'
 
-const Variables = ({
-  variables, display = DISPLAY_TYPE_CARDS
-}) => {
+const Variables = ({ variables, display = DISPLAY_TYPE_CARDS }) => {
   if (display === DISPLAY_TYPE_CARDS) {
-    return <VariableCardsList variables={variables}/>
+    return <VariableCardsList variables={variables} />
   }
 
   return <Text>TBD : Variables as table</Text>
@@ -19,7 +17,7 @@ const Variables = ({
 
 Variables.propTypes = {
   variables: PropTypes.arrayOf(variableType),
-  display: PropTypes.oneOf([DISPLAY_TYPE_CARDS, DISPLAY_TYPE_TABLE])
+  display: PropTypes.oneOf([DISPLAY_TYPE_CARDS, DISPLAY_TYPE_TABLE]),
 }
 
 export default Variables

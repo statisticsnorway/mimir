@@ -8,7 +8,7 @@ export interface Table {
         /**
          * Selected
          */
-        _selected: "tbprocessor";
+        _selected: 'tbprocessor'
 
         /**
          * Tall fra tabellbygger
@@ -17,14 +17,14 @@ export interface Table {
           /**
            * URL eller TBML-id
            */
-          urlOrId?: string;
-        };
+          urlOrId?: string
+        }
       }
     | {
         /**
          * Selected
          */
-        _selected: "statbankApi";
+        _selected: 'statbankApi'
 
         /**
          * Api-spørring mot statistikkbanken
@@ -33,50 +33,49 @@ export interface Table {
           /**
            * URL eller tabell-id
            */
-          urlOrId?: string;
+          urlOrId?: string
 
           /**
            * API-spørring mot statistikkbanken (JSON-format)
            */
-          json?: string;
+          json?: string
 
           /**
            * Navn på x-akse dimensjon
            */
-          xAxisLabel?: string;
+          xAxisLabel?: string
 
           /**
            * Navn på y-akse dimensjon
            */
-          yAxisLabel?: string;
+          yAxisLabel?: string
 
           /**
            * Filtrering på dataset
            */
-          datasetFilterOptions?:
-            | {
-                /**
-                 * Selected
-                 */
-                _selected: "municipalityFilter";
+          datasetFilterOptions?: {
+            /**
+             * Selected
+             */
+            _selected: 'municipalityFilter'
 
-                /**
-                 * Filtrer på kommune
-                 */
-                municipalityFilter: {
-                  /**
-                   * Hvilken dimensjon skal filtreres på kommunenummer
-                   */
-                  municipalityDimension: string;
-                };
-              };
-        };
+            /**
+             * Filtrer på kommune
+             */
+            municipalityFilter: {
+              /**
+               * Hvilken dimensjon skal filtreres på kommunenummer
+               */
+              municipalityDimension: string
+            }
+          }
+        }
       }
     | {
         /**
          * Selected
          */
-        _selected: "statbankSaved";
+        _selected: 'statbankSaved'
 
         /**
          * Lagrede spørringer mot statistikkbanken
@@ -85,14 +84,14 @@ export interface Table {
           /**
            * URL eller tabell-id
            */
-          urlOrId?: string;
-        };
+          urlOrId?: string
+        }
       }
     | {
         /**
          * Selected
          */
-        _selected: "htmlTable";
+        _selected: 'htmlTable'
 
         /**
          * Excel (Kun på innholdstype Tabell)
@@ -101,19 +100,19 @@ export interface Table {
           /**
            * Kildetabell limt inn fra Excel
            */
-          html?: string;
+          html?: string
 
           /**
            * Fotnote-tekst
            */
-          footnoteText?: Array<string>;
-        };
+          footnoteText?: Array<string>
+        }
       }
     | {
         /**
          * Selected
          */
-        _selected: "dataset";
+        _selected: 'dataset'
 
         /**
          * (Ikke i bruk) Ferdige dataset
@@ -122,19 +121,19 @@ export interface Table {
           /**
            * ID
            */
-          id?: string;
+          id?: string
 
           /**
            * Format
            */
-          format: "json" | "csv";
-        };
+          format: 'json' | 'csv'
+        }
       }
     | {
         /**
          * Selected
          */
-        _selected: "klass";
+        _selected: 'klass'
 
         /**
          * Klass
@@ -143,9 +142,9 @@ export interface Table {
           /**
            * URL
            */
-          urlOrId?: string;
-        };
-      };
+          urlOrId?: string
+        }
+      }
 
   /**
    * Kilder
@@ -155,7 +154,7 @@ export interface Table {
         /**
          * Selected
          */
-        _selected: "urlSource";
+        _selected: 'urlSource'
 
         /**
          * Kilde fra url
@@ -164,19 +163,19 @@ export interface Table {
           /**
            * Tekst til kildelenke
            */
-          urlText: string;
+          urlText: string
 
           /**
            * Kildelenke
            */
-          url: string;
-        };
+          url: string
+        }
       }
     | {
         /**
          * Selected
          */
-        _selected: "relatedSource";
+        _selected: 'relatedSource'
 
         /**
          * Kilde fra XP
@@ -185,18 +184,18 @@ export interface Table {
           /**
            * Tekst til kildelenke
            */
-          urlText?: string;
+          urlText?: string
 
           /**
            * Relatert innhold
            */
-          sourceSelector?: string;
-        };
+          sourceSelector?: string
+        }
       }
-  >;
+  >
 
   /**
    * Rettemelding
    */
-  correctionNotice?: string;
+  correctionNotice?: string
 }

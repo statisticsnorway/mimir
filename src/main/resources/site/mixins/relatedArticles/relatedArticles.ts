@@ -8,7 +8,7 @@ export interface RelatedArticles {
         /**
          * Selected
          */
-        _selected: "article";
+        _selected: 'article'
 
         /**
          * Artikkel
@@ -17,14 +17,14 @@ export interface RelatedArticles {
           /**
            * Artikkel fra XP
            */
-          article: string;
-        };
+          article: string
+        }
       }
     | {
         /**
          * Selected
          */
-        _selected: "externalArticle";
+        _selected: 'externalArticle'
 
         /**
          * Artikkel fra 4.7-CMS
@@ -33,33 +33,33 @@ export interface RelatedArticles {
           /**
            * URL
            */
-          url: string;
+          url: string
 
           /**
            * Tittel
            */
-          title: string;
+          title: string
 
           /**
            * Type
            */
-          type?: string;
+          type?: string
 
           /**
            * Dato
            */
-          date?: string;
+          date?: string
 
           /**
            * Ingress
            */
-          preface: string;
+          preface: string
 
           /**
            * Bilde
            */
-          image: string;
-        };
+          image: string
+        }
       }
-  >;
+  >
 }
