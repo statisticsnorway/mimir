@@ -27,7 +27,7 @@ try {
 
   const {
     createOrUpdateStatisticsRepo
-  } = __non_webpack_require__('/lib/ssb/repo/statistics')
+  } = __non_webpack_require__('/lib/ssb/repo/statisticVariant')
 
   log.info('Application ' + app.name + ' started') // Log application started
   __.disposer(() => log.info('Application ' + app.name + ' stopped')) // Log application stoppped

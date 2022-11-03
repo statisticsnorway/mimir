@@ -80,8 +80,6 @@ export function fillRepo(statistics: Array<StatisticInListing>) {
       forceArray(statistic.variants).forEach((variant) => {
         const path: string = `/${statistic.shortName}-${variant.id}–${language}`
         const exists: Array<string> = connection.exists(path)
-        log.info('Finnes denne: ' + variant.id + ' ' + JSON.stringify(exists, null, 4))
-
         const content: ContentLight<Release> = createContentStatisticVariant({
           statistic,
           variant,
@@ -93,15 +91,17 @@ export function fillRepo(statistics: Array<StatisticInListing>) {
 
         // Check if exists, and then do update instead if changed
         if (!exists) {
-          // create<NodeData>(a: NodeData & NodeCreateParams): NodeData & RepoNode;
           connection.create<ContentLight<Release>>(content)
         } else {
-          // modify<NodeData>(params: NodeModifyParams<NodeData>): NodeData & RepoNode;
           connection.modify<ContentLight<Release>>({
             key: path,
             editor: (node) => {
               return {
                 ...node,
+                displayName: content.displayName,
+                modifiedTime: content.modifiedTime,
+                language: content.language,
+                publish: content.publish,
                 data: {
                   ...node.data,
                   ...content.data
