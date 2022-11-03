@@ -59,6 +59,9 @@ const {
 const {
   isEnabled
 } = __non_webpack_require__('/lib/featureToggle')
+const {
+  createOrUpdateStatisticsRepo
+} = __non_webpack_require__('/lib/ssb/repo/statisticVariant')
 
 const createUserContext: RunContext<ContextAttributes> = { // Master context (XP)
   repository: ENONIC_CMS_DEFAULT_REPO,
@@ -132,6 +135,7 @@ export function statRegJob(): void {
   })
   const result: Array<StatRegRefreshResult> = refreshStatRegData()
   completeJobLog(jobLogNode._id, JOB_STATUS_COMPLETE, result)
+  createOrUpdateStatisticsRepo()
 }
 
 function pushRssNewsJob(): void {

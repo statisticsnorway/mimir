@@ -41,6 +41,9 @@ const {
 const {
   localize
 } = __non_webpack_require__('/lib/xp/i18n')
+const {
+  createOrUpdateStatisticsRepo
+} = __non_webpack_require__('/lib/ssb/repo/statisticVariant')
 
 export type StatRegLatestFetchInfoNodeType = StatRegLatestFetchInfoNode | readonly StatRegLatestFetchInfoNode[] | null;
 export function getStatRegFetchStatuses(): Array<StatRegStatus> {
@@ -126,6 +129,9 @@ function runRefresh(socketEmitter: SocketEmitter, statRegKeys: Array<string>): v
   statRegKeys.forEach((key) => {
     refreshStatRegData(STATREG_NODES.filter((nodeConfig) => nodeConfig.key === key))
     socketEmitter.broadcast('statreg-dashboard-refresh-result', getStatRegStatus(key))
+    if (key === 'statistics') {
+      createOrUpdateStatisticsRepo()
+    }
   })
 }
 
