@@ -15,7 +15,8 @@
     "no-use-before-define": "off",
     "@typescript-eslint/ban-types": "off",
     "@typescript-eslint/no-var-requires": "off",
-    "@typescript-eslint/ban-ts-comment": "off"
+    "@typescript-eslint/ban-ts-comment": "off",
+    "semi": "off" // We need to turn this off because xp codegen insists on semicolons.
   },
   "globals": {
     "require": true,
