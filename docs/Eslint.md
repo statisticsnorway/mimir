@@ -15,7 +15,7 @@ We use the [.editorconfig](../.editorconfig) file to set up a common configurati
 
  - [Sublime text plugin](https://github.com/sindresorhus/editorconfig-sublime#readme)
  - [Visual Studio Code plugin](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig)
- - [Vim plugin](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig)
+ - [Vim plugin](https://github.com/editorconfig/editorconfig-vim#readme)
 ### Visual Studio Code
 #### Install Eslint Plugin: 
 
