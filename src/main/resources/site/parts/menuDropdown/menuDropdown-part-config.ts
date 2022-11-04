@@ -3,15 +3,15 @@ export interface MenuDropdownPartConfig {
   /**
    * Meny
    */
-  menu: string
+  menu: string;
 
   /**
    * Hovedside
    */
-  basePage: string
+  basePage: string;
 
   /**
    * Kommunefakta versjon
    */
-  modeMunicipality: boolean
+  modeMunicipality: boolean;
 }

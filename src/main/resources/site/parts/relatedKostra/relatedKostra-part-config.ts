@@ -3,20 +3,20 @@ export interface RelatedKostraPartConfig {
   /**
    * Overskrft
    */
-  title: string
+  title: string;
 
   /**
    * Beskrivelse
    */
-  description: string
+  description: string;
 
   /**
    * KOSTRA lenke tekst
    */
-  kostraLinkText: string
+  kostraLinkText: string;
 
   /**
    * KOSTRA lenke
    */
-  kostraLink: string
+  kostraLink: string;
 }

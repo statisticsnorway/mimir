@@ -3,15 +3,15 @@ export interface HeaderLink {
   /**
    * Lenketekst
    */
-  linkText?: string
+  linkText?: string;
 
   /**
    * URL
    */
-  headerLinkHref?: string
+  headerLinkHref?: string;
 
   /**
    * Innhold
    */
-  linkedContent?: string
+  linkedContent?: string;
 }

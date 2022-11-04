@@ -3,15 +3,15 @@ export interface LocalSearchPartConfig {
   /**
    * Søke tittel
    */
-  title: string
+  title: string;
 
   /**
    * Tekst i søkefelt
    */
-  searchPlaceholder: string
+  searchPlaceholder: string;
 
   /**
    * Søkbar mappe
    */
-  searchFolder: string
+  searchFolder: string;
 }

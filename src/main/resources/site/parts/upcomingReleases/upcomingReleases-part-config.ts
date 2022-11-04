@@ -3,10 +3,10 @@ export interface UpcomingReleasesPartConfig {
   /**
    * Ingress
    */
-  preface: string
+  preface: string;
 
   /**
    * Antall dager pr "side"
    */
-  numberOfDays: string
+  numberOfDays: string;
 }

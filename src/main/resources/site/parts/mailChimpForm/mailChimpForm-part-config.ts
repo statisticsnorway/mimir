@@ -3,20 +3,20 @@ export interface MailChimpFormPartConfig {
   /**
    * Tittel
    */
-  title?: string
+  title?: string;
 
   /**
    * Ingress
    */
-  text?: string
+  text?: string;
 
   /**
    * Mailchimp endepunkt
    */
-  mailchimpEndpoint?: string
+  mailchimpEndpoint?: string;
 
   /**
    * Mailchimp ID
    */
-  mailchimpId?: string
+  mailchimpId?: string;
 }

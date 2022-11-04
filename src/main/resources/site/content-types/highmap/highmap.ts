@@ -3,65 +3,65 @@ export interface Highmap {
   /**
    * Undertittel
    */
-  subtitle?: string
+  subtitle?: string;
 
   /**
    * Forklaring datagrunnlag for skjermlesere
    */
-  description?: string
+  description?: string;
 
   /**
    * Kart fil (json format)
    */
-  mapFile?: string
+  mapFile?: string;
 
   /**
    * Kartdata fra tabell (tabell limt inn fra excel)
    */
-  htmlTable?: string
+  htmlTable?: string;
 
   /**
    * Terskelverdi
    */
-  thresholdValues: Array<string>
+  thresholdValues: Array<string>;
 
   /**
    * Skjul navn i kart
    */
-  hideTitle: boolean
+  hideTitle: boolean;
 
   /**
    * Velg fargepalett
    */
-  colorPalette: 'green' | 'yellow'
+  colorPalette: "green" | "yellow";
 
   /**
    * Antall desimalplasser som vises
    */
-  numberDecimals?: string
+  numberDecimals?: string;
 
   /**
    * Høyde i prosent av bredde
    */
-  heightAspectRatio?: string
+  heightAspectRatio?: string;
 
   /**
    * Serietittel
    */
-  seriesTitle?: string
+  seriesTitle?: string;
 
   /**
    * Tegnforklaring tittel
    */
-  legendTitle?: string
+  legendTitle?: string;
 
   /**
    * Plassering av tegnforklaring
    */
-  legendAlign: 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight'
+  legendAlign: "topLeft" | "topRight" | "bottomLeft" | "bottomRight";
 
   /**
    * Fotnote-tekst
    */
-  footnoteText?: Array<string>
+  footnoteText?: Array<string>;
 }

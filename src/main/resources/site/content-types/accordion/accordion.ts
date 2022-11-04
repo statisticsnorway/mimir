@@ -7,12 +7,12 @@ export interface Accordion {
     /**
      * Tekst til åpne-knapp
      */
-    open?: string
+    open?: string;
 
     /**
      * Innhold
      */
-    body?: string
+    body?: string;
 
     /**
      * Underpunkt
@@ -21,12 +21,12 @@ export interface Accordion {
       /**
        * Tekst til åpneknapp
        */
-      title?: string
+      title?: string;
 
       /**
        * Brødtekst
        */
-      body?: string
-    }>
-  }>
+      body?: string;
+    }>;
+  }>;
 }

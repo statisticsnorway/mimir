@@ -3,5 +3,5 @@ export interface RelatedFactPage {
   /**
    * Faktasider
    */
-  relatedFactPages?: Array<string>
+  relatedFactPages?: Array<string>;
 }

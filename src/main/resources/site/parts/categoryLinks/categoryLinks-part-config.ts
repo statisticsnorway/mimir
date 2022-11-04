@@ -7,18 +7,18 @@ export interface CategoryLinksPartConfig {
     /**
      * Lenketittel
      */
-    titleText: string
+    titleText: string;
 
     /**
      * Forklaringstekst
      */
-    subText: string
+    subText: string;
 
     /**
      * Lenkemål
      */
-    href: string
-  }>
+    href: string;
+  }>;
 
   /**
    * Metode og Dokumentasjon
@@ -28,7 +28,7 @@ export interface CategoryLinksPartConfig {
         /**
          * Selected
          */
-        _selected: 'urlSource'
+        _selected: "urlSource";
 
         /**
          * Url
@@ -37,14 +37,14 @@ export interface CategoryLinksPartConfig {
           /**
            * Url
            */
-          url: string
-        }
+          url: string;
+        };
       }
     | {
         /**
          * Selected
          */
-        _selected: 'relatedSource'
+        _selected: "relatedSource";
 
         /**
          * Innhold XP
@@ -53,7 +53,7 @@ export interface CategoryLinksPartConfig {
           /**
            * Lenkemål
            */
-          content?: string
-        }
-      }
+          content?: string;
+        };
+      };
 }

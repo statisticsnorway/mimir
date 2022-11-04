@@ -3,7 +3,7 @@ export interface OmStatistikken {
   /**
    * Ingress
    */
-  ingress: string
+  ingress: string;
 
   /**
    * Definisjoner
@@ -12,13 +12,13 @@ export interface OmStatistikken {
     /**
      * Definisjoner av viktige begrep og variabler
      */
-    conceptsAndVariables?: string
+    conceptsAndVariables?: string;
 
     /**
      * Standard klassifikasjoner
      */
-    standardRatings?: string
-  }
+    standardRatings?: string;
+  };
 
   /**
    * Administrative opplysninger
@@ -27,33 +27,33 @@ export interface OmStatistikken {
     /**
      * Navn og emne
      */
-    nameAndSubject?: string
+    nameAndSubject?: string;
 
     /**
      * Ansvarlig Seksjon
      */
-    responsibleDept?: string
+    responsibleDept?: string;
 
     /**
      * Regionalt nivå
      */
-    regionalLevel?: string
+    regionalLevel?: string;
 
     /**
      * Hyppighet og aktualitet
      */
-    frequency?: string
+    frequency?: string;
 
     /**
      * Internasjonal rapportering
      */
-    internationalReporting?: string
+    internationalReporting?: string;
 
     /**
      * Lagring og anvendelse av grunnlagsmaterialet
      */
-    storageAndUse?: string
-  }
+    storageAndUse?: string;
+  };
 
   /**
    * Bakgrunn
@@ -62,33 +62,33 @@ export interface OmStatistikken {
     /**
      * Formål og historie
      */
-    purposeAndHistory?: string
+    purposeAndHistory?: string;
 
     /**
      * Brukere og bruksområder
      */
-    usersAndUse?: string
+    usersAndUse?: string;
 
     /**
      * Likebehandling av brukere
      */
-    equalTreatmentUsers?: string
+    equalTreatmentUsers?: string;
 
     /**
      * Sammenheng med annen statistikk
      */
-    relationOtherStatistics?: string
+    relationOtherStatistics?: string;
 
     /**
      * Lovhjemmel
      */
-    legalAuthority?: string
+    legalAuthority?: string;
 
     /**
      * EØS-referanse
      */
-    eeaReference?: string
-  }
+    eeaReference?: string;
+  };
 
   /**
    * Produksjon
@@ -97,33 +97,33 @@ export interface OmStatistikken {
     /**
      * Omfang
      */
-    scope?: string
+    scope?: string;
 
     /**
      * Datakilder og utvalg
      */
-    dataSourcesAndSamples?: string
+    dataSourcesAndSamples?: string;
 
     /**
      * Datainnsamling, editering og beregninger
      */
-    dataCollectionEditingAndCalculations?: string
+    dataCollectionEditingAndCalculations?: string;
 
     /**
      * Sesongjustering
      */
-    seasonalAdjustment?: string
+    seasonalAdjustment?: string;
 
     /**
      * Konfidensialitet
      */
-    confidentiality?: string
+    confidentiality?: string;
 
     /**
      * Sammenlignbarhet over tid og sted
      */
-    comparability?: string
-  }
+    comparability?: string;
+  };
 
   /**
    * Nøyaktighet og pålitelighet
@@ -132,18 +132,18 @@ export interface OmStatistikken {
     /**
      * Feilkilder og usikkerhet
      */
-    errorSources?: string
+    errorSources?: string;
 
     /**
      * Revisjon
      */
-    revision?: string
-  }
+    revision?: string;
+  };
 
   /**
    * Relevant dokumentasjon
    */
-  relevantDocumentation?: string
+  relevantDocumentation?: string;
 
   /**
    * Om sesongjustering
@@ -152,46 +152,46 @@ export interface OmStatistikken {
     /**
      * Generelt om sesongjustering
      */
-    generalInformation?: string
+    generalInformation?: string;
 
     /**
      * Hvorfor sesongjusteres denne statistikken?
      */
-    whySeasonallyAdjustStatistic?: string
+    whySeasonallyAdjustStatistic?: string;
 
     /**
      * Prekorrigering
      */
-    preTreatment?: string
+    preTreatment?: string;
 
     /**
      * Sesongjustering
      */
-    seasonalAdjustment?: string
+    seasonalAdjustment?: string;
 
     /**
      * Revisjonsrutiner
      */
-    auditProcedures?: string
+    auditProcedures?: string;
 
     /**
      * Kvalitet på sesongjustering
      */
-    qualityOfSeasonalAdjustment?: string
+    qualityOfSeasonalAdjustment?: string;
 
     /**
      * Spesielle tilfeller
      */
-    specialCases?: string
+    specialCases?: string;
 
     /**
      * Publiseringsrutiner
      */
-    postingProcedures?: string
+    postingProcedures?: string;
 
     /**
      * Relevant dokumentasjon
      */
-    relevantDocumentation?: string
-  }
+    relevantDocumentation?: string;
+  };
 }

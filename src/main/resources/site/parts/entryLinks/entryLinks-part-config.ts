@@ -7,21 +7,21 @@ export interface EntryLinksPartConfig {
     /**
      * Tittel
      */
-    title: string
+    title: string;
 
     /**
      * URL
      */
-    href: string
+    href: string;
 
     /**
      * Ikon
      */
-    icon: string
+    icon: string;
 
     /**
      * Mobil-Ikon
      */
-    mobileIcon: string
-  }>
+    mobileIcon: string;
+  }>;
 }

@@ -3,45 +3,45 @@ export interface Project {
   /**
    * Tittel
    */
-  projectTitle: string
+  projectTitle: string;
 
   /**
    * Prosjekt/modellansvarlig
    */
-  manager?: string
+  manager?: string;
 
   /**
    * Velg mellom prosjekt eller modell
    */
-  projectType?: 'project' | 'model'
+  projectType?: "project" | "model";
 
   /**
    * Periode
    */
-  projectPeriod?: string
+  projectPeriod?: string;
 
   /**
    * Finansør
    */
-  financier?: string
+  financier?: string;
 
   /**
    * Ingress
    */
-  ingress?: string
+  ingress?: string;
 
   /**
    * Prosjekttekst
    */
-  body?: string
+  body?: string;
 
   /**
    * Prosjektdeltakere
    */
-  participants?: string
+  participants?: string;
 
   /**
    * Samarbeidspartnere
    */
-  collaborators?: string
+  collaborators?: string;
 }

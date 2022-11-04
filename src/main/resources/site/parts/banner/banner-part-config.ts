@@ -3,7 +3,7 @@ export interface BannerPartConfig {
   /**
    * Bakgrunnsbilde
    */
-  image?: string
+  image?: string;
 
   /**
    * Hvor skal banneret brukes?
@@ -13,18 +13,18 @@ export interface BannerPartConfig {
         /**
          * Selected
          */
-        _selected: 'kommunefakta'
+        _selected: "kommunefakta";
 
         /**
          * Kommunefakta
          */
-        kommunefakta: Record<string, unknown>
+        kommunefakta: Record<string, unknown>;
       }
     | {
         /**
          * Selected
          */
-        _selected: 'faktaside'
+        _selected: "faktaside";
 
         /**
          * Faktaside
@@ -33,19 +33,19 @@ export interface BannerPartConfig {
           /**
            * Stikktittel
            */
-          subTitle?: string
+          subTitle?: string;
 
           /**
            * Tittel på faktaside
            */
-          title?: string
-        }
+          title?: string;
+        };
       }
     | {
         /**
          * Selected
          */
-        _selected: 'general'
+        _selected: "general";
 
         /**
          * Annet
@@ -54,7 +54,7 @@ export interface BannerPartConfig {
           /**
            * Tittel
            */
-          generalTitle?: string
-        }
-      }
+          generalTitle?: string;
+        };
+      };
 }

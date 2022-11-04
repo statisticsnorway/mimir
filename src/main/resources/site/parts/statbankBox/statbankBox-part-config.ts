@@ -3,15 +3,15 @@ export interface StatbankBoxPartConfig {
   /**
    * Overstyr tittel
    */
-  title?: string
+  title?: string;
 
   /**
    * Overstyr lenke
    */
-  href?: string
+  href?: string;
 
   /**
    * Full bredde på boksen
    */
-  fullWidthCheckBox: boolean
+  fullWidthCheckBox: boolean;
 }

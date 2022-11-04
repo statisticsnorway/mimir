@@ -3,12 +3,12 @@ export interface Highchart {
   /**
    * Undertittel
    */
-  subtitle?: string
+  subtitle?: string;
 
   /**
    * Graftype
    */
-  graphType: 'line' | 'pie' | 'column' | 'bar' | 'area' | 'barNegative'
+  graphType: "line" | "pie" | "column" | "bar" | "area" | "barNegative";
 
   /**
    * Datakilde
@@ -18,7 +18,7 @@ export interface Highchart {
         /**
          * Selected
          */
-        _selected: 'tbprocessor'
+        _selected: "tbprocessor";
 
         /**
          * Tall fra tabellbygger
@@ -27,14 +27,14 @@ export interface Highchart {
           /**
            * URL eller TBML-id
            */
-          urlOrId?: string
-        }
+          urlOrId?: string;
+        };
       }
     | {
         /**
          * Selected
          */
-        _selected: 'statbankApi'
+        _selected: "statbankApi";
 
         /**
          * Api-spørring mot statistikkbanken
@@ -43,49 +43,50 @@ export interface Highchart {
           /**
            * URL eller tabell-id
            */
-          urlOrId?: string
+          urlOrId?: string;
 
           /**
            * API-spørring mot statistikkbanken (JSON-format)
            */
-          json?: string
+          json?: string;
 
           /**
            * Navn på x-akse dimensjon
            */
-          xAxisLabel?: string
+          xAxisLabel?: string;
 
           /**
            * Navn på y-akse dimensjon
            */
-          yAxisLabel?: string
+          yAxisLabel?: string;
 
           /**
            * Filtrering på dataset
            */
-          datasetFilterOptions?: {
-            /**
-             * Selected
-             */
-            _selected: 'municipalityFilter'
+          datasetFilterOptions?:
+            | {
+                /**
+                 * Selected
+                 */
+                _selected: "municipalityFilter";
 
-            /**
-             * Filtrer på kommune
-             */
-            municipalityFilter: {
-              /**
-               * Hvilken dimensjon skal filtreres på kommunenummer
-               */
-              municipalityDimension: string
-            }
-          }
-        }
+                /**
+                 * Filtrer på kommune
+                 */
+                municipalityFilter: {
+                  /**
+                   * Hvilken dimensjon skal filtreres på kommunenummer
+                   */
+                  municipalityDimension: string;
+                };
+              };
+        };
       }
     | {
         /**
          * Selected
          */
-        _selected: 'statbankSaved'
+        _selected: "statbankSaved";
 
         /**
          * Lagrede spørringer mot statistikkbanken
@@ -94,14 +95,14 @@ export interface Highchart {
           /**
            * URL eller tabell-id
            */
-          urlOrId?: string
-        }
+          urlOrId?: string;
+        };
       }
     | {
         /**
          * Selected
          */
-        _selected: 'htmlTable'
+        _selected: "htmlTable";
 
         /**
          * Excel (Kun på innholdstype Tabell)
@@ -110,19 +111,19 @@ export interface Highchart {
           /**
            * Kildetabell limt inn fra Excel
            */
-          html?: string
+          html?: string;
 
           /**
            * Fotnote-tekst
            */
-          footnoteText?: Array<string>
-        }
+          footnoteText?: Array<string>;
+        };
       }
     | {
         /**
          * Selected
          */
-        _selected: 'dataset'
+        _selected: "dataset";
 
         /**
          * (Ikke i bruk) Ferdige dataset
@@ -131,19 +132,19 @@ export interface Highchart {
           /**
            * ID
            */
-          id?: string
+          id?: string;
 
           /**
            * Format
            */
-          format: 'json' | 'csv'
-        }
+          format: "json" | "csv";
+        };
       }
     | {
         /**
          * Selected
          */
-        _selected: 'klass'
+        _selected: "klass";
 
         /**
          * Klass
@@ -152,159 +153,160 @@ export interface Highchart {
           /**
            * URL
            */
-          urlOrId?: string
-        }
-      }
+          urlOrId?: string;
+        };
+      };
 
   /**
    * Kildetabell limt inn fra Excel
    */
-  htmlTable?: string
+  htmlTable?: string;
 
   /**
    * Bytt rader og kolonner
    */
-  switchRowsAndColumns: boolean
+  switchRowsAndColumns: boolean;
 
   /**
    * Skjul tittel (gjelder kun figur til faktasider o.l.)
    */
-  hideTitle: boolean
+  hideTitle: boolean;
 
   /**
    * Kombinere forklaringer
    */
-  combineInfo: boolean
+  combineInfo: boolean;
 
   /**
    * Antall desimaler som skal vises på verdiene ved mouseover:
    */
-  numberDecimals?: '0' | '1' | '2' | '3'
+  numberDecimals?: "0" | "1" | "2" | "3";
 
   /**
    * Stabling av verdier (for stolpe- og arealdiagram)
    */
-  stacking?: 'disabled' | 'normal' | 'percent'
+  stacking?: "disabled" | "normal" | "percent";
 
   /**
    * Vis stablesum
    */
-  showStackedTotal: boolean
+  showStackedTotal: boolean;
 
   /**
    * Zoom i graf
    */
-  zoomType?: 'null' | 'x' | 'y' | 'xy'
+  zoomType?: "null" | "x" | "y" | "xy";
 
   /**
    * Høyde i prosent av bredde
    */
-  heightAspectRatio?: string
+  heightAspectRatio?: string;
 
   /**
    * Plassering av tegnforklaring
    */
-  legendAlign?: 'right' | 'center'
+  legendAlign?: "right" | "center";
 
   /**
    * Skjul tegnforklaringen (gjelder ikke for kakediagram).
    */
-  noLegend: boolean
+  noLegend: boolean;
 
   /**
    * Tegnforklaring under (gjelder kun for kakediagram).
    */
-  pieLegend: boolean
+  pieLegend: boolean;
 
   /**
    * X-akse, tittel
    */
-  xAxisTitle?: string
+  xAxisTitle?: string;
 
   /**
    * X-skala
    */
-  xAxisType?: 'category' | 'linear' | 'logarithmic'
+  xAxisType?: "category" | "linear" | "logarithmic";
 
   /**
    * X-akse, minste verdi
    */
-  xAxisMin?: string
+  xAxisMin?: string;
 
   /**
    * X-akse, største verdi
    */
-  xAxisMax?: string
+  xAxisMax?: string;
 
   /**
    * Tickintervall (overstyring av avstand mellom verdier på x-aksen).
    */
-  tickInterval?: string
+  tickInterval?: string;
 
   /**
    * Skjul aksemarkører
    */
-  xEnableLabel: boolean
+  xEnableLabel: boolean;
 
   /**
    * Reverser X-akse
    */
-  xAxisFlip: boolean
+  xAxisFlip: boolean;
 
   /**
    * Y-akse, tittel
    */
-  yAxisTitle?: string
+  yAxisTitle?: string;
 
   /**
    * Plassering av y-aksetittel
    */
-  yAxisOffset?: string
+  yAxisOffset?: string;
 
   /**
    * Y-skala
    */
-  yAxisType?: 'category' | 'linear' | 'logarithmic'
+  yAxisType?: "category" | "linear" | "logarithmic";
 
   /**
    * Y-akse, minste verdi
    */
-  yAxisMin?: string
+  yAxisMin?: string;
 
   /**
    * Y-akse, største verdi
    */
-  yAxisMax?: string
+  yAxisMax?: string;
 
   /**
    * Vis desimaler på Y-akseverdiene, antall:
    */
-  yAxisDecimalPlaces?: '0' | '1' | '2'
+  yAxisDecimalPlaces?: "0" | "1" | "2";
+
 
   sourceList?: Array<{
     /**
      * Kildetekst
      */
-    sourceText?: string
+    sourceText?: string;
 
     /**
      * Kilde-URL
      */
-    sourceHref?: string
-  }>
+    sourceHref?: string;
+  }>;
 
   /**
    * Fotnote-tekst
    */
-  footnoteText?: string
+  footnoteText?: string;
 
   /**
    * (IKKE BRUK) Kildetekst
    */
-  creditsText?: string
+  creditsText?: string;
 
   /**
    * (IKKE BRUK) Kilde-URL
    */
-  creditsHref?: string
+  creditsHref?: string;
 }

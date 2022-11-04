@@ -7,11 +7,11 @@ export interface ProfiledLinkIconPartConfig {
     /**
      * Lenketekst
      */
-    text?: string
+    text?: string;
 
     /**
      * Innhold
      */
-    href?: string
-  }>
+    href?: string;
+  }>;
 }

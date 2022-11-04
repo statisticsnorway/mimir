@@ -3,20 +3,20 @@ export interface UpcomingRelease {
   /**
    * Publisering
    */
-  date: string
+  date: string;
 
   /**
    * Innholdstype
    */
-  contentType: 'article' | 'report' | 'analysis' | 'table' | 'activity' | 'statistics'
+  contentType: "article" | "report" | "analysis" | "table" | "activity" | "statistics";
 
   /**
    * Hovedemne
    */
-  mainSubject: string
+  mainSubject: string;
 
   /**
    * Lenke
    */
-  href?: string
+  href?: string;
 }

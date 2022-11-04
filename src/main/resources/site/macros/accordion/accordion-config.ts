@@ -3,5 +3,5 @@ export interface AccordionConfig {
   /**
    * Trekkspill-innhold
    */
-  accordion: Array<string>
+  accordion: Array<string>;
 }

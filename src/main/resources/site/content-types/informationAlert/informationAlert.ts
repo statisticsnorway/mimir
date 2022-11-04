@@ -3,7 +3,7 @@ export interface InformationAlert {
   /**
    * Tekst
    */
-  message: string
+  message: string;
 
   /**
    * Sidetype
@@ -13,7 +13,7 @@ export interface InformationAlert {
         /**
          * Selected
          */
-        _selected: 'statistics'
+        _selected: "statistics";
 
         /**
          * Statistikk
@@ -22,19 +22,19 @@ export interface InformationAlert {
           /**
            * Velg hvilken statistikk det gjelder her.
            */
-          statisticsIds?: Array<string>
+          statisticsIds?: Array<string>;
 
           /**
            * Velg for å gjelde alle statistikker
            */
-          selectAllStatistics: boolean
-        }
+          selectAllStatistics: boolean;
+        };
       }
     | {
         /**
          * Selected
          */
-        _selected: 'pages'
+        _selected: "pages";
 
         /**
          * Side
@@ -43,14 +43,14 @@ export interface InformationAlert {
           /**
            * Velg hvilken side det gjelder her.
            */
-          pageIds: Array<string>
-        }
+          pageIds: Array<string>;
+        };
       }
     | {
         /**
          * Selected
          */
-        _selected: 'articles'
+        _selected: "articles";
 
         /**
          * Artikkel
@@ -59,14 +59,14 @@ export interface InformationAlert {
           /**
            * Velg hvilken artikkel det gjelder her.
            */
-          articleIds: Array<string>
-        }
+          articleIds: Array<string>;
+        };
       }
     | {
         /**
          * Selected
          */
-        _selected: 'statbank'
+        _selected: "statbank";
 
         /**
          * Statistikkbanken
@@ -75,7 +75,7 @@ export interface InformationAlert {
           /**
            * Velg for å gjelde hele Statistikkbanken
            */
-          selectAllStatbankPages: boolean
-        }
-      }
+          selectAllStatbankPages: boolean;
+        };
+      };
 }

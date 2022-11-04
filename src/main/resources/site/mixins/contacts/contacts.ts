@@ -3,5 +3,5 @@ export interface Contacts {
   /**
    * Kontakter
    */
-  contacts?: Array<string>
+  contacts?: Array<string>;
 }

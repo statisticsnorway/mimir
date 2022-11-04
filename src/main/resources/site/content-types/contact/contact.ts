@@ -3,15 +3,15 @@ export interface Contact {
   /**
    * Navn på kontakt
    */
-  name: string
+  name: string;
 
   /**
    * Epostadresse
    */
-  email?: string
+  email?: string;
 
   /**
    * Telefonnummer
    */
-  phone?: string
+  phone?: string;
 }

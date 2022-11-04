@@ -7,11 +7,11 @@ export interface EndedStatisticList {
     /**
      * Kortnavn
      */
-    statistic: string
+    statistic: string;
 
     /**
      * Skjul statistikk fra statbank inngang
      */
-    hideFromList: boolean
-  }>
+    hideFromList: boolean;
+  }>;
 }

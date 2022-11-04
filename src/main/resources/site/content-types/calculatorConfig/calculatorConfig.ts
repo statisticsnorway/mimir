@@ -3,30 +3,30 @@ export interface CalculatorConfig {
   /**
    * Kilde Årstall
    */
-  kpiSourceYear?: string
+  kpiSourceYear?: string;
 
   /**
    * Kilde Måned
    */
-  kpiSourceMonth?: string
+  kpiSourceMonth?: string;
 
   /**
    * Kilde
    */
-  pifSource?: string
+  pifSource?: string;
 
   /**
    * Kilde enebolig
    */
-  bkibolSourceEnebolig?: string
+  bkibolSourceEnebolig?: string;
 
   /**
    * Kilde boligblokk
    */
-  bkibolSourceBoligblokk?: string
+  bkibolSourceBoligblokk?: string;
 
   /**
    * PX-API spørring for historiske navnedata
    */
-  nameSearchGraphData?: string
+  nameSearchGraphData?: string;
 }

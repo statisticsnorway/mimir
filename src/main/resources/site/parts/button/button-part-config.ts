@@ -3,5 +3,5 @@ export interface ButtonPartConfig {
   /**
    * Knapp
    */
-  button: Array<string>
+  button: Array<string>;
 }

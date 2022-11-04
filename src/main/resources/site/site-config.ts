@@ -3,22 +3,22 @@ export interface SiteConfig {
   /**
    * Kommunedata innhold fra api
    */
-  municipalDataContentId?: string
+  municipalDataContentId?: string;
 
   /**
    * Fylkedata innhold fra api
    */
-  countyDataContentId?: string
+  countyDataContentId?: string;
 
   /**
    * Endringslister fra api
    */
-  municipalChangeListContentId?: string
+  municipalChangeListContentId?: string;
 
   /**
    * Standard kommune for å vise i "preview" mode
    */
-  defaultMunicipality: string
+  defaultMunicipality: string;
 
   /**
    * Kommunefakta instillinger
@@ -27,13 +27,13 @@ export interface SiteConfig {
     /**
      * Mappe kartfiler
      */
-    mapfolder?: string
-  }
+    mapfolder?: string;
+  };
 
   /**
    * URL til hjelpeside for statistikkbanken.
    */
-  statbankHelpLink: string
+  statbankHelpLink: string;
 
   /**
    * Språk instillinger
@@ -42,41 +42,41 @@ export interface SiteConfig {
     /**
      * Språktittel (brukt til lenke i header)
      */
-    label: string
+    label: string;
 
     /**
      * Språkkode (f.eks. "en", "no")
      */
-    code: string
+    code: string;
 
     /**
      * Språklenke: url-stien til språkets "hjemmeside"
      */
-    link?: string
+    link?: string;
 
     /**
      * Språk tekst/fraser
      */
-    phrases: 'norwegian' | 'english'
+    phrases: "norwegian" | "english";
 
     /**
      * Språkets "Hjem"-side
      */
-    homePageId?: string
+    homePageId?: string;
 
     /**
      * Header
      */
-    headerId?: string
+    headerId?: string;
 
     /**
      * Footer
      */
-    footerId?: string
+    footerId?: string;
 
     /**
      * Standardtegn i tabeller
      */
-    standardSymbolPage?: string
-  }>
+    standardSymbolPage?: string;
+  }>;
 }

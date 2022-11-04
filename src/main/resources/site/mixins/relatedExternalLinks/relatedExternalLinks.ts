@@ -7,11 +7,11 @@ export interface RelatedExternalLinks {
     /**
      * Lenketekst
      */
-    urlText: string
+    urlText: string;
 
     /**
      * URL
      */
-    url: string
-  }>
+    url: string;
+  }>;
 }

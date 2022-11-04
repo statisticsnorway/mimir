@@ -3,5 +3,5 @@ export interface FactBox {
   /**
    * Tekst
    */
-  text: string
+  text: string;
 }

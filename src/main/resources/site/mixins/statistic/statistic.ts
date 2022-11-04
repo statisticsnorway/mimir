@@ -3,5 +3,5 @@ export interface Statistic {
   /**
    * Statistikk
    */
-  statistic?: string
+  statistic?: string;
 }

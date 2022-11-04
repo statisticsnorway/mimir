@@ -3,7 +3,7 @@ export interface Header {
   /**
    * Meny
    */
-  menuContentId: string
+  menuContentId: string;
 
   /**
    * Topp lenker i meny
@@ -12,7 +12,7 @@ export interface Header {
     /**
      * Lenketittel
      */
-    linkTitle: string
+    linkTitle: string;
 
     /**
      * Lenkemål
@@ -22,7 +22,7 @@ export interface Header {
           /**
            * Selected
            */
-          _selected: 'manual'
+          _selected: "manual";
 
           /**
            * Url lenke
@@ -31,14 +31,14 @@ export interface Header {
             /**
              * Kildelenke
              */
-            url?: string
-          }
+            url?: string;
+          };
         }
       | {
           /**
            * Selected
            */
-          _selected: 'content'
+          _selected: "content";
 
           /**
            * Lenke til internt innhold
@@ -47,10 +47,10 @@ export interface Header {
             /**
              * Relatert innhold
              */
-            contentId?: string
-          }
-        }
-  }>
+            contentId?: string;
+          };
+        };
+  }>;
 
   /**
    * Landingsside for søk
@@ -60,7 +60,7 @@ export interface Header {
         /**
          * Selected
          */
-        _selected: 'manual'
+        _selected: "manual";
 
         /**
          * Url lenke
@@ -69,14 +69,14 @@ export interface Header {
           /**
            * Kildelenke
            */
-          url?: string
-        }
+          url?: string;
+        };
       }
     | {
         /**
          * Selected
          */
-        _selected: 'content'
+        _selected: "content";
 
         /**
          * Lenke til internt innhold
@@ -85,7 +85,7 @@ export interface Header {
           /**
            * Relatert innhold
            */
-          contentId?: string
-        }
-      }
+          contentId?: string;
+        };
+      };
 }

@@ -3,10 +3,10 @@ export interface GlossaryConfig {
   /**
    * Ord
    */
-  text: string
+  text: string;
 
   /**
    * Forklaring til ordet
    */
-  explanation: string
+  explanation: string;
 }

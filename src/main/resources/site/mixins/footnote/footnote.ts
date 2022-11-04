@@ -3,5 +3,5 @@ export interface Footnote {
   /**
    * Fotnote-tekst
    */
-  footNote?: Array<string>
+  footNote?: Array<string>;
 }

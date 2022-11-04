@@ -3,10 +3,10 @@ export interface MenuBoxPartConfig {
   /**
    * Kort
    */
-  menu: string
+  menu: string;
 
   /**
    * Høyde på bokser
    */
-  height: 'default' | 'fixed'
+  height: "default" | "fixed";
 }

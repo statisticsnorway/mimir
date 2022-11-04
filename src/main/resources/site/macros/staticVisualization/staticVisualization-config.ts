@@ -3,5 +3,5 @@ export interface StaticVisualizationConfig {
   /**
    * Velg en statisk visualisering
    */
-  staticVisualizationContent: string
+  staticVisualizationContent: string;
 }

@@ -3,20 +3,20 @@ export interface NameSearchPartConfig {
   /**
    * Ingress
    */
-  nameSearchDescription?: string
+  nameSearchDescription?: string;
 
   /**
    * Lenke tittel
    */
-  aboutLinkTitle: string
+  aboutLinkTitle: string;
 
   /**
    * Lenkemål
    */
-  aboutLinkTarget?: string
+  aboutLinkTarget?: string;
 
   /**
    * Bruk på Forside
    */
-  frontPage: boolean
+  frontPage: boolean;
 }

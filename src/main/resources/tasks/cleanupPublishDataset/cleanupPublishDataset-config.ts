@@ -3,20 +3,20 @@ export interface CleanupPublishDatasetConfig {
   /**
    * JobId
    */
-  jobId: string
+  jobId: string;
 
   /**
    * StatisticsContentId
    */
-  statisticsContentId: string
+  statisticsContentId: string;
 
   /**
    * StatisticsId
    */
-  statisticsId: string
+  statisticsId: string;
 
   /**
    * PublicationItem
    */
-  publicationItem: string
+  publicationItem: string;
 }

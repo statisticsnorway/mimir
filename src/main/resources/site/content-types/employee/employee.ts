@@ -3,60 +3,60 @@ export interface Employee {
   /**
    * Er forsker
    */
-  isResearcher: boolean
+  isResearcher: boolean;
 
   /**
    * Fornavn
    */
-  name: string
+  name: string;
 
   /**
    * Etternavn
    */
-  surname: string
+  surname: string;
 
   /**
    * Stilling
    */
-  position?: string
+  position?: string;
 
   /**
    * E-post
    */
-  email?: string
+  email?: string;
 
   /**
    * Telefon
    */
-  phone?: string
+  phone?: string;
 
   /**
    * Forskningsområde eller avdeling
    */
-  area?: string
+  area?: string;
 
   /**
    * Kort om
    */
-  description?: string
+  description?: string;
 
   /**
    * Pressebilder
    */
-  profileImages?: Array<string>
+  profileImages?: Array<string>;
 
   /**
    * Ansatt id Cristin
    */
-  cristinId?: string
+  cristinId?: string;
 
   /**
    * Min CV
    */
-  myCV?: string
+  myCV?: string;
 
   /**
    * Prosjekter
    */
-  projects?: Array<string>
+  projects?: Array<string>;
 }

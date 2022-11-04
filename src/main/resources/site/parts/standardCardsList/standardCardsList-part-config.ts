@@ -3,7 +3,7 @@ export interface StandardCardsListPartConfig {
   /**
    * Tittel
    */
-  title?: string
+  title?: string;
 
   /**
    * Innhold
@@ -12,26 +12,26 @@ export interface StandardCardsListPartConfig {
     /**
      * Ikon
      */
-    icon?: string
+    icon?: string;
 
     /**
      * Innhold fra XP
      */
-    contentXP?: string
+    contentXP?: string;
 
     /**
      * Tittel
      */
-    title?: string
+    title?: string;
 
     /**
      * Profileringstekst
      */
-    profiledText?: string
+    profiledText?: string;
 
     /**
      * Lenke
      */
-    href?: string
-  }>
+    href?: string;
+  }>;
 }
