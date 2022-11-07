@@ -1,0 +1,13 @@
+<x-data>
+  <display-name>Emneinndeling</display-name>
+  <form>
+    <input name="mainSubject" type="Tag">
+      <label>Hovedemne</label>
+      <occurrences minimum="0" maximum="1"/>
+    </input>
+    <input name="secondarySubject" type="Tag">
+      <label>Delemne</label>
+      <occurrences minimum="0" maximum="1"/>
+    </input>
+  </form>
+</x-data>
