@@ -37,8 +37,12 @@ function renderPart(req: XP.Request): RenderResponse {
     locale: language
   })
 
-  const aboutPhrase: string = localize({
-    key: 'project.aboutProject',
+  const modelPhrase: string = localize({
+    key: 'project.modelPhrase',
+    locale: language
+  })
+  const projectPhrase: string = localize({
+    key: 'project.projectPhrase',
     locale: language
   })
 
@@ -58,11 +62,13 @@ function renderPart(req: XP.Request): RenderResponse {
   })
 
   const props: ProjectProps = {
-    projectTitle: page.data.projectTitle,
+    introTitle: capitalizeFirstLetter(page.data.introTitle),
+    projectTitle: page.displayName || undefined,
     manager: getManager(managerConfig),
     projectType: page.data.projectType === 'model' ? modelManagerPhrase : projectManagerPhrase,
-    projectPeriod: page.data.projectPeriod,
+    projectPeriod: page.data.projectPeriod || undefined,
     financier: page.data.financier,
+    heading: page.data.projectType === 'model' ? modelPhrase : projectPhrase,
     ingress: page.data.ingress ? processHtml({
       value: page.data.ingress
     }) : undefined,
@@ -77,7 +83,6 @@ function renderPart(req: XP.Request): RenderResponse {
     }) : undefined,
     periodPhrase,
     financierPhrase,
-    aboutPhrase,
     participantsPhrase,
     projectParticipantsPhrase,
     collaboratorsPhrase
@@ -86,7 +91,7 @@ function renderPart(req: XP.Request): RenderResponse {
   return render('site/parts/project/project', props, req)
 }
 
-function getManager(managerId: string | undefined): ManagerLink | undefined {
+function getManager(managerId?: string | undefined): ManagerLink | undefined {
   if (managerId) {
     const managerContent: Content | null = getTheContent({
       key: managerId
@@ -103,25 +108,35 @@ function getManager(managerId: string | undefined): ManagerLink | undefined {
   return undefined
 }
 
+function capitalizeFirstLetter(str?: string) : string | undefined {
+  if (str) {
+    const result1: string = str.charAt(0).toUpperCase() + str.slice(1)
+    const result2: string = str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()
+    return result2
+  }
+  return undefined
+}
+
 interface ManagerLink {
     text: string;
     href: string;
 }
 
 interface ProjectProps {
-    projectTitle: string;
-    manager: ManagerLink | undefined;
+    introTitle?: string;
+    projectTitle?: string;
+    manager?: ManagerLink;
     projectType?: string;
     projectPeriod?: string;
     financier?: string;
-    ingress: string | undefined;
+    heading?: string;
+    ingress?: string;
     body?: string;
     participants?: string;
     collaborators?: string;
-    periodPhrase: string;
-    financierPhrase: string;
-    aboutPhrase: string;
-    participantsPhrase: string;
-    projectParticipantsPhrase: string;
-    collaboratorsPhrase: string;
+    periodPhrase?: string;
+    financierPhrase?: string;
+    participantsPhrase?: string;
+    projectParticipantsPhrase?: string;
+    collaboratorsPhrase?: string;
 }

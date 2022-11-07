@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <content-type>
     <display-name>Prosjekt</display-name>
+    <description>Prosjekt eller modell</description>
     <super-type>base:structured</super-type>
     <allow-child-content>true</allow-child-content>
     <form>
         <field-set>
-            <label>Om Prosjekt</label>
+            <label>Informasjon</label>
             <items>
-                <input name="projectTitle" type="TextLine">
-                    <label>Tittel</label>
-                    <occurrences minimum="1" maximum="1"/>
+                <input name="introTitle" type="textLine">
+                    <label>Stikktittel</label>
+                    <occurrences minimum="0" maximum="1"/>
                 </input>
                 <input name="manager" type="ContentSelector">
                     <label>Prosjekt/modellansvarlig</label>
@@ -22,7 +23,7 @@
                     <label>Velg mellom prosjekt eller modell</label>
                     <occurrences minimum="0" maximum="1"/>
                     <config>
-                        <option value="project">Project</option>
+                        <option value="project">Prosjekt</option>
                         <option value="model">Modell</option>
                     </config>
                 </input>
@@ -31,7 +32,7 @@
                     <occurrences minimum="0" maximum="1"/>
                 </input>
                 <input name="financier" type="TextLine">
-                    <label>Finansør</label>
+                    <label>Finansiør</label>
                     <occurrences minimum="0" maximum="1"/>
                 </input>
             </items>
@@ -40,7 +41,7 @@
             <label>Ingress</label>
             <items>
                 <input name="ingress" type="HtmlArea">
-                    <label>Ingress</label>
+                    <label>Om Prosjekt/Modell</label>
                     <occurrences minimum="0" maximum="1"/>
                     <config>
                         <include>Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote</include>
@@ -58,7 +59,7 @@
             </items>
         </field-set>
         <field-set>
-            <label>Prosjektdeltakere</label>
+            <label>Deltakere</label>
             <items>
                 <input name="participants" type="HtmlArea">
                     <label>Prosjektdeltakere</label>
