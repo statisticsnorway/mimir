@@ -1,7 +1,7 @@
 import org.apache.tools.ant.taskdefs.condition.Os
 
 plugins {
-    id("com.github.node-gradle.node") version "2.2.3"
+    id("com.github.node-gradle.node") version "3.5.0"
     id 'com.enonic.xp.app' version '3.1.0'
     id 'no.item.xp.codegen' version '1.1.9'
 }
@@ -55,8 +55,8 @@ repositories {
     maven {
         url "https://repo1.maven.org/maven2/"
     }
-    maven { 
-        url 'https://jitpack.io' 
+    maven {
+        url 'https://jitpack.io'
     }
 }
 
@@ -90,7 +90,7 @@ apply from: 'node_modules/@enonic/react4xp/npmInstall.gradle'
 apply from: 'node_modules/@enonic/react4xp/updaters.gradle'
 
 task clientJsWebpack( type: NpxTask, dependsOn: npmInstall ) {
-    command =  'webpack' 
+    command =  'webpack'
     environment = [ 'NODE_ENV': nodeEnvironment() ]
     args = [ '--config', 'webpack.clientjs.config.js', '--color' ]
     description = 'Build client-side js.'
