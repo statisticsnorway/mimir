@@ -15,8 +15,7 @@
     "no-use-before-define": "off",
     "@typescript-eslint/ban-types": "off",
     "@typescript-eslint/no-var-requires": "off",
-    "@typescript-eslint/ban-ts-comment": "off",
-    "semi": false
+    "@typescript-eslint/ban-ts-comment": "off"
   },
   "globals": {
     "require": true,
