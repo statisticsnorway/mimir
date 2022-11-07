@@ -1,11 +1,13 @@
 # mimir
 
+This is the abbreviated documentation. For details, see our [more complete documentation here.](docs/README.md)
+
 ## Getting started
 
 Download and install Node and NPM from https://nodejs.org/en/
 Make sure to get the LTS version, not the Current or Latest.
 
-Install latest Enonic XP according to docs for you platform
+Install latest Enonic XP according to [docs for you platform](https://developer.enonic.com/start)
 
 ## Installing dependencies
 *Do **not** run `npm install` because this might install the incorrect versions of packages*
@@ -31,11 +33,6 @@ enonic project build
 or for a continous build and deploy (needs $XP_HOME and $JAVA_HOME env variables set)
 ```
 ./gradlew deploy -t
-```
-Integration tests are run when you build or deploy with Enonic CLI.  
-To build and deploy your application locally without running tests, run Gradle directly and skip them
-```
-./gradlew deploy -x test
 ```
 
 #### Typescript interfaces Code-Gen
@@ -78,6 +75,3 @@ Deploying to QA:
 
 Deploing to PROD:   
 `drone build promote statisticsnorway/mimir (build-number) prod`
-
-
-## [Documentation](./docs/README.md)
