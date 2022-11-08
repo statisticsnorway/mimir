@@ -1,6 +1,6 @@
 import { query, Content, QueryResponse } from '/lib/xp/content'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
-import { GenericDataImport } from '../../../site/content-types/genericDataImport/genericDataImport'
+import type { GenericDataImport } from '../../../site/content-types'
 import { DataSource as DataSourceType, DatasetRepoNode } from '../repo/dataset'
 import { JSONstat } from '../../types/jsonstat-toolkit'
 import { StatbankSavedRaw, TbmlDataUniform } from '../../types/xmlParser'
@@ -9,96 +9,91 @@ import { getUser, User } from '/lib/xp/auth'
 import { TbprocessorParsedResponse } from './tbprocessor/tbml'
 import { ContextAttributes } from '*/lib/xp/context'
 
-const {
-  Events
-} = __non_webpack_require__('/lib/ssb/repo/query')
-const {
-  getStatbankApi,
-  fetchStatbankApiData,
-  getStatbankApiKey
-} = __non_webpack_require__('/lib/ssb/dataset/statbankApi/statbankApi')
-const {
-  getStatbankSaved,
-  fetchStatbankSavedData
-} = __non_webpack_require__('/lib/ssb/dataset/statbankSaved/statbankSaved')
-const {
-  getTbprocessor,
-  getTbprocessorKey,
-  fetchTbprocessorData
-} = __non_webpack_require__('/lib/ssb/dataset/tbprocessor/tbprocessor')
-const {
-  getKlass,
-  getKlassKey,
-  fetchKlassData
-} = __non_webpack_require__('/lib/ssb/dataset/klass/klass')
+const { Events } = __non_webpack_require__('/lib/ssb/repo/query')
+const { getStatbankApi, fetchStatbankApiData, getStatbankApiKey } = __non_webpack_require__(
+  '/lib/ssb/dataset/statbankApi/statbankApi'
+)
+const { getStatbankSaved, fetchStatbankSavedData } = __non_webpack_require__(
+  '/lib/ssb/dataset/statbankSaved/statbankSaved'
+)
+const { getTbprocessor, getTbprocessorKey, fetchTbprocessorData } = __non_webpack_require__(
+  '/lib/ssb/dataset/tbprocessor/tbprocessor'
+)
+const { getKlass, getKlassKey, fetchKlassData } = __non_webpack_require__('/lib/ssb/dataset/klass/klass')
 const {
   createOrUpdateDataset,
   deleteDataset: deleteDatasetFromRepo,
-  DATASET_BRANCH
+  DATASET_BRANCH,
 } = __non_webpack_require__('/lib/ssb/repo/dataset')
-const {
-  ENONIC_CMS_DEFAULT_REPO
-} = __non_webpack_require__('/lib/ssb/repo/common')
+const { ENONIC_CMS_DEFAULT_REPO } = __non_webpack_require__('/lib/ssb/repo/common')
 
-export function getDataset(content: Content<DataSource>, branch: string = DATASET_BRANCH): DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null {
+export function getDataset(
+  content: Content<DataSource>,
+  branch: string = DATASET_BRANCH
+): DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null {
   switch (content.data.dataSource?._selected) {
-  case DataSourceType.STATBANK_API: {
-    return getStatbankApi(content, branch)
-  }
-  case DataSourceType.STATBANK_SAVED: {
-    return getStatbankSaved(content, branch)
-  }
-  case DataSourceType.TBPROCESSOR: {
-    return getTbprocessor(content, branch)
-  }
-  case DataSourceType.KLASS: {
-    return getKlass(content, branch)
-  }
-  default: {
-    return null
-  }
+    case DataSourceType.STATBANK_API: {
+      return getStatbankApi(content, branch)
+    }
+    case DataSourceType.STATBANK_SAVED: {
+      return getStatbankSaved(content, branch)
+    }
+    case DataSourceType.TBPROCESSOR: {
+      return getTbprocessor(content, branch)
+    }
+    case DataSourceType.KLASS: {
+      return getKlass(content, branch)
+    }
+    default: {
+      return null
+    }
   }
 }
 
 export function extractKey(content: Content<DataSource>): string | null {
   switch (content.data.dataSource?._selected) {
-  case DataSourceType.STATBANK_API:
-    return getStatbankApiKey(content)
-  case DataSourceType.TBPROCESSOR:
-    const language: string = content.language || ''
-    return `${getTbprocessorKey(content)}${language === 'en' ? language : ''}`
-  case DataSourceType.STATBANK_SAVED:
-    return getStatbankApiKey(content)
-  case DataSourceType.KLASS:
-    return getKlassKey(content)
-  default:
-    return null
+    case DataSourceType.STATBANK_API:
+      return getStatbankApiKey(content)
+    case DataSourceType.TBPROCESSOR:
+      const language: string = content.language || ''
+      return `${getTbprocessorKey(content)}${language === 'en' ? language : ''}`
+    case DataSourceType.STATBANK_SAVED:
+      return getStatbankApiKey(content)
+    case DataSourceType.KLASS:
+      return getKlassKey(content)
+    default:
+      return null
   }
 }
 
 function fetchData(
   content: Content<DataSource>,
-  processXml?: string): JSONstat | TbprocessorParsedResponse<TbmlDataUniform> | StatbankSavedRaw | object | null {
+  processXml?: string
+): JSONstat | TbprocessorParsedResponse<TbmlDataUniform> | StatbankSavedRaw | object | null {
   switch (content.data.dataSource?._selected) {
-  case DataSourceType.STATBANK_API:
-    return fetchStatbankApiData(content) // JSONstat | null;
-  case DataSourceType.TBPROCESSOR:
-    return fetchTbprocessorData(content, processXml) // TbprocessorParsedResponse<TbmlDataUniform> | null;
-  case DataSourceType.STATBANK_SAVED:
-    return fetchStatbankSavedData(content) // StatbankSavedRaw | null;
-  case DataSourceType.KLASS:
-    return fetchKlassData(content) // object | null
-  default:
-    return null
+    case DataSourceType.STATBANK_API:
+      return fetchStatbankApiData(content) // JSONstat | null;
+    case DataSourceType.TBPROCESSOR:
+      return fetchTbprocessorData(content, processXml) // TbprocessorParsedResponse<TbmlDataUniform> | null;
+    case DataSourceType.STATBANK_SAVED:
+      return fetchStatbankSavedData(content) // StatbankSavedRaw | null;
+    case DataSourceType.KLASS:
+      return fetchKlassData(content) // object | null
+    default:
+      return null
   }
 }
 
 export function refreshDataset(
-  content: Content<DataSource | GenericDataImport>,
+  content: Content<DataSource, object | GenericDataImport>,
   branch: string = DATASET_BRANCH,
-  processXml?: string ): CreateOrUpdateStatus {
+  processXml?: string
+): CreateOrUpdateStatus {
   /**/
-  const newDataset: JSONstat | TbmlDataUniform | TbprocessorParsedResponse<TbmlDataUniform> | object | null = fetchData(content, processXml)
+  const newDataset: JSONstat | TbmlDataUniform | TbprocessorParsedResponse<TbmlDataUniform> | object | null = fetchData(
+    content,
+    processXml
+  )
   const key: string | null = extractKey(content)
   const user: User | null = getUser()
 
@@ -106,7 +101,10 @@ export function refreshDataset(
     let oldDataset: DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null = getDataset(content, branch)
 
     // Check if data is of type TbprocessorParsedResponse
-    if (determineIfTbprocessorParsedResponse(newDataset) && content.data.dataSource._selected === DataSourceType.TBPROCESSOR) {
+    if (
+      determineIfTbprocessorParsedResponse(newDataset) &&
+      content.data.dataSource._selected === DataSourceType.TBPROCESSOR
+    ) {
       // pass error msg from tbprocessor: e.g: bad username/password combo, wrong tbml id.
       if (newDataset.status && newDataset.status === 500) {
         return {
@@ -117,7 +115,7 @@ export function refreshDataset(
           hasNewData: false,
           newDataset,
           branch,
-          user
+          user,
         }
       } else {
         const hasNewData: boolean = newDataset.parsedBody ? isDataNew(newDataset.parsedBody, oldDataset) : false
@@ -132,7 +130,7 @@ export function refreshDataset(
           dataset: oldDataset,
           newDataset,
           branch,
-          user
+          user,
         }
       }
     } else {
@@ -145,7 +143,7 @@ export function refreshDataset(
         status: hasNewData ? Events.GET_DATA_COMPLETE : Events.NO_NEW_DATA,
         hasNewData: hasNewData,
         dataset: oldDataset,
-        user
+        user,
       }
     }
   } else {
@@ -154,7 +152,7 @@ export function refreshDataset(
       status: Events.FAILED_TO_GET_DATA,
       dataset: null,
       hasNewData: false,
-      user
+      user,
     }
   }
 }
@@ -167,24 +165,28 @@ function getSourceListStatus(newData: TbprocessorParsedResponse<TbmlDataUniform>
   }
 }
 
-function determineIfTbprocessorParsedResponse(toBeDetermined: TbprocessorParsedResponse<TbmlDataUniform> | object):
-  toBeDetermined is TbprocessorParsedResponse<TbmlDataUniform> {
+function determineIfTbprocessorParsedResponse(
+  toBeDetermined: TbprocessorParsedResponse<TbmlDataUniform> | object
+): toBeDetermined is TbprocessorParsedResponse<TbmlDataUniform> {
   if ((toBeDetermined as TbprocessorParsedResponse<TbmlDataUniform>).status) {
     return true
   }
   return false
 }
 
-
-export function refreshDatasetWithUserKey(content: Content<DataSource>, userLogin: string, branch: string = DATASET_BRANCH, ): CreateOrUpdateStatus {
+export function refreshDatasetWithUserKey(
+  content: Content<DataSource>,
+  userLogin: string,
+  branch: string = DATASET_BRANCH
+): CreateOrUpdateStatus {
   const context: RunContext<ContextAttributes> = {
     branch: 'master',
     repository: ENONIC_CMS_DEFAULT_REPO,
     principals: ['role:system.admin'],
     user: {
       login: userLogin,
-      idProvider: 'system'
-    }
+      idProvider: 'system',
+    },
   }
   return run(context, () => refreshDataset(content, branch))
 }
@@ -199,14 +201,14 @@ export function deleteDataset(content: Content<DataSource>, branch: string = DAT
 }
 
 export function getContentWithDataSource(): Array<Content<DataSource>> {
-  let start: number = 0
-  let count: number = 100
+  let start = 0
+  let count = 100
   let hits: Array<Content<DataSource>> = []
   while (count === 100) {
     const result: QueryResponse<DataSource, object> = query({
       start,
       count,
-      query: `data.dataSource._selected LIKE "*"`
+      query: `data.dataSource._selected LIKE "*"`,
     })
     count = result.count
     start += count
@@ -217,7 +219,8 @@ export function getContentWithDataSource(): Array<Content<DataSource>> {
 
 function isDataNew(
   newDataset: JSONstat | TbmlDataUniform | object,
-  oldDataset: DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null): boolean {
+  oldDataset: DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null
+): boolean {
   if (!oldDataset) {
     return true
   } else if (newDataset && oldDataset) {
@@ -227,22 +230,32 @@ function isDataNew(
 }
 
 export interface CreateOrUpdateStatus {
-  dataquery: Content<DataSource>;
-  dataset: DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null;
-  hasNewData: boolean;
-  status: string;
-  sourceListStatus?: string;
-  user: User | null;
-  newDataset?: object;
-  branch?: string;
+  dataquery: Content<DataSource>
+  dataset: DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null
+  hasNewData: boolean
+  status: string
+  sourceListStatus?: string
+  user: User | null
+  newDataset?: object
+  branch?: string
 }
 
 export interface DatasetLib {
-  getDataset: (content: Content<DataSource>, branch?: string) => DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null;
-  extractKey: (content: Content<DataSource>) => string;
-  refreshDataset: (content: Content<DataSource>, branch?: string, processXml?: string) => CreateOrUpdateStatus;
-  refreshDatasetWithUserKey: (content: Content<DataSource>, userLogin: string, branch?: string) => CreateOrUpdateStatus;
-  deleteDataset: (content: Content<DataSource>, branch?: string) => boolean;
-  getContentWithDataSource: () => Array<Content<DataSource>>;
-  isDataNew: (data: JSONstat | TbmlDataUniform | object, dataset: DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null) => boolean;
+  getDataset: (
+    content: Content<DataSource>,
+    branch?: string
+  ) => DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null
+  extractKey: (content: Content<DataSource>) => string
+  refreshDataset: (
+    content: Content<DataSource | GenericDataImport>,
+    branch?: string,
+    processXml?: string
+  ) => CreateOrUpdateStatus
+  refreshDatasetWithUserKey: (content: Content<DataSource>, userLogin: string, branch?: string) => CreateOrUpdateStatus
+  deleteDataset: (content: Content<DataSource>, branch?: string) => boolean
+  getContentWithDataSource: () => Array<Content<DataSource>>
+  isDataNew: (
+    data: JSONstat | TbmlDataUniform | object,
+    dataset: DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null
+  ) => boolean
 }

@@ -1,48 +1,37 @@
 import { query, Content } from '/lib/xp/content'
-import { Statistics } from '../../../site/content-types/statistics/statistics'
-import { EndedStatisticList } from '../../../site/content-types/endedStatisticList/endedStatisticList'
+import type { Statistics, EndedStatisticList } from '../../../site/content-types'
 import { StatisticInListing } from '../dashboard/statreg/types'
 import { Statistic } from '../../../site/mixins/statistic/statistic'
 import { Subtopic } from '../../../site/mixins/subtopic/subtopic'
 import { DefaultPage } from '/lib/types/defaultPage'
-const {
-  getAllStatisticsFromRepo
-} = __non_webpack_require__('/lib/ssb/statreg/statistics')
-const {
-  ensureArray
-} = __non_webpack_require__('/lib/ssb/utils/arrayUtils')
-const {
-  fromSubjectCache
-} = __non_webpack_require__('/lib/ssb/cache/subjectCache')
-const {
-  parentPath
-} = __non_webpack_require__('/lib/ssb/utils/parentUtils')
-
+const { getAllStatisticsFromRepo } = __non_webpack_require__('/lib/ssb/statreg/statistics')
+const { ensureArray } = __non_webpack_require__('/lib/ssb/utils/arrayUtils')
+const { fromSubjectCache } = __non_webpack_require__('/lib/ssb/cache/subjectCache')
+const { parentPath } = __non_webpack_require__('/lib/ssb/utils/parentUtils')
 
 export function getMainSubjects(request: XP.Request, language?: string): Array<SubjectItem> {
   return fromSubjectCache<SubjectItem>(request, `mainsubject-${language ? language : 'all'}`, () => {
-    const lang: string = language ? language !== 'en' ? 'AND language != "en"' : 'AND language = "en"' : ''
+    const lang: string = language ? (language !== 'en' ? 'AND language != "en"' : 'AND language = "en"') : ''
     const mainSubjectsContent: Array<DefaultPage> = query({
       start: 0,
       count: 200,
       sort: 'displayName ASC',
-      query: `components.page.config.mimir.default.subjectType LIKE "mainSubject" ${lang}`
+      query: `components.page.config.mimir.default.subjectType LIKE "mainSubject" ${lang}`,
     }).hits as unknown as Array<DefaultPage>
 
-    return mainSubjectsContent.map((m) =>({
+    return mainSubjectsContent.map((m) => ({
       id: m._id,
       title: m.displayName,
       subjectCode: m.page.config.subjectCode ? m.page.config.subjectCode : '',
       path: m._path,
       language: m.language && m.language === 'en' ? 'en' : 'no',
-      name: m._name
+      name: m._name,
     }))
   })
 }
 
 export function getMainSubjectById(mainSubjects: Array<SubjectItem>, id: string): SubjectItem | null {
-  const mainSubjectFiltered: Array<SubjectItem> = mainSubjects.filter((mainsubject) =>
-    mainsubject.id === id)
+  const mainSubjectFiltered: Array<SubjectItem> = mainSubjects.filter((mainsubject) => mainsubject.id === id)
 
   if (mainSubjectFiltered.length > 0) {
     return mainSubjectFiltered[0]
@@ -53,33 +42,36 @@ export function getMainSubjectById(mainSubjects: Array<SubjectItem>, id: string)
 
 export function getSubSubjects(request: XP.Request, language?: string): Array<SubjectItem> {
   return fromSubjectCache<SubjectItem>(request, `subsubject-${language ? language : 'all'}`, () => {
-    const lang: string = language ? language !== 'en' ? 'AND language != "en"' : 'AND language = "en"' : ''
+    const lang: string = language ? (language !== 'en' ? 'AND language != "en"' : 'AND language = "en"') : ''
     const subSubjectsContent: Array<DefaultPage> = query({
       start: 0,
       count: 1000,
       sort: 'displayName ASC',
-      query: `components.page.config.mimir.default.subjectType LIKE "subSubject" ${lang}`
+      query: `components.page.config.mimir.default.subjectType LIKE "subSubject" ${lang}`,
     }).hits as unknown as Array<DefaultPage>
 
     return subSubjectsContent.map((m) => ({
       id: m._id,
       title: m.displayName,
-      subjectCode: typeof m.page.config === 'object' && m.page.config && m.page.config.subjectCode ? m.page.config.subjectCode : '',
+      subjectCode:
+        typeof m.page.config === 'object' && m.page.config && m.page.config.subjectCode
+          ? m.page.config.subjectCode
+          : '',
       path: m._path,
       language: m.language && m.language === 'en' ? 'en' : 'no',
-      name: m._name
+      name: m._name,
     }))
   })
 }
 
 function getSubjectsByLanguage(subjects: Array<SubjectItem>, language: string): Array<SubjectItem> {
-  return subjects.filter((subject) =>
-    subject.language === language)
+  return subjects.filter((subject) => subject.language === language)
 }
 
 function getSubjectByNameAndLanguage(subjects: Array<SubjectItem>, language: string, name: string): SubjectItem | null {
-  const subjectsFiltered: Array<SubjectItem> = subjects.filter((subject) =>
-    subject.language === language && subject.name === name)
+  const subjectsFiltered: Array<SubjectItem> = subjects.filter(
+    (subject) => subject.language === language && subject.name === name
+  )
 
   if (subjectsFiltered.length > 0) {
     return subjectsFiltered[0]
@@ -95,14 +87,14 @@ function getTitlesBySubjectName(subjects: Array<SubjectItem>, name: string): Arr
   if (subjectNorwegian) {
     titles.push({
       title: subjectNorwegian.title,
-      language: 'no'
+      language: 'no',
     })
   }
 
   if (subjectEnglish) {
     titles.push({
       title: subjectEnglish.title,
-      language: 'en'
+      language: 'en',
     })
   }
 
@@ -117,13 +109,18 @@ function getSubSubjectsByMainSubjectPath(
   subjects: Array<SubjectItem>,
   statistics: Array<StatisticItem>,
   statregStatistics: Array<StatisticInListing>,
-  path: string): Array<SubSubject> {
+  path: string
+): Array<SubSubject> {
   const subSubjectsPath: Array<SubjectItem> = getSubSubjectsByPath(subjects, path)
 
   return subSubjectsPath.map((s) => {
     const endedStatistics: Array<StatisticItem> = getEndedStatisticsByPath(s.path, statregStatistics, false)
     const secondaryStatistics: Array<StatisticItem> = getSecondaryStatisticsBySubject(statistics, s)
-    const allStatistics: Array<StatisticItem> = [...getStatisticsByPath(statistics, s.path), ...endedStatistics, ...secondaryStatistics]
+    const allStatistics: Array<StatisticItem> = [
+      ...getStatisticsByPath(statistics, s.path),
+      ...endedStatistics,
+      ...secondaryStatistics,
+    ]
     const titles: Array<Title> = ensureArray(getTitlesBySubjectName(subjects, s.name))
 
     return {
@@ -131,7 +128,7 @@ function getSubSubjectsByMainSubjectPath(
       subjectCode: s.subjectCode ? s.subjectCode : '',
       name: s.name,
       titles,
-      statistics: allStatistics
+      statistics: allStatistics,
     }
   })
 }
@@ -143,33 +140,35 @@ export function getStatistics(statregStatistics: Array<StatisticInListing>): Arr
     count: 2000,
     contentTypes: [`${app.name}:statistics`],
     sort: 'displayName ASC',
-    query: `data.statistic LIKE '*'`
+    query: `data.statistic LIKE '*'`,
   }).hits as unknown as Array<Content<Statistics>>
 
   if (statregStatistics.length > 0) {
     statisticContent.forEach((statistic: Content<Statistics & Statistic & Subtopic>) => {
-      const statreg: StatisticInListing | undefined = statregStatistics.find((s) => s.id.toString() === statistic.data.statistic)
+      const statreg: StatisticInListing | undefined = statregStatistics.find(
+        (s) => s.id.toString() === statistic.data.statistic
+      )
       if (statreg) {
-        const titles: Array<Title> = [{
-          title: statreg.name,
-          language: 'no'
-        },
-        {
-          title: statreg.nameEN,
-          language: 'en'
-        }]
-
-        statistics.push(
+        const titles: Array<Title> = [
           {
-            path: statistic._path,
-            language: statistic.language === 'en' ? 'en' : 'no',
-            shortName: statreg.shortName,
-            isPrimaryLocated: true,
-            titles,
-            hideFromList: statistic.data.hideFromList ? statistic.data.hideFromList : false,
-            secondarySubject: statistic.data.subtopic ? ensureArray(statistic.data.subtopic) : []
-          }
-        )
+            title: statreg.name,
+            language: 'no',
+          },
+          {
+            title: statreg.nameEN,
+            language: 'en',
+          },
+        ]
+
+        statistics.push({
+          path: statistic._path,
+          language: statistic.language === 'en' ? 'en' : 'no',
+          shortName: statreg.shortName,
+          isPrimaryLocated: true,
+          titles,
+          hideFromList: statistic.data.hideFromList ? statistic.data.hideFromList : false,
+          secondarySubject: statistic.data.subtopic ? ensureArray(statistic.data.subtopic) : [],
+        })
       }
     })
   }
@@ -177,43 +176,50 @@ export function getStatistics(statregStatistics: Array<StatisticInListing>): Arr
   return statistics
 }
 
-export function getEndedStatisticsByPath(path: string, statregStatistics: Array<StatisticInListing>, hideStatistics: boolean): Array<StatisticItem> {
+export function getEndedStatisticsByPath(
+  path: string,
+  statregStatistics: Array<StatisticInListing>,
+  hideStatistics: boolean
+): Array<StatisticItem> {
   const statistics: Array<StatisticItem> = []
   const statisticList: Content<EndedStatisticList> = query({
     start: 0,
     count: 1,
     query: `_path LIKE "/content${path}*"`,
-    contentTypes: [`${app.name}:endedStatisticList`]
+    contentTypes: [`${app.name}:endedStatisticList`],
   }).hits[0]
-  const endedStatistics: Array<EndedStatistic> = statisticList && statisticList.data.endedStatistics ?
-    ensureArray(statisticList.data.endedStatistics) : []
-  const endedStatisticsFiltered: Array<EndedStatistic> = hideStatistics ?
-    endedStatistics.filter((e) => e.hideFromList === false) : endedStatistics
+  const endedStatistics: Array<EndedStatistic> =
+    statisticList && statisticList.data.endedStatistics ? ensureArray(statisticList.data.endedStatistics) : []
+  const endedStatisticsFiltered: Array<EndedStatistic> = hideStatistics
+    ? endedStatistics.filter((e) => e.hideFromList === false)
+    : endedStatistics
 
-  if (endedStatisticsFiltered.length > 0 && statregStatistics.length > 0 ) {
+  if (endedStatisticsFiltered.length > 0 && statregStatistics.length > 0) {
     endedStatisticsFiltered.forEach((endedStatistic: EndedStatistic) => {
-      const statreg: StatisticInListing | undefined = statregStatistics.find((s) => s.id.toString() === endedStatistic.statistic)
+      const statreg: StatisticInListing | undefined = statregStatistics.find(
+        (s) => s.id.toString() === endedStatistic.statistic
+      )
       if (statreg) {
-        const titles: Array<Title> = [{
-          title: statreg.name,
-          language: 'no'
-        },
-        {
-          title: statreg.nameEN,
-          language: 'en'
-        }]
-
-        statistics.push(
+        const titles: Array<Title> = [
           {
-            path: path,
+            title: statreg.name,
             language: 'no',
-            shortName: statreg.shortName,
-            isPrimaryLocated: true,
-            titles: titles,
-            hideFromList: hideStatistics,
-            secondarySubject: []
-          }
-        )
+          },
+          {
+            title: statreg.nameEN,
+            language: 'en',
+          },
+        ]
+
+        statistics.push({
+          path: path,
+          language: 'no',
+          shortName: statreg.shortName,
+          isPrimaryLocated: true,
+          titles: titles,
+          hideFromList: hideStatistics,
+          secondarySubject: [],
+        })
       }
     })
   }
@@ -225,13 +231,18 @@ export function getStatisticsByPath(statistics: Array<StatisticItem>, path: stri
   return statistics.filter((s: StatisticItem) => s.path.startsWith(path))
 }
 
-export function getSecondaryStatisticsBySubject(statistics: Array<StatisticItem>, subject: SubjectItem): Array<StatisticItem> {
-  return statistics.filter((statistic) => statistic.secondarySubject.includes(subject.id)).map((s) => {
-    return {
-      ...s,
-      isPrimaryLocated: false
-    }
-  })
+export function getSecondaryStatisticsBySubject(
+  statistics: Array<StatisticItem>,
+  subject: SubjectItem
+): Array<StatisticItem> {
+  return statistics
+    .filter((statistic) => statistic.secondarySubject.includes(subject.id))
+    .map((s) => {
+      return {
+        ...s,
+        isPrimaryLocated: false,
+      }
+    })
 }
 
 export function getSubjectStructur(request: XP.Request, language: string): Array<MainSubject> {
@@ -243,76 +254,87 @@ export function getSubjectStructur(request: XP.Request, language: string): Array
 
   const mainSubjects: Array<MainSubject> = mainSubjectsLanguage.map((m) => {
     const titles: Array<Title> | null = getTitlesBySubjectName(mainSubjectsAll, m.name)
-    const subSubjects: Array<SubSubject> = getSubSubjectsByMainSubjectPath(subSubjectsAll, statistics, statregStatistics, m.path)
+    const subSubjects: Array<SubSubject> = getSubSubjectsByMainSubjectPath(
+      subSubjectsAll,
+      statistics,
+      statregStatistics,
+      m.path
+    )
 
     return {
       subjectCode: m.subjectCode ? m.subjectCode : '',
       name: m.name,
       titles: titles ? titles : [],
-      subSubjects: subSubjects
+      subSubjects: subSubjects,
     }
   })
   return mainSubjects
 }
 
-export function getMainSubjectBySubSubject(subSubject: SubjectItem, mainSubjects: Array<SubjectItem>): SubjectItem | undefined {
+export function getMainSubjectBySubSubject(
+  subSubject: SubjectItem,
+  mainSubjects: Array<SubjectItem>
+): SubjectItem | undefined {
   return mainSubjects.find((mainSubject) => mainSubject.path === parentPath(subSubject.path))
 }
 
 export interface SubjectItem {
-  id: string;
-  title: string;
-  subjectCode?: string;
-  path: string;
-  language: string;
-  name: string;
+  id: string
+  title: string
+  subjectCode?: string
+  path: string
+  language: string
+  name: string
 }
 
 export interface MainSubject {
-    subjectCode: string;
-    name: string;
-    titles: Array<Title>;
-    subSubjects: Array<SubSubject>;
+  subjectCode: string
+  name: string
+  titles: Array<Title>
+  subSubjects: Array<SubSubject>
 }
 
 export interface SubSubject {
-    id: string;
-    subjectCode: string;
-    name: string;
-    titles: Array<Title>;
-    statistics: Array<StatisticItem>;
+  id: string
+  subjectCode: string
+  name: string
+  titles: Array<Title>
+  statistics: Array<StatisticItem>
 }
 
 export interface Title {
-    title: string;
-    language: string;
+  title: string
+  language: string
 }
 
 export interface StatisticItem {
-    path: string;
-    language: string;
-    shortName: string;
-    isPrimaryLocated: boolean;
-    titles: Array<Title>;
-    hideFromList: boolean;
-    secondarySubject: Array<string>;
+  path: string
+  language: string
+  shortName: string
+  isPrimaryLocated: boolean
+  titles: Array<Title>
+  hideFromList: boolean
+  secondarySubject: Array<string>
 }
 
 interface EndedStatistic {
-  statistic?: string;
-  hideFromList: boolean;
+  statistic?: string
+  hideFromList: boolean
 }
 
 export interface SubjectUtilsLib {
-    getMainSubjects: (request: XP.Request, language?: string) => Array<SubjectItem>;
-    getMainSubjectById: (mainSubjects: Array<SubjectItem>, id: string) => SubjectItem;
-    getSubSubjects: (request: XP.Request, language?: string) => Array<SubjectItem>;
-    getSubSubjectsByPath: (subjects: Array<SubjectItem>, path: string) => Array<SubjectItem>;
-    getSubjectStructur: (request: XP.Request, language: string) => Array<MainSubject>;
-    getStatistics: (statregStatistics: Array<StatisticInListing>) => Array<StatisticItem>;
-    getStatisticsByPath: (statistics: Array<StatisticItem>, path: string) => Array<StatisticItem>;
-    getEndedStatisticsByPath: (path: string, statregStatistics: Array<StatisticInListing>, hideStatistics: boolean) => Array<StatisticItem>;
-    getSecondaryStatisticsBySubject: (statistics: Array<StatisticItem>, subject: SubjectItem) => Array<StatisticItem>;
-    getMainSubjectBySubSubject: (subSubject: SubjectItem, mainSubjects: Array<SubjectItem>) => SubjectItem | undefined;
-  }
-
+  getMainSubjects: (request: XP.Request, language?: string) => Array<SubjectItem>
+  getMainSubjectById: (mainSubjects: Array<SubjectItem>, id: string) => SubjectItem
+  getSubSubjects: (request: XP.Request, language?: string) => Array<SubjectItem>
+  getSubSubjectsByPath: (subjects: Array<SubjectItem>, path: string) => Array<SubjectItem>
+  getSubjectStructur: (request: XP.Request, language: string) => Array<MainSubject>
+  getStatistics: (statregStatistics: Array<StatisticInListing>) => Array<StatisticItem>
+  getStatisticsByPath: (statistics: Array<StatisticItem>, path: string) => Array<StatisticItem>
+  getEndedStatisticsByPath: (
+    path: string,
+    statregStatistics: Array<StatisticInListing>,
+    hideStatistics: boolean
+  ) => Array<StatisticItem>
+  getSecondaryStatisticsBySubject: (statistics: Array<StatisticItem>, subject: SubjectItem) => Array<StatisticItem>
+  getMainSubjectBySubSubject: (subSubject: SubjectItem, mainSubjects: Array<SubjectItem>) => SubjectItem | undefined
+}

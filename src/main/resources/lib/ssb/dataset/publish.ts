@@ -1,20 +1,14 @@
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 import { Content } from '/lib/xp/content'
-import { Statistics } from '../../../site/content-types/statistics/statistics'
+import type { Statistics } from '../../../site/content-types'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { DatasetRepoNode } from '../repo/dataset'
-import { StatisticInListing } from '../dashboard/statreg/types'
 import { NodeQueryHit } from '/lib/xp/node'
 import { Statistic } from '../../../site/mixins/statistic/statistic'
 import { listener, EnonicEvent } from '/lib/xp/event'
 import { TaskInfo } from '/lib/xp/task'
 
-const {
-  JobNames,
-  JobStatus,
-  queryJobLogs
-} = __non_webpack_require__('/lib/ssb/repo/job')
-
+const { JobNames, JobStatus, queryJobLogs } = __non_webpack_require__('/lib/ssb/repo/job')
 
 const publishTasks: Array<EnonicEvent<TaskInfo>> = []
 
@@ -32,7 +26,7 @@ export function setupTaskListener(): void {
         publishTasks.splice(taskIndex, 1)
       }
       // log.info(JSON.stringify(publishTasks.map((t) => `${t.data.id} :: ${t.data.progress.info}`), null, 2))
-    }
+    },
   })
 }
 
@@ -43,11 +37,11 @@ export function currentlyWaitingForPublish(statistic: Content<Statistics & Stati
     start: 0,
     count: 1,
     query: `
-      _path LIKE "/jobs/*" AND 
-      data.task = "${JobNames.PUBLISH_JOB}" AND 
-      data.status = "${JobStatus.STARTED}" AND 
+      _path LIKE "/jobs/*" AND
+      data.task = "${JobNames.PUBLISH_JOB}" AND
+      data.status = "${JobStatus.STARTED}" AND
       range("_ts", instant("${from}"), instant("${to}"))`,
-    sort: '_ts DESC'
+    sort: '_ts DESC',
   }).hits[0]
   if (jobRes) {
     const myTask: EnonicEvent<TaskInfo> | undefined = publishTasks.find((t) => {
@@ -61,11 +55,11 @@ export function currentlyWaitingForPublish(statistic: Content<Statistics & Stati
 }
 
 export interface PublishDatasetLib {
-  setupTaskListener: () => void;
-  currentlyWaitingForPublish: (statistic: Content<Statistic>) => boolean;
+  setupTaskListener: () => void
+  currentlyWaitingForPublish: (statistic: Content<Statistic>) => boolean
 }
 
 export interface PublicationItem {
-  dataset: DatasetRepoNode<object> | null;
-  dataSource: Content<DataSource>;
+  dataset: DatasetRepoNode<object> | null
+  dataSource: Content<DataSource>
 }
