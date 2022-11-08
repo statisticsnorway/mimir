@@ -1,22 +1,15 @@
 import { Content } from '/lib/xp/content'
 import { Phrases } from '../../../lib/types/language'
-import {render} from '/lib/enonic/react4xp'
-import { PubArchiveCalendarLinksPartConfig } from './pubArchiveCalendarLinks-part-config'
+import { render } from '/lib/enonic/react4xp'
+import type { PubArchiveCalendarLinks as PubArchiveCalendarLinksPartConfig } from '.'
 
-const {
-  getComponent,
-  getContent
-} = __non_webpack_require__('/lib/xp/portal')
+const { getComponent, getContent } = __non_webpack_require__('/lib/xp/portal')
 
-const {
-  renderError
-} = __non_webpack_require__('/lib/ssb/error/error')
+const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
-const {
-  getPhrases
-} = __non_webpack_require__('/lib/ssb/utils/language')
+const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
 
-exports.get = function(req: XP.Request): XP.Response {
+exports.get = function (req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -28,7 +21,7 @@ exports.preview = (req: XP.Request): XP.Response => renderPart(req)
 
 const NO_LINKS_FOUND: object = {
   body: '',
-  contentType: 'text/html'
+  contentType: 'text/html',
 }
 
 function renderPart(req: XP.Request): XP.Response {
@@ -40,20 +33,20 @@ function renderPart(req: XP.Request): XP.Response {
   const CalendarText: string = phrases.statCalendarText
 
   if (config.pubArchiveUrl || config.statCalendarUrl) {
-    return render('PubArchiveStatCalendarLinks',
+    return render(
+      'PubArchiveStatCalendarLinks',
       {
         PublicationLink: config.pubArchiveUrl,
         PublicationText: PublicationText,
         CalendarLink: config.statCalendarUrl,
-        CalendarText: CalendarText
+        CalendarText: CalendarText,
       },
-        req,
-        {
-          id: 'CalendarLinks',
-          body: '<section class="xp-part part-pubarchive-link"></section>'
-        })
+      req,
+      {
+        id: 'CalendarLinks',
+        body: '<section class="xp-part part-pubarchive-link"></section>',
+      }
+    )
   }
   return NO_LINKS_FOUND
 }
-
-

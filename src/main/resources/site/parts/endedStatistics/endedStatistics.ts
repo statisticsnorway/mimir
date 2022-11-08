@@ -1,8 +1,8 @@
 import { render, RenderResponse } from '/lib/enonic/react4xp'
-import { EndedStatisticsPartConfig } from './endedStatistics-part-config'
+import type { EndedStatistics as EndedStatisticsPartConfig } from '.'
 import { get, Content } from '/lib/xp/content'
 import { Phrases } from '../../../lib/types/language'
-import { Statistics } from '../../content-types/statistics/statistics'
+import type { Statistics } from '../../content-types'
 import { SEO } from '../../../services/news/news'
 
 const {

@@ -2,28 +2,20 @@ import { Content } from '/lib/xp/content'
 import { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/types'
 import { Phrases } from '../../../lib/types/language'
 import { render } from '/lib/enonic/react4xp'
-import { Statistics } from '../../content-types/statistics/statistics'
-import { StatbankBoxPartConfig } from './statbankBox-part-config'
+import type { Statistics } from '../../content-types'
+import type { StatbankBox as StatbankBoxPartConfig } from '.'
 
-const {
-  getStatisticByIdFromRepo
-} = __non_webpack_require__('/lib/ssb/statreg/statistics')
-const {
-  getContent,
-  getComponent,
-  assetUrl
-} = __non_webpack_require__('/lib/xp/portal')
-const {
-  getPhrases
-} = __non_webpack_require__('/lib/ssb/utils/language')
-const {
-  renderError
-} = __non_webpack_require__('/lib/ssb/error/error')
+const { getStatisticByIdFromRepo } = __non_webpack_require__('/lib/ssb/statreg/statistics')
+const { getContent, getComponent, assetUrl } = __non_webpack_require__('/lib/xp/portal')
+const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
+const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
+const STATBANKWEB_URL: string =
+  app.config && app.config['ssb.statbankweb.baseUrl']
+    ? app.config['ssb.statbankweb.baseUrl']
+    : 'https://www.ssb.no/statbank'
 
-const STATBANKWEB_URL: string = app.config && app.config['ssb.statbankweb.baseUrl'] ? app.config['ssb.statbankweb.baseUrl'] : 'https://www.ssb.no/statbank'
-
-exports.get = function(req: XP.Request): XP.Response {
+exports.get = function (req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -42,20 +34,31 @@ function renderPart(req: XP.Request): XP.Response {
   return renderStatbankBox(req, parseStatbankBoxContent(page, config, phrases), isNotInEditMode)
 }
 
-function renderStatbankBox(req: XP.Request, statbankBoxContent: StatbankBoxProps, isNotInEditMode: boolean): XP.Response {
-  return render('StatbankBox',
+function renderStatbankBox(
+  req: XP.Request,
+  statbankBoxContent: StatbankBoxProps,
+  isNotInEditMode: boolean
+): XP.Response {
+  return render(
+    'StatbankBox',
     {
-      ...statbankBoxContent
+      ...statbankBoxContent,
     },
     req,
     {
       body: '<section class="xp-part part-statbank-box"></section>',
-      clientRender: isNotInEditMode
-    })
+      clientRender: isNotInEditMode,
+    }
+  )
 }
 
-function parseStatbankBoxContent(page: Content<Statistics>, config: StatbankBoxPartConfig, phrases: Phrases): StatbankBoxProps {
-  const statistic: StatisticInListing | undefined = (page.data.statistic && getStatisticByIdFromRepo(page.data.statistic)) as StatisticInListing | undefined
+function parseStatbankBoxContent(
+  page: Content<Statistics>,
+  config: StatbankBoxPartConfig,
+  phrases: Phrases
+): StatbankBoxProps {
+  const statistic: StatisticInListing | undefined = (page.data.statistic &&
+    getStatisticByIdFromRepo(page.data.statistic)) as StatisticInListing | undefined
   const shortName: string | undefined = statistic && statistic.shortName ? statistic.shortName : undefined
 
   const overrideTitle: string | undefined = config.title
@@ -87,15 +90,15 @@ function parseStatbankBoxContent(page: Content<Statistics>, config: StatbankBoxP
     title,
     href: href,
     icon: assetUrl({
-      path: 'SSB_ikon_statbank.svg'
+      path: 'SSB_ikon_statbank.svg',
     }),
-    fullWidth
+    fullWidth,
   }
 }
 
 interface StatbankBoxProps {
-  title: string;
-  href: string;
-  icon: string;
-  fullWidth: boolean;
+  title: string
+  href: string
+  icon: string
+  fullWidth: boolean
 }

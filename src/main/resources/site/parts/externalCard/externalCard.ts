@@ -1,18 +1,12 @@
-import {render, RenderResponse} from '/lib/enonic/react4xp'
-import { getComponent, imageUrl, Component} from "/lib/xp/portal";
-import {ExternalCardPartConfig} from "./externalCard-part-config";
+import { render, RenderResponse } from '/lib/enonic/react4xp'
+import { getComponent, imageUrl, Component } from '/lib/xp/portal'
+import type { ExternalCard as ExternalCardPartConfig } from '.'
 
-const {
-  renderError
-} = __non_webpack_require__('/lib/ssb/error/error')
+const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
-const {
-  data
-} = __non_webpack_require__('/lib/util')
+const { data } = __non_webpack_require__('/lib/util')
 
-
-
-exports.get = function(req: XP.Request) {
+exports.get = function (req: XP.Request) {
   try {
     return renderPart(req)
   } catch (e) {
@@ -24,7 +18,7 @@ exports.preview = (req: XP.Request) => renderPart(req)
 
 const NO_LINKS_FOUND = {
   body: '',
-  contentType: 'text/html'
+  contentType: 'text/html',
 }
 
 function renderPart(req: XP.Request): XP.Response | RenderResponse {
@@ -36,32 +30,33 @@ function renderPart(req: XP.Request): XP.Response | RenderResponse {
 const renderExternalCard = (req: XP.Request, links: Array<ExternalCard>) => {
   if (links && links.length) {
     return render(
-        'ExternalCards',
-        {
-          links: links.map((link) => {
-            return {
-              href: link.linkUrl,
-              children: link.linkText,
-              content: link.content,
-              image: imageUrl({
-                id: link.image,
-                scale: 'height(70)'
-              })
-            }
-          })
-        },
-        req,
-        {
-          body: '<section class="xp-part part-external-card"></section>',
-          clientRender: req.mode !== 'edit'
-        })
+      'ExternalCards',
+      {
+        links: links.map((link) => {
+          return {
+            href: link.linkUrl,
+            children: link.linkText,
+            content: link.content,
+            image: imageUrl({
+              id: link.image,
+              scale: 'height(70)',
+            }),
+          }
+        }),
+      },
+      req,
+      {
+        body: '<section class="xp-part part-external-card"></section>',
+        clientRender: req.mode !== 'edit',
+      }
+    )
   }
   return NO_LINKS_FOUND
 }
 
 interface ExternalCard {
-  image: string;
-  content: string;
-  linkText: string;
-  linkUrl: string;
+  image: string
+  content: string
+  linkText: string
+  linkUrl: string
 }

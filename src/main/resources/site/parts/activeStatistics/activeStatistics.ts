@@ -1,8 +1,8 @@
 import { get, Content } from '/lib/xp/content'
 import { ResourceKey, render } from '/lib/thymeleaf'
 import { render as r4XpRender, RenderResponse } from '/lib/enonic/react4xp'
-import { ActiveStatisticsPartConfig } from './activeStatistics-part-config'
-import { Statistics } from '../../content-types/statistics/statistics'
+import type { ActiveStatistics as ActiveStatisticsPartConfig } from '.'
+import type { Statistics } from '../../content-types'
 import { SEO } from '../../../services/news/news'
 
 const {

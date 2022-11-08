@@ -3,34 +3,24 @@ import { render as r4XpRender, RenderResponse } from '/lib/enonic/react4xp'
 import { ResourceKey, render } from '/lib/thymeleaf'
 import { Component } from '/lib/xp/portal'
 import { MunicipalityWithCounty } from '../../../lib/ssb/dataset/klass/municipalities'
-import { MenuDropdownPartConfig } from '../menuDropdown/menuDropdown-part-config'
+import type { MenuDropdown as MenuDropdownPartConfig } from '.'
 import { SiteConfig } from '../../site-config'
-import { MenuDropdown } from '../../content-types/menuDropdown/menuDropdown'
+import type { MenuDropdown } from '../../content-types'
 import { randomUnsafeString } from '/lib/ssb/utils/utils'
 
-const {
-  assetUrl,
-  getContent,
-  getComponent,
-  pageUrl,
-  getSiteConfig,
-  serviceUrl
-} = __non_webpack_require__('/lib/xp/portal')
-const {
-  municipalsWithCounties,
-  getMunicipality,
-  removeCountyFromMunicipalityName
-} = __non_webpack_require__('/lib/ssb/dataset/klass/municipalities')
+const { assetUrl, getContent, getComponent, pageUrl, getSiteConfig, serviceUrl } =
+  __non_webpack_require__('/lib/xp/portal')
+const { municipalsWithCounties, getMunicipality, removeCountyFromMunicipalityName } = __non_webpack_require__(
+  '/lib/ssb/dataset/klass/municipalities'
+)
 
-const {
-  renderError
-} = __non_webpack_require__('/lib/ssb/error/error')
+const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
 const i18nLib = __non_webpack_require__('/lib/xp/i18n')
 
 const view: ResourceKey = resolve('./menuDropdown.html')
 
-exports.get = (req: XP.Request):XP.Response | RenderResponse => {
+exports.get = (req: XP.Request): XP.Response | RenderResponse => {
   try {
     return renderPart(req)
   } catch (e) {
@@ -38,46 +28,48 @@ exports.get = (req: XP.Request):XP.Response | RenderResponse => {
   }
 }
 
-exports.preview = (req:XP.Request) => renderPart(req)
+exports.preview = (req: XP.Request) => renderPart(req)
 
-function renderPart(req:XP.Request): XP.Response | RenderResponse {
-  const parsedMunicipalities:Array<MunicipalityWithCounty> = municipalsWithCounties()
-  const municipality:MunicipalityWithCounty | undefined = getMunicipality(req)
+function renderPart(req: XP.Request): XP.Response | RenderResponse {
+  const parsedMunicipalities: Array<MunicipalityWithCounty> = municipalsWithCounties()
+  const municipality: MunicipalityWithCounty | undefined = getMunicipality(req)
   const component: Component<MenuDropdownPartConfig> = getComponent()
   const siteConfig: SiteConfig = getSiteConfig()
-  let mapFolder: string = '/mapdata'
+  let mapFolder = '/mapdata'
 
   if (typeof siteConfig.kommunefakta !== 'undefined' && siteConfig.kommunefakta.mapfolder) {
     mapFolder = siteConfig.kommunefakta.mapfolder
   }
 
-  const dataPathAssetUrl: string = assetUrl( {
-    path: mapFolder
+  const dataPathAssetUrl: string = assetUrl({
+    path: mapFolder,
   })
 
   const dataServiceUrl: string = serviceUrl({
-    service: 'municipality'
+    service: 'municipality',
   })
 
   const page: Content<MenuDropdown> = getContent()
-  const baseUrl: string = component.config.basePage ?
-    pageUrl({
-      id: component.config.basePage
-    }) :
-    pageUrl({
-      id: page._id
-    })
+  const baseUrl: string = component.config.basePage
+    ? pageUrl({
+        id: component.config.basePage,
+      })
+    : pageUrl({
+        id: page._id,
+      })
 
   const searchBarText: string = i18nLib.localize({
-    key: 'menuDropdown.searchBarText'
+    key: 'menuDropdown.searchBarText',
   })
 
-  const municipalityItems: Array<Municipality> = parsedMunicipalities.map( (municipality) => ({
+  const municipalityItems: Array<Municipality> = parsedMunicipalities.map((municipality) => ({
     id: municipality.path,
-    title: municipality.displayName
+    title: municipality.displayName,
   }))
 
-  const municipalityName: string | undefined = municipality ? removeCountyFromMunicipalityName(municipality.displayName) : undefined
+  const municipalityName: string | undefined = municipality
+    ? removeCountyFromMunicipalityName(municipality.displayName)
+    : undefined
   const reactUuid: string = randomUnsafeString()
 
   const model: ThymeleafModel = {
@@ -89,40 +81,42 @@ function renderPart(req:XP.Request): XP.Response | RenderResponse {
     municipality: municipality,
     municipalityName: municipalityName,
     municipalityList: municipalityItems,
-    dropdownId: reactUuid
+    dropdownId: reactUuid,
   }
 
   const thymeleafRender: string = render(view, model)
 
   // Dropdown react object for sticky menu
-  return r4XpRender('site/parts/menuDropdown/DropdownMunicipality',
+  return r4XpRender(
+    'site/parts/menuDropdown/DropdownMunicipality',
     {
       ariaLabel: searchBarText,
       placeholder: searchBarText,
       items: municipalityItems,
-      baseUrl: baseUrl
+      baseUrl: baseUrl,
     },
     req,
     {
       id: reactUuid,
       body: thymeleafRender,
-      clientRender: req.mode !== 'edit'
-    })
+      clientRender: req.mode !== 'edit',
+    }
+  )
 }
 
 interface Municipality {
-  id: string,
+  id: string
   title: string
 }
 
 interface ThymeleafModel {
-  modeMunicipality: boolean,
-  displayName: string,
-  baseUrl: string,
-  dataPathAssetUrl: string,
-  dataServiceUrl: string,
-  municipality: MunicipalityWithCounty | undefined,
-  municipalityName: string | undefined,
+  modeMunicipality: boolean
+  displayName: string
+  baseUrl: string
+  dataPathAssetUrl: string
+  dataServiceUrl: string
+  municipality: MunicipalityWithCounty | undefined
+  municipalityName: string | undefined
   municipalityList: Array<Municipality>
   dropdownId: string
 }

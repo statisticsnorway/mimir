@@ -1,27 +1,16 @@
 import { get, Content } from '/lib/xp/content'
-import {render, RenderResponse} from '/lib/enonic/react4xp'
-import { Accordion } from '../../content-types/accordion/accordion'
+import { render, RenderResponse } from '/lib/enonic/react4xp'
+import type { Accordion } from '../../content-types'
 import { AccordionConfig } from '../../macros/accordion/accordion-config'
 
 const {
-  data: {
-    forceArray
-  }
+  data: { forceArray },
 } = __non_webpack_require__('/lib/util')
-const {
-  getComponent,
-  getContent,
-  processHtml
-} = __non_webpack_require__('/lib/xp/portal')
-const {
-  sanitize
-} = __non_webpack_require__('/lib/xp/common')
-const {
-  renderError
-} = __non_webpack_require__('/lib/ssb/error/error')
+const { getComponent, getContent, processHtml } = __non_webpack_require__('/lib/xp/portal')
+const { sanitize } = __non_webpack_require__('/lib/xp/common')
+const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
-
-exports.get = function(req: XP.Request): RenderResponse | XP.Response {
+exports.get = function (req: XP.Request): RenderResponse | XP.Response {
   try {
     const config: AccordionConfig = getComponent().config
     const accordionIds: Array<string> = config ? forceArray(config.accordion) : []
@@ -31,10 +20,12 @@ exports.get = function(req: XP.Request): RenderResponse | XP.Response {
   }
 }
 
-exports.preview = function(req: XP.Request, accordionIds: Array<string> | string): RenderResponse | XP.Response {
+exports.preview = function (req: XP.Request, accordionIds: Array<string> | string): RenderResponse | XP.Response {
   try {
     const page: Content<Accordion> = getContent()
-    return page.type === `${app.name}:accordion` ? renderPart(req, [accordionIds as string]) : renderPart(req, accordionIds as Array<string>)
+    return page.type === `${app.name}:accordion`
+      ? renderPart(req, [accordionIds as string])
+      : renderPart(req, accordionIds as Array<string>)
   } catch (e) {
     return renderError(req, 'Error in part', e)
   }
@@ -44,12 +35,16 @@ function renderPart(req: XP.Request, accordionIds: Array<string>): RenderRespons
   const accordions: Array<AccordionData> = []
 
   accordionIds.map((key) => {
-    const accordion: Content<Accordion> | null = key ? get({
-      key
-    }) : null
+    const accordion: Content<Accordion> | null = key
+      ? get({
+          key,
+        })
+      : null
 
     if (accordion) {
-      const accordionContents: Accordion['accordions'] = accordion.data.accordions ? forceArray(accordion.data.accordions) : []
+      const accordionContents: Accordion['accordions'] = accordion.data.accordions
+        ? forceArray(accordion.data.accordions)
+        : []
       accordionContents
         .filter((accordion) => !!accordion)
         .map((accordion) => {
@@ -57,18 +52,24 @@ function renderPart(req: XP.Request, accordionIds: Array<string>): RenderRespons
 
           accordions.push({
             id: accordion.open && sanitize(accordion.open),
-            body: accordion.body && processHtml({
-              value: accordion.body
-            }),
+            body:
+              accordion.body &&
+              processHtml({
+                value: accordion.body,
+              }),
             open: accordion.open,
-            items: items.length ? items.map((item) => {
-              return {
-                ...item,
-                body: item.body && processHtml({
-                  value: item.body
+            items: items.length
+              ? items.map((item) => {
+                  return {
+                    ...item,
+                    body:
+                      item.body &&
+                      processHtml({
+                        value: item.body,
+                      }),
+                  }
                 })
-              }
-            }) : []
+              : [],
           })
         })
     }
@@ -78,24 +79,24 @@ function renderPart(req: XP.Request, accordionIds: Array<string>): RenderRespons
     accordions.push({
       body: 'Feil i lasting av innhold, innhold mangler eller kunne ikke hentes.',
       open: 'Sett inn innhold!',
-      items: []
+      items: [],
     })
   }
 
   const props: AccordionProp = {
-    accordions
+    accordions,
   }
 
   return render('Accordion', props, req)
 }
 
 export interface AccordionData {
-  id?: string;
-  body?: string | undefined;
-  open?: string | undefined;
-  items?: Accordion['accordions'];
+  id?: string
+  body?: string | undefined
+  open?: string | undefined
+  items?: Accordion['accordions']
 }
 
 interface AccordionProp {
-  accordions: Array<AccordionData>;
+  accordions: Array<AccordionData>
 }

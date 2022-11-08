@@ -1,15 +1,12 @@
 import { Content, QueryResponse, get, query } from '/lib/xp/content'
-import { Employee } from '../../content-types/employee/employee'
+import type { Employee } from '../../content-types'
 import { DefaultPageConfig } from '../../pages/default/default-page-config'
 import { getContent, pageUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 import { RenderResponse, render } from '/lib/enonic/react4xp'
-import { Page } from '../../content-types/page/page'
+import type { Page } from '../../content-types'
 
-const {
-  renderError
-} = __non_webpack_require__('/lib/ssb/error/error')
-
+const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
 exports.get = (req: XP.Request): RenderResponse | XP.Response => {
   try {
@@ -31,19 +28,19 @@ function renderPart(req: XP.Request): RenderResponse {
 
   const pageHeadingPhrase: string = localize({
     key: 'researcherList.pageHeading',
-    locale: language
+    locale: language,
   })
 
   const pageDescriptionPhrase: string = localize({
     key: 'researcherList.pageDescription',
-    locale: language
+    locale: language,
   })
 
   const props: IPartProps = {
     researchers: alphabeticalResearchersList,
     total: queryResults.total,
     pageHeadingPhrase,
-    pageDescriptionPhrase
+    pageDescriptionPhrase,
   }
 
   return render('site/parts/researcherList/researcherList', props, req)
@@ -60,89 +57,90 @@ function getResearchers() {
           {
             hasValue: {
               field: 'data.isResearcher',
-              values: [true]
-            }
-          }
-        ]
-      }
+              values: [true],
+            },
+          },
+        ],
+      },
     },
-    contentTypes: [
-      `${app.name}:employee`
-    ]
+    contentTypes: [`${app.name}:employee`],
   })
 }
 
 function prepareResearchers(results: readonly Content<Employee>[]) {
   return results.map((result) => {
-    const areaContent: Content<DefaultPageConfig> | null = result.data.area ? get({
-      key: result.data.area
-    }) : null
+    const areaContent: Content<DefaultPageConfig> | null = result.data.area
+      ? get({
+          key: result.data.area,
+        })
+      : null
 
-    const area: Area| null = areaContent ? {
-      title: areaContent.displayName,
-      href: areaContent._path
-    } : null
+    const area: Area | null = areaContent
+      ? {
+          title: areaContent.displayName,
+          href: areaContent._path,
+        }
+      : null
 
     return {
       surname: result.data.surname || '',
       name: result.data.name || '',
       position: result.data.position || '',
       path: pageUrl({
-        id: result._id
+        id: result._id,
       }),
       phone: result.data.phone || '',
       email: result.data.email || '',
-      area: area || ''
+      area: area || '',
     }
   })
 }
 
-function createAlphabeticalResearchersList(preparedResults: IPreparedResearcher[]):Array<IResearcherMap> {
+function createAlphabeticalResearchersList(preparedResults: IPreparedResearcher[]): Array<IResearcherMap> {
   const data: IObjectKeys = preparedResults.reduce((result: IObjectKeys, researcher: IPreparedResearcher) => {
     const alphabet: string = researcher.surname[0].toUpperCase()
     if (!result[alphabet]) {
       result[alphabet] = {
         alphabet,
-        record: [researcher]
+        record: [researcher],
       }
     } else {
       result[alphabet].record.push(researcher)
     }
     return result
-  }, {
-  })
+  }, {})
 
   const result: Array<IResearcherMap> = Object.keys(data).map((key) => data[key])
   return result
 }
 
 interface IPartProps {
-  researchers: IResearcherMap[],
-  total: number,
-  pageHeadingPhrase: string,
+  researchers: IResearcherMap[]
+  total: number
+  pageHeadingPhrase: string
   pageDescriptionPhrase: string
 }
 
 interface IPreparedResearcher {
-  surname: string,
-  name: string,
-  position: string,
-  path: string,
-  phone: string,
-  email: string,
+  surname: string
+  name: string
+  position: string
+  path: string
+  phone: string
+  email: string
   area: string | Area
 }
 
 interface Area {
-  href: string;
-  title: string;
+  href: string
+  title: string
 }
 
 interface IObjectKeys {
-  [key: string]: IResearcherMap;
+  [key: string]: IResearcherMap
 }
 
 interface IResearcherMap {
-  alphabet: string;
+  alphabet: string
   record: IPreparedResearcher[]
 }

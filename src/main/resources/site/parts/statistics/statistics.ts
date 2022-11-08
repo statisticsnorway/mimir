@@ -3,47 +3,25 @@ import { ResourceKey, render } from '/lib/thymeleaf'
 import { ReleaseDatesVariant, StatisticInListing, VariantInListing } from '../../../lib/ssb/dashboard/statreg/types'
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
 import { render as r4xpRender } from '/lib/enonic/react4xp'
-import { Statistics } from '../../content-types/statistics/statistics'
+import type { Statistics } from '../../content-types'
 import { Phrases } from '../../../lib/types/language'
 import { randomUnsafeString } from '/lib/ssb/utils/utils'
 
-const {
-  getContent, pageUrl
-} = __non_webpack_require__('/lib/xp/portal')
-const {
-  getStatisticByIdFromRepo, getReleaseDatesByVariants
-} = __non_webpack_require__('/lib/ssb/statreg/statistics')
-const {
-  getPhrases
-} = __non_webpack_require__('/lib/ssb/utils/language')
+const { getContent, pageUrl } = __non_webpack_require__('/lib/xp/portal')
+const { getStatisticByIdFromRepo, getReleaseDatesByVariants } = __non_webpack_require__('/lib/ssb/statreg/statistics')
+const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
 
-const {
-  renderError
-} = __non_webpack_require__('/lib/ssb/error/error')
-const {
-  preview: keyFigurePreview
-} = __non_webpack_require__('../keyFigure/keyFigure')
-const {
-  hasWritePermissionsAndPreview
-} = __non_webpack_require__('/lib/ssb/parts/permissions')
-const {
-  sleep
-} = __non_webpack_require__('/lib/xp/task')
-const {
-  currentlyWaitingForPublish
-} = __non_webpack_require__('/lib/ssb/dataset/publish')
-const {
-  currentlyWaitingForPublish: currentlyWaitingForPublishOld
-} = __non_webpack_require__('/lib/ssb/dataset/publishOld')
+const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
+const { preview: keyFigurePreview } = __non_webpack_require__('../keyFigure/keyFigure')
+const { hasWritePermissionsAndPreview } = __non_webpack_require__('/lib/ssb/parts/permissions')
+const { sleep } = __non_webpack_require__('/lib/xp/task')
+const { currentlyWaitingForPublish } = __non_webpack_require__('/lib/ssb/dataset/publish')
+const { currentlyWaitingForPublish: currentlyWaitingForPublishOld } =
+  __non_webpack_require__('/lib/ssb/dataset/publishOld')
 const util = __non_webpack_require__('/lib/util')
-const {
-  isEnabled
-} = __non_webpack_require__('/lib/featureToggle')
+const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
 
-
-const {
-  moment
-} = __non_webpack_require__('/lib/vendor/moment')
+const { moment } = __non_webpack_require__('/lib/vendor/moment')
 const view: ResourceKey = resolve('./statistics.html')
 
 exports.get = (req: XP.Request): XP.Response => {
@@ -61,11 +39,17 @@ function renderPart(req: XP.Request): XP.Response {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   const phrases: Phrases = getPhrases(page)
-  const wait: number = app.config && app.config['ssb.statistics.publishWait'] ? parseInt(app.config['ssb.statistics.publishWait']) : 100
-  const maxWait: number = app.config && app.config['ssb.statistics.publishMaxWait'] ? parseInt(app.config['ssb.statistics.publishMaxWait']) : 10000
+  const wait: number =
+    app.config && app.config['ssb.statistics.publishWait'] ? parseInt(app.config['ssb.statistics.publishWait']) : 100
+  const maxWait: number =
+    app.config && app.config['ssb.statistics.publishMaxWait']
+      ? parseInt(app.config['ssb.statistics.publishMaxWait'])
+      : 10000
   const newPublishJobEnabled: boolean = isEnabled('publishJob-lib-sheduler', false, 'ssb')
-  const currentlyWaiting: boolean = newPublishJobEnabled ? currentlyWaitingForPublish(page) : currentlyWaitingForPublishOld(page)
-  let waitedFor: number = 0
+  const currentlyWaiting: boolean = newPublishJobEnabled
+    ? currentlyWaitingForPublish(page)
+    : currentlyWaitingForPublishOld(page)
+  let waitedFor = 0
   while (currentlyWaiting && waitedFor < maxWait) {
     waitedFor += wait
     sleep(wait)
@@ -77,8 +61,12 @@ function renderPart(req: XP.Request): XP.Response {
   const updated: string = phrases.updated + ': '
   const nextUpdate: string = phrases.nextUpdate + ': '
   const changed: string = phrases.modified + ': '
-  const modifiedText: string | undefined = page.data.showModifiedDate ? page.data.showModifiedDate.modifiedOption.modifiedText : undefined
-  const modifiedDate: string | undefined = page.data.showModifiedDate ? page.data.showModifiedDate.modifiedOption.lastModified : undefined
+  const modifiedText: string | undefined = page.data.showModifiedDate
+    ? page.data.showModifiedDate.modifiedOption.modifiedText
+    : undefined
+  const modifiedDate: string | undefined = page.data.showModifiedDate
+    ? page.data.showModifiedDate.modifiedOption.lastModified
+    : undefined
   let previousRelease: string | undefined = phrases.notAvailable
   let nextRelease: string | undefined = phrases.notYetDetermined
   let previewNextRelease: string | undefined = phrases.notYetDetermined
@@ -87,16 +75,17 @@ function renderPart(req: XP.Request): XP.Response {
   let nextReleaseDate: string | undefined
   let previousReleaseDate: string | undefined
   const showPreviewDraft: boolean = hasWritePermissionsAndPreview(req, page._id)
-  const paramShowDraft: boolean = !!req.params.showDraft
-  const draftUrl: string = paramShowDraft ? pageUrl({
-    path: page._path
-  }) : pageUrl({
-    params: {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-      // @ts-ignore
-      showDraft: true
-    }
-  })
+  const paramShowDraft = !!req.params.showDraft
+  const draftUrl: string = paramShowDraft
+    ? pageUrl({
+        path: page._path,
+      })
+    : pageUrl({
+        params: {
+          // @ts-ignore
+          showDraft: true,
+        },
+      })
   const draftButtonText: string = paramShowDraft ? 'Vis publiserte tall' : 'Vis upubliserte tall'
   const language: string = page.language === 'en' || page.language === 'nn' ? page.language : 'nb'
 
@@ -146,49 +135,51 @@ function renderPart(req: XP.Request): XP.Response {
     statisticsKeyFigure: statisticsKeyFigure ? statisticsKeyFigure.body : null,
     showPreviewDraft,
     draftUrl,
-    draftButtonText
+    draftButtonText,
   }
 
   const body: string = render(view, model)
   const pageContributions: XP.PageContributions = {
-    bodyEnd: statisticsKeyFigure && statisticsKeyFigure.pageContributions ? statisticsKeyFigure.pageContributions.bodyEnd : []
+    bodyEnd:
+      statisticsKeyFigure && statisticsKeyFigure.pageContributions ? statisticsKeyFigure.pageContributions.bodyEnd : [],
   }
 
   if (changeDate) {
-    return r4xpRender('ModifiedDate',
+    return r4xpRender(
+      'ModifiedDate',
       {
         explanation: modifiedText,
         className: '',
-        children: changeDate
+        children: changeDate,
       },
       req,
       {
         id: id,
         body: body,
-        pageContributions
-      })
+        pageContributions,
+      }
+    )
   }
 
   return {
     body,
     pageContributions,
-    contentType: 'text/html'
+    contentType: 'text/html',
   }
 }
 
-
 interface StatisticsProps {
-  title: string;
-  updated: string;
-  nextUpdate: string;
+  title: string
+  updated: string
+  nextUpdate: string
   changed: string
-  changeDate: string | undefined;
-  modifiedText: string | null | undefined;
-  previousRelease: string | undefined;
-  nextRelease: string | undefined;
-  modifiedDateId: string;
-  statisticsKeyFigure: string | object | null | undefined;
-  showPreviewDraft: boolean;
-  draftUrl: string;
-  draftButtonText: string;
+  changeDate: string | undefined
+  modifiedText: string | null | undefined
+  previousRelease: string | undefined
+  nextRelease: string | undefined
+  modifiedDateId: string
+  statisticsKeyFigure: string | object | null | undefined
+  showPreviewDraft: boolean
+  draftUrl: string
+  draftButtonText: string
 }

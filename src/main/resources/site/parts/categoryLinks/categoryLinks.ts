@@ -1,23 +1,17 @@
 import { render, RenderResponse } from '/lib/enonic/react4xp'
 import { getComponent, getContent, pageUrl, Component } from '/lib/xp/portal'
-import { CategoryLinksPartConfig } from './categoryLinks-part-config'
+import type { CategoryLinks as CategoryLinksPartConfig } from '.'
 import { Content } from '/lib/xp/content'
 import { Language, Phrases } from '../../../lib/types/language'
 import { randomUnsafeString } from '/lib/ssb/utils/utils'
 
-const {
- data
-} = __non_webpack_require__('/lib/util')
+const { data } = __non_webpack_require__('/lib/util')
 
-const {
- renderError
-} = __non_webpack_require__('/lib/ssb/error/error')
+const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
-const {
- getLanguage
-} = __non_webpack_require__('/lib/ssb/utils/language')
+const { getLanguage } = __non_webpack_require__('/lib/ssb/utils/language')
 
-exports.get = function(req: XP.Request): XP.Response | RenderResponse {
+exports.get = function (req: XP.Request): XP.Response | RenderResponse {
   try {
     return renderPart(req)
   } catch (e) {
@@ -29,7 +23,7 @@ exports.preview = (req: XP.Request): XP.Response | RenderResponse => renderPart(
 
 const NO_LINKS_FOUND = {
   body: '',
-  contentType: 'text/html'
+  contentType: 'text/html',
 }
 
 function renderPart(req: XP.Request): XP.Response | RenderResponse {
@@ -54,7 +48,7 @@ function renderPart(req: XP.Request): XP.Response | RenderResponse {
       methodsAndDocumentation.relatedSource.content
     ) {
       methodsAndDocumentationUrl = pageUrl({
-        id: methodsAndDocumentation.relatedSource.content
+        id: methodsAndDocumentation.relatedSource.content,
       })
     }
   }
@@ -66,19 +60,19 @@ function renderPart(req: XP.Request): XP.Response | RenderResponse {
         links: links.map((link) => {
           return {
             href: pageUrl({
-              id: link.href
+              id: link.href,
             }),
             titleText: link.titleText,
-            subText: link.subText
+            subText: link.subText,
           }
         }),
         methodsAndDocumentationUrl,
-        methodsAndDocumentationLabel: phrases.methodsAndDocumentation
+        methodsAndDocumentationLabel: phrases.methodsAndDocumentation,
       },
       req,
       {
         id: id,
-        body: `<section class="xp-part part-category-link"></section>`
+        body: `<section class="xp-part part-category-link"></section>`,
       }
     )
 
