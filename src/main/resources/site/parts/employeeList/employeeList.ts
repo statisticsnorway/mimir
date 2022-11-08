@@ -1,4 +1,4 @@
-import { Content, getChildren, QueryResponse, get } from '/lib/xp/content'
+import { Content, query, QueryResponse, get } from '/lib/xp/content'
 import { Employee } from '../../content-types/employee/employee'
 import { DefaultPageConfig } from '../../pages/default/default-page-config'
 import { getContent, Component, getComponent, pageUrl } from '/lib/xp/portal'
@@ -24,9 +24,10 @@ function renderPart(req: XP.Request): RenderResponse {
   const content: Content<Page, object> = getContent()
   const part: Component<EmployeeListPartConfig> = getComponent()
 
-  const queryResults: QueryResponse<Employee, object> = getChildren({
-    key: content._path,
+  const queryResults: QueryResponse<Employee, object> = query({
     count: 500,
+    contentTypes: [`${app.name}:employee`],
+    query: `_path LIKE "/content${content._path}/*"`,
     sort: 'data.surname ASC'
   })
 

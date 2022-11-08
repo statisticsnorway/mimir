@@ -14,7 +14,6 @@
 	}
 
 	.banner {
-		height: 304px;
 		margin-bottom: 3.75rem;
 		padding: 3.75rem 0 5rem;
 		background-color: #f0f8f9;
@@ -94,12 +93,11 @@
 	.employees-list {
 
 		.banner {
-			height: 288px;
 			width: 100vw;
       position: relative;
       left: 50%;
       margin-left: -50vw;
-			padding: 2rem 0 0;
+			padding: 2rem 0 2.5rem;
 			margin-bottom: 2.5rem;
 
 			.container {

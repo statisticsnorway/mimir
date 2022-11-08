@@ -74,9 +74,10 @@ function EmployeeList(props) {
       <div className="row banner">
         <div className="container">
           <h1 className="page-title">{pageTitle}</h1>
-          <div className="page-description" dangerouslySetInnerHTML={{
-            __html: pageDescription
-          }}></div>
+          {pageDescription ? 
+            <div className="page-description" dangerouslySetInnerHTML={{
+              __html: pageDescription
+            }}></div> : null}
         </div>
       </div>
       <div className="row">
