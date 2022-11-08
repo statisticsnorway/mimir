@@ -1,0 +1,68 @@
+.project {
+  .project-details {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    border-bottom: 1px solid #c3dcdc;
+
+    .details-block {
+      border-top: 1px solid #c3dcdc;
+      display: flex;
+
+      @include media-breakpoint-up(lg) {
+        margin-left: 1rem;
+
+        &:first-child {
+          margin-left: 0px !important;
+        }
+      }
+
+      svg {
+        margin: 0.4rem 1rem 0 0;
+        stroke-width: 2.5;
+      }
+    }
+  }
+
+  .detail-info {
+    font-weight: 700;
+    font-size: 20px;
+  }
+}
+
+.info-text {
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+.center {
+  max-width: 680px;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.project-ingress {
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 32px;
+  margin-bottom: 0px;
+}
+
+.project-paragraph {
+  > p {
+    font-size: 16px;
+    font-stretch: normal;
+    font-weight: 400;
+    line-height: 28px;
+
+  }
+}
+
+@include media-breakpoint-up(lg) {
+  .center-accordion {
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+}

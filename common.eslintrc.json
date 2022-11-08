@@ -10,9 +10,9 @@
     "quotes": ["error", "single", {
         "avoidEscape": true,
         "allowTemplateLiterals": true
-      } 
+      }
     ],
-    "max-len": ["error", 160],
+    "max-len": ["error", 120],
     "linebreak-style": "off",
     "brace-style": ["error", "1tbs"],
     "camelcase": "warn",

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<content-type>
+    <display-name>Prosjekt</display-name>
+    <description>Prosjekt eller modell</description>
+    <super-type>base:structured</super-type>
+    <allow-child-content>true</allow-child-content>
+    <form>
+        <field-set>
+            <label>Informasjon</label>
+            <items>
+                <input name="introTitle" type="textLine">
+                    <label>Stikktittel</label>
+                    <occurrences minimum="0" maximum="1"/>
+                </input>
+                <input name="manager" type="ContentSelector">
+                    <label>Prosjekt/modellansvarlig</label>
+                    <occurrences minimum="0" maximum="1"/>
+                    <config>
+                        <allowContentType>employee</allowContentType>
+                    </config>
+                </input>
+                <input name="projectType" type="RadioButton">
+                    <label>Velg mellom prosjekt eller modell</label>
+                    <occurrences minimum="0" maximum="1"/>
+                    <config>
+                        <option value="project">Prosjekt</option>
+                        <option value="model">Modell</option>
+                    </config>
+                </input>
+                <input name="projectPeriod" type="textLine">
+                    <label>Periode</label>
+                    <occurrences minimum="0" maximum="1"/>
+                </input>
+                <input name="financier" type="TextLine">
+                    <label>Finansiør</label>
+                    <occurrences minimum="0" maximum="1"/>
+                </input>
+            </items>
+        </field-set>
+        <field-set>
+            <label>Ingress</label>
+            <items>
+                <input name="ingress" type="TextArea">
+                    <label>Om Prosjekt/Modell</label>
+                    <occurrences minimum="0" maximum="1"/>
+                    <config>
+                        <include>Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote</include>
+                        <allowHeadings>h2 h3 h4 h5</allowHeadings>
+                    </config>
+                </input>
+                <input name="body" type="HtmlArea">
+                    <label>Prosjekttekst</label>
+                    <occurrences minimum="0" maximum="1"/>
+                    <config>
+                        <include>Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote</include>
+                        <allowHeadings>h2 h3 h4 h5</allowHeadings>
+                    </config>
+                </input>
+            </items>
+        </field-set>
+        <field-set>
+            <label>Deltakere</label>
+            <items>
+                <input name="participants" type="HtmlArea">
+                    <label>Prosjektdeltakere</label>
+                    <occurrences minimum="0" maximum="1"/>
+                </input>
+                <input name="collaborators" type="HtmlArea">
+                    <label>Samarbeidspartnere</label>
+                    <occurrences minimum="0" maximum="1"/>
+                </input>
+            </items>
+        </field-set>
+    </form>
+</content-type>
