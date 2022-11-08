@@ -50,7 +50,7 @@ export function getPublicationsNew(
   const res: MultiRepoNodeQueryResponse = connection.query({
     start,
     count,
-    sort: 'modifiedTime DESC',
+    sort: 'publish.from DESC',
     query: query as unknown as string, // hack because Node lib supports QueryDSL but the types for it is not in this version
     filters: {
       boolean: {
@@ -133,7 +133,6 @@ export function getPublicationsNew(
           language,
           release: content,
           mainSubjects,
-          subSubjects,
         })
   )
 
@@ -151,9 +150,14 @@ function statisticsAsPublicationItem({
   release,
   language,
   mainSubjects,
-  subSubjects,
 }: StatisticsAsPublicationItemParams): PublicationItem {
-  const [mainSubject, ...secondaryMainSubjects] = forceArray(release.data.mainSubjects)
+  const mainSubjectsStatistic: string[] = forceArray(release.data.mainSubjects) ?? []
+  const secondaryMainSubjects: string[] =
+    mainSubjectsStatistic.length > 1 ? forceArray(mainSubjectsStatistic.shift()) : []
+  const mainSubjectId: string = mainSubjectsStatistic.length ? mainSubjectsStatistic[0] : ''
+  const mainSubjectTitle: string = mainSubjectId.length
+    ? mainSubjects.filter((subject) => subject.name === mainSubjectId)[0].title
+    : ''
 
   return {
     title: release.data.name,
@@ -166,9 +170,9 @@ function statisticsAsPublicationItem({
     publishDateHuman: formatDate(release.data.previousRelease, 'PPP', language),
     contentType: `${app.name}:statistics`,
     articleType: 'statistics',
-    mainSubjectId: mainSubject,
-    mainSubject: mainSubjects.map((subject) => subject.title)[0] ?? '',
-    secondaryMainSubjects,
+    mainSubjectId: mainSubjectId,
+    mainSubject: mainSubjectTitle,
+    secondaryMainSubjects: secondaryMainSubjects,
     appName: app.name,
   }
 }
@@ -204,6 +208,7 @@ function articleAsPublicationItem({
   }
 }
 
+//TODO: Remove when content Article have x-data with mainsubjects
 function getSecondaryMainSubject(
   subtopicsContent: Array<string>,
   mainSubjects: Array<SubjectItem>,
@@ -227,7 +232,6 @@ interface StatisticsAsPublicationItemParams {
   release: ContentLight<Release>
   language: string
   mainSubjects: SubjectItem[]
-  subSubjects: SubjectItem[]
 }
 
 interface ArticleAsPublicationItemParams {
