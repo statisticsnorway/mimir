@@ -16,7 +16,7 @@ import { SubjectItem } from '/lib/ssb/utils/subjectUtils'
 import { ReleasesInListing } from '/lib/ssb/dashboard/statreg/types'
 
 const {
-  queryForMainSubjects
+  queryForMainSubjects, queryForSubSubjects, getSecondaryMainSubject
 } = __non_webpack_require__( '/lib/ssb/utils/subjectUtils')
 
 export const REPO_ID_STATREG_STATISTICS: 'no.ssb.statreg.statistics.variants' = 'no.ssb.statreg.statistics.variants' as const
@@ -65,6 +65,9 @@ export function fillRepo(statistics: Array<StatisticInListing>) {
     const allMainSubjects: SubjectItem[] = queryForMainSubjects({
       language
     })
+    const allSubSubjects: SubjectItem[] = queryForSubSubjects({
+      language
+    })
 
     const statisticsResponse: QueryResponse<Statistics, XData> = getStatisticsContentByRegStatId(statistics.map((stat) => String(stat.id)), language)
     const statisticsRecord: Record<string, Content<Statistics, XData>> = contentArrayToRecord(statisticsResponse.hits, (c) => c.data.statistic!)
@@ -77,6 +80,11 @@ export function fillRepo(statistics: Array<StatisticInListing>) {
         aboutTheStatistics[statisticsContent?.data.aboutTheStatistics] :
         undefined
 
+      const mainSubject: SubjectItem[] = allMainSubjects.filter((subject) => statisticsContent?._path.startsWith(subject.path))
+      const subTopics:Array<string> = statisticsContent?.data.subtopic ? forceArray(statisticsContent.data.subtopic) : []
+      const secondaryMainSubject: SubjectItem[] = subTopics ? getSecondaryMainSubject(subTopics, allMainSubjects, allSubSubjects) : []
+      const allMainSubjectsStatistic: SubjectItem[] = mainSubject.concat(secondaryMainSubject)
+
       forceArray(statistic.variants).forEach((variant) => {
         const path: string = `/${statistic.shortName}-${variant.id}–${language}`
         const exists: Array<string> = connection.exists(path)
@@ -86,7 +94,7 @@ export function fillRepo(statistics: Array<StatisticInListing>) {
           language,
           statisticsContent,
           aboutTheStatisticsContent,
-          allMainSubjects
+          allMainSubjectsStatistic
         })
 
         // Check if exists, and then do update instead if changed
@@ -103,7 +111,6 @@ export function fillRepo(statistics: Array<StatisticInListing>) {
                 language: content.language,
                 publish: content.publish,
                 data: {
-                  ...node.data,
                   ...content.data
                 }
               }
@@ -167,7 +174,7 @@ function asLocalDateTime(str: string | undefined): LocalDateTime | undefined {
 }
 
 function prepareData({
-  statistic, variant, language, statisticsContent, aboutTheStatisticsContent, allMainSubjects
+  statistic, variant, language, statisticsContent, aboutTheStatisticsContent, allMainSubjectsStatistic
 }: CreateContentStatisticVariantParams): Release {
   return {
     statisticId: String(statistic.id),
@@ -184,9 +191,8 @@ function prepareData({
     nextRelease: variant.nextRelease,
     statisticContentId: statisticsContent?._id,
     articleType: 'statistics', // allows this content to be filtered together with `Article.articleType`,
-    mainSubjects: allMainSubjects
-      .filter((subject) => statisticsContent?._path.startsWith(subject.path))
-      .map((subject) => subject.subjectCode)
+    mainSubjects: allMainSubjectsStatistic
+      .map((subject) => subject.name)
       .filter(notNullOrUndefined),
     upcomingReleases: variant.upcomingReleases
   }
@@ -246,5 +252,5 @@ interface CreateContentStatisticVariantParams {
   language: 'nb' | 'en';
   statisticsContent?: Content<Statistics, XData>;
   aboutTheStatisticsContent?: Content<OmStatistikken, XData>;
-  allMainSubjects: SubjectItem[]
+  allMainSubjectsStatistic: SubjectItem[]
 }

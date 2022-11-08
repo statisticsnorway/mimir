@@ -27,7 +27,7 @@ export function getMainSubjects(request: XP.Request, language?: string): Array<S
 
 export function queryForMainSubjects({
   language
-}: QueryForMainSubjectsParams): SubjectItem[] {
+}: QueryForSubjectsParams): SubjectItem[] {
   return query({
     count: 200,
     sort: 'displayName ASC',
@@ -68,7 +68,50 @@ export function queryForMainSubjects({
     })
 }
 
-interface QueryForMainSubjectsParams {
+export function queryForSubSubjects({
+  language
+}: QueryForSubjectsParams): SubjectItem[] {
+  return query({
+    count: 200,
+    sort: 'displayName ASC',
+    filters: {
+      boolean: {
+        must: [
+          {
+            hasValue: {
+              field: 'language',
+              values: language === 'en' ? ['en'] : ['no', 'nb', 'nn']
+            }
+          },
+          {
+            hasValue: {
+              field: 'components.page.config.mimir.default.subjectType',
+              values: ['subSubject']
+            }
+          }
+        ]
+      }
+    }
+  }).hits
+    .filter((hit) => {
+      const page: DefaultPage['page'] = hit.page as DefaultPage['page']
+      return page.config.subjectCode !== undefined
+    })
+    .map((hit) => {
+      const page: DefaultPage['page'] = hit.page as DefaultPage['page']
+
+      return {
+        id: hit._id,
+        title: hit.displayName,
+        subjectCode: page.config.subjectCode,
+        path: hit._path,
+        language: hit?.language === 'en' ? 'en' : 'no',
+        name: hit._name
+      }
+    })
+}
+
+interface QueryForSubjectsParams {
   language?: string | undefined;
 }
 
@@ -102,6 +145,21 @@ export function getSubSubjects(request: XP.Request, language?: string): Array<Su
       name: m._name
     }))
   })
+}
+
+export function getSecondaryMainSubject(subtopicsContent: Array<string>, mainSubjects: Array<SubjectItem>, subSubjects: Array<SubjectItem> ):
+Array<SubjectItem> {
+  const secondaryMainSubjects: Array<SubjectItem> = subtopicsContent.reduce((acc: Array<SubjectItem>, topic: string) => {
+    const subSubject: SubjectItem = subSubjects.filter((subSubject) => subSubject.id === topic)[0]
+    if (subSubject) {
+      const mainSubject: SubjectItem| undefined = getMainSubjectBySubSubject(subSubject, mainSubjects)
+      if (mainSubject && !acc.includes(mainSubject)) {
+        acc.push(mainSubject)
+      }
+    }
+    return acc
+  }, [])
+  return secondaryMainSubjects
 }
 
 function getSubjectsByLanguage(subjects: Array<SubjectItem>, language: string): Array<SubjectItem> {
