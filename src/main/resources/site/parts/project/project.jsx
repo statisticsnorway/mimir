@@ -25,7 +25,7 @@ const Project = (props) => {
 
     const renderTitle = () => {
         return (
-            <div className="col-12 col-lg-12 p-0 mb-4">
+            <div className="col-12 col-lg-12 mb-4">
                 <div className="info-text searchabletext mb-1">{introTitle}</div>
                 <Title className="ssb-title searchabletext" size='3'>
                     {projectTitle}
