@@ -18,11 +18,10 @@
       }
 
       svg {
-        margin: 0 1rem 0 0;
+        margin: 0.4rem 1rem 0 0;
         stroke-width: 2.5;
       }
     }
-
   }
 
   .detail-info {
@@ -44,12 +43,10 @@
 }
 
 .project-ingress {
-  > p {
-    font-weight: 400;
-    font-size: 20px;
-    line-height: 32px;
-    margin-bottom: 0px;
-  }
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 32px;
+  margin-bottom: 0px;
 }
 
 .project-paragraph {

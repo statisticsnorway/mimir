@@ -77,14 +77,10 @@ const Project = (props) => {
 
                 <div className="row center">
                     <div className="col-12 col-md-12 row-gutter-mobile">
-                        <h2 className="ssb-title py-4">{heading}</h2>
+                        <h2 className="ssb-title pb-3 pt-5">{heading}</h2>
                     </div>
                     <div className="col-12 col-md-12 row-gutter-mobile">
-                        <div className="project-ingress"
-                             dangerouslySetInnerHTML={{
-                                 __html: ingress
-                             }}
-                        />
+                        <p className="project-ingress">{ingress}</p>
                         <div className="project-paragraph"
                              dangerouslySetInnerHTML={{
                                  __html: body
@@ -108,7 +104,7 @@ const Project = (props) => {
             return (
                 <div className="row center mt-5">
                     <div className="col-12 col-md-12 row-gutter-mobile">
-                        <h2 className="mw-680 ssb-title">{participantsPhrase}</h2>
+                        <h2 className="mw-680 ssb-title pb-3">{participantsPhrase}</h2>
                         <Accordion header={projectParticipantsPhrase}
                                    className={`${!participants ? 'd-none' : ''}`}>
                             <div className="ssb-paragraph lh-lg"

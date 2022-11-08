@@ -40,7 +40,7 @@
         <field-set>
             <label>Ingress</label>
             <items>
-                <input name="ingress" type="HtmlArea">
+                <input name="ingress" type="TextArea">
                     <label>Om Prosjekt/Modell</label>
                     <occurrences minimum="0" maximum="1"/>
                     <config>
