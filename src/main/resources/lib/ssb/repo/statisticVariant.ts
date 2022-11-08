@@ -11,7 +11,7 @@ import { OmStatistikken } from '../../../site/content-types/omStatistikken/omSta
 import { XData } from '../../../site/x-data'
 import { Statistics } from '../../../site/content-types/statistics/statistics'
 import { capitalize } from '/lib/ssb/utils/stringUtils'
-import { calculatePeriod } from '/lib/ssb/utils/variantUtils'
+import { calculatePeriod, nextReleasedPassed, getPreviousRelease, getNextRelease } from '/lib/ssb/utils/variantUtils'
 import { SubjectItem } from '/lib/ssb/utils/subjectUtils'
 import { ReleasesInListing } from '/lib/ssb/dashboard/statreg/types'
 
@@ -109,9 +109,14 @@ export function fillRepo(statistics: Array<StatisticInListing>) {
       forceArray(statistic.variants).forEach((variant) => {
         const path = `/${statistic.shortName}-${variant.id}–${language}`
         const exists: Array<string> = connection.exists(path)
+        const nextReleasePassed: boolean = nextReleasedPassed(variant)
+        const prevRelease: ReleasesInListing = getPreviousRelease(nextReleasePassed, variant)
+        const nextRelease: ReleasesInListing | undefined = getNextRelease(nextReleasePassed, variant)
         const content: ContentLight<Release> = createContentStatisticVariant({
           statistic,
           variant,
+          prevRelease,
+          nextRelease,
           language,
           statisticsContent,
           aboutTheStatisticsContent,
@@ -171,7 +176,7 @@ function getStatisticsContentByRegStatId(statisticsIds: string[], language: stri
 function createContentStatisticVariant(
   params: CreateContentStatisticVariantParams
 ): ContentLight<Release> & NodeCreateParams {
-  const { statistic, variant, language } = params
+  const { statistic, variant, prevRelease, language } = params
 
   return {
     displayName: language === 'nb' ? statistic.name : statistic.nameEN,
@@ -181,7 +186,7 @@ function createContentStatisticVariant(
     data: prepareData(params),
     language,
     publish: {
-      from: asLocalDateTime(variant.previousRelease),
+      from: asLocalDateTime(prevRelease.publishTime),
     },
   }
 }
@@ -195,6 +200,8 @@ function asLocalDateTime(str: string | undefined): LocalDateTime | undefined {
 function prepareData({
   statistic,
   variant,
+  prevRelease,
+  nextRelease,
   language,
   statisticsContent,
   aboutTheStatisticsContent,
@@ -211,10 +218,17 @@ function prepareData({
       statisticsContent?.x?.['com-enonic-app-metafields']?.['meta-data'].seoDescription,
     status: statistic.status,
     frequency: variant.frekvens,
-    previousRelease: variant.previousRelease,
-    previousFrom: variant.previousFrom,
-    previousTo: variant.previousTo,
-    nextRelease: variant.nextRelease,
+    previousRelease: prevRelease.publishTime,
+    previousFrom: prevRelease.periodFrom,
+    previousTo: prevRelease.periodTo,
+    previousPeriod:
+      prevRelease.periodFrom !== ''
+        ? capitalize(calculatePeriod(variant.frekvens, prevRelease.periodFrom, prevRelease.periodTo, language))
+        : '',
+    nextRelease: nextRelease?.publishTime ?? '',
+    nextPeriod: nextRelease
+      ? capitalize(calculatePeriod(variant.frekvens, nextRelease.periodFrom, nextRelease.periodTo, language))
+      : '',
     statisticContentId: statisticsContent?._id,
     articleType: 'statistics', // allows this content to be filtered together with `Article.articleType`,
     mainSubjects: allMainSubjectsStatistic.map((subject) => subject.name).filter(notNullOrUndefined),
@@ -254,7 +268,9 @@ export interface Release {
   previousRelease?: string
   previousFrom?: string
   previousTo?: string
+  previousPeriod: string
   nextRelease?: string
+  nextPeriod: string
   statisticContentId?: string
   articleType: 'statistics'
   mainSubjects: Array<string> | string | undefined
@@ -274,6 +290,8 @@ export interface ContentLight<Data> {
 interface CreateContentStatisticVariantParams {
   statistic: StatisticInListing
   variant: VariantInListing
+  prevRelease: ReleasesInListing
+  nextRelease: ReleasesInListing | undefined
   language: 'nb' | 'en'
   statisticsContent?: Content<Statistics, XData>
   aboutTheStatisticsContent?: Content<OmStatistikken, XData>
