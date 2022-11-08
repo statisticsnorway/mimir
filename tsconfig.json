@@ -12,16 +12,21 @@
       "node",
       "enonic-types"
     ],
-    "baseUrl": "./src/main/resources",
+    "rootDirs": [
+      "./src/main/resources",
+      "./.xp-codegen"
+    ],
     "paths": {
-      "/lib/*": ["lib/*"]
+      "/lib/*": [ "./node_modules/@item-enonic-types/lib-*" ,"./src/main/resources/lib/*"],
+      "/site/*": ["./.xp-codegen/site/*"]
     }
   },
   "types": [
     "types"
   ],
   "include": [
-    "src/**/*.ts"
+    "src/**/*.ts",
+    "./.xp-codegen/**/*",
   ],
   "exclude": ["./build/*"]
 }
