@@ -1,22 +1,20 @@
 import { render, RenderResponse } from '/lib/enonic/react4xp'
-import { getComponent,
-  getContent,
-  pageUrl,
-  Component } from '/lib/xp/portal'
+import { getComponent, getContent, pageUrl, Component } from '/lib/xp/portal'
 import { CategoryLinksPartConfig } from './categoryLinks-part-config'
 import { Content } from '/lib/xp/content'
 import { Language, Phrases } from '../../../lib/types/language'
+import { randomUnsafeString } from '/lib/ssb/utils/utils'
 
 const {
-  data
+ data
 } = __non_webpack_require__('/lib/util')
 
 const {
-  renderError
+ renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
 
 const {
-  getLanguage
+ getLanguage
 } = __non_webpack_require__('/lib/ssb/utils/language')
 
 exports.get = function(req: XP.Request): XP.Response | RenderResponse {
@@ -39,17 +37,22 @@ function renderPart(req: XP.Request): XP.Response | RenderResponse {
   const page: Content = getContent()
   const language: Language = getLanguage(page)
   const phrases: Phrases = language.phrases as Phrases
-  const links: Array<CategoryLink> = part.config.CategoryLinkItemSet ? data.forceArray(part.config.CategoryLinkItemSet) : []
+  const links: Array<CategoryLink> = part.config.CategoryLinkItemSet
+    ? data.forceArray(part.config.CategoryLinkItemSet)
+    : []
   const methodsAndDocumentation: DocumentationContent | DocumentationUrl | undefined = part.config.methodsDocumentation
+  const id: string = 'categoryLink-' + randomUnsafeString()
   let methodsAndDocumentationUrl
   if (methodsAndDocumentation) {
     if (methodsAndDocumentation._selected == 'urlSource') {
       methodsAndDocumentationUrl = methodsAndDocumentation.urlSource.url
     }
 
-    if (methodsAndDocumentation &&
-        methodsAndDocumentation._selected == 'relatedSource' &&
-        methodsAndDocumentation.relatedSource.content) {
+    if (
+      methodsAndDocumentation &&
+      methodsAndDocumentation._selected == 'relatedSource' &&
+      methodsAndDocumentation.relatedSource.content
+    ) {
       methodsAndDocumentationUrl = pageUrl({
         id: methodsAndDocumentation.relatedSource.content
       })
@@ -74,9 +77,10 @@ function renderPart(req: XP.Request): XP.Response | RenderResponse {
       },
       req,
       {
-        id: 'categoryLink',
+        id: id,
         body: `<section class="xp-part part-category-link"></section>`
-      })
+      }
+    )
 
     return categoryLinksComponent
   }
@@ -84,9 +88,9 @@ function renderPart(req: XP.Request): XP.Response | RenderResponse {
 }
 
 interface CategoryLink {
-  titleText: string;
-  subText: string;
-  href: string;
+  titleText: string
+  subText: string
+  href: string
 }
 
 interface MethodDocumentation {
@@ -96,13 +100,13 @@ interface MethodDocumentation {
 interface DocumentationUrl extends MethodDocumentation {
   _selected: 'urlSource'
   urlSource: {
-    url: string;
-  };
+    url: string
+  }
 }
 
 interface DocumentationContent extends MethodDocumentation {
   _selected: 'relatedSource'
   relatedSource: {
-    content?: string;
-  };
+    content?: string
+  }
 }

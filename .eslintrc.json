@@ -1,76 +1,53 @@
 {
-    "env": {
-        "browser": true,
-        "es6": true
-    },
-    "ignorePatterns": [
-      "**/content-types/**/*.ts",
-      "**/mixins/**/*.ts",
-      "**/*-config.ts",
-      "**/assets/js/app/tableExport.es6"
-    ],
-    "extends": [
-        "google",
-        "./common.eslintrc.json"
-    ],
-    "globals": {
-        "Atomics": "readonly",
-        "SharedArrayBuffer": "readonly"
-    },
-    "parserOptions": {
-        "ecmaVersion": 2018,
-        "sourceType": "module"
-    },
-    "overrides": [
-      {
-        "parser": "@typescript-eslint/parser",
-        "files": "*.ts",
-        "plugins": [
-          "@typescript-eslint"
-        ],
-        "extends": [
-          "google",
-          "plugin:@typescript-eslint/recommended",
-          "plugin:@typescript-eslint/recommended-requiring-type-checking",
-          "./common.eslintrc.json"
-        ],
-        "parserOptions": {
-          "ecmaVersion": 2018,
-          "sourceType": "module",
-          "project": "./tsconfig.json"
-        },
-        "rules": {
-          "@typescript-eslint/no-inferrable-types": "off",
-          "@typescript-eslint/typedef": [
-            "error",
-            {
-              "arrowParameter": false,
-              "variableDeclaration": true
-            }
-          ],
-          "@typescript-eslint/no-use-before-define": "off",
-          "@typescript-eslint/no-var-requires": "off",
-          "@typescript-eslint/no-non-null-assertion": "off"
+  "extends": [
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "prettier"
+  ],
+  "plugins": [
+    "@typescript-eslint",
+    "prettier"
+  ],
+  "rules": {
+    "@typescript-eslint/no-unused-vars": "error",
+    "prettier/prettier": ["warn"],
+    "no-unused-vars": "off", // https://github.com/typescript-eslint/typescript-eslint/issues/2621
+    "no-use-before-define": "off",
+    "@typescript-eslint/ban-types": "off",
+    "@typescript-eslint/no-var-requires": "off",
+    "@typescript-eslint/ban-ts-comment": "off"
+  },
+  "globals": {
+    "require": true,
+    "log": true,
+    "exports": true,
+    "resolve": true,
+    "app": true,
+    "document": true,
+    "window": true,
+    "__": true
+  },
+  "overrides": [
+    {
+      "plugins":[
+        "react",
+        "prettier"
+      ],
+      "files": "*.jsx",
+      "parserOptions": {
+        "ecmaFeatures": {
+          "jsx": true
         }
       },
-      {
-        "plugins":[
-          "react"
-        ],
-        "files": "*.jsx",
-        "parserOptions": {
-          "ecmaFeatures": {
-            "jsx": true
-          }
-        },
-        "extends": [
-          "google",
-          "plugin:react/recommended",
-          "./common.eslintrc.json"
-        ],
-        "rules": {
-          "react/display-name": "off"
-        }
+      "extends": [
+        "google",
+        "plugin:react/recommended",
+        "./common.eslintrc.json",
+        "prettier"
+      ],
+      "rules": {
+        "react/display-name": "off"
       }
-    ]
+    }
+  ]
 }

@@ -4,25 +4,28 @@ Tries to automaticly fix all .es6|.ts|.jsx files based on .eslintrc
 
 `npm run lint`
 
-
 Same as lint, but doesn't fix the files, just creates the error/warning dump in console
 
 `npm run lint-dry`
 
 ## Setup
-### Visual Studio Code
-Install eslint globally  
-`npm install eslint -g`
+### Common to all editors
 
-Install Eslint Plugin: 
-```
-Name: ESLint
-Id: dbaeumer.vscode-eslint
-Description: Integrates ESLint JavaScript into VS Code.
-Version: 2.0.14
-Publisher: Dirk Baeumer
-VS Marketplace Link: https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint\
-```
+We use the [.editorconfig](../.editorconfig) file to set up a common configuration across all editors that support this format. For the time being you need to install a plugin for VSCode or Sublime Text, but IntelliJ reads this format natively and does not need one. 
+
+ - [Sublime text plugin](https://github.com/sindresorhus/editorconfig-sublime#readme)
+ - [Visual Studio Code plugin](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig)
+ - [Vim plugin](https://github.com/editorconfig/editorconfig-vim#readme)
+### Visual Studio Code
+#### Install Eslint Plugin: 
+
+>Name: ESLint    
+>Id: dbaeumer.vscode-eslint    
+>Description: Integrates ESLint JavaScript into VS Code.    
+>Version: 2.0.14    
+>Publisher: Dirk Baeumer    
+>VS Marketplace Link: https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint\
+
 Update VSCode workspace- or userconfig:
 ```
   "eslint.enable": true,
@@ -31,6 +34,17 @@ Update VSCode workspace- or userconfig:
   },
 ```
 If you don't want it to automaticly lint the current file on save, omit the `codeActionsOnSave` config
+
+#### Install Prettier plugin 
+Prettier works in tandem with ESlint: ESlint does code styles and Prettier does formatting, whitespace etc. We use both of them, they are configured to not cause conflicts. You can read more about this configuration [here](https://www.robinwieruch.de/prettier-eslint/), and in the related articles.
+
+>Name: Prettier - Code formatter    
+>Id: esbenp.prettier-vscode    
+>Description: Code formatter using prettier    
+>Version: 9.9.0
+>Publisher: Prettier    
+>VS Marketplace Link: https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode
+
 ### IntelliJ
 TODO
 
