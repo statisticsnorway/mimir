@@ -10,12 +10,15 @@ import { get as getContext, type Context, type ContextAttributes, type Principal
 import type { ContentLight, Release } from '/lib/ssb/repo/statisticVariant'
 import { notEmptyOrUndefined } from '/lib/ssb/utils/coreUtils'
 
-const {
-  moment
-} = __non_webpack_require__('/lib/vendor/moment')
+const { moment } = __non_webpack_require__('/lib/vendor/moment')
 
 export function getPublicationsNew(
-  req: XP.Request, start: number = 0, count: number = 10, language: string, articleType?: string, subject?: string
+  req: XP.Request,
+  start = 0,
+  count = 10,
+  language: string,
+  articleType?: string,
+  subject?: string
 ): PublicationResult {
   const mainSubjects: Array<SubjectItem> = getMainSubjects(req, language)
   const subSubjects: Array<SubjectItem> = getSubSubjects(req, language)
@@ -26,22 +29,22 @@ export function getPublicationsNew(
       {
         repoId: context.repository,
         branch: context.branch,
-        principals: context.authInfo.principals as Array<PrincipalKey>
+        principals: context.authInfo.principals as Array<PrincipalKey>,
       },
       {
         repoId: 'no.ssb.statreg.statistics.variants',
         branch: 'master',
-        principals: context.authInfo.principals as Array<PrincipalKey>
-      }
-    ]
+        principals: context.authInfo.principals as Array<PrincipalKey>,
+      },
+    ],
   })
 
   const query: QueryDSL = {
     range: {
       field: 'publish.from',
       type: 'dateTime',
-      lte: new Date().toISOString()
-    }
+      lte: new Date().toISOString(),
+    },
   }
 
   const res: MultiRepoNodeQueryResponse = connection.query({
@@ -55,15 +58,15 @@ export function getPublicationsNew(
           {
             hasValue: {
               field: 'language',
-              values: language === 'nb' ? ['nb', 'nn'] : ['en']
-            }
+              values: language === 'nb' ? ['nb', 'nn'] : ['en'],
+            },
           },
           {
             hasValue: {
               field: 'data.articleType',
-              values: forceArray(articleType).filter(notEmptyOrUndefined)
-            }
-          }
+              values: forceArray(articleType).filter(notEmptyOrUndefined),
+            },
+          },
         ],
         should: [
           // reports
@@ -73,22 +76,22 @@ export function getPublicationsNew(
                 {
                   hasValue: {
                     field: 'data.articleType',
-                    values: ['statistics']
-                  }
+                    values: ['statistics'],
+                  },
                 },
                 {
                   hasValue: {
                     field: 'data.status',
-                    values: ['A']
-                  }
+                    values: ['A'],
+                  },
                 },
                 {
                   exists: {
-                    field: 'data.statisticContentId'
-                  }
-                }
-              ]
-            }
+                    field: 'data.statisticContentId',
+                  },
+                },
+              ],
+            },
           },
           // articles
           {
@@ -97,45 +100,46 @@ export function getPublicationsNew(
                 {
                   hasValue: {
                     field: 'type',
-                    values: [`${app.name}:article`]
-                  }
+                    values: [`${app.name}:article`],
+                  },
                 },
                 {
                   hasValue: {
                     field: 'x.mimir.subjects.mainSubjects',
-                    values: forceArray(subject)
-                  }
-                }
-              ]
-            }
-          }
-        ]
-      }
-    }
+                    values: forceArray(subject),
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
   })
 
-  const contents: (Content<Article, XData> | ContentLight<Release>)[] = res.hits.map(
-    (hit) => connect(hit).get<Content<Article, XData> | ContentLight<Release>>(hit.id)
+  const contents: (Content<Article, XData> | ContentLight<Release>)[] = res.hits.map((hit) =>
+    connect(hit).get<Content<Article, XData> | ContentLight<Release>>(hit.id)
   )
 
-  const publications: Array<PublicationItem> = contents
-    .map((content) => isContentArticle(content) ?
-      articleAsPublicationItem({
-        content,
-        language,
-        mainSubjects,
-        subSubjects
-      }) :
-      statisticsAsPublicationItem({
-        language,
-        release: content,
-        mainSubjects,
-        subSubjects
-      }))
+  const publications: Array<PublicationItem> = contents.map((content) =>
+    isContentArticle(content)
+      ? articleAsPublicationItem({
+          content,
+          language,
+          mainSubjects,
+          subSubjects,
+        })
+      : statisticsAsPublicationItem({
+          language,
+          release: content,
+          mainSubjects,
+          subSubjects,
+        })
+  )
 
   return {
     total: res.total,
-    publications
+    publications,
   }
 }
 
@@ -144,7 +148,10 @@ function isContentArticle(content: unknown): content is Content<Article, XData> 
 }
 
 function statisticsAsPublicationItem({
-  release, language, mainSubjects, subSubjects
+  release,
+  language,
+  mainSubjects,
+  subSubjects,
 }: StatisticsAsPublicationItemParams): PublicationItem {
   const [mainSubject, ...secondaryMainSubjects] = forceArray(release.data.mainSubjects)
 
@@ -153,7 +160,7 @@ function statisticsAsPublicationItem({
     period: release.data.period,
     preface: release.data.ingress!,
     url: pageUrl({
-      id: release.data.statisticContentId!
+      id: release.data.statisticContentId!,
     }),
     publishDate: moment(release.data.previousRelease).locale('nb').format('YYYY.MM.DD HH:mm'),
     publishDateHuman: formatDate(release.data.previousRelease, 'PPP', language),
@@ -162,23 +169,29 @@ function statisticsAsPublicationItem({
     mainSubjectId: mainSubject,
     mainSubject: mainSubjects.map((subject) => subject.title)[0] ?? '',
     secondaryMainSubjects,
-    appName: app.name
+    appName: app.name,
   }
 }
 
-
 function articleAsPublicationItem({
-  content, mainSubjects, subSubjects, language
+  content,
+  mainSubjects,
+  subSubjects,
+  language,
 }: ArticleAsPublicationItemParams): PublicationItem {
-  const mainSubject: SubjectItem | undefined = mainSubjects.find((mainSubject) => content._path.startsWith(mainSubject.path))
+  const mainSubject: SubjectItem | undefined = mainSubjects.find((mainSubject) =>
+    content._path.startsWith(mainSubject.path)
+  )
   const subtopics: Array<string> = forceArray(content.data.subtopic)
-  const secondaryMainSubjects: Array<string> = subtopics ? getSecondaryMainSubject(subtopics, mainSubjects, subSubjects) : []
+  const secondaryMainSubjects: Array<string> = subtopics
+    ? getSecondaryMainSubject(subtopics, mainSubjects, subSubjects)
+    : []
 
   return {
     title: content.displayName,
     preface: content.data.ingress ? content.data.ingress : '',
     url: pageUrl({
-      id: content._id
+      id: content._id,
     }),
     publishDate: content.publish?.from ? moment(content.publish.from).locale('nb').format('YYYY.MM.DD HH:mm') : '',
     publishDateHuman: content.publish?.from ? moment(content.publish.from).locale(language).format('Do MMMM YYYY') : '',
@@ -187,11 +200,15 @@ function articleAsPublicationItem({
     mainSubjectId: mainSubject ? mainSubject.name : '',
     mainSubject: mainSubject ? mainSubject.title : '',
     secondaryMainSubjects,
-    appName: app.name
+    appName: app.name,
   }
 }
 
-function getSecondaryMainSubject(subtopicsContent: Array<string>, mainSubjects: Array<SubjectItem>, subSubjects: Array<SubjectItem> ): Array<string> {
+function getSecondaryMainSubject(
+  subtopicsContent: Array<string>,
+  mainSubjects: Array<SubjectItem>,
+  subSubjects: Array<SubjectItem>
+): Array<string> {
   return subtopicsContent.reduce((acc: Array<string>, topic: string) => {
     const subSubject: SubjectItem = subSubjects.filter((subSubject) => subSubject.id === topic)[0]
 
@@ -207,37 +224,37 @@ function getSecondaryMainSubject(subtopicsContent: Array<string>, mainSubjects: 
 }
 
 interface StatisticsAsPublicationItemParams {
-  release: ContentLight<Release>,
-  language: string;
-  mainSubjects: SubjectItem[],
-  subSubjects: SubjectItem[],
+  release: ContentLight<Release>
+  language: string
+  mainSubjects: SubjectItem[]
+  subSubjects: SubjectItem[]
 }
 
 interface ArticleAsPublicationItemParams {
-  content: Content<Article, XData>;
-  mainSubjects: Array<SubjectItem>;
-  subSubjects: Array<SubjectItem>;
-  language: string;
+  content: Content<Article, XData>
+  mainSubjects: Array<SubjectItem>
+  subSubjects: Array<SubjectItem>
+  language: string
 }
 
 export type PublicationArchiveLib = typeof import('./publicationArchiveNew')
 
 export interface PublicationResult {
-  total: number;
-  publications: Array<PublicationItem>;
+  total: number
+  publications: Array<PublicationItem>
 }
 
 export interface PublicationItem {
-  title: string;
-  period?: string;
-  preface: string;
-  url: string;
-  publishDate: string;
-  publishDateHuman: string | undefined;
-  contentType: string;
-  articleType: string;
-  mainSubjectId: string;
-  mainSubject: string;
-  secondaryMainSubjects: Array<string>;
-  appName: string;
+  title: string
+  period?: string
+  preface: string
+  url: string
+  publishDate: string
+  publishDateHuman: string | undefined
+  contentType: string
+  articleType: string
+  mainSubjectId: string
+  mainSubject: string
+  secondaryMainSubjects: Array<string>
+  appName: string
 }

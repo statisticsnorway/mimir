@@ -15,26 +15,29 @@ import { calculatePeriod } from '/lib/ssb/utils/variantUtils'
 import { SubjectItem } from '/lib/ssb/utils/subjectUtils'
 import { ReleasesInListing } from '/lib/ssb/dashboard/statreg/types'
 
-const {
-  queryForMainSubjects, queryForSubSubjects, getSecondaryMainSubject
-} = __non_webpack_require__( '/lib/ssb/utils/subjectUtils')
+const { queryForMainSubjects, queryForSubSubjects, getSecondaryMainSubject } =
+  __non_webpack_require__('/lib/ssb/utils/subjectUtils')
 
-export const REPO_ID_STATREG_STATISTICS: 'no.ssb.statreg.statistics.variants' = 'no.ssb.statreg.statistics.variants' as const
+export const REPO_ID_STATREG_STATISTICS: 'no.ssb.statreg.statistics.variants' =
+  'no.ssb.statreg.statistics.variants' as const
 
 const LANGUAGES: ReadonlyArray<'en' | 'nb'> = ['nb', 'en'] as const
 
 export function createOrUpdateStatisticsRepo(): void {
   log.info(`Initiating "${REPO_ID_STATREG_STATISTICS}"`)
-  run({
-    user: {
-      login: 'su',
-      idProvider: 'system'
+  run(
+    {
+      user: {
+        login: 'su',
+        idProvider: 'system',
+      },
+      branch: 'master',
     },
-    branch: 'master'
-  }, () => {
-    fillRepo(getAllStatisticsFromRepo())
-    log.info(`Finished initiating "${REPO_ID_STATREG_STATISTICS}"`)
-  })
+    () => {
+      fillRepo(getAllStatisticsFromRepo())
+      log.info(`Finished initiating "${REPO_ID_STATREG_STATISTICS}"`)
+    }
+  )
 }
 
 export function fillRepo(statistics: Array<StatisticInListing>) {
@@ -45,48 +48,66 @@ export function fillRepo(statistics: Array<StatisticInListing>) {
         {
           principal: 'role:system.admin',
           allow: ['READ', 'CREATE', 'MODIFY', 'DELETE', 'PUBLISH', 'READ_PERMISSIONS', 'WRITE_PERMISSIONS'],
-          deny: []
+          deny: [],
         },
         {
           principal: 'role:system.everyone',
           allow: ['READ'],
-          deny: []
-        }
-      ]
+          deny: [],
+        },
+      ],
     })
   }
 
   const connection: RepoConnection = connect({
     repoId: REPO_ID_STATREG_STATISTICS,
-    branch: 'master'
+    branch: 'master',
   })
 
   LANGUAGES.forEach((language) => {
     const allMainSubjects: SubjectItem[] = queryForMainSubjects({
-      language
+      language,
     })
     const allSubSubjects: SubjectItem[] = queryForSubSubjects({
-      language
+      language,
     })
 
-    const statisticsResponse: QueryResponse<Statistics, XData> = getStatisticsContentByRegStatId(statistics.map((stat) => String(stat.id)), language)
-    const statisticsRecord: Record<string, Content<Statistics, XData>> = contentArrayToRecord(statisticsResponse.hits, (c) => c.data.statistic!)
-    const aboutTheStatisticsKeys: Array<string> = statisticsResponse.hits.map((stat) => stat.data.aboutTheStatistics).filter(notNullOrUndefined)
-    const aboutTheStatistics: Record<string, Content<OmStatistikken, XData>> = getByIds<OmStatistikken>(aboutTheStatisticsKeys, language)
+    const statisticsResponse: QueryResponse<Statistics, XData> = getStatisticsContentByRegStatId(
+      statistics.map((stat) => String(stat.id)),
+      language
+    )
+    const statisticsRecord: Record<string, Content<Statistics, XData>> = contentArrayToRecord(
+      statisticsResponse.hits,
+      (c) => c.data.statistic!
+    )
+    const aboutTheStatisticsKeys: Array<string> = statisticsResponse.hits
+      .map((stat) => stat.data.aboutTheStatistics)
+      .filter(notNullOrUndefined)
+    const aboutTheStatistics: Record<string, Content<OmStatistikken, XData>> = getByIds<OmStatistikken>(
+      aboutTheStatisticsKeys,
+      language
+    )
 
     statistics.forEach((statistic) => {
       const statisticsContent: Content<Statistics, XData> | undefined = statisticsRecord[String(statistic.id)]
-      const aboutTheStatisticsContent: Content<OmStatistikken, XData> | undefined = statisticsContent?.data.aboutTheStatistics ?
-        aboutTheStatistics[statisticsContent?.data.aboutTheStatistics] :
-        undefined
+      const aboutTheStatisticsContent: Content<OmStatistikken, XData> | undefined = statisticsContent?.data
+        .aboutTheStatistics
+        ? aboutTheStatistics[statisticsContent?.data.aboutTheStatistics]
+        : undefined
 
-      const mainSubject: SubjectItem[] = allMainSubjects.filter((subject) => statisticsContent?._path.startsWith(subject.path))
-      const subTopics:Array<string> = statisticsContent?.data.subtopic ? forceArray(statisticsContent.data.subtopic) : []
-      const secondaryMainSubject: SubjectItem[] = subTopics ? getSecondaryMainSubject(subTopics, allMainSubjects, allSubSubjects) : []
+      const mainSubject: SubjectItem[] = allMainSubjects.filter((subject) =>
+        statisticsContent?._path.startsWith(subject.path)
+      )
+      const subTopics: Array<string> = statisticsContent?.data.subtopic
+        ? forceArray(statisticsContent.data.subtopic)
+        : []
+      const secondaryMainSubject: SubjectItem[] = subTopics
+        ? getSecondaryMainSubject(subTopics, allMainSubjects, allSubSubjects)
+        : []
       const allMainSubjectsStatistic: SubjectItem[] = mainSubject.concat(secondaryMainSubject)
 
       forceArray(statistic.variants).forEach((variant) => {
-        const path: string = `/${statistic.shortName}-${variant.id}–${language}`
+        const path = `/${statistic.shortName}-${variant.id}–${language}`
         const exists: Array<string> = connection.exists(path)
         const content: ContentLight<Release> = createContentStatisticVariant({
           statistic,
@@ -94,7 +115,7 @@ export function fillRepo(statistics: Array<StatisticInListing>) {
           language,
           statisticsContent,
           aboutTheStatisticsContent,
-          allMainSubjectsStatistic
+          allMainSubjectsStatistic,
         })
 
         // Check if exists, and then do update instead if changed
@@ -111,10 +132,10 @@ export function fillRepo(statistics: Array<StatisticInListing>) {
                 language: content.language,
                 publish: content.publish,
                 data: {
-                  ...content.data
-                }
+                  ...content.data,
+                },
               }
-            }
+            },
           })
         }
       })
@@ -132,27 +153,25 @@ function getStatisticsContentByRegStatId(statisticsIds: string[], language: stri
           {
             hasValue: {
               field: 'language',
-              values: language === 'en' ? ['en'] : ['nb', 'nn']
-            }
+              values: language === 'en' ? ['en'] : ['nb', 'nn'],
+            },
           },
           {
             hasValue: {
               field: 'data.statistic',
-              values: statisticsIds
-            }
-          }
-        ]
-      }
-
-    }
+              values: statisticsIds,
+            },
+          },
+        ],
+      },
+    },
   })
 }
 
-
-function createContentStatisticVariant(params: CreateContentStatisticVariantParams): ContentLight<Release> & NodeCreateParams {
-  const {
-    statistic, variant, language
-  } = params
+function createContentStatisticVariant(
+  params: CreateContentStatisticVariantParams
+): ContentLight<Release> & NodeCreateParams {
+  const { statistic, variant, language } = params
 
   return {
     displayName: language === 'nb' ? statistic.name : statistic.nameEN,
@@ -162,19 +181,24 @@ function createContentStatisticVariant(params: CreateContentStatisticVariantPara
     data: prepareData(params),
     language,
     publish: {
-      from: asLocalDateTime(variant.previousRelease)
-    }
+      from: asLocalDateTime(variant.previousRelease),
+    },
   }
 }
 
-function asLocalDateTime(str: string): LocalDateTime;
-function asLocalDateTime(str: string | undefined): LocalDateTime | undefined;
+function asLocalDateTime(str: string): LocalDateTime
+function asLocalDateTime(str: string | undefined): LocalDateTime | undefined
 function asLocalDateTime(str: string | undefined): LocalDateTime | undefined {
   return notEmptyOrUndefined(str) ? localDateTime(str.replace(' ', 'T')) : undefined
 }
 
 function prepareData({
-  statistic, variant, language, statisticsContent, aboutTheStatisticsContent, allMainSubjectsStatistic
+  statistic,
+  variant,
+  language,
+  statisticsContent,
+  aboutTheStatisticsContent,
+  allMainSubjectsStatistic,
 }: CreateContentStatisticVariantParams): Release {
   return {
     statisticId: String(statistic.id),
@@ -182,7 +206,9 @@ function prepareData({
     shortName: statistic.shortName,
     name: language === 'nb' ? statistic.name : statistic.nameEN,
     period: capitalize(calculatePeriod(variant.frekvens, variant.previousFrom, variant.previousTo, language)),
-    ingress: aboutTheStatisticsContent?.data.ingress ?? statisticsContent?.x?.['com-enonic-app-metafields']?.['meta-data'].seoDescription,
+    ingress:
+      aboutTheStatisticsContent?.data.ingress ??
+      statisticsContent?.x?.['com-enonic-app-metafields']?.['meta-data'].seoDescription,
     status: statistic.status,
     frequency: variant.frekvens,
     previousRelease: variant.previousRelease,
@@ -191,66 +217,65 @@ function prepareData({
     nextRelease: variant.nextRelease,
     statisticContentId: statisticsContent?._id,
     articleType: 'statistics', // allows this content to be filtered together with `Article.articleType`,
-    mainSubjects: allMainSubjectsStatistic
-      .map((subject) => subject.name)
-      .filter(notNullOrUndefined),
-    upcomingReleases: variant.upcomingReleases
+    mainSubjects: allMainSubjectsStatistic.map((subject) => subject.name).filter(notNullOrUndefined),
+    upcomingReleases: variant.upcomingReleases,
   }
 }
 
-
-function getByIds<Data extends object>(ids: Array<string>, language: 'en' | 'nb'): Record<string, Content<Data, XData>> {
+function getByIds<Data extends object>(
+  ids: Array<string>,
+  language: 'en' | 'nb'
+): Record<string, Content<Data, XData>> {
   return contentArrayToRecord(
     query<Data, XData>({
       count: ids.length,
       filters: {
         ids: {
-          values: ids
+          values: ids,
         },
         hasValue: {
           field: 'language',
-          values: language === 'en' ? ['en'] : ['nb', 'nn']
-        }
-      }
+          values: language === 'en' ? ['en'] : ['nb', 'nn'],
+        },
+      },
     }).hits
   )
 }
 
 export interface Release {
-  statisticId: string;
-  variantId: string;
-  shortName: string;
-  name: string;
-  period: string;
-  ingress?: string;
-  status: string;
-  frequency: string;
-  previousRelease?: string;
-  previousFrom?: string;
-  previousTo?: string;
-  nextRelease?: string;
-  statisticContentId?: string;
-  articleType: 'statistics';
-  mainSubjects: Array<string> | string | undefined;
-  upcomingReleases?: Array<ReleasesInListing>;
+  statisticId: string
+  variantId: string
+  shortName: string
+  name: string
+  period: string
+  ingress?: string
+  status: string
+  frequency: string
+  previousRelease?: string
+  previousFrom?: string
+  previousTo?: string
+  nextRelease?: string
+  statisticContentId?: string
+  articleType: 'statistics'
+  mainSubjects: Array<string> | string | undefined
+  upcomingReleases?: Array<ReleasesInListing>
 }
 
-
 export interface ContentLight<Data> {
-  displayName?: string;
-  modifiedTime?: LocalDateTime | string;
-  data: Data;
-  language: 'nb' | 'en';
+  displayName?: string
+  modifiedTime?: LocalDateTime | string
+  data: Data
+  language: 'nb' | 'en'
   publish?: {
-    from?: LocalDateTime | string;
+    from?: LocalDateTime | string
   }
 }
 
 interface CreateContentStatisticVariantParams {
-  statistic: StatisticInListing;
-  variant: VariantInListing;
-  language: 'nb' | 'en';
-  statisticsContent?: Content<Statistics, XData>;
-  aboutTheStatisticsContent?: Content<OmStatistikken, XData>;
+  statistic: StatisticInListing
+  variant: VariantInListing
+  language: 'nb' | 'en'
+  statisticsContent?: Content<Statistics, XData>
+  aboutTheStatisticsContent?: Content<OmStatistikken, XData>
   allMainSubjectsStatistic: SubjectItem[]
 }
