@@ -105,6 +105,7 @@ export function fillRepo(statistics: Array<StatisticInListing>) {
         ? getSecondaryMainSubject(subTopics, allMainSubjects, allSubSubjects)
         : []
       const allMainSubjectsStatistic: SubjectItem[] = mainSubject.concat(secondaryMainSubject)
+      //var myFinalArray = myArray1.concat(myArray2.filter((item) => myArray1.indexOf(item) < 0));
 
       forceArray(statistic.variants).forEach((variant) => {
         const path = `/${statistic.shortName}-${variant.id}–${language}`

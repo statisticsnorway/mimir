@@ -153,7 +153,7 @@ function statisticsAsPublicationItem({
 }: StatisticsAsPublicationItemParams): PublicationItem {
   const mainSubjectsStatistic: string[] = forceArray(release.data.mainSubjects) ?? []
   const secondaryMainSubjects: string[] =
-    mainSubjectsStatistic.length > 1 ? forceArray(mainSubjectsStatistic.shift()) : []
+    mainSubjectsStatistic.length > 1 ? mainSubjectsStatistic.slice(1, mainSubjectsStatistic.length) : []
   const mainSubjectId: string = mainSubjectsStatistic.length ? mainSubjectsStatistic[0] : ''
   const mainSubjectTitle: string = mainSubjectId.length
     ? mainSubjects.filter((subject) => subject.name === mainSubjectId)[0].title
