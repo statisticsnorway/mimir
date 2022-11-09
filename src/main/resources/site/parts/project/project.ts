@@ -1,8 +1,8 @@
-import { Content, get as getTheContent } from '/lib/xp/content'
-import { render, RenderResponse } from '/lib/enonic/react4xp'
-import { localize } from '/lib/xp/i18n'
-import { Project } from '../../content-types/project/project'
-import { getContent, pageUrl, processHtml } from '/lib/xp/portal'
+import {type Content, get as getTheContent} from '/lib/xp/content'
+import {render, type RenderResponse} from '/lib/enonic/react4xp'
+import {localize} from '/lib/xp/i18n'
+import type {Project} from '../../content-types/project/project'
+import {getContent, pageUrl, processHtml} from '/lib/xp/portal'
 
 export function preview(req: XP.Request): RenderResponse {
   return renderPart(req)
@@ -119,25 +119,25 @@ function getManager(managerId?: string | undefined): ManagerLink | undefined {
 }
 
 interface ManagerLink {
-    text: string;
-    href: string;
+  text: string;
+  href: string;
 }
 
 interface ProjectProps {
-    introTitle?: string;
-    projectTitle?: string;
-    manager?: ManagerLink;
-    projectType?: string;
-    projectPeriod?: string;
-    financier?: string;
-    heading?: string;
-    ingress?: string;
-    body?: string;
-    participants?: string;
-    collaborators?: string;
-    periodPhrase?: string;
-    financierPhrase?: string;
-    participantsPhrase?: string;
-    projectParticipantsPhrase?: string;
-    collaboratorsPhrase?: string;
+  introTitle?: string;
+  projectTitle?: string;
+  manager?: ManagerLink;
+  projectType?: string;
+  projectPeriod?: string;
+  financier?: string;
+  heading?: string;
+  ingress?: string;
+  body?: string;
+  participants?: string;
+  collaborators?: string;
+  periodPhrase?: string;
+  financierPhrase?: string;
+  participantsPhrase?: string;
+  projectParticipantsPhrase?: string;
+  collaboratorsPhrase?: string;
 }
