@@ -56,10 +56,9 @@ const Employee = (props) => {
 
   const renderDownloadCvButton = () => {
     return (
-      myCV ?
-        <div className="downloadCv">
-          <Button onClick={() => downloadPDF(myCV)}><Download size="24" />{downloadPdfPhrase} ({calculateCvSize(cvInformation.size)} kB)</Button>
-        </div> : null
+      <div className="downloadCv">
+        <Button onClick={() => downloadPDF(myCV)}><Download size="24" />{downloadPdfPhrase} ({calculateCvSize(cvInformation.size)} kB)</Button>
+      </div>
     )
   }
 
@@ -114,7 +113,7 @@ const Employee = (props) => {
           }
           {
             phone ?
-              <div className="details-block col-lg col-12">
+              <div className={"details-block col-lg col-12" + (profileImages.length == 0 ? " border-if-no-images" : "")}>
                 <div><Smartphone size={24} /></div>
                 <div>
                   <div>{phonePhrase}</div>
@@ -131,12 +130,17 @@ const Employee = (props) => {
   const renderAttachmentsForDesktop = () => {
     return (
       <aside className="employee-attachments mobile-display-none col-12 col-md-3" role="complementary">
-        <div className="instructions">
-          <h3>{pressPicturesPhrase}</h3>
-          <p>{pressPicturesDescrPhrase}</p>
-        </div>
-        {renderPortraitImages()}
-        {renderDownloadCvButton()}
+        {profileImages.length != 0 ?
+          <React.Fragment>
+            <div className="instructions">
+              <h3>{pressPicturesPhrase}</h3>
+              <p>{pressPicturesDescrPhrase}</p>
+            </div>
+            {renderPortraitImages()}
+          </React.Fragment>
+          : null
+        }
+        {myCV ? renderDownloadCvButton() : null}
       </aside>
     )
   }
@@ -168,7 +172,7 @@ const Employee = (props) => {
             <h2>{briefSummaryPhrase}</h2>
             <LeadParagraph>{description}</LeadParagraph>
           </div>
-          <div className="desktop-display-none">{renderDownloadCvButton()}</div>
+          {myCV ? <div className="desktop-display-none">{renderDownloadCvButton()}</div> : null}
         </div>
       </div>
     )
@@ -214,7 +218,7 @@ const Employee = (props) => {
       </div>
 
       <div className="row row-gutter-desktop">
-        {profileImages.length != 0 ? renderAttachmentsForDesktop() : null}
+        {renderAttachmentsForDesktop()}
         {profileImages.length != 0 ? renderAttachmentsForMobile() : null}
 
         <div className="col-12 col-md-6 row-gutter-mobile">

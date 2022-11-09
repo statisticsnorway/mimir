@@ -191,6 +191,10 @@
       .details-block {
         padding: 1.25rem 0;
       }
+
+      .details-block .border-if-no-images {
+        border-bottom: 1px solid #c3dcdc;
+      }
     }
     
     .desktop-display-none {
