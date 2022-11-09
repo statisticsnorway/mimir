@@ -8,10 +8,6 @@
         <field-set>
             <label>Informasjon</label>
             <items>
-                <input name="introTitle" type="textLine">
-                    <label>Stikktittel</label>
-                    <occurrences minimum="0" maximum="1"/>
-                </input>
                 <input name="manager" type="ContentSelector">
                     <label>Prosjekt/modellansvarlig</label>
                     <occurrences minimum="0" maximum="1"/>

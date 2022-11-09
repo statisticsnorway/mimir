@@ -37,12 +37,12 @@ function renderPart(req: XP.Request): RenderResponse {
     locale: language
   })
 
-  const modelPhrase: string = localize({
-    key: 'project.modelPhrase',
+  const aboutModelPhrase: string = localize({
+    key: 'project.aboutModel',
     locale: language
   })
-  const projectPhrase: string = localize({
-    key: 'project.projectPhrase',
+  const aboutProjectPhrase: string = localize({
+    key: 'project.aboutProject',
     locale: language
   })
 
@@ -61,14 +61,24 @@ function renderPart(req: XP.Request): RenderResponse {
     locale: language
   })
 
+  const modelPhrase: string = localize({
+    key: 'project.model',
+    locale: language
+  })
+
+  const projectPhrase: string = localize({
+    key: 'project.projectPhrase',
+    locale: language
+  })
+
   const props: ProjectProps = {
-    introTitle: capitalizeFirstLetter(page.data.introTitle),
+    introTitle: page.data.projectType === 'model' ? modelPhrase : projectPhrase,
     projectTitle: page.displayName || undefined,
     manager: getManager(managerConfig),
     projectType: page.data.projectType === 'model' ? modelManagerPhrase : projectManagerPhrase,
     projectPeriod: page.data.projectPeriod || undefined,
     financier: page.data.financier,
-    heading: page.data.projectType === 'model' ? modelPhrase : projectPhrase,
+    heading: page.data.projectType === 'model' ? aboutModelPhrase : aboutProjectPhrase,
     ingress: page.data.ingress ? processHtml({
       value: page.data.ingress
     }) : undefined,
@@ -85,7 +95,7 @@ function renderPart(req: XP.Request): RenderResponse {
     financierPhrase,
     participantsPhrase,
     projectParticipantsPhrase,
-    collaboratorsPhrase
+    collaboratorsPhrase,
   }
 
   return render('site/parts/project/project', props, req)
@@ -104,14 +114,6 @@ function getManager(managerId?: string | undefined): ManagerLink | undefined {
         })
       }
     }
-  }
-  return undefined
-}
-
-function capitalizeFirstLetter(str?: string) : string | undefined {
-  if (str) {
-    const result: string = str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()
-    return result
   }
   return undefined
 }
