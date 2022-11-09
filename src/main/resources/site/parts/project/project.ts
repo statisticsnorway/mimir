@@ -110,9 +110,8 @@ function getManager(managerId?: string | undefined): ManagerLink | undefined {
 
 function capitalizeFirstLetter(str?: string) : string | undefined {
   if (str) {
-    const result1: string = str.charAt(0).toUpperCase() + str.slice(1)
-    const result2: string = str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()
-    return result2
+    const result: string = str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()
+    return result
   }
   return undefined
 }
