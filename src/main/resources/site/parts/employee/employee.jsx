@@ -173,7 +173,9 @@ const Employee = (props) => {
         <div className="employee-description">
           <div>
             <h2>{briefSummaryPhrase}</h2>
-            <LeadParagraph>{description}</LeadParagraph>
+            <div dangerouslySetInnerHTML={{
+              __html: description
+            }}></div>
           </div>
           {myCV ? <div className="desktop-display-none">{renderDownloadCvButton()}</div> : null}
         </div>
@@ -224,7 +226,7 @@ const Employee = (props) => {
         {renderAttachmentsForDesktop()}
         {profileImages.length != 0 ? renderAttachmentsForMobile() : null}
 
-        <div className="col-12 col-md-6 row-gutter-mobile">
+        <div className="col-12 col-md-6 row-gutter-mobile mt-4">
           {description ? renderEmployeeDescription() : null}
           {projects.length != 0 ? renderProjects() : null}
           {cristinId ? renderPublications : null}
