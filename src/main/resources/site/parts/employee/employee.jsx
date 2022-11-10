@@ -69,7 +69,10 @@ const Employee = (props) => {
           <div className="employee-image">
             <img alt={`${profilePicturePhrase} ${title}`} src={props.profileImages[0]} />
           </div> : null}
-        <div className="employee-title"><Title size="1">{title}</Title></div>
+        {profileImages.length != 0 ?
+          <div className="employee-title"><Title size="1">{title}</Title></div> :
+          <div><Title size="1">{title}</Title></div> 
+        }
       </div>
     )
   }
