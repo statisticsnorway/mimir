@@ -90,6 +90,12 @@ export function getPublicationsNew(
                     field: 'data.statisticContentId',
                   },
                 },
+                {
+                  hasValue: {
+                    field: 'data.mainSubjects',
+                    values: forceArray(subject),
+                  },
+                },
               ],
             },
           },
