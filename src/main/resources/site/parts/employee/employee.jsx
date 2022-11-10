@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Title, Link, LeadParagraph, Paragraph, Accordion } from '@statisticsnorway/ssb-component-library'
+import { Button, Title, Link, Paragraph, Accordion } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
 import { Share2, Send, Smartphone, Eye, Home, Download, Image } from 'react-feather'
 
