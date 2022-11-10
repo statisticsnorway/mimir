@@ -1,12 +1,12 @@
 import type { Article } from '../../../site/content-types/article/article'
 import type { Content, QueryDSL } from '/lib/xp/content'
 import { pageUrl } from '/lib/xp/portal'
-import { getMainSubjects, getSubSubjects, getMainSubjectBySubSubject, type SubjectItem } from '../utils/subjectUtils'
+import { getMainSubjectBySubSubject, getMainSubjects, getSubSubjects, type SubjectItem } from '../utils/subjectUtils'
 import { formatDate } from '../utils/dateUtils'
 import type { XData } from '../../../site/x-data'
 import { forceArray } from '../utils/arrayUtils'
 import { connect, multiRepoConnect, type MultiRepoConnection, type MultiRepoNodeQueryResponse } from '/lib/xp/node'
-import { get as getContext, type Context, type ContextAttributes, type PrincipalKey } from '/lib/xp/context'
+import { type Context, type ContextAttributes, get as getContext, type PrincipalKey } from '/lib/xp/context'
 import type { ContentLight, Release } from '/lib/ssb/repo/statisticVariant'
 import { notEmptyOrUndefined } from '/lib/ssb/utils/coreUtils'
 
@@ -161,7 +161,7 @@ function statisticsAsPublicationItem({
 
   return {
     title: release.data.name,
-    period: release.data.period,
+    period: release.data.previousPeriod,
     preface: release.data.ingress!,
     url: pageUrl({
       id: release.data.statisticContentId!,

@@ -1,21 +1,21 @@
-import { get as getRepo, create as createRepo } from '/lib/xp/repo'
-import { connect, type RepoConnection, type NodeCreateParams } from '/lib/xp/node'
+import { create as createRepo, get as getRepo } from '/lib/xp/repo'
+import { connect, type NodeCreateParams, type RepoConnection } from '/lib/xp/node'
 import { localDateTime, type LocalDateTime } from '/lib/xp/value'
 import { run } from '/lib/xp/context'
 import { getAllStatisticsFromRepo } from '/lib/ssb/statreg/statistics'
 import { contentArrayToRecord, forceArray } from '/lib/ssb/utils/arrayUtils'
 import { notEmptyOrUndefined, notNullOrUndefined } from '/lib/ssb/utils/coreUtils'
 import type { StatisticInListing, VariantInListing } from '/lib/ssb/dashboard/statreg/types'
-import { query, type Content, type QueryResponse } from '/lib/xp/content'
+import { ReleasesInListing } from '/lib/ssb/dashboard/statreg/types'
+import { type Content, query, type QueryResponse } from '/lib/xp/content'
 import { OmStatistikken } from '../../../site/content-types/omStatistikken/omStatistikken'
 import { XData } from '../../../site/x-data'
 import { Statistics } from '../../../site/content-types/statistics/statistics'
 import { capitalize } from '/lib/ssb/utils/stringUtils'
-import { calculatePeriod, nextReleasedPassed, getPreviousRelease, getNextRelease } from '/lib/ssb/utils/variantUtils'
+import { calculatePeriod, getNextRelease, getPreviousRelease, nextReleasedPassed } from '/lib/ssb/utils/variantUtils'
 import { SubjectItem } from '/lib/ssb/utils/subjectUtils'
-import { ReleasesInListing } from '/lib/ssb/dashboard/statreg/types'
 
-const { queryForMainSubjects, queryForSubSubjects, getSecondaryMainSubject } =
+const { queryForMainSubjects, queryForSubSubjects, getAllMainSubjectByContent, getAllSubSubjectByContent } =
   __non_webpack_require__('/lib/ssb/utils/subjectUtils')
 
 export const REPO_ID_STATREG_STATISTICS: 'no.ssb.statreg.statistics.variants' =
@@ -95,17 +95,12 @@ export function fillRepo(statistics: Array<StatisticInListing>) {
         ? aboutTheStatistics[statisticsContent?.data.aboutTheStatistics]
         : undefined
 
-      const mainSubject: SubjectItem[] = allMainSubjects.filter((subject) =>
-        statisticsContent?._path.startsWith(subject.path)
+      const allMainSubjectsStatistic: SubjectItem[] = getAllMainSubjectByContent(
+        statisticsContent,
+        allMainSubjects,
+        allSubSubjects
       )
-      const subTopics: Array<string> = statisticsContent?.data.subtopic
-        ? forceArray(statisticsContent.data.subtopic)
-        : []
-      const secondaryMainSubject: SubjectItem[] = subTopics
-        ? getSecondaryMainSubject(subTopics, allMainSubjects, allSubSubjects)
-        : []
-      const allMainSubjectsStatistic: SubjectItem[] = mainSubject.concat(secondaryMainSubject)
-      //var myFinalArray = myArray1.concat(myArray2.filter((item) => myArray1.indexOf(item) < 0));
+      const allSubSubjectsStatistic: SubjectItem[] = getAllSubSubjectByContent(statisticsContent, allSubSubjects)
 
       forceArray(statistic.variants).forEach((variant) => {
         const path = `/${statistic.shortName}-${variant.id}–${language}`
@@ -122,6 +117,7 @@ export function fillRepo(statistics: Array<StatisticInListing>) {
           statisticsContent,
           aboutTheStatisticsContent,
           allMainSubjectsStatistic,
+          allSubSubjectsStatistic,
         })
 
         // Check if exists, and then do update instead if changed
@@ -207,6 +203,7 @@ function prepareData({
   statisticsContent,
   aboutTheStatisticsContent,
   allMainSubjectsStatistic,
+  allSubSubjectsStatistic,
 }: CreateContentStatisticVariantParams): Release {
   return {
     statisticId: String(statistic.id),
@@ -233,6 +230,7 @@ function prepareData({
     statisticContentId: statisticsContent?._id,
     articleType: 'statistics', // allows this content to be filtered together with `Article.articleType`,
     mainSubjects: allMainSubjectsStatistic.map((subject) => subject.name).filter(notNullOrUndefined),
+    subSubjects: allSubSubjectsStatistic.map((subject) => subject.name).filter(notNullOrUndefined),
     upcomingReleases: variant.upcomingReleases,
   }
 }
@@ -275,6 +273,7 @@ export interface Release {
   statisticContentId?: string
   articleType: 'statistics'
   mainSubjects: Array<string> | string | undefined
+  subSubjects: Array<string> | string | undefined
   upcomingReleases?: Array<ReleasesInListing>
 }
 
@@ -297,4 +296,5 @@ interface CreateContentStatisticVariantParams {
   statisticsContent?: Content<Statistics, XData>
   aboutTheStatisticsContent?: Content<OmStatistikken, XData>
   allMainSubjectsStatistic: SubjectItem[]
+  allSubSubjectsStatistic: SubjectItem[]
 }
