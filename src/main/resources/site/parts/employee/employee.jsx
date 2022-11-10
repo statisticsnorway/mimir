@@ -78,7 +78,7 @@ const Employee = (props) => {
   const renderEmployeeDetails = () => {
     return (
       <div className="employee-details col-12">
-        <div className="row w-100">
+        <div className={"row w-100" + (profileImages.length == 0 ? " border-if-no-images" : "")}>
           {
             position ?
               <div className="details-block col-lg col-12">
@@ -113,7 +113,7 @@ const Employee = (props) => {
           }
           {
             phone ?
-              <div className={"details-block col-lg col-12" + (profileImages.length == 0 ? " border-if-no-images" : "")}>
+              <div className="details-block col-lg col-12">
                 <div><Smartphone size={24} /></div>
                 <div>
                   <div>{phonePhrase}</div>
