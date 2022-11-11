@@ -1,6 +1,6 @@
 import { Content, QueryResponse, get, query } from '/lib/xp/content'
 import type { Employee } from '../../content-types'
-import type { Default as DefaultPageConfig } from '../../../site/pages/default'
+import type { Default as DefaultPageConfig } from '../../pages/default'
 import { getContent, pageUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 import { RenderResponse, render } from '/lib/enonic/react4xp'
