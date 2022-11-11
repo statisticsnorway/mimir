@@ -1,9 +1,8 @@
 import { Content, query, QueryResponse, get } from '/lib/xp/content'
-import type { Employee } from '../../content-types'
+import type { Employee, Page } from '../../content-types'
 import type { Default as DefaultPageConfig } from '../../pages/default'
 import { getContent, Component, getComponent, pageUrl } from '/lib/xp/portal'
 import { RenderResponse, render } from '/lib/enonic/react4xp'
-import type { Page } from '../../content-types/page'
 import type { EmployeeList as EmployeeListPartConfig } from '.'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
