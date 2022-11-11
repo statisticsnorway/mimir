@@ -1,11 +1,8 @@
 import { exists, Content, Site } from '/lib/xp/content'
-import { SiteConfig } from '../../../site/site-config'
 import { Language, AlternativeLanguages, Phrases } from '../../types/language'
 
 const i18n = __non_webpack_require__('/lib/xp/i18n')
-const {
-  getSite, getSiteConfig, pageUrl
-} = __non_webpack_require__('/lib/xp/portal')
+const { getSite, getSiteConfig, pageUrl } = __non_webpack_require__('/lib/xp/portal')
 
 let english: Phrases | undefined
 let norwegian: Phrases | undefined
@@ -20,32 +17,34 @@ try {
 }
 
 exports.getLanguage = function (page: Content): Language {
-  const site: Site<SiteConfig> = getSite()
-  const siteConfig: SiteConfig = getSiteConfig()
+  const site: Site<XP.SiteConfig> = getSite()
+  const siteConfig: XP.SiteConfig = getSiteConfig()
   const currentLanguageConfig: Language = siteConfig.language.filter((language) => language.code === page.language)[0]
 
-  const alternativeLanguagesConfig: SiteConfig['language'] = siteConfig.language.filter((language) => language.code !== page.language)
+  const alternativeLanguagesConfig: XP.SiteConfig['language'] = siteConfig.language.filter(
+    (language) => language.code !== page.language
+  )
   const currentLangPath: string = currentLanguageConfig && currentLanguageConfig.link ? currentLanguageConfig.link : ''
   const pagePathAfterSiteName: string = page._path.replace(`${site._path}${currentLangPath}`, '')
 
   const alternativeLanguages: Array<AlternativeLanguages> = alternativeLanguagesConfig.map((altLanguage) => {
     const altVersionPath: string = altLanguage.link ? altLanguage.link : ''
-    const altVersionUri: string = `${site._path}${altVersionPath}${pagePathAfterSiteName}`
+    const altVersionUri = `${site._path}${altVersionPath}${pagePathAfterSiteName}`
     const altVersionExists: boolean = exists({
-      key: altVersionUri
+      key: altVersionUri,
     })
-    let path: string = ''
+    let path = ''
     if (altVersionExists) {
       path = pageUrl({
-        path: altVersionUri
+        path: altVersionUri,
       })
     } else if (altLanguage.homePageId) {
       path = pageUrl({
-        id: altLanguage.homePageId
+        id: altLanguage.homePageId,
       })
     } else {
       path = pageUrl({
-        path: altVersionPath
+        path: altVersionPath,
       })
     }
 
@@ -53,7 +52,7 @@ exports.getLanguage = function (page: Content): Language {
       code: altLanguage.code,
       title: altLanguage.label,
       altVersionExists,
-      path
+      path,
     }
   })
 
@@ -64,12 +63,16 @@ exports.getLanguage = function (page: Content): Language {
     footerId: currentLanguageConfig ? currentLanguageConfig.footerId : norwegianConfig.footerId,
     code: currentLanguageConfig ? currentLanguageConfig.code : page.language,
     link: currentLanguageConfig ? (currentLanguageConfig.link ? currentLanguageConfig.link : '/') : '/',
-    standardSymbolPage: currentLanguageConfig ? currentLanguageConfig.standardSymbolPage : norwegianConfig.standardSymbolPage,
+    standardSymbolPage: currentLanguageConfig
+      ? currentLanguageConfig.standardSymbolPage
+      : norwegianConfig.standardSymbolPage,
     phrases: {
-      ...(i18n.getPhrases(page.language === 'nb' ? '' : page.language as string, ['site/i18n/phrases']))
+      ...i18n.getPhrases(page.language === 'nb' ? '' : (page.language as string), ['site/i18n/phrases']),
     },
-    alternativeLanguages: (page.language === 'nb' || page.language === 'en') ? alternativeLanguages :
-      alternativeLanguages.filter((altLanguage) => altLanguage.code === 'en')
+    alternativeLanguages:
+      page.language === 'nb' || page.language === 'en'
+        ? alternativeLanguages
+        : alternativeLanguages.filter((altLanguage) => altLanguage.code === 'en'),
   }
 
   return result
@@ -106,35 +109,35 @@ exports.localizeTimePeriod = (time: string): string => {
  * @return {string}
  */
 function parseTimeInterval(time: string): string {
-  const splitYearLetterNumberIntoArray: RegExp = new RegExp(/(\d{4})([HKMTU])(\d{1,2})/)
+  const splitYearLetterNumberIntoArray = new RegExp(/(\d{4})([HKMTU])(\d{1,2})/)
   const interval: RegExpExecArray | null = splitYearLetterNumberIntoArray.exec(time)
 
-  let parsedTime: string = ''
+  let parsedTime = ''
   if (interval) {
     switch (interval[2]) {
       case 'H':
         parsedTime = `${i18n.localize({
-          key: 'interval.' + interval[2]
+          key: 'interval.' + interval[2],
         })} ${interval[1]} `
         break
       case 'K':
         parsedTime = `${interval[3]}. ${i18n.localize({
-          key: 'interval.' + interval[2]
+          key: 'interval.' + interval[2],
         })} ${interval[1]}`
         break
       case 'M':
         parsedTime = `${i18n.localize({
-          key: 'interval.M.' + interval[3]
+          key: 'interval.M.' + interval[3],
         })} ${interval[1]}`
         break
       case 'T':
         parsedTime = `${interval[3]}. ${i18n.localize({
-          key: 'interval.' + interval[2]
+          key: 'interval.' + interval[2],
         })} ${interval[1]}`
         break
       case 'U':
         parsedTime = `${i18n.localize({
-          key: 'interval.' + interval[2]
+          key: 'interval.' + interval[2],
         })} ${interval[3]} ${interval[1]}`
         break
     }
@@ -144,11 +147,10 @@ function parseTimeInterval(time: string): string {
 }
 
 export function getLanguageShortName(content: Content): string {
-  const norwegianPhrasesSuffix: string = 'no'
+  const norwegianPhrasesSuffix = 'no'
   if (!content || !content.language) {
     return norwegianPhrasesSuffix
   } else {
     return content.language === 'nb' ? norwegianPhrasesSuffix : content.language
   }
 }
-

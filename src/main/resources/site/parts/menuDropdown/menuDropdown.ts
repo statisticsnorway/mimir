@@ -4,7 +4,6 @@ import { ResourceKey, render } from '/lib/thymeleaf'
 import { Component } from '/lib/xp/portal'
 import { MunicipalityWithCounty } from '../../../lib/ssb/dataset/klass/municipalities'
 import type { MenuDropdown as MenuDropdownPartConfig } from '.'
-import { SiteConfig } from '../../site-config'
 import type { MenuDropdown } from '../../content-types'
 import { randomUnsafeString } from '/lib/ssb/utils/utils'
 
@@ -34,7 +33,7 @@ function renderPart(req: XP.Request): XP.Response | RenderResponse {
   const parsedMunicipalities: Array<MunicipalityWithCounty> = municipalsWithCounties()
   const municipality: MunicipalityWithCounty | undefined = getMunicipality(req)
   const component: Component<MenuDropdownPartConfig> = getComponent()
-  const siteConfig: SiteConfig = getSiteConfig()
+  const siteConfig: XP.SiteConfig = getSiteConfig()
   let mapFolder = '/mapdata'
 
   if (typeof siteConfig.kommunefakta !== 'undefined' && siteConfig.kommunefakta.mapfolder) {

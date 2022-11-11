@@ -9,7 +9,6 @@ import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
 import { Language } from '../../../lib/types/language'
 import { render as r4xpRender, RenderResponse } from '/lib/enonic/react4xp'
 import type { Statistics } from '../../content-types'
-import { SiteConfig } from '../../site-config'
 import type { Default as DefaultPageConfig } from '../../pages/default'
 import { Component, getContent, processHtml, assetUrl, getSiteConfig, pageUrl } from '/lib/xp/portal'
 import { SEO } from '../../../services/news/news'
@@ -463,7 +462,7 @@ function parseStatbankFrameContent(statbankFane: boolean, req: XP.Request, page:
     }
   }
 
-  const siteConfig: SiteConfig = getSiteConfig()
+  const siteConfig: XP.SiteConfig = getSiteConfig()
 
   let statbankHelpLink: string = siteConfig.statbankHelpLink
   if (pageLanguage === 'en') {

@@ -1,4 +1,3 @@
-import { SiteConfig } from '../../../../site/site-config'
 import { get as getContent, Content } from '/lib/xp/content'
 import { DatasetRepoNode } from '../../repo/dataset'
 import type { DataSource } from '../../../../site/mixins/dataSource'
@@ -13,7 +12,7 @@ const { fromDatasetRepoCache } = __non_webpack_require__('/lib/ssb/cache/cache')
 export const list: () => Array<County> = () => getCountiesFromContent()
 
 function getCountiesFromContent(): Array<County> {
-  const siteConfig: SiteConfig = getSiteConfig()
+  const siteConfig: XP.SiteConfig = getSiteConfig()
   const key: string | undefined = siteConfig.countyDataContentId
   if (key) {
     const dataSource: Content<DataSource> | null = getContent({
