@@ -20,9 +20,9 @@ export function solrSearch(
   const lang: string = language === 'en' ? 'en' : 'no'
   const languageQuery = `fq=sprak${encodeURIComponent(':')}${lang}`
   // Note the use of uri encoded quotation marks, Solr needs these when a facet field is multiple words
-  const contentTypeQuery: string = contentType ? `&fq=innholdstype${encodeURIComponent(':"' + contentType + '"')}` : ''
-  const subjectQuery: string = mainSubject ? `&fq=hovedemner${encodeURIComponent(':"' + mainSubject + '"')}` : ''
-  const sortQuery: string = sortParam ? `&sort=${sortParam}+desc` : ''
+  const contentTypeQuery = contentType ? `&fq=innholdstype${encodeURIComponent(':"' + contentType + '"')}` : ''
+  const subjectQuery = mainSubject ? `&fq=hovedemner${encodeURIComponent(':"' + mainSubject + '"')}` : ''
+  const sortQuery = sortParam ? `&sort=${sortParam}+desc` : ''
   const searchResult: SolrResult | undefined = querySolr({
     query: createQuery(term, numberOfHits, start, languageQuery, contentTypeQuery, subjectQuery, sortQuery),
   })
@@ -126,6 +126,18 @@ function createQuery(
   sortQuery: string
 ): string {
   return `${SOLR_BASE_URL}?${SOLR_PARAM_QUERY}=${term}&${languageQuery}${contentTypeQuery}${subjectQuery}&wt=${SOLR_FORMAT}&start=${start}&rows=${numberOfHits}${sortQuery}`
+function createQuery(
+  term: string,
+  numberOfHits: number,
+  start: number,
+  languageQuery: string,
+  contentTypeQuery: string,
+  subjectQuery: string,
+  sortQuery: string
+): string {
+  return `${SOLR_BASE_URL}?${SOLR_PARAM_QUERY}=${encodeURIComponent(
+    term
+  )}&${languageQuery}${contentTypeQuery}${subjectQuery}&wt=${SOLR_FORMAT}&start=${start}&rows=${numberOfHits}${sortQuery}`
 }
 
 function createFacetsArray(solrResults: Array<string | number>): Array<Facet> {

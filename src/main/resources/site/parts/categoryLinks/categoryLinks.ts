@@ -3,6 +3,7 @@ import { getComponent, getContent, pageUrl, Component } from '/lib/xp/portal'
 import { CategoryLinksPartConfig } from './categoryLinks-part-config'
 import { Content } from '/lib/xp/content'
 import { Language, Phrases } from '../../../lib/types/language'
+import { randomUnsafeString } from '/lib/ssb/utils/utils'
 
 const { data } = __non_webpack_require__('/lib/util')
 
@@ -34,6 +35,7 @@ function renderPart(req: XP.Request): XP.Response | RenderResponse {
     ? data.forceArray(part.config.CategoryLinkItemSet)
     : []
   const methodsAndDocumentation: DocumentationContent | DocumentationUrl | undefined = part.config.methodsDocumentation
+  const id: string = 'categoryLink-' + randomUnsafeString()
   let methodsAndDocumentationUrl
   if (methodsAndDocumentation) {
     if (methodsAndDocumentation._selected == 'urlSource') {
@@ -69,7 +71,7 @@ function renderPart(req: XP.Request): XP.Response | RenderResponse {
       },
       req,
       {
-        id: 'categoryLink',
+        id: id,
         body: `<section class="xp-part part-category-link"></section>`,
       }
     )

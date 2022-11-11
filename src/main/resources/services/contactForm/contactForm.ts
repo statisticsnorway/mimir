@@ -1,16 +1,15 @@
-import { send, EmailParams } from '/lib/xp/mail'
-import { request, HttpRequestParams, HttpResponse } from '/lib/http-client'
+import { type EmailParams, send } from '/lib/xp/mail'
+import { type HttpRequestParams, type HttpResponse, request } from '/lib/http-client'
 
 exports.post = (req: XP.Request): XP.Response => {
   const formData: ContactFormData = JSON.parse(req.body)
 
   log.info('\n\n## data\n--------------\n%s\n', JSON.stringify(formData, null, 4))
 
-  const secret: string | null =
-    app.config && app.config['RECAPTCHA_SECRET_KEY'] ? app.config['RECAPTCHA_SECRET_KEY'] : null
+  const secret = app.config && app.config['RECAPTCHA_SECRET_KEY'] ? app.config['RECAPTCHA_SECRET_KEY'] : null
   if (secret) {
     const requestParams: HttpRequestParams = {
-      url: ' https://www.google.com/recaptcha/api/siteverify',
+      url: 'https://www.google.com/recaptcha/api/siteverify',
       method: 'POST',
       queryParams: {
         secret,

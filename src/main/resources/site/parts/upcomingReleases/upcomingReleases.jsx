@@ -242,7 +242,7 @@ function UpcomingReleases(props) {
 
     const monthNumber = Number(month.month)
     const monthPadded = monthNumber < 9 ? '0' + (monthNumber + 1) : monthNumber + 1
-    const dateTime = `${day.day}.${monthPadded}.${year.year}`
+    const dateTime = `${year.year}-${monthPadded}-${day.day}`
     const monthNames =
       props.language === 'en'
         ? [

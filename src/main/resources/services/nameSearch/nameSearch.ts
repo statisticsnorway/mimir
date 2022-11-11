@@ -3,8 +3,6 @@ import { Content } from '/lib/xp/content'
 import { CalculatorConfig } from '../../site/content-types/calculatorConfig/calculatorConfig'
 import { DatasetRepoNode } from '../../lib/ssb/repo/dataset'
 
-/* eslint-disable new-cap */
-// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import JSONstat from 'jsonstat-toolkit/import.mjs'
 import validator from 'validator'
@@ -97,11 +95,10 @@ function prepareQuery(input: string): string {
   else
     return (
       pad(input) +
-      '+' +
       input
         .split(' ')
         .map((word) => pad(word))
-        .join('+')
+        .join('')
     )
 }
 
