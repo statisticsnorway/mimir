@@ -12,7 +12,7 @@ import { render, RenderResponse } from '/lib/enonic/react4xp'
 // @ts-ignore
 import { Base64 } from 'js-base64'
 import type { InfoGraphics as InfoGraphicsPartConfig } from '.'
-import { DefaultPageConfig } from '../../pages/default/default-page-config'
+import type { Default as DefaultPageConfig } from '../../../site/pages/default'
 
 exports.get = function (req: XP.Request): XP.Response | RenderResponse {
   try {

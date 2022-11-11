@@ -7,7 +7,7 @@ import { TbmlDataUniform, XmlParser } from '../../types/xmlParser'
 import { DatasetRepoNode, DataSource as DataSourceType } from '../repo/dataset'
 import { JSONstat } from '../../types/jsonstat-toolkit'
 import { JobStatus } from '../repo/job'
-import { DefaultPageConfig } from '../../../site/pages/default/default-page-config'
+import type { Default as DefaultPageConfig } from '../../../site/pages/default'
 import type { Statistics } from '../../../site/content-types'
 import { Statistic } from '../../../site/mixins/statistic/statistic'
 

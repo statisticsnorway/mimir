@@ -1,5 +1,5 @@
 import { get as getContent, query, Content, QueryResponse } from '/lib/xp/content'
-import { DefaultPageConfig } from '../../../site/pages/default/default-page-config'
+import type { Default as DefaultPageConfig } from '../../../site/pages/default'
 import type { Statistics, Page } from '../../../site/content-types'
 import { StatisticInListing } from '../dashboard/statreg/types'
 import { DefaultPage } from '/lib/types/defaultPage'

@@ -1,6 +1,6 @@
 import { query, Content } from '/lib/xp/content'
 import type { Page, Article, Statistics } from '../../site/content-types'
-import { DefaultPageConfig } from '../../site/pages/default/default-page-config'
+import type { Default as DefaultPageConfig } from '../../site/pages/default'
 import { StatisticInListing, VariantInListing } from '../../lib/ssb/dashboard/statreg/types'
 import { Statistic } from '../../site/mixins/statistic/statistic'
 const { moment } = __non_webpack_require__('/lib/vendor/moment')

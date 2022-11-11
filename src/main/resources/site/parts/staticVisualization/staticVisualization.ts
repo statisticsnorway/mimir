@@ -13,7 +13,7 @@ import { SourceList, SourcesConfig } from '../../../lib/ssb/utils/utils'
 import { render, RenderResponse } from '/lib/enonic/react4xp'
 import type { StaticVisualization } from '../../content-types'
 // @ts-ignore
-import { DefaultPageConfig } from '../../pages/default/default-page-config'
+import type { Default as DefaultPageConfig } from '../../pages/default'
 import type { StaticVisualization as StaticVisualizationPartConfig } from '.'
 import type { HtmlTable } from '../../../lib/ssb/parts/table'
 

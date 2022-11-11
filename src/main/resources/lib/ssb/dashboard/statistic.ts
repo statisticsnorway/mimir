@@ -1,4 +1,4 @@
-import { DefaultPageConfig } from '../../../site/pages/default/default-page-config'
+import type { Default as DefaultPageConfig } from '../../../site/pages/default'
 
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 import { EventInfo } from '../repo/query'

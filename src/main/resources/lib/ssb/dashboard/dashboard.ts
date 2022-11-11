@@ -25,7 +25,7 @@ import {
 import { StatisticInListing } from './statreg/types'
 import { StatRegRefreshResult } from '../repo/statreg'
 import { StatRegJobInfo } from './statreg'
-import { DefaultPageConfig } from '../../../site/pages/default/default-page-config'
+import type { Default as DefaultPageConfig } from '../../../site/pages/default'
 import type { Page, Statistics } from '../../../site/content-types'
 
 const { users, showWarningIcon, WARNING_ICON_EVENTS, isPublished } = __non_webpack_require__(
