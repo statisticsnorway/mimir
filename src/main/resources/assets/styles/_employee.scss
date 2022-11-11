@@ -104,28 +104,36 @@
     }
     
     .downloadCv {
-      margin-top: 3.125rem;
+      margin-top: 2.5rem;
 
       button svg {
         margin-right: 0.5rem;
       }
     }
   }
+  
+  .mt-4 {
+    margin-top: 2rem !important;
+  }
 
   .employee-description {
-    margin: 2rem 0 2.75rem 0;
+    margin: 0 0 2.75rem 0;
 
     > div {
-      
       div {
         display: flex;
         flex-wrap: wrap;
-  
-        button {
-          margin: .2rem;
+
+        p {
+          font-size: 20px;
+          line-height: 32px;
+
+          a {
+            font-size: 20px;
+            line-height: 32px;
+          }
         }
       }
-
     }
   }
 
@@ -191,6 +199,10 @@
       .details-block {
         padding: 1.25rem 0;
       }
+
+      .border-if-no-images {
+        border-bottom: 1px solid #c3dcdc;
+      }
     }
     
     .desktop-display-none {
@@ -232,7 +244,7 @@
     }
 
     .employee-description {
-      margin: 2.5rem 0 3.75rem;
+      margin: .5rem 0 3.75rem;
     }
 
     .employee-description .desktop-display-none > div > button {

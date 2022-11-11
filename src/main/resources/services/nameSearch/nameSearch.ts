@@ -3,7 +3,6 @@ import { Content } from '/lib/xp/content'
 import type { CalculatorConfig } from '../../site/content-types'
 import { DatasetRepoNode } from '../../lib/ssb/repo/dataset'
 
-/* eslint-disable new-cap */
 // @ts-ignore
 import JSONstat from 'jsonstat-toolkit/import.mjs'
 import validator from 'validator'
@@ -96,11 +95,10 @@ function prepareQuery(input: string): string {
   else
     return (
       pad(input) +
-      '+' +
       input
         .split(' ')
         .map((word) => pad(word))
-        .join('+')
+        .join('')
     )
 }
 
