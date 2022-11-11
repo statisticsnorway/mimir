@@ -1,98 +1,64 @@
 import { findUsers, createUser, UserQueryResult } from '/lib/xp/auth'
 import { Content } from '/lib/xp/content'
 import { run, RunContext, ContextAttributes } from '/lib/xp/context'
-import { DataSource } from '../../../site/mixins/dataSource/dataSource'
+import type { DataSource } from '../../../site/mixins/dataSource'
 import { JobEventNode, JobInfoNode } from '../repo/job'
 import { StatRegRefreshResult } from '../repo/statreg'
 import { schedule, list, TaskMapper } from '/lib/cron'
 import { RSSFilter } from './rss'
-import { create,
-  modify,
-  list as listScheduledJobs,
-  get as getScheduledJob,
-  ScheduledJob } from '/lib/xp/scheduler'
+import { create, modify, list as listScheduledJobs, get as getScheduledJob, ScheduledJob } from '/lib/xp/scheduler'
 
-const {
-  clearPartFromPartCache
-} = __non_webpack_require__('/lib/ssb/cache/partCache')
-const {
-  refreshStatRegData,
-  STATREG_NODES
-} = __non_webpack_require__('/lib/ssb/repo/statreg')
-const {
-  refreshQueriesAsync
-} = __non_webpack_require__('/lib/ssb/cron/task')
-const {
-  getContentWithDataSource
-} = __non_webpack_require__('/lib/ssb/dataset/dataset')
-const {
-  completeJobLog,
-  startJobLog,
-  updateJobLog,
-  JOB_STATUS_COMPLETE,
-  JobNames
-} = __non_webpack_require__('/lib/ssb/repo/job')
-const {
-  dataSourceRSSFilter
-} = __non_webpack_require__('/lib/ssb/cron/rss')
-const {
-  deleteExpiredEventLogs
-} = __non_webpack_require__('/lib/ssb/cron/eventLog')
-const {
-  isMaster
-} = __non_webpack_require__('/lib/xp/cluster')
-const {
-  cronJobLog
-} = __non_webpack_require__('/lib/ssb/utils/serverLog')
-const {
-  ENONIC_CMS_DEFAULT_REPO
-} = __non_webpack_require__('/lib/ssb/repo/common')
-const {
-  updateUnpublishedMockTbml
-} = __non_webpack_require__('/lib/ssb/dataset/mockUnpublished')
-const {
-  pushRssNews
-} = __non_webpack_require__('/lib/ssb/cron/pushRss')
-const {
-  publishDataset
-} = __non_webpack_require__('/lib/ssb/dataset/publishOld')
-const {
-  isEnabled
-} = __non_webpack_require__('/lib/featureToggle')
+const { clearPartFromPartCache } = __non_webpack_require__('/lib/ssb/cache/partCache')
+const { refreshStatRegData, STATREG_NODES } = __non_webpack_require__('/lib/ssb/repo/statreg')
+const { refreshQueriesAsync } = __non_webpack_require__('/lib/ssb/cron/task')
+const { getContentWithDataSource } = __non_webpack_require__('/lib/ssb/dataset/dataset')
+const { completeJobLog, startJobLog, updateJobLog, JOB_STATUS_COMPLETE, JobNames } =
+  __non_webpack_require__('/lib/ssb/repo/job')
+const { dataSourceRSSFilter } = __non_webpack_require__('/lib/ssb/cron/rss')
+const { deleteExpiredEventLogs } = __non_webpack_require__('/lib/ssb/cron/eventLog')
+const { isMaster } = __non_webpack_require__('/lib/xp/cluster')
+const { cronJobLog } = __non_webpack_require__('/lib/ssb/utils/serverLog')
+const { ENONIC_CMS_DEFAULT_REPO } = __non_webpack_require__('/lib/ssb/repo/common')
+const { updateUnpublishedMockTbml } = __non_webpack_require__('/lib/ssb/dataset/mockUnpublished')
+const { pushRssNews } = __non_webpack_require__('/lib/ssb/cron/pushRss')
+const { publishDataset } = __non_webpack_require__('/lib/ssb/dataset/publishOld')
+const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
 
-const createUserContext: RunContext<ContextAttributes> = { // Master context (XP)
+const createUserContext: RunContext<ContextAttributes> = {
+  // Master context (XP)
   repository: ENONIC_CMS_DEFAULT_REPO,
   branch: 'master',
   principals: ['role:system.admin'],
   user: {
     login: 'su',
-    idProvider: 'system'
-  }
+    idProvider: 'system',
+  },
 }
 
 const newPublishJobEnabled: boolean = isEnabled('publishJob-lib-sheduler', false, 'ssb')
 
-export const cronContext: RunContext<ContextAttributes> = { // Master context (XP)
+export const cronContext: RunContext<ContextAttributes> = {
+  // Master context (XP)
   repository: ENONIC_CMS_DEFAULT_REPO,
   branch: 'master',
   principals: ['role:system.admin'],
   user: {
     login: 'cronjob',
-    idProvider: 'system'
-  }
+    idProvider: 'system',
+  },
 }
 
 function setupCronJobUser(): void {
   const findUsersResult: UserQueryResult<object> = findUsers({
     count: 1,
-    query: `login LIKE "cronjob"`
+    query: `login LIKE "cronjob"`,
   })
   if (findUsersResult.hits.length === 0) {
     createUser({
       idProvider: 'system',
       name: 'cronjob',
       displayName: 'Carl Cronjob',
-      email: 'cronjob@ssb.no'
+      email: 'cronjob@ssb.no',
     })
   }
 }
@@ -106,7 +72,7 @@ function job(): void {
   updateJobLog(jobLogNode._id, (node: JobInfoNode) => {
     node.data = {
       ...node.data,
-      queryIds: dataSourceQueries.map((q) => q._id)
+      queryIds: dataSourceQueries.map((q) => q._id),
     }
     return node
   })
@@ -115,7 +81,7 @@ function job(): void {
   } else {
     completeJobLog(jobLogNode._id, JOB_STATUS_COMPLETE, {
       filterInfo: filterData.logData,
-      result: []
+      result: [],
     })
   }
   cronJobLog(JobNames.REFRESH_DATASET_JOB)
@@ -126,7 +92,7 @@ export function statRegJob(): void {
   updateJobLog(jobLogNode._id, (node: JobInfoNode) => {
     node.data = {
       ...node.data,
-      queryIds: STATREG_NODES.map((s) => s.key)
+      queryIds: STATREG_NODES.map((s) => s.key),
     }
     return node
   })
@@ -138,7 +104,7 @@ function pushRssNewsJob(): void {
   const jobLogNode: JobEventNode = startJobLog(JobNames.PUSH_RSS_NEWS)
   const result: string = pushRssNews()
   completeJobLog(jobLogNode._id, result, {
-    result
+    result,
   })
 }
 
@@ -152,17 +118,20 @@ export function setupCronJobs(): void {
   run(createUserContext, setupCronJobUser)
 
   // setup dataquery cron job
-  const dataqueryCron: string = app.config && app.config['ssb.cron.dataquery'] ? app.config['ssb.cron.dataquery'] : '0 15 * * *'
+  const dataqueryCron: string =
+    app.config && app.config['ssb.cron.dataquery'] ? app.config['ssb.cron.dataquery'] : '0 15 * * *'
   schedule({
     name: 'Data from datasource endpoints',
     cron: dataqueryCron,
     callback: () => runOnMasterOnly(job),
-    context: cronContext
+    context: cronContext,
   })
 
   // clear calculator parts cache cron
   const clearCalculatorPartsCacheCron: string =
-    app.config && app.config['ssb.cron.clearCalculatorCache'] ? app.config['ssb.cron.clearCalculatorCache'] : '15 07 * * *'
+    app.config && app.config['ssb.cron.clearCalculatorCache']
+      ? app.config['ssb.cron.clearCalculatorCache']
+      : '15 07 * * *'
 
   schedule({
     name: 'Clear calculator parts cache',
@@ -173,48 +142,54 @@ export function setupCronJobs(): void {
       clearPartFromPartCache('bkibolCalculator')
       clearPartFromPartCache('husleieCalculator')
     },
-    context: cronContext
+    context: cronContext,
   })
 
   // and setup a cron for periodic executions in the future
-  const statregCron: string = app.config && app.config['ssb.cron.statreg'] ? app.config['ssb.cron.statreg'] : '30 14 * * *'
+  const statregCron: string =
+    app.config && app.config['ssb.cron.statreg'] ? app.config['ssb.cron.statreg'] : '30 14 * * *'
   schedule({
     name: 'StatReg Periodic Refresh',
     cron: statregCron,
     callback: () => runOnMasterOnly(statRegJob),
-    context: cronContext
+    context: cronContext,
   })
 
-  const deleteExpiredEventLogCron: string = app.config && app.config['ssb.cron.deleteLogs'] ? app.config['ssb.cron.deleteLogs'] : '45 13 * * *'
+  const deleteExpiredEventLogCron: string =
+    app.config && app.config['ssb.cron.deleteLogs'] ? app.config['ssb.cron.deleteLogs'] : '45 13 * * *'
   schedule({
     name: 'Delete expired event logs',
     cron: deleteExpiredEventLogCron,
     callback: () => runOnMasterOnly(deleteExpiredEventLogs),
-    context: cronContext
+    context: cronContext,
   })
 
   if (app.config && app.config['ssb.mock.enable'] === 'true') {
     const updateUnpublishedMockCron: string =
-      app.config && app.config['ssb.cron.updateUnpublishedMock'] ? app.config['ssb.cron.updateUnpublishedMock'] : '0 04 * * *'
+      app.config && app.config['ssb.cron.updateUnpublishedMock']
+        ? app.config['ssb.cron.updateUnpublishedMock']
+        : '0 04 * * *'
     schedule({
       name: 'Update unpublished mock tbml',
       cron: updateUnpublishedMockCron,
       callback: () => runOnMasterOnly(updateUnpublishedMockTbml),
-      context: cronContext
+      context: cronContext,
     })
   }
 
   // push news to rss feed
-  const pushRssNewsCron: string = app.config && app.config['ssb.cron.pushRssNews'] ? app.config['ssb.cron.pushRssNews'] : '02 06 * * *'
+  const pushRssNewsCron: string =
+    app.config && app.config['ssb.cron.pushRssNews'] ? app.config['ssb.cron.pushRssNews'] : '02 06 * * *'
   schedule({
     name: 'Push RSS news',
     cron: pushRssNewsCron,
     callback: () => runOnMasterOnly(pushRssNewsJob),
-    context: cronContext
+    context: cronContext,
   })
 
   // clear specific cache once an hour
-  const clearCacheCron: string = app.config && app.config['ssb.cron.clearCacheCron'] ? app.config['ssb.cron.clearCacheCron'] : '01 * * * *'
+  const clearCacheCron: string =
+    app.config && app.config['ssb.cron.clearCacheCron'] ? app.config['ssb.cron.clearCacheCron'] : '01 * * * *'
   schedule({
     name: 'clear cache',
     cron: clearCacheCron,
@@ -231,16 +206,20 @@ export function setupCronJobs(): void {
       clearPartFromPartCache('archiveAllPublications-nb')
       clearPartFromPartCache('archiveAllPublications-en')
     },
-    context: cronContext
+    context: cronContext,
   })
 
   // Task
-  const testTaskCron: string = app.config && app.config['ssb.cron.testTask'] ? app.config['ssb.cron.testTask'] : '0 08 * * *'
-  const datasetPublishCron: string = app.config && app.config['ssb.cron.publishDataset'] ? app.config['ssb.cron.publishDataset'] : '50 05 * * *'
-  const updateMimirMockReleaseCron: string = app.config && app.config['ssb.cron.updateMimirReleasedMock'] ?
-    app.config['ssb.cron.updateMimirReleasedMock'] : '01 8 * * *'
-  const updateCalculatorCron: string = app.config && app.config['ssb.cron.updateCalculator'] ?
-    app.config['ssb.cron.updateCalculator'] : '01 8 * * *'
+  const testTaskCron: string =
+    app.config && app.config['ssb.cron.testTask'] ? app.config['ssb.cron.testTask'] : '0 08 * * *'
+  const datasetPublishCron: string =
+    app.config && app.config['ssb.cron.publishDataset'] ? app.config['ssb.cron.publishDataset'] : '50 05 * * *'
+  const updateMimirMockReleaseCron: string =
+    app.config && app.config['ssb.cron.updateMimirReleasedMock']
+      ? app.config['ssb.cron.updateMimirReleasedMock']
+      : '01 8 * * *'
+  const updateCalculatorCron: string =
+    app.config && app.config['ssb.cron.updateCalculator'] ? app.config['ssb.cron.updateCalculator'] : '01 8 * * *'
   const timezone: string = app.config && app.config['ssb.cron.timezone'] ? app.config['ssb.cron.timezone'] : 'UTC'
 
   // Use feature-toggling to switch to lib-sheduler when testet in QA
@@ -251,7 +230,7 @@ export function setupCronJobs(): void {
       name: 'Dataset publish',
       cron: datasetPublishCron,
       callback: () => runOnMasterOnly(publishDataset),
-      context: cronContext
+      context: cronContext,
     })
   } else {
     log.info('Run new dailyPublishJob lib-scheduler')
@@ -260,8 +239,8 @@ export function setupCronJobs(): void {
   if (isMaster()) {
     // publish dataset sheduler job
     run(cronContext, () => {
-      const jobExists: boolean = !!getScheduledJob({
-        name: 'dailyPublishJob'
+      const jobExists = !!getScheduledJob({
+        name: 'dailyPublishJob',
       })
       if (jobExists) {
         modify({
@@ -271,7 +250,7 @@ export function setupCronJobs(): void {
             job.schedule.value = datasetPublishCron
             job.schedule.timeZone = timezone
             return job
-          }
+          },
         })
       } else {
         create({
@@ -283,8 +262,8 @@ export function setupCronJobs(): void {
           schedule: {
             type: 'CRON',
             value: datasetPublishCron,
-            timeZone: timezone
-          }
+            timeZone: timezone,
+          },
         })
       }
       const schedulerList: Array<ScheduledJob<unknown>> = listScheduledJobs()
@@ -293,8 +272,8 @@ export function setupCronJobs(): void {
 
     // Test sheduler task
     run(cronContext, () => {
-      const jobExists: boolean = !!getScheduledJob({
-        name: 'testTask'
+      const jobExists = !!getScheduledJob({
+        name: 'testTask',
       })
       if (jobExists) {
         modify({
@@ -303,7 +282,7 @@ export function setupCronJobs(): void {
             job.schedule.value = testTaskCron
             job.schedule.timeZone = timezone
             return job
-          }
+          },
         })
       } else {
         create({
@@ -315,16 +294,16 @@ export function setupCronJobs(): void {
           schedule: {
             type: 'CRON',
             value: testTaskCron,
-            timeZone: timezone
-          }
+            timeZone: timezone,
+          },
         })
       }
     })
 
     // Update calculators
     run(cronContext, () => {
-      const jobExists: boolean = !!getScheduledJob({
-        name: 'updateCalculator'
+      const jobExists = !!getScheduledJob({
+        name: 'updateCalculator',
       })
       if (jobExists) {
         modify({
@@ -332,7 +311,7 @@ export function setupCronJobs(): void {
           editor: (job) => {
             job.schedule.value = updateCalculatorCron
             return job
-          }
+          },
         })
       } else {
         create({
@@ -344,8 +323,8 @@ export function setupCronJobs(): void {
           schedule: {
             type: 'CRON',
             value: updateCalculatorCron,
-            timeZone: 'Europe/Oslo'
-          }
+            timeZone: 'Europe/Oslo',
+          },
         })
       }
     })
@@ -353,8 +332,8 @@ export function setupCronJobs(): void {
     // Update next release Mimir QA
     if (app.config && app.config['ssb.mock.enable'] === 'true') {
       run(cronContext, () => {
-        const jobExists: boolean = !!getScheduledJob({
-          name: 'updateMimirMockRelease'
+        const jobExists = !!getScheduledJob({
+          name: 'updateMimirMockRelease',
         })
         if (jobExists) {
           modify({
@@ -362,7 +341,7 @@ export function setupCronJobs(): void {
             editor: (job) => {
               job.schedule.value = updateMimirMockReleaseCron
               return job
-            }
+            },
           })
         } else {
           create({
@@ -374,8 +353,8 @@ export function setupCronJobs(): void {
             schedule: {
               type: 'CRON',
               value: updateMimirMockReleaseCron,
-              timeZone: 'Europe/Oslo'
-            }
+              timeZone: 'Europe/Oslo',
+            },
           })
         }
       })
@@ -388,7 +367,7 @@ export function setupCronJobs(): void {
 }
 
 export interface SSBCronLib {
-    setupCronJobs: () => void;
-    runOnMasterOnly: (task: () => void) => void;
-    cronContext: RunContext<ContextAttributes>;
+  setupCronJobs: () => void
+  runOnMasterOnly: (task: () => void) => void
+  cronContext: RunContext<ContextAttributes>
 }

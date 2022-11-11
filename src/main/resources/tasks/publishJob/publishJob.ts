@@ -1,13 +1,13 @@
 import { get as getContent, Content } from '/lib/xp/content'
 import type { Statistics } from '../../site/content-types'
-import { DataSource } from '../../site/mixins/dataSource/dataSource'
+import type { DataSource } from '../../site/mixins/dataSource'
 import {
   JobEventNode,
   JobInfoNode,
   StatisticsPublishResult,
   DataSourceStatisticsPublishResult,
 } from '../../lib/ssb/repo/job'
-import { Statistic } from '../../site/mixins/statistic/statistic'
+import type { Statistic } from '../../site/mixins/statistic'
 import { PublicationItem } from '../../lib/ssb/dataset/publish'
 import { PublishDatasetConfig } from '../publishDataset/publishDataset-config'
 import { ReleaseDatesVariant, StatisticInListing } from '../../lib/ssb/dashboard/statreg/types'

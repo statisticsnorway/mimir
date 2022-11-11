@@ -9,12 +9,12 @@ import type { Statistics, Highchart, Table, KeyFigure } from '../../../site/cont
 import { ProcessXml, RefreshDatasetResult, DashboardJobInfo } from './dashboard'
 import { run, RunContext } from '/lib/xp/context'
 import { DatasetRepoNode } from '../repo/dataset'
-import { DataSource } from '../../../site/mixins/dataSource/dataSource'
+import type { DataSource } from '../../../site/mixins/dataSource'
 import { Source, TbmlDataUniform } from '../../types/xmlParser'
 import { JobEventNode, JobInfoNode, JobNames, JobStatus } from '../repo/job'
 import { NodeQueryResponse } from '/lib/xp/node'
 import { hasRole, User } from '/lib/xp/auth'
-import { Statistic } from '../../../site/mixins/statistic/statistic'
+import type { Statistic } from '../../../site/mixins/statistic'
 import { ContextAttributes } from '*/lib/xp/context'
 
 const { hasWritePermissions } = __non_webpack_require__('/lib/ssb/parts/permissions')

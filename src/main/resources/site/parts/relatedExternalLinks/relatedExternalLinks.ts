@@ -3,7 +3,7 @@ import { ResourceKey, render } from '/lib/thymeleaf'
 import { Phrases } from '../../../lib/types/language'
 import { render as r4xpRender } from '/lib/enonic/react4xp'
 import type { Article, Statistics } from '../../content-types'
-import { RelatedExternalLinks } from '../../mixins/relatedExternalLinks/relatedExternalLinks'
+import type { RelatedExternalLinks } from '../../mixins/relatedExternalLinks'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 

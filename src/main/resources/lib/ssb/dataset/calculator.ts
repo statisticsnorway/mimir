@@ -5,7 +5,7 @@ import { DatasetRepoNode } from '../repo/dataset'
 /* eslint-disable new-cap */
 // @ts-ignore
 import JSONstat from 'jsonstat-toolkit/import.mjs'
-import { DataSource } from '../../../site/mixins/dataSource/dataSource'
+import type { DataSource } from '../../../site/mixins/dataSource'
 
 const { datasetOrUndefined } = __non_webpack_require__('/lib/ssb/cache/cache')
 

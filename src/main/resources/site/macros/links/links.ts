@@ -2,9 +2,9 @@ import { render, RenderResponse } from '/lib/enonic/react4xp'
 import type { Links as LinksConfig } from '../../macros/links'
 import { get, Content } from '/lib/xp/content'
 import { LinksProps, prepareText } from '../../parts/links/links'
-import { TableLink } from '../../mixins/tableLink/tableLink'
-import { HeaderLink } from '../../mixins/headerLink/headerLink'
-import { ProfiledLink } from '../../mixins/profiledLink/profiledLink'
+import type { TableLink } from '../../mixins/tableLink'
+import type { HeaderLink } from '../../mixins/headerLink'
+import type { ProfiledLink } from '../../mixins/profiledLink'
 import { GA_TRACKING_ID } from '../../pages/default/default'
 
 const { attachmentUrl, pageUrl } = __non_webpack_require__('/lib/xp/portal')

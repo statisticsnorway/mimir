@@ -3,7 +3,7 @@ import { ContextAttributes } from '*/lib/xp/context'
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 import { CreateOrUpdateStatus } from '../dataset/dataset'
 import { get as getContent, query, Content } from '/lib/xp/content'
-import { DataSource } from '../../../site/mixins/dataSource/dataSource'
+import type { DataSource } from '../../../site/mixins/dataSource'
 import { Events, QueryInfoNode } from '../repo/query'
 import { EVENT_LOG_REPO, EVENT_LOG_BRANCH, LogSummary } from '../repo/eventLog'
 import { NodeQueryHit, RepoNode } from '/lib/xp/node'

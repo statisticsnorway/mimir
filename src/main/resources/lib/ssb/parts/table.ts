@@ -18,7 +18,7 @@ import {
 } from '../../types/xmlParser'
 import { DatasetRepoNode } from '../repo/dataset'
 import { DataSource as DataSourceType } from '../repo/dataset'
-import { DataSource } from '../../../site/mixins/dataSource/dataSource'
+import type { DataSource } from '../../../site/mixins/dataSource'
 
 const {
   data: { forceArray },

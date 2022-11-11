@@ -1,7 +1,7 @@
 import { HighchartsGraphConfig } from '../../../types/highcharts'
 import type { Highchart } from '../../../../site/content-types'
 import { Content } from '/lib/xp/content'
-import { DataSource } from '../../../../site/mixins/dataSource/dataSource'
+import type { DataSource } from '../../../../site/mixins/dataSource'
 import { PreliminaryData } from '../../../types/xmlParser'
 
 const { createDefaultConfig } = __non_webpack_require__('/lib/ssb/parts/highcharts/graph/config')

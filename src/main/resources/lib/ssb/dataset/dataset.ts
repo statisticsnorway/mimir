@@ -1,5 +1,5 @@
 import { query, Content, QueryResponse } from '/lib/xp/content'
-import { DataSource } from '../../../site/mixins/dataSource/dataSource'
+import type { DataSource } from '../../../site/mixins/dataSource'
 import type { GenericDataImport } from '../../../site/content-types'
 import { DataSource as DataSourceType, DatasetRepoNode } from '../repo/dataset'
 import { JSONstat } from '../../types/jsonstat-toolkit'

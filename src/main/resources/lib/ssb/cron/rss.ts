@@ -2,14 +2,14 @@ import { StatisticInListing } from '../dashboard/statreg/types'
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 import { Content } from '/lib/xp/content'
 import { request, HttpResponse } from '/lib/http-client'
-import { DataSource } from '../../../site/mixins/dataSource/dataSource'
+import type { DataSource } from '../../../site/mixins/dataSource'
 import { TbmlDataUniform, XmlParser } from '../../types/xmlParser'
 import { DatasetRepoNode, DataSource as DataSourceType } from '../repo/dataset'
 import { JSONstat } from '../../types/jsonstat-toolkit'
 import { JobStatus } from '../repo/job'
 import type { Default as DefaultPageConfig } from '../../../site/pages/default'
 import type { Statistics } from '../../../site/content-types'
-import { Statistic } from '../../../site/mixins/statistic/statistic'
+import type { Statistic } from '../../../site/mixins/statistic'
 
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 const { moment } = __non_webpack_require__('/lib/vendor/moment')

@@ -10,7 +10,7 @@ import { JSONstat as JSONstatType } from '../../../lib/types/jsonstat-toolkit'
 import { TbmlDataUniform } from '../../../lib/types/xmlParser'
 import { HighchartsGraphConfig } from '../../../lib/types/highcharts'
 import { ResourceKey, render } from '/lib/thymeleaf'
-import { DataSource } from '../../mixins/dataSource/dataSource'
+import type { DataSource } from '../../mixins/dataSource'
 import { render as r4XpRender, RenderResponse } from '/lib/enonic/react4xp'
 import { GA_TRACKING_ID } from '../../pages/default/default'
 

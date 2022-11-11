@@ -6,7 +6,7 @@ import { Phrases } from '../../../lib/types/language'
 import { render as r4xpRender } from '/lib/enonic/react4xp'
 import { SEO } from '../../../services/news/news'
 import type { Article, Statistics } from '../../content-types'
-import { RelatedArticles } from '../../mixins/relatedArticles/relatedArticles'
+import type { RelatedArticles } from '../../mixins/relatedArticles'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 

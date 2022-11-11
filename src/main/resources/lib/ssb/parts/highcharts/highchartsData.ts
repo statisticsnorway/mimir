@@ -2,7 +2,7 @@ import { PreliminaryData, TbmlDataUniform } from '../../../types/xmlParser'
 import type { Highchart } from '../../../../site/content-types'
 import { Content } from '/lib/xp/content'
 import { JSONstat } from '../../../types/jsonstat-toolkit'
-import { DataSource } from '../../../../site/mixins/dataSource/dataSource'
+import type { DataSource } from '../../../../site/mixins/dataSource'
 import { RowValue } from '../../utils/utils'
 
 const { seriesAndCategoriesFromHtmlTable } = __non_webpack_require__('/lib/ssb/parts/highcharts/data/htmlTable')

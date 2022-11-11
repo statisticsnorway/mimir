@@ -2,7 +2,7 @@ import { query, Content } from '/lib/xp/content'
 import type { Page, Article, Statistics } from '../../site/content-types'
 import type { Default as DefaultPageConfig } from '../../site/pages/default'
 import { StatisticInListing, VariantInListing } from '../../lib/ssb/dashboard/statreg/types'
-import { Statistic } from '../../site/mixins/statistic/statistic'
+import type { Statistic } from '../../site/mixins/statistic'
 const { moment } = __non_webpack_require__('/lib/vendor/moment')
 const { fetchStatisticsWithReleaseToday } = __non_webpack_require__('/lib/ssb/statreg/statistics')
 const { pageUrl } = __non_webpack_require__('/lib/xp/portal')

@@ -8,7 +8,7 @@ import { MunicipalityWithCounty } from '../dataset/klass/municipalities'
 import { TbmlDataUniform, TableRowUniform, TableCellUniform, PreliminaryData } from '../../types/xmlParser'
 import { Category, Dimension, JSONstat as JSONstatType } from '../../types/jsonstat-toolkit'
 import { DatasetRepoNode, DataSource as DataSourceType } from '../repo/dataset'
-import { DataSource } from '../../../site/mixins/dataSource/dataSource'
+import type { DataSource } from '../../../site/mixins/dataSource'
 
 const { imageUrl } = __non_webpack_require__('/lib/xp/portal')
 const { datasetOrUndefined } = __non_webpack_require__('/lib/ssb/cache/cache')
