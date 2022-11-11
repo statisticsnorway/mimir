@@ -10,7 +10,7 @@ import { MunicipalityWithCounty } from '../dataset/klass/municipalities'
 import { newCache, Cache } from '/lib/cache'
 import type { DataSource } from '../../../site/mixins/dataSource'
 import { request, HttpResponse } from '/lib/http-client'
-import { BanVarnishPageCacheConfig } from '../../../tasks/banVarnishPageCache/banVarnishPageCache-config'
+import type { BanVarnishPageCache as BanVarnishPageCacheConfig } from '../../../tasks/banVarnishPageCache'
 
 const { executeFunction, sleep, submitTask } = __non_webpack_require__('/lib/xp/task')
 const { getDataset, extractKey } = __non_webpack_require__('/lib/ssb/dataset/dataset')
