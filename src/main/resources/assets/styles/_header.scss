@@ -3,6 +3,10 @@
 
   .container {
     padding: 0;
+
+    @include media-breakpoint-down(md){
+      max-width: 720px;
+    }
   }
 }
 
@@ -72,7 +76,7 @@ header.ssb-header-wrapper {
 
   .header-content {
     margin-top: 14px;
-    // CHANGE
+
     @include media-breakpoint-down(lg){
       margin-top: 0;
       overflow: hidden;
@@ -123,7 +127,6 @@ header.ssb-header-wrapper {
     letter-spacing: normal;
     text-align: right;
 
-    // CHANGE
     @include media-breakpoint-down(lg) {
       display: block;
 
@@ -143,7 +146,6 @@ header.ssb-header-wrapper {
     width: 285px;
     align-self: flex-end;
 
-    // CHANGE
     @include media-breakpoint-down(lg) {
       max-height: 0;
       margin: 20px 0 0;
