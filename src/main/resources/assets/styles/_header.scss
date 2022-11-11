@@ -9,7 +9,7 @@
 header.ssb-header-wrapper {
   padding: 0;
 
-  @include media-breakpoint-down(md){
+  @include media-breakpoint-down(lg){
     padding-top: 20px;
   }
 
@@ -22,7 +22,7 @@ header.ssb-header-wrapper {
     margin-bottom: 12px;
     margin-top: 10px;
 
-    @include media-breakpoint-down(md) {
+    @include media-breakpoint-down(lg) {
       display: none;
     }
     .ssb-links {
@@ -49,7 +49,7 @@ header.ssb-header-wrapper {
   .plainLink {
     background: none;
     border-bottom: none;
-    @include media-breakpoint-down(md){
+    @include media-breakpoint-down(lg){
       margin: 0
     }
   }
@@ -57,7 +57,7 @@ header.ssb-header-wrapper {
   .misc {
     width: 100%;
     padding: 0;
-    @include media-breakpoint-down(md){
+    @include media-breakpoint-down(lg){
       padding: 0 20px 20px;
       align-items: center;
     }
@@ -72,8 +72,8 @@ header.ssb-header-wrapper {
 
   .header-content {
     margin-top: 14px;
-
-    @include media-breakpoint-down(md){
+    // CHANGE
+    @include media-breakpoint-down(lg){
       margin-top: 0;
       overflow: hidden;
       max-height: 0;
@@ -101,7 +101,7 @@ header.ssb-header-wrapper {
       width: 248px;
       height: 50px;
 
-      @include media-breakpoint-down(md) {
+      @include media-breakpoint-down(lg) {
         width: 197px;
         height: auto;
       }
@@ -123,7 +123,8 @@ header.ssb-header-wrapper {
     letter-spacing: normal;
     text-align: right;
 
-    @include media-breakpoint-down(md) {
+    // CHANGE
+    @include media-breakpoint-down(lg) {
       display: block;
 
       &:focus {
@@ -142,7 +143,8 @@ header.ssb-header-wrapper {
     width: 285px;
     align-self: flex-end;
 
-    @include media-breakpoint-down(md) {
+    // CHANGE
+    @include media-breakpoint-down(lg) {
       max-height: 0;
       margin: 20px 0 0;
       width: 100%;
@@ -172,7 +174,7 @@ header.ssb-header-wrapper {
   }
 
   #mainMenu {
-    @include media-breakpoint-down(md){
+    @include media-breakpoint-down(lg){
       flex-direction: column;
     }
 
@@ -182,7 +184,7 @@ header.ssb-header-wrapper {
       padding: 0;
       margin-bottom: 0;
 
-      @include media-breakpoint-down(md){ 
+      @include media-breakpoint-down(lg){ 
         flex-direction: column;
       }
     }
@@ -198,7 +200,7 @@ header.ssb-header-wrapper {
           color: $ssb-dark-6;
           font-weight: bold;
 
-          @include media-breakpoint-down(md) {
+          @include media-breakpoint-down(lg) {
             font-weight: normal;
           }
         }
@@ -212,7 +214,7 @@ header.ssb-header-wrapper {
         }
       }
 
-      @include media-breakpoint-down(md) {
+      @include media-breakpoint-down(lg) {
         .subMenu {
           display: block;
 
@@ -225,7 +227,7 @@ header.ssb-header-wrapper {
       }
     }
 
-    @include media-breakpoint-down(md){
+    @include media-breakpoint-down(lg){
       transition: max-height 0.3s ease-in;
       display: grid;
       width: 100%;
@@ -269,7 +271,7 @@ header.ssb-header-wrapper {
         outline: 0 none;
       }
 
-      @include media-breakpoint-down(md) {
+      @include media-breakpoint-down(lg) {
         padding: 18px 0px;
         margin: 0 2px 1px;
 
@@ -283,7 +285,7 @@ header.ssb-header-wrapper {
           height: 4px;
           background: black;
 
-          @include media-breakpoint-down(md) {
+          @include media-breakpoint-down(lg) {
             height: 0;
           }
         }
@@ -298,7 +300,7 @@ header.ssb-header-wrapper {
       margin-right: 30px;
       cursor: pointer;
 
-      @include media-breakpoint-down(md) {
+      @include media-breakpoint-down(lg) {
         display: grid;
         grid-column-gap: 5px;
         grid-template-columns: 20px auto;
@@ -320,7 +322,7 @@ header.ssb-header-wrapper {
       span {
         font-size: 16px;
         width: 100%;
-        @include media-breakpoint-down(md) {
+        @include media-breakpoint-down(lg) {
           font-size: 20px;
         }
       }
@@ -344,14 +346,14 @@ header.ssb-header-wrapper {
         }
       }
 
-      @include media-breakpoint-down(md) {
+      @include media-breakpoint-down(lg) {
         display: none;
       }
 
       li {
         margin: 20px 0;
         padding-right: 8px;
-        @include media-breakpoint-down(md) {
+        @include media-breakpoint-down(lg) {
           margin-top: 5px;
           padding: 0 20px;
         }
@@ -390,7 +392,7 @@ header.ssb-header-wrapper {
   .global-bottom-links {
     display: none;
 
-    @include media-breakpoint-down(md) {
+    @include media-breakpoint-down(lg) {
       display: flex;
       flex-direction: column;
       align-items: flex-start;
