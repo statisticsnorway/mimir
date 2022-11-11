@@ -1,7 +1,7 @@
 import { get, Content } from '/lib/xp/content'
 import { render, RenderResponse } from '/lib/enonic/react4xp'
 import type { Accordion } from '../../content-types'
-import { AccordionConfig } from '../../macros/accordion/accordion-config'
+import type { Accordion as AccordionConfig } from '../../macros/accordion'
 
 const {
   data: { forceArray },
