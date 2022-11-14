@@ -128,7 +128,7 @@ function getTablesAndFigures(
       },
     }).hits
     return attachmentTablesFiguresHits.map((content, index) => {
-      if (content && content.type === `${app.name}:table`) {
+      if (content.type === `${app.name}:table`) {
         ++tableIndex
         return getTableReturnObject(
           content,
@@ -136,7 +136,7 @@ function getTablesAndFigures(
           `${phrases.table} ${tableIndex}`,
           index
         )
-      } else if (content && content.type === `${app.name}:highchart`) {
+      } else if (content.type === `${app.name}:highchart`) {
         ++figureIndex
         return getFigureReturnObject(
           content,
