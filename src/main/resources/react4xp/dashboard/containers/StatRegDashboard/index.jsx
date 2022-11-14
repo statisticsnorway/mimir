@@ -25,57 +25,67 @@ export function StatRegDashboard() {
 
   function refreshAll() {
     const statRegStatusesNotLoading = statuses.filter((status) => !status.loading)
-    startRefresh(dispatch, io, statRegStatusesNotLoading.map((status) => status.key))
+    startRefresh(
+      dispatch,
+      io,
+      statRegStatusesNotLoading.map((status) => status.key)
+    )
   }
 
   function makeRefreshButton(statRegStatus) {
     return (
       <Button
-        variant="primary"
-        size="sm"
-        className="mx-1"
+        variant='primary'
+        size='sm'
+        className='mx-1'
         onClick={() => refreshStatReg(statRegStatus.key)}
         disabled={statRegStatus.loading}
       >
-        { statRegStatus.loading ? <span className="spinner-border spinner-border-sm" /> : <RefreshCw size={16}/> }
+        {statRegStatus.loading ? <span className='spinner-border spinner-border-sm' /> : <RefreshCw size={16} />}
       </Button>
     )
   }
 
   function renderTable() {
     if (loading) {
-      return (<span className="spinner-border spinner-border" />)
+      return <span className='spinner-border spinner-border' />
     }
 
     return (
       <Table bordered>
         <thead>
           <tr>
-            <th className="roboto-bold">Spørring</th>
-            <th className="roboto-bold">Sist oppdatert</th>
-            <th className="roboto-bold">Siste aktivitet</th>
+            <th className='roboto-bold'>Spørring</th>
+            <th className='roboto-bold'>Sist oppdatert</th>
+            <th className='roboto-bold'>Siste aktivitet</th>
             <th />
           </tr>
         </thead>
-        <tbody className="small">
+        <tbody className='small'>
           {statuses.map((statRegStatus) => {
             const {
               displayName,
               modifiedReadable,
               modified,
-              logData: {
-                showWarningIcon
-              },
-              key
+              logData: { showWarningIcon },
+              key,
             } = statRegStatus
             return (
               <tr key={key}>
                 <td className={`${statusIcon(showWarningIcon)} dataset`}>
-                  <a className="ssb-link my-0 text-capitalize" href="#">{displayName}</a>
+                  <a className='ssb-link my-0 text-capitalize' href='#'>
+                    {displayName}
+                  </a>
                 </td>
-                <td>{modifiedReadable}<br/>{modified}</td>
-                <td><DataSourceLog dataSourceId={key} isStatReg={true}/></td>
-                <td className="text-center">{makeRefreshButton(statRegStatus)}</td>
+                <td>
+                  {modifiedReadable}
+                  <br />
+                  {modified}
+                </td>
+                <td>
+                  <DataSourceLog dataSourceId={key} isStatReg={true} />
+                </td>
+                <td className='text-center'>{makeRefreshButton(statRegStatus)}</td>
               </tr>
             )
           })}
@@ -85,20 +95,20 @@ export function StatRegDashboard() {
   }
 
   return (
-    <section className="xp-part part-dashboard container-fluid p-0 m-0">
+    <section className='xp-part part-dashboard container-fluid p-0 m-0'>
       <Row>
         <Col>
-          <div className="p-4 tables-wrapper statreg">
-            <h2 className="d-inline-block w-75">Data fra Statistikkregisteret</h2>
-            <div className="d-inline-block float-end">
+          <div className='p-4 tables-wrapper statreg'>
+            <h2 className='d-inline-block w-75'>Data fra Statistikkregisteret</h2>
+            <div className='d-inline-block float-end'>
               <Button
                 onClick={() => refreshAll()}
                 disabled={statuses.filter((s) => s.loading).length === statuses.length}
               >
-                  Oppdater data
+                Oppdater data
               </Button>
             </div>
-            <Accordion header="Status" className="mx-0" openByDefault={true}>
+            <Accordion header='Status' className='mx-0' openByDefault={true}>
               {renderTable()}
             </Accordion>
           </div>

@@ -2,17 +2,15 @@ __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 import { Content } from '/lib/xp/content'
 import { newCache, Cache } from '/lib/cache'
 
-const {
-  cacheLog
-} = __non_webpack_require__('/lib/ssb/utils/serverLog')
+const { cacheLog } = __non_webpack_require__('/lib/ssb/utils/serverLog')
 
 const masterSubjectCache: Cache = newCache({
   expire: 3600,
-  size: 25
+  size: 25,
 })
 const draftSubjectCache: Cache = newCache({
   expire: 3600,
-  size: 25
+  size: 25,
 })
 
 export function fromSubjectCache<T>(req: XP.Request, key: string, fallback: () => Array<T>): Array<T> {
@@ -37,7 +35,7 @@ export function completelyClearSubjectCache(branch: string): void {
 }
 
 export interface SSBSubjectCacheLibrary {
-  fromSubjectCache: <T>(req: XP.Request, key: string, fallback: () => Array<T>) => Array<T>;
-  clearSubjectCache: (content: Content, branch: string) => void;
-  completelyClearSubjectCache: (branch: string) => void;
+  fromSubjectCache: <T>(req: XP.Request, key: string, fallback: () => Array<T>) => Array<T>
+  clearSubjectCache: (content: Content, branch: string) => void
+  completelyClearSubjectCache: (branch: string) => void
 }

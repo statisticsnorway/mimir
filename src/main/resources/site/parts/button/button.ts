@@ -1,20 +1,15 @@
 import { get, Content } from '/lib/xp/content'
 import { Button } from '../../content-types/button/button'
-import { attachmentUrl,
-  getComponent,
-  pageUrl,
-  Component } from '/lib/xp/portal'
+import { attachmentUrl, getComponent, pageUrl, Component } from '/lib/xp/portal'
 import { ButtonPartConfig } from './button-part-config'
 import { ResourceKey, render } from '/lib/thymeleaf'
 
-const {
-  renderError
-} = __non_webpack_require__('/lib/ssb/error/error')
+const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
 const util = __non_webpack_require__('/lib/util')
 const view: ResourceKey = resolve('./button.html') as ResourceKey
 
-exports.get = function(req: XP.Request): XP.Response {
+exports.get = function (req: XP.Request): XP.Response {
   try {
     const part: Component<ButtonPartConfig> = getComponent()
     const buttonsIds: Array<string> = part.config.button ? util.data.forceArray(part.config.button) : []
@@ -31,48 +26,47 @@ function renderPart(req: XP.Request, buttonIds: Array<string>): XP.Response {
 
   buttonIds.map((key: string) => {
     const button: Content<Button> | null = get({
-      key
+      key,
     })
 
     if (button && button.data.link) {
       const target: Content | null = get({
-        key: button.data.link
+        key: button.data.link,
       })
-
 
       if (target) {
         const href: string = getHref(target)
         buttons.push({
           displayName: button.displayName,
-          href: href
+          href: href,
         })
       }
     }
   })
 
   const body: string = render(view, {
-    buttons
+    buttons,
   })
 
   return {
     body,
-    contentType: 'text/html'
+    contentType: 'text/html',
   }
 }
 
 function getHref(target: Content<any>): string {
   if (target.type === `${app.name}:page` || target.type === `${app.name}:statistics`) {
     return pageUrl({
-      id: target._id
+      id: target._id,
     })
   } else {
     return attachmentUrl({
-      id: target._id
+      id: target._id,
     })
   }
 }
 
 interface ButtonShape {
-  displayName: string;
-  href: string;
+  displayName: string
+  href: string
 }

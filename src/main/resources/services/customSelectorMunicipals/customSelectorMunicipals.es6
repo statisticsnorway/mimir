@@ -1,6 +1,4 @@
-const {
-  list, query
-} = __non_webpack_require__('/lib/ssb/dataset/klass/municipalities')
+const { list, query } = __non_webpack_require__('/lib/ssb/dataset/klass/municipalities')
 
 /**
  * @param {object} req: Enonics request object
@@ -23,9 +21,8 @@ exports.get = (req) => {
       hits: municipals.map((municipal) => ({
         id: municipal.code,
         displayName: `${municipal.code} ${municipal.name}`,
-        description: `${municipal.shortName} ${municipal.presentationName}`
-      }))
-    }
+        description: `${municipal.shortName} ${municipal.presentationName}`,
+      })),
+    },
   }
 }
-

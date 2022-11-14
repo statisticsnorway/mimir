@@ -1,9 +1,7 @@
 import React, { useContext } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Button, Table } from 'react-bootstrap'
-import { selectStatistics,
-  selectLoading,
-  selectOpenModal } from './selectors'
+import { selectStatistics, selectLoading, selectOpenModal } from './selectors'
 import { RefreshCw } from 'react-feather'
 import Moment from 'react-moment'
 import { Link } from '@statisticsnorway/ssb-component-library'
@@ -36,7 +34,7 @@ export function Statistics() {
       } else {
         statisticsFinal.push({
           shortName: statistic.shortName,
-          language: 'en'
+          language: 'en',
         })
       }
     })
@@ -44,33 +42,31 @@ export function Statistics() {
 
   function renderStatistics() {
     if (loading) {
-      return (
-        <span className="spinner-border spinner-border" />
-      )
+      return <span className='spinner-border spinner-border' />
     }
     return (
-      <div className="next-release">
+      <div className='next-release'>
         <Table bordered>
           <thead>
             <tr>
-              <th className="roboto-bold">
+              <th className='roboto-bold'>
                 <span>Statistikk</span>
               </th>
-              <th className="roboto-bold">
+              <th className='roboto-bold'>
                 <span>Om statistikken</span>
               </th>
-              <th className="roboto-bold">
+              <th className='roboto-bold'>
                 <span>Neste publisering</span>
               </th>
               <th />
-              <th className="roboto-bold">
+              <th className='roboto-bold'>
                 <span>Logg/sist oppdatert</span>
               </th>
             </tr>
           </thead>
           {getStatistics()}
         </Table>
-        {openModal ? <RefreshStatisticsModal/> : null }
+        {openModal ? <RefreshStatisticsModal /> : null}
       </div>
     )
   }
@@ -78,13 +74,13 @@ export function Statistics() {
   function makeRefreshButton(statistic) {
     return (
       <Button
-        variant="primary"
-        size="sm"
-        className="mx-1"
+        variant='primary'
+        size='sm'
+        className='mx-1'
         onClick={() => onRefreshStatistic(statistic)}
         disabled={statistic.loading}
       >
-        { statistic.loading ? <span className="spinner-border spinner-border-sm" /> : <RefreshCw size={16}/> }
+        {statistic.loading ? <span className='spinner-border spinner-border-sm' /> : <RefreshCw size={16} />}
       </Button>
     )
   }
@@ -99,37 +95,23 @@ export function Statistics() {
       return (
         <tbody>
           {statisticsFinal.map((statistic, index) => {
-            return (
-              statisticRow(statistic, index)
-            )
+            return statisticRow(statistic, index)
           })}
         </tbody>
       )
     }
-    return (
-      <tbody/>
-    )
+    return <tbody />
   }
 
   function statisticRow(statistic, index) {
     const key = statistic.shortName + '_' + statistic.language + '_' + index
     return (
       <tr key={key}>
-        <td className='statistic'>
-          {getShortNameLink(statistic)}
-        </td>
-        <td>
-          {getAboutStatisticLink(statistic)}
-        </td>
-        <td>
-          {getNextRelease(statistic)}
-        </td>
-        <td className="text-center">
-          {makeRefreshButton(statistic)}
-        </td>
-        <td>
-          {statistic.logData ? <StatisticsLog statisticId={statistic.id}/> : null}
-        </td>
+        <td className='statistic'>{getShortNameLink(statistic)}</td>
+        <td>{getAboutStatisticLink(statistic)}</td>
+        <td>{getNextRelease(statistic)}</td>
+        <td className='text-center'>{makeRefreshButton(statistic)}</td>
+        <td>{statistic.logData ? <StatisticsLog statisticId={statistic.id} /> : null}</td>
       </tr>
     )
   }
@@ -137,7 +119,7 @@ export function Statistics() {
   function getNextRelease(statistic) {
     return (
       <span>
-        {statistic.nextRelease ? <Moment format="DD.MM.YYYY HH:mm">{statistic.nextRelease}</Moment> : null}
+        {statistic.nextRelease ? <Moment format='DD.MM.YYYY HH:mm'>{statistic.nextRelease}</Moment> : null}
         {getStatregLinks(statistic)}
       </span>
     )
@@ -147,7 +129,9 @@ export function Statistics() {
     if (statistic.nextReleaseId) {
       const editUrl = internalBaseUrl + '/statistikkregisteret/publisering/edit/' + statistic.nextReleaseId
       return (
-        <Link isExternal href={editUrl} title="Endre publisering i statistikkregisteret" className="ms-2">[Endre]</Link>
+        <Link isExternal href={editUrl} title='Endre publisering i statistikkregisteret' className='ms-2'>
+          [Endre]
+        </Link>
       )
     }
     return null
@@ -155,11 +139,18 @@ export function Statistics() {
 
   function createLink(statistic) {
     if (statistic.statisticId && statistic.variantId) {
-      const createUrl = statistic.activeVariants > 1 ?
-        internalBaseUrl + '/statistikkregisteret/statistikk/show/' + statistic.statisticId :
-        internalBaseUrl + '/statistikkregisteret/publisering/create?statistikk.id=' + statistic.statisticId + '&variant.id=' + statistic.variantId
+      const createUrl =
+        statistic.activeVariants > 1
+          ? internalBaseUrl + '/statistikkregisteret/statistikk/show/' + statistic.statisticId
+          : internalBaseUrl +
+            '/statistikkregisteret/publisering/create?statistikk.id=' +
+            statistic.statisticId +
+            '&variant.id=' +
+            statistic.variantId
       return (
-        <Link isExternal href={createUrl} title="Melde ny publisering i statistikkregisteret" className="ms-2">[Meld]</Link>
+        <Link isExternal href={createUrl} title='Melde ny publisering i statistikkregisteret' className='ms-2'>
+          [Meld]
+        </Link>
       )
     }
     return null
@@ -177,26 +168,20 @@ export function Statistics() {
   function renderEditLink(statistic) {
     if (statistic.id) {
       return (
-        <Link
-          isExternal
-          href={contentStudioBaseUrl + statistic.id}>
+        <Link isExternal href={contentStudioBaseUrl + statistic.id}>
           {statistic.language === 'en' ? 'Eng. ' + statistic.shortName : statistic.shortName}
         </Link>
       )
     } else {
-      return (
-        <span>{statistic.language === 'en' ? 'Eng. ' + statistic.shortName : statistic.shortName}</span>
-      )
+      return <span>{statistic.language === 'en' ? 'Eng. ' + statistic.shortName : statistic.shortName}</span>
     }
   }
 
   function renderPreviewLink(statistic) {
     if (statistic.previewUrl) {
       return (
-        <Link
-          isExternal
-          title="Forhåndsvisning" href={statistic.previewUrl} className="ms-2">
-        [Forhåndsvisning]
+        <Link isExternal title='Forhåndsvisning' href={statistic.previewUrl} className='ms-2'>
+          [Forhåndsvisning]
         </Link>
       )
     }
@@ -214,20 +199,17 @@ export function Statistics() {
   function getAboutStatisticLink(statistic) {
     if (statistic.aboutTheStatistics) {
       return (
-        <Link
-          isExternal
-          href={contentStudioBaseUrl + statistic.aboutTheStatistics}>{statistic.language === 'en' ? 'Eng. ' + 'Om statistikken' : 'Om statistikken'}
+        <Link isExternal href={contentStudioBaseUrl + statistic.aboutTheStatistics}>
+          {statistic.language === 'en' ? 'Eng. ' + 'Om statistikken' : 'Om statistikken'}
         </Link>
       )
     }
-    return (
-      <span>{statistic.language === 'en' ? 'Eng. ' + 'Om statistikken' : 'Om statistikken'}</span>
-    )
+    return <span>{statistic.language === 'en' ? 'Eng. ' + 'Om statistikken' : 'Om statistikken'}</span>
   }
 
   return (
-    <div className="p-4 tables-wrapper">
-      <h2 className="mb-3">Kommende publiseringer</h2>
+    <div className='p-4 tables-wrapper'>
+      <h2 className='mb-3'>Kommende publiseringer</h2>
       {renderStatistics()}
     </div>
   )

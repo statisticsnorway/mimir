@@ -13,15 +13,18 @@ class LocalSearch extends React.Component {
 
   render() {
     return (
-      <section className="xp-part part-local-search container">
-        <div className="container">
-          <div className="row">
-            <div className="col-12">
+      <section className='xp-part part-local-search container'>
+        <div className='container'>
+          <div className='row'>
+            <div className='col-12'>
               <Title size={2}>{this.props.title}</Title>
-              <Dropdown placeholder={this.props.placeholder}
-                searchable largeSize onSelect={(selectedItem)=> this.onSelect(selectedItem)}
+              <Dropdown
+                placeholder={this.props.placeholder}
+                searchable
+                largeSize
+                onSelect={(selectedItem) => this.onSelect(selectedItem)}
                 items={this.props.items}
-                className="search-field"
+                className='search-field'
                 ariaLabel={this.props.placeholder}
               />
             </div>
@@ -38,8 +41,8 @@ LocalSearch.propTypes = {
   items: PropTypes.arrayOf({
     title: PropTypes.string,
     id: PropTypes.string,
-    url: PropTypes.string
-  })
+    url: PropTypes.string,
+  }),
 }
 
 export default (props) => <LocalSearch {...props} />

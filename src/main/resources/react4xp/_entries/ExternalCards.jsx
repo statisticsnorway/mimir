@@ -6,26 +6,24 @@ import { Container, Row, Col } from 'react-bootstrap'
 const ExternalCards = (props) => {
   return (
     <Container>
-      <Row className="justify-content-start">
+      <Row className='justify-content-start'>
         {props.links.map((link, index) => {
           return (
-            <Col
-              key={`external-card-${index}`}
-              className="external-card col-12 mb-4 col-md-4">
+            <Col key={`external-card-${index}`} className='external-card col-12 mb-4 col-md-4'>
               <Card
                 href={link.href}
                 hrefText={link.children}
-                icon={link.image && <img src={link.image} alt=''/>}
-                profiled external
+                icon={link.image && <img src={link.image} alt='' />}
+                profiled
+                external
                 ariaLabel={link.children}
-                ariaDescribedBy="text"
+                ariaDescribedBy='text'
               >
                 <Text>{link.content}</Text>
               </Card>
             </Col>
           )
-        }
-        )}
+        })}
       </Row>
     </Container>
   )
@@ -38,9 +36,9 @@ ExternalCards.propTypes = {
       imageAlt: PropTypes.string,
       content: PropTypes.string,
       href: PropTypes.string.isRequired,
-      children: PropTypes.string
+      children: PropTypes.string,
     })
-  )
+  ),
 }
 
 export default ExternalCards

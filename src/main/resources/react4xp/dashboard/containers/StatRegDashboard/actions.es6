@@ -2,7 +2,7 @@ import { actions } from './slice'
 
 export function requestStatuses(dispatch, io) {
   dispatch({
-    type: actions.loadStatuses.type
+    type: actions.loadStatuses.type,
   })
 
   io.emit('statreg-dashboard-status')
@@ -11,7 +11,7 @@ export function requestStatuses(dispatch, io) {
 export function startRefresh(dispatch, io, keys) {
   dispatch({
     type: actions.startRefreshStatus.type,
-    keys
+    keys,
   })
 
   io.emit('statreg-dashboard-refresh', keys)
@@ -20,7 +20,7 @@ export function startRefresh(dispatch, io, keys) {
 export function requestStatRegEventLogData(dispatch, io, id) {
   dispatch({
     type: actions.statRegEventLogLoading.type,
-    id
+    id,
   })
   io.emit('get-statreg-eventlog-node', id)
 }

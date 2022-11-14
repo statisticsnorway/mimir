@@ -1,19 +1,14 @@
 /* eslint-disable new-cap */
-const {
-  getMunicipality
-} = __non_webpack_require__('/lib/ssb/dataset/klass/municipalities')
+const { getMunicipality } = __non_webpack_require__('/lib/ssb/dataset/klass/municipalities')
 
-const {
-  DataSource: DataSourceType
-} = __non_webpack_require__('/lib/ssb/repo/dataset')
-
+const { DataSource: DataSourceType } = __non_webpack_require__('/lib/ssb/repo/dataset')
 
 export function seriesAndCategoriesFromJsonStat(req, highchart, dataset, datasetFormat) {
   const jsonStatConfig = datasetFormat.jsonStat || datasetFormat[DataSourceType.STATBANK_API]
   const filterOptions = jsonStatConfig.datasetFilterOptions
   const xAxisLabel = jsonStatConfig.xAxisLabel
   const yAxisLabel = jsonStatConfig.yAxisLabel
-  const dimensionFilter = dataset && dataset.id.map( () => 0 )
+  const dimensionFilter = dataset && dataset.id.map(() => 0)
 
   if (filterOptions && filterOptions._selected && filterOptions._selected === 'municipalityFilter') {
     const municipality = getMunicipality(req)
@@ -37,19 +32,19 @@ const defaultFormat = (ds, dimensionFilter, xAxis, yAxisLabel) => {
   const yAxis = !yAxisLabel || yAxisLabel === 'Region' ? 'ContentsCode' : yAxisLabel
   const yCategories = ds.Dimension(yAxis).Category()
 
-  const series = xCategories.map( (xCategory) => {
+  const series = xCategories.map((xCategory) => {
     dimensionFilter[xAxisIndex] = xCategory.index
     const data = ds.Data(dimensionFilter, false)
     return {
       name: xCategory.label,
       y: data,
-      data: [data]
+      data: [data],
     }
   })
 
   return {
     series,
-    categories: yCategories.map((category) => category.label)
+    categories: yCategories.map((category) => category.label),
   }
 }
 
@@ -59,22 +54,24 @@ function pieFormat(ds, dimensionFilter, xAxis, yAxisLabel) {
   const yAxis = !yAxisLabel || yAxisLabel === 'Region' ? 'ContentsCode' : yAxisLabel
   const yCategories = ds.Dimension(yAxis).Category()
 
-  const series = [{
-    name: yCategories.length === 1 ? yCategories[0].label : 'Antall',
-    data: xCategories.map((xCategory) => {
-      dimensionFilter[xAxisIndex] = xCategory.index
-      const data = ds.Data(dimensionFilter, false)
-      return {
-        name: xCategory.label,
-        y: data,
-        data: [data]
-      }
-    })
-  }]
+  const series = [
+    {
+      name: yCategories.length === 1 ? yCategories[0].label : 'Antall',
+      data: xCategories.map((xCategory) => {
+        dimensionFilter[xAxisIndex] = xCategory.index
+        const data = ds.Data(dimensionFilter, false)
+        return {
+          name: xCategory.label,
+          y: data,
+          data: [data],
+        }
+      }),
+    },
+  ]
 
   return {
     series,
-    categories: xCategories.map((category) => category.label)
+    categories: xCategories.map((category) => category.label),
   }
 }
 
@@ -85,28 +82,27 @@ const barNegativeFormat = (ds, dimensionFilter, xAxis, yAxis) => {
   const xCategories = ds.Dimension(xAxis).Category()
   const yCategories = ds.Dimension(yAxis).Category()
 
-  const series = yCategories.map( (yCategory) => ({
+  const series = yCategories.map((yCategory) => ({
     name: yCategory.label,
-    data: xCategories.map( (xCategory) => {
+    data: xCategories.map((xCategory) => {
       dimensionFilter[yAxisIndex] = yCategory.index
       dimensionFilter[xAxisIndex] = xCategory.index
       const value = ds.Data(dimensionFilter, false)
       return yCategory.index === 0 ? value * -1 : value
-    })
+    }),
   }))
 
   return {
     series,
-    categories: xCategories.map((category) => category.label)
+    categories: xCategories.map((category) => category.label),
   }
 }
 
-
 const parseDataWithMunicipality = (dataset, filterTarget, municipality, xAxis) => {
   let code = municipality.code
-  let hasData = hasFilterData(dataset, filterTarget, code, xAxis )
+  let hasData = hasFilterData(dataset, filterTarget, code, xAxis)
 
-  if ( !hasData ) {
+  if (!hasData) {
     const getDataFromOldMunicipalityCode = municipality.changes.length > 0
     if (getDataFromOldMunicipalityCode) {
       code = municipality.changes[0].oldCode
@@ -138,4 +134,3 @@ const hasFilterData = (dataset, filterTarget, filter, xAxis) => {
     return !!dataset.Data(dimension, false)
   }, false)
 }
-

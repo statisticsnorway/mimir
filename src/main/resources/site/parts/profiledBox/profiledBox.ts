@@ -5,22 +5,13 @@ import { ProfiledBoxPartConfig } from './profiledBox-part-config'
 import { render, ResourceKey } from '/lib/thymeleaf'
 import { randomUnsafeString } from '/lib/ssb/utils/utils'
 
-const {
-  getContent,
-  getComponent,
-  pageUrl,
-  imageUrl
-} = __non_webpack_require__('/lib/xp/portal')
-const {
-  renderError
-} = __non_webpack_require__('/lib/ssb/error/error')
-const {
-  getImageAlt
-} = __non_webpack_require__('/lib/ssb/utils/imageUtils')
+const { getContent, getComponent, pageUrl, imageUrl } = __non_webpack_require__('/lib/xp/portal')
+const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
+const { getImageAlt } = __non_webpack_require__('/lib/ssb/utils/imageUtils')
 
 const view: ResourceKey = resolve('profiledBox.html')
 
-exports.get = function(req: XP.Request): XP.Response {
+exports.get = function (req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -38,16 +29,16 @@ function renderPart(req: XP.Request): XP.Response {
   const titleSize: string = getTitleSize(config.title)
   const id: string = 'profiled-box-' + randomUnsafeString()
   const body: string = render(view, {
-    profiledBoxId: id
+    profiledBoxId: id,
   })
 
   const props: ProfiledBoxProps = {
     imgUrl: imageUrl({
       id: config.image,
-      scale: 'block(315, 215)'
+      scale: 'block(315, 215)',
     }),
     imageAltText: getImageAlt(config.image) ? getImageAlt(config.image) : ' ',
-    imagePlacement: (config.cardOrientation == 'horizontal') ? 'left' : 'top',
+    imagePlacement: config.cardOrientation == 'horizontal' ? 'left' : 'top',
     href: getLink(urlContentSelector),
     subTitle: getSubtitle(config.content, config.date, language),
     title: config.title,
@@ -55,17 +46,13 @@ function renderPart(req: XP.Request): XP.Response {
     linkType: 'header',
     titleSize: titleSize,
     ariaLabel: config.title,
-    ariaDescribedBy: 'subtitle'
+    ariaDescribedBy: 'subtitle',
   }
 
-  return r4xpRender('site/parts/profiledBox/profiledBox',
-    props,
-    req,
-    {
-      id: id,
-      body: body
-    }
-  )
+  return r4xpRender('site/parts/profiledBox/profiledBox', props, req, {
+    id: id,
+    body: body,
+  })
 }
 
 function getLink(urlContentSelector: ProfiledBoxPartConfig['urlContentSelector']): string | undefined {
@@ -74,22 +61,22 @@ function getLink(urlContentSelector: ProfiledBoxPartConfig['urlContentSelector']
   }
 
   if (urlContentSelector._selected == 'optionXPContent') {
-    return urlContentSelector.optionXPContent.xpContent ? pageUrl({
-      id: urlContentSelector.optionXPContent.xpContent
-    }) : ''
+    return urlContentSelector.optionXPContent.xpContent
+      ? pageUrl({
+          id: urlContentSelector.optionXPContent.xpContent,
+        })
+      : ''
   }
   return ''
 }
 
 function getSubtitle(content: string | undefined, date: string | undefined, language: string): string {
   if (content && date) {
-    return content + ' / ' + (formatDate(date, 'PPP', language) as string)
-      .toLowerCase()
+    return content + ' / ' + (formatDate(date, 'PPP', language) as string).toLowerCase()
   } else if (content) {
     return content
   } else if (date) {
-    return (formatDate(date, 'PPP', language) as string)
-      .toLowerCase()
+    return (formatDate(date, 'PPP', language) as string).toLowerCase()
   } else {
     return ''
   }
@@ -97,7 +84,7 @@ function getSubtitle(content: string | undefined, date: string | undefined, lang
 
 function getTitleSize(title: string): string {
   const titleLength: number = title.length
-  let titleSize: string = 'sm'
+  let titleSize = 'sm'
   if (titleLength > 25) {
     titleSize = 'md'
   }
@@ -111,15 +98,15 @@ function getTitleSize(title: string): string {
 }
 
 interface ProfiledBoxProps {
-  imgUrl: string;
-  imageAltText: string | undefined;
-  imagePlacement: string;
-  href: string | undefined;
-  subTitle: string;
-  title: string;
-  preambleText: string;
-  linkType: string;
-  titleSize: string;
-  ariaLabel: string | undefined;
-  ariaDescribedBy: string | undefined;
+  imgUrl: string
+  imageAltText: string | undefined
+  imagePlacement: string
+  href: string | undefined
+  subTitle: string
+  title: string
+  preambleText: string
+  linkType: string
+  titleSize: string
+  ariaLabel: string | undefined
+  ariaDescribedBy: string | undefined
 }

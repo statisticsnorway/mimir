@@ -5,14 +5,12 @@ import PropTypes from 'prop-types'
 const ModifiedDate = (props) => {
   return (
     <React.Fragment>
-      <Glossary
-        className={props.className}
-        explanation={props.explanation}
-      >
+      <Glossary className={props.className} explanation={props.explanation}>
         <span
           dangerouslySetInnerHTML={{
-            __html: props.children
-          }} />
+            __html: props.children,
+          }}
+        />
       </Glossary>
     </React.Fragment>
   )
@@ -21,7 +19,7 @@ const ModifiedDate = (props) => {
 ModifiedDate.propTypes = {
   children: PropTypes.node,
   className: PropTypes.string,
-  explanation: PropTypes.string
+  explanation: PropTypes.string,
 }
 
 export default ModifiedDate

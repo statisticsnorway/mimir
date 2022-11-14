@@ -3,34 +3,21 @@ import { allMonths, lastPeriodKpi, monthLabel, nextPeriod } from '../../../lib/s
 import { CalculatorPeriod } from '../../../lib/types/calculator'
 import { Dataset } from '../../../lib/types/jsonstat-toolkit'
 import { Language, Phrases } from '../../../lib/types/language'
-import {render, RenderResponse} from '/lib/enonic/react4xp'
+import { render, RenderResponse } from '/lib/enonic/react4xp'
 import { CalculatorConfig } from '../../content-types/calculatorConfig/calculatorConfig'
 import { KpiCalculatorPartConfig } from './kpiCalculator-part-config'
 import { DropdownItems as MonthDropdownItems } from '../../../lib/types/components'
 
-const {
-  getComponent,
-  getContent,
-  serviceUrl,
-  pageUrl
-} = __non_webpack_require__('/lib/xp/portal')
+const { getComponent, getContent, serviceUrl, pageUrl } = __non_webpack_require__('/lib/xp/portal')
 
-const {
-  renderError
-} = __non_webpack_require__('/lib/ssb/error/error')
+const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
-const {
-  getLanguage
-} = __non_webpack_require__('/lib/ssb/utils/language')
-const {
-  getCalculatorConfig, getKpiDatasetMonth
-} = __non_webpack_require__('/lib/ssb/dataset/calculator')
-const {
-  fromPartCache
-} = __non_webpack_require__('/lib/ssb/cache/partCache')
+const { getLanguage } = __non_webpack_require__('/lib/ssb/utils/language')
+const { getCalculatorConfig, getKpiDatasetMonth } = __non_webpack_require__('/lib/ssb/dataset/calculator')
+const { fromPartCache } = __non_webpack_require__('/lib/ssb/cache/partCache')
 const i18nLib = __non_webpack_require__('/lib/xp/i18n')
 
-exports.get = function(req: XP.Request): XP.Response {
+exports.get = function (req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -38,7 +25,7 @@ exports.get = function(req: XP.Request): XP.Response {
   }
 }
 
-exports.preview = function(req: XP.Request): XP.Response {
+exports.preview = function (req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -59,13 +46,13 @@ function renderPart(req: XP.Request): XP.Response {
 
   return {
     body: kpiCalculator.body,
-    pageContributions: kpiCalculator.pageContributions as XP.PageContributions
+    pageContributions: kpiCalculator.pageContributions as XP.PageContributions,
   }
 }
 
 function getKpiCalculatorComponent(req: XP.Request, page: Content): RenderResponse {
   const config: KpiCalculatorPartConfig = getComponent().config
-  const frontPage: boolean = !!config.frontPage
+  const frontPage = !!config.frontPage
   const frontPageIngress: string | null | undefined = config.ingressFrontpage && config.ingressFrontpage
   const language: Language = getLanguage(page)
   const phrases: Phrases = language.phrases as Phrases
@@ -82,25 +69,25 @@ function getKpiCalculatorComponent(req: XP.Request, page: Content): RenderRespon
       monthLabel(months, language.code, lastUpdated.month as string),
       lastUpdated.year as string,
       monthLabel(months, language.code, nextUpdate.month as string),
-      monthLabel(months, language.code, nextReleaseMonth)
-    ]
+      monthLabel(months, language.code, nextReleaseMonth),
+    ],
   })
   const lastNumberText: string = i18nLib.localize({
     key: 'calculatorLastNumber',
     locale: language.code,
-    values: [
-      monthLabel(months, language.code, lastUpdated.month as string),
-      lastUpdated.year as string
-    ]
+    values: [monthLabel(months, language.code, lastUpdated.month as string), lastUpdated.year as string],
   })
-  const calculatorArticleUrl: string | null | undefined = config.kpiCalculatorArticle && pageUrl({
-    id: config.kpiCalculatorArticle
-  })
+  const calculatorArticleUrl: string | null | undefined =
+    config.kpiCalculatorArticle &&
+    pageUrl({
+      id: config.kpiCalculatorArticle,
+    })
 
-  return render('KpiCalculator',
-      {
+  return render(
+    'KpiCalculator',
+    {
       kpiServiceUrl: serviceUrl({
-        service: 'kpi'
+        service: 'kpi',
       }),
       language: language.code,
       months,
@@ -110,10 +97,11 @@ function getKpiCalculatorComponent(req: XP.Request, page: Content): RenderRespon
       lastNumberText,
       lastUpdated,
       frontPage,
-      frontPageIngress
+      frontPageIngress,
     },
-      req,
-      {
-        body: '<section class="xp-part part-kpi-calculator container"></section>'
-      })
+    req,
+    {
+      body: '<section class="xp-part part-kpi-calculator container"></section>',
+    }
+  )
 }

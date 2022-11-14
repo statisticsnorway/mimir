@@ -6,9 +6,9 @@ export function init() {
   }
 
   // Removes unused empty paragraph tags. They appear to be injected before and after each macro, for some reason.
-  $( 'p:empty' ).remove()
+  $('p:empty').remove()
 
-  $(function() {
+  $(function () {
     // #region hide trailing dividers in last region
     const sectionsInLastRegion = Array.from(document.querySelectorAll('.xp-region:last-child > section'))
     sectionsInLastRegion.reverse().every((elem) => {

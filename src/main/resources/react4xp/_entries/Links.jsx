@@ -12,11 +12,20 @@ const Links = (props) => {
             <Link
               className={link.className}
               href={link.href}
-              icon={link.iconType ? (link.iconType == 'arrowRight' ? <ArrowRight size="20"/> : <ExternalLink size="18"/>) : undefined}
+              icon={
+                link.iconType ? (
+                  link.iconType == 'arrowRight' ? (
+                    <ArrowRight size='20' />
+                  ) : (
+                    <ExternalLink size='18' />
+                  )
+                ) : undefined
+              }
               isExternal={link.isExternal}
               linkType={link.linkType}
               negative={link.negative}
-            >{link.children}
+            >
+              {link.children}
             </Link>
           </div>
         )
@@ -34,14 +43,10 @@ Links.propTypes = {
       icon: PropTypes.node,
       iconType: PropTypes.string,
       isExternal: PropTypes.bool,
-      linkType: PropTypes.oneOf([
-        'regular',
-        'profiled',
-        'header'
-      ]),
-      negative: PropTypes.bool
+      linkType: PropTypes.oneOf(['regular', 'profiled', 'header']),
+      negative: PropTypes.bool,
     })
-  )
+  ),
 }
 
 export default Links

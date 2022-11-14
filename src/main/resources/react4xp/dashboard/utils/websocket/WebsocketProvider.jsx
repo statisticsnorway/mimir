@@ -10,9 +10,7 @@ import setupJobsListeners from '../../containers/Jobs/listeners'
 const WebSocketContext = createContext(null)
 export { WebSocketContext }
 
-function WebsocketProvider({
-  children
-}) {
+function WebsocketProvider({ children }) {
   let io
   let wsConnection
   let pingInterval
@@ -23,7 +21,7 @@ function WebsocketProvider({
   function addEmitQueue(key, data) {
     emitQueue.push({
       key,
-      data
+      data,
     })
   }
 
@@ -33,7 +31,7 @@ function WebsocketProvider({
       function closeConnection() {
         provider.emit = addEmitQueue
         dispatch({
-          type: commonActions.onDisconnect.type
+          type: commonActions.onDisconnect.type,
         })
 
         // remove keep alive
@@ -47,7 +45,7 @@ function WebsocketProvider({
 
       wsConnection.setEventHandler('open', () => {
         dispatch({
-          type: commonActions.onConnect.type
+          type: commonActions.onConnect.type,
         })
         // setup keep alive
         if (!pingInterval) {
@@ -86,19 +84,15 @@ function WebsocketProvider({
 
     provider = {
       emit: addEmitQueue,
-      setup
+      setup,
     }
   }
 
-  return (
-    <WebSocketContext.Provider value={provider}>
-      {children}
-    </WebSocketContext.Provider>
-  )
+  return <WebSocketContext.Provider value={provider}>{children}</WebSocketContext.Provider>
 }
 
 WebsocketProvider.propTypes = {
-  children: PropTypes.any
+  children: PropTypes.any,
 }
 
-export default (props) => <WebsocketProvider {...props}/>
+export default (props) => <WebsocketProvider {...props} />

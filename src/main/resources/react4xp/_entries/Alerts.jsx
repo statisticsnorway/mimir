@@ -8,15 +8,10 @@ const Alerts = (props) => {
     <Container>
       {props.alerts.map((alert, index) => {
         return (
-          <Dialog
-            className="mt-4 mb-3"
-            key={`alert-${index}`}
-            type={alert.messageType}
-            title={alert.title}
-          >
+          <Dialog className='mt-4 mb-3' key={`alert-${index}`} type={alert.messageType} title={alert.title}>
             <div
               dangerouslySetInnerHTML={{
-                __html: alert.message.replace(/&nbsp;/g, ' ')
+                __html: alert.message.replace(/&nbsp;/g, ' '),
               }}
             />
           </Dialog>
@@ -31,9 +26,9 @@ Alerts.propTypes = {
     PropTypes.shape({
       messageType: PropTypes.string,
       title: PropTypes.string,
-      message: PropTypes.string
+      message: PropTypes.string,
     })
-  ).isRequired
+  ).isRequired,
 }
 
 export default Alerts

@@ -3,10 +3,15 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Button, Col, Modal, Row } from 'react-bootstrap'
 import { RefreshStatisticsForm } from './RefreshStatisticsForm'
 import { RefreshStatisticsStatus } from './RefreshStatisticsStatus'
-import { refreshStatistic, setOpenModal, setOpenStatistic, setModal, resetModal } from '../containers/Statistics/actions'
+import {
+  refreshStatistic,
+  setOpenModal,
+  setOpenStatistic,
+  setModal,
+  resetModal,
+} from '../containers/Statistics/actions'
 import { createSelectModalDisplay, selectOpenStatistic } from '../containers/Statistics/selectors'
 import { WebSocketContext } from '../utils/websocket/WebsocketProvider'
-
 
 export function RefreshStatisticsModal(props) {
   const io = useContext(WebSocketContext)
@@ -21,19 +26,19 @@ export function RefreshStatisticsModal(props) {
       const newModal = {
         statisticId: openStatistic.id,
         modalDisplay: 'request',
-        updateMessages: []
+        updateMessages: [],
       }
       setModal(dispatch, newModal)
     }
 
     if (openStatistic.loadingOwnersWithSources || !openStatistic.ownersWithSources) {
-      return (
-        <span className="spinner-border spinner-border" />
-      )
+      return <span className='spinner-border spinner-border' />
     }
     return (
       <React.Fragment>
-        {modal.modalDisplay === 'request' && <RefreshStatisticsForm onSubmit={(e) => updateTables(e)} modalInfo={openStatistic}/>}
+        {modal.modalDisplay === 'request' && (
+          <RefreshStatisticsForm onSubmit={(e) => updateTables(e)} modalInfo={openStatistic} />
+        )}
         {modal.modalDisplay !== 'request' && <RefreshStatisticsStatus modal={modal} />}
       </React.Fragment>
     )
@@ -51,7 +56,8 @@ export function RefreshStatisticsModal(props) {
 
   const modalLoading = modal && modal.modalDisplay === 'loading'
   return (
-    <Modal size='lg'
+    <Modal
+      size='lg'
       show={true}
       onHide={() => handleClose()}
       keyboard={!modalLoading}
@@ -64,18 +70,22 @@ export function RefreshStatisticsModal(props) {
         <Row>
           <Col>
             <h2>Statistikk: {openStatistic.shortName}</h2>
-            <span>For å oppdatere tabeller med ennå ikke publiserte tall må brukernavn og passord for lastebrukere i Statistikkbanken brukes.</span>
-            <br/>
             <span>
-              For andre endringer velg &quot;Hent oppdatert tabellstruktur fra Tabellbygger med publiserte tall&quot; uten å oppgi brukernavn og passord.
+              For å oppdatere tabeller med ennå ikke publiserte tall må brukernavn og passord for lastebrukere i
+              Statistikkbanken brukes.
+            </span>
+            <br />
+            <span>
+              For andre endringer velg &quot;Hent oppdatert tabellstruktur fra Tabellbygger med publiserte tall&quot;
+              uten å oppgi brukernavn og passord.
             </span>
           </Col>
         </Row>
-        { renderStatisticsForm() }
+        {renderStatisticsForm()}
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" disabled={modalLoading} onClick={() => handleClose()}>
-            Lukk
+        <Button variant='secondary' disabled={modalLoading} onClick={() => handleClose()}>
+          Lukk
         </Button>
       </Modal.Footer>
     </Modal>
