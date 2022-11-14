@@ -39,11 +39,15 @@ export function getPublicationsNew(
     ],
   })
 
+  const serverOffsetInMs: number =
+    app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
+  const serverTime: Date = new Date(new Date().getTime() + serverOffsetInMs)
+
   const query: QueryDSL = {
     range: {
       field: 'publish.from',
       type: 'dateTime',
-      lte: new Date().toISOString(),
+      lte: serverTime.toISOString(),
     },
   }
 
@@ -214,7 +218,7 @@ function articleAsPublicationItem({
   }
 }
 
-//TODO: Remove when content Article have x-data with mainsubjects
+// TODO: Remove when content Article have x-data with mainsubjects
 function getSecondaryMainSubject(
   subtopicsContent: Array<string>,
   mainSubjects: Array<SubjectItem>,
