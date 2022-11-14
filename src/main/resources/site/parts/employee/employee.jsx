@@ -73,8 +73,11 @@ const Employee = (props) => {
 
   const renderDownloadCvButton = () => {
     return (
-      <div className="downloadCv">
-        <Button onClick={() => downloadPDF(myCV)}><Download size="24" />{downloadPdfPhrase} ({calculateCvSize(cvInformation.size)} kB)</Button>
+      <div className='downloadCv'>
+        <Button onClick={() => downloadPDF(myCV)}>
+          <Download size='24' />
+          {downloadPdfPhrase} ({calculateCvSize(cvInformation.size)} kB)
+        </Button>
       </div>
     )
   }
@@ -85,32 +88,38 @@ const Employee = (props) => {
         {profileImages.length != 0 ? (
           <div className='employee-image'>
             <img alt={`${profilePicturePhrase} ${title}`} src={props.profileImages[0]} />
-          </div> : null}
-        {profileImages.length != 0 ?
-          <div className="employee-title"><Title size="1">{title}</Title></div> :
-          <div><Title size="1">{title}</Title></div>
-        }
+          </div>
+        ) : null}
+        {profileImages.length != 0 ? (
+          <div className='employee-title'>
+            <Title size='1'>{title}</Title>
+          </div>
+        ) : (
+          <div>
+            <Title size='1'>{title}</Title>
+          </div>
+        )}
       </div>
     )
   }
 
   const renderEmployeeDetails = () => {
     return (
-      <div className="employee-details col-12">
-        <div className={"row w-100" + (profileImages.length == 0 ? " border-if-no-images" : "")}>
-          {
-            position ?
-              <div className="details-block col-lg col-12">
-                <div><Share2 size={24} transform='rotate(90)' /></div>
-                <div>
-                  <div>{positionPhrase}</div>
-                  <div className="position-text">{position}</div>
-                </div>
-              </div> :
-              null
-          }
-          { area ?
-            <div className="details-block col-lg col-12">
+      <div className='employee-details col-12'>
+        <div className={'row w-100' + (profileImages.length == 0 ? ' border-if-no-images' : '')}>
+          {position ? (
+            <div className='details-block col-lg col-12'>
+              <div>
+                <Share2 size={24} transform='rotate(90)' />
+              </div>
+              <div>
+                <div>{positionPhrase}</div>
+                <div className='position-text'>{position}</div>
+              </div>
+            </div>
+          ) : null}
+          {area ? (
+            <div className='details-block col-lg col-12'>
               <div>{isResearcher ? <Eye size={24} /> : <Home size={24} />}</div>
               <div>
                 <div>{isResearcher ? researchAreaPhrase : departmentPhrase}</div>
@@ -155,17 +164,16 @@ const Employee = (props) => {
 
   const renderAttachmentsForDesktop = () => {
     return (
-      <aside className="employee-attachments mobile-display-none col-12 col-md-3" role="complementary">
-        {profileImages.length != 0 ?
+      <aside className='employee-attachments mobile-display-none col-12 col-md-3' role='complementary'>
+        {profileImages.length != 0 ? (
           <React.Fragment>
-            <div className="instructions">
+            <div className='instructions'>
               <h3>{pressPicturesPhrase}</h3>
               <p>{pressPicturesDescrPhrase}</p>
             </div>
             {renderPortraitImages()}
           </React.Fragment>
-          : null
-        }
+        ) : null}
         {myCV ? renderDownloadCvButton() : null}
       </aside>
     )
@@ -196,11 +204,13 @@ const Employee = (props) => {
         <div className='employee-description'>
           <div>
             <h2>{briefSummaryPhrase}</h2>
-            <div dangerouslySetInnerHTML={{
-              __html: description
-            }}></div>
+            <div
+              dangerouslySetInnerHTML={{
+                __html: description,
+              }}
+            ></div>
           </div>
-          {myCV ? <div className="desktop-display-none">{renderDownloadCvButton()}</div> : null}
+          {myCV ? <div className='desktop-display-none'>{renderDownloadCvButton()}</div> : null}
         </div>
       </div>
     )
@@ -243,11 +253,11 @@ const Employee = (props) => {
 
       <div className='row row-gutter-desktop'>{renderEmployeeDetails()}</div>
 
-      <div className="row row-gutter-desktop">
+      <div className='row row-gutter-desktop'>
         {renderAttachmentsForDesktop()}
         {profileImages.length != 0 ? renderAttachmentsForMobile() : null}
 
-        <div className="col-12 col-md-6 row-gutter-mobile mt-4">
+        <div className='col-12 col-md-6 row-gutter-mobile mt-4'>
           {description ? renderEmployeeDescription() : null}
           {projects.length != 0 ? renderProjects() : null}
           {cristinId ? renderPublications : null}
