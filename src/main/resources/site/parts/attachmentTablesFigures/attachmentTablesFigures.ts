@@ -107,6 +107,17 @@ function getTablesAndFiguresComponent(page: Content<Statistics>, req: XP.Request
   }
 }
 
+//TODO: Remove contentArrayToRecord when it's been added to arrayUtils, import func instead
+function contentArrayToRecord<Hit extends { _id: string }>(
+  arr: ReadonlyArray<Hit>,
+  getKey: (hit: Hit) => string = (hit) => hit._id
+): Record<string, Hit> {
+  return arr.reduce<Record<string, Hit>>((record, hit) => {
+    record[getKey(hit)] = hit
+    return record
+  }, {})
+}
+
 function getTablesAndFigures(
   attachmentTablesAndFigures: Array<string>,
   req: XP.Request,
@@ -115,7 +126,7 @@ function getTablesAndFigures(
   let figureIndex = 0
   let tableIndex = 0
   if (attachmentTablesAndFigures.length > 0) {
-    //TODO: Replace filter with notNullOrUndefined when function has been implemented
+    //TODO: Replace tableOrFigure with notNullOrUndefined when function has been implemented
     const attachmentTablesFiguresIds = attachmentTablesAndFigures
       .map((id) => id)
       .filter((tableOrFigure) => !!tableOrFigure)
@@ -127,20 +138,21 @@ function getTablesAndFigures(
         },
       },
     }).hits
-    return attachmentTablesFiguresHits.map((content, index) => {
-      if (content.type === `${app.name}:table`) {
+    const attachmentTablesFiguresMap = contentArrayToRecord(attachmentTablesFiguresHits)
+    return attachmentTablesAndFigures.map((id, index) => {
+      if (attachmentTablesFiguresMap[id].type === `${app.name}:table`) {
         ++tableIndex
         return getTableReturnObject(
-          content,
-          tableController.getProps(req, content._id),
+          attachmentTablesFiguresMap[id],
+          tableController.getProps(req, id),
           `${phrases.table} ${tableIndex}`,
           index
         )
-      } else if (content.type === `${app.name}:highchart`) {
+      } else if (attachmentTablesFiguresMap[id].type === `${app.name}:highchart`) {
         ++figureIndex
         return getFigureReturnObject(
-          content,
-          highchartController.preview(req, content._id),
+          attachmentTablesFiguresMap[id],
+          highchartController.preview(req, id),
           `${phrases.figure} ${figureIndex}`,
           index
         )
