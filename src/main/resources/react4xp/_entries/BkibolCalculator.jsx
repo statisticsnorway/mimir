@@ -1,14 +1,16 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { Form, Container, Row, Col } from 'react-bootstrap'
-import { Input,
+import {
+  Input,
   Button,
   Dropdown,
   Divider,
   FormError,
   Link,
   RadioGroup,
-  Title } from '@statisticsnorway/ssb-component-library'
+  Title,
+} from '@statisticsnorway/ssb-component-library'
 import axios from 'axios'
 import NumberFormat from 'react-number-format'
 import { X } from 'react-feather'
@@ -18,42 +20,42 @@ function BkibolCalculator(props) {
   const [scope, setScope] = useState({
     error: false,
     errorMsg: 'Feil markedskode',
-    value: ''
+    value: '',
   })
   const [domene, setDomene] = useState({
     error: false,
     errorMsg: 'Feil domene',
-    value: 'ENEBOLIG'
+    value: 'ENEBOLIG',
   })
   const [serie, setSerie] = useState({
     error: false,
     errorMsg: props.phrases.bkibolValidateSerie,
-    value: ''
+    value: '',
   })
   const [startValue, setStartValue] = useState({
     error: false,
     errorMsg: props.phrases.calculatorValidateAmountNumber,
-    value: ''
+    value: '',
   })
   const [startMonth, setStartMonth] = useState({
     error: false,
     errorMsg: props.phrases.calculatorValidateDropdownMonth,
-    value: ''
+    value: '',
   })
   const [startYear, setStartYear] = useState({
     error: false,
     errorMsg: `${props.phrases.bkibolValidateYear} ${validMaxYear}`,
-    value: ''
+    value: '',
   })
   const [endMonth, setEndMonth] = useState({
     error: false,
     errorMsg: props.phrases.calculatorValidateDropdownMonth,
-    value: ''
+    value: '',
   })
   const [endYear, setEndYear] = useState({
     error: false,
     errorMsg: `${props.phrases.bkibolValidateYear} ${validMaxYear}`,
-    value: ''
+    value: '',
   })
   const [errorMessage, setErrorMessage] = useState(null)
   const [loading, setLoading] = useState(false)
@@ -74,12 +76,12 @@ function BkibolCalculator(props) {
   const scrollAnchor = React.useRef(null)
   function scrollToResult() {
     scrollAnchor.current.focus({
-      preventScroll: true
+      preventScroll: true,
     })
     scrollAnchor.current.scrollIntoView({
       behavior: 'smooth',
       block: 'end',
-      inline: 'nearest'
+      inline: 'nearest',
     })
   }
 
@@ -87,38 +89,38 @@ function BkibolCalculator(props) {
     return [
       {
         id: 'ALT',
-        title: props.phrases.bkibolWorkTypeAll
+        title: props.phrases.bkibolWorkTypeAll,
       },
       {
         id: 'STEIN',
         title: props.phrases.bkibolWorkTypeStone,
-        disabled: domene === 'BOLIGBLOKK'
+        disabled: domene === 'BOLIGBLOKK',
       },
       {
         id: 'GRUNNARBEID',
-        title: props.phrases.bkibolWorkTypeGroundwork
+        title: props.phrases.bkibolWorkTypeGroundwork,
       },
       {
         id: 'BYGGEARBEIDER',
         title: props.phrases.bkibolWorkTypeWithoutStone,
-        disabled: domene === 'BOLIGBLOKK'
+        disabled: domene === 'BOLIGBLOKK',
       },
       {
         id: 'TOMRING',
-        title: props.phrases.bkibolWorkTypeCarpentry
+        title: props.phrases.bkibolWorkTypeCarpentry,
       },
       {
         id: 'MALING',
-        title: props.phrases.bkibolWorkTypePainting
+        title: props.phrases.bkibolWorkTypePainting,
       },
       {
         id: 'RORLEGGERARBEID',
-        title: props.phrases.bkibolWorkTypePlumbing
+        title: props.phrases.bkibolWorkTypePlumbing,
       },
       {
         id: 'ELEKTRIKERARBEID',
-        title: props.phrases.bkibolWorkTypeElectric
-      }
+        title: props.phrases.bkibolWorkTypeElectric,
+      },
     ]
   }
 
@@ -140,22 +142,23 @@ function BkibolCalculator(props) {
 
     setErrorMessage(null)
     setLoading(true)
-    axios.get(props.bkibolServiceUrl, {
-      params: {
-        scope: scope.value,
-        domene: domene.value,
-        serie: serie.value,
-        startValue: startValue.value,
-        startYear: startYear.value,
-        startMonth: startMonth.value,
-        endYear: endYear.value,
-        endMonth: endMonth.value,
-        language: language
-      }
-    })
+    axios
+      .get(props.bkibolServiceUrl, {
+        params: {
+          scope: scope.value,
+          domene: domene.value,
+          serie: serie.value,
+          startValue: startValue.value,
+          startYear: startYear.value,
+          startMonth: startMonth.value,
+          endYear: endYear.value,
+          endMonth: endMonth.value,
+          language: language,
+        },
+      })
       .then((res) => {
         const changeVal = (res.data.change * 100).toFixed(1)
-        const endVal = (res.data.endValue).toFixed(2)
+        const endVal = res.data.endValue.toFixed(2)
         const startPeriod = getPeriod(startYear.value, startMonth.value)
         const endPeriod = getPeriod(endYear.value, endMonth.value)
         setChange(changeVal)
@@ -173,14 +176,21 @@ function BkibolCalculator(props) {
           setErrorMessage(err.toString())
         }
       })
-      .finally(()=> {
+      .finally(() => {
         setLoading(false)
         scrollToResult()
       })
   }
 
   function isFormValid() {
-    return isSerieValid() && isStartValueValid() && isStartYearValid() && isStartMonthValid() && isEndYearValid() && isEndMonthValid()
+    return (
+      isSerieValid() &&
+      isStartValueValid() &&
+      isStartYearValid() &&
+      isStartMonthValid() &&
+      isEndYearValid() &&
+      isEndMonthValid()
+    )
   }
 
   function isStartValueValid(value) {
@@ -212,7 +222,7 @@ function BkibolCalculator(props) {
     if (!serieValid) {
       setSerie({
         ...serie,
-        error: true
+        error: true,
       })
     }
     return serieValid
@@ -224,15 +234,15 @@ function BkibolCalculator(props) {
     if (startMonthEmpty) {
       setStartMonth({
         ...startMonth,
-        error: true
+        error: true,
       })
     }
-    const startMonthValid = !((startYear.value === validMaxYear) && (startMonthValue > validMaxMonth))
+    const startMonthValid = !(startYear.value === validMaxYear && startMonthValue > validMaxMonth)
     if (!startMonthValid) {
       setStartMonth({
         ...startMonth,
         error: true,
-        errorMsg: props.lastNumberText
+        errorMsg: props.lastNumberText,
       })
     }
     return startMonthEmpty ? startMonthEmpty : startMonthValid
@@ -244,15 +254,15 @@ function BkibolCalculator(props) {
     if (endMonthEmpty) {
       setEndMonth({
         ...endMonth,
-        error: true
+        error: true,
       })
     }
-    const endMonthValid = !((endYear.value === validMaxYear) && (endMonthValue > validMaxMonth))
+    const endMonthValid = !(endYear.value === validMaxYear && endMonthValue > validMaxMonth)
     if (!endMonthValid) {
       setEndMonth({
         ...endMonth,
         error: true,
-        errorMsg: props.lastNumberText
+        errorMsg: props.lastNumberText,
       })
     }
     return endMonthEmpty ? endMonthEmpty : endMonthValid
@@ -260,120 +270,120 @@ function BkibolCalculator(props) {
 
   function onBlur(id) {
     switch (id) {
-    case 'start-value': {
-      setStartValue({
-        ...startValue,
-        error: !isStartValueValid()
-      })
-      break
-    }
-    case 'start-year': {
-      setStartYear({
-        ...startYear,
-        error: !isStartYearValid()
-      })
-      break
-    }
-    case 'end-year': {
-      setEndYear({
-        ...endYear,
-        error: !isEndYearValid()
-      })
-      break
-    }
-    default: {
-      break
-    }
+      case 'start-value': {
+        setStartValue({
+          ...startValue,
+          error: !isStartValueValid(),
+        })
+        break
+      }
+      case 'start-year': {
+        setStartYear({
+          ...startYear,
+          error: !isStartYearValid(),
+        })
+        break
+      }
+      case 'end-year': {
+        setEndYear({
+          ...endYear,
+          error: !isEndYearValid(),
+        })
+        break
+      }
+      default: {
+        break
+      }
     }
   }
 
   function onChange(id, value) {
     switch (id) {
-    case 'scope': {
-      setScope({
-        ...scope,
-        value: value
-      })
-      break
-    }
-    case 'domene': {
-      setDomene({
-        ...domene,
-        value: value
-      })
-      break
-    }
-    case 'serie': {
-      setSerie({
-        ...serie,
-        value: value.id,
-        error: serie.error ? !isSerieValid(value.id) : serie.error
-      })
-      break
-    }
-    case 'start-value': {
-      value = value.replace(/,/g, '.')
-      setStartValue({
-        ...startValue,
-        value,
-        error: startValue.error ? !isStartValueValid(value) : startValue.error
-      })
-      break
-    }
-    case 'start-month': {
-      setStartMonth({
-        ...startMonth,
-        value: value.id,
-        error: startMonth.error ? !isStartMonthValid(value.id) : startMonth.error
-      })
-      break
-    }
-    case 'start-year': {
-      if (startMonth.error) {
+      case 'scope': {
+        setScope({
+          ...scope,
+          value: value,
+        })
+        break
+      }
+      case 'domene': {
+        setDomene({
+          ...domene,
+          value: value,
+        })
+        break
+      }
+      case 'serie': {
+        setSerie({
+          ...serie,
+          value: value.id,
+          error: serie.error ? !isSerieValid(value.id) : serie.error,
+        })
+        break
+      }
+      case 'start-value': {
+        value = value.replace(/,/g, '.')
+        setStartValue({
+          ...startValue,
+          value,
+          error: startValue.error ? !isStartValueValid(value) : startValue.error,
+        })
+        break
+      }
+      case 'start-month': {
         setStartMonth({
           ...startMonth,
-          error: false
+          value: value.id,
+          error: startMonth.error ? !isStartMonthValid(value.id) : startMonth.error,
         })
+        break
       }
-      setStartYear({
-        ...startYear,
-        value,
-        error: startYear.error ? !isStartYearValid(value) : startYear.error
-      })
-      break
-    }
-    case 'end-month': {
-      setEndMonth({
-        ...endMonth,
-        value: value.id,
-        error: endMonth.error ? !isEndMonthValid(value.id) : endMonth.error
-      })
-      break
-    }
-    case 'end-year': {
-      if (endMonth.error) {
+      case 'start-year': {
+        if (startMonth.error) {
+          setStartMonth({
+            ...startMonth,
+            error: false,
+          })
+        }
+        setStartYear({
+          ...startYear,
+          value,
+          error: startYear.error ? !isStartYearValid(value) : startYear.error,
+        })
+        break
+      }
+      case 'end-month': {
         setEndMonth({
           ...endMonth,
-          error: false
+          value: value.id,
+          error: endMonth.error ? !isEndMonthValid(value.id) : endMonth.error,
         })
+        break
       }
-      setEndYear({
-        ...endYear,
-        value,
-        error: endYear.error ? !isEndYearValid(value) : endYear.error
-      })
-      break
-    }
-    default: {
-      break
-    }
+      case 'end-year': {
+        if (endMonth.error) {
+          setEndMonth({
+            ...endMonth,
+            error: false,
+          })
+        }
+        setEndYear({
+          ...endYear,
+          value,
+          error: endYear.error ? !isEndYearValid(value) : endYear.error,
+        })
+        break
+      }
+      default: {
+        break
+      }
     }
   }
 
   function addDropdownStartMonth(id) {
     return (
       <Dropdown
-        className="month"
+        className='month'
         id={id}
         header={props.phrases.chooseMonth}
         onSelect={(value) => {
@@ -383,7 +393,7 @@ function BkibolCalculator(props) {
         errorMessage={startMonth.errorMsg}
         selectedItem={{
           title: props.phrases.chooseMonth,
-          id: ''
+          id: '',
         }}
         items={props.months}
       />
@@ -393,7 +403,7 @@ function BkibolCalculator(props) {
   function addDropdownEndMonth(id) {
     return (
       <Dropdown
-        className="month"
+        className='month'
         id={id}
         header={props.phrases.chooseMonth}
         onSelect={(value) => {
@@ -403,7 +413,7 @@ function BkibolCalculator(props) {
         errorMessage={endMonth.errorMsg}
         selectedItem={{
           title: props.phrases.chooseMonth,
-          id: ''
+          id: '',
         }}
         items={props.months}
       />
@@ -414,7 +424,7 @@ function BkibolCalculator(props) {
     if (domene.value === 'ENEBOLIG') {
       return (
         <Dropdown
-          className="serie-enebolig"
+          className='serie-enebolig'
           id='serie'
           onSelect={(value) => {
             onChange('serie', value)
@@ -423,7 +433,7 @@ function BkibolCalculator(props) {
           errorMessage={serie.errorMsg}
           selectedItem={{
             title: props.phrases.bkibolChooseWork,
-            id: ''
+            id: '',
           }}
           items={serieItemsDomene('ENEBOLIG')}
           ariaLabel={props.phrases.bkibolWorkTypeDone}
@@ -436,7 +446,7 @@ function BkibolCalculator(props) {
     if (domene.value === 'BOLIGBLOKK') {
       return (
         <Dropdown
-          className="serie-boligblokk"
+          className='serie-boligblokk'
           id='serie'
           onSelect={(value) => {
             onChange('serie', value)
@@ -445,7 +455,7 @@ function BkibolCalculator(props) {
           errorMessage={serie.errorMsg}
           selectedItem={{
             title: props.phrases.bkibolChooseWork,
-            id: ''
+            id: '',
           }}
           items={serieItemsDomene('BOLIGBLOKK')}
           ariaLabel={props.phrases.bkibolWorkTypeDone}
@@ -465,11 +475,11 @@ function BkibolCalculator(props) {
 
   function renderNumber(value) {
     if (endValue && change) {
-      const decimalSeparator = (language === 'en') ? '.' : ','
+      const decimalSeparator = language === 'en' ? '.' : ','
       return (
         <React.Fragment>
           <NumberFormat
-            value={ Number(value) }
+            value={Number(value)}
             displayType={'text'}
             thousandSeparator={' '}
             decimalSeparator={decimalSeparator}
@@ -483,18 +493,19 @@ function BkibolCalculator(props) {
 
   function renderNumberValute(value) {
     if (endValue && change) {
-      const valute = (language === 'en') ? 'NOK' : 'kr'
-      const decimalSeparator = (language === 'en') ? '.' : ','
+      const valute = language === 'en' ? 'NOK' : 'kr'
+      const decimalSeparator = language === 'en' ? '.' : ','
       return (
         <React.Fragment>
           <NumberFormat
-            value={ Number(value) }
+            value={Number(value)}
             displayType={'text'}
             thousandSeparator={' '}
             decimalSeparator={decimalSeparator}
             decimalScale={2}
             fixedDecimalScale={true}
-          /> {valute}
+          />{' '}
+          {valute}
         </React.Fragment>
       )
     }
@@ -503,17 +514,18 @@ function BkibolCalculator(props) {
   function renderNumberChangeValue() {
     if (endValue && change) {
       const changeValue = change.charAt(0) === '-' ? change.replace('-', '') : change
-      const decimalSeparator = (language === 'en') ? '.' : ','
+      const decimalSeparator = language === 'en' ? '.' : ','
       return (
         <React.Fragment>
           <NumberFormat
-            value={ Number(changeValue) }
+            value={Number(changeValue)}
             displayType={'text'}
             thousandSeparator={' '}
             decimalSeparator={decimalSeparator}
             decimalScale={1}
             fixedDecimalScale={true}
-          /> %
+          />{' '}
+          %
         </React.Fragment>
       )
     }
@@ -522,62 +534,62 @@ function BkibolCalculator(props) {
   function calculatorResult() {
     const priceChangeLabel = change.charAt(0) === '-' ? props.phrases.priceDecrease : props.phrases.priceIncrease
     return (
-      <Container className="calculator-result" ref={scrollAnchor} tabIndex="0">
-        <Row className="mb-5">
-          <Col className="amount-equal col-12 col-md-4">
+      <Container className='calculator-result' ref={scrollAnchor} tabIndex='0'>
+        <Row className='mb-5'>
+          <Col className='amount-equal col-12 col-md-4'>
             <h3>{props.phrases.amountEqualled}</h3>
           </Col>
-          <Col className="end-value col-12 col-md-8">
-            <span className="float-start float-md-end">
-              {renderNumberValute(endValue)}
-            </span>
+          <Col className='end-value col-12 col-md-8'>
+            <span className='float-start float-md-end'>{renderNumberValute(endValue)}</span>
           </Col>
-          <Col className="col-12">
-            <Divider dark/>
+          <Col className='col-12'>
+            <Divider dark />
           </Col>
         </Row>
-        <Row className="mb-0 mb-lg-5">
-          <Col className="price-increase col-12 col-lg-4">
+        <Row className='mb-0 mb-lg-5'>
+          <Col className='price-increase col-12 col-lg-4'>
             <span>{priceChangeLabel}</span>
-            <span className="float-end">
-              {renderNumberChangeValue()}
-            </span>
-            <Divider dark/>
+            <span className='float-end'>{renderNumberChangeValue()}</span>
+            <Divider dark />
           </Col>
-          <Col className="start-value col-12 col-lg-4">
-            <span>{props.phrases.amount} {startPeriod}</span>
-            <span className="float-end">
-              {renderNumberValute(startValueResult)}
+          <Col className='start-value col-12 col-lg-4'>
+            <span>
+              {props.phrases.amount} {startPeriod}
             </span>
-            <Divider dark/>
+            <span className='float-end'>{renderNumberValute(startValueResult)}</span>
+            <Divider dark />
           </Col>
-          <Col className="amount col-12 col-lg-4">
-            <span>{props.phrases.amount} {endPeriod}</span>
-            <span className="float-end">
-              {renderNumberValute(endValue)}
+          <Col className='amount col-12 col-lg-4'>
+            <span>
+              {props.phrases.amount} {endPeriod}
             </span>
-            <Divider dark/>
+            <span className='float-end'>{renderNumberValute(endValue)}</span>
+            <Divider dark />
           </Col>
         </Row>
         <Row>
-          <Col className="start-value col-12 col-lg-4 offset-lg-4">
-            <span>{props.phrases.index} {startPeriod}</span>
-            <span className="float-end">
-              {renderNumber(startIndex)}
+          <Col className='start-value col-12 col-lg-4 offset-lg-4'>
+            <span>
+              {props.phrases.index} {startPeriod}
             </span>
-            <Divider dark/>
+            <span className='float-end'>{renderNumber(startIndex)}</span>
+            <Divider dark />
           </Col>
-          <Col className="amount col-12 col-lg-4">
-            <span>{props.phrases.index} {endPeriod}</span>
-            <span className="float-end">
-              {renderNumber(endIndex)}
+          <Col className='amount col-12 col-lg-4'>
+            <span>
+              {props.phrases.index} {endPeriod}
             </span>
-            <Divider dark/>
+            <span className='float-end'>{renderNumber(endIndex)}</span>
+            <Divider dark />
           </Col>
         </Row>
         <Row>
-          <Col className="md-6">
-            <Button className="close-button" onClick={() => closeResult()} type="button"> <X size="18"/>{props.phrases.close}</Button>
+          <Col className='md-6'>
+            <Button className='close-button' onClick={() => closeResult()} type='button'>
+              {' '}
+              <X size='18' />
+              {props.phrases.close}
+            </Button>
           </Col>
         </Row>
       </Container>
@@ -588,33 +600,36 @@ function BkibolCalculator(props) {
     if (loading) {
       return (
         <Container>
-          <span className="spinner-border spinner-border" />
+          <span className='spinner-border spinner-border' />
         </Container>
       )
     }
     if (errorMessage !== null) {
       return (
-        <Container className="calculator-error" >
+        <Container className='calculator-error'>
           <Row>
             <Col>
-              <FormError errorMessages={[errorMessage || props.phrases.pifErrorUnknownError]} title={props.phrases.pifErrorCalculationFailed} />
+              <FormError
+                errorMessages={[errorMessage || props.phrases.pifErrorUnknownError]}
+                title={props.phrases.pifErrorCalculationFailed}
+              />
             </Col>
           </Row>
         </Container>
       )
     }
     if (endValue && change) {
-      return (
-        calculatorResult()
-      )
+      return calculatorResult()
     }
   }
 
   function renderLinkArticle() {
     if (props.calculatorArticleUrl) {
       return (
-        <Col className="article-link align-self-center col-12 col-md-6">
-          <Link className="float-md-end" href={props.calculatorArticleUrl}>{props.phrases.readAboutCalculator}</Link>
+        <Col className='article-link align-self-center col-12 col-md-6'>
+          <Link className='float-md-end' href={props.calculatorArticleUrl}>
+            {props.phrases.readAboutCalculator}
+          </Link>
         </Col>
       )
     }
@@ -622,7 +637,7 @@ function BkibolCalculator(props) {
 
   function renderForm() {
     return (
-      <div className="calculator-form">
+      <div className='calculator-form'>
         <Row>
           <Col>
             <Title size={2}>{props.phrases.bkibolTitle}</Title>
@@ -630,14 +645,14 @@ function BkibolCalculator(props) {
           {renderLinkArticle()}
         </Row>
         <Row>
-          <Col className="col-12 col-md-8">
-            <p className="publish-text">{props.nextPublishText}</p>
+          <Col className='col-12 col-md-8'>
+            <p className='publish-text'>{props.nextPublishText}</p>
           </Col>
         </Row>
         <Form onSubmit={onSubmit}>
           <Container>
-            <Row className="my-5">
-              <Col className="choose-domene col-12 col-md-6 col-xl-4 mb-3 mb-md-0">
+            <Row className='my-5'>
+              <Col className='choose-domene col-12 col-md-6 col-xl-4 mb-3 mb-md-0'>
                 <Title size={3}>{props.phrases.bkibolChooseDwellingType}</Title>
                 <RadioGroup
                   onChange={(value) => {
@@ -648,24 +663,24 @@ function BkibolCalculator(props) {
                   items={[
                     {
                       label: props.phrases.bkibolDetachedHouse,
-                      value: 'ENEBOLIG'
+                      value: 'ENEBOLIG',
                     },
                     {
                       label: props.phrases.bkibolMultiDwellingHouse,
-                      value: 'BOLIGBLOKK'
-                    }
+                      value: 'BOLIGBLOKK',
+                    },
                   ]}
                 />
               </Col>
-              <Col className="select-serie col-12 col-md-6 col-xl-6">
+              <Col className='select-serie col-12 col-md-6 col-xl-6'>
                 <Title size={3}>{props.phrases.bkibolWorkTypeDone}</Title>
-                { addDropdownSerieEnebolig() }
-                { addDropdownSerieBoligblokk() }
+                {addDropdownSerieEnebolig()}
+                {addDropdownSerieBoligblokk()}
               </Col>
             </Row>
-            <Divider/>
-            <Row className="my-5">
-              <Col className="choose-scope col-12 col-md-6 col-xl-4 mb-3 mb-md-0">
+            <Divider />
+            <Row className='my-5'>
+              <Col className='choose-scope col-12 col-md-6 col-xl-4 mb-3 mb-md-0'>
                 <Title size={3}>{props.phrases.bkibolAmountInclude}</Title>
                 <RadioGroup
                   onChange={(value) => {
@@ -676,36 +691,36 @@ function BkibolCalculator(props) {
                   items={[
                     {
                       label: props.phrases.bkibolExpenditureAll,
-                      value: 'ALT'
+                      value: 'ALT',
                     },
                     {
                       label: props.phrases.bkibolExpenditureMatrials,
-                      value: 'MATERIALER'
-                    }
+                      value: 'MATERIALER',
+                    },
                   ]}
                 />
               </Col>
-              <Col className="input-amount col-12 col-md-6 col-xl-8">
-                <h3 id="amount">{props.phrases.bkibolAmount}</h3>
+              <Col className='input-amount col-12 col-md-6 col-xl-8'>
+                <h3 id='amount'>{props.phrases.bkibolAmount}</h3>
                 <Input
-                  className="start-value"
+                  className='start-value'
                   handleChange={(value) => onChange('start-value', value)}
                   error={startValue.error}
                   errorMessage={startValue.errorMsg}
                   onBlur={() => onBlur('start-value')}
-                  ariaLabelledBy="amount"
+                  ariaLabelledBy='amount'
                 />
               </Col>
             </Row>
-            <Divider/>
-            <Row className="mt-5">
-              <Col className="calculate-from col-12 col-md-6">
+            <Divider />
+            <Row className='mt-5'>
+              <Col className='calculate-from col-12 col-md-6'>
                 <h3>{props.phrases.calculatePriceChangeFrom}</h3>
                 <Container>
                   <Row>
-                    <Col className="select-year col-sm-5">
+                    <Col className='select-year col-sm-5'>
                       <Input
-                        className="input-year"
+                        className='input-year'
                         label={props.phrases.fromYear}
                         handleChange={(value) => onChange('start-year', value)}
                         error={startYear.error}
@@ -713,19 +728,17 @@ function BkibolCalculator(props) {
                         onBlur={() => onBlur('start-year')}
                       />
                     </Col>
-                    <Col className="select-month col-sm-7">
-                      {addDropdownStartMonth('start-month')}
-                    </Col>
+                    <Col className='select-month col-sm-7'>{addDropdownStartMonth('start-month')}</Col>
                   </Row>
                 </Container>
               </Col>
-              <Col className="calculate-to col-12 col-md-6">
+              <Col className='calculate-to col-12 col-md-6'>
                 <h3>{props.phrases.calculatePriceChangeTo}</h3>
                 <Container>
                   <Row>
-                    <Col className="select-year col-sm-5">
+                    <Col className='select-year col-sm-5'>
                       <Input
-                        className="input-year"
+                        className='input-year'
                         label={props.phrases.toYear}
                         handleChange={(value) => onChange('end-year', value)}
                         error={endYear.error}
@@ -733,16 +746,16 @@ function BkibolCalculator(props) {
                         onBlur={() => onBlur('end-year')}
                       />
                     </Col>
-                    <Col className="select-month col-sm-7">
-                      {addDropdownEndMonth('end-month' )}
-                    </Col>
+                    <Col className='select-month col-sm-7'>{addDropdownEndMonth('end-month')}</Col>
                   </Row>
                 </Container>
               </Col>
             </Row>
-            <Row className="submit">
+            <Row className='submit'>
               <Col>
-                <Button className="submit-button" primary type="submit" disabled={loading}>{props.phrases.seePriceChange}</Button>
+                <Button className='submit-button' primary type='submit' disabled={loading}>
+                  {props.phrases.seePriceChange}
+                </Button>
               </Col>
             </Row>
           </Container>
@@ -761,7 +774,7 @@ function BkibolCalculator(props) {
 
 BkibolCalculator.defaultValue = {
   bkibolServiceUrl: null,
-  language: 'nb'
+  language: 'nb',
 }
 
 BkibolCalculator.propTypes = {
@@ -770,7 +783,7 @@ BkibolCalculator.propTypes = {
   months: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string,
-      title: PropTypes.string
+      title: PropTypes.string,
     })
   ),
   phrases: PropTypes.arrayOf(PropTypes.string),
@@ -779,8 +792,8 @@ BkibolCalculator.propTypes = {
   lastNumberText: PropTypes.string,
   lastUpdated: PropTypes.shape({
     month: PropTypes.string,
-    year: PropTypes.string
-  })
+    year: PropTypes.string,
+  }),
 }
 
 export default (props) => <BkibolCalculator {...props} />

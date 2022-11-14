@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Link,
-  Button,
-  Divider,
-  Dropdown } from '@statisticsnorway/ssb-component-library'
+import { Link, Button, Divider, Dropdown } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
 import { ChevronDown } from 'react-feather'
 import Truncate from 'react-truncate'
@@ -22,97 +19,101 @@ function SubjectArticleList(props) {
   const [loadedFirst, setLoadedFirst] = useState(true)
   const [totalCount, setTotalCount] = useState(props.articles.length)
   const [sort, setSort] = useState('DESC')
-  const showCountLabel = props.language == 'en' ? `Showing ${articles.length} of ${props.totalArticles}` : `Viser ${articles.length} av ${props.totalArticles}`
+  const showCountLabel =
+    props.language == 'en'
+      ? `Showing ${articles.length} of ${props.totalArticles}`
+      : `Viser ${articles.length} av ${props.totalArticles}`
 
-  useEffect(
-    () => {
-      if (loadedFirst) {
-        setLoadedFirst(false)
-        setArticleStart(articleStart + props.count)
-      }
-    },
-    [],
-  )
+  useEffect(() => {
+    if (loadedFirst) {
+      setLoadedFirst(false)
+      setArticleStart(articleStart + props.count)
+    }
+  }, [])
 
   function fetchMoreArticles() {
-    axios.get(props.articleServiceUrl, {
-      params: {
-        currentPath: props.currentPath,
-        start: articleStart,
-        count: props.count,
-        sort: sort,
-        language: props.language
-      }
-    }).then((res) => {
-      setArticles(articles.concat(res.data.articles))
-      setTotalCount((prevState) => prevState + res.data.articles.length)
-    }).finally(() => {
-      setArticleStart((prevState) => prevState + props.count)
-    },
-    )
+    axios
+      .get(props.articleServiceUrl, {
+        params: {
+          currentPath: props.currentPath,
+          start: articleStart,
+          count: props.count,
+          sort: sort,
+          language: props.language,
+        },
+      })
+      .then((res) => {
+        setArticles(articles.concat(res.data.articles))
+        setTotalCount((prevState) => prevState + res.data.articles.length)
+      })
+      .finally(() => {
+        setArticleStart((prevState) => prevState + props.count)
+      })
   }
 
   function fetchArticlesStartOver(order) {
     setArticleStart(props.start)
-    axios.get(props.articleServiceUrl, {
-      params: {
-        currentPath: props.currentPath,
-        start: props.start,
-        count: props.count,
-        sort: order,
-        language: props.language
-      }
-    }).then((res) => {
-      setArticles(res.data.articles)
-      setTotalCount(res.data.totalCount)
-      setLoadedFirst(true)
-    })
+    axios
+      .get(props.articleServiceUrl, {
+        params: {
+          currentPath: props.currentPath,
+          start: props.start,
+          count: props.count,
+          sort: order,
+          language: props.language,
+        },
+      })
+      .then((res) => {
+        setArticles(res.data.articles)
+        setTotalCount(res.data.totalCount)
+        setLoadedFirst(true)
+      })
   }
 
   function renderArticles() {
-    return (
-      articles.map((article, i) => {
-        return (
-          <div key={i} className="mt-5">
-            <Link href={article.url} className="ssb-link header">
-              {article.title}
-            </Link>
-            <p>
-              <Truncate lines={2}
-                className="article-list-ingress">{article.preface}</Truncate>
-            </p>
-            <time dateTime={article.publishDate}>
-              {article.publishDateHuman}
-            </time>
-          </div>
-        )
-      },
-      ))
+    return articles.map((article, i) => {
+      return (
+        <div key={i} className='mt-5'>
+          <Link href={article.url} className='ssb-link header'>
+            {article.title}
+          </Link>
+          <p>
+            <Truncate lines={2} className='article-list-ingress'>
+              {article.preface}
+            </Truncate>
+          </p>
+          <time dateTime={article.publishDate}>{article.publishDateHuman}</time>
+        </div>
+      )
+    })
   }
 
   function renderSortAndFilter() {
     if (props.showSortAndFilter) {
       return (
-        <div className="col-md-6 col-12">
-          <span className="mb-3">Sorter innholdet</span>
-          <Dropdown header="sorter etter dato" items={[
-            {
+        <div className='col-md-6 col-12'>
+          <span className='mb-3'>Sorter innholdet</span>
+          <Dropdown
+            header='sorter etter dato'
+            items={[
+              {
+                title: 'Nyeste',
+                id: 'DESC',
+              },
+              {
+                title: 'Eldste',
+                id: 'ASC',
+              },
+            ]}
+            selectedItem={{
               title: 'Nyeste',
-              id: 'DESC'
-            },
-            {
-              title: 'Eldste',
-              id: 'ASC'
-            }]}
-          selectedItem={{
-            title: 'Nyeste',
-            id: 'DESC'
-          }}
-          onSelect={(selected) => {
-            setSort(selected.id)
-            fetchArticlesStartOver(selected.id)
-          }
-          }/>
+              id: 'DESC',
+            }}
+            onSelect={(selected) => {
+              setSort(selected.id)
+              fetchArticlesStartOver(selected.id)
+            }}
+          />
         </div>
       )
     }
@@ -122,10 +123,13 @@ function SubjectArticleList(props) {
     if (!props.showAllArticles) {
       return (
         <div>
-          <Button disabled={(totalCount > 0) && (totalCount >= props.totalArticles)}
-            className="button-more mt-5"
-            onClick={fetchMoreArticles}><ChevronDown
-              size="18"/>{props.buttonTitle}
+          <Button
+            disabled={totalCount > 0 && totalCount >= props.totalArticles}
+            className='button-more mt-5'
+            onClick={fetchMoreArticles}
+          >
+            <ChevronDown size='18' />
+            {props.buttonTitle}
           </Button>
         </div>
       )
@@ -133,28 +137,20 @@ function SubjectArticleList(props) {
   }
 
   return (
-    <section className="subject-article-list container-fluid">
-      <div className="container pt-5 pb-5">
-        <h2 className="mb-5">{props.title}</h2>
+    <section className='subject-article-list container-fluid'>
+      <div className='container pt-5 pb-5'>
+        <h2 className='mb-5'>{props.title}</h2>
 
-        <div className="row justify-content-md-center">
-          {
-            renderSortAndFilter()
-          }
+        <div className='row justify-content-md-center'>
+          {renderSortAndFilter()}
 
-          <div className="col-md-6 col-12">
-            <div className="total-count mb-2">
-              {showCountLabel}
-            </div>
+          <div className='col-md-6 col-12'>
+            <div className='total-count mb-2'>{showCountLabel}</div>
 
-            <Divider dark={true}/>
+            <Divider dark={true} />
 
-            {
-              renderArticles()
-            }
-            {
-              renderShowMoreButton()
-            }
+            {renderArticles()}
+            {renderShowMoreButton()}
           </div>
         </div>
       </div>
@@ -162,26 +158,25 @@ function SubjectArticleList(props) {
   )
 }
 
-SubjectArticleList.propTypes =
-    {
+SubjectArticleList.propTypes = {
+  title: PropTypes.string,
+  buttonTitle: PropTypes.string,
+  articleServiceUrl: PropTypes.string,
+  currentPath: PropTypes.string,
+  start: PropTypes.number,
+  count: PropTypes.number,
+  showSortAndFilter: PropTypes.bool,
+  language: PropTypes.string,
+  articles: PropTypes.arrayOf(
+    PropTypes.shape({
       title: PropTypes.string,
-      buttonTitle: PropTypes.string,
-      articleServiceUrl: PropTypes.string,
-      currentPath: PropTypes.string,
-      start: PropTypes.number,
-      count: PropTypes.number,
-      showSortAndFilter: PropTypes.bool,
-      language: PropTypes.string,
-      articles: PropTypes.arrayOf(
-        PropTypes.shape({
-          title: PropTypes.string,
-          preface: PropTypes.string,
-          url: PropTypes.string,
-          publishDate: PropTypes.string
-        })
-      ),
-      totalArticles: PropTypes.number,
-      showAllArticles: PropTypes.bool
-    }
+      preface: PropTypes.string,
+      url: PropTypes.string,
+      publishDate: PropTypes.string,
+    })
+  ),
+  totalArticles: PropTypes.number,
+  showAllArticles: PropTypes.bool,
+}
 
 export default (props) => <SubjectArticleList {...props} />

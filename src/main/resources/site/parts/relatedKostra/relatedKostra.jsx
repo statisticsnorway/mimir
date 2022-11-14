@@ -10,19 +10,22 @@ class RelatedKostra extends React.Component {
 
   createMarkup(html) {
     return {
-      __html: html
+      __html: html,
     }
   }
 
   render() {
     return (
-      <section className="container part-related-kostra border-top-green">
-        <div className="row">
-          <div className="col-12">
-            <div className="text-center">
-              <h2 className="roboto-condensed position-relative">{this.props.title}</h2>
-              <div className="pt-1 pb-2 position-relative" dangerouslySetInnerHTML={this.createMarkup(this.props.description)}></div>
-              <Link {...this.props} icon={<ArrowRight size="20" />} />
+      <section className='container part-related-kostra border-top-green'>
+        <div className='row'>
+          <div className='col-12'>
+            <div className='text-center'>
+              <h2 className='roboto-condensed position-relative'>{this.props.title}</h2>
+              <div
+                className='pt-1 pb-2 position-relative'
+                dangerouslySetInnerHTML={this.createMarkup(this.props.description)}
+              ></div>
+              <Link {...this.props} icon={<ArrowRight size='20' />} />
             </div>
           </div>
         </div>
@@ -33,7 +36,7 @@ class RelatedKostra extends React.Component {
 
 RelatedKostra.propTypes = {
   title: PropTypes.string,
-  description: PropTypes.string
+  description: PropTypes.string,
 }
 
 export default (props) => <RelatedKostra {...props} />

@@ -18,12 +18,12 @@ highchartsModuleExportData(Highcharts)
 
 const EMPTY_CONFIG = {
   title: {
-    style: {}
+    style: {},
   },
   tooltip: {},
   plotOptions: {
-    series: {}
-  }
+    series: {},
+  },
 }
 
 const createSetOptions = {
@@ -32,17 +32,17 @@ const createSetOptions = {
       chartContainerLabel: 'Interaktiv figur',
       exporting: {
         chartMenuLabel: 'Last ned graf',
-        menuButtonLabel: 'Velg format for å laste ned {chartTitle}'
+        menuButtonLabel: 'Velg format for å laste ned {chartTitle}',
       },
       screenReaderSection: {
         beforeRegionLabel: 'Skjermleser-informasjon for figur',
-        endOfChartMarker: ''
+        endOfChartMarker: '',
       },
       legend: {
         legendItem: 'Vis {itemName}',
         legendLabel: 'Forklaring av diagram: {legendTitle}',
-        legendLabelNoTitle: 'Bytt synlighet på serie, {chartTitle}'
-      }
+        legendLabelNoTitle: 'Bytt synlighet på serie, {chartTitle}',
+      },
     },
     chartTypes: {
       barMultiple: 'Søylediagram med {numSeries} serier.',
@@ -62,37 +62,47 @@ const createSetOptions = {
       scatterSingle: 'Spredningsplott diagram med {numPoints} {#plural(numPoints, points, point)}.',
       splineMultiple: 'Linjediagram med {numSeries} linjer.',
       splineSingle: 'linjediagram med {numPoints} datapunkter {#plural(numPoints, points, point)}.',
-      unknownMap: 'Kart med {numSeries} dataserier.'
+      unknownMap: 'Kart med {numSeries} dataserier.',
     },
     series: {
       xAxisDescription: 'X-akse, {name}',
       yAxisDescription: 'Y-akse , {name}',
       summary: {
         bar: '{name}, stolpediagram {ix} av {numSeries} med {numPoints} {#plural(numPoints, bars, bar)}.',
-        barCombination: '{name}, serie {ix} av {numSeries}. stolpediagram med {numPoints} {#plural(numPoints, bars, bar)}.',
+        barCombination:
+          '{name}, serie {ix} av {numSeries}. stolpediagram med {numPoints} {#plural(numPoints, bars, bar)}.',
         boxplot: '{name}, boksdiagram {ix} av {numSeries} med {numPoints} {#plural(numPoints, boxes, box)}.',
-        boxplotCombination: '{name}, serie {ix} av {numSeries}. Boksdiagram med {numPoints} {#plural(numPoints, boxes, box)}.',
+        boxplotCombination:
+          '{name}, serie {ix} av {numSeries}. Boksdiagram med {numPoints} {#plural(numPoints, boxes, box)}.',
         bubble: '{name}, boblediagram {ix} av {numSeries} med {numPoints} {#plural(numPoints, bubbles, bubble)}.',
-        bubbleCombination: '{name}, serie {ix} av {numSeries}. Boblediagram serie med {numPoints} {#plural(numPoints, bubbles, bubble)}.',
+        bubbleCombination:
+          '{name}, serie {ix} av {numSeries}. Boblediagram serie med {numPoints} {#plural(numPoints, bubbles, bubble)}.',
         column: '{name}, stolpediagram {ix} av {numSeries} med {numPoints} {#plural(numPoints, bars, bar)}.',
-        columnCombination: '{name}, serie {ix} av {numSeries}. Stolpediagram med {numPoints} {#plural(numPoints, bars, bar)}.',
+        columnCombination:
+          '{name}, serie {ix} av {numSeries}. Stolpediagram med {numPoints} {#plural(numPoints, bars, bar)}.',
         default: '{name}, serie {ix} av {numSeries} med {numPoints} data {#plural(numPoints, points, point)}.',
-        defaultCombination: '{name}, serie {ix} av {numSeries} med {numPoints} data {#plural(numPoints, points, point)}.',
+        defaultCombination:
+          '{name}, serie {ix} av {numSeries} med {numPoints} data {#plural(numPoints, points, point)}.',
         line: '{name}, linje {ix} av {numSeries} med {numPoints} data {#plural(numPoints, points, point)}.',
-        lineCombination: '{name}, serie {ix} av {numSeries}. Linje med {numPoints} data {#plural(numPoints, points, point)}.',
+        lineCombination:
+          '{name}, serie {ix} av {numSeries}. Linje med {numPoints} data {#plural(numPoints, points, point)}.',
         map: '{name}, kart {ix} av {numSeries} med {numPoints} {#plural(numPoints, areas, area)}.',
         mapbubble: '{name}, Boblediagram {ix} av {numSeries} med {numPoints} {#plural(numPoints, bubbles, bubble)}.',
-        mapbubbleCombination: '{name}, serie {ix} av {numSeries}. Boblediagram serie med {numPoints} {#plural(numPoints, bubbles, bubble)}.',
+        mapbubbleCombination:
+          '{name}, serie {ix} av {numSeries}. Boblediagram serie med {numPoints} {#plural(numPoints, bubbles, bubble)}.',
         mapCombination: '{name}, serie {ix} av {numSeries}. Kart med {numPoints} {#plural(numPoints, areas, area)}.',
         mapline: '{name}, linje {ix} av {numSeries} med {numPoints} data {#plural(numPoints, points, point)}.',
-        maplineCombination: '{name}, serie {ix} av {numSeries}. Linje med {numPoints} data {#plural(numPoints, points, point)}.',
+        maplineCombination:
+          '{name}, serie {ix} av {numSeries}. Linje med {numPoints} data {#plural(numPoints, points, point)}.',
         pie: '{name}, Kake {ix} av {numSeries} med {numPoints} {#plural(numPoints, slices, slice)}.',
         pieCombination: '{name}, serie {ix} av {numSeries}. Kake med {numPoints} {#plural(numPoints, slices, slice)}.',
         scatter: '{name}, spredningsplott {ix} av {numSeries} med {numPoints} {#plural(numPoints, points, point)}.',
-        scatterCombination: '{name}, serie {ix} av {numSeries}, spredningsplott med {numPoints} {#plural(numPoints, points, point)}.',
+        scatterCombination:
+          '{name}, serie {ix} av {numSeries}, spredningsplott med {numPoints} {#plural(numPoints, points, point)}.',
         spline: '{name}, linje {ix} av {numSeries} med {numPoints} data {#plural(numPoints, points, point)}.',
-        splineCombination: '{name}, serie {ix} av {numSeries}. Linje med {numPoints} data {#plural(numPoints, points, point)}.'
-      }
+        splineCombination:
+          '{name}, serie {ix} av {numSeries}. Linje med {numPoints} data {#plural(numPoints, points, point)}.',
+      },
     },
     svgContainerLabel: 'Interaktiv graf',
     defaultChartTitle: 'Graf',
@@ -111,8 +121,8 @@ const createSetOptions = {
     printChart: 'Skriv ut graf',
     resetZoom: 'Nullstill zoom',
     resetZoomTitle: 'Nullstill zoom',
-    thousandsSep: ' '
-  }
+    thousandsSep: ' ',
+  },
 }
 
 // HIGHCHART
@@ -120,9 +130,9 @@ export function init() {
   Highcharts.setOptions(createSetOptions)
 
   const lang = $('html').attr('lang')
-  Highcharts.addEvent(Highcharts.Chart, 'aftergetTableAST', function(e) {
-    e.tree.children[2].children.forEach(function(row) {
-      row.children.forEach(function(cell, i) {
+  Highcharts.addEvent(Highcharts.Chart, 'aftergetTableAST', function (e) {
+    e.tree.children[2].children.forEach(function (row) {
+      row.children.forEach(function (cell, i) {
         if (i !== 0) {
           const cellValue = parseFloat(cell.textContent)
             .toLocaleString(lang === 'en' ? 'en-EN' : 'no-NO')
@@ -133,13 +143,13 @@ export function init() {
     })
   })
 
-  $(function() {
+  $(function () {
     const w = {
       height: $(window).height().toFixed(0),
-      width: $(window).width().toFixed(0)
+      width: $(window).width().toFixed(0),
     }
 
-    $('.hc-container').each(function(i, container) {
+    $('.hc-container').each(function (i, container) {
       const height = $(container).height()
       $(container).find('svg').attr('height', height)
     })
@@ -147,7 +157,7 @@ export function init() {
     const h1Size = w.width < 768 ? '14px' : '16px'
 
     // Initialisering av HighCharts-figurer fra tilhørende HTML-tabell
-    $('.highcharts-canvas[id^="highcharts-"]').each(function(index, chart) {
+    $('.highcharts-canvas[id^="highcharts-"]').each(function (index, chart) {
       const config = window['highchart' + $(chart).data('contentkey')] || EMPTY_CONFIG
       const canvas = $(chart)
       const highchartsContentKey = canvas.data('contentkey')
@@ -156,15 +166,20 @@ export function init() {
       if ($('table#highcharts-datatable-' + highchartsContentKey)) {
         config.title.style.fontSize = h1Size
 
-
         if (canvas.data('type') === 'barNegative') {
-          config.yAxis.labels.formatter = function(a) {
+          config.yAxis.labels.formatter = function (a) {
             return Math.abs(a.value)
           }
         }
-        config.tooltip.formatter = (canvas.data('type') === 'barNegative') ? function() {
-          return `<b>${this.series.name} ${this.point.category}:</b> ` + Highcharts.numberFormat(Math.abs(this.point.y), 0)
-        } : ''
+        config.tooltip.formatter =
+          canvas.data('type') === 'barNegative'
+            ? function () {
+                return (
+                  `<b>${this.series.name} ${this.point.category}:</b> ` +
+                  Highcharts.numberFormat(Math.abs(this.point.y), 0)
+                )
+              }
+            : ''
 
         if (canvas.data('type') === 'pie') {
           config.legend.labelFormatter = function name() {
@@ -173,22 +188,22 @@ export function init() {
         }
 
         config.plotOptions.series.events = {
-          legendItemClick: function(e) {
+          legendItemClick: function (e) {
             // Possible bug: untested browser support for browserEvent (but works in IE8, chrome, FF...)
             $(e.browserEvent.target).toggleClass('disabled')
-          }
+          },
         }
 
         // Only show plotOption marker on last data element
         if (canvas.data('type') === 'line') {
-          config.series.forEach(function(series) {
+          config.series.forEach(function (series) {
             const lastIndex = series.data.length - 1
-            series.data.forEach(function(data, index) {
+            series.data.forEach(function (data, index) {
               series.data[index] = {
                 y: parseFloat(data),
                 marker: {
-                  enabled: index === lastIndex
-                }
+                  enabled: index === lastIndex,
+                },
               }
             })
           })
@@ -198,108 +213,108 @@ export function init() {
         const action = 'Lastet ned highcharts'
 
         config.exporting.menuItemDefinitions = {
-          'printChart': {
-            onclick: function() {
+          printChart: {
+            onclick: function () {
               const label = `${config.title.text} - Skriv ut graf`
               gtag('event', action, {
-                'event_category': category,
-                'event_label': label
+                event_category: category,
+                event_label: label,
               })
 
               this.print()
-            }
+            },
           },
-          'downloadPNG': {
-            onclick: function() {
+          downloadPNG: {
+            onclick: function () {
               const label = `${config.title.text} - Last ned som PNG`
               gtag('event', action, {
-                'event_category': category,
-                'event_label': label
+                event_category: category,
+                event_label: label,
               })
 
               this.exportChart({
-                type: 'png'
+                type: 'png',
               })
-            }
+            },
           },
-          'downloadJPEG': {
-            onclick: function() {
+          downloadJPEG: {
+            onclick: function () {
               const label = `${config.title.text} - Last ned som JPEG`
               gtag('event', action, {
-                'event_category': category,
-                'event_label': label
+                event_category: category,
+                event_label: label,
               })
 
               this.exportChart({
-                type: 'jpeg'
+                type: 'jpeg',
               })
-            }
+            },
           },
-          'downloadPDF': {
-            onclick: function() {
+          downloadPDF: {
+            onclick: function () {
               const label = `${config.title.text} - Last ned som PDF`
               gtag('event', action, {
-                'event_category': category,
-                'event_label': label
+                event_category: category,
+                event_label: label,
               })
 
               this.exportChart({
-                type: 'application/pdf'
+                type: 'application/pdf',
               })
-            }
+            },
           },
-          'downloadSVG': {
-            onclick: function() {
+          downloadSVG: {
+            onclick: function () {
               const label = `${config.title.text} - Last ned som SVG`
               gtag('event', action, {
-                'event_category': category,
-                'event_label': label
+                event_category: category,
+                event_label: label,
               })
 
               this.exportChart({
-                type: 'svg'
+                type: 'svg',
               })
-            }
+            },
           },
-          'downloadXLS': {
-            onclick: function() {
+          downloadXLS: {
+            onclick: function () {
               const label = `${config.title.text} - Last ned som XLS`
               gtag('event', action, {
-                'event_category': category,
-                'event_label': label
+                event_category: category,
+                event_label: label,
               })
               const rows = this.getDataRows(true)
-              const xlsxRows = rows.slice(1).map(function(row) {
-                return row.map(function(column) {
+              const xlsxRows = rows.slice(1).map(function (row) {
+                return row.map(function (column) {
                   return {
                     type: typeof column === 'number' ? 'number' : 'string',
-                    value: column
+                    value: column,
                   }
                 })
               })
               zipcelx({
                 filename: config.title.text ? config.title.text : 'graf.xslt',
                 sheet: {
-                  data: xlsxRows
-                }
+                  data: xlsxRows,
+                },
               })
-            }
+            },
           },
-          'downloadCSV': {
-            onclick: function() {
+          downloadCSV: {
+            onclick: function () {
               const label = `${config.title.text} - Last ned som CSV`
               gtag('event', action, {
-                'event_category': category,
-                'event_label': label
+                event_category: category,
+                event_label: label,
               })
 
               this.downloadCSV()
-            }
-          }
+            },
+          },
         }
 
         // Replace table header from Category with xAxis.title.text
-        config.exporting.csv.columnHeaderFormatter = function(item) {
+        config.exporting.csv.columnHeaderFormatter = function (item) {
           if (!item || item instanceof Highcharts.Axis) {
             return config.xAxis.title.text ? config.xAxis.title.text : 'Category'
           } else {
@@ -338,5 +353,3 @@ export function init() {
     })
   })
 }
-
-

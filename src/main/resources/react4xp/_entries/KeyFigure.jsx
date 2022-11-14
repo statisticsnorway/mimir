@@ -8,9 +8,12 @@ class KeyFigures extends React.Component {
     super(props)
 
     this.state = {
-      showPreviewToggle: this.props.showPreviewDraft && (this.props.pageTypeKeyFigure || this.props.paramShowDraft && !this.props.pageTypeKeyFigure),
+      showPreviewToggle:
+        this.props.showPreviewDraft &&
+        (this.props.pageTypeKeyFigure || (this.props.paramShowDraft && !this.props.pageTypeKeyFigure)),
       fetchUnPublished: this.props.paramShowDraft,
-      keyFigures: this.props.paramShowDraft && this.props.draftExist ? this.props.keyFiguresDraft : this.props.keyFigures
+      keyFigures:
+        this.props.paramShowDraft && this.props.draftExist ? this.props.keyFiguresDraft : this.props.keyFigures,
     }
 
     this.toggleDraft = this.toggleDraft.bind(this)
@@ -19,7 +22,8 @@ class KeyFigures extends React.Component {
   toggleDraft() {
     this.setState({
       fetchUnPublished: !this.state.fetchUnPublished,
-      keyFigures: !this.state.fetchUnPublished && this.props.draftExist ? this.props.keyFiguresDraft : this.props.keyFigures
+      keyFigures:
+        !this.state.fetchUnPublished && this.props.draftExist ? this.props.keyFiguresDraft : this.props.keyFigures,
     })
   }
 
@@ -27,11 +31,7 @@ class KeyFigures extends React.Component {
     if (this.state.showPreviewToggle && this.props.pageTypeKeyFigure) {
       return (
         <Col>
-          <Button
-            variant="primary"
-            onClick={this.toggleDraft}
-            className="mb-4"
-          >
+          <Button variant='primary' onClick={this.toggleDraft} className='mb-4'>
             {!this.state.fetchUnPublished ? 'Vis upubliserte tall' : 'Vis publiserte tall'}
           </Button>
         </Col>
@@ -49,7 +49,7 @@ class KeyFigures extends React.Component {
           if (this.props.draftExist && keyFigure.number) {
             return (
               <Col className={`col-12${this.props.isInStatisticsPage ? ' p-0' : ''}`}>
-                <Alert variant='info' className="mb-4">
+                <Alert variant='info' className='mb-4'>
                   Tallet i nøkkeltallet nedenfor er upublisert
                 </Alert>
               </Col>
@@ -57,7 +57,7 @@ class KeyFigures extends React.Component {
           } else {
             return (
               <Col className={`col-12${this.props.isInStatisticsPage ? ' p-0' : ''}`}>
-                <Alert variant='warning' className="mb-4">
+                <Alert variant='warning' className='mb-4'>
                   Finnes ikke upubliserte tall for dette nøkkeltallet
                 </Alert>
               </Col>
@@ -75,15 +75,27 @@ class KeyFigures extends React.Component {
 
     let isRight = true
     return keyFigures.map((keyFigure, i) => {
-      isRight = (!columns || (columns && !isRight) || keyFigure.size === 'large')
+      isRight = !columns || (columns && !isRight) || keyFigure.size === 'large'
       return (
         <React.Fragment key={`figure-${i}`}>
-          <Col className={`col-12${columns && keyFigure.size !== 'large' ? ' col-md-6' : ''}${this.props.isInStatisticsPage ? ' p-0' : ''}`}>
-            <SSBKeyFigures {...keyFigure} icon={keyFigure.iconUrl && <img src={keyFigure.iconUrl}
-              alt={keyFigure.iconAltText ? keyFigure.iconAltText : ' '}></img>}/>
+          <Col
+            className={`col-12${columns && keyFigure.size !== 'large' ? ' col-md-6' : ''}${
+              this.props.isInStatisticsPage ? ' p-0' : ''
+            }`}
+          >
+            <SSBKeyFigures
+              {...keyFigure}
+              icon={
+                keyFigure.iconUrl && (
+                  <img src={keyFigure.iconUrl} alt={keyFigure.iconAltText ? keyFigure.iconAltText : ' '}></img>
+                )
+              }
+            />
             {this.addKeyFigureSource(keyFigure)}
           </Col>
-          {i < keyFigures.length - 1 ? <Divider className={`my-5 d-block ${!isRight ? 'd-md-none' : ''}`} light /> : null}
+          {i < keyFigures.length - 1 ? (
+            <Divider className={`my-5 d-block ${!isRight ? 'd-md-none' : ''}`} light />
+          ) : null}
         </React.Fragment>
       )
     })
@@ -94,10 +106,16 @@ class KeyFigures extends React.Component {
       const sourceLabel = this.props.sourceLabel
 
       return (
-        <References className={`${keyFigure.size !== 'large' ? 'mt-3' : ''}`} title={sourceLabel} referenceList={[{
-          href: keyFigure.source.url,
-          label: keyFigure.source.title
-        }]}/>
+        <References
+          className={`${keyFigure.size !== 'large' ? 'mt-3' : ''}`}
+          title={sourceLabel}
+          referenceList={[
+            {
+              href: keyFigure.source.url,
+              label: keyFigure.source.title,
+            },
+          ]}
+        />
       )
     }
     return
@@ -108,11 +126,17 @@ class KeyFigures extends React.Component {
       const sourceLabel = this.props.sourceLabel
 
       return (
-        <Col className="col-12">
-          <References className="col-12 mt-3" title={sourceLabel} referenceList={[{
-            href: this.props.source.url,
-            label: this.props.source.title
-          }]}/>
+        <Col className='col-12'>
+          <References
+            className='col-12 mt-3'
+            title={sourceLabel}
+            referenceList={[
+              {
+                href: this.props.source.url,
+                label: this.props.source.title,
+              },
+            ]}
+          />
         </Col>
       )
     }
@@ -123,7 +147,9 @@ class KeyFigures extends React.Component {
     if (this.props.displayName) {
       return (
         <Col>
-          <Title size={3} className="mb-5">{this.props.displayName}</Title>
+          <Title size={3} className='mb-5'>
+            {this.props.displayName}
+          </Title>
         </Col>
       )
     }
@@ -133,8 +159,8 @@ class KeyFigures extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <Row className="d-none searchabletext">
-          <Col className="col-12">{this.props.hiddenTitle}</Col>
+        <Row className='d-none searchabletext'>
+          <Col className='col-12'>{this.props.hiddenTitle}</Col>
         </Row>
         <Row>
           {this.addPreviewButton()}
@@ -165,14 +191,14 @@ KeyFigures.propTypes = {
       changes: PropTypes.shape({
         changeDirection: PropTypes.string,
         changeText: PropTypes.string,
-        changePeriod: PropTypes.string
+        changePeriod: PropTypes.string,
       }),
       glossary: PropTypes.string,
       greenBox: PropTypes.bool,
       source: PropTypes.shape({
         url: PropTypes.string,
-        title: PropTypes.title
-      })
+        title: PropTypes.title,
+      }),
     })
   ),
   keyFigures: PropTypes.arrayOf(
@@ -188,20 +214,20 @@ KeyFigures.propTypes = {
       changes: PropTypes.shape({
         changeDirection: PropTypes.string,
         changeText: PropTypes.string,
-        changePeriod: PropTypes.string
+        changePeriod: PropTypes.string,
       }),
       glossary: PropTypes.string,
       greenBox: PropTypes.bool,
       source: PropTypes.shape({
         url: PropTypes.string,
-        title: PropTypes.title
-      })
+        title: PropTypes.title,
+      }),
     })
   ),
   sourceLabel: PropTypes.string,
   source: PropTypes.shape({
     url: PropTypes.string,
-    title: PropTypes.title
+    title: PropTypes.title,
   }),
   columns: PropTypes.bool,
   showPreviewDraft: PropTypes.bool,
@@ -209,7 +235,7 @@ KeyFigures.propTypes = {
   draftExist: PropTypes.bool,
   pageTypeKeyFigure: PropTypes.bool,
   hiddenTitle: PropTypes.string,
-  isInStatisticsPage: PropTypes.string
+  isInStatisticsPage: PropTypes.string,
 }
 
-export default (props) => <KeyFigures {...props}/>
+export default (props) => <KeyFigures {...props} />

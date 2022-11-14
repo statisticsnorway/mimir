@@ -3,28 +3,16 @@ import { Publication, Publisering, PubliseringXML } from '../dashboard/statreg/t
 import { XmlParser } from '../../types/xmlParser'
 import { HttpResponse } from '/lib/http-client'
 
-const {
-  ensureArray
-} = __non_webpack_require__('/lib/ssb/utils/arrayUtils')
-const {
-  getNode
-} = __non_webpack_require__('/lib/ssb/repo/common')
-const {
-  STATREG_BRANCH,
-  STATREG_REPO,
-  getStatRegBaseUrl,
-  PUBLICATIONS_URL
-} = __non_webpack_require__('/lib/ssb/dashboard/statreg/config')
-const {
-  fetchStatRegData
-} = __non_webpack_require__('/lib/ssb/dashboard/statreg/common')
-const {
-  Events,
-  logUserDataQuery
-} = __non_webpack_require__('/lib/ssb/repo/query')
+const { ensureArray } = __non_webpack_require__('/lib/ssb/utils/arrayUtils')
+const { getNode } = __non_webpack_require__('/lib/ssb/repo/common')
+const { STATREG_BRANCH, STATREG_REPO, getStatRegBaseUrl, PUBLICATIONS_URL } = __non_webpack_require__(
+  '/lib/ssb/dashboard/statreg/config'
+)
+const { fetchStatRegData } = __non_webpack_require__('/lib/ssb/dashboard/statreg/common')
+const { Events, logUserDataQuery } = __non_webpack_require__('/lib/ssb/repo/query')
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 
-export const STATREG_REPO_PUBLICATIONS_KEY: string = 'publications'
+export const STATREG_REPO_PUBLICATIONS_KEY = 'publications'
 
 function extractPublications(payload: string): Array<Publication> {
   const pubXML: PubliseringXML = JSON.parse(xmlParser.parse(payload))
@@ -39,45 +27,46 @@ export function fetchPublications(): Array<Publication> | null {
       return extractPublications(response.body)
     }
   } catch (error) {
-    const message: string = `Failed to fetch data from statreg: Publications (${error})`
+    const message = `Failed to fetch data from statreg: Publications (${error})`
     logUserDataQuery('Publications', {
       file: '/lib/ssb/statreg/publications.ts',
       function: 'fetchPublications',
       message: Events.REQUEST_COULD_NOT_CONNECT,
       info: message,
-      status: error
+      status: error,
     })
   }
   return null
 }
 
 function transformPublication(pub: Publisering): Publication {
-  const {
-    id, variant, statistikkKortnavn, deskFlyt, endret
-  } = pub
+  const { id, variant, statistikkKortnavn, deskFlyt, endret } = pub
 
   return {
     id,
     variant,
     statisticsKey: statistikkKortnavn,
     status: deskFlyt,
-    modifiedTime: endret
+    modifiedTime: endret,
   }
 }
 
 function getAllPublicationsFromRepo(): Array<Publication> {
-  const node: StatRegNode[] = getNode(STATREG_REPO, STATREG_BRANCH, `/${STATREG_REPO_PUBLICATIONS_KEY}`) as StatRegNode[]
+  const node: StatRegNode[] = getNode(
+    STATREG_REPO,
+    STATREG_BRANCH,
+    `/${STATREG_REPO_PUBLICATIONS_KEY}`
+  ) as StatRegNode[]
   const publicationsNode: StatRegNode | null = Array.isArray(node) ? node[0] : node
   return publicationsNode ? (publicationsNode.data as Array<Publication>) : []
 }
 
 export function getPublicationsForStatistic(shortName: string): Array<Publication> {
-  return ensureArray(getAllPublicationsFromRepo())
-    .filter((pub: Publication) => pub.statisticsKey === shortName)
+  return ensureArray(getAllPublicationsFromRepo()).filter((pub: Publication) => pub.statisticsKey === shortName)
 }
 
 export interface StatRegPublicationsLib {
-  STATREG_REPO_PUBLICATIONS_KEY: string;
-  fetchPublications: () => Array<Publication> | null;
-  getPublicationsForStatistic: (shortName: string) => Array<Publication>;
+  STATREG_REPO_PUBLICATIONS_KEY: string
+  fetchPublications: () => Array<Publication> | null
+  getPublicationsForStatistic: (shortName: string) => Array<Publication>
 }

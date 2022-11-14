@@ -1,10 +1,12 @@
 import React, { useContext, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectInternalBaseUrl,
+import {
+  selectInternalBaseUrl,
   selectInternalStatbankUrl,
   selectLoadingClearCache,
   selectLoadingPurgeVarnish,
-  selectVarnishPurgeResult } from '../HomePage/selectors'
+  selectVarnishPurgeResult,
+} from '../HomePage/selectors'
 import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
 import { requestClearCache, requestPurgeVarnishCache } from '../HomePage/actions'
 import { RefreshCw, Rss, Trash } from 'react-feather'
@@ -54,14 +56,10 @@ export function DashboardTools() {
     }
 
     return (
-      <div className="d-flex justify-content-between align-items-center">
-        <span className="fw-bold">Oppdater alle {statRegName}</span>
-        <Button
-          className="ms-auto"
-          onClick={() => refreshStatReg(statRegStatus.key)}
-          disabled={statRegStatus.loading}
-        >
-          { statRegStatus.loading ? <span className="spinner-border spinner-border-sm" /> : <RefreshCw size={18}/> }
+      <div className='d-flex justify-content-between align-items-center'>
+        <span className='fw-bold'>Oppdater alle {statRegName}</span>
+        <Button className='ms-auto' onClick={() => refreshStatReg(statRegStatus.key)} disabled={statRegStatus.loading}>
+          {statRegStatus.loading ? <span className='spinner-border spinner-border-sm' /> : <RefreshCw size={18} />}
         </Button>
       </div>
     )
@@ -77,28 +75,26 @@ export function DashboardTools() {
 
   function pushRss() {
     setPushingRss(true)
-    axios.get(
-      '/xp/admin/_/service/mimir/rssPush'
-    ).then((response) => {
-      setRssStatus('success')
-      setPushRssResult(response.data)
-    }
-    ).catch((error) => {
-      setRssStatus('danger')
-      setPushRssResult(error.message)
-    }
-    )
+    axios
+      .get('/xp/admin/_/service/mimir/rssPush')
+      .then((response) => {
+        setRssStatus('success')
+        setPushRssResult(response.data)
+      })
+      .catch((error) => {
+        setRssStatus('danger')
+        setPushRssResult(error.message)
+      })
       .finally(() => {
         setPushingRss(false)
-      }
-      )
+      })
   }
 
   function renderIcon(loading) {
     if (loading) {
-      return (<span className="spinner-border spinner-border-sm" />)
+      return <span className='spinner-border spinner-border-sm' />
     }
-    return (<Trash size={20}/>)
+    return <Trash size={20} />
   }
 
   function onStatisticsSearchSelect(e) {
@@ -111,28 +107,26 @@ export function DashboardTools() {
 
   function renderStatisticsSearch() {
     if (loadingStatisticsSearchList) {
-      return (
-        <span className="spinner-border spinner-border-sm ms-2 mb-1" />
-      )
+      return <span className='spinner-border spinner-border-sm ms-2 mb-1' />
     }
     const items = statisticsSearchList.map((s) => {
       return {
         title: `${s.shortName} - ${s.name}`,
-        id: s.id
+        id: s.id,
       }
     })
     if (items.length === 0) {
       items.push({
         title: `Ingen statistikker`,
-        id: '-1'
+        id: '-1',
       })
     }
 
     return (
       <Dropdown
-        className="w-100 dropdown-update-statistics"
-        header="Søk og oppdater statistikk"
-        placeholder="Søk og oppdater statistikk"
+        className='w-100 dropdown-update-statistics'
+        header='Søk og oppdater statistikk'
+        placeholder='Søk og oppdater statistikk'
         searchable
         items={items}
         onSelect={(e) => onStatisticsSearchSelect(e)}
@@ -142,22 +136,24 @@ export function DashboardTools() {
 
   function getLinkOptions() {
     const linkOptions = []
-    linkOptions.push({
-      id: 'link-statreg',
-      title: 'Statistikkregisteret'
-    },
-    {
-      id: 'link-designer',
-      title: 'Tabellbygger'
-    },
-    {
-      id: 'link-statbank',
-      title: 'Intern statistikkbank'
-    },
-    {
-      id: 'link-guide-publications',
-      title: 'Veiledninger i publiseringer på ssb.no'
-    })
+    linkOptions.push(
+      {
+        id: 'link-statreg',
+        title: 'Statistikkregisteret',
+      },
+      {
+        id: 'link-designer',
+        title: 'Tabellbygger',
+      },
+      {
+        id: 'link-statbank',
+        title: 'Intern statistikkbank',
+      },
+      {
+        id: 'link-guide-publications',
+        title: 'Veiledninger i publiseringer på ssb.no',
+      }
+    )
     return linkOptions
   }
 
@@ -181,11 +177,11 @@ export function DashboardTools() {
 
     return (
       <Dropdown
-        className="other-tools-dropdown"
-        header="Andre verktøy"
+        className='other-tools-dropdown'
+        header='Andre verktøy'
         selectedItem={{
           id: 'link-dropdown-placeholder',
-          title: 'Andre verktøy'
+          title: 'Andre verktøy',
         }}
         items={getLinkOptions()}
         onSelect={openLinks}
@@ -201,9 +197,9 @@ export function DashboardTools() {
     return (
       <Col>
         <Input
-          className="mt-3"
-          ariaLabel="Search table ID"
-          placeholder="Finn TBML-def. med tabellnummer"
+          className='mt-3'
+          ariaLabel='Search table ID'
+          placeholder='Finn TBML-def. med tabellnummer'
           searchField
           submitCallback={handleTbmlDefinitionsStatbankTableSearch}
         />
@@ -212,73 +208,72 @@ export function DashboardTools() {
   }
 
   return (
-    <div className="p-4 tables-wrapper">
-      <h2 className="mb-4">Verktøy</h2>
+    <div className='p-4 tables-wrapper'>
+      <h2 className='mb-4'>Verktøy</h2>
       <Container>
-        <Row className="mb-4">
-          <Col className="d-inline-flex align-content-center justify-content-between">
+        <Row className='mb-4'>
+          <Col className='d-inline-flex align-content-center justify-content-between'>
             {renderStatisticsSearch()}
             <Button
-              className="m-0"
+              className='m-0'
               onClick={() => {
                 setOpenStatistic(dispatch, io, selectedStat)
                 setOpenModal(dispatch, true)
               }}
               disabled={hasLoadingStatistic || loadingStatisticsSearchList || !selectedStat}
             >
-              { hasLoadingStatistic ? <span className="spinner-border spinner-border-sm" /> : <RefreshCw size={18}/> }
+              {hasLoadingStatistic ? <span className='spinner-border spinner-border-sm' /> : <RefreshCw size={18} />}
             </Button>
           </Col>
         </Row>
         {statuses.map((statRegStatus, index) => {
           const {} = statRegStatus
           return (
-            <Row className="mb-4" key={index}>
-              <Col>
-                {makeStatRegRefreshOptions(statRegStatus)}
-              </Col>
+            <Row className='mb-4' key={index}>
+              <Col>{makeStatRegRefreshOptions(statRegStatus)}</Col>
             </Row>
           )
         })}
         {modalShow && <RefreshStatRegModal statRegKey={selectedStatRegKey} handleClose={() => setModalShow(false)} />}
-        <Row className="mb-5">
-          {renderTbmlDefinitionsStatbankTable()}
-        </Row>
-        <fieldset className="safe-zone d-flex flex-column justify-content-center mb-3 p-2">
-          <h3 className="mb-4">Manuelle jobber</h3>
-          <Row className="mb-1">
+        <Row className='mb-5'>{renderTbmlDefinitionsStatbankTable()}</Row>
+        <fieldset className='safe-zone d-flex flex-column justify-content-center mb-3 p-2'>
+          <h3 className='mb-4'>Manuelle jobber</h3>
+          <Row className='mb-1'>
             <Col>
               <Button
                 primary
-                className="w-100 d-flex justify-content-center"
+                className='w-100 d-flex justify-content-center'
                 onClick={() => purgeVarnishCache()}
-                disabled={loadingVarnishPurge}>
+                disabled={loadingVarnishPurge}
+              >
                 <div>
                   {renderIcon(loadingVarnishPurge)} <span>Tøm Varnish</span>
                 </div>
               </Button>
             </Col>
           </Row>
-          <Row className="mb-1">
+          <Row className='mb-1'>
             <Col>
               <Button
                 primary
-                className="w-100 d-flex justify-content-center"
+                className='w-100 d-flex justify-content-center'
                 onClick={() => clearCache()}
-                disabled={loadingCache}>
+                disabled={loadingCache}
+              >
                 <div>
                   {renderIcon(loadingCache)} <span>Tøm XP cache</span>
                 </div>
               </Button>
             </Col>
           </Row>
-          <Row className="mb-1">
+          <Row className='mb-1'>
             <Col>
               <Button
                 primary
-                className="w-100 d-flex justify-content-center"
+                className='w-100 d-flex justify-content-center'
                 onClick={() => pushRss()}
-                disabled={pushingRss}>
+                disabled={pushingRss}
+              >
                 <div>
                   <Rss /> <span>Push RSS</span>
                 </div>
@@ -287,7 +282,9 @@ export function DashboardTools() {
           </Row>
           <Row>
             <Col>
-              <Alert variant={rssStatus} show={!!pushRssResult}>{pushRssResult}</Alert>
+              <Alert variant={rssStatus} show={!!pushRssResult}>
+                {pushRssResult}
+              </Alert>
             </Col>
           </Row>
           <Row>
@@ -299,10 +296,8 @@ export function DashboardTools() {
             </Col>
           </Row>
         </fieldset>
-        <Row className="mb-4">
-          <Col>
-            {renderLinkTools()}
-          </Col>
+        <Row className='mb-4'>
+          <Col>{renderLinkTools()}</Col>
         </Row>
       </Container>
     </div>

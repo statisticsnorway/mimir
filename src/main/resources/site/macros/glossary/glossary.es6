@@ -1,12 +1,10 @@
 import { render } from '/lib/thymeleaf'
 
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
-const {
-  renderError
-} = __non_webpack_require__('/lib/ssb/error/error')
+const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 const view = resolve('./glossary.html')
 
-exports.macro = function(context) {
+exports.macro = function (context) {
   try {
     return renderMacro(context)
   } catch (e) {
@@ -21,19 +19,19 @@ const renderMacro = (context) => {
   const glossary = new React4xp('site/macros/glossary/glossary')
     .setProps({
       text: context.params.text,
-      explanation: context.params.explanation
+      explanation: context.params.explanation,
     })
     .setId('glossary')
     .uniqueId()
 
   const body = render(view, {
-    glossaryId: glossary.react4xpId
+    glossaryId: glossary.react4xpId,
   })
 
   return {
     body: glossary.renderBody({
-      body
+      body,
     }),
-    pageContributions: glossary.renderPageContributions()
+    pageContributions: glossary.renderPageContributions(),
   }
 }

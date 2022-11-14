@@ -246,11 +246,7 @@ export interface DatasetLib {
     branch?: string
   ) => DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null
   extractKey: (content: Content<DataSource>) => string
-  refreshDataset: (
-    content: Content<DataSource | GenericDataImport>,
-    branch?: string,
-    processXml?: string
-  ) => CreateOrUpdateStatus
+  refreshDataset: (content: Content<DataSource>, branch?: string, processXml?: string) => CreateOrUpdateStatus
   refreshDatasetWithUserKey: (content: Content<DataSource>, userLogin: string, branch?: string) => CreateOrUpdateStatus
   deleteDataset: (content: Content<DataSource>, branch?: string) => boolean
   getContentWithDataSource: () => Array<Content<DataSource>>

@@ -15,7 +15,7 @@ export function StatisticsLogJob(props) {
   const logData = useSelector(selectJobLog(props.statisticId, props.jobId))
 
   function onToggleAccordion(isOpen) {
-    if (firstOpen && isOpen ) {
+    if (firstOpen && isOpen) {
       setFirstOpen(false)
       requestJobLogDetails(dispatch, io, props.jobId, props.statisticId)
     }
@@ -37,14 +37,16 @@ export function StatisticsLogJob(props) {
           <NestedAccordion
             key={i}
             header={`${log.displayName} (${log.branch})`}
-            className="mx-0"
+            className='mx-0'
             openByDefault={props.nestedAccordionStatus && !!props.nestedAccordionStatus[i]}
-            onToggle={(nestedIsOpen) => setNestedAccordionStatus(i, nestedIsOpen)}>
+            onToggle={(nestedIsOpen) => setNestedAccordionStatus(i, nestedIsOpen)}
+          >
             <ul>
               {log.eventLogResult.map((logNode, k) => {
                 return (
                   <p key={k}>
-                    <span>{logNode.modifiedTs}</span> - <span>{logNode.by}</span><br/>
+                    <span>{logNode.modifiedTs}</span> - <span>{logNode.by}</span>
+                    <br />
                     <span> &gt; {logNode.result}</span>
                   </p>
                 )
@@ -54,9 +56,7 @@ export function StatisticsLogJob(props) {
         )
       })
     } else {
-      return (
-        <span className="spinner-border spinner-border" />
-      )
+      return <span className='spinner-border spinner-border' />
     }
   }
 
@@ -81,5 +81,5 @@ StatisticsLogJob.propTypes = {
   setAccordionStatusOnIndex: PropTypes.func,
   index: PropTypes.number,
   nestedAccordionStatus: PropTypes.array,
-  setNestedAccordionWithIndexes: PropTypes.func
+  setNestedAccordionWithIndexes: PropTypes.func,
 }
