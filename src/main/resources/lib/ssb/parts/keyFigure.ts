@@ -11,38 +11,19 @@ import { Category, Dimension, JSONstat as JSONstatType } from '../../types/jsons
 import { DatasetRepoNode, DataSource as DataSourceType } from '../repo/dataset'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 
+const { imageUrl } = __non_webpack_require__('/lib/xp/portal')
+const { datasetOrUndefined } = __non_webpack_require__('/lib/ssb/cache/cache')
 const {
-  imageUrl
-} = __non_webpack_require__('/lib/xp/portal')
-const {
-  datasetOrUndefined
-} = __non_webpack_require__('/lib/ssb/cache/cache')
-const {
-  data: {
-    forceArray
-  }
+  data: { forceArray },
 } = __non_webpack_require__('/lib/util')
-const {
-  DATASET_BRANCH,
-  UNPUBLISHED_DATASET_BRANCH
-} = __non_webpack_require__('/lib/ssb/repo/dataset')
-const {
-  getDataset
-} = __non_webpack_require__('/lib/ssb/dataset/dataset')
-const {
-  localizeTimePeriod
-} = __non_webpack_require__('/lib/ssb/utils/language')
-const {
-  localize
-} = __non_webpack_require__('/lib/xp/i18n')
-const {
-  createHumanReadableFormat
-} = __non_webpack_require__('/lib/ssb/utils/utils')
-const {
-  getImageCaption
-} = __non_webpack_require__('/lib/ssb/utils/imageUtils')
+const { DATASET_BRANCH, UNPUBLISHED_DATASET_BRANCH } = __non_webpack_require__('/lib/ssb/repo/dataset')
+const { getDataset } = __non_webpack_require__('/lib/ssb/dataset/dataset')
+const { localizeTimePeriod } = __non_webpack_require__('/lib/ssb/utils/language')
+const { localize } = __non_webpack_require__('/lib/xp/i18n')
+const { createHumanReadableFormat } = __non_webpack_require__('/lib/ssb/utils/utils')
+const { getImageCaption } = __non_webpack_require__('/lib/ssb/utils/imageUtils')
 
-const contentTypeName: string = `${app.name}:keyFigure`
+const contentTypeName = `${app.name}:keyFigure`
 
 export function get(keys: string | Array<string>): Array<Content<KeyFigure>> {
   keys = forceArray(keys)
@@ -53,9 +34,9 @@ export function get(keys: string | Array<string>): Array<Content<KeyFigure>> {
     start: 0,
     filters: {
       ids: {
-        values: keys
-      }
-    }
+        values: keys,
+      },
+    },
   })
   const hits: Array<Content<KeyFigure>> = keys.reduce((keyfigures: Array<Content<KeyFigure>>, id: string) => {
     const found: Array<Content<KeyFigure>> = content.hits.filter((keyFigure) => keyFigure._id === id)
@@ -68,30 +49,31 @@ export function get(keys: string | Array<string>): Array<Content<KeyFigure>> {
 }
 
 interface DatasetFilterOptions {
-  _selected: 'municipalityFilter';
+  _selected: 'municipalityFilter'
   municipalityFilter: {
-    municipalityDimension: string;
-  };
+    municipalityDimension: string
+  }
 }
 
 export function parseKeyFigure(
   keyFigure: Content<KeyFigure & DataSource>,
   municipality?: MunicipalityWithCounty,
-  branch: string = DATASET_BRANCH): KeyFigureView {
+  branch: string = DATASET_BRANCH
+): KeyFigureView {
   const keyFigureViewData: KeyFigureView = {
     iconUrl: getIconUrl(keyFigure),
     iconAltText: keyFigure.data.icon ? getImageCaption(keyFigure.data.icon) : '',
     number: undefined,
     numberDescription: keyFigure.data.denomination,
     noNumberText: localize({
-      key: 'value.notFound'
+      key: 'value.notFound',
     }),
     time: undefined,
     size: keyFigure.data.size,
     title: keyFigure.displayName,
     changes: undefined,
     greenBox: keyFigure.data.greenBox,
-    glossaryText: keyFigure.data.glossaryText
+    glossaryText: keyFigure.data.glossaryText,
   }
 
   let datasetRepo: DatasetRepoNode<JSONstatType | TbmlDataUniform | object> | undefined | null
@@ -111,7 +93,11 @@ export function parseKeyFigure(
       const yAxisLabel: string | undefined = dataSource.statbankApi ? dataSource.statbankApi.yAxisLabel : undefined
 
       // if filter get data with filter
-      if (dataSource.statbankApi && dataSource.statbankApi.datasetFilterOptions && dataSource.statbankApi.datasetFilterOptions._selected) {
+      if (
+        dataSource.statbankApi &&
+        dataSource.statbankApi.datasetFilterOptions &&
+        dataSource.statbankApi.datasetFilterOptions._selected
+      ) {
         const filterOptions: DatasetFilterOptions = dataSource.statbankApi.datasetFilterOptions
         getDataWithFilterStatbankApi(keyFigureViewData, municipality, filterOptions, ds, yAxisLabel)
       } else if (xAxisLabel && ds && !(ds instanceof Array)) {
@@ -180,14 +166,14 @@ function getDataTbProcessor(
       changeDirection = 'down'
     } else {
       changeText = localize({
-        key: 'keyFigure.noChange'
+        key: 'keyFigure.noChange',
       })
     }
 
     keyFigureViewData.changes = {
       changeDirection,
       changeText,
-      changePeriod: row2.th.toString()
+      changePeriod: row2.th.toString(),
     }
   }
 
@@ -206,12 +192,26 @@ function getDataWithFilterStatbankApi(
   yAxisLabel: string | undefined
 ): KeyFigureView {
   if (yAxisLabel && ds && !(ds instanceof Array)) {
-    if (filterOptions && filterOptions.municipalityFilter && filterOptions._selected === 'municipalityFilter' && municipality) {
+    if (
+      filterOptions &&
+      filterOptions.municipalityFilter &&
+      filterOptions._selected === 'municipalityFilter' &&
+      municipality
+    ) {
       const filterTarget: string = filterOptions.municipalityFilter.municipalityDimension
       // get value and label from json-stat data, filtering on municipality
-      let municipalData: MunicipalData | null = getDataFromMunicipalityCode(ds, municipality.code, yAxisLabel, filterTarget)
+      let municipalData: MunicipalData | null = getDataFromMunicipalityCode(
+        ds,
+        municipality.code,
+        yAxisLabel,
+        filterTarget
+      )
       // not all municipals have data, so if its missing, try the old one
-      if ((!municipalData || (municipalData.value === null || municipalData.value === 0)) && municipality.changes && municipality.changes.length > 0) {
+      if (
+        (!municipalData || municipalData.value === null || municipalData.value === 0) &&
+        municipality.changes &&
+        municipality.changes.length > 0
+      ) {
         municipalData = getDataFromMunicipalityCode(ds, municipality.changes[0].oldCode, yAxisLabel, filterTarget)
       }
       if (municipalData && municipalData.value !== null) {
@@ -226,25 +226,30 @@ function getDataWithFilterStatbankApi(
 }
 
 function getIconUrl(keyFigure: Content<KeyFigure>): string {
-  let iconUrl: string = ''
+  let iconUrl = ''
   if (keyFigure.data.icon) {
     iconUrl = imageUrl({
       id: keyFigure.data.icon,
-      scale: 'block(100,100)'
+      scale: 'block(100,100)',
     })
   }
   return iconUrl
 }
 
-function getDataFromMunicipalityCode(ds: JSONstat, municipalityCode: string, yAxisLabel: string, filterTarget: string): MunicipalData | null {
+function getDataFromMunicipalityCode(
+  ds: JSONstat,
+  municipalityCode: string,
+  yAxisLabel: string,
+  filterTarget: string
+): MunicipalData | null {
   const filterTargetIndex: number = ds.id.indexOf(filterTarget)
   const filterDimension: Dimension | null = ds.Dimension(filterTarget) as Dimension | null
-  if ( !filterDimension ) {
+  if (!filterDimension) {
     return null
   }
   const filterCategory: Category | null = filterDimension.Category(municipalityCode) as Category | null
   const filterCategoryIndex: number | undefined = filterCategory ? filterCategory.index : undefined
-  const dimensionFilter: Array<number|string> = ds.id.map( () => 0 )
+  const dimensionFilter: Array<number | string> = ds.id.map(() => 0)
 
   if (filterCategoryIndex !== undefined && filterCategoryIndex >= 0) {
     dimensionFilter[filterTargetIndex] = filterCategoryIndex
@@ -254,7 +259,8 @@ function getDataFromMunicipalityCode(ds: JSONstat, municipalityCode: string, yAx
 
   const yAxisIndex: number = ds.id.indexOf(yAxisLabel)
   const yDimension: Dimension | Array<Dimension> | null = ds.Dimension(yAxisLabel)
-  const yCategories: Category | Array<Category> | null = yDimension && !(yDimension instanceof Array) ? yDimension.Category() : null
+  const yCategories: Category | Array<Category> | null =
+    yDimension && !(yDimension instanceof Array) ? yDimension.Category() : null
   if (yCategories && Array.isArray(yCategories) && yCategories.length > 0) {
     const yCategory: Category | undefined = yCategories.shift()
     if (yCategory) {
@@ -262,7 +268,7 @@ function getDataFromMunicipalityCode(ds: JSONstat, municipalityCode: string, yAx
       const d: number | null = ds.Data(dimensionFilter, false) as number | null
       return {
         value: d,
-        label: yCategory.label
+        label: yCategory.label,
       }
     }
   }
@@ -279,7 +285,7 @@ function parseValueZeroSafe(value: number | string | null): string | undefined {
 
 const notFoundValues: Array<string> = ['.', '..', '...', ':', '-']
 function parseValue(value: number | string | null): string | undefined {
-  let hasValue: boolean = true
+  let hasValue = true
   if (!value || notFoundValues.includes(value.toString())) {
     hasValue = false
   }
@@ -287,34 +293,35 @@ function parseValue(value: number | string | null): string | undefined {
 }
 
 interface MunicipalData {
-  value: number | null;
-  label?: string;
+  value: number | null
+  label?: string
 }
 
 export interface KeyFigureView {
-  iconUrl?: string;
-  iconAltText?: string;
-  number?: string;
-  numberDescription?: string;
-  noNumberText: string;
-  size?: string;
-  title: string;
-  time?: string;
-  changes?: KeyFigureChanges;
-  greenBox: boolean;
-  glossaryText?: string;
+  iconUrl?: string
+  iconAltText?: string
+  number?: string
+  numberDescription?: string
+  noNumberText: string
+  size?: string
+  title: string
+  time?: string
+  changes?: KeyFigureChanges
+  greenBox: boolean
+  glossaryText?: string
 }
 
 export interface KeyFigureChanges {
-  changeDirection: 'up' | 'down' | 'same';
-  changeText?: string;
-  changePeriod: string;
+  changeDirection: 'up' | 'down' | 'same'
+  changeText?: string
+  changePeriod: string
 }
 
 export interface KeyFigureLib {
-  get: (keys: string | Array<string>) => Array<Content<KeyFigure>>;
+  get: (keys: string | Array<string>) => Array<Content<KeyFigure>>
   parseKeyFigure: (
     keyFigure: Content<KeyFigure>,
     municipality?: MunicipalityWithCounty,
-    branch?: string) => KeyFigureView;
+    branch?: string
+  ) => KeyFigureView
 }

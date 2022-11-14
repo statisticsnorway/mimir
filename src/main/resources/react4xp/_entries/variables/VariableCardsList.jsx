@@ -10,20 +10,17 @@ class VariableCardsList extends React.Component {
 
   render() {
     return (
-      <div className="variable-cardlist grid-column grid-4">
+      <div className='variable-cardlist grid-column grid-4'>
         {this.props.variables.map((variable, idx) => {
-          return (
-            <VariableCard key={idx} variable={variable} />
-          )
-        }
-        )}
+          return <VariableCard key={idx} variable={variable} />
+        })}
       </div>
     )
   }
 }
 
 VariableCardsList.propTypes = {
-  variables: PropTypes.arrayOf(variableType)
+  variables: PropTypes.arrayOf(variableType),
 }
 
 export default VariableCardsList

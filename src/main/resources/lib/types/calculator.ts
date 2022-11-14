@@ -1,4 +1,4 @@
 export interface CalculatorPeriod {
-    month: number | string;
-    year: number | string;
+  month: number | string
+  year: number | string
 }

@@ -1,9 +1,5 @@
 import { render as r4XpRender, RenderResponse } from '/lib/enonic/react4xp'
-import { getComponent,
-  getContent,
-  serviceUrl,
-  pageUrl,
-  Component } from '/lib/xp/portal'
+import { getComponent, getContent, serviceUrl, pageUrl, Component } from '/lib/xp/portal'
 import { BkibolCalculatorPartConfig } from './bkibolCalculator-part-config'
 import { Dataset, Dimension } from '../../../lib/types/jsonstat-toolkit'
 import { Content } from '/lib/xp/content'
@@ -13,22 +9,14 @@ import { allMonths, nextPeriod } from '../../../lib/ssb/utils/calculatorUtils'
 import { CalculatorPeriod } from '../../../lib/types/calculator'
 import { DropdownItem, DropdownItems } from '../../../lib/types/components'
 
-const {
-  renderError
-} = __non_webpack_require__('/lib/ssb/error/error')
+const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
-const {
-  getLanguage
-} = __non_webpack_require__( '/lib/ssb/utils/language')
-const {
-  getCalculatorConfig, getBkibolDatasetEnebolig
-} = __non_webpack_require__('/lib/ssb/dataset/calculator')
-const {
-  fromPartCache
-} = __non_webpack_require__('/lib/ssb/cache/partCache')
+const { getLanguage } = __non_webpack_require__('/lib/ssb/utils/language')
+const { getCalculatorConfig, getBkibolDatasetEnebolig } = __non_webpack_require__('/lib/ssb/dataset/calculator')
+const { fromPartCache } = __non_webpack_require__('/lib/ssb/cache/partCache')
 const i18nLib = __non_webpack_require__('/lib/xp/i18n')
 
-exports.get = function(req: XP.Request): RenderResponse | XP.Response {
+exports.get = function (req: XP.Request): RenderResponse | XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -36,14 +24,13 @@ exports.get = function(req: XP.Request): RenderResponse | XP.Response {
   }
 }
 
-exports.preview = function(req: XP.Request): RenderResponse | XP.Response {
+exports.preview = function (req: XP.Request): RenderResponse | XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
     return renderError(req, 'Error in part', e)
   }
 }
-
 
 function renderPart(req: XP.Request): RenderResponse {
   const page: Content<BkibolCalculatorPartConfig> = getContent()
@@ -77,26 +64,25 @@ function getBkibolCalculatorComponent(req: XP.Request, page: Content<BkibolCalcu
       monthLabel(months, code, +lastUpdated.month),
       lastUpdated.year.toString(),
       monthLabel(months, code, +nextUpdate.month),
-      monthLabel(months, code, nextReleaseMonth)
-    ]
+      monthLabel(months, code, nextReleaseMonth),
+    ],
   })
   const lastNumberText: string = i18nLib.localize({
     key: 'calculatorLastNumber',
     locale: code,
-    values: [
-      monthLabel(months, code, +lastUpdated.month),
-      lastUpdated.year.toString()
-    ]
+    values: [monthLabel(months, code, +lastUpdated.month), lastUpdated.year.toString()],
   })
-  const calculatorArticleUrl: string | undefined = part.config.bkibolCalculatorArticle && pageUrl({
-    id: part.config.bkibolCalculatorArticle
-  })
+  const calculatorArticleUrl: string | undefined =
+    part.config.bkibolCalculatorArticle &&
+    pageUrl({
+      id: part.config.bkibolCalculatorArticle,
+    })
 
   return r4XpRender(
     'BkibolCalculator',
     {
       bkibolServiceUrl: serviceUrl({
-        service: 'bkibol'
+        service: 'bkibol',
       }),
       language: language.code,
       months,
@@ -104,18 +90,19 @@ function getBkibolCalculatorComponent(req: XP.Request, page: Content<BkibolCalcu
       calculatorArticleUrl,
       nextPublishText,
       lastNumberText,
-      lastUpdated
+      lastUpdated,
     },
     req,
     {
-      body: `<section class="xp-part part-bkibol-calculator container"></section>`
-    })
+      body: `<section class="xp-part part-bkibol-calculator container"></section>`,
+    }
+  )
 }
 
 function lastPeriod(bkibolData: Dataset | null): CalculatorPeriod {
   // eslint-disable-next-line new-cap
   const bkiBolDataDimension: Dimension | null = bkibolData?.Dimension('Tid') as Dimension
-  const dataTime: string[] = bkiBolDataDimension ? bkiBolDataDimension.id as string[] : []
+  const dataTime: string[] = bkiBolDataDimension ? (bkiBolDataDimension.id as string[]) : []
   const lastTimeItem: string = dataTime[dataTime.length - 1]
   const splitTime: Array<string> = lastTimeItem.split('M')
 
@@ -124,7 +111,7 @@ function lastPeriod(bkibolData: Dataset | null): CalculatorPeriod {
 
   return {
     month: lastMonth,
-    year: lastYear
+    year: lastYear,
   }
 }
 

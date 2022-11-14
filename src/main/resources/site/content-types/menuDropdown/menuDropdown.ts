@@ -2,5 +2,5 @@ export interface MenuDropdown {
   /**
    * Kilde (url)
    */
-  source?: string;
+  source?: string
 }

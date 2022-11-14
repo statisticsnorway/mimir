@@ -4,24 +4,14 @@ import { parseContributions } from '../../../lib/ssb/utils/utils'
 import { DropdownItems } from '../../../lib/types/components'
 import { render as r4XpRender, RenderResponse } from '/lib/enonic/react4xp'
 
-const {
-  assetUrl, serviceUrl
-} = __non_webpack_require__('/lib/xp/portal')
-const {
-  localize
-} = __non_webpack_require__('/lib/xp/i18n')
-const {
-  getToolUrl
-} = __non_webpack_require__('/lib/xp/admin')
-const {
-  renderError
-} = __non_webpack_require__('/lib/ssb/error/error')
-
+const { assetUrl, serviceUrl } = __non_webpack_require__('/lib/xp/portal')
+const { localize } = __non_webpack_require__('/lib/xp/i18n')
+const { getToolUrl } = __non_webpack_require__('/lib/xp/admin')
+const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
 const view: ResourceKey = resolve('./bestbet.html')
 
-
-exports.get = function(req: XP.Request): RenderResponse | XP.Response {
+exports.get = function (req: XP.Request): RenderResponse | XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -41,92 +31,108 @@ function renderPart(req: XP.Request): RenderResponse | XP.Response {
   // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
   // @ts-ignore
   const DEFAULT_CONTENTSTUDIO_URL: string = getToolUrl('com.enonic.app.contentstudio', 'main')
-  const ENONIC_PROJECT_ID: string = app.config && app.config['ssb.project.id'] ? app.config['ssb.project.id'] : 'default'
+  const ENONIC_PROJECT_ID: string =
+    app.config && app.config['ssb.project.id'] ? app.config['ssb.project.id'] : 'default'
 
   // Main subjects and content types must be translated in frontend since it can't be based off of the app's language
   const mainSubjects: Array<SubjectItem> = getMainSubjects(req, 'nb')
   const mainSubjectsEnglish: Array<SubjectItem> = getMainSubjects(req, 'en')
 
-  const mainSubjectsList: Array<{id: string; title: string}> = mainSubjects.map((subject) => {
+  const mainSubjectsList: Array<{ id: string; title: string }> = mainSubjects.map((subject) => {
     return {
       id: subject.name,
-      title: subject.title
+      title: subject.title,
     }
   })
 
-  const mainSubjectsListEnglish: Array<{id: string; title: string}> = mainSubjectsEnglish.map((subject) => {
+  const mainSubjectsListEnglish: Array<{ id: string; title: string }> = mainSubjectsEnglish.map((subject) => {
     return {
       id: subject.name,
-      title: subject.title
+      title: subject.title,
     }
   })
-  const mainSubjectDropdownItems: DropdownItems = [{
-    id: '',
-    title: 'Velg emne'
-  }, ...mainSubjectsList]
+  const mainSubjectDropdownItems: DropdownItems = [
+    {
+      id: '',
+      title: 'Velg emne',
+    },
+    ...mainSubjectsList,
+  ]
 
-  const englishMainSubjectDropdownItems: DropdownItems = [{
-    id: '',
-    title: 'Velg engelsk emne'
-  }, ...mainSubjectsListEnglish]
+  const englishMainSubjectDropdownItems: DropdownItems = [
+    {
+      id: '',
+      title: 'Velg engelsk emne',
+    },
+    ...mainSubjectsListEnglish,
+  ]
 
-  const validContentTypes: Array<string> = ['artikkel', 'statistikk', 'faktaside', 'statistikkbanktabell', 'publikasjon']
-  const contentTypesList: Array<{id: string; title: string}> = validContentTypes.map((contentType: string) => {
+  const validContentTypes: Array<string> = [
+    'artikkel',
+    'statistikk',
+    'faktaside',
+    'statistikkbanktabell',
+    'publikasjon',
+  ]
+  const contentTypesList: Array<{ id: string; title: string }> = validContentTypes.map((contentType: string) => {
     return {
       id: contentType,
       title: localize({
         key: `contentType.search.${contentType}`,
-        locale: 'nb'
-      })
+        locale: 'nb',
+      }),
     }
   })
-  const contentTypesDropdownItems: DropdownItems = [{
-    id: '',
-    title: 'Velg innholdstype'
-  }, ...contentTypesList]
+  const contentTypesDropdownItems: DropdownItems = [
+    {
+      id: '',
+      title: 'Velg innholdstype',
+    },
+    ...contentTypesList,
+  ]
 
   const bestBetComponent: RenderResponse = r4XpRender(
-    'bestbet/Bestbet'
-    , {
+    'bestbet/Bestbet',
+    {
       logoUrl: assetUrl({
-        path: 'SSB_logo_black.svg'
+        path: 'SSB_logo_black.svg',
       }),
       bestBetListServiceUrl: serviceUrl({
-        service: 'bestBetList'
+        service: 'bestBetList',
       }),
       contentSearchServiceUrl: serviceUrl({
-        service: 'contentSearch'
+        service: 'contentSearch',
       }),
       contentStudioBaseUrl: `${DEFAULT_CONTENTSTUDIO_URL}#/${ENONIC_PROJECT_ID}/edit/`,
       contentTypes: contentTypesDropdownItems,
       mainSubjects: mainSubjectDropdownItems,
-      mainSubjectsEnglish: englishMainSubjectDropdownItems
+      mainSubjectsEnglish: englishMainSubjectDropdownItems,
     },
     req,
     {
       id: 'app-bestbet',
-      clientRender: req.mode !== 'edit'
+      clientRender: req.mode !== 'edit',
     }
   )
 
   return {
     body: render(view, {
       ...getAssets(),
-      pageContributions: parseContributions(bestBetComponent.pageContributions)
-    })
+      pageContributions: parseContributions(bestBetComponent.pageContributions),
+    }),
   }
 }
 
 function getAssets(): object {
   return {
     jsLibsUrl: assetUrl({
-      path: 'js/bundle.js'
+      path: 'js/bundle.js',
     }),
     stylesUrl: assetUrl({
-      path: 'styles/bundle.css'
+      path: 'styles/bundle.css',
     }),
     wsServiceUrl: serviceUrl({
-      service: 'websocket'
-    })
+      service: 'websocket',
+    }),
   }
 }

@@ -4,7 +4,7 @@
 
 if (!String.prototype.includes) {
   // eslint-disable-next-line no-extend-native
-  String.prototype.includes = function(search, start) {
+  String.prototype.includes = function (search, start) {
     'use strict'
 
     if (search instanceof RegExp) {
@@ -23,7 +23,7 @@ if (!String.prototype.includes) {
 if (!Array.prototype.find) {
   // eslint-disable-next-line no-extend-native
   Object.defineProperty(Array.prototype, 'find', {
-    value: function(predicate) {
+    value: function (predicate) {
       // 1. Let O be ? ToObject(this value).
       if (this == null) {
         throw new TypeError('"this" is null or not defined')
@@ -64,7 +64,7 @@ if (!Array.prototype.find) {
       return undefined
     },
     configurable: true,
-    writable: true
+    writable: true,
   })
 }
 
@@ -73,7 +73,7 @@ if (!Array.prototype.find) {
 if (!Array.prototype.includes) {
   // eslint-disable-next-line no-extend-native
   Object.defineProperty(Array.prototype, 'includes', {
-    value: function(searchElement, fromIndex) {
+    value: function (searchElement, fromIndex) {
       // 1. Let O be ? ToObject(this value).
       if (this == null) {
         throw new TypeError('"this" is null or not defined')
@@ -117,7 +117,7 @@ if (!Array.prototype.includes) {
 
       // 8. Return false
       return false
-    }
+    },
   })
 }
 
@@ -127,7 +127,7 @@ if (!Array.prototype.includes) {
 if (!Array.prototype.findIndex) {
   // eslint-disable-next-line no-extend-native
   Object.defineProperty(Array.prototype, 'findIndex', {
-    value: function(predicate) {
+    value: function (predicate) {
       // 1. Let O be ? ToObject(this value).
       if (this == null) {
         throw new TypeError('"this" is null or not defined')
@@ -168,6 +168,6 @@ if (!Array.prototype.findIndex) {
       return -1
     },
     configurable: true,
-    writable: true
+    writable: true,
   })
 }

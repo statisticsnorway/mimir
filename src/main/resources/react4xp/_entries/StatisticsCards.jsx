@@ -8,7 +8,7 @@ class RelatedStatistics extends React.Component {
     super(props)
 
     this.state = {
-      isHidden: true
+      isHidden: true,
     }
 
     this.toggleBox = this.toggleBox.bind(this)
@@ -16,17 +16,12 @@ class RelatedStatistics extends React.Component {
 
   toggleBox() {
     this.setState((prevState) => ({
-      isHidden: !prevState.isHidden
+      isHidden: !prevState.isHidden,
     }))
-  };
-
+  }
 
   getButtonBreakpoints() {
-    const {
-      showAll,
-      showLess,
-      statistics
-    } = this.props
+    const { showAll, showLess, statistics } = this.props
     if (showAll && showLess) {
       if (statistics.length > 6) {
         return '' // always display if it's more than 6
@@ -41,13 +36,10 @@ class RelatedStatistics extends React.Component {
   }
 
   renderShowMoreButton() {
-    const {
-      showAll,
-      showLess
-    } = this.props
+    const { showAll, showLess } = this.props
     return (
       <Row className={`justify-content-center justify-content-lg-start p-0 p-lg-auto${this.getButtonBreakpoints()}`}>
-        <Col className="col-auto">
+        <Col className='col-auto'>
           <Button onClick={this.toggleBox}>{this.state.isHidden ? showAll : showLess}</Button>
         </Col>
       </Row>
@@ -67,34 +59,19 @@ class RelatedStatistics extends React.Component {
   }
 
   render() {
-    const {
-      headerTitle,
-      statistics,
-      showAll,
-      showLess
-    } = this.props
+    const { headerTitle, statistics, showAll, showLess } = this.props
     const hasButton = showAll && showLess
     return (
       <Container>
         <Row>
-          <Col className="col-12">
-            <h2 className="mt-4 mb-5">{headerTitle}</h2>
+          <Col className='col-12'>
+            <h2 className='mt-4 mb-5'>{headerTitle}</h2>
           </Col>
-          {statistics.map(({
-            icon, iconAlt, href, title, preamble
-          }, index) => {
+          {statistics.map(({ icon, iconAlt, href, title, preamble }, index) => {
             return (
-              <Col
-                key="index"
-                className={`mb-3 col-12 col-lg-4${this.getBreakpoints(index, hasButton)}`}
-              >
-                <Card
-                  href={href}
-                  title={title}
-                  icon={icon && <img src={icon} alt={iconAlt} />}>
-                  <Text>
-                    {preamble}
-                  </Text>
+              <Col key='index' className={`mb-3 col-12 col-lg-4${this.getBreakpoints(index, hasButton)}`}>
+                <Card href={href} title={title} icon={icon && <img src={icon} alt={iconAlt} />}>
+                  <Text>{preamble}</Text>
                 </Card>
               </Col>
             )
@@ -114,11 +91,11 @@ RelatedStatistics.propTypes = {
       iconAlt: PropTypes.string,
       title: PropTypes.string.isRequired,
       preamble: PropTypes.string.isRequired,
-      href: PropTypes.string.isRequired
+      href: PropTypes.string.isRequired,
     })
   ).isRequired,
   showAll: PropTypes.string,
-  showLess: PropTypes.string
+  showLess: PropTypes.string,
 }
 
 export default (props) => <RelatedStatistics {...props} />

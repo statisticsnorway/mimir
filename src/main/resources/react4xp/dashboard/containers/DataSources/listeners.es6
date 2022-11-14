@@ -4,28 +4,28 @@ export default function setupDataSourcesListeners(io, dispatch) {
   io.on('error-data-sources-result', (data) => {
     dispatch({
       type: actions.errorDataSourcesLoaded.type,
-      dataSources: data
+      dataSources: data,
     })
   })
 
   io.on('fact-page-groups-result', (data) => {
     dispatch({
       type: actions.factPageGroupsLoaded.type,
-      factPageGroups: data
+      factPageGroups: data,
     })
   })
 
   io.on('dashboard-activity-refreshDataset-result', (data) => {
     dispatch({
       type: actions.dataSourceLoaded.type,
-      dataSource: data
+      dataSource: data,
     })
   })
 
   io.on('dashboard-activity-refreshDataset', (data) => {
     dispatch({
       type: actions.dataSourceLoading.type,
-      ids: [data.id]
+      ids: [data.id],
     })
   })
 
@@ -33,7 +33,7 @@ export default function setupDataSourcesListeners(io, dispatch) {
     dispatch({
       type: actions.dataSourceEventLogLoaded.type,
       id: data.id,
-      logs: data.logs
+      logs: data.logs,
     })
   })
 
@@ -41,14 +41,14 @@ export default function setupDataSourcesListeners(io, dispatch) {
     dispatch({
       type: actions.factPageDataSourcesLoaded.type,
       id: data.id,
-      dataSources: data.dataSources
+      dataSources: data.dataSources,
     })
   })
 
   io.on('statistics-groups-result', (data) => {
     dispatch({
       type: actions.statisticsGroupsLoaded.type,
-      statisticsGroups: data
+      statisticsGroups: data,
     })
   })
 
@@ -56,14 +56,14 @@ export default function setupDataSourcesListeners(io, dispatch) {
     dispatch({
       type: actions.statisticsDataSourcesLoaded.type,
       id: data.id,
-      dataSources: data.dataSources
+      dataSources: data.dataSources,
     })
   })
 
   io.on('municipal-groups-result', (data) => {
     dispatch({
       type: actions.municipalGroupsLoaded.type,
-      municipalGroups: data
+      municipalGroups: data,
     })
   })
 
@@ -71,14 +71,14 @@ export default function setupDataSourcesListeners(io, dispatch) {
     dispatch({
       type: actions.municipalDataSourcesLoaded.type,
       id: data.id,
-      dataSources: data.dataSources
+      dataSources: data.dataSources,
     })
   })
 
   io.on('default-data-sources-result', (data) => {
     dispatch({
       type: actions.defaultDataSourcesLoaded.type,
-      dataSources: data
+      dataSources: data,
     })
   })
 }

@@ -1,14 +1,9 @@
 import { get, Content } from '/lib/xp/content'
-import { getComponent,
-  attachmentUrl,
-  pageUrl,
-  Component } from '/lib/xp/portal'
+import { getComponent, attachmentUrl, pageUrl, Component } from '/lib/xp/portal'
 import { LinksPartConfig } from './links-part-config'
-import {render, RenderResponse} from '/lib/enonic/react4xp'
+import { render, RenderResponse } from '/lib/enonic/react4xp'
 import { renderError } from '../../../lib/ssb/error/error'
 import { GA_TRACKING_ID } from '../../pages/default/default'
-
-
 
 exports.get = (req: XP.Request): RenderResponse | XP.Response => {
   try {
@@ -33,14 +28,16 @@ function renderPart(req: XP.Request, config: LinksPartConfig): RenderResponse {
   let props: LinksProps | object = {}
   if (linkTypes) {
     if (linkTypes._selected === 'tableLink') {
-      const href: string | undefined = linkTypes.tableLink.relatedContent ? pageUrl({
-        id: linkTypes.tableLink.relatedContent
-      }) : linkTypes.tableLink.url
+      const href: string | undefined = linkTypes.tableLink.relatedContent
+        ? pageUrl({
+            id: linkTypes.tableLink.relatedContent,
+          })
+        : linkTypes.tableLink.url
 
       props = {
         href,
         description: linkTypes.tableLink.description,
-        text: linkTypes.tableLink.title
+        text: linkTypes.tableLink.title,
       }
     }
 
@@ -48,23 +45,29 @@ function renderPart(req: XP.Request, config: LinksPartConfig): RenderResponse {
       const linkedContent: string | undefined = linkTypes.headerLink.linkedContent
       const linkText: string | undefined = linkTypes.headerLink.linkText
 
-      const content: Content | null = linkedContent ? get({
-        key: linkedContent
-      }) : null
+      const content: Content | null = linkedContent
+        ? get({
+            key: linkedContent,
+          })
+        : null
 
       let contentUrl: string | undefined
-      let isPDFAttachment: boolean = false
+      let isPDFAttachment = false
       let attachmentTitle: string | undefined
       if (content && Object.keys(content.attachments).length > 0) {
-        contentUrl = linkedContent && attachmentUrl({
-          id: linkedContent
-        })
-        isPDFAttachment = (/(.*?).pdf/).test(content._name)
+        contentUrl =
+          linkedContent &&
+          attachmentUrl({
+            id: linkedContent,
+          })
+        isPDFAttachment = /(.*?).pdf/.test(content._name)
         attachmentTitle = content.displayName
       } else {
-        contentUrl = linkedContent ? pageUrl({
-          id: linkedContent
-        }) : linkTypes.headerLink.headerLinkHref
+        contentUrl = linkedContent
+          ? pageUrl({
+              id: linkedContent,
+            })
+          : linkTypes.headerLink.headerLinkHref
       }
 
       props = {
@@ -73,18 +76,20 @@ function renderPart(req: XP.Request, config: LinksPartConfig): RenderResponse {
         linkType: 'header',
         GA_TRACKING_ID: GA_TRACKING_ID,
         isPDFAttachment,
-        attachmentTitle
+        attachmentTitle,
       }
     }
 
     if (linkTypes._selected === 'profiledLink') {
       props = {
         children: linkTypes.profiledLink.text,
-        href: linkTypes.profiledLink.contentUrl ? pageUrl({
-          id: linkTypes.profiledLink.contentUrl
-        }) : linkTypes.profiledLink.profiledLinkHref,
+        href: linkTypes.profiledLink.contentUrl
+          ? pageUrl({
+              id: linkTypes.profiledLink.contentUrl,
+            })
+          : linkTypes.profiledLink.profiledLinkHref,
         withIcon: !!linkTypes.profiledLink.withIcon,
-        linkType: 'profiled'
+        linkType: 'profiled',
       }
     }
   }
@@ -101,24 +106,24 @@ export function prepareText(content: Content, linkText: string | undefined): str
   let finalText: string
 
   if (attachmentSize) {
-    if (attachmentSize > 1.049e+6) {
+    if (attachmentSize > 1.049e6) {
       notation = 'MB'
-      finalText = (attachmentSize / 1.049e+6).toFixed(1)
+      finalText = (attachmentSize / 1.049e6).toFixed(1)
     } else {
       notation = 'KB'
-      finalText = (attachmentSize / 1024 ).toFixed(1)
+      finalText = (attachmentSize / 1024).toFixed(1)
     }
-    return `${linkText} (${finalText } ${notation})`
+    return `${linkText} (${finalText} ${notation})`
   }
 
   return linkText && linkText
 }
 
 export interface LinksProps {
-  children: string;
-  href: string;
-  withIcon: boolean | string;
-  linkType: string;
-  description: string;
-  title: string;
+  children: string
+  href: string
+  withIcon: boolean | string
+  linkType: string
+  description: string
+  title: string
 }

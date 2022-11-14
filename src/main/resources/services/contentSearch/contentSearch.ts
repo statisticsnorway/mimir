@@ -7,11 +7,7 @@ exports.get = (req: XP.Request): XP.Response | object => {
     count: 10,
     sort: 'modifiedTime DESC',
     query: `fulltext('_alltext', '${queryString}', 'AND')`,
-    contentTypes: [
-      `${app.name}:page`,
-      `${app.name}:article`,
-      `${app.name}:statistics`
-    ]
+    contentTypes: [`${app.name}:page`, `${app.name}:article`, `${app.name}:statistics`],
   })
   if (result && result.hits) {
     const response: object = {
@@ -19,15 +15,14 @@ exports.get = (req: XP.Request): XP.Response | object => {
         hits: result.hits.map((hit) => ({
           value: hit._id,
           label: `${hit.displayName} - ${hit._path}`,
-          title: hit.displayName
-        }))
-      }
+          title: hit.displayName,
+        })),
+      },
     }
     return response
   } else {
     return {
-      'result': []
+      result: [],
     }
   }
 }
-

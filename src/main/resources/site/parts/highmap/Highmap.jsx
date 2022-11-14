@@ -15,10 +15,11 @@ function renderFootnotes(footnotes) {
   if (footnotes.length) {
     return (
       <Row>
-        {footnotes.map((footnote, index) =>
-          <Col className="col-12" key={`footnote-${index}`}>
+        {footnotes.map((footnote, index) => (
+          <Col className='col-12' key={`footnote-${index}`}>
             {footnote && <Text>{footnote}</Text>}
-          </Col>)}
+          </Col>
+        ))}
       </Row>
     )
   }
@@ -30,13 +31,13 @@ function Highmap(props) {
     Highcharts.setOptions({
       lang: {
         decimalPoint: ',',
-        thousandsSep: ' '
-      }
+        thousandsSep: ' ',
+      },
     })
   }
 
   const desktop = useMediaQuery({
-    minWidth: 992
+    minWidth: 992,
   })
 
   let y = 0
@@ -50,36 +51,37 @@ function Highmap(props) {
 
   const mapOptions = {
     chart: {
-      height: desktop && props.heightAspectRatio && `${props.heightAspectRatio}%`
+      height: desktop && props.heightAspectRatio && `${props.heightAspectRatio}%`,
     },
     accessibility: {
       enabled: true,
-      description: props.description && props.description
+      description: props.description && props.description,
     },
     title: {
       text: props.title,
-      align: 'left'
+      align: 'left',
     },
     subtitle: {
       text: props.subtitle && props.subtitle,
-      align: 'left'
+      align: 'left',
     },
     mapNavigation: {
-      enabled: true
+      enabled: true,
     },
-    colors: props.colorPalette === 'green' ?
-      ['#e3f1e6', '#90cc93', '#25a23c', '#007e50', '#005245'] :
-      ['#f9f2d1', '#e8d780', '#d2bc2a', '#a67c36', '#6e4735'],
+    colors:
+      props.colorPalette === 'green'
+        ? ['#e3f1e6', '#90cc93', '#25a23c', '#007e50', '#005245']
+        : ['#f9f2d1', '#e8d780', '#d2bc2a', '#a67c36', '#6e4735'],
     colorAxis: {
       dataClasses: props.thresholdValues && props.thresholdValues,
-      dataClassColor: 'category'
+      dataClassColor: 'category',
     },
     legend: {
       title: {
         text: props.legendTitle && props.legendTitle,
         style: {
-          color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
-        }
+          color: (Highcharts.theme && Highcharts.theme.textColor) || 'black',
+        },
       },
       align: props.legendAlign === 'topLeft' || props.legendAlign === 'bottomLeft' ? 'left' : 'right',
       verticalAlign: props.legendAlign === 'topLeft' || props.legendAlign === 'topRight' ? 'top' : 'bottom',
@@ -90,24 +92,26 @@ function Highmap(props) {
       valueDecimals: props.numberDecimals && props.numberDecimals,
       backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || 'rgba(255, 255, 255, 0.85)',
       symbolRadius: 0,
-      symbolHeight: 14
+      symbolHeight: 14,
     },
-    series: [{
-      mapData: props.mapFile,
-      data: props.tableData,
-      name: props.seriesTitle ? props.seriesTitle : '',
-      joinBy: 'capitalName',
-      dataLabels: {
-        enabled: !props.hideTitle,
-        format: '{point.properties.name}'
+    series: [
+      {
+        mapData: props.mapFile,
+        data: props.tableData,
+        name: props.seriesTitle ? props.seriesTitle : '',
+        joinBy: 'capitalName',
+        dataLabels: {
+          enabled: !props.hideTitle,
+          format: '{point.properties.name}',
+        },
+        tooltip: {
+          pointFormat: '{point.properties.name}: {point.value}',
+          valueDecimals: props.numberDecimals && props.numberDecimals,
+        },
       },
-      tooltip: {
-        pointFormat: '{point.properties.name}: {point.value}',
-        valueDecimals: props.numberDecimals && props.numberDecimals
-      }
-    }],
+    ],
     credits: {
-      enabled: false
+      enabled: false,
     },
     exporting: {
       buttons: {
@@ -121,49 +125,45 @@ function Highmap(props) {
             'downloadSVG',
             'separator',
             'downloadCSV',
-            'downloadXLS'
-          ]
-        }
+            'downloadXLS',
+          ],
+        },
       },
       enabled: true,
       menuItemDefinitions: {
         printChart: {
-          text: props.phrases['highcharts.printChart']
+          text: props.phrases['highcharts.printChart'],
         },
         downloadPNG: {
-          text: props.phrases['highcharts.downloadPNG']
+          text: props.phrases['highcharts.downloadPNG'],
         },
         downloadJPEG: {
-          text: props.phrases['highcharts.downloadJPEG']
+          text: props.phrases['highcharts.downloadJPEG'],
         },
         downloadPDF: {
-          text: props.phrases['highcharts.downloadPDF']
+          text: props.phrases['highcharts.downloadPDF'],
         },
         downloadSVG: {
-          text: props.phrases['highcharts.downloadSVG']
+          text: props.phrases['highcharts.downloadSVG'],
         },
         downloadCSV: {
-          text: props.phrases['highcharts.downloadCSV']
+          text: props.phrases['highcharts.downloadCSV'],
         },
         downloadXLS: {
-          text: props.phrases['highcharts.downloadXLS']
-        }
-      }
+          text: props.phrases['highcharts.downloadXLS'],
+        },
+      },
     },
     csv: {
-      itemDelimiter: ';'
-    }
+      itemDelimiter: ';',
+    },
   }
 
   return (
-    <section className="part-highmap container">
+    <section className='part-highmap container'>
       <Row>
-        <Col className="col-12 p-lg-0">
-          <HighchartsReact
-            highcharts={Highcharts}
-            constructorType={'mapChart'}
-            options={mapOptions}
-          />
+        <Col className='col-12 p-lg-0'>
+          <HighchartsReact highcharts={Highcharts} constructorType={'mapChart'} options={mapOptions} />
         </Col>
       </Row>
       {renderFootnotes(props.footnoteText)}
@@ -187,7 +187,7 @@ Highmap.propTypes = {
   legendAlign: PropTypes.string,
   footnoteText: PropTypes.array,
   phrases: PropTypes.object,
-  language: PropTypes.string
+  language: PropTypes.string,
 }
 
 export default (props) => <Highmap {...props} />
