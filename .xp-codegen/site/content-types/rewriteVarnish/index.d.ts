@@ -19,5 +19,5 @@ export interface RewriteVarnish {
   /**
    * GraphQL name. Also used for separating unions in TypeScript
    */
-  __typename?: "mimir_RewriteVarnish_Data";
+  __typename?: 'mimir_RewriteVarnish_Data';
 }

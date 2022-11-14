@@ -34,5 +34,5 @@ export interface CalculatorConfig {
   /**
    * GraphQL name. Also used for separating unions in TypeScript
    */
-  __typename?: "mimir_CalculatorConfig_Data";
+  __typename?: 'mimir_CalculatorConfig_Data';
 }

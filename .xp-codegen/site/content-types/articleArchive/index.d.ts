@@ -24,5 +24,5 @@ export interface ArticleArchive {
   /**
    * GraphQL name. Also used for separating unions in TypeScript
    */
-  __typename?: "mimir_ArticleArchive_Data";
+  __typename?: 'mimir_ArticleArchive_Data';
 }

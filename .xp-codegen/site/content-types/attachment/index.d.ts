@@ -14,5 +14,5 @@ export interface Attachment {
   /**
    * GraphQL name. Also used for separating unions in TypeScript
    */
-  __typename?: "mimir_Attachment_Data";
+  __typename?: 'mimir_Attachment_Data';
 }

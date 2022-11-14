@@ -51,5 +51,5 @@ export interface MenuItem {
   /**
    * GraphQL name. Also used for separating unions in TypeScript
    */
-  __typename?: "mimir_MenuItem_Data";
+  __typename?: 'mimir_MenuItem_Data';
 }

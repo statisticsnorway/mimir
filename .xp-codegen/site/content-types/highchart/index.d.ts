@@ -314,5 +314,5 @@ export interface Highchart {
   /**
    * GraphQL name. Also used for separating unions in TypeScript
    */
-  __typename?: "mimir_Highchart_Data";
+  __typename?: 'mimir_Highchart_Data';
 }

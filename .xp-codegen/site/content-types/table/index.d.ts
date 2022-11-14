@@ -204,5 +204,5 @@ export interface Table {
   /**
    * GraphQL name. Also used for separating unions in TypeScript
    */
-  __typename?: "mimir_Table_Data";
+  __typename?: 'mimir_Table_Data';
 }

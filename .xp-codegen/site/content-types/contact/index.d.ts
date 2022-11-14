@@ -19,5 +19,5 @@ export interface Contact {
   /**
    * GraphQL name. Also used for separating unions in TypeScript
    */
-  __typename?: "mimir_Contact_Data";
+  __typename?: 'mimir_Contact_Data';
 }

@@ -83,5 +83,5 @@ export interface InformationAlert {
   /**
    * GraphQL name. Also used for separating unions in TypeScript
    */
-  __typename?: "mimir_InformationAlert_Data";
+  __typename?: 'mimir_InformationAlert_Data';
 }

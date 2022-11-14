@@ -271,5 +271,5 @@ export interface Article {
   /**
    * GraphQL name. Also used for separating unions in TypeScript
    */
-  __typename?: "mimir_Article_Data";
+  __typename?: 'mimir_Article_Data';
 }

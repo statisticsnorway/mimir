@@ -49,5 +49,5 @@ export interface Project {
   /**
    * GraphQL name. Also used for separating unions in TypeScript
    */
-  __typename?: "mimir_Project_Data";
+  __typename?: 'mimir_Project_Data';
 }

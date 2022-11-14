@@ -81,5 +81,5 @@ export interface Footer {
   /**
    * GraphQL name. Also used for separating unions in TypeScript
    */
-  __typename?: "mimir_Footer_Data";
+  __typename?: 'mimir_Footer_Data';
 }

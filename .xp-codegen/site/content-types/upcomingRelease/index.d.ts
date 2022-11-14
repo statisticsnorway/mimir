@@ -24,5 +24,5 @@ export interface UpcomingRelease {
   /**
    * GraphQL name. Also used for separating unions in TypeScript
    */
-  __typename?: "mimir_UpcomingRelease_Data";
+  __typename?: 'mimir_UpcomingRelease_Data';
 }

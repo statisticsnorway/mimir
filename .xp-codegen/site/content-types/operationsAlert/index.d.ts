@@ -9,5 +9,5 @@ export interface OperationsAlert {
   /**
    * GraphQL name. Also used for separating unions in TypeScript
    */
-  __typename?: "mimir_OperationsAlert_Data";
+  __typename?: 'mimir_OperationsAlert_Data';
 }

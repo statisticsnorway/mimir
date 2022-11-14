@@ -199,5 +199,5 @@ export interface OmStatistikken {
   /**
    * GraphQL name. Also used for separating unions in TypeScript
    */
-  __typename?: "mimir_OmStatistikken_Data";
+  __typename?: 'mimir_OmStatistikken_Data';
 }

@@ -69,5 +69,5 @@ export interface Highmap {
   /**
    * GraphQL name. Also used for separating unions in TypeScript
    */
-  __typename?: "mimir_Highmap_Data";
+  __typename?: 'mimir_Highmap_Data';
 }

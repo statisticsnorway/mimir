@@ -24,5 +24,5 @@ export interface MunicipalityAlert {
   /**
    * GraphQL name. Also used for separating unions in TypeScript
    */
-  __typename?: "mimir_MunicipalityAlert_Data";
+  __typename?: 'mimir_MunicipalityAlert_Data';
 }

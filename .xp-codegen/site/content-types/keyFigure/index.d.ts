@@ -211,5 +211,5 @@ export interface KeyFigure {
   /**
    * GraphQL name. Also used for separating unions in TypeScript
    */
-  __typename?: "mimir_KeyFigure_Data";
+  __typename?: 'mimir_KeyFigure_Data';
 }

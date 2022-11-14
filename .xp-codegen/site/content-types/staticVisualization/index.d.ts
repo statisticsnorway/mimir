@@ -72,5 +72,5 @@ export interface StaticVisualization {
   /**
    * GraphQL name. Also used for separating unions in TypeScript
    */
-  __typename?: "mimir_StaticVisualization_Data";
+  __typename?: 'mimir_StaticVisualization_Data';
 }

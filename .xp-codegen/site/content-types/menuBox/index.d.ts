@@ -61,5 +61,5 @@ export interface MenuBox {
   /**
    * GraphQL name. Also used for separating unions in TypeScript
    */
-  __typename?: "mimir_MenuBox_Data";
+  __typename?: 'mimir_MenuBox_Data';
 }

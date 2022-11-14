@@ -64,5 +64,5 @@ export interface Employee {
   /**
    * GraphQL name. Also used for separating unions in TypeScript
    */
-  __typename?: "mimir_Employee_Data";
+  __typename?: 'mimir_Employee_Data';
 }

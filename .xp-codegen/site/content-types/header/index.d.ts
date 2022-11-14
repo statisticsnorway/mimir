@@ -93,5 +93,5 @@ export interface Header {
   /**
    * GraphQL name. Also used for separating unions in TypeScript
    */
-  __typename?: "mimir_Header_Data";
+  __typename?: 'mimir_Header_Data';
 }

@@ -19,5 +19,5 @@ export interface EndedStatisticList {
   /**
    * GraphQL name. Also used for separating unions in TypeScript
    */
-  __typename?: "mimir_EndedStatisticList_Data";
+  __typename?: 'mimir_EndedStatisticList_Data';
 }

@@ -9,5 +9,5 @@ export interface ContentList {
   /**
    * GraphQL name. Also used for separating unions in TypeScript
    */
-  __typename?: "mimir_ContentList_Data";
+  __typename?: 'mimir_ContentList_Data';
 }

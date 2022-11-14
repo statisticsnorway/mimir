@@ -229,5 +229,5 @@ export interface Statistics {
   /**
    * GraphQL name. Also used for separating unions in TypeScript
    */
-  __typename?: "mimir_Statistics_Data";
+  __typename?: 'mimir_Statistics_Data';
 }
