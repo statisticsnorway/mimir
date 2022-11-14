@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-  <x-data name="subjectTag" allowContentTypes="article"/>
+  <x-data name="subjectTag" allowContentTypes="page"/>
   <form>
     <field-set>
       <label>Kommunefakta</label>
