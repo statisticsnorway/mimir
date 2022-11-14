@@ -125,16 +125,6 @@ function createQuery(
   subjectQuery: string,
   sortQuery: string
 ): string {
-  return `${SOLR_BASE_URL}?${SOLR_PARAM_QUERY}=${term}&${languageQuery}${contentTypeQuery}${subjectQuery}&wt=${SOLR_FORMAT}&start=${start}&rows=${numberOfHits}${sortQuery}`
-function createQuery(
-  term: string,
-  numberOfHits: number,
-  start: number,
-  languageQuery: string,
-  contentTypeQuery: string,
-  subjectQuery: string,
-  sortQuery: string
-): string {
   return `${SOLR_BASE_URL}?${SOLR_PARAM_QUERY}=${encodeURIComponent(
     term
   )}&${languageQuery}${contentTypeQuery}${subjectQuery}&wt=${SOLR_FORMAT}&start=${start}&rows=${numberOfHits}${sortQuery}`
