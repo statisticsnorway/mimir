@@ -6,35 +6,39 @@ function MailchimpForm(props) {
   const [email, setEmail] = useState({
     error: false,
     errorMsg: props.validateEmailMsg,
-    value: ''
+    value: '',
   })
-
 
   function validateEmail(value) {
     // eslint-disable-next-line max-len
-    const regEx = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    const regEx =
+      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     const result = value.match(regEx)
     setEmail({
       ...email,
       value,
-      error: !result
+      error: !result,
     })
   }
 
   return (
-    <form method="post" action={props.endpoint}>
-      <Input type="email"
+    <form method='post' action={props.endpoint}>
+      <Input
+        type='email'
         label={props.emailLabel}
-        name="EMAIL"
-        id="mce-EMAIL"
-        value=""
-        className="my-4"
+        name='EMAIL'
+        id='mce-EMAIL'
+        value=''
+        className='my-4'
         handleChange={(value) => validateEmail(value)}
         error={email.error}
-        errorMessage={email.errorMsg}/>
-      <input type="text" name={props.id} value="" hidden/>
-      <input type="text" name="EMAIL" value={email.value} hidden/>
-      <Button disabled={email.error} type="submit">{props.buttonTitle}</Button>
+        errorMessage={email.errorMsg}
+      />
+      <input type='text' name={props.id} value='' hidden />
+      <input type='text' name='EMAIL' value={email.value} hidden />
+      <Button disabled={email.error} type='submit'>
+        {props.buttonTitle}
+      </Button>
     </form>
   )
 }
@@ -44,8 +48,7 @@ MailchimpForm.propTypes = {
   buttonTitle: PropTypes.string,
   endpoint: PropTypes.string,
   id: PropTypes.string,
-  validateEmailMsg: PropTypes.string
+  validateEmailMsg: PropTypes.string,
 }
 
-export default (props) => <MailchimpForm {...props}/>
-
+export default (props) => <MailchimpForm {...props} />

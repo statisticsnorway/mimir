@@ -1,6 +1,6 @@
-
 export function sanitizeForSolr(term: string): string {
-  return term.replace('\'', '')
+  return term
+    .replace("'", '')
     .replace('<', '')
     .replace('>', '')
     .replace(';', '')
@@ -13,5 +13,5 @@ export function sanitizeForSolr(term: string): string {
 }
 
 export interface TextUtilsLib {
-  sanitizeForSolr: (term: string) => string;
+  sanitizeForSolr: (term: string) => string
 }

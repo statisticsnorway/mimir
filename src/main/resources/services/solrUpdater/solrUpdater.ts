@@ -1,14 +1,10 @@
 import { query, Content, QueryResponse } from '/lib/xp/content'
 import { ResourceKey, render } from '/lib/thymeleaf'
 
-const {
-  moment
-} = __non_webpack_require__('/lib/vendor/moment')
-
+const { moment } = __non_webpack_require__('/lib/vendor/moment')
 
 const yesterday: string = moment().subtract(1, 'days').format('YYYY-MM-DD')
 const baseUrl: string = app.config && app.config['ssb.baseUrl'] ? app.config['ssb.baseUrl'] : 'https://www.ssb.no'
-
 
 exports.get = (): XP.Response => {
   const changedContent: QueryResponse<Content, object> = query({
@@ -16,7 +12,7 @@ exports.get = (): XP.Response => {
     count: 100,
     sort: 'modifiedTime DESC',
     query: `modifiedtime >= date('${yesterday}')`,
-    contentTypes: [`${app.name}:statistics`, `${app.name}:article`, `${app.name}:page`]
+    contentTypes: [`${app.name}:statistics`, `${app.name}:article`, `${app.name}:page`],
   })
 
   const urls: string[] = changedContent.hits.map((content) => {
@@ -25,15 +21,15 @@ exports.get = (): XP.Response => {
 
   const template: ResourceKey = resolve('./solrUpdater.html') as ResourceKey
   const model: urlModel = {
-    urls: urls
+    urls: urls,
   }
 
   return {
     body: render(template, model),
-    contentType: 'text/html'
+    contentType: 'text/html',
   }
 }
 
 interface urlModel {
-    urls: Array<string>
+  urls: Array<string>
 }

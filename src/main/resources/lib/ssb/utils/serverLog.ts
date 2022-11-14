@@ -17,7 +17,7 @@ export function autoRefreshLog(msg: string): void {
 }
 
 export interface ServerLogLib {
-  cacheLog: (msg: string) => void;
-  cronJobLog: (msg: string) => void;
-  autoRefreshLog: (msg: string) => void;
+  cacheLog: (msg: string) => void
+  cronJobLog: (msg: string) => void
+  autoRefreshLog: (msg: string) => void
 }

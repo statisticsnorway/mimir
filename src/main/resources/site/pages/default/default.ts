@@ -11,55 +11,29 @@ import { render as r4xpRender, RenderResponse } from '/lib/enonic/react4xp'
 import { Statistics } from '../../content-types/statistics/statistics'
 import { SiteConfig } from '../../site-config'
 import { DefaultPageConfig } from './default-page-config'
-import { Component,
-  getContent,
-  processHtml,
-  assetUrl,
-  getSiteConfig,
-  pageUrl } from '/lib/xp/portal'
+import { Component, getContent, processHtml, assetUrl, getSiteConfig, pageUrl } from '/lib/xp/portal'
 import { SEO } from '../../../services/news/news'
 
 const {
-  data: {
-    forceArray
-  }
+  data: { forceArray },
 } = __non_webpack_require__('/lib/util')
-const {
-  getLanguage
-} = __non_webpack_require__('/lib/ssb/utils/language')
-const {
-  localize
-} = __non_webpack_require__('/lib/xp/i18n')
-const {
-  alertsForContext
-} = __non_webpack_require__('/lib/ssb/utils/alertUtils')
-const {
-  getBreadcrumbs
-} = __non_webpack_require__('/lib/ssb/utils/breadcrumbsUtils')
-const {
-  getMainSubjects, getSubSubjects, getMainSubjectBySubSubject
-} = __non_webpack_require__( '/lib/ssb/utils/subjectUtils')
-const {
-  getReleaseDatesByVariants, getStatisticByIdFromRepo, getStatisticByShortNameFromRepo
-} = __non_webpack_require__('/lib/ssb/statreg/statistics')
-const {
-  getMunicipality
-} = __non_webpack_require__('/lib/ssb/dataset/klass/municipalities')
-const {
-  getHeaderContent
-} = __non_webpack_require__('/lib/ssb/parts/header')
-const {
-  getFooterContent
-} = __non_webpack_require__('/lib/ssb/parts/footer')
-const {
-  fromMenuCache
-} = __non_webpack_require__('/lib/ssb/cache/cache')
+const { getLanguage } = __non_webpack_require__('/lib/ssb/utils/language')
+const { localize } = __non_webpack_require__('/lib/xp/i18n')
+const { alertsForContext } = __non_webpack_require__('/lib/ssb/utils/alertUtils')
+const { getBreadcrumbs } = __non_webpack_require__('/lib/ssb/utils/breadcrumbsUtils')
+const { getMainSubjects, getSubSubjects, getMainSubjectBySubSubject } =
+  __non_webpack_require__('/lib/ssb/utils/subjectUtils')
+const { getReleaseDatesByVariants, getStatisticByIdFromRepo, getStatisticByShortNameFromRepo } =
+  __non_webpack_require__('/lib/ssb/statreg/statistics')
+const { getMunicipality } = __non_webpack_require__('/lib/ssb/dataset/klass/municipalities')
+const { getHeaderContent } = __non_webpack_require__('/lib/ssb/parts/header')
+const { getFooterContent } = __non_webpack_require__('/lib/ssb/parts/footer')
+const { fromMenuCache } = __non_webpack_require__('/lib/ssb/cache/cache')
 
-const {
-  isEnabled
-} = __non_webpack_require__('/lib/featureToggle')
+const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
 
-const partsWithPreview: Array<string> = [ // Parts that has preview
+const partsWithPreview: Array<string> = [
+  // Parts that has preview
   `${app.name}:map`,
   `${app.name}:button`,
   `${app.name}:menuBox`,
@@ -76,25 +50,26 @@ const partsWithPreview: Array<string> = [ // Parts that has preview
   `${app.name}:table`,
   `${app.name}:staticVisualization`,
   `${app.name}:employee`,
-  `${app.name}:project`
+  `${app.name}:project`,
 ]
 
 const previewOverride: object = {
-  'contentList': 'relatedFactPage'
+  contentList: 'relatedFactPage',
 }
 
 export const GA_TRACKING_ID: string | null = app.config && app.config.GA_TRACKING_ID ? app.config.GA_TRACKING_ID : null
 
-
 const view: ResourceKey = resolve('default.html')
 
-exports.get = function(req: XP.Request): XP.Response {
+exports.get = function (req: XP.Request): XP.Response {
   const page: DefaultPage = getContent() as DefaultPage
   const pageConfig: DefaultPageConfig = page.page.config
 
-  const ingress: string | undefined = page.data.ingress ? processHtml({
-    value: page.data.ingress.replace(/&nbsp;/g, ' ')
-  }) : undefined
+  const ingress: string | undefined = page.data.ingress
+    ? processHtml({
+        value: page.data.ingress.replace(/&nbsp;/g, ' '),
+      })
+    : undefined
   const showIngress: string | boolean | undefined = ingress && page.type === 'mimir:page'
 
   // Create preview if available
@@ -105,7 +80,7 @@ exports.get = function(req: XP.Request): XP.Response {
     // @ts-ignore
     if (previewOverride[name]) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-    // @ts-ignore
+      // @ts-ignore
       name = previewOverride[name]
     }
     const controller: Controller = __non_webpack_require__(`../../parts/${name}/${name}`)
@@ -129,15 +104,15 @@ exports.get = function(req: XP.Request): XP.Response {
   }
 
   const stylesUrl: string = assetUrl({
-    path: 'styles/bundle.css'
+    path: 'styles/bundle.css',
   })
 
   const jsLibsUrl: string = assetUrl({
-    path: 'js/bundle.js'
+    path: 'js/bundle.js',
   })
 
   const ieUrl: string = assetUrl({
-    path: '/js/ie.js'
+    path: '/js/ie.js',
   })
 
   let pageContributions: XP.PageContributions | undefined
@@ -150,17 +125,18 @@ exports.get = function(req: XP.Request): XP.Response {
   const headerContent: MenuContent | unknown = fromMenuCache(req, `header_${menuCacheLanguage}`, () => {
     return getHeaderContent(language)
   })
-  const header: RenderResponse = r4xpRender('Header',
+  const header: RenderResponse = r4xpRender(
+    'Header',
     {
-      ...headerContent as object,
+      ...(headerContent as object),
       language: language,
-      searchResult: req.params.sok
+      searchResult: req.params.sok,
     },
     req,
     {
       id: 'header',
       body: '<div id="header"></div>',
-      pageContributions
+      pageContributions,
     }
   )
 
@@ -168,20 +144,20 @@ exports.get = function(req: XP.Request): XP.Response {
     pageContributions = header.pageContributions
   }
 
-
   const footerContent: FooterContent | unknown = fromMenuCache(req, `footer_${menuCacheLanguage}`, () => {
-    return getFooterContent(language )
+    return getFooterContent(language)
   })
-  const footer: RenderResponse = r4xpRender('Footer',
+  const footer: RenderResponse = r4xpRender(
+    'Footer',
     {
-      ...footerContent as object,
-      language: language
+      ...(footerContent as object),
+      language: language,
     },
     req,
     {
       id: 'footer',
       body: '<footer id="footer"></footer>',
-      pageContributions
+      pageContributions,
     }
   )
 
@@ -210,18 +186,19 @@ exports.get = function(req: XP.Request): XP.Response {
 
   const metaInfo: MetaInfoData = parseMetaInfoData(municipality, pageType, page, language, req)
 
-  const statbankFane: boolean = (req.params.xpframe === 'statbank')
+  const statbankFane: boolean = req.params.xpframe === 'statbank'
   const statBankContent: StatbankFrameData = parseStatbankFrameContent(statbankFane, req, page)
 
   const breadcrumbs: Breadcrumbs = getBreadcrumbs(page, municipality, statbankFane ? statBankContent : undefined)
-  const breadcrumbId: string = 'breadcrumbs'
-  const hideBreadcrumb: boolean = !!(pageConfig).hide_breadcrumb
-  const innrapporteringRegexp: RegExp = /^\/ssb(\/en)?\/innrapportering/ // Skal matche alle sider under /innrapportering på norsk og engelsk
-  const baseUrl: string = app.config && app.config['ssb.baseUrl'] ? app.config['ssb.baseUrl'] as string : 'https://www.ssb.no'
+  const breadcrumbId = 'breadcrumbs'
+  const hideBreadcrumb = !!pageConfig.hide_breadcrumb
+  const innrapporteringRegexp = /^\/ssb(\/en)?\/innrapportering/ // Skal matche alle sider under /innrapportering på norsk og engelsk
+  const baseUrl: string =
+    app.config && app.config['ssb.baseUrl'] ? (app.config['ssb.baseUrl'] as string) : 'https://www.ssb.no'
   const model: DefaultModel = {
     pageTitle: 'SSB', // not really used on normal pages because of SEO app (404 still uses this)
     pageUrl: `${baseUrl}${pageUrl({
-      id: page._id
+      id: page._id,
     })}`,
     page,
     ...regions,
@@ -242,21 +219,23 @@ exports.get = function(req: XP.Request): XP.Response {
     breadcrumbsReactId: breadcrumbId,
     hideBreadcrumb,
     enabledEnalyzerScript: isEnabled('enable-enalyzer-script', true, 'ssb'),
-    enabledChatScript: isEnabled('enable-chat-script', true, 'ssb') && innrapporteringRegexp.exec(page._path)
+    enabledChatScript: isEnabled('enable-chat-script', true, 'ssb') && innrapporteringRegexp.exec(page._path),
   }
 
   const thymeleafRenderBody: XP.Response['body'] = render(view, model)
 
-  const breadcrumbComponent: RenderResponse = r4xpRender('Breadcrumb',
+  const breadcrumbComponent: RenderResponse = r4xpRender(
+    'Breadcrumb',
     {
-      items: breadcrumbs
+      items: breadcrumbs,
     },
     req,
     {
       id: breadcrumbId,
       body: thymeleafRenderBody,
-      pageContributions
-    })
+      pageContributions,
+    }
+  )
 
   const bodyWithBreadCrumbs: string | boolean = !hideBreadcrumb && breadcrumbComponent.body
 
@@ -264,30 +243,33 @@ exports.get = function(req: XP.Request): XP.Response {
     pageContributions = breadcrumbComponent.pageContributions
   }
 
-  const alertOptions: MunicipalityOptions | InformationAlertOptions = pageConfig && (pageConfig).pageType === 'municipality' ? {
-    municipality,
-    municipalPageType
-  } as MunicipalityOptions : {
-    pageType: page.type,
-    pageTypeId: page._id,
-    statbankWeb: statbankFane || page._path === '/ssb/statbank'
-  } as InformationAlertOptions
+  const alertOptions: MunicipalityOptions | InformationAlertOptions =
+    pageConfig && pageConfig.pageType === 'municipality'
+      ? ({
+          municipality,
+          municipalPageType,
+        } as MunicipalityOptions)
+      : ({
+          pageType: page.type,
+          pageTypeId: page._id,
+          statbankWeb: statbankFane || page._path === '/ssb/statbank',
+        } as InformationAlertOptions)
 
   const alerts: AlertType = alertsForContext(pageConfig, alertOptions)
   const body: string = bodyWithBreadCrumbs ? bodyWithBreadCrumbs : thymeleafRenderBody
-  const bodyWithAlerts: XP.Response = alerts.length ?
-    addAlerts(alerts, body, pageContributions, req) :
-    {
-      body,
-      pageContributions
-    } as XP.Response
+  const bodyWithAlerts: XP.Response = alerts.length
+    ? addAlerts(alerts, body, pageContributions, req)
+    : ({
+        body,
+        pageContributions,
+      } as XP.Response)
 
   return {
     body: `<!DOCTYPE html>${bodyWithAlerts.body}`,
     pageContributions: bodyWithAlerts.pageContributions,
     headers: {
-      'x-content-key': page._id
-    }
+      'x-content-key': page._id,
+    },
   } as XP.Response
 }
 
@@ -310,11 +292,12 @@ function prepareRegions(isFragment: boolean, page: DefaultPage): RegionsContent 
     configRegion.components = regions[configRegion.region] ? forceArray(regions[configRegion.region].components) : []
   })
 
-  const mainRegionData: Regions['components'] | undefined = regions && regions.main && regions.main.components.length > 0 ? regions.main.components : undefined
+  const mainRegionData: Regions['components'] | undefined =
+    regions && regions.main && regions.main.components.length > 0 ? regions.main.components : undefined
 
   return {
     mainRegionData,
-    configRegions
+    configRegions,
   }
 }
 
@@ -323,8 +306,9 @@ function parseMetaInfoData(
   pageType: string,
   page: DefaultPage,
   language: Language,
-  req: XP.Request): MetaInfoData {
-  let addMetaInfoSearch: boolean = true
+  req: XP.Request
+): MetaInfoData {
+  let addMetaInfoSearch = true
   let metaInfoSearchId: string | undefined = page._id
   let metaInfoSearchContentType: string | undefined
   let metaInfoSearchGroup: string | undefined = page._id
@@ -350,7 +334,7 @@ function parseMetaInfoData(
     metaInfoSearchContentType = 'faktaside'
   }
 
-  if (page.type === `${app.name}:article` || page.type === `${app.name}:statistics` ) {
+  if (page.type === `${app.name}:article` || page.type === `${app.name}:statistics`) {
     const mainSubjects: string = getSubjectsPage(page, req, language.code as string).join(';')
     metaInfoMainSubject = mainSubjects
   }
@@ -369,7 +353,7 @@ function parseMetaInfoData(
   }
 
   if (page.type === `${app.name}:article`) {
-    if (page.data.articleType == 'report' || page.data.articleType == 'note' ) {
+    if (page.data.articleType == 'report' || page.data.articleType == 'note') {
       // We use the old content type publikasjon for this, as we want to group these three together in the search results filter.
       // Note and Report are the new content types that replaces Publikasjon.
       metaInfoSearchContentType = 'publikasjon'
@@ -386,7 +370,7 @@ function parseMetaInfoData(
     metaInfoSearchKeywords,
     metaInfoDescription,
     metaInfoSearchPublishFrom,
-    metaInfoMainSubject
+    metaInfoMainSubject,
   }
 }
 
@@ -403,7 +387,9 @@ function getSubjectsPage(page: DefaultPage, req: XP.Request, language: string): 
     subjects.push(mainSubject.title)
   }
 
-  const secondaryMainSubjects: Array<string> = subTopics ? getSecondaryMainSubject(subTopics, allMainSubjects, allSubSubjects) : []
+  const secondaryMainSubjects: Array<string> = subTopics
+    ? getSecondaryMainSubject(subTopics, allMainSubjects, allSubSubjects)
+    : []
   secondaryMainSubjects.map((subject) => {
     if (!subjects.includes(subject)) {
       subjects.push(subject)
@@ -413,11 +399,15 @@ function getSubjectsPage(page: DefaultPage, req: XP.Request, language: string): 
   return subjects
 }
 
-function getSecondaryMainSubject(subtopicsContent: Array<string>, mainSubjects: Array<SubjectItem>, subSubjects: Array<SubjectItem> ): Array<string> {
+function getSecondaryMainSubject(
+  subtopicsContent: Array<string>,
+  mainSubjects: Array<SubjectItem>,
+  subSubjects: Array<SubjectItem>
+): Array<string> {
   const secondaryMainSubjects: Array<string> = subtopicsContent.reduce((acc: Array<string>, topic: string) => {
     const subSubject: SubjectItem = subSubjects.filter((subSubject) => subSubject.id === topic)[0]
     if (subSubject) {
-      const mainSubject: SubjectItem| undefined = getMainSubjectBySubSubject(subSubject, mainSubjects)
+      const mainSubject: SubjectItem | undefined = getMainSubjectBySubSubject(subSubject, mainSubjects)
       if (mainSubject && !acc.includes(mainSubject.title)) {
         acc.push(mainSubject.title)
       }
@@ -434,21 +424,27 @@ function parseStatbankFrameContent(statbankFane: boolean, req: XP.Request, page:
   let filteredStatistics: StatisticInListing | undefined = undefined
   // If req.params.shortname exists, the xp frame fallback (system/xpramme) is in use
   // Since the fallback will only either be in bokmål or english, we will have to run two queries
-  const statisticInXP: Content<Statistics> | undefined = req.params.shortname ? query({
-    count: 1,
-    query: `_path LIKE "*/${req.params.shortname}" AND language = "${pageLanguage}"`,
-    contentTypes: [`${app.name}:statistics`]
-  }).hits[0] as Content<Statistics> : undefined
+  const statisticInXP: Content<Statistics> | undefined = req.params.shortname
+    ? (query({
+        count: 1,
+        query: `_path LIKE "*/${req.params.shortname}" AND language = "${pageLanguage}"`,
+        contentTypes: [`${app.name}:statistics`],
+      }).hits[0] as Content<Statistics>)
+    : undefined
 
-  const nynorskStatisticInXP: Content<Statistics> | undefined = req.params.shortname ? query({
-    count: 1,
-    query: `_path LIKE "*/${req.params.shortname}" AND language = "nn"`,
-    contentTypes: [`${app.name}:statistics`]
-  }).hits[0] as Content<Statistics> : undefined
+  const nynorskStatisticInXP: Content<Statistics> | undefined = req.params.shortname
+    ? (query({
+        count: 1,
+        query: `_path LIKE "*/${req.params.shortname}" AND language = "nn"`,
+        contentTypes: [`${app.name}:statistics`],
+      }).hits[0] as Content<Statistics>)
+    : undefined
 
   if (statbankFane) {
     if (statisticInXP || nynorskStatisticInXP) {
-      filteredStatistics = getStatisticByIdFromRepo(statisticInXP ? statisticInXP.data.statistic : nynorskStatisticInXP?.data.statistic)
+      filteredStatistics = getStatisticByIdFromRepo(
+        statisticInXP ? statisticInXP.data.statistic : nynorskStatisticInXP?.data.statistic
+      )
       // In order to get the correct phrases for the localized strings, we need to get the language from the content itself
       // rather than the language from the xp frame fallback page
       pageLanguage = statisticInXP ? statisticInXP.language : nynorskStatisticInXP?.language
@@ -472,20 +468,20 @@ function parseStatbankFrameContent(statbankFane: boolean, req: XP.Request, page:
   const siteConfig: SiteConfig = getSiteConfig()
 
   let statbankHelpLink: string = siteConfig.statbankHelpLink
-  if ( pageLanguage === 'en') {
+  if (pageLanguage === 'en') {
     statbankHelpLink = '/en' + siteConfig.statbankHelpLink
   }
   const statbankHelpText: string = localize({
     key: 'statbankHelpText',
-    locale: pageLanguage === 'nb' ? 'no' : pageLanguage
+    locale: pageLanguage === 'nb' ? 'no' : pageLanguage,
   })
   const statbankMainFigures: string = localize({
     key: 'statbankMainFigures',
-    locale: pageLanguage === 'nb' ? 'no' : pageLanguage
+    locale: pageLanguage === 'nb' ? 'no' : pageLanguage,
   })
   const statbankFrontPage: string = localize({
     key: 'statbankFrontPage',
-    locale: pageLanguage === 'nb' ? 'no' : pageLanguage
+    locale: pageLanguage === 'nb' ? 'no' : pageLanguage,
   })
 
   return {
@@ -495,108 +491,115 @@ function parseStatbankFrameContent(statbankFane: boolean, req: XP.Request, page:
     statbankMainFigures,
     statbankStatisticsUrl,
     statbankStatisticsTitle,
-    statisticsPageContent: statisticInXP ? statisticInXP : nynorskStatisticInXP
+    statisticsPageContent: statisticInXP ? statisticInXP : nynorskStatisticInXP,
   }
 }
 
-function addAlerts(alerts: AlertType, body: string, pageContributions: XP.PageContributions | undefined, req: XP.Request): XP.Response {
-  return r4xpRender('Alerts',
+function addAlerts(
+  alerts: AlertType,
+  body: string,
+  pageContributions: XP.PageContributions | undefined,
+  req: XP.Request
+): XP.Response {
+  return r4xpRender(
+    'Alerts',
     {
-      alerts
+      alerts,
     },
     req,
     {
       id: 'alerts',
       body: body,
-      pageContributions: pageContributions
-    })
+      pageContributions: pageContributions,
+    }
+  )
 }
 
 interface DefaultPage extends Content {
   fragment?: {
-    regions: Regions;
-    config: DefaultPageConfig;
-  };
-  x:SEO,
+    regions: Regions
+    config: DefaultPageConfig
+  }
+  x: SEO
   data: {
-    ingress: string;
-    keywords: string;
-    statistic: string;
-    subtopic: Array<string>;
-    articleType: string;
-  };
-  page: ExtendedPage;
+    ingress: string
+    keywords: string
+    statistic: string
+    subtopic: Array<string>
+    articleType: string
+  }
+  page: ExtendedPage
 }
 
-interface ExtendedPage extends Component<object>{
-  config: DefaultPageConfig;
+interface ExtendedPage extends Component<object> {
+  config: DefaultPageConfig
 }
 
 interface Regions {
-  components?: object;
-  region?: RegionData;
+  components?: object
+  region?: RegionData
   main?: {
-    components: Array<RegionData>;
-  };
+    components: Array<RegionData>
+  }
 }
 interface RegionData {
-  path: string;
-  type: string;
-  descriptor: string;
+  path: string
+  type: string
+  descriptor: string
 }
 interface Controller {
-  preview: (req: XP.Request, id: string) => XP.Response;
+  preview: (req: XP.Request, id: string) => XP.Response
 }
 
 interface MenuContent {
-  body: string;
-  component: RenderResponse;
+  body: string
+  component: RenderResponse
 }
 
 interface RegionsContent {
-  mainRegionData: Regions | undefined;
-  configRegions: ExtendedPage['config']['regions'];
+  mainRegionData: Regions | undefined
+  configRegions: ExtendedPage['config']['regions']
 }
 
 interface MetaInfoData {
-  addMetaInfoSearch: boolean;
-  metaInfoSearchId: string | undefined;
-  metaInfoSearchGroup: string | undefined;
-  metaInfoSearchContentType: string | undefined;
-  metaInfoSearchKeywords: string | undefined;
-  metaInfoDescription: string | undefined;
-  metaInfoSearchPublishFrom: string | undefined;
-  metaInfoMainSubject: string | undefined;
+  addMetaInfoSearch: boolean
+  metaInfoSearchId: string | undefined
+  metaInfoSearchGroup: string | undefined
+  metaInfoSearchContentType: string | undefined
+  metaInfoSearchKeywords: string | undefined
+  metaInfoDescription: string | undefined
+  metaInfoSearchPublishFrom: string | undefined
+  metaInfoMainSubject: string | undefined
 }
 
 export interface StatbankFrameData {
-  statbankHelpText: string;
-  statbankHelpLink: string;
-  statbankFrontPage: string;
-  statbankMainFigures: string;
-  statbankStatisticsUrl: string;
-  statbankStatisticsTitle: string;
-  statisticsPageContent: Content<Statistics> | undefined;
+  statbankHelpText: string
+  statbankHelpLink: string
+  statbankFrontPage: string
+  statbankMainFigures: string
+  statbankStatisticsUrl: string
+  statbankStatisticsTitle: string
+  statisticsPageContent: Content<Statistics> | undefined
 }
 
 interface DefaultModel {
-  pageTitle: string;
-  pageUrl: string | undefined;
-  page: Content;
-  ingress: string | undefined;
-  showIngress: string | boolean | undefined;
-  preview: XP.Response | undefined;
-  bodyClasses: string;
-  stylesUrl: string;
-  jsLibsUrl: string;
-  ieUrl: string;
-  language: Language;
-  statbankWeb: boolean;
-  GA_TRACKING_ID: string | null;
-  headerBody: string | undefined;
-  footerBody: string| undefined;
-  breadcrumbsReactId: string | undefined;
-  hideBreadcrumb: boolean;
-  enabledEnalyzerScript: boolean;
-  enabledChatScript: boolean;
+  pageTitle: string
+  pageUrl: string | undefined
+  page: Content
+  ingress: string | undefined
+  showIngress: string | boolean | undefined
+  preview: XP.Response | undefined
+  bodyClasses: string
+  stylesUrl: string
+  jsLibsUrl: string
+  ieUrl: string
+  language: Language
+  statbankWeb: boolean
+  GA_TRACKING_ID: string | null
+  headerBody: string | undefined
+  footerBody: string | undefined
+  breadcrumbsReactId: string | undefined
+  hideBreadcrumb: boolean
+  enabledEnalyzerScript: boolean
+  enabledChatScript: boolean
 }

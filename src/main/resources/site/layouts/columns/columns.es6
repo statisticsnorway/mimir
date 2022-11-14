@@ -1,26 +1,17 @@
-const {
-  getComponent
-} = __non_webpack_require__('/lib/xp/portal')
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
+const { getComponent } = __non_webpack_require__('/lib/xp/portal')
+const { render } = __non_webpack_require__('/lib/thymeleaf')
 
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
 const view = resolve('columns.html')
 
-exports.get = function(req) {
+exports.get = function (req) {
   const component = getComponent()
-  const {
-    size,
-    title,
-    hideTitle,
-    verticalBorder
-  } = component.config
+  const { size, title, hideTitle, verticalBorder } = component.config
   const isGrid = component.config.isGrid && req.mode !== 'edit'
 
   const divider = new React4xp('Divider')
     .setProps({
-      light: true
+      light: true,
     })
     .uniqueId()
 
@@ -60,9 +51,9 @@ exports.get = function(req) {
       if (left) {
         gridComponents.push({
           path: left.path,
-          classes: `order-0 ${leftSize}${(!prevRight && i !== 0) ? ` ${leftOffset}` : ''}`,
+          classes: `order-0 ${leftSize}${!prevRight && i !== 0 ? ` ${leftOffset}` : ''}`,
           order: left.path.slice(-1), // Get the last char of the path (path i.e. /Rad_H/1/left/1)
-          regionSide: 'left'
+          regionSide: 'left',
         })
       }
       if (right) {
@@ -70,7 +61,7 @@ exports.get = function(req) {
           path: right.path,
           classes: `order-1 order-md-0 ${rightSize}${!left ? ` ${rightOffset}` : ''}`,
           order: right.path.slice(-1),
-          regionSide: 'right'
+          regionSide: 'right',
         })
       }
     }
@@ -86,14 +77,17 @@ exports.get = function(req) {
     rightSize,
     isGrid,
     gridComponents,
-    verticalBorder
+    verticalBorder,
   }
 
-  const body = rightRegion.length == 0 ? render(view, model) : divider.renderBody({
-    body: render(view, model)
-  })
+  const body =
+    rightRegion.length == 0
+      ? render(view, model)
+      : divider.renderBody({
+          body: render(view, model),
+        })
 
   return {
-    body
+    body,
   }
 }

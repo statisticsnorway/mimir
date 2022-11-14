@@ -1,15 +1,12 @@
-import { getComponent, imageUrl, Component} from "/lib/xp/portal";
-import {FrontPageBannerPartConfig} from "./frontPageBanner-part-config";
+import { getComponent, imageUrl, Component } from '/lib/xp/portal'
+import { FrontPageBannerPartConfig } from './frontPageBanner-part-config'
 import { render } from '/lib/thymeleaf'
 
-const {
-  renderError
-} = __non_webpack_require__('/lib/ssb/error/error')
+const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
 const view = resolve('./frontPageBanner.html')
 
-
-exports.get = function(req: XP.Request) {
+exports.get = function (req: XP.Request) {
   try {
     return renderPart(req)
   } catch (e) {
@@ -24,16 +21,18 @@ function renderPart(req: XP.Request): XP.Response {
 
   const model: object = {
     bannerText: part.config.text,
-    bannerImage: part.config.image ? imageUrl({
-      id: part.config.image,
-      scale: 'block(86,86)'
-    }) : undefined
+    bannerImage: part.config.image
+      ? imageUrl({
+          id: part.config.image,
+          scale: 'block(86,86)',
+        })
+      : undefined,
   }
 
   const body = render(view, model)
 
   return {
     body,
-    contentType: 'text/html'
+    contentType: 'text/html',
   }
 }

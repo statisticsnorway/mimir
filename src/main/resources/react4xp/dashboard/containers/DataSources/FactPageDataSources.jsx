@@ -1,10 +1,12 @@
 import { Accordion, NestedAccordion } from '@statisticsnorway/ssb-component-library'
 import React, { useContext } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectLoadingFactPageGroups,
+import {
+  selectLoadingFactPageGroups,
   selectFactPageGroups,
   selectFactPageDataSources,
-  selectFactPageLoading } from './selectors'
+  selectFactPageLoading,
+} from './selectors'
 import PropTypes from 'prop-types'
 import { requestFactPageGroups, requestFactPageDataSources } from './actions'
 import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
@@ -39,33 +41,25 @@ export function FactPageDataSources(props) {
 
   function renderAccordionBody() {
     if (isLoading) {
-      return (
-        <span className="spinner-border spinner-border" />
-      )
+      return <span className='spinner-border spinner-border' />
     }
-    return (
-      factPages.map((factPage) => renderDataSourceTable(factPage))
-    )
+    return factPages.map((factPage) => renderDataSourceTable(factPage))
   }
 
   onToggleAccordion(props.openByDefault)
   return (
-    <Accordion
-      header="Spørringer fra Faktasider"
-      className="mx-0"
-      onToggle={(isOpen) => onToggleAccordion(isOpen)}
-    >
+    <Accordion header='Spørringer fra Faktasider' className='mx-0' onToggle={(isOpen) => onToggleAccordion(isOpen)}>
       {renderAccordionBody()}
     </Accordion>
   )
 }
 
 FactPageDataSources.defaultProps = {
-  openByDefault: false
+  openByDefault: false,
 }
 
 FactPageDataSources.propTypes = {
-  openByDefault: PropTypes.bool
+  openByDefault: PropTypes.bool,
 }
 
 export default (props) => <FactPageDataSources {...props} />

@@ -1,10 +1,8 @@
 const highmapController = __non_webpack_require__('../../parts/highmap/highmap')
 
-const {
-  renderError
-} = __non_webpack_require__('/lib/ssb/error/error')
+const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
-exports.macro = function(context) {
+exports.macro = function (context) {
   try {
     const highmap = highmapController.preview(context, context.params.highmap)
 

@@ -1,8 +1,6 @@
 import { PreparedArticles, ArticleResult } from '../../lib/ssb/utils/articleUtils'
 
-const {
-  getAllArticles
-} = __non_webpack_require__( '/lib/ssb/utils/articleUtils')
+const { getAllArticles } = __non_webpack_require__('/lib/ssb/utils/articleUtils')
 
 exports.get = (req: XP.Request): XP.Response => {
   const start: number = Number(req.params.start) ? Number(req.params.start) : 0
@@ -11,10 +9,9 @@ exports.get = (req: XP.Request): XP.Response => {
   const allArticles: ArticleResult = getAllArticles(req, language, start, count)
   const articleStart: number = start + 1
   const articleEnd: number = start + allArticles.articles.length
-  const moreArticlesUrl: string = `/_/service/mimir/solrArticleList?language=${language}&start=${start + count}&count=${count}`
+  const moreArticlesUrl = `/_/service/mimir/solrArticleList?language=${language}&start=${start + count}&count=${count}`
 
-  const articleListHtml: string =
-  `<!DOCTYPE html>
+  const articleListHtml = `<!DOCTYPE html>
     <html lang="${language}">
         <head>
             <meta charset="UTF-8"/>
@@ -24,19 +21,23 @@ exports.get = (req: XP.Request): XP.Response => {
           <div>
               <p>Artikkel ${articleStart} til ${articleEnd} (Totalt antall artikler ${allArticles.total})</p>
               <div>
-                  ${allArticles.articles.map((article: PreparedArticles) =>`<a href="${article.url}">${article.title}</a>`).join('</br>')}
+                  ${allArticles.articles
+                    .map((article: PreparedArticles) => `<a href="${article.url}">${article.title}</a>`)
+                    .join('</br>')}
               </div>
-              ${allArticles.total > start + count ?
-    `<p>
+              ${
+                allArticles.total > start + count
+                  ? `<p>
               <a href="${moreArticlesUrl}">Neste ${count} artikler</a>
-          </p>` : ''}
+          </p>`
+                  : ''
+              }
             </div>
         </body>
     </html>`
 
-
   return {
     body: articleListHtml,
-    contentType: 'text/html'
+    contentType: 'text/html',
   }
 }

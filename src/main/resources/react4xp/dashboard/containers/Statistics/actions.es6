@@ -2,7 +2,7 @@ import { actions } from './slice'
 
 export function requestStatistics(dispatch, io) {
   dispatch({
-    type: actions.loadStatistics.type
+    type: actions.loadStatistics.type,
   })
 
   io.emit('get-statistics')
@@ -10,7 +10,7 @@ export function requestStatistics(dispatch, io) {
 
 export function requestStatisticsSearchList(dispatch, io) {
   dispatch({
-    type: actions.loadStatisticsSearchList.type
+    type: actions.loadStatisticsSearchList.type,
   })
 
   io.emit('get-statistics-search-list')
@@ -19,19 +19,19 @@ export function requestStatisticsSearchList(dispatch, io) {
 export function refreshStatistic(dispatch, io, id, owners) {
   dispatch({
     type: actions.startRefreshStatistic.type,
-    id
+    id,
   })
 
   io.emit('refresh-statistic', {
     id,
-    owners
+    owners,
   })
 }
 
 export function setOpenStatistic(dispatch, io, statistic) {
   dispatch({
     type: actions.setOpenStatistic.type,
-    id: statistic ? statistic.id : null
+    id: statistic ? statistic.id : null,
   })
 
   // always fetch related tables and owners with sources every time the modal is opened, just in case it changed
@@ -45,64 +45,63 @@ export function setOpenStatistic(dispatch, io, statistic) {
 export function resetRefreshStatus(dispatch, status) {
   dispatch({
     type: actions.resetRefreshStatus.type,
-    status
+    status,
   })
 }
 
 export function setOpenModal(dispatch, status) {
   dispatch({
     type: actions.setOpenModal.type,
-    status
+    status,
   })
 }
 
 export function setModal(dispatch, modal) {
   dispatch({
     type: actions.setModal.type,
-    modal
+    modal,
   })
 }
 
 export function resetModal(dispatch, id) {
   dispatch({
     type: actions.resetModal.type,
-    id
+    id,
   })
 }
-
 
 export function fetchOwnersWithSources(dispatch, io, id, dataSourceIds) {
   dispatch({
     type: actions.loadStatisticsOwnersWithSources.type,
-    id
+    id,
   })
 
   io.emit('get-statistics-owners-with-sources', {
     id,
-    dataSourceIds
+    dataSourceIds,
   })
 }
 
 export function fetchRelatedTablesAndOwnersWithSources(dispatch, io, id) {
   dispatch({
     type: actions.loadStatisticsRelatedTables.type,
-    id
+    id,
   })
 
   io.emit('get-statistics-related-tables-and-owners-with-sources', {
-    id
+    id,
   })
 }
 
 export function requestStatisticsJobLog(dispatch, io, id) {
   io.emit('get-statistics-job-log', {
-    id
+    id,
   })
 }
 
 export function requestJobLogDetails(dispatch, io, jobLogId, statisticId) {
   io.emit('get-statistic-job-log-details', {
     id: jobLogId,
-    statisticId
+    statisticId,
   })
 }

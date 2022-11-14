@@ -1,23 +1,15 @@
 import { Component } from '/lib/xp/portal'
-import {render, RenderResponse} from '/lib/enonic/react4xp'
+import { render, RenderResponse } from '/lib/enonic/react4xp'
 import { Content } from '/lib/xp/content'
 import { PublicationArchivePartConfig } from './publicationArchive-part-config'
 import { PublicationResult } from '../../../lib/ssb/parts/publicationArchive'
 import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
 
-const {
-  getPhrases
-} = __non_webpack_require__('/lib/ssb/utils/language')
-const {
-  getContent, serviceUrl, getComponent
-} = __non_webpack_require__('/lib/xp/portal')
+const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
+const { getContent, serviceUrl, getComponent } = __non_webpack_require__('/lib/xp/portal')
 
-const {
-  getPublications
-} = __non_webpack_require__( '/lib/ssb/parts/publicationArchive')
-const {
-  getMainSubjects
-} = __non_webpack_require__( '/lib/ssb/utils/subjectUtils')
+const { getPublications } = __non_webpack_require__('/lib/ssb/parts/publicationArchive')
+const { getMainSubjects } = __non_webpack_require__('/lib/ssb/utils/subjectUtils')
 
 exports.get = (req: XP.Request): RenderResponse => {
   return renderPart(req)
@@ -28,60 +20,62 @@ exports.preview = (req: XP.Request): RenderResponse => renderPart(req)
 function renderPart(req: XP.Request): RenderResponse {
   const content: Content = getContent()
   const part: Component<PublicationArchivePartConfig> = getComponent()
-  const phrases: {[key: string]: string} = getPhrases(content)
+  const phrases: { [key: string]: string } = getPhrases(content)
   const language: string = content.language ? content.language : 'nb'
   const publicationArchiveServiceUrl: string = serviceUrl({
-    service: 'publicationArchive'
+    service: 'publicationArchive',
   })
   const mainSubjects: Array<SubjectItem> = getMainSubjects(req, language)
-  const start: number = 0
-  const count: number = 10
+  const start = 0
+  const count = 10
 
   const mainSubjectDropdown: Array<Dropdown> = [
     {
       id: '',
-      title: phrases['publicationArchive.allSubjects']
-    }
-  ].concat(mainSubjects.map((subject) => {
-    return {
-      id: subject.name,
-      title: subject.title
-    }
-  }))
+      title: phrases['publicationArchive.allSubjects'],
+    },
+  ].concat(
+    mainSubjects.map((subject) => {
+      return {
+        id: subject.name,
+        title: subject.title,
+      }
+    })
+  )
 
   const articleTypeDropdown: Array<Dropdown> = [
     {
       id: '',
-      title: phrases['publicationArchive.allTypes']
+      title: phrases['publicationArchive.allTypes'],
     },
     {
       id: 'default',
-      title: phrases['articleType.default']
+      title: phrases['articleType.default'],
     },
     {
       id: 'report',
-      title: phrases['articleType.report']
+      title: phrases['articleType.report'],
     },
     {
       id: 'note',
-      title: phrases['articleType.note']
+      title: phrases['articleType.note'],
     },
     {
       id: 'analysis',
-      title: phrases['articleType.analysis']
+      title: phrases['articleType.analysis'],
     },
     {
       id: 'economicTrends',
-      title: phrases['articleType.economicTrends']
+      title: phrases['articleType.economicTrends'],
     },
     {
       id: 'discussionPaper',
-      title: phrases['articleType.discussionPaper']
+      title: phrases['articleType.discussionPaper'],
     },
     {
       id: 'statistics',
-      title: phrases['articleType.statistics']
-    }
+      title: phrases['articleType.statistics'],
+    },
   ]
 
   const props: PartProperties = {
@@ -102,34 +96,34 @@ function renderPart(req: XP.Request): RenderResponse {
       analysis: phrases['articleType.analysis'],
       economicTrends: phrases['articleType.economicTrends'],
       discussionPaper: phrases['articleType.discussionPaper'],
-      statistics: phrases['articleType.statistics']
+      statistics: phrases['articleType.statistics'],
     },
     dropDownSubjects: mainSubjectDropdown,
-    dropDownTypes: articleTypeDropdown
+    dropDownTypes: articleTypeDropdown,
   }
 
   return render('site/parts/publicationArchive/publicationArchive', props, req)
 }
 
 interface PartProperties {
-  title: string;
-  ingress: string;
-  buttonTitle: string;
-  showingPhrase: string;
-  defineContentPhrase: string;
-  chooseSubjectPhrase: string;
-  chooseContentTypePhrase: string;
-  language: string;
-  publicationArchiveServiceUrl: string;
-  firstPublications: PublicationResult;
+  title: string
+  ingress: string
+  buttonTitle: string
+  showingPhrase: string
+  defineContentPhrase: string
+  chooseSubjectPhrase: string
+  chooseContentTypePhrase: string
+  language: string
+  publicationArchiveServiceUrl: string
+  firstPublications: PublicationResult
   articleTypePhrases: {
-    [key: string]: string;
-  };
-  dropDownSubjects: Array<Dropdown>;
-  dropDownTypes: Array<Dropdown>;
+    [key: string]: string
+  }
+  dropDownSubjects: Array<Dropdown>
+  dropDownTypes: Array<Dropdown>
 }
 
 interface Dropdown {
-  id: string;
-  title: string;
+  id: string
+  title: string
 }

@@ -44,7 +44,7 @@
                         <treeMode>true</treeMode>
                     </config>
                 </input>
-                <input name="description" type="TextArea">
+                <input name="description" type="HtmlArea">
                     <label>Kort om</label>
                 </input>
                 <input name="profileImages" type="ImageSelector">
