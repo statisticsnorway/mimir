@@ -1,4 +1,4 @@
-import { StatRegRefreshResult, StatRegNode } from '../../repo/statreg'
+import { StatRegNode, StatRegRefreshResult } from '../../repo/statreg'
 import { Socket, SocketEmitter } from '../../../types/socket'
 import { StatRegLatestFetchInfoNode } from '../../statreg/eventLog'
 import { LogSummary } from '../../repo/eventLog'
@@ -7,83 +7,59 @@ import { run, RunContext } from '/lib/xp/context'
 import { DashboardRefreshResultLogData } from '../dashboard'
 import { ContextAttributes } from '*/lib/xp/context'
 
-const {
-  STATREG_NODES,
-  refreshStatRegData,
-  getStatRegNode
-} = __non_webpack_require__('/lib/ssb/repo/statreg')
-const {
-  STATREG_REPO_CONTACTS_KEY
-} = __non_webpack_require__('/lib/ssb/statreg/contacts')
-const {
-  STATREG_REPO_STATISTICS_KEY
-} = __non_webpack_require__('/lib/ssb/statreg/statistics')
-const {
-  STATREG_REPO_PUBLICATIONS_KEY
-} = __non_webpack_require__('/lib/ssb/statreg/publications')
-const {
-  showWarningIcon,
-  users
-} = __non_webpack_require__('/lib/ssb/dashboard/dashboardUtils')
-const {
-  dateToReadable,
-  dateToFormat
-} = __non_webpack_require__('/lib/ssb/utils/utils')
-const {
-  getNode,
-  ENONIC_CMS_DEFAULT_REPO
-} = __non_webpack_require__('/lib/ssb/repo/common')
-const {
-  EVENT_LOG_BRANCH,
-  EVENT_LOG_REPO,
-  getQueryChildNodesStatus
-} = __non_webpack_require__('/lib/ssb/repo/eventLog')
-const {
-  localize
-} = __non_webpack_require__('/lib/xp/i18n')
-const {
-  createOrUpdateStatisticsRepo
-} = __non_webpack_require__('/lib/ssb/repo/statisticVariant')
+const { STATREG_NODES, refreshStatRegData, getStatRegNode } = __non_webpack_require__('/lib/ssb/repo/statreg')
+const { STATREG_REPO_CONTACTS_KEY } = __non_webpack_require__('/lib/ssb/statreg/contacts')
+const { STATREG_REPO_STATISTICS_KEY } = __non_webpack_require__('/lib/ssb/statreg/statistics')
+const { STATREG_REPO_PUBLICATIONS_KEY } = __non_webpack_require__('/lib/ssb/statreg/publications')
+const { showWarningIcon, users } = __non_webpack_require__('/lib/ssb/dashboard/dashboardUtils')
+const { dateToReadable, dateToFormat } = __non_webpack_require__('/lib/ssb/utils/utils')
+const { getNode, ENONIC_CMS_DEFAULT_REPO } = __non_webpack_require__('/lib/ssb/repo/common')
+const { EVENT_LOG_BRANCH, EVENT_LOG_REPO, getQueryChildNodesStatus } = __non_webpack_require__('/lib/ssb/repo/eventLog')
+const { localize } = __non_webpack_require__('/lib/xp/i18n')
+const { createOrUpdateStatisticsRepo } = __non_webpack_require__('/lib/ssb/repo/statisticVariant')
 
-export type StatRegLatestFetchInfoNodeType = StatRegLatestFetchInfoNode | readonly StatRegLatestFetchInfoNode[] | null;
+export type StatRegLatestFetchInfoNodeType = StatRegLatestFetchInfoNode | readonly StatRegLatestFetchInfoNode[] | null
+
 export function getStatRegFetchStatuses(): Array<StatRegStatus> {
-  return [
-    STATREG_REPO_CONTACTS_KEY,
-    STATREG_REPO_STATISTICS_KEY,
-    STATREG_REPO_PUBLICATIONS_KEY
-  ].map(getStatRegStatus)
+  return [STATREG_REPO_CONTACTS_KEY, STATREG_REPO_STATISTICS_KEY, STATREG_REPO_PUBLICATIONS_KEY].map(getStatRegStatus)
 }
 
 function toDisplayString(key: string): string {
   switch (key) {
-  case STATREG_REPO_CONTACTS_KEY: return 'kontakter'
-  case STATREG_REPO_STATISTICS_KEY: return 'statistikk'
-  case STATREG_REPO_PUBLICATIONS_KEY: return 'publiseringer'
-  default: return key
+    case STATREG_REPO_CONTACTS_KEY:
+      return 'kontakter'
+    case STATREG_REPO_STATISTICS_KEY:
+      return 'statistikk'
+    case STATREG_REPO_PUBLICATIONS_KEY:
+      return 'publiseringer'
+    default:
+      return key
   }
 }
 
 function getStatRegStatus(key: string): StatRegStatus {
   const logNode: QueryInfo | null = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/queries/${key}`) as QueryInfo | null
   const statRegNode: StatRegNode | null = getStatRegNode(key)
-  const modifiedResult: string = logNode && logNode.data.modifiedResult || ''
+  const modifiedResult: string = (logNode && logNode.data.modifiedResult) || ''
   const logMessage: string = localize({
     key: modifiedResult || '',
-    values: [modifiedResult || '']
+    values: [modifiedResult || ''],
   })
   const statRegData: StatRegStatus = {
     key,
     displayName: toDisplayString(key),
     modified: statRegNode ? dateToFormat(statRegNode._ts) : undefined,
     modifiedReadable: statRegNode ? dateToReadable(statRegNode._ts) : undefined,
-    logData: logNode ? {
-      ...logNode.data,
-      modified: logNode.data.modified,
-      modifiedReadable: dateToReadable(logNode.data.modifiedTs),
-      showWarningIcon: showWarningIcon(modifiedResult as Events),
-      message: logMessage
-    } : {},
-    eventLogNodes: []
+    logData: logNode
+      ? {
+          ...logNode.data,
+          modified: logNode.data.modified,
+          modifiedReadable: dateToReadable(logNode.data.modifiedTs),
+          showWarningIcon: showWarningIcon(modifiedResult as Events),
+          message: logMessage,
+        }
+      : {},
+    eventLogNodes: [],
   }
   return statRegData
 }
@@ -105,22 +81,24 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
       principals: ['role:system.admin'],
       user: {
         login: users[parseInt(socket.id)].login,
-        idProvider: users[parseInt(socket.id)].idProvider ? users[parseInt(socket.id)].idProvider : 'system'
-      }
+        idProvider: users[parseInt(socket.id)].idProvider ? users[parseInt(socket.id)].idProvider : 'system',
+      },
     }
     run(context, () => {
       runRefresh(socketEmitter, statRegKeys)
     })
   })
 
-  socket.on('get-statreg-eventlog-node', (key)=> {
-    let status: Array<LogSummary> | undefined = getQueryChildNodesStatus(`/queries/${key}`) as Array<LogSummary> | undefined
+  socket.on('get-statreg-eventlog-node', (key) => {
+    let status: Array<LogSummary> | undefined = getQueryChildNodesStatus(`/queries/${key}`) as
+      | Array<LogSummary>
+      | undefined
     if (!status) {
       status = []
     }
     socket.emit('statreg-eventlog-node-result', {
       logs: status,
-      id: key
+      id: key,
     })
   })
 }
@@ -140,16 +118,11 @@ export function parseStatRegJobInfo(refreshDataResult: Array<StatRegRefreshResul
     const displayName: string = toDisplayString(result.key)
     const status: string = localize({
       key: result.status,
-      values: [result.status]
+      values: [result.status],
     })
-    let infoMessage: string = ''
+    let infoMessage = ''
     if (result.status === Events.DATASET_UPDATED || result.status === Events.NO_NEW_DATA) {
-      const {
-        added,
-        changed,
-        deleted,
-        total
-      } = result.info
+      const { added, changed, deleted, total } = result.info
       if (added || changed || deleted) {
         infoMessage = ''
         if (added) {
@@ -177,29 +150,29 @@ export function parseStatRegJobInfo(refreshDataResult: Array<StatRegRefreshResul
       status,
       showWarningIcon: showWarningIcon(result.status as Events),
       hasNewData: result.status === Events.DATASET_UPDATED,
-      infoMessage
+      infoMessage,
     }
   })
 }
 
 export interface StatRegStatus {
-  key: string;
-  displayName: string;
-  modified: string | undefined;
-  modifiedReadable: string | undefined;
-  logData: DashboardRefreshResultLogData | {};
-  eventLogNodes: Array<LogSummary>;
+  key: string
+  displayName: string
+  modified: string | undefined
+  modifiedReadable: string | undefined
+  logData: DashboardRefreshResultLogData | {}
+  eventLogNodes: Array<LogSummary>
 }
 
 export interface StatRegJobInfo {
-  displayName: string;
-  status: string;
-  showWarningIcon: boolean;
-  hasNewData: boolean;
-  infoMessage: string;
+  displayName: string
+  status: string
+  showWarningIcon: boolean
+  hasNewData: boolean
+  infoMessage: string
 }
 
 export interface SSBStatRegLib {
-  setupHandlers: (socket: Socket, socketEmitter: SocketEmitter) => void;
-  parseStatRegJobInfo: (refreshDataResult: Array<StatRegRefreshResult>) => Array<StatRegJobInfo>;
+  setupHandlers: (socket: Socket, socketEmitter: SocketEmitter) => void
+  parseStatRegJobInfo: (refreshDataResult: Array<StatRegRefreshResult>) => Array<StatRegJobInfo>
 }

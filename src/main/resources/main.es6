@@ -1,29 +1,13 @@
 try {
-  const {
-    setupEventLog
-  } = __non_webpack_require__('/lib/ssb/repo/eventLog')
-  const {
-    setupStatRegRepo
-  } = __non_webpack_require__('/lib/ssb/repo/statreg')
-  const {
-    setupDatasetRepo
-  } = __non_webpack_require__('/lib/ssb/repo/dataset')
-  const {
-    setupBestBetRepo
-  } = __non_webpack_require__('/lib/ssb/repo/bestbet')
+  const { setupEventLog } = __non_webpack_require__('/lib/ssb/repo/eventLog')
+  const { setupStatRegRepo } = __non_webpack_require__('/lib/ssb/repo/statreg')
+  const { setupDatasetRepo } = __non_webpack_require__('/lib/ssb/repo/dataset')
+  const { setupBestBetRepo } = __non_webpack_require__('/lib/ssb/repo/bestbet')
   const cache = __non_webpack_require__('/lib/ssb/cache/cache')
-  const {
-    setupFetchDataOnCreateListener
-  } = __non_webpack_require__('/lib/ssb/dataset/listeners')
-  const {
-    setupCronJobs
-  } = __non_webpack_require__('/lib/ssb/cron/cron')
-  const {
-    create
-  } = __non_webpack_require__('/lib/featureToggle')
-  const {
-    setupTaskListener
-  } = __non_webpack_require__('/lib/ssb/dataset/publish')
+  const { setupFetchDataOnCreateListener } = __non_webpack_require__('/lib/ssb/dataset/listeners')
+  const { setupCronJobs } = __non_webpack_require__('/lib/ssb/cron/cron')
+  const { create } = __non_webpack_require__('/lib/featureToggle')
+  const { setupTaskListener } = __non_webpack_require__('/lib/ssb/dataset/publish')
 
   log.info('Application ' + app.name + ' started') // Log application started
   __.disposer(() => log.info('Application ' + app.name + ' stopped')) // Log application stoppped
@@ -43,70 +27,70 @@ try {
       features: [
         {
           feature: 'rss-news',
-          enabled: true
+          enabled: true,
         },
         {
           feature: 'rss-news-statistics',
-          enabled: false
+          enabled: false,
         },
         {
           feature: 'article-isbn',
-          enabled: true
+          enabled: true,
         },
         {
           feature: 'articlelist-sorting',
-          enabled: false
+          enabled: false,
         },
         {
           feature: 'name-graph',
-          enabled: false
+          enabled: false,
         },
         {
           feature: 'dashboard-redux-logging-debugging',
-          enabled: true
+          enabled: true,
         },
         {
           feature: 'enable-enalyzer-script',
-          enabled: false
+          enabled: false,
         },
         {
           feature: 'highchart-show-datatable',
-          enabled: false
+          enabled: false,
         },
         {
           feature: 'highchart-react',
-          enabled: false
+          enabled: false,
         },
         {
           feature: 'publishJob-lib-sheduler',
-          enabled: false
+          enabled: false,
         },
         {
           feature: 'enable-chat-script',
-          enabled: false
+          enabled: false,
         },
         {
           feature: 'highcharts-y-axix-title-mobile',
-          enabled: false
+          enabled: false,
         },
         {
           feature: 'name-search-in-freetext-search',
-          enabled: false
+          enabled: false,
         },
         {
           feature: 'deactivate-partcache-released-statistics',
-          enabled: true
+          enabled: true,
         },
         {
           feature: 'deactivate-part-cache-article-list',
-          enabled: true
+          enabled: true,
         },
         {
           feature: 'new-publication-archive',
-          enabled: false
-        }
-      ]
-    }
+          enabled: false,
+        },
+      ],
+    },
   ])
 
   const now = new Date()

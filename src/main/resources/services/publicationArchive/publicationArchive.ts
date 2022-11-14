@@ -1,14 +1,8 @@
 import { PublicationResult } from '../../lib/ssb/parts/publicationArchive'
 
-const {
-  getPublications
-} = __non_webpack_require__( '/lib/ssb/parts/publicationArchive')
-const {
-  getPublicationsNew
-} = __non_webpack_require__( '/lib/ssb/parts/publicationArchiveNew')
-const {
-  isEnabled
-} = __non_webpack_require__('/lib/featureToggle')
+const { getPublications } = __non_webpack_require__('/lib/ssb/parts/publicationArchive')
+const { getPublicationsNew } = __non_webpack_require__('/lib/ssb/parts/publicationArchiveNew')
+const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
 
 exports.get = (req: XP.Request): XP.Response => {
   const start: number = Number(req.params.start) ? Number(req.params.start) : 0
@@ -18,16 +12,16 @@ exports.get = (req: XP.Request): XP.Response => {
   const subject: string = req.params?.subject ? req.params.subject : ''
   const newPublicationArchiveEnabled: boolean = isEnabled('new-publication-archive', false, 'ssb')
 
-  const startClock:number = new Date().getTime()
-  const result: PublicationResult = newPublicationArchiveEnabled ?
-    getPublicationsNew(req, start, count, language, type, subject) :
-    getPublications(req, start, count, language, type, subject)
+  const startClock: number = new Date().getTime()
+  const result: PublicationResult = newPublicationArchiveEnabled
+    ? getPublicationsNew(req, start, count, language, type, subject)
+    : getPublications(req, start, count, language, type, subject)
 
   log.info(`Publikasjonsarkiv Ny (${newPublicationArchiveEnabled}) : ${new Date().getTime() - startClock} ms`)
 
   return {
     status: 200,
     contentType: 'application/json',
-    body: result
+    body: result,
   }
 }
