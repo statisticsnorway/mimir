@@ -1,5 +1,5 @@
 import { Article } from '../../../site/content-types/article/article'
-import { query, get, Content, QueryResponse } from '/lib/xp/content'
+import { Content, get, query, QueryResponse } from '/lib/xp/content'
 import { StatisticInListing } from '../dashboard/statreg/types'
 import { getAllStatisticsFromRepo } from '../statreg/statistics'
 import { calculatePeriodRelease, Release } from '../utils/variantUtils'

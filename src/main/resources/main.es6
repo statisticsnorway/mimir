@@ -85,6 +85,10 @@ try {
           feature: 'deactivate-part-cache-article-list',
           enabled: true,
         },
+        {
+          feature: 'new-publication-archive',
+          enabled: false,
+        },
       ],
     },
   ])

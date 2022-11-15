@@ -1,12 +1,12 @@
-import { findUsers, createUser, UserQueryResult } from '/lib/xp/auth'
+import { createUser, findUsers, UserQueryResult } from '/lib/xp/auth'
 import { Content } from '/lib/xp/content'
-import { run, RunContext, ContextAttributes } from '/lib/xp/context'
+import { ContextAttributes, run, RunContext } from '/lib/xp/context'
 import { DataSource } from '../../../site/mixins/dataSource/dataSource'
 import { JobEventNode, JobInfoNode } from '../repo/job'
 import { StatRegRefreshResult } from '../repo/statreg'
-import { schedule, list, TaskMapper } from '/lib/cron'
+import { list, schedule, TaskMapper } from '/lib/cron'
 import { RSSFilter } from './rss'
-import { create, modify, list as listScheduledJobs, get as getScheduledJob, ScheduledJob } from '/lib/xp/scheduler'
+import { create, get as getScheduledJob, list as listScheduledJobs, modify, ScheduledJob } from '/lib/xp/scheduler'
 
 const { clearPartFromPartCache } = __non_webpack_require__('/lib/ssb/cache/partCache')
 const { refreshStatRegData, STATREG_NODES } = __non_webpack_require__('/lib/ssb/repo/statreg')
@@ -23,6 +23,7 @@ const { updateUnpublishedMockTbml } = __non_webpack_require__('/lib/ssb/dataset/
 const { pushRssNews } = __non_webpack_require__('/lib/ssb/cron/pushRss')
 const { publishDataset } = __non_webpack_require__('/lib/ssb/dataset/publishOld')
 const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
+const { createOrUpdateStatisticsRepo } = __non_webpack_require__('/lib/ssb/repo/statisticVariant')
 
 const createUserContext: RunContext<ContextAttributes> = {
   // Master context (XP)
@@ -98,6 +99,7 @@ export function statRegJob(): void {
   })
   const result: Array<StatRegRefreshResult> = refreshStatRegData()
   completeJobLog(jobLogNode._id, JOB_STATUS_COMPLETE, result)
+  createOrUpdateStatisticsRepo()
 }
 
 function pushRssNewsJob(): void {
