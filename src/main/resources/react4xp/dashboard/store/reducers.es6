@@ -6,7 +6,7 @@ export function createReducer(injectedReducers = {}) {
     return (state) => state
   } else {
     return combineReducers({
-      ...injectedReducers
+      ...injectedReducers,
     })
   }
 }

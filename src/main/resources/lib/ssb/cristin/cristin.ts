@@ -1,9 +1,16 @@
-import { FetchResponse, ListOfResults, Project, fetchResults, fetchProject, fetchPersonResults } from '/lib/cristin/service'
+import {
+  FetchResponse,
+  ListOfResults,
+  Project,
+  fetchResults,
+  fetchProject,
+  fetchPersonResults,
+} from '/lib/cristin/service'
 
 export function fetchResultsCristin(
   contributor?: string,
   category?: string,
-  per_page: string = '10',
+  per_page = '10',
   page?: string,
   sort?: string
 ): FetchResponse<ListOfResults> {
@@ -13,7 +20,7 @@ export function fetchResultsCristin(
     category,
     per_page,
     page,
-    sort
+    sort,
   })
 
   return results
@@ -21,21 +28,22 @@ export function fetchResultsCristin(
 
 export function fetchProjectCristin(projectId: string | number): Project {
   const project: Project = fetchProject({
-    id: projectId
+    id: projectId,
   })
-  const projectResultsIds: Array<string> | undefined = project.results && project.results.map((result) => result.split('/').pop()) as Array<string> | undefined
+  const projectResultsIds: Array<string> | undefined =
+    project.results && (project.results.map((result) => result.split('/').pop()) as Array<string> | undefined)
 
   return {
     ...project,
-    results: projectResultsIds
+    results: projectResultsIds,
   }
 }
 
-export function fetchPersonResultsCristin(personId?: string, per_page: string = '10', page?: string): ListOfResults {
+export function fetchPersonResultsCristin(personId?: string, per_page = '10', page?: string): ListOfResults {
   const results: ListOfResults = fetchPersonResults({
     id: personId,
     per_page,
-    page
+    page,
   })
 
   return results

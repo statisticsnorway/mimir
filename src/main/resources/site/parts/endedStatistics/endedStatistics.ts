@@ -6,25 +6,13 @@ import { Statistics } from '../../content-types/statistics/statistics'
 import { SEO } from 'services/news/news'
 
 const {
-  data: {
-    forceArray
-  }
+  data: { forceArray },
 } = __non_webpack_require__('/lib/util')
-const {
-  getContent,
-  getComponent,
-  pageUrl
-} = __non_webpack_require__('/lib/xp/portal')
-const {
-  getPhrases
-} = __non_webpack_require__('/lib/ssb/utils/language')
+const { getContent, getComponent, pageUrl } = __non_webpack_require__('/lib/xp/portal')
+const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
 
-const {
-  renderError
-} = __non_webpack_require__('/lib/ssb/error/error')
-const {
-  hasPath
-} = __non_webpack_require__('/lib/vendor/ramda')
+const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
+const { hasPath } = __non_webpack_require__('/lib/vendor/ramda')
 
 exports.get = (req: XP.Request) => {
   try {
@@ -39,71 +27,83 @@ exports.preview = (req: XP.Request) => renderPart(req)
 function renderPart(req: XP.Request): XP.Response | RenderResponse {
   const page: Content = getContent()
   const part: EndedStatisticsPartConfig = getComponent().config
-  const endedStatistics: EndedStatisticsPartConfig['relatedStatisticsOptions'] = part.relatedStatisticsOptions ? forceArray(part.relatedStatisticsOptions) : []
+  const endedStatistics: EndedStatisticsPartConfig['relatedStatisticsOptions'] = part.relatedStatisticsOptions
+    ? forceArray(part.relatedStatisticsOptions)
+    : []
 
   const phrases: Phrases = getPhrases(page) as Phrases
 
   return renderEndedStatistics(req, parseContent(endedStatistics), phrases)
 }
 
-function renderEndedStatistics(req: XP.Request, endedStatisticsContent: Array<EndedStatistic | undefined>, phrases: Phrases): RenderResponse {
+function renderEndedStatistics(
+  req: XP.Request,
+  endedStatisticsContent: Array<EndedStatistic | undefined>,
+  phrases: Phrases
+): RenderResponse {
   if (endedStatisticsContent && endedStatisticsContent.length) {
-    return render('EndedStatistics',
+    return render(
+      'EndedStatistics',
       {
         endedStatistics: endedStatisticsContent.map((statisticsContent) => {
           return {
-            ...statisticsContent
+            ...statisticsContent,
           }
         }),
         iconText: phrases.endedCardText,
-        buttonText: phrases.endedStatistics
+        buttonText: phrases.endedStatistics,
       },
       req,
       {
-        body: '<section class="xp-part part-ended-statistics"></section>'
+        body: '<section class="xp-part part-ended-statistics"></section>',
       }
     )
   } else {
     return {
       body: '',
-      pageContributions: {}
+      pageContributions: {},
     }
   }
 }
 
-function parseContent(endedStatistics: EndedStatisticsPartConfig['relatedStatisticsOptions']): Array<EndedStatistic | undefined> {
+function parseContent(
+  endedStatistics: EndedStatisticsPartConfig['relatedStatisticsOptions']
+): Array<EndedStatistic | undefined> {
   if (endedStatistics && endedStatistics.length) {
-    return endedStatistics.map((statistics) => {
-      if (statistics._selected === 'xp' && statistics.xp.contentId) {
-        const statisticsContentId: string = statistics.xp.contentId
-        const endedStatisticsContent: Content<Statistics, SEO> | null = statisticsContentId ? get({
-          key: statisticsContentId
-        }) : null
+    return endedStatistics
+      .map((statistics) => {
+        if (statistics._selected === 'xp' && statistics.xp.contentId) {
+          const statisticsContentId: string = statistics.xp.contentId
+          const endedStatisticsContent: Content<Statistics, SEO> | null = statisticsContentId
+            ? get({
+                key: statisticsContentId,
+              })
+            : null
 
-        const preamble: string = endedStatisticsContent?.x['com-enonic-app-metafields']['meta-data'].seoDescription as string
+          const preamble: string = endedStatisticsContent?.x['com-enonic-app-metafields']['meta-data']
+            .seoDescription as string
 
-
-        return {
-          title: endedStatisticsContent ? endedStatisticsContent.displayName : '',
-          preamble: preamble ? preamble : '',
-          href: pageUrl({
-            id: statisticsContentId
-          })
-        }
-      } else if (statistics._selected === 'cms') {
-        return {
-          title: statistics.cms.title,
-          preamble: statistics.cms.profiledText,
-          href: statistics.cms.url
-        }
-      } else return undefined
-    }).filter((statistics) => !!statistics)
+          return {
+            title: endedStatisticsContent ? endedStatisticsContent.displayName : '',
+            preamble: preamble ? preamble : '',
+            href: pageUrl({
+              id: statisticsContentId,
+            }),
+          }
+        } else if (statistics._selected === 'cms') {
+          return {
+            title: statistics.cms.title,
+            preamble: statistics.cms.profiledText,
+            href: statistics.cms.url,
+          }
+        } else return undefined
+      })
+      .filter((statistics) => !!statistics)
   } else return []
 }
 
-
 interface EndedStatistic {
-  title: string;
-  preamble: string;
-  href: string;
+  title: string
+  preamble: string
+  href: string
 }

@@ -1,10 +1,16 @@
-exports.responseProcessor = function(req, res) {
-  if (res.status === 200 && res.pageContributions && res.pageContributions.bodyEnd && res.pageContributions.bodyEnd.length) {
+exports.responseProcessor = function (req, res) {
+  if (
+    res.status === 200 &&
+    res.pageContributions &&
+    res.pageContributions.bodyEnd &&
+    res.pageContributions.bodyEnd.length
+  ) {
     if (req.mode === 'edit') {
-      res.pageContributions.bodyEnd = res.pageContributions.bodyEnd
-        .filter((src) => src.indexOf('React4xp.CLIENT.hydrate') === -1 && src.indexOf('service/mimir/react4xp') === -1)
+      res.pageContributions.bodyEnd = res.pageContributions.bodyEnd.filter(
+        (src) => src.indexOf('React4xp.CLIENT.hydrate') === -1 && src.indexOf('service/mimir/react4xp') === -1
+      )
     } else {
-      const exp = new RegExp('src\s*=\s*"(.+?)"')
+      const exp = new RegExp('srcs*=s*"(.+?)"')
       res.pageContributions.bodyEnd = res.pageContributions.bodyEnd.map((script) => {
         const match = exp.exec(script)
         if (match && match.length === 2 && match[1].indexOf('/_/service/mimir/react4xp') >= 1) {

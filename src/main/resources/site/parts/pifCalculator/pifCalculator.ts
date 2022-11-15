@@ -4,33 +4,20 @@ import { CalculatorPeriod } from '../../../lib/types/calculator'
 import { DropdownItems as MonthDropdownItems } from '../../../lib/types/components'
 import { Dataset, Dimension } from '../../../lib/types/jsonstat-toolkit'
 import { Language, Phrases } from '../../../lib/types/language'
-import {render, RenderResponse} from '/lib/enonic/react4xp'
+import { render, RenderResponse } from '/lib/enonic/react4xp'
 import { CalculatorConfig } from '../../content-types/calculatorConfig/calculatorConfig'
 import { PifCalculatorPartConfig } from './pifCalculator-part-config'
 
-const {
-  getComponent,
-  getContent,
-  serviceUrl,
-  pageUrl
-} = __non_webpack_require__('/lib/xp/portal')
+const { getComponent, getContent, serviceUrl, pageUrl } = __non_webpack_require__('/lib/xp/portal')
 
-const {
-  renderError
-} = __non_webpack_require__('/lib/ssb/error/error')
+const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
-const {
-  getLanguage
-} = __non_webpack_require__( '/lib/ssb/utils/language')
-const {
-  getCalculatorConfig, getPifDataset
-} = __non_webpack_require__('/lib/ssb/dataset/calculator')
-const {
-  fromPartCache
-} = __non_webpack_require__('/lib/ssb/cache/partCache')
+const { getLanguage } = __non_webpack_require__('/lib/ssb/utils/language')
+const { getCalculatorConfig, getPifDataset } = __non_webpack_require__('/lib/ssb/dataset/calculator')
+const { fromPartCache } = __non_webpack_require__('/lib/ssb/cache/partCache')
 const i18nLib = __non_webpack_require__('/lib/xp/i18n')
 
-exports.get = function(req: XP.Request): XP.Response | RenderResponse {
+exports.get = function (req: XP.Request): XP.Response | RenderResponse {
   try {
     return renderPart(req)
   } catch (e) {
@@ -38,7 +25,7 @@ exports.get = function(req: XP.Request): XP.Response | RenderResponse {
   }
 }
 
-exports.preview = function(req: XP.Request): XP.Response | RenderResponse {
+exports.preview = function (req: XP.Request): XP.Response | RenderResponse {
   try {
     return renderPart(req)
   } catch (e) {
@@ -77,25 +64,25 @@ function getPifCalculatorComponent(req: XP.Request, page: Content): RenderRespon
       monthLabel(months, language.code, lastUpdated.month),
       lastUpdated.year as string,
       monthLabel(months, language.code, nextUpdate.month),
-      monthLabel(months, language.code, nextReleaseMonth)
-    ]
+      monthLabel(months, language.code, nextReleaseMonth),
+    ],
   })
   const lastNumberText: string = i18nLib.localize({
     key: 'calculatorLastNumber',
     locale: language.code,
-    values: [
-      monthLabel(months, language.code, lastUpdated.month),
-      lastUpdated.year as string
-    ]
+    values: [monthLabel(months, language.code, lastUpdated.month), lastUpdated.year as string],
   })
-  const calculatorArticleUrl: string | undefined = partConfig.pifCalculatorArticle ? pageUrl({
-    id: partConfig.pifCalculatorArticle
-  }) : undefined
+  const calculatorArticleUrl: string | undefined = partConfig.pifCalculatorArticle
+    ? pageUrl({
+        id: partConfig.pifCalculatorArticle,
+      })
+    : undefined
 
-  return render('PifCalculator',
+  return render(
+    'PifCalculator',
     {
       pifServiceUrl: serviceUrl({
-        service: 'pif'
+        service: 'pif',
       }),
       language: language.code,
       months,
@@ -104,13 +91,14 @@ function getPifCalculatorComponent(req: XP.Request, page: Content): RenderRespon
       lastNumberText,
       lastUpdated,
       productGroups: productGroups(phrases),
-      calculatorArticleUrl
+      calculatorArticleUrl,
     },
-      req,
-      {
-        id: 'pifCalculatorId',
-        body: '<section class="xp-part part-pif-calculator container"></section>'
-      })
+    req,
+    {
+      id: 'pifCalculatorId',
+      body: '<section class="xp-part part-pif-calculator container"></section>',
+    }
+  )
 }
 
 function lastPeriod(pifData: Dataset | null): CalculatorPeriod | undefined {
@@ -127,7 +115,7 @@ function lastPeriod(pifData: Dataset | null): CalculatorPeriod | undefined {
 
     return {
       month: lastMonth,
-      year: lastYear
+      year: lastYear,
     }
   }
   return
@@ -137,43 +125,43 @@ function productGroups(phrases: Phrases): MonthDropdownItems {
   return [
     {
       id: 'SITCT',
-      title: phrases.pifProductTypeAll
+      title: phrases.pifProductTypeAll,
     },
     {
       id: 'SITC0',
-      title: phrases.pifProductFood
+      title: phrases.pifProductFood,
     },
     {
       id: 'SITC1',
-      title: phrases.pifProductBeverage
+      title: phrases.pifProductBeverage,
     },
     {
       id: 'SITC2',
-      title: phrases.pifProductRaw
+      title: phrases.pifProductRaw,
     },
     {
       id: 'SITC3',
-      title: phrases.pifProductFuel
+      title: phrases.pifProductFuel,
     },
     {
       id: 'SITC4',
-      title: phrases.pifProductOil
+      title: phrases.pifProductOil,
     },
     {
       id: 'SITC5',
-      title: phrases.pifProductChemical
+      title: phrases.pifProductChemical,
     },
     {
       id: 'SITC6',
-      title: phrases.pifProductManufactured
+      title: phrases.pifProductManufactured,
     },
     {
       id: 'SITC7',
-      title: phrases.pifProductMachine
+      title: phrases.pifProductMachine,
     },
     {
       id: 'SITC8',
-      title: phrases.pifProductOther
-    }
+      title: phrases.pifProductOther,
+    },
   ]
 }

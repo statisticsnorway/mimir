@@ -25,7 +25,7 @@ const Search = (props) => {
 Search.propTypes = {
   searchText: PropTypes.string,
   className: PropTypes.string,
-  searchResultPageUrl: PropTypes.string
+  searchResultPageUrl: PropTypes.string,
 }
 
 export default Search

@@ -9,12 +9,7 @@ import { Statistic } from '../../../site/mixins/statistic/statistic'
 import { listener, EnonicEvent } from '/lib/xp/event'
 import { TaskInfo } from '/lib/xp/task'
 
-const {
-  JobNames,
-  JobStatus,
-  queryJobLogs
-} = __non_webpack_require__('/lib/ssb/repo/job')
-
+const { JobNames, JobStatus, queryJobLogs } = __non_webpack_require__('/lib/ssb/repo/job')
 
 const publishTasks: Array<EnonicEvent<TaskInfo>> = []
 
@@ -32,7 +27,7 @@ export function setupTaskListener(): void {
         publishTasks.splice(taskIndex, 1)
       }
       // log.info(JSON.stringify(publishTasks.map((t) => `${t.data.id} :: ${t.data.progress.info}`), null, 2))
-    }
+    },
   })
 }
 
@@ -47,7 +42,7 @@ export function currentlyWaitingForPublish(statistic: Content<Statistics & Stati
       data.task = "${JobNames.PUBLISH_JOB}" AND 
       data.status = "${JobStatus.STARTED}" AND 
       range("_ts", instant("${from}"), instant("${to}"))`,
-    sort: '_ts DESC'
+    sort: '_ts DESC',
   }).hits[0]
   if (jobRes) {
     const myTask: EnonicEvent<TaskInfo> | undefined = publishTasks.find((t) => {
@@ -61,11 +56,11 @@ export function currentlyWaitingForPublish(statistic: Content<Statistics & Stati
 }
 
 export interface PublishDatasetLib {
-  setupTaskListener: () => void;
-  currentlyWaitingForPublish: (statistic: Content<Statistic>) => boolean;
+  setupTaskListener: () => void
+  currentlyWaitingForPublish: (statistic: Content<Statistic>) => boolean
 }
 
 export interface PublicationItem {
-  dataset: DatasetRepoNode<object> | null;
-  dataSource: Content<DataSource>;
+  dataset: DatasetRepoNode<object> | null
+  dataSource: Content<DataSource>
 }

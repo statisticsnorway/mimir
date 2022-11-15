@@ -3,7 +3,8 @@ import 'core-js/stable'
 if (typeof Object.assign !== 'function') {
   // Must be writable: true, enumerable: false, configurable: true
   Object.defineProperty(Object, 'assign', {
-    value: function assign(target, varArgs) { // .length of function is 2
+    value: function assign(target, varArgs) {
+      // .length of function is 2
       'use strict'
       if (target === null || target === undefined) {
         throw new TypeError('Cannot convert undefined or null to object')
@@ -27,17 +28,17 @@ if (typeof Object.assign !== 'function') {
       return to
     },
     writable: true,
-    configurable: true
+    configurable: true,
   })
 }
 
 if (!Object.keys) {
-  Object.keys = (function() {
+  Object.keys = (function () {
     'use strict'
     const hasOwnProperty = Object.prototype.hasOwnProperty
-    const hasDontEnumBug = !({
-      toString: null
-    }).propertyIsEnumerable('toString')
+    const hasDontEnumBug = !{
+      toString: null,
+    }.propertyIsEnumerable('toString')
     const dontEnums = [
       'toString',
       'toLocaleString',
@@ -45,16 +46,18 @@ if (!Object.keys) {
       'hasOwnProperty',
       'isPrototypeOf',
       'propertyIsEnumerable',
-      'constructor'
+      'constructor',
     ]
     const dontEnumsLength = dontEnums.length
 
-    return function(obj) {
+    return function (obj) {
       if (typeof obj !== 'function' && (typeof obj !== 'object' || obj === null)) {
         throw new TypeError('Object.keys called on non-object')
       }
 
-      const result = []; let prop; let i
+      const result = []
+      let prop
+      let i
 
       for (prop in obj) {
         if (hasOwnProperty.call(obj, prop)) {
@@ -71,12 +74,12 @@ if (!Object.keys) {
       }
       return result
     }
-  }())
+  })()
 }
 
 if (!Object.entries) {
-  Object.entries = function( obj ) {
-    const ownProps = Object.keys( obj )
+  Object.entries = function (obj) {
+    const ownProps = Object.keys(obj)
     let i = ownProps.length
     const resArray = new Array(i) // preallocate the Array
     while (i--) {
@@ -92,7 +95,7 @@ if (!Object.entries) {
 if (!Array.prototype.find) {
   // eslint-disable-next-line no-extend-native
   Object.defineProperty(Array.prototype, 'find', {
-    value: function(predicate) {
+    value: function (predicate) {
       // 1. Let O be ? ToObject(this value).
       if (this == null) {
         throw new TypeError('"this" is null or not defined')
@@ -133,6 +136,6 @@ if (!Array.prototype.find) {
       return undefined
     },
     configurable: true,
-    writable: true
+    writable: true,
   })
 }

@@ -2,17 +2,15 @@ __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 import { Content } from '/lib/xp/content'
 import { newCache, Cache } from '/lib/cache'
 
-const {
-  cacheLog
-} = __non_webpack_require__('/lib/ssb/utils/serverLog')
+const { cacheLog } = __non_webpack_require__('/lib/ssb/utils/serverLog')
 
 const masterPartCache: Cache = newCache({
   expire: 3600,
-  size: 1000
+  size: 1000,
 })
 const draftPartCache: Cache = newCache({
   expire: 3600,
-  size: 1000
+  size: 1000,
 })
 
 export function fromPartCache<T>(req: XP.Request, key: string, fallback: () => T): T {
@@ -25,7 +23,11 @@ export function fromPartCache<T>(req: XP.Request, key: string, fallback: () => T
 
 export function clearPartCache(content: Content, branch: string): void {
   const partCache: Cache = branch === 'master' ? masterPartCache : draftPartCache
-  if (content.type === `${app.name}:page` || content.type === `portal:site` || content.type === `${app.name}:statistics`) {
+  if (
+    content.type === `${app.name}:page` ||
+    content.type === `portal:site` ||
+    content.type === `${app.name}:statistics`
+  ) {
     cacheLog(`try to clear ${content._id}-kpiCalculator from part cache (${branch})`)
     partCache.remove(`${content._id}-kpiCalculator`)
     cacheLog(`try to clear ${content._id}-pifCalculator from part cache (${branch})`)
@@ -65,8 +67,8 @@ export function clearPartFromPartCache(part: string): void {
 }
 
 export interface SSBPartCacheLibrary {
-  fromPartCache: <T>(req: XP.Request, key: string, fallback: () => T) => T;
-  clearPartCache: (content: Content, branch: string) => void;
-  completelyClearPartCache: (branch: string) => void;
-  clearPartFromPartCache: (part: string) => void;
+  fromPartCache: <T>(req: XP.Request, key: string, fallback: () => T) => T
+  clearPartCache: (content: Content, branch: string) => void
+  completelyClearPartCache: (branch: string) => void
+  clearPartFromPartCache: (part: string) => void
 }
