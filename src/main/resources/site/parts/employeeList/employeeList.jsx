@@ -38,19 +38,31 @@ function EmployeeList(props) {
         ) : null}
         <div className='contact-details'>
           <Text small>
-            {employee.phone != '' ? (
+            {employee.area.title != undefined ? (
               <>
-                <Link href={'tel:' + employee.phone}>{sanitizeMobileNo(employee.phone)}</Link>
-                <span className='dash-space'> / </span>{' '}
+                <Link href={employee.area.href}>{employee.area.title}</Link>
               </>
             ) : null}
+
+            {employee.area.title == undefined
+              ? null
+              : (employee.area.title =
+                  !undefined && employee.email == '' && employee.phone == '' ? null : (
+                    <span className='dash-space'> / </span>
+                  ))}
+
             {employee.email != '' ? (
               <>
                 <Link href={'mailto:' + employee.email}>{employee.email}</Link>
               </>
             ) : null}
-            {employee.area.title == undefined || employee.email == '' ? null : <span className='dash-space'> / </span>}
-            {employee.area.title != '' ? <Link href={employee.area.href}>{employee.area.title}</Link> : null}
+
+            {employee.phone == '' || employee.email == '' ? null : <span className='dash-space'> / </span>}
+            {employee.phone != '' ? (
+              <>
+                <Link href={'tel:' + employee.phone}>{sanitizeMobileNo(employee.phone)}</Link>
+              </>
+            ) : null}
           </Text>
         </div>
       </div>
