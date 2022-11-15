@@ -1,15 +1,10 @@
-import { get, Content } from '/lib/xp/content'
-import {render as r4XpRender, RenderResponse} from '/lib/enonic/react4xp'
-import { ResourceKey, render } from '/lib/thymeleaf'
-import { Component } from '/lib/xp/portal'
-import { MenuBoxPartConfig } from '../menuBox/menuBox-part-config'
-import { MenuBox } from '../../content-types/menuBox/menuBox'
-
-const {
-  getComponent,
-  imageUrl,
-  pageUrl
-} = __non_webpack_require__('/lib/xp/portal')
+import {get as getContentByKey, type Content} from '/lib/xp/content'
+import {render as r4XpRender, type RenderResponse} from '/lib/enonic/react4xp'
+import {type ResourceKey, render} from '/lib/thymeleaf'
+import type {Component} from '/lib/xp/portal'
+import type {MenuBoxPartConfig} from '../menuBox/menuBox-part-config'
+import type {MenuBox} from '../../content-types/menuBox/menuBox'
+import {pageUrl, getComponent, imageUrl} from '/lib/xp/portal'
 
 const {
   renderError
@@ -26,7 +21,7 @@ const {
 const view: ResourceKey = resolve('./menuBox.html')
 
 
-exports.get = function(req:XP.Request):XP.Response | RenderResponse | string {
+export function get(req: XP.Request): XP.Response | RenderResponse | string {
   try {
     return renderPart(req)
   } catch (e) {
@@ -34,12 +29,12 @@ exports.get = function(req:XP.Request):XP.Response | RenderResponse | string {
   }
 }
 
-exports.preview = function(req:XP.Request):XP.Response | RenderResponse | string {
+export function preview(req: XP.Request): XP.Response | RenderResponse | string {
   return renderPart(req)
 }
 
-function renderPart(req:XP.Request):XP.Response | RenderResponse | string {
-  const part:Component<MenuBoxPartConfig> = getComponent()
+function renderPart(req: XP.Request): XP.Response | RenderResponse | string {
+  const part: Component<MenuBoxPartConfig> = getComponent()
   const menuBoxId: string = part.config.menu
   const height: string = part.config.height ? part.config.height as string : 'default'
   if (!menuBoxId) {
@@ -54,7 +49,7 @@ function renderPart(req:XP.Request):XP.Response | RenderResponse | string {
       throw new Error('MenuBox - Missing Id')
     }
   }
-  const menuBoxContent: Content<MenuBox> | null = get({
+  const menuBoxContent: Content<MenuBox> | null = getContentByKey({
     key: menuBoxId
   })
   if (!menuBoxContent) throw new Error(`MenuBox with id ${menuBoxId} doesn't exist`)
@@ -69,9 +64,9 @@ function renderPart(req:XP.Request):XP.Response | RenderResponse | string {
   return r4XpRender('MenuBox', props, req)
 }
 
-function buildMenu(menuBoxContent: Content<MenuBox> ): Array<MenuItem> {
+function buildMenu(menuBoxContent: Content<MenuBox>): Array<MenuItem> {
   const menuItems: Array<MenuConfig | undefined> = forceArray(menuBoxContent.data.menu)
-  return menuItems ? menuItems.map((box: MenuConfig| undefined): MenuItem => {
+  return menuItems ? menuItems.map((box: MenuConfig | undefined): MenuItem => {
     const boxTitle: string = box?.title ? box.title : ''
     const titleSize: string = getTitleSize(boxTitle)
     return {

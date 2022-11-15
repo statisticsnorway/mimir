@@ -1,8 +1,8 @@
-import { Content, get as getTheContent } from '/lib/xp/content'
-import { render, RenderResponse } from '/lib/enonic/react4xp'
-import { localize } from '/lib/xp/i18n'
-import { Project } from '../../content-types/project/project'
-import { getContent, pageUrl, processHtml } from '/lib/xp/portal'
+import {type  Content, get as getContentByKey} from '/lib/xp/content'
+import {render, type RenderResponse} from '/lib/enonic/react4xp'
+import {localize} from '/lib/xp/i18n'
+import type {Project} from '../../content-types/project/project'
+import {getContent, pageUrl, processHtml} from '/lib/xp/portal'
 
 export function preview(req: XP.Request): RenderResponse {
   return renderPart(req)
@@ -93,7 +93,7 @@ function renderPart(req: XP.Request): RenderResponse {
 
 function getManager(managerId?: string | undefined): ManagerLink | undefined {
   if (managerId) {
-    const managerContent: Content | null = getTheContent({
+    const managerContent: Content | null = getContentByKey({
       key: managerId
     })
     if (managerContent) {
@@ -108,7 +108,7 @@ function getManager(managerId?: string | undefined): ManagerLink | undefined {
   return undefined
 }
 
-function capitalizeFirstLetter(str?: string) : string | undefined {
+function capitalizeFirstLetter(str?: string): string | undefined {
   if (str) {
     const result1: string = str.charAt(0).toUpperCase() + str.slice(1)
     const result2: string = str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()
@@ -118,25 +118,25 @@ function capitalizeFirstLetter(str?: string) : string | undefined {
 }
 
 interface ManagerLink {
-    text: string;
-    href: string;
+  text: string;
+  href: string;
 }
 
 interface ProjectProps {
-    introTitle?: string;
-    projectTitle?: string;
-    manager?: ManagerLink;
-    projectType?: string;
-    projectPeriod?: string;
-    financier?: string;
-    heading?: string;
-    ingress?: string;
-    body?: string;
-    participants?: string;
-    collaborators?: string;
-    periodPhrase?: string;
-    financierPhrase?: string;
-    participantsPhrase?: string;
-    projectParticipantsPhrase?: string;
-    collaboratorsPhrase?: string;
+  introTitle?: string;
+  projectTitle?: string;
+  manager?: ManagerLink;
+  projectType?: string;
+  projectPeriod?: string;
+  financier?: string;
+  heading?: string;
+  ingress?: string;
+  body?: string;
+  participants?: string;
+  collaborators?: string;
+  periodPhrase?: string;
+  financierPhrase?: string;
+  participantsPhrase?: string;
+  projectParticipantsPhrase?: string;
+  collaboratorsPhrase?: string;
 }

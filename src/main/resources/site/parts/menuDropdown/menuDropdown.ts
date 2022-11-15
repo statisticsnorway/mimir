@@ -1,36 +1,27 @@
-import { Content } from '/lib/xp/content'
-import { render as r4XpRender, RenderResponse } from '/lib/enonic/react4xp'
-import { ResourceKey, render } from '/lib/thymeleaf'
-import { Component } from '/lib/xp/portal'
-import { MunicipalityWithCounty } from '../../../lib/ssb/dataset/klass/municipalities'
-import { MenuDropdownPartConfig } from '../menuDropdown/menuDropdown-part-config'
-import { SiteConfig } from '../../site-config'
-import { MenuDropdown } from '../../content-types/menuDropdown/menuDropdown'
-import { randomUnsafeString } from '/lib/ssb/utils/utils'
+import type {Content} from '/lib/xp/content'
+import {render as r4XpRender, type RenderResponse} from '/lib/enonic/react4xp'
+import {type ResourceKey, render} from '/lib/thymeleaf'
+import type {Component} from '/lib/xp/portal'
+import type {MunicipalityWithCounty} from '../../../lib/ssb/dataset/klass/municipalities'
+import type {MenuDropdownPartConfig} from '../menuDropdown/menuDropdown-part-config'
+import type {SiteConfig} from '../../site-config'
+import type {MenuDropdown} from '../../content-types/menuDropdown/menuDropdown'
+import {randomUnsafeString} from '/lib/ssb/utils/utils'
+import {assetUrl, getContent, getComponent, pageUrl, getSiteConfig, serviceUrl} from '/lib/xp/portal'
+import {localize} from '/lib/xp/i18n'
 
-const {
-  assetUrl,
-  getContent,
-  getComponent,
-  pageUrl,
-  getSiteConfig,
-  serviceUrl
-} = __non_webpack_require__('/lib/xp/portal')
 const {
   municipalsWithCounties,
   getMunicipality,
   removeCountyFromMunicipalityName
 } = __non_webpack_require__('/lib/ssb/dataset/klass/municipalities')
-
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
 
-const i18nLib = __non_webpack_require__('/lib/xp/i18n')
-
 const view: ResourceKey = resolve('./menuDropdown.html')
 
-exports.get = (req: XP.Request):XP.Response | RenderResponse => {
+export function get(req: XP.Request): XP.Response | RenderResponse {
   try {
     return renderPart(req)
   } catch (e) {
@@ -38,11 +29,13 @@ exports.get = (req: XP.Request):XP.Response | RenderResponse => {
   }
 }
 
-exports.preview = (req:XP.Request) => renderPart(req)
+export function preview(req: XP.Request) {
+  return renderPart(req)
+}
 
-function renderPart(req:XP.Request): XP.Response | RenderResponse {
-  const parsedMunicipalities:Array<MunicipalityWithCounty> = municipalsWithCounties()
-  const municipality:MunicipalityWithCounty | undefined = getMunicipality(req)
+function renderPart(req: XP.Request): XP.Response | RenderResponse {
+  const parsedMunicipalities: Array<MunicipalityWithCounty> = municipalsWithCounties()
+  const municipality: MunicipalityWithCounty | undefined = getMunicipality(req)
   const component: Component<MenuDropdownPartConfig> = getComponent()
   const siteConfig: SiteConfig = getSiteConfig()
   let mapFolder: string = '/mapdata'
@@ -51,7 +44,7 @@ function renderPart(req:XP.Request): XP.Response | RenderResponse {
     mapFolder = siteConfig.kommunefakta.mapfolder
   }
 
-  const dataPathAssetUrl: string = assetUrl( {
+  const dataPathAssetUrl: string = assetUrl({
     path: mapFolder
   })
 
@@ -68,11 +61,11 @@ function renderPart(req:XP.Request): XP.Response | RenderResponse {
       id: page._id
     })
 
-  const searchBarText: string = i18nLib.localize({
+  const searchBarText: string = localize({
     key: 'menuDropdown.searchBarText'
   })
 
-  const municipalityItems: Array<Municipality> = parsedMunicipalities.map( (municipality) => ({
+  const municipalityItems: Array<Municipality> = parsedMunicipalities.map((municipality) => ({
     id: municipality.path,
     title: municipality.displayName
   }))

@@ -1,9 +1,9 @@
-import { type ResourceKey, render } from '/lib/thymeleaf'
-import type { Content } from '/lib/xp/content'
-import { getContent, getComponent, imageUrl, type Component } from '/lib/xp/portal'
-import type { BannerPartConfig } from './banner-part-config'
-import type { MunicipalityWithCounty } from '../../../lib/ssb/dataset/klass/municipalities'
-import type { Page } from '../../content-types/page/page'
+import {type ResourceKey, render} from '/lib/thymeleaf'
+import type {Content} from '/lib/xp/content'
+import {getContent, getComponent, imageUrl, type Component} from '/lib/xp/portal'
+import type {BannerPartConfig} from './banner-part-config'
+import type {MunicipalityWithCounty} from '../../../lib/ssb/dataset/klass/municipalities'
+import type {Page} from '../../content-types/page/page'
 
 const {
   getMunicipality, removeCountyFromMunicipalityName
@@ -79,8 +79,8 @@ function imageSrcSet(imageId: string): ImageConf {
   const sizes = `(min-width: 2561px) 3840px,
                  (min-width: 2001px) and (max-width: 2560px) 2560px,
                  (min-width: 1501px) and (max-width: 2000px) 2000px,
-                 ((min-width: 1261px) and (max-width: 1500px)) 1500px, 
-                 ((min-width: 801px) and (max-width: 1261px)) 1260px, 
+                 ((min-width: 1261px) and (max-width: 1500px)) 1500px,
+                 ((min-width: 801px) and (max-width: 1261px)) 1260px,
                  ((min-width: 651px) and (max-width: 800px)) 800px, 650px`
 
   return {

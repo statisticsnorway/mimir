@@ -1,16 +1,11 @@
-import { Content } from '/lib/xp/content'
-import { formatDate } from '../../../lib/ssb/utils/dateUtils'
-import { render as r4xpRender, RenderResponse } from '/lib/enonic/react4xp'
-import { ProfiledBoxPartConfig } from './profiledBox-part-config'
-import { render, ResourceKey } from '/lib/thymeleaf'
-import { randomUnsafeString } from '/lib/ssb/utils/utils'
+import type {Content} from '/lib/xp/content'
+import {formatDate} from '../../../lib/ssb/utils/dateUtils'
+import {render as r4xpRender, RenderResponse} from '/lib/enonic/react4xp'
+import type {ProfiledBoxPartConfig} from './profiledBox-part-config'
+import {render, type ResourceKey} from '/lib/thymeleaf'
+import {randomUnsafeString} from '/lib/ssb/utils/utils'
+import {getContent, getComponent, imageUrl, pageUrl} from '/lib/xp/portal'
 
-const {
-  getContent,
-  getComponent,
-  pageUrl,
-  imageUrl
-} = __non_webpack_require__('/lib/xp/portal')
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
@@ -20,7 +15,7 @@ const {
 
 const view: ResourceKey = resolve('profiledBox.html')
 
-exports.get = function(req: XP.Request): XP.Response {
+export function get(req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -28,7 +23,9 @@ exports.get = function(req: XP.Request): XP.Response {
   }
 }
 
-exports.preview = (req: XP.Request): XP.Response => renderPart(req)
+export function preview(req: XP.Request): XP.Response {
+  return renderPart(req)
+}
 
 function renderPart(req: XP.Request): XP.Response {
   const page: Content = getContent()

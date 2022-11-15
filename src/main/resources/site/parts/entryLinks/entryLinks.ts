@@ -1,9 +1,9 @@
-import { render as r4XpRender, RenderResponse } from '/lib/enonic/react4xp'
-import { Component, getComponent, getContent, imageUrl } from '/lib/xp/portal'
-import { EntryLinksPartConfig } from './entryLinks-part-config'
-import { Content, get, MediaImage } from '/lib/xp/content'
-import { Phrases } from '../../../lib/types/language'
-import { render, ResourceKey } from '/lib/thymeleaf'
+import {render as r4XpRender, type RenderResponse} from '/lib/enonic/react4xp'
+import {type Component, getComponent, getContent, imageUrl} from '/lib/xp/portal'
+import type {EntryLinksPartConfig} from './entryLinks-part-config'
+import {type Content, get as getContentByKey, type MediaImage} from '/lib/xp/content'
+import type {Phrases} from '../../../lib/types/language'
+import {render, type ResourceKey} from '/lib/thymeleaf'
 
 const {
   data: {
@@ -24,7 +24,7 @@ const {
 
 const view: ResourceKey = resolve('./entryLinks.html') as ResourceKey
 
-exports.get = (req: XP.Request) => {
+export function get(req: XP.Request) {
   try {
     return renderPart(req)
   } catch (e) {
@@ -32,7 +32,9 @@ exports.get = (req: XP.Request) => {
   }
 }
 
-exports.preview = (req: XP.Request) => renderPart(req)
+export function preview(req: XP.Request) {
+  return renderPart(req)
+}
 
 function renderPart(req: XP.Request): XP.Response | RenderResponse {
   const page: Content = getContent()
@@ -55,7 +57,7 @@ function renderPart(req: XP.Request): XP.Response | RenderResponse {
 }
 
 function renderEntryLinks(req: XP.Request, headerTitle: string, entryLinksContent: EntryLinksPartConfig['entryLinks']): RenderResponse {
-  if ( entryLinksContent && entryLinksContent.length > 0) {
+  if (entryLinksContent && entryLinksContent.length > 0) {
     return r4XpRender(
       'EntryLinks',
       {
@@ -78,11 +80,11 @@ function renderEntryLinks(req: XP.Request, headerTitle: string, entryLinksConten
   }
 }
 
-function parseEntryLinks(entryLinksContent: EntryLinksPartConfig['entryLinks']): Array<LinkEntry>|undefined {
+function parseEntryLinks(entryLinksContent: EntryLinksPartConfig['entryLinks']): Array<LinkEntry> | undefined {
   return entryLinksContent && entryLinksContent.map(({
-    title, href, icon, mobileIcon
-  }) => {
-    const iconData: Content<MediaImage> | null = get({
+                                                       title, href, icon, mobileIcon
+                                                     }) => {
+    const iconData: Content<MediaImage> | null = getContentByKey({
       key: icon
     })
 
@@ -109,9 +111,9 @@ function parseEntryLinks(entryLinksContent: EntryLinksPartConfig['entryLinks']):
 }
 
 interface LinkEntry {
-    title: string;
-    href: string;
-    icon: string;
-    mobileIcon?: string;
-    altText: string;
+  title: string;
+  href: string;
+  icon: string;
+  mobileIcon?: string;
+  altText: string;
 }

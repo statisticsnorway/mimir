@@ -1,10 +1,11 @@
-import { get, Content, MediaImage } from '/lib/xp/content'
-import { ResourceKey, render } from '/lib/thymeleaf'
-import { render as r4xpRender, RenderResponse } from '/lib/enonic/react4xp'
-import { SEO } from '../../../services/news/news'
-import { Statistics } from '../../content-types/statistics/statistics'
-import { StandardCardsListPartConfig } from './standardCardsList-part-config'
-import { randomUnsafeString } from '/lib/ssb/utils/utils'
+import {get as getContentByKey, type Content, type MediaImage} from '/lib/xp/content'
+import {type ResourceKey, render} from '/lib/thymeleaf'
+import {render as r4xpRender} from '/lib/enonic/react4xp'
+import type {SEO} from '../../../services/news/news'
+import type {Statistics} from '../../content-types/statistics/statistics'
+import type {StandardCardsListPartConfig} from './standardCardsList-part-config'
+import {randomUnsafeString} from '/lib/ssb/utils/utils'
+import {getComponent, imageUrl, pageUrl} from '/lib/xp/portal'
 
 const {
   data: {
@@ -12,26 +13,17 @@ const {
   }
 } = __non_webpack_require__('/lib/util')
 const {
-  getComponent,
-  imageUrl,
-  pageUrl
-} = __non_webpack_require__('/lib/xp/portal')
-const {
   getImageCaption,
   getImageAlt
 } = __non_webpack_require__('/lib/ssb/utils/imageUtils')
-
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
-const {
-  hasPath
-} = __non_webpack_require__('/lib/vendor/ramda')
 
 
 const view: ResourceKey = resolve('standardCardsList.html')
 
-exports.get = (req: XP.Request): XP.Response => {
+export function get(req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -39,7 +31,9 @@ exports.get = (req: XP.Request): XP.Response => {
   }
 }
 
-exports.preview = (req: XP.Request): XP.Response => renderPart(req)
+export function preview(req: XP.Request): XP.Response {
+  return renderPart(req)
+}
 
 function renderPart(req: XP.Request): XP.Response {
   const config: StandardCardsListPartConfig = getComponent().config
@@ -91,7 +85,7 @@ function parseContent(standardCardsListContent: StandardCardsListPartConfig['sta
   if (standardCardsListContent && standardCardsListContent.length) {
     return standardCardsListContent.map((standardCard) => {
       const iconId: string | undefined = standardCard.icon
-      const iconData: Content<MediaImage> | null = iconId ? get({
+      const iconData: Content<MediaImage> | null = iconId ? getContentByKey({
         key: iconId
       }) : null
       const iconPath: string | undefined = iconId ? imageUrl({
@@ -101,12 +95,12 @@ function parseContent(standardCardsListContent: StandardCardsListPartConfig['sta
 
       if (standardCard.contentXP) {
         const standardCardContentId: string = standardCard.contentXP
-        const pageContent: Content<Statistics, SEO> | null = standardCardContentId ? get({
+        const pageContent: Content<Statistics, SEO> | null = standardCardContentId ? getContentByKey({
           key: standardCardContentId
         }) : null
 
         let preamble: string = ''
-        if ( pageContent) {
+        if (pageContent) {
           preamble = pageContent.x['com-enonic-app-metafields']['meta-data'].seoDescription
         }
 

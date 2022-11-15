@@ -1,9 +1,10 @@
-import { render, RenderResponse } from '/lib/enonic/react4xp'
-import { EndedStatisticsPartConfig } from './endedStatistics-part-config'
-import { get, Content } from '/lib/xp/content'
-import { Phrases } from '../../../lib/types/language'
-import { Statistics } from '../../content-types/statistics/statistics'
-import { SEO } from 'services/news/news'
+import {render, type RenderResponse} from '/lib/enonic/react4xp'
+import type {EndedStatisticsPartConfig} from './endedStatistics-part-config'
+import {get as getContentByKey, type Content} from '/lib/xp/content'
+import type {Phrases} from '../../../lib/types/language'
+import type {Statistics} from '../../content-types/statistics/statistics'
+import type {SEO} from 'services/news/news'
+import {getComponent, getContent, pageUrl} from '/lib/xp/portal'
 
 const {
   data: {
@@ -11,22 +12,15 @@ const {
   }
 } = __non_webpack_require__('/lib/util')
 const {
-  getContent,
-  getComponent,
-  pageUrl
-} = __non_webpack_require__('/lib/xp/portal')
-const {
   getPhrases
 } = __non_webpack_require__('/lib/ssb/utils/language')
 
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
-const {
-  hasPath
-} = __non_webpack_require__('/lib/vendor/ramda')
 
-exports.get = (req: XP.Request) => {
+
+export function get(req: XP.Request) {
   try {
     return renderPart(req)
   } catch (e) {
@@ -34,7 +28,9 @@ exports.get = (req: XP.Request) => {
   }
 }
 
-exports.preview = (req: XP.Request) => renderPart(req)
+export function preview(req: XP.Request) {
+  return renderPart(req)
+}
 
 function renderPart(req: XP.Request): XP.Response | RenderResponse {
   const page: Content = getContent()
@@ -76,7 +72,7 @@ function parseContent(endedStatistics: EndedStatisticsPartConfig['relatedStatist
     return endedStatistics.map((statistics) => {
       if (statistics._selected === 'xp' && statistics.xp.contentId) {
         const statisticsContentId: string = statistics.xp.contentId
-        const endedStatisticsContent: Content<Statistics, SEO> | null = statisticsContentId ? get({
+        const endedStatisticsContent: Content<Statistics, SEO> | null = statisticsContentId ? getContentByKey({
           key: statisticsContentId
         }) : null
 

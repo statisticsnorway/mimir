@@ -1,13 +1,14 @@
-import { get as getOne, type Content } from '/lib/xp/content'
-import { getContent, processHtml } from '/lib/xp/portal'
-import type { DatasetRepoNode } from '/lib/ssb/repo/dataset'
-import type { JSONstat } from '/lib/types/jsonstat-toolkit'
-import type { Phrases } from '/lib/types/language'
-import { render as r4XpRender, type RenderResponse } from '/lib/enonic/react4xp'
-import type { TbmlDataUniform } from '/lib/types/xmlParser'
-import type { Statistics } from '../../content-types/statistics/statistics'
-import { GA_TRACKING_ID } from '../../pages/default/default'
-import type { AccordionData } from '../accordion/accordion'
+import {get as getOne, type Content} from '/lib/xp/content'
+import {getContent, processHtml} from '/lib/xp/portal'
+import type {DatasetRepoNode} from '/lib/ssb/repo/dataset'
+import type {JSONstat} from '/lib/types/jsonstat-toolkit'
+import type {Phrases} from '/lib/types/language'
+import {render as r4XpRender, type RenderResponse} from '/lib/enonic/react4xp'
+import type {TbmlDataUniform} from '/lib/types/xmlParser'
+import type {Statistics} from '../../content-types/statistics/statistics'
+import {GA_TRACKING_ID} from '../../pages/default/default'
+import type {AccordionData} from '../accordion/accordion'
+
 const {
   data: {
     forceArray
@@ -23,9 +24,6 @@ const {
 const {
   datasetOrUndefined
 } = __non_webpack_require__('/lib/ssb/cache/cache')
-// const {
-//   fromPartCache
-// } = __non_webpack_require__('/lib/ssb/cache/partCache')
 
 const tableController: { getProps: (req: XP.Request, tableId: string) => object } = __non_webpack_require__('../table/table')
 const highchartController: { preview: (req: XP.Request, id: string) => XP.Response } = __non_webpack_require__('../highchart/highchart')
@@ -62,8 +60,8 @@ function getTablesAndFiguresComponent(page: Content<Statistics>, req: XP.Request
   const attachmentTableAndFigureView: Array<AttachmentTablesFiguresData> = getTablesAndFigures(attachmentTablesAndFigures, req, phrases)
   const attachmentTablesFiguresProps: object = {
     accordions: attachmentTableAndFigureView.map(({
-      id, open, subHeader, body, contentType, props
-    }) => {
+                                                    id, open, subHeader, body, contentType, props
+                                                  }) => {
       return {
         id,
         contentType,
@@ -111,7 +109,7 @@ function getTablesAndFiguresComponent(page: Content<Statistics>, req: XP.Request
   }
 }
 
-function getTablesAndFigures(attachmentTablesAndFigures: Array<string>, req: XP.Request, phrases: {[key: string]: string}): Array<AttachmentTablesFiguresData> {
+function getTablesAndFigures(attachmentTablesAndFigures: Array<string>, req: XP.Request, phrases: { [key: string]: string }): Array<AttachmentTablesFiguresData> {
   let figureIndex: number = 0
   let tableIndex: number = 0
   if (attachmentTablesAndFigures.length > 0) {
@@ -141,7 +139,7 @@ function getTableReturnObject(content: Content, props: object, subHeader: string
   return {
     id: `attachment-table-figure-${index + 1}`,
     contentType: content.type,
-    open: typeof(title) === 'string' ? title : title.content,
+    open: typeof (title) === 'string' ? title : title.content,
     subHeader,
     props
   }
@@ -154,7 +152,7 @@ function getFigureReturnObject(content: Content, preview: XP.Response, subHeader
   return {
     id: `attachment-table-figure-${index + 1}`,
     contentType: content.type,
-    open: typeof(title) === 'string' ? title : title.content,
+    open: typeof (title) === 'string' ? title : title.content,
     subHeader,
     body: preview.body as string | undefined,
     pageContributions: preview.pageContributions

@@ -1,16 +1,14 @@
-import { get as getOne, type Content } from '/lib/xp/content'
-import { formatDate } from '/lib/ssb/utils/dateUtils'
-import { render, type RenderResponse } from '/lib/enonic/react4xp'
-import type { Article } from '../../content-types/article/article'
+import {get as getOne, type Content} from '/lib/xp/content'
+import {formatDate} from '/lib/ssb/utils/dateUtils'
+import {render, type RenderResponse} from '/lib/enonic/react4xp'
+import type {Article} from '../../content-types/article/article'
+import {processHtml, getContent, pageUrl} from '/lib/xp/portal'
 
 const {
   data: {
     forceArray
   }
 } = __non_webpack_require__('/lib/util')
-const {
-  getContent, pageUrl, processHtml
-} = __non_webpack_require__('/lib/xp/portal')
 const {
   getPhrases
 } = __non_webpack_require__('/lib/ssb/utils/language')
@@ -50,8 +48,8 @@ function renderPart(req: XP.Request): RenderResponse {
 
   const authorConfig: Article['authorItemSet'] = page.data.authorItemSet ? forceArray(page.data.authorItemSet) : []
   const authors: Article['authorItemSet'] | undefined = authorConfig.length ? authorConfig.map(({
-    name, email
-  }) => {
+                                                                                                  name, email
+                                                                                                }) => {
     return {
       name,
       email
@@ -59,7 +57,7 @@ function renderPart(req: XP.Request): RenderResponse {
   }) : undefined
 
   const associatedStatisticsConfig: Article['associatedStatistics'] =
-  page.data.associatedStatistics ? forceArray(page.data.associatedStatistics) : []
+    page.data.associatedStatistics ? forceArray(page.data.associatedStatistics) : []
 
   const associatedArticleArchivesConfig: Article['articleArchive'] = page.data.articleArchive ? forceArray(page.data.articleArchive) : []
 

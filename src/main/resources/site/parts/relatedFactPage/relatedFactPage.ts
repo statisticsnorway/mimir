@@ -1,15 +1,12 @@
-import { get, query, Content, QueryResponse } from '/lib/xp/content'
-import { Phrases } from '../../../lib/types/language'
-import { render, RenderResponse } from '/lib/enonic/react4xp'
-import { SEO } from '../../../services/news/news'
-import { Article } from '../../content-types/article/article'
-import { ContentList } from '../../content-types/contentList/contentList'
-import { RelatedFactPagePartConfig } from './relatedFactPage-part-config'
+import {get as getContentByKey, query, type Content, type QueryResponse} from '/lib/xp/content'
+import type {Phrases} from '../../../lib/types/language'
+import {render, type RenderResponse} from '/lib/enonic/react4xp'
+import type {SEO} from '../../../services/news/news'
+import type {Article} from '../../content-types/article/article'
+import type {ContentList} from '../../content-types/contentList/contentList'
+import type {RelatedFactPagePartConfig} from './relatedFactPage-part-config'
+import {imagePlaceholder, getComponent, getContent, imageUrl, pageUrl, serviceUrl} from '/lib/xp/portal'
 
-const {
-  imagePlaceholder,
-  getComponent, getContent, imageUrl, pageUrl, serviceUrl
-} = __non_webpack_require__('/lib/xp/portal')
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
@@ -29,7 +26,7 @@ const {
 } = __non_webpack_require__('/lib/util')
 
 
-exports.get = function(req: XP.Request): XP.Response | RenderResponse {
+export function get(req: XP.Request): XP.Response | RenderResponse {
   try {
     const page: Content<Article> = getContent()
     const config: RelatedFactPagePartConfig = getComponent().config
@@ -59,8 +56,9 @@ exports.get = function(req: XP.Request): XP.Response | RenderResponse {
   }
 }
 
-exports.preview = (req: XP.Request, relatedFactPageConfig: RelatedFactPageConfig | undefined): XP.Response | RenderResponse =>
-  renderPart(req, relatedFactPageConfig)
+export function preview(req: XP.Request, relatedFactPageConfig: RelatedFactPageConfig | undefined): XP.Response | RenderResponse {
+  return renderPart(req, relatedFactPageConfig)
+}
 
 function renderPart(req: XP.Request, relatedFactPageConfig: RelatedFactPageConfig | undefined): XP.Response | RenderResponse {
   const page: Content<Article> = getContent()
@@ -121,7 +119,7 @@ export function parseRelatedFactPageData(relatedFactPageConfig: RelatedFactPageC
   if (relatedFactPageConfig && relatedFactPageConfig.contentIdList) {
     let contentListId: Array<string> = relatedFactPageConfig.contentIdList as Array<string>
     if (relatedFactPageConfig.inputType === 'itemList') {
-      const relatedContent: RelatedFactPage | null = get({
+      const relatedContent: RelatedFactPage | null = getContentByKey({
         key: relatedFactPageConfig.contentIdList as string
       })
       contentListId = forceArray((relatedContent?.data as ContentList).contentList) as Array<string>
@@ -132,12 +130,12 @@ export function parseRelatedFactPageData(relatedFactPageConfig: RelatedFactPageC
     }) : null
     if (relatedContentQueryResults) {
       const sortedRelatedContentQueryResults: Array<RelatedFactPage> =
-       (relatedContentQueryResults.hits as unknown as Array<RelatedFactPage>)
-         .sort((a, b) => {
-           if (contentListId.indexOf(a._id) > contentListId.indexOf(b._id)) return 1
-           else return -1
-         })
-         .slice(start, start + count)
+        (relatedContentQueryResults.hits as unknown as Array<RelatedFactPage>)
+          .sort((a, b) => {
+            if (contentListId.indexOf(a._id) > contentListId.indexOf(b._id)) return 1
+            else return -1
+          })
+          .slice(start, start + count)
       sortedRelatedContentQueryResults.map((relatedFactPage) => relatedFactPages.push(parseRelatedContent(relatedFactPage)))
       total = relatedContentQueryResults.total
     }
@@ -187,7 +185,7 @@ interface RelatedFactPageProps {
   firstRelatedContents: RelatedFactPages;
   relatedFactPageServiceUrl: string;
   partConfig: RelatedFactPageConfig | undefined;
-  mainTitle:string;
+  mainTitle: string;
   showAll: string;
   showLess: string;
 }

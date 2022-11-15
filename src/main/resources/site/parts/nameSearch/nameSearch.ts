@@ -1,25 +1,16 @@
-import { Component } from '/lib/xp/portal'
-import { renderError } from '../../../lib/ssb/error/error'
-import {render, RenderResponse} from '/lib/enonic/react4xp'
-import { GA_TRACKING_ID } from '../../pages/default/default'
-import { NameSearchPartConfig } from './nameSearch-part-config'
+import type {Component} from '/lib/xp/portal'
+import {renderError} from '../../../lib/ssb/error/error'
+import {render, type RenderResponse} from '/lib/enonic/react4xp'
+import {GA_TRACKING_ID} from '../../pages/default/default'
+import type {NameSearchPartConfig} from './nameSearch-part-config'
+import {getContent, getComponent, pageUrl, serviceUrl} from '/lib/xp/portal'
+import {localize} from '/lib/xp/i18n'
 
-const {
-  getComponent,
-  getContent,
-  pageUrl,
-  serviceUrl
-} = __non_webpack_require__('/lib/xp/portal')
 const {
   getLanguageShortName
 } = __non_webpack_require__('/lib/ssb/utils/language')
-const {
-  localize
-} = __non_webpack_require__('/lib/xp/i18n')
 
-
-
-exports.get = (req: XP.Request): RenderResponse | XP.Response => {
+export function get(req: XP.Request): RenderResponse | XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -27,7 +18,9 @@ exports.get = (req: XP.Request): RenderResponse | XP.Response => {
   }
 }
 
-exports.preview = (req: XP.Request): RenderResponse => renderPart(req)
+export function preview(req: XP.Request): RenderResponse {
+  return renderPart(req)
+}
 
 function renderPart(req: XP.Request): RenderResponse {
   const component: Component<NameSearchPartConfig> = getComponent()

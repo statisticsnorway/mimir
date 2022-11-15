@@ -1,6 +1,6 @@
-import {render, RenderResponse} from '/lib/enonic/react4xp'
-import { getComponent, imageUrl, Component} from "/lib/xp/portal";
-import {ExternalCardPartConfig} from "./externalCard-part-config";
+import {render, type RenderResponse} from '/lib/enonic/react4xp'
+import {getComponent, imageUrl, type Component} from "/lib/xp/portal";
+import type {ExternalCardPartConfig} from "./externalCard-part-config";
 
 const {
   renderError
@@ -11,8 +11,7 @@ const {
 } = __non_webpack_require__('/lib/util')
 
 
-
-exports.get = function(req: XP.Request) {
+export function get(req: XP.Request) {
   try {
     return renderPart(req)
   } catch (e) {
@@ -20,7 +19,9 @@ exports.get = function(req: XP.Request) {
   }
 }
 
-exports.preview = (req: XP.Request) => renderPart(req)
+export function preview(req: XP.Request) {
+  return renderPart(req)
+}
 
 const NO_LINKS_FOUND = {
   body: '',
@@ -36,25 +37,25 @@ function renderPart(req: XP.Request): XP.Response | RenderResponse {
 const renderExternalCard = (req: XP.Request, links: Array<ExternalCard>) => {
   if (links && links.length) {
     return render(
-        'ExternalCards',
-        {
-          links: links.map((link) => {
-            return {
-              href: link.linkUrl,
-              children: link.linkText,
-              content: link.content,
-              image: imageUrl({
-                id: link.image,
-                scale: 'height(70)'
-              })
-            }
-          })
-        },
-        req,
-        {
-          body: '<section class="xp-part part-external-card"></section>',
-          clientRender: req.mode !== 'edit'
+      'ExternalCards',
+      {
+        links: links.map((link) => {
+          return {
+            href: link.linkUrl,
+            children: link.linkText,
+            content: link.content,
+            image: imageUrl({
+              id: link.image,
+              scale: 'height(70)'
+            })
+          }
         })
+      },
+      req,
+      {
+        body: '<section class="xp-part part-external-card"></section>',
+        clientRender: req.mode !== 'edit'
+      })
   }
   return NO_LINKS_FOUND
 }

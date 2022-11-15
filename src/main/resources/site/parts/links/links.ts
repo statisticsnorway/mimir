@@ -1,16 +1,12 @@
-import { get, Content } from '/lib/xp/content'
-import { getComponent,
-  attachmentUrl,
-  pageUrl,
-  Component } from '/lib/xp/portal'
-import { LinksPartConfig } from './links-part-config'
-import {render, RenderResponse} from '/lib/enonic/react4xp'
-import { renderError } from '../../../lib/ssb/error/error'
-import { GA_TRACKING_ID } from '../../pages/default/default'
+import {get as getContentByKey, type Content} from '/lib/xp/content'
+import {getComponent, attachmentUrl, pageUrl, type Component} from '/lib/xp/portal'
+import type {LinksPartConfig} from './links-part-config'
+import {render, type RenderResponse} from '/lib/enonic/react4xp'
+import {renderError} from '../../../lib/ssb/error/error'
+import {GA_TRACKING_ID} from '../../pages/default/default'
 
 
-
-exports.get = (req: XP.Request): RenderResponse | XP.Response => {
+export function get(req: XP.Request): RenderResponse | XP.Response {
   try {
     const part: Component<LinksPartConfig> = getComponent()
     const config: LinksPartConfig = part.config
@@ -20,13 +16,14 @@ exports.get = (req: XP.Request): RenderResponse | XP.Response => {
   }
 }
 
-exports.preview = (req: XP.Request, config: LinksPartConfig): RenderResponse | XP.Response => {
+export function preview(req: XP.Request, config: LinksPartConfig): RenderResponse | XP.Response {
   try {
     return renderPart(req, config)
   } catch (e) {
     return renderError(req, 'Error in part', e)
   }
 }
+
 function renderPart(req: XP.Request, config: LinksPartConfig): RenderResponse {
   const linkTypes: LinksPartConfig['linkTypes'] = config.linkTypes
 
@@ -48,7 +45,7 @@ function renderPart(req: XP.Request, config: LinksPartConfig): RenderResponse {
       const linkedContent: string | undefined = linkTypes.headerLink.linkedContent
       const linkText: string | undefined = linkTypes.headerLink.linkText
 
-      const content: Content | null = linkedContent ? get({
+      const content: Content | null = linkedContent ? getContentByKey({
         key: linkedContent
       }) : null
 
@@ -106,9 +103,9 @@ export function prepareText(content: Content, linkText: string | undefined): str
       finalText = (attachmentSize / 1.049e+6).toFixed(1)
     } else {
       notation = 'KB'
-      finalText = (attachmentSize / 1024 ).toFixed(1)
+      finalText = (attachmentSize / 1024).toFixed(1)
     }
-    return `${linkText} (${finalText } ${notation})`
+    return `${linkText} (${finalText} ${notation})`
   }
 
   return linkText && linkText

@@ -1,9 +1,11 @@
-import { get as getOne, type Content } from '/lib/xp/content'
-import { type ResourceKey, render } from '/lib/thymeleaf'
-import { render as r4XpRender, type RenderResponse } from '/lib/enonic/react4xp'
-import type { ActiveStatisticsPartConfig } from './activeStatistics-part-config'
-import type { Statistics } from '../../content-types/statistics/statistics'
-import type { SEO } from 'services/news/news'
+import {get as getOne, type Content} from '/lib/xp/content'
+import {type ResourceKey, render} from '/lib/thymeleaf'
+import {render as r4XpRender, type RenderResponse} from '/lib/enonic/react4xp'
+import type {ActiveStatisticsPartConfig} from './activeStatistics-part-config'
+import type {Statistics} from '../../content-types/statistics/statistics'
+import type {SEO} from 'services/news/news'
+import {getComponent, getContent, pageUrl} from '/lib/xp/portal'
+import {localize} from '/lib/xp/i18n'
 
 const {
   data: {
@@ -11,17 +13,8 @@ const {
   }
 } = __non_webpack_require__('/lib/util')
 const {
-  getContent,
-  getComponent,
-  pageUrl
-} = __non_webpack_require__('/lib/xp/portal')
-
-const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
-const {
-  localize
-} = __non_webpack_require__('/lib/xp/i18n')
 
 
 const view: ResourceKey = resolve('./activeStatistics.html')
@@ -99,7 +92,7 @@ function renderActiveStatistics(statisticsTitle: string, activeStatisticsContent
 }
 
 function parseContent(activeStatistics: ActiveStatisticsPartConfig['relatedStatisticsOptions']): Array<ActiveStatistic | undefined> {
-  if ( activeStatistics && activeStatistics.length) {
+  if (activeStatistics && activeStatistics.length) {
     return activeStatistics.map((statistics) => {
       if (statistics._selected === 'xp' && statistics.xp.contentId) {
         const statisticsContentId: string = statistics.xp.contentId

@@ -1,48 +1,43 @@
-import { render, RenderResponse } from '/lib/enonic/react4xp'
-import { query, Content } from '/lib/xp/content'
-import { Component } from '/lib/xp/portal'
-import { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/types'
-import { GroupedBy, PreparedStatistics, YearReleases, Release } from '../../../lib/ssb/utils/variantUtils'
-import { UpcomingReleasesPartConfig } from './upcomingReleases-part-config'
-import { UpcomingRelease } from '../../content-types/upcomingRelease/upcomingRelease'
-import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
-import { formatDate } from '../../../lib/ssb/utils/dateUtils'
+import {render, type RenderResponse} from '/lib/enonic/react4xp'
+import {query, type Content} from '/lib/xp/content'
+import type {Component} from '/lib/xp/portal'
+import type {StatisticInListing} from '../../../lib/ssb/dashboard/statreg/types'
+import type {GroupedBy, PreparedStatistics, YearReleases, Release} from '../../../lib/ssb/utils/variantUtils'
+import type {UpcomingReleasesPartConfig} from './upcomingReleases-part-config'
+import type {UpcomingRelease} from '../../content-types/upcomingRelease/upcomingRelease'
+import type {SubjectItem} from '../../../lib/ssb/utils/subjectUtils'
+import {formatDate} from '../../../lib/ssb/utils/dateUtils'
+import {getContent, getComponent, processHtml, serviceUrl} from '/lib/xp/portal'
+import {localize} from '/lib/xp/i18n'
 
 const {
   moment
 } = __non_webpack_require__('/lib/vendor/moment')
-
-const {
-  getContent,
-  getComponent,
-  processHtml,
-  serviceUrl
-} = __non_webpack_require__('/lib/xp/portal')
 const {
   addMonthNames,
   groupStatisticsByYearMonthAndDay,
   prepareRelease,
   filterOnComingReleases,
   getUpcomingReleases
-} = __non_webpack_require__( '/lib/ssb/utils/variantUtils')
+} = __non_webpack_require__('/lib/ssb/utils/variantUtils')
 const {
   getAllStatisticsFromRepo
-} = __non_webpack_require__( '/lib/ssb/statreg/statistics')
-const {
-  localize
-} = __non_webpack_require__('/lib/xp/i18n')
+} = __non_webpack_require__('/lib/ssb/statreg/statistics')
 const {
   fromPartCache
 } = __non_webpack_require__('/lib/ssb/cache/partCache')
 const {
   getMainSubjects, getMainSubjectById
-} = __non_webpack_require__( '/lib/ssb/utils/subjectUtils')
+} = __non_webpack_require__('/lib/ssb/utils/subjectUtils')
 
-exports.get = (req: XP.Request): RenderResponse => {
+
+export function get(req: XP.Request): RenderResponse {
   return renderPart(req)
 }
 
-exports.preview = (req: XP.Request): RenderResponse => renderPart(req)
+export function preview(req: XP.Request): RenderResponse {
+  return renderPart(req)
+}
 
 function renderPart(req: XP.Request): RenderResponse {
   const content: Content = getContent()
@@ -60,7 +55,7 @@ function renderPart(req: XP.Request): RenderResponse {
   const upcomingReleasesServiceUrl: string = serviceUrl({
     service: 'upcomingReleases'
   })
-  const allMainSubjects: Array<SubjectItem> = getMainSubjects(req, content.language === 'en' ? 'en' : 'nb' )
+  const allMainSubjects: Array<SubjectItem> = getMainSubjects(req, content.language === 'en' ? 'en' : 'nb')
 
   const groupedWithMonthNames: Array<YearReleases> = fromPartCache(req, `${content._id}-upcomingReleases`, () => {
     // Get statistics
@@ -141,6 +136,7 @@ interface PartProps {
   statisticsPageUrlText: string;
   contentReleases: Array<PreparedUpcomingRelease>;
 }
+
 interface PreparedUpcomingRelease {
   id: string;
   name: string;

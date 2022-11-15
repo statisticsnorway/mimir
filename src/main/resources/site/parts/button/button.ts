@@ -1,8 +1,8 @@
-import { get as getOne, type Content } from '/lib/xp/content'
-import type { Button } from '../../content-types/button/button'
-import { attachmentUrl, getComponent, pageUrl, type Component } from '/lib/xp/portal'
-import type { ButtonPartConfig } from './button-part-config'
-import { type ResourceKey, render } from '/lib/thymeleaf'
+import {get as getOne, type Content} from '/lib/xp/content'
+import type {Button} from '../../content-types/button/button'
+import {attachmentUrl, getComponent, pageUrl, type Component} from '/lib/xp/portal'
+import type {ButtonPartConfig} from './button-part-config'
+import {type ResourceKey, render} from '/lib/thymeleaf'
 
 const {
   renderError
@@ -20,6 +20,7 @@ export function get(req: XP.Request): XP.Response {
     return renderError(req, 'Error in part', e)
   }
 }
+
 export function preview(req: XP.Request, id: string): XP.Response {
   return renderPart(req, [id])
 }

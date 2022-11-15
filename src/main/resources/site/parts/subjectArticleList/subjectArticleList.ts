@@ -1,14 +1,9 @@
-import { render, RenderResponse } from '/lib/enonic/react4xp'
-import { Content, QueryResponse } from '/lib/xp/content'
-import { PreparedArticles } from '../../../lib/ssb/utils/articleUtils'
-import { Article } from '../../content-types/article/article'
-
-const {
-  localize
-} = __non_webpack_require__('/lib/xp/i18n')
-const {
-  getContent, serviceUrl
-} = __non_webpack_require__('/lib/xp/portal')
+import {render, type RenderResponse} from '/lib/enonic/react4xp'
+import type {Content, QueryResponse} from '/lib/xp/content'
+import type {PreparedArticles} from '../../../lib/ssb/utils/articleUtils'
+import type {Article} from '../../content-types/article/article'
+import {getContent, serviceUrl} from '/lib/xp/portal'
+import {localize} from '/lib/xp/i18n'
 
 const {
   isEnabled
@@ -16,13 +11,15 @@ const {
 const {
   getChildArticles,
   prepareArticles
-} = __non_webpack_require__( '/lib/ssb/utils/articleUtils')
+} = __non_webpack_require__('/lib/ssb/utils/articleUtils')
 
-exports.get = (req: XP.Request): RenderResponse => {
+export function get(req: XP.Request): RenderResponse {
   return renderPart(req)
 }
 
-exports.preview = (req: XP.Request): RenderResponse => renderPart(req)
+export function preview(req: XP.Request): RenderResponse {
+  return renderPart(req)
+}
 
 function renderPart(req: XP.Request): RenderResponse {
   const content: Content = getContent()
@@ -71,16 +68,16 @@ function renderPart(req: XP.Request): RenderResponse {
 }
 
 interface PartProperties {
-    title: string;
-    buttonTitle: string;
-    articleServiceUrl: string;
-    currentPath: string;
-    start: number;
-    count: number;
-    showSortAndFilter: boolean;
-    language: string;
-    articles: Array<PreparedArticles>;
-    totalArticles: number;
-    showAllArticles: boolean;
+  title: string;
+  buttonTitle: string;
+  articleServiceUrl: string;
+  currentPath: string;
+  start: number;
+  count: number;
+  showSortAndFilter: boolean;
+  language: string;
+  articles: Array<PreparedArticles>;
+  totalArticles: number;
+  showAllArticles: boolean;
 
 }

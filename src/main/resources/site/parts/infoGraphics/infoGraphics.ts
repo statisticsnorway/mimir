@@ -1,11 +1,17 @@
+import {get as getContentByKey, type Content, type MediaImage} from '/lib/xp/content'
+import type {SourceList, SourcesConfig} from '../../../lib/ssb/utils/utils'
+import {render, type RenderResponse} from '/lib/enonic/react4xp'
+// @ts-ignore
+import {Base64} from 'js-base64'
+import type {InfoGraphicsPartConfig} from './infoGraphics-part-config'
+import type {DefaultPageConfig} from '../../pages/default/default-page-config'
+import {getContent, getComponent, imageUrl} from '/lib/xp/portal'
+
 const {
   data: {
     forceArray
   }
 } = __non_webpack_require__('/lib/util')
-const {
-  getContent, getComponent, imageUrl
-} = __non_webpack_require__('/lib/xp/portal')
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
@@ -17,17 +23,7 @@ const {
 } = __non_webpack_require__('/lib/ssb/utils/language')
 
 
-import { get, Content, MediaImage } from '/lib/xp/content'
-import { SourceList, SourcesConfig } from '../../../lib/ssb/utils/utils'
-import {render, RenderResponse} from '/lib/enonic/react4xp'
-// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-// @ts-ignore
-import { Base64 } from 'js-base64'
-import { InfoGraphicsPartConfig } from './infoGraphics-part-config'
-import { DefaultPageConfig } from '../../pages/default/default-page-config'
-
-
-exports.get = function(req: XP.Request): XP.Response | RenderResponse {
+export function get(req: XP.Request): XP.Response | RenderResponse {
   try {
     const config: InfoGraphicsPartConfig = getComponent().config
     return renderPart(req)
@@ -36,11 +32,13 @@ exports.get = function(req: XP.Request): XP.Response | RenderResponse {
   }
 }
 
-exports.preview = (req: XP.Request): XP.Response | RenderResponse => renderPart(req)
+export function preview(req: XP.Request): XP.Response | RenderResponse {
+  return renderPart(req)
+}
 
 function renderPart(req: XP.Request): RenderResponse {
   const page: DefaultPage = getContent() as DefaultPage
-  const phrases: {source: string; descriptionStaticVisualization: string} = getPhrases(page)
+  const phrases: { source: string; descriptionStaticVisualization: string } = getPhrases(page)
   const sourcesLabel: string = phrases.source
   const descriptionStaticVisualization: string = phrases.descriptionStaticVisualization
 
@@ -57,7 +55,7 @@ function renderPart(req: XP.Request): RenderResponse {
   })
 
   // Retrieves image as content to get image meta data
-  const imageData: Content<MediaImage> | null = get({
+  const imageData: Content<MediaImage> | null = getContentByKey({
     key: config.image
   })
 

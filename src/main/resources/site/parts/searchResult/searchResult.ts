@@ -1,23 +1,18 @@
-import { Component } from '/lib/xp/portal'
-import { get, Content } from '/lib/xp/content'
-import { SearchResultPartConfig } from './searchResult-part-config'
-import { render, RenderResponse } from '/lib/enonic/react4xp'
-import { PreparedSearchResult, SolrPrepResultAndTotal, Facet } from '../../../lib/ssb/utils/solrUtils'
-import { queryNodes, getNode } from '../../../lib/ssb/repo/common'
-import { NodeQueryResponse, RepoNode } from '/lib/xp/node'
-import { formatDate } from '../../../lib/ssb/utils/dateUtils'
-import { BestBetContent } from '../../../lib/ssb/repo/bestbet'
-
+import type {Component} from '/lib/xp/portal'
+import {get as getContentByKey, type Content} from '/lib/xp/content'
+import type {SearchResultPartConfig} from './searchResult-part-config'
+import {render, type RenderResponse} from '/lib/enonic/react4xp'
+import type {PreparedSearchResult, SolrPrepResultAndTotal, Facet} from '../../../lib/ssb/utils/solrUtils'
+import {queryNodes, getNode} from '../../../lib/ssb/repo/common'
+import type {NodeQueryResponse, RepoNode} from '/lib/xp/node'
+import {formatDate} from '../../../lib/ssb/utils/dateUtils'
+import type {BestBetContent} from '../../../lib/ssb/repo/bestbet'
+import {getContent, getComponent, pageUrl, serviceUrl} from '/lib/xp/portal'
+import {localize} from '/lib/xp/i18n'
 
 const {
   solrSearch
 } = __non_webpack_require__('/lib/ssb/utils/solrUtils')
-const {
-  getComponent,
-  getContent,
-  pageUrl,
-  serviceUrl
-} = __non_webpack_require__('/lib/xp/portal')
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
@@ -25,13 +20,11 @@ const {
   sanitizeForSolr
 } = __non_webpack_require__('/lib/ssb/utils/textUtils')
 const {
-  localize
-} = __non_webpack_require__('/lib/xp/i18n')
-const {
   isEnabled
 } = __non_webpack_require__('/lib/featureToggle')
 
-exports.get = function(req: XP.Request): RenderResponse | XP.Response {
+
+export function get(req: XP.Request): RenderResponse | XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -39,7 +32,7 @@ exports.get = function(req: XP.Request): RenderResponse | XP.Response {
   }
 }
 
-exports.preview = (req: XP.Request): RenderResponse | XP.Response => {
+export function preview(req: XP.Request): RenderResponse | XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -101,13 +94,14 @@ export function renderPart(req: XP.Request): RenderResponse {
       start: 0,
       count: 1,
       query: `fulltext('data.searchWords', '${sanitizedTerm}', 'AND')`
-    } )
+    })
 
     const bet: BestBet | null = result.hits.length ? getNode('no.ssb.bestbet', 'master', result.hits[0].id) as BestBet : null
     let firstBet: BestBet | null
     if (bet && bet.constructor === Array) {
       firstBet = bet[0]
-    } if (bet && !(bet.constructor === Array)) {
+    }
+    if (bet && !(bet.constructor === Array)) {
       firstBet = bet
     } else firstBet = null
 
@@ -118,7 +112,7 @@ export function renderPart(req: XP.Request): RenderResponse {
       let href: string = firstBet.data && firstBet.data.linkedContentHref ? firstBet.data.linkedContentHref : ''
       const xpContentId: string | undefined = firstBet.data && firstBet.data.linkedSelectedContentResult?.value
       if (firstBet.data && firstBet.data.linkedSelectedContentResult) {
-        const xpContent: Content | null = get({
+        const xpContent: Content | null = getContentByKey({
           key: xpContentId
         })
 
@@ -167,7 +161,7 @@ export function renderPart(req: XP.Request): RenderResponse {
 
   /* query solr */
   const solrResult: SolrPrepResultAndTotal = sanitizedTerm ?
-    solrSearch( sanitizedTerm, language, parseInt(part.config.numberOfHits), 0, req.params.emne, req.params.innholdstype) : {
+    solrSearch(sanitizedTerm, language, parseInt(part.config.numberOfHits), 0, req.params.emne, req.params.innholdstype) : {
       total: 0,
       hits: [],
       contentTypes: [],

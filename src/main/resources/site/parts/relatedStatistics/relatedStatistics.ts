@@ -1,9 +1,10 @@
-import { get, Content } from '/lib/xp/content'
-import { ResourceKey, render } from '/lib/thymeleaf'
-import { Phrases } from '../../../lib/types/language'
-import { render as r4xpRender } from '/lib/enonic/react4xp'
-import { SEO } from '../../../services/news/news'
-import { Statistics } from '../../content-types/statistics/statistics'
+import {get as getContentByKey, type Content} from '/lib/xp/content'
+import {type ResourceKey, render} from '/lib/thymeleaf'
+import type {Phrases} from '../../../lib/types/language'
+import {render as r4xpRender} from '/lib/enonic/react4xp'
+import type {SEO} from '../../../services/news/news'
+import type {Statistics} from '../../content-types/statistics/statistics'
+import {getContent, pageUrl} from '/lib/xp/portal'
 
 const {
   data: {
@@ -11,20 +12,15 @@ const {
   }
 } = __non_webpack_require__('/lib/util')
 const {
-  getContent,
-  pageUrl
-} = __non_webpack_require__('/lib/xp/portal')
-const {
   getPhrases
 } = __non_webpack_require__('/lib/ssb/utils/language')
-
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
 
 const view: ResourceKey = resolve('./relatedStatistics.html')
 
-exports.get = (req: XP.Request): XP.Response => {
+export function get(req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -32,7 +28,9 @@ exports.get = (req: XP.Request): XP.Response => {
   }
 }
 
-exports.preview = (req: XP.Request): XP.Response => renderPart(req)
+export function preview(req: XP.Request): XP.Response {
+  return renderPart(req)
+}
 
 function renderPart(req: XP.Request): XP.Response {
   const page: Content<Statistics> = getContent()
@@ -54,9 +52,9 @@ function renderPart(req: XP.Request): XP.Response {
 }
 
 function renderRelatedStatistics(req: XP.Request,
-  statisticsTitle: string,
-  relatedStatisticsContent: Array<RelatedStatisticsContent>,
-  phrases: Phrases): XP.Response {
+                                 statisticsTitle: string,
+                                 relatedStatisticsContent: Array<RelatedStatisticsContent>,
+                                 phrases: Phrases): XP.Response {
   if (relatedStatisticsContent && relatedStatisticsContent.length) {
     const id: string = 'related-statistics'
     const body: string = render(view, {
@@ -91,7 +89,7 @@ function parseRelatedContent(relatedStatistics: Statistics['relatedStatisticsOpt
     return relatedStatistics.map((statistics) => {
       if (statistics._selected === 'xp') {
         const statisticsContentId: string | undefined = statistics.xp.contentId
-        const relatedStatisticsContent: Content<Statistics, SEO> | null = statisticsContentId ? get({
+        const relatedStatisticsContent: Content<Statistics, SEO> | null = statisticsContentId ? getContentByKey({
           key: statisticsContentId
         }) : null
 

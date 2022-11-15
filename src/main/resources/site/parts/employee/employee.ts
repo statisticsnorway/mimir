@@ -1,11 +1,11 @@
-import { Content, get } from '/lib/xp/content'
-import { Employee } from '../../content-types/employee/employee'
-import { DefaultPageConfig } from '../../pages/default/default-page-config'
-import { localize } from '/lib/xp/i18n'
-import { getContent, pageUrl, imageUrl, attachmentUrl } from '/lib/xp/portal'
-import { render, RenderResponse } from '/lib/enonic/react4xp'
-import { Page } from 'site/content-types/page/page'
-import { SEO } from 'services/news/news'
+import {type Content, get as getContentByKey} from '/lib/xp/content'
+import type {Employee} from '../../content-types/employee/employee'
+import type {DefaultPageConfig} from '../../pages/default/default-page-config'
+import {localize} from '/lib/xp/i18n'
+import {getContent, pageUrl, imageUrl, attachmentUrl} from '/lib/xp/portal'
+import {render, type RenderResponse} from '/lib/enonic/react4xp'
+import type {Page} from 'site/content-types/page/page'
+import type {SEO} from 'services/news/news'
 
 const {
   renderError
@@ -16,7 +16,7 @@ const {
   }
 } = __non_webpack_require__('/lib/util')
 
-exports.get = function(req: XP.Request): RenderResponse | XP.Response {
+export function get(req: XP.Request): RenderResponse | XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -24,7 +24,9 @@ exports.get = function(req: XP.Request): RenderResponse | XP.Response {
   }
 }
 
-exports.preview = (req: XP.Request): RenderResponse | XP.Response => renderPart(req)
+export function preview(req: XP.Request): RenderResponse | XP.Response {
+  return renderPart(req)
+}
 
 function renderPart(req: XP.Request): RenderResponse {
   const page: Content<Employee> = getContent()
@@ -40,11 +42,11 @@ function renderPart(req: XP.Request): RenderResponse {
     })
   }) : []
 
-  const areaContent: Content<DefaultPageConfig> | null = page.data.area ? get({
+  const areaContent: Content<DefaultPageConfig> | null = page.data.area ? getContentByKey({
     key: page.data.area
   }) : null
 
-  const area: Area| null = areaContent ? {
+  const area: Area | null = areaContent ? {
     title: areaContent.displayName,
     href: areaContent._path
   } : null
@@ -156,7 +158,7 @@ function renderPart(req: XP.Request): RenderResponse {
 function parseProject(projects: Employee['projects']): Array<Project> {
   const projectsIds: Array<string> = projects ? forceArray(projects) : []
   return projectsIds.map((projectId) => {
-    const relatedProjectContent: Content<Page, SEO> | null = projectId ? get({
+    const relatedProjectContent: Content<Page, SEO> | null = projectId ? getContentByKey({
       key: projectId
     }) : null
     const seoDescription: string | undefined = relatedProjectContent?.x['com-enonic-app-metafields']['meta-data'].seoDescription as string
@@ -200,10 +202,11 @@ interface EmployeeProp {
 }
 
 interface Project {
-    href: string;
-    title: string;
-    description: string;
-  }
+  href: string;
+  title: string;
+  description: string;
+}
+
 interface Area {
   href: string;
   title: string;

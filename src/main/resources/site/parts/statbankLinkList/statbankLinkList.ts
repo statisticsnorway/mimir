@@ -1,29 +1,25 @@
-import { Content } from '/lib/xp/content'
-import { ResourceKey, render } from '/lib/thymeleaf'
-import { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/types'
-import { Phrases } from '../../../lib/types/language'
-import { render as r4xpRender, RenderResponse } from '/lib/enonic/react4xp'
-import { Statistics } from '../../content-types/statistics/statistics'
+import type {Content} from '/lib/xp/content'
+import {type ResourceKey, render} from '/lib/thymeleaf'
+import type {StatisticInListing} from '../../../lib/ssb/dashboard/statreg/types'
+import type {Phrases} from '../../../lib/types/language'
+import {render as r4xpRender} from '/lib/enonic/react4xp'
+import type {Statistics} from '../../content-types/statistics/statistics'
+import {getContent} from '/lib/xp/portal'
 
 const {
   getStatisticByIdFromRepo
 } = __non_webpack_require__('/lib/ssb/statreg/statistics')
 const {
-  getContent
-} = __non_webpack_require__('/lib/xp/portal')
-const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
-
-
 const util = __non_webpack_require__('/lib/util')
-const view: ResourceKey = resolve('./statbankLinkList.html')
-const STATBANKWEB_URL: string = app.config && app.config['ssb.statbankweb.baseUrl'] ? app.config['ssb.statbankweb.baseUrl'] : 'https://www.ssb.no/statbank'
 const {
   getPhrases
 } = __non_webpack_require__('/lib/ssb/utils/language')
+const view: ResourceKey = resolve('./statbankLinkList.html')
+const STATBANKWEB_URL: string = app.config && app.config['ssb.statbankweb.baseUrl'] ? app.config['ssb.statbankweb.baseUrl'] : 'https://www.ssb.no/statbank'
 
-exports.get = function(req: XP.Request): XP.Response {
+export function get(req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -31,7 +27,9 @@ exports.get = function(req: XP.Request): XP.Response {
   }
 }
 
-exports.preview = (req: XP.Request): XP.Response => renderPart(req)
+export function preview(req: XP.Request): XP.Response {
+  return renderPart(req)
+}
 
 function renderPart(req: XP.Request): XP.Response {
   const page: Content<Statistics> = getContent()

@@ -1,10 +1,10 @@
-import { render, type RenderResponse } from '/lib/enonic/react4xp'
-import { query, type Content, type QueryResponse } from '/lib/xp/content'
-import { getContent, imageUrl, pageUrl, processHtml, serviceUrl } from '/lib/xp/portal'
-import { localize } from '/lib/xp/i18n'
-import { formatDate } from '/lib/ssb/utils/dateUtils'
-import type { Article } from '../../content-types/article/article'
-import type { ArticleArchive } from '../../content-types/articleArchive/articleArchive'
+import {render, type RenderResponse} from '/lib/enonic/react4xp'
+import {query, type Content, type QueryResponse} from '/lib/xp/content'
+import {getContent, imageUrl, pageUrl, processHtml, serviceUrl} from '/lib/xp/portal'
+import {localize} from '/lib/xp/i18n'
+import {formatDate} from '/lib/ssb/utils/dateUtils'
+import type {Article} from '../../content-types/article/article'
+import type {ArticleArchive} from '../../content-types/articleArchive/articleArchive'
 
 const {
   getImageAlt
@@ -132,20 +132,20 @@ export function parseArticleData(pageId: string, start: number, count: number, l
 }
 
 interface ArticleArchiveProps {
-    title: string | undefined;
-    preamble: string | undefined;
-    image: string | undefined;
-    imageAltText: string | undefined;
-    freeText: string | undefined;
-    issnNumber: string | undefined;
-    listOfArticlesSectionTitle: string;
-    language: string;
-    pageId: string;
-    firstArticles: ParsedArticles;
-    articleArchiveService: string;
-    showMore: string;
-    showMorePagination: string;
-  }
+  title: string | undefined;
+  preamble: string | undefined;
+  image: string | undefined;
+  imageAltText: string | undefined;
+  freeText: string | undefined;
+  issnNumber: string | undefined;
+  listOfArticlesSectionTitle: string;
+  language: string;
+  pageId: string;
+  firstArticles: ParsedArticles;
+  articleArchiveService: string;
+  showMore: string;
+  showMorePagination: string;
+}
 
 interface ParsedArticleData {
   preamble: string | undefined;

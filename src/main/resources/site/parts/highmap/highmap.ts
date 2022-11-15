@@ -1,20 +1,17 @@
-import { get, getAttachmentStream, ByteSource, Content } from '/lib/xp/content'
-import { RowData } from '../../../lib/ssb/parts/highcharts/data/htmlTable'
-import { isNumber, RowValue } from '../../../lib/ssb/utils/utils'
-import {render, RenderResponse} from '/lib/enonic/react4xp'
-import { PreliminaryData, XmlParser } from '../../../lib/types/xmlParser'
-import { Highmap } from '../../content-types/highmap/highmap'
-import { HighmapPartConfig } from './highmap-part-config'
+import {get as getContentByKey, getAttachmentStream, type ByteSource, type Content} from '/lib/xp/content'
+import type {RowData} from '../../../lib/ssb/parts/highcharts/data/htmlTable'
+import {isNumber, type RowValue} from '../../../lib/ssb/utils/utils'
+import {render, type RenderResponse} from '/lib/enonic/react4xp'
+import type {PreliminaryData, XmlParser} from '../../../lib/types/xmlParser'
+import type {Highmap} from '../../content-types/highmap/highmap'
+import type {HighmapPartConfig} from './highmap-part-config'
+import {getComponent, getContent} from '/lib/xp/portal'
 
 const {
   data: {
     forceArray
   }
 } = __non_webpack_require__('/lib/util')
-const {
-  getComponent,
-  getContent
-} = __non_webpack_require__('/lib/xp/portal')
 const {
   getPhrases
 } = __non_webpack_require__('/lib/ssb/utils/language')
@@ -31,7 +28,8 @@ const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 interface MapFeatures {
   properties: {
     name?: string;
-    capitalName?: string; };
+    capitalName?: string;
+  };
 }
 
 interface MapResult {
@@ -75,7 +73,7 @@ interface HighmapProps {
   language: string | undefined;
 }
 
-exports.get = function(req: XP.Request): RenderResponse | XP.Response {
+export function get(req: XP.Request): RenderResponse | XP.Response {
   try {
     const config: HighmapPartConfig = getComponent().config
     const highmapId: string | undefined = config.highmapId
@@ -85,7 +83,7 @@ exports.get = function(req: XP.Request): RenderResponse | XP.Response {
   }
 }
 
-exports.preview = (req: XP.Request, highmapId: string | undefined): RenderResponse | XP.Response => {
+export function preview(req: XP.Request, highmapId: string | undefined): RenderResponse | XP.Response {
   try {
     return renderPart(req, highmapId)
   } catch (e) {
@@ -95,11 +93,11 @@ exports.preview = (req: XP.Request, highmapId: string | undefined): RenderRespon
 
 function renderPart(req: XP.Request, highmapId: string | undefined): RenderResponse | XP.Response {
   const page: Content = getContent()
-  const highmapContent: Content<Highmap> | null = highmapId ? get({
+  const highmapContent: Content<Highmap> | null = highmapId ? getContentByKey({
     key: highmapId
   }) : null
 
-  const mapFile: Content | null = highmapContent && highmapContent.data.mapFile ? get({
+  const mapFile: Content | null = highmapContent && highmapContent.data.mapFile ? getContentByKey({
     key: highmapContent.data.mapFile
   }) : null
 
@@ -166,7 +164,7 @@ function renderPart(req: XP.Request, highmapId: string | undefined): RenderRespo
   }
 }
 
-function getRowValue(value: number | string | PreliminaryData| Array<number | string | PreliminaryData>): RowValue {
+function getRowValue(value: number | string | PreliminaryData | Array<number | string | PreliminaryData>): RowValue {
   if (typeof value === 'string' && isNumber(value.replace(',', '.'))) {
     return Number(value.replace(',', '.'))
   }

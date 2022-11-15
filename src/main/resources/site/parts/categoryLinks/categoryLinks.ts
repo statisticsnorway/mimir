@@ -1,23 +1,23 @@
-import { render, RenderResponse } from '/lib/enonic/react4xp'
-import { getComponent, getContent, pageUrl, Component } from '/lib/xp/portal'
-import { CategoryLinksPartConfig } from './categoryLinks-part-config'
-import { Content } from '/lib/xp/content'
-import { Language, Phrases } from '../../../lib/types/language'
-import { randomUnsafeString } from '/lib/ssb/utils/utils'
+import {render, RenderResponse} from '/lib/enonic/react4xp'
+import {getComponent, getContent, pageUrl, Component} from '/lib/xp/portal'
+import {CategoryLinksPartConfig} from './categoryLinks-part-config'
+import {Content} from '/lib/xp/content'
+import {Language, Phrases} from '../../../lib/types/language'
+import {randomUnsafeString} from '/lib/ssb/utils/utils'
 
 const {
- data
+  data
 } = __non_webpack_require__('/lib/util')
 
 const {
- renderError
+  renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
 
 const {
- getLanguage
+  getLanguage
 } = __non_webpack_require__('/lib/ssb/utils/language')
 
-exports.get = function(req: XP.Request): XP.Response | RenderResponse {
+exports.get = function (req: XP.Request): XP.Response | RenderResponse {
   try {
     return renderPart(req)
   } catch (e) {

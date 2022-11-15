@@ -1,19 +1,14 @@
-import { Content } from '/lib/xp/content'
-import { allMonths, monthLabel, nextPeriod } from '../../../lib/ssb/utils/calculatorUtils'
-import { CalculatorPeriod } from '../../../lib/types/calculator'
-import { DropdownItems as MonthDropdownItems } from '../../../lib/types/components'
-import { Dataset, Dimension } from '../../../lib/types/jsonstat-toolkit'
-import { Language, Phrases } from '../../../lib/types/language'
-import {render, RenderResponse} from '/lib/enonic/react4xp'
-import { CalculatorConfig } from '../../content-types/calculatorConfig/calculatorConfig'
-import { PifCalculatorPartConfig } from './pifCalculator-part-config'
-
-const {
-  getComponent,
-  getContent,
-  serviceUrl,
-  pageUrl
-} = __non_webpack_require__('/lib/xp/portal')
+import type {Content} from '/lib/xp/content'
+import {allMonths, monthLabel, nextPeriod} from '../../../lib/ssb/utils/calculatorUtils'
+import type {CalculatorPeriod} from '../../../lib/types/calculator'
+import {DropdownItems as MonthDropdownItems} from '../../../lib/types/components'
+import type {Dataset, Dimension} from '../../../lib/types/jsonstat-toolkit'
+import type {Language, Phrases} from '../../../lib/types/language'
+import {render, type RenderResponse} from '/lib/enonic/react4xp'
+import type {CalculatorConfig} from '../../content-types/calculatorConfig/calculatorConfig'
+import type {PifCalculatorPartConfig} from './pifCalculator-part-config'
+import {getContent, getComponent, serviceUrl, pageUrl} from '/lib/xp/portal'
+import {localize} from '/lib/xp/i18n'
 
 const {
   renderError
@@ -21,16 +16,16 @@ const {
 
 const {
   getLanguage
-} = __non_webpack_require__( '/lib/ssb/utils/language')
+} = __non_webpack_require__('/lib/ssb/utils/language')
 const {
   getCalculatorConfig, getPifDataset
 } = __non_webpack_require__('/lib/ssb/dataset/calculator')
 const {
   fromPartCache
 } = __non_webpack_require__('/lib/ssb/cache/partCache')
-const i18nLib = __non_webpack_require__('/lib/xp/i18n')
 
-exports.get = function(req: XP.Request): XP.Response | RenderResponse {
+
+export function get(req: XP.Request): XP.Response | RenderResponse {
   try {
     return renderPart(req)
   } catch (e) {
@@ -38,7 +33,7 @@ exports.get = function(req: XP.Request): XP.Response | RenderResponse {
   }
 }
 
-exports.preview = function(req: XP.Request): XP.Response | RenderResponse {
+export function preview(req: XP.Request): XP.Response | RenderResponse {
   try {
     return renderPart(req)
   } catch (e) {
@@ -70,7 +65,7 @@ function getPifCalculatorComponent(req: XP.Request, page: Content): RenderRespon
   const lastUpdated: CalculatorPeriod | undefined = lastPeriod(pifData) as CalculatorPeriod
   const nextUpdate: CalculatorPeriod = nextPeriod(lastUpdated.month as string, lastUpdated.year as string)
   const nextReleaseMonth: number = (nextUpdate.month as number) === 12 ? 1 : (nextUpdate.month as number) + 1
-  const nextPublishText: string = i18nLib.localize({
+  const nextPublishText: string = localize({
     key: 'calculatorNextPublishText',
     locale: language.code,
     values: [
@@ -80,7 +75,7 @@ function getPifCalculatorComponent(req: XP.Request, page: Content): RenderRespon
       monthLabel(months, language.code, nextReleaseMonth)
     ]
   })
-  const lastNumberText: string = i18nLib.localize({
+  const lastNumberText: string = localize({
     key: 'calculatorLastNumber',
     locale: language.code,
     values: [
@@ -106,11 +101,11 @@ function getPifCalculatorComponent(req: XP.Request, page: Content): RenderRespon
       productGroups: productGroups(phrases),
       calculatorArticleUrl
     },
-      req,
-      {
-        id: 'pifCalculatorId',
-        body: '<section class="xp-part part-pif-calculator container"></section>'
-      })
+    req,
+    {
+      id: 'pifCalculatorId',
+      body: '<section class="xp-part part-pif-calculator container"></section>'
+    })
 }
 
 function lastPeriod(pifData: Dataset | null): CalculatorPeriod | undefined {

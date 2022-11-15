@@ -1,6 +1,6 @@
-import { getComponent, Component } from '/lib/xp/portal'
-import { render } from '/lib/enonic/react4xp'
-import { DividerPartConfig } from './divider-part-config'
+import {getComponent, type Component} from '/lib/xp/portal'
+import {render} from '/lib/enonic/react4xp'
+import type {DividerPartConfig} from './divider-part-config'
 
 const {
   renderError
@@ -9,7 +9,7 @@ const {
   fromPartCache
 } = __non_webpack_require__('/lib/ssb/cache/partCache')
 
-exports.get = function(req: XP.Request): XP.Response {
+export function get(req: XP.Request): XP.Response {
   try {
     const component: Component<DividerPartConfig> = getComponent()
     return renderPart(req, component.config)
@@ -18,7 +18,7 @@ exports.get = function(req: XP.Request): XP.Response {
   }
 }
 
-exports.preview = function(req: XP.Request): XP.Response {
+export function preview(req: XP.Request): XP.Response {
   return renderPart(req, {})
 }
 

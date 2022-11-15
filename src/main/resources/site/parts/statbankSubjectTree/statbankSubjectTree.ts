@@ -1,7 +1,9 @@
-import { render, RenderResponse } from '/lib/enonic/react4xp'
-import { SubjectItem, StatisticItem } from '../../../lib/ssb/utils/subjectUtils'
-import { Content } from '/lib/xp/content'
-import { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/types'
+import {render, type RenderResponse} from '/lib/enonic/react4xp'
+import type {SubjectItem, StatisticItem} from '../../../lib/ssb/utils/subjectUtils'
+import type {Content} from '/lib/xp/content'
+import type {StatisticInListing} from '../../../lib/ssb/dashboard/statreg/types'
+import {getContent} from '/lib/xp/portal'
+
 const {
   getMainSubjects,
   getSubSubjects,
@@ -10,14 +12,10 @@ const {
   getStatisticsByPath,
   getEndedStatisticsByPath,
   getSecondaryStatisticsBySubject
-} = __non_webpack_require__( '/lib/ssb/utils/subjectUtils')
+} = __non_webpack_require__('/lib/ssb/utils/subjectUtils')
 const {
   getAllStatisticsFromRepo
 } = __non_webpack_require__('/lib/ssb/statreg/statistics')
-
-const {
-  getContent
-} = __non_webpack_require__('/lib/xp/portal')
 const {
   ensureArray
 } = __non_webpack_require__('/lib/ssb/utils/arrayUtils')
@@ -61,15 +59,15 @@ function getStatbankSubjectTree(req: XP.Request, content: Content): RenderRespon
 }
 
 function prepareSubSubjects(subSubject: SubjectItem,
-  statregStatistics: Array<StatisticInListing>,
-  statistics: Array<StatisticItem>,
-  language: string): SubSubjectsWithStatistics {
+                            statregStatistics: Array<StatisticInListing>,
+                            statistics: Array<StatisticItem>,
+                            language: string): SubSubjectsWithStatistics {
   const statisticItems: Array<StatisticItem> = getStatisticsByPath(statistics, subSubject.path).filter((s) => s.hideFromList !== true)
 
   const preparedStatistics: PreparedSubs['statistics'] = []
   statisticItems.forEach((s) => {
     const lang: string = language === 'en' ? 'en' : 'no'
-    const title: string = s.titles.filter((t)=> t.language === lang)[0].title
+    const title: string = s.titles.filter((t) => t.language === lang)[0].title
     preparedStatistics.push(
       {
         title: title,
@@ -82,7 +80,7 @@ function prepareSubSubjects(subSubject: SubjectItem,
   const endedStatistics: Array<StatisticItem> = getEndedStatisticsByPath(pathEndedStatisticNo, statregStatistics, true)
   const preparedEndedStatistics: PreparedSubs['statistics'] = endedStatistics.length > 0 ? endedStatistics.map((e) => {
     const lang: string = language === 'en' ? 'en' : 'no'
-    const title: string = e.titles.filter((t)=> t.language === lang)[0].title
+    const title: string = e.titles.filter((t) => t.language === lang)[0].title
     return {
       title: title,
       url: e.shortName
@@ -93,7 +91,7 @@ function prepareSubSubjects(subSubject: SubjectItem,
 
   const preparedSecondaryStatistics: PreparedSubs['statistics'] = secondaryStatistics.length > 0 ? secondaryStatistics.map((e) => {
     const lang: string = language === 'en' ? 'en' : 'no'
-    const title: string = e.titles.filter((t)=> t.language === lang)[0].title
+    const title: string = e.titles.filter((t) => t.language === lang)[0].title
     return {
       title: title,
       url: e.shortName
@@ -117,7 +115,7 @@ interface SubSubs {
 }
 
 interface PreparedSubs {
-  statistics: Array<{title: string; url: string}>;
+  statistics: Array<{ title: string; url: string }>;
 }
 
 interface ReactProps {

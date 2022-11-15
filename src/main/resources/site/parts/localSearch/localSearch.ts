@@ -1,16 +1,14 @@
-import { get, query, Content } from '/lib/xp/content'
-import {render, RenderResponse} from '/lib/enonic/react4xp'
-import { LocalSearchPartConfig } from './localSearch-part-config'
+import {get as getContentByKey, query, type Content} from '/lib/xp/content'
+import {render, type RenderResponse} from '/lib/enonic/react4xp'
+import type {LocalSearchPartConfig} from './localSearch-part-config'
+import {getComponent, pageUrl} from '/lib/xp/portal'
 
-const {
-  getComponent, pageUrl
-} = __non_webpack_require__('/lib/xp/portal')
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
 
 
-exports.get = function(req:XP.Request):XP.Response | RenderResponse {
+export function get(req: XP.Request): XP.Response | RenderResponse {
   try {
     return renderPart(req)
   } catch (e) {
@@ -18,13 +16,13 @@ exports.get = function(req:XP.Request):XP.Response | RenderResponse {
   }
 }
 
-exports.preview = (req: XP.Request): RenderResponse => {
+export function preview(req: XP.Request): RenderResponse {
   return renderPart(req)
 }
 
 function renderPart(req: XP.Request): RenderResponse {
   const config: LocalSearchPartConfig = getComponent().config
-  const searchFolderContent: Content<object> | null = config.searchFolder ? get({
+  const searchFolderContent: Content<object> | null = config.searchFolder ? getContentByKey({
     key: config.searchFolder
   }) : null
 

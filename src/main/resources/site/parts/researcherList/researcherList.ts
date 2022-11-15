@@ -1,17 +1,17 @@
-import { Content, QueryResponse, get, query } from '/lib/xp/content'
-import { Employee } from '../../content-types/employee/employee'
-import { DefaultPageConfig } from '../../pages/default/default-page-config'
-import { getContent, pageUrl } from '/lib/xp/portal'
-import { localize } from '/lib/xp/i18n'
-import { RenderResponse, render } from '/lib/enonic/react4xp'
-import { Page } from '../../content-types/page/page'
+import {type Content, type QueryResponse, get as getContentByKey, query} from '/lib/xp/content'
+import type {Employee} from '../../content-types/employee/employee'
+import type {DefaultPageConfig} from '../../pages/default/default-page-config'
+import {getContent, pageUrl} from '/lib/xp/portal'
+import {localize} from '/lib/xp/i18n'
+import {type RenderResponse, render} from '/lib/enonic/react4xp'
+import type {Page} from '../../content-types/page/page'
 
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
 
 
-exports.get = (req: XP.Request): RenderResponse | XP.Response => {
+export function get(req: XP.Request): RenderResponse | XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -19,7 +19,9 @@ exports.get = (req: XP.Request): RenderResponse | XP.Response => {
   }
 }
 
-exports.preview = (req: XP.Request): RenderResponse => renderPart(req)
+export function preview(req: XP.Request): RenderResponse {
+  return renderPart(req)
+}
 
 function renderPart(req: XP.Request): RenderResponse {
   const content: Content<Page, object> = getContent()
@@ -74,11 +76,11 @@ function getResearchers() {
 
 function prepareResearchers(results: readonly Content<Employee>[]) {
   return results.map((result) => {
-    const areaContent: Content<DefaultPageConfig> | null = result.data.area ? get({
+    const areaContent: Content<DefaultPageConfig> | null = result.data.area ? getContentByKey({
       key: result.data.area
     }) : null
 
-    const area: Area| null = areaContent ? {
+    const area: Area | null = areaContent ? {
       title: areaContent.displayName,
       href: areaContent._path
     } : null
@@ -97,7 +99,7 @@ function prepareResearchers(results: readonly Content<Employee>[]) {
   })
 }
 
-function createAlphabeticalResearchersList(preparedResults: IPreparedResearcher[]):Array<IResearcherMap> {
+function createAlphabeticalResearchersList(preparedResults: IPreparedResearcher[]): Array<IResearcherMap> {
   const data: IObjectKeys = preparedResults.reduce((result: IObjectKeys, researcher: IPreparedResearcher) => {
     const alphabet: string = researcher.surname[0].toUpperCase()
     if (!result[alphabet]) {
@@ -109,8 +111,7 @@ function createAlphabeticalResearchersList(preparedResults: IPreparedResearcher[
       result[alphabet].record.push(researcher)
     }
     return result
-  }, {
-  })
+  }, {})
 
   const result: Array<IResearcherMap> = Object.keys(data).map((key) => data[key])
   return result

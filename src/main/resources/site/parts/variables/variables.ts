@@ -1,27 +1,21 @@
-import { getChildren, query, Content } from '/lib/xp/content'
-import { render, RenderResponse } from '/lib/enonic/react4xp'
-import { Article } from '../../content-types/article/article'
+import {getChildren, query, type Content} from '/lib/xp/content'
+import {render} from '/lib/enonic/react4xp'
+import type {Article} from '../../content-types/article/article'
+import {attachmentUrl, getContent, pageUrl, processHtml} from '/lib/xp/portal'
+import {localize} from '/lib/xp/i18n'
 
 const {
   data
 } = __non_webpack_require__('/lib/util')
 const {
-  attachmentUrl,
-  getContent,
-  pageUrl,
-  processHtml
-} = __non_webpack_require__('/lib/xp/portal')
-
-const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
-
-const i18nLib = __non_webpack_require__('/lib/xp/i18n')
 const {
   moment
 } = __non_webpack_require__('/lib/vendor/moment')
 
-exports.get = function(req: XP.Request): XP.Response {
+
+export function get(req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -29,7 +23,9 @@ exports.get = function(req: XP.Request): XP.Response {
   }
 }
 
-exports.preview = (req: XP.Request): XP.Response => renderPart(req)
+export function preview(req: XP.Request): XP.Response {
+  return renderPart(req)
+}
 
 const MAX_VARIABLES: number = 9999
 const NO_VARIABLES_FOUND: XP.Response = {
@@ -51,15 +47,15 @@ function renderPart(req: XP.Request): XP.Response {
 
 function renderVariables(req: XP.Request, variables: Array<Variables>): XP.Response {
   if (variables && variables.length) {
-    const download: string = i18nLib.localize({
+    const download: string = localize({
       key: 'variables.download'
     })
 
     return render('variables/Variables',
       {
         variables: variables.map(({
-          title, description, fileHref, fileModifiedDate, href
-        }) => {
+                                    title, description, fileHref, fileModifiedDate, href
+                                  }) => {
           return {
             title,
             description,

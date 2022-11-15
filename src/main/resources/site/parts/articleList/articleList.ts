@@ -1,14 +1,11 @@
-import type { Article } from '../../content-types/article/article'
-import { pageUrl, getContent, getComponent, type Component } from '/lib/xp/portal'
-import type { ArticleListPartConfig } from './articleList-part-config'
-import { render, type RenderResponse } from '/lib/enonic/react4xp'
-import { query, type AggregationsResponseEntry, type Content } from '/lib/xp/content'
-import type { SubjectItem } from '/lib/ssb/utils/subjectUtils'
-import { formatDate } from '/lib/ssb/utils/dateUtils'
-
-const {
-  localize
-} = __non_webpack_require__('/lib/xp/i18n')
+import type {Article} from '../../content-types/article/article'
+import {pageUrl, getContent, getComponent, type Component} from '/lib/xp/portal'
+import type {ArticleListPartConfig} from './articleList-part-config'
+import {render, type RenderResponse} from '/lib/enonic/react4xp'
+import {query, type AggregationsResponseEntry, type Content} from '/lib/xp/content'
+import type {SubjectItem} from '/lib/ssb/utils/subjectUtils'
+import {formatDate} from '/lib/ssb/utils/dateUtils'
+import {localize} from '/lib/xp/i18n'
 
 const {
   moment
@@ -58,7 +55,7 @@ function getArticleList(req: XP.Request, content: Content): RenderResponse {
     key: 'publicationLinkText',
     locale: language
   })
-  const headerText: string = localize( {
+  const headerText: string = localize({
     key: 'articleList.heading',
     locale: language
   })

@@ -1,20 +1,16 @@
-import {render, RenderResponse} from '/lib/enonic/react4xp'
-import { PictureCardLinksPartConfig } from './pictureCardLinks-part-config'
+import {render} from '/lib/enonic/react4xp'
+import type {PictureCardLinksPartConfig} from './pictureCardLinks-part-config'
+import {getComponent, imageUrl, imagePlaceholder} from '/lib/xp/portal'
 
 const {
   getImageAlt
 } = __non_webpack_require__('/lib/ssb/utils/imageUtils')
-
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
-const {
-  getComponent,
-  imageUrl,
-  imagePlaceholder
-} = __non_webpack_require__('/lib/xp/portal')
 
-exports.get = function(req: XP.Request): XP.Response {
+
+export function get(req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -22,20 +18,20 @@ exports.get = function(req: XP.Request): XP.Response {
   }
 }
 
-exports.preview = (req: XP.Request): XP.Response => {
+export function preview(req: XP.Request): XP.Response {
   return renderPart(req)
 }
 
 function renderPart(req: XP.Request): XP.Response {
   const config: PictureCardLinksPartConfig = getComponent().config
   return render('PictureCardLinks',
-      {
-        pictureCardLinks: parsePictureCardLinks(config.pictureCardLinks)
-      },
-      req,
-      {
-        body: '<section class="xp-part picture-card-links container my-5"></section>'
-      })
+    {
+      pictureCardLinks: parsePictureCardLinks(config.pictureCardLinks)
+    },
+    req,
+    {
+      body: '<section class="xp-part picture-card-links container my-5"></section>'
+    })
 }
 
 function parsePictureCardLinks(pictureCardLinks: PictureCardLinksPartConfig['pictureCardLinks']): Array<PictureCardLinksContent> {

@@ -1,18 +1,16 @@
-import { getComponent, processHtml, Component} from "/lib/xp/portal";
-import {FactBoxPartConfig} from "./factBox-part-config";
-import {render as r4XpRender, RenderResponse} from '/lib/enonic/react4xp'
-import {get, Content} from "/lib/xp/content";
-import {FactBox} from "../../content-types/factBox/factBox";
-import { ResourceKey, render } from '/lib/thymeleaf'
+import {getComponent, processHtml, type Component} from "/lib/xp/portal";
+import type {FactBoxPartConfig} from "./factBox-part-config";
+import {render as r4XpRender, type RenderResponse} from '/lib/enonic/react4xp'
+import {get as getContentByKey, type Content} from "/lib/xp/content";
+import type {FactBox} from "../../content-types/factBox/factBox";
+import {type ResourceKey, render} from '/lib/thymeleaf'
 
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
-
-
 const view: ResourceKey = resolve('./factBox.html')
 
-exports.get = function(req: XP.Request): XP.Response | RenderResponse {
+export function get(req: XP.Request): XP.Response | RenderResponse {
   try {
     const part: Component<FactBoxPartConfig> = getComponent()
     return renderPart(req, part.config.factBox)
@@ -21,7 +19,7 @@ exports.get = function(req: XP.Request): XP.Response | RenderResponse {
   }
 }
 
-exports.preview = function(req: XP.Request, id: string) {
+export function preview(req: XP.Request, id: string) {
   try {
     return renderPart(req, id)
   } catch (e) {
@@ -40,7 +38,7 @@ function renderPart(req: XP.Request, factBoxId: string): XP.Response | RenderRes
       throw new Error('Factbox - Missing Id')
     }
   }
-  const factBoxContent: Content<FactBox> | null = get({
+  const factBoxContent: Content<FactBox> | null = getContentByKey({
     key: factBoxId
   })
   if (!factBoxContent) throw new Error(`FactBox with id ${factBoxId} doesn't exist`)
@@ -49,13 +47,13 @@ function renderPart(req: XP.Request, factBoxId: string): XP.Response | RenderRes
   })
   const body: string = render(view)
   return r4XpRender(
-      'FactBox',
-      {
+    'FactBox',
+    {
       header: factBoxContent.displayName,
       text
-      },
-      req,
-      {
-        body: body
-      })
+    },
+    req,
+    {
+      body: body
+    })
 }

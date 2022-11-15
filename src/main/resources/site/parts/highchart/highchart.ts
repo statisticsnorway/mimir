@@ -2,18 +2,19 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import JSONstat from 'jsonstat-toolkit/import.mjs'
-import { getComponent, getContent, Component } from '/lib/xp/portal'
-import { HighchartPartConfig } from './highchart-part-config'
-import { get, Content } from '/lib/xp/content'
-import { Highchart } from '../../content-types/highchart/highchart'
-import { DatasetRepoNode } from '../../../lib/ssb/repo/dataset'
-import { JSONstat as JSONstatType } from '../../../lib/types/jsonstat-toolkit'
-import { TbmlDataUniform } from '../../../lib/types/xmlParser'
-import { HighchartsGraphConfig } from '../../../lib/types/highcharts'
-import { ResourceKey, render } from '/lib/thymeleaf'
-import { DataSource } from '../../mixins/dataSource/dataSource'
-import {render as r4XpRender, RenderResponse} from '/lib/enonic/react4xp'
-import { GA_TRACKING_ID } from '../../pages/default/default'
+import {getComponent, getContent, type Component} from '/lib/xp/portal'
+import type {HighchartPartConfig} from './highchart-part-config'
+import {get as getContentByKey, type Content} from '/lib/xp/content'
+import type {Highchart} from '../../content-types/highchart/highchart'
+import type {DatasetRepoNode} from '../../../lib/ssb/repo/dataset'
+import {JSONstat as JSONstatType} from '../../../lib/types/jsonstat-toolkit'
+import type {TbmlDataUniform} from '../../../lib/types/xmlParser'
+import type {HighchartsGraphConfig} from '../../../lib/types/highcharts'
+import {type  ResourceKey, render} from '/lib/thymeleaf'
+import type {DataSource} from '../../mixins/dataSource/dataSource'
+import {render as r4XpRender, type RenderResponse} from '/lib/enonic/react4xp'
+import {GA_TRACKING_ID} from '../../pages/default/default'
+import {localize} from '/lib/xp/i18n'
 
 const {
   DataSource: DataSourceType,
@@ -25,10 +26,6 @@ const {
     forceArray
   }
 } = __non_webpack_require__('/lib/util')
-const {
-  localize
-} = __non_webpack_require__('/lib/xp/i18n')
-
 const {
   createHighchartObject
 } = __non_webpack_require__('/lib/ssb/parts/highcharts/highchartsUtils')
@@ -45,13 +42,12 @@ const view: ResourceKey = resolve('./highchart.html')
 const {
   isEnabled
 } = __non_webpack_require__('/lib/featureToggle')
-
 const {
   getPhrases
 } = __non_webpack_require__('/lib/ssb/utils/language')
 
 
-exports.get = function(req: XP.Request): XP.Response | RenderResponse {
+export function get(req: XP.Request): XP.Response | RenderResponse {
   try {
     const part: Component<HighchartPartConfig> = getComponent()
     const highchartIds: Array<string> = part.config.highchart ? forceArray(part.config.highchart) : []
@@ -61,7 +57,7 @@ exports.get = function(req: XP.Request): XP.Response | RenderResponse {
   }
 }
 
-exports.preview = (req: XP.Request, id: string): XP.Response | RenderResponse => {
+export function preview(req: XP.Request, id: string): XP.Response | RenderResponse {
   try {
     return renderPart(req, [id])
   } catch (e) {
@@ -95,7 +91,7 @@ function renderPart(req: XP.Request, highchartIds: Array<string>): XP.Response |
   })
 
   const highcharts: Array<HighchartsReactProps> = highchartIds.map((key) => {
-    const highchart: Content<Highchart> | null = get({
+    const highchart: Content<Highchart> | null = getContentByKey({
       key
     })
     const config: HighchartsExtendedProps | undefined = highchart ? determinConfigType(req, highchart) : undefined
@@ -155,7 +151,7 @@ function createDataFromHtmlTable(req: XP.Request, highchart: Content<Highchart &
 
 
 function createDataFromDataSource(req: XP.Request, highchart: Content<Highchart & DataSource>): HighchartsExtendedProps | undefined {
-  if ( highchart && highchart.data && highchart.data.dataSource) {
+  if (highchart && highchart.data && highchart.data.dataSource) {
     const type: string = highchart.data.dataSource._selected
 
     // get draft
@@ -199,6 +195,7 @@ function createHighchartsReactProps(highchart: Content<Highchart>, config: Highc
     hideTitle: highchart.data.hideTitle
   }
 }
+
 type HighchartsExtendedProps = HighchartsGraphConfig & HighchartsReactExtraProps
 
 interface HighchartsReactProps {

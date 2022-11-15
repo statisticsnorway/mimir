@@ -1,12 +1,12 @@
-import {render, RenderResponse} from '/lib/enonic/react4xp'
-import { getComponent, attachmentUrl, Component } from '/lib/xp/portal'
-import { DownloadLinkPartConfig } from './downloadLink-part-config'
+import {render, type RenderResponse} from '/lib/enonic/react4xp'
+import {getComponent, attachmentUrl, type Component} from '/lib/xp/portal'
+import type {DownloadLinkPartConfig} from './downloadLink-part-config'
 
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
 
-exports.get = function(req: XP.Request) {
+export function get(req: XP.Request) {
   try {
     return renderPart(req)
   } catch (e) {
@@ -14,7 +14,9 @@ exports.get = function(req: XP.Request) {
   }
 }
 
-exports.preview = (req: XP.Request) => renderPart(req)
+export function preview(req: XP.Request) {
+  return renderPart(req)
+}
 
 function renderPart(req: XP.Request): RenderResponse {
   const part: Component<DownloadLinkPartConfig> = getComponent()
@@ -26,8 +28,8 @@ function renderPart(req: XP.Request): RenderResponse {
       }),
       downloadText: part.config.text
     },
-      req,
-      {
-        body: '<section class="xp-part part-download-link"></section>'
-      })
+    req,
+    {
+      body: '<section class="xp-part part-download-link"></section>'
+    })
 }

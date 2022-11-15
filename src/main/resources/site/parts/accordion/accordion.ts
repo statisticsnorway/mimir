@@ -1,18 +1,14 @@
-import { get as getOne, type Content } from '/lib/xp/content'
-import { render, type RenderResponse } from '/lib/enonic/react4xp'
-import type { Accordion } from '../../content-types/accordion/accordion'
-import type { AccordionConfig } from '../../macros/accordion/accordion-config'
+import {get as getOne, type Content} from '/lib/xp/content'
+import {render, type RenderResponse} from '/lib/enonic/react4xp'
+import type {Accordion} from '../../content-types/accordion/accordion'
+import type {AccordionConfig} from '../../macros/accordion/accordion-config'
+import {getComponent, getContent, processHtml} from '/lib/xp/portal'
 
 const {
   data: {
     forceArray
   }
 } = __non_webpack_require__('/lib/util')
-const {
-  getComponent,
-  getContent,
-  processHtml
-} = __non_webpack_require__('/lib/xp/portal')
 const {
   sanitize
 } = __non_webpack_require__('/lib/xp/common')

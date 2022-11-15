@@ -1,22 +1,19 @@
-import { Content } from '/lib/xp/content'
-import { ResourceKey, render } from '/lib/thymeleaf'
-import { ReleaseDatesVariant, StatisticInListing, VariantInListing } from '../../../lib/ssb/dashboard/statreg/types'
-import { formatDate } from '../../../lib/ssb/utils/dateUtils'
-import { render as r4xpRender } from '/lib/enonic/react4xp'
-import { Statistics } from '../../content-types/statistics/statistics'
-import { Phrases } from '../../../lib/types/language'
-import { randomUnsafeString } from '/lib/ssb/utils/utils'
+import type {Content} from '/lib/xp/content'
+import {type ResourceKey, render} from '/lib/thymeleaf'
+import type {ReleaseDatesVariant, StatisticInListing, VariantInListing} from '../../../lib/ssb/dashboard/statreg/types'
+import {formatDate} from '../../../lib/ssb/utils/dateUtils'
+import {render as r4xpRender} from '/lib/enonic/react4xp'
+import type {Statistics} from '../../content-types/statistics/statistics'
+import type {Phrases} from '../../../lib/types/language'
+import {randomUnsafeString} from '/lib/ssb/utils/utils'
+import {getContent, pageUrl} from '/lib/xp/portal'
 
-const {
-  getContent, pageUrl
-} = __non_webpack_require__('/lib/xp/portal')
 const {
   getStatisticByIdFromRepo, getReleaseDatesByVariants
 } = __non_webpack_require__('/lib/ssb/statreg/statistics')
 const {
   getPhrases
 } = __non_webpack_require__('/lib/ssb/utils/language')
-
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
@@ -39,14 +36,13 @@ const util = __non_webpack_require__('/lib/util')
 const {
   isEnabled
 } = __non_webpack_require__('/lib/featureToggle')
-
-
 const {
   moment
 } = __non_webpack_require__('/lib/vendor/moment')
 const view: ResourceKey = resolve('./statistics.html')
 
-exports.get = (req: XP.Request): XP.Response => {
+
+export function get(req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -54,7 +50,9 @@ exports.get = (req: XP.Request): XP.Response => {
   }
 }
 
-exports.preview = (req: XP.Request): XP.Response => renderPart(req)
+export function preview(req: XP.Request): XP.Response {
+  return renderPart(req)
+}
 
 function renderPart(req: XP.Request): XP.Response {
   const page: Content<Statistics> = getContent()

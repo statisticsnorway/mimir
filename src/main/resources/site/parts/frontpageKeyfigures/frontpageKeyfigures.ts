@@ -1,10 +1,10 @@
-import {render, ResourceKey} from '/lib/thymeleaf'
-import {render as r4XpRender, RenderResponse} from '/lib/enonic/react4xp'
-import {Component, getComponent} from "/lib/xp/portal";
-import {FrontpageKeyfiguresPartConfig} from "./frontpageKeyfigures-part-config";
-import {Content, get} from "/lib/xp/content";
-import {KeyFigure} from "../../content-types/keyFigure/keyFigure";
-import {KeyFigureView} from "../../../lib/ssb/parts/keyFigure";
+import {render, type ResourceKey} from '/lib/thymeleaf'
+import {render as r4XpRender, type RenderResponse} from '/lib/enonic/react4xp'
+import {type Component, getComponent} from "/lib/xp/portal";
+import type {FrontpageKeyfiguresPartConfig} from "./frontpageKeyfigures-part-config";
+import {type Content, get as getContentByKey} from "/lib/xp/content";
+import type {KeyFigure} from "../../content-types/keyFigure/keyFigure";
+import type {KeyFigureView} from "../../../lib/ssb/parts/keyFigure";
 
 
 const {
@@ -22,7 +22,7 @@ const {
 
 const view: ResourceKey = resolve('./frontpageKeyfigures.html')
 
-exports.get = function(req: XP.Request) {
+export function get(req: XP.Request) {
   try {
     return renderPart(req)
   } catch (e) {
@@ -30,7 +30,9 @@ exports.get = function(req: XP.Request) {
   }
 }
 
-exports.preview = (req: XP.Request) => renderPart(req)
+export function preview(req: XP.Request) {
+  return renderPart(req)
+}
 
 const isKeyfigureData = (data: FrontPageKeyFigureData | undefined): data is FrontPageKeyFigureData => {
   return !!data
@@ -41,7 +43,7 @@ function renderPart(req: XP.Request): XP.Response | RenderResponse {
   const keyFiguresPart: Array<FrontpageKeyfigure> = part.config.keyfiguresFrontpage ? data.forceArray(part.config.keyfiguresFrontpage) : []
 
   const frontpageKeyfigures: Array<FrontPageKeyFigureData | undefined> = keyFiguresPart.map((keyFigure: FrontpageKeyfigure) => {
-    const keyFigureContent: Content<KeyFigure> | null = keyFigure.keyfigure ? get({
+    const keyFigureContent: Content<KeyFigure> | null = keyFigure.keyfigure ? getContentByKey({
       key: keyFigure.keyfigure
     }) : null
 
@@ -67,20 +69,20 @@ function renderPart(req: XP.Request): XP.Response | RenderResponse {
   }
 }
 
-function renderFrontpageKeyfigures(req: XP.Request, frontpageKeyfigures: Array<FrontPageKeyFigureData> ): RenderResponse {
+function renderFrontpageKeyfigures(req: XP.Request, frontpageKeyfigures: Array<FrontPageKeyFigureData>): RenderResponse {
   return r4XpRender('FrontpageKeyfigures',
-      {
-        keyFigures: frontpageKeyfigures.map((frontpageKeyfigure) => {
-          return {
-            ...frontpageKeyfigure
-          }
-        })
-      },
-      req,
-      {
-        body: render(view),
-        clientRender: req.mode !== 'edit'
+    {
+      keyFigures: frontpageKeyfigures.map((frontpageKeyfigure) => {
+        return {
+          ...frontpageKeyfigure
+        }
       })
+    },
+    req,
+    {
+      body: render(view),
+      clientRender: req.mode !== 'edit'
+    })
 }
 
 interface FrontpageKeyfigure {
@@ -96,5 +98,5 @@ interface FrontPageKeyFigureData {
   url: string;
   number?: string;
   numberDescription?: string;
-  noNumberText:string;
+  noNumberText: string;
 }

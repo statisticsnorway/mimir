@@ -1,15 +1,13 @@
-import { formatDate } from '../../../lib/ssb/utils/dateUtils'
-import { get, Content } from '/lib/xp/content'
-import { render, RenderResponse } from '/lib/enonic/react4xp'
-import { Phrases } from '../../../lib/types/language'
-import { Statistics } from '../../content-types/statistics/statistics'
-import { OmStatistikken } from '../../content-types/omStatistikken/omStatistikken'
-import { ReleaseDatesVariant, StatisticInListing, VariantInListing } from '../../../lib/ssb/dashboard/statreg/types'
-import { Accordion, AccordionItem } from '../../../lib/types/components'
+import {formatDate} from '../../../lib/ssb/utils/dateUtils'
+import {get as getContentByKey, type Content} from '/lib/xp/content'
+import {render, type RenderResponse} from '/lib/enonic/react4xp'
+import type {Phrases} from '../../../lib/types/language'
+import type {Statistics} from '../../content-types/statistics/statistics'
+import type {OmStatistikken} from '../../content-types/omStatistikken/omStatistikken'
+import type {ReleaseDatesVariant, StatisticInListing, VariantInListing} from '../../../lib/ssb/dashboard/statreg/types'
+import type {Accordion, AccordionItem} from '../../../lib/types/components'
+import {getContent, processHtml} from '/lib/xp/portal'
 
-const {
-  getContent, processHtml
-} = __non_webpack_require__('/lib/xp/portal')
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
@@ -32,7 +30,7 @@ const {
 } = __non_webpack_require__('/lib/util')
 
 
-exports.get = function(req:XP.Request):XP.Response | RenderResponse {
+export function get(req: XP.Request): XP.Response | RenderResponse {
   try {
     const statisticPage: Content<Statistics> = getContent()
     return renderPart(req, statisticPage.data.aboutTheStatistics)
@@ -41,9 +39,11 @@ exports.get = function(req:XP.Request):XP.Response | RenderResponse {
   }
 }
 
-exports.preview = (req: XP.Request, id: string | undefined):XP.Response | RenderResponse => renderPart(req, id)
+export function preview(req: XP.Request, id: string | undefined): XP.Response | RenderResponse {
+  return renderPart(req, id)
+}
 
-function renderPart(req:XP.Request, aboutTheStatisticsId: string | undefined):XP.Response | RenderResponse {
+function renderPart(req: XP.Request, aboutTheStatisticsId: string | undefined): XP.Response | RenderResponse {
   const page: Content = getContent()
   if (!aboutTheStatisticsId) {
     if (req.mode === 'edit' && page.type !== `${app.name}:statistics`) {
@@ -71,14 +71,14 @@ function renderPart(req:XP.Request, aboutTheStatisticsId: string | undefined):XP
   }
 }
 
-function getOmStatistikken(req:XP.Request, page: Content<any>, aboutTheStatisticsId: string | undefined ): XP.Response | RenderResponse {
+function getOmStatistikken(req: XP.Request, page: Content<any>, aboutTheStatisticsId: string | undefined): XP.Response | RenderResponse {
   const phrases: Phrases = getPhrases(page) as Phrases
   const language: string = page.language === 'en' || page.language === 'nn' ? page.language : 'nb'
   let nextRelease: string = phrases.notYetDetermined
   const statisticPage: Content<Statistics> = getContent()
   const statisticId: string | undefined = statisticPage.data.statistic
 
-  const aboutTheStatisticsContent: Content<OmStatistikken> | null = aboutTheStatisticsId ? get({
+  const aboutTheStatisticsContent: Content<OmStatistikken> | null = aboutTheStatisticsId ? getContentByKey({
     key: aboutTheStatisticsId
   }) : null
 
@@ -108,16 +108,16 @@ function getOmStatistikken(req:XP.Request, page: Content<any>, aboutTheStatistic
   })
 }
 
-function getNextRelease(statistic: StatisticInListing, nextRelease: string, language: string) : string {
+function getNextRelease(statistic: StatisticInListing, nextRelease: string, language: string): string {
   const variants: Array<VariantInListing> = statistic.variants ? forceArray(statistic.variants) : []
-  const releaseDates:ReleaseDatesVariant = getReleaseDatesByVariants(variants)
+  const releaseDates: ReleaseDatesVariant = getReleaseDatesByVariants(variants)
   const nextReleaseDate: string = releaseDates.nextRelease[0]
   const nextReleaseStatistic: string | undefined = nextReleaseDate && nextReleaseDate !== '' ? formatDate(nextReleaseDate, 'PPP', language) : undefined
 
   return nextReleaseStatistic ? nextReleaseStatistic : nextRelease
 }
 
-function getAccordionData(content: OmStatistikken, phrases: Phrases, nextUpdate: string) : Array<Accordion> {
+function getAccordionData(content: OmStatistikken, phrases: Phrases, nextUpdate: string): Array<Accordion> {
   const accordions: Array<Accordion> = []
 
   const items: Items = {

@@ -1,28 +1,28 @@
-import { render as r4XpRender, type RenderResponse } from '/lib/enonic/react4xp'
-import { getComponent, getContent, serviceUrl, pageUrl, type Component } from '/lib/xp/portal'
-import type { BkibolCalculatorPartConfig } from './bkibolCalculator-part-config'
-import type { Dataset, Dimension } from '/lib/types/jsonstat-toolkit'
-import type { Content } from '/lib/xp/content'
-import type { CalculatorConfig } from '../../content-types/calculatorConfig/calculatorConfig'
-import type { Language, Phrases } from '/lib/types/language'
-import { allMonths, nextPeriod } from '/lib/ssb/utils/calculatorUtils'
-import type { CalculatorPeriod } from '/lib/types/calculator'
-import type { DropdownItem, DropdownItems } from '/lib/types/components'
+import {render as r4XpRender, type RenderResponse} from '/lib/enonic/react4xp'
+import {getComponent, getContent, serviceUrl, pageUrl, type Component} from '/lib/xp/portal'
+import type {BkibolCalculatorPartConfig} from './bkibolCalculator-part-config'
+import type {Dataset, Dimension} from '/lib/types/jsonstat-toolkit'
+import type {Content} from '/lib/xp/content'
+import type {CalculatorConfig} from '../../content-types/calculatorConfig/calculatorConfig'
+import type {Language, Phrases} from '/lib/types/language'
+import {allMonths, nextPeriod} from '/lib/ssb/utils/calculatorUtils'
+import type {CalculatorPeriod} from '/lib/types/calculator'
+import type {DropdownItem, DropdownItems} from '/lib/types/components'
+import {localize} from '/lib/xp/i18n'
 
 const {
   renderError
 } = __non_webpack_require__('/lib/ssb/error/error')
-
 const {
   getLanguage
-} = __non_webpack_require__( '/lib/ssb/utils/language')
+} = __non_webpack_require__('/lib/ssb/utils/language')
 const {
   getCalculatorConfig, getBkibolDatasetEnebolig
 } = __non_webpack_require__('/lib/ssb/dataset/calculator')
 const {
   fromPartCache
 } = __non_webpack_require__('/lib/ssb/cache/partCache')
-const i18nLib = __non_webpack_require__('/lib/xp/i18n')
+
 
 export function get(req: XP.Request): RenderResponse | XP.Response {
   try {
@@ -66,7 +66,7 @@ function getBkibolCalculatorComponent(req: XP.Request, page: Content<BkibolCalcu
   const lastUpdated: CalculatorPeriod = lastPeriod(bkibolDataEnebolig)
   const nextUpdate: CalculatorPeriod = nextPeriod(lastUpdated.month.toString(), lastUpdated.year.toString())
   const nextReleaseMonth: number = +nextUpdate.month === 12 ? 1 : +nextUpdate.month + 1
-  const nextPublishText: string = i18nLib.localize({
+  const nextPublishText: string = localize({
     key: 'bkibolNextPublishText',
     locale: language.code,
     values: [
@@ -76,7 +76,7 @@ function getBkibolCalculatorComponent(req: XP.Request, page: Content<BkibolCalcu
       monthLabel(months, code, nextReleaseMonth)
     ]
   })
-  const lastNumberText: string = i18nLib.localize({
+  const lastNumberText: string = localize({
     key: 'calculatorLastNumber',
     locale: code,
     values: [
