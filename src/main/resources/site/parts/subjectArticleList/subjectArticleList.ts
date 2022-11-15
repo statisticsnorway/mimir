@@ -1,17 +1,12 @@
-import {render, type RenderResponse} from '/lib/enonic/react4xp'
-import type {Content, QueryResponse} from '/lib/xp/content'
-import type {PreparedArticles} from '../../../lib/ssb/utils/articleUtils'
-import type {Article} from '../../content-types/article/article'
-import {getContent, serviceUrl} from '/lib/xp/portal'
-import {localize} from '/lib/xp/i18n'
+import { render, type RenderResponse } from '/lib/enonic/react4xp'
+import type { Content, QueryResponse } from '/lib/xp/content'
+import type { PreparedArticles } from '../../../lib/ssb/utils/articleUtils'
+import type { Article } from '../../content-types/article/article'
+import { getContent, serviceUrl } from '/lib/xp/portal'
+import { localize } from '/lib/xp/i18n'
 
-const {
-  isEnabled
-} = __non_webpack_require__('/lib/featureToggle')
-const {
-  getChildArticles,
-  prepareArticles
-} = __non_webpack_require__('/lib/ssb/utils/articleUtils')
+const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
+const { getChildArticles, prepareArticles } = __non_webpack_require__('/lib/ssb/utils/articleUtils')
 
 export function get(req: XP.Request): RenderResponse {
   return renderPart(req)
@@ -29,8 +24,8 @@ function renderPart(req: XP.Request): RenderResponse {
   const filterAndSortEnabled: boolean = isEnabled('articlelist-sorting', false)
   const currentPath: string = content._path
   // TODO change to false when crawling of articles is fixed
-  const showAllArticles: boolean = true
-  const start: number = 0
+  const showAllArticles = true
+  const start = 0
   const count: number = showAllArticles ? 100 : 10
 
   const childArticles: QueryResponse<Article, object> = getChildArticles(currentPath, subTopicId, start, count, sort)
@@ -38,16 +33,16 @@ function renderPart(req: XP.Request): RenderResponse {
   const totalArticles: number = childArticles.total
 
   const articleServiceUrl: string = serviceUrl({
-    service: 'articles'
+    service: 'articles',
   })
 
   const headerText: string = localize({
     key: 'relatedArticlesHeading',
-    locale: language === 'nb' ? 'no' : language
+    locale: language === 'nb' ? 'no' : language,
   })
   const buttonText: string = localize({
     key: 'button.showMore',
-    locale: language === 'nb' ? 'no' : language
+    locale: language === 'nb' ? 'no' : language,
   })
 
   const props: PartProperties = {
@@ -61,23 +56,22 @@ function renderPart(req: XP.Request): RenderResponse {
     language: language,
     articles: preparedArticles,
     totalArticles: totalArticles,
-    showAllArticles: showAllArticles
+    showAllArticles: showAllArticles,
   }
 
   return render('site/parts/subjectArticleList/subjectArticleList', props, req)
 }
 
 interface PartProperties {
-  title: string;
-  buttonTitle: string;
-  articleServiceUrl: string;
-  currentPath: string;
-  start: number;
-  count: number;
-  showSortAndFilter: boolean;
-  language: string;
-  articles: Array<PreparedArticles>;
-  totalArticles: number;
-  showAllArticles: boolean;
-
+  title: string
+  buttonTitle: string
+  articleServiceUrl: string
+  currentPath: string
+  start: number
+  count: number
+  showSortAndFilter: boolean
+  language: string
+  articles: Array<PreparedArticles>
+  totalArticles: number
+  showAllArticles: boolean
 }

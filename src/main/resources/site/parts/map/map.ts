@@ -1,10 +1,8 @@
-import {type ResourceKey, render} from '/lib/thymeleaf'
-import type {SiteConfig} from '../../site-config'
-import {assetUrl, getSiteConfig, serviceUrl} from '/lib/xp/portal'
+import { type ResourceKey, render } from '/lib/thymeleaf'
+import type { SiteConfig } from '../../site-config'
+import { assetUrl, getSiteConfig, serviceUrl } from '/lib/xp/portal'
 
-const {
-  renderError
-} = __non_webpack_require__('/lib/ssb/error/error')
+const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
 const view: ResourceKey = resolve('./map.html')
 
@@ -22,25 +20,25 @@ export function preview(req: XP.Request): XP.Response {
 
 function renderPart(req: XP.Request): XP.Response {
   const siteConfig: SiteConfig = getSiteConfig()
-  let mapFolder: string = '/mapdata'
+  let mapFolder = '/mapdata'
 
   if (typeof siteConfig.kommunefakta !== 'undefined' && siteConfig.kommunefakta.mapfolder) {
     mapFolder = siteConfig.kommunefakta.mapfolder
   }
 
   const dataPathAssetUrl: string = assetUrl({
-    path: mapFolder
+    path: mapFolder,
   })
   const dataServiceUrl: string = serviceUrl({
-    service: 'municipality'
+    service: 'municipality',
   })
   const body: string = render(view, {
     dataPathAssetUrl,
-    dataServiceUrl
+    dataServiceUrl,
   })
 
   return {
     body,
-    contentType: 'text/html'
+    contentType: 'text/html',
   }
 }

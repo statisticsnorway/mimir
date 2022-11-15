@@ -12,7 +12,7 @@ export const initialState = {
   internalBaseUrl: '',
   internalStatbankUrl: '',
   serverTime: undefined,
-  serverTimeReceived: undefined
+  serverTimeReceived: undefined,
 }
 
 const commonSlice = createSlice({
@@ -59,11 +59,8 @@ const commonSlice = createSlice({
     serverTimeLoaded(state, action) {
       state.serverTime = action.serverTime
       state.serverTimeReceived = Date.now()
-    }
-  }
+    },
+  },
 })
 
-export const {
-  actions, reducer, name: sliceKey
-} = commonSlice
-
+export const { actions, reducer, name: sliceKey } = commonSlice

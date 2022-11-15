@@ -5,27 +5,31 @@ import React from 'react'
 function StatbankSubjectTree(props) {
   function renderStatisticLink(statistic) {
     return (
-      <li><Link href={props.statbankBaseUrl + statistic.url}>{statistic.title}</Link></li>
+      <li>
+        <Link href={props.statbankBaseUrl + statistic.url}>{statistic.title}</Link>
+      </li>
     )
   }
 
   function renderSubSubjects(subSubject) {
-    return (<NestedAccordion header={subSubject.title}>
-      <ol className="statbank-list">
-        {subSubject.statistics.map((statistic) => renderStatisticLink(statistic))}
-      </ol>
-    </NestedAccordion>)
+    return (
+      <NestedAccordion header={subSubject.title}>
+        <ol className='statbank-list'>{subSubject.statistics.map((statistic) => renderStatisticLink(statistic))}</ol>
+      </NestedAccordion>
+    )
   }
 
   function renderMainSubjects(mainSubject) {
-    return (<Accordion header={mainSubject.title}>
-      { mainSubject.subSubjects.map((subSubject) => renderSubSubjects(subSubject)) }
-    </Accordion>)
+    return (
+      <Accordion header={mainSubject.title}>
+        {mainSubject.subSubjects.map((subSubject) => renderSubSubjects(subSubject))}
+      </Accordion>
+    )
   }
 
   return (
-    <section className="statbank-subject-tree">
-      { props.mainSubjects.map((mainSubject) => renderMainSubjects(mainSubject))}
+    <section className='statbank-subject-tree'>
+      {props.mainSubjects.map((mainSubject) => renderMainSubjects(mainSubject))}
     </section>
   )
 }
@@ -46,10 +50,10 @@ StatbankSubjectTree.propTypes = {
       name: PropTypes.string,
       statistics: PropTypes.arrayOf({
         title: PropTypes.string,
-        url: PropTypes.string
-      })
-    })
-  })
+        url: PropTypes.string,
+      }),
+    }),
+  }),
 }
 
-export default (props) => <StatbankSubjectTree {...props}/>
+export default (props) => <StatbankSubjectTree {...props} />

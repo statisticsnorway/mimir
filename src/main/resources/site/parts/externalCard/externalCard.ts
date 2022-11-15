@@ -1,15 +1,9 @@
-import {render, type RenderResponse} from '/lib/enonic/react4xp'
-import {getComponent, imageUrl, type Component} from "/lib/xp/portal";
-import type {ExternalCardPartConfig} from "./externalCard-part-config";
+import { render, type RenderResponse } from '/lib/enonic/react4xp'
+import { getComponent, imageUrl, type Component } from '/lib/xp/portal'
+import type { ExternalCardPartConfig } from './externalCard-part-config'
 
-const {
-  renderError
-} = __non_webpack_require__('/lib/ssb/error/error')
-
-const {
-  data
-} = __non_webpack_require__('/lib/util')
-
+const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
+const { data } = __non_webpack_require__('/lib/util')
 
 export function get(req: XP.Request) {
   try {
@@ -25,7 +19,7 @@ export function preview(req: XP.Request) {
 
 const NO_LINKS_FOUND = {
   body: '',
-  contentType: 'text/html'
+  contentType: 'text/html',
 }
 
 function renderPart(req: XP.Request): XP.Response | RenderResponse {
@@ -46,23 +40,24 @@ const renderExternalCard = (req: XP.Request, links: Array<ExternalCard>) => {
             content: link.content,
             image: imageUrl({
               id: link.image,
-              scale: 'height(70)'
-            })
+              scale: 'height(70)',
+            }),
           }
-        })
+        }),
       },
       req,
       {
         body: '<section class="xp-part part-external-card"></section>',
-        clientRender: req.mode !== 'edit'
-      })
+        clientRender: req.mode !== 'edit',
+      }
+    )
   }
   return NO_LINKS_FOUND
 }
 
 interface ExternalCard {
-  image: string;
-  content: string;
-  linkText: string;
-  linkUrl: string;
+  image: string
+  content: string
+  linkText: string
+  linkUrl: string
 }

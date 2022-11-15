@@ -1,8 +1,8 @@
-import {render, type RenderResponse} from '/lib/enonic/react4xp'
-import type {Content} from '/lib/xp/content'
-import type {SiteConfig} from '../../site-config'
-import {getContent, getSiteConfig} from '/lib/xp/portal'
-import {localize} from '/lib/xp/i18n'
+import { render, type RenderResponse } from '/lib/enonic/react4xp'
+import type { Content } from '/lib/xp/content'
+import type { SiteConfig } from '../../site-config'
+import { getContent, getSiteConfig } from '/lib/xp/portal'
+import { localize } from '/lib/xp/i18n'
 
 export function get(req: XP.Request): RenderResponse {
   return renderPart(req)
@@ -22,37 +22,39 @@ function renderPart(req: XP.Request): RenderResponse {
 
   const statbankHelpText: string = localize({
     key: 'statbankHelpText',
-    locale: pageLanguage === 'nb' ? 'no' : pageLanguage
+    locale: pageLanguage === 'nb' ? 'no' : pageLanguage,
   })
   const statbankFrontPage: string = localize({
     key: 'statbankFrontPage',
-    locale: pageLanguage === 'nb' ? 'no' : pageLanguage
+    locale: pageLanguage === 'nb' ? 'no' : pageLanguage,
   })
 
-
-  const testCrumbs: Array<object> = [{
-    text: 'Forsiden',
-    link: '/'
-  }, {
-    text: 'Statistikkbanken',
-    link: '/statbank'
-  }]
+  const testCrumbs: Array<object> = [
+    {
+      text: 'Forsiden',
+      link: '/',
+    },
+    {
+      text: 'Statistikkbanken',
+      link: '/statbank',
+    },
+  ]
 
   const props: PartProperties = {
     title: 'Statistikkbanken',
     breadcrumb: testCrumbs,
     statbankHelpText,
     statbankFrontPage,
-    statbankHelpLink
+    statbankHelpLink,
   }
 
   return render('site/parts/statbankFrame/statbankFrame', props, req)
 }
 
 interface PartProperties {
-  title: string;
-  breadcrumb: Array<object>;
-  statbankHelpText: string;
-  statbankFrontPage: string;
-  statbankHelpLink: string;
+  title: string
+  breadcrumb: Array<object>
+  statbankHelpText: string
+  statbankFrontPage: string
+  statbankHelpLink: string
 }

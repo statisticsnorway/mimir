@@ -1,53 +1,37 @@
-import { DataSourceStatisticsPublishResult, JobInfoNode, JOB_STATUS_COMPLETE, StatisticsPublishResult } from '../../lib/ssb/repo/job'
+import {
+  DataSourceStatisticsPublishResult,
+  JobInfoNode,
+  JOB_STATUS_COMPLETE,
+  StatisticsPublishResult,
+} from '../../lib/ssb/repo/job'
 import { CleanupPublishDatasetConfig } from '../cleanupPublishDataset/cleanupPublishDataset-config'
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 
+const { Events, logUserDataQuery } = __non_webpack_require__('/lib/ssb/repo/query')
 const {
-  Events,
-  logUserDataQuery
-} = __non_webpack_require__('/lib/ssb/repo/query')
-const {
-  data: {
-    forceArray
-  }
+  data: { forceArray },
 } = __non_webpack_require__('/lib/util')
-const {
-  deleteDataset,
-  extractKey
-} = __non_webpack_require__('/lib/ssb/dataset/dataset')
-const {
-  UNPUBLISHED_DATASET_BRANCH
-} = __non_webpack_require__('/lib/ssb/repo/dataset')
-const {
-  updateJobLog,
-  JobStatus,
-  getJobLog
-} = __non_webpack_require__('/lib/ssb/repo/job')
+const { deleteDataset, extractKey } = __non_webpack_require__('/lib/ssb/dataset/dataset')
+const { UNPUBLISHED_DATASET_BRANCH } = __non_webpack_require__('/lib/ssb/repo/dataset')
+const { updateJobLog, JobStatus, getJobLog } = __non_webpack_require__('/lib/ssb/repo/job')
 import { send } from '/lib/xp/event'
 
-exports.run = function(props: CleanupPublishDatasetConfig): void {
-  const {
-    jobId,
-    statisticsContentId,
-    publicationItem,
-    statisticsId
-  } = props
-  const {
-    dataSource,
-    dataset
-  } = JSON.parse(publicationItem)
-
+exports.run = function (props: CleanupPublishDatasetConfig): void {
+  const { jobId, statisticsContentId, publicationItem, statisticsId } = props
+  const { dataSource, dataset } = JSON.parse(publicationItem)
 
   /*
-      * Iterate this statistics related datasources, and check if they have unpublished data
-      * If they do, create or update the dataset on master branch
-      * Then delete dataset in draft
-      * */
+   * Iterate this statistics related datasources, and check if they have unpublished data
+   * If they do, create or update the dataset on master branch
+   * Then delete dataset in draft
+   * */
   if (dataset && dataSource.data.dataSource) {
     const key: string | null = extractKey(dataSource)
 
     const job: JobInfoNode = getJobLog(jobId) as JobInfoNode
-    const jobRefreshResult: Array<StatisticsPublishResult> = forceArray(job.data.refreshDataResult) as Array<StatisticsPublishResult>
+    const jobRefreshResult: Array<StatisticsPublishResult> = forceArray(
+      job.data.refreshDataResult
+    ) as Array<StatisticsPublishResult>
     const statRefreshResult: StatisticsPublishResult | undefined = jobRefreshResult.find((s) => {
       return s.statistic === statisticsContentId
     })
@@ -56,7 +40,7 @@ exports.run = function(props: CleanupPublishDatasetConfig): void {
       logUserDataQuery(dataSource._id, {
         file: '/lib/ssb/dataset/publish.ts',
         function: 'createTask',
-        message: Events.DATASET_PUBLISHED
+        message: Events.DATASET_PUBLISHED,
       })
       deleteDataset(dataSource, UNPUBLISHED_DATASET_BRANCH)
     }
@@ -68,31 +52,39 @@ exports.run = function(props: CleanupPublishDatasetConfig): void {
 }
 
 function updateLogs(jobId: string, statisticsContentId: string, statisticsId: string, dataSourceId: string): void {
-  let completed: boolean = false
+  let completed = false
 
   updateJobLog(jobId, (node: JobInfoNode) => {
-    const refreshDataResult: Array<StatisticsPublishResult> = forceArray(node.data.refreshDataResult) as Array<StatisticsPublishResult>
+    const refreshDataResult: Array<StatisticsPublishResult> = forceArray(
+      node.data.refreshDataResult
+    ) as Array<StatisticsPublishResult>
     const statRefreshResult: StatisticsPublishResult | undefined = refreshDataResult.find((s) => {
       return s.statistic === statisticsContentId
     })
     if (statRefreshResult) {
-      const dataSourceRefreshResult: DataSourceStatisticsPublishResult | undefined = forceArray(statRefreshResult.dataSources).find((ds) => {
+      const dataSourceRefreshResult: DataSourceStatisticsPublishResult | undefined = forceArray(
+        statRefreshResult.dataSources
+      ).find((ds) => {
         return ds.id === dataSourceId
       })
       if (dataSourceRefreshResult) {
         dataSourceRefreshResult.status = JobStatus.COMPLETE
         // log.info(`Update jobLog ${jobId} - Datasource: ${dataSourceId} Statistikk: ${statisticsId}(content: ${statisticsContentId})  - COMPLETE`)
       }
-      const allDataSourcesComplete: boolean = forceArray(statRefreshResult.dataSources).filter((ds) => {
-        return ds.status === JobStatus.COMPLETE || ds.status === JobStatus.ERROR || ds.status === JobStatus.SKIPPED
-      }).length === forceArray(statRefreshResult.dataSources).length
+      const allDataSourcesComplete: boolean =
+        forceArray(statRefreshResult.dataSources).filter((ds) => {
+          return ds.status === JobStatus.COMPLETE || ds.status === JobStatus.ERROR || ds.status === JobStatus.SKIPPED
+        }).length === forceArray(statRefreshResult.dataSources).length
       if (allDataSourcesComplete) {
         statRefreshResult.status = JobStatus.COMPLETE
         // log.info(`Update jobLog ${jobId} - All Datasources statistikk: ${statisticsId}(content: ${statisticsContentId})  - COMPLETE`)
       }
-      const allStatisticsComplete: boolean = refreshDataResult.filter((stat) => {
-        return stat.status === JobStatus.COMPLETE || stat.status === JobStatus.ERROR || stat.status === JobStatus.SKIPPED
-      }).length === refreshDataResult.length
+      const allStatisticsComplete: boolean =
+        refreshDataResult.filter((stat) => {
+          return (
+            stat.status === JobStatus.COMPLETE || stat.status === JobStatus.ERROR || stat.status === JobStatus.SKIPPED
+          )
+        }).length === refreshDataResult.length
       if (allStatisticsComplete) {
         completed = true
         node.data.message = `Successfully updated ${refreshDataResult.length} statistics`
@@ -109,8 +101,8 @@ function updateLogs(jobId: string, statisticsContentId: string, statisticsId: st
       type: 'clearCache',
       distributed: true,
       data: {
-        clearDatasetRepoCache: true
-      }
+        clearDatasetRepoCache: true,
+      },
     })
   }
 }

@@ -1,27 +1,18 @@
-import {get as getContentByKey, type Content, type MediaImage} from '/lib/xp/content'
-import type {SourceList, SourcesConfig} from '../../../lib/ssb/utils/utils'
-import {render, type RenderResponse} from '/lib/enonic/react4xp'
+import { get as getContentByKey, type Content, type MediaImage } from '/lib/xp/content'
+import type { SourceList, SourcesConfig } from '../../../lib/ssb/utils/utils'
+import { render, type RenderResponse } from '/lib/enonic/react4xp'
 // @ts-ignore
-import {Base64} from 'js-base64'
-import type {InfoGraphicsPartConfig} from './infoGraphics-part-config'
-import type {DefaultPageConfig} from '../../pages/default/default-page-config'
-import {getContent, getComponent, imageUrl} from '/lib/xp/portal'
+import { Base64 } from 'js-base64'
+import type { InfoGraphicsPartConfig } from './infoGraphics-part-config'
+import type { DefaultPageConfig } from '../../pages/default/default-page-config'
+import { getContent, getComponent, imageUrl } from '/lib/xp/portal'
 
 const {
-  data: {
-    forceArray
-  }
+  data: { forceArray },
 } = __non_webpack_require__('/lib/util')
-const {
-  renderError
-} = __non_webpack_require__('/lib/ssb/error/error')
-const {
-  getSources
-} = __non_webpack_require__('/lib/ssb/utils/utils')
-const {
-  getPhrases
-} = __non_webpack_require__('/lib/ssb/utils/language')
-
+const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
+const { getSources } = __non_webpack_require__('/lib/ssb/utils/utils')
+const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
 
 export function get(req: XP.Request): XP.Response | RenderResponse {
   try {
@@ -51,24 +42,29 @@ function renderPart(req: XP.Request): RenderResponse {
 
   const imageSrc: string | null = imageUrl({
     id: config.image,
-    scale: 'max(850)'
+    scale: 'max(850)',
   })
 
   // Retrieves image as content to get image meta data
   const imageData: Content<MediaImage> | null = getContentByKey({
-    key: config.image
+    key: config.image,
   })
 
   const props: InfoGraphicsProps = {
     title: config.title,
-    altText: imageData && imageData.data.altText ? imageData.data.altText : (imageData && imageData.data.caption ? imageData.data.caption : ''),
+    altText:
+      imageData && imageData.data.altText
+        ? imageData.data.altText
+        : imageData && imageData.data.caption
+        ? imageData.data.caption
+        : '',
     imageSrc: imageSrc,
     footnotes: config.footNote ? forceArray(config.footNote) : [],
     sources: getSources(sourceConfig as Array<SourcesConfig>),
     longDesc,
     sourcesLabel,
     descriptionStaticVisualization,
-    oldContent: true
+    oldContent: true,
   }
 
   return render('site/parts/infoGraphics/infoGraphics', props, req)
@@ -76,19 +72,19 @@ function renderPart(req: XP.Request): RenderResponse {
 
 interface DefaultPage {
   page: {
-    config: DefaultPageConfig;
-  };
+    config: DefaultPageConfig
+  }
 }
 
 interface InfoGraphicsProps {
-  title: string;
-  altText: string;
-  imageSrc: string;
-  footnotes: InfoGraphicsPartConfig['footNote'];
-  sources: SourceList;
-  longDesc: string;
-  sourcesLabel: string;
-  descriptionStaticVisualization: string;
-  inFactPage?: boolean;
-  oldContent?: boolean;
+  title: string
+  altText: string
+  imageSrc: string
+  footnotes: InfoGraphicsPartConfig['footNote']
+  sources: SourceList
+  longDesc: string
+  sourcesLabel: string
+  descriptionStaticVisualization: string
+  inFactPage?: boolean
+  oldContent?: boolean
 }

@@ -1,13 +1,9 @@
-import {getComponent, type Component} from '/lib/xp/portal'
-import {render} from '/lib/enonic/react4xp'
-import type {DividerPartConfig} from './divider-part-config'
+import { getComponent, type Component } from '/lib/xp/portal'
+import { render } from '/lib/enonic/react4xp'
+import type { DividerPartConfig } from './divider-part-config'
 
-const {
-  renderError
-} = __non_webpack_require__('/lib/ssb/error/error')
-const {
-  fromPartCache
-} = __non_webpack_require__('/lib/ssb/cache/partCache')
+const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
+const { fromPartCache } = __non_webpack_require__('/lib/ssb/cache/partCache')
 
 export function get(req: XP.Request): XP.Response {
   try {
@@ -26,26 +22,20 @@ function renderPart(req: XP.Request, config: DividerPartConfig): XP.Response {
   const dividerColor: string = config.dividerColor || 'light'
 
   return fromPartCache(req, `divider${dividerColor}`, () => {
-    return render(
-      'Divider',
-      setColor(dividerColor),
-      req,
-      {
-        body: '<section class="xp-part part-divider"></section>'
-      }
-    )
+    return render('Divider', setColor(dividerColor), req, {
+      body: '<section class="xp-part part-divider"></section>',
+    })
   })
 }
 
 function setColor(dividerColor: string): object {
   if (dividerColor === 'dark') {
     return {
-      dark: true
+      dark: true,
     }
   } else {
     return {
-      light: true
+      light: true,
     }
   }
 }
-

@@ -1,22 +1,16 @@
-import {get as getContentByKey, type Content} from '/lib/xp/content'
-import {type ResourceKey, render} from '/lib/thymeleaf'
-import type {Phrases} from '../../../lib/types/language'
-import {render as r4xpRender} from '/lib/enonic/react4xp'
-import type {SEO} from '../../../services/news/news'
-import type {Statistics} from '../../content-types/statistics/statistics'
-import {getContent, pageUrl} from '/lib/xp/portal'
+import { get as getContentByKey, type Content } from '/lib/xp/content'
+import { type ResourceKey, render } from '/lib/thymeleaf'
+import type { Phrases } from '../../../lib/types/language'
+import { render as r4xpRender } from '/lib/enonic/react4xp'
+import type { SEO } from '../../../services/news/news'
+import type { Statistics } from '../../content-types/statistics/statistics'
+import { getContent, pageUrl } from '/lib/xp/portal'
 
 const {
-  data: {
-    forceArray
-  }
+  data: { forceArray },
 } = __non_webpack_require__('/lib/util')
-const {
-  getPhrases
-} = __non_webpack_require__('/lib/ssb/utils/language')
-const {
-  renderError
-} = __non_webpack_require__('/lib/ssb/error/error')
+const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
+const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
 const view: ResourceKey = resolve('./relatedStatistics.html')
 
@@ -42,83 +36,100 @@ function renderPart(req: XP.Request): XP.Response {
     if (req.mode === 'edit' && page.type !== `${app.name}:statistics` && page.type !== `${app.name}:article`) {
       return {
         body: render(view, {
-          statisticsTitle
-        })
+          statisticsTitle,
+        }),
       }
     }
   }
 
-  return renderRelatedStatistics(req, statisticsTitle, parseRelatedContent(relatedStatistics ? forceArray(relatedStatistics) : []), phrases)
+  return renderRelatedStatistics(
+    req,
+    statisticsTitle,
+    parseRelatedContent(relatedStatistics ? forceArray(relatedStatistics) : []),
+    phrases
+  )
 }
 
-function renderRelatedStatistics(req: XP.Request,
-                                 statisticsTitle: string,
-                                 relatedStatisticsContent: Array<RelatedStatisticsContent>,
-                                 phrases: Phrases): XP.Response {
+function renderRelatedStatistics(
+  req: XP.Request,
+  statisticsTitle: string,
+  relatedStatisticsContent: Array<RelatedStatisticsContent>,
+  phrases: Phrases
+): XP.Response {
   if (relatedStatisticsContent && relatedStatisticsContent.length) {
-    const id: string = 'related-statistics'
+    const id = 'related-statistics'
     const body: string = render(view, {
-      relatedStatisticsId: id
+      relatedStatisticsId: id,
     })
 
-    return r4xpRender('StatisticsCards',
+    return r4xpRender(
+      'StatisticsCards',
       {
         headerTitle: statisticsTitle,
         statistics: relatedStatisticsContent.map((statisticsContent) => {
           return {
-            ...statisticsContent
+            ...statisticsContent,
           }
         }),
         showAll: phrases.showAll,
-        showLess: phrases.showLess
+        showLess: phrases.showLess,
       },
       req,
       {
         id: id,
-        body: body
-      })
+        body: body,
+      }
+    )
   }
   return {
     body: null,
-    pageContributions: undefined
+    pageContributions: undefined,
   }
 }
 
-function parseRelatedContent(relatedStatistics: Statistics['relatedStatisticsOptions']): Array<RelatedStatisticsContent> {
+function parseRelatedContent(
+  relatedStatistics: Statistics['relatedStatisticsOptions']
+): Array<RelatedStatisticsContent> {
   if (relatedStatistics && relatedStatistics.length > 0) {
-    return relatedStatistics.map((statistics) => {
-      if (statistics._selected === 'xp') {
-        const statisticsContentId: string | undefined = statistics.xp.contentId
-        const relatedStatisticsContent: Content<Statistics, SEO> | null = statisticsContentId ? getContentByKey({
-          key: statisticsContentId
-        }) : null
+    return relatedStatistics
+      .map((statistics) => {
+        if (statistics._selected === 'xp') {
+          const statisticsContentId: string | undefined = statistics.xp.contentId
+          const relatedStatisticsContent: Content<Statistics, SEO> | null = statisticsContentId
+            ? getContentByKey({
+                key: statisticsContentId,
+              })
+            : null
 
-        let preamble: string | undefined
-        if (relatedStatisticsContent) {
-          preamble = relatedStatisticsContent.x['com-enonic-app-metafields']['meta-data'].seoDescription
+          let preamble: string | undefined
+          if (relatedStatisticsContent) {
+            preamble = relatedStatisticsContent.x['com-enonic-app-metafields']['meta-data'].seoDescription
+          }
+
+          return {
+            title: relatedStatisticsContent && relatedStatisticsContent.displayName,
+            preamble: preamble ? preamble : '',
+            href: statisticsContentId
+              ? pageUrl({
+                  id: statisticsContentId,
+                })
+              : '',
+          }
         }
 
         return {
-          title: relatedStatisticsContent && relatedStatisticsContent.displayName,
-          preamble: preamble ? preamble : '',
-          href: statisticsContentId ? pageUrl({
-            id: statisticsContentId
-          }) : ''
+          title: statistics.cms.title,
+          preamble: statistics.cms.profiledText,
+          href: statistics.cms.url,
         }
-      }
-
-      return {
-        title: statistics.cms.title,
-        preamble: statistics.cms.profiledText,
-        href: statistics.cms.url
-      }
-    }).filter((statistics) => !!statistics) as Array<RelatedStatisticsContent>
+      })
+      .filter((statistics) => !!statistics) as Array<RelatedStatisticsContent>
   }
   return []
 }
 
 interface RelatedStatisticsContent {
-  title: string;
-  preamble: string;
-  href: string;
+  title: string
+  preamble: string
+  href: string
 }

@@ -11,6 +11,6 @@ exports.get = (req: XP.Request): XP.Response => {
   return {
     status: 200,
     contentType: 'application/json',
-    body: parsedArticles
+    body: parsedArticles,
   }
 }

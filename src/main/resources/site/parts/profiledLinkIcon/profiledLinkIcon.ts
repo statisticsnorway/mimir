@@ -1,14 +1,9 @@
-import {render} from '/lib/enonic/react4xp'
-import type {ProfiledLinkIconPartConfig} from './profiledLinkIcon-part-config'
-import {getComponent, pageUrl} from '/lib/xp/portal'
+import { render } from '/lib/enonic/react4xp'
+import type { ProfiledLinkIconPartConfig } from './profiledLinkIcon-part-config'
+import { getComponent, pageUrl } from '/lib/xp/portal'
 
-const {
-  data
-} = __non_webpack_require__('/lib/util')
-const {
-  renderError
-} = __non_webpack_require__('/lib/ssb/error/error')
-
+const { data } = __non_webpack_require__('/lib/util')
+const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
 export function get(req: XP.Request): XP.Response {
   try {
@@ -24,7 +19,7 @@ export function preview(req: XP.Request): XP.Response {
 
 const NO_LINKS_FOUND: object = {
   body: '',
-  contentType: 'text/html'
+  contentType: 'text/html',
 }
 
 function renderPart(req: XP.Request): XP.Response {
@@ -35,26 +30,27 @@ function renderPart(req: XP.Request): XP.Response {
 
 function renderProfiledLinks(req: XP.Request, links: ProfiledLinkIconPartConfig['profiledLinkItemSet']): XP.Response {
   if (links && links.length) {
-    return render('Links',
+    return render(
+      'Links',
       {
         links: links.map((link) => {
           return {
             children: link.text,
-            href: link.href ? pageUrl({
-              id: link.href
-            }) : '',
+            href: link.href
+              ? pageUrl({
+                  id: link.href,
+                })
+              : '',
             iconType: 'arrowRight',
-            linkType: 'profiled'
+            linkType: 'profiled',
           }
-        })
+        }),
       },
       req,
       {
-        body: '<section class="xp-part part-profiledLinkIcon"></section>'
+        body: '<section class="xp-part part-profiledLinkIcon"></section>',
       }
     )
   }
   return NO_LINKS_FOUND
 }
-
-

@@ -1,76 +1,66 @@
-import {get as getContentByKey, getAttachmentStream, type ByteSource, type Content} from '/lib/xp/content'
-import type {RowData} from '../../../lib/ssb/parts/highcharts/data/htmlTable'
-import {isNumber, type RowValue} from '../../../lib/ssb/utils/utils'
-import {render, type RenderResponse} from '/lib/enonic/react4xp'
-import type {PreliminaryData, XmlParser} from '../../../lib/types/xmlParser'
-import type {Highmap} from '../../content-types/highmap/highmap'
-import type {HighmapPartConfig} from './highmap-part-config'
-import {getComponent, getContent} from '/lib/xp/portal'
+import { get as getContentByKey, getAttachmentStream, type ByteSource, type Content } from '/lib/xp/content'
+import type { RowData } from '../../../lib/ssb/parts/highcharts/data/htmlTable'
+import { isNumber, type RowValue } from '../../../lib/ssb/utils/utils'
+import { render, type RenderResponse } from '/lib/enonic/react4xp'
+import type { PreliminaryData, XmlParser } from '../../../lib/types/xmlParser'
+import type { Highmap } from '../../content-types/highmap/highmap'
+import type { HighmapPartConfig } from './highmap-part-config'
+import { getComponent, getContent } from '/lib/xp/portal'
 
 const {
-  data: {
-    forceArray
-  }
+  data: { forceArray },
 } = __non_webpack_require__('/lib/util')
-const {
-  getPhrases
-} = __non_webpack_require__('/lib/ssb/utils/language')
-const {
-  readText
-} = __non_webpack_require__('/lib/xp/io')
-const {
-  renderError
-} = __non_webpack_require__('/lib/ssb/error/error')
-
+const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
+const { readText } = __non_webpack_require__('/lib/xp/io')
+const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
-
 
 interface MapFeatures {
   properties: {
-    name?: string;
-    capitalName?: string;
-  };
+    name?: string
+    capitalName?: string
+  }
 }
 
 interface MapResult {
-  features: Array<MapFeatures>;
+  features: Array<MapFeatures>
 }
 
 interface HighmapTable {
   table: {
     tbody: {
-      tr: Array<RowData>;
-    };
-  };
+      tr: Array<RowData>
+    }
+  }
 }
 
 interface HighmapFormattedTableData {
-  capitalName: string;
-  value: number;
+  capitalName: string
+  value: number
 }
 
 interface ThresholdValues {
-  to: number | undefined;
-  from: number | undefined;
+  to: number | undefined
+  from: number | undefined
 }
 
 interface HighmapProps {
-  title: string;
-  subtitle: Highmap['subtitle'];
-  description: Highmap['description'];
-  mapFile: object;
-  tableData: Array<HighmapFormattedTableData>;
-  thresholdValues: Array<ThresholdValues>;
-  hideTitle: Highmap['hideTitle'];
-  colorPalette: Highmap['colorPalette'];
-  numberDecimals: number | undefined;
-  heightAspectRatio: Highmap['heightAspectRatio'];
-  seriesTitle: Highmap['seriesTitle'];
-  legendTitle: Highmap['legendTitle'];
-  legendAlign: Highmap['legendAlign'];
-  footnoteText: Highmap['footnoteText'];
-  phrases: object;
-  language: string | undefined;
+  title: string
+  subtitle: Highmap['subtitle']
+  description: Highmap['description']
+  mapFile: object
+  tableData: Array<HighmapFormattedTableData>
+  thresholdValues: Array<ThresholdValues>
+  hideTitle: Highmap['hideTitle']
+  colorPalette: Highmap['colorPalette']
+  numberDecimals: number | undefined
+  heightAspectRatio: Highmap['heightAspectRatio']
+  seriesTitle: Highmap['seriesTitle']
+  legendTitle: Highmap['legendTitle']
+  legendAlign: Highmap['legendAlign']
+  footnoteText: Highmap['footnoteText']
+  phrases: object
+  language: string | undefined
 }
 
 export function get(req: XP.Request): RenderResponse | XP.Response {
@@ -93,18 +83,25 @@ export function preview(req: XP.Request, highmapId: string | undefined): RenderR
 
 function renderPart(req: XP.Request, highmapId: string | undefined): RenderResponse | XP.Response {
   const page: Content = getContent()
-  const highmapContent: Content<Highmap> | null = highmapId ? getContentByKey({
-    key: highmapId
-  }) : null
+  const highmapContent: Content<Highmap> | null = highmapId
+    ? getContentByKey({
+        key: highmapId,
+      })
+    : null
 
-  const mapFile: Content | null = highmapContent && highmapContent.data.mapFile ? getContentByKey({
-    key: highmapContent.data.mapFile
-  }) : null
+  const mapFile: Content | null =
+    highmapContent && highmapContent.data.mapFile
+      ? getContentByKey({
+          key: highmapContent.data.mapFile,
+        })
+      : null
 
-  const mapStream: ByteSource | null = mapFile ? getAttachmentStream({
-    key: mapFile._id,
-    name: mapFile._name
-  }) : null
+  const mapStream: ByteSource | null = mapFile
+    ? getAttachmentStream({
+        key: mapFile._id,
+        name: mapFile._name,
+      })
+    : null
 
   const mapResult: MapResult = mapStream ? JSON.parse(readText(mapStream)) : {}
   mapResult.features.forEach((element, index) => {
@@ -117,7 +114,9 @@ function renderPart(req: XP.Request, highmapId: string | undefined): RenderRespo
   if (highmapContent) {
     const tableData: Array<HighmapFormattedTableData> = []
     if (highmapContent.data.htmlTable) {
-      const stringJson: string | undefined = highmapContent.data.htmlTable ? __.toNativeObject(xmlParser.parse(highmapContent.data.htmlTable)) : undefined
+      const stringJson: string | undefined = highmapContent.data.htmlTable
+        ? __.toNativeObject(xmlParser.parse(highmapContent.data.htmlTable))
+        : undefined
       const result: HighmapTable | undefined = stringJson ? JSON.parse(stringJson) : undefined
       const tableRow: HighmapTable['table']['tbody']['tr'] | undefined = result ? result.table.tbody.tr : undefined
 
@@ -128,14 +127,16 @@ function renderPart(req: XP.Request, highmapId: string | undefined): RenderRespo
             const value: number = getRowValue(row.td[1]) as number
             tableData.push({
               capitalName: name, // Matches map result name
-              value: value
+              value: value,
             })
           }
         })
       }
     }
 
-    const thresholdValues: Highmap['thresholdValues'] = highmapContent.data.thresholdValues ? forceArray(highmapContent.data.thresholdValues) : []
+    const thresholdValues: Highmap['thresholdValues'] = highmapContent.data.thresholdValues
+      ? forceArray(highmapContent.data.thresholdValues)
+      : []
 
     const props: HighmapProps = {
       title: highmapContent.displayName,
@@ -153,14 +154,14 @@ function renderPart(req: XP.Request, highmapId: string | undefined): RenderRespo
       legendAlign: highmapContent.data.legendAlign,
       footnoteText: highmapContent.data.footnoteText ? forceArray(highmapContent.data.footnoteText) : [],
       phrases: getPhrases(page),
-      language: page.language
+      language: page.language,
     }
 
     return render('site/parts/highmap/Highmap', props, req)
   }
   return {
     body: '',
-    contentType: 'text/html'
+    contentType: 'text/html',
   }
 }
 
@@ -180,7 +181,9 @@ function getRowValue(value: number | string | PreliminaryData | Array<number | s
 
 function sortedThresholdValues(thresholdValues: Highmap['thresholdValues']): Array<ThresholdValues> {
   if (thresholdValues.length) {
-    const formattedThresholdValues: Array<number> = thresholdValues.map((t) => Number(t.replace(',', '.'))).sort((a, b) => a - b)
+    const formattedThresholdValues: Array<number> = thresholdValues
+      .map((t) => Number(t.replace(',', '.')))
+      .sort((a, b) => a - b)
     const sortedDataClasses: Array<ThresholdValues> = getDataClass(formattedThresholdValues)
 
     if (sortedDataClasses.length) {
@@ -201,7 +204,7 @@ function getDataClass(formattedThresholdValues: Array<number>): Array<ThresholdV
       // Displays < currentValue in the chart
       dataClasses.push({
         to: currentValue,
-        from: undefined
+        from: undefined,
       })
     }
 
@@ -209,14 +212,14 @@ function getDataClass(formattedThresholdValues: Array<number>): Array<ThresholdV
       // Displays previousValue - currentValue in the chart
       dataClasses.push({
         to: currentValue,
-        from: previousValue
+        from: previousValue,
       })
     }
     if (previousValue > currentValue) {
       // Displays currentValue - previousValue in the chart
       dataClasses.push({
         to: previousValue,
-        from: currentValue
+        from: currentValue,
       })
     }
 
@@ -226,9 +229,8 @@ function getDataClass(formattedThresholdValues: Array<number>): Array<ThresholdV
   // Displays > maximum value in the chart
   dataClasses.push({
     to: undefined,
-    from: dataClasses[dataClasses.length - 1].to
+    from: dataClasses[dataClasses.length - 1].to,
   })
 
   return dataClasses
 }
-

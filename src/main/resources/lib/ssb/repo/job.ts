@@ -2,16 +2,8 @@ import { NodeQueryParams, NodeQueryResponse, RepoNode } from '/lib/xp/node'
 import { EditorCallback } from './eventLog'
 import { getUser, User } from '/lib/xp/auth'
 import { DataSourceInfo, RSSFilterLogData } from '../cron/rss'
-const {
-  modifyNode,
-  getNode,
-  queryNodes
-} = __non_webpack_require__('/lib/ssb/repo/common')
-const {
-  EVENT_LOG_REPO,
-  EVENT_LOG_BRANCH,
-  createEventLog
-} = __non_webpack_require__('/lib/ssb/repo/eventLog')
+const { modifyNode, getNode, queryNodes } = __non_webpack_require__('/lib/ssb/repo/common')
+const { EVENT_LOG_REPO, EVENT_LOG_BRANCH, createEventLog } = __non_webpack_require__('/lib/ssb/repo/eventLog')
 
 export enum JobStatus {
   STARTED = 'STARTED',
@@ -37,46 +29,46 @@ export type JobEventNode = RepoNode & JobEvent
 
 export interface JobInfo {
   data: {
-    status: typeof JOB_STATUS_STARTED | typeof JOB_STATUS_COMPLETE;
-    task: string;
-    refreshDataResult: object | Array<StatisticsPublishResult> | DatasetRefreshResult | CalculatorRefreshResult;
-    message: string;
-    httpStatusCode?: number;
-    jobStarted: string;
-    completionTime: string;
-    queryIds?: Array<string>;
-    user: User;
-  };
+    status: typeof JOB_STATUS_STARTED | typeof JOB_STATUS_COMPLETE
+    task: string
+    refreshDataResult: object | Array<StatisticsPublishResult> | DatasetRefreshResult | CalculatorRefreshResult
+    message: string
+    httpStatusCode?: number
+    jobStarted: string
+    completionTime: string
+    queryIds?: Array<string>
+    user: User
+  }
 }
 
 export interface DatasetRefreshResult {
-  filterInfo: RSSFilterLogData;
-  result: Array<DataSourceInfo>;
+  filterInfo: RSSFilterLogData
+  result: Array<DataSourceInfo>
 }
 
 export interface CalculatorRefreshResult {
-  result: Array<DataSourceInfo>;
+  result: Array<DataSourceInfo>
 }
 
 export interface StatisticsPublishResult {
-  statistic: string;
-  shortNameId: string;
-  status: string;
-  dataSources: Array<DataSourceStatisticsPublishResult>;
+  statistic: string
+  shortNameId: string
+  status: string
+  dataSources: Array<DataSourceStatisticsPublishResult>
 }
 
 export interface DataSourceStatisticsPublishResult {
-  id: string;
-  status: string;
-  message: string;
+  id: string
+  status: string
+  message: string
 }
 export interface JobEvent {
   data: {
-    task?: string;
-    jobStarted: string;
-    status: string;
-    user: User | null;
-  };
+    task?: string
+    jobStarted: string
+    status: string
+    user: User | null
+  }
 }
 
 export function startJobLog(task?: string): JobEventNode {
@@ -88,8 +80,8 @@ export function startJobLog(task?: string): JobEventNode {
       task: task,
       jobStarted: now.toISOString(),
       status: JOB_STATUS_STARTED,
-      user
-    }
+      user,
+    },
   })
 }
 
@@ -105,28 +97,28 @@ export function getJobLog(id: string): JobInfoNode | ReadonlyArray<JobInfoNode> 
   return getNode<JobInfoNode>(EVENT_LOG_REPO, EVENT_LOG_BRANCH, id)
 }
 
-export function completeJobLog(jobLogId: string, message: string, refreshDataResult: object ): JobInfoNode {
+export function completeJobLog(jobLogId: string, message: string, refreshDataResult: object): JobInfoNode {
   const now: Date = new Date()
-  return updateJobLog<JobInfoNode>(jobLogId, function(node: JobInfoNode): JobInfoNode {
+  return updateJobLog<JobInfoNode>(jobLogId, function (node: JobInfoNode): JobInfoNode {
     node.data = {
       ...node.data,
       completionTime: now.toISOString(),
       status: JOB_STATUS_COMPLETE,
       message,
-      refreshDataResult
+      refreshDataResult,
     }
     return node
   })
 }
 
 export interface RepoJobLib {
-  JOB_STATUS_STARTED: typeof JOB_STATUS_STARTED;
-  JOB_STATUS_COMPLETE: typeof JOB_STATUS_COMPLETE;
-  JobNames: typeof JobNames;
-  JobStatus: typeof JobStatus;
-  startJobLog: (task?: string) => JobEventNode;
-  updateJobLog: <T>(jobId: string, editor: EditorCallback<JobInfoNode>) => JobInfoNode;
-  queryJobLogs: <T>(params: NodeQueryParams) => NodeQueryResponse;
-  getJobLog: (id: string) => JobInfoNode | ReadonlyArray<JobInfoNode> | null;
-  completeJobLog: (jobLogId: string, message: string, refreshDataResult: object ) => JobInfoNode;
+  JOB_STATUS_STARTED: typeof JOB_STATUS_STARTED
+  JOB_STATUS_COMPLETE: typeof JOB_STATUS_COMPLETE
+  JobNames: typeof JobNames
+  JobStatus: typeof JobStatus
+  startJobLog: (task?: string) => JobEventNode
+  updateJobLog: <T>(jobId: string, editor: EditorCallback<JobInfoNode>) => JobInfoNode
+  queryJobLogs: <T>(params: NodeQueryParams) => NodeQueryResponse
+  getJobLog: (id: string) => JobInfoNode | ReadonlyArray<JobInfoNode> | null
+  completeJobLog: (jobLogId: string, message: string, refreshDataResult: object) => JobInfoNode
 }

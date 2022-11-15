@@ -1,21 +1,14 @@
-import {get as getOne, type Content} from '/lib/xp/content'
-import {render, type RenderResponse} from '/lib/enonic/react4xp'
-import type {Accordion} from '../../content-types/accordion/accordion'
-import type {AccordionConfig} from '../../macros/accordion/accordion-config'
-import {getComponent, getContent, processHtml} from '/lib/xp/portal'
+import { get as getContentByKey, type Content } from '/lib/xp/content'
+import { render, type RenderResponse } from '/lib/enonic/react4xp'
+import type { Accordion } from '../../content-types/accordion/accordion'
+import type { AccordionConfig } from '../../macros/accordion/accordion-config'
+import { getComponent, getContent, processHtml } from '/lib/xp/portal'
 
 const {
-  data: {
-    forceArray
-  }
+  data: { forceArray },
 } = __non_webpack_require__('/lib/util')
-const {
-  sanitize
-} = __non_webpack_require__('/lib/xp/common')
-const {
-  renderError
-} = __non_webpack_require__('/lib/ssb/error/error')
-
+const { sanitize } = __non_webpack_require__('/lib/xp/common')
+const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
 export function get(req: XP.Request): RenderResponse | XP.Response {
   try {
@@ -30,7 +23,9 @@ export function get(req: XP.Request): RenderResponse | XP.Response {
 export function preview(req: XP.Request, accordionIds: Array<string> | string): RenderResponse | XP.Response {
   try {
     const page: Content<Accordion> = getContent()
-    return page.type === `${app.name}:accordion` ? renderPart(req, [accordionIds as string]) : renderPart(req, accordionIds as Array<string>)
+    return page.type === `${app.name}:accordion`
+      ? renderPart(req, [accordionIds as string])
+      : renderPart(req, accordionIds as Array<string>)
   } catch (e) {
     return renderError(req, 'Error in part', e)
   }
@@ -40,12 +35,16 @@ function renderPart(req: XP.Request, accordionIds: Array<string>): RenderRespons
   const accordions: Array<AccordionData> = []
 
   accordionIds.map((key) => {
-    const accordion: Content<Accordion> | null = key ? getOne({
-      key
-    }) : null
+    const accordion: Content<Accordion> | null = key
+      ? getContentByKey({
+          key,
+        })
+      : null
 
     if (accordion) {
-      const accordionContents: Accordion['accordions'] = accordion.data.accordions ? forceArray(accordion.data.accordions) : []
+      const accordionContents: Accordion['accordions'] = accordion.data.accordions
+        ? forceArray(accordion.data.accordions)
+        : []
       accordionContents
         .filter((accordion) => !!accordion)
         .map((accordion) => {
@@ -53,18 +52,24 @@ function renderPart(req: XP.Request, accordionIds: Array<string>): RenderRespons
 
           accordions.push({
             id: accordion.open && sanitize(accordion.open),
-            body: accordion.body && processHtml({
-              value: accordion.body
-            }),
+            body:
+              accordion.body &&
+              processHtml({
+                value: accordion.body,
+              }),
             open: accordion.open,
-            items: items.length ? items.map((item) => {
-              return {
-                ...item,
-                body: item.body && processHtml({
-                  value: item.body
+            items: items.length
+              ? items.map((item) => {
+                  return {
+                    ...item,
+                    body:
+                      item.body &&
+                      processHtml({
+                        value: item.body,
+                      }),
+                  }
                 })
-              }
-            }) : []
+              : [],
           })
         })
     }
@@ -74,24 +79,24 @@ function renderPart(req: XP.Request, accordionIds: Array<string>): RenderRespons
     accordions.push({
       body: 'Feil i lasting av innhold, innhold mangler eller kunne ikke hentes.',
       open: 'Sett inn innhold!',
-      items: []
+      items: [],
     })
   }
 
   const props: AccordionProp = {
-    accordions
+    accordions,
   }
 
   return render('Accordion', props, req)
 }
 
 export interface AccordionData {
-  id?: string;
-  body?: string | undefined;
-  open?: string | undefined;
-  items?: Accordion['accordions'];
+  id?: string
+  body?: string | undefined
+  open?: string | undefined
+  items?: Accordion['accordions']
 }
 
 interface AccordionProp {
-  accordions: Array<AccordionData>;
+  accordions: Array<AccordionData>
 }

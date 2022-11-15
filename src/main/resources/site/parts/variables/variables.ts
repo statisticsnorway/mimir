@@ -1,19 +1,12 @@
-import {getChildren, query, type Content} from '/lib/xp/content'
-import {render} from '/lib/enonic/react4xp'
-import type {Article} from '../../content-types/article/article'
-import {attachmentUrl, getContent, pageUrl, processHtml} from '/lib/xp/portal'
-import {localize} from '/lib/xp/i18n'
+import { getChildren, query, type Content } from '/lib/xp/content'
+import { render } from '/lib/enonic/react4xp'
+import type { Article } from '../../content-types/article/article'
+import { attachmentUrl, getContent, pageUrl, processHtml } from '/lib/xp/portal'
+import { localize } from '/lib/xp/i18n'
 
-const {
-  data
-} = __non_webpack_require__('/lib/util')
-const {
-  renderError
-} = __non_webpack_require__('/lib/ssb/error/error')
-const {
-  moment
-} = __non_webpack_require__('/lib/vendor/moment')
-
+const { data } = __non_webpack_require__('/lib/util')
+const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
+const { moment } = __non_webpack_require__('/lib/vendor/moment')
 
 export function get(req: XP.Request): XP.Response {
   try {
@@ -27,19 +20,19 @@ export function preview(req: XP.Request): XP.Response {
   return renderPart(req)
 }
 
-const MAX_VARIABLES: number = 9999
+const MAX_VARIABLES = 9999
 const NO_VARIABLES_FOUND: XP.Response = {
   body: '',
-  contentType: 'text/html'
+  contentType: 'text/html',
 }
 
 function renderPart(req: XP.Request): XP.Response {
   const page: Content = getContent()
-  const language: string = page.language ? page.language === 'en' ? 'en-gb' : page.language : 'nb'
+  const language: string = page.language ? (page.language === 'en' ? 'en-gb' : page.language) : 'nb'
 
   const hits: Array<Content<Article>> = getChildren({
     key: page._path,
-    count: MAX_VARIABLES
+    count: MAX_VARIABLES,
   }).hits as unknown as Array<Content<Article>>
 
   return renderVariables(req, contentArrayToVariables(hits ? data.forceArray(hits) : [], language))
@@ -48,27 +41,27 @@ function renderPart(req: XP.Request): XP.Response {
 function renderVariables(req: XP.Request, variables: Array<Variables>): XP.Response {
   if (variables && variables.length) {
     const download: string = localize({
-      key: 'variables.download'
+      key: 'variables.download',
     })
 
-    return render('variables/Variables',
+    return render(
+      'variables/Variables',
       {
-        variables: variables.map(({
-                                    title, description, fileHref, fileModifiedDate, href
-                                  }) => {
+        variables: variables.map(({ title, description, fileHref, fileModifiedDate, href }) => {
           return {
             title,
             description,
             fileLocation: fileHref,
             downloadText: download + ' (' + 'per ' + fileModifiedDate + ')',
-            href
+            href,
           }
-        })
+        }),
       },
       req,
       {
-        body: '<section class="xp-part part-variableCardsList container"/>'
-      })
+        body: '<section class="xp-part part-variableCardsList container"/>',
+      }
+    )
   }
 
   return NO_VARIABLES_FOUND
@@ -80,37 +73,36 @@ function contentArrayToVariables(content: Array<Content<Article>>, language: str
       count: 1,
       sort: 'modifiedTime DESC',
       query: `_path LIKE '/content${variable._path}/*' `,
-      contentTypes: [
-        'media:spreadsheet',
-        'media:document',
-        'media:unknown'
-      ]
+      contentTypes: ['media:spreadsheet', 'media:document', 'media:unknown'],
     }).hits as unknown as Array<Content<Article>>
 
-    const fileInfo: object = (files.length > 0) ? {
-      fileHref: attachmentUrl({
-        id: files[0]._id
-      }),
-      fileModifiedDate: moment(files[0].modifiedTime).locale(language).format('DD.MM.YY')
-    } : {}
+    const fileInfo: object =
+      files.length > 0
+        ? {
+            fileHref: attachmentUrl({
+              id: files[0]._id,
+            }),
+            fileModifiedDate: moment(files[0].modifiedTime).locale(language).format('DD.MM.YY'),
+          }
+        : {}
 
     return {
       title: variable.displayName,
       description: processHtml({
-        value: variable.data.ingress as string
+        value: variable.data.ingress as string,
       }),
       href: pageUrl({
-        id: variable._id
+        id: variable._id,
       }),
-      ...fileInfo
+      ...fileInfo,
     }
   }) as Array<Variables>
 }
 
 interface Variables {
-  title: string;
-  description: string;
-  href: string;
-  fileHref: string;
-  fileModifiedDate: string;
+  title: string
+  description: string
+  href: string
+  fileHref: string
+  fileModifiedDate: string
 }

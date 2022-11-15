@@ -8,25 +8,22 @@ import { addGtagForEvent } from '../ReactGA'
 
 function AttachmentTableFigures(props) {
   const [isHidden, setIsHidden] = useState(true)
-  const {
-    accordions,
-    freeText,
-    showAll,
-    showLess,
-    title
-  } = props
+  const { accordions, freeText, showAll, showLess, title } = props
 
   function toggleBox() {
     setIsHidden((prevState) => !prevState)
   }
 
   function toggleAccordion(isOpen, index) {
-    const {
-      contentType, subHeader, open
-    } = accordions[index]
+    const { contentType, subHeader, open } = accordions[index]
 
     if (isOpen && contentType === `${props.appName}:table` && props.GA_TRACKING_ID) {
-      addGtagForEvent(props.GA_TRACKING_ID, 'Utvidet vedleggstabell', 'Statistikkside vedleggstabeller', `${subHeader} ${open}`)
+      addGtagForEvent(
+        props.GA_TRACKING_ID,
+        'Utvidet vedleggstabell',
+        'Statistikkside vedleggstabeller',
+        `${subHeader} ${open}`
+      )
     }
   }
 
@@ -41,13 +38,14 @@ function AttachmentTableFigures(props) {
     if (isHidden) {
       return (
         <span>
-          <ChevronDown size="20" className="chevron-icons" /> {showAll}
+          <ChevronDown size='20' className='chevron-icons' /> {showAll}
         </span>
       )
     }
     return (
       <span>
-        <ChevronUp size="20" className="chevron-icons" />{showLess}
+        <ChevronUp size='20' className='chevron-icons' />
+        {showLess}
       </span>
     )
   }
@@ -55,10 +53,8 @@ function AttachmentTableFigures(props) {
   function renderShowMoreButton() {
     return (
       <div className={`row mt-5 hide-show-btn justify-content-center ${getButtonBreakpoint()}`}>
-        <div className="col-auto">
-          <Button onClick={toggleBox}>
-            {getButtonText()}
-          </Button>
+        <div className='col-auto'>
+          <Button onClick={toggleBox}>{getButtonText()}</Button>
         </div>
       </div>
     )
@@ -66,7 +62,7 @@ function AttachmentTableFigures(props) {
 
   function createMarkup(html) {
     return {
-      __html: html
+      __html: html,
     }
   }
 
@@ -78,7 +74,7 @@ function AttachmentTableFigures(props) {
   }
 
   function getFreeTextBreakpoint() {
-    if (!freeText || isHidden && accordions.length > 5) {
+    if (!freeText || (isHidden && accordions.length > 5)) {
       return 'd-none'
     }
     return 'mt-5'
@@ -86,9 +82,9 @@ function AttachmentTableFigures(props) {
 
   function renderAccordionBody(accordion) {
     if (accordion.contentType === `${props.appName}:table`) {
-      return (<Table {...accordion.props}/>)
+      return <Table {...accordion.props} />
     } else {
-      return (<div dangerouslySetInnerHTML={createMarkup(accordion.body)}></div>)
+      return <div dangerouslySetInnerHTML={createMarkup(accordion.body)}></div>
     }
   }
 
@@ -98,32 +94,31 @@ function AttachmentTableFigures(props) {
   return (
     <React.Fragment>
       <h2>{title}</h2>
-      {accordions &&
-        <div className="xp-part part-accordion container">
-          <div className="row">
-            {
-              accordions.map((accordion, index) => {
-                return (
-                  <Accordion
-                    key={index}
-                    className={`col-12 ${getBreakpoint(index)}`}
-                    id={accordion.id}
-                    header={accordion.open}
-                    subHeader={accordion.subHeader}
-                    openByDefault={anchor && accordion.id && accordion.id === anchor}
-                    onToggle={(isOpen) => toggleAccordion(isOpen, index)}
-                  >
-                    {renderAccordionBody(accordion)}
-                  </Accordion>
-                )
-              }
-              )}
+      {accordions && (
+        <div className='xp-part part-accordion container'>
+          <div className='row'>
+            {accordions.map((accordion, index) => {
+              return (
+                <Accordion
+                  key={index}
+                  className={`col-12 ${getBreakpoint(index)}`}
+                  id={accordion.id}
+                  header={accordion.open}
+                  subHeader={accordion.subHeader}
+                  openByDefault={anchor && accordion.id && accordion.id === anchor}
+                  onToggle={(isOpen) => toggleAccordion(isOpen, index)}
+                >
+                  {renderAccordionBody(accordion)}
+                </Accordion>
+              )
+            })}
           </div>
           <div className={`row free-text-wrapper ${getFreeTextBreakpoint()}`}>
-            <div className="col-12 col-lg-6" dangerouslySetInnerHTML={createMarkup(freeText)}></div>
+            <div className='col-12 col-lg-6' dangerouslySetInnerHTML={createMarkup(freeText)}></div>
           </div>
           {renderShowMoreButton()}
-        </div>}
+        </div>
+      )}
     </React.Fragment>
   )
 }
@@ -136,7 +131,7 @@ AttachmentTableFigures.propTypes = {
       open: PropTypes.string.isRequired,
       subHeader: PropTypes.string,
       body: PropTypes.string,
-      props: PropTypes.object
+      props: PropTypes.object,
     })
   ),
   freeText: PropTypes.string,
@@ -144,7 +139,7 @@ AttachmentTableFigures.propTypes = {
   showLess: PropTypes.string,
   appName: PropTypes.string,
   GA_TRACKING_ID: PropTypes.string,
-  title: PropTypes.string
+  title: PropTypes.string,
 }
 
 export default (props) => <AttachmentTableFigures {...props} />

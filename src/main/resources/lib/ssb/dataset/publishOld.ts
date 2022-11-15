@@ -9,55 +9,22 @@ import { NodeQueryHit } from '/lib/xp/node'
 import { Statistic } from '../../../site/mixins/statistic/statistic'
 import { send } from '/lib/xp/event'
 
+const { moment } = __non_webpack_require__('/lib/vendor/moment')
+const { Events, logUserDataQuery } = __non_webpack_require__('/lib/ssb/repo/query')
+const { getDataSourceIdsFromStatistics, getStatisticsContent } = __non_webpack_require__('/lib/ssb/dashboard/statistic')
+const { getStatisticByIdFromRepo, getReleaseDatesByVariants } = __non_webpack_require__('/lib/ssb/statreg/statistics')
 const {
-  moment
-} = __non_webpack_require__('/lib/vendor/moment')
-const {
-  Events,
-  logUserDataQuery
-} = __non_webpack_require__('/lib/ssb/repo/query')
-const {
-  getDataSourceIdsFromStatistics,
-  getStatisticsContent
-} = __non_webpack_require__('/lib/ssb/dashboard/statistic')
-const {
-  getStatisticByIdFromRepo,
-  getReleaseDatesByVariants
-} = __non_webpack_require__('/lib/ssb/statreg/statistics')
-const {
-  data: {
-    forceArray
-  }
+  data: { forceArray },
 } = __non_webpack_require__('/lib/util')
-const {
-  executeFunction,
-  sleep
-} = __non_webpack_require__('/lib/xp/task')
-const {
-  deleteDataset,
-  extractKey,
-  getDataset
-} = __non_webpack_require__('/lib/ssb/dataset/dataset')
-const {
-  createOrUpdateDataset,
-  DATASET_BRANCH,
-  UNPUBLISHED_DATASET_BRANCH
-} = __non_webpack_require__('/lib/ssb/repo/dataset')
-const {
-  completeJobLog,
-  startJobLog,
-  updateJobLog,
-  JobNames,
-  JobStatus,
-  queryJobLogs,
-  getJobLog
-} = __non_webpack_require__('/lib/ssb/repo/job')
-const {
-  cronJobLog
-} = __non_webpack_require__('/lib/ssb/utils/serverLog')
+const { executeFunction, sleep } = __non_webpack_require__('/lib/xp/task')
+const { deleteDataset, extractKey, getDataset } = __non_webpack_require__('/lib/ssb/dataset/dataset')
+const { createOrUpdateDataset, DATASET_BRANCH, UNPUBLISHED_DATASET_BRANCH } =
+  __non_webpack_require__('/lib/ssb/repo/dataset')
+const { completeJobLog, startJobLog, updateJobLog, JobNames, JobStatus, queryJobLogs, getJobLog } =
+  __non_webpack_require__('/lib/ssb/repo/job')
+const { cronJobLog } = __non_webpack_require__('/lib/ssb/utils/serverLog')
 
-
-const jobs: {[key: string]: JobEventNode | JobInfoNode} = {}
+const jobs: { [key: string]: JobEventNode | JobInfoNode } = {}
 
 export function currentlyWaitingForPublish(statistic: Content<Statistics>): boolean {
   const from: string = new Date(Date.now() - 1800000).toISOString()
@@ -70,28 +37,33 @@ export function currentlyWaitingForPublish(statistic: Content<Statistics>): bool
       data.task = "${JobNames.PUBLISH_JOB}" AND 
       data.status = "${JobStatus.STARTED}" AND 
       range("_ts", instant("${from}"), instant("${to}"))`,
-    sort: '_ts DESC'
+    sort: '_ts DESC',
   }).hits[0]
   if (jobRes) {
     const job: JobInfoNode | null = getJobLog(jobRes.id) as JobInfoNode | null
     if (job) {
-      const jobRefreshResult: Array<StatisticsPublishResult> = forceArray(job.data.refreshDataResult) as Array<StatisticsPublishResult>
+      const jobRefreshResult: Array<StatisticsPublishResult> = forceArray(
+        job.data.refreshDataResult
+      ) as Array<StatisticsPublishResult>
       const statRefreshResult: StatisticsPublishResult | undefined = jobRefreshResult.find((s) => {
         return s && s.statistic === statistic._id
       })
-      if (statRefreshResult && statRefreshResult.status !== JobStatus.COMPLETE && statRefreshResult.status !== JobStatus.SKIPPED) {
+      if (
+        statRefreshResult &&
+        statRefreshResult.status !== JobStatus.COMPLETE &&
+        statRefreshResult.status !== JobStatus.SKIPPED
+      ) {
         const nextRelease: string | null = getNextRelease(statistic)
         const previousRelease: string | null = getPreviousRelease(statistic)
-        const serverOffsetInMs: number = app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
+        const serverOffsetInMs: number =
+          app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
         const now: Date = new Date(new Date().getTime() + serverOffsetInMs + 1000)
         if (
           (nextRelease && moment(nextRelease).isSameOrBefore(now)) ||
-                    (
-                      previousRelease &&
-                        moment(previousRelease).isSame(now, 'day') &&
-                        !moment(nextRelease).isSame(now, 'day') &&
-                        moment(previousRelease).isSameOrBefore(now)
-                    )
+          (previousRelease &&
+            moment(previousRelease).isSame(now, 'day') &&
+            !moment(nextRelease).isSame(now, 'day') &&
+            moment(previousRelease).isSameOrBefore(now))
         ) {
           return true
         }
@@ -112,28 +84,29 @@ export function publishDataset(): void {
     const nextRelease: string | null = getNextRelease(stat)
     if (nextRelease) {
       const releaseDate: Date = new Date(nextRelease)
-      const serverOffsetInMs: number = app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
+      const serverOffsetInMs: number =
+        app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
       const now: Date = new Date(new Date().getTime() + serverOffsetInMs)
-      const oneHourFromNow: Date = new Date(now.getTime() + (1000 * 60 * 60))
+      const oneHourFromNow: Date = new Date(now.getTime() + 1000 * 60 * 60)
       if (releaseDate > now && releaseDate < oneHourFromNow) {
         log.info(`Stat ${stat.data.statistic} releases today`)
         const statJobInfo: StatisticsPublishResult = {
           statistic: stat._id,
           shortNameId: stat.data.statistic ? stat.data.statistic : '',
           status: JobStatus.STARTED,
-          dataSources: []
+          dataSources: [],
         }
         const dataSourceIds: Array<string> = getDataSourceIdsFromStatistics(stat)
         const dataSources: Array<Content<DataSource> | null> = dataSourceIds.map((key) => {
           return getContent({
-            key
+            key,
           })
         })
         const publications: Array<PublicationItem | null> = dataSources.map((dataSource): PublicationItem | null => {
           if (dataSource) {
             return {
               dataset: getDataset(dataSource, UNPUBLISHED_DATASET_BRANCH),
-              dataSource
+              dataSource,
             }
           }
           return null
@@ -148,7 +121,7 @@ export function publishDataset(): void {
             statJobInfo.dataSources.push({
               id: p.dataSource._id,
               status: JobStatus.SKIPPED,
-              message: 'No unpublished dataset to publish'
+              message: 'No unpublished dataset to publish',
             })
             return false
           }
@@ -157,7 +130,7 @@ export function publishDataset(): void {
             statJobInfo.dataSources.push({
               id: p.dataSource._id,
               status: JobStatus.STARTED,
-              message: ''
+              message: '',
             })
             return true
           }
@@ -179,7 +152,7 @@ export function publishDataset(): void {
     node.data = {
       ...node.data,
       queryIds: jobResult.map((q) => q.statistic),
-      refreshDataResult: jobResult
+      refreshDataResult: jobResult,
     }
     return node
   })
@@ -190,7 +163,7 @@ export function publishDataset(): void {
 }
 
 function allJobsAreSkipped(jobResult: Array<StatisticsPublishResult>): boolean {
-  const sum: Array<boolean> = jobResult.reduce( (acc: Array<boolean>, jr: StatisticsPublishResult): Array<boolean> => {
+  const sum: Array<boolean> = jobResult.reduce((acc: Array<boolean>, jr: StatisticsPublishResult): Array<boolean> => {
     const numberOfSkippedDataSources: number = jr.dataSources.filter((ds: DataSourceStatisticsPublishResult) => {
       return ds.status === JobStatus.SKIPPED
     }).length
@@ -200,19 +173,21 @@ function allJobsAreSkipped(jobResult: Array<StatisticsPublishResult>): boolean {
   return !sum.includes(false)
 }
 
-function createTask(jobId: string, statistic: Content<Statistics & Statistic>, releaseDate: Date, publication: PublicationItem): void {
+function createTask(
+  jobId: string,
+  statistic: Content<Statistics & Statistic>,
+  releaseDate: Date,
+  publication: PublicationItem
+): void {
   executeFunction({
     description: `Publish statistic (${statistic.data.statistic})`,
     func: () => {
       /*
-            * Iterate this statistics related datasources, and check if they have unpublished data
-            * If they do, create or update the dataset on master branch
-            * Then delete dataset in draft
-            * */
-      const {
-        dataSource,
-        dataset
-      } = publication
+       * Iterate this statistics related datasources, and check if they have unpublished data
+       * If they do, create or update the dataset on master branch
+       * Then delete dataset in draft
+       * */
+      const { dataSource, dataset } = publication
       if (dataset && dataSource.data.dataSource) {
         let ts: number = Date.now()
         const start: number = Date.now()
@@ -224,14 +199,19 @@ function createTask(jobId: string, statistic: Content<Statistics & Statistic>, r
           sendClearCache: null,
           delete: null,
           completeJob: null,
-          total: null
+          total: null,
         }
         const key: string | null = extractKey(dataSource)
-        const serverOffsetInMs: number = app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
+        const serverOffsetInMs: number =
+          app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
         const now: Date = new Date(new Date().getTime() + serverOffsetInMs)
         const sleepFor: number = releaseDate.getTime() - now.getTime()
 
-        log.info(`Publish dataset (${key}) for statistic ${statistic.data.statistic} in ${sleepFor}ms (${releaseDate.toISOString()})`)
+        log.info(
+          `Publish dataset (${key}) for statistic ${
+            statistic.data.statistic
+          } in ${sleepFor}ms (${releaseDate.toISOString()})`
+        )
         timings.preSleepPrep = Date.now() - ts
 
         sleep(sleepFor)
@@ -239,7 +219,9 @@ function createTask(jobId: string, statistic: Content<Statistics & Statistic>, r
         ts = Date.now()
 
         const job: JobInfoNode = jobs[jobId] as JobInfoNode
-        const jobRefreshResult: Array<StatisticsPublishResult> = forceArray(job.data.refreshDataResult) as Array<StatisticsPublishResult>
+        const jobRefreshResult: Array<StatisticsPublishResult> = forceArray(
+          job.data.refreshDataResult
+        ) as Array<StatisticsPublishResult>
         const statRefreshResult: StatisticsPublishResult | undefined = jobRefreshResult.find((s) => {
           return s.statistic === statistic._id
         })
@@ -248,9 +230,13 @@ function createTask(jobId: string, statistic: Content<Statistics & Statistic>, r
         ts = Date.now()
 
         if (key) {
-          log.info(`publishing dataset ${dataSource.data.dataSource?._selected} - ${key} for ${statistic.data.statistic}`)
+          log.info(
+            `publishing dataset ${dataSource.data.dataSource?._selected} - ${key} for ${statistic.data.statistic}`
+          )
           createOrUpdateDataset(dataSource.data.dataSource?._selected, DATASET_BRANCH, key, dataset.data)
-          log.info(`finished publish of dataset ${dataSource.data.dataSource?._selected} - ${key} for ${statistic.data.statistic}`)
+          log.info(
+            `finished publish of dataset ${dataSource.data.dataSource?._selected} - ${key} for ${statistic.data.statistic}`
+          )
 
           timings.publish = Date.now() - ts
           ts = Date.now()
@@ -258,7 +244,7 @@ function createTask(jobId: string, statistic: Content<Statistics & Statistic>, r
           logUserDataQuery(dataSource._id, {
             file: '/lib/ssb/dataset/publish.ts',
             function: 'createTask',
-            message: Events.DATASET_PUBLISHED
+            message: Events.DATASET_PUBLISHED,
           })
 
           timings.log = Date.now() - ts
@@ -268,8 +254,8 @@ function createTask(jobId: string, statistic: Content<Statistics & Statistic>, r
             type: 'clearDatasetCache',
             distributed: true,
             data: {
-              path: dataset._path
-            }
+              path: dataset._path,
+            },
           })
 
           timings.sendClearCache = Date.now() - ts
@@ -281,7 +267,9 @@ function createTask(jobId: string, statistic: Content<Statistics & Statistic>, r
           ts = Date.now()
 
           if (statRefreshResult) {
-            const dataSourceRefreshResult: DataSourceStatisticsPublishResult | undefined = forceArray(statRefreshResult.dataSources).find((ds) => {
+            const dataSourceRefreshResult: DataSourceStatisticsPublishResult | undefined = forceArray(
+              statRefreshResult.dataSources
+            ).find((ds) => {
               return ds.id === dataSource._id
             })
             if (dataSourceRefreshResult) {
@@ -291,15 +279,19 @@ function createTask(jobId: string, statistic: Content<Statistics & Statistic>, r
         }
         // Update the statistics refresh result object
         if (job && statRefreshResult) {
-          const allDataSourcesComplete: boolean = forceArray(statRefreshResult.dataSources).filter((ds) => {
-            return ds.status === JobStatus.COMPLETE || ds.status === JobStatus.ERROR || ds.status === JobStatus.SKIPPED
-          }).length === forceArray(statRefreshResult.dataSources).length
+          const allDataSourcesComplete: boolean =
+            forceArray(statRefreshResult.dataSources).filter((ds) => {
+              return (
+                ds.status === JobStatus.COMPLETE || ds.status === JobStatus.ERROR || ds.status === JobStatus.SKIPPED
+              )
+            }).length === forceArray(statRefreshResult.dataSources).length
           if (allDataSourcesComplete) {
             log.info(`finished publishing statistic ${statistic.data.statistic}`)
             statRefreshResult.status = JobStatus.COMPLETE
-            const allComplete: boolean = jobRefreshResult.filter((s) => {
-              return s.status === JobStatus.COMPLETE || s.status === JobStatus.ERROR || s.status === JobStatus.SKIPPED
-            }).length === jobRefreshResult.length
+            const allComplete: boolean =
+              jobRefreshResult.filter((s) => {
+                return s.status === JobStatus.COMPLETE || s.status === JobStatus.ERROR || s.status === JobStatus.SKIPPED
+              }).length === jobRefreshResult.length
             if (allComplete) {
               log.info('finished publish job')
               sleep(100)
@@ -309,14 +301,14 @@ function createTask(jobId: string, statistic: Content<Statistics & Statistic>, r
                 type: 'clearCache',
                 distributed: true,
                 data: {
-                  clearDatasetRepoCache: true
-                }
+                  clearDatasetRepoCache: true,
+                },
               })
             } else {
               updateJobLog(jobId, (node: JobInfoNode) => {
                 node.data = {
                   ...node.data,
-                  refreshDataResult: jobRefreshResult
+                  refreshDataResult: jobRefreshResult,
                 }
                 return node
               })
@@ -328,7 +320,7 @@ function createTask(jobId: string, statistic: Content<Statistics & Statistic>, r
         timings.total = Date.now() - start - sleepFor
         log.info(`PUBLISH TIMING :: ${key} :: ${JSON.stringify(timings, null, 2)}`)
       }
-    }
+    },
   })
 }
 
@@ -355,22 +347,22 @@ function getPreviousRelease(statistic: Content<Statistics & Statistic>): string 
 }
 
 export interface PublishDatasetLib {
-    publishDataset: () => void;
-    currentlyWaitingForPublish: (statistic: Content<Statistic>) => boolean ;
+  publishDataset: () => void
+  currentlyWaitingForPublish: (statistic: Content<Statistic>) => boolean
 }
 
 interface PublicationItem {
-    dataset: DatasetRepoNode<object> | null;
-    dataSource: Content<DataSource>;
+  dataset: DatasetRepoNode<object> | null
+  dataSource: Content<DataSource>
 }
 
 interface PublishTimings {
-    preSleepPrep: null | number;
-    postSleepPrep: null | number;
-    publish: null | number;
-    log: null | number;
-    sendClearCache: null | number;
-    delete: null | number;
-    completeJob: null | number;
-    total: null | number;
+  preSleepPrep: null | number
+  postSleepPrep: null | number
+  publish: null | number
+  log: null | number
+  sendClearCache: null | number
+  delete: null | number
+  completeJob: null | number
+  total: null | number
 }

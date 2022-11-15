@@ -1,19 +1,15 @@
-import {render, type RenderResponse} from '/lib/enonic/react4xp'
-import {query, type Content, type QueryResponse} from '/lib/xp/content'
-import {getContent, imageUrl, pageUrl, processHtml, serviceUrl} from '/lib/xp/portal'
-import {localize} from '/lib/xp/i18n'
-import {formatDate} from '/lib/ssb/utils/dateUtils'
-import type {Article} from '../../content-types/article/article'
-import type {ArticleArchive} from '../../content-types/articleArchive/articleArchive'
+import { render, type RenderResponse } from '/lib/enonic/react4xp'
+import { query, type Content, type QueryResponse } from '/lib/xp/content'
+import { getContent, imageUrl, pageUrl, processHtml, serviceUrl } from '/lib/xp/portal'
+import { localize } from '/lib/xp/i18n'
+import { formatDate } from '/lib/ssb/utils/dateUtils'
+import type { Article } from '../../content-types/article/article'
+import type { ArticleArchive } from '../../content-types/articleArchive/articleArchive'
 
-const {
-  getImageAlt
-} = __non_webpack_require__('/lib/ssb/utils/imageUtils')
-const {
-  renderError
-} = __non_webpack_require__('/lib/ssb/error/error')
+const { getImageAlt } = __non_webpack_require__('/lib/ssb/utils/imageUtils')
+const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
-export function get(req: XP.Request): RenderResponse | XP.Response {
+exports.get = function (req: XP.Request): XP.Response | RenderResponse {
   try {
     return renderPart(req)
   } catch (e) {
@@ -30,22 +26,26 @@ function renderPart(req: XP.Request): RenderResponse {
   const language: string = page.language === 'en' || page.language === 'nn' ? page.language : 'nb'
   const listOfArticlesTitle: string = localize({
     key: 'articleAnalysisPublications',
-    locale: language
+    locale: language,
   })
   const title: string | undefined = page.displayName ? page.displayName : undefined
 
   const preamble: string | undefined = page.data.preamble ? page.data.preamble : undefined
 
   /* TODO: Image needs to rescale dynamically in mobile version */
-  const image: string | undefined = page.data.image ? imageUrl({
-    id: page.data.image,
-    scale: 'block(1180, 275)'
-  }) : undefined
+  const image: string | undefined = page.data.image
+    ? imageUrl({
+        id: page.data.image,
+        scale: 'block(1180, 275)',
+      })
+    : undefined
 
   const imageAltText: string | undefined = page.data.image ? getImageAlt(page.data.image) : ' '
-  const freeText: string | undefined = page.data.freeText ? processHtml({
-    value: page.data.freeText.replace(/&nbsp;/g, ' ')
-  }) : undefined
+  const freeText: string | undefined = page.data.freeText
+    ? processHtml({
+        value: page.data.freeText.replace(/&nbsp;/g, ' '),
+      })
+    : undefined
 
   const issnNumber: string | undefined = page.data.issnNumber ? 'ISSN ' + page.data.issnNumber : undefined
 
@@ -61,25 +61,25 @@ function renderPart(req: XP.Request): RenderResponse {
     pageId: page._id,
     firstArticles: parseArticleData(page._id, 0, 15, language),
     articleArchiveService: serviceUrl({
-      service: 'articleArchive'
+      service: 'articleArchive',
     }),
     showMore: localize({
       key: 'button.showMore',
-      locale: language
+      locale: language,
     }),
     showMorePagination: localize({
       key: 'articleArchive.showMore',
-      locale: language
-    })
+      locale: language,
+    }),
   }
 
   return render('ArticleArchive', props, req, {
-    body: '<section class="xp-part article-archive"></section>'
+    body: '<section class="xp-part article-archive"></section>',
   })
 }
 
 function getSubTitle(articleContent: Content<Article>, articleNamePhrase: string, language: string): string {
-  let type: string = ''
+  let type = ''
   if (articleContent.type === `${app.name}:article`) {
     type = articleNamePhrase
   }
@@ -97,7 +97,7 @@ function getSubTitle(articleContent: Content<Article>, articleNamePhrase: string
 export function parseArticleData(pageId: string, start: number, count: number, language: string): ParsedArticles {
   const articleNamePhrase: string = localize({
     key: 'articleName',
-    locale: language
+    locale: language,
   })
 
   const articles: QueryResponse<Article, object> = query({
@@ -105,60 +105,57 @@ export function parseArticleData(pageId: string, start: number, count: number, l
     count,
     sort: 'publish.from DESC',
     query: `data.articleArchive = "${pageId}"`,
-    contentTypes: [
-      `${app.name}:article`
-    ]
+    contentTypes: [`${app.name}:article`],
   })
 
   const parsedArticles: Array<ParsedArticleData> = articles.hits.map((articleContent) => {
     return {
-      year: articleContent.publish && articleContent.createdTime ?
-        formatDate(articleContent.publish.from, 'yyyy', language) :
-        formatDate(articleContent.createdTime, 'yyyy', language),
+      year:
+        articleContent.publish && articleContent.createdTime
+          ? formatDate(articleContent.publish.from, 'yyyy', language)
+          : formatDate(articleContent.createdTime, 'yyyy', language),
       subtitle: getSubTitle(articleContent, articleNamePhrase, language),
       href: pageUrl({
-        id: articleContent._id
+        id: articleContent._id,
       }),
       title: articleContent.displayName,
       preamble: articleContent.data.ingress,
-      date: articleContent.publish && articleContent.publish.from ? articleContent.publish.from : ''
+      date: articleContent.publish && articleContent.publish.from ? articleContent.publish.from : '',
     }
   })
 
   return {
     articles: parsedArticles,
-    total: articles.total
+    total: articles.total,
   }
 }
 
 interface ArticleArchiveProps {
-  title: string | undefined;
-  preamble: string | undefined;
-  image: string | undefined;
-  imageAltText: string | undefined;
-  freeText: string | undefined;
-  issnNumber: string | undefined;
-  listOfArticlesSectionTitle: string;
-  language: string;
-  pageId: string;
-  firstArticles: ParsedArticles;
-  articleArchiveService: string;
-  showMore: string;
-  showMorePagination: string;
+  title: string | undefined
+  preamble: string | undefined
+  image: string | undefined
+  imageAltText: string | undefined
+  freeText: string | undefined
+  issnNumber: string | undefined
+  listOfArticlesSectionTitle: string
+  language: string
+  pageId: string
+  firstArticles: ParsedArticles
+  articleArchiveService: string
+  showMore: string
+  showMorePagination: string
 }
 
 interface ParsedArticleData {
-  preamble: string | undefined;
-  year: string | undefined;
-  subtitle: string;
-  href: string;
-  title: string;
-  date: string;
+  preamble: string | undefined
+  year: string | undefined
+  subtitle: string
+  href: string
+  title: string
+  date: string
 }
 
 export interface ParsedArticles {
-  articles: Array<ParsedArticleData>;
-  total: number;
+  articles: Array<ParsedArticleData>
+  total: number
 }
-
-

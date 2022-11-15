@@ -5,21 +5,19 @@ import { ArrowRight } from 'react-feather'
 function FrontpageKeyfigures(props) {
   function createRows() {
     const keyFigures = props.keyFigures
-    const {
-      width
-    } = useWindowDimensions()
+    const { width } = useWindowDimensions()
 
     return keyFigures.map((keyFigure, i) => {
       return (
         <React.Fragment key={`figure-${i}`}>
           <div className={'col-12 col-lg-3 mb-lg-0 ' + (i === keyFigures.length - 1 ? 'mb-0' : 'mb-3')}>
-            <a href={keyFigure.url} className="keyfigure-wrapper">
+            <a href={keyFigure.url} className='keyfigure-wrapper'>
               <div className={'keyfigure ' + (i === 0 ? 'first' : 'others')}>
                 <div className={'ssb-link header ' + (i !== 0 ? 'hide-mobile' : '')}>
-                  <span className="link-text">{keyFigure.urlText}</span>
+                  <span className='link-text'>{keyFigure.urlText}</span>
                 </div>
-                <div className="number-section">
-                  { i === 0 || width > 768 ? addKeyfigure(keyFigure) : addKeyfigureMobile(keyFigure)}
+                <div className='number-section'>
+                  {i === 0 || width > 768 ? addKeyfigure(keyFigure) : addKeyfigureMobile(keyFigure)}
                 </div>
               </div>
             </a>
@@ -33,14 +31,12 @@ function FrontpageKeyfigures(props) {
     if (keyFigure.number) {
       return (
         <React.Fragment>
-          <div className="ssb-number small">{keyFigure.number}</div>
-          <span className="kf-title subtitle">{keyFigure.numberDescription}</span>
+          <div className='ssb-number small'>{keyFigure.number}</div>
+          <span className='kf-title subtitle'>{keyFigure.numberDescription}</span>
         </React.Fragment>
       )
     } else {
-      return (
-        <span className="no-number">{keyFigure.noNumberText}</span>
-      )
+      return <span className='no-number'>{keyFigure.noNumberText}</span>
     }
   }
 
@@ -48,34 +44,30 @@ function FrontpageKeyfigures(props) {
     if (keyFigure.number) {
       return (
         <React.Fragment>
-          <div className="frontpage-keyfigure-mobile">
-            <div className="ssb-number small">{keyFigure.number + ' ' + keyFigure.numberDescription}</div>
-            <span className="kf-title subtitle">{keyFigure.urlText}</span>
-            <div className="icon-wrapper"><ArrowRight size="24" /></div>
+          <div className='frontpage-keyfigure-mobile'>
+            <div className='ssb-number small'>{keyFigure.number + ' ' + keyFigure.numberDescription}</div>
+            <span className='kf-title subtitle'>{keyFigure.urlText}</span>
+            <div className='icon-wrapper'>
+              <ArrowRight size='24' />
+            </div>
           </div>
         </React.Fragment>
       )
     } else {
-      return (
-        <span className="no-number">{keyFigure.noNumberText}</span>
-      )
+      return <span className='no-number'>{keyFigure.noNumberText}</span>
     }
   }
 
   // functions to get and set browserwindow size
   function getWindowDimensions() {
-    const {
-      innerWidth: width, innerHeight: height
-    } = window
+    const { innerWidth: width, innerHeight: height } = window
     return {
       width,
-      height
+      height,
     }
   }
   function useWindowDimensions() {
-    const [windowDimensions, setWindowDimensions] = useState(
-      getWindowDimensions()
-    )
+    const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions())
 
     useEffect(() => {
       function handleResize() {
@@ -90,10 +82,8 @@ function FrontpageKeyfigures(props) {
   }
 
   return (
-    <div className="container">
-      <div className="row d-flex flex-wrap">
-        {createRows()}
-      </div>
+    <div className='container'>
+      <div className='row d-flex flex-wrap'>{createRows()}</div>
     </div>
   )
 }
@@ -107,9 +97,9 @@ FrontpageKeyfigures.propTypes = {
       urlText: PropTypes.string,
       number: PropTypes.string,
       numberDescription: PropTypes.string,
-      noNumberText: PropTypes.string
+      noNumberText: PropTypes.string,
     })
-  )
+  ),
 }
 
-export default (props) => <FrontpageKeyfigures {...props}/>
+export default (props) => <FrontpageKeyfigures {...props} />

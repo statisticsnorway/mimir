@@ -1,35 +1,21 @@
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 
-import type {Content} from '/lib/xp/content'
-import type {StatisticInListing} from '../../../lib/ssb/dashboard/statreg/types'
-import {render, type RenderResponse} from '/lib/enonic/react4xp'
-import type {Component} from '/lib/xp/portal'
-import type {ReleasedStatisticsPartConfig} from './releasedStatistics-part-config'
-import type {YearReleases} from '../../../lib/ssb/utils/variantUtils'
-import {getContent, getComponent} from '/lib/xp/portal'
-import {localize} from '/lib/xp/i18n'
+import type { Content } from '/lib/xp/content'
+import type { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/types'
+import { render, type RenderResponse } from '/lib/enonic/react4xp'
+import type { Component } from '/lib/xp/portal'
+import type { ReleasedStatisticsPartConfig } from './releasedStatistics-part-config'
+import type { YearReleases } from '../../../lib/ssb/utils/variantUtils'
+import { getContent, getComponent } from '/lib/xp/portal'
+import { localize } from '/lib/xp/i18n'
 
-const {
-  fromPartCache
-} = __non_webpack_require__('/lib/ssb/cache/partCache')
-const {
-  getAllStatisticsFromRepo
-} = __non_webpack_require__('/lib/ssb/statreg/statistics')
-const {
-  renderError
-} = __non_webpack_require__('/lib/ssb/error/error')
-const {
-  isEnabled
-} = __non_webpack_require__('/lib/featureToggle')
-const {
-  checkLimitAndTrim
-} = __non_webpack_require__('/lib/ssb/utils/arrayUtils')
-const {
-  addMonthNames,
-  getReleasesForDay,
-  groupStatisticsByYearMonthAndDay,
-  prepareStatisticRelease
-} = __non_webpack_require__('/lib/ssb/utils/variantUtils')
+const { fromPartCache } = __non_webpack_require__('/lib/ssb/cache/partCache')
+const { getAllStatisticsFromRepo } = __non_webpack_require__('/lib/ssb/statreg/statistics')
+const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
+const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
+const { checkLimitAndTrim } = __non_webpack_require__('/lib/ssb/utils/arrayUtils')
+const { addMonthNames, getReleasesForDay, groupStatisticsByYearMonthAndDay, prepareStatisticRelease } =
+  __non_webpack_require__('/lib/ssb/utils/variantUtils')
 
 export function get(req: XP.Request): RenderResponse | XP.Response {
   try {
@@ -49,22 +35,27 @@ export function renderPart(req: XP.Request): RenderResponse {
   const part: Component<ReleasedStatisticsPartConfig> = getComponent()
   const deactivatePartCacheEnabled: boolean = isEnabled('deactivate-partcache-released-statistics', true, 'ssb')
 
-  const groupedWithMonthNames: Array<YearReleases> = !deactivatePartCacheEnabled ? fromPartCache(req, `${content._id}-releasedStatistics`, () => {
-    return getGroupedWithMonthNames(part, currentLanguage)
-  }) : getGroupedWithMonthNames(part, currentLanguage)
+  const groupedWithMonthNames: Array<YearReleases> = !deactivatePartCacheEnabled
+    ? fromPartCache(req, `${content._id}-releasedStatistics`, () => {
+        return getGroupedWithMonthNames(part, currentLanguage)
+      })
+    : getGroupedWithMonthNames(part, currentLanguage)
 
   const props: PartProps = {
     releases: groupedWithMonthNames,
     title: localize({
       key: 'newStatistics',
-      locale: currentLanguage
+      locale: currentLanguage,
     }),
-    language: currentLanguage
+    language: currentLanguage,
   }
   return render('ReleasedStatistics', props, req)
 }
 
-function getGroupedWithMonthNames(part: Component<ReleasedStatisticsPartConfig>, currentLanguage: string): Array<YearReleases> {
+function getGroupedWithMonthNames(
+  part: Component<ReleasedStatisticsPartConfig>,
+  currentLanguage: string
+): Array<YearReleases> {
   // iterate and format month names
   const numberOfReleases: number = part.config.numberOfStatistics ? parseInt(part.config.numberOfStatistics) : 8
 
@@ -75,16 +66,22 @@ function getGroupedWithMonthNames(part: Component<ReleasedStatisticsPartConfig>,
   const releasesFiltered: Array<StatisticInListing> = filterOnPreviousReleases(releases, numberOfReleases)
 
   // Choose the right variant and prepare the date in a way it works with the groupBy function
-  const releasesPrepped: Array<PreparedStatistics> = releasesFiltered.map((release: StatisticInListing) => prepareStatisticRelease(release, currentLanguage))
+  const releasesPrepped: Array<PreparedStatistics> = releasesFiltered.map((release: StatisticInListing) =>
+    prepareStatisticRelease(release, currentLanguage)
+  )
 
   // group by year, then month, then day
-  const groupedByYearMonthAndDay: GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>> = groupStatisticsByYearMonthAndDay(releasesPrepped)
+  const groupedByYearMonthAndDay: GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>> =
+    groupStatisticsByYearMonthAndDay(releasesPrepped)
   return addMonthNames(groupedByYearMonthAndDay, currentLanguage)
 }
 
-export function filterOnPreviousReleases(stats: Array<StatisticInListing>, numberOfReleases: number): Array<StatisticInListing> {
+export function filterOnPreviousReleases(
+  stats: Array<StatisticInListing>,
+  numberOfReleases: number
+): Array<StatisticInListing> {
   const releases: Array<StatisticInListing> = []
-  for (let i: number = 0; releases.length < numberOfReleases; i++) {
+  for (let i = 0; releases.length < numberOfReleases; i++) {
     const day: Date = new Date()
     day.setDate(day.getDate() - i)
     const releasesOnThisDay: Array<StatisticInListing> = getReleasesForDay(stats, day)
@@ -95,33 +92,31 @@ export function filterOnPreviousReleases(stats: Array<StatisticInListing>, numbe
 }
 
 /*
-*  Interfaces
-*/
+ *  Interfaces
+ */
 
 interface PartProps {
-  releases: Array<YearReleases>;
-  title: string;
-  language: string;
+  releases: Array<YearReleases>
+  title: string
+  language: string
 }
 
 interface PreparedStatistics {
-  id: number;
-  name: string;
-  shortName: string;
-  variant: PreparedVariant;
+  id: number
+  name: string
+  shortName: string
+  variant: PreparedVariant
 }
 
 interface PreparedVariant {
-  id: string;
-  day: number;
-  monthNumber: number;
-  year: number;
-  frequency: string;
-  period: string;
+  id: string
+  day: number
+  monthNumber: number
+  year: number
+  frequency: string
+  period: string
 }
 
 interface GroupedBy<T> {
-  [key: string]: Array<T> | T;
+  [key: string]: Array<T> | T
 }
-
-

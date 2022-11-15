@@ -3,9 +3,9 @@
  * https://github.com/enonic/lib-util/tree/master/src/main/resources/lib/util
  */
 export interface UtilLibrary {
-  readonly data: UtilDataLibrary;
+  readonly data: UtilDataLibrary
 }
 
 interface UtilDataLibrary {
-  forceArray<T>(data: T | Array<T>): Array<T>;
+  forceArray<T>(data: T | Array<T>): Array<T>
 }

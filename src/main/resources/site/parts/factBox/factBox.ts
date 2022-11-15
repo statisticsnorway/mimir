@@ -1,13 +1,12 @@
-import {getComponent, processHtml, type Component} from "/lib/xp/portal";
-import type {FactBoxPartConfig} from "./factBox-part-config";
-import {render as r4XpRender, type RenderResponse} from '/lib/enonic/react4xp'
-import {get as getContentByKey, type Content} from "/lib/xp/content";
-import type {FactBox} from "../../content-types/factBox/factBox";
-import {type ResourceKey, render} from '/lib/thymeleaf'
+import { getComponent, processHtml, type Component } from '/lib/xp/portal'
+import type { FactBoxPartConfig } from './factBox-part-config'
+import { render as r4XpRender, type RenderResponse } from '/lib/enonic/react4xp'
+import { get as getContentByKey, type Content } from '/lib/xp/content'
+import type { FactBox } from '../../content-types/factBox/factBox'
+import { type ResourceKey, render } from '/lib/thymeleaf'
 
-const {
-  renderError
-} = __non_webpack_require__('/lib/ssb/error/error')
+const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
+
 const view: ResourceKey = resolve('./factBox.html')
 
 export function get(req: XP.Request): XP.Response | RenderResponse {
@@ -32,28 +31,29 @@ function renderPart(req: XP.Request, factBoxId: string): XP.Response | RenderRes
   if (!factBoxId) {
     if (req.mode === 'edit') {
       return {
-        body: render(view)
+        body: render(view),
       }
     } else {
       throw new Error('Factbox - Missing Id')
     }
   }
   const factBoxContent: Content<FactBox> | null = getContentByKey({
-    key: factBoxId
+    key: factBoxId,
   })
   if (!factBoxContent) throw new Error(`FactBox with id ${factBoxId} doesn't exist`)
   const text: string = processHtml({
-    value: factBoxContent.data.text.replace(/&nbsp;/g, ' ')
+    value: factBoxContent.data.text.replace(/&nbsp;/g, ' '),
   })
   const body: string = render(view)
   return r4XpRender(
     'FactBox',
     {
       header: factBoxContent.displayName,
-      text
+      text,
     },
     req,
     {
-      body: body
-    })
+      body: body,
+    }
+  )
 }

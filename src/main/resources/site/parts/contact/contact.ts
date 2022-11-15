@@ -1,27 +1,17 @@
-import type {Content} from '/lib/xp/content'
-import {getContent, getComponent, type Component} from '/lib/xp/portal'
-import {type ResourceKey, render} from '/lib/thymeleaf'
-import type {Phrases} from '../../../lib/types/language'
-import type {Contact} from '../../../lib/ssb/dashboard/statreg/types'
-import type {ContactPartConfig} from './contact-part-config'
-import type {Article} from '../../content-types/article/article';
-import type {Statistics} from '../../content-types/statistics/statistics';
+import type { Content } from '/lib/xp/content'
+import { getContent, getComponent, type Component } from '/lib/xp/portal'
+import { type ResourceKey, render } from '/lib/thymeleaf'
+import type { Phrases } from '../../../lib/types/language'
+import type { Contact } from '../../../lib/ssb/dashboard/statreg/types'
+import type { ContactPartConfig } from './contact-part-config'
+import type { Article } from '../../content-types/article/article'
+import type { Statistics } from '../../content-types/statistics/statistics'
 
-const {
-  renderError
-} = __non_webpack_require__('/lib/ssb/error/error')
-const {
-  getContactsFromRepo
-} = __non_webpack_require__('/lib/ssb/statreg/contacts')
-const {
-  ensureArray, chunkArray
-} = __non_webpack_require__('/lib/ssb/utils/arrayUtils')
-const {
-  getPhrases
-} = __non_webpack_require__('/lib/ssb/utils/language')
-const {
-  find
-} = __non_webpack_require__('/lib/vendor/ramda')
+const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
+const { getContactsFromRepo } = __non_webpack_require__('/lib/ssb/statreg/contacts')
+const { ensureArray, chunkArray } = __non_webpack_require__('/lib/ssb/utils/arrayUtils')
+const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
+const { find } = __non_webpack_require__('/lib/vendor/ramda')
 
 const view: ResourceKey = resolve('./contact.html') as ResourceKey
 
@@ -39,7 +29,7 @@ export function preview(req: XP.Request) {
 
 // split 8-digit phone numbers into groups of 2 digits each dvs. "12345678" => "12 34 56 78"
 function treatPhoneNumber(phone: string): string {
-  const matcher: RegExp = /..?/g
+  const matcher = /..?/g
   const phoneArr: Array<string> | null = phone.match(matcher)
   if (phoneArr) {
     return phoneArr.join(' ')
@@ -48,21 +38,22 @@ function treatPhoneNumber(phone: string): string {
   }
 }
 
-const landCodeVisual: string = '(+47) '
-const landCode: string = '+47'
+const landCodeVisual = '(+47) '
+const landCode = '+47'
 
 function transformContact(contact: Contact, language: string): TransformedContact {
   return {
     ...contact,
-    telephone: language == 'en' && contact.telephone != '' ?
-      landCodeVisual.concat(treatPhoneNumber(contact.telephone as string)) : treatPhoneNumber(contact.telephone as string),
-    phonelink: landCode.concat(contact.telephone as string)
+    telephone:
+      language == 'en' && contact.telephone != ''
+        ? landCodeVisual.concat(treatPhoneNumber(contact.telephone as string))
+        : treatPhoneNumber(contact.telephone as string),
+    phonelink: landCode.concat(contact.telephone as string),
   }
 }
 
-
 function renderPart(req: XP.Request): XP.Response {
-  const WIDTH: number = 4 // how many boxes in a row
+  const WIDTH = 4 // how many boxes in a row
   const page: Content<Article | Statistics> = getContent()
   const pageLanguage: string = page.language ? page.language : 'nb'
   const part: Component<ContactPartConfig> = getComponent()
@@ -80,7 +71,9 @@ function renderPart(req: XP.Request): XP.Response {
   }
 
   const selectedContacts: Array<TransformedContact> = contactIds.reduce((acc: Array<TransformedContact>, contactId) => {
-    const found: Contact | undefined = statRegContacts ? find((contact: Contact) => `${contact.id}` === `${contactId}`)(statRegContacts) : undefined
+    const found: Contact | undefined = statRegContacts
+      ? find((contact: Contact) => `${contact.id}` === `${contactId}`)(statRegContacts)
+      : undefined
     if (found) {
       return acc.concat(transformContact(found, pageLanguage))
     } else {
@@ -91,38 +84,38 @@ function renderPart(req: XP.Request): XP.Response {
   const contacts: Array<Array<TransformedContact>> = chunkArray(selectedContacts, WIDTH)
 
   const contactTitle: string = phrases.contact
-  if (!contacts || (contacts.length < 1)) {
+  if (!contacts || contacts.length < 1) {
     if (req.mode === 'edit' && page.type !== `${app.name}:statistics` && page.type !== `${app.name}:article`) {
       return {
         body: render(view, {
-          label: contactTitle
-        })
+          label: contactTitle,
+        }),
       }
     } else {
       return {
-        body: null
+        body: null,
       }
     }
   }
 
   const model: ContactModel = {
     contactTitle,
-    contacts
+    contacts,
   }
 
   const body: string = render(view, model)
 
   return {
     body,
-    contentType: 'text/html'
+    contentType: 'text/html',
   }
 }
 
 interface TransformedContact extends Contact {
-  phonelink: string;
+  phonelink: string
 }
 
 interface ContactModel {
-  contactTitle: string;
+  contactTitle: string
   contacts: Array<Array<TransformedContact>>
 }

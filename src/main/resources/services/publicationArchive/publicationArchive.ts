@@ -1,8 +1,6 @@
 import { PublicationResult } from '../../lib/ssb/parts/publicationArchive'
 
-const {
-  getPublications
-} = __non_webpack_require__( '/lib/ssb/parts/publicationArchive')
+const { getPublications } = __non_webpack_require__('/lib/ssb/parts/publicationArchive')
 
 exports.get = (req: XP.Request): XP.Response => {
   const start: number = Number(req.params.start) ? Number(req.params.start) : 0
@@ -16,6 +14,6 @@ exports.get = (req: XP.Request): XP.Response => {
   return {
     status: 200,
     contentType: 'application/json',
-    body: result
+    body: result,
   }
 }

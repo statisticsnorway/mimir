@@ -2,13 +2,8 @@ import { request, HttpRequestParams, HttpResponse } from '/lib/http-client'
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 import { XmlParser } from '../../../types/xmlParser'
 
-const {
-  sleep
-} = __non_webpack_require__('/lib/xp/task')
-const {
-  logUserDataQuery,
-  Events
-} = __non_webpack_require__('/lib/ssb/repo/query')
+const { sleep } = __non_webpack_require__('/lib/xp/task')
+const { logUserDataQuery, Events } = __non_webpack_require__('/lib/ssb/repo/query')
 
 export function get(url: string, queryId?: string): object | null {
   const requestParams: HttpRequestParams = {
@@ -17,10 +12,10 @@ export function get(url: string, queryId?: string): object | null {
     contentType: 'text/html',
     headers: {
       'Cache-Control': 'no-cache',
-      'Accept': 'text/html'
+      Accept: 'text/html',
     },
     connectionTimeout: 20000,
-    readTimeout: 5000
+    readTimeout: 5000,
   }
 
   if (queryId) {
@@ -28,7 +23,7 @@ export function get(url: string, queryId?: string): object | null {
       file: '/lib/statbankSaved/statbankSaved.ts',
       function: 'fetch',
       message: Events.REQUEST_DATA,
-      request: requestParams
+      request: requestParams,
     })
   }
 
@@ -40,25 +35,26 @@ export function get(url: string, queryId?: string): object | null {
         file: '/lib/statbankSaved/statbankSaved.ts',
         function: 'fetch',
         message: Events.REQUEST_GOT_ERROR_RESPONSE,
-        response
+        response,
       })
     }
     log.error(`HTTP ${url} (${response.status} ${response.message})`)
   }
 
-  if (response.status === 429) { // 429 = too many requests
+  if (response.status === 429) {
+    // 429 = too many requests
     sleep(30 * 1000)
   }
 
   if (response.status === 200 && response.body) {
     return {
       html: response.body,
-      json: xmlParser.parse(response.body.replace('&', '&amp;'))
+      json: xmlParser.parse(response.body.replace('&', '&amp;')),
     }
   }
   return null
 }
 
 export interface StatbankSavedRequestLib {
-  get: (url: string, queryId?: string) => object | null;
+  get: (url: string, queryId?: string) => object | null
 }

@@ -1,31 +1,20 @@
-import {get as getContentByKey, type Content, type MediaImage} from '/lib/xp/content'
-import type {SourceList, SourcesConfig} from '../../../lib/ssb/utils/utils'
-import {render, type RenderResponse} from '/lib/enonic/react4xp'
-import type {StaticVisualization} from '../../content-types/staticVisualization/staticVisualization'
-import type {DefaultPageConfig} from '../../pages/default/default-page-config'
-import type {StaticVisualizationPartConfig} from './staticVisualization-part-config'
-import type {HtmlTable} from '../../../lib/ssb/parts/table'
-import {getContent, getComponent, imageUrl} from '/lib/xp/portal'
-import {localize} from '/lib/xp/i18n'
+import { get as getContentByKey, type Content, type MediaImage } from '/lib/xp/content'
+import type { SourceList, SourcesConfig } from '../../../lib/ssb/utils/utils'
+import { render, type RenderResponse } from '/lib/enonic/react4xp'
+import type { StaticVisualization } from '../../content-types/staticVisualization/staticVisualization'
+import type { DefaultPageConfig } from '../../pages/default/default-page-config'
+import type { StaticVisualizationPartConfig } from './staticVisualization-part-config'
+import type { HtmlTable } from '../../../lib/ssb/parts/table'
+import { getContent, getComponent, imageUrl } from '/lib/xp/portal'
+import { localize } from '/lib/xp/i18n'
 
 const {
-  data: {
-    forceArray
-  }
+  data: { forceArray },
 } = __non_webpack_require__('/lib/util')
-const {
-  renderError
-} = __non_webpack_require__('/lib/ssb/error/error')
-const {
-  getSources
-} = __non_webpack_require__('/lib/ssb/utils/utils')
-const {
-  getPhrases
-} = __non_webpack_require__('/lib/ssb/utils/language')
-const {
-  parseHtmlString
-} = __non_webpack_require__('/lib/ssb/parts/table')
-
+const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
+const { getSources } = __non_webpack_require__('/lib/ssb/utils/utils')
+const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
+const { parseHtmlString } = __non_webpack_require__('/lib/ssb/parts/table')
 
 export function get(req: XP.Request): XP.Response | RenderResponse {
   try {
@@ -51,42 +40,51 @@ function renderPart(req: XP.Request, contentId: string | undefined): RenderRespo
   const sourcesLabel: string = phrases.source
   const descriptionStaticVisualization: string = phrases.descriptionStaticVisualization
 
-  const staticVisualizationsContent: Content<StaticVisualization> | null = contentId ? getContentByKey({
-    key: contentId
-  }) : null
+  const staticVisualizationsContent: Content<StaticVisualization> | null = contentId
+    ? getContentByKey({
+        key: contentId,
+      })
+    : null
 
   if (staticVisualizationsContent) {
-    const sourceConfig: StaticVisualization['sources'] = staticVisualizationsContent.data.sources ? forceArray(staticVisualizationsContent.data.sources) : []
+    const sourceConfig: StaticVisualization['sources'] = staticVisualizationsContent.data.sources
+      ? forceArray(staticVisualizationsContent.data.sources)
+      : []
     const language: string = staticVisualizationsContent.language ? staticVisualizationsContent.language : 'nb'
 
     const showAsGraphLabel: string = localize({
       key: 'highcharts.showAsChart',
-      locale: language === 'nb' ? 'no' : language
+      locale: language === 'nb' ? 'no' : language,
     })
 
     const showAsTableLabel: string = localize({
       key: 'highcharts.showAsTable',
-      locale: language === 'nb' ? 'no' : language
+      locale: language === 'nb' ? 'no' : language,
     })
 
     const imageSrc: string | null = imageUrl({
       id: staticVisualizationsContent.data.image,
-      scale: 'max(850)'
+      scale: 'max(850)',
     })
 
     // Retrieves image as content to get image meta data
     const imageData: Content<MediaImage> | null = getContentByKey({
-      key: staticVisualizationsContent.data.image
+      key: staticVisualizationsContent.data.image,
     })
 
     // Tabledata
-    const htmlTable: HtmlTable | undefined = staticVisualizationsContent.data.tableData ?
-      parseHtmlString(staticVisualizationsContent.data.tableData) : undefined
-
+    const htmlTable: HtmlTable | undefined = staticVisualizationsContent.data.tableData
+      ? parseHtmlString(staticVisualizationsContent.data.tableData)
+      : undefined
 
     const props: StaticVisualizationProps = {
       title: staticVisualizationsContent.displayName,
-      altText: imageData && imageData.data.altText ? imageData.data.altText : (imageData && imageData.data.caption ? imageData.data.caption : ' '),
+      altText:
+        imageData && imageData.data.altText
+          ? imageData.data.altText
+          : imageData && imageData.data.caption
+          ? imageData.data.caption
+          : ' ',
       imageSrc: imageSrc,
       footnotes: staticVisualizationsContent.data.footNote ? forceArray(staticVisualizationsContent.data.footNote) : [],
       sources: getSources(sourceConfig as Array<SourcesConfig>),
@@ -97,35 +95,34 @@ function renderPart(req: XP.Request, contentId: string | undefined): RenderRespo
       descriptionStaticVisualization,
       inFactPage: page.page.config && page.page.config.pageType === 'factPage',
       language: language,
-      tableData: htmlTable
+      tableData: htmlTable,
     }
 
     return render('site/parts/staticVisualization/staticVisualization', props, req)
   }
   return {
-    body: null
+    body: null,
   }
 }
 
 interface DefaultPage {
   page: {
-    config: DefaultPageConfig;
-  };
+    config: DefaultPageConfig
+  }
 }
 
 interface StaticVisualizationProps {
-  title: string;
-  altText: string;
-  imageSrc: string;
-  footnotes: StaticVisualization['footNote'];
-  sources: SourceList;
-  longDesc: string | undefined;
-  sourcesLabel: string;
-  showAsGraphLabel: string;
-  showAsTableLabel: string;
-  descriptionStaticVisualization: string;
-  inFactPage?: boolean;
-  language: string;
-  tableData: HtmlTable | undefined;
+  title: string
+  altText: string
+  imageSrc: string
+  footnotes: StaticVisualization['footNote']
+  sources: SourceList
+  longDesc: string | undefined
+  sourcesLabel: string
+  showAsGraphLabel: string
+  showAsTableLabel: string
+  descriptionStaticVisualization: string
+  inFactPage?: boolean
+  language: string
+  tableData: HtmlTable | undefined
 }
-
