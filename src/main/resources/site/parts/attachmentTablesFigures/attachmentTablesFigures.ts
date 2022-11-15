@@ -8,6 +8,8 @@ import { TbmlDataUniform } from '../../../lib/types/xmlParser'
 import { Statistics } from '../../content-types/statistics/statistics'
 import { GA_TRACKING_ID } from '../../pages/default/default'
 import { AccordionData } from '../accordion/accordion'
+import { contentArrayToRecord } from '/lib/ssb/utils/arrayUtils'
+import { notNullOrUndefined } from '/lib/ssb/utils/coreUtils'
 const {
   data: { forceArray },
 } = __non_webpack_require__('/lib/util')
@@ -107,17 +109,6 @@ function getTablesAndFiguresComponent(page: Content<Statistics>, req: XP.Request
   }
 }
 
-//TODO: Remove contentArrayToRecord when it's been added to arrayUtils, import func instead
-function contentArrayToRecord<Hit extends { _id: string }>(
-  arr: ReadonlyArray<Hit>,
-  getKey: (hit: Hit) => string = (hit) => hit._id
-): Record<string, Hit> {
-  return arr.reduce<Record<string, Hit>>((record, hit) => {
-    record[getKey(hit)] = hit
-    return record
-  }, {})
-}
-
 function getTablesAndFigures(
   attachmentTablesAndFigures: Array<string>,
   req: XP.Request,
@@ -126,10 +117,7 @@ function getTablesAndFigures(
   let figureIndex = 0
   let tableIndex = 0
   if (attachmentTablesAndFigures.length > 0) {
-    //TODO: Replace tableOrFigure with notNullOrUndefined when function has been implemented
-    const attachmentTablesFiguresIds = attachmentTablesAndFigures
-      .map((id) => id)
-      .filter((tableOrFigure) => !!tableOrFigure)
+    const attachmentTablesFiguresIds = attachmentTablesAndFigures.map((id) => id).filter(notNullOrUndefined)
     const attachmentTablesFiguresHits = query({
       count: attachmentTablesFiguresIds.length,
       filters: {
