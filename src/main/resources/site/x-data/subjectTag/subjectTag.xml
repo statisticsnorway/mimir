@@ -2,20 +2,17 @@
   <display-name>Emneinndeling</display-name>
   <form>
     <field-set>
-      <label>Emneinformasjon</label>
+      <label>Emneinformasjon - IKKE ENDRE</label>
       <items>
-        <input name="subjectType" type="RadioButton">
-          <label>Hovedemne eller Delemne</label>
-          <occurrences minimum="0" maximum="1"/>
-          <config>
-            <option value="mainSubject">Hovedemne</option>
-            <option value="subSubject">Delemne</option>
-          </config>
-        </input>
-        <input type="TextLine" name="subjectCode">
-          <label>Emnekode</label>
+        <input type="Tag" name="mainSubjects">
+          <label>Hovedemnekoder</label>
           <help-text>Hvert hovedemne og delemne har en kode, finner det i emnestrukturen i 4.7</help-text>
-          <occurrences minimum="0" maximum="1"/>
+          <occurrences minimum="0" maximum="0"/>
+        </input>
+        <input type="Tag" name="subSubjects">
+          <label>Delemnekoder</label>
+          <help-text>Hvert hovedemne og delemne har en kode, finner det i emnestrukturen i 4.7</help-text>
+          <occurrences minimum="0" maximum="0"/>
         </input>
       </items>
     </field-set>
