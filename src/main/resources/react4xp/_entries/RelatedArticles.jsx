@@ -8,14 +8,7 @@ function RelatedArticles(props) {
   const [focusElement, setFocusElement] = useState(false)
   const currentElement = useRef(null)
 
-  const {
-    relatedArticles,
-    heading,
-    showAll,
-    showLess,
-    showAllAriaLabel,
-    articlePluralName
-  } = props
+  const { relatedArticles, heading, showAll, showLess, showAllAriaLabel, articlePluralName } = props
 
   const handleMediaQueryChange = (matches) => {
     if (isHidden) {
@@ -23,9 +16,13 @@ function RelatedArticles(props) {
     }
   }
 
-  const desktop = useMediaQuery({
-    minWidth: 992 // lg breakpoint from bootstrap v.5
-  }, undefined, handleMediaQueryChange)
+  const desktop = useMediaQuery(
+    {
+      minWidth: 992, // lg breakpoint from bootstrap v.5
+    },
+    undefined,
+    handleMediaQueryChange
+  )
 
   // Props must be assigned to const before we can instantiate this state.
   const [count, setCount] = useState(desktop ? 6 : 3)
@@ -72,7 +69,7 @@ function RelatedArticles(props) {
   function renderShowMoreButton() {
     return (
       <div className={`row hide-show-btn justify-content-center justify-content-lg-start${getButtonBreakpoints()}`}>
-        <div className="col-auto">
+        <div className='col-auto'>
           <Button
             onClick={toggleBox}
             ariaLabel={isHidden ? `${showAllAriaLabel} - ${relatedArticles.length} ${articlePluralName}` : ''}
@@ -87,33 +84,32 @@ function RelatedArticles(props) {
   const hasButton = showAll && showLess
 
   return (
-    <div className="container">
-      <div className="row">
-        <h2 className="col mt-4 mb-5">{heading}</h2>
+    <div className='container'>
+      <div className='row'>
+        <h2 className='col mt-4 mb-5'>{heading}</h2>
       </div>
-      <ul className="row mb-5"
-        aria-label={`${props.showingPhrase.replace('{0}', shownArticles.length)} ${relatedArticles.length} ${articlePluralName}`}>
+      <ul
+        className='row mb-5'
+        aria-label={`${props.showingPhrase.replace('{0}', shownArticles.length)} ${
+          relatedArticles.length
+        } ${articlePluralName}`}
+      >
         {shownArticles.map((article, index) => {
           return (
-            <li
-              key={index}
-              className={`col-auto col-12 col-lg-4 mb-3`}
-            >
-              <div className="ssb-card">
+            <li key={index} className={`col-auto col-12 col-lg-4 mb-3`}>
+              <div className='ssb-card'>
                 <a
                   ref={index === count ? currentElement : null}
                   href={article.href}
-                  className="clickable top-orientation"
+                  className='clickable top-orientation'
                 >
-                  <div className="card-image">
-                    <img
-                      src={article.imageSrc}
-                      alt={article.imageAlt ? article.imageAlt : ' '} aria-hidden="true" />
+                  <div className='card-image'>
+                    <img src={article.imageSrc} alt={article.imageAlt ? article.imageAlt : ' '} aria-hidden='true' />
                   </div>
-                  <div className="card-content with-image">
-                    <div className="card-subtitle">{article.subTitle}</div>
-                    <div className="card-title">{article.title}</div>
-                    <span className="ssb-text-wrapper">{article.preface}</span>
+                  <div className='card-content with-image'>
+                    <div className='card-subtitle'>{article.subTitle}</div>
+                    <div className='card-title'>{article.title}</div>
+                    <span className='ssb-text-wrapper'>{article.preface}</span>
                   </div>
                 </a>
               </div>
@@ -134,7 +130,7 @@ RelatedArticles.propTypes = {
       preface: PropTypes.string,
       href: PropTypes.string.isRequired,
       imageSrc: PropTypes.string.isRequired,
-      imageAlt: PropTypes.string
+      imageAlt: PropTypes.string,
     })
   ).isRequired,
   showAll: PropTypes.string.isRequired,
@@ -142,7 +138,7 @@ RelatedArticles.propTypes = {
   heading: PropTypes.string.isRequired,
   articlePluralName: PropTypes.string.isRequired,
   showAllAriaLabel: PropTypes.string.isRequired,
-  showingPhrase: PropTypes.string
+  showingPhrase: PropTypes.string,
 }
 
 export default (props) => <RelatedArticles {...props} />

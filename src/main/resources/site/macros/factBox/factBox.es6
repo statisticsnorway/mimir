@@ -1,10 +1,8 @@
 const factBoxController = __non_webpack_require__(`../../parts/factBox/factBox`)
 
-const {
-  renderError
-} = __non_webpack_require__('/lib/ssb/error/error')
+const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
-exports.macro = function(context) {
+exports.macro = function (context) {
   try {
     const factBox = factBoxController.preview(context, context.params.factBox)
 

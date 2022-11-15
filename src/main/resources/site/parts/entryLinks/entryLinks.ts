@@ -6,21 +6,12 @@ import { Phrases } from '../../../lib/types/language'
 import { render, ResourceKey } from '/lib/thymeleaf'
 
 const {
-  data: {
-    forceArray
-  }
+  data: { forceArray },
 } = __non_webpack_require__('/lib/util')
-const {
-  getPhrases
-} = __non_webpack_require__('/lib/ssb/utils/language')
+const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
 
-const {
-  renderError
-} = __non_webpack_require__('/lib/ssb/error/error')
-const {
-  getAttachmentContent
-} = __non_webpack_require__('/lib/ssb/utils/utils')
-
+const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
+const { getAttachmentContent } = __non_webpack_require__('/lib/ssb/utils/utils')
 
 const view: ResourceKey = resolve('./entryLinks.html') as ResourceKey
 
@@ -39,14 +30,16 @@ function renderPart(req: XP.Request): XP.Response | RenderResponse {
   const part: Component<EntryLinksPartConfig> = getComponent()
   const phrases: Phrases = getPhrases(page) as Phrases
 
-  const entryLinksContent: EntryLinksPartConfig['entryLinks'] = part.config.entryLinks ? forceArray(part.config.entryLinks) : []
+  const entryLinksContent: EntryLinksPartConfig['entryLinks'] = part.config.entryLinks
+    ? forceArray(part.config.entryLinks)
+    : []
   const headerTitle: string = phrases.entryLinksTitle
   if (entryLinksContent.length === 0) {
     if (req.mode === 'edit') {
       return {
         body: render(view, {
-          headerTitle
-        })
+          headerTitle,
+        }),
       }
     }
   }
@@ -54,64 +47,70 @@ function renderPart(req: XP.Request): XP.Response | RenderResponse {
   return renderEntryLinks(req, headerTitle, entryLinksContent)
 }
 
-function renderEntryLinks(req: XP.Request, headerTitle: string, entryLinksContent: EntryLinksPartConfig['entryLinks']): RenderResponse {
-  if ( entryLinksContent && entryLinksContent.length > 0) {
+function renderEntryLinks(
+  req: XP.Request,
+  headerTitle: string,
+  entryLinksContent: EntryLinksPartConfig['entryLinks']
+): RenderResponse {
+  if (entryLinksContent && entryLinksContent.length > 0) {
     return r4XpRender(
       'EntryLinks',
       {
         headerTitle,
-        entryLinks: parseEntryLinks(entryLinksContent)
+        entryLinks: parseEntryLinks(entryLinksContent),
       },
       req,
       {
         id: 'entry-links',
         body: render(view, {
-          entryLinksId: 'entry-links'
+          entryLinksId: 'entry-links',
         }),
-        clientRender: req.mode !== 'edit'
-      })
+        clientRender: req.mode !== 'edit',
+      }
+    )
   } else {
     return {
       body: '',
-      pageContributions: {}
+      pageContributions: {},
     }
   }
 }
 
-function parseEntryLinks(entryLinksContent: EntryLinksPartConfig['entryLinks']): Array<LinkEntry>|undefined {
-  return entryLinksContent && entryLinksContent.map(({
-    title, href, icon, mobileIcon
-  }) => {
-    const iconData: Content<MediaImage> | null = get({
-      key: icon
+function parseEntryLinks(entryLinksContent: EntryLinksPartConfig['entryLinks']): Array<LinkEntry> | undefined {
+  return (
+    entryLinksContent &&
+    entryLinksContent.map(({ title, href, icon, mobileIcon }) => {
+      const iconData: Content<MediaImage> | null = get({
+        key: icon,
+      })
+
+      let altText: string
+      if (iconData && iconData.data.altText) {
+        altText = iconData.data.altText
+      }
+      if (iconData && iconData.data.caption) {
+        altText = iconData.data.caption
+      }
+      altText = ''
+
+      return {
+        title,
+        href,
+        icon: imageUrl({
+          id: icon,
+          scale: 'block(80,80)',
+        }),
+        mobileIcon: getAttachmentContent(mobileIcon),
+        altText,
+      }
     })
-
-    let altText: string
-    if (iconData && iconData.data.altText) {
-      altText = iconData.data.altText
-    }
-    if (iconData && iconData.data.caption) {
-      altText = iconData.data.caption
-    }
-    altText = ''
-
-    return {
-      title,
-      href,
-      icon: imageUrl({
-        id: icon,
-        scale: 'block(80,80)'
-      }),
-      mobileIcon: getAttachmentContent(mobileIcon),
-      altText
-    }
-  })
+  )
 }
 
 interface LinkEntry {
-    title: string;
-    href: string;
-    icon: string;
-    mobileIcon?: string;
-    altText: string;
+  title: string
+  href: string
+  icon: string
+  mobileIcon?: string
+  altText: string
 }

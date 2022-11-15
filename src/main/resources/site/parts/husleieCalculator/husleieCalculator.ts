@@ -4,32 +4,19 @@ import { CalculatorPeriod } from '../../../lib/types/calculator'
 import { DropdownItems as MonthDropdownItems } from '../../../lib/types/components'
 import { Dataset } from '../../../lib/types/jsonstat-toolkit'
 import { Language, Phrases } from '../../../lib/types/language'
-import {render, RenderResponse} from '/lib/enonic/react4xp'
+import { render, RenderResponse } from '/lib/enonic/react4xp'
 import { CalculatorConfig } from '../../content-types/calculatorConfig/calculatorConfig'
 import { HusleieCalculatorPartConfig } from './husleieCalculator-part-config'
 
-const {
-  getComponent,
-  getContent,
-  serviceUrl,
-  pageUrl
-} = __non_webpack_require__('/lib/xp/portal')
-const {
-  renderError
-} = __non_webpack_require__('/lib/ssb/error/error')
+const { getComponent, getContent, serviceUrl, pageUrl } = __non_webpack_require__('/lib/xp/portal')
+const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
-const {
-  getLanguage
-} = __non_webpack_require__('/lib/ssb/utils/language')
-const {
-  getCalculatorConfig, getKpiDatasetMonth
-} = __non_webpack_require__('/lib/ssb/dataset/calculator')
+const { getLanguage } = __non_webpack_require__('/lib/ssb/utils/language')
+const { getCalculatorConfig, getKpiDatasetMonth } = __non_webpack_require__('/lib/ssb/dataset/calculator')
 const i18nLib = __non_webpack_require__('/lib/xp/i18n')
-const {
-  fromPartCache
-} = __non_webpack_require__('/lib/ssb/cache/partCache')
+const { fromPartCache } = __non_webpack_require__('/lib/ssb/cache/partCache')
 
-exports.get = function(req: XP.Request): RenderResponse | XP.Response {
+exports.get = function (req: XP.Request): RenderResponse | XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -67,25 +54,25 @@ function getHusleiekalkulator(req: XP.Request, page: Content): RenderResponse {
       monthLabel(months, language.code, lastUpdated.month),
       lastUpdated.year as string,
       monthLabel(months, language.code, nextUpdate.month),
-      monthLabel(months, language.code, nextReleaseMonth)
-    ]
+      monthLabel(months, language.code, nextReleaseMonth),
+    ],
   })
   const lastNumberText: string = i18nLib.localize({
     key: 'calculatorLastNumber',
     locale: language.code,
-    values: [
-      monthLabel(months, language.code, lastUpdated.month),
-      lastUpdated.year as string
-    ]
+    values: [monthLabel(months, language.code, lastUpdated.month), lastUpdated.year as string],
   })
-  const calculatorArticleUrl: string | null | undefined = config.husleieCalculatorArticle && pageUrl({
-    id: config.husleieCalculatorArticle
-  })
+  const calculatorArticleUrl: string | null | undefined =
+    config.husleieCalculatorArticle &&
+    pageUrl({
+      id: config.husleieCalculatorArticle,
+    })
 
-  return render('site/parts/husleieCalculator/husleieCalculator',
-      {
+  return render(
+    'site/parts/husleieCalculator/husleieCalculator',
+    {
       kpiServiceUrl: serviceUrl({
-        service: 'kpi'
+        service: 'kpi',
       }),
       language: language.code,
       months,
@@ -93,10 +80,11 @@ function getHusleiekalkulator(req: XP.Request, page: Content): RenderResponse {
       calculatorArticleUrl,
       nextPublishText,
       lastNumberText,
-      lastUpdated
+      lastUpdated,
     },
-      req,
-      {
-        clientRender: req.mode !== 'edit'
-      })
+    req,
+    {
+      clientRender: req.mode !== 'edit',
+    }
+  )
 }

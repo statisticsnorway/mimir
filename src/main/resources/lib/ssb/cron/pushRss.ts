@@ -1,14 +1,12 @@
 import { HttpRequestParams, HttpResponse } from '/lib/http-client'
-const {
-  request
-} = __non_webpack_require__( '/lib/http-client')
-const {
-  encryptRssNews
-} = __non_webpack_require__('/lib/cipher/cipherRss')
+const { request } = __non_webpack_require__('/lib/http-client')
+const { encryptRssNews } = __non_webpack_require__('/lib/cipher/cipherRss')
 
 export function pushRssNews(): string {
-  const newsServiceUrl: string = app.config && app.config['ssb.baseUrl'] ? app.config['ssb.baseUrl'] + '/_/service/mimir/news' :
-    'https:www.utv.ssb.no/_/service/mimir/news'
+  const newsServiceUrl: string =
+    app.config && app.config['ssb.baseUrl']
+      ? app.config['ssb.baseUrl'] + '/_/service/mimir/news'
+      : 'https:www.utv.ssb.no/_/service/mimir/news'
   const rssNews: RssNews = getRssNews(newsServiceUrl)
   if (rssNews.body !== null) {
     const encryptedBody: string = encryptRssNews(rssNews.body)
@@ -22,12 +20,12 @@ function getRssNews(url: string): RssNews {
   const requestParams: HttpRequestParams = {
     url,
     method: 'GET',
-    readTimeout: 40000
+    readTimeout: 40000,
   }
 
   const status: RssNews = {
     body: null,
-    message: ''
+    message: '',
   }
 
   try {
@@ -49,13 +47,15 @@ function getRssNews(url: string): RssNews {
 }
 
 function postRssNews(encryptedRss: string): string {
-  const rssNewsBaseUrl: string = app.config && app.config['ssb.baseUrl'] ? app.config['ssb.baseUrl'] + '/rss/populate/news' :
-    'https:www.utv.ssb.no/rss/populate/news'
+  const rssNewsBaseUrl: string =
+    app.config && app.config['ssb.baseUrl']
+      ? app.config['ssb.baseUrl'] + '/rss/populate/news'
+      : 'https:www.utv.ssb.no/rss/populate/news'
 
   const requestParams: HttpRequestParams = {
     url: rssNewsBaseUrl,
     method: 'POST',
-    body: encryptedRss
+    body: encryptedRss,
   }
 
   try {
@@ -71,10 +71,10 @@ function postRssNews(encryptedRss: string): string {
 }
 
 interface RssNews {
-  body: string | null;
-  message: string;
+  body: string | null
+  message: string
 }
 
 export interface PushRSSLib {
-  pushRssNews: () => string;
+  pushRssNews: () => string
 }

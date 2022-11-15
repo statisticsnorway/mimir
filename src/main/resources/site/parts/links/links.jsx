@@ -5,17 +5,8 @@ import PropTypes from 'prop-types'
 import { addGtagForEvent } from '../../../react4xp/ReactGA'
 
 const Links = (props) => {
-  const {
-    children,
-    href,
-    withIcon,
-    linkType,
-    text,
-    description,
-    GA_TRACKING_ID,
-    isPDFAttachment,
-    attachmentTitle
-  } = props
+  const { children, href, withIcon, linkType, text, description, GA_TRACKING_ID, isPDFAttachment, attachmentTitle } =
+    props
 
   const handleClick = () => {
     if (linkType === 'header') {
@@ -26,49 +17,30 @@ const Links = (props) => {
   const renderLinks = () => {
     const renderIcon = typeof withIcon === 'boolean' ? withIcon : withIcon === 'true' // Macro config returns string. This is a workaround.
     return (
-      <Link
-        href={href}
-        icon={renderIcon && <ArrowRight size="20"/>}
-        linkType={linkType}
-        onClick={handleClick}
-      >
+      <Link href={href} icon={renderIcon && <ArrowRight size='20' />} linkType={linkType} onClick={handleClick}>
         {children}
       </Link>
     )
   }
 
   const renderTableLink = () => {
-    return (
-      <TableLink
-        href={href}
-        description={description}
-        text={text}
-      />
-    )
+    return <TableLink href={href} description={description} text={text} />
   }
 
   const tableLinkProps = text && description
-  return (
-    <section className="xp-part part-links">
-      {tableLinkProps ? renderTableLink() : renderLinks()}
-    </section>
-  )
+  return <section className='xp-part part-links'>{tableLinkProps ? renderTableLink() : renderLinks()}</section>
 }
 
 Links.propTypes = {
   children: PropTypes.node,
   href: PropTypes.string,
   withIcon: PropTypes.bool | PropTypes.string,
-  linkType: PropTypes.oneOf([
-    'regular',
-    'profiled',
-    'header'
-  ]),
+  linkType: PropTypes.oneOf(['regular', 'profiled', 'header']),
   text: PropTypes.string,
   description: PropTypes.string,
   GA_TRACKING_ID: PropTypes.string,
   isPDFAttachment: PropTypes.bool,
-  attachmentTitle: PropTypes.string
+  attachmentTitle: PropTypes.string,
 }
 
 export default Links

@@ -10,9 +10,7 @@ import { StatisticsLogJob } from './StatisticsLogJob'
 import { selectStatisticsLogDataLoaded, selectStatistic } from './selectors'
 
 export function StatisticsLog(props) {
-  const {
-    statisticId
-  } = props
+  const { statisticId } = props
 
   const io = useContext(WebSocketContext)
   const dispatch = useDispatch()
@@ -55,70 +53,65 @@ export function StatisticsLog(props) {
       })(log.result)
       return (
         <React.Fragment>
-          <span className="d-sm-flex justify-content-center text-center small haveList" onClick={() => openEventlog()}>
-            {log.message} - {moment(log.completionTime ? log.completionTime : log.startTime).locale('nb').format('DD.MM.YYYY HH.mm')}
-            <br/>
+          <span className='d-sm-flex justify-content-center text-center small haveList' onClick={() => openEventlog()}>
+            {log.message} -{' '}
+            {moment(log.completionTime ? log.completionTime : log.startTime)
+              .locale('nb')
+              .format('DD.MM.YYYY HH.mm')}
+            <br />
             {log.user ? log.user.displayName : ''}
-            <br/>
-            {Object.entries(groupedDataSourceLogs).map(([status, dataSourceLogGroup]) => renderDataSourceLogGroup(log, status, dataSourceLogGroup))}
+            <br />
+            {Object.entries(groupedDataSourceLogs).map(([status, dataSourceLogGroup]) =>
+              renderDataSourceLogGroup(log, status, dataSourceLogGroup)
+            )}
           </span>
-          {show ? <ModalContent/> : null}
+          {show ? <ModalContent /> : null}
         </React.Fragment>
       )
     }
-    return <span className="d-sm-flex justify-content-center text-center small">Ingen logger</span>
+    return <span className='d-sm-flex justify-content-center text-center small'>Ingen logger</span>
   }
 
   function renderDataSourceLogGroup(log, status, dataSourceLogGroup) {
-    const tbmls = dataSourceLogGroup.map((datasource) => {
-      const relatedTable = statistic.relatedTables.find((r) => r.queryId === datasource.id)
-      return relatedTable ? relatedTable.tbmlId : ''
-    }).join(', ')
+    const tbmls = dataSourceLogGroup
+      .map((datasource) => {
+        const relatedTable = statistic.relatedTables.find((r) => r.queryId === datasource.id)
+        return relatedTable ? relatedTable.tbmlId : ''
+      })
+      .join(', ')
     return (
       <React.Fragment key={`${log.id}_${status}`}>
-        {status} - {tbmls} <br/>
+        {status} - {tbmls} <br />
       </React.Fragment>
     )
   }
 
   function renderModalBody() {
     if (logsLoaded) {
-      return (
-        statistic.logData.map((log, index) => {
-          return (
-            <StatisticsLogJob
-              key={index}
-              index={index}
-              statisticId={statistic.id}
-              jobId={statistic.logData[index].id}
-              accordionOpenStatus={!!accordionOpenStatus[index]}
-              setAccordionStatusOnIndex={setAccordionStatusOnIndex}
-              nestedAccordionStatus={nestedAccordionStatus[index]}
-              setNestedAccordionWithIndexes={setNestedAccordionWithIndexes}
-            />
-          )
-        })
-      )
+      return statistic.logData.map((log, index) => {
+        return (
+          <StatisticsLogJob
+            key={index}
+            index={index}
+            statisticId={statistic.id}
+            jobId={statistic.logData[index].id}
+            accordionOpenStatus={!!accordionOpenStatus[index]}
+            setAccordionStatusOnIndex={setAccordionStatusOnIndex}
+            nestedAccordionStatus={nestedAccordionStatus[index]}
+            setNestedAccordionWithIndexes={setNestedAccordionWithIndexes}
+          />
+        )
+      })
     }
 
-    return (
-      <span className="spinner-border spinner-border" />
-    )
+    return <span className='spinner-border spinner-border' />
   }
-
 
   const ModalContent = () => {
     return (
-      <Modal
-        size="lg"
-        show={show}
-        onHide={handleClose}
-        animation={false}
-      >
+      <Modal size='lg' show={show} onHide={handleClose} animation={false}>
         <Modal.Header closeButton>
-          <Modal.Title>
-            {statistic.name}
-          </Modal.Title>
+          <Modal.Title>{statistic.name}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <h3>Logg detaljer</h3>
@@ -126,17 +119,17 @@ export function StatisticsLog(props) {
           {/* <StatisticsLogJob selectStatistic={getStatisticSelector} /> */}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>Lukk</Button>
+          <Button variant='secondary' onClick={handleClose}>
+            Lukk
+          </Button>
         </Modal.Footer>
       </Modal>
     )
   }
 
-  return (
-    renderLogData()
-  )
+  return renderLogData()
 }
 
 StatisticsLog.propTypes = {
-  statisticId: PropTypes.string
+  statisticId: PropTypes.string,
 }

@@ -2,7 +2,7 @@ import { createSlice } from '../../utils/@reduxjs/toolkit'
 
 export const initialState = {
   statuses: [],
-  loading: true
+  loading: true,
 }
 
 const statRegSlice = createSlice({
@@ -48,10 +48,8 @@ const statRegSlice = createSlice({
         statReg.loadingLogs = false
         statReg.eventLogNodes = action.logs
       }
-    }
-  }
+    },
+  },
 })
 
-export const {
-  actions, reducer, name: sliceKey
-} = statRegSlice
+export const { actions, reducer, name: sliceKey } = statRegSlice

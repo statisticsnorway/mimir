@@ -9,7 +9,7 @@ class EndedStatistics extends React.Component {
     super(props)
 
     this.state = {
-      isHidden: true
+      isHidden: true,
     }
 
     this.toggleBox = this.toggleBox.bind(this)
@@ -17,51 +17,47 @@ class EndedStatistics extends React.Component {
 
   toggleBox() {
     this.setState((prevState) => ({
-      isHidden: !prevState.isHidden
+      isHidden: !prevState.isHidden,
     }))
-  };
+  }
 
   renderIcon() {
     if (this.state.isHidden) {
-      return <ChevronDown size={20} className="me-2" />
+      return <ChevronDown size={20} className='me-2' />
     }
-    return <ChevronUp size={20} className="me-2" />
+    return <ChevronUp size={20} className='me-2' />
   }
 
   renderShowMoreButton() {
-    const {
-      buttonText
-    } = this.props
+    const { buttonText } = this.props
     return (
       <Row>
         <Col>
-          <Button onClick={this.toggleBox}>{this.renderIcon()}{buttonText}</Button>
+          <Button onClick={this.toggleBox}>
+            {this.renderIcon()}
+            {buttonText}
+          </Button>
         </Col>
       </Row>
     )
   }
 
   render() {
-    const {
-      endedStatistics, iconText
-    } = this.props
+    const { endedStatistics, iconText } = this.props
     return (
       <Container>
         {this.renderShowMoreButton()}
-        <Row className="mt-3">
-          {endedStatistics.map(({
-            href, title, preamble
-          }, index) => {
+        <Row className='mt-3'>
+          {endedStatistics.map(({ href, title, preamble }, index) => {
             return (
               <Card
                 key={`ended-statistics-card-${index}`}
                 className={`mb-3 col-12 col-lg-4 ${this.state.isHidden ? 'd-none' : ''}`}
                 href={href}
                 hrefText={iconText}
-                title={title}>
-                <Text>
-                  {preamble}
-                </Text>
+                title={title}
+              >
+                <Text>{preamble}</Text>
               </Card>
             )
           })}
@@ -76,11 +72,11 @@ EndedStatistics.propTypes = {
     PropTypes.shape({
       title: PropTypes.string.isRequired,
       preamble: PropTypes.string.isRequired,
-      href: PropTypes.string.isRequired
+      href: PropTypes.string.isRequired,
     })
   ).isRequired,
   iconText: PropTypes.string,
-  buttonText: PropTypes.string.isRequired
+  buttonText: PropTypes.string.isRequired,
 }
 
 export default (props) => <EndedStatistics {...props} />

@@ -1,10 +1,12 @@
 import { Accordion, NestedAccordion } from '@statisticsnorway/ssb-component-library'
 import React, { useContext } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectStatisticsGroups,
+import {
+  selectStatisticsGroups,
   selectLoadingStatisticsGroups,
   selectStatisticsDataSources,
-  selectStatisticsLoading } from './selectors'
+  selectStatisticsLoading,
+} from './selectors'
 import PropTypes from 'prop-types'
 import { requestStatisticsGroups, requestStatisticsDataSources } from './actions'
 import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
@@ -39,33 +41,25 @@ export function StatisticsDataSources(props) {
 
   function renderAccordionBody() {
     if (isLoading) {
-      return (
-        <span className="spinner-border spinner-border" />
-      )
+      return <span className='spinner-border spinner-border' />
     }
-    return (
-      statistics.map((statistic) => renderDataSourceTable(statistic))
-    )
+    return statistics.map((statistic) => renderDataSourceTable(statistic))
   }
 
   onToggleAccordion(props.openByDefault)
   return (
-    <Accordion
-      header="Spørringer fra Statistikker"
-      className="mx-0"
-      onToggle={(isOpen) => onToggleAccordion(isOpen)}
-    >
+    <Accordion header='Spørringer fra Statistikker' className='mx-0' onToggle={(isOpen) => onToggleAccordion(isOpen)}>
       {renderAccordionBody()}
     </Accordion>
   )
 }
 
 StatisticsDataSources.defaultProps = {
-  openByDefault: false
+  openByDefault: false,
 }
 
 StatisticsDataSources.propTypes = {
-  openByDefault: PropTypes.bool
+  openByDefault: PropTypes.bool,
 }
 
 export default (props) => <StatisticsDataSources {...props} />

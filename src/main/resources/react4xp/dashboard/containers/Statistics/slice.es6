@@ -7,7 +7,7 @@ export const initialState = {
   loadingSearchList: true,
   openStatistic: null,
   openModal: false,
-  modals: []
+  modals: [],
 }
 
 const statisticsSlice = createSlice({
@@ -172,10 +172,8 @@ const statisticsSlice = createSlice({
           }
         }
       }
-    }
-  }
+    },
+  },
 })
 
-export const {
-  actions, reducer, name: sliceKey
-} = statisticsSlice
+export const { actions, reducer, name: sliceKey } = statisticsSlice

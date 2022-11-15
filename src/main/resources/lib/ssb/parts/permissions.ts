@@ -10,12 +10,10 @@ export function hasWritePermissionsAndPreview(req: XP.Request, key: string): boo
 }
 
 export function hasWritePermissions(key: string): boolean {
-  const {
-    permissions
-  }: GetPermissionsResult = getPermissions({
-    key
+  const { permissions }: GetPermissionsResult = getPermissions({
+    key,
   })
-  const userPrincipals: ReadonlyArray<string> = (getContext().authInfo).principals
+  const userPrincipals: ReadonlyArray<string> = getContext().authInfo.principals
   const usersPermissions: Array<PermissionsParams> = permissions.filter((p) => userPrincipals.includes(p.principal))
   return !!usersPermissions.find((permission) => {
     return permission.allow.includes('WRITE_PERMISSIONS') || permission.allow.includes('MODIFY')
@@ -23,7 +21,6 @@ export function hasWritePermissions(key: string): boolean {
 }
 
 export interface PermissionsLib {
-  hasWritePermissions: (key: string) => boolean;
-  hasWritePermissionsAndPreview: (req: XP.Request, key: string) => boolean;
+  hasWritePermissions: (key: string) => boolean
+  hasWritePermissionsAndPreview: (req: XP.Request, key: string) => boolean
 }
-

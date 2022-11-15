@@ -13,9 +13,7 @@ import logger from 'redux-logger'
 export function configureAppStore(toggleDebugging) {
   const reduxSagaMonitorOptions = {}
   const sagaMiddleware = createSagaMiddleware(reduxSagaMonitorOptions)
-  const {
-    run: runSaga
-  } = sagaMiddleware
+  const { run: runSaga } = sagaMiddleware
 
   // Create the store with saga middleware
   const middlewares = [sagaMiddleware]
@@ -27,8 +25,8 @@ export function configureAppStore(toggleDebugging) {
   const enhancers = [
     createInjectorsEnhancer({
       createReducer,
-      runSaga
-    })
+      runSaga,
+    }),
   ]
 
   const store = configureStore({
@@ -37,12 +35,12 @@ export function configureAppStore(toggleDebugging) {
       statReg: statRegReducer,
       dataSources: dataSourcesReducer,
       statistics: statisticsReducer,
-      jobs: jobsReducer
+      jobs: jobsReducer,
     },
     // middleware: [...getDefaultMiddleware(), ...middlewares],
     middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(middlewares),
     devTools: process.env.NODE_ENV !== 'production',
-    enhancers
+    enhancers,
   })
 
   return store

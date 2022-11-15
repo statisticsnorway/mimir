@@ -6,9 +6,7 @@ import { RenderResponse, render } from '/lib/enonic/react4xp'
 import { Page } from '../../content-types/page/page'
 import { EmployeeListPartConfig } from '../employeeList/employeeList-part-config'
 
-const {
-  renderError
-} = __non_webpack_require__('/lib/ssb/error/error')
+const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
 exports.get = (req: XP.Request): RenderResponse | XP.Response => {
   try {
@@ -28,7 +26,7 @@ function renderPart(req: XP.Request): RenderResponse {
     count: 500,
     contentTypes: [`${app.name}:employee`],
     query: `_path LIKE "/content${content._path}/*"`,
-    sort: 'data.surname ASC'
+    sort: 'data.surname ASC',
   })
 
   const preparedResults: Array<IPreparedEmployee> = prepareEmployees(queryResults.hits)
@@ -38,7 +36,7 @@ function renderPart(req: XP.Request): RenderResponse {
     employees: alphabeticalEmployeesList,
     total: queryResults.total,
     pageTitle: content.displayName,
-    pageDescription: part.config.ingress || ''
+    pageDescription: part.config.ingress || '',
   }
 
   return render('site/parts/employeeList/employeeList', props, req)
@@ -46,75 +44,78 @@ function renderPart(req: XP.Request): RenderResponse {
 
 function prepareEmployees(results: readonly Content<Employee>[]) {
   return results.map((result) => {
-    const areaContent: Content<DefaultPageConfig> | null = result.data.area ? get({
-      key: result.data.area
-    }) : null
+    const areaContent: Content<DefaultPageConfig> | null = result.data.area
+      ? get({
+          key: result.data.area,
+        })
+      : null
 
-    const area: Area| null = areaContent ? {
-      title: areaContent.displayName,
-      href: areaContent._path
-    } : null
+    const area: Area | null = areaContent
+      ? {
+          title: areaContent.displayName,
+          href: areaContent._path,
+        }
+      : null
 
     return {
       surname: result.data.surname || '',
       name: result.data.name || '',
       position: result.data.position || '',
       path: pageUrl({
-        id: result._id
+        id: result._id,
       }),
       phone: result.data.phone || '',
       email: result.data.email || '',
-      area: area || ''
+      area: area || '',
     }
   })
 }
 
-function createAlphabeticalEmployeesList(preparedResults: IPreparedEmployee[]):Array<IEmployeeMap> {
+function createAlphabeticalEmployeesList(preparedResults: IPreparedEmployee[]): Array<IEmployeeMap> {
   const data: IObjectKeys = preparedResults.reduce((result: IObjectKeys, employee: IPreparedEmployee) => {
     const alphabet: string = employee.surname[0].toUpperCase()
     if (!result[alphabet]) {
       result[alphabet] = {
         alphabet,
-        record: [employee]
+        record: [employee],
       }
     } else {
       result[alphabet].record.push(employee)
     }
     return result
-  }, {
-  })
+  }, {})
 
   const result: Array<IEmployeeMap> = Object.keys(data).map((key) => data[key])
   return result
 }
 
 interface IPartProps {
-  employees: IEmployeeMap[],
-  total: number,
-  pageTitle: string,
-  pageDescription: string,
+  employees: IEmployeeMap[]
+  total: number
+  pageTitle: string
+  pageDescription: string
 }
 
 interface IPreparedEmployee {
-  surname: string,
-  name: string,
-  position: string,
-  path: string,
-  phone: string,
-  email: string,
+  surname: string
+  name: string
+  position: string
+  path: string
+  phone: string
+  email: string
   area: string | Area
 }
 
 interface Area {
-  href: string;
-  title: string;
+  href: string
+  title: string
 }
 
 interface IObjectKeys {
-  [key: string]: IEmployeeMap;
+  [key: string]: IEmployeeMap
 }
 
 interface IEmployeeMap {
-  alphabet: string;
+  alphabet: string
   record: IPreparedEmployee[]
 }

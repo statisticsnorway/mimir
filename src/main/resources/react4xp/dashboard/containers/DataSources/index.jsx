@@ -12,17 +12,17 @@ export function DataSources() {
     return (
       <React.Fragment>
         <DataSourceTable
-          header="Spørringer som feilet"
+          header='Spørringer som feilet'
           dataSourceSelector={selectDataSourcesByParentType('error')}
           loadingSelector={selectLoadingErrors}
           requestDataSources={requestErrorDataSources}
           openByDefault={true}
         />
-        <FactPageDataSources/>
-        <StatisticsDataSources/>
-        <MunicipalDataSources/>
+        <FactPageDataSources />
+        <StatisticsDataSources />
+        <MunicipalDataSources />
         <DataSourceTable
-          header="Andre"
+          header='Andre'
           dataSourceSelector={selectDataSourcesByParentType('default')}
           loadingSelector={selectLoadingDefaultDataSources}
           requestDataSources={requestDefaultDataSources}
@@ -32,11 +32,11 @@ export function DataSources() {
   }
 
   return (
-    <section className="xp-part part-dashboard container-fluid p-0">
+    <section className='xp-part part-dashboard container-fluid p-0'>
       <Row>
         <Col>
-          <div className="p-4 tables-wrapper datasources">
-            <h2 className="mb-3">{`Spørringer mot statistikkbank og tabellbygger`}</h2>
+          <div className='p-4 tables-wrapper datasources'>
+            <h2 className='mb-3'>{`Spørringer mot statistikkbank og tabellbygger`}</h2>
             {renderDataSourceTables()}
           </div>
         </Col>

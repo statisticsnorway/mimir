@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef } from 'react'
 import { useMediaQuery } from 'react-responsive'
 
 import PropTypes from 'prop-types'
-import { Card,
+import {
+  Card,
   Divider,
   Input,
   Link,
@@ -11,7 +12,8 @@ import { Card,
   Dropdown,
   Tag,
   RadioGroup,
-  Accordion } from '@statisticsnorway/ssb-component-library'
+  Accordion,
+} from '@statisticsnorway/ssb-component-library'
 import { ChevronDown, User, X } from 'react-feather'
 import axios from 'axios'
 import NumberFormat from 'react-number-format'
@@ -32,27 +34,33 @@ function SearchResult(props) {
   const [sortList, setSortList] = useState(undefined)
   const [filter, setFilter] = useState({
     mainSubject: props.subjectUrlParam ? props.subjectUrlParam : '',
-    contentType: props.contentTypeUrlParam ? props.contentTypeUrlParam : ''
+    contentType: props.contentTypeUrlParam ? props.contentTypeUrlParam : '',
   })
   const allContentTypeItem = {
     id: 'allTypes',
-    title: props.allContentTypesPhrase
+    title: props.allContentTypesPhrase,
   }
 
-  const preselectedContentType = props.contentTypeUrlParam ? props.contentTypePhrases.find((phrase) => phrase.id === props.contentTypeUrlParam) : undefined
+  const preselectedContentType = props.contentTypeUrlParam
+    ? props.contentTypePhrases.find((phrase) => phrase.id === props.contentTypeUrlParam)
+    : undefined
 
-  const preselectedContentTypeDropdownItem = preselectedContentType ? {
-    id: props.contentTypeUrlParam,
-    title: preselectedContentType.title
-  } : allContentTypeItem
+  const preselectedContentTypeDropdownItem = preselectedContentType
+    ? {
+        id: props.contentTypeUrlParam,
+        title: preselectedContentType.title,
+      }
+    : allContentTypeItem
   const allSubjectsItem = {
     id: 'allSubjects',
-    title: props.allSubjectsPhrase
+    title: props.allSubjectsPhrase,
   }
-  const preselectedSubjectDropdownItem = props.subjectUrlParam ? {
-    id: props.subjectUrlParam,
-    title: props.subjectUrlParam
-  } : allSubjectsItem
+  const preselectedSubjectDropdownItem = props.subjectUrlParam
+    ? {
+        id: props.subjectUrlParam,
+        title: props.subjectUrlParam,
+      }
+    : allSubjectsItem
   const [selectedContentType, setSelectedContentType] = useState(preselectedContentTypeDropdownItem)
   const [selectedMainSubject, setSelectedMainSubject] = useState(preselectedSubjectDropdownItem)
   const [numberChanged, setNumberChanged] = useState(0)
@@ -74,7 +82,7 @@ function SearchResult(props) {
     if (props.bestBetHit) {
       addGtagForEvent(props.GA_TRACKING_ID, 'Best Bet', 'Søk', searchTerm)
     }
-    if ((!props.bestBetHit) && (!hits.length)) {
+    if (!props.bestBetHit && !hits.length) {
       addGtagForEvent(props.GA_TRACKING_ID, 'Null treff', 'Søk', searchTerm)
     }
   }, [filter, sortList])
@@ -83,27 +91,33 @@ function SearchResult(props) {
     setFilterChanged(true)
 
     if (id === 'mainSubject') {
-      const selectedSubject = value.id === 'allSubjects' ? value : {
-        id: value.id,
-        title: value.id
-      }
+      const selectedSubject =
+        value.id === 'allSubjects'
+          ? value
+          : {
+              id: value.id,
+              title: value.id,
+            }
       setSelectedMainSubject(selectedSubject)
       setFilter({
         ...filter,
-        mainSubject: value.id === '' || value.id === 'allSubjects' ? '' : value.id
+        mainSubject: value.id === '' || value.id === 'allSubjects' ? '' : value.id,
       })
     }
 
     if (id === 'contentType') {
-      const selectedContentType = value.id === 'allTypes' ? value : {
-        id: value.id,
-        title: props.contentTypePhrases.find((phrase) => phrase.id === value.id).title
-      }
+      const selectedContentType =
+        value.id === 'allTypes'
+          ? value
+          : {
+              id: value.id,
+              title: props.contentTypePhrases.find((phrase) => phrase.id === value.id).title,
+            }
 
       setSelectedContentType(selectedContentType)
       setFilter({
         ...filter,
-        contentType: value.id === '' || value.id === 'allTypes' ? '' : value.id
+        contentType: value.id === '' || value.id === 'allTypes' ? '' : value.id,
       })
     }
   }
@@ -128,7 +142,7 @@ function SearchResult(props) {
   function removeFilter() {
     setFilter({
       mainSubject: '',
-      contentType: ''
+      contentType: '',
     })
     setSelectedContentType(allContentTypeItem)
     setSelectedMainSubject(allSubjectsItem)
@@ -139,26 +153,33 @@ function SearchResult(props) {
     if (hit) {
       const last = i === hits.length - props.count
       return (
-        <li key={i ? i : undefined} className="mb-4">
+        <li key={i ? i : undefined} className='mb-4'>
           <a
             ref={last ? currentElement : null}
-            className="ssb-link header"
+            className='ssb-link header'
             href={hit.url}
             onClick={() => {
               addGtagForEvent(props.GA_TRACKING_ID, 'Klikk på lenke', 'Søk', `${searchTerm} - Lenke nummer: ${i + 1}`)
             }}
           >
-            <span dangerouslySetInnerHTML={{
-              __html: hit.title.replace(/&nbsp;/g, ' ')
-            }}></span>
+            <span
+              dangerouslySetInnerHTML={{
+                __html: hit.title.replace(/&nbsp;/g, ' '),
+              }}
+            ></span>
           </a>
-          <Paragraph className="search-result-ingress my-1" ><span dangerouslySetInnerHTML={{
-            __html: hit.preface.replace(/&nbsp;/g, ' ')
-          }}></span>
+          <Paragraph className='search-result-ingress my-1'>
+            <span
+              dangerouslySetInnerHTML={{
+                __html: hit.preface.replace(/&nbsp;/g, ' '),
+              }}
+            ></span>
           </Paragraph>
-          <Paragraph className="metadata">
-            <span className="type">{hit.contentType}</span> {((hit.contentType && hit.publishDateHuman) || (hit.contentType && hit.mainSubject)) && ` / `}
-            <time dateTime={hit.publishDate}>{hit.publishDateHuman}</time> {hit.publishDateHuman && hit.mainSubject && ` / `}
+          <Paragraph className='metadata'>
+            <span className='type'>{hit.contentType}</span>{' '}
+            {((hit.contentType && hit.publishDateHuman) || (hit.contentType && hit.mainSubject)) && ` / `}
+            <time dateTime={hit.publishDate}>{hit.publishDateHuman}</time>{' '}
+            {hit.publishDateHuman && hit.mainSubject && ` / `}
             {hit.mainSubject}
           </Paragraph>
         </li>
@@ -174,23 +195,21 @@ function SearchResult(props) {
     const totalHits = bestBetHit ? total + 1 : total
     return (
       <div>
-        <div className="row mb-4">
-          <Col className="total-hits col-12 col-md-4" aria-live="polite" aria-atomic="true">
-            {props.showingPhrase.replace('{0}', currentAmount)}&nbsp;<NumberFormat
-              value={ Number(totalHits) }
-              displayType={'text'}
-              thousandSeparator={' '}/>
+        <div className='row mb-4'>
+          <Col className='total-hits col-12 col-md-4' aria-live='polite' aria-atomic='true'>
+            {props.showingPhrase.replace('{0}', currentAmount)}&nbsp;
+            <NumberFormat value={Number(totalHits)} displayType={'text'} thousandSeparator={' '} />
           </Col>
-          <Col className="choose-sorting col-12 col-md-8">
+          <Col className='choose-sorting col-12 col-md-8'>
             <span className='sort-title'>{`${props.sortPhrase}:`}</span>
             {renderRadiobuttonSort()}
           </Col>
           <Divider dark />
         </div>
         {props.nameSearchToggle ? renderNameResult() : undefined}
-        <ol className="list-unstyled ">
+        <ol className='list-unstyled '>
           {renderListItem(bestBetHit)}
-          {hits.map( (hit, i) => {
+          {hits.map((hit, i) => {
             return renderListItem(hit, i)
           })}
         </ol>
@@ -201,9 +220,9 @@ function SearchResult(props) {
   function renderLoading() {
     if (loading) {
       return (
-        <div className="row">
-          <div className="col">
-            <span className="spinner-border spinner-border" />
+        <div className='row'>
+          <div className='col'>
+            <span className='spinner-border spinner-border' />
           </div>
         </div>
       )
@@ -215,52 +234,58 @@ function SearchResult(props) {
     const contentType = filter.contentType
 
     setLoading(true)
-    axios.get(props.searchServiceUrl, {
-      params: {
-        sok: searchTerm,
-        start: 0,
-        count: props.count,
-        language: props.language,
-        mainsubject: mainSubject,
-        contentType: contentType,
-        sort: sortList === 'publiseringsdato' ? sortList : undefined
-      }
-    }).then((res) => {
-      setHits(res.data.hits)
-      setTotal(res.data.total)
-      setContentTypes(res.data.contentTypes)
-      setSubjects(res.data.subjects)
-    }).finally(() => {
-      setLoading(false)
-      const mainSubjectQueryString = mainSubject ? `&emne=${mainSubject}` : ''
-      const contentTypeQueryString = contentType ? `&innholdstype=${contentType}` : ''
-      window.history.pushState({}, '', `?sok=${searchTerm}${mainSubjectQueryString}${contentTypeQueryString}`)
-    })
+    axios
+      .get(props.searchServiceUrl, {
+        params: {
+          sok: searchTerm,
+          start: 0,
+          count: props.count,
+          language: props.language,
+          mainsubject: mainSubject,
+          contentType: contentType,
+          sort: sortList === 'publiseringsdato' ? sortList : undefined,
+        },
+      })
+      .then((res) => {
+        setHits(res.data.hits)
+        setTotal(res.data.total)
+        setContentTypes(res.data.contentTypes)
+        setSubjects(res.data.subjects)
+      })
+      .finally(() => {
+        setLoading(false)
+        const mainSubjectQueryString = mainSubject ? `&emne=${mainSubject}` : ''
+        const contentTypeQueryString = contentType ? `&innholdstype=${contentType}` : ''
+        window.history.pushState({}, '', `?sok=${searchTerm}${mainSubjectQueryString}${contentTypeQueryString}`)
+      })
   }
 
   function fetchSearchResult(focusElement) {
     setLoading(true)
-    axios.get(props.searchServiceUrl, {
-      params: {
-        sok: searchTerm,
-        start: hits.length,
-        count: props.count,
-        language: props.language,
-        mainsubject: filter.mainSubject,
-        contentType: filter.contentType,
-        sort: sortList === 'publiseringsdato' ? sortList : undefined
-      }
-    }).then((res) => {
-      setHits(hits.concat(res.data.hits))
-      setTotal(res.data.total)
-      setContentTypes(res.data.contentTypes)
-      setSubjects(res.data.subjects)
-    }).finally(() => {
-      setLoading(false)
-      if (focusElement) {
-        currentElement.current.focus()
-      }
-    })
+    axios
+      .get(props.searchServiceUrl, {
+        params: {
+          sok: searchTerm,
+          start: hits.length,
+          count: props.count,
+          language: props.language,
+          mainsubject: filter.mainSubject,
+          contentType: filter.contentType,
+          sort: sortList === 'publiseringsdato' ? sortList : undefined,
+        },
+      })
+      .then((res) => {
+        setHits(hits.concat(res.data.hits))
+        setTotal(res.data.total)
+        setContentTypes(res.data.contentTypes)
+        setSubjects(res.data.subjects)
+      })
+      .finally(() => {
+        setLoading(false)
+        if (focusElement) {
+          currentElement.current.focus()
+        }
+      })
   }
 
   function renderShowMoreButton() {
@@ -269,7 +294,7 @@ function SearchResult(props) {
         <div>
           <button
             disabled={loading || total === hits.length}
-            className="ssb-btn button-more mt-5"
+            className='ssb-btn button-more mt-5'
             onClick={() => onShowMoreSearchResults(false)}
             onKeyDown={(e) => {
               if (e.key === 'Enter' || e.key === ' ') {
@@ -277,7 +302,7 @@ function SearchResult(props) {
               }
             }}
           >
-            <ChevronDown size="18"/> {props.buttonTitle}
+            <ChevronDown size='18' /> {props.buttonTitle}
           </button>
         </div>
       )
@@ -288,21 +313,34 @@ function SearchResult(props) {
     if (props.language === 'en') {
       return (
         <div>
-          { props.nameSearchToggle ? renderNameResult() : undefined }
+          {props.nameSearchToggle ? renderNameResult() : undefined}
           <Title size={2}>{props.noHitMessage}</Title>
-          <p>Go to <Link href="/en/navn">name search</Link></p>
-          <p>See <Link href="/en/publiseringsarkiv">list of all our published statistics, analyses and articles </Link></p>
-          <p>Go to <Link href="/en/statbank">Statbank</Link> to find all our figures and tables</p>
+          <p>
+            Go to <Link href='/en/navn'>name search</Link>
+          </p>
+          <p>
+            See <Link href='/en/publiseringsarkiv'>list of all our published statistics, analyses and articles </Link>
+          </p>
+          <p>
+            Go to <Link href='/en/statbank'>Statbank</Link> to find all our figures and tables
+          </p>
         </div>
       )
     } else {
       return (
         <div>
-          { props.nameSearchToggle ? renderNameResult() : undefined }
+          {props.nameSearchToggle ? renderNameResult() : undefined}
           <Title size={2}>{props.noHitMessage}</Title>
-          <p>Her finner du <Link href="/navn">navnesøk</Link></p>
-          <p>Her finner du <Link href="/publiseringsarkiv">liste over alle publiserte statistikker, analyser og artikler </Link></p>
-          <p>I verktøyet <Link href="/statbank">Statistikkbanken</Link> finner du alle tallene våre</p>
+          <p>
+            Her finner du <Link href='/navn'>navnesøk</Link>
+          </p>
+          <p>
+            Her finner du{' '}
+            <Link href='/publiseringsarkiv'>liste over alle publiserte statistikker, analyser og artikler </Link>
+          </p>
+          <p>
+            I verktøyet <Link href='/statbank'>Statistikkbanken</Link> finner du alle tallene våre
+          </p>
         </div>
       )
     }
@@ -313,23 +351,26 @@ function SearchResult(props) {
   }
 
   function getNameSearch(term) {
-    axios.get(props.nameSearchUrl, {
-      params: {
-        'name': term
-      }
-    }).then((result) => {
-      setNameSearchData(result.data)
-      findMainResult(result.data.response.docs, searchTerm)
-    }).catch((e) => {
-      setNameSearchData({
-        'error': e
+    axios
+      .get(props.nameSearchUrl, {
+        params: {
+          name: term,
+        },
       })
-    })
+      .then((result) => {
+        setNameSearchData(result.data)
+        findMainResult(result.data.response.docs, searchTerm)
+      })
+      .catch((e) => {
+        setNameSearchData({
+          error: e,
+        })
+      })
   }
 
   function capitalizeNames(name) {
     const nameTokens = name.toLowerCase().split(' ')
-    const capitalizedTokens = nameTokens.map((n)=>{
+    const capitalizedTokens = nameTokens.map((n) => {
       const first = n.slice(0, 1).toUpperCase()
       const rest = n.slice(1)
       return first + rest
@@ -340,12 +381,14 @@ function SearchResult(props) {
   function findMainResult(docs, originalName) {
     // only get result with same name as the input
     const filteredResult = docs.filter((doc) => doc.name === originalName.toUpperCase())
-    const mainRes = filteredResult.length && filteredResult.reduce((acc, current) => {
-      if (!acc || acc.count < current.count ) {
-        acc = current // get the hit with the highest count
-      }
-      return acc
-    })
+    const mainRes =
+      filteredResult.length &&
+      filteredResult.reduce((acc, current) => {
+        if (!acc || acc.count < current.count) {
+          acc = current // get the hit with the highest count
+        }
+        return acc
+      })
     if (mainRes && mainRes.count) {
       addGtagForEvent(props.GA_TRACKING_ID, 'Navnesøket', 'Søk', searchTerm)
     }
@@ -353,19 +396,19 @@ function SearchResult(props) {
   }
 
   const parseResultText = (doc) => {
-    return (
-      `${doc.count} 
+    return `${doc.count} 
       ${formatGender(doc.gender)} ${props.namePhrases.have}
       ${capitalizeNames(doc.name)}
-      ${props.namePhrases.asTheir} ${translateName(doc.type)}`)
+      ${props.namePhrases.asTheir} ${translateName(doc.type)}`
   }
   function formatGender(gender) {
     switch (gender) {
-    case 'F':
-      return props.namePhrases.women
-    case 'M':
-      return props.namePhrases.men
-    default: return ''
+      case 'F':
+        return props.namePhrases.women
+      case 'M':
+        return props.namePhrases.men
+      default:
+        return ''
     }
   }
   function translateName(nameCode) {
@@ -376,7 +419,12 @@ function SearchResult(props) {
     if (mainNameResult && mainNameResult.count && !filterChanged && numberChanged === 0) {
       return (
         //  TODO: Legge til en bedre url til navnestatistikken
-        <Card title={ mainNameResult && parseResultText(mainNameResult) } className={'pb-5'} href={'/navn'} icon={<User size={32} />}>
+        <Card
+          title={mainNameResult && parseResultText(mainNameResult)}
+          className={'pb-5'}
+          href={'/navn'}
+          icon={<User size={32} />}
+        >
           {props.namePhrases.readMore}
         </Card>
       )
@@ -386,32 +434,36 @@ function SearchResult(props) {
   const dropdownContentTypeItems = [
     {
       id: 'allTypes',
-      title: props.allContentTypesPhrase
-    }
-  ].concat(contentTypes.map((type) => {
-    const phrase = props.contentTypePhrases.find((phrase) => phrase.id === type.title)
-    return {
-      id: type.title,
-      title: `${phrase.title} (${type.count})`
-    }
-  }))
+      title: props.allContentTypesPhrase,
+    },
+  ].concat(
+    contentTypes.map((type) => {
+      const phrase = props.contentTypePhrases.find((phrase) => phrase.id === type.title)
+      return {
+        id: type.title,
+        title: `${phrase.title} (${type.count})`,
+      }
+    })
+  )
 
   const dropdownSubjectsItems = [
     {
       id: 'allSubjects',
-      title: props.allContentTypesPhrase
-    }
-  ].concat(subjects.map((type) => {
-    return {
-      id: type.title,
-      title: `${type.title} (${type.count})`
-    }
-  }))
+      title: props.allContentTypesPhrase,
+    },
+  ].concat(
+    subjects.map((type) => {
+      return {
+        id: type.title,
+        title: `${type.title} (${type.count})`,
+      }
+    })
+  )
 
   const DropdownMainSubject = React.forwardRef((_props, ref) => (
     <Dropdown
       ref={ref}
-      className="DropdownMainSubject"
+      className='DropdownMainSubject'
       id='mainSubject'
       onSelect={(value) => {
         onChange('mainSubject', value)
@@ -429,7 +481,7 @@ function SearchResult(props) {
   const DropdownContentType = React.forwardRef((_props, ref) => (
     <Dropdown
       ref={ref}
-      className="DropdownContentType"
+      className='DropdownContentType'
       id='contentType'
       onSelect={(value) => {
         onChange('contentType', value)
@@ -456,23 +508,23 @@ function SearchResult(props) {
         items={[
           {
             label: props.sortBestHitPhrase,
-            value: 'best'
+            value: 'best',
           },
           {
             label: props.sortDatePhrase,
-            value: 'publiseringsdato'
-          }
+            value: 'publiseringsdato',
+          },
         ]}
       />
     )
   }
 
   const isDesktopOrTablet = useMediaQuery({
-    minWidth: 768 // md breakpoint bootstrap 5.0
+    minWidth: 768, // md breakpoint bootstrap 5.0
   })
 
   const isMobile = useMediaQuery({
-    maxWidth: 767.98
+    maxWidth: 767.98,
   })
 
   function renderFilterResults() {
@@ -480,29 +532,27 @@ function SearchResult(props) {
     const filterDropdowns = (
       <Row justify-content-start>
         <Col lg='4' className='search-result-dropdown pb-1 pr-1'>
-          <DropdownMainSubject/>
+          <DropdownMainSubject />
         </Col>
         <Col lg='4' className='search-result-dropdown pr-1'>
-          <DropdownContentType/>
+          <DropdownContentType />
         </Col>
       </Row>
     )
 
     return (
-      <div className="filter">
-        {isDesktopOrTablet &&
+      <div className='filter'>
+        {isDesktopOrTablet && (
           <React.Fragment>
-            <span className="limit-result mb-3">{limitResultPhrase}</span>
+            <span className='limit-result mb-3'>{limitResultPhrase}</span>
             {filterDropdowns}
-          </React.Fragment>}
-        {isMobile &&
-          <Accordion
-            id="search-result-filter-accordion"
-            header={limitResultPhrase}
-            openByDefault={openAccordion}
-          >
+          </React.Fragment>
+        )}
+        {isMobile && (
+          <Accordion id='search-result-filter-accordion' header={limitResultPhrase} openByDefault={openAccordion}>
             {filterDropdowns}
-          </Accordion>}
+          </Accordion>
+        )}
         {renderClearFilterButton()}
       </div>
     )
@@ -511,24 +561,22 @@ function SearchResult(props) {
   function renderClearFilterButton() {
     if (filter.mainSubject || filter.contentType) {
       return (
-        <Tag
-          onClick={removeFilter}
-          icon={<X size={18} />}
-        >{props.removeFilterPhrase}
+        <Tag onClick={removeFilter} icon={<X size={18} />}>
+          {props.removeFilterPhrase}
         </Tag>
       )
     }
   }
 
   return (
-    <section className="search-result container-fluid p-0">
-      <div className="row">
-        <div className="col-12 search-result-head">
-          <div className="container">
+    <section className='search-result container-fluid p-0'>
+      <div className='row'>
+        <div className='col-12 search-result-head'>
+          <div className='container'>
             <Title>{props.title}</Title>
             <Input
-              className="d-none d-lg-block"
-              size="lg"
+              className='d-none d-lg-block'
+              size='lg'
               value={searchTerm}
               handleChange={setSearchTerm}
               searchField
@@ -537,7 +585,7 @@ function SearchResult(props) {
               ariaLabelSearchButton={props.searchText}
             />
             <Input
-              className="d-block d-lg-none"
+              className='d-block d-lg-none'
               value={searchTerm}
               handleChange={setSearchTerm}
               searchField
@@ -548,8 +596,8 @@ function SearchResult(props) {
             {renderFilterResults()}
           </div>
         </div>
-        <div className="col-12 search-result-body">
-          <div className="container mt-5">
+        <div className='col-12 search-result-body'>
+          <div className='container mt-5'>
             {hits.length > 0 || props.bestBetHit ? renderList() : renderNoHitMessage()}
             {renderLoading()}
             {renderShowMoreButton()}
@@ -559,7 +607,6 @@ function SearchResult(props) {
     </section>
   )
 }
-
 
 SearchResult.propTypes = {
   title: PropTypes.string,
@@ -600,8 +647,8 @@ SearchResult.propTypes = {
       family: PropTypes.string,
       onlygiven: PropTypes.string,
       onlygivenandfamily: PropTypes.string,
-      firstgiven: PropTypes.string
-    })
+      firstgiven: PropTypes.string,
+    }),
   }),
   bestBetHit: PropTypes.shape({
     title: PropTypes.string,
@@ -610,7 +657,7 @@ SearchResult.propTypes = {
     mainSubject: PropTypes.string,
     contentType: PropTypes.string,
     publishDate: PropTypes.string,
-    publishDateHuman: PropTypes.string
+    publishDateHuman: PropTypes.string,
   }),
   hits: PropTypes.arrayOf(
     PropTypes.shape({
@@ -620,26 +667,30 @@ SearchResult.propTypes = {
       mainSubject: PropTypes.string,
       contentType: PropTypes.string,
       publishDate: PropTypes.string,
-      publishDateHuman: PropTypes.string
-    })),
+      publishDateHuman: PropTypes.string,
+    })
+  ),
   contentTypePhrases: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string,
-      title: PropTypes.string
-    })),
+      title: PropTypes.string,
+    })
+  ),
   contentTypes: PropTypes.arrayOf(
     PropTypes.shape({
       title: PropTypes.string,
-      count: PropTypes.number
-    })),
+      count: PropTypes.number,
+    })
+  ),
   subjects: PropTypes.arrayOf(
     PropTypes.shape({
       title: PropTypes.string,
-      count: PropTypes.number
-    })),
+      count: PropTypes.number,
+    })
+  ),
   GA_TRACKING_ID: PropTypes.string,
   contentTypeUrlParam: PropTypes.string,
-  subjectUrlParam: PropTypes.string
+  subjectUrlParam: PropTypes.string,
 }
 
 export default (props) => <SearchResult {...props} />
