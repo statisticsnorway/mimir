@@ -1,5 +1,5 @@
 import { Article } from '../../../site/content-types/article/article'
-import { Content, get, query, QueryResponse } from '/lib/xp/content'
+import { Content, get, query, QueryDSL, QueryResponse } from '/lib/xp/content'
 import { StatisticInListing } from '../dashboard/statreg/types'
 import { getAllStatisticsFromRepo } from '../statreg/statistics'
 import { calculatePeriodRelease, Release } from '../utils/variantUtils'
@@ -8,6 +8,8 @@ import { Statistics } from '../../../site/content-types/statistics/statistics'
 import { SEO } from '../../../services/news/news'
 import { OmStatistikken } from '../../../site/content-types/omStatistikken/omStatistikken'
 import { formatDate } from '../utils/dateUtils'
+import { getStatisticVariantsFromRepo } from '/lib/ssb/repo/statisticVariant'
+import type { ContentLight, Release as ReleaseVariant } from '/lib/ssb/repo/statisticVariant'
 
 const { pageUrl } = __non_webpack_require__('/lib/xp/portal')
 const { moment } = __non_webpack_require__('/lib/vendor/moment')
@@ -15,9 +17,11 @@ const { getPreviousReleases } = __non_webpack_require__('/lib/ssb/utils/variantU
 const { getMainSubjects, getSubSubjects, getMainSubjectBySubSubject } =
   __non_webpack_require__('/lib/ssb/utils/subjectUtils')
 const { fromPartCache } = __non_webpack_require__('/lib/ssb/cache/partCache')
+const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
 const {
   data: { forceArray },
 } = __non_webpack_require__('/lib/util')
+const newPublicationArchiveEnabled: boolean = isEnabled('new-publication-archive', false, 'ssb')
 
 export function getPublications(
   req: XP.Request,
@@ -68,13 +72,22 @@ function filterPublications(
 function getPublicationsAndStatistics(req: XP.Request, language: string): Array<PublicationItem> {
   const mainSubjects: Array<SubjectItem> = getMainSubjects(req, language)
   const subSubjects: Array<SubjectItem> = getSubSubjects(req, language)
+  const startArticleContent: number = new Date().getTime()
   const articlesContent: QueryResponse<Article, object> = getArticlesContent(language, mainSubjects)
+  log.info(`getArticlesContent:  ${new Date().getTime() - startArticleContent} ms`)
 
+  const startPrepArticleContent: number = new Date().getTime()
   const publications: Array<PublicationItem> = articlesContent.hits.map((article) => {
     return prepareArticle(article, mainSubjects, subSubjects, language)
   })
+  log.info(`prepareArticle:  ${new Date().getTime() - startPrepArticleContent} ms`)
 
-  const statistics: Array<PublicationItem> = getStatistics(language, mainSubjects, subSubjects)
+  const startStatistics: number = new Date().getTime()
+  const statistics: Array<PublicationItem> = newPublicationArchiveEnabled
+    ? getStatisticsNew(language, mainSubjects)
+    : getStatistics(language, mainSubjects, subSubjects)
+  log.info(`getStatistics:  ${new Date().getTime() - startStatistics} ms`)
+
   const statisticsWithMainSubject: Array<PublicationItem> = statistics.filter(
     (statistic) => statistic.mainSubject !== ''
   )
@@ -197,11 +210,59 @@ function getArticlesContent(language: string, mainSubjects: Array<SubjectItem>):
   return res
 }
 
+function getStatisticsNew(language: string, mainSubjects: Array<SubjectItem>): Array<PublicationItem> {
+  log.info('getStatisticsNew')
+  const query: QueryDSL = {
+    range: {
+      field: 'publish.from',
+      type: 'dateTime',
+      lte: new Date().toISOString(),
+    },
+  }
+
+  const allPreviousStatisticVariantsFromRepo: ContentLight<ReleaseVariant>[] = getStatisticVariantsFromRepo(
+    language,
+    query
+  )
+
+  const previousReleasesNew: PublicationItem[] = allPreviousStatisticVariantsFromRepo.map((release) => {
+    const mainSubjectsStatistic: string[] = release.data.mainSubjects ? forceArray(release.data.mainSubjects) : []
+    const secondaryMainSubjects: string[] =
+      mainSubjectsStatistic.length > 1 ? mainSubjectsStatistic.slice(1, mainSubjectsStatistic.length) : []
+    const mainSubjectId: string = mainSubjectsStatistic.length ? mainSubjectsStatistic[0] : ''
+    const mainSubjectTitle: string = mainSubjectId.length
+      ? mainSubjects.filter((subject) => subject.name === mainSubjectId)[0].title
+      : ''
+
+    return {
+      title: release.data.name,
+      period: release.data.previousPeriod,
+      preface: release.data.ingress ?? '',
+      url: release.data.statisticContentId
+        ? pageUrl({
+            id: release.data.statisticContentId,
+          })
+        : '',
+      publishDate: moment(release.data.previousRelease).locale('nb').format('YYYY.MM.DD HH:mm'),
+      publishDateHuman: formatDate(release.data.previousRelease, 'PPP', language),
+      contentType: `${app.name}:statistics`,
+      articleType: 'statistics',
+      mainSubjectId: mainSubjectId,
+      mainSubject: mainSubjectTitle,
+      secondaryMainSubjects: secondaryMainSubjects,
+      appName: app.name,
+    }
+  })
+
+  return previousReleasesNew
+}
+
 function getStatistics(
   language: string,
   mainSubjects: Array<SubjectItem>,
   subSubjects: Array<SubjectItem>
 ): Array<PublicationItem> {
+  log.info('getStatisticsOld')
   const statistics: Array<StatisticInListing> = getAllStatisticsFromRepo()
   const previousReleases: Array<Release> = getPreviousReleases(statistics)
   const statisticsReleases: Array<PublicationItem> = previousReleases.reduce(function (
