@@ -1,6 +1,6 @@
 import { create as createRepo, get as getRepo } from '/lib/xp/repo'
 import { connect, type NodeCreateParams, type RepoConnection } from '/lib/xp/node'
-import { localDateTime, type LocalDateTime } from '/lib/xp/value'
+import { type Instant, instant, type LocalDateTime, localDateTime } from '/lib/xp/value'
 import { run } from '/lib/xp/context'
 import { getAllStatisticsFromRepo } from '/lib/ssb/statreg/statistics'
 import { contentArrayToRecord, forceArray } from '/lib/ssb/utils/arrayUtils'
@@ -183,7 +183,7 @@ function createContentStatisticVariant(
     data: prepareData(params),
     language,
     publish: {
-      from: asLocalDateTime(prevRelease.publishTime),
+      from: prevRelease.publishTime ? instant(new Date(prevRelease.publishTime)) : '',
     },
   }
 }
@@ -283,7 +283,7 @@ export interface ContentLight<Data> {
   data: Data
   language: 'nb' | 'en'
   publish?: {
-    from?: LocalDateTime | string
+    from?: Instant | string
   }
 }
 
