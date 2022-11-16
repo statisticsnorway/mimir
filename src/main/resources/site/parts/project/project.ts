@@ -19,46 +19,46 @@ function renderPart(req: XP.Request): RenderResponse {
 
   const projectManagerPhrase: string = localize({
     key: 'project.projectManager',
-    locale: language
+    locale: language,
   })
 
   const modelManagerPhrase: string = localize({
     key: 'project.modelManager',
-    locale: language
+    locale: language,
   })
 
   const periodPhrase: string = localize({
     key: 'project.period',
-    locale: language
+    locale: language,
   })
 
   const financierPhrase: string = localize({
     key: 'project.financier',
-    locale: language
+    locale: language,
   })
 
   const aboutModelPhrase: string = localize({
     key: 'project.aboutModel',
-    locale: language
+    locale: language,
   })
   const aboutProjectPhrase: string = localize({
     key: 'project.aboutProject',
-    locale: language
+    locale: language,
   })
 
   const participantsPhrase: string = localize({
     key: 'project.participants',
-    locale: language
+    locale: language,
   })
 
   const projectParticipantsPhrase: string = localize({
     key: 'project.projectParticipants',
-    locale: language
+    locale: language,
   })
 
   const collaboratorsPhrase: string = localize({
     key: 'project.collaborators',
-    locale: language
+    locale: language,
   })
 
   const modelPhrase: string = localize({
@@ -104,14 +104,14 @@ function renderPart(req: XP.Request): RenderResponse {
 function getManager(managerId?: string | undefined): ManagerLink | undefined {
   if (managerId) {
     const managerContent: Content | null = getTheContent({
-      key: managerId
+      key: managerId,
     })
     if (managerContent) {
       return {
         text: managerContent.displayName,
         href: pageUrl({
-          path: managerContent._path
-        })
+          path: managerContent._path,
+        }),
       }
     }
   }
@@ -119,8 +119,8 @@ function getManager(managerId?: string | undefined): ManagerLink | undefined {
 }
 
 interface ManagerLink {
-  text: string;
-  href: string;
+  text: string
+  href: string
 }
 
 interface ProjectProps {

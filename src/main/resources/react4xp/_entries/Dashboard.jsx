@@ -1,10 +1,10 @@
 /**
-*
-* App
-*
-* This component is the skeleton around the actual pages, and should only
-* contain code that should be seen on all pages. (e.g. navigation bar)
-*/
+ *
+ * App
+ *
+ * This component is the skeleton around the actual pages, and should only
+ * contain code that should be seen on all pages. (e.g. navigation bar)
+ */
 
 import * as React from 'react'
 import { Provider, useDispatch } from 'react-redux'
@@ -32,7 +32,8 @@ function Dashboard(props) {
             contentStudioBaseUrl={props.contentStudioBaseUrl}
             dataToolBoxBaseUrl={props.dataToolBoxBaseUrl}
             internalBaseUrl={props.internalBaseUrl}
-            internalStatbankUrl={props.internalStatbankUrl} />
+            internalStatbankUrl={props.internalStatbankUrl}
+          />
         </HelmetProvider>
       </WebsocketProvider>
     </Provider>
@@ -46,13 +47,13 @@ Dashboard.propTypes = {
     statistics: PropTypes.bool,
     jobLogs: PropTypes.bool,
     dataSources: PropTypes.bool,
-    statisticRegister: PropTypes.bool
+    statisticRegister: PropTypes.bool,
   }),
   contentStudioBaseUrl: PropTypes.string,
   dataToolBoxBaseUrl: PropTypes.string,
   internalBaseUrl: PropTypes.string,
   internalStatbankUrl: PropTypes.string,
-  toggleDebugging: PropTypes.boolean
+  toggleDebugging: PropTypes.boolean,
 }
 
 function DashboardRouter(props) {
@@ -62,27 +63,27 @@ function DashboardRouter(props) {
   io.setup(dispatch)
   dispatch({
     type: commonActions.setUser.type,
-    user: props.user
+    user: props.user,
   })
   dispatch({
     type: commonActions.setDashboardOptions.type,
-    dashboardOptions: props.dashboardOptionsForUser
+    dashboardOptions: props.dashboardOptionsForUser,
   })
   dispatch({
     type: commonActions.setContentStudioBaseUrl.type,
-    contentStudioBaseUrl: props.contentStudioBaseUrl
+    contentStudioBaseUrl: props.contentStudioBaseUrl,
   })
   dispatch({
     type: commonActions.setDataToolBoxBaseUrl.type,
-    dataToolBoxBaseUrl: props.dataToolBoxBaseUrl
+    dataToolBoxBaseUrl: props.dataToolBoxBaseUrl,
   })
   dispatch({
     type: commonActions.setInternalBaseUrl.type,
-    internalBaseUrl: props.internalBaseUrl
+    internalBaseUrl: props.internalBaseUrl,
   })
   dispatch({
     type: commonActions.setInternalStatbankUrl.type,
-    internalStatbankUrl: props.internalStatbankUrl
+    internalStatbankUrl: props.internalStatbankUrl,
   })
   setUserServerSide(dispatch, io, props.user)
   if (props.dashboardOptionsForUser.statistics) requestStatistics(dispatch, io)
@@ -92,14 +93,10 @@ function DashboardRouter(props) {
   requestServerTime(dispatch, io)
   return (
     <BrowserRouter>
-      <Helmet
-        titleTemplate="SSB Dashboard"
-        defaultTitle="SSB Dashboard"
-      >
-      </Helmet>
+      <Helmet titleTemplate='SSB Dashboard' defaultTitle='SSB Dashboard'></Helmet>
 
       <Switch>
-        <Route path="/" component={HomePage} />
+        <Route path='/' component={HomePage} />
       </Switch>
     </BrowserRouter>
   )
@@ -112,12 +109,12 @@ DashboardRouter.propTypes = {
     statistics: PropTypes.bool,
     jobLogs: PropTypes.bool,
     dataSources: PropTypes.bool,
-    statisticRegister: PropTypes.bool
+    statisticRegister: PropTypes.bool,
   }),
   contentStudioBaseUrl: PropTypes.string,
   dataToolBoxBaseUrl: PropTypes.string,
   internalBaseUrl: PropTypes.string,
-  internalStatbankUrl: PropTypes.string
+  internalStatbankUrl: PropTypes.string,
 }
 
 export default (props) => <Dashboard {...props} />

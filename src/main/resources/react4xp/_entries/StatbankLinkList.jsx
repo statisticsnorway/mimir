@@ -9,13 +9,14 @@ const StatbankLinkList = (props) => {
       <Link
         className={props.className}
         href={props.href}
-        icon={props.iconType ? (props.iconType == 'arrowRight' ? <ArrowRight size="20"/> : '' ) : undefined }
+        icon={props.iconType ? props.iconType == 'arrowRight' ? <ArrowRight size='20' /> : '' : undefined}
         linkType={props.linkType}
       >
         <span
           dangerouslySetInnerHTML={{
-            __html: props.children
-          }} />
+            __html: props.children,
+          }}
+        />
       </Link>
     </React.Fragment>
   )
@@ -27,12 +28,8 @@ StatbankLinkList.propTypes = {
   href: PropTypes.string.isRequired,
   icon: PropTypes.node,
   iconType: PropTypes.string,
-  linkType: PropTypes.oneOf([
-    'regular',
-    'profiled',
-    'header'
-  ]),
-  negative: PropTypes.bool
+  linkType: PropTypes.oneOf(['regular', 'profiled', 'header']),
+  negative: PropTypes.bool,
 }
 
 export default StatbankLinkList

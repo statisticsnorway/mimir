@@ -2,15 +2,9 @@ import { get, getAttachmentStream, ByteSource, Content } from '/lib/xp/content'
 import { Header } from '../../../site/content-types/header/header'
 import { PreliminaryData } from '../../types/xmlParser'
 
-const {
-  getContent, pageUrl
-} = __non_webpack_require__('/lib/xp/portal')
-const {
-  moment
-} = __non_webpack_require__('/lib/vendor/moment')
-const {
-  readLines
-} = __non_webpack_require__('/lib/xp/io')
+const { getContent, pageUrl } = __non_webpack_require__('/lib/xp/portal')
+const { moment } = __non_webpack_require__('/lib/vendor/moment')
+const { readLines } = __non_webpack_require__('/lib/xp/io')
 
 function numberWithSpaces(x: number | string): string {
   const parts: Array<string> = x.toString().split('.')
@@ -20,9 +14,11 @@ function numberWithSpaces(x: number | string): string {
 
 export function createHumanReadableFormat(value: number | string | null): string {
   if (getContent().language != 'en' && value) {
-    return value > 999 || value < -999 ? numberWithSpaces(value).toString().replace(/\./, ',') : value.toString().replace(/\./, ',')
+    return value > 999 || value < -999
+      ? numberWithSpaces(value).toString().replace(/\./, ',')
+      : value.toString().replace(/\./, ',')
   }
-  return value ? value > 999 || value < -999 ? numberWithSpaces(value) : value.toString() : ''
+  return value ? (value > 999 || value < -999 ? numberWithSpaces(value) : value.toString()) : ''
 }
 
 export function dateToFormat(dateString: string | undefined): string {
@@ -40,14 +36,16 @@ export function isUrl(urlOrId: string | undefined): boolean | undefined {
 }
 
 export function isNumber(str: number | string | undefined): boolean {
-  return ((str != null) && (str !== '') && !isNaN(str as number))
+  return str != null && str !== '' && !isNaN(str as number)
 }
 
 function isNonBreakingSpace(str: string): boolean {
   return str.charCodeAt(0) == 160 && str.length === 1
 }
 
-export function getRowValue(value: number | string | PreliminaryData| Array<number | string | PreliminaryData>): RowValue {
+export function getRowValue(
+  value: number | string | PreliminaryData | Array<number | string | PreliminaryData>
+): RowValue {
   if (typeof value === 'string' && isNumber(value) && !isNonBreakingSpace(value)) {
     return Number(value)
   }
@@ -72,9 +70,11 @@ export function pathFromStringOrContent(urlSrc: Header['searchResultPage']): str
   if (urlSrc !== undefined) {
     if (urlSrc._selected === 'content') {
       const selected: ContentSearchPageResult | undefined = urlSrc[urlSrc._selected]
-      return selected && selected.contentId ? pageUrl({
-        id: selected.contentId
-      }) : undefined
+      return selected && selected.contentId
+        ? pageUrl({
+            id: selected.contentId,
+          })
+        : undefined
     }
 
     if (urlSrc._selected === 'manual') {
@@ -93,8 +93,8 @@ export function pathFromStringOrContent(urlSrc: Header['searchResultPage']): str
  */
 export function getSources(sourceConfig: Array<SourcesConfig>): SourceList {
   return sourceConfig.map((selectedSource) => {
-    let sourceText: string = ''
-    let sourceUrl: string = ''
+    let sourceText = ''
+    let sourceUrl = ''
 
     if (selectedSource._selected == 'urlSource') {
       sourceText = selectedSource.urlSource.urlText
@@ -104,12 +104,12 @@ export function getSources(sourceConfig: Array<SourcesConfig>): SourceList {
     if (selectedSource._selected == 'relatedSource') {
       sourceText = selectedSource.relatedSource.urlText
       sourceUrl = pageUrl({
-        id: selectedSource.relatedSource.sourceSelector
+        id: selectedSource.relatedSource.sourceSelector,
       })
     }
     return {
       urlText: sourceText,
-      url: sourceUrl
+      url: sourceUrl,
     }
   })
 }
@@ -117,7 +117,7 @@ export function getSources(sourceConfig: Array<SourcesConfig>): SourceList {
 export function getAttachmentContent(contentId: string | undefined): string | undefined {
   if (!contentId) return undefined
   const attachmentContent: Content | null = get({
-    key: contentId
+    key: contentId,
   })
 
   return getAttachment(attachmentContent)
@@ -127,7 +127,7 @@ export function getAttachment(attachmentContent: Content | null): string | undef
   if (!attachmentContent) return undefined
   const stream: ByteSource | null = getAttachmentStream({
     key: attachmentContent._id,
-    name: attachmentContent._name
+    name: attachmentContent._name,
   })
 
   if (!stream) return undefined
@@ -137,8 +137,12 @@ export function getAttachment(attachmentContent: Content | null): string | undef
 
 // For admin tool applications
 export function parseContributions(contributions: XP.PageContributions): XP.PageContributions {
-  contributions.headEnd = contributions.headEnd && (contributions.headEnd as Array<string>).map((script: string) => script.replace(' defer ', ' defer="" '))
-  contributions.bodyEnd = contributions.bodyEnd && (contributions.bodyEnd as Array<string>).map((script: string) => script.replace(' defer ', ' defer="" '))
+  contributions.headEnd =
+    contributions.headEnd &&
+    (contributions.headEnd as Array<string>).map((script: string) => script.replace(' defer ', ' defer="" '))
+  contributions.bodyEnd =
+    contributions.bodyEnd &&
+    (contributions.bodyEnd as Array<string>).map((script: string) => script.replace(' defer ', ' defer="" '))
   return contributions
 }
 
@@ -149,41 +153,41 @@ export function randomUnsafeString(): string {
 }
 
 export interface SourcesConfig {
-  _selected: string;
+  _selected: string
   urlSource: {
-    urlText: string;
-    url: string;
-  };
+    urlText: string
+    url: string
+  }
   relatedSource: {
-    urlText: string;
-    sourceSelector: string;
-  };
+    urlText: string
+    sourceSelector: string
+  }
 }
 
 interface Sources {
-  urlText: string;
-  url: string;
+  urlText: string
+  url: string
 }
 interface ContentSearchPageResult {
-  contentId?: string;
+  contentId?: string
 }
 
 interface ManualSearchPageResult {
-  url?: string;
+  url?: string
 }
 
 export type SourceList = Array<Sources>
 export interface UtilsLib {
-  createHumanReadableFormat: (value: number | string | null) => string;
-  dateToFormat: (dateString: string | undefined) => string;
-  dateToReadable: (dateString: string | undefined) => string;
-  isUrl: (urlOrId: string | undefined) => boolean | undefined;
-  isNumber: (str: number | string | undefined) => boolean;
-  getRowValue: (value: number | string | PreliminaryData | Array<number | string | PreliminaryData>) => RowValue;
-  pageMode: (req: XP.Request) => string;
-  pathFromStringOrContent: (urlSrc: Header['searchResultPage']) => string | undefined;
-  getSources: (sourceConfig: Array<SourcesConfig>) => SourceList;
-  getAttachmentContent: (contentId: string | undefined) => string | undefined;
-  getAttachment: (attachmentContent: Content | null) => string | undefined;
-  parseContributions: (contributions: XP.PageContributions) => XP.PageContributions;
+  createHumanReadableFormat: (value: number | string | null) => string
+  dateToFormat: (dateString: string | undefined) => string
+  dateToReadable: (dateString: string | undefined) => string
+  isUrl: (urlOrId: string | undefined) => boolean | undefined
+  isNumber: (str: number | string | undefined) => boolean
+  getRowValue: (value: number | string | PreliminaryData | Array<number | string | PreliminaryData>) => RowValue
+  pageMode: (req: XP.Request) => string
+  pathFromStringOrContent: (urlSrc: Header['searchResultPage']) => string | undefined
+  getSources: (sourceConfig: Array<SourcesConfig>) => SourceList
+  getAttachmentContent: (contentId: string | undefined) => string | undefined
+  getAttachment: (attachmentContent: Content | null) => string | undefined
+  parseContributions: (contributions: XP.PageContributions) => XP.PageContributions
 }

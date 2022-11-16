@@ -19,9 +19,9 @@ export function HomePage() {
   function createDatasourcesTab() {
     if (dashboardOptions.dataSources || dashboardOptions.statisticRegister) {
       return (
-        <Tab eventKey="queries" title="Spørringer">
-          {dashboardOptions.dataSources && <DataSources/>}
-          {dashboardOptions.statisticRegister && <StatRegDashboard/>}
+        <Tab eventKey='queries' title='Spørringer'>
+          {dashboardOptions.dataSources && <DataSources />}
+          {dashboardOptions.statisticRegister && <StatRegDashboard />}
         </Tab>
       )
     }
@@ -32,31 +32,32 @@ export function HomePage() {
       return (
         <Row>
           <Col className={dashboardOptions.dashboardTools ? 'col-9' : 'col-12'}>
-            {dashboardOptions.statistics && <Statistics/>}
-            {dashboardOptions.jobLogs && <Jobs/>}
+            {dashboardOptions.statistics && <Statistics />}
+            {dashboardOptions.jobLogs && <Jobs />}
           </Col>
-          {dashboardOptions.dashboardTools &&
-            <Col className="pl-4">
-              <DashboardTools/>
-            </Col>}
+          {dashboardOptions.dashboardTools && (
+            <Col className='pl-4'>
+              <DashboardTools />
+            </Col>
+          )}
         </Row>
       )
     }
   }
 
   return (
-    <Container fluid className="px-5">
-      <div className="dashboard-info d-flex p-2">
-        <ServerTime serverTime={serverTime} serverTimeReceived={serverTimeReceived}/>
+    <Container fluid className='px-5'>
+      <div className='dashboard-info d-flex p-2'>
+        <ServerTime serverTime={serverTime} serverTimeReceived={serverTimeReceived} />
         <ConnectionBadge isConnected={isConnected} />
       </div>
-      <Tabs defaultActiveKey="statistics">
-        <Tab eventKey="statistics" title="Statistikker">
-          <Container fluid className="p-0">
-            { createStatisticsTab() }
+      <Tabs defaultActiveKey='statistics'>
+        <Tab eventKey='statistics' title='Statistikker'>
+          <Container fluid className='p-0'>
+            {createStatisticsTab()}
           </Container>
         </Tab>
-        { createDatasourcesTab() }
+        {createDatasourcesTab()}
       </Tabs>
     </Container>
   )

@@ -7,6 +7,6 @@ exports.get = (req: XP.Request): XP.Response => {
 
   return {
     body: project,
-    contentType: 'application/json'
+    contentType: 'application/json',
   }
 }

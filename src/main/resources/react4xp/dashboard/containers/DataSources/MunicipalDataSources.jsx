@@ -1,10 +1,12 @@
 import { Accordion, NestedAccordion } from '@statisticsnorway/ssb-component-library'
 import React, { useContext } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectMunicipalGroups,
+import {
+  selectMunicipalGroups,
   selectLoadingMunicipalGroups,
   selectMunicipalDataSources,
-  selectMunicipalLoading } from './selectors'
+  selectMunicipalLoading,
+} from './selectors'
 import PropTypes from 'prop-types'
 import { requestMunicipalGroups, requestMunicipalDataSources } from './actions'
 import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
@@ -39,33 +41,25 @@ export function MunicipalDataSources(props) {
 
   function renderAccordionBody() {
     if (isLoading) {
-      return (
-        <span className="spinner-border spinner-border" />
-      )
+      return <span className='spinner-border spinner-border' />
     }
-    return (
-      municipals.map((municipal) => renderDataSourceTable(municipal))
-    )
+    return municipals.map((municipal) => renderDataSourceTable(municipal))
   }
 
   onToggleAccordion(props.openByDefault)
   return (
-    <Accordion
-      header="Spørringer fra Kommunefakta"
-      className="mx-0"
-      onToggle={(isOpen) => onToggleAccordion(isOpen)}
-    >
+    <Accordion header='Spørringer fra Kommunefakta' className='mx-0' onToggle={(isOpen) => onToggleAccordion(isOpen)}>
       {renderAccordionBody()}
     </Accordion>
   )
 }
 
 MunicipalDataSources.defaultProps = {
-  openByDefault: false
+  openByDefault: false,
 }
 
 MunicipalDataSources.propTypes = {
-  openByDefault: PropTypes.bool
+  openByDefault: PropTypes.bool,
 }
 
 export default (props) => <MunicipalDataSources {...props} />

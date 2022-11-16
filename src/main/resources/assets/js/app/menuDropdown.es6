@@ -5,7 +5,7 @@ import 'bootstrap/js/dist/collapse'
 // Belongs to part menu-dropdown
 // - adds visibility class for muncipality when on top of page (sticky part of page)
 export function init() {
-  $(function() {
+  $(function () {
     let animate
     const map = $('#js-show-map')
 
@@ -15,9 +15,7 @@ export function init() {
 
       const el = $('.part-menu-dropdown')[0]
 
-      const {
-        top
-      } = el.getBoundingClientRect()
+      const { top } = el.getBoundingClientRect()
 
       const onSwingTimeout = () => {
         map.collapse('show')
@@ -27,12 +25,19 @@ export function init() {
         animate = true
 
         const pos = $(el).offset()
-        $('html').stop().animate({
-          scrollTop: pos.top
-        }, 400, 'swing', () => {
-          animate = false
-          setTimeout(onSwingTimeout, 50)
-        })
+        $('html')
+          .stop()
+          .animate(
+            {
+              scrollTop: pos.top,
+            },
+            400,
+            'swing',
+            () => {
+              animate = false
+              setTimeout(onSwingTimeout, 50)
+            }
+          )
       }
     })
 
@@ -40,14 +45,17 @@ export function init() {
       map.parent().addClass('map-container')
       $('.show-map').attr('aria-expanded', 'true').addClass('active')
 
-      if (window.innerWidth <= 720) { // Bootstrap md width
+      if (window.innerWidth <= 720) {
+        // Bootstrap md width
         $('#search-container').collapse('hide')
         $('.show-search').removeClass('active')
       }
 
-      $('.show-search').parent().on('click', () => {
-        $('.show-map').removeClass('active')
-      })
+      $('.show-search')
+        .parent()
+        .on('click', () => {
+          $('.show-map').removeClass('active')
+        })
     })
 
     map.on('hide.bs.collapse', () => {
@@ -58,19 +66,13 @@ export function init() {
 
     $('.part-menu-dropdown').each((i, el) => {
       $(window).on('scroll', () => {
-        const {
-          top
-        } = el.getBoundingClientRect()
+        const { top } = el.getBoundingClientRect()
 
-        top > 0 && $(el).removeClass('border-bottom shadow-sm').find('.opacity-zero')
-          .removeClass('opacity-one')
+        top > 0 && $(el).removeClass('border-bottom shadow-sm').find('.opacity-zero').removeClass('opacity-one')
 
-        top === 0 && $(el).addClass('border-bottom shadow-sm').find('.opacity-zero')
-          .addClass('opacity-one')
+        top === 0 && $(el).addClass('border-bottom shadow-sm').find('.opacity-zero').addClass('opacity-one')
 
-        top > 0 &&
-        !animate &&
-        map.length
+        top > 0 && !animate && map.length
 
         const stickyMenu = document.getElementById('sticky-menu')
         if (stickyMenu) {
@@ -100,9 +102,9 @@ export function init() {
     $('#input-query-municipality').attr({
       'data-display': 'static',
       'data-toggle': 'dropdown',
-      'role': 'button',
+      role: 'button',
       'aria-haspopup': 'true',
-      'aria-expanded': 'false'
+      'aria-expanded': 'false',
     })
 
     $('#municipality-list').appendTo('.input-wrapper')

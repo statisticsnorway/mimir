@@ -3,53 +3,43 @@ import { EditorCallback } from './eventLog'
 import { User } from '/lib/xp/auth'
 import { HttpRequestParams, HttpResponse } from '/lib/http-client'
 import { TbmlDataUniform } from '../../types/xmlParser'
-const {
-  dateToFormat
-} = __non_webpack_require__('/lib/ssb/utils/utils')
-const {
-  getNode,
-  withConnection,
-  withLoggedInUserContext,
-  withSuperUserContext
-} = __non_webpack_require__('/lib/ssb/repo/common')
-const {
-  EVENT_LOG_BRANCH,
-  EVENT_LOG_REPO,
-  createEventLog,
-  updateEventLog
-} = __non_webpack_require__('/lib/ssb/repo/eventLog')
+const { dateToFormat } = __non_webpack_require__('/lib/ssb/utils/utils')
+const { getNode, withConnection, withLoggedInUserContext, withSuperUserContext } =
+  __non_webpack_require__('/lib/ssb/repo/common')
+const { EVENT_LOG_BRANCH, EVENT_LOG_REPO, createEventLog, updateEventLog } =
+  __non_webpack_require__('/lib/ssb/repo/eventLog')
 export type QueryInfoNode = QueryInfo & RepoNode
 
 export interface QueryInfo {
-  _name: string;
+  _name: string
   data: {
-    queryId: string;
-    modified: string;
-    modifiedTs?: string;
-    modifiedResult: string;
-    by: User;
-  };
+    queryId: string
+    modified: string
+    modifiedTs?: string
+    modifiedResult: string
+    by: User
+  }
 }
 
 export interface QueryStatus {
-  message: string;
-  response?: HttpResponse;
-  request?: HttpRequestParams;
-  xmlResult?: TbmlDataUniform;
-  info?: string;
-  function?: string;
-  file?: string;
-  status?: string;
-  result?: object;
-  branch?: string;
+  message: string
+  response?: HttpResponse
+  request?: HttpRequestParams
+  xmlResult?: TbmlDataUniform
+  info?: string
+  function?: string
+  file?: string
+  status?: string
+  result?: object
+  branch?: string
 }
 
 export interface EventInfo {
   data: {
-    ts: string;
-    status: QueryStatus;
-    by: User;
-  };
+    ts: string
+    status: QueryStatus
+    by: User
+  }
 }
 
 export enum Events {
@@ -70,7 +60,7 @@ export enum Events {
   FAILED_TO_CREATE_DATASET = 'FAILED_TO_CREATE_DATASET',
   FAILED_TO_REFRESH_DATASET = 'FAILED_TO_REFRESH_DATASET',
   FAILED_TO_GET_SOURCE_LIST = 'FAILED_TO_GET_SOURCE_LIST',
-  XML_TO_JSON = 'XML_TO_JSON'
+  XML_TO_JSON = 'XML_TO_JSON',
 }
 
 function logDataQueryEvent(queryId: string, status: QueryStatus, user: User): EventInfo & RepoNode {
@@ -95,14 +85,18 @@ function addEventToQueryLog(queryId: string, user: User, status: QueryStatus): E
     data: {
       status,
       ts: dateToFormat(ts.toISOString()),
-      by: user
-    }
+      by: user,
+    },
   })
 }
 
 function startQuery(queryId: string, user: User, status: QueryStatus): QueryInfoNode {
   return withConnection(EVENT_LOG_REPO, EVENT_LOG_BRANCH, () => {
-    const queryLogNode: ReadonlyArray<QueryInfoNode> | QueryInfoNode | null = getNode<QueryInfo>(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/queries/${queryId}`)
+    const queryLogNode: ReadonlyArray<QueryInfoNode> | QueryInfoNode | null = getNode<QueryInfo>(
+      EVENT_LOG_REPO,
+      EVENT_LOG_BRANCH,
+      `/queries/${queryId}`
+    )
     if (queryLogNode !== undefined && queryLogNode !== null) {
       return Array.isArray(queryLogNode) ? queryLogNode[0] : queryLogNode
     } else {
@@ -120,8 +114,8 @@ function createQueryNode(queryId: string, user: User, status: QueryStatus): Quer
       queryId: queryId,
       modified: dateToFormat(ts.toISOString()),
       modifiedResult: status.message,
-      by: user
-    }
+      by: user,
+    },
   })
 }
 
@@ -132,19 +126,19 @@ function updateQuery<T>(key: string, editor: EditorCallback<QueryInfoNode>): Que
 function updateQueryLogStatus(queryId: string, user: User, status: QueryStatus): QueryInfoNode {
   const ts: Date = new Date()
 
-  return updateQuery(`/queries/${queryId}`, function(node: QueryInfoNode): QueryInfoNode {
+  return updateQuery(`/queries/${queryId}`, function (node: QueryInfoNode): QueryInfoNode {
     node.data = {
       ...node.data,
       by: user,
       modifiedTs: ts.toISOString(),
       modified: dateToFormat(ts.toISOString()),
-      modifiedResult: status.message
+      modifiedResult: status.message,
     }
     return node
   })
 }
 
 export interface RepoQueryLib {
-  logUserDataQuery: (queryId: string, status: QueryStatus) => EventInfo & RepoNode;
-  Events: typeof Events;
+  logUserDataQuery: (queryId: string, status: QueryStatus) => EventInfo & RepoNode
+  Events: typeof Events
 }

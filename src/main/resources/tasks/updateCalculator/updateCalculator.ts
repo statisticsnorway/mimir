@@ -1,32 +1,18 @@
-
 import { JobEventNode, JobInfoNode } from '../../lib/ssb/repo/job'
 import { CreateOrUpdateStatus } from '../../lib/ssb/dataset/dataset'
 import { GenericDataImport } from '../../site/content-types/genericDataImport/genericDataImport'
 import { Content } from '/lib/xp/content'
 import { DATASET_BRANCH } from '../../lib/ssb/repo/dataset'
 
-const {
-  completeJobLog,
-  startJobLog,
-  updateJobLog,
-  JOB_STATUS_COMPLETE,
-  JobNames
-} = __non_webpack_require__('/lib/ssb/repo/job')
-const {
-  cronJobLog
-} = __non_webpack_require__('/lib/ssb/utils/serverLog')
-const {
-  refreshDataset
-} = __non_webpack_require__('/lib/ssb/dataset/dataset')
-const {
-  getAllCalculatorDataset
-} = __non_webpack_require__('/lib/ssb/dataset/calculator')
-const {
-  clearPartFromPartCache
-} = __non_webpack_require__('/lib/ssb/cache/partCache')
+const { completeJobLog, startJobLog, updateJobLog, JOB_STATUS_COMPLETE, JobNames } =
+  __non_webpack_require__('/lib/ssb/repo/job')
+const { cronJobLog } = __non_webpack_require__('/lib/ssb/utils/serverLog')
+const { refreshDataset } = __non_webpack_require__('/lib/ssb/dataset/dataset')
+const { getAllCalculatorDataset } = __non_webpack_require__('/lib/ssb/dataset/calculator')
+const { clearPartFromPartCache } = __non_webpack_require__('/lib/ssb/cache/partCache')
 
-exports.run = function(): void {
-  log.info(`Run Task updateCalculator: ${new(Date)}`)
+exports.run = function (): void {
+  log.info(`Run Task updateCalculator: ${new Date()}`)
   const jobLogNode: JobEventNode = startJobLog(JobNames.REFRESH_DATASET_CALCULATOR_JOB)
   const dataSources: Array<Content<GenericDataImport>> = getAllCalculatorDataset()
 
@@ -34,7 +20,7 @@ exports.run = function(): void {
     updateJobLog(jobLogNode._id, (node: JobInfoNode) => {
       node.data = {
         ...node.data,
-        queryIds: dataSources.map((q) => q._id )
+        queryIds: dataSources.map((q) => q._id),
       }
       return node
     })
@@ -50,8 +36,8 @@ exports.run = function(): void {
           displayName: r.dataquery.displayName,
           contentType: r.dataquery.type,
           dataSourceType: r.dataquery.data.dataSource?._selected,
-          status: r.status
-        }))
+          status: r.status,
+        })),
       })
     }
 
@@ -65,9 +51,8 @@ exports.run = function(): void {
     }
   } else {
     completeJobLog(jobLogNode._id, JOB_STATUS_COMPLETE, {
-      result: []
+      result: [],
     })
   }
   cronJobLog(JobNames.REFRESH_DATASET_CALCULATOR_JOB)
 }
-

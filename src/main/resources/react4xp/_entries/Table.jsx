@@ -12,9 +12,11 @@ class Table extends Component {
     super(props)
     this.state = {
       prevClientWidth: 0,
-      showPreviewToggle: this.props.showPreviewDraft && (!this.props.pageTypeStatistic || this.props.paramShowDraft && this.props.pageTypeStatistic),
+      showPreviewToggle:
+        this.props.showPreviewDraft &&
+        (!this.props.pageTypeStatistic || (this.props.paramShowDraft && this.props.pageTypeStatistic)),
       fetchUnPublished: this.props.paramShowDraft,
-      table: this.props.paramShowDraft && this.props.draftExist ? this.props.tableDraft : this.props.table
+      table: this.props.paramShowDraft && this.props.draftExist ? this.props.tableDraft : this.props.table,
     }
 
     this.captionRef = createRef()
@@ -47,7 +49,7 @@ class Table extends Component {
   widthCheck() {
     if (this.tableWrapperRef.current.clientWidth !== this.state.prevClientWidth) {
       this.setState({
-        prevClientWidth: this.tableWrapperRef.current.clientWidth
+        prevClientWidth: this.tableWrapperRef.current.clientWidth,
       })
       this.updateTableControlsDesktop()
     }
@@ -107,14 +109,14 @@ class Table extends Component {
 
   formatNumber(value) {
     const language = this.props.table.language
-    const decimalSeparator = (language === 'en') ? '.' : ','
+    const decimalSeparator = language === 'en' ? '.' : ','
     value = this.trimValue(value)
     if (value) {
-      if (typeof value === 'number' || typeof value === 'string' && !isNaN(value)) {
+      if (typeof value === 'number' || (typeof value === 'string' && !isNaN(value))) {
         const decimals = value.toString().indexOf('.') > -1 ? value.toString().split('.')[1].length : 0
         return (
           <NumberFormat
-            value={ Number(value) }
+            value={Number(value)}
             displayType={'text'}
             thousandSeparator={' '}
             decimalSeparator={decimalSeparator}
@@ -128,11 +130,7 @@ class Table extends Component {
   }
 
   addDownloadTableDropdown(mobile) {
-    const {
-      downloadTableLabel,
-      downloadTableTitle,
-      downloadTableOptions
-    } = this.props
+    const { downloadTableLabel, downloadTableTitle, downloadTableOptions } = this.props
 
     if (downloadTableLabel && downloadTableTitle && downloadTableOptions) {
       const downloadTable = (item) => {
@@ -164,7 +162,12 @@ class Table extends Component {
 
   downloadTableAsCSV() {
     if (this.props.GA_TRACKING_ID) {
-      addGtagForEvent(this.props.GA_TRACKING_ID, 'Lastet ned csv tabell', 'Statistikkside tabeller', 'Last ned csv tabell')
+      addGtagForEvent(
+        this.props.GA_TRACKING_ID,
+        'Lastet ned csv tabell',
+        'Statistikkside tabeller',
+        'Last ned csv tabell'
+      )
     }
 
     if (window && window.downloadTableFile) {
@@ -173,14 +176,19 @@ class Table extends Component {
         fileName: 'tabell',
         csvSeparator: ';',
         csvEnclosure: '',
-        tfootSelector: ''
+        tfootSelector: '',
       })
     }
   }
 
   downloadTableAsExcel() {
     if (this.props.GA_TRACKING_ID) {
-      addGtagForEvent(this.props.GA_TRACKING_ID, 'Lastet ned excell tabell', 'Statistikkside tabeller', 'Last ned excell tabell')
+      addGtagForEvent(
+        this.props.GA_TRACKING_ID,
+        'Lastet ned excell tabell',
+        'Statistikkside tabeller',
+        'Last ned excell tabell'
+      )
     }
 
     if (window && window.downloadTableFile) {
@@ -190,27 +198,24 @@ class Table extends Component {
         numbers: {
           html: {
             decimalMark: ',',
-            thousandsSeparator: ' '
+            thousandsSeparator: ' ',
           },
-          output:
-          {
+          output: {
             decimalMark: '.',
-            thousandsSeparator: ''
-          }
-        }
+            thousandsSeparator: '',
+          },
+        },
       })
     }
   }
 
   createTable() {
-    const {
-      tableClass
-    } = this.props.table
+    const { tableClass } = this.props.table
 
     return (
       <table className={tableClass} ref={this.tableRef}>
         {this.addCaption()}
-        {this.state.table.thead.map( (t, index) => {
+        {this.state.table.thead.map((t, index) => {
           return (
             <Fragment key={index}>
               {this.addThead(index)}
@@ -224,14 +229,12 @@ class Table extends Component {
   }
 
   addCaption() {
-    const {
-      caption
-    } = this.state.table
+    const { caption } = this.state.table
     if (caption) {
       const hasNoteRefs = typeof caption === 'object'
       return (
         <caption noterefs={hasNoteRefs ? caption.noterefs : null} ref={this.captionRef}>
-          <div className="caption-text-wrapper">
+          <div className='caption-text-wrapper'>
             {hasNoteRefs ? caption.content : caption}
             {hasNoteRefs ? this.addNoteRefs(caption.noterefs) : null}
           </div>
@@ -242,7 +245,7 @@ class Table extends Component {
 
   createScrollControlsMobile() {
     return (
-      <div className="table-controls-mobile" ref={this.tableControlsMobileRef}>
+      <div className='table-controls-mobile' ref={this.tableControlsMobileRef}>
         <img src={this.props.iconUrl} />
       </div>
     )
@@ -250,36 +253,30 @@ class Table extends Component {
 
   createScrollControlsDesktop() {
     return (
-      <div className="table-controls-desktop" ref={this.tableControlsDesktopRef}>
-        <span className="me-2" onClick={() => this.scrollLeft()}><ChevronLeft/></span>
-        <span onClick={() => this.scrollRight()}><ChevronRight/></span>
+      <div className='table-controls-desktop' ref={this.tableControlsDesktopRef}>
+        <span className='me-2' onClick={() => this.scrollLeft()}>
+          <ChevronLeft />
+        </span>
+        <span onClick={() => this.scrollRight()}>
+          <ChevronRight />
+        </span>
       </div>
     )
   }
 
   addThead(index) {
-    return (
-      <thead>
-        {this.createRowsHead(this.state.table.thead[index].tr)}
-      </thead>
-    )
+    return <thead>{this.createRowsHead(this.state.table.thead[index].tr)}</thead>
   }
 
   addTbody(index) {
-    return (
-      <tbody>
-        {this.createRowsBody(this.state.table.tbody[index].tr)}
-      </tbody>
-    )
+    return <tbody>{this.createRowsBody(this.state.table.tbody[index].tr)}</tbody>
   }
 
   renderCorrectionNotice() {
     if (this.state.table.tfoot.correctionNotice) {
       return (
-        <tr className="correction-notice">
-          <td colSpan="100%">
-            {this.state.table.tfoot.correctionNotice}
-          </td>
+        <tr className='correction-notice'>
+          <td colSpan='100%'>{this.state.table.tfoot.correctionNotice}</td>
         </tr>
       )
     }
@@ -287,30 +284,28 @@ class Table extends Component {
   }
 
   addTFoot() {
-    const {
-      footnotes, correctionNotice
-    } = this.state.table.tfoot
+    const { footnotes, correctionNotice } = this.state.table.tfoot
 
     const noteRefs = this.state.table.noteRefs
 
-    if (noteRefs && noteRefs.length > 0 || correctionNotice) {
+    if ((noteRefs && noteRefs.length > 0) || correctionNotice) {
       return (
         <tfoot>
           {noteRefs.map((note, index) => {
             const current = footnotes && footnotes.find((footnote) => footnote.noteid === note)
             if (current) {
               return (
-                <tr key={index} className="footnote">
-                  <td colSpan="100%">
-                    <sup>{index + 1}</sup>{current.content}
+                <tr key={index} className='footnote'>
+                  <td colSpan='100%'>
+                    <sup>{index + 1}</sup>
+                    {current.content}
                   </td>
                 </tr>
               )
             } else {
               return null
             }
-          })
-          }
+          })}
           {this.renderCorrectionNotice()}
         </tfoot>
       )
@@ -321,11 +316,7 @@ class Table extends Component {
   createRowsHead(rows) {
     if (rows) {
       return rows.map((row, i) => {
-        return (
-          <tr key={i}>
-            { this.createHeaderCell(row) }
-          </tr>
-        )
+        return <tr key={i}>{this.createHeaderCell(row)}</tr>
       })
     }
   }
@@ -335,8 +326,8 @@ class Table extends Component {
       return rows.map((row, i) => {
         return (
           <tr key={i}>
-            { this.createBodyTh(row) }
-            { this.createBodyTd(row) }
+            {this.createBodyTh(row)}
+            {this.createBodyTd(row)}
           </tr>
         )
       })
@@ -347,13 +338,9 @@ class Table extends Component {
     return Object.keys(row).map((keyName, keyIndex) => {
       const value = row[keyName]
       if (keyName === 'th') {
-        return (
-          this.createHeadTh(value)
-        )
+        return this.createHeadTh(value)
       } else if (keyName === 'td') {
-        return (
-          this.createHeadTd(value)
-        )
+        return this.createHeadTd(value)
       }
     })
   }
@@ -363,9 +350,7 @@ class Table extends Component {
       if (typeof cellValue === 'object') {
         if (Array.isArray(cellValue)) {
           // TODO: Because some values is split into array by xmlParser i have to do this, find better fix
-          return (
-            <th key={i}>{cellValue.join(' ')}</th>
-          )
+          return <th key={i}>{cellValue.join(' ')}</th>
         } else {
           return (
             <th key={i} className={cellValue.class} rowSpan={cellValue.rowspan} colSpan={cellValue.colspan}>
@@ -375,9 +360,7 @@ class Table extends Component {
           )
         }
       } else {
-        return (
-          <th key={i}>{this.trimValue(cellValue)}</th>
-        )
+        return <th key={i}>{this.trimValue(cellValue)}</th>
       }
     })
   }
@@ -392,9 +375,7 @@ class Table extends Component {
           </td>
         )
       } else {
-        return (
-          <td key={i}>{this.trimValue(cellValue)}</td>
-        )
+        return <td key={i}>{this.trimValue(cellValue)}</td>
       }
     })
   }
@@ -412,9 +393,7 @@ class Table extends Component {
               </th>
             )
           } else {
-            return (
-              <th key={i}>{this.trimValue(cellValue)}</th>
-            )
+            return <th key={i}>{this.trimValue(cellValue)}</th>
           }
         })
       }
@@ -433,9 +412,7 @@ class Table extends Component {
               </td>
             )
           } else {
-            return (
-              <td key={i}>{this.formatNumber(cellValue)}</td>
-            )
+            return <td key={i}>{this.formatNumber(cellValue)}</td>
           }
         })
       }
@@ -452,34 +429,23 @@ class Table extends Component {
       }, [])
 
       if (notesToReturn) {
-        return (
-          <sup>
-            {notesToReturn.map((noteRef) => `${noteRef + 1} `)}
-          </sup>
-        )
+        return <sup>{notesToReturn.map((noteRef) => `${noteRef + 1} `)}</sup>
       }
     } else return ''
   }
 
   addStandardSymbols() {
-    const {
-      standardSymbol
-    } = this.props
+    const { standardSymbol } = this.props
 
     if (standardSymbol && standardSymbol.href && standardSymbol.text) {
-      return (
-        <Link href={standardSymbol.href} >{standardSymbol.text}</Link>
-      )
+      return <Link href={standardSymbol.href}>{standardSymbol.text}</Link>
     }
   }
 
   addPreviewButton() {
     if (this.state.showPreviewToggle && !this.props.pageTypeStatistic) {
       return (
-        <Button
-          variant="primary"
-          onClick={this.toggleDraft}
-        >
+        <Button variant='primary' onClick={this.toggleDraft}>
           {!this.state.fetchUnPublished ? 'Vis upubliserte tall' : 'Vis publiserte tall'}
         </Button>
       )
@@ -490,47 +456,35 @@ class Table extends Component {
   toggleDraft() {
     this.setState({
       fetchUnPublished: !this.state.fetchUnPublished,
-      table: !this.state.fetchUnPublished && this.props.draftExist ? this.props.tableDraft : this.props.table
+      table: !this.state.fetchUnPublished && this.props.draftExist ? this.props.tableDraft : this.props.table,
     })
   }
 
   addPreviewInfo() {
     if (this.props.showPreviewDraft) {
       if (this.state.fetchUnPublished && this.props.draftExist) {
-        return (
-          <Alert variant='info'>
-          Tallene i tabellen nedenfor er upublisert
-          </Alert>
-        )
+        return <Alert variant='info'>Tallene i tabellen nedenfor er upublisert</Alert>
       } else if (this.state.fetchUnPublished && !this.props.draftExist) {
-        return (
-          <Alert variant='warning'>
-              Finnes ikke upubliserte tall for denne tabellen
-          </Alert>
-        )
+        return <Alert variant='warning'>Finnes ikke upubliserte tall for denne tabellen</Alert>
       }
     }
     return
   }
 
   renderSources() {
-    const {
-      sources,
-      sourceLabel,
-      sourceListTables,
-      sourceTableLabel,
-      statBankWebUrl
-    } = this.props
+    const { sources, sourceLabel, sourceListTables, sourceTableLabel, statBankWebUrl } = this.props
 
-    if (sourceListTables && sourceListTables.length > 0 || sources && sources.length > 0) {
+    if ((sourceListTables && sourceListTables.length > 0) || (sources && sources.length > 0)) {
       return (
-        <div className="row mt-5 source">
-          <div className="w-100 col-12">
-            <span><strong>{sourceLabel}</strong></span>
+        <div className='row mt-5 source'>
+          <div className='w-100 col-12'>
+            <span>
+              <strong>{sourceLabel}</strong>
+            </span>
           </div>
           {sourceListTables.map((tableId, index) => {
             return (
-              <div key={index} className="col-lg-3 col-12 mb-3">
+              <div key={index} className='col-lg-3 col-12 mb-3'>
                 <Link href={statBankWebUrl + '/table/' + tableId}>{sourceTableLabel + ' ' + tableId}</Link>
               </div>
             )
@@ -538,7 +492,7 @@ class Table extends Component {
           {sources.map((source, index) => {
             if (source.url && source.urlText) {
               return (
-                <div key={index} className="col-lg-3 col-12 mb-3">
+                <div key={index} className='col-lg-3 col-12 mb-3'>
                   <Link href={source.url}>{source.urlText}</Link>
                 </div>
               )
@@ -552,21 +506,23 @@ class Table extends Component {
 
   render() {
     if (!isEmpty(this.state.table)) {
-      const {
-        hiddenTitle
-      } = this.props
+      const { hiddenTitle } = this.props
       return (
-        <section className="xp-part table">
-          <div className="d-none searchabletext">
+        <section className='xp-part table'>
+          <div className='d-none searchabletext'>
             <span>{hiddenTitle}</span>
           </div>
-          <div className="container border-0">
+          <div className='container border-0'>
             {this.addPreviewButton()}
             {this.addDownloadTableDropdown(false)}
             {this.addPreviewInfo()}
             {this.createScrollControlsDesktop()}
             {this.createScrollControlsMobile()}
-            <div className="table-wrapper searchabletext" onScroll={() => this.updateTableControlsDesktop()} ref={this.tableWrapperRef}>
+            <div
+              className='table-wrapper searchabletext'
+              onScroll={() => this.updateTableControlsDesktop()}
+              ref={this.tableWrapperRef}
+            >
               {this.createTable()}
             </div>
             {this.addDownloadTableDropdown(true)}
@@ -576,9 +532,11 @@ class Table extends Component {
         </section>
       )
     } else {
-      return <div>
-        <p>Ingen tilknyttet Tabell</p>
-      </div>
+      return (
+        <div>
+          <p>Ingen tilknyttet Tabell</p>
+        </div>
+      )
     }
   }
 }
@@ -589,112 +547,150 @@ Table.propTypes = {
   downloadTableOptions: PropTypes.arrayOf(
     PropTypes.shape({
       title: PropTypes.string,
-      id: PropTypes.string
+      id: PropTypes.string,
     })
   ),
   standardSymbol: PropTypes.shape({
     href: PropTypes.string,
-    text: PropTypes.string
+    text: PropTypes.string,
   }),
   sourceLabel: PropTypes.string,
-  sources: PropTypes.arrayOf(PropTypes.shape({
-    urlText: PropTypes.string,
-    url: PropTypes.string
-  })),
+  sources: PropTypes.arrayOf(
+    PropTypes.shape({
+      urlText: PropTypes.string,
+      url: PropTypes.string,
+    })
+  ),
   iconUrl: PropTypes.string,
   table: PropTypes.shape({
-    caption: PropTypes.string | PropTypes.shape({
-      content: PropTypes.string,
-      noterefs: PropTypes.string
-    }),
+    caption:
+      PropTypes.string |
+      PropTypes.shape({
+        content: PropTypes.string,
+        noterefs: PropTypes.string,
+      }),
     tableClass: PropTypes.string,
     thead: PropTypes.arrayOf(
       PropTypes.shape({
-        td: PropTypes.array | PropTypes.number | PropTypes.string | PropTypes.shape({
-          rowspan: PropTypes.number,
-          colspan: PropTypes.number,
-          content: PropTypes.string,
-          class: PropTypes.string
-        }),
-        th: PropTypes.array | PropTypes.number | PropTypes.string | PropTypes.shape({
-          rowspan: PropTypes.number,
-          colspan: PropTypes.number,
-          content: PropTypes.string,
-          class: PropTypes.string,
-          noterefs: PropTypes.string
-        })
+        td:
+          PropTypes.array |
+          PropTypes.number |
+          PropTypes.string |
+          PropTypes.shape({
+            rowspan: PropTypes.number,
+            colspan: PropTypes.number,
+            content: PropTypes.string,
+            class: PropTypes.string,
+          }),
+        th:
+          PropTypes.array |
+          PropTypes.number |
+          PropTypes.string |
+          PropTypes.shape({
+            rowspan: PropTypes.number,
+            colspan: PropTypes.number,
+            content: PropTypes.string,
+            class: PropTypes.string,
+            noterefs: PropTypes.string,
+          }),
       })
     ),
     tbody: PropTypes.arrayOf(
       PropTypes.shape({
-        th: PropTypes.array | PropTypes.number | PropTypes.string | PropTypes.shape({
-          content: PropTypes.string,
-          class: PropTypes.string,
-          noterefs: PropTypes.string
-        }),
-        td: PropTypes.array | PropTypes.number | PropTypes.string | PropTypes.shape({
-          content: PropTypes.string,
-          class: PropTypes.string
-        })
+        th:
+          PropTypes.array |
+          PropTypes.number |
+          PropTypes.string |
+          PropTypes.shape({
+            content: PropTypes.string,
+            class: PropTypes.string,
+            noterefs: PropTypes.string,
+          }),
+        td:
+          PropTypes.array |
+          PropTypes.number |
+          PropTypes.string |
+          PropTypes.shape({
+            content: PropTypes.string,
+            class: PropTypes.string,
+          }),
       })
     ),
     tfoot: PropTypes.shape({
       footnotes: PropTypes.arrayOf(
         PropTypes.shape({
           noteid: PropTypes.string,
-          content: PropTypes.string
+          content: PropTypes.string,
         })
       ),
-      correctionNotice: PropTypes.string
+      correctionNotice: PropTypes.string,
     }),
     language: PropTypes.string,
-    noteRefs: PropTypes.arrayOf(PropTypes.string)
+    noteRefs: PropTypes.arrayOf(PropTypes.string),
   }),
   tableDraft: PropTypes.shape({
-    caption: PropTypes.string | PropTypes.shape({
-      content: PropTypes.string,
-      noterefs: PropTypes.string
-    }),
+    caption:
+      PropTypes.string |
+      PropTypes.shape({
+        content: PropTypes.string,
+        noterefs: PropTypes.string,
+      }),
     thead: PropTypes.arrayOf(
       PropTypes.shape({
-        td: PropTypes.array | PropTypes.number | PropTypes.string | PropTypes.shape({
-          rowspan: PropTypes.number,
-          colspan: PropTypes.number,
-          content: PropTypes.string,
-          class: PropTypes.string
-        }),
-        th: PropTypes.array | PropTypes.number | PropTypes.string | PropTypes.shape({
-          rowspan: PropTypes.number,
-          colspan: PropTypes.number,
-          content: PropTypes.string,
-          class: PropTypes.string,
-          noterefs: PropTypes.string
-        })
+        td:
+          PropTypes.array |
+          PropTypes.number |
+          PropTypes.string |
+          PropTypes.shape({
+            rowspan: PropTypes.number,
+            colspan: PropTypes.number,
+            content: PropTypes.string,
+            class: PropTypes.string,
+          }),
+        th:
+          PropTypes.array |
+          PropTypes.number |
+          PropTypes.string |
+          PropTypes.shape({
+            rowspan: PropTypes.number,
+            colspan: PropTypes.number,
+            content: PropTypes.string,
+            class: PropTypes.string,
+            noterefs: PropTypes.string,
+          }),
       })
     ),
     tbody: PropTypes.arrayOf(
       PropTypes.shape({
-        th: PropTypes.array | PropTypes.number | PropTypes.string | PropTypes.shape({
-          content: PropTypes.string,
-          class: PropTypes.string,
-          noterefs: PropTypes.string
-        }),
-        td: PropTypes.array | PropTypes.number | PropTypes.string | PropTypes.shape({
-          content: PropTypes.string,
-          class: PropTypes.string
-        })
+        th:
+          PropTypes.array |
+          PropTypes.number |
+          PropTypes.string |
+          PropTypes.shape({
+            content: PropTypes.string,
+            class: PropTypes.string,
+            noterefs: PropTypes.string,
+          }),
+        td:
+          PropTypes.array |
+          PropTypes.number |
+          PropTypes.string |
+          PropTypes.shape({
+            content: PropTypes.string,
+            class: PropTypes.string,
+          }),
       })
     ),
     tfoot: PropTypes.shape({
       footnotes: PropTypes.arrayOf(
         PropTypes.shape({
           noteid: PropTypes.string,
-          content: PropTypes.string
+          content: PropTypes.string,
         })
       ),
-      correctionNotice: PropTypes.string
+      correctionNotice: PropTypes.string,
     }),
-    noteRefs: PropTypes.arrayOf(PropTypes.string)
+    noteRefs: PropTypes.arrayOf(PropTypes.string),
   }),
   showPreviewDraft: PropTypes.bool,
   paramShowDraft: PropTypes.bool,
@@ -704,7 +700,7 @@ Table.propTypes = {
   sourceTableLabel: PropTypes.string,
   statBankWebUrl: PropTypes.string,
   hiddenTitle: PropTypes.string,
-  GA_TRACKING_ID: PropTypes.string
+  GA_TRACKING_ID: PropTypes.string,
 }
 
-export default (props) => <Table {...props}/>
+export default (props) => <Table {...props} />

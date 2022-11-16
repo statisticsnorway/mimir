@@ -11,24 +11,29 @@ function StaticVisualization(props) {
   function renderLongDescriptionAndSources() {
     return (
       <React.Fragment>
-        {props.longDesc ? <p className="pt-4">{props.longDesc}</p> : null}
-        {props.footnotes.length ?
+        {props.longDesc ? <p className='pt-4'>{props.longDesc}</p> : null}
+        {props.footnotes.length ? (
           <ul className={`footnote${props.inFactPage ? '' : ' pl-0'}`}>
-            {props.footnotes.map((footnote, index) =>
+            {props.footnotes.map((footnote, index) => (
               <li key={`footnote-${index}`}>
                 <sup>{index + 1}</sup>
                 <span>{footnote}</span>
               </li>
-            )}
-          </ul> : null}
+            ))}
+          </ul>
+        ) : null}
 
-        {props.sources.length ?
-          <p className="pt-2">
-            {props.sources.map((source, index) =>
-              <p key={`source-${index}`} className="sources">
-                <Link className="mb-1" href={source.url}>{props.sourcesLabel}: {source.urlText}</Link>
-              </p>)}
-          </p> : null}
+        {props.sources.length ? (
+          <p className='pt-2'>
+            {props.sources.map((source, index) => (
+              <p key={`source-${index}`} className='sources'>
+                <Link className='mb-1' href={source.url}>
+                  {props.sourcesLabel}: {source.urlText}
+                </Link>
+              </p>
+            ))}
+          </p>
+        ) : null}
       </React.Fragment>
     )
   }
@@ -37,21 +42,21 @@ function StaticVisualization(props) {
     return (
       <React.Fragment>
         <Tabs
-          className="pl-4"
-          activeOnInit="figure"
+          className='pl-4'
+          activeOnInit='figure'
           onClick={tabClicked}
           items={[
             {
               title: props.showAsGraphLabel,
-              path: 'figure'
+              path: 'figure',
             },
             {
               title: props.showAsTableLabel,
-              path: 'table'
-            }
+              path: 'table',
+            },
           ]}
         />
-        <Divider/>
+        <Divider />
       </React.Fragment>
     )
   }
@@ -60,19 +65,13 @@ function StaticVisualization(props) {
     const tableData = props.tableData
     if (tableData) {
       return (
-        <table className="statistics">
+        <table className='statistics'>
           <thead>
-            <tr>
-              {createHeaderCell(tableData.table.thead.tr)}
-            </tr>
+            <tr>{createHeaderCell(tableData.table.thead.tr)}</tr>
           </thead>
           <tbody>
             {tableData.table.tbody.tr.map((row, index) => {
-              return (
-                <tr key={index}>
-                  {createBodyCells(row)}
-                </tr>
-              )
+              return <tr key={index}>{createBodyCells(row)}</tr>
             })}
           </tbody>
         </table>
@@ -82,36 +81,30 @@ function StaticVisualization(props) {
 
   function createHeaderCell(row) {
     return row.th.map((cellValue, i) => {
-      return (
-        <th key={i}>{trimValue(cellValue)}</th>
-      )
+      return <th key={i}>{trimValue(cellValue)}</th>
     })
   }
 
   function createBodyCells(row) {
     return row.td.map((cellValue, i) => {
       if (i > 0) {
-        return (
-          <td key={i}>{formatNumber(cellValue)}</td>
-        )
+        return <td key={i}>{formatNumber(cellValue)}</td>
       } else {
-        return (
-          <th key={i}>{trimValue(cellValue)}</th>
-        )
+        return <th key={i}>{trimValue(cellValue)}</th>
       }
     })
   }
 
   function formatNumber(value) {
     const language = props.language
-    const decimalSeparator = (language === 'en') ? '.' : ','
+    const decimalSeparator = language === 'en' ? '.' : ','
     value = trimValue(value)
     if (value) {
-      if (typeof value === 'number' || typeof value === 'string' && !isNaN(value)) {
+      if (typeof value === 'number' || (typeof value === 'string' && !isNaN(value))) {
         const decimals = value.toString().indexOf('.') > -1 ? value.toString().split('.')[1].length : 0
         return (
           <NumberFormat
-            value={ Number(value) }
+            value={Number(value)}
             displayType={'text'}
             thousandSeparator={' '}
             decimalSeparator={decimalSeparator}
@@ -132,33 +125,27 @@ function StaticVisualization(props) {
   }
 
   return (
-    <section className="container part-static-visualization">
-      <Row className="xp-part">
-        <Col className="xp-region col-12">
+    <section className='container part-static-visualization'>
+      <Row className='xp-part'>
+        <Col className='xp-region col-12'>
           <figure>
-            <figcaption className="mt-0">{props.title}</figcaption>
+            <figcaption className='mt-0'>{props.title}</figcaption>
             {renderTabs()}
             {activeTab === 'figure' && (
-              <div className="static-visualization-chart d-flex justify-content-center">
+              <div className='static-visualization-chart d-flex justify-content-center'>
                 <img alt={props.altText} src={props.imageSrc} />
               </div>
             )}
 
             {activeTab === 'table' && (
-              <div className="static-visualization-data d-flex justify-content-center">
-                {createTable()}
-              </div>
+              <div className='static-visualization-data d-flex justify-content-center'>{createTable()}</div>
             )}
 
-            <FactBox
-              header={props.descriptionStaticVisualization}
-              text={renderLongDescriptionAndSources()}
-            />
+            <FactBox header={props.descriptionStaticVisualization} text={renderLongDescriptionAndSources()} />
           </figure>
         </Col>
       </Row>
     </section>
-
   )
 }
 
@@ -175,7 +162,7 @@ StaticVisualization.propTypes = {
   sources: PropTypes.arrayOf(
     PropTypes.shape({
       url: PropTypes.string,
-      urlText: PropTypes.string
+      urlText: PropTypes.string,
     })
   ),
   inFactPage: PropTypes.bool,
@@ -184,21 +171,21 @@ StaticVisualization.propTypes = {
     table: {
       thead: {
         tr: {
-          th: PropTypes.array
-        }
+          th: PropTypes.array,
+        },
       },
       tbody: PropTypes.arrayOf(
         PropTypes.shape({
           tr: PropTypes.arrayOf(
             PropTypes.shape({
               th: PropTypes.array,
-              td: PropTypes.array
+              td: PropTypes.array,
             })
-          )
+          ),
         })
-      )
-    }
-  })
+      ),
+    },
+  }),
 }
 
 export default (props) => <StaticVisualization {...props} />

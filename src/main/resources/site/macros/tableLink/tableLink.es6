@@ -1,16 +1,11 @@
 import { render } from '/lib/thymeleaf'
 
-
-const {
-  pageUrl
-} = __non_webpack_require__('/lib/xp/portal')
+const { pageUrl } = __non_webpack_require__('/lib/xp/portal')
 const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
-const {
-  renderError
-} = __non_webpack_require__('/lib/ssb/error/error')
+const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 const view = resolve('./tableLink.html')
 
-exports.macro = function(context) {
+exports.macro = function (context) {
   try {
     return renderMacro(context)
   } catch (e) {
@@ -19,9 +14,11 @@ exports.macro = function(context) {
 }
 
 const renderMacro = (context) => {
-  const linkSrc = context.params.relatedContent ? pageUrl({
-    id: context.params.relatedContent
-  }) : context.params.href
+  const linkSrc = context.params.relatedContent
+    ? pageUrl({
+        id: context.params.relatedContent,
+      })
+    : context.params.href
 
   if (!context.params.title) throw new Error('Missing param title')
   if (!linkSrc) throw new Error('Missing param Url or relatedContent')
@@ -31,19 +28,19 @@ const renderMacro = (context) => {
     .setProps({
       title: context.params.title,
       href: linkSrc,
-      description: context.params.description
+      description: context.params.description,
     })
     .setId('tableLink')
     .uniqueId()
 
   const body = render(view, {
-    tableLinkId: tableLink.react4xpId
+    tableLinkId: tableLink.react4xpId,
   })
 
   return {
     body: tableLink.renderBody({
-      body
+      body,
     }),
-    pageContributions: tableLink.renderPageContributions()
+    pageContributions: tableLink.renderPageContributions(),
   }
 }

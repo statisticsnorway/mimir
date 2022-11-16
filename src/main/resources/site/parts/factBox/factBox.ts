@@ -1,18 +1,15 @@
-import { getComponent, processHtml, Component} from "/lib/xp/portal";
-import {FactBoxPartConfig} from "./factBox-part-config";
-import {render as r4XpRender, RenderResponse} from '/lib/enonic/react4xp'
-import {get, Content} from "/lib/xp/content";
-import {FactBox} from "../../content-types/factBox/factBox";
+import { getComponent, processHtml, Component } from '/lib/xp/portal'
+import { FactBoxPartConfig } from './factBox-part-config'
+import { render as r4XpRender, RenderResponse } from '/lib/enonic/react4xp'
+import { get, Content } from '/lib/xp/content'
+import { FactBox } from '../../content-types/factBox/factBox'
 import { ResourceKey, render } from '/lib/thymeleaf'
 
-const {
-  renderError
-} = __non_webpack_require__('/lib/ssb/error/error')
-
+const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
 const view: ResourceKey = resolve('./factBox.html')
 
-exports.get = function(req: XP.Request): XP.Response | RenderResponse {
+exports.get = function (req: XP.Request): XP.Response | RenderResponse {
   try {
     const part: Component<FactBoxPartConfig> = getComponent()
     return renderPart(req, part.config.factBox)
@@ -21,7 +18,7 @@ exports.get = function(req: XP.Request): XP.Response | RenderResponse {
   }
 }
 
-exports.preview = function(req: XP.Request, id: string) {
+exports.preview = function (req: XP.Request, id: string) {
   try {
     return renderPart(req, id)
   } catch (e) {
@@ -34,28 +31,29 @@ function renderPart(req: XP.Request, factBoxId: string): XP.Response | RenderRes
   if (!factBoxId) {
     if (req.mode === 'edit') {
       return {
-        body: render(view)
+        body: render(view),
       }
     } else {
       throw new Error('Factbox - Missing Id')
     }
   }
   const factBoxContent: Content<FactBox> | null = get({
-    key: factBoxId
+    key: factBoxId,
   })
   if (!factBoxContent) throw new Error(`FactBox with id ${factBoxId} doesn't exist`)
   const text: string = processHtml({
-    value: factBoxContent.data.text.replace(/&nbsp;/g, ' ')
+    value: factBoxContent.data.text.replace(/&nbsp;/g, ' '),
   })
   const body: string = render(view)
   return r4XpRender(
-      'FactBox',
-      {
+    'FactBox',
+    {
       header: factBoxContent.displayName,
-      text
-      },
-      req,
-      {
-        body: body
-      })
+      text,
+    },
+    req,
+    {
+      body: body,
+    }
+  )
 }

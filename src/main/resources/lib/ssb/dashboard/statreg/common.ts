@@ -1,9 +1,6 @@
 import { request, HttpRequestParams, HttpResponse } from '/lib/http-client'
 
-const {
-  Events,
-  logUserDataQuery
-} = __non_webpack_require__('/lib/ssb/repo/query')
+const { Events, logUserDataQuery } = __non_webpack_require__('/lib/ssb/repo/query')
 
 export function fetchStatRegData(dataKey: string, serviceUrl: string): HttpResponse {
   const requestParams: HttpRequestParams = {
@@ -12,10 +9,10 @@ export function fetchStatRegData(dataKey: string, serviceUrl: string): HttpRespo
     contentType: 'application/json',
     headers: {
       'Cache-Control': 'no-cache',
-      'Accept': 'application/json'
+      Accept: 'application/json',
     },
     connectionTimeout: 30000,
-    readTimeout: 30000
+    readTimeout: 30000,
   }
   const response: HttpResponse = request(requestParams)
 
@@ -25,7 +22,7 @@ export function fetchStatRegData(dataKey: string, serviceUrl: string): HttpRespo
     message: Events.REQUEST_DATA,
     status: `${response.status}`,
     request: requestParams,
-    response
+    response,
   })
 
   if (response.status !== 200) {
@@ -34,7 +31,7 @@ export function fetchStatRegData(dataKey: string, serviceUrl: string): HttpRespo
       function: 'fetchStatRegData',
       message: Events.REQUEST_GOT_ERROR_RESPONSE,
       status: `${response.status}`,
-      response
+      response,
     })
   }
 
@@ -42,5 +39,5 @@ export function fetchStatRegData(dataKey: string, serviceUrl: string): HttpRespo
 }
 
 export interface StatRegCommonLib {
-  fetchStatRegData: (dataKey: string, serviceUrl: string) => HttpResponse;
+  fetchStatRegData: (dataKey: string, serviceUrl: string) => HttpResponse
 }

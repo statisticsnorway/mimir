@@ -2,14 +2,14 @@ import ReactGA from 'react-ga'
 
 export const addGtagForEvent = (GA_TRACKING_ID, action, category, label) => {
   ReactGA.initialize(GA_TRACKING_ID, {
-    titleCase: false
+    titleCase: false,
   })
   ReactGA.event({
     action,
     category,
-    label
+    label,
   })
   ReactGA.set({
-    anonymizeIp: true
+    anonymizeIp: true,
   })
 }

@@ -2,7 +2,7 @@ import { actions } from './slice'
 
 export function requestClearCache(dispatch, io) {
   dispatch({
-    type: actions.startLoadingClearCache.type
+    type: actions.startLoadingClearCache.type,
   })
 
   io.emit('clear-cache')
@@ -10,7 +10,7 @@ export function requestClearCache(dispatch, io) {
 
 export function requestPurgeVarnishCache(dispatch, io) {
   dispatch({
-    type: actions.startLoadingPurgeVarnishCache.type
+    type: actions.startLoadingPurgeVarnishCache.type,
   })
   io.emit('purge-varnish')
 }
