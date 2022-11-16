@@ -113,7 +113,7 @@ function EmployeeList(props) {
       </div>
       <div className='row'>
         <div className='container'>
-          <div className='mb-3'>
+          <div className='person-count'>
             <p>Det er {total} personer i avdelingen</p>
           </div>
           {employees != [] ? renderEmployees() : null}
