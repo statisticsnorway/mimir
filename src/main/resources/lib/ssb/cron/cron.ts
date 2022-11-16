@@ -157,6 +157,21 @@ export function setupCronJobs(): void {
     context: cronContext,
   })
 
+  // Update repo statreg.statistics.variant
+  const updateStatisticRepoCron: string =
+    app.config && app.config['ssb.cron.update.statisticRepo']
+      ? app.config['ssb.cron.update.statisticRepo']
+      : '0 7 * * *'
+
+  schedule({
+    name: 'Update statreg.statistics.variant Repo',
+    cron: updateStatisticRepoCron,
+    callback: () => {
+      createOrUpdateStatisticsRepo()
+    },
+    context: cronContext,
+  })
+
   const deleteExpiredEventLogCron: string =
     app.config && app.config['ssb.cron.deleteLogs'] ? app.config['ssb.cron.deleteLogs'] : '45 13 * * *'
   schedule({
