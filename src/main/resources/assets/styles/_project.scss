@@ -36,12 +36,6 @@
   line-height: 1.6;
 }
 
-.center {
-  max-width: 680px;
-  margin-left: auto !important;
-  margin-right: auto !important;
-}
-
 .project-ingress {
   font-weight: 400;
   font-size: 20px;
@@ -61,6 +55,11 @@
 
 @include media-breakpoint-up(lg) {
   .center-accordion {
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+  .center {
+    max-width: 680px;
     margin-left: auto !important;
     margin-right: auto !important;
   }
