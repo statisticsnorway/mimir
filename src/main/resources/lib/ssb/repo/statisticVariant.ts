@@ -1,5 +1,5 @@
 import { create as createRepo, get as getRepo } from '/lib/xp/repo'
-import { connect, type NodeCreateParams, type RepoConnection } from '/lib/xp/node'
+import { connect, type NodeCreateParams, type NodeQueryResponse, type RepoConnection } from '/lib/xp/node'
 import { type Instant, instant, type LocalDateTime, localDateTime } from '/lib/xp/value'
 import { run } from '/lib/xp/context'
 import { getAllStatisticsFromRepo } from '/lib/ssb/statreg/statistics'
@@ -13,6 +13,7 @@ import type { Statistics } from '../../../site/content-types/statistics/statisti
 import { capitalize } from '/lib/ssb/utils/stringUtils'
 import { calculatePeriod, getNextRelease, getPreviousRelease, nextReleasedPassed } from '/lib/ssb/utils/variantUtils'
 import type { SubjectItem } from '/lib/ssb/utils/subjectUtils'
+import type { QueryDSL } from '/lib/xp/content'
 
 const { queryForMainSubjects, queryForSubSubjects, getAllMainSubjectByContent, getAllSubSubjectByContent } =
   __non_webpack_require__('/lib/ssb/utils/subjectUtils')
@@ -37,6 +38,42 @@ export function createOrUpdateStatisticsRepo(): void {
       log.info(`Finished initiating "${REPO_ID_STATREG_STATISTICS}"`)
     }
   )
+}
+
+export function getRepoConnectionStatistics(): RepoConnection {
+  return connect({
+    repoId: 'no.ssb.statreg.statistics.variants',
+    branch: 'master',
+  })
+}
+
+export function getStatisticVariantsFromRepo(language: string, query?: QueryDSL): ContentLight<Release>[] {
+  const connectionStatisticRepo: RepoConnection = getRepoConnectionStatistics()
+  const res: NodeQueryResponse = connectionStatisticRepo.query({
+    count: 1000,
+    sort: 'publish.from DESC',
+    query: query ? (query as unknown as string) : undefined,
+    filters: {
+      boolean: {
+        must: [
+          {
+            hasValue: {
+              field: 'language',
+              values: language === 'nb' ? ['nb', 'nn'] : ['en'],
+            },
+          },
+          {
+            hasValue: {
+              field: 'data.status',
+              values: ['A'],
+            },
+          },
+        ],
+      },
+    },
+  })
+
+  return res.hits.map((hit) => connectionStatisticRepo.get(hit.id))
 }
 
 export function fillRepo(statistics: Array<StatisticInListing>) {
