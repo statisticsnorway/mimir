@@ -1,8 +1,8 @@
-import { render, RenderResponse } from '/lib/enonic/react4xp'
-import { getComponent, getContent, pageUrl, Component } from '/lib/xp/portal'
+import { render, type RenderResponse } from '/lib/enonic/react4xp'
+import { getComponent, getContent, pageUrl, type Component } from '/lib/xp/portal'
 import type { CategoryLinks as CategoryLinksPartConfig } from '.'
-import { Content } from '/lib/xp/content'
-import { Language, Phrases } from '../../../lib/types/language'
+import type { Content } from '/lib/xp/content'
+import { Language, type Phrases } from '../../../lib/types/language'
 import { randomUnsafeString } from '/lib/ssb/utils/utils'
 
 const { data } = __non_webpack_require__('/lib/util')
@@ -11,7 +11,7 @@ const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
 const { getLanguage } = __non_webpack_require__('/lib/ssb/utils/language')
 
-exports.get = function (req: XP.Request): XP.Response | RenderResponse {
+export function get(req: XP.Request): XP.Response | RenderResponse {
   try {
     return renderPart(req)
   } catch (e) {
@@ -19,7 +19,9 @@ exports.get = function (req: XP.Request): XP.Response | RenderResponse {
   }
 }
 
-exports.preview = (req: XP.Request): XP.Response | RenderResponse => renderPart(req)
+export function preview(req: XP.Request): XP.Response | RenderResponse {
+  return renderPart(req)
+}
 
 const NO_LINKS_FOUND = {
   body: '',
