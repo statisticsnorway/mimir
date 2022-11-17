@@ -3,7 +3,7 @@ import { ResourceKey, render } from '/lib/thymeleaf'
 import { ReleaseDatesVariant, StatisticInListing, VariantInListing } from '../../../lib/ssb/dashboard/statreg/types'
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
 import { render as r4xpRender } from '/lib/enonic/react4xp'
-import { Statistics } from '../../content-types/statistics/statistics'
+import type { Statistics } from '../../content-types'
 import { Phrases } from '../../../lib/types/language'
 import { randomUnsafeString } from '/lib/ssb/utils/utils'
 
@@ -82,7 +82,6 @@ function renderPart(req: XP.Request): XP.Response {
       })
     : pageUrl({
         params: {
-          // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
           // @ts-ignore
           showDraft: true,
         },

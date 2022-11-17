@@ -1,7 +1,7 @@
 import { Content } from '/lib/xp/content'
 import { Phrases } from '../../../lib/types/language'
 import { render } from '/lib/enonic/react4xp'
-import { PubArchiveCalendarLinksPartConfig } from './pubArchiveCalendarLinks-part-config'
+import type { PubArchiveCalendarLinks as PubArchiveCalendarLinksPartConfig } from '.'
 
 const { getComponent, getContent } = __non_webpack_require__('/lib/xp/portal')
 

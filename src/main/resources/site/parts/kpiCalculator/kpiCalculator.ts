@@ -4,8 +4,8 @@ import { CalculatorPeriod } from '../../../lib/types/calculator'
 import { Dataset } from '../../../lib/types/jsonstat-toolkit'
 import { Language, Phrases } from '../../../lib/types/language'
 import { render, RenderResponse } from '/lib/enonic/react4xp'
-import { CalculatorConfig } from '../../content-types/calculatorConfig/calculatorConfig'
-import { KpiCalculatorPartConfig } from './kpiCalculator-part-config'
+import type { CalculatorConfig } from '../../content-types'
+import type { KpiCalculator as KpiCalculatorPartConfig } from '.'
 import { DropdownItems as MonthDropdownItems } from '../../../lib/types/components'
 
 const { getComponent, getContent, serviceUrl, pageUrl } = __non_webpack_require__('/lib/xp/portal')

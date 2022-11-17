@@ -4,7 +4,7 @@ import { Content } from '/lib/xp/content'
 import { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/types'
 import { render, RenderResponse } from '/lib/enonic/react4xp'
 import { Component } from '/lib/xp/portal'
-import { ReleasedStatisticsPartConfig } from './releasedStatistics-part-config'
+import type { ReleasedStatistics as ReleasedStatisticsPartConfig } from '.'
 import { YearReleases } from '../../../lib/ssb/utils/variantUtils'
 
 const { localize } = __non_webpack_require__('/lib/xp/i18n')

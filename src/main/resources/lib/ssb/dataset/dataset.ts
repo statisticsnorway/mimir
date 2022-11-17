@@ -1,6 +1,6 @@
 import { query, Content, QueryResponse } from '/lib/xp/content'
-import { DataSource } from '../../../site/mixins/dataSource/dataSource'
-import { GenericDataImport } from '../../../site/content-types/genericDataImport/genericDataImport'
+import type { DataSource } from '../../../site/mixins/dataSource'
+import type { GenericDataImport } from '../../../site/content-types'
 import { DataSource as DataSourceType, DatasetRepoNode } from '../repo/dataset'
 import { JSONstat } from '../../types/jsonstat-toolkit'
 import { StatbankSavedRaw, TbmlDataUniform } from '../../types/xmlParser'
@@ -85,7 +85,7 @@ function fetchData(
 }
 
 export function refreshDataset(
-  content: Content<DataSource | GenericDataImport>,
+  content: Content<DataSource, object | GenericDataImport>,
   branch: string = DATASET_BRANCH,
   processXml?: string
 ): CreateOrUpdateStatus {

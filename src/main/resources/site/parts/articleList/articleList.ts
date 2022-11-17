@@ -1,6 +1,6 @@
-import { Article } from '../../content-types/article/article'
+import type { Article } from '../../content-types'
 import { pageUrl, getContent, getComponent, Component } from '/lib/xp/portal'
-import { ArticleListPartConfig } from './articleList-part-config'
+import type { ArticleList as ArticleListPartConfig } from '.'
 import { render, RenderResponse } from '/lib/enonic/react4xp'
 import { query, AggregationsResponseEntry, Content } from '/lib/xp/content'
 import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'

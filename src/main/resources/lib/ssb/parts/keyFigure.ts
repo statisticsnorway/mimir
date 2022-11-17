@@ -1,15 +1,14 @@
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 /* eslint-disable new-cap */
-// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import JSONstat from 'jsonstat-toolkit/import.mjs'
 import { query, QueryResponse, Content } from '/lib/xp/content'
-import { KeyFigure } from '../../../site/content-types/keyFigure/keyFigure'
+import type { KeyFigure } from '../../../site/content-types'
 import { MunicipalityWithCounty } from '../dataset/klass/municipalities'
 import { TbmlDataUniform, TableRowUniform, TableCellUniform, PreliminaryData } from '../../types/xmlParser'
 import { Category, Dimension, JSONstat as JSONstatType } from '../../types/jsonstat-toolkit'
 import { DatasetRepoNode, DataSource as DataSourceType } from '../repo/dataset'
-import { DataSource } from '../../../site/mixins/dataSource/dataSource'
+import type { DataSource } from '../../../site/mixins/dataSource'
 
 const { imageUrl } = __non_webpack_require__('/lib/xp/portal')
 const { datasetOrUndefined } = __non_webpack_require__('/lib/ssb/cache/cache')

@@ -1,9 +1,9 @@
 import { get, Content } from '/lib/xp/content'
 import { ResourceKey, render } from '/lib/thymeleaf'
 import { render as r4XpRender, RenderResponse } from '/lib/enonic/react4xp'
-import { ActiveStatisticsPartConfig } from './activeStatistics-part-config'
-import { Statistics } from '../../content-types/statistics/statistics'
-import { SEO } from 'services/news/news'
+import type { ActiveStatistics as ActiveStatisticsPartConfig } from '.'
+import type { Statistics } from '../../content-types'
+import { SEO } from '../../../services/news/news'
 
 const {
   data: { forceArray },
@@ -11,7 +11,6 @@ const {
 const { getContent, getComponent, pageUrl } = __non_webpack_require__('/lib/xp/portal')
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
-const { hasPath } = __non_webpack_require__('/lib/vendor/ramda')
 const { localize } = __non_webpack_require__('/lib/xp/i18n')
 
 const view: ResourceKey = resolve('./activeStatistics.html')

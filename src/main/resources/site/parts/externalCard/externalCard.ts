@@ -1,6 +1,6 @@
 import { render, RenderResponse } from '/lib/enonic/react4xp'
 import { getComponent, imageUrl, Component } from '/lib/xp/portal'
-import { ExternalCardPartConfig } from './externalCard-part-config'
+import type { ExternalCard as ExternalCardPartConfig } from '.'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 

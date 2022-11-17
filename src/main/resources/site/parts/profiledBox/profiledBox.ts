@@ -1,7 +1,7 @@
 import { Content } from '/lib/xp/content'
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
-import { render as r4xpRender, RenderResponse } from '/lib/enonic/react4xp'
-import { ProfiledBoxPartConfig } from './profiledBox-part-config'
+import { render as r4xpRender } from '/lib/enonic/react4xp'
+import type { ProfiledBox as ProfiledBoxPartConfig } from '.'
 import { render, ResourceKey } from '/lib/thymeleaf'
 import { randomUnsafeString } from '/lib/ssb/utils/utils'
 

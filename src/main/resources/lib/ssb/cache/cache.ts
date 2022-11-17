@@ -8,9 +8,9 @@ import { DATASET_REPO, DatasetRepoNode } from '../repo/dataset'
 import { Socket } from '../../types/socket'
 import { MunicipalityWithCounty } from '../dataset/klass/municipalities'
 import { newCache, Cache } from '/lib/cache'
-import { DataSource } from '../../../site/mixins/dataSource/dataSource'
+import type { DataSource } from '../../../site/mixins/dataSource'
 import { request, HttpResponse } from '/lib/http-client'
-import { BanVarnishPageCacheConfig } from '../../../tasks/banVarnishPageCache/banVarnishPageCache-config'
+import type { BanVarnishPageCache as BanVarnishPageCacheConfig } from '../../../tasks/banVarnishPageCache'
 
 const { executeFunction, sleep, submitTask } = __non_webpack_require__('/lib/xp/task')
 const { getDataset, extractKey } = __non_webpack_require__('/lib/ssb/dataset/dataset')

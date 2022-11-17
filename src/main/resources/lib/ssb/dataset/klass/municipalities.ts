@@ -1,8 +1,7 @@
-import { SiteConfig } from '../../../../site/site-config'
 import { get as getContent, Content } from '/lib/xp/content'
 import { County } from './counties'
 import { DatasetRepoNode } from '../../repo/dataset'
-import { DataSource } from '../../../../site/mixins/dataSource/dataSource'
+import type { DataSource } from '../../../../site/mixins/dataSource'
 
 const { sanitize } = __non_webpack_require__('/lib/xp/common')
 const { getSiteConfig } = __non_webpack_require__('/lib/xp/portal')
@@ -31,7 +30,7 @@ export const query: (queryString: string) => Array<MunicipalCode> = (queryString
   )
 
 function getMunicipalsFromContent(): Array<MunicipalCode> {
-  const siteConfig: SiteConfig = getSiteConfig()
+  const siteConfig: XP.SiteConfig = getSiteConfig()
   const key: string | undefined = siteConfig.municipalDataContentId
   if (key) {
     const dataSource: Content<DataSource> | null = getContent({
@@ -113,7 +112,7 @@ export function getMunicipality(req: RequestWithCode): MunicipalityWithCounty | 
   }
 
   if (!municipality && (req.mode === 'edit' || req.mode === 'preview' || req.mode === 'inline')) {
-    const siteConfig: SiteConfig = getSiteConfig()
+    const siteConfig: XP.SiteConfig = getSiteConfig()
     const defaultMunicipality: string = siteConfig.defaultMunicipality
     municipality = getMunicipalityByCode(municipalities, defaultMunicipality)
   }
@@ -185,7 +184,7 @@ function changesWithMunicipalityCode(municipalityCode: string): Array<Municipali
 }
 
 function getMunicipalityChanges(): MunicipalityChangeList {
-  const changeListId: string | undefined = getSiteConfig<SiteConfig>().municipalChangeListContentId
+  const changeListId: string | undefined = getSiteConfig<XP.SiteConfig>().municipalChangeListContentId
   if (changeListId) {
     const dataSource: Content<DataSource> | null = getContent({
       key: changeListId,

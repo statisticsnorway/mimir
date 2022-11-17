@@ -5,8 +5,8 @@ import { DropdownItems as MonthDropdownItems } from '../../../lib/types/componen
 import { Dataset, Dimension } from '../../../lib/types/jsonstat-toolkit'
 import { Language, Phrases } from '../../../lib/types/language'
 import { render, RenderResponse } from '/lib/enonic/react4xp'
-import { CalculatorConfig } from '../../content-types/calculatorConfig/calculatorConfig'
-import { PifCalculatorPartConfig } from './pifCalculator-part-config'
+import type { CalculatorConfig } from '../../content-types'
+import type { PifCalculator as PifCalculatorPartConfig } from '.'
 
 const { getComponent, getContent, serviceUrl, pageUrl } = __non_webpack_require__('/lib/xp/portal')
 

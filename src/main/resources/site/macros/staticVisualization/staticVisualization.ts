@@ -1,5 +1,5 @@
 import { RenderResponse } from '/lib/enonic/react4xp'
-import { StaticVisualizationConfig } from './staticVisualization-config'
+import type { StaticVisualization as StaticVisualizationConfig } from '../../macros/staticVisualization'
 
 const { preview } = __non_webpack_require__('../../parts/staticVisualization/staticVisualization')
 

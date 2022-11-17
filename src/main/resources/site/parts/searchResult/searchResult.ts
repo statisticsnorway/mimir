@@ -1,6 +1,6 @@
 import { Component } from '/lib/xp/portal'
 import { get, Content } from '/lib/xp/content'
-import { SearchResultPartConfig } from './searchResult-part-config'
+import { SearchResult as SearchResultPartConfig } from '.'
 import { render, RenderResponse } from '/lib/enonic/react4xp'
 import { PreparedSearchResult, SolrPrepResultAndTotal, Facet } from '../../../lib/ssb/utils/solrUtils'
 import { queryNodes, getNode } from '../../../lib/ssb/repo/common'

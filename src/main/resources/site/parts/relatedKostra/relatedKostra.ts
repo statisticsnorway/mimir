@@ -1,7 +1,6 @@
 import { MunicipalityWithCounty } from '../../../lib/ssb/dataset/klass/municipalities'
 import { render, RenderResponse } from '/lib/enonic/react4xp'
-import { SiteConfig } from '../../site-config'
-import { RelatedKostraPartConfig } from './relatedKostra-part-config'
+import type { RelatedKostra as RelatedKostraPartConfig } from '.'
 
 const { getComponent, getSiteConfig, processHtml } = __non_webpack_require__('/lib/xp/portal')
 const { getMunicipality } = __non_webpack_require__('/lib/ssb/dataset/klass/municipalities')
@@ -13,7 +12,7 @@ exports.get = function (req: XP.Request): XP.Response | RenderResponse {
     let municipality: MunicipalityWithCounty | undefined = getMunicipality(req)
     const mode: string = pageMode(req)
     if (!municipality && mode === 'edit') {
-      const siteConfig: SiteConfig = getSiteConfig()
+      const siteConfig: XP.SiteConfig = getSiteConfig()
       municipality = getMunicipality({
         code: siteConfig.defaultMunicipality,
       } as unknown as XP.Request)
@@ -25,7 +24,7 @@ exports.get = function (req: XP.Request): XP.Response | RenderResponse {
 }
 
 exports.preview = function (req: XP.Request): XP.Response | RenderResponse {
-  const siteConfig: SiteConfig = getSiteConfig()
+  const siteConfig: XP.SiteConfig = getSiteConfig()
   const municipality: MunicipalityWithCounty | undefined = getMunicipality({
     code: siteConfig.defaultMunicipality,
   } as unknown as XP.Request)

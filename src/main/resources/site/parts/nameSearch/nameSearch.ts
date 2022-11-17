@@ -2,7 +2,7 @@ import { Component } from '/lib/xp/portal'
 import { renderError } from '../../../lib/ssb/error/error'
 import { render, RenderResponse } from '/lib/enonic/react4xp'
 import { GA_TRACKING_ID } from '../../pages/default/default'
-import { NameSearchPartConfig } from './nameSearch-part-config'
+import type { NameSearch as NameSearchPartConfig } from '.'
 
 const { getComponent, getContent, pageUrl, serviceUrl } = __non_webpack_require__('/lib/xp/portal')
 const { getLanguageShortName } = __non_webpack_require__('/lib/ssb/utils/language')

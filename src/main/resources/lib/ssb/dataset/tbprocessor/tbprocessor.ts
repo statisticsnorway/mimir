@@ -1,7 +1,7 @@
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 import { DatasetRepoNode, DataSource as dataSourceType } from '../../repo/dataset'
 import { Content } from '/lib/xp/content'
-import { DataSource } from '../../../../site/mixins/dataSource/dataSource'
+import type { DataSource } from '../../../../site/mixins/dataSource'
 import { TbmlDataUniform, TbmlSourceListUniform } from '../../../types/xmlParser'
 import { TbprocessorParsedResponse } from './tbml'
 

@@ -1,5 +1,5 @@
 import { get, getAttachmentStream, ByteSource, Content } from '/lib/xp/content'
-import { Header } from '../../../site/content-types/header/header'
+import type { Header } from '../../../site/content-types'
 import { PreliminaryData } from '../../types/xmlParser'
 
 const { getContent, pageUrl } = __non_webpack_require__('/lib/xp/portal')
