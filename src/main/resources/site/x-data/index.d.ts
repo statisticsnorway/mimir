@@ -6,7 +6,7 @@ export interface XData {
     }
   }
   mimir?: {
-    subjectTag: {
+    subjectTag?: {
       mainSubjects: Array<string>
       subSubjects: Array<string>
     }
