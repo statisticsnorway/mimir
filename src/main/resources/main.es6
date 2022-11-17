@@ -8,6 +8,7 @@ try {
   const { setupCronJobs } = __non_webpack_require__('/lib/ssb/cron/cron')
   const { create } = __non_webpack_require__('/lib/featureToggle')
   const { setupTaskListener } = __non_webpack_require__('/lib/ssb/dataset/publish')
+  const { createOrUpdateStatisticsNewRepo } = __non_webpack_require__('/lib/ssb/repo/statistics')
 
   log.info('Application ' + app.name + ' started') // Log application started
   __.disposer(() => log.info('Application ' + app.name + ' stopped')) // Log application stoppped
@@ -92,6 +93,8 @@ try {
       ],
     },
   ])
+
+  createOrUpdateStatisticsNewRepo()
 
   const now = new Date()
   log.info(`Startup script complete: ${now.toISOString()}`)
