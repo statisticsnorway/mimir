@@ -9,10 +9,28 @@ import {
 } from '../utils/subjectUtils'
 import { formatDate } from './dateUtils'
 import { notNullOrUndefined } from '/lib/ssb/utils/coreUtils'
-import { modify, query, type Content, type QueryResponse } from '/lib/xp/content'
+import { get, modify, query, type Content, type QueryResponse } from '/lib/xp/content'
 import { pageUrl } from '/lib/xp/portal'
+import { listener, EnonicEvent } from '/lib/xp/event'
+import { contentArrayToRecord } from './arrayUtils'
 
 const { moment } = __non_webpack_require__('/lib/vendor/moment')
+
+export function setupArticleListener(): void {
+  listener({
+    type: 'node.*',
+    localOnly: false,
+    callback: (event: EnonicEvent) => {
+      if (['node.updated', 'node.moved'].indexOf(event.type) >= 0) {
+        log.info(`GLNRBN event \n ${JSON.stringify(event, null, 2)}`)
+        const eventContent = get({ key: event.data.nodes[0].id })
+        if (eventContent?.type == 'mimir:article') {
+          log.info(JSON.stringify(addSubjectToXData(eventContent)))
+        }
+      }
+    },
+  })
+}
 
 export function getChildArticles(
   currentPath: string,
