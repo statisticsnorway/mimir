@@ -11,18 +11,19 @@ import type { OmStatistikken } from '../../../site/content-types/omStatistikken/
 import type { XData } from '../../../site/x-data'
 import type { Statistics } from '../../../site/content-types/statistics/statistics'
 import { capitalize } from '/lib/ssb/utils/stringUtils'
-import { calculatePeriod, getNextRelease, getPreviousRelease, nextReleasedPassed } from '/lib/ssb/utils/variantUtils'
+import { calculatePeriod } from '/lib/ssb/utils/variantUtils'
 import type { SubjectItem } from '/lib/ssb/utils/subjectUtils'
 import type { QueryDSL } from '/lib/xp/content'
 
 const { queryForMainSubjects, queryForSubSubjects, getAllMainSubjectByContent, getAllSubSubjectByContent } =
   __non_webpack_require__('/lib/ssb/utils/subjectUtils')
+const { localize } = __non_webpack_require__('/lib/xp/i18n')
 
 export const REPO_ID_STATISTICS: 'no.ssb.statistics' = 'no.ssb.statistics' as const
 
 const LANGUAGES: ReadonlyArray<'en' | 'nb'> = ['nb', 'en'] as const
 
-export function createOrUpdateStatisticsNewRepo(): void {
+export function createOrUpdateStatisticsRepo(): void {
   log.info(`Initiating "${REPO_ID_STATISTICS}"`)
   run(
     {
@@ -138,10 +139,12 @@ export function fillRepoStatistic(statistics: Array<StatisticInListing>) {
       const allSubSubjectsStatistic: SubjectItem[] = getAllSubSubjectByContent(statisticsContent, allSubSubjects)
       const variants: VariantInListing[] = statistic.variants ? forceArray(statistic.variants) : []
       const releases: StatisticRelease[] = createContentStatisticReleases(variants, language)
-
       const releasesSorted: StatisticRelease[] = releases.sort((a, b) => {
         return new Date(a.publishTime || '01.01.3000').getTime() - new Date(b.publishTime || '01.01.3000').getTime()
       })
+
+      const previousRelease: StatisticRelease | undefined = getPreviousRelease(releasesSorted, language)
+      const nextRelease: StatisticRelease | undefined = getNextRelease(releasesSorted, language)
 
       const path = `/${statistic.shortName}-${language}`
       const exists: Array<string> = connection.exists(path)
@@ -154,6 +157,8 @@ export function fillRepoStatistic(statistics: Array<StatisticInListing>) {
         allMainSubjectsStatistic,
         allSubSubjectsStatistic,
         releases: releasesSorted,
+        nextRelease,
+        previousRelease,
       })
 
       if (!exists) {
@@ -205,7 +210,7 @@ function getStatisticsContentByRegStatId(statisticsIds: string[], language: stri
 }
 
 function createContentStatistic(params: CreateContentStatisticParams): ContentLight<Statistic> & NodeCreateParams {
-  const { statistic, language } = params
+  const { statistic, language, previousRelease } = params
 
   return {
     displayName: language === 'nb' ? statistic.name : statistic.nameEN,
@@ -215,7 +220,7 @@ function createContentStatistic(params: CreateContentStatisticParams): ContentLi
     data: prepareData(params),
     language,
     publish: {
-      from: '',
+      from: previousRelease?.publishTime ? instant(new Date(previousRelease.publishTime)) : '',
     },
   }
 }
@@ -259,6 +264,8 @@ function prepareData({
   allMainSubjectsStatistic,
   allSubSubjectsStatistic,
   releases,
+  nextRelease,
+  previousRelease,
 }: CreateContentStatisticParams): Statistic {
   return {
     statisticId: String(statistic.id),
@@ -268,8 +275,10 @@ function prepareData({
       aboutTheStatisticsContent?.data.ingress ??
       statisticsContent?.x?.['com-enonic-app-metafields']?.['meta-data'].seoDescription,
     status: statistic.status,
-    previousRelease: '',
-    previousPeriod: '',
+    previousRelease: previousRelease ? instant(new Date(previousRelease.publishTime)) : '',
+    previousPeriod: previousRelease ? previousRelease.period : '',
+    nextRelease: nextRelease ? instant(new Date(nextRelease.publishTime)) : '',
+    nextReleasePeriod: nextRelease ? nextRelease.period : '',
     statisticContentId: statisticsContent?._id,
     articleType: 'statistics',
     mainSubjects: allMainSubjectsStatistic.map((subject) => subject.name).filter(notNullOrUndefined),
@@ -298,14 +307,67 @@ function getByIds<Data extends object>(
   )
 }
 
+function getNextRelease(releases: StatisticRelease[], language: string): StatisticRelease | undefined {
+  const upComingReleases: StatisticRelease[] = releases.filter((release) => new Date(release.publishTime) > new Date())
+  if (!upComingReleases.length) {
+    return undefined
+  }
+  const nextRelease: StatisticRelease = upComingReleases[0]
+  //Check if more than one release at same day
+  const releasesPublishTime: StatisticRelease[] = upComingReleases.filter(
+    (release) => release.publishTime === nextRelease.publishTime
+  )
+  const period: string =
+    releasesPublishTime.length > 1 ? concatReleaseTimes(releasesPublishTime, language) : nextRelease.period
+
+  return {
+    ...nextRelease,
+    period,
+  }
+}
+
+function getPreviousRelease(releases: StatisticRelease[], language: string): StatisticRelease | undefined {
+  const previousReleases: StatisticRelease[] = releases.filter((release) => new Date(release.publishTime) <= new Date())
+  if (!previousReleases.length) {
+    return undefined
+  }
+  const previousRelease: StatisticRelease = previousReleases[previousReleases.length - 1]
+
+  //Check if more than one release at same day
+  const releasesPublishTime: StatisticRelease[] = previousReleases.filter(
+    (release) => release.publishTime === previousRelease.publishTime
+  )
+  const period: string =
+    releasesPublishTime.length > 1 ? concatReleaseTimes(releasesPublishTime, language) : previousRelease.period
+
+  return {
+    ...previousRelease,
+    period,
+  }
+}
+
+function concatReleaseTimes(releases: StatisticRelease[], language: string): string {
+  const timePeriodes: Array<string> = releases.map((release: StatisticRelease) => release.period)
+
+  const formatedTimePeriodes: string = timePeriodes.join(
+    ` ${localize({
+      key: 'and',
+      locale: language,
+    })} `
+  )
+  return formatedTimePeriodes
+}
+
 export interface Statistic {
   statisticId: string
   shortName: string
   name: string
   ingress?: string
   status: string
-  previousRelease?: string
+  previousRelease?: Instant | string //string
   previousPeriod: string
+  nextRelease: Instant | string //string
+  nextReleasePeriod: string
   statisticContentId?: string
   articleType: 'statistics'
   mainSubjects: Array<string> | string | undefined
@@ -315,7 +377,7 @@ export interface Statistic {
 
 export interface StatisticRelease {
   frequency: string
-  publishTime: string
+  publishTime: string //Instant | string
   period: string
 }
 
@@ -337,4 +399,6 @@ interface CreateContentStatisticParams {
   allMainSubjectsStatistic: SubjectItem[]
   allSubSubjectsStatistic: SubjectItem[]
   releases: StatisticRelease[]
+  nextRelease: StatisticRelease | undefined
+  previousRelease: StatisticRelease | undefined
 }

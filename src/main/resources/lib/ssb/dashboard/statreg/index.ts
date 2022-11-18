@@ -16,7 +16,7 @@ const { dateToReadable, dateToFormat } = __non_webpack_require__('/lib/ssb/utils
 const { getNode, ENONIC_CMS_DEFAULT_REPO } = __non_webpack_require__('/lib/ssb/repo/common')
 const { EVENT_LOG_BRANCH, EVENT_LOG_REPO, getQueryChildNodesStatus } = __non_webpack_require__('/lib/ssb/repo/eventLog')
 const { localize } = __non_webpack_require__('/lib/xp/i18n')
-const { createOrUpdateStatisticsRepo } = __non_webpack_require__('/lib/ssb/repo/statisticVariant')
+const { createOrUpdateStatisticsRepo } = __non_webpack_require__('/lib/ssb/repo/statistics')
 
 export type StatRegLatestFetchInfoNodeType = StatRegLatestFetchInfoNode | readonly StatRegLatestFetchInfoNode[] | null
 
