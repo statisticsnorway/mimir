@@ -23,7 +23,7 @@ const { updateUnpublishedMockTbml } = __non_webpack_require__('/lib/ssb/dataset/
 const { pushRssNews } = __non_webpack_require__('/lib/ssb/cron/pushRss')
 const { publishDataset } = __non_webpack_require__('/lib/ssb/dataset/publishOld')
 const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
-const { createOrUpdateStatisticsRepo } = __non_webpack_require__('/lib/ssb/repo/statisticVariant')
+const { createOrUpdateStatisticsRepo } = __non_webpack_require__('/lib/ssb/repo/statistics')
 
 const createUserContext: RunContext<ContextAttributes> = {
   // Master context (XP)
@@ -157,14 +157,14 @@ export function setupCronJobs(): void {
     context: cronContext,
   })
 
-  // Update repo statreg.statistics.variant
+  // Update repo no.ssb.statistics
   const updateStatisticRepoCron: string =
     app.config && app.config['ssb.cron.update.statisticRepo']
       ? app.config['ssb.cron.update.statisticRepo']
       : '0 7 * * *'
 
   schedule({
-    name: 'Update statreg.statistics.variant Repo',
+    name: 'Update no.ssb.statistics Repo',
     cron: updateStatisticRepoCron,
     callback: () => {
       createOrUpdateStatisticsRepo()

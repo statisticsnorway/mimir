@@ -8,8 +8,8 @@ import { Statistics } from '../../../site/content-types/statistics/statistics'
 import { SEO } from '../../../services/news/news'
 import { OmStatistikken } from '../../../site/content-types/omStatistikken/omStatistikken'
 import { formatDate } from '../utils/dateUtils'
-import { getStatisticVariantsFromRepo } from '/lib/ssb/repo/statisticVariant'
-import type { ContentLight, Release as ReleaseVariant } from '/lib/ssb/repo/statisticVariant'
+import { getStatisticsFromRepo } from '/lib/ssb/repo/statistics'
+import type { ContentLight, Statistic as StatisticRepo } from '/lib/ssb/repo/statistics'
 
 const { pageUrl } = __non_webpack_require__('/lib/xp/portal')
 const { moment } = __non_webpack_require__('/lib/vendor/moment')
@@ -220,13 +220,10 @@ function getStatisticsNew(language: string, mainSubjects: Array<SubjectItem>): A
     },
   }
 
-  const allPreviousStatisticVariantsFromRepo: ContentLight<ReleaseVariant>[] = getStatisticVariantsFromRepo(
-    language,
-    query
-  )
+  const allPreviousStatisticsFromRepo: ContentLight<StatisticRepo>[] = getStatisticsFromRepo(language, query)
 
-  const previousReleasesNew: PublicationItem[] = allPreviousStatisticVariantsFromRepo.map((release) => {
-    const mainSubjectsStatistic: string[] = release.data.mainSubjects ? forceArray(release.data.mainSubjects) : []
+  const previousReleases: PublicationItem[] = allPreviousStatisticsFromRepo.map((statistic) => {
+    const mainSubjectsStatistic: string[] = statistic.data.mainSubjects ? forceArray(statistic.data.mainSubjects) : []
     const secondaryMainSubjects: string[] =
       mainSubjectsStatistic.length > 1 ? mainSubjectsStatistic.slice(1, mainSubjectsStatistic.length) : []
     const mainSubjectId: string = mainSubjectsStatistic.length ? mainSubjectsStatistic[0] : ''
@@ -235,16 +232,16 @@ function getStatisticsNew(language: string, mainSubjects: Array<SubjectItem>): A
       : ''
 
     return {
-      title: release.data.name,
-      period: release.data.previousPeriod,
-      preface: release.data.ingress ?? '',
-      url: release.data.statisticContentId
+      title: statistic.data.name,
+      period: statistic.data.previousPeriod,
+      preface: statistic.data.ingress ?? '',
+      url: statistic.data.statisticContentId
         ? pageUrl({
-            id: release.data.statisticContentId,
+            id: statistic.data.statisticContentId,
           })
         : '',
-      publishDate: moment(release.data.previousRelease).locale('nb').format('YYYY.MM.DD HH:mm'),
-      publishDateHuman: formatDate(release.data.previousRelease, 'PPP', language),
+      publishDate: moment(statistic.data.previousRelease).locale('nb').format('YYYY.MM.DD HH:mm'),
+      publishDateHuman: formatDate(statistic.data.previousRelease, 'PPP', language),
       contentType: `${app.name}:statistics`,
       articleType: 'statistics',
       mainSubjectId: mainSubjectId,
@@ -254,7 +251,7 @@ function getStatisticsNew(language: string, mainSubjects: Array<SubjectItem>): A
     }
   })
 
-  return previousReleasesNew
+  return previousReleases
 }
 
 function getStatistics(

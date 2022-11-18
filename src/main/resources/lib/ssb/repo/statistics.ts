@@ -275,9 +275,9 @@ function prepareData({
       aboutTheStatisticsContent?.data.ingress ??
       statisticsContent?.x?.['com-enonic-app-metafields']?.['meta-data'].seoDescription,
     status: statistic.status,
-    previousRelease: previousRelease ? instant(new Date(previousRelease.publishTime)) : '',
+    previousRelease: previousRelease ? previousRelease.publishTime : '',
     previousPeriod: previousRelease ? previousRelease.period : '',
-    nextRelease: nextRelease ? instant(new Date(nextRelease.publishTime)) : '',
+    nextRelease: nextRelease ? nextRelease.publishTime : '',
     nextReleasePeriod: nextRelease ? nextRelease.period : '',
     statisticContentId: statisticsContent?._id,
     articleType: 'statistics',
@@ -364,9 +364,9 @@ export interface Statistic {
   name: string
   ingress?: string
   status: string
-  previousRelease?: Instant | string //string
+  previousRelease?: string
   previousPeriod: string
-  nextRelease: Instant | string //string
+  nextRelease: string
   nextReleasePeriod: string
   statisticContentId?: string
   articleType: 'statistics'
