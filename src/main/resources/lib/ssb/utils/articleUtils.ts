@@ -1,11 +1,18 @@
+import { XData } from 'site/x-data'
 import { Article } from '../../../site/content-types/article/article'
-import { query, Content, QueryResponse } from '/lib/xp/content'
-import { SubjectItem } from '../utils/subjectUtils'
+import {
+  getAllMainSubjectByContent,
+  getAllSubSubjectByContent,
+  getMainSubjects,
+  getSubSubjects,
+  type SubjectItem,
+} from '../utils/subjectUtils'
 import { formatDate } from './dateUtils'
+import { notNullOrUndefined } from '/lib/ssb/utils/coreUtils'
+import { modify, query, type Content, type QueryResponse } from '/lib/xp/content'
+import { pageUrl } from '/lib/xp/portal'
 
-const { pageUrl } = __non_webpack_require__('/lib/xp/portal')
 const { moment } = __non_webpack_require__('/lib/vendor/moment')
-const { getMainSubjects } = __non_webpack_require__('/lib/ssb/utils/subjectUtils')
 
 export function getChildArticles(
   currentPath: string,
@@ -61,6 +68,43 @@ export function prepareArticles(articles: QueryResponse<Article, object>, langua
     }
   })
 }
+
+export function addSubjectToXData(
+  article: Content<Article, XData>,
+  req: XP.Request
+): Content<Article, XData> | undefined {
+  const allMainSubjects: SubjectItem[] = getMainSubjects(req, 'nb')
+  const allSubSubjects: SubjectItem[] = getSubSubjects(req, 'nb')
+
+  const mainSubjects: string[] = getAllMainSubjectByContent(article, allMainSubjects, allSubSubjects)
+    .map((subject) => subject.name)
+    .filter(notNullOrUndefined)
+  const subSubjects: string[] = getAllSubSubjectByContent(article, allSubSubjects)
+    .map((subject) => subject.name)
+    .filter(notNullOrUndefined)
+
+  if (mainSubjects.length && subSubjects.length) {
+    const modified = modify({
+      key: article._id,
+      requireValid: false,
+      editor: (content: Content<Article, XData>) => {
+        content.x = {
+          ...content.x,
+          mimir: {
+            subjectTag: {
+              mainSubjects: mainSubjects,
+              subSubjects: subSubjects,
+            },
+          },
+        }
+        return content
+      },
+    })
+    return modified
+  }
+  return undefined
+}
+
 export interface ArticleUtilsLib {
   getChildArticles: (
     currentPath: string,
