@@ -1,9 +1,9 @@
 import { render, ResourceKey } from '/lib/thymeleaf'
 import { render as r4XpRender, RenderResponse } from '/lib/enonic/react4xp'
 import { Component, getComponent } from '/lib/xp/portal'
-import { FrontpageKeyfiguresPartConfig } from './frontpageKeyfigures-part-config'
+import type { FrontpageKeyfigures as FrontpageKeyfiguresPartConfig } from '.'
 import { Content, get } from '/lib/xp/content'
-import { KeyFigure } from '../../content-types/keyFigure/keyFigure'
+import type { KeyFigure } from '../../content-types'
 import { KeyFigureView } from '../../../lib/ssb/parts/keyFigure'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')

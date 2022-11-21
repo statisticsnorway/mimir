@@ -8,9 +8,8 @@ import { Breadcrumbs } from '../../../lib/ssb/utils/breadcrumbsUtils'
 import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
 import { Language } from '../../../lib/types/language'
 import { render as r4xpRender, RenderResponse } from '/lib/enonic/react4xp'
-import { Statistics } from '../../content-types/statistics/statistics'
-import { SiteConfig } from '../../site-config'
-import { DefaultPageConfig } from './default-page-config'
+import type { Statistics } from '../../content-types'
+import type { Default as DefaultPageConfig } from '../../pages/default'
 import { Component, getContent, processHtml, assetUrl, getSiteConfig, pageUrl } from '/lib/xp/portal'
 import { SEO } from '../../../services/news/news'
 
@@ -76,10 +75,8 @@ exports.get = function (req: XP.Request): XP.Response {
   let preview: XP.Response | undefined
   if (partsWithPreview.includes(page.type)) {
     let name: string = page.type.replace(/^.*:/, '')
-    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
     // @ts-ignore
     if (previewOverride[name]) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
       // @ts-ignore
       name = previewOverride[name]
     }
@@ -465,7 +462,7 @@ function parseStatbankFrameContent(statbankFane: boolean, req: XP.Request, page:
     }
   }
 
-  const siteConfig: SiteConfig = getSiteConfig()
+  const siteConfig: XP.SiteConfig = getSiteConfig()
 
   let statbankHelpLink: string = siteConfig.statbankHelpLink
   if (pageLanguage === 'en') {

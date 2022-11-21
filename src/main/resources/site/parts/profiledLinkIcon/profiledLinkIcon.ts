@@ -1,5 +1,5 @@
 import { render } from '/lib/enonic/react4xp'
-import { ProfiledLinkIconPartConfig } from './profiledLinkIcon-part-config'
+import type { ProfiledLinkIcon as ProfiledLinkIconPartConfig } from '.'
 
 const { data } = __non_webpack_require__('/lib/util')
 const { getComponent, pageUrl } = __non_webpack_require__('/lib/xp/portal')

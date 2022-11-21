@@ -1,6 +1,6 @@
 import { render, RenderResponse } from '/lib/enonic/react4xp'
 import { getComponent, attachmentUrl, Component } from '/lib/xp/portal'
-import { DownloadLinkPartConfig } from './downloadLink-part-config'
+import type { DownloadLink as DownloadLinkPartConfig } from '.'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 

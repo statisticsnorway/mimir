@@ -7,11 +7,10 @@ import {
   DropdownItems as TableDownloadDropdownItems,
 } from '../../../lib/types/components'
 import { Language, Phrases } from '../../../lib/types/language'
-import { render as r4xpRender, RenderResponse } from '/lib/enonic/react4xp'
-import { Statistics } from '../../content-types/statistics/statistics'
-import { Table } from '../../content-types/table/table'
+import { render as r4xpRender } from '/lib/enonic/react4xp'
+import type { Statistics, Table } from '../../content-types'
 import { GA_TRACKING_ID } from '../../pages/default/default'
-import { TablePartConfig } from './table-part-config'
+import type { Table as TablePartConfig } from '.'
 import { DataSource as DataSourceType } from '../../../lib/ssb/repo/dataset'
 
 const { getContent, getComponent, pageUrl, assetUrl } = __non_webpack_require__('/lib/xp/portal')

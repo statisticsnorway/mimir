@@ -1,9 +1,9 @@
 import { render, RenderResponse } from '/lib/enonic/react4xp'
-import { EndedStatisticsPartConfig } from './endedStatistics-part-config'
+import type { EndedStatistics as EndedStatisticsPartConfig } from '.'
 import { get, Content } from '/lib/xp/content'
 import { Phrases } from '../../../lib/types/language'
-import { Statistics } from '../../content-types/statistics/statistics'
-import { SEO } from 'services/news/news'
+import type { Statistics } from '../../content-types'
+import { SEO } from '../../../services/news/news'
 
 const {
   data: { forceArray },
@@ -12,7 +12,6 @@ const { getContent, getComponent, pageUrl } = __non_webpack_require__('/lib/xp/p
 const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
-const { hasPath } = __non_webpack_require__('/lib/vendor/ramda')
 
 exports.get = (req: XP.Request) => {
   try {

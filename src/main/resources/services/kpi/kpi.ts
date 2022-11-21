@@ -1,6 +1,6 @@
 import { Content } from '/lib/xp/content'
 import { HttpRequestParams } from '/lib/http-client'
-import { CalculatorConfig } from '../../site/content-types/calculatorConfig/calculatorConfig'
+import type { CalculatorConfig } from '../../site/content-types'
 import { Dataset } from '../../lib/types/jsonstat-toolkit'
 const { localize } = __non_webpack_require__('/lib/xp/i18n')
 const { getCalculatorConfig, getKpiDatasetYear, getKpiDatasetMonth, isChronological, getChangeValue } =
@@ -87,13 +87,11 @@ function getIndexes(
   let endIndex: null | number = null
 
   if (parseInt(startYear) < 1920) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
     // @ts-ignore
     startIndex = kpiData.year?.Data({
       Tid: startYear,
     }).value
   } else {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
     // @ts-ignore
     startIndex = kpiData.month?.Data({
       Tid: startYear,
@@ -102,13 +100,11 @@ function getIndexes(
   }
 
   if (parseInt(endYear) < 1920) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
     // @ts-ignore
     endIndex = kpiData.year?.Data({
       Tid: endYear,
     }).value
   } else {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
     // @ts-ignore
     endIndex = kpiData.month?.Data({
       Tid: endYear,

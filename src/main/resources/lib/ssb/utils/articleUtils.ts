@@ -1,4 +1,4 @@
-import { Article } from '../../../site/content-types/article/article'
+import type { Article } from '../../../site/content-types'
 import { query, Content, QueryResponse } from '/lib/xp/content'
 import { SubjectItem } from '../utils/subjectUtils'
 import { formatDate } from './dateUtils'

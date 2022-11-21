@@ -1,5 +1,5 @@
 import { Component } from '/lib/xp/portal'
-import { MathsPartConfig } from './maths-part-config'
+import type { Maths as MathsPartConfig } from '.'
 import { render, RenderResponse } from '/lib/enonic/react4xp'
 
 const { getComponent } = __non_webpack_require__('/lib/xp/portal')

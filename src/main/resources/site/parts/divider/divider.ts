@@ -1,6 +1,6 @@
 import { getComponent, Component } from '/lib/xp/portal'
 import { render } from '/lib/enonic/react4xp'
-import { DividerPartConfig } from './divider-part-config'
+import type { Divider as DividerPartConfig } from '.'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 const { fromPartCache } = __non_webpack_require__('/lib/ssb/cache/partCache')
