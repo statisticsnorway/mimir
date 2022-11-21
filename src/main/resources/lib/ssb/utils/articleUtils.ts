@@ -12,8 +12,7 @@ import { notNullOrUndefined } from '/lib/ssb/utils/coreUtils'
 import { get, modify, query, type Content, type QueryResponse } from '/lib/xp/content'
 import { pageUrl } from '/lib/xp/portal'
 import { listener, EnonicEvent } from '/lib/xp/event'
-import { run, type ContextAttributes, type RunContext } from '/lib/xp/context'
-import { ENONIC_CMS_DEFAULT_REPO } from '/lib/ssb/repo/common'
+import { ENONIC_CMS_DEFAULT_REPO, withSuperUserContext } from '/lib/ssb/repo/common'
 
 const { moment } = __non_webpack_require__('/lib/vendor/moment')
 
@@ -21,31 +20,19 @@ const dummyReq: Partial<XP.Request> = {
   branch: 'master',
 }
 
-const createUserContext: RunContext<ContextAttributes> = {
-  // Master context (XP)
-  repository: ENONIC_CMS_DEFAULT_REPO,
-  branch: 'master',
-  principals: ['role:system.admin'],
-  user: {
-    login: 'su',
-    idProvider: 'system',
-  },
-}
-
 export function setupArticleListener(): void {
   listener({
     type: 'node.updated',
     localOnly: true,
     callback: (event: EnonicEvent) => {
-      log.info(`GLNRBN event \n ${JSON.stringify(event, null, 2)}`)
       const eventContent: Content<Article, XData> | null = get({ key: event.data.nodes[0].id })
       if (eventContent?.type == 'mimir:article') {
-        const result = run(createUserContext, () => {
-          // @ts-ignore
-          return addSubjectToXData(eventContent, dummyReq)
-        })
-
-        log.info(JSON.stringify(result))
+        try {
+          // @ts-ignore <- needs to be here, we don't want to create a whole req
+          addSubjectToXData(eventContent, dummyReq)
+        } catch (error) {
+          log.info(`Error while trying to add Subject to Article, error: ${JSON.stringify(error, null, 2)}`)
+        }
       }
     },
   })
@@ -120,30 +107,38 @@ export function addSubjectToXData(
     .map((subject) => subject.name)
     .filter(notNullOrUndefined)
 
-  log.info(`GLNRBN main: ${mainSubjects}, sub: ${subSubjects}`)
   if (mainSubjects.length && subSubjects.length) {
-    log.info(`GLNRBN input content: ${JSON.stringify(article)}`)
-
-    const modified = modify({
-      key: article._id,
-      requireValid: false,
-      editor: (content: Content<Article, XData>) => {
-        content.x = {
-          ...content.x,
-          mimir: {
-            subjectTag: {
-              mainSubjects: mainSubjects,
-              subSubjects: subSubjects,
+    const subjectTag = {
+      mainSubjects: mainSubjects,
+      subSubjects: subSubjects,
+    }
+    if (article.x.mimir?.subjectTag != subjectTag) {
+      let modified: Content<Article, XData> | undefined
+      try {
+        modified = withSuperUserContext(ENONIC_CMS_DEFAULT_REPO, 'draft', () => {
+          return modify({
+            key: article._id,
+            requireValid: true,
+            editor: (content: Content<Article, XData>) => {
+              content.x = {
+                ...content.x,
+                mimir: {
+                  subjectTag: {
+                    mainSubjects: mainSubjects,
+                    subSubjects: subSubjects,
+                  },
+                },
+              }
+              return content
             },
-          },
-        }
-        log.info(`GLNRBN content: ${JSON.stringify(content)}`)
-        return content
-      },
-    })
-    log.info(`GLNRBN modified: ${JSON.stringify(modified)}`)
+          })
+        })
+      } catch (error) {
+        log.error(JSON.stringify(error))
+      }
 
-    return modified
+      return modified
+    }
   }
   return undefined
 }
