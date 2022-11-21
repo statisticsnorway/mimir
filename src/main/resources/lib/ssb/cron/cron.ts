@@ -157,7 +157,7 @@ export function setupCronJobs(): void {
     context: cronContext,
   })
 
-  // Update repo no.ssb.statistics
+  // Update repo no.ssb.statistic.variant
   const updateStatisticRepoCron: string =
     app.config && app.config['ssb.cron.updateStatisticRepo'] ? app.config['ssb.cron.updateStatisticRepo'] : '0 7 * * *'
 

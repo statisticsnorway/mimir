@@ -70,23 +70,17 @@ function getPublicationsAndStatistics(req: XP.Request, language: string): Array<
   const mainSubjects: Array<SubjectItem> = getMainSubjects(req, language)
   const subSubjects: Array<SubjectItem> = getSubSubjects(req, language)
 
-  const startArticleContent: number = new Date().getTime()
   const articlesContent: QueryResponse<Article, object> = getArticlesContent(language, mainSubjects)
-  log.info(`getArticlesContent:  ${new Date().getTime() - startArticleContent} ms`)
 
-  const startPrepArticleContent: number = new Date().getTime()
   const publications: Array<PublicationItem> = articlesContent.hits.map((article) => {
     return prepareArticle(article, mainSubjects, subSubjects, language)
   })
-  log.info(`prepareArticle:  ${new Date().getTime() - startPrepArticleContent} ms`)
 
   const newPublicationArchiveEnabled: boolean = isEnabled('new-publication-archive', false, 'ssb')
 
-  const startStatistics: number = new Date().getTime()
   const statistics: Array<PublicationItem> = newPublicationArchiveEnabled
     ? getStatisticsRepo(language, mainSubjects)
     : getStatistics(language, mainSubjects, subSubjects)
-  log.info(`getStatistics:  ${new Date().getTime() - startStatistics} ms`)
 
   const statisticsWithMainSubject: Array<PublicationItem> = statistics.filter(
     (statistic) => statistic.mainSubject !== ''
@@ -211,7 +205,6 @@ function getArticlesContent(language: string, mainSubjects: Array<SubjectItem>):
 }
 
 function getStatisticsRepo(language: string, mainSubjects: Array<SubjectItem>): Array<PublicationItem> {
-  log.info('getStatisticsNew')
   const query: QueryDSL = {
     range: {
       field: 'publish.from',
@@ -265,7 +258,6 @@ function getStatistics(
   mainSubjects: Array<SubjectItem>,
   subSubjects: Array<SubjectItem>
 ): Array<PublicationItem> {
-  log.info('getStatisticsOld')
   const statistics: Array<StatisticInListing> = getAllStatisticsFromRepo()
   const previousReleases: Array<Release> = getPreviousReleases(statistics)
   const statisticsReleases: Array<PublicationItem> = previousReleases.reduce(function (
