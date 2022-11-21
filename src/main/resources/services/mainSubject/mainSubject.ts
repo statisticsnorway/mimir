@@ -3,7 +3,18 @@ import { query, QueryResponse } from '/lib/xp/content'
 exports.get = (): XP.Response => {
   const mainSubjects: QueryResponse<MainSubjects, object> = query({
     count: 500,
-    query: `components.page.config.mimir.default.subjectType LIKE "mainSubject"`,
+    filters: {
+      boolean: {
+        must: [
+          {
+            hasValue: {
+              field: 'components.page.config.mimir.default.subjectType',
+              values: ['mainSubject'],
+            },
+          },
+        ],
+      },
+    },
   })
 
   return {
