@@ -240,8 +240,6 @@ function UpcomingReleases(props) {
       year: year.year,
     }
 
-    // console.log('date', date)
-
     const monthNumber = Number(month.month)
     const monthPadded = monthNumber < 9 ? '0' + (monthNumber + 1) : monthNumber + 1
     const dateTime = `${year.year}-${monthPadded}-${day.day}`
