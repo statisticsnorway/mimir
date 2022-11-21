@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, Link, Paragraph, Title } from '@statisticsnorway/ssb-component-library'
+import { Button, Link } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
 import axios from 'axios'
 import { ChevronDown } from 'react-feather'
@@ -59,7 +59,7 @@ function UpcomingReleases(props) {
       }
       return false
     })
-    contentReleases.forEach((release, i) => {
+    contentReleases.forEach((release) => {
       const releaseDate = new Date(release.date)
       let yearReleases
       for (let i = 0; i < newReleases.length; i += 1) {
@@ -141,32 +141,32 @@ function UpcomingReleases(props) {
     return newReleases
   }
 
-  function fetchMoreReleases() {
-    setLoading(true)
-    if (!lastCountedDay) {
-      return
-    }
-    axios
-      .get(props.upcomingReleasesServiceUrl, {
-        params: {
-          start: `${lastCountedDay.year}-${parseInt(lastCountedDay.month) + 1}-${lastCountedDay.day}`,
-          count: props.count,
-          language: props.language,
-        },
-      })
-      .then((res) => {
-        if (res.data.releases.length) {
-          let newReleases = mergeReleases(releases, res.data.releases, 0)
-          newReleases = mergeContentReleases(newReleases)
-          setReleases(newReleases)
-        } else {
-          setLoading(true)
-        }
-      })
-      .finally(() => {
-        setLoading(false)
-      })
-  }
+  // function fetchMoreReleases() {
+  //   setLoading(true)
+  //   if (!lastCountedDay) {
+  //     return
+  //   }
+  //   axios
+  //     .get(props.upcomingReleasesServiceUrl, {
+  //       params: {
+  //         start: `${lastCountedDay.year}-${parseInt(lastCountedDay.month) + 1}-${lastCountedDay.day}`,
+  //         count: props.count,
+  //         language: props.language,
+  //       },
+  //     })
+  //     .then((res) => {
+  //       if (res.data.releases.length) {
+  //         let newReleases = mergeReleases(releases, res.data.releases, 0)
+  //         newReleases = mergeContentReleases(newReleases)
+  //         setReleases(newReleases)
+  //       } else {
+  //         setLoading(true)
+  //       }
+  //     })
+  //     .finally(() => {
+  //       setLoading(false)
+  //     })
+  // }
 
   function fetchAllReleases() {
     setLoading(true)
@@ -239,6 +239,8 @@ function UpcomingReleases(props) {
       month: month.month,
       year: year.year,
     }
+
+    // console.log('date', date)
 
     const monthNumber = Number(month.month)
     const monthPadded = monthNumber < 9 ? '0' + (monthNumber + 1) : monthNumber + 1
