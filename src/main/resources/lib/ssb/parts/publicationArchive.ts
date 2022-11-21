@@ -8,8 +8,8 @@ import { Statistics } from '../../../site/content-types/statistics/statistics'
 import { SEO } from '../../../services/news/news'
 import { OmStatistikken } from '../../../site/content-types/omStatistikken/omStatistikken'
 import { formatDate, stringToServerTime } from '../utils/dateUtils'
-import type { ContentLight, Statistic as StatisticRepo } from '/lib/ssb/repo/statistics'
-import { getStatisticsFromRepo } from '/lib/ssb/repo/statistics'
+import type { ContentLight, Release as ReleaseVariant } from '/lib/ssb/repo/statisticVariant'
+import { getStatisticVariantsFromRepo } from '/lib/ssb/repo/statisticVariant'
 
 const { pageUrl } = __non_webpack_require__('/lib/xp/portal')
 const { moment } = __non_webpack_require__('/lib/vendor/moment')
@@ -222,9 +222,12 @@ function getStatisticsRepo(language: string, mainSubjects: Array<SubjectItem>): 
     },
   }
 
-  const allPreviousStatisticsFromRepo: ContentLight<StatisticRepo>[] = getStatisticsFromRepo(language, query)
-  const previousReleases: PublicationItem[] = allPreviousStatisticsFromRepo.map((statistic) => {
-    const mainSubjectsStatistic: string[] = statistic.data.mainSubjects ? forceArray(statistic.data.mainSubjects) : []
+  const allPreviousStatisticVariantsFromRepo: ContentLight<ReleaseVariant>[] = getStatisticVariantsFromRepo(
+    language,
+    query
+  )
+  const previousReleases: PublicationItem[] = allPreviousStatisticVariantsFromRepo.map((release) => {
+    const mainSubjectsStatistic: string[] = release.data.mainSubjects ? forceArray(release.data.mainSubjects) : []
     const secondaryMainSubjects: string[] =
       mainSubjectsStatistic.length > 1 ? mainSubjectsStatistic.slice(1, mainSubjectsStatistic.length) : []
     const mainSubjectId: string = mainSubjectsStatistic.length ? mainSubjectsStatistic[0] : ''
@@ -232,26 +235,21 @@ function getStatisticsRepo(language: string, mainSubjects: Array<SubjectItem>): 
       ? mainSubjects.filter((subject) => subject.name === mainSubjectId)[0].title
       : ''
 
-    const nextReleasePassed: boolean = new Date(statistic.data.nextRelease) <= stringToServerTime()
-    const period = nextReleasePassed ? statistic.data.nextReleasePeriod : statistic.data.previousPeriod
-    const publishDate = nextReleasePassed
-      ? formatDate(statistic.data.nextRelease, 'yyyy.MM.dd HH:mm', language)
-      : formatDate(statistic.data.previousRelease, 'yyyy.MM.dd HH:mm', language)
-    const publishDateHuman = nextReleasePassed
-      ? formatDate(statistic.data.nextRelease, 'PPP', language)
-      : formatDate(statistic.data.previousRelease, 'PPP', language)
+    const nextReleasePassed: boolean = new Date(release.data.nextRelease) <= stringToServerTime()
+    const period = nextReleasePassed ? release.data.nextPeriod : release.data.previousPeriod
+    const publishDate = nextReleasePassed ? release.data.nextRelease : release.data.previousRelease
 
     return {
-      title: statistic.data.name,
+      title: release.data.name,
       period,
-      preface: statistic.data.ingress ?? '',
-      url: statistic.data.statisticContentId
+      preface: release.data.ingress ?? '',
+      url: release.data.statisticContentId
         ? pageUrl({
-            id: statistic.data.statisticContentId,
+            id: release.data.statisticContentId,
           })
         : '',
-      publishDate,
-      publishDateHuman,
+      publishDate: formatDate(publishDate, 'yyyy.MM.dd HH:mm', language) ?? '',
+      publishDateHuman: formatDate(publishDate, 'PPP', language),
       contentType: `${app.name}:statistics`,
       articleType: 'statistics',
       mainSubjectId: mainSubjectId,

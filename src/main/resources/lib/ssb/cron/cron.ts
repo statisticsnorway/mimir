@@ -23,7 +23,7 @@ const { updateUnpublishedMockTbml } = __non_webpack_require__('/lib/ssb/dataset/
 const { pushRssNews } = __non_webpack_require__('/lib/ssb/cron/pushRss')
 const { publishDataset } = __non_webpack_require__('/lib/ssb/dataset/publishOld')
 const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
-const { createOrUpdateStatisticsRepo } = __non_webpack_require__('/lib/ssb/repo/statistics')
+const { createOrUpdateStatisticsRepo } = __non_webpack_require__('/lib/ssb/repo/statisticVariant')
 
 const createUserContext: RunContext<ContextAttributes> = {
   // Master context (XP)

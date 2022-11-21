@@ -23,6 +23,7 @@ export const REPO_ID_STATISTICS: 'no.ssb.statistics' = 'no.ssb.statistics' as co
 
 const LANGUAGES: ReadonlyArray<'en' | 'nb'> = ['nb', 'en'] as const
 
+//TODO Hele denne kan kanskje slettes hvis statisticVariant fungerer som forventet.
 export function createOrUpdateStatisticsRepo(): void {
   log.info(`Initiating "${REPO_ID_STATISTICS}"`)
   run(

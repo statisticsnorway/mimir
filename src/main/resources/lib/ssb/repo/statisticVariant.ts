@@ -213,7 +213,7 @@ function createContentStatisticVariant(
 
   return {
     displayName: language === 'nb' ? statistic.name : statistic.nameEN,
-    _name: `${statistic.shortName}-${variant.id}–${language}`,
+    _name: `${statistic.shortName}-${variant.id}-${language}`,
     _inheritsPermissions: true,
     modifiedTime: asLocalDateTime(variant.previousRelease),
     data: prepareData(params),
@@ -252,7 +252,7 @@ function prepareData({
       statisticsContent?.x?.['com-enonic-app-metafields']?.['meta-data'].seoDescription,
     status: statistic.status,
     frequency: variant.frekvens,
-    previousRelease: prevRelease.publishTime,
+    previousRelease: prevRelease.publishTime ?? '',
     previousFrom: prevRelease.periodFrom,
     previousTo: prevRelease.periodTo,
     previousPeriod:
@@ -300,11 +300,11 @@ export interface Release {
   ingress?: string
   status: string
   frequency: string
-  previousRelease?: string
+  previousRelease: string
   previousFrom?: string
   previousTo?: string
   previousPeriod: string
-  nextRelease?: string
+  nextRelease: string
   nextPeriod: string
   statisticContentId?: string
   articleType: 'statistics'
