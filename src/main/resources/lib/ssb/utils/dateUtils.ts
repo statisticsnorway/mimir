@@ -18,6 +18,12 @@ export function formatDate(date: string | undefined, formatType: string, languag
   return
 }
 
+export function stringToServerTime(): Date {
+  const serverOffsetInMs: number =
+    app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
+  return new Date(new Date().getTime() + serverOffsetInMs)
+}
+
 export interface DateUtilsLib {
   sameDay: (d1: Date, d2: Date) => boolean
   formatDate: (date: string | undefined, formatType: string, language: string) => string | undefined

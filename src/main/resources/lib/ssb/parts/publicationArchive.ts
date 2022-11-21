@@ -7,9 +7,9 @@ import { SubjectItem } from '../utils/subjectUtils'
 import { Statistics } from '../../../site/content-types/statistics/statistics'
 import { SEO } from '../../../services/news/news'
 import { OmStatistikken } from '../../../site/content-types/omStatistikken/omStatistikken'
-import { formatDate } from '../utils/dateUtils'
-import { getStatisticsFromRepo } from '/lib/ssb/repo/statistics'
+import { formatDate, stringToServerTime } from '../utils/dateUtils'
 import type { ContentLight, Statistic as StatisticRepo } from '/lib/ssb/repo/statistics'
+import { getStatisticsFromRepo } from '/lib/ssb/repo/statistics'
 
 const { pageUrl } = __non_webpack_require__('/lib/xp/portal')
 const { moment } = __non_webpack_require__('/lib/vendor/moment')
@@ -223,7 +223,6 @@ function getStatisticsRepo(language: string, mainSubjects: Array<SubjectItem>): 
   }
 
   const allPreviousStatisticsFromRepo: ContentLight<StatisticRepo>[] = getStatisticsFromRepo(language, query)
-
   const previousReleases: PublicationItem[] = allPreviousStatisticsFromRepo.map((statistic) => {
     const mainSubjectsStatistic: string[] = statistic.data.mainSubjects ? forceArray(statistic.data.mainSubjects) : []
     const secondaryMainSubjects: string[] =
@@ -233,17 +232,26 @@ function getStatisticsRepo(language: string, mainSubjects: Array<SubjectItem>): 
       ? mainSubjects.filter((subject) => subject.name === mainSubjectId)[0].title
       : ''
 
+    const nextReleasePassed: boolean = new Date(statistic.data.nextRelease) <= stringToServerTime()
+    const period = nextReleasePassed ? statistic.data.nextReleasePeriod : statistic.data.previousPeriod
+    const publishDate = nextReleasePassed
+      ? formatDate(statistic.data.nextRelease, 'yyyy.MM.dd HH:mm', language)
+      : formatDate(statistic.data.previousRelease, 'yyyy.MM.dd HH:mm', language)
+    const publishDateHuman = nextReleasePassed
+      ? formatDate(statistic.data.nextRelease, 'PPP', language)
+      : formatDate(statistic.data.previousRelease, 'PPP', language)
+
     return {
       title: statistic.data.name,
-      period: statistic.data.previousPeriod,
+      period,
       preface: statistic.data.ingress ?? '',
       url: statistic.data.statisticContentId
         ? pageUrl({
             id: statistic.data.statisticContentId,
           })
         : '',
-      publishDate: moment(statistic.data.previousRelease).locale('nb').format('YYYY.MM.DD HH:mm'),
-      publishDateHuman: formatDate(statistic.data.previousRelease, 'PPP', language),
+      publishDate,
+      publishDateHuman,
       contentType: `${app.name}:statistics`,
       articleType: 'statistics',
       mainSubjectId: mainSubjectId,

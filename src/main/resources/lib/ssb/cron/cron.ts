@@ -159,9 +159,7 @@ export function setupCronJobs(): void {
 
   // Update repo no.ssb.statistics
   const updateStatisticRepoCron: string =
-    app.config && app.config['ssb.cron.update.statisticRepo']
-      ? app.config['ssb.cron.update.statisticRepo']
-      : '0 7 * * *'
+    app.config && app.config['ssb.cron.updateStatisticRepo'] ? app.config['ssb.cron.updateStatisticRepo'] : '0 7 * * *'
 
   schedule({
     name: 'Update no.ssb.statistics Repo',
