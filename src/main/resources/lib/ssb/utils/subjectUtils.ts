@@ -7,10 +7,10 @@ import type { Subtopic } from '../../../site/mixins/subtopic/subtopic'
 import type { DefaultPage } from '/lib/types/defaultPage'
 import { Article } from '../../../site/content-types/article/article'
 import { forceArray } from '/lib/ssb/utils/arrayUtils'
+import { fromSubjectCache } from '/lib/ssb/cache/subjectCache'
 
 const { getAllStatisticsFromRepo } = __non_webpack_require__('/lib/ssb/statreg/statistics')
 const { ensureArray } = __non_webpack_require__('/lib/ssb/utils/arrayUtils')
-const { fromSubjectCache } = __non_webpack_require__('/lib/ssb/cache/subjectCache')
 const { parentPath } = __non_webpack_require__('/lib/ssb/utils/parentUtils')
 
 export function getMainSubjects(request: XP.Request, language?: string): Array<SubjectItem> {

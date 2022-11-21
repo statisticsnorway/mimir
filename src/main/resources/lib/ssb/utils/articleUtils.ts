@@ -12,21 +12,40 @@ import { notNullOrUndefined } from '/lib/ssb/utils/coreUtils'
 import { get, modify, query, type Content, type QueryResponse } from '/lib/xp/content'
 import { pageUrl } from '/lib/xp/portal'
 import { listener, EnonicEvent } from '/lib/xp/event'
-import { contentArrayToRecord } from './arrayUtils'
+import { run, type ContextAttributes, type RunContext } from '/lib/xp/context'
+import { ENONIC_CMS_DEFAULT_REPO } from '/lib/ssb/repo/common'
 
 const { moment } = __non_webpack_require__('/lib/vendor/moment')
 
+const dummyReq: Partial<XP.Request> = {
+  branch: 'master',
+}
+
+const createUserContext: RunContext<ContextAttributes> = {
+  // Master context (XP)
+  repository: ENONIC_CMS_DEFAULT_REPO,
+  branch: 'master',
+  principals: ['role:system.admin'],
+  user: {
+    login: 'su',
+    idProvider: 'system',
+  },
+}
+
 export function setupArticleListener(): void {
   listener({
-    type: 'node.*',
-    localOnly: false,
+    type: 'node.updated',
+    localOnly: true,
     callback: (event: EnonicEvent) => {
-      if (['node.updated', 'node.moved'].indexOf(event.type) >= 0) {
-        log.info(`GLNRBN event \n ${JSON.stringify(event, null, 2)}`)
-        const eventContent = get({ key: event.data.nodes[0].id })
-        if (eventContent?.type == 'mimir:article') {
-          log.info(JSON.stringify(addSubjectToXData(eventContent)))
-        }
+      log.info(`GLNRBN event \n ${JSON.stringify(event, null, 2)}`)
+      const eventContent: Content<Article, XData> | null = get({ key: event.data.nodes[0].id })
+      if (eventContent?.type == 'mimir:article') {
+        const result = run(createUserContext, () => {
+          // @ts-ignore
+          return addSubjectToXData(eventContent, dummyReq)
+        })
+
+        log.info(JSON.stringify(result))
       }
     },
   })
@@ -101,7 +120,10 @@ export function addSubjectToXData(
     .map((subject) => subject.name)
     .filter(notNullOrUndefined)
 
+  log.info(`GLNRBN main: ${mainSubjects}, sub: ${subSubjects}`)
   if (mainSubjects.length && subSubjects.length) {
+    log.info(`GLNRBN input content: ${JSON.stringify(article)}`)
+
     const modified = modify({
       key: article._id,
       requireValid: false,
@@ -115,9 +137,12 @@ export function addSubjectToXData(
             },
           },
         }
+        log.info(`GLNRBN content: ${JSON.stringify(content)}`)
         return content
       },
     })
+    log.info(`GLNRBN modified: ${JSON.stringify(modified)}`)
+
     return modified
   }
   return undefined
