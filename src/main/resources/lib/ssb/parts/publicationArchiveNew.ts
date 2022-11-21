@@ -1,4 +1,4 @@
-import type { Article } from '../../../site/content-types/article/article'
+import type { Article } from '../../../site/content-types'
 import type { Content, QueryDSL } from '/lib/xp/content'
 import { pageUrl } from '/lib/xp/portal'
 import { getMainSubjectBySubSubject, getMainSubjects, getSubSubjects, type SubjectItem } from '../utils/subjectUtils'

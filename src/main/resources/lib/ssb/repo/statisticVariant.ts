@@ -6,14 +6,13 @@ import { getAllStatisticsFromRepo } from '/lib/ssb/statreg/statistics'
 import { contentArrayToRecord, forceArray } from '/lib/ssb/utils/arrayUtils'
 import { notEmptyOrUndefined, notNullOrUndefined } from '/lib/ssb/utils/coreUtils'
 import type { ReleasesInListing, StatisticInListing, VariantInListing } from '/lib/ssb/dashboard/statreg/types'
+import type { QueryDSL } from '/lib/xp/content'
 import { type Content, query, type QueryResponse } from '/lib/xp/content'
-import type { OmStatistikken } from '../../../site/content-types/omStatistikken/omStatistikken'
+import type { OmStatistikken, Statistics } from '../../../site/content-types'
 import type { XData } from '../../../site/x-data'
-import type { Statistics } from '../../../site/content-types/statistics/statistics'
 import { capitalize } from '/lib/ssb/utils/stringUtils'
 import { calculatePeriod, getNextRelease, getPreviousRelease, nextReleasedPassed } from '/lib/ssb/utils/variantUtils'
 import type { SubjectItem } from '/lib/ssb/utils/subjectUtils'
-import type { QueryDSL } from '/lib/xp/content'
 
 const { queryForMainSubjects, queryForSubSubjects, getAllMainSubjectByContent, getAllSubSubjectByContent } =
   __non_webpack_require__('/lib/ssb/utils/subjectUtils')

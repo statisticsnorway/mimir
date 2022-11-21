@@ -6,14 +6,13 @@ import { getAllStatisticsFromRepo } from '/lib/ssb/statreg/statistics'
 import { contentArrayToRecord, forceArray } from '/lib/ssb/utils/arrayUtils'
 import { notEmptyOrUndefined, notNullOrUndefined } from '/lib/ssb/utils/coreUtils'
 import type { StatisticInListing, VariantInListing } from '/lib/ssb/dashboard/statreg/types'
+import type { QueryDSL } from '/lib/xp/content'
 import { type Content, query, type QueryResponse } from '/lib/xp/content'
-import type { OmStatistikken } from '../../../site/content-types/omStatistikken/omStatistikken'
+import type { OmStatistikken, Statistics } from '../../../site/content-types'
 import type { XData } from '../../../site/x-data'
-import type { Statistics } from '../../../site/content-types/statistics/statistics'
 import { capitalize } from '/lib/ssb/utils/stringUtils'
 import { calculatePeriod } from '/lib/ssb/utils/variantUtils'
 import type { SubjectItem } from '/lib/ssb/utils/subjectUtils'
-import type { QueryDSL } from '/lib/xp/content'
 
 const { queryForMainSubjects, queryForSubSubjects, getAllMainSubjectByContent, getAllSubSubjectByContent } =
   __non_webpack_require__('/lib/ssb/utils/subjectUtils')
@@ -23,7 +22,7 @@ export const REPO_ID_STATISTICS: 'no.ssb.statistics' = 'no.ssb.statistics' as co
 
 const LANGUAGES: ReadonlyArray<'en' | 'nb'> = ['nb', 'en'] as const
 
-//TODO Hele denne kan kanskje slettes hvis statisticVariant fungerer som forventet.
+// TODO Hele denne kan kanskje slettes hvis statisticVariant fungerer som forventet.
 export function createOrUpdateStatisticsRepo(): void {
   log.info(`Initiating "${REPO_ID_STATISTICS}"`)
   run(
@@ -314,7 +313,7 @@ function getNextRelease(releases: StatisticRelease[], language: string): Statist
     return undefined
   }
   const nextRelease: StatisticRelease = upComingReleases[0]
-  //Check if more than one release at same day
+  // Check if more than one release at same day
   const releasesPublishTime: StatisticRelease[] = upComingReleases.filter(
     (release) => release.publishTime === nextRelease.publishTime
   )
@@ -334,7 +333,7 @@ function getPreviousRelease(releases: StatisticRelease[], language: string): Sta
   }
   const previousRelease: StatisticRelease = previousReleases[previousReleases.length - 1]
 
-  //Check if more than one release at same day
+  // Check if more than one release at same day
   const releasesPublishTime: StatisticRelease[] = previousReleases.filter(
     (release) => release.publishTime === previousRelease.publishTime
   )
@@ -378,7 +377,7 @@ export interface Statistic {
 
 export interface StatisticRelease {
   frequency: string
-  publishTime: string //Instant | string
+  publishTime: string // Instant | string
   period: string
 }
 
