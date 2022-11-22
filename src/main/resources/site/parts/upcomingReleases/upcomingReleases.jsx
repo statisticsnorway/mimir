@@ -141,33 +141,6 @@ function UpcomingReleases(props) {
     return newReleases
   }
 
-  // function fetchMoreReleases() {
-  //   setLoading(true)
-  //   if (!lastCountedDay) {
-  //     return
-  //   }
-  //   axios
-  //     .get(props.upcomingReleasesServiceUrl, {
-  //       params: {
-  //         start: `${lastCountedDay.year}-${parseInt(lastCountedDay.month) + 1}-${lastCountedDay.day}`,
-  //         count: props.count,
-  //         language: props.language,
-  //       },
-  //     })
-  //     .then((res) => {
-  //       if (res.data.releases.length) {
-  //         let newReleases = mergeReleases(releases, res.data.releases, 0)
-  //         newReleases = mergeContentReleases(newReleases)
-  //         setReleases(newReleases)
-  //       } else {
-  //         setLoading(true)
-  //       }
-  //     })
-  //     .finally(() => {
-  //       setLoading(false)
-  //     })
-  // }
-
   function fetchAllReleases() {
     setLoading(true)
     setShowAll(true)
