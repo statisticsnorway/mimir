@@ -14,7 +14,7 @@ import { capitalize } from '/lib/ssb/utils/stringUtils'
 import { calculatePeriod, getNextRelease, getPreviousRelease, nextReleasedPassed } from '/lib/ssb/utils/variantUtils'
 import type { SubjectItem } from '/lib/ssb/utils/subjectUtils'
 
-const { queryForMainSubjects, queryForSubSubjects, getAllMainSubjectByContent, getAllSubSubjectByContent } =
+const { queryForSubjects, getAllMainSubjectByContent, getAllSubSubjectByContent } =
   __non_webpack_require__('/lib/ssb/utils/subjectUtils')
 
 export const REPO_ID_STATREG_STATISTICS: 'no.ssb.statreg.statistics.variants' =
@@ -100,11 +100,13 @@ export function fillRepo(statistics: Array<StatisticInListing>) {
   })
 
   LANGUAGES.forEach((language) => {
-    const allMainSubjects: SubjectItem[] = queryForMainSubjects({
+    const allMainSubjects: SubjectItem[] = queryForSubjects({
       language,
+      subjectType: 'mainSubject',
     })
-    const allSubSubjects: SubjectItem[] = queryForSubSubjects({
+    const allSubSubjects: SubjectItem[] = queryForSubjects({
       language,
+      subjectType: 'subSubject',
     })
 
     const statisticsResponse: QueryResponse<Statistics, XData> = getStatisticsContentByRegStatId(
