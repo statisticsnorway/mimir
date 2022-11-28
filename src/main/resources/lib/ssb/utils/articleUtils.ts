@@ -134,7 +134,7 @@ export function addSubjectToXData(
         })
       })
     } catch (error) {
-      log.error(JSON.stringify(error))
+      log.error(`Error in editing content for subjectTags, error: ${JSON.stringify(error, null, 2)}`)
     }
     return modified
   }
