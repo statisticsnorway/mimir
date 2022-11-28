@@ -13,6 +13,7 @@ import { get, modify, query, type Content, type QueryResponse } from '/lib/xp/co
 import { pageUrl } from '/lib/xp/portal'
 import { listener, EnonicEvent } from '/lib/xp/event'
 import { ENONIC_CMS_DEFAULT_REPO, withSuperUserContext } from '/lib/ssb/repo/common'
+import { arraysEqual, ensureArray } from './arrayUtils'
 
 const { moment } = __non_webpack_require__('/lib/vendor/moment')
 
@@ -25,13 +26,14 @@ export function setupArticleListener(): void {
     type: 'node.updated',
     localOnly: true,
     callback: (event: EnonicEvent) => {
+      log.info(JSON.stringify(event, null, 2))
       const eventContent: Content<Article, XData> | null = get({ key: event.data.nodes[0].id })
       if (eventContent?.type == 'mimir:article') {
         try {
           // @ts-ignore <- needs to be here, we don't want to create a whole req
           addSubjectToXData(eventContent, dummyReq)
         } catch (error) {
-          log.info(`Error while trying to add Subject to Article, error: ${JSON.stringify(error, null, 2)}`)
+          log.error(`Error while trying to add Subject to Article, error: ${JSON.stringify(error, null, 2)}`)
         }
       }
     },
@@ -107,40 +109,51 @@ export function addSubjectToXData(
     .map((subject) => subject.name)
     .filter(notNullOrUndefined)
 
-  if (mainSubjects.length && subSubjects.length) {
-    const subjectTag = {
-      mainSubjects: mainSubjects,
-      subSubjects: subSubjects,
-    }
-    if (article.x.mimir?.subjectTag != subjectTag) {
-      let modified: Content<Article, XData> | undefined
-      try {
-        modified = withSuperUserContext(ENONIC_CMS_DEFAULT_REPO, 'draft', () => {
-          return modify({
-            key: article._id,
-            requireValid: true,
-            editor: (content: Content<Article, XData>) => {
-              content.x = {
-                ...content.x,
-                mimir: {
-                  subjectTag: {
-                    mainSubjects: mainSubjects,
-                    subSubjects: subSubjects,
-                  },
+  if (mainSubjects.length && subSubjects.length && shouldEdit(mainSubjects, subSubjects, article)) {
+    let modified: Content<Article, XData> | undefined
+    try {
+      modified = withSuperUserContext(ENONIC_CMS_DEFAULT_REPO, 'draft', () => {
+        return modify({
+          key: article._id,
+          requireValid: true,
+          editor: (content: Content<Article, XData>) => {
+            content.x = {
+              ...content.x,
+              mimir: {
+                subjectTag: {
+                  mainSubjects: mainSubjects,
+                  subSubjects: subSubjects,
                 },
-              }
-              return content
-            },
-          })
+              },
+            }
+            return content
+          },
         })
-      } catch (error) {
-        log.error(JSON.stringify(error))
-      }
-
-      return modified
+      })
+    } catch (error) {
+      log.error(JSON.stringify(error))
     }
+    return modified
   }
   return undefined
+}
+
+function shouldEdit(
+  mainSubjects: Array<string>,
+  subSubjects: Array<string>,
+  article: Content<Article, XData>
+): boolean {
+  const mainIdentical: boolean = arraysEqual(
+    ensureArray(mainSubjects),
+    ensureArray(article.x.mimir?.subjectTag?.mainSubjects)
+  )
+  const subIdentical: boolean = arraysEqual(
+    ensureArray(subSubjects),
+    ensureArray(article.x.mimir?.subjectTag?.subSubjects)
+  )
+  // Should skip editing if content already contains xdata equal to what it should have
+  if (mainIdentical && subIdentical) return false
+  else return true
 }
 
 export interface ArticleUtilsLib {
