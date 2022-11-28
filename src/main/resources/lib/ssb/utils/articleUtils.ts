@@ -26,12 +26,15 @@ export function setupArticleListener(): void {
     type: 'node.updated',
     localOnly: true,
     callback: (event: EnonicEvent) => {
-      log.info(JSON.stringify(event, null, 2))
       const eventContent: Content<Article, XData> | null = get({ key: event.data.nodes[0].id })
       if (eventContent?.type == 'mimir:article') {
         try {
+          const start = Date.now()
           // @ts-ignore <- needs to be here, we don't want to create a whole req
           addSubjectToXData(eventContent, dummyReq)
+
+          const end = Date.now()
+          log.info(`GLNRBN runtime for adding subjectData: ${end - start}ms`)
         } catch (error) {
           log.error(`Error while trying to add Subject to Article, error: ${JSON.stringify(error, null, 2)}`)
         }
