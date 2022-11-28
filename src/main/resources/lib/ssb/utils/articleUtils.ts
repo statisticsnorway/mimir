@@ -34,7 +34,7 @@ export function setupArticleListener(): void {
           addSubjectToXData(eventContent, dummyReq)
 
           const end = Date.now()
-          log.info(`GLNRBN runtime for adding subjectData: ${end - start}ms`)
+          log.info(`Runtime for adding subjectData: ${end - start}ms`)
         } catch (error) {
           log.error(`Error while trying to add Subject to Article, error: ${JSON.stringify(error, null, 2)}`)
         }

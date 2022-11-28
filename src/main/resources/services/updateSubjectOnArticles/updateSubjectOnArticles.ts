@@ -43,7 +43,6 @@ export function get(req: XP.Request): XP.Response {
   }
 
   const fixedContents: Array<Content<Article, XData>> = []
-  // const contentsToPublish: Array<string> = []
   const publishResult: Array<PublishResponse> = []
 
   contentToFix.hits.forEach((hit) => {
@@ -55,7 +54,6 @@ export function get(req: XP.Request): XP.Response {
     preparedArticle && fixedContents.push(preparedArticle)
 
     if (masterVersion?.modifiedTime == hit.modifiedTime && preparedArticle) {
-      // contentsToPublish.push(modified._id)
       run(createUserContext, () => {
         publishResult.push(
           publish({
@@ -68,23 +66,6 @@ export function get(req: XP.Request): XP.Response {
       })
     }
   })
-
-  // if (contentsToPublish.length) {
-  // }
-  // let publishResult: Array<PublishResponse>
-  // run(createUserContext, () => {
-  //   publishResult.push(publish({
-  //     keys: contentsToPublish,
-  //     sourceBranch: 'draft',
-  //     targetBranch: 'master',
-  //     includeDependencies: false,
-  //   }))
-  // })
-  //   return {
-  //     body: { count: fixedContents.length, fixedContents, publishResult },
-  //     contentType: 'application/json',
-  //   }
-  // } else
 
   return {
     body: { count: fixedContents.length, fixedContents, publishResult },
