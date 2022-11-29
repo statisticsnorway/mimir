@@ -2,9 +2,8 @@ import { get, query, Content, QueryResponse } from '/lib/xp/content'
 import { Phrases } from '../../../lib/types/language'
 import { render, RenderResponse } from '/lib/enonic/react4xp'
 import { SEO } from '../../../services/news/news'
-import { Article } from '../../content-types/article/article'
-import { ContentList } from '../../content-types/contentList/contentList'
-import { RelatedFactPagePartConfig } from './relatedFactPage-part-config'
+import type { Article, ContentList } from '../../content-types'
+import type { RelatedFactPage as RelatedFactPagePartConfig } from '.'
 
 const { imagePlaceholder, getComponent, getContent, imageUrl, pageUrl, serviceUrl } =
   __non_webpack_require__('/lib/xp/portal')

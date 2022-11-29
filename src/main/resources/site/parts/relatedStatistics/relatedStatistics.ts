@@ -3,7 +3,7 @@ import { ResourceKey, render } from '/lib/thymeleaf'
 import { Phrases } from '../../../lib/types/language'
 import { render as r4xpRender } from '/lib/enonic/react4xp'
 import { SEO } from '../../../services/news/news'
-import { Statistics } from '../../content-types/statistics/statistics'
+import type { Statistics } from '../../content-types'
 
 const {
   data: { forceArray },

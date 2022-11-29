@@ -1,5 +1,5 @@
+import type { Article } from '../../../site/content-types'
 import { XData } from 'site/x-data'
-import { Article } from '../../../site/content-types/article/article'
 import {
   getAllMainSubjectByContent,
   getAllSubSubjectByContent,
@@ -7,6 +7,8 @@ import {
   getSubSubjects,
   type SubjectItem,
 } from '../utils/subjectUtils'
+import { query, Content, QueryResponse } from '/lib/xp/content'
+import { SubjectItem } from '../utils/subjectUtils'
 import { formatDate } from './dateUtils'
 import { notNullOrUndefined } from '/lib/ssb/utils/coreUtils'
 import { get, modify, query, type Content, type QueryResponse } from '/lib/xp/content'

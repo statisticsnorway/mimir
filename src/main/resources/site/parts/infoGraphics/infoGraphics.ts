@@ -9,15 +9,13 @@ const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
 import { get, Content, MediaImage } from '/lib/xp/content'
 import { SourceList, SourcesConfig } from '../../../lib/ssb/utils/utils'
 import { render, RenderResponse } from '/lib/enonic/react4xp'
-// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import { Base64 } from 'js-base64'
-import { InfoGraphicsPartConfig } from './infoGraphics-part-config'
-import { DefaultPageConfig } from '../../pages/default/default-page-config'
+import type { InfoGraphics as InfoGraphicsPartConfig } from '.'
+import type { Default as DefaultPageConfig } from '../../pages/default'
 
 exports.get = function (req: XP.Request): XP.Response | RenderResponse {
   try {
-    const config: InfoGraphicsPartConfig = getComponent().config
     return renderPart(req)
   } catch (e) {
     return renderError(req, 'Error in part', e)

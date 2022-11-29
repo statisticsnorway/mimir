@@ -1,5 +1,5 @@
 import { query, Content } from '/lib/xp/content'
-import { RewriteVarnish } from '../../site/content-types/rewriteVarnish/rewriteVarnish'
+import type { RewriteVarnish } from '../../site/content-types'
 
 function get(): XP.Response {
   const varnishContent: Content<RewriteVarnish> = query({

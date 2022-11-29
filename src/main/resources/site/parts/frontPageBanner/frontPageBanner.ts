@@ -1,5 +1,5 @@
 import { getComponent, imageUrl, Component } from '/lib/xp/portal'
-import { FrontPageBannerPartConfig } from './frontPageBanner-part-config'
+import type { FrontPageBanner as FrontPageBannerPartConfig } from '.'
 import { render } from '/lib/thymeleaf'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
@@ -8,15 +8,15 @@ const view = resolve('./frontPageBanner.html')
 
 exports.get = function (req: XP.Request) {
   try {
-    return renderPart(req)
+    return renderPart()
   } catch (e) {
     return renderError(req, 'Error in part: ', e)
   }
 }
 
-exports.preview = (req: XP.Request) => renderPart(req)
+exports.preview = () => renderPart()
 
-function renderPart(req: XP.Request): XP.Response {
+function renderPart(): XP.Response {
   const part: Component<FrontPageBannerPartConfig> = getComponent()
 
   const model: object = {

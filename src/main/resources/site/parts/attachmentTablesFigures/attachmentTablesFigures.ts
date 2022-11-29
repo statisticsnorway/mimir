@@ -5,7 +5,7 @@ import { JSONstat } from '../../../lib/types/jsonstat-toolkit'
 import { Phrases } from '../../../lib/types/language'
 import { render as r4XpRender, RenderResponse } from '/lib/enonic/react4xp'
 import { TbmlDataUniform } from '../../../lib/types/xmlParser'
-import { Statistics } from '../../content-types/statistics/statistics'
+import type { Statistics } from '../../content-types'
 import { GA_TRACKING_ID } from '../../pages/default/default'
 import { AccordionData } from '../accordion/accordion'
 const {

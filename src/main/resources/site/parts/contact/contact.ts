@@ -3,9 +3,8 @@ import { getContent, getComponent, Component } from '/lib/xp/portal'
 import { ResourceKey, render } from '/lib/thymeleaf'
 import { Phrases } from '../../../lib/types/language'
 import { Contact } from '../../../lib/ssb/dashboard/statreg/types'
-import { ContactPartConfig } from './contact-part-config'
-import { Article } from '../../content-types/article/article'
-import { Statistics } from '../../content-types/statistics/statistics'
+import type { Contact as ContactPartConfig } from '.'
+import type { Article, Statistics } from '../../content-types'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 const { getContactsFromRepo } = __non_webpack_require__('/lib/ssb/statreg/contacts')

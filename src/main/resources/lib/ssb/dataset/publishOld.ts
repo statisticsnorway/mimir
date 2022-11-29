@@ -1,12 +1,12 @@
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 import { get as getContent, Content } from '/lib/xp/content'
-import { Statistics } from '../../../site/content-types/statistics/statistics'
-import { DataSource } from '../../../site/mixins/dataSource/dataSource'
+import type { Statistics } from '../../../site/content-types'
+import type { DataSource } from '../../../site/mixins/dataSource'
 import { DatasetRepoNode } from '../repo/dataset'
 import { StatisticInListing, ReleaseDatesVariant } from '../dashboard/statreg/types'
 import { JobEventNode, JobInfoNode, StatisticsPublishResult, DataSourceStatisticsPublishResult } from '../repo/job'
 import { NodeQueryHit } from '/lib/xp/node'
-import { Statistic } from '../../../site/mixins/statistic/statistic'
+import type { Statistic } from '../../../site/mixins/statistic'
 import { send } from '/lib/xp/event'
 
 const { moment } = __non_webpack_require__('/lib/vendor/moment')
@@ -33,9 +33,9 @@ export function currentlyWaitingForPublish(statistic: Content<Statistics>): bool
     start: 0,
     count: 1,
     query: `
-      _path LIKE "/jobs/*" AND 
-      data.task = "${JobNames.PUBLISH_JOB}" AND 
-      data.status = "${JobStatus.STARTED}" AND 
+      _path LIKE "/jobs/*" AND
+      data.task = "${JobNames.PUBLISH_JOB}" AND
+      data.status = "${JobStatus.STARTED}" AND
       range("_ts", instant("${from}"), instant("${to}"))`,
     sort: '_ts DESC',
   }).hits[0]

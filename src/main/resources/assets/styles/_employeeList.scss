@@ -11,6 +11,10 @@
 			font-size: 20px;
 			line-height: 32px;
 		}
+
+    .person-count p {
+      margin-bottom: .5rem;
+    }
 	}
 
 	.banner {
@@ -23,20 +27,20 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		
+
 		.letter-list {
 			width: 780px;
 			display: flex;
 			flex-direction: column;
 			padding-left: 0;
 			margin: 0;
-	
+
 			.list-item {
 				width: 100%;
 				margin: 1.7rem 0;
 				display: flex;
 				list-style: none;
-				
+
 				.letter {
 					width: 80px;
 					height: 80px;
@@ -50,36 +54,36 @@
 					border: 2px solid $ssb-dark-5;
 					background: white;
 					color: $ssb-dark-5;
-				
+
 					h2 {
 						font-size: 40px;
 					}
-				} 
-				
+				}
+
 				.empty-letter {
 					min-width: 80px;
 					max-width: 80px;
 					margin: .5rem 1rem 0 0;
 				}
-				
+
 				.employee-info {
 					width: 100%;
 					min-height: 94.78px;
 					display: flex;
 					justify-content: space-between;
-	
+
 					> div .position {
 						margin-top: .3rem;
 					}
-	
+
 					> div .contact-details {
 						margin-top: .3rem;
-	
+
 						span .dash-space {
 							margin: 0 0.2rem;
 						}
 					}
-				
+
 					> div > div > span > a > .link-text {
 						font-size: 14px;
 					}
@@ -109,16 +113,23 @@
 			}
 		}
 
-		.row .container div p { 
-			inline-size: 100%;
-		}
-		
+		.row .container {
+      div p {
+        inline-size: 100%;
+      }
+
+      .person-count p {
+        margin-bottom: .75rem;
+      }
+    }
+
+
 		.letter-list-container .letter-list {
 			max-width: 100%;
 
 			.list-item {
 				flex-direction: column;
-	
+
 				.letter {
 					margin: 0 0 0.5rem;
 					width: 72px;
@@ -128,19 +139,19 @@
 					color: white;
 					background: $ssb-dark-5;
 					border: 2px solid $ssb-dark-5;
-	
+
 					h2 {
 						font-size: 16px;
 					}
 				}
-	
+
 				.empty-letter {
 					margin: 0;
 					display: none;
 				}
 			}
 		}
-		
+
 	}
 }
 

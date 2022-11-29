@@ -18,7 +18,16 @@ export function formatDate(date: string | undefined, formatType: string, languag
   return
 }
 
+export function createMonthName(monthNumber: string, language?: string) {
+  const months =
+    language === 'en'
+      ? ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+      : ['jan.', 'feb.', 'mar.', 'apr.', 'mai.', 'jun.', 'jul.', 'aug.', 'sep.', 'okt.', 'nov.', 'des.']
+  return months[parseInt(monthNumber)]
+}
+
 export interface DateUtilsLib {
   sameDay: (d1: Date, d2: Date) => boolean
   formatDate: (date: string | undefined, formatType: string, language: string) => string | undefined
+  createMonthName: (monthNumber: string, language: string) => string
 }

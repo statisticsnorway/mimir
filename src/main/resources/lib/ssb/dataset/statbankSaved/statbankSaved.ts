@@ -1,6 +1,6 @@
 import { DatasetRepoNode, DataSource as DataSourceType } from '../../repo/dataset'
 import { Content } from '/lib/xp/content'
-import { DataSource } from '../../../../site/mixins/dataSource/dataSource'
+import type { DataSource } from '../../../../site/mixins/dataSource'
 import { JSONstat } from '../../../types/jsonstat-toolkit'
 import { StatbankSavedRaw } from '../../../types/xmlParser'
 

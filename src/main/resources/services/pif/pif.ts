@@ -1,6 +1,6 @@
 import { Content } from '/lib/xp/content'
 import { HttpRequestParams } from '/lib/http-client'
-import { CalculatorConfig } from '../../site/content-types/calculatorConfig/calculatorConfig'
+import type { CalculatorConfig } from '../../site/content-types'
 import { Dataset } from '../../lib/types/jsonstat-toolkit'
 const { localize } = __non_webpack_require__('/lib/xp/i18n')
 const { getCalculatorConfig, getPifDataset, isChronological, getChangeValue } =
@@ -136,7 +136,6 @@ function getAverageYear(dataPif: Dataset | null, year: string, scopeCode: string
 }
 
 function getIndexTime(pifData: Dataset | null, time: string, scopeCode: string, productGroup: string): number | null {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
   // @ts-ignore
   const index: null | number = pifData?.Data({
     Tid: time,

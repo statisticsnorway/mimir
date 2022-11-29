@@ -1,9 +1,9 @@
 import { get, Content, MediaImage } from '/lib/xp/content'
 import { ResourceKey, render } from '/lib/thymeleaf'
-import { render as r4xpRender, RenderResponse } from '/lib/enonic/react4xp'
+import { render as r4xpRender } from '/lib/enonic/react4xp'
 import { SEO } from '../../../services/news/news'
-import { Statistics } from '../../content-types/statistics/statistics'
-import { StandardCardsListPartConfig } from './standardCardsList-part-config'
+import type { Statistics } from '../../content-types'
+import type { StandardCardsList as StandardCardsListPartConfig } from '.'
 import { randomUnsafeString } from '/lib/ssb/utils/utils'
 
 const {
@@ -13,7 +13,6 @@ const { getComponent, imageUrl, pageUrl } = __non_webpack_require__('/lib/xp/por
 const { getImageCaption, getImageAlt } = __non_webpack_require__('/lib/ssb/utils/imageUtils')
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
-const { hasPath } = __non_webpack_require__('/lib/vendor/ramda')
 
 const view: ResourceKey = resolve('standardCardsList.html')
 

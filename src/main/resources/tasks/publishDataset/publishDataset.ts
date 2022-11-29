@@ -1,6 +1,6 @@
 import { cronContext } from '../../lib/ssb/cron/cron'
-import { CleanupPublishDatasetConfig } from '../cleanupPublishDataset/cleanupPublishDataset-config'
-import { PublishDatasetConfig } from './publishDataset-config'
+import type { CleanupPublishDataset as CleanupPublishDatasetConfig } from '../../tasks/cleanupPublishDataset'
+import type { PublishDataset as PublishDatasetConfig } from '../../tasks/publishDataset'
 import { send } from '/lib/xp/event'
 
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')

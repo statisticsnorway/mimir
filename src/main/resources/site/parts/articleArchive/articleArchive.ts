@@ -4,8 +4,7 @@ import { getContent, imageUrl, pageUrl, processHtml, serviceUrl } from '/lib/xp/
 import { localize } from '/lib/xp/i18n'
 
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
-import { Article } from '../../content-types/article/article'
-import { ArticleArchive } from '../../content-types/articleArchive/articleArchive'
+import type { Article, ArticleArchive } from '../../content-types'
 
 const { getImageAlt } = __non_webpack_require__('/lib/ssb/utils/imageUtils')
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')

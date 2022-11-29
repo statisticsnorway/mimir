@@ -1,23 +1,20 @@
-import { DefaultPageConfig } from '../../../site/pages/default/default-page-config'
+import type { Default as DefaultPageConfig } from '../../../site/pages/default'
 
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 import { EventInfo } from '../repo/query'
 import { Socket, SocketEmitter } from '../../types/socket'
 import { query, get as getContent, Content, QueryResponse } from '/lib/xp/content'
 import { StatisticInListing, VariantInListing } from './statreg/types'
-import { Statistics } from '../../../site/content-types/statistics/statistics'
+import type { Statistics, Highchart, Table, KeyFigure } from '../../../site/content-types'
 import { ProcessXml, RefreshDatasetResult, DashboardJobInfo } from './dashboard'
 import { run, RunContext } from '/lib/xp/context'
 import { DatasetRepoNode } from '../repo/dataset'
-import { Highchart } from '../../../site/content-types/highchart/highchart'
-import { Table } from '../../../site/content-types/table/table'
-import { KeyFigure } from '../../../site/content-types/keyFigure/keyFigure'
-import { DataSource } from '../../../site/mixins/dataSource/dataSource'
+import type { DataSource } from '../../../site/mixins/dataSource'
 import { Source, TbmlDataUniform } from '../../types/xmlParser'
 import { JobEventNode, JobInfoNode, JobNames, JobStatus } from '../repo/job'
 import { NodeQueryResponse } from '/lib/xp/node'
 import { hasRole, User } from '/lib/xp/auth'
-import { Statistic } from '../../../site/mixins/statistic/statistic'
+import type { Statistic } from '../../../site/mixins/statistic'
 import { ContextAttributes } from '*/lib/xp/context'
 
 const { hasWritePermissions } = __non_webpack_require__('/lib/ssb/parts/permissions')

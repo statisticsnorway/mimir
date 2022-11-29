@@ -1,11 +1,10 @@
 import { Content, get } from '/lib/xp/content'
-import { Employee } from '../../content-types/employee/employee'
-import { DefaultPageConfig } from '../../pages/default/default-page-config'
+import type { Employee, Page } from '../../content-types'
+import type { Default as DefaultPageConfig } from '../../pages/default'
 import { localize } from '/lib/xp/i18n'
 import { getContent, pageUrl, imageUrl, attachmentUrl } from '/lib/xp/portal'
 import { render, RenderResponse } from '/lib/enonic/react4xp'
-import { Page } from 'site/content-types/page/page'
-import { SEO } from 'services/news/news'
+import { SEO } from '../../../services/news/news'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 const {

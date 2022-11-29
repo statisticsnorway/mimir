@@ -1,6 +1,5 @@
 import { render, RenderResponse } from '/lib/enonic/react4xp'
 import { Content } from '/lib/xp/content'
-import { SiteConfig } from '../../site-config'
 
 const { getContent, getSiteConfig } = __non_webpack_require__('/lib/xp/portal')
 const { localize } = __non_webpack_require__('/lib/xp/i18n')
@@ -16,7 +15,7 @@ function renderPart(req: XP.Request): RenderResponse {
 
   const pageLanguage: string = page.language ? page.language : 'nb'
 
-  const siteConfig: SiteConfig = getSiteConfig()
+  const siteConfig: XP.SiteConfig = getSiteConfig()
   const statbankHelpLink: string = siteConfig.statbankHelpLink
 
   const statbankHelpText: string = localize({

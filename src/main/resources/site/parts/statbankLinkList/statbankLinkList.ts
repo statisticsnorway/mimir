@@ -2,8 +2,8 @@ import { Content } from '/lib/xp/content'
 import { ResourceKey, render } from '/lib/thymeleaf'
 import { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/types'
 import { Phrases } from '../../../lib/types/language'
-import { render as r4xpRender, RenderResponse } from '/lib/enonic/react4xp'
-import { Statistics } from '../../content-types/statistics/statistics'
+import { render as r4xpRender } from '/lib/enonic/react4xp'
+import type { Statistics } from '../../content-types'
 
 const { getStatisticByIdFromRepo } = __non_webpack_require__('/lib/ssb/statreg/statistics')
 const { getContent } = __non_webpack_require__('/lib/xp/portal')

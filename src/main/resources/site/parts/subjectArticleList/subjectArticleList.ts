@@ -1,7 +1,7 @@
 import { render, RenderResponse } from '/lib/enonic/react4xp'
 import { Content, QueryResponse } from '/lib/xp/content'
 import { PreparedArticles } from '../../../lib/ssb/utils/articleUtils'
-import { Article } from '../../content-types/article/article'
+import type { Article } from '../../content-types'
 
 const { localize } = __non_webpack_require__('/lib/xp/i18n')
 const { getContent, serviceUrl } = __non_webpack_require__('/lib/xp/portal')

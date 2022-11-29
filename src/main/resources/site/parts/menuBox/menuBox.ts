@@ -2,8 +2,8 @@ import { get, Content } from '/lib/xp/content'
 import { render as r4XpRender, RenderResponse } from '/lib/enonic/react4xp'
 import { ResourceKey, render } from '/lib/thymeleaf'
 import { Component } from '/lib/xp/portal'
-import { MenuBoxPartConfig } from '../menuBox/menuBox-part-config'
-import { MenuBox } from '../../content-types/menuBox/menuBox'
+import type { MenuBox as MenuBoxPartConfig } from '.'
+import type { MenuBox } from '../../content-types'
 
 const { getComponent, imageUrl, pageUrl } = __non_webpack_require__('/lib/xp/portal')
 

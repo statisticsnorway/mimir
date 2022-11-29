@@ -1,6 +1,6 @@
 import { getChildren, query, Content } from '/lib/xp/content'
-import { render, RenderResponse } from '/lib/enonic/react4xp'
-import { Article } from '../../content-types/article/article'
+import { render } from '/lib/enonic/react4xp'
+import type { Article } from '../../content-types'
 
 const { data } = __non_webpack_require__('/lib/util')
 const { attachmentUrl, getContent, pageUrl, processHtml } = __non_webpack_require__('/lib/xp/portal')

@@ -1,17 +1,16 @@
 /* eslint-disable new-cap */
-// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import JSONstat from 'jsonstat-toolkit/import.mjs'
 import { getComponent, getContent, Component } from '/lib/xp/portal'
-import { HighchartPartConfig } from './highchart-part-config'
+import type { Highchart as HighchartPartConfig } from '.'
 import { get, Content } from '/lib/xp/content'
-import { Highchart } from '../../content-types/highchart/highchart'
+import type { Highchart } from '../../content-types'
 import { DatasetRepoNode } from '../../../lib/ssb/repo/dataset'
 import { JSONstat as JSONstatType } from '../../../lib/types/jsonstat-toolkit'
 import { TbmlDataUniform } from '../../../lib/types/xmlParser'
 import { HighchartsGraphConfig } from '../../../lib/types/highcharts'
 import { ResourceKey, render } from '/lib/thymeleaf'
-import { DataSource } from '../../mixins/dataSource/dataSource'
+import type { DataSource } from '../../mixins/dataSource'
 import { render as r4XpRender, RenderResponse } from '/lib/enonic/react4xp'
 import { GA_TRACKING_ID } from '../../pages/default/default'
 
@@ -78,7 +77,7 @@ function renderPart(req: XP.Request, highchartIds: Array<string>): XP.Response |
 
   const highcharts: Array<HighchartsReactProps> = highchartIds
     .map((key) => {
-      const highchart: Content<Highchart> | null = get({
+      const highchart: Content<Highchart & DataSource> | null = get({
         key,
       })
       const config: HighchartsExtendedProps | undefined = highchart ? determinConfigType(req, highchart) : undefined
