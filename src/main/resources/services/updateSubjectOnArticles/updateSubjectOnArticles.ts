@@ -13,6 +13,16 @@ import { run, type ContextAttributes, type RunContext } from '/lib/xp/context'
 
 import { ENONIC_CMS_DEFAULT_REPO } from '/lib/ssb/repo/common'
 
+import { pageUrl } from '/lib/xp/portal'
+import { getToolUrl } from '/lib/xp/admin'
+const DEFAULT_CONTENTSTUDIO_URL = getToolUrl('com.enonic.app.contentstudio', 'main')
+const ENONIC_PROJECT_ID = app.config && app.config['ssb.project.id'] ? app.config['ssb.project.id'] : 'default'
+
+const contentStudioBaseUrl = `${DEFAULT_CONTENTSTUDIO_URL}#/${ENONIC_PROJECT_ID}/edit/`
+
+const INTERNAL_BASE_URL =
+  app.config && app.config['ssb.internal.baseUrl'] ? app.config['ssb.internal.baseUrl'] : 'https://i.ssb.no'
+
 export function get(req: XP.Request): XP.Response {
   const contentToFix: QueryResponse<Article, XData, object> = query({
     query: '',
@@ -43,6 +53,7 @@ export function get(req: XP.Request): XP.Response {
   }
 
   const fixedContents: Array<Content<Article, XData>> = []
+  const editedUnpublishedContents: Array<{ name: string; url: string }> = []
   const publishResult: Array<PublishResponse> = []
 
   contentToFix.hits.forEach((hit) => {
@@ -64,11 +75,17 @@ export function get(req: XP.Request): XP.Response {
           })
         )
       })
+    } else if (preparedArticle) {
+      // editedUnpublishedContents.push(INTERNAL_BASE_URL + pageUrl({ id: preparedArticle._id }))
+      editedUnpublishedContents.push({
+        name: preparedArticle._name,
+        url: INTERNAL_BASE_URL + contentStudioBaseUrl + preparedArticle._id,
+      })
     }
   })
 
   return {
-    body: { count: fixedContents.length, fixedContents, publishResult },
+    body: { count: fixedContents.length, fixedContents, publishResult, editedUnpublishedContents },
     contentType: 'application/json',
   }
 }
