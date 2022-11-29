@@ -1,14 +1,7 @@
-import type { Content } from '/lib/xp/content'
-import type { CalculatorConfig } from '../../site/content-types'
-import type { DatasetRepoNode } from '../../lib/ssb/repo/dataset'
-import type { Data, Dataset, Dimension } from '../../lib/types/jsonstat-toolkit'
-/* eslint-disable new-cap */
-// @ts-ignore
-import JSONstat from 'jsonstat-toolkit/import.mjs'
+import type { NameData } from '/lib/ssb/repo/nameGraph'
+import { getNameGraphDataFromRepo } from '/lib/ssb/repo/nameGraph'
 
 import validator from 'validator'
-
-const { getCalculatorConfig, getNameSearchGraphData } = __non_webpack_require__('/lib/ssb/dataset/calculator')
 
 const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
 
@@ -48,45 +41,23 @@ function prepareResult(name: string): string {
 }
 
 function prepareGraph(name: string): Array<NameGraph> {
-  const config: Content<CalculatorConfig> | undefined = getCalculatorConfig()
-
+  const names: string[] = name.split(' ')
   const result: Array<NameGraph> = []
-  const bankSaved: DatasetRepoNode<object | JSONstat> | null = config ? getNameSearchGraphData(config) : null
-  const nameGraphDataset: Dataset | null = bankSaved ? JSONstat(bankSaved.data).Dataset('dataset') : null
-  const time: Dimension | null = nameGraphDataset?.Dimension('Tid') as Dimension
-  const years: Array<string> = time?.id as Array<string>
 
   try {
-    const labels: Keyable = bankSaved?.data.dimension.Fornavn.category.label
-
-    name.split(' ').forEach((n) => {
-      const preparedName: string = n.charAt(0) + n.slice(1).toLowerCase()
-      const nameCode: string | undefined = getKeyByValue(labels, preparedName)
-
-      if (nameCode) {
-        const values: number[] = years.map((year) => {
-          const data: Data | null = nameGraphDataset?.Data({
-            Fornavn: nameCode,
-            Tid: year,
-          }) as Data
-
-          return Number(data.value)
-        })
-        result.push({
-          name: preparedName,
-          data: values,
-        })
-      }
+    const nameDataRepo: NameData[] = getNameGraphDataFromRepo(names)
+    nameDataRepo.forEach((name) => {
+      result.push({
+        name: name.displayName,
+        data: name.data,
+      })
     })
+
     return result
   } catch (error) {
     log.error(error)
     return result
   }
-}
-
-function getKeyByValue(object: Keyable, value: string): string | undefined {
-  return Object.keys(object).find((key) => object[key] === value)
 }
 
 function sanitizeQuery(name: string): string {
@@ -113,8 +84,4 @@ interface ResultType {
 interface NameGraph {
   name: string
   data: Array<number>
-}
-
-interface Keyable {
-  [key: string]: string
 }
