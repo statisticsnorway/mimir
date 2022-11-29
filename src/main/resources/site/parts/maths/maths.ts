@@ -1,5 +1,5 @@
 import type { Component } from '/lib/xp/portal'
-import type { MathsPartConfig } from './maths-part-config'
+import type { Maths as MathsPartConfig } from '.'
 import { render, type RenderResponse } from '/lib/enonic/react4xp'
 import { getComponent } from '/lib/xp/portal'
 

@@ -3,7 +3,7 @@ import { type ResourceKey, render } from '/lib/thymeleaf'
 import type { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/types'
 import type { Phrases } from '../../../lib/types/language'
 import { render as r4xpRender } from '/lib/enonic/react4xp'
-import type { Statistics } from '../../content-types/statistics/statistics'
+import type { Statistics } from '../../content-types'
 import { getContent } from '/lib/xp/portal'
 
 const { getStatisticByIdFromRepo } = __non_webpack_require__('/lib/ssb/statreg/statistics')

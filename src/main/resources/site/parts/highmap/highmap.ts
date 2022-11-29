@@ -3,8 +3,8 @@ import type { RowData } from '../../../lib/ssb/parts/highcharts/data/htmlTable'
 import { isNumber, type RowValue } from '../../../lib/ssb/utils/utils'
 import { render, type RenderResponse } from '/lib/enonic/react4xp'
 import type { PreliminaryData, XmlParser } from '../../../lib/types/xmlParser'
-import type { Highmap } from '../../content-types/highmap/highmap'
-import type { HighmapPartConfig } from './highmap-part-config'
+import type { Highmap } from '../../content-types'
+import type { Highmap as HighmapPartConfig } from '.'
 import { getComponent, getContent } from '/lib/xp/portal'
 
 const {
@@ -181,7 +181,7 @@ function getRowValue(value: number | string | PreliminaryData | Array<number | s
 
 function sortedThresholdValues(thresholdValues: Highmap['thresholdValues']): Array<ThresholdValues> {
   if (thresholdValues.length) {
-    const formattedThresholdValues: Array<number> = thresholdValues
+    const formattedThresholdValues: Array<number> = (thresholdValues as Array<string>)
       .map((t) => Number(t.replace(',', '.')))
       .sort((a, b) => a - b)
     const sortedDataClasses: Array<ThresholdValues> = getDataClass(formattedThresholdValues)

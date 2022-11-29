@@ -1,6 +1,6 @@
 import { query, Content, QueryResponse } from '/lib/xp/content'
 import { listener, EnonicEvent, EnonicEventData } from '/lib/xp/event'
-import { DataSource } from '../../../site/mixins/dataSource/dataSource'
+import type { DataSource } from '../../../site/mixins/dataSource'
 import { run } from '/lib/xp/context'
 
 const { refreshDataset } = __non_webpack_require__('/lib/ssb/dataset/dataset')
@@ -22,11 +22,11 @@ export function setupFetchDataOnCreateListener(): void {
         if (nodes.length > 0) {
           const contentWithDataSource: QueryResponse<DataSource, object> = query({
             count: nodes.length,
-            query: `_id IN(${nodes.map((n) => `'${n.id}'`).join(',')}) AND 
+            query: `_id IN(${nodes.map((n) => `'${n.id}'`).join(',')}) AND
                 (
-                  data.dataSource._selected = '${DataSourceType.STATBANK_API}' OR 
-                  data.dataSource._selected = '${DataSourceType.TBPROCESSOR}' OR 
-                  data.dataSource._selected = '${DataSourceType.STATBANK_SAVED}' OR 
+                  data.dataSource._selected = '${DataSourceType.STATBANK_API}' OR
+                  data.dataSource._selected = '${DataSourceType.TBPROCESSOR}' OR
+                  data.dataSource._selected = '${DataSourceType.STATBANK_SAVED}' OR
                   data.dataSource._selected = '${DataSourceType.KLASS}'
                 )`,
             contentTypes: [

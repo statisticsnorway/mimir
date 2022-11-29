@@ -1,10 +1,10 @@
-import type { Article } from '../../content-types/article/article'
+import type { Article } from '../../content-types'
 import { pageUrl, getContent, getComponent, type Component } from '/lib/xp/portal'
-import type { ArticleListPartConfig } from './articleList-part-config'
+import type { ArticleList as ArticleListPartConfig } from '.'
 import { render, type RenderResponse } from '/lib/enonic/react4xp'
 import { query, type AggregationsResponseEntry, type Content } from '/lib/xp/content'
-import type { SubjectItem } from '/lib/ssb/utils/subjectUtils'
-import { formatDate } from '/lib/ssb/utils/dateUtils'
+import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
+import { formatDate } from '../../../lib/ssb/utils/dateUtils'
 import { localize } from '/lib/xp/i18n'
 
 const { moment } = __non_webpack_require__('/lib/vendor/moment')

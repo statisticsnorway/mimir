@@ -1,5 +1,5 @@
 import { request, HttpResponse } from '/lib/http-client'
-import { BanVarnishPageCacheConfig } from './banVarnishPageCache-config'
+import type { BanVarnishPageCache as BanVarnishPageCacheConfig } from '../../tasks/banVarnishPageCache'
 
 const taskLib = __non_webpack_require__('/lib/xp/task')
 

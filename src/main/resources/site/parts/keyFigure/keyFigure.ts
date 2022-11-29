@@ -2,8 +2,7 @@ import type { Content } from '/lib/xp/content'
 import type { MunicipalityWithCounty } from '../../../lib/ssb/dataset/klass/municipalities'
 import type { KeyFigureView } from '../../../lib/ssb/parts/keyFigure'
 import { render, type RenderResponse } from '/lib/enonic/react4xp'
-import type { SiteConfig } from '../../../site/site-config'
-import type { KeyFigurePartConfig } from './keyFigure-part-config'
+import type { KeyFigure as KeyFigurePartConfig } from '.'
 import { getContent, getComponent, getSiteConfig } from '/lib/xp/portal'
 
 const { get: getKeyFigures, parseKeyFigure } = __non_webpack_require__('/lib/ssb/parts/keyFigure')
@@ -29,8 +28,8 @@ export function get(req: XP.Request): RenderResponse | XP.Response {
 
 export function preview(req: XP.Request, id: string): RenderResponse | XP.Response {
   try {
-    const siteConfig: SiteConfig = getSiteConfig()
-    const defaultMunicipality: SiteConfig['defaultMunicipality'] = siteConfig.defaultMunicipality
+    const siteConfig: XP.SiteConfig = getSiteConfig()
+    const defaultMunicipality: XP.SiteConfig['defaultMunicipality'] = siteConfig.defaultMunicipality
     const municipality: MunicipalityWithCounty | undefined = getMunicipality({
       code: defaultMunicipality,
     } as unknown as XP.Request)

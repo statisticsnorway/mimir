@@ -1,7 +1,6 @@
 import { query, get, Content } from '/lib/xp/content'
 import { SEO } from '../../../services/news/news'
-import { OmStatistikken } from '../../../site/content-types/omStatistikken/omStatistikken'
-import { Statistics } from '../../../site/content-types/statistics/statistics'
+import type { OmStatistikken, Statistics } from '../../../site/content-types'
 import { ReleasesInListing, StatisticInListing, VariantInListing } from '../dashboard/statreg/types'
 import { parseISO, getMonth, getYear, getDate } from 'date-fns'
 

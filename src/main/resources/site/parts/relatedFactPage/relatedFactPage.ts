@@ -2,9 +2,8 @@ import { get as getContentByKey, query, type Content, type QueryResponse } from 
 import type { Phrases } from '../../../lib/types/language'
 import { render, type RenderResponse } from '/lib/enonic/react4xp'
 import type { SEO } from '../../../services/news/news'
-import type { Article } from '../../content-types/article/article'
-import type { ContentList } from '../../content-types/contentList/contentList'
-import type { RelatedFactPagePartConfig } from './relatedFactPage-part-config'
+import type { Article, ContentList } from '../../content-types'
+import type { RelatedFactPage as RelatedFactPagePartConfig } from '.'
 import { imagePlaceholder, getComponent, getContent, imageUrl, pageUrl, serviceUrl } from '/lib/xp/portal'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')

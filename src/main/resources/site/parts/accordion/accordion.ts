@@ -1,7 +1,7 @@
 import { get as getContentByKey, type Content } from '/lib/xp/content'
 import { render, type RenderResponse } from '/lib/enonic/react4xp'
-import type { Accordion } from '../../content-types/accordion/accordion'
-import type { AccordionConfig } from '../../macros/accordion/accordion-config'
+import type { Accordion } from '../../content-types'
+import type { Accordion as AccordionConfig } from '../../macros/accordion'
 import { getComponent, getContent, processHtml } from '/lib/xp/portal'
 
 const {

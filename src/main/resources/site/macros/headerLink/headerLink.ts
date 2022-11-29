@@ -1,4 +1,4 @@
-import { HeaderLinkConfig } from './headerLink-config'
+import type { HeaderLink as HeaderLinkConfig } from '../../macros/headerLink'
 import { render, RenderResponse } from '/lib/enonic/react4xp'
 import { get, Content } from '/lib/xp/content'
 
@@ -56,9 +56,4 @@ function prepareText(content: Content, linkText: string): string {
   }
 
   return linkText
-}
-
-interface PartProperties {
-  linkText: string
-  linkedContent: string
 }

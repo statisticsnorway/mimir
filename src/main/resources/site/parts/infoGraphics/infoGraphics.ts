@@ -3,8 +3,8 @@ import type { SourceList, SourcesConfig } from '../../../lib/ssb/utils/utils'
 import { render, type RenderResponse } from '/lib/enonic/react4xp'
 // @ts-ignore
 import { Base64 } from 'js-base64'
-import type { InfoGraphicsPartConfig } from './infoGraphics-part-config'
-import type { DefaultPageConfig } from '../../pages/default/default-page-config'
+import type { InfoGraphics as InfoGraphicsPartConfig } from '.'
+import type { Default as DefaultPageConfig } from '../../pages/default'
 import { getContent, getComponent, imageUrl } from '/lib/xp/portal'
 
 const {
@@ -16,7 +16,6 @@ const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
 
 export function get(req: XP.Request): XP.Response | RenderResponse {
   try {
-    const config: InfoGraphicsPartConfig = getComponent().config
     return renderPart(req)
   } catch (e) {
     return renderError(req, 'Error in part', e)

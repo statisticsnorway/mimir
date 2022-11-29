@@ -1,6 +1,6 @@
 import { get as getContentByKey, query, type Content } from '/lib/xp/content'
 import { render, type RenderResponse } from '/lib/enonic/react4xp'
-import type { LocalSearchPartConfig } from './localSearch-part-config'
+import type { LocalSearch as LocalSearchPartConfig } from '.'
 import { getComponent, pageUrl } from '/lib/xp/portal'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')

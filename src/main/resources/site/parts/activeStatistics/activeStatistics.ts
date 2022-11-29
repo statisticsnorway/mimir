@@ -1,9 +1,9 @@
 import { get as getContentByKey, type Content } from '/lib/xp/content'
 import { type ResourceKey, render } from '/lib/thymeleaf'
 import { render as r4XpRender, type RenderResponse } from '/lib/enonic/react4xp'
-import type { ActiveStatisticsPartConfig } from './activeStatistics-part-config'
-import type { Statistics } from '../../content-types/statistics/statistics'
-import type { SEO } from 'services/news/news'
+import type { ActiveStatistics as ActiveStatisticsPartConfig } from '.'
+import type { Statistics } from '../../content-types'
+import { SEO } from '../../../services/news/news'
 import { getContent, getComponent, pageUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 

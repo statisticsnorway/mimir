@@ -1,8 +1,7 @@
 import { get as getContent, query, Content, QueryResponse } from '/lib/xp/content'
-import { DefaultPageConfig } from '../../../site/pages/default/default-page-config'
-import { Statistics } from '../../../site/content-types/statistics/statistics'
+import type { Default as DefaultPageConfig } from '../../../site/pages/default'
+import type { Statistics, Page } from '../../../site/content-types'
 import { StatisticInListing } from '../dashboard/statreg/types'
-import { Page } from '../../../site/content-types/page/page'
 import { DefaultPage } from '/lib/types/defaultPage'
 
 const { getStatisticByShortNameFromRepo } = __non_webpack_require__('/lib/ssb/statreg/statistics')

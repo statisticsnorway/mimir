@@ -2,8 +2,8 @@ import { get as getContentByKey, type Content, type MediaImage } from '/lib/xp/c
 import { type ResourceKey, render } from '/lib/thymeleaf'
 import { render as r4xpRender } from '/lib/enonic/react4xp'
 import type { SEO } from '../../../services/news/news'
-import type { Statistics } from '../../content-types/statistics/statistics'
-import type { StandardCardsListPartConfig } from './standardCardsList-part-config'
+import type { Statistics } from '../../content-types'
+import type { StandardCardsList as StandardCardsListPartConfig } from '.'
 import { randomUnsafeString } from '/lib/ssb/utils/utils'
 import { getComponent, imageUrl, pageUrl } from '/lib/xp/portal'
 

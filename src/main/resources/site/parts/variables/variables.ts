@@ -1,6 +1,6 @@
 import { getChildren, query, type Content } from '/lib/xp/content'
 import { render } from '/lib/enonic/react4xp'
-import type { Article } from '../../content-types/article/article'
+import type { Article } from '../../content-types'
 import { attachmentUrl, getContent, pageUrl, processHtml } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 

@@ -8,10 +8,9 @@ import {
 } from '../../../lib/types/components'
 import type { Language, Phrases } from '../../../lib/types/language'
 import { render as r4xpRender } from '/lib/enonic/react4xp'
-import type { Statistics } from '../../content-types/statistics/statistics'
-import type { Table } from '../../content-types/table/table'
+import type { Statistics, Table } from '../../content-types'
 import { GA_TRACKING_ID } from '../../pages/default/default'
-import type { TablePartConfig } from './table-part-config'
+import type { Table as TablePartConfig } from '.'
 import { DataSource as DataSourceType } from '../../../lib/ssb/repo/dataset'
 import { getContent, getComponent, pageUrl, assetUrl } from '/lib/xp/portal'
 

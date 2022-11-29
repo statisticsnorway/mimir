@@ -1,6 +1,6 @@
 import { get as getContentByKey, type Content } from '/lib/xp/content'
 import { getComponent, attachmentUrl, pageUrl, type Component } from '/lib/xp/portal'
-import type { LinksPartConfig } from './links-part-config'
+import type { Links as LinksPartConfig } from '.'
 import { render, type RenderResponse } from '/lib/enonic/react4xp'
 import { renderError } from '../../../lib/ssb/error/error'
 import { GA_TRACKING_ID } from '../../pages/default/default'

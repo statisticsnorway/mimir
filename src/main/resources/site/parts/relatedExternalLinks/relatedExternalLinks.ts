@@ -2,10 +2,9 @@ import type { Content } from '/lib/xp/content'
 import { type ResourceKey, render } from '/lib/thymeleaf'
 import type { Phrases } from '../../../lib/types/language'
 import { render as r4xpRender } from '/lib/enonic/react4xp'
-import type { Article } from '../../content-types/article/article'
-import type { Statistics } from '../../content-types/statistics/statistics'
-import type { RelatedExternalLinks } from '../../mixins/relatedExternalLinks/relatedExternalLinks'
 import { getContent } from '/lib/xp/portal'
+import type { Article, Statistics } from '../../content-types'
+import type { RelatedExternalLinks } from '../../mixins/relatedExternalLinks'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 const util = __non_webpack_require__('/lib/util')

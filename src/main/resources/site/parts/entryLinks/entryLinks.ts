@@ -1,6 +1,6 @@
 import { render as r4XpRender, type RenderResponse } from '/lib/enonic/react4xp'
 import { type Component, getComponent, getContent, imageUrl } from '/lib/xp/portal'
-import type { EntryLinksPartConfig } from './entryLinks-part-config'
+import type { EntryLinks as EntryLinksPartConfig } from '.'
 import { type Content, get as getContentByKey, type MediaImage } from '/lib/xp/content'
 import type { Phrases } from '../../../lib/types/language'
 import { render, type ResourceKey } from '/lib/thymeleaf'

@@ -3,9 +3,8 @@ import { getContent, getComponent, type Component } from '/lib/xp/portal'
 import { type ResourceKey, render } from '/lib/thymeleaf'
 import type { Phrases } from '../../../lib/types/language'
 import type { Contact } from '../../../lib/ssb/dashboard/statreg/types'
-import type { ContactPartConfig } from './contact-part-config'
-import type { Article } from '../../content-types/article/article'
-import type { Statistics } from '../../content-types/statistics/statistics'
+import type { Contact as ContactPartConfig } from '.'
+import type { Article, Statistics } from '../../content-types'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 const { getContactsFromRepo } = __non_webpack_require__('/lib/ssb/statreg/contacts')
@@ -37,7 +36,6 @@ function treatPhoneNumber(phone: string): string {
     return ''
   }
 }
-
 const landCodeVisual = '(+47) '
 const landCode = '+47'
 

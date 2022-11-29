@@ -8,10 +8,10 @@ import type {
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
 import type { Phrases } from '../../../lib/types/language'
 import { render as r4xpRender } from '/lib/enonic/react4xp'
-import type { SEO } from '../../../services/news/news'
-import type { Article } from '../../content-types/article/article'
-import type { Statistics } from '../../content-types/statistics/statistics'
-import type { RelatedArticles } from '../../mixins/relatedArticles/relatedArticles'
+import { SEO } from '../../../services/news/news'
+import type { Article, Statistics } from '../../content-types'
+import type { RelatedArticles } from '../../mixins/relatedArticles'
+
 
 import { getContent, pageUrl, imageUrl, imagePlaceholder } from '/lib/xp/portal'
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')

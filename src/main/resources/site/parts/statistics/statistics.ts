@@ -7,7 +7,7 @@ import type {
 } from '../../../lib/ssb/dashboard/statreg/types'
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
 import { render as r4xpRender } from '/lib/enonic/react4xp'
-import type { Statistics } from '../../content-types/statistics/statistics'
+import type { Statistics } from '../../content-types'
 import type { Phrases } from '../../../lib/types/language'
 import { randomUnsafeString } from '/lib/ssb/utils/utils'
 import { getContent, pageUrl } from '/lib/xp/portal'
@@ -87,7 +87,6 @@ function renderPart(req: XP.Request): XP.Response {
       })
     : pageUrl({
         params: {
-          // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
           // @ts-ignore
           showDraft: true,
         },

@@ -1,7 +1,7 @@
 import { render as r4XpRender, type RenderResponse } from '/lib/enonic/react4xp'
 import { type ResourceKey, render } from '/lib/thymeleaf'
 import { getComponent, getContent, type Component } from '/lib/xp/portal'
-import type { MailChimpFormPartConfig } from './mailChimpForm-part-config'
+import type { MailChimpForm as MailChimpFormPartConfig } from '.'
 import type { Content } from '/lib/xp/content'
 import { localize } from '/lib/xp/i18n'
 

@@ -1,7 +1,7 @@
 import type { Content } from '/lib/xp/content'
 import type { Phrases } from '../../../lib/types/language'
 import { render } from '/lib/enonic/react4xp'
-import type { PubArchiveCalendarLinksPartConfig } from './pubArchiveCalendarLinks-part-config'
+import type { PubArchiveCalendarLinks as PubArchiveCalendarLinksPartConfig } from '.'
 import { getContent, getComponent } from '/lib/xp/portal'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')

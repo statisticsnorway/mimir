@@ -1,4 +1,4 @@
-import type { PictureCardLinksPartConfig } from './pictureCardLinks-part-config'
+import type { PictureCardLinks as PictureCardLinksPartConfig } from '.'
 import { getComponent, imageUrl, imagePlaceholder } from '/lib/xp/portal'
 import { render, RenderResponse } from '/lib/enonic/react4xp'
 

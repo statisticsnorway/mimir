@@ -2,8 +2,8 @@ import type { Content } from '/lib/xp/content'
 import type { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/types'
 import type { Phrases } from '../../../lib/types/language'
 import { render } from '/lib/enonic/react4xp'
-import type { Statistics } from '../../content-types/statistics/statistics'
-import type { StatbankBoxPartConfig } from './statbankBox-part-config'
+import type { Statistics } from '../../content-types'
+import type { StatbankBox as StatbankBoxPartConfig } from '.'
 import { getComponent, getContent, assetUrl } from '/lib/xp/portal'
 
 const { getStatisticByIdFromRepo } = __non_webpack_require__('/lib/ssb/statreg/statistics')

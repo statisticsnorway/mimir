@@ -3,7 +3,7 @@ import { type ResourceKey, render } from '/lib/thymeleaf'
 import type { Phrases } from '../../../lib/types/language'
 import { render as r4xpRender } from '/lib/enonic/react4xp'
 import type { SEO } from '../../../services/news/news'
-import type { Statistics } from '../../content-types/statistics/statistics'
+import type { Statistics } from '../../content-types'
 import { getContent, pageUrl } from '/lib/xp/portal'
 
 const {

@@ -1,9 +1,8 @@
 import { query, Content } from '/lib/xp/content'
-import { Statistics } from '../../../site/content-types/statistics/statistics'
-import { EndedStatisticList } from '../../../site/content-types/endedStatisticList/endedStatisticList'
+import type { Statistics, EndedStatisticList } from '../../../site/content-types'
 import { StatisticInListing } from '../dashboard/statreg/types'
-import { Statistic } from '../../../site/mixins/statistic/statistic'
-import { Subtopic } from '../../../site/mixins/subtopic/subtopic'
+import type { Statistic } from '../../../site/mixins/statistic'
+import type { Subtopic } from '../../../site/mixins/subtopic'
 import { DefaultPage } from '/lib/types/defaultPage'
 const { getAllStatisticsFromRepo } = __non_webpack_require__('/lib/ssb/statreg/statistics')
 const { ensureArray } = __non_webpack_require__('/lib/ssb/utils/arrayUtils')

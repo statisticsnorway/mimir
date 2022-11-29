@@ -1,7 +1,7 @@
 import { get as getContentByKey, type Content } from '/lib/xp/content'
 import { formatDate } from '/lib/ssb/utils/dateUtils'
 import { render, type RenderResponse } from '/lib/enonic/react4xp'
-import type { Article } from '../../content-types/article/article'
+import type { Article } from '../../content-types'
 import { processHtml, getContent, pageUrl } from '/lib/xp/portal'
 
 const {
@@ -120,7 +120,7 @@ function getAssociatedArticleArchiveLinks(
   associatedArticleArchivesConfig: Article['articleArchive']
 ): Array<AssociatedLink> | [] {
   if (associatedArticleArchivesConfig && associatedArticleArchivesConfig.length) {
-    return associatedArticleArchivesConfig
+    return (associatedArticleArchivesConfig as Array<string>)
       .map((articleArchive: string) => {
         const articleArchiveContent: Content | null = articleArchive
           ? getContentByKey({

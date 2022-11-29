@@ -2,8 +2,7 @@ import { formatDate } from '../../../lib/ssb/utils/dateUtils'
 import { get as getContentByKey, type Content } from '/lib/xp/content'
 import { render, type RenderResponse } from '/lib/enonic/react4xp'
 import type { Phrases } from '../../../lib/types/language'
-import type { Statistics } from '../../content-types/statistics/statistics'
-import type { OmStatistikken } from '../../content-types/omStatistikken/omStatistikken'
+import type { Statistics, OmStatistikken } from '../../content-types'
 import type {
   ReleaseDatesVariant,
   StatisticInListing,

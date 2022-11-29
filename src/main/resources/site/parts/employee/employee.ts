@@ -1,11 +1,10 @@
 import { type Content, get as getContentByKey } from '/lib/xp/content'
-import type { Employee } from '../../content-types/employee/employee'
-import type { DefaultPageConfig } from '../../pages/default/default-page-config'
+import type { Employee, Page } from '../../content-types'
+import type { Default as DefaultPageConfig } from '../../pages/default'
 import { localize } from '/lib/xp/i18n'
 import { getContent, pageUrl, imageUrl, attachmentUrl } from '/lib/xp/portal'
-import { render, type RenderResponse } from '/lib/enonic/react4xp'
-import type { Page } from 'site/content-types/page/page'
-import type { SEO } from 'services/news/news'
+import { render, RenderResponse } from '/lib/enonic/react4xp'
+import { SEO } from '../../../services/news/news'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 const {

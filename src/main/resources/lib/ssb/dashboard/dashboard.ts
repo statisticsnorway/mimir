@@ -3,7 +3,7 @@ import { ContextAttributes } from '*/lib/xp/context'
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 import { CreateOrUpdateStatus } from '../dataset/dataset'
 import { get as getContent, query, Content } from '/lib/xp/content'
-import { DataSource } from '../../../site/mixins/dataSource/dataSource'
+import type { DataSource } from '../../../site/mixins/dataSource'
 import { Events, QueryInfoNode } from '../repo/query'
 import { EVENT_LOG_REPO, EVENT_LOG_BRANCH, LogSummary } from '../repo/eventLog'
 import { NodeQueryHit, RepoNode } from '/lib/xp/node'
@@ -25,9 +25,8 @@ import {
 import { StatisticInListing } from './statreg/types'
 import { StatRegRefreshResult } from '../repo/statreg'
 import { StatRegJobInfo } from './statreg'
-import { DefaultPageConfig } from '../../../site/pages/default/default-page-config'
-import { Page } from '../../../site/content-types/page/page'
-import { Statistics } from '../../../site/content-types/statistics/statistics'
+import type { Default as DefaultPageConfig } from '../../../site/pages/default'
+import type { Page, Statistics } from '../../../site/content-types'
 
 const { users, showWarningIcon, WARNING_ICON_EVENTS, isPublished } = __non_webpack_require__(
   '/lib/ssb/dashboard/dashboardUtils'

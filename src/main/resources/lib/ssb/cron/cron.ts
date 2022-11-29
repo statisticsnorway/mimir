@@ -1,7 +1,7 @@
 import { findUsers, createUser, UserQueryResult } from '/lib/xp/auth'
 import { Content } from '/lib/xp/content'
 import { run, RunContext, ContextAttributes } from '/lib/xp/context'
-import { DataSource } from '../../../site/mixins/dataSource/dataSource'
+import type { DataSource } from '../../../site/mixins/dataSource'
 import { JobEventNode, JobInfoNode } from '../repo/job'
 import { StatRegRefreshResult } from '../repo/statreg'
 import { schedule, list, TaskMapper } from '/lib/cron'

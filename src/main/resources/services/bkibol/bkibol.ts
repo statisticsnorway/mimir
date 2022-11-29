@@ -1,6 +1,6 @@
 import { Content } from '/lib/xp/content'
 import { HttpRequestParams } from '/lib/http-client'
-import { CalculatorConfig } from '../../site/content-types/calculatorConfig/calculatorConfig'
+import type { CalculatorConfig } from '../../site/content-types'
 import { Dataset } from '../../lib/types/jsonstat-toolkit'
 const { localize } = __non_webpack_require__('/lib/xp/i18n')
 const { getCalculatorConfig, getBkibolDatasetEnebolig, getBkibolDatasetBoligblokk, isChronological, getChangeValue } =
@@ -122,7 +122,6 @@ interface IndexResult {
 }
 
 function getIndexTime(bkibolData: Dataset | null, time: string, workTypeCode: string): number | null {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
   // @ts-ignore
   const index: null | number = bkibolData?.Data({
     Tid: time,

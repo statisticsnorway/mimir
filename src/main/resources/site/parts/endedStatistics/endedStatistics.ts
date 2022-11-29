@@ -1,9 +1,9 @@
 import { render, type RenderResponse } from '/lib/enonic/react4xp'
-import type { EndedStatisticsPartConfig } from './endedStatistics-part-config'
+import type { EndedStatistics as EndedStatisticsPartConfig } from '.'
 import { get as getContentByKey, type Content } from '/lib/xp/content'
 import type { Phrases } from '../../../lib/types/language'
-import type { Statistics } from '../../content-types/statistics/statistics'
-import type { SEO } from 'services/news/news'
+import type { Statistics } from '../../content-types'
+import { SEO } from '../../../services/news/news'
 import { getComponent, getContent, pageUrl } from '/lib/xp/portal'
 
 const {

@@ -5,8 +5,8 @@ import { DropdownItems as MonthDropdownItems } from '../../../lib/types/componen
 import type { Dataset, Dimension } from '../../../lib/types/jsonstat-toolkit'
 import type { Language, Phrases } from '../../../lib/types/language'
 import { render, type RenderResponse } from '/lib/enonic/react4xp'
-import type { CalculatorConfig } from '../../content-types/calculatorConfig/calculatorConfig'
-import type { PifCalculatorPartConfig } from './pifCalculator-part-config'
+import type { CalculatorConfig } from '../../content-types'
+import type { PifCalculator as PifCalculatorPartConfig } from '.'
 import { getContent, getComponent, serviceUrl, pageUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 

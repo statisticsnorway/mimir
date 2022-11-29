@@ -1,11 +1,10 @@
 import { Content } from '/lib/xp/content'
-import { CalculatorConfig } from '../../site/content-types/calculatorConfig/calculatorConfig'
+import type { CalculatorConfig } from '../../site/content-types'
 import { DatasetRepoNode } from '../../lib/ssb/repo/dataset'
 
 const { getCalculatorConfig, getNameSearchGraphData } = __non_webpack_require__('/lib/ssb/dataset/calculator')
 
 /* eslint-disable new-cap */
-// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import JSONstat from 'jsonstat-toolkit/import.mjs'
 

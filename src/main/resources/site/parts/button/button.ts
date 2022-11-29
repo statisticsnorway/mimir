@@ -1,7 +1,7 @@
 import { get as getContentByKey, type Content } from '/lib/xp/content'
-import type { Button } from '../../content-types/button/button'
+import type { Button } from '../../content-types'
 import { attachmentUrl, getComponent, pageUrl, type Component } from '/lib/xp/portal'
-import type { ButtonPartConfig } from './button-part-config'
+import type { Button as ButtonPartConfig } from '.'
 import { type ResourceKey, render } from '/lib/thymeleaf'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')

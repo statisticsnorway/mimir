@@ -1,7 +1,7 @@
 import { HighchartsGraphConfig } from '../../../types/highcharts'
-import { Highchart } from '../../../../site/content-types/highchart/highchart'
+import type { Highchart } from '../../../../site/content-types'
 import { Content } from '/lib/xp/content'
-import { DataSource } from '../../../../site/mixins/dataSource/dataSource'
+import type { DataSource } from '../../../../site/mixins/dataSource'
 import { PreliminaryData } from '../../../types/xmlParser'
 
 const { createDefaultConfig } = __non_webpack_require__('/lib/ssb/parts/highcharts/graph/config')
@@ -34,7 +34,7 @@ export function prepareHighchartsGraphConfig(
   return getGraphConfig(highchartContent, options)
 }
 
-function getGraphConfig<T>(highchartContent: Content<Highchart>, options: GetGraphOptions): HighchartsGraphConfig {
+function getGraphConfig(highchartContent: Content<Highchart>, options: GetGraphOptions): HighchartsGraphConfig {
   switch (highchartContent.data.graphType) {
     case 'area':
       return areaConfig(highchartContent, options)
