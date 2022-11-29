@@ -11,11 +11,9 @@ import { getContent, getComponent, serviceUrl, pageUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
-
 const { getLanguage } = __non_webpack_require__('/lib/ssb/utils/language')
 const { getCalculatorConfig, getKpiDatasetMonth } = __non_webpack_require__('/lib/ssb/dataset/calculator')
 const { fromPartCache } = __non_webpack_require__('/lib/ssb/cache/partCache')
-const i18nLib = __non_webpack_require__('/lib/xp/i18n')
 
 export function get(req: XP.Request): XP.Response {
   try {
@@ -25,12 +23,8 @@ export function get(req: XP.Request): XP.Response {
   }
 }
 
-export function preview(req: XP.Request): XP.Response {
-  try {
-    return renderPart(req)
-  } catch (e) {
-    return renderError(req, 'Error in part', e)
-  }
+export function preview(req: XP.Request) {
+  return renderPart(req)
 }
 
 function renderPart(req: XP.Request): XP.Response {

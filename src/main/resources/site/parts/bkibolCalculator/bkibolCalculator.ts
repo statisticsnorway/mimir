@@ -11,11 +11,9 @@ import type { DropdownItem, DropdownItems } from '/lib/types/components'
 import { localize } from '/lib/xp/i18n'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
-
 const { getLanguage } = __non_webpack_require__('/lib/ssb/utils/language')
 const { getCalculatorConfig, getBkibolDatasetEnebolig } = __non_webpack_require__('/lib/ssb/dataset/calculator')
 const { fromPartCache } = __non_webpack_require__('/lib/ssb/cache/partCache')
-const i18nLib = __non_webpack_require__('/lib/xp/i18n')
 
 export function get(req: XP.Request): RenderResponse | XP.Response {
   try {
@@ -26,11 +24,7 @@ export function get(req: XP.Request): RenderResponse | XP.Response {
 }
 
 export function preview(req: XP.Request): RenderResponse | XP.Response {
-  try {
-    return renderPart(req)
-  } catch (e) {
-    return renderError(req, 'Error in part', e)
-  }
+  return renderPart(req)
 }
 
 function renderPart(req: XP.Request): RenderResponse {

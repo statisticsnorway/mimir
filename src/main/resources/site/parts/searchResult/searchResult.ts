@@ -23,12 +23,8 @@ export function get(req: XP.Request): RenderResponse | XP.Response {
   }
 }
 
-export function preview(req: XP.Request): RenderResponse | XP.Response {
-  try {
-    return renderPart(req)
-  } catch (e) {
-    return renderError(req, 'Error in part', e)
-  }
+export function preview(req: XP.Request) {
+  return renderPart(req)
 }
 
 export function renderPart(req: XP.Request): RenderResponse {

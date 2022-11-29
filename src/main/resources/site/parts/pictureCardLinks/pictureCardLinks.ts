@@ -1,6 +1,6 @@
 import type { PictureCardLinks as PictureCardLinksPartConfig } from '.'
 import { getComponent, imageUrl, imagePlaceholder } from '/lib/xp/portal'
-import { render, RenderResponse } from '/lib/enonic/react4xp'
+import { render } from '/lib/enonic/react4xp'
 
 const { getImageAlt } = __non_webpack_require__('/lib/ssb/utils/imageUtils')
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
@@ -13,7 +13,7 @@ export function get(req: XP.Request): XP.Response {
   }
 }
 
-export function preview(req: XP.Request): XP.Response {
+export function preview(req: XP.Request) {
   return renderPart(req)
 }
 

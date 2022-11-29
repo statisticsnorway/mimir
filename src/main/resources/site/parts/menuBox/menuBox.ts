@@ -22,7 +22,7 @@ export function get(req: XP.Request): XP.Response | RenderResponse | string {
   }
 }
 
-export function preview(req: XP.Request): XP.Response | RenderResponse | string {
+export function preview(req: XP.Request) {
   return renderPart(req)
 }
 
