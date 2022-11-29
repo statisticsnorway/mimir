@@ -1,12 +1,12 @@
-import { findUsers, createUser, UserQueryResult } from '/lib/xp/auth'
-import { Content } from '/lib/xp/content'
-import { run, RunContext, ContextAttributes } from '/lib/xp/context'
+import { createUser, findUsers, type UserQueryResult } from '/lib/xp/auth'
+import type { Content } from '/lib/xp/content'
+import { type ContextAttributes, run, type RunContext } from '/lib/xp/context'
 import type { DataSource } from '../../../site/mixins/dataSource'
-import { JobEventNode, JobInfoNode } from '../repo/job'
-import { StatRegRefreshResult } from '../repo/statreg'
-import { schedule, list, TaskMapper } from '/lib/cron'
-import { RSSFilter } from './rss'
-import { create, modify, list as listScheduledJobs, get as getScheduledJob, ScheduledJob } from '/lib/xp/scheduler'
+import type { JobEventNode, JobInfoNode } from '../repo/job'
+import type { StatRegRefreshResult } from '../repo/statreg'
+import { list, schedule, type TaskMapper } from '/lib/cron'
+import type { RSSFilter } from './rss'
+import { create, get as getScheduledJob, list as listScheduledJobs, modify, type ScheduledJob } from '/lib/xp/scheduler'
 
 const { clearPartFromPartCache } = __non_webpack_require__('/lib/ssb/cache/partCache')
 const { refreshStatRegData, STATREG_NODES } = __non_webpack_require__('/lib/ssb/repo/statreg')
@@ -23,6 +23,7 @@ const { updateUnpublishedMockTbml } = __non_webpack_require__('/lib/ssb/dataset/
 const { pushRssNews } = __non_webpack_require__('/lib/ssb/cron/pushRss')
 const { publishDataset } = __non_webpack_require__('/lib/ssb/dataset/publishOld')
 const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
+const { createOrUpdateStatisticsRepo } = __non_webpack_require__('/lib/ssb/repo/statisticVariant')
 
 const createUserContext: RunContext<ContextAttributes> = {
   // Master context (XP)
@@ -98,6 +99,7 @@ export function statRegJob(): void {
   })
   const result: Array<StatRegRefreshResult> = refreshStatRegData()
   completeJobLog(jobLogNode._id, JOB_STATUS_COMPLETE, result)
+  createOrUpdateStatisticsRepo()
 }
 
 function pushRssNewsJob(): void {
@@ -152,6 +154,19 @@ export function setupCronJobs(): void {
     name: 'StatReg Periodic Refresh',
     cron: statregCron,
     callback: () => runOnMasterOnly(statRegJob),
+    context: cronContext,
+  })
+
+  // Update repo no.ssb.statistic.variant
+  const updateStatisticRepoCron: string =
+    app.config && app.config['ssb.cron.updateStatisticRepo'] ? app.config['ssb.cron.updateStatisticRepo'] : '0 7 * * *'
+
+  schedule({
+    name: 'Update no.ssb.statistics Repo',
+    cron: updateStatisticRepoCron,
+    callback: () => {
+      createOrUpdateStatisticsRepo()
+    },
     context: cronContext,
   })
 
