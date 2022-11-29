@@ -1,8 +1,8 @@
 import { create as createRepo, get as getRepo } from '/lib/xp/repo'
 import { run } from '/lib/xp/context'
 import { connect, type NodeCreateParams, type RepoConnection } from '/lib/xp/node'
-import { Dimension } from '../../types/jsonstat-toolkit'
-import { DatasetRepoNode } from '../../../lib/ssb/repo/dataset'
+import type { Data, Dataset, Dimension } from '../../types/jsonstat-toolkit'
+import type { DatasetRepoNode } from '../../../lib/ssb/repo/dataset'
 // @ts-ignore
 import JSONstat from 'jsonstat-toolkit/import.mjs'
 
@@ -26,7 +26,7 @@ export function createOrUpdateNameGraphRepo(): void {
   )
 }
 
-export function fillRepo(names: Array<NameGraph>) {
+export function fillRepo(names: Array<NameData>) {
   if (getRepo(REPO_ID_NAME_GRAPH) === null) {
     createRepo({
       id: REPO_ID_NAME_GRAPH,
@@ -54,7 +54,7 @@ export function fillRepo(names: Array<NameGraph>) {
     const path = `/${name.displayName}`
     const exists: Array<string> = connection.exists(path)
 
-    const content: NameGraph = createContentName({
+    const content: NameData = createContentName({
       displayName: name.displayName,
       nameCode: name.nameCode,
       data: name.data,
@@ -62,9 +62,9 @@ export function fillRepo(names: Array<NameGraph>) {
 
     try {
       if (!exists) {
-        connection.create<NameGraph>(content)
+        connection.create<NameData>(content)
       } else {
-        connection.modify<NameGraph>({
+        connection.modify<NameData>({
           key: path,
           editor: (node) => {
             return {
@@ -82,32 +82,30 @@ export function fillRepo(names: Array<NameGraph>) {
   })
 }
 
-function getNameGraph(): Array<NameGraph> {
-  const result: Array<NameGraph> = []
-  const bankSaved: DatasetRepoNode<object | JSONstat> | null = getNameGraphDataWithConfig()
-  const labels: Keyable = bankSaved?.data.dimension.Fornavn.category.label
-
-  const fornavn: Dimension | null = JSONstat(bankSaved?.data).Dataset('dataset').Dimension('Fornavn') as Dimension
+function getNameGraph(): Array<NameData> {
+  const result: Array<NameData> = []
+  const nameGraphData: DatasetRepoNode<object | JSONstat> | null = getNameGraphDataWithConfig()
+  const nameGraphDataset: Dataset | null = nameGraphData ? JSONstat(nameGraphData.data).Dataset('dataset') : null
+  const labels: Keyable = nameGraphData?.data.dimension.Fornavn.category.label
+  const fornavn: Dimension | null = nameGraphDataset?.Dimension('Fornavn') as Dimension
+  const tid: Dimension | null = nameGraphDataset?.Dimension('Tid') as Dimension
   const names: Array<string> = fornavn?.id as Array<string>
-  const namesTest: Array<string> = names.slice(0, 10)
+  const years: Array<string> = tid?.id as Array<string>
 
   try {
-    namesTest.forEach(function (name) {
-      log.info('Name: ' + name)
-      const dataset: KeyableNumberArray = JSONstat(bankSaved?.data)
-        .Dataset(0)
-        .Dice(
-          {
-            Fornavn: [name],
-          },
-          {
-            clone: true,
-          }
-        )
+    names.forEach(function (name) {
+      const values: number[] = years.map((year) => {
+        const data: Data | null = nameGraphDataset?.Data({
+          Fornavn: name,
+          Tid: year,
+        }) as Data
+
+        return Number(data.value)
+      })
       result.push({
         displayName: labels[name],
         nameCode: name,
-        data: dataset.value,
+        data: values,
       })
     })
 
@@ -118,7 +116,7 @@ function getNameGraph(): Array<NameGraph> {
   }
 }
 
-function createContentName(params: NameGraph): NameGraph & NodeCreateParams {
+function createContentName(params: NameData): NameData & NodeCreateParams {
   const { displayName, nameCode, data } = params
   return {
     displayName: displayName,
@@ -129,7 +127,7 @@ function createContentName(params: NameGraph): NameGraph & NodeCreateParams {
   }
 }
 
-interface NameGraph {
+interface NameData {
   displayName: string
   nameCode: string
   data: Array<number>
@@ -137,8 +135,4 @@ interface NameGraph {
 
 interface Keyable {
   [key: string]: string
-}
-
-interface KeyableNumberArray {
-  [key: string]: Array<number>
 }
