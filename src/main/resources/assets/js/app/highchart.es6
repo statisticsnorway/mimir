@@ -130,6 +130,25 @@ export function init() {
   Highcharts.setOptions(createSetOptions)
 
   const lang = $('html').attr('lang')
+
+  // Workaround for table ascending/descending sort.
+  // There is a feature request in github, so a config option to disable the feature is being implemented.
+  Highcharts.addEvent(
+    Highcharts.Chart,
+    'afterViewData',
+    function () {
+      this.dataTableDiv2 = this.dataTableDiv
+      this.dataTableDiv = null
+    },
+    {
+      order: 0,
+    }
+  )
+  Highcharts.addEvent(Highcharts.Chart, 'afterViewData', function () {
+    this.dataTableDiv = this.dataTableDiv2
+    this.dataTableDiv2 = null
+  })
+
   Highcharts.addEvent(Highcharts.Chart, 'aftergetTableAST', function (e) {
     e.tree.children[2].children.forEach(function (row) {
       row.children.forEach(function (cell, i) {

@@ -1,14 +1,15 @@
-import { Content } from '/lib/xp/content'
+import type { Content } from '/lib/xp/content'
 import type { CalculatorConfig } from '../../site/content-types'
-import { DatasetRepoNode } from '../../lib/ssb/repo/dataset'
-
-const { getCalculatorConfig, getNameSearchGraphData } = __non_webpack_require__('/lib/ssb/dataset/calculator')
-
+import type { DatasetRepoNode } from '../../lib/ssb/repo/dataset'
+import type { Data, Dataset, Dimension } from '../../lib/types/jsonstat-toolkit'
 /* eslint-disable new-cap */
 // @ts-ignore
 import JSONstat from 'jsonstat-toolkit/import.mjs'
 
 import validator from 'validator'
+
+const { getCalculatorConfig, getNameSearchGraphData } = __non_webpack_require__('/lib/ssb/dataset/calculator')
+
 const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
 
 export function get(req: XP.Request): XP.Response {
@@ -51,6 +52,9 @@ function prepareGraph(name: string): Array<NameGraph> {
 
   const result: Array<NameGraph> = []
   const bankSaved: DatasetRepoNode<object | JSONstat> | null = config ? getNameSearchGraphData(config) : null
+  const nameGraphDataset: Dataset | null = bankSaved ? JSONstat(bankSaved.data).Dataset('dataset') : null
+  const time: Dimension | null = nameGraphDataset?.Dimension('Tid') as Dimension
+  const years: Array<string> = time?.id as Array<string>
 
   try {
     const labels: Keyable = bankSaved?.data.dimension.Fornavn.category.label
@@ -60,19 +64,17 @@ function prepareGraph(name: string): Array<NameGraph> {
       const nameCode: string | undefined = getKeyByValue(labels, preparedName)
 
       if (nameCode) {
-        const dataset: KeyableNumberArray = JSONstat(bankSaved?.data)
-          .Dataset(0)
-          .Dice(
-            {
-              Fornavn: [nameCode],
-            },
-            {
-              clone: true,
-            }
-          )
+        const values: number[] = years.map((year) => {
+          const data: Data | null = nameGraphDataset?.Data({
+            Fornavn: nameCode,
+            Tid: year,
+          }) as Data
+
+          return Number(data.value)
+        })
         result.push({
           name: preparedName,
-          data: dataset.value,
+          data: values,
         })
       }
     })
@@ -115,8 +117,4 @@ interface NameGraph {
 
 interface Keyable {
   [key: string]: string
-}
-
-interface KeyableNumberArray {
-  [key: string]: Array<number>
 }
