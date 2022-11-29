@@ -1,6 +1,6 @@
 import { create as createRepo, get as getRepo } from '/lib/xp/repo'
 import { run } from '/lib/xp/context'
-import { connect, type NodeCreateParams, type RepoConnection } from '/lib/xp/node'
+import { connect, type NodeCreateParams, type NodeQueryResponse, type RepoConnection } from '/lib/xp/node'
 import type { Data, Dataset, Dimension } from '../../types/jsonstat-toolkit'
 import type { DatasetRepoNode } from '../../../lib/ssb/repo/dataset'
 // @ts-ignore
@@ -8,6 +8,9 @@ import JSONstat from 'jsonstat-toolkit/import.mjs'
 
 export const REPO_ID_NAME_GRAPH: 'no.ssb.name.graph' = 'no.ssb.name.graph' as const
 const { getNameGraphDataWithConfig } = __non_webpack_require__('/lib/ssb/dataset/calculator')
+const {
+  data: { forceArray },
+} = __non_webpack_require__('/lib/util')
 
 export function createOrUpdateNameGraphRepo(): void {
   log.info(`Initiating "${REPO_ID_NAME_GRAPH}"`)
@@ -82,6 +85,34 @@ export function fillRepo(names: Array<NameData>) {
   })
 }
 
+export function getRepoConnectionNameGraph(): RepoConnection {
+  return connect({
+    repoId: REPO_ID_NAME_GRAPH,
+    branch: 'master',
+  })
+}
+
+export function getNameGraphDataFromRepo(names: string[]): NameData[] {
+  const connectionNameGraphRepo: RepoConnection = getRepoConnectionNameGraph()
+  const res: NodeQueryResponse = connectionNameGraphRepo.query({
+    count: 10,
+    filters: {
+      boolean: {
+        must: [
+          {
+            hasValue: {
+              field: 'displayName',
+              values: forceArray(names),
+            },
+          },
+        ],
+      },
+    },
+  })
+
+  return res.hits.map((hit) => connectionNameGraphRepo.get(hit.id))
+}
+
 function getNameGraph(): Array<NameData> {
   const result: Array<NameData> = []
   const nameGraphData: DatasetRepoNode<object | JSONstat> | null = getNameGraphDataWithConfig()
@@ -127,7 +158,7 @@ function createContentName(params: NameData): NameData & NodeCreateParams {
   }
 }
 
-interface NameData {
+export interface NameData {
   displayName: string
   nameCode: string
   data: Array<number>
