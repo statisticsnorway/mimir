@@ -1,11 +1,11 @@
-import { render } from '/lib/enonic/react4xp'
 import type { PictureCardLinks as PictureCardLinksPartConfig } from '.'
+import { getComponent, imageUrl, imagePlaceholder } from '/lib/xp/portal'
+import { render } from '/lib/enonic/react4xp'
+
 const { getImageAlt } = __non_webpack_require__('/lib/ssb/utils/imageUtils')
-
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
-const { getComponent, imageUrl, imagePlaceholder } = __non_webpack_require__('/lib/xp/portal')
 
-exports.get = function (req: XP.Request): XP.Response {
+export function get(req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -13,7 +13,7 @@ exports.get = function (req: XP.Request): XP.Response {
   }
 }
 
-exports.preview = (req: XP.Request): XP.Response => {
+export function preview(req: XP.Request) {
   return renderPart(req)
 }
 

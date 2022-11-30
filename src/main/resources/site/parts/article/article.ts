@@ -1,17 +1,17 @@
-import { get, Content } from '/lib/xp/content'
-import { formatDate } from '../../../lib/ssb/utils/dateUtils'
-import { render, RenderResponse } from '/lib/enonic/react4xp'
+import { get as getContentByKey, type Content } from '/lib/xp/content'
+import { formatDate } from '/lib/ssb/utils/dateUtils'
+import { render, type RenderResponse } from '/lib/enonic/react4xp'
 import type { Article } from '../../content-types'
+import { processHtml, getContent, pageUrl } from '/lib/xp/portal'
 
 const {
   data: { forceArray },
 } = __non_webpack_require__('/lib/util')
-const { getContent, pageUrl, processHtml } = __non_webpack_require__('/lib/xp/portal')
 const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
 
-exports.get = (req: XP.Request): RenderResponse | XP.Response => {
+export function get(req: XP.Request): RenderResponse | XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -86,7 +86,7 @@ function getAssociatedStatisticsLinks(
         if (option?._selected === 'XP') {
           const associatedStatisticsXP: string | undefined = option.XP?.content
           const associatedStatisticsXPContent: Content | null = associatedStatisticsXP
-            ? get({
+            ? getContentByKey({
                 key: associatedStatisticsXP,
               })
             : null
@@ -123,7 +123,7 @@ function getAssociatedArticleArchiveLinks(
     return (associatedArticleArchivesConfig as Array<string>)
       .map((articleArchive: string) => {
         const articleArchiveContent: Content | null = articleArchive
-          ? get({
+          ? getContentByKey({
               key: articleArchive,
             })
           : null

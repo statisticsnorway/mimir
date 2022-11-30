@@ -1,12 +1,11 @@
-import { ResourceKey, render } from '/lib/thymeleaf'
-
-const { assetUrl, getSiteConfig, serviceUrl } = __non_webpack_require__('/lib/xp/portal')
+import { type ResourceKey, render } from '/lib/thymeleaf'
+import { assetUrl, getSiteConfig, serviceUrl } from '/lib/xp/portal'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
 const view: ResourceKey = resolve('./map.html')
 
-exports.get = function (req: XP.Request): XP.Response {
+export function get(req: XP.Request): XP.Response {
   try {
     return renderPart()
   } catch (e) {
@@ -14,7 +13,9 @@ exports.get = function (req: XP.Request): XP.Response {
   }
 }
 
-exports.preview = (): XP.Response => renderPart()
+export function preview(): XP.Response {
+  return renderPart()
+}
 
 function renderPart(): XP.Response {
   const siteConfig: XP.SiteConfig = getSiteConfig()

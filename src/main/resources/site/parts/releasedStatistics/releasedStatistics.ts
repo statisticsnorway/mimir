@@ -1,25 +1,23 @@
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 
-import { Content } from '/lib/xp/content'
-import { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/types'
-import { render, RenderResponse } from '/lib/enonic/react4xp'
-import { Component } from '/lib/xp/portal'
+import type { Content } from '/lib/xp/content'
+import type { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/types'
+import { render, type RenderResponse } from '/lib/enonic/react4xp'
+import type { Component } from '/lib/xp/portal'
 import type { ReleasedStatistics as ReleasedStatisticsPartConfig } from '.'
-import { YearReleases } from '../../../lib/ssb/utils/variantUtils'
+import type { YearReleases } from '../../../lib/ssb/utils/variantUtils'
+import { getContent, getComponent } from '/lib/xp/portal'
+import { localize } from '/lib/xp/i18n'
 
-const { localize } = __non_webpack_require__('/lib/xp/i18n')
 const { fromPartCache } = __non_webpack_require__('/lib/ssb/cache/partCache')
 const { getAllStatisticsFromRepo } = __non_webpack_require__('/lib/ssb/statreg/statistics')
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
-const { getComponent, getContent } = __non_webpack_require__('/lib/xp/portal')
 const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
-
 const { checkLimitAndTrim } = __non_webpack_require__('/lib/ssb/utils/arrayUtils')
-
 const { addMonthNames, getReleasesForDay, groupStatisticsByYearMonthAndDay, prepareStatisticRelease } =
   __non_webpack_require__('/lib/ssb/utils/variantUtils')
 
-exports.get = function (req: XP.Request): RenderResponse | XP.Response {
+export function get(req: XP.Request): RenderResponse | XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -27,7 +25,9 @@ exports.get = function (req: XP.Request): RenderResponse | XP.Response {
   }
 }
 
-exports.preview = (req: XP.Request): RenderResponse => renderPart(req)
+export function preview(req: XP.Request): RenderResponse {
+  return renderPart(req)
+}
 
 export function renderPart(req: XP.Request): RenderResponse {
   const content: Content = getContent()

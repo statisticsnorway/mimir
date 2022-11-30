@@ -1,12 +1,16 @@
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
-import { get, Content } from '/lib/xp/content'
-import { render, RenderResponse } from '/lib/enonic/react4xp'
-import { Phrases } from '../../../lib/types/language'
+import { get as getContentByKey, type Content } from '/lib/xp/content'
+import { render, type RenderResponse } from '/lib/enonic/react4xp'
+import type { Phrases } from '../../../lib/types/language'
 import type { Statistics, OmStatistikken } from '../../content-types'
-import { ReleaseDatesVariant, StatisticInListing, VariantInListing } from '../../../lib/ssb/dashboard/statreg/types'
-import { Accordion, AccordionItem } from '../../../lib/types/components'
+import type {
+  ReleaseDatesVariant,
+  StatisticInListing,
+  VariantInListing,
+} from '../../../lib/ssb/dashboard/statreg/types'
+import type { Accordion, AccordionItem } from '../../../lib/types/components'
+import { getContent, processHtml } from '/lib/xp/portal'
 
-const { getContent, processHtml } = __non_webpack_require__('/lib/xp/portal')
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 const { getStatisticByIdFromRepo } = __non_webpack_require__('/lib/ssb/statreg/statistics')
 const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
@@ -16,7 +20,7 @@ const {
   data: { forceArray },
 } = __non_webpack_require__('/lib/util')
 
-exports.get = function (req: XP.Request): XP.Response | RenderResponse {
+export function get(req: XP.Request): XP.Response | RenderResponse {
   try {
     const statisticPage: Content<Statistics> = getContent()
     return renderPart(req, statisticPage.data.aboutTheStatistics)
@@ -25,7 +29,9 @@ exports.get = function (req: XP.Request): XP.Response | RenderResponse {
   }
 }
 
-exports.preview = (req: XP.Request, id: string | undefined): XP.Response | RenderResponse => renderPart(req, id)
+export function preview(req: XP.Request, id: string | undefined): XP.Response | RenderResponse {
+  return renderPart(req, id)
+}
 
 function renderPart(req: XP.Request, aboutTheStatisticsId: string | undefined): XP.Response | RenderResponse {
   const page: Content = getContent()
@@ -72,7 +78,7 @@ function getOmStatistikken(
   const statisticId: string | undefined = statisticPage.data.statistic
 
   const aboutTheStatisticsContent: Content<OmStatistikken> | null = aboutTheStatisticsId
-    ? get({
+    ? getContentByKey({
         key: aboutTheStatisticsId,
       })
     : null

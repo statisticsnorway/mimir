@@ -1,25 +1,23 @@
-import { Content } from '/lib/xp/content'
-import { render as r4XpRender, RenderResponse } from '/lib/enonic/react4xp'
-import { ResourceKey, render } from '/lib/thymeleaf'
-import { Component } from '/lib/xp/portal'
-import { MunicipalityWithCounty } from '../../../lib/ssb/dataset/klass/municipalities'
+import type { Content } from '/lib/xp/content'
+import { render as r4XpRender, type RenderResponse } from '/lib/enonic/react4xp'
+import { type ResourceKey, render } from '/lib/thymeleaf'
+import type { Component } from '/lib/xp/portal'
+import type { MunicipalityWithCounty } from '../../../lib/ssb/dataset/klass/municipalities'
 import type { MenuDropdown as MenuDropdownPartConfig } from '.'
 import type { MenuDropdown } from '../../content-types'
 import { randomUnsafeString } from '/lib/ssb/utils/utils'
+import { assetUrl, getContent, getComponent, pageUrl, getSiteConfig, serviceUrl } from '/lib/xp/portal'
+import { localize } from '/lib/xp/i18n'
 
-const { assetUrl, getContent, getComponent, pageUrl, getSiteConfig, serviceUrl } =
-  __non_webpack_require__('/lib/xp/portal')
+__non_webpack_require__('/lib/xp/portal')
 const { municipalsWithCounties, getMunicipality, removeCountyFromMunicipalityName } = __non_webpack_require__(
   '/lib/ssb/dataset/klass/municipalities'
 )
-
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
-
-const i18nLib = __non_webpack_require__('/lib/xp/i18n')
 
 const view: ResourceKey = resolve('./menuDropdown.html')
 
-exports.get = (req: XP.Request): XP.Response | RenderResponse => {
+export function get(req: XP.Request): XP.Response | RenderResponse {
   try {
     return renderPart(req)
   } catch (e) {
@@ -27,7 +25,9 @@ exports.get = (req: XP.Request): XP.Response | RenderResponse => {
   }
 }
 
-exports.preview = (req: XP.Request) => renderPart(req)
+export function preview(req: XP.Request) {
+  return renderPart(req)
+}
 
 function renderPart(req: XP.Request): XP.Response | RenderResponse {
   const parsedMunicipalities: Array<MunicipalityWithCounty> = municipalsWithCounties()
@@ -57,7 +57,7 @@ function renderPart(req: XP.Request): XP.Response | RenderResponse {
         id: page._id,
       })
 
-  const searchBarText: string = i18nLib.localize({
+  const searchBarText: string = localize({
     key: 'menuDropdown.searchBarText',
   })
 

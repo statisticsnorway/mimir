@@ -1,23 +1,23 @@
-const {
-  data: { forceArray },
-} = __non_webpack_require__('/lib/util')
-const { getContent, getComponent, imageUrl } = __non_webpack_require__('/lib/xp/portal')
-const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
-const { getSources } = __non_webpack_require__('/lib/ssb/utils/utils')
-const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
-const { parseHtmlString } = __non_webpack_require__('/lib/ssb/parts/table')
-const { localize } = __non_webpack_require__('/lib/xp/i18n')
-
-import { get, Content, MediaImage } from '/lib/xp/content'
-import { SourceList, SourcesConfig } from '../../../lib/ssb/utils/utils'
-import { render, RenderResponse } from '/lib/enonic/react4xp'
+import { get as getContentByKey, type Content, type MediaImage } from '/lib/xp/content'
+import type { SourceList, SourcesConfig } from '../../../lib/ssb/utils/utils'
+import { render, type RenderResponse } from '/lib/enonic/react4xp'
 import type { StaticVisualization } from '../../content-types'
 // @ts-ignore
 import type { Default as DefaultPageConfig } from '../../pages/default'
 import type { StaticVisualization as StaticVisualizationPartConfig } from '.'
 import type { HtmlTable } from '../../../lib/ssb/parts/table'
+import { getContent, getComponent, imageUrl } from '/lib/xp/portal'
+import { localize } from '/lib/xp/i18n'
 
-exports.get = function (req: XP.Request): XP.Response | RenderResponse {
+const {
+  data: { forceArray },
+} = __non_webpack_require__('/lib/util')
+const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
+const { getSources } = __non_webpack_require__('/lib/ssb/utils/utils')
+const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
+const { parseHtmlString } = __non_webpack_require__('/lib/ssb/parts/table')
+
+export function get(req: XP.Request): XP.Response | RenderResponse {
   try {
     const config: StaticVisualizationPartConfig = getComponent().config
     const contentId: string | undefined = config.staticVisualizationContent
@@ -27,7 +27,7 @@ exports.get = function (req: XP.Request): XP.Response | RenderResponse {
   }
 }
 
-exports.preview = (req: XP.Request, contentId: string | undefined): XP.Response | RenderResponse => {
+export function preview(req: XP.Request, contentId: string | undefined): XP.Response | RenderResponse {
   try {
     return renderPart(req, contentId)
   } catch (e) {
@@ -42,7 +42,7 @@ function renderPart(req: XP.Request, contentId: string | undefined): RenderRespo
   const descriptionStaticVisualization: string = phrases.descriptionStaticVisualization
 
   const staticVisualizationsContent: Content<StaticVisualization> | null = contentId
-    ? get({
+    ? getContentByKey({
         key: contentId,
       })
     : null
@@ -69,7 +69,7 @@ function renderPart(req: XP.Request, contentId: string | undefined): RenderRespo
     })
 
     // Retrieves image as content to get image meta data
-    const imageData: Content<MediaImage> | null = get({
+    const imageData: Content<MediaImage> | null = getContentByKey({
       key: staticVisualizationsContent.data.image,
     })
 

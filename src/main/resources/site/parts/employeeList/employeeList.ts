@@ -1,13 +1,13 @@
-import { Content, query, QueryResponse, get } from '/lib/xp/content'
+import { type Content, query, type QueryResponse, get as getContentByKey } from '/lib/xp/content'
 import type { Employee, Page } from '../../content-types'
 import type { Default as DefaultPageConfig } from '../../pages/default'
 import { getContent, Component, getComponent, pageUrl } from '/lib/xp/portal'
-import { RenderResponse, render } from '/lib/enonic/react4xp'
+import { type RenderResponse, render } from '/lib/enonic/react4xp'
 import type { EmployeeList as EmployeeListPartConfig } from '.'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
-exports.get = (req: XP.Request): RenderResponse | XP.Response => {
+export function get(req: XP.Request): RenderResponse | XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -15,7 +15,9 @@ exports.get = (req: XP.Request): RenderResponse | XP.Response => {
   }
 }
 
-exports.preview = (req: XP.Request): RenderResponse => renderPart(req)
+export function preview (req: XP.Request): RenderResponse {
+  return renderPart(req)
+}
 
 function renderPart(req: XP.Request): RenderResponse {
   const content: Content<Page, object> = getContent()
@@ -44,7 +46,7 @@ function renderPart(req: XP.Request): RenderResponse {
 function prepareEmployees(results: readonly Content<Employee>[]) {
   return results.map((result) => {
     const areaContent: Content<DefaultPageConfig> | null = result.data.area
-      ? get({
+      ? getContentByKey({
           key: result.data.area,
         })
       : null

@@ -1,4 +1,4 @@
-import { Content, get } from '/lib/xp/content'
+import { type Content, get as getContentByKey } from '/lib/xp/content'
 import type { Employee, Page } from '../../content-types'
 import type { Default as DefaultPageConfig } from '../../pages/default'
 import { localize } from '/lib/xp/i18n'
@@ -11,7 +11,7 @@ const {
   data: { forceArray },
 } = __non_webpack_require__('/lib/util')
 
-exports.get = function (req: XP.Request): RenderResponse | XP.Response {
+export function get(req: XP.Request): RenderResponse | XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -19,7 +19,9 @@ exports.get = function (req: XP.Request): RenderResponse | XP.Response {
   }
 }
 
-exports.preview = (req: XP.Request): RenderResponse | XP.Response => renderPart(req)
+export function preview(req: XP.Request): RenderResponse | XP.Response {
+  return renderPart(req)
+}
 
 function renderPart(req: XP.Request): RenderResponse {
   const page: Content<Employee> = getContent()
@@ -38,7 +40,7 @@ function renderPart(req: XP.Request): RenderResponse {
     : []
 
   const areaContent: Content<DefaultPageConfig> | null = page.data.area
-    ? get({
+    ? getContentByKey({
         key: page.data.area,
       })
     : null
@@ -160,7 +162,7 @@ function parseProject(projects: Employee['projects']): Array<Project> {
   const projectsIds: Array<string> = projects ? forceArray(projects) : []
   return projectsIds.map((projectId) => {
     const relatedProjectContent: Content<Page, SEO> | null = projectId
-      ? get({
+      ? getContentByKey({
           key: projectId,
         })
       : null

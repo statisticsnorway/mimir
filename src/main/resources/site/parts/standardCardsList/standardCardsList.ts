@@ -1,22 +1,21 @@
-import { get, Content, MediaImage } from '/lib/xp/content'
-import { ResourceKey, render } from '/lib/thymeleaf'
+import { get as getContentByKey, type Content, type MediaImage } from '/lib/xp/content'
+import { type ResourceKey, render } from '/lib/thymeleaf'
 import { render as r4xpRender } from '/lib/enonic/react4xp'
-import { SEO } from '../../../services/news/news'
+import type { SEO } from '../../../services/news/news'
 import type { Statistics } from '../../content-types'
 import type { StandardCardsList as StandardCardsListPartConfig } from '.'
 import { randomUnsafeString } from '/lib/ssb/utils/utils'
+import { getComponent, imageUrl, pageUrl } from '/lib/xp/portal'
 
 const {
   data: { forceArray },
 } = __non_webpack_require__('/lib/util')
-const { getComponent, imageUrl, pageUrl } = __non_webpack_require__('/lib/xp/portal')
 const { getImageCaption, getImageAlt } = __non_webpack_require__('/lib/ssb/utils/imageUtils')
-
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
 const view: ResourceKey = resolve('standardCardsList.html')
 
-exports.get = (req: XP.Request): XP.Response => {
+export function get(req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -24,7 +23,9 @@ exports.get = (req: XP.Request): XP.Response => {
   }
 }
 
-exports.preview = (req: XP.Request): XP.Response => renderPart(req)
+export function preview(req: XP.Request): XP.Response {
+  return renderPart(req)
+}
 
 function renderPart(req: XP.Request): XP.Response {
   const config: StandardCardsListPartConfig = getComponent().config
@@ -88,7 +89,7 @@ function parseContent(
       .map((standardCard) => {
         const iconId: string | undefined = standardCard.icon
         const iconData: Content<MediaImage> | null = iconId
-          ? get({
+          ? getContentByKey({
               key: iconId,
             })
           : null
@@ -102,7 +103,7 @@ function parseContent(
         if (standardCard.contentXP) {
           const standardCardContentId: string = standardCard.contentXP
           const pageContent: Content<Statistics, SEO> | null = standardCardContentId
-            ? get({
+            ? getContentByKey({
                 key: standardCardContentId,
               })
             : null

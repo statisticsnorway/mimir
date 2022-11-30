@@ -1,15 +1,13 @@
-import { render as r4XpRender, RenderResponse } from '/lib/enonic/react4xp'
-import { ResourceKey, render } from '/lib/thymeleaf'
-import { getComponent, getContent, Component } from '/lib/xp/portal'
+import { render as r4XpRender, type RenderResponse } from '/lib/enonic/react4xp'
+import { type ResourceKey, render } from '/lib/thymeleaf'
+import { getComponent, getContent, type Component } from '/lib/xp/portal'
 import type { MailChimpForm as MailChimpFormPartConfig } from '.'
-import { Content } from '/lib/xp/content'
-import { I18nLibrary } from '/lib/xp/i18n'
-
-const { localize }: I18nLibrary = __non_webpack_require__('/lib/xp/i18n')
+import type { Content } from '/lib/xp/content'
+import { localize } from '/lib/xp/i18n'
 
 const view: ResourceKey = resolve('./mailChimpForm.html')
 
-exports.get = function (req: XP.Request): RenderResponse {
+export function get(req: XP.Request): RenderResponse {
   const component: Component<MailChimpFormPartConfig> = getComponent()
   const content: Content = getContent()
 

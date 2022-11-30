@@ -1,19 +1,18 @@
-import { get, getAttachmentStream, ByteSource, Content } from '/lib/xp/content'
-import { RowData } from '../../../lib/ssb/parts/highcharts/data/htmlTable'
-import { isNumber, RowValue } from '../../../lib/ssb/utils/utils'
-import { render, RenderResponse } from '/lib/enonic/react4xp'
-import { PreliminaryData, XmlParser } from '../../../lib/types/xmlParser'
+import { get as getContentByKey, getAttachmentStream, type ByteSource, type Content } from '/lib/xp/content'
+import type { RowData } from '../../../lib/ssb/parts/highcharts/data/htmlTable'
+import { isNumber, type RowValue } from '../../../lib/ssb/utils/utils'
+import { render, type RenderResponse } from '/lib/enonic/react4xp'
+import type { PreliminaryData, XmlParser } from '../../../lib/types/xmlParser'
 import type { Highmap } from '../../content-types'
 import type { Highmap as HighmapPartConfig } from '.'
+import { getComponent, getContent } from '/lib/xp/portal'
 
 const {
   data: { forceArray },
 } = __non_webpack_require__('/lib/util')
-const { getComponent, getContent } = __non_webpack_require__('/lib/xp/portal')
 const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
 const { readText } = __non_webpack_require__('/lib/xp/io')
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
-
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 
 interface MapFeatures {
@@ -64,7 +63,7 @@ interface HighmapProps {
   language: string | undefined
 }
 
-exports.get = function (req: XP.Request): RenderResponse | XP.Response {
+export function get(req: XP.Request): RenderResponse | XP.Response {
   try {
     const config: HighmapPartConfig = getComponent().config
     const highmapId: string | undefined = config.highmapId
@@ -74,7 +73,7 @@ exports.get = function (req: XP.Request): RenderResponse | XP.Response {
   }
 }
 
-exports.preview = (req: XP.Request, highmapId: string | undefined): RenderResponse | XP.Response => {
+export function preview(req: XP.Request, highmapId: string | undefined): RenderResponse | XP.Response {
   try {
     return renderPart(req, highmapId)
   } catch (e) {
@@ -85,14 +84,14 @@ exports.preview = (req: XP.Request, highmapId: string | undefined): RenderRespon
 function renderPart(req: XP.Request, highmapId: string | undefined): RenderResponse | XP.Response {
   const page: Content = getContent()
   const highmapContent: Content<Highmap> | null = highmapId
-    ? get({
+    ? getContentByKey({
         key: highmapId,
       })
     : null
 
   const mapFile: Content | null =
     highmapContent && highmapContent.data.mapFile
-      ? get({
+      ? getContentByKey({
           key: highmapContent.data.mapFile,
         })
       : null

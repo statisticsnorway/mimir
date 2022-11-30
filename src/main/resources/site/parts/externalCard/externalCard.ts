@@ -1,12 +1,11 @@
-import { render, RenderResponse } from '/lib/enonic/react4xp'
-import { getComponent, imageUrl, Component } from '/lib/xp/portal'
+import { render, type RenderResponse } from '/lib/enonic/react4xp'
+import { getComponent, imageUrl, type Component } from '/lib/xp/portal'
 import type { ExternalCard as ExternalCardPartConfig } from '.'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
-
 const { data } = __non_webpack_require__('/lib/util')
 
-exports.get = function (req: XP.Request) {
+export function get(req: XP.Request) {
   try {
     return renderPart(req)
   } catch (e) {
@@ -14,7 +13,9 @@ exports.get = function (req: XP.Request) {
   }
 }
 
-exports.preview = (req: XP.Request) => renderPart(req)
+export function preview(req: XP.Request) {
+  return renderPart(req)
+}
 
 const NO_LINKS_FOUND = {
   body: '',

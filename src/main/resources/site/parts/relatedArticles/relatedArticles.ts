@@ -1,16 +1,20 @@
-import { Content, get, query } from '/lib/xp/content'
-import { render, ResourceKey } from '/lib/thymeleaf'
-import { ReleaseDatesVariant, StatisticInListing, VariantInListing } from '../../../lib/ssb/dashboard/statreg/types'
+import { type Content, get as getContentByKey, query } from '/lib/xp/content'
+import { render, type ResourceKey } from '/lib/thymeleaf'
+import type {
+  ReleaseDatesVariant,
+  StatisticInListing,
+  VariantInListing,
+} from '../../../lib/ssb/dashboard/statreg/types'
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
-import { Phrases } from '../../../lib/types/language'
+import type { Phrases } from '../../../lib/types/language'
 import { render as r4xpRender } from '/lib/enonic/react4xp'
 import { SEO } from '../../../services/news/news'
 import type { Article, Statistics } from '../../content-types'
 import type { RelatedArticles } from '../../mixins/relatedArticles'
 
-const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
-const { getContent, pageUrl, imageUrl, imagePlaceholder } = __non_webpack_require__('/lib/xp/portal')
+import { getContent, pageUrl, imageUrl, imagePlaceholder } from '/lib/xp/portal'
+const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 const util = __non_webpack_require__('/lib/util')
 const { getImageAlt } = __non_webpack_require__('/lib/ssb/utils/imageUtils')
 const { getReleaseDatesByVariants } = __non_webpack_require__('/lib/ssb/statreg/statistics')
@@ -22,7 +26,7 @@ const { moment } = __non_webpack_require__('/lib/vendor/moment')
 
 const view: ResourceKey = resolve('./relatedArticles.html')
 
-exports.get = function (req: XP.Request): XP.Response {
+export function get(req: XP.Request): XP.Response {
   try {
     const page: Content<Article> = getContent()
     let relatedArticles: RelatedArticles['relatedArticles'] = page.data.relatedArticles
@@ -37,8 +41,9 @@ exports.get = function (req: XP.Request): XP.Response {
   }
 }
 
-exports.preview = (req: XP.Request, relatedArticles: RelatedArticles['relatedArticles']) =>
-  renderPart(req, relatedArticles)
+export function preview(req: XP.Request, relatedArticles: RelatedArticles['relatedArticles']) {
+  return renderPart(req, relatedArticles)
+}
 
 function renderPart(req: XP.Request, relatedArticles: RelatedArticles['relatedArticles']): XP.Response {
   const page: Content<Article, SEO> = getContent()
@@ -74,7 +79,7 @@ function renderPart(req: XP.Request, relatedArticles: RelatedArticles['relatedAr
         .map((article) => {
           if (article._selected === 'article') {
             return fromRelatedArticlesCache(req, article.article.article, () => {
-              const articleContent: Content<Article, SEO> | null = get({
+              const articleContent: Content<Article, SEO> | null = getContentByKey({
                 key: article.article.article,
               })
 

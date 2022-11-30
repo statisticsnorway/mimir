@@ -1,8 +1,8 @@
-import { Content } from '/lib/xp/content'
-import { getContent, getComponent, Component } from '/lib/xp/portal'
-import { ResourceKey, render } from '/lib/thymeleaf'
-import { Phrases } from '../../../lib/types/language'
-import { Contact } from '../../../lib/ssb/dashboard/statreg/types'
+import type { Content } from '/lib/xp/content'
+import { getContent, getComponent, type Component } from '/lib/xp/portal'
+import { type ResourceKey, render } from '/lib/thymeleaf'
+import type { Phrases } from '../../../lib/types/language'
+import type { Contact } from '../../../lib/ssb/dashboard/statreg/types'
 import type { Contact as ContactPartConfig } from '.'
 import type { Article, Statistics } from '../../content-types'
 
@@ -14,7 +14,7 @@ const { find } = __non_webpack_require__('/lib/vendor/ramda')
 
 const view: ResourceKey = resolve('./contact.html') as ResourceKey
 
-exports.get = function (req: XP.Request) {
+export function get(req: XP.Request) {
   try {
     return renderPart(req)
   } catch (e) {
@@ -22,7 +22,9 @@ exports.get = function (req: XP.Request) {
   }
 }
 
-exports.preview = (req: XP.Request) => renderPart(req)
+export function preview(req: XP.Request) {
+  return renderPart(req)
+}
 
 // split 8-digit phone numbers into groups of 2 digits each dvs. "12345678" => "12 34 56 78"
 function treatPhoneNumber(phone: string): string {

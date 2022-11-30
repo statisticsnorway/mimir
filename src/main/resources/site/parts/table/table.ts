@@ -1,19 +1,18 @@
-import { get, Content } from '/lib/xp/content'
-import { ResourceKey, render } from '/lib/thymeleaf'
-import { TableSourceList, TableView } from '../../../lib/ssb/parts/table'
-import { SourceList, SourcesConfig } from '../../../lib/ssb/utils/utils'
+import { get as getContentByKey, type Content } from '/lib/xp/content'
+import { type ResourceKey, render } from '/lib/thymeleaf'
+import type { TableSourceList, TableView } from '../../../lib/ssb/parts/table'
+import type { SourceList, SourcesConfig } from '../../../lib/ssb/utils/utils'
 import {
   DropdownItem as TableDownloadDropdownItem,
   DropdownItems as TableDownloadDropdownItems,
 } from '../../../lib/types/components'
-import { Language, Phrases } from '../../../lib/types/language'
+import type { Language, Phrases } from '../../../lib/types/language'
 import { render as r4xpRender } from '/lib/enonic/react4xp'
 import type { Statistics, Table } from '../../content-types'
 import { GA_TRACKING_ID } from '../../pages/default/default'
 import type { Table as TablePartConfig } from '.'
 import { DataSource as DataSourceType } from '../../../lib/ssb/repo/dataset'
-
-const { getContent, getComponent, pageUrl, assetUrl } = __non_webpack_require__('/lib/xp/portal')
+import { getContent, getComponent, pageUrl, assetUrl } from '/lib/xp/portal'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 const { parseTable } = __non_webpack_require__('/lib/ssb/parts/table')
@@ -27,7 +26,7 @@ const { hasWritePermissionsAndPreview } = __non_webpack_require__('/lib/ssb/part
 
 const view: ResourceKey = resolve('./table.html') as ResourceKey
 
-exports.get = function (req: XP.Request): XP.Response {
+export function get(req: XP.Request): XP.Response {
   try {
     const config: TablePartConfig = getComponent().config
     const page: Content<Statistics> = getContent()
@@ -38,7 +37,7 @@ exports.get = function (req: XP.Request): XP.Response {
   }
 }
 
-exports.preview = (req: XP.Request, id?: string): XP.Response => {
+export function preview(req: XP.Request, id?: string): XP.Response {
   return renderPart(req, id)
 }
 
@@ -47,7 +46,7 @@ function getProps(req: XP.Request, tableId?: string): TableProps {
   const language: Language = getLanguage(page) as Language
   const phrases: Phrases = getPhrases(page) as Phrases
 
-  const tableContent: Content<Table> | null = get({
+  const tableContent: Content<Table> | null = getContentByKey({
     key: tableId as string,
   }) as Content<Table>
 

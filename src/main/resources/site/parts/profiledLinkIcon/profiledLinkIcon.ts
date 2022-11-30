@@ -1,12 +1,11 @@
 import { render } from '/lib/enonic/react4xp'
 import type { ProfiledLinkIcon as ProfiledLinkIconPartConfig } from '.'
+import { getComponent, pageUrl } from '/lib/xp/portal'
 
 const { data } = __non_webpack_require__('/lib/util')
-const { getComponent, pageUrl } = __non_webpack_require__('/lib/xp/portal')
-
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
-exports.get = function (req: XP.Request): XP.Response {
+export function get(req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -14,7 +13,9 @@ exports.get = function (req: XP.Request): XP.Response {
   }
 }
 
-exports.preview = (req: XP.Request): XP.Response => renderPart(req)
+export function preview(req: XP.Request): XP.Response {
+  return renderPart(req)
+}
 
 const NO_LINKS_FOUND: object = {
   body: '',

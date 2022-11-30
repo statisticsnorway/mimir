@@ -1,11 +1,10 @@
-import { get, Content } from '/lib/xp/content'
-import { render as r4XpRender, RenderResponse } from '/lib/enonic/react4xp'
-import { ResourceKey, render } from '/lib/thymeleaf'
-import { Component } from '/lib/xp/portal'
+import { get as getContentByKey, type Content } from '/lib/xp/content'
+import { render as r4XpRender, type RenderResponse } from '/lib/enonic/react4xp'
+import { type ResourceKey, render } from '/lib/thymeleaf'
+import type { Component } from '/lib/xp/portal'
 import type { MenuBox as MenuBoxPartConfig } from '.'
 import type { MenuBox } from '../../content-types'
-
-const { getComponent, imageUrl, pageUrl } = __non_webpack_require__('/lib/xp/portal')
+import { pageUrl, getComponent, imageUrl } from '/lib/xp/portal'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 const { getImageAlt } = __non_webpack_require__('/lib/ssb/utils/imageUtils')
@@ -15,7 +14,7 @@ const {
 
 const view: ResourceKey = resolve('./menuBox.html')
 
-exports.get = function (req: XP.Request): XP.Response | RenderResponse | string {
+export function get(req: XP.Request): XP.Response | RenderResponse | string {
   try {
     return renderPart(req)
   } catch (e) {
@@ -23,7 +22,7 @@ exports.get = function (req: XP.Request): XP.Response | RenderResponse | string 
   }
 }
 
-exports.preview = function (req: XP.Request): XP.Response | RenderResponse | string {
+export function preview(req: XP.Request) {
   return renderPart(req)
 }
 
@@ -43,7 +42,7 @@ function renderPart(req: XP.Request): XP.Response | RenderResponse | string {
       throw new Error('MenuBox - Missing Id')
     }
   }
-  const menuBoxContent: Content<MenuBox> | null = get({
+  const menuBoxContent: Content<MenuBox> | null = getContentByKey({
     key: menuBoxId,
   })
   if (!menuBoxContent) throw new Error(`MenuBox with id ${menuBoxId} doesn't exist`)

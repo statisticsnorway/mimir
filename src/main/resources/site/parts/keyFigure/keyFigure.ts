@@ -1,22 +1,21 @@
-import { Content } from '/lib/xp/content'
-import { MunicipalityWithCounty } from '../../../lib/ssb/dataset/klass/municipalities'
-import { KeyFigureView } from '../../../lib/ssb/parts/keyFigure'
-import { render, RenderResponse } from '/lib/enonic/react4xp'
+import type { Content } from '/lib/xp/content'
+import type { MunicipalityWithCounty } from '../../../lib/ssb/dataset/klass/municipalities'
+import type { KeyFigureView } from '../../../lib/ssb/parts/keyFigure'
+import { render, type RenderResponse } from '/lib/enonic/react4xp'
 import type { KeyFigure as KeyFigurePartConfig } from '.'
+import { getContent, getComponent, getSiteConfig } from '/lib/xp/portal'
 
 const { get: getKeyFigures, parseKeyFigure } = __non_webpack_require__('/lib/ssb/parts/keyFigure')
 const { getMunicipality } = __non_webpack_require__('/lib/ssb/dataset/klass/municipalities')
-const { getContent, getComponent, getSiteConfig } = __non_webpack_require__('/lib/xp/portal')
 const {
   data: { forceArray },
 } = __non_webpack_require__('/lib/util')
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 const { DATASET_BRANCH, UNPUBLISHED_DATASET_BRANCH } = __non_webpack_require__('/lib/ssb/repo/dataset')
 const { hasWritePermissionsAndPreview } = __non_webpack_require__('/lib/ssb/parts/permissions')
-
 const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
 
-exports.get = function (req: XP.Request): RenderResponse | XP.Response {
+export function get(req: XP.Request): RenderResponse | XP.Response {
   try {
     const config: KeyFigurePartConfig = getComponent().config
     const keyFigureIds: Array<string> | [] = config.figure ? forceArray(config.figure) : []
@@ -27,7 +26,7 @@ exports.get = function (req: XP.Request): RenderResponse | XP.Response {
   }
 }
 
-exports.preview = function (req: XP.Request, id: string): RenderResponse | XP.Response {
+export function preview(req: XP.Request, id: string): RenderResponse | XP.Response {
   try {
     const siteConfig: XP.SiteConfig = getSiteConfig()
     const defaultMunicipality: XP.SiteConfig['defaultMunicipality'] = siteConfig.defaultMunicipality

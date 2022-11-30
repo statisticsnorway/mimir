@@ -1,7 +1,9 @@
-import { render, RenderResponse } from '/lib/enonic/react4xp'
-import { SubjectItem, StatisticItem } from '../../../lib/ssb/utils/subjectUtils'
-import { Content } from '/lib/xp/content'
-import { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/types'
+import { render, type RenderResponse } from '/lib/enonic/react4xp'
+import type { SubjectItem, StatisticItem } from '../../../lib/ssb/utils/subjectUtils'
+import type { Content } from '/lib/xp/content'
+import type { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/types'
+import { getContent } from '/lib/xp/portal'
+
 const {
   getMainSubjects,
   getSubSubjects,
@@ -13,7 +15,6 @@ const {
 } = __non_webpack_require__('/lib/ssb/utils/subjectUtils')
 const { getAllStatisticsFromRepo } = __non_webpack_require__('/lib/ssb/statreg/statistics')
 
-const { getContent } = __non_webpack_require__('/lib/xp/portal')
 const { ensureArray } = __non_webpack_require__('/lib/ssb/utils/arrayUtils')
 const { fromPartCache } = __non_webpack_require__('/lib/ssb/cache/partCache')
 

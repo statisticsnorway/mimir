@@ -1,19 +1,18 @@
-import { render, RenderResponse } from '/lib/enonic/react4xp'
+import { render, type RenderResponse } from '/lib/enonic/react4xp'
 import type { EndedStatistics as EndedStatisticsPartConfig } from '.'
-import { get, Content } from '/lib/xp/content'
-import { Phrases } from '../../../lib/types/language'
+import { get as getContentByKey, type Content } from '/lib/xp/content'
+import type { Phrases } from '../../../lib/types/language'
 import type { Statistics } from '../../content-types'
 import { SEO } from '../../../services/news/news'
+import { getComponent, getContent, pageUrl } from '/lib/xp/portal'
 
 const {
   data: { forceArray },
 } = __non_webpack_require__('/lib/util')
-const { getContent, getComponent, pageUrl } = __non_webpack_require__('/lib/xp/portal')
 const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
-
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
-exports.get = (req: XP.Request) => {
+export function get(req: XP.Request) {
   try {
     return renderPart(req)
   } catch (e) {
@@ -21,7 +20,9 @@ exports.get = (req: XP.Request) => {
   }
 }
 
-exports.preview = (req: XP.Request) => renderPart(req)
+export function preview(req: XP.Request) {
+  return renderPart(req)
+}
 
 function renderPart(req: XP.Request): XP.Response | RenderResponse {
   const page: Content = getContent()
@@ -74,7 +75,7 @@ function parseContent(
         if (statistics._selected === 'xp' && statistics.xp.contentId) {
           const statisticsContentId: string = statistics.xp.contentId
           const endedStatisticsContent: Content<Statistics, SEO> | null = statisticsContentId
-            ? get({
+            ? getContentByKey({
                 key: statisticsContentId,
               })
             : null

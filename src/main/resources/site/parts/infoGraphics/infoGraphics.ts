@@ -1,20 +1,20 @@
-const {
-  data: { forceArray },
-} = __non_webpack_require__('/lib/util')
-const { getContent, getComponent, imageUrl } = __non_webpack_require__('/lib/xp/portal')
-const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
-const { getSources } = __non_webpack_require__('/lib/ssb/utils/utils')
-const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
-
-import { get, Content, MediaImage } from '/lib/xp/content'
-import { SourceList, SourcesConfig } from '../../../lib/ssb/utils/utils'
-import { render, RenderResponse } from '/lib/enonic/react4xp'
+import { get as getContentByKey, type Content, type MediaImage } from '/lib/xp/content'
+import type { SourceList, SourcesConfig } from '../../../lib/ssb/utils/utils'
+import { render, type RenderResponse } from '/lib/enonic/react4xp'
 // @ts-ignore
 import { Base64 } from 'js-base64'
 import type { InfoGraphics as InfoGraphicsPartConfig } from '.'
 import type { Default as DefaultPageConfig } from '../../pages/default'
+import { getContent, getComponent, imageUrl } from '/lib/xp/portal'
 
-exports.get = function (req: XP.Request): XP.Response | RenderResponse {
+const {
+  data: { forceArray },
+} = __non_webpack_require__('/lib/util')
+const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
+const { getSources } = __non_webpack_require__('/lib/ssb/utils/utils')
+const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
+
+export function get(req: XP.Request): XP.Response | RenderResponse {
   try {
     return renderPart(req)
   } catch (e) {
@@ -22,7 +22,9 @@ exports.get = function (req: XP.Request): XP.Response | RenderResponse {
   }
 }
 
-exports.preview = (req: XP.Request): XP.Response | RenderResponse => renderPart(req)
+export function preview(req: XP.Request): XP.Response | RenderResponse {
+  return renderPart(req)
+}
 
 function renderPart(req: XP.Request): RenderResponse {
   const page: DefaultPage = getContent() as DefaultPage
@@ -43,7 +45,7 @@ function renderPart(req: XP.Request): RenderResponse {
   })
 
   // Retrieves image as content to get image meta data
-  const imageData: Content<MediaImage> | null = get({
+  const imageData: Content<MediaImage> | null = getContentByKey({
     key: config.image,
   })
 

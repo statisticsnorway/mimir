@@ -1,10 +1,10 @@
-import { render, ResourceKey } from '/lib/thymeleaf'
-import { render as r4XpRender, RenderResponse } from '/lib/enonic/react4xp'
-import { Component, getComponent } from '/lib/xp/portal'
+import { render, type ResourceKey } from '/lib/thymeleaf'
+import { render as r4XpRender, type RenderResponse } from '/lib/enonic/react4xp'
+import { type Component, getComponent } from '/lib/xp/portal'
 import type { FrontpageKeyfigures as FrontpageKeyfiguresPartConfig } from '.'
-import { Content, get } from '/lib/xp/content'
+import { type Content, get as getContentByKey } from '/lib/xp/content'
 import type { KeyFigure } from '../../content-types'
-import { KeyFigureView } from '../../../lib/ssb/parts/keyFigure'
+import type { KeyFigureView } from '../../../lib/ssb/parts/keyFigure'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 const { data } = __non_webpack_require__('/lib/util')
@@ -13,7 +13,7 @@ const { DATASET_BRANCH } = __non_webpack_require__('/lib/ssb/repo/dataset')
 
 const view: ResourceKey = resolve('./frontpageKeyfigures.html')
 
-exports.get = function (req: XP.Request) {
+export function get(req: XP.Request) {
   try {
     return renderPart(req)
   } catch (e) {
@@ -21,7 +21,9 @@ exports.get = function (req: XP.Request) {
   }
 }
 
-exports.preview = (req: XP.Request) => renderPart(req)
+export function preview(req: XP.Request) {
+  return renderPart(req)
+}
 
 const isKeyfigureData = (data: FrontPageKeyFigureData | undefined): data is FrontPageKeyFigureData => {
   return !!data
@@ -36,7 +38,7 @@ function renderPart(req: XP.Request): XP.Response | RenderResponse {
   const frontpageKeyfigures: Array<FrontPageKeyFigureData | undefined> = keyFiguresPart.map(
     (keyFigure: FrontpageKeyfigure) => {
       const keyFigureContent: Content<KeyFigure> | null = keyFigure.keyfigure
-        ? get({
+        ? getContentByKey({
             key: keyFigure.keyfigure,
           })
         : null

@@ -1,15 +1,13 @@
-import { Content } from '/lib/xp/content'
-import { Phrases } from '../../../lib/types/language'
+import type { Content } from '/lib/xp/content'
+import type { Phrases } from '../../../lib/types/language'
 import { render } from '/lib/enonic/react4xp'
 import type { PubArchiveCalendarLinks as PubArchiveCalendarLinksPartConfig } from '.'
-
-const { getComponent, getContent } = __non_webpack_require__('/lib/xp/portal')
+import { getContent, getComponent } from '/lib/xp/portal'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
-
 const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
 
-exports.get = function (req: XP.Request): XP.Response {
+export function get(req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -17,7 +15,9 @@ exports.get = function (req: XP.Request): XP.Response {
   }
 }
 
-exports.preview = (req: XP.Request): XP.Response => renderPart(req)
+export function preview(req: XP.Request): XP.Response {
+  return renderPart(req)
+}
 
 const NO_LINKS_FOUND: object = {
   body: '',
