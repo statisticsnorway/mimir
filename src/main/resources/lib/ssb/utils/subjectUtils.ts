@@ -4,6 +4,7 @@ import type { StatisticInListing } from '../dashboard/statreg/types'
 import type { Statistic } from '../../../site/mixins/statistic'
 import type { Subtopic } from '../../../site/mixins/subtopic'
 import type { DefaultPage } from '/lib/types/defaultPage'
+import { fromSubjectCache } from '../cache/subjectCache'
 import { forceArray } from '/lib/ssb/utils/arrayUtils'
 
 const { getAllStatisticsFromRepo } = __non_webpack_require__('/lib/ssb/statreg/statistics')

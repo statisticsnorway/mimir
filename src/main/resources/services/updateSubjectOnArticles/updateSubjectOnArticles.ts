@@ -1,5 +1,4 @@
-import { Article } from 'site/content-types/article/article'
-import { XData } from 'site/x-data'
+import { Article } from '/site/content-types'
 import { addSubjectToXData } from '/lib/ssb/utils/articleUtils'
 import {
   get as getContent,
@@ -24,7 +23,7 @@ const INTERNAL_BASE_URL =
   app.config && app.config['ssb.internal.baseUrl'] ? app.config['ssb.internal.baseUrl'] : 'https://i.ssb.no'
 
 export function get(req: XP.Request): XP.Response {
-  const contentToFix: QueryResponse<Article, XData, object> = query({
+  const contentToFix: QueryResponse<Article, XpXData, object> = query({
     query: '',
     count: 500,
     contentTypes: [`${app.name}:article`],
@@ -52,7 +51,7 @@ export function get(req: XP.Request): XP.Response {
     },
   }
 
-  const fixedContents: Array<Content<Article, XData>> = []
+  const fixedContents: Array<Content<Article, XpXData>> = []
   const editedUnpublishedContents: Array<{ name: string; url: string }> = []
   const publishResult: Array<PublishResponse> = []
 

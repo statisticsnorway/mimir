@@ -1,5 +1,4 @@
 import type { Article } from '../../../site/content-types'
-import { XData } from 'site/x-data'
 import {
   getAllMainSubjectByContent,
   getAllSubSubjectByContent,
@@ -7,8 +6,6 @@ import {
   getSubSubjects,
   type SubjectItem,
 } from '../utils/subjectUtils'
-import { query, Content, QueryResponse } from '/lib/xp/content'
-import { SubjectItem } from '../utils/subjectUtils'
 import { formatDate } from './dateUtils'
 import { notNullOrUndefined } from '/lib/ssb/utils/coreUtils'
 import { get, modify, query, type Content, type QueryResponse } from '/lib/xp/content'
@@ -28,7 +25,7 @@ export function setupArticleListener(): void {
     type: 'node.updated',
     localOnly: true,
     callback: (event: EnonicEvent) => {
-      const eventContent: Content<Article, XData> | null = get({ key: event.data.nodes[0].id })
+      const eventContent: Content<Article, XpXData> | null = get({ key: event.data.nodes[0].id })
       if (eventContent?.type == 'mimir:article') {
         try {
           const start = Date.now()
@@ -101,9 +98,9 @@ export function prepareArticles(articles: QueryResponse<Article, object>, langua
 }
 
 export function addSubjectToXData(
-  article: Content<Article, XData>,
+  article: Content<Article, XpXData>,
   req: XP.Request
-): Content<Article, XData> | undefined {
+): Content<Article, XpXData> | undefined {
   const allMainSubjects: SubjectItem[] = getMainSubjects(req, 'nb')
   const allSubSubjects: SubjectItem[] = getSubSubjects(req, 'nb')
 
@@ -115,13 +112,13 @@ export function addSubjectToXData(
     .filter(notNullOrUndefined)
 
   if (mainSubjects.length && subSubjects.length && shouldEdit(mainSubjects, subSubjects, article)) {
-    let modified: Content<Article, XData> | undefined
+    let modified: Content<Article, XpXData> | undefined
     try {
       modified = withSuperUserContext(ENONIC_CMS_DEFAULT_REPO, 'draft', () => {
         return modify({
           key: article._id,
           requireValid: true,
-          editor: (content: Content<Article, XData>) => {
+          editor: (content: Content<Article, XpXData>) => {
             content.x = {
               ...content.x,
               mimir: {
@@ -146,7 +143,7 @@ export function addSubjectToXData(
 function shouldEdit(
   mainSubjects: Array<string>,
   subSubjects: Array<string>,
-  article: Content<Article, XData>
+  article: Content<Article, XpXData>
 ): boolean {
   const mainIdentical: boolean = arraysEqual(
     ensureArray(mainSubjects),
