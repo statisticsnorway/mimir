@@ -1,6 +1,6 @@
-import { Page } from '../../site/content-types/page/page'
+import type { Page } from '../../site/content-types'
 import { Content } from '/lib/xp/content'
-import { DefaultPageConfig } from '../../site/pages/default/default-page-config'
+import type { Default as DefaultPageConfig } from '../../site/pages/default'
 import { Region } from '*/lib/xp/portal'
 import { SEO } from '../../services/news/news'
 

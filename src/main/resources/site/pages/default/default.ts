@@ -1,18 +1,21 @@
-import { query, Content } from '/lib/xp/content'
-import { ResourceKey, render } from '/lib/thymeleaf'
-import { ReleaseDatesVariant, StatisticInListing, VariantInListing } from '../../../lib/ssb/dashboard/statreg/types'
-import { MunicipalityWithCounty } from '../../../lib/ssb/dataset/klass/municipalities'
-import { FooterContent } from '../../../lib/ssb/parts/footer'
-import { AlertType, InformationAlertOptions, MunicipalityOptions } from '../../../lib/ssb/utils/alertUtils'
-import { Breadcrumbs } from '../../../lib/ssb/utils/breadcrumbsUtils'
-import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
-import { Language } from '../../../lib/types/language'
-import { render as r4xpRender, RenderResponse } from '/lib/enonic/react4xp'
-import { Statistics } from '../../content-types/statistics/statistics'
-import { SiteConfig } from '../../site-config'
-import { DefaultPageConfig } from './default-page-config'
-import { Component, getContent, processHtml, assetUrl, getSiteConfig, pageUrl } from '/lib/xp/portal'
-import { SEO } from '../../../services/news/news'
+import { type Content, query } from '/lib/xp/content'
+import { render, type ResourceKey } from '/lib/thymeleaf'
+import type {
+  ReleaseDatesVariant,
+  StatisticInListing,
+  VariantInListing,
+} from '../../../lib/ssb/dashboard/statreg/types'
+import type { MunicipalityWithCounty } from '../../../lib/ssb/dataset/klass/municipalities'
+import type { FooterContent } from '../../../lib/ssb/parts/footer'
+import type { AlertType, InformationAlertOptions, MunicipalityOptions } from '../../../lib/ssb/utils/alertUtils'
+import type { Breadcrumbs } from '../../../lib/ssb/utils/breadcrumbsUtils'
+import type { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
+import type { Language } from '../../../lib/types/language'
+import { render as r4xpRender, type RenderResponse } from '/lib/enonic/react4xp'
+import type { Statistics } from '../../content-types'
+import type { Default as DefaultPageConfig } from '../../pages/default'
+import { assetUrl, type Component, getContent, getSiteConfig, pageUrl, processHtml } from '/lib/xp/portal'
+import type { SEO } from '../../../services/news/news'
 
 const {
   data: { forceArray },
@@ -76,10 +79,8 @@ exports.get = function (req: XP.Request): XP.Response {
   let preview: XP.Response | undefined
   if (partsWithPreview.includes(page.type)) {
     let name: string = page.type.replace(/^.*:/, '')
-    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
     // @ts-ignore
     if (previewOverride[name]) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
       // @ts-ignore
       name = previewOverride[name]
     }
@@ -323,6 +324,10 @@ function parseMetaInfoData(
     metaInfoDescription = page.x['com-enonic-app-metafields']['meta-data'].seoDescription
   }
 
+  if (pageType === 'municipality' && page._name === 'kommune' && !municipality) {
+    addMetaInfoSearch = false
+  }
+
   if (pageType === 'municipality' && municipality) {
     addMetaInfoSearch = true
     metaInfoSearchId = metaInfoSearchId + '_' + municipality.code
@@ -465,7 +470,7 @@ function parseStatbankFrameContent(statbankFane: boolean, req: XP.Request, page:
     }
   }
 
-  const siteConfig: SiteConfig = getSiteConfig()
+  const siteConfig: XP.SiteConfig = getSiteConfig()
 
   let statbankHelpLink: string = siteConfig.statbankHelpLink
   if (pageLanguage === 'en') {
@@ -542,11 +547,13 @@ interface Regions {
     components: Array<RegionData>
   }
 }
+
 interface RegionData {
   path: string
   type: string
   descriptor: string
 }
+
 interface Controller {
   preview: (req: XP.Request, id: string) => XP.Response
 }

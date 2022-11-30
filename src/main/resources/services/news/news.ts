@@ -1,10 +1,8 @@
 import { query, Content } from '/lib/xp/content'
-import { Page } from '../../site/content-types/page/page'
-import { DefaultPageConfig } from '../../site/pages/default/default-page-config'
-import { Article } from '../../site/content-types/article/article'
+import type { Page, Article, Statistics } from '../../site/content-types'
+import type { Default as DefaultPageConfig } from '../../site/pages/default'
 import { StatisticInListing, VariantInListing } from '../../lib/ssb/dashboard/statreg/types'
-import { Statistics } from '../../site/content-types/statistics/statistics'
-import { Statistic } from '../../site/mixins/statistic/statistic'
+import type { Statistic } from '../../site/mixins/statistic'
 const { moment } = __non_webpack_require__('/lib/vendor/moment')
 const { fetchStatisticsWithReleaseToday } = __non_webpack_require__('/lib/ssb/statreg/statistics')
 const { pageUrl } = __non_webpack_require__('/lib/xp/portal')

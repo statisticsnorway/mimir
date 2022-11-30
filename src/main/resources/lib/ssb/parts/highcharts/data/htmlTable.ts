@@ -1,7 +1,7 @@
 import { AreaLineLinearData, PieData, Series, SeriesAndCategories } from '../highchartsData'
 import { XmlParser, PreliminaryData, TableRowUniform, TableCellUniform } from '../../../../types/xmlParser'
 import { Content } from '/lib/xp/content'
-import { Highchart } from '../../../../../site/content-types/highchart/highchart'
+import type { Highchart } from '../../../../../site/content-types'
 import { RowValue } from '../../../utils/utils'
 
 const { toString } = __non_webpack_require__('/lib/vendor/ramda')

@@ -1,13 +1,12 @@
 import { query, get, Content } from '/lib/xp/content'
 import { SEO } from '../../../services/news/news'
-import { OmStatistikken } from '../../../site/content-types/omStatistikken/omStatistikken'
-import { Statistics } from '../../../site/content-types/statistics/statistics'
+import type { OmStatistikken, Statistics } from '../../../site/content-types'
 import { ReleasesInListing, StatisticInListing, VariantInListing } from '../dashboard/statreg/types'
 import { parseISO, getMonth, getYear, getDate } from 'date-fns'
 
 const { pageUrl } = __non_webpack_require__('/lib/xp/portal')
 const { getMainSubject, getMainSubjectStatistic } = __non_webpack_require__('/lib/ssb/utils/parentUtils')
-const { sameDay } = __non_webpack_require__('/lib/ssb/utils/dateUtils')
+const { sameDay, createMonthName } = __non_webpack_require__('/lib/ssb/utils/dateUtils')
 const { localize } = __non_webpack_require__('/lib/xp/i18n')
 const { groupBy } = __non_webpack_require__('/lib/vendor/ramda')
 const {
@@ -15,7 +14,7 @@ const {
 } = __non_webpack_require__('/lib/util')
 const { moment } = __non_webpack_require__('/lib/vendor/moment')
 
-function calculatePeriod(frequency: string, previousFrom: string, previousTo: string, language: string): string {
+export function calculatePeriod(frequency: string, previousFrom: string, previousTo: string, language: string): string {
   switch (frequency) {
     case 'År':
       return calculateYear(previousFrom, previousTo, language)
@@ -195,7 +194,7 @@ export function addMonthNames(
 
       const a: MonthReleases = {
         month: monthNumber,
-        monthName: moment().locale(language).month(monthNumber).format('MMM'),
+        monthName: createMonthName(monthNumber, language),
         releases: dayReleases,
       }
       return a
@@ -427,13 +426,33 @@ function concatReleaseTimes(
 }
 
 // If import from statreg failed use nextRelease instead of previousRelease
-function nextReleasedPassed(variant: VariantInListing): boolean {
+export function nextReleasedPassed(variant: VariantInListing): boolean {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   const serverOffsetInMs: number =
     app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
   const serverTime: Date = new Date(new Date().getTime() + serverOffsetInMs)
   const nextRelease: Date = new Date(variant.nextRelease)
   return moment(nextRelease).isSameOrBefore(serverTime, 'minute')
+}
+export function getPreviousRelease(nextReleasePassed: boolean, variant: VariantInListing): ReleasesInListing {
+  const upComingReleases: Array<ReleasesInListing> = variant.upcomingReleases
+    ? forceArray(variant.upcomingReleases)
+    : []
+  return nextReleasePassed && upComingReleases.length
+    ? upComingReleases[0]
+    : {
+        id: variant.id,
+        publishTime: variant.previousRelease,
+        periodFrom: variant.previousFrom,
+        periodTo: variant.previousTo,
+      }
+}
+
+export function getNextRelease(nextReleasePassed: boolean, variant: VariantInListing): ReleasesInListing | undefined {
+  const upComingReleases: Array<ReleasesInListing> = variant.upcomingReleases
+    ? forceArray(variant.upcomingReleases)
+    : []
+  return nextReleasePassed ? (upComingReleases.length > 1 ? upComingReleases[1] : undefined) : upComingReleases[0]
 }
 
 function formatVariant(variant: VariantInListing, language: string, property: keyof VariantInListing): PreparedVariant {

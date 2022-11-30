@@ -11,12 +11,11 @@ const { localize } = __non_webpack_require__('/lib/xp/i18n')
 import { get, Content, MediaImage } from '/lib/xp/content'
 import { SourceList, SourcesConfig } from '../../../lib/ssb/utils/utils'
 import { render, RenderResponse } from '/lib/enonic/react4xp'
-import { StaticVisualization } from '../../content-types/staticVisualization/staticVisualization'
-// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+import type { StaticVisualization } from '../../content-types'
 // @ts-ignore
-import { DefaultPageConfig } from '../../pages/default/default-page-config'
-import { StaticVisualizationPartConfig } from './staticVisualization-part-config'
-import { HtmlTable } from '../../../lib/ssb/parts/table'
+import type { Default as DefaultPageConfig } from '../../pages/default'
+import type { StaticVisualization as StaticVisualizationPartConfig } from '.'
+import type { HtmlTable } from '../../../lib/ssb/parts/table'
 
 exports.get = function (req: XP.Request): XP.Response | RenderResponse {
   try {

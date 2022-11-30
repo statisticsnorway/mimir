@@ -1,6 +1,6 @@
 import { Content } from '/lib/xp/content'
 import { CreateOrUpdateStatus } from '../dataset/dataset'
-import { DataSource } from '../../../site/mixins/dataSource/dataSource'
+import type { DataSource } from '../../../site/mixins/dataSource'
 import { RSSFilterLogData } from './rss'
 
 const { splitEvery } = __non_webpack_require__('/lib/vendor/ramda')

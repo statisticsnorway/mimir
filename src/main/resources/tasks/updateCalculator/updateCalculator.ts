@@ -1,6 +1,6 @@
 import { JobEventNode, JobInfoNode } from '../../lib/ssb/repo/job'
 import { CreateOrUpdateStatus } from '../../lib/ssb/dataset/dataset'
-import { GenericDataImport } from '../../site/content-types/genericDataImport/genericDataImport'
+import type { GenericDataImport } from '../../site/content-types'
 import { Content } from '/lib/xp/content'
 import { DATASET_BRANCH } from '../../lib/ssb/repo/dataset'
 

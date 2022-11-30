@@ -1,6 +1,5 @@
-import { render, RenderResponse } from '/lib/enonic/react4xp'
-import { PictureCardLinksPartConfig } from './pictureCardLinks-part-config'
-
+import { render } from '/lib/enonic/react4xp'
+import type { PictureCardLinks as PictureCardLinksPartConfig } from '.'
 const { getImageAlt } = __non_webpack_require__('/lib/ssb/utils/imageUtils')
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')

@@ -3,9 +3,8 @@ import { render as r4XpRender, RenderResponse } from '/lib/enonic/react4xp'
 import { ResourceKey, render } from '/lib/thymeleaf'
 import { Component } from '/lib/xp/portal'
 import { MunicipalityWithCounty } from '../../../lib/ssb/dataset/klass/municipalities'
-import { MenuDropdownPartConfig } from '../menuDropdown/menuDropdown-part-config'
-import { SiteConfig } from '../../site-config'
-import { MenuDropdown } from '../../content-types/menuDropdown/menuDropdown'
+import type { MenuDropdown as MenuDropdownPartConfig } from '.'
+import type { MenuDropdown } from '../../content-types'
 import { randomUnsafeString } from '/lib/ssb/utils/utils'
 
 const { assetUrl, getContent, getComponent, pageUrl, getSiteConfig, serviceUrl } =
@@ -34,7 +33,7 @@ function renderPart(req: XP.Request): XP.Response | RenderResponse {
   const parsedMunicipalities: Array<MunicipalityWithCounty> = municipalsWithCounties()
   const municipality: MunicipalityWithCounty | undefined = getMunicipality(req)
   const component: Component<MenuDropdownPartConfig> = getComponent()
-  const siteConfig: SiteConfig = getSiteConfig()
+  const siteConfig: XP.SiteConfig = getSiteConfig()
   let mapFolder = '/mapdata'
 
   if (typeof siteConfig.kommunefakta !== 'undefined' && siteConfig.kommunefakta.mapfolder) {

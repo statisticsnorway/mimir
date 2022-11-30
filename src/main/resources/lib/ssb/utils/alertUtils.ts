@@ -1,4 +1,4 @@
-import { DefaultPageConfig } from '../../../site/pages/default/default-page-config'
+import type { Default as DefaultPageConfig } from '../../../site/pages/default'
 import { MunicipalityWithCounty } from '../dataset/klass/municipalities'
 
 const { list: listOperationsAlerts } = __non_webpack_require__('/lib/ssb/parts/operationsAlert')

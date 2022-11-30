@@ -1,7 +1,7 @@
 import { Component } from '/lib/xp/portal'
 import { render, RenderResponse } from '/lib/enonic/react4xp'
 import { Content } from '/lib/xp/content'
-import { PublicationArchivePartConfig } from './publicationArchive-part-config'
+import { PublicationArchive as PublicationArchivePartConfig } from '.'
 import { PublicationResult } from '../../../lib/ssb/parts/publicationArchive'
 import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
 

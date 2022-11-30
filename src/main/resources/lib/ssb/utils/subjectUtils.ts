@@ -1,34 +1,69 @@
-import { query, Content } from '/lib/xp/content'
-import { Statistics } from '../../../site/content-types/statistics/statistics'
-import { EndedStatisticList } from '../../../site/content-types/endedStatisticList/endedStatisticList'
-import { StatisticInListing } from '../dashboard/statreg/types'
-import { Statistic } from '../../../site/mixins/statistic/statistic'
-import { Subtopic } from '../../../site/mixins/subtopic/subtopic'
-import { DefaultPage } from '/lib/types/defaultPage'
+import { type Content, query } from '/lib/xp/content'
+import type { Article, EndedStatisticList, Statistics } from '../../../site/content-types'
+import type { StatisticInListing } from '../dashboard/statreg/types'
+import type { Statistic } from '../../../site/mixins/statistic'
+import type { Subtopic } from '../../../site/mixins/subtopic'
+import type { DefaultPage } from '/lib/types/defaultPage'
+import { forceArray } from '/lib/ssb/utils/arrayUtils'
+
 const { getAllStatisticsFromRepo } = __non_webpack_require__('/lib/ssb/statreg/statistics')
 const { ensureArray } = __non_webpack_require__('/lib/ssb/utils/arrayUtils')
 const { fromSubjectCache } = __non_webpack_require__('/lib/ssb/cache/subjectCache')
 const { parentPath } = __non_webpack_require__('/lib/ssb/utils/parentUtils')
 
 export function getMainSubjects(request: XP.Request, language?: string): Array<SubjectItem> {
-  return fromSubjectCache<SubjectItem>(request, `mainsubject-${language ? language : 'all'}`, () => {
-    const lang: string = language ? (language !== 'en' ? 'AND language != "en"' : 'AND language = "en"') : ''
-    const mainSubjectsContent: Array<DefaultPage> = query({
-      start: 0,
-      count: 200,
-      sort: 'displayName ASC',
-      query: `components.page.config.mimir.default.subjectType LIKE "mainSubject" ${lang}`,
-    }).hits as unknown as Array<DefaultPage>
+  return fromSubjectCache<SubjectItem>(request, `mainsubject-${language ? language : 'all'}`, () =>
+    queryForSubjects({
+      language,
+      subjectType: 'mainSubject',
+    })
+  )
+}
 
-    return mainSubjectsContent.map((m) => ({
-      id: m._id,
-      title: m.displayName,
-      subjectCode: m.page.config.subjectCode ? m.page.config.subjectCode : '',
-      path: m._path,
-      language: m.language && m.language === 'en' ? 'en' : 'no',
-      name: m._name,
-    }))
+export function queryForSubjects({ language, subjectType }: QueryForSubjectsParams): SubjectItem[] {
+  return query({
+    count: 200,
+    sort: 'displayName ASC',
+    filters: {
+      boolean: {
+        must: [
+          {
+            hasValue: {
+              field: 'language',
+              values: language === 'en' ? ['en'] : ['no', 'nb', 'nn'],
+            },
+          },
+          {
+            hasValue: {
+              field: 'components.page.config.mimir.default.subjectType',
+              values: [subjectType],
+            },
+          },
+        ],
+      },
+    },
   })
+    .hits.filter((hit) => {
+      const page: DefaultPage['page'] = hit.page as DefaultPage['page']
+      return page.config.subjectCode !== undefined
+    })
+    .map((hit) => {
+      const page: DefaultPage['page'] = hit.page as DefaultPage['page']
+
+      return {
+        id: hit._id,
+        title: hit.displayName,
+        subjectCode: page.config.subjectCode,
+        path: hit._path,
+        language: hit?.language === 'en' ? 'en' : 'no',
+        name: hit._name,
+      }
+    })
+}
+
+interface QueryForSubjectsParams {
+  language?: string | undefined
+  subjectType: string
 }
 
 export function getMainSubjectById(mainSubjects: Array<SubjectItem>, id: string): SubjectItem | null {
@@ -63,6 +98,71 @@ export function getSubSubjects(request: XP.Request, language?: string): Array<Su
       name: m._name,
     }))
   })
+}
+
+export function getSecondaryMainSubject(
+  subtopicsContent: Array<string>,
+  mainSubjects: Array<SubjectItem>,
+  subSubjects: Array<SubjectItem>
+): Array<SubjectItem> {
+  const secondaryMainSubjects: Array<SubjectItem> = subtopicsContent.reduce(
+    (acc: Array<SubjectItem>, topic: string) => {
+      const subSubject: SubjectItem = subSubjects.filter((subSubject) => subSubject.id === topic)[0]
+      if (subSubject) {
+        const mainSubject: SubjectItem | undefined = getMainSubjectBySubSubject(subSubject, mainSubjects)
+        if (mainSubject && !acc.includes(mainSubject)) {
+          acc.push(mainSubject)
+        }
+      }
+      return acc
+    },
+    []
+  )
+  return secondaryMainSubjects
+}
+
+export function getSecondarySubSubject(
+  subtopicsContent: Array<string>,
+  subSubjects: Array<SubjectItem>
+): Array<SubjectItem> {
+  const secondarySubSubjects: Array<SubjectItem> = subtopicsContent.reduce((acc: Array<SubjectItem>, topic: string) => {
+    const subSubject: SubjectItem = subSubjects.filter((subSubject) => subSubject.id === topic)[0]
+    if (subSubject && !acc.includes(subSubject)) {
+      acc.push(subSubject)
+    }
+    return acc
+  }, [])
+  return secondarySubSubjects
+}
+
+export function getAllMainSubjectByContent(
+  content: Content<Statistics | Article>,
+  mainSubjects: Array<SubjectItem>,
+  subSubjects: Array<SubjectItem>
+): Array<SubjectItem> {
+  const mainSubject: SubjectItem[] = mainSubjects.filter((subject) => content?._path.startsWith(subject.path))
+  const subTopics: Array<string> = content?.data.subtopic ? forceArray(content.data.subtopic) : []
+  const secondaryMainSubject: SubjectItem[] = subTopics
+    ? getSecondaryMainSubject(subTopics, mainSubjects, subSubjects)
+    : []
+  const allMainSubjects: SubjectItem[] = mainSubject.concat(
+    secondaryMainSubject.filter((item) => mainSubject.indexOf(item) < 0)
+  )
+
+  return allMainSubjects
+}
+
+export function getAllSubSubjectByContent(
+  content: Content<Statistics | Article>,
+  subSubjects: Array<SubjectItem>
+): Array<SubjectItem> {
+  const subSubject: SubjectItem[] = subSubjects.filter((subject) => content?._path.startsWith(subject.path))
+  const subTopics: Array<string> = content?.data.subtopic ? forceArray(content.data.subtopic) : []
+  const secondarySubSubject: SubjectItem[] = subTopics ? getSecondarySubSubject(subTopics, subSubjects) : []
+  const allSubSubjects: SubjectItem[] = subSubject.concat(
+    secondarySubSubject.filter((item) => subSubject.indexOf(item) < 0)
+  )
+  return allSubSubjects
 }
 
 function getSubjectsByLanguage(subjects: Array<SubjectItem>, language: string): Array<SubjectItem> {
@@ -323,19 +423,4 @@ interface EndedStatistic {
   hideFromList: boolean
 }
 
-export interface SubjectUtilsLib {
-  getMainSubjects: (request: XP.Request, language?: string) => Array<SubjectItem>
-  getMainSubjectById: (mainSubjects: Array<SubjectItem>, id: string) => SubjectItem
-  getSubSubjects: (request: XP.Request, language?: string) => Array<SubjectItem>
-  getSubSubjectsByPath: (subjects: Array<SubjectItem>, path: string) => Array<SubjectItem>
-  getSubjectStructur: (request: XP.Request, language: string) => Array<MainSubject>
-  getStatistics: (statregStatistics: Array<StatisticInListing>) => Array<StatisticItem>
-  getStatisticsByPath: (statistics: Array<StatisticItem>, path: string) => Array<StatisticItem>
-  getEndedStatisticsByPath: (
-    path: string,
-    statregStatistics: Array<StatisticInListing>,
-    hideStatistics: boolean
-  ) => Array<StatisticItem>
-  getSecondaryStatisticsBySubject: (statistics: Array<StatisticItem>, subject: SubjectItem) => Array<StatisticItem>
-  getMainSubjectBySubSubject: (subSubject: SubjectItem, mainSubjects: Array<SubjectItem>) => SubjectItem | undefined
-}
+export type SubjectUtilsLib = typeof import('./subjectUtils')
