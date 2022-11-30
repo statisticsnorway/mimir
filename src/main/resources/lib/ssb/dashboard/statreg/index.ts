@@ -1,4 +1,4 @@
-import { StatRegRefreshResult, StatRegNode } from '../../repo/statreg'
+import { StatRegNode, StatRegRefreshResult } from '../../repo/statreg'
 import { Socket, SocketEmitter } from '../../../types/socket'
 import { StatRegLatestFetchInfoNode } from '../../statreg/eventLog'
 import { LogSummary } from '../../repo/eventLog'
@@ -16,8 +16,10 @@ const { dateToReadable, dateToFormat } = __non_webpack_require__('/lib/ssb/utils
 const { getNode, ENONIC_CMS_DEFAULT_REPO } = __non_webpack_require__('/lib/ssb/repo/common')
 const { EVENT_LOG_BRANCH, EVENT_LOG_REPO, getQueryChildNodesStatus } = __non_webpack_require__('/lib/ssb/repo/eventLog')
 const { localize } = __non_webpack_require__('/lib/xp/i18n')
+const { createOrUpdateStatisticsRepo } = __non_webpack_require__('/lib/ssb/repo/statisticVariant')
 
 export type StatRegLatestFetchInfoNodeType = StatRegLatestFetchInfoNode | readonly StatRegLatestFetchInfoNode[] | null
+
 export function getStatRegFetchStatuses(): Array<StatRegStatus> {
   return [STATREG_REPO_CONTACTS_KEY, STATREG_REPO_STATISTICS_KEY, STATREG_REPO_PUBLICATIONS_KEY].map(getStatRegStatus)
 }
@@ -105,6 +107,9 @@ function runRefresh(socketEmitter: SocketEmitter, statRegKeys: Array<string>): v
   statRegKeys.forEach((key) => {
     refreshStatRegData(STATREG_NODES.filter((nodeConfig) => nodeConfig.key === key))
     socketEmitter.broadcast('statreg-dashboard-refresh-result', getStatRegStatus(key))
+    if (key === 'statistics') {
+      createOrUpdateStatisticsRepo()
+    }
   })
 }
 

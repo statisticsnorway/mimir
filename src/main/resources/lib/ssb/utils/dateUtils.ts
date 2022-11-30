@@ -1,5 +1,5 @@
 import { enGB, nb, nn } from 'date-fns/locale'
-import { parseISO, format } from 'date-fns'
+import { format, parseISO } from 'date-fns'
 
 export function sameDay(d1: Date, d2: Date): boolean {
   return d1.getDate() === d2.getDate() && d1.getMonth() === d2.getMonth() && d1.getFullYear() === d2.getFullYear()
@@ -18,6 +18,12 @@ export function formatDate(date: string | undefined, formatType: string, languag
   return
 }
 
+export function stringToServerTime(): Date {
+  const serverOffsetInMs: number =
+    app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
+  return new Date(new Date().getTime() + serverOffsetInMs)
+}
+
 export function createMonthName(monthNumber: string, language?: string) {
   const months =
     language === 'en'
@@ -29,5 +35,6 @@ export function createMonthName(monthNumber: string, language?: string) {
 export interface DateUtilsLib {
   sameDay: (d1: Date, d2: Date) => boolean
   formatDate: (date: string | undefined, formatType: string, language: string) => string | undefined
+  stringToServerTime: () => Date
   createMonthName: (monthNumber: string, language: string) => string
 }
