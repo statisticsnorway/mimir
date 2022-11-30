@@ -1,4 +1,4 @@
-import { get as getContentByKey, type Content } from '/lib/xp/content'
+import { query , type Content } from '/lib/xp/content'
 import { getContent, processHtml } from '/lib/xp/portal'
 import type { DatasetRepoNode } from '/lib/ssb/repo/dataset'
 import type { JSONstat } from '/lib/types/jsonstat-toolkit'
@@ -7,6 +7,8 @@ import { render as r4XpRender, type RenderResponse } from '/lib/enonic/react4xp'
 import type { TbmlDataUniform } from '/lib/types/xmlParser'
 import type { Statistics } from '../../content-types'
 import { GA_TRACKING_ID } from '../../pages/default/default'
+import { contentArrayToRecord } from '/lib/ssb/utils/arrayUtils'
+import { notNullOrUndefined } from '/lib/ssb/utils/coreUtils'
 import type { AccordionData } from '../accordion/accordion'
 
 const {
@@ -113,31 +115,36 @@ function getTablesAndFigures(
   let figureIndex = 0
   let tableIndex = 0
   if (attachmentTablesAndFigures.length > 0) {
-    return attachmentTablesAndFigures
-      .filter((tableOrFigure) => !!tableOrFigure)
-      .map((id, index) => {
-        const content: Content | null = getContentByKey({
-          key: id,
-        })
-        if (content && content.type === `${app.name}:table`) {
-          ++tableIndex
-          return getTableReturnObject(
-            content,
-            tableController.getProps(req, id),
-            `${phrases.table} ${tableIndex}`,
-            index
-          )
-        } else if (content && content.type === `${app.name}:highchart`) {
-          ++figureIndex
-          return getFigureReturnObject(
-            content,
-            highchartController.preview(req, id),
-            `${phrases.figure} ${figureIndex}`,
-            index
-          )
-        }
-        return
-      }) as Array<AttachmentTablesFiguresData>
+    const attachmentTablesFiguresIds = attachmentTablesAndFigures.map((id) => id).filter(notNullOrUndefined)
+    const attachmentTablesFiguresHits = query({
+      count: attachmentTablesFiguresIds.length,
+      filters: {
+        ids: {
+          values: attachmentTablesFiguresIds,
+        },
+      },
+    }).hits
+    const attachmentTablesFiguresMap = contentArrayToRecord(attachmentTablesFiguresHits)
+    return attachmentTablesAndFigures.map((id, index) => {
+      if (attachmentTablesFiguresMap[id].type === `${app.name}:table`) {
+        ++tableIndex
+        return getTableReturnObject(
+          attachmentTablesFiguresMap[id],
+          tableController.getProps(req, id),
+          `${phrases.table} ${tableIndex}`,
+          index
+        )
+      } else if (attachmentTablesFiguresMap[id].type === `${app.name}:highchart`) {
+        ++figureIndex
+        return getFigureReturnObject(
+          attachmentTablesFiguresMap[id],
+          highchartController.preview(req, id),
+          `${phrases.figure} ${figureIndex}`,
+          index
+        )
+      }
+      return
+    }) as Array<AttachmentTablesFiguresData>
   }
   return []
 }
