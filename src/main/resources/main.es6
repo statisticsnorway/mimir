@@ -3,6 +3,7 @@ try {
   const { setupStatRegRepo } = __non_webpack_require__('/lib/ssb/repo/statreg')
   const { setupDatasetRepo } = __non_webpack_require__('/lib/ssb/repo/dataset')
   const { setupBestBetRepo } = __non_webpack_require__('/lib/ssb/repo/bestbet')
+  const { createOrUpdateStatisticsRepo } = __non_webpack_require__('/lib/ssb/repo/statisticVariant')
   const cache = __non_webpack_require__('/lib/ssb/cache/cache')
   const { setupFetchDataOnCreateListener } = __non_webpack_require__('/lib/ssb/dataset/listeners')
   const { setupCronJobs } = __non_webpack_require__('/lib/ssb/cron/cron')
@@ -95,6 +96,7 @@ try {
     },
   ])
 
+  createOrUpdateStatisticsRepo()
   const now = new Date()
   log.info(`Startup script complete: ${now.toISOString()}`)
 } catch (e) {

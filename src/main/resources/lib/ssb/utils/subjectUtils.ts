@@ -1,11 +1,10 @@
-import { query, Content } from '/lib/xp/content'
-import type { Statistics, EndedStatisticList, Article } from '../../../site/content-types'
-import { StatisticInListing } from '../dashboard/statreg/types'
+import { type Content, query } from '/lib/xp/content'
+import type { Article, EndedStatisticList, Statistics } from '../../../site/content-types'
+import type { StatisticInListing } from '../dashboard/statreg/types'
 import type { Statistic } from '../../../site/mixins/statistic'
 import type { Subtopic } from '../../../site/mixins/subtopic'
-import { DefaultPage } from '/lib/types/defaultPage'
+import type { DefaultPage } from '/lib/types/defaultPage'
 import { forceArray } from '/lib/ssb/utils/arrayUtils'
-import { fromSubjectCache } from '/lib/ssb/cache/subjectCache'
 
 const { getAllStatisticsFromRepo } = __non_webpack_require__('/lib/ssb/statreg/statistics')
 const { ensureArray } = __non_webpack_require__('/lib/ssb/utils/arrayUtils')
@@ -13,13 +12,14 @@ const { parentPath } = __non_webpack_require__('/lib/ssb/utils/parentUtils')
 
 export function getMainSubjects(request: XP.Request, language?: string): Array<SubjectItem> {
   return fromSubjectCache<SubjectItem>(request, `mainsubject-${language ? language : 'all'}`, () =>
-    queryForMainSubjects({
+    queryForSubjects({
       language,
+      subjectType: 'mainSubject',
     })
   )
 }
 
-export function queryForMainSubjects({ language }: QueryForSubjectsParams): SubjectItem[] {
+export function queryForSubjects({ language, subjectType }: QueryForSubjectsParams): SubjectItem[] {
   return query({
     count: 200,
     sort: 'displayName ASC',
@@ -35,48 +35,7 @@ export function queryForMainSubjects({ language }: QueryForSubjectsParams): Subj
           {
             hasValue: {
               field: 'components.page.config.mimir.default.subjectType',
-              values: ['mainSubject'],
-            },
-          },
-        ],
-      },
-    },
-  })
-    .hits.filter((hit) => {
-      const page: DefaultPage['page'] = hit.page as DefaultPage['page']
-      return page.config.subjectCode !== undefined
-    })
-    .map((hit) => {
-      const page: DefaultPage['page'] = hit.page as DefaultPage['page']
-
-      return {
-        id: hit._id,
-        title: hit.displayName,
-        subjectCode: page.config.subjectCode,
-        path: hit._path,
-        language: hit?.language === 'en' ? 'en' : 'no',
-        name: hit._name,
-      }
-    })
-}
-
-export function queryForSubSubjects({ language }: QueryForSubjectsParams): SubjectItem[] {
-  return query({
-    count: 200,
-    sort: 'displayName ASC',
-    filters: {
-      boolean: {
-        must: [
-          {
-            hasValue: {
-              field: 'language',
-              values: language === 'en' ? ['en'] : ['no', 'nb', 'nn'],
-            },
-          },
-          {
-            hasValue: {
-              field: 'components.page.config.mimir.default.subjectType',
-              values: ['subSubject'],
+              values: [subjectType],
             },
           },
         ],
@@ -103,6 +62,7 @@ export function queryForSubSubjects({ language }: QueryForSubjectsParams): Subje
 
 interface QueryForSubjectsParams {
   language?: string | undefined
+  subjectType: string
 }
 
 export function getMainSubjectById(mainSubjects: Array<SubjectItem>, id: string): SubjectItem | null {

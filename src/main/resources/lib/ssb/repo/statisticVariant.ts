@@ -1,21 +1,20 @@
 import { create as createRepo, get as getRepo } from '/lib/xp/repo'
-import { connect, type NodeCreateParams, type RepoConnection } from '/lib/xp/node'
-import { localDateTime, type LocalDateTime } from '/lib/xp/value'
+import { connect, type NodeCreateParams, type NodeQueryResponse, type RepoConnection } from '/lib/xp/node'
+import { type Instant, instant, type LocalDateTime, localDateTime } from '/lib/xp/value'
 import { run } from '/lib/xp/context'
 import { getAllStatisticsFromRepo } from '/lib/ssb/statreg/statistics'
 import { contentArrayToRecord, forceArray } from '/lib/ssb/utils/arrayUtils'
 import { notEmptyOrUndefined, notNullOrUndefined } from '/lib/ssb/utils/coreUtils'
-import type { StatisticInListing, VariantInListing } from '/lib/ssb/dashboard/statreg/types'
-import { ReleasesInListing } from '/lib/ssb/dashboard/statreg/types'
+import type { ReleasesInListing, StatisticInListing, VariantInListing } from '/lib/ssb/dashboard/statreg/types'
+import type { QueryDSL } from '/lib/xp/content'
 import { type Content, query, type QueryResponse } from '/lib/xp/content'
-import { OmStatistikken } from '../../../site/content-types/omStatistikken/omStatistikken'
-import { XData } from '../../../site/x-data'
-import { Statistics } from '../../../site/content-types/statistics/statistics'
+import type { OmStatistikken, Statistics } from '../../../site/content-types'
+import type { XData } from '../../../site/x-data'
 import { capitalize } from '/lib/ssb/utils/stringUtils'
 import { calculatePeriod, getNextRelease, getPreviousRelease, nextReleasedPassed } from '/lib/ssb/utils/variantUtils'
-import { SubjectItem } from '/lib/ssb/utils/subjectUtils'
+import type { SubjectItem } from '/lib/ssb/utils/subjectUtils'
 
-const { queryForMainSubjects, queryForSubSubjects, getAllMainSubjectByContent, getAllSubSubjectByContent } =
+const { queryForSubjects, getAllMainSubjectByContent, getAllSubSubjectByContent } =
   __non_webpack_require__('/lib/ssb/utils/subjectUtils')
 
 export const REPO_ID_STATREG_STATISTICS: 'no.ssb.statreg.statistics.variants' =
@@ -38,6 +37,42 @@ export function createOrUpdateStatisticsRepo(): void {
       log.info(`Finished initiating "${REPO_ID_STATREG_STATISTICS}"`)
     }
   )
+}
+
+export function getRepoConnectionStatistics(): RepoConnection {
+  return connect({
+    repoId: 'no.ssb.statreg.statistics.variants',
+    branch: 'master',
+  })
+}
+
+export function getStatisticVariantsFromRepo(language: string, query?: QueryDSL): ContentLight<Release>[] {
+  const connectionStatisticRepo: RepoConnection = getRepoConnectionStatistics()
+  const res: NodeQueryResponse = connectionStatisticRepo.query({
+    count: 1000,
+    sort: 'publish.from DESC',
+    query: query ? (query as unknown as string) : undefined,
+    filters: {
+      boolean: {
+        must: [
+          {
+            hasValue: {
+              field: 'language',
+              values: language === 'nb' ? ['nb', 'nn'] : ['en'],
+            },
+          },
+          {
+            hasValue: {
+              field: 'data.status',
+              values: ['A'],
+            },
+          },
+        ],
+      },
+    },
+  })
+
+  return res.hits.map((hit) => connectionStatisticRepo.get(hit.id))
 }
 
 export function fillRepo(statistics: Array<StatisticInListing>) {
@@ -65,11 +100,13 @@ export function fillRepo(statistics: Array<StatisticInListing>) {
   })
 
   LANGUAGES.forEach((language) => {
-    const allMainSubjects: SubjectItem[] = queryForMainSubjects({
+    const allMainSubjects: SubjectItem[] = queryForSubjects({
       language,
+      subjectType: 'mainSubject',
     })
-    const allSubSubjects: SubjectItem[] = queryForSubSubjects({
+    const allSubSubjects: SubjectItem[] = queryForSubjects({
       language,
+      subjectType: 'subSubject',
     })
 
     const statisticsResponse: QueryResponse<Statistics, XData> = getStatisticsContentByRegStatId(
@@ -103,7 +140,7 @@ export function fillRepo(statistics: Array<StatisticInListing>) {
       const allSubSubjectsStatistic: SubjectItem[] = getAllSubSubjectByContent(statisticsContent, allSubSubjects)
 
       forceArray(statistic.variants).forEach((variant) => {
-        const path = `/${statistic.shortName}-${variant.id}–${language}`
+        const path = `/${statistic.shortName}-${variant.id}-${language}`
         const exists: Array<string> = connection.exists(path)
         const nextReleasePassed: boolean = nextReleasedPassed(variant)
         const prevRelease: ReleasesInListing = getPreviousRelease(nextReleasePassed, variant)
@@ -177,13 +214,13 @@ function createContentStatisticVariant(
 
   return {
     displayName: language === 'nb' ? statistic.name : statistic.nameEN,
-    _name: `${statistic.shortName}-${variant.id}–${language}`,
+    _name: `${statistic.shortName}-${variant.id}-${language}`,
     _inheritsPermissions: true,
     modifiedTime: asLocalDateTime(variant.previousRelease),
     data: prepareData(params),
     language,
     publish: {
-      from: asLocalDateTime(prevRelease.publishTime),
+      from: prevRelease.publishTime ? instant(new Date(prevRelease.publishTime)) : '',
     },
   }
 }
@@ -216,7 +253,7 @@ function prepareData({
       statisticsContent?.x?.['com-enonic-app-metafields']?.['meta-data'].seoDescription,
     status: statistic.status,
     frequency: variant.frekvens,
-    previousRelease: prevRelease.publishTime,
+    previousRelease: prevRelease.publishTime ?? '',
     previousFrom: prevRelease.periodFrom,
     previousTo: prevRelease.periodTo,
     previousPeriod:
@@ -264,11 +301,11 @@ export interface Release {
   ingress?: string
   status: string
   frequency: string
-  previousRelease?: string
+  previousRelease: string
   previousFrom?: string
   previousTo?: string
   previousPeriod: string
-  nextRelease?: string
+  nextRelease: string
   nextPeriod: string
   statisticContentId?: string
   articleType: 'statistics'
@@ -283,7 +320,7 @@ export interface ContentLight<Data> {
   data: Data
   language: 'nb' | 'en'
   publish?: {
-    from?: LocalDateTime | string
+    from?: Instant | string
   }
 }
 
