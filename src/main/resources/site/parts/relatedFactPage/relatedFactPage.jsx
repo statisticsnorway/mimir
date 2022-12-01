@@ -61,8 +61,6 @@ function RelatedBoxes(props) {
   }
 
   function renderRelatedFactPages() {
-    console.log('props', props)
-    console.log('relatedFactPages', relatedFactPages)
     if (relatedFactPages.length) {
       return (
         <>
