@@ -11,7 +11,11 @@ const FactBox = (props) => {
     ></div>
   )
 
-  return <FactBoxComponent header={props.header} text={createText(props.text)}></FactBoxComponent>
+  return (
+    <section className='xp-part part-fact-box container'>
+      <FactBoxComponent header={props.header} text={createText(props.text)}></FactBoxComponent>
+    </section>
+  )
 }
 
 FactBox.propTypes = {
