@@ -22,6 +22,8 @@ function ArticleArchive(props) {
     showMorePagination,
   } = props
 
+  console.log(props)
+
   const [articles, setArticles] = useState(firstArticles.articles)
   const [totalCount, setTotalCount] = useState(firstArticles.total)
   const [loading, setLoading] = useState()

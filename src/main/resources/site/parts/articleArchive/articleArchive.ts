@@ -99,13 +99,47 @@ export function parseArticleData(pageId: string, start: number, count: number, l
     locale: language,
   })
 
+  // const articles: QueryResponse<Article, object> = query({
+  //   start,
+  //   count,
+  //   sort: 'publish.from DESC',
+  //   query: `data.articleArchive = "${pageId}"`,
+  //   contentTypes: [`${app.name}:article`],
+  // })
+
   const articles: QueryResponse<Article, object> = query({
     start,
     count,
     sort: 'publish.from DESC',
-    query: `data.articleArchive = "${pageId}"`,
-    contentTypes: [`${app.name}:article`],
+    filters: {
+      boolean: {
+        // must: [
+        //   {
+        //     hasValue: {
+        //       field: 'language',
+        //       values: language === 'en' ? ['en'] : ['no', 'nb', 'nn'],
+        //     },
+        //   },
+        // ],
+        must: [
+          {
+            hasValue: {
+              field: 'data.articleArchive',
+              values: [pageId],
+            },
+          },
+          {
+            hasValue: {
+              field: 'type',
+              values: [`${app.name}:article`],
+            },
+          },
+        ],
+      },
+    },
   })
+
+  log.info(JSON.stringify(articles, null, 2))
 
   const parsedArticles: Array<ParsedArticleData> = articles.hits.map((articleContent) => {
     return {
