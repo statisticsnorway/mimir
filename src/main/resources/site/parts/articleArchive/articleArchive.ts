@@ -27,6 +27,7 @@ function renderPart(req: XP.Request): RenderResponse {
     key: 'articleAnalysisPublications',
     locale: language,
   })
+
   const title: string | undefined = page.displayName ? page.displayName : undefined
 
   const preamble: string | undefined = page.data.preamble ? page.data.preamble : undefined
@@ -40,6 +41,7 @@ function renderPart(req: XP.Request): RenderResponse {
     : undefined
 
   const imageAltText: string | undefined = page.data.image ? getImageAlt(page.data.image) : ' '
+
   const freeText: string | undefined = page.data.freeText
     ? processHtml({
         value: page.data.freeText.replace(/&nbsp;/g, ' '),
@@ -105,15 +107,13 @@ export function parseArticleData(pageId: string, start: number, count: number, l
     sort: 'publish.from DESC',
     filters: {
       boolean: {
-        // must: [
-        //   {
-        //     hasValue: {
-        //       field: 'language',
-        //       values: language === 'en' ? ['en'] : ['no', 'nb', 'nn'],
-        //     },
-        //   },
-        // ],
         must: [
+          {
+            hasValue: {
+              field: 'language',
+              values: language === 'en' ? ['en'] : ['no', 'nb', 'nn'],
+            },
+          },
           {
             hasValue: {
               field: 'data.articleArchive',
@@ -132,11 +132,9 @@ export function parseArticleData(pageId: string, start: number, count: number, l
   })
 
   const parsedArticles: Array<ParsedArticleData> = articles.hits.map((articleContent) => {
-    log.info(JSON.stringify(articleContent.publish, null, 2))
-    log.info(JSON.stringify(JSON.stringify(articleContent.publish) != '{}', null, 2))
-
     return {
       year:
+        // checking against an empty articleContent.publish object to throw a false
         JSON.stringify(articleContent.publish) != '{}' && articleContent.createdTime
           ? formatDate(articleContent.publish?.from, 'yyyy', language)
           : formatDate(articleContent.createdTime, 'yyyy', language),
