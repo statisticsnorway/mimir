@@ -99,14 +99,6 @@ export function parseArticleData(pageId: string, start: number, count: number, l
     locale: language,
   })
 
-  // const articles: QueryResponse<Article, object> = query({
-  //   start,
-  //   count,
-  //   sort: 'publish.from DESC',
-  //   query: `data.articleArchive = "${pageId}"`,
-  //   contentTypes: [`${app.name}:article`],
-  // })
-
   const articles: QueryResponse<Article, object> = query({
     start,
     count,
@@ -139,13 +131,14 @@ export function parseArticleData(pageId: string, start: number, count: number, l
     },
   })
 
-  log.info(JSON.stringify(articles, null, 2))
-
   const parsedArticles: Array<ParsedArticleData> = articles.hits.map((articleContent) => {
+    log.info(JSON.stringify(articleContent.publish, null, 2))
+    log.info(JSON.stringify(JSON.stringify(articleContent.publish) != '{}', null, 2))
+
     return {
       year:
-        articleContent.publish && articleContent.createdTime
-          ? formatDate(articleContent.publish.from, 'yyyy', language)
+        JSON.stringify(articleContent.publish) != '{}' && articleContent.createdTime
+          ? formatDate(articleContent.publish?.from, 'yyyy', language)
           : formatDate(articleContent.createdTime, 'yyyy', language),
       subtitle: getSubTitle(articleContent, articleNamePhrase, language),
       href: pageUrl({
