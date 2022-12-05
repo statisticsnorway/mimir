@@ -32,7 +32,7 @@ function useHover() {
 const PictureLink = (props) => {
   const [hoverRef, hovered] = useHover()
   return (
-    <a className={`ssb-picture-card vertical ${props.className || ''}`} ref={hoverRef} href={props.href}>
+    <a className={`ssb-picture-card vertical ${props.className || ''}`} ref={hoverRef} href={props.href} tabIndex='0'>
       <div className='image-background'>
         <img src={props.imageSrc} alt={props.imageAlt} aria-hidden='true' />
       </div>
