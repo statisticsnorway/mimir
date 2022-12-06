@@ -1,21 +1,20 @@
-import { get, Content } from '/lib/xp/content'
-import { ResourceKey, render } from '/lib/thymeleaf'
-import { render as r4XpRender, RenderResponse } from '/lib/enonic/react4xp'
+import { get as getContentByKey, type Content } from '/lib/xp/content'
+import { type ResourceKey, render } from '/lib/thymeleaf'
+import { render as r4XpRender, type RenderResponse } from '/lib/enonic/react4xp'
 import type { ActiveStatistics as ActiveStatisticsPartConfig } from '.'
 import type { Statistics } from '../../content-types'
 import { SEO } from '../../../services/news/news'
+import { getContent, getComponent, pageUrl } from '/lib/xp/portal'
+import { localize } from '/lib/xp/i18n'
 
 const {
   data: { forceArray },
 } = __non_webpack_require__('/lib/util')
-const { getContent, getComponent, pageUrl } = __non_webpack_require__('/lib/xp/portal')
-
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
-const { localize } = __non_webpack_require__('/lib/xp/i18n')
 
 const view: ResourceKey = resolve('./activeStatistics.html')
 
-exports.get = (req: XP.Request): RenderResponse | XP.Response => {
+export function get(req: XP.Request): RenderResponse | XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -23,7 +22,9 @@ exports.get = (req: XP.Request): RenderResponse | XP.Response => {
   }
 }
 
-exports.preview = (req: XP.Request): RenderResponse => renderPart(req)
+export function preview(req: XP.Request): RenderResponse {
+  return renderPart(req)
+}
 
 function renderPart(req: XP.Request): RenderResponse {
   const page: Content = getContent()
@@ -96,7 +97,7 @@ function parseContent(
       .map((statistics) => {
         if (statistics._selected === 'xp' && statistics.xp.contentId) {
           const statisticsContentId: string = statistics.xp.contentId
-          const activeStatisticsContent: Content<Statistics, SEO> | null = get({
+          const activeStatisticsContent: Content<Statistics, SEO> | null = getContentByKey({
             key: statisticsContentId,
           })
 

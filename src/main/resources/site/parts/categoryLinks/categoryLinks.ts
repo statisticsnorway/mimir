@@ -6,9 +6,7 @@ import { Language, type Phrases } from '../../../lib/types/language'
 import { randomUnsafeString } from '/lib/ssb/utils/utils'
 
 const { data } = __non_webpack_require__('/lib/util')
-
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
-
 const { getLanguage } = __non_webpack_require__('/lib/ssb/utils/language')
 
 export function get(req: XP.Request): XP.Response | RenderResponse {

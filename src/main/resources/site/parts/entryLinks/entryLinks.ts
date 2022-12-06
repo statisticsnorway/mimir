@@ -1,9 +1,9 @@
-import { render as r4XpRender, RenderResponse } from '/lib/enonic/react4xp'
-import { Component, getComponent, getContent, imageUrl } from '/lib/xp/portal'
+import { render as r4XpRender, type RenderResponse } from '/lib/enonic/react4xp'
+import { type Component, getComponent, getContent, imageUrl } from '/lib/xp/portal'
 import type { EntryLinks as EntryLinksPartConfig } from '.'
-import { Content, get, MediaImage } from '/lib/xp/content'
-import { Phrases } from '../../../lib/types/language'
-import { render, ResourceKey } from '/lib/thymeleaf'
+import { type Content, get as getContentByKey, type MediaImage } from '/lib/xp/content'
+import type { Phrases } from '../../../lib/types/language'
+import { render, type ResourceKey } from '/lib/thymeleaf'
 
 const {
   data: { forceArray },
@@ -15,7 +15,7 @@ const { getAttachmentContent } = __non_webpack_require__('/lib/ssb/utils/utils')
 
 const view: ResourceKey = resolve('./entryLinks.html') as ResourceKey
 
-exports.get = (req: XP.Request) => {
+export function get(req: XP.Request) {
   try {
     return renderPart(req)
   } catch (e) {
@@ -23,7 +23,9 @@ exports.get = (req: XP.Request) => {
   }
 }
 
-exports.preview = (req: XP.Request) => renderPart(req)
+export function preview(req: XP.Request) {
+  return renderPart(req)
+}
 
 function renderPart(req: XP.Request): XP.Response | RenderResponse {
   const page: Content = getContent()
@@ -80,7 +82,7 @@ function parseEntryLinks(entryLinksContent: EntryLinksPartConfig['entryLinks']):
   return (
     entryLinksContent &&
     entryLinksContent.map(({ title, href, icon, mobileIcon }) => {
-      const iconData: Content<MediaImage> | null = get({
+      const iconData: Content<MediaImage> | null = getContentByKey({
         key: icon,
       })
 

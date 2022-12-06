@@ -1,12 +1,12 @@
-import { Content } from '/lib/xp/content'
-import { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/types'
-import { Phrases } from '../../../lib/types/language'
+import type { Content } from '/lib/xp/content'
+import type { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/types'
+import type { Phrases } from '../../../lib/types/language'
 import { render } from '/lib/enonic/react4xp'
 import type { Statistics } from '../../content-types'
 import type { StatbankBox as StatbankBoxPartConfig } from '.'
+import { getComponent, getContent, assetUrl } from '/lib/xp/portal'
 
 const { getStatisticByIdFromRepo } = __non_webpack_require__('/lib/ssb/statreg/statistics')
-const { getContent, getComponent, assetUrl } = __non_webpack_require__('/lib/xp/portal')
 const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
@@ -15,7 +15,7 @@ const STATBANKWEB_URL: string =
     ? app.config['ssb.statbankweb.baseUrl']
     : 'https://www.ssb.no/statbank'
 
-exports.get = function (req: XP.Request): XP.Response {
+export function get(req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -23,7 +23,9 @@ exports.get = function (req: XP.Request): XP.Response {
   }
 }
 
-exports.preview = (req: XP.Request): XP.Response => renderPart(req)
+export function preview(req: XP.Request): XP.Response {
+  return renderPart(req)
+}
 
 function renderPart(req: XP.Request): XP.Response {
   const page: Content<Statistics> = getContent()

@@ -1,12 +1,11 @@
 import type { Article } from '../../content-types'
-import { pageUrl, getContent, getComponent, Component } from '/lib/xp/portal'
+import { pageUrl, getContent, getComponent, type Component } from '/lib/xp/portal'
 import type { ArticleList as ArticleListPartConfig } from '.'
-import { render, RenderResponse } from '/lib/enonic/react4xp'
-import { query, AggregationsResponseEntry, Content } from '/lib/xp/content'
+import { render, type RenderResponse } from '/lib/enonic/react4xp'
+import { query, type AggregationsResponseEntry, type Content } from '/lib/xp/content'
 import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
-
-const { localize } = __non_webpack_require__('/lib/xp/i18n')
+import { localize } from '/lib/xp/i18n'
 
 const { moment } = __non_webpack_require__('/lib/vendor/moment')
 const { getSubSubjects } = __non_webpack_require__('/lib/ssb/utils/subjectUtils')
@@ -14,7 +13,7 @@ const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 const { fromPartCache } = __non_webpack_require__('/lib/ssb/cache/partCache')
 const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
 
-exports.get = (req: XP.Request): RenderResponse | XP.Response => {
+export function get(req: XP.Request): RenderResponse | XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -22,7 +21,9 @@ exports.get = (req: XP.Request): RenderResponse | XP.Response => {
   }
 }
 
-exports.preview = (req: XP.Request): RenderResponse => renderPart(req)
+export function preview(req: XP.Request): RenderResponse {
+  return renderPart(req)
+}
 
 function renderPart(req: XP.Request): RenderResponse {
   const content: Content = getContent()

@@ -1,14 +1,15 @@
-import { render, RenderResponse } from '/lib/enonic/react4xp'
-import { Content } from '/lib/xp/content'
+import { render, type RenderResponse } from '/lib/enonic/react4xp'
+import type { Content } from '/lib/xp/content'
+import { getContent, getSiteConfig } from '/lib/xp/portal'
+import { localize } from '/lib/xp/i18n'
 
-const { getContent, getSiteConfig } = __non_webpack_require__('/lib/xp/portal')
-const { localize } = __non_webpack_require__('/lib/xp/i18n')
-
-exports.get = (req: XP.Request): RenderResponse => {
+export function get(req: XP.Request): RenderResponse {
   return renderPart(req)
 }
 
-exports.preview = (req: XP.Request): RenderResponse => renderPart(req)
+export function preview(req: XP.Request): RenderResponse {
+  return renderPart(req)
+}
 
 function renderPart(req: XP.Request): RenderResponse {
   const page: Content = getContent()

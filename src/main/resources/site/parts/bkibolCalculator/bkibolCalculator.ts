@@ -1,22 +1,21 @@
-import { render as r4XpRender, RenderResponse } from '/lib/enonic/react4xp'
-import { getComponent, getContent, serviceUrl, pageUrl, Component } from '/lib/xp/portal'
+import { render as r4XpRender, type RenderResponse } from '/lib/enonic/react4xp'
+import { getComponent, getContent, serviceUrl, pageUrl, type Component } from '/lib/xp/portal'
 import type { BkibolCalculator as BkibolCalculatorPartConfig } from '.'
-import { Dataset, Dimension } from '../../../lib/types/jsonstat-toolkit'
-import { Content } from '/lib/xp/content'
+import type { Dataset, Dimension } from '/lib/types/jsonstat-toolkit'
+import type { Content } from '/lib/xp/content'
 import type { CalculatorConfig } from '../../content-types'
-import { Language, Phrases } from '../../../lib/types/language'
-import { allMonths, nextPeriod } from '../../../lib/ssb/utils/calculatorUtils'
-import { CalculatorPeriod } from '../../../lib/types/calculator'
-import { DropdownItem, DropdownItems } from '../../../lib/types/components'
+import type { Language, Phrases } from '/lib/types/language'
+import { allMonths, nextPeriod } from '/lib/ssb/utils/calculatorUtils'
+import type { CalculatorPeriod } from '/lib/types/calculator'
+import type { DropdownItem, DropdownItems } from '/lib/types/components'
+import { localize } from '/lib/xp/i18n'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
-
 const { getLanguage } = __non_webpack_require__('/lib/ssb/utils/language')
 const { getCalculatorConfig, getBkibolDatasetEnebolig } = __non_webpack_require__('/lib/ssb/dataset/calculator')
 const { fromPartCache } = __non_webpack_require__('/lib/ssb/cache/partCache')
-const i18nLib = __non_webpack_require__('/lib/xp/i18n')
 
-exports.get = function (req: XP.Request): RenderResponse | XP.Response {
+export function get(req: XP.Request): RenderResponse | XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -24,12 +23,8 @@ exports.get = function (req: XP.Request): RenderResponse | XP.Response {
   }
 }
 
-exports.preview = function (req: XP.Request): RenderResponse | XP.Response {
-  try {
-    return renderPart(req)
-  } catch (e) {
-    return renderError(req, 'Error in part', e)
-  }
+export function preview(req: XP.Request): RenderResponse | XP.Response {
+  return renderPart(req)
 }
 
 function renderPart(req: XP.Request): RenderResponse {
@@ -57,7 +52,7 @@ function getBkibolCalculatorComponent(req: XP.Request, page: Content<BkibolCalcu
   const lastUpdated: CalculatorPeriod = lastPeriod(bkibolDataEnebolig)
   const nextUpdate: CalculatorPeriod = nextPeriod(lastUpdated.month.toString(), lastUpdated.year.toString())
   const nextReleaseMonth: number = +nextUpdate.month === 12 ? 1 : +nextUpdate.month + 1
-  const nextPublishText: string = i18nLib.localize({
+  const nextPublishText: string = localize({
     key: 'bkibolNextPublishText',
     locale: language.code,
     values: [
@@ -67,7 +62,7 @@ function getBkibolCalculatorComponent(req: XP.Request, page: Content<BkibolCalcu
       monthLabel(months, code, nextReleaseMonth),
     ],
   })
-  const lastNumberText: string = i18nLib.localize({
+  const lastNumberText: string = localize({
     key: 'calculatorLastNumber',
     locale: code,
     values: [monthLabel(months, code, +lastUpdated.month), lastUpdated.year.toString()],

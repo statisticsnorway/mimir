@@ -1,19 +1,20 @@
-import { render, RenderResponse } from '/lib/enonic/react4xp'
-import { Content, QueryResponse } from '/lib/xp/content'
-import { PreparedArticles } from '../../../lib/ssb/utils/articleUtils'
+import { render, type RenderResponse } from '/lib/enonic/react4xp'
+import type { Content, QueryResponse } from '/lib/xp/content'
+import type { PreparedArticles } from '../../../lib/ssb/utils/articleUtils'
 import type { Article } from '../../content-types'
-
-const { localize } = __non_webpack_require__('/lib/xp/i18n')
-const { getContent, serviceUrl } = __non_webpack_require__('/lib/xp/portal')
+import { getContent, serviceUrl } from '/lib/xp/portal'
+import { localize } from '/lib/xp/i18n'
 
 const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
 const { getChildArticles, prepareArticles } = __non_webpack_require__('/lib/ssb/utils/articleUtils')
 
-exports.get = (req: XP.Request): RenderResponse => {
+export function get(req: XP.Request): RenderResponse {
   return renderPart(req)
 }
 
-exports.preview = (req: XP.Request): RenderResponse => renderPart(req)
+export function preview(req: XP.Request): RenderResponse {
+  return renderPart(req)
+}
 
 function renderPart(req: XP.Request): RenderResponse {
   const content: Content = getContent()

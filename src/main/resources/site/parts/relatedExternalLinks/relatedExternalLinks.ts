@@ -1,19 +1,18 @@
-import { Content } from '/lib/xp/content'
-import { ResourceKey, render } from '/lib/thymeleaf'
-import { Phrases } from '../../../lib/types/language'
+import type { Content } from '/lib/xp/content'
+import { type ResourceKey, render } from '/lib/thymeleaf'
+import type { Phrases } from '../../../lib/types/language'
 import { render as r4xpRender } from '/lib/enonic/react4xp'
+import { getContent } from '/lib/xp/portal'
 import type { Article, Statistics } from '../../content-types'
 import type { RelatedExternalLinks } from '../../mixins/relatedExternalLinks'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
-
-const { getContent } = __non_webpack_require__('/lib/xp/portal')
 const util = __non_webpack_require__('/lib/util')
 const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
 
 const view: ResourceKey = resolve('./relatedExternalLinks.html')
 
-exports.get = function (req: XP.Request): XP.Response {
+export function get(req: XP.Request): XP.Response {
   try {
     const page: Content<Article | Statistics> = getContent()
     let externalLinks: RelatedExternalLinks['relatedExternalLinkItemSet'] = page.data.relatedExternalLinkItemSet
@@ -30,8 +29,12 @@ exports.get = function (req: XP.Request): XP.Response {
   }
 }
 
-exports.preview = (req: XP.Request, externalLinks: RelatedExternalLinks['relatedExternalLinkItemSet']): XP.Response =>
-  renderPart(req, externalLinks)
+export function preview(
+  req: XP.Request,
+  externalLinks: RelatedExternalLinks['relatedExternalLinkItemSet']
+): XP.Response {
+  return renderPart(req, externalLinks)
+}
 
 function renderPart(req: XP.Request, externalLinks: RelatedExternalLinks['relatedExternalLinkItemSet']): XP.Response {
   const page: Content = getContent()

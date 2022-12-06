@@ -1,13 +1,12 @@
-import { render, RenderResponse } from '/lib/enonic/react4xp'
-import { Content } from '/lib/xp/content'
-import { Language, Phrases } from '../../../lib/types/language'
+import { render, type RenderResponse } from '/lib/enonic/react4xp'
+import type { Content } from '/lib/xp/content'
+import type { Language, Phrases } from '../../../lib/types/language'
+import { getContent, serviceUrl } from '/lib/xp/portal'
 
-const { getContent, serviceUrl } = __non_webpack_require__('/lib/xp/portal')
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
-
 const { getLanguage } = __non_webpack_require__('/lib/ssb/utils/language')
 
-exports.get = function (req: XP.Request) {
+export function get(req: XP.Request) {
   try {
     return renderPart(req)
   } catch (e) {
@@ -15,7 +14,9 @@ exports.get = function (req: XP.Request) {
   }
 }
 
-exports.preview = (req: XP.Request) => renderPart(req)
+export function preview(req: XP.Request) {
+  return renderPart(req)
+}
 
 function renderPart(req: XP.Request): RenderResponse {
   const page: Content = getContent()

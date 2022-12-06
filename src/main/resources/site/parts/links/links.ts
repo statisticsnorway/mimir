@@ -1,11 +1,11 @@
-import { get, Content } from '/lib/xp/content'
-import { getComponent, attachmentUrl, pageUrl, Component } from '/lib/xp/portal'
+import { get as getContentByKey, type Content } from '/lib/xp/content'
+import { getComponent, attachmentUrl, pageUrl, type Component } from '/lib/xp/portal'
 import type { Links as LinksPartConfig } from '.'
-import { render, RenderResponse } from '/lib/enonic/react4xp'
+import { render, type RenderResponse } from '/lib/enonic/react4xp'
 import { renderError } from '../../../lib/ssb/error/error'
 import { GA_TRACKING_ID } from '../../pages/default/default'
 
-exports.get = (req: XP.Request): RenderResponse | XP.Response => {
+export function get(req: XP.Request): RenderResponse | XP.Response {
   try {
     const part: Component<LinksPartConfig> = getComponent()
     const config: LinksPartConfig = part.config
@@ -15,7 +15,7 @@ exports.get = (req: XP.Request): RenderResponse | XP.Response => {
   }
 }
 
-exports.preview = (req: XP.Request, config: LinksPartConfig): RenderResponse | XP.Response => {
+export function preview(req: XP.Request, config: LinksPartConfig): RenderResponse | XP.Response {
   try {
     return renderPart(req, config)
   } catch (e) {
@@ -46,7 +46,7 @@ function renderPart(req: XP.Request, config: LinksPartConfig): RenderResponse {
       const linkText: string | undefined = linkTypes.headerLink.linkText
 
       const content: Content | null = linkedContent
-        ? get({
+        ? getContentByKey({
             key: linkedContent,
           })
         : null

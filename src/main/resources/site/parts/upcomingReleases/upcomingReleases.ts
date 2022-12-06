@@ -1,28 +1,29 @@
-import { render, RenderResponse } from '/lib/enonic/react4xp'
-import { query, Content } from '/lib/xp/content'
-import { Component } from '/lib/xp/portal'
-import { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/types'
-import { GroupedBy, PreparedStatistics, YearReleases, Release } from '../../../lib/ssb/utils/variantUtils'
+import { render, type RenderResponse } from '/lib/enonic/react4xp'
+import { query, type Content } from '/lib/xp/content'
+import type { Component } from '/lib/xp/portal'
+import type { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/types'
+import type { GroupedBy, PreparedStatistics, YearReleases, Release } from '../../../lib/ssb/utils/variantUtils'
 import type { UpcomingReleases as UpcomingReleasesPartConfig } from '.'
 import type { UpcomingRelease } from '../../content-types'
-import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
+import type { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
+import { getContent, getComponent, processHtml, serviceUrl } from '/lib/xp/portal'
+import { localize } from '/lib/xp/i18n'
 
 const { moment } = __non_webpack_require__('/lib/vendor/moment')
-
-const { getContent, getComponent, processHtml, serviceUrl } = __non_webpack_require__('/lib/xp/portal')
 const { addMonthNames, groupStatisticsByYearMonthAndDay, prepareRelease, filterOnComingReleases, getUpcomingReleases } =
   __non_webpack_require__('/lib/ssb/utils/variantUtils')
 const { getAllStatisticsFromRepo } = __non_webpack_require__('/lib/ssb/statreg/statistics')
-const { localize } = __non_webpack_require__('/lib/xp/i18n')
 const { fromPartCache } = __non_webpack_require__('/lib/ssb/cache/partCache')
 const { getMainSubjects, getMainSubjectById } = __non_webpack_require__('/lib/ssb/utils/subjectUtils')
 
-exports.get = (req: XP.Request): RenderResponse => {
+export function get(req: XP.Request): RenderResponse {
   return renderPart(req)
 }
 
-exports.preview = (req: XP.Request): RenderResponse => renderPart(req)
+export function preview(req: XP.Request): RenderResponse {
+  return renderPart(req)
+}
 
 function renderPart(req: XP.Request): RenderResponse {
   const content: Content = getContent()

@@ -1,13 +1,13 @@
-import { MunicipalityWithCounty } from '../../../lib/ssb/dataset/klass/municipalities'
-import { render, RenderResponse } from '/lib/enonic/react4xp'
+import type { MunicipalityWithCounty } from '../../../lib/ssb/dataset/klass/municipalities'
+import { render, type RenderResponse } from '/lib/enonic/react4xp'
 import type { RelatedKostra as RelatedKostraPartConfig } from '.'
+import { getComponent, getSiteConfig, processHtml } from '/lib/xp/portal'
 
-const { getComponent, getSiteConfig, processHtml } = __non_webpack_require__('/lib/xp/portal')
 const { getMunicipality } = __non_webpack_require__('/lib/ssb/dataset/klass/municipalities')
 const { pageMode } = __non_webpack_require__('/lib/ssb/utils/utils')
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
-exports.get = function (req: XP.Request): XP.Response | RenderResponse {
+export function get(req: XP.Request): XP.Response | RenderResponse {
   try {
     let municipality: MunicipalityWithCounty | undefined = getMunicipality(req)
     const mode: string = pageMode(req)
@@ -23,7 +23,7 @@ exports.get = function (req: XP.Request): XP.Response | RenderResponse {
   }
 }
 
-exports.preview = function (req: XP.Request): XP.Response | RenderResponse {
+export function preview(req: XP.Request): XP.Response | RenderResponse {
   const siteConfig: XP.SiteConfig = getSiteConfig()
   const municipality: MunicipalityWithCounty | undefined = getMunicipality({
     code: siteConfig.defaultMunicipality,
