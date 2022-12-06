@@ -12,7 +12,6 @@ import { run, type ContextAttributes, type RunContext } from '/lib/xp/context'
 
 import { ENONIC_CMS_DEFAULT_REPO } from '/lib/ssb/repo/common'
 
-import { pageUrl } from '/lib/xp/portal'
 import { getToolUrl } from '/lib/xp/admin'
 const DEFAULT_CONTENTSTUDIO_URL = getToolUrl('com.enonic.app.contentstudio', 'main')
 const ENONIC_PROJECT_ID = app.config && app.config['ssb.project.id'] ? app.config['ssb.project.id'] : 'default'
@@ -24,11 +23,17 @@ const INTERNAL_BASE_URL =
 
 export function get(req: XP.Request): XP.Response {
   const contentToFix: QueryResponse<Article, XpXData, object> = query({
-    query: '',
     count: 500,
-    contentTypes: [`${app.name}:article`],
     filters: {
       boolean: {
+        must: [
+          {
+            hasValue: {
+              field: 'type',
+              values: [`${app.name}:article`],
+            },
+          },
+        ],
         mustNot: [
           {
             exists: {
@@ -75,7 +80,6 @@ export function get(req: XP.Request): XP.Response {
         )
       })
     } else if (preparedArticle) {
-      // editedUnpublishedContents.push(INTERNAL_BASE_URL + pageUrl({ id: preparedArticle._id }))
       editedUnpublishedContents.push({
         name: preparedArticle._name,
         url: INTERNAL_BASE_URL + contentStudioBaseUrl + preparedArticle._id,
