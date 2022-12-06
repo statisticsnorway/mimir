@@ -47,6 +47,7 @@ const {
 } = __non_webpack_require__('/lib/util')
 const { getStatisticByIdFromRepo } = __non_webpack_require__('/lib/ssb/statreg/statistics')
 const { parseStatRegJobInfo } = __non_webpack_require__('/lib/ssb/dashboard/statreg')
+const { createOrUpdateNameGraphRepo } = __non_webpack_require__('/lib/ssb/repo/nameGraph')
 
 export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): void {
   socket.on('get-error-data-sources', () => {
@@ -181,6 +182,13 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
 
   socket.on('dashboard-server-time', () => {
     socket.emit('dashboard-server-time-result', new Date().toISOString())
+  })
+
+  socket.on('dashboard-refresh-namegraph', () => {
+    createOrUpdateNameGraphRepo()
+    socket.emit('refresh-namegraph-finished', {
+      status: 'Ferdig med oppdatering av navnedata',
+    })
   })
 }
 

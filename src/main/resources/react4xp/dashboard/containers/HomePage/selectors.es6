@@ -14,7 +14,14 @@ export const selectLoadingPurgeVarnish = createSelector(
   (commonState) => commonState.loadingPurgeVarnish
 )
 
+export const selectLoadingRefreshNameGraph = createSelector(
+  [selectDomain],
+  (commonState) => commonState.loadingRefreshNameGraph
+)
+
 export const selectVarnishPurgeResult = createSelector([selectDomain], (commonState) => commonState.varnishPurgeResult)
+
+export const selectRefreshNameGraphResult = createSelector([selectDomain], (commonState) => commonState.refreshNameGraphResult)
 
 export const selectContentStudioBaseUrl = createSelector(
   [selectDomain],
