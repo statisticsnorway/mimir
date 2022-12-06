@@ -1,11 +1,46 @@
 import type { Article } from '../../../site/content-types'
-import { query, Content, QueryResponse } from '/lib/xp/content'
-import { SubjectItem } from '../utils/subjectUtils'
+import {
+  getAllMainSubjectByContent,
+  getAllSubSubjectByContent,
+  getMainSubjects,
+  getSubSubjects,
+  type SubjectItem,
+} from '../utils/subjectUtils'
 import { formatDate } from './dateUtils'
+import { notNullOrUndefined } from '/lib/ssb/utils/coreUtils'
+import { get, modify, query, type Content, type QueryResponse } from '/lib/xp/content'
+import { pageUrl } from '/lib/xp/portal'
+import { listener, EnonicEvent } from '/lib/xp/event'
+import { ENONIC_CMS_DEFAULT_REPO, withSuperUserContext } from '/lib/ssb/repo/common'
+import { arraysEqual, ensureArray } from './arrayUtils'
 
-const { pageUrl } = __non_webpack_require__('/lib/xp/portal')
 const { moment } = __non_webpack_require__('/lib/vendor/moment')
-const { getMainSubjects } = __non_webpack_require__('/lib/ssb/utils/subjectUtils')
+
+const dummyReq: Partial<XP.Request> = {
+  branch: 'master',
+}
+
+export function setupArticleListener(): void {
+  listener({
+    type: 'node.updated',
+    localOnly: true,
+    callback: (event: EnonicEvent) => {
+      const eventContent: Content<Article, XpXData> | null = get({ key: event.data.nodes[0].id })
+      if (eventContent?.type == 'mimir:article') {
+        try {
+          const start = Date.now()
+          // @ts-ignore <- needs to be here, we don't want to create a whole req
+          addSubjectToXData(eventContent, dummyReq)
+
+          const end = Date.now()
+          log.info(`Runtime for adding subjectData: ${end - start}ms`)
+        } catch (error) {
+          log.error(`Error while trying to add Subject to Article, error: ${JSON.stringify(error, null, 2)}`)
+        }
+      }
+    },
+  })
+}
 
 export function getChildArticles(
   currentPath: string,
@@ -61,6 +96,68 @@ export function prepareArticles(articles: QueryResponse<Article, object>, langua
     }
   })
 }
+
+export function addSubjectToXData(
+  article: Content<Article, XpXData>,
+  req: XP.Request
+): Content<Article, XpXData> | undefined {
+  const allMainSubjects: SubjectItem[] = getMainSubjects(req, 'nb')
+  const allSubSubjects: SubjectItem[] = getSubSubjects(req, 'nb')
+
+  const mainSubjects: string[] = getAllMainSubjectByContent(article, allMainSubjects, allSubSubjects)
+    .map((subject) => subject.name)
+    .filter(notNullOrUndefined)
+  const subSubjects: string[] = getAllSubSubjectByContent(article, allSubSubjects)
+    .map((subject) => subject.name)
+    .filter(notNullOrUndefined)
+
+  if (mainSubjects.length && subSubjects.length && shouldEdit(mainSubjects, subSubjects, article)) {
+    let modified: Content<Article, XpXData> | undefined
+    try {
+      modified = withSuperUserContext(ENONIC_CMS_DEFAULT_REPO, 'draft', () => {
+        return modify({
+          key: article._id,
+          requireValid: true,
+          editor: (content: Content<Article, XpXData>) => {
+            content.x = {
+              ...content.x,
+              mimir: {
+                subjectTag: {
+                  mainSubjects: mainSubjects,
+                  subSubjects: subSubjects,
+                },
+              },
+            }
+            return content
+          },
+        })
+      })
+    } catch (error) {
+      log.error(`Error in editing content for subjectTags, error: ${JSON.stringify(error, null, 2)}`)
+    }
+    return modified
+  }
+  return undefined
+}
+
+function shouldEdit(
+  mainSubjects: Array<string>,
+  subSubjects: Array<string>,
+  article: Content<Article, XpXData>
+): boolean {
+  const mainIdentical: boolean = arraysEqual(
+    ensureArray(mainSubjects),
+    ensureArray(article.x.mimir?.subjectTag?.mainSubjects)
+  )
+  const subIdentical: boolean = arraysEqual(
+    ensureArray(subSubjects),
+    ensureArray(article.x.mimir?.subjectTag?.subSubjects)
+  )
+  // Should skip editing if content already contains xdata equal to what it should have
+  if (mainIdentical && subIdentical) return false
+  else return true
+}
+
 export interface ArticleUtilsLib {
   getChildArticles: (
     currentPath: string,
