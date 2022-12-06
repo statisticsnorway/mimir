@@ -336,7 +336,7 @@ export function fromFilterCache(
 }
 
 export function fromMenuCache(req: XP.Request, key: string, fallback: () => unknown): unknown {
-  if (req.mode === 'live' || req.mode === 'preview') {
+  if (req.mode === 'live') {
     const branch: string = req.mode === 'live' ? 'master' : 'draft'
     const menuCache: Cache = branch === 'master' ? masterMenuCache : draftMenuCache
     return menuCache.get(key, () => {
@@ -348,7 +348,7 @@ export function fromMenuCache(req: XP.Request, key: string, fallback: () => unkn
 }
 
 export function fromRelatedArticlesCache(req: XP.Request, key: string, fallback: () => unknown): unknown {
-  if (req.mode === 'live' || req.mode === 'preview') {
+  if (req.mode === 'live') {
     const branch: string = req.mode === 'live' ? 'master' : 'draft'
     const relatedArticlesCache: Cache = branch === 'master' ? masterRelatedArticlesCache : draftRelatedArticlesCache
     return relatedArticlesCache.get(key, () => {
