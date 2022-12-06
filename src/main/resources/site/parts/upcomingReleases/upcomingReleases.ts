@@ -9,6 +9,7 @@ import type { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
 import { getContent, getComponent, processHtml, serviceUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
+import { getUpcomingReleasesResults } from '/lib/ssb/parts/upcomingReleases'
 
 const { moment } = __non_webpack_require__('/lib/vendor/moment')
 const { addMonthNames, groupStatisticsByYearMonthAndDay, prepareRelease, filterOnComingReleases, getUpcomingReleases } =
@@ -96,6 +97,13 @@ function renderPart(req: XP.Request): RenderResponse {
       upcomingReleaseLink: r.data.href ? r.data.href : '',
     }
   })
+
+  log.info('contentReleases before: %s', JSON.stringify(contentReleases.length, null, 2))
+
+  log.info(
+    'contentReleases after: %s',
+    JSON.stringify(getUpcomingReleasesResults(req, 0, 500, currentLanguage).total, null, 2)
+  )
 
   const props: PartProps = {
     title: content.displayName,
