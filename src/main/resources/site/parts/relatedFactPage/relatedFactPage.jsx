@@ -76,7 +76,7 @@ function RelatedBoxes(props) {
               />
             ))}
           </div>
-          {total > 3 && (
+          {total > 4 && (
             <div className='row'>
               <div className='col-auto'>
                 <Button onClick={handleButtonOnClick}>
