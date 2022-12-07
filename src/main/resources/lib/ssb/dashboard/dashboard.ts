@@ -48,6 +48,7 @@ const {
 const { getStatisticByIdFromRepo } = __non_webpack_require__('/lib/ssb/statreg/statistics')
 const { parseStatRegJobInfo } = __non_webpack_require__('/lib/ssb/dashboard/statreg')
 const { createOrUpdateNameGraphRepo } = __non_webpack_require__('/lib/ssb/repo/nameGraph')
+const { getNameSearchGraphDatasetId } = __non_webpack_require__('/lib/ssb/dataset/calculator')
 
 export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): void {
   socket.on('get-error-data-sources', () => {
@@ -185,9 +186,32 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
   })
 
   socket.on('dashboard-refresh-namegraph', () => {
-    createOrUpdateNameGraphRepo()
+    const datasetId: string | undefined = getNameSearchGraphDatasetId()
+    let status: string
+    if (datasetId) {
+      const context: RunContext<ContextAttributes> = {
+        branch: 'master',
+        repository: ENONIC_CMS_DEFAULT_REPO,
+        principals: ['role:system.admin'],
+        user: {
+          login: users[parseInt(socket.id)].login,
+          idProvider: users[parseInt(socket.id)].idProvider ? users[parseInt(socket.id)].idProvider : 'system',
+        },
+      }
+      const apiData: RefreshDatasetResult[] = run(context, () => refreshDatasetHandler([datasetId], socketEmitter))
+
+      if (apiData[0].status !== 'FAILED_TO_GET_DATA') {
+        createOrUpdateNameGraphRepo()
+        status = 'Nye data fra statbankApi er hentet og Repo nameGraph er oppdatert'
+      } else {
+        status = 'Henting av data fra statbankApi feilet'
+      }
+    } else {
+      status = 'Henting av data fra StatbankApi feilet pga manglende datasetId'
+    }
+
     socket.emit('refresh-namegraph-finished', {
-      status: 'Ferdig med oppdatering av navnedata',
+      status: status,
     })
   })
 }

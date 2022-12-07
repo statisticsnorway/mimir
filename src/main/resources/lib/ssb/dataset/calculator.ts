@@ -175,6 +175,11 @@ export function getAllCalculatorDataset(): Array<Content<GenericDataImport>> {
   return datasources
 }
 
+export function getNameSearchGraphDatasetId(): string | undefined {
+  const config: Content<CalculatorConfig> | undefined = getCalculatorConfig()
+  return config?.data.nameSearchGraphData ?? undefined
+}
+
 export function isChronological(startYear: string, startMonth: string, endYear: string, endMonth: string): boolean {
   if (parseInt(startYear) < parseInt(endYear)) return true
   if (parseInt(endYear) < parseInt(startYear)) return false
@@ -202,6 +207,7 @@ export interface CalculatorLib {
   getBkibolDatasetBoligblokk: (config: Content<CalculatorConfig>) => Dataset | null
   getNameSearchGraphData: (config: Content<CalculatorConfig>) => DatasetRepoNode<JSONstatType> | null
   getNameGraphDataWithConfig: () => DatasetRepoNode<JSONstatType> | null
+  getNameSearchGraphDatasetId: () => string | undefined
   getAllCalculatorDataset: () => Array<Content<GenericDataImport>>
   isChronological: (startYear: string, startMonth: string, endYear: string, endMonth: string) => boolean
   getChangeValue: (startIndex: number, endIndex: number, chronological: boolean) => number
