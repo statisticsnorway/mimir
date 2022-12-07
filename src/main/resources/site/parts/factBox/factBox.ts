@@ -7,6 +7,8 @@ import { type ResourceKey, render } from '/lib/thymeleaf'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
+const view: ResourceKey = resolve('./factBox.html')
+
 export function get(req: XP.Request): XP.Response | RenderResponse {
   try {
     const part: Component<FactBoxPartConfig> = getComponent()
@@ -29,7 +31,7 @@ function renderPart(req: XP.Request, factBoxId: string): XP.Response | RenderRes
   if (!factBoxId) {
     if (req.mode === 'edit') {
       return {
-        body: r4XpRender('site/parts/factBox/factBox'),
+        body: render(view),
       }
     } else {
       throw new Error('Factbox - Missing Id')
@@ -42,12 +44,16 @@ function renderPart(req: XP.Request, factBoxId: string): XP.Response | RenderRes
   const text: string = processHtml({
     value: factBoxContent.data.text.replace(/&nbsp;/g, ' '),
   })
+  const body: string = render(view)
   return r4XpRender(
-    'site/parts/factBox/factBox',
+    'FactBox',
     {
       header: factBoxContent.displayName,
       text,
     },
-    req
+    req,
+    {
+      body: body,
+    }
   )
 }
