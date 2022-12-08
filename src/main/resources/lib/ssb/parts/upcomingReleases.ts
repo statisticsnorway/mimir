@@ -1,6 +1,7 @@
 import type { Content } from '/lib/xp/content'
 import { connect, multiRepoConnect, type MultiRepoConnection, type MultiRepoNodeQueryResponse } from '/lib/xp/node'
 import { type Context, type ContextAttributes, get as getContext, type PrincipalKey } from '/lib/xp/context'
+import { pageUrl } from '/lib/xp/portal'
 import { getMainSubjectById, getMainSubjects, SubjectItem } from '../utils/subjectUtils'
 import { type UpcomingRelease } from '/site/content-types'
 import { ContentLight, Release } from '../repo/statisticVariant'
@@ -36,17 +37,17 @@ export function getUpcomingReleasesResults(req: XP.Request, numberOfDays: number
         field: 'data.nextRelease',
         direction: 'ASC',
       },
-      // {
-      //   field: 'data.date',
-      //   direction: 'ASC',
-      // },
+      {
+        field: 'data.date',
+        direction: 'ASC',
+      },
     ] as unknown as string,
     // query: `data.date >= "${new Date().toISOString()}" OR data.nextRelease >= "${moment().format(
     //   'YYYY-MM-DD HH:mm:ss.S'
     // )}"`,
     query: {
       range: {
-        field: 'data.nextRelease',
+        field: ['data.nextRelease', 'data.date'],
         from: 'dateTime',
         gte: new Date().toISOString(),
         lte: addDays(new Date(), numberOfDays),
@@ -86,19 +87,19 @@ export function getUpcomingReleasesResults(req: XP.Request, numberOfDays: number
               ],
             },
           },
-          //contentReleases
-          // {
-          //   boolean: {
-          //     must: [
-          //       {
-          //         hasValue: {
-          //           field: 'type',
-          //           values: [`${app.name}:upcomingRelease`],
-          //         },
-          //       },
-          //     ],
-          //   },
-          // },
+          // contentReleases
+          {
+            boolean: {
+              must: [
+                {
+                  hasValue: {
+                    field: 'type',
+                    values: [`${app.name}:upcomingRelease`],
+                  },
+                },
+              ],
+            },
+          },
         ],
       },
     },
@@ -159,12 +160,12 @@ function prepStatisticUpcomingRelease(
   allMainSubjects: Array<SubjectItem>
 ): UpcomingReleases {
   const date: string = content.data.nextRelease
-  const mainSubject: SubjectItem | null = getMainSubjectById(allMainSubjects, content.data.mainSubjects as string)
+  const mainSubject: SubjectItem | null = allMainSubjects.filter((m) => m.name === content.data.mainSubjects)[0]
   return {
     id: content.data.statisticId,
     name: content.data.name,
     type: localize({
-      key: content.data.articleType,
+      key: `contentType.${content.data.articleType}`,
       locale: language,
     }),
     date: formatDate(date, 'PPP', language) as string,
@@ -173,6 +174,10 @@ function prepStatisticUpcomingRelease(
     month: formatDate(date, 'M', language) as string,
     monthName: formatDate(date, 'MMM', language) as string,
     year: formatDate(date, 'yyyy', language) as string,
+    description: content.data.nextPeriod,
+    upcomingReleaseLink: pageUrl({
+      id: content.data.statisticContentId as string,
+    }),
   }
 }
 export interface UpcomingReleasesResults {
@@ -190,5 +195,6 @@ export interface UpcomingReleases {
   month: string
   monthName: string
   year: string
+  description?: string
   upcomingReleaseLink?: string
 }

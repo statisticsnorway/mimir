@@ -5,7 +5,7 @@ import type { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/type
 import type { GroupedBy, PreparedStatistics, YearReleases, Release } from '../../../lib/ssb/utils/variantUtils'
 import type { UpcomingReleases as UpcomingReleasesPartConfig } from '.'
 import type { UpcomingRelease } from '../../content-types'
-import type { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
+import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
 import { formatDate } from '../../../lib/ssb/utils/dateUtils'
 import { getContent, getComponent, processHtml, serviceUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
@@ -99,6 +99,8 @@ function renderPart(req: XP.Request): RenderResponse {
       upcomingReleaseLink: r.data.href ? r.data.href : '',
     }
   })
+
+  log.info('upcoming releases %s', JSON.stringify(getUpcomingReleasesResults(req, count, currentLanguage), null, 2))
 
   log.info('contentReleases before: %s', JSON.stringify(contentReleases.length, null, 2))
 
