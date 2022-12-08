@@ -57,6 +57,8 @@ function renderPart(req: XP.Request): RenderResponse {
       prepareRelease(release, currentLanguage)
     )
 
+    log.info('releasesPrepped before: %s', JSON.stringify(releasesPrepped.length, null, 2))
+
     // group by year, then month, then day
     const groupedByYearMonthAndDay: GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>> =
       groupStatisticsByYearMonthAndDay(releasesPrepped)
@@ -101,8 +103,8 @@ function renderPart(req: XP.Request): RenderResponse {
   log.info('contentReleases before: %s', JSON.stringify(contentReleases.length, null, 2))
 
   log.info(
-    'contentReleases after: %s',
-    JSON.stringify(getUpcomingReleasesResults(req, 0, 500, currentLanguage).total, null, 2)
+    'upcoming releases after: %s',
+    JSON.stringify(getUpcomingReleasesResults(req, count, currentLanguage).total, null, 2)
   )
 
   const props: PartProps = {
