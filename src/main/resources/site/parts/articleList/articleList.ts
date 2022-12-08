@@ -14,8 +14,7 @@ const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
 
 export function get(req: XP.Request): RenderResponse | XP.Response {
   try {
-  const res = renderPart(req)
-  return res
+  return renderPart(req)
    } catch (e) {
     return renderError(req, 'Error in part', e)
    }
@@ -29,9 +28,7 @@ function renderPart(req: XP.Request): RenderResponse {
   const content: Content = getContent()
   const articleListCacheDisabled: boolean = isEnabled('deactivate-part-cache-article-list', true, 'ssb')
   if (req.mode === 'edit' || req.mode === 'inline' || articleListCacheDisabled) {
-    const test = getArticleList(req, content)
-    getArticleList(req, content)
-    return test
+    return getArticleList(req, content)
   } else {
     return fromPartCache(req, `${content._id}-articleList`, () => getArticleList(req, content))
   }
