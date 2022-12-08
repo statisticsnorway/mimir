@@ -48,9 +48,9 @@ const Employee = (props) => {
         {profileImages.map((href, i) => {
           return (
             <div key={i} className='grid-column' role='img' aria-label={`${pressPicturesPhrase} ${i + 1} av ${title}`}>
-              <a href={href} target='_blank' rel='noreferrer' type='media_type'>
+              <a href={href.downloadLink} target='_blank' rel='noreferrer' type='media_type'>
                 <div>
-                  <img alt={`${pressPicturesPhrase} ${i + 1} av ${title}.`} src={href} />
+                  <img alt={`${pressPicturesPhrase} ${i + 1} av ${title}.`} src={href.displayLink} />
                 </div>
                 <div>
                   <Link linkType='profiled'>
@@ -87,7 +87,7 @@ const Employee = (props) => {
       <div className='employee-head col-12'>
         {profileImages.length != 0 ? (
           <div className='employee-image'>
-            <img alt={`${profilePicturePhrase} ${title}`} src={props.profileImages[0]} />
+            <img alt={`${profilePicturePhrase} ${title}`} src={props.profileImages[0].displayLink} />
           </div>
         ) : null}
         {profileImages.length != 0 ? (

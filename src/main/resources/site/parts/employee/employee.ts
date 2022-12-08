@@ -30,12 +30,21 @@ function renderPart(req: XP.Request): RenderResponse {
   const projects: Array<Project> = projectIds && projectIds.length > 0 ? parseProject(projectIds) : []
   const profileImageIds: Array<string> = page.data.profileImages ? forceArray(page.data.profileImages) : []
 
-  const profileImages: Array<string> | void[] = profileImageIds
-    ? profileImageIds.map((image: string) => {
-        return imageUrl({
-          id: image,
+  const profileImages: Array<ImageLinks> | void[] = profileImageIds
+    ? profileImageIds.map((imageId: string) => {
+        const displayLink = imageUrl({
+          id: imageId,
           scale: 'max(850)',
         })
+        const downloadLink = imageUrl({
+          id: imageId,
+          // quality: 100,
+          scale: 'full',
+        })
+        return {
+          displayLink,
+          downloadLink,
+        }
       })
     : []
 
@@ -185,7 +194,7 @@ interface EmployeeProp {
   position: string
   phone: string
   description: string
-  profileImages: Array<string> | void[]
+  profileImages: Array<ImageLinks> | void[]
   myCV: string | null
   projects: Array<Project>
   area: Area | null
@@ -205,6 +214,11 @@ interface EmployeeProp {
   pressPicturesDescrPhrase: string
   imagePhrase: string
   profilePicturePhrase: string
+}
+
+interface ImageLinks {
+  displayLink: string
+  downloadLink: string
 }
 
 interface Project {
