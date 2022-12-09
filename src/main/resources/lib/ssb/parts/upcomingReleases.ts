@@ -8,6 +8,7 @@ import { ContentLight, Release } from '../repo/statisticVariant'
 import { formatDate } from '../utils/dateUtils'
 import { localize } from '/lib/xp/i18n'
 import { addDays } from 'date-fns'
+import { getMainSubject } from '../utils/parentUtils'
 
 const { moment } = __non_webpack_require__('/lib/vendor/moment')
 
@@ -30,6 +31,10 @@ export function getUpcomingReleasesResults(req: XP.Request, numberOfDays: number
     ],
   })
 
+  const serverOffsetInMs: number =
+    app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
+  const serverTime: Date = new Date(new Date().getTime() + serverOffsetInMs)
+
   const results: MultiRepoNodeQueryResponse = connection.query({
     count: 500,
     sort: [
@@ -37,19 +42,38 @@ export function getUpcomingReleasesResults(req: XP.Request, numberOfDays: number
         field: 'data.nextRelease',
         direction: 'ASC',
       },
-      {
-        field: 'data.date',
-        direction: 'ASC',
-      },
+      // {
+      //   field: 'data.date',
+      //   direction: 'ASC',
+      // },
     ] as unknown as string,
-    // query: `data.date >= "${new Date().toISOString()}" OR data.nextRelease >= "${moment().format(
-    //   'YYYY-MM-DD HH:mm:ss.S'
-    // )}"`,
+    // query: `data.date >= "${new Date().toISOString()}"
+    // OR data.nextRelease >= "${moment().format('YYYY-MM-DD HH:mm:ss.S')}"`,
     query: {
+      // boolean: {
+      //   should: [
+      //     {
+      //       range: {
+      //         field: 'data.nextRelease',
+      //         from: 'dateTime',
+      //         gte: new Date().toISOString(),
+      //         lte: addDays(new Date(), numberOfDays),
+      //       },
+      //     },
+      //     {
+      //       range: {
+      //         field: 'data.date',
+      //         from: 'dateTime',
+      //         gte: new Date().toISOString(),
+      //         lte: addDays(new Date(), numberOfDays),
+      //       },
+      //     },
+      //   ],
+      // },
       range: {
-        field: ['data.nextRelease', 'data.date'],
+        field: 'data.nextRelease',
         from: 'dateTime',
-        gte: new Date().toISOString(),
+        gte: serverTime,
         lte: addDays(new Date(), numberOfDays),
       },
     } as unknown as string,
@@ -84,22 +108,27 @@ export function getUpcomingReleasesResults(req: XP.Request, numberOfDays: number
                     field: 'data.statisticContentId',
                   },
                 },
-              ],
-            },
-          },
-          // contentReleases
-          {
-            boolean: {
-              must: [
                 {
-                  hasValue: {
-                    field: 'type',
-                    values: [`${app.name}:upcomingRelease`],
+                  exists: {
+                    field: 'data.nextPeriod',
                   },
                 },
               ],
             },
           },
+          // contentReleases
+          // {
+          //   boolean: {
+          //     must: [
+          //       {
+          //         hasValue: {
+          //           field: 'type',
+          //           values: [`${app.name}:upcomingRelease`],
+          //         },
+          //       },
+          //     ],
+          //   },
+          // },
         ],
       },
     },
@@ -112,7 +141,7 @@ export function getUpcomingReleasesResults(req: XP.Request, numberOfDays: number
   const upcomingReleases: Array<UpcomingReleases> = contents.map((content) =>
     isContentUpcomingRelease(content)
       ? prepContentUpcomingRelease(content as Content<UpcomingRelease, object>, language, allMainSubjects)
-      : prepStatisticUpcomingRelease(content as ContentLight<Release>, language, allMainSubjects)
+      : prepStatisticUpcomingRelease(content as ContentLight<Release>, language)
   )
 
   return {
@@ -154,13 +183,8 @@ function prepContentUpcomingRelease(
   }
 }
 
-function prepStatisticUpcomingRelease(
-  content: ContentLight<Release>,
-  language: string,
-  allMainSubjects: Array<SubjectItem>
-): UpcomingReleases {
+function prepStatisticUpcomingRelease(content: ContentLight<Release>, language: string): UpcomingReleases {
   const date: string = content.data.nextRelease
-  const mainSubject: SubjectItem | null = allMainSubjects.filter((m) => m.name === content.data.mainSubjects)[0]
   return {
     id: content.data.statisticId,
     name: content.data.name,
@@ -169,7 +193,7 @@ function prepStatisticUpcomingRelease(
       locale: language,
     }),
     date: formatDate(date, 'PPP', language) as string,
-    mainSubject: mainSubject ? mainSubject.title : '',
+    mainSubject: getMainSubject(content.data.shortName, language),
     day: formatDate(date, 'd', language) as string,
     month: formatDate(date, 'M', language) as string,
     monthName: formatDate(date, 'MMM', language) as string,
