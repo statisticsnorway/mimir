@@ -10,7 +10,7 @@ import {
   selectRefreshNameGraphResult,
 } from '../HomePage/selectors'
 import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
-import {requestClearCache, requestPurgeVarnishCache, requestRefreshNameGraph} from '../HomePage/actions'
+import { requestClearCache, requestPurgeVarnishCache, requestRefreshNameGraph } from '../HomePage/actions'
 import { RefreshCw, Rss, Trash } from 'react-feather'
 import { Col, Container, Row, Alert } from 'react-bootstrap'
 import { Button, Dropdown, Input } from '@statisticsnorway/ssb-component-library'
@@ -312,7 +312,7 @@ export function DashboardTools() {
                 disabled={loadingRefreshNameGraph}
               >
                 <div>
-                 <RefreshCw/> <span>Oppdatere data Navnegrafer</span>
+                  <RefreshCw /> <span>Oppdatere data Navnegrafer</span>
                 </div>
               </Button>
             </Col>
