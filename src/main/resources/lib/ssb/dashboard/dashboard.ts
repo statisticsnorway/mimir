@@ -199,13 +199,12 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
         },
       }
       const apiData: RefreshDatasetResult[] = run(context, () => refreshDatasetHandler([datasetId], socketEmitter))
+      const statusApi: string = localize({
+        key: apiData[0].status,
+      })
 
-      if (apiData[0].status !== 'FAILED_TO_GET_DATA') {
-        createOrUpdateNameGraphRepo()
-        status = 'Nye data fra statbankApi er hentet og Repo nameGraph er oppdatert'
-      } else {
-        status = 'Henting av data fra statbankApi feilet'
-      }
+      createOrUpdateNameGraphRepo()
+      status = `Data statbankApi: ${statusApi}, Repo nameGraph er oppdatert`
     } else {
       status = 'Henting av data fra StatbankApi feilet pga manglende datasetId'
     }
