@@ -12,6 +12,10 @@ const {
   data: { forceArray },
 } = __non_webpack_require__('/lib/util')
 
+export function nameGraphRepoExists(): boolean {
+  return !!getRepo(REPO_ID_NAME_GRAPH)
+}
+
 export function createOrUpdateNameGraphRepo(): void {
   log.info(`Initiating "${REPO_ID_NAME_GRAPH}"`)
   run(
