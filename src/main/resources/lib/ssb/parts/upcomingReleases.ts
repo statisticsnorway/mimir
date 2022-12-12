@@ -7,8 +7,9 @@ import { type UpcomingRelease } from '/site/content-types'
 import { ContentLight, Release } from '../repo/statisticVariant'
 import { formatDate } from '../utils/dateUtils'
 import { localize } from '/lib/xp/i18n'
-import { addDays } from 'date-fns'
+import { addDays, isWithinInterval } from 'date-fns'
 import { getMainSubject } from '../utils/parentUtils'
+import { forceArray } from '../utils/arrayUtils'
 
 const { moment } = __non_webpack_require__('/lib/vendor/moment')
 
@@ -34,6 +35,7 @@ export function getUpcomingReleasesResults(req: XP.Request, numberOfDays: number
   const serverOffsetInMs: number =
     app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
   const serverTime: Date = new Date(new Date().getTime() + serverOffsetInMs)
+  const endDate: Date = addDays(serverTime, numberOfDays)
 
   const results: MultiRepoNodeQueryResponse = connection.query({
     count: 500,
@@ -74,7 +76,7 @@ export function getUpcomingReleasesResults(req: XP.Request, numberOfDays: number
         field: 'data.nextRelease',
         from: 'dateTime',
         gte: serverTime,
-        lte: addDays(new Date(), numberOfDays),
+        lte: endDate,
       },
     } as unknown as string,
     filters: {
@@ -108,11 +110,6 @@ export function getUpcomingReleasesResults(req: XP.Request, numberOfDays: number
                     field: 'data.statisticContentId',
                   },
                 },
-                {
-                  exists: {
-                    field: 'data.nextPeriod',
-                  },
-                },
               ],
             },
           },
@@ -143,10 +140,17 @@ export function getUpcomingReleasesResults(req: XP.Request, numberOfDays: number
       ? prepContentUpcomingRelease(content as Content<UpcomingRelease, object>, language, allMainSubjects)
       : prepStatisticUpcomingRelease(content as ContentLight<Release>, language)
   )
+  const filteredStatisticsUpcomingReleases = contents
+    .map((content) => filterStatisticsUpcomingReleases(content as ContentLight<Release>, language, serverTime, endDate))
+    .reduce((acc, curr) => {
+      if (curr.length) return acc.concat(curr)
+      else return acc
+    }, [])
+  const mergedStatisticsUpcomingReleases = [...upcomingReleases, ...filteredStatisticsUpcomingReleases]
 
   return {
-    total: upcomingReleases.length,
-    upcomingReleases,
+    total: mergedStatisticsUpcomingReleases.length,
+    upcomingReleases: mergedStatisticsUpcomingReleases,
   }
 }
 
@@ -183,11 +187,50 @@ function prepContentUpcomingRelease(
   }
 }
 
+function filterStatisticsUpcomingReleases(
+  content: ContentLight<Release>,
+  language: string,
+  startDate: Date,
+  endDate: Date
+): Array<UpcomingReleases> {
+  const filteredUpcomingReleases = content.data.upcomingReleases
+    ? forceArray(content.data.upcomingReleases).filter((release) =>
+        isWithinInterval(new Date(release.publishTime), { start: startDate, end: endDate })
+      )
+    : []
+  if (filteredUpcomingReleases && filteredUpcomingReleases.length > 2) {
+    return filteredUpcomingReleases.map((release) => {
+      const date = release.publishTime
+      return {
+        id: content.data.statisticId,
+        name: content.data.name,
+        shortName: content.data.shortName,
+        type: localize({
+          key: `contentType.${content.data.articleType}`,
+          locale: language,
+        }),
+        date: formatDate(date, 'PPP', language) as string,
+        mainSubject: getMainSubject(content.data.shortName, language),
+        day: formatDate(date, 'd', language) as string,
+        month: formatDate(date, 'M', language) as string,
+        monthName: formatDate(date, 'MMM', language) as string,
+        year: formatDate(date, 'yyyy', language) as string,
+        aboutTheStatisticsDescription: release.period,
+        upcomingReleaseLink: pageUrl({
+          id: content.data.statisticContentId as string,
+        }),
+      }
+    })
+  }
+  return []
+}
+
 function prepStatisticUpcomingRelease(content: ContentLight<Release>, language: string): UpcomingReleases {
   const date: string = content.data.nextRelease
   return {
     id: content.data.statisticId,
     name: content.data.name,
+    shortName: content.data.shortName,
     type: localize({
       key: `contentType.${content.data.articleType}`,
       locale: language,
@@ -198,7 +241,7 @@ function prepStatisticUpcomingRelease(content: ContentLight<Release>, language: 
     month: formatDate(date, 'M', language) as string,
     monthName: formatDate(date, 'MMM', language) as string,
     year: formatDate(date, 'yyyy', language) as string,
-    description: content.data.nextPeriod,
+    aboutTheStatisticsDescription: content.data.nextPeriod,
     upcomingReleaseLink: pageUrl({
       id: content.data.statisticContentId as string,
     }),
@@ -210,15 +253,16 @@ export interface UpcomingReleasesResults {
 }
 
 export interface UpcomingReleases {
-  id: string
-  name: string
-  type: string
-  date: string
-  mainSubject: string
-  day: string
-  month: string
-  monthName: string
-  year: string
-  description?: string
+  id?: string
+  name?: string
+  shortName?: string
+  type?: string
+  date?: string
+  mainSubject?: string
+  day?: string
+  month?: string
+  monthName?: string
+  year?: string
+  aboutTheStatisticsDescription?: string
   upcomingReleaseLink?: string
 }
