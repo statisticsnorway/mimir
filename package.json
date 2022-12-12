@@ -99,7 +99,7 @@
     "redux-injectors": "^1.3.0",
     "redux-saga": "^1.1.3",
     "regenerator-runtime": "^0.13.9",
-    "sass": "^1.42.0",
+    "sass": "^1.56.2",
     "sass-loader": "^12.1.0",
     "style-loader": "^3.3.1",
     "ts-loader": "^9.4.1",
