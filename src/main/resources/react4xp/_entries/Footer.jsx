@@ -64,10 +64,10 @@ class Footer extends React.Component {
     if (facebookUrl && twitterUrl && linkedinUrl && rssUrl) {
       return (
         <div className='social-links'>
-          <Link ariaLabel='Facebook' href={facebookUrl} isExternal negative icon={<Facebook size={24} />} />
-          <Link ariaLabel='Twitter' href={twitterUrl} isExternal negative icon={<Twitter size={24} />} />
-          <Link ariaLabel='Linkedin' href={linkedinUrl} isExternal negative icon={<Linkedin size={24} />} />
-          <Link ariaLabel='Rss' href={rssUrl} negative icon={<Rss size={24} />} />
+          <Link ariaLabel='Facebook' href={facebookUrl} isExternal negative icon={<Facebook size={24} />} standAlone />
+          <Link ariaLabel='Twitter' href={twitterUrl} isExternal negative icon={<Twitter size={24} />} standAlone />
+          <Link ariaLabel='Linkedin' href={linkedinUrl} isExternal negative icon={<Linkedin size={24} />} standAlone />
+          <Link ariaLabel='Rss' href={rssUrl} negative icon={<Rss size={24} />} standAlone />
         </div>
       )
     }
