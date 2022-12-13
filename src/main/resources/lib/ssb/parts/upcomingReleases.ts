@@ -11,8 +11,6 @@ import { addDays, isWithinInterval } from 'date-fns'
 import { getMainSubject } from '../utils/parentUtils'
 import { forceArray } from '../utils/arrayUtils'
 
-const { moment } = __non_webpack_require__('/lib/vendor/moment')
-
 export function getUpcomingReleasesResults(req: XP.Request, numberOfDays: number, language: string) {
   const allMainSubjects: Array<SubjectItem> = getMainSubjects(req, language)
   const context: Context<ContextAttributes> = getContext()
@@ -38,40 +36,14 @@ export function getUpcomingReleasesResults(req: XP.Request, numberOfDays: number
   const endDate: Date = addDays(serverTime, numberOfDays)
 
   const results: MultiRepoNodeQueryResponse = connection.query({
-    count: 500,
+    count: 1000,
     sort: [
       {
         field: 'data.nextRelease',
         direction: 'ASC',
       },
-      // {
-      //   field: 'data.date',
-      //   direction: 'ASC',
-      // },
     ] as unknown as string,
-    // query: `data.date >= "${new Date().toISOString()}"
-    // OR data.nextRelease >= "${moment().format('YYYY-MM-DD HH:mm:ss.S')}"`,
     query: {
-      // boolean: {
-      //   should: [
-      //     {
-      //       range: {
-      //         field: 'data.nextRelease',
-      //         from: 'dateTime',
-      //         gte: new Date().toISOString(),
-      //         lte: addDays(new Date(), numberOfDays),
-      //       },
-      //     },
-      //     {
-      //       range: {
-      //         field: 'data.date',
-      //         from: 'dateTime',
-      //         gte: new Date().toISOString(),
-      //         lte: addDays(new Date(), numberOfDays),
-      //       },
-      //     },
-      //   ],
-      // },
       range: {
         field: 'data.nextRelease',
         from: 'dateTime',
@@ -114,18 +86,18 @@ export function getUpcomingReleasesResults(req: XP.Request, numberOfDays: number
             },
           },
           // contentReleases
-          // {
-          //   boolean: {
-          //     must: [
-          //       {
-          //         hasValue: {
-          //           field: 'type',
-          //           values: [`${app.name}:upcomingRelease`],
-          //         },
-          //       },
-          //     ],
-          //   },
-          // },
+          {
+            boolean: {
+              must: [
+                {
+                  hasValue: {
+                    field: 'type',
+                    values: [`${app.name}:upcomingRelease`],
+                  },
+                },
+              ],
+            },
+          },
         ],
       },
     },
@@ -146,7 +118,9 @@ export function getUpcomingReleasesResults(req: XP.Request, numberOfDays: number
       if (curr.length) return acc.concat(curr)
       else return acc
     }, [])
-  const mergedStatisticsUpcomingReleases = [...upcomingReleases, ...filteredStatisticsUpcomingReleases]
+  const mergedStatisticsUpcomingReleases = [...upcomingReleases, ...filteredStatisticsUpcomingReleases].sort((a, b) => {
+    return new Date(a.date as string).getTime() - new Date(b.date as string).getTime()
+  })
 
   return {
     total: mergedStatisticsUpcomingReleases.length,
@@ -163,7 +137,7 @@ function prepContentUpcomingRelease(
   language: string,
   allMainSubjects: Array<SubjectItem>
 ): UpcomingReleases {
-  const date: string = content.data.date
+  const date: string = content.data.nextRelease
   const mainSubjectItem: SubjectItem | null = getMainSubjectById(allMainSubjects, content.data.mainSubject)
   const mainSubject: string = mainSubjectItem ? mainSubjectItem.title : ''
   const contentType: string = content.data.contentType
@@ -177,7 +151,7 @@ function prepContentUpcomingRelease(
     id: content._id,
     name: content.displayName,
     type: contentType,
-    date: moment(date).locale(language).format(),
+    date: formatDate(date, 'PPP', language) as string,
     mainSubject: mainSubject,
     day: formatDate(date, 'd', language) as string,
     month: formatDate(date, 'M', language) as string,

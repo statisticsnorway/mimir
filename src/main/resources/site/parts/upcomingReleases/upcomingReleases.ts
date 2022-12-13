@@ -10,7 +10,6 @@ import { formatDate } from '../../../lib/ssb/utils/dateUtils'
 import { getContent, getComponent, processHtml, serviceUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 import { getUpcomingReleasesResults } from '/lib/ssb/parts/upcomingReleases'
-import { addDays } from 'date-fns'
 
 const { moment } = __non_webpack_require__('/lib/vendor/moment')
 const { addMonthNames, groupStatisticsByYearMonthAndDay, prepareRelease, filterOnComingReleases, getUpcomingReleases } =
@@ -77,7 +76,7 @@ function renderPart(req: XP.Request): RenderResponse {
       app.name
     }:upcomingRelease" AND language = "${currentLanguage}" AND data.date >= "${moment().format('YYYY-MM-DD')}"`,
   }).hits.map((r) => {
-    const date: string = r.data.date
+    const date: string = r.data.nextRelease
     const mainSubjectItem: SubjectItem | null = getMainSubjectById(allMainSubjects, r.data.mainSubject)
     const mainSubject: string = mainSubjectItem ? mainSubjectItem.title : ''
     const contentType: string = r.data.contentType
@@ -106,11 +105,9 @@ function renderPart(req: XP.Request): RenderResponse {
   log.info('contentReleases before: %s', JSON.stringify(contentReleases.length, null, 2))
 
   log.info(
-    'upcoming releases after: %s',
+    'upcoming releases after %s',
     JSON.stringify(getUpcomingReleasesResults(req, count, currentLanguage).total, null, 2)
   )
-
-  log.info(JSON.stringify(addDays(new Date(), count), null, 2))
 
   const props: PartProps = {
     title: content.displayName,
