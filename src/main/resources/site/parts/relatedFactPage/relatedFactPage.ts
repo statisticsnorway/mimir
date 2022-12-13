@@ -174,7 +174,7 @@ function parseRelatedContent(relatedContent: RelatedFactPage): RelatedFactPageCo
   let imageAlt = ' '
   if (relatedContent.x['com-enonic-app-metafields']['meta-data'].seoImage) {
     imageId = relatedContent.x['com-enonic-app-metafields']['meta-data'].seoImage
-    imageAlt = getImageAlt(imageId) ? (getImageAlt(imageId) as string) : ' '
+    imageAlt = getImageAlt(imageId) ? (getImageAlt(imageId) as string) : ''
     image = imageUrl({
       id: imageId,
       scale: 'block(380, 400)',

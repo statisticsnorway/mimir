@@ -34,7 +34,7 @@ const PictureLink = (props) => {
   return (
     <a className={`ssb-picture-card vertical ${props.className || ''}`} ref={hoverRef} href={props.href}>
       <div className='image-background'>
-        <img src={props.imageSrc} alt={props.imageSrc} aria-hidden='true' />
+        <img src={props.imageSrc} alt={props.imageAlt} aria-hidden='true' />
       </div>
       <div className='overlay w-100'>
         <span className='il-title'>{props.title}</span>
