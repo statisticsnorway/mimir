@@ -118,7 +118,12 @@ export function getUpcomingReleasesResults(req: XP.Request, numberOfDays: number
       if (curr.length) return acc.concat(curr)
       else return acc
     }, [])
-  const mergedStatisticsUpcomingReleases = [...upcomingReleases, ...filteredStatisticsUpcomingReleases].sort((a, b) => {
+
+  // TODO: Remove duplicates
+  const mergedStatisticsUpcomingReleases = [
+    ...upcomingReleases,
+    ...(filteredStatisticsUpcomingReleases as Array<UpcomingReleases>),
+  ].sort((a, b) => {
     return new Date(a.date as string).getTime() - new Date(b.date as string).getTime()
   })
 
@@ -152,7 +157,6 @@ function prepContentUpcomingRelease(
     name: content.displayName,
     type: contentType,
     date,
-    // date: formatDate(date, 'PPP', language) as string,
     mainSubject: mainSubject,
     day: formatDate(date, 'd', language) as string,
     month: formatDate(date, 'M', language) as string,
@@ -167,7 +171,7 @@ function filterStatisticsUpcomingReleases(
   language: string,
   startDate: Date,
   endDate: Date
-): Array<UpcomingReleases> {
+): Array<UpcomingReleases | []> {
   const filteredUpcomingReleases = content.data.upcomingReleases
     ? forceArray(content.data.upcomingReleases).filter((release) =>
         isWithinInterval(new Date(release.publishTime), { start: startDate, end: endDate })
@@ -205,7 +209,6 @@ function prepStatisticUpcomingRelease(content: ContentLight<Release>, language: 
   return {
     id: content.data.statisticId,
     name: content.data.name,
-    shortName: content.data.shortName,
     type: localize({
       key: `contentType.${content.data.articleType}`,
       locale: language,
@@ -228,16 +231,15 @@ export interface UpcomingReleasesResults {
 }
 
 export interface UpcomingReleases {
-  id?: string
-  name?: string
-  shortName?: string
-  type?: string
-  date?: string
-  mainSubject?: string
-  day?: string
-  month?: string
-  monthName?: string
-  year?: string
+  id: string
+  name: string
+  type: string
+  date: string
+  mainSubject: string
+  day: string
+  month: string
+  monthName: string
+  year: string
   aboutTheStatisticsDescription?: string
   upcomingReleaseLink?: string
 }
