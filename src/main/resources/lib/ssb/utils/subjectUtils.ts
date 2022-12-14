@@ -30,7 +30,7 @@ export function queryForSubjects({ language, subjectType }: QueryForSubjectsPara
           {
             hasValue: {
               field: 'language',
-              values: language === 'en' ? ['en'] : ['no', 'nb', 'nn'],
+              values: language ? (language === 'en' ? ['en'] : ['no', 'nb', 'nn']) : ['no', 'nb', 'nn', 'en'],
             },
           },
           {
