@@ -1,4 +1,4 @@
-import { create as createRepo, get as getRepo } from '/lib/xp/repo'
+import { create as createRepo } from '/lib/xp/repo'
 import { run } from '/lib/xp/context'
 import { connect, type NodeCreateParams, type NodeQueryResponse, type RepoConnection } from '/lib/xp/node'
 import type { Data, Dataset, Dimension } from '../../types/jsonstat-toolkit'
@@ -11,9 +11,10 @@ const { getNameGraphDataWithConfig } = __non_webpack_require__('/lib/ssb/dataset
 const {
   data: { forceArray },
 } = __non_webpack_require__('/lib/util')
+const { getRepo } = __non_webpack_require__('/lib/ssb/repo/repo')
 
 export function nameGraphRepoExists(): boolean {
-  return !!getRepo(REPO_ID_NAME_GRAPH)
+  return !!getRepo(REPO_ID_NAME_GRAPH, 'master')
 }
 
 export function createOrUpdateNameGraphRepo(): void {
@@ -34,7 +35,7 @@ export function createOrUpdateNameGraphRepo(): void {
 }
 
 export function fillRepo(names: Array<NameData>) {
-  if (getRepo(REPO_ID_NAME_GRAPH) === null) {
+  if (getRepo(REPO_ID_NAME_GRAPH, 'master') === null) {
     createRepo({
       id: REPO_ID_NAME_GRAPH,
       rootPermissions: [
