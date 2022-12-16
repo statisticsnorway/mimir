@@ -2,7 +2,7 @@ import type { Content } from '/lib/xp/content'
 import type { CalculatorConfig } from '../../site/content-types'
 import type { DatasetRepoNode } from '../../lib/ssb/repo/dataset'
 import type { Data, Dataset, Dimension } from '../../lib/types/jsonstat-toolkit'
-import { getNameGraphDataFromRepo, nameGraphRepoExists, type NameData } from '/lib/ssb/repo/nameGraph'
+import { getNameGraphDataFromRepo, type NameData, nameGraphRepoExists } from '/lib/ssb/repo/nameGraph'
 // @ts-ignore
 import JSONstat from 'jsonstat-toolkit/import.mjs'
 
@@ -51,7 +51,7 @@ function prepareGraph(name: string): Array<NameGraph> {
   return nameGraphRepoExists() ? prepareGraphRepo(name) : prepareGraphDataset(name)
 }
 
-//TODO: Remove this when new repo nameGraph is created in production.
+//Uses when repo dont exist
 function prepareGraphDataset(name: string): Array<NameGraph> {
   const config: Content<CalculatorConfig> | undefined = getCalculatorConfig()
 
