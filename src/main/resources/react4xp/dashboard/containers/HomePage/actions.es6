@@ -15,6 +15,13 @@ export function requestPurgeVarnishCache(dispatch, io) {
   io.emit('purge-varnish')
 }
 
+export function requestRefreshNameGraph(dispatch, io) {
+  dispatch({
+    type: actions.startLoadingRefreshNameGraph.type,
+  })
+  io.emit('dashboard-refresh-namegraph')
+}
+
 export function setUserServerSide(dispatch, io, user) {
   io.emit('dashboard-register-user', user)
 }

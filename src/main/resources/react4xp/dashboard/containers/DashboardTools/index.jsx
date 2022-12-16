@@ -6,9 +6,11 @@ import {
   selectLoadingClearCache,
   selectLoadingPurgeVarnish,
   selectVarnishPurgeResult,
+  selectLoadingRefreshNameGraph,
+  selectRefreshNameGraphResult,
 } from '../HomePage/selectors'
 import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
-import { requestClearCache, requestPurgeVarnishCache } from '../HomePage/actions'
+import { requestClearCache, requestPurgeVarnishCache, requestRefreshNameGraph } from '../HomePage/actions'
 import { RefreshCw, Rss, Trash } from 'react-feather'
 import { Col, Container, Row, Alert } from 'react-bootstrap'
 import { Button, Dropdown, Input } from '@statisticsnorway/ssb-component-library'
@@ -24,6 +26,8 @@ export function DashboardTools() {
   const loadingCache = useSelector(selectLoadingClearCache)
   const loadingVarnishPurge = useSelector(selectLoadingPurgeVarnish)
   const varnishPurgeResult = useSelector(selectVarnishPurgeResult)
+  const loadingRefreshNameGraph = useSelector(selectLoadingRefreshNameGraph)
+  const refreshNameGraphResult = useSelector(selectRefreshNameGraphResult)
   const [pushingRss, setPushingRss] = useState(false)
   const [pushRssResult, setPushRssResult] = useState('')
   const [rssStatus, setRssStatus] = useState('success')
@@ -71,6 +75,10 @@ export function DashboardTools() {
 
   function purgeVarnishCache() {
     requestPurgeVarnishCache(dispatch, io)
+  }
+
+  function refreshNameGraph() {
+    requestRefreshNameGraph(dispatch, io)
   }
 
   function pushRss() {
@@ -252,6 +260,14 @@ export function DashboardTools() {
               </Button>
             </Col>
           </Row>
+          <Row>
+            <Col>
+              <Alert variant={'info'} show={!!varnishPurgeResult}>
+                <h5 className='alert-heading'>Varnish Purge</h5>
+                {varnishPurgeResult}
+              </Alert>
+            </Col>
+          </Row>
           <Row className='mb-1'>
             <Col>
               <Button
@@ -287,11 +303,25 @@ export function DashboardTools() {
               </Alert>
             </Col>
           </Row>
+          <Row className='mb-1'>
+            <Col>
+              <Button
+                primary
+                className='w-100 d-flex justify-content-center'
+                onClick={() => refreshNameGraph()}
+                disabled={loadingRefreshNameGraph}
+              >
+                <div>
+                  <RefreshCw /> <span>Oppdatere data Navnegrafer</span>
+                </div>
+              </Button>
+            </Col>
+          </Row>
           <Row>
             <Col>
-              <Alert variant={'info'} show={!!varnishPurgeResult}>
-                <h5 className='alert-heading'>Varnish Purge</h5>
-                {varnishPurgeResult}
+              <Alert variant={'info'} show={!!refreshNameGraphResult}>
+                <h5 className='alert-heading'>Oppdatert navnegrafer</h5>
+                {refreshNameGraphResult}
               </Alert>
             </Col>
           </Row>
