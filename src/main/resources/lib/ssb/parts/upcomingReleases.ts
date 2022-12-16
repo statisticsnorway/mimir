@@ -112,23 +112,24 @@ export function getUpcomingReleasesResults(req: XP.Request, numberOfDays: number
       ? prepContentUpcomingRelease(content as Content<UpcomingRelease, object>, language, allMainSubjects)
       : prepStatisticUpcomingRelease(content as ContentLight<Release>, language)
   )
-  const filteredStatisticsPreparedStatistics = contents
-    .map((content) => filterUpcomingStatistics(content as ContentLight<Release>, language, serverTime, endDate))
+
+  const filteredUpcomingReleasesStatistics = contents
+    .map((content) => filterUpcomingReleasesStatistics(content as ContentLight<Release>, language, serverTime, endDate))
     .reduce((acc, curr) => {
       if (curr.length) return acc.concat(curr)
       else return acc
     }, [])
 
-  const mergedStatisticsPreparedStatistics = [
+  const mergedStatisticsAndUpcomingStatisticsReleases = [
     ...upcomingReleases,
-    ...(filteredStatisticsPreparedStatistics as Array<PreparedStatistics>),
+    ...(filteredUpcomingReleasesStatistics as Array<PreparedStatistics>),
   ].sort((a, b) => {
     return new Date(a.date as string).getTime() - new Date(b.date as string).getTime()
   })
 
   return {
-    total: mergedStatisticsPreparedStatistics.length,
-    upcomingReleases: mergedStatisticsPreparedStatistics,
+    total: mergedStatisticsAndUpcomingStatisticsReleases.length,
+    upcomingReleases: mergedStatisticsAndUpcomingStatisticsReleases,
   }
 }
 
@@ -166,7 +167,36 @@ function prepContentUpcomingRelease(
   }
 }
 
-function filterUpcomingStatistics(
+function parseUpcomingStatistics(
+  statisticData: ContentLight<Release>['data'],
+  language: string,
+  date: string,
+  period: string
+): PreparedStatistics {
+  return {
+    id: Number(statisticData.statisticId),
+    name: statisticData.name,
+    type: localize({
+      key: `contentType.${statisticData.articleType}`,
+      locale: language,
+    }),
+    date,
+    mainSubject: getMainSubject(statisticData.shortName, language),
+    variant: {
+      id: statisticData.statisticId,
+      day: getDate(new Date(date)),
+      monthNumber: getMonth(new Date(date)),
+      year: getYear(new Date(date)),
+      period: period,
+      frequency: statisticData.frequency,
+    },
+    statisticsPageUrl: pageUrl({
+      id: statisticData.statisticContentId as string,
+    }),
+  }
+}
+
+function filterUpcomingReleasesStatistics(
   content: ContentLight<Release>,
   language: string,
   startDate: Date,
@@ -184,28 +214,7 @@ function filterUpcomingStatistics(
     filteredPreparedStatistics.shift()
     return filteredPreparedStatistics.map((release) => {
       const date = release.publishTime
-      return {
-        id: Number(content.data.statisticId),
-        shortName: content.data.shortName,
-        name: content.data.name,
-        type: localize({
-          key: `contentType.${content.data.articleType}`,
-          locale: language,
-        }),
-        date,
-        mainSubject: getMainSubject(content.data.shortName, language),
-        variant: {
-          id: content.data.statisticId,
-          day: getDate(new Date(date)),
-          monthNumber: getMonth(new Date(date)),
-          year: getYear(new Date(date)),
-          period: release.period,
-          frequency: content.data.frequency,
-        },
-        statisticsPageUrl: pageUrl({
-          id: content.data.statisticContentId as string,
-        }),
-      }
+      return parseUpcomingStatistics(content.data, language, date, release.period)
     })
   }
   return []
@@ -213,28 +222,7 @@ function filterUpcomingStatistics(
 
 function prepStatisticUpcomingRelease(content: ContentLight<Release>, language: string): PreparedStatistics {
   const date: string = content.data.nextRelease
-  return {
-    id: Number(content.data.statisticId),
-    shortName: content.data.shortName,
-    name: content.data.name,
-    type: localize({
-      key: `contentType.${content.data.articleType}`,
-      locale: language,
-    }),
-    date,
-    mainSubject: getMainSubject(content.data.shortName, language),
-    variant: {
-      id: content.data.statisticId,
-      day: getDate(new Date(date)),
-      monthNumber: getMonth(new Date(date)),
-      year: getYear(new Date(date)),
-      period: content.data.nextPeriod,
-      frequency: content.data.frequency,
-    },
-    statisticsPageUrl: pageUrl({
-      id: content.data.statisticContentId as string,
-    }),
-  }
+  return parseUpcomingStatistics(content.data, language, date, content.data.nextPeriod)
 }
 export interface PreparedStatisticsResults {
   total: number

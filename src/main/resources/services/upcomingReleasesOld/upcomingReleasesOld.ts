@@ -32,7 +32,7 @@ exports.get = (req: XP.Request): XP.Response => {
     status: 200,
     contentType: 'application/json',
     body: {
-      total: groupedWithMonthNames.length,
+      total: releasesPrepped.length,
       releases: groupedWithMonthNames,
       count,
     },

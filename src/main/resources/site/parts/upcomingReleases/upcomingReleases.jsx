@@ -8,7 +8,6 @@ function UpcomingReleases(props) {
   const [releases, setReleases] = useState(props.releases)
   const [loading, setLoading] = useState(false)
   const [showAll, setShowAll] = useState(false)
-  let lastCountedDay = undefined
 
   function fetchAllReleases() {
     setLoading(true)
@@ -151,20 +150,13 @@ function UpcomingReleases(props) {
   }
 
   function renderList() {
-    let lastDay = {}
     const list = releases.map((year) => {
       return year.releases.map((month) => {
         return month.releases.map((day, index) => {
-          lastDay = {
-            year: year.year,
-            month: month.month,
-            day: day.day,
-          }
           return renderDay(day, month, year, index)
         })
       })
     })
-    lastCountedDay = lastDay
     return list
   }
 
@@ -224,10 +216,8 @@ UpcomingReleases.propTypes = {
                   }),
                   statistics: PropTypes.arrayOf(
                     PropTypes.shape({
-                      shortName: PropTypes.string,
+                      id: PropTypes.string,
                       name: PropTypes.string,
-                      nameEN: PropTypes.string,
-                      modifiedTime: PropTypes.string,
                       type: PropTypes.string,
                       mainSubject: PropTypes.string,
                       variants: {
