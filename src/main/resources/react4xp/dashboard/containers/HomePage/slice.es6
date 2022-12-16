@@ -4,7 +4,9 @@ export const initialState = {
   isConnected: false,
   loadingClearCache: false,
   loadingPurgeVarnish: false,
+  loadingRefreshNameGraph: false,
   varnishPurgeResult: '',
+  refreshNameGraphResult:'',
   user: undefined,
   dashboardOptions: {},
   contentStudioBaseUrl: '',
@@ -55,6 +57,13 @@ const commonSlice = createSlice({
     stopLoadingPurgeVarnishCache(state, action) {
       state.loadingPurgeVarnish = false
       state.varnishPurgeResult = action.status
+    },
+    startLoadingRefreshNameGraph(state) {
+      state.loadingRefreshNameGraph = true
+    },
+    stopLoadingRefreshNameGraph(state, action) {
+      state.loadingRefreshNameGraph = false
+      state.refreshNameGraphResult = action.status
     },
     serverTimeLoaded(state, action) {
       state.serverTime = action.serverTime

@@ -30,7 +30,7 @@ export function queryForSubjects({ language, subjectType }: QueryForSubjectsPara
           {
             hasValue: {
               field: 'language',
-              values: language === 'en' ? ['en'] : ['no', 'nb', 'nn'],
+              values: getLanguageValues(language),
             },
           },
           {
@@ -59,6 +59,14 @@ export function queryForSubjects({ language, subjectType }: QueryForSubjectsPara
         name: hit._name,
       }
     })
+}
+
+function getLanguageValues(language: string | undefined): string[] {
+  if (language) {
+    return language === 'en' ? ['en'] : ['no', 'nb', 'nn']
+  } else {
+    return ['no', 'nb', 'nn', 'en']
+  }
 }
 
 interface QueryForSubjectsParams {

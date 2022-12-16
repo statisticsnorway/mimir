@@ -19,6 +19,7 @@ export enum JobNames {
   REFRESH_DATASET_JOB = 'Refresh dataset',
   PUSH_RSS_NEWS = 'Push RSS news',
   REFRESH_DATASET_CALCULATOR_JOB = 'Refresh dataset calculators',
+  REFRESH_DATASET_NAMEGRAPH_JOB = 'Refresh dataset nameGraph',
 }
 
 export const JOB_STATUS_STARTED: 'STARTED' = 'STARTED'
