@@ -1,22 +1,14 @@
 import { render, type RenderResponse } from '/lib/enonic/react4xp'
-import { query, type Content } from '/lib/xp/content'
+import { type Content } from '/lib/xp/content'
 import type { Component } from '/lib/xp/portal'
-import type { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/types'
-import type { GroupedBy, PreparedStatistics, YearReleases, Release } from '../../../lib/ssb/utils/variantUtils'
+import type { YearReleases } from '../../../lib/ssb/utils/variantUtils'
 import type { UpcomingReleases as UpcomingReleasesPartConfig } from '.'
-import type { UpcomingRelease } from '../../content-types'
-import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
-import { formatDate } from '../../../lib/ssb/utils/dateUtils'
 import { getContent, getComponent, processHtml, serviceUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 import { getUpcomingReleasesResults } from '/lib/ssb/parts/upcomingReleases'
 
-const { moment } = __non_webpack_require__('/lib/vendor/moment')
-const { addMonthNames, groupStatisticsByYearMonthAndDay, prepareRelease, filterOnComingReleases, getUpcomingReleases } =
-  __non_webpack_require__('/lib/ssb/utils/variantUtils')
-const { getAllStatisticsFromRepo } = __non_webpack_require__('/lib/ssb/statreg/statistics')
+const { addMonthNames, groupStatisticsByYearMonthAndDay } = __non_webpack_require__('/lib/ssb/utils/variantUtils')
 const { fromPartCache } = __non_webpack_require__('/lib/ssb/cache/partCache')
-const { getMainSubjects, getMainSubjectById } = __non_webpack_require__('/lib/ssb/utils/subjectUtils')
 
 export function get(req: XP.Request): RenderResponse {
   return renderPart(req)
@@ -42,30 +34,6 @@ function renderPart(req: XP.Request): RenderResponse {
   const upcomingReleasesServiceUrl: string = serviceUrl({
     service: 'upcomingReleases',
   })
-  // const allMainSubjects: Array<SubjectItem> = getMainSubjects(req, content.language === 'en' ? 'en' : 'nb')
-
-  // const groupedWithMonthNames: Array<YearReleases> = fromPartCache(req, `${content._id}-upcomingReleases`, () => {
-  //   // Get statistics
-  //   const statistics: Array<StatisticInListing> = getAllStatisticsFromRepo()
-  //   const upComingReleases: Array<Release> = getUpcomingReleases(statistics)
-
-  //   // All statistics published today, and fill up with previous releases.
-  //   const releasesFiltered: Array<Release> = filterOnComingReleases(upComingReleases, count)
-
-  //   // Choose the right variant and prepare the date in a way it works with the groupBy function
-  //   const releasesPrepped: Array<PreparedStatistics> = releasesFiltered.map((release: Release) =>
-  //     prepareRelease(release, currentLanguage)
-  //   )
-
-  //   // group by year, then month, then day
-  //   const groupedByYearMonthAndDay: GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>> =
-  //     groupStatisticsByYearMonthAndDay(releasesPrepped)
-
-  //   // iterate and format month names
-  //   // const groupedWithMonthNames: Array<YearReleases> = addMonthNames(groupedByYearMonthAndDay, currentLanguage)
-
-  //   return addMonthNames(groupedByYearMonthAndDay, currentLanguage)
-  // })
 
   const groupedWithMonthNames: Array<YearReleases> = fromPartCache(req, `${content._id}-upcomingReleases`, () => {
     const upcomingReleases = getUpcomingReleasesResults(req, count, currentLanguage).upcomingReleases
@@ -74,39 +42,6 @@ function renderPart(req: XP.Request): RenderResponse {
 
     return addMonthNames(groupedByYearMonthAndDay, currentLanguage)
   })
-
-  // const contentReleases: Array<PreparedUpcomingRelease> = query<UpcomingRelease, object>({
-  //   start: 0,
-  //   count: 500,
-  //   query: `type = "${
-  //     app.name
-  //   }:upcomingRelease" AND language = "${currentLanguage}" AND data.date >= "${moment().format('YYYY-MM-DD')}"`,
-  // }).hits.map((r) => {
-  //   const date: string = r.data.nextRelease
-  //   const mainSubjectItem: SubjectItem | null = getMainSubjectById(allMainSubjects, r.data.mainSubject)
-  //   const mainSubject: string = mainSubjectItem ? mainSubjectItem.title : ''
-  //   const contentType: string = r.data.contentType
-  //     ? localize({
-  //         key: `contentType.${r.data.contentType}`,
-  //         locale: currentLanguage,
-  //       })
-  //     : ''
-
-  //   return {
-  //     id: r._id,
-  //     name: r.displayName,
-  //     type: contentType,
-  //     date: moment(date).locale(currentLanguage).format(),
-  //     mainSubject: mainSubject,
-  //     day: formatDate(date, 'd', currentLanguage) as string,
-  //     month: formatDate(date, 'M', currentLanguage) as string,
-  //     monthName: formatDate(date, 'MMM', currentLanguage) as string,
-  //     year: formatDate(date, 'yyyy', currentLanguage) as string,
-  //     upcomingReleaseLink: r.data.href ? r.data.href : '',
-  //   }
-  // })
-
-  // log.info('upcoming releases %s', JSON.stringify(getUpcomingReleasesResults(req, count, currentLanguage), null, 2))
 
   const props: PartProps = {
     title: content.displayName,
@@ -121,15 +56,11 @@ function renderPart(req: XP.Request): RenderResponse {
     upcomingReleasesServiceUrl,
     buttonTitle,
     statisticsPageUrlText,
-    // contentReleases,
   }
 
   return render('site/parts/upcomingReleases/upcomingReleases', props, req)
 }
 
-/*
- *  Interfaces
- */
 interface PartProps {
   releases: Array<YearReleases>
   title?: string
@@ -139,17 +70,4 @@ interface PartProps {
   upcomingReleasesServiceUrl: string
   buttonTitle: string
   statisticsPageUrlText: string
-  // contentReleases: Array<PreparedUpcomingRelease>
 }
-// interface PreparedUpcomingRelease {
-//   id: string
-//   name: string
-//   type: string
-//   date: string
-//   mainSubject: string
-//   day: string
-//   month: string
-//   monthName: string
-//   year: string
-//   upcomingReleaseLink?: string
-// }

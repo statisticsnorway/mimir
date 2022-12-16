@@ -31,14 +31,11 @@ exports.get = (req: XP.Request): XP.Response => {
   return {
     status: 200,
     contentType: 'application/json',
-    body: JSON.stringify(
-      {
-        releases: groupedWithMonthNames,
-        count,
-      },
-      null,
-      2
-    ),
+    body: {
+      total: groupedWithMonthNames.length,
+      releases: groupedWithMonthNames,
+      count,
+    },
   }
 }
 
