@@ -66,13 +66,12 @@ function getGroupedWithMonthNames(
   const releasesFiltered: Array<StatisticInListing> = filterOnPreviousReleases(releases, numberOfReleases)
 
   // Choose the right variant and prepare the date in a way it works with the groupBy function
-  const releasesPrepped: Array<PreparedStatistics> = releasesFiltered.map((release: StatisticInListing) =>
+  const releasesPrepped = releasesFiltered.map((release: StatisticInListing) =>
     prepareStatisticRelease(release, currentLanguage)
   )
 
   // group by year, then month, then day
-  const groupedByYearMonthAndDay: GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>> =
-    groupStatisticsByYearMonthAndDay(releasesPrepped)
+  const groupedByYearMonthAndDay = groupStatisticsByYearMonthAndDay(releasesPrepped)
   return addMonthNames(groupedByYearMonthAndDay, currentLanguage)
 }
 
@@ -99,24 +98,4 @@ interface PartProps {
   releases: Array<YearReleases>
   title: string
   language: string
-}
-
-interface PreparedStatistics {
-  id: number
-  name: string
-  shortName: string
-  variant: PreparedVariant
-}
-
-interface PreparedVariant {
-  id: string
-  day: number
-  monthNumber: number
-  year: number
-  frequency: string
-  period: string
-}
-
-interface GroupedBy<T> {
-  [key: string]: Array<T> | T
 }

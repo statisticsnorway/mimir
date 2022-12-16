@@ -42,63 +42,71 @@ function renderPart(req: XP.Request): RenderResponse {
   const upcomingReleasesServiceUrl: string = serviceUrl({
     service: 'upcomingReleases',
   })
-  const allMainSubjects: Array<SubjectItem> = getMainSubjects(req, content.language === 'en' ? 'en' : 'nb')
+  // const allMainSubjects: Array<SubjectItem> = getMainSubjects(req, content.language === 'en' ? 'en' : 'nb')
+
+  // const groupedWithMonthNames: Array<YearReleases> = fromPartCache(req, `${content._id}-upcomingReleases`, () => {
+  //   // Get statistics
+  //   const statistics: Array<StatisticInListing> = getAllStatisticsFromRepo()
+  //   const upComingReleases: Array<Release> = getUpcomingReleases(statistics)
+
+  //   // All statistics published today, and fill up with previous releases.
+  //   const releasesFiltered: Array<Release> = filterOnComingReleases(upComingReleases, count)
+
+  //   // Choose the right variant and prepare the date in a way it works with the groupBy function
+  //   const releasesPrepped: Array<PreparedStatistics> = releasesFiltered.map((release: Release) =>
+  //     prepareRelease(release, currentLanguage)
+  //   )
+
+  //   // group by year, then month, then day
+  //   const groupedByYearMonthAndDay: GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>> =
+  //     groupStatisticsByYearMonthAndDay(releasesPrepped)
+
+  //   // iterate and format month names
+  //   // const groupedWithMonthNames: Array<YearReleases> = addMonthNames(groupedByYearMonthAndDay, currentLanguage)
+
+  //   return addMonthNames(groupedByYearMonthAndDay, currentLanguage)
+  // })
 
   const groupedWithMonthNames: Array<YearReleases> = fromPartCache(req, `${content._id}-upcomingReleases`, () => {
-    // Get statistics
-    const statistics: Array<StatisticInListing> = getAllStatisticsFromRepo()
-    const upComingReleases: Array<Release> = getUpcomingReleases(statistics)
+    const upcomingReleases = getUpcomingReleasesResults(req, count, currentLanguage).upcomingReleases
 
-    // All statistics published today, and fill up with previous releases.
-    const releasesFiltered: Array<Release> = filterOnComingReleases(upComingReleases, count)
-
-    // Choose the right variant and prepare the date in a way it works with the groupBy function
-    const releasesPrepped: Array<PreparedStatistics> = releasesFiltered.map((release: Release) =>
-      prepareRelease(release, currentLanguage)
-    )
-
-    // group by year, then month, then day
-    const groupedByYearMonthAndDay: GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>> =
-      groupStatisticsByYearMonthAndDay(releasesPrepped)
-
-    // iterate and format month names
-    // const groupedWithMonthNames: Array<YearReleases> = addMonthNames(groupedByYearMonthAndDay, currentLanguage)
+    const groupedByYearMonthAndDay = groupStatisticsByYearMonthAndDay(upcomingReleases)
 
     return addMonthNames(groupedByYearMonthAndDay, currentLanguage)
   })
 
-  const contentReleases: Array<PreparedUpcomingRelease> = query<UpcomingRelease, object>({
-    start: 0,
-    count: 500,
-    query: `type = "${
-      app.name
-    }:upcomingRelease" AND language = "${currentLanguage}" AND data.date >= "${moment().format('YYYY-MM-DD')}"`,
-  }).hits.map((r) => {
-    const date: string = r.data.nextRelease
-    const mainSubjectItem: SubjectItem | null = getMainSubjectById(allMainSubjects, r.data.mainSubject)
-    const mainSubject: string = mainSubjectItem ? mainSubjectItem.title : ''
-    const contentType: string = r.data.contentType
-      ? localize({
-          key: `contentType.${r.data.contentType}`,
-          locale: currentLanguage,
-        })
-      : ''
+  // const contentReleases: Array<PreparedUpcomingRelease> = query<UpcomingRelease, object>({
+  //   start: 0,
+  //   count: 500,
+  //   query: `type = "${
+  //     app.name
+  //   }:upcomingRelease" AND language = "${currentLanguage}" AND data.date >= "${moment().format('YYYY-MM-DD')}"`,
+  // }).hits.map((r) => {
+  //   const date: string = r.data.nextRelease
+  //   const mainSubjectItem: SubjectItem | null = getMainSubjectById(allMainSubjects, r.data.mainSubject)
+  //   const mainSubject: string = mainSubjectItem ? mainSubjectItem.title : ''
+  //   const contentType: string = r.data.contentType
+  //     ? localize({
+  //         key: `contentType.${r.data.contentType}`,
+  //         locale: currentLanguage,
+  //       })
+  //     : ''
 
-    return {
-      id: r._id,
-      name: r.displayName,
-      type: contentType,
-      date: moment(date).locale(currentLanguage).format(),
-      mainSubject: mainSubject,
-      day: formatDate(date, 'd', currentLanguage) as string,
-      month: formatDate(date, 'M', currentLanguage) as string,
-      monthName: formatDate(date, 'MMM', currentLanguage) as string,
-      year: formatDate(date, 'yyyy', currentLanguage) as string,
-      upcomingReleaseLink: r.data.href ? r.data.href : '',
-    }
-  })
+  //   return {
+  //     id: r._id,
+  //     name: r.displayName,
+  //     type: contentType,
+  //     date: moment(date).locale(currentLanguage).format(),
+  //     mainSubject: mainSubject,
+  //     day: formatDate(date, 'd', currentLanguage) as string,
+  //     month: formatDate(date, 'M', currentLanguage) as string,
+  //     monthName: formatDate(date, 'MMM', currentLanguage) as string,
+  //     year: formatDate(date, 'yyyy', currentLanguage) as string,
+  //     upcomingReleaseLink: r.data.href ? r.data.href : '',
+  //   }
+  // })
 
-  log.info('upcoming releases %s', JSON.stringify(getUpcomingReleasesResults(req, count, currentLanguage), null, 2))
+  // log.info('upcoming releases %s', JSON.stringify(getUpcomingReleasesResults(req, count, currentLanguage), null, 2))
 
   const props: PartProps = {
     title: content.displayName,
@@ -113,7 +121,7 @@ function renderPart(req: XP.Request): RenderResponse {
     upcomingReleasesServiceUrl,
     buttonTitle,
     statisticsPageUrlText,
-    contentReleases,
+    // contentReleases,
   }
 
   return render('site/parts/upcomingReleases/upcomingReleases', props, req)
@@ -131,17 +139,17 @@ interface PartProps {
   upcomingReleasesServiceUrl: string
   buttonTitle: string
   statisticsPageUrlText: string
-  contentReleases: Array<PreparedUpcomingRelease>
+  // contentReleases: Array<PreparedUpcomingRelease>
 }
-interface PreparedUpcomingRelease {
-  id: string
-  name: string
-  type: string
-  date: string
-  mainSubject: string
-  day: string
-  month: string
-  monthName: string
-  year: string
-  upcomingReleaseLink?: string
-}
+// interface PreparedUpcomingRelease {
+//   id: string
+//   name: string
+//   type: string
+//   date: string
+//   mainSubject: string
+//   day: string
+//   month: string
+//   monthName: string
+//   year: string
+//   upcomingReleaseLink?: string
+// }
