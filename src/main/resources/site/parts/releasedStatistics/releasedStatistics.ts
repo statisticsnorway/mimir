@@ -18,11 +18,7 @@ const { addMonthNames, groupStatisticsByYearMonthAndDay } = __non_webpack_requir
 
 export function get(req: XP.Request): RenderResponse | XP.Response {
   try {
-    const start: number = new Date().getTime()
-    const render: XP.Response = renderPart(req)
-    log.info(`renderPart:  ${new Date().getTime() - start}`)
-
-    return render //renderPart(req)
+    return renderPart(req)
   } catch (e) {
     return renderError(req, 'Error in part', e)
   }
