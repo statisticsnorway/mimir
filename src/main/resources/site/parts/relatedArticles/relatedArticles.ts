@@ -204,7 +204,6 @@ function addDsArticle(
 }
 
 function getDsArticle(statisticId: string, statisticPublishDate: string): RelatedArticle | undefined {
-  // statisticPublishDate = moment(new Date(statisticPublishDate)).format('YYYY-MM-DD')
   statisticPublishDate = format(new Date(statisticPublishDate), 'yyyy-MM-dd')
 
   const articleContent: Array<Content<Statistics | Article, SEO>> = query({
