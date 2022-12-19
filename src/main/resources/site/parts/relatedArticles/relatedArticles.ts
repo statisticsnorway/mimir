@@ -22,7 +22,6 @@ const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
 const { fromRelatedArticlesCache } = __non_webpack_require__('/lib/ssb/cache/cache')
 const { getStatisticByIdFromRepo } = __non_webpack_require__('/lib/ssb/statreg/statistics')
 const { hasWritePermissionsAndPreview } = __non_webpack_require__('/lib/ssb/parts/permissions')
-// const { moment } = __non_webpack_require__('/lib/vendor/moment')
 
 const view: ResourceKey = resolve('./relatedArticles.html')
 
