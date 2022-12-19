@@ -13,6 +13,7 @@ const {
   data: { forceArray },
 } = __non_webpack_require__('/lib/util')
 const { moment } = __non_webpack_require__('/lib/vendor/moment')
+const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
 
 export function calculatePeriod(frequency: string, previousFrom: string, previousTo: string, language: string): string {
   switch (frequency) {
@@ -542,31 +543,18 @@ export function getUpcomingReleases(statisticList: Array<StatisticInListing>): A
 export function getPreviousReleases(statisticList: Array<StatisticInListing>): Array<Release> {
   const allReleases: Array<Release> = getAllReleases(statisticList)
 
-  const before = Date.now()
-  const filtWithMoment = allReleases.filter(
-    (release) => release.status === 'A' && moment(new Date(release.publishTime)).isSameOrBefore(new Date(), 'day')
-  )
-  const after = Date.now()
-  log.info(
-    `GLNRBN previousRelease getting MOMENT date took ${after - before} ms, number of releases is ${
-      filtWithMoment.length
-    }`
-  )
-
-  const before2 = Date.now()
-  const filtWithDateFns = allReleases.filter(
-    (release) =>
-      release.status === 'A' &&
-      (isBefore(new Date(release.publishTime), new Date()) || isSameDay(new Date(release.publishTime), new Date()))
-  )
-  const after2 = Date.now()
-  log.info(
-    `GLNRBN previousRelease getting DATEFNS date took ${after2 - before2} ms, number of releases is ${
-      filtWithDateFns.length
-    }`
-  )
-
-  return filtWithDateFns ? filtWithDateFns : filtWithMoment
+  // TODO: Remove this feature flag when we have confirmed that the correct releases are produced
+  const shouldUseDateFns: boolean = isEnabled('datefns-publication-archive')
+  if (shouldUseDateFns)
+    return allReleases.filter(
+      (release) => release.status === 'A' && moment(new Date(release.publishTime)).isSameOrBefore(new Date(), 'day')
+    )
+  else
+    return allReleases.filter(
+      (release) =>
+        release.status === 'A' &&
+        (isBefore(new Date(release.publishTime), new Date()) || isSameDay(new Date(release.publishTime), new Date()))
+    )
 }
 
 export interface VariantUtilsLib {
