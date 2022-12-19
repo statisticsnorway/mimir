@@ -4,11 +4,11 @@ import type { Content, QueryDSL } from '/lib/xp/content'
 import { render, type RenderResponse } from '/lib/enonic/react4xp'
 import type { ReleasedStatistics as ReleasedStatisticsPartConfig } from '.'
 import type { YearReleases } from '../../../lib/ssb/utils/variantUtils'
-import { type Component, getContent, getComponent } from '/lib/xp/portal'
+import { type Component, getComponent, getContent } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 import type { ContentLight, Release as ReleaseVariant } from '/lib/ssb/repo/statisticVariant'
 import { getStatisticVariantsFromRepo } from '/lib/ssb/repo/statisticVariant'
-import { parseISO, getMonth, getYear, getDate } from 'date-fns'
+import { getDate, getMonth, getYear, parseISO } from 'date-fns'
 import { stringToServerTime } from '../../../lib/ssb/utils/dateUtils'
 
 const { fromPartCache } = __non_webpack_require__('/lib/ssb/cache/partCache')
@@ -72,17 +72,20 @@ function getGroupedWithMonthNames(
   const numberPreviousReleases: number =
     nextReleaseToday.length !== 0 ? numberOfReleases - nextReleaseToday.length : numberOfReleases
 
-  const allPreviousStatisticVariantsFromRepo: ContentLight<ReleaseVariant>[] = getStatisticVariantsFromRepo(
-    currentLanguage,
-    {
-      range: {
-        field: 'publish.from',
-        type: 'dateTime',
-        lte: new Date().toISOString(),
-      },
-    },
-    numberPreviousReleases
-  )
+  const allPreviousStatisticVariantsFromRepo: ContentLight<ReleaseVariant>[] =
+    numberPreviousReleases > 0
+      ? getStatisticVariantsFromRepo(
+          currentLanguage,
+          {
+            range: {
+              field: 'publish.from',
+              type: 'dateTime',
+              lte: new Date().toISOString(),
+            },
+          },
+          numberPreviousReleases
+        )
+      : []
 
   const releasesPreppedNextReleaseToday: PreparedStatistics[] = nextReleaseToday.map((variant) => {
     return prepReleases(variant, parseISO(variant.data.nextRelease))
