@@ -47,7 +47,7 @@ function parsePictureCardLinks(
           id: pictureCardLink.image,
           scale: 'block(580, 420)',
         })
-        imageAlt = getImageAlt(pictureCardLink.image) || ' '
+        imageAlt = getImageAlt(pictureCardLink.image) || ''
       } else {
         imageSrc = imagePlaceholder({
           width: 580,

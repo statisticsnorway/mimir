@@ -127,6 +127,28 @@ export function getNameSearchGraphData(config: Content<CalculatorConfig>): Datas
   return nameSearchGraphRepo
 }
 
+export function getNameGraphDataWithConfig(): DatasetRepoNode<JSONstatType> | null {
+  const config: Content<CalculatorConfig> | undefined = getCalculatorConfig()
+  if (!config) {
+    return null
+  }
+  const nameSearchGraphData: Content<GenericDataImport & DataSource> | null = config?.data.nameSearchGraphData
+    ? getContent({
+        key: config.data.nameSearchGraphData,
+      })
+    : null
+
+  if (nameSearchGraphData === null) {
+    log.info('Data calculator - nameSearchGraphData is Null, calculatorConfig: ' + JSON.stringify(config, null, 4))
+  }
+
+  const nameSearchGraphRepo: DatasetRepoNode<JSONstatType> | null = nameSearchGraphData
+    ? (datasetOrUndefined(nameSearchGraphData) as DatasetRepoNode<JSONstatType> | null)
+    : null
+
+  return nameSearchGraphRepo
+}
+
 export function getAllCalculatorDataset(): Array<Content<GenericDataImport>> {
   const calculatorConfig: Content<CalculatorConfig> | undefined = getCalculatorConfig()
   const calculatorDatasetKeys: Array<string | undefined> = []
@@ -151,6 +173,11 @@ export function getAllCalculatorDataset(): Array<Content<GenericDataImport>> {
   })
 
   return datasources
+}
+
+export function getNameSearchGraphDatasetId(): string | undefined {
+  const config: Content<CalculatorConfig> | undefined = getCalculatorConfig()
+  return config?.data.nameSearchGraphData ?? undefined
 }
 
 export function isChronological(startYear: string, startMonth: string, endYear: string, endMonth: string): boolean {
@@ -179,6 +206,8 @@ export interface CalculatorLib {
   getBkibolDatasetEnebolig: (config: Content<CalculatorConfig>) => Dataset | null
   getBkibolDatasetBoligblokk: (config: Content<CalculatorConfig>) => Dataset | null
   getNameSearchGraphData: (config: Content<CalculatorConfig>) => DatasetRepoNode<JSONstatType> | null
+  getNameGraphDataWithConfig: () => DatasetRepoNode<JSONstatType> | null
+  getNameSearchGraphDatasetId: () => string | undefined
   getAllCalculatorDataset: () => Array<Content<GenericDataImport>>
   isChronological: (startYear: string, startMonth: string, endYear: string, endMonth: string) => boolean
   getChangeValue: (startIndex: number, endIndex: number, chronological: boolean) => number

@@ -2,7 +2,7 @@ import type { Content } from '/lib/xp/content'
 import type { CalculatorConfig } from '../../site/content-types'
 import type { DatasetRepoNode } from '../../lib/ssb/repo/dataset'
 import type { Data, Dataset, Dimension } from '../../lib/types/jsonstat-toolkit'
-/* eslint-disable new-cap */
+import { getNameGraphDataFromRepo, type NameData, nameGraphRepoExists } from '/lib/ssb/repo/nameGraph'
 // @ts-ignore
 import JSONstat from 'jsonstat-toolkit/import.mjs'
 
@@ -48,6 +48,11 @@ function prepareResult(name: string): string {
 }
 
 function prepareGraph(name: string): Array<NameGraph> {
+  return nameGraphRepoExists() ? prepareGraphRepo(name) : prepareGraphDataset(name)
+}
+
+//Uses when repo dont exist
+function prepareGraphDataset(name: string): Array<NameGraph> {
   const config: Content<CalculatorConfig> | undefined = getCalculatorConfig()
 
   const result: Array<NameGraph> = []
@@ -78,6 +83,26 @@ function prepareGraph(name: string): Array<NameGraph> {
         })
       }
     })
+    return result
+  } catch (error) {
+    log.error(error)
+    return result
+  }
+}
+
+function prepareGraphRepo(name: string): Array<NameGraph> {
+  const names: string[] = name.split(' ')
+  const result: Array<NameGraph> = []
+
+  try {
+    const nameDataRepo: NameData[] = getNameGraphDataFromRepo(names)
+    nameDataRepo.forEach((name) => {
+      result.push({
+        name: name.displayName,
+        data: name.data,
+      })
+    })
+
     return result
   } catch (error) {
     log.error(error)

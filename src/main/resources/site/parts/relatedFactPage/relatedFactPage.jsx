@@ -69,7 +69,7 @@ function RelatedBoxes(props) {
               <PictureCard
                 className='mb-3'
                 imageSrc={relatedFactPageContent.image}
-                altText={relatedFactPageContent.imageAlt ? relatedFactPageContent.imageAlt : ' '}
+                altText={relatedFactPageContent.imageAlt ? relatedFactPageContent.imageAlt : ''}
                 link={relatedFactPageContent.link}
                 title={relatedFactPageContent.title}
                 key={index}
