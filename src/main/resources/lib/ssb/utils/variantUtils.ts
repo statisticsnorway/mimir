@@ -547,13 +547,13 @@ export function getPreviousReleases(statisticList: Array<StatisticInListing>): A
   const shouldUseDateFns: boolean = isEnabled('datefns-publication-archive')
   if (shouldUseDateFns)
     return allReleases.filter(
-      (release) => release.status === 'A' && moment(new Date(release.publishTime)).isSameOrBefore(new Date(), 'day')
-    )
-  else
-    return allReleases.filter(
       (release) =>
         release.status === 'A' &&
         (isBefore(new Date(release.publishTime), new Date()) || isSameDay(new Date(release.publishTime), new Date()))
+    )
+  else
+    return allReleases.filter(
+      (release) => release.status === 'A' && moment(new Date(release.publishTime)).isSameOrBefore(new Date(), 'day')
     )
 }
 
