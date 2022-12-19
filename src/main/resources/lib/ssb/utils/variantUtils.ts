@@ -2,7 +2,7 @@ import { query, get, Content } from '/lib/xp/content'
 import { SEO } from '../../../services/news/news'
 import type { OmStatistikken, Statistics } from '../../../site/content-types'
 import { ReleasesInListing, StatisticInListing, VariantInListing } from '../dashboard/statreg/types'
-import { parseISO, getMonth, getYear, getDate, isAfter } from 'date-fns'
+import { parseISO, getMonth, getYear, getDate, isAfter, isBefore, isSameDay } from 'date-fns'
 
 const { pageUrl } = __non_webpack_require__('/lib/xp/portal')
 const { getMainSubject, getMainSubjectStatistic } = __non_webpack_require__('/lib/ssb/utils/parentUtils')
@@ -541,9 +541,32 @@ export function getUpcomingReleases(statisticList: Array<StatisticInListing>): A
 
 export function getPreviousReleases(statisticList: Array<StatisticInListing>): Array<Release> {
   const allReleases: Array<Release> = getAllReleases(statisticList)
-  return allReleases.filter(
+
+  const before = Date.now()
+  const filtWithMoment = allReleases.filter(
     (release) => release.status === 'A' && moment(new Date(release.publishTime)).isSameOrBefore(new Date(), 'day')
   )
+  const after = Date.now()
+  log.info(
+    `GLNRBN previousRelease getting MOMENT date took ${after - before} ms, number of releases is ${
+      filtWithMoment.length
+    }`
+  )
+
+  const before2 = Date.now()
+  const filtWithDateFns = allReleases.filter(
+    (release) =>
+      release.status === 'A' &&
+      (isBefore(new Date(release.publishTime), new Date()) || isSameDay(new Date(release.publishTime), new Date()))
+  )
+  const after2 = Date.now()
+  log.info(
+    `GLNRBN previousRelease getting DATEFNS date took ${after2 - before2} ms, number of releases is ${
+      filtWithDateFns.length
+    }`
+  )
+
+  return filtWithDateFns ? filtWithDateFns : filtWithMoment
 }
 
 export interface VariantUtilsLib {
