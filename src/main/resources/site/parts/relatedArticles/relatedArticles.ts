@@ -11,7 +11,7 @@ import { render as r4xpRender } from '/lib/enonic/react4xp'
 import { SEO } from '../../../services/news/news'
 import type { Article, Statistics } from '../../content-types'
 import type { RelatedArticles } from '../../mixins/relatedArticles'
-
+import { format } from 'date-fns'
 
 import { getContent, pageUrl, imageUrl, imagePlaceholder } from '/lib/xp/portal'
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
@@ -22,7 +22,7 @@ const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
 const { fromRelatedArticlesCache } = __non_webpack_require__('/lib/ssb/cache/cache')
 const { getStatisticByIdFromRepo } = __non_webpack_require__('/lib/ssb/statreg/statistics')
 const { hasWritePermissionsAndPreview } = __non_webpack_require__('/lib/ssb/parts/permissions')
-const { moment } = __non_webpack_require__('/lib/vendor/moment')
+// const { moment } = __non_webpack_require__('/lib/vendor/moment')
 
 const view: ResourceKey = resolve('./relatedArticles.html')
 
@@ -205,7 +205,9 @@ function addDsArticle(
 }
 
 function getDsArticle(statisticId: string, statisticPublishDate: string): RelatedArticle | undefined {
-  statisticPublishDate = moment(new Date(statisticPublishDate)).format('YYYY-MM-DD')
+  // statisticPublishDate = moment(new Date(statisticPublishDate)).format('YYYY-MM-DD')
+  statisticPublishDate = format(new Date(statisticPublishDate), 'yyyy-MM-dd')
+
   const articleContent: Array<Content<Statistics | Article, SEO>> = query({
     count: 1,
     sort: 'publish.from DESC',
