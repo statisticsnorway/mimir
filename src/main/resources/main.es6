@@ -91,6 +91,10 @@ try {
           feature: 'new-publication-archive',
           enabled: false,
         },
+        {
+          feature: 'datefns-publication-archive',
+          enabled: false,
+        },
       ],
     },
   ])
