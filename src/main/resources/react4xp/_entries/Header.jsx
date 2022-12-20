@@ -11,10 +11,6 @@ function Header(props) {
   const escFunction = useCallback((event) => {
     if (event.keyCode === 27 || event.key == 'Escape') {
       // CLOSE submenu when esc is pressed
-
-      if (window && window.innerWidth >= 992 && document.activeElement instanceof HTMLElement)
-        document.activeElement.blur()
-
       setShowSubMenu(false)
       setIndexForCurrentActiveMenuItem(undefined)
     }
@@ -24,7 +20,7 @@ function Header(props) {
     window.location = `${props.searchResultPageUrl}?sok=${value}`
   }
 
-  function toggleMainMenu(e) {
+  function toggleMainMenu() {
     setShowMainMenuOnMobile(!showMainMenuOnMobile)
   }
 
@@ -33,7 +29,7 @@ function Header(props) {
     const activeIndex = indexForCurrentActiveMenuItem === index ? undefined : index
 
     if (window && window.innerWidth >= 992 && document.activeElement instanceof HTMLElement)
-      document.activeElement.blur()
+      document.activeElement.focus()
 
     setShowSubMenu(!showSubMenu || activeIndex !== undefined)
     setIndexForCurrentActiveMenuItem(activeIndex)
@@ -146,7 +142,7 @@ function Header(props) {
         <button
           className='hamburger'
           aria-expanded={showMainMenuOnMobile ? 'true' : 'false'}
-          onClick={(e) => toggleMainMenu(e)}
+          onClick={() => toggleMainMenu()}
         >
           {menuButtonStatus()}
         </button>
