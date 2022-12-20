@@ -79,6 +79,7 @@ class Header extends React.Component {
   renderIcon(icon) {
     return (
       <span
+        aria-hidden='true'
         dangerouslySetInnerHTML={{
           __html: icon,
         }}

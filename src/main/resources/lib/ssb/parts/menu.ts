@@ -55,8 +55,7 @@ export function createMenuTree(menuItemId: string): Array<MenuItemParsed> {
       const menuItem: MenuItemParsed | undefined = flatMenu.find((fm) => fm.iconId === icon._id)
       if (menuItem) {
         menuItem.iconAltText = icon ? icon.data.caption : ' '
-        menuItem.iconSvgTag = icon ? (getAttachment(icon) as string).replace(/<title>(.*)<\/title>/g, '') : undefined
-        log.info(JSON.stringify(menuItem.iconSvgTag, null, 2))
+        menuItem.iconSvgTag = icon ? getAttachment(icon) : undefined
       }
     })
     return parsedMenu
