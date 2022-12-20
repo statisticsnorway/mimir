@@ -8,9 +8,13 @@ function Header(props) {
   const [showMainMenuOnMobile, setShowMainMenuOnMobile] = useState(false)
   const [indexForCurrentActiveMenuItem, setIndexForCurrentActiveMenuItem] = useState(undefined)
 
-  const escFunction = useCallback((event) => {
+  // CLOSE submenu when esc key is pressed
+  const escKeyListener = useCallback((event) => {
     if (event.keyCode === 27 || event.key == 'Escape') {
-      // CLOSE submenu when esc is pressed
+      if (window && window.innerWidth >= 992 && document.activeElement instanceof HTMLElement)
+        document.activeElement.blur()
+      // ^ takes away focus from last element
+      // find last heading and focus
       setShowSubMenu(false)
       setIndexForCurrentActiveMenuItem(undefined)
     }
@@ -118,10 +122,10 @@ function Header(props) {
   const mainMenuLabel = language.code === 'en' ? 'main menu' : 'hovedmeny'
 
   useEffect(() => {
-    document.addEventListener('keydown', escFunction, false)
+    document.addEventListener('keydown', escKeyListener, false)
 
     return () => {
-      document.removeEventListener('keydown', escFunction, false)
+      document.removeEventListener('keydown', escKeyListener, false)
     }
   }, [])
 
