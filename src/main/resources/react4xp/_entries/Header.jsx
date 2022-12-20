@@ -1,37 +1,41 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Divider, Input, Link } from '@statisticsnorway/ssb-component-library'
 import { ChevronDown, ChevronRight, Menu, X } from 'react-feather'
 
 function Header(props) {
   const [showSubMenu, setShowSubMenu] = useState(false)
-
   const [showMainMenuOnMobile, setShowMainMenuOnMobile] = useState(false)
-  // const [searchFieldInput, setSearchFieldInput] = useState('')
-  // const [mainMenu, setMainMenu] = useState(props.mainNavigation.map(() => false))
-
   const [indexForCurrentActiveMenuItem, setIndexForCurrentActiveMenuItem] = useState(undefined)
+
+  const escFunction = useCallback((event) => {
+    if (event.keyCode === 27 || event.key == 'Escape') {
+      // CLOSE submenu when esc is pressed
+
+      if (window && window.innerWidth >= 992 && document.activeElement instanceof HTMLElement)
+        document.activeElement.blur()
+
+      setShowSubMenu(false)
+      setIndexForCurrentActiveMenuItem(undefined)
+    }
+  }, [])
 
   function goToSearchResultPage(value) {
     window.location = `${props.searchResultPageUrl}?sok=${value}`
   }
 
-  function toggleMainMenu() {
+  function toggleMainMenu(e) {
     setShowMainMenuOnMobile(!showMainMenuOnMobile)
   }
 
-  function toggleSubMenu(index) {
+  function toggleSubMenu(e, index) {
+    console.log(e)
     const activeIndex = indexForCurrentActiveMenuItem === index ? undefined : index
-
-    // const mainMenuVar = [...mainMenu]
 
     if (window && window.innerWidth >= 992 && document.activeElement instanceof HTMLElement)
       document.activeElement.blur()
 
-    // mainMenu[index] = !mainMenuVar[index]
-
     setShowSubMenu(!showSubMenu || activeIndex !== undefined)
-    // setMainMenu(mainMenu)
     setIndexForCurrentActiveMenuItem(activeIndex)
   }
 
@@ -117,6 +121,14 @@ function Header(props) {
   const globalLinksLabel = language.code === 'en' ? 'global links' : 'globale lenker'
   const mainMenuLabel = language.code === 'en' ? 'main menu' : 'hovedmeny'
 
+  useEffect(() => {
+    document.addEventListener('keydown', escFunction, false)
+
+    return () => {
+      document.removeEventListener('keydown', escFunction, false)
+    }
+  }, [])
+
   return (
     <header className='ssb-header-wrapper'>
       <nav className='global-links hideOnMobile' aria-label={globalLinksLabel}>
@@ -134,7 +146,7 @@ function Header(props) {
         <button
           className='hamburger'
           aria-expanded={showMainMenuOnMobile ? 'true' : 'false'}
-          onClick={() => toggleMainMenu}
+          onClick={(e) => toggleMainMenu(e)}
         >
           {menuButtonStatus()}
         </button>
@@ -163,7 +175,7 @@ function Header(props) {
                 (topMenuItem.isActive && indexForCurrentActiveMenuItem === undefined)
               return (
                 <li key={index} className={`tabItem${activeMenuItem ? ' activeTab' : ''}`}>
-                  <button onClick={() => toggleSubMenu(index)} aria-expanded={activeMenuItem ? 'true' : 'false'}>
+                  <button onClick={(e) => toggleSubMenu(e, index)} aria-expanded={activeMenuItem ? 'true' : 'false'}>
                     <span className={activeMenuItem ? 'active navigation-item' : 'navigation-item'}>
                       {activeMenuItem && showSubMenu ? <ChevronDown size='20' /> : <ChevronRight size='20' />}
                       <span>{topMenuItem.title}</span>
