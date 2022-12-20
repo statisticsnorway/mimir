@@ -17,7 +17,13 @@ const Links = (props) => {
   const renderLinks = () => {
     const renderIcon = typeof withIcon === 'boolean' ? withIcon : withIcon === 'true' // Macro config returns string. This is a workaround.
     return (
-      <Link href={href} icon={renderIcon && <ArrowRight size='20' />} linkType={linkType} onClick={handleClick}>
+      <Link
+        href={href}
+        icon={renderIcon && <ArrowRight size='20' />}
+        linkType={linkType}
+        onClick={handleClick}
+        standAlone
+      >
         {children}
       </Link>
     )
