@@ -81,7 +81,7 @@ function getIcon(iconId: string): Image | undefined {
         id: iconId,
         scale: 'block(100,100)',
       }),
-      alt: getImageAlt(iconId) ? getImageAlt(iconId) : ' ',
+      alt: getImageAlt(iconId) ? getImageAlt(iconId) : '',
     }
   } else {
     return undefined
