@@ -8,18 +8,6 @@ function Header(props) {
   const [showMainMenuOnMobile, setShowMainMenuOnMobile] = useState(false)
   const [indexForCurrentActiveMenuItem, setIndexForCurrentActiveMenuItem] = useState(undefined)
 
-  // CLOSE submenu when esc key is pressed
-  const escKeyListener = useCallback((event) => {
-    if (event.keyCode === 27 || event.key == 'Escape') {
-      if (window && window.innerWidth >= 992 && document.activeElement instanceof HTMLElement)
-        document.activeElement.blur()
-      // ^ takes away focus from last element
-      // find last heading and focus
-      setShowSubMenu(false)
-      setIndexForCurrentActiveMenuItem(undefined)
-    }
-  }, [])
-
   function goToSearchResultPage(value) {
     window.location = `${props.searchResultPageUrl}?sok=${value}`
   }
@@ -28,8 +16,7 @@ function Header(props) {
     setShowMainMenuOnMobile(!showMainMenuOnMobile)
   }
 
-  function toggleSubMenu(e, index) {
-    console.log(e)
+  function toggleSubMenu(index) {
     const activeIndex = indexForCurrentActiveMenuItem === index ? undefined : index
 
     if (window && window.innerWidth >= 992 && document.activeElement instanceof HTMLElement)
@@ -106,6 +93,30 @@ function Header(props) {
     })
   }
 
+  // CLOSE submenu when esc key is pressed
+  const escKeyListener = useCallback(
+    (event) => {
+      if (event.keyCode === 27 || event.key == 'Escape') {
+        if (window && window.innerWidth >= 992 && document.activeElement instanceof HTMLElement)
+          document.activeElement.blur()
+
+        setShowSubMenu(false)
+        const activeMenuButton = document.getElementById(indexForCurrentActiveMenuItem)
+        activeMenuButton.focus()
+        setIndexForCurrentActiveMenuItem(undefined)
+      }
+    },
+    [indexForCurrentActiveMenuItem]
+  )
+
+  useEffect(() => {
+    document.addEventListener('keydown', escKeyListener, false)
+
+    return () => {
+      document.removeEventListener('keydown', escKeyListener, false)
+    }
+  }, [indexForCurrentActiveMenuItem])
+
   const {
     searchText,
     mainMenuText,
@@ -120,14 +131,6 @@ function Header(props) {
 
   const globalLinksLabel = language.code === 'en' ? 'global links' : 'globale lenker'
   const mainMenuLabel = language.code === 'en' ? 'main menu' : 'hovedmeny'
-
-  useEffect(() => {
-    document.addEventListener('keydown', escKeyListener, false)
-
-    return () => {
-      document.removeEventListener('keydown', escKeyListener, false)
-    }
-  }, [])
 
   return (
     <header className='ssb-header-wrapper'>
@@ -175,7 +178,11 @@ function Header(props) {
                 (topMenuItem.isActive && indexForCurrentActiveMenuItem === undefined)
               return (
                 <li key={index} className={`tabItem${activeMenuItem ? ' activeTab' : ''}`}>
-                  <button onClick={(e) => toggleSubMenu(e, index)} aria-expanded={activeMenuItem ? 'true' : 'false'}>
+                  <button
+                    onClick={() => toggleSubMenu(index)}
+                    aria-expanded={activeMenuItem ? 'true' : 'false'}
+                    id={index}
+                  >
                     <span className={activeMenuItem ? 'active navigation-item' : 'navigation-item'}>
                       {activeMenuItem && showSubMenu ? <ChevronDown size='20' /> : <ChevronRight size='20' />}
                       <span>{topMenuItem.title}</span>
