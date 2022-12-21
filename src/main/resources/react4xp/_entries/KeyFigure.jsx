@@ -87,7 +87,7 @@ class KeyFigures extends React.Component {
               {...keyFigure}
               icon={
                 keyFigure.iconUrl && (
-                  <img src={keyFigure.iconUrl} alt={keyFigure.iconAltText ? keyFigure.iconAltText : ' '}></img>
+                  <img src={keyFigure.iconUrl} alt={keyFigure.iconAltText ? keyFigure.iconAltText : ''}></img>
                 )
               }
             />

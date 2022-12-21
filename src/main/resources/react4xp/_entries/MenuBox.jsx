@@ -15,7 +15,7 @@ const MenuBox = (props) => {
               key={`box_${index}`}
               title={box.title}
               href={box.href}
-              icon={box.icon ? <img src={box.icon.src} alt={box.icon.alt ? box.icon.alt : ' '}></img> : undefined}
+              icon={box.icon ? <img src={box.icon.src} alt={box.icon.alt ? box.icon.alt : ''}></img> : undefined}
               profiled
             >
               {box.subtitle ? <Text>{box.subtitle}</Text> : undefined}

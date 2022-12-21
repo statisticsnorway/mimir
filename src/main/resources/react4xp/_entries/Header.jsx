@@ -141,7 +141,7 @@ class Header extends React.Component {
         </nav>
         <div className='misc top-row flex-row justify-space-between flex-wrap'>
           <a id='header-logo' className='plainLink' href={logoUrl}>
-            <img src={logoSrc} alt={logoAltText ? logoAltText : ' '} className='logo' />
+            <img src={logoSrc} alt={logoAltText ? logoAltText : ''} className='logo' />
           </a>
 
           <button
