@@ -32,7 +32,7 @@
     <div data-th-if="${highchart.creditsEnabled}" class="col-12 highcharts-source">
       <a class="ssb-link" data-th-if="${highchart.creditsHref || highchart.creditsText}" data-th-href="${highchart.creditsHref}" data-th-text="${sourceText + ' ' + highchart.creditsText}"></a>
       <div data-th-if="${highchart.sourceList}" data-th-each="source : ${highchart.sourceList}" class="mt-3">
-        <a class="ssb-link" data-th-href="${source.sourceHref}" data-th-text="${sourceText + ' ' + source.sourceText}" />
+        <a class="ssb-link stand-alone" data-th-href="${source.sourceHref}" data-th-text="${sourceText + ' ' + source.sourceText}" />
       </div>
     </div>
   </div>

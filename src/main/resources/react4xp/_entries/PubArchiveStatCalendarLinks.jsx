@@ -15,6 +15,7 @@ const PubArchiveStatCalendarLinks = (props) => {
                 linkType='profiled'
                 className='publication-link mb-md-0 mb-4'
                 icon={<ArrowRight size='18' />}
+                standAlone
               >
                 {props.PublicationText}
               </Link>
@@ -23,7 +24,7 @@ const PubArchiveStatCalendarLinks = (props) => {
             )}
 
             {props.CalendarLink ? (
-              <Link href={props.CalendarLink} className='calendar-link' icon={<Calendar size='16' />}>
+              <Link href={props.CalendarLink} className='calendar-link' icon={<Calendar size='16' />} standAlone>
                 {props.CalendarText}
               </Link>
             ) : (

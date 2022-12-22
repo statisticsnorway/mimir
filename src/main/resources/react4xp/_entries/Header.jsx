@@ -47,7 +47,7 @@ function Header(props) {
     const { alternativeLanguages } = props.language
     return alternativeLanguages.map((altLanguage, index) => {
       return (
-        <Link title={'language-changer'} key={'link_' + index} href={altLanguage.path}>
+        <Link title={'language-changer'} key={'link_' + index} href={altLanguage.path} standAlone>
           {altLanguage.title}
         </Link>
       )
@@ -87,7 +87,7 @@ function Header(props) {
   function topLinks() {
     return props.topLinks.map((topLink, index) => {
       return (
-        <Link key={'link_' + index} href={topLink.path}>
+        <Link key={'link_' + index} href={topLink.path} standAlone>
           {topLink.title}
         </Link>
       )

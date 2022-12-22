@@ -80,8 +80,7 @@
   border-collapse: collapse;
 
   .ssb-link {
-    display: inline-block;
-    margin-top: 20px;
+    margin-top: 10px;
   }
 
   .source {
@@ -160,7 +159,7 @@ table.statistics {
 
     @include media-breakpoint-down(md) {
       padding-top: 50px;
-      
+
       .caption-text-wrapper {
         max-width: initial;
       }

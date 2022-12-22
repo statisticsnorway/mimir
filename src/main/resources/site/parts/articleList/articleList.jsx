@@ -20,7 +20,7 @@ class ArticleList extends React.Component {
           return (
             <div key={i} className='mt-5'>
               <Title size={3}>
-                <Link href={article.url} className='ssb-link header'>
+                <Link href={article.url} className='ssb-link header' standAlone>
                   {article.title}
                 </Link>
               </Title>

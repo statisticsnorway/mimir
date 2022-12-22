@@ -77,6 +77,7 @@
 
     .part-fact-box .accordion-header {
       padding: 0;
+      min-height: 44px;
     }
 
     @include media-breakpoint-down(md) {
@@ -117,7 +118,7 @@
       .mt-lg-0 {
         margin-top: 0;
       }
-    }  
+    }
   }
 
   .article-isbn {
