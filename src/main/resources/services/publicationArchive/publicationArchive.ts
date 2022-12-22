@@ -1,6 +1,6 @@
-import { PublicationResult } from '../../lib/ssb/parts/publicationArchive'
+import { PublicationResult } from '../../lib/ssb/parts/publicationArchiveNew'
 
-const { getPublications } = __non_webpack_require__('/lib/ssb/parts/publicationArchive')
+const { getPublicationsNew } = __non_webpack_require__('/lib/ssb/parts/publicationArchiveNew')
 
 exports.get = (req: XP.Request): XP.Response => {
   const start: number = Number(req.params.start) ? Number(req.params.start) : 0
@@ -9,7 +9,7 @@ exports.get = (req: XP.Request): XP.Response => {
   const type: string = req.params?.type ? req.params.type : ''
   const subject: string = req.params?.subject ? req.params.subject : ''
 
-  const result: PublicationResult = getPublications(req, start, count, language, type, subject)
+  const result: PublicationResult = getPublicationsNew(req, start, count, language, type, subject)
 
   return {
     status: 200,

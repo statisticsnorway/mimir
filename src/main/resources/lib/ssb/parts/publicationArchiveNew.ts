@@ -17,7 +17,7 @@ export function getPublicationsNew(
   start = 0,
   count = 10,
   language: string,
-  articleType?: string,
+  articleType: string,
   subject?: string
 ): PublicationResult {
   const mainSubjects: Array<SubjectItem> = getMainSubjects(req, language)
@@ -61,7 +61,7 @@ export function getPublicationsNew(
               values: language === 'nb' ? ['nb', 'nn'] : ['en'],
             },
           },
-          {
+         {
             hasValue: {
               field: 'data.articleType',
               values: forceArray(articleType).filter(notEmptyOrUndefined),
@@ -97,6 +97,7 @@ export function getPublicationsNew(
                   },
                 },
               ],
+
             },
           },
           // articles
@@ -111,13 +112,14 @@ export function getPublicationsNew(
                 },
                 {
                   hasValue: {
-                    field: 'x.mimir.subjects.mainSubjects',
+                    field: 'x.mimir.subjectTag.mainSubjects',
                     values: forceArray(subject),
                   },
                 },
               ],
             },
           },
+
         ],
       },
     },

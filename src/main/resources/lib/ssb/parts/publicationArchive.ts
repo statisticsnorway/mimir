@@ -188,6 +188,8 @@ function prepareArticle(
 }
 
 function getArticlesContent(language: string, mainSubjects: Array<SubjectItem>): QueryResponse<Article, object> {
+  log.info('inside');
+  log.info(JSON.stringify(mainSubjects));
   const languageQuery: string = language !== 'en' ? 'AND language != "en"' : 'AND language = "en"'
   const now: string = new Date().toISOString()
   const publishFromQuery = `(publish.from LIKE '*' AND publish.from < '${now}')`
@@ -196,11 +198,13 @@ function getArticlesContent(language: string, mainSubjects: Array<SubjectItem>):
   const queryString = `${publishFromQuery} AND ${subjectQuery} ${languageQuery}`
 
   const res: QueryResponse<Article, object> = query({
-    count: 10000,
+    count: 10,
     query: queryString,
     contentTypes: [`${app.name}:article`],
     sort: 'publish.from DESC',
   })
+
+  //log.info(JSON.stringify(res));
   return res
 }
 
