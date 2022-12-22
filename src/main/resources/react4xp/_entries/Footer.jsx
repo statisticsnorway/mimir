@@ -124,7 +124,7 @@ class Footer extends React.Component {
           <div className='container'>
             <h2 className='sr-only'>{hiddenFooterText}</h2>
             <div className='footer-top-row'>
-              <img src={logoUrl} alt='ssb-logo' />
+              <img src={logoUrl} alt='' />
               <Button negative onClick={() => this.goToTop()}>
                 <ArrowUp size='22' className='me-2' />
                 {topButtonText}

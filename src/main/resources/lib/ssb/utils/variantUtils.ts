@@ -2,7 +2,7 @@ import { query, get, Content } from '/lib/xp/content'
 import { SEO } from '../../../services/news/news'
 import type { OmStatistikken, Statistics } from '../../../site/content-types'
 import { ReleasesInListing, StatisticInListing, VariantInListing } from '../dashboard/statreg/types'
-import { parseISO, getMonth, getYear, getDate } from 'date-fns'
+import { parseISO, getMonth, getYear, getDate, isAfter, isBefore, isSameDay } from 'date-fns'
 
 const { pageUrl } = __non_webpack_require__('/lib/xp/portal')
 const { getMainSubject, getMainSubjectStatistic } = __non_webpack_require__('/lib/ssb/utils/parentUtils')
@@ -13,6 +13,7 @@ const {
   data: { forceArray },
 } = __non_webpack_require__('/lib/util')
 const { moment } = __non_webpack_require__('/lib/vendor/moment')
+const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
 
 export function calculatePeriod(frequency: string, previousFrom: string, previousTo: string, language: string): string {
   switch (frequency) {
@@ -536,14 +537,24 @@ export function getUpcomingReleases(statisticList: Array<StatisticInListing>): A
   const serverOffsetInMs: number =
     app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
   const serverTime: Date = new Date(new Date().getTime() + serverOffsetInMs)
-  return allReleases.filter((release) => moment(release.publishTime).isAfter(serverTime, 'minute'))
+  return allReleases.filter((release) => isAfter(new Date(release.publishTime), serverTime))
 }
 
 export function getPreviousReleases(statisticList: Array<StatisticInListing>): Array<Release> {
   const allReleases: Array<Release> = getAllReleases(statisticList)
-  return allReleases.filter(
-    (release) => release.status === 'A' && moment(new Date(release.publishTime)).isSameOrBefore(new Date(), 'day')
-  )
+
+  // TODO: Remove this feature flag when we have confirmed that the correct releases are produced
+  const shouldUseDateFns: boolean = isEnabled('datefns-publication-archive')
+  if (shouldUseDateFns)
+    return allReleases.filter(
+      (release) =>
+        release.status === 'A' &&
+        (isBefore(new Date(release.publishTime), new Date()) || isSameDay(new Date(release.publishTime), new Date()))
+    )
+  else
+    return allReleases.filter(
+      (release) => release.status === 'A' && moment(new Date(release.publishTime)).isSameOrBefore(new Date(), 'day')
+    )
 }
 
 export interface VariantUtilsLib {

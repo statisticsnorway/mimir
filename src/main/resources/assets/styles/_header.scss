@@ -186,7 +186,7 @@ header.ssb-header-wrapper {
       padding: 0;
       margin-bottom: 0;
 
-      @include media-breakpoint-down(lg){ 
+      @include media-breakpoint-down(lg){
         flex-direction: column;
       }
     }
@@ -251,7 +251,7 @@ header.ssb-header-wrapper {
         content: '';
         height: 2px;
       }
-  
+
       &:after {
         border-bottom: 1px solid $ssb-dark-2;
         content: '';

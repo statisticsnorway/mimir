@@ -23,7 +23,7 @@ class EntryLinks extends React.Component {
           <div className='col-md-3 mt-4 p-0'>
             <div className='row text-start text-md-center '>
               <div className='col-md-12 col-auto align-items-end d-none d-md-inline'>
-                <img src={icon} alt={altText ? altText : ' '} className='desktop-icons' />
+                <img src={icon} alt={altText ? altText : ''} className='desktop-icons' />
               </div>
               <div className='col-md-12 col-10 mt-md-4'>
                 <Link href={href} linkType='header' className='d-none d-md-inline'>
