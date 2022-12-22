@@ -4,7 +4,7 @@ export interface UpcomingRelease {
   /**
    * Publisering
    */
-  date?: string;
+  date: string;
 
   /**
    * Innholdstype
