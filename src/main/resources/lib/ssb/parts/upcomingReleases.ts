@@ -24,7 +24,7 @@ export function getUpcomingReleasesResults(req: XP.Request, numberOfDays: number
     },
   } as unknown as QueryDSL)
 
-  const upcomingReleases: Array<PreparedStatistics> = results.map((statistic) =>
+  const upcomingStatisticsReleases: Array<PreparedStatistics> = results.map((statistic) =>
     prepStatisticUpcomingRelease(statistic as ContentLight<Release>, language)
   )
 
@@ -37,8 +37,8 @@ export function getUpcomingReleasesResults(req: XP.Request, numberOfDays: number
       else return acc
     }, [])
 
-  const mergedStatisticsAndUpcomingStatisticsReleases = [
-    ...upcomingReleases,
+  const upcomingReleases = [
+    ...upcomingStatisticsReleases,
     ...(filteredUpcomingReleasesStatistics as Array<PreparedStatistics>),
     ...prepContentUpcomingReleases(stringToServerTime(), endDate, allMainSubjects, language),
   ].sort((a, b) => {
@@ -46,8 +46,8 @@ export function getUpcomingReleasesResults(req: XP.Request, numberOfDays: number
   })
 
   return {
-    total: mergedStatisticsAndUpcomingStatisticsReleases.length,
-    upcomingReleases: mergedStatisticsAndUpcomingStatisticsReleases,
+    total: upcomingReleases.length,
+    upcomingReleases: upcomingReleases,
   }
 }
 
