@@ -1,4 +1,4 @@
-import type { Content } from '/lib/xp/content'
+import { type Content, query } from '/lib/xp/content'
 import { connect, multiRepoConnect, type MultiRepoConnection, type MultiRepoNodeQueryResponse } from '/lib/xp/node'
 import { type Context, type ContextAttributes, get as getContext, type PrincipalKey } from '/lib/xp/context'
 import { pageUrl } from '/lib/xp/portal'
@@ -123,6 +123,7 @@ export function getUpcomingReleasesResults(req: XP.Request, numberOfDays: number
   const mergedStatisticsAndUpcomingStatisticsReleases = [
     ...upcomingReleases,
     ...(filteredUpcomingReleasesStatistics as Array<PreparedStatistics>),
+    ...prepOldContentUpcomingReleases(serverTime, endDate, allMainSubjects, language),
   ].sort((a, b) => {
     return new Date(a.date as string).getTime() - new Date(b.date as string).getTime()
   })
@@ -135,6 +136,78 @@ export function getUpcomingReleasesResults(req: XP.Request, numberOfDays: number
 
 function isContentUpcomingRelease(content: unknown) {
   return (content as Content).type === `${app.name}:upcomingRelease`
+}
+
+// TODO: Delete after all content has been updated
+function prepOldContentUpcomingReleases(
+  serverTime: Date,
+  endDate: Date | undefined,
+  allMainSubjects: Array<SubjectItem>,
+  language: string
+): Array<PreparedStatistics> | [] {
+  const oldContentUpcomingReleases: Array<PreparedStatistics> = query<UpcomingRelease, object>({
+    count: 500,
+    query: {
+      range: {
+        field: 'data.date',
+        from: 'dateTime',
+        gte: serverTime,
+        lte: endDate,
+      },
+    } as unknown as string,
+    filters: {
+      boolean: {
+        must: [
+          {
+            hasValue: {
+              field: 'language',
+              values: language === 'nb' ? ['nb', 'nn'] : ['en'],
+            },
+          },
+        ],
+        should: [
+          {
+            boolean: {
+              must: [
+                {
+                  hasValue: {
+                    field: 'type',
+                    values: [`${app.name}:upcomingRelease`],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  }).hits.map((r: Content<UpcomingRelease, object>) => {
+    const date: string = r.data.date ? r.data.date : new Date().toISOString()
+    const mainSubjectItem: SubjectItem | null = getMainSubjectById(allMainSubjects, r.data.mainSubject)
+    const mainSubject: string = mainSubjectItem ? mainSubjectItem.title : ''
+    const contentType: string = r.data.contentType
+      ? localize({
+          key: `contentType.${r.data.contentType}`,
+          locale: language,
+        })
+      : ''
+
+    return {
+      id: r._id,
+      name: r.displayName,
+      type: contentType,
+      date,
+      mainSubject: mainSubject,
+      variant: {
+        day: getDate(new Date(date)),
+        monthNumber: getMonth(new Date(date)),
+        year: getYear(new Date(date)),
+      },
+      statisticsPageUrl: r.data.href ? r.data.href : '',
+    }
+  })
+
+  return oldContentUpcomingReleases.length ? oldContentUpcomingReleases : []
 }
 
 function prepContentUpcomingRelease(
