@@ -85,7 +85,7 @@ function renderPart(req: XP.Request, contentId: string | undefined): RenderRespo
           ? imageData.data.altText
           : imageData && imageData.data.caption
           ? imageData.data.caption
-          : ' ',
+          : '',
       imageSrc: imageSrc,
       footnotes: staticVisualizationsContent.data.footNote ? forceArray(staticVisualizationsContent.data.footNote) : [],
       sources: getSources(sourceConfig as Array<SourcesConfig>),

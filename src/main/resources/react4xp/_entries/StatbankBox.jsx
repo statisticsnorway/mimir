@@ -12,7 +12,7 @@ class StatbankBox extends React.Component {
           <a className={`statbank-link ${fullWidth ? 'col-lg-12' : 'col-lg-7'}`} href={href} id='statbankLink'>
             <div className='content'>
               <div className='icon-wrapper'>
-                <img src={icon} alt='Statbank logo' />
+                <img src={icon} alt='' />
               </div>
               <div className='title-wrapper'>
                 <h3 className='title'>{title}</h3>

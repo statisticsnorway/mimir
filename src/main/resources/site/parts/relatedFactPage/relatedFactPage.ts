@@ -19,6 +19,7 @@ export function get(req: XP.Request): XP.Response | RenderResponse {
     const page: Content<Article> = getContent()
     const config: RelatedFactPagePartConfig = getComponent().config
     let relatedFactPageConfig: RelatedFactPageConfig | undefined
+
     if (config.itemList) {
       relatedFactPageConfig = {
         inputType: 'itemList',
@@ -125,18 +126,26 @@ export function parseRelatedFactPageData(
   let total = 0
   if (relatedFactPageConfig && relatedFactPageConfig.contentIdList) {
     let contentListId: Array<string> = relatedFactPageConfig.contentIdList as Array<string>
+
+    // why this? if contentListId is empty [], then:
     if (relatedFactPageConfig.inputType === 'itemList') {
       const relatedContent: RelatedFactPage | null = getContentByKey({
         key: relatedFactPageConfig.contentIdList as string,
       })
       contentListId = forceArray((relatedContent?.data as ContentList).contentList) as Array<string>
     }
+
     const relatedContentQueryResults: QueryResponse<RelatedFactPage, object> | null = contentListId.length
       ? query({
           count: 999,
-          query: `_id IN(${contentListId.map((id) => `'${id}'`).join(',')})`,
+          filters: {
+            ids: {
+              values: contentListId,
+            },
+          },
         })
       : null
+
     if (relatedContentQueryResults) {
       const sortedRelatedContentQueryResults: Array<RelatedFactPage> = (
         relatedContentQueryResults.hits as unknown as Array<RelatedFactPage>
@@ -146,6 +155,7 @@ export function parseRelatedFactPageData(
           else return -1
         })
         .slice(start, start + count)
+
       sortedRelatedContentQueryResults.map((relatedFactPage) =>
         relatedFactPages.push(parseRelatedContent(relatedFactPage))
       )
@@ -164,7 +174,7 @@ function parseRelatedContent(relatedContent: RelatedFactPage): RelatedFactPageCo
   let imageAlt = ' '
   if (relatedContent.x['com-enonic-app-metafields']['meta-data'].seoImage) {
     imageId = relatedContent.x['com-enonic-app-metafields']['meta-data'].seoImage
-    imageAlt = getImageAlt(imageId) ? (getImageAlt(imageId) as string) : ' '
+    imageAlt = getImageAlt(imageId) ? (getImageAlt(imageId) as string) : ''
     image = imageUrl({
       id: imageId,
       scale: 'block(380, 400)',

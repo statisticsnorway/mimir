@@ -46,10 +46,14 @@ export function getRepoConnectionStatistics(): RepoConnection {
   })
 }
 
-export function getStatisticVariantsFromRepo(language: string, query?: QueryDSL): ContentLight<Release>[] {
+export function getStatisticVariantsFromRepo(
+  language: string,
+  query?: QueryDSL,
+  count?: number
+): ContentLight<Release>[] {
   const connectionStatisticRepo: RepoConnection = getRepoConnectionStatistics()
   const res: NodeQueryResponse = connectionStatisticRepo.query({
-    count: 1000,
+    count: count ? count : 1000,
     sort: 'publish.from DESC',
     query: query ? (query as unknown as string) : undefined,
     filters: {

@@ -69,14 +69,14 @@ function RelatedBoxes(props) {
               <PictureCard
                 className='mb-3'
                 imageSrc={relatedFactPageContent.image}
-                altText={relatedFactPageContent.imageAlt ? relatedFactPageContent.imageAlt : ' '}
+                altText={relatedFactPageContent.imageAlt ? relatedFactPageContent.imageAlt : ''}
                 link={relatedFactPageContent.link}
                 title={relatedFactPageContent.title}
                 key={index}
               />
             ))}
           </div>
-          {total > 3 && (
+          {total > 4 && (
             <div className='row'>
               <div className='col-auto'>
                 <Button onClick={handleButtonOnClick}>
