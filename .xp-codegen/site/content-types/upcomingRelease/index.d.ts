@@ -4,11 +4,6 @@ export interface UpcomingRelease {
   /**
    * Publisering
    */
-  nextRelease: string;
-
-  /**
-   * Publisering (ikke bruk)
-   */
   date?: string;
 
   /**

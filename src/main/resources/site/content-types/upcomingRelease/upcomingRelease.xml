@@ -2,13 +2,8 @@
     <display-name>Innhold til publiseringskalender</display-name>
     <super-type>base:structured</super-type>
     <form>
-        <input type="Date" name="nextRelease">
-            <label>Publisering</label>
-            <default>now</default>
-            <occurrences minimum="1" maximum="1" />
-        </input>
         <input type="Date" name="date">
-            <label>Publisering (ikke bruk)</label>
+            <label>Publisering</label>
             <default>now</default>
             <occurrences minimum="0" maximum="1" />
         </input>

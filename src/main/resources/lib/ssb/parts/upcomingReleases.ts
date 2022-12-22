@@ -1,6 +1,5 @@
-import { type Content, query } from '/lib/xp/content'
-import { connect, multiRepoConnect, type MultiRepoConnection, type MultiRepoNodeQueryResponse } from '/lib/xp/node'
-import { type Context, type ContextAttributes, get as getContext, type PrincipalKey } from '/lib/xp/context'
+import { type Content, type QueryDSL, query } from '/lib/xp/content'
+import { getStatisticVariantsFromRepo } from '/lib/ssb/repo/statisticVariant'
 import { pageUrl } from '/lib/xp/portal'
 import { getMainSubjectById, getMainSubjects, SubjectItem } from '../utils/subjectUtils'
 import { type UpcomingRelease } from '/site/content-types'
@@ -10,111 +9,29 @@ import { addDays, getDate, getMonth, getYear, isWithinInterval } from 'date-fns'
 import { getMainSubject } from '../utils/parentUtils'
 import { forceArray } from '../utils/arrayUtils'
 import { PreparedStatistics } from '../utils/variantUtils'
+import { stringToServerTime } from '../utils/dateUtils'
 
 export function getUpcomingReleasesResults(req: XP.Request, numberOfDays: number | undefined, language: string) {
   const allMainSubjects: Array<SubjectItem> = getMainSubjects(req, language)
-  const context: Context<ContextAttributes> = getContext()
+  const endDate: Date | undefined = numberOfDays ? addDays(stringToServerTime(), numberOfDays) : undefined
 
-  const connection: MultiRepoConnection = multiRepoConnect({
-    sources: [
-      {
-        repoId: context.repository,
-        branch: context.branch,
-        principals: context.authInfo.principals as Array<PrincipalKey>,
-      },
-      {
-        repoId: 'no.ssb.statreg.statistics.variants',
-        branch: 'master',
-        principals: context.authInfo.principals as Array<PrincipalKey>,
-      },
-    ],
-  })
-
-  const serverOffsetInMs: number =
-    app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
-  const serverTime: Date = new Date(new Date().getTime() + serverOffsetInMs)
-  const endDate: Date | undefined = numberOfDays ? addDays(serverTime, numberOfDays) : undefined
-
-  const results: MultiRepoNodeQueryResponse = connection.query({
-    count: 1000,
-    sort: [
-      {
-        field: 'data.nextRelease',
-        direction: 'ASC',
-      },
-    ] as unknown as string,
-    query: {
-      range: {
-        field: 'data.nextRelease',
-        from: 'dateTime',
-        gte: serverTime,
-        lte: endDate,
-      },
-    } as unknown as string,
-    filters: {
-      boolean: {
-        must: [
-          {
-            hasValue: {
-              field: 'language',
-              values: language === 'nb' ? ['nb', 'nn'] : ['en'],
-            },
-          },
-        ],
-        should: [
-          {
-            boolean: {
-              must: [
-                {
-                  hasValue: {
-                    field: 'data.articleType',
-                    values: ['statistics'],
-                  },
-                },
-                {
-                  hasValue: {
-                    field: 'data.status',
-                    values: ['A'],
-                  },
-                },
-                {
-                  exists: {
-                    field: 'data.statisticContentId',
-                  },
-                },
-              ],
-            },
-          },
-          // contentReleases
-          {
-            boolean: {
-              must: [
-                {
-                  hasValue: {
-                    field: 'type',
-                    values: [`${app.name}:upcomingRelease`],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
+  const results = getStatisticVariantsFromRepo(language, {
+    range: {
+      field: 'data.nextRelease',
+      from: 'dateTime',
+      gte: stringToServerTime(),
+      lte: endDate,
     },
-  })
+  } as unknown as QueryDSL)
 
-  const contents: (Content<UpcomingRelease, object> | ContentLight<Release>)[] = results.hits.map((hit) =>
-    connect(hit).get<Content<UpcomingRelease, object> | ContentLight<Release>>(hit.id)
+  const upcomingReleases: Array<PreparedStatistics> = results.map((statistic) =>
+    prepStatisticUpcomingRelease(statistic as ContentLight<Release>, language)
   )
 
-  const upcomingReleases: Array<PreparedStatistics> = contents.map((content) =>
-    isContentUpcomingRelease(content)
-      ? prepContentUpcomingRelease(content as Content<UpcomingRelease, object>, language, allMainSubjects)
-      : prepStatisticUpcomingRelease(content as ContentLight<Release>, language)
-  )
-
-  const filteredUpcomingReleasesStatistics = contents
-    .map((content) => filterUpcomingReleasesStatistics(content as ContentLight<Release>, language, serverTime, endDate))
+  const filteredUpcomingReleasesStatistics = results
+    .map((statistic) =>
+      filterUpcomingReleasesStatistics(statistic as ContentLight<Release>, language, stringToServerTime(), endDate)
+    )
     .reduce((acc, curr) => {
       if (curr.length) return acc.concat(curr)
       else return acc
@@ -123,7 +40,7 @@ export function getUpcomingReleasesResults(req: XP.Request, numberOfDays: number
   const mergedStatisticsAndUpcomingStatisticsReleases = [
     ...upcomingReleases,
     ...(filteredUpcomingReleasesStatistics as Array<PreparedStatistics>),
-    ...prepOldContentUpcomingReleases(serverTime, endDate, allMainSubjects, language),
+    ...prepContentUpcomingReleases(stringToServerTime(), endDate, allMainSubjects, language),
   ].sort((a, b) => {
     return new Date(a.date as string).getTime() - new Date(b.date as string).getTime()
   })
@@ -134,12 +51,7 @@ export function getUpcomingReleasesResults(req: XP.Request, numberOfDays: number
   }
 }
 
-function isContentUpcomingRelease(content: unknown) {
-  return (content as Content).type === `${app.name}:upcomingRelease`
-}
-
-// TODO: Delete after all content has been updated
-function prepOldContentUpcomingReleases(
+function prepContentUpcomingReleases(
   serverTime: Date,
   endDate: Date | undefined,
   allMainSubjects: Array<SubjectItem>,
@@ -208,36 +120,6 @@ function prepOldContentUpcomingReleases(
   })
 
   return oldContentUpcomingReleases.length ? oldContentUpcomingReleases : []
-}
-
-function prepContentUpcomingRelease(
-  content: Content<UpcomingRelease, object>,
-  language: string,
-  allMainSubjects: Array<SubjectItem>
-): PreparedStatistics {
-  const date: string = content.data.nextRelease
-  const mainSubjectItem: SubjectItem | null = getMainSubjectById(allMainSubjects, content.data.mainSubject)
-  const mainSubject: string = mainSubjectItem ? mainSubjectItem.title : ''
-  const contentType: string = content.data.contentType
-    ? localize({
-        key: `contentType.${content.data.contentType}`,
-        locale: language,
-      })
-    : ''
-
-  return {
-    id: content._id,
-    name: content.displayName,
-    type: contentType,
-    date,
-    mainSubject: mainSubject,
-    variant: {
-      day: getDate(new Date(date)),
-      monthNumber: getMonth(new Date(date)),
-      year: getYear(new Date(date)),
-    },
-    statisticsPageUrl: content.data.href ? content.data.href : '',
-  }
 }
 
 function parseUpcomingStatistics(

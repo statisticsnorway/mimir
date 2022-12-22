@@ -58,7 +58,8 @@ function UpcomingReleases(props) {
             </p>
           )}
           <p className='metadata' aria-hidden='true'>
-            {day}. {monthName} {year} / <span className='type'>{type}</span> / {mainSubject}
+            {day}. {monthName} {year} / <span className='type'>{type}</span>
+            {mainSubject && ` / ${mainSubject}`}
           </p>
         </div>
         {statisticsPageUrl && (
