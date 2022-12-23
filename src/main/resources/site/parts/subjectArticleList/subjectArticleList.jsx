@@ -71,21 +71,25 @@ function SubjectArticleList(props) {
   }
 
   function renderArticles() {
-    return articles.map((article, i) => {
-      return (
-        <div key={i} className='mt-5'>
-          <Link href={article.url} className='ssb-link header' standAlone>
-            {article.title}
-          </Link>
-          <p>
-            <Truncate lines={2} className='article-list-ingress'>
-              {article.preface}
-            </Truncate>
-          </p>
-          <time dateTime={article.publishDate}>{article.publishDateHuman}</time>
-        </div>
-      )
-    })
+    return (
+      <ol className='list-unstyled'>
+        {articles.map((article, i) => {
+          return (
+            <li key={i} className='mt-5'>
+              <Link href={article.url} className='ssb-link header' standAlone>
+                {article.title}
+              </Link>
+              <p>
+                <Truncate lines={2} className='article-list-ingress'>
+                  {article.preface}
+                </Truncate>
+              </p>
+              <time dateTime={article.publishDate}>{article.publishDateHuman}</time>
+            </li>
+          )
+        })}
+      </ol>
+    )
   }
 
   function renderSortAndFilter() {
