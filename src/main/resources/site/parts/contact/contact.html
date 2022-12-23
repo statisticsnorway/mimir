@@ -3,11 +3,11 @@
   <div data-th-if="${contacts}" data-th-each="contactGroup : ${contacts}" class="row d-flex flex-wrap">
     <div data-th-if="${contact}" data-th-each="contact : ${contactGroup}" class="col-md-4 col-lg-3 contacts">
       <p class="roboto-plain lead mb-1 text-break text-wrap part-contact-name" data-th-text=${contact.name} />
-      <p data-th-if="${contact.email}" class="part-contact-email mb-1">
-        <a class="roboto-plain" data-th-href="@{'mailto:' + ${contact.email}}" data-th-text="${contact.email}" />
+      <p data-th-if="${contact.email}" class="part-contact-email mb-0">
+        <a class="roboto-plain ssb-link stand-alone" data-th-href="@{'mailto:' + ${contact.email}}" data-th-text="${contact.email}" />
       </p>
-      <p data-th-if="${contact.telephone} != ''" class="part-contact-telephone mt-2">
-        <a data-th-text="${contact.telephone}" data-th-href="@{'tel:' + ${contact.phonelink}}" />
+      <p data-th-if="${contact.telephone} != ''" class="part-contact-telephone">
+        <a class="ssb-link stand-alone" data-th-text="${contact.telephone}" data-th-href="@{'tel:' + ${contact.phonelink}}" />
       </p>
     </div>
   </div>

@@ -438,7 +438,11 @@ class Table extends Component {
     const { standardSymbol } = this.props
 
     if (standardSymbol && standardSymbol.href && standardSymbol.text) {
-      return <Link href={standardSymbol.href}>{standardSymbol.text}</Link>
+      return (
+        <Link href={standardSymbol.href} standAlone>
+          {standardSymbol.text}
+        </Link>
+      )
     }
   }
 
@@ -484,8 +488,10 @@ class Table extends Component {
           </div>
           {sourceListTables.map((tableId, index) => {
             return (
-              <div key={index} className='col-lg-3 col-12 mb-3'>
-                <Link href={statBankWebUrl + '/table/' + tableId}>{sourceTableLabel + ' ' + tableId}</Link>
+              <div key={index} className='col-lg-3 col-12'>
+                <Link href={statBankWebUrl + '/table/' + tableId} standAlone>
+                  {sourceTableLabel + ' ' + tableId}
+                </Link>
               </div>
             )
           })}
@@ -493,7 +499,9 @@ class Table extends Component {
             if (source.url && source.urlText) {
               return (
                 <div key={index} className='col-lg-3 col-12 mb-3'>
-                  <Link href={source.url}>{source.urlText}</Link>
+                  <Link href={source.url} standAlone>
+                    {source.urlText}
+                  </Link>
                 </div>
               )
             }

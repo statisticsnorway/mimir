@@ -11,6 +11,7 @@ const StatbankLinkList = (props) => {
         href={props.href}
         icon={props.iconType ? props.iconType == 'arrowRight' ? <ArrowRight size='20' /> : '' : undefined}
         linkType={props.linkType}
+        standAlone
       >
         <span
           dangerouslySetInnerHTML={{

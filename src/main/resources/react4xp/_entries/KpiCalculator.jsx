@@ -476,7 +476,7 @@ function KpiCalculator(props) {
     if (props.calculatorArticleUrl) {
       return (
         <Col className='article-link col-12 col-lg-6 d-lg-flex align-self-center justify-content-end'>
-          <Link className='float-lg-end' href={props.calculatorArticleUrl}>
+          <Link className='float-lg-end' href={props.calculatorArticleUrl} standAlone>
             {props.phrases.readAboutCalculator}
           </Link>
         </Col>
