@@ -39,18 +39,22 @@ function RelatedArticles(props) {
     }
   }, [shownArticles])
 
-  function toggleBox() {
-    isHidden ? showMore() : showFewer()
+  function toggleBox(focus) {
+    isHidden ? showMore(focus) : showFewer(focus)
     setIsHidden((prev) => !prev)
   }
 
-  function showMore() {
-    setFocusElement(true)
+  function showMore(focus) {
+    if (focus) {
+      setFocusElement(true)
+    }
     setShownArticles(relatedArticles)
   }
 
-  function showFewer() {
-    setFocusElement(false)
+  function showFewer(focus) {
+    if (focus) {
+      setFocusElement(false)
+    }
     setShownArticles(firstShownArticles)
   }
 
@@ -71,9 +75,11 @@ function RelatedArticles(props) {
         <div className='col-auto'>
           <button
             className='ssb-btn'
+            onClick={() => toggleBox(false)}
             onKeyDown={(e) => {
               if (e.key === 'Enter' || e.key === ' ') {
-                toggleBox()
+                e.preventDefault()
+                toggleBox(true)
               }
             }}
             aria-label={isHidden ? `${showAllAriaLabel} - ${relatedArticles.length} ${articlePluralName}` : ''}
