@@ -15,7 +15,7 @@ export function get(req: XP.Request): RenderResponse | XP.Response {
   }
 }
 
-export function preview (req: XP.Request): RenderResponse {
+export function preview(req: XP.Request): RenderResponse {
   return renderPart(req)
 }
 
@@ -54,7 +54,7 @@ function prepareEmployees(results: readonly Content<Employee>[]) {
     const area: Area | null = areaContent
       ? {
           title: areaContent.displayName,
-          href: areaContent._path,
+          href: pageUrl({ path: areaContent._path }),
         }
       : null
 

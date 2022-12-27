@@ -91,7 +91,9 @@ function Article(props) {
             {associatedStatistics.map((associatedStatistic, index) => {
               return (
                 <div key={`associated-statistic-${index}`} className='col-12 p-0'>
-                  <Link href={associatedStatistic.href}>{associatedStatistic.text}</Link>
+                  <Link href={associatedStatistic.href} standAlone>
+                    {associatedStatistic.text}
+                  </Link>
                 </div>
               )
             })}
@@ -112,7 +114,9 @@ function Article(props) {
             {associatedArticleArchives.map((associatedArticleArchive, index) => {
               return (
                 <div key={`associated-article-archive-${index}`} className='col-12 p-0'>
-                  <Link href={associatedArticleArchive.href}>{associatedArticleArchive.text}</Link>
+                  <Link href={associatedArticleArchive.href} standAlone>
+                    {associatedArticleArchive.text}
+                  </Link>
                 </div>
               )
             })}

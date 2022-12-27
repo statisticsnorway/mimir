@@ -41,6 +41,8 @@
                     <config>
                         <allowPath>${site}/forskning/</allowPath>
                         <allowPath>${site}/omssb/ssbs-virksomhet/organisasjon/</allowPath>
+                        <allowPath>${site}/en/forskning/</allowPath>
+                        <allowPath>${site}/en/omssb/ssbs-virksomhet/organisasjon/</allowPath>
                         <treeMode>true</treeMode>
                     </config>
                 </input>

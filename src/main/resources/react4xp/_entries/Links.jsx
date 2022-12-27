@@ -24,6 +24,7 @@ const Links = (props) => {
               isExternal={link.isExternal}
               linkType={link.linkType}
               negative={link.negative}
+              standAlone
             >
               {link.children}
             </Link>
