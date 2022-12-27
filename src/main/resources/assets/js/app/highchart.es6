@@ -385,7 +385,7 @@ export function init() {
         const buttonShowDataTable = $('button#show-tabledata-' + highchartsContentKey)
         const buttonShowGraph = $('button#show-graph-' + highchartsContentKey)
 
-        buttonShowDataTable.on('click', (e) => {
+        buttonShowDataTable.on('click', () => {
           buttonShowDataTable.addClass('active')
           buttonShowGraph.removeClass('active')
           dataTable.removeClass('hide-div')
@@ -394,7 +394,7 @@ export function init() {
           graph.addClass('hide-div')
         })
 
-        buttonShowGraph.on('click', (e) => {
+        buttonShowGraph.on('click', () => {
           buttonShowGraph.addClass('active')
           buttonShowDataTable.removeClass('active')
           dataTable.removeClass('show-div')
