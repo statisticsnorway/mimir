@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { Button } from '@statisticsnorway/ssb-component-library'
+import { Button, Card, Text } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
 import { useMediaQuery } from 'react-responsive'
 
@@ -36,12 +36,12 @@ function RelatedArticles(props) {
 
   useEffect(() => {
     if (focusElement) {
-      currentElement.current.focus()
+      currentElement.current.firstChild.firstChild.focus()
     }
   }, [shownArticles])
 
   function toggleBox() {
-    isHidden ? showMore() : showFewer()
+    shownArticles.length < relatedArticles.length ? showMore() : showFewer()
     setIsHidden((prev) => !prev)
   }
 
@@ -55,33 +55,20 @@ function RelatedArticles(props) {
     setShownArticles(firstShownArticles)
   }
 
-  function getButtonBreakpoints() {
-    if (relatedArticles.length > 6) {
-      return '' // always display if it's more than 6
-    } else if (relatedArticles.length > 4) {
-      return ' d-xl-none'
-    } else if (relatedArticles.length > 3) {
-      return ' d-lg-none'
-    }
-    return ' d-none' // always hide if there is less than 3
-  }
-
   function renderShowMoreButton() {
     return (
-      <div className={`row hide-show-btn justify-content-center justify-content-lg-start${getButtonBreakpoints()}`}>
+      <div className={`row hide-show-btn justify-content-center justify-content-lg-start`}>
         <div className='col-auto'>
           <Button
             onClick={toggleBox}
             ariaLabel={isHidden ? `${showAllAriaLabel} - ${relatedArticles.length} ${articlePluralName}` : ''}
           >
-            {isHidden ? showAll + ` (${relatedArticles.length})` : showLess}
+            {shownArticles.length < relatedArticles.length ? showAll + ` (${relatedArticles.length})` : showLess}
           </Button>
         </div>
       </div>
     )
   }
-
-  const hasButton = showAll && showLess
 
   return (
     <div className='container'>
@@ -96,28 +83,22 @@ function RelatedArticles(props) {
       >
         {shownArticles.map((article, index) => {
           return (
-            <li key={index} className={`col-auto col-12 col-lg-4 mb-3`}>
-              <div className='ssb-card'>
-                <a
-                  ref={index === count ? currentElement : null}
-                  href={article.href}
-                  className='clickable top-orientation'
-                >
-                  <div className='card-image'>
-                    <img src={article.imageSrc} alt={article.imageAlt ? article.imageAlt : ' '} aria-hidden='true' />
-                  </div>
-                  <div className='card-content with-image'>
-                    <div className='card-subtitle'>{article.subTitle}</div>
-                    <div className='card-title'>{article.title}</div>
-                    <span className='ssb-text-wrapper'>{article.preface}</span>
-                  </div>
-                </a>
-              </div>
+            <li key={index} className={`col-auto col-12 col-lg-4 mb-3`} ref={index === count ? currentElement : null}>
+              <Card
+                href={article.href}
+                imagePlacement='top'
+                image={<img src={article.imageSrc} alt={article.imageAlt ? article.imageAlt : ' '} />}
+                title={article.title}
+                subTitle={article.subTitle}
+                ariaLabel={article.title + ' ' + article.subTitle}
+              >
+                <Text>{article.preface}</Text>
+              </Card>
             </li>
           )
         })}
       </ul>
-      {hasButton && renderShowMoreButton()}
+      {firstShownArticles.length < relatedArticles.length && renderShowMoreButton()}
     </div>
   )
 }
