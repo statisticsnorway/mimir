@@ -32,17 +32,25 @@ function useHover() {
 const PictureLink = (props) => {
   const [hoverRef, hovered] = useHover()
   return (
-    <a className={`ssb-picture-card vertical ${props.className || ''}`} ref={hoverRef} href={props.href}>
+    <a
+      className={`ssb-picture-card vertical ${props.className || ''}`}
+      ref={hoverRef}
+      href={props.href}
+      aria-label={props.title}
+      aria-describedby={props.ariaDescribedBy ? `${props.id}-${props.ariaDescribedBy}` : undefined}
+    >
       <div className='image-background'>
         <img src={props.imageSrc} alt={props.imageAlt} aria-hidden='true' />
       </div>
       <div className='overlay w-100'>
         <span className='il-title'>{props.title}</span>
-        <span className='il-type'>{props.subTitle}</span>
+        <span className='il-type' id={`${props.id}-text`}>
+          {props.subTitle}
+        </span>
         {hovered ? (
-          <ArrowRightCircle className='arrow-icon' size={32} />
+          <ArrowRightCircle className='arrow-icon' size={32} aria-hidden='true' />
         ) : (
-          <ArrowRight className='arrow-icon' size={32} />
+          <ArrowRight className='arrow-icon' size={32} aria-hidden='true' />
         )}
       </div>
     </a>
@@ -56,6 +64,8 @@ PictureLink.propTypes = {
   imageSrc: PropTypes.string,
   imageAlt: PropTypes.string,
   className: PropTypes.string,
+  id: PropTypes.string,
+  ariaDescribedBy: PropTypes.string,
 }
 
 const PictureCardLinks = (props) => {
@@ -80,6 +90,8 @@ const PictureCardLinks = (props) => {
               href={pictureCard.href}
               imageSrc={pictureCard.imageSrc}
               imageAlt={pictureCard.imageAlt}
+              id={index.toString()}
+              ariaDescribedBy='text'
             />
           </div>
         )
