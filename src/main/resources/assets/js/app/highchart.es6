@@ -205,6 +205,21 @@ export function init() {
             return Array.isArray(this.name) ? this.name[0] : this.name
           }
 
+          // config.plotOptions.pie = {
+          //   size: '60%',
+          //   center: ['50%', '50%'],
+          //   dataLabels: {
+          //     crop: false,
+          //     overflow: 'justify',
+          //     connectorShape: 'crookedLine',
+          //     crookDistance: '90%',
+          //     alignTo: 'plotEdges',
+          //     style: {
+          //       textOverflow: 'none',
+          //     }
+          //   },
+          // },
+
           config.responsive = {
             rules: [
               {
@@ -212,18 +227,22 @@ export function init() {
                   maxWidth: 500,
                 },
                 chartOptions: {
-                  chart: {
-                    height: 350,
-                    spacing: [2, 2, 2, 2],
-                  },
+                  // chart: {
+                  //   height: 350,
+                  //   spacing: [2, 2, 2, 2],
+                  // },
                   plotOptions: {
                     pie: {
-                      size: '35%',
+                      size: '60%',
+                      center: ['50%', '50%'],
                       dataLabels: {
                         crop: false,
-                        distance: 5,
+                        overflow: 'justify',
+                        connectorShape: 'crookedLine',
+                        crookDistance: '90%',
+                        alignTo: 'plotEdges',
                         style: {
-                          fontSize: '7px',
+                          textOverflow: 'none',
                         },
                       },
                     },
@@ -233,10 +252,42 @@ export function init() {
             ],
           }
 
-          config.plotOptions.pie.dataLabels.style = {
-            borderWidth: '80px',
-            textOverflow: 'none',
-          }
+          // config.plotOptions.pie.dataLabels.style = {
+          //   textOverflow: 'none',
+          // }
+
+          // config.responsive = {
+          //   rules: [
+          //     {
+          //       condition: {
+          //         maxWidth: 500,
+          //       },
+          //       chartOptions: {
+          //         chart: {
+          //           height: 350,
+          //           spacing: [2, 2, 2, 2],
+          //         },
+          //         plotOptions: {
+          //           pie: {
+          //             size: '35%',
+          //             dataLabels: {
+          //               crop: false,
+          //               distance: 5,
+          //               style: {
+          //                 fontSize: '7px',
+          //               },
+          //             },
+          //           },
+          //         },
+          //       },
+          //     },
+          //   ],
+          // }
+
+          // config.plotOptions.pie.dataLabels.style = {
+          //   borderWidth: '80px',
+          //   textOverflow: 'none',
+          // }
         }
 
         config.plotOptions.series.events = {
