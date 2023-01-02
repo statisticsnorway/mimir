@@ -11,7 +11,12 @@ class ReleasedStatistics extends React.Component {
     const hrefStatistic = this.props.language === 'en' ? `/en/${release.shortName}` : `/${release.shortName}`
     return (
       <li key={index} className='front-page-released-statistic'>
-        <Link href={hrefStatistic} linkType='header' ariaLabel={`${release.name} - ${release.variant.period}`}>
+        <Link
+          href={hrefStatistic}
+          linkType='header'
+          ariaLabel={`${release.name} - ${release.variant.period}`}
+          standAlone
+        >
           {release.name}
         </Link>
         <p className='my-2' aria-hidden='true'>

@@ -64,10 +64,10 @@ class Footer extends React.Component {
     if (facebookUrl && twitterUrl && linkedinUrl && rssUrl) {
       return (
         <div className='social-links'>
-          <Link ariaLabel='Facebook' href={facebookUrl} isExternal negative icon={<Facebook size={24} />} />
-          <Link ariaLabel='Twitter' href={twitterUrl} isExternal negative icon={<Twitter size={24} />} />
-          <Link ariaLabel='Linkedin' href={linkedinUrl} isExternal negative icon={<Linkedin size={24} />} />
-          <Link ariaLabel='Rss' href={rssUrl} negative icon={<Rss size={24} />} />
+          <Link ariaLabel='Facebook' href={facebookUrl} isExternal negative icon={<Facebook size={24} />} standAlone />
+          <Link ariaLabel='Twitter' href={twitterUrl} isExternal negative icon={<Twitter size={24} />} standAlone />
+          <Link ariaLabel='Linkedin' href={linkedinUrl} isExternal negative icon={<Linkedin size={24} />} standAlone />
+          <Link ariaLabel='Rss' href={rssUrl} negative icon={<Rss size={24} />} standAlone />
         </div>
       )
     }
@@ -124,7 +124,7 @@ class Footer extends React.Component {
           <div className='container'>
             <h2 className='sr-only'>{hiddenFooterText}</h2>
             <div className='footer-top-row'>
-              <img src={logoUrl} alt='ssb-logo' />
+              <img src={logoUrl} alt='' />
               <Button negative onClick={() => this.goToTop()}>
                 <ArrowUp size='22' className='me-2' />
                 {topButtonText}

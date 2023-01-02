@@ -4,7 +4,7 @@ export function getImageCaption(imageId: string): string | undefined {
   const imageContent: Content<MediaImage> | null = get({
     key: imageId,
   })
-  return imageContent && imageContent !== undefined ? imageContent.data.caption : ' '
+  return imageContent && imageContent !== undefined ? imageContent.data.caption : ''
 }
 
 export function getImageAlt(imageId: string): string | undefined {

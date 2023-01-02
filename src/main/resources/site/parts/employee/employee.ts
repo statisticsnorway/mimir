@@ -48,7 +48,7 @@ function renderPart(req: XP.Request): RenderResponse {
   const area: Area | null = areaContent
     ? {
         title: areaContent.displayName,
-        href: areaContent._path,
+        href: pageUrl({ path: areaContent._path }),
       }
     : null
 
