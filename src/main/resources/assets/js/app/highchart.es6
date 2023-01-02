@@ -206,7 +206,7 @@ export function init() {
           }
 
           config.plotOptions.pie = {
-            // size: '75%',
+            size: '75%',
             center: ['50%', '50%'],
             dataLabels: {
               crop: false,
