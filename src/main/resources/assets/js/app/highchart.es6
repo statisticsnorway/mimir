@@ -212,18 +212,11 @@ export function init() {
                   maxWidth: 500,
                 },
                 chartOptions: {
-                  // chart: {
-                  //   height: 350,
-                  //   spacing: [2, 2, 2, 2],
-                  // },
                   plotOptions: {
                     pie: {
                       showInLegend: true,
                       dataLabels: {
                         enabled: false,
-                        // style: {
-                        //   fontSize: '1em',
-                        // },
                       },
                     },
                   },
