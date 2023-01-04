@@ -205,19 +205,31 @@ export function init() {
             return Array.isArray(this.name) ? this.name[0] : this.name
           }
 
-          config.plotOptions.pie = {
-            size: '75%',
-            center: ['50%', '50%'],
-            dataLabels: {
-              crop: false,
-              overflow: 'justify',
-              connectorShape: 'crookedLine',
-              crookDistance: '90%',
-              alignTo: 'plotEdges',
-              style: {
-                textOverflow: 'none',
+          config.responsive = {
+            rules: [
+              {
+                condition: {
+                  maxWidth: 500,
+                },
+                chartOptions: {
+                  // chart: {
+                  //   height: 350,
+                  //   spacing: [2, 2, 2, 2],
+                  // },
+                  plotOptions: {
+                    pie: {
+                      showInLegend: true,
+                      dataLabels: {
+                        enabled: false,
+                        // style: {
+                        //   fontSize: '1em',
+                        // },
+                      },
+                    },
+                  },
+                },
               },
-            },
+            ],
           }
         }
 
