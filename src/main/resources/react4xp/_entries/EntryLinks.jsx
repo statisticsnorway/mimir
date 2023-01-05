@@ -25,8 +25,8 @@ class EntryLinks extends React.Component {
               <div className='col-md-12 col-auto align-items-end d-none d-md-inline'>
                 <img src={icon} alt={altText ? altText : ''} className='desktop-icons' />
               </div>
-              <div className='col-md-12 col-10 mt-md-4'>
-                <Link href={href} linkType='header' className='d-none d-md-inline'>
+              <div className='col-md-12 col-10 mt-md-4 d-md-flex justify-content-center'>
+                <Link href={href} linkType='header' className='d-none d-md-block pt-1' standAlone>
                   {title}
                 </Link>
                 <Link
@@ -34,6 +34,7 @@ class EntryLinks extends React.Component {
                   linkType='profiled'
                   icon={this.renderIcon(mobileIcon)}
                   className='d-md-none mobile-link-icon'
+                  standAlone
                 >
                   {title}
                 </Link>

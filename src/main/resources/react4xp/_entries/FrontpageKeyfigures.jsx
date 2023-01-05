@@ -13,7 +13,7 @@ function FrontpageKeyfigures(props) {
           <div className={'col-12 col-lg-3 mb-lg-0 ' + (i === keyFigures.length - 1 ? 'mb-0' : 'mb-3')}>
             <a href={keyFigure.url} className='keyfigure-wrapper'>
               <div className={'keyfigure ' + (i === 0 ? 'first' : 'others')}>
-                <div className={'ssb-link header ' + (i !== 0 ? 'hide-mobile' : '')}>
+                <div className={'ssb-link header stand-alone ' + (i !== 0 ? 'hide-mobile' : '')}>
                   <span className='link-text'>{keyFigure.urlText}</span>
                 </div>
                 <div className='number-section'>
