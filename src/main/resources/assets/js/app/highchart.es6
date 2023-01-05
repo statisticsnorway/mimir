@@ -204,26 +204,6 @@ export function init() {
           config.legend.labelFormatter = function name() {
             return Array.isArray(this.name) ? this.name[0] : this.name
           }
-
-          config.responsive = {
-            rules: [
-              {
-                condition: {
-                  maxWidth: 500,
-                },
-                chartOptions: {
-                  plotOptions: {
-                    pie: {
-                      showInLegend: true,
-                      dataLabels: {
-                        enabled: false,
-                      },
-                    },
-                  },
-                },
-              },
-            ],
-          }
         }
 
         config.plotOptions.series.events = {
