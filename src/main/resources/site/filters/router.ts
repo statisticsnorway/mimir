@@ -44,6 +44,13 @@ exports.filter = function (req: XP.Request, next: (req: XP.Request) => XP.Respon
       }) as Content
     )._id
     pageTitle = `Barn og unge ${municipality ? municipality.displayName : ''}`
+  } else if (req.path.indexOf('/jakt-i-din-kommune/') > -1) {
+    targetId = (
+      get({
+        key: '/ssb/jakt-i-din-kommune/kommune',
+      }) as Content
+    )._id
+    pageTitle = `Jakt i din kommune ${municipality ? municipality.displayName : ''}`
   }
 
   if (!targetId) {
