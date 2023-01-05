@@ -97,7 +97,7 @@ export function init() {
                             .then((result) => {
                               window.location.href =
                                 window.location.href.replace(
-                                  /(kommunefakta||barn-og-unge|jakt-i-din-kommune)\/.*$/,
+                                  /(kommunefakta|kommuneareal|barn-og-unge|jakt-i-din-kommune)\/.*$/,
                                   '$1'
                                 ) + result.data.municipality.path
                             })
