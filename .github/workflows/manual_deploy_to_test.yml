@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download workflow artifact
-        uses: dawidd6/action-download-artifact@v2.24.2
+        uses: dawidd6/action-download-artifact@v2.24.3
         with:
           workflow: deploy_to_test.yaml
           run_number: ${{ github.event.inputs.gh_run_number }}
