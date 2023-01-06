@@ -35,7 +35,7 @@ function RelatedArticles(props) {
 
   useEffect(() => {
     if (focusElement) {
-      currentElement.current.focus()
+      currentElement.current && currentElement.current.focus()
     }
   }, [shownArticles])
 
