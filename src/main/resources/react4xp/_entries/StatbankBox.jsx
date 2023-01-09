@@ -9,7 +9,12 @@ class StatbankBox extends React.Component {
     return (
       <div className='container-fluid p-0'>
         <div className='row'>
-          <a className={`statbank-link ${fullWidth ? 'col-lg-12' : 'col-lg-7'}`} href={href} id='statbankLink'>
+          <a
+            className={`statbank-link ${fullWidth ? 'col-lg-12' : 'col-lg-7'}`}
+            href={href}
+            id='statbankLink'
+            aria-label={title}
+          >
             <div className='content'>
               <div className='icon-wrapper'>
                 <img src={icon} alt='' />
@@ -17,7 +22,7 @@ class StatbankBox extends React.Component {
               <div className='title-wrapper'>
                 <h3 className='title'>{title}</h3>
               </div>
-              {fullWidth && <ArrowRight size={28} className='arrow-icon' />}
+              {fullWidth && <ArrowRight size={28} className='arrow-icon' aria-hidden='true' />}
             </div>
           </a>
         </div>
