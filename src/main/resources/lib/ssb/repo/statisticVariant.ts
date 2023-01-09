@@ -246,6 +246,20 @@ function prepareData({
   allMainSubjectsStatistic,
   allSubSubjectsStatistic,
 }: CreateContentStatisticVariantParams): Release {
+  const upcomingReleases: Array<UpcomingRelease> = variant.upcomingReleases
+    ? forceArray(variant.upcomingReleases).map((release) => {
+        const period: string = release.periodFrom
+          ? capitalize(calculatePeriod(variant.frekvens, release.periodFrom, release.periodTo, language))
+          : ''
+        return {
+          publishTime: release.publishTime,
+          periodFrom: release.periodFrom,
+          periodTo: release.periodTo,
+          period,
+        }
+      })
+    : []
+
   return {
     statisticId: String(statistic.id),
     variantId: String(variant.id),
@@ -272,7 +286,7 @@ function prepareData({
     articleType: 'statistics', // allows this content to be filtered together with `Article.articleType`,
     mainSubjects: allMainSubjectsStatistic.map((subject) => subject.name).filter(notNullOrUndefined),
     subSubjects: allSubSubjectsStatistic.map((subject) => subject.name).filter(notNullOrUndefined),
-    upcomingReleases: variant.upcomingReleases,
+    upcomingReleases: upcomingReleases,
   }
 }
 
@@ -315,7 +329,7 @@ export interface Release {
   articleType: 'statistics'
   mainSubjects: Array<string> | string | undefined
   subSubjects: Array<string> | string | undefined
-  upcomingReleases?: Array<ReleasesInListing>
+  upcomingReleases?: Array<UpcomingRelease>
 }
 
 export interface ContentLight<Data> {
@@ -338,4 +352,11 @@ interface CreateContentStatisticVariantParams {
   aboutTheStatisticsContent?: Content<OmStatistikken, XData>
   allMainSubjectsStatistic: SubjectItem[]
   allSubSubjectsStatistic: SubjectItem[]
+}
+
+interface UpcomingRelease {
+  publishTime: string
+  periodFrom: string
+  periodTo: string
+  period: string
 }

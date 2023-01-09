@@ -588,9 +588,9 @@ export interface VariantUtilsLib {
 }
 
 export interface PreparedStatistics {
-  id: number
+  id: number | string
   name: string
-  shortName: string
+  shortName?: string
   variant: PreparedVariant
   type?: string
   date?: string
@@ -600,12 +600,12 @@ export interface PreparedStatistics {
 }
 
 export interface PreparedVariant {
-  id: string
+  id?: string
   day: number
   monthNumber: number
   year: number
-  frequency: string
-  period: string
+  frequency?: string
+  period?: string
 }
 
 export interface Release {

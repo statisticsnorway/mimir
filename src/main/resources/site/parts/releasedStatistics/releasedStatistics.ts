@@ -3,7 +3,7 @@ __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 import type { Content, QueryDSL } from '/lib/xp/content'
 import { render, type RenderResponse } from '/lib/enonic/react4xp'
 import type { ReleasedStatistics as ReleasedStatisticsPartConfig } from '.'
-import type { YearReleases } from '../../../lib/ssb/utils/variantUtils'
+import type { PreparedStatistics, YearReleases } from '../../../lib/ssb/utils/variantUtils'
 import { type Component, getComponent, getContent } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 import type { ContentLight, Release as ReleaseVariant } from '/lib/ssb/repo/statisticVariant'
@@ -99,8 +99,7 @@ function getGroupedWithMonthNames(
     releasesPreppedNextReleaseToday.concat(releasesPreppedPreviousRelease)
 
   // group by year, then month, then day
-  const groupedByYearMonthAndDay: GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>> =
-    groupStatisticsByYearMonthAndDay(releasedStatistics)
+  const groupedByYearMonthAndDay = groupStatisticsByYearMonthAndDay(releasedStatistics)
   return addMonthNames(groupedByYearMonthAndDay, currentLanguage)
 }
 
@@ -128,24 +127,4 @@ interface PartProps {
   releases: Array<YearReleases>
   title: string
   language: string
-}
-
-interface PreparedStatistics {
-  id: number
-  name: string
-  shortName: string
-  variant: PreparedVariant
-}
-
-interface PreparedVariant {
-  id: string
-  day: number
-  monthNumber: number
-  year: number
-  frequency: string
-  period: string
-}
-
-interface GroupedBy<T> {
-  [key: string]: Array<T> | T
 }
