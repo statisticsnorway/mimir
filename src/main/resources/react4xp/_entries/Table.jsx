@@ -335,7 +335,7 @@ class Table extends Component {
   }
 
   createHeaderCell(row) {
-    return Object.keys(row).map((keyName, keyIndex) => {
+    return Object.keys(row).map((keyName) => {
       const value = row[keyName]
       if (keyName === 'th') {
         return this.createHeadTh(value)
@@ -353,14 +353,24 @@ class Table extends Component {
           return <th key={i}>{cellValue.join(' ')}</th>
         } else {
           return (
-            <th key={i} className={cellValue.class} rowSpan={cellValue.rowspan} colSpan={cellValue.colspan}>
+            <th
+              key={i}
+              className={cellValue.class}
+              rowSpan={cellValue.rowspan}
+              colSpan={cellValue.colspan}
+              scope={cellValue.rowspan || cellValue.colspan ? 'colgroup' : 'col'}
+            >
               {this.trimValue(cellValue.content)}
               {this.addNoteRefs(cellValue.noterefs)}
             </th>
           )
         }
       } else {
-        return <th key={i}>{this.trimValue(cellValue)}</th>
+        return (
+          <th key={i} scope='col'>
+            {this.trimValue(cellValue)}
+          </th>
+        )
       }
     })
   }
@@ -381,19 +391,29 @@ class Table extends Component {
   }
 
   createBodyTh(row) {
-    return Object.keys(row).map((key, index) => {
+    return Object.keys(row).map((key) => {
       const value = row[key]
       if (key === 'th') {
         return value.map((cellValue, i) => {
           if (typeof cellValue === 'object') {
             return (
-              <th key={i} className={cellValue.class} rowSpan={cellValue.rowspan} colSpan={cellValue.colspan}>
+              <th
+                key={i}
+                className={cellValue.class}
+                rowSpan={cellValue.rowspan}
+                colSpan={cellValue.colspan}
+                scope={cellValue.rowspan || cellValue.colspan ? 'rowgroup' : 'row'}
+              >
                 {this.trimValue(cellValue.content)}
                 {this.addNoteRefs(cellValue.noterefs)}
               </th>
             )
           } else {
-            return <th key={i}>{this.trimValue(cellValue)}</th>
+            return (
+              <th key={i} scope='row'>
+                {this.trimValue(cellValue)}
+              </th>
+            )
           }
         })
       }
@@ -401,7 +421,7 @@ class Table extends Component {
   }
 
   createBodyTd(row) {
-    return Object.keys(row).map((keyName, keyIndex) => {
+    return Object.keys(row).map((keyName) => {
       const value = row[keyName]
       if (keyName === 'td') {
         return value.map((cellValue, i) => {
