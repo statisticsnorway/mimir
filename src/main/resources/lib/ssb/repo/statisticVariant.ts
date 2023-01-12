@@ -224,7 +224,7 @@ function createContentStatisticVariant(
     data: prepareData(params),
     language,
     publish: {
-      from: prevRelease.publishTime ? instant(new Date(prevRelease.publishTime)) : '',
+      from: prevRelease.publishTime ? instant(new Date(prevRelease.publishTime).toISOString()) : '',
     },
   }
 }
