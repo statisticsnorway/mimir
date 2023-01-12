@@ -87,13 +87,6 @@ function getGroupedWithMonthNames(
         )
       : []
 
-  log.info(
-    `ReleasedStatistics - stringToServerTime/new Date().toISOString(): ${stringToServerTime()}/${new Date().toISOString()}`
-  )
-  log.info(
-    `ReleasedStatistics - NextReleaseToday/PreviousRelease Antall: ${nextReleaseToday.length}/${allPreviousStatisticVariantsFromRepo.length}`
-  )
-
   const releasesPreppedNextReleaseToday: PreparedStatistics[] = nextReleaseToday.map((variant) => {
     return prepReleases(variant, parseISO(variant.data.nextRelease))
   })
