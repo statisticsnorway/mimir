@@ -215,12 +215,15 @@ function createContentStatisticVariant(
   params: CreateContentStatisticVariantParams
 ): ContentLight<Release> & NodeCreateParams {
   const { statistic, variant, prevRelease, language } = params
+  const serverOffsetInMs: number =
+    app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
+  const prevReleaseServerOffset: Date = new Date(new Date(prevRelease.publishTime).getTime() - serverOffsetInMs)
+
   if (statistic.shortName === 'knr' && prevRelease.publishTime && language === 'nb') {
-    log.info('prevRelease.publishTime: ' + prevRelease.publishTime)
     log.info('publish.From Date: ' + new Date(prevRelease.publishTime))
     log.info('publish.From Date ISO: ' + new Date(prevRelease.publishTime).toISOString())
-    log.info('publish.From Instant: ' + instant(new Date(prevRelease.publishTime)))
-    log.info('publish.From Instant ISO: ' + instant(new Date(prevRelease.publishTime).toISOString()))
+    log.info('prevReleaseServerOffset: ' + prevReleaseServerOffset)
+    log.info('prevReleaseServerOffset Instant: ' + instant(prevReleaseServerOffset))
   }
 
   return {
@@ -231,7 +234,7 @@ function createContentStatisticVariant(
     data: prepareData(params),
     language,
     publish: {
-      from: prevRelease.publishTime ? instant(new Date(prevRelease.publishTime)) : '',
+      from: prevRelease.publishTime ? instant(prevReleaseServerOffset) : '',
     },
   }
 }
