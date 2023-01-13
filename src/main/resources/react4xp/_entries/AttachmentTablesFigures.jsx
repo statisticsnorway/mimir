@@ -4,7 +4,7 @@ import { ChevronDown, ChevronUp } from 'react-feather'
 
 import PropTypes from 'prop-types'
 import Table from './Table'
-import { addGtagForEvent } from '../ReactGA'
+import { addGtagForEvent } from '/react4xp/ReactGA'
 
 function AttachmentTableFigures(props) {
   const [isHidden, setIsHidden] = useState(true)

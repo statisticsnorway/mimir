@@ -1,7 +1,7 @@
-import { Language } from '../../types/language'
+import { Language } from '/lib/types/language'
 import { get, Content } from '/lib/xp/content'
-import type { Header, MenuItem } from '../../../site/content-types'
-import { Link } from './menu'
+import type { Header, MenuItem } from '/site/content-types'
+import { Link } from '/lib/ssb/parts/menu'
 const { assetUrl } = __non_webpack_require__('/lib/xp/portal')
 const { createMenuTree, parseTopLinks } = __non_webpack_require__('/lib/ssb/parts/menu')
 const { pathFromStringOrContent } = __non_webpack_require__('/lib/ssb/utils/utils')

@@ -2,7 +2,7 @@ import { render, type RenderResponse } from '/lib/enonic/react4xp'
 import { getComponent, getContent, pageUrl, type Component } from '/lib/xp/portal'
 import type { CategoryLinks as CategoryLinksPartConfig } from '.'
 import type { Content } from '/lib/xp/content'
-import { Language, type Phrases } from '../../../lib/types/language'
+import { Language, type Phrases } from '/lib/types/language'
 import { randomUnsafeString } from '/lib/ssb/utils/utils'
 
 const { data } = __non_webpack_require__('/lib/util')

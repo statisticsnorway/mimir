@@ -1,6 +1,6 @@
 import React from 'react'
 import { Card, Text } from '@statisticsnorway/ssb-component-library'
-import { variableType } from './types'
+import { variableType } from '/react4xp/_entries/variables/types'
 
 const VariableCard = ({ variable }) => {
   const { icon, description, ...rest } = variable

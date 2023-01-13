@@ -1,17 +1,20 @@
 import React, { useContext } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Button, Col, Modal, Row } from 'react-bootstrap'
-import { RefreshStatisticsForm } from './RefreshStatisticsForm'
-import { RefreshStatisticsStatus } from './RefreshStatisticsStatus'
+import { RefreshStatisticsForm } from '/react4xp/dashboard/components/RefreshStatisticsForm'
+import { RefreshStatisticsStatus } from '/react4xp/dashboard/components/RefreshStatisticsStatus'
 import {
   refreshStatistic,
   setOpenModal,
   setOpenStatistic,
   setModal,
   resetModal,
-} from '../containers/Statistics/actions'
-import { createSelectModalDisplay, selectOpenStatistic } from '../containers/Statistics/selectors'
-import { WebSocketContext } from '../utils/websocket/WebsocketProvider'
+} from '/react4xp/dashboard/containers/Statistics/actions'
+import {
+  createSelectModalDisplay,
+  selectOpenStatistic,
+} from '/react4xp/dashboard/containers/Statistics/selectors'
+import { WebSocketContext } from '/react4xp/dashboard/utils/websocket/WebsocketProvider'
 
 export function RefreshStatisticsModal(props) {
   const io = useContext(WebSocketContext)

@@ -2,8 +2,8 @@ import type { Component } from '/lib/xp/portal'
 import { render, type RenderResponse } from '/lib/enonic/react4xp'
 import type { Content } from '/lib/xp/content'
 import { PublicationArchive as PublicationArchivePartConfig } from '.'
-import type { PublicationResult } from '../../../lib/ssb/parts/publicationArchive'
-import type { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
+import type { PublicationResult } from '/lib/ssb/parts/publicationArchive'
+import type { SubjectItem } from '/lib/ssb/utils/subjectUtils'
 import { getContent, getComponent, serviceUrl } from '/lib/xp/portal'
 
 const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')

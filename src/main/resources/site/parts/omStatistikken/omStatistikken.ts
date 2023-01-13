@@ -1,14 +1,10 @@
-import { formatDate } from '../../../lib/ssb/utils/dateUtils'
+import { formatDate } from '/lib/ssb/utils/dateUtils'
 import { get as getContentByKey, type Content } from '/lib/xp/content'
 import { render, type RenderResponse } from '/lib/enonic/react4xp'
-import type { Phrases } from '../../../lib/types/language'
-import type { Statistics, OmStatistikken } from '../../content-types'
-import type {
-  ReleaseDatesVariant,
-  StatisticInListing,
-  VariantInListing,
-} from '../../../lib/ssb/dashboard/statreg/types'
-import type { Accordion, AccordionItem } from '../../../lib/types/components'
+import type { Phrases } from '/lib/types/language'
+import type { Statistics, OmStatistikken } from '/site/content-types'
+import type { ReleaseDatesVariant, StatisticInListing, VariantInListing } from '/lib/ssb/dashboard/statreg/types'
+import type { Accordion, AccordionItem } from '/lib/types/components'
 import { getContent, processHtml } from '/lib/xp/portal'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')

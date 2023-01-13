@@ -1,16 +1,12 @@
 import { type Content, get as getContentByKey, query } from '/lib/xp/content'
 import { render, type ResourceKey } from '/lib/thymeleaf'
-import type {
-  ReleaseDatesVariant,
-  StatisticInListing,
-  VariantInListing,
-} from '../../../lib/ssb/dashboard/statreg/types'
-import { formatDate } from '../../../lib/ssb/utils/dateUtils'
-import type { Phrases } from '../../../lib/types/language'
+import type { ReleaseDatesVariant, StatisticInListing, VariantInListing } from '/lib/ssb/dashboard/statreg/types'
+import { formatDate } from '/lib/ssb/utils/dateUtils'
+import type { Phrases } from '/lib/types/language'
 import { render as r4xpRender } from '/lib/enonic/react4xp'
-import { SEO } from '../../../services/news/news'
-import type { Article, Statistics } from '../../content-types'
-import type { RelatedArticles } from '../../mixins/relatedArticles'
+import { SEO } from 'src/main/resources/services/news/news'
+import type { Article, Statistics } from '/site/content-types'
+import type { RelatedArticles } from '/site/mixins/relatedArticles'
 import { format } from 'date-fns'
 
 import { getContent, pageUrl, imageUrl, imagePlaceholder } from '/lib/xp/portal'

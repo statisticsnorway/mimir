@@ -1,4 +1,4 @@
-import type { HeaderLink as HeaderLinkConfig } from '../../macros/headerLink'
+import type { HeaderLink as HeaderLinkConfig } from '/site/macros/headerLink'
 import { render, RenderResponse } from '/lib/enonic/react4xp'
 import { get, Content } from '/lib/xp/content'
 

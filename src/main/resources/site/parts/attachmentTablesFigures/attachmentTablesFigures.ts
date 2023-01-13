@@ -1,15 +1,15 @@
-import { query , type Content } from '/lib/xp/content'
+import { query, type Content } from '/lib/xp/content'
 import { getContent, processHtml } from '/lib/xp/portal'
 import type { DatasetRepoNode } from '/lib/ssb/repo/dataset'
 import type { JSONstat } from '/lib/types/jsonstat-toolkit'
 import type { Phrases } from '/lib/types/language'
 import { render as r4XpRender, type RenderResponse } from '/lib/enonic/react4xp'
 import type { TbmlDataUniform } from '/lib/types/xmlParser'
-import type { Statistics } from '../../content-types'
-import { GA_TRACKING_ID } from '../../pages/default/default'
+import type { Statistics } from '/site/content-types'
+import { GA_TRACKING_ID } from '/site/pages/default/default'
 import { contentArrayToRecord } from '/lib/ssb/utils/arrayUtils'
 import { notNullOrUndefined } from '/lib/ssb/utils/coreUtils'
-import type { AccordionData } from '../accordion/accordion'
+import type { AccordionData } from '/site/parts/accordion/accordion'
 
 const {
   data: { forceArray },

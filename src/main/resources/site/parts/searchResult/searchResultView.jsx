@@ -396,7 +396,7 @@ function SearchResult(props) {
   }
 
   const parseResultText = (doc) => {
-    return `${doc.count} 
+    return `${doc.count}
       ${formatGender(doc.gender)} ${props.namePhrases.have}
       ${capitalizeNames(doc.name)}
       ${props.namePhrases.asTheir} ${translateName(doc.type)}`

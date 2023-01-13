@@ -1,5 +1,5 @@
-import type { Default as DefaultPageConfig } from '../../../site/pages/default'
-import { MunicipalityWithCounty } from '../dataset/klass/municipalities'
+import type { Default as DefaultPageConfig } from '/site/pages/default'
+import { MunicipalityWithCounty } from '/lib/ssb/dataset/klass/municipalities'
 
 const { list: listOperationsAlerts } = __non_webpack_require__('/lib/ssb/parts/operationsAlert')
 const { list: listMunicipalityAlerts } = __non_webpack_require__('/lib/ssb/parts/municipalityAlert')

@@ -5,8 +5,8 @@ import { Input, TextArea, Dropdown, Button, Divider, Tabs, RadioGroup } from '@s
 import axios from 'axios'
 import AsyncSelect from 'react-select/async'
 import 'regenerator-runtime'
-import { BestBetContext } from './Bestbet'
-import { customAsyncSelectStyles } from './customAsyncSelectStyles'
+import { BestBetContext } from '/react4xp/_entries/bestbet/Bestbet'
+import { customAsyncSelectStyles } from '/react4xp/_entries/bestbet/customAsyncSelectStyles'
 
 function BestBetForm(props) {
   const { formState, dispatch } = useContext(BestBetContext)

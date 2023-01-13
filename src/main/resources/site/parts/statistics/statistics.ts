@@ -1,14 +1,10 @@
 import type { Content } from '/lib/xp/content'
 import { type ResourceKey, render } from '/lib/thymeleaf'
-import type {
-  ReleaseDatesVariant,
-  StatisticInListing,
-  VariantInListing,
-} from '../../../lib/ssb/dashboard/statreg/types'
-import { formatDate } from '../../../lib/ssb/utils/dateUtils'
+import type { ReleaseDatesVariant, StatisticInListing, VariantInListing } from '/lib/ssb/dashboard/statreg/types'
+import { formatDate } from '/lib/ssb/utils/dateUtils'
 import { render as r4xpRender } from '/lib/enonic/react4xp'
-import type { Statistics } from '../../content-types'
-import type { Phrases } from '../../../lib/types/language'
+import type { Statistics } from '/site/content-types'
+import type { Phrases } from '/lib/types/language'
 import { randomUnsafeString } from '/lib/ssb/utils/utils'
 import { getContent, pageUrl } from '/lib/xp/portal'
 

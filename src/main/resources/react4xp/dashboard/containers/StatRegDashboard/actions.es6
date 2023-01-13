@@ -1,4 +1,4 @@
-import { actions } from './slice'
+import { actions } from '/react4xp/dashboard/containers/StatRegDashboard/slice'
 
 export function requestStatuses(dispatch, io) {
   dispatch({

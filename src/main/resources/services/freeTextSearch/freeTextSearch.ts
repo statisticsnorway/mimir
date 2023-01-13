@@ -1,4 +1,4 @@
-import { SolrPrepResultAndTotal } from '../../lib/ssb/utils/solrUtils'
+import { SolrPrepResultAndTotal } from '/lib/ssb/utils/solrUtils'
 
 const { solrSearch } = __non_webpack_require__('/lib/ssb/utils/solrUtils')
 

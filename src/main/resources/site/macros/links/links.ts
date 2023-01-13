@@ -1,11 +1,11 @@
 import { render, RenderResponse } from '/lib/enonic/react4xp'
-import type { Links as LinksConfig } from '../../macros/links'
+import type { Links as LinksConfig } from '/site/macros/links'
 import { get, Content } from '/lib/xp/content'
-import { LinksProps, prepareText } from '../../parts/links/links'
-import type { TableLink } from '../../mixins/tableLink'
-import type { HeaderLink } from '../../mixins/headerLink'
-import type { ProfiledLink } from '../../mixins/profiledLink'
-import { GA_TRACKING_ID } from '../../pages/default/default'
+import { LinksProps, prepareText } from '/site/parts/links/links'
+import type { TableLink } from '/site/mixins/tableLink'
+import type { HeaderLink } from '/site/mixins/headerLink'
+import type { ProfiledLink } from '/site/mixins/profiledLink'
+import { GA_TRACKING_ID } from '/site/pages/default/default'
 
 const { attachmentUrl, pageUrl } = __non_webpack_require__('/lib/xp/portal')
 

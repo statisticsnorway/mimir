@@ -1,9 +1,9 @@
-import { PreliminaryData, TbmlDataUniform } from '../../../types/xmlParser'
-import type { Highchart } from '../../../../site/content-types'
+import { PreliminaryData, TbmlDataUniform } from '/lib/types/xmlParser'
+import type { Highchart } from '/site/content-types'
 import { Content } from '/lib/xp/content'
-import { JSONstat } from '../../../types/jsonstat-toolkit'
-import type { DataSource } from '../../../../site/mixins/dataSource'
-import { RowValue } from '../../utils/utils'
+import { JSONstat } from '/lib/types/jsonstat-toolkit'
+import type { DataSource } from '/site/mixins/dataSource'
+import { RowValue } from '/lib/ssb/utils/utils'
 
 const { seriesAndCategoriesFromHtmlTable } = __non_webpack_require__('/lib/ssb/parts/highcharts/data/htmlTable')
 const { seriesAndCategoriesFromJsonStat } = __non_webpack_require__('/lib/ssb/parts/highcharts/data/statBank')

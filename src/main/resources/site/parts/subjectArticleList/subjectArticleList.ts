@@ -1,7 +1,7 @@
 import { render, type RenderResponse } from '/lib/enonic/react4xp'
 import type { Content, QueryResponse } from '/lib/xp/content'
-import type { PreparedArticles } from '../../../lib/ssb/utils/articleUtils'
-import type { Article } from '../../content-types'
+import type { PreparedArticles } from '/lib/ssb/utils/articleUtils'
+import type { Article } from '/site/content-types'
 import { getContent, serviceUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 

@@ -1,6 +1,6 @@
 import { Content, QueryResponse } from '/lib/xp/content'
-import { PreparedArticles } from '../../lib/ssb/utils/articleUtils'
-import type { Article } from '../../site/content-types'
+import { PreparedArticles } from '/lib/ssb/utils/articleUtils'
+import type { Article } from '/site/content-types'
 
 const { getContent } = __non_webpack_require__('/lib/xp/portal')
 const { getChildArticles, prepareArticles } = __non_webpack_require__('/lib/ssb/utils/articleUtils')

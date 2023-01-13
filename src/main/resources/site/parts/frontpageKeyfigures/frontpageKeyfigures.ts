@@ -3,8 +3,8 @@ import { render as r4XpRender, type RenderResponse } from '/lib/enonic/react4xp'
 import { type Component, getComponent } from '/lib/xp/portal'
 import type { FrontpageKeyfigures as FrontpageKeyfiguresPartConfig } from '.'
 import { type Content, get as getContentByKey } from '/lib/xp/content'
-import type { KeyFigure } from '../../content-types'
-import type { KeyFigureView } from '../../../lib/ssb/parts/keyFigure'
+import type { KeyFigure } from '/site/content-types'
+import type { KeyFigureView } from '/lib/ssb/parts/keyFigure'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 const { data } = __non_webpack_require__('/lib/util')

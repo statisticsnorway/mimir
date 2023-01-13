@@ -1,10 +1,10 @@
-import type { Highchart } from '../../../../site/content-types'
+import type { Highchart } from '/site/content-types'
 import { Content } from '/lib/xp/content'
-import { JSONstat } from '../../../types/jsonstat-toolkit'
-import { TbmlDataUniform } from '../../../types/xmlParser'
-import type { DataSource } from '../../../../site/mixins/dataSource'
-import { HighchartsGraphConfig } from '../../../types/highcharts'
-import { SeriesAndCategories } from './highchartsData'
+import { JSONstat } from '/lib/types/jsonstat-toolkit'
+import { TbmlDataUniform } from '/lib/types/xmlParser'
+import type { DataSource } from '/site/mixins/dataSource'
+import { HighchartsGraphConfig } from '/lib/types/highcharts'
+import { SeriesAndCategories } from '/lib/ssb/parts/highcharts/highchartsData'
 
 const { prepareHighchartsGraphConfig } = __non_webpack_require__('/lib/ssb/parts/highcharts/highchartsGraphConfig')
 const { mergeDeepRight } = __non_webpack_require__('/lib/vendor/ramda')

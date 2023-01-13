@@ -1,4 +1,4 @@
-import { createSlice } from '../../utils/@reduxjs/toolkit'
+import { createSlice } from '/react4xp/dashboard/utils/@reduxjs/toolkit'
 
 export const initialState = {
   statuses: [],

@@ -1,6 +1,6 @@
 import { createSelector } from '@reduxjs/toolkit'
 
-import { initialState } from './slice'
+import { initialState } from '/react4xp/dashboard/containers/HomePage/slice'
 
 // First select the relevant part from the state
 const selectDomain = (state) => state.common || initialState
@@ -21,7 +21,10 @@ export const selectLoadingRefreshNameGraph = createSelector(
 
 export const selectVarnishPurgeResult = createSelector([selectDomain], (commonState) => commonState.varnishPurgeResult)
 
-export const selectRefreshNameGraphResult = createSelector([selectDomain], (commonState) => commonState.refreshNameGraphResult)
+export const selectRefreshNameGraphResult = createSelector(
+  [selectDomain],
+  (commonState) => commonState.refreshNameGraphResult
+)
 
 export const selectContentStudioBaseUrl = createSelector(
   [selectDomain],

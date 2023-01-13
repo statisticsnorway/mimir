@@ -2,9 +2,9 @@ import React, { useContext } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { PropTypes } from 'prop-types'
 import { Button, Modal } from 'react-bootstrap'
-import { selectStatRegStatus } from '../StatRegDashboard/selectors'
-import { requestStatRegEventLogData } from '../StatRegDashboard/actions'
-import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
+import { selectStatRegStatus } from '/react4xp/dashboard/containers/StatRegDashboard/selectors'
+import { requestStatRegEventLogData } from '/react4xp/dashboard/containers/StatRegDashboard/actions'
+import { WebSocketContext } from '/react4xp/dashboard/utils/websocket/WebsocketProvider'
 import { AlertTriangle } from 'react-feather'
 
 export function RefreshStatRegModal(props) {

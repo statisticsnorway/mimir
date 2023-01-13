@@ -1,4 +1,4 @@
-import { PreparedArticles, ArticleResult } from '../../lib/ssb/utils/articleUtils'
+import { PreparedArticles, ArticleResult } from '/lib/ssb/utils/articleUtils'
 
 const { getAllArticles } = __non_webpack_require__('/lib/ssb/utils/articleUtils')
 

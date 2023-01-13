@@ -1,11 +1,11 @@
 import React, { createContext } from 'react'
 import PropTypes from 'prop-types'
-import { actions as commonActions } from '../../containers/HomePage/slice'
-import setupStatRegListeners from '../../containers/StatRegDashboard/listeners'
-import setupHomePageListeners from '../../containers/HomePage/listeners'
-import setupDataSourcesListeners from '../../containers/DataSources/listeners'
-import setupStatisticsListeners from '../../containers/Statistics/listeners'
-import setupJobsListeners from '../../containers/Jobs/listeners'
+import { actions as commonActions } from '/react4xp/dashboard/containers/HomePage/slice'
+import setupStatRegListeners from '/react4xp/dashboard/containers/StatRegDashboard/listeners'
+import setupHomePageListeners from '/react4xp/dashboard/containers/HomePage/listeners'
+import setupDataSourcesListeners from '/react4xp/dashboard/containers/DataSources/listeners'
+import setupStatisticsListeners from '/react4xp/dashboard/containers/Statistics/listeners'
+import setupJobsListeners from '/react4xp/dashboard/containers/Jobs/listeners'
 
 const WebSocketContext = createContext(null)
 export { WebSocketContext }

@@ -1,6 +1,6 @@
 import { request, HttpRequestParams, HttpResponse } from '/lib/http-client'
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
-import { XmlParser } from '../../../types/xmlParser'
+import { XmlParser } from '/lib/types/xmlParser'
 
 const { sleep } = __non_webpack_require__('/lib/xp/task')
 const { logUserDataQuery, Events } = __non_webpack_require__('/lib/ssb/repo/query')

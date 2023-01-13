@@ -1,6 +1,6 @@
 import { type Content, query, type QueryResponse, get as getContentByKey } from '/lib/xp/content'
-import type { Employee, Page } from '../../content-types'
-import type { Default as DefaultPageConfig } from '../../pages/default'
+import type { Employee, Page } from '/site/content-types'
+import type { Default as DefaultPageConfig } from '/site/pages/default'
 import { getContent, Component, getComponent, pageUrl } from '/lib/xp/portal'
 import { type RenderResponse, render } from '/lib/enonic/react4xp'
 import type { EmployeeList as EmployeeListPartConfig } from '.'

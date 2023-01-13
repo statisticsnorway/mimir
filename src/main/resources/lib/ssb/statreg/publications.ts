@@ -1,6 +1,6 @@
-import { StatRegNode } from '../repo/statreg'
-import { Publication, Publisering, PubliseringXML } from '../dashboard/statreg/types'
-import { XmlParser } from '../../types/xmlParser'
+import { StatRegNode } from '/lib/ssb/repo/statreg'
+import { Publication, Publisering, PubliseringXML } from '/lib/ssb/dashboard/statreg/types'
+import { XmlParser } from '/lib/types/xmlParser'
 import { HttpResponse } from '/lib/http-client'
 
 const { ensureArray } = __non_webpack_require__('/lib/ssb/utils/arrayUtils')

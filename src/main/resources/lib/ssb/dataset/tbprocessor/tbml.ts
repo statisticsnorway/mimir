@@ -13,7 +13,7 @@ import {
   MetadataRaw,
   Title,
   Note,
-} from '../../../types/xmlParser'
+} from '/lib/types/xmlParser'
 
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 const { logUserDataQuery, Events } = __non_webpack_require__('/lib/ssb/repo/query')

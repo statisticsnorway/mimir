@@ -1,5 +1,5 @@
 import { FetchResponse, ListOfResults } from '/lib/cristin/service'
-import { fetchResultsCristin } from '../../lib/ssb/cristin/cristin'
+import { fetchResultsCristin } from '/lib/ssb/cristin/cristin'
 
 exports.get = (req: XP.Request): XP.Response => {
   // eslint-disable-next-line camelcase

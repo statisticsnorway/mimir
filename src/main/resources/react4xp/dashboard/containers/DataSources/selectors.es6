@@ -1,5 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit'
-import { initialState } from './slice'
+import { initialState } from '/react4xp/dashboard/containers/DataSources/slice'
 import { groupBy } from 'ramda'
 
 const byParentType = groupBy((dataSource) => {

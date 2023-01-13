@@ -1,5 +1,5 @@
 import { NodeQueryHit, NodeQueryResponse, RepoNode } from '/lib/xp/node'
-import { JobEventNode } from '../repo/job'
+import { JobEventNode } from '/lib/ssb/repo/job'
 
 const { getChildNodes, queryNodes, withConnection, getNode } = __non_webpack_require__('/lib/ssb/repo/common')
 

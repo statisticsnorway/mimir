@@ -1,16 +1,16 @@
 import React, { useContext } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
+import { WebSocketContext } from '/react4xp/dashboard/utils/websocket/WebsocketProvider'
 import { Button, Modal } from 'react-bootstrap'
 import { Accordion, Link } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
-import { requestDatasetUpdate } from './actions'
+import { requestDatasetUpdate } from '/react4xp/dashboard/containers/DataSources/actions'
 import { RefreshCw } from 'react-feather'
-import { selectContentStudioBaseUrl } from '../HomePage/selectors'
-import { ReactTable } from '../../components/ReactTable'
-import { DataQueryBadges } from '../../components/DataQueryBadges'
-import { DataSourceLog } from './DataSourceLog'
-import { RefreshDataSourceButton } from './RefreshDataSourceButton'
+import { selectContentStudioBaseUrl } from '/react4xp/dashboard/containers/HomePage/selectors'
+import { ReactTable } from '/react4xp/dashboard/components/ReactTable'
+import { DataQueryBadges } from '/react4xp/dashboard/components/DataQueryBadges'
+import { DataSourceLog } from '/react4xp/dashboard/containers/DataSources/DataSourceLog'
+import { RefreshDataSourceButton } from '/react4xp/dashboard/containers/DataSources/RefreshDataSourceButton'
 
 export function DataSourceTable(props) {
   const dataSources = useSelector(props.dataSourceSelector)

@@ -1,7 +1,7 @@
 import { query, get as getContent, Content, QueryResponse } from '/lib/xp/content'
-import type { Statistics } from '../../../site/content-types'
-import type { DataSource } from '../../../site/mixins/dataSource'
-import { UNPUBLISHED_DATASET_BRANCH } from '../repo/dataset'
+import type { Statistics } from '/site/content-types'
+import type { DataSource } from '/site/mixins/dataSource'
+import { UNPUBLISHED_DATASET_BRANCH } from '/lib/ssb/repo/dataset'
 
 const { getDataSourceIdsFromStatistics } = __non_webpack_require__('/lib/ssb/dashboard/statistic')
 const { refreshDataset } = __non_webpack_require__('/lib/ssb/dataset/dataset')

@@ -1,4 +1,4 @@
-import { actions } from './slice'
+import { actions } from '/react4xp/dashboard/containers/DataSources/slice'
 
 export function requestErrorDataSources(dispatch, io) {
   dispatch({

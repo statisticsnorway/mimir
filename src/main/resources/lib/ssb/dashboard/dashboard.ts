@@ -1,18 +1,18 @@
 import { ContextAttributes } from '*/lib/xp/context'
 
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
-import { CreateOrUpdateStatus } from '../dataset/dataset'
+import { CreateOrUpdateStatus } from '/lib/ssb/dataset/dataset'
 import { get as getContent, query, Content } from '/lib/xp/content'
-import type { DataSource } from '../../../site/mixins/dataSource'
-import { Events, QueryInfoNode } from '../repo/query'
-import { EVENT_LOG_REPO, EVENT_LOG_BRANCH, LogSummary } from '../repo/eventLog'
+import type { DataSource } from '/site/mixins/dataSource'
+import { Events, QueryInfoNode } from '/lib/ssb/repo/query'
+import { EVENT_LOG_REPO, EVENT_LOG_BRANCH, LogSummary } from '/lib/ssb/repo/eventLog'
 import { NodeQueryHit, RepoNode } from '/lib/xp/node'
 import { run, RunContext } from '/lib/xp/context'
-import { Socket, SocketEmitter } from '../../types/socket'
-import { JSONstat } from '../../types/jsonstat-toolkit'
-import { TbmlDataUniform } from '../../types/xmlParser'
-import { DatasetRepoNode } from '../repo/dataset'
-import { withConnection } from '../repo/common'
+import { Socket, SocketEmitter } from '/lib/types/socket'
+import { JSONstat } from '/lib/types/jsonstat-toolkit'
+import { TbmlDataUniform } from '/lib/types/xmlParser'
+import { DatasetRepoNode } from '/lib/ssb/repo/dataset'
+import { withConnection } from '/lib/ssb/repo/common'
 import { User } from '/lib/xp/auth'
 import {
   CalculatorRefreshResult,
@@ -21,12 +21,12 @@ import {
   JOB_STATUS_COMPLETE,
   JOB_STATUS_STARTED,
   StatisticsPublishResult,
-} from '../repo/job'
-import { StatisticInListing } from './statreg/types'
-import { StatRegRefreshResult } from '../repo/statreg'
-import { StatRegJobInfo } from './statreg'
-import type { Default as DefaultPageConfig } from '../../../site/pages/default'
-import type { Page, Statistics } from '../../../site/content-types'
+} from '/lib/ssb/repo/job'
+import { StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
+import { StatRegRefreshResult } from '/lib/ssb/repo/statreg'
+import { StatRegJobInfo } from '/lib/ssb/dashboard/statreg'
+import type { Default as DefaultPageConfig } from '/site/pages/default'
+import type { Page, Statistics } from '/site/content-types'
 
 const { users, showWarningIcon, WARNING_ICON_EVENTS, isPublished } = __non_webpack_require__(
   '/lib/ssb/dashboard/dashboardUtils'

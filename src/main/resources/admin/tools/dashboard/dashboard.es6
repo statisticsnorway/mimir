@@ -1,4 +1,4 @@
-import { parseContributions } from '../../../lib/ssb/utils/utils'
+import { parseContributions } from '/lib/ssb/utils/utils'
 
 const { assetUrl, serviceUrl } = __non_webpack_require__('/lib/xp/portal')
 

@@ -1,6 +1,6 @@
-import { StatRegNode } from '../repo/statreg'
-import { Contact, Kontakt, KontaktNavn, KontaktNavnType, KontaktXML } from '../dashboard/statreg/types'
-import { XmlParser } from '../../types/xmlParser'
+import { StatRegNode } from '/lib/ssb/repo/statreg'
+import { Contact, Kontakt, KontaktNavn, KontaktNavnType, KontaktXML } from '/lib/ssb/dashboard/statreg/types'
+import { XmlParser } from '/lib/types/xmlParser'
 import { HttpResponse } from '/lib/http-client'
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 

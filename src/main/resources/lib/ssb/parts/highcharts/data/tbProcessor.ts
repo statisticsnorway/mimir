@@ -1,6 +1,6 @@
-import { AreaLineLinearData, Series, SeriesAndCategories } from '../highchartsData'
-import { PreliminaryData, TableCellUniform, TableRowUniform, TbmlDataUniform } from '../../../../types/xmlParser'
-import { RowValue } from '../../../utils/utils'
+import { AreaLineLinearData, Series, SeriesAndCategories } from '/lib/ssb/parts/highcharts/highchartsData'
+import { PreliminaryData, TableCellUniform, TableRowUniform, TbmlDataUniform } from '/lib/types/xmlParser'
+import { RowValue } from '/lib/ssb/utils/utils'
 
 const {
   data: { forceArray },

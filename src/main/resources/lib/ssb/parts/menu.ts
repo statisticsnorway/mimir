@@ -1,5 +1,5 @@
 import { get, getChildren, query, Content, QueryResponse, MediaImage } from '/lib/xp/content'
-import type { MenuItem, Footer, Header } from '../../../site/content-types'
+import type { MenuItem, Footer, Header } from '/site/content-types'
 
 const { pageUrl } = __non_webpack_require__('/lib/xp/portal')
 const { getAttachment } = __non_webpack_require__('/lib/ssb/utils/utils')

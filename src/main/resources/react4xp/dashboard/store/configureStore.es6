@@ -1,12 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { createInjectorsEnhancer } from 'redux-injectors'
 import createSagaMiddleware from 'redux-saga'
-import { createReducer } from './reducers'
-import { reducer as statRegReducer } from '../containers/StatRegDashboard/slice'
-import { reducer as commonReducer } from '../containers/HomePage/slice'
-import { reducer as dataSourcesReducer } from '../containers/DataSources/slice'
-import { reducer as statisticsReducer } from '../containers/Statistics/slice'
-import { reducer as jobsReducer } from '../containers/Jobs/slice'
+import { createReducer } from '/react4xp/dashboard/store/reducers'
+import { reducer as statRegReducer } from '/react4xp/dashboard/containers/StatRegDashboard/slice'
+import { reducer as commonReducer } from '/react4xp/dashboard/containers/HomePage/slice'
+import { reducer as dataSourcesReducer } from '/react4xp/dashboard/containers/DataSources/slice'
+import { reducer as statisticsReducer } from '/react4xp/dashboard/containers/Statistics/slice'
+import { reducer as jobsReducer } from '/react4xp/dashboard/containers/Jobs/slice'
 
 import logger from 'redux-logger'
 

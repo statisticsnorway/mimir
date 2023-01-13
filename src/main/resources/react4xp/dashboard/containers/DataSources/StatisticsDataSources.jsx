@@ -6,11 +6,14 @@ import {
   selectLoadingStatisticsGroups,
   selectStatisticsDataSources,
   selectStatisticsLoading,
-} from './selectors'
+} from '/react4xp/dashboard/containers/DataSources/selectors'
 import PropTypes from 'prop-types'
-import { requestStatisticsGroups, requestStatisticsDataSources } from './actions'
-import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
-import { DataSourceTable } from './DataSourceTable'
+import {
+  requestStatisticsGroups,
+  requestStatisticsDataSources,
+} from '/react4xp/dashboard/containers/DataSources/actions'
+import { WebSocketContext } from '/react4xp/dashboard/utils/websocket/WebsocketProvider'
+import { DataSourceTable } from '/react4xp/dashboard/containers/DataSources/DataSourceTable'
 
 export function StatisticsDataSources(props) {
   const [firstOpen, setFirstOpen] = React.useState(true)

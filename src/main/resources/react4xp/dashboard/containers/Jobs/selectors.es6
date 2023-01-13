@@ -1,5 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit'
-import { initialState } from './slice'
+import { initialState } from '/react4xp/dashboard/containers/Jobs/slice'
 
 // First select the relevant part from the state
 const selectDomain = (state) => state.jobs || initialState

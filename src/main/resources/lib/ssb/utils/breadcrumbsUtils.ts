@@ -1,6 +1,6 @@
 import { get, Content } from '/lib/xp/content'
-import { StatbankFrameData } from '../../../site/pages/default/default'
-import { MunicipalityWithCounty } from '../dataset/klass/municipalities'
+import { StatbankFrameData } from '/site/pages/default/default'
+import { MunicipalityWithCounty } from '/lib/ssb/dataset/klass/municipalities'
 
 const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
 const { pageUrl, getContent } = __non_webpack_require__('/lib/xp/portal')

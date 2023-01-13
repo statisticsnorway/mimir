@@ -1,5 +1,5 @@
 import { request, HttpResponse, HttpRequestParams } from '/lib/http-client'
-import { JSONstat } from '../../../types/jsonstat-toolkit'
+import { JSONstat } from '/lib/types/jsonstat-toolkit'
 const { Events, logUserDataQuery } = __non_webpack_require__('/lib/ssb/repo/query')
 const { sleep } = __non_webpack_require__('/lib/xp/task')
 

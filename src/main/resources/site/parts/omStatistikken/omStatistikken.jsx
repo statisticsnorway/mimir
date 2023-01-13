@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import Accordion from '../../../react4xp/_entries/Accordion'
+import Accordion from '/react4xp/_entries/Accordion'
 
 const OmStatistikken = (props) => {
   const { ingress, label, accordions } = props

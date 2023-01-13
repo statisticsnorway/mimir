@@ -1,8 +1,8 @@
 import { get as getContentByKey, query, type Content, type QueryResponse } from '/lib/xp/content'
-import type { Phrases } from '../../../lib/types/language'
+import type { Phrases } from '/lib/types/language'
 import { render, type RenderResponse } from '/lib/enonic/react4xp'
-import type { SEO } from '../../../services/news/news'
-import type { Article, ContentList } from '../../content-types'
+import type { SEO } from 'src/main/resources/services/news/news'
+import type { Article, ContentList } from '/site/content-types'
 import type { RelatedFactPage as RelatedFactPagePartConfig } from '.'
 import { imagePlaceholder, getComponent, getContent, imageUrl, pageUrl, serviceUrl } from '/lib/xp/portal'
 

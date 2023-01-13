@@ -1,4 +1,4 @@
-import { actions } from './slice'
+import { actions } from '/react4xp/dashboard/containers/HomePage/slice'
 
 export default function setupHomePageListeners(io, dispatch) {
   io.on('clear-cache-finished', (data) => {

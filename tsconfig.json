@@ -17,8 +17,18 @@
       "./.xp-codegen"
     ],
     "paths": {
+      "/admin/*": ["./src/main/resources/admin/*"],
       "/lib/*": [ "./node_modules/@item-enonic-types/lib-*" ,"./src/main/resources/lib/*"],
-      "/site/*": ["./.xp-codegen/site/*"]
+      "/react4xp/*": ["./src/main/resources/react4xp/*"],
+      "/services/*": ["./src/main/resources/services/*"],
+      "/site/*": [
+        "./.xp-codegen/site/*",
+        "./src/main/resources/site/*"
+      ],
+      "/tasks/*": [
+        "./.xp-codegen/tasks/*",
+        "./src/main/resources/tasks/*"
+      ],
     }
   },
   "types": [

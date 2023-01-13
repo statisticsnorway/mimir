@@ -1,4 +1,4 @@
-import { actions } from './slice'
+import { actions } from '/react4xp/dashboard/containers/Jobs/slice'
 
 export function requestJobs(dispatch, io) {
   dispatch({

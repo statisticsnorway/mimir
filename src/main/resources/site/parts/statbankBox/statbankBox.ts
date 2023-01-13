@@ -1,8 +1,8 @@
 import type { Content } from '/lib/xp/content'
-import type { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/types'
-import type { Phrases } from '../../../lib/types/language'
+import type { StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
+import type { Phrases } from '/lib/types/language'
 import { render } from '/lib/enonic/react4xp'
-import type { Statistics } from '../../content-types'
+import type { Statistics } from '/site/content-types'
 import type { StatbankBox as StatbankBoxPartConfig } from '.'
 import { getComponent, getContent, assetUrl } from '/lib/xp/portal'
 

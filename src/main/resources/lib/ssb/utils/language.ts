@@ -1,5 +1,5 @@
 import { exists, Content, Site } from '/lib/xp/content'
-import { Language, AlternativeLanguages, Phrases } from '../../types/language'
+import { Language, AlternativeLanguages, Phrases } from '/lib/types/language'
 
 const i18n = __non_webpack_require__('/lib/xp/i18n')
 const { getSite, getSiteConfig, pageUrl } = __non_webpack_require__('/lib/xp/portal')

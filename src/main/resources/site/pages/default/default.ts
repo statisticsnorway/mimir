@@ -1,21 +1,17 @@
 import { type Content, query } from '/lib/xp/content'
 import { render, type ResourceKey } from '/lib/thymeleaf'
-import type {
-  ReleaseDatesVariant,
-  StatisticInListing,
-  VariantInListing,
-} from '../../../lib/ssb/dashboard/statreg/types'
-import type { MunicipalityWithCounty } from '../../../lib/ssb/dataset/klass/municipalities'
-import type { FooterContent } from '../../../lib/ssb/parts/footer'
-import type { AlertType, InformationAlertOptions, MunicipalityOptions } from '../../../lib/ssb/utils/alertUtils'
-import type { Breadcrumbs } from '../../../lib/ssb/utils/breadcrumbsUtils'
-import type { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
-import type { Language } from '../../../lib/types/language'
+import type { ReleaseDatesVariant, StatisticInListing, VariantInListing } from '/lib/ssb/dashboard/statreg/types'
+import type { MunicipalityWithCounty } from '/lib/ssb/dataset/klass/municipalities'
+import type { FooterContent } from '/lib/ssb/parts/footer'
+import type { AlertType, InformationAlertOptions, MunicipalityOptions } from '/lib/ssb/utils/alertUtils'
+import type { Breadcrumbs } from '/lib/ssb/utils/breadcrumbsUtils'
+import type { SubjectItem } from '/lib/ssb/utils/subjectUtils'
+import type { Language } from '/lib/types/language'
 import { render as r4xpRender, type RenderResponse } from '/lib/enonic/react4xp'
-import type { Statistics } from '../../content-types'
-import type { Default as DefaultPageConfig } from '../../pages/default'
+import type { Statistics } from '/site/content-types'
+import type { Default as DefaultPageConfig } from '/site/pages/default'
 import { assetUrl, type Component, getContent, getSiteConfig, pageUrl, processHtml } from '/lib/xp/portal'
-import type { SEO } from '../../../services/news/news'
+import type { SEO } from 'src/main/resources/services/news/news'
 
 const {
   data: { forceArray },

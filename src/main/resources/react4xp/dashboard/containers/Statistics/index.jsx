@@ -1,15 +1,22 @@
 import React, { useContext } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Button, Table } from 'react-bootstrap'
-import { selectStatistics, selectLoading, selectOpenModal } from './selectors'
+import {
+  selectStatistics,
+  selectLoading,
+  selectOpenModal,
+} from '/react4xp/dashboard/containers/Statistics/selectors'
 import { RefreshCw } from 'react-feather'
 import Moment from 'react-moment'
 import { Link } from '@statisticsnorway/ssb-component-library'
-import { selectContentStudioBaseUrl, selectInternalBaseUrl } from '../HomePage/selectors'
-import { setOpenStatistic, setOpenModal } from './actions'
-import { StatisticsLog } from './StatisticsLog'
-import { RefreshStatisticsModal } from '../../components/RefreshStatisticsModal'
-import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
+import {
+  selectContentStudioBaseUrl,
+  selectInternalBaseUrl,
+} from '/react4xp/dashboard/containers/HomePage/selectors'
+import { setOpenStatistic, setOpenModal } from '/react4xp/dashboard/containers/Statistics/actions'
+import { StatisticsLog } from '/react4xp/dashboard/containers/Statistics/StatisticsLog'
+import { RefreshStatisticsModal } from '/react4xp/dashboard/components/RefreshStatisticsModal'
+import { WebSocketContext } from '/react4xp/dashboard/utils/websocket/WebsocketProvider'
 
 export function Statistics() {
   const statistics = useSelector(selectStatistics)

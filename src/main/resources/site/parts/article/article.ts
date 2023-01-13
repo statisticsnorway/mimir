@@ -1,7 +1,7 @@
 import { get as getContentByKey, type Content } from '/lib/xp/content'
 import { formatDate } from '/lib/ssb/utils/dateUtils'
 import { render, type RenderResponse } from '/lib/enonic/react4xp'
-import type { Article } from '../../content-types'
+import type { Article } from '/site/content-types'
 import { processHtml, getContent, pageUrl } from '/lib/xp/portal'
 
 const {

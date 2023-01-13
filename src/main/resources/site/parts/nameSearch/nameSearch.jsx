@@ -7,7 +7,7 @@ import { X } from 'react-feather'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import { useMediaQuery } from 'react-responsive'
-import { addGtagForEvent } from '../../../react4xp/ReactGA'
+import { addGtagForEvent } from '/react4xp/ReactGA'
 
 require('highcharts/modules/accessibility')(Highcharts)
 require('highcharts/modules/exporting')(Highcharts)

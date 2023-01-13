@@ -1,16 +1,16 @@
 import { get as getContent, Content } from '/lib/xp/content'
-import type { Statistics } from '../../site/content-types'
-import type { DataSource } from '../../site/mixins/dataSource'
+import type { Statistics } from '/site/content-types'
+import type { DataSource } from '/site/mixins/dataSource'
 import {
   JobEventNode,
   JobInfoNode,
   StatisticsPublishResult,
   DataSourceStatisticsPublishResult,
-} from '../../lib/ssb/repo/job'
-import type { Statistic } from '../../site/mixins/statistic'
-import { PublicationItem } from '../../lib/ssb/dataset/publish'
-import type { PublishDataset as PublishDatasetConfig } from '../../tasks/publishDataset'
-import { ReleaseDatesVariant, StatisticInListing } from '../../lib/ssb/dashboard/statreg/types'
+} from '/lib/ssb/repo/job'
+import type { Statistic } from '/site/mixins/statistic'
+import { PublicationItem } from '/lib/ssb/dataset/publish'
+import type { PublishDataset as PublishDatasetConfig } from 'src/main/resources/tasks/publishDataset'
+import { ReleaseDatesVariant, StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
 
 const { create: createScheduledJob } = __non_webpack_require__('/lib/xp/scheduler')
 const { getDataSourceIdsFromStatistics, getStatisticsContent } = __non_webpack_require__('/lib/ssb/dashboard/statistic')
