@@ -219,13 +219,6 @@ function createContentStatisticVariant(
     app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
   const prevReleaseServerOffset: Date = new Date(new Date(prevRelease.publishTime).getTime() - serverOffsetInMs)
 
-  if (statistic.shortName === 'knr' && prevRelease.publishTime && language === 'nb') {
-    log.info('publish.From Date: ' + new Date(prevRelease.publishTime))
-    log.info('publish.From Date ISO: ' + new Date(prevRelease.publishTime).toISOString())
-    log.info('prevReleaseServerOffset: ' + prevReleaseServerOffset)
-    log.info('prevReleaseServerOffset Instant: ' + instant(prevReleaseServerOffset))
-  }
-
   return {
     displayName: language === 'nb' ? statistic.name : statistic.nameEN,
     _name: `${statistic.shortName}-${variant.id}-${language}`,
