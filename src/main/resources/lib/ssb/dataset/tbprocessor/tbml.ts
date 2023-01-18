@@ -61,6 +61,7 @@ export function fetch(url: string, queryId?: string, processXml?: string, type?:
     url,
     body: processXml,
     method: processXml ? 'POST' : 'GET',
+    connectionTimeout: 20000,
     readTimeout: 40000,
   }
   const response: HttpResponse = mock ? mock : request(requestParams)
