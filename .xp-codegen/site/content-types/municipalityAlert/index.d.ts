@@ -9,7 +9,7 @@ export interface MunicipalityAlert {
   /**
    * Velg hvilke sidetype varselet skal vises på
    */
-  municipalPageType: 'kommunefakta' | 'kommuneareal' | 'barn-og-unge' | 'jakt-i-din-kommune' | 'showOnAll';
+  municipalPageType: 'kommunefakta' | 'kommuneareal' | 'barn-og-unge' | 'showOnAll';
 
   /**
    * Velg hvilken kommuner det gjelder her.
