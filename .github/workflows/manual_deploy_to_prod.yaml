@@ -72,7 +72,7 @@ jobs:
               ]
             }
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_MIMIR_UTV }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_ALERTS_PROD }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
       - name: Send failure message to Slack
         id: slack_failure
