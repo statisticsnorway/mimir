@@ -164,9 +164,7 @@ export function setupCronJobs(): void {
   schedule({
     name: 'Update no.ssb.statistics Repo',
     cron: updateStatisticRepoCron,
-    callback: () => {
-      createOrUpdateStatisticsRepo()
-    },
+    callback: () => runOnMasterOnly(createOrUpdateStatisticsRepo),
     context: cronContext,
   })
 
