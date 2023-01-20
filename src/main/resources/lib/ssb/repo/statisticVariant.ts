@@ -254,7 +254,7 @@ function prepareData({
     variantId: String(variant.id),
     shortName: statistic.shortName,
     name: language === 'nb' ? statistic.name : statistic.nameEN,
-    period: capitalize(calculatePeriod(variant.frekvens, variant.previousFrom, variant.previousTo, language)),
+    period: capitalize(calculatePeriod(variant.frekvens, prevRelease.periodFrom, prevRelease.periodTo, language)),
     ingress:
       aboutTheStatisticsContent?.data.ingress ??
       statisticsContent?.x?.['com-enonic-app-metafields']?.['meta-data'].seoDescription,
