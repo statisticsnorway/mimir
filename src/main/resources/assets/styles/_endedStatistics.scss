@@ -1,6 +1,10 @@
 .part-ended-statistics {
   margin-top: 0;
 
+  .ssb-btn-tertiary .accordion-body {
+    padding: 0;
+  }
+
   .ssb-card {
     .card-content {
       background-color: transparent;
@@ -25,6 +29,12 @@
       .card-action {
         background-color: $ssb-dark-6;
       }
+    }
+  }
+
+  @include media-breakpoint-down(md) {
+    .ssb-card {
+      padding: 0;
     }
   }
 }
