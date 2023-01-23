@@ -28,7 +28,6 @@ const EndedStatistics = (props) => {
 
   const renderShowMoreButton = () => {
     const { buttonText } = props
-    // endedStatistics.length != 0
     return (
       <Row>
         <Col>
