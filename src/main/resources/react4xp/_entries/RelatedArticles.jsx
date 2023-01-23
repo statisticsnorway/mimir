@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { Button, Card, Text } from '@statisticsnorway/ssb-component-library'
+import { Card, Text } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
 import { useMediaQuery } from 'react-responsive'
 
@@ -36,22 +36,26 @@ function RelatedArticles(props) {
 
   useEffect(() => {
     if (focusElement) {
-      currentElement.current.firstChild.firstChild.focus()
+      currentElement.current && currentElement.current.firstChild.firstChild.focus()
     }
   }, [shownArticles])
 
-  function toggleBox() {
-    shownArticles.length < relatedArticles.length ? showMore() : showFewer()
+  function toggleBox(focus) {
+    shownArticles.length < relatedArticles.length ? showMore(focus) : showFewer(focus)
     setIsHidden((prev) => !prev)
   }
 
-  function showMore() {
-    setFocusElement(true)
+  function showMore(focus) {
+    if (focus) {
+      setFocusElement(true)
+    }
     setShownArticles(relatedArticles)
   }
 
-  function showFewer() {
-    setFocusElement(false)
+  function showFewer(focus) {
+    if (focus) {
+      setFocusElement(false)
+    }
     setShownArticles(firstShownArticles)
   }
 
@@ -59,12 +63,19 @@ function RelatedArticles(props) {
     return (
       <div className={`row hide-show-btn justify-content-center justify-content-lg-start`}>
         <div className='col-auto'>
-          <Button
-            onClick={toggleBox}
-            ariaLabel={isHidden ? `${showAllAriaLabel} - ${relatedArticles.length} ${articlePluralName}` : ''}
+          <button
+            className='ssb-btn'
+            onClick={() => toggleBox(false)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault()
+                toggleBox(true)
+              }
+            }}
+            aria-label={isHidden ? `${showAllAriaLabel} - ${relatedArticles.length} ${articlePluralName}` : ''}
           >
             {shownArticles.length < relatedArticles.length ? showAll + ` (${relatedArticles.length})` : showLess}
-          </Button>
+          </button>
         </div>
       </div>
     )
