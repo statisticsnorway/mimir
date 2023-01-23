@@ -3,7 +3,7 @@ on:
   push:
     branches:
       - 'master'
-  
+
 jobs:
   deploy_to_qa:
     name: 'Deploy to QA'
@@ -15,7 +15,7 @@ jobs:
           skipPublishing: true
       - id: deploy_app_to_XP
         uses: 'enonic/action-app-deploy@main'
-        with: 
+        with:
           url: ${{ secrets.ENONIC_QA_URL }}
           username: ${{ secrets.ENONIC_QA_USER }}
           password: ${{ secrets.ENONIC_QA_PASS }}
@@ -70,7 +70,7 @@ jobs:
               ]
             }
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_MIMIR_UTV }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_ALERTS_QA }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
       - name: Send failure message to Slack
         id: slack_failure
