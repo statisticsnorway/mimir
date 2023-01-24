@@ -179,6 +179,9 @@ exports.get = function (req: XP.Request): XP.Response {
     if (page._path.includes('/barn-og-unge/')) {
       municipalPageType = 'barn-og-unge'
     }
+    if (page._path.includes('/jakt-i-din-kommune/')) {
+      municipalPageType = 'jakt-i-din-kommune'
+    }
   }
 
   const metaInfo: MetaInfoData = parseMetaInfoData(municipality, pageType, page, language, req)
