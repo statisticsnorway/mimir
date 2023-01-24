@@ -16,8 +16,7 @@ import {
   TableCellRaw,
   XmlParser,
 } from '/lib/types/xmlParser'
-import { DatasetRepoNode } from '/lib/ssb/repo/dataset'
-import { DataSource as DataSourceType } from '/lib/ssb/repo/dataset'
+import { DatasetRepoNode, DataSource as DataSourceType } from '/lib/ssb/repo/dataset'
 import type { DataSource } from '/site/mixins/dataSource'
 
 const {

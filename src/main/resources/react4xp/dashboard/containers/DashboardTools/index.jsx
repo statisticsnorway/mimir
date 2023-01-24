@@ -22,11 +22,11 @@ import {
   selectSearchList,
   selectLoadingSearchList,
   selectHasLoadingStatistic,
+  selectStatistics,
 } from '/react4xp/dashboard/containers/Statistics/selectors'
 import { setOpenStatistic, setOpenModal } from '/react4xp/dashboard/containers/Statistics/actions'
 import { startRefresh } from '/react4xp/dashboard/containers/StatRegDashboard/actions'
 import { selectStatuses } from '/react4xp/dashboard/containers/StatRegDashboard/selectors'
-import { selectStatistics } from '/react4xp/dashboard/containers/Statistics/selectors'
 import { RefreshStatRegModal } from '/react4xp/dashboard/containers/DashboardTools/RefreshStatRegModal'
 import axios from 'axios'
 
