@@ -6,6 +6,8 @@
   }
 
   .ssb-card {
+    width: 33%;
+
     .card-content {
       background-color: transparent;
       border-color: $ssb-dark-6;
@@ -34,6 +36,7 @@
 
   @include media-breakpoint-down(md) {
     .ssb-card {
+      width: 100%;
       padding: 0;
     }
   }

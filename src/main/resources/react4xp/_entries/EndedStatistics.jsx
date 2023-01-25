@@ -13,7 +13,7 @@ const EndedStatistics = (props) => {
           return (
             <Card
               key={`ended-statistics-card-${index}`}
-              className={`mb-3 col-12 col-lg-4`}
+              className={`mb-3`}
               href={href}
               hrefText={iconText}
               title={title}
