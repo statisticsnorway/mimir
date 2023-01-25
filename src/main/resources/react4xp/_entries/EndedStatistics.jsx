@@ -1,70 +1,45 @@
 import React from 'react'
-import { Button, Card, Text } from '@statisticsnorway/ssb-component-library'
+import { Card, Text, ButtonTertiary } from '@statisticsnorway/ssb-component-library'
 import { Col, Container, Row } from 'react-bootstrap'
 import PropTypes from 'prop-types'
-import { ChevronDown, ChevronUp } from 'react-feather'
 
-class EndedStatistics extends React.Component {
-  constructor(props) {
-    super(props)
+const EndedStatistics = (props) => {
+  const { endedStatistics, iconText } = props
 
-    this.state = {
-      isHidden: true,
-    }
-
-    this.toggleBox = this.toggleBox.bind(this)
+  const renderContent = () => {
+    return (
+      <Row className='mt-3'>
+        {endedStatistics.map(({ href, title, preamble }, index) => {
+          return (
+            <Card
+              key={`ended-statistics-card-${index}`}
+              className={`mb-3`}
+              href={href}
+              hrefText={iconText}
+              title={title}
+            >
+              <Text>{preamble}</Text>
+            </Card>
+          )
+        })}
+      </Row>
+    )
   }
 
-  toggleBox() {
-    this.setState((prevState) => ({
-      isHidden: !prevState.isHidden,
-    }))
-  }
-
-  renderIcon() {
-    if (this.state.isHidden) {
-      return <ChevronDown size={20} className='me-2' />
-    }
-    return <ChevronUp size={20} className='me-2' />
-  }
-
-  renderShowMoreButton() {
-    const { buttonText } = this.props
+  const renderShowMoreButton = () => {
+    const { buttonText } = props
     return (
       <Row>
         <Col>
-          <Button onClick={this.toggleBox}>
-            {this.renderIcon()}
-            {buttonText}
-          </Button>
+          <ButtonTertiary id='ended-stat' header={buttonText}>
+            {renderContent()}
+          </ButtonTertiary>
         </Col>
       </Row>
     )
   }
 
-  render() {
-    const { endedStatistics, iconText } = this.props
-    return (
-      <Container>
-        {this.renderShowMoreButton()}
-        <Row className='mt-3'>
-          {endedStatistics.map(({ href, title, preamble }, index) => {
-            return (
-              <Card
-                key={`ended-statistics-card-${index}`}
-                className={`mb-3 col-12 col-lg-4 ${this.state.isHidden ? 'd-none' : ''}`}
-                href={href}
-                hrefText={iconText}
-                title={title}
-              >
-                <Text>{preamble}</Text>
-              </Card>
-            )
-          })}
-        </Row>
-      </Container>
-    )
-  }
+  return <Container>{renderShowMoreButton()}</Container>
 }
 
 EndedStatistics.propTypes = {
@@ -79,4 +54,4 @@ EndedStatistics.propTypes = {
   buttonText: PropTypes.string.isRequired,
 }
 
-export default (props) => <EndedStatistics {...props} />
+export default EndedStatistics

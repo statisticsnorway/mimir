@@ -1,7 +1,13 @@
 .part-ended-statistics {
   margin-top: 0;
 
+  .ssb-btn-tertiary .accordion-body {
+    padding: 0;
+  }
+
   .ssb-card {
+    width: 33%;
+
     .card-content {
       background-color: transparent;
       border-color: $ssb-dark-6;
@@ -25,6 +31,13 @@
       .card-action {
         background-color: $ssb-dark-6;
       }
+    }
+  }
+
+  @include media-breakpoint-down(md) {
+    .ssb-card {
+      width: 100%;
+      padding: 0;
     }
   }
 }
