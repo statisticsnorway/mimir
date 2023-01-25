@@ -215,6 +215,9 @@ function createContentStatisticVariant(
   params: CreateContentStatisticVariantParams
 ): ContentLight<Release> & NodeCreateParams {
   const { statistic, variant, prevRelease, language } = params
+  const serverOffsetInMs: number =
+    app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
+  const prevReleaseServerOffset: Date = new Date(new Date(prevRelease.publishTime).getTime() - serverOffsetInMs)
 
   return {
     displayName: language === 'nb' ? statistic.name : statistic.nameEN,
@@ -224,7 +227,7 @@ function createContentStatisticVariant(
     data: prepareData(params),
     language,
     publish: {
-      from: prevRelease.publishTime ? instant(new Date(prevRelease.publishTime)) : '',
+      from: prevRelease.publishTime ? instant(prevReleaseServerOffset) : '',
     },
   }
 }
@@ -251,7 +254,7 @@ function prepareData({
     variantId: String(variant.id),
     shortName: statistic.shortName,
     name: language === 'nb' ? statistic.name : statistic.nameEN,
-    period: capitalize(calculatePeriod(variant.frekvens, variant.previousFrom, variant.previousTo, language)),
+    period: capitalize(calculatePeriod(variant.frekvens, prevRelease.periodFrom, prevRelease.periodTo, language)),
     ingress:
       aboutTheStatisticsContent?.data.ingress ??
       statisticsContent?.x?.['com-enonic-app-metafields']?.['meta-data'].seoDescription,

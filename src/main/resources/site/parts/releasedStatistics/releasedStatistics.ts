@@ -88,11 +88,11 @@ function getGroupedWithMonthNames(
       : []
 
   const releasesPreppedNextReleaseToday: PreparedStatistics[] = nextReleaseToday.map((variant) => {
-    return prepReleases(variant, parseISO(variant.data.nextRelease))
+    return prepReleases(variant, parseISO(variant.data.nextRelease), variant.data.nextPeriod)
   })
 
   const releasesPreppedPreviousRelease: PreparedStatistics[] = allPreviousStatisticVariantsFromRepo.map((variant) => {
-    return prepReleases(variant, parseISO(variant.data.previousRelease))
+    return prepReleases(variant, parseISO(variant.data.previousRelease), variant.data.period)
   })
 
   const releasedStatistics: PreparedStatistics[] =
@@ -104,7 +104,11 @@ function getGroupedWithMonthNames(
   return addMonthNames(groupedByYearMonthAndDay, currentLanguage)
 }
 
-function prepReleases(variant: ContentLight<ReleaseVariant>, date: Date): PreparedStatistics {
+function prepReleases(
+  variant: ContentLight<ReleaseVariant>,
+  date: Date,
+  periodRelease: string | undefined
+): PreparedStatistics {
   return {
     id: Number(variant.data.statisticId),
     name: variant.data.name,
@@ -115,7 +119,7 @@ function prepReleases(variant: ContentLight<ReleaseVariant>, date: Date): Prepar
       monthNumber: getMonth(date),
       year: getYear(date),
       frequency: variant.data.frequency,
-      period: variant.data.period ? variant.data.period.toLowerCase() : '',
+      period: periodRelease ? periodRelease.toLowerCase() : '',
     },
   }
 }

@@ -19,6 +19,7 @@
                 <option value="kommunefakta">Vis på Kommunefakta</option>
                 <option value="kommuneareal">Vis på Kommuneareal</option>
                 <option value="barn-og-unge">Vis på Barn og unge</option>
+                <option value="jakt-i-din-kommune">Vis på Jakt i din kommune</option>
                 <option value="showOnAll">Vis på alle sider</option>
             </config>
             <default>kommunefakta</default>
