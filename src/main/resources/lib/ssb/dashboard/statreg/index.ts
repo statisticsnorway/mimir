@@ -1,10 +1,10 @@
-import { StatRegNode, StatRegRefreshResult } from '../../repo/statreg'
-import { Socket, SocketEmitter } from '../../../types/socket'
-import { StatRegLatestFetchInfoNode } from '../../statreg/eventLog'
-import { LogSummary } from '../../repo/eventLog'
-import { Events, QueryInfo } from '../../repo/query'
+import { StatRegNode, StatRegRefreshResult } from '/lib/ssb/repo/statreg'
+import { Socket, SocketEmitter } from '/lib/types/socket'
+import { StatRegLatestFetchInfoNode } from '/lib/ssb/statreg/eventLog'
+import { LogSummary } from '/lib/ssb/repo/eventLog'
+import { Events, QueryInfo } from '/lib/ssb/repo/query'
 import { run, RunContext } from '/lib/xp/context'
-import { DashboardRefreshResultLogData } from '../dashboard'
+import { DashboardRefreshResultLogData } from '/lib/ssb/dashboard/dashboard'
 import { ContextAttributes } from '*/lib/xp/context'
 
 const { STATREG_NODES, refreshStatRegData, getStatRegNode } = __non_webpack_require__('/lib/ssb/repo/statreg')

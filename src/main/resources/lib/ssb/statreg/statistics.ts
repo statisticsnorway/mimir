@@ -1,11 +1,11 @@
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
-import { StatRegNode } from '../repo/statreg'
+import { StatRegNode } from '/lib/ssb/repo/statreg'
 import {
   StatisticInListing,
   VariantInListing,
   ReleasesInListing,
   ReleaseDatesVariant,
-} from '../dashboard/statreg/types'
+} from '/lib/ssb/dashboard/statreg/types'
 import { HttpResponse } from '/lib/http-client'
 
 const { moment } = __non_webpack_require__('/lib/vendor/moment')

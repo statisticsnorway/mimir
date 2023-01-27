@@ -1,6 +1,6 @@
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 import { Content } from '/lib/xp/content'
-import type { Table } from '../../../site/content-types'
+import type { Table } from '/site/content-types'
 import {
   TbmlDataUniform,
   TableRowUniform,
@@ -15,10 +15,9 @@ import {
   StatbankSavedUniform,
   TableCellRaw,
   XmlParser,
-} from '../../types/xmlParser'
-import { DatasetRepoNode } from '../repo/dataset'
-import { DataSource as DataSourceType } from '../repo/dataset'
-import type { DataSource } from '../../../site/mixins/dataSource'
+} from '/lib/types/xmlParser'
+import { DatasetRepoNode, DataSource as DataSourceType } from '/lib/ssb/repo/dataset'
+import type { DataSource } from '/site/mixins/dataSource'
 
 const {
   data: { forceArray },

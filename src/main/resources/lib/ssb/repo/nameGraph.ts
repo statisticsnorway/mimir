@@ -1,8 +1,8 @@
 import { create as createRepo } from '/lib/xp/repo'
 import { run } from '/lib/xp/context'
 import { connect, type NodeCreateParams, type NodeQueryResponse, type RepoConnection } from '/lib/xp/node'
-import type { Data, Dataset, Dimension } from '../../types/jsonstat-toolkit'
-import type { DatasetRepoNode } from '../../../lib/ssb/repo/dataset'
+import type { Data, Dataset, Dimension } from '/lib/types/jsonstat-toolkit'
+import type { DatasetRepoNode } from '/lib/ssb/repo/dataset'
 // @ts-ignore
 import JSONstat from 'jsonstat-toolkit/import.mjs'
 

@@ -1,7 +1,7 @@
 import { NodeQueryParams, NodeQueryResponse, RepoNode } from '/lib/xp/node'
-import { EditorCallback } from './eventLog'
+import { EditorCallback } from '/lib/ssb/repo/eventLog'
 import { getUser, User } from '/lib/xp/auth'
-import { DataSourceInfo, RSSFilterLogData } from '../cron/rss'
+import { DataSourceInfo, RSSFilterLogData } from '/lib/ssb/cron/rss'
 const { modifyNode, getNode, queryNodes } = __non_webpack_require__('/lib/ssb/repo/common')
 const { EVENT_LOG_REPO, EVENT_LOG_BRANCH, createEventLog } = __non_webpack_require__('/lib/ssb/repo/eventLog')
 

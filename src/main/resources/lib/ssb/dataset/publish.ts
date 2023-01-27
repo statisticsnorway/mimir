@@ -1,10 +1,10 @@
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 import { Content } from '/lib/xp/content'
-import type { Statistics } from '../../../site/content-types'
-import type { DataSource } from '../../../site/mixins/dataSource'
-import { DatasetRepoNode } from '../repo/dataset'
+import type { Statistics } from '/site/content-types'
+import type { DataSource } from '/site/mixins/dataSource'
+import { DatasetRepoNode } from '/lib/ssb/repo/dataset'
 import { NodeQueryHit } from '/lib/xp/node'
-import type { Statistic } from '../../../site/mixins/statistic'
+import type { Statistic } from '/site/mixins/statistic'
 import { listener, EnonicEvent } from '/lib/xp/event'
 import { TaskInfo } from '/lib/xp/task'
 

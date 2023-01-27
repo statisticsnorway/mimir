@@ -1,10 +1,10 @@
 import { get as getContentByKey, type Content, type MediaImage } from '/lib/xp/content'
-import type { SourceList, SourcesConfig } from '../../../lib/ssb/utils/utils'
+import type { SourceList, SourcesConfig } from '/lib/ssb/utils/utils'
 import { render, type RenderResponse } from '/lib/enonic/react4xp'
 // @ts-ignore
 import { Base64 } from 'js-base64'
 import type { InfoGraphics as InfoGraphicsPartConfig } from '.'
-import type { Default as DefaultPageConfig } from '../../pages/default'
+import type { Default as DefaultPageConfig } from '/site/pages/default'
 import { getContent, getComponent, imageUrl } from '/lib/xp/portal'
 
 const {

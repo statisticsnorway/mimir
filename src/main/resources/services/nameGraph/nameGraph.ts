@@ -1,7 +1,7 @@
 import type { Content } from '/lib/xp/content'
-import type { CalculatorConfig } from '../../site/content-types'
-import type { DatasetRepoNode } from '../../lib/ssb/repo/dataset'
-import type { Data, Dataset, Dimension } from '../../lib/types/jsonstat-toolkit'
+import type { CalculatorConfig } from '/site/content-types'
+import type { DatasetRepoNode } from '/lib/ssb/repo/dataset'
+import type { Data, Dataset, Dimension } from '/lib/types/jsonstat-toolkit'
 import { getNameGraphDataFromRepo, type NameData, nameGraphRepoExists } from '/lib/ssb/repo/nameGraph'
 // @ts-ignore
 import JSONstat from 'jsonstat-toolkit/import.mjs'

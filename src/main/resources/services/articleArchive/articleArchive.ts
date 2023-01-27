@@ -1,4 +1,4 @@
-import { parseArticleData, ParsedArticles } from '../../site/parts/articleArchive/articleArchive'
+import { parseArticleData, ParsedArticles } from '/site/parts/articleArchive/articleArchive'
 
 exports.get = (req: XP.Request): XP.Response => {
   const start: number = Number(req.params.start) ? Number(req.params.start) : 0

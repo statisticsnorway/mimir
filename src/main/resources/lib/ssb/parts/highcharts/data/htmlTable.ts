@@ -1,8 +1,8 @@
-import { AreaLineLinearData, PieData, Series, SeriesAndCategories } from '../highchartsData'
-import { XmlParser, PreliminaryData, TableRowUniform, TableCellUniform } from '../../../../types/xmlParser'
+import { AreaLineLinearData, PieData, Series, SeriesAndCategories } from '/lib/ssb/parts/highcharts/highchartsData'
+import { XmlParser, PreliminaryData, TableRowUniform, TableCellUniform } from '/lib/types/xmlParser'
 import { Content } from '/lib/xp/content'
-import type { Highchart } from '../../../../../site/content-types'
-import { RowValue } from '../../../utils/utils'
+import type { Highchart } from '/site/content-types'
+import { RowValue } from '/lib/ssb/utils/utils'
 
 const { toString } = __non_webpack_require__('/lib/vendor/ramda')
 const {

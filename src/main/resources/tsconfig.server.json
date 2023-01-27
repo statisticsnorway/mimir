@@ -1,7 +1,7 @@
 {
   "extends": "../../../tsconfig",
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "commonjs", // NOTE: I suspect module:'commonjs' breaks tree-shaking. Let SWC handle the formatting instead.
     "moduleResolution": "node",
     "sourceMap": false,
     "allowSyntheticDefaultImports": true,

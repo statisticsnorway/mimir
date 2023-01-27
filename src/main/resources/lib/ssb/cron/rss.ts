@@ -1,15 +1,15 @@
-import { StatisticInListing } from '../dashboard/statreg/types'
+import { StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 import { Content } from '/lib/xp/content'
 import { request, HttpResponse } from '/lib/http-client'
-import type { DataSource } from '../../../site/mixins/dataSource'
-import { TbmlDataUniform, XmlParser } from '../../types/xmlParser'
-import { DatasetRepoNode, DataSource as DataSourceType } from '../repo/dataset'
-import { JSONstat } from '../../types/jsonstat-toolkit'
-import { JobStatus } from '../repo/job'
-import type { Default as DefaultPageConfig } from '../../../site/pages/default'
-import type { Statistics } from '../../../site/content-types'
-import type { Statistic } from '../../../site/mixins/statistic'
+import type { DataSource } from '/site/mixins/dataSource'
+import { TbmlDataUniform, XmlParser } from '/lib/types/xmlParser'
+import { DatasetRepoNode, DataSource as DataSourceType } from '/lib/ssb/repo/dataset'
+import { JSONstat } from '/lib/types/jsonstat-toolkit'
+import { JobStatus } from '/lib/ssb/repo/job'
+import type { Default as DefaultPageConfig } from '/site/pages/default'
+import type { Statistics } from '/site/content-types'
+import type { Statistic } from '/site/mixins/statistic'
 
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 const { moment } = __non_webpack_require__('/lib/vendor/moment')

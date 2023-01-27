@@ -1,6 +1,6 @@
 import type { Content } from '/lib/xp/content'
-import type { MunicipalityWithCounty } from '../../../lib/ssb/dataset/klass/municipalities'
-import type { KeyFigureView } from '../../../lib/ssb/parts/keyFigure'
+import type { MunicipalityWithCounty } from '/lib/ssb/dataset/klass/municipalities'
+import type { KeyFigureView } from '/lib/ssb/parts/keyFigure'
 import { render, type RenderResponse } from '/lib/enonic/react4xp'
 import type { KeyFigure as KeyFigurePartConfig } from '.'
 import { getContent, getComponent, getSiteConfig } from '/lib/xp/portal'

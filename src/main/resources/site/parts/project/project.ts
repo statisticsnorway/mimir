@@ -1,7 +1,7 @@
 import { type Content, get as getTheContent } from '/lib/xp/content'
 import { render, type RenderResponse } from '/lib/enonic/react4xp'
 import { localize } from '/lib/xp/i18n'
-import type { Project } from '../../content-types'
+import type { Project } from '/site/content-types'
 import { getContent, pageUrl, processHtml } from '/lib/xp/portal'
 
 export function preview(req: XP.Request): RenderResponse {

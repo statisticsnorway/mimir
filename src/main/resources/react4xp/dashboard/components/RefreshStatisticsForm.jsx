@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Button, Form, Row, Col } from 'react-bootstrap'
 import PropTypes from 'prop-types'
-import { selectInternalStatbankUrl } from '../containers/HomePage/selectors'
+import { selectInternalStatbankUrl } from '/react4xp/dashboard/containers/HomePage/selectors'
 import { useSelector } from 'react-redux'
 import { Link } from '@statisticsnorway/ssb-component-library'
 

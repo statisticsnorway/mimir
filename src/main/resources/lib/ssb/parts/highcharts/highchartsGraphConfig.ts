@@ -1,8 +1,8 @@
-import { HighchartsGraphConfig } from '../../../types/highcharts'
-import type { Highchart } from '../../../../site/content-types'
+import { HighchartsGraphConfig } from '/lib/types/highcharts'
+import type { Highchart } from '/site/content-types'
 import { Content } from '/lib/xp/content'
-import type { DataSource } from '../../../../site/mixins/dataSource'
-import { PreliminaryData } from '../../../types/xmlParser'
+import type { DataSource } from '/site/mixins/dataSource'
+import { PreliminaryData } from '/lib/types/xmlParser'
 
 const { createDefaultConfig } = __non_webpack_require__('/lib/ssb/parts/highcharts/graph/config')
 const { areaConfig } = __non_webpack_require__('/lib/ssb/parts/highcharts/graph/graphAreaConfig')

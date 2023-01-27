@@ -1,5 +1,5 @@
 import { request, HttpResponse } from '/lib/http-client'
-import { formatDate } from './dateUtils'
+import { formatDate } from '/lib/ssb/utils/dateUtils'
 
 const SOLR_PARAM_QUERY = 'q'
 const SOLR_FORMAT = 'json'

@@ -1,9 +1,9 @@
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
-import { DatasetRepoNode, DataSource as dataSourceType } from '../../repo/dataset'
+import { DatasetRepoNode, DataSource as dataSourceType } from '/lib/ssb/repo/dataset'
 import { Content } from '/lib/xp/content'
-import type { DataSource } from '../../../../site/mixins/dataSource'
-import { TbmlDataUniform, TbmlSourceListUniform } from '../../../types/xmlParser'
-import { TbprocessorParsedResponse } from './tbml'
+import type { DataSource } from '/site/mixins/dataSource'
+import { TbmlDataUniform, TbmlSourceListUniform } from '/lib/types/xmlParser'
+import { TbprocessorParsedResponse } from '/lib/ssb/dataset/tbprocessor/tbml'
 
 const { mergeDeepLeft } = __non_webpack_require__('/lib/vendor/ramda')
 const { getDataset } = __non_webpack_require__('/lib/ssb/repo/dataset')

@@ -2,7 +2,7 @@ import {
   parseRelatedFactPageData,
   RelatedFactPages,
   RelatedFactPageConfig,
-} from '../../site/parts/relatedFactPage/relatedFactPage'
+} from '/site/parts/relatedFactPage/relatedFactPage'
 
 exports.get = (req: XP.Request): XP.Response => {
   const start: number = Number(req.params.start) ? Number(req.params.start) : 0

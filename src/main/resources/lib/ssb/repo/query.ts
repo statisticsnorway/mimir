@@ -1,8 +1,8 @@
 import { RepoNode } from '/lib/xp/node'
-import { EditorCallback } from './eventLog'
+import { EditorCallback } from '/lib/ssb/repo/eventLog'
 import { User } from '/lib/xp/auth'
 import { HttpRequestParams, HttpResponse } from '/lib/http-client'
-import { TbmlDataUniform } from '../../types/xmlParser'
+import { TbmlDataUniform } from '/lib/types/xmlParser'
 const { dateToFormat } = __non_webpack_require__('/lib/ssb/utils/utils')
 const { getNode, withConnection, withLoggedInUserContext, withSuperUserContext } =
   __non_webpack_require__('/lib/ssb/repo/common')

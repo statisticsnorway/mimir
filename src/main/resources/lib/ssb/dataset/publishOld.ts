@@ -1,12 +1,17 @@
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 import { get as getContent, Content } from '/lib/xp/content'
-import type { Statistics } from '../../../site/content-types'
-import type { DataSource } from '../../../site/mixins/dataSource'
-import { DatasetRepoNode } from '../repo/dataset'
-import { StatisticInListing, ReleaseDatesVariant } from '../dashboard/statreg/types'
-import { JobEventNode, JobInfoNode, StatisticsPublishResult, DataSourceStatisticsPublishResult } from '../repo/job'
+import type { Statistics } from '/site/content-types'
+import type { DataSource } from '/site/mixins/dataSource'
+import { DatasetRepoNode } from '/lib/ssb/repo/dataset'
+import { StatisticInListing, ReleaseDatesVariant } from '/lib/ssb/dashboard/statreg/types'
+import {
+  JobEventNode,
+  JobInfoNode,
+  StatisticsPublishResult,
+  DataSourceStatisticsPublishResult,
+} from '/lib/ssb/repo/job'
 import { NodeQueryHit } from '/lib/xp/node'
-import type { Statistic } from '../../../site/mixins/statistic'
+import type { Statistic } from '/site/mixins/statistic'
 import { send } from '/lib/xp/event'
 
 const { moment } = __non_webpack_require__('/lib/vendor/moment')

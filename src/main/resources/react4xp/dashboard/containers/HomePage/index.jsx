@@ -1,14 +1,19 @@
 import React from 'react'
 import { Col, Container, Row, Tab, Tabs } from 'react-bootstrap'
 import { useSelector } from 'react-redux'
-import { StatRegDashboard } from '../StatRegDashboard'
-import { selectDashboardOptions, selectIsConnected, selectServerTime, selectServerTimeReceived } from './selectors'
-import { ConnectionBadge } from '../../components/ConnectionBadge'
-import { DataSources } from '../DataSources'
-import { Statistics } from '../Statistics'
-import DashboardTools from '../DashboardTools'
-import Jobs from '../Jobs'
-import { ServerTime } from '../../components/ServerTime'
+import { StatRegDashboard } from '/react4xp/dashboard/containers/StatRegDashboard'
+import {
+  selectDashboardOptions,
+  selectIsConnected,
+  selectServerTime,
+  selectServerTimeReceived,
+} from '/react4xp/dashboard/containers/HomePage/selectors'
+import { ConnectionBadge } from '/react4xp/dashboard/components/ConnectionBadge'
+import { DataSources } from '/react4xp/dashboard/containers/DataSources'
+import { Statistics } from '/react4xp/dashboard/containers/Statistics'
+import DashboardTools from '/react4xp/dashboard/containers/DashboardTools'
+import Jobs from '/react4xp/dashboard/containers/Jobs'
+import { ServerTime } from '/react4xp/dashboard/components/ServerTime'
 
 export function HomePage() {
   const isConnected = useSelector(selectIsConnected)

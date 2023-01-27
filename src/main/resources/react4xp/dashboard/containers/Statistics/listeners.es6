@@ -1,4 +1,4 @@
-import { actions } from './slice'
+import { actions } from '/react4xp/dashboard/containers/Statistics/slice'
 
 export default function setupStatisticsListeners(io, dispatch) {
   io.on('statistics-result', (data) => {

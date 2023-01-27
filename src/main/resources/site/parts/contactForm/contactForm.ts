@@ -1,6 +1,6 @@
 import { render, type RenderResponse } from '/lib/enonic/react4xp'
 import type { Content } from '/lib/xp/content'
-import type { Language, Phrases } from '../../../lib/types/language'
+import type { Language, Phrases } from '/lib/types/language'
 import { getContent, serviceUrl } from '/lib/xp/portal'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')

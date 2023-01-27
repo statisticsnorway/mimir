@@ -1,11 +1,11 @@
 import React, { useMemo, useState } from 'react'
 import { Col, Container, Row, Modal, Button } from 'react-bootstrap'
 import { useSelector } from 'react-redux'
-import { ReactTable } from '../../components/ReactTable'
-import { selectJobs, selectLoading } from './selectors'
-import { selectContentStudioBaseUrl } from '../HomePage/selectors'
+import { ReactTable } from '/react4xp/dashboard/components/ReactTable'
+import { selectJobs, selectLoading } from '/react4xp/dashboard/containers/Jobs/selectors'
+import { selectContentStudioBaseUrl } from '/react4xp/dashboard/containers/HomePage/selectors'
 import { Link, Accordion, Divider } from '@statisticsnorway/ssb-component-library'
-import { DataQueryBadges } from '../../components/DataQueryBadges'
+import { DataQueryBadges } from '/react4xp/dashboard/components/DataQueryBadges'
 import moment from 'moment/min/moment-with-locales'
 
 export function Jobs() {

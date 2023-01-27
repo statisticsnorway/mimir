@@ -1,18 +1,18 @@
-import type { Article } from '../../../site/content-types'
+import type { Article } from '/site/content-types'
 import {
   getAllMainSubjectByContent,
   getAllSubSubjectByContent,
   getMainSubjects,
   getSubSubjects,
   type SubjectItem,
-} from '../utils/subjectUtils'
-import { formatDate } from './dateUtils'
+} from '/lib/ssb/utils/subjectUtils'
+import { formatDate } from '/lib/ssb/utils/dateUtils'
 import { notNullOrUndefined } from '/lib/ssb/utils/coreUtils'
 import { get, modify, query, type Content, type QueryResponse } from '/lib/xp/content'
 import { pageUrl } from '/lib/xp/portal'
 import { listener, EnonicEvent } from '/lib/xp/event'
 import { ENONIC_CMS_DEFAULT_REPO, withSuperUserContext } from '/lib/ssb/repo/common'
-import { arraysEqual, ensureArray } from './arrayUtils'
+import { arraysEqual, ensureArray } from '/lib/ssb/utils/arrayUtils'
 
 const { moment } = __non_webpack_require__('/lib/vendor/moment')
 

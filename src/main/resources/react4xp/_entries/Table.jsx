@@ -5,7 +5,7 @@ import { isEmpty } from 'ramda'
 import NumberFormat from 'react-number-format'
 import { Alert, Button } from 'react-bootstrap'
 import { ChevronLeft, ChevronRight } from 'react-feather'
-import { addGtagForEvent } from '../ReactGA'
+import { addGtagForEvent } from '/react4xp/ReactGA'
 
 class Table extends Component {
   constructor(props) {

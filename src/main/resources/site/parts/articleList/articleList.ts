@@ -1,10 +1,10 @@
-import type { Article } from '../../content-types'
+import type { Article } from '/site/content-types'
 import { pageUrl, getContent, getComponent, type Component } from '/lib/xp/portal'
 import type { ArticleList as ArticleListPartConfig } from '.'
 import { render, type RenderResponse } from '/lib/enonic/react4xp'
 import { query, type Content } from '/lib/xp/content'
-import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
-import { formatDate } from '../../../lib/ssb/utils/dateUtils'
+import { SubjectItem } from '/lib/ssb/utils/subjectUtils'
+import { formatDate } from '/lib/ssb/utils/dateUtils'
 import { localize } from '/lib/xp/i18n'
 
 const { getSubSubjects } = __non_webpack_require__('/lib/ssb/utils/subjectUtils')
@@ -14,10 +14,10 @@ const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
 
 export function get(req: XP.Request): RenderResponse | XP.Response {
   try {
-  return renderPart(req)
-   } catch (e) {
+    return renderPart(req)
+  } catch (e) {
     return renderError(req, 'Error in part', e)
-   }
+  }
 }
 
 export function preview(req: XP.Request): RenderResponse {
@@ -63,18 +63,19 @@ function getArticles(req: XP.Request, language: string): Array<Content<Article>>
   const pagePaths: Array<string> = subjectItems.map((sub) => `_parentPath LIKE "/content${sub.path}/*"`)
   const languageQuery: string = language !== 'en' ? 'AND language != "en"' : 'AND language = "en"'
 
-  const sort = [{
-    field: "publish.from",
-    direction: "DESC"
-  }, {
-    field: "data.frontPagePriority",
-    direction: "DESC"
-  }]
-  const articles: Array<Content<Article>> = query ({
+  const sort = [
+    {
+      field: 'publish.from',
+      direction: 'DESC',
+    },
+    {
+      field: 'data.frontPagePriority',
+      direction: 'DESC',
+    },
+  ]
+  const articles: Array<Content<Article>> = query({
     count: 4,
-    query: `(${pagePaths.join(
-      ' OR '
-    )}) ${languageQuery}`,
+    query: `(${pagePaths.join(' OR ')}) ${languageQuery}`,
     contentTypes: [`${app.name}:article`],
     sort: sort as unknown as string,
   }).hits as unknown as Array<Content<Article>>

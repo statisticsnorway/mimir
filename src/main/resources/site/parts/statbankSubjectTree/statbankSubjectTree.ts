@@ -1,7 +1,7 @@
 import { render, type RenderResponse } from '/lib/enonic/react4xp'
-import type { SubjectItem, StatisticItem } from '../../../lib/ssb/utils/subjectUtils'
+import type { SubjectItem, StatisticItem } from '/lib/ssb/utils/subjectUtils'
 import type { Content } from '/lib/xp/content'
-import type { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/types'
+import type { StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
 import { getContent } from '/lib/xp/portal'
 
 const {

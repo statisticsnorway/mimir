@@ -1,4 +1,4 @@
-import { actions } from './slice'
+import { actions } from '/react4xp/dashboard/containers/StatRegDashboard/slice'
 
 export default function setupStatRegListeners(io, dispatch) {
   io.on('statreg-dashboard-status-result', (data) => {

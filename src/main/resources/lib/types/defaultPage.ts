@@ -1,8 +1,8 @@
-import type { Page } from '../../site/content-types'
+import type { Page } from '/site/content-types'
 import { Content } from '/lib/xp/content'
-import type { Default as DefaultPageConfig } from '../../site/pages/default'
+import type { Default as DefaultPageConfig } from '/site/pages/default'
 import { Region } from '*/lib/xp/portal'
-import { SEO } from '../../services/news/news'
+import { SEO } from '/services/news/news'
 
 export interface DefaultPage extends Content<Page, SEO> {
   page: {

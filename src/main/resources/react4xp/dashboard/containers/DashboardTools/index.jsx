@@ -8,18 +8,26 @@ import {
   selectVarnishPurgeResult,
   selectLoadingRefreshNameGraph,
   selectRefreshNameGraphResult,
-} from '../HomePage/selectors'
-import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
-import { requestClearCache, requestPurgeVarnishCache, requestRefreshNameGraph } from '../HomePage/actions'
+} from '/react4xp/dashboard/containers/HomePage/selectors'
+import { WebSocketContext } from '/react4xp/dashboard/utils/websocket/WebsocketProvider'
+import {
+  requestClearCache,
+  requestPurgeVarnishCache,
+  requestRefreshNameGraph,
+} from '/react4xp/dashboard/containers/HomePage/actions'
 import { RefreshCw, Rss, Trash } from 'react-feather'
 import { Col, Container, Row, Alert } from 'react-bootstrap'
 import { Button, Dropdown, Input } from '@statisticsnorway/ssb-component-library'
-import { selectSearchList, selectLoadingSearchList, selectHasLoadingStatistic } from '../Statistics/selectors'
-import { setOpenStatistic, setOpenModal } from '../Statistics/actions'
-import { startRefresh } from '../StatRegDashboard/actions'
-import { selectStatuses } from '../StatRegDashboard/selectors'
-import { selectStatistics } from '../Statistics/selectors'
-import { RefreshStatRegModal } from './RefreshStatRegModal'
+import {
+  selectSearchList,
+  selectLoadingSearchList,
+  selectHasLoadingStatistic,
+  selectStatistics,
+} from '/react4xp/dashboard/containers/Statistics/selectors'
+import { setOpenStatistic, setOpenModal } from '/react4xp/dashboard/containers/Statistics/actions'
+import { startRefresh } from '/react4xp/dashboard/containers/StatRegDashboard/actions'
+import { selectStatuses } from '/react4xp/dashboard/containers/StatRegDashboard/selectors'
+import { RefreshStatRegModal } from '/react4xp/dashboard/containers/DashboardTools/RefreshStatRegModal'
 import axios from 'axios'
 
 export function DashboardTools() {

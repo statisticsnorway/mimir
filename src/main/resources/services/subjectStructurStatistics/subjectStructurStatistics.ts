@@ -1,4 +1,4 @@
-import { MainSubject, SubSubject, Title, StatisticItem } from '../../lib/ssb/utils/subjectUtils'
+import { MainSubject, SubSubject, Title, StatisticItem } from '/lib/ssb/utils/subjectUtils'
 const { getSubjectStructur } = __non_webpack_require__('/lib/ssb/utils/subjectUtils')
 const { xmlEscape } = __non_webpack_require__('/lib/text-encoding')
 
@@ -21,7 +21,7 @@ function get(req: XP.Request): XP.Response {
                             stat.isPrimaryLocated
                           }">${getXmlTitle(stat.titles)}</Statistikk>`
                       )
-                      .join('')}        
+                      .join('')}
         </delemne>`
                 )
                 .join('')}

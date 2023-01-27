@@ -1,4 +1,4 @@
-import { PublicationResult } from '../../lib/ssb/parts/publicationArchive'
+import { PublicationResult } from '/lib/ssb/parts/publicationArchive'
 
 const { getPublications } = __non_webpack_require__('/lib/ssb/parts/publicationArchive')
 

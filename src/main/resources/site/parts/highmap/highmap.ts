@@ -1,9 +1,9 @@
 import { get as getContentByKey, getAttachmentStream, type ByteSource, type Content } from '/lib/xp/content'
-import type { RowData } from '../../../lib/ssb/parts/highcharts/data/htmlTable'
-import { isNumber, type RowValue } from '../../../lib/ssb/utils/utils'
+import type { RowData } from '/lib/ssb/parts/highcharts/data/htmlTable'
+import { isNumber, type RowValue } from '/lib/ssb/utils/utils'
 import { render, type RenderResponse } from '/lib/enonic/react4xp'
-import type { PreliminaryData, XmlParser } from '../../../lib/types/xmlParser'
-import type { Highmap } from '../../content-types'
+import type { PreliminaryData, XmlParser } from '/lib/types/xmlParser'
+import type { Highmap } from '/site/content-types'
 import type { Highmap as HighmapPartConfig } from '.'
 import { getComponent, getContent } from '/lib/xp/portal'
 

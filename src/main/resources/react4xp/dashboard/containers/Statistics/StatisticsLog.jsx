@@ -1,13 +1,16 @@
 import React, { useContext, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
-import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
+import { WebSocketContext } from '/react4xp/dashboard/utils/websocket/WebsocketProvider'
 import { Button, Modal } from 'react-bootstrap'
-import { requestStatisticsJobLog } from './actions'
+import { requestStatisticsJobLog } from '/react4xp/dashboard/containers/Statistics/actions'
 import moment from 'moment/min/moment-with-locales'
 import { groupBy } from 'ramda'
-import { StatisticsLogJob } from './StatisticsLogJob'
-import { selectStatisticsLogDataLoaded, selectStatistic } from './selectors'
+import { StatisticsLogJob } from '/react4xp/dashboard/containers/Statistics/StatisticsLogJob'
+import {
+  selectStatisticsLogDataLoaded,
+  selectStatistic,
+} from '/react4xp/dashboard/containers/Statistics/selectors'
 
 export function StatisticsLog(props) {
   const { statisticId } = props

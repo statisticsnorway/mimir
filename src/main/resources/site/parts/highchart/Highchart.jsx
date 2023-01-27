@@ -4,7 +4,7 @@ import HighchartsReact from 'highcharts-react-official'
 import PropTypes from 'prop-types'
 import { Row, Col, Container } from 'react-bootstrap'
 import { Title, Button, Tabs, Divider, Link } from '@statisticsnorway/ssb-component-library'
-import { addGtagForEvent } from '../../../react4xp/ReactGA'
+import { addGtagForEvent } from '/react4xp/ReactGA'
 
 require('highcharts/modules/accessibility')(Highcharts)
 require('highcharts/modules/exporting')(Highcharts)

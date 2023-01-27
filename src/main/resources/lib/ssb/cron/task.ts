@@ -1,7 +1,7 @@
 import { Content } from '/lib/xp/content'
-import { CreateOrUpdateStatus } from '../dataset/dataset'
-import type { DataSource } from '../../../site/mixins/dataSource'
-import { RSSFilterLogData } from './rss'
+import { CreateOrUpdateStatus } from '/lib/ssb/dataset/dataset'
+import type { DataSource } from '/site/mixins/dataSource'
+import { RSSFilterLogData } from '/lib/ssb/cron/rss'
 
 const { splitEvery } = __non_webpack_require__('/lib/vendor/ramda')
 const { DATASET_BRANCH } = __non_webpack_require__('/lib/ssb/repo/dataset')

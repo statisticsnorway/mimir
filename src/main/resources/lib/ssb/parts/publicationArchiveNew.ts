@@ -1,10 +1,15 @@
-import type { Article } from '../../../site/content-types'
+import type { Article } from '/site/content-types'
 import type { Content, QueryDSL } from '/lib/xp/content'
 import { pageUrl } from '/lib/xp/portal'
-import { getMainSubjectBySubSubject, getMainSubjects, getSubSubjects, type SubjectItem } from '../utils/subjectUtils'
-import { formatDate } from '../utils/dateUtils'
-import type { XData } from '../../../site/x-data'
-import { forceArray } from '../utils/arrayUtils'
+import {
+  getMainSubjectBySubSubject,
+  getMainSubjects,
+  getSubSubjects,
+  type SubjectItem,
+} from '/lib/ssb/utils/subjectUtils'
+import { formatDate } from '/lib/ssb/utils/dateUtils'
+import type { XData } from '/site/x-data'
+import { forceArray } from '/lib/ssb/utils/arrayUtils'
 import { connect, multiRepoConnect, type MultiRepoConnection, type MultiRepoNodeQueryResponse } from '/lib/xp/node'
 import { type Context, type ContextAttributes, get as getContext, type PrincipalKey } from '/lib/xp/context'
 import type { ContentLight, Release } from '/lib/ssb/repo/statisticVariant'

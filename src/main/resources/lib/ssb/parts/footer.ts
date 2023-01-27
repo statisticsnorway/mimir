@@ -1,6 +1,6 @@
-import type { MenuItem, Footer } from '../../../site/content-types'
-import { Language } from '../../types/language'
-import { Link } from './menu'
+import type { MenuItem, Footer } from '/site/content-types'
+import { Language } from '/lib/types/language'
+import { Link } from '/lib/ssb/parts/menu'
 import { get, Content } from '/lib/xp/content'
 const { assetUrl } = __non_webpack_require__('/lib/xp/portal')
 const { createMenuTree, parseGlobalLinks } = __non_webpack_require__('/lib/ssb/parts/menu')

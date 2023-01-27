@@ -3,13 +3,13 @@ __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 import type { Content, QueryDSL } from '/lib/xp/content'
 import { render, type RenderResponse } from '/lib/enonic/react4xp'
 import type { ReleasedStatistics as ReleasedStatisticsPartConfig } from '.'
-import type { YearReleases } from '../../../lib/ssb/utils/variantUtils'
+import type { YearReleases } from '/lib/ssb/utils/variantUtils'
 import { type Component, getComponent, getContent } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 import type { ContentLight, Release as ReleaseVariant } from '/lib/ssb/repo/statisticVariant'
 import { getStatisticVariantsFromRepo } from '/lib/ssb/repo/statisticVariant'
 import { getDate, getMonth, getYear, parseISO } from 'date-fns'
-import { stringToServerTime } from '../../../lib/ssb/utils/dateUtils'
+import { stringToServerTime } from '/lib/ssb/utils/dateUtils'
 
 const { fromPartCache } = __non_webpack_require__('/lib/ssb/cache/partCache')
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')

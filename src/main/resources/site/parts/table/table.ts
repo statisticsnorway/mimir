@@ -1,17 +1,17 @@
 import { get as getContentByKey, type Content } from '/lib/xp/content'
 import { type ResourceKey, render } from '/lib/thymeleaf'
-import type { TableSourceList, TableView } from '../../../lib/ssb/parts/table'
-import type { SourceList, SourcesConfig } from '../../../lib/ssb/utils/utils'
+import type { TableSourceList, TableView } from '/lib/ssb/parts/table'
+import type { SourceList, SourcesConfig } from '/lib/ssb/utils/utils'
 import {
   DropdownItem as TableDownloadDropdownItem,
   DropdownItems as TableDownloadDropdownItems,
-} from '../../../lib/types/components'
-import type { Language, Phrases } from '../../../lib/types/language'
+} from '/lib/types/components'
+import type { Language, Phrases } from '/lib/types/language'
 import { render as r4xpRender } from '/lib/enonic/react4xp'
-import type { Statistics, Table } from '../../content-types'
-import { GA_TRACKING_ID } from '../../pages/default/default'
+import type { Statistics, Table } from '/site/content-types'
+import { GA_TRACKING_ID } from '/site/pages/default/default'
 import type { Table as TablePartConfig } from '.'
-import { DataSource as DataSourceType } from '../../../lib/ssb/repo/dataset'
+import { DataSource as DataSourceType } from '/lib/ssb/repo/dataset'
 import { getContent, getComponent, pageUrl, assetUrl } from '/lib/xp/portal'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')

@@ -2,8 +2,8 @@ import { type ResourceKey, render } from '/lib/thymeleaf'
 import type { Content } from '/lib/xp/content'
 import { getContent, getComponent, imageUrl, type Component } from '/lib/xp/portal'
 import type { Banner as BannerPartConfig } from '.'
-import { MunicipalityWithCounty } from '../../../lib/ssb/dataset/klass/municipalities'
-import type { Page } from '../../content-types'
+import { MunicipalityWithCounty } from '/lib/ssb/dataset/klass/municipalities'
+import type { Page } from '/site/content-types'
 
 const { getMunicipality, removeCountyFromMunicipalityName } = __non_webpack_require__(
   '/lib/ssb/dataset/klass/municipalities'

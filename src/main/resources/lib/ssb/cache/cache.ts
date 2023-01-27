@@ -2,15 +2,15 @@ __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 import { listener, send, EnonicEvent, EnonicEventData } from '/lib/xp/event'
 import { query, get, QueryResponse, Content } from '/lib/xp/content'
 import { run } from '/lib/xp/context'
-import { JSONstat } from '../../types/jsonstat-toolkit'
-import { TbmlDataUniform } from '../../types/xmlParser'
-import { DATASET_REPO, DatasetRepoNode } from '../repo/dataset'
-import { Socket } from '../../types/socket'
-import { MunicipalityWithCounty } from '../dataset/klass/municipalities'
+import { JSONstat } from '/lib/types/jsonstat-toolkit'
+import { TbmlDataUniform } from '/lib/types/xmlParser'
+import { DATASET_REPO, DatasetRepoNode } from '/lib/ssb/repo/dataset'
+import { Socket } from '/lib/types/socket'
+import { MunicipalityWithCounty } from '/lib/ssb/dataset/klass/municipalities'
 import { newCache, Cache } from '/lib/cache'
-import type { DataSource } from '../../../site/mixins/dataSource'
+import type { DataSource } from '/site/mixins/dataSource'
 import { request, HttpResponse } from '/lib/http-client'
-import type { BanVarnishPageCache as BanVarnishPageCacheConfig } from '../../../tasks/banVarnishPageCache'
+import type { BanVarnishPageCache as BanVarnishPageCacheConfig } from '/tasks/banVarnishPageCache'
 
 const { executeFunction, sleep, submitTask } = __non_webpack_require__('/lib/xp/task')
 const { getDataset, extractKey } = __non_webpack_require__('/lib/ssb/dataset/dataset')

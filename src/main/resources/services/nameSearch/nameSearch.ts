@@ -1,7 +1,7 @@
 import { request, HttpRequestParams, HttpResponse } from '/lib/http-client'
 import { Content } from '/lib/xp/content'
-import type { CalculatorConfig } from '../../site/content-types'
-import { DatasetRepoNode } from '../../lib/ssb/repo/dataset'
+import type { CalculatorConfig } from '/site/content-types'
+import { DatasetRepoNode } from '/lib/ssb/repo/dataset'
 
 // @ts-ignore
 import JSONstat from 'jsonstat-toolkit/import.mjs'

@@ -1,5 +1,5 @@
 import { NodeCreateParams, NodeQueryHit, NodeQueryResponse, RepoNode } from '/lib/xp/node'
-import { EventInfo, QueryInfo } from './query'
+import { EventInfo, QueryInfo } from '/lib/ssb/repo/query'
 
 const { localize } = __non_webpack_require__('/lib/xp/i18n')
 const { nodeExists, createNode, getNode, getChildNodes, withConnection } =

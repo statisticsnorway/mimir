@@ -1,11 +1,18 @@
 import React from 'react'
 import { Col, Row } from 'react-bootstrap'
-import { DataSourceTable } from './DataSourceTable'
-import { selectLoadingErrors, selectDataSourcesByParentType, selectLoadingDefaultDataSources } from './selectors'
-import { requestErrorDataSources, requestDefaultDataSources } from './actions'
-import { FactPageDataSources } from './FactPageDataSources'
-import { StatisticsDataSources } from './StatisticsDataSources'
-import { MunicipalDataSources } from './MunicipalDataSources'
+import { DataSourceTable } from '/react4xp/dashboard/containers/DataSources/DataSourceTable'
+import {
+  selectLoadingErrors,
+  selectDataSourcesByParentType,
+  selectLoadingDefaultDataSources,
+} from '/react4xp/dashboard/containers/DataSources/selectors'
+import {
+  requestErrorDataSources,
+  requestDefaultDataSources,
+} from '/react4xp/dashboard/containers/DataSources/actions'
+import { FactPageDataSources } from '/react4xp/dashboard/containers/DataSources/FactPageDataSources'
+import { StatisticsDataSources } from '/react4xp/dashboard/containers/DataSources/StatisticsDataSources'
+import { MunicipalDataSources } from '/react4xp/dashboard/containers/DataSources/MunicipalDataSources'
 
 export function DataSources() {
   function renderDataSourceTables() {

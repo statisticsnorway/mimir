@@ -1,4 +1,4 @@
-import type { StatisticInListing } from '../dashboard/statreg/types'
+import type { StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
 
 export function forceArray<A>(data: A | Array<A> | undefined): Array<A>
 export function forceArray<A>(data: A | ReadonlyArray<A> | undefined): ReadonlyArray<A>

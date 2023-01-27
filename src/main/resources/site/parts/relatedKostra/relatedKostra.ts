@@ -1,4 +1,4 @@
-import type { MunicipalityWithCounty } from '../../../lib/ssb/dataset/klass/municipalities'
+import type { MunicipalityWithCounty } from '/lib/ssb/dataset/klass/municipalities'
 import { render, type RenderResponse } from '/lib/enonic/react4xp'
 import type { RelatedKostra as RelatedKostraPartConfig } from '.'
 import { getComponent, getSiteConfig, processHtml } from '/lib/xp/portal'

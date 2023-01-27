@@ -1,5 +1,5 @@
-import { StatisticInListing } from '../../lib/ssb/dashboard/statreg/types'
-import { GroupedBy, PreparedStatistics, YearReleases, Release } from '../../lib/ssb/utils/variantUtils'
+import { StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
+import { GroupedBy, PreparedStatistics, YearReleases, Release } from '/lib/ssb/utils/variantUtils'
 
 const { addMonthNames, groupStatisticsByYearMonthAndDay, prepareRelease, filterOnComingReleases, getUpcomingReleases } =
   __non_webpack_require__('/lib/ssb/utils/variantUtils')

@@ -1,11 +1,11 @@
 import { get as getContentByKey, type Content, type MediaImage } from '/lib/xp/content'
-import type { SourceList, SourcesConfig } from '../../../lib/ssb/utils/utils'
+import type { SourceList, SourcesConfig } from '/lib/ssb/utils/utils'
 import { render, type RenderResponse } from '/lib/enonic/react4xp'
-import type { StaticVisualization } from '../../content-types'
+import type { StaticVisualization } from '/site/content-types'
 // @ts-ignore
-import type { Default as DefaultPageConfig } from '../../pages/default'
+import type { Default as DefaultPageConfig } from '/site/pages/default'
 import type { StaticVisualization as StaticVisualizationPartConfig } from '.'
-import type { HtmlTable } from '../../../lib/ssb/parts/table'
+import type { HtmlTable } from '/lib/ssb/parts/table'
 import { getContent, getComponent, imageUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 

@@ -1,6 +1,6 @@
 import { getUser, User } from '/lib/xp/auth'
 import { connect, NodeCreateParams, NodeQueryParams, NodeQueryResponse, RepoConnection, RepoNode } from '/lib/xp/node'
-import { EditorCallback } from './eventLog'
+import { EditorCallback } from '/lib/ssb/repo/eventLog'
 import { run } from '/lib/xp/context'
 import { PrincipalKeyRole } from '*/lib/xp/auth'
 

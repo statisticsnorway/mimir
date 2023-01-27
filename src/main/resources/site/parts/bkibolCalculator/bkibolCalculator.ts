@@ -3,7 +3,7 @@ import { getComponent, getContent, serviceUrl, pageUrl, type Component } from '/
 import type { BkibolCalculator as BkibolCalculatorPartConfig } from '.'
 import type { Dataset, Dimension } from '/lib/types/jsonstat-toolkit'
 import type { Content } from '/lib/xp/content'
-import type { CalculatorConfig } from '../../content-types'
+import type { CalculatorConfig } from '/site/content-types'
 import type { Language, Phrases } from '/lib/types/language'
 import { allMonths, nextPeriod } from '/lib/ssb/utils/calculatorUtils'
 import type { CalculatorPeriod } from '/lib/types/calculator'

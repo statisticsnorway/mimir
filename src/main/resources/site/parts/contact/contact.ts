@@ -1,10 +1,10 @@
 import type { Content } from '/lib/xp/content'
 import { getContent, getComponent, type Component } from '/lib/xp/portal'
 import { type ResourceKey, render } from '/lib/thymeleaf'
-import type { Phrases } from '../../../lib/types/language'
-import type { Contact } from '../../../lib/ssb/dashboard/statreg/types'
+import type { Phrases } from '/lib/types/language'
+import type { Contact } from '/lib/ssb/dashboard/statreg/types'
 import type { Contact as ContactPartConfig } from '.'
-import type { Article, Statistics } from '../../content-types'
+import type { Article, Statistics } from '/site/content-types'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 const { getContactsFromRepo } = __non_webpack_require__('/lib/ssb/statreg/contacts')

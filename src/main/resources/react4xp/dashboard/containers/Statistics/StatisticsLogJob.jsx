@@ -3,9 +3,12 @@ import { Accordion, NestedAccordion } from '@statisticsnorway/ssb-component-libr
 import React, { useContext } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import moment from 'moment/min/moment-with-locales'
-import { requestJobLogDetails } from './actions'
-import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
-import { selectJobLog, selectJobLogDetailsLoaded } from './selectors'
+import { requestJobLogDetails } from '/react4xp/dashboard/containers/Statistics/actions'
+import { WebSocketContext } from '/react4xp/dashboard/utils/websocket/WebsocketProvider'
+import {
+  selectJobLog,
+  selectJobLogDetailsLoaded,
+} from '/react4xp/dashboard/containers/Statistics/selectors'
 
 export function StatisticsLogJob(props) {
   const io = useContext(WebSocketContext)

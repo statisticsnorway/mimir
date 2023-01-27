@@ -1,7 +1,7 @@
-import { DatasetRepoNode, DataSource as DataSourceType } from '../../repo/dataset'
+import { DatasetRepoNode, DataSource as DataSourceType } from '/lib/ssb/repo/dataset'
 import { Content } from '/lib/xp/content'
-import type { DataSource } from '../../../../site/mixins/dataSource'
-import { JSONstat } from '../../../types/jsonstat-toolkit'
+import type { DataSource } from '/site/mixins/dataSource'
+import { JSONstat } from '/lib/types/jsonstat-toolkit'
 
 const { getDataset } = __non_webpack_require__('/lib/ssb/repo/dataset')
 const { get: fetchData } = __non_webpack_require__('/lib/ssb/dataset/statbankApi/statbankApiRequest')

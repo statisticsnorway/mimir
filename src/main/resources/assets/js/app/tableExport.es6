@@ -1927,15 +1927,9 @@ export function init() {
                 htmlData = ''
                 $.each(html, function () {
                   if ($(this).is('input')) {
-                    htmlData += $cell
-                      .find('input')
-                      .eq(inputidx++)
-                      .val()
+                    htmlData += $cell.find('input').eq(inputidx++).val()
                   } else if ($(this).is('select')) {
-                    htmlData += $cell
-                      .find('select option:selected')
-                      .eq(selectidx++)
-                      .text()
+                    htmlData += $cell.find('select option:selected').eq(selectidx++).text()
                   } else {
                     if (typeof $(this).html() === 'undefined') {
                       htmlData += $(this).text()

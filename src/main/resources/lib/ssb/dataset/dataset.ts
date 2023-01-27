@@ -1,12 +1,12 @@
 import { query, Content, QueryResponse } from '/lib/xp/content'
-import type { DataSource } from '../../../site/mixins/dataSource'
-import type { GenericDataImport } from '../../../site/content-types'
-import { DataSource as DataSourceType, DatasetRepoNode } from '../repo/dataset'
-import { JSONstat } from '../../types/jsonstat-toolkit'
-import { StatbankSavedRaw, TbmlDataUniform } from '../../types/xmlParser'
+import type { DataSource } from '/site/mixins/dataSource'
+import type { GenericDataImport } from '/site/content-types'
+import { DataSource as DataSourceType, DatasetRepoNode } from '/lib/ssb/repo/dataset'
+import { JSONstat } from '/lib/types/jsonstat-toolkit'
+import { StatbankSavedRaw, TbmlDataUniform } from '/lib/types/xmlParser'
 import { run, RunContext } from '/lib/xp/context'
 import { getUser, User } from '/lib/xp/auth'
-import { TbprocessorParsedResponse } from './tbprocessor/tbml'
+import { TbprocessorParsedResponse } from '/lib/ssb/dataset/tbprocessor/tbml'
 import { ContextAttributes } from '*/lib/xp/context'
 
 const { Events } = __non_webpack_require__('/lib/ssb/repo/query')

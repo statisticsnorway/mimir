@@ -2,7 +2,7 @@ import React from 'react'
 import { Link, TableLink } from '@statisticsnorway/ssb-component-library'
 import { ArrowRight } from 'react-feather'
 import PropTypes from 'prop-types'
-import { addGtagForEvent } from '../../../react4xp/ReactGA'
+import { addGtagForEvent } from '/react4xp/ReactGA'
 
 const Links = (props) => {
   const { children, href, withIcon, linkType, text, description, GA_TRACKING_ID, isPDFAttachment, attachmentTitle } =

@@ -3,12 +3,12 @@ __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 // @ts-ignore
 import JSONstat from 'jsonstat-toolkit/import.mjs'
 import { query, QueryResponse, Content } from '/lib/xp/content'
-import type { KeyFigure } from '../../../site/content-types'
-import { MunicipalityWithCounty } from '../dataset/klass/municipalities'
-import { TbmlDataUniform, TableRowUniform, TableCellUniform, PreliminaryData } from '../../types/xmlParser'
-import { Category, Dimension, JSONstat as JSONstatType } from '../../types/jsonstat-toolkit'
-import { DatasetRepoNode, DataSource as DataSourceType } from '../repo/dataset'
-import type { DataSource } from '../../../site/mixins/dataSource'
+import type { KeyFigure } from '/site/content-types'
+import { MunicipalityWithCounty } from '/lib/ssb/dataset/klass/municipalities'
+import { TbmlDataUniform, TableRowUniform, TableCellUniform, PreliminaryData } from '/lib/types/xmlParser'
+import { Category, Dimension, JSONstat as JSONstatType } from '/lib/types/jsonstat-toolkit'
+import { DatasetRepoNode, DataSource as DataSourceType } from '/lib/ssb/repo/dataset'
+import type { DataSource } from '/site/mixins/dataSource'
 
 const { imageUrl } = __non_webpack_require__('/lib/xp/portal')
 const { datasetOrUndefined } = __non_webpack_require__('/lib/ssb/cache/cache')

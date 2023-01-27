@@ -1,7 +1,7 @@
 import { Content } from '/lib/xp/content'
 import { HttpRequestParams } from '/lib/http-client'
-import type { CalculatorConfig } from '../../site/content-types'
-import { Dataset } from '../../lib/types/jsonstat-toolkit'
+import type { CalculatorConfig } from '/site/content-types'
+import { Dataset } from '/lib/types/jsonstat-toolkit'
 const { localize } = __non_webpack_require__('/lib/xp/i18n')
 const { getCalculatorConfig, getPifDataset, isChronological, getChangeValue } =
   __non_webpack_require__('/lib/ssb/dataset/calculator')

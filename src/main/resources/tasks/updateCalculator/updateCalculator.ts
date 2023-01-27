@@ -1,8 +1,8 @@
-import { JobEventNode, JobInfoNode } from '../../lib/ssb/repo/job'
-import { CreateOrUpdateStatus } from '../../lib/ssb/dataset/dataset'
-import type { GenericDataImport } from '../../site/content-types'
+import { JobEventNode, JobInfoNode } from '/lib/ssb/repo/job'
+import { CreateOrUpdateStatus } from '/lib/ssb/dataset/dataset'
+import type { GenericDataImport } from '/site/content-types'
 import { Content } from '/lib/xp/content'
-import { DATASET_BRANCH } from '../../lib/ssb/repo/dataset'
+import { DATASET_BRANCH } from '/lib/ssb/repo/dataset'
 
 const { completeJobLog, startJobLog, updateJobLog, JOB_STATUS_COMPLETE, JobNames } =
   __non_webpack_require__('/lib/ssb/repo/job')

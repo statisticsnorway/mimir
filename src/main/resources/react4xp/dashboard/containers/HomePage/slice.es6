@@ -1,4 +1,4 @@
-import { createSlice } from '../../utils/@reduxjs/toolkit'
+import { createSlice } from '/react4xp/dashboard/utils/@reduxjs/toolkit'
 
 export const initialState = {
   isConnected: false,
@@ -6,7 +6,7 @@ export const initialState = {
   loadingPurgeVarnish: false,
   loadingRefreshNameGraph: false,
   varnishPurgeResult: '',
-  refreshNameGraphResult:'',
+  refreshNameGraphResult: '',
   user: undefined,
   dashboardOptions: {},
   contentStudioBaseUrl: '',

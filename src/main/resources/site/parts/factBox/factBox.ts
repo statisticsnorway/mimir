@@ -2,7 +2,7 @@ import { getComponent, processHtml, type Component } from '/lib/xp/portal'
 import type { FactBox as FactBoxPartConfig } from '.'
 import { render as r4XpRender, type RenderResponse } from '/lib/enonic/react4xp'
 import { get as getContentByKey, type Content } from '/lib/xp/content'
-import type { FactBox } from '../../content-types'
+import type { FactBox } from '/site/content-types'
 import { type ResourceKey, render } from '/lib/thymeleaf'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')

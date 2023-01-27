@@ -1,11 +1,11 @@
 import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
-import { requestDatasetUpdate } from './actions'
+import { requestDatasetUpdate } from '/react4xp/dashboard/containers/DataSources/actions'
 import { RefreshCw } from 'react-feather'
 import { Button } from 'react-bootstrap'
-import { WebSocketContext } from '../../utils/websocket/WebsocketProvider'
+import { WebSocketContext } from '/react4xp/dashboard/utils/websocket/WebsocketProvider'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectDataSourceById } from './selectors'
+import { selectDataSourceById } from '/react4xp/dashboard/containers/DataSources/selectors'
 
 export function RefreshDataSourceButton(props) {
   const io = useContext(WebSocketContext)

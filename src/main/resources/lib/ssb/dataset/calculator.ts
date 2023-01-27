@@ -1,11 +1,11 @@
-import { Dataset, JSONstat as JSONstatType } from '../../types/jsonstat-toolkit'
+import { Dataset, JSONstat as JSONstatType } from '/lib/types/jsonstat-toolkit'
 import { query, get as getContent, Content } from '/lib/xp/content'
-import type { CalculatorConfig, GenericDataImport } from '../../../site/content-types'
-import { DatasetRepoNode } from '../repo/dataset'
+import type { CalculatorConfig, GenericDataImport } from '/site/content-types'
+import { DatasetRepoNode } from '/lib/ssb/repo/dataset'
 /* eslint-disable new-cap */
 // @ts-ignore
 import JSONstat from 'jsonstat-toolkit/import.mjs'
-import type { DataSource } from '../../../site/mixins/dataSource'
+import type { DataSource } from '/site/mixins/dataSource'
 
 const { datasetOrUndefined } = __non_webpack_require__('/lib/ssb/cache/cache')
 

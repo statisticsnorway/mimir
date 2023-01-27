@@ -1,5 +1,5 @@
 import { get as getContentByKey, type Content } from '/lib/xp/content'
-import type { Button } from '../../content-types'
+import type { Button } from '/site/content-types'
 import { attachmentUrl, getComponent, pageUrl, type Component } from '/lib/xp/portal'
 import type { Button as ButtonPartConfig } from '.'
 import { type ResourceKey, render } from '/lib/thymeleaf'

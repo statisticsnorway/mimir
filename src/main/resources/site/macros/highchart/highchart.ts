@@ -1,4 +1,4 @@
-import type { Highchart as HighchartConfig } from '../../macros/highchart'
+import type { Highchart as HighchartConfig } from '/site/macros/highchart'
 
 const { preview: highchartControllerPreview } = __non_webpack_require__('../../parts/highchart/highchart')
 const { preview: dividerControllerPreview } = __non_webpack_require__('../../parts/divider/divider')
