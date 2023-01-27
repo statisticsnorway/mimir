@@ -9,7 +9,7 @@ import {
 } from '/lib/ssb/repo/job'
 import type { Statistic } from '/site/mixins/statistic'
 import { PublicationItem } from '/lib/ssb/dataset/publish'
-import type { PublishDataset as PublishDatasetConfig } from 'src/main/resources/tasks/publishDataset'
+import type { PublishDataset as PublishDatasetConfig } from '/tasks/publishDataset'
 import { ReleaseDatesVariant, StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
 
 const { create: createScheduledJob } = __non_webpack_require__('/lib/xp/scheduler')

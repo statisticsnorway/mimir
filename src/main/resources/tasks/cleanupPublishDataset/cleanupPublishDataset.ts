@@ -4,7 +4,7 @@ import {
   JOB_STATUS_COMPLETE,
   StatisticsPublishResult,
 } from '/lib/ssb/repo/job'
-import type { CleanupPublishDataset as CleanupPublishDatasetConfig } from 'src/main/resources/tasks/cleanupPublishDataset'
+import type { CleanupPublishDataset as CleanupPublishDatasetConfig } from '/tasks/cleanupPublishDataset'
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 
 const { Events, logUserDataQuery } = __non_webpack_require__('/lib/ssb/repo/query')

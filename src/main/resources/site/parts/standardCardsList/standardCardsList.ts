@@ -1,7 +1,7 @@
 import { get as getContentByKey, type Content, type MediaImage } from '/lib/xp/content'
 import { type ResourceKey, render } from '/lib/thymeleaf'
 import { render as r4xpRender } from '/lib/enonic/react4xp'
-import type { SEO } from 'src/main/resources/services/news/news'
+import type { SEO } from '/services/news/news'
 import type { Statistics } from '/site/content-types'
 import type { StandardCardsList as StandardCardsListPartConfig } from '.'
 import { randomUnsafeString } from '/lib/ssb/utils/utils'

@@ -11,7 +11,7 @@ import { render as r4xpRender, type RenderResponse } from '/lib/enonic/react4xp'
 import type { Statistics } from '/site/content-types'
 import type { Default as DefaultPageConfig } from '/site/pages/default'
 import { assetUrl, type Component, getContent, getSiteConfig, pageUrl, processHtml } from '/lib/xp/portal'
-import type { SEO } from 'src/main/resources/services/news/news'
+import type { SEO } from '/services/news/news'
 
 const {
   data: { forceArray },

@@ -1,5 +1,5 @@
 import { query, get, Content } from '/lib/xp/content'
-import { SEO } from 'src/main/resources/services/news/news'
+import { SEO } from '/services/news/news'
 import type { OmStatistikken, Statistics } from '/site/content-types'
 import { ReleasesInListing, StatisticInListing, VariantInListing } from '/lib/ssb/dashboard/statreg/types'
 import { parseISO, getMonth, getYear, getDate, isAfter, isBefore, isSameDay } from 'date-fns'

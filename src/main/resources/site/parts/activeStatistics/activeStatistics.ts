@@ -3,7 +3,7 @@ import { type ResourceKey, render } from '/lib/thymeleaf'
 import { render as r4XpRender, type RenderResponse } from '/lib/enonic/react4xp'
 import type { ActiveStatistics as ActiveStatisticsPartConfig } from '.'
 import type { Statistics } from '/site/content-types'
-import { SEO } from 'src/main/resources/services/news/news'
+import { SEO } from '/services/news/news'
 import { getContent, getComponent, pageUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 
