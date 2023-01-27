@@ -82,7 +82,7 @@
     "postcss": "^8.4.20",
     "postcss-loader": "^7.0.2",
     "postcss-normalize": "^10.0.1",
-    "prettier": "^2.8.1",
+    "prettier": "^2.8.3",
     "prop-types": "^15.8.1",
     "q-i": "^2.0.1",
     "ramda": "~0.27.2",
