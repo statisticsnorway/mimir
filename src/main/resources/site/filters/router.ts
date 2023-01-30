@@ -64,8 +64,13 @@ exports.filter = function (req: XP.Request, next: (req: XP.Request) => XP.Respon
   const baseUrl: string = app.config && app.config['ssb.baseUrl'] ? app.config['ssb.baseUrl'] : 'https://www.ssb.no'
 
   const targetResponse: XP.Response = fromFilterCache(req, targetId, req.path, () => {
+    const headers: Headers = req.headers
+    const cookies: string | undefined = headers['Cookie']
     return request({
       url: `${baseUrl}${targetUrl}`,
+      headers: {
+        Cookie: cookies,
+      },
       params: {
         selfRequest: 'true',
         municipality: JSON.stringify(municipality),
