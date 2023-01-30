@@ -61,14 +61,11 @@ exports.filter = function (req: XP.Request, next: (req: XP.Request) => XP.Respon
     id: targetId,
   })
 
-  const targetResponse: XP.Response = fromFilterCache(req, targetId, req.path, () => {
-    const headers: Headers = req.headers
-    delete headers['Connection'] // forbidden header name for http/2 and http/3
-    delete headers['Host']
+  const baseUrl: string = app.config && app.config['ssb.baseUrl'] ? app.config['ssb.baseUrl'] : 'https://www.ssb.no'
 
+  const targetResponse: XP.Response = fromFilterCache(req, targetId, req.path, () => {
     return request({
-      url: `http://localhost:8080${targetUrl}`,
-      headers,
+      url: `${baseUrl}${targetUrl}`,
       params: {
         selfRequest: 'true',
         municipality: JSON.stringify(municipality),
