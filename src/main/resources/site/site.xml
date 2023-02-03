@@ -134,6 +134,9 @@
     <mapping filter="/site/filters/router.js" order="10">
       <pattern>/(kommuneareal|kommunefakta|barn-og-unge|jakt-i-din-kommune)/?[^/]+$</pattern>
     </mapping>
+	<!-- <mapping filter="/site/filters/filter.js" order="10">
+      <pattern>/(kommuneareal|kommunefakta|barn-og-unge|jakt-i-din-kommune)/?[^/]+$</pattern>
+    </mapping> -->
     <mapping controller="/site/pages/default/default.js">
       <match>type:'portal:fragment'</match>
     </mapping>
