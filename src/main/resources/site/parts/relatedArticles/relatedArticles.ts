@@ -199,7 +199,7 @@ function addDsArticle(
 }
 
 function getDsArticle(statisticId: string, statisticPublishDate: string): RelatedArticle | undefined {
-  statisticPublishDate = new Date(statisticPublishDate).toLocaleDateString()
+  statisticPublishDate = statisticPublishDate ? new Date(statisticPublishDate).toLocaleDateString() : ''
 
   const articleContent: Array<Content<Statistics | Article, SEO>> = query({
     count: 1,
