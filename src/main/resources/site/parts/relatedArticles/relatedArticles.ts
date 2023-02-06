@@ -7,7 +7,6 @@ import { render as r4xpRender } from '/lib/enonic/react4xp'
 import { SEO } from '/services/news/news'
 import type { Article, Statistics } from '/site/content-types'
 import type { RelatedArticles } from '/site/mixins/relatedArticles'
-import { format } from 'date-fns'
 
 import { getContent, pageUrl, imageUrl, imagePlaceholder } from '/lib/xp/portal'
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
@@ -200,7 +199,7 @@ function addDsArticle(
 }
 
 function getDsArticle(statisticId: string, statisticPublishDate: string): RelatedArticle | undefined {
-  statisticPublishDate = statisticPublishDate ? format(new Date(statisticPublishDate), 'yyyy-MM-dd') : ''
+  statisticPublishDate = statisticPublishDate ? new Date(statisticPublishDate).toLocaleDateString() : ''
 
   const articleContent: Array<Content<Statistics | Article, SEO>> = query({
     count: 1,
