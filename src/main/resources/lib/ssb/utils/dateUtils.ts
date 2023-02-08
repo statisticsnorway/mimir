@@ -1,5 +1,8 @@
-import { enGB, nb, nn } from 'date-fns/locale'
-import { format, parseISO } from 'date-fns'
+import { default as nb } from 'date-fns/locale/nb'
+import { default as nn } from 'date-fns/locale/nn'
+import { default as enGB } from 'date-fns/locale/en-GB'
+import { default as parseISO } from 'date-fns/parseISO'
+import { default as format } from 'date-fns/format'
 
 export function sameDay(d1: Date, d2: Date): boolean {
   return d1.getDate() === d2.getDate() && d1.getMonth() === d2.getMonth() && d1.getFullYear() === d2.getFullYear()

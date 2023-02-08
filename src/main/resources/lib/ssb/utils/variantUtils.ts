@@ -2,7 +2,13 @@ import { query, get, Content } from '/lib/xp/content'
 import { SEO } from '/services/news/news'
 import type { OmStatistikken, Statistics } from '/site/content-types'
 import { ReleasesInListing, StatisticInListing, VariantInListing } from '/lib/ssb/dashboard/statreg/types'
-import { parseISO, getMonth, getYear, getDate, isAfter, isBefore, isSameDay } from 'date-fns'
+import { default as parseISO } from 'date-fns/parseISO'
+import { default as getMonth } from 'date-fns/getMonth'
+import { default as getYear } from 'date-fns/getYear'
+import { default as getDate } from 'date-fns/getDate'
+import { default as isAfter } from 'date-fns/isAfter'
+import { default as isBefore } from 'date-fns/isBefore'
+import { default as isSameDay } from 'date-fns/isSameDay'
 
 const { pageUrl } = __non_webpack_require__('/lib/xp/portal')
 const { getMainSubject, getMainSubjectStatistic } = __non_webpack_require__('/lib/ssb/utils/parentUtils')
