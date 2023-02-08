@@ -1,0 +1,9 @@
+<part>
+    <display-name>Mailchimp skjema for KOSTRA</display-name>
+    <form>
+        <input type="TextArea" name="ingress">
+            <label>Ingress</label>
+            <occurrences minimum="0" maximum="1"/>
+        </input>
+    </form>
+</part>
