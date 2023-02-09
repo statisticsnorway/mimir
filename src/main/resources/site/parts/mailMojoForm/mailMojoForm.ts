@@ -12,8 +12,8 @@ export function get(req: XP.Request): RenderResponse {
   const props: MailMojoFormProps = {
     mailMojoFormUrl: config.url ?? '',
     ingress: config.ingress ?? '',
-    nameLabel: phrases['newsletter.nameLabel'],
     emailLabel: phrases['newsletter.emailLabel'],
+    validateEmailMsg: phrases['newsletter.emailVerificationError'],
     buttonTitle: phrases['newsletter.buttonTitle'],
   }
 
@@ -25,7 +25,7 @@ export function get(req: XP.Request): RenderResponse {
 interface MailMojoFormProps {
   mailMojoFormUrl: string
   ingress: string
-  nameLabel: string
   emailLabel: string
+  validateEmailMsg: string
   buttonTitle: string
 }
