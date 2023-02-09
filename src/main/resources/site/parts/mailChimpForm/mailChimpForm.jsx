@@ -38,7 +38,7 @@ function MailchimpForm(props) {
           errorMessage={email.errorMsg}
         />
         {props.id && <input type='hidden' name={props.id} value='' />}
-        <input type='hidden' name={mailMojoForm ? 'email' : 'email'} value={email.value} />
+        <input type='hidden' name={mailMojoForm ? 'email' : 'EMAIL'} value={email.value} />
         <Button disabled={email.error} type='submit' primary>
           {props.buttonTitle}
         </Button>
