@@ -12,9 +12,9 @@ export interface MailChimpForm {
   text?: string;
 
   /**
-   * Mailchimp endepunkt
+   * Mailchimp endepunkt eller Mailmojo url
    */
-  mailchimpEndpoint?: string;
+  mailchimpEndpoint: string;
 
   /**
    * Mailchimp ID

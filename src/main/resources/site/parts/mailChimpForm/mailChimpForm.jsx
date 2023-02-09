@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { Button, Input } from '@statisticsnorway/ssb-component-library'
+import { Button, Input, Text, Title } from '@statisticsnorway/ssb-component-library'
 
 function MailchimpForm(props) {
   const [email, setEmail] = useState({
@@ -21,29 +21,35 @@ function MailchimpForm(props) {
     })
   }
 
+  const mailMojoForm = props.endpoint && !props.id
   return (
-    <form method='post' action={props.endpoint}>
-      <Input
-        type='email'
-        label={props.emailLabel}
-        name='EMAIL'
-        id='mce-EMAIL'
-        value=''
-        className='my-4'
-        handleChange={(value) => validateEmail(value)}
-        error={email.error}
-        errorMessage={email.errorMsg}
-      />
-      <input type='text' name={props.id} value='' hidden />
-      <input type='text' name='EMAIL' value={email.value} hidden />
-      <Button disabled={email.error} type='submit' primary>
-        {props.buttonTitle}
-      </Button>
-    </form>
+    <section className='xp-part mailchimp-form'>
+      <Title size={2}>{props.title}</Title>
+      <Text>{props.text}</Text>
+      <form method='post' action={props.endpoint}>
+        <Input
+          type='email'
+          label={props.emailLabel}
+          name={mailMojoForm ? 'email' : 'EMAIL'}
+          id={mailMojoForm ? 'mm-email' : 'mce-EMAIL'}
+          className='my-4'
+          handleChange={(value) => validateEmail(value)}
+          error={email.error}
+          errorMessage={email.errorMsg}
+        />
+        {props.id && <input type='hidden' name={props.id} value='' />}
+        <input type='hidden' name={mailMojoForm ? 'email' : 'email'} value={email.value} />
+        <Button disabled={email.error} type='submit' primary>
+          {props.buttonTitle}
+        </Button>
+      </form>
+    </section>
   )
 }
 
 MailchimpForm.propTypes = {
+  title: PropTypes.string,
+  text: PropTypes.string,
   emailLabel: PropTypes.string,
   buttonTitle: PropTypes.string,
   endpoint: PropTypes.string,
