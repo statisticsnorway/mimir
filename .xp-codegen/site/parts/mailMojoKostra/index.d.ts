@@ -7,7 +7,7 @@ export interface MailMojoKostra {
   ingress?: string;
 
   /**
-   * Url
+   * Mailmojo skjema url
    */
   url: string;
 }
