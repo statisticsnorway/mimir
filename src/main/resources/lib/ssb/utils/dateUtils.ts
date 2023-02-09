@@ -5,6 +5,10 @@ import { default as parseISO } from 'date-fns/parseISO'
 import { default as format } from 'date-fns/format'
 import { default as isWithinInterval } from 'date-fns/isWithinInterval'
 import { default as subDays } from 'date-fns/subDays'
+import { default as differenceInDays } from 'date-fns/differenceInDays'
+import { default as differenceInMilliseconds } from 'date-fns/differenceInMilliseconds'
+
+export { parseISO, subDays }
 
 export function sameDay(d1: Date, d2: Date): boolean {
   return d1.getDate() === d2.getDate() && d1.getMonth() === d2.getMonth() && d1.getFullYear() === d2.getFullYear()
@@ -45,20 +49,20 @@ export function isDateBetween(date: string, startDate: string, endDate: string):
   return dateFnsBetween
 }
 
-export function parseISOString(date: string): Date {
-  return parseISO(date)
-}
-
 export function substractDaysFromDate(date: string, days: number): Date {
   return subDays(new Date(), days)
 }
 
-export interface DateUtilsLib {
-  sameDay: (d1: Date, d2: Date) => boolean
-  formatDate: (date: string | undefined, formatType: string, language: string) => string | undefined
-  stringToServerTime: () => Date
-  createMonthName: (monthNumber: string, language: string) => string
-  parseISOString: (date: string) => Date
-  isDateBetween: (date: string, startDate: string, endDate: string) => boolean
-  substractDaysFromDate: (date: string, days: number) => Date
+export function isSameOrBeforeDay(date1: Date, date2: Date): boolean {
+  return differenceInDays(date1, date2) <= 0
 }
+
+export function isSameOrBeforeNow(date1: Date, date2: Date): boolean {
+  return differenceInMilliseconds(date1, date2) <= 0
+}
+
+export function isSameDay(date1: Date, date2: Date): boolean {
+  return differenceInDays(date1, date2) === 0
+}
+
+export type DateUtilsLib = typeof import('./dateUtils')
