@@ -2,9 +2,9 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Text, Button } from '@statisticsnorway/ssb-component-library'
 
-function MailmojoFormKostra(props) {
+function MailmojoForm(props) {
   return (
-    <section className='xp-part mailmojo-form-kostra'>
+    <section className='xp-part mailmojo-form'>
       <Text>{props.ingress}</Text>
       <form method='post' action={props.mailMojoFormUrl}>
         <div className='ssb-input mt-4'>
@@ -27,7 +27,7 @@ function MailmojoFormKostra(props) {
   )
 }
 
-MailmojoFormKostra.propTypes = {
+MailmojoForm.propTypes = {
   mailMojoFormUrl: PropTypes.string,
   ingress: PropTypes.string,
   nameLabel: PropTypes.string,
@@ -35,4 +35,4 @@ MailmojoFormKostra.propTypes = {
   buttonTitle: PropTypes.string,
 }
 
-export default (props) => <MailmojoFormKostra {...props} />
+export default (props) => <MailmojoForm {...props} />

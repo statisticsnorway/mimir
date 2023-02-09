@@ -1,5 +1,5 @@
 <part>
-    <display-name>Mailmojo skjema for KOSTRA</display-name>
+    <display-name>Nyhetsbrev (Mailmojo)</display-name>
     <form>
         <input type="TextArea" name="ingress">
             <label>Ingress</label>
