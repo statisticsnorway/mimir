@@ -10,6 +10,7 @@ export function get(req: XP.Request): RenderResponse {
   const phrases: Phrases = getPhrases(getContent()) as Phrases
 
   const props: MailMojoFormKostraProps = {
+    mailMojoFormUrl: config.url ?? '',
     ingress: config.ingress ?? '',
     nameLabel: phrases['newsletter.nameLabel'],
     emailLabel: phrases['newsletter.emailLabel'],
@@ -22,6 +23,7 @@ export function get(req: XP.Request): RenderResponse {
 }
 
 interface MailMojoFormKostraProps {
+  mailMojoFormUrl: string
   ingress: string
   nameLabel: string
   emailLabel: string

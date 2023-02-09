@@ -6,7 +6,7 @@ function MailmojoFormKostra(props) {
   return (
     <section className='xp-part mailmojo-form-kostra'>
       <Text>{props.ingress}</Text>
-      <form method='post' action='https://ssb.mailmojo.no/32219/s'>
+      <form method='post' action={props.mailMojoFormUrl}>
         <div className='ssb-input mt-4'>
           <label htmlFor='mm-name'>{props.nameLabel}</label>
           <div className='input-wrapper'>
@@ -28,6 +28,7 @@ function MailmojoFormKostra(props) {
 }
 
 MailmojoFormKostra.propTypes = {
+  mailMojoFormUrl: PropTypes.string,
   ingress: PropTypes.string,
   nameLabel: PropTypes.string,
   emailLabel: PropTypes.string,

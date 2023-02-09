@@ -5,4 +5,9 @@ export interface MailMojoKostra {
    * Ingress
    */
   ingress?: string;
+
+  /**
+   * Url
+   */
+  url: string;
 }
