@@ -1,5 +1,5 @@
 <part>
-    <display-name>Mailchimp skjema for KOSTRA</display-name>
+    <display-name>Mailmojo skjema for KOSTRA</display-name>
     <form>
         <input type="TextArea" name="ingress">
             <label>Ingress</label>
