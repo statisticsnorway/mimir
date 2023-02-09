@@ -1,0 +1,15 @@
+Make url a prop for mailmojo kostra
+
+MIMIR-1560
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+#
+# On branch MIMIR-1560_mailmojo_kostra
+# Your branch is up to date with 'origin/MIMIR-1560_mailmojo_kostra'.
+#
+# Changes to be committed:
+#	modified:   .xp-codegen/site/parts/mailMojoKostra/index.d.ts
+#	modified:   src/main/resources/site/parts/mailMojoKostra/mailMojoKostra.jsx
+#	modified:   src/main/resources/site/parts/mailMojoKostra/mailMojoKostra.ts
+#	modified:   src/main/resources/site/parts/mailMojoKostra/mailMojoKostra.xml
+#
