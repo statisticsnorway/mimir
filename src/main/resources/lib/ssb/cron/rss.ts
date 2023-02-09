@@ -10,9 +10,10 @@ import { JobStatus } from '/lib/ssb/repo/job'
 import type { Default as DefaultPageConfig } from '/site/pages/default'
 import type { Statistics } from '/site/content-types'
 import type { Statistic } from '/site/mixins/statistic'
+import { default as isWithinInterval } from 'date-fns/isWithinInterval'
+import { default as subDays } from 'date-fns/subDays'
 
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
-const { moment } = __non_webpack_require__('/lib/vendor/moment')
 const { getTableIdFromTbprocessor } = __non_webpack_require__('/lib/ssb/dataset/tbprocessor/tbprocessor')
 const { getTableIdFromStatbankApi } = __non_webpack_require__('/lib/ssb/dataset/statbankApi/statbankApi')
 const { getDataset } = __non_webpack_require__('/lib/ssb/dataset/dataset')
@@ -114,9 +115,17 @@ export function dataSourceRSSFilter(dataSources: Array<Content<DataSource>>): RS
     end: [],
   }
 
+  // only keep those with updates for the last 2 days
+  const startDate: string = subDays(new Date(), 1).toDateString()
+  const endDate: string = new Date().toDateString()
+
   const RSSItems: Array<RSSItem> = fetchRSS().filter((item) =>
-    moment(item.pubDate).isBetween(moment().subtract(1, 'day'), moment(), 'day', '[]')
-  ) // only keep those with updates for the last 2 days
+    isWithinInterval(new Date(item.pubDate), {
+      start: new Date(startDate),
+      end: new Date(endDate),
+    })
+  )
+
   const statisticsWithReleaseToday: Array<string> = fetchStatisticsWithReleaseToday().map((s: StatisticInListing) =>
     s.id.toString()
   )
