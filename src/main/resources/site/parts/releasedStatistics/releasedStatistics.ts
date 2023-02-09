@@ -8,11 +8,7 @@ import { type Component, getComponent, getContent } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 import type { ContentLight, Release as ReleaseVariant } from '/lib/ssb/repo/statisticVariant'
 import { getStatisticVariantsFromRepo } from '/lib/ssb/repo/statisticVariant'
-import { default as parseISO } from 'date-fns/parseISO'
-import { default as getMonth } from 'date-fns/getMonth'
-import { default as getYear } from 'date-fns/getYear'
-import { default as getDate } from 'date-fns/getDate'
-import { stringToServerTime } from '/lib/ssb/utils/dateUtils'
+import { stringToServerTime, parseISOString } from '/lib/ssb/utils/dateUtils'
 
 const { fromPartCache } = __non_webpack_require__('/lib/ssb/cache/partCache')
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
@@ -91,11 +87,11 @@ function getGroupedWithMonthNames(
       : []
 
   const releasesPreppedNextReleaseToday: PreparedStatistics[] = nextReleaseToday.map((variant) => {
-    return prepReleases(variant, parseISO(variant.data.nextRelease), variant.data.nextPeriod)
+    return prepReleases(variant, parseISOString(variant.data.nextRelease), variant.data.nextPeriod)
   })
 
   const releasesPreppedPreviousRelease: PreparedStatistics[] = allPreviousStatisticVariantsFromRepo.map((variant) => {
-    return prepReleases(variant, parseISO(variant.data.previousRelease), variant.data.period)
+    return prepReleases(variant, parseISOString(variant.data.previousRelease), variant.data.period)
   })
 
   const releasedStatistics: PreparedStatistics[] =
@@ -118,9 +114,9 @@ function prepReleases(
     shortName: variant.data.shortName,
     variant: {
       id: variant.data.variantId,
-      day: getDate(date),
-      monthNumber: getMonth(date),
-      year: getYear(date),
+      day: date.getDate(),
+      monthNumber: date.getMonth(),
+      year: date.getFullYear(),
       frequency: variant.data.frequency,
       period: periodRelease ? periodRelease.toLowerCase() : '',
     },
