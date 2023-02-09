@@ -1,5 +1,5 @@
 <part>
-    <display-name>Mailchimp skjema</display-name>
+    <display-name>Nyhetsbrev (Mailchimp eller mailmojo skjema)</display-name>
     <form>
         <input type="TextLine" name="title">
             <label>Tittel</label>
@@ -10,7 +10,7 @@
             <occurrences minimum="0" maximum="1"/>
         </input>
         <input type="TextLine" name="mailchimpEndpoint">
-            <label>Mailchimp endepunkt eller Mailmojo url</label>
+            <label>Mailchimp endepunkt eller mailmojo url</label>
             <occurrences minimum="1" maximum="1"/>
         </input>
         <input type="TextLine" name="mailchimpId">

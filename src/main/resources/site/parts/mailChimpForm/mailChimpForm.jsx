@@ -24,8 +24,8 @@ function MailchimpForm(props) {
   const mailMojoForm = props.endpoint && !props.id
   return (
     <section className='xp-part mailchimp-form'>
-      <Title size={2}>{props.title}</Title>
-      <Text>{props.text}</Text>
+      {props.title && <Title size={2}>{props.title}</Title>}
+      {props.text && <Text>{props.text}</Text>}
       <form method='post' action={props.endpoint}>
         <Input
           type='email'
