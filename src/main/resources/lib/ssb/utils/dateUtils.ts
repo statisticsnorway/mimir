@@ -7,8 +7,15 @@ import { default as isWithinInterval } from 'date-fns/isWithinInterval'
 import { default as subDays } from 'date-fns/subDays'
 import { default as differenceInDays } from 'date-fns/differenceInDays'
 import { default as differenceInMilliseconds } from 'date-fns/differenceInMilliseconds'
+import { default as getMonth } from 'date-fns/getMonth'
+import { default as getYear } from 'date-fns/getYear'
+import { default as getDate } from 'date-fns/getDate'
+import { default as isAfter } from 'date-fns/isAfter'
+import { default as isBefore } from 'date-fns/isBefore'
+import { default as isSameDay } from 'date-fns/isSameDay'
+import { default as isSameSecond } from 'date-fns/isSameSecond'
 
-export { parseISO, subDays }
+export { parseISO, subDays, getMonth, getYear, getDate, isAfter, isBefore, isSameDay, isSameSecond }
 
 export function sameDay(d1: Date, d2: Date): boolean {
   return d1.getDate() === d2.getDate() && d1.getMonth() === d2.getMonth() && d1.getFullYear() === d2.getFullYear()
@@ -49,20 +56,17 @@ export function isDateBetween(date: string, startDate: string, endDate: string):
   return dateFnsBetween
 }
 
-export function substractDaysFromDate(date: string, days: number): Date {
-  return subDays(new Date(), days)
-}
-
-export function isSameOrBeforeDay(date1: Date, date2: Date): boolean {
-  return differenceInDays(date1, date2) <= 0
-}
-
-export function isSameOrBeforeNow(date1: Date, date2: Date): boolean {
-  return differenceInMilliseconds(date1, date2) <= 0
-}
-
-export function isSameDay(date1: Date, date2: Date): boolean {
-  return differenceInDays(date1, date2) === 0
+export function isSameOrBefore(date1: Date, date2: Date, unit?: string): boolean {
+  return unit === 'day' ? differenceInDays(date1, date2) <= 0 : differenceInMilliseconds(date1, date2) <= 0
 }
 
 export type DateUtilsLib = typeof import('./dateUtils')
+
+/*export interface DateUtilsLib {
+  sameDay: (d1: Date, d2: Date) => boolean
+  formatDate: (date: string | undefined, formatType: string, language: string) => string | undefined
+  stringToServerTime: () => Date
+  createMonthName: (monthNumber: string, language: string) => string
+  isDateBetween: (date: string, startDate: string, endDate: string) => boolean
+  isSameOrBefore: (date1: Date, date2: Date, unit?: string) => boolean
+}*/

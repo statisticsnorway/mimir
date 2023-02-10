@@ -118,9 +118,7 @@ export function dataSourceRSSFilter(dataSources: Array<Content<DataSource>>): RS
   const startDate: string = subDays(new Date(), 1).toDateString()
   const endDate: string = new Date().toDateString()
 
-  const RSSItems: Array<RSSItem> = fetchRSS().filter((item) =>
-    isDateBetween(new Date(item.pubDate), startDate, endDate)
-  )
+  const RSSItems: Array<RSSItem> = fetchRSS().filter((item) => isDateBetween(item.pubDate, startDate, endDate))
 
   const statisticsWithReleaseToday: Array<string> = fetchStatisticsWithReleaseToday().map((s: StatisticInListing) =>
     s.id.toString()
