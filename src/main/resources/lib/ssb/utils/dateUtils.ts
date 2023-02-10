@@ -15,7 +15,7 @@ import { default as isBefore } from 'date-fns/isBefore'
 import { default as isSameDay } from 'date-fns/isSameDay'
 import { default as isSameSecond } from 'date-fns/isSameSecond'
 
-export { parseISO, subDays, getMonth, getYear, getDate, isAfter, isBefore, isSameDay, isSameSecond }
+export { parseISO, subDays, getMonth, format, getYear, getDate, isAfter, isBefore, isSameDay, isSameSecond }
 
 export function sameDay(d1: Date, d2: Date): boolean {
   return d1.getDate() === d2.getDate() && d1.getMonth() === d2.getMonth() && d1.getFullYear() === d2.getFullYear()
