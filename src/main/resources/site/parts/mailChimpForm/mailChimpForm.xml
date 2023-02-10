@@ -11,6 +11,7 @@
         </input>
         <input type="TextLine" name="mailchimpId">
             <label>Mailchimp ID</label>
+            <help-text>Dette feltet er kun for mailchimp skjemaer. Feltet må være tom for mailmojo url-er.</help-text>
             <occurrences minimum="0" maximum="1"/>
         </input>
     </form>
