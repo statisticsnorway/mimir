@@ -1,10 +1,6 @@
 <part>
-    <display-name>Nyhetsbrev (Mailchimp eller mailmojo skjema)</display-name>
+    <display-name>Nyhetsbrev</display-name>
     <form>
-        <input type="TextLine" name="title">
-            <label>Tittel</label>
-            <occurrences minimum="0" maximum="1"/>
-        </input>
         <input type="TextArea" name="text">
             <label>Ingress</label>
             <occurrences minimum="0" maximum="1"/>

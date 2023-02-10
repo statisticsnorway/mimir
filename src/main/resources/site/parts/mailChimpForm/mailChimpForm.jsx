@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { Button, Input, Text, Title } from '@statisticsnorway/ssb-component-library'
+import { Button, Input, Text } from '@statisticsnorway/ssb-component-library'
 
 function MailchimpForm(props) {
   const [email, setEmail] = useState({
@@ -10,9 +10,7 @@ function MailchimpForm(props) {
   })
 
   function validateEmail(value) {
-    // eslint-disable-next-line max-len
-    const regEx =
-      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    const regEx = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i
     const result = value.match(regEx)
     setEmail({
       ...email,
@@ -24,7 +22,6 @@ function MailchimpForm(props) {
   const mailMojoForm = props.endpoint && !props.id
   return (
     <section className='xp-part mailchimp-form'>
-      {props.title && <Title size={2}>{props.title}</Title>}
       {props.text && <Text>{props.text}</Text>}
       <form method='post' action={props.endpoint}>
         <Input
@@ -48,7 +45,6 @@ function MailchimpForm(props) {
 }
 
 MailchimpForm.propTypes = {
-  title: PropTypes.string,
   text: PropTypes.string,
   emailLabel: PropTypes.string,
   buttonTitle: PropTypes.string,
