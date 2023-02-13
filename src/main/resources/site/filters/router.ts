@@ -9,7 +9,8 @@ const { getMunicipalityByName, municipalsWithCounties } = __non_webpack_require_
 
 exports.filter = function (req: XP.Request, next: (req: XP.Request) => XP.Response): XP.Response {
   if (req.params.selfRequest) return next(req)
-  const region: string | undefined = req.path.split('/').pop()
+  const paramKommune: string | undefined = req.params.kommune
+  const region: string | undefined = paramKommune ?? req.path.split('/').pop()
   const municipality: MunicipalityWithCounty | undefined = getMunicipalityByName(
     municipalsWithCounties(),
     region as string
@@ -18,6 +19,16 @@ exports.filter = function (req: XP.Request, next: (req: XP.Request) => XP.Respon
     return next(req)
   }
   const pageTitle = createPageTitle(req.path, municipality)
+
+  if (paramKommune) {
+    req.params = {
+      selfRequest: 'true',
+      municipality: JSON.stringify(municipality),
+      pageTitle,
+    }
+    return next(req)
+  }
+
   const targetId: string | null = getTargetId(req.path)
   const municipalityUrl: string = createMunicipalityPath(req.url)
 
