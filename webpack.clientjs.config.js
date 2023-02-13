@@ -2,11 +2,8 @@ const path = require('path')
 const R = require('ramda')
 const webpack = require('webpack')
 const TerserPlugin = require('terser-webpack-plugin')
-const {
-  setEntry,
-  addRule,
-  prependExtensions
-} = require('./util/compose')
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+const { setEntry, addRule, prependExtensions } = require('./util/compose')
 // BABEL
 function addBabelSupport(cfg) {
   const rule = {
@@ -21,11 +18,11 @@ function addBabelSupport(cfg) {
           '@babel/preset-env',
           {
             // false means polyfill not required runtime
-            useBuiltIns: false
-          }
-        ]
-      ]
-    }
+            useBuiltIns: false,
+          },
+        ],
+      ],
+    },
   }
 
   return R.pipe(
@@ -41,31 +38,29 @@ function addBabelSupport(cfg) {
 // ----------------------------------------------------------------------------
 
 module.exports = (env) => {
-  const cfg = R.pipe(
-    addBabelSupport,
-  )({
+  const cfg = R.pipe(addBabelSupport)({
     context: path.join(__dirname, '/src/main/resources/assets/js'),
     entry: {},
     output: {
       path: path.join(__dirname, '/build/resources/main/assets/js'),
-      filename: '[name].js'
+      filename: '[name].js',
     },
     resolve: {
-      extensions: []
+      extensions: [],
     },
     optimization: {
       minimizer: [
         new TerserPlugin({
           terserOptions: {
             compress: {
-              drop_console: false
-            }
-          }
-        })
+              drop_console: false,
+            },
+          },
+        }),
       ],
       splitChunks: {
-        minSize: 30000
-      }
+        minSize: 30000,
+      },
     },
     plugins: [
       // new webpack.DefinePlugin({
@@ -73,11 +68,13 @@ module.exports = (env) => {
       //   'process.env.TEST': process.env.TEST
       // })
       new webpack.EnvironmentPlugin({
-        NODE_ENV: 'development' // use 'development' unless process.env.NODE_ENV is defined
+        NODE_ENV: 'development', // use 'development' unless process.env.NODE_ENV is defined
         // TEST: false
-      })
+      }),
+      // https://github.com/webpack-contrib/webpack-bundle-analyzer/blob/master/README.md
+      new BundleAnalyzerPlugin({ analyzerMode: 'disabled' }), // default is 'server'
     ],
-    mode: env.type
+    mode: env.type,
     // devtool: isProd ? false : 'inline-source-map'
   })
   return cfg
