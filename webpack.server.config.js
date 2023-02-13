@@ -3,11 +3,8 @@ const path = require('path')
 const glob = require('glob')
 const R = require('ramda')
 const TerserPlugin = require('terser-webpack-plugin')
-const {
-  setEntriesForPath,
-  addRule,
-  prependExtensions
-} = require('./util/compose')
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+const { setEntriesForPath, addRule, prependExtensions } = require('./util/compose')
 const env = require('./util/env')
 
 const RESOURCES_PATH = 'src/main/resources'
@@ -52,7 +49,10 @@ const config = {
     ],
     // usedExports: true,
   },
-  plugins: [],
+  plugins: [
+    // https://github.com/webpack-contrib/webpack-bundle-analyzer/blob/master/README.md
+    new BundleAnalyzerPlugin({ analyzerMode: 'disabled' }), // default is 'server'
+  ],
   mode: env.type,
   // Source maps are not usable in server scripts
   devtool: false,
@@ -169,8 +169,7 @@ function addSWC(cfg) {
     },
     exclude: /node_modules/,
   }
-  const entries = listEntries('{ts,js,es,es6}', [])
-    .filter((entry) => entry.indexOf('.d.ts') === -1)
+  const entries = listEntries('{ts,js,es,es6}', []).filter((entry) => entry.indexOf('.d.ts') === -1)
   return R.pipe(
     setEntriesForPath(entries),
     addRule(rule),
