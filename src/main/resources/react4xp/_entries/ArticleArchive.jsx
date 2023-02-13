@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Divider, Button, LeadParagraph, Paragraph, Link } from '@statisticsnorway/ssb-component-library'
 import { Container, Row, Col } from 'react-bootstrap'
 import { ChevronDown } from 'react-feather'
-import { groupBy } from 'ramda/es/groupBy'
+import { default as groupBy } from 'ramda/es/groupBy'
 import PropTypes from 'prop-types'
 import { get } from 'axios'
 function ArticleArchive(props) {
