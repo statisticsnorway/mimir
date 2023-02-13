@@ -1,6 +1,6 @@
 import { createSelector } from '@reduxjs/toolkit'
 import { initialState } from '/react4xp/dashboard/containers/DataSources/slice'
-import { groupBy } from 'ramda'
+import { groupBy } from 'ramda/es/groupBy'
 
 const byParentType = groupBy((dataSource) => {
   if (dataSource.logData && dataSource.logData.showWarningIcon) {

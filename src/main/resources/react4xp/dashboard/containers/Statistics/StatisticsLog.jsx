@@ -5,12 +5,9 @@ import { WebSocketContext } from '/react4xp/dashboard/utils/websocket/WebsocketP
 import { Button, Modal } from 'react-bootstrap'
 import { requestStatisticsJobLog } from '/react4xp/dashboard/containers/Statistics/actions'
 import moment from 'moment/min/moment-with-locales'
-import { groupBy } from 'ramda'
+import { groupBy } from 'ramda/es/groupBy'
 import { StatisticsLogJob } from '/react4xp/dashboard/containers/Statistics/StatisticsLogJob'
-import {
-  selectStatisticsLogDataLoaded,
-  selectStatistic,
-} from '/react4xp/dashboard/containers/Statistics/selectors'
+import { selectStatisticsLogDataLoaded, selectStatistic } from '/react4xp/dashboard/containers/Statistics/selectors'
 
 export function StatisticsLog(props) {
   const { statisticId } = props
