@@ -1,7 +1,7 @@
 import React, { Component, createRef, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import { Dropdown, Link } from '@statisticsnorway/ssb-component-library'
-import { isEmpty } from 'ramda'
+import { default as isEmpty } from 'ramda/es/isEmpty'
 import NumberFormat from 'react-number-format'
 import { Alert, Button } from 'react-bootstrap'
 import { ChevronLeft, ChevronRight } from 'react-feather'

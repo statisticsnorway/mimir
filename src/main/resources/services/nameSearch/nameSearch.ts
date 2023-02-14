@@ -5,7 +5,7 @@ import { DatasetRepoNode } from '/lib/ssb/repo/dataset'
 
 // @ts-ignore
 import JSONstat from 'jsonstat-toolkit/import.mjs'
-import validator from 'validator'
+import whitelist from 'validator/es/lib/whitelist'
 
 const { getCalculatorConfig, getNameSearchGraphData } = __non_webpack_require__('/lib/ssb/dataset/calculator')
 const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
@@ -108,7 +108,7 @@ function pad(word: string): string {
 
 function sanitizeQuery(name: string): string {
   const approved = 'ABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ '
-  return validator.whitelist(replaceCharacters(name.toUpperCase()), approved)
+  return whitelist(replaceCharacters(name.toUpperCase()), approved)
 }
 
 function replaceCharacters(name: string): string {

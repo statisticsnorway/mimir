@@ -5,8 +5,7 @@ import type { Data, Dataset, Dimension } from '/lib/types/jsonstat-toolkit'
 import { getNameGraphDataFromRepo, type NameData, nameGraphRepoExists } from '/lib/ssb/repo/nameGraph'
 // @ts-ignore
 import JSONstat from 'jsonstat-toolkit/import.mjs'
-
-import validator from 'validator'
+import whitelist from 'validator/es/lib/whitelist'
 
 const { getCalculatorConfig, getNameSearchGraphData } = __non_webpack_require__('/lib/ssb/dataset/calculator')
 
@@ -116,7 +115,7 @@ function getKeyByValue(object: Keyable, value: string): string | undefined {
 
 function sanitizeQuery(name: string): string {
   const approved = 'ABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ '
-  return validator.whitelist(replaceCharacters(name.toUpperCase()), approved)
+  return whitelist(replaceCharacters(name.toUpperCase()), approved)
 }
 
 function replaceCharacters(name: string): string {
