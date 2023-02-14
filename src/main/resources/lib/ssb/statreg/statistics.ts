@@ -7,6 +7,7 @@ import {
   ReleaseDatesVariant,
 } from '/lib/ssb/dashboard/statreg/types'
 import { HttpResponse } from '/lib/http-client'
+import { format, isDateBetween, isSameDay } from '/lib/ssb/utils/dateUtils'
 
 const { moment } = __non_webpack_require__('/lib/vendor/moment')
 const { ensureArray } = __non_webpack_require__('/lib/ssb/utils/arrayUtils')
@@ -47,22 +48,12 @@ export function createMimirMockReleaseStatreg(): StatisticInListing {
   // use todays date for next release if its before 0800 in the morning
   const serverOffsetInMs: number =
     app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
-  const midnight: moment.Moment = moment().hour(0).minute(0).second(0).millisecond(0)
-  const eight: moment.Moment = moment().hour(8).minute(0).second(0).millisecond(0)
-  const isBeforeEight: boolean = moment().add(serverOffsetInMs, 'milliseconds').isBetween(midnight, eight, 'hour', '[)')
-
-  const previousRelease: moment.Moment = moment()
-    .hour(8)
-    .minute(0)
-    .second(0)
-    .millisecond(0)
-    .subtract(isBeforeEight ? 1 : 0, 'days')
-  const nextRelease: moment.Moment = moment()
-    .hour(8)
-    .minute(0)
-    .second(0)
-    .millisecond(0)
-    .add(isBeforeEight ? 0 : 1, 'days')
+  const midnight: number = new Date().setHours(0, 0, 0, 0)
+  const eight: number = new Date().setHours(8, 0, 0, 0)
+  const withServerOffset = new Date(new Date().getTime() + serverOffsetInMs).getTime()
+  const isBeforeEight: boolean = withServerOffset >= midnight && withServerOffset <= eight
+  const previousRelease = isBeforeEight ? new Date(eight).getTime() - 86400000 : eight
+  const nextRelease = isBeforeEight ? eight : new Date(eight).getTime() + 86400000
 
   return {
     id: 0,
@@ -70,22 +61,22 @@ export function createMimirMockReleaseStatreg(): StatisticInListing {
     name: 'Mimir',
     nameEN: 'Mimir',
     status: '',
-    modifiedTime: moment().format('YYYY-MM-DD HH:mm:ss.S'),
+    modifiedTime: format(new Date(), 'yyyy-MM-dd HH:mm:ss.S'),
     variants: [
       {
         id: '0',
         frekvens: 'Dag',
-        previousRelease: previousRelease.format('YYYY-MM-DD HH:mm:ss.S'),
-        previousFrom: previousRelease.format('YYYY-MM-DD HH:mm:ss.S'),
-        previousTo: previousRelease.format('YYYY-MM-DD HH:mm:ss.S'),
-        nextRelease: nextRelease.format('YYYY-MM-DD HH:mm:ss.S'),
+        previousRelease: format(previousRelease, 'yyyy-MM-dd HH:mm:ss.S'),
+        previousFrom: format(previousRelease, 'yyyy-MM-dd HH:mm:ss.S'),
+        previousTo: format(previousRelease, 'yyyy-MM-dd HH:mm:ss.S'),
+        nextRelease: format(nextRelease, 'yyyy-MM-dd HH:mm:ss.S'),
         nextReleaseId: '0',
         upcomingReleases: [
           {
             id: '0',
-            publishTime: nextRelease.format('YYYY-MM-DD HH:mm:ss.S'),
-            periodFrom: nextRelease.format('YYYY-MM-DD HH:mm:ss.S'),
-            periodTo: nextRelease.format('YYYY-MM-DD HH:mm:ss.S'),
+            publishTime: format(nextRelease, 'yyyy-MM-dd HH:mm:ss.S'),
+            periodFrom: format(nextRelease, 'yyyy-MM-dd HH:mm:ss.S'),
+            periodTo: format(nextRelease, 'yyyy-MM-dd HH:mm:ss.S'),
           },
         ],
       },
@@ -103,7 +94,7 @@ export function fetchStatisticsWithRelease(before: Date): Array<StatisticInListi
           return aDate.getTime() - bDate.getTime()
         })
       : []
-    if (variants[0] && moment(variants[0].nextRelease).isBetween(new Date(), before, 'day', '[]')) {
+    if (variants[0] && isDateBetween(variants[0].nextRelease, new Date().toDateString(), before.toDateString())) {
       statsWithRelease.push(stat)
     }
     return statsWithRelease
@@ -115,8 +106,7 @@ export function fetchStatisticsWithReleaseToday(): Array<StatisticInListing> {
   return statistics.reduce((statsWithRelease: Array<StatisticInListing>, stat) => {
     const variants: Array<VariantInListing> = ensureArray<VariantInListing>(stat.variants).filter(
       (variant) =>
-        moment(variant.nextRelease).isSame(new Date(), 'day') ||
-        moment(variant.previousRelease).isSame(new Date(), 'day')
+        isSameDay(new Date(variant.nextRelease), new Date()) || isSameDay(new Date(variant.previousRelease), new Date())
     )
     if (variants.length > 0) {
       stat.variants = variants
