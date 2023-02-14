@@ -21,6 +21,8 @@ exports.filter = function (req: XP.Request, next: (req: XP.Request) => XP.Respon
   const pageTitle = createPageTitle(req.path, municipality)
 
   if (paramKommune) {
+    log.info('Param kommune: ' + paramKommune)
+    log.info('municipality: ' + JSON.stringify(municipality, null, 4))
     req.params = {
       selfRequest: 'true',
       municipality: JSON.stringify(municipality),
