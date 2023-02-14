@@ -10,7 +10,6 @@ import type { ContentLight, Release as ReleaseVariant } from '/lib/ssb/repo/stat
 import { getStatisticVariantsFromRepo } from '/lib/ssb/repo/statisticVariant'
 
 const { pageUrl } = __non_webpack_require__('/lib/xp/portal')
-const { moment } = __non_webpack_require__('/lib/vendor/moment')
 const { getPreviousReleases } = __non_webpack_require__('/lib/ssb/utils/variantUtils')
 const { getMainSubjects, getSubSubjects, getMainSubjectBySubSubject } =
   __non_webpack_require__('/lib/ssb/utils/subjectUtils')
@@ -131,13 +130,14 @@ function prepareStatisticRelease(
       ? getSecondaryMainSubject(subtopics, mainSubjects, subSubjects)
       : []
     const period: string = calculatePeriodRelease(release, language)
+    const publishDate: string | undefined = formatDate(release.publishTime, 'yyyy.MM.dd HH:mm', 'nb')
 
     return {
       title: language === 'en' ? release.statisticNameEn : release.statisticName,
       period: period.charAt(0).toUpperCase() + period.slice(1),
       preface: aboutTheStatisticsContent ? aboutTheStatisticsContent.data.ingress : seoDescription,
       url: statisticsPageUrl,
-      publishDate: moment(release.publishTime).locale('nb').format('YYYY.MM.DD HH:mm'),
+      publishDate: publishDate ?? '',
       publishDateHuman: formatDate(release.publishTime, 'PPP', language),
       contentType: `${app.name}:statistics`,
       articleType: 'statistics',
@@ -164,20 +164,16 @@ function prepareArticle(
   const secondaryMainSubjects: Array<string> = subtopics
     ? getSecondaryMainSubject(subtopics, mainSubjects, subSubjects)
     : []
+  const publishDate: string | undefined =
+    article.publish && article.publish.from ? formatDate(article.publish.from, 'yyyy.MM.dd HH:mm', 'nb') : undefined
   return {
     title: article.displayName,
     preface: article.data.ingress ? article.data.ingress : '',
     url: pageUrl({
       id: article._id,
     }),
-    publishDate:
-      article.publish && article.publish.from
-        ? moment(article.publish.from).locale('nb').format('YYYY.MM.DD HH:mm')
-        : '',
-    publishDateHuman:
-      article.publish && article.publish.from
-        ? moment(article.publish.from).locale(language).format('Do MMMM YYYY')
-        : '',
+    publishDate: publishDate ?? '',
+    publishDateHuman: article.publish && article.publish.from ? formatDate(article.publish.from, 'PPP', language) : '',
     contentType: article.type,
     articleType: article.data.articleType ? article.data.articleType : 'default',
     mainSubjectId: mainSubject ? mainSubject.name : '',
