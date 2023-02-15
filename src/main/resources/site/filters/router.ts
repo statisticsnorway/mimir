@@ -16,15 +16,12 @@ exports.filter = function (req: XP.Request, next: (req: XP.Request) => XP.Respon
     region as string
   )
   if (!municipality && region !== 'kommune') {
-    log.info('Ikke kommunedata og ikke region')
     return next(req)
   }
   const pageTitle = createPageTitle(req.path, municipality)
 
   if (paramKommune) {
-    log.info('Param kommune: ' + paramKommune)
-    log.info('Request Url: ' + req.url)
-    log.info('municipality: ' + JSON.stringify(municipality, null, 4))
+    log.info('Kommuneside via apache, kommune: ' + paramKommune + ' Request Url: ' + req.url)
     req.params = {
       selfRequest: 'true',
       municipality: JSON.stringify(municipality),
@@ -65,7 +62,7 @@ exports.filter = function (req: XP.Request, next: (req: XP.Request) => XP.Respon
     )
   }
 
-  log.info('Return targetResponse, gammel metode')
+  log.info('Kommuneside via targetResponse, kommune: ' + region + ' Request Url: ' + req.url)
   return {
     body: targetResponse.body,
   }
