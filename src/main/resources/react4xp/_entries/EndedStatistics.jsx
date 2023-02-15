@@ -11,7 +11,13 @@ const EndedStatistics = (props) => {
       <Row className='mt-3'>
         {endedStatistics.map(({ href, title, preamble }, index) => {
           return (
-            <Card key={`ended-statistics-card-${index}`} href={href} hrefText={iconText} title={title}>
+            <Card
+              key={`ended-statistics-card-${index}`}
+              className={`mb-3`}
+              href={href}
+              hrefText={iconText}
+              title={title}
+            >
               <Text>{preamble}</Text>
             </Card>
           )
