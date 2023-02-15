@@ -23,6 +23,7 @@ exports.filter = function (req: XP.Request, next: (req: XP.Request) => XP.Respon
 
   if (paramKommune) {
     log.info('Param kommune: ' + paramKommune)
+    log.info('Request Url: ' + req.url)
     log.info('municipality: ' + JSON.stringify(municipality, null, 4))
     req.params = {
       selfRequest: 'true',
