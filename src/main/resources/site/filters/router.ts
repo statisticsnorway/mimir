@@ -1,7 +1,8 @@
 import { MunicipalityWithCounty } from '/lib/ssb/dataset/klass/municipalities'
-import { Content, get } from '/lib/xp/content'
+import { get, Content } from '/lib/xp/content'
 
 const { request } = __non_webpack_require__('/lib/http-client')
+const { pageUrl, getSite } = __non_webpack_require__('/lib/xp/portal')
 const { fromFilterCache } = __non_webpack_require__('/lib/ssb/cache/cache')
 const { getMunicipalityByName, municipalsWithCounties } = __non_webpack_require__(
   '/lib/ssb/dataset/klass/municipalities'
@@ -31,20 +32,24 @@ exports.filter = function (req: XP.Request, next: (req: XP.Request) => XP.Respon
   }
 
   const targetId: string | null = getTargetId(req.path)
-  const municipalityUrl: string = createMunicipalityPath(req.url)
 
   if (!targetId) {
     return next(req)
   }
 
+  const targetUrl: string = pageUrl({
+    id: targetId,
+  })
+
   const targetResponse: XP.Response = fromFilterCache(req, targetId, req.path, () => {
     const headers: Headers = req.headers
-    const cookies: string | undefined = headers['Cookie']
+    delete headers['Accept-Encoding']
+    delete headers['Connection'] // forbidden header name for http/2 and http/3
+    delete headers['Host']
+
     return request({
-      url: municipalityUrl,
-      headers: {
-        Cookie: cookies,
-      },
+      url: `http://localhost:8080${targetUrl}`,
+      headers,
       params: {
         selfRequest: 'true',
         municipality: JSON.stringify(municipality),
@@ -56,9 +61,10 @@ exports.filter = function (req: XP.Request, next: (req: XP.Request) => XP.Respon
   })
 
   if (pageTitle) {
+    const site: Content = getSite()
     targetResponse.body = (targetResponse.body as string).replace(
       /(<title>)(.*?)(<\/title>)/i,
-      `<title>${pageTitle}</title>`
+      `<title>${pageTitle} - ${site.displayName}</title>`
     )
   }
 
@@ -66,13 +72,6 @@ exports.filter = function (req: XP.Request, next: (req: XP.Request) => XP.Respon
   return {
     body: targetResponse.body,
   }
-}
-
-function createMunicipalityPath(path: string): string {
-  const municipalityName: string | undefined = path.split('/').pop()
-  const result: string | undefined =
-    municipalityName && municipalityName !== 'kommune' ? path.replace(`/${municipalityName}`, '/kommune') : path
-  return result
 }
 
 function createPageTitle(path: string, municipality: MunicipalityWithCounty | undefined): string {
