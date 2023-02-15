@@ -1,5 +1,5 @@
 <part>
-    <display-name>Nyhetsbrev</display-name>
+    <display-name>Påmeldingskjema for nyhetsbrev</display-name>
     <form>
         <input type="TextArea" name="text">
             <label>Ingress</label>
