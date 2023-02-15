@@ -16,6 +16,7 @@ exports.filter = function (req: XP.Request, next: (req: XP.Request) => XP.Respon
     region as string
   )
   if (!municipality && region !== 'kommune') {
+    log.info('Ikke kommunedata og ikke region')
     return next(req)
   }
   const pageTitle = createPageTitle(req.path, municipality)
@@ -63,6 +64,7 @@ exports.filter = function (req: XP.Request, next: (req: XP.Request) => XP.Respon
     )
   }
 
+  log.info('Return targetResponse, gammel metode')
   return {
     body: targetResponse.body,
   }
