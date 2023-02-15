@@ -7,9 +7,8 @@ import {
   ReleaseDatesVariant,
 } from '/lib/ssb/dashboard/statreg/types'
 import { HttpResponse } from '/lib/http-client'
-import { format, isDateBetween, isSameDay } from '/lib/ssb/utils/dateUtils'
+import { format, isDateBetween, isSameDay, isAfter } from '/lib/ssb/utils/dateUtils'
 
-const { moment } = __non_webpack_require__('/lib/vendor/moment')
 const { ensureArray } = __non_webpack_require__('/lib/ssb/utils/arrayUtils')
 const { fetchStatRegData } = __non_webpack_require__('/lib/ssb/dashboard/statreg/common')
 const { getStatRegBaseUrl, STATISTICS_URL, STATREG_BRANCH, STATREG_REPO } = __non_webpack_require__(
@@ -116,6 +115,7 @@ export function fetchStatisticsWithReleaseToday(): Array<StatisticInListing> {
   }, [])
 }
 
+//TODO: Remove possibly unused code
 export function fetchStatisticsWithPreviousReleaseBetween(from: Date, to: Date): Array<StatisticInListing> {
   const statistics: Array<StatisticInListing> = getAllStatisticsFromRepo()
   return statistics.reduce((statsWithRelease: Array<StatisticInListing>, stat) => {
@@ -126,7 +126,7 @@ export function fetchStatisticsWithPreviousReleaseBetween(from: Date, to: Date):
         return bDate.getTime() - aDate.getTime()
       }
     )
-    if (variants[0] && moment(variants[0].previousRelease).isBetween(from, to, undefined, '[]')) {
+    if (variants[0] && isDateBetween(variants[0].previousRelease, from.toDateString(), to.toDateString())) {
       stat.variants = variants
       statsWithRelease.push(stat)
     }
@@ -187,7 +187,7 @@ export function getReleaseDatesByVariants(variants: Array<VariantInListing>): Re
     app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
   const serverTime: Date = new Date(new Date().getTime() + serverOffsetInMs)
   const nextReleaseFiltered: Array<string> = nextReleasesSorted.filter((release) =>
-    moment(release).isAfter(serverTime, 'minute')
+    isAfter(new Date(release), serverTime)
   )
   const nextReleaseIndex: number = nextReleasesSorted.indexOf(nextReleaseFiltered[0])
 
