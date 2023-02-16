@@ -31,7 +31,7 @@ const EndedStatistics = (props) => {
     return (
       <Row>
         <Col>
-          <ButtonTertiary id='ended-stat' header={buttonText}>
+          <ButtonTertiary id='ended-stat' header={buttonText} className={`button-margin-top`}>
             {renderContent()}
           </ButtonTertiary>
         </Col>
