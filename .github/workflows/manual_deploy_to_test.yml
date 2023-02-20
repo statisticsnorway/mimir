@@ -25,10 +25,10 @@ jobs:
         with:
           # Secrets from Github repository
           url: ${{ secrets.ENONIC_TEST_URL }}
-          username: ${{ secrets.ENONIC_TEST_USER }}
+          username: ${{ secrets.ENONIC_USER }}
           password: ${{ secrets.ENONIC_TEST_PASS }}
-          client_cert: ${{ secrets.ENONIC_TEST_CERT }}
-          client_key: ${{ secrets.ENONIC_TEST_KEY }}
+          client_cert: ${{ secrets.ENONIC_CERT }}
+          client_key: ${{ secrets.ENONIC_KEY }}
           app_jar: "*.jar"
       - name: Send failure message to Slack
         id: slack_failure

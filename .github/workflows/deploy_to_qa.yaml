@@ -17,10 +17,10 @@ jobs:
         uses: 'enonic/action-app-deploy@main'
         with:
           url: ${{ secrets.ENONIC_QA_URL }}
-          username: ${{ secrets.ENONIC_QA_USER }}
+          username: ${{ secrets.ENONIC_USER }}
           password: ${{ secrets.ENONIC_QA_PASS }}
-          client_cert: ${{ secrets.ENONIC_QA_CERT }}
-          client_key: ${{ secrets.ENONIC_QA_KEY }}
+          client_cert: ${{ secrets.ENONIC_CERT }}
+          client_key: ${{ secrets.ENONIC_KEY }}
           app_jar: "./build/libs/*.jar"
       - name: Upload artifacts
         id: upload_artifacts
