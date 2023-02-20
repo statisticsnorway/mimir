@@ -1,3 +1,4 @@
+import { type Locale } from 'date-fns'
 import { default as nb } from 'date-fns/locale/nb'
 import { default as nn } from 'date-fns/locale/nn'
 import { default as enGB } from 'date-fns/locale/en-GB'
@@ -14,6 +15,7 @@ import { default as isAfter } from 'date-fns/isAfter'
 import { default as isBefore } from 'date-fns/isBefore'
 import { default as isSameDay } from 'date-fns/isSameDay'
 import { default as isSameSecond } from 'date-fns/isSameSecond'
+import { default as formatDistanceToNowStrict } from 'date-fns/formatDistanceToNowStrict'
 
 export {
   parseISO,
@@ -70,6 +72,11 @@ export function isDateBetween(date: string, startDate: string, endDate: string):
 
 export function isSameOrBefore(date1: Date, date2: Date, unit?: string): boolean {
   return unit === 'day' ? differenceInDays(date1, date2) <= 0 : differenceInMilliseconds(date1, date2) <= 0
+}
+
+export function fromNow(date: string, language?: string): string {
+  const locale: Locale = language ? (language === 'en' ? enGB : language === 'nn' ? nn : nb) : nb
+  return formatDistanceToNowStrict(new Date(date), { addSuffix: true, locale })
 }
 
 export type DateUtilsLib = typeof import('./dateUtils')
