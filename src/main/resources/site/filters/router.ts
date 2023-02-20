@@ -10,10 +10,8 @@ const { getMunicipalityByName, municipalsWithCounties } = __non_webpack_require_
 
 exports.filter = function (req: XP.Request, next: (req: XP.Request) => XP.Response): XP.Response {
   if (req.params.selfRequest) return next(req)
-  const headers: Headers = req.headers
-  delete headers['Accept-Encoding']
-  let pageTitle = ''
-  const region: string | undefined = req.path.split('/').pop()
+  const paramKommune: string | undefined = req.params.kommune
+  const region: string | undefined = paramKommune ?? req.path.split('/').pop()
   const municipality: MunicipalityWithCounty | undefined = getMunicipalityByName(
     municipalsWithCounties(),
     region as string
@@ -21,37 +19,19 @@ exports.filter = function (req: XP.Request, next: (req: XP.Request) => XP.Respon
   if (!municipality && region !== 'kommune') {
     return next(req)
   }
+  const pageTitle = createPageTitle(req.path, municipality)
 
-  let targetId: string | null = null
-  if (req.path.indexOf('/kommunefakta/') > -1) {
-    targetId = (
-      get({
-        key: '/ssb/kommunefakta/kommune',
-      }) as Content
-    )._id
-    pageTitle = `Kommunefakta ${municipality ? municipality.displayName : ''}`
-  } else if (req.path.indexOf('/kommuneareal/') > -1) {
-    targetId = (
-      get({
-        key: '/ssb/kommuneareal/kommune',
-      }) as Content
-    )._id
-    pageTitle = `Kommuneareal ${municipality ? municipality.displayName : ''}`
-  } else if (req.path.indexOf('/barn-og-unge/') > -1) {
-    targetId = (
-      get({
-        key: '/ssb/barn-og-unge/kommune',
-      }) as Content
-    )._id
-    pageTitle = `Barn og unge ${municipality ? municipality.displayName : ''}`
-  } else if (req.path.indexOf('/jakt-i-din-kommune/') > -1) {
-    targetId = (
-      get({
-        key: '/ssb/jakt-i-din-kommune/kommune',
-      }) as Content
-    )._id
-    pageTitle = `Jakt i din kommune ${municipality ? municipality.displayName : ''}`
+  if (paramKommune) {
+    log.info('Kommuneside via apache, kommune: ' + paramKommune + ' Request Url: ' + req.url)
+    req.params = {
+      selfRequest: 'true',
+      municipality: JSON.stringify(municipality),
+      pageTitle,
+    }
+    return next(req)
   }
+
+  const targetId: string | null = getTargetId(req.path)
 
   if (!targetId) {
     return next(req)
@@ -63,6 +43,7 @@ exports.filter = function (req: XP.Request, next: (req: XP.Request) => XP.Respon
 
   const targetResponse: XP.Response = fromFilterCache(req, targetId, req.path, () => {
     const headers: Headers = req.headers
+    delete headers['Accept-Encoding']
     delete headers['Connection'] // forbidden header name for http/2 and http/3
     delete headers['Host']
 
@@ -87,9 +68,58 @@ exports.filter = function (req: XP.Request, next: (req: XP.Request) => XP.Respon
     )
   }
 
+  log.info('Kommuneside via targetResponse, kommune: ' + region + ' Request Url: ' + req.url)
   return {
     body: targetResponse.body,
   }
+}
+
+function createPageTitle(path: string, municipality: MunicipalityWithCounty | undefined): string {
+  let pageTitle = ''
+  if (path.indexOf('/kommunefakta/') > -1) {
+    pageTitle = `Kommunefakta ${municipality ? municipality.displayName : ''}`
+  } else if (path.indexOf('/kommuneareal/') > -1) {
+    pageTitle = `Kommuneareal ${municipality ? municipality.displayName : ''}`
+  } else if (path.indexOf('/barn-og-unge/') > -1) {
+    pageTitle = `Barn og unge ${municipality ? municipality.displayName : ''}`
+  } else if (path.indexOf('/jakt-i-din-kommune/') > -1) {
+    pageTitle = `Jakt i din kommune ${municipality ? municipality.displayName : ''}`
+  } else {
+    pageTitle = ''
+  }
+  return pageTitle
+}
+
+function getTargetId(path: string): string | null {
+  let targetId: string | null = null
+  if (path.indexOf('/kommunefakta/') > -1) {
+    targetId = (
+      get({
+        key: '/ssb/kommunefakta/kommune',
+      }) as Content
+    )._id
+  } else if (path.indexOf('/kommuneareal/') > -1) {
+    targetId = (
+      get({
+        key: '/ssb/kommuneareal/kommune',
+      }) as Content
+    )._id
+  } else if (path.indexOf('/barn-og-unge/') > -1) {
+    targetId = (
+      get({
+        key: '/ssb/barn-og-unge/kommune',
+      }) as Content
+    )._id
+  } else if (path.indexOf('/jakt-i-din-kommune/') > -1) {
+    targetId = (
+      get({
+        key: '/ssb/jakt-i-din-kommune/kommune',
+      }) as Content
+    )._id
+  } else {
+    targetId = null
+  }
+  return targetId
 }
 
 // XP.Request.headers type is set as readonly; we have to define our own type to delete the desired properties
