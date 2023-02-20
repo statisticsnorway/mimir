@@ -7,8 +7,8 @@ Today we have these municipal pages
 - Jakt i din kommune
 
 ## Create municipality page
-To build up a page with the parts you want, you hav to create a page /kommune under the main municipality page where all parts are added. Both mainpage and page /kommune must have set pageType to Kommunefakta.
-Parts that support municipaldata are:
+To build up a page with the parts you want, you hav to create a page /kommune under the main municipality page where all parts are added. Both main page and page /kommune must have set pageType to Kommunefakta.
+Parts that support municipal data are:
 - Banner
 - KeyFigure
 - Highchart
@@ -22,7 +22,7 @@ To get counties and municipalities we use these dataqueries from KLASS:
 * Counties: http://data.ssb.no/api/klass/v1/classifications/104/codesAt?date=2020-01-01
 * ChangeList: https://data.ssb.no/api/klass/v1/classifications/131/changes?from=2016-01-01&to=2020-01-02
 
-We use the contenttype genericDataImport to retrieve region lists from Klass, then you have to add these 3 municipality lists to the site configuration (Mimir Applikation)
+We use the content type genericDataImport to retrieve region lists from Klass, then you have to add these 3 municipality lists to the site configuration (Mimir Application)
 Data from Klass is stored in repo no.ssb.dataset/master/root/klass, cronjob updated these everyday
 
 Data from Klass is used in map, menuDropdown and to get data to banner, highchart and keyfigure
