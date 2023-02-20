@@ -6,8 +6,6 @@ import { default as parseISO } from 'date-fns/parseISO'
 import { default as format } from 'date-fns/format'
 import { default as isWithinInterval } from 'date-fns/isWithinInterval'
 import { default as subDays } from 'date-fns/subDays'
-import { default as differenceInDays } from 'date-fns/differenceInDays'
-import { default as differenceInMilliseconds } from 'date-fns/differenceInMilliseconds'
 import { default as getMonth } from 'date-fns/getMonth'
 import { default as getYear } from 'date-fns/getYear'
 import { default as getDate } from 'date-fns/getDate'
@@ -71,7 +69,9 @@ export function isDateBetween(date: string, startDate: string, endDate: string):
 }
 
 export function isSameOrBefore(date1: Date, date2: Date, unit?: string): boolean {
-  return unit === 'day' ? differenceInDays(date1, date2) <= 0 : differenceInMilliseconds(date1, date2) <= 0
+  return unit === 'day'
+    ? isBefore(date1, date2) || isSameDay(date1, date2)
+    : isBefore(date1, date2) || isSameSecond(date1, date2)
 }
 
 export function fromNow(date: string, language?: string): string {
