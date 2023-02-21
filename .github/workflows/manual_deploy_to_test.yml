@@ -87,4 +87,4 @@ jobs:
       - name: install mabl
         run: npm install -g @mablhq/mabl-cli
       - name: mabl end-to-end test - TEST
-        run: mabl deployments create --api-key ${{ secrets.MABLAPIKEY }} --application-id ${{ secrets.MABLAPPID }} --environment-id ${{ secrets.MABLENVTEST }} --labels MIMIR --await-completion
+        run:  mabl deployments create --api-key ${{ secrets.MABLAPIKEY }} --application-id ${{ secrets.MABLAPPID }} --environment-id  ${{ secrets.MABLENVTEST }} --labels MIMIR --revision $REV --await-completion --mabl-branch ${GITHUB_HEAD_REF##*/} --auto-branch true
