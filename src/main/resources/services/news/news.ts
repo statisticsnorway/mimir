@@ -3,6 +3,7 @@ import type { Page, Article, Statistics } from '/site/content-types'
 import type { Default as DefaultPageConfig } from '/site/pages/default'
 import { StatisticInListing, VariantInListing } from '/lib/ssb/dashboard/statreg/types'
 import type { Statistic } from '/site/mixins/statistic'
+import { subDays } from '/lib/ssb/utils/dateUtils'
 const { moment } = __non_webpack_require__('/lib/vendor/moment')
 const { fetchStatisticsWithReleaseToday } = __non_webpack_require__('/lib/ssb/statreg/statistics')
 const { pageUrl } = __non_webpack_require__('/lib/xp/portal')
@@ -48,8 +49,8 @@ function get(): XP.Response {
 exports.get = get
 
 function getNews(mainSubjects: Array<Content<Page, DefaultPageConfig>>): Array<News> {
-  const from: string = moment().subtract(1, 'days').toISOString()
-  const to: string = moment().toISOString()
+  const from: string = subDays(new Date(), 1).toISOString()
+  const to: string = new Date().toISOString()
   const baseUrl: string = (app.config && app.config['ssb.baseUrl']) || ''
   const serverOffsetInMinutes: number = (app.config && app.config['serverOffsetInMs']) || 0
 
