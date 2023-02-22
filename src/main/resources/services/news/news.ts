@@ -3,7 +3,7 @@ import type { Page, Article, Statistics } from '/site/content-types'
 import type { Default as DefaultPageConfig } from '/site/pages/default'
 import { StatisticInListing, VariantInListing } from '/lib/ssb/dashboard/statreg/types'
 import type { Statistic } from '/site/mixins/statistic'
-import { subDays } from '/lib/ssb/utils/dateUtils'
+import { subDays, isSameDay } from '/lib/ssb/utils/dateUtils'
 const { moment } = __non_webpack_require__('/lib/vendor/moment')
 const { fetchStatisticsWithReleaseToday } = __non_webpack_require__('/lib/ssb/statreg/statistics')
 const { pageUrl } = __non_webpack_require__('/lib/xp/portal')
@@ -63,6 +63,7 @@ function getNews(mainSubjects: Array<Content<Page, DefaultPageConfig>>): Array<N
       query: `_path LIKE "/content${mainSubject._path}/*" AND range("publish.from", instant("${from}"), instant("${to}"))`,
     }).hits as unknown as Array<Content<Article, SEO>>
     articles.forEach((article) => {
+      //TODO: find a smart way to solve this without moment
       const pubDate: string | undefined = article.publish?.first
         ? moment(article.publish?.first)
             .utcOffset(serverOffsetInMinutes / 1000 / 60)
@@ -115,11 +116,16 @@ function getStatisticsNews(mainSubjects: Array<Content<Page, DefaultPageConfig>>
           statreg && statreg.variants && statreg.variants[0] ? statreg.variants[0] : undefined
         let pubDate: string | undefined
         if (variant) {
-          if (variant.previousRelease && moment(variant.previousRelease).isSame(new Date(), 'day')) {
+          const previousReleaseSameDayNow: boolean = variant.previousRelease
+            ? isSameDay(new Date(variant.previousRelease), new Date())
+            : false
+          if (previousReleaseSameDayNow) {
+            //TODO: find a smart way to solve this without moment
             pubDate = moment(variant.previousRelease)
               .utcOffset(serverOffsetInMS / 1000 / 60, true)
               .format()
           } else if (variant.nextRelease && moment(variant.nextRelease).isSame(new Date(), 'day')) {
+            //TODO: find a smart way to solve this without moment
             pubDate = moment(variant.nextRelease)
               .utcOffset(serverOffsetInMS / 1000 / 60, true)
               .format()
