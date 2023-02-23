@@ -3,7 +3,7 @@ import type { Page, Article, Statistics } from '/site/content-types'
 import type { Default as DefaultPageConfig } from '/site/pages/default'
 import { StatisticInListing, VariantInListing } from '/lib/ssb/dashboard/statreg/types'
 import type { Statistic } from '/site/mixins/statistic'
-import { subDays, isSameDay } from '/lib/ssb/utils/dateUtils'
+import { subDays, isSameDay, format } from '/lib/ssb/utils/dateUtils'
 const { fetchStatisticsWithReleaseToday } = __non_webpack_require__('/lib/ssb/statreg/statistics')
 const { pageUrl } = __non_webpack_require__('/lib/xp/portal')
 const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
@@ -63,8 +63,15 @@ function getNews(mainSubjects: Array<Content<Page, DefaultPageConfig>>): Array<N
     }).hits as unknown as Array<Content<Article, SEO>>
     articles.forEach((article) => {
       //TODO: Sjekke om det blir riktig tidspunkt i TEST før koden merges til master, skal være sånn 2023-02-22T08:00:00+01:00
+      const pubDateWithOffset: Date | undefined = article.publish?.first
+        ? new Date(new Date(article.publish.first).getTime() + serverOffsetInMinutes)
+        : undefined
+      const formattetDate: string = pubDateWithOffset
+        ? format(new Date(pubDateWithOffset), "yyyy-MM-dd'T'HH:mm:ssxxx")
+        : ''
+      log.info('formattetDate with offset: ' + formattetDate)
       const pubDate: string | undefined = article.publish?.first
-        ? new Date(new Date(article.publish.first).getTime() + serverOffsetInMinutes).toISOString()
+        ? format(new Date(article.publish.first), "yyyy-MM-dd'T'HH:mm:ssxxx")
         : undefined
       if (pubDate) {
         news.push({
@@ -121,10 +128,10 @@ function getStatisticsNews(mainSubjects: Array<Content<Page, DefaultPageConfig>>
             : false
           if (previousReleaseSameDayNow) {
             //TODO: Sjekke om det blir riktig tidspunkt i TEST før koden merges til master, skal være sånn 2023-02-22T08:00:00+01:00
-            pubDate = new Date(new Date(variant.previousRelease).getTime() + serverOffsetInMS).toISOString()
+            pubDate = format(new Date(variant.previousRelease), "yyyy-MM-dd'T'HH:mm:ssxxx") //new Date(new Date(variant.previousRelease).getTime() + serverOffsetInMS).toISOString()
           } else if (nextReleaseSameDayNow) {
             //TODO: Sjekke om det blir riktig tidspunkt i TEST før koden merges til master, skal være sånn 2023-02-22T08:00:00+01:00
-            pubDate = new Date(new Date(variant.nextRelease).getTime() + serverOffsetInMS).toISOString()
+            pubDate = format(new Date(variant.nextRelease), "yyyy-MM-dd'T'HH:mm:ssxxx") //new Date(new Date(variant.nextRelease).getTime() + serverOffsetInMS).toISOString()
           }
         }
         if (pubDate) {
