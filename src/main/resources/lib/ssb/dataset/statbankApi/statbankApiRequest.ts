@@ -30,7 +30,7 @@ export function get(
       'Cache-Control': 'no-cache',
       Accept: 'application/json',
     },
-    connectionTimeout: 20000,
+    connectionTimeout: 60000,
     readTimeout: 5000,
     body: json ? JSON.stringify(json) : '',
   }

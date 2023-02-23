@@ -11,7 +11,7 @@ export function fetchStatRegData(dataKey: string, serviceUrl: string): HttpRespo
       'Cache-Control': 'no-cache',
       Accept: 'application/json',
     },
-    connectionTimeout: 30000,
+    connectionTimeout: 60000,
     readTimeout: 30000,
   }
   const response: HttpResponse = request(requestParams)

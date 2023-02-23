@@ -14,7 +14,7 @@ export function get(url: string, queryId?: string): object | null {
       'Cache-Control': 'no-cache',
       Accept: 'text/html',
     },
-    connectionTimeout: 20000,
+    connectionTimeout: 60000,
     readTimeout: 5000,
   }
 
