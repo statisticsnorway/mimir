@@ -4,7 +4,6 @@ import type { Default as DefaultPageConfig } from '/site/pages/default'
 import { StatisticInListing, VariantInListing } from '/lib/ssb/dashboard/statreg/types'
 import type { Statistic } from '/site/mixins/statistic'
 import { subDays, isSameDay } from '/lib/ssb/utils/dateUtils'
-const { moment } = __non_webpack_require__('/lib/vendor/moment')
 const { fetchStatisticsWithReleaseToday } = __non_webpack_require__('/lib/ssb/statreg/statistics')
 const { pageUrl } = __non_webpack_require__('/lib/xp/portal')
 const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
@@ -117,10 +116,13 @@ function getStatisticsNews(mainSubjects: Array<Content<Page, DefaultPageConfig>>
           const previousReleaseSameDayNow: boolean = variant.previousRelease
             ? isSameDay(new Date(variant.previousRelease), new Date())
             : false
+          const nextReleaseSameDayNow: boolean = variant.nextRelease
+            ? isSameDay(new Date(variant.nextRelease), new Date())
+            : false
           if (previousReleaseSameDayNow) {
             //TODO: Sjekke om det blir riktig tidspunkt i TEST før koden merges til master, skal være sånn 2023-02-22T08:00:00+01:00
             pubDate = new Date(new Date(variant.previousRelease).getTime() + serverOffsetInMS).toISOString()
-          } else if (variant.nextRelease && moment(variant.nextRelease).isSame(new Date(), 'day')) {
+          } else if (nextReleaseSameDayNow) {
             //TODO: Sjekke om det blir riktig tidspunkt i TEST før koden merges til master, skal være sånn 2023-02-22T08:00:00+01:00
             pubDate = new Date(new Date(variant.nextRelease).getTime() + serverOffsetInMS).toISOString()
           }
