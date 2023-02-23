@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - 'MIMIR-1227_updates-and-manual-deploy'
-  
+
 jobs:
   deploy_to_test:
     name: 'Deploy to Test'
@@ -19,10 +19,10 @@ jobs:
         with:
           # Secrets from Github repository
           url: ${{ secrets.ENONIC_TEST_URL }}
-          username: ${{ secrets.ENONIC_TEST_USER }}
+          username: ${{ secrets.ENONIC_USER }}
           password: ${{ secrets.ENONIC_TEST_PASS }}
-          client_cert: ${{ secrets.ENONIC_TEST_CERT }}
-          client_key: ${{ secrets.ENONIC_TEST_KEY }}
+          client_cert: ${{ secrets.ENONIC_CERT }}
+          client_key: ${{ secrets.ENONIC_KEY }}
           app_jar: "./build/libs/*.jar"
       - name: Upload artifacts
         id: upload_artifacts
@@ -88,4 +88,4 @@ jobs:
       - name: install mabl
         run: npm install -g @mablhq/mabl-cli
       - name: mabl end-to-end test - TEST
-        run: mabl deployments create --api-key ${{ secrets.MABLAPIKEY }} --application-id ${{ secrets.MABLAPPID }} --environment-id ${{ secrets.MABLENVTEST }} --labels MIMIR --await-completion
+        run: mabl deployments create --api-key ${{ secrets.MABLAPIKEY }} --application-id ${{ secrets.MABLAPPID }} --environment-id ${{ secrets.MABLENVTEST }} --labels MIMIR --revision ${{ github.sha }} --await-completion --mabl-branch ${{ github.head_ref || github.ref_name }} --auto-branch true

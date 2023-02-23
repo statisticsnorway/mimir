@@ -5,6 +5,10 @@
     padding: 0;
   }
 
+  .button-margin-top {
+    margin-top: 40px;
+  }
+
   .ssb-card {
     width: 33%;
 
@@ -35,6 +39,11 @@
   }
 
   @include media-breakpoint-down(md) {
+
+    .button-margin-top {
+      margin-top: 36px;
+    }
+
     .ssb-card {
       width: 100%;
       padding: 0;
