@@ -52,7 +52,7 @@ function getNews(mainSubjects: Array<Content<Page, DefaultPageConfig>>): Array<N
   const from: string = subDays(new Date(), 1).toISOString()
   const to: string = new Date().toISOString()
   const baseUrl: string = (app.config && app.config['ssb.baseUrl']) || ''
-  const serverOffsetInMinutes: number = (app.config && app.config['serverOffsetInMs']) || 0
+  const serverOffsetInMinutes: number = parseInt(app.config && app.config['serverOffsetInMs']) || 0
 
   const news: Array<News> = []
   mainSubjects.forEach((mainSubject) => {
@@ -63,11 +63,9 @@ function getNews(mainSubjects: Array<Content<Page, DefaultPageConfig>>): Array<N
       query: `_path LIKE "/content${mainSubject._path}/*" AND range("publish.from", instant("${from}"), instant("${to}"))`,
     }).hits as unknown as Array<Content<Article, SEO>>
     articles.forEach((article) => {
-      //TODO: find a smart way to solve this without moment
+      //TODO: Sjekke om det blir riktig tidspunkt i TEST før koden merges til master, skal være sånn 2023-02-22T08:00:00+01:00
       const pubDate: string | undefined = article.publish?.first
-        ? moment(article.publish?.first)
-            .utcOffset(serverOffsetInMinutes / 1000 / 60)
-            .format()
+        ? new Date(new Date(article.publish.first).getTime() + serverOffsetInMinutes).toISOString()
         : undefined
       if (pubDate) {
         news.push({
@@ -107,7 +105,7 @@ function getStatisticsNews(mainSubjects: Array<Content<Page, DefaultPageConfig>>
       }).hits as unknown as Array<Content<Statistics & Statistic, SEO>>
 
       const baseUrl: string = (app.config && app.config['ssb.baseUrl']) || ''
-      const serverOffsetInMS: number = (app.config && app.config['serverOffsetInMs']) || 0
+      const serverOffsetInMS: number = parseInt(app.config && app.config['serverOffsetInMs']) || 0
       statistics.forEach((statistic) => {
         const statreg: StatisticInListing | undefined = statregStatistics.find(
           (s) => s.id.toString() === statistic.data.statistic
@@ -120,15 +118,11 @@ function getStatisticsNews(mainSubjects: Array<Content<Page, DefaultPageConfig>>
             ? isSameDay(new Date(variant.previousRelease), new Date())
             : false
           if (previousReleaseSameDayNow) {
-            //TODO: find a smart way to solve this without moment
-            pubDate = moment(variant.previousRelease)
-              .utcOffset(serverOffsetInMS / 1000 / 60, true)
-              .format()
+            //TODO: Sjekke om det blir riktig tidspunkt i TEST før koden merges til master, skal være sånn 2023-02-22T08:00:00+01:00
+            pubDate = new Date(new Date(variant.previousRelease).getTime() + serverOffsetInMS).toISOString()
           } else if (variant.nextRelease && moment(variant.nextRelease).isSame(new Date(), 'day')) {
-            //TODO: find a smart way to solve this without moment
-            pubDate = moment(variant.nextRelease)
-              .utcOffset(serverOffsetInMS / 1000 / 60, true)
-              .format()
+            //TODO: Sjekke om det blir riktig tidspunkt i TEST før koden merges til master, skal være sånn 2023-02-22T08:00:00+01:00
+            pubDate = new Date(new Date(variant.nextRelease).getTime() + serverOffsetInMS).toISOString()
           }
         }
         if (pubDate) {
