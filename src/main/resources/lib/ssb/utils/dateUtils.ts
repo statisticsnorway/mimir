@@ -80,12 +80,3 @@ export function fromNow(date: string, language?: string): string {
 }
 
 export type DateUtilsLib = typeof import('./dateUtils')
-
-/*export interface DateUtilsLib {
-  sameDay: (d1: Date, d2: Date) => boolean
-  formatDate: (date: string | undefined, formatType: string, language: string) => string | undefined
-  stringToServerTime: () => Date
-  createMonthName: (monthNumber: string, language: string) => string
-  isDateBetween: (date: string, startDate: string, endDate: string) => boolean
-  isSameOrBefore: (date1: Date, date2: Date, unit?: string) => boolean
-}*/
