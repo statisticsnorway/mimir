@@ -207,8 +207,8 @@ export const createDefaultConfig = (highchartData, displayName, language) => ({
       style,
       format: `{value:,.${highchartData.yAxisDecimalPlaces || 0}f}`,
     },
-    max: highchartData.yAxisMax ? highchartData.yAxisMax.replace(/,/g, '.') : null,
-    min: highchartData.yAxisMin ? highchartData.yAxisMin.replace(/,/g, '.') : null,
+    max: highchartData.yAxisMax ? parseFloat(highchartData.yAxisMax.replace(/,/g, '.')) : null,
+    min: highchartData.yAxisMin ? parseFloat(highchartData.yAxisMin.replace(/,/g, '.')) : null,
     stackLabels: {
       enabled: false,
       // HC sets x or y := 0 by default, leaving no breathing space between the bar and the label
