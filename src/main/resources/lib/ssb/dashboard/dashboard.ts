@@ -235,7 +235,9 @@ function getDataSourcesWithError(): Array<DashboardDataSource> {
     return []
   }
   const dataSourcesWithError: Array<Content<DataSource>> = query({
-    query: `_id IN(${errorLogNodes.map((s) => `"${s._name}"`).join(',')}) AND data.dataSource._selected LIKE "*"`,
+    query: `_id IN(${errorLogNodes
+      .map((s) => `"${s._name}"`)
+      .join(',')}) AND data.dataSource._selected LIKE "*" AND data.dataSource._selected NOT LIKE "htmlTable"`,
     count: errorLogNodes.length,
   }).hits as unknown as Array<Content<DataSource>>
   return dataSourcesWithError
@@ -271,7 +273,7 @@ function getFactPageDataSources(factPageId: string): Array<DashboardDataSource> 
   })
   if (factPage) {
     const hits: Array<Content<DataSource>> = query({
-      query: `_path LIKE "/content${factPage._path}/*" AND data.dataSource._selected LIKE "*"`,
+      query: `_path LIKE "/content${factPage._path}/*" AND data.dataSource._selected LIKE "*" AND data.dataSource._selected NOT LIKE "htmlTable"`,
       count: 1000,
     }).hits as unknown as Array<Content<DataSource>>
     return prepDataSources(hits)
@@ -302,7 +304,7 @@ function getStatisticsDataSources(statisticId: string): Array<DashboardDataSourc
   })
   if (statistic) {
     const hits: Array<Content<DataSource>> = query({
-      query: `_path LIKE "/content${statistic._path}/*" AND data.dataSource._selected LIKE "*"`,
+      query: `_path LIKE "/content${statistic._path}/*" AND data.dataSource._selected LIKE "*" AND data.dataSource._selected NOT LIKE "htmlTable"`,
       count: 100,
     }).hits as unknown as Array<Content<DataSource>>
     return prepDataSources(hits)
@@ -333,7 +335,7 @@ function getMunicipalDataSources(municipalId: string): Array<DashboardDataSource
   })
   if (municipal) {
     const hits: Array<Content<DataSource>> = query({
-      query: `_path LIKE "/content${municipal._path}/*" AND data.dataSource._selected LIKE "*"`,
+      query: `_path LIKE "/content${municipal._path}/*" AND data.dataSource._selected LIKE "*" AND data.dataSource._selected NOT LIKE "htmlTable"`,
       count: 100,
     }).hits as unknown as Array<Content<DataSource>>
     return prepDataSources(hits)
@@ -349,7 +351,7 @@ function getDefaultDataSources(): Array<DashboardDataSource> {
   const hits: Array<Content<DataSource>> = query({
     query: `${paths
       .map((p) => `_path NOT LIKE "/content${p}/*"`)
-      .join(' AND ')} AND data.dataSource._selected LIKE "*"`,
+      .join(' AND ')} AND data.dataSource._selected LIKE "*" AND data.dataSource._selected NOT LIKE "htmlTable"`,
     count: 1000,
   }).hits as unknown as Array<Content<DataSource>>
   return prepDataSources(hits)
