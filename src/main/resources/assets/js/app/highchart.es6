@@ -43,65 +43,71 @@ const createSetOptions = {
         legendLabel: 'Forklaring av diagram: {legendTitle}',
         legendLabelNoTitle: 'Bytt synlighet på serie, {chartTitle}',
       },
-    },
-    chartTypes: {
-      barMultiple: 'Søylediagram med {numSeries} serier.',
-      barSingle: 'Søylediagram med {numPoints} {#plural(numPoints, bars, bar)}.',
-      columnMultiple: 'Liggende søylediagram med {numSeries} linjer.',
-      columnSingle: 'Søylediagram med {numPoints} {#plural(numPoints, bars, bar)}.',
-      combinationChart: 'Kombinasjonsdiagram med {numSeries} dataserier.',
-      defaultMultiple: 'Diagram med {numSeries} dataserier.',
-      defaultSingle: 'Diagram med {numPoints} datapunkter {#plural(numPoints, points, point)}.',
-      emptyChart: 'Tom datavisualisering',
-      lineMultiple: 'Linjediagram med {numSeries} linjer.',
-      lineSingle: 'Linjediagram med {numPoints} datapunkter {#plural(numPoints, points, point)}.',
-      mapTypeDescription: 'Kart over {mapTitle} med {numSeries} dataserier.',
-      pieMultiple: 'Kakediagram med {numSeries} kakestykker.',
-      pieSingle: 'kakediagram med {numPoints} {#plural(numPoints, slices, slice)}.',
-      scatterMultiple: 'Spredningsplott diagram med {numSeries} dataserier.',
-      scatterSingle: 'Spredningsplott diagram med {numPoints} {#plural(numPoints, points, point)}.',
-      splineMultiple: 'Linjediagram med {numSeries} linjer.',
-      splineSingle: 'linjediagram med {numPoints} datapunkter {#plural(numPoints, points, point)}.',
-      unknownMap: 'Kart med {numSeries} dataserier.',
-    },
-    series: {
-      xAxisDescription: 'X-akse, {name}',
-      yAxisDescription: 'Y-akse , {name}',
-      summary: {
-        bar: '{name}, stolpediagram {ix} av {numSeries} med {numPoints} {#plural(numPoints, bars, bar)}.',
-        barCombination:
-          '{name}, serie {ix} av {numSeries}. stolpediagram med {numPoints} {#plural(numPoints, bars, bar)}.',
-        boxplot: '{name}, boksdiagram {ix} av {numSeries} med {numPoints} {#plural(numPoints, boxes, box)}.',
-        boxplotCombination:
-          '{name}, serie {ix} av {numSeries}. Boksdiagram med {numPoints} {#plural(numPoints, boxes, box)}.',
-        bubble: '{name}, boblediagram {ix} av {numSeries} med {numPoints} {#plural(numPoints, bubbles, bubble)}.',
-        bubbleCombination:
-          '{name}, serie {ix} av {numSeries}. Boblediagram serie med {numPoints} {#plural(numPoints, bubbles, bubble)}.',
-        column: '{name}, stolpediagram {ix} av {numSeries} med {numPoints} {#plural(numPoints, bars, bar)}.',
-        columnCombination:
-          '{name}, serie {ix} av {numSeries}. Stolpediagram med {numPoints} {#plural(numPoints, bars, bar)}.',
-        default: '{name}, serie {ix} av {numSeries} med {numPoints} data {#plural(numPoints, points, point)}.',
-        defaultCombination:
-          '{name}, serie {ix} av {numSeries} med {numPoints} data {#plural(numPoints, points, point)}.',
-        line: '{name}, linje {ix} av {numSeries} med {numPoints} data {#plural(numPoints, points, point)}.',
-        lineCombination:
-          '{name}, serie {ix} av {numSeries}. Linje med {numPoints} data {#plural(numPoints, points, point)}.',
-        map: '{name}, kart {ix} av {numSeries} med {numPoints} {#plural(numPoints, areas, area)}.',
-        mapbubble: '{name}, Boblediagram {ix} av {numSeries} med {numPoints} {#plural(numPoints, bubbles, bubble)}.',
-        mapbubbleCombination:
-          '{name}, serie {ix} av {numSeries}. Boblediagram serie med {numPoints} {#plural(numPoints, bubbles, bubble)}.',
-        mapCombination: '{name}, serie {ix} av {numSeries}. Kart med {numPoints} {#plural(numPoints, areas, area)}.',
-        mapline: '{name}, linje {ix} av {numSeries} med {numPoints} data {#plural(numPoints, points, point)}.',
-        maplineCombination:
-          '{name}, serie {ix} av {numSeries}. Linje med {numPoints} data {#plural(numPoints, points, point)}.',
-        pie: '{name}, Kake {ix} av {numSeries} med {numPoints} {#plural(numPoints, slices, slice)}.',
-        pieCombination: '{name}, serie {ix} av {numSeries}. Kake med {numPoints} {#plural(numPoints, slices, slice)}.',
-        scatter: '{name}, spredningsplott {ix} av {numSeries} med {numPoints} {#plural(numPoints, points, point)}.',
-        scatterCombination:
-          '{name}, serie {ix} av {numSeries}, spredningsplott med {numPoints} {#plural(numPoints, points, point)}.',
-        spline: '{name}, linje {ix} av {numSeries} med {numPoints} data {#plural(numPoints, points, point)}.',
-        splineCombination:
-          '{name}, serie {ix} av {numSeries}. Linje med {numPoints} data {#plural(numPoints, points, point)}.',
+      chartTypes: {
+        barMultiple: 'Søylediagram med {numSeries} serier.',
+        barSingle: 'Søylediagram med {numPoints} {#plural(numPoints, bars, bar)}.',
+        columnMultiple: 'Liggende søylediagram med {numSeries} linjer.',
+        columnSingle: 'Søylediagram med {numPoints} {#plural(numPoints, bars, bar)}.',
+        combinationChart: 'Kombinasjonsdiagram med {numSeries} dataserier.',
+        defaultMultiple: 'Diagram med {numSeries} dataserier.',
+        defaultSingle: 'Diagram med {numPoints} datapunkter {#plural(numPoints, points, point)}.',
+        emptyChart: 'Tom datavisualisering',
+        lineMultiple: 'Linjediagram med {numSeries} linjer.',
+        lineSingle: 'Linjediagram med {numPoints} datapunkter {#plural(numPoints, points, point)}.',
+        mapTypeDescription: 'Kart over {mapTitle} med {numSeries} dataserier.',
+        pieMultiple: 'Kakediagram med {numSeries} kakestykker.',
+        pieSingle: 'kakediagram med {numPoints} {#plural(numPoints, slices, slice)}.',
+        scatterMultiple: 'Spredningsplott diagram med {numSeries} dataserier.',
+        scatterSingle: 'Spredningsplott diagram med {numPoints} {#plural(numPoints, points, point)}.',
+        splineMultiple: 'Linjediagram med {numSeries} linjer.',
+        splineSingle: 'linjediagram med {numPoints} datapunkter {#plural(numPoints, points, point)}.',
+        unknownMap: 'Kart med {numSeries} dataserier.',
+      },
+      axis: {
+        xAxisDescriptionPlural: 'Figuren har {numAxes} X akse som viser {#each(names, -1), }og {names[-1]}.',
+        xAxisDescriptionSingular: 'Figuren har 1 X akse som viser {names[0]}. {ranges[0]}',
+        yAxisDescriptionPlural: 'Figuren har {numAxes} Y akse som viser {#each(names, -1), }og {names[-1]}.',
+        yAxisDescriptionSingular: 'Figuren har 1 Y akse som viser {names[0]}. {ranges[0]}',
+      },
+      series: {
+        xAxisDescription: 'X-akse, {name}',
+        yAxisDescription: 'Y-akse , {name}',
+        summary: {
+          bar: '{name}, stolpediagram {ix} av {numSeries} med {numPoints} {#plural(numPoints, bars, bar)}.',
+          barCombination:
+            '{name}, serie {ix} av {numSeries}. stolpediagram med {numPoints} {#plural(numPoints, bars, bar)}.',
+          boxplot: '{name}, boksdiagram {ix} av {numSeries} med {numPoints} {#plural(numPoints, boxes, box)}.',
+          boxplotCombination:
+            '{name}, serie {ix} av {numSeries}. Boksdiagram med {numPoints} {#plural(numPoints, boxes, box)}.',
+          bubble: '{name}, boblediagram {ix} av {numSeries} med {numPoints} {#plural(numPoints, bubbles, bubble)}.',
+          bubbleCombination:
+            '{name}, serie {ix} av {numSeries}. Boblediagram serie med {numPoints} {#plural(numPoints, bubbles, bubble)}.',
+          column: '{name}, stolpediagram {ix} av {numSeries} med {numPoints} {#plural(numPoints, bars, bar)}.',
+          columnCombination:
+            '{name}, serie {ix} av {numSeries}. Stolpediagram med {numPoints} {#plural(numPoints, bars, bar)}.',
+          default: '{name}, serie {ix} av {numSeries} med {numPoints} data {#plural(numPoints, points, point)}.',
+          defaultCombination:
+            '{name}, serie {ix} av {numSeries} med {numPoints} data {#plural(numPoints, points, point)}.',
+          line: '{name}, linje {ix} av {numSeries} med {numPoints} data {#plural(numPoints, points, point)}.',
+          lineCombination:
+            '{name}, serie {ix} av {numSeries}. Linje med {numPoints} data {#plural(numPoints, points, point)}.',
+          map: '{name}, kart {ix} av {numSeries} med {numPoints} {#plural(numPoints, areas, area)}.',
+          mapbubble: '{name}, Boblediagram {ix} av {numSeries} med {numPoints} {#plural(numPoints, bubbles, bubble)}.',
+          mapbubbleCombination:
+            '{name}, serie {ix} av {numSeries}. Boblediagram serie med {numPoints} {#plural(numPoints, bubbles, bubble)}.',
+          mapCombination: '{name}, serie {ix} av {numSeries}. Kart med {numPoints} {#plural(numPoints, areas, area)}.',
+          mapline: '{name}, linje {ix} av {numSeries} med {numPoints} data {#plural(numPoints, points, point)}.',
+          maplineCombination:
+            '{name}, serie {ix} av {numSeries}. Linje med {numPoints} data {#plural(numPoints, points, point)}.',
+          pie: '{name}, Kake {ix} av {numSeries} med {numPoints} {#plural(numPoints, slices, slice)}.',
+          pieCombination: '{name}, serie {ix} av {numSeries}. Kake med {numPoints} {#plural(numPoints, slices, slice)}.',
+          scatter: '{name}, spredningsplott {ix} av {numSeries} med {numPoints} {#plural(numPoints, points, point)}.',
+          scatterCombination:
+            '{name}, serie {ix} av {numSeries}, spredningsplott med {numPoints} {#plural(numPoints, points, point)}.',
+          spline: '{name}, linje {ix} av {numSeries} med {numPoints} data {#plural(numPoints, points, point)}.',
+          splineCombination:
+            '{name}, serie {ix} av {numSeries}. Linje med {numPoints} data {#plural(numPoints, points, point)}.',
+        },
       },
     },
     svgContainerLabel: 'Interaktiv graf',
