@@ -64,6 +64,7 @@ const createSetOptions = {
         unknownMap: 'Kart med {numSeries} dataserier.',
       },
       axis: {
+        rangeFromTo: 'Dataene varierer fra {rangeFrom} til {rangeTo}.',
         xAxisDescriptionPlural: 'Figuren har {numAxes} X akse som viser {#each(names, -1), }og {names[-1]}.',
         xAxisDescriptionSingular: 'Figuren har 1 X akse som viser {names[0]}. {ranges[0]}',
         yAxisDescriptionPlural: 'Figuren har {numAxes} Y akse som viser {#each(names, -1), }og {names[-1]}.',
@@ -109,8 +110,8 @@ const createSetOptions = {
             '{name}, serie {ix} av {numSeries}. Linje med {numPoints} data {#plural(numPoints, points, point)}.',
         },
       },
+      svgContainerLabel: 'Interaktiv graf',
     },
-    svgContainerLabel: 'Interaktiv graf',
     defaultChartTitle: 'Graf',
     contextButtonTitle: 'Last ned/skriv ut',
     decimalPoint: ',',
