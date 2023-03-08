@@ -103,7 +103,7 @@ function renderPart(req: XP.Request): RenderResponse | XP.Response {
       contentSearchServiceUrl: serviceUrl({
         service: 'contentSearch',
       }),
-      contentStudioBaseUrl: `${DEFAULT_CONTENTSTUDIO_URL}#/${ENONIC_PROJECT_ID}/edit/`,
+      contentStudioBaseUrl: `${DEFAULT_CONTENTSTUDIO_URL}/${ENONIC_PROJECT_ID}/edit/`,
       contentTypes: contentTypesDropdownItems,
       mainSubjects: mainSubjectDropdownItems,
       mainSubjectsEnglish: englishMainSubjectDropdownItems,
