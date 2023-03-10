@@ -8,11 +8,11 @@
         <figcaption class="figure-title" data-th-if="${highchart.config.title && highchart.config.title.text}" data-th-text="${highchart.config.title.text}"/>
         <p class="figure-subtitle" data-th-if="${highchart.config.subtitle && highchart.config.subtitle.text}" data-th-text="${highchart.config.subtitle.text}"/>
         <div class="show-datatable" data-th-if="${showDataTableEnabled}">
-          <div class="ssb-tabs">
-            <button class="navigation-item active" data-th-id="show-graph- + ${highchart.contentKey}">
+          <div class="ssb-tabs" role="tablist">
+            <button class="navigation-item active" data-th-id="show-graph- + ${highchart.contentKey}" role="tab">
               <span data-th-text="${showAsGraphText}"></span>
             </button>
-            <button class="navigation-item" data-th-id="show-tabledata- + ${highchart.contentKey}">
+            <button class="navigation-item" data-th-id="show-tabledata- + ${highchart.contentKey}" role="tab">
               <span data-th-text="${showAsTableText}"></span>
             </button>
           </div>

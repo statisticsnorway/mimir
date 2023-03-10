@@ -352,21 +352,42 @@ export function init() {
         const buttonShowDataTable = $('button#show-tabledata-' + highchartsContentKey)
         const buttonShowGraph = $('button#show-graph-' + highchartsContentKey)
 
-        buttonShowDataTable.on('click', () => {
-          buttonShowDataTable.addClass('active')
-          buttonShowGraph.removeClass('active')
-          dataTable.removeClass('hide-div')
-          dataTable.addClass('show-div')
-          graph.removeClass('show-div')
-          graph.addClass('hide-div')
-        })
+        buttonShowGraph.attr('aria-controls', 'panel-1-' + highchartsContentKey)
+        buttonShowGraph.attr('aria-selected', true)
+
+        graph.attr('id', 'panel-1-' + highchartsContentKey)
+        graph.attr('role', 'tabpanel')
+
+        buttonShowDataTable.attr('aria-controls', 'panel-2-' + highchartsContentKey)
+        buttonShowDataTable.attr('aria-selected', false)
+        buttonShowDataTable.attr('id', 'tab-2-' + highchartsContentKey)
+
+        dataTable.attr('id', 'panel-2-' + highchartsContentKey)
+        dataTable.attr('role', 'tabpanel')
+        dataTable.attr('aria-labelledby', 'tab-2-' + highchartsContentKey)
 
         buttonShowGraph.on('click', () => {
           buttonShowGraph.addClass('active')
           buttonShowDataTable.removeClass('active')
+          buttonShowDataTable.attr('aria-selected', false)
+          buttonShowGraph.attr('aria-selected', true)
           dataTable.removeClass('show-div')
           dataTable.addClass('hide-div')
           graph.addClass('show-div')
+          graph.removeClass('hide-div')
+          graph.attr('aria-hidden', 'false')
+        })
+
+        buttonShowDataTable.on('click', () => {
+          buttonShowDataTable.addClass('active')
+          buttonShowGraph.removeClass('active')
+          buttonShowDataTable.attr('aria-selected', true)
+          buttonShowGraph.attr('aria-selected', false)
+          dataTable.removeClass('hide-div')
+          dataTable.addClass('show-div')
+          graph.removeClass('show-div')
+          graph.addClass('hide-div')
+          graph.attr('aria-hidden', 'true')
         })
       }
     })
