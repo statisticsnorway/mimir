@@ -17,6 +17,7 @@
 
     .navigation-item {
       padding-top: 0;
+      min-height: 44px;
     }
 
     @include media-breakpoint-down(md) {
