@@ -90,6 +90,7 @@ function requestSolr(queryParams: SolrQueryParams): SolrResponse {
   try {
     const result: HttpResponse = request({
       url: queryParams.query,
+      connectionTimeout: 60000,
     })
 
     if (result.status !== 200) {

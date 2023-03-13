@@ -35,7 +35,7 @@ export function get(req: XP.Request): XP.Response {
       'Cache-Control': 'no-cache',
       Accept: 'application/json',
     },
-    connectionTimeout: 20000,
+    connectionTimeout: 60000,
     readTimeout: 10000,
     params: {
       q: prepareQuery(sanitizeQuery(name)),

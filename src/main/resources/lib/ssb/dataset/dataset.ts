@@ -208,7 +208,7 @@ export function getContentWithDataSource(): Array<Content<DataSource>> {
     const result: QueryResponse<DataSource, object> = query({
       start,
       count,
-      query: `data.dataSource._selected LIKE "*"`,
+      query: `data.dataSource._selected LIKE "*" AND data.dataSource._selected NOT LIKE "htmlTable"`,
     })
     count = result.count
     start += count
