@@ -24,6 +24,11 @@
         width: 50%;
         margin-right: 0;
       }
+
+      &:focus {
+        outline: $ssb-purple-3 solid 2px;
+        outline-offset: 1px;
+      }
     }
 
     @include media-breakpoint-down(md) {
