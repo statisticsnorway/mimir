@@ -9,10 +9,9 @@ module.exports = function (env, config) {
   config.resolve.alias['/react4xp'] = path.resolve(__dirname, './src/main/resources/react4xp/')
   config.resolve.symlinks = false
 
-  config.plugins = [
-    // https://github.com/webpack-contrib/webpack-bundle-analyzer/blob/master/README.md
-    new BundleAnalyzerPlugin({ analyzerMode: 'disabled' }), // default is 'server'
-  ]
+  // config.plugins = [
+  //   new BundleAnalyzerPlugin(),
+  //]
 
   return config
 }
