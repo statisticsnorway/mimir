@@ -1,4 +1,3 @@
-// export * from 'ramda'
 export { default as equals } from 'ramda/es/equals'
 export { default as find } from 'ramda/es/find'
 export { default as groupBy } from 'ramda/es/groupBy'
