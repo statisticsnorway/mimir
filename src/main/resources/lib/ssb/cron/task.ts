@@ -2,8 +2,8 @@ import { Content } from '/lib/xp/content'
 import { CreateOrUpdateStatus } from '/lib/ssb/dataset/dataset'
 import type { DataSource } from '/site/mixins/dataSource'
 import { RSSFilterLogData } from '/lib/ssb/cron/rss'
+import { splitEvery } from '/lib/vendor/ramda'
 
-const { splitEvery } = __non_webpack_require__('/lib/vendor/ramda')
 const { DATASET_BRANCH } = __non_webpack_require__('/lib/ssb/repo/dataset')
 const { refreshDataset } = __non_webpack_require__('/lib/ssb/dataset/dataset')
 const { progress, executeFunction } = __non_webpack_require__('/lib/xp/task')

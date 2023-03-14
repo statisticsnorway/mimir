@@ -3,8 +3,8 @@ import { XmlParser, PreliminaryData, TableRowUniform, TableCellUniform } from '/
 import { Content } from '/lib/xp/content'
 import type { Highchart } from '/site/content-types'
 import { RowValue } from '/lib/ssb/utils/utils'
+import { toString } from '/lib/vendor/ramda'
 
-const { toString } = __non_webpack_require__('/lib/vendor/ramda')
 const {
   data: { forceArray },
 } = __non_webpack_require__('/lib/util')

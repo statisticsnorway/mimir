@@ -5,12 +5,12 @@ import type { Phrases } from '/lib/types/language'
 import type { Contact } from '/lib/ssb/dashboard/statreg/types'
 import type { Contact as ContactPartConfig } from '.'
 import type { Article, Statistics } from '/site/content-types'
+import { find } from '/lib/vendor/ramda'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 const { getContactsFromRepo } = __non_webpack_require__('/lib/ssb/statreg/contacts')
 const { ensureArray, chunkArray } = __non_webpack_require__('/lib/ssb/utils/arrayUtils')
 const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
-const { find } = __non_webpack_require__('/lib/vendor/ramda')
 
 const view: ResourceKey = resolve('./contact.html') as ResourceKey
 

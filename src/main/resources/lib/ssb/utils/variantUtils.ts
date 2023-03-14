@@ -3,12 +3,12 @@ import { SEO } from '/services/news/news'
 import type { OmStatistikken, Statistics } from '/site/content-types'
 import { ReleasesInListing, StatisticInListing, VariantInListing } from '/lib/ssb/dashboard/statreg/types'
 import { parseISO, getMonth, getYear, getDate, isAfter, isBefore, isSameDay } from 'date-fns'
+import { groupBy } from '/lib/vendor/ramda'
 
 const { pageUrl } = __non_webpack_require__('/lib/xp/portal')
 const { getMainSubject, getMainSubjectStatistic } = __non_webpack_require__('/lib/ssb/utils/parentUtils')
 const { sameDay, createMonthName } = __non_webpack_require__('/lib/ssb/utils/dateUtils')
 const { localize } = __non_webpack_require__('/lib/xp/i18n')
-const { groupBy } = __non_webpack_require__('/lib/vendor/ramda')
 const {
   data: { forceArray },
 } = __non_webpack_require__('/lib/util')

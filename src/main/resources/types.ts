@@ -97,7 +97,7 @@ interface LibMap extends EnonicLibraryMap {
 
     // vendor
     '/lib/vendor/moment': import('./lib/vendor/moment').Moment;
-    '/lib/vendor/ramda': typeof import('ramda');
+    '/lib/vendor/ramda': typeof import('./lib/vendor/ramda');
 }
 
 declare const __non_webpack_require__: <K extends keyof LibMap | string = string>(path: K) => K extends keyof LibMap
