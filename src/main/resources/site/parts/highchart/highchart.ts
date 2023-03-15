@@ -30,6 +30,7 @@ const { hasWritePermissionsAndPreview } = __non_webpack_require__('/lib/ssb/part
 const view: ResourceKey = resolve('./highchart.html')
 const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
 const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
+const { getTbprocessorKey } = __non_webpack_require__('/lib/ssb/dataset/tbprocessor/tbprocessor')
 
 export function get(req: XP.Request): XP.Response | RenderResponse {
   try {
@@ -152,7 +153,7 @@ function createDataFromDataSource(
       showPreviewDraft &&
       highchart.data.dataSource._selected === DataSourceType.TBPROCESSOR &&
       highchart.data.dataSource.tbprocessor?.urlOrId
-        ? getDataset(type, UNPUBLISHED_DATASET_BRANCH, highchart.data.dataSource.tbprocessor.urlOrId)
+        ? getDataset(type, UNPUBLISHED_DATASET_BRANCH, getTbprocessorKey(highchart))
         : null
 
     // get dataset
