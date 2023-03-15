@@ -99,8 +99,7 @@ const createSetOptions = {
             '{name}, serie {ix} av {numSeries}. Boblediagram serie med {numPoints} {#plural(numPoints, bobler, boble)}.',
           mapCombination:
             '{name}, serie {ix} av {numSeries}. Kart med {numPoints} {#plural(numPoints, områder, område)}.',
-          mapline:
-            '{name}, linjediagram {ix} av {numSeries} med {numPoints} data {#plural(numPoints, punkter, punkt)}.',
+          mapline: '{name}, linje {ix} av {numSeries} med {numPoints} data {#plural(numPoints, punkter, punkt)}.',
           maplineCombination:
             '{name}, serie {ix} av {numSeries}. Linje med {numPoints} data {#plural(numPoints, punkter, punkt)}.',
           pie: '{name}, sektordiagram {ix} av {numSeries} med {numPoints} {#plural(numPoints, sektorer, sektor)}.',
