@@ -85,7 +85,7 @@
     "prettier": "^2.8.1",
     "prop-types": "^15.8.1",
     "q-i": "^2.0.1",
-    "ramda": "~0.27.2",
+    "ramda": "~0.28.0",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
     "react-feather": "^2.0.10",
