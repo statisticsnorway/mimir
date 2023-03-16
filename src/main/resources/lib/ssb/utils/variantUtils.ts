@@ -2,18 +2,16 @@ import { query, get, Content } from '/lib/xp/content'
 import { SEO } from '/services/news/news'
 import type { OmStatistikken, Statistics } from '/site/content-types'
 import { ReleasesInListing, StatisticInListing, VariantInListing } from '/lib/ssb/dashboard/statreg/types'
-import { parseISO, getMonth, getYear, getDate, isAfter, isBefore, isSameDay } from 'date-fns'
 
 const { pageUrl } = __non_webpack_require__('/lib/xp/portal')
 const { getMainSubject, getMainSubjectStatistic } = __non_webpack_require__('/lib/ssb/utils/parentUtils')
-const { sameDay, createMonthName } = __non_webpack_require__('/lib/ssb/utils/dateUtils')
+const { sameDay, createMonthName, parseISO, getMonth, getYear, getDate, isAfter, formatDate, isSameOrBefore } =
+  __non_webpack_require__('/lib/ssb/utils/dateUtils')
 const { localize } = __non_webpack_require__('/lib/xp/i18n')
 const { groupBy } = __non_webpack_require__('/lib/vendor/ramda')
 const {
   data: { forceArray },
 } = __non_webpack_require__('/lib/util')
-const { moment } = __non_webpack_require__('/lib/vendor/moment')
-const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
 
 export function calculatePeriod(frequency: string, previousFrom: string, previousTo: string, language: string): string {
   switch (frequency) {
@@ -150,8 +148,8 @@ function calculateQuarter(previousFrom: string, language: string): string {
 }
 
 function calculateMonth(previousFrom: string, language: string): string {
-  const monthName: string = moment(previousFrom).locale(language).format('MMMM')
-  const year: string = moment(previousFrom).locale(language).format('YYYY')
+  const monthName: string = formatDate(previousFrom, 'MMMM', language) ?? ''
+  const year: string = formatDate(previousFrom, 'yyyy', language) ?? ''
   return localize({
     key: 'period.month',
     locale: language,
@@ -433,7 +431,7 @@ export function nextReleasedPassed(variant: VariantInListing): boolean {
     app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
   const serverTime: Date = new Date(new Date().getTime() + serverOffsetInMs)
   const nextRelease: Date = new Date(variant.nextRelease)
-  return moment(nextRelease).isSameOrBefore(serverTime, 'minute')
+  return isSameOrBefore(new Date(nextRelease), serverTime)
 }
 export function getPreviousRelease(nextReleasePassed: boolean, variant: VariantInListing): ReleasesInListing {
   const upComingReleases: Array<ReleasesInListing> = variant.upcomingReleases
@@ -542,19 +540,9 @@ export function getUpcomingReleases(statisticList: Array<StatisticInListing>): A
 
 export function getPreviousReleases(statisticList: Array<StatisticInListing>): Array<Release> {
   const allReleases: Array<Release> = getAllReleases(statisticList)
-
-  // TODO: Remove this feature flag when we have confirmed that the correct releases are produced
-  const shouldUseDateFns: boolean = isEnabled('datefns-publication-archive')
-  if (shouldUseDateFns)
-    return allReleases.filter(
-      (release) =>
-        release.status === 'A' &&
-        (isBefore(new Date(release.publishTime), new Date()) || isSameDay(new Date(release.publishTime), new Date()))
-    )
-  else
-    return allReleases.filter(
-      (release) => release.status === 'A' && moment(new Date(release.publishTime)).isSameOrBefore(new Date(), 'day')
-    )
+  return allReleases.filter(
+    (release) => release.status === 'A' && isSameOrBefore(new Date(release.publishTime), new Date(), 'day')
+  )
 }
 
 export interface VariantUtilsLib {

@@ -7,6 +7,7 @@ import type { Statistics } from '/site/content-types'
 import type { Phrases } from '/lib/types/language'
 import { randomUnsafeString } from '/lib/ssb/utils/utils'
 import { getContent, pageUrl } from '/lib/xp/portal'
+import { isAfter } from '/lib/ssb/utils/dateUtils'
 
 const { getStatisticByIdFromRepo, getReleaseDatesByVariants } = __non_webpack_require__('/lib/ssb/statreg/statistics')
 const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
@@ -20,7 +21,6 @@ const { currentlyWaitingForPublish: currentlyWaitingForPublishOld } =
 const util = __non_webpack_require__('/lib/util')
 const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
 
-const { moment } = __non_webpack_require__('/lib/vendor/moment')
 const view: ResourceKey = resolve('./statistics.html')
 
 export function get(req: XP.Request): XP.Response {
@@ -116,7 +116,7 @@ function renderPart(req: XP.Request): XP.Response {
   }
 
   if (page.data.showModifiedDate && previousReleaseDate) {
-    if (moment(modifiedDate).isAfter(previousReleaseDate)) {
+    if (isAfter(new Date(modifiedDate), new Date(previousReleaseDate))) {
       changeDate = formatDate(modifiedDate, 'PPpp', language)
     }
   }

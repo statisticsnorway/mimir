@@ -13,8 +13,8 @@ import {
 import { NodeQueryHit } from '/lib/xp/node'
 import type { Statistic } from '/site/mixins/statistic'
 import { send } from '/lib/xp/event'
+import { isSameOrBefore, isSameDay } from '/lib/ssb/utils/dateUtils'
 
-const { moment } = __non_webpack_require__('/lib/vendor/moment')
 const { Events, logUserDataQuery } = __non_webpack_require__('/lib/ssb/repo/query')
 const { getDataSourceIdsFromStatistics, getStatisticsContent } = __non_webpack_require__('/lib/ssb/dashboard/statistic')
 const { getStatisticByIdFromRepo, getReleaseDatesByVariants } = __non_webpack_require__('/lib/ssb/statreg/statistics')
@@ -63,12 +63,15 @@ export function currentlyWaitingForPublish(statistic: Content<Statistics>): bool
         const serverOffsetInMs: number =
           app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
         const now: Date = new Date(new Date().getTime() + serverOffsetInMs + 1000)
+        const nextReleaseSameOrBeforeNow: boolean = nextRelease ? isSameOrBefore(new Date(nextRelease), now) : false
+        const previousReleaseSameDayNow: boolean = previousRelease ? isSameDay(new Date(previousRelease), now) : false
+        const previousReleaseSameOrBeforeNow: boolean = previousRelease
+          ? isSameOrBefore(new Date(previousRelease), now)
+          : false
+        const nextReleaseReleaseSameDayNow: boolean = nextRelease ? isSameDay(new Date(nextRelease), now) : false
         if (
-          (nextRelease && moment(nextRelease).isSameOrBefore(now)) ||
-          (previousRelease &&
-            moment(previousRelease).isSame(now, 'day') &&
-            !moment(nextRelease).isSame(now, 'day') &&
-            moment(previousRelease).isSameOrBefore(now))
+          nextReleaseSameOrBeforeNow ||
+          (previousReleaseSameDayNow && !nextReleaseReleaseSameDayNow && previousReleaseSameOrBeforeNow)
         ) {
           return true
         }

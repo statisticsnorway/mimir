@@ -3,7 +3,7 @@ import type { Page, Article, Statistics } from '/site/content-types'
 import type { Default as DefaultPageConfig } from '/site/pages/default'
 import { StatisticInListing, VariantInListing } from '/lib/ssb/dashboard/statreg/types'
 import type { Statistic } from '/site/mixins/statistic'
-const { moment } = __non_webpack_require__('/lib/vendor/moment')
+import { subDays, isSameDay, format, parseISO } from '/lib/ssb/utils/dateUtils'
 const { fetchStatisticsWithReleaseToday } = __non_webpack_require__('/lib/ssb/statreg/statistics')
 const { pageUrl } = __non_webpack_require__('/lib/xp/portal')
 const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
@@ -48,10 +48,10 @@ function get(): XP.Response {
 exports.get = get
 
 function getNews(mainSubjects: Array<Content<Page, DefaultPageConfig>>): Array<News> {
-  const from: string = moment().subtract(1, 'days').toISOString()
-  const to: string = moment().toISOString()
+  const from: string = subDays(new Date(), 1).toISOString()
+  const to: string = new Date().toISOString()
   const baseUrl: string = (app.config && app.config['ssb.baseUrl']) || ''
-  const serverOffsetInMinutes: number = (app.config && app.config['serverOffsetInMs']) || 0
+  const serverOffsetInMinutes: number = parseInt(app.config && app.config['serverOffsetInMs']) || 0
 
   const news: Array<News> = []
   mainSubjects.forEach((mainSubject) => {
@@ -62,10 +62,12 @@ function getNews(mainSubjects: Array<Content<Page, DefaultPageConfig>>): Array<N
       query: `_path LIKE "/content${mainSubject._path}/*" AND range("publish.from", instant("${from}"), instant("${to}"))`,
     }).hits as unknown as Array<Content<Article, SEO>>
     articles.forEach((article) => {
+      //TODO: Sjekke om det blir riktig tidspunkt i TEST før koden merges til master, skal være sånn 2023-02-22T08:00:00+01:00
       const pubDate: string | undefined = article.publish?.first
-        ? moment(article.publish?.first)
-            .utcOffset(serverOffsetInMinutes / 1000 / 60)
-            .format()
+        ? format(
+            new Date(new Date(article.publish.first).getTime() + serverOffsetInMinutes),
+            "yyyy-MM-dd'T'HH:mm:ssxxx"
+          )
         : undefined
       if (pubDate) {
         news.push({
@@ -105,7 +107,7 @@ function getStatisticsNews(mainSubjects: Array<Content<Page, DefaultPageConfig>>
       }).hits as unknown as Array<Content<Statistics & Statistic, SEO>>
 
       const baseUrl: string = (app.config && app.config['ssb.baseUrl']) || ''
-      const serverOffsetInMS: number = (app.config && app.config['serverOffsetInMs']) || 0
+      const serverOffsetInMS: number = parseInt(app.config && app.config['serverOffsetInMs']) || 0
       statistics.forEach((statistic) => {
         const statreg: StatisticInListing | undefined = statregStatistics.find(
           (s) => s.id.toString() === statistic.data.statistic
@@ -114,14 +116,25 @@ function getStatisticsNews(mainSubjects: Array<Content<Page, DefaultPageConfig>>
           statreg && statreg.variants && statreg.variants[0] ? statreg.variants[0] : undefined
         let pubDate: string | undefined
         if (variant) {
-          if (variant.previousRelease && moment(variant.previousRelease).isSame(new Date(), 'day')) {
-            pubDate = moment(variant.previousRelease)
-              .utcOffset(serverOffsetInMS / 1000 / 60, true)
-              .format()
-          } else if (variant.nextRelease && moment(variant.nextRelease).isSame(new Date(), 'day')) {
-            pubDate = moment(variant.nextRelease)
-              .utcOffset(serverOffsetInMS / 1000 / 60, true)
-              .format()
+          const previousReleaseSameDayNow: boolean = variant.previousRelease
+            ? isSameDay(new Date(variant.previousRelease), new Date())
+            : false
+          const nextReleaseSameDayNow: boolean = variant.nextRelease
+            ? isSameDay(new Date(variant.nextRelease), new Date())
+            : false
+          if (previousReleaseSameDayNow) {
+            //TODO: Sjekke om det blir riktig tidspunkt i TEST før koden merges til master, skal være sånn 2023-02-22T08:00:00+01:00
+            pubDate = variant.previousRelease
+              ? format(
+                  new Date(new Date(variant.previousRelease).getTime() + serverOffsetInMS),
+                  "yyyy-MM-dd'T'HH:mm:ssxxx"
+                )
+              : undefined
+          } else if (nextReleaseSameDayNow) {
+            //TODO: Sjekke om det blir riktig tidspunkt i TEST før koden merges til master, skal være sånn 2023-02-22T08:00:00+01:00
+            pubDate = variant.nextRelease
+              ? format(new Date(new Date(variant.nextRelease).getTime() + serverOffsetInMS), "yyyy-MM-dd'T'HH:mm:ssxxx")
+              : undefined
           }
         }
         if (pubDate) {
