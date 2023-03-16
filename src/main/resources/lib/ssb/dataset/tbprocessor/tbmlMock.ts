@@ -1,8 +1,8 @@
 import { ByteSource } from '/lib/xp/content'
 import { HttpResponse } from '/lib/http-client'
+import { format } from '/lib/ssb/utils/dateUtils'
 
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
-const { moment } = __non_webpack_require__('/lib/vendor/moment')
 
 export function getTbmlMock(url: string): HttpResponse | null {
   if (app.config && app.config['ssb.mock.enable'] === 'true') {
@@ -49,7 +49,7 @@ function getTbmlMock1(): HttpResponse {
                 </thead>
                 <tbody>
                     <tr>
-                        <td>${moment().format('LL')}</td>
+                        <td>${format(new Date(), 'MMMM d, yyyy')}</td>
                     </tr>
                 </tbody>
             </table>

@@ -68,7 +68,7 @@ function SearchResult(props) {
   const currentElement = useRef(null)
 
   useEffect(() => {
-    if (!nameSearchData) {
+    if (!nameSearchData && props.nameSearchToggle) {
       try {
         getNameSearch(searchTerm)
       } catch (e) {
