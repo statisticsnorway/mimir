@@ -5,9 +5,9 @@ import { TbmlDataUniform } from '/lib/types/xmlParser'
 import type { DataSource } from '/site/mixins/dataSource'
 import { HighchartsGraphConfig } from '/lib/types/highcharts'
 import { SeriesAndCategories } from '/lib/ssb/parts/highcharts/highchartsData'
+import { mergeDeepRight } from '/lib/vendor/ramda'
 
 const { prepareHighchartsGraphConfig } = __non_webpack_require__('/lib/ssb/parts/highcharts/highchartsGraphConfig')
-const { mergeDeepRight } = __non_webpack_require__('/lib/vendor/ramda')
 const { prepareHighchartsData } = __non_webpack_require__('/lib/ssb/parts/highcharts/highchartsData')
 
 export function createHighchartObject(

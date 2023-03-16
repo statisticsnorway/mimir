@@ -2,9 +2,10 @@ import { StatRegNode } from '/lib/ssb/repo/statreg'
 import { Contact, Kontakt, KontaktNavn, KontaktNavnType, KontaktXML } from '/lib/ssb/dashboard/statreg/types'
 import { XmlParser } from '/lib/types/xmlParser'
 import { HttpResponse } from '/lib/http-client'
+import { find } from '/lib/vendor/ramda'
+
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 
-const { find } = __non_webpack_require__('/lib/vendor/ramda')
 const { fetchStatRegData } = __non_webpack_require__('/lib/ssb/dashboard/statreg/common')
 const { CONTACTS_URL, STATREG_BRANCH, STATREG_REPO, getStatRegBaseUrl } = __non_webpack_require__(
   '/lib/ssb/dashboard/statreg/config'
