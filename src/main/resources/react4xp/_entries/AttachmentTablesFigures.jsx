@@ -14,7 +14,18 @@ function AttachmentTableFigures(props) {
 
   function toggleBox() {
     setIsHidden((prevState) => !prevState)
-    setFocusElement(!focusElement)
+    // setFocusElement(!focusElement)
+  }
+
+  // *** requires update in component lib to allow onKeyDown
+  const keyDownToggleBox = (e) => {
+    console.log('im doing something')
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault()
+      setIsHidden((prevState) => !prevState)
+      setFocusElement(!focusElement)
+      console.log('im doing something')
+    }
   }
 
   function toggleAccordion(isOpen, index) {
@@ -57,7 +68,9 @@ function AttachmentTableFigures(props) {
     return (
       <div className={`row mt-5 hide-show-btn justify-content-center ${getButtonBreakpoint()}`}>
         <div className='col-auto'>
-          <Button onClick={toggleBox}>{getButtonText()}</Button>
+          <Button onClick={toggleBox} onKeyDown={(e) => keyDownToggleBox(e)}>
+            {getButtonText()}
+          </Button>
         </div>
       </div>
     )
