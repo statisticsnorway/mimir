@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { Accordion, Button } from '@statisticsnorway/ssb-component-library'
 import { ChevronDown, ChevronUp } from 'react-feather'
 
@@ -9,9 +9,12 @@ import { addGtagForEvent } from '/react4xp/ReactGA'
 function AttachmentTableFigures(props) {
   const [isHidden, setIsHidden] = useState(true)
   const { accordions, freeText, showAll, showLess, title } = props
+  const currentElement = useRef(null)
+  const [focusElement, setFocusElement] = useState(false)
 
   function toggleBox() {
     setIsHidden((prevState) => !prevState)
+    setFocusElement(!focusElement)
   }
 
   function toggleAccordion(isOpen, index) {
@@ -91,27 +94,37 @@ function AttachmentTableFigures(props) {
   const location = window.location
   const anchor = location && location.hash !== '' ? location.hash.substr(1) : undefined
 
+  useEffect(() => {
+    if (focusElement) {
+      currentElement.current && currentElement.current.firstChild.firstChild.focus()
+    }
+  }, [isHidden])
+
   return (
     <React.Fragment>
       <h2>{title}</h2>
       {accordions && (
         <div className='xp-part part-accordion container'>
           <div className='row'>
-            {accordions.map((accordion, index) => {
-              return (
-                <Accordion
-                  key={index}
-                  className={`col-12 ${getBreakpoint(index)}`}
-                  id={accordion.id}
-                  header={accordion.open}
-                  subHeader={accordion.subHeader}
-                  openByDefault={anchor && accordion.id && accordion.id === anchor}
-                  onToggle={(isOpen) => toggleAccordion(isOpen, index)}
-                >
-                  {renderAccordionBody(accordion)}
-                </Accordion>
-              )
-            })}
+            <ul>
+              {accordions.map((accordion, index) => {
+                return (
+                  <li key={index} ref={index === 4 ? currentElement : null}>
+                    <Accordion
+                      key={index}
+                      className={`col-12 ${getBreakpoint(index)}`}
+                      id={accordion.id}
+                      header={accordion.open}
+                      subHeader={accordion.subHeader}
+                      openByDefault={anchor && accordion.id && accordion.id === anchor}
+                      onToggle={(isOpen) => toggleAccordion(isOpen, index)}
+                    >
+                      {renderAccordionBody(accordion)}
+                    </Accordion>
+                  </li>
+                )
+              })}
+            </ul>
           </div>
           <div className={`row free-text-wrapper ${getFreeTextBreakpoint()}`}>
             <div className='col-12 col-lg-6' dangerouslySetInnerHTML={createMarkup(freeText)}></div>
