@@ -16,6 +16,9 @@
     margin-top: 40px;
 
     .navigation-item {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
       padding-top: 0;
       min-height: 44px;
       padding-bottom: 6px;
@@ -23,6 +26,12 @@
       @include media-breakpoint-down(md) {
         width: 50%;
         margin-right: 0;
+      }
+
+      span {
+        display: inline-block;
+        min-height: 28px;
+        margin-bottom: -6px;
       }
 
       &:focus {
