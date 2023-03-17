@@ -1,9 +1,9 @@
 import { get, getAttachmentStream, ByteSource, Content } from '/lib/xp/content'
 import type { Header } from '/site/content-types'
 import { PreliminaryData } from '/lib/types/xmlParser'
+import { formatDate, fromNow } from '/lib/ssb/utils/dateUtils'
 
 const { getContent, pageUrl } = __non_webpack_require__('/lib/xp/portal')
-const { moment } = __non_webpack_require__('/lib/vendor/moment')
 const { readLines } = __non_webpack_require__('/lib/xp/io')
 
 function numberWithSpaces(x: number | string): string {
@@ -22,11 +22,11 @@ export function createHumanReadableFormat(value: number | string | null): string
 }
 
 export function dateToFormat(dateString: string | undefined): string {
-  if (dateString) return moment(dateString).locale('nb').format('DD.MM.YYYY HH:mm')
-  return ''
+  const dateFormatted: string | undefined = dateString ? formatDate(dateString, 'dd.MM.yyyy HH:mm', 'nb') : ''
+  return dateFormatted ?? ''
 }
 export function dateToReadable(dateString: string | undefined): string {
-  if (dateString) return moment(dateString).locale('nb').fromNow()
+  if (dateString) return fromNow(dateString, 'nb')
   return ''
 }
 

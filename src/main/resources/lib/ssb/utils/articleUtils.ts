@@ -14,8 +14,6 @@ import { listener, EnonicEvent } from '/lib/xp/event'
 import { ENONIC_CMS_DEFAULT_REPO, withSuperUserContext } from '/lib/ssb/repo/common'
 import { arraysEqual, ensureArray } from '/lib/ssb/utils/arrayUtils'
 
-const { moment } = __non_webpack_require__('/lib/vendor/moment')
-
 const dummyReq: Partial<XP.Request> = {
   branch: 'master',
 }
@@ -49,7 +47,7 @@ export function getChildArticles(
   count: number,
   sort: string
 ): QueryResponse<Article, object> {
-  const toDay: string = moment().toISOString()
+  const toDay: string = new Date().toISOString()
   return query({
     start: start,
     count: count,

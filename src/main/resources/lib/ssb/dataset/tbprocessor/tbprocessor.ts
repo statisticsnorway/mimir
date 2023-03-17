@@ -4,8 +4,8 @@ import { Content } from '/lib/xp/content'
 import type { DataSource } from '/site/mixins/dataSource'
 import { TbmlDataUniform, TbmlSourceListUniform } from '/lib/types/xmlParser'
 import { TbprocessorParsedResponse } from '/lib/ssb/dataset/tbprocessor/tbml'
+import { mergeDeepLeft } from '/lib/vendor/ramda'
 
-const { mergeDeepLeft } = __non_webpack_require__('/lib/vendor/ramda')
 const { getDataset } = __non_webpack_require__('/lib/ssb/repo/dataset')
 const { getTbmlData, TbProcessorTypes } = __non_webpack_require__('/lib/ssb/dataset/tbprocessor/tbml')
 const { logUserDataQuery, Events } = __non_webpack_require__('/lib/ssb/repo/query')
