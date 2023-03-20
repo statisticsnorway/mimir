@@ -15,8 +15,6 @@ import { type Context, type ContextAttributes, get as getContext, type Principal
 import type { ContentLight, Release } from '/lib/ssb/repo/statisticVariant'
 import { notEmptyOrUndefined } from '/lib/ssb/utils/coreUtils'
 
-const { moment } = __non_webpack_require__('/lib/vendor/moment')
-
 export function getPublicationsNew(
   req: XP.Request,
   start = 0,
@@ -169,6 +167,7 @@ function statisticsAsPublicationItem({
   const mainSubjectTitle: string = mainSubjectId.length
     ? mainSubjects.filter((subject) => subject.name === mainSubjectId)[0].title
     : ''
+  const publishDate: string | undefined = formatDate(release.data.previousRelease, 'yyyy.MM.dd HH:mm', 'nb')
 
   return {
     title: release.data.name,
@@ -177,7 +176,7 @@ function statisticsAsPublicationItem({
     url: pageUrl({
       id: release.data.statisticContentId!,
     }),
-    publishDate: moment(release.data.previousRelease).locale('nb').format('YYYY.MM.DD HH:mm'),
+    publishDate: publishDate ?? '',
     publishDateHuman: formatDate(release.data.previousRelease, 'PPP', language),
     contentType: `${app.name}:statistics`,
     articleType: 'statistics',
@@ -201,6 +200,9 @@ function articleAsPublicationItem({
   const secondaryMainSubjects: Array<string> = subtopics
     ? getSecondaryMainSubject(subtopics, mainSubjects, subSubjects)
     : []
+  const publishDate: string | undefined = content.publish?.from
+    ? formatDate(content.publish.from, 'yyyy.MM.dd HH:mm', 'nb')
+    : undefined
 
   return {
     title: content.displayName,
@@ -208,8 +210,8 @@ function articleAsPublicationItem({
     url: pageUrl({
       id: content._id,
     }),
-    publishDate: content.publish?.from ? moment(content.publish.from).locale('nb').format('YYYY.MM.DD HH:mm') : '',
-    publishDateHuman: content.publish?.from ? moment(content.publish.from).locale(language).format('Do MMMM YYYY') : '',
+    publishDate: publishDate ?? '',
+    publishDateHuman: content.publish?.from ? formatDate(content.publish.from, 'PPP', language) : '',
     contentType: content.type,
     articleType: content.data.articleType ?? 'default',
     mainSubjectId: mainSubject ? mainSubject.name : '',

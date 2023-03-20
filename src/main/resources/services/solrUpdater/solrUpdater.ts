@@ -1,9 +1,8 @@
 import { query, Content, QueryResponse } from '/lib/xp/content'
 import { ResourceKey, render } from '/lib/thymeleaf'
+import { subDays, format } from '/lib/ssb/utils/dateUtils'
 
-const { moment } = __non_webpack_require__('/lib/vendor/moment')
-
-const yesterday: string = moment().subtract(1, 'days').format('YYYY-MM-DD')
+const yesterday: string = format(subDays(new Date(), 1), 'yyyy-MM-dd')
 const baseUrl: string = app.config && app.config['ssb.baseUrl'] ? app.config['ssb.baseUrl'] : 'https://www.ssb.no'
 
 exports.get = (): XP.Response => {

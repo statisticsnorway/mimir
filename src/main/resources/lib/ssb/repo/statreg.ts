@@ -1,7 +1,7 @@
 import { RepoNode } from '/lib/xp/node'
 import { StatisticInListing, StatRegBase } from '/lib/ssb/dashboard/statreg/types'
+import { equals } from '/lib/vendor/ramda'
 
-const { equals } = __non_webpack_require__('/lib/vendor/ramda')
 const { createNode, getNode, modifyNode } = __non_webpack_require__('/lib/ssb/repo/common')
 const { repoExists, createRepo } = __non_webpack_require__('/lib/ssb/repo/repo')
 const { STATREG_REPO_CONTACTS_KEY, fetchContacts } = __non_webpack_require__('/lib/ssb/statreg/contacts')

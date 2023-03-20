@@ -6,11 +6,10 @@ import type { GroupedBy, PreparedStatistics, YearReleases, Release } from '/lib/
 import type { UpcomingReleases as UpcomingReleasesPartConfig } from '.'
 import type { UpcomingRelease } from '/site/content-types'
 import type { SubjectItem } from '/lib/ssb/utils/subjectUtils'
-import { formatDate } from '/lib/ssb/utils/dateUtils'
+import { formatDate, format } from '/lib/ssb/utils/dateUtils'
 import { getContent, getComponent, processHtml, serviceUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 
-const { moment } = __non_webpack_require__('/lib/vendor/moment')
 const { addMonthNames, groupStatisticsByYearMonthAndDay, prepareRelease, filterOnComingReleases, getUpcomingReleases } =
   __non_webpack_require__('/lib/ssb/utils/variantUtils')
 const { getAllStatisticsFromRepo } = __non_webpack_require__('/lib/ssb/statreg/statistics')
@@ -69,9 +68,10 @@ function renderPart(req: XP.Request): RenderResponse {
   const contentReleases: Array<PreparedUpcomingRelease> = query<UpcomingRelease, object>({
     start: 0,
     count: 500,
-    query: `type = "${
-      app.name
-    }:upcomingRelease" AND language = "${currentLanguage}" AND data.date >= "${moment().format('YYYY-MM-DD')}"`,
+    query: `type = "${app.name}:upcomingRelease" AND language = "${currentLanguage}" AND data.date >= "${format(
+      new Date(),
+      'yyyy-MM-dd'
+    )}"`,
   }).hits.map((r) => {
     const date: string = r.data.date
     const mainSubjectItem: SubjectItem | null = getMainSubjectById(allMainSubjects, r.data.mainSubject)
@@ -87,7 +87,7 @@ function renderPart(req: XP.Request): RenderResponse {
       id: r._id,
       name: r.displayName,
       type: contentType,
-      date: moment(date).locale(currentLanguage).format(),
+      date: new Date(date).toISOString(),
       mainSubject: mainSubject,
       day: formatDate(date, 'd', currentLanguage) as string,
       month: formatDate(date, 'M', currentLanguage) as string,

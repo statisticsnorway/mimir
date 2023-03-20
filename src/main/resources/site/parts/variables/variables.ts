@@ -2,11 +2,11 @@ import { getChildren, query, type Content } from '/lib/xp/content'
 import { render } from '/lib/enonic/react4xp'
 import type { Article } from '/site/content-types'
 import { attachmentUrl, getContent, pageUrl, processHtml } from '/lib/xp/portal'
+import { formatDate } from '/lib/ssb/utils/dateUtils'
 import { localize } from '/lib/xp/i18n'
 
 const { data } = __non_webpack_require__('/lib/util')
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
-const { moment } = __non_webpack_require__('/lib/vendor/moment')
 
 export function get(req: XP.Request): XP.Response {
   try {
@@ -82,7 +82,7 @@ function contentArrayToVariables(content: Array<Content<Article>>, language: str
             fileHref: attachmentUrl({
               id: files[0]._id,
             }),
-            fileModifiedDate: moment(files[0].modifiedTime).locale(language).format('DD.MM.YY'),
+            fileModifiedDate: formatDate(files[0].modifiedTime, 'dd.MM.yy', language),
           }
         : {}
 
