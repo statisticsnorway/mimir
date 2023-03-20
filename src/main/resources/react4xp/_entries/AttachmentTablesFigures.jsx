@@ -14,17 +14,13 @@ function AttachmentTableFigures(props) {
 
   function toggleBox() {
     setIsHidden((prevState) => !prevState)
-    // setFocusElement(!focusElement)
   }
 
-  // *** requires update in component lib to allow onKeyDown
-  const keyDownToggleBox = (e) => {
-    console.log('im doing something')
-    if (e.key === 'Enter' || e.key === ' ') {
+  function keyDownToggleBox(e) {
+    if (e.keyCode === 13 || e.key == 'Enter' || e.keyCode === 32 || e.key == 'Space') {
       e.preventDefault()
       setIsHidden((prevState) => !prevState)
       setFocusElement(!focusElement)
-      console.log('im doing something')
     }
   }
 
