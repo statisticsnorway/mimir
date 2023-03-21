@@ -40,7 +40,7 @@
     "@enonic/react-components": "^3.0.1",
     "@enonic/react4xp": "^3.1.2",
     "@reduxjs/toolkit": "^1.9.1",
-    "@statisticsnorway/ssb-component-library": "^2.0.80",
+    "@statisticsnorway/ssb-component-library": "^2.0.82",
     "@types/ramda": "~0.28.0",
     "@types/react": "^17.0.52",
     "@types/uuid": "^9.0.0",
