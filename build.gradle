@@ -46,7 +46,6 @@ dependencies {
     include 'com.enonic.lib:lib-text-encoding:2.0.0'
     include "com.enonic.xp:lib-value:${xpVersion}"
     include "no.item:lib-xp-cristin:1.0.16"
-	include "no.item:lib-xp-time:1.0.0"
 }
 
 repositories {

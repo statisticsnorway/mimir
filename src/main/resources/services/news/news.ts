@@ -10,7 +10,6 @@ const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
 const { xmlEscape } = __non_webpack_require__('/lib/text-encoding')
 
 function get(): XP.Response {
-  testPubDates()
   const rssNewsEnabled: boolean = isEnabled('rss-news', true, 'ssb')
   const rssStatisticsEnabled: boolean = isEnabled('rss-news-statistics', false, 'ssb')
   const mainSubjects: Array<Content<Page, DefaultPageConfig>> = rssNewsEnabled
@@ -54,6 +53,9 @@ function getNews(mainSubjects: Array<Content<Page, DefaultPageConfig>>): Array<N
   const baseUrl: string = (app.config && app.config['ssb.baseUrl']) || ''
   const serverOffsetInMinutes: number = parseInt(app.config && app.config['serverOffsetInMs']) || 0
   const timeZoneIso: string = getTimeZoneIso(serverOffsetInMinutes)
+
+  //TODO: Fjerne når datoformat er verifisert i Test
+  testPubDates()
 
   const news: Array<News> = []
   mainSubjects.forEach((mainSubject) => {
