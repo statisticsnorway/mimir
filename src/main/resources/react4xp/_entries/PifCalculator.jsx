@@ -548,10 +548,12 @@ function PifCalculator(props) {
                   orientation='column'
                   items={[
                     {
+                      id: 'pif-choose-home-import',
                       label: props.phrases.pifChooseHomeImport,
                       value: '3',
                     },
                     {
+                      id: 'pif-choose-home',
                       label: props.phrases.pifChooseHome,
                       value: '2',
                     },
