@@ -96,7 +96,6 @@ interface LibMap extends EnonicLibraryMap {
     '/lib/ssb/utils/calculatorUtils': import('./lib/ssb/utils/calculatorUtils').CalculatorUtilsLib;
 
     // vendor
-	'/lib/vendor/moment': import('./lib/vendor/moment').Moment;
     '/lib/vendor/ramda': typeof import('./lib/vendor/ramda');
 }
 
