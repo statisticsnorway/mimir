@@ -34,7 +34,6 @@ function NameSearch(props) {
   const currentElement = useRef(null)
 
   function keyDownToggleBox(e) {
-    console.log(e)
     if (e.keyCode === 13 || e.key == 'Enter' || e.keyCode === 32 || e.key == 'Space') {
       e.preventDefault()
       setResult(null)
