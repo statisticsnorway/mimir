@@ -52,6 +52,13 @@ export function stringToServerTime(): Date {
   return new Date(new Date().getTime() + serverOffsetInMs)
 }
 
+export function getTimeZoneIso(serverOffsetInMs: number): string {
+  if (serverOffsetInMs === 0) return 'Z'
+  const offsetHours = (serverOffsetInMs / 1000 / 60 / 60).toString()
+  const offsetHourPadded = offsetHours.length === 1 ? `0${offsetHours}` : `${offsetHours}`
+  return `+${offsetHourPadded}:00`
+}
+
 export function createMonthName(monthNumber: string, language?: string) {
   const months =
     language === 'en'
