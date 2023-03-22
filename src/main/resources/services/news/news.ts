@@ -3,7 +3,7 @@ import type { Page, Article, Statistics } from '/site/content-types'
 import type { Default as DefaultPageConfig } from '/site/pages/default'
 import { StatisticInListing, VariantInListing } from '/lib/ssb/dashboard/statreg/types'
 import type { Statistic } from '/site/mixins/statistic'
-import { subDays, isSameDay, format, getTimeZoneIso } from '/lib/ssb/utils/dateUtils'
+import { subDays, isSameDay, format, parseISO, getTimeZoneIso } from '/lib/ssb/utils/dateUtils'
 const { fetchStatisticsWithReleaseToday } = __non_webpack_require__('/lib/ssb/statreg/statistics')
 const { pageUrl } = __non_webpack_require__('/lib/xp/portal')
 const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
@@ -157,7 +157,7 @@ function getStatisticsNews(mainSubjects: Array<Content<Page, DefaultPageConfig>>
 }
 
 function formatPubDate(date: string, timeZoneIso: string): string {
-  const pubDate: string = format(new Date(date), "yyyy-MM-dd'T'HH:mm:ss")
+  const pubDate: string = format(parseISO(date), "yyyy-MM-dd'T'HH:mm:ss")
   return `${pubDate}${timeZoneIso}`
 }
 
@@ -168,7 +168,14 @@ function testPubDates() {
   const ArtikkelDate = formatPubDate('2023-03-20T07:00:00Z', timeZoneIso)
   const StatistikkDate = formatPubDate('2023-03-20 08:00:00.0', timeZoneIso)
 
+  log.info(`TimeZone fra offset config: ${timeZoneIso} - Timezone fra getTimezoneOffset(): ${getTimeZone()}`)
   log.info(`RSS-news - Artikkel: ${ArtikkelDate} statistikk: ${StatistikkDate}`)
+}
+
+function getTimeZone() {
+  const offset = new Date().getTimezoneOffset(),
+    o = Math.abs(offset)
+  return (offset < 0 ? '+' : '-') + ('00' + Math.floor(o / 60)).slice(-2) + ':' + ('00' + (o % 60)).slice(-2)
 }
 
 export interface SEO {
