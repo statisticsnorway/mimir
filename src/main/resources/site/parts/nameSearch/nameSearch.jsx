@@ -32,16 +32,20 @@ function NameSearch(props) {
   const [nameGraphData, setNameGraphData] = useState(undefined)
   const [loadingGraph, setLoadingGraph] = useState(false)
   const currentElement = useRef(null)
+  const [focusElement, setFocusElement] = useState(false)
 
   function keyDownToggleBox(e) {
     if (e.keyCode === 13 || e.key == 'Enter' || e.keyCode === 32 || e.key == 'Space') {
       e.preventDefault()
       setResult(null)
+      setFocusElement(true)
     }
   }
 
   useEffect(() => {
-    currentElement.current && currentElement.current.firstChild.focus()
+    if (focusElement) {
+      currentElement.current && currentElement.current.firstChild.focus()
+    }
   }, [result])
 
   useEffect(() => {
