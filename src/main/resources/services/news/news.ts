@@ -54,7 +54,7 @@ function getNews(mainSubjects: Array<Content<Page, DefaultPageConfig>>): Array<N
   const serverOffsetInMinutes: number = parseInt(app.config && app.config['serverOffsetInMs']) || 0
   const timeZoneIso: string = getTimeZoneIso(serverOffsetInMinutes)
 
-  //TODO: Fjerne når datoformat er verifisert i Test
+  //TODO: Fjerne når datoformat er verifisert i de forskjellige miljøene
   testPubDates()
 
   const news: Array<News> = []
@@ -66,7 +66,6 @@ function getNews(mainSubjects: Array<Content<Page, DefaultPageConfig>>): Array<N
       query: `_path LIKE "/content${mainSubject._path}/*" AND range("publish.from", instant("${from}"), instant("${to}"))`,
     }).hits as unknown as Array<Content<Article, SEO>>
     articles.forEach((article) => {
-      //TODO: Sjekke om det blir riktig tidspunkt i TEST før koden merges til master, skal være sånn 2023-02-22T08:00:00+01:00
       const pubDate: string | undefined = article.publish?.first
         ? formatPubDateArticle(article.publish.first, serverOffsetInMinutes, timeZoneIso)
         : undefined
