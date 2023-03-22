@@ -3,7 +3,7 @@ import type { Page, Article, Statistics } from '/site/content-types'
 import type { Default as DefaultPageConfig } from '/site/pages/default'
 import { StatisticInListing, VariantInListing } from '/lib/ssb/dashboard/statreg/types'
 import type { Statistic } from '/site/mixins/statistic'
-import { subDays, isSameDay, format, parseISO } from '/lib/ssb/utils/dateUtils'
+import { subDays, isSameDay, format, parseISO, getTimeZoneIso } from '/lib/ssb/utils/dateUtils'
 const { fetchStatisticsWithReleaseToday } = __non_webpack_require__('/lib/ssb/statreg/statistics')
 const { pageUrl } = __non_webpack_require__('/lib/xp/portal')
 const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
@@ -52,6 +52,10 @@ function getNews(mainSubjects: Array<Content<Page, DefaultPageConfig>>): Array<N
   const to: string = new Date().toISOString()
   const baseUrl: string = (app.config && app.config['ssb.baseUrl']) || ''
   const serverOffsetInMinutes: number = parseInt(app.config && app.config['serverOffsetInMs']) || 0
+  const timeZoneIso: string = getTimeZoneIso(serverOffsetInMinutes)
+
+  //TODO: Fjerne når datoformat er verifisert i de forskjellige miljøene
+  testPubDates()
 
   const news: Array<News> = []
   mainSubjects.forEach((mainSubject) => {
@@ -62,12 +66,8 @@ function getNews(mainSubjects: Array<Content<Page, DefaultPageConfig>>): Array<N
       query: `_path LIKE "/content${mainSubject._path}/*" AND range("publish.from", instant("${from}"), instant("${to}"))`,
     }).hits as unknown as Array<Content<Article, SEO>>
     articles.forEach((article) => {
-      //TODO: Sjekke om det blir riktig tidspunkt i TEST før koden merges til master, skal være sånn 2023-02-22T08:00:00+01:00
       const pubDate: string | undefined = article.publish?.first
-        ? format(
-            new Date(new Date(article.publish.first).getTime() + serverOffsetInMinutes),
-            "yyyy-MM-dd'T'HH:mm:ssxxx"
-          )
+        ? formatPubDateArticle(article.publish.first, serverOffsetInMinutes, timeZoneIso)
         : undefined
       if (pubDate) {
         news.push({
@@ -108,6 +108,7 @@ function getStatisticsNews(mainSubjects: Array<Content<Page, DefaultPageConfig>>
 
       const baseUrl: string = (app.config && app.config['ssb.baseUrl']) || ''
       const serverOffsetInMS: number = parseInt(app.config && app.config['serverOffsetInMs']) || 0
+      const timeZoneIso: string = getTimeZoneIso(serverOffsetInMS)
       statistics.forEach((statistic) => {
         const statreg: StatisticInListing | undefined = statregStatistics.find(
           (s) => s.id.toString() === statistic.data.statistic
@@ -124,17 +125,10 @@ function getStatisticsNews(mainSubjects: Array<Content<Page, DefaultPageConfig>>
             : false
           if (previousReleaseSameDayNow) {
             //TODO: Sjekke om det blir riktig tidspunkt i TEST før koden merges til master, skal være sånn 2023-02-22T08:00:00+01:00
-            pubDate = variant.previousRelease
-              ? format(
-                  new Date(new Date(variant.previousRelease).getTime() + serverOffsetInMS),
-                  "yyyy-MM-dd'T'HH:mm:ssxxx"
-                )
-              : undefined
+            pubDate = variant.previousRelease ? formatPubDateStatistic(variant.previousRelease, timeZoneIso) : undefined
           } else if (nextReleaseSameDayNow) {
             //TODO: Sjekke om det blir riktig tidspunkt i TEST før koden merges til master, skal være sånn 2023-02-22T08:00:00+01:00
-            pubDate = variant.nextRelease
-              ? format(new Date(new Date(variant.nextRelease).getTime() + serverOffsetInMS), "yyyy-MM-dd'T'HH:mm:ssxxx")
-              : undefined
+            pubDate = variant.nextRelease ? formatPubDateStatistic(variant.nextRelease, timeZoneIso) : undefined
           }
         }
         if (pubDate) {
@@ -159,6 +153,27 @@ function getStatisticsNews(mainSubjects: Array<Content<Page, DefaultPageConfig>>
   }
 
   return statisticsNews
+}
+
+function formatPubDateArticle(date: string, serverOffsetInMS: number, timeZoneIso: string): string {
+  const dateWithOffset = new Date(new Date(date).getTime() + serverOffsetInMS)
+  const pubDate: string = format(dateWithOffset, "yyyy-MM-dd'T'HH:mm:ss")
+  return `${pubDate}${timeZoneIso}`
+}
+
+function formatPubDateStatistic(date: string, timeZoneIso: string): string {
+  const pubDate: string = format(parseISO(date), "yyyy-MM-dd'T'HH:mm:ss")
+  return `${pubDate}${timeZoneIso}`
+}
+
+function testPubDates() {
+  const serverOffsetInMS: number = parseInt(app.config && app.config['serverOffsetInMs']) || 0
+  const timeZoneIso: string = getTimeZoneIso(serverOffsetInMS)
+
+  const ArtikkelDate = formatPubDateArticle('2023-03-20T07:00:00Z', serverOffsetInMS, timeZoneIso)
+  const StatistikkDate = formatPubDateStatistic('2023-03-20 08:00:00.0', timeZoneIso)
+
+  log.info(`RSS-news - Artikkel: ${ArtikkelDate} statistikk: ${StatistikkDate}`)
 }
 
 export interface SEO {
