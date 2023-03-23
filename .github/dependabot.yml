@@ -12,7 +12,7 @@ updates:
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 10
-    reviewers:
+    assignees:
       - ssb-cgn
       # - Glenruben  I'll be back 😎
       - johnnadeluy
@@ -22,7 +22,7 @@ updates:
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 10
-    reviewers:
+    assignees:
       - ssb-cgn
       # - Glenruben  I'll be back 😎
       - johnnadeluy
@@ -32,7 +32,7 @@ updates:
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 10
-    reviewers:
+    assignees:
       - ssb-cgn
       # - Glenruben  I'll be back 😎
       - johnnadeluy
