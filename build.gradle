@@ -14,7 +14,7 @@ app {
     systemVersion = "${xpVersion}"}
 
 dependencies {
-    include "com.enonic.lib:lib-thymeleaf:2.0.1"
+    include "com.enonic.lib:lib-thymeleaf:2.0.2"
     implementation "com.enonic.xp:core-api:${xpVersion}"
     implementation "com.enonic.xp:portal-api:${xpVersion}"
     include "com.enonic.xp:lib-content:${xpVersion}"
