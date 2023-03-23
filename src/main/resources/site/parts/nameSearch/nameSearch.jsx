@@ -31,6 +31,22 @@ function NameSearch(props) {
   const [errorMessage, setErrorMessage] = useState(undefined)
   const [nameGraphData, setNameGraphData] = useState(undefined)
   const [loadingGraph, setLoadingGraph] = useState(false)
+  const currentElement = useRef(null)
+  const [focusElement, setFocusElement] = useState(false)
+
+  function keyDownToggleBox(e) {
+    if (e.keyCode === 13 || e.key == 'Enter' || e.keyCode === 32 || e.key == 'Space') {
+      e.preventDefault()
+      setResult(null)
+      setFocusElement(true)
+    }
+  }
+
+  useEffect(() => {
+    if (focusElement) {
+      currentElement.current && currentElement.current.firstChild.focus()
+    }
+  }, [result])
 
   useEffect(() => {
     Highcharts.setOptions({
@@ -161,7 +177,12 @@ function NameSearch(props) {
               {!!result.nameGraph && renderGraphLink(desktop)}
               <Row>
                 <Col className='md-6'>
-                  <Button className='close-button' onClick={() => closeResult()} type='button'>
+                  <Button
+                    className='close-button'
+                    onClick={() => closeResult()}
+                    type='button'
+                    onKeyDown={keyDownToggleBox}
+                  >
                     {' '}
                     <X size='18' /> {props.phrases.close}{' '}
                   </Button>
@@ -488,9 +509,11 @@ function NameSearch(props) {
           </Row>
           <Row>
             <Col lg md='12'>
-              <Button primary type='submit'>
-                {props.phrases.nameSearchButtonText}
-              </Button>
+              <span ref={currentElement}>
+                <Button primary type='submit'>
+                  {props.phrases.nameSearchButtonText}
+                </Button>
+              </span>
             </Col>
             <Col lg md='12' className='name-search-about-link'>
               {props.aboutLink && props.aboutLink.url && (
