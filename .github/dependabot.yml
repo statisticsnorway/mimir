@@ -12,13 +12,28 @@ updates:
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 10
+    reviewers:
+      - ssb-cgn
+      # - Glenruben  I'll be back 😎
+      - johnnadeluy
+      - KyleDanny
   - package-ecosystem: "gradle"
     directory: "/"
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 10
+    reviewers:
+      - ssb-cgn
+      # - Glenruben  I'll be back 😎
+      - johnnadeluy
+      - KyleDanny
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 10
+    reviewers:
+      - ssb-cgn
+      # - Glenruben  I'll be back 😎
+      - johnnadeluy
+      - KyleDanny
