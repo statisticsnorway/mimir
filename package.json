@@ -135,7 +135,7 @@
     "highcharts-react-official": "^3.1.0",
     "react-bootstrap": "^2.7.0",
     "react-ga": "^3.3.1",
-    "react-select": "^5.7.0",
+    "react-select": "^5.7.2",
     "redux-logger": "^3.0.6",
     "uuid": "^9.0.0",
     "zipcelx": "^1.6.2"
