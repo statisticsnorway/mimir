@@ -16,8 +16,11 @@ reviewers:
 numberOfReviewers: 0
 
 # A list of assignees, overrides reviewers if set
-# assignees:
-#   - assigneeA
+assignees:
+  - ssb-cgn
+  # - Glenruben  I'll be back 😎
+  - johnnadeluy
+  - KyleDanny
 
 # A number of assignees to add to the pull request
 # Set to 0 to add all of the assignees.
@@ -26,3 +29,8 @@ numberOfAssignees: 1
 # A list of keywords to be skipped the process that add reviewers if pull requests include it
 # skipKeywords:
 #   - wip
+
+filterLabels:
+  # Run
+  include:
+    - dependencies
