@@ -30,7 +30,7 @@ numberOfAssignees: 1
 # skipKeywords:
 #   - wip
 
-filterLabels:
-  # Run
-  include:
-    - dependencies
+# filterLabels:
+#   # Run
+#   include:
+#     - dependencies
