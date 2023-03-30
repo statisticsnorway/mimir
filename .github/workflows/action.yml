@@ -20,9 +20,5 @@ jobs:
       - name: Assign PR
         uses: kentaro-m/auto-assign-action@v1.2.5
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          addAssignees: true
-          numberOfAssignees: 1
-          assignees: ${{ github.repository_collaborators }}
-          randomAssignees: true
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
 
