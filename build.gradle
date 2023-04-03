@@ -45,7 +45,7 @@ dependencies {
     include 'com.enonic.lib:lib-react4xp:3.4.1'
     include 'com.enonic.lib:lib-text-encoding:2.1.1'
     include "com.enonic.xp:lib-value:${xpVersion}"
-    include "no.item:lib-xp-cristin:1.2.2"
+    include "no.item:lib-xp-cristin:1.2.3"
 }
 
 repositories {
