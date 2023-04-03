@@ -37,7 +37,7 @@
     "@babel/preset-stage-0": "^7.8.3",
     "@babel/register": "^7.18.9",
     "@babel/runtime": "^7.20.7",
-    "@enonic/react-components": "^3.0.1",
+    "@enonic/react-components": "^3.1.2",
     "@enonic/react4xp": "^3.1.2",
     "@reduxjs/toolkit": "^1.9.1",
     "@statisticsnorway/ssb-component-library": "^2.0.83",
