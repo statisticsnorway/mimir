@@ -44,6 +44,8 @@ return {
 - [ ] externalCard
 - [x] factBox
 - [ ] frontpageKeyFigures
+- [x] glossary
+- [x] headerLink
 - [x] highmap
 - [ ] husleieCalculator
 - [x] infoGraphics
@@ -80,5 +82,6 @@ return {
 - [x] statistics
 - [x] subjectArticleList
 - [ ] table
+- [x] tableLink
 - [x] upcomingReleases
 - [x] variables
