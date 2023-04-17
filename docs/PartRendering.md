@@ -20,9 +20,13 @@ return {
 };
 ```
 
+### List of admin tools that needs to be changed
+
+- [ ] bestbet
+- [ ] dashboard
+
 ### List of parts that needs to be changed
 
-- [ ] dashboard
 - [x] accordion
 - [x] article
 - [x] articleArchive
