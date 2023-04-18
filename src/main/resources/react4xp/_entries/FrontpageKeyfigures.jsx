@@ -3,10 +3,23 @@ import PropTypes from 'prop-types'
 import { ArrowRight } from 'react-feather'
 
 function FrontpageKeyfigures(props) {
+  const isSsr = useIsSsr()
+
+  function useIsSsr() {
+    // default is "SSR mode", to ensure our initial browser render matches the SSR render
+    const [isSsr, setIsSsr] = useState(true)
+
+    useEffect(() => {
+      // `useEffect` will run on client and execute this block
+      setIsSsr(false)
+    }, [])
+
+    return isSsr
+  }
+
   function createRows() {
     const keyFigures = props.keyFigures
     const { width } = useWindowDimensions()
-    const isSsr = useIsSsr()
 
     return keyFigures.map((keyFigure, i) => {
       return (
@@ -80,18 +93,6 @@ function FrontpageKeyfigures(props) {
     }, [])
 
     return windowDimensions
-  }
-
-  const useIsSsr = () => {
-    // default is "SSR mode", to ensure our initial browser render matches the SSR render
-    const [isSsr, setIsSsr] = useState(true)
-
-    useEffect(() => {
-      // `useEffect` will run on client and execute this block
-      setIsSsr(false)
-    }, [])
-
-    return isSsr
   }
 
   return (
