@@ -1,12 +1,12 @@
-.part-accordion {
-  div ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-  }
-}
-
 .attachment-tables-figures {
+  .part-accordion {
+    div ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+  }
+
   h2 {
     margin-bottom: $spacer * 3;
   }
