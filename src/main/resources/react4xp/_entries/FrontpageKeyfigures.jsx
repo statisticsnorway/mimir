@@ -3,6 +3,20 @@ import PropTypes from 'prop-types'
 import { ArrowRight } from 'react-feather'
 
 function FrontpageKeyfigures(props) {
+  const isSsr = useIsSsr()
+
+  function useIsSsr() {
+    // default is "SSR mode", to ensure our initial browser render matches the SSR render
+    const [isSsr, setIsSsr] = useState(true)
+
+    useEffect(() => {
+      // `useEffect` will run on client and execute this block
+      setIsSsr(false)
+    }, [])
+
+    return isSsr
+  }
+
   function createRows() {
     const keyFigures = props.keyFigures
     const { width } = useWindowDimensions()
@@ -17,7 +31,7 @@ function FrontpageKeyfigures(props) {
                   <span className='link-text'>{keyFigure.urlText}</span>
                 </div>
                 <div className='number-section'>
-                  {i === 0 || width > 768 ? addKeyfigure(keyFigure) : addKeyfigureMobile(keyFigure)}
+                  {i === 0 || (width > 768 && !isSsr) ? addKeyfigure(keyFigure) : addKeyfigureMobile(keyFigure)}
                 </div>
               </div>
             </a>
@@ -66,9 +80,9 @@ function FrontpageKeyfigures(props) {
       height,
     }
   }
+
   function useWindowDimensions() {
     const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions())
-
     useEffect(() => {
       function handleResize() {
         setWindowDimensions(getWindowDimensions())

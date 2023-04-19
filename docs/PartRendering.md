@@ -43,7 +43,7 @@ return {
 - [ ] entryLinks
 - [ ] externalCard
 - [x] factBox
-- [ ] frontpageKeyFigures
+- [x] frontpageKeyFigures
 - [x] glossary
 - [x] headerLink
 - [x] highmap
