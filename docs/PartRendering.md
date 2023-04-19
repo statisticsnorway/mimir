@@ -31,7 +31,7 @@ return {
 - [x] article
 - [x] articleArchive
 - [x] articleList
-- [ ] attachmentTablesFigures
+- [x] attachmentTablesFigures
 - [x] bkibolCalculator
 - [x] categoryLinks
 - [x] contactForm
