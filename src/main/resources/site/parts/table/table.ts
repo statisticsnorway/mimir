@@ -1,7 +1,7 @@
 import { get as getContentByKey, type Content } from '/lib/xp/content'
 import { type ResourceKey, render } from '/lib/thymeleaf'
 import type { TableSourceList, TableView } from '/lib/ssb/parts/table'
-import type { SourceList, SourcesConfig } from '/lib/ssb/utils/utils'
+import { SourceList, SourcesConfig, scriptAsset } from '/lib/ssb/utils/utils'
 import {
   DropdownItem as TableDownloadDropdownItem,
   DropdownItems as TableDownloadDropdownItems,
@@ -149,6 +149,9 @@ function renderPart(req: XP.Request, tableId?: string): XP.Response {
 
   return r4xpRender('Table', getProps(req, tableId), req, {
     clientRender: req.mode !== 'edit',
+    pageContributions: {
+      bodyEnd: [scriptAsset('js/tableExport.js')],
+    },
     // id: 'table'
   })
 }

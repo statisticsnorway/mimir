@@ -1,17 +1,10 @@
-import { init as initHighcharts } from './app/highchart.es6'
-import { init as initMap } from './app/map.es6'
-import { init as initMenuDropDown } from './app/menuDropdown.es6'
-import { init as initDivider } from './app/divider.es6'
-import { init as initTableExport } from './app/tableExport.es6'
+// --- Only include code that is used on every page here ---
+// Keeping file as-is for when we need it
 
 document.addEventListener(
   'DOMContentLoaded',
   () => {
-    initHighcharts()
-    initMap()
-    initMenuDropDown()
-    initDivider()
-    initTableExport()
+    // no-op
   },
   false
 )

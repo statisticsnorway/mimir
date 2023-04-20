@@ -1,4 +1,5 @@
 import $ from 'jquery'
+// only used in part Highcharts when not doing react4xp render
 
 import Highcharts from 'highcharts'
 // Load the exporting module.
@@ -119,7 +120,7 @@ const createSetOptions = {
     },
     contextButtonTitle: 'Last ned/skriv ut',
     decimalPoint: ',',
-    downloadJPEG: 'Last ned som JPEG',
+    downloadJPEG: 'Last ned som JPEG 123',
     downloadPDF: 'Last ned som PDF',
     downloadPNG: 'Last ned som PNG',
     downloadSVG: 'Last ned som SVG',
@@ -404,3 +405,5 @@ export function init() {
     })
   })
 }
+
+document.addEventListener('DOMContentLoaded', () => init(), false)
