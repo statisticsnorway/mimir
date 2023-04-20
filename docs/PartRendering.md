@@ -20,33 +20,68 @@ return {
 };
 ```
 
+### List of admin tools that needs to be changed
+
+- [ ] bestbet
+- [ ] dashboard
+
 ### List of parts that needs to be changed
 
-- [ ] dashboard
+- [x] accordion
+- [x] article
 - [x] articleArchive
+- [x] articleList
 - [ ] attachmentTablesFigures
-- [ ] bkibolCalculator
+- [x] bkibolCalculator
+- [x] categoryLinks
 - [ ] contactForm
 - [x] divider
+- [x] downloadLink
+- [x] employee
+- [x] employeeList
+- [x] endedStatistics
 - [ ] entryLinks
 - [ ] externalCard
-- [ ] frontpageKeyFigures
+- [x] factBox
+- [x] frontpageKeyFigures
+- [x] glossary
+- [x] headerLink
+- [x] highmap
 - [ ] husleieCalculator
-- [ ] kpiCalculator
-- [ ] links
-- [ ] localSearch
+- [x] infoGraphics
+- [x] keyFigure
+- [x] kpiCalculator
+- [x] links
+- [x] localSearch
 - [ ] mailChimpForm
-- [ ] menuBox
+- [x] maths
+- [x] menuBox
 - [ ] menuDropdown
 - [ ] nameSearch
-- [x] pictureCardLink
-- [ ] pifCalculator
+- [x] omStatistikken
+- [x] pictureCardLinks
+- [x] pifCalculator
+- [x] profiledBox
+- [x] profiledLinkIcon
+- [x] project
 - [x] pubArchiveCalenderLinks
 - [x] publicationArchive
-- [ ] relatedFactPage
+- [x] relatedArticles
+- [x] relatedExternalLinks
+- [x] relatedFactPage
+- [x] relatedKostra
+- [x] relatedStatistics
 - [x] releasedStatistics
+- [x] searchResult
+- [x] standardCardsList
 - [ ] statbankBox
+- [x] statbankFrame
+- [x] statbankSubjectTree
+- [x] staticVisualization
 - [ ] statbankLinkList
 - [x] statistics
+- [x] subjectArticleList
 - [ ] table
+- [x] tableLink
 - [x] upcomingReleases
+- [x] variables

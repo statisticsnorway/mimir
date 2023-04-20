@@ -84,7 +84,6 @@ function renderFrontpageKeyfigures(
     req,
     {
       body: render(view),
-      clientRender: req.mode !== 'edit',
     }
   )
 }
