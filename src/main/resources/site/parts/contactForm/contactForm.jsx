@@ -55,7 +55,7 @@ function ContactForm(props) {
               language: props.language === 'en' ? 'en' : 'no',
               token,
             })
-            .then((res) => {
+            .then(() => {
               setEmailSent(true)
             })
             .catch((err) => {
