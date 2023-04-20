@@ -1,10 +1,13 @@
+// Only used in menuDropdown part
+
 import $ from 'jquery'
 import 'bootstrap/js/dist/collapse'
+
 // Markup according to Bootstrap 4 collapse element - see https://getbootstrap.com/docs/4.3/components/collapse/
 // Dependencies: jQuery and Bootstrap
 // Belongs to part menu-dropdown
 // - adds visibility class for muncipality when on top of page (sticky part of page)
-export function init() {
+function init() {
   $(function () {
     let animate
     const map = $('#js-show-map')
@@ -110,3 +113,5 @@ export function init() {
     $('#municipality-list').appendTo('.input-wrapper')
   })
 }
+
+document.addEventListener('DOMContentLoaded', () => init(), false)

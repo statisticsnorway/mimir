@@ -1,3 +1,5 @@
+// Only used in Table part
+
 import jquery from 'jquery'
 window.jQuery = jquery
 window.$ = jquery
@@ -14,7 +16,7 @@ import XLSX from 'xlsx/dist/xlsx.core.min'
  * Licensed under the MIT License, http://opensource.org/licenses/mit-license
  */
 
-export function init() {
+function init() {
   ;(function ($) {
     $.fn.extend({
       tableExport: function (options) {
@@ -2307,3 +2309,5 @@ export function init() {
 window.downloadTableFile = (table, options) => {
   $(table).tableExport(options)
 }
+
+document.addEventListener('DOMContentLoaded', () => init(), false)
