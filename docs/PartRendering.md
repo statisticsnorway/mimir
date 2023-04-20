@@ -34,7 +34,7 @@ return {
 - [ ] attachmentTablesFigures
 - [x] bkibolCalculator
 - [x] categoryLinks
-- [ ] contactForm
+- [x] contactForm
 - [x] divider
 - [x] downloadLink
 - [x] employee
