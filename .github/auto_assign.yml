@@ -10,6 +10,7 @@ reviewers:
   # - Glenruben  I'll be back 😎
   - johnnadeluy
   - KyleDanny
+  - omsaggau
 
 # A number of reviewers added to the pull request
 # Set 0 to add all the reviewers (default: 0)
@@ -21,6 +22,7 @@ assignees:
   # - Glenruben  I'll be back 😎
   - johnnadeluy
   - KyleDanny
+  - omsaggau
 
 # A number of assignees to add to the pull request
 # Set to 0 to add all of the assignees.
