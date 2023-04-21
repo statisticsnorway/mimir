@@ -56,7 +56,7 @@ return {
 - [ ] mailChimpForm
 - [x] maths
 - [x] menuBox
-- [ ] menuDropdown
+- [x] menuDropdown
 - [ ] nameSearch
 - [x] omStatistikken
 - [x] pictureCardLinks
