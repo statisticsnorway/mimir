@@ -1,6 +1,7 @@
 import { getComponent, type Component } from '/lib/xp/portal'
 import { render } from '/lib/enonic/react4xp'
 import type { Divider as DividerPartConfig } from '.'
+import { scriptAsset } from '/lib/ssb/utils/utils'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 const { fromPartCache } = __non_webpack_require__('/lib/ssb/cache/partCache')
@@ -24,6 +25,9 @@ function renderPart(req: XP.Request, config: DividerPartConfig): XP.Response {
   return fromPartCache(req, `divider${dividerColor}`, () => {
     return render('Divider', setColor(dividerColor), req, {
       body: '<section class="xp-part part-divider"></section>',
+      pageContributions: {
+        bodyEnd: [scriptAsset('js/divider.js')],
+      },
     })
   })
 }
