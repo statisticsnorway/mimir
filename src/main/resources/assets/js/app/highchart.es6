@@ -120,7 +120,7 @@ const createSetOptions = {
     },
     contextButtonTitle: 'Last ned/skriv ut',
     decimalPoint: ',',
-    downloadJPEG: 'Last ned som JPEG 123',
+    downloadJPEG: 'Last ned som JPEG',
     downloadPDF: 'Last ned som PDF',
     downloadPNG: 'Last ned som PNG',
     downloadSVG: 'Last ned som SVG',
