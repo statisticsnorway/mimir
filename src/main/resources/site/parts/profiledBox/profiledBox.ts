@@ -38,6 +38,7 @@ function renderPart(req: XP.Request): XP.Response {
     imgUrl: imageUrl({
       id: config.image,
       scale: 'block(315, 215)',
+      format: 'jpg',
     }),
     imageAltText: getImageAlt(config.image) ? getImageAlt(config.image) : ' ',
     imagePlacement: config.cardOrientation == 'horizontal' ? 'left' : 'top',

@@ -97,6 +97,7 @@ function parseContent(
           ? imageUrl({
               id: iconId,
               scale: 'block(100, 100)',
+              format: 'jpg',
             })
           : undefined
 

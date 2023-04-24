@@ -25,7 +25,7 @@ class ArticleList extends React.Component {
                 </Link>
               </Title>
               <p>
-                <Truncate lines={2} className='article-list-ingress'>
+                <Truncate lines={2} className='truncate'>
                   {article.preface}
                 </Truncate>
               </p>

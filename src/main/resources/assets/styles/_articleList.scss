@@ -28,3 +28,10 @@
         }
     }
 }
+
+.truncate {
+  // ca 2 lines
+  max-height: 50px;
+  overflow: hidden;
+  display: block;
+}

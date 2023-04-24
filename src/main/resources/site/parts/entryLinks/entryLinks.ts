@@ -101,6 +101,7 @@ function parseEntryLinks(entryLinksContent: EntryLinksPartConfig['entryLinks']):
         icon: imageUrl({
           id: icon,
           scale: 'block(80,80)',
+          format: 'jpg',
         }),
         mobileIcon: getAttachmentContent(mobileIcon),
         altText,

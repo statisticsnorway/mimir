@@ -178,6 +178,7 @@ function parseRelatedContent(relatedContent: RelatedFactPage): RelatedFactPageCo
     image = imageUrl({
       id: imageId,
       scale: 'block(380, 400)',
+      format: 'jpg',
     })
   } else {
     image = imagePlaceholder({

@@ -66,6 +66,7 @@ function renderPart(req: XP.Request, contentId: string | undefined): RenderRespo
     const imageSrc: string | null = imageUrl({
       id: staticVisualizationsContent.data.image,
       scale: 'max(850)',
+      format: 'jpg',
     })
 
     // Retrieves image as content to get image meta data

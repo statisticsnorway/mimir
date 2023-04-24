@@ -41,6 +41,7 @@ const renderExternalCard = (req: XP.Request, links: Array<ExternalCard>) => {
             image: imageUrl({
               id: link.image,
               scale: 'height(70)',
+              format: 'jpg',
             }),
           }
         }),
