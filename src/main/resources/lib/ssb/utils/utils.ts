@@ -158,7 +158,7 @@ export function randomUnsafeString(): string {
  * @returns HTML script tag <script>
  */
 export function scriptAsset(path: string): string {
-  return `<script defer src="${assetUrl({ path })}"><script/>`
+  return `<script defer src="${assetUrl({ path })}"></script>`
 }
 
 export interface SourcesConfig {
