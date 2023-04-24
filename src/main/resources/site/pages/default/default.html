@@ -1,7 +1,7 @@
 <html data-th-lang="${language.code}">
 <head>
   <!-- UA GA tracking script with added GA4 gtag config -->
-  <script async="async" data-th-if="${GA_TRACKING_ID}" data-th-src="|https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}|"></script>
+  <script defer data-th-if="${GA_TRACKING_ID}" data-th-src="|https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}|"></script>
   <script th:inline="javascript" data-th-if="${GA_TRACKING_ID}">
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
@@ -15,6 +15,7 @@
     id='enalyzer-embed' 
     data-env='https://surveys.enalyzer.com' 
     data-embedid='hmumar2q' 
+    defer
     src='https://surveys.enalyzer.com/Scripts/websitecollector.js'>
   </script>
 
@@ -22,7 +23,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta data-th-if="${page.data.metaDescription}" name="description" data-th-content="${page.data.metaDescription}"/>
   <title data-th-text="${pageTitle}"></title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans%7COpen+Sans:700%7CRoboto:700%7CRoboto+Condensed:700"/>
+  <link rel="preload" data-th-href="${stylesUrl}" as="style" />
   <link rel="stylesheet" data-th-href="${stylesUrl}"/>
   <link rel="alternate" data-th-if="${alternateLanguageVersionUrl}" data-th-href="${alternateLanguageVersionUrl}" data-th-hreflang="${language.alternate}"/>
   <link data-th-unless="${statbankWeb}" rel="canonical" data-th-href="${pageUrl}" />
@@ -155,7 +156,7 @@
   <footer data-th-if="${footerBody}" id="footer" data-th-utext="${footerBody}" data-th-remove="tag">
   </footer>
 
-  <script data-th-src="${ieUrl}"></script>
+  <script data-th-src="${ieUrl}" defer></script>
   <!-- siteimprove tracking script -->
   <script type="text/javascript">
     /*<![CDATA[*/

@@ -40,7 +40,7 @@ const PictureLink = (props) => {
       aria-describedby={props.ariaDescribedBy ? `${props.id}-${props.ariaDescribedBy}` : undefined}
     >
       <div className='image-background'>
-        <img src={props.imageSrc} alt={props.imageAlt} aria-hidden='true' />
+        <img src={props.imageSrc} alt={props.imageAlt} aria-hidden='true' height={400} loading='lazy' />
       </div>
       <div className='overlay w-100'>
         <span className='il-title'>{props.title}</span>
