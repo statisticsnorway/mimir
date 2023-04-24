@@ -21,6 +21,7 @@ const { cronJobLog } = __non_webpack_require__('/lib/ssb/utils/serverLog')
 const { ENONIC_CMS_DEFAULT_REPO } = __non_webpack_require__('/lib/ssb/repo/common')
 const { updateUnpublishedMockTbml } = __non_webpack_require__('/lib/ssb/dataset/mockUnpublished')
 const { pushRssNews } = __non_webpack_require__('/lib/ssb/cron/pushRss')
+const { updateSDDSTables } = __non_webpack_require__('/lib/ssb/cron/updateSDDSTables')
 const { publishDataset } = __non_webpack_require__('/lib/ssb/dataset/publishOld')
 const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
 const { createOrUpdateStatisticsRepo } = __non_webpack_require__('/lib/ssb/repo/statisticVariant')
@@ -105,6 +106,14 @@ export function statRegJob(): void {
 function pushRssNewsJob(): void {
   const jobLogNode: JobEventNode = startJobLog(JobNames.PUSH_RSS_NEWS)
   const result: string = pushRssNews()
+  completeJobLog(jobLogNode._id, result, {
+    result,
+  })
+}
+
+function updateSDDSTablesJob(): void {
+  const jobLogNode: JobEventNode = startJobLog(JobNames.REFRESH_DATASET_SDDS_TABLES_JOB)
+  const result: string = updateSDDSTables()
   completeJobLog(jobLogNode._id, result, {
     result,
   })
@@ -219,6 +228,16 @@ export function setupCronJobs(): void {
       clearPartFromPartCache('archiveAllPublications-nb')
       clearPartFromPartCache('archiveAllPublications-en')
     },
+    context: cronContext,
+  })
+
+  // Update SDDS tables
+  const updateSDDSTablesCron: string =
+    app.config && app.config['ssb.cron.updateSDDSTables'] ? app.config['ssb.cron.updateSDDSTables'] : '01 09 * * *'
+  schedule({
+    name: 'Update SDDS tables',
+    cron: updateSDDSTablesCron,
+    callback: () => runOnMasterOnly(updateSDDSTablesJob),
     context: cronContext,
   })
 
