@@ -43,7 +43,6 @@ function renderPart(req: XP.Request): RenderResponse {
       pageContributions: {
         headEnd: [`<script src="https://www.google.com/recaptcha/api.js?render=${recaptchaSiteKey}"></script>`],
       },
-      clientRender: req.mode !== 'edit',
     }
   )
 }
