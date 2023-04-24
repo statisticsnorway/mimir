@@ -3,6 +3,7 @@ import { formatDate } from '/lib/ssb/utils/dateUtils'
 import { render, type RenderResponse } from '/lib/enonic/react4xp'
 import type { Article } from '/site/content-types'
 import { processHtml, getContent, pageUrl } from '/lib/xp/portal'
+import { scriptAsset } from '/lib/ssb/utils/utils'
 
 const {
   data: { forceArray },
@@ -74,7 +75,11 @@ function renderPart(req: XP.Request): RenderResponse {
     isbn: isEnabled('article-isbn', true) && page.data.isbnNumber,
   }
 
-  return render('site/parts/article/article', props, req)
+  return render('site/parts/article/article', props, req, {
+    pageContributions: {
+      bodyEnd: [scriptAsset('js/divider.js')],
+    },
+  })
 }
 
 function getAssociatedStatisticsLinks(

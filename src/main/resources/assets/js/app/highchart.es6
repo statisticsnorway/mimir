@@ -1,4 +1,5 @@
 import $ from 'jquery'
+// only used in part Highcharts when not doing react4xp render
 
 import Highcharts from 'highcharts'
 // Load the exporting module.
@@ -404,3 +405,5 @@ export function init() {
     })
   })
 }
+
+document.addEventListener('DOMContentLoaded', () => init(), false)

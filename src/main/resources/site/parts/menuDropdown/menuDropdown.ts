@@ -5,7 +5,7 @@ import type { Component } from '/lib/xp/portal'
 import type { MunicipalityWithCounty } from '/lib/ssb/dataset/klass/municipalities'
 import type { MenuDropdown as MenuDropdownPartConfig } from '.'
 import type { MenuDropdown } from '/site/content-types'
-import { randomUnsafeString } from '/lib/ssb/utils/utils'
+import { randomUnsafeString, scriptAsset } from '/lib/ssb/utils/utils'
 import { assetUrl, getContent, getComponent, pageUrl, getSiteConfig, serviceUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 
@@ -98,6 +98,9 @@ function renderPart(req: XP.Request): XP.Response | RenderResponse {
     {
       id: reactUuid,
       body: thymeleafRender,
+      pageContributions: {
+        bodyEnd: [scriptAsset('js/map.js'), scriptAsset('js/menuDropdown.js')],
+      },
     }
   )
 }
