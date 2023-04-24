@@ -34,7 +34,7 @@ return {
 - [ ] attachmentTablesFigures
 - [x] bkibolCalculator
 - [x] categoryLinks
-- [ ] contactForm
+- [x] contactForm
 - [x] divider
 - [x] downloadLink
 - [x] employee
@@ -56,7 +56,7 @@ return {
 - [ ] mailChimpForm
 - [x] maths
 - [x] menuBox
-- [ ] menuDropdown
+- [x] menuDropdown
 - [ ] nameSearch
 - [x] omStatistikken
 - [x] pictureCardLinks

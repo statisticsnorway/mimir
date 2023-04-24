@@ -98,7 +98,6 @@ function renderPart(req: XP.Request): XP.Response | RenderResponse {
     {
       id: reactUuid,
       body: thymeleafRender,
-      clientRender: req.mode !== 'edit',
       pageContributions: {
         bodyEnd: [scriptAsset('js/map.js'), scriptAsset('js/menuDropdown.js')],
       },

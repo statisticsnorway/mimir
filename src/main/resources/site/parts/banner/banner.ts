@@ -70,6 +70,7 @@ function renderPart(req: XP.Request): XP.Response {
   }
 }
 
+// Inefficient, should only do one imageUrl call and then string replace the width
 function imageSrcSet(imageId: string): ImageConf {
   const widths = [3840, 2560, 2000, 1500, 1260, 800, 650]
   const srcset = widths
