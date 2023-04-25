@@ -71,6 +71,8 @@ export function Jobs() {
         return 'Publisering statistikk'
       case 'Refresh statreg data':
         return 'Import Statreg'
+      case 'Refresh dataset for SDDS tables':
+        return 'Oppdatere SDDS tabeller'
       default:
         return task
     }

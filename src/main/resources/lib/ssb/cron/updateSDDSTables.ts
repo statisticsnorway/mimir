@@ -8,7 +8,6 @@ const { completeJobLog, startJobLog, updateJobLog, JOB_STATUS_COMPLETE, JobNames
   __non_webpack_require__('/lib/ssb/repo/job')
 const { cronJobLog } = __non_webpack_require__('/lib/ssb/utils/serverLog')
 const { refreshDataset } = __non_webpack_require__('/lib/ssb/dataset/dataset')
-const { clearPartFromPartCache } = __non_webpack_require__('/lib/ssb/cache/partCache')
 
 export function updateSDDSTables(): void {
   cronJobLog('Start update SDDS tables job')
@@ -41,12 +40,8 @@ export function updateSDDSTables(): void {
     }
 
     const updatedDataquery: number = jobLogResult.filter((job) => job.status === 'GET_DATA_COMPLETE').length
-
     if (updatedDataquery > 0) {
-      clearPartFromPartCache('kpiCalculator')
-      clearPartFromPartCache('pifCalculator')
-      clearPartFromPartCache('bkibolCalculator')
-      clearPartFromPartCache('husleieCalculator')
+      // TODO:
     }
   } else {
     completeJobLog(jobLogNode._id, JOB_STATUS_COMPLETE, {
@@ -56,9 +51,9 @@ export function updateSDDSTables(): void {
 }
 
 function getSDDSTableDataset(): Array<Content<GenericDataImport>> {
-  return query({
+  const SDDSTables: Array<Content<GenericDataImport>> = query({
     start: 0,
-    count: 10, // TODO: Exact number?
+    count: 10,
     query: `fulltext('displayName',  'SDDS')`,
     filters: {
       boolean: {
@@ -79,4 +74,8 @@ function getSDDSTableDataset(): Array<Content<GenericDataImport>> {
       },
     },
   }).hits as unknown as Array<Content<GenericDataImport>>
+
+  log.info(JSON.stringify(SDDSTables, null, 2))
+
+  return SDDSTables
 }
