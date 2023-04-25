@@ -38,20 +38,16 @@ export function updateSDDSTables(): void {
         })),
       })
     }
-
-    const updatedDataquery: number = jobLogResult.filter((job) => job.status === 'GET_DATA_COMPLETE').length
-    if (updatedDataquery > 0) {
-      // TODO:
-    }
   } else {
     completeJobLog(jobLogNode._id, JOB_STATUS_COMPLETE, {
       result: [],
     })
   }
+  cronJobLog(JobNames.REFRESH_DATASET_SDDS_TABLES_JOB)
 }
 
 function getSDDSTableDataset(): Array<Content<GenericDataImport>> {
-  const SDDSTables: Array<Content<GenericDataImport>> = query({
+  return query({
     start: 0,
     count: 10,
     query: `fulltext('displayName',  'SDDS')`,
@@ -74,8 +70,4 @@ function getSDDSTableDataset(): Array<Content<GenericDataImport>> {
       },
     },
   }).hits as unknown as Array<Content<GenericDataImport>>
-
-  log.info(JSON.stringify(SDDSTables, null, 2))
-
-  return SDDSTables
 }

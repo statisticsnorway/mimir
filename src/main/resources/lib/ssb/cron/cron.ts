@@ -111,14 +111,6 @@ function pushRssNewsJob(): void {
   })
 }
 
-function updateSDDSTablesJob(): void {
-  const jobLogNode: JobEventNode = startJobLog(JobNames.REFRESH_DATASET_SDDS_TABLES_JOB)
-  const result: string = updateSDDSTables()
-  completeJobLog(jobLogNode._id, result, {
-    result,
-  })
-}
-
 export function runOnMasterOnly(task: () => void): void {
   if (isMaster()) {
     task()
@@ -237,7 +229,7 @@ export function setupCronJobs(): void {
   schedule({
     name: 'Update SDDS tables',
     cron: updateSDDSTablesCron,
-    callback: () => runOnMasterOnly(updateSDDSTablesJob),
+    callback: () => runOnMasterOnly(updateSDDSTables),
     context: cronContext,
   })
 

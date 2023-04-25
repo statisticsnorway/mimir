@@ -139,6 +139,7 @@ export function Jobs() {
       ) : (
         <span>{job.status}</span>
       )
+    } else if (job.task === 'Refresh dataset for SDDS tables') {
     }
     return (
       <span>
@@ -237,6 +238,8 @@ export function Jobs() {
           </React.Fragment>
         )
       })
+    } else if (currentModalJob.task === 'Refresh dataset for SDDS tables') {
+      return
     }
   }
 
