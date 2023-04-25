@@ -40,7 +40,7 @@ return {
 - [x] employee
 - [x] employeeList
 - [x] endedStatistics
-- [ ] entryLinks
+- [x] entryLinks
 - [ ] externalCard
 - [x] factBox
 - [x] frontpageKeyFigures
