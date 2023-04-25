@@ -128,7 +128,7 @@ export function Jobs() {
       ) : (
         <span>{job.status}</span>
       )
-    } else if (job.task === 'Refresh dataset calculators') {
+    } else if (job.task === 'Refresh dataset calculators' || job.task === 'Refresh dataset for SDDS tables') {
       const skipped = job.result.result.filter((ds) => ds.status === 'Ingen nye data').length
       const updated = job.result.result.filter((ds) => ds.status === 'Dataset hentet og oppdatert').length
       const errorCount = job.result.result.filter((ds) => ds.hasError).length
@@ -139,7 +139,6 @@ export function Jobs() {
       ) : (
         <span>{job.status}</span>
       )
-    } else if (job.task === 'Refresh dataset for SDDS tables') {
     }
     return (
       <span>
@@ -215,7 +214,10 @@ export function Jobs() {
           </React.Fragment>
         )
       })
-    } else if (currentModalJob.task === 'Refresh dataset calculators') {
+    } else if (
+      currentModalJob.task === 'Refresh dataset calculators' ||
+      currentModalJob.task === 'Refresh dataset for SDDS tables'
+    ) {
       return currentModalJob.result.result.map((dataSource) => {
         return (
           <React.Fragment key={`refresh_dataset_log_${dataSource.id}`}>
