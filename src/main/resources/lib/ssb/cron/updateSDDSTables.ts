@@ -12,22 +12,22 @@ const { refreshDataset } = __non_webpack_require__('/lib/ssb/dataset/dataset')
 export function updateSDDSTables(): void {
   cronJobLog('Start update SDDS tables job')
   const jobLogNode: JobEventNode = startJobLog(JobNames.REFRESH_DATASET_SDDS_TABLES_JOB)
-  const dataSources: Array<Content<GenericDataImport>> = getSDDSTableDataset()
+  const hits: Array<Content<GenericDataImport>> = getSDDSTableDataset()
 
-  if (dataSources && dataSources.length > 1) {
+  if (hits && hits.length) {
     updateJobLog(jobLogNode._id, (node: JobInfoNode) => {
       node.data = {
         ...node.data,
-        queryIds: dataSources.map((q) => q._id),
+        queryIds: hits.map((q) => q._id),
       }
       return node
     })
 
-    const jobLogResult: Array<CreateOrUpdateStatus> = dataSources.map((datasource) => {
-      return refreshDataset(datasource, DATASET_BRANCH)
+    const jobLogResult: Array<CreateOrUpdateStatus> = hits.map((tableDataSource) => {
+      return refreshDataset(tableDataSource, DATASET_BRANCH)
     })
 
-    if (jobLogResult.length === dataSources.length) {
+    if (jobLogResult.length === hits.length) {
       completeJobLog(jobLogNode._id, JOB_STATUS_COMPLETE, {
         result: jobLogResult.map((r) => ({
           id: r.dataquery._id,
