@@ -240,8 +240,6 @@ export function Jobs() {
           </React.Fragment>
         )
       })
-    } else if (currentModalJob.task === 'Refresh dataset for SDDS tables') {
-      return
     }
   }
 
