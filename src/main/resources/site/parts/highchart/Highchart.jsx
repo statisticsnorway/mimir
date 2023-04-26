@@ -6,11 +6,13 @@ import { Row, Col, Container } from 'react-bootstrap'
 import { Title, Button, Tabs, Divider, Link } from '@statisticsnorway/ssb-component-library'
 import { addGtagForEvent } from '/react4xp/ReactGA'
 
-require('highcharts/modules/accessibility')(Highcharts)
-require('highcharts/modules/exporting')(Highcharts)
-require('highcharts/modules/export-data')(Highcharts)
-require('highcharts/modules/data')(Highcharts)
-require('highcharts/modules/no-data-to-display')(Highcharts)
+if (typeof Highcharts === 'object') {
+  require('highcharts/modules/exporting')(Highcharts)
+  require('highcharts/modules/export-data')(Highcharts)
+  require('highcharts/modules/data')(Highcharts)
+  require('highcharts/modules/no-data-to-display')(Highcharts)
+  require('highcharts/modules/accessibility')(Highcharts)
+}
 
 /* TODO list
  * Display highcharts in edit mode

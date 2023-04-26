@@ -9,10 +9,11 @@ import HighchartsReact from 'highcharts-react-official'
 import { useMediaQuery } from 'react-responsive'
 import { addGtagForEvent } from '/react4xp/ReactGA'
 
-require('highcharts/modules/accessibility')(Highcharts)
-require('highcharts/modules/exporting')(Highcharts)
-require('highcharts/modules/export-data')(Highcharts)
-
+if (typeof Highcharts === 'object') {
+  require('highcharts/modules/accessibility')(Highcharts)
+  require('highcharts/modules/exporting')(Highcharts)
+  require('highcharts/modules/export-data')(Highcharts)
+}
 /* TODO
 - Etternavn må få rett visning av beste-treff
 - Skjule mindre interessante resultater - må sikkert diskuteres noen runder med Siv og Ina
@@ -167,7 +168,7 @@ function NameSearch(props) {
               <Row>
                 <Col>
                   <Title size={3} className='result-title mb-1'>
-                    {props.phrases.nameSearchResultTitle}
+                    {props.phrases.nameSearchResultTitle} 123
                   </Title>
                   <Divider dark />
                 </Col>
@@ -475,7 +476,7 @@ function NameSearch(props) {
   }
 
   return (
-    <section className='name-search container-fluid p-0'>
+    <section className='name-search container-fluid p-0' style={{ background: 'red' }}>
       <Container className='name-search-input'>
         <Row>
           <Col lg='12'>
