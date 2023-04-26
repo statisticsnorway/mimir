@@ -47,7 +47,7 @@ return {
 - [x] glossary
 - [x] headerLink
 - [x] highmap
-- [ ] husleieCalculator
+- [x] husleieCalculator
 - [x] infoGraphics
 - [x] keyFigure
 - [x] kpiCalculator
