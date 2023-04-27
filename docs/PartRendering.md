@@ -57,7 +57,7 @@ return {
 - [x] maths
 - [x] menuBox
 - [x] menuDropdown
-- [ ] nameSearch
+- [x] nameSearch
 - [x] omStatistikken
 - [x] pictureCardLinks
 - [x] pifCalculator
