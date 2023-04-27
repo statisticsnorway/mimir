@@ -22,8 +22,8 @@ return {
 
 ### List of admin tools that needs to be changed
 
-- [ ] bestbet
-- [ ] dashboard
+- [x] bestbet
+- [ ] dashboard // will remain as Client Side rendered
 
 ### List of parts that needs to be changed
 
