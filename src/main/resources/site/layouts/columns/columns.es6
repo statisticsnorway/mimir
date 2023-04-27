@@ -85,6 +85,7 @@ exports.get = function (req) {
       ? render(view, model)
       : divider.renderBody({
           body: render(view, model),
+          request: req,
         })
 
   return {

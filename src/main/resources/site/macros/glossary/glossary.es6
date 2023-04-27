@@ -25,13 +25,18 @@ const renderMacro = (context) => {
     .uniqueId()
 
   const body = render(view, {
+    // TODO, swap to another unique ID
+    // Is this needed? maybe for multiple glossaries on same page?
     glossaryId: glossary.react4xpId,
   })
 
   return {
     body: glossary.renderBody({
       body,
+      request: context.request,
     }),
-    pageContributions: glossary.renderPageContributions(),
+    pageContributions: glossary.renderPageContributions({
+      request: context.request,
+    }),
   }
 }

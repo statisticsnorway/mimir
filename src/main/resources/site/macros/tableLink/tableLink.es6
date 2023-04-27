@@ -40,7 +40,10 @@ const renderMacro = (context) => {
   return {
     body: tableLink.renderBody({
       body,
+      request: context.request,
     }),
-    pageContributions: tableLink.renderPageContributions(),
+    pageContributions: tableLink.renderPageContributions({
+      request: context.request,
+    }),
   }
 }
