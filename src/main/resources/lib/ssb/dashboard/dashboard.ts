@@ -462,7 +462,10 @@ function parseResult(
       return ds
     })
     return result
-  } else if (jobLog.data.task === JobNames.REFRESH_DATASET_CALCULATOR_JOB) {
+  } else if (
+    jobLog.data.task === JobNames.REFRESH_DATASET_CALCULATOR_JOB ||
+    jobLog.data.task === JobNames.REFRESH_DATASET_SDDS_TABLES_JOB
+  ) {
     let result: CalculatorRefreshResult | undefined = jobLog.data.refreshDataResult as
       | CalculatorRefreshResult
       | undefined
