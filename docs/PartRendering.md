@@ -23,7 +23,6 @@ return {
 ### List of admin tools that needs to be changed
 
 - [ ] bestbet
-- [ ] dashboard
 
 ### List of parts that needs to be changed
 
@@ -74,7 +73,7 @@ return {
 - [x] releasedStatistics
 - [x] searchResult
 - [x] standardCardsList
-- [ ] statbankBox
+- [x] statbankBox
 - [x] statbankFrame
 - [x] statbankSubjectTree
 - [x] staticVisualization
