@@ -53,7 +53,7 @@ return {
 - [x] kpiCalculator
 - [x] links
 - [x] localSearch
-- [ ] mailChimpForm
+- [x] mailChimpForm
 - [x] maths
 - [x] menuBox
 - [x] menuDropdown
