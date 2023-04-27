@@ -41,7 +41,7 @@ return {
 - [x] employeeList
 - [x] endedStatistics
 - [ ] entryLinks
-- [ ] externalCard
+- [x] externalCard
 - [x] factBox
 - [x] frontpageKeyFigures
 - [x] glossary
