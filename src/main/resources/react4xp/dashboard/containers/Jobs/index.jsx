@@ -40,7 +40,7 @@ export function Jobs() {
   function getJobRows() {
     return jobs.map((job) => {
       const jobTime = job.completionTime ? job.completionTime : job.startTime
-      const ts = new Date(jobTime).toLocaleString('nb')
+      const ts = jobTime ? new Date(jobTime).toLocaleString('nb') : null
       const name = getTranslatedJobName(job.task)
 
       const info = renderInfo(job)
