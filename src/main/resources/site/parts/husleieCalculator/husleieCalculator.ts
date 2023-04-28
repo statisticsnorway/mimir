@@ -83,9 +83,6 @@ function getHusleiekalkulator(req: XP.Request, page: Content): RenderResponse {
       lastNumberText,
       lastUpdated,
     },
-    req,
-    {
-      clientRender: req.mode !== 'edit',
-    }
+    req
   )
 }
