@@ -94,6 +94,16 @@ export function Jobs() {
     setCurrentModalJob(null)
   }
 
+  function renderRefreshDatasetJobTaskMessage(job, updated, error, skipped) {
+    return job.status !== 'STARTED' ? (
+      <span className='modal-trigger' onClick={() => openJobLogModal(job)}>
+        {job.status} - Oppdaterte {updated} spørringer, {error} feilet og {skipped} ignorert
+      </span>
+    ) : (
+      <span>{status}</span>
+    )
+  }
+
   function renderInfo(job) {
     if (job.task === 'Publish statistics') {
       return (
@@ -121,24 +131,12 @@ export function Jobs() {
       const count = job.result.result.length
       const errorCount = job.result.result.filter((ds) => ds.hasError).length
       const ignoreCount = job.result.filterInfo && job.result.filterInfo.skipped && job.result.filterInfo.skipped.length
-      return job.status !== 'STARTED' ? (
-        <span className='modal-trigger' onClick={() => openJobLogModal(job)}>
-          {job.status} - Oppdaterte {count - errorCount} spørringer, {errorCount} feilet, og {ignoreCount} ignorert
-        </span>
-      ) : (
-        <span>{job.status}</span>
-      )
+      return renderRefreshDatasetJobTaskMessage(job, count - errorCount, errorCount, ignoreCount)
     } else if (job.task === 'Refresh dataset calculators' || job.task === 'Refresh dataset for SDDS tables') {
       const skipped = job.result.result.filter((ds) => ds.status === 'Ingen nye data').length
       const updated = job.result.result.filter((ds) => ds.status === 'Dataset hentet og oppdatert').length
       const errorCount = job.result.result.filter((ds) => ds.hasError).length
-      return job.status !== 'STARTED' ? (
-        <span className='modal-trigger' onClick={() => openJobLogModal(job)}>
-          {job.status} - Oppdaterte {updated} spørringer, {errorCount} feilet og {skipped} ignorert
-        </span>
-      ) : (
-        <span>{job.status}</span>
-      )
+      return renderRefreshDatasetJobTaskMessage(job, updated, errorCount, skipped)
     }
     return (
       <span>
@@ -191,30 +189,8 @@ export function Jobs() {
           </Accordion>
         )
       })
-    } else if (currentModalJob.task === 'Refresh dataset') {
-      return currentModalJob.result.result.map((dataSource) => {
-        return (
-          <React.Fragment key={`refresh_dataset_log_${dataSource.id}`}>
-            <p>
-              <Link isExternal href={contentStudioBaseUrl + dataSource.id}>
-                {dataSource.displayName}
-              </Link>
-              <span className='small'>
-                <DataQueryBadges
-                  contentType={dataSource.contentType}
-                  format={dataSource.dataSourceType}
-                  isPublished={true}
-                  floatRight={false}
-                />
-              </span>
-              <br />
-              {dataSource.status}
-            </p>
-            <Divider className='my-3' />
-          </React.Fragment>
-        )
-      })
     } else if (
+      currentModalJob.task === 'Refresh dataset' ||
       currentModalJob.task === 'Refresh dataset calculators' ||
       currentModalJob.task === 'Refresh dataset for SDDS tables'
     ) {
