@@ -48,7 +48,6 @@ const renderExternalCard = (req: XP.Request, links: Array<ExternalCard>) => {
       req,
       {
         body: '<section class="xp-part part-external-card"></section>',
-        clientRender: req.mode !== 'edit',
       }
     )
   }

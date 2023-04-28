@@ -1,5 +1,6 @@
 import { type ResourceKey, render } from '/lib/thymeleaf'
 import { assetUrl, getSiteConfig, serviceUrl } from '/lib/xp/portal'
+import { scriptAsset } from '/lib/ssb/utils/utils'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
@@ -39,5 +40,8 @@ function renderPart(): XP.Response {
   return {
     body,
     contentType: 'text/html',
+    pageContributions: {
+      bodyEnd: [scriptAsset('js/map.js')],
+    },
   }
 }

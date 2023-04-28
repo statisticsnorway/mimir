@@ -14,6 +14,7 @@ import type { DataSource } from '/site/mixins/dataSource'
 import { render as r4XpRender, type RenderResponse } from '/lib/enonic/react4xp'
 import { GA_TRACKING_ID } from '/site/pages/default/default'
 import { localize } from '/lib/xp/i18n'
+import { scriptAsset } from '/lib/ssb/utils/utils'
 
 const {
   DataSource: DataSourceType,
@@ -113,7 +114,7 @@ function renderPart(req: XP.Request, highchartIds: Array<string>): XP.Response |
         showAsTableText,
       }),
       pageContributions: {
-        bodyEnd: inlineScript,
+        bodyEnd: [...inlineScript, scriptAsset('js/highchart.js')],
       },
       contentType: 'text/html',
     }

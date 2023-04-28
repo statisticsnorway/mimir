@@ -23,7 +23,7 @@ export function preview(req: XP.Request): RenderResponse {
 function renderPart(req: XP.Request): RenderResponse {
   const component: Component<NameSearchPartConfig> = getComponent()
   const locale: string = getLanguageShortName(getContent())
-  const isNotInEditMode: boolean = req.mode !== 'edit'
+  // const isNotInEditMode: boolean = req.mode !== 'edit'
 
   const urlToService: string = serviceUrl({
     service: 'nameSearch',
@@ -44,9 +44,7 @@ function renderPart(req: XP.Request): RenderResponse {
     GA_TRACKING_ID: GA_TRACKING_ID,
   }
 
-  return render('site/parts/nameSearch/nameSearch', props, req, {
-    clientRender: isNotInEditMode,
-  })
+  return render('site/parts/nameSearch/nameSearch', props, req)
 }
 
 function aboutLinkResources(

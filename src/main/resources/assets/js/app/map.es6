@@ -1,3 +1,5 @@
+// Only used in map and menuDropdown parts
+
 import $ from 'jquery'
 import * as axios from 'axios'
 
@@ -13,7 +15,7 @@ DrillDown(Highcharts) // eslint-disable-line new-cap
 
 // Related to map content type and map part
 // Draws a map with highchart on json files located in assets/mapdata - static files for map
-export function init() {
+function init() {
   const setDrilldownPointer = (i, el) => {
     el.drilldown = el.properties.FYLKE
     el.value = i
@@ -208,3 +210,5 @@ export function init() {
     $('#map').each(setupMap)
   })
 }
+
+document.addEventListener('DOMContentLoaded', () => init(), false)

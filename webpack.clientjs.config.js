@@ -26,6 +26,12 @@ function addBabelSupport(cfg) {
   }
 
   return R.pipe(
+    setEntry('divider', './app/divider.es6'),
+    setEntry('highchart', './app/highchart.es6'),
+    setEntry('map', './app/map.es6'),
+    setEntry('menuDropdown', './app/menuDropdown.es6'),
+    setEntry('tableExport', './app/tableExport.es6'),
+
     setEntry('bundle', './main.es6'),
     setEntry('ie', './ie.es6'),
     addRule(rule),

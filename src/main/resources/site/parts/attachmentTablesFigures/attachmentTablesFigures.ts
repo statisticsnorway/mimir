@@ -36,12 +36,6 @@ export function preview(req: XP.Request): XP.Response {
 
 function renderPart(req: XP.Request): XP.Response {
   const page: Content<Statistics> = getContent()
-  // TODO Fjernet caching siden den skapte problemer for forhåndsvisning av upubliserte tall
-  // if (req.mode !== 'edit') {
-  //   return fromPartCache(req, `${page._id}-attachmentTablesFigures`, () => {
-  //     return getTablesAndFiguresComponent(page, req)
-  //   })
-  // }
   return getTablesAndFiguresComponent(page, req)
 }
 
@@ -84,7 +78,6 @@ function getTablesAndFiguresComponent(page: Content<Statistics>, req: XP.Request
   const accordionComponent: RenderResponse = r4XpRender('AttachmentTablesFigures', attachmentTablesFiguresProps, req, {
     id: 'accordion',
     body: `<section class="xp-part attachment-tables-figures"></section>`,
-    clientRender: req.mode !== 'edit',
   })
 
   const accordionBody: string | null = accordionComponent.body

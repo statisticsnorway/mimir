@@ -3,7 +3,7 @@ import type { Header } from '/site/content-types'
 import { PreliminaryData } from '/lib/types/xmlParser'
 import { formatDate, fromNow } from '/lib/ssb/utils/dateUtils'
 
-const { getContent, pageUrl } = __non_webpack_require__('/lib/xp/portal')
+const { getContent, pageUrl, assetUrl } = __non_webpack_require__('/lib/xp/portal')
 const { readLines } = __non_webpack_require__('/lib/xp/io')
 
 function numberWithSpaces(x: number | string): string {
@@ -150,6 +150,15 @@ export function parseContributions(contributions: XP.PageContributions): XP.Page
 // Cryptographically UNSAFE due to math.random, do NOT use for encryption or security.
 export function randomUnsafeString(): string {
   return Math.random().toString(36).substring(2)
+}
+
+/**
+ * Generated a script tag for a js file in /assets folder to be used in pageContributions
+ * @param path Path to js file in /assets folder
+ * @returns HTML script tag <script>
+ */
+export function scriptAsset(path: string): string {
+  return `<script defer src="${assetUrl({ path })}"></script>`
 }
 
 export interface SourcesConfig {

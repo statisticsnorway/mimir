@@ -7,6 +7,7 @@ import type { StatRegRefreshResult } from '/lib/ssb/repo/statreg'
 import { list, schedule, type TaskMapper } from '/lib/cron'
 import type { RSSFilter } from '/lib/ssb/cron/rss'
 import { create, get as getScheduledJob, list as listScheduledJobs, modify, type ScheduledJob } from '/lib/xp/scheduler'
+import { updateSDDSTables } from '/lib/ssb/cron/updateSDDSTables'
 
 const { clearPartFromPartCache } = __non_webpack_require__('/lib/ssb/cache/partCache')
 const { refreshStatRegData, STATREG_NODES } = __non_webpack_require__('/lib/ssb/repo/statreg')
@@ -219,6 +220,16 @@ export function setupCronJobs(): void {
       clearPartFromPartCache('archiveAllPublications-nb')
       clearPartFromPartCache('archiveAllPublications-en')
     },
+    context: cronContext,
+  })
+
+  // Update SDDS tables
+  const updateSDDSTablesCron: string =
+    app.config && app.config['ssb.cron.updateSDDSTables'] ? app.config['ssb.cron.updateSDDSTables'] : '01 09 * * *'
+  schedule({
+    name: 'Update SDDS tables',
+    cron: updateSDDSTablesCron,
+    callback: () => runOnMasterOnly(updateSDDSTables),
     context: cronContext,
   })
 
