@@ -78,7 +78,6 @@ function renderPart(req: XP.Request): XP.Response {
     {
       id: 'statbankLinkId',
       body: body,
-      clientRender: req.mode !== 'edit',
     }
   )
 }
