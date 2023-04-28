@@ -22,7 +22,7 @@ return {
 
 ### List of admin tools that needs to be changed
 
-- [ ] bestbet
+- [x] bestbet
 
 ### List of parts that needs to be changed
 

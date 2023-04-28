@@ -28,7 +28,6 @@ exports.preview = (req: XP.Request): RenderResponse | XP.Response => {
 }
 
 function renderPart(req: XP.Request): RenderResponse | XP.Response {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
   // @ts-ignore
   const DEFAULT_CONTENTSTUDIO_URL: string = getToolUrl('com.enonic.app.contentstudio', 'main')
   const ENONIC_PROJECT_ID: string =
@@ -111,7 +110,6 @@ function renderPart(req: XP.Request): RenderResponse | XP.Response {
     req,
     {
       id: 'app-bestbet',
-      clientRender: req.mode !== 'edit',
     }
   )
 
