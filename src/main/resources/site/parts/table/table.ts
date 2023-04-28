@@ -148,11 +148,9 @@ function renderPart(req: XP.Request, tableId?: string): XP.Response {
   }
 
   return r4xpRender('Table', getProps(req, tableId), req, {
-    clientRender: req.mode !== 'edit',
     pageContributions: {
       bodyEnd: [scriptAsset('js/tableExport.js')],
     },
-    // id: 'table'
   })
 }
 
