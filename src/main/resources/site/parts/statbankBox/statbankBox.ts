@@ -32,15 +32,10 @@ function renderPart(req: XP.Request): XP.Response {
   const config: StatbankBoxPartConfig = getComponent().config
   const phrases: Phrases = getPhrases(page)
 
-  const isNotInEditMode: boolean = req.mode !== 'edit'
-  return renderStatbankBox(req, parseStatbankBoxContent(page, config, phrases), isNotInEditMode)
+  return renderStatbankBox(req, parseStatbankBoxContent(page, config, phrases))
 }
 
-function renderStatbankBox(
-  req: XP.Request,
-  statbankBoxContent: StatbankBoxProps,
-  isNotInEditMode: boolean
-): XP.Response {
+function renderStatbankBox(req: XP.Request, statbankBoxContent: StatbankBoxProps): XP.Response {
   return render(
     'StatbankBox',
     {
@@ -49,7 +44,6 @@ function renderStatbankBox(
     req,
     {
       body: '<section class="xp-part part-statbank-box"></section>',
-      clientRender: isNotInEditMode,
     }
   )
 }

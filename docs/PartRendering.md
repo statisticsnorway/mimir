@@ -23,7 +23,6 @@ return {
 ### List of admin tools that needs to be changed
 
 - [x] bestbet
-- [ ] dashboard // will remain as Client Side rendered
 
 ### List of parts that needs to be changed
 
@@ -41,13 +40,13 @@ return {
 - [x] employeeList
 - [x] endedStatistics
 - [ ] entryLinks
-- [ ] externalCard
+- [x] externalCard
 - [x] factBox
 - [x] frontpageKeyFigures
 - [x] glossary
 - [x] headerLink
 - [x] highmap
-- [ ] husleieCalculator
+- [x] husleieCalculator
 - [x] infoGraphics
 - [x] keyFigure
 - [x] kpiCalculator
@@ -57,7 +56,7 @@ return {
 - [x] maths
 - [x] menuBox
 - [x] menuDropdown
-- [ ] nameSearch
+- [x] nameSearch
 - [x] omStatistikken
 - [x] pictureCardLinks
 - [x] pifCalculator
@@ -74,7 +73,7 @@ return {
 - [x] releasedStatistics
 - [x] searchResult
 - [x] standardCardsList
-- [ ] statbankBox
+- [x] statbankBox
 - [x] statbankFrame
 - [x] statbankSubjectTree
 - [x] staticVisualization
