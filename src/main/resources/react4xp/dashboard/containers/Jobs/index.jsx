@@ -6,6 +6,7 @@ import { selectJobs, selectLoading } from '/react4xp/dashboard/containers/Jobs/s
 import { selectContentStudioBaseUrl } from '/react4xp/dashboard/containers/HomePage/selectors'
 import { Link, Accordion, Divider } from '@statisticsnorway/ssb-component-library'
 import { DataQueryBadges } from '/react4xp/dashboard/components/DataQueryBadges'
+import { default as format } from 'date-fns/format'
 
 export function Jobs() {
   const loading = useSelector(selectLoading)
@@ -40,7 +41,7 @@ export function Jobs() {
   function getJobRows() {
     return jobs.map((job) => {
       const jobTime = job.completionTime ? job.completionTime : job.startTime
-      const ts = jobTime ? new Date(jobTime).toLocaleString('nb') : null
+      const ts = jobTime ? format(new Date(jobTime), 'dd.MM.yyyy HH:mm') : null
       const name = getTranslatedJobName(job.task)
 
       const info = renderInfo(job)

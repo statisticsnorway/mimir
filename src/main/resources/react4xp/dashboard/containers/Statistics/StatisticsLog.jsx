@@ -7,6 +7,7 @@ import { requestStatisticsJobLog } from '/react4xp/dashboard/containers/Statisti
 import { default as groupBy } from 'ramda/es/groupBy'
 import { StatisticsLogJob } from '/react4xp/dashboard/containers/Statistics/StatisticsLogJob'
 import { selectStatisticsLogDataLoaded, selectStatistic } from '/react4xp/dashboard/containers/Statistics/selectors'
+import { default as format } from 'date-fns/format'
 
 export function StatisticsLog(props) {
   const { statisticId } = props
@@ -51,7 +52,7 @@ export function StatisticsLog(props) {
         return log.status
       })(log.result)
       const lastUpdated = log.completionTime ? log.completionTime : log.startTime
-      const lastUpdatedFormatted = lastUpdated ? new Date(lastUpdated).toLocaleString('nb') : ''
+      const lastUpdatedFormatted = lastUpdated ? format(new Date(lastUpdated), 'dd.MM.yyyy HH:mm') : ''
       return (
         <React.Fragment>
           <span className='d-sm-flex justify-content-center text-center small haveList' onClick={() => openEventlog()}>
