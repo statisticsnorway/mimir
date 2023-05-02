@@ -77,7 +77,7 @@ return {
 - [x] statbankFrame
 - [x] statbankSubjectTree
 - [x] staticVisualization
-- [ ] statbankLinkList
+- [x] statbankLinkList
 - [x] statistics
 - [x] subjectArticleList
 - [ ] table
