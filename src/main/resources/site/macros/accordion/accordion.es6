@@ -5,5 +5,5 @@ const {
 
 exports.macro = function (context) {
   const accordionIds = context.params.accordion ? forceArray(context.params.accordion) : []
-  return accordionController.preview(context, accordionIds)
+  return accordionController.preview(context.request, accordionIds)
 }

@@ -7,12 +7,12 @@ const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
 exports.macro = function (context: XP.MacroContext): XP.Response {
   try {
-    const divider: XP.Response = dividerControllerPreview(context, {
+    const divider: XP.Response = dividerControllerPreview(context.request, {
       dark: false,
     })
 
     const config: HighchartConfig = context.params
-    const highchart: XP.Response = highchartControllerPreview(context, config.highchart)
+    const highchart: XP.Response = highchartControllerPreview(context.request, config.highchart)
 
     if (highchart.status && highchart.status !== 200) throw new Error(`Highchart with id ${config.highchart} missing`)
     highchart.body = (divider.body as string) + highchart.body + divider.body
