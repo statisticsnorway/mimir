@@ -44,11 +44,7 @@ enonic sandbox start --dev
 
 Run an `enonic project deploy` if you haven't already.
 
-We have 2 npm scripts to run to get watching going of everything.
-
-In one terminal run `npm run gradlew-dev-mode`, this will watch all JS, TS and style files. 
-
-In another terminal run `npm run dev:react4xp`, this will watch all JSX files.
+Run `npm run dev`, this will start multiple webpack watches in parallel that will watch for changes.
 
 Most changes to files should then be ready after page refresh in a few seconds.
 

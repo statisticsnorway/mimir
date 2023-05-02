@@ -168,7 +168,7 @@ function NameSearch(props) {
               <Row>
                 <Col>
                   <Title size={3} className='result-title mb-1'>
-                    {props.phrases.nameSearchResultTitle} 123
+                    {props.phrases.nameSearchResultTitle}
                   </Title>
                   <Divider dark />
                 </Col>
