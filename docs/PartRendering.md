@@ -80,7 +80,7 @@ return {
 - [x] statbankLinkList
 - [x] statistics
 - [x] subjectArticleList
-- [ ] table
+- [x] table
 - [x] tableLink
 - [x] upcomingReleases
 - [x] variables
