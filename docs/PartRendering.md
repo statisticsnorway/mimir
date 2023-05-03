@@ -22,7 +22,7 @@ return {
 
 ### List of admin tools that needs to be changed
 
-- [ ] bestbet
+- [x] bestbet
 
 ### List of parts that needs to be changed
 
@@ -39,7 +39,7 @@ return {
 - [x] employee
 - [x] employeeList
 - [x] endedStatistics
-- [ ] entryLinks
+- [x] entryLinks
 - [x] externalCard
 - [x] factBox
 - [x] frontpageKeyFigures
@@ -52,7 +52,7 @@ return {
 - [x] kpiCalculator
 - [x] links
 - [x] localSearch
-- [ ] mailChimpForm
+- [x] mailChimpForm
 - [x] maths
 - [x] menuBox
 - [x] menuDropdown
@@ -77,10 +77,10 @@ return {
 - [x] statbankFrame
 - [x] statbankSubjectTree
 - [x] staticVisualization
-- [ ] statbankLinkList
+- [x] statbankLinkList
 - [x] statistics
 - [x] subjectArticleList
-- [ ] table
+- [x] table
 - [x] tableLink
 - [x] upcomingReleases
 - [x] variables

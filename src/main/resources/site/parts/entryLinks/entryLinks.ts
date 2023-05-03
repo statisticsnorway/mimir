@@ -67,7 +67,6 @@ function renderEntryLinks(
         body: render(view, {
           entryLinksId: 'entry-links',
         }),
-        clientRender: req.mode !== 'edit',
       }
     )
   } else {
