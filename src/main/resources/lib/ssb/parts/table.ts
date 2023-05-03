@@ -1,4 +1,6 @@
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
+// @ts-ignore
+import striptags from 'striptags'
 import { Content } from '/lib/xp/content'
 import type { Table } from '/site/content-types'
 import {
@@ -243,7 +245,8 @@ export function parseHtmlString(tableData: string): HtmlTable {
 }
 
 function parseStringToJson(tableData: string): HtmlTableRaw | undefined {
-  const tableRaw: string = __.toNativeObject(xmlParser.parse(tableData)) as string
+  const sanitized = striptags(tableData, ['table', 'thead', 'tbody', 'tr', 'th', 'td'])
+  const tableRaw: string = __.toNativeObject(xmlParser.parse(sanitized)) as string
   const jsonTable: HtmlTableRaw | undefined = tableRaw ? (JSON.parse(tableRaw) as HtmlTableRaw) : undefined
   return jsonTable
 }
