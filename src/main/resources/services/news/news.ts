@@ -50,8 +50,8 @@ exports.get = get
 function getNews(mainSubjects: Array<Content<Page, DefaultPageConfig>>): Array<News> {
   const from: string = subDays(new Date(), 1).toISOString()
   const to: string = new Date().toISOString()
-  const baseUrl: string = (app.config && app.config['ssb.baseUrl']) || ''
-  const serverOffsetInMinutes: number = parseInt(app.config && app.config['serverOffsetInMs']) || 0
+  const baseUrl: string = app.config?.['ssb.baseUrl'] || ''
+  const serverOffsetInMinutes: number = parseInt(app.config?.['serverOffsetInMs']) || 0
   const timeZoneIso: string = getTimeZoneIso(serverOffsetInMinutes)
 
   //TODO: Fjerne når datoformat er verifisert i de forskjellige miljøene
@@ -106,15 +106,14 @@ function getStatisticsNews(mainSubjects: Array<Content<Page, DefaultPageConfig>>
           .join(',')})`,
       }).hits as unknown as Array<Content<Statistics & Statistic, SEO>>
 
-      const baseUrl: string = (app.config && app.config['ssb.baseUrl']) || ''
-      const serverOffsetInMS: number = parseInt(app.config && app.config['serverOffsetInMs']) || 0
+      const baseUrl: string = app.config?.['ssb.baseUrl'] || ''
+      const serverOffsetInMS: number = parseInt(app.config?.['serverOffsetInMs']) || 0
       const timeZoneIso: string = getTimeZoneIso(serverOffsetInMS)
       statistics.forEach((statistic) => {
         const statreg: StatisticInListing | undefined = statregStatistics.find(
           (s) => s.id.toString() === statistic.data.statistic
         )
-        const variant: VariantInListing | undefined =
-          statreg && statreg.variants && statreg.variants[0] ? statreg.variants[0] : undefined
+        const variant: VariantInListing | undefined = statreg?.variants?.[0] || undefined
         let pubDate: string | undefined
         if (variant) {
           const previousReleaseSameDayNow: boolean = variant.previousRelease
@@ -167,7 +166,7 @@ function formatPubDateStatistic(date: string, timeZoneIso: string): string {
 }
 
 function testPubDates() {
-  const serverOffsetInMS: number = parseInt(app.config && app.config['serverOffsetInMs']) || 0
+  const serverOffsetInMS: number = parseInt(app.config?.['serverOffsetInMs']) || 0
   const timeZoneIso: string = getTimeZoneIso(serverOffsetInMS)
 
   const ArtikkelDate = formatPubDateArticle('2023-03-20T07:00:00Z', serverOffsetInMS, timeZoneIso)
