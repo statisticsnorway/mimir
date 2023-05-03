@@ -66,8 +66,8 @@ function getNews(mainSubjects: Array<Content<Page, DefaultPageConfig>>): Array<N
       query: `_path LIKE "/content${mainSubject._path}/*" AND range("publish.from", instant("${from}"), instant("${to}"))`,
     }).hits as unknown as Array<Content<Article, SEO>>
     articles.forEach((article) => {
-      const pubDate: string | undefined = article.publish?.first
-        ? formatPubDateArticle(article.publish.first, serverOffsetInMinutes, timeZoneIso)
+      const pubDate: string | undefined = article.publish?.from
+        ? formatPubDateArticle(article.publish.from, serverOffsetInMinutes, timeZoneIso)
         : undefined
       if (pubDate) {
         news.push({
