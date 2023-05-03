@@ -82,5 +82,5 @@ exports.macro = function (context: XP.MacroContext): RenderResponse {
     }
   }
 
-  return render('site/parts/links/links', props)
+  return render('site/parts/links/links', props, context.request)
 }
