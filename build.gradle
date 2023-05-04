@@ -1,7 +1,7 @@
 import org.apache.tools.ant.taskdefs.condition.Os
 
 plugins {
-    id("com.github.node-gradle.node") version "3.5.1"
+    id("com.github.node-gradle.node") version "4.0.0"
     id 'com.enonic.xp.app' version '3.2.0'
     id 'no.item.xp.codegen' version '2.2.2'
 }
