@@ -41,6 +41,7 @@ module.exports = function (env, config) {
     }
   })
 
+  config.target = ['web', 'es2017']
   /* 
     Pro tip, Add:
     env.BUILD_ENV = 'development';

@@ -27,6 +27,7 @@ function renderPart(req: XP.Request): XP.Response {
       ? imageUrl({
           id: part.config.image,
           scale: 'block(86,86)',
+          format: 'jpg',
         })
       : undefined,
   }

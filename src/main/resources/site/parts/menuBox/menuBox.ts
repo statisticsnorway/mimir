@@ -80,6 +80,7 @@ function getIcon(iconId: string): Image | undefined {
       src: imageUrl({
         id: iconId,
         scale: 'block(100,100)',
+        format: 'jpg',
       }),
       alt: getImageAlt(iconId) ? getImageAlt(iconId) : '',
     }

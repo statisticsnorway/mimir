@@ -37,6 +37,7 @@ function renderPart(req: XP.Request): RenderResponse {
     ? imageUrl({
         id: page.data.image,
         scale: 'block(1180, 275)',
+        format: 'jpg',
       })
     : undefined
 

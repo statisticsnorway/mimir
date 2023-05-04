@@ -42,6 +42,7 @@ function renderPart(req: XP.Request): RenderResponse {
   const imageSrc: string | null = imageUrl({
     id: config.image,
     scale: 'max(850)',
+    format: 'jpg',
   })
 
   // Retrieves image as content to get image meta data
