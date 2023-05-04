@@ -65,7 +65,7 @@ export function parseTable(
 
     if (dataSource && dataSource._selected === DataSourceType.TBPROCESSOR) {
       const tbmlData: TbmlDataUniform = data as TbmlDataUniform
-      if (tbmlData && tbmlData.tbml && tbmlData.tbml.metadata && tbmlData.tbml.presentation) {
+      if (tbmlData?.tbml?.metadata && tbmlData?.tbml?.presentation) {
         tableViewData = getTableViewData(table, tbmlData)
       }
     }
@@ -95,8 +95,7 @@ function parseHtmlTable(table: Content<Table & DataSource>): TableView {
   const theadRow: Array<HtmlTableRowRaw> = forceArray(tableRows[0])
   const tbodyRows: Array<HtmlTableRowRaw> = tableRows.slice(1)
 
-  const footNotes: Array<string> =
-    datasourceHtmlTable && datasourceHtmlTable.footnoteText ? forceArray(datasourceHtmlTable.footnoteText) : []
+  const footNotes: Array<string> = datasourceHtmlTable?.footnoteText ? forceArray(datasourceHtmlTable.footnoteText) : []
   const correctionText: string = table.data.correctionNotice || ''
   const noteRefs: Array<string> = footNotes ? footNotes.map((_note: string, index: number) => `note:${index + 1}`) : []
   const notes: Array<Note> = footNotes
@@ -158,8 +157,7 @@ function getHtmlTableCells(row: HtmlTableRowRaw): Array<number | string> {
 function getTableViewData(table: Content<Table>, dataContent: TbmlDataUniform): TableView {
   const title: Title = dataContent.tbml.metadata.title
   const notes: NotesUniform = dataContent.tbml.metadata.notes
-  const sourceList: Array<Source> =
-    dataContent.tbml.metadata && dataContent.tbml.metadata.sourceList ? dataContent.tbml.metadata.sourceList : []
+  const sourceList: Array<Source> = dataContent?.tbml?.metadata?.sourceList || []
   const headRows: Array<TableRowUniform> = forceArray(dataContent.tbml.presentation.table.thead)
   const bodyRows: Array<TableRowUniform> = forceArray(dataContent.tbml.presentation.table.tbody)
 
@@ -179,10 +177,9 @@ function getTableViewData(table: Content<Table>, dataContent: TbmlDataUniform): 
     return acc
   }, [])
 
-  const noteRefs: Array<string> =
-    title && title.noterefs
-      ? [...title.noterefs.split(' '), ...headNoteRefs, ...bodyNoteRefs]
-      : [...headNoteRefs, ...bodyNoteRefs]
+  const noteRefs: Array<string> = title?.noterefs
+    ? [...title.noterefs.split(' '), ...headNoteRefs, ...bodyNoteRefs]
+    : [...headNoteRefs, ...bodyNoteRefs]
 
   const uniqueNoteRefs: Array<string> = noteRefs.filter((v, i, a) => a.indexOf(v) === i)
 
