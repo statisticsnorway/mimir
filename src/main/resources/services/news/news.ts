@@ -120,10 +120,8 @@ function getStatisticsNews(mainSubjects: Array<Content<Page, DefaultPageConfig>>
             ? isSameDay(new Date(variant.nextRelease), new Date())
             : false
           if (previousReleaseSameDayNow) {
-            //TODO: Sjekke om det blir riktig tidspunkt i TEST før koden merges til master, skal være sånn 2023-02-22T08:00:00+01:00
             pubDate = variant.previousRelease ? formatPubDateStatistic(variant.previousRelease, timeZoneIso) : undefined
           } else if (nextReleaseSameDayNow) {
-            //TODO: Sjekke om det blir riktig tidspunkt i TEST før koden merges til master, skal være sånn 2023-02-22T08:00:00+01:00
             pubDate = variant.nextRelease ? formatPubDateStatistic(variant.nextRelease, timeZoneIso) : undefined
           }
         }
