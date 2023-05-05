@@ -54,9 +54,6 @@ function getNews(mainSubjects: Array<Content<Page, DefaultPageConfig>>): Array<N
   const serverOffsetInMinutes: number = parseInt(app.config && app.config['serverOffsetInMs']) || 0
   const timeZoneIso: string = getTimeZoneIso(serverOffsetInMinutes)
 
-  //TODO: Fjerne når datoformat er verifisert i de forskjellige miljøene
-  testPubDates()
-
   const news: Array<News> = []
   mainSubjects.forEach((mainSubject) => {
     const articles: Array<Content<Article, SEO>> = query({
@@ -164,16 +161,6 @@ function formatPubDateArticle(date: string, serverOffsetInMS: number, timeZoneIs
 function formatPubDateStatistic(date: string, timeZoneIso: string): string {
   const pubDate: string = format(parseISO(date), "yyyy-MM-dd'T'HH:mm:ss")
   return `${pubDate}${timeZoneIso}`
-}
-
-function testPubDates() {
-  const serverOffsetInMS: number = parseInt(app.config && app.config['serverOffsetInMs']) || 0
-  const timeZoneIso: string = getTimeZoneIso(serverOffsetInMS)
-
-  const ArtikkelDate = formatPubDateArticle('2023-03-20T07:00:00Z', serverOffsetInMS, timeZoneIso)
-  const StatistikkDate = formatPubDateStatistic('2023-03-20 08:00:00.0', timeZoneIso)
-
-  log.info(`RSS-news - Artikkel: ${ArtikkelDate} statistikk: ${StatistikkDate}`)
 }
 
 export interface SEO {
