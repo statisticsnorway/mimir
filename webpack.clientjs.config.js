@@ -46,6 +46,7 @@ function addBabelSupport(cfg) {
 module.exports = (env) => {
   const cfg = R.pipe(addBabelSupport)({
     context: path.join(__dirname, '/src/main/resources/assets/js'),
+    target: ['web', 'es2017'],
     entry: {},
     output: {
       path: path.join(__dirname, '/build/resources/main/assets/js'),

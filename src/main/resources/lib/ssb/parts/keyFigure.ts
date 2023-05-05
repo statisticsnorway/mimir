@@ -230,6 +230,7 @@ function getIconUrl(keyFigure: Content<KeyFigure>): string {
     iconUrl = imageUrl({
       id: keyFigure.data.icon,
       scale: 'block(100,100)',
+      format: 'jpg',
     })
   }
   return iconUrl

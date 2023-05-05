@@ -51,6 +51,81 @@
     }
   }
 
+  .keyfigure-row:first-child {
+    @include media-breakpoint-down(sm) {
+      .ssb-number.small {
+        font-size: 12vw;
+      }
+    }
+  }
+
+  .frontpage-keyfigure {
+    .ssb-number .description {
+      display: none
+    }
+
+    .subtitle .url {
+      display: none;
+    }
+
+    .icon-wrapper {
+      display: none
+    }
+  }
+
+  .keyfigure-row:not(:first-child) {
+    @include media-breakpoint-down(sm) {
+      .ssb-link.stand-alone {
+        display: none;
+      }
+      .keyfigure {
+          min-height: 104px;
+      }
+    }
+
+    .frontpage-keyfigure {
+      @include media-breakpoint-down(sm) {
+        .ssb-number .description {
+          display: initial
+        }
+  
+        .subtitle .url {
+          display: initial;
+        }
+        .subtitle .description {
+          display: none;
+        }
+  
+        .icon-wrapper {
+          display: initial;
+        }
+
+        display: grid;
+        grid-template-columns: auto 24px;
+        grid-template-rows: auto auto;
+  
+        .ssb-number {
+          font-size: 20px;
+          margin-bottom: 8px;
+          grid-column: 1;
+          grid-row: 1;
+        }
+        .subtitle {
+          grid-column: 1;
+          grid-row: 2;
+        }
+        .icon-wrapper {
+          color: $ssb-green-4;
+          grid-column: 2;
+          grid-row-start: 1;
+          grid-row-end: 3;
+          align-content: center;
+          align-self: center;
+        }
+      }
+    }
+  } 
+
   @include media-breakpoint-down(lg) {
     padding: 40px 20px;
   }
@@ -59,46 +134,6 @@
   }
   @include media-breakpoint-down(sm) {
     padding: 40px 10px;
-
-    .hide-mobile {
-      display: none;
-    }
-    .frontpage-keyfigure-mobile {
-      display: grid;
-      grid-template-columns: auto 24px;
-      grid-template-rows: auto auto;
-
-      .ssb-number {
-        font-size: 20px;
-        margin-bottom: 8px;
-        grid-column: 1;
-        grid-row: 1;
-      }
-      .subtitle {
-        grid-column: 1;
-        grid-row: 2;
-      }
-      .icon-wrapper {
-        color: $ssb-green-4;
-        grid-column: 2;
-        grid-row-start: 1;
-        grid-row-end: 3;
-        align-content: center;
-        align-self: center;
-      }
-    }
-
-    .keyfigure.first {
-      .ssb-number.small {
-        @include media-breakpoint-down(sm) {
-          font-size: 12vw;
-        }
-      }
-    }
-
-    .keyfigure.others {
-      min-height: 104px;
-    }
   }
 }
 

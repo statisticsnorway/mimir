@@ -18,9 +18,7 @@ export function get(req: XP.Request): RenderResponse {
     buttonTitle: phrases['newsletter.buttonTitle'],
   }
 
-  return r4XpRender('site/parts/mailChimpForm/mailChimpForm', props, req, {
-    clientRender: req.mode !== 'edit',
-  })
+  return r4XpRender('site/parts/mailChimpForm/mailChimpForm', props, req)
 }
 
 interface PartProps {

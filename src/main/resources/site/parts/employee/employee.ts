@@ -35,6 +35,7 @@ function renderPart(req: XP.Request): RenderResponse {
         return imageUrl({
           id: image,
           scale: 'max(850)',
+          format: 'jpg',
         })
       })
     : []

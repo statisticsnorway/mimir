@@ -52,7 +52,7 @@ return {
 - [x] kpiCalculator
 - [x] links
 - [x] localSearch
-- [ ] mailChimpForm
+- [x] mailChimpForm
 - [x] maths
 - [x] menuBox
 - [x] menuDropdown
@@ -77,10 +77,10 @@ return {
 - [x] statbankFrame
 - [x] statbankSubjectTree
 - [x] staticVisualization
-- [ ] statbankLinkList
+- [x] statbankLinkList
 - [x] statistics
 - [x] subjectArticleList
-- [ ] table
+- [x] table
 - [x] tableLink
 - [x] upcomingReleases
 - [x] variables

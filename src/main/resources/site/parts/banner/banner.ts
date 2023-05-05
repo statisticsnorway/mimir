@@ -56,6 +56,7 @@ function renderPart(req: XP.Request): XP.Response {
       ? imageUrl({
           id: part.config.image,
           scale: 'block(350,100)',
+          format: 'jpg',
         })
       : undefined,
     municipalityTitle: municipality ? municipalityName + ' (' + municipality.county.name + ')' : undefined,

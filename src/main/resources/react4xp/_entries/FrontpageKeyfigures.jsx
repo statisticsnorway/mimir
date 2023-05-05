@@ -1,103 +1,46 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { ArrowRight } from 'react-feather'
 
-function FrontpageKeyfigures(props) {
-  const isSsr = useIsSsr()
-
-  function useIsSsr() {
-    // default is "SSR mode", to ensure our initial browser render matches the SSR render
-    const [isSsr, setIsSsr] = useState(true)
-
-    useEffect(() => {
-      // `useEffect` will run on client and execute this block
-      setIsSsr(false)
-    }, [])
-
-    return isSsr
-  }
-
-  function createRows() {
-    const keyFigures = props.keyFigures
-    const { width } = useWindowDimensions()
-
-    return keyFigures.map((keyFigure, i) => {
-      return (
-        <React.Fragment key={`figure-${i}`}>
-          <div className={'col-12 col-lg-3 mb-lg-0 ' + (i === keyFigures.length - 1 ? 'mb-0' : 'mb-3')}>
-            <a href={keyFigure.url} className='keyfigure-wrapper'>
-              <div className={'keyfigure ' + (i === 0 ? 'first' : 'others')}>
-                <div className={'ssb-link header stand-alone ' + (i !== 0 ? 'hide-mobile' : '')}>
-                  <span className='link-text'>{keyFigure.urlText}</span>
-                </div>
-                <div className='number-section'>
-                  {i === 0 || (width > 768 && !isSsr) ? addKeyfigure(keyFigure) : addKeyfigureMobile(keyFigure)}
-                </div>
-              </div>
-            </a>
-          </div>
-        </React.Fragment>
-      )
-    })
-  }
-
-  function addKeyfigure(keyFigure) {
-    if (keyFigure.number) {
-      return (
-        <React.Fragment>
-          <div className='ssb-number small'>{keyFigure.number}</div>
-          <span className='kf-title subtitle'>{keyFigure.numberDescription}</span>
-        </React.Fragment>
-      )
-    } else {
-      return <span className='no-number'>{keyFigure.noNumberText}</span>
-    }
-  }
-
-  function addKeyfigureMobile(keyFigure) {
-    if (keyFigure.number) {
-      return (
-        <React.Fragment>
-          <div className='frontpage-keyfigure-mobile'>
-            <div className='ssb-number small'>{keyFigure.number + ' ' + keyFigure.numberDescription}</div>
-            <span className='kf-title subtitle'>{keyFigure.urlText}</span>
-            <div className='icon-wrapper'>
-              <ArrowRight size='24' />
-            </div>
-          </div>
-        </React.Fragment>
-      )
-    } else {
-      return <span className='no-number'>{keyFigure.noNumberText}</span>
-    }
-  }
-
-  // functions to get and set browserwindow size
-  function getWindowDimensions() {
-    const { innerWidth: width, innerHeight: height } = window
-    return {
-      width,
-      height,
-    }
-  }
-
-  function useWindowDimensions() {
-    const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions())
-    useEffect(() => {
-      function handleResize() {
-        setWindowDimensions(getWindowDimensions())
-      }
-
-      window.addEventListener('resize', handleResize)
-      return () => window.removeEventListener('resize', handleResize)
-    }, [])
-
-    return windowDimensions
-  }
-
+function FrontpageKeyfigures({ keyFigures }) {
   return (
     <div className='container'>
-      <div className='row d-flex flex-wrap'>{createRows()}</div>
+      <div className='row d-flex flex-wrap'>
+        {keyFigures.map((keyFigure, i) => {
+          return (
+            <div
+              key={`figure-${i}`}
+              className={'keyfigure-row col-12 col-lg-3 mb-lg-0 ' + (i === keyFigures.length - 1 ? 'mb-0' : 'mb-3')}
+            >
+              <a href={keyFigure.url} className='keyfigure-wrapper'>
+                <div className='keyfigure'>
+                  <div className='ssb-link header stand-alone'>
+                    <span className='link-text'>{keyFigure.urlText}</span>
+                  </div>
+                  <div className='number-section'>
+                    {keyFigure.number && (
+                      <div className='frontpage-keyfigure'>
+                        <div className='ssb-number small'>
+                          <span className='number'>{keyFigure.number}</span>
+                          <span className='description'> {keyFigure.numberDescription}</span>
+                        </div>
+                        <span className='kf-title subtitle'>
+                          <span className='url'>{keyFigure.urlText}</span>
+                          <span className='description'>{keyFigure.numberDescription}</span>
+                        </span>
+                        <div className='icon-wrapper'>
+                          <ArrowRight size='24' />
+                        </div>
+                      </div>
+                    )}
+                    {!keyFigure.number && <span className='no-number'>{keyFigure.noNumberText}</span>}
+                  </div>
+                </div>
+              </a>
+            </div>
+          )
+        })}
+      </div>
     </div>
   )
 }
