@@ -20,12 +20,10 @@ module.exports = function (env, config) {
   // Take these packages out of vendor.js and put them in their own file.
   // These are big packages that are not used on every page, thus we let webpack only load them when needed.
   const vendorSplits = [
-    'moment',
     'highcharts',
     'react-select',
     'react-table',
     'react-bootstrap',
-    'react-moment',
     'react-responsive',
     'react-number-format',
   ]
