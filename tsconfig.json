@@ -18,6 +18,7 @@
     ],
     "paths": {
       "/admin/*": ["./src/main/resources/admin/*"],
+      "/lib/xp/*": ["./node_modules/@enonic-types/lib-*"],
       "/lib/*": [ "./node_modules/@item-enonic-types/lib-*" ,"./src/main/resources/lib/*"],
       "/react4xp/*": ["./src/main/resources/react4xp/*"],
       "/services/*": ["./src/main/resources/services/*"],
