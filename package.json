@@ -131,7 +131,7 @@
     "@emotion/react": "^11.10.5",
     "bootstrap": "^5.2.3",
     "core-js": "^3.30.2",
-    "date-fns": "^2.29.3",
+    "date-fns": "^2.30.0",
     "highcharts-react-official": "^3.1.0",
     "react-bootstrap": "^2.7.3",
     "react-ga": "^3.3.1",
