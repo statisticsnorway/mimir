@@ -54,9 +54,6 @@ function getNews(mainSubjects: Array<Content<Page, DefaultPageConfig>>): Array<N
   const serverOffsetInMinutes: number = parseInt(app.config?.['serverOffsetInMs']) || 0
   const timeZoneIso: string = getTimeZoneIso(serverOffsetInMinutes)
 
-  //TODO: Fjerne når datoformat er verifisert i de forskjellige miljøene
-  testPubDates()
-
   const news: Array<News> = []
   mainSubjects.forEach((mainSubject) => {
     const articles: Array<Content<Article, SEO>> = query({
@@ -123,10 +120,8 @@ function getStatisticsNews(mainSubjects: Array<Content<Page, DefaultPageConfig>>
             ? isSameDay(new Date(variant.nextRelease), new Date())
             : false
           if (previousReleaseSameDayNow) {
-            //TODO: Sjekke om det blir riktig tidspunkt i TEST før koden merges til master, skal være sånn 2023-02-22T08:00:00+01:00
             pubDate = variant.previousRelease ? formatPubDateStatistic(variant.previousRelease, timeZoneIso) : undefined
           } else if (nextReleaseSameDayNow) {
-            //TODO: Sjekke om det blir riktig tidspunkt i TEST før koden merges til master, skal være sånn 2023-02-22T08:00:00+01:00
             pubDate = variant.nextRelease ? formatPubDateStatistic(variant.nextRelease, timeZoneIso) : undefined
           }
         }
@@ -164,17 +159,6 @@ function formatPubDateStatistic(date: string, timeZoneIso: string): string {
   const pubDate: string = format(parseISO(date), "yyyy-MM-dd'T'HH:mm:ss")
   return `${pubDate}${timeZoneIso}`
 }
-
-function testPubDates() {
-  const serverOffsetInMS: number = parseInt(app.config?.['serverOffsetInMs']) || 0
-  const timeZoneIso: string = getTimeZoneIso(serverOffsetInMS)
-
-  const ArtikkelDate = formatPubDateArticle('2023-03-20T07:00:00Z', serverOffsetInMS, timeZoneIso)
-  const StatistikkDate = formatPubDateStatistic('2023-03-20 08:00:00.0', timeZoneIso)
-
-  log.info(`RSS-news - Artikkel: ${ArtikkelDate} statistikk: ${StatistikkDate}`)
-}
-
 export interface SEO {
   seoDescription: string
   seoImage: string

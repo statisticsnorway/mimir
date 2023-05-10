@@ -4,10 +4,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import { WebSocketContext } from '/react4xp/dashboard/utils/websocket/WebsocketProvider'
 import { Button, Modal } from 'react-bootstrap'
 import { requestStatisticsJobLog } from '/react4xp/dashboard/containers/Statistics/actions'
-import moment from 'moment/min/moment-with-locales'
 import { default as groupBy } from 'ramda/es/groupBy'
 import { StatisticsLogJob } from '/react4xp/dashboard/containers/Statistics/StatisticsLogJob'
 import { selectStatisticsLogDataLoaded, selectStatistic } from '/react4xp/dashboard/containers/Statistics/selectors'
+import { default as format } from 'date-fns/format'
 
 export function StatisticsLog(props) {
   const { statisticId } = props
@@ -51,13 +51,12 @@ export function StatisticsLog(props) {
       const groupedDataSourceLogs = groupBy((log) => {
         return log.status
       })(log.result)
+      const lastUpdated = log.completionTime ? log.completionTime : log.startTime
+      const lastUpdatedFormatted = lastUpdated ? format(new Date(lastUpdated), 'dd.MM.yyyy HH:mm') : ''
       return (
         <React.Fragment>
           <span className='d-sm-flex justify-content-center text-center small haveList' onClick={() => openEventlog()}>
-            {log.message} -{' '}
-            {moment(log.completionTime ? log.completionTime : log.startTime)
-              .locale('nb')
-              .format('DD.MM.YYYY HH.mm')}
+            {log.message} - {lastUpdatedFormatted}
             <br />
             {log.user ? log.user.displayName : ''}
             <br />
