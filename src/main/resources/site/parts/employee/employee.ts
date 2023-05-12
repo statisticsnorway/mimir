@@ -4,7 +4,6 @@ import type { Default as DefaultPageConfig } from '/site/pages/default'
 import { localize } from '/lib/xp/i18n'
 import { getContent, pageUrl, imageUrl, attachmentUrl } from '/lib/xp/portal'
 import { render, RenderResponse } from '/lib/enonic/react4xp'
-import { SEO } from '/services/news/news'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 const {
@@ -24,7 +23,9 @@ export function preview(req: XP.Request): RenderResponse | XP.Response {
 }
 
 function renderPart(req: XP.Request): RenderResponse {
-  const page: Content<Employee> = getContent()
+  const page = getContent<Content<Employee>>()
+  if (!page) throw Error('No page found')
+
   const language: string = page.language ? page.language : 'nb'
   const projectIds: Employee['projects'] = page.data.projects
   const projects: Array<Project> = projectIds && projectIds.length > 0 ? parseProject(projectIds) : []
@@ -162,20 +163,19 @@ function renderPart(req: XP.Request): RenderResponse {
 function parseProject(projects: Employee['projects']): Array<Project> {
   const projectsIds: Array<string> = projects ? forceArray(projects) : []
   return projectsIds.map((projectId) => {
-    const relatedProjectContent: Content<Page, SEO> | null = projectId
+    const relatedProjectContent: Content<Page> | null = projectId
       ? getContentByKey({
           key: projectId,
         })
       : null
-    const seoDescription: string | undefined = relatedProjectContent?.x['com-enonic-app-metafields']['meta-data']
-      .seoDescription as string
+    const seoDescription = relatedProjectContent?.x['com-enonic-app-metafields']?.['meta-data']?.seoDescription
 
     return {
       title: relatedProjectContent ? relatedProjectContent.displayName : '',
       href: pageUrl({
         id: projectId,
       }),
-      description: seoDescription ? seoDescription : '',
+      description: seoDescription ?? '',
     }
   })
 }

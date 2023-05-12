@@ -1,5 +1,5 @@
 import { render as r4XpRender, type RenderResponse } from '/lib/enonic/react4xp'
-import { getComponent, getContent, serviceUrl, pageUrl, type Component } from '/lib/xp/portal'
+import { getComponent, getContent, serviceUrl, pageUrl } from '/lib/xp/portal'
 import type { BkibolCalculator as BkibolCalculatorPartConfig } from '.'
 import type { Dataset, Dimension } from '/lib/types/jsonstat-toolkit'
 import type { Content } from '/lib/xp/content'
@@ -28,7 +28,9 @@ export function preview(req: XP.Request): RenderResponse | XP.Response {
 }
 
 function renderPart(req: XP.Request): RenderResponse {
-  const page: Content<BkibolCalculatorPartConfig> = getContent()
+  const page = getContent<Content<BkibolCalculatorPartConfig>>()
+  if (!page) throw Error('No page found')
+
   let bkibolCalculator: RenderResponse
   if (req.mode === 'edit' || req.mode === 'inline') {
     bkibolCalculator = getBkibolCalculatorComponent(req, page)
@@ -42,7 +44,9 @@ function renderPart(req: XP.Request): RenderResponse {
 }
 
 function getBkibolCalculatorComponent(req: XP.Request, page: Content<BkibolCalculatorPartConfig>): RenderResponse {
-  const part: Component<BkibolCalculatorPartConfig> = getComponent()
+  const part = getComponent<BkibolCalculatorPartConfig>()
+  if (!part) throw Error('No part found')
+
   const language: Language = getLanguage(page) as Language
   const phrases: Phrases = language.phrases as Phrases
   const code: string = language.code ? language.code : 'nb'

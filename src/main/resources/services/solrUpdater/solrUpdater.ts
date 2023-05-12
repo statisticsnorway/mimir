@@ -1,12 +1,13 @@
-import { query, Content, QueryResponse } from '/lib/xp/content'
-import { ResourceKey, render } from '/lib/thymeleaf'
+import { Content, query } from '/lib/xp/content'
+import { render } from '/lib/thymeleaf'
 import { subDays, format } from '/lib/ssb/utils/dateUtils'
+import { Article, Page, Statistics } from '/site/content-types'
 
 const yesterday: string = format(subDays(new Date(), 1), 'yyyy-MM-dd')
 const baseUrl: string = app.config && app.config['ssb.baseUrl'] ? app.config['ssb.baseUrl'] : 'https://www.ssb.no'
 
 exports.get = (): XP.Response => {
-  const changedContent: QueryResponse<Content, object> = query({
+  const changedContent = query<Content<Statistics | Article | Page>>({
     start: 0,
     count: 100,
     sort: 'modifiedTime DESC',
@@ -18,7 +19,7 @@ exports.get = (): XP.Response => {
     return baseUrl + content._path.slice(4) // trim off leading '/ssb' from path
   })
 
-  const template: ResourceKey = resolve('./solrUpdater.html') as ResourceKey
+  const template = resolve('./solrUpdater.html')
   const model: urlModel = {
     urls: urls,
   }

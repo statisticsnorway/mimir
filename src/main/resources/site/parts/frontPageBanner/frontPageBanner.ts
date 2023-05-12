@@ -1,4 +1,4 @@
-import { getComponent, imageUrl, type Component } from '/lib/xp/portal'
+import { getComponent, imageUrl } from '/lib/xp/portal'
 import type { FrontPageBanner as FrontPageBannerPartConfig } from '.'
 import { render } from '/lib/thymeleaf'
 
@@ -8,18 +8,19 @@ const view = resolve('./frontPageBanner.html')
 
 export function get(req: XP.Request) {
   try {
-    return renderPart(req)
+    return renderPart()
   } catch (e) {
     return renderError(req, 'Error in part: ', e)
   }
 }
 
-export function preview(req: XP.Request) {
-  return renderPart(req)
+export function preview() {
+  return renderPart()
 }
 
-function renderPart(req: XP.Request): XP.Response {
-  const part: Component<FrontPageBannerPartConfig> = getComponent()
+function renderPart(): XP.Response {
+  const part = getComponent<FrontPageBannerPartConfig>()
+  if (!part) throw Error('No part found')
 
   const model: object = {
     bannerText: part.config.text,

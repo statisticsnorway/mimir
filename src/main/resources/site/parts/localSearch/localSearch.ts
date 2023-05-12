@@ -18,7 +18,9 @@ export function preview(req: XP.Request): RenderResponse {
 }
 
 function renderPart(req: XP.Request): RenderResponse {
-  const config: LocalSearchPartConfig = getComponent().config
+  const config = getComponent()?.config as LocalSearchPartConfig
+  if (!config) throw Error('No part found')
+
   const searchFolderContent: Content<object> | null = config.searchFolder
     ? getContentByKey({
         key: config.searchFolder,

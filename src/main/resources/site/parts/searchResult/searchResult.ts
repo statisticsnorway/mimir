@@ -1,14 +1,13 @@
-import type { Component } from '/lib/xp/portal'
 import { get as getContentByKey, type Content } from '/lib/xp/content'
 import { SearchResult as SearchResultPartConfig } from '.'
 import { render, type RenderResponse } from '/lib/enonic/react4xp'
 import type { PreparedSearchResult, SolrPrepResultAndTotal, Facet } from '/lib/ssb/utils/solrUtils'
 import { queryNodes, getNode } from '/lib/ssb/repo/common'
-import type { NodeQueryResponse, RepoNode } from '/lib/xp/node'
 import { formatDate } from '/lib/ssb/utils/dateUtils'
 import type { BestBetContent } from '/lib/ssb/repo/bestbet'
 import { getContent, getComponent, pageUrl, serviceUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
+import { Node } from '@enonic-types/lib-node'
 
 const { solrSearch } = __non_webpack_require__('/lib/ssb/utils/solrUtils')
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
@@ -29,8 +28,12 @@ export function preview(req: XP.Request) {
 
 export function renderPart(req: XP.Request): RenderResponse {
   /* collect data */
-  const content: Content = getContent()
-  const part: Component<SearchResultPartConfig> = getComponent()
+  const content = getContent()
+  if (!content) throw Error('No page found')
+
+  const part = getComponent<SearchResultPartConfig>()
+  if (!part) throw Error('No part found')
+
   const sanitizedTerm: string = req.params.sok ? sanitizeForSolr(req.params.sok) : ''
   const searchPageUrl: string = part.config.searchResultPage
     ? pageUrl({
@@ -79,7 +82,7 @@ export function renderPart(req: XP.Request): RenderResponse {
   ]
 
   function bestBet(): PreparedSearchResult | undefined {
-    const result: NodeQueryResponse = queryNodes('no.ssb.bestbet', 'master', {
+    const result = queryNodes('no.ssb.bestbet', 'master', {
       start: 0,
       count: 1,
       query: `fulltext('data.searchWords', '${sanitizedTerm}', 'AND')`,
@@ -318,7 +321,7 @@ export function renderPart(req: XP.Request): RenderResponse {
   return render('site/parts/searchResult/searchResultView', props, req)
 }
 
-interface BestBet extends RepoNode {
+interface BestBet extends Node {
   data: {
     linkedSelectedContentResult: BestBetContent['linkedSelectedContentResult']
     linkedContentTitle: BestBetContent['linkedContentTitle']

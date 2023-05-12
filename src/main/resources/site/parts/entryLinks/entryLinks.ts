@@ -1,9 +1,9 @@
 import { render as r4XpRender, type RenderResponse } from '/lib/enonic/react4xp'
-import { type Component, getComponent, getContent, imageUrl } from '/lib/xp/portal'
+import { getComponent, getContent, imageUrl } from '/lib/xp/portal'
 import type { EntryLinks as EntryLinksPartConfig } from '.'
-import { type Content, get as getContentByKey, type MediaImage } from '/lib/xp/content'
+import { type Content, get as getContentByKey } from '/lib/xp/content'
 import type { Phrases } from '/lib/types/language'
-import { render, type ResourceKey } from '/lib/thymeleaf'
+import { render } from '/lib/thymeleaf'
 
 const {
   data: { forceArray },
@@ -13,7 +13,7 @@ const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 const { getAttachmentContent } = __non_webpack_require__('/lib/ssb/utils/utils')
 
-const view: ResourceKey = resolve('./entryLinks.html') as ResourceKey
+const view = resolve('./entryLinks.html')
 
 export function get(req: XP.Request) {
   try {
@@ -28,8 +28,12 @@ export function preview(req: XP.Request) {
 }
 
 function renderPart(req: XP.Request): XP.Response | RenderResponse {
-  const page: Content = getContent()
-  const part: Component<EntryLinksPartConfig> = getComponent()
+  const page = getContent()
+  if (!page) throw Error('No page found')
+
+  const part = getComponent<EntryLinksPartConfig>()
+  if (!part) throw Error('No part found')
+
   const phrases: Phrases = getPhrases(page) as Phrases
 
   const entryLinksContent: EntryLinksPartConfig['entryLinks'] = part.config.entryLinks

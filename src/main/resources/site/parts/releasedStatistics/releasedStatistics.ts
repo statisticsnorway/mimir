@@ -1,6 +1,6 @@
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 
-import type { Content, QueryDSL } from '/lib/xp/content'
+import type { QueryDsl } from '/lib/xp/content'
 import { render, type RenderResponse } from '/lib/enonic/react4xp'
 import type { ReleasedStatistics as ReleasedStatisticsPartConfig } from '.'
 import type { YearReleases } from '/lib/ssb/utils/variantUtils'
@@ -28,9 +28,13 @@ export function preview(req: XP.Request): RenderResponse {
 }
 
 export function renderPart(req: XP.Request): RenderResponse {
-  const content: Content = getContent()
+  const content = getContent()
+  if (!content) throw Error('No page found')
+
   const currentLanguage: string = content.language ? content.language : 'nb'
-  const part: Component<ReleasedStatisticsPartConfig> = getComponent()
+  const part = getComponent<ReleasedStatisticsPartConfig>()
+  if (!part) throw Error('No part found')
+
   const deactivatePartCacheEnabled: boolean = isEnabled('deactivate-partcache-released-statistics', true, 'ssb')
   const groupedWithMonthNames: Array<YearReleases> = !deactivatePartCacheEnabled
     ? fromPartCache(req, `${content._id}-releasedStatistics`, () => {
@@ -64,7 +68,7 @@ function getGroupedWithMonthNames(
         from: 'dateTime',
         lte: stringToServerTime(),
       },
-    } as unknown as QueryDSL,
+    } as QueryDsl,
     numberOfReleases
   )
 

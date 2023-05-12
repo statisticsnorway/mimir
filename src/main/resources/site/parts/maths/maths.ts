@@ -7,7 +7,9 @@ const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
 export function get(req: XP.Request): XP.Response | RenderResponse {
   try {
-    const part: Component<MathsPartConfig> = getComponent()
+    const part = getComponent<MathsPartConfig>()
+    if (!part) throw Error('No part found')
+
     return renderPart(req, part)
   } catch (e) {
     return renderError(req, 'Error in part', e)

@@ -13,12 +13,12 @@ function numberWithSpaces(x: number | string): string {
 }
 
 export function createHumanReadableFormat(value: number | string | null): string {
-  if (getContent().language != 'en' && value) {
-    return value > 999 || value < -999
+  if (getContent()?.language != 'en' && value) {
+    return +value > 999 || +value < -999
       ? numberWithSpaces(value).toString().replace(/\./, ',')
       : value.toString().replace(/\./, ',')
   }
-  return value ? (value > 999 || value < -999 ? numberWithSpaces(value) : value.toString()) : ''
+  return value ? (+value > 999 || +value < -999 ? numberWithSpaces(value) : value.toString()) : ''
 }
 
 export function dateToFormat(dateString: string | undefined): string {

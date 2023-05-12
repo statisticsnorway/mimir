@@ -1,7 +1,6 @@
 import { get as getContentByKey, type Content } from '/lib/xp/content'
 import { render as r4XpRender, type RenderResponse } from '/lib/enonic/react4xp'
-import { type ResourceKey, render } from '/lib/thymeleaf'
-import type { Component } from '/lib/xp/portal'
+import { render } from '/lib/thymeleaf'
 import type { MenuBox as MenuBoxPartConfig } from '.'
 import type { MenuBox } from '/site/content-types'
 import { pageUrl, getComponent, imageUrl } from '/lib/xp/portal'
@@ -12,7 +11,7 @@ const {
   data: { forceArray },
 } = __non_webpack_require__('/lib/util')
 
-const view: ResourceKey = resolve('./menuBox.html')
+const view = resolve('./menuBox.html')
 
 export function get(req: XP.Request): XP.Response | RenderResponse | string {
   try {
@@ -27,7 +26,9 @@ export function preview(req: XP.Request) {
 }
 
 function renderPart(req: XP.Request): XP.Response | RenderResponse | string {
-  const part: Component<MenuBoxPartConfig> = getComponent()
+  const part = getComponent<MenuBoxPartConfig>()
+  if (!part) throw Error('No part found')
+
   const menuBoxId: string = part.config.menu
   const height: string = part.config.height ? (part.config.height as string) : 'default'
   if (!menuBoxId) {

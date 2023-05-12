@@ -1,4 +1,4 @@
-import { get as getContentByKey, type Content, type MediaImage } from '/lib/xp/content'
+import { get as getContentByKey, type Content } from '/lib/xp/content'
 import type { SourceList, SourcesConfig } from '/lib/ssb/utils/utils'
 import { render, type RenderResponse } from '/lib/enonic/react4xp'
 import type { StaticVisualization } from '/site/content-types'
@@ -19,7 +19,9 @@ const { parseHtmlString } = __non_webpack_require__('/lib/ssb/parts/table')
 
 export function get(req: XP.Request): XP.Response | RenderResponse {
   try {
-    const config: StaticVisualizationPartConfig = getComponent().config
+    const config = getComponent<StaticVisualizationPartConfig>()?.config
+    if (!config) throw Error('No part found')
+
     const contentId: string | undefined = config.staticVisualizationContent
     return renderPart(req, contentId)
   } catch (e) {

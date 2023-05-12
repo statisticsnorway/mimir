@@ -1,7 +1,6 @@
-import { get as getContentByKey, query, type Content, type QueryResponse } from '/lib/xp/content'
+import { get as getContentByKey, query, type Content } from '/lib/xp/content'
 import type { Phrases } from '/lib/types/language'
 import { render, type RenderResponse } from '/lib/enonic/react4xp'
-import type { SEO } from '/services/news/news'
 import type { Article, ContentList } from '/site/content-types'
 import type { RelatedFactPage as RelatedFactPagePartConfig } from '.'
 import { imagePlaceholder, getComponent, getContent, imageUrl, pageUrl, serviceUrl } from '/lib/xp/portal'
@@ -16,8 +15,12 @@ const {
 
 export function get(req: XP.Request): XP.Response | RenderResponse {
   try {
-    const page: Content<Article> = getContent()
-    const config: RelatedFactPagePartConfig = getComponent().config
+    const page = getContent<Content<Article>>()
+    if (!page) throw Error('No page found')
+
+    const config = getComponent<RelatedFactPagePartConfig>()?.config
+    if (!config) throw Error('No part found')
+
     let relatedFactPageConfig: RelatedFactPageConfig | undefined
 
     if (config.itemList) {
@@ -56,7 +59,9 @@ function renderPart(
   req: XP.Request,
   relatedFactPageConfig: RelatedFactPageConfig | undefined
 ): XP.Response | RenderResponse {
-  const page: Content<Article> = getContent()
+  const page = getContent()
+  if (!page) throw Error('No page found')
+
   if (req.mode === 'edit' || req.mode === 'inline' || !relatedFactPageConfig) {
     return renderRelatedFactPage(req, page, relatedFactPageConfig)
   } else {
@@ -72,7 +77,9 @@ function renderRelatedFactPage(
   relatedFactPageConfig: RelatedFactPageConfig | undefined
 ): XP.Response | RenderResponse {
   const phrases: Phrases = getPhrases(page)
-  const config: RelatedFactPagePartConfig = getComponent().config
+  const config = getComponent<RelatedFactPagePartConfig>()?.config
+  if (!config) throw Error('No part found')
+
   const mainTitle: string = config.title ? config.title : phrases.relatedFactPagesHeading
   const showAll: string = phrases.showAll
   const showLess: string = phrases.showLess
@@ -135,7 +142,7 @@ export function parseRelatedFactPageData(
       contentListId = forceArray((relatedContent?.data as ContentList).contentList) as Array<string>
     }
 
-    const relatedContentQueryResults: QueryResponse<RelatedFactPage, object> | null = contentListId.length
+    const relatedContentQueryResults = contentListId.length
       ? query({
           count: 999,
           filters: {
@@ -172,9 +179,9 @@ function parseRelatedContent(relatedContent: RelatedFactPage): RelatedFactPageCo
   let imageId: string | undefined
   let image: string | undefined
   let imageAlt = ' '
-  if (relatedContent.x['com-enonic-app-metafields']['meta-data'].seoImage) {
-    imageId = relatedContent.x['com-enonic-app-metafields']['meta-data'].seoImage
-    imageAlt = getImageAlt(imageId) ? (getImageAlt(imageId) as string) : ''
+  if (relatedContent.x['com-enonic-app-metafields']?.['meta-data']?.seoImage) {
+    imageId = relatedContent.x['com-enonic-app-metafields']?.['meta-data']?.seoImage
+    imageAlt = getImageAlt(imageId) ?? ''
     image = imageUrl({
       id: imageId,
       scale: 'block(380, 400)',
@@ -213,7 +220,7 @@ interface RelatedFactPageProps {
   showLess: string
 }
 
-type RelatedFactPage = Content<ContentList | Article, SEO>
+type RelatedFactPage = Content<ContentList | Article>
 
 export interface RelatedFactPages {
   relatedFactPages: Array<RelatedFactPageContent>

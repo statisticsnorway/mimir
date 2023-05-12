@@ -1,4 +1,4 @@
-import { RepoNode } from '/lib/xp/node'
+import { Node } from '/lib/xp/node'
 import { StatisticInListing, StatRegBase } from '/lib/ssb/dashboard/statreg/types'
 import { equals } from '/lib/vendor/ramda'
 
@@ -205,7 +205,7 @@ export function updateMimirMockRelease(): void {
   }
 }
 
-export type StatRegNode = RepoNode & StatRegContent
+export type StatRegNode = Node & StatRegContent
 export interface StatRegNodeConfig {
   key: string
   fetcher: () => Array<StatRegBase> | null

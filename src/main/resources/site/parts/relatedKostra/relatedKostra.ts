@@ -12,7 +12,9 @@ export function get(req: XP.Request): XP.Response | RenderResponse {
     let municipality: MunicipalityWithCounty | undefined = getMunicipality(req)
     const mode: string = pageMode(req)
     if (!municipality && mode === 'edit') {
-      const siteConfig: XP.SiteConfig = getSiteConfig()
+      const siteConfig = getSiteConfig<XP.SiteConfig>()
+      if (!siteConfig) throw Error('No site config found')
+
       municipality = getMunicipality({
         code: siteConfig.defaultMunicipality,
       } as unknown as XP.Request)
@@ -24,7 +26,9 @@ export function get(req: XP.Request): XP.Response | RenderResponse {
 }
 
 export function preview(req: XP.Request): XP.Response | RenderResponse {
-  const siteConfig: XP.SiteConfig = getSiteConfig()
+  const siteConfig = getSiteConfig<XP.SiteConfig>()
+  if (!siteConfig) throw Error('No site config found')
+
   const municipality: MunicipalityWithCounty | undefined = getMunicipality({
     code: siteConfig.defaultMunicipality,
   } as unknown as XP.Request)
@@ -32,7 +36,8 @@ export function preview(req: XP.Request): XP.Response | RenderResponse {
 }
 
 function renderPart(req: XP.Request, municipality: MunicipalityWithCounty | undefined): XP.Response | RenderResponse {
-  const config: RelatedKostraPartConfig = getComponent().config
+  const config = getComponent<RelatedKostraPartConfig>()?.config
+  if (!config) throw Error('No part found')
 
   const props: RelatedKostraProps = {
     title: config.title,

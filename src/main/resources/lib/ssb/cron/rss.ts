@@ -7,7 +7,6 @@ import { TbmlDataUniform, XmlParser } from '/lib/types/xmlParser'
 import { DatasetRepoNode, DataSource as DataSourceType } from '/lib/ssb/repo/dataset'
 import { JSONstat } from '/lib/types/jsonstat-toolkit'
 import { JobStatus } from '/lib/ssb/repo/job'
-import type { Default as DefaultPageConfig } from '/site/pages/default'
 import type { Statistics } from '/site/content-types'
 import type { Statistic } from '/site/mixins/statistic'
 import { isDateBetween, subDays } from '/lib/ssb/utils/dateUtils'
@@ -52,7 +51,7 @@ function isValidType(dataSource: Content<DataSource>): boolean {
 function isSavedQuerysStatistic(statisticsWithReleaseToday: Array<string>, dataSource: Content<DataSource>): boolean {
   const isSavedQuery: boolean = dataSource.data.dataSource?._selected === 'statbankSaved'
   if (isSavedQuery) {
-    const parentContent: Content<object, DefaultPageConfig | Statistics> | null = getParentContent(dataSource._path)
+    const parentContent = getParentContent(dataSource._path)
     if (parentContent && parentContent.type === `${app.name}:statistics`) {
       const statisticContent: Content<Statistics & Statistic> = parentContent as Content<Statistics>
       if (

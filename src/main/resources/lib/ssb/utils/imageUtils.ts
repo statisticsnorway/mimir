@@ -1,4 +1,4 @@
-import { get, Content, MediaImage } from '/lib/xp/content'
+import { get, Content } from '/lib/xp/content'
 
 export function getImageCaption(imageId: string): string | undefined {
   const imageContent: Content<MediaImage> | null = get({

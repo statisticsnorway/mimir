@@ -1,11 +1,4 @@
-import {
-  FetchResponse,
-  ListOfResults,
-  Project,
-  fetchResults,
-  fetchProject,
-  fetchPersonResults,
-} from '/lib/cristin/service'
+import { fetchResults, fetchProject, fetchPersonResults } from '/lib/cristin/service'
 
 export function fetchResultsCristin(
   contributor?: string,
@@ -13,8 +6,8 @@ export function fetchResultsCristin(
   per_page = '10',
   page?: string,
   sort?: string
-): FetchResponse<ListOfResults> {
-  const results: FetchResponse<ListOfResults> = fetchResults({
+) {
+  const results = fetchResults({
     institution: 'statistisk+sentralbyra',
     contributor,
     category,
@@ -26,8 +19,8 @@ export function fetchResultsCristin(
   return results
 }
 
-export function fetchProjectCristin(projectId: string | number): Project {
-  const project: Project = fetchProject({
+export function fetchProjectCristin(projectId: string | number) {
+  const project = fetchProject({
     id: projectId,
   })
   const projectResultsIds: Array<string> | undefined =
@@ -39,8 +32,8 @@ export function fetchProjectCristin(projectId: string | number): Project {
   }
 }
 
-export function fetchPersonResultsCristin(personId?: string, per_page = '10', page?: string): ListOfResults {
-  const results: ListOfResults = fetchPersonResults({
+export function fetchPersonResultsCristin(personId?: string, per_page = '10', page?: string) {
+  const results = fetchPersonResults({
     id: personId,
     per_page,
     page,

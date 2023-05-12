@@ -1,5 +1,5 @@
 import { render, type RenderResponse } from '/lib/enonic/react4xp'
-import { getComponent, attachmentUrl, type Component } from '/lib/xp/portal'
+import { getComponent, attachmentUrl } from '/lib/xp/portal'
 import type { DownloadLink as DownloadLinkPartConfig } from '.'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
@@ -17,7 +17,8 @@ export function preview(req: XP.Request) {
 }
 
 function renderPart(req: XP.Request): RenderResponse {
-  const part: Component<DownloadLinkPartConfig> = getComponent()
+  const part = getComponent<DownloadLinkPartConfig>()
+  if (!part) throw Error('No part found')
 
   return render(
     'DownloadLink',

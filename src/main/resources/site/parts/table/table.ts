@@ -1,5 +1,5 @@
 import { get as getContentByKey, type Content } from '/lib/xp/content'
-import { type ResourceKey, render } from '/lib/thymeleaf'
+import { render } from '/lib/thymeleaf'
 import type { TableSourceList, TableView } from '/lib/ssb/parts/table'
 import { SourceList, SourcesConfig, scriptAsset } from '/lib/ssb/utils/utils'
 import {
@@ -24,12 +24,16 @@ const { getLanguage, getPhrases } = __non_webpack_require__('/lib/ssb/utils/lang
 const { DATASET_BRANCH, UNPUBLISHED_DATASET_BRANCH } = __non_webpack_require__('/lib/ssb/repo/dataset')
 const { hasWritePermissionsAndPreview } = __non_webpack_require__('/lib/ssb/parts/permissions')
 
-const view: ResourceKey = resolve('./table.html') as ResourceKey
+const view = resolve('./table.html')
 
 export function get(req: XP.Request): XP.Response {
   try {
-    const config: TablePartConfig = getComponent().config
-    const page: Content<Statistics> = getContent()
+    const config = getComponent<TablePartConfig>()?.config
+    if (!config) throw Error('No part found')
+
+    const page = getContent<Content<Statistics>>()
+    if (!page) throw Error('No page found')
+
     const tableId: string = config.table ? config.table : (page.data.mainTable as string)
     return renderPart(req, tableId)
   } catch (e) {
@@ -42,7 +46,9 @@ export function preview(req: XP.Request, id?: string): XP.Response {
 }
 
 function getProps(req: XP.Request, tableId?: string): TableProps {
-  const page: Content<Table> = getContent()
+  const page = getContent<Content<Table>>()
+  if (!page) throw Error('No page found')
+
   const language: Language = getLanguage(page) as Language
   const phrases: Phrases = getPhrases(page) as Phrases
 
@@ -130,7 +136,9 @@ function getProps(req: XP.Request, tableId?: string): TableProps {
 exports.getProps = getProps
 
 function renderPart(req: XP.Request, tableId?: string): XP.Response {
-  const page: Content<Table> = getContent()
+  const page = getContent<Content<Table>>()
+  if (!page) throw Error('No page found')
+
   const phrases: Phrases = getPhrases(page) as Phrases
 
   if (!tableId) {

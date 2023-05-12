@@ -1,7 +1,7 @@
-import { type Content, query, type QueryResponse, get as getContentByKey } from '/lib/xp/content'
+import { type Content, query, get as getContentByKey } from '/lib/xp/content'
 import type { Employee, Page } from '/site/content-types'
 import type { Default as DefaultPageConfig } from '/site/pages/default'
-import { getContent, Component, getComponent, pageUrl } from '/lib/xp/portal'
+import { getContent, getComponent, pageUrl } from '/lib/xp/portal'
 import { type RenderResponse, render } from '/lib/enonic/react4xp'
 import type { EmployeeList as EmployeeListPartConfig } from '.'
 
@@ -20,10 +20,13 @@ export function preview(req: XP.Request): RenderResponse {
 }
 
 function renderPart(req: XP.Request): RenderResponse {
-  const content: Content<Page, object> = getContent()
-  const part: Component<EmployeeListPartConfig> = getComponent()
+  const content = getContent<Content<Page>>()
+  if (!content) throw Error('No page found')
 
-  const queryResults: QueryResponse<Employee, object> = query({
+  const part = getComponent<EmployeeListPartConfig>()
+  if (!part) throw Error('No part found')
+
+  const queryResults = query<Content<Employee>>({
     count: 500,
     contentTypes: [`${app.name}:employee`],
     query: `_path LIKE "/content${content._path}/*"`,

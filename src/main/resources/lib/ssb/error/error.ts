@@ -1,4 +1,4 @@
-import { ResourceKey, render } from '/lib/thymeleaf'
+import { render } from '/lib/thymeleaf'
 
 export interface ErrorInterface {
   errorTitle: string
@@ -6,7 +6,7 @@ export interface ErrorInterface {
   errorLog: void
 }
 
-const errorView: ResourceKey = resolve('./error.html')
+const errorView = resolve('./error.html')
 
 export function renderError(req: XP.Request, title: string, exception: Error): XP.Response {
   const model: ErrorInterface = {

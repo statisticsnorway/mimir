@@ -65,7 +65,7 @@ interface HighmapProps {
 
 export function get(req: XP.Request): RenderResponse | XP.Response {
   try {
-    const config: HighmapPartConfig = getComponent().config
+    const config = getComponent()?.config as HighmapPartConfig
     const highmapId: string | undefined = config.highmapId
     return renderPart(req, highmapId)
   } catch (e) {
@@ -82,7 +82,9 @@ export function preview(req: XP.Request, highmapId: string | undefined): RenderR
 }
 
 function renderPart(req: XP.Request, highmapId: string | undefined): RenderResponse | XP.Response {
-  const page: Content = getContent()
+  const page = getContent()
+  if (!page) throw new Error('No page found')
+
   const highmapContent: Content<Highmap> | null = highmapId
     ? getContentByKey({
         key: highmapId,

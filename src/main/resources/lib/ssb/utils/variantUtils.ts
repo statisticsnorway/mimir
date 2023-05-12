@@ -1,5 +1,4 @@
 import { query, get, Content } from '/lib/xp/content'
-import { SEO } from '/services/news/news'
 import type { OmStatistikken, Statistics } from '/site/content-types'
 import { ReleasesInListing, StatisticInListing, VariantInListing } from '/lib/ssb/dashboard/statreg/types'
 import { groupBy } from '/lib/vendor/ramda'
@@ -306,13 +305,13 @@ export function prepareRelease(release: Release, language: string): PreparedStat
   if (release) {
     const preparedVariant: PreparedVariant = formatRelease(release, language)
 
-    const statisticsPagesXP: Content<Statistics, SEO> | undefined = query({
+    const statisticsPagesXP = query<Content<Statistics>>({
       count: 1,
       query: `data.statistic LIKE "${release.statisticId}" AND language IN (${
         language === 'nb' ? '"nb", "nn"' : '"en"'
       })`,
       contentTypes: [`${app.name}:statistics`],
-    }).hits[0] as unknown as Content<Statistics, SEO>
+    }).hits[0]
     const statisticsPageUrl: string | undefined = statisticsPagesXP
       ? pageUrl({
           path: statisticsPagesXP._path,
@@ -325,7 +324,7 @@ export function prepareRelease(release: Release, language: string): PreparedStat
           })
         : null
     const seoDescription: string | undefined = statisticsPagesXP
-      ? statisticsPagesXP.x['com-enonic-app-metafields']['meta-data'].seoDescription
+      ? statisticsPagesXP.x['com-enonic-app-metafields']?.['meta-data']?.seoDescription
       : ''
 
     return {
@@ -357,11 +356,11 @@ export function prepareStatisticRelease(
       ? concatReleaseTimes(release.variants, language, property)
       : formatVariant(release.variants, language, property)
 
-    const statisticsPagesXP: Content<Statistics, SEO> | undefined = query({
+    const statisticsPagesXP = query<Content<Statistics>>({
       count: 1,
       query: `data.statistic LIKE "${release.id}" AND language IN (${language === 'nb' ? '"nb", "nn"' : '"en"'})`,
       contentTypes: [`${app.name}:statistics`],
-    }).hits[0] as unknown as Content<Statistics, SEO>
+    }).hits[0]
     const statisticsPageUrl: string | undefined = statisticsPagesXP
       ? pageUrl({
           path: statisticsPagesXP._path,
@@ -374,7 +373,7 @@ export function prepareStatisticRelease(
           })
         : null
     const seoDescription: string | undefined = statisticsPagesXP
-      ? statisticsPagesXP.x['com-enonic-app-metafields']['meta-data'].seoDescription
+      ? statisticsPagesXP.x['com-enonic-app-metafields']?.['meta-data']?.seoDescription
       : ''
 
     return {

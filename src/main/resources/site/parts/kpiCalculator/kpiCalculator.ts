@@ -28,7 +28,9 @@ export function preview(req: XP.Request) {
 }
 
 function renderPart(req: XP.Request): XP.Response {
-  const page: Content = getContent()
+  const page = getContent()
+  if (!page) throw Error('No page found')
+
   let kpiCalculator: RenderResponse | undefined
   if (req.mode === 'edit' || req.mode === 'inline') {
     kpiCalculator = getKpiCalculatorComponent(req, page)
@@ -45,7 +47,9 @@ function renderPart(req: XP.Request): XP.Response {
 }
 
 function getKpiCalculatorComponent(req: XP.Request, page: Content): RenderResponse {
-  const config: KpiCalculatorPartConfig = getComponent().config
+  const config = getComponent()?.config as KpiCalculatorPartConfig
+  if (!config) throw Error('No part found')
+
   const frontPage = !!config.frontPage
   const frontPageIngress: string | null | undefined = config.ingressFrontpage && config.ingressFrontpage
   const language: Language = getLanguage(page)

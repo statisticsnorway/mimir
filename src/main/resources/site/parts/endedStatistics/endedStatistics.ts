@@ -3,7 +3,6 @@ import type { EndedStatistics as EndedStatisticsPartConfig } from '.'
 import { get as getContentByKey, type Content } from '/lib/xp/content'
 import type { Phrases } from '/lib/types/language'
 import type { Statistics } from '/site/content-types'
-import { SEO } from '/services/news/news'
 import { getComponent, getContent, pageUrl } from '/lib/xp/portal'
 
 const {
@@ -25,8 +24,12 @@ export function preview(req: XP.Request) {
 }
 
 function renderPart(req: XP.Request): XP.Response | RenderResponse {
-  const page: Content = getContent()
-  const part: EndedStatisticsPartConfig = getComponent().config
+  const page = getContent()
+  if (!page) throw Error('No page found')
+
+  const part = getComponent()?.config as EndedStatisticsPartConfig
+  if (!part) throw Error('No part config found')
+
   const endedStatistics: EndedStatisticsPartConfig['relatedStatisticsOptions'] = part.relatedStatisticsOptions
     ? forceArray(part.relatedStatisticsOptions)
     : []
@@ -74,18 +77,17 @@ function parseContent(
       .map((statistics) => {
         if (statistics._selected === 'xp' && statistics.xp.contentId) {
           const statisticsContentId: string = statistics.xp.contentId
-          const endedStatisticsContent: Content<Statistics, SEO> | null = statisticsContentId
+          const endedStatisticsContent: Content<Statistics> | null = statisticsContentId
             ? getContentByKey({
                 key: statisticsContentId,
               })
             : null
 
-          const preamble: string = endedStatisticsContent?.x['com-enonic-app-metafields']['meta-data']
-            .seoDescription as string
+          const preamble = endedStatisticsContent?.x['com-enonic-app-metafields']?.['meta-data']?.seoDescription
 
           return {
             title: endedStatisticsContent ? endedStatisticsContent.displayName : '',
-            preamble: preamble ? preamble : '',
+            preamble: preamble ?? '',
             href: pageUrl({
               id: statisticsContentId,
             }),

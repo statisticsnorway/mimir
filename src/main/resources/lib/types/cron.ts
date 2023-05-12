@@ -1,5 +1,4 @@
-import { RunContext } from '/lib/xp/context'
-import { ContextAttributes } from '*/lib/xp/context'
+import { type ContextParams } from '/lib/xp/context'
 
 export interface CronLib {
   schedule: (options: ScheduleParams) => void
@@ -15,7 +14,7 @@ export interface ScheduleParams {
   delay?: number
   times: number
   callback: () => void
-  context: RunContext<ContextAttributes>
+  context: ContextParams
 }
 
 export interface UnscheduleParams {
@@ -33,6 +32,6 @@ export interface GetCronResult {
   fixedDelay: number
   delay: number
   applicationKey: string
-  context: RunContext<ContextAttributes>
+  context: ContextParams
   nextExecTime: string
 }

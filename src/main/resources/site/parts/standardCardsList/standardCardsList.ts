@@ -1,7 +1,6 @@
-import { get as getContentByKey, type Content, type MediaImage } from '/lib/xp/content'
-import { type ResourceKey, render } from '/lib/thymeleaf'
+import { get as getContentByKey, type Content } from '/lib/xp/content'
+import { render } from '/lib/thymeleaf'
 import { render as r4xpRender } from '/lib/enonic/react4xp'
-import type { SEO } from '/services/news/news'
 import type { Statistics } from '/site/content-types'
 import type { StandardCardsList as StandardCardsListPartConfig } from '.'
 import { randomUnsafeString } from '/lib/ssb/utils/utils'
@@ -13,7 +12,7 @@ const {
 const { getImageCaption, getImageAlt } = __non_webpack_require__('/lib/ssb/utils/imageUtils')
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
-const view: ResourceKey = resolve('standardCardsList.html')
+const view = resolve('standardCardsList.html')
 
 export function get(req: XP.Request): XP.Response {
   try {
@@ -28,7 +27,9 @@ export function preview(req: XP.Request): XP.Response {
 }
 
 function renderPart(req: XP.Request): XP.Response {
-  const config: StandardCardsListPartConfig = getComponent().config
+  const config = getComponent<StandardCardsListPartConfig>()?.config
+  if (!config) throw Error('No part found')
+
   const standardCardsListConfig: StandardCardsListPartConfig['statisticsItemSet'] = config.statisticsItemSet
     ? forceArray(config.statisticsItemSet)
     : []
@@ -103,7 +104,7 @@ function parseContent(
 
         if (standardCard.contentXP) {
           const standardCardContentId: string = standardCard.contentXP
-          const pageContent: Content<Statistics, SEO> | null = standardCardContentId
+          const pageContent: Content<Statistics> | null = standardCardContentId
             ? getContentByKey({
                 key: standardCardContentId,
               })
@@ -111,7 +112,7 @@ function parseContent(
 
           let preamble = ''
           if (pageContent) {
-            preamble = pageContent.x['com-enonic-app-metafields']['meta-data'].seoDescription
+            preamble = pageContent.x['com-enonic-app-metafields']?.['meta-data']?.seoDescription
           }
 
           return {

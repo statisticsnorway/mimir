@@ -28,7 +28,9 @@ export function preview(req: XP.Request): RenderResponse {
 }
 
 function renderPart(req: XP.Request): RenderResponse {
-  const page: Content = getContent()
+  const page = getContent()
+  if (!page) throw Error('No page found')
+
   if (req.mode === 'edit' || req.mode === 'inline') {
     return getHusleiekalkulator(req, page)
   } else {
@@ -39,7 +41,9 @@ function renderPart(req: XP.Request): RenderResponse {
 }
 
 function getHusleiekalkulator(req: XP.Request, page: Content): RenderResponse {
-  const config: HusleieCalculatorPartConfig = getComponent().config
+  const config = getComponent()?.config as HusleieCalculatorPartConfig
+  if (!config) throw Error('No part found')
+
   const language: Language = getLanguage(page)
   const phrases: Phrases = language.phrases as Phrases
   const calculatorConfig: Content<CalculatorConfig> | undefined = getCalculatorConfig()

@@ -83,7 +83,7 @@ interface LibMap extends EnonicLibraryMap {
     '/lib/ssb/utils/alertUtils': import('./lib/ssb/utils/alertUtils').AlertUtilsLib;
     '/lib/ssb/utils/arrayUtils': import('./lib/ssb/utils/arrayUtils').ArrayUtilsLib;
     '/lib/ssb/utils/breadcrumbsUtils': import('./lib/ssb/utils/breadcrumbsUtils').BreadcrumbsUtilsLib;
-	'/lib/ssb/utils/dateUtils': typeof import('./lib/ssb/utils/dateUtils');
+    '/lib/ssb/utils/dateUtils': typeof import('./lib/ssb/utils/dateUtils');
     '/lib/ssb/utils/imageUtils': import('./lib/ssb/utils/imageUtils').ImageUtilsLib;
     '/lib/ssb/utils/parentUtils': import('./lib/ssb/utils/parentUtils').ParentUtilsLib;
     '/lib/ssb/utils/serverLog': import('./lib/ssb/utils/serverLog').ServerLogLib;
@@ -100,8 +100,8 @@ interface LibMap extends EnonicLibraryMap {
 }
 
 declare const __non_webpack_require__: <K extends keyof LibMap | string = string>(path: K) => K extends keyof LibMap
-  ? LibMap[K]
-  : any;
+    ? LibMap[K]
+    : any;
 
 declare const resolve: (path: string) => any
 
@@ -123,4 +123,72 @@ declare const log: {
 declare const __: {
     newBean: (bean: string) => any;
     toNativeObject: (beanResult: any) => any;
+}
+
+interface BaseMedia<Media extends object = BaseMediaConfig> {
+    media: Media;
+    caption?: string;
+    artist?: string | Array<string>;
+    copyright?: string;
+    tags?: string | Array<string>;
+}
+interface BaseMediaConfig {
+    attachment: string;
+}
+interface MediaImage extends BaseMedia<ImageConfig> {
+    altText?: string;
+}
+interface ImageConfig {
+    attachment: string;
+    focalPoint: {
+        x: number;
+        y: number;
+    };
+    zoomPosition: {
+        left: number;
+        top: number;
+        right: number;
+        bottom: number;
+    };
+    cropPosition: {
+        left: number;
+        top: number;
+        right: number;
+        bottom: number;
+        zoom: number;
+    };
+}
+interface MediaImageXData {
+    media: {
+        imageInfo: {
+            imageHeight: number;
+            imageWidth: number;
+            contentType: string;
+            colorSpace: string;
+            pixelSize: number;
+            byteSize: number;
+            description: string;
+            fileSource: string;
+        };
+        cameraInfo: {
+            make: string;
+            model: string;
+            lens: string;
+            iso: string;
+            focalLength: string;
+            focalLength35: string;
+            exposureBias: string;
+            aperture: string;
+            shutterTime: string;
+            flash: string;
+            autoFlashCompensation: string;
+            whiteBalance: string;
+            exposureProgram: string;
+            shootingMode: string;
+            meteringMode: string;
+            exposureMode: string;
+            focusDistance: string;
+            orientation: string;
+        };
+    };
 }

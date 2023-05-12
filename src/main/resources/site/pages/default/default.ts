@@ -1,5 +1,5 @@
 import { type Content, query } from '/lib/xp/content'
-import { render, type ResourceKey } from '/lib/thymeleaf'
+import { render } from '/lib/thymeleaf'
 import type { ReleaseDatesVariant, StatisticInListing, VariantInListing } from '/lib/ssb/dashboard/statreg/types'
 import type { MunicipalityWithCounty } from '/lib/ssb/dataset/klass/municipalities'
 import type { FooterContent } from '/lib/ssb/parts/footer'
@@ -8,10 +8,9 @@ import type { Breadcrumbs } from '/lib/ssb/utils/breadcrumbsUtils'
 import type { SubjectItem } from '/lib/ssb/utils/subjectUtils'
 import type { Language } from '/lib/types/language'
 import { render as r4xpRender, type RenderResponse } from '/lib/enonic/react4xp'
-import type { Statistics } from '/site/content-types'
+import type { Page, Statistics } from '/site/content-types'
 import type { Default as DefaultPageConfig } from '/site/pages/default'
 import { assetUrl, type Component, getContent, getSiteConfig, pageUrl, processHtml } from '/lib/xp/portal'
-import type { SEO } from '/services/news/news'
 
 const {
   data: { forceArray },
@@ -58,10 +57,12 @@ const previewOverride: object = {
 
 export const GA_TRACKING_ID: string | null = app.config && app.config.GA_TRACKING_ID ? app.config.GA_TRACKING_ID : null
 
-const view: ResourceKey = resolve('default.html')
+const view = resolve('default.html')
 
 exports.get = function (req: XP.Request): XP.Response {
-  const page: DefaultPage = getContent() as DefaultPage
+  const page = getContent<Content<Page> & DefaultPage>()
+  if (!page) return { status: 404 }
+
   const pageConfig: DefaultPageConfig = page.page.config
 
   const ingress: string | undefined = page.data.ingress
@@ -189,7 +190,11 @@ exports.get = function (req: XP.Request): XP.Response {
   const statbankFane: boolean = req.params.xpframe === 'statbank'
   const statBankContent: StatbankFrameData = parseStatbankFrameContent(statbankFane, req, page)
 
-  const breadcrumbs: Breadcrumbs = getBreadcrumbs(page, municipality, statbankFane ? statBankContent : undefined)
+  const breadcrumbs: Breadcrumbs = getBreadcrumbs(
+    page as unknown as Content,
+    municipality,
+    statbankFane ? statBankContent : undefined
+  )
   const breadcrumbId = 'breadcrumbs'
   const hideBreadcrumb = !!pageConfig.hide_breadcrumb
   const innrapporteringRegexp = /^\/ssb(\/en)?\/innrapportering/ // Skal matche alle sider under /innrapportering på norsk og engelsk
@@ -200,7 +205,7 @@ exports.get = function (req: XP.Request): XP.Response {
     pageUrl: `${baseUrl}${pageUrl({
       id: page._id,
     })}`,
-    page,
+    page: page as unknown as Content,
     ...regions,
     ingress,
     showIngress,
@@ -320,7 +325,7 @@ function parseMetaInfoData(
   if (pageType === 'municipality') {
     metaInfoSearchContentType = 'kommunefakta'
     metaInfoSearchKeywords = 'kommune, kommuneprofil'
-    metaInfoDescription = page.x['com-enonic-app-metafields']['meta-data'].seoDescription
+    metaInfoDescription = page.x['com-enonic-app-metafields']?.['meta-data']?.seoDescription
   }
 
   if (pageType === 'municipality' && page._name === 'kommune' && !municipality) {
@@ -352,7 +357,7 @@ function parseMetaInfoData(
       metaInfoSearchPublishFrom = previousRelease ? new Date(previousRelease).toISOString() : new Date().toISOString()
     }
     metaInfoSearchContentType = 'statistikk'
-    metaInfoDescription = page.x['com-enonic-app-metafields']['meta-data'].seoDescription || ''
+    metaInfoDescription = page.x['com-enonic-app-metafields']?.['meta-data']?.seoDescription || ''
     metaInfoSearchKeywords = page.data.keywords ? page.data.keywords : ''
   }
 
@@ -429,19 +434,19 @@ function parseStatbankFrameContent(statbankFane: boolean, req: XP.Request, page:
   // If req.params.shortname exists, the xp frame fallback (system/xpramme) is in use
   // Since the fallback will only either be in bokmål or english, we will have to run two queries
   const statisticInXP: Content<Statistics> | undefined = req.params.shortname
-    ? (query({
+    ? query<Content<Statistics>>({
         count: 1,
         query: `_path LIKE "*/${req.params.shortname}" AND language = "${pageLanguage}"`,
         contentTypes: [`${app.name}:statistics`],
-      }).hits[0] as Content<Statistics>)
+      }).hits[0]
     : undefined
 
   const nynorskStatisticInXP: Content<Statistics> | undefined = req.params.shortname
-    ? (query({
+    ? query<Content<Statistics>>({
         count: 1,
         query: `_path LIKE "*/${req.params.shortname}" AND language = "nn"`,
         contentTypes: [`${app.name}:statistics`],
-      }).hits[0] as Content<Statistics>)
+      }).hits[0]
     : undefined
 
   if (statbankFane) {
@@ -469,7 +474,7 @@ function parseStatbankFrameContent(statbankFane: boolean, req: XP.Request, page:
     }
   }
 
-  const siteConfig: XP.SiteConfig = getSiteConfig()
+  const siteConfig = getSiteConfig<XP.SiteConfig>() as XP.SiteConfig
 
   let statbankHelpLink: string = siteConfig.statbankHelpLink
   if (pageLanguage === 'en') {
@@ -524,7 +529,6 @@ interface DefaultPage extends Content {
     regions: Regions
     config: DefaultPageConfig
   }
-  x: SEO
   data: {
     ingress: string
     keywords: string

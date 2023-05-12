@@ -1,5 +1,4 @@
 import { render, type RenderResponse } from '/lib/enonic/react4xp'
-import type { Content } from '/lib/xp/content'
 import type { Language, Phrases } from '/lib/types/language'
 import { getContent, serviceUrl } from '/lib/xp/portal'
 
@@ -19,7 +18,9 @@ export function preview(req: XP.Request) {
 }
 
 function renderPart(req: XP.Request): RenderResponse {
-  const page: Content = getContent()
+  const page = getContent()
+  if (!page) throw new Error('No page found')
+
   const language: Language = getLanguage(page) as Language
   const phrases: Phrases = language.phrases as Phrases
   const recaptchaSiteKey: string =

@@ -1,4 +1,4 @@
-import { NodeQueryHit, NodeQueryResponse, RepoNode } from '/lib/xp/node'
+import { Node } from '/lib/xp/node'
 
 const { createRepo, repoExists } = __non_webpack_require__('/lib/ssb/repo/repo')
 const { nodeExists, createNode, getNode, getChildNodes, modifyNode, deleteNode } =
@@ -33,9 +33,9 @@ export function setupBestBetRepo(): void {
   cronJobLog('BestBet Repo setup complete.')
 }
 
-export function listBestBets(count?: number): ReadonlyArray<RepoNode> | RepoNode | null {
-  const nodes: NodeQueryResponse = getChildNodes(BESTBET_REPO, BESTBET_BRANCH, '/', count ? count : undefined)
-  const ids: Array<string> = nodes.hits.map((hit: NodeQueryHit) => {
+export function listBestBets(count?: number): ReadonlyArray<Node> | Node | null {
+  const nodes = getChildNodes(BESTBET_REPO, BESTBET_BRANCH, '/', count ? count : undefined)
+  const ids: Array<string> = nodes.hits.map((hit) => {
     return hit.id
   })
   return getNode(BESTBET_REPO, BESTBET_BRANCH, ids)

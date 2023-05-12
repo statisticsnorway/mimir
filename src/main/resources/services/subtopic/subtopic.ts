@@ -1,15 +1,15 @@
-import { query, Content, QueryResponse } from '/lib/xp/content'
+import { query } from '/lib/xp/content'
 
 exports.get = (req: XP.Request): XP.Response => {
-  const subtopicQuery: QueryResponse<Subtopics, object> = query({
+  const subtopicQuery = query({
     count: 1000,
     query: `components.page.config.mimir.default.subjectType LIKE "subSubject"`,
   })
-  const subtopicHits: Array<Content> = req.params.query
+  const subtopicHits = req.params.query
     ? subtopicQuery.hits.filter((subtopic) =>
         subtopic.displayName.toLowerCase().includes((req.params.query as string).toLowerCase())
       )
-    : (subtopicQuery.hits as Array<Content>)
+    : subtopicQuery.hits
 
   return {
     body: {
@@ -25,16 +25,4 @@ exports.get = (req: XP.Request): XP.Response => {
     },
     contentType: 'application/json',
   }
-}
-
-interface Subtopics {
-  count: string
-  total: string
-  hits: Array<Subtopic>
-}
-
-interface Subtopic {
-  id: string
-  displayName: string
-  description: string
 }

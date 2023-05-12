@@ -21,7 +21,9 @@ export function preview(req: XP.Request): RenderResponse {
 }
 
 function renderPart(req: XP.Request): RenderResponse {
-  const component: Component<NameSearchPartConfig> = getComponent()
+  const component = getComponent<NameSearchPartConfig>()
+  if (!component) throw Error('No part found')
+
   const locale: string = getLanguageShortName(getContent())
   // const isNotInEditMode: boolean = req.mode !== 'edit'
 

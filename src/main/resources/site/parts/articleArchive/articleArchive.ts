@@ -1,5 +1,5 @@
 import { render, type RenderResponse } from '/lib/enonic/react4xp'
-import { query, type Content, type QueryResponse } from '/lib/xp/content'
+import { query, type Content } from '/lib/xp/content'
 import { getContent, imageUrl, pageUrl, processHtml, serviceUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 import { formatDate } from '/lib/ssb/utils/dateUtils'
@@ -21,7 +21,9 @@ export function preview(req: XP.Request): RenderResponse {
 }
 
 function renderPart(req: XP.Request): RenderResponse {
-  const page: Content<ArticleArchive> = getContent()
+  const page = getContent<Content<ArticleArchive>>()
+  if (!page) throw Error('No page found')
+
   const language: string = page.language === 'en' || page.language === 'nn' ? page.language : 'nb'
   const listOfArticlesTitle: string = localize({
     key: 'articleAnalysisPublications',
@@ -102,7 +104,7 @@ export function parseArticleData(pageId: string, start: number, count: number, l
     locale: language,
   })
 
-  const articles: QueryResponse<Article, object> = query({
+  const articles = query<Content<Article>>({
     start,
     count,
     sort: 'publish.from DESC',

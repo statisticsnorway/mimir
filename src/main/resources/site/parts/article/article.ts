@@ -21,7 +21,9 @@ export function get(req: XP.Request): RenderResponse | XP.Response {
 }
 
 function renderPart(req: XP.Request): RenderResponse {
-  const page: Content<Article> = getContent()
+  const page = getContent<Content<Article>>()
+  if (!page) throw Error('No page found')
+
   const language: string = page.language === 'en' || page.language === 'nn' ? page.language : 'nb'
   const phrases: object = getPhrases(page)
 

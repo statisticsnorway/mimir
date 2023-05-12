@@ -1,9 +1,8 @@
 import { get as getContentByKey, type Content } from '/lib/xp/content'
-import { type ResourceKey, render } from '/lib/thymeleaf'
+import { render } from '/lib/thymeleaf'
 import { render as r4XpRender, type RenderResponse } from '/lib/enonic/react4xp'
 import type { ActiveStatistics as ActiveStatisticsPartConfig } from '.'
 import type { Statistics } from '/site/content-types'
-import { SEO } from '/services/news/news'
 import { getContent, getComponent, pageUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 
@@ -12,7 +11,7 @@ const {
 } = __non_webpack_require__('/lib/util')
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
-const view: ResourceKey = resolve('./activeStatistics.html')
+const view = resolve('./activeStatistics.html')
 
 export function get(req: XP.Request): RenderResponse | XP.Response {
   try {
@@ -27,8 +26,10 @@ export function preview(req: XP.Request): RenderResponse {
 }
 
 function renderPart(req: XP.Request): RenderResponse {
-  const page: Content = getContent()
-  const partConfig: ActiveStatisticsPartConfig = getComponent().config
+  const page = getContent()
+  if (!page) throw Error('No page found')
+
+  const partConfig: ActiveStatisticsPartConfig = getComponent()?.config as ActiveStatisticsPartConfig
   const activeStatistics: ActiveStatisticsPartConfig['relatedStatisticsOptions'] = partConfig.relatedStatisticsOptions
     ? forceArray(partConfig.relatedStatisticsOptions)
     : []
@@ -97,16 +98,15 @@ function parseContent(
       .map((statistics) => {
         if (statistics._selected === 'xp' && statistics.xp.contentId) {
           const statisticsContentId: string = statistics.xp.contentId
-          const activeStatisticsContent: Content<Statistics, SEO> | null = getContentByKey({
+          const activeStatisticsContent: Content<Statistics> | null = getContentByKey({
             key: statisticsContentId,
           })
 
-          const preamble: string = activeStatisticsContent?.x['com-enonic-app-metafields']['meta-data']
-            .seoDescription as string
+          const preamble = activeStatisticsContent?.x['com-enonic-app-metafields']?.['meta-data']?.seoDescription
 
           return {
             title: activeStatisticsContent ? activeStatisticsContent.displayName : '',
-            preamble: preamble ? preamble : '',
+            preamble: preamble ?? '',
             href: pageUrl({
               id: statisticsContentId,
             }),

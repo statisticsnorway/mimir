@@ -17,7 +17,9 @@ const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
 
 export function get(req: XP.Request): RenderResponse | XP.Response {
   try {
-    const config: KeyFigurePartConfig = getComponent().config
+    const config = getComponent()?.config as KeyFigurePartConfig
+    if (!config) throw Error('No part found')
+
     const keyFigureIds: Array<string> | [] = config.figure ? forceArray(config.figure) : []
     const municipality: MunicipalityWithCounty | undefined = getMunicipality(req)
     return renderPart(req, municipality, keyFigureIds)
@@ -28,7 +30,9 @@ export function get(req: XP.Request): RenderResponse | XP.Response {
 
 export function preview(req: XP.Request, id: string): RenderResponse | XP.Response {
   try {
-    const siteConfig: XP.SiteConfig = getSiteConfig()
+    const siteConfig = getSiteConfig<XP.SiteConfig>()
+    if (!siteConfig) throw Error('No site config found')
+
     const defaultMunicipality: XP.SiteConfig['defaultMunicipality'] = siteConfig.defaultMunicipality
     const municipality: MunicipalityWithCounty | undefined = getMunicipality({
       code: defaultMunicipality,
@@ -44,8 +48,12 @@ function renderPart(
   municipality: MunicipalityWithCounty | undefined,
   keyFigureIds: Array<string>
 ): RenderResponse | XP.Response {
-  const page: Content = getContent()
-  const config: KeyFigurePartConfig = getComponent() && getComponent().config
+  const page = getContent()
+  if (!page) throw Error('No page found')
+
+  const config = getComponent()?.config as KeyFigurePartConfig
+  if (!config) throw Error('No part found')
+
   const showPreviewDraft: boolean = hasWritePermissionsAndPreview(req, page._id)
 
   // get all keyFigures and filter out non-existing keyFigures

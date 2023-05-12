@@ -13,7 +13,9 @@ export function get(req: XP.Request): RenderResponse {
 }
 
 function renderPart(req: XP.Request): RenderResponse {
-  const page: Content<Project> = getContent()
+  const page = getContent<Content<Project>>()
+  if (!page) throw Error('No page found')
+
   const managerConfig: string | undefined = page.data.manager || undefined
   const language: string = page.language ? page.language : 'nb'
 

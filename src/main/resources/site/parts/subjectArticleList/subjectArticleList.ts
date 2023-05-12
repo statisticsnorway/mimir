@@ -1,5 +1,5 @@
 import { render, type RenderResponse } from '/lib/enonic/react4xp'
-import type { Content, QueryResponse } from '/lib/xp/content'
+import type { Content, ContentsResult } from '/lib/xp/content'
 import type { PreparedArticles } from '/lib/ssb/utils/articleUtils'
 import type { Article } from '/site/content-types'
 import { getContent, serviceUrl } from '/lib/xp/portal'
@@ -17,7 +17,9 @@ export function preview(req: XP.Request): RenderResponse {
 }
 
 function renderPart(req: XP.Request): RenderResponse {
-  const content: Content = getContent()
+  const content = getContent()
+  if (!content) throw Error('No page found')
+
   const subTopicId: string = content._id
   const sort: string = req.params.sort ? req.params.sort : 'DESC'
   const language: string = content.language ? content.language : 'nb'
@@ -28,7 +30,7 @@ function renderPart(req: XP.Request): RenderResponse {
   const start = 0
   const count: number = showAllArticles ? 100 : 10
 
-  const childArticles: QueryResponse<Article, object> = getChildArticles(currentPath, subTopicId, start, count, sort)
+  const childArticles: ContentsResult<Content<Article>> = getChildArticles(currentPath, subTopicId, start, count, sort)
   const preparedArticles: Array<PreparedArticles> = prepareArticles(childArticles, language)
   const totalArticles: number = childArticles.total
 

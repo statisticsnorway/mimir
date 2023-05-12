@@ -12,12 +12,12 @@ const { xmlEscape } = __non_webpack_require__('/lib/text-encoding')
 function get(): XP.Response {
   const rssNewsEnabled: boolean = isEnabled('rss-news', true, 'ssb')
   const rssStatisticsEnabled: boolean = isEnabled('rss-news-statistics', false, 'ssb')
-  const mainSubjects: Array<Content<Page, DefaultPageConfig>> = rssNewsEnabled
+  const mainSubjects: Array<Content<Page & DefaultPageConfig>> = rssNewsEnabled
     ? (query({
         start: 0,
         count: 100,
         query: 'components.page.config.mimir.default.subjectType LIKE "mainSubject"',
-      }).hits as unknown as Array<Content<Page, DefaultPageConfig>>)
+      }).hits as unknown as Array<Content<Page & DefaultPageConfig>>)
     : []
 
   const news: Array<News> = rssNewsEnabled ? getNews(mainSubjects) : []
@@ -47,7 +47,7 @@ function get(): XP.Response {
 }
 exports.get = get
 
-function getNews(mainSubjects: Array<Content<Page, DefaultPageConfig>>): Array<News> {
+function getNews(mainSubjects: Array<Content<Page & DefaultPageConfig>>): Array<News> {
   const from: string = subDays(new Date(), 1).toISOString()
   const to: string = new Date().toISOString()
   const baseUrl: string = app.config?.['ssb.baseUrl'] || ''
@@ -59,12 +59,12 @@ function getNews(mainSubjects: Array<Content<Page, DefaultPageConfig>>): Array<N
 
   const news: Array<News> = []
   mainSubjects.forEach((mainSubject) => {
-    const articles: Array<Content<Article, SEO>> = query({
+    const articles: Array<Content<Article>> = query({
       start: 0,
       count: 1000,
       contentTypes: [`${app.name}:article`],
       query: `_path LIKE "/content${mainSubject._path}/*" AND range("publish.from", instant("${from}"), instant("${to}"))`,
-    }).hits as unknown as Array<Content<Article, SEO>>
+    }).hits as unknown as Array<Content<Article>>
     articles.forEach((article) => {
       const pubDate: string | undefined = article.publish?.from
         ? formatPubDateArticle(article.publish.from, serverOffsetInMinutes, timeZoneIso)
@@ -78,7 +78,8 @@ function getNews(mainSubjects: Array<Content<Page, DefaultPageConfig>>): Array<N
             pageUrl({
               id: article._id,
             }),
-          description: article.data.ingress || article.x['com-enonic-app-metafields']['meta-data'].seoDescription || '',
+          description:
+            article.data.ingress || article.x['com-enonic-app-metafields']?.['meta-data']?.seoDescription || '',
           category: mainSubject.displayName,
           subject: mainSubject._name,
           language: article.language === 'en' ? 'en' : 'no',
@@ -92,19 +93,19 @@ function getNews(mainSubjects: Array<Content<Page, DefaultPageConfig>>): Array<N
   return news
 }
 
-function getStatisticsNews(mainSubjects: Array<Content<Page, DefaultPageConfig>>): Array<News> {
+function getStatisticsNews(mainSubjects: Array<Content<Page & DefaultPageConfig>>): Array<News> {
   const statregStatistics: Array<StatisticInListing> = fetchStatisticsWithReleaseToday()
 
   const statisticsNews: Array<News> = []
   if (statregStatistics.length > 0) {
     mainSubjects.forEach((mainSubject) => {
-      const statistics: Array<Content<Statistics & Statistic, SEO>> = query({
+      const statistics: Array<Content<Statistics & Statistic>> = query({
         start: 0,
         count: 100,
         query: `_path LIKE "/content${mainSubject._path}/*" AND data.statistic IN(${statregStatistics
           .map((s) => `"${s.id}"`)
           .join(',')})`,
-      }).hits as unknown as Array<Content<Statistics & Statistic, SEO>>
+      }).hits as unknown as Array<Content<Statistics & Statistic>>
 
       const baseUrl: string = app.config?.['ssb.baseUrl'] || ''
       const serverOffsetInMS: number = parseInt(app.config?.['serverOffsetInMs']) || 0
@@ -139,7 +140,7 @@ function getStatisticsNews(mainSubjects: Array<Content<Page, DefaultPageConfig>>
               pageUrl({
                 id: statistic._id,
               }),
-            description: statistic.x['com-enonic-app-metafields']['meta-data'].seoDescription || '',
+            description: statistic.x['com-enonic-app-metafields']?.['meta-data']?.seoDescription || '',
             category: mainSubject.displayName,
             subject: mainSubject._name,
             language: statistic.language === 'en' ? 'en' : 'no',
@@ -173,17 +174,6 @@ function testPubDates() {
   const StatistikkDate = formatPubDateStatistic('2023-03-20 08:00:00.0', timeZoneIso)
 
   log.info(`RSS-news - Artikkel: ${ArtikkelDate} statistikk: ${StatistikkDate}`)
-}
-
-export interface SEO {
-  seoDescription: string
-  seoImage: string
-  'com-enonic-app-metafields': {
-    'meta-data': {
-      seoImage: string
-      seoDescription: string
-    }
-  }
 }
 
 interface News {

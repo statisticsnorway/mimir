@@ -19,7 +19,9 @@ const { ensureArray } = __non_webpack_require__('/lib/ssb/utils/arrayUtils')
 const { fromPartCache } = __non_webpack_require__('/lib/ssb/cache/partCache')
 
 export function get(req: XP.Request): RenderResponse {
-  const content: Content = getContent()
+  const content = getContent()
+  if (!content) throw Error('No page found')
+
   if (req.mode === 'edit' || req.mode === 'inline') {
     return getStatbankSubjectTree(req, content)
   } else {

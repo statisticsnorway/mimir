@@ -18,7 +18,9 @@ const {
 
 export function get(req: XP.Request): XP.Response | RenderResponse {
   try {
-    const statisticPage: Content<Statistics> = getContent()
+    const statisticPage = getContent<Content<Statistics>>()
+    if (!statisticPage) throw Error('No page found')
+
     return renderPart(req, statisticPage.data.aboutTheStatistics)
   } catch (e) {
     return renderError(req, 'Error in part', e)
@@ -30,7 +32,9 @@ export function preview(req: XP.Request, id: string | undefined): XP.Response | 
 }
 
 function renderPart(req: XP.Request, aboutTheStatisticsId: string | undefined): XP.Response | RenderResponse {
-  const page: Content = getContent()
+  const page = getContent()
+  if (!page) throw Error('No page found')
+
   if (!aboutTheStatisticsId) {
     if (req.mode === 'edit' && page.type !== `${app.name}:statistics`) {
       return render(
@@ -70,7 +74,9 @@ function getOmStatistikken(
   const phrases: Phrases = getPhrases(page) as Phrases
   const language: string = page.language === 'en' || page.language === 'nn' ? page.language : 'nb'
   let nextRelease: string = phrases.notYetDetermined
-  const statisticPage: Content<Statistics> = getContent()
+  const statisticPage = getContent<Content<Statistics>>()
+  if (!statisticPage) throw Error('No page found')
+
   const statisticId: string | undefined = statisticPage.data.statistic
 
   const aboutTheStatisticsContent: Content<OmStatistikken> | null = aboutTheStatisticsId

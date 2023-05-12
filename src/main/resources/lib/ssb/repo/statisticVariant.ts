@@ -1,15 +1,14 @@
 import { create as createRepo, get as getRepo } from '/lib/xp/repo'
-import { connect, type NodeCreateParams, type NodeQueryResponse, type RepoConnection } from '/lib/xp/node'
+import { connect, CreateNodeParams, type RepoConnection } from '/lib/xp/node'
 import { type Instant, instant, type LocalDateTime, localDateTime } from '/lib/xp/value'
 import { run } from '/lib/xp/context'
 import { getAllStatisticsFromRepo } from '/lib/ssb/statreg/statistics'
 import { contentArrayToRecord, forceArray } from '/lib/ssb/utils/arrayUtils'
 import { notEmptyOrUndefined, notNullOrUndefined } from '/lib/ssb/utils/coreUtils'
 import type { ReleasesInListing, StatisticInListing, VariantInListing } from '/lib/ssb/dashboard/statreg/types'
-import type { QueryDSL } from '/lib/xp/content'
-import { type Content, query, type QueryResponse } from '/lib/xp/content'
+import type { QueryDsl } from '/lib/xp/content'
+import { type Content, query } from '/lib/xp/content'
 import type { OmStatistikken, Statistics } from '/site/content-types'
-import type { XData } from '/site/x-data'
 import { capitalize } from '/lib/ssb/utils/stringUtils'
 import { calculatePeriod, getNextRelease, getPreviousRelease, nextReleasedPassed } from '/lib/ssb/utils/variantUtils'
 import type { SubjectItem } from '/lib/ssb/utils/subjectUtils'
@@ -48,14 +47,14 @@ export function getRepoConnectionStatistics(): RepoConnection {
 
 export function getStatisticVariantsFromRepo(
   language: string,
-  query?: QueryDSL,
+  query?: QueryDsl,
   count?: number
 ): ContentLight<Release>[] {
   const connectionStatisticRepo: RepoConnection = getRepoConnectionStatistics()
-  const res: NodeQueryResponse = connectionStatisticRepo.query({
+  const res = connectionStatisticRepo.query({
     count: count ? count : 1000,
     sort: 'publish.from DESC',
-    query: query ? (query as unknown as string) : undefined,
+    query: query || undefined,
     filters: {
       boolean: {
         must: [
@@ -76,7 +75,7 @@ export function getStatisticVariantsFromRepo(
     },
   })
 
-  return res.hits.map((hit) => connectionStatisticRepo.get(hit.id))
+  return res.hits.map((hit) => connectionStatisticRepo.get(hit.id) as ContentLight<Release>)
 }
 
 export function fillRepo(statistics: Array<StatisticInListing>) {
@@ -113,26 +112,25 @@ export function fillRepo(statistics: Array<StatisticInListing>) {
       subjectType: 'subSubject',
     })
 
-    const statisticsResponse: QueryResponse<Statistics, XData> = getStatisticsContentByRegStatId(
+    const statisticsResponse = getStatisticsContentByRegStatId(
       statistics.map((stat) => String(stat.id)),
       language
     )
-    const statisticsRecord: Record<string, Content<Statistics, XData>> = contentArrayToRecord(
+    const statisticsRecord: Record<string, Content<Statistics>> = contentArrayToRecord(
       statisticsResponse.hits,
       (c) => c.data.statistic!
     )
     const aboutTheStatisticsKeys: Array<string> = statisticsResponse.hits
       .map((stat) => stat.data.aboutTheStatistics)
       .filter(notNullOrUndefined)
-    const aboutTheStatistics: Record<string, Content<OmStatistikken, XData>> = getByIds<OmStatistikken>(
+    const aboutTheStatistics: Record<string, Content<OmStatistikken>> = getByIds<OmStatistikken>(
       aboutTheStatisticsKeys,
       language
     )
 
     statistics.forEach((statistic) => {
-      const statisticsContent: Content<Statistics, XData> | undefined = statisticsRecord[String(statistic.id)]
-      const aboutTheStatisticsContent: Content<OmStatistikken, XData> | undefined = statisticsContent?.data
-        .aboutTheStatistics
+      const statisticsContent: Content<Statistics> | undefined = statisticsRecord[String(statistic.id)]
+      const aboutTheStatisticsContent: Content<OmStatistikken> | undefined = statisticsContent?.data.aboutTheStatistics
         ? aboutTheStatistics[statisticsContent?.data.aboutTheStatistics]
         : undefined
 
@@ -145,7 +143,7 @@ export function fillRepo(statistics: Array<StatisticInListing>) {
 
       forceArray(statistic.variants).forEach((variant) => {
         const path = `/${statistic.shortName}-${variant.id}-${language}`
-        const exists: Array<string> = connection.exists(path)
+        const exists = connection.exists(path)
         const nextReleasePassed: boolean = nextReleasedPassed(variant)
         const prevRelease: ReleasesInListing = getPreviousRelease(nextReleasePassed, variant)
         const nextRelease: ReleasesInListing | undefined = getNextRelease(nextReleasePassed, variant)
@@ -186,8 +184,8 @@ export function fillRepo(statistics: Array<StatisticInListing>) {
   })
 }
 
-function getStatisticsContentByRegStatId(statisticsIds: string[], language: string): QueryResponse<Statistics, XData> {
-  return query<Statistics, XData>({
+function getStatisticsContentByRegStatId(statisticsIds: string[], language: string) {
+  return query<Content<Statistics>>({
     count: statisticsIds.length,
     contentTypes: [`${app.name}:statistics`],
     filters: {
@@ -213,7 +211,7 @@ function getStatisticsContentByRegStatId(statisticsIds: string[], language: stri
 
 function createContentStatisticVariant(
   params: CreateContentStatisticVariantParams
-): ContentLight<Release> & NodeCreateParams {
+): ContentLight<Release> & CreateNodeParams {
   const { statistic, variant, prevRelease, language } = params
   const serverOffsetInMs: number =
     app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
@@ -279,12 +277,9 @@ function prepareData({
   }
 }
 
-function getByIds<Data extends object>(
-  ids: Array<string>,
-  language: 'en' | 'nb'
-): Record<string, Content<Data, XData>> {
+function getByIds<Data extends object>(ids: Array<string>, language: 'en' | 'nb'): Record<string, Content<Data>> {
   return contentArrayToRecord(
-    query<Data, XData>({
+    query<Content<Data>>({
       count: ids.length,
       filters: {
         ids: {
@@ -337,8 +332,8 @@ interface CreateContentStatisticVariantParams {
   prevRelease: ReleasesInListing
   nextRelease: ReleasesInListing | undefined
   language: 'nb' | 'en'
-  statisticsContent?: Content<Statistics, XData>
-  aboutTheStatisticsContent?: Content<OmStatistikken, XData>
+  statisticsContent?: Content<Statistics>
+  aboutTheStatisticsContent?: Content<OmStatistikken>
   allMainSubjectsStatistic: SubjectItem[]
   allSubSubjectsStatistic: SubjectItem[]
 }

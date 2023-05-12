@@ -1,5 +1,5 @@
 import type { Article } from '/site/content-types'
-import { pageUrl, getContent, getComponent, type Component } from '/lib/xp/portal'
+import { pageUrl, getContent, getComponent } from '/lib/xp/portal'
 import type { ArticleList as ArticleListPartConfig } from '.'
 import { render, type RenderResponse } from '/lib/enonic/react4xp'
 import { query, type Content } from '/lib/xp/content'
@@ -25,7 +25,9 @@ export function preview(req: XP.Request): RenderResponse {
 }
 
 function renderPart(req: XP.Request): RenderResponse {
-  const content: Content = getContent()
+  const content = getContent()
+  if (!content) throw Error('No page found')
+
   const articleListCacheDisabled: boolean = isEnabled('deactivate-part-cache-article-list', true, 'ssb')
   if (req.mode === 'edit' || req.mode === 'inline' || articleListCacheDisabled) {
     return getArticleList(req, content)
@@ -35,7 +37,9 @@ function renderPart(req: XP.Request): RenderResponse {
 }
 
 function getArticleList(req: XP.Request, content: Content): RenderResponse {
-  const component: Component<ArticleListPartConfig> = getComponent()
+  const component = getComponent<ArticleListPartConfig>()
+  if (!component) throw Error('No component found')
+
   const language: string = content.language ? content.language : 'nb'
   const articles: Array<Content<Article>> = getArticles(req, language)
   const preparedArticles: Array<PreparedArticles> = prepareArticles(articles, language)

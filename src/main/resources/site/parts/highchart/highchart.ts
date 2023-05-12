@@ -1,7 +1,7 @@
 /* eslint-disable new-cap */
 // @ts-ignore
 import JSONstat from 'jsonstat-toolkit/import.mjs'
-import { getComponent, getContent, type Component } from '/lib/xp/portal'
+import { getComponent, getContent } from '/lib/xp/portal'
 import type { Highchart as HighchartPartConfig } from '.'
 import { get as getContentByKey, type Content } from '/lib/xp/content'
 import type { Highchart } from '/site/content-types'
@@ -9,7 +9,7 @@ import type { DatasetRepoNode } from '/lib/ssb/repo/dataset'
 import { JSONstat as JSONstatType } from '/lib/types/jsonstat-toolkit'
 import type { TbmlDataUniform } from '/lib/types/xmlParser'
 import type { HighchartsGraphConfig } from '/lib/types/highcharts'
-import { type ResourceKey, render } from '/lib/thymeleaf'
+import { render } from '/lib/thymeleaf'
 import type { DataSource } from '/site/mixins/dataSource'
 import { render as r4XpRender, type RenderResponse } from '/lib/enonic/react4xp'
 import { GA_TRACKING_ID } from '/site/pages/default/default'
@@ -28,14 +28,16 @@ const { createHighchartObject } = __non_webpack_require__('/lib/ssb/parts/highch
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 const { datasetOrUndefined } = __non_webpack_require__('/lib/ssb/cache/cache')
 const { hasWritePermissionsAndPreview } = __non_webpack_require__('/lib/ssb/parts/permissions')
-const view: ResourceKey = resolve('./highchart.html')
+const view = resolve('./highchart.html')
 const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
 const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
 const { getTbprocessorKey } = __non_webpack_require__('/lib/ssb/dataset/tbprocessor/tbprocessor')
 
 export function get(req: XP.Request): XP.Response | RenderResponse {
   try {
-    const part: Component<HighchartPartConfig> = getComponent()
+    const part = getComponent<HighchartPartConfig>()
+    if (!part) throw Error('No part found')
+
     const highchartIds: Array<string> = part.config.highchart ? forceArray(part.config.highchart) : []
     return renderPart(req, highchartIds)
   } catch (e) {
@@ -52,7 +54,9 @@ export function preview(req: XP.Request, id: string): XP.Response | RenderRespon
 }
 
 function renderPart(req: XP.Request, highchartIds: Array<string>): XP.Response | RenderResponse {
-  const page: Content = getContent()
+  const page = getContent()
+  if (!page) throw Error('No page found')
+
   const language: string = page.language ? page.language : 'nb'
 
   //  Must be set to nb instead of no for localization

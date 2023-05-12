@@ -1,7 +1,6 @@
 import type { Content } from '/lib/xp/content'
 import { render as r4XpRender, type RenderResponse } from '/lib/enonic/react4xp'
-import { type ResourceKey, render } from '/lib/thymeleaf'
-import type { Component } from '/lib/xp/portal'
+import { render } from '/lib/thymeleaf'
 import type { MunicipalityWithCounty } from '/lib/ssb/dataset/klass/municipalities'
 import type { MenuDropdown as MenuDropdownPartConfig } from '.'
 import type { MenuDropdown } from '/site/content-types'
@@ -15,7 +14,7 @@ const { municipalsWithCounties, getMunicipality, removeCountyFromMunicipalityNam
 )
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
-const view: ResourceKey = resolve('./menuDropdown.html')
+const view = resolve('./menuDropdown.html')
 
 export function get(req: XP.Request): XP.Response | RenderResponse {
   try {
@@ -32,8 +31,12 @@ export function preview(req: XP.Request) {
 function renderPart(req: XP.Request): XP.Response | RenderResponse {
   const parsedMunicipalities: Array<MunicipalityWithCounty> = municipalsWithCounties()
   const municipality: MunicipalityWithCounty | undefined = getMunicipality(req)
-  const component: Component<MenuDropdownPartConfig> = getComponent()
-  const siteConfig: XP.SiteConfig = getSiteConfig()
+  const component = getComponent<MenuDropdownPartConfig>()
+  if (!component) throw Error('No part found')
+
+  const siteConfig = getSiteConfig<XP.SiteConfig>()
+  if (!siteConfig) throw Error('No site config found')
+
   let mapFolder = '/mapdata'
 
   if (typeof siteConfig.kommunefakta !== 'undefined' && siteConfig.kommunefakta.mapfolder) {
@@ -48,7 +51,9 @@ function renderPart(req: XP.Request): XP.Response | RenderResponse {
     service: 'municipality',
   })
 
-  const page: Content<MenuDropdown> = getContent()
+  const page = getContent<Content<MenuDropdown>>()
+  if (!page) throw Error('No page found')
+
   const baseUrl: string = component.config.basePage
     ? pageUrl({
         id: component.config.basePage,

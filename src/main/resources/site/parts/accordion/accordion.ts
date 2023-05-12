@@ -12,7 +12,9 @@ const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
 export function get(req: XP.Request): RenderResponse | XP.Response {
   try {
-    const config: AccordionConfig = getComponent().config
+    const config: AccordionConfig | undefined = getComponent<AccordionConfig>()?.config
+    if (!config) throw Error('No config found')
+
     const accordionIds: Array<string> = config ? forceArray(config.accordion) : []
     return renderPart(req, accordionIds)
   } catch (e) {
@@ -22,7 +24,9 @@ export function get(req: XP.Request): RenderResponse | XP.Response {
 
 export function preview(req: XP.Request, accordionIds: Array<string> | string): RenderResponse | XP.Response {
   try {
-    const page: Content<Accordion> = getContent()
+    const page = getContent<Content<Accordion>>()
+    if (!page) throw Error('No page found')
+
     return page.type === `${app.name}:accordion`
       ? renderPart(req, [accordionIds as string])
       : renderPart(req, accordionIds as Array<string>)

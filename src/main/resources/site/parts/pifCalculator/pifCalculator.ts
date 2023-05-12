@@ -28,7 +28,9 @@ export function preview(req: XP.Request) {
 }
 
 function renderPart(req: XP.Request): XP.Response | RenderResponse {
-  const page: Content = getContent()
+  const page = getContent()
+  if (!page) throw Error('No page found')
+
   let pifCalculator: RenderResponse | undefined
   if (req.mode === 'edit' || req.mode === 'inline') {
     pifCalculator = getPifCalculatorComponent(req, page)
@@ -42,7 +44,9 @@ function renderPart(req: XP.Request): XP.Response | RenderResponse {
 }
 
 function getPifCalculatorComponent(req: XP.Request, page: Content): RenderResponse {
-  const partConfig: PifCalculatorPartConfig = getComponent().config
+  const partConfig = getComponent()?.config as PifCalculatorPartConfig
+  if (!partConfig) throw Error('No part config found')
+
   const language: Language = getLanguage(page)
   const phrases: Phrases = language.phrases as Phrases
   const months: MonthDropdownItems = allMonths(phrases)

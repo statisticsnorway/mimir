@@ -35,7 +35,9 @@ export function preview(req: XP.Request): XP.Response {
 }
 
 function renderPart(req: XP.Request): XP.Response {
-  const page: Content<Statistics> = getContent()
+  const page = getContent<Content<Statistics>>()
+  if (!page) throw Error('No page found')
+
   return getTablesAndFiguresComponent(page, req)
 }
 

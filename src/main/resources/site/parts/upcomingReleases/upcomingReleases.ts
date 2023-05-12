@@ -1,6 +1,5 @@
 import { render, type RenderResponse } from '/lib/enonic/react4xp'
 import { query, type Content } from '/lib/xp/content'
-import type { Component } from '/lib/xp/portal'
 import type { StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
 import type { GroupedBy, PreparedStatistics, YearReleases, Release } from '/lib/ssb/utils/variantUtils'
 import type { UpcomingReleases as UpcomingReleasesPartConfig } from '.'
@@ -25,8 +24,12 @@ export function preview(req: XP.Request): RenderResponse {
 }
 
 function renderPart(req: XP.Request): RenderResponse {
-  const content: Content = getContent()
-  const component: Component<UpcomingReleasesPartConfig> = getComponent()
+  const content = getContent()
+  if (!content) throw Error('No page found')
+
+  const component = getComponent<UpcomingReleasesPartConfig>()
+  if (!component) throw Error('No part found')
+
   const currentLanguage: string = content.language ? content.language : 'nb'
   const count: number = parseInt(component.config.numberOfDays)
   const buttonTitle: string = localize({
@@ -65,7 +68,7 @@ function renderPart(req: XP.Request): RenderResponse {
     return addMonthNames(groupedByYearMonthAndDay, currentLanguage)
   })
 
-  const contentReleases: Array<PreparedUpcomingRelease> = query<UpcomingRelease, object>({
+  const contentReleases: Array<PreparedUpcomingRelease> = query<Content<UpcomingRelease>>({
     start: 0,
     count: 500,
     query: `type = "${app.name}:upcomingRelease" AND language = "${currentLanguage}" AND data.date >= "${format(

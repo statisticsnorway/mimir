@@ -1,5 +1,13 @@
 import { getUser, User } from '/lib/xp/auth'
-import { connect, NodeCreateParams, NodeQueryParams, NodeQueryResponse, RepoConnection, RepoNode } from '/lib/xp/node'
+import {
+  connect,
+  RepoConnection,
+  type Node,
+  type CreateNodeParams,
+  type QueryNodeParams,
+  type FindNodesByParentResult,
+  type NodeQueryResult,
+} from '/lib/xp/node'
 import { EditorCallback } from '/lib/ssb/repo/eventLog'
 import { run } from '/lib/xp/context'
 import { PrincipalKeyRole } from '*/lib/xp/auth'
@@ -64,17 +72,13 @@ export function withConnection<T>(repository: string, branch: string, callback: 
   return callback(getConnection(repository, branch))
 }
 
-export function createNode<T>(repository: string, branch: string, content: T & NodeCreateParams): T & RepoNode {
+export function createNode<T>(repository: string, branch: string, content: T & CreateNodeParams): T & Node {
   return withConnection(repository, branch, (conn: RepoConnection) => {
     return conn.create(content)
   })
 }
 
-export function getNode<T>(
-  repository: string,
-  branch: string,
-  key: string | Array<string>
-): ReadonlyArray<T & RepoNode> | (T & RepoNode) | null {
+export function getNode(repository: string, branch: string, key: string | Array<string>) {
   return withConnection(repository, branch, (conn) => {
     return conn.get(key)
   })
@@ -95,14 +99,9 @@ export function modifyNode<T>(repository: string, branch: string, key: string, e
   })
 }
 
-export function getChildNodes(
-  repository: string,
-  branch: string,
-  key: string,
-  count = 10,
-  countOnly = false
-): NodeQueryResponse {
+export function getChildNodes(repository: string, branch: string, key: string, count = 10, countOnly = false) {
   return withConnection(repository, branch, (conn) => {
+    // @ts-ignore https://github.com/enonic/xp/issues/10138
     return conn.findChildren({
       parentKey: key,
       count,
@@ -117,7 +116,7 @@ export function nodeExists(repository: string, branch: string, key: string): boo
   })
 }
 
-export function queryNodes(repository: string, branch: string, params: NodeQueryParams): NodeQueryResponse {
+export function queryNodes(repository: string, branch: string, params: QueryNodeParams) {
   return withConnection(repository, branch, (conn) => {
     return conn.query(params)
   })
@@ -128,12 +127,12 @@ export interface RepoCommonLib {
   withSuperUserContext: <T>(repository: string, branch: string, callback: ContextCallback<T>) => T
   withLoggedInUserContext: <T>(branch: string, callback: UserContextCallback<T>) => T
   withConnection: <T>(repository: string, branch: string, callback: ConnectionCallback<T>) => T
-  createNode: <T>(repository: string, branch: string, content: T & NodeCreateParams) => T & RepoNode
-  getNode: <T>(
+  createNode: <T>(repository: string, branch: string, content: T & CreateNodeParams) => T & Node
+  getNode: (
     repository: string,
     branch: string,
     key: string | Array<string>
-  ) => ReadonlyArray<T & RepoNode> | (T & RepoNode) | null
+  ) => Node<Record<string, unknown>> | Node<Record<string, unknown>>[] | null
   deleteNode: (repository: string, branch: string, key: string) => boolean
   modifyNode: <T>(repository: string, branch: string, key: string, editor: EditorCallback<T>) => T
   getChildNodes: (
@@ -142,7 +141,7 @@ export interface RepoCommonLib {
     key: string,
     count?: number,
     countOnly?: boolean
-  ) => NodeQueryResponse
+  ) => FindNodesByParentResult
   nodeExists: (repository: string, branch: string, key: string) => boolean
-  queryNodes: (repository: string, branch: string, params: NodeQueryParams) => NodeQueryResponse
+  queryNodes: (repository: string, branch: string, params: QueryNodeParams) => NodeQueryResult
 }

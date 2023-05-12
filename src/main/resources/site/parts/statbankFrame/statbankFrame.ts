@@ -1,5 +1,4 @@
 import { render, type RenderResponse } from '/lib/enonic/react4xp'
-import type { Content } from '/lib/xp/content'
 import { getContent, getSiteConfig } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 
@@ -12,11 +11,14 @@ export function preview(req: XP.Request): RenderResponse {
 }
 
 function renderPart(req: XP.Request): RenderResponse {
-  const page: Content = getContent()
+  const page = getContent()
+  if (!page) throw Error('No page found')
 
   const pageLanguage: string = page.language ? page.language : 'nb'
 
-  const siteConfig: XP.SiteConfig = getSiteConfig()
+  const siteConfig = getSiteConfig<XP.SiteConfig>()
+  if (!siteConfig) throw Error('No site config found')
+
   const statbankHelpLink: string = siteConfig.statbankHelpLink
 
   const statbankHelpText: string = localize({

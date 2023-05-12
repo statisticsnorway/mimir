@@ -1,13 +1,12 @@
-import { query, Content, QueryResponse } from '/lib/xp/content'
+import { query, Content, ContentsResult } from '/lib/xp/content'
 import type { DataSource } from '/site/mixins/dataSource'
 import type { GenericDataImport } from '/site/content-types'
 import { DataSource as DataSourceType, DatasetRepoNode } from '/lib/ssb/repo/dataset'
 import { JSONstat } from '/lib/types/jsonstat-toolkit'
 import { StatbankSavedRaw, TbmlDataUniform } from '/lib/types/xmlParser'
-import { run, RunContext } from '/lib/xp/context'
+import { run, ContextParams } from '/lib/xp/context'
 import { getUser, User } from '/lib/xp/auth'
 import { TbprocessorParsedResponse } from '/lib/ssb/dataset/tbprocessor/tbml'
-import { ContextAttributes } from '*/lib/xp/context'
 
 const { Events } = __non_webpack_require__('/lib/ssb/repo/query')
 const { getStatbankApi, fetchStatbankApiData, getStatbankApiKey } = __non_webpack_require__(
@@ -85,7 +84,7 @@ function fetchData(
 }
 
 export function refreshDataset(
-  content: Content<DataSource, object | GenericDataImport>,
+  content: Content<DataSource | GenericDataImport>,
   branch: string = DATASET_BRANCH,
   processXml?: string
 ): CreateOrUpdateStatus {
@@ -179,7 +178,7 @@ export function refreshDatasetWithUserKey(
   userLogin: string,
   branch: string = DATASET_BRANCH
 ): CreateOrUpdateStatus {
-  const context: RunContext<ContextAttributes> = {
+  const context: ContextParams = {
     branch: 'master',
     repository: ENONIC_CMS_DEFAULT_REPO,
     principals: ['role:system.admin'],
@@ -205,7 +204,7 @@ export function getContentWithDataSource(): Array<Content<DataSource>> {
   let count = 100
   let hits: Array<Content<DataSource>> = []
   while (count === 100) {
-    const result: QueryResponse<DataSource, object> = query({
+    const result: ContentsResult<Content<DataSource>> = query({
       start,
       count,
       query: `data.dataSource._selected LIKE "*" AND data.dataSource._selected NOT LIKE "htmlTable"`,
