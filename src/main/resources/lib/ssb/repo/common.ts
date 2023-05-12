@@ -100,12 +100,14 @@ export function getChildNodes(
   branch: string,
   key: string,
   count = 10,
-  countOnly = false
+  countOnly = false,
+  childOrder = '_ts DESC'
 ): NodeQueryResponse {
   return withConnection(repository, branch, (conn) => {
     return conn.findChildren({
       parentKey: key,
       count,
+      childOrder,
       countOnly,
     })
   })
