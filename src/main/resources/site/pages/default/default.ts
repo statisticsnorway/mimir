@@ -58,8 +58,11 @@ const previewOverride: object = {
 }
 
 export const GA_TRACKING_ID: string | null = app.config && app.config.GA_TRACKING_ID ? app.config.GA_TRACKING_ID : null
-export const GTM_TRACKING_ID: string | null = app.config && app.config.GTM_TRACKING_ID ? app.config.GTM_TRACKING_ID : null
+export const GTM_TRACKING_ID: string | null =
+  app.config && app.config.GTM_TRACKING_ID ? app.config.GTM_TRACKING_ID : null
 export const GTM_AUTH: string | null = app.config && app.config.GTM_AUTH ? app.config.GTM_AUTH : null
+log.info(JSON.stringify(GTM_TRACKING_ID, null, 2))
+log.info(JSON.stringify(GTM_AUTH, null, 2))
 
 const view: ResourceKey = resolve('default.html')
 
