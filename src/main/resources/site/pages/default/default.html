@@ -2,19 +2,34 @@
 <head>
   <!-- UA GA tracking script with added GA4 gtag config -->
   <script defer data-th-if="${GA_TRACKING_ID}" data-th-src="|https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}|"></script>
+
   <script th:inline="javascript" data-th-if="${GA_TRACKING_ID}">
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-    gtag('config', /*[[${GA_TRACKING_ID}]]*/);
-    gtag('config', 'G-RWG24LNZ9T', { 'anonymize_ip': true });
+    gtag('config', [[${GA_TRACKING_ID}]], { 'anonymize_ip': true });
   </script>
+
+
+  <script>
+    window.dataLayer = window.dataLayer || [];
+  </script>
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl+ '&gtm_auth=aEbtoMi1nws_IeWNyMOMGA&gtm_preview=env-3&gtm_cookies_win=x';f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-NTM83KT');
+  </script>
+  <!-- End Google Tag Manager -->
+
+
   <script data-th-src="${jsLibsUrl}" defer="defer"></script>
   <script data-th-if="${enabledEnalyzerScript}"
-    type='text/javascript' 
-    id='enalyzer-embed' 
-    data-env='https://surveys.enalyzer.com' 
-    data-embedid='hmumar2q' 
+    type='text/javascript'
+    id='enalyzer-embed'
+    data-env='https://surveys.enalyzer.com'
+    data-embedid='hmumar2q'
     defer
     src='https://surveys.enalyzer.com/Scripts/websitecollector.js'>
   </script>
@@ -30,6 +45,12 @@
 
 </head>
 <body class="xp-page" data-th-classappend="${bodyClasses}">
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NTM83KT&gtm_auth=aEbtoMi1nws_IeWNyMOMGA&gtm_preview=env-3&gtm_cookies_win=x"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe>
+  </noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
   <!-- HEADER -->
   <div class="header-wrapper">
     <div class="container">
