@@ -88,14 +88,14 @@
         .ssb-number .description {
           display: initial
         }
-  
+
         .subtitle .url {
           display: initial;
         }
         .subtitle .description {
           display: none;
         }
-  
+
         .icon-wrapper {
           display: initial;
         }
@@ -103,7 +103,7 @@
         display: grid;
         grid-template-columns: auto 24px;
         grid-template-rows: auto auto;
-  
+
         .ssb-number {
           font-size: 20px;
           margin-bottom: 8px;
@@ -124,7 +124,7 @@
         }
       }
     }
-  } 
+  }
 
   @include media-breakpoint-down(lg) {
     padding: 40px 20px;
@@ -168,4 +168,10 @@
 .picture-card-links {
   margin-top: 60px;
   margin-bottom: 60px;
+
+  @include media-breakpoint-up(md) {
+    .picture-card-link-0 .image-background img {
+      width: 100%;
+    }
+  }
 }

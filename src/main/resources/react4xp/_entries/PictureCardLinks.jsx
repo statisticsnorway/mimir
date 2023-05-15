@@ -81,7 +81,9 @@ const PictureCardLinks = (props) => {
         return (
           <div
             key={`picture-card-link-${props.react4xpId}-${index}`}
-            className={getColSize(props.pictureCardLinks.length, index) + ' col-12 mb-4 mb-md-0'}
+            className={
+              getColSize(props.pictureCardLinks.length, index) + ' col-12 mb-4 mb-md-0 ' + `picture-card-link-${index}`
+            }
           >
             <PictureLink
               className='w-100'
