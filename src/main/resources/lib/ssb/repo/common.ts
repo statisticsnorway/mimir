@@ -99,12 +99,13 @@ export function modifyNode<T>(repository: string, branch: string, key: string, e
   })
 }
 
-export function getChildNodes(repository: string, branch: string, key: string, count = 10, countOnly = false) {
+export function getChildNodes(repository: string, branch: string, key: string, count = 10, countOnly = false, childOrder = '_ts DESC') {
   return withConnection(repository, branch, (conn) => {
     // @ts-ignore https://github.com/enonic/xp/issues/10138
     return conn.findChildren({
       parentKey: key,
       count,
+      childOrder,
       countOnly,
     })
   })

@@ -126,6 +126,7 @@ header.ssb-header-wrapper {
     line-height: normal;
     letter-spacing: normal;
     text-align: right;
+    color: inherit;
 
     @include media-breakpoint-down(lg) {
       display: block;
@@ -195,6 +196,10 @@ header.ssb-header-wrapper {
   .tabItem {
     flex-grow: 1;
     overflow: hidden;
+
+    button {
+      color: inherit;
+    }
 
     &.activeTab {
       .subMenu li a.ssb-link.with-icon {

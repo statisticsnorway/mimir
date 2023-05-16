@@ -49,5 +49,5 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         REV: ${{ github.event.inputs.commit_id }}
         MABL_BRANCH:  ${{ github.event.inputs.branch }}
-      run: mabl deployments create --api-key $MABL_API_KEY --application-id $MABL_APP_ID --environment-id $ENV_ID_TEST --mabl-branch ${MABL_BRANCH} --labels MIMIR --revision $REV --auto-branch --await-completion
+      run: mabl deployments create --api-key $MABL_API_KEY --application-id $MABL_APP_ID --environment-id $ENV_ID_TEST --labels MIMIR --revision $REV --await-completion
     

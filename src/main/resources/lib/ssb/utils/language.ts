@@ -23,10 +23,12 @@ exports.getLanguage = function (page: Content): Language | null {
   const siteConfig = getSiteConfig<XP.SiteConfig>()
   if (!siteConfig) return null
 
-  const currentLanguageConfig: Language = siteConfig.language.filter((language) => language.code === page.language)[0]
+  const pageLanguage = page.language || site.language || 'nb'
+
+  const currentLanguageConfig: Language = siteConfig.language.filter((language) => language.code === pageLanguage)[0]
 
   const alternativeLanguagesConfig: XP.SiteConfig['language'] = siteConfig.language.filter(
-    (language) => language.code !== page.language
+    (language) => language.code !== pageLanguage
   )
   const currentLangPath: string = currentLanguageConfig && currentLanguageConfig.link ? currentLanguageConfig.link : ''
   const pagePathAfterSiteName: string = page._path.replace(`${site._path}${currentLangPath}`, '')
@@ -65,16 +67,16 @@ exports.getLanguage = function (page: Content): Language | null {
     menuContentId: currentLanguageConfig ? currentLanguageConfig.menuContentId : norwegianConfig.menuContentId,
     headerId: currentLanguageConfig ? currentLanguageConfig.headerId : norwegianConfig.headerId,
     footerId: currentLanguageConfig ? currentLanguageConfig.footerId : norwegianConfig.footerId,
-    code: currentLanguageConfig ? currentLanguageConfig.code : page.language,
+    code: currentLanguageConfig ? currentLanguageConfig.code : pageLanguage,
     link: currentLanguageConfig ? (currentLanguageConfig.link ? currentLanguageConfig.link : '/') : '/',
     standardSymbolPage: currentLanguageConfig
       ? currentLanguageConfig.standardSymbolPage
       : norwegianConfig.standardSymbolPage,
     phrases: {
-      ...i18n.getPhrases(page.language === 'nb' ? '' : (page.language as string), ['site/i18n/phrases']),
+      ...i18n.getPhrases(pageLanguage === 'nb' ? '' : (pageLanguage as string), ['site/i18n/phrases']),
     },
     alternativeLanguages:
-      page.language === 'nb' || page.language === 'en'
+      pageLanguage === 'nb' || pageLanguage === 'en'
         ? alternativeLanguages
         : alternativeLanguages.filter((altLanguage) => altLanguage.code === 'en'),
   }
@@ -82,7 +84,7 @@ exports.getLanguage = function (page: Content): Language | null {
   return result
 }
 
-exports.getPhrases = (page: Content): Phrases | undefined => {
+exports.getPhrases = (page: Content, isSite?: boolean): Phrases | undefined => {
   if (page.language) {
     if (page.language === 'en') {
       return english
@@ -92,7 +94,12 @@ exports.getPhrases = (page: Content): Phrases | undefined => {
       return norwegian
     }
   }
-  return
+
+  if (!isSite) {
+    return exports.getPhrases(getSite(), true)
+  }
+
+  return norwegian
 }
 
 /**

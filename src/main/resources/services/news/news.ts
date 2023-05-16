@@ -54,9 +54,6 @@ function getNews(mainSubjects: Array<Content<Page & DefaultPageConfig>>): Array<
   const serverOffsetInMinutes: number = parseInt(app.config?.['serverOffsetInMs']) || 0
   const timeZoneIso: string = getTimeZoneIso(serverOffsetInMinutes)
 
-  //TODO: Fjerne når datoformat er verifisert i de forskjellige miljøene
-  testPubDates()
-
   const news: Array<News> = []
   mainSubjects.forEach((mainSubject) => {
     const articles: Array<Content<Article>> = query({
@@ -124,10 +121,8 @@ function getStatisticsNews(mainSubjects: Array<Content<Page & DefaultPageConfig>
             ? isSameDay(new Date(variant.nextRelease), new Date())
             : false
           if (previousReleaseSameDayNow) {
-            //TODO: Sjekke om det blir riktig tidspunkt i TEST før koden merges til master, skal være sånn 2023-02-22T08:00:00+01:00
             pubDate = variant.previousRelease ? formatPubDateStatistic(variant.previousRelease, timeZoneIso) : undefined
           } else if (nextReleaseSameDayNow) {
-            //TODO: Sjekke om det blir riktig tidspunkt i TEST før koden merges til master, skal være sånn 2023-02-22T08:00:00+01:00
             pubDate = variant.nextRelease ? formatPubDateStatistic(variant.nextRelease, timeZoneIso) : undefined
           }
         }

@@ -2,13 +2,10 @@ import PropTypes from 'prop-types'
 import { Accordion, NestedAccordion } from '@statisticsnorway/ssb-component-library'
 import React, { useContext } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import moment from 'moment/min/moment-with-locales'
 import { requestJobLogDetails } from '/react4xp/dashboard/containers/Statistics/actions'
 import { WebSocketContext } from '/react4xp/dashboard/utils/websocket/WebsocketProvider'
-import {
-  selectJobLog,
-  selectJobLogDetailsLoaded,
-} from '/react4xp/dashboard/containers/Statistics/selectors'
+import { selectJobLog, selectJobLogDetailsLoaded } from '/react4xp/dashboard/containers/Statistics/selectors'
+import { default as format } from 'date-fns/format'
 
 export function StatisticsLogJob(props) {
   const io = useContext(WebSocketContext)
@@ -30,7 +27,7 @@ export function StatisticsLogJob(props) {
   }
 
   function formatTime(time) {
-    return moment(time).locale('nb').format('DD.MM.YYYY HH.mm')
+    return time ? format(new Date(time), 'dd.MM.yyyy HH:mm') : ''
   }
 
   function renderAccordionBody() {

@@ -4,6 +4,8 @@ import { Content } from '/lib/xp/content'
 import type { Highchart } from '/site/content-types'
 import { RowValue } from '/lib/ssb/utils/utils'
 import { toString } from '/lib/vendor/ramda'
+// @ts-ignore
+import striptags from 'striptags'
 
 const {
   data: { forceArray },
@@ -12,9 +14,12 @@ const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 const { getRowValue } = __non_webpack_require__('/lib/ssb/utils/utils')
 
 export function seriesAndCategoriesFromHtmlTable(highChartsContent: Content<Highchart>): SeriesAndCategories {
-  const stringJson: string | undefined = highChartsContent.data.htmlTable
-    ? __.toNativeObject(xmlParser.parse(highChartsContent.data.htmlTable))
-    : undefined
+  let stringJson: string | undefined
+
+  if (highChartsContent.data.htmlTable) {
+    const sanitized = striptags(highChartsContent.data.htmlTable, ['table', 'thead', 'tbody', 'tr', 'th', 'td'])
+    stringJson = __.toNativeObject(xmlParser.parse(sanitized))
+  }
   const result: Table | undefined = stringJson ? JSON.parse(stringJson) : undefined
   const tbody: Array<TableRowUniform> = result ? forceArray(result.table.tbody) : []
   const rows: TableRowUniform['tr'] = tbody[0].tr
