@@ -5,6 +5,10 @@ on:
     branches:
       - 'MIMIR-1227_updates-and-manual-deploy'
 
+concurrency:
+  group: test
+  cancel-in-progress: true
+
 jobs:
   deploy_to_test:
     name: 'Deploy to Test'

@@ -4,6 +4,10 @@ on:
     branches:
       - 'master'
 
+concurrency:
+  group: qa
+  cancel-in-progress: true
+
 jobs:
   deploy_to_qa:
     name: 'Deploy to QA'
