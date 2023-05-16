@@ -5,7 +5,7 @@ on:
       - 'master'
 
 concurrency:
-  group: qa
+  group: mimir-qa
   cancel-in-progress: true
 
 jobs:

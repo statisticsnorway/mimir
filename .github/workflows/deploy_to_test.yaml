@@ -6,7 +6,7 @@ on:
       - 'MIMIR-1227_updates-and-manual-deploy'
 
 concurrency:
-  group: test
+  group: mimir-test
   cancel-in-progress: true
 
 jobs:
