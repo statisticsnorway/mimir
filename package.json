@@ -44,7 +44,7 @@
     "@types/ramda": "~0.28.0",
     "@types/react": "^17.0.52",
     "@types/uuid": "^9.0.0",
-    "@types/validator": "^13.7.15",
+    "@types/validator": "^13.7.17",
     "@types/zipcelx": "^1.5.0",
     "@typescript-eslint/eslint-plugin": "^5.59.5",
     "@typescript-eslint/parser": "^5.59.6",
