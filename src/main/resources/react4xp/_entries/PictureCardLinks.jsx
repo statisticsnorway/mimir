@@ -40,7 +40,10 @@ const PictureLink = (props) => {
       aria-describedby={props.ariaDescribedBy ? `${props.id}-${props.ariaDescribedBy}` : undefined}
     >
       <div className='image-background'>
-        <img src={props.imageSrc} alt={props.imageAlt} aria-hidden='true' height={400} loading='lazy' />
+        <picture>
+          <source srcSet={props.imageSrcSet} media='(min-width: 768px)' />
+          <img src={props.imageSrc} alt={props.imageAlt} aria-hidden='true' height={400} loading='lazy' />
+        </picture>
       </div>
       <div className='overlay w-100'>
         <span className='il-title'>{props.title}</span>
@@ -61,6 +64,7 @@ PictureLink.propTypes = {
   title: PropTypes.string,
   subTitle: PropTypes.string,
   href: PropTypes.string,
+  imageSrcSet: PropTypes.string,
   imageSrc: PropTypes.string,
   imageAlt: PropTypes.string,
   className: PropTypes.string,
@@ -88,6 +92,7 @@ const PictureCardLinks = (props) => {
               title={pictureCard.title}
               subTitle={pictureCard.subTitle}
               href={pictureCard.href}
+              imageSrcSet={pictureCard.imageSrcSet}
               imageSrc={pictureCard.imageSrc}
               imageAlt={pictureCard.imageAlt}
               id={index.toString()}
@@ -110,6 +115,7 @@ PictureCardLinks.propTypes = {
       title: PropTypes.string,
       subTitle: PropTypes.string,
       href: PropTypes.string,
+      imageSrcSet: PropTypes.string,
       imageSrc: PropTypes.string,
       imageAlt: PropTypes.string,
     })

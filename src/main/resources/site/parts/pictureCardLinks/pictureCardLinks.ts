@@ -35,19 +35,21 @@ function parsePictureCardLinks(
   pictureCardLinks: PictureCardLinksPartConfig['pictureCardLinks']
 ): Array<PictureCardLinksContent> {
   pictureCardLinks = Array.isArray(pictureCardLinks) ? pictureCardLinks : [pictureCardLinks]
-  return pictureCardLinks.reduce((acc, pictureCardLink) => {
+  return pictureCardLinks.reduce((acc, pictureCardLink, index) => {
     if (pictureCardLink) {
       const title: string = pictureCardLink.title
       const subTitle: string = pictureCardLink.subTitle
       const href: string = pictureCardLink.href
+
+      let imageSrcSet = ''
       let imageSrc = ''
       let imageAlt = ' '
+
+      // imageSrc - other sizes
       if (pictureCardLink.image) {
         imageSrc = imageUrl({
           id: pictureCardLink.image,
-          // scale: 'block(580, 420)',
-          // scale: 'width(580)',
-          scale: 'height(400)',
+          scale: index === 0 ? 'block(450, 400)' : 'block(450, 400)',
           format: 'jpg',
         })
         imageAlt = getImageAlt(pictureCardLink.image) || ''
@@ -58,10 +60,20 @@ function parsePictureCardLinks(
         })
       }
 
+      // imageSrcSet - desktop
+      if (pictureCardLink.image) {
+        imageSrcSet = imageUrl({
+          id: pictureCardLink.image,
+          scale: index === 0 ? 'block(580, 400)' : 'block(280, 400)',
+          format: 'jpg',
+        })
+      }
+
       const pictureCardLinksContent: PictureCardLinksContent = {
         title: title,
         subTitle: subTitle,
         href: href,
+        imageSrcSet: imageSrcSet,
         imageSrc: imageSrc,
         imageAlt: imageAlt,
       }
@@ -75,6 +87,7 @@ interface PictureCardLinksContent {
   title: string
   subTitle: string
   href: string
+  imageSrcSet: string
   imageSrc: string
   imageAlt: string
 }
