@@ -4,7 +4,8 @@ import { render, type RenderResponse } from '/lib/enonic/react4xp'
 import type { SEO } from '/services/news/news'
 import type { Article, ContentList } from '/site/content-types'
 import type { RelatedFactPage as RelatedFactPagePartConfig } from '.'
-import { imagePlaceholder, getComponent, getContent, imageUrl, pageUrl, serviceUrl } from '/lib/xp/portal'
+import { imagePlaceholder, getComponent, getContent, pageUrl, serviceUrl } from '/lib/xp/portal'
+import { imageUrl } from '/lib/ssb/utils/imageUtils'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
