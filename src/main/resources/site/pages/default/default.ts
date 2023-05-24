@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import { type Content, query } from '/lib/xp/content'
 import { render, type ResourceKey } from '/lib/thymeleaf'
 import type { ReleaseDatesVariant, StatisticInListing, VariantInListing } from '/lib/ssb/dashboard/statreg/types'
@@ -57,6 +58,9 @@ const previewOverride: object = {
 }
 
 export const GA_TRACKING_ID: string | null = app.config && app.config.GA_TRACKING_ID ? app.config.GA_TRACKING_ID : null
+export const GTM_TRACKING_ID: string | null =
+  app.config && app.config.GTM_TRACKING_ID ? app.config.GTM_TRACKING_ID : null
+export const GTM_AUTH: string | null = app.config && app.config.GTM_AUTH ? app.config.GTM_AUTH : null
 
 const view: ResourceKey = resolve('default.html')
 
@@ -213,6 +217,8 @@ exports.get = function (req: XP.Request): XP.Response {
     statbankWeb: statbankFane,
     ...statBankContent,
     GA_TRACKING_ID,
+    GTM_TRACKING_ID,
+    GTM_AUTH,
     headerBody: header ? header.body : undefined,
     footerBody: footer ? footer.body : undefined,
     ...metaInfo,
@@ -602,6 +608,8 @@ interface DefaultModel {
   language: Language
   statbankWeb: boolean
   GA_TRACKING_ID: string | null
+  GTM_TRACKING_ID: string | null
+  GTM_AUTH: string | null
   headerBody: string | undefined
   footerBody: string | undefined
   breadcrumbsReactId: string | undefined
