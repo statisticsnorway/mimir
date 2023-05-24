@@ -168,10 +168,4 @@
 .picture-card-links {
   margin-top: 60px;
   margin-bottom: 60px;
-
-  @include media-breakpoint-up(md) {
-    .picture-card-link-0 .image-background img {
-      width: 100%;
-    }
-  }
 }

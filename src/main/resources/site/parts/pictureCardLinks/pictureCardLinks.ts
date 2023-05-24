@@ -45,7 +45,9 @@ function parsePictureCardLinks(
       if (pictureCardLink.image) {
         imageSrc = imageUrl({
           id: pictureCardLink.image,
-          scale: 'block(580, 420)',
+          // scale: 'block(580, 420)',
+          // scale: 'width(580)',
+          scale: 'height(400)',
           format: 'jpg',
         })
         imageAlt = getImageAlt(pictureCardLink.image) || ''
