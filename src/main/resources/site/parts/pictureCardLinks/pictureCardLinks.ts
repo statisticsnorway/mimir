@@ -42,14 +42,17 @@ function parsePictureCardLinks(
       const href: string = pictureCardLink.href
 
       let imageSrcSet = ''
+      let imageSrcSet2 = ''
+      let imageSrcSet3 = ''
+      let imageSrcSet4 = ''
       let imageSrc = ''
       let imageAlt = ' '
 
-      // imageSrc - other sizes
+      // imageSrc - mobile
       if (pictureCardLink.image) {
         imageSrc = imageUrl({
           id: pictureCardLink.image,
-          scale: index === 0 ? 'block(450, 400)' : 'block(450, 400)',
+          scale: index === 0 ? 'block(300, 400)' : 'block(300, 400)',
           format: 'jpg',
         })
         imageAlt = getImageAlt(pictureCardLink.image) || ''
@@ -69,11 +72,41 @@ function parsePictureCardLinks(
         })
       }
 
+      // imageSrcSet2 - laptop
+      if (pictureCardLink.image) {
+        imageSrcSet2 = imageUrl({
+          id: pictureCardLink.image,
+          scale: index === 0 ? 'block(470, 400)' : 'block(225, 400)',
+          format: 'jpg',
+        })
+      }
+
+      // imageSrcSet3 - tablet
+      if (pictureCardLink.image) {
+        imageSrcSet3 = imageUrl({
+          id: pictureCardLink.image,
+          scale: index === 0 ? 'block(350, 400)' : 'block(165, 400)',
+          format: 'jpg',
+        })
+      }
+
+      // imageSrcSet4 - phone
+      if (pictureCardLink.image) {
+        imageSrcSet4 = imageUrl({
+          id: pictureCardLink.image,
+          scale: 'block(454, 400)',
+          format: 'jpg',
+        })
+      }
+
       const pictureCardLinksContent: PictureCardLinksContent = {
         title: title,
         subTitle: subTitle,
         href: href,
         imageSrcSet: imageSrcSet,
+        imageSrcSet2: imageSrcSet2,
+        imageSrcSet3: imageSrcSet3,
+        imageSrcSet4: imageSrcSet4,
         imageSrc: imageSrc,
         imageAlt: imageAlt,
       }
@@ -88,6 +121,9 @@ interface PictureCardLinksContent {
   subTitle: string
   href: string
   imageSrcSet: string
+  imageSrcSet2: string
+  imageSrcSet3: string
+  imageSrcSet4: string
   imageSrc: string
   imageAlt: string
 }
