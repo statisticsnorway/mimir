@@ -2,8 +2,9 @@ import { type Content, get as getContentByKey } from '/lib/xp/content'
 import type { Employee, Page } from '/site/content-types'
 import type { Default as DefaultPageConfig } from '/site/pages/default'
 import { localize } from '/lib/xp/i18n'
-import { getContent, pageUrl, imageUrl, attachmentUrl } from '/lib/xp/portal'
+import { getContent, pageUrl, attachmentUrl } from '/lib/xp/portal'
 import { render, RenderResponse } from '/lib/enonic/react4xp'
+import { imageUrl } from '/lib/ssb/utils/imageUtils'
 import { SEO } from '/services/news/news'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
