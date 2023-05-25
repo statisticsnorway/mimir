@@ -41,11 +41,17 @@ const PictureLink = (props) => {
     >
       <div className='image-background'>
         <picture>
-          <source srcSet={props.imageSrcSet} media='(min-width: 1260px)' />
-          <source srcSet={props.imageSrcSet2} media='(min-width: 992px) and (max-width: 1259px)' />
-          <source srcSet={props.imageSrcSet3} media='(min-width: 768px) and (max-width: 991px)' />
-          <source srcSet={props.imageSrcSet4} media='(min-width: 392px) and (max-width: 767px)' />
-          <img src={props.imageSrc} alt={props.imageAlt} aria-hidden='true' height={400} loading='lazy' />
+          <source srcSet={props.imageSources.imageSrcSet} media='(min-width: 1260px)' />
+          <source srcSet={props.imageSources.imageSrcSet2} media='(min-width: 992px) and (max-width: 1259px)' />
+          <source srcSet={props.imageSources.imageSrcSet3} media='(min-width: 768px) and (max-width: 991px)' />
+          <source srcSet={props.imageSources.imageSrcSet4} media='(min-width: 392px) and (max-width: 767px)' />
+          <img
+            src={props.imageSources.imageSrc}
+            alt={props.imageSources.imageAlt}
+            aria-hidden='true'
+            height={400}
+            loading='lazy'
+          />
         </picture>
       </div>
       <div className='overlay w-100'>
@@ -67,12 +73,7 @@ PictureLink.propTypes = {
   title: PropTypes.string,
   subTitle: PropTypes.string,
   href: PropTypes.string,
-  imageSrcSet: PropTypes.string,
-  imageSrcSet2: PropTypes.string,
-  imageSrcSet3: PropTypes.string,
-  imageSrcSet4: PropTypes.string,
-  imageSrc: PropTypes.string,
-  imageAlt: PropTypes.string,
+  imageSources: PropTypes.object,
   className: PropTypes.string,
   id: PropTypes.string,
   ariaDescribedBy: PropTypes.string,
@@ -98,12 +99,7 @@ const PictureCardLinks = (props) => {
               title={pictureCard.title}
               subTitle={pictureCard.subTitle}
               href={pictureCard.href}
-              imageSrcSet={pictureCard.imageSrcSet}
-              imageSrcSet2={pictureCard.imageSrcSet2}
-              imageSrcSet3={pictureCard.imageSrcSet3}
-              imageSrcSet4={pictureCard.imageSrcSet4}
-              imageSrc={pictureCard.imageSrc}
-              imageAlt={pictureCard.imageAlt}
+              imageSources={pictureCard.imageSources}
               id={index.toString()}
               ariaDescribedBy='text'
             />
@@ -124,12 +120,7 @@ PictureCardLinks.propTypes = {
       title: PropTypes.string,
       subTitle: PropTypes.string,
       href: PropTypes.string,
-      imageSrcSet: PropTypes.string,
-      imageSrcSet2: PropTypes.string,
-      imageSrcSet3: PropTypes.string,
-      imageSrcSet4: PropTypes.string,
-      imageSrc: PropTypes.string,
-      imageAlt: PropTypes.string,
+      imageSources: PropTypes.object,
     })
   ),
   react4xpId: PropTypes.string,

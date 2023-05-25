@@ -41,74 +41,13 @@ function parsePictureCardLinks(
       const subTitle: string = pictureCardLink.subTitle
       const href: string = pictureCardLink.href
 
-      let imageSrcSet = ''
-      let imageSrcSet2 = ''
-      let imageSrcSet3 = ''
-      let imageSrcSet4 = ''
-      let imageSrc = ''
-      let imageAlt = ' '
-
-      // imageSrc - mobile
-      if (pictureCardLink.image) {
-        imageSrc = imageUrl({
-          id: pictureCardLink.image,
-          scale: index === 0 ? 'block(300, 400)' : 'block(300, 400)',
-          format: 'jpg',
-        })
-        imageAlt = getImageAlt(pictureCardLink.image) || ''
-      } else {
-        imageSrc = imagePlaceholder({
-          width: 580,
-          height: 420,
-        })
-      }
-
-      // imageSrcSet - desktop
-      if (pictureCardLink.image) {
-        imageSrcSet = imageUrl({
-          id: pictureCardLink.image,
-          scale: index === 0 ? 'block(580, 400)' : 'block(280, 400)',
-          format: 'jpg',
-        })
-      }
-
-      // imageSrcSet2 - laptop
-      if (pictureCardLink.image) {
-        imageSrcSet2 = imageUrl({
-          id: pictureCardLink.image,
-          scale: index === 0 ? 'block(470, 400)' : 'block(225, 400)',
-          format: 'jpg',
-        })
-      }
-
-      // imageSrcSet3 - tablet
-      if (pictureCardLink.image) {
-        imageSrcSet3 = imageUrl({
-          id: pictureCardLink.image,
-          scale: index === 0 ? 'block(350, 400)' : 'block(165, 400)',
-          format: 'jpg',
-        })
-      }
-
-      // imageSrcSet4 - phone
-      if (pictureCardLink.image) {
-        imageSrcSet4 = imageUrl({
-          id: pictureCardLink.image,
-          scale: 'block(454, 400)',
-          format: 'jpg',
-        })
-      }
+      const imageSources = createImageUrls(pictureCardLink, index)
 
       const pictureCardLinksContent: PictureCardLinksContent = {
         title: title,
         subTitle: subTitle,
         href: href,
-        imageSrcSet: imageSrcSet,
-        imageSrcSet2: imageSrcSet2,
-        imageSrcSet3: imageSrcSet3,
-        imageSrcSet4: imageSrcSet4,
-        imageSrc: imageSrc,
-        imageAlt: imageAlt,
+        imageSources: imageSources,
       }
       acc.push(pictureCardLinksContent as never)
     }
@@ -116,14 +55,89 @@ function parsePictureCardLinks(
   }, [])
 }
 
-interface PictureCardLinksContent {
+function createImageUrls(pictureCardLink: PictureCardLink, index: number): ImageUrls {
+  const imageUrls: ImageUrls = {
+    imageSrcSet: '',
+    imageSrcSet2: '',
+    imageSrcSet3: '',
+    imageSrcSet4: '',
+    imageSrc: '',
+    imageAlt: '',
+  }
+
+  // imageSrc - mobile
+  if (pictureCardLink.image) {
+    imageUrls.imageSrc = imageUrl({
+      id: pictureCardLink.image,
+      scale: index === 0 ? 'block(300, 400)' : 'block(300, 400)',
+      format: 'jpg',
+    })
+    imageUrls.imageAlt = getImageAlt(pictureCardLink.image) || ''
+  } else {
+    imageUrls.imageSrc = imagePlaceholder({
+      width: 580,
+      height: 420,
+    })
+  }
+
+  // imageSrcSet - desktop
+  if (pictureCardLink.image) {
+    imageUrls.imageSrcSet = imageUrl({
+      id: pictureCardLink.image,
+      scale: index === 0 ? 'block(580, 400)' : 'block(280, 400)',
+      format: 'jpg',
+    })
+  }
+
+  // imageSrcSet2 - laptop
+  if (pictureCardLink.image) {
+    imageUrls.imageSrcSet2 = imageUrl({
+      id: pictureCardLink.image,
+      scale: index === 0 ? 'block(470, 400)' : 'block(225, 400)',
+      format: 'jpg',
+    })
+  }
+
+  // imageSrcSet3 - tablet
+  if (pictureCardLink.image) {
+    imageUrls.imageSrcSet3 = imageUrl({
+      id: pictureCardLink.image,
+      scale: index === 0 ? 'block(350, 400)' : 'block(165, 400)',
+      format: 'jpg',
+    })
+  }
+
+  // imageSrcSet4 - mobile
+  if (pictureCardLink.image) {
+    imageUrls.imageSrcSet4 = imageUrl({
+      id: pictureCardLink.image,
+      scale: 'block(454, 400)',
+      format: 'jpg',
+    })
+  }
+
+  return imageUrls
+}
+
+interface PictureCardLink {
   title: string
   subTitle: string
   href: string
+  image?: string
+}
+
+interface ImageUrls {
   imageSrcSet: string
   imageSrcSet2: string
   imageSrcSet3: string
   imageSrcSet4: string
   imageSrc: string
   imageAlt: string
+}
+
+interface PictureCardLinksContent {
+  title: string
+  subTitle: string
+  href: string
+  imageSources: ImageUrls
 }
