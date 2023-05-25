@@ -73,46 +73,35 @@ function createImageUrls(pictureCardLink: PictureCardLink, index: number): Image
       format: 'jpg',
     })
     imageUrls.imageAlt = getImageAlt(pictureCardLink.image) || ''
-  } else {
-    imageUrls.imageSrc = imagePlaceholder({
-      width: 580,
-      height: 420,
-    })
-  }
 
-  // imageSrcSet - desktop
-  if (pictureCardLink.image) {
+    // imageSrcSet - desktop
     imageUrls.imageSrcSet = imageUrl({
       id: pictureCardLink.image,
       scale: index === 0 ? 'block(580, 400)' : 'block(280, 400)',
       format: 'jpg',
     })
-  }
-
-  // imageSrcSet2 - laptop
-  if (pictureCardLink.image) {
+    // imageSrcSet2 - laptop
     imageUrls.imageSrcSet2 = imageUrl({
       id: pictureCardLink.image,
       scale: index === 0 ? 'block(470, 400)' : 'block(225, 400)',
       format: 'jpg',
     })
-  }
-
-  // imageSrcSet3 - tablet
-  if (pictureCardLink.image) {
+    // imageSrcSet3 - tablet
     imageUrls.imageSrcSet3 = imageUrl({
       id: pictureCardLink.image,
       scale: index === 0 ? 'block(350, 400)' : 'block(165, 400)',
       format: 'jpg',
     })
-  }
-
-  // imageSrcSet4 - mobile
-  if (pictureCardLink.image) {
+    // imageSrcSet4 - mobile
     imageUrls.imageSrcSet4 = imageUrl({
       id: pictureCardLink.image,
       scale: 'block(454, 400)',
       format: 'jpg',
+    })
+  } else {
+    imageUrls.imageSrc = imagePlaceholder({
+      width: 580,
+      height: 420,
     })
   }
 
