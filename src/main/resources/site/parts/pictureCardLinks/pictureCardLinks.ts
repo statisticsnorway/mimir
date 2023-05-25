@@ -69,7 +69,7 @@ function createImageUrls(pictureCardLink: PictureCardLink, index: number): Image
   if (pictureCardLink.image) {
     imageUrls.imageSrc = imageUrl({
       id: pictureCardLink.image,
-      scale: index === 0 ? 'block(300, 400)' : 'block(300, 400)',
+      scale: 'block(300, 400)',
       format: 'jpg',
     })
     imageUrls.imageAlt = getImageAlt(pictureCardLink.image) || ''
