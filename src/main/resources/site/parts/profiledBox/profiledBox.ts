@@ -4,7 +4,8 @@ import { render as r4xpRender } from '/lib/enonic/react4xp'
 import type { ProfiledBox as ProfiledBoxPartConfig } from '.'
 import { render, type ResourceKey } from '/lib/thymeleaf'
 import { randomUnsafeString } from '/lib/ssb/utils/utils'
-import { getContent, getComponent, imageUrl, pageUrl } from '/lib/xp/portal'
+import { getContent, getComponent, pageUrl } from '/lib/xp/portal'
+import { imageUrl } from '/lib/ssb/utils/imageUtils'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 const { getImageAlt } = __non_webpack_require__('/lib/ssb/utils/imageUtils')

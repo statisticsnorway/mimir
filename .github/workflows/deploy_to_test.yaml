@@ -5,6 +5,10 @@ on:
     branches:
       - 'MIMIR-1227_updates-and-manual-deploy'
 
+concurrency:
+  group: mimir-test
+  cancel-in-progress: true
+
 jobs:
   deploy_to_test:
     name: 'Deploy to Test'
@@ -88,4 +92,4 @@ jobs:
       - name: install mabl
         run: npm install -g @mablhq/mabl-cli
       - name: mabl end-to-end test - TEST
-        run: mabl deployments create --api-key ${{ secrets.MABLAPIKEY }} --application-id ${{ secrets.MABLAPPID }} --environment-id ${{ secrets.MABLENVTEST }} --labels MIMIR --revision ${{ github.sha }} --await-completion --mabl-branch ${{ github.head_ref || github.ref_name }} --auto-branch true
+        run: mabl deployments create --api-key ${{ secrets.MABLAPIKEY }} --application-id ${{ secrets.MABLAPPID }} --environment-id ${{ secrets.MABLENVTEST }} --labels MIMIR --revision ${{ github.sha }} --await-completion

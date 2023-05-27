@@ -4,7 +4,8 @@ import { type ResourceKey, render } from '/lib/thymeleaf'
 import type { Component } from '/lib/xp/portal'
 import type { MenuBox as MenuBoxPartConfig } from '.'
 import type { MenuBox } from '/site/content-types'
-import { pageUrl, getComponent, imageUrl } from '/lib/xp/portal'
+import { pageUrl, getComponent } from '/lib/xp/portal'
+import { imageUrl } from '/lib/ssb/utils/imageUtils'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 const { getImageAlt } = __non_webpack_require__('/lib/ssb/utils/imageUtils')
