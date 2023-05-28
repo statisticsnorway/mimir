@@ -36,13 +36,13 @@ function parsePictureCardLinks(
   pictureCardLinks: PictureCardLinksPartConfig['pictureCardLinks']
 ): Array<PictureCardLinksContent> {
   pictureCardLinks = Array.isArray(pictureCardLinks) ? pictureCardLinks : [pictureCardLinks]
-  return pictureCardLinks.reduce((acc, pictureCardLink, index) => {
+  return pictureCardLinks.reduce((acc, pictureCardLink, i) => {
     if (pictureCardLink) {
       const title: string = pictureCardLink.title
       const subTitle: string = pictureCardLink.subTitle
       const href: string = pictureCardLink.href
 
-      const imageSources = createImageUrls(pictureCardLink, index)
+      const imageSources = createImageUrls(pictureCardLink, i)
 
       const pictureCardLinksContent: PictureCardLinksContent = {
         title: title,
@@ -56,49 +56,23 @@ function parsePictureCardLinks(
   }, [])
 }
 
-function createImageUrls(pictureCardLink: PictureCardLink, index: number): ImageUrls {
+function createImageUrls(pictureCardLink: PictureCardLink, i: number): ImageUrls {
   const imageUrls: ImageUrls = {
-    imageSrcSet: '',
-    imageSrcSet2: '',
-    imageSrcSet3: '',
-    imageSrcSet4: '',
+    portraitSrcSet: '',
+    landscapeSrcSet: '',
     imageSrc: '',
     imageAlt: '',
   }
 
-  // imageSrc - mobile
   if (pictureCardLink.image) {
     imageUrls.imageSrc = imageUrl({
       id: pictureCardLink.image,
-      scale: 'block(300, 400)',
-      format: 'jpg',
+      scale: 'block(580, 400)',
     })
-    imageUrls.imageAlt = getImageAlt(pictureCardLink.image) || ''
 
-    // imageSrcSet - desktop
-    imageUrls.imageSrcSet = imageUrl({
-      id: pictureCardLink.image,
-      scale: index === 0 ? 'block(580, 400)' : 'block(280, 400)',
-      format: 'jpg',
-    })
-    // imageSrcSet2 - laptop
-    imageUrls.imageSrcSet2 = imageUrl({
-      id: pictureCardLink.image,
-      scale: index === 0 ? 'block(470, 400)' : 'block(225, 400)',
-      format: 'jpg',
-    })
-    // imageSrcSet3 - tablet
-    imageUrls.imageSrcSet3 = imageUrl({
-      id: pictureCardLink.image,
-      scale: index === 0 ? 'block(350, 400)' : 'block(165, 400)',
-      format: 'jpg',
-    })
-    // imageSrcSet4 - mobile
-    imageUrls.imageSrcSet4 = imageUrl({
-      id: pictureCardLink.image,
-      scale: 'block(454, 400)',
-      format: 'jpg',
-    })
+    imageUrls.landscapeSrcSet = imageUrls.imageSrc
+    if (i > 0) imageUrls.portraitSrcSet = imageUrls.imageSrc.replace('block-580-400', 'block-280-400')
+    imageUrls.imageAlt = getImageAlt(pictureCardLink.image) || ''
   } else {
     imageUrls.imageSrc = imagePlaceholder({
       width: 580,
@@ -117,10 +91,8 @@ interface PictureCardLink {
 }
 
 interface ImageUrls {
-  imageSrcSet: string
-  imageSrcSet2: string
-  imageSrcSet3: string
-  imageSrcSet4: string
+  portraitSrcSet: string
+  landscapeSrcSet: string
   imageSrc: string
   imageAlt: string
 }
