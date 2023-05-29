@@ -1,3 +1,5 @@
+import { sanitize } from '/lib/xp/common'
+
 const { listBestBets, createBestBet, deleteBestBet } = __non_webpack_require__('/lib/ssb/repo/bestbet')
 const { ensureArray } = __non_webpack_require__('/lib/ssb/utils/arrayUtils')
 
@@ -10,7 +12,7 @@ exports.get = () => {
           id: bet._id,
           linkedSelectedContentResult: bet.data.linkedSelectedContentResult,
           linkedContentTitle: bet.data.linkedContentTitle,
-          linkedContentHref: bet.data.linkedContentHref,
+          linkedContentHref: bet.data.linkedContentHref ? sanitize(bet.data.linkedContentHref) : '',
           linkedContentIngress: bet.data.linkedContentIngress,
           linkedContentType: bet.data.linkedContentType,
           linkedContentDate: bet.data.linkedContentDate,
