@@ -95,7 +95,7 @@ function getOmStatistikken(
   const props: AboutTheStatisticProps = {
     accordions: aboutTheStatisticsData ? getAccordionData(aboutTheStatisticsData, phrases, nextRelease) : [],
     label: phrases.aboutTheStatistics,
-    ingress: aboutTheStatisticsData && aboutTheStatisticsData.ingress ? aboutTheStatisticsData.ingress : '',
+    ingress: aboutTheStatisticsData?.ingress ?? '',
   }
 
   return render('site/parts/omStatistikken/omStatistikken', props, req, {
@@ -171,43 +171,45 @@ function getAccordionData(content: OmStatistikken, phrases: Phrases, nextUpdate:
     administrativeInformation.nextUpdate = nextUpdate
   }
 
-  definition && isNotEmpty(definition)
-    ? accordions.push(
-        getAccordion('om-statistikken-definisjoner', phrases.definitions, definition, items.definition, phrases)
+  if (definition && isNotEmpty(definition)) {
+    accordions.push(
+      getAccordion('om-statistikken-definisjoner', phrases.definitions, definition, items.definition, phrases)
+    )
+  }
+
+  if (administrativeInformation && isNotEmpty(administrativeInformation)) {
+    accordions.push(
+      getAccordion(
+        'om-statistikken-administrative_opplysninger',
+        phrases.administrativeInformation,
+        administrativeInformation,
+        items.administrativeInformation,
+        phrases
       )
-    : undefined
-  administrativeInformation && isNotEmpty(administrativeInformation)
-    ? accordions.push(
-        getAccordion(
-          'om-statistikken-administrative_opplysninger',
-          phrases.administrativeInformation,
-          administrativeInformation,
-          items.administrativeInformation,
-          phrases
-        )
+    )
+  }
+
+  if (background && isNotEmpty(background)) {
+    accordions.push(getAccordion('om-statistikken-bakgrunn', phrases.background, background, items.background, phrases))
+  }
+
+  if (production && isNotEmpty(production)) {
+    accordions.push(
+      getAccordion('om-statistikken-produksjon', phrases.production, production, items.production, phrases)
+    )
+  }
+
+  if (accuracyAndReliability && isNotEmpty(accuracyAndReliability)) {
+    accordions.push(
+      getAccordion(
+        'om-statistikken-feilkilder',
+        phrases.accuracyAndReliability,
+        accuracyAndReliability,
+        items.accuracyAndReliability,
+        phrases
       )
-    : undefined
-  background && isNotEmpty(background)
-    ? accordions.push(
-        getAccordion('om-statistikken-bakgrunn', phrases.background, background, items.background, phrases)
-      )
-    : undefined
-  production && isNotEmpty(production)
-    ? accordions.push(
-        getAccordion('om-statistikken-produksjon', phrases.production, production, items.production, phrases)
-      )
-    : undefined
-  accuracyAndReliability && isNotEmpty(accuracyAndReliability)
-    ? accordions.push(
-        getAccordion(
-          'om-statistikken-feilkilder',
-          phrases.accuracyAndReliability,
-          accuracyAndReliability,
-          items.accuracyAndReliability,
-          phrases
-        )
-      )
-    : undefined
+    )
+  }
 
   const relevantDocumentationAccordion: Accordion = {
     id: 'om-statistikken-relevant-dokumentasjon',
@@ -224,17 +226,17 @@ function getAccordionData(content: OmStatistikken, phrases: Phrases, nextUpdate:
     accordions.push(relevantDocumentationAccordion)
   }
 
-  aboutSeasonalAdjustment && isNotEmpty(aboutSeasonalAdjustment)
-    ? accordions.push(
-        getAccordion(
-          'om-sesongjustering',
-          phrases.aboutSeasonalAdjustment,
-          aboutSeasonalAdjustment,
-          items.aboutSeasonalAdjustment,
-          phrases
-        )
+  if (aboutSeasonalAdjustment && isNotEmpty(aboutSeasonalAdjustment)) {
+    accordions.push(
+      getAccordion(
+        'om-sesongjustering',
+        phrases.aboutSeasonalAdjustment,
+        aboutSeasonalAdjustment,
+        items.aboutSeasonalAdjustment,
+        phrases
       )
-    : undefined
+    )
+  }
 
   return accordions
 }
