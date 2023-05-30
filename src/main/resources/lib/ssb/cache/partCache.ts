@@ -46,7 +46,6 @@ export function clearPartCache(content: Content, branch: string): void {
     cacheLog(`try to clear ${content._id}-articleList from part cache (${branch})`)
     partCache.removePattern(`${content._id}-articleList.*`)
     cacheLog(`try to clear ${content._id}-relatedFactPage from part cache (${branch})`)
-    log.info(`try to clear ${content._id}-relatedFactPage from part cache (${branch})`)
     partCache.removePattern(`${content._id}-relatedFactPage.*`)
   }
 
