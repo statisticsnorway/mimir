@@ -163,7 +163,7 @@ function getTableViewData(table: Content<Table>, dataContent: TbmlDataUniform): 
 
   const headNoteRefs: Array<string> = headRows.reduce((acc: Array<string>, row: TableRowUniform) => {
     const tableCells: Array<TableCellUniform> = row.tr
-    tableCells.map((cell: TableCellUniform) => {
+    tableCells.forEach((cell: TableCellUniform) => {
       if (cell) acc.push(...getNoterefsHeader(cell))
     })
     return acc
@@ -171,7 +171,7 @@ function getTableViewData(table: Content<Table>, dataContent: TbmlDataUniform): 
 
   const bodyNoteRefs: Array<string> = bodyRows.reduce((acc: Array<string>, row: TableRowUniform) => {
     const tableCells: Array<TableCellUniform> = row.tr
-    tableCells.map((cell: TableCellUniform) => {
+    tableCells.forEach((cell: TableCellUniform) => {
       if (cell) acc.push(...getNoterefsHeader(cell))
     })
     return acc

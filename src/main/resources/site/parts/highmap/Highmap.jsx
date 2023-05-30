@@ -15,8 +15,8 @@ function renderFootnotes(footnotes) {
   if (footnotes.length) {
     return (
       <Row>
-        {footnotes.map((footnote, index) => (
-          <Col className='col-12' key={`footnote-${index}`}>
+        {footnotes.map((footnote) => (
+          <Col className='col-12' key={`footnote-${footnote}`}>
             {footnote && <Text>{footnote}</Text>}
           </Col>
         ))}
@@ -55,14 +55,14 @@ function Highmap(props) {
     },
     accessibility: {
       enabled: true,
-      description: props.description && props.description,
+      description: props.description,
     },
     title: {
       text: props.title,
       align: 'left',
     },
     subtitle: {
-      text: props.subtitle && props.subtitle,
+      text: props.subtitle,
       align: 'left',
     },
     mapNavigation: {
@@ -73,14 +73,14 @@ function Highmap(props) {
         ? ['#e3f1e6', '#90cc93', '#25a23c', '#007e50', '#005245']
         : ['#f9f2d1', '#e8d780', '#d2bc2a', '#a67c36', '#6e4735'],
     colorAxis: {
-      dataClasses: props.thresholdValues && props.thresholdValues,
+      dataClasses: props.thresholdValues,
       dataClassColor: 'category',
     },
     legend: {
       title: {
-        text: props.legendTitle && props.legendTitle,
+        text: props.legendTitle,
         style: {
-          color: (Highcharts.theme && Highcharts.theme.textColor) || 'black',
+          color: Highcharts.theme?.textColor || 'black',
         },
       },
       align: props.legendAlign === 'topLeft' || props.legendAlign === 'bottomLeft' ? 'left' : 'right',
@@ -89,8 +89,8 @@ function Highmap(props) {
       layout: 'vertical',
       x: 0,
       y,
-      valueDecimals: props.numberDecimals && props.numberDecimals,
-      backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || 'rgba(255, 255, 255, 0.85)',
+      valueDecimals: props.numberDecimals,
+      backgroundColor: Highcharts.theme?.legendBackgroundColor || 'rgba(255, 255, 255, 0.85)',
       symbolRadius: 0,
       symbolHeight: 14,
     },
@@ -106,7 +106,7 @@ function Highmap(props) {
         },
         tooltip: {
           pointFormat: '{point.properties.name}: {point.value}',
-          valueDecimals: props.numberDecimals && props.numberDecimals,
+          valueDecimals: props.numberDecimals,
         },
       },
     ],

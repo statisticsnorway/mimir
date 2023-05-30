@@ -125,7 +125,7 @@ export function parseRelatedFactPageData(
 ): RelatedFactPages {
   const relatedFactPages: Array<RelatedFactPageContent> = []
   let total = 0
-  if (relatedFactPageConfig && relatedFactPageConfig.contentIdList) {
+  if (relatedFactPageConfig?.contentIdList) {
     let contentListId: Array<string> = relatedFactPageConfig.contentIdList as Array<string>
 
     // why this? if contentListId is empty [], then:
@@ -153,11 +153,12 @@ export function parseRelatedFactPageData(
       )
         .sort((a, b) => {
           if (contentListId.indexOf(a._id) > contentListId.indexOf(b._id)) return 1
+          else if (contentListId.indexOf(a._id) === contentListId.indexOf(b._id)) return 0
           else return -1
         })
         .slice(start, start + count)
 
-      sortedRelatedContentQueryResults.map((relatedFactPage) =>
+      sortedRelatedContentQueryResults.forEach((relatedFactPage) =>
         relatedFactPages.push(parseRelatedContent(relatedFactPage))
       )
       total = relatedContentQueryResults.total
