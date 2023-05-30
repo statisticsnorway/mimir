@@ -30,28 +30,29 @@ export function clearPartCache(content: Content, branch: string): void {
     content.type === `${app.name}:statistics`
   ) {
     cacheLog(`try to clear ${content._id}-kpiCalculator from part cache (${branch})`)
-    partCache.removePattern(`${content._id}-kpiCalculator*`)
+    partCache.removePattern(`${content._id}-kpiCalculator.*`)
     cacheLog(`try to clear ${content._id}-pifCalculator from part cache (${branch})`)
-    partCache.removePattern(`${content._id}-pifCalculator*`)
+    partCache.removePattern(`${content._id}-pifCalculator.*`)
     cacheLog(`try to clear ${content._id}-bkibolCalculator from part cache (${branch})`)
-    partCache.removePattern(`${content._id}-bkibolCalculator*`)
+    partCache.removePattern(`${content._id}-bkibolCalculator.*`)
     cacheLog(`try to clear ${content._id}-husleieCalculator from part cache (${branch})`)
-    partCache.removePattern(`${content._id}-husleieCalculator*`)
+    partCache.removePattern(`${content._id}-husleieCalculator.*`)
     cacheLog(`try to clear ${content._id}-releasedStatistics from part cache (${branch})`)
-    partCache.removePattern(`${content._id}-releasedStatistics*`)
+    partCache.removePattern(`${content._id}-releasedStatistics.*`)
     cacheLog(`try to clear ${content._id}-omStatistikken from part cache (${branch})`)
-    partCache.removePattern(`${content._id}-omStatistikken*`)
+    partCache.removePattern(`${content._id}-omStatistikken.*`)
     cacheLog(`try to clear ${content._id}-upcomingReleases from part cache (${branch})`)
-    partCache.removePattern(`${content._id}-upcomingReleases*`)
+    partCache.removePattern(`${content._id}-upcomingReleases.*`)
     cacheLog(`try to clear ${content._id}-articleList from part cache (${branch})`)
-    partCache.removePattern(`${content._id}-articleList*`)
+    partCache.removePattern(`${content._id}-articleList.*`)
     cacheLog(`try to clear ${content._id}-relatedFactPage from part cache (${branch})`)
-    partCache.removePattern(`${content._id}-relatedFactPage*`)
+    log.info(`try to clear ${content._id}-relatedFactPage from part cache (${branch})`)
+    partCache.removePattern(`${content._id}-relatedFactPage.*`)
   }
 
   if (content.type === `${app.name}:article`) {
     cacheLog(`try to clear ${content._id}-relatedFactPage from part cache (${branch})`)
-    partCache.removePattern(`${content._id}-relatedFactPage*`)
+    partCache.removePattern(`${content._id}-relatedFactPage.*`)
   }
 }
 
@@ -63,8 +64,8 @@ export function completelyClearPartCache(branch: string): void {
 
 export function clearPartFromPartCache(part: string): void {
   cacheLog(`clear ${part} from part cache (draft and master)`)
-  masterPartCache.removePattern(`.*${part}*`)
-  draftPartCache.removePattern(`.*${part}*`)
+  masterPartCache.removePattern(`.*${part}.*`)
+  draftPartCache.removePattern(`.*${part}.*`)
 }
 
 export interface SSBPartCacheLibrary {
