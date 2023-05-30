@@ -1,5 +1,4 @@
-import type { Component } from '/lib/xp/portal'
-import { sanitizeHtml } from '/lib/xp/portal'
+import { sanitizeHtml, type Component } from '/lib/xp/portal'
 import { get as getContentByKey, type Content } from '/lib/xp/content'
 import { SearchResult as SearchResultPartConfig } from '.'
 import { render, type RenderResponse } from '/lib/enonic/react4xp'
