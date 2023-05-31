@@ -26,7 +26,7 @@ export function deleteExpiredEventLogs(): void {
 
   const parentNodes: Array<RepoNodeExtended> = queryNodes(EVENT_LOG_REPO, EVENT_LOG_BRANCH, {
     query: `_parentPath = "${path}"`,
-    count: 3000,
+    count: 10000,
   }).hits.reduce((acc: Array<RepoNodeExtended>, parentNodeHit: NodeQueryHit) => {
     const parentNode: RepoNodeExtended | null = getNode<RepoNodeExtended>(
       EVENT_LOG_REPO,
@@ -39,6 +39,7 @@ export function deleteExpiredEventLogs(): void {
     return acc
   }, [])
 
+  let count = 0
   const deleteResult: Array<object> | undefined = parentNodes.reduce((acc: Array<object>, parent) => {
     const eventLogs: NodeQueryResponse = getChildNodes(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `${parent._id}`, 0, true)
     if (eventLogs.total > maxLogsBeforeDeleting) {
@@ -58,9 +59,10 @@ export function deleteExpiredEventLogs(): void {
       queryIds: parentNodes.map((parent: RepoNodeExtended) => parent._name),
       status: JOB_STATUS_COMPLETE,
     }
+    count = parentNodes.length
     return node
   })
-  cronJobLog('Delete expired logs complete')
+  cronJobLog(`Delete expired logs complete. Total expired logs deleted: ${count}`)
 }
 
 // TODO make sure there is at least 10 logs left after delete
