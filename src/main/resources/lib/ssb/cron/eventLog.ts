@@ -44,6 +44,7 @@ export function deleteExpiredEventLogs(): void {
     const eventLogs: NodeQueryResponse = getChildNodes(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `${parent._id}`, 0, true)
     if (eventLogs.total > maxLogsBeforeDeleting) {
       const deleteResult: Array<string> = deleteLog(path, parent, expireDate, eventLogs.total)
+      count = eventLogs.total
       acc.push({
         contentId: parent._name,
         deleteResult,
@@ -59,7 +60,6 @@ export function deleteExpiredEventLogs(): void {
       queryIds: parentNodes.map((parent: RepoNodeExtended) => parent._name),
       status: JOB_STATUS_COMPLETE,
     }
-    count = parentNodes.length
     return node
   })
   cronJobLog(`Delete expired logs complete. Total expired logs deleted: ${count}`)
