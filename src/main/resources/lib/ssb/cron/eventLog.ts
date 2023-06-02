@@ -44,7 +44,6 @@ export function deleteExpiredEventLogsForQueries(): void {
     const eventLogs: NodeQueryResponse = getChildNodes(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `${parent._id}`, 0, true)
     if (eventLogs.total > maxLogsBeforeDeleting) {
       const deleteResult: Array<string> = deleteLog(parent, expireDate, eventLogs.total)
-      count = eventLogs.total
       acc.push({
         contentId: parent._name,
         deleteResult,
@@ -52,6 +51,7 @@ export function deleteExpiredEventLogsForQueries(): void {
     }
     return acc
   }, [])
+  count = deleteResult.length
 
   updateJobLog(job._id, (node) => {
     node.data = {
