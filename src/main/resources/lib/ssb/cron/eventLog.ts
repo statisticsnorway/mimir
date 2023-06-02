@@ -65,9 +65,6 @@ export function deleteExpiredEventLogsForQueries(): void {
   cronJobLog(`Delete expired logs for queries complete. Total expired logs deleted: ${count}`)
 }
 
-// TODO make sure there is at least 10 logs left after delete
-// sort by _ts and compare to count (which is eventlogs.total)
-// it might work with using count -10 if the sorting is correct as well
 function deleteLog(parent: RepoNodeExtended, expiredDate: Date, count: number): Array<string> {
   const query = `_parentPath = '${parent._path}' AND _ts < dateTime('${expiredDate.toISOString()}')`
   const expiredLogs: NodeQueryResponse = queryNodes(EVENT_LOG_REPO, EVENT_LOG_BRANCH, {
