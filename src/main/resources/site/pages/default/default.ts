@@ -172,6 +172,11 @@ exports.get = function (req: XP.Request): XP.Response {
   }
 
   const pageType: string = pageConfig.pageType ? pageConfig.pageType : 'default'
+  const baseUrl: string =
+    app.config && app.config['ssb.baseUrl'] ? (app.config['ssb.baseUrl'] as string) : 'https://www.ssb.no'
+  let canonicalUrl: string | undefined = `${baseUrl}${pageUrl({
+    id: page._id,
+  })}`
   let municipalPageType: string | undefined
   if (pageType === 'municipality') {
     if (page._path.includes('/kommunefakta/')) {
@@ -188,22 +193,26 @@ exports.get = function (req: XP.Request): XP.Response {
     }
   }
 
+  if (pageType === 'municipality' && municipality) {
+    canonicalUrl = `${baseUrl}/${municipalPageType}${municipality.path}`
+  }
+
   const metaInfo: MetaInfoData = parseMetaInfoData(municipality, pageType, page, language, req)
 
   const statbankFane: boolean = req.params.xpframe === 'statbank'
   const statBankContent: StatbankFrameData = parseStatbankFrameContent(statbankFane, req, page)
+  if (statbankFane) {
+    canonicalUrl = undefined
+  }
 
   const breadcrumbs: Breadcrumbs = getBreadcrumbs(page, municipality, statbankFane ? statBankContent : undefined)
   const breadcrumbId = 'breadcrumbs'
   const hideBreadcrumb = !!pageConfig.hide_breadcrumb
   const innrapporteringRegexp = /^\/ssb(\/en)?\/innrapportering/ // Skal matche alle sider under /innrapportering på norsk og engelsk
-  const baseUrl: string =
-    app.config && app.config['ssb.baseUrl'] ? (app.config['ssb.baseUrl'] as string) : 'https://www.ssb.no'
+
   const model: DefaultModel = {
     pageTitle: 'SSB', // not really used on normal pages because of SEO app (404 still uses this)
-    pageUrl: `${baseUrl}${pageUrl({
-      id: page._id,
-    })}`,
+    canonicalUrl,
     page,
     ...regions,
     ingress,
@@ -596,7 +605,7 @@ export interface StatbankFrameData {
 
 interface DefaultModel {
   pageTitle: string
-  pageUrl: string | undefined
+  canonicalUrl: string | undefined
   page: Content
   ingress: string | undefined
   showIngress: string | boolean | undefined

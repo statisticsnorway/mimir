@@ -43,7 +43,7 @@
   <link rel="preload" data-th-href="${stylesUrl}" as="style" />
   <link rel="stylesheet" data-th-href="${stylesUrl}"/>
   <link rel="alternate" data-th-if="${alternateLanguageVersionUrl}" data-th-href="${alternateLanguageVersionUrl}" data-th-hreflang="${language.alternate}"/>
-  <link data-th-unless="${statbankWeb}" rel="canonical" data-th-href="${pageUrl}" />
+  <link data-th-if="${canonicalUrl}" rel="canonical" data-th-href="${canonicalUrl}" />
 
 </head>
 <body class="xp-page" data-th-classappend="${bodyClasses}">
@@ -65,7 +65,7 @@
   </div>
 
   <!-- Metainfo to make the page searchable -->
-  <div id="metainfo-container" data-th-if="${addMetaInfoSearch}" data-th-include="mimir:/site/includes/metainfoSearch.html" data-th-remove="tag"></div>
+  <div id="metainfo-container" data-th-if="${addMetaInfoSearch}" data-th-insert="~{mimir:/site/includes/metainfoSearch.html}" data-th-remove="tag"></div>
 
   <!-- MAIN -->
   <main class="xp-region" id="content" data-th-if="${!isFragment}">
