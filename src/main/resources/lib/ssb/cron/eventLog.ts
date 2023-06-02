@@ -14,9 +14,9 @@ interface RepoNodeExtended extends RepoNode {
   _name: string
 }
 
-export function deleteExpiredEventLogs(): void {
-  cronJobLog('Deleting expired eventlogs')
-  const job: JobEventNode = startJobLog('Delete expired eventlogs')
+export function deleteExpiredEventLogsForQueries(): void {
+  cronJobLog('Deleting expired event logs for queries')
+  const job: JobEventNode = startJobLog('Delete expired event logs for queries')
   const path = '/queries'
   const maxLogsBeforeDeleting = 10
   const monthsBeforeLogsExpire = 1
@@ -43,7 +43,7 @@ export function deleteExpiredEventLogs(): void {
   const deleteResult: Array<object> | undefined = parentNodes.reduce((acc: Array<object>, parent) => {
     const eventLogs: NodeQueryResponse = getChildNodes(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `${parent._id}`, 0, true)
     if (eventLogs.total > maxLogsBeforeDeleting) {
-      const deleteResult: Array<string> = deleteLog(path, parent, expireDate, eventLogs.total)
+      const deleteResult: Array<string> = deleteLog(parent, expireDate, eventLogs.total)
       count = eventLogs.total
       acc.push({
         contentId: parent._name,
@@ -62,13 +62,13 @@ export function deleteExpiredEventLogs(): void {
     }
     return node
   })
-  cronJobLog(`Delete expired logs complete. Total expired logs deleted: ${count}`)
+  cronJobLog(`Delete expired logs for queries complete. Total expired logs deleted: ${count}`)
 }
 
 // TODO make sure there is at least 10 logs left after delete
 // sort by _ts and compare to count (which is eventlogs.total)
 // it might work with using count -10 if the sorting is correct as well
-function deleteLog(path: string, parent: RepoNodeExtended, expiredDate: Date, count: number): Array<string> {
+function deleteLog(parent: RepoNodeExtended, expiredDate: Date, count: number): Array<string> {
   const query = `_parentPath = '${parent._path}' AND _ts < dateTime('${expiredDate.toISOString()}')`
   const expiredLogs: NodeQueryResponse = queryNodes(EVENT_LOG_REPO, EVENT_LOG_BRANCH, {
     query,
@@ -82,5 +82,5 @@ function deleteLog(path: string, parent: RepoNodeExtended, expiredDate: Date, co
 }
 
 export interface EventLogLib {
-  deleteExpiredEventLogs: () => void
+  deleteExpiredEventLogsForQueries: () => void
 }
