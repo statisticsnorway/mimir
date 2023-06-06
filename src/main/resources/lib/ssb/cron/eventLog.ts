@@ -62,14 +62,15 @@ export function deleteExpiredEventLogsForQueries(): void {
     }
     return node
   })
-  cronJobLog(`Delete expired logs for queries complete. Total expired logs deleted: ${count}`)
+  cronJobLog(`Delete expired logs for queries complete. Total nodes with expired logs deleted: ${count}`)
 }
 
 function deleteLog(parent: RepoNodeExtended, expiredDate: Date, count: number): Array<string> {
   const query = `_parentPath = '${parent._path}' AND _ts < dateTime('${expiredDate.toISOString()}')`
   const expiredLogs: NodeQueryResponse = queryNodes(EVENT_LOG_REPO, EVENT_LOG_BRANCH, {
     query,
-    count,
+    count: count - 10,
+    sort: '_ts ASC',
   })
   return withConnection(EVENT_LOG_REPO, EVENT_LOG_BRANCH, (conn) => {
     return conn.delete(expiredLogs.hits.map((h) => h.id)).map((id) => {
