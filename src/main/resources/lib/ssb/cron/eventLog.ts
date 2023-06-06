@@ -14,6 +14,8 @@ interface RepoNodeExtended extends RepoNode {
   _name: string
 }
 
+let totalExpiredLogsDeleted = 0
+
 export function deleteExpiredEventLogsForQueries(): void {
   cronJobLog('Deleting expired event logs for queries')
   const job: JobEventNode = startJobLog('Delete expired event logs for queries')
@@ -39,7 +41,6 @@ export function deleteExpiredEventLogsForQueries(): void {
     return acc
   }, [])
 
-  let count = 0
   const deleteResult: Array<object> | undefined = parentNodes.reduce((acc: Array<object>, parent) => {
     const eventLogs: NodeQueryResponse = getChildNodes(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `${parent._id}`, 0, true)
     if (eventLogs.total > maxLogsBeforeDeleting) {
@@ -51,7 +52,6 @@ export function deleteExpiredEventLogsForQueries(): void {
     }
     return acc
   }, [])
-  count = deleteResult.length
 
   updateJobLog(job._id, (node) => {
     node.data = {
@@ -62,7 +62,7 @@ export function deleteExpiredEventLogsForQueries(): void {
     }
     return node
   })
-  cronJobLog(`Delete expired logs for queries complete. Total nodes with expired logs deleted: ${count}`)
+  cronJobLog(`Delete expired logs for queries complete. Total expired logs deleted: ${totalExpiredLogsDeleted}`)
 }
 
 function deleteLog(parent: RepoNodeExtended, expiredDate: Date, count: number): Array<string> {
@@ -72,6 +72,9 @@ function deleteLog(parent: RepoNodeExtended, expiredDate: Date, count: number): 
     count: count - 10,
     sort: '_ts ASC',
   })
+
+  totalExpiredLogsDeleted += expiredLogs.hits.length
+
   return withConnection(EVENT_LOG_REPO, EVENT_LOG_BRANCH, (conn) => {
     return conn.delete(expiredLogs.hits.map((h) => h.id)).map((id) => {
       return `Deleted expired event log: ${parent._id}/${id}`
