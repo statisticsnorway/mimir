@@ -59,7 +59,10 @@ export function deleteExpiredEventLogsForQueries(): void {
       refreshDataResult: deleteResult,
       queryIds: parentNodes.map((parent: RepoNodeExtended) => parent._name),
       status: JOB_STATUS_COMPLETE,
-      message: `Successfully deleted ${totalExpiredLogsDeleted} expired logs.`,
+      message:
+        totalExpiredLogsDeleted != 0
+          ? `Successfully deleted ${totalExpiredLogsDeleted} expired logs.`
+          : 'No expired logs deleted.',
     }
     return node
   })
