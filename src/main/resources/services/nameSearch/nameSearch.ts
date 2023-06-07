@@ -107,7 +107,7 @@ function pad(word: string): string {
 }
 
 function sanitizeQuery(name: string): string {
-  if (name.toLowerCase() == 'and' || 'or') {
+  if (name.toLowerCase() === 'and' || name.toLowerCase() === 'or') {
     return name.toLowerCase()
   }
   const approved = 'ABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ '
