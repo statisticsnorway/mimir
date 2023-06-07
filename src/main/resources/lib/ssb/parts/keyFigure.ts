@@ -9,8 +9,8 @@ import { TbmlDataUniform, TableRowUniform, TableCellUniform, PreliminaryData } f
 import { Category, Dimension, JSONstat as JSONstatType } from '/lib/types/jsonstat-toolkit'
 import { DatasetRepoNode, DataSource as DataSourceType } from '/lib/ssb/repo/dataset'
 import type { DataSource } from '/site/mixins/dataSource'
+import { imageUrl } from '/lib/ssb/utils/imageUtils'
 
-const { imageUrl } = __non_webpack_require__('/lib/xp/portal')
 const { datasetOrUndefined } = __non_webpack_require__('/lib/ssb/cache/cache')
 const {
   data: { forceArray },

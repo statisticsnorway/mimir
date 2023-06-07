@@ -232,7 +232,7 @@ export function groupStatisticsByYearMonthAndDay(
   Object.keys(groupedByYear).forEach((year) => {
     const groupedByMonthAndDay: GroupedBy<GroupedBy<PreparedStatistics>> = {}
     const tmpMonth: GroupedBy<PreparedStatistics> = groupStatisticsByMonth(forceArray(groupedByYear[year]))
-    Object.keys(tmpMonth).map((month) => {
+    Object.keys(tmpMonth).forEach((month) => {
       groupedByMonthAndDay[month] = groupStatisticsByDay(forceArray(tmpMonth[month]))
     })
     groupedByYearMonthAndDay[year] = groupedByMonthAndDay

@@ -308,6 +308,7 @@ function Bestbet(props) {
                 <div className='best-bet-url-wrapper pr-1'>
                   <Link
                     isExternal={true}
+                    // deepcode ignore DOMXSS: react href escapes quotes. item.linkedContentHref is sanitized backend
                     href={
                       item.linkedSelectedContentResult
                         ? props.contentStudioBaseUrl + item.linkedSelectedContentResult.value

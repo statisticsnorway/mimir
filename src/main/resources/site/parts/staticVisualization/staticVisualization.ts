@@ -6,8 +6,9 @@ import type { StaticVisualization } from '/site/content-types'
 import type { Default as DefaultPageConfig } from '/site/pages/default'
 import type { StaticVisualization as StaticVisualizationPartConfig } from '.'
 import type { HtmlTable } from '/lib/ssb/parts/table'
-import { getContent, getComponent, imageUrl } from '/lib/xp/portal'
+import { getContent, getComponent } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
+import { imageUrl } from '/lib/ssb/utils/imageUtils'
 
 const {
   data: { forceArray },

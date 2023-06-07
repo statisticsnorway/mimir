@@ -7,7 +7,9 @@ import { render as r4xpRender } from '/lib/enonic/react4xp'
 import type { Article, Statistics } from '/site/content-types'
 import type { RelatedArticles } from '/site/mixins/relatedArticles'
 
-import { getContent, pageUrl, imageUrl, imagePlaceholder } from '/lib/xp/portal'
+import { getContent, pageUrl, imagePlaceholder } from '/lib/xp/portal'
+import { imageUrl } from '/lib/ssb/utils/imageUtils'
+
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 const util = __non_webpack_require__('/lib/util')
 const { getImageAlt } = __non_webpack_require__('/lib/ssb/utils/imageUtils')

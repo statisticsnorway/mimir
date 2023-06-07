@@ -82,8 +82,7 @@ function getProps(req: XP.Request, tableId?: string): TableProps {
     language.standardSymbolPage,
     phrases.tableStandardSymbols
   )
-  const baseUrl: string =
-    app.config && app.config['ssb.baseUrl'] ? `${app.config['ssb.baseUrl'] as string}` : 'https://www.ssb.no'
+  const baseUrl: string = app.config?.['ssb.baseUrl'] ? `${app.config['ssb.baseUrl'] as string}` : 'https://www.ssb.no'
   const statBankWebUrl: string = tableContent.language === 'en' ? baseUrl + '/en/statbank' : baseUrl + '/statbank'
   const sourceList: TableSourceList = table.sourceList ? forceArray(table.sourceList) : []
   const sourceListExternal: TableSourceList =

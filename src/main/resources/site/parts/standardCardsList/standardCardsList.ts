@@ -4,7 +4,8 @@ import { render as r4xpRender } from '/lib/enonic/react4xp'
 import type { Statistics } from '/site/content-types'
 import type { StandardCardsList as StandardCardsListPartConfig } from '.'
 import { randomUnsafeString } from '/lib/ssb/utils/utils'
-import { getComponent, imageUrl, pageUrl } from '/lib/xp/portal'
+import { getComponent, pageUrl } from '/lib/xp/portal'
+import { imageUrl } from '/lib/ssb/utils/imageUtils'
 
 const {
   data: { forceArray },

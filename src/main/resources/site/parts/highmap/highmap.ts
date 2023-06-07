@@ -123,7 +123,7 @@ function renderPart(req: XP.Request, highmapId: string | undefined): RenderRespo
       const tableRow: HighmapTable['table']['tbody']['tr'] | undefined = result ? result.table.tbody.tr : undefined
 
       if (tableRow) {
-        tableRow.map((row) => {
+        tableRow.forEach((row) => {
           if (row) {
             const name: string = getRowValue(row.td[0]) as string
             const value: number = getRowValue(row.td[1]) as number
@@ -168,6 +168,7 @@ function renderPart(req: XP.Request, highmapId: string | undefined): RenderRespo
 }
 
 function getRowValue(value: number | string | PreliminaryData | Array<number | string | PreliminaryData>): RowValue {
+  // file deepcode ignore GlobalReplacementRegex: dont need replacAll when we are replacing only one character
   if (typeof value === 'string' && isNumber(value.replace(',', '.'))) {
     return Number(value.replace(',', '.'))
   }
@@ -199,7 +200,7 @@ function getDataClass(formattedThresholdValues: Array<number>): Array<ThresholdV
   const dataClasses: Array<ThresholdValues> = []
 
   let previousValue: number = formattedThresholdValues[0]
-  formattedThresholdValues.map((thresholdValue, index) => {
+  formattedThresholdValues.forEach((thresholdValue, index) => {
     const currentValue: number = formattedThresholdValues[index]
 
     if (previousValue == currentValue) {

@@ -1,10 +1,11 @@
+// @ts-ignore
+import { Base64 } from 'js-base64'
 import { get as getContentByKey, type Content } from '/lib/xp/content'
 import type { SourceList, SourcesConfig } from '/lib/ssb/utils/utils'
 import { render, type RenderResponse } from '/lib/enonic/react4xp'
-// @ts-ignore
-import { Base64 } from 'js-base64'
+import { getContent, getComponent } from '/lib/xp/portal'
+import { imageUrl } from '/lib/ssb/utils/imageUtils'
 import type { InfoGraphics as InfoGraphicsPartConfig } from '.'
-import { getContent, getComponent, imageUrl } from '/lib/xp/portal'
 
 const {
   data: { forceArray },

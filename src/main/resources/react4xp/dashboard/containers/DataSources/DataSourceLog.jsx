@@ -15,9 +15,8 @@ export function DataSourceLog(props) {
   const dispatch = useDispatch()
   const io = useContext(WebSocketContext)
   const dataToolBoxBaseUrl = useSelector(selectDataToolBoxBaseUrl)
-  const dataSource = isStatReg
-    ? useSelector(selectStatRegStatus(dataSourceId))
-    : useSelector(selectDataSourceById(dataSourceId))
+  const dataSource = useSelector(isStatReg ? selectStatRegStatus(dataSourceId) : selectDataSourceById(dataSourceId))
+
   const { displayName, logData, loadingLogs, eventLogNodes } = dataSource
 
   const [show, setShow] = useState(false)

@@ -8,6 +8,7 @@ import { StatisticInListing, VariantInListing } from '/lib/ssb/dashboard/statreg
 import type { Statistics, Highchart, Table, KeyFigure } from '/site/content-types'
 import { ProcessXml, RefreshDatasetResult, DashboardJobInfo } from '/lib/ssb/dashboard/dashboard'
 import { run, type ContextParams } from '/lib/xp/context'
+import { sanitize } from '/lib/xp/common'
 import { DatasetRepoNode } from '/lib/ssb/repo/dataset'
 import type { DataSource } from '/site/mixins/dataSource'
 import { Source, TbmlDataUniform } from '/lib/types/xmlParser'
@@ -308,7 +309,9 @@ function getOwnersWithSources(dataSourceIds: Array<string>): Array<OwnerWithSour
 function getStatisticsJobLogInfo(id: string, count = 1): Array<DashboardJobInfo> {
   return withConnection(EVENT_LOG_REPO, EVENT_LOG_BRANCH, (connection) => {
     const statisticsJobLog = connection.query({
-      query: `_path LIKE "/jobs/*" AND data.task = "${JobNames.STATISTICS_REFRESH_JOB}" AND data.queryIds = "${id}"`,
+      query: `_path LIKE "/jobs/*" AND data.task = "${JobNames.STATISTICS_REFRESH_JOB}" AND data.queryIds = "${sanitize(
+        id
+      )}"`,
       count,
       sort: '_ts DESC',
     })

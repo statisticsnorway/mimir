@@ -5,7 +5,7 @@ import type { PreparedSearchResult, SolrPrepResultAndTotal, Facet } from '/lib/s
 import { queryNodes, getNode } from '/lib/ssb/repo/common'
 import { formatDate } from '/lib/ssb/utils/dateUtils'
 import type { BestBetContent } from '/lib/ssb/repo/bestbet'
-import { getContent, getComponent, pageUrl, serviceUrl } from '/lib/xp/portal'
+import { sanitizeHtml, getContent, getComponent, pageUrl, serviceUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 import { Node } from '@enonic-types/lib-node'
 
@@ -126,8 +126,10 @@ export function renderPart(req: XP.Request): RenderResponse {
       }
 
       bestBetResult = {
-        title: title,
-        preface: firstBet.data && firstBet.data.linkedContentIngress ? firstBet.data.linkedContentIngress : '',
+        title: sanitizeHtml(title),
+        preface: sanitizeHtml(
+          firstBet.data && firstBet.data.linkedContentIngress ? firstBet.data.linkedContentIngress : ''
+        ),
         contentType:
           firstBet.data && firstBet.data.linkedContentType
             ? localize({

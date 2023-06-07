@@ -1,6 +1,7 @@
-import { getComponent, imageUrl } from '/lib/xp/portal'
-import type { FrontPageBanner as FrontPageBannerPartConfig } from '.'
+import { getComponent } from '/lib/xp/portal'
 import { render } from '/lib/thymeleaf'
+import { imageUrl } from '/lib/ssb/utils/imageUtils'
+import type { FrontPageBanner as FrontPageBannerPartConfig } from '.'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 

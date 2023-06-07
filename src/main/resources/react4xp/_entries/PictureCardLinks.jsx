@@ -1,57 +1,29 @@
-import React, { useRef, useState, useEffect } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { ArrowRight, ArrowRightCircle } from 'react-feather'
 
-function useHover() {
-  const [value, setValue] = useState(false)
-
-  const hoverRef = useRef(null)
-
-  useEffect(
-    // eslint-disable-next-line consistent-return
-    () => {
-      const handleMouseOver = () => setValue(true)
-      const handleMouseOut = () => setValue(false)
-      const element = hoverRef && hoverRef.current
-
-      if (element) {
-        element.addEventListener('mouseover', handleMouseOver)
-        element.addEventListener('mouseout', handleMouseOut)
-        return () => {
-          element.removeEventListener('mouseover', handleMouseOver)
-          element.removeEventListener('mouseout', handleMouseOut)
-        }
-      }
-    },
-    [hoverRef]
-  )
-
-  return [hoverRef, value]
-}
-
-const PictureLink = (props) => {
-  const [hoverRef, hovered] = useHover()
+const PictureLink = ({ href, title, subTitle, id, ariaDescribedBy, className, imageSources }) => {
   return (
     <a
-      className={`ssb-picture-card vertical ${props.className || ''}`}
-      ref={hoverRef}
-      href={props.href}
-      aria-label={props.title}
-      aria-describedby={props.ariaDescribedBy ? `${props.id}-${props.ariaDescribedBy}` : undefined}
+      className={`ssb-picture-card vertical ${className || ''} group`}
+      href={href}
+      aria-label={title}
+      aria-describedby={ariaDescribedBy ? `${id}-${ariaDescribedBy}` : undefined}
     >
       <div className='image-background'>
-        <img src={props.imageSrc} alt={props.imageAlt} aria-hidden='true' height={400} loading='lazy' />
+        <picture>
+          <source srcSet={imageSources.landscapeSrcSet} media='(max-width: 767px)' />
+          {imageSources.portraitSrcSet && <source srcSet={imageSources.portraitSrcSet} media='(min-width: 768px)' />}
+          <img src={imageSources.imageSrc} alt={imageSources.imageAlt} aria-hidden='true' height={400} loading='lazy' />
+        </picture>
       </div>
       <div className='overlay w-100'>
-        <span className='il-title'>{props.title}</span>
-        <span className='il-type' id={`${props.id}-text`}>
-          {props.subTitle}
+        <span className='il-title'>{title}</span>
+        <span className='il-type' id={`${id}-text`}>
+          {subTitle}
         </span>
-        {hovered ? (
-          <ArrowRightCircle className='arrow-icon' size={32} aria-hidden='true' />
-        ) : (
-          <ArrowRight className='arrow-icon' size={32} aria-hidden='true' />
-        )}
+        <ArrowRightCircle className='arrow-icon icon-circle' size={32} aria-hidden='true' />
+        <ArrowRight className='arrow-icon icon' size={32} aria-hidden='true' />
       </div>
     </a>
   )
@@ -61,8 +33,7 @@ PictureLink.propTypes = {
   title: PropTypes.string,
   subTitle: PropTypes.string,
   href: PropTypes.string,
-  imageSrc: PropTypes.string,
-  imageAlt: PropTypes.string,
+  imageSources: PropTypes.object,
   className: PropTypes.string,
   id: PropTypes.string,
   ariaDescribedBy: PropTypes.string,
@@ -88,8 +59,7 @@ const PictureCardLinks = (props) => {
               title={pictureCard.title}
               subTitle={pictureCard.subTitle}
               href={pictureCard.href}
-              imageSrc={pictureCard.imageSrc}
-              imageAlt={pictureCard.imageAlt}
+              imageSources={pictureCard.imageSources}
               id={index.toString()}
               ariaDescribedBy='text'
             />
@@ -110,8 +80,7 @@ PictureCardLinks.propTypes = {
       title: PropTypes.string,
       subTitle: PropTypes.string,
       href: PropTypes.string,
-      imageSrc: PropTypes.string,
-      imageAlt: PropTypes.string,
+      imageSources: PropTypes.object,
     })
   ),
   react4xpId: PropTypes.string,

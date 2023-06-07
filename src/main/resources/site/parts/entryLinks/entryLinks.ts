@@ -1,9 +1,10 @@
 import { render as r4XpRender, type RenderResponse } from '/lib/enonic/react4xp'
-import { getComponent, getContent, imageUrl } from '/lib/xp/portal'
+import { getComponent, getContent } from '/lib/xp/portal'
 import type { EntryLinks as EntryLinksPartConfig } from '.'
 import { type Content, get as getContentByKey } from '/lib/xp/content'
 import type { Phrases } from '/lib/types/language'
 import { render } from '/lib/thymeleaf'
+import { imageUrl } from '/lib/ssb/utils/imageUtils'
 
 const {
   data: { forceArray },
