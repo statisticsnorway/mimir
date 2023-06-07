@@ -1,8 +1,9 @@
 import { render, type RenderResponse } from '/lib/enonic/react4xp'
 import { query, type Content, type QueryResponse } from '/lib/xp/content'
-import { getContent, imageUrl, pageUrl, processHtml, serviceUrl } from '/lib/xp/portal'
+import { getContent, pageUrl, processHtml, serviceUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 import { formatDate } from '/lib/ssb/utils/dateUtils'
+import { imageUrl } from '/lib/ssb/utils/imageUtils'
 import type { Article, ArticleArchive } from '/site/content-types'
 
 const { getImageAlt } = __non_webpack_require__('/lib/ssb/utils/imageUtils')
@@ -37,6 +38,7 @@ function renderPart(req: XP.Request): RenderResponse {
     ? imageUrl({
         id: page.data.image,
         scale: 'block(1180, 275)',
+        format: 'jpg',
       })
     : undefined
 

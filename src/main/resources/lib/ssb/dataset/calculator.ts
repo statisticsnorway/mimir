@@ -152,7 +152,7 @@ export function getNameGraphDataWithConfig(): DatasetRepoNode<JSONstatType> | nu
 export function getAllCalculatorDataset(): Array<Content<GenericDataImport>> {
   const calculatorConfig: Content<CalculatorConfig> | undefined = getCalculatorConfig()
   const calculatorDatasetKeys: Array<string | undefined> = []
-  if (calculatorConfig && calculatorConfig.data) {
+  if (calculatorConfig?.data) {
     calculatorDatasetKeys.push(calculatorConfig.data.kpiSourceYear)
     calculatorDatasetKeys.push(calculatorConfig.data.kpiSourceMonth)
     calculatorDatasetKeys.push(calculatorConfig.data.pifSource)

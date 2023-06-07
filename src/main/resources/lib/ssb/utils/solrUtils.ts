@@ -1,3 +1,4 @@
+import { sanitizeHtml } from '/lib/xp/portal'
 import { request, HttpResponse } from '/lib/http-client'
 import { formatDate } from '/lib/ssb/utils/dateUtils'
 
@@ -63,8 +64,8 @@ function nerfSearchResult(solrResult: SolrResult, language: string): Array<Prepa
       const mainSubjects: Array<string> = doc.hovedemner ? doc.hovedemner.split(';') : []
       const secondarySubjects: Array<string> = mainSubjects.filter((subject) => subject !== mainSubjects[0])
       acc.push({
-        title: highlight.tittel ? highlight.tittel[0] : doc.tittel,
-        preface: highlight.innhold ? highlight.innhold[0] : doc.tittel,
+        title: sanitizeHtml(highlight.tittel ? highlight.tittel[0] : doc.tittel),
+        preface: sanitizeHtml(highlight.innhold ? highlight.innhold[0] : doc.tittel),
         contentType: doc.innholdstype,
         url: doc.url,
         mainSubject: mainSubjects.length > 0 ? mainSubjects[0] : '',

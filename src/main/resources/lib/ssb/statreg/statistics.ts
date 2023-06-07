@@ -45,8 +45,7 @@ export function fetchStatistics(): Array<StatisticInListing> | null {
 
 export function createMimirMockReleaseStatreg(): StatisticInListing {
   // use todays date for next release if its before 0800 in the morning
-  const serverOffsetInMs: number =
-    app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
+  const serverOffsetInMs: number = app.config?.['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
   const midnight: number = new Date().setHours(0, 0, 0, 0)
   const eight: number = new Date().setHours(8, 0, 0, 0)
   const withServerOffset = new Date(new Date().getTime() + serverOffsetInMs).getTime()
@@ -172,7 +171,7 @@ export function getReleaseDatesByVariants(variants: Array<VariantInListing>): Re
     const upcomingReleases: Array<ReleasesInListing> = variant.upcomingReleases
       ? ensureArray(variant.upcomingReleases)
       : []
-    upcomingReleases.map((release) => nextReleases.push(release.publishTime))
+    upcomingReleases.forEach((release) => nextReleases.push(release.publishTime))
     if (variant.previousRelease !== '') {
       previousReleases.push(variant.previousRelease)
     }
@@ -183,8 +182,7 @@ export function getReleaseDatesByVariants(variants: Array<VariantInListing>): Re
   const nextReleasesSorted: Array<string> = nextReleases.sort(
     (a: string, b: string) => new Date(a).getTime() - new Date(b).getTime()
   )
-  const serverOffsetInMs: number =
-    app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
+  const serverOffsetInMs: number = app.config?.['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
   const serverTime: Date = new Date(new Date().getTime() + serverOffsetInMs)
   const nextReleaseFiltered: Array<string> = nextReleasesSorted.filter((release) =>
     isAfter(new Date(release), serverTime)

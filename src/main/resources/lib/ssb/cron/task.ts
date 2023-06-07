@@ -29,7 +29,7 @@ export function refreshQueriesAsync(
           total: httpQueriesbatch.length,
           info: `Start task for datasets ${httpQueriesbatch.map((httpQuery) => httpQuery._id)}`,
         })
-        httpQueriesbatch.map((httpQuery: Content<DataSource>, index) => {
+        httpQueriesbatch.forEach((httpQuery: Content<DataSource>, index) => {
           progress({
             current: index,
             total: httpQueriesbatch.length,

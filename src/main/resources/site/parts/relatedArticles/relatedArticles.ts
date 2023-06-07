@@ -8,7 +8,9 @@ import { SEO } from '/services/news/news'
 import type { Article, Statistics } from '/site/content-types'
 import type { RelatedArticles } from '/site/mixins/relatedArticles'
 
-import { getContent, pageUrl, imageUrl, imagePlaceholder } from '/lib/xp/portal'
+import { getContent, pageUrl, imagePlaceholder } from '/lib/xp/portal'
+import { imageUrl } from '/lib/ssb/utils/imageUtils'
+
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 const util = __non_webpack_require__('/lib/util')
 const { getImageAlt } = __non_webpack_require__('/lib/ssb/utils/imageUtils')
@@ -95,6 +97,7 @@ function renderPart(req: XP.Request, relatedArticles: RelatedArticles['relatedAr
                 imageSrc = imageUrl({
                   id: image,
                   scale: 'block(320, 180)', // 16:9
+                  format: 'jpg',
                 })
                 imageAlt = getImageAlt(image) ? getImageAlt(image) : ' '
               }
@@ -114,6 +117,7 @@ function renderPart(req: XP.Request, relatedArticles: RelatedArticles['relatedAr
             const imageSrc: string = imageUrl({
               id: article.externalArticle.image,
               scale: 'block(320, 180)', // 16:9
+              format: 'jpg',
             })
             const imageAlt: string | undefined = getImageAlt(article.externalArticle.image)
             let subTitle = ''

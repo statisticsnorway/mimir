@@ -5,7 +5,8 @@ import type { SEO } from '/services/news/news'
 import type { Statistics } from '/site/content-types'
 import type { StandardCardsList as StandardCardsListPartConfig } from '.'
 import { randomUnsafeString } from '/lib/ssb/utils/utils'
-import { getComponent, imageUrl, pageUrl } from '/lib/xp/portal'
+import { getComponent, pageUrl } from '/lib/xp/portal'
+import { imageUrl } from '/lib/ssb/utils/imageUtils'
 
 const {
   data: { forceArray },
@@ -97,6 +98,7 @@ function parseContent(
           ? imageUrl({
               id: iconId,
               scale: 'block(100, 100)',
+              format: 'jpg',
             })
           : undefined
 

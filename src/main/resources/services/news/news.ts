@@ -50,12 +50,9 @@ exports.get = get
 function getNews(mainSubjects: Array<Content<Page, DefaultPageConfig>>): Array<News> {
   const from: string = subDays(new Date(), 1).toISOString()
   const to: string = new Date().toISOString()
-  const baseUrl: string = (app.config && app.config['ssb.baseUrl']) || ''
-  const serverOffsetInMinutes: number = parseInt(app.config && app.config['serverOffsetInMs']) || 0
+  const baseUrl: string = app.config?.['ssb.baseUrl'] || ''
+  const serverOffsetInMinutes: number = parseInt(app.config?.['serverOffsetInMs']) || 0
   const timeZoneIso: string = getTimeZoneIso(serverOffsetInMinutes)
-
-  //TODO: Fjerne når datoformat er verifisert i de forskjellige miljøene
-  testPubDates()
 
   const news: Array<News> = []
   mainSubjects.forEach((mainSubject) => {
@@ -66,8 +63,8 @@ function getNews(mainSubjects: Array<Content<Page, DefaultPageConfig>>): Array<N
       query: `_path LIKE "/content${mainSubject._path}/*" AND range("publish.from", instant("${from}"), instant("${to}"))`,
     }).hits as unknown as Array<Content<Article, SEO>>
     articles.forEach((article) => {
-      const pubDate: string | undefined = article.publish?.first
-        ? formatPubDateArticle(article.publish.first, serverOffsetInMinutes, timeZoneIso)
+      const pubDate: string | undefined = article.publish?.from
+        ? formatPubDateArticle(article.publish.from, serverOffsetInMinutes, timeZoneIso)
         : undefined
       if (pubDate) {
         news.push({
@@ -106,15 +103,14 @@ function getStatisticsNews(mainSubjects: Array<Content<Page, DefaultPageConfig>>
           .join(',')})`,
       }).hits as unknown as Array<Content<Statistics & Statistic, SEO>>
 
-      const baseUrl: string = (app.config && app.config['ssb.baseUrl']) || ''
-      const serverOffsetInMS: number = parseInt(app.config && app.config['serverOffsetInMs']) || 0
+      const baseUrl: string = app.config?.['ssb.baseUrl'] || ''
+      const serverOffsetInMS: number = parseInt(app.config?.['serverOffsetInMs']) || 0
       const timeZoneIso: string = getTimeZoneIso(serverOffsetInMS)
       statistics.forEach((statistic) => {
         const statreg: StatisticInListing | undefined = statregStatistics.find(
           (s) => s.id.toString() === statistic.data.statistic
         )
-        const variant: VariantInListing | undefined =
-          statreg && statreg.variants && statreg.variants[0] ? statreg.variants[0] : undefined
+        const variant: VariantInListing | undefined = statreg?.variants?.[0] || undefined
         let pubDate: string | undefined
         if (variant) {
           const previousReleaseSameDayNow: boolean = variant.previousRelease
@@ -124,10 +120,8 @@ function getStatisticsNews(mainSubjects: Array<Content<Page, DefaultPageConfig>>
             ? isSameDay(new Date(variant.nextRelease), new Date())
             : false
           if (previousReleaseSameDayNow) {
-            //TODO: Sjekke om det blir riktig tidspunkt i TEST før koden merges til master, skal være sånn 2023-02-22T08:00:00+01:00
             pubDate = variant.previousRelease ? formatPubDateStatistic(variant.previousRelease, timeZoneIso) : undefined
           } else if (nextReleaseSameDayNow) {
-            //TODO: Sjekke om det blir riktig tidspunkt i TEST før koden merges til master, skal være sånn 2023-02-22T08:00:00+01:00
             pubDate = variant.nextRelease ? formatPubDateStatistic(variant.nextRelease, timeZoneIso) : undefined
           }
         }
@@ -165,17 +159,6 @@ function formatPubDateStatistic(date: string, timeZoneIso: string): string {
   const pubDate: string = format(parseISO(date), "yyyy-MM-dd'T'HH:mm:ss")
   return `${pubDate}${timeZoneIso}`
 }
-
-function testPubDates() {
-  const serverOffsetInMS: number = parseInt(app.config && app.config['serverOffsetInMs']) || 0
-  const timeZoneIso: string = getTimeZoneIso(serverOffsetInMS)
-
-  const ArtikkelDate = formatPubDateArticle('2023-03-20T07:00:00Z', serverOffsetInMS, timeZoneIso)
-  const StatistikkDate = formatPubDateStatistic('2023-03-20 08:00:00.0', timeZoneIso)
-
-  log.info(`RSS-news - Artikkel: ${ArtikkelDate} statistikk: ${StatistikkDate}`)
-}
-
 export interface SEO {
   seoDescription: string
   seoImage: string

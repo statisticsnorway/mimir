@@ -6,14 +6,18 @@ import axios from 'axios'
 import { X } from 'react-feather'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
+import highchartsExporting from 'highcharts/modules/exporting'
+import highchartsExportData from 'highcharts/modules/export-data'
+import highchartsAccessibility from 'highcharts/modules/accessibility'
 import { useMediaQuery } from 'react-responsive'
 import { addGtagForEvent } from '/react4xp/ReactGA'
 
-if (typeof Highcharts === 'object') {
-  require('highcharts/modules/accessibility')(Highcharts)
-  require('highcharts/modules/exporting')(Highcharts)
-  require('highcharts/modules/export-data')(Highcharts)
+if (typeof window !== 'undefined' && typeof Highcharts === 'object') {
+  highchartsExporting(Highcharts)
+  highchartsExportData(Highcharts)
+  highchartsAccessibility(Highcharts)
 }
+
 /* TODO
 - Etternavn må få rett visning av beste-treff
 - Skjule mindre interessante resultater - må sikkert diskuteres noen runder med Siv og Ina
@@ -48,29 +52,6 @@ function NameSearch(props) {
       currentElement.current && currentElement.current.firstChild.focus()
     }
   }, [result])
-
-  useEffect(() => {
-    Highcharts.setOptions({
-      lang: {
-        accessibility: {
-          chartContainerLabel: props.phrases.chartContainerLabel,
-          exporting: {
-            chartMenuLabel: props.phrases.chartMenuLabel,
-            menuButtonLabel: props.phrases.menuButtonLabel,
-          },
-          screenReaderSection: {
-            beforeRegionLabel: props.phrases.beforeRegionLabel,
-            endOfChartMarker: '',
-          },
-          legend: {
-            legendItem: props.phrases.legendItem,
-            legendLabel: props.phrases.legendLabel,
-            legendLabelNoTitle: props.phrases.legendLabelNoTitle,
-          },
-        },
-      },
-    })
-  })
 
   const scrollAnchor = useRef(null)
   function scrollToResult() {
@@ -353,6 +334,25 @@ function NameSearch(props) {
     }
     if (nameGraphData && !loadingGraph) {
       const options = {
+        lang: {
+          contextButtonTitle: 'Last ned/skriv ut',
+          accessibility: {
+            chartContainerLabel: props.phrases.chartContainerLabel,
+            exporting: {
+              chartMenuLabel: props.phrases.chartMenuLabel,
+              menuButtonLabel: props.phrases.menuButtonLabel,
+            },
+            screenReaderSection: {
+              beforeRegionLabel: props.phrases.beforeRegionLabel,
+              endOfChartMarker: '',
+            },
+            legend: {
+              legendItem: props.phrases.legendItem,
+              legendLabel: props.phrases.legendLabel,
+              legendLabelNoTitle: props.phrases.legendLabelNoTitle,
+            },
+          },
+        },
         chart: {
           type: 'spline',
           height: frontPage || !desktop ? '380px' : '75%',

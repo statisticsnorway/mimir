@@ -76,6 +76,7 @@ function SubjectArticleList(props) {
         {articles.map((article, i) => {
           return (
             <li key={i} className='mt-5'>
+              {/* deepcode ignore DOMXSS: url comes from pageUrl which escapes + Reacts own escaping */}
               <Link href={article.url} className='ssb-link header' standAlone>
                 {article.title}
               </Link>

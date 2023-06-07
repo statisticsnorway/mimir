@@ -1,8 +1,9 @@
 import { type ResourceKey, render } from '/lib/thymeleaf'
 import type { Content } from '/lib/xp/content'
-import { getContent, getComponent, imageUrl, type Component } from '/lib/xp/portal'
+import { getContent, getComponent, type Component } from '/lib/xp/portal'
 import type { Banner as BannerPartConfig } from '.'
 import { MunicipalityWithCounty } from '/lib/ssb/dataset/klass/municipalities'
+import { imageUrl } from '/lib/ssb/utils/imageUtils'
 import type { Page } from '/site/content-types'
 
 const { getMunicipality, removeCountyFromMunicipalityName } = __non_webpack_require__(
@@ -56,6 +57,7 @@ function renderPart(req: XP.Request): XP.Response {
       ? imageUrl({
           id: part.config.image,
           scale: 'block(350,100)',
+          format: 'jpg',
         })
       : undefined,
     municipalityTitle: municipality ? municipalityName + ' (' + municipality.county.name + ')' : undefined,

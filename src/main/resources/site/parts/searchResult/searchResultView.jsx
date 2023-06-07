@@ -157,6 +157,7 @@ function SearchResult(props) {
           <a
             ref={last ? currentElement : null}
             className='ssb-link header'
+            // deepcode ignore DOMXSS: url comes from pageUrl which escapes  + Reacts own escaping
             href={hit.url}
             onClick={() => {
               addGtagForEvent(props.GA_TRACKING_ID, 'Klikk på lenke', 'Søk', `${searchTerm} - Lenke nummer: ${i + 1}`)
@@ -164,6 +165,7 @@ function SearchResult(props) {
           >
             <span
               dangerouslySetInnerHTML={{
+                // deepcode ignore DOMXSS: We sanitize this field in backend
                 __html: hit.title.replace(/&nbsp;/g, ' '),
               }}
             ></span>
@@ -171,6 +173,7 @@ function SearchResult(props) {
           <Paragraph className='search-result-ingress my-1'>
             <span
               dangerouslySetInnerHTML={{
+                // deepcode ignore DOMXSS: We sanitize this field in backend
                 __html: hit.preface.replace(/&nbsp;/g, ' '),
               }}
             ></span>

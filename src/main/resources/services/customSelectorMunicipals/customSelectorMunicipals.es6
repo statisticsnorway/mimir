@@ -12,6 +12,7 @@ const { list, query } = __non_webpack_require__('/lib/ssb/dataset/klass/municipa
  * }}
  */
 exports.get = (req) => {
+  // deepcode ignore Sqli: This is not SQL, simply string regex matching
   const municipals = req.params.query ? query(req.params.query) : list(req.params.count)
 
   return {

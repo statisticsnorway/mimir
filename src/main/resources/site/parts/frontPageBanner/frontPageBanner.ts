@@ -1,6 +1,7 @@
-import { getComponent, imageUrl, type Component } from '/lib/xp/portal'
-import type { FrontPageBanner as FrontPageBannerPartConfig } from '.'
+import { getComponent, type Component } from '/lib/xp/portal'
 import { render } from '/lib/thymeleaf'
+import { imageUrl } from '/lib/ssb/utils/imageUtils'
+import type { FrontPageBanner as FrontPageBannerPartConfig } from '.'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
@@ -27,6 +28,7 @@ function renderPart(req: XP.Request): XP.Response {
       ? imageUrl({
           id: part.config.image,
           scale: 'block(86,86)',
+          format: 'jpg',
         })
       : undefined,
   }

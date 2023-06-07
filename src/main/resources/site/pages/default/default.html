@@ -1,20 +1,37 @@
 <html data-th-lang="${language.code}">
 <head>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+  </script>
+  <!-- Google Tag Manager -->
+  <script th:inline="javascript" data-th-if="${GTM_TRACKING_ID && GTM_AUTH}">
+    (function(w,d,s,l,i) {
+      w[l]=w[l]||[];w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});
+      var f=d.getElementsByTagName(s)[0],
+          j=d.createElement(s),
+          dl=l!='dataLayer'?'&l='+l:'';
+      j.defer=true;
+      j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl+ '&gtm_auth='+[[${GTM_AUTH}]]+'&gtm_preview=env-3&gtm_cookies_win=x';
+      f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer', [[${GTM_TRACKING_ID}]]);
+  </script>
+  <!-- End Google Tag Manager -->
+
   <!-- UA GA tracking script with added GA4 gtag config -->
   <script defer data-th-if="${GA_TRACKING_ID}" data-th-src="|https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}|"></script>
+
   <script th:inline="javascript" data-th-if="${GA_TRACKING_ID}">
-    window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-    gtag('config', /*[[${GA_TRACKING_ID}]]*/);
-    gtag('config', 'G-RWG24LNZ9T', { 'anonymize_ip': true });
+    gtag('config', [[${GA_TRACKING_ID}]], { 'anonymize_ip': true });
   </script>
+
   <script data-th-src="${jsLibsUrl}" defer="defer"></script>
   <script data-th-if="${enabledEnalyzerScript}"
-    type='text/javascript' 
-    id='enalyzer-embed' 
-    data-env='https://surveys.enalyzer.com' 
-    data-embedid='hmumar2q' 
+    type='text/javascript'
+    id='enalyzer-embed'
+    data-env='https://surveys.enalyzer.com'
+    data-embedid='hmumar2q'
     defer
     src='https://surveys.enalyzer.com/Scripts/websitecollector.js'>
   </script>
@@ -30,6 +47,12 @@
 
 </head>
 <body class="xp-page" data-th-classappend="${bodyClasses}">
+  <!-- Google Tag Manager (noscript) -->
+  <noscript data-th-if="${GTM_TRACKING_ID && GTM_AUTH}"><iframe title="GTM tag" data-th-src="|https://www.googletagmanager.com/ns.html?id=${GTM_TRACKING_ID}&gtm_auth=${GTM_AUTH}&gtm_preview=env-3&gtm_cookies_win=x|"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe>
+  </noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
   <!-- HEADER -->
   <div class="header-wrapper">
     <div class="container">

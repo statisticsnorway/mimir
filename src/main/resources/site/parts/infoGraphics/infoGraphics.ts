@@ -1,11 +1,12 @@
+// @ts-ignore
+import { Base64 } from 'js-base64'
 import { get as getContentByKey, type Content, type MediaImage } from '/lib/xp/content'
 import type { SourceList, SourcesConfig } from '/lib/ssb/utils/utils'
 import { render, type RenderResponse } from '/lib/enonic/react4xp'
-// @ts-ignore
-import { Base64 } from 'js-base64'
-import type { InfoGraphics as InfoGraphicsPartConfig } from '.'
 import type { Default as DefaultPageConfig } from '/site/pages/default'
-import { getContent, getComponent, imageUrl } from '/lib/xp/portal'
+import { getContent, getComponent } from '/lib/xp/portal'
+import { imageUrl } from '/lib/ssb/utils/imageUtils'
+import type { InfoGraphics as InfoGraphicsPartConfig } from '.'
 
 const {
   data: { forceArray },
@@ -42,6 +43,7 @@ function renderPart(req: XP.Request): RenderResponse {
   const imageSrc: string | null = imageUrl({
     id: config.image,
     scale: 'max(850)',
+    format: 'jpg',
   })
 
   // Retrieves image as content to get image meta data

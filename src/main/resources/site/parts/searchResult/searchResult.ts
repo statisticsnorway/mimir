@@ -1,4 +1,4 @@
-import type { Component } from '/lib/xp/portal'
+import { sanitizeHtml, type Component } from '/lib/xp/portal'
 import { get as getContentByKey, type Content } from '/lib/xp/content'
 import { SearchResult as SearchResultPartConfig } from '.'
 import { render, type RenderResponse } from '/lib/enonic/react4xp'
@@ -123,8 +123,10 @@ export function renderPart(req: XP.Request): RenderResponse {
       }
 
       bestBetResult = {
-        title: title,
-        preface: firstBet.data && firstBet.data.linkedContentIngress ? firstBet.data.linkedContentIngress : '',
+        title: sanitizeHtml(title),
+        preface: sanitizeHtml(
+          firstBet.data && firstBet.data.linkedContentIngress ? firstBet.data.linkedContentIngress : ''
+        ),
         contentType:
           firstBet.data && firstBet.data.linkedContentType
             ? localize({

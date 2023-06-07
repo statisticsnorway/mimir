@@ -1,5 +1,6 @@
 import { render, type RenderResponse } from '/lib/enonic/react4xp'
-import { getComponent, imageUrl, type Component } from '/lib/xp/portal'
+import { getComponent, type Component } from '/lib/xp/portal'
+import { imageUrl } from '/lib/ssb/utils/imageUtils'
 import type { ExternalCard as ExternalCardPartConfig } from '.'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
@@ -41,6 +42,7 @@ const renderExternalCard = (req: XP.Request, links: Array<ExternalCard>) => {
             image: imageUrl({
               id: link.image,
               scale: 'height(70)',
+              format: 'jpg',
             }),
           }
         }),

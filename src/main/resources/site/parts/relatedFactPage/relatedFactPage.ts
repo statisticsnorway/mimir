@@ -4,7 +4,8 @@ import { render, type RenderResponse } from '/lib/enonic/react4xp'
 import type { SEO } from '/services/news/news'
 import type { Article, ContentList } from '/site/content-types'
 import type { RelatedFactPage as RelatedFactPagePartConfig } from '.'
-import { imagePlaceholder, getComponent, getContent, imageUrl, pageUrl, serviceUrl } from '/lib/xp/portal'
+import { imagePlaceholder, getComponent, getContent, pageUrl, serviceUrl } from '/lib/xp/portal'
+import { imageUrl } from '/lib/ssb/utils/imageUtils'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
@@ -124,7 +125,7 @@ export function parseRelatedFactPageData(
 ): RelatedFactPages {
   const relatedFactPages: Array<RelatedFactPageContent> = []
   let total = 0
-  if (relatedFactPageConfig && relatedFactPageConfig.contentIdList) {
+  if (relatedFactPageConfig?.contentIdList) {
     let contentListId: Array<string> = relatedFactPageConfig.contentIdList as Array<string>
 
     // why this? if contentListId is empty [], then:
@@ -152,11 +153,12 @@ export function parseRelatedFactPageData(
       )
         .sort((a, b) => {
           if (contentListId.indexOf(a._id) > contentListId.indexOf(b._id)) return 1
+          else if (contentListId.indexOf(a._id) === contentListId.indexOf(b._id)) return 0
           else return -1
         })
         .slice(start, start + count)
 
-      sortedRelatedContentQueryResults.map((relatedFactPage) =>
+      sortedRelatedContentQueryResults.forEach((relatedFactPage) =>
         relatedFactPages.push(parseRelatedContent(relatedFactPage))
       )
       total = relatedContentQueryResults.total
@@ -178,6 +180,7 @@ function parseRelatedContent(relatedContent: RelatedFactPage): RelatedFactPageCo
     image = imageUrl({
       id: imageId,
       scale: 'block(380, 400)',
+      format: 'jpg',
     })
   } else {
     image = imagePlaceholder({

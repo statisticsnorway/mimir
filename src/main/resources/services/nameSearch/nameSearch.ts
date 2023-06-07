@@ -107,6 +107,9 @@ function pad(word: string): string {
 }
 
 function sanitizeQuery(name: string): string {
+  if (name.toLowerCase() === 'and' || name.toLowerCase() === 'or') {
+    return name.toLowerCase()
+  }
   const approved = 'ABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ '
   return whitelist(replaceCharacters(name.toUpperCase()), approved)
 }

@@ -1,6 +1,7 @@
 import type { PictureCardLinks as PictureCardLinksPartConfig } from '.'
-import { getComponent, imageUrl, imagePlaceholder } from '/lib/xp/portal'
+import { getComponent, imagePlaceholder } from '/lib/xp/portal'
 import { render } from '/lib/enonic/react4xp'
+import { imageUrl } from '/lib/ssb/utils/imageUtils'
 
 const { getImageAlt } = __non_webpack_require__('/lib/ssb/utils/imageUtils')
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
@@ -35,32 +36,19 @@ function parsePictureCardLinks(
   pictureCardLinks: PictureCardLinksPartConfig['pictureCardLinks']
 ): Array<PictureCardLinksContent> {
   pictureCardLinks = Array.isArray(pictureCardLinks) ? pictureCardLinks : [pictureCardLinks]
-  return pictureCardLinks.reduce((acc, pictureCardLink) => {
+  return pictureCardLinks.reduce((acc, pictureCardLink, i) => {
     if (pictureCardLink) {
       const title: string = pictureCardLink.title
       const subTitle: string = pictureCardLink.subTitle
       const href: string = pictureCardLink.href
-      let imageSrc = ''
-      let imageAlt = ' '
-      if (pictureCardLink.image) {
-        imageSrc = imageUrl({
-          id: pictureCardLink.image,
-          scale: 'block(580, 420)',
-        })
-        imageAlt = getImageAlt(pictureCardLink.image) || ''
-      } else {
-        imageSrc = imagePlaceholder({
-          width: 580,
-          height: 420,
-        })
-      }
+
+      const imageSources = createImageUrls(pictureCardLink, i)
 
       const pictureCardLinksContent: PictureCardLinksContent = {
         title: title,
         subTitle: subTitle,
         href: href,
-        imageSrc: imageSrc,
-        imageAlt: imageAlt,
+        imageSources: imageSources,
       }
       acc.push(pictureCardLinksContent as never)
     }
@@ -68,10 +56,50 @@ function parsePictureCardLinks(
   }, [])
 }
 
+function createImageUrls(pictureCardLink: PictureCardLink, i: number): ImageUrls {
+  const imageUrls: ImageUrls = {
+    portraitSrcSet: '',
+    landscapeSrcSet: '',
+    imageSrc: '',
+    imageAlt: '',
+  }
+
+  if (pictureCardLink.image) {
+    imageUrls.imageSrc = imageUrl({
+      id: pictureCardLink.image,
+      scale: 'block(580, 400)',
+    })
+
+    imageUrls.landscapeSrcSet = imageUrls.imageSrc
+    if (i > 0) imageUrls.portraitSrcSet = imageUrls.imageSrc.replace('block-580-400', 'block-280-400')
+    imageUrls.imageAlt = getImageAlt(pictureCardLink.image) || ''
+  } else {
+    imageUrls.imageSrc = imagePlaceholder({
+      width: 580,
+      height: 420,
+    })
+  }
+
+  return imageUrls
+}
+
+interface PictureCardLink {
+  title: string
+  subTitle: string
+  href: string
+  image?: string
+}
+
+interface ImageUrls {
+  portraitSrcSet: string
+  landscapeSrcSet: string
+  imageSrc: string
+  imageAlt: string
+}
+
 interface PictureCardLinksContent {
   title: string
   subTitle: string
   href: string
-  imageSrc: string
-  imageAlt: string
+  imageSources: ImageUrls
 }

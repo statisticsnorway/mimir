@@ -1,9 +1,10 @@
 import { render as r4XpRender, type RenderResponse } from '/lib/enonic/react4xp'
-import { type Component, getComponent, getContent, imageUrl } from '/lib/xp/portal'
+import { type Component, getComponent, getContent } from '/lib/xp/portal'
 import type { EntryLinks as EntryLinksPartConfig } from '.'
 import { type Content, get as getContentByKey, type MediaImage } from '/lib/xp/content'
 import type { Phrases } from '/lib/types/language'
 import { render, type ResourceKey } from '/lib/thymeleaf'
+import { imageUrl } from '/lib/ssb/utils/imageUtils'
 
 const {
   data: { forceArray },
@@ -100,6 +101,7 @@ function parseEntryLinks(entryLinksContent: EntryLinksPartConfig['entryLinks']):
         icon: imageUrl({
           id: icon,
           scale: 'block(80,80)',
+          format: 'jpg',
         }),
         mobileIcon: getAttachmentContent(mobileIcon),
         altText,
