@@ -67,6 +67,7 @@ export function deleteExpiredEventLogsForQueries(): void {
     return node
   })
   cronJobLog(`Delete expired logs for queries complete. Total expired logs deleted: ${totalExpiredLogsDeleted}`)
+  totalExpiredLogsDeleted = 0
 }
 
 function deleteLog(parent: RepoNodeExtended, expiredDate: Date, count: number): Array<string> {
