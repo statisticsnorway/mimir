@@ -7,7 +7,6 @@
 // ──────────────────────────────────────────────────────────────────────────────
 
 module.exports = {
-
   // ────────────────────────────────────────────────────────────────────────────
   // ENTRIES AND CHUNKING:
   // ────────────────────────────────────────────────────────────────────────────
@@ -23,7 +22,6 @@ module.exports = {
   //   react4xp entries, but otherwise unreachable from react4xp.
   // - Default entryExtensions (file extensions to look for when finding entries
   //   under OTHER entryDirs than /site/) are: jsx, js, tsx, ts, es6, es
-
 
   // chunkDirs are folder names where importable, non-entry code is kept.
   //  Comma-separated list of folder names, relative to
@@ -53,7 +51,7 @@ module.exports = {
   //
   // For compatibility with earlier versions of react4xp, add _entries here.
   //
-  entryDirs: ['_entries']
+  entryDirs: ['_entries'],
 
   // entryExtensions are filename extensions of files (comma-separated list)
   // below the entryDirs folders that webpack should look for and turn into
@@ -65,7 +63,6 @@ module.exports = {
   // the box. Rules for typescript compilation must be added in your own
   //
   // entryExtensions: ['jsx', 'js', 'tsx', 'ts', 'es6', 'es'],
-
 
   // ────────────────────────────────────────────────────────────────────────────
   // Externals

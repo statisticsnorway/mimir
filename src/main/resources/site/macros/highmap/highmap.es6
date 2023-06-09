@@ -4,7 +4,7 @@ const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
 exports.macro = function (context) {
   try {
-    const highmap = highmapController.preview(context, context.params.highmap)
+    const highmap = highmapController.preview(context.request, context.params.highmap)
 
     if (highmap.status && highmap.status !== 200) throw new Error(`Highmap with id ${context.params.highmap} missing`)
 
