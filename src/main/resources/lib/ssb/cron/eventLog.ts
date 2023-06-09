@@ -28,7 +28,7 @@ export function deleteExpiredEventLogsForQueries(): void {
 
   const parentNodes: Array<RepoNodeExtended> = queryNodes(EVENT_LOG_REPO, EVENT_LOG_BRANCH, {
     query: `_parentPath = "${path}"`,
-    count: 10000,
+    count: 20000,
   }).hits.reduce((acc: Array<RepoNodeExtended>, parentNodeHit: NodeQueryHit) => {
     const parentNode: RepoNodeExtended | null = getNode<RepoNodeExtended>(
       EVENT_LOG_REPO,
