@@ -20,7 +20,7 @@ export function deleteExpiredEventLogsForQueries(): void {
   cronJobLog('Deleting expired event logs for queries')
   const job: JobEventNode = startJobLog('Delete expired event logs for queries')
   const path = '/queries'
-  const maxLogsBeforeDeleting = 10
+  const maxLogsBeforeDeleting = 10 // Have at least 10 logs left for each query to keep its log history
   const monthsBeforeLogsExpire = 1
 
   const expireDate: Date = new Date()
@@ -44,7 +44,7 @@ export function deleteExpiredEventLogsForQueries(): void {
   const deleteResult: Array<object> | undefined = parentNodes.reduce((acc: Array<object>, parent) => {
     const eventLogs: NodeQueryResponse = getChildNodes(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `${parent._id}`, 0, true)
     if (eventLogs.total > maxLogsBeforeDeleting) {
-      const deleteResult: Array<string> = deleteLog(parent, expireDate, eventLogs.total)
+      const deleteResult: Array<string> = deleteLog(parent, expireDate, eventLogs.total, maxLogsBeforeDeleting)
       acc.push({
         contentId: parent._name,
         deleteResult,
@@ -70,11 +70,16 @@ export function deleteExpiredEventLogsForQueries(): void {
   totalExpiredLogsDeleted = 0
 }
 
-function deleteLog(parent: RepoNodeExtended, expiredDate: Date, count: number): Array<string> {
+function deleteLog(
+  parent: RepoNodeExtended,
+  expiredDate: Date,
+  count: number,
+  maxLogsBeforeDeleting: number
+): Array<string> {
   const query = `_parentPath = '${parent._path}' AND _ts < dateTime('${expiredDate.toISOString()}')`
   const expiredLogs: NodeQueryResponse = queryNodes(EVENT_LOG_REPO, EVENT_LOG_BRANCH, {
     query,
-    count: count - 10,
+    count: count - maxLogsBeforeDeleting,
     sort: '_ts ASC',
   })
 
