@@ -148,6 +148,7 @@ export function getStatisticByIdFromRepo(statId: string | undefined): StatisticI
   if (!statId) {
     return undefined
   }
+  // TODO: This is really inneficient when getStatisticByIdFromRepo is used in a map
   const allStats: Array<StatisticInListing> = ensureArray(getAllStatisticsFromRepo())
   return allStats.find((s) => statId === `${s.id}`)
 }

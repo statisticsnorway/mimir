@@ -50,10 +50,11 @@ function renderPart(req: XP.Request): RenderResponse {
     }
   }
 
-  return renderActiveStatistics(statisticsTitle, parseContent(activeStatistics))
+  return renderActiveStatistics(req, statisticsTitle, parseContent(activeStatistics))
 }
 
 function renderActiveStatistics(
+  req: XP.Request,
   statisticsTitle: string,
   activeStatisticsContent: Array<ActiveStatistic | undefined>
 ): RenderResponse {
@@ -72,7 +73,7 @@ function renderActiveStatistics(
           }
         }),
       },
-      null,
+      req,
       {
         id,
         body: body,

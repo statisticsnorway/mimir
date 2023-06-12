@@ -33,7 +33,7 @@ function renderPart(context: XP.MacroContext): RenderResponse {
     linkedContent: contentUrl,
   }
 
-  return render('site/macros/headerLink/headerLink', props)
+  return render('site/macros/headerLink/headerLink', props, context.request)
 }
 
 function prepareText(content: Content, linkText: string): string {

@@ -4,7 +4,7 @@ const { assetUrl, serviceUrl } = __non_webpack_require__('/lib/xp/portal')
 
 const { render } = __non_webpack_require__('/lib/thymeleaf')
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
-const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+const { React4xp } = __non_webpack_require__('/lib/enonic/react4xp')
 const { getUser, hasRole } = __non_webpack_require__('/lib/xp/auth')
 const { getToolUrl } = __non_webpack_require__('/lib/xp/admin')
 const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
@@ -50,7 +50,7 @@ function renderPart(req) {
     statisticRegister: userHasAdmin,
   }
 
-  const dashboardDataset = new React4xp('Dashboard')
+  const dashboardDataset = new React4xp('DashboardEntry')
     .setProps({
       user,
       dashboardOptionsForUser,
@@ -64,7 +64,8 @@ function renderPart(req) {
 
   const pageContributions = parseContributions(
     dashboardDataset.renderPageContributions({
-      clientRender: req.mode !== 'edit',
+      ssr: false,
+      request: req,
     })
   )
 
@@ -78,7 +79,8 @@ function renderPart(req) {
 
   body = dashboardDataset.renderBody({
     body,
-    clientRender: req.mode !== 'edit',
+    ssr: false,
+    request: req,
   })
 
   return {

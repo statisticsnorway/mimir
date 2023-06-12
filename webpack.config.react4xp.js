@@ -1,4 +1,5 @@
 const path = require('path')
+const WatcherTouchPlugin = require('./WatcherTouchPlugin')
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
 module.exports = function (env, config) {
@@ -39,7 +40,12 @@ module.exports = function (env, config) {
     }
   })
 
-  config.target = ['web', 'es2017']
+  config.target = ['web', 'es2020']
+
+  if (process.env.WATCH === 'true') {
+    config.plugins.push(new WatcherTouchPlugin())
+    config.watch = true
+  }
   /* 
     Pro tip, Add:
     env.BUILD_ENV = 'development';
