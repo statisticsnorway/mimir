@@ -52,7 +52,7 @@
     "@statisticsnorway/ssb-component-library": "^2.0.84",
     "@types/ramda": "~0.29.1",
     "@types/react": "^17.0.58",
-    "@types/uuid": "^9.0.0",
+    "@types/uuid": "^9.0.2",
     "@types/validator": "^13.7.17",
     "@types/zipcelx": "^1.5.0",
     "@typescript-eslint/eslint-plugin": "^5.59.7",
