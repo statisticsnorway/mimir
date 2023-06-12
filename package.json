@@ -88,7 +88,7 @@
     "numeral": "^2.0.6",
     "popper.js": "^1.16.1",
     "postcss": "^8.4.23",
-    "postcss-loader": "^7.3.0",
+    "postcss-loader": "^7.3.3",
     "postcss-normalize": "^10.0.1",
     "prettier": "^2.8.8",
     "prop-types": "^15.8.1",
