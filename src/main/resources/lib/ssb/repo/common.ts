@@ -1,4 +1,4 @@
-import { getUser, User } from '/lib/xp/auth'
+import { getUser, User, type PrincipalKey } from '/lib/xp/auth'
 import {
   connect,
   RepoConnection,
@@ -10,11 +10,10 @@ import {
 } from '/lib/xp/node'
 import { EditorCallback } from '/lib/ssb/repo/eventLog'
 import { run } from '/lib/xp/context'
-import { PrincipalKeyRole } from '*/lib/xp/auth'
 
 const ENONIC_PROJECT_ID: string = app.config && app.config['ssb.project.id'] ? app.config['ssb.project.id'] : 'default'
 export const ENONIC_CMS_DEFAULT_REPO = `com.enonic.cms.${ENONIC_PROJECT_ID}`
-const SYSADMIN_ROLE: PrincipalKeyRole = 'role:system.admin'
+const SYSADMIN_ROLE: PrincipalKey = 'role:system.admin'
 
 export type ContextCallback<T> = () => T
 export type UserContextCallback<T> = (user: User | null) => T
@@ -99,7 +98,14 @@ export function modifyNode<T>(repository: string, branch: string, key: string, e
   })
 }
 
-export function getChildNodes(repository: string, branch: string, key: string, count = 10, countOnly = false, childOrder = '_ts DESC') {
+export function getChildNodes(
+  repository: string,
+  branch: string,
+  key: string,
+  count = 10,
+  countOnly = false,
+  childOrder = '_ts DESC'
+) {
   return withConnection(repository, branch, (conn) => {
     // @ts-ignore https://github.com/enonic/xp/issues/10138
     return conn.findChildren({

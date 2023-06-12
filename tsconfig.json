@@ -10,7 +10,7 @@
     "lib": ["ES5", "ES6"],
     "types": [
       "node",
-      "enonic-types"
+      "@item-enonic-types/global"
     ],
     "rootDirs": [
       "./src/main/resources",
@@ -32,9 +32,6 @@
       ],
     }
   },
-  "types": [
-    "types"
-  ],
   "include": [
     "./.xp-codegen/**/*",
     "./src/main/resources/**/*"
