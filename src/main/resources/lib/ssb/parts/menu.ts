@@ -1,4 +1,4 @@
-import { get, getChildren, query, Content, QueryResponse, MediaImage } from '/lib/xp/content'
+import { get, getChildren, query, Content, ContentsResult } from '/lib/xp/content'
 import type { MenuItem, Footer, Header } from '/site/content-types'
 
 const { pageUrl } = __non_webpack_require__('/lib/xp/portal')
@@ -41,20 +41,20 @@ export function createMenuTree(menuItemId: string): Array<MenuItemParsed> {
   })
 
   if (menuContent) {
-    const menuContentChildren: QueryResponse<MenuItem, object> = getChildren({
+    const menuContentChildren = getChildren({
       count: 100,
       key: menuContent._id,
     })
 
     const parsedMenu: Array<MenuItemParsed> = menuContentChildren.hits.map((menuItem) => createMenuBranch(menuItem))
     const flatMenu: Array<MenuItemParsed> = flattenMenu(parsedMenu)
-    query<MediaImage, object>({
+    query({
       count: flatMenu.length,
       query: `_id IN(${flatMenu.map((menuItem) => `"${menuItem.iconId}"`).join(',')}) AND type = "media:vector"`,
     }).hits.forEach((icon) => {
       const menuItem: MenuItemParsed | undefined = flatMenu.find((fm) => fm.iconId === icon._id)
       if (menuItem) {
-        menuItem.iconAltText = icon ? icon.data.caption : ''
+        menuItem.iconAltText = icon ? (icon.data.caption as string) : ''
         menuItem.iconSvgTag = icon ? getAttachment(icon) : undefined
       }
     })
@@ -63,7 +63,7 @@ export function createMenuTree(menuItemId: string): Array<MenuItemParsed> {
   return []
 }
 
-export function isMenuItemActive(children: QueryResponse<MenuItem, object>, content: Content | null): boolean {
+export function isMenuItemActive(children: ContentsResult<Content<MenuItem>>, content: Content | null): boolean {
   return children.total > 0 && content && content._path
     ? children.hits.reduce((hasActiveChildren: boolean, child: Content<MenuItem>) => {
         if (
@@ -146,7 +146,7 @@ export interface Link {
 
 export interface MenuLib {
   createMenuTree: (menuItemId: string) => Array<MenuItemParsed>
-  isMenuItemActive: (children: QueryResponse<MenuItem, object>, content: Content | null) => boolean
+  isMenuItemActive: (children: ContentsResult<Content<MenuItem>>, content: Content | null) => boolean
   parseTopLinks: (topLinks: TopLinks) => Array<Link>
   parseGlobalLinks: (globalLinks: GlobalLinks) => Array<Link>
   getMenuIcons: (menuItemId: string) => Array<object>

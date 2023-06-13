@@ -28,8 +28,11 @@ export function preview(req: XP.Request): XP.Response {
 }
 
 function renderPart(req: XP.Request): XP.Response {
-  const page: Content<Statistics> = getContent()
-  const config: StatbankBoxPartConfig = getComponent().config
+  const page = getContent<Content<Statistics>>()
+  if (!page) throw Error('No page found')
+  const config = getComponent<StatbankBoxPartConfig>()?.config
+  if (!config) throw Error('No part found')
+
   const phrases: Phrases = getPhrases(page)
 
   return renderStatbankBox(req, parseStatbankBoxContent(page, config, phrases))

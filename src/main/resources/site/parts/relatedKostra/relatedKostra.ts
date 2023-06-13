@@ -1,5 +1,5 @@
 import type { MunicipalityWithCounty } from '/lib/ssb/dataset/klass/municipalities'
-import { render, type RenderResponse } from '/lib/enonic/react4xp'
+import { render } from '/lib/enonic/react4xp'
 import type { RelatedKostra as RelatedKostraPartConfig } from '.'
 import { getComponent, getSiteConfig, processHtml } from '/lib/xp/portal'
 
@@ -7,12 +7,14 @@ const { getMunicipality } = __non_webpack_require__('/lib/ssb/dataset/klass/muni
 const { pageMode } = __non_webpack_require__('/lib/ssb/utils/utils')
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
-export function get(req: XP.Request): XP.Response | RenderResponse {
+export function get(req: XP.Request): XP.Response {
   try {
     let municipality: MunicipalityWithCounty | undefined = getMunicipality(req)
     const mode: string = pageMode(req)
     if (!municipality && mode === 'edit') {
-      const siteConfig: XP.SiteConfig = getSiteConfig()
+      const siteConfig = getSiteConfig<XP.SiteConfig>()
+      if (!siteConfig) throw Error('No site config found')
+
       municipality = getMunicipality({
         code: siteConfig.defaultMunicipality,
       } as unknown as XP.Request)
@@ -23,16 +25,19 @@ export function get(req: XP.Request): XP.Response | RenderResponse {
   }
 }
 
-export function preview(req: XP.Request): XP.Response | RenderResponse {
-  const siteConfig: XP.SiteConfig = getSiteConfig()
+export function preview(req: XP.Request): XP.Response {
+  const siteConfig = getSiteConfig<XP.SiteConfig>()
+  if (!siteConfig) throw Error('No site config found')
+
   const municipality: MunicipalityWithCounty | undefined = getMunicipality({
     code: siteConfig.defaultMunicipality,
   } as unknown as XP.Request)
   return renderPart(req, municipality)
 }
 
-function renderPart(req: XP.Request, municipality: MunicipalityWithCounty | undefined): XP.Response | RenderResponse {
-  const config: RelatedKostraPartConfig = getComponent().config
+function renderPart(req: XP.Request, municipality: MunicipalityWithCounty | undefined): XP.Response {
+  const config = getComponent<RelatedKostraPartConfig>()?.config
+  if (!config) throw Error('No part found')
 
   const props: RelatedKostraProps = {
     title: config.title,

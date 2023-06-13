@@ -1,4 +1,3 @@
-import { FetchResponse, ListOfResults } from '/lib/cristin/service'
 import { fetchResultsCristin } from '/lib/ssb/cristin/cristin'
 
 exports.get = (req: XP.Request): XP.Response => {
@@ -9,7 +8,7 @@ exports.get = (req: XP.Request): XP.Response => {
   const page: string | undefined = req.params.page
   const sort: string | undefined = req.params.sort
 
-  const results: FetchResponse<ListOfResults> = fetchResultsCristin(contributor, category, per_page, page, sort)
+  const results = fetchResultsCristin(contributor, category, per_page, page, sort)
 
   return {
     body: results,

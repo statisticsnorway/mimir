@@ -1,10 +1,9 @@
 import { type Content, get as getContentByKey, query } from '/lib/xp/content'
-import { render, type ResourceKey } from '/lib/thymeleaf'
+import { render } from '/lib/thymeleaf'
 import type { ReleaseDatesVariant, StatisticInListing, VariantInListing } from '/lib/ssb/dashboard/statreg/types'
 import { formatDate } from '/lib/ssb/utils/dateUtils'
 import type { Phrases } from '/lib/types/language'
 import { render as r4xpRender } from '/lib/enonic/react4xp'
-import { SEO } from '/services/news/news'
 import type { Article, Statistics } from '/site/content-types'
 import type { RelatedArticles } from '/site/mixins/relatedArticles'
 
@@ -20,11 +19,13 @@ const { fromRelatedArticlesCache } = __non_webpack_require__('/lib/ssb/cache/cac
 const { getStatisticByIdFromRepo } = __non_webpack_require__('/lib/ssb/statreg/statistics')
 const { hasWritePermissionsAndPreview } = __non_webpack_require__('/lib/ssb/parts/permissions')
 
-const view: ResourceKey = resolve('./relatedArticles.html')
+const view = resolve('./relatedArticles.html')
 
 export function get(req: XP.Request): XP.Response {
   try {
-    const page: Content<Article> = getContent()
+    const page = getContent<Content<Article>>()
+    if (!page) throw Error('No page found')
+
     let relatedArticles: RelatedArticles['relatedArticles'] = page.data.relatedArticles
     if (relatedArticles) {
       relatedArticles = util.data.forceArray(relatedArticles)
@@ -42,7 +43,9 @@ export function preview(req: XP.Request, relatedArticles: RelatedArticles['relat
 }
 
 function renderPart(req: XP.Request, relatedArticles: RelatedArticles['relatedArticles']): XP.Response {
-  const page: Content<Article, SEO> = getContent()
+  const page = getContent<Content<Article>>()
+  if (!page) throw Error('No page found')
+
   const language: string = page.language === 'en' || page.language === 'nn' ? page.language : 'nb'
   const phrases: Phrases = getPhrases(page)
   const showPreview: boolean = (req.params.showDraft && hasWritePermissionsAndPreview(req, page._id)) as boolean
@@ -75,7 +78,7 @@ function renderPart(req: XP.Request, relatedArticles: RelatedArticles['relatedAr
         .map((article) => {
           if (article._selected === 'article') {
             return fromRelatedArticlesCache(req, article.article.article, () => {
-              const articleContent: Content<Article, SEO> | null = getContentByKey({
+              const articleContent: Content<Article> | null = getContentByKey({
                 key: article.article.article,
               })
 
@@ -86,14 +89,14 @@ function renderPart(req: XP.Request, relatedArticles: RelatedArticles['relatedAr
               let imageSrc: string | undefined
               let imageAlt: string | undefined = ' '
 
-              if (!articleContent.x['com-enonic-app-metafields']['meta-data'].seoImage) {
+              if (!articleContent.x['com-enonic-app-metafields']?.['meta-data']?.seoImage) {
                 imageSrc = imagePlaceholder({
                   width: 320,
                   height: 180,
                 })
               } else {
                 // use placeholder if there is no seo image on the article
-                const image: string = articleContent.x['com-enonic-app-metafields']['meta-data'].seoImage
+                const image: string = articleContent.x['com-enonic-app-metafields']?.['meta-data']?.seoImage
                 imageSrc = imageUrl({
                   id: image,
                   scale: 'block(320, 180)', // 16:9
@@ -156,11 +159,7 @@ function renderPart(req: XP.Request, relatedArticles: RelatedArticles['relatedAr
   )
 }
 
-function getSubTitle(
-  articleContent: Content<Article, SEO> | null,
-  phrases: Phrases,
-  language: string
-): string | undefined {
+function getSubTitle(articleContent: Content<Article> | null, phrases: Phrases, language: string): string | undefined {
   if (articleContent) {
     let type = ''
     if (articleContent.type === `${app.name}:article`) {
@@ -178,7 +177,7 @@ function getSubTitle(
 }
 
 function addDsArticle(
-  page: Content<Statistics | Article, SEO>,
+  page: Content<Statistics | Article>,
   relatedArticles: RelatedArticles['relatedArticles'],
   showPreview: boolean
 ): RelatedArticles['relatedArticles'] {
@@ -205,12 +204,12 @@ function addDsArticle(
 function getDsArticle(statisticId: string, statisticPublishDate: string): RelatedArticle | undefined {
   statisticPublishDate = statisticPublishDate ? new Date(statisticPublishDate).toLocaleDateString() : ''
 
-  const articleContent: Array<Content<Statistics | Article, SEO>> = query({
+  const articleContent: Array<Content<Statistics | Article>> = query({
     count: 1,
     sort: 'publish.from DESC',
     query: `data.associatedStatistics.XP.content = "${statisticId}" AND publish.from LIKE "${statisticPublishDate}*" `,
     contentTypes: [`${app.name}:article`],
-  }).hits as unknown as Array<Content<Statistics | Article, SEO>>
+  }).hits as unknown as Array<Content<Statistics | Article>>
 
   const articleObject: RelatedArticle | undefined =
     articleContent.length > 0

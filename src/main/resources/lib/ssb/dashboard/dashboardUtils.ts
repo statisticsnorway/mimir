@@ -1,6 +1,7 @@
 import { User } from '/lib/xp/auth'
 import { Content } from '/lib/xp/content'
 import { Events } from '/lib/ssb/repo/query'
+import { DataSource } from '/site/mixins/dataSource'
 
 /**
  * The timestamp from enonic contains 6 millisecond decimals. This is not supported in
@@ -35,7 +36,7 @@ export function showWarningIcon(result: Events): boolean {
 }
 
 export interface DashboardUtilsLib {
-  isPublished: (content: Content) => boolean
+  isPublished: (content: Content<DataSource>) => boolean
   WARNING_ICON_EVENTS: ReadonlyArray<Events>
   users: Array<User>
   showWarningIcon: (result: Events) => boolean

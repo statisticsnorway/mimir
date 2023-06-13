@@ -1,6 +1,6 @@
 import { create as createRepo } from '/lib/xp/repo'
 import { run } from '/lib/xp/context'
-import { connect, type NodeCreateParams, type NodeQueryResponse, type RepoConnection } from '/lib/xp/node'
+import { connect, CreateNodeParams, type RepoConnection } from '/lib/xp/node'
 import type { Data, Dataset, Dimension } from '/lib/types/jsonstat-toolkit'
 import type { DatasetRepoNode } from '/lib/ssb/repo/dataset'
 // @ts-ignore
@@ -60,7 +60,7 @@ export function fillRepo(names: Array<NameData>) {
 
   names.forEach((name) => {
     const path = `/${name.displayName}`
-    const exists: Array<string> = connection.exists(path)
+    const exists = connection.exists(path)
 
     const content: NameData = createContentName({
       displayName: name.displayName,
@@ -99,7 +99,7 @@ export function getRepoConnectionNameGraph(): RepoConnection {
 
 export function getNameGraphDataFromRepo(names: string[]): NameData[] {
   const connectionNameGraphRepo: RepoConnection = getRepoConnectionNameGraph()
-  const res: NodeQueryResponse = connectionNameGraphRepo.query({
+  const res = connectionNameGraphRepo.query({
     count: 10,
     filters: {
       boolean: {
@@ -115,7 +115,7 @@ export function getNameGraphDataFromRepo(names: string[]): NameData[] {
     },
   })
 
-  return res.hits.map((hit) => connectionNameGraphRepo.get(hit.id))
+  return res.hits.map((hit) => connectionNameGraphRepo.get(hit.id) as NameData)
 }
 
 function getNameGraph(): Array<NameData> {
@@ -152,7 +152,7 @@ function getNameGraph(): Array<NameData> {
   }
 }
 
-function createContentName(params: NameData): NameData & NodeCreateParams {
+function createContentName(params: NameData): NameData & CreateNodeParams {
   const { displayName, nameCode, data } = params
   return {
     displayName: displayName,

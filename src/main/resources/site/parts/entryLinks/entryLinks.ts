@@ -1,9 +1,9 @@
-import { render as r4XpRender, type RenderResponse } from '/lib/enonic/react4xp'
-import { type Component, getComponent, getContent } from '/lib/xp/portal'
+import { render as r4XpRender } from '/lib/enonic/react4xp'
+import { getComponent, getContent } from '/lib/xp/portal'
 import type { EntryLinks as EntryLinksPartConfig } from '.'
-import { type Content, get as getContentByKey, type MediaImage } from '/lib/xp/content'
+import { type Content, get as getContentByKey } from '/lib/xp/content'
 import type { Phrases } from '/lib/types/language'
-import { render, type ResourceKey } from '/lib/thymeleaf'
+import { render } from '/lib/thymeleaf'
 import { imageUrl } from '/lib/ssb/utils/imageUtils'
 
 const {
@@ -14,7 +14,7 @@ const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 const { getAttachmentContent } = __non_webpack_require__('/lib/ssb/utils/utils')
 
-const view: ResourceKey = resolve('./entryLinks.html') as ResourceKey
+const view = resolve('./entryLinks.html')
 
 export function get(req: XP.Request) {
   try {
@@ -28,9 +28,13 @@ export function preview(req: XP.Request) {
   return renderPart(req)
 }
 
-function renderPart(req: XP.Request): XP.Response | RenderResponse {
-  const page: Content = getContent()
-  const part: Component<EntryLinksPartConfig> = getComponent()
+function renderPart(req: XP.Request): XP.Response {
+  const page = getContent()
+  if (!page) throw Error('No page found')
+
+  const part = getComponent<EntryLinksPartConfig>()
+  if (!part) throw Error('No part found')
+
   const phrases: Phrases = getPhrases(page) as Phrases
 
   const entryLinksContent: EntryLinksPartConfig['entryLinks'] = part.config.entryLinks
@@ -50,11 +54,7 @@ function renderPart(req: XP.Request): XP.Response | RenderResponse {
   return renderEntryLinks(req, headerTitle, entryLinksContent)
 }
 
-function renderEntryLinks(
-  req: XP.Request,
-  headerTitle: string,
-  entryLinksContent: EntryLinksPartConfig['entryLinks']
-): RenderResponse {
+function renderEntryLinks(req: XP.Request, headerTitle: string, entryLinksContent: EntryLinksPartConfig['entryLinks']) {
   if (entryLinksContent && entryLinksContent.length > 0) {
     return r4XpRender(
       'EntryLinks',

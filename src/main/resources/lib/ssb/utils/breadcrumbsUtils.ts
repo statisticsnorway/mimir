@@ -36,12 +36,12 @@ export function getBreadcrumbs(
   municipality: MunicipalityWithCounty | undefined,
   statbank: StatbankFrameData | undefined
 ): Breadcrumbs {
-  const statbankStatisticsPage: Content | undefined = statbank && statbank.statisticsPageContent
+  const statbankStatisticsPage = statbank && statbank.statisticsPageContent
   const breadcrumbs: Breadcrumbs = statbankStatisticsPage
-    ? addBreadcrumbs(statbankStatisticsPage, statbankStatisticsPage)
+    ? addBreadcrumbs(statbankStatisticsPage as unknown as Content, statbankStatisticsPage as unknown as Content)
     : addBreadcrumbs(page, page)
 
-  if (getContent().language == 'en') {
+  if (getContent()?.language == 'en') {
     breadcrumbs.shift()
     breadcrumbs[0].text = 'Home'
   }

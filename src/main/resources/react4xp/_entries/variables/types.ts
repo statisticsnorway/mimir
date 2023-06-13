@@ -1,4 +1,5 @@
-import PropTypes from 'prop-types';
+// @ts-nocheck
+import PropTypes from 'prop-types'
 
 export const variableType = PropTypes.shape({
   title: PropTypes.string.isRequired,
@@ -7,4 +8,4 @@ export const variableType = PropTypes.shape({
   fileLocation: PropTypes.string,
   downloadText: PropTypes.string,
   icon: PropTypes.element,
-});
+})

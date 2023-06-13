@@ -1,5 +1,5 @@
 import type { Content } from '/lib/xp/content'
-import { type ResourceKey, render } from '/lib/thymeleaf'
+import { render } from '/lib/thymeleaf'
 import type { ReleaseDatesVariant, StatisticInListing, VariantInListing } from '/lib/ssb/dashboard/statreg/types'
 import { formatDate } from '/lib/ssb/utils/dateUtils'
 import { render as r4xpRender } from '/lib/enonic/react4xp'
@@ -21,7 +21,7 @@ const { currentlyWaitingForPublish: currentlyWaitingForPublishOld } =
 const util = __non_webpack_require__('/lib/util')
 const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
 
-const view: ResourceKey = resolve('./statistics.html')
+const view = resolve('./statistics.html')
 
 export function get(req: XP.Request): XP.Response {
   try {
@@ -35,8 +35,11 @@ export function preview(req: XP.Request): XP.Response {
   return renderPart(req)
 }
 
+// eslint-disable-next-line complexity
 function renderPart(req: XP.Request): XP.Response {
-  const page: Content<Statistics> = getContent()
+  const page = getContent<Content<Statistics>>()
+  if (!page) throw Error('No page found')
+
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   const phrases: Phrases = getPhrases(page)
@@ -82,8 +85,9 @@ function renderPart(req: XP.Request): XP.Response {
         path: page._path,
       })
     : pageUrl({
+        // TODO - test this
+        path: page._path,
         params: {
-          // @ts-ignore
           showDraft: true,
         },
       })
@@ -115,7 +119,7 @@ function renderPart(req: XP.Request): XP.Response {
     statisticsKeyFigure = keyFigurePreview(req, page.data.statisticsKeyFigure)
   }
 
-  if (page.data.showModifiedDate && previousReleaseDate) {
+  if (page.data.showModifiedDate && previousReleaseDate && modifiedDate) {
     if (isAfter(new Date(modifiedDate), new Date(previousReleaseDate))) {
       changeDate = formatDate(modifiedDate, 'PPpp', language)
     }
@@ -133,7 +137,7 @@ function renderPart(req: XP.Request): XP.Response {
     previousRelease: paramShowDraft && showPreviewDraft ? nextRelease : previousRelease,
     nextRelease: paramShowDraft && showPreviewDraft ? previewNextRelease : nextRelease,
     modifiedDateId: id,
-    statisticsKeyFigure: statisticsKeyFigure ? statisticsKeyFigure.body : null,
+    statisticsKeyFigure: statisticsKeyFigure?.body || null,
     showPreviewDraft,
     draftUrl,
     draftButtonText,

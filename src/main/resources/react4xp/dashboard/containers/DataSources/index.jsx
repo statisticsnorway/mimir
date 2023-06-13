@@ -6,10 +6,7 @@ import {
   selectDataSourcesByParentType,
   selectLoadingDefaultDataSources,
 } from '/react4xp/dashboard/containers/DataSources/selectors'
-import {
-  requestErrorDataSources,
-  requestDefaultDataSources,
-} from '/react4xp/dashboard/containers/DataSources/actions'
+import { requestErrorDataSources, requestDefaultDataSources } from '/react4xp/dashboard/containers/DataSources/actions'
 import { FactPageDataSources } from '/react4xp/dashboard/containers/DataSources/FactPageDataSources'
 import { StatisticsDataSources } from '/react4xp/dashboard/containers/DataSources/StatisticsDataSources'
 import { MunicipalDataSources } from '/react4xp/dashboard/containers/DataSources/MunicipalDataSources'

@@ -13,7 +13,9 @@ const { fromDatasetRepoCache } = __non_webpack_require__('/lib/ssb/cache/cache')
 export const list: () => Array<County> = () => getCountiesFromContent()
 
 function getCountiesFromContent(): Array<County> {
-  const siteConfig: XP.SiteConfig = getSiteConfig()
+  const siteConfig: XP.SiteConfig | null = getSiteConfig()
+  if (!siteConfig) return []
+
   const key: string | undefined = siteConfig.countyDataContentId
   if (key) {
     const dataSource: Content<DataSource> | null = getContent({

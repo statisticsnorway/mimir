@@ -1,14 +1,7 @@
 import { Article } from '/site/content-types'
 import { addSubjectToXData } from '/lib/ssb/utils/articleUtils'
-import {
-  get as getContent,
-  publish,
-  query,
-  type Content,
-  type PublishResponse,
-  type QueryResponse,
-} from '/lib/xp/content'
-import { run, type ContextAttributes, type RunContext } from '/lib/xp/context'
+import { get as getContent, publish, query, type Content, PublishContentResult } from '/lib/xp/content'
+import { run, type ContextParams } from '/lib/xp/context'
 
 import { ENONIC_CMS_DEFAULT_REPO } from '/lib/ssb/repo/common'
 
@@ -22,7 +15,7 @@ const INTERNAL_BASE_URL =
   app.config && app.config['ssb.internal.baseUrl'] ? app.config['ssb.internal.baseUrl'] : 'https://i.ssb.no'
 
 export function get(req: XP.Request): XP.Response {
-  const contentToFix: QueryResponse<Article, XpXData, object> = query({
+  const contentToFix = query<Content<Article>>({
     count: 500,
     filters: {
       boolean: {
@@ -45,7 +38,7 @@ export function get(req: XP.Request): XP.Response {
     },
   })
 
-  const createUserContext: RunContext<ContextAttributes> = {
+  const createUserContext: ContextParams = {
     // Master context (XP)
     repository: ENONIC_CMS_DEFAULT_REPO,
     branch: 'master',
@@ -56,9 +49,9 @@ export function get(req: XP.Request): XP.Response {
     },
   }
 
-  const fixedContents: Array<Content<Article, XpXData>> = []
+  const fixedContents: Array<Content<Article>> = []
   const editedUnpublishedContents: Array<{ name: string; url: string }> = []
-  const publishResult: Array<PublishResponse> = []
+  const publishResult: Array<PublishContentResult> = []
 
   contentToFix.hits.forEach((hit) => {
     const masterVersion = run(createUserContext, () => {

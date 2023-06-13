@@ -1,7 +1,7 @@
 import { get as getContentByKey, getAttachmentStream, type ByteSource, type Content } from '/lib/xp/content'
 import type { RowData } from '/lib/ssb/parts/highcharts/data/htmlTable'
 import { isNumber, type RowValue } from '/lib/ssb/utils/utils'
-import { render, type RenderResponse } from '/lib/enonic/react4xp'
+import { render } from '/lib/enonic/react4xp'
 import type { PreliminaryData, XmlParser } from '/lib/types/xmlParser'
 import type { Highmap } from '/site/content-types'
 import type { Highmap as HighmapPartConfig } from '.'
@@ -63,9 +63,9 @@ interface HighmapProps {
   language: string | undefined
 }
 
-export function get(req: XP.Request): RenderResponse | XP.Response {
+export function get(req: XP.Request): XP.Response {
   try {
-    const config: HighmapPartConfig = getComponent().config
+    const config = getComponent()?.config as HighmapPartConfig
     const highmapId: string | undefined = config.highmapId
     return renderPart(req, highmapId)
   } catch (e) {
@@ -73,7 +73,7 @@ export function get(req: XP.Request): RenderResponse | XP.Response {
   }
 }
 
-export function preview(req: XP.Request, highmapId: string | undefined): RenderResponse | XP.Response {
+export function preview(req: XP.Request, highmapId: string | undefined): XP.Response {
   try {
     return renderPart(req, highmapId)
   } catch (e) {
@@ -81,8 +81,10 @@ export function preview(req: XP.Request, highmapId: string | undefined): RenderR
   }
 }
 
-function renderPart(req: XP.Request, highmapId: string | undefined): RenderResponse | XP.Response {
-  const page: Content = getContent()
+function renderPart(req: XP.Request, highmapId: string | undefined): XP.Response {
+  const page = getContent()
+  if (!page) throw new Error('No page found')
+
   const highmapContent: Content<Highmap> | null = highmapId
     ? getContentByKey({
         key: highmapId,

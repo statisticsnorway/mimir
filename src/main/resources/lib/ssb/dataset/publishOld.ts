@@ -10,7 +10,7 @@ import {
   StatisticsPublishResult,
   DataSourceStatisticsPublishResult,
 } from '/lib/ssb/repo/job'
-import { NodeQueryHit } from '/lib/xp/node'
+import { NodeQueryResultHit } from '/lib/xp/node'
 import type { Statistic } from '/site/mixins/statistic'
 import { send } from '/lib/xp/event'
 import { isSameOrBefore, isSameDay } from '/lib/ssb/utils/dateUtils'
@@ -34,7 +34,7 @@ const jobs: { [key: string]: JobEventNode | JobInfoNode } = {}
 export function currentlyWaitingForPublish(statistic: Content<Statistics>): boolean {
   const from: string = new Date(Date.now() - 1800000).toISOString()
   const to: string = new Date().toISOString()
-  const jobRes: NodeQueryHit | null = queryJobLogs({
+  const jobRes: NodeQueryResultHit | null = queryJobLogs({
     start: 0,
     count: 1,
     query: `

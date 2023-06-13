@@ -1,4 +1,4 @@
-import { NodeQueryParams, NodeQueryResponse, RepoNode } from '/lib/xp/node'
+import { QueryNodeParams, Node, NodeQueryResult } from '/lib/xp/node'
 import { EditorCallback } from '/lib/ssb/repo/eventLog'
 import { getUser, User } from '/lib/xp/auth'
 import { DataSourceInfo, RSSFilterLogData } from '/lib/ssb/cron/rss'
@@ -23,11 +23,11 @@ export enum JobNames {
   REFRESH_DATASET_SDDS_TABLES_JOB = 'Refresh dataset for SDDS tables',
 }
 
-export const JOB_STATUS_STARTED: 'STARTED' = 'STARTED'
-export const JOB_STATUS_COMPLETE: 'COMPLETE' = 'COMPLETE'
+export const JOB_STATUS_STARTED = 'STARTED' as const
+export const JOB_STATUS_COMPLETE = 'COMPLETE' as const
 
-export type JobInfoNode = RepoNode & JobInfo
-export type JobEventNode = RepoNode & JobEvent
+export type JobInfoNode = Node & JobInfo
+export type JobEventNode = Node & JobEvent
 
 export interface JobInfo {
   data: {
@@ -87,21 +87,21 @@ export function startJobLog(task?: string): JobEventNode {
   })
 }
 
-export function updateJobLog<T>(jobId: string, editor: EditorCallback<JobInfoNode>): JobInfoNode {
+export function updateJobLog(jobId: string, editor: EditorCallback<JobInfoNode>): JobInfoNode {
   return modifyNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, jobId, editor)
 }
 
-export function queryJobLogs(params: NodeQueryParams): NodeQueryResponse {
+export function queryJobLogs(params: QueryNodeParams) {
   return queryNodes(EVENT_LOG_REPO, EVENT_LOG_BRANCH, params)
 }
 
-export function getJobLog(id: string): JobInfoNode | ReadonlyArray<JobInfoNode> | null {
-  return getNode<JobInfoNode>(EVENT_LOG_REPO, EVENT_LOG_BRANCH, id)
+export function getJobLog(id: string) {
+  return getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, id) as JobInfoNode | ReadonlyArray<JobInfoNode> | null
 }
 
 export function completeJobLog(jobLogId: string, message: string, refreshDataResult: object): JobInfoNode {
   const now: Date = new Date()
-  return updateJobLog<JobInfoNode>(jobLogId, function (node: JobInfoNode): JobInfoNode {
+  return updateJobLog(jobLogId, function (node: JobInfoNode): JobInfoNode {
     node.data = {
       ...node.data,
       completionTime: now.toISOString(),
@@ -109,7 +109,7 @@ export function completeJobLog(jobLogId: string, message: string, refreshDataRes
       message,
       refreshDataResult,
     }
-    return node
+    return node as JobInfoNode
   })
 }
 
@@ -119,8 +119,8 @@ export interface RepoJobLib {
   JobNames: typeof JobNames
   JobStatus: typeof JobStatus
   startJobLog: (task?: string) => JobEventNode
-  updateJobLog: <T>(jobId: string, editor: EditorCallback<JobInfoNode>) => JobInfoNode
-  queryJobLogs: <T>(params: NodeQueryParams) => NodeQueryResponse
+  updateJobLog: (jobId: string, editor: EditorCallback<JobInfoNode>) => JobInfoNode
+  queryJobLogs: (params: QueryNodeParams) => NodeQueryResult
   getJobLog: (id: string) => JobInfoNode | ReadonlyArray<JobInfoNode> | null
   completeJobLog: (jobLogId: string, message: string, refreshDataResult: object) => JobInfoNode
 }

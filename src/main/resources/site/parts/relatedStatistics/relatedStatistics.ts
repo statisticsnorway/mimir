@@ -1,8 +1,7 @@
 import { get as getContentByKey, type Content } from '/lib/xp/content'
-import { type ResourceKey, render } from '/lib/thymeleaf'
+import { render } from '/lib/thymeleaf'
 import type { Phrases } from '/lib/types/language'
 import { render as r4xpRender } from '/lib/enonic/react4xp'
-import type { SEO } from '/services/news/news'
 import type { Statistics } from '/site/content-types'
 import { getContent, pageUrl } from '/lib/xp/portal'
 
@@ -12,7 +11,7 @@ const {
 const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
-const view: ResourceKey = resolve('./relatedStatistics.html')
+const view = resolve('./relatedStatistics.html')
 
 export function get(req: XP.Request): XP.Response {
   try {
@@ -27,7 +26,9 @@ export function preview(req: XP.Request): XP.Response {
 }
 
 function renderPart(req: XP.Request): XP.Response {
-  const page: Content<Statistics> = getContent()
+  const page = getContent<Content<Statistics>>()
+  if (!page) throw Error('No page found')
+
   const relatedStatistics: Statistics['relatedStatisticsOptions'] = page.data.relatedStatisticsOptions
   const phrases: Phrases = getPhrases(page)
 
@@ -95,7 +96,7 @@ function parseRelatedContent(
       .map((statistics) => {
         if (statistics._selected === 'xp') {
           const statisticsContentId: string | undefined = statistics.xp.contentId
-          const relatedStatisticsContent: Content<Statistics, SEO> | null = statisticsContentId
+          const relatedStatisticsContent: Content<Statistics> | null = statisticsContentId
             ? getContentByKey({
                 key: statisticsContentId,
               })
@@ -103,12 +104,12 @@ function parseRelatedContent(
 
           let preamble: string | undefined
           if (relatedStatisticsContent) {
-            preamble = relatedStatisticsContent.x['com-enonic-app-metafields']['meta-data'].seoDescription
+            preamble = relatedStatisticsContent.x['com-enonic-app-metafields']?.['meta-data']?.seoDescription
           }
 
           return {
             title: relatedStatisticsContent && relatedStatisticsContent.displayName,
-            preamble: preamble ? preamble : '',
+            preamble: preamble ?? '',
             href: statisticsContentId
               ? pageUrl({
                   id: statisticsContentId,

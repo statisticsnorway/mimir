@@ -3,20 +3,18 @@ import type { Default as DefaultPageConfig } from '/site/pages/default'
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 import { EventInfo } from '/lib/ssb/repo/query'
 import { Socket, SocketEmitter } from '/lib/types/socket'
-import { query, get as getContent, Content, QueryResponse } from '/lib/xp/content'
+import { query, get as getContent, Content, ContentsResult } from '/lib/xp/content'
 import { StatisticInListing, VariantInListing } from '/lib/ssb/dashboard/statreg/types'
 import type { Statistics, Highchart, Table, KeyFigure } from '/site/content-types'
 import { ProcessXml, RefreshDatasetResult, DashboardJobInfo } from '/lib/ssb/dashboard/dashboard'
-import { run, RunContext } from '/lib/xp/context'
+import { run, type ContextParams } from '/lib/xp/context'
 import { sanitize } from '/lib/xp/common'
 import { DatasetRepoNode } from '/lib/ssb/repo/dataset'
 import type { DataSource } from '/site/mixins/dataSource'
 import { Source, TbmlDataUniform } from '/lib/types/xmlParser'
 import { JobEventNode, JobInfoNode, JobNames, JobStatus } from '/lib/ssb/repo/job'
-import { NodeQueryResponse } from '/lib/xp/node'
 import { hasRole, User } from '/lib/xp/auth'
 import type { Statistic } from '/site/mixins/statistic'
-import { ContextAttributes } from '*/lib/xp/context'
 
 const { hasWritePermissions } = __non_webpack_require__('/lib/ssb/parts/permissions')
 const { fetchStatisticsWithRelease, getAllStatisticsFromRepo, getStatisticByIdFromRepo } =
@@ -39,7 +37,7 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
     executeFunction({
       description: 'get-statistics',
       func: () => {
-        const context: RunContext<ContextAttributes> = {
+        const context: ContextParams = {
           branch: 'master',
           repository: ENONIC_CMS_DEFAULT_REPO,
           // principals: ['role:system.admin'],
@@ -145,7 +143,7 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
           const datasetIdsToUpdate: Array<string> = getDataSourceIdsFromStatistics(statistic)
           const processXmls: Array<ProcessXml> | undefined = data.owners ? processXmlFromOwners(data.owners) : undefined
           if (datasetIdsToUpdate.length > 0) {
-            const context: RunContext<ContextAttributes> = {
+            const context: ContextParams = {
               branch: 'master',
               repository: ENONIC_CMS_DEFAULT_REPO,
               principals: ['role:system.admin'],
@@ -280,7 +278,7 @@ function getSourcesForUserFromStatistic(sources: Array<SourceList>): Array<Owner
 }
 
 function getDatasetFromContentId(contentId: string): DatasetRepoNode<TbmlDataUniform> | null {
-  const queryResult: QueryResponse<DataSource, DefaultPageConfig> = query({
+  const queryResult: ContentsResult<Content<DataSource>> = query({
     query: `_id = '${contentId}'`,
     count: 1,
     filters: {
@@ -289,7 +287,8 @@ function getDatasetFromContentId(contentId: string): DatasetRepoNode<TbmlDataUni
       },
     },
   })
-  const content: Content<DataSource> | undefined = queryResult.count === 1 ? queryResult.hits[0] : undefined
+
+  const content = queryResult.count === 1 ? queryResult.hits[0] : undefined
   return content ? getTbprocessor(content, 'master') : null
 }
 
@@ -309,7 +308,7 @@ function getOwnersWithSources(dataSourceIds: Array<string>): Array<OwnerWithSour
 
 function getStatisticsJobLogInfo(id: string, count = 1): Array<DashboardJobInfo> {
   return withConnection(EVENT_LOG_REPO, EVENT_LOG_BRANCH, (connection) => {
-    const statisticsJobLog: NodeQueryResponse = connection.query({
+    const statisticsJobLog = connection.query({
       query: `_path LIKE "/jobs/*" AND data.task = "${JobNames.STATISTICS_REFRESH_JOB}" AND data.queryIds = "${sanitize(
         id
       )}"`,
@@ -371,7 +370,7 @@ function getEventLogsFromStatisticsJobLog(jobLogId: string): { user: User; datas
       const datasetContent: Content<Highchart | Table | KeyFigure> | null = getContent({
         key: dataset.id,
       })
-      const eventLogResult: NodeQueryResponse = queryNodes(EVENT_LOG_REPO, EVENT_LOG_BRANCH, {
+      const eventLogResult = queryNodes(EVENT_LOG_REPO, EVENT_LOG_BRANCH, {
         query: `_path LIKE "/queries/${dataset.id}/*" AND data.by.login = "${userLogin}" AND range("_ts", instant("${from}"), instant("${to}"))`,
         count: 10,
         sort: '_ts DESC',
@@ -380,11 +379,9 @@ function getEventLogsFromStatisticsJobLog(jobLogId: string): { user: User; datas
         displayName: datasetContent?.displayName,
         branch: dataset.branch === 'master' ? 'publisert' : 'upublisert',
         eventLogResult: eventLogResult.hits.map((hit) => {
-          const node: EventInfo | null = getNode(
-            EVENT_LOG_REPO,
-            EVENT_LOG_BRANCH,
-            `/queries/${dataset.id}/${hit.id}`
-          ) as EventInfo
+          const node = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/queries/${dataset.id}/${hit.id}`) as EventInfo | null
+          if (!node) return {}
+
           const resultMessage: string = localize({
             key: node.data.status.message,
             values: node.data.status.status ? [`(${node.data.status.status})`] : [''],
@@ -425,7 +422,7 @@ function getAdminStatistics(): Array<StatisticDashboard> {
 }
 
 function getUserStatistics(): Array<StatisticDashboard> {
-  const userStatisticsResult: QueryResponse<Statistics, DefaultPageConfig> = query({
+  const userStatisticsResult: ContentsResult<Content<Statistics & DefaultPageConfig>> = query({
     query: `data.statistic LIKE '*'`,
     contentTypes: [`${app.name}:statistics`],
     count: 1000,
@@ -548,7 +545,7 @@ function getStatisticsSearchList(): Array<StatisticSearch> {
 
 export function getStatisticsContent(): Array<Content<Statistics>> {
   let hits: Array<Content<Statistics>> = []
-  const result: QueryResponse<Statistics, DefaultPageConfig> = query({
+  const result: ContentsResult<Content<Statistics & DefaultPageConfig>> = query({
     contentTypes: [`${app.name}:statistics`],
     query: `data.statistic LIKE "*"`,
     count: 1000,

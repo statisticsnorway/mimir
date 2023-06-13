@@ -1,8 +1,8 @@
-import { query, Content, QueryResponse } from '/lib/xp/content'
+import { query } from '/lib/xp/content'
 
 exports.get = (req: XP.Request): XP.Response | object => {
   const queryString: string = req.params.query ? req.params.query : ''
-  const result: QueryResponse<Content, object> = query({
+  const result = query({
     start: 0,
     count: 10,
     sort: 'modifiedTime DESC',

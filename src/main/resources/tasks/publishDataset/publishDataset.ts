@@ -1,5 +1,4 @@
 import { cronContext } from '/lib/ssb/cron/cron'
-import type { CleanupPublishDataset as CleanupPublishDatasetConfig } from '/tasks/cleanupPublishDataset'
 import type { PublishDataset as PublishDatasetConfig } from '/tasks/publishDataset'
 import { send } from '/lib/xp/event'
 
@@ -47,7 +46,7 @@ exports.run = function (props: PublishDatasetConfig): void {
       log.info(
         `PublishDataset - create task: cleanupPublishDataset_${jobId}_${statisticsId}_${dataset._name} Time: ${dateWithSleep}`
       )
-      createScheduledJob<CleanupPublishDatasetConfig>({
+      createScheduledJob({
         name: `cleanupPublishDataset_${jobId}_${statisticsId}_${dataset._name}`,
         descriptor: 'mimir:cleanupPublishDataset',
         enabled: true,

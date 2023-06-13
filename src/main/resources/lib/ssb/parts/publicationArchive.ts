@@ -1,10 +1,9 @@
 import type { Article, OmStatistikken, Statistics } from '/site/content-types'
-import { type Content, get, query, QueryDSL, QueryResponse } from '/lib/xp/content'
+import { type Content, get, query, QueryDsl, ContentsResult } from '/lib/xp/content'
 import type { StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
 import { getAllStatisticsFromRepo } from '/lib/ssb/statreg/statistics'
 import { calculatePeriodRelease, type Release } from '/lib/ssb/utils/variantUtils'
 import type { SubjectItem } from '/lib/ssb/utils/subjectUtils'
-import type { SEO } from '/services/news/news'
 import { formatDate, stringToServerTime } from '/lib/ssb/utils/dateUtils'
 import type { ContentLight, Release as ReleaseVariant } from '/lib/ssb/repo/statisticVariant'
 import { getStatisticVariantsFromRepo } from '/lib/ssb/repo/statisticVariant'
@@ -69,7 +68,7 @@ function getPublicationsAndStatistics(req: XP.Request, language: string): Array<
   const mainSubjects: Array<SubjectItem> = getMainSubjects(req, language)
   const subSubjects: Array<SubjectItem> = getSubSubjects(req, language)
 
-  const articlesContent: QueryResponse<Article, object> = getArticlesContent(language, mainSubjects)
+  const articlesContent: ContentsResult<Content<Article>> = getArticlesContent(language, mainSubjects)
 
   const publications: Array<PublicationItem> = articlesContent.hits.map((article) => {
     return prepareArticle(article, mainSubjects, subSubjects, language)
@@ -99,13 +98,13 @@ function prepareStatisticRelease(
   release: Release,
   language: string
 ): PublicationItem | null {
-  const statisticsPagesXP: Content<Statistics, SEO> | undefined = query({
+  const statisticsPagesXP: Content<Statistics> | undefined = query({
     count: 1,
     query: `data.statistic LIKE "${release.statisticId}" AND language IN (${
       language === 'nb' ? '"nb", "nn"' : '"en"'
     })`,
     contentTypes: [`${app.name}:statistics`],
-  }).hits[0] as unknown as Content<Statistics, SEO>
+  }).hits[0] as unknown as Content<Statistics>
 
   if (statisticsPagesXP) {
     const statisticsPageUrl: string = pageUrl({
@@ -117,7 +116,7 @@ function prepareStatisticRelease(
           key: statisticsPagesXP.data.aboutTheStatistics,
         })
       : null
-    const seoDescription: string = statisticsPagesXP.x['com-enonic-app-metafields']['meta-data'].seoDescription
+    const seoDescription = statisticsPagesXP.x['com-enonic-app-metafields']?.['meta-data']?.seoDescription
       ? statisticsPagesXP.x['com-enonic-app-metafields']['meta-data'].seoDescription
       : ''
 
@@ -183,7 +182,7 @@ function prepareArticle(
   }
 }
 
-function getArticlesContent(language: string, mainSubjects: Array<SubjectItem>): QueryResponse<Article, object> {
+function getArticlesContent(language: string, mainSubjects: Array<SubjectItem>) {
   const languageQuery: string = language !== 'en' ? 'AND language != "en"' : 'AND language = "en"'
   const now: string = new Date().toISOString()
   const publishFromQuery = `(publish.from LIKE '*' AND publish.from < '${now}')`
@@ -191,7 +190,7 @@ function getArticlesContent(language: string, mainSubjects: Array<SubjectItem>):
   const subjectQuery = `(${pagePaths.join(' OR ')})`
   const queryString = `${publishFromQuery} AND ${subjectQuery} ${languageQuery}`
 
-  const res: QueryResponse<Article, object> = query({
+  const res: ContentsResult<Content<Article>> = query({
     count: 10000,
     query: queryString,
     contentTypes: [`${app.name}:article`],
@@ -201,7 +200,7 @@ function getArticlesContent(language: string, mainSubjects: Array<SubjectItem>):
 }
 
 function getStatisticsRepo(language: string, mainSubjects: Array<SubjectItem>): Array<PublicationItem> {
-  const query: QueryDSL = {
+  const query: QueryDsl = {
     range: {
       field: 'publish.from',
       type: 'dateTime',

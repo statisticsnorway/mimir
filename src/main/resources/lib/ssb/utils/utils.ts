@@ -13,12 +13,12 @@ function numberWithSpaces(x: number | string): string {
 }
 
 export function createHumanReadableFormat(value: number | string | null): string {
-  if (getContent().language != 'en' && value) {
-    return value > 999 || value < -999
+  if (getContent()?.language != 'en' && value) {
+    return +value > 999 || +value < -999
       ? numberWithSpaces(value).toString().replace(/\./, ',')
       : value.toString().replace(/\./, ',')
   }
-  return value ? (value > 999 || value < -999 ? numberWithSpaces(value) : value.toString()) : ''
+  return value ? (+value > 999 || +value < -999 ? numberWithSpaces(value) : value.toString()) : ''
 }
 
 export function dateToFormat(dateString: string | undefined): string {
@@ -137,6 +137,8 @@ export function getAttachment(attachmentContent: Content | null): string | undef
 
 // For admin tool applications
 export function parseContributions(contributions: XP.PageContributions): XP.PageContributions {
+  if (!contributions) return contributions
+
   contributions.headEnd =
     contributions.headEnd &&
     (contributions.headEnd as Array<string>).map((script: string) => script.replace(' defer ', ' defer="" '))
