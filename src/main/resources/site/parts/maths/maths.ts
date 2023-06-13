@@ -1,11 +1,11 @@
 import type { Component } from '/lib/xp/portal'
 import type { Maths as MathsPartConfig } from '.'
-import { render, type RenderResponse } from '/lib/enonic/react4xp'
+import { render } from '/lib/enonic/react4xp'
 import { getComponent } from '/lib/xp/portal'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
-export function get(req: XP.Request): XP.Response | RenderResponse {
+export function get(req: XP.Request): XP.Response {
   try {
     const part = getComponent<MathsPartConfig>()
     if (!part) throw Error('No part found')
@@ -16,11 +16,11 @@ export function get(req: XP.Request): XP.Response | RenderResponse {
   }
 }
 
-export function preview(req: XP.Request, part: Component<MathsPartConfig>): RenderResponse {
+export function preview(req: XP.Request, part: Component<MathsPartConfig>) {
   return renderPart(req, part)
 }
 
-function renderPart(req: XP.Request, part: Component<MathsPartConfig>): RenderResponse {
+function renderPart(req: XP.Request, part: Component<MathsPartConfig>) {
   const props: PartProperties = {
     mathsFormula: part.config.mathsFormula,
   }

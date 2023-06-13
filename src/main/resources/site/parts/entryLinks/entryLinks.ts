@@ -1,4 +1,4 @@
-import { render as r4XpRender, type RenderResponse } from '/lib/enonic/react4xp'
+import { render as r4XpRender } from '/lib/enonic/react4xp'
 import { getComponent, getContent } from '/lib/xp/portal'
 import type { EntryLinks as EntryLinksPartConfig } from '.'
 import { type Content, get as getContentByKey } from '/lib/xp/content'
@@ -28,7 +28,7 @@ export function preview(req: XP.Request) {
   return renderPart(req)
 }
 
-function renderPart(req: XP.Request): XP.Response | RenderResponse {
+function renderPart(req: XP.Request): XP.Response {
   const page = getContent()
   if (!page) throw Error('No page found')
 
@@ -54,11 +54,7 @@ function renderPart(req: XP.Request): XP.Response | RenderResponse {
   return renderEntryLinks(req, headerTitle, entryLinksContent)
 }
 
-function renderEntryLinks(
-  req: XP.Request,
-  headerTitle: string,
-  entryLinksContent: EntryLinksPartConfig['entryLinks']
-): RenderResponse {
+function renderEntryLinks(req: XP.Request, headerTitle: string, entryLinksContent: EntryLinksPartConfig['entryLinks']) {
   if (entryLinksContent && entryLinksContent.length > 0) {
     return r4XpRender(
       'EntryLinks',

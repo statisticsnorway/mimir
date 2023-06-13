@@ -4,7 +4,7 @@ import type { CalculatorPeriod } from '/lib/types/calculator'
 import { DropdownItems as MonthDropdownItems } from '/lib/types/components'
 import type { Dataset, Dimension } from '/lib/types/jsonstat-toolkit'
 import type { Language, Phrases } from '/lib/types/language'
-import { render, type RenderResponse } from '/lib/enonic/react4xp'
+import { render } from '/lib/enonic/react4xp'
 import type { CalculatorConfig } from '/site/content-types'
 import type { PifCalculator as PifCalculatorPartConfig } from '.'
 import { getContent, getComponent, serviceUrl, pageUrl } from '/lib/xp/portal'
@@ -15,7 +15,7 @@ const { getLanguage } = __non_webpack_require__('/lib/ssb/utils/language')
 const { getCalculatorConfig, getPifDataset } = __non_webpack_require__('/lib/ssb/dataset/calculator')
 const { fromPartCache } = __non_webpack_require__('/lib/ssb/cache/partCache')
 
-export function get(req: XP.Request): XP.Response | RenderResponse {
+export function get(req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -27,11 +27,11 @@ export function preview(req: XP.Request) {
   return renderPart(req)
 }
 
-function renderPart(req: XP.Request): XP.Response | RenderResponse {
+function renderPart(req: XP.Request): XP.Response {
   const page = getContent()
   if (!page) throw Error('No page found')
 
-  let pifCalculator: RenderResponse | undefined
+  let pifCalculator: XP.Response
   if (req.mode === 'edit' || req.mode === 'inline') {
     pifCalculator = getPifCalculatorComponent(req, page)
   } else {
@@ -43,7 +43,7 @@ function renderPart(req: XP.Request): XP.Response | RenderResponse {
   return pifCalculator
 }
 
-function getPifCalculatorComponent(req: XP.Request, page: Content): RenderResponse {
+function getPifCalculatorComponent(req: XP.Request, page: Content) {
   const partConfig = getComponent()?.config as PifCalculatorPartConfig
   if (!partConfig) throw Error('No part config found')
 

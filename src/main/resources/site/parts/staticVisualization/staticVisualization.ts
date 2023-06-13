@@ -1,6 +1,6 @@
 import { get as getContentByKey, type Content } from '/lib/xp/content'
 import type { SourceList, SourcesConfig } from '/lib/ssb/utils/utils'
-import { render, type RenderResponse } from '/lib/enonic/react4xp'
+import { render } from '/lib/enonic/react4xp'
 import type { StaticVisualization } from '/site/content-types'
 // @ts-ignore
 import type { Default as DefaultPageConfig } from '/site/pages/default'
@@ -18,7 +18,7 @@ const { getSources } = __non_webpack_require__('/lib/ssb/utils/utils')
 const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
 const { parseHtmlString } = __non_webpack_require__('/lib/ssb/parts/table')
 
-export function get(req: XP.Request): XP.Response | RenderResponse {
+export function get(req: XP.Request): XP.Response {
   try {
     const config = getComponent<StaticVisualizationPartConfig>()?.config
     if (!config) throw Error('No part found')
@@ -30,7 +30,7 @@ export function get(req: XP.Request): XP.Response | RenderResponse {
   }
 }
 
-export function preview(req: XP.Request, contentId: string | undefined): XP.Response | RenderResponse {
+export function preview(req: XP.Request, contentId: string | undefined): XP.Response {
   try {
     return renderPart(req, contentId)
   } catch (e) {
@@ -38,7 +38,7 @@ export function preview(req: XP.Request, contentId: string | undefined): XP.Resp
   }
 }
 
-function renderPart(req: XP.Request, contentId: string | undefined): RenderResponse | XP.Response {
+function renderPart(req: XP.Request, contentId: string | undefined): XP.Response {
   const page: DefaultPage = getContent() as DefaultPage
   const phrases: { source: string; descriptionStaticVisualization: string } = getPhrases(page)
   const sourcesLabel: string = phrases.source

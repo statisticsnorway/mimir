@@ -1,6 +1,6 @@
 import { get as getContentByKey, query, type Content } from '/lib/xp/content'
 import type { Phrases } from '/lib/types/language'
-import { render, type RenderResponse } from '/lib/enonic/react4xp'
+import { render } from '/lib/enonic/react4xp'
 import type { Article, ContentList } from '/site/content-types'
 import type { RelatedFactPage as RelatedFactPagePartConfig } from '.'
 import { imagePlaceholder, getComponent, getContent, pageUrl, serviceUrl } from '/lib/xp/portal'
@@ -14,7 +14,7 @@ const {
   data: { forceArray },
 } = __non_webpack_require__('/lib/util')
 
-export function get(req: XP.Request): XP.Response | RenderResponse {
+export function get(req: XP.Request): XP.Response {
   try {
     const page = getContent<Content<Article>>()
     if (!page) throw Error('No page found')
@@ -49,17 +49,11 @@ export function get(req: XP.Request): XP.Response | RenderResponse {
   }
 }
 
-export function preview(
-  req: XP.Request,
-  relatedFactPageConfig: RelatedFactPageConfig | undefined
-): XP.Response | RenderResponse {
+export function preview(req: XP.Request, relatedFactPageConfig: RelatedFactPageConfig | undefined): XP.Response {
   return renderPart(req, relatedFactPageConfig)
 }
 
-function renderPart(
-  req: XP.Request,
-  relatedFactPageConfig: RelatedFactPageConfig | undefined
-): XP.Response | RenderResponse {
+function renderPart(req: XP.Request, relatedFactPageConfig: RelatedFactPageConfig | undefined): XP.Response {
   const page = getContent()
   if (!page) throw Error('No page found')
 
@@ -76,7 +70,7 @@ function renderRelatedFactPage(
   req: XP.Request,
   page: Content,
   relatedFactPageConfig: RelatedFactPageConfig | undefined
-): XP.Response | RenderResponse {
+): XP.Response {
   const phrases: Phrases = getPhrases(page)
   const config = getComponent<RelatedFactPagePartConfig>()?.config
   if (!config) throw Error('No part found')

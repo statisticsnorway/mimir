@@ -137,7 +137,7 @@ function renderPart(req: XP.Request): XP.Response {
     previousRelease: paramShowDraft && showPreviewDraft ? nextRelease : previousRelease,
     nextRelease: paramShowDraft && showPreviewDraft ? previewNextRelease : nextRelease,
     modifiedDateId: id,
-    statisticsKeyFigure: statisticsKeyFigure ? statisticsKeyFigure.body : null,
+    statisticsKeyFigure: statisticsKeyFigure?.body || null,
     showPreviewDraft,
     draftUrl,
     draftButtonText,

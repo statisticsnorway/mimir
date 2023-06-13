@@ -137,6 +137,8 @@ export function getAttachment(attachmentContent: Content | null): string | undef
 
 // For admin tool applications
 export function parseContributions(contributions: XP.PageContributions): XP.PageContributions {
+  if (!contributions) return contributions
+
   contributions.headEnd =
     contributions.headEnd &&
     (contributions.headEnd as Array<string>).map((script: string) => script.replace(' defer ', ' defer="" '))

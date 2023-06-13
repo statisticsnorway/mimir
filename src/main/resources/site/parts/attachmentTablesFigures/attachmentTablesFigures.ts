@@ -3,7 +3,7 @@ import { getContent, processHtml } from '/lib/xp/portal'
 import type { DatasetRepoNode } from '/lib/ssb/repo/dataset'
 import type { JSONstat } from '/lib/types/jsonstat-toolkit'
 import type { Phrases } from '/lib/types/language'
-import { render as r4XpRender, type RenderResponse } from '/lib/enonic/react4xp'
+import { render as r4XpRender } from '/lib/enonic/react4xp'
 import type { TbmlDataUniform } from '/lib/types/xmlParser'
 import type { Statistics } from '/site/content-types'
 import { GA_TRACKING_ID } from '/site/pages/default/default'
@@ -77,7 +77,7 @@ function getTablesAndFiguresComponent(page: Content<Statistics>, req: XP.Request
     title,
   }
 
-  const accordionComponent: RenderResponse = r4XpRender('AttachmentTablesFigures', attachmentTablesFiguresProps, req, {
+  const accordionComponent = r4XpRender('AttachmentTablesFigures', attachmentTablesFiguresProps, req, {
     id: 'accordion',
     body: `<section class="xp-part attachment-tables-figures"></section>`,
   })
@@ -194,7 +194,7 @@ function getFinalPageContributions(
     return acc
   }, [])
 
-  if (pageContributions.length > 0) {
+  if (pageContributions.length > 0 && accordionPageContributions) {
     return {
       headEnd: [].concat(
         accordionPageContributions.headEnd as unknown as ConcatArray<never>,

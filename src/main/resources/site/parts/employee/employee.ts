@@ -3,7 +3,7 @@ import type { Employee, Page } from '/site/content-types'
 import type { Default as DefaultPageConfig } from '/site/pages/default'
 import { localize } from '/lib/xp/i18n'
 import { getContent, pageUrl, attachmentUrl } from '/lib/xp/portal'
-import { render, RenderResponse } from '/lib/enonic/react4xp'
+import { render } from '/lib/enonic/react4xp'
 import { imageUrl } from '/lib/ssb/utils/imageUtils'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
@@ -11,7 +11,7 @@ const {
   data: { forceArray },
 } = __non_webpack_require__('/lib/util')
 
-export function get(req: XP.Request): RenderResponse | XP.Response {
+export function get(req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -19,11 +19,11 @@ export function get(req: XP.Request): RenderResponse | XP.Response {
   }
 }
 
-export function preview(req: XP.Request): RenderResponse | XP.Response {
+export function preview(req: XP.Request): XP.Response {
   return renderPart(req)
 }
 
-function renderPart(req: XP.Request): RenderResponse {
+function renderPart(req: XP.Request) {
   const page = getContent<Content<Employee>>()
   if (!page) throw Error('No page found')
 

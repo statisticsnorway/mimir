@@ -1,4 +1,4 @@
-import { render, type RenderResponse } from '/lib/enonic/react4xp'
+import { render } from '/lib/enonic/react4xp'
 import type { Content, ContentsResult } from '/lib/xp/content'
 import type { PreparedArticles } from '/lib/ssb/utils/articleUtils'
 import type { Article } from '/site/content-types'
@@ -8,15 +8,15 @@ import { localize } from '/lib/xp/i18n'
 const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
 const { getChildArticles, prepareArticles } = __non_webpack_require__('/lib/ssb/utils/articleUtils')
 
-export function get(req: XP.Request): RenderResponse {
+export function get(req: XP.Request) {
   return renderPart(req)
 }
 
-export function preview(req: XP.Request): RenderResponse {
+export function preview(req: XP.Request) {
   return renderPart(req)
 }
 
-function renderPart(req: XP.Request): RenderResponse {
+function renderPart(req: XP.Request) {
   const content = getContent()
   if (!content) throw Error('No page found')
 

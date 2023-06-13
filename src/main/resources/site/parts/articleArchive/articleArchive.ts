@@ -1,4 +1,4 @@
-import { render, type RenderResponse } from '/lib/enonic/react4xp'
+import { render } from '/lib/enonic/react4xp'
 import { query, type Content } from '/lib/xp/content'
 import { getContent, pageUrl, processHtml, serviceUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
@@ -9,7 +9,7 @@ import type { Article, ArticleArchive } from '/site/content-types'
 const { getImageAlt } = __non_webpack_require__('/lib/ssb/utils/imageUtils')
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
-exports.get = function (req: XP.Request): XP.Response | RenderResponse {
+exports.get = function (req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -17,11 +17,11 @@ exports.get = function (req: XP.Request): XP.Response | RenderResponse {
   }
 }
 
-export function preview(req: XP.Request): RenderResponse {
+export function preview(req: XP.Request) {
   return renderPart(req)
 }
 
-function renderPart(req: XP.Request): RenderResponse {
+function renderPart(req: XP.Request) {
   const page = getContent<Content<ArticleArchive>>()
   if (!page) throw Error('No page found')
 

@@ -8,10 +8,7 @@ import {
   selectFactPageLoading,
 } from '/react4xp/dashboard/containers/DataSources/selectors'
 import PropTypes from 'prop-types'
-import {
-  requestFactPageGroups,
-  requestFactPageDataSources,
-} from '/react4xp/dashboard/containers/DataSources/actions'
+import { requestFactPageGroups, requestFactPageDataSources } from '/react4xp/dashboard/containers/DataSources/actions'
 import { WebSocketContext } from '/react4xp/dashboard/utils/websocket/WebsocketProvider'
 import { DataSourceTable } from '/react4xp/dashboard/containers/DataSources/DataSourceTable'
 

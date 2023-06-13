@@ -1,11 +1,11 @@
 import { get as getContentByKey, query, type Content } from '/lib/xp/content'
-import { render, type RenderResponse } from '/lib/enonic/react4xp'
+import { render } from '/lib/enonic/react4xp'
 import type { LocalSearch as LocalSearchPartConfig } from '.'
 import { getComponent, pageUrl } from '/lib/xp/portal'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
-export function get(req: XP.Request): XP.Response | RenderResponse {
+export function get(req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -13,11 +13,11 @@ export function get(req: XP.Request): XP.Response | RenderResponse {
   }
 }
 
-export function preview(req: XP.Request): RenderResponse {
+export function preview(req: XP.Request) {
   return renderPart(req)
 }
 
-function renderPart(req: XP.Request): RenderResponse {
+function renderPart(req: XP.Request) {
   const config = getComponent()?.config as LocalSearchPartConfig
   if (!config) throw Error('No part found')
 

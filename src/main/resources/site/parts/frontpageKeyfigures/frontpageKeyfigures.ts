@@ -1,5 +1,5 @@
 import { render } from '/lib/thymeleaf'
-import { render as r4XpRender, type RenderResponse } from '/lib/enonic/react4xp'
+import { render as r4XpRender } from '/lib/enonic/react4xp'
 import { getComponent } from '/lib/xp/portal'
 import type { FrontpageKeyfigures as FrontpageKeyfiguresPartConfig } from '.'
 import { type Content, get as getContentByKey } from '/lib/xp/content'
@@ -29,7 +29,7 @@ const isKeyfigureData = (data: FrontPageKeyFigureData | undefined): data is Fron
   return !!data
 } // user-defined type guards <3
 
-function renderPart(req: XP.Request): XP.Response | RenderResponse {
+function renderPart(req: XP.Request): XP.Response {
   const part = getComponent<FrontpageKeyfiguresPartConfig>()
   if (!part) throw Error('No part found')
 
@@ -70,10 +70,7 @@ function renderPart(req: XP.Request): XP.Response | RenderResponse {
       }
 }
 
-function renderFrontpageKeyfigures(
-  req: XP.Request,
-  frontpageKeyfigures: Array<FrontPageKeyFigureData>
-): RenderResponse {
+function renderFrontpageKeyfigures(req: XP.Request, frontpageKeyfigures: Array<FrontPageKeyFigureData>) {
   return r4XpRender(
     'FrontpageKeyfigures',
     {

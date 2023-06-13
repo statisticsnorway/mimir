@@ -12,15 +12,10 @@ import { Helmet, HelmetProvider } from 'react-helmet-async'
 import { Switch, Route, BrowserRouter } from 'react-router-dom'
 
 import { HomePage } from '/react4xp/dashboard/containers/HomePage/index'
-import WebsocketProvider, {
-  WebSocketContext,
-} from '/react4xp/dashboard/utils/websocket/WebsocketProvider'
+import WebsocketProvider, { WebSocketContext } from '/react4xp/dashboard/utils/websocket/WebsocketProvider'
 import { configureAppStore } from '/react4xp/dashboard/store/configureStore'
 import { requestStatuses } from '/react4xp/dashboard/containers/StatRegDashboard/actions'
-import {
-  requestStatistics,
-  requestStatisticsSearchList,
-} from '/react4xp/dashboard/containers/Statistics/actions'
+import { requestStatistics, requestStatisticsSearchList } from '/react4xp/dashboard/containers/Statistics/actions'
 import { actions as commonActions } from '/react4xp/dashboard/containers/HomePage/slice'
 import PropTypes from 'prop-types'
 import { setUserServerSide, requestServerTime } from '/react4xp/dashboard/containers/HomePage/actions'

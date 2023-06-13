@@ -161,6 +161,7 @@ function formatPubDateStatistic(date: string, timeZoneIso: string): string {
   return `${pubDate}${timeZoneIso}`
 }
 
+/* 
 function testPubDates() {
   const serverOffsetInMS: number = parseInt(app.config?.['serverOffsetInMs']) || 0
   const timeZoneIso: string = getTimeZoneIso(serverOffsetInMS)
@@ -169,7 +170,7 @@ function testPubDates() {
   const StatistikkDate = formatPubDateStatistic('2023-03-20 08:00:00.0', timeZoneIso)
 
   log.info(`RSS-news - Artikkel: ${ArtikkelDate} statistikk: ${StatistikkDate}`)
-}
+} */
 
 interface News {
   guid: string // _id

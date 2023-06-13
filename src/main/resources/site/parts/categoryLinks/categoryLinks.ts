@@ -1,4 +1,4 @@
-import { render, type RenderResponse } from '/lib/enonic/react4xp'
+import { render } from '/lib/enonic/react4xp'
 import { getComponent, getContent, pageUrl } from '/lib/xp/portal'
 import type { CategoryLinks as CategoryLinksPartConfig } from '.'
 import { Language, type Phrases } from '/lib/types/language'
@@ -8,7 +8,7 @@ const { data } = __non_webpack_require__('/lib/util')
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 const { getLanguage } = __non_webpack_require__('/lib/ssb/utils/language')
 
-export function get(req: XP.Request): XP.Response | RenderResponse {
+export function get(req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -16,7 +16,7 @@ export function get(req: XP.Request): XP.Response | RenderResponse {
   }
 }
 
-export function preview(req: XP.Request): XP.Response | RenderResponse {
+export function preview(req: XP.Request): XP.Response {
   return renderPart(req)
 }
 
@@ -25,7 +25,7 @@ const NO_LINKS_FOUND = {
   contentType: 'text/html',
 }
 
-function renderPart(req: XP.Request): XP.Response | RenderResponse {
+function renderPart(req: XP.Request): XP.Response {
   const part = getComponent<CategoryLinksPartConfig>()
   const page = getContent()
   if (!part || !page) throw new Error('No page or part')
@@ -55,7 +55,7 @@ function renderPart(req: XP.Request): XP.Response | RenderResponse {
   }
 
   if (links && links.length) {
-    const categoryLinksComponent: RenderResponse = render(
+    const categoryLinksComponent = render(
       'CategoryLinks',
       {
         links: links.map((link) => {

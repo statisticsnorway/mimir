@@ -1,4 +1,4 @@
-import { render, type RenderResponse } from '/lib/enonic/react4xp'
+import { render } from '/lib/enonic/react4xp'
 import type { Language, Phrases } from '/lib/types/language'
 import { getContent, serviceUrl } from '/lib/xp/portal'
 
@@ -17,7 +17,7 @@ export function preview(req: XP.Request) {
   return renderPart(req)
 }
 
-function renderPart(req: XP.Request): RenderResponse {
+function renderPart(req: XP.Request) {
   const page = getContent()
   if (!page) throw new Error('No page found')
 

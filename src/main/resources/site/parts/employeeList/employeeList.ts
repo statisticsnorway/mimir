@@ -2,12 +2,12 @@ import { type Content, query, get as getContentByKey } from '/lib/xp/content'
 import type { Employee, Page } from '/site/content-types'
 import type { Default as DefaultPageConfig } from '/site/pages/default'
 import { getContent, getComponent, pageUrl } from '/lib/xp/portal'
-import { type RenderResponse, render } from '/lib/enonic/react4xp'
+import { render } from '/lib/enonic/react4xp'
 import type { EmployeeList as EmployeeListPartConfig } from '.'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
-export function get(req: XP.Request): RenderResponse | XP.Response {
+export function get(req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -15,11 +15,11 @@ export function get(req: XP.Request): RenderResponse | XP.Response {
   }
 }
 
-export function preview(req: XP.Request): RenderResponse {
+export function preview(req: XP.Request) {
   return renderPart(req)
 }
 
-function renderPart(req: XP.Request): RenderResponse {
+function renderPart(req: XP.Request) {
   const content = getContent<Content<Page>>()
   if (!content) throw Error('No page found')
 

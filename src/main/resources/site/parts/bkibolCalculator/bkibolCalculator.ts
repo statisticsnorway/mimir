@@ -1,4 +1,4 @@
-import { render as r4XpRender, type RenderResponse } from '/lib/enonic/react4xp'
+import { render as r4XpRender } from '/lib/enonic/react4xp'
 import { getComponent, getContent, serviceUrl, pageUrl } from '/lib/xp/portal'
 import type { BkibolCalculator as BkibolCalculatorPartConfig } from '.'
 import type { Dataset, Dimension } from '/lib/types/jsonstat-toolkit'
@@ -15,7 +15,7 @@ const { getLanguage } = __non_webpack_require__('/lib/ssb/utils/language')
 const { getCalculatorConfig, getBkibolDatasetEnebolig } = __non_webpack_require__('/lib/ssb/dataset/calculator')
 const { fromPartCache } = __non_webpack_require__('/lib/ssb/cache/partCache')
 
-export function get(req: XP.Request): RenderResponse | XP.Response {
+export function get(req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -23,15 +23,16 @@ export function get(req: XP.Request): RenderResponse | XP.Response {
   }
 }
 
-export function preview(req: XP.Request): RenderResponse | XP.Response {
+export function preview(req: XP.Request): XP.Response {
   return renderPart(req)
 }
 
-function renderPart(req: XP.Request): RenderResponse {
+function renderPart(req: XP.Request) {
   const page = getContent<Content<BkibolCalculatorPartConfig>>()
   if (!page) throw Error('No page found')
 
-  let bkibolCalculator: RenderResponse
+  let bkibolCalculator
+
   if (req.mode === 'edit' || req.mode === 'inline') {
     bkibolCalculator = getBkibolCalculatorComponent(req, page)
   } else {
@@ -43,7 +44,7 @@ function renderPart(req: XP.Request): RenderResponse {
   return bkibolCalculator
 }
 
-function getBkibolCalculatorComponent(req: XP.Request, page: Content<BkibolCalculatorPartConfig>): RenderResponse {
+function getBkibolCalculatorComponent(req: XP.Request, page: Content<BkibolCalculatorPartConfig>) {
   const part = getComponent<BkibolCalculatorPartConfig>()
   if (!part) throw Error('No part found')
 

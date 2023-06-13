@@ -11,7 +11,7 @@ import type { TbmlDataUniform } from '/lib/types/xmlParser'
 import type { HighchartsGraphConfig } from '/lib/types/highcharts'
 import { render } from '/lib/thymeleaf'
 import type { DataSource } from '/site/mixins/dataSource'
-import { render as r4XpRender, type RenderResponse } from '/lib/enonic/react4xp'
+import { render as r4XpRender } from '/lib/enonic/react4xp'
 import { GA_TRACKING_ID } from '/site/pages/default/default'
 import { localize } from '/lib/xp/i18n'
 import { scriptAsset } from '/lib/ssb/utils/utils'
@@ -33,7 +33,7 @@ const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
 const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
 const { getTbprocessorKey } = __non_webpack_require__('/lib/ssb/dataset/tbprocessor/tbprocessor')
 
-export function get(req: XP.Request): XP.Response | RenderResponse {
+export function get(req: XP.Request): XP.Response {
   try {
     const part = getComponent<HighchartPartConfig>()
     if (!part) throw Error('No part found')
@@ -45,7 +45,7 @@ export function get(req: XP.Request): XP.Response | RenderResponse {
   }
 }
 
-export function preview(req: XP.Request, id: string): XP.Response | RenderResponse {
+export function preview(req: XP.Request, id: string): XP.Response {
   try {
     return renderPart(req, [id])
   } catch (e) {
@@ -53,7 +53,7 @@ export function preview(req: XP.Request, id: string): XP.Response | RenderRespon
   }
 }
 
-function renderPart(req: XP.Request, highchartIds: Array<string>): XP.Response | RenderResponse {
+function renderPart(req: XP.Request, highchartIds: Array<string>): XP.Response {
   const page = getContent()
   if (!page) throw Error('No page found')
 

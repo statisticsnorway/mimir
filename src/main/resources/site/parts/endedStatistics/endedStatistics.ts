@@ -1,4 +1,4 @@
-import { render, type RenderResponse } from '/lib/enonic/react4xp'
+import { render } from '/lib/enonic/react4xp'
 import type { EndedStatistics as EndedStatisticsPartConfig } from '.'
 import { get as getContentByKey, type Content } from '/lib/xp/content'
 import type { Phrases } from '/lib/types/language'
@@ -23,7 +23,7 @@ export function preview(req: XP.Request) {
   return renderPart(req)
 }
 
-function renderPart(req: XP.Request): XP.Response | RenderResponse {
+function renderPart(req: XP.Request): XP.Response {
   const page = getContent()
   if (!page) throw Error('No page found')
 
@@ -43,7 +43,7 @@ function renderEndedStatistics(
   req: XP.Request,
   endedStatisticsContent: Array<EndedStatistic | undefined>,
   phrases: Phrases
-): RenderResponse {
+) {
   if (endedStatisticsContent && endedStatisticsContent.length) {
     return render(
       'EndedStatistics',

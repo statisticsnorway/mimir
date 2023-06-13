@@ -1,5 +1,5 @@
 import type { Content } from '/lib/xp/content'
-import { render as r4XpRender, type RenderResponse } from '/lib/enonic/react4xp'
+import { render as r4XpRender } from '/lib/enonic/react4xp'
 import { render } from '/lib/thymeleaf'
 import type { MunicipalityWithCounty } from '/lib/ssb/dataset/klass/municipalities'
 import type { MenuDropdown as MenuDropdownPartConfig } from '.'
@@ -16,7 +16,7 @@ const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
 const view = resolve('./menuDropdown.html')
 
-export function get(req: XP.Request): XP.Response | RenderResponse {
+export function get(req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -28,7 +28,7 @@ export function preview(req: XP.Request) {
   return renderPart(req)
 }
 
-function renderPart(req: XP.Request): XP.Response | RenderResponse {
+function renderPart(req: XP.Request): XP.Response {
   const parsedMunicipalities: Array<MunicipalityWithCounty> = municipalsWithCounties()
   const municipality: MunicipalityWithCounty | undefined = getMunicipality(req)
   const component = getComponent<MenuDropdownPartConfig>()

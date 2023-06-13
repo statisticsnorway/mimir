@@ -8,7 +8,7 @@ import type { AlertType, InformationAlertOptions, MunicipalityOptions } from '/l
 import type { Breadcrumbs } from '/lib/ssb/utils/breadcrumbsUtils'
 import type { SubjectItem } from '/lib/ssb/utils/subjectUtils'
 import type { Language } from '/lib/types/language'
-import { render as r4xpRender, type RenderResponse } from '/lib/enonic/react4xp'
+import { render as r4xpRender } from '/lib/enonic/react4xp'
 import type { Page, Statistics } from '/site/content-types'
 import type { Default as DefaultPageConfig } from '/site/pages/default'
 import { assetUrl, type Component, getContent, getSiteConfig, pageUrl, processHtml } from '/lib/xp/portal'
@@ -127,7 +127,7 @@ exports.get = function (req: XP.Request): XP.Response {
   const headerContent: MenuContent | unknown = fromMenuCache(req, `header_${menuCacheLanguage}`, () => {
     return getHeaderContent(language)
   })
-  const header: RenderResponse = r4xpRender(
+  const header = r4xpRender(
     'Header',
     {
       ...(headerContent as object),
@@ -149,7 +149,7 @@ exports.get = function (req: XP.Request): XP.Response {
   const footerContent: FooterContent | unknown = fromMenuCache(req, `footer_${menuCacheLanguage}`, () => {
     return getFooterContent(language)
   })
-  const footer: RenderResponse = r4xpRender(
+  const footer = r4xpRender(
     'Footer',
     {
       ...(footerContent as object),
@@ -233,9 +233,9 @@ exports.get = function (req: XP.Request): XP.Response {
     enabledChatScript: isEnabled('enable-chat-script', true, 'ssb') && innrapporteringRegexp.exec(page._path),
   }
 
-  const thymeleafRenderBody: XP.Response['body'] = render(view, model)
+  const thymeleafRenderBody = render(view, model)
 
-  const breadcrumbComponent: RenderResponse = r4xpRender(
+  const breadcrumbComponent = r4xpRender(
     'Breadcrumb',
     {
       items: breadcrumbs,
@@ -267,7 +267,7 @@ exports.get = function (req: XP.Request): XP.Response {
         } as InformationAlertOptions)
 
   const alerts: AlertType = alertsForContext(pageConfig, alertOptions)
-  const body: string = bodyWithBreadCrumbs ? bodyWithBreadCrumbs : thymeleafRenderBody
+  const body: string = bodyWithBreadCrumbs ? breadcrumbComponent.body : thymeleafRenderBody
   const bodyWithAlerts: XP.Response = alerts.length
     ? addAlerts(alerts, body, pageContributions, req)
     : ({
@@ -569,7 +569,7 @@ interface Controller {
 
 interface MenuContent {
   body: string
-  component: RenderResponse
+  component: XP.Response
 }
 
 interface RegionsContent {

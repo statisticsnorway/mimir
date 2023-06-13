@@ -58,20 +58,21 @@
     "@enonic-types/lib-mail": "^7.12.2",
     "@enonic-types/lib-node": "^7.12.2",
     "@enonic-types/lib-portal": "^7.12.2",
+    "@enonic-types/lib-react4xp": "4.0.0",
     "@enonic-types/lib-repo": "^7.12.2",
     "@enonic-types/lib-scheduler": "^7.12.2",
     "@enonic-types/lib-task": "^7.12.2",
     "@enonic-types/lib-value": "^7.12.2",
     "@enonic-types/lib-websocket": "^7.12.2",
-    "@enonic-types/lib-react4xp": "4.0.0",
+    "@enonic/react-components": "^3.1.2",
+    "@enonic/react4xp": "4.0.0",
     "@item-enonic-types/global": "^7.12.2",
     "@item-enonic-types/lib-cache": "^2.1.1",
     "@item-enonic-types/lib-cristin": "^1.3.1",
+    "@item-enonic-types/lib-cron": "^1.1.1",
     "@item-enonic-types/lib-http-client": "^3.2.1",
     "@item-enonic-types/lib-menu": "^4.2.0-patch1",
     "@item-enonic-types/lib-thymeleaf": "^2.1.0",
-    "@enonic/react-components": "^3.1.2",
-    "@enonic/react4xp": "4.0.0",
     "@reduxjs/toolkit": "^1.9.5",
     "@statisticsnorway/ssb-component-library": "^2.0.84",
     "@types/ramda": "~0.29.1",
@@ -94,6 +95,7 @@
     "eslint-plugin-no-relative-import-paths": "^1.5.2",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.31.11",
+    "enonic-types": "^7.12.2",
     "feather-icons": "^4.29.0",
     "file-loader": "^6.2.0",
     "glob": "^10.2.3",
@@ -174,7 +176,7 @@
     "react-mathjax": {
       "react": "$react"
     },
-    "react-truncate":{
+    "react-truncate": {
       "react": "$react"
     },
     "redux-injectors": {

@@ -1,6 +1,6 @@
 import { get as getContentByKey, type Content } from '/lib/xp/content'
 import { render } from '/lib/thymeleaf'
-import { render as r4XpRender, type RenderResponse } from '/lib/enonic/react4xp'
+import { render as r4XpRender } from '/lib/enonic/react4xp'
 import type { ActiveStatistics as ActiveStatisticsPartConfig } from '.'
 import type { Statistics } from '/site/content-types'
 import { getContent, getComponent, pageUrl } from '/lib/xp/portal'
@@ -13,7 +13,7 @@ const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
 const view = resolve('./activeStatistics.html')
 
-export function get(req: XP.Request): RenderResponse | XP.Response {
+export function get(req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -21,11 +21,11 @@ export function get(req: XP.Request): RenderResponse | XP.Response {
   }
 }
 
-export function preview(req: XP.Request): RenderResponse {
+export function preview(req: XP.Request) {
   return renderPart(req)
 }
 
-function renderPart(req: XP.Request): RenderResponse {
+function renderPart(req: XP.Request) {
   const page = getContent()
   if (!page) throw Error('No page found')
 
@@ -57,13 +57,13 @@ function renderActiveStatistics(
   req: XP.Request,
   statisticsTitle: string,
   activeStatisticsContent: Array<ActiveStatistic | undefined>
-): RenderResponse {
+) {
   if (activeStatisticsContent && activeStatisticsContent.length) {
     const id = 'active-statistics'
     const body: string = render(view, {
       activeStatisticsId: id,
     })
-    const activeStatisticsXP: RenderResponse = r4XpRender(
+    const activeStatisticsXP = r4XpRender(
       'StatisticsCards',
       {
         headerTitle: statisticsTitle,

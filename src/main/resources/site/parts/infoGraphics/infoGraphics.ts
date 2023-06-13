@@ -2,7 +2,7 @@
 import { Base64 } from 'js-base64'
 import { get as getContentByKey, type Content } from '/lib/xp/content'
 import type { SourceList, SourcesConfig } from '/lib/ssb/utils/utils'
-import { render, type RenderResponse } from '/lib/enonic/react4xp'
+import { render } from '/lib/enonic/react4xp'
 import { getContent, getComponent } from '/lib/xp/portal'
 import { imageUrl } from '/lib/ssb/utils/imageUtils'
 import type { InfoGraphics as InfoGraphicsPartConfig } from '.'
@@ -14,7 +14,7 @@ const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 const { getSources } = __non_webpack_require__('/lib/ssb/utils/utils')
 const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
 
-export function get(req: XP.Request): XP.Response | RenderResponse {
+export function get(req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -22,11 +22,11 @@ export function get(req: XP.Request): XP.Response | RenderResponse {
   }
 }
 
-export function preview(req: XP.Request): XP.Response | RenderResponse {
+export function preview(req: XP.Request): XP.Response {
   return renderPart(req)
 }
 
-function renderPart(req: XP.Request): RenderResponse {
+function renderPart(req: XP.Request) {
   const page = getContent()
   if (!page) throw Error('No page found')
 

@@ -1,6 +1,6 @@
 import { formatDate } from '/lib/ssb/utils/dateUtils'
 import { get as getContentByKey, type Content } from '/lib/xp/content'
-import { render, type RenderResponse } from '/lib/enonic/react4xp'
+import { render } from '/lib/enonic/react4xp'
 import type { Phrases } from '/lib/types/language'
 import type { Statistics, OmStatistikken } from '/site/content-types'
 import type { ReleaseDatesVariant, StatisticInListing, VariantInListing } from '/lib/ssb/dashboard/statreg/types'
@@ -16,7 +16,7 @@ const {
   data: { forceArray },
 } = __non_webpack_require__('/lib/util')
 
-export function get(req: XP.Request): XP.Response | RenderResponse {
+export function get(req: XP.Request): XP.Response {
   try {
     const statisticPage = getContent<Content<Statistics>>()
     if (!statisticPage) throw Error('No page found')
@@ -27,11 +27,11 @@ export function get(req: XP.Request): XP.Response | RenderResponse {
   }
 }
 
-export function preview(req: XP.Request, id: string | undefined): XP.Response | RenderResponse {
+export function preview(req: XP.Request, id: string | undefined): XP.Response {
   return renderPart(req, id)
 }
 
-function renderPart(req: XP.Request, aboutTheStatisticsId: string | undefined): XP.Response | RenderResponse {
+function renderPart(req: XP.Request, aboutTheStatisticsId: string | undefined): XP.Response {
   const page = getContent()
   if (!page) throw Error('No page found')
 
@@ -66,11 +66,7 @@ function renderPart(req: XP.Request, aboutTheStatisticsId: string | undefined): 
   }
 }
 
-function getOmStatistikken(
-  req: XP.Request,
-  page: Content<any>,
-  aboutTheStatisticsId: string | undefined
-): XP.Response | RenderResponse {
+function getOmStatistikken(req: XP.Request, page: Content<any>, aboutTheStatisticsId: string | undefined): XP.Response {
   const phrases: Phrases = getPhrases(page) as Phrases
   const language: string = page.language === 'en' || page.language === 'nn' ? page.language : 'nb'
   let nextRelease: string = phrases.notYetDetermined

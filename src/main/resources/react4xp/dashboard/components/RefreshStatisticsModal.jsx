@@ -10,10 +10,7 @@ import {
   setModal,
   resetModal,
 } from '/react4xp/dashboard/containers/Statistics/actions'
-import {
-  createSelectModalDisplay,
-  selectOpenStatistic,
-} from '/react4xp/dashboard/containers/Statistics/selectors'
+import { createSelectModalDisplay, selectOpenStatistic } from '/react4xp/dashboard/containers/Statistics/selectors'
 import { WebSocketContext } from '/react4xp/dashboard/utils/websocket/WebsocketProvider'
 
 export function RefreshStatisticsModal(props) {

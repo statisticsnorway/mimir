@@ -1,7 +1,7 @@
 import type { Article } from '/site/content-types'
 import { pageUrl, getContent, getComponent } from '/lib/xp/portal'
 import type { ArticleList as ArticleListPartConfig } from '.'
-import { render, type RenderResponse } from '/lib/enonic/react4xp'
+import { render } from '/lib/enonic/react4xp'
 import { query, type Content } from '/lib/xp/content'
 import { SubjectItem } from '/lib/ssb/utils/subjectUtils'
 import { formatDate } from '/lib/ssb/utils/dateUtils'
@@ -12,7 +12,7 @@ const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 const { fromPartCache } = __non_webpack_require__('/lib/ssb/cache/partCache')
 const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
 
-export function get(req: XP.Request): RenderResponse | XP.Response {
+export function get(req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -20,11 +20,11 @@ export function get(req: XP.Request): RenderResponse | XP.Response {
   }
 }
 
-export function preview(req: XP.Request): RenderResponse {
+export function preview(req: XP.Request) {
   return renderPart(req)
 }
 
-function renderPart(req: XP.Request): RenderResponse {
+function renderPart(req: XP.Request) {
   const content = getContent()
   if (!content) throw Error('No page found')
 
@@ -36,7 +36,7 @@ function renderPart(req: XP.Request): RenderResponse {
   }
 }
 
-function getArticleList(req: XP.Request, content: Content): RenderResponse {
+function getArticleList(req: XP.Request, content: Content) {
   const component = getComponent<ArticleListPartConfig>()
   if (!component) throw Error('No component found')
 

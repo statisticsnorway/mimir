@@ -1,5 +1,5 @@
 import { get as getContentByKey, type Content } from '/lib/xp/content'
-import { render, type RenderResponse } from '/lib/enonic/react4xp'
+import { render } from '/lib/enonic/react4xp'
 import type { Accordion } from '/site/content-types'
 import type { Accordion as AccordionConfig } from '/site/macros/accordion'
 import { getComponent, getContent, processHtml } from '/lib/xp/portal'
@@ -10,7 +10,7 @@ const {
 const { sanitize } = __non_webpack_require__('/lib/xp/common')
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
-export function get(req: XP.Request): RenderResponse | XP.Response {
+export function get(req: XP.Request): XP.Response {
   try {
     const config: AccordionConfig | undefined = getComponent<AccordionConfig>()?.config
     if (!config) throw Error('No config found')
@@ -22,7 +22,7 @@ export function get(req: XP.Request): RenderResponse | XP.Response {
   }
 }
 
-export function preview(req: XP.Request, accordionIds: Array<string> | string): RenderResponse | XP.Response {
+export function preview(req: XP.Request, accordionIds: Array<string> | string): XP.Response {
   try {
     const page = getContent<Content<Accordion>>()
     if (!page) throw Error('No page found')
@@ -35,7 +35,7 @@ export function preview(req: XP.Request, accordionIds: Array<string> | string): 
   }
 }
 
-function renderPart(req: XP.Request, accordionIds: Array<string>): RenderResponse {
+function renderPart(req: XP.Request, accordionIds: Array<string>) {
   const accordions: Array<AccordionData> = []
 
   accordionIds.map((key) => {

@@ -1,7 +1,7 @@
 import type { Content } from '/lib/xp/content'
 import type { MunicipalityWithCounty } from '/lib/ssb/dataset/klass/municipalities'
 import type { KeyFigureView } from '/lib/ssb/parts/keyFigure'
-import { render, type RenderResponse } from '/lib/enonic/react4xp'
+import { render } from '/lib/enonic/react4xp'
 import type { KeyFigure as KeyFigurePartConfig } from '.'
 import { getContent, getComponent, getSiteConfig } from '/lib/xp/portal'
 
@@ -15,7 +15,7 @@ const { DATASET_BRANCH, UNPUBLISHED_DATASET_BRANCH } = __non_webpack_require__('
 const { hasWritePermissionsAndPreview } = __non_webpack_require__('/lib/ssb/parts/permissions')
 const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
 
-export function get(req: XP.Request): RenderResponse | XP.Response {
+export function get(req: XP.Request): XP.Response {
   try {
     const config = getComponent()?.config as KeyFigurePartConfig
     if (!config) throw Error('No part found')
@@ -28,7 +28,7 @@ export function get(req: XP.Request): RenderResponse | XP.Response {
   }
 }
 
-export function preview(req: XP.Request, id: string): RenderResponse | XP.Response {
+export function preview(req: XP.Request, id: string): XP.Response {
   try {
     const siteConfig = getSiteConfig<XP.SiteConfig>()
     if (!siteConfig) throw Error('No site config found')
@@ -47,7 +47,7 @@ function renderPart(
   req: XP.Request,
   municipality: MunicipalityWithCounty | undefined,
   keyFigureIds: Array<string>
-): RenderResponse | XP.Response {
+): XP.Response {
   const page = getContent()
   if (!page) throw Error('No page found')
 
@@ -88,7 +88,7 @@ function renderKeyFigure(
   parsedKeyFiguresDraft: Array<KeyFigureData> | null,
   showPreviewDraft: boolean,
   req: XP.Request
-): RenderResponse | XP.Response {
+): XP.Response {
   const draftExist = !!parsedKeyFiguresDraft
   if ((parsedKeyFigures && parsedKeyFigures.length > 0) || draftExist) {
     const hiddenTitle: Array<string> = parsedKeyFigures.map((keyFigureData) => {

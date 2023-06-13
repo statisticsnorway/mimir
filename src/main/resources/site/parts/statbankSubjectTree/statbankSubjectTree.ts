@@ -1,4 +1,4 @@
-import { render, type RenderResponse } from '/lib/enonic/react4xp'
+import { render } from '/lib/enonic/react4xp'
 import type { SubjectItem, StatisticItem } from '/lib/ssb/utils/subjectUtils'
 import type { Content } from '/lib/xp/content'
 import type { StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
@@ -18,7 +18,7 @@ const { getAllStatisticsFromRepo } = __non_webpack_require__('/lib/ssb/statreg/s
 const { ensureArray } = __non_webpack_require__('/lib/ssb/utils/arrayUtils')
 const { fromPartCache } = __non_webpack_require__('/lib/ssb/cache/partCache')
 
-export function get(req: XP.Request): RenderResponse {
+export function get(req: XP.Request) {
   const content = getContent()
   if (!content) throw Error('No page found')
 
@@ -31,7 +31,7 @@ export function get(req: XP.Request): RenderResponse {
   }
 }
 
-function getStatbankSubjectTree(req: XP.Request, content: Content): RenderResponse {
+function getStatbankSubjectTree(req: XP.Request, content: Content) {
   const lang: string = content.language === 'en' ? 'en' : 'no'
   const allMainSubjects: Array<SubjectItem> = getMainSubjects(req, lang)
   const allSubSubjects: Array<SubjectItem> = getSubSubjects(req, lang)

@@ -3,7 +3,7 @@ import { render } from '/lib/thymeleaf'
 import { getMainSubjects, SubjectItem } from '/lib/ssb/utils/subjectUtils'
 import { parseContributions } from '/lib/ssb/utils/utils'
 import { DropdownItems } from '/lib/types/components'
-import { render as r4XpRender, RenderResponse } from '/lib/enonic/react4xp'
+import { render as r4XpRender } from '/lib/enonic/react4xp'
 
 const { assetUrl, serviceUrl } = __non_webpack_require__('/lib/xp/portal')
 const { localize } = __non_webpack_require__('/lib/xp/i18n')
@@ -12,7 +12,7 @@ const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
 const view: ResourceKey = resolve('./bestbet.html')
 
-exports.get = function (req: XP.Request): RenderResponse | XP.Response {
+exports.get = function (req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -20,7 +20,7 @@ exports.get = function (req: XP.Request): RenderResponse | XP.Response {
   }
 }
 
-exports.preview = (req: XP.Request): RenderResponse | XP.Response => {
+exports.preview = (req: XP.Request): XP.Response => {
   try {
     return renderPart(req)
   } catch (e) {
@@ -28,7 +28,7 @@ exports.preview = (req: XP.Request): RenderResponse | XP.Response => {
   }
 }
 
-function renderPart(req: XP.Request): RenderResponse | XP.Response {
+function renderPart(req: XP.Request): XP.Response {
   // @ts-ignore
   const DEFAULT_CONTENTSTUDIO_URL: string = getToolUrl('com.enonic.app.contentstudio', 'main')
   const ENONIC_PROJECT_ID: string =
@@ -91,7 +91,7 @@ function renderPart(req: XP.Request): RenderResponse | XP.Response {
     ...contentTypesList,
   ]
 
-  const bestBetComponent: RenderResponse = r4XpRender(
+  const bestBetComponent = r4XpRender(
     'bestbet/Bestbet',
     {
       logoUrl: assetUrl({

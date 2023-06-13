@@ -1,5 +1,5 @@
 import { get as getContentByKey, type Content } from '/lib/xp/content'
-import { render as r4XpRender, type RenderResponse } from '/lib/enonic/react4xp'
+import { render as r4XpRender } from '/lib/enonic/react4xp'
 import { render } from '/lib/thymeleaf'
 import type { MenuBox as MenuBoxPartConfig } from '.'
 import type { MenuBox } from '/site/content-types'
@@ -14,7 +14,7 @@ const {
 
 const view = resolve('./menuBox.html')
 
-export function get(req: XP.Request): XP.Response | RenderResponse | string {
+export function get(req: XP.Request): XP.Response | string {
   try {
     return renderPart(req)
   } catch (e) {
@@ -26,7 +26,7 @@ export function preview(req: XP.Request) {
   return renderPart(req)
 }
 
-function renderPart(req: XP.Request): XP.Response | RenderResponse | string {
+function renderPart(req: XP.Request): XP.Response | string {
   const part = getComponent<MenuBoxPartConfig>()
   if (!part) throw Error('No part found')
 
