@@ -61,8 +61,8 @@ export function deleteExpiredEventLogsForQueries(): void {
       status: JOB_STATUS_COMPLETE,
       message:
         totalExpiredLogsDeleted != 0
-          ? `Successfully deleted ${totalExpiredLogsDeleted} expired logs.`
-          : 'No expired logs deleted.',
+          ? `Slettet ${totalExpiredLogsDeleted} utdaterte event logs`
+          : 'Ingen utdaterte event logs ble slettet',
     }
     return node
   })
