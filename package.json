@@ -74,7 +74,7 @@
     "feather-icons": "^4.29.0",
     "file-loader": "^6.2.0",
     "glob": "^10.2.3",
-    "highcharts": "^10.3.2",
+    "highcharts": "^11.1.0",
     "imagesloaded": "^5.0.0",
     "jquery": "^3.7.0",
     "jquery-bridget": "^3.0.1",
