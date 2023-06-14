@@ -1,4 +1,4 @@
-import { RepoNode } from '/lib/xp/node'
+import { Node } from '/lib/xp/node'
 
 export enum StatRegFetchStatus {
   INIT = 'Init',
@@ -15,7 +15,7 @@ export interface StatRegFetchInfo {
   completionTime?: string
 }
 
-export interface StatRegFetchJobNode extends RepoNode {
+export interface StatRegFetchJobNode extends Node {
   data: StatRegFetchInfo
 }
 
@@ -24,7 +24,7 @@ export interface StatRegLatestFetchInfo {
   latestEventInfo: StatRegFetchInfo
 }
 
-export interface StatRegLatestFetchInfoNode extends RepoNode {
+export interface StatRegLatestFetchInfoNode extends Node {
   data: StatRegLatestFetchInfo
 }
 

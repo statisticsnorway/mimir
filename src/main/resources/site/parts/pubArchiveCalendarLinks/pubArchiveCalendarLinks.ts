@@ -1,4 +1,3 @@
-import type { Content } from '/lib/xp/content'
 import type { Phrases } from '/lib/types/language'
 import { render } from '/lib/enonic/react4xp'
 import type { PubArchiveCalendarLinks as PubArchiveCalendarLinksPartConfig } from '.'
@@ -25,8 +24,12 @@ const NO_LINKS_FOUND: object = {
 }
 
 function renderPart(req: XP.Request): XP.Response {
-  const config: PubArchiveCalendarLinksPartConfig = getComponent().config
-  const page: Content = getContent()
+  const config = getComponent<PubArchiveCalendarLinksPartConfig>()?.config
+  if (!config) throw Error('No part found')
+
+  const page = getContent()
+  if (!page) throw Error('No page found')
+
   const phrases: Phrases = getPhrases(page)
 
   const PublicationText: string = phrases.publicationLinkText

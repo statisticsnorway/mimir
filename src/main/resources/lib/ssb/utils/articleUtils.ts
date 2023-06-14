@@ -8,7 +8,7 @@ import {
 } from '/lib/ssb/utils/subjectUtils'
 import { formatDate } from '/lib/ssb/utils/dateUtils'
 import { notNullOrUndefined } from '/lib/ssb/utils/coreUtils'
-import { get, modify, query, type Content, type QueryResponse } from '/lib/xp/content'
+import { get, modify, query, type Content, ContentsResult } from '/lib/xp/content'
 import { pageUrl } from '/lib/xp/portal'
 import { listener, EnonicEvent } from '/lib/xp/event'
 import { ENONIC_CMS_DEFAULT_REPO, withSuperUserContext } from '/lib/ssb/repo/common'
@@ -23,7 +23,7 @@ export function setupArticleListener(): void {
     type: 'node.updated',
     localOnly: true,
     callback: (event: EnonicEvent) => {
-      const eventContent: Content<Article, XpXData> | null = get({ key: event.data.nodes[0].id })
+      const eventContent: Content<Article> | null = get({ key: event.data.nodes[0].id })
       if (eventContent?.type == 'mimir:article') {
         try {
           const start = Date.now()
@@ -40,15 +40,9 @@ export function setupArticleListener(): void {
   })
 }
 
-export function getChildArticles(
-  currentPath: string,
-  subTopicId: string,
-  start: number,
-  count: number,
-  sort: string
-): QueryResponse<Article, object> {
+export function getChildArticles(currentPath: string, subTopicId: string, start: number, count: number, sort: string) {
   const toDay: string = new Date().toISOString()
-  return query({
+  return query<Content<Article>>({
     start: start,
     count: count,
     query: `(_path LIKE "/content${currentPath}*" OR data.subtopic = "${subTopicId}") AND publish.from <= instant("${toDay}")`,
@@ -66,7 +60,7 @@ export function getAllArticles(req: XP.Request, language: string, start: 0, coun
   const subjectQuery = `(${pagePaths.join(' OR ')})`
   const queryString = `${publishFromQuery} AND ${subjectQuery} ${languageQuery}`
 
-  const articlesContent: QueryResponse<Article, object> = query({
+  const articlesContent: ContentsResult<Content<Article>> = query({
     start: start,
     count: count,
     query: queryString,
@@ -80,7 +74,7 @@ export function getAllArticles(req: XP.Request, language: string, start: 0, coun
   }
 }
 
-export function prepareArticles(articles: QueryResponse<Article, object>, language: string): Array<PreparedArticles> {
+export function prepareArticles(articles: ContentsResult<Content<Article>>, language: string): Array<PreparedArticles> {
   return articles.hits.map((article: Content<Article>) => {
     return {
       title: article.displayName,
@@ -95,12 +89,11 @@ export function prepareArticles(articles: QueryResponse<Article, object>, langua
   })
 }
 
-export function addSubjectToXData(
-  article: Content<Article, XpXData>,
-  req: XP.Request
-): Content<Article, XpXData> | undefined {
+export function addSubjectToXData(article: Content<Article>, req: XP.Request) {
   const allMainSubjects: SubjectItem[] = getMainSubjects(req, 'nb')
   const allSubSubjects: SubjectItem[] = getSubSubjects(req, 'nb')
+
+  if (!article) return undefined
 
   const mainSubjects: string[] = getAllMainSubjectByContent(article, allMainSubjects, allSubSubjects)
     .map((subject) => subject.name)
@@ -110,13 +103,13 @@ export function addSubjectToXData(
     .filter(notNullOrUndefined)
 
   if (mainSubjects.length && subSubjects.length && shouldEdit(mainSubjects, subSubjects, article)) {
-    let modified: Content<Article, XpXData> | undefined
+    let modified: Content<Article> | null = null
     try {
       modified = withSuperUserContext(ENONIC_CMS_DEFAULT_REPO, 'draft', () => {
         return modify({
           key: article._id,
           requireValid: true,
-          editor: (content: Content<Article, XpXData>) => {
+          editor: (content: Content<Article>) => {
             content.x = {
               ...content.x,
               mimir: {
@@ -138,11 +131,7 @@ export function addSubjectToXData(
   return undefined
 }
 
-function shouldEdit(
-  mainSubjects: Array<string>,
-  subSubjects: Array<string>,
-  article: Content<Article, XpXData>
-): boolean {
+function shouldEdit(mainSubjects: Array<string>, subSubjects: Array<string>, article: Content<Article>): boolean {
   const mainIdentical: boolean = arraysEqual(
     ensureArray(mainSubjects),
     ensureArray(article.x.mimir?.subjectTag?.mainSubjects)
@@ -163,8 +152,8 @@ export interface ArticleUtilsLib {
     start: number,
     count: number,
     sort: string
-  ) => QueryResponse<Article, object>
-  prepareArticles: (articles: QueryResponse<Article, object>, language: string) => Array<PreparedArticles>
+  ) => ContentsResult<Content<Article>>
+  prepareArticles: (articles: ContentsResult<Content<Article>>, language: string) => Array<PreparedArticles>
   getAllArticles: (req: XP.Request, language: string, start: number, count: number) => ArticleResult
 }
 

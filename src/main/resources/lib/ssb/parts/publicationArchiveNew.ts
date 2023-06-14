@@ -1,5 +1,5 @@
 import type { Article } from '/site/content-types'
-import type { Content, QueryDSL } from '/lib/xp/content'
+import type { Content, QueryDsl } from '/lib/xp/content'
 import { pageUrl } from '/lib/xp/portal'
 import {
   getMainSubjectBySubSubject,
@@ -8,10 +8,9 @@ import {
   type SubjectItem,
 } from '/lib/ssb/utils/subjectUtils'
 import { formatDate } from '/lib/ssb/utils/dateUtils'
-import type { XData } from '/site/x-data'
 import { forceArray } from '/lib/ssb/utils/arrayUtils'
-import { connect, multiRepoConnect, type MultiRepoConnection, type MultiRepoNodeQueryResponse } from '/lib/xp/node'
-import { type Context, type ContextAttributes, get as getContext, type PrincipalKey } from '/lib/xp/context'
+import { connect, multiRepoConnect, Node, type MultiRepoConnection } from '/lib/xp/node'
+import { get as getContext, type PrincipalKey } from '/lib/xp/context'
 import type { ContentLight, Release } from '/lib/ssb/repo/statisticVariant'
 import { notEmptyOrUndefined } from '/lib/ssb/utils/coreUtils'
 
@@ -25,24 +24,24 @@ export function getPublicationsNew(
 ): PublicationResult {
   const mainSubjects: Array<SubjectItem> = getMainSubjects(req, language)
   const subSubjects: Array<SubjectItem> = getSubSubjects(req, language)
-  const context: Context<ContextAttributes> = getContext()
+  const context = getContext()
 
   const connection: MultiRepoConnection = multiRepoConnect({
     sources: [
       {
         repoId: context.repository,
         branch: context.branch,
-        principals: context.authInfo.principals as Array<PrincipalKey>,
+        principals: context.authInfo?.principals as Array<PrincipalKey>,
       },
       {
         repoId: 'no.ssb.statreg.statistics.variants',
         branch: 'master',
-        principals: context.authInfo.principals as Array<PrincipalKey>,
+        principals: context.authInfo?.principals as Array<PrincipalKey>,
       },
     ],
   })
 
-  const query: QueryDSL = {
+  const query: QueryDsl = {
     range: {
       field: 'publish.from',
       type: 'dateTime',
@@ -50,11 +49,11 @@ export function getPublicationsNew(
     },
   }
 
-  const res: MultiRepoNodeQueryResponse = connection.query({
+  const res = connection.query({
     start,
     count,
     sort: 'publish.from DESC',
-    query: query as unknown as string, // hack because Node lib supports QueryDSL but the types for it is not in this version
+    query,
     filters: {
       boolean: {
         must: [
@@ -126,8 +125,8 @@ export function getPublicationsNew(
     },
   })
 
-  const contents: (Content<Article, XData> | ContentLight<Release>)[] = res.hits.map((hit) =>
-    connect(hit).get<Content<Article, XData> | ContentLight<Release>>(hit.id)
+  const contents: (Node<Article> | Node<Release> | null)[] = res.hits.map((hit) =>
+    connect(hit).get<Node<Article> | Node<Release>>(hit.id)
   )
 
   const publications: Array<PublicationItem> = contents.map((content) =>
@@ -140,7 +139,7 @@ export function getPublicationsNew(
         })
       : statisticsAsPublicationItem({
           language,
-          release: content,
+          release: content as unknown as ContentLight<Release>,
           mainSubjects,
         })
   )
@@ -151,7 +150,7 @@ export function getPublicationsNew(
   }
 }
 
-function isContentArticle(content: unknown): content is Content<Article, XData> {
+function isContentArticle(content: unknown): content is Content<Article> {
   return (content as Content).type == `${app.name}:article`
 }
 
@@ -248,7 +247,7 @@ interface StatisticsAsPublicationItemParams {
 }
 
 interface ArticleAsPublicationItemParams {
-  content: Content<Article, XData>
+  content: Content<Article>
   mainSubjects: Array<SubjectItem>
   subSubjects: Array<SubjectItem>
   language: string

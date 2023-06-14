@@ -3,7 +3,7 @@ import { Content } from '/lib/xp/content'
 import type { Statistics } from '/site/content-types'
 import type { DataSource } from '/site/mixins/dataSource'
 import { DatasetRepoNode } from '/lib/ssb/repo/dataset'
-import { NodeQueryHit } from '/lib/xp/node'
+import { NodeQueryResultHit } from '/lib/xp/node'
 import type { Statistic } from '/site/mixins/statistic'
 import { listener, EnonicEvent } from '/lib/xp/event'
 import { TaskInfo } from '/lib/xp/task'
@@ -33,7 +33,7 @@ export function setupTaskListener(): void {
 export function currentlyWaitingForPublish(statistic: Content<Statistics & Statistic>): boolean {
   const from: string = new Date(Date.now() - 1800000).toISOString()
   const to: string = new Date().toISOString()
-  const jobRes: NodeQueryHit | null = queryJobLogs({
+  const jobRes: NodeQueryResultHit | null = queryJobLogs({
     start: 0,
     count: 1,
     query: `

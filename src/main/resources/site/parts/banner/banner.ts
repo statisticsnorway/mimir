@@ -1,4 +1,4 @@
-import { type ResourceKey, render } from '/lib/thymeleaf'
+import { render } from '/lib/thymeleaf'
 import type { Content } from '/lib/xp/content'
 import { getContent, getComponent, type Component } from '/lib/xp/portal'
 import type { Banner as BannerPartConfig } from '.'
@@ -13,7 +13,7 @@ const { getImageAlt } = __non_webpack_require__('/lib/ssb/utils/imageUtils')
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
 const i18nLib = __non_webpack_require__('/lib/xp/i18n')
-const view: ResourceKey = resolve('./banner.html') as ResourceKey
+const view = resolve('./banner.html')
 
 export function get(req: XP.Request): XP.Response {
   try {
@@ -28,8 +28,10 @@ export function preview(req: XP.Request): XP.Response {
 }
 
 function renderPart(req: XP.Request): XP.Response {
-  const page: Content<Page> = getContent()
-  const part: Component<BannerPartConfig> = getComponent()
+  const page = getContent<Content<Page>>()
+  if (!page) throw Error('No page found')
+
+  const part = getComponent() as Component<BannerPartConfig>
   const pageType: BannerPartConfig['pageType'] = part.config.pageType
   const factsAbout: string = i18nLib.localize({
     key: 'factsAbout',

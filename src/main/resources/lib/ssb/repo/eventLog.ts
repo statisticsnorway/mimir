@@ -1,4 +1,4 @@
-import { NodeCreateParams, NodeQueryHit, NodeQueryResponse, RepoNode } from '/lib/xp/node'
+import { CreateNodeParams, Node } from '/lib/xp/node'
 import { EventInfo, QueryInfo } from '/lib/ssb/repo/query'
 
 const { localize } = __non_webpack_require__('/lib/xp/i18n')
@@ -9,7 +9,7 @@ const { repoExists, createRepo } = __non_webpack_require__('/lib/ssb/repo/repo')
 export const EVENT_LOG_REPO = 'no.ssb.eventlog'
 export const EVENT_LOG_BRANCH = 'master'
 
-export type EditorCallback<T> = (node: T & RepoNode) => T & RepoNode
+export type EditorCallback<T> = (node: T & Node) => T & Node
 
 export function setupEventLog(): void {
   if (!eventLogExists()) {
@@ -34,7 +34,7 @@ export function createEventLogRepo(): void {
   createRepo(EVENT_LOG_REPO, EVENT_LOG_BRANCH)
 }
 
-export function createEventLog<T>(content: T & NodeCreateParams, createRepoIfNotFound = true): T & RepoNode {
+export function createEventLog<T>(content: T & CreateNodeParams, createRepoIfNotFound = true): T & Node {
   if (!eventLogExists() && createRepoIfNotFound) {
     createEventLogRepo()
   }
@@ -42,8 +42,8 @@ export function createEventLog<T>(content: T & NodeCreateParams, createRepoIfNot
   return createNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, content)
 }
 
-export function updateEventLog<T>(key: string, editor: EditorCallback<T>): T & RepoNode {
-  return withConnection<T & RepoNode>(EVENT_LOG_REPO, EVENT_LOG_BRANCH, (conn) => {
+export function updateEventLog<T>(key: string, editor: EditorCallback<T>): T & Node {
+  return withConnection<T & Node>(EVENT_LOG_REPO, EVENT_LOG_BRANCH, (conn) => {
     return conn.modify({
       key,
       editor,
@@ -51,16 +51,12 @@ export function updateEventLog<T>(key: string, editor: EditorCallback<T>): T & R
   })
 }
 
-export function getQueryChildNodesStatus<T>(queryId: string): ReadonlyArray<LogSummary> | undefined {
+export function getQueryChildNodesStatus(queryId: string): ReadonlyArray<LogSummary> | undefined {
   if (nodeExists(EVENT_LOG_REPO, EVENT_LOG_BRANCH, queryId)) {
-    const childNodeIds: NodeQueryResponse = getChildNodes(EVENT_LOG_REPO, EVENT_LOG_BRANCH, queryId)
+    const childNodeIds = getChildNodes(EVENT_LOG_REPO, EVENT_LOG_BRANCH, queryId)
     return childNodeIds.hits
-      .map((hit: NodeQueryHit) => {
-        const nodes: ReadonlyArray<QueryInfo> | QueryInfo | null = getNode<QueryInfo>(
-          EVENT_LOG_REPO,
-          EVENT_LOG_BRANCH,
-          hit.id
-        )
+      .map((hit) => {
+        const nodes = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, hit.id) as ReadonlyArray<QueryInfo> | QueryInfo | null
         return Array.isArray(nodes) ? nodes[0] : nodes
       })
       .map((node: EventInfo) => {
@@ -91,7 +87,7 @@ export interface RepoEventLogLib {
   setupEventLog: () => void
   eventLogExists: () => boolean
   createEventLogRepo: () => void
-  createEventLog: <T>(content: T & NodeCreateParams, createRepoIfNotFound?: boolean) => T & RepoNode
-  updateEventLog: <T>(key: string, editor: EditorCallback<T>) => T & RepoNode
-  getQueryChildNodesStatus: <T>(queryId: string) => ReadonlyArray<LogSummary> | undefined
+  createEventLog: <T>(content: T & CreateNodeParams, createRepoIfNotFound?: boolean) => T & Node
+  updateEventLog: <T>(key: string, editor: EditorCallback<T>) => T & Node
+  getQueryChildNodesStatus: (queryId: string) => ReadonlyArray<LogSummary> | undefined
 }

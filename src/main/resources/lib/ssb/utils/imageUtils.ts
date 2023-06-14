@@ -1,4 +1,4 @@
-import { get, Content, MediaImage } from '/lib/xp/content'
+import { get, Content } from '/lib/xp/content'
 import { imageUrl as xpImageUrl, type ImageUrlParams } from '/lib/xp/portal'
 
 export function getImageCaption(imageId: string): string | undefined {

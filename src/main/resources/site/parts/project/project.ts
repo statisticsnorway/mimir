@@ -1,19 +1,21 @@
 import { type Content, get as getTheContent } from '/lib/xp/content'
-import { render, type RenderResponse } from '/lib/enonic/react4xp'
+import { render } from '/lib/enonic/react4xp'
 import { localize } from '/lib/xp/i18n'
 import type { Project } from '/site/content-types'
 import { getContent, pageUrl, processHtml } from '/lib/xp/portal'
 
-export function preview(req: XP.Request): RenderResponse {
+export function preview(req: XP.Request) {
   return renderPart(req)
 }
 
-export function get(req: XP.Request): RenderResponse {
+export function get(req: XP.Request) {
   return renderPart(req)
 }
 
-function renderPart(req: XP.Request): RenderResponse {
-  const page: Content<Project> = getContent()
+function renderPart(req: XP.Request) {
+  const page = getContent<Content<Project>>()
+  if (!page) throw Error('No page found')
+
   const managerConfig: string | undefined = page.data.manager || undefined
   const language: string = page.language ? page.language : 'nb'
 

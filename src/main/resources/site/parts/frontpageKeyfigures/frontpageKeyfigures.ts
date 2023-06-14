@@ -1,6 +1,6 @@
-import { render, type ResourceKey } from '/lib/thymeleaf'
-import { render as r4XpRender, type RenderResponse } from '/lib/enonic/react4xp'
-import { type Component, getComponent } from '/lib/xp/portal'
+import { render } from '/lib/thymeleaf'
+import { render as r4XpRender } from '/lib/enonic/react4xp'
+import { getComponent } from '/lib/xp/portal'
 import type { FrontpageKeyfigures as FrontpageKeyfiguresPartConfig } from '.'
 import { type Content, get as getContentByKey } from '/lib/xp/content'
 import type { KeyFigure } from '/site/content-types'
@@ -11,7 +11,7 @@ const { data } = __non_webpack_require__('/lib/util')
 const { parseKeyFigure } = __non_webpack_require__('/lib/ssb/parts/keyFigure')
 const { DATASET_BRANCH } = __non_webpack_require__('/lib/ssb/repo/dataset')
 
-const view: ResourceKey = resolve('./frontpageKeyfigures.html')
+const view = resolve('./frontpageKeyfigures.html')
 
 export function get(req: XP.Request) {
   try {
@@ -29,8 +29,10 @@ const isKeyfigureData = (data: FrontPageKeyFigureData | undefined): data is Fron
   return !!data
 } // user-defined type guards <3
 
-function renderPart(req: XP.Request): XP.Response | RenderResponse {
-  const part: Component<FrontpageKeyfiguresPartConfig> = getComponent()
+function renderPart(req: XP.Request): XP.Response {
+  const part = getComponent<FrontpageKeyfiguresPartConfig>()
+  if (!part) throw Error('No part found')
+
   const keyFiguresPart: Array<FrontpageKeyfigure> = part.config.keyfiguresFrontpage
     ? data.forceArray(part.config.keyfiguresFrontpage)
     : []
@@ -68,10 +70,7 @@ function renderPart(req: XP.Request): XP.Response | RenderResponse {
       }
 }
 
-function renderFrontpageKeyfigures(
-  req: XP.Request,
-  frontpageKeyfigures: Array<FrontPageKeyFigureData>
-): RenderResponse {
+function renderFrontpageKeyfigures(req: XP.Request, frontpageKeyfigures: Array<FrontPageKeyFigureData>) {
   return r4XpRender(
     'FrontpageKeyfigures',
     {

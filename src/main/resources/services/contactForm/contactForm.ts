@@ -1,4 +1,4 @@
-import { type EmailParams, send } from '/lib/xp/mail'
+import { type SendMessageParams, send } from '/lib/xp/mail'
 import { type HttpRequestParams, type HttpResponse, request } from '/lib/http-client'
 
 exports.post = (req: XP.Request): XP.Response => {
@@ -61,7 +61,7 @@ interface RecaptchaResponse {
 }
 
 function postMail(formData: ContactFormData): XP.Response {
-  const emailParams: EmailParams = {
+  const emailParams: SendMessageParams = {
     from: 'noreply@ssb.no',
     to: getReceiverEmail(formData.receiver.id),
     subject: 'Forespørsel SSB - ' + formData.receiver.title,

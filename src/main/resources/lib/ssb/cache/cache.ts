@@ -1,6 +1,6 @@
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 import { listener, send, EnonicEvent, EnonicEventData } from '/lib/xp/event'
-import { query, get, QueryResponse, Content } from '/lib/xp/content'
+import { query, get, Content } from '/lib/xp/content'
 import { run } from '/lib/xp/context'
 import { JSONstat } from '/lib/types/jsonstat-toolkit'
 import { TbmlDataUniform } from '/lib/types/xmlParser'
@@ -10,7 +10,6 @@ import { MunicipalityWithCounty } from '/lib/ssb/dataset/klass/municipalities'
 import { newCache, Cache } from '/lib/cache'
 import type { DataSource } from '/site/mixins/dataSource'
 import { request, HttpResponse } from '/lib/http-client'
-import type { BanVarnishPageCache as BanVarnishPageCacheConfig } from '/tasks/banVarnishPageCache'
 
 const { executeFunction, sleep, submitTask } = __non_webpack_require__('/lib/xp/task')
 const { getDataset, extractKey } = __non_webpack_require__('/lib/ssb/dataset/dataset')
@@ -98,7 +97,7 @@ export function setup(): void {
 
 function removePageFromVarnish(event: EnonicEvent<EnonicEventData>): void {
   if (event.data.nodes[0].repo == 'com.enonic.cms.default' && event.data.nodes[0].branch == 'master') {
-    const taskConfig: BanVarnishPageCacheConfig = {
+    const taskConfig = {
       pageId: event.data.nodes[0].id,
     }
 
@@ -241,7 +240,7 @@ function getReferences(id: string): Array<Content> {
   let count = 10
   let hits: Array<Content> = []
   while (count === 10) {
-    const result: QueryResponse<Content, object> = query({
+    const result = query({
       start,
       count,
       query: `_references LIKE "${id}"`,

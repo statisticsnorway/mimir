@@ -1,5 +1,5 @@
-import { render as r4XpRender, type RenderResponse } from '/lib/enonic/react4xp'
-import { getComponent, getContent, serviceUrl, pageUrl, type Component } from '/lib/xp/portal'
+import { render as r4XpRender } from '/lib/enonic/react4xp'
+import { getComponent, getContent, serviceUrl, pageUrl } from '/lib/xp/portal'
 import type { BkibolCalculator as BkibolCalculatorPartConfig } from '.'
 import type { Dataset, Dimension } from '/lib/types/jsonstat-toolkit'
 import type { Content } from '/lib/xp/content'
@@ -15,7 +15,7 @@ const { getLanguage } = __non_webpack_require__('/lib/ssb/utils/language')
 const { getCalculatorConfig, getBkibolDatasetEnebolig } = __non_webpack_require__('/lib/ssb/dataset/calculator')
 const { fromPartCache } = __non_webpack_require__('/lib/ssb/cache/partCache')
 
-export function get(req: XP.Request): RenderResponse | XP.Response {
+export function get(req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -23,13 +23,16 @@ export function get(req: XP.Request): RenderResponse | XP.Response {
   }
 }
 
-export function preview(req: XP.Request): RenderResponse | XP.Response {
+export function preview(req: XP.Request): XP.Response {
   return renderPart(req)
 }
 
-function renderPart(req: XP.Request): RenderResponse {
-  const page: Content<BkibolCalculatorPartConfig> = getContent()
-  let bkibolCalculator: RenderResponse
+function renderPart(req: XP.Request) {
+  const page = getContent<Content<BkibolCalculatorPartConfig>>()
+  if (!page) throw Error('No page found')
+
+  let bkibolCalculator
+
   if (req.mode === 'edit' || req.mode === 'inline') {
     bkibolCalculator = getBkibolCalculatorComponent(req, page)
   } else {
@@ -41,8 +44,10 @@ function renderPart(req: XP.Request): RenderResponse {
   return bkibolCalculator
 }
 
-function getBkibolCalculatorComponent(req: XP.Request, page: Content<BkibolCalculatorPartConfig>): RenderResponse {
-  const part: Component<BkibolCalculatorPartConfig> = getComponent()
+function getBkibolCalculatorComponent(req: XP.Request, page: Content<BkibolCalculatorPartConfig>) {
+  const part = getComponent<BkibolCalculatorPartConfig>()
+  if (!part) throw Error('No part found')
+
   const language: Language = getLanguage(page) as Language
   const phrases: Phrases = language.phrases as Phrases
   const code: string = language.code ? language.code : 'nb'

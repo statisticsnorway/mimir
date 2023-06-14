@@ -4,7 +4,7 @@ import type { CalculatorPeriod } from '/lib/types/calculator'
 import { DropdownItems as MonthDropdownItems } from '/lib/types/components'
 import type { Dataset } from '/lib/types/jsonstat-toolkit'
 import type { Language, Phrases } from '/lib/types/language'
-import { render, type RenderResponse } from '/lib/enonic/react4xp'
+import { render } from '/lib/enonic/react4xp'
 import type { CalculatorConfig } from '/site/content-types'
 import type { HusleieCalculator as HusleieCalculatorPartConfig } from '.'
 import { getComponent, getContent, serviceUrl, pageUrl } from '/lib/xp/portal'
@@ -15,7 +15,7 @@ const { getLanguage } = __non_webpack_require__('/lib/ssb/utils/language')
 const { getCalculatorConfig, getKpiDatasetMonth } = __non_webpack_require__('/lib/ssb/dataset/calculator')
 const { fromPartCache } = __non_webpack_require__('/lib/ssb/cache/partCache')
 
-export function get(req: XP.Request): RenderResponse | XP.Response {
+export function get(req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -23,12 +23,14 @@ export function get(req: XP.Request): RenderResponse | XP.Response {
   }
 }
 
-export function preview(req: XP.Request): RenderResponse {
+export function preview(req: XP.Request) {
   return renderPart(req)
 }
 
-function renderPart(req: XP.Request): RenderResponse {
-  const page: Content = getContent()
+function renderPart(req: XP.Request) {
+  const page = getContent()
+  if (!page) throw Error('No page found')
+
   if (req.mode === 'edit' || req.mode === 'inline') {
     return getHusleiekalkulator(req, page)
   } else {
@@ -38,8 +40,10 @@ function renderPart(req: XP.Request): RenderResponse {
   }
 }
 
-function getHusleiekalkulator(req: XP.Request, page: Content): RenderResponse {
-  const config: HusleieCalculatorPartConfig = getComponent().config
+function getHusleiekalkulator(req: XP.Request, page: Content) {
+  const config = getComponent()?.config as HusleieCalculatorPartConfig
+  if (!config) throw Error('No part found')
+
   const language: Language = getLanguage(page)
   const phrases: Phrases = language.phrases as Phrases
   const calculatorConfig: Content<CalculatorConfig> | undefined = getCalculatorConfig()

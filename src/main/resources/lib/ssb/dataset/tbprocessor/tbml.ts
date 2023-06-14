@@ -27,7 +27,7 @@ export enum TbProcessorTypes {
   SOURCE_LIST = 'SOURCE_LIST',
 }
 
-export function getTbmlData<T extends TbmlDataUniform | TbmlSourceListUniform>(
+export function getTbmlData(
   url: string,
   queryId?: string,
   processXml?: string,
@@ -38,14 +38,11 @@ export function getTbmlData<T extends TbmlDataUniform | TbmlSourceListUniform>(
   return {
     body: response.body,
     status: response.status,
-    parsedBody: response.body && response.status === 200 ? processBody<T>(response.body, queryId) : undefined,
+    parsedBody: response.body && response.status === 200 ? processBody(response.body, queryId) : undefined,
   }
 }
 
-function processBody<T extends TbmlDataUniform | TbmlSourceListUniform>(
-  body: string,
-  queryId?: string
-): TbmlDataUniform | TbmlSourceListUniform {
+function processBody(body: string, queryId?: string): TbmlDataUniform | TbmlSourceListUniform {
   //
   const tbmlDataRaw: TbmlDataRaw | TbmlSourceListRaw = xmlToJson(body, queryId)
   if ((tbmlDataRaw as TbmlSourceListRaw).sourceList) {

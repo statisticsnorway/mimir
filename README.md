@@ -35,6 +35,19 @@ or for a continous build and deploy (needs $XP_HOME and $JAVA_HOME env variables
 ./gradlew deploy -t
 ```
 
+### Development
+
+Start your sandbox in dev mode
+```
+enonic sandbox start --dev
+```
+
+Run an `enonic project deploy` if you haven't already.
+
+Run `npm run dev`, this will start multiple webpack watches in parallel that will watch for changes.
+
+Most changes to files should then be ready after page refresh in a few seconds.
+
 #### Typescript interfaces Code-Gen
 We're using the `enonic-ts-codegen` library. This reads through all .xml config files and automatically creates interface files for all parts, layouts, pages, site-config, and content-types. This is a part of the gradle.build pipeline. So they will be regenerated and overwritten on every build. To change the interface you'll have to change the .xml, not the .ts interface files.
 

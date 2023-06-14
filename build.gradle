@@ -37,12 +37,11 @@ dependencies {
     include "com.enonic.xp:lib-cluster:${xpVersion}"
     include "com.enonic.xp:lib-mail:${xpVersion}"
     include "com.enonic.xp:lib-scheduler:${xpVersion}"
-    include "com.enonic.xp:lib-io:${xpVersion}"
     implementation 'commons-codec:commons-codec:1.15'
     include "no.item:wsutil-server:2.0.0"
     include "com.gravitondigital:featuretogglelib:0.3.0"
     include 'org.json:json:20230227'
-    include 'com.enonic.lib:lib-react4xp:3.4.1'
+    include "com.enonic.lib:lib-react4xp:4.0.1"
     include 'com.enonic.lib:lib-text-encoding:2.1.1'
     include "com.enonic.xp:lib-value:${xpVersion}"
     include "no.item:lib-xp-cristin:1.3.1"
@@ -62,32 +61,8 @@ repositories {
 
 node {
     download = true
-    version = '16.4.2'
+    version = '18.12.1'
 }
-
-def react4xpGradlePath = 'node_modules/@enonic/react4xp/react4xp.gradle'
-def react4xpGradleFile = new File(react4xpGradlePath)
-if (!react4xpGradleFile.exists()) {
-    exec {
-        String npm = 'npm'
-        if (Os.isFamily(Os.FAMILY_WINDOWS)) {
-            npm = 'npm.cmd'
-        }
-        commandLine npm
-        args = ['install']
-        println "\nNot found: $react4xpGradlePath - running shell command: $npm install"
-        //store the output instead of printing to the console:
-        standardOutput = new ByteArrayOutputStream()
-
-        //extension method execSomething.output() can be used to obtain the output:
-        ext.output = {
-            return standardOutput.toString()
-        }
-    }
-}
-apply from: react4xpGradlePath
-apply from: 'node_modules/@enonic/react4xp/npmInstall.gradle'
-apply from: 'node_modules/@enonic/react4xp/updaters.gradle'
 
 task clientJsWebpack( type: NpxTask, dependsOn: npmInstall ) {
     command =  'webpack'
@@ -138,6 +113,26 @@ task serverWebpack( type: NpxTask, dependsOn: npmInstall ) {
     outputs.dir "${buildDir}/resources/main/admin"
     outputs.file "${buildDir}/resources/main/main.js"
 }
+
+task react4xp(type: NpmTask, dependsOn: npmInstall) {
+  args = [
+    'run',
+    'build:react4xp' // This script must exist in the package.json file
+  ]
+  description 'Compile React4xp resources'
+  environment = [
+    'R4X_APP_NAME': "${appName}",
+    'R4X_BUILD_LOG_LEVEL': gradle.startParameter.logLevel.toString(),
+    'R4X_DIR_PATH_ABSOLUTE_PROJECT': project.projectDir.toString(),
+    'NODE_ENV': project.hasProperty('dev') || project.hasProperty('development') ? 'development' : 'production'
+  ]
+  group 'react4xp'
+  // It also watches package.json and package-lock.json :)
+  inputs.dir 'node_modules/@enonic/react4xp'
+  inputs.dir 'src/main/resources'
+  outputs.dir 'build/resources/main'
+}
+jar.dependsOn 'react4xp'
 
 processResources {
     include '**/*'

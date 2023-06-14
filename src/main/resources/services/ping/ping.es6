@@ -1,6 +1,6 @@
 const { getVersion } = __non_webpack_require__('/lib/xp/admin')
 
-export function get(req) {
+export function get() {
   const contentType = 'application/xml'
   const body = `<ping>
             <version>${app.version}</version>

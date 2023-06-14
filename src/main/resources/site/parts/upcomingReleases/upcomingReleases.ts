@@ -1,6 +1,5 @@
-import { render, type RenderResponse } from '/lib/enonic/react4xp'
+import { render } from '/lib/enonic/react4xp'
 import { query, type Content } from '/lib/xp/content'
-import type { Component } from '/lib/xp/portal'
 import type { StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
 import type { GroupedBy, PreparedStatistics, YearReleases, Release } from '/lib/ssb/utils/variantUtils'
 import type { UpcomingReleases as UpcomingReleasesPartConfig } from '.'
@@ -16,17 +15,21 @@ const { getAllStatisticsFromRepo } = __non_webpack_require__('/lib/ssb/statreg/s
 const { fromPartCache } = __non_webpack_require__('/lib/ssb/cache/partCache')
 const { getMainSubjects, getMainSubjectById } = __non_webpack_require__('/lib/ssb/utils/subjectUtils')
 
-export function get(req: XP.Request): RenderResponse {
+export function get(req: XP.Request) {
   return renderPart(req)
 }
 
-export function preview(req: XP.Request): RenderResponse {
+export function preview(req: XP.Request) {
   return renderPart(req)
 }
 
-function renderPart(req: XP.Request): RenderResponse {
-  const content: Content = getContent()
-  const component: Component<UpcomingReleasesPartConfig> = getComponent()
+function renderPart(req: XP.Request) {
+  const content = getContent()
+  if (!content) throw Error('No page found')
+
+  const component = getComponent<UpcomingReleasesPartConfig>()
+  if (!component) throw Error('No part found')
+
   const currentLanguage: string = content.language ? content.language : 'nb'
   const count: number = parseInt(component.config.numberOfDays)
   const buttonTitle: string = localize({
@@ -65,7 +68,7 @@ function renderPart(req: XP.Request): RenderResponse {
     return addMonthNames(groupedByYearMonthAndDay, currentLanguage)
   })
 
-  const contentReleases: Array<PreparedUpcomingRelease> = query<UpcomingRelease, object>({
+  const contentReleases: Array<PreparedUpcomingRelease> = query<Content<UpcomingRelease>>({
     start: 0,
     count: 500,
     query: `type = "${app.name}:upcomingRelease" AND language = "${currentLanguage}" AND data.date >= "${format(

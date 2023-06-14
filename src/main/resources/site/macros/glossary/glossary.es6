@@ -1,6 +1,6 @@
 import { render } from '/lib/thymeleaf'
 
-const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+const { React4xp } = __non_webpack_require__('/lib/enonic/react4xp')
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 const view = resolve('./glossary.html')
 
@@ -25,13 +25,18 @@ const renderMacro = (context) => {
     .uniqueId()
 
   const body = render(view, {
+    // TODO, swap to another unique ID
+    // Is this needed? maybe for multiple glossaries on same page?
     glossaryId: glossary.react4xpId,
   })
 
   return {
     body: glossary.renderBody({
       body,
+      request: context.request,
     }),
-    pageContributions: glossary.renderPageContributions(),
+    pageContributions: glossary.renderPageContributions({
+      request: context.request,
+    }),
   }
 }

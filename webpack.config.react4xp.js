@@ -1,4 +1,5 @@
 const path = require('path')
+const WatcherTouchPlugin = require('./WatcherTouchPlugin')
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
 module.exports = function (env, config) {
@@ -39,11 +40,16 @@ module.exports = function (env, config) {
     }
   })
 
-  config.target = ['web', 'es2017']
+  config.target = ['web', 'es2020']
+
+  if (process.env.WATCH === 'true') {
+    config.plugins.push(new WatcherTouchPlugin())
+    config.watch = true
+  }
   /* 
     Pro tip, Add:
-    env.BUILD_ENV = 'development';
-    to the top of the function in node_modules/@enonic/react4xp/dist/webpack.config.externals.js
+    process.env.NODE_ENV = 'development';
+    to the top of the function in node_modules/@enonic/react4xp/dist/webpack.config.globals.js
     to get non-minified react in externals, so you can debug easier in the browser and XP terminal without getting minified react error
   */
 

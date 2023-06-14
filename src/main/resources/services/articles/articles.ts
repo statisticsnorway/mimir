@@ -1,6 +1,4 @@
-import { Content, QueryResponse } from '/lib/xp/content'
 import { PreparedArticles } from '/lib/ssb/utils/articleUtils'
-import type { Article } from '/site/content-types'
 
 const { getContent } = __non_webpack_require__('/lib/xp/portal')
 const { getChildArticles, prepareArticles } = __non_webpack_require__('/lib/ssb/utils/articleUtils')
@@ -13,10 +11,15 @@ exports.get = (req: XP.Request): XP.Response => {
   const count: number = Number(req.params.count) ? Number(req.params.count) : 10
   const sort: string = req.params.sort ? req.params.sort : 'DESC'
   const language: string = req.params?.language ? (req.params.language === 'en' ? 'en-gb' : req.params.language) : 'nb'
-  const content: Content = getContent()
+  const content = getContent()
+  if (!content) {
+    return {
+      status: 404,
+    }
+  }
   const subTopicId: string = content._id
 
-  const childArticles: QueryResponse<Article, object> = getChildArticles(currentPath, subTopicId, start, count, sort)
+  const childArticles = getChildArticles(currentPath, subTopicId, start, count, sort)
   const preparedArticles: Array<PreparedArticles> = prepareArticles(childArticles, language)
   totalCount = childArticles.total
 

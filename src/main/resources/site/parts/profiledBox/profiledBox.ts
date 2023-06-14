@@ -1,8 +1,7 @@
-import type { Content } from '/lib/xp/content'
 import { formatDate } from '/lib/ssb/utils/dateUtils'
 import { render as r4xpRender } from '/lib/enonic/react4xp'
 import type { ProfiledBox as ProfiledBoxPartConfig } from '.'
-import { render, type ResourceKey } from '/lib/thymeleaf'
+import { render } from '/lib/thymeleaf'
 import { randomUnsafeString } from '/lib/ssb/utils/utils'
 import { getContent, getComponent, pageUrl } from '/lib/xp/portal'
 import { imageUrl } from '/lib/ssb/utils/imageUtils'
@@ -10,7 +9,7 @@ import { imageUrl } from '/lib/ssb/utils/imageUtils'
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 const { getImageAlt } = __non_webpack_require__('/lib/ssb/utils/imageUtils')
 
-const view: ResourceKey = resolve('profiledBox.html')
+const view = resolve('profiledBox.html')
 
 export function get(req: XP.Request): XP.Response {
   try {
@@ -25,8 +24,12 @@ export function preview(req: XP.Request): XP.Response {
 }
 
 function renderPart(req: XP.Request): XP.Response {
-  const page: Content = getContent()
-  const config: ProfiledBoxPartConfig = getComponent().config
+  const page = getContent()
+  if (!page) throw Error('No page found')
+
+  const config = getComponent<ProfiledBoxPartConfig>()?.config
+  if (!config) throw Error('No part found')
+
   const language: string = page.language === 'en' || page.language === 'nn' ? page.language : 'nb'
   const urlContentSelector: ProfiledBoxPartConfig['urlContentSelector'] = config.urlContentSelector
   const titleSize: string = getTitleSize(config.title)

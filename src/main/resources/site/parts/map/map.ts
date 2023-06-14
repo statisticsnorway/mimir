@@ -1,10 +1,10 @@
-import { type ResourceKey, render } from '/lib/thymeleaf'
+import { render } from '/lib/thymeleaf'
 import { assetUrl, getSiteConfig, serviceUrl } from '/lib/xp/portal'
 import { scriptAsset } from '/lib/ssb/utils/utils'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
-const view: ResourceKey = resolve('./map.html')
+const view = resolve('./map.html')
 
 export function get(req: XP.Request): XP.Response {
   try {
@@ -19,7 +19,9 @@ export function preview(): XP.Response {
 }
 
 function renderPart(): XP.Response {
-  const siteConfig: XP.SiteConfig = getSiteConfig()
+  const siteConfig = getSiteConfig<XP.SiteConfig>()
+  if (!siteConfig) throw Error('No site config found')
+
   let mapFolder = '/mapdata'
 
   if (typeof siteConfig.kommunefakta !== 'undefined' && siteConfig.kommunefakta.mapfolder) {

@@ -1,5 +1,5 @@
-import { render, type RenderResponse } from '/lib/enonic/react4xp'
-import type { Content, QueryResponse } from '/lib/xp/content'
+import { render } from '/lib/enonic/react4xp'
+import type { Content, ContentsResult } from '/lib/xp/content'
 import type { PreparedArticles } from '/lib/ssb/utils/articleUtils'
 import type { Article } from '/site/content-types'
 import { getContent, serviceUrl } from '/lib/xp/portal'
@@ -8,16 +8,18 @@ import { localize } from '/lib/xp/i18n'
 const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
 const { getChildArticles, prepareArticles } = __non_webpack_require__('/lib/ssb/utils/articleUtils')
 
-export function get(req: XP.Request): RenderResponse {
+export function get(req: XP.Request) {
   return renderPart(req)
 }
 
-export function preview(req: XP.Request): RenderResponse {
+export function preview(req: XP.Request) {
   return renderPart(req)
 }
 
-function renderPart(req: XP.Request): RenderResponse {
-  const content: Content = getContent()
+function renderPart(req: XP.Request) {
+  const content = getContent()
+  if (!content) throw Error('No page found')
+
   const subTopicId: string = content._id
   const sort: string = req.params.sort ? req.params.sort : 'DESC'
   const language: string = content.language ? content.language : 'nb'
@@ -28,7 +30,7 @@ function renderPart(req: XP.Request): RenderResponse {
   const start = 0
   const count: number = showAllArticles ? 100 : 10
 
-  const childArticles: QueryResponse<Article, object> = getChildArticles(currentPath, subTopicId, start, count, sort)
+  const childArticles: ContentsResult<Content<Article>> = getChildArticles(currentPath, subTopicId, start, count, sort)
   const preparedArticles: Array<PreparedArticles> = prepareArticles(childArticles, language)
   const totalArticles: number = childArticles.total
 

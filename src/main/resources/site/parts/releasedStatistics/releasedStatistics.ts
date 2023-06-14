@@ -1,7 +1,7 @@
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 
-import type { Content, QueryDSL } from '/lib/xp/content'
-import { render, type RenderResponse } from '/lib/enonic/react4xp'
+import type { QueryDsl } from '/lib/xp/content'
+import { render } from '/lib/enonic/react4xp'
 import type { ReleasedStatistics as ReleasedStatisticsPartConfig } from '.'
 import type { YearReleases } from '/lib/ssb/utils/variantUtils'
 import { type Component, getComponent, getContent } from '/lib/xp/portal'
@@ -15,7 +15,7 @@ const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
 const { addMonthNames, groupStatisticsByYearMonthAndDay } = __non_webpack_require__('/lib/ssb/utils/variantUtils')
 
-export function get(req: XP.Request): RenderResponse | XP.Response {
+export function get(req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -23,14 +23,18 @@ export function get(req: XP.Request): RenderResponse | XP.Response {
   }
 }
 
-export function preview(req: XP.Request): RenderResponse {
+export function preview(req: XP.Request) {
   return renderPart(req)
 }
 
-export function renderPart(req: XP.Request): RenderResponse {
-  const content: Content = getContent()
+export function renderPart(req: XP.Request) {
+  const content = getContent()
+  if (!content) throw Error('No page found')
+
   const currentLanguage: string = content.language ? content.language : 'nb'
-  const part: Component<ReleasedStatisticsPartConfig> = getComponent()
+  const part = getComponent<ReleasedStatisticsPartConfig>()
+  if (!part) throw Error('No part found')
+
   const deactivatePartCacheEnabled: boolean = isEnabled('deactivate-partcache-released-statistics', true, 'ssb')
   const groupedWithMonthNames: Array<YearReleases> = !deactivatePartCacheEnabled
     ? fromPartCache(req, `${content._id}-releasedStatistics`, () => {
@@ -64,7 +68,7 @@ function getGroupedWithMonthNames(
         from: 'dateTime',
         lte: stringToServerTime(),
       },
-    } as unknown as QueryDSL,
+    } as QueryDsl,
     numberOfReleases
   )
 

@@ -1,6 +1,6 @@
-import { createUser, findUsers, type UserQueryResult } from '/lib/xp/auth'
+import { createUser, findUsers } from '/lib/xp/auth'
 import type { Content } from '/lib/xp/content'
-import { type ContextAttributes, run, type RunContext } from '/lib/xp/context'
+import { run, type ContextParams } from '/lib/xp/context'
 import type { DataSource } from '/site/mixins/dataSource'
 import type { JobEventNode, JobInfoNode } from '/lib/ssb/repo/job'
 import type { StatRegRefreshResult } from '/lib/ssb/repo/statreg'
@@ -26,7 +26,7 @@ const { publishDataset } = __non_webpack_require__('/lib/ssb/dataset/publishOld'
 const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
 const { createOrUpdateStatisticsRepo } = __non_webpack_require__('/lib/ssb/repo/statisticVariant')
 
-const createUserContext: RunContext<ContextAttributes> = {
+const createUserContext: ContextParams = {
   // Master context (XP)
   repository: ENONIC_CMS_DEFAULT_REPO,
   branch: 'master',
@@ -39,7 +39,7 @@ const createUserContext: RunContext<ContextAttributes> = {
 
 const newPublishJobEnabled: boolean = isEnabled('publishJob-lib-sheduler', false, 'ssb')
 
-export const cronContext: RunContext<ContextAttributes> = {
+export const cronContext: ContextParams = {
   // Master context (XP)
   repository: ENONIC_CMS_DEFAULT_REPO,
   branch: 'master',
@@ -51,7 +51,7 @@ export const cronContext: RunContext<ContextAttributes> = {
 }
 
 function setupCronJobUser(): void {
-  const findUsersResult: UserQueryResult<object> = findUsers({
+  const findUsersResult = findUsers({
     count: 1,
     query: `login LIKE "cronjob"`,
   })
@@ -272,7 +272,9 @@ export function setupCronJobs(): void {
           editor: (job) => {
             job.enabled = newPublishJobEnabled
             job.schedule.value = datasetPublishCron
-            job.schedule.timeZone = timezone
+            if (job.schedule.type === 'CRON') {
+              job.schedule.timeZone = timezone
+            }
             return job
           },
         })
@@ -290,7 +292,7 @@ export function setupCronJobs(): void {
           },
         })
       }
-      const schedulerList: Array<ScheduledJob<unknown>> = listScheduledJobs()
+      const schedulerList: Array<ScheduledJob> = listScheduledJobs()
       cronJobLog(JSON.stringify(schedulerList, null, 2))
     })
 
@@ -304,7 +306,9 @@ export function setupCronJobs(): void {
           name: 'testTask',
           editor: (job) => {
             job.schedule.value = testTaskCron
-            job.schedule.timeZone = timezone
+            if (job.schedule.type === 'CRON') {
+              job.schedule.timeZone = timezone
+            }
             return job
           },
         })
@@ -393,5 +397,5 @@ export function setupCronJobs(): void {
 export interface SSBCronLib {
   setupCronJobs: () => void
   runOnMasterOnly: (task: () => void) => void
-  cronContext: RunContext<ContextAttributes>
+  cronContext: ContextParams
 }

@@ -1,16 +1,18 @@
 import { get as getContentByKey, type Content } from '/lib/xp/content'
 import type { Button } from '/site/content-types'
-import { attachmentUrl, getComponent, pageUrl, type Component } from '/lib/xp/portal'
+import { attachmentUrl, getComponent, pageUrl } from '/lib/xp/portal'
 import type { Button as ButtonPartConfig } from '.'
-import { type ResourceKey, render } from '/lib/thymeleaf'
+import { render } from '/lib/thymeleaf'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 const util = __non_webpack_require__('/lib/util')
-const view: ResourceKey = resolve('./button.html') as ResourceKey
+const view = resolve('./button.html')
 
 export function get(req: XP.Request): XP.Response {
   try {
-    const part: Component<ButtonPartConfig> = getComponent()
+    const part = getComponent<ButtonPartConfig>()
+    if (!part) throw Error('No part found')
+
     const buttonsIds: Array<string> = part.config.button ? util.data.forceArray(part.config.button) : []
     return renderPart(req, buttonsIds)
   } catch (e) {

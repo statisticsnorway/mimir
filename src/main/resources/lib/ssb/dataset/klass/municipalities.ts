@@ -30,7 +30,9 @@ export const query: (queryString: string) => Array<MunicipalCode> = (queryString
   )
 
 function getMunicipalsFromContent(): Array<MunicipalCode> {
-  const siteConfig: XP.SiteConfig = getSiteConfig()
+  const siteConfig: XP.SiteConfig | null = getSiteConfig()
+  if (!siteConfig) return []
+
   const key: string | undefined = siteConfig.municipalDataContentId
   if (key) {
     const dataSource: Content<DataSource> | null = getContent({
@@ -112,9 +114,11 @@ export function getMunicipality(req: RequestWithCode): MunicipalityWithCounty | 
   }
 
   if (!municipality && (req.mode === 'edit' || req.mode === 'preview' || req.mode === 'inline')) {
-    const siteConfig: XP.SiteConfig = getSiteConfig()
-    const defaultMunicipality: string = siteConfig.defaultMunicipality
-    municipality = getMunicipalityByCode(municipalities, defaultMunicipality)
+    const siteConfig: XP.SiteConfig | null = getSiteConfig()
+    if (siteConfig) {
+      const defaultMunicipality: string = siteConfig.defaultMunicipality
+      municipality = getMunicipalityByCode(municipalities, defaultMunicipality)
+    }
   }
 
   return municipality
@@ -184,7 +188,7 @@ function changesWithMunicipalityCode(municipalityCode: string): Array<Municipali
 }
 
 function getMunicipalityChanges(): MunicipalityChangeList {
-  const changeListId: string | undefined = getSiteConfig<XP.SiteConfig>().municipalChangeListContentId
+  const changeListId: string | undefined = getSiteConfig<XP.SiteConfig>()?.municipalChangeListContentId
   if (changeListId) {
     const dataSource: Content<DataSource> | null = getContent({
       key: changeListId,

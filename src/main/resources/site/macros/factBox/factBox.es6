@@ -4,7 +4,7 @@ const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
 exports.macro = function (context) {
   try {
-    const factBox = factBoxController.preview(context, context.params.factBox)
+    const factBox = factBoxController.preview(context.request, context.params.factBox)
 
     if (factBox.status && factBox.status !== 200) throw new Error(`factBox with id ${context.params.factBox} missing`)
 
