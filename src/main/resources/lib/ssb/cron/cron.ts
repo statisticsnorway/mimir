@@ -16,7 +16,7 @@ const { getContentWithDataSource } = __non_webpack_require__('/lib/ssb/dataset/d
 const { completeJobLog, startJobLog, updateJobLog, JOB_STATUS_COMPLETE, JobNames } =
   __non_webpack_require__('/lib/ssb/repo/job')
 const { dataSourceRSSFilter } = __non_webpack_require__('/lib/ssb/cron/rss')
-const { deleteExpiredEventLogs } = __non_webpack_require__('/lib/ssb/cron/eventLog')
+const { deleteExpiredEventLogsForQueries } = __non_webpack_require__('/lib/ssb/cron/eventLog')
 const { isMaster } = __non_webpack_require__('/lib/xp/cluster')
 const { cronJobLog } = __non_webpack_require__('/lib/ssb/utils/serverLog')
 const { ENONIC_CMS_DEFAULT_REPO } = __non_webpack_require__('/lib/ssb/repo/common')
@@ -172,9 +172,9 @@ export function setupCronJobs(): void {
   const deleteExpiredEventLogCron: string =
     app.config && app.config['ssb.cron.deleteLogs'] ? app.config['ssb.cron.deleteLogs'] : '45 13 * * *'
   schedule({
-    name: 'Delete expired event logs',
+    name: 'Delete expired event logs for queries',
     cron: deleteExpiredEventLogCron,
-    callback: () => runOnMasterOnly(deleteExpiredEventLogs),
+    callback: () => runOnMasterOnly(deleteExpiredEventLogsForQueries),
     context: cronContext,
   })
 

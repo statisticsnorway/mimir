@@ -64,8 +64,8 @@ export function Jobs() {
         return 'Kjøre oppdaterte spørringer'
       case 'Refresh dataset calculators':
         return 'Oppdatere kalkulatorer'
-      case 'Delete expired eventlogs':
-        return 'Slette eventlog'
+      case 'Delete expired event logs for queries':
+        return 'Slette utdaterte event logs for spørringer'
       case 'Publish statistics':
         return 'Publisering statistikk'
       case 'Refresh statreg data':
