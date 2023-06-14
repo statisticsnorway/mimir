@@ -1,5 +1,5 @@
 exports.get = () => {
-  const body = `Contact: sikkerhetssenter@ssb.no
+  const body = `Contact: mailto:sikkerhetssenter@ssb.no
 Expires: 2023-11-31T06:00:00.000Z
 Preferred-Languages: nb,en
 Policy: We welcome any friendly bug report. Please contact us in advance if you wish to use methods that can trigger warnings or cause denial of service.
