@@ -308,6 +308,7 @@ function getOwnersWithSources(dataSourceIds: Array<string>): Array<OwnerWithSour
 
 function getStatisticsJobLogInfo(id: string, count = 1): Array<DashboardJobInfo> {
   return withConnection(EVENT_LOG_REPO, EVENT_LOG_BRANCH, (connection) => {
+    // deepcode ignore Sqli: queryIds are sanitized
     const statisticsJobLog = connection.query({
       query: `_path LIKE "/jobs/*" AND data.task = "${JobNames.STATISTICS_REFRESH_JOB}" AND data.queryIds = "${sanitize(
         id
@@ -316,7 +317,7 @@ function getStatisticsJobLogInfo(id: string, count = 1): Array<DashboardJobInfo>
       sort: '_ts DESC',
     })
     return statisticsJobLog.hits.reduce((res: Array<DashboardJobInfo>, jobRes) => {
-      const jobNode: JobInfoNode | null = connection.get(jobRes.id)
+      const jobNode: JobInfoNode | null = connection.get(sanitize(jobRes.id))
       if (jobNode) {
         res.push(prepStatisticsJobLogInfo(jobNode))
       }
