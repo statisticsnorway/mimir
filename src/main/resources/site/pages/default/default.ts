@@ -175,7 +175,7 @@ exports.get = function (req: XP.Request): XP.Response {
   const baseUrl: string =
     app.config && app.config['ssb.baseUrl'] ? (app.config['ssb.baseUrl'] as string) : 'https://www.ssb.no'
   let canonicalUrl: string | undefined = `${baseUrl}${pageUrl({
-    id: page._id,
+    path: page._path,
   })}`
   let municipalPageType: string | undefined
   if (pageType === 'municipality') {
