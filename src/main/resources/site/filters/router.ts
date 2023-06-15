@@ -22,7 +22,6 @@ exports.filter = function (req: XP.Request, next: (req: XP.Request) => XP.Respon
   const pageTitle = createPageTitle(req.path, municipality)
 
   if (paramKommune) {
-    log.info('Kommuneside via apache, kommune: ' + paramKommune + ' Request Url: ' + req.url)
     // @ts-ignore HMMMMMM this is probably really hacky
     req.params = {
       selfRequest: 'true',
@@ -71,7 +70,6 @@ exports.filter = function (req: XP.Request, next: (req: XP.Request) => XP.Respon
     }
   }
 
-  log.info('Kommuneside via targetResponse, kommune: ' + region + ' Request Url: ' + req.url)
   return {
     body: targetResponse.body,
   }

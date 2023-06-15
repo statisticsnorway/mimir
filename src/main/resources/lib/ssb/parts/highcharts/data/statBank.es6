@@ -12,6 +12,7 @@ export function seriesAndCategoriesFromJsonStat(req, highchart, dataset, dataset
 
   if (filterOptions && filterOptions._selected && filterOptions._selected === 'municipalityFilter') {
     const municipality = getMunicipality(req)
+    if (!municipality) return undefined
     const filterTarget = filterOptions.municipalityFilter.municipalityDimension
     const filterTargetIndex = dataset && dataset.id.indexOf(filterTarget)
     dimensionFilter[filterTargetIndex] = parseDataWithMunicipality(dataset, filterTarget, municipality, xAxisLabel)
