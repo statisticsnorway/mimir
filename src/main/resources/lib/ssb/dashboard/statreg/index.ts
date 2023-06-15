@@ -3,9 +3,8 @@ import { Socket, SocketEmitter } from '/lib/types/socket'
 import { StatRegLatestFetchInfoNode } from '/lib/ssb/statreg/eventLog'
 import { LogSummary } from '/lib/ssb/repo/eventLog'
 import { Events, QueryInfo } from '/lib/ssb/repo/query'
-import { run, RunContext } from '/lib/xp/context'
+import { run, type ContextParams } from '/lib/xp/context'
 import { DashboardRefreshResultLogData } from '/lib/ssb/dashboard/dashboard'
-import { ContextAttributes } from '*/lib/xp/context'
 
 const { STATREG_NODES, refreshStatRegData, getStatRegNode } = __non_webpack_require__('/lib/ssb/repo/statreg')
 const { STATREG_REPO_CONTACTS_KEY } = __non_webpack_require__('/lib/ssb/statreg/contacts')
@@ -75,7 +74,7 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
       socketEmitter.broadcast('statreg-dashboard-refresh-start', key)
     })
     // start refreshing
-    const context: RunContext<ContextAttributes> = {
+    const context: ContextParams = {
       branch: 'master',
       repository: ENONIC_CMS_DEFAULT_REPO,
       principals: ['role:system.admin'],

@@ -22,6 +22,7 @@ exports.filter = function (req: XP.Request, next: (req: XP.Request) => XP.Respon
   const pageTitle = createPageTitle(req.path, municipality)
 
   if (paramKommune) {
+    // @ts-ignore HMMMMMM this is probably really hacky
     req.params = {
       selfRequest: 'true',
       municipality: JSON.stringify(municipality),
@@ -60,11 +61,13 @@ exports.filter = function (req: XP.Request, next: (req: XP.Request) => XP.Respon
   })
 
   if (pageTitle) {
-    const site: Content = getSite()
-    targetResponse.body = (targetResponse.body as string).replace(
-      /(<title>)(.*?)(<\/title>)/i,
-      `<title>${pageTitle} - ${site.displayName}</title>`
-    )
+    const site = getSite()
+    if (site) {
+      targetResponse.body = (targetResponse.body as string).replace(
+        /(<title>)(.*?)(<\/title>)/i,
+        `<title>${pageTitle} - ${site.displayName}</title>`
+      )
+    }
   }
 
   return {

@@ -8,7 +8,7 @@
     "esModuleInterop": true,
     "types": [
       "node",
-      "enonic-types"
+      "@item-enonic-types/global"
     ]
   },
   "exclude": [

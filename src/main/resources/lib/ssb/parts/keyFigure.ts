@@ -2,7 +2,7 @@ __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 /* eslint-disable new-cap */
 // @ts-ignore
 import JSONstat from 'jsonstat-toolkit/import.mjs'
-import { query, QueryResponse, Content } from '/lib/xp/content'
+import { query, Content, ContentsResult } from '/lib/xp/content'
 import type { KeyFigure } from '/site/content-types'
 import { MunicipalityWithCounty } from '/lib/ssb/dataset/klass/municipalities'
 import { TbmlDataUniform, TableRowUniform, TableCellUniform, PreliminaryData } from '/lib/types/xmlParser'
@@ -26,7 +26,7 @@ const contentTypeName = `${app.name}:keyFigure`
 
 export function get(keys: string | Array<string>): Array<Content<KeyFigure>> {
   keys = forceArray(keys)
-  const content: QueryResponse<KeyFigure, object> = query({
+  const content: ContentsResult<Content<KeyFigure>> = query({
     contentTypes: [contentTypeName],
     query: ``,
     count: keys.length,
@@ -159,9 +159,9 @@ function getDataTbProcessor(
     }
     // set arrow direction based on change
     let changeDirection: KeyFigureChanges['changeDirection'] = 'same'
-    if (change > 0) {
+    if (+change > 0) {
       changeDirection = 'up'
-    } else if (change < 0) {
+    } else if (+change < 0) {
       changeDirection = 'down'
     } else {
       changeText = localize({

@@ -1,12 +1,14 @@
-import { render as r4XpRender, type RenderResponse } from '/lib/enonic/react4xp'
+import { render as r4XpRender } from '/lib/enonic/react4xp'
 import { getComponent, getContent } from '/lib/xp/portal'
 import type { MailChimpForm as MailChimpFormPartConfig } from '.'
 import { Phrases } from '/lib/types/language'
 
 const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
 
-export function get(req: XP.Request): RenderResponse {
-  const config: MailChimpFormPartConfig = getComponent().config
+export function get(req: XP.Request) {
+  const config = getComponent()?.config as MailChimpFormPartConfig
+  if (!config) throw Error('No part found')
+
   const phrases: Phrases = getPhrases(getContent()) as Phrases
 
   const props: PartProps = {

@@ -1,6 +1,6 @@
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
-import { RepoNode } from '/lib/xp/node'
-import { RepositoryConfig } from '/lib/xp/repo'
+import { Node } from '/lib/xp/node'
+import { Repository } from '/lib/xp/repo'
 
 const { getRepo, createRepo, createBranch } = __non_webpack_require__('/lib/ssb/repo/repo')
 const { nodeExists, createNode, getNode, modifyNode, deleteNode } = __non_webpack_require__('/lib/ssb/repo/common')
@@ -19,7 +19,7 @@ export enum DataSource {
 }
 
 export function setupDatasetRepo(): void {
-  let repo: RepositoryConfig | null = getRepo(DATASET_REPO, DATASET_BRANCH)
+  let repo: Repository | null = getRepo(DATASET_REPO, DATASET_BRANCH)
   if (!repo) {
     repo = createRepo(DATASET_REPO, DATASET_BRANCH)
   }
@@ -103,7 +103,7 @@ export function deleteDataset(dataSourceType: string, branch: string, key: strin
   return deleteNode(DATASET_REPO, branch, `/${dataSourceType}/${key}`)
 }
 
-export interface DatasetRepoNode<T> extends RepoNode {
+export interface DatasetRepoNode<T> extends Node {
   data?: string | T
 }
 

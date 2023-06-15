@@ -3,10 +3,7 @@ import { Button, Table, Row, Col } from 'react-bootstrap'
 import { RefreshCw } from 'react-feather'
 import { Accordion } from '@statisticsnorway/ssb-component-library'
 import { useDispatch, useSelector } from 'react-redux'
-import {
-  selectStatuses,
-  selectLoading,
-} from '/react4xp/dashboard/containers/StatRegDashboard/selectors'
+import { selectStatuses, selectLoading } from '/react4xp/dashboard/containers/StatRegDashboard/selectors'
 import { WebSocketContext } from '/react4xp/dashboard/utils/websocket/WebsocketProvider'
 import { startRefresh } from '/react4xp/dashboard/containers/StatRegDashboard/actions.es6'
 import { DataSourceLog } from '/react4xp/dashboard/containers/DataSources/DataSourceLog'

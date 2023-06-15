@@ -1,13 +1,11 @@
-import { ContextAttributes } from '*/lib/xp/context'
-
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 import { CreateOrUpdateStatus } from '/lib/ssb/dataset/dataset'
 import { get as getContent, query, Content } from '/lib/xp/content'
 import type { DataSource } from '/site/mixins/dataSource'
 import { Events, QueryInfoNode } from '/lib/ssb/repo/query'
 import { EVENT_LOG_REPO, EVENT_LOG_BRANCH, LogSummary } from '/lib/ssb/repo/eventLog'
-import { NodeQueryHit, RepoNode } from '/lib/xp/node'
-import { run, RunContext } from '/lib/xp/context'
+import { Node, NodeQueryResultHit } from '/lib/xp/node'
+import { run, type ContextParams } from '/lib/xp/context'
 import { Socket, SocketEmitter } from '/lib/types/socket'
 import { JSONstat } from '/lib/types/jsonstat-toolkit'
 import { TbmlDataUniform } from '/lib/types/xmlParser'
@@ -160,7 +158,7 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
   })
 
   socket.on('dashboard-refresh-dataset', (options: RefreshDatasetOptions) => {
-    const context: RunContext<ContextAttributes> = {
+    const context: ContextParams = {
       branch: 'master',
       repository: ENONIC_CMS_DEFAULT_REPO,
       principals: ['role:system.admin'],
@@ -189,7 +187,7 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
     const datasetId: string | undefined = getNameSearchGraphDatasetId()
     let status: string
     if (datasetId) {
-      const context: RunContext<ContextAttributes> = {
+      const context: ContextParams = {
         branch: 'master',
         repository: ENONIC_CMS_DEFAULT_REPO,
         principals: ['role:system.admin'],
@@ -217,7 +215,7 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
 
 function getDataSourcesWithError(): Array<DashboardDataSource> {
   const errorLogNodes: Array<QueryInfoNode> = withConnection(EVENT_LOG_REPO, EVENT_LOG_BRANCH, (connection) => {
-    const errorLogResult: ReadonlyArray<NodeQueryHit> = connection.query({
+    const errorLogResult = connection.query({
       query: `_path LIKE "/queries/*" AND data.modifiedResult IN(${WARNING_ICON_EVENTS.map((e) => `"${e}"`).join(
         ','
       )})`,
@@ -251,10 +249,10 @@ function getDataSourcesWithError(): Array<DashboardDataSource> {
 }
 
 function getFactPageGroups(): Array<DashboardDataSourceGroups> {
-  const factPages: Array<Content<Page, DefaultPageConfig>> = query({
+  const factPages: Array<Content<Page & DefaultPageConfig>> = query({
     query: `components.page.config.mimir.default.pageType LIKE "factPage"`,
     count: 1000,
-  }).hits as unknown as Array<Content<Page, DefaultPageConfig>>
+  }).hits as unknown as Array<Content<Page & DefaultPageConfig>>
 
   return factPages.map((factPage) => {
     return {
@@ -313,10 +311,10 @@ function getStatisticsDataSources(statisticId: string): Array<DashboardDataSourc
 }
 
 function getMunicipalGroups(): Array<DashboardDataSourceGroups> {
-  const municipals: Array<Content<Page, DefaultPageConfig>> = query({
+  const municipals: Array<Content<Page & DefaultPageConfig>> = query({
     query: `components.page.config.mimir.default.pageType LIKE "municipality" AND _parentPath LIKE "/content/ssb"`,
     count: 5,
-  }).hits as unknown as Array<Content<Page, DefaultPageConfig>>
+  }).hits as unknown as Array<Content<Page & DefaultPageConfig>>
 
   return municipals.map((municipal) => {
     return {
@@ -363,8 +361,8 @@ function getJobs(): Array<DashboardJobInfo> {
     count: 20,
     query: 'data.user.key = "user:system:cronjob" AND _path LIKE "/jobs/*"',
     sort: '_ts DESC',
-  }).hits.reduce((result: Array<DashboardJobInfo>, j) => {
-    const res: JobInfoNode | ReadonlyArray<JobInfoNode> | null = getJobLog(j.id)
+  }).hits.reduce((result: Array<DashboardJobInfo>, j: NodeQueryResultHit) => {
+    const res = getJobLog(j.id)
     if (res) {
       const jobLog: JobInfoNode = Array.isArray(res) ? res[0] : res
       result.push({
@@ -682,11 +680,7 @@ export function refreshDatasetHandler(
 }
 
 function transfromQueryResult(result: CreateOrUpdateStatus): DashboardRefreshResult {
-  const nodes: QueryLogNode | readonly QueryLogNode[] | null = getNode(
-    EVENT_LOG_REPO,
-    EVENT_LOG_BRANCH,
-    `/queries/${result.dataquery._id}`
-  )
+  const nodes = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/queries/${result.dataquery._id}`) as QueryLogNode | null
   let queryLogNode: QueryLogNode | null = null
   if (nodes) {
     if (Array.isArray(nodes)) {
@@ -721,7 +715,7 @@ function transfromQueryResult(result: CreateOrUpdateStatus): DashboardRefreshRes
   }
 }
 
-interface QueryLogNode extends RepoNode {
+interface QueryLogNode extends Node {
   data: {
     queryId: string
     modified: string

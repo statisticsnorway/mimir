@@ -1,16 +1,16 @@
 import type { HeaderLink as HeaderLinkConfig } from '/site/macros/headerLink'
-import { render, RenderResponse } from '/lib/enonic/react4xp'
+import { render } from '/lib/enonic/react4xp'
 import { get, Content } from '/lib/xp/content'
 
 const { attachmentUrl, pageUrl } = __non_webpack_require__('/lib/xp/portal')
 
-exports.macro = (context: XP.MacroContext): RenderResponse => {
+exports.macro = (context: XP.MacroContext) => {
   return renderPart(context)
 }
 
-exports.preview = (context: XP.MacroContext): RenderResponse => renderPart(context)
+exports.preview = (context: XP.MacroContext) => renderPart(context)
 
-function renderPart(context: XP.MacroContext): RenderResponse {
+function renderPart(context: XP.MacroContext) {
   const { linkedContent, linkText } = context.params
 
   const content: Content | null = get({
@@ -33,7 +33,7 @@ function renderPart(context: XP.MacroContext): RenderResponse {
     linkedContent: contentUrl,
   }
 
-  return render('site/macros/headerLink/headerLink', props)
+  return render('site/macros/headerLink/headerLink', props, context.request)
 }
 
 function prepareText(content: Content, linkText: string): string {

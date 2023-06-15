@@ -1,5 +1,5 @@
 import type { Content } from '/lib/xp/content'
-import { type ResourceKey, render } from '/lib/thymeleaf'
+import { render } from '/lib/thymeleaf'
 import type { Phrases } from '/lib/types/language'
 import { render as r4xpRender } from '/lib/enonic/react4xp'
 import { getContent } from '/lib/xp/portal'
@@ -10,11 +10,13 @@ const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 const util = __non_webpack_require__('/lib/util')
 const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
 
-const view: ResourceKey = resolve('./relatedExternalLinks.html')
+const view = resolve('./relatedExternalLinks.html')
 
 export function get(req: XP.Request): XP.Response {
   try {
-    const page: Content<Article | Statistics> = getContent()
+    const page = getContent<Content<Article | Statistics>>()
+    if (!page) throw Error('No page found')
+
     let externalLinks: RelatedExternalLinks['relatedExternalLinkItemSet'] = page.data.relatedExternalLinkItemSet
     if (externalLinks) {
       externalLinks = util.data.forceArray(
@@ -37,7 +39,8 @@ export function preview(
 }
 
 function renderPart(req: XP.Request, externalLinks: RelatedExternalLinks['relatedExternalLinkItemSet']): XP.Response {
-  const page: Content = getContent()
+  const page = getContent()
+  if (!page) throw Error('No page found')
 
   const phrases: Phrases = getPhrases(page)
   const externalLinksTitle: string = phrases.externalLinksHeading

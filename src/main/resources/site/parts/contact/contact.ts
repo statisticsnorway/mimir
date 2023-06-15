@@ -1,6 +1,6 @@
 import type { Content } from '/lib/xp/content'
-import { getContent, getComponent, type Component } from '/lib/xp/portal'
-import { type ResourceKey, render } from '/lib/thymeleaf'
+import { getContent, getComponent } from '/lib/xp/portal'
+import { render } from '/lib/thymeleaf'
 import type { Phrases } from '/lib/types/language'
 import type { Contact } from '/lib/ssb/dashboard/statreg/types'
 import type { Contact as ContactPartConfig } from '.'
@@ -12,7 +12,7 @@ const { getContactsFromRepo } = __non_webpack_require__('/lib/ssb/statreg/contac
 const { ensureArray, chunkArray } = __non_webpack_require__('/lib/ssb/utils/arrayUtils')
 const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
 
-const view: ResourceKey = resolve('./contact.html') as ResourceKey
+const view = resolve('./contact.html')
 
 export function get(req: XP.Request) {
   try {
@@ -52,9 +52,12 @@ function transformContact(contact: Contact, language: string): TransformedContac
 
 function renderPart(req: XP.Request): XP.Response {
   const WIDTH = 4 // how many boxes in a row
-  const page: Content<Article | Statistics> = getContent()
+  const page = getContent<Content<Article | Statistics>>()
+  if (!page) throw Error('No page found')
+
   const pageLanguage: string = page.language ? page.language : 'nb'
-  const part: Component<ContactPartConfig> = getComponent()
+  const part = getComponent<ContactPartConfig>()
+  if (!part) throw Error('No part found')
 
   const phrases: Phrases = getPhrases(page) as Phrases
 

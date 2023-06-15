@@ -1,5 +1,5 @@
 import type { Content } from '/lib/xp/content'
-import { type ResourceKey, render } from '/lib/thymeleaf'
+import { render } from '/lib/thymeleaf'
 import type { StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
 import type { Phrases } from '/lib/types/language'
 import { render as r4xpRender } from '/lib/enonic/react4xp'
@@ -14,7 +14,7 @@ const STATBANKWEB_URL: string =
   app.config && app.config['ssb.statbankweb.baseUrl']
     ? app.config['ssb.statbankweb.baseUrl']
     : 'https://www.ssb.no/statbank'
-const view: ResourceKey = resolve('./statbankLinkList.html')
+const view = resolve('./statbankLinkList.html')
 
 export function get(req: XP.Request): XP.Response {
   try {
@@ -29,7 +29,9 @@ export function preview(req: XP.Request): XP.Response {
 }
 
 function renderPart(req: XP.Request): XP.Response {
-  const page: Content<Statistics> = getContent()
+  const page = getContent<Content<Statistics>>()
+  if (!page) throw Error('No page found')
+
   const statistic: StatisticInListing = (page.data.statistic &&
     getStatisticByIdFromRepo(page.data.statistic)) as StatisticInListing
   const shortName: string | undefined = statistic && statistic.shortName ? statistic.shortName : undefined

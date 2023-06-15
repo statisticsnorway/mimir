@@ -1,14 +1,15 @@
-export interface XData {
-  'com-enonic-app-metafields'?: {
-    'meta-data': {
-      seoImage: string
-      seoDescription: string
+export type SubjectTag = import('./subjectTag/subjectTag').SubjectTag
+
+declare global {
+  interface XpXData {
+    'com-enonic-app-metafields': {
+      'meta-data': {
+        seoImage: string
+        seoDescription: string
+      }
     }
-  }
-  mimir?: {
-    subjectTag?: {
-      mainSubjects: Array<string>
-      subSubjects: Array<string>
+    mimir?: {
+      subjectTag?: SubjectTag
     }
   }
 }

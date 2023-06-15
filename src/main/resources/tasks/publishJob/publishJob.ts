@@ -9,7 +9,6 @@ import {
 } from '/lib/ssb/repo/job'
 import type { Statistic } from '/site/mixins/statistic'
 import { PublicationItem } from '/lib/ssb/dataset/publish'
-import type { PublishDataset as PublishDatasetConfig } from '/tasks/publishDataset'
 import { ReleaseDatesVariant, StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
 
 const { create: createScheduledJob } = __non_webpack_require__('/lib/xp/scheduler')
@@ -99,7 +98,7 @@ exports.run = function (): void {
             log.info(
               `PublishJob - create task: publishDataset_${stat.data.statistic}_${validPublication.dataset?._name} Time: ${runTaskTime}`
             )
-            createScheduledJob<PublishDatasetConfig>({
+            createScheduledJob({
               name: `publishDataset_${jobLogNode._id}_${stat.data.statistic}_${validPublication.dataset?._name}`,
               descriptor: 'mimir:publishDataset',
               enabled: true,

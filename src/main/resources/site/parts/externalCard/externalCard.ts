@@ -1,5 +1,5 @@
-import { render, type RenderResponse } from '/lib/enonic/react4xp'
-import { getComponent, type Component } from '/lib/xp/portal'
+import { render } from '/lib/enonic/react4xp'
+import { getComponent } from '/lib/xp/portal'
 import { imageUrl } from '/lib/ssb/utils/imageUtils'
 import type { ExternalCard as ExternalCardPartConfig } from '.'
 
@@ -23,8 +23,9 @@ const NO_LINKS_FOUND = {
   contentType: 'text/html',
 }
 
-function renderPart(req: XP.Request): XP.Response | RenderResponse {
-  const part: Component<ExternalCardPartConfig> = getComponent()
+function renderPart(req: XP.Request): XP.Response {
+  const part = getComponent<ExternalCardPartConfig>()
+  if (!part) throw Error('No part found')
 
   return renderExternalCard(req, part.config.externalCards ? data.forceArray(part.config.externalCards) : [])
 }

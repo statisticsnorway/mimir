@@ -1,7 +1,7 @@
 const { getComponent } = __non_webpack_require__('/lib/xp/portal')
 const { render } = __non_webpack_require__('/lib/thymeleaf')
 
-const React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+const { React4xp } = __non_webpack_require__('/lib/enonic/react4xp')
 const view = resolve('columns.html')
 
 exports.get = function (req) {
@@ -85,6 +85,7 @@ exports.get = function (req) {
       ? render(view, model)
       : divider.renderBody({
           body: render(view, model),
+          request: req,
         })
 
   return {

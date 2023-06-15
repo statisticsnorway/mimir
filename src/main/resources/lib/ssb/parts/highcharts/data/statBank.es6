@@ -100,7 +100,9 @@ const barNegativeFormat = (ds, dimensionFilter, xAxis, yAxis) => {
 }
 
 const parseDataWithMunicipality = (dataset, filterTarget, municipality, xAxis) => {
-  let code = municipality.code
+  let code = municipality?.code
+  if (!code) return -1
+
   let hasData = hasFilterData(dataset, filterTarget, code, xAxis)
 
   if (!hasData) {

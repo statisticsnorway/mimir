@@ -1,4 +1,4 @@
-import { getComponent, type Component } from '/lib/xp/portal'
+import { getComponent } from '/lib/xp/portal'
 import { render } from '/lib/enonic/react4xp'
 import type { Divider as DividerPartConfig } from '.'
 import { scriptAsset } from '/lib/ssb/utils/utils'
@@ -8,7 +8,9 @@ const { fromPartCache } = __non_webpack_require__('/lib/ssb/cache/partCache')
 
 export function get(req: XP.Request): XP.Response {
   try {
-    const component: Component<DividerPartConfig> = getComponent()
+    const component = getComponent<DividerPartConfig>()
+    if (!component) throw Error('No component found')
+
     return renderPart(req, component.config)
   } catch (e) {
     return renderError(req, 'Error in part', e)

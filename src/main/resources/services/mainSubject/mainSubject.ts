@@ -1,7 +1,7 @@
-import { query, QueryResponse } from '/lib/xp/content'
+import { query } from '/lib/xp/content'
 
 exports.get = (): XP.Response => {
-  const mainSubjects: QueryResponse<MainSubjects, object> = query({
+  const mainSubjects = query({
     count: 500,
     filters: {
       boolean: {
@@ -31,16 +31,4 @@ exports.get = (): XP.Response => {
     },
     contentType: 'application/json',
   }
-}
-
-interface MainSubjects {
-  count: string
-  total: string
-  hits: Array<MainSubject>
-}
-
-interface MainSubject {
-  id: string
-  displayName: string
-  description: string
 }

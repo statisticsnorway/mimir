@@ -1,7 +1,6 @@
-import { render, type RenderResponse } from '/lib/enonic/react4xp'
-import { getComponent, getContent, pageUrl, type Component } from '/lib/xp/portal'
+import { render } from '/lib/enonic/react4xp'
+import { getComponent, getContent, pageUrl } from '/lib/xp/portal'
 import type { CategoryLinks as CategoryLinksPartConfig } from '.'
-import type { Content } from '/lib/xp/content'
 import { Language, type Phrases } from '/lib/types/language'
 import { randomUnsafeString } from '/lib/ssb/utils/utils'
 
@@ -9,7 +8,7 @@ const { data } = __non_webpack_require__('/lib/util')
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 const { getLanguage } = __non_webpack_require__('/lib/ssb/utils/language')
 
-export function get(req: XP.Request): XP.Response | RenderResponse {
+export function get(req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -17,7 +16,7 @@ export function get(req: XP.Request): XP.Response | RenderResponse {
   }
 }
 
-export function preview(req: XP.Request): XP.Response | RenderResponse {
+export function preview(req: XP.Request): XP.Response {
   return renderPart(req)
 }
 
@@ -26,9 +25,11 @@ const NO_LINKS_FOUND = {
   contentType: 'text/html',
 }
 
-function renderPart(req: XP.Request): XP.Response | RenderResponse {
-  const part: Component<CategoryLinksPartConfig> = getComponent()
-  const page: Content = getContent()
+function renderPart(req: XP.Request): XP.Response {
+  const part = getComponent<CategoryLinksPartConfig>()
+  const page = getContent()
+  if (!part || !page) throw new Error('No page or part')
+
   const language: Language = getLanguage(page)
   const phrases: Phrases = language.phrases as Phrases
   const links: Array<CategoryLink> = part.config.CategoryLinkItemSet
@@ -54,7 +55,7 @@ function renderPart(req: XP.Request): XP.Response | RenderResponse {
   }
 
   if (links && links.length) {
-    const categoryLinksComponent: RenderResponse = render(
+    const categoryLinksComponent = render(
       'CategoryLinks',
       {
         links: links.map((link) => {

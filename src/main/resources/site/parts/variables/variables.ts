@@ -27,7 +27,9 @@ const NO_VARIABLES_FOUND: XP.Response = {
 }
 
 function renderPart(req: XP.Request): XP.Response {
-  const page: Content = getContent()
+  const page = getContent()
+  if (!page) throw Error('No page found')
+
   const language: string = page.language ? (page.language === 'en' ? 'en-gb' : page.language) : 'nb'
 
   const hits: Array<Content<Article>> = getChildren({

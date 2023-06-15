@@ -1,4 +1,4 @@
-import { get as getContent, query, Content, QueryResponse } from '/lib/xp/content'
+import { get as getContent, query, Content, ContentsResult } from '/lib/xp/content'
 import type { Default as DefaultPageConfig } from '/site/pages/default'
 import type { Statistics, Page } from '/site/content-types'
 import { StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
@@ -11,7 +11,7 @@ export function getParentType(path: string): string | undefined {
   return fromParentTypeCache(path, () => parentType(path))
 }
 
-export function getParentContent(path: string): Content<object, DefaultPageConfig | Statistics> | null {
+export function getParentContent(path: string): Content<DefaultPageConfig | Statistics> | null {
   const parentPathKey: string = parentPath(path)
   return getContent({
     key: parentPathKey,
@@ -51,7 +51,7 @@ export function parentPath(path: string): string {
 export function getMainSubject(shortName: string, language: string): string {
   const statisticFromRepo: StatisticInListing | undefined = getStatisticByShortNameFromRepo(shortName)
   if (statisticFromRepo) {
-    const statisticResult: QueryResponse<Statistics, object> =
+    const statisticResult: ContentsResult<Content<Statistics>> =
       statisticFromRepo &&
       query({
         query: `data.statistic = '${statisticFromRepo.id}' AND language IN (${
@@ -87,7 +87,7 @@ export function getMainSubjectStatistic(statistic: Content<Statistics>): string 
 
 export interface ParentUtilsLib {
   getParentType: (path: string) => string | undefined
-  getParentContent: (path: string) => Content<object, DefaultPageConfig | Statistics> | null
+  getParentContent: (path: string) => Content<DefaultPageConfig | Statistics> | null
   parentType: (path: string) => string | undefined
   parentPath: (path: string) => string
   getMainSubject: (shortName: string, language: string) => string

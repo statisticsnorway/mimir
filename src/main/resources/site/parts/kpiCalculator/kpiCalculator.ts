@@ -3,7 +3,7 @@ import { allMonths, lastPeriodKpi, monthLabel, nextPeriod } from '/lib/ssb/utils
 import type { CalculatorPeriod } from '/lib/types/calculator'
 import type { Dataset } from '/lib/types/jsonstat-toolkit'
 import type { Language, Phrases } from '/lib/types/language'
-import { render, type RenderResponse } from '/lib/enonic/react4xp'
+import { render } from '/lib/enonic/react4xp'
 import type { CalculatorConfig } from '/site/content-types'
 import type { KpiCalculator as KpiCalculatorPartConfig } from '.'
 import { DropdownItems as MonthDropdownItems } from '/lib/types/components'
@@ -28,8 +28,10 @@ export function preview(req: XP.Request) {
 }
 
 function renderPart(req: XP.Request): XP.Response {
-  const page: Content = getContent()
-  let kpiCalculator: RenderResponse | undefined
+  const page = getContent()
+  if (!page) throw Error('No page found')
+
+  let kpiCalculator: undefined
   if (req.mode === 'edit' || req.mode === 'inline') {
     kpiCalculator = getKpiCalculatorComponent(req, page)
   } else {
@@ -39,13 +41,15 @@ function renderPart(req: XP.Request): XP.Response {
   }
 
   return {
-    body: kpiCalculator.body,
-    pageContributions: kpiCalculator.pageContributions as XP.PageContributions,
+    body: ((kpiCalculator as unknown as XP.Response)?.body as string) || '',
+    pageContributions: (kpiCalculator as unknown as XP.Response)?.pageContributions as XP.PageContributions,
   }
 }
 
-function getKpiCalculatorComponent(req: XP.Request, page: Content): RenderResponse {
-  const config: KpiCalculatorPartConfig = getComponent().config
+function getKpiCalculatorComponent(req: XP.Request, page: Content) {
+  const config = getComponent()?.config as KpiCalculatorPartConfig
+  if (!config) throw Error('No part found')
+
   const frontPage = !!config.frontPage
   const frontPageIngress: string | null | undefined = config.ingressFrontpage && config.ingressFrontpage
   const language: Language = getLanguage(page)

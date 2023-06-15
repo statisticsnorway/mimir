@@ -1,7 +1,7 @@
 import type { Article } from '/site/content-types'
-import { pageUrl, getContent, getComponent, type Component } from '/lib/xp/portal'
+import { pageUrl, getContent, getComponent } from '/lib/xp/portal'
 import type { ArticleList as ArticleListPartConfig } from '.'
-import { render, type RenderResponse } from '/lib/enonic/react4xp'
+import { render } from '/lib/enonic/react4xp'
 import { query, type Content } from '/lib/xp/content'
 import { SubjectItem } from '/lib/ssb/utils/subjectUtils'
 import { formatDate } from '/lib/ssb/utils/dateUtils'
@@ -12,7 +12,7 @@ const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 const { fromPartCache } = __non_webpack_require__('/lib/ssb/cache/partCache')
 const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
 
-export function get(req: XP.Request): RenderResponse | XP.Response {
+export function get(req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -20,12 +20,14 @@ export function get(req: XP.Request): RenderResponse | XP.Response {
   }
 }
 
-export function preview(req: XP.Request): RenderResponse {
+export function preview(req: XP.Request) {
   return renderPart(req)
 }
 
-function renderPart(req: XP.Request): RenderResponse {
-  const content: Content = getContent()
+function renderPart(req: XP.Request) {
+  const content = getContent()
+  if (!content) throw Error('No page found')
+
   const articleListCacheDisabled: boolean = isEnabled('deactivate-part-cache-article-list', true, 'ssb')
   if (req.mode === 'edit' || req.mode === 'inline' || articleListCacheDisabled) {
     return getArticleList(req, content)
@@ -34,8 +36,10 @@ function renderPart(req: XP.Request): RenderResponse {
   }
 }
 
-function getArticleList(req: XP.Request, content: Content): RenderResponse {
-  const component: Component<ArticleListPartConfig> = getComponent()
+function getArticleList(req: XP.Request, content: Content) {
+  const component = getComponent<ArticleListPartConfig>()
+  if (!component) throw Error('No component found')
+
   const language: string = content.language ? content.language : 'nb'
   const articles: Array<Content<Article>> = getArticles(req, language)
   const preparedArticles: Array<PreparedArticles> = prepareArticles(articles, language)

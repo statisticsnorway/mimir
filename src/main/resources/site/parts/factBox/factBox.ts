@@ -1,17 +1,19 @@
-import { getComponent, processHtml, type Component } from '/lib/xp/portal'
+import { getComponent, processHtml } from '/lib/xp/portal'
 import type { FactBox as FactBoxPartConfig } from '.'
-import { render as r4XpRender, type RenderResponse } from '/lib/enonic/react4xp'
+import { render as r4XpRender } from '/lib/enonic/react4xp'
 import { get as getContentByKey, type Content } from '/lib/xp/content'
 import type { FactBox } from '/site/content-types'
-import { type ResourceKey, render } from '/lib/thymeleaf'
+import { render } from '/lib/thymeleaf'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
-const view: ResourceKey = resolve('./factBox.html')
+const view = resolve('./factBox.html')
 
-export function get(req: XP.Request): XP.Response | RenderResponse {
+export function get(req: XP.Request): XP.Response {
   try {
-    const part: Component<FactBoxPartConfig> = getComponent()
+    const part = getComponent<FactBoxPartConfig>()
+    if (!part) throw Error('No part found')
+
     return renderPart(req, part.config.factBox)
   } catch (e) {
     return renderError(req, 'Error in part', e)
@@ -26,7 +28,7 @@ export function preview(req: XP.Request, id: string) {
   }
 }
 
-function renderPart(req: XP.Request, factBoxId: string): XP.Response | RenderResponse {
+function renderPart(req: XP.Request, factBoxId: string): XP.Response {
   // throw an error if there is no selected factbox, or an empty section for edit mode
   if (!factBoxId) {
     if (req.mode === 'edit') {

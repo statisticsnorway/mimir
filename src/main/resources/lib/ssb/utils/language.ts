@@ -1,4 +1,4 @@
-import { exists, Content, Site } from '/lib/xp/content'
+import { exists, Content } from '/lib/xp/content'
 import { Language, AlternativeLanguages, Phrases } from '/lib/types/language'
 
 const i18n = __non_webpack_require__('/lib/xp/i18n')
@@ -16,9 +16,13 @@ try {
   e.toString()
 }
 
-exports.getLanguage = function (page: Content): Language {
-  const site: Site<XP.SiteConfig> = getSite()
-  const siteConfig: XP.SiteConfig = getSiteConfig()
+exports.getLanguage = function (page: Content): Language | null {
+  const site = getSite<XP.SiteConfig>()
+  if (!site) return null
+
+  const siteConfig = getSiteConfig<XP.SiteConfig>()
+  if (!siteConfig) return null
+
   const pageLanguage = page.language || site.language || 'nb'
 
   const currentLanguageConfig: Language = siteConfig.language.filter((language) => language.code === pageLanguage)[0]

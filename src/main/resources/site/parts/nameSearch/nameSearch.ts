@@ -1,6 +1,6 @@
 import type { Component } from '/lib/xp/portal'
 import { renderError } from '/lib/ssb/error/error'
-import { render, type RenderResponse } from '/lib/enonic/react4xp'
+import { render } from '/lib/enonic/react4xp'
 import { GA_TRACKING_ID } from '/site/pages/default/default'
 import type { NameSearch as NameSearchPartConfig } from '.'
 import { getContent, getComponent, pageUrl, serviceUrl } from '/lib/xp/portal'
@@ -8,7 +8,7 @@ import { localize } from '/lib/xp/i18n'
 
 const { getLanguageShortName } = __non_webpack_require__('/lib/ssb/utils/language')
 
-exports.get = (req: XP.Request): RenderResponse | XP.Response => {
+exports.get = (req: XP.Request): XP.Response => {
   try {
     return renderPart(req)
   } catch (e) {
@@ -16,12 +16,14 @@ exports.get = (req: XP.Request): RenderResponse | XP.Response => {
   }
 }
 
-export function preview(req: XP.Request): RenderResponse {
+export function preview(req: XP.Request) {
   return renderPart(req)
 }
 
-function renderPart(req: XP.Request): RenderResponse {
-  const component: Component<NameSearchPartConfig> = getComponent()
+function renderPart(req: XP.Request) {
+  const component = getComponent<NameSearchPartConfig>()
+  if (!component) throw Error('No part found')
+
   const locale: string = getLanguageShortName(getContent())
   // const isNotInEditMode: boolean = req.mode !== 'edit'
 

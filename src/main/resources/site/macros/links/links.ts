@@ -1,4 +1,4 @@
-import { render, RenderResponse } from '/lib/enonic/react4xp'
+import { render } from '/lib/enonic/react4xp'
 import type { Links as LinksConfig } from '/site/macros/links'
 import { get, Content } from '/lib/xp/content'
 import { LinksProps, prepareText } from '/site/parts/links/links'
@@ -9,7 +9,7 @@ import { GA_TRACKING_ID } from '/site/pages/default/default'
 
 const { attachmentUrl, pageUrl } = __non_webpack_require__('/lib/xp/portal')
 
-exports.macro = function (context: XP.MacroContext): RenderResponse {
+exports.macro = function (context: XP.MacroContext) {
   const config: LinksConfig & TableLink & HeaderLink & ProfiledLink = context.params
   const linkType: string | undefined = config.linkTypes
 
@@ -82,5 +82,5 @@ exports.macro = function (context: XP.MacroContext): RenderResponse {
     }
   }
 
-  return render('site/parts/links/links', props)
+  return render('site/parts/links/links', props, context.request)
 }
