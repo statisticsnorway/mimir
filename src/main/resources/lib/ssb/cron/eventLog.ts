@@ -11,7 +11,7 @@ const { cronJobLog } = __non_webpack_require__('/lib/ssb/utils/serverLog')
 
 let totalExpiredLogsDeleted = 0
 
-export function deleteExpiredEventLogs(): void {
+export function deleteExpiredEventLogsForQueries(): void {
   cronJobLog('Deleting expired event logs for queries')
   const job: JobEventNode = startJobLog('Delete expired event logs for queries')
   const path = '/queries'
@@ -62,12 +62,7 @@ export function deleteExpiredEventLogs(): void {
   totalExpiredLogsDeleted = 0
 }
 
-function deleteLog(
-  parent: Node,
-  expiredDate: Date,
-  count: number,
-  maxLogsBeforeDeleting: number
-): Array<string> {
+function deleteLog(parent: Node, expiredDate: Date, count: number, maxLogsBeforeDeleting: number): Array<string> {
   const query = `_parentPath = '${parent._path}' AND _ts < dateTime('${expiredDate.toISOString()}')`
   const expiredLogs = queryNodes(EVENT_LOG_REPO, EVENT_LOG_BRANCH, {
     query,
