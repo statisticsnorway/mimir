@@ -350,6 +350,7 @@ function SearchResult(props) {
   }
 
   function goToSearchResultPage() {
+    // deepcode ignore OR: pageUrl and content._path is used to generate the URL in the backend
     window.location = `${props.searchPageUrl}?sok=${searchTerm}`
   }
 

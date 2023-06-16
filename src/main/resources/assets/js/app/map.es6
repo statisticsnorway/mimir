@@ -98,6 +98,7 @@ function init() {
                             })
                             .then((result) => {
                               window.location.href =
+                                // deepcode ignore OR: municipality path comes from our municipality service
                                 window.location.href.replace(
                                   /(kommunefakta|kommuneareal|barn-og-unge|jakt-i-din-kommune)\/.*$/,
                                   '$1'
