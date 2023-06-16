@@ -223,6 +223,7 @@ function getDataSourcesWithError(): Array<DashboardDataSource> {
       count: 1000,
     }).hits
     return errorLogResult.reduce((errorLogNodes: Array<QueryInfoNode>, errorLog) => {
+      // deepcode ignore Sqli: NoQL. get is an xp function that fetches content from the repositories in xp
       const errorLogNode: QueryInfoNode | null = connection.get(sanitize(errorLog.id))
       if (errorLogNode) {
         errorLogNodes.push(errorLogNode)
