@@ -178,6 +178,7 @@ function UpcomingReleases(props) {
           {!upcomingReleaseLink && <span className='sr-only'>{`${name} - ${showPeriod ? variant.period : ''}`}</span>}
 
           {upcomingReleaseLink ? (
+            // deepcode ignore DOMXSS: URL is sanitized in the backend
             <Link href={upcomingReleaseLink} linkType='header'>
               {name}
             </Link>
