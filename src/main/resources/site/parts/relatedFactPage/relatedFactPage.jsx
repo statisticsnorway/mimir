@@ -108,16 +108,19 @@ function RelatedBoxes(props) {
 }
 
 RelatedBoxes.propTypes = {
-  firstRelatedContents: PropTypes.arrayOf(
-    PropTypes.shape({
-      title: PropTypes.string,
-      link: PropTypes.string,
-      image: PropTypes.string,
-      imageAlt: PropTypes.string,
-    })
-  ),
+  firstRelatedContents: PropTypes.shape({
+    total: PropTypes.number,
+    relatedFactPages: PropTypes.arrayOf(
+      PropTypes.shape({
+        title: PropTypes.string,
+        link: PropTypes.string,
+        image: PropTypes.string,
+        imageAlt: PropTypes.string,
+      })
+    ),
+  }),
   relatedFactPageServiceUrl: PropTypes.string,
-  partConfig: PropTypes.string,
+  partConfig: PropTypes.object,
   showAll: PropTypes.string,
   showLess: PropTypes.string,
   mainTitle: PropTypes.string,

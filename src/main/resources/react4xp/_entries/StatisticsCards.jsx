@@ -69,7 +69,7 @@ class RelatedStatistics extends React.Component {
           </Col>
           {statistics.map(({ icon, iconAlt, href, title, preamble }, index) => {
             return (
-              <Col key='index' className={`mb-3 col-12 col-lg-4${this.getBreakpoints(index, hasButton)}`}>
+              <Col key={title + index} className={`mb-3 col-12 col-lg-4${this.getBreakpoints(index, hasButton)}`}>
                 <Card
                   href={href}
                   title={title}

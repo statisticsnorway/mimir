@@ -533,7 +533,7 @@ function SearchResult(props) {
   function renderFilterResults() {
     const limitResultPhrase = props.limitResultPhrase
     const filterDropdowns = (
-      <Row justify-content-start>
+      <Row>
         <Col lg='4' className='search-result-dropdown pb-1 pr-1'>
           <DropdownMainSubject />
         </Col>
@@ -616,7 +616,7 @@ SearchResult.propTypes = {
   total: PropTypes.number,
   buttonTitle: PropTypes.string,
   searchServiceUrl: PropTypes.string,
-  searchPageUrl: PropTypes.stirng,
+  searchPageUrl: PropTypes.string,
   nameSearchUrl: PropTypes.string,
   language: PropTypes.string,
   term: PropTypes.string,
