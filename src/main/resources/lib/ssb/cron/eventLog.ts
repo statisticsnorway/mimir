@@ -1,5 +1,10 @@
 import { type Node } from '/lib/xp/node'
+import { sleep } from '/lib/xp/task'
 import { JobEventNode } from '/lib/ssb/repo/job'
+
+const {
+  data: { forceArray },
+} = __non_webpack_require__('/lib/util')
 
 const { getChildNodes, queryNodes, withConnection, getNode } = __non_webpack_require__('/lib/ssb/repo/common')
 
@@ -9,7 +14,7 @@ const { startJobLog, updateJobLog, JOB_STATUS_COMPLETE } = __non_webpack_require
 
 const { cronJobLog } = __non_webpack_require__('/lib/ssb/utils/serverLog')
 
-let totalExpiredLogsDeleted = 0
+type DeletedCount = { contentId: string; deletedCount: number }
 
 export function deleteExpiredEventLogsForQueries(): void {
   cronJobLog('Deleting expired event logs for queries')
@@ -21,35 +26,75 @@ export function deleteExpiredEventLogsForQueries(): void {
   const expireDate: Date = new Date()
   expireDate.setMonth(expireDate.getMonth() - monthsBeforeLogsExpire)
 
-  const parentNodes = queryNodes(EVENT_LOG_REPO, EVENT_LOG_BRANCH, {
-    query: `_parentPath = "${path}"`,
-    count: 20000,
-  }).hits.reduce<Node[]>((acc, parentNodeHit) => {
-    const parentNode = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, parentNodeHit.id) as Node
+  let nodeTree: { [key: string]: Node[] } = {}
+  let deleteResult: DeletedCount[] = []
+  let totalExpiredLogsDeleted = 0
 
-    if (parentNode) {
-      acc.push(parentNode)
-    }
-    return acc
-  }, [])
+  let start = 0
+  let total = 999999999
+  const count = 200
 
-  const deleteResult: Array<object> | undefined = parentNodes.reduce((acc: Array<object>, parent) => {
-    const eventLogs = getChildNodes(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `${parent._id}`, 0, true)
-    if (eventLogs.total > maxLogsBeforeDeleting) {
-      const deleteResult: Array<string> = deleteLog(parent, expireDate, eventLogs.total, maxLogsBeforeDeleting)
-      acc.push({
-        contentId: parent._name,
-        deleteResult,
+  while (start < total) {
+    sleep(100)
+    const resultParents = queryNodes(EVENT_LOG_REPO, EVENT_LOG_BRANCH, {
+      query: `_parentPath = "${path}"`,
+      start,
+      count,
+    })
+
+    total = resultParents.total
+    start += count
+
+    resultParents.hits.forEach((parentHit) => {
+      const children = getChildNodes(EVENT_LOG_REPO, EVENT_LOG_BRANCH, parentHit.id, count, false)
+      if (children.total > maxLogsBeforeDeleting) {
+        nodeTree[parentHit.id] = forceArray(
+          getNode(
+            EVENT_LOG_REPO,
+            EVENT_LOG_BRANCH,
+            children.hits.map((n) => n.id)
+          )
+        ) as Node[]
+      }
+    })
+
+    const _deleteResult = Object.keys(nodeTree).reduce((acc: DeletedCount[], parentId: string) => {
+      // Sort by date, we want the 10 latest to be kept
+      const logs = nodeTree[parentId].sort((a, b) => {
+        return new Date(a._ts).getTime() - new Date(b._ts).getTime()
       })
-    }
-    return acc
-  }, [])
+      const logCount = logs.length
+
+      if (logCount > maxLogsBeforeDeleting) {
+        const toBeDeleted = logs.slice(0, logCount - maxLogsBeforeDeleting).filter((node) => {
+          // Even if above 10, keep them if not expired yet
+          return new Date(node._ts) < expireDate
+        })
+
+        const deletedCount = withConnection(EVENT_LOG_REPO, EVENT_LOG_BRANCH, (conn) => {
+          if (toBeDeleted.length === 0) return 0
+
+          return conn.delete(toBeDeleted.map((n) => n._id)).length
+        })
+
+        acc.push({
+          contentId: parentId,
+          deletedCount,
+        })
+      }
+      return acc
+    }, [])
+
+    deleteResult = [...deleteResult, ..._deleteResult]
+    nodeTree = {}
+    const deletedCount = _deleteResult.map((d) => d.deletedCount).reduce((partialSum, a) => partialSum + a, 0)
+    totalExpiredLogsDeleted += deletedCount
+  }
 
   updateJobLog(job._id, (node) => {
     node.data = {
       ...node.data,
       refreshDataResult: deleteResult,
-      queryIds: parentNodes.map((parent) => parent._name),
       status: JOB_STATUS_COMPLETE,
       message:
         totalExpiredLogsDeleted != 0
@@ -58,25 +103,8 @@ export function deleteExpiredEventLogsForQueries(): void {
     }
     return node
   })
+
   cronJobLog(`Delete expired logs for queries complete. Total expired logs deleted: ${totalExpiredLogsDeleted}`)
-  totalExpiredLogsDeleted = 0
-}
-
-function deleteLog(parent: Node, expiredDate: Date, count: number, maxLogsBeforeDeleting: number): Array<string> {
-  const query = `_parentPath = '${parent._path}' AND _ts < dateTime('${expiredDate.toISOString()}')`
-  const expiredLogs = queryNodes(EVENT_LOG_REPO, EVENT_LOG_BRANCH, {
-    query,
-    count: count - maxLogsBeforeDeleting,
-    sort: '_ts ASC',
-  })
-
-  totalExpiredLogsDeleted += expiredLogs.hits.length
-
-  return withConnection(EVENT_LOG_REPO, EVENT_LOG_BRANCH, (conn) => {
-    return conn.delete(expiredLogs.hits.map((h) => h.id)).map((id) => {
-      return `Deleted expired event log: ${parent._id}/${id}`
-    })
-  })
 }
 
 export interface EventLogLib {
