@@ -8,6 +8,7 @@ import type { SubjectItem } from '/lib/ssb/utils/subjectUtils'
 import { formatDate, format } from '/lib/ssb/utils/dateUtils'
 import { getContent, getComponent, processHtml, serviceUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
+import { sanitizeHtml } from '/lib/xp/portal'
 
 const { addMonthNames, groupStatisticsByYearMonthAndDay, prepareRelease, filterOnComingReleases, getUpcomingReleases } =
   __non_webpack_require__('/lib/ssb/utils/variantUtils')
@@ -96,7 +97,7 @@ function renderPart(req: XP.Request) {
       month: formatDate(date, 'M', currentLanguage) as string,
       monthName: formatDate(date, 'MMM', currentLanguage) as string,
       year: formatDate(date, 'yyyy', currentLanguage) as string,
-      upcomingReleaseLink: r.data.href ? r.data.href : '',
+      upcomingReleaseLink: r.data.href ? sanitizeHtml(r.data.href) : '', // External URLs
     }
   })
 

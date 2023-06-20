@@ -25,6 +25,7 @@ import { StatRegRefreshResult } from '/lib/ssb/repo/statreg'
 import { StatRegJobInfo } from '/lib/ssb/dashboard/statreg'
 import type { Default as DefaultPageConfig } from '/site/pages/default'
 import type { Page, Statistics } from '/site/content-types'
+import { sanitize } from '/lib/xp/common'
 
 const { users, showWarningIcon, WARNING_ICON_EVENTS, isPublished } = __non_webpack_require__(
   '/lib/ssb/dashboard/dashboardUtils'
@@ -222,7 +223,8 @@ function getDataSourcesWithError(): Array<DashboardDataSource> {
       count: 1000,
     }).hits
     return errorLogResult.reduce((errorLogNodes: Array<QueryInfoNode>, errorLog) => {
-      const errorLogNode: QueryInfoNode | null = connection.get(errorLog.id)
+      // deepcode ignore Sqli: NoQL. get is an xp function that fetches content from the repositories in xp
+      const errorLogNode: QueryInfoNode | null = connection.get(sanitize(errorLog.id))
       if (errorLogNode) {
         errorLogNodes.push(errorLogNode)
       }
