@@ -48,8 +48,12 @@
 </head>
 <body class="xp-page" data-th-classappend="${bodyClasses}">
   <!-- Google Tag Manager (noscript) -->
-  <noscript data-th-if="${GTM_TRACKING_ID && GTM_AUTH}"><iframe title="GTM tag" data-th-src="|https://www.googletagmanager.com/ns.html?id=${GTM_TRACKING_ID}&gtm_auth=${GTM_AUTH}&gtm_preview=env-3&gtm_cookies_win=x|"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe>
+  <noscript data-th-if="${GTM_TRACKING_ID}">
+    <iframe 
+      title="GTM tag" 
+      data-th-src="'https://www.googletagmanager.com/ns.html?id=' + ${GTM_TRACKING_ID} + (${GTM_AUTH} ? '&gtm_auth='+${GTM_AUTH}+'&gtm_preview=env-3&gtm_cookies_win=x' : '')"
+      height="0" width="0" style="display:none;visibility:hidden"
+    ></iframe>
   </noscript>
   <!-- End Google Tag Manager (noscript) -->
 
