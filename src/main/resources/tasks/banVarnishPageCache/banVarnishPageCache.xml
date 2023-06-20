@@ -1,9 +1,9 @@
 <task>
     <description>Clear Varnish cache for a single page</description>
     <form>
-        <input type="TextLine" name="pageId">
+        <input type="TextLine" name="pageIds">
             <label>ID of content to clear</label>
-            <occurrences minimum="1" maximum="1"/>
+            <occurrences minimum="1" maximum="0"/>
         </input>
     </form>
 </task>
