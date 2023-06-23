@@ -98,7 +98,7 @@ export function parseHtmlTable(table: Content<Table & DataSource> | string, titl
 
   const footNotes: Array<string> = datasourceHtmlTable?.footnoteText ? forceArray(datasourceHtmlTable.footnoteText) : []
   const correctionText: string =
-    typeof table !== 'string' ? (table as Content<Table & DataSource>).data.correctionNotice || '' : ''
+    typeof table === 'string' ? '' : (table as Content<Table & DataSource>).data.correctionNotice || ''
   const noteRefs: Array<string> = footNotes ? footNotes.map((_note: string, index: number) => `note:${index + 1}`) : []
   const notes: Array<Note> = footNotes
     ? footNotes.map((note: string, index: number) => {
