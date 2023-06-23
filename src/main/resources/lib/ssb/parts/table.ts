@@ -83,20 +83,22 @@ export function parseTable(
   return tableViewData
 }
 
-function parseHtmlTable(table: Content<Table & DataSource>): TableView {
-  const dataSource: DataSource['dataSource'] | undefined = table.data.dataSource
+export function parseHtmlTable(table: Content<Table & DataSource> | string, title?: string): TableView {
+  const dataSource: DataSource['dataSource'] | undefined =
+    typeof table !== 'string' ? (table as Content<Table & DataSource>).data.dataSource : undefined
   const datasourceHtmlTable: DatasourceHtmlTable | undefined =
     dataSource && dataSource._selected === DataSourceType.HTMLTABLE
       ? (dataSource.htmlTable as DatasourceHtmlTable)
       : undefined
-  const tableData: string | undefined = datasourceHtmlTable ? datasourceHtmlTable.html : undefined
+  const tableData: string | undefined = datasourceHtmlTable ? datasourceHtmlTable.html : (table as string)
   const jsonTable: HtmlTableRaw | undefined = tableData ? parseStringToJson(tableData) : undefined
   const tableRows: Array<HtmlTableRowRaw> = jsonTable ? forceArray(jsonTable.table.tbody.tr) : []
   const theadRow: Array<HtmlTableRowRaw> = forceArray(tableRows[0])
   const tbodyRows: Array<HtmlTableRowRaw> = tableRows.slice(1)
 
   const footNotes: Array<string> = datasourceHtmlTable?.footnoteText ? forceArray(datasourceHtmlTable.footnoteText) : []
-  const correctionText: string = table.data.correctionNotice || ''
+  const correctionText: string =
+    typeof table !== 'string' ? (table as Content<Table & DataSource>).data.correctionNotice || '' : ''
   const noteRefs: Array<string> = footNotes ? footNotes.map((_note: string, index: number) => `note:${index + 1}`) : []
   const notes: Array<Note> = footNotes
     ? footNotes.map((note: string, index: number) => {
@@ -133,7 +135,7 @@ function parseHtmlTable(table: Content<Table & DataSource>): TableView {
   return {
     caption: {
       noterefs: '',
-      content: table.displayName,
+      content: title ? title : (table as Content<Table & DataSource>).displayName,
     },
     thead: thead,
     tbody: tbody,
@@ -194,50 +196,6 @@ function getTableViewData(table: Content<Table>, dataContent: TbmlDataUniform): 
     },
     noteRefs: uniqueNoteRefs,
     sourceList,
-  }
-}
-
-export function parseHtmlString(tableData: string): HtmlTable {
-  const jsonTable: HtmlTableRaw | undefined = parseStringToJson(tableData)
-  const tableRows: Array<HtmlTableRowRaw> = jsonTable ? jsonTable.table.tbody.tr : []
-  const theadRows: Array<HtmlTableRowRaw> = []
-  const tbodyRows: Array<HtmlTableRowRaw> = []
-
-  tableRows.forEach((row: HtmlTableRowRaw, index: number) => {
-    if (index > 0) {
-      tbodyRows.push(row)
-    } else {
-      theadRows.push(row)
-    }
-  })
-
-  const headCell: Array<number | string> = theadRows[0].td.map((dataCell) => {
-    const value: number | string = getRowValue(dataCell)
-    return typeof value === 'string' ? value.replace(/&nbsp;/g, '') : value
-  })
-
-  const bodyCells: Array<BodyCell> = tbodyRows.map((row) => {
-    const dataCellValues: Array<number | string> = row.td.map((dataCell) => {
-      const value: number | string = getRowValue(dataCell)
-      return typeof value === 'string' ? value.replace(/&nbsp;/g, '') : value
-    })
-
-    return {
-      td: dataCellValues,
-    }
-  })
-
-  return {
-    table: {
-      thead: {
-        tr: {
-          th: headCell,
-        },
-      },
-      tbody: {
-        tr: bodyCells,
-      },
-    },
   }
 }
 
@@ -320,7 +278,7 @@ export type TableSourceList = Array<Source>
 
 export interface TableLib {
   parseTable: (req: XP.Request, table: Content<Table>, branch?: string) => TableView
-  parseHtmlString: (tableData: string) => HtmlTable
+  parseHtmlTable: (table: Content<Table & DataSource> | string, title?: string) => TableView
 }
 
 interface DatasourceHtmlTable {
@@ -337,20 +295,4 @@ interface HtmlTableRaw {
 }
 interface HtmlTableRowRaw {
   td: Array<number | string | PreliminaryData>
-}
-
-export interface HtmlTable {
-  table: {
-    thead: {
-      tr: {
-        th: Array<number | string>
-      }
-    }
-    tbody: {
-      tr: Array<BodyCell>
-    }
-  }
-}
-interface BodyCell {
-  td: Array<number | string>
 }

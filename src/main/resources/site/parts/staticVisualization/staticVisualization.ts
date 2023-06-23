@@ -5,7 +5,7 @@ import type { StaticVisualization } from '/site/content-types'
 // @ts-ignore
 import type { Default as DefaultPageConfig } from '/site/pages/default'
 import type { StaticVisualization as StaticVisualizationPartConfig } from '.'
-import type { HtmlTable } from '/lib/ssb/parts/table'
+import type { TableView } from '/lib/ssb/parts/table'
 import { getContent, getComponent } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 import { imageUrl } from '/lib/ssb/utils/imageUtils'
@@ -16,7 +16,7 @@ const {
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 const { getSources } = __non_webpack_require__('/lib/ssb/utils/utils')
 const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
-const { parseHtmlString } = __non_webpack_require__('/lib/ssb/parts/table')
+const { parseHtmlTable } = __non_webpack_require__('/lib/ssb/parts/table')
 
 export function get(req: XP.Request): XP.Response {
   try {
@@ -78,12 +78,13 @@ function renderPart(req: XP.Request, contentId: string | undefined): XP.Response
     })
 
     // Tabledata
-    const htmlTable: HtmlTable | undefined = staticVisualizationsContent.data.tableData
-      ? parseHtmlString(staticVisualizationsContent.data.tableData)
+    const title: string = staticVisualizationsContent.displayName
+    const htmlTable: TableView | undefined = staticVisualizationsContent.data.tableData
+      ? parseHtmlTable(staticVisualizationsContent.data.tableData, title)
       : undefined
 
     const props: StaticVisualizationProps = {
-      title: staticVisualizationsContent.displayName,
+      title,
       altText:
         imageData && imageData.data.altText
           ? imageData.data.altText
@@ -129,5 +130,5 @@ interface StaticVisualizationProps {
   descriptionStaticVisualization: string
   inFactPage?: boolean
   language: string
-  tableData: HtmlTable | undefined
+  tableData: TableView | undefined
 }
