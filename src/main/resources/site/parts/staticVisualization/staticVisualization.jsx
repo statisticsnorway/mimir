@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { PropTypes } from 'prop-types'
 import { Link, FactBox, Tabs, Divider } from '@statisticsnorway/ssb-component-library'
 import { Row, Col } from 'react-bootstrap'
-import Table from '/react4xp/_entries/Table'
+import Table, { tableDataShape } from '/react4xp/_entries/Table'
 
 function StaticVisualization(props) {
   const [activeTab, changeTab] = useState('figure')
@@ -111,72 +111,7 @@ StaticVisualization.propTypes = {
   ),
   inFactPage: PropTypes.bool,
   language: PropTypes.string,
-  tableData: PropTypes.shape({
-    caption:
-      PropTypes.string |
-      PropTypes.shape({
-        content: PropTypes.string,
-        noterefs: PropTypes.string,
-      }),
-    tableClass: PropTypes.string,
-    thead: PropTypes.arrayOf(
-      PropTypes.shape({
-        td:
-          PropTypes.array |
-          PropTypes.number |
-          PropTypes.string |
-          PropTypes.shape({
-            rowspan: PropTypes.number,
-            colspan: PropTypes.number,
-            content: PropTypes.string,
-            class: PropTypes.string,
-          }),
-        th:
-          PropTypes.array |
-          PropTypes.number |
-          PropTypes.string |
-          PropTypes.shape({
-            rowspan: PropTypes.number,
-            colspan: PropTypes.number,
-            content: PropTypes.string,
-            class: PropTypes.string,
-            noterefs: PropTypes.string,
-          }),
-      })
-    ),
-    tbody: PropTypes.arrayOf(
-      PropTypes.shape({
-        th:
-          PropTypes.array |
-          PropTypes.number |
-          PropTypes.string |
-          PropTypes.shape({
-            content: PropTypes.string,
-            class: PropTypes.string,
-            noterefs: PropTypes.string,
-          }),
-        td:
-          PropTypes.array |
-          PropTypes.number |
-          PropTypes.string |
-          PropTypes.shape({
-            content: PropTypes.string,
-            class: PropTypes.string,
-          }),
-      })
-    ),
-    tfoot: PropTypes.shape({
-      footnotes: PropTypes.arrayOf(
-        PropTypes.shape({
-          noteid: PropTypes.string,
-          content: PropTypes.string,
-        })
-      ),
-      correctionNotice: PropTypes.string,
-    }),
-    language: PropTypes.string,
-    noteRefs: PropTypes.arrayOf(PropTypes.string),
-  }),
+  tableData: tableDataShape,
 }
 
 export default (props) => <StaticVisualization {...props} />

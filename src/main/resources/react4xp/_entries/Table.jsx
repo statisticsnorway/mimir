@@ -546,6 +546,73 @@ function Table(props) {
   )
 }
 
+export const tableDataShape = PropTypes.shape({
+  caption:
+    PropTypes.string |
+    PropTypes.shape({
+      content: PropTypes.string,
+      noterefs: PropTypes.string,
+    }),
+  tableClass: PropTypes.string,
+  thead: PropTypes.arrayOf(
+    PropTypes.shape({
+      td:
+        PropTypes.array |
+        PropTypes.number |
+        PropTypes.string |
+        PropTypes.shape({
+          rowspan: PropTypes.number,
+          colspan: PropTypes.number,
+          content: PropTypes.string,
+          class: PropTypes.string,
+        }),
+      th:
+        PropTypes.array |
+        PropTypes.number |
+        PropTypes.string |
+        PropTypes.shape({
+          rowspan: PropTypes.number,
+          colspan: PropTypes.number,
+          content: PropTypes.string,
+          class: PropTypes.string,
+          noterefs: PropTypes.string,
+        }),
+    })
+  ),
+  tbody: PropTypes.arrayOf(
+    PropTypes.shape({
+      th:
+        PropTypes.array |
+        PropTypes.number |
+        PropTypes.string |
+        PropTypes.shape({
+          content: PropTypes.string,
+          class: PropTypes.string,
+          noterefs: PropTypes.string,
+        }),
+      td:
+        PropTypes.array |
+        PropTypes.number |
+        PropTypes.string |
+        PropTypes.shape({
+          content: PropTypes.string,
+          class: PropTypes.string,
+        }),
+    })
+  ),
+  tfoot: PropTypes.shape({
+    footnotes: PropTypes.arrayOf(
+      PropTypes.shape({
+        noteid: PropTypes.string,
+        content: PropTypes.string,
+      })
+    ),
+    correctionNotice: PropTypes.string,
+  }),
+  language: PropTypes.string,
+  noteRefs: PropTypes.arrayOf(PropTypes.string),
+})
+
 Table.propTypes = {
   downloadTableLabel: PropTypes.string,
   downloadTableTitle: PropTypes.object,
@@ -567,136 +634,8 @@ Table.propTypes = {
     })
   ),
   iconUrl: PropTypes.string,
-  table: PropTypes.shape({
-    caption:
-      PropTypes.string |
-      PropTypes.shape({
-        content: PropTypes.string,
-        noterefs: PropTypes.string,
-      }),
-    tableClass: PropTypes.string,
-    thead: PropTypes.arrayOf(
-      PropTypes.shape({
-        td:
-          PropTypes.array |
-          PropTypes.number |
-          PropTypes.string |
-          PropTypes.shape({
-            rowspan: PropTypes.number,
-            colspan: PropTypes.number,
-            content: PropTypes.string,
-            class: PropTypes.string,
-          }),
-        th:
-          PropTypes.array |
-          PropTypes.number |
-          PropTypes.string |
-          PropTypes.shape({
-            rowspan: PropTypes.number,
-            colspan: PropTypes.number,
-            content: PropTypes.string,
-            class: PropTypes.string,
-            noterefs: PropTypes.string,
-          }),
-      })
-    ),
-    tbody: PropTypes.arrayOf(
-      PropTypes.shape({
-        th:
-          PropTypes.array |
-          PropTypes.number |
-          PropTypes.string |
-          PropTypes.shape({
-            content: PropTypes.string,
-            class: PropTypes.string,
-            noterefs: PropTypes.string,
-          }),
-        td:
-          PropTypes.array |
-          PropTypes.number |
-          PropTypes.string |
-          PropTypes.shape({
-            content: PropTypes.string,
-            class: PropTypes.string,
-          }),
-      })
-    ),
-    tfoot: PropTypes.shape({
-      footnotes: PropTypes.arrayOf(
-        PropTypes.shape({
-          noteid: PropTypes.string,
-          content: PropTypes.string,
-        })
-      ),
-      correctionNotice: PropTypes.string,
-    }),
-    language: PropTypes.string,
-    noteRefs: PropTypes.arrayOf(PropTypes.string),
-  }),
-  tableDraft: PropTypes.shape({
-    caption:
-      PropTypes.string |
-      PropTypes.shape({
-        content: PropTypes.string,
-        noterefs: PropTypes.string,
-      }),
-    thead: PropTypes.arrayOf(
-      PropTypes.shape({
-        td:
-          PropTypes.array |
-          PropTypes.number |
-          PropTypes.string |
-          PropTypes.shape({
-            rowspan: PropTypes.number,
-            colspan: PropTypes.number,
-            content: PropTypes.string,
-            class: PropTypes.string,
-          }),
-        th:
-          PropTypes.array |
-          PropTypes.number |
-          PropTypes.string |
-          PropTypes.shape({
-            rowspan: PropTypes.number,
-            colspan: PropTypes.number,
-            content: PropTypes.string,
-            class: PropTypes.string,
-            noterefs: PropTypes.string,
-          }),
-      })
-    ),
-    tbody: PropTypes.arrayOf(
-      PropTypes.shape({
-        th:
-          PropTypes.array |
-          PropTypes.number |
-          PropTypes.string |
-          PropTypes.shape({
-            content: PropTypes.string,
-            class: PropTypes.string,
-            noterefs: PropTypes.string,
-          }),
-        td:
-          PropTypes.array |
-          PropTypes.number |
-          PropTypes.string |
-          PropTypes.shape({
-            content: PropTypes.string,
-            class: PropTypes.string,
-          }),
-      })
-    ),
-    tfoot: PropTypes.shape({
-      footnotes: PropTypes.arrayOf(
-        PropTypes.shape({
-          noteid: PropTypes.string,
-          content: PropTypes.string,
-        })
-      ),
-      correctionNotice: PropTypes.string,
-    }),
-    noteRefs: PropTypes.arrayOf(PropTypes.string),
-  }),
+  table: tableDataShape,
+  tableDraft: tableDataShape,
   showPreviewDraft: PropTypes.bool,
   paramShowDraft: PropTypes.bool,
   draftExist: PropTypes.bool,
