@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { Form, Container, Row, Col } from 'react-bootstrap'
 import {
@@ -73,11 +73,10 @@ function BkibolCalculator(props) {
   const validMinYear = 1979
   const yearRegexp = /^[1-9]{1}[0-9]{3}$/g
 
-  const scrollAnchor = React.useRef(null)
+  const scrollAnchor = useRef(null)
   function scrollToResult() {
-    scrollAnchor.current.focus({
-      preventScroll: true,
-    })
+    if (scrollAnchor.current === null) return
+
     scrollAnchor.current.scrollIntoView({
       behavior: 'smooth',
       block: 'end',
@@ -124,7 +123,9 @@ function BkibolCalculator(props) {
     ]
   }
 
+  const submitButton = useRef(null)
   function closeResult() {
+    if (submitButton.current) submitButton.current.focus()
     setEndValue(null)
   }
 
@@ -137,6 +138,8 @@ function BkibolCalculator(props) {
       onBlur('start-value')
       onBlur('start-year')
       onBlur('end-year')
+      onBlur('start-month')
+      onBlur('end-month')
       return
     }
 
@@ -177,8 +180,10 @@ function BkibolCalculator(props) {
         }
       })
       .finally(() => {
-        setLoading(false)
-        scrollToResult()
+        window.requestAnimationFrame(() => {
+          setLoading(false)
+          scrollToResult()
+        })
       })
   }
 
@@ -245,7 +250,7 @@ function BkibolCalculator(props) {
         errorMsg: props.lastNumberText,
       })
     }
-    return startMonthEmpty ? startMonthEmpty : startMonthValid
+    return startMonthEmpty ? false : startMonthValid
   }
 
   function isEndMonthValid(value) {
@@ -265,7 +270,7 @@ function BkibolCalculator(props) {
         errorMsg: props.lastNumberText,
       })
     }
-    return endMonthEmpty ? endMonthEmpty : endMonthValid
+    return endMonthEmpty ? false : endMonthValid
   }
 
   function onBlur(id) {
@@ -291,6 +296,20 @@ function BkibolCalculator(props) {
         })
         break
       }
+      case 'start-month': {
+        setStartMonth({
+          ...startMonth,
+          error: !isStartMonthValid(),
+        })
+        break
+      }
+      case 'end-month': {
+        setEndMonth({
+          ...endMonth,
+          error: !isEndMonthValid(),
+        })
+        break
+      }
       default: {
         break
       }
@@ -310,6 +329,11 @@ function BkibolCalculator(props) {
         setDomene({
           ...domene,
           value: value,
+        })
+        setSerie({
+          error: false,
+          errorMsg: props.phrases.bkibolValidateSerie,
+          value: '',
         })
         break
       }
@@ -534,7 +558,7 @@ function BkibolCalculator(props) {
   function calculatorResult() {
     const priceChangeLabel = change.charAt(0) === '-' ? props.phrases.priceDecrease : props.phrases.priceIncrease
     return (
-      <Container className='calculator-result' ref={scrollAnchor} tabIndex='0'>
+      <Container className='calculator-result' ref={scrollAnchor}>
         <Row className='mb-5'>
           <Col className='amount-equal col-12 col-md-4'>
             <h3>{props.phrases.amountEqualled}</h3>
@@ -627,7 +651,7 @@ function BkibolCalculator(props) {
     if (props.calculatorArticleUrl) {
       return (
         <Col className='article-link align-self-center col-12 col-md-6'>
-          <Link className='float-md-end' href={props.calculatorArticleUrl}>
+          <Link className='float-md-end' href={props.calculatorArticleUrl} standAlone>
             {props.phrases.readAboutCalculator}
           </Link>
         </Col>
@@ -652,9 +676,10 @@ function BkibolCalculator(props) {
         <Form onSubmit={onSubmit}>
           <Container>
             <Row className='my-5'>
-              <Col className='choose-domene col-12 col-md-6 col-xl-4 mb-3 mb-md-0'>
+              <Col className='123 choose-domene col-12 col-md-6 col-xl-4 mb-3 mb-md-0'>
                 <Title size={3}>{props.phrases.bkibolChooseDwellingType}</Title>
                 <RadioGroup
+                  groupName='dwellingType'
                   onChange={(value) => {
                     onChange('domene', value)
                   }}
@@ -683,6 +708,7 @@ function BkibolCalculator(props) {
               <Col className='choose-scope col-12 col-md-6 col-xl-4 mb-3 mb-md-0'>
                 <Title size={3}>{props.phrases.bkibolAmountInclude}</Title>
                 <RadioGroup
+                  groupName='amountInclude'
                   onChange={(value) => {
                     onChange('scope', value)
                   }}
@@ -753,7 +779,7 @@ function BkibolCalculator(props) {
             </Row>
             <Row className='submit'>
               <Col>
-                <Button className='submit-button' primary type='submit' disabled={loading}>
+                <Button className='submit-button' ref={submitButton} primary type='submit' disabled={loading}>
                   {props.phrases.seePriceChange}
                 </Button>
               </Col>
@@ -767,7 +793,7 @@ function BkibolCalculator(props) {
   return (
     <Container className='bkibol-calculator'>
       {renderForm()}
-      {renderResult()}
+      <div aria-live='polite'>{renderResult()}</div>
     </Container>
   )
 }

@@ -1,8 +1,14 @@
-import { Content } from '/lib/xp/content'
+import { type Content } from '/lib/xp/content'
+import { getContent } from '/lib/xp/portal'
 import { HttpRequestParams } from '/lib/http-client'
 import type { CalculatorConfig } from '/site/content-types'
 import { Dataset } from '/lib/types/jsonstat-toolkit'
+import { Language, Phrases } from '/lib/types/language'
+import { DropdownItems } from '/lib/types/components'
+import { allMonths, monthLabel } from '/lib/ssb/utils/calculatorUtils'
+
 const { localize } = __non_webpack_require__('/lib/xp/i18n')
+const { getLanguage } = __non_webpack_require__('/lib/ssb/utils/language')
 const { getCalculatorConfig, getBkibolDatasetEnebolig, getBkibolDatasetBoligblokk, isChronological, getChangeValue } =
   __non_webpack_require__('/lib/ssb/dataset/calculator')
 
@@ -16,13 +22,19 @@ function get(req: HttpRequestParams): XP.Response {
   const endMonth: string | undefined = req.params?.endMonth || ''
   const endYear: string | undefined = req.params?.endYear
   const language: string | undefined = req.params?.language ? req.params.language : 'nb'
+
+  const lang: Language = getLanguage(getContent()) as Language
+  const phrases: Phrases = lang.phrases as Phrases
+  const months: DropdownItems = allMonths(phrases, false, 'bkibol')
   const errorValidateStartMonth: string = localize({
     key: 'bkibolServiceValidateStartMonth',
     locale: language,
+    values: [monthLabel(months, lang.code, +startMonth), startYear || '', serie.toLowerCase()],
   })
   const errorValidateEndMonth: string = localize({
     key: 'bkibolServiceValidateEndMonth',
     locale: language,
+    values: [monthLabel(months, lang.code, +endMonth), endYear || '', serie.toLowerCase()],
   })
 
   if (!domene || !serie || !serie || !startValue || !startYear || !startMonth || !endYear || !endMonth) {
@@ -60,6 +72,14 @@ function get(req: HttpRequestParams): XP.Response {
           endIndex: indexResult.endIndex,
           change: changeValue,
           endValue: parseFloat(startValue) * (indexResult.endIndex / indexResult.startIndex),
+        },
+        contentType: 'application/json',
+      }
+    } else if (indexResult.startIndex === null && indexResult.endIndex === null) {
+      return {
+        status: 500,
+        body: {
+          error: localize({ key: 'bkibolEmpty', locale: language }),
         },
         contentType: 'application/json',
       }
