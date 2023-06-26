@@ -188,7 +188,9 @@ function ContactForm(props) {
           <Col>
             <Divider light />
             <Container className='pt-3'>
-              <Title size={3}>{props.phrases.contactFormMessageSentOk}</Title>
+              <Title size={2} className='h3'>
+                {props.phrases.contactFormMessageSentOk}
+              </Title>
               <p>{props.phrases.contactFormMessageSentText}</p>
             </Container>
           </Col>
@@ -213,12 +215,29 @@ function ContactForm(props) {
 
   function renderForm() {
     if (!emailSent) {
+      const items = [
+        {
+          title: props.phrases.contactFormReceiverGenerell,
+          id: 'generell',
+        },
+        {
+          title: props.phrases.contactFormReceiverStatistikk,
+          id: 'statistikk',
+        },
+        {
+          title: props.phrases.contactFormReceiverInnrapportering,
+          id: 'innrapportering',
+        },
+      ]
+
       return (
         <Row>
           <Col>
             <Divider light />
             <Container className='pt-3'>
-              <Title size={3}>{props.phrases.contactFormTitle}</Title>
+              <Title size={2} className='h3'>
+                {props.phrases.contactFormTitle}
+              </Title>
               <p>{props.phrases.contactFormText}</p>
             </Container>
             <Form onSubmit={onSubmit}>
@@ -231,23 +250,12 @@ function ContactForm(props) {
                       onSelect={(value) => {
                         onChange('receiver', value)
                       }}
-                      placeholder={props.phrases.contactFormChooseReceiver}
+                      header={props.phrases.contactFormChooseReceiver}
+                      placeholder={''}
+                      selectedItem={items[0]}
                       error={receiver.error}
                       errorMessage={receiver.errorMsg}
-                      items={[
-                        {
-                          title: props.phrases.contactFormReceiverGenerell,
-                          id: 'generell',
-                        },
-                        {
-                          title: props.phrases.contactFormReceiverStatistikk,
-                          id: 'statistikk',
-                        },
-                        {
-                          title: props.phrases.contactFormReceiverInnrapportering,
-                          id: 'innrapportering',
-                        },
-                      ]}
+                      items={items}
                       ariaLabel={props.phrases.contactFormChooseReceiver}
                     />
                   </Col>
