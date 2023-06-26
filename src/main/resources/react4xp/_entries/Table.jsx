@@ -23,12 +23,11 @@ function Table(props) {
 
   useEffect(() => {
     updateTableControlsDesktop()
-    // NOTE terrible solution, but its from react docs (https://reactjs.org/docs/state-and-lifecycle.html#adding-lifecycle-methods-to-a-class)
+
     const widthCheckInterval = setInterval(() => {
       widthCheck()
     }, 250)
     window.addEventListener('resize', () => updateTableControlsDesktop())
-
     return () => {
       clearInterval(widthCheckInterval)
     }
@@ -546,7 +545,7 @@ function Table(props) {
   )
 }
 
-export const tableDataShape = PropTypes.shape({
+const tableDataShape = PropTypes.shape({
   caption:
     PropTypes.string |
     PropTypes.shape({

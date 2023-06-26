@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { PropTypes } from 'prop-types'
 import { Link, FactBox, Tabs, Divider } from '@statisticsnorway/ssb-component-library'
 import { Row, Col } from 'react-bootstrap'
-import Table, { tableDataShape } from '/react4xp/_entries/Table'
+import NumberFormat from 'react-number-format'
 
 function StaticVisualization(props) {
   const [activeTab, changeTab] = useState('figure')
@@ -64,8 +64,64 @@ function StaticVisualization(props) {
   function createTable() {
     const tableData = props.tableData
     if (tableData) {
-      return <Table table={tableData} />
+      return (
+        <table className='statistics'>
+          <thead>
+            <tr>{createHeaderCell(tableData.table.thead.tr)}</tr>
+          </thead>
+          <tbody>
+            {tableData.table.tbody.tr.map((row, index) => {
+              return <tr key={index}>{createBodyCells(row)}</tr>
+            })}
+          </tbody>
+        </table>
+      )
     }
+  }
+
+  function createHeaderCell(row) {
+    return row.th.map((cellValue, i) => {
+      return <th key={i}>{trimValue(cellValue)}</th>
+    })
+  }
+
+  function createBodyCells(row) {
+    return row.td.map((cellValue, i) => {
+      if (i > 0) {
+        return <td key={i}>{formatNumber(cellValue)}</td>
+      } else {
+        return <th key={i}>{trimValue(cellValue)}</th>
+      }
+    })
+  }
+
+  function formatNumber(value) {
+    const language = props.language
+    const decimalSeparator = language === 'en' ? '.' : ','
+    value = trimValue(value)
+    if (value) {
+      if (typeof value === 'number' || (typeof value === 'string' && !isNaN(value))) {
+        const decimals = value.toString().indexOf('.') > -1 ? value.toString().split('.')[1].length : 0
+        return (
+          <NumberFormat
+            value={Number(value)}
+            displayType={'text'}
+            thousandSeparator={' '}
+            decimalSeparator={decimalSeparator}
+            decimalScale={decimals}
+            fixedDecimalScale={true}
+          />
+        )
+      }
+    }
+    return value
+  }
+
+  function trimValue(value) {
+    if (value && typeof value === 'string') {
+      return value.trim()
+    }
+    return value
   }
 
   return (
@@ -111,7 +167,25 @@ StaticVisualization.propTypes = {
   ),
   inFactPage: PropTypes.bool,
   language: PropTypes.string,
-  tableData: tableDataShape,
+  tableData: PropTypes.shape({
+    table: {
+      thead: {
+        tr: {
+          th: PropTypes.array,
+        },
+      },
+      tbody: PropTypes.arrayOf(
+        PropTypes.shape({
+          tr: PropTypes.arrayOf(
+            PropTypes.shape({
+              th: PropTypes.array,
+              td: PropTypes.array,
+            })
+          ),
+        })
+      ),
+    },
+  }),
 }
 
 export default (props) => <StaticVisualization {...props} />
