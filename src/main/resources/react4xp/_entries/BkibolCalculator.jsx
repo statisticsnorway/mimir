@@ -676,7 +676,7 @@ function BkibolCalculator(props) {
         <Form onSubmit={onSubmit}>
           <Container>
             <Row className='my-5'>
-              <Col className='123 choose-domene col-12 col-md-6 col-xl-4 mb-3 mb-md-0'>
+              <Col className='choose-domene col-12 col-md-6 col-xl-4 mb-3 mb-md-0'>
                 <Title size={3}>{props.phrases.bkibolChooseDwellingType}</Title>
                 <RadioGroup
                   groupName='dwellingType'
