@@ -154,6 +154,49 @@ function getHtmlTableCells(row: HtmlTableRowRaw): Array<number | string> {
   })
 }
 
+function getTableViewData(table: Content<Table>, dataContent: TbmlDataUniform): TableView {
+  const title: Title = dataContent.tbml.metadata.title
+  const notes: NotesUniform = dataContent.tbml.metadata.notes
+  const sourceList: Array<Source> = dataContent?.tbml?.metadata?.sourceList || []
+  const headRows: Array<TableRowUniform> = forceArray(dataContent.tbml.presentation.table.thead)
+  const bodyRows: Array<TableRowUniform> = forceArray(dataContent.tbml.presentation.table.tbody)
+
+  const headNoteRefs: Array<string> = headRows.reduce((acc: Array<string>, row: TableRowUniform) => {
+    const tableCells: Array<TableCellUniform> = row.tr
+    tableCells.forEach((cell: TableCellUniform) => {
+      if (cell) acc.push(...getNoterefsHeader(cell))
+    })
+    return acc
+  }, [])
+
+  const bodyNoteRefs: Array<string> = bodyRows.reduce((acc: Array<string>, row: TableRowUniform) => {
+    const tableCells: Array<TableCellUniform> = row.tr
+    tableCells.forEach((cell: TableCellUniform) => {
+      if (cell) acc.push(...getNoterefsHeader(cell))
+    })
+    return acc
+  }, [])
+
+  const noteRefs: Array<string> = title?.noterefs
+    ? [...title.noterefs.split(' '), ...headNoteRefs, ...bodyNoteRefs]
+    : [...headNoteRefs, ...bodyNoteRefs]
+
+  const uniqueNoteRefs: Array<string> = noteRefs.filter((v, i, a) => a.indexOf(v) === i)
+
+  return {
+    caption: title,
+    thead: headRows,
+    tbody: bodyRows,
+    tableClass: dataContent.tbml.presentation.table.class ? dataContent.tbml.presentation.table.class : 'statistics',
+    tfoot: {
+      footnotes: notes ? notes.note : [],
+      correctionNotice: table.data.correctionNotice || '',
+    },
+    noteRefs: uniqueNoteRefs,
+    sourceList,
+  }
+}
+
 export function parseHtmlString(tableData: string): HtmlTable {
   const jsonTable: HtmlTableRaw | undefined = parseStringToJson(tableData)
   const tableRows: Array<HtmlTableRowRaw> = jsonTable ? jsonTable.table.tbody.tr : []
@@ -195,49 +238,6 @@ export function parseHtmlString(tableData: string): HtmlTable {
         tr: bodyCells,
       },
     },
-  }
-}
-
-function getTableViewData(table: Content<Table>, dataContent: TbmlDataUniform): TableView {
-  const title: Title = dataContent.tbml.metadata.title
-  const notes: NotesUniform = dataContent.tbml.metadata.notes
-  const sourceList: Array<Source> = dataContent?.tbml?.metadata?.sourceList || []
-  const headRows: Array<TableRowUniform> = forceArray(dataContent.tbml.presentation.table.thead)
-  const bodyRows: Array<TableRowUniform> = forceArray(dataContent.tbml.presentation.table.tbody)
-
-  const headNoteRefs: Array<string> = headRows.reduce((acc: Array<string>, row: TableRowUniform) => {
-    const tableCells: Array<TableCellUniform> = row.tr
-    tableCells.forEach((cell: TableCellUniform) => {
-      if (cell) acc.push(...getNoterefsHeader(cell))
-    })
-    return acc
-  }, [])
-
-  const bodyNoteRefs: Array<string> = bodyRows.reduce((acc: Array<string>, row: TableRowUniform) => {
-    const tableCells: Array<TableCellUniform> = row.tr
-    tableCells.forEach((cell: TableCellUniform) => {
-      if (cell) acc.push(...getNoterefsHeader(cell))
-    })
-    return acc
-  }, [])
-
-  const noteRefs: Array<string> = title?.noterefs
-    ? [...title.noterefs.split(' '), ...headNoteRefs, ...bodyNoteRefs]
-    : [...headNoteRefs, ...bodyNoteRefs]
-
-  const uniqueNoteRefs: Array<string> = noteRefs.filter((v, i, a) => a.indexOf(v) === i)
-
-  return {
-    caption: title,
-    thead: headRows,
-    tbody: bodyRows,
-    tableClass: dataContent.tbml.presentation.table.class ? dataContent.tbml.presentation.table.class : 'statistics',
-    tfoot: {
-      footnotes: notes ? notes.note : [],
-      correctionNotice: table.data.correctionNotice || '',
-    },
-    noteRefs: uniqueNoteRefs,
-    sourceList,
   }
 }
 
@@ -338,6 +338,7 @@ interface HtmlTableRaw {
 interface HtmlTableRowRaw {
   td: Array<number | string | PreliminaryData>
 }
+
 export interface HtmlTable {
   table: {
     thead: {
