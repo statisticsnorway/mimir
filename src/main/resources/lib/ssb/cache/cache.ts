@@ -96,9 +96,13 @@ export function setup(): void {
 }
 
 function removePageFromVarnish(event: EnonicEvent<EnonicEventData>): void {
-  if (event.data.nodes[0].repo == 'com.enonic.cms.default' && event.data.nodes[0].branch == 'master') {
+  const pageIds: string[] = event.data.nodes
+    .filter((n) => n.repo == 'com.enonic.cms.default' && n.branch == 'master' && n.path.startsWith('/content/'))
+    .map((n) => n.id)
+
+  if (pageIds.length > 0) {
     const taskConfig = {
-      pageId: event.data.nodes[0].id,
+      pageIds,
     }
 
     const taskId: string = submitTask({
