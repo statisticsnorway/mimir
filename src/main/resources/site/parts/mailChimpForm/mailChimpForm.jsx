@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { Button, Input, Text } from '@statisticsnorway/ssb-component-library'
+import { Button, Input, Paragraph } from '@statisticsnorway/ssb-component-library'
 
 function MailchimpForm(props) {
   const [email, setEmail] = useState({
@@ -22,7 +22,7 @@ function MailchimpForm(props) {
   const mailMojoForm = props.endpoint && !props.id
   return (
     <section className='xp-part mailchimp-form'>
-      {props.text && <Text>{props.text}</Text>}
+      {props.text && <Paragraph>{props.text}</Paragraph>}
       <form method='post' action={props.endpoint}>
         <Input
           type='email'
