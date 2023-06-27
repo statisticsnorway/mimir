@@ -89,7 +89,7 @@
     "cross-env": "^7.0.3",
     "css-loader": "^6.7.4",
     "cssnano": "^5.1.14",
-    "eslint": "^8.41.0",
+    "eslint": "^8.43.0",
     "eslint-config-google": "~0.14.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-no-relative-import-paths": "^1.5.2",
