@@ -27,9 +27,10 @@ function Table(props) {
     const widthCheckInterval = setInterval(() => {
       widthCheck()
     }, 250)
-    window.addEventListener('resize', () => updateTableControlsDesktop())
+    window.addEventListener('resize', updateTableControlsDesktop)
     return () => {
       clearInterval(widthCheckInterval)
+      window.removeEventListener('resize', updateTableControlsDesktop)
     }
   }, [])
 
