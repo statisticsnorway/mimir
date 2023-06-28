@@ -1,4 +1,4 @@
-import React, { Component, createRef, Fragment } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Dropdown, Link } from '@statisticsnorway/ssb-component-library'
 import { default as isEmpty } from 'ramda/es/isEmpty'
@@ -7,64 +7,50 @@ import { Alert, Button } from 'react-bootstrap'
 import { ChevronLeft, ChevronRight } from 'react-feather'
 import { addGtagForEvent } from '/react4xp/ReactGA'
 
-class Table extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      prevClientWidth: 0,
-      showPreviewToggle:
-        this.props.showPreviewDraft &&
-        (!this.props.pageTypeStatistic || (this.props.paramShowDraft && this.props.pageTypeStatistic)),
-      fetchUnPublished: this.props.paramShowDraft,
-      table: this.props.paramShowDraft && this.props.draftExist ? this.props.tableDraft : this.props.table,
-    }
+function Table(props) {
+  const [prevClientWidth, setPrevClientWidth] = useState(0)
+  const [table, setTable] = useState(props.paramShowDraft && props.draftExist ? props.tableDraft : props.table)
+  const [fetchUnPublished, setFetchUnPublished] = useState(props.paramShowDraft)
 
-    this.captionRef = createRef()
-    this.tableControlsDesktopRef = createRef()
-    this.tableControlsMobileRef = createRef()
-    this.tableRef = createRef()
-    this.tableWrapperRef = createRef()
+  const showPreviewToggle =
+    props.showPreviewDraft && (!props.pageTypeStatistic || (props.paramShowDraft && props.pageTypeStatistic))
 
-    this.widthCheckInterval = undefined
-    this.toggleDraft = this.toggleDraft.bind(this)
-  }
+  const captionRef = useRef(null)
+  const tableControlsDesktopRef = useRef(null)
+  const tableControlsMobileRef = useRef(null)
+  const tableRef = useRef(null)
+  const tableWrapperRef = useRef(null)
 
-  componentDidUpdate() {
-    this.updateTableControlsDesktop()
-  }
+  useEffect(() => {
+    updateTableControlsDesktop()
 
-  componentWillUnmount() {
-    clearInterval(this.widthCheckInterval)
-  }
-
-  componentDidMount() {
-    this.updateTableControlsDesktop()
-    // NOTE terrible solution, but its from react docs (https://reactjs.org/docs/state-and-lifecycle.html#adding-lifecycle-methods-to-a-class)
-    this.widthCheckInterval = setInterval(() => {
-      this.widthCheck()
+    const widthCheckInterval = setInterval(() => {
+      widthCheck()
     }, 250)
-    window.addEventListener('resize', () => this.updateTableControlsDesktop())
-  }
+    window.addEventListener('resize', updateTableControlsDesktop)
+    return () => {
+      clearInterval(widthCheckInterval)
+      window.removeEventListener('resize', updateTableControlsDesktop)
+    }
+  }, [])
 
-  widthCheck() {
-    if (this.tableWrapperRef.current.clientWidth !== this.state.prevClientWidth) {
-      this.setState({
-        prevClientWidth: this.tableWrapperRef.current.clientWidth,
-      })
-      this.updateTableControlsDesktop()
+  function widthCheck() {
+    if (tableWrapperRef.current.clientWidth !== prevClientWidth) {
+      setPrevClientWidth(tableWrapperRef.current.clientWidth)
+      updateTableControlsDesktop()
     }
   }
 
-  updateTableControlsDesktop() {
-    const controls = this.tableControlsDesktopRef.current
-    const tableWrapper = this.tableWrapperRef.current
+  function updateTableControlsDesktop() {
+    const controls = tableControlsDesktopRef.current
+    const tableWrapper = tableWrapperRef.current
     const left = controls.children.item(0)
     const right = controls.children.item(1)
 
     // hide controlls if there is no scrollbar
     if (tableWrapper.scrollWidth > tableWrapper.clientWidth || tableWrapper.clientWidth === 0) {
       controls.classList.remove('d-none')
-      this.tableControlsMobileRef.current.classList.remove('d-none')
+      tableControlsMobileRef.current.classList.remove('d-none')
       // disable left
       if (tableWrapper.scrollLeft <= 0) {
         left.classList.add('disabled')
@@ -80,37 +66,37 @@ class Table extends Component {
       }
 
       // move desktop controls to correct pos
-      const captionHalfHeight = this.captionRef.current.offsetHeight / 2
+      const captionHalfHeight = captionRef.current.offsetHeight / 2
       const controlsHalfHeight = left.scrollHeight / 2
       left.style.marginTop = `${captionHalfHeight - controlsHalfHeight}px`
       right.style.marginTop = `${captionHalfHeight - controlsHalfHeight}px`
     } else {
       controls.classList.add('d-none')
-      this.tableControlsMobileRef.current.classList.add('d-none')
+      tableControlsMobileRef.current.classList.add('d-none')
     }
   }
 
-  scrollLeft() {
-    this.tableWrapperRef.current.scrollLeft -= 100
-    this.updateTableControlsDesktop()
+  function scrollLeft() {
+    tableWrapperRef.current.scrollLeft -= 100
+    updateTableControlsDesktop()
   }
 
-  scrollRight() {
-    this.tableWrapperRef.current.scrollLeft += 100
-    this.updateTableControlsDesktop()
+  function scrollRight() {
+    tableWrapperRef.current.scrollLeft += 100
+    updateTableControlsDesktop()
   }
 
-  trimValue(value) {
+  function trimValue(value) {
     if (value && typeof value === 'string') {
       return value.trim()
     }
     return value
   }
 
-  formatNumber(value) {
-    const language = this.props.table.language
+  function formatNumber(value) {
+    const language = props.table.language
     const decimalSeparator = language === 'en' ? '.' : ','
-    value = this.trimValue(value)
+    value = trimValue(value)
     if (value) {
       if (typeof value === 'number' || (typeof value === 'string' && !isNaN(value))) {
         const decimals = value.toString().indexOf('.') > -1 ? value.toString().split('.')[1].length : 0
@@ -129,20 +115,20 @@ class Table extends Component {
     return value
   }
 
-  addDownloadTableDropdown(mobile) {
-    const { downloadTableLabel, downloadTableTitle, downloadTableOptions } = this.props
+  function addDownloadTableDropdown(mobile) {
+    const { downloadTableLabel, downloadTableTitle, downloadTableOptions } = props
 
     if (downloadTableLabel && downloadTableTitle && downloadTableOptions) {
       const downloadTable = (item) => {
         if (item.id === 'downloadTableAsCSV') {
           {
-            this.downloadTableAsCSV()
+            downloadTableAsCSV()
           }
         }
 
         if (item.id === 'downloadTableAsXLSX') {
           {
-            this.downloadTableAsExcel()
+            downloadTableAsExcel()
           }
         }
       }
@@ -160,18 +146,13 @@ class Table extends Component {
     }
   }
 
-  downloadTableAsCSV() {
-    if (this.props.GA_TRACKING_ID) {
-      addGtagForEvent(
-        this.props.GA_TRACKING_ID,
-        'Lastet ned csv tabell',
-        'Statistikkside tabeller',
-        'Last ned csv tabell'
-      )
+  function downloadTableAsCSV() {
+    if (props.GA_TRACKING_ID) {
+      addGtagForEvent(props.GA_TRACKING_ID, 'Lastet ned csv tabell', 'Statistikkside tabeller', 'Last ned csv tabell')
     }
 
     if (window && window.downloadTableFile) {
-      window.downloadTableFile(this.tableRef.current, {
+      window.downloadTableFile(tableRef.current, {
         type: 'csv',
         fileName: 'tabell',
         csvSeparator: ';',
@@ -181,10 +162,10 @@ class Table extends Component {
     }
   }
 
-  downloadTableAsExcel() {
-    if (this.props.GA_TRACKING_ID) {
+  function downloadTableAsExcel() {
+    if (props.GA_TRACKING_ID) {
       addGtagForEvent(
-        this.props.GA_TRACKING_ID,
+        props.GA_TRACKING_ID,
         'Lastet ned excell tabell',
         'Statistikkside tabeller',
         'Last ned excell tabell'
@@ -192,7 +173,7 @@ class Table extends Component {
     }
 
     if (window && window.downloadTableFile) {
-      window.downloadTableFile(this.tableRef.current, {
+      window.downloadTableFile(tableRef.current, {
         type: 'xlsx',
         fileName: 'tabell',
         numbers: {
@@ -209,84 +190,84 @@ class Table extends Component {
     }
   }
 
-  createTable() {
-    const { tableClass } = this.props.table
+  function createTable() {
+    const { tableClass } = props.table
 
     return (
-      <table className={tableClass} ref={this.tableRef}>
-        {this.addCaption()}
-        {this.state.table.thead.map((t, index) => {
+      <table className={tableClass} ref={tableRef}>
+        {addCaption()}
+        {table.thead.map((t, index) => {
           return (
-            <Fragment key={index}>
-              {this.addThead(index)}
-              {this.addTbody(index)}
-            </Fragment>
+            <React.Fragment key={index}>
+              {addThead(index)}
+              {addTbody(index)}
+            </React.Fragment>
           )
         })}
-        {this.addTFoot()}
+        {addTFoot()}
       </table>
     )
   }
 
-  addCaption() {
-    const { caption } = this.state.table
+  function addCaption() {
+    const { caption } = table
     if (caption) {
       const hasNoteRefs = typeof caption === 'object'
       return (
-        <caption noterefs={hasNoteRefs ? caption.noterefs : null} ref={this.captionRef}>
+        <caption noterefs={hasNoteRefs ? caption.noterefs : null} ref={captionRef}>
           <div className='caption-text-wrapper'>
             {hasNoteRefs ? caption.content : caption}
-            {hasNoteRefs ? this.addNoteRefs(caption.noterefs) : null}
+            {hasNoteRefs ? addNoteRefs(caption.noterefs) : null}
           </div>
         </caption>
       )
     }
   }
 
-  createScrollControlsMobile() {
+  function createScrollControlsMobile() {
     return (
-      <div className='table-controls-mobile' ref={this.tableControlsMobileRef}>
-        <img src={this.props.iconUrl} />
+      <div className='table-controls-mobile' ref={tableControlsMobileRef}>
+        <img src={props.iconUrl} />
       </div>
     )
   }
 
-  createScrollControlsDesktop() {
+  function createScrollControlsDesktop() {
     return (
-      <div className='table-controls-desktop' ref={this.tableControlsDesktopRef}>
-        <span className='me-2' onClick={() => this.scrollLeft()}>
+      <div className='table-controls-desktop' ref={tableControlsDesktopRef}>
+        <span className='me-2' onClick={() => scrollLeft()}>
           <ChevronLeft />
         </span>
-        <span onClick={() => this.scrollRight()}>
+        <span onClick={() => scrollRight()}>
           <ChevronRight />
         </span>
       </div>
     )
   }
 
-  addThead(index) {
-    return <thead>{this.createRowsHead(this.state.table.thead[index].tr)}</thead>
+  function addThead(index) {
+    return <thead>{createRowsHead(table.thead[index].tr)}</thead>
   }
 
-  addTbody(index) {
-    return <tbody>{this.createRowsBody(this.state.table.tbody[index].tr)}</tbody>
+  function addTbody(index) {
+    return <tbody>{createRowsBody(table.tbody[index].tr)}</tbody>
   }
 
-  renderCorrectionNotice() {
-    if (this.state.table.tfoot.correctionNotice) {
+  function renderCorrectionNotice() {
+    if (table.tfoot.correctionNotice) {
       return (
         <tr className='correction-notice'>
-          <td colSpan='100%'>{this.state.table.tfoot.correctionNotice}</td>
+          <td colSpan='100%'>{table.tfoot.correctionNotice}</td>
         </tr>
       )
     }
     return null
   }
 
-  addTFoot() {
-    const { footnotes, correctionNotice } = this.state.table.tfoot
+  function addTFoot() {
+    const { footnotes, correctionNotice } = table.tfoot
 
-    const noteRefs = this.state.table.noteRefs
+    const noteRefs = table.noteRefs
 
     if ((noteRefs && noteRefs.length > 0) || correctionNotice) {
       return (
@@ -306,46 +287,46 @@ class Table extends Component {
               return null
             }
           })}
-          {this.renderCorrectionNotice()}
+          {renderCorrectionNotice()}
         </tfoot>
       )
     }
     return null
   }
 
-  createRowsHead(rows) {
+  function createRowsHead(rows) {
     if (rows) {
       return rows.map((row, i) => {
-        return <tr key={i}>{this.createHeaderCell(row)}</tr>
+        return <tr key={i}>{createHeaderCell(row)}</tr>
       })
     }
   }
 
-  createRowsBody(rows) {
+  function createRowsBody(rows) {
     if (rows) {
       return rows.map((row, i) => {
         return (
           <tr key={i}>
-            {this.createBodyTh(row)}
-            {this.createBodyTd(row)}
+            {createBodyTh(row)}
+            {createBodyTd(row)}
           </tr>
         )
       })
     }
   }
 
-  createHeaderCell(row) {
+  function createHeaderCell(row) {
     return Object.keys(row).map((keyName) => {
       const value = row[keyName]
       if (keyName === 'th') {
-        return this.createHeadTh(value)
+        return createHeadTh(value)
       } else if (keyName === 'td') {
-        return this.createHeadTd(value)
+        return createHeadTd(value)
       }
     })
   }
 
-  createHeadTh(value) {
+  function createHeadTh(value) {
     return value.map((cellValue, i) => {
       if (typeof cellValue === 'object') {
         if (Array.isArray(cellValue)) {
@@ -360,37 +341,37 @@ class Table extends Component {
               colSpan={cellValue.colspan}
               scope={cellValue.rowspan || cellValue.colspan ? 'colgroup' : 'col'}
             >
-              {this.trimValue(cellValue.content)}
-              {this.addNoteRefs(cellValue.noterefs)}
+              {trimValue(cellValue.content)}
+              {addNoteRefs(cellValue.noterefs)}
             </th>
           )
         }
       } else {
         return (
           <th key={i} scope='col'>
-            {this.trimValue(cellValue)}
+            {trimValue(cellValue)}
           </th>
         )
       }
     })
   }
 
-  createHeadTd(value) {
+  function createHeadTd(value) {
     return value.map((cellValue, i) => {
       if (typeof cellValue === 'object') {
         return (
           <td key={i} className={cellValue.class} rowSpan={cellValue.rowspan} colSpan={cellValue.colspan}>
-            {this.trimValue(cellValue.content)}
-            {this.addNoteRefs(cellValue.noterefs)}
+            {trimValue(cellValue.content)}
+            {addNoteRefs(cellValue.noterefs)}
           </td>
         )
       } else {
-        return <td key={i}>{this.trimValue(cellValue)}</td>
+        return <td key={i}>{trimValue(cellValue)}</td>
       }
     })
   }
 
-  createBodyTh(row) {
+  function createBodyTh(row) {
     return Object.keys(row).map((key) => {
       const value = row[key]
       if (key === 'th') {
@@ -404,14 +385,14 @@ class Table extends Component {
                 colSpan={cellValue.colspan}
                 scope={cellValue.rowspan || cellValue.colspan ? 'rowgroup' : 'row'}
               >
-                {this.trimValue(cellValue.content)}
-                {this.addNoteRefs(cellValue.noterefs)}
+                {trimValue(cellValue.content)}
+                {addNoteRefs(cellValue.noterefs)}
               </th>
             )
           } else {
             return (
               <th key={i} scope='row'>
-                {this.trimValue(cellValue)}
+                {trimValue(cellValue)}
               </th>
             )
           }
@@ -420,7 +401,7 @@ class Table extends Component {
     })
   }
 
-  createBodyTd(row) {
+  function createBodyTd(row) {
     return Object.keys(row).map((keyName) => {
       const value = row[keyName]
       if (keyName === 'td') {
@@ -428,20 +409,20 @@ class Table extends Component {
           if (typeof cellValue === 'object') {
             return (
               <td key={i} className={cellValue.class} rowSpan={cellValue.rowspan} colSpan={cellValue.colspan}>
-                {this.formatNumber(cellValue.content)}
+                {formatNumber(cellValue.content)}
               </td>
             )
           } else {
-            return <td key={i}>{this.formatNumber(cellValue)}</td>
+            return <td key={i}>{formatNumber(cellValue)}</td>
           }
         })
       }
     })
   }
 
-  addNoteRefs(noteRefId) {
+  function addNoteRefs(noteRefId) {
     if (noteRefId) {
-      const noteRefs = this.state.table.noteRefs
+      const noteRefs = table.noteRefs
       const noteIDs = noteRefId.split(' ')
       const notesToReturn = noteRefs.reduce((acc, current, index) => {
         // Lag et array av indeksen til alle id-enene i footer
@@ -454,8 +435,8 @@ class Table extends Component {
     } else return ''
   }
 
-  addStandardSymbols() {
-    const { standardSymbol } = this.props
+  function addStandardSymbols() {
+    const { standardSymbol } = props
 
     if (standardSymbol && standardSymbol.href && standardSymbol.text) {
       return (
@@ -466,37 +447,35 @@ class Table extends Component {
     }
   }
 
-  addPreviewButton() {
-    if (this.state.showPreviewToggle && !this.props.pageTypeStatistic) {
+  function addPreviewButton() {
+    if (showPreviewToggle && !props.pageTypeStatistic) {
       return (
-        <Button variant='primary' onClick={this.toggleDraft}>
-          {!this.state.fetchUnPublished ? 'Vis upubliserte tall' : 'Vis publiserte tall'}
+        <Button variant='primary' onClick={toggleDraft}>
+          {!fetchUnPublished ? 'Vis upubliserte tall' : 'Vis publiserte tall'}
         </Button>
       )
     }
     return
   }
 
-  toggleDraft() {
-    this.setState({
-      fetchUnPublished: !this.state.fetchUnPublished,
-      table: !this.state.fetchUnPublished && this.props.draftExist ? this.props.tableDraft : this.props.table,
-    })
+  function toggleDraft() {
+    setFetchUnPublished(!fetchUnPublished)
+    setTable(!fetchUnPublished && props.draftExist ? props.tableDraft : props.table)
   }
 
-  addPreviewInfo() {
-    if (this.props.showPreviewDraft) {
-      if (this.state.fetchUnPublished && this.props.draftExist) {
+  function addPreviewInfo() {
+    if (props.showPreviewDraft) {
+      if (fetchUnPublished && props.draftExist) {
         return <Alert variant='info'>Tallene i tabellen nedenfor er upublisert</Alert>
-      } else if (this.state.fetchUnPublished && !this.props.draftExist) {
+      } else if (fetchUnPublished && !props.draftExist) {
         return <Alert variant='warning'>Finnes ikke upubliserte tall for denne tabellen</Alert>
       }
     }
     return
   }
 
-  renderSources() {
-    const { sources, sourceLabel, sourceListTables, sourceTableLabel, statBankWebUrl } = this.props
+  function renderSources() {
+    const { sources, sourceLabel, sourceListTables, sourceTableLabel, statBankWebUrl } = props
 
     if ((sourceListTables && sourceListTables.length > 0) || (sources && sources.length > 0)) {
       return (
@@ -532,42 +511,107 @@ class Table extends Component {
     return null
   }
 
-  render() {
-    if (!isEmpty(this.state.table)) {
-      const { hiddenTitle } = this.props
-      return (
-        <section className='xp-part table'>
+  const { hiddenTitle } = props
+  return (
+    <section className='xp-part table'>
+      {!isEmpty(table) ? (
+        <React.Fragment>
           <div className='d-none searchabletext'>
             <span>{hiddenTitle}</span>
           </div>
           <div className='container border-0'>
-            {this.addPreviewButton()}
-            {this.addDownloadTableDropdown(false)}
-            {this.addPreviewInfo()}
-            {this.createScrollControlsDesktop()}
-            {this.createScrollControlsMobile()}
+            {addPreviewButton()}
+            {addDownloadTableDropdown(false)}
+            {addPreviewInfo()}
+            {createScrollControlsDesktop()}
+            {createScrollControlsMobile()}
             <div
               className='table-wrapper searchabletext'
-              onScroll={() => this.updateTableControlsDesktop()}
-              ref={this.tableWrapperRef}
+              onScroll={() => updateTableControlsDesktop()}
+              ref={tableWrapperRef}
             >
-              {this.createTable()}
+              {createTable()}
             </div>
-            {this.addDownloadTableDropdown(true)}
-            {this.addStandardSymbols()}
-            {this.renderSources()}
+            {addDownloadTableDropdown(true)}
+            {addStandardSymbols()}
+            {renderSources()}
           </div>
-        </section>
-      )
-    } else {
-      return (
+        </React.Fragment>
+      ) : (
         <div>
           <p>Ingen tilknyttet Tabell</p>
         </div>
-      )
-    }
-  }
+      )}
+    </section>
+  )
 }
+
+const tableDataShape = PropTypes.shape({
+  caption:
+    PropTypes.string |
+    PropTypes.shape({
+      content: PropTypes.string,
+      noterefs: PropTypes.string,
+    }),
+  tableClass: PropTypes.string,
+  thead: PropTypes.arrayOf(
+    PropTypes.shape({
+      td:
+        PropTypes.array |
+        PropTypes.number |
+        PropTypes.string |
+        PropTypes.shape({
+          rowspan: PropTypes.number,
+          colspan: PropTypes.number,
+          content: PropTypes.string,
+          class: PropTypes.string,
+        }),
+      th:
+        PropTypes.array |
+        PropTypes.number |
+        PropTypes.string |
+        PropTypes.shape({
+          rowspan: PropTypes.number,
+          colspan: PropTypes.number,
+          content: PropTypes.string,
+          class: PropTypes.string,
+          noterefs: PropTypes.string,
+        }),
+    })
+  ),
+  tbody: PropTypes.arrayOf(
+    PropTypes.shape({
+      th:
+        PropTypes.array |
+        PropTypes.number |
+        PropTypes.string |
+        PropTypes.shape({
+          content: PropTypes.string,
+          class: PropTypes.string,
+          noterefs: PropTypes.string,
+        }),
+      td:
+        PropTypes.array |
+        PropTypes.number |
+        PropTypes.string |
+        PropTypes.shape({
+          content: PropTypes.string,
+          class: PropTypes.string,
+        }),
+    })
+  ),
+  tfoot: PropTypes.shape({
+    footnotes: PropTypes.arrayOf(
+      PropTypes.shape({
+        noteid: PropTypes.string,
+        content: PropTypes.string,
+      })
+    ),
+    correctionNotice: PropTypes.string,
+  }),
+  language: PropTypes.string,
+  noteRefs: PropTypes.arrayOf(PropTypes.string),
+})
 
 Table.propTypes = {
   downloadTableLabel: PropTypes.string,
@@ -590,136 +634,8 @@ Table.propTypes = {
     })
   ),
   iconUrl: PropTypes.string,
-  table: PropTypes.shape({
-    caption:
-      PropTypes.string |
-      PropTypes.shape({
-        content: PropTypes.string,
-        noterefs: PropTypes.string,
-      }),
-    tableClass: PropTypes.string,
-    thead: PropTypes.arrayOf(
-      PropTypes.shape({
-        td:
-          PropTypes.array |
-          PropTypes.number |
-          PropTypes.string |
-          PropTypes.shape({
-            rowspan: PropTypes.number,
-            colspan: PropTypes.number,
-            content: PropTypes.string,
-            class: PropTypes.string,
-          }),
-        th:
-          PropTypes.array |
-          PropTypes.number |
-          PropTypes.string |
-          PropTypes.shape({
-            rowspan: PropTypes.number,
-            colspan: PropTypes.number,
-            content: PropTypes.string,
-            class: PropTypes.string,
-            noterefs: PropTypes.string,
-          }),
-      })
-    ),
-    tbody: PropTypes.arrayOf(
-      PropTypes.shape({
-        th:
-          PropTypes.array |
-          PropTypes.number |
-          PropTypes.string |
-          PropTypes.shape({
-            content: PropTypes.string,
-            class: PropTypes.string,
-            noterefs: PropTypes.string,
-          }),
-        td:
-          PropTypes.array |
-          PropTypes.number |
-          PropTypes.string |
-          PropTypes.shape({
-            content: PropTypes.string,
-            class: PropTypes.string,
-          }),
-      })
-    ),
-    tfoot: PropTypes.shape({
-      footnotes: PropTypes.arrayOf(
-        PropTypes.shape({
-          noteid: PropTypes.string,
-          content: PropTypes.string,
-        })
-      ),
-      correctionNotice: PropTypes.string,
-    }),
-    language: PropTypes.string,
-    noteRefs: PropTypes.arrayOf(PropTypes.string),
-  }),
-  tableDraft: PropTypes.shape({
-    caption:
-      PropTypes.string |
-      PropTypes.shape({
-        content: PropTypes.string,
-        noterefs: PropTypes.string,
-      }),
-    thead: PropTypes.arrayOf(
-      PropTypes.shape({
-        td:
-          PropTypes.array |
-          PropTypes.number |
-          PropTypes.string |
-          PropTypes.shape({
-            rowspan: PropTypes.number,
-            colspan: PropTypes.number,
-            content: PropTypes.string,
-            class: PropTypes.string,
-          }),
-        th:
-          PropTypes.array |
-          PropTypes.number |
-          PropTypes.string |
-          PropTypes.shape({
-            rowspan: PropTypes.number,
-            colspan: PropTypes.number,
-            content: PropTypes.string,
-            class: PropTypes.string,
-            noterefs: PropTypes.string,
-          }),
-      })
-    ),
-    tbody: PropTypes.arrayOf(
-      PropTypes.shape({
-        th:
-          PropTypes.array |
-          PropTypes.number |
-          PropTypes.string |
-          PropTypes.shape({
-            content: PropTypes.string,
-            class: PropTypes.string,
-            noterefs: PropTypes.string,
-          }),
-        td:
-          PropTypes.array |
-          PropTypes.number |
-          PropTypes.string |
-          PropTypes.shape({
-            content: PropTypes.string,
-            class: PropTypes.string,
-          }),
-      })
-    ),
-    tfoot: PropTypes.shape({
-      footnotes: PropTypes.arrayOf(
-        PropTypes.shape({
-          noteid: PropTypes.string,
-          content: PropTypes.string,
-        })
-      ),
-      correctionNotice: PropTypes.string,
-    }),
-    noteRefs: PropTypes.arrayOf(PropTypes.string),
-  }),
+  table: tableDataShape,
+  tableDraft: tableDataShape,
   showPreviewDraft: PropTypes.bool,
   paramShowDraft: PropTypes.bool,
   draftExist: PropTypes.bool,

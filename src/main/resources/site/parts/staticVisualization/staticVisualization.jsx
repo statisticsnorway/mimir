@@ -132,14 +132,12 @@ function StaticVisualization(props) {
             <figcaption className='mt-0'>{props.title}</figcaption>
             {renderTabs()}
             {activeTab === 'figure' && (
-              <div className='static-visualization-chart d-flex justify-content-center'>
+              <div className='static-visualization-chart'>
                 <img alt={props.altText} src={props.imageSrc} />
               </div>
             )}
 
-            {activeTab === 'table' && (
-              <div className='static-visualization-data d-flex justify-content-center'>{createTable()}</div>
-            )}
+            {activeTab === 'table' && <div className='static-visualization-data'>{createTable()}</div>}
 
             <FactBox header={props.descriptionStaticVisualization} text={renderLongDescriptionAndSources()} />
           </figure>
