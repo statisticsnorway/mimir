@@ -25,12 +25,16 @@ function renderPart(req: XP.Request, config: DividerPartConfig): XP.Response {
   const dividerColor: string = config.dividerColor || 'light'
 
   return fromPartCache(req, `divider${dividerColor}`, () => {
-    return render('Divider', setColor(dividerColor), req, {
+    const result = render('Divider', setColor(dividerColor), req, {
       body: '<section class="xp-part part-divider"></section>',
+      hydrate: false,
       pageContributions: {
         bodyEnd: [scriptAsset('js/divider.js')],
       },
     })
+
+    result.body = result.body.replace(/ id=".*?"/i, '')
+    return result
   })
 }
 
