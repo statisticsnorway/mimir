@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Form, Container, Row, Col } from 'react-bootstrap'
 import {
@@ -74,15 +74,15 @@ function BkibolCalculator(props) {
   const yearRegexp = /^[1-9]{1}[0-9]{3}$/g
 
   const scrollAnchor = useRef(null)
-  function scrollToResult() {
-    if (scrollAnchor.current === null) return
-
-    scrollAnchor.current.scrollIntoView({
-      behavior: 'smooth',
-      block: 'end',
-      inline: 'nearest',
-    })
-  }
+  useEffect(() => {
+    if (!loading && scrollAnchor.current !== null) {
+      scrollAnchor.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'end',
+        inline: 'nearest',
+      })
+    }
+  }, [loading])
 
   function serieItemsDomene(domene) {
     return [
@@ -180,10 +180,7 @@ function BkibolCalculator(props) {
         }
       })
       .finally(() => {
-        window.requestAnimationFrame(() => {
-          setLoading(false)
-          scrollToResult()
-        })
+        setLoading(false)
       })
   }
 
