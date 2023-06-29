@@ -65,7 +65,7 @@ function StaticVisualization(props) {
     const tableData = props.tableData
     if (tableData) {
       return (
-        <table className='statistics'>
+        <table className='statistics' aria-labelledby={`figure-caption-${props.id}`}>
           <thead>
             <tr>{createHeaderCell(tableData.table.thead.tr)}</tr>
           </thead>
@@ -81,7 +81,11 @@ function StaticVisualization(props) {
 
   function createHeaderCell(row) {
     return row.th.map((cellValue, i) => {
-      return <th key={i}>{trimValue(cellValue)}</th>
+      return (
+        <th key={i} scope='col'>
+          {trimValue(cellValue)}
+        </th>
+      )
     })
   }
 
@@ -90,7 +94,11 @@ function StaticVisualization(props) {
       if (i > 0) {
         return <td key={i}>{formatNumber(cellValue)}</td>
       } else {
-        return <th key={i}>{trimValue(cellValue)}</th>
+        return (
+          <th key={i} scope='row'>
+            {trimValue(cellValue)}
+          </th>
+        )
       }
     })
   }
@@ -129,7 +137,9 @@ function StaticVisualization(props) {
       <Row className='xp-part'>
         <Col className='xp-region col-12'>
           <figure>
-            <figcaption className='mt-0'>{props.title}</figcaption>
+            <figcaption className='mt-0' id={`figure-caption-${props.id}`}>
+              {props.title}
+            </figcaption>
             {renderTabs()}
             {activeTab === 'figure' && (
               <div className='static-visualization-chart'>
@@ -184,6 +194,7 @@ StaticVisualization.propTypes = {
       ),
     },
   }),
+  id: PropTypes.string,
 }
 
 export default (props) => <StaticVisualization {...props} />

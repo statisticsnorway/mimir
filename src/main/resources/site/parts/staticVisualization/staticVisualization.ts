@@ -9,6 +9,7 @@ import type { HtmlTable } from '/lib/ssb/parts/table'
 import { getContent, getComponent } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 import { imageUrl } from '/lib/ssb/utils/imageUtils'
+import { randomUnsafeString } from '/lib/ssb/utils/utils'
 
 const {
   data: { forceArray },
@@ -101,6 +102,7 @@ function renderPart(req: XP.Request, contentId: string | undefined): XP.Response
       inFactPage: page.page.config && page.page.config.pageType === 'factPage',
       language: language,
       tableData: htmlTable,
+      id: randomUnsafeString(),
     }
 
     return render('site/parts/staticVisualization/staticVisualization', props, req)
@@ -117,6 +119,7 @@ interface DefaultPage {
 }
 
 interface StaticVisualizationProps {
+  id: string
   title: string
   altText: string
   imageSrc: string
