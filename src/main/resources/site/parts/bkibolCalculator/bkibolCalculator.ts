@@ -5,9 +5,9 @@ import type { Dataset, Dimension } from '/lib/types/jsonstat-toolkit'
 import type { Content } from '/lib/xp/content'
 import type { CalculatorConfig } from '/site/content-types'
 import type { Language, Phrases } from '/lib/types/language'
-import { allMonths, nextPeriod } from '/lib/ssb/utils/calculatorUtils'
+import { allMonths, monthLabel, nextPeriod } from '/lib/ssb/utils/calculatorUtils'
 import type { CalculatorPeriod } from '/lib/types/calculator'
-import type { DropdownItem, DropdownItems } from '/lib/types/components'
+import type { DropdownItems } from '/lib/types/components'
 import { localize } from '/lib/xp/i18n'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
@@ -49,9 +49,10 @@ function getBkibolCalculatorComponent(req: XP.Request, page: Content<BkibolCalcu
   if (!part) throw Error('No part found')
 
   const language: Language = getLanguage(page) as Language
+  // Todo - Never pass this to props, this is HUUGE and gets put in html, use localize
   const phrases: Phrases = language.phrases as Phrases
   const code: string = language.code ? language.code : 'nb'
-  const months: DropdownItems = allMonths(phrases)
+  const months: DropdownItems = allMonths(phrases, false, 'bkibol')
   const config: Content<CalculatorConfig> | undefined = getCalculatorConfig()
   const bkibolDataEnebolig: Dataset | null = config ? getBkibolDatasetEnebolig(config) : null
   const lastUpdated: CalculatorPeriod = lastPeriod(bkibolDataEnebolig)
@@ -113,12 +114,4 @@ function lastPeriod(bkibolData: Dataset | null): CalculatorPeriod {
     month: lastMonth,
     year: lastYear,
   }
-}
-
-function monthLabel(months: DropdownItems, language: string, month: number): string {
-  const monthLabel: DropdownItem | undefined = months.find((m) => parseInt(m.id) === month)
-  if (monthLabel) {
-    return language === 'en' ? monthLabel.title : monthLabel.title.toLowerCase()
-  }
-  return ''
 }
