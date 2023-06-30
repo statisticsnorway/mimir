@@ -38,6 +38,7 @@ function NameSearch(props) {
   const [loadingGraph, setLoadingGraph] = useState(false)
   const currentElement = useRef(null)
   const [focusElement, setFocusElement] = useState(false)
+  const [nameGraphOpen, setNameGraphOpen] = React.useState(false)
 
   function keyDownToggleBox(e) {
     if (e.keyCode === 13 || e.key == 'Enter' || e.keyCode === 32 || e.key == 'Space') {
@@ -216,6 +217,7 @@ function NameSearch(props) {
     form.preventDefault()
     setResult(null) // Clear result box
     setNameGraphData(null) // Clear name graph data
+    setNameGraphOpen(false)
 
     if (!name.value) {
       return // Do nothing further if no name is submitted (prevents fun errors)
@@ -312,8 +314,13 @@ function NameSearch(props) {
 
   function renderGraphLink(desktop) {
     return (
-      <Accordion className='name-search-link' header={props.phrases.historicalTrend} subHeader={props.phrases.chart}>
-        {renderGraphs(desktop, searchedTerm)}
+      <Accordion
+        className='name-search-link'
+        header={props.phrases.historicalTrend}
+        subHeader={props.phrases.chart}
+        onToggle={(isOpen) => setNameGraphOpen(isOpen)}
+      >
+        {nameGraphOpen && renderGraphs(desktop, searchedTerm)}
       </Accordion>
     )
   }
