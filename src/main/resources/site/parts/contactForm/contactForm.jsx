@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { Form, Container, Row, Col } from 'react-bootstrap'
 import { Input, Button, Dropdown, TextArea, Divider, Title, FormError } from '@statisticsnorway/ssb-component-library'
@@ -29,6 +29,16 @@ function ContactForm(props) {
   const [loading, setLoading] = useState(false)
   const [emailSent, setEmailSent] = useState(false)
   const [emailSentFailed, setEmailSentFailed] = useState(false)
+
+  useEffect(() => {
+    // Remove false positive from Wave
+    const captcha = document.querySelector("[name='g-recaptcha-response']")
+    if (captcha) {
+      captcha.setAttribute('aria-hidden', 'true')
+      captcha.setAttribute('aria-readonly', 'true')
+      captcha.setAttribute('aria-label', 'recaptcha')
+    }
+  }, [])
 
   function onSubmit(e) {
     e.preventDefault()
