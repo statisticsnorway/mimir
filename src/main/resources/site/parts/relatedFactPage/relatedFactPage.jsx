@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { PictureCard, Button } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
 import { get } from 'axios'
@@ -11,6 +11,14 @@ function RelatedBoxes(props) {
   )
   const [total, setTotal] = useState(firstRelatedContents ? firstRelatedContents.total : 0)
   const [loading, setLoading] = useState(false)
+  const [focusElement, setFocusElement] = useState(false)
+  const currentElement = useRef(null)
+
+  useEffect(() => {
+    if (focusElement) {
+      currentElement.current && currentElement.current.firstChild.focus()
+    }
+  }, [relatedFactPages])
 
   function fetchAllRelatedFactPages() {
     setLoading(true)
@@ -64,22 +72,36 @@ function RelatedBoxes(props) {
     if (relatedFactPages.length) {
       return (
         <>
-          <div className='row image-box-wrapper'>
-            {relatedFactPages.map((relatedFactPageContent, index) => (
-              <PictureCard
-                className='mb-3'
-                imageSrc={relatedFactPageContent.image}
-                altText={relatedFactPageContent.imageAlt ? relatedFactPageContent.imageAlt : ''}
-                link={relatedFactPageContent.link}
-                title={relatedFactPageContent.title}
-                key={index}
-              />
-            ))}
+          <div className='row'>
+            <ul className='image-box-wrapper'>
+              {relatedFactPages.map((relatedFactPageContent, index) => (
+                <li key={`related-factpage-${index}`} ref={index === 4 ? currentElement : null}>
+                  <PictureCard
+                    className='mb-3'
+                    imageSrc={relatedFactPageContent.image}
+                    altText={relatedFactPageContent.imageAlt ? relatedFactPageContent.imageAlt : ''}
+                    link={relatedFactPageContent.link}
+                    title={relatedFactPageContent.title}
+                  />
+                </li>
+              ))}
+            </ul>
           </div>
           {total > 4 && (
             <div className='row'>
               <div className='col-auto'>
-                <Button onClick={handleButtonOnClick}>
+                <Button
+                  onClick={() => {
+                    handleButtonOnClick()
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault()
+                      handleButtonOnClick()
+                      setFocusElement((prev) => !prev)
+                    }
+                  }}
+                >
                   {!loading ? (
                     total > relatedFactPages.length ? (
                       showAll

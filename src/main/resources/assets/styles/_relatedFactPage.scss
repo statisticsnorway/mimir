@@ -10,6 +10,10 @@
     }
   }
 
+  ul {
+    list-style: none;
+  }
+
   // TODO: Remember to fix in ssb component library after bootstrap 5 update
   .ssb-picture-card {
     padding: 0;
