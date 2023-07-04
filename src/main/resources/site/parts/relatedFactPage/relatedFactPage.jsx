@@ -15,8 +15,8 @@ function RelatedBoxes(props) {
   const currentElement = useRef(null)
 
   useEffect(() => {
-    if (focusElement) {
-      currentElement.current && currentElement.current.firstChild.focus()
+    if (focusElement && currentElement.current) {
+      currentElement.current.firstChild.focus()
     }
   }, [relatedFactPages])
 
@@ -68,6 +68,18 @@ function RelatedBoxes(props) {
     }
   }
 
+  function renderButtonText() {
+    if (!loading) {
+      if (total > relatedFactPages.length) {
+        return showAll
+      } else {
+        return showLess
+      }
+    } else {
+      return <span className='spinner-border spinner-border-sm' />
+    }
+  }
+
   function renderRelatedFactPages() {
     if (relatedFactPages.length) {
       return (
@@ -75,11 +87,11 @@ function RelatedBoxes(props) {
           <div className='row'>
             <ul className='image-box-wrapper'>
               {relatedFactPages.map((relatedFactPageContent, index) => (
-                <li key={`related-factpage-${index}`} ref={index === 4 ? currentElement : null}>
+                <li key={index} ref={index === 4 ? currentElement : null}>
                   <PictureCard
                     className='mb-3'
                     imageSrc={relatedFactPageContent.image}
-                    altText={relatedFactPageContent.imageAlt ? relatedFactPageContent.imageAlt : ''}
+                    altText={relatedFactPageContent.imageAlt ?? ''}
                     link={relatedFactPageContent.link}
                     title={relatedFactPageContent.title}
                   />
@@ -91,26 +103,16 @@ function RelatedBoxes(props) {
             <div className='row'>
               <div className='col-auto'>
                 <Button
-                  onClick={() => {
-                    handleButtonOnClick()
-                  }}
+                  onClick={handleButtonOnClick}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' || e.key === ' ') {
                       e.preventDefault()
-                      handleButtonOnClick()
                       setFocusElement((prev) => !prev)
+                      handleButtonOnClick()
                     }
                   }}
                 >
-                  {!loading ? (
-                    total > relatedFactPages.length ? (
-                      showAll
-                    ) : (
-                      showLess
-                    )
-                  ) : (
-                    <span className='spinner-border spinner-border-sm' />
-                  )}
+                  {renderButtonText()}
                 </Button>
               </div>
             </div>
