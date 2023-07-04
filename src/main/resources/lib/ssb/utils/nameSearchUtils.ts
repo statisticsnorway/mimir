@@ -34,7 +34,7 @@ function prepareGraphDataset(name: string): Array<NameGraph> {
   try {
     const labels: Keyable = bankSaved?.data.dimension.Fornavn.category.label
     const names: string[] = name.split(' ')
-    //TODO: Add maximum number of names?
+    //TODO: Add limitation on max number of names?
 
     names.forEach((n) => {
       const preparedName: string = n.charAt(0) + n.slice(1).toLowerCase()
@@ -64,7 +64,7 @@ function prepareGraphDataset(name: string): Array<NameGraph> {
 
 function prepareGraphRepo(name: string): Array<NameGraph> {
   const names: string[] = name.split(' ')
-  //TODO: Add maximum number of names?
+  //TODO: Add limitation on max number of names?
   const result: Array<NameGraph> = []
 
   try {
