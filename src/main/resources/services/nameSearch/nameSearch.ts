@@ -1,13 +1,7 @@
 import { request, HttpRequestParams, HttpResponse } from '/lib/http-client'
-import { Content } from '/lib/xp/content'
-import type { CalculatorConfig } from '/site/content-types'
-import { DatasetRepoNode } from '/lib/ssb/repo/dataset'
-
-// @ts-ignore
-import JSONstat from 'jsonstat-toolkit/import.mjs'
+import { prepareGraph, type NameGraph } from '/lib/ssb/utils/nameSearchUtils'
 import whitelist from 'validator/es/lib/whitelist'
 
-const { getCalculatorConfig, getNameSearchGraphData } = __non_webpack_require__('/lib/ssb/dataset/calculator')
 const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
 
 export function get(req: XP.Request): XP.Response {
@@ -26,6 +20,7 @@ export function get(req: XP.Request): XP.Response {
       : 'https://www.ssb.no/solr/navnesok/select'
 
   const name: string = req.params.name.trim()
+  const includeGraphData: boolean = req.params.includeGraphData === 'true'
 
   const requestParams: HttpRequestParams = {
     url: solrBaseUrl,
@@ -45,7 +40,7 @@ export function get(req: XP.Request): XP.Response {
 
   try {
     const result: HttpResponse = request(requestParams)
-    const preparedBody: string = result.body ? prepareResult(result.body, sanitizeQuery(name)) : ''
+    const preparedBody: string = result.body ? prepareResult(result.body, sanitizeQuery(name), includeGraphData) : ''
 
     return {
       body: preparedBody,
@@ -63,31 +58,13 @@ export function get(req: XP.Request): XP.Response {
   }
 }
 
-function prepareResult(result: string, name: string): string {
+function prepareResult(result: string, name: string, includeGraphData: boolean): string {
   const nameSearchGraphEnabled: boolean = isEnabled('name-graph', true, 'ssb')
   const obj: ResultType = JSON.parse(result)
   obj.originalName = name
-  obj.nameGraph = nameSearchGraphEnabled ? graphAvailable(name) : false
+  log.info('Navn: ' + JSON.stringify(name, null, 4))
+  obj.nameGraphData = nameSearchGraphEnabled && includeGraphData ? prepareGraph(name) : []
   return JSON.stringify(obj)
-}
-
-// Checks if any of the searched for names have graph data available.
-// Uses cached graphData, and returns true for first possible hit.
-// 250ms on first run, 5-10 on subsequent runs.
-function graphAvailable(name: string): boolean {
-  const config: Content<CalculatorConfig> | undefined = getCalculatorConfig()
-
-  const bankSaved: DatasetRepoNode<object | JSONstat> | null = config ? getNameSearchGraphData(config) : null
-
-  const labels: Keyable = bankSaved?.data.dimension.Fornavn.category.label
-
-  const exists: boolean = name.split(' ').some((name) => checkKeysForValue(labels, name))
-  return exists
-}
-
-function checkKeysForValue(object: Keyable, value: string): boolean {
-  const preparedName: string = value.charAt(0) + value.slice(1).toLowerCase()
-  return !!Object.keys(object).find((key) => object[key] === preparedName)
 }
 
 function prepareQuery(input: string): string {
@@ -128,9 +105,5 @@ function replaceCharacters(name: string): string {
 
 interface ResultType {
   originalName: string
-  nameGraph?: boolean
-}
-
-interface Keyable {
-  [key: string]: string
+  nameGraphData: Array<NameGraph>
 }

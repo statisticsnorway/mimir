@@ -25,19 +25,13 @@ function renderPart(req: XP.Request) {
   if (!component) throw Error('No part found')
 
   const locale: string = getLanguageShortName(getContent())
-  // const isNotInEditMode: boolean = req.mode !== 'edit'
 
   const urlToService: string = serviceUrl({
     service: 'nameSearch',
   })
 
-  const urlToGraphService: string = serviceUrl({
-    service: 'nameGraph',
-  })
-
   const props: PartProperties = {
     urlToService: urlToService,
-    urlToGraphService: urlToGraphService,
     aboutLink: aboutLinkResources(component.config),
     nameSearchDescription: component.config.nameSearchDescription,
     frontPage: component.config.frontPage,
@@ -232,7 +226,6 @@ function partsPhrases(locale: string): PartProperties['phrases'] {
 
 interface PartProperties {
   urlToService: string
-  urlToGraphService: string
   aboutLink?: {
     title: string
     url: string

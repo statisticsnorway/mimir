@@ -34,11 +34,9 @@ function NameSearch(props) {
   const [searchedTerm, setSearchedTerm] = useState('')
   const [loading, setLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState(undefined)
-  const [nameGraphData, setNameGraphData] = useState(undefined)
-  const [loadingGraph, setLoadingGraph] = useState(false)
+  const [nameGraphData, setNameGraphData] = useState([])
   const currentElement = useRef(null)
   const [focusElement, setFocusElement] = useState(false)
-  const [nameGraphOpen, setNameGraphOpen] = useState(false)
 
   function keyDownToggleBox(e) {
     if (e.keyCode === 13 || e.key == 'Enter' || e.keyCode === 32 || e.key == 'Space') {
@@ -156,7 +154,7 @@ function NameSearch(props) {
               </Row>
               {result.response && renderMainResult(result.response.docs)}
               {result.response && renderSubResult(result.response.docs)}
-              {!!result.nameGraph && renderGraphLink(desktop)}
+              {result.nameGraphData.length > 0 && renderGraphLink(desktop)}
               <Row>
                 <Col className='md-6'>
                   <Button
@@ -216,7 +214,6 @@ function NameSearch(props) {
     form.preventDefault()
     setResult(null) // Clear result box
     setNameGraphData(null) // Clear name graph data
-    setNameGraphOpen(false)
 
     if (!name.value) {
       return // Do nothing further if no name is submitted (prevents fun errors)
@@ -233,12 +230,14 @@ function NameSearch(props) {
       .get(props.urlToService, {
         params: {
           name: name.value,
+          includeGraphData: true,
         },
         timeout: 20000,
       })
       .then((res) => {
         findMainResult(res.data.response.docs, res.data.originalName)
         setResult(res.data)
+        setNameGraphData(res.data.nameGraphData)
       })
       .catch((error) => {
         if (error.response) {
@@ -275,69 +274,18 @@ function NameSearch(props) {
     return !invalidCharacters
   }
 
-  function fetchGraph(name) {
-    setLoadingGraph(true)
-
-    axios
-      .get(props.urlToGraphService, {
-        params: {
-          name: name,
-        },
-        timeout: 20000,
-      })
-      .then((res) => {
-        setNameGraphData(res.data)
-      })
-      .catch((error) => {
-        if (error.response) {
-          // The request was made and the server responded with a status code
-          // that falls out of the range of 2xx
-          setErrorMessage(error.message)
-        } else if (error.request) {
-          // The request was made but no response was received
-          // Likely to be a network error or disconnect
-          console.log('Error in REQUEST')
-          console.log(error.request)
-          setErrorMessage(error.message)
-        } else {
-          // Something happened in setting up the request that triggered an Error
-          console.log(error)
-        }
-      })
-      .finally(() => {
-        setLoadingGraph(false)
-        scrollToResult()
-      })
-  }
-
   function renderGraphLink(desktop) {
     return (
-      <Accordion
-        className='name-search-link'
-        header={props.phrases.historicalTrend}
-        subHeader={props.phrases.chart}
-        onToggle={(isOpen) => setNameGraphOpen(isOpen)}
-      >
-        {nameGraphOpen && renderGraphs(desktop, searchedTerm)}
+      <Accordion className='name-search-link' header={props.phrases.historicalTrend} subHeader={props.phrases.chart}>
+        {renderGraphs(desktop, searchedTerm)}
       </Accordion>
     )
   }
 
   function renderGraphs(desktop, nameForRender) {
-    !nameGraphData && !loadingGraph && fetchGraph(nameForRender)
-
     const { frontPage, phrases, language } = props
     const lineColor = '#21383a'
-
-    if (loadingGraph) {
-      return (
-        <Container className='name-search-graph text-center'>
-          <span className='spinner-border spinner-border' />
-          <p>{props.phrases.loadingGraph}</p>
-        </Container>
-      )
-    }
-    if (nameGraphData && !loadingGraph) {
+    if (nameGraphData) {
       const options = {
         lang: {
           contextButtonTitle: 'Last ned/skriv ut',
@@ -417,7 +365,7 @@ function NameSearch(props) {
             pointStart: 1880, // Magic number: Name data starts in the year 1880 and we try to get all the years since.
           },
         },
-        series: nameGraphData.nameGraph,
+        series: nameGraphData,
         credits: {
           enabled: false,
         },
@@ -558,7 +506,6 @@ NameSearch.propTypes = {
     threeOrLessText: PropTypes.string,
     yAxis: PropTypes.string,
     graphHeader: PropTypes.string,
-    loadingGraph: PropTypes.string,
     historicalTrend: PropTypes.string,
     chart: PropTypes.string,
     women: PropTypes.string,
