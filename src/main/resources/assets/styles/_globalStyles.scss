@@ -254,10 +254,19 @@ table {
   }
 
 }
+/* -- End Table -- */
+
+/* -- Placeholder -- */
+.edit-placeholder {
+  border: 3px solid $ssb-dark-4;
+  padding: 16px;
+  margin: 16px 0
+}
+
+/* -- End Placeholder -- */
 
 /* -- Opacity Divider,Fix in komponent library later -- */
 .ssb-divider {
   opacity: 1;
 }
 
-/* -- End Table -- */

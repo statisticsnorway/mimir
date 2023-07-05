@@ -67,6 +67,10 @@ export function get(req: XP.Request): XP.Response {
   try {
     const config = getComponent()?.config as HighmapPartConfig
     const highmapId: string | undefined = config.highmapId
+
+    if (req.mode === 'edit') {
+      return renderEditPlaceholder()
+    }
     return renderPart(req, highmapId)
   } catch (e) {
     return renderError(req, 'Error in part', e)
@@ -78,6 +82,17 @@ export function preview(req: XP.Request, highmapId: string | undefined): XP.Resp
     return renderPart(req, highmapId)
   } catch (e) {
     return renderError(req, 'Error in part', e)
+  }
+}
+
+function renderEditPlaceholder(): XP.Response {
+  return {
+    contentType: 'text/html',
+    body: `
+    <div class="edit-placeholder"><h2>HIGHMAP</h2>
+      <p>Vises ikke i redigeringsmodus. Se den i forhåndsvisning.</p>
+    </div>
+    `,
   }
 }
 
@@ -106,7 +121,7 @@ function renderPart(req: XP.Request, highmapId: string | undefined): XP.Response
     : null
 
   const mapResult: MapResult = mapStream ? JSON.parse(readText(mapStream)) : {}
-  mapResult.features.forEach((element, index) => {
+  mapResult.features?.forEach((element, index) => {
     if (element.properties.name) {
       // New property, to keep capitalization for display in map
       mapResult.features[index].properties.capitalName = element.properties.name.toUpperCase()
