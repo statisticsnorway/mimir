@@ -24,7 +24,7 @@ function StaticVisualization(props) {
         ) : null}
 
         {props.sources.length ? (
-          <p className='pt-2'>
+          <div className='pt-2'>
             {props.sources.map((source, index) => (
               <p key={`source-${index}`} className='sources'>
                 <Link className='mb-1' href={source.url}>
@@ -32,7 +32,7 @@ function StaticVisualization(props) {
                 </Link>
               </p>
             ))}
-          </p>
+          </div>
         ) : null}
       </React.Fragment>
     )
