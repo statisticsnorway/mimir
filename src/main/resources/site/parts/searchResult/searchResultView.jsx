@@ -585,6 +585,7 @@ function SearchResult(props) {
               handleChange={setSearchTerm}
               searchField
               submitCallback={goToSearchResultPage}
+              ariaLabel={props.mainSearchPhrase}
               ariaLabelWrapper={props.term ? props.mainSearchPhrase : undefined}
               ariaLabelSearchButton={props.searchText}
             />
@@ -594,6 +595,7 @@ function SearchResult(props) {
               handleChange={setSearchTerm}
               searchField
               submitCallback={goToSearchResultPage}
+              ariaLabel={props.mainSearchPhrase}
               ariaLabelWrapper={props.term ? props.mainSearchPhrase : undefined}
               ariaLabelSearchButton={props.searchText}
             />
