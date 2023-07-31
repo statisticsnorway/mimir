@@ -52,7 +52,7 @@
     "@enonic-types/lib-common": "^7.12.2",
     "@enonic-types/lib-content": "^7.12.2",
     "@enonic-types/lib-context": "^7.12.2",
-    "@enonic-types/lib-event": "^7.12.2",
+    "@enonic-types/lib-event": "^7.13.1",
     "@enonic-types/lib-i18n": "^7.12.2",
     "@enonic-types/lib-io": "^7.12.2",
     "@enonic-types/lib-mail": "^7.12.2",
