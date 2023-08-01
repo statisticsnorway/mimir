@@ -4,22 +4,27 @@ This is the abbreviated documentation. For details, see our [more complete docum
 
 ## Getting started
 
-Download and install Node and NPM from https://nodejs.org/en/
-Make sure to get the LTS version, not the Current or Latest.
+Download and install Node version **18.12.1** from https://nodejs.org/en/
+Make sure to keep the version synced to the one used by gradle, foind in `build.gradle` under `node { version: ... }`.
 
-Install latest Enonic XP according to [docs for you platform](https://developer.enonic.com/start)
+Install latest Enonic CLI according to [docs for you platform](https://developer.enonic.com/start)
 
 ## Installing dependencies
-*Do **not** run `npm install` because this might install the incorrect versions of packages*
-*<br>Gradle will do this for you when you run `enonic project deploy`*
+Do **not** run `npm install` because this might install the incorrect versions of packages.
+
+Gradle will do this for you when you run `enonic project deploy`.
+This command does all the steps necessary to get a finished artifact which can be installed on XP.
+It will install dependencies and compile, bundle etc. a production ready JAR file. 
 
 ## Starting Enonic XP locally in development mode
-### Start your sandbox
+### Sandbox
+Create a sandbox with the same version as our QA server is running, or as specified by `xpVersion` in `gradle.properties`.
+
 Open your preferred terminal and run: 
 ```
 enonic sandbox start
 ```
-This will either help you create a new sandbox, or start an existing sandbox
+This will either help you create a new sandbox, or start an existing sandbox. It is **not** recommended to put the version number in the sandbox name, since usaully when we upgrade to a new version of XP we upgrade an existing sandbox. 
 
 ### Build and Deploy
 After you have your sandbox up and running, you can build and/or deploy the project by using:
@@ -30,10 +35,6 @@ or
 ```
 enonic project build
 ```
-or for a continous build and deploy (needs $XP_HOME and $JAVA_HOME env variables set)
-```
-./gradlew deploy -t
-```
 
 ### Development
 
@@ -41,10 +42,21 @@ Start your sandbox in dev mode
 ```
 enonic sandbox start --dev
 ```
+<br>
 
-Run an `enonic project deploy` if you haven't already.
+Run 
+```
+enonic project deploy
+```
+if you haven't already. The first time this is done it creates a connection between your local code repository and the XP server and will enable a better dev mode. 
 
-Run `npm run dev`, this will start multiple webpack watches in parallel that will watch for changes.
+<br> 
+
+Run
+```
+npm run dev
+```
+to start multiple webpack watches in parallel that will watch for changes in TypeScript, JavaScript and SCSS files.
 
 Most changes to files should then be ready after page refresh in a few seconds.
 
@@ -61,30 +73,23 @@ Direct yout favorite browser to http://localhost:8080
 ```
 $ git checkout master
 $ git pull
-$ git checkout -b add-feature-x
+$ git checkout -b MIMIR-9999_add-feature-x
 ... do changes ...
 $ git commit -a -m "detailed commit message"
 $ git status
 ... verify that correct files are included ...
-$ git push -u origin add-feature-x
+$ git push -u origin MIMIR-9999_add-feature-x
 ... create pull-request to master ...
 ```
 
+Try to start the branchname with the related JIRA task if there is one.
+
 ## Deploying builds to environments
 ### Setup
-Upon creating a pull request, Drone builds and tests your branch.  
-This build must pass in order for you to merge your pull request.   
+Upon creating and updating pull requests, Github actions builds and deploys your code to the TEST server where *mabl* runs automatic tests.   
+This build and tests must pass in order for you to be able to merge your pull request.   
 Tests will run again on subsequent commits to the same branch.
 
-Upon merging a branch to Master, Drone builds and deploys to Test automatically. 
+Upon merging a branch to Master, it is built and deployed to QA where *mabl* tests it again.
 
-In order to deploy to QA and PROD, we need to use the drone CLI.   
-[Install instructions for Drone CLI can be found here.](https://docs.drone.io/cli/install/)
-
-### Execution
-Replace (build-number) with the build number you want to deploy   
-Deploying to QA:   
-`drone build promote statisticsnorway/mimir (build-number) qa` 
-
-Deploing to PROD:   
-`drone build promote statisticsnorway/mimir (build-number) prod`
+Deploying to PROD is done manually through a Github action.

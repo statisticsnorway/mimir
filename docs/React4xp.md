@@ -5,7 +5,7 @@ We should try to use server-side rendering for all react components because of c
 Example for SSR only: [Breadcrumbs.jsx](/src/main/resources/react4xp/_entries/Breadcrumb.jsx) and [default.es6](/src/main/resources/site/pages/default/default.es6)
 
 ## Hydrate (Without SSR)
-If there are problems where SSR doesn't work at all, clientRender: true can be used in renderBody and renderPageContributions. We should try to never use it, because then the part will never be visible/rendered for non-js users.
+If there are problems where SSR doesn't work at all, `ssr: false` can be used in render functions. We should try to never use it, because then the part will never be visible/rendered for non-js users.
 
 ## SSR and Hydrate
 Hydration is needed for react components with client side interaction. You need to add pageContributions for this to work (ref. [factBox.ts](/src/main/resources/site/parts/factBox/factBox.ts)).

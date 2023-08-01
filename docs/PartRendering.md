@@ -1,86 +1,27 @@
 # Rendering of parts
+We use the React library to rendrer most HTML in our app. 
 
-## Server side and client side rendering
+<dl>
+  <dt>Render</dt>
+  <dd>Executing code (JSX is code) to generate HTML.</dd>
 
-Due to a bug in react4xp we had to client side render all the parts, as they would behave unpredictably. Most if not all parts would come and go. That issue has been resolved so we can properly set up serverside rendering for all the parts now.
+  <dt>Server-side rendering (ssr)</dt>
+  <dd>The server <em>renders</em> the HTML on the server side, and sends it to the client. The client recieves a complete HTML document, JavaScript and data.</dd>
 
-## Removing clientside rendering
+  <dt>Client-side rendering</dt>
+  <dd>The server only send JavaScript and data to the client, the client then <em>renders</em> the HTML itself.</dd>
 
-React4xp components are serverside rendered by default, so in order to disable clientside rendering we have to remove the clientRender property in the renderBody and renderPageContributions calls from most of our parts:
+  <dt>Hydration</dt>
+  <dd>After server-side rendering, the client will render everything again. This is to compare the results and warn for mismatch, aswell as to make the HTML interactive. The server can render the HTML, but the client needs to attach event listeners, onClicks etc.</dd>
+</dl>
 
-```javascript
-return {
-  body: externalCardComponent.renderBody({
-    body,
-    clientRender: req.mode !== "edit",
-  }),
-  pageContributions: externalCardComponent.renderPageContributions({
-    clientRender: req.mode !== "edit",
-  }),
-};
+In our parts we can choose if we want it to be server-side or client-side rendered, aswell as if we want hydration or not. As per the definition above, we need hydration if we have interactivity in our code. If our code has no event listeners, hooks etc, nothing except outputting some HTML, we can turn off hydration. This is a performance improvement since the server then does not have to send JavaScript and data along with the HTML for that part. 
+
+Tweak these options in the [React4xp render function](https://developer.enonic.com/docs/react4xp/stable/api#react4xp_render):
+
 ```
-
-### List of admin tools that needs to be changed
-
-- [x] bestbet
-
-### List of parts that needs to be changed
-
-- [x] accordion
-- [x] article
-- [x] articleArchive
-- [x] articleList
-- [x] attachmentTablesFigures
-- [x] bkibolCalculator
-- [x] categoryLinks
-- [x] contactForm
-- [x] divider
-- [x] downloadLink
-- [x] employee
-- [x] employeeList
-- [x] endedStatistics
-- [x] entryLinks
-- [x] externalCard
-- [x] factBox
-- [x] frontpageKeyFigures
-- [x] glossary
-- [x] headerLink
-- [x] highmap
-- [x] husleieCalculator
-- [x] infoGraphics
-- [x] keyFigure
-- [x] kpiCalculator
-- [x] links
-- [x] localSearch
-- [x] mailChimpForm
-- [x] maths
-- [x] menuBox
-- [x] menuDropdown
-- [x] nameSearch
-- [x] omStatistikken
-- [x] pictureCardLinks
-- [x] pifCalculator
-- [x] profiledBox
-- [x] profiledLinkIcon
-- [x] project
-- [x] pubArchiveCalenderLinks
-- [x] publicationArchive
-- [x] relatedArticles
-- [x] relatedExternalLinks
-- [x] relatedFactPage
-- [x] relatedKostra
-- [x] relatedStatistics
-- [x] releasedStatistics
-- [x] searchResult
-- [x] standardCardsList
-- [x] statbankBox
-- [x] statbankFrame
-- [x] statbankSubjectTree
-- [x] staticVisualization
-- [x] statbankLinkList
-- [x] statistics
-- [x] subjectArticleList
-- [x] table
-- [x] tableLink
-- [x] upcomingReleases
-- [x] variables
+render('Divider', props, req, {
+  hydrate: false,
+  ssr: true
+})
+```
