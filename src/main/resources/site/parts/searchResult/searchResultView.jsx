@@ -13,6 +13,7 @@ import {
   Tag,
   RadioGroup,
   Accordion,
+  Button,
 } from '@statisticsnorway/ssb-component-library'
 import { ChevronDown, User, X } from 'react-feather'
 import axios from 'axios'
@@ -295,9 +296,9 @@ function SearchResult(props) {
     if (hits.length > 0) {
       return (
         <div>
-          <button
+          <Button
             disabled={loading || total === hits.length}
-            className='ssb-btn button-more mt-5'
+            className='button-more mt-5'
             onClick={() => onShowMoreSearchResults(false)}
             onKeyDown={(e) => {
               if (e.key === 'Enter' || e.key === ' ') {
@@ -306,7 +307,7 @@ function SearchResult(props) {
             }}
           >
             <ChevronDown size='18' /> {props.buttonTitle}
-          </button>
+          </Button>
         </div>
       )
     }

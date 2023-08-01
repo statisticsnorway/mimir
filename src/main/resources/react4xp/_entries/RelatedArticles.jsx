@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { Card, Text } from '@statisticsnorway/ssb-component-library'
+import { Card, Text, Button } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
 import { useMediaQuery } from 'react-responsive'
 
@@ -63,8 +63,7 @@ function RelatedArticles(props) {
     return (
       <div className={`row hide-show-btn justify-content-center justify-content-lg-start`}>
         <div className='col-auto'>
-          <button
-            className='ssb-btn'
+          <Button
             onClick={() => toggleBox(false)}
             onKeyDown={(e) => {
               if (e.key === 'Enter' || e.key === ' ') {
@@ -72,10 +71,10 @@ function RelatedArticles(props) {
                 toggleBox(true)
               }
             }}
-            aria-label={isHidden ? `${showAllAriaLabel} - ${relatedArticles.length} ${articlePluralName}` : ''}
+            ariaLabel={isHidden ? `${showAllAriaLabel} - ${relatedArticles.length} ${articlePluralName}` : ''}
           >
             {shownArticles.length < relatedArticles.length ? showAll + ` (${relatedArticles.length})` : showLess}
-          </button>
+          </Button>
         </div>
       </div>
     )
