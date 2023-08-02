@@ -112,6 +112,8 @@ function renderRelatedFactPage(
     mainTitle,
     showAll,
     showLess,
+    factpagePluralName: phrases.relatedFactPagesHeading,
+    showingPhrase: phrases['publicationArchive.showing'],
   }
 
   return render('site/parts/relatedFactPage/relatedFactPage', props, req, {
@@ -214,6 +216,8 @@ interface RelatedFactPageProps {
   mainTitle: string
   showAll: string
   showLess: string
+  factpagePluralName: string
+  showingPhrase: string
 }
 
 type RelatedFactPage = Content<ContentList | Article>
