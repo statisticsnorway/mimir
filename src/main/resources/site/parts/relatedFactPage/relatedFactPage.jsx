@@ -115,7 +115,7 @@ function RelatedBoxes(props) {
             <div className='row'>
               <div className='col-auto'>
                 <Button
-                  ariaLabel={`${showAll} - ${total} ${factpagePluralName}`}
+                  ariaLabel={total > relatedFactPages.length && `${showAll} - ${total} ${factpagePluralName}`}
                   onClick={handleButtonOnClick}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' || e.key === ' ') {
