@@ -4,7 +4,16 @@ import PropTypes from 'prop-types'
 import { get } from 'axios'
 
 function RelatedBoxes(props) {
-  const { firstRelatedContents, relatedFactPageServiceUrl, partConfig, showAll, showLess, mainTitle } = props
+  const {
+    firstRelatedContents,
+    relatedFactPageServiceUrl,
+    partConfig,
+    showAll,
+    showLess,
+    mainTitle,
+    showingPhrase,
+    factpagePluralName,
+  } = props
 
   const [relatedFactPages, setRelatedFactPages] = useState(
     firstRelatedContents ? firstRelatedContents.relatedFactPages : []
@@ -71,7 +80,7 @@ function RelatedBoxes(props) {
   function renderButtonText() {
     if (!loading) {
       if (total > relatedFactPages.length) {
-        return showAll
+        return `${showAll} (${total})`
       } else {
         return showLess
       }
@@ -85,7 +94,10 @@ function RelatedBoxes(props) {
       return (
         <>
           <div className='row'>
-            <ul className='image-box-wrapper'>
+            <ul
+              className='image-box-wrapper'
+              aria-label={`${showingPhrase.replace('{0}', relatedFactPages.length)} ${total} ${factpagePluralName}`}
+            >
               {relatedFactPages.map((relatedFactPageContent, index) => (
                 <li key={index} ref={index === 4 ? currentElement : null}>
                   <PictureCard
@@ -103,6 +115,7 @@ function RelatedBoxes(props) {
             <div className='row'>
               <div className='col-auto'>
                 <Button
+                  ariaLabel={total > relatedFactPages.length && `${showAll} - ${total} ${factpagePluralName}`}
                   onClick={handleButtonOnClick}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' || e.key === ' ') {
@@ -145,6 +158,8 @@ RelatedBoxes.propTypes = {
   showAll: PropTypes.string,
   showLess: PropTypes.string,
   mainTitle: PropTypes.string,
+  factpagePluralName: PropTypes.string,
+  showingPhrase: PropTypes.string,
 }
 
 export default (props) => <RelatedBoxes {...props} />
