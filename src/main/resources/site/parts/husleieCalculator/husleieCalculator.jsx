@@ -293,7 +293,7 @@ function HusleieCalculator(props) {
     }
   }
 
-  function renderNumberValute(value) {
+  function renderNumberValute(value, removeThousandSeparator) {
     if (endValue && change) {
       const valute = language === 'en' ? 'NOK' : 'kr'
       const decimalSeparator = language === 'en' ? '.' : ','
@@ -302,12 +302,12 @@ function HusleieCalculator(props) {
           <NumberFormat
             value={Number(value)}
             displayType={'text'}
-            thousandSeparator={' '}
+            thousandSeparator={removeThousandSeparator ? '' : ' '}
             decimalSeparator={decimalSeparator}
             decimalScale={2}
             fixedDecimalScale={true}
-          />{' '}
-          {valute}
+            suffix={' ' + valute}
+          />
         </React.Fragment>
       )
     }
@@ -341,7 +341,10 @@ function HusleieCalculator(props) {
             <Title size={3}>{props.phrases.husleieNewRent}</Title>
           </Col>
           <Col className='end-value col-12 col-md-8'>
-            <span className='float-start float-md-end'>{renderNumberValute(endValue)}</span>
+            <span className='float-start float-md-end' aria-hidden='true'>
+              {renderNumberValute(endValue)}
+            </span>
+            <span className='sr-only'>{renderNumberValute(endValue, true)}</span>
           </Col>
           <Col className='col-12'>
             <Divider dark />
@@ -443,7 +446,9 @@ function HusleieCalculator(props) {
     return (
       <Container className='husleie-calculator'>
         {renderForm()}
-        {renderResult()}
+        <div aria-live='polite' aria-atomic='true'>
+          {renderResult()}
+        </div>
       </Container>
     )
   }
@@ -462,7 +467,7 @@ function HusleieCalculator(props) {
             <p className='publish-text'>{props.nextPublishText}</p>
           </Col>
         </Row>
-        {renderAlertUnderAYearAgo()}
+        <div aria-live='polite'>{renderAlertUnderAYearAgo()}</div>
         <Form onSubmit={onSubmit}>
           <Container>
             <Row>
@@ -518,7 +523,7 @@ function HusleieCalculator(props) {
                 </Button>
               </Col>
             </Row>
-            {renderChooseHusleiePeriode()}
+            <div aria-live='polite'>{renderChooseHusleiePeriode()}</div>
           </Container>
         </Form>
       </div>
