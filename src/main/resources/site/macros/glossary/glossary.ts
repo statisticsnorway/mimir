@@ -20,5 +20,10 @@ const renderMacro = (context: XP.MacroContext) => {
     explanation,
   }
 
-  return render('site/macros/glossary/glossary', props, context.request)
+  const react4xpId = `r4x-${(78364164096 + Math.floor(Math.random() * 2742745743360)).toString(36)}`
+  return render('site/macros/glossary/glossary', props, context.request, {
+    id: react4xpId,
+    body: `<span id="${react4xpId}"></span>`,
+    ssr: false, // Component has to be clientside rendered so it doesn't get inserted twice
+  })
 }
