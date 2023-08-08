@@ -240,6 +240,7 @@ exports.get = function (req: XP.Request): XP.Response {
     hideBreadcrumb,
     enabledEnalyzerScript: isEnabled('enable-enalyzer-script', true, 'ssb'),
     enabledChatScript: isEnabled('enable-chat-script', true, 'ssb') && innrapporteringRegexp.exec(page._path),
+    tableView: page.type === 'mimir:table',
   }
 
   const thymeleafRenderBody = render(view, model)
@@ -629,4 +630,5 @@ interface DefaultModel {
   hideBreadcrumb: boolean
   enabledEnalyzerScript: boolean
   enabledChatScript: boolean
+  tableView: boolean
 }
