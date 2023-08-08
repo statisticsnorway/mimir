@@ -48,16 +48,16 @@ const Employee = (props) => {
         {profileImages.map((href, i) => {
           return (
             <div key={i} className='grid-column' role='img' aria-label={`${pressPicturesPhrase} ${i + 1} av ${title}`}>
-              <a href={href} target='_blank' rel='noreferrer' type='media_type'>
+              <a href={href} target='_blank' rel='noreferrer' type='image/jpeg'>
                 <div>
                   <img alt={`${pressPicturesPhrase} ${i + 1} av ${title}.`} src={href} />
                 </div>
-                <div>
-                  <Link linkType='profiled'>
-                    {imagePhrase} {i + 1}.jpg
-                  </Link>
-                </div>
               </a>
+              <div>
+                <Link href={href} isExternal={true} rel='noreferrer' linkType='profiled'>
+                  {imagePhrase} {i + 1}.jpg
+                </Link>
+              </div>
             </div>
           )
         })}
@@ -110,6 +110,7 @@ const Employee = (props) => {
           {position ? (
             <div className='details-block col-lg col-12'>
               <div>
+                {/* TODO: Attribute transform not allowed on element svg at this point. */}
                 <Share2 size={24} transform='rotate(90)' />
               </div>
               <div>
@@ -164,11 +165,11 @@ const Employee = (props) => {
 
   const renderAttachmentsForDesktop = () => {
     return (
-      <aside className='employee-attachments mobile-display-none col-12 col-md-3' role='complementary'>
+      <aside className='employee-attachments mobile-display-none col-12 col-md-3'>
         {profileImages.length != 0 ? (
           <React.Fragment>
             <div className='instructions'>
-              <h3>{pressPicturesPhrase}</h3>
+              <h2>{pressPicturesPhrase}</h2>
               <p>{pressPicturesDescrPhrase}</p>
             </div>
             {renderPortraitImages()}
@@ -179,6 +180,7 @@ const Employee = (props) => {
     )
   }
 
+  // TODO: Suggestion: make this into a legend instead? See legend html tag
   const renderAttachmentsForMobile = () => {
     const accordionHeader = (
       <React.Fragment>
