@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Form, Container, Row, Col } from 'react-bootstrap'
 import {
@@ -48,6 +48,19 @@ function HusleieCalculator(props) {
   const [resultText, setResultText] = useState(null)
   const validMinYear = 1950
   const yearRegexp = /^[1-9]{1}[0-9]{3}$/g
+
+  const scrollAnchor = useRef(null)
+  useEffect(() => {
+    if (!loading && scrollAnchor.current !== null) {
+      scrollAnchor.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'end',
+        inline: 'nearest',
+      })
+    }
+  }, [loading, choosePeriod])
+
+  const submitButton = useRef(null)
 
   function onSubmit(e) {
     e.preventDefault()
@@ -111,11 +124,13 @@ function HusleieCalculator(props) {
   }
 
   function submitOneYearLater() {
+    setLoading(true)
     const yearAfter = Number(startYear.value) + 1
     getServiceData(startMonth.value, yearAfter.toString())
   }
 
   function submitLastPeriod() {
+    setLoading(true)
     getServiceData(validMaxMonth, validMaxYear)
   }
 
@@ -306,8 +321,8 @@ function HusleieCalculator(props) {
             decimalSeparator={decimalSeparator}
             decimalScale={2}
             fixedDecimalScale={true}
-          />{' '}
-          {valute}
+            suffix={' ' + valute}
+          />
         </React.Fragment>
       )
     }
@@ -326,8 +341,8 @@ function HusleieCalculator(props) {
             decimalSeparator={decimalSeparator}
             decimalScale={1}
             fixedDecimalScale={true}
-          />{' '}
-          %
+            suffix={' %'}
+          />
         </React.Fragment>
       )
     }
@@ -335,7 +350,7 @@ function HusleieCalculator(props) {
 
   function calculatorResult() {
     return (
-      <Container className='calculator-result'>
+      <Container className='calculator-result' ref={scrollAnchor}>
         <Row className='mb-3 mb-sm-5'>
           <Col className='amount-equal align-self-end col-12 col-md-4'>
             <Title size={3}>{props.phrases.husleieNewRent}</Title>
@@ -406,7 +421,7 @@ function HusleieCalculator(props) {
       const newestNumbers =
         getMonthLabel(validMaxMonth) + ' ' + validMaxYear + ' (' + props.phrases.husleieLatestFigures + ' )'
       return (
-        <Container>
+        <Container ref={scrollAnchor}>
           <Divider className='my-5' />
           <Row>
             <Title size={3} className='col-12 mb-2'>
@@ -415,10 +430,10 @@ function HusleieCalculator(props) {
             <p className='col-12 mb-4'>{props.phrases.husleieChooseFiguresToCalculateRent}</p>
           </Row>
           <Row className='ms-0'>
-            <Button className='submit-one-year' onClick={submitOneYearLater}>
+            <Button className='submit-one-year' onClick={submitOneYearLater} ref={submitButton}>
               {phraseOneYearLater}
             </Button>
-            <Button className='submit-last-period' onClick={submitLastPeriod}>
+            <Button className='submit-last-period' onClick={submitLastPeriod} ref={submitButton}>
               {newestNumbers}
             </Button>
           </Row>
@@ -443,7 +458,9 @@ function HusleieCalculator(props) {
     return (
       <Container className='husleie-calculator'>
         {renderForm()}
-        {renderResult()}
+        <div aria-live='polite' aria-atomic='true'>
+          {renderResult()}
+        </div>
       </Container>
     )
   }
@@ -462,7 +479,7 @@ function HusleieCalculator(props) {
             <p className='publish-text'>{props.nextPublishText}</p>
           </Col>
         </Row>
-        {renderAlertUnderAYearAgo()}
+        <div aria-live='polite'>{renderAlertUnderAYearAgo()}</div>
         <Form onSubmit={onSubmit}>
           <Container>
             <Row>
@@ -513,12 +530,12 @@ function HusleieCalculator(props) {
             </Row>
             <Row className='submit'>
               <Col>
-                <Button className='submit-button' primary type='submit' disabled={loading}>
+                <Button className='submit-button' primary type='submit' disabled={loading} ref={submitButton}>
                   {props.phrases.husleieSubmit}
                 </Button>
               </Col>
             </Row>
-            {renderChooseHusleiePeriode()}
+            <div aria-live='polite'>{renderChooseHusleiePeriode()}</div>
           </Container>
         </Form>
       </div>
