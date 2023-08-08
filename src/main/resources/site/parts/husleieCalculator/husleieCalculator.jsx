@@ -317,7 +317,7 @@ function HusleieCalculator(props) {
           <NumberFormat
             value={Number(value)}
             displayType={'text'}
-            thousandSeparator=' '
+            thousandSeparator={' '}
             decimalSeparator={decimalSeparator}
             decimalScale={2}
             fixedDecimalScale={true}
