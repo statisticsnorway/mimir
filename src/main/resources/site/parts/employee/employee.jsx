@@ -109,9 +109,8 @@ const Employee = (props) => {
         <div className={'row w-100' + (profileImages.length == 0 ? ' border-if-no-images' : '')}>
           {position ? (
             <div className='details-block col-lg col-12'>
-              <div>
-                {/* TODO: Attribute transform not allowed on element svg at this point. */}
-                <Share2 size={24} transform='rotate(90)' />
+              <div className='position-feather-icon'>
+                <Share2 size={24} />
               </div>
               <div>
                 <div>{positionPhrase}</div>

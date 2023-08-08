@@ -198,6 +198,10 @@
 
       .details-block {
         padding: 1.25rem 0;
+
+        .position-feather-icon {
+          transform: 'rotate(90deg)';
+        }
       }
 
       .border-if-no-images {
