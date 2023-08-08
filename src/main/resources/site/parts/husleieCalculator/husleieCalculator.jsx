@@ -341,8 +341,8 @@ function HusleieCalculator(props) {
             decimalSeparator={decimalSeparator}
             decimalScale={1}
             fixedDecimalScale={true}
-          />{' '}
-          %
+            suffix={' %'}
+          />
         </React.Fragment>
       )
     }
