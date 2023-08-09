@@ -545,7 +545,7 @@ function KpiCalculator(props) {
               </Col>
             </Row>
             <Row>
-              <Col className='calculate-from col-12 col-md-6'>
+              <Col className='calculate-from col-12 col-lg-6'>
                 <Title size={3}>{props.phrases.calculatePriceChangeFrom}</Title>
                 <Container>
                   <Row>
@@ -563,7 +563,7 @@ function KpiCalculator(props) {
                   </Row>
                 </Container>
               </Col>
-              <Col className='calculate-to col-12 col-md-6'>
+              <Col className='calculate-to col-12 col-lg-6'>
                 <Title size={3}>{props.phrases.calculatePriceChangeTo}</Title>
                 <Container>
                   <Row>

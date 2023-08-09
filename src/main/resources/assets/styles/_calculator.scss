@@ -163,6 +163,20 @@
       }
     }
 
+    @include media-breakpoint-down(lg) {
+      .calculator-form {
+        
+        .calculate-from {
+          padding-right: 10px;
+        }
+
+        .calculate-to {
+          padding-left: 10px;
+          padding-top: 10px;
+        }
+      }
+    }
+
     @include media-breakpoint-down(md) {
       .calculator-form {
         padding: 20px;
@@ -322,6 +336,12 @@
     .choose-scope {
       padding-top: 0;
       padding-bottom: 0;
+    }
+
+    @include media-breakpoint-down(lg) {
+      .start-value {
+        width: 100%;
+      }
     }
 
     @include media-breakpoint-down(sm) {

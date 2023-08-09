@@ -496,7 +496,7 @@ function HusleieCalculator(props) {
               </Col>
             </Row>
             <Row>
-              <Col className='calculate-from col-12 col-sm-7'>
+              <Col className='calculate-from col-12 col-lg-6'>
                 <Title size={3}>{props.phrases.husleieLastAdjust}</Title>
                 <Container>
                   <Row>
