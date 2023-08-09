@@ -120,6 +120,12 @@ function renderPart(req: XP.Request) {
     locale: language,
   })
 
+  const pressPictureLabelPhrase: string = localize({
+    key: 'employee.pressPictureLabel',
+    locale: language,
+    values: ['{0}', page.displayName],
+  })
+
   const imagePhrase: string = localize({
     key: 'employee.image',
     locale: language,
@@ -154,6 +160,7 @@ function renderPart(req: XP.Request) {
     publicationsPhrase,
     pressPicturesPhrase,
     pressPicturesDescrPhrase,
+    pressPictureLabelPhrase,
     imagePhrase,
     profilePicturePhrase,
   }
@@ -205,6 +212,7 @@ interface EmployeeProp {
   publicationsPhrase: string
   pressPicturesPhrase: string
   pressPicturesDescrPhrase: string
+  pressPictureLabelPhrase: string
   imagePhrase: string
   profilePicturePhrase: string
 }

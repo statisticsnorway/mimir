@@ -241,14 +241,16 @@
         .grid-column {
           flex: 22%;
           max-width: 22%;
-        }
 
-        .grid-column a div img {
-          height: 100.15px;
-        }
+          a {
+            .press-picture-thumbnail img {
+              height: 100.15px;
+            }
 
-        .grid-column a div a .link-text {
-          font-size: 12px;
+            .link-text {
+              font-size: 12px;
+            }
+          }
         }
       }
     }

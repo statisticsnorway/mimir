@@ -28,6 +28,7 @@ const Employee = (props) => {
     publicationsPhrase,
     pressPicturesPhrase,
     pressPicturesDescrPhrase,
+    pressPictureLabelPhrase,
     imagePhrase,
     profilePicturePhrase,
   } = props
@@ -46,24 +47,23 @@ const Employee = (props) => {
     return (
       <div className='grid-row'>
         {profileImages.map((href, i) => {
+          // TODO:
+          // * Discuss if "opens in a new tab" is descriptive enough
+          // * Fix styling on focus and hover. Outline image and trigger animation on link-text when hovering as a whole
+          const pressPictureNumber = i + 1
+          const pressPicturePhrase = pressPictureLabelPhrase.replace('{0}', pressPictureNumber)
           return (
-            <div key={i} className='grid-column' role='img' aria-label={`${pressPicturesPhrase} ${i + 1} av ${title}`}>
-              {/* TODO:
-               * Det handler om kravet 4.1.2 for skjermleser, som sier «interaktive objekter gjengir hva det er for noe (rolle), hva det heter (tekstbeskrivelse)
-                og hva de gjør for noe (utvidet/minimert, valgt/ikke valgt…».
-                Selve pressebildet er ikke markert som noe nedlastbart/lenke, men trenger det være det,
-                siden det står tekst over om at en kan laste ned høyoppløselig versjon? Vet dere (utviklerne) mer om dette kravet?
-              * Alt-tekst til pressebildet er nå «Pressebilder 1 av Elin Halvorsen». Her bør vi droppe punktum og skrive pressebilder i entall (altså «Pressebilde 1», «Pressebilde 2» osv.)  */}
-              <a href={href} target='_blank' rel='noreferrer' type='image/jpeg'>
-                <div>
-                  <img alt={`${pressPicturesPhrase} ${i + 1} av ${title}.`} src={href} />
+            <div key={i} className='grid-column'>
+              <a href={href} target='_blank' rel='noreferrer' type='image/jpeg' aria-label={pressPicturePhrase}>
+                <div className='press-picture-thumbnail'>
+                  <img alt='' src={href} />
+                </div>
+                <div className='ssb-link profiled' aria-hidden='true'>
+                  <span className='link-text'>
+                    {imagePhrase} {pressPictureNumber}.jpg
+                  </span>
                 </div>
               </a>
-              <div>
-                <Link href={href} isExternal={true} rel='noreferrer' linkType='profiled'>
-                  {imagePhrase} {i + 1}.jpg
-                </Link>
-              </div>
             </div>
           )
         })}
@@ -292,7 +292,7 @@ Employee.propTypes = {
   area: PropTypes.object,
   cvInformation: PropTypes.object,
   isResearcher: PropTypes.bool,
-  cristinId: PropTypes.string | null,
+  cristinId: PropTypes.string || null,
   emailPhrase: PropTypes.string,
   phonePhrase: PropTypes.string,
   positionPhrase: PropTypes.string,
@@ -304,6 +304,7 @@ Employee.propTypes = {
   publicationsPhrase: PropTypes.string,
   pressPicturesPhrase: PropTypes.string,
   pressPicturesDescrPhrase: PropTypes.string,
+  pressPictureLabelPhrase: PropTypes.string,
   imagePhrase: PropTypes.string,
   profilePicturePhrase: PropTypes.string,
 }
