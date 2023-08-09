@@ -48,6 +48,12 @@ const Employee = (props) => {
         {profileImages.map((href, i) => {
           return (
             <div key={i} className='grid-column' role='img' aria-label={`${pressPicturesPhrase} ${i + 1} av ${title}`}>
+              {/* TODO:
+               * Det handler om kravet 4.1.2 for skjermleser, som sier «interaktive objekter gjengir hva det er for noe (rolle), hva det heter (tekstbeskrivelse)
+                og hva de gjør for noe (utvidet/minimert, valgt/ikke valgt…».
+                Selve pressebildet er ikke markert som noe nedlastbart/lenke, men trenger det være det,
+                siden det står tekst over om at en kan laste ned høyoppløselig versjon? Vet dere (utviklerne) mer om dette kravet?
+              * Alt-tekst til pressebildet er nå «Pressebilder 1 av Elin Halvorsen». Her bør vi droppe punktum og skrive pressebilder i entall (altså «Pressebilde 1», «Pressebilde 2» osv.)  */}
               <a href={href} target='_blank' rel='noreferrer' type='image/jpeg'>
                 <div>
                   <img alt={`${pressPicturesPhrase} ${i + 1} av ${title}.`} src={href} />
@@ -75,7 +81,7 @@ const Employee = (props) => {
     return (
       <div className='downloadCv'>
         <Button onClick={() => downloadPDF(myCV)}>
-          <Download size='24' />
+          <Download size='24' aria-hidden='true' />
           {downloadPdfPhrase} ({calculateCvSize(cvInformation.size)} kB)
         </Button>
       </div>
@@ -90,6 +96,9 @@ const Employee = (props) => {
             <img alt={`${profilePicturePhrase} ${title}`} src={props.profileImages[0]} />
           </div>
         ) : null}
+        {/* TODO:
+         * H1 må leses opp før alt-teksten til profilbildet
+         * Should the image be decorative? */}
         {profileImages.length != 0 ? (
           <div className='employee-title'>
             <Title size='1'>{title}</Title>
@@ -110,7 +119,7 @@ const Employee = (props) => {
           {position ? (
             <div className='details-block col-lg col-12'>
               <div className='position-feather-icon'>
-                <Share2 size={24} />
+                <Share2 size={24} aria-hidden='true' />
               </div>
               <div>
                 <div>{positionPhrase}</div>
@@ -120,7 +129,7 @@ const Employee = (props) => {
           ) : null}
           {area ? (
             <div className='details-block col-lg col-12'>
-              <div>{isResearcher ? <Eye size={24} /> : <Home size={24} />}</div>
+              <div>{isResearcher ? <Eye size={24} aria-hidden='true' /> : <Home size={24} aria-hidden='true' />}</div>
               <div>
                 <div>{isResearcher ? researchAreaPhrase : departmentPhrase}</div>
                 <Link href={area.href} linkType='profiled'>
@@ -132,7 +141,7 @@ const Employee = (props) => {
           {email ? (
             <div className='details-block col-lg col-12'>
               <div>
-                <Send size={24} />
+                <Send size={24} aria-hidden='true' />
               </div>
               <div>
                 <div>{emailPhrase}</div>
@@ -147,7 +156,7 @@ const Employee = (props) => {
           {phone ? (
             <div className='details-block col-lg col-12'>
               <div>
-                <Smartphone size={24} />
+                <Smartphone size={24} aria-hidden='true' />
               </div>
               <div>
                 <div>{phonePhrase}</div>
@@ -179,7 +188,7 @@ const Employee = (props) => {
     )
   }
 
-  // TODO: Suggestion: make this into a legend instead? See legend html tag
+  // TODO: Suggestion from designer: make this into a legend instead? See legend html tag
   const renderAttachmentsForMobile = () => {
     const accordionHeader = (
       <React.Fragment>
@@ -205,6 +214,10 @@ const Employee = (props) => {
         <div className='employee-description'>
           <div>
             <h2>{briefSummaryPhrase}</h2>
+            {/* TODO:
+             * Prevent long texts such as links to overflow on md breakpoints (on mobile and 400%)
+             * Suggestion from designer: Screenreader order; read description before press pictures.
+             * My reflections: Move press pictures to the right side and under description on mobile. Discuss with designer */}
             <div
               dangerouslySetInnerHTML={{
                 __html: description,
