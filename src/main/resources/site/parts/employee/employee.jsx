@@ -215,7 +215,6 @@ const Employee = (props) => {
           <div>
             <h2>{briefSummaryPhrase}</h2>
             {/* TODO:
-             * Prevent long texts such as links to overflow on md breakpoints (on mobile and 400%)
              * Suggestion from designer: Screenreader order; read description before press pictures.
              * My reflections: Move press pictures to the right side and under description on mobile. Discuss with designer */}
             <div
