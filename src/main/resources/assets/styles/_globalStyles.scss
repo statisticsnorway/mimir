@@ -13,38 +13,38 @@ h3,h4,h5,h6 {
   margin-top: 0;
 }
 h1 {
-  font-size: 56px;
-  line-height: 80px;
+  font-size: 4rem;
+  line-height: 5rem;
 }
 h2 {
-  font-size: 28px;
-  line-height: 40px;
+  font-size: 1.8rem;
+  line-height: 3rem;
 }
 h3 {
-  font-size: 20px;
-  line-height: 32px;
+  font-size: 1.3rem;
+  line-height: 2rem;
 }
 h4 {
-  font-size: 16px;
-  line-height: 28px;
+  font-size: 1rem;
+  line-height: 1.8rem;
 }
 h5 {
-  font-size: 18px;
-  line-height: 1.7;
+  font-size: 1.1rem;
+  line-height: 1.7rem;
 }
 h6 {
-  font-size: 16px;
-  line-height: 1.7;
+  font-size: 1rem;
+  line-height: 1.7rem;
 }
 
 @media #{$mobile} {
   h1 {
-    font-size: 44px;
-    line-height: 56px;
+    font-size: 3rem;
+    line-height: 4rem;
   }
   h2 {
-    font-size: 28px;
-    line-height: 36px;
+    font-size: 1.8rem;
+    line-height: 2rem;
   }
 }
 /* -- End headings -- */
@@ -60,14 +60,14 @@ body {
 p {
   @include open-sans;
   color: $ssb-dark-6;
-  font-size: 16px;
+  font-size: 1rem;
   font-style: normal;
   letter-spacing: normal;
-  line-height: 1.7;
+  line-height: 1.7rem;
   //max-width: $max-readable-width; <-- this is screwing with center alignment of text, TODO: maybe find a fix? (not critical)
 
   &.small-text {
-    font-size: 14px;
+    font-size: 0.9rem;
   }
 
   &.negative {
@@ -79,9 +79,9 @@ p {
 
 /* -- Links -- */
 
-$default-font-size: 16px;
-$profiled-font-size: 18px;
-$header-font-size: 20px;
+$default-font-size: 1rem;
+$profiled-font-size: 1.1rem;
+$header-font-size: 1.3rem;
 $icon-padding: 8px;
 
 p > a, p > strong > a, ul > li > a, ol > li > a, table a {
@@ -155,7 +155,7 @@ p > a, p > strong > a, ul > li > a, ol > li > a, table a {
       align-items: flex-start;
 
       i {
-        font-size: 20px;
+        font-size: 1.3rem;
       }
 
       .link-text, span {
@@ -195,7 +195,7 @@ p > a, p > strong > a, ul > li > a, ol > li > a, table a {
     align-items: flex-start;
 
     i {
-      font-size: 16px;
+      font-size: 1rem;
     }
 
     .link-text, span {
@@ -236,7 +236,7 @@ blockquote > p {
   background-repeat: no-repeat;
   background-size: 100% 50%;
   display: inline;
-  font-size: 20px;
+  font-size: 1.3rem;
   font-style: normal;
   letter-spacing: normal;
   line-height: 1.6;
