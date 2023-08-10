@@ -47,9 +47,6 @@ const Employee = (props) => {
     return (
       <div className='grid-row'>
         {profileImages.map((href, i) => {
-          // TODO:
-          // * Discuss if "opens in a new tab" is descriptive enough
-          // * Fix styling on focus and hover. Outline image and trigger animation on link-text when hovering as a whole
           const pressPictureNumber = i + 1
           const pressPicturePhrase = pressPictureLabelPhrase.replace('{0}', pressPictureNumber)
           return (
@@ -96,9 +93,7 @@ const Employee = (props) => {
             <img alt={`${profilePicturePhrase} ${title}`} src={props.profileImages[0]} />
           </div>
         ) : null}
-        {/* TODO:
-         * H1 må leses opp før alt-teksten til profilbildet
-         * Should the image be decorative? */}
+        {/* TODO: Screenreader: H1 before profile picture alt-text. Should profile picture be decorative? */}
         {profileImages.length != 0 ? (
           <div className='employee-title'>
             <Title size='1'>{title}</Title>
@@ -215,8 +210,7 @@ const Employee = (props) => {
           <div>
             <h2>{briefSummaryPhrase}</h2>
             {/* TODO:
-             * Suggestion from designer: Screenreader order; read description before press pictures.
-             * My reflections: Move press pictures to the right side and under description on mobile. Discuss with designer */}
+             * Suggestion from designer: Screenreader order; read description before press pictures.*/}
             <div
               dangerouslySetInnerHTML={{
                 __html: description,
