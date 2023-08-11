@@ -7,7 +7,7 @@ class Accordion extends React.Component {
   renderNestedAccordions(items) {
     return items.map((item, i) => (
       <NestedAccordion key={i} header={item.title}>
-        <div dangerouslySetInnerHTML={item.body ? this.createMarkup(item.body) : ''} />
+        {item.body && <div dangerouslySetInnerHTML={this.createMarkup(item.body)} />}
       </NestedAccordion>
     ))
   }
@@ -36,7 +36,7 @@ class Accordion extends React.Component {
                 subHeader={accordion.subHeader}
                 openByDefault={anchor && accordion.id && accordion.id === anchor}
               >
-                <div dangerouslySetInnerHTML={this.createMarkup(accordion.body)}></div>
+                {accordion.body && <div dangerouslySetInnerHTML={this.createMarkup(accordion.body)} />}
                 {this.renderNestedAccordions(accordion.items)}
               </AccordionComponent>
             </React.Fragment>
