@@ -62,7 +62,6 @@ function prepareResult(result: string, name: string, includeGraphData: boolean):
   const nameSearchGraphEnabled: boolean = isEnabled('name-graph', true, 'ssb')
   const obj: ResultType = JSON.parse(result)
   obj.originalName = name
-  log.info('Navn: ' + JSON.stringify(name, null, 4))
   obj.nameGraphData = nameSearchGraphEnabled && includeGraphData ? prepareGraph(name) : []
   return JSON.stringify(obj)
 }
