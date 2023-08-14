@@ -9,6 +9,7 @@ const {
 } = __non_webpack_require__('/lib/util')
 const { sanitize } = __non_webpack_require__('/lib/xp/common')
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
+const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
 
 export function get(req: XP.Request): XP.Response {
   try {
@@ -37,6 +38,7 @@ export function preview(req: XP.Request, accordionIds: Array<string> | string): 
 
 function renderPart(req: XP.Request, accordionIds: Array<string>) {
   const accordions: Array<AccordionData> = []
+  const csrOnTableAccordion: boolean = isEnabled('csr-on-table-accordion', false, 'ssb')
 
   accordionIds.map((key) => {
     const accordion: Content<Accordion> | null = key
@@ -91,7 +93,7 @@ function renderPart(req: XP.Request, accordionIds: Array<string>) {
     accordions,
   }
 
-  return render('Accordion', props, req)
+  return render('Accordion', props, req, { ssr: !csrOnTableAccordion }) // False means client-side rendering. Do this if option is turned on.
 }
 
 export interface AccordionData {
