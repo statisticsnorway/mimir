@@ -93,7 +93,7 @@ function renderPart(req: XP.Request, accordionIds: Array<string>) {
     accordions,
   }
 
-  return render('Accordion', props, req, { ssr: !csrOnTableAccordion }) // False means client-side rendering. Do this if option is turned on.
+  return render('Accordion', props, req, { ssr: false })
 }
 
 export interface AccordionData {

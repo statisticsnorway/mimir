@@ -71,6 +71,7 @@ function KpiCalculator(props) {
       onBlur('start-value')
       onBlur('start-year')
       onBlur('end-year')
+      // Select first input field that an invalid value has, and focus on it.
       return
     }
     setErrorMessage(null)
@@ -539,7 +540,7 @@ function KpiCalculator(props) {
                   handleChange={(value) => onChange('start-value', value)}
                   error={startValue.error}
                   errorMessage={startValue.errorMsg}
-                  onBlur={() => onBlur('start-value')}
+                  // onBlur={() => onBlur('start-value')}
                   ariaLabelledBy='enter-amount'
                 />
               </Col>
@@ -555,8 +556,8 @@ function KpiCalculator(props) {
                         label={props.phrases.fromYear}
                         handleChange={(value) => onChange('start-year', value)}
                         error={startYear.error}
-                        errorMessage={startYear.errorMsg}
-                        onBlur={() => onBlur('start-year')}
+                        errorMessage={'feil i feltet ' + props.phrases.fromYear + startYear.errorMsg}
+                        // onBlur={() => onBlur('start-year')}
                       />
                     </Col>
                     <Col className='select-month col-sm-7'>{addDropdownMonth('start-month')}</Col>
@@ -574,7 +575,7 @@ function KpiCalculator(props) {
                         handleChange={(value) => onChange('end-year', value)}
                         error={endYear.error}
                         errorMessage={endYear.errorMsg}
-                        onBlur={() => onBlur('end-year')}
+                        // onBlur={() => onBlur('end-year')}
                       />
                     </Col>
                     <Col className='select-month col-sm-7'>{addDropdownEndMonth('end-month')}</Col>
