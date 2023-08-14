@@ -500,7 +500,7 @@ function HusleieCalculator(props) {
                 <Title size={3}>{props.phrases.husleieLastAdjust}</Title>
                 <Container>
                   <Row>
-                    <Col className='select-month col-sm-8'>
+                    <Col className='select-month col-12 col-sm-8'>
                       <Dropdown
                         className='month'
                         id='start-month'
