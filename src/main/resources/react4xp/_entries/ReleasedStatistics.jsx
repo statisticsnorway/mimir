@@ -29,7 +29,8 @@ class ReleasedStatistics extends React.Component {
   renderDay(day, month, year, index) {
     const monthNumber = Number(month.month)
     const monthPadded = monthNumber < 9 ? '0' + (monthNumber + 1) : monthNumber + 1
-    const dateTime = `${day.day}.${monthPadded}.${year.year}`
+    const dayPadded = +day.day < 10 ? '0' + day.day : day.day
+    const dateTime = `${year.year}-${monthPadded}-${dayPadded}`
     const monthNames =
       this.props.language === 'en'
         ? [

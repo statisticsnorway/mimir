@@ -154,7 +154,6 @@ function renderPart(req: XP.Request): XP.Response {
       'ModifiedDate',
       {
         explanation: modifiedText,
-        className: '',
         children: changeDate,
       },
       req,
@@ -162,6 +161,7 @@ function renderPart(req: XP.Request): XP.Response {
         id: id,
         body: body,
         pageContributions,
+        ssr: req.mode === 'edit', // Component has to be clientside rendered so it doesn't get inserted twice
       }
     )
   }

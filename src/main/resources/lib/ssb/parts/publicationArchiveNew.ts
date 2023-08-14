@@ -166,7 +166,7 @@ function statisticsAsPublicationItem({
   const mainSubjectTitle: string = mainSubjectId.length
     ? mainSubjects.filter((subject) => subject.name === mainSubjectId)[0].title
     : ''
-  const publishDate: string | undefined = formatDate(release.data.previousRelease, 'yyyy.MM.dd HH:mm', 'nb')
+  const publishDate: string | undefined = formatDate(release.data.previousRelease, 'yyyy-MM-dd HH:mm', 'nb')
 
   return {
     title: release.data.name,
@@ -200,7 +200,7 @@ function articleAsPublicationItem({
     ? getSecondaryMainSubject(subtopics, mainSubjects, subSubjects)
     : []
   const publishDate: string | undefined = content.publish?.from
-    ? formatDate(content.publish.from, 'yyyy.MM.dd HH:mm', 'nb')
+    ? formatDate(content.publish.from, 'yyyy-MM-dd HH:mm', 'nb')
     : undefined
 
   return {

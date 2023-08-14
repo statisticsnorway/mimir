@@ -129,7 +129,7 @@ function prepareStatisticRelease(
       ? getSecondaryMainSubject(subtopics, mainSubjects, subSubjects)
       : []
     const period: string = calculatePeriodRelease(release, language)
-    const publishDate: string | undefined = formatDate(release.publishTime, 'yyyy.MM.dd HH:mm', 'nb')
+    const publishDate: string | undefined = formatDate(release.publishTime, 'yyyy-MM-dd HH:mm', 'nb')
 
     return {
       title: language === 'en' ? release.statisticNameEn : release.statisticName,
@@ -164,7 +164,7 @@ function prepareArticle(
     ? getSecondaryMainSubject(subtopics, mainSubjects, subSubjects)
     : []
   const publishDate: string | undefined =
-    article.publish && article.publish.from ? formatDate(article.publish.from, 'yyyy.MM.dd HH:mm', 'nb') : undefined
+    article.publish && article.publish.from ? formatDate(article.publish.from, 'yyyy-MM-dd HH:mm', 'nb') : undefined
   return {
     title: article.displayName,
     preface: article.data.ingress ? article.data.ingress : '',
@@ -234,7 +234,7 @@ function getStatisticsRepo(language: string, mainSubjects: Array<SubjectItem>): 
             id: release.data.statisticContentId,
           })
         : '',
-      publishDate: formatDate(publishDate, 'yyyy.MM.dd HH:mm', language) ?? '',
+      publishDate: formatDate(publishDate, 'yyyy-MM-dd HH:mm', language) ?? '',
       publishDateHuman: formatDate(publishDate, 'PPP', language),
       contentType: `${app.name}:statistics`,
       articleType: 'statistics',

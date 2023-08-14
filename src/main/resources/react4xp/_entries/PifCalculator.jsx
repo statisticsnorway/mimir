@@ -581,7 +581,7 @@ function PifCalculator(props) {
               </Col>
             </Row>
             <Row>
-              <Col className='calculate-from col-12 col-md-6'>
+              <Col className='calculate-from col-12 col-lg-6'>
                 <h3>{props.phrases.calculatePriceChangeFrom}</h3>
                 <Container>
                   <Row>
@@ -599,7 +599,7 @@ function PifCalculator(props) {
                   </Row>
                 </Container>
               </Col>
-              <Col className='calculate-to col-12 col-md-6'>
+              <Col className='calculate-to col-12 col-lg-6'>
                 <h3>{props.phrases.calculatePriceChangeTo}</h3>
                 <Container>
                   <Row>

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import PropTypes from 'prop-types'
@@ -6,10 +6,12 @@ import { Text } from '@statisticsnorway/ssb-component-library'
 import { Col, Row } from 'react-bootstrap'
 import { useMediaQuery } from 'react-responsive'
 
-require('highcharts/modules/accessibility')(Highcharts)
-require('highcharts/modules/exporting')(Highcharts)
-require('highcharts/modules/export-data')(Highcharts)
-require('highcharts/modules/map')(Highcharts)
+if (typeof Highcharts === 'object') {
+  require('highcharts/modules/accessibility')(Highcharts)
+  require('highcharts/modules/exporting')(Highcharts)
+  require('highcharts/modules/export-data')(Highcharts)
+  require('highcharts/modules/map')(Highcharts)
+}
 
 function renderFootnotes(footnotes) {
   if (footnotes.length) {
@@ -27,14 +29,16 @@ function renderFootnotes(footnotes) {
 }
 
 function Highmap(props) {
-  if (props.language !== 'en') {
-    Highcharts.setOptions({
-      lang: {
-        decimalPoint: ',',
-        thousandsSep: ' ',
-      },
-    })
-  }
+  useEffect(() => {
+    if (props.language !== 'en') {
+      Highcharts.setOptions({
+        lang: {
+          decimalPoint: ',',
+          thousandsSep: ' ',
+        },
+      })
+    }
+  }, [])
 
   const desktop = useMediaQuery({
     minWidth: 992,

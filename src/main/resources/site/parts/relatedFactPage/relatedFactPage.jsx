@@ -1,16 +1,33 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { PictureCard, Button } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
 import { get } from 'axios'
 
 function RelatedBoxes(props) {
-  const { firstRelatedContents, relatedFactPageServiceUrl, partConfig, showAll, showLess, mainTitle } = props
+  const {
+    firstRelatedContents,
+    relatedFactPageServiceUrl,
+    partConfig,
+    showAll,
+    showLess,
+    mainTitle,
+    showingPhrase,
+    factpagePluralName,
+  } = props
 
   const [relatedFactPages, setRelatedFactPages] = useState(
     firstRelatedContents ? firstRelatedContents.relatedFactPages : []
   )
   const [total, setTotal] = useState(firstRelatedContents ? firstRelatedContents.total : 0)
   const [loading, setLoading] = useState(false)
+  const [focusElement, setFocusElement] = useState(false)
+  const currentElement = useRef(null)
+
+  useEffect(() => {
+    if (focusElement && currentElement.current) {
+      currentElement.current.firstChild.focus()
+    }
+  }, [relatedFactPages])
 
   function fetchAllRelatedFactPages() {
     setLoading(true)
@@ -60,35 +77,55 @@ function RelatedBoxes(props) {
     }
   }
 
+  function renderButtonText() {
+    if (!loading) {
+      if (total > relatedFactPages.length) {
+        return `${showAll} (${total})`
+      } else {
+        return showLess
+      }
+    } else {
+      return <span className='spinner-border spinner-border-sm' />
+    }
+  }
+
   function renderRelatedFactPages() {
     if (relatedFactPages.length) {
       return (
         <>
-          <div className='row image-box-wrapper'>
-            {relatedFactPages.map((relatedFactPageContent, index) => (
-              <PictureCard
-                className='mb-3'
-                imageSrc={relatedFactPageContent.image}
-                altText={relatedFactPageContent.imageAlt ? relatedFactPageContent.imageAlt : ''}
-                link={relatedFactPageContent.link}
-                title={relatedFactPageContent.title}
-                key={index}
-              />
-            ))}
+          <div className='row'>
+            <ul
+              className='image-box-wrapper'
+              aria-label={`${showingPhrase.replace('{0}', relatedFactPages.length)} ${total} ${factpagePluralName}`}
+            >
+              {relatedFactPages.map((relatedFactPageContent, index) => (
+                <li key={index} ref={index === 4 ? currentElement : null}>
+                  <PictureCard
+                    className='mb-3'
+                    imageSrc={relatedFactPageContent.image}
+                    altText={relatedFactPageContent.imageAlt ?? ''}
+                    link={relatedFactPageContent.link}
+                    title={relatedFactPageContent.title}
+                  />
+                </li>
+              ))}
+            </ul>
           </div>
           {total > 4 && (
             <div className='row'>
               <div className='col-auto'>
-                <Button onClick={handleButtonOnClick}>
-                  {!loading ? (
-                    total > relatedFactPages.length ? (
-                      showAll
-                    ) : (
-                      showLess
-                    )
-                  ) : (
-                    <span className='spinner-border spinner-border-sm' />
-                  )}
+                <Button
+                  ariaLabel={total > relatedFactPages.length && `${showAll} - ${total} ${factpagePluralName}`}
+                  onClick={handleButtonOnClick}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault()
+                      setFocusElement((prev) => !prev)
+                      handleButtonOnClick()
+                    }
+                  }}
+                >
+                  {renderButtonText()}
                 </Button>
               </div>
             </div>
@@ -121,6 +158,8 @@ RelatedBoxes.propTypes = {
   showAll: PropTypes.string,
   showLess: PropTypes.string,
   mainTitle: PropTypes.string,
+  factpagePluralName: PropTypes.string,
+  showingPhrase: PropTypes.string,
 }
 
 export default (props) => <RelatedBoxes {...props} />

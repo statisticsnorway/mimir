@@ -70,7 +70,7 @@ export function allMonths(phrases: Phrases, frontPage?: boolean, type?: string):
     },
   ]
 
-  if (type !== 'husleie') {
+  if (type !== 'husleie' && type !== 'bkibol') {
     const placeholderItem: MonthDropdownItem = {
       id: '90',
       title: frontPage ? phrases.calculatorMonthAverageFrontpage : phrases.calculatorMonthAverage,

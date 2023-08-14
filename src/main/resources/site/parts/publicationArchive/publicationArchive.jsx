@@ -113,7 +113,7 @@ function PublicationArchive(props) {
             <Text small>
               {getArticleType(publication)} /&nbsp;
               <time dateTime={publication.publishDate}>{publication.publishDateHuman}</time>
-              {publication.mainSubject && `/ ${publication.mainSubject}`}
+              {publication.mainSubject && ` / ${publication.mainSubject}`}
             </Text>
           </div>
         </div>
