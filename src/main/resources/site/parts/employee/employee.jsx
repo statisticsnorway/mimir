@@ -30,7 +30,6 @@ const Employee = (props) => {
     pressPicturesDescrPhrase,
     pressPictureLabelPhrase,
     imagePhrase,
-    profilePicturePhrase,
   } = props
 
   const calculateCvSize = (bytes) => {
@@ -90,10 +89,9 @@ const Employee = (props) => {
       <div className='employee-head col-12'>
         {profileImages.length != 0 ? (
           <div className='employee-image'>
-            <img alt={`${profilePicturePhrase} ${title}`} src={props.profileImages[0]} />
+            <img alt='' src={props.profileImages[0]} aria-hidden='true' />
           </div>
         ) : null}
-        {/* TODO: Screenreader: H1 before profile picture alt-text. Should profile picture be decorative? */}
         {profileImages.length != 0 ? (
           <div className='employee-title'>
             <Title size='1'>{title}</Title>
@@ -183,7 +181,6 @@ const Employee = (props) => {
     )
   }
 
-  // TODO: Suggestion from designer: make this into a legend instead? See legend html tag
   const renderAttachmentsForMobile = () => {
     const accordionHeader = (
       <React.Fragment>
@@ -209,8 +206,6 @@ const Employee = (props) => {
         <div className='employee-description'>
           <div>
             <h2>{briefSummaryPhrase}</h2>
-            {/* TODO:
-             * Suggestion from designer: Screenreader order; read description before press pictures.*/}
             <div
               dangerouslySetInnerHTML={{
                 __html: description,
