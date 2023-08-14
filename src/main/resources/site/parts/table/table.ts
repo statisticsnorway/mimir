@@ -160,7 +160,7 @@ function renderPart(req: XP.Request, tableId?: string): XP.Response {
     pageContributions: {
       bodyEnd: [scriptAsset('js/tableExport.js')],
     },
-    ssr: false,
+    ssr: !csrOnTableAccordion,
   })
 }
 

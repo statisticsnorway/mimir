@@ -93,7 +93,7 @@ function renderPart(req: XP.Request, accordionIds: Array<string>) {
     accordions,
   }
 
-  return render('Accordion', props, req, { ssr: false })
+  return render('Accordion', props, req, { ssr: !csrOnTableAccordion })
 }
 
 export interface AccordionData {
