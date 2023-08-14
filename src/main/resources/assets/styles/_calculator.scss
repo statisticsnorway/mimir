@@ -113,6 +113,16 @@
       .submit {
         padding-top: 32px;
       }
+
+	  p,p > a {
+		font-size: 16px;
+		line-height: 1.7;
+	  }
+	
+	  h2 {
+		font-size: 28px;
+		  line-height: 40px;
+	  }
     }
 
     .calculator-result-frontpage {
