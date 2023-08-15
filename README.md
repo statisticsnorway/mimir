@@ -1,5 +1,7 @@
 # mimir
 
+TEST CHANGE FOR AUTO-ASSIGN BOT 🤖
+
 This is the abbreviated documentation. For details, see our [more complete documentation here.](docs/README.md)
 
 ## Getting started
