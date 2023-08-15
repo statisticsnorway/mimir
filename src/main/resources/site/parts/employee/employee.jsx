@@ -28,8 +28,8 @@ const Employee = (props) => {
     publicationsPhrase,
     pressPicturesPhrase,
     pressPicturesDescrPhrase,
+    pressPictureLabelPhrase,
     imagePhrase,
-    profilePicturePhrase,
   } = props
 
   const calculateCvSize = (bytes) => {
@@ -46,16 +46,18 @@ const Employee = (props) => {
     return (
       <div className='grid-row'>
         {profileImages.map((href, i) => {
+          const pressPictureNumber = i + 1
+          const pressPicturePhrase = pressPictureLabelPhrase.replace('{0}', pressPictureNumber)
           return (
-            <div key={i} className='grid-column' role='img' aria-label={`${pressPicturesPhrase} ${i + 1} av ${title}`}>
-              <a href={href} target='_blank' rel='noreferrer' type='media_type'>
-                <div>
-                  <img alt={`${pressPicturesPhrase} ${i + 1} av ${title}.`} src={href} />
+            <div key={i} className='grid-column'>
+              <a href={href} target='_blank' rel='noreferrer' type='image/jpeg' aria-label={pressPicturePhrase}>
+                <div className='press-picture-thumbnail'>
+                  <img alt='' src={href} />
                 </div>
-                <div>
-                  <Link linkType='profiled'>
-                    {imagePhrase} {i + 1}.jpg
-                  </Link>
+                <div className='ssb-link profiled' aria-hidden='true'>
+                  <span className='link-text'>
+                    {imagePhrase} {pressPictureNumber}.jpg
+                  </span>
                 </div>
               </a>
             </div>
@@ -75,7 +77,7 @@ const Employee = (props) => {
     return (
       <div className='downloadCv'>
         <Button onClick={() => downloadPDF(myCV)}>
-          <Download size='24' />
+          <Download size='24' aria-hidden='true' />
           {downloadPdfPhrase} ({calculateCvSize(cvInformation.size)} kB)
         </Button>
       </div>
@@ -87,7 +89,7 @@ const Employee = (props) => {
       <div className='employee-head col-12'>
         {profileImages.length != 0 ? (
           <div className='employee-image'>
-            <img alt={`${profilePicturePhrase} ${title}`} src={props.profileImages[0]} />
+            <img alt='' src={props.profileImages[0]} aria-hidden='true' />
           </div>
         ) : null}
         {profileImages.length != 0 ? (
@@ -109,8 +111,8 @@ const Employee = (props) => {
         <div className={'row w-100' + (profileImages.length == 0 ? ' border-if-no-images' : '')}>
           {position ? (
             <div className='details-block col-lg col-12'>
-              <div>
-                <Share2 size={24} transform='rotate(90)' />
+              <div className='position-feather-icon'>
+                <Share2 size={24} aria-hidden='true' />
               </div>
               <div>
                 <div>{positionPhrase}</div>
@@ -120,7 +122,7 @@ const Employee = (props) => {
           ) : null}
           {area ? (
             <div className='details-block col-lg col-12'>
-              <div>{isResearcher ? <Eye size={24} /> : <Home size={24} />}</div>
+              <div>{isResearcher ? <Eye size={24} aria-hidden='true' /> : <Home size={24} aria-hidden='true' />}</div>
               <div>
                 <div>{isResearcher ? researchAreaPhrase : departmentPhrase}</div>
                 <Link href={area.href} linkType='profiled'>
@@ -132,7 +134,7 @@ const Employee = (props) => {
           {email ? (
             <div className='details-block col-lg col-12'>
               <div>
-                <Send size={24} />
+                <Send size={24} aria-hidden='true' />
               </div>
               <div>
                 <div>{emailPhrase}</div>
@@ -147,7 +149,7 @@ const Employee = (props) => {
           {phone ? (
             <div className='details-block col-lg col-12'>
               <div>
-                <Smartphone size={24} />
+                <Smartphone size={24} aria-hidden='true' />
               </div>
               <div>
                 <div>{phonePhrase}</div>
@@ -164,11 +166,11 @@ const Employee = (props) => {
 
   const renderAttachmentsForDesktop = () => {
     return (
-      <aside className='employee-attachments mobile-display-none col-12 col-md-3' role='complementary'>
+      <aside className='employee-attachments mobile-display-none col-12 col-md-3'>
         {profileImages.length != 0 ? (
           <React.Fragment>
             <div className='instructions'>
-              <h3>{pressPicturesPhrase}</h3>
+              <h2>{pressPicturesPhrase}</h2>
               <p>{pressPicturesDescrPhrase}</p>
             </div>
             {renderPortraitImages()}
@@ -279,7 +281,7 @@ Employee.propTypes = {
   area: PropTypes.object,
   cvInformation: PropTypes.object,
   isResearcher: PropTypes.bool,
-  cristinId: PropTypes.string | null,
+  cristinId: PropTypes.string || null,
   emailPhrase: PropTypes.string,
   phonePhrase: PropTypes.string,
   positionPhrase: PropTypes.string,
@@ -291,6 +293,7 @@ Employee.propTypes = {
   publicationsPhrase: PropTypes.string,
   pressPicturesPhrase: PropTypes.string,
   pressPicturesDescrPhrase: PropTypes.string,
+  pressPictureLabelPhrase: PropTypes.string,
   imagePhrase: PropTypes.string,
   profilePicturePhrase: PropTypes.string,
 }
