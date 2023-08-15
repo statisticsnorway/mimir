@@ -34,9 +34,10 @@ function SearchResult(props) {
   const [sortChanged, setSortChanged] = useState(false)
   const [sortList, setSortList] = useState(undefined)
   const [filter, setFilter] = useState({
-    mainSubject: props.subjectUrlParam ? props.subjectUrlParam : '',
-    contentType: props.contentTypeUrlParam ? props.contentTypeUrlParam : '',
+    mainSubject: props.subjectUrlParam || '',
+    contentType: props.contentTypeUrlParam || '',
   })
+  const [searchResultSRText, setSearchResultSRText] = useState(props.searchResultSRText)
   const allContentTypeItem = {
     id: 'allTypes',
     title: props.allContentTypesPhrase,
@@ -67,6 +68,18 @@ function SearchResult(props) {
   const [numberChanged, setNumberChanged] = useState(0)
   const [openAccordion, setOpenAccordion] = useState(false)
   const currentElement = useRef(null)
+  const inputSearchElement = useRef(null)
+
+  useEffect(() => {
+    if (searchTerm && inputSearchElement.current) {
+      inputSearchElement.current.firstChild.focus()
+    }
+
+    const timeout = setTimeout(() => {
+      setSearchResultSRText((prev) => prev + '.')
+    }, 1500)
+    return () => clearTimeout(timeout)
+  }, [])
 
   useEffect(() => {
     if (!nameSearchData && props.nameSearchToggle) {
@@ -580,6 +593,7 @@ function SearchResult(props) {
           <div className='container'>
             <Title>{props.title}</Title>
             <Input
+              ref={inputSearchElement}
               className='d-none d-lg-block'
               size='lg'
               value={searchTerm}
@@ -605,6 +619,9 @@ function SearchResult(props) {
         </div>
         <div className='col-12 search-result-body'>
           <div className='container mt-5'>
+            <div className='sr-only' aria-live='polite'>
+              {searchResultSRText}
+            </div>
             {hits.length > 0 || props.bestBetHit ? renderList() : renderNoHitMessage()}
             {renderLoading()}
             {renderShowMoreButton()}
@@ -698,6 +715,7 @@ SearchResult.propTypes = {
   GA_TRACKING_ID: PropTypes.string,
   contentTypeUrlParam: PropTypes.string,
   subjectUrlParam: PropTypes.string,
+  searchResultSRText: PropTypes.string,
 }
 
 export default (props) => <SearchResult {...props} />
