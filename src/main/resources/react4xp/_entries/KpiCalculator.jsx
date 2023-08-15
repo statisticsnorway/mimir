@@ -559,7 +559,7 @@ function KpiCalculator(props) {
                         onBlur={() => onBlur('start-year')}
                       />
                     </Col>
-                    <Col className='select-month col-sm-7'>{addDropdownMonth('start-month')}</Col>
+                    <Col className='select-month col-12 col-sm-7'>{addDropdownMonth('start-month')}</Col>
                   </Row>
                 </Container>
               </Col>
@@ -577,7 +577,7 @@ function KpiCalculator(props) {
                         onBlur={() => onBlur('end-year')}
                       />
                     </Col>
-                    <Col className='select-month col-sm-7'>{addDropdownEndMonth('end-month')}</Col>
+                    <Col className='select-month col-12 col-sm-7'>{addDropdownEndMonth('end-month')}</Col>
                   </Row>
                 </Container>
               </Col>
