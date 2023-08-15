@@ -263,10 +263,12 @@
 
         .select-month {
           padding-right: 0;
+          margin-top: 20px;
         }
 
         .select-month, .ssb-dropdown.month, .list-of-options {
           min-width: 95px;
+          padding-left: 0;
         }
 
         .submit-button {
@@ -388,6 +390,15 @@
 
       .submit-one-year, .submit-last-period {
         width: 100%;
+      }
+
+      .select-month {
+        padding-right: 0;
+        margin-bottom: 20px;
+      }
+
+      .select-month, .ssb-dropdown.month, .list-of-options {
+        margin-top: 0;
       }
     }
   }
