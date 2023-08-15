@@ -10,6 +10,8 @@ import highchartsModuleNoDataToDisplay from 'highcharts/modules/no-data-to-displ
 import highchartsModuleExportData from 'highcharts/modules/export-data'
 import zipcelx from 'zipcelx/lib/legacy'
 
+import accessibilityLang from '../highchart-lang.json'
+
 // Initialize exporting module.
 highchartsModuleData(Highcharts)
 highchartsModuleAccessibility(Highcharts)
@@ -27,119 +29,9 @@ const EMPTY_CONFIG = {
   },
 }
 
-const createSetOptions = {
-  lang: {
-    accessibility: {
-      chartContainerLabel: 'Interaktiv figur',
-      exporting: {
-        chartMenuLabel: 'Last ned graf',
-        menuButtonLabel: 'Velg format for å laste ned {chartTitle}',
-      },
-      screenReaderSection: {
-        beforeRegionLabel: 'Skjermleser-informasjon for figur',
-        endOfChartMarker: '',
-      },
-      legend: {
-        legendItem: 'Vis {itemName}',
-        legendLabel: 'Forklaring av diagram: {legendTitle}',
-        legendLabelNoTitle: 'Bytt synlighet på serie, {chartTitle}',
-      },
-      chartTypes: {
-        barMultiple: 'Stolpediagram med {numSeries} serier.',
-        barSingle: 'Stolpediagram med {numPoints} {#plural(numPoints, stolper, stolpe)}.',
-        columnMultiple: 'Liggende søylediagram med {numSeries} linjer.',
-        columnSingle: 'Søylediagram med {numPoints} {#plural(numPoints, søyler, søyle)}.',
-        combinationChart: 'Kombinasjonsdiagram med {numSeries} dataserier.',
-        defaultMultiple: 'Diagram med {numSeries} dataserier.',
-        defaultSingle: 'Diagram med {numPoints} datapunkter {#plural(numPoints, punkter, punkt)}.',
-        emptyChart: 'Tom datavisualisering',
-        lineMultiple: 'Linjediagram med {numSeries} linjer.',
-        lineSingle: 'Linjediagram med {numPoints} datapunkter {#plural(numPoints, punkter, punkt)}.',
-        mapTypeDescription: 'Kart over {mapTitle} med {numSeries} dataserier.',
-        pieMultiple: 'Sektordiagram med {numSeries} sektorer.',
-        pieSingle: 'Sektordiagram med {numPoints} {#plural(numPoints, sektorer, sektor)}.',
-        scatterMultiple: 'Spredningsplott diagram med {numSeries} dataserier.',
-        scatterSingle: 'Spredningsplott diagram med {numPoints} {#plural(numPoints, punkter, punkt)}.',
-        splineMultiple: 'Linjediagram med {numSeries} linjer.',
-        splineSingle: 'Linjediagram med {numPoints} datapunkter {#plural(numPoints, punkter, punkt)}.',
-        unknownMap: 'Kart med {numSeries} dataserier.',
-      },
-      axis: {
-        rangeFromTo: 'Dataene varierer fra {rangeFrom} til {rangeTo}.',
-        xAxisDescriptionPlural: 'Figuren har {numAxes} X akse som viser {#each(names, -1), }og {names[-1]}.',
-        xAxisDescriptionSingular: 'Figuren har 1 X akse som viser {names[0]}. {ranges[0]}',
-        yAxisDescriptionPlural: 'Figuren har {numAxes} Y akse som viser {#each(names, -1), }og {names[-1]}.',
-        yAxisDescriptionSingular: 'Figuren har 1 Y akse som viser {names[0]}. {ranges[0]}',
-      },
-      series: {
-        xAxisDescription: 'X-akse, {name}',
-        yAxisDescription: 'Y-akse , {name}',
-        summary: {
-          bar: '{name}, stolpediagram {ix} av {numSeries} med {numPoints} {#plural(numPoints, stolper, stolpe)}.',
-          barCombination:
-            '{name}, serie {ix} av {numSeries}. Stolpediagram med {numPoints} {#plural(numPoints, stolper, stolpe)}.',
-          boxplot: '{name}, boksdiagram {ix} av {numSeries} med {numPoints} {#plural(numPoints, bokser, boks)}.',
-          boxplotCombination:
-            '{name}, serie {ix} av {numSeries}. Boksdiagram med {numPoints} {#plural(numPoints, bokser, boks)}.',
-          bubble: '{name}, boblediagram {ix} av {numSeries} med {numPoints} {#plural(numPoints, bobler, boble)}.',
-          bubbleCombination:
-            '{name}, serie {ix} av {numSeries}. Boblediagram serie med {numPoints} {#plural(numPoints, bobler, boble)}.',
-          column: '{name}, søylediagram {ix} av {numSeries} med {numPoints} {#plural(numPoints, søyler, søyle)}.',
-          columnCombination:
-            '{name}, serie {ix} av {numSeries}. Søylediagram med {numPoints} {#plural(numPoints, søyler, søyle)}.',
-          default:
-            '{name}, seriediagram {ix} av {numSeries} med {numPoints} data {#plural(numPoints, punkter, punkt)}.',
-          defaultCombination:
-            '{name}, serie {ix} av {numSeries} med {numPoints} data {#plural(numPoints, punkter, punkt)}.',
-          line: '{name}, linjediagram {ix} av {numSeries} med {numPoints} data {#plural(numPoints, punkter, punkt)}.',
-          lineCombination:
-            '{name}, serie {ix} av {numSeries}. Linje med {numPoints} data {#plural(numPoints, punkter, punkt)}.',
-          map: '{name}, kart {ix} av {numSeries} med {numPoints} {#plural(numPoints, områder, område)}.',
-          mapbubble: '{name}, boblediagram {ix} av {numSeries} med {numPoints} {#plural(numPoints, bobler, boble)}.',
-          mapbubbleCombination:
-            '{name}, serie {ix} av {numSeries}. Boblediagram serie med {numPoints} {#plural(numPoints, bobler, boble)}.',
-          mapCombination:
-            '{name}, serie {ix} av {numSeries}. Kart med {numPoints} {#plural(numPoints, områder, område)}.',
-          mapline: '{name}, linje {ix} av {numSeries} med {numPoints} data {#plural(numPoints, punkter, punkt)}.',
-          maplineCombination:
-            '{name}, serie {ix} av {numSeries}. Linje med {numPoints} data {#plural(numPoints, punkter, punkt)}.',
-          pie: '{name}, sektordiagram {ix} av {numSeries} med {numPoints} {#plural(numPoints, sektorer, sektor)}.',
-          pieCombination:
-            '{name}, serie {ix} av {numSeries}. Sektordiagram med {numPoints} {#plural(numPoints, sektorer, sektor)}.',
-          scatter: '{name}, spredningsplott {ix} av {numSeries} med {numPoints} {#plural(numPoints, punkter, punkt)}.',
-          scatterCombination:
-            '{name}, serie {ix} av {numSeries}, spredningsplott med {numPoints} {#plural(numPoints, punkter, punkt)}.',
-          spline: '{name}, linje {ix} av {numSeries} med {numPoints} data {#plural(numPoints, punkter, punkt)}.',
-          splineCombination:
-            '{name}, serie {ix} av {numSeries}. Linje med {numPoints} data {#plural(numPoints, punkter, punkt)}.',
-        },
-      },
-      credits: 'Diagramkreditter: {creditsStr}.',
-      svgContainerLabel: 'Interaktiv graf',
-      defaultChartTitle: 'Graf',
-    },
-    contextButtonTitle: 'Last ned/skriv ut',
-    decimalPoint: ',',
-    downloadJPEG: 'Last ned som JPEG',
-    downloadPDF: 'Last ned som PDF',
-    downloadPNG: 'Last ned som PNG',
-    downloadSVG: 'Last ned som SVG',
-    downloadCSV: 'Last ned tala som CSV',
-    downloadXLS: 'Last ned tala som XLS',
-    drillUpText: 'Tilbake til {series.name}',
-    loading: 'Tegner graf...',
-    noData: 'Tall ikke tilgjengelig',
-    numericSymbols: [null, ' mill.', ' mrd.'],
-    printChart: 'Skriv ut graf',
-    resetZoom: 'Nullstill zoom',
-    resetZoomTitle: 'Nullstill zoom',
-    thousandsSep: ' ',
-  },
-}
-
 // HIGHCHART
 export function init() {
-  Highcharts.setOptions(createSetOptions)
+  Highcharts.setOptions(accessibilityLang)
 
   const lang = $('html').attr('lang')
 
