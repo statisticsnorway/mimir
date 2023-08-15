@@ -21,4 +21,11 @@ jobs:
         uses: kentaro-m/auto-assign-action@v1.2.5
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-
+  pull-requests:
+    runs-on: ubuntu-latest
+    if: ${{ github.actor != 'dependabot'}}
+    steps:
+      - name: Assign PR
+        uses: kentaro-m/auto-assign-action@v1.2.5
+        with:
+          configuration-path: '.github/auto_assign.yml'
