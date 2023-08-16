@@ -5,7 +5,7 @@ This is the abbreviated documentation. For details, see our [more complete docum
 ## Getting started
 
 Download and install Node version **18.12.1** from https://nodejs.org/en/
-Make sure to keep the version synced to the one used by gradle, foind in `build.gradle` under `node { version: ... }`.
+Make sure to keep the version synced to the one used by gradle, found in `build.gradle` under `node { version: ... }`.
 
 Install latest Enonic CLI according to [docs for you platform](https://developer.enonic.com/start)
 
@@ -24,7 +24,7 @@ Open your preferred terminal and run:
 ```
 enonic sandbox start
 ```
-This will either help you create a new sandbox, or start an existing sandbox. It is **not** recommended to put the version number in the sandbox name, since usaully when we upgrade to a new version of XP we upgrade an existing sandbox. 
+This will either help you create a new sandbox, or start an existing sandbox. It is **not** recommended to put the version number in the sandbox name, since when we upgrade to a new version of XP, the existing sandbox is upgraded.
 
 ### Build and Deploy
 After you have your sandbox up and running, you can build and/or deploy the project by using:
