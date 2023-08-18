@@ -10,6 +10,7 @@ import { localize } from '/lib/xp/i18n'
 import { Node } from '@enonic-types/lib-node'
 
 const { solrSearch } = __non_webpack_require__('/lib/ssb/utils/solrUtils')
+const { nameSearchResult } = __non_webpack_require__('/lib/ssb/utils/nameSearchUtils')
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 const { sanitizeForSolr } = __non_webpack_require__('/lib/ssb/utils/textUtils')
 const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
@@ -158,6 +159,22 @@ export function renderPart(req: XP.Request) {
     } else return ''
   }
 
+  function getNameDataResult() {
+    const solrNameResult = nameSearchResult(sanitizedTerm, false)
+    const body = JSON.parse(solrNameResult.body)
+    const docs = body.response.docs
+    const filteredResult = docs.filter((doc) => doc.name === sanitizedTerm.toUpperCase())
+    const mainRes =
+      filteredResult.length &&
+      filteredResult.reduce((acc, current) => {
+        if (!acc || acc.count < current.count) {
+          acc = current // get the hit with the highest count
+        }
+        return acc
+      })
+    return mainRes
+  }
+
   /* query solr */
   const solrResult: SolrPrepResultAndTotal = sanitizedTerm
     ? solrSearch(
@@ -186,6 +203,7 @@ export function renderPart(req: XP.Request) {
     count,
     title: content.displayName,
     nameSearchToggle: isEnabled('name-search-in-freetext-search') ? true : false,
+    nameSearchData: getNameDataResult(),
     noHitMessage: localize({
       key: 'searchResult.noHitMessage',
       locale: language,
@@ -367,6 +385,7 @@ interface SearchResultProps {
   allSubjectsPhrase: string
   searchServiceUrl: string
   nameSearchToggle: boolean
+  nameSearchData: object
   nameSearchUrl: string
   namePhrases: {
     readMore: string
