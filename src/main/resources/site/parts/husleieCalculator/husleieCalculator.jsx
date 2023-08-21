@@ -76,6 +76,7 @@ function HusleieCalculator(props) {
 
     if (!isFormValid()) {
       onBlur('start-value')
+      onBlur('start-month')
       onBlur('start-year')
       return
     }
@@ -105,8 +106,9 @@ function HusleieCalculator(props) {
         const changeVal = (res.data.change * 100).toFixed(1)
         const endVal = res.data.endValue.toFixed(2)
         const phraseTo = language === 'en' ? 'to' : 'til'
-        const phraseResultText = `${props.phrases.husleieAppliesFor} ${getMonthLabel(startMonth.value).toLowerCase()}
-     ${startYear.value} ${phraseTo} ${getMonthLabel(endMonth).toLowerCase()} ${endYear}`
+        const phraseResultText = `${props.phrases.husleieAppliesFor} ${getMonthLabel(startMonth.value).toLowerCase()}${
+          startYear.value
+        } ${phraseTo} ${getMonthLabel(endMonth).toLowerCase()} ${endYear}`
         setResultText(phraseResultText)
         setChange(changeVal)
         setEndValue(endVal)
@@ -166,7 +168,7 @@ function HusleieCalculator(props) {
         errorMsg: props.lastNumberText,
       })
     }
-    return startMonthEmpty ? startMonthEmpty : startMonthValid
+    return startMonthEmpty ? startMonthEmpty && !startMonthValid : startMonthValid
   }
 
   function isRentPeriodValid() {
@@ -189,11 +191,11 @@ function HusleieCalculator(props) {
         ? `According to The Tenancy Act, you can at the earliest adjust rent in ${rentDate.toLowerCase()} ${
             Number(startYear.value) + 1
           }.
-       Figures for ${rentDate.toLowerCase()} ${Number(startYear.value) + 1} will be available about the 10th 
+       Figures for ${rentDate.toLowerCase()} ${Number(startYear.value) + 1} will be available about the 10th
        of ${rentDatePublish.toLowerCase()} ${nextAdjust.year}`
         : `I følge Husleieloven kan du tidligst endre husleie i ${rentDate.toLowerCase()} ${
             Number(startYear.value) + 1
-          }. 
+          }.
       Tall for ${rentDate.toLowerCase()} ${
             Number(startYear.value) + 1
           } kommer ca 10. ${rentDatePublish.toLowerCase()} ${nextAdjust.year}`
@@ -220,7 +222,7 @@ function HusleieCalculator(props) {
       setChoosePeriod(true)
     }
 
-    return monthsSinceLastPublished === 12 && monthsSinceLastPublished === 12
+    return monthsSinceLastPublished === 12
   }
 
   function onBlur(id) {
@@ -229,6 +231,13 @@ function HusleieCalculator(props) {
         setStartValue({
           ...startValue,
           error: !isStartValueValid(),
+        })
+        break
+      }
+      case 'start-month': {
+        setStartMonth({
+          ...startMonth,
+          error: !isStartMonthValid(),
         })
         break
       }
