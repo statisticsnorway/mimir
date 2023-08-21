@@ -142,7 +142,7 @@ function PublicationArchive(props) {
       <div className='mt-5'>
         <div className='row'>
           <div className='col'>
-            <Title size={6}>{defineContentPhrase}</Title>
+            <span>{defineContentPhrase}</span>
           </div>
         </div>
         <div className='row'>
