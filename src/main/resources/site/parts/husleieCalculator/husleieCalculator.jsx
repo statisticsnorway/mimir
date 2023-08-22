@@ -56,6 +56,7 @@ function HusleieCalculator(props) {
   const language = props.language ? props.language : 'nb'
   const [choosePeriod, setChoosePeriod] = useState(false)
   const [resultText, setResultText] = useState(null)
+  const [showResult, setShowResult] = useState(false)
   const validMinYear = 1950
   const yearRegexp = /^[1-9]{1}[0-9]{3}$/g
 
@@ -97,6 +98,7 @@ function HusleieCalculator(props) {
       newestNumbersPhrase:
         getMonthLabel(validMaxMonth) + ' ' + validMaxYear + ' (' + props.phrases.husleieLatestFigures + ' )',
     })
+    setShowResult(true)
     setChoosePeriod(false)
 
     if (!isFormValid()) {
@@ -290,6 +292,7 @@ function HusleieCalculator(props) {
   }
 
   function onChange(id, value) {
+    setShowResult(false)
     switch (id) {
       case 'start-value': {
         value = value.replace(/,/g, '.')
@@ -442,7 +445,7 @@ function HusleieCalculator(props) {
         </Container>
       )
     }
-    if (endValue && change) {
+    if (endValue && change && showResult) {
       return calculatorResult()
     }
   }
@@ -460,7 +463,7 @@ function HusleieCalculator(props) {
   }
 
   function renderChooseHusleiePeriode() {
-    if (choosePeriod) {
+    if (choosePeriod && showResult) {
       return (
         <Container ref={scrollAnchor}>
           <Divider className='my-5' />
