@@ -11,7 +11,7 @@ import whitelist from 'validator/es/lib/whitelist'
 const { getCalculatorConfig, getNameSearchGraphData } = __non_webpack_require__('/lib/ssb/dataset/calculator')
 const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
 
-export function nameSearchResult(name: string, includeGraphData: boolean): SolrResponse {
+export function getNameSearchResult(name: string, includeGraphData: boolean): SolrResponse {
   const solrBaseUrl: string =
     app.config && app.config['ssb.solrNameSearch.baseUrl']
       ? app.config['ssb.solrNameSearch.baseUrl']
