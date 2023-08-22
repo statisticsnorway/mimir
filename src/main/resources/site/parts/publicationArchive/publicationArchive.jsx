@@ -141,8 +141,8 @@ function PublicationArchive(props) {
     return (
       <div className='mt-5'>
         <div className='row'>
-          <div className='col'>
-            <span>{defineContentPhrase}</span>
+          <div className='col '>
+            <p className='defineContentPhrase'>{defineContentPhrase}</p>
           </div>
         </div>
         <div className='row'>
