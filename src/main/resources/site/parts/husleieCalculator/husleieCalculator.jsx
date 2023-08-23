@@ -33,11 +33,12 @@ function HusleieCalculator(props) {
     errorMsg: `${props.phrases.husleieValidateYear} ${validMaxYear}`,
     value: '',
   })
-  const [adjustRentWarning, setAdjustRentWarning] = useState({
+  const defaultAdjustRentWarning = {
     warning: false,
     warningTitle: '',
     warningMsg: '',
-  })
+  }
+  const [adjustRentWarning, setAdjustRentWarning] = useState(defaultAdjustRentWarning)
   const [chooseFiguresToCalculateRent, setChooseFiguresToCalculateRent] = useState({
     startValue: '',
     startMonth: '',
@@ -78,11 +79,7 @@ function HusleieCalculator(props) {
     if (loading) return
     setChange(null)
     setEndValue(null)
-    setAdjustRentWarning({
-      warning: false,
-      warningTitle: '',
-      warningMsg: '',
-    })
+    setAdjustRentWarning(defaultAdjustRentWarning)
 
     const calculateRentStartMonth = startMonth.value
     const calculatorRentYear = Number(startYear.value)
@@ -103,7 +100,7 @@ function HusleieCalculator(props) {
 
     if (!isFormValid()) {
       onBlur('start-value')
-      onBlur('start-month') // TODO: Will only show "Du må velge måned" error. Doesn't show the error for available values
+      onBlur('start-month')
       onBlur('start-year')
       return
     }
@@ -191,21 +188,8 @@ function HusleieCalculator(props) {
   function isStartMonthValid(value) {
     const startMonthValue = value || startMonth.value
     const startMonthEmpty = startMonthValue === ''
-    if (startMonthEmpty) {
-      setStartMonth({
-        ...startMonth,
-        error: true,
-      })
-    }
     const startMonthValid = !(startYear.value === validMaxYear && startMonthValue > validMaxMonth)
-    if (!startMonthValid) {
-      setStartMonth({
-        ...startMonth,
-        error: true,
-        errorMsg: props.lastNumberText,
-      })
-    }
-    return startMonthEmpty ? startMonthEmpty && !startMonthValid : startMonthValid
+    return !startMonthEmpty || startMonthValid
   }
 
   function isRentPeriodValid() {
@@ -262,6 +246,26 @@ function HusleieCalculator(props) {
     return monthsSinceLastPublished === 12
   }
 
+  function handleStartMonthDropdownErrors() {
+    const startMonthValue = startMonth.value
+    if (startMonthValue === '') {
+      setStartMonth({
+        ...startMonth,
+        error: true,
+      })
+      setAdjustRentWarning(defaultAdjustRentWarning)
+    }
+    const startMonthValid = !(startYear.value === validMaxYear && startMonthValue > validMaxMonth)
+    if (!startMonthValid) {
+      setStartMonth({
+        ...startMonth,
+        error: true,
+        errorMsg: props.lastNumberText,
+      })
+      setAdjustRentWarning(defaultAdjustRentWarning)
+    }
+  }
+
   function onBlur(id) {
     switch (id) {
       case 'start-value': {
@@ -272,10 +276,7 @@ function HusleieCalculator(props) {
         break
       }
       case 'start-month': {
-        setStartMonth({
-          ...startMonth,
-          error: !isStartMonthValid(),
-        })
+        handleStartMonthDropdownErrors()
         break
       }
       case 'start-year': {
