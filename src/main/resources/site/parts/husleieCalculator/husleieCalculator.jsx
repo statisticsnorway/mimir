@@ -248,21 +248,19 @@ function HusleieCalculator(props) {
 
   function handleStartMonthDropdownErrors() {
     const startMonthValue = startMonth.value
-    if (startMonthValue === '') {
-      setStartMonth({
-        ...startMonth,
-        error: true,
-      })
-      setAdjustRentWarning(defaultAdjustRentWarning)
-    }
+    const startMonthEmpty = startMonthValue === ''
     const startMonthValid = !(startYear.value === validMaxYear && startMonthValue > validMaxMonth)
-    if (!startMonthValid) {
-      setStartMonth({
-        ...startMonth,
-        error: true,
-        errorMsg: props.lastNumberText,
-      })
+    const startMonthInvalid = startMonthEmpty || !startMonthValid
+
+    setStartMonth({
+      ...startMonth,
+      error: startMonthInvalid,
+      errorMsg: !startMonthValid ? props.lastNumberText : props.phrases.calculatorValidateDropdownMonth,
+    })
+
+    if (startMonthInvalid) {
       setAdjustRentWarning(defaultAdjustRentWarning)
+      setShowResult(false)
     }
   }
 
