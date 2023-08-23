@@ -74,7 +74,7 @@
     "@item-enonic-types/lib-menu": "^4.2.0-patch1",
     "@item-enonic-types/lib-thymeleaf": "^2.1.0",
     "@reduxjs/toolkit": "^1.9.5",
-    "@statisticsnorway/ssb-component-library": "^2.0.88",
+    "@statisticsnorway/ssb-component-library": "^2.0.89",
     "@types/ramda": "~0.29.1",
     "@types/react": "^18.2.14",
     "@types/uuid": "^9.0.0",
