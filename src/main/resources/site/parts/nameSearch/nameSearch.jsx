@@ -12,6 +12,8 @@ import highchartsAccessibility from 'highcharts/modules/accessibility'
 import { useMediaQuery } from 'react-responsive'
 import { addGtagForEvent } from '/react4xp/ReactGA'
 
+import accessibilityLang from './../../../assets/js/highchart-lang.json'
+
 if (typeof window !== 'undefined' && typeof Highcharts === 'object') {
   highchartsExporting(Highcharts)
   highchartsExportData(Highcharts)
@@ -335,18 +337,22 @@ function NameSearch(props) {
     if (nameGraphData && !loadingGraph) {
       const options = {
         lang: {
-          contextButtonTitle: 'Last ned/skriv ut',
+          ...accessibilityLang.lang,
           accessibility: {
+            ...accessibilityLang.lang.accessibility,
             chartContainerLabel: props.phrases.chartContainerLabel,
             exporting: {
+              ...accessibilityLang.lang.accessibility.exporting,
               chartMenuLabel: props.phrases.chartMenuLabel,
               menuButtonLabel: props.phrases.menuButtonLabel,
             },
             screenReaderSection: {
+              ...accessibilityLang.lang.accessibility.screenReaderSection,
               beforeRegionLabel: props.phrases.beforeRegionLabel,
               endOfChartMarker: '',
             },
             legend: {
+              ...accessibilityLang.lang.accessibility.legend,
               legendItem: props.phrases.legendItem,
               legendLabel: props.phrases.legendLabel,
               legendLabelNoTitle: props.phrases.legendLabelNoTitle,

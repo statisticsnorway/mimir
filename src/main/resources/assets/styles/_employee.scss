@@ -90,16 +90,37 @@
       .grid-column {
         flex: 45%;
         max-width: 45%;
-      }
 
-      .grid-column a div img {
-        width: 100%;
-        height: 125.19px;
-        object-fit: cover;
-      }
+        a {
+          .press-picture-thumbnail img {
+            width: 100%;
+            height: 125.19px;
+            object-fit: cover;
+          }
 
-      .grid-column a div a .link-text {
-        font-size: 14px;
+          .link-text {
+            font-size: 14px;
+          }
+
+          &:hover, &:focus {
+            outline: none;
+
+            .press-picture-thumbnail {
+              outline: $ssb-purple-3 solid 2px;
+              outline-offset: 2px;
+            }
+
+            .ssb-link {
+              background-size: 100% 100%;
+              outline: 0;
+              text-decoration: none;
+
+              .link-text {
+                color: $ssb-white;
+              }
+            }
+          }
+        }
       }
     }
 
@@ -123,6 +144,7 @@
       div {
         display: flex;
         flex-wrap: wrap;
+        word-break: break-word;
 
         p {
           font-size: 20px;
@@ -198,6 +220,10 @@
 
       .details-block {
         padding: 1.25rem 0;
+
+        .position-feather-icon {
+          transform: 'rotate(90deg)';
+        }
       }
 
       .border-if-no-images {
@@ -222,6 +248,11 @@
 
       .instructions {
         margin-top: 0;
+
+        h2 {
+          font-size: 20px;
+          line-height: 32px;
+        }
       }
 
       .grid-row {
@@ -231,14 +262,16 @@
         .grid-column {
           flex: 22%;
           max-width: 22%;
-        }
 
-        .grid-column a div img {
-          height: 100.15px;
-        }
+          a {
+            .press-picture-thumbnail img {
+              height: 100.15px;
+            }
 
-        .grid-column a div a .link-text {
-          font-size: 12px;
+            .link-text {
+              font-size: 12px;
+            }
+          }
         }
       }
     }

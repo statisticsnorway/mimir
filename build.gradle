@@ -41,7 +41,7 @@ dependencies {
     include "no.item:wsutil-server:2.0.0"
     include "com.gravitondigital:featuretogglelib:0.3.0"
     include 'org.json:json:20230618'
-    include "com.enonic.lib:lib-react4xp:4.0.2-B1"
+    include "com.enonic.lib:lib-react4xp:4.0.2-B2"
     include 'com.enonic.lib:lib-text-encoding:2.1.1'
     include "com.enonic.xp:lib-value:${xpVersion}"
     include "no.item:lib-xp-cristin:1.3.1"

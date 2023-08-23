@@ -175,6 +175,8 @@ export function renderPart(req: XP.Request) {
         subjects: [],
       }
 
+  const totalHits = bestBet() ? solrResult.total + 1 : solrResult.total
+
   /* prepare props */
   const props: SearchResultProps = {
     bestBetHit: bestBet(),
@@ -318,6 +320,11 @@ export function renderPart(req: XP.Request) {
     GA_TRACKING_ID: app.config && app.config.GA_TRACKING_ID ? app.config.GA_TRACKING_ID : null,
     contentTypeUrlParam: req.params.innholdstype,
     subjectUrlParam: req.params.emne,
+    searchResultSRText: localize({
+      key: 'searchResult.screenReader.result',
+      locale: language,
+      values: [sanitizedTerm, totalHits.toString()],
+    }),
   }
 
   return render('site/parts/searchResult/searchResultView', props, req)
@@ -388,6 +395,7 @@ interface SearchResultProps {
   GA_TRACKING_ID: string | null
   contentTypeUrlParam: string | undefined
   subjectUrlParam: string | undefined
+  searchResultSRText: string
 }
 
 interface ContentTypePhrase {

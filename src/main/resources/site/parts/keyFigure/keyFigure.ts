@@ -52,8 +52,6 @@ function renderPart(
   if (!page) throw Error('No page found')
 
   const config = getComponent()?.config as KeyFigurePartConfig
-  if (!config) throw Error('No part found')
-
   const showPreviewDraft: boolean = hasWritePermissionsAndPreview(req, page._id)
 
   // get all keyFigures and filter out non-existing keyFigures

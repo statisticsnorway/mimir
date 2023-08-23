@@ -6,6 +6,8 @@ import { Text } from '@statisticsnorway/ssb-component-library'
 import { Col, Row } from 'react-bootstrap'
 import { useMediaQuery } from 'react-responsive'
 
+import accessibilityLang from './../../../assets/js/highchart-lang.json'
+
 if (typeof Highcharts === 'object') {
   require('highcharts/modules/accessibility')(Highcharts)
   require('highcharts/modules/exporting')(Highcharts)
@@ -61,6 +63,7 @@ function Highmap(props) {
       enabled: true,
       description: props.description,
     },
+    ...accessibilityLang,
     title: {
       text: props.title,
       align: 'left',
