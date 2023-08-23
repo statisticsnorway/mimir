@@ -37,7 +37,6 @@ function SearchResult(props) {
     mainSubject: props.subjectUrlParam || '',
     contentType: props.contentTypeUrlParam || '',
   })
-  const [searchResultSRText, setSearchResultSRText] = useState(props.searchResultSRText)
   const allContentTypeItem = {
     id: 'allTypes',
     title: props.allContentTypesPhrase,
@@ -74,11 +73,6 @@ function SearchResult(props) {
     if (searchTerm && inputSearchElement.current) {
       inputSearchElement.current.firstChild.focus()
     }
-
-    const timeout = setTimeout(() => {
-      setSearchResultSRText((prev) => prev + '.')
-    }, 1500)
-    return () => clearTimeout(timeout)
   }, [])
 
   useEffect(() => {
@@ -614,14 +608,12 @@ function SearchResult(props) {
               ariaLabelWrapper={props.term ? props.mainSearchPhrase : undefined}
               ariaLabelSearchButton={props.searchText}
             />
+            <div className='sr-only'>{props.searchResultSRText}</div>
             {renderFilterResults()}
           </div>
         </div>
         <div className='col-12 search-result-body'>
           <div className='container mt-5'>
-            <div className='sr-only' aria-live='polite'>
-              {searchResultSRText}
-            </div>
             {hits.length > 0 || props.bestBetHit ? renderList() : renderNoHitMessage()}
             {renderLoading()}
             {renderShowMoreButton()}
