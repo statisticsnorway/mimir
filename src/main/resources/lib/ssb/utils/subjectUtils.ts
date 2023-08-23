@@ -148,7 +148,7 @@ export function getAllMainSubjectByContent(
   mainSubjects: Array<SubjectItem>,
   subSubjects: Array<SubjectItem>
 ): Array<SubjectItem> {
-  const mainSubject: SubjectItem[] = mainSubjects.filter((subject) => content?._path.startsWith(subject.path))
+  const mainSubject: SubjectItem[] = content?._path ? getSubjectsByPath(mainSubjects, content._path) : []
   const subTopics: Array<string> = content?.data.subtopic ? forceArray(content.data.subtopic) : []
   const secondaryMainSubject: SubjectItem[] = subTopics
     ? getSecondaryMainSubject(subTopics, mainSubjects, subSubjects)
@@ -164,13 +164,17 @@ export function getAllSubSubjectByContent(
   content: Content<Statistics | Article>,
   subSubjects: Array<SubjectItem>
 ): Array<SubjectItem> {
-  const subSubject: SubjectItem[] = subSubjects.filter((subject) => content?._path.startsWith(subject.path))
+  const subSubject: SubjectItem[] = content?._path ? getSubjectsByPath(subSubjects, content._path) : []
   const subTopics: Array<string> = content?.data.subtopic ? forceArray(content.data.subtopic) : []
   const secondarySubSubject: SubjectItem[] = subTopics ? getSecondarySubSubject(subTopics, subSubjects) : []
   const allSubSubjects: SubjectItem[] = subSubject.concat(
     secondarySubSubject.filter((item) => subSubject.indexOf(item) < 0)
   )
   return allSubSubjects
+}
+
+function getSubjectsByPath(subjects: Array<SubjectItem>, path: string): Array<SubjectItem> {
+  return subjects.filter((subject) => path.startsWith(subject.path))
 }
 
 function getSubjectsByLanguage(subjects: Array<SubjectItem>, language: string): Array<SubjectItem> {
