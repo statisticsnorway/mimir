@@ -37,6 +37,7 @@ function SearchResult(props) {
     mainSubject: props.subjectUrlParam || '',
     contentType: props.contentTypeUrlParam || '',
   })
+  const [searchResultSRText, setSearchResultSRText] = useState(null)
   const allContentTypeItem = {
     id: 'allTypes',
     title: props.allContentTypesPhrase,
@@ -72,6 +73,17 @@ function SearchResult(props) {
   useEffect(() => {
     if (searchTerm && inputSearchElement.current) {
       inputSearchElement.current.firstChild.focus()
+    }
+
+    const announceSearchResultScreenReader = setTimeout(() => {
+      setSearchResultSRText(props.searchResultSRText)
+    }, 1500)
+    const clearSearchResulScreenReaderText = setTimeout(() => {
+      setSearchResultSRText(null)
+    }, 2000)
+    return () => {
+      clearTimeout(announceSearchResultScreenReader)
+      clearTimeout(clearSearchResulScreenReaderText)
     }
   }, [])
 
@@ -608,12 +620,16 @@ function SearchResult(props) {
               ariaLabelWrapper={props.term ? props.mainSearchPhrase : undefined}
               ariaLabelSearchButton={props.searchText}
             />
-            <div className='sr-only'>{props.searchResultSRText}</div>
             {renderFilterResults()}
           </div>
         </div>
         <div className='col-12 search-result-body'>
           <div className='container mt-5'>
+            {searchResultSRText && (
+              <div className='visually-hidden' aria-live='polite'>
+                {searchResultSRText}
+              </div>
+            )}
             {hits.length > 0 || props.bestBetHit ? renderList() : renderNoHitMessage()}
             {renderLoading()}
             {renderShowMoreButton()}
