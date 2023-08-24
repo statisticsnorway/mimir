@@ -23,7 +23,6 @@ const {
 const { getLanguage, getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
 const { DATASET_BRANCH, UNPUBLISHED_DATASET_BRANCH } = __non_webpack_require__('/lib/ssb/repo/dataset')
 const { hasWritePermissionsAndPreview } = __non_webpack_require__('/lib/ssb/parts/permissions')
-const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
 
 const view = resolve('./table.html')
 
@@ -140,7 +139,6 @@ function renderPart(req: XP.Request, tableId?: string): XP.Response {
   if (!page) throw Error('No page found')
 
   const phrases: Phrases = getPhrases(page) as Phrases
-  const csrOnTableAccordion: boolean = isEnabled('csr-on-table-accordion', false, 'ssb')
 
   if (!tableId) {
     if (req.mode === 'edit' && page.type !== `${app.name}:statistics`) {
@@ -160,7 +158,6 @@ function renderPart(req: XP.Request, tableId?: string): XP.Response {
     pageContributions: {
       bodyEnd: [scriptAsset('js/tableExport.js')],
     },
-    ssr: !csrOnTableAccordion,
   })
 }
 
