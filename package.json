@@ -166,7 +166,7 @@
     "highcharts-react-official": "^3.1.0",
     "react-bootstrap": "^2.7.4",
     "react-ga": "^3.3.1",
-    "react-select": "^5.7.3",
+    "react-select": "^5.7.4",
     "redux-logger": "^3.0.6",
     "striptags": "^3.2.0",
     "uuid": "^9.0.0",
