@@ -47,7 +47,7 @@ function renderVariables(req: XP.Request, variables: Array<Variables>): XP.Respo
     })
 
     return render(
-      'variables/Variables',
+      'Variables',
       {
         variables: variables.map(({ title, description, fileHref, fileModifiedDate, href }) => {
           return {

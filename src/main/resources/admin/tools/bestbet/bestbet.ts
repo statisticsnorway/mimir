@@ -92,7 +92,7 @@ function renderPart(req: XP.Request): XP.Response {
   ]
 
   const bestBetComponent = r4XpRender(
-    'bestbet/Bestbet',
+    'Bestbet',
     {
       logoUrl: assetUrl({
         path: 'SSB_logo_black.svg',

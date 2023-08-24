@@ -22,4 +22,4 @@ BestBetModal.propTypes = {
   footer: PropTypes.node,
 }
 
-export default (props) => <BestBetModal {...props} />
+export default BestBetModal
