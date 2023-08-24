@@ -94,6 +94,7 @@ interface LibMap extends EnonicLibraryMap {
     '/lib/ssb/utils/articleUtils': import('./lib/ssb/utils/articleUtils').ArticleUtilsLib;
     '/lib/ssb/utils/utils': import('./lib/ssb/utils/utils').UtilsLib;
     '/lib/ssb/utils/calculatorUtils': import('./lib/ssb/utils/calculatorUtils').CalculatorUtilsLib;
+	'/lib/ssb/utils/nameSearchUtils': typeof import('./lib/ssb/utils/nameSearchUtils');
 
     // vendor
     '/lib/vendor/ramda': typeof import('./lib/vendor/ramda');
