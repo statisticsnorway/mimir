@@ -99,7 +99,7 @@ function SearchResult(props) {
   }, [filter, sortList])
 
   function onChange(id, value) {
-    setFilterChanged(true)
+    setFilterChanged(id)
 
     if (id === 'mainSubject') {
       const selectedSubject =
@@ -216,7 +216,24 @@ function SearchResult(props) {
           </Col>
           <Col className='choose-sorting col-12 col-md-8'>
             <span className='sort-title'>{`${props.sortPhrase}:`}</span>
-            {renderRadiobuttonSort()}
+            <RadioGroup
+              className='float-end'
+              onChange={(value) => {
+                onChangeSortList(value)
+              }}
+              selectedValue='best'
+              orientation='row'
+              items={[
+                {
+                  label: props.sortBestHitPhrase,
+                  value: 'best',
+                },
+                {
+                  label: props.sortDatePhrase,
+                  value: 'publiseringsdato',
+                },
+              ]}
+            />
           </Col>
           <Divider dark />
         </div>
@@ -263,8 +280,10 @@ function SearchResult(props) {
       .then((res) => {
         setHits(res.data.hits)
         setTotal(res.data.total)
-        setContentTypes(res.data.contentTypes)
-        setSubjects(res.data.subjects)
+        console.log(filterChanged)
+        console.log('-------------')
+        if (filterChanged === 'mainSubject') setContentTypes(res.data.contentTypes)
+        if (filterChanged === 'contentType') setSubjects(res.data.subjects)
       })
       .finally(() => {
         setLoading(false)
@@ -413,142 +432,46 @@ function SearchResult(props) {
     } else return null
   }
 
-  const dropdownContentTypeItems = [
-    {
-      id: 'allTypes',
-      title: props.allContentTypesPhrase,
-    },
-  ].concat(
-    contentTypes.map((type) => {
-      const phrase = props.contentTypePhrases.find((phrase) => phrase.id === type.title)
-      return {
-        id: type.title,
-        title: `${phrase.title} (${type.count})`,
-      }
-    })
-  )
+  const dropdownContentTypeItems = React.useMemo(() => {
+    console.log('dropdownContentTypeItems', contentTypes)
 
-  const dropdownSubjectsItems = [
-    {
-      id: 'allSubjects',
-      title: props.allContentTypesPhrase,
-    },
-  ].concat(
-    subjects.map((type) => {
-      return {
-        id: type.title,
-        title: `${type.title} (${type.count})`,
-      }
-    })
-  )
-
-  const DropdownMainSubject = React.forwardRef((_props, ref) => (
-    <Dropdown
-      ref={ref}
-      className='DropdownMainSubject'
-      id='mainSubject'
-      onSelect={(value) => {
-        onChange('mainSubject', value)
-        addGtagForEvent(props.GA_TRACKING_ID, 'Valgt emne', 'Søk', value.title)
-        if (!openAccordion) {
-          setOpenAccordion(true)
+    return [
+      {
+        id: 'allTypes',
+        title: props.allContentTypesPhrase,
+      },
+    ].concat(
+      contentTypes.map((type) => {
+        const phrase = props.contentTypePhrases.find((phrase) => phrase.id === type.title)
+        return {
+          id: type.title,
+          title: `${phrase.title} (${type.count})`,
+          prettyTitle: phrase.title,
         }
-      }}
-      selectedItem={selectedMainSubject}
-      items={dropdownSubjectsItems}
-      header={props.chooseSubjectPhrase}
-    />
-  ))
+      })
+    )
+  }, [contentTypes])
 
-  const DropdownContentType = React.forwardRef((_props, ref) => (
-    <Dropdown
-      ref={ref}
-      className='DropdownContentType'
-      id='contentType'
-      onSelect={(value) => {
-        onChange('contentType', value)
-        addGtagForEvent(props.GA_TRACKING_ID, 'Valgt innholdstype', 'Søk', value.title)
-        if (!openAccordion) {
-          setOpenAccordion(true)
+  const dropdownSubjectsItems = React.useMemo(() => {
+    console.log('dropdownSubjectsItems', subjects)
+
+    return [
+      {
+        id: 'allSubjects',
+        title: props.allContentTypesPhrase,
+      },
+    ].concat(
+      subjects.map((type) => {
+        return {
+          id: type.title,
+          title: `${type.title} (${type.count})`,
+          prettyTitle: type.title,
         }
-      }}
-      selectedItem={selectedContentType}
-      items={dropdownContentTypeItems}
-      header={props.chooseContentTypePhrase}
-    />
-  ))
-
-  function renderRadiobuttonSort() {
-    return (
-      <RadioGroup
-        className='float-end'
-        onChange={(value) => {
-          onChangeSortList(value)
-        }}
-        selectedValue='best'
-        orientation='row'
-        items={[
-          {
-            label: props.sortBestHitPhrase,
-            value: 'best',
-          },
-          {
-            label: props.sortDatePhrase,
-            value: 'publiseringsdato',
-          },
-        ]}
-      />
+      })
     )
-  }
+  }, [subjects])
 
-  const isDesktopOrTablet = useMediaQuery({
-    minWidth: 768, // md breakpoint bootstrap 5.0
-  })
-
-  const isMobile = useMediaQuery({
-    maxWidth: 767.98,
-  })
-
-  function renderFilterResults() {
-    const limitResultPhrase = props.limitResultPhrase
-    const filterDropdowns = (
-      <Row justify-content-start>
-        <Col lg='4' className='search-result-dropdown pb-1 pr-1'>
-          <DropdownMainSubject />
-        </Col>
-        <Col lg='4' className='search-result-dropdown pr-1'>
-          <DropdownContentType />
-        </Col>
-      </Row>
-    )
-
-    return (
-      <div className='filter'>
-        {isDesktopOrTablet && (
-          <React.Fragment>
-            <span className='limit-result mb-3'>{limitResultPhrase}</span>
-            {filterDropdowns}
-          </React.Fragment>
-        )}
-        {isMobile && (
-          <Accordion id='search-result-filter-accordion' header={limitResultPhrase} openByDefault={openAccordion}>
-            {filterDropdowns}
-          </Accordion>
-        )}
-        {renderClearFilterButton()}
-      </div>
-    )
-  }
-
-  function renderClearFilterButton() {
-    if (filter.mainSubject || filter.contentType) {
-      return (
-        <Tag onClick={removeFilter} icon={<X size={18} />}>
-          {props.removeFilterPhrase}
-        </Tag>
-      )
-    }
-  }
+  const limitResultPhrase = props.limitResultPhrase
 
   return (
     <section className='search-result container-fluid p-0'>
@@ -578,7 +501,48 @@ function SearchResult(props) {
               ariaLabelWrapper={props.term ? props.mainSearchPhrase : undefined}
               ariaLabelSearchButton={props.searchText}
             />
-            {renderFilterResults()}
+            <div className='filter'>
+              <span className='limit-result mb-3'>{limitResultPhrase}</span>
+              <Row>
+                <Col lg='4' className='search-result-dropdown pb-1 pr-1'>
+                  <Dropdown
+                    className='DropdownMainSubject'
+                    id='mainSubject'
+                    onSelect={(value) => {
+                      onChange('mainSubject', value)
+                      addGtagForEvent(props.GA_TRACKING_ID, 'Valgt emne', 'Søk', value.title)
+                      if (!openAccordion) {
+                        setOpenAccordion(true)
+                      }
+                    }}
+                    selectedItem={selectedMainSubject}
+                    items={dropdownSubjectsItems}
+                    header={props.chooseSubjectPhrase}
+                  />
+                </Col>
+                <Col lg='4' className='search-result-dropdown pr-1'>
+                  <Dropdown
+                    className='DropdownContentType'
+                    id='contentType'
+                    onSelect={(value) => {
+                      onChange('contentType', value)
+                      addGtagForEvent(props.GA_TRACKING_ID, 'Valgt innholdstype', 'Søk', value.title)
+                      if (!openAccordion) {
+                        setOpenAccordion(true)
+                      }
+                    }}
+                    selectedItem={selectedContentType}
+                    items={dropdownContentTypeItems}
+                    header={props.chooseContentTypePhrase}
+                  />
+                </Col>
+              </Row>
+              {(filter.mainSubject || filter.contentType) && (
+                <Tag onClick={removeFilter} icon={<X size={18} />}>
+                  {props.removeFilterPhrase}
+                </Tag>
+              )}
+            </div>
           </div>
         </div>
         <div className='col-12 search-result-body'>
