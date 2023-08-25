@@ -2,6 +2,7 @@ import { get as getContentByKey, type Content } from '/lib/xp/content'
 import { SearchResult as SearchResultPartConfig } from '.'
 import { render } from '/lib/enonic/react4xp'
 import type { PreparedSearchResult, SolrPrepResultAndTotal, Facet } from '/lib/ssb/utils/solrUtils'
+import type { SolrResponse } from '/lib/ssb/utils/nameSearchUtils'
 import { queryNodes, getNode } from '/lib/ssb/repo/common'
 import { formatDate } from '/lib/ssb/utils/dateUtils'
 import type { BestBetContent } from '/lib/ssb/repo/bestbet'
@@ -160,19 +161,23 @@ export function renderPart(req: XP.Request) {
   }
 
   function getNameDataResult() {
-    const solrNameResult = getNameSearchResult(sanitizedTerm, false)
-    const body = JSON.parse(solrNameResult.body)
-    const docs = body.response.docs
-    const filteredResult = docs.filter((doc) => doc.name === sanitizedTerm.toUpperCase())
-    const mainRes =
-      filteredResult.length &&
-      filteredResult.reduce((acc, current) => {
-        if (!acc || acc.count < current.count) {
-          acc = current // get the hit with the highest count
-        }
-        return acc
-      })
-    return mainRes
+    const solrNameResult: SolrResponse = getNameSearchResult(sanitizedTerm, false)
+    if (solrNameResult.status === 200 && solrNameResult.body) {
+      const body = JSON.parse(solrNameResult.body)
+      const docs = body.response.docs
+      const filteredResult = docs.filter((doc) => doc.name === sanitizedTerm.toUpperCase())
+      const mainRes =
+        filteredResult.length &&
+        filteredResult.reduce((acc, current) => {
+          if (!acc || acc.count < current.count) {
+            acc = current // get the hit with the highest count
+          }
+          return acc
+        })
+      return mainRes
+    } else {
+      return undefined
+    }
   }
 
   /* query solr */

@@ -33,20 +33,20 @@ export function getNameSearchResult(name: string, includeGraphData: boolean): So
     },
   }
 
-  try {
-    const result: HttpResponse = request(requestParams)
+  const result: HttpResponse = request(requestParams)
+  if (result.status === 200) {
     const preparedBody: string = result.body ? prepareResult(result.body, sanitizeQuery(name), includeGraphData) : ''
-
     return {
       body: preparedBody,
       status: result.status,
     }
-  } catch (err) {
-    log.error(`Failed to fetch data from solr name search: ${solrBaseUrl}. ${err}`)
-
+  } else {
+    log.error(
+      `getNameSearchResult: Failed to fetch data from solr name search: ${solrBaseUrl} - Statuscode: ${result.status}`
+    )
     return {
-      body: err,
-      status: err.status ? err.status : 500,
+      body: '',
+      status: result.status ? result.status : 500,
     }
   }
 }
