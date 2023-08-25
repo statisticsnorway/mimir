@@ -55,7 +55,7 @@ function PifCalculator(props) {
   const [endIndex, setEndIndex] = useState(null)
   const language = props.language ? props.language : 'nb'
   const [focusElement, setFocusElement] = useState(false)
-  const [scroll, setScroll] = useState(false)
+  const [scrollFocus, setScrollFocus] = useState(false)
   const scrollAnchor = useRef(null)
   const currentElement = useRef(null)
 
@@ -70,10 +70,10 @@ function PifCalculator(props) {
   }, [focusElement])
 
   useEffect(() => {
-    if (scroll && scrollAnchor.current) {
+    if (scrollFocus && scrollAnchor.current) {
       scrollToResult()
     }
-  }, [scroll])
+  }, [scrollFocus])
 
   function scrollToResult() {
     scrollAnchor.current.focus({
@@ -88,7 +88,7 @@ function PifCalculator(props) {
 
   function closeResult() {
     setEndValue(null)
-    setScroll(false)
+    setScrollFocus(false)
     setFocusElement(true)
   }
 
@@ -140,7 +140,7 @@ function PifCalculator(props) {
       })
       .finally(() => {
         setLoading(false)
-        setScroll(true)
+        setScrollFocus(true)
       })
   }
 
