@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Form, Container, Row, Col } from 'react-bootstrap'
 import { Input, Button, Dropdown, Divider, FormError, Link, RadioGroup } from '@statisticsnorway/ssb-component-library'
@@ -54,12 +54,27 @@ function PifCalculator(props) {
   const [startIndex, setStartIndex] = useState(null)
   const [endIndex, setEndIndex] = useState(null)
   const language = props.language ? props.language : 'nb'
+  const [focusElement, setFocusElement] = useState(false)
+  const [scroll, setScroll] = useState(false)
+  const scrollAnchor = useRef(null)
+  const currentElement = useRef(null)
 
   const validMaxMonth = props.lastUpdated.month
   const validMinYear = 1865
   const yearRegexp = /^[1-9]{1}[0-9]{3}$/g
 
-  const scrollAnchor = React.useRef(null)
+  useEffect(() => {
+    if (focusElement && currentElement.current) {
+      currentElement.current.focus()
+    }
+  }, [focusElement])
+
+  useEffect(() => {
+    if (scroll && scrollAnchor.current) {
+      scrollToResult()
+    }
+  }, [scroll])
+
   function scrollToResult() {
     scrollAnchor.current.focus({
       preventScroll: true,
@@ -73,6 +88,8 @@ function PifCalculator(props) {
 
   function closeResult() {
     setEndValue(null)
+    setScroll(false)
+    setFocusElement(true)
   }
 
   function onSubmit(e) {
@@ -123,7 +140,7 @@ function PifCalculator(props) {
       })
       .finally(() => {
         setLoading(false)
-        scrollToResult()
+        setScroll(true)
       })
   }
 
@@ -620,7 +637,7 @@ function PifCalculator(props) {
             </Row>
             <Row className='submit'>
               <Col>
-                <Button className='submit-button' primary type='submit' disabled={loading}>
+                <Button ref={currentElement} className='submit-button' primary type='submit' disabled={loading}>
                   {props.phrases.seePriceChange}
                 </Button>
               </Col>
