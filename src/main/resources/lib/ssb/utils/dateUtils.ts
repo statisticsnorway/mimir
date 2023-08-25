@@ -41,7 +41,15 @@ export function formatDate(date: string | undefined, formatType: string, languag
           locale: language === 'en' ? enGB : language === 'nn' ? nn : nb,
         }
       : {}
-    return format(parsedDate, formatType, locale)
+
+    try {
+      const result = format(parsedDate, formatType, locale)
+      return result
+    } catch (e) {
+      log.error(`Error in formatDate, tried to format ${parsedDate} to ${formatType}`)
+      log.error(JSON.stringify(locale, null, 2))
+      throw e
+    }
   }
   return
 }
