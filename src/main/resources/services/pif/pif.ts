@@ -7,7 +7,7 @@ const { getCalculatorConfig, getPifDataset, isChronological, getChangeValue } =
   __non_webpack_require__('/lib/ssb/dataset/calculator')
 
 function get(req: HttpRequestParams): XP.Response {
-  const scopeCode: string | undefined = req.params?.scopeCode || '2'
+  const scopeCode: string | undefined = req.params?.scopeCode || '3'
   const productGroup: string | undefined = req.params?.productGroup || 'SITCT'
   const startValue: string | undefined = req.params?.startValue
   const startMonth: string | undefined = req.params?.startMonth || ''
