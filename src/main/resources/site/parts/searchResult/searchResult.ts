@@ -2,6 +2,7 @@ import { get as getContentByKey, type Content } from '/lib/xp/content'
 import { SearchResult as SearchResultPartConfig } from '.'
 import { render } from '/lib/enonic/react4xp'
 import type { PreparedSearchResult, SolrPrepResultAndTotal, Facet } from '/lib/ssb/utils/solrUtils'
+import type { SolrResponse } from '/lib/ssb/utils/nameSearchUtils'
 import { queryNodes, getNode } from '/lib/ssb/repo/common'
 import { formatDate } from '/lib/ssb/utils/dateUtils'
 import type { BestBetContent } from '/lib/ssb/repo/bestbet'
@@ -10,6 +11,7 @@ import { localize } from '/lib/xp/i18n'
 import { Node } from '@enonic-types/lib-node'
 
 const { solrSearch } = __non_webpack_require__('/lib/ssb/utils/solrUtils')
+const { getNameSearchResult } = __non_webpack_require__('/lib/ssb/utils/nameSearchUtils')
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 const { sanitizeForSolr } = __non_webpack_require__('/lib/ssb/utils/textUtils')
 const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
@@ -158,6 +160,26 @@ export function renderPart(req: XP.Request) {
     } else return ''
   }
 
+  function getNameDataResult() {
+    const solrNameResult: SolrResponse = getNameSearchResult(sanitizedTerm, false)
+    if (solrNameResult.status === 200 && solrNameResult.body) {
+      const body = JSON.parse(solrNameResult.body)
+      const docs = body.response.docs
+      const filteredResult = docs.filter((doc) => doc.name === sanitizedTerm.toUpperCase())
+      const mainRes =
+        filteredResult.length &&
+        filteredResult.reduce((acc, current) => {
+          if (!acc || acc.count < current.count) {
+            acc = current // get the hit with the highest count
+          }
+          return acc
+        })
+      return mainRes
+    } else {
+      return undefined
+    }
+  }
+
   /* query solr */
   const solrResult: SolrPrepResultAndTotal = sanitizedTerm
     ? solrSearch(
@@ -176,6 +198,7 @@ export function renderPart(req: XP.Request) {
       }
 
   const totalHits = bestBet() ? solrResult.total + 1 : solrResult.total
+  const showNameSearch = isEnabled('name-search-in-freetext-search') ? true : false
 
   /* prepare props */
   const props: SearchResultProps = {
@@ -185,7 +208,8 @@ export function renderPart(req: XP.Request) {
     term: sanitizedTerm,
     count,
     title: content.displayName,
-    nameSearchToggle: isEnabled('name-search-in-freetext-search') ? true : false,
+    nameSearchToggle: showNameSearch,
+    nameSearchData: showNameSearch ? getNameDataResult() : undefined,
     noHitMessage: localize({
       key: 'searchResult.noHitMessage',
       locale: language,
@@ -367,6 +391,7 @@ interface SearchResultProps {
   allSubjectsPhrase: string
   searchServiceUrl: string
   nameSearchToggle: boolean
+  nameSearchData: object | undefined
   nameSearchUrl: string
   namePhrases: {
     readMore: string

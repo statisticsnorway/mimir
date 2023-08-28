@@ -67,7 +67,7 @@ exports.get = function (req: XP.Request): XP.Response {
   const page = getContent<Content<Page> & DefaultPage>()
   if (!page) return { status: 404 }
 
-  const pageConfig: DefaultPageConfig = page.page.config
+  const pageConfig: DefaultPageConfig = page.page?.config
 
   const ingress: string | undefined = page.data.ingress
     ? processHtml({
@@ -172,7 +172,7 @@ exports.get = function (req: XP.Request): XP.Response {
     municipality = getMunicipality(req)
   }
 
-  const pageType: string = pageConfig.pageType ? pageConfig.pageType : 'default'
+  const pageType: string = pageConfig?.pageType || 'default'
   const baseUrl: string =
     app.config && app.config['ssb.baseUrl'] ? (app.config['ssb.baseUrl'] as string) : 'https://www.ssb.no'
   let canonicalUrl: string | undefined = `${baseUrl}${pageUrl({
@@ -212,10 +212,11 @@ exports.get = function (req: XP.Request): XP.Response {
     statbankFane ? statBankContent : undefined
   )
   const breadcrumbId = 'breadcrumbs'
-  const hideBreadcrumb = !!pageConfig.hide_breadcrumb
+  const hideBreadcrumb = !!pageConfig?.hide_breadcrumb
   const innrapporteringRegexp = /^\/ssb(\/en)?\/innrapportering/ // Skal matche alle sider under /innrapportering på norsk og engelsk
 
   const model: DefaultModel = {
+    isFragment,
     pageTitle: 'SSB', // not really used on normal pages because of SEO app (404 still uses this)
     canonicalUrl,
     page: page as unknown as Content,
@@ -609,6 +610,7 @@ export interface StatbankFrameData {
 }
 
 interface DefaultModel {
+  isFragment: boolean
   pageTitle: string
   canonicalUrl: string | undefined
   page: Content

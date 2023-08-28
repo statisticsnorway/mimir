@@ -187,6 +187,10 @@
     </div>
   </main>
 
+  <main class="xp-region" id="content" data-th-if="${isFragment}">
+      <div data-portal-component="fragment" data-th-remove="tag"></div>
+  </main>
+
   <!-- FOOTER -->
   <footer data-th-if="${footerBody}" id="footer" data-th-utext="${footerBody}" data-th-remove="tag">
   </footer>

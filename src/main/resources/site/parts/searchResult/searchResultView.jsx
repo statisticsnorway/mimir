@@ -29,15 +29,13 @@ function SearchResult(props) {
   const [contentTypes, setContentTypes] = useState(props.contentTypes)
   const [subjects, setSubjects] = useState(props.subjects)
   const [filterChanged, setFilterChanged] = useState(false)
-  const [nameSearchData, setNameSearchData] = useState(undefined)
-  const [mainNameResult, setMainNameResult] = useState(undefined)
   const [sortChanged, setSortChanged] = useState(false)
   const [sortList, setSortList] = useState(undefined)
   const [filter, setFilter] = useState({
     mainSubject: props.subjectUrlParam || '',
     contentType: props.contentTypeUrlParam || '',
   })
-  const [searchResultSRText, setSearchResultSRText] = useState(props.searchResultSRText)
+  const [searchResultSRText, setSearchResultSRText] = useState(null)
   const allContentTypeItem = {
     id: 'allTypes',
     title: props.allContentTypesPhrase,
@@ -75,20 +73,19 @@ function SearchResult(props) {
       inputSearchElement.current.firstChild.focus()
     }
 
-    const timeout = setTimeout(() => {
-      setSearchResultSRText((prev) => prev + '.')
+    const announceSearchResultScreenReader = setTimeout(() => {
+      setSearchResultSRText(props.searchResultSRText)
     }, 1500)
-    return () => clearTimeout(timeout)
+    const clearSearchResulScreenReaderText = setTimeout(() => {
+      setSearchResultSRText(null)
+    }, 2000)
+    return () => {
+      clearTimeout(announceSearchResultScreenReader)
+      clearTimeout(clearSearchResulScreenReaderText)
+    }
   }, [])
 
   useEffect(() => {
-    if (!nameSearchData && props.nameSearchToggle) {
-      try {
-        getNameSearch(searchTerm)
-      } catch (e) {
-        console.log(e)
-      }
-    }
     if (filterChanged || sortChanged) {
       fetchFilteredSearchResult()
     }
@@ -223,7 +220,7 @@ function SearchResult(props) {
           </Col>
           <Divider dark />
         </div>
-        {props.nameSearchToggle ? renderNameResult() : undefined}
+        {props.nameSearchToggle && props.nameSearchData ? renderNameResult() : undefined}
         <ol className='list-unstyled '>
           {renderListItem(bestBetHit)}
           {hits.map((hit, i) => {
@@ -368,24 +365,6 @@ function SearchResult(props) {
     window.location = `${props.searchPageUrl}?sok=${searchTerm}`
   }
 
-  function getNameSearch(term) {
-    axios
-      .get(props.nameSearchUrl, {
-        params: {
-          name: term,
-        },
-      })
-      .then((result) => {
-        setNameSearchData(result.data)
-        findMainResult(result.data.response.docs, searchTerm)
-      })
-      .catch((e) => {
-        setNameSearchData({
-          error: e,
-        })
-      })
-  }
-
   function capitalizeNames(name) {
     const nameTokens = name.toLowerCase().split(' ')
     const capitalizedTokens = nameTokens.map((n) => {
@@ -394,23 +373,6 @@ function SearchResult(props) {
       return first + rest
     })
     return capitalizedTokens.join(' ')
-  }
-
-  function findMainResult(docs, originalName) {
-    // only get result with same name as the input
-    const filteredResult = docs.filter((doc) => doc.name === originalName.toUpperCase())
-    const mainRes =
-      filteredResult.length &&
-      filteredResult.reduce((acc, current) => {
-        if (!acc || acc.count < current.count) {
-          acc = current // get the hit with the highest count
-        }
-        return acc
-      })
-    if (mainRes && mainRes.count) {
-      addGtagForEvent(props.GA_TRACKING_ID, 'Navnesøket', 'Søk', searchTerm)
-    }
-    setMainNameResult(mainRes)
   }
 
   const parseResultText = (doc) => {
@@ -434,7 +396,9 @@ function SearchResult(props) {
   }
 
   function renderNameResult() {
+    const mainNameResult = props.nameSearchData
     if (mainNameResult && mainNameResult.count && !filterChanged && numberChanged === 0) {
+      addGtagForEvent(props.GA_TRACKING_ID, 'Navnesøket', 'Søk', searchTerm)
       return (
         //  TODO: Legge til en bedre url til navnestatistikken
         <Card
@@ -619,9 +583,11 @@ function SearchResult(props) {
         </div>
         <div className='col-12 search-result-body'>
           <div className='container mt-5'>
-            <div className='sr-only' aria-live='polite'>
-              {searchResultSRText}
-            </div>
+            {searchResultSRText && (
+              <div className='visually-hidden' aria-live='polite'>
+                {searchResultSRText}
+              </div>
+            )}
             {hits.length > 0 || props.bestBetHit ? renderList() : renderNoHitMessage()}
             {renderLoading()}
             {renderShowMoreButton()}
@@ -656,6 +622,7 @@ SearchResult.propTypes = {
   count: PropTypes.number,
   noHitMessage: PropTypes.string,
   nameSearchToggle: PropTypes.bool,
+  nameSearchData: PropTypes.object,
   namePhrases: PropTypes.shape({
     readMore: PropTypes.string,
     thereAre: PropTypes.string,
