@@ -54,20 +54,13 @@ function PifCalculator(props) {
   const [startIndex, setStartIndex] = useState(null)
   const [endIndex, setEndIndex] = useState(null)
   const language = props.language ? props.language : 'nb'
-  const [focusElement, setFocusElement] = useState(false)
   const [scrollFocus, setScrollFocus] = useState(false)
   const scrollAnchor = useRef(null)
-  const currentElement = useRef(null)
+  const onSubmitBtnElement = useRef(null)
 
   const validMaxMonth = props.lastUpdated.month
   const validMinYear = 1865
   const yearRegexp = /^[1-9]{1}[0-9]{3}$/g
-
-  useEffect(() => {
-    if (focusElement && currentElement.current) {
-      currentElement.current.focus()
-    }
-  }, [focusElement])
 
   useEffect(() => {
     if (scrollFocus && scrollAnchor.current) {
@@ -89,7 +82,10 @@ function PifCalculator(props) {
   function closeResult() {
     setEndValue(null)
     setScrollFocus(false)
-    setFocusElement(true)
+
+    if (onSubmitBtnElement.current) {
+      onSubmitBtnElement.current.focus()
+    }
   }
 
   function onSubmit(e) {
@@ -637,7 +633,7 @@ function PifCalculator(props) {
             </Row>
             <Row className='submit'>
               <Col>
-                <Button ref={currentElement} className='submit-button' primary type='submit' disabled={loading}>
+                <Button ref={onSubmitBtnElement} className='submit-button' primary type='submit' disabled={loading}>
                   {props.phrases.seePriceChange}
                 </Button>
               </Col>
