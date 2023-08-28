@@ -23,17 +23,13 @@ const renderMacro = (context: XP.MacroContext) => {
     })
     .uniqueId()
 
-  // Component has to be clientside rendered so it doesn't get inserted twice
-  const isInEditMode = context.request.mode === 'edit'
   return {
     body: glossary.renderBody({
       body: `<span class="macro-glossary" id="${glossary.react4xpId}"></span>`,
       request: context.request,
-      ssr: isInEditMode,
     }),
     pageContributions: glossary.renderPageContributions({
       request: context.request,
-      ssr: isInEditMode,
     }),
   }
 }
