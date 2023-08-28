@@ -54,7 +54,6 @@ function PifCalculator(props) {
   const [startIndex, setStartIndex] = useState(null)
   const [endIndex, setEndIndex] = useState(null)
   const language = props.language ? props.language : 'nb'
-  const [scrollFocus, setScrollFocus] = useState(false)
   const scrollAnchor = useRef(null)
   const onSubmitBtnElement = useRef(null)
 
@@ -63,29 +62,18 @@ function PifCalculator(props) {
   const yearRegexp = /^[1-9]{1}[0-9]{3}$/g
 
   useEffect(() => {
-    if (scrollFocus && scrollAnchor.current) {
-      scrollToResult()
+    if (!loading && scrollAnchor.current) {
+      scrollAnchor.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'end',
+        inline: 'nearest',
+      })
     }
-  }, [scrollFocus])
-
-  function scrollToResult() {
-    scrollAnchor.current.focus({
-      preventScroll: true,
-    })
-    scrollAnchor.current.scrollIntoView({
-      behavior: 'smooth',
-      block: 'end',
-      inline: 'nearest',
-    })
-  }
+  }, [loading])
 
   function closeResult() {
     setEndValue(null)
-    setScrollFocus(false)
-
-    if (onSubmitBtnElement.current) {
-      onSubmitBtnElement.current.focus()
-    }
+    if (onSubmitBtnElement.current) onSubmitBtnElement.current.focus()
   }
 
   function onSubmit(e) {
@@ -136,7 +124,6 @@ function PifCalculator(props) {
       })
       .finally(() => {
         setLoading(false)
-        setScrollFocus(true)
       })
   }
 
