@@ -29,9 +29,14 @@ function PifCalculator(props) {
     errorMsg: props.lastNumberText,
     value: '',
   })
+  // Differentiate validMinYear based on selected market
+  const validMinYear = scopeCode.value === '3' ? 1926 : 1977
+  console.log(scopeCode.value)
+  const validMinYearPhrase = pifValidateYear.replaceAll('{0}', validMinYear)
+  const validYearErrorMsg = `${validMinYearPhrase} ${validMaxYear}`
   const [startYear, setStartYear] = useState({
     error: false,
-    errorMsg: `${pifValidateYear} ${validMaxYear}`,
+    errorMsg: validYearErrorMsg,
     value: '',
   })
   const [endMonth, setEndMonth] = useState({
@@ -41,7 +46,7 @@ function PifCalculator(props) {
   })
   const [endYear, setEndYear] = useState({
     error: false,
-    errorMsg: `${pifValidateYear} ${validMaxYear}`,
+    errorMsg: validYearErrorMsg,
     value: '',
   })
   const [errorMessage, setErrorMessage] = useState(null)
@@ -58,7 +63,6 @@ function PifCalculator(props) {
   const onSubmitBtnElement = useRef(null)
 
   const validMaxMonth = props.lastUpdated.month
-  const validMinYear = 1865
   const yearRegexp = /^[1-9]{1}[0-9]{3}$/g
 
   useEffect(() => {
@@ -70,6 +74,17 @@ function PifCalculator(props) {
       })
     }
   }, [loading])
+
+  useEffect(() => {
+    setStartYear({
+      ...startYear,
+      errorMsg: validYearErrorMsg,
+    })
+    setEndYear({
+      ...endYear,
+      errorMsg: validYearErrorMsg,
+    })
+  }, [validMinYear])
 
   function closeResult() {
     setEndValue(null)
