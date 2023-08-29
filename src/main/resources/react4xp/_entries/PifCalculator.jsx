@@ -527,7 +527,7 @@ function PifCalculator(props) {
     if (props.calculatorArticleUrl) {
       return (
         <Col className='article-link align-self-center col-12 col-md-6'>
-          <Link className='float-md-end stand-alone' href={props.calculatorArticleUrl}>
+          <Link className='float-md-end' href={props.calculatorArticleUrl} standAlone>
             {props.phrases.readAboutCalculator}
           </Link>
         </Col>
