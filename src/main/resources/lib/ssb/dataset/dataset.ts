@@ -71,13 +71,13 @@ function fetchData(
 ): JSONstat | TbprocessorParsedResponse<TbmlDataUniform> | StatbankSavedRaw | object | null {
   switch (content.data.dataSource?._selected) {
     case DataSourceType.STATBANK_API:
-      return fetchStatbankApiData(content) // JSONstat | null;
+      return fetchStatbankApiData(content)
     case DataSourceType.TBPROCESSOR:
-      return fetchTbprocessorData(content, processXml) // TbprocessorParsedResponse<TbmlDataUniform> | null;
+      return fetchTbprocessorData(content, processXml)
     case DataSourceType.STATBANK_SAVED:
-      return fetchStatbankSavedData(content) // StatbankSavedRaw | null;
+      return fetchStatbankSavedData(content)
     case DataSourceType.KLASS:
-      return fetchKlassData(content) // object | null
+      return fetchKlassData(content)
     default:
       return null
   }
@@ -88,7 +88,6 @@ export function refreshDataset(
   branch: string = DATASET_BRANCH,
   processXml?: string
 ): CreateOrUpdateStatus {
-  /**/
   const newDataset: JSONstat | TbmlDataUniform | TbprocessorParsedResponse<TbmlDataUniform> | object | null = fetchData(
     content,
     processXml

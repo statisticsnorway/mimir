@@ -1,4 +1,5 @@
 import { request, HttpResponse, HttpRequestParams } from '/lib/http-client'
+import { JSONstat } from '/lib/types/jsonstat-toolkit'
 const { Events, logUserDataQuery } = __non_webpack_require__('/lib/ssb/repo/query')
 const { sleep } = __non_webpack_require__('/lib/xp/task')
 
@@ -12,15 +13,15 @@ export function get(
   json: DataqueryRequestData | undefined,
   selection: SelectionFilter = defaultSelectionFilter,
   queryId?: string
-): object | null {
-  if (json && json.query) {
+): JSONstat | object | null {
+  if (json?.query) {
     for (const query of json.query) {
       if (query.code === 'KOKkommuneregion0000' || query.code === 'Region') {
         query.selection = selection
       }
     }
   }
-  const method: string = json && json.query ? 'POST' : 'GET'
+  const method = json?.query ? 'POST' : 'GET'
   const requestParams: HttpRequestParams = {
     url,
     method,
@@ -42,29 +43,33 @@ export function get(
       request: requestParams,
     })
   }
+  let result: HttpResponse = request(requestParams)
+  let retryCount = 0
 
-  const result: HttpResponse = request(requestParams)
-
-  if (result.status !== 200) {
-    log.error(`HTTP ${url} (${result.status} ${result.message})`)
-    if (queryId) {
-      logUserDataQuery(queryId, {
-        file: '/lib/dataquery.ts',
-        function: 'get',
-        message: Events.REQUEST_GOT_ERROR_RESPONSE,
-        response: result,
-        info: url,
-      })
-    }
+  // 429 = too many requests
+  while (retryCount < 3 && result.status === 429) {
+    sleep(60 * 1000)
+    result = request(requestParams)
+    retryCount++
+    log.warn(`HTTP 429 - attempt nr${retryCount + 1} - ${url} (${result.message})`)
   }
 
-  if (result.status === 429) {
-    // 429 = too many requests
-    sleep(30 * 1000)
-  }
+  // We are limited to 30 requests per minute, sleep a bit for each request
+  sleep(3000)
 
   if (result.status === 200 && result.body) {
     return JSON.parse(result.body)
+  }
+
+  log.error(`HTTP ${url} (${result.status} ${result.message})`)
+  if (queryId) {
+    logUserDataQuery(queryId, {
+      file: '/lib/dataquery.ts',
+      function: 'get',
+      message: Events.REQUEST_GOT_ERROR_RESPONSE,
+      response: result,
+      info: url,
+    })
   }
   return null
 }
@@ -84,18 +89,4 @@ export interface DataqueryRequestData {
 export interface Dimension {
   code: string
   selection: SelectionFilter
-}
-
-// TODO create issue for enonic-types where read-only is blocking modify
-/* interface ModifyContent<A extends object> extends Content<A> {
-  displayName: string;
-}*/
-
-export interface KlassRequestLib {
-  get: (
-    url: string,
-    json: DataqueryRequestData | undefined,
-    selection?: SelectionFilter,
-    queryId?: string
-  ) => object | null
 }
