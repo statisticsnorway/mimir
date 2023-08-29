@@ -3,8 +3,8 @@ import PropTypes from 'prop-types'
 import { Container, Row, Col } from 'react-bootstrap'
 import { Title, Link, Tag, Button, Divider } from '@statisticsnorway/ssb-component-library'
 import { XCircle, Edit, Trash, Plus } from 'react-feather'
-import BestBetModal from '/react4xp/_entries/bestbet/BestBetModal'
-import BestBetForm from '/react4xp/_entries/bestbet/BestBetForm'
+import BestBetModal from './BestBetModal'
+import BestBetForm from './BestBetForm'
 import axios from 'axios'
 
 export const BestBetContext = createContext()
@@ -419,4 +419,4 @@ Bestbet.propTypes = {
   mainSubjects: PropTypes.array,
 }
 
-export default (props) => <Bestbet {...props} />
+export default Bestbet

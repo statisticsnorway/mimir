@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import VariableCard from '/react4xp/_entries/variables/VariableCard.jsx'
-import { variableType } from '/react4xp/_entries/variables/types'
+import VariableCard from './VariableCard.jsx'
+import { variableType } from './types'
 
 class VariableCardsList extends React.Component {
   constructor(props) {
