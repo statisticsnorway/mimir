@@ -31,7 +31,6 @@ function PifCalculator(props) {
   })
   // Differentiate validMinYear based on selected market
   const validMinYear = scopeCode.value === '3' ? 1926 : 1977
-  console.log(scopeCode.value)
   const validMinYearPhrase = pifValidateYear.replaceAll('{0}', validMinYear)
   const validYearErrorMsg = `${validMinYearPhrase} ${validMaxYear}`
   const [startYear, setStartYear] = useState({
