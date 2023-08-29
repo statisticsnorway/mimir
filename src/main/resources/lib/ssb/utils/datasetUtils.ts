@@ -51,7 +51,7 @@ export function get(
     sleep(60 * 1000)
     result = request(requestParams)
     retryCount++
-    log.warn(`HTTP 429 - attempt nr${retryCount + 1} - ${url} (${result.message})`)
+    log.warning(`HTTP 429 - attempt nr${retryCount} - ${url} (${result.message})`)
   }
 
   // We are limited to 30 requests per minute, sleep a bit for each request
