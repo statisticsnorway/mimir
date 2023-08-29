@@ -1,6 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { useMediaQuery } from 'react-responsive'
-
 import PropTypes from 'prop-types'
 import {
   Card,
@@ -12,7 +10,6 @@ import {
   Dropdown,
   Tag,
   RadioGroup,
-  Accordion,
   Button,
 } from '@statisticsnorway/ssb-component-library'
 import { ChevronDown, User, X } from 'react-feather'
@@ -157,6 +154,7 @@ function SearchResult(props) {
     })
     setSelectedContentType(allContentTypeItem)
     setSelectedMainSubject(allSubjectsItem)
+    setFilterChanged(true) // we want the useEffect to trigger fetching of results, and new filters
     addGtagForEvent(props.GA_TRACKING_ID, 'Klikk', 'Søk', 'Fjern alle filtervalg')
   }
 
@@ -280,16 +278,15 @@ function SearchResult(props) {
       .then((res) => {
         setHits(res.data.hits)
         setTotal(res.data.total)
-        console.log(filterChanged)
-        console.log('-------------')
-        if (filterChanged === 'mainSubject') setContentTypes(res.data.contentTypes)
-        if (filterChanged === 'contentType') setSubjects(res.data.subjects)
+        if (filterChanged) setContentTypes(res.data.contentTypes)
+        if (filterChanged) setSubjects(res.data.subjects)
       })
       .finally(() => {
         setLoading(false)
         const mainSubjectQueryString = mainSubject ? `&emne=${mainSubject}` : ''
         const contentTypeQueryString = contentType ? `&innholdstype=${contentType}` : ''
         window.history.pushState({}, '', `?sok=${searchTerm}${mainSubjectQueryString}${contentTypeQueryString}`)
+        setFilterChanged(false)
       })
   }
 
@@ -433,8 +430,6 @@ function SearchResult(props) {
   }
 
   const dropdownContentTypeItems = React.useMemo(() => {
-    console.log('dropdownContentTypeItems', contentTypes)
-
     return [
       {
         id: 'allTypes',
@@ -453,12 +448,10 @@ function SearchResult(props) {
   }, [contentTypes])
 
   const dropdownSubjectsItems = React.useMemo(() => {
-    console.log('dropdownSubjectsItems', subjects)
-
     return [
       {
         id: 'allSubjects',
-        title: props.allContentTypesPhrase,
+        title: props.allSubjectsPhrase,
       },
     ].concat(
       subjects.map((type) => {
