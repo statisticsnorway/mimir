@@ -95,10 +95,6 @@ try {
           feature: 'datefns-publication-archive',
           enabled: false,
         },
-        {
-          feature: 'csr-on-table-accordion',
-          enabled: false,
-        },
       ],
     },
   ])
