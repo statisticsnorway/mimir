@@ -790,7 +790,9 @@ function BkibolCalculator(props) {
   return (
     <Container className='bkibol-calculator'>
       {renderForm()}
-      <div aria-live='polite'>{renderResult()}</div>
+      <div aria-live='polite' aria-atomic='true'>
+        {renderResult()}
+      </div>
     </Container>
   )
 }
