@@ -648,7 +648,7 @@ function PifCalculator(props) {
   return (
     <Container className='pif-calculator'>
       {renderForm()}
-      {renderResult()}
+      <div aria-live='polite'>{renderResult()}</div>
     </Container>
   )
 }
