@@ -162,7 +162,7 @@ function SearchResult(props) {
     if (hit) {
       const last = i === hits.length - props.count
       return (
-        <li key={i ? i : undefined} className='mb-4'>
+        <li key={hit.id || i || undefined} className='mb-4'>
           <a
             ref={last ? currentElement : null}
             className='ssb-link header'
@@ -609,6 +609,7 @@ SearchResult.propTypes = {
   }),
   hits: PropTypes.arrayOf(
     PropTypes.shape({
+      id: PropTypes.string,
       title: PropTypes.string,
       url: PropTypes.string,
       preface: PropTypes.string,
