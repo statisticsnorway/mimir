@@ -441,7 +441,6 @@ function SearchResult(props) {
         return {
           id: type.title,
           title: `${phrase.title} (${type.count})`,
-          prettyTitle: phrase.title,
         }
       })
     )
@@ -458,7 +457,6 @@ function SearchResult(props) {
         return {
           id: type.title,
           title: `${type.title} (${type.count})`,
-          prettyTitle: type.title,
         }
       })
     )
@@ -560,7 +558,7 @@ SearchResult.propTypes = {
   total: PropTypes.number,
   buttonTitle: PropTypes.string,
   searchServiceUrl: PropTypes.string,
-  searchPageUrl: PropTypes.stirng,
+  searchPageUrl: PropTypes.string,
   nameSearchUrl: PropTypes.string,
   language: PropTypes.string,
   term: PropTypes.string,
