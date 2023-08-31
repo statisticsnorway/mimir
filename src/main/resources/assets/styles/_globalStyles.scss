@@ -13,38 +13,38 @@ h3,h4,h5,h6 {
   margin-top: 0;
 }
 h1 {
-  font-size: 4rem;
+  font-size: 3.5rem;
   line-height: 5rem;
 }
 h2 {
-  font-size: 1.8rem;
-  line-height: 3rem;
+  font-size: 1.75rem;
+  line-height: 2.5rem;
 }
 h3 {
-  font-size: 1.3rem;
+  font-size: 1.25rem;
   line-height: 2rem;
 }
 h4 {
   font-size: 1rem;
-  line-height: 1.8rem;
+  line-height: 1.75rem;
 }
 h5 {
-  font-size: 1.1rem;
-  line-height: 1.7rem;
+  font-size: 1.125rem;
+  line-height: 1.7;
 }
 h6 {
   font-size: 1rem;
-  line-height: 1.7rem;
+  line-height: 1.7;
 }
 
 @media #{$mobile} {
   h1 {
-    font-size: 3rem;
-    line-height: 4rem;
+    font-size: 2.75rem;
+    line-height: 3.5rem;
   }
   h2 {
-    font-size: 1.8rem;
-    line-height: 2rem;
+    font-size: 1.75rem;
+    line-height: 2.25rem;
   }
 }
 
@@ -68,11 +68,11 @@ p {
   font-size: 1rem;
   font-style: normal;
   letter-spacing: normal;
-  line-height: 1.7rem;
+  line-height: 1.7;
   //max-width: $max-readable-width; <-- this is screwing with center alignment of text, TODO: maybe find a fix? (not critical)
 
   &.small-text {
-    font-size: 0.9rem;
+    font-size: 0.875rem;
   }
 
   &.negative {
@@ -85,8 +85,8 @@ p {
 /* -- Links -- */
 
 $default-font-size: 1rem;
-$profiled-font-size: 1.1rem;
-$header-font-size: 1.3rem;
+$profiled-font-size: 1.125rem;
+$header-font-size: 1.25rem;
 $icon-padding: 8px;
 
 p > a, p > strong > a, ul > li > a, ol > li > a, table a {
@@ -160,7 +160,7 @@ p > a, p > strong > a, ul > li > a, ol > li > a, table a {
       align-items: flex-start;
 
       i {
-        font-size: 1.3rem;
+        font-size: 1.25rem;
       }
 
       .link-text, span {
@@ -241,7 +241,7 @@ blockquote > p {
   background-repeat: no-repeat;
   background-size: 100% 50%;
   display: inline;
-  font-size: 1.3rem;
+  font-size: 1.25rem;
   font-style: normal;
   letter-spacing: normal;
   line-height: 1.6;
