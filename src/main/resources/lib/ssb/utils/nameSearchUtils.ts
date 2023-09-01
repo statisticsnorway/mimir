@@ -97,14 +97,14 @@ function sanitizeQuery(name: string): string {
 
 function replaceCharacters(name: string): string {
   return name
-    .replaceAll(/[ÈÉË]/, 'E')
-    .replaceAll(/[ÔÒÓ]/, 'O')
+    .replace(/[ÈÉË]/g, 'E')
+    .replace(/[ÔÒÓ]/g, 'O')
     .replaceAll("'", '')
     .replaceAll('Ä', 'Æ')
     .replaceAll('Ü', 'Y')
     .replaceAll('Ö', 'Ø')
-    .replaceAll(/[ÀÁ]/, 'A')
-    .replaceAll(/[ÐÞ∂þ]/, 'D')
+    .replace(/[ÀÁ]/g, 'A')
+    .replace(/[ÐÞ∂þ]/g, 'D')
 }
 
 //Uses when repo dont exist
