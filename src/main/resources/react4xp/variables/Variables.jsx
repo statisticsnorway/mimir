@@ -1,8 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Text } from '@statisticsnorway/ssb-component-library'
-import VariableCardsList from '/react4xp/_entries/variables/VariableCardsList.jsx'
-import { variableType } from '/react4xp/_entries/variables/types'
+import VariableCardsList from './VariableCardsList.jsx'
+import { variableType } from './types'
 
 export const DISPLAY_TYPE_CARDS = 'CARDS'
 export const DISPLAY_TYPE_TABLE = 'TABLE'

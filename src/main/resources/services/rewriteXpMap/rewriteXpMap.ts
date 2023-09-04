@@ -10,7 +10,7 @@ function get(): XP.Response {
   }).hits[0]
   return {
     body: parseRules(varnishContent),
-    contentType: 'text/plain',
+    contentType: 'text/plain;charset=utf-8',
   }
 }
 

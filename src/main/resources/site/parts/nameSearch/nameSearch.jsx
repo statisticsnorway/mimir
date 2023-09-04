@@ -37,24 +37,9 @@ function NameSearch(props) {
   const [loading, setLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState(undefined)
   const [nameGraphData, setNameGraphData] = useState([])
-  const currentElement = useRef(null)
-  const [focusElement, setFocusElement] = useState(false)
-
-  function keyDownToggleBox(e) {
-    if (e.keyCode === 13 || e.key == 'Enter' || e.keyCode === 32 || e.key == 'Space') {
-      e.preventDefault()
-      setResult(null)
-      setFocusElement(true)
-    }
-  }
-
-  useEffect(() => {
-    if (focusElement) {
-      currentElement.current && currentElement.current.firstChild.focus()
-    }
-  }, [result])
-
+  const submitButton = useRef(null)
   const scrollAnchor = useRef(null)
+
   useEffect(() => {
     if (!loading && scrollAnchor.current !== null) {
       scrollAnchor.current.scrollIntoView({
@@ -62,11 +47,13 @@ function NameSearch(props) {
         block: 'end',
         inline: 'nearest',
       })
+      scrollAnchor.current.focus()
     }
   }, [loading])
 
   function closeResult() {
     setResult(null)
+    submitButton.current.focus()
   }
 
   function findMainResult(docs, originalName) {
@@ -154,17 +141,12 @@ function NameSearch(props) {
                   <Divider dark />
                 </Col>
               </Row>
-              {result.response && renderMainResult(result.response.docs)}
+              {result.response && renderMainResult()}
               {result.response && renderSubResult(result.response.docs)}
               {result.nameGraphData.length > 0 && renderGraphLink(desktop)}
               <Row>
                 <Col className='md-6'>
-                  <Button
-                    className='close-button'
-                    onClick={() => closeResult()}
-                    type='button'
-                    onKeyDown={keyDownToggleBox}
-                  >
+                  <Button className='close-button' onClick={() => closeResult()} type='button'>
                     {' '}
                     <X size='18' /> {props.phrases.close}{' '}
                   </Button>
@@ -469,11 +451,9 @@ function NameSearch(props) {
           </Row>
           <Row>
             <Col lg md='12'>
-              <span ref={currentElement}>
-                <Button primary type='submit'>
-                  {props.phrases.nameSearchButtonText}
-                </Button>
-              </span>
+              <Button primary type='submit' ref={submitButton}>
+                {props.phrases.nameSearchButtonText}
+              </Button>
             </Col>
             <Col lg md='12' className='name-search-about-link'>
               {props.aboutLink && props.aboutLink.url && (

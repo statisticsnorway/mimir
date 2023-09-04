@@ -14,4 +14,6 @@ Hydration is needed for react components with client side interaction. You need 
 If we want to make more complex components/containers for react we can create classes that extends the React.Component class. This will open of for the possibility to use [state](https://reactjs.org/docs/state-and-lifecycle.html#adding-local-state-to-a-class) and [lifecycles](https://reactjs.org/docs/react-component.html#the-component-lifecycle). Ref. [Header.jsx](/src/main/resources/react4xp/_entries/Header.jsx)
 
 ## Entries
+It is important that any file in `react4xp/_entries` is not imported into any other file. An entry is a bridge between XP and React, not a reusable React component. They should only be used through the various render methods in `lib-react4xp` in our controllers.
+
 After you've run `enonic project build` or `enonic project deploy` at least once, you'll have a file in your build folder with a list of all react4xp components available. `/build/resources/main/assets/react4xp/entries.json`
