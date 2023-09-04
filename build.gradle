@@ -117,7 +117,7 @@ task serverWebpack( type: NpxTask, dependsOn: npmInstall ) {
 task react4xp(type: NpmTask, dependsOn: npmInstall) {
   args = [
     'run',
-    'build:react4xp' // This script must exist in the package.json file
+    'compile:react4xp' // This script must exist in the package.json file
   ]
   description 'Compile React4xp resources'
   environment = [
