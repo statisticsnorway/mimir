@@ -19,6 +19,11 @@ h1 {
 h2 {
   font-size: 1.75rem;
   line-height: 2.5rem;
+
+  &.statbank-title{
+	font-size: 28px;
+	line-height: 40px;
+  }
 }
 h3 {
   font-size: 1.25rem;
@@ -45,6 +50,11 @@ h6 {
   h2 {
     font-size: 1.75rem;
     line-height: 2.25rem;
+
+	&.statbank-title{
+		font-size: 28px;
+		line-height: 36px;
+	}	
   }
 }
 
