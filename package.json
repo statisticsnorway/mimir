@@ -15,7 +15,7 @@
     "build:clientts": "webpack --config webpack.clientts.config.js --color",
     "build:server": "webpack --config webpack.server.config.js --color",
     "build:react4xp": "cross-env WATCH=false R4X_APP_NAME=mimir R4X_DIR_PATH_ABSOLUTE_PROJECT=$INIT_CWD npm run compile:react4xp",
-    "build": "run-p -c build:* --mode:development",
+    "build": "run-p -c build:* --mode:production",
     "dist:clientjs": "cross-env NODE_ENV=production webpack --config webpack.clientjs.config.js --color",
     "dist:clientts": "cross-env NODE_ENV=production webpack --config webpack.clientts.config.js --color",
     "dist:server": "cross-env NODE_ENV=production webpack --config webpack.server.config.js --color",
