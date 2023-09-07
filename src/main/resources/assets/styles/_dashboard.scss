@@ -140,20 +140,6 @@
       border-bottom: 0 none;
       border-top: 0 none;
     }
-
-    &.joblog, &.datasources, &.statreg {
-      table {
-        thead tr th {
-          border: 2px solid #dee2e6;
-        }
-
-        tbody tr {
-          &:nth-child(odd) {
-            background-color: #f2f2f2;
-          }
-        }
-      }
-    }
   }
 
   .next-release {
@@ -166,9 +152,13 @@
       }
       tbody tr {
         background-color: $ssb-white;
-
+        
         &:nth-child(4n+1), &:nth-child(4n+2) {
           background: #F2F2F2;
+        }
+        
+        td {
+          background-color: inherit;
         }
       }
 

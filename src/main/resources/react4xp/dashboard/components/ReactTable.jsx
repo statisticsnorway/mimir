@@ -14,7 +14,7 @@ export function ReactTable(props) {
   )
 
   return (
-    <Table bordered {...getTableProps()}>
+    <Table bordered striped {...getTableProps()}>
       <thead>
         {headerGroups.map((headerGroup, index) => (
           <tr key={index} {...headerGroup.getHeaderGroupProps()}>

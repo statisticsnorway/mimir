@@ -52,7 +52,7 @@ export function StatRegDashboard() {
     }
 
     return (
-      <Table bordered>
+      <Table bordered striped>
         <thead>
           <tr>
             <th className='roboto-bold'>Spørring</th>
