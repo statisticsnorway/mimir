@@ -140,6 +140,14 @@
       border-bottom: 0 none;
       border-top: 0 none;
     }
+
+    &.joblog, &.datasources, &.statreg {
+      table {
+        thead tr th {
+          border: 2px solid #dee2e6;
+        }
+      }
+    }
   }
 
   .next-release {
