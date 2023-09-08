@@ -271,6 +271,7 @@ function prepareData({
       : '',
     statisticContentId: statisticsContent?._id,
     articleType: 'statistics', // allows this content to be filtered together with `Article.articleType`,
+    contacts: statisticsContent?.data.contacts ? forceArray(statisticsContent?.data.contacts) : [],
     mainSubjects: allMainSubjectsStatistic.map((subject) => subject.name).filter(notNullOrUndefined),
     subSubjects: allSubSubjectsStatistic.map((subject) => subject.name).filter(notNullOrUndefined),
     upcomingReleases: variant.upcomingReleases,
@@ -311,6 +312,7 @@ export interface Release {
   nextPeriod: string
   statisticContentId?: string
   articleType: 'statistics'
+  contacts: string[]
   mainSubjects: Array<string> | string | undefined
   subSubjects: Array<string> | string | undefined
   upcomingReleases?: Array<ReleasesInListing>
