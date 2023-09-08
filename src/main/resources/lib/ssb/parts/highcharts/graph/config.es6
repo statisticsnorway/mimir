@@ -1,6 +1,7 @@
 /* eslint-disable complexity */
 const { localize } = __non_webpack_require__('/lib/xp/i18n')
 const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
+import { ensureArray } from '/lib/ssb/utils/arrayUtils'
 
 export const style = {
   color: '#21383a',
@@ -79,20 +80,24 @@ export const createDefaultConfig = (highchartData, displayName, language) => ({
       color: '#00824d',
       fontSize: '16px',
     },
-    enabled: highchartData.creditsText || highchartData.creditsHref,
+    enabled: !!highchartData.sourceList,
   },
   exporting: {
     chartOptions: {
       chart: {
-        height: highchartData.sourceList.sourceText || highchartData.sourceList.sourceHref ? '100%' : null,
-        spacingBottom: highchartData.sourceList.sourceText || highchartData.sourceList.sourceHref ? 50 : 10,
+        spacingBottom: 10 + ensureArray(highchartData?.sourceList).length * 40,
       },
       credits: {
-        enabled: !!highchartData.sourceList.sourceText,
-        text: `<b style="color:#274247">${localize({
-          key: 'source',
-          locale: language ? language : 'nb',
-        })}:</b></br>${highchartData.sourceList.sourceText}`,
+        enabled: !!highchartData.sourceList,
+        text: ensureArray(highchartData?.sourceList).reduce((combinedSources, currentSource) => {
+          return (
+            combinedSources +
+            `<b style="color:#274247">${localize({
+              key: 'source',
+              locale: language ? language : 'nb',
+            })}: </b>${currentSource.sourceText}</br>`
+          )
+        }, ''),
         position: {
           y: -30,
         },
