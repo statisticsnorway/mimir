@@ -245,6 +245,16 @@ export function init() {
           }
         }
 
+        $('button.highcharts-a11y-proxy-button.highcharts-no-tooltip').each(function () {
+          $(this).css('top', '0')
+        })
+        const preventTopPositionChange = () => {
+          $('button.highcharts-a11y-proxy-button.highcharts-no-tooltip').css('top', '0')
+        }
+        $(window).on('resize', preventTopPositionChange)
+        $(window).on('scroll', preventTopPositionChange)
+        $('.highcharts-legend-item').on('click', preventTopPositionChange)
+
         Highcharts.chart(chart, config)
 
         // Hide data table when highchart is loaded
