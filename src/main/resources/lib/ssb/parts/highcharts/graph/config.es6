@@ -84,14 +84,15 @@ export const createDefaultConfig = (highchartData, displayName, language) => ({
   exporting: {
     chartOptions: {
       chart: {
-        spacingBottom: highchartData.creditsText || highchartData.creditsHref ? 50 : 10,
+        height: highchartData.sourceList.sourceText || highchartData.sourceList.sourceHref ? '100%' : null,
+        spacingBottom: highchartData.sourceList.sourceText || highchartData.sourceList.sourceHref ? 50 : 10,
       },
       credits: {
-        enabled: !!highchartData.creditsText,
+        enabled: !!highchartData.sourceList.sourceText,
         text: `<b style="color:#274247">${localize({
           key: 'source',
           locale: language ? language : 'nb',
-        })}:</b></br>${highchartData.creditsText}`,
+        })}:</b></br>${highchartData.sourceList.sourceText}`,
         position: {
           y: -30,
         },
