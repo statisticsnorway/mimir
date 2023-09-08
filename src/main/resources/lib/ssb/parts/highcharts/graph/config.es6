@@ -84,7 +84,6 @@ export const createDefaultConfig = (highchartData, displayName, language) => ({
   exporting: {
     chartOptions: {
       chart: {
-        height: highchartData.creditsText || highchartData.creditsHref ? '100%' : null,
         spacingBottom: highchartData.creditsText || highchartData.creditsHref ? 50 : 10,
       },
       credits: {
