@@ -78,6 +78,22 @@ export function getStatisticVariantsFromRepo(
   return res.hits.map((hit) => connectionStatisticRepo.get(hit.id) as ContentLight<Release>)
 }
 
+export function getUpcompingStatisticVariantsFromRepo(count?: number): ContentLight<Release>[] {
+  const connectionStatisticRepo: RepoConnection = getRepoConnectionStatistics()
+  const res = connectionStatisticRepo.query({
+    count: count ? count : 1000,
+    sort: 'publish.from DESC',
+    query: {
+      range: {
+        field: 'data.nextRelease',
+        gte: new Date().toISOString(),
+      },
+    },
+  })
+
+  return res.hits.map((hit) => connectionStatisticRepo.get(hit.id) as ContentLight<Release>)
+}
+
 export function fillRepo(statistics: Array<StatisticInListing>) {
   if (getRepo(REPO_ID_STATREG_STATISTICS) === null) {
     createRepo({
