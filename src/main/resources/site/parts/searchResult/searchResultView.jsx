@@ -32,6 +32,7 @@ function SearchResult(props) {
     mainSubject: props.subjectUrlParam || '',
     contentType: props.contentTypeUrlParam || '',
   })
+  const [reset, setReset] = useState(0)
   const [searchResultSRText, setSearchResultSRText] = useState(null)
   const allContentTypeItem = {
     id: 'allTypes',
@@ -152,6 +153,7 @@ function SearchResult(props) {
       mainSubject: '',
       contentType: '',
     })
+    setReset(reset + 1)
     setSelectedContentType(allContentTypeItem)
     setSelectedMainSubject(allSubjectsItem)
     setFilterChanged(true) // we want the useEffect to trigger fetching of results, and new filters
@@ -499,6 +501,7 @@ function SearchResult(props) {
                   <Dropdown
                     className='DropdownMainSubject'
                     id='mainSubject'
+                    key={`mainSubject-${reset}`}
                     onSelect={(value) => {
                       onChange('mainSubject', value)
                       addGtagForEvent(props.GA_TRACKING_ID, 'Valgt emne', 'Søk', value.title)
@@ -515,6 +518,7 @@ function SearchResult(props) {
                   <Dropdown
                     className='DropdownContentType'
                     id='contentType'
+                    key={`contentType-${reset}`}
                     onSelect={(value) => {
                       onChange('contentType', value)
                       addGtagForEvent(props.GA_TRACKING_ID, 'Valgt innholdstype', 'Søk', value.title)
