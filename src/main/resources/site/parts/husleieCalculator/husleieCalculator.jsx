@@ -107,6 +107,7 @@ function HusleieCalculator(props) {
 
     setErrorMessage(null)
     setLoading(true)
+    getServiceData(startValue.value, startMonth.value, startYear.value, validMaxMonth, validMaxYear)
   }
 
   function isFormValid() {
