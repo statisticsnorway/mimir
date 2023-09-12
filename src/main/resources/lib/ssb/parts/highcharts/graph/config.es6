@@ -69,23 +69,17 @@ export const createDefaultConfig = (highchartData, displayName, language) => ({
     '#000000',
   ],
   credits: {
-    position: {
-      align: 'left',
-      x: 10,
-      y: -25,
-    },
-    text: highchartData.creditsText,
-    href: highchartData.creditsHref,
-    style: {
-      color: '#00824d',
-      fontSize: '16px',
-    },
     enabled: !!highchartData.sourceList,
   },
   exporting: {
     chartOptions: {
       chart: {
-        spacingBottom: 10 + ensureArray(highchartData?.sourceList).length * 40,
+        spacingBottom: 10 + ensureArray(highchartData?.sourceList).length * 20,
+      },
+      xAxis: {
+        labels: {
+          step: 1,
+        },
       },
       credits: {
         enabled: !!highchartData.sourceList,
@@ -94,12 +88,18 @@ export const createDefaultConfig = (highchartData, displayName, language) => ({
             combinedSources +
             `<b style="color:#274247">${localize({
               key: 'source',
-              locale: language ? language : 'nb',
+              locale: language ?? 'nb',
             })}: </b>${currentSource.sourceText}</br>`
           )
         }, ''),
         position: {
-          y: -30,
+          align: 'left',
+          x: 10,
+          y: -10 - (ensureArray(highchartData?.sourceList).length - 1) * 20,
+        },
+        style: {
+          color: '#00824d',
+          fontSize: '16px',
         },
       },
     },
