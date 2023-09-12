@@ -7,7 +7,8 @@ const { getCalculatorConfig, getPifDataset, isChronological, getChangeValue } =
   __non_webpack_require__('/lib/ssb/dataset/calculator')
 
 function get(req: HttpRequestParams): XP.Response {
-  const scopeCode: string | undefined = req.params?.scopeCode || '2'
+  // Scope code for radio button group option pif-choose-home-import, which is set as default in frontend.
+  const scopeCode: string | undefined = req.params?.scopeCode ?? '3'
   const productGroup: string | undefined = req.params?.productGroup || 'SITCT'
   const startValue: string | undefined = req.params?.startValue
   const startMonth: string | undefined = req.params?.startMonth || ''
