@@ -137,3 +137,8 @@
 .show-div {
   display: block!important;
 }
+
+// Highcharts Keyboard navigation tab fix (accessibility elements fix)
+.highcharts-a11y-proxy-button.highcharts-no-tooltip{
+  top:0!important;
+}
