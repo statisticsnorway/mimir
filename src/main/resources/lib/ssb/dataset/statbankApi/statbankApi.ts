@@ -2,14 +2,14 @@ import { DatasetRepoNode, DataSource as DataSourceType } from '/lib/ssb/repo/dat
 import { Content } from '/lib/xp/content'
 import type { DataSource } from '/site/mixins/dataSource'
 import { JSONstat } from '/lib/types/jsonstat-toolkit'
+import { get as fetchData } from '/lib/ssb/utils/datasetUtils'
 
 const { getDataset } = __non_webpack_require__('/lib/ssb/repo/dataset')
-const { get: fetchData } = __non_webpack_require__('/lib/ssb/dataset/statbankApi/statbankApiRequest')
 const { logUserDataQuery, Events } = __non_webpack_require__('/lib/ssb/repo/query')
 const { isUrl } = __non_webpack_require__('/lib/ssb/utils/utils')
 
 export function getStatbankApi(content: Content<DataSource>, branch: string): DatasetRepoNode<JSONstat> | null {
-  if (content.data.dataSource && content.data.dataSource._selected) {
+  if (content?.data?.dataSource?._selected) {
     const dataSource: DataSource['dataSource'] = content.data.dataSource
     if (
       dataSource._selected === DataSourceType.STATBANK_API &&
@@ -29,12 +29,11 @@ export function getStatbankApi(content: Content<DataSource>, branch: string): Da
   return null
 }
 
-export function fetchStatbankApiData(content: Content<DataSource>): JSONstat | null {
-  const baseUrl: string =
-    app.config && app.config['ssb.pxwebapi.baseUrl']
-      ? app.config['ssb.pxwebapi.baseUrl']
-      : 'https://data.ssb.no/api/v0/no'
-  let data: JSONstat | null = null
+export function fetchStatbankApiData(content: Content<DataSource>) {
+  const baseUrl: string = app?.config?.['ssb.pxwebapi.baseUrl']
+    ? app.config['ssb.pxwebapi.baseUrl']
+    : 'https://data.ssb.no/api/v0/no'
+  let data: object | JSONstat | null = null
   if (content.data.dataSource) {
     try {
       const dataSource: DataSource['dataSource'] = content.data.dataSource

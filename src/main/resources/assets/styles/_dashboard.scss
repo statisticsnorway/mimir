@@ -146,12 +146,6 @@
         thead tr th {
           border: 2px solid #dee2e6;
         }
-
-        tbody tr {
-          &:nth-child(odd) {
-            background-color: #f2f2f2;
-          }
-        }
       }
     }
   }
@@ -166,9 +160,13 @@
       }
       tbody tr {
         background-color: $ssb-white;
-
+        
         &:nth-child(4n+1), &:nth-child(4n+2) {
           background: #F2F2F2;
+        }
+        
+        td {
+          background-color: inherit;
         }
       }
 

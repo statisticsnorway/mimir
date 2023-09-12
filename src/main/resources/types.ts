@@ -34,11 +34,9 @@ interface LibMap extends EnonicLibraryMap {
     // dataset - klass
     '/lib/ssb/dataset/klass/counties': import('./lib/ssb/dataset/klass/counties').CountiesLib;
     '/lib/ssb/dataset/klass/klass': import('./lib/ssb/dataset/klass/klass').KlassLib;
-    '/lib/ssb/dataset/klass/klassRequest': import('./lib/ssb/dataset/klass/klassRequest').KlassRequestLib;
     '/lib/ssb/dataset/klass/municipalities': import('./lib/ssb/dataset/klass/municipalities').MunicipalitiesLib;
     // dataset - statbankApi
     '/lib/ssb/dataset/statbankApi/statbankApi': import('./lib/ssb/dataset/statbankApi/statbankApi').StatbankApiLib;
-    '/lib/ssb/dataset/statbankApi/statbankApiRequest': import('./lib/ssb/dataset/statbankApi/statbankApiRequest').StatbankApiRequestLib;
     // dataset - statbankSaved
     '/lib/ssb/dataset/statbankSaved/statbankSaved': import('./lib/ssb/dataset/statbankSaved/statbankSaved').StatbankSavedLib;
     '/lib/ssb/dataset/statbankSaved/statbankSavedRequest': import('./lib/ssb/dataset/statbankSaved/statbankSavedRequest').StatbankSavedRequestLib;
@@ -117,7 +115,7 @@ declare const app: {
 declare const log: {
     debug: (...args: any[]) => void;
     info: (...args: any[]) => void;
-    warn: (...args: any[]) => void;
+    warning: (...args: any[]) => void;
     error: (...args: any[]) => void;
 }
 

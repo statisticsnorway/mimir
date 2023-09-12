@@ -64,6 +64,7 @@ function nerfSearchResult(solrResult: SolrResult, language: string): Array<Prepa
       const mainSubjects: Array<string> = doc.hovedemner ? doc.hovedemner.split(';') : []
       const secondarySubjects: Array<string> = mainSubjects.filter((subject) => subject !== mainSubjects[0])
       acc.push({
+        id: doc.id,
         title: sanitizeHtml(highlight.tittel ? highlight.tittel[0] : doc.tittel),
         preface: sanitizeHtml(highlight.innhold ? highlight.innhold[0] : doc.tittel),
         contentType: doc.innholdstype,
@@ -171,6 +172,7 @@ interface SolrResponse {
 }
 
 export interface PreparedSearchResult {
+  id?: string
   title: string
   preface: string
   contentType: string

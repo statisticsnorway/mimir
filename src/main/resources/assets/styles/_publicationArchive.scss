@@ -10,6 +10,14 @@
     .publication-archive-body {
       & > * {
         max-width: 580px;
-      }  
+      }
+    }
+    .defineContentPhrase{
+      font-family: Roboto,sans-serif!important;
+      font-stretch: normal;
+      font-weight: 700;
+      margin: 0;
+      font-size: 1rem;
+      padding-bottom: 0.5rem;
     }
 }
