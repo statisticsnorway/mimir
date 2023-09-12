@@ -49,8 +49,8 @@
 <body class="xp-page" data-th-classappend="${bodyClasses}">
   <!-- Google Tag Manager (noscript) -->
   <noscript data-th-if="${GTM_TRACKING_ID}">
-    <iframe 
-      title="GTM tag" 
+    <iframe
+      title="GTM tag"
       data-th-src="'https://www.googletagmanager.com/ns.html?id=' + ${GTM_TRACKING_ID} + (${GTM_AUTH} ? '&gtm_auth='+${GTM_AUTH}+'&gtm_preview=env-3&gtm_cookies_win=x' : '')"
       height="0" width="0" style="display:none;visibility:hidden"
     ></iframe>
@@ -196,16 +196,7 @@
   </footer>
 
   <script data-th-src="${ieUrl}" defer></script>
-  <!-- siteimprove tracking script -->
-  <script type="text/javascript">
-    /*<![CDATA[*/
-    (function() {
-      var sz = document.createElement('script'); sz.type = 'text/javascript'; sz.defer = true;
-      sz.src = '//siteimproveanalytics.com/js/siteanalyze_6003075.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(sz, s);
-    })();
-    /*]]>*/
-  </script>
+
     <!-- SnapEngage code -->
     <script type="text/javascript" data-th-if="${enabledChatScript}">
     /*<![CDATA[*/
