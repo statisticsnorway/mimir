@@ -302,16 +302,6 @@ export interface Highchart {
   footnoteText?: string;
 
   /**
-   * (IKKE BRUK) Kildetekst
-   */
-  creditsText?: string;
-
-  /**
-   * (IKKE BRUK) Kilde-URL
-   */
-  creditsHref?: string;
-
-  /**
    * GraphQL name. Also used for separating unions in TypeScript
    */
   __typename?: 'mimir_Highchart_Data';

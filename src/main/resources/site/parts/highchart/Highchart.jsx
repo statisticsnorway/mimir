@@ -7,6 +7,7 @@ import { Title, Button, Tabs, Divider, Link } from '@statisticsnorway/ssb-compon
 import { addGtagForEvent } from '/react4xp/ReactGA'
 
 import accessibilityLang from './../../../assets/js/highchart-lang.json'
+import { ensureArray } from '/lib/ssb/utils/arrayUtils'
 
 if (typeof Highcharts === 'object') {
   require('highcharts/modules/exporting')(Highcharts)
@@ -102,18 +103,29 @@ function Highchart(props) {
     )
   }
 
-  function renderHighchartsSources(highchart) {
+  function renderHighchartsSource(sourceLink) {
     return (
-      <Col className='col-12'>
-        {highchart.footnoteText ? <Row className='col-12 footnote'>{highchart.footnoteText}</Row> : null}
-        {highchart.creditsEnabled ? (
-          <Row className='mt-4 mt-md-5 highcharts-source'>
-            <Col className='col-12 fw-bold mb-0'>{props.phrases.source}:</Col>
-            <Col className='col-12'>
-              <Link href={highchart.creditsHref}>{highchart.creditsText}</Link>
-            </Col>
+      <Row>
+        <Col>
+          <Link href={sourceLink.sourceHref}>
+            {props.phrases.source}: {sourceLink.sourceText}
+          </Link>
+        </Col>
+      </Row>
+    )
+  }
+
+  function renderHighchartsFooter(highchart) {
+    return (
+      <Col>
+        {highchart.footnoteText ? (
+          <Row className='footnote mb-4 mb-md-5'>
+            <Col>{highchart.footnoteText}</Col>
           </Row>
         ) : null}
+        {highchart.creditsEnabled
+          ? ensureArray(highchart.sourceList).map((source) => renderHighchartsSource(source))
+          : null}
       </Col>
     )
   }
@@ -234,7 +246,7 @@ function Highchart(props) {
             <Col className='col-12'>
               <HighchartsReact highcharts={Highcharts} options={config} />
             </Col>
-            {renderHighchartsSources(highchart)}
+            {renderHighchartsFooter(highchart)}
           </Row>
         )
       })
@@ -253,8 +265,7 @@ Highchart.propTypes = {
       contentKey: PropTypes.string,
       footnoteText: PropTypes.string,
       creditsEnabled: PropTypes.boolean,
-      creditsHref: PropTypes.string,
-      creditsText: PropTypes.string,
+      sourceList: Highchart['sourceList'],
       hideTitle: PropTypes.boolean,
     })
   ),
