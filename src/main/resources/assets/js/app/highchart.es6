@@ -11,6 +11,7 @@ import highchartsModuleExportData from 'highcharts/modules/export-data'
 import zipcelx from 'zipcelx/lib/legacy'
 
 import accessibilityLang from '../highchart-lang.json'
+import accessibilityLangEN from '../highchart-lang-en.json'
 
 // Initialize exporting module.
 highchartsModuleData(Highcharts)
@@ -31,9 +32,11 @@ const EMPTY_CONFIG = {
 
 // HIGHCHART
 export function init() {
-  Highcharts.setOptions(accessibilityLang)
-
+  //Language file selector code (default = nb)
+  //nb = (highchart-lang.json) and en = (highchart-lang-en.json)
   const lang = $('html').attr('lang')
+  const langSetting = lang === 'en' ? accessibilityLangEN : accessibilityLang
+  Highcharts.setOptions(langSetting)
 
   // Workaround for table ascending/descending sort.
   // There is a feature request in github, so a config option to disable the feature is being implemented.
