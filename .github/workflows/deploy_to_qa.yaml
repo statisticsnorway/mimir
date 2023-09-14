@@ -12,6 +12,7 @@ jobs:
   deploy_to_qa:
     name: 'Deploy to QA'
     runs-on: 'ubuntu-latest'
+    environment: 'QA'
     steps:
       - id: build_app
         uses: enonic/release-tools/build-and-publish@master
