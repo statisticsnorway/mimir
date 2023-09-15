@@ -11,7 +11,6 @@ import highchartsModuleExportData from 'highcharts/modules/export-data'
 import zipcelx from 'zipcelx/lib/legacy'
 
 import accessibilityLang from '../highchart-lang.json'
-//import accessibilityLangEN from '../highchart-lang-en.json'
 
 // Initialize exporting module.
 highchartsModuleData(Highcharts)
