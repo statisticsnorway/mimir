@@ -17,6 +17,10 @@ export function getStatisticCalendarRss(req: XP.Request): string {
   const upcomingReleases: StatkalRelease[] = getUpcomingReleases(statisticVariants)
   const rssReleases: RssRelease[] = getRssReleases(upcomingVariants, upcomingReleases)
 
+  //TODO: Endre må inneholde publiseringsdato og periode, <title>20/09/2023: Export of salmon, week 37 2023</title>
+  //TODO: Endre Link - <link>http://www.ssb.no/utenriksokonomi/statistikker/laks/uke</link>
+  //TODO: Endre pubdate - <pubDate>2023-09-20T08:00:00+02:00</pubDate>
+
   const xml = `<?xml version="1.0" encoding="utf-8"?>
 	<rssitems count="${rssReleases.length}">
 	  ${[...rssReleases]
