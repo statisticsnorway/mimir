@@ -11,13 +11,10 @@ const { getMainSubjects } = __non_webpack_require__('/lib/ssb/utils/subjectUtils
 const { getContactsFromRepo } = __non_webpack_require__('/lib/ssb/statreg/contacts')
 
 export function getStatisticCalendarRss(req: XP.Request): string {
-  //const startGetStatisticCalendarRss: number = new Date().getTime()
-  const allUpcomingReleasesRepo: ContentLight<ReleaseVariant>[] = getUpcompingStatisticVariantsFromRepo()
-  //log.info(`allUpcomingReleasesRepo bruker:  ${new Date().getTime() - startGetStatisticCalendarRss}`)
-
+  const statisticVariants: ContentLight<ReleaseVariant>[] = getUpcompingStatisticVariantsFromRepo()
   const allMainSubjects: Array<SubjectItem> = getMainSubjects(req)
-  const upcomingVariants: StatkalVariant[] = getUpcomingVariants(allUpcomingReleasesRepo, allMainSubjects)
-  const upcomingReleases: StatkalRelease[] = getUpcomingReleases(allUpcomingReleasesRepo)
+  const upcomingVariants: StatkalVariant[] = getUpcomingVariants(statisticVariants, allMainSubjects)
+  const upcomingReleases: StatkalRelease[] = getUpcomingReleases(statisticVariants)
   const rssReleases: RssRelease[] = getRssReleases(upcomingVariants, upcomingReleases)
 
   const xml = `<?xml version="1.0" encoding="utf-8"?>
@@ -31,16 +28,15 @@ export function getStatisticCalendarRss(req: XP.Request): string {
 		<description>${r.description ? xmlEscape(r.description) : ''}</description>
 		<category>${r.category}</category>
 		<subject>${r.subject}</subject>
-		<language>${r.language}</language>
-		${forceArray(r.contacts)
-      .map(
-        (c) => `<contact>
+		<language>${r.language}</language>${forceArray(r.contacts)
+          .map(
+            (c: Contact) => `<contact>
 	  		<name>${c.name}</name>
 	  		<email>${c.email}</email>
 	  		<phone>${c.telephone}</phone>
 	  	</contact>`
-      )
-      .join('')}
+          )
+          .join('')}
 		<pubDate>${r.pubDate}</pubDate>
 		<shortname>${r.shortname}</shortname>
 	  </rssitem>`
