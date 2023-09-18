@@ -60,7 +60,7 @@
     "@enonic-types/lib-node": "^7.12.2",
     "@enonic-types/lib-portal": "^7.12.2",
     "@enonic-types/lib-react4xp": "4.0.0",
-    "@enonic-types/lib-repo": "^7.12.2",
+    "@enonic-types/lib-repo": "^7.13.3",
     "@enonic-types/lib-scheduler": "^7.12.2",
     "@enonic-types/lib-task": "^7.13.2",
     "@enonic-types/lib-value": "^7.13.1",
