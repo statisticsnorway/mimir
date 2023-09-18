@@ -3,6 +3,8 @@ import { getUpcompingStatisticVariantsFromRepo } from '/lib/ssb/repo/statisticVa
 import { ReleasesInListing } from '/lib/ssb/dashboard/statreg/types'
 import type { SubjectItem } from '/lib/ssb/utils/subjectUtils'
 import { Contact } from '/lib/ssb/dashboard/statreg/types'
+import { calculatePeriod } from '/lib/ssb/utils/variantUtils'
+
 const { xmlEscape } = __non_webpack_require__('/lib/text-encoding')
 const {
   data: { forceArray },
@@ -27,7 +29,7 @@ export function getStatisticCalendarRss(req: XP.Request): string {
       .map(
         (r: RssRelease) => `<rssitem>
 		<guid isPermalink="false">statkal-${r.guid}</guid>
-		<title>${xmlEscape(r.title)}</title>
+		<title>${xmlEscape(r.title)}, ${r.periode}</title>
 		<link>www.ssb.no</link>
 		<description>${r.description ? xmlEscape(r.description) : ''}</description>
 		<category>${r.category}</category>
@@ -81,23 +83,24 @@ function getUpcomingVariants(
 }
 
 function getUpcomingReleases(statisticVariants: ContentLight<ReleaseVariant>[]): StatkalRelease[] {
-  const ferdigListe: StatkalRelease[] = []
+  const releases: StatkalRelease[] = []
   statisticVariants.forEach((statisticVariant) => {
     const upcomingReleases: ReleasesInListing[] = statisticVariant.data.upcomingReleases
       ? forceArray(statisticVariant.data.upcomingReleases)
       : []
 
     upcomingReleases.forEach((r) => {
-      ferdigListe.push({
+      releases.push({
         guid: r.id,
         statisticId: statisticVariant.data.statisticId,
         variantId: statisticVariant.data.variantId,
         language: statisticVariant.language,
         pubDate: r.publishTime,
+        periode: calculatePeriod(statisticVariant.data.frequency, r.periodFrom, r.periodTo, statisticVariant.language),
       })
     })
   })
-  return ferdigListe
+  return releases
 }
 
 function getRssReleases(variants: StatkalVariant[], releases: StatkalRelease[]): RssRelease[] {
@@ -117,6 +120,7 @@ function getRssReleases(variants: StatkalVariant[], releases: StatkalRelease[]):
       subject: variant.subject,
       language: variant.language,
       pubDate: release.pubDate,
+      periode: release.periode,
       shortname: variant.shortname,
       contacts: statisticContacts,
     })
@@ -148,6 +152,7 @@ interface RssRelease {
   subject: string
   language: string
   pubDate: string
+  periode: string
   shortname: string
   contacts: Contact[]
 }
@@ -171,4 +176,5 @@ interface StatkalRelease {
   variantId: string
   language: string
   pubDate: string
+  periode: string
 }
