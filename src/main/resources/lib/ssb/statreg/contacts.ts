@@ -64,5 +64,5 @@ export function fetchContacts(): Array<Contact> | null {
 export interface StatRegContactsLib {
   STATREG_REPO_CONTACTS_KEY: string
   fetchContacts: () => Array<Contact> | null
-  getContactsFromRepo: () => Array<Contact> | null
+  getContactsFromRepo: () => Array<Contact>
 }

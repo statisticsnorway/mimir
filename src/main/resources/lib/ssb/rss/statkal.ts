@@ -2,16 +2,18 @@ import type { ContentLight, Release as ReleaseVariant } from '/lib/ssb/repo/stat
 import { getUpcompingStatisticVariantsFromRepo } from '/lib/ssb/repo/statisticVariant'
 import { ReleasesInListing } from '/lib/ssb/dashboard/statreg/types'
 import type { SubjectItem } from '/lib/ssb/utils/subjectUtils'
+import { Contact } from '/lib/ssb/dashboard/statreg/types'
 const { xmlEscape } = __non_webpack_require__('/lib/text-encoding')
 const {
   data: { forceArray },
 } = __non_webpack_require__('/lib/util')
 const { getMainSubjects } = __non_webpack_require__('/lib/ssb/utils/subjectUtils')
+const { getContactsFromRepo } = __non_webpack_require__('/lib/ssb/statreg/contacts')
 
 export function getStatisticCalendarRss(req: XP.Request): string {
-  //const startRepo: number = new Date().getTime()
+  //const startGetStatisticCalendarRss: number = new Date().getTime()
   const allUpcomingReleasesRepo: ContentLight<ReleaseVariant>[] = getUpcompingStatisticVariantsFromRepo()
-  //log.info(`allUpcomingReleasesRepo bruker:  ${new Date().getTime() - startRepo}`)
+  //log.info(`allUpcomingReleasesRepo bruker:  ${new Date().getTime() - startGetStatisticCalendarRss}`)
 
   const allMainSubjects: Array<SubjectItem> = getMainSubjects(req)
   const upcomingVariants: StatkalVariant[] = getUpcomingVariants(allUpcomingReleasesRepo, allMainSubjects)
@@ -31,7 +33,13 @@ export function getStatisticCalendarRss(req: XP.Request): string {
 		<subject>${r.subject}</subject>
 		<language>${r.language}</language>
 		${forceArray(r.contacts)
-      .map((c) => `<contact>${c}</contact>`)
+      .map(
+        (c) => `<contact>
+	  		<name>${c.name}</name>
+	  		<email>${c.email}</email>
+	  		<phone>${c.telephone}</phone>
+	  	</contact>`
+      )
       .join('')}
 		<pubDate>${r.pubDate}</pubDate>
 		<shortname>${r.shortname}</shortname>
@@ -94,10 +102,12 @@ function getUpcomingReleases(statisticVariants: ContentLight<ReleaseVariant>[]):
 
 function getRssReleases(variants: StatkalVariant[], releases: StatkalRelease[]): RssRelease[] {
   const rssReleases: RssRelease[] = []
+  const contacts: Contact[] = getContactsFromRepo()
   releases.forEach((release: StatkalRelease) => {
     const variant: StatkalVariant = variants.filter(
       (variant) => variant.statisticId == release.statisticId && variant.language === release.language
     )[0]
+    const statisticContacts: Contact[] = variant.contacts ? geContactsByIds(contacts, variant.contacts) : []
     rssReleases.push({
       guid: release.guid,
       title: variant.title,
@@ -108,13 +118,11 @@ function getRssReleases(variants: StatkalVariant[], releases: StatkalRelease[]):
       language: variant.language,
       pubDate: release.pubDate,
       shortname: variant.shortname,
-      contacts: variant.contacts,
+      contacts: statisticContacts,
     })
   })
   return rssReleases
 }
-
-//TODO: getContact(id: string)
 
 function getMainSubject(mainSubjectName: string, allMainSubjects: SubjectItem[], language: string): SubjectItem | null {
   const mainSubjectFiltered: SubjectItem[] = allMainSubjects.filter(
@@ -127,6 +135,10 @@ function getMainSubject(mainSubjectName: string, allMainSubjects: SubjectItem[],
   return null
 }
 
+function geContactsByIds(contacts: Contact[], contactIds: string[]): Contact[] {
+  return contacts.filter((contact) => contactIds.includes(contact.id.toString()))
+}
+
 interface RssRelease {
   guid: string
   title: string
@@ -137,7 +149,7 @@ interface RssRelease {
   language: string
   pubDate: string
   shortname: string
-  contacts: string[]
+  contacts: Contact[]
 }
 
 interface StatkalVariant {
