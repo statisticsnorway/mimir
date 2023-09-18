@@ -143,6 +143,9 @@
     <mapping controller="/services/securitytxt/securitytxt.js" order="10">
       <pattern>/.well-known/security.txt</pattern>
     </mapping>
+    <mapping controller="/services/sitemap/sitemap.js">
+      <pattern>/sitemapindex.xml</pattern>
+    </mapping>
   </mappings>
   <processors>
     <response-processor name="searchableText" order="10"/>
