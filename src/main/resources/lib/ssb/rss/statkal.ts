@@ -1,8 +1,7 @@
 import type { ContentLight, Release as ReleaseVariant } from '/lib/ssb/repo/statisticVariant'
 import { getUpcompingStatisticVariantsFromRepo } from '/lib/ssb/repo/statisticVariant'
-import { ReleasesInListing } from '/lib/ssb/dashboard/statreg/types'
+import { Contact, ReleasesInListing } from '/lib/ssb/dashboard/statreg/types'
 import type { SubjectItem } from '/lib/ssb/utils/subjectUtils'
-import { Contact } from '/lib/ssb/dashboard/statreg/types'
 import { calculatePeriod } from '/lib/ssb/utils/variantUtils'
 import { formatDate } from '/lib/ssb/utils/dateUtils'
 
@@ -12,6 +11,7 @@ const {
 } = __non_webpack_require__('/lib/util')
 const { getMainSubjects } = __non_webpack_require__('/lib/ssb/utils/subjectUtils')
 const { getContactsFromRepo } = __non_webpack_require__('/lib/ssb/statreg/contacts')
+const { pageUrl } = __non_webpack_require__('/lib/xp/portal')
 
 export function getStatisticCalendarRss(req: XP.Request): string {
   const statisticVariants: ContentLight<ReleaseVariant>[] = getUpcompingStatisticVariantsFromRepo()
@@ -19,7 +19,6 @@ export function getStatisticCalendarRss(req: XP.Request): string {
   const upcomingVariants: StatkalVariant[] = getUpcomingVariants(statisticVariants, allMainSubjects)
   const upcomingReleases: StatkalRelease[] = getUpcomingReleases(statisticVariants)
   const rssReleases: RssRelease[] = getRssReleases(upcomingVariants, upcomingReleases)
-  //TODO: Endre Link - <link>http://www.ssb.no/utenriksokonomi/statistikker/laks/uke</link>
   //TODO: Endre pubdate - <pubDate>2023-09-20T08:00:00+02:00</pubDate>
 
   const xml = `<?xml version="1.0" encoding="utf-8"?>
@@ -29,7 +28,7 @@ export function getStatisticCalendarRss(req: XP.Request): string {
         (r: RssRelease) => `<rssitem>
 		<guid isPermalink="false">statkal-${r.guid}</guid>
 		<title>${createTitle(r)}</title>
-		<link>www.ssb.no</link>
+		<link>${r.link}</link>
 		<description>${r.description ? xmlEscape(r.description) : ''}</description>
 		<category>${r.category}</category>
 		<subject>${r.subject}</subject>
@@ -64,12 +63,19 @@ function getUpcomingVariants(
     const mainSubject: SubjectItem | null = mainSubjectName
       ? getMainSubject(mainSubjectName, allMainSubjects, lang)
       : null
+    const baseUrl: string = app.config?.['ssb.baseUrl'] || 'https://www.ssb.no'
+    const statisticUrl = statisticVariant.data.statisticContentId
+      ? baseUrl +
+        pageUrl({
+          id: statisticVariant.data.statisticContentId,
+        })
+      : ''
 
     variants.push({
       statisticId: statisticVariant.data.statisticId,
       variantId: statisticVariant.data.variantId,
       title: statisticVariant.data.name,
-      link: '',
+      link: statisticUrl,
       description: statisticVariant.data.ingress ?? '',
       category: mainSubject ? mainSubject.title : '',
       subject: mainSubject ? mainSubject.name : '',
