@@ -1,5 +1,8 @@
 import { query } from '/lib/xp/content'
 // import { attachmentUrl } from '/lib/xp/portal'
+import { render } from '/lib/thymeleaf'
+
+const view = resolve('./sitemap.xsl')
 
 exports.get = () => {
   const sitemapXmlAppConfigQuery = query({
@@ -23,15 +26,13 @@ exports.get = () => {
     sitemapXmlAppConfigQuery.data.siteConfig.find((config) => config.applicationKey === 'com.enonic.app.sitemapxml')
       ?.config ?? {}
 
-  /* TODO: Generate new sitemap xml including links in sitemap xml app config
-   * Fetch sitemap xml from sitemap xml app from repo?
-   * Merge sitemap.xml from sitemap xml app with xml generated from service to sitemapindex.xml
-   * Return result to body
-   */
+  log.info(JSON.stringify(sitemapXmlAppConfig, null, 2))
 
+  // TODO: Generate new sitemap xml including links in sitemap xml app config
+  const model = {}
   return {
-    contentType: 'text/json',
-    body: JSON.stringify(sitemapXmlAppConfig, null, 2),
+    contentType: 'text/xml',
+    body: render(view, model),
   }
 }
 
