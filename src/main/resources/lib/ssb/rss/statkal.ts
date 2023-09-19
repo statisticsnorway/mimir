@@ -4,6 +4,7 @@ import { ReleasesInListing } from '/lib/ssb/dashboard/statreg/types'
 import type { SubjectItem } from '/lib/ssb/utils/subjectUtils'
 import { Contact } from '/lib/ssb/dashboard/statreg/types'
 import { calculatePeriod } from '/lib/ssb/utils/variantUtils'
+import { formatDate } from '/lib/ssb/utils/dateUtils'
 
 const { xmlEscape } = __non_webpack_require__('/lib/text-encoding')
 const {
@@ -18,8 +19,6 @@ export function getStatisticCalendarRss(req: XP.Request): string {
   const upcomingVariants: StatkalVariant[] = getUpcomingVariants(statisticVariants, allMainSubjects)
   const upcomingReleases: StatkalRelease[] = getUpcomingReleases(statisticVariants)
   const rssReleases: RssRelease[] = getRssReleases(upcomingVariants, upcomingReleases)
-
-  //TODO: Endre må inneholde publiseringsdato og periode, <title>20/09/2023: Export of salmon, week 37 2023</title>
   //TODO: Endre Link - <link>http://www.ssb.no/utenriksokonomi/statistikker/laks/uke</link>
   //TODO: Endre pubdate - <pubDate>2023-09-20T08:00:00+02:00</pubDate>
 
@@ -29,7 +28,7 @@ export function getStatisticCalendarRss(req: XP.Request): string {
       .map(
         (r: RssRelease) => `<rssitem>
 		<guid isPermalink="false">statkal-${r.guid}</guid>
-		<title>${xmlEscape(r.title)}, ${r.periode}</title>
+		<title>${createTitle(r)}</title>
 		<link>www.ssb.no</link>
 		<description>${r.description ? xmlEscape(r.description) : ''}</description>
 		<category>${r.category}</category>
@@ -110,7 +109,7 @@ function getRssReleases(variants: StatkalVariant[], releases: StatkalRelease[]):
     const variant: StatkalVariant = variants.filter(
       (variant) => variant.statisticId == release.statisticId && variant.language === release.language
     )[0]
-    const statisticContacts: Contact[] = variant.contacts ? geContactsByIds(contacts, variant.contacts) : []
+    const statisticContacts: Contact[] = variant.contacts ? getContactsByIds(contacts, variant.contacts) : []
     rssReleases.push({
       guid: release.guid,
       title: variant.title,
@@ -139,8 +138,14 @@ function getMainSubject(mainSubjectName: string, allMainSubjects: SubjectItem[],
   return null
 }
 
-function geContactsByIds(contacts: Contact[], contactIds: string[]): Contact[] {
+function getContactsByIds(contacts: Contact[], contactIds: string[]): Contact[] {
   return contacts.filter((contact) => contactIds.includes(contact.id.toString()))
+}
+
+function createTitle(release: RssRelease): string {
+  const pattern = release.language === 'en' ? 'dd/MM/yyyy' : 'dd.MM.yyyy'
+  const dateFormattet = formatDate(release.pubDate, pattern)
+  return `${dateFormattet}: ${release.title}, ${release.periode}`
 }
 
 interface RssRelease {
