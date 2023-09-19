@@ -269,6 +269,17 @@ function NameSearch(props) {
   function renderGraphs(desktop, nameForRender) {
     const { frontPage, phrases, language } = props
     const lineColor = '#21383a'
+
+    // Highchart language checker
+    const lang = document.querySelector('html').getAttribute('lang')
+    if (lang === 'nb') {
+      Highcharts.setOptions({
+        lang: {
+          decimalPoint: accessibilityLang.lang.decimalPoint,
+        },
+      })
+    }
+
     if (nameGraphData) {
       const options = {
         lang: {
