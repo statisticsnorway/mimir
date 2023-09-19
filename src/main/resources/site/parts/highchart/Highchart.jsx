@@ -7,7 +7,6 @@ import { Title, Button, Tabs, Divider, Link } from '@statisticsnorway/ssb-compon
 import { addGtagForEvent } from '/react4xp/ReactGA'
 
 import accessibilityLang from './../../../assets/js/highchart-lang.json'
-import { ensureArray } from '/lib/ssb/utils/arrayUtils'
 
 if (typeof Highcharts === 'object') {
   require('highcharts/modules/exporting')(Highcharts)
@@ -103,9 +102,9 @@ function Highchart(props) {
     )
   }
 
-  function renderHighchartsSource(sourceLink) {
+  function renderHighchartsSource(sourceLink, index) {
     return (
-      <Row>
+      <Row key={index}>
         <Col>
           <Link href={sourceLink.sourceHref}>
             {props.phrases.source}: {sourceLink.sourceText}
@@ -123,9 +122,7 @@ function Highchart(props) {
             <Col>{highchart.footnoteText}</Col>
           </Row>
         ) : null}
-        {highchart.creditsEnabled
-          ? ensureArray(highchart.sourceList).map((source) => renderHighchartsSource(source))
-          : null}
+        {highchart.creditsEnabled ? highchart.sourceList.map((source, i) => renderHighchartsSource(source, i)) : null}
       </Col>
     )
   }
