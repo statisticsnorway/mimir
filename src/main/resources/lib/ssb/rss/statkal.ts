@@ -3,8 +3,7 @@ import { getUpcompingStatisticVariantsFromRepo } from '/lib/ssb/repo/statisticVa
 import { Contact, ReleasesInListing } from '/lib/ssb/dashboard/statreg/types'
 import type { SubjectItem } from '/lib/ssb/utils/subjectUtils'
 import { calculatePeriod } from '/lib/ssb/utils/variantUtils'
-import { formatDate } from '/lib/ssb/utils/dateUtils'
-import { isSameOrAfter } from '/lib/ssb/utils/dateUtils'
+import { format, getTimeZoneIso, isSameOrAfter, parseISO } from '/lib/ssb/utils/dateUtils'
 
 const { xmlEscape } = __non_webpack_require__('/lib/text-encoding')
 const {
@@ -20,7 +19,6 @@ export function getStatisticCalendarRss(req: XP.Request): string {
   const upcomingVariants: StatkalVariant[] = getUpcomingVariants(statisticVariants, allMainSubjects)
   const upcomingReleases: StatkalRelease[] = getUpcomingReleases(statisticVariants)
   const rssReleases: RssRelease[] = getRssReleases(upcomingVariants, upcomingReleases)
-  //TODO: Endre pubdate - <pubDate>2023-09-20T08:00:00+02:00</pubDate>
 
   const xml = `<?xml version="1.0" encoding="utf-8"?>
 	<rssitems count="${rssReleases.length}">
@@ -33,7 +31,7 @@ export function getStatisticCalendarRss(req: XP.Request): string {
 		<description>${r.description ? xmlEscape(r.description) : ''}</description>
 		<category>${r.category}</category>
 		<subject>${r.subject}</subject>
-		<language>${r.language}</language>${forceArray(r.contacts)
+		<language>${r.language}</language>${r.contacts
           .map(
             (c: Contact) => `<contact>
 	  		<name>${c.name}</name>
@@ -115,10 +113,14 @@ function getUpcomingReleases(statisticVariants: ContentLight<ReleaseVariant>[]):
 function getRssReleases(variants: StatkalVariant[], releases: StatkalRelease[]): RssRelease[] {
   const rssReleases: RssRelease[] = []
   const contacts: Contact[] = getContactsFromRepo()
+  const serverOffsetInMinutes: number = parseInt(app.config?.['serverOffsetInMs']) || 0
+  const timeZoneIso: string = getTimeZoneIso(serverOffsetInMinutes)
   releases.forEach((release: StatkalRelease) => {
     const variant: StatkalVariant = variants.filter(
       (variant) => variant.statisticId == release.statisticId && variant.language === release.language
     )[0]
+    const contactsStatistic = contacts.filter((contact) => variant.contacts.includes(contact.id.toString()))
+    const pubDate: string = format(parseISO(release.pubDate), "yyyy-MM-dd'T'HH:mm:ss")
     rssReleases.push({
       guid: release.guid,
       title: variant.title,
@@ -127,10 +129,10 @@ function getRssReleases(variants: StatkalVariant[], releases: StatkalRelease[]):
       category: variant.category,
       subject: variant.subject,
       language: variant.language,
-      pubDate: release.pubDate,
+      pubDate: `${pubDate}${timeZoneIso}`,
       periode: release.periode,
       shortname: variant.shortname,
-      contacts: getContactsByIds(contacts, variant.contacts),
+      contacts: forceArray(contactsStatistic),
     })
   })
   return rssReleases
@@ -147,13 +149,9 @@ function getMainSubject(mainSubjectName: string, allMainSubjects: SubjectItem[],
   return null
 }
 
-function getContactsByIds(contacts: Contact[], contactIds: string[]): Contact[] {
-  return contacts.filter((contact) => contactIds.includes(contact.id.toString()))
-}
-
 function createTitle(release: RssRelease): string {
   const pattern = release.language === 'en' ? 'dd/MM/yyyy' : 'dd.MM.yyyy'
-  const dateFormattet = formatDate(release.pubDate, pattern)
+  const dateFormattet = format(new Date(release.pubDate), pattern)
   return `${dateFormattet}: ${release.title}, ${release.periode}`
 }
 
