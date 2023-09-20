@@ -84,11 +84,6 @@ declare global {
          */
         standardSymbolPage?: string;
       }>;
-
-      /**
-       * Sitemap XML
-       */
-      sitemapXmlMediaSelector?: Array<string> | string;
     }
   }
 }

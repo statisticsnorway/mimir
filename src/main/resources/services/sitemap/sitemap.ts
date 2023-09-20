@@ -1,5 +1,5 @@
 import { query } from '/lib/xp/content'
-import { getSiteConfig, attachmentUrl } from '/lib/xp/portal'
+import { attachmentUrl } from '/lib/xp/portal'
 
 const {
   data: { forceArray },
@@ -23,13 +23,11 @@ exports.get = () => {
     },
   }).hits[0] as unknown as SitemapXmlAppConfig
 
-  // const sitemapXmlAppConfig =
-  //   sitemapXmlAppConfigQuery.data.siteConfig.find((config) => config.applicationKey === 'com.enonic.app.sitemapxml')
-  //     ?.config ?? []
+  const sitemapXmlAppConfig =
+    sitemapXmlAppConfigQuery.data.siteConfig.find((config) => config.applicationKey === 'com.enonic.app.sitemapxml')
+      ?.config?.sitemapXmlFileIds ?? []
 
-  const sitemapXmlAppConfig = getSiteConfig<XP.SiteConfig>()?.sitemapXmlMediaSelector ?? []
-
-  const sitemapXmlAppConfigUrls = query({
+  const sitemapIndexXmlList = query({
     start: 0,
     count: sitemapXmlAppConfig.length + 1,
     filters: {
@@ -49,7 +47,7 @@ exports.get = () => {
 
   const body = `<?xml version="1.0" encoding="UTF-8"?>
   <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-    ${sitemapXmlAppConfigUrls
+    ${sitemapIndexXmlList
       .map(({ url, lastModified }) => {
         return `<sitemap>
             <loc>${url}</loc>
@@ -67,6 +65,14 @@ exports.get = () => {
 
 type SitemapXmlAppConfig = {
   data: {
-    siteConfig: [{ applicationKey: string; config: object }]
+    siteConfig: [
+      {
+        applicationKey: string
+        config: {
+          siteMap: Array<object>
+          sitemapXmlFileIds: Array<string>
+        }
+      }
+    ]
   }
 }
