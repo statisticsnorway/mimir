@@ -129,6 +129,15 @@
         </input>
       </items>
     </item-set>
+    <!-- TODO: Placeholder config for sitemap. Testing purposes only, delete later -->
+    <input name="sitemapXmlMediaSelector" type="MediaSelector">
+      <label>Sitemap XML</label>
+      <occurrences minimum="0" maximum="0" />
+      <config>
+        <allowContentType>media:code</allowContentType>
+        <allowPath>${site}/*</allowPath>
+      </config>
+    </input>
   </form>
   <mappings>
     <mapping filter="/site/filters/router.js" order="10">
