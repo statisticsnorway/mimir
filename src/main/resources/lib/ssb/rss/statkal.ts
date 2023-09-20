@@ -4,6 +4,7 @@ import { Contact, ReleasesInListing } from '/lib/ssb/dashboard/statreg/types'
 import type { SubjectItem } from '/lib/ssb/utils/subjectUtils'
 import { calculatePeriod } from '/lib/ssb/utils/variantUtils'
 import { formatDate } from '/lib/ssb/utils/dateUtils'
+import { isSameOrAfter } from '/lib/ssb/utils/dateUtils'
 
 const { xmlEscape } = __non_webpack_require__('/lib/text-encoding')
 const {
@@ -81,7 +82,7 @@ function getUpcomingVariants(
       subject: mainSubject ? mainSubject.name : '',
       language: statisticVariant.language,
       shortname: statisticVariant.data.shortName,
-      contacts: statisticVariant.data.contacts,
+      contacts: statisticVariant.data.contacts ? forceArray(statisticVariant.data.contacts) : [],
     })
   })
   return variants
@@ -90,9 +91,12 @@ function getUpcomingVariants(
 function getUpcomingReleases(statisticVariants: ContentLight<ReleaseVariant>[]): StatkalRelease[] {
   const releases: StatkalRelease[] = []
   statisticVariants.forEach((statisticVariant) => {
-    const upcomingReleases: ReleasesInListing[] = statisticVariant.data.upcomingReleases
+    const allReleases: ReleasesInListing[] = statisticVariant.data.upcomingReleases
       ? forceArray(statisticVariant.data.upcomingReleases)
       : []
+    const upcomingReleases: ReleasesInListing[] = allReleases.filter((release) =>
+      isSameOrAfter(new Date(release.publishTime), new Date(), 'day')
+    )
 
     upcomingReleases.forEach((r) => {
       releases.push({
@@ -115,7 +119,6 @@ function getRssReleases(variants: StatkalVariant[], releases: StatkalRelease[]):
     const variant: StatkalVariant = variants.filter(
       (variant) => variant.statisticId == release.statisticId && variant.language === release.language
     )[0]
-    const statisticContacts: Contact[] = variant.contacts ? getContactsByIds(contacts, variant.contacts) : []
     rssReleases.push({
       guid: release.guid,
       title: variant.title,
@@ -127,7 +130,7 @@ function getRssReleases(variants: StatkalVariant[], releases: StatkalRelease[]):
       pubDate: release.pubDate,
       periode: release.periode,
       shortname: variant.shortname,
-      contacts: statisticContacts,
+      contacts: getContactsByIds(contacts, variant.contacts),
     })
   })
   return rssReleases

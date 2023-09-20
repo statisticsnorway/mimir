@@ -89,6 +89,12 @@ export function isSameOrBefore(date1: Date, date2: Date, unit?: string): boolean
     : isBefore(date1, date2) || isSameSecond(date1, date2)
 }
 
+export function isSameOrAfter(date1: Date, date2: Date, unit?: string): boolean {
+  return unit === 'day'
+    ? isAfter(date1, date2) || isSameDay(date1, date2)
+    : isAfter(date1, date2) || isSameSecond(date1, date2)
+}
+
 export function fromNow(date: string, language?: string): string {
   const locale: Locale = language ? (language === 'en' ? enGB : language === 'nn' ? nn : nb) : nb
   return formatDistanceToNowStrict(new Date(date), { addSuffix: true, locale })
