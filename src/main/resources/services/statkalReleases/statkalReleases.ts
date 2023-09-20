@@ -1,9 +1,12 @@
+//const { getStatisticCalendarRss } = __non_webpack_require__('/lib/ssb/rss/statkal')
+
 import type { ContentLight, Release as ReleaseVariant } from '/lib/ssb/repo/statisticVariant'
 import { getUpcompingStatisticVariantsFromRepo } from '/lib/ssb/repo/statisticVariant'
 import { Contact, ReleasesInListing } from '/lib/ssb/dashboard/statreg/types'
 import type { SubjectItem } from '/lib/ssb/utils/subjectUtils'
 import { calculatePeriod } from '/lib/ssb/utils/variantUtils'
 import { format, getTimeZoneIso, isSameOrAfter, parseISO } from '/lib/ssb/utils/dateUtils'
+import { pageUrl } from '/lib/xp/portal'
 
 const { xmlEscape } = __non_webpack_require__('/lib/text-encoding')
 const {
@@ -11,11 +14,15 @@ const {
 } = __non_webpack_require__('/lib/util')
 const { getMainSubjects } = __non_webpack_require__('/lib/ssb/utils/subjectUtils')
 const { getContactsFromRepo } = __non_webpack_require__('/lib/ssb/statreg/contacts')
-const { pageUrl } = __non_webpack_require__('/lib/xp/portal')
 
-export function getStatisticCalendarRss(req: XP.Request): string {
+const dummyReq: Partial<XP.Request> = {
+  branch: 'master',
+}
+
+exports.get = (): XP.Response => {
+  log.info('getStatisticCalendarRss')
   const statisticVariants: ContentLight<ReleaseVariant>[] = getUpcompingStatisticVariantsFromRepo()
-  const allMainSubjects: Array<SubjectItem> = getMainSubjects(req)
+  const allMainSubjects: Array<SubjectItem> = getMainSubjects(dummyReq as XP.Request)
   const upcomingVariants: StatkalVariant[] = getUpcomingVariants(statisticVariants, allMainSubjects)
   const upcomingReleases: StatkalRelease[] = getUpcomingReleases(statisticVariants)
   const rssReleases: RssRelease[] = getRssReleases(upcomingVariants, upcomingReleases)
@@ -46,6 +53,46 @@ export function getStatisticCalendarRss(req: XP.Request): string {
       )
       .join('')}
 	</rssitems>`
+  return {
+    body: xml,
+    contentType: 'text/xml',
+  }
+}
+
+export function getStatisticCalendarRss(): string {
+  log.info('getStatisticCalendarRss')
+  const statisticVariants: ContentLight<ReleaseVariant>[] = getUpcompingStatisticVariantsFromRepo()
+  const allMainSubjects: Array<SubjectItem> = getMainSubjects(dummyReq as XP.Request)
+  const upcomingVariants: StatkalVariant[] = getUpcomingVariants(statisticVariants, allMainSubjects)
+  const upcomingReleases: StatkalRelease[] = getUpcomingReleases(statisticVariants)
+  const rssReleases: RssRelease[] = getRssReleases(upcomingVariants, upcomingReleases)
+
+  const xml = `<?xml version="1.0" encoding="utf-8"?>
+	  <rssitems count="${rssReleases.length}">
+		${[...rssReleases]
+      .map(
+        (r: RssRelease) => `<rssitem>
+		  <guid isPermalink="false">statkal-${r.guid}</guid>
+		  <title>${createTitle(r)}</title>
+		  <link>${r.link}</link>
+		  <description>${r.description ? xmlEscape(r.description) : ''}</description>
+		  <category>${r.category}</category>
+		  <subject>${r.subject}</subject>
+		  <language>${r.language}</language>${r.contacts
+          .map(
+            (c: Contact) => `<contact>
+				<name>${c.name}</name>
+				<email>${c.email}</email>
+				<phone>${c.telephone}</phone>
+			</contact>`
+          )
+          .join('')}
+		  <pubDate>${r.pubDate}</pubDate>
+		  <shortname>${r.shortname}</shortname>
+		</rssitem>`
+      )
+      .join('')}
+	  </rssitems>`
   return xml
 }
 
@@ -53,6 +100,7 @@ function getUpcomingVariants(
   statisticVariants: ContentLight<ReleaseVariant>[],
   allMainSubjects: SubjectItem[]
 ): StatkalVariant[] {
+  log.info('** getUpcomingVariants **')
   const variants: StatkalVariant[] = []
   statisticVariants.forEach((statisticVariant) => {
     const lang: string = statisticVariant.language === 'en' ? 'en' : 'no'
@@ -62,7 +110,7 @@ function getUpcomingVariants(
     const mainSubject: SubjectItem | null = mainSubjectName
       ? getMainSubject(mainSubjectName, allMainSubjects, lang)
       : null
-    const baseUrl: string = app.config?.['ssb.baseUrl'] || 'https://www.ssb.no'
+    const baseUrl: string = app.config && app.config['ssb.baseUrl'] ? app.config['ssb.baseUrl'] : 'https://www.ssb.no'
     const statisticUrl = statisticVariant.data.statisticContentId
       ? baseUrl +
         pageUrl({

@@ -1,6 +1,6 @@
 import { HttpRequestParams, HttpResponse } from '/lib/http-client'
 const { request } = __non_webpack_require__('/lib/http-client')
-const { encryptRssNews } = __non_webpack_require__('/lib/cipher/cipherRss')
+const { encryptRssNews, encryptRssStatkal } = __non_webpack_require__('/lib/cipher/cipherRss')
 
 export function pushRssNews(): string {
   const newsServiceUrl: string =
@@ -13,6 +13,21 @@ export function pushRssNews(): string {
     return postRssNews(encryptedBody)
   } else {
     return rssNews.message
+  }
+}
+
+export function pushRssStatkal(): string {
+  const statkalReleasesServiceUrl: string =
+    app.config && app.config['ssb.baseUrl']
+      ? app.config['ssb.baseUrl'] + '/_/service/mimir/statkalReleases'
+      : 'https:www.utv.ssb.no/_/service/mimir/statkalReleases'
+  const rssStatkal: RssNews = getRssStatkal(statkalReleasesServiceUrl)
+  if (rssStatkal.body !== null) {
+    const encryptedBody: string = encryptRssStatkal(rssStatkal.body)
+    log.info('Kryptert kropp: ' + encryptedBody)
+    return 'postRssStatkal snart ' //postRssStatkal(encryptedBody)
+  } else {
+    return rssStatkal.message
   }
 }
 
@@ -46,6 +61,36 @@ function getRssNews(url: string): RssNews {
   return status
 }
 
+function getRssStatkal(url: string): RssNews {
+  const requestParams: HttpRequestParams = {
+    url,
+    method: 'GET',
+    readTimeout: 40000,
+  }
+
+  const status: RssNews = {
+    body: null,
+    message: '',
+  }
+
+  try {
+    const rssNewsResponse: HttpResponse = request(requestParams)
+    if (rssNewsResponse.status === 200) {
+      if (rssNewsResponse.body) {
+        status.body = rssNewsResponse.body
+      } else {
+        status.message = 'Ingen publiseringer å pushe til RSS'
+      }
+    } else {
+      status.message = 'Henting av publiseringer XP feilet - ' + rssNewsResponse.status
+    }
+  } catch (e) {
+    status.message = 'Henting av publiseringer XP feilet - ' + e
+  }
+
+  return status
+}
+
 function postRssNews(encryptedRss: string): string {
   const rssNewsBaseUrl: string =
     app.config && app.config['ssb.baseUrl']
@@ -70,6 +115,30 @@ function postRssNews(encryptedRss: string): string {
   }
 }
 
+function postRssStatkal(encryptedRss: string): string {
+  const rssStatkalBaseUrl: string =
+    app.config && app.config['ssb.baseUrl']
+      ? app.config['ssb.baseUrl'] + '/rss/populate/statkal'
+      : 'https:www.utv.ssb.no/rss/populate/statkal'
+
+  const requestParams: HttpRequestParams = {
+    url: rssStatkalBaseUrl,
+    method: 'POST',
+    body: encryptedRss,
+  }
+
+  try {
+    const pushRssStatkalResponse: HttpResponse = request(requestParams)
+    if (pushRssStatkalResponse.status === 200) {
+      return 'Push av RSS publiseringer OK'
+    } else {
+      return 'Push av RSS publiseringer feilet - ' + pushRssStatkalResponse.status
+    }
+  } catch (e) {
+    return 'Push av publiseringer feilet - ' + e
+  }
+}
+
 interface RssNews {
   body: string | null
   message: string
@@ -77,4 +146,5 @@ interface RssNews {
 
 export interface PushRSSLib {
   pushRssNews: () => string
+  pushRssStatkal: () => string
 }

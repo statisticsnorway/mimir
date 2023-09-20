@@ -21,7 +21,7 @@ const { isMaster } = __non_webpack_require__('/lib/xp/cluster')
 const { cronJobLog } = __non_webpack_require__('/lib/ssb/utils/serverLog')
 const { ENONIC_CMS_DEFAULT_REPO } = __non_webpack_require__('/lib/ssb/repo/common')
 const { updateUnpublishedMockTbml } = __non_webpack_require__('/lib/ssb/dataset/mockUnpublished')
-const { pushRssNews } = __non_webpack_require__('/lib/ssb/cron/pushRss')
+const { pushRssNews, pushRssStatkal } = __non_webpack_require__('/lib/ssb/cron/pushRss')
 const { publishDataset } = __non_webpack_require__('/lib/ssb/dataset/publishOld')
 const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
 const { createOrUpdateStatisticsRepo } = __non_webpack_require__('/lib/ssb/repo/statisticVariant')
@@ -106,6 +106,14 @@ export function statRegJob(): void {
 function pushRssNewsJob(): void {
   const jobLogNode: JobEventNode = startJobLog(JobNames.PUSH_RSS_NEWS)
   const result: string = pushRssNews()
+  completeJobLog(jobLogNode._id, result, {
+    result,
+  })
+}
+
+function pushRssStatkalJob(): void {
+  const jobLogNode: JobEventNode = startJobLog(JobNames.PUSH_RSS_STATKAL)
+  const result: string = pushRssStatkal()
   completeJobLog(jobLogNode._id, result, {
     result,
   })
@@ -198,6 +206,16 @@ export function setupCronJobs(): void {
     name: 'Push RSS news',
     cron: pushRssNewsCron,
     callback: () => runOnMasterOnly(pushRssNewsJob),
+    context: cronContext,
+  })
+
+  // push statkalReleases to rss feed
+  const pushRssStatkalCron: string =
+    app.config && app.config['ssb.cron.pushRssStatkal'] ? app.config['ssb.cron.pushRssStatkal'] : '03 06 * * *'
+  schedule({
+    name: 'Push RSS statkal',
+    cron: pushRssStatkalCron,
+    callback: () => runOnMasterOnly(pushRssStatkalJob),
     context: cronContext,
   })
 
