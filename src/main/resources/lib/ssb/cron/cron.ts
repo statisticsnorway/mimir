@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import { createUser, findUsers } from '/lib/xp/auth'
 import type { Content } from '/lib/xp/content'
 import { run, type ContextParams } from '/lib/xp/context'
@@ -21,7 +22,7 @@ const { isMaster } = __non_webpack_require__('/lib/xp/cluster')
 const { cronJobLog } = __non_webpack_require__('/lib/ssb/utils/serverLog')
 const { ENONIC_CMS_DEFAULT_REPO } = __non_webpack_require__('/lib/ssb/repo/common')
 const { updateUnpublishedMockTbml } = __non_webpack_require__('/lib/ssb/dataset/mockUnpublished')
-const { pushRssNews, pushRssStatkal } = __non_webpack_require__('/lib/ssb/cron/pushRss')
+const { pushRssNews } = __non_webpack_require__('/lib/ssb/cron/pushRss')
 const { publishDataset } = __non_webpack_require__('/lib/ssb/dataset/publishOld')
 const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
 const { createOrUpdateStatisticsRepo } = __non_webpack_require__('/lib/ssb/repo/statisticVariant')
@@ -106,14 +107,6 @@ export function statRegJob(): void {
 function pushRssNewsJob(): void {
   const jobLogNode: JobEventNode = startJobLog(JobNames.PUSH_RSS_NEWS)
   const result: string = pushRssNews()
-  completeJobLog(jobLogNode._id, result, {
-    result,
-  })
-}
-
-function pushRssStatkalJob(): void {
-  const jobLogNode: JobEventNode = startJobLog(JobNames.PUSH_RSS_STATKAL)
-  const result: string = pushRssStatkal()
   completeJobLog(jobLogNode._id, result, {
     result,
   })
@@ -209,16 +202,6 @@ export function setupCronJobs(): void {
     context: cronContext,
   })
 
-  // push statkalReleases to rss feed
-  const pushRssStatkalCron: string =
-    app.config && app.config['ssb.cron.pushRssStatkal'] ? app.config['ssb.cron.pushRssStatkal'] : '03 06 * * *'
-  schedule({
-    name: 'Push RSS statkal',
-    cron: pushRssStatkalCron,
-    callback: () => runOnMasterOnly(pushRssStatkalJob),
-    context: cronContext,
-  })
-
   // clear specific cache once an hour
   const clearCacheCron: string =
     app.config && app.config['ssb.cron.clearCacheCron'] ? app.config['ssb.cron.clearCacheCron'] : '01 * * * *'
@@ -251,18 +234,8 @@ export function setupCronJobs(): void {
     context: cronContext,
   })
 
-  // Task
-  const testTaskCron: string =
-    app.config && app.config['ssb.cron.testTask'] ? app.config['ssb.cron.testTask'] : '0 08 * * *'
   const datasetPublishCron: string =
     app.config && app.config['ssb.cron.publishDataset'] ? app.config['ssb.cron.publishDataset'] : '50 05 * * *'
-  const updateMimirMockReleaseCron: string =
-    app.config && app.config['ssb.cron.updateMimirReleasedMock']
-      ? app.config['ssb.cron.updateMimirReleasedMock']
-      : '01 8 * * *'
-  const updateCalculatorCron: string =
-    app.config && app.config['ssb.cron.updateCalculator'] ? app.config['ssb.cron.updateCalculator'] : '01 8 * * *'
-  const timezone: string = app.config && app.config['ssb.cron.timezone'] ? app.config['ssb.cron.timezone'] : 'UTC'
 
   // Use feature-toggling to switch to lib-sheduler when testet in QA
   if (!newPublishJobEnabled) {
@@ -278,7 +251,10 @@ export function setupCronJobs(): void {
     log.info('Run new dailyPublishJob lib-scheduler')
   }
 
+  // Task
   if (isMaster()) {
+    const timezone: string =
+      app.config && app.config['ssb.cron.timezone'] ? app.config['ssb.cron.timezone'] : 'Europe/Oslo'
     // publish dataset sheduler job
     run(cronContext, () => {
       const jobExists = !!getScheduledJob({
@@ -316,6 +292,8 @@ export function setupCronJobs(): void {
 
     // Test sheduler task
     run(cronContext, () => {
+      const testTaskCron: string =
+        app.config && app.config['ssb.cron.testTask'] ? app.config['ssb.cron.testTask'] : '0 10 * * *'
       const jobExists = !!getScheduledJob({
         name: 'testTask',
       })
@@ -348,6 +326,8 @@ export function setupCronJobs(): void {
 
     // Update calculators
     run(cronContext, () => {
+      const updateCalculatorCron: string =
+        app.config && app.config['ssb.cron.updateCalculator'] ? app.config['ssb.cron.updateCalculator'] : '01 8 * * *'
       const jobExists = !!getScheduledJob({
         name: 'updateCalculator',
       })
@@ -356,6 +336,9 @@ export function setupCronJobs(): void {
           name: 'updateCalculator',
           editor: (job) => {
             job.schedule.value = updateCalculatorCron
+            if (job.schedule.type === 'CRON') {
+              job.schedule.timeZone = timezone
+            }
             return job
           },
         })
@@ -369,7 +352,7 @@ export function setupCronJobs(): void {
           schedule: {
             type: 'CRON',
             value: updateCalculatorCron,
-            timeZone: 'Europe/Oslo',
+            timeZone: timezone,
           },
         })
       }
@@ -378,6 +361,10 @@ export function setupCronJobs(): void {
     // Update next release Mimir QA
     if (app.config && app.config['ssb.mock.enable'] === 'true') {
       run(cronContext, () => {
+        const updateMimirMockReleaseCron: string =
+          app.config && app.config['ssb.cron.updateMimirReleasedMock']
+            ? app.config['ssb.cron.updateMimirReleasedMock']
+            : '01 8 * * *'
         const jobExists = !!getScheduledJob({
           name: 'updateMimirMockRelease',
         })
@@ -405,6 +392,40 @@ export function setupCronJobs(): void {
         }
       })
     }
+
+    // Push Rss Statkal
+    run(cronContext, () => {
+      const pushRssStatkalCron: string =
+        app.config && app.config['ssb.cron.pushRssStatkal'] ? app.config['ssb.cron.pushRssStatkal'] : '05 08 * * *'
+      const jobExists = !!getScheduledJob({
+        name: 'pushRssStatkal',
+      })
+      if (jobExists) {
+        modify({
+          name: 'pushRssStatkal',
+          editor: (job) => {
+            job.schedule.value = pushRssStatkalCron
+            if (job.schedule.type === 'CRON') {
+              job.schedule.timeZone = timezone
+            }
+            return job
+          },
+        })
+      } else {
+        create({
+          name: 'pushRssStatkal',
+          descriptor: `${app.name}:pushRssStatkal`,
+          description: 'Push kommende publiseringer til rss/statkal',
+          user: `user:system:cronjob`,
+          enabled: true,
+          schedule: {
+            type: 'CRON',
+            value: pushRssStatkalCron,
+            timeZone: timezone,
+          },
+        })
+      }
+    })
   }
 
   const cronList: Array<TaskMapper> = list() as Array<TaskMapper>
