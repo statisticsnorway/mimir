@@ -1,11 +1,9 @@
-//const { getStatisticCalendarRss } = __non_webpack_require__('/lib/ssb/rss/statkal')
-
 import type { ContentLight, Release as ReleaseVariant } from '/lib/ssb/repo/statisticVariant'
 import { getUpcompingStatisticVariantsFromRepo } from '/lib/ssb/repo/statisticVariant'
 import { Contact, ReleasesInListing } from '/lib/ssb/dashboard/statreg/types'
 import type { SubjectItem } from '/lib/ssb/utils/subjectUtils'
 import { calculatePeriod } from '/lib/ssb/utils/variantUtils'
-import { format, getTimeZoneIso, isSameOrAfter, parseISO } from '/lib/ssb/utils/dateUtils'
+import { format, getTimeZoneIso, parseISO, addDays, isWithinInterval } from '/lib/ssb/utils/dateUtils'
 import { pageUrl } from '/lib/xp/portal'
 
 const { xmlEscape } = __non_webpack_require__('/lib/text-encoding')
@@ -20,7 +18,6 @@ const dummyReq: Partial<XP.Request> = {
 }
 
 exports.get = (): XP.Response => {
-  log.info('getStatisticCalendarRss')
   const statisticVariants: ContentLight<ReleaseVariant>[] = getUpcompingStatisticVariantsFromRepo()
   const allMainSubjects: Array<SubjectItem> = getMainSubjects(dummyReq as XP.Request)
   const upcomingVariants: StatkalVariant[] = getUpcomingVariants(statisticVariants, allMainSubjects)
@@ -32,23 +29,24 @@ exports.get = (): XP.Response => {
 	  ${[...rssReleases]
       .map(
         (r: RssRelease) => `<rssitem>
-		<guid isPermalink="false">statkal-${r.guid}</guid>
+		<guid isPermalink="false">release-${r.guid}-${r.language}</guid>
 		<title>${createTitle(r)}</title>
 		<link>${r.link}</link>
-		<description>${r.description ? xmlEscape(r.description) : ''}</description>
+		<description>${xmlEscape(r.description)}</description>
 		<category>${r.category}</category>
 		<subject>${r.subject}</subject>
-		<language>${r.language}</language>${r.contacts
-          .map(
-            (c: Contact) => `<contact>
-	  		<name>${c.name}</name>
-	  		<email>${c.email}</email>
-	  		<phone>${c.telephone}</phone>
-	  	</contact>`
-          )
-          .join('')}
-		<pubDate>${r.pubDate}</pubDate>
-		<shortname>${r.shortname}</shortname>
+		<language>${r.language}</language>
+		${r.contacts
+      .map(
+        (c: Contact) => `<contact>
+			<name>${c.name}</name>
+			<email>${c.email}</email>
+			<phone>${c.telephone}</phone>
+		</contact>`
+      )
+      .join('')}
+	  	<pubDate>${r.pubDate}</pubDate>
+	  	<shortname>${r.shortname}</shortname>
 	  </rssitem>`
       )
       .join('')}
@@ -59,48 +57,10 @@ exports.get = (): XP.Response => {
   }
 }
 
-export function getStatisticCalendarRss(): string {
-  log.info('getStatisticCalendarRss')
-  const statisticVariants: ContentLight<ReleaseVariant>[] = getUpcompingStatisticVariantsFromRepo()
-  const allMainSubjects: Array<SubjectItem> = getMainSubjects(dummyReq as XP.Request)
-  const upcomingVariants: StatkalVariant[] = getUpcomingVariants(statisticVariants, allMainSubjects)
-  const upcomingReleases: StatkalRelease[] = getUpcomingReleases(statisticVariants)
-  const rssReleases: RssRelease[] = getRssReleases(upcomingVariants, upcomingReleases)
-
-  const xml = `<?xml version="1.0" encoding="utf-8"?>
-	  <rssitems count="${rssReleases.length}">
-		${[...rssReleases]
-      .map(
-        (r: RssRelease) => `<rssitem>
-		  <guid isPermalink="false">statkal-${r.guid}</guid>
-		  <title>${createTitle(r)}</title>
-		  <link>${r.link}</link>
-		  <description>${r.description ? xmlEscape(r.description) : ''}</description>
-		  <category>${r.category}</category>
-		  <subject>${r.subject}</subject>
-		  <language>${r.language}</language>${r.contacts
-          .map(
-            (c: Contact) => `<contact>
-				<name>${c.name}</name>
-				<email>${c.email}</email>
-				<phone>${c.telephone}</phone>
-			</contact>`
-          )
-          .join('')}
-		  <pubDate>${r.pubDate}</pubDate>
-		  <shortname>${r.shortname}</shortname>
-		</rssitem>`
-      )
-      .join('')}
-	  </rssitems>`
-  return xml
-}
-
 function getUpcomingVariants(
   statisticVariants: ContentLight<ReleaseVariant>[],
   allMainSubjects: SubjectItem[]
 ): StatkalVariant[] {
-  log.info('** getUpcomingVariants **')
   const variants: StatkalVariant[] = []
   statisticVariants.forEach((statisticVariant) => {
     const lang: string = statisticVariant.language === 'en' ? 'en' : 'no'
@@ -135,13 +95,19 @@ function getUpcomingVariants(
 }
 
 function getUpcomingReleases(statisticVariants: ContentLight<ReleaseVariant>[]): StatkalRelease[] {
+  const rssStatkalDays: number =
+    app.config && app.config['ssb.rss.statkal.days'] ? app.config['ssb.rss.statkal.days'] : 120
+  const endDate: Date = addDays(new Date(), rssStatkalDays)
   const releases: StatkalRelease[] = []
   statisticVariants.forEach((statisticVariant) => {
     const allReleases: ReleasesInListing[] = statisticVariant.data.upcomingReleases
       ? forceArray(statisticVariant.data.upcomingReleases)
       : []
     const upcomingReleases: ReleasesInListing[] = allReleases.filter((release) =>
-      isSameOrAfter(new Date(release.publishTime), new Date(), 'day')
+      isWithinInterval(new Date(release.publishTime), {
+        start: new Date(),
+        end: endDate.setHours(23, 59, 59, 999),
+      })
     )
 
     upcomingReleases.forEach((r) => {
@@ -176,7 +142,7 @@ function getRssReleases(variants: StatkalVariant[], releases: StatkalRelease[]):
       description: variant.description,
       category: variant.category,
       subject: variant.subject,
-      language: variant.language,
+      language: variant.language === 'en' ? 'en' : 'no',
       pubDate: `${pubDate}${timeZoneIso}`,
       periode: release.periode,
       shortname: variant.shortname,

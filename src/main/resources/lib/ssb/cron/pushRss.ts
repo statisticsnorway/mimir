@@ -24,7 +24,6 @@ export function pushRssStatkal(): string {
   const rssStatkal: RssNews = getRssStatkal(statkalReleasesServiceUrl)
   if (rssStatkal.body !== null) {
     const encryptedBody: string = encryptRssStatkal(rssStatkal.body)
-    log.info('Kryptert kropp: ' + encryptedBody)
     return 'postRssStatkal snart ' //postRssStatkal(encryptedBody)
   } else {
     return rssStatkal.message
@@ -130,12 +129,12 @@ function postRssStatkal(encryptedRss: string): string {
   try {
     const pushRssStatkalResponse: HttpResponse = request(requestParams)
     if (pushRssStatkalResponse.status === 200) {
-      return 'Push av RSS publiseringer OK'
+      return 'Push av RSS statkal OK'
     } else {
-      return 'Push av RSS publiseringer feilet - ' + pushRssStatkalResponse.status
+      return 'Push av RSS statkal feilet - ' + pushRssStatkalResponse.status
     }
   } catch (e) {
-    return 'Push av publiseringer feilet - ' + e
+    return 'Push av RSS statkal feilet - ' + e
   }
 }
 
