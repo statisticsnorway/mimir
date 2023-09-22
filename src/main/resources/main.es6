@@ -95,6 +95,10 @@ try {
           feature: 'datefns-publication-archive',
           enabled: false,
         },
+        {
+          feature: 'push-rss-statkal',
+          enabled: false,
+        },
       ],
     },
   ])

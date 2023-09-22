@@ -24,7 +24,7 @@ export function pushRssStatkal(): string {
   const rssStatkal: RssNews = getRssStatkal(statkalReleasesServiceUrl)
   if (rssStatkal.body !== null) {
     const encryptedBody: string = encryptRssStatkal(rssStatkal.body)
-    return 'postRssStatkal snart ' //postRssStatkal(encryptedBody)
+    return postRssStatkal(encryptedBody)
   } else {
     return rssStatkal.message
   }

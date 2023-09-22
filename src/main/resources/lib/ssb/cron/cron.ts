@@ -394,6 +394,7 @@ export function setupCronJobs(): void {
     }
 
     // Push Rss Statkal
+    const pushRssStatkalEnabled: boolean = isEnabled('push-rss-statkal', false, 'ssb')
     run(cronContext, () => {
       const pushRssStatkalCron: string =
         app.config && app.config['ssb.cron.pushRssStatkal'] ? app.config['ssb.cron.pushRssStatkal'] : '05 08 * * *'
@@ -404,6 +405,7 @@ export function setupCronJobs(): void {
         modify({
           name: 'pushRssStatkal',
           editor: (job) => {
+            job.enabled = pushRssStatkalEnabled
             job.schedule.value = pushRssStatkalCron
             if (job.schedule.type === 'CRON') {
               job.schedule.timeZone = timezone
@@ -417,7 +419,7 @@ export function setupCronJobs(): void {
           descriptor: `${app.name}:pushRssStatkal`,
           description: 'Push kommende publiseringer til rss/statkal',
           user: `user:system:cronjob`,
-          enabled: true,
+          enabled: pushRssStatkalEnabled,
           schedule: {
             type: 'CRON',
             value: pushRssStatkalCron,
