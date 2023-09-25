@@ -5,7 +5,8 @@
 export interface UtilLibrary {
   readonly data: UtilDataLibrary
 }
-
 interface UtilDataLibrary {
   forceArray<T>(data: T | Array<T>): Array<T>
 }
+
+export declare const data: UtilDataLibrary
