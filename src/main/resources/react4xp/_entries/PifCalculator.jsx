@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Form, Container, Row, Col } from 'react-bootstrap'
 import { Input, Button, Dropdown, Divider, FormError, Link, RadioGroup } from '@statisticsnorway/ssb-component-library'
@@ -29,9 +29,13 @@ function PifCalculator(props) {
     errorMsg: props.lastNumberText,
     value: '',
   })
+  // Differentiate validMinYear based on selected market
+  const validMinYear = scopeCode.value === '3' ? 1926 : 1977
+  const validMinYearPhrase = pifValidateYear.replaceAll('{0}', validMinYear)
+  const validYearErrorMsg = `${validMinYearPhrase} ${validMaxYear}`
   const [startYear, setStartYear] = useState({
     error: false,
-    errorMsg: `${pifValidateYear} ${validMaxYear}`,
+    errorMsg: validYearErrorMsg,
     value: '',
   })
   const [endMonth, setEndMonth] = useState({
@@ -41,7 +45,7 @@ function PifCalculator(props) {
   })
   const [endYear, setEndYear] = useState({
     error: false,
-    errorMsg: `${pifValidateYear} ${validMaxYear}`,
+    errorMsg: validYearErrorMsg,
     value: '',
   })
   const [errorMessage, setErrorMessage] = useState(null)
@@ -54,25 +58,36 @@ function PifCalculator(props) {
   const [startIndex, setStartIndex] = useState(null)
   const [endIndex, setEndIndex] = useState(null)
   const language = props.language ? props.language : 'nb'
+  const scrollAnchor = useRef(null)
+  const onSubmitBtnElement = useRef(null)
 
   const validMaxMonth = props.lastUpdated.month
-  const validMinYear = 1865
   const yearRegexp = /^[1-9]{1}[0-9]{3}$/g
 
-  const scrollAnchor = React.useRef(null)
-  function scrollToResult() {
-    scrollAnchor.current.focus({
-      preventScroll: true,
+  useEffect(() => {
+    if (!loading && scrollAnchor.current) {
+      scrollAnchor.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'end',
+        inline: 'nearest',
+      })
+    }
+  }, [loading])
+
+  useEffect(() => {
+    setStartYear({
+      ...startYear,
+      errorMsg: validYearErrorMsg,
     })
-    scrollAnchor.current.scrollIntoView({
-      behavior: 'smooth',
-      block: 'end',
-      inline: 'nearest',
+    setEndYear({
+      ...endYear,
+      errorMsg: validYearErrorMsg,
     })
-  }
+  }, [validMinYear])
 
   function closeResult() {
     setEndValue(null)
+    if (onSubmitBtnElement.current) onSubmitBtnElement.current.focus()
   }
 
   function onSubmit(e) {
@@ -123,7 +138,6 @@ function PifCalculator(props) {
       })
       .finally(() => {
         setLoading(false)
-        scrollToResult()
       })
   }
 
@@ -513,7 +527,7 @@ function PifCalculator(props) {
     if (props.calculatorArticleUrl) {
       return (
         <Col className='article-link align-self-center col-12 col-md-6'>
-          <Link className='float-md-end' href={props.calculatorArticleUrl}>
+          <Link className='float-md-end' href={props.calculatorArticleUrl} standAlone>
             {props.phrases.readAboutCalculator}
           </Link>
         </Col>
@@ -620,7 +634,7 @@ function PifCalculator(props) {
             </Row>
             <Row className='submit'>
               <Col>
-                <Button className='submit-button' primary type='submit' disabled={loading}>
+                <Button ref={onSubmitBtnElement} className='submit-button' primary type='submit' disabled={loading}>
                   {props.phrases.seePriceChange}
                 </Button>
               </Col>
@@ -634,7 +648,9 @@ function PifCalculator(props) {
   return (
     <Container className='pif-calculator'>
       {renderForm()}
-      {renderResult()}
+      <div aria-live='polite' aria-atomic='true'>
+        {renderResult()}
+      </div>
     </Container>
   )
 }

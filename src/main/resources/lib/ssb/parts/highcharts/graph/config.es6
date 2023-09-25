@@ -1,6 +1,7 @@
 /* eslint-disable complexity */
 const { localize } = __non_webpack_require__('/lib/xp/i18n')
 const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
+import { ensureArray } from '/lib/ssb/utils/arrayUtils'
 
 export const style = {
   color: '#21383a',
@@ -68,33 +69,37 @@ export const createDefaultConfig = (highchartData, displayName, language) => ({
     '#000000',
   ],
   credits: {
-    position: {
-      align: 'left',
-      x: 10,
-      y: -25,
-    },
-    text: highchartData.creditsText,
-    href: highchartData.creditsHref,
-    style: {
-      color: '#00824d',
-      fontSize: '16px',
-    },
-    enabled: highchartData.creditsText || highchartData.creditsHref,
+    enabled: !!highchartData.sourceList,
   },
   exporting: {
     chartOptions: {
       chart: {
-        height: highchartData.creditsText || highchartData.creditsHref ? '100%' : null,
-        spacingBottom: highchartData.creditsText || highchartData.creditsHref ? 50 : 10,
+        spacingBottom: 10 + ensureArray(highchartData?.sourceList).length * 20,
+      },
+      xAxis: {
+        labels: {
+          step: 1,
+        },
       },
       credits: {
-        enabled: !!highchartData.creditsText,
-        text: `<b style="color:#274247">${localize({
-          key: 'source',
-          locale: language ? language : 'nb',
-        })}:</b></br>${highchartData.creditsText}`,
+        enabled: !!highchartData.sourceList,
+        text: ensureArray(highchartData?.sourceList).reduce((combinedSources, currentSource) => {
+          return (
+            combinedSources +
+            `<b style="color:#274247">${localize({
+              key: 'source',
+              locale: language ?? 'nb',
+            })}: </b>${currentSource.sourceText}</br>`
+          )
+        }, ''),
         position: {
-          y: -30,
+          align: 'left',
+          x: 10,
+          y: -10 - (ensureArray(highchartData?.sourceList).length - 1) * 20,
+        },
+        style: {
+          color: '#00824d',
+          fontSize: '16px',
         },
       },
     },
