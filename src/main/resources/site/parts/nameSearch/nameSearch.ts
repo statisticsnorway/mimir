@@ -6,7 +6,7 @@ import type { NameSearch as NameSearchPartConfig } from '.'
 import { getContent, getComponent, pageUrl, serviceUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 
-const { getLanguageShortName } = __non_webpack_require__('/lib/ssb/utils/language')
+//const { getLanguageShortName } = __non_webpack_require__('/lib/ssb/utils/language')
 
 exports.get = (req: XP.Request): XP.Response => {
   try {
@@ -24,7 +24,7 @@ function renderPart(req: XP.Request) {
   const component = getComponent<NameSearchPartConfig>()
   if (!component) throw Error('No part found')
 
-  const locale: string = getLanguageShortName(getContent())
+  //const locale: string = getLanguageShortName(getContent())
 
   const urlToService: string = serviceUrl({
     service: 'nameSearch',
@@ -35,8 +35,8 @@ function renderPart(req: XP.Request) {
     aboutLink: aboutLinkResources(component.config),
     nameSearchDescription: component.config.nameSearchDescription,
     frontPage: component.config.frontPage,
-    phrases: partsPhrases(locale),
-    language: locale,
+    phrases: partsPhrases(getContent().language),
+    language: getContent().language,
     GA_TRACKING_ID: GA_TRACKING_ID,
   }
 

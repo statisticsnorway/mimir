@@ -271,17 +271,8 @@ function NameSearch(props) {
     const lineColor = '#21383a'
 
     // Highchart language checker
-    const lang = document.querySelector('html').getAttribute('lang')
-    if (lang === 'nb') {
+    if (language === 'nb') {
       Highcharts.setOptions({
-        lang: {
-          decimalPoint: accessibilityLang.lang.decimalPoint,
-        },
-      })
-    }
-
-    if (nameGraphData) {
-      const options = {
         lang: {
           ...accessibilityLang.lang,
           accessibility: {
@@ -304,7 +295,13 @@ function NameSearch(props) {
               legendLabelNoTitle: props.phrases.legendLabelNoTitle,
             },
           },
+          decimalPoint: accessibilityLang.lang.decimalPoint,
         },
+      })
+    }
+
+    if (nameGraphData) {
+      const options = {
         chart: {
           type: 'spline',
           height: frontPage || !desktop ? '380px' : '75%',
