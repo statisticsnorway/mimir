@@ -19,7 +19,7 @@ const dummyReq: Partial<XP.Request> = {
 
 exports.get = (): XP.Response => {
   const statisticVariants: ContentLight<ReleaseVariant>[] = getUpcompingStatisticVariantsFromRepo()
-  const allMainSubjects: Array<SubjectItem> = getMainSubjects(dummyReq as XP.Request)
+  const allMainSubjects: SubjectItem[] = getMainSubjects(dummyReq as XP.Request)
   const upcomingVariants: StatkalVariant[] = getUpcomingVariants(statisticVariants, allMainSubjects)
   const upcomingReleases: StatkalRelease[] = getUpcomingReleases(statisticVariants)
   const rssReleases: RssRelease[] = getRssReleases(upcomingVariants, upcomingReleases)
@@ -30,10 +30,10 @@ exports.get = (): XP.Response => {
       .map(
         (r: RssRelease) => `<rssitem>
 		<guid isPermalink="false">release-${r.guid}-${r.language}</guid>
-		<title>${createTitle(r)}</title>
+		<title>${xmlEscape(createTitle(r))}</title>
 		<link>${r.link}</link>
 		<description>${xmlEscape(r.description)}</description>
-		<category>${r.category}</category>
+		<category>${xmlEscape(r.category)}</category>
 		<subject>${r.subject}</subject>
 		<language>${r.language}</language>
 		${r.contacts

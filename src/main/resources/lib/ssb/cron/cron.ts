@@ -397,7 +397,7 @@ export function setupCronJobs(): void {
     const pushRssStatkalEnabled: boolean = isEnabled('push-rss-statkal', false, 'ssb')
     run(cronContext, () => {
       const pushRssStatkalCron: string =
-        app.config && app.config['ssb.cron.pushRssStatkal'] ? app.config['ssb.cron.pushRssStatkal'] : '05 08 * * *'
+        app.config && app.config['ssb.cron.pushRssStatkal'] ? app.config['ssb.cron.pushRssStatkal'] : '10 08 * * *'
       const jobExists = !!getScheduledJob({
         name: 'pushRssStatkal',
       })
