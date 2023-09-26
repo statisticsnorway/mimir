@@ -7,7 +7,6 @@ on:
 
 concurrency:
   group: mimir-test
-  cancel-in-progress: true
 
 jobs:
   deploy_to_test:
