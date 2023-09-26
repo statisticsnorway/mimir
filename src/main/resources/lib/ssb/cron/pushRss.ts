@@ -115,12 +115,11 @@ function postRssNews(encryptedRss: string): string {
 }
 
 function postRssStatkal(encryptedRss: string): string {
-  /*  const rssStatkalBaseUrl: string =
+  const rssStatkalBaseUrl: string =
     app.config && app.config['ssb.baseUrl']
       ? app.config['ssb.baseUrl'] + '/rss/populate/statkal'
-      : 'https:www.utv.ssb.no/rss/populate/statkal' */
+      : 'https:www.utv.ssb.no/rss/populate/statkal'
 
-  const rssStatkalBaseUrl = 'http://localhost:9090/rss/populate/statkal'
   const requestParams: HttpRequestParams = {
     url: rssStatkalBaseUrl,
     method: 'POST',
