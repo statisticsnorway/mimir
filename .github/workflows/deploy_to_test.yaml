@@ -13,7 +13,6 @@ jobs:
   deploy_to_test:
     name: 'Deploy to Test'
     runs-on: 'ubuntu-latest'
-    environment: 'test'
     steps:
       - id: build_app
         uses: enonic/release-tools/build-and-publish@master

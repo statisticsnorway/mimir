@@ -12,7 +12,6 @@ jobs:
   deploy-artifact:
     name: 'Deploy artifact'
     runs-on: ubuntu-latest
-    environment: 'test'
     steps:
       - name: Download workflow artifact
         uses: dawidd6/action-download-artifact@v2.27.0
