@@ -1,3 +1,5 @@
+import { formatDate as libTimeFormatDate } from '/lib/time'
+
 import { type Locale } from 'date-fns'
 import { default as nb } from 'date-fns/locale/nb'
 import { default as nn } from 'date-fns/locale/nn'
@@ -42,14 +44,32 @@ export function formatDate(date: string | undefined, formatType: string, languag
         }
       : {}
 
+    let dateFnsResult
+
     try {
-      const result = format(parsedDate, formatType, locale)
-      return result
+      dateFnsResult = format(parsedDate, formatType, locale)
     } catch (e) {
       log.error(`Error in formatDate, tried to format ${parsedDate} to ${formatType}`)
-      log.error(JSON.stringify(locale, null, 2))
-      throw e
     }
+
+    let libTimePattern = formatType
+    // https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/format/DateTimeFormatter.html#patterns
+    if (formatType === 'PPP') libTimePattern = language === 'en' ? 'd MMMM u' : 'd. MMMM u'
+    const libTimeResult = libTimeFormatDate({
+      date: parsedDate.toISOString(),
+      pattern: libTimePattern,
+      locale: language,
+      timezoneId: 'Europe/Oslo',
+    })
+
+    // Track errors in logs
+    if (dateFnsResult && dateFnsResult !== libTimeResult) {
+      log.error(
+        `Error in formatDate, got different result with date-fns and lib-time when formatting ${parsedDate} to ${formatType}. date-fns: ${dateFnsResult}, lib-time: ${libTimeResult}`
+      )
+    }
+
+    return libTimeResult
   }
   return
 }
