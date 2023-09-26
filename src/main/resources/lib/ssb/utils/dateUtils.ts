@@ -54,7 +54,7 @@ export function formatDate(date: string | undefined, formatType: string, languag
 
     let libTimePattern = formatType
     // https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/format/DateTimeFormatter.html#patterns
-    if (formatType === 'PPP') libTimePattern = 'd. MMMM u'
+    if (formatType === 'PPP') libTimePattern = language === 'en' ? 'd MMMM u' : 'd. MMMM u'
     const libTimeResult = libTimeFormatDate({
       date: parsedDate.toISOString(),
       pattern: libTimePattern,
