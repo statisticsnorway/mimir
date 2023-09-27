@@ -271,7 +271,7 @@ function NameSearch(props) {
     const lineColor = '#21383a'
 
     // Highchart language checker
-    if (language === 'nb') {
+    if (language !== 'en') {
       Highcharts.setOptions({
         lang: {
           ...accessibilityLang.lang,
