@@ -31,10 +31,9 @@ const EMPTY_CONFIG = {
 
 // HIGHCHART
 export function init() {
-  //Highchart language
-  //if html = 'nb' then accessibilityLang selected, if html = 'en' then default higcharts eng (no accessibiltyLang selected)
+  //Highchart language checker
   const lang = $('html').attr('lang')
-  if (lang === 'nb') {
+  if (lang !== 'en') {
     Highcharts.setOptions(accessibilityLang)
   }
 
