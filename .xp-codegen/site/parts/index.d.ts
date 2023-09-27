@@ -63,7 +63,18 @@ export type Table = import("./table").Table;
 export type UpcomingReleases = import("./upcomingReleases").UpcomingReleases;
 export type Variables = import("./variables").Variables;
 
+import { PartComponent } from '@enonic-types/core'
 declare global {
+  namespace XpPartComponent {
+    export type Accordion = PartComponent<'mimir:accordion', XpPartMap['mimir:accordion']>
+  }
+
+  namespace XpComponent {
+    export type Part = {
+      [Property in keyof XpPartMap]: PartComponent<Property, XpPartMap[Property]>;
+    }
+  }
+
   interface XpPartMap {
     "mimir:accordion": Accordion;
     "mimir:activeStatistics": ActiveStatistics;
