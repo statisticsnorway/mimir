@@ -6,7 +6,7 @@ export function pushRssNews(): string {
   const newsServiceUrl: string =
     app.config && app.config['ssb.baseUrl']
       ? app.config['ssb.baseUrl'] + '/_/service/mimir/news'
-      : 'https:www.utv.ssb.no/_/service/mimir/news'
+      : 'https://www.utv.ssb.no/_/service/mimir/news'
   const rssNews: RssItems = getRssNews(newsServiceUrl)
   if (rssNews.body !== null) {
     const encryptedBody: string = encryptRssNews(rssNews.body)
@@ -20,7 +20,7 @@ export function pushRssStatkal(): string {
   const statkalReleasesServiceUrl: string =
     app.config && app.config['ssb.baseUrl']
       ? app.config['ssb.baseUrl'] + '/_/service/mimir/statkalReleases'
-      : 'https:www.utv.ssb.no/_/service/mimir/statkalReleases'
+      : 'https://www.utv.ssb.no/_/service/mimir/statkalReleases'
   const rssStatkal: RssItems = getRssStatkal(statkalReleasesServiceUrl)
   if (rssStatkal.body !== null) {
     const encryptedBody: string = encryptRssStatkal(rssStatkal.body)
@@ -94,7 +94,7 @@ function postRssNews(encryptedRss: string): string {
   const rssNewsBaseUrl: string =
     app.config && app.config['ssb.baseUrl']
       ? app.config['ssb.baseUrl'] + '/rss/populate/news'
-      : 'https:www.utv.ssb.no/rss/populate/news'
+      : 'https://www.utv.ssb.no/rss/populate/news'
 
   const requestParams: HttpRequestParams = {
     url: rssNewsBaseUrl,
@@ -118,7 +118,7 @@ function postRssStatkal(encryptedRss: string): string {
   const rssStatkalBaseUrl: string =
     app.config && app.config['ssb.baseUrl']
       ? app.config['ssb.baseUrl'] + '/rss/populate/statkal'
-      : 'https:www.utv.ssb.no/rss/populate/statkal'
+      : 'https://www.utv.ssb.no/rss/populate/statkal'
 
   const requestParams: HttpRequestParams = {
     url: rssStatkalBaseUrl,
