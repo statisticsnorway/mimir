@@ -11,11 +11,7 @@ const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
 export function get(req: XP.Request): XP.Response {
   try {
-    const component1 = getComponent<XpPartComponent.Accordion>()
-    const component2 = getComponent<XpComponent.Part['mimir:accordion']>()
-    if (!component2) throw Error('No config found')
-
-    const config = component2?.config
+    const config = getComponent<XP.PartComponent.Accordion>()?.config
 
     const accordionIds: Array<string> = config ? forceArray(config.accordion) : []
     return renderPart(req, accordionIds)
