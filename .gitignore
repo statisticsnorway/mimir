@@ -1,6 +1,7 @@
 bin/
 dist
 build
+.xp-codegen
 *.swp
 .gradle
 .vscode
