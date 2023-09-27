@@ -37,7 +37,12 @@ export function sameDay(d1: Date, d2: Date): boolean {
 
 export function formatDate(date: string | undefined, formatType: string, language?: string): string | undefined {
   if (date) {
-    const parsedDate: Date = parseISO(date)
+    let parsedDate: Date = parseISO(date)
+
+    if (!date.match(/(?:Z|[+-](?:2[0-3]|[01][0-9]):[0-5][0-9])$/gm)) {
+      const serverOffsetInMs: number = app.config?.['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
+      parsedDate = new Date(parsedDate.getTime() + serverOffsetInMs)
+    }
     const locale: object = language
       ? {
           locale: language === 'en' ? enGB : language === 'nn' ? nn : nb,
@@ -45,7 +50,6 @@ export function formatDate(date: string | undefined, formatType: string, languag
       : {}
 
     let dateFnsResult
-
     try {
       dateFnsResult = format(parsedDate, formatType, locale)
     } catch (e) {
@@ -55,12 +59,22 @@ export function formatDate(date: string | undefined, formatType: string, languag
     let libTimePattern = formatType
     // https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/format/DateTimeFormatter.html#patterns
     if (formatType === 'PPP') libTimePattern = language === 'en' ? 'd MMMM u' : 'd. MMMM u'
-    const libTimeResult = libTimeFormatDate({
-      date: parsedDate.toISOString(),
-      pattern: libTimePattern,
-      locale: language,
-      timezoneId: 'Europe/Oslo',
-    })
+    if (formatType === 'PPpp') libTimePattern = language === 'en' ? 'd MMM u, HH:mm:ss' : 'd. MMM u HH:mm:ss'
+
+    let libTimeResult
+    try {
+      libTimeResult = libTimeFormatDate({
+        date: parsedDate.toISOString(),
+        pattern: libTimePattern,
+        locale: language,
+        timezoneId: 'Europe/Oslo',
+      })
+    } catch (e) {
+      log.error(`Error in formatDate with Lib time, tried to format ${parsedDate} to ${libTimePattern}`)
+      return dateFnsResult
+    }
+
+    log.info(`${date} -- ${formatType} -- date-fns: ${dateFnsResult}, lib-time: ${libTimeResult}`)
 
     // Track errors in logs
     if (dateFnsResult && dateFnsResult !== libTimeResult) {
