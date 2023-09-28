@@ -37,11 +37,14 @@ export function sameDay(d1: Date, d2: Date): boolean {
 
 export function formatDate(date: string | undefined, formatType: string, language?: string): string | undefined {
   if (date) {
-    let parsedDate: Date = parseISO(date)
+    const parsedDate: Date = parseISO(date)
+    let parsedDateWithTimeZone = parsedDate
 
+    // If date has no specified timezone, add server offset so it become Europe/Oslo.
+    // If no timezone is specified, the parseISO function will assume the date is in local time, which for the server is UTC (Z, GMT+0)
     if (!date.match(/(?:Z|[+-](?:2[0-3]|[01][0-9]):[0-5][0-9])$/gm)) {
       const serverOffsetInMs: number = app.config?.['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
-      parsedDate = new Date(parsedDate.getTime() + serverOffsetInMs)
+      parsedDateWithTimeZone = new Date(parsedDateWithTimeZone.getTime() + serverOffsetInMs)
     }
     const locale: object = language
       ? {
@@ -64,7 +67,7 @@ export function formatDate(date: string | undefined, formatType: string, languag
     let libTimeResult
     try {
       libTimeResult = libTimeFormatDate({
-        date: parsedDate.toISOString(),
+        date: parsedDateWithTimeZone.toISOString(),
         pattern: libTimePattern,
         locale: language,
         timezoneId: 'Europe/Oslo',
@@ -74,7 +77,7 @@ export function formatDate(date: string | undefined, formatType: string, languag
       return dateFnsResult
     }
 
-    log.info(`${date} -- ${formatType} -- date-fns: ${dateFnsResult}, lib-time: ${libTimeResult}`)
+    // log.info(`${date} -- ${formatType} -- date-fns: ${dateFnsResult}, lib-time: ${libTimeResult}`)
 
     // Track errors in logs
     if (dateFnsResult && dateFnsResult !== libTimeResult) {
