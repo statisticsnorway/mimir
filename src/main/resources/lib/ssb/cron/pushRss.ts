@@ -1,4 +1,5 @@
 import { HttpRequestParams, HttpResponse } from '/lib/http-client'
+import { getRssItemsStatkal } from '/lib/ssb/rss/statkal'
 const { request } = __non_webpack_require__('/lib/http-client')
 const { encryptRssNews, encryptRssStatkal } = __non_webpack_require__('/lib/cipher/cipherRss')
 
@@ -17,16 +18,12 @@ export function pushRssNews(): string {
 }
 
 export function pushRssStatkal(): string {
-  const statkalReleasesServiceUrl: string =
-    app.config && app.config['ssb.baseUrl']
-      ? app.config['ssb.baseUrl'] + '/_/service/mimir/statkalReleases'
-      : 'https://www.utv.ssb.no/_/service/mimir/statkalReleases'
-  const rssStatkal: RssItems = getRssStatkal(statkalReleasesServiceUrl)
-  if (rssStatkal.body !== null) {
-    const encryptedBody: string = encryptRssStatkal(rssStatkal.body)
+  const rssStatkal: string | null = getRssItemsStatkal()
+  if (rssStatkal !== null) {
+    const encryptedBody: string = encryptRssStatkal(rssStatkal)
     return postRssStatkal(encryptedBody)
   } else {
-    return rssStatkal.message
+    return 'Ingen publiseringer å pushe til rss/statkal'
   }
 }
 
@@ -55,36 +52,6 @@ function getRssNews(url: string): RssItems {
     }
   } catch (e) {
     status.message = 'Henting av nyheter XP feilet - ' + e
-  }
-
-  return status
-}
-
-function getRssStatkal(url: string): RssItems {
-  const requestParams: HttpRequestParams = {
-    url,
-    method: 'GET',
-    readTimeout: 40000,
-  }
-
-  const status: RssItems = {
-    body: null,
-    message: '',
-  }
-
-  try {
-    const rssStatkalResponse: HttpResponse = request(requestParams)
-    if (rssStatkalResponse.status === 200) {
-      if (rssStatkalResponse.body) {
-        status.body = rssStatkalResponse.body
-      } else {
-        status.message = 'Ingen publiseringer å pushe til rss/statkal'
-      }
-    } else {
-      status.message = 'Henting av publiseringer XP feilet - ' + rssStatkalResponse.status
-    }
-  } catch (e) {
-    status.message = 'Henting av publiseringer XP feilet - ' + e
   }
 
   return status
@@ -131,7 +98,7 @@ function postRssStatkal(encryptedRss: string): string {
     if (pushRssStatkalResponse.status === 200) {
       return 'Push av RSS statkal OK'
     } else {
-      return 'Push av RSS statkal feilet - ' + pushRssStatkalResponse.status
+      return `Push av RSS statkal til ${rssStatkalBaseUrl} feilet - ${pushRssStatkalResponse.status} `
     }
   } catch (e) {
     return 'Push av RSS statkal feilet - ' + e

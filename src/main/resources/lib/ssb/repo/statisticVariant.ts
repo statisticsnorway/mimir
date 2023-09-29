@@ -263,6 +263,7 @@ function prepareData({
   allMainSubjectsStatistic,
   allSubSubjectsStatistic,
 }: CreateContentStatisticVariantParams): Release {
+  const statisticPath: string = statisticsContent?._path ? statisticsContent._path.split('/').slice(2).join('/') : ''
   return {
     statisticId: String(statistic.id),
     variantId: String(variant.id),
@@ -286,6 +287,7 @@ function prepareData({
       ? capitalize(calculatePeriod(variant.frekvens, nextRelease.periodFrom, nextRelease.periodTo, language))
       : '',
     statisticContentId: statisticsContent?._id,
+    statisticPath: encodeURI(statisticPath),
     articleType: 'statistics', // allows this content to be filtered together with `Article.articleType`,
     contacts: statisticsContent?.data.contacts ? forceArray(statisticsContent?.data.contacts) : [],
     mainSubjects: allMainSubjectsStatistic.map((subject) => subject.name).filter(notNullOrUndefined),
@@ -327,6 +329,7 @@ export interface Release {
   nextRelease: string
   nextPeriod: string
   statisticContentId?: string
+  statisticPath: string
   articleType: 'statistics'
   contacts: string[]
   mainSubjects: Array<string> | string | undefined

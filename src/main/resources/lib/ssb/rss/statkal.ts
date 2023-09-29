@@ -4,7 +4,6 @@ import { Contact, ReleasesInListing } from '/lib/ssb/dashboard/statreg/types'
 import type { SubjectItem } from '/lib/ssb/utils/subjectUtils'
 import { calculatePeriod } from '/lib/ssb/utils/variantUtils'
 import { format, getTimeZoneIso, parseISO, addDays, isWithinInterval } from '/lib/ssb/utils/dateUtils'
-import { pageUrl } from '/lib/xp/portal'
 
 const { xmlEscape } = __non_webpack_require__('/lib/text-encoding')
 const {
@@ -17,14 +16,15 @@ const dummyReq: Partial<XP.Request> = {
   branch: 'master',
 }
 
-exports.get = (): XP.Response => {
+export function getRssItemsStatkal(): string | null {
   const statisticVariants: ContentLight<ReleaseVariant>[] = getUpcompingStatisticVariantsFromRepo()
   const allMainSubjects: SubjectItem[] = getMainSubjects(dummyReq as XP.Request)
   const upcomingVariants: StatkalVariant[] = getUpcomingVariants(statisticVariants, allMainSubjects)
   const upcomingReleases: StatkalRelease[] = getUpcomingReleases(statisticVariants)
   const rssReleases: RssRelease[] = getRssReleases(upcomingVariants, upcomingReleases)
 
-  const xml = `<?xml version="1.0" encoding="utf-8"?>
+  const xml = rssReleases
+    ? `<?xml version="1.0" encoding="utf-8"?>
 	<rssitems count="${rssReleases.length}">
 	  ${[...rssReleases]
       .map(
@@ -51,10 +51,8 @@ exports.get = (): XP.Response => {
       )
       .join('')}
 	</rssitems>`
-  return {
-    body: xml,
-    contentType: 'text/xml',
-  }
+    : null
+  return xml
 }
 
 function getUpcomingVariants(
@@ -70,13 +68,9 @@ function getUpcomingVariants(
     const mainSubject: SubjectItem | null = mainSubjectName
       ? getMainSubject(mainSubjectName, allMainSubjects, lang)
       : null
+
     const baseUrl: string = app.config && app.config['ssb.baseUrl'] ? app.config['ssb.baseUrl'] : 'https://www.ssb.no'
-    const statisticUrl = statisticVariant.data.statisticContentId
-      ? baseUrl +
-        pageUrl({
-          id: statisticVariant.data.statisticContentId,
-        })
-      : ''
+    const statisticUrl = `${baseUrl}/${statisticVariant.data.statisticPath}`
 
     variants.push({
       statisticId: statisticVariant.data.statisticId,
