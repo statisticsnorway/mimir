@@ -78,6 +78,22 @@ export function getStatisticVariantsFromRepo(
   return res.hits.map((hit) => connectionStatisticRepo.get(hit.id) as ContentLight<Release>)
 }
 
+export function getUpcompingStatisticVariantsFromRepo(count?: number): ContentLight<Release>[] {
+  const connectionStatisticRepo: RepoConnection = getRepoConnectionStatistics()
+  const res = connectionStatisticRepo.query({
+    count: count ? count : 1000,
+    sort: 'publish.from DESC',
+    query: {
+      range: {
+        field: 'data.nextRelease',
+        gte: new Date().toISOString(),
+      },
+    },
+  })
+
+  return res.hits.map((hit) => connectionStatisticRepo.get(hit.id) as ContentLight<Release>)
+}
+
 export function fillRepo(statistics: Array<StatisticInListing>) {
   if (getRepo(REPO_ID_STATREG_STATISTICS) === null) {
     createRepo({
@@ -247,6 +263,7 @@ function prepareData({
   allMainSubjectsStatistic,
   allSubSubjectsStatistic,
 }: CreateContentStatisticVariantParams): Release {
+  const statisticPath: string = statisticsContent?._path ? statisticsContent._path.split('/').slice(2).join('/') : ''
   return {
     statisticId: String(statistic.id),
     variantId: String(variant.id),
@@ -270,7 +287,9 @@ function prepareData({
       ? capitalize(calculatePeriod(variant.frekvens, nextRelease.periodFrom, nextRelease.periodTo, language))
       : '',
     statisticContentId: statisticsContent?._id,
+    statisticPath: encodeURI(statisticPath),
     articleType: 'statistics', // allows this content to be filtered together with `Article.articleType`,
+    contacts: statisticsContent?.data.contacts ? forceArray(statisticsContent?.data.contacts) : [],
     mainSubjects: allMainSubjectsStatistic.map((subject) => subject.name).filter(notNullOrUndefined),
     subSubjects: allSubSubjectsStatistic.map((subject) => subject.name).filter(notNullOrUndefined),
     upcomingReleases: variant.upcomingReleases,
@@ -310,7 +329,9 @@ export interface Release {
   nextRelease: string
   nextPeriod: string
   statisticContentId?: string
+  statisticPath: string
   articleType: 'statistics'
+  contacts: string[]
   mainSubjects: Array<string> | string | undefined
   subSubjects: Array<string> | string | undefined
   upcomingReleases?: Array<ReleasesInListing>

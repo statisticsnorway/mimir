@@ -7,6 +7,7 @@ import { default as enGB } from 'date-fns/locale/en-GB'
 import { default as parseISO } from 'date-fns/parseISO'
 import { default as format } from 'date-fns/format'
 import { default as isWithinInterval } from 'date-fns/isWithinInterval'
+import { default as addDays } from 'date-fns/addDays'
 import { default as subDays } from 'date-fns/subDays'
 import { default as getMonth } from 'date-fns/getMonth'
 import { default as getYear } from 'date-fns/getYear'
@@ -19,6 +20,7 @@ import { default as formatDistanceToNowStrict } from 'date-fns/formatDistanceToN
 
 export {
   parseISO,
+  addDays,
   subDays,
   getMonth,
   format,
