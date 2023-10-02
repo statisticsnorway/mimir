@@ -1,5 +1,4 @@
 import { get as getContentByKey, type Content } from '/lib/xp/content'
-import { SearchResult as SearchResultPartConfig } from '.'
 import { render } from '/lib/enonic/react4xp'
 import type { PreparedSearchResult, SolrPrepResultAndTotal, Facet } from '/lib/ssb/utils/solrUtils'
 import type { SolrResponse } from '/lib/ssb/utils/nameSearchUtils'
@@ -33,7 +32,7 @@ export function renderPart(req: XP.Request) {
   const content = getContent()
   if (!content) throw Error('No page found')
 
-  const part = getComponent<SearchResultPartConfig>()
+  const part = getComponent<XP.PartComponent.SearchResult>()
   if (!part) throw Error('No part found')
 
   const sanitizedTerm: string = req.params.sok ? sanitizeForSolr(req.params.sok) : ''

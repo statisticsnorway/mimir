@@ -193,8 +193,5 @@ interface MediaImageXData {
 }
 
 declare namespace XP {
-    type Request = import('@item-enonic-types/global/controller').Request;
-    type Response<ResponseBody = unknown> = import("@item-enonic-types/global/controller").Response<ResponseBody>;
     type PageContributions = import("@item-enonic-types/global/controller").Response['pageContributions'];
-    type MacroContext = import("@item-enonic-types/global/controller").MacroContext;
 }

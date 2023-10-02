@@ -26,7 +26,7 @@ const NO_LINKS_FOUND = {
 }
 
 function renderPart(req: XP.Request): XP.Response {
-  const part = getComponent<CategoryLinksPartConfig>()
+  const part = getComponent<XP.PartComponent.CategoryLinks>()
   const page = getContent()
   if (!part || !page) throw new Error('No page or part')
 

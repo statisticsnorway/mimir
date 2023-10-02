@@ -1,5 +1,4 @@
 import { render } from '/lib/enonic/react4xp'
-import { PublicationArchive as PublicationArchivePartConfig } from '.'
 import type { PublicationResult } from '/lib/ssb/parts/publicationArchive'
 import type { SubjectItem } from '/lib/ssb/utils/subjectUtils'
 import { getContent, getComponent, serviceUrl } from '/lib/xp/portal'
@@ -20,7 +19,7 @@ function renderPart(req: XP.Request) {
   const content = getContent()
   if (!content) throw Error('No content found')
 
-  const part = getComponent<PublicationArchivePartConfig>()
+  const part = getComponent<XP.PartComponent.PublicationArchive>()
   if (!part) throw Error('No part found')
 
   const phrases: { [key: string]: string } = getPhrases(content)

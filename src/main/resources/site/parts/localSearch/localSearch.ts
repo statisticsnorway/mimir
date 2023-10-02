@@ -1,6 +1,5 @@
 import { get as getContentByKey, query, type Content } from '/lib/xp/content'
 import { render } from '/lib/enonic/react4xp'
-import type { LocalSearch as LocalSearchPartConfig } from '.'
 import { getComponent, pageUrl } from '/lib/xp/portal'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
@@ -18,7 +17,7 @@ export function preview(req: XP.Request) {
 }
 
 function renderPart(req: XP.Request) {
-  const config = getComponent()?.config as LocalSearchPartConfig
+  const config = getComponent<XP.PartComponent.LocalSearch>()?.config
   if (!config) throw Error('No part found')
 
   const searchFolderContent: Content<object> | null = config.searchFolder

@@ -28,7 +28,7 @@ export function preview(req: XP.Request): XP.Response {
 }
 
 function renderPart(req: XP.Request): XP.Response {
-  const config = getComponent<StandardCardsListPartConfig>()?.config
+  const config = getComponent<XP.PartComponent.StandardCardsList>()?.config
   if (!config) throw Error('No part found')
 
   const standardCardsListConfig: StandardCardsListPartConfig['statisticsItemSet'] = config.statisticsItemSet

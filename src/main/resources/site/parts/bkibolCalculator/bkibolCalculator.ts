@@ -45,7 +45,7 @@ function renderPart(req: XP.Request) {
 }
 
 function getBkibolCalculatorComponent(req: XP.Request, page: Content<BkibolCalculatorPartConfig>) {
-  const part = getComponent<BkibolCalculatorPartConfig>()
+  const part = getComponent<XP.PartComponent.BkibolCalculator>()
   if (!part) throw Error('No part found')
 
   const language: Language = getLanguage(page) as Language

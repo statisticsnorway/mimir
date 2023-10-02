@@ -27,7 +27,7 @@ function renderPart(req: XP.Request): XP.Response {
   const page = getContent()
   if (!page) throw Error('No page found')
 
-  const part = getComponent()?.config as EndedStatisticsPartConfig
+  const part = getComponent<XP.PartComponent.EndedStatistics>()?.config
   if (!part) throw Error('No part config found')
 
   const endedStatistics: EndedStatisticsPartConfig['relatedStatisticsOptions'] = part.relatedStatisticsOptions

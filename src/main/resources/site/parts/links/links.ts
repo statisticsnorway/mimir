@@ -7,7 +7,7 @@ import { GA_TRACKING_ID } from '/site/pages/default/default'
 
 export function get(req: XP.Request): XP.Response {
   try {
-    const part = getComponent<LinksPartConfig>()
+    const part = getComponent<XP.PartComponent.Links>()
     if (!part) throw Error('No part found')
 
     const config: LinksPartConfig = part.config

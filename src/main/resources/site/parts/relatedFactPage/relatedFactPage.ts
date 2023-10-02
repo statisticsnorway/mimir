@@ -19,7 +19,7 @@ export function get(req: XP.Request): XP.Response {
     const page = getContent<Content<Article>>()
     if (!page) throw Error('No page found')
 
-    const config = getComponent<RelatedFactPagePartConfig>()?.config
+    const config = getComponent<XP.PartComponent.RelatedFactPage>()?.config
     if (!config) throw Error('No part found')
 
     let relatedFactPageConfig: RelatedFactPageConfig | undefined

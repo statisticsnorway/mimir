@@ -27,7 +27,7 @@ function renderPart(req: XP.Request): XP.Response {
   const page = getContent()
   if (!page) throw Error('No page found')
 
-  const config = getComponent<ProfiledBoxPartConfig>()?.config
+  const config = getComponent<XP.PartComponent.ProfiledBox>()?.config
   if (!config) throw Error('No part found')
 
   const language: string = page.language === 'en' || page.language === 'nn' ? page.language : 'nb'

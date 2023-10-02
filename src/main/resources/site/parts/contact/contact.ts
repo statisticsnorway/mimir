@@ -56,7 +56,7 @@ function renderPart(req: XP.Request): XP.Response {
   if (!page) throw Error('No page found')
 
   const pageLanguage: string = page.language ? page.language : 'nb'
-  const part = getComponent<ContactPartConfig>()
+  const part = getComponent<XP.PartComponent.Contact>()
   if (!part) throw Error('No part found')
 
   const phrases: Phrases = getPhrases(page) as Phrases
