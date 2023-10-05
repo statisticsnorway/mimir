@@ -67,7 +67,7 @@ We're using the `enonic-ts-codegen` library. This reads through all .xml config 
 #### [Eslint](./docs/Eslint.md)
 
 ## Login
-Direct yout favorite browser to http://localhost:8080
+Direct your favorite browser to http://localhost:8080
 
 ### How to start working on a feature
 ```

@@ -242,13 +242,5 @@
         </input>
       </items>
     </field-set>
-
-    <input name="creditsText" type="TextArea">
-      <label>(IKKE BRUK) Kildetekst</label>
-    </input>
-    <input name="creditsHref" type="TextLine">
-      <label>(IKKE BRUK) Kilde-URL</label>
-    </input>
-
   </form>
 </content-type>

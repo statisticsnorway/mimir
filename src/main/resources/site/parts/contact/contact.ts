@@ -61,7 +61,7 @@ function renderPart(req: XP.Request): XP.Response {
 
   const phrases: Phrases = getPhrases(page) as Phrases
 
-  const statRegContacts: Array<Contact> | null = getContactsFromRepo()
+  const statRegContacts: Array<Contact> = getContactsFromRepo()
   let contactIds: Array<string> = []
 
   if (part.config.contacts) {

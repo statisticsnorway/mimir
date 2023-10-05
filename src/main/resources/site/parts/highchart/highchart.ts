@@ -190,10 +190,7 @@ function createHighchartsReactProps(
     type: highchart.data.graphType,
     contentKey: highchart._id,
     footnoteText: highchart.data.footnoteText,
-    creditsEnabled:
-      highchart.data.creditsHref || highchart.data.creditsText || highchart.data.sourceList ? true : false,
-    creditsHref: highchart.data.creditsHref,
-    creditsText: highchart.data.creditsText,
+    creditsEnabled: highchart.data.sourceList ? true : false,
     sourceList: highchart.data.sourceList ? forceArray(highchart.data.sourceList) : undefined,
     hideTitle: highchart.data.hideTitle,
   }
@@ -207,8 +204,6 @@ interface HighchartsReactProps {
   contentKey?: string
   footnoteText?: string
   creditsEnabled?: boolean
-  creditsHref?: string
-  creditsText?: string
   sourceList?: Highchart['sourceList']
   hideTitle?: boolean
 }

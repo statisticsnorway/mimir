@@ -18,6 +18,7 @@ export enum JobNames {
   STATISTICS_REFRESH_JOB = 'refresh statistics',
   REFRESH_DATASET_JOB = 'Refresh dataset',
   PUSH_RSS_NEWS = 'Push RSS news',
+  PUSH_RSS_STATKAL = 'Push RSS statkal',
   REFRESH_DATASET_CALCULATOR_JOB = 'Refresh dataset calculators',
   REFRESH_DATASET_NAMEGRAPH_JOB = 'Refresh dataset nameGraph',
   REFRESH_DATASET_SDDS_TABLES_JOB = 'Refresh dataset for SDDS tables',

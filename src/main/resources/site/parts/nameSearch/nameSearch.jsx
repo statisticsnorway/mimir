@@ -269,8 +269,10 @@ function NameSearch(props) {
   function renderGraphs(desktop, nameForRender) {
     const { frontPage, phrases, language } = props
     const lineColor = '#21383a'
-    if (nameGraphData) {
-      const options = {
+
+    // Highchart language checker
+    if (language !== 'en') {
+      Highcharts.setOptions({
         lang: {
           ...accessibilityLang.lang,
           accessibility: {
@@ -293,7 +295,13 @@ function NameSearch(props) {
               legendLabelNoTitle: props.phrases.legendLabelNoTitle,
             },
           },
+          decimalPoint: accessibilityLang.lang.decimalPoint,
         },
+      })
+    }
+
+    if (nameGraphData) {
+      const options = {
         chart: {
           type: 'spline',
           height: frontPage || !desktop ? '380px' : '75%',

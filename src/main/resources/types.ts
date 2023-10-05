@@ -96,6 +96,9 @@ interface LibMap extends EnonicLibraryMap {
 
     // vendor
     '/lib/vendor/ramda': typeof import('./lib/vendor/ramda');
+
+    // rss
+    '/lib/ssb/rss/statkal': typeof import('./lib/ssb/rss/statkal');
 }
 
 declare const __non_webpack_require__: <K extends keyof LibMap | string = string>(path: K) => K extends keyof LibMap
