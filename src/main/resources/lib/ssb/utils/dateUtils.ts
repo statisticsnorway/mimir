@@ -84,7 +84,7 @@ export function formatDate(date: string | undefined, formatType: string, languag
     // Track errors in logs
     if (dateFnsResult && dateFnsResult !== libTimeResult) {
       log.error(
-        `Error in formatDate, got different result with date-fns and lib-time when formatting ${parsedDate} to ${formatType}. date-fns: ${dateFnsResult}, lib-time: ${libTimeResult}`
+        `Error in formatDate, got different result with date-fns and lib-time when formatting (${date} - ${parsedDate}) to ${formatType}. date-fns: ${dateFnsResult}, lib-time: ${libTimeResult}`
       )
     }
 
