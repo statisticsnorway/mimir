@@ -88,7 +88,7 @@ export function formatDate(date: string | undefined, formatType: string, languag
       )
     }
 
-    return libTimeResult
+    return dateFnsResult || libTimeResult
   }
   return
 }
