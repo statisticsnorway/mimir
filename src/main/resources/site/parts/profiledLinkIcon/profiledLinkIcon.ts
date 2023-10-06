@@ -23,7 +23,7 @@ const NO_LINKS_FOUND: object = {
 }
 
 function renderPart(req: XP.Request): XP.Response {
-  const config = getComponent<ProfiledLinkIconPartConfig>()?.config
+  const config = getComponent<XP.PartComponent.ProfiledLinkIcon>()?.config
   if (!config) throw Error('No part found')
 
   return renderProfiledLinks(req, config.profiledLinkItemSet ? data.forceArray(config.profiledLinkItemSet) : [])

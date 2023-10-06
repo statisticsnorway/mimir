@@ -1,7 +1,6 @@
 import { get as getContentByKey, type Content } from '/lib/xp/content'
 import { render } from '/lib/enonic/react4xp'
 import type { Accordion } from '/site/content-types'
-import type { Accordion as AccordionConfig } from '/site/macros/accordion'
 import { getComponent, getContent, processHtml } from '/lib/xp/portal'
 
 const {
@@ -12,8 +11,7 @@ const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
 export function get(req: XP.Request): XP.Response {
   try {
-    const config: AccordionConfig | undefined = getComponent<AccordionConfig>()?.config
-    if (!config) throw Error('No config found')
+    const config = getComponent<XP.PartComponent.Accordion>()?.config
 
     const accordionIds: Array<string> = config ? forceArray(config.accordion) : []
     return renderPart(req, accordionIds)

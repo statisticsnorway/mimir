@@ -1,7 +1,6 @@
 import { getComponent } from '/lib/xp/portal'
 import { render } from '/lib/thymeleaf'
 import { imageUrl } from '/lib/ssb/utils/imageUtils'
-import type { FrontPageBanner as FrontPageBannerPartConfig } from '.'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
@@ -20,7 +19,7 @@ export function preview() {
 }
 
 function renderPart(): XP.Response {
-  const part = getComponent<FrontPageBannerPartConfig>()
+  const part = getComponent<XP.PartComponent.FrontPageBanner>()
   if (!part) throw Error('No part found')
 
   const model: object = {

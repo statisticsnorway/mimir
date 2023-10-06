@@ -17,7 +17,7 @@ const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
 
 export function get(req: XP.Request): XP.Response {
   try {
-    const config = getComponent()?.config as KeyFigurePartConfig
+    const config = getComponent<XP.PartComponent.KeyFigure>()?.config
     if (!config) throw Error('No part found')
 
     const keyFigureIds: Array<string> | [] = config.figure ? forceArray(config.figure) : []
@@ -51,7 +51,9 @@ function renderPart(
   const page = getContent()
   if (!page) throw Error('No page found')
 
-  const config = getComponent()?.config as KeyFigurePartConfig
+  const config = getComponent<XP.PartComponent.KeyFigure>()?.config
+  if (!config) throw Error('No part found')
+
   const showPreviewDraft: boolean = hasWritePermissionsAndPreview(req, page._id)
 
   // get all keyFigures and filter out non-existing keyFigures

@@ -1,6 +1,5 @@
 import type { MunicipalityWithCounty } from '/lib/ssb/dataset/klass/municipalities'
 import { render } from '/lib/enonic/react4xp'
-import type { RelatedKostra as RelatedKostraPartConfig } from '.'
 import { getComponent, getSiteConfig, processHtml } from '/lib/xp/portal'
 
 const { getMunicipality } = __non_webpack_require__('/lib/ssb/dataset/klass/municipalities')
@@ -36,7 +35,7 @@ export function preview(req: XP.Request): XP.Response {
 }
 
 function renderPart(req: XP.Request, municipality: MunicipalityWithCounty | undefined): XP.Response {
-  const config = getComponent<RelatedKostraPartConfig>()?.config
+  const config = getComponent<XP.PartComponent.RelatedKostra>()?.config
   if (!config) throw Error('No part found')
 
   const props: RelatedKostraProps = {

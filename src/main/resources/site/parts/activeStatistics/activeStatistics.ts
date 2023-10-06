@@ -29,7 +29,8 @@ function renderPart(req: XP.Request) {
   const page = getContent()
   if (!page) throw Error('No page found')
 
-  const partConfig: ActiveStatisticsPartConfig = getComponent()?.config as ActiveStatisticsPartConfig
+  const partConfig: ActiveStatisticsPartConfig = getComponent<XP.PartComponent.ActiveStatistics>()
+    ?.config as ActiveStatisticsPartConfig
   const activeStatistics: ActiveStatisticsPartConfig['relatedStatisticsOptions'] = partConfig.relatedStatisticsOptions
     ? forceArray(partConfig.relatedStatisticsOptions)
     : []

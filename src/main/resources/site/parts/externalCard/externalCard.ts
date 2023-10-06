@@ -1,7 +1,6 @@
 import { render } from '/lib/enonic/react4xp'
 import { getComponent } from '/lib/xp/portal'
 import { imageUrl } from '/lib/ssb/utils/imageUtils'
-import type { ExternalCard as ExternalCardPartConfig } from '.'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 const { data } = __non_webpack_require__('/lib/util')
@@ -24,7 +23,7 @@ const NO_LINKS_FOUND = {
 }
 
 function renderPart(req: XP.Request): XP.Response {
-  const part = getComponent<ExternalCardPartConfig>()
+  const part = getComponent<XP.PartComponent.ExternalCard>()
   if (!part) throw Error('No part found')
 
   return renderExternalCard(req, part.config.externalCards ? data.forceArray(part.config.externalCards) : [])

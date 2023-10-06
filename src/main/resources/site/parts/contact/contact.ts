@@ -3,7 +3,6 @@ import { getContent, getComponent } from '/lib/xp/portal'
 import { render } from '/lib/thymeleaf'
 import type { Phrases } from '/lib/types/language'
 import type { Contact } from '/lib/ssb/dashboard/statreg/types'
-import type { Contact as ContactPartConfig } from '.'
 import type { Article, Statistics } from '/site/content-types'
 import { find } from '/lib/vendor/ramda'
 
@@ -56,7 +55,7 @@ function renderPart(req: XP.Request): XP.Response {
   if (!page) throw Error('No page found')
 
   const pageLanguage: string = page.language ? page.language : 'nb'
-  const part = getComponent<ContactPartConfig>()
+  const part = getComponent<XP.PartComponent.Contact>()
   if (!part) throw Error('No part found')
 
   const phrases: Phrases = getPhrases(page) as Phrases

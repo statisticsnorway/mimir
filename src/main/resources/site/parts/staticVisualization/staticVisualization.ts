@@ -2,9 +2,7 @@ import { get as getContentByKey, type Content } from '/lib/xp/content'
 import type { SourceList, SourcesConfig } from '/lib/ssb/utils/utils'
 import { render } from '/lib/enonic/react4xp'
 import type { StaticVisualization } from '/site/content-types'
-// @ts-ignore
 import type { Default as DefaultPageConfig } from '/site/pages/default'
-import type { StaticVisualization as StaticVisualizationPartConfig } from '.'
 import type { HtmlTable } from '/lib/ssb/parts/table'
 import { getContent, getComponent } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
@@ -21,7 +19,7 @@ const { parseHtmlString } = __non_webpack_require__('/lib/ssb/parts/table')
 
 export function get(req: XP.Request): XP.Response {
   try {
-    const config = getComponent<StaticVisualizationPartConfig>()?.config
+    const config = getComponent<XP.PartComponent.StaticVisualization>()?.config
     if (!config) throw Error('No part found')
 
     const contentId: string | undefined = config.staticVisualizationContent
@@ -40,8 +38,9 @@ export function preview(req: XP.Request, contentId: string | undefined): XP.Resp
 }
 
 function renderPart(req: XP.Request, contentId: string | undefined): XP.Response {
-  const page: DefaultPage = getContent() as DefaultPage
-  const phrases: { source: string; descriptionStaticVisualization: string } = getPhrases(page)
+  const content = getContent<Content<DefaultPage>>()
+  if (!content?.page) throw Error('No content found')
+  const phrases: { source: string; descriptionStaticVisualization: string } = getPhrases(content)
   const sourcesLabel: string = phrases.source
   const descriptionStaticVisualization: string = phrases.descriptionStaticVisualization
 
@@ -99,7 +98,7 @@ function renderPart(req: XP.Request, contentId: string | undefined): XP.Response
       showAsGraphLabel,
       showAsTableLabel,
       descriptionStaticVisualization,
-      inFactPage: page.page.config && page.page.config.pageType === 'factPage',
+      inFactPage: content.page.config && content.page.config.pageType === 'factPage',
       language: language,
       tableData: htmlTable,
       id: randomUnsafeString(),

@@ -5,7 +5,6 @@ import type { Dataset } from '/lib/types/jsonstat-toolkit'
 import type { Language, Phrases } from '/lib/types/language'
 import { render } from '/lib/enonic/react4xp'
 import type { CalculatorConfig } from '/site/content-types'
-import type { KpiCalculator as KpiCalculatorPartConfig } from '.'
 import { DropdownItems as MonthDropdownItems } from '/lib/types/components'
 import { getContent, getComponent, serviceUrl, pageUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
@@ -47,7 +46,7 @@ function renderPart(req: XP.Request): XP.Response {
 }
 
 function getKpiCalculatorComponent(req: XP.Request, page: Content) {
-  const config = getComponent()?.config as KpiCalculatorPartConfig
+  const config = getComponent<XP.PartComponent.KpiCalculator>()?.config
   if (!config) throw Error('No part found')
 
   const frontPage = !!config.frontPage

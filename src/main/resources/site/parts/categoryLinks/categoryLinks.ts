@@ -1,6 +1,5 @@
 import { render } from '/lib/enonic/react4xp'
 import { getComponent, getContent, pageUrl } from '/lib/xp/portal'
-import type { CategoryLinks as CategoryLinksPartConfig } from '.'
 import { Language, type Phrases } from '/lib/types/language'
 import { randomUnsafeString } from '/lib/ssb/utils/utils'
 
@@ -26,7 +25,7 @@ const NO_LINKS_FOUND = {
 }
 
 function renderPart(req: XP.Request): XP.Response {
-  const part = getComponent<CategoryLinksPartConfig>()
+  const part = getComponent<XP.PartComponent.CategoryLinks>()
   const page = getContent()
   if (!part || !page) throw new Error('No page or part')
 

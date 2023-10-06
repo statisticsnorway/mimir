@@ -6,7 +6,6 @@ import type { Dataset, Dimension } from '/lib/types/jsonstat-toolkit'
 import type { Language, Phrases } from '/lib/types/language'
 import { render } from '/lib/enonic/react4xp'
 import type { CalculatorConfig } from '/site/content-types'
-import type { PifCalculator as PifCalculatorPartConfig } from '.'
 import { getContent, getComponent, serviceUrl, pageUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 
@@ -44,7 +43,7 @@ function renderPart(req: XP.Request): XP.Response {
 }
 
 function getPifCalculatorComponent(req: XP.Request, page: Content) {
-  const partConfig = getComponent()?.config as PifCalculatorPartConfig
+  const partConfig = getComponent<XP.PartComponent.PifCalculator>()?.config
   if (!partConfig) throw Error('No part config found')
 
   const language: Language = getLanguage(page)

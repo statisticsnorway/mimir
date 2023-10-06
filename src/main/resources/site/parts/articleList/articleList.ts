@@ -1,6 +1,5 @@
 import type { Article } from '/site/content-types'
 import { pageUrl, getContent, getComponent } from '/lib/xp/portal'
-import type { ArticleList as ArticleListPartConfig } from '.'
 import { render } from '/lib/enonic/react4xp'
 import { query, type Content } from '/lib/xp/content'
 import { SubjectItem } from '/lib/ssb/utils/subjectUtils'
@@ -37,7 +36,7 @@ function renderPart(req: XP.Request) {
 }
 
 function getArticleList(req: XP.Request, content: Content) {
-  const component = getComponent<ArticleListPartConfig>()
+  const component = getComponent<XP.PartComponent.ArticleList>()
   if (!component) throw Error('No component found')
 
   const language: string = content.language ? content.language : 'nb'
