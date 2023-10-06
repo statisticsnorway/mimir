@@ -46,20 +46,17 @@ class KeyFigures extends React.Component {
     if (this.props.showPreviewDraft) {
       if (this.state.fetchUnPublished) {
         return keyFigures.map((keyFigure, i) => {
+          const unpublishedDraft = this.props.draftExist && keyFigure.number
           return (
             <Col
               key={`${keyFigure.number || keyFigure.title}${i}`}
               className={`col-12${this.props.isInStatisticsPage ? ' p-0' : ''}`}
             >
-              {this.props.draftExist && keyFigure.number ? (
-                <Alert variant='info' className='mb-4'>
-                  Tallet i nøkkeltallet nedenfor er upublisert
-                </Alert>
-              ) : (
-                <Alert variant='warning' className='mb-4'>
-                  Finnes ikke upubliserte tall for dette nøkkeltallet
-                </Alert>
-              )}
+              <Alert variant={unpublishedDraft ? 'info' : 'warning'} className='mb-4'>
+                {unpublishedDraft
+                  ? 'Tallet i nøkkeltallet nedenfor er upublisert'
+                  : 'Finnes ikke upubliserte tall for dette nøkkeltallet'}
+              </Alert>
             </Col>
           )
         })
