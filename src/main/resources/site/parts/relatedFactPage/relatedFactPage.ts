@@ -2,7 +2,6 @@ import { get as getContentByKey, query, type Content } from '/lib/xp/content'
 import type { Phrases } from '/lib/types/language'
 import { render } from '/lib/enonic/react4xp'
 import type { Article, ContentList } from '/site/content-types'
-import type { RelatedFactPage as RelatedFactPagePartConfig } from '.'
 import { imagePlaceholder, getComponent, getContent, pageUrl, serviceUrl } from '/lib/xp/portal'
 import { imageUrl } from '/lib/ssb/utils/imageUtils'
 
@@ -72,7 +71,7 @@ function renderRelatedFactPage(
   relatedFactPageConfig: RelatedFactPageConfig | undefined
 ): XP.Response {
   const phrases: Phrases = getPhrases(page)
-  const config = getComponent<RelatedFactPagePartConfig>()?.config
+  const config = getComponent<XP.PartComponent.RelatedFactPage>()?.config
   if (!config) throw Error('No part found')
 
   const mainTitle: string = config.title ? config.title : phrases.relatedFactPagesHeading

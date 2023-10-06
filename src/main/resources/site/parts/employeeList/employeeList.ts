@@ -22,7 +22,7 @@ function renderPart(req: XP.Request) {
   const content = getContent<Content<Page>>()
   if (!content) throw Error('No page found')
 
-  const part = getComponent<XP.PartComponent.Employee>()
+  const part = getComponent<XP.PartComponent.EmployeeList>()
   if (!part) throw Error('No part found')
 
   const queryResults = query<Content<Employee>>({

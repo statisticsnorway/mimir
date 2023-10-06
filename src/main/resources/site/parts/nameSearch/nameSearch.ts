@@ -25,13 +25,15 @@ function renderPart(req: XP.Request) {
     service: 'nameSearch',
   })
 
+  const currentContent = getContent()
+
   const props: PartProperties = {
     urlToService: urlToService,
     aboutLink: aboutLinkResources(component.config),
     nameSearchDescription: component.config.nameSearchDescription,
     frontPage: component.config.frontPage,
-    phrases: partsPhrases(getContent().language),
-    language: getContent().language,
+    phrases: partsPhrases(currentContent?.language || 'nb'),
+    language: currentContent?.language || 'nb',
     GA_TRACKING_ID: GA_TRACKING_ID,
   }
 

@@ -175,6 +175,7 @@ function getKeyByValue(object: Keyable, value: string): string | undefined {
 
 interface ResultType {
   originalName: string
+  nameGraphData?: Array<NameGraph>
   nameGraph?: Array<NameGraph>
 }
 

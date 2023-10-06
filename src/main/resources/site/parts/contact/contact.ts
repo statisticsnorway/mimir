@@ -3,7 +3,6 @@ import { getContent, getComponent } from '/lib/xp/portal'
 import { render } from '/lib/thymeleaf'
 import type { Phrases } from '/lib/types/language'
 import type { Contact } from '/lib/ssb/dashboard/statreg/types'
-import type { Contact as ContactPartConfig } from '.'
 import type { Article, Statistics } from '/site/content-types'
 import { find } from '/lib/vendor/ramda'
 
