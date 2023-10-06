@@ -214,7 +214,7 @@ function Table(props) {
     if (caption) {
       const hasNoteRefs = typeof caption === 'object'
       return (
-        <caption noterefs={hasNoteRefs ? caption.noterefs : null} ref={captionRef}>
+        <caption data-noterefs={hasNoteRefs ? caption.noterefs : null} ref={captionRef}>
           <div className='caption-text-wrapper'>
             {hasNoteRefs ? caption.content : caption}
             {hasNoteRefs ? addNoteRefs(caption.noterefs) : null}
@@ -547,29 +547,31 @@ function Table(props) {
 }
 
 const tableDataShape = PropTypes.shape({
-  caption:
-    PropTypes.string |
+  caption: PropTypes.oneOfType([
+    PropTypes.string,
     PropTypes.shape({
       content: PropTypes.string,
       noterefs: PropTypes.string,
     }),
+  ]),
   tableClass: PropTypes.string,
   thead: PropTypes.arrayOf(
     PropTypes.shape({
-      td:
-        PropTypes.array |
-        PropTypes.number |
-        PropTypes.string |
+      td: PropTypes.oneOfType([
+        PropTypes.array,
+        PropTypes.number,
+        PropTypes.string,
         PropTypes.shape({
           rowspan: PropTypes.number,
           colspan: PropTypes.number,
           content: PropTypes.string,
           class: PropTypes.string,
         }),
-      th:
-        PropTypes.array |
-        PropTypes.number |
-        PropTypes.string |
+      ]),
+      th: PropTypes.oneOfType([
+        PropTypes.array,
+        PropTypes.number,
+        PropTypes.string,
         PropTypes.shape({
           rowspan: PropTypes.number,
           colspan: PropTypes.number,
@@ -577,27 +579,30 @@ const tableDataShape = PropTypes.shape({
           class: PropTypes.string,
           noterefs: PropTypes.string,
         }),
+      ]),
     })
   ),
   tbody: PropTypes.arrayOf(
     PropTypes.shape({
-      th:
-        PropTypes.array |
-        PropTypes.number |
-        PropTypes.string |
+      th: PropTypes.oneOfType([
+        PropTypes.array,
+        PropTypes.number,
+        PropTypes.string,
         PropTypes.shape({
           content: PropTypes.string,
           class: PropTypes.string,
           noterefs: PropTypes.string,
         }),
-      td:
-        PropTypes.array |
-        PropTypes.number |
-        PropTypes.string |
+      ]),
+      td: PropTypes.oneOfType([
+        PropTypes.array,
+        PropTypes.number,
+        PropTypes.string,
         PropTypes.shape({
           content: PropTypes.string,
           class: PropTypes.string,
         }),
+      ]),
     })
   ),
   tfoot: PropTypes.shape({

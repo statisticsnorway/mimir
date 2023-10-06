@@ -185,7 +185,7 @@ Footer.propTypes = {
   rssUrl: PropTypes.string,
   topButtonText: PropTypes.string,
   hiddenFooterText: PropTypes.string,
-  language: PropTypes.string,
+  language: PropTypes.object,
 }
 
 export default (props) => <Footer {...props} />
