@@ -219,8 +219,8 @@ function HusleieCalculator(props) {
             Number(startYear.value) + 1
           }.
       Tall for ${rentDate.toLowerCase()} ${
-            Number(startYear.value) + 1
-          } kommer ca 10. ${rentDatePublish.toLowerCase()} ${nextAdjust.year}`
+        Number(startYear.value) + 1
+      } kommer ca 10. ${rentDatePublish.toLowerCase()} ${nextAdjust.year}`
 
     if (monthsSinceLastAdjusted >= 12 && monthsSinceLastPublished === 11) {
       setAdjustRentWarning({
