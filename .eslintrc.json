@@ -2,6 +2,7 @@
   "extends": [
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended",
+    "plugin:import/errors",
     "prettier"
   ],
   "plugins": [
@@ -17,8 +18,17 @@
     "@typescript-eslint/ban-types": "off",
     "@typescript-eslint/no-var-requires": "off",
     "@typescript-eslint/ban-ts-comment": "off",
-    "no-duplicate-imports": ["error"],
-    "import/no-duplicates": ["error"],
+    "import/no-duplicates": ["error", {"prefer-inline": true}],
+    "import/no-unresolved": "off",
+    "import/consistent-type-specifier-style": ["error", "prefer-inline"],
+    "import/order": ["error", { 
+      "pathGroups": [
+        { "pattern": "/lib/xp/**", "group": "external", "position": "after"},
+        { "pattern": "/lib/**", "group": "internal", "position": "before"},
+        { "pattern": "/site/**", "group": "internal", "position": "after"}
+      ],
+      "groups": ["builtin", "external", "internal", "parent", "sibling", "index", "object"]
+    }],
     "complexity": ["warn", 20]
   },
   "globals": {
