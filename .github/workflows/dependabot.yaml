@@ -23,4 +23,4 @@ jobs:
         run: gh pr review --approve "$PR_URL"
       - name: merge
         if: ${{steps.metadata.outputs.update-type == 'version-update:semver-patch'}}
-        run: gh pr merge --auto --merge "$PR_URL"
+        run: gh pr merge --auto --squash "$PR_URL"
