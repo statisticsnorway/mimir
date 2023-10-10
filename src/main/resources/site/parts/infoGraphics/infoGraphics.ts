@@ -34,7 +34,7 @@ function renderPart(req: XP.Request) {
   const sourcesLabel: string = phrases.source
   const descriptionStaticVisualization: string = phrases.descriptionStaticVisualization
 
-  const config = getComponent()?.config as InfoGraphicsPartConfig
+  const config = getComponent<XP.PartComponent.InfoGraphics>()?.config
   if (!config) throw Error('No part found')
 
   const sourceConfig: InfoGraphicsPartConfig['sources'] = config.sources ? forceArray(config.sources) : []

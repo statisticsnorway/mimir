@@ -10,7 +10,6 @@ import type { Language, Phrases } from '/lib/types/language'
 import { render as r4xpRender } from '/lib/enonic/react4xp'
 import type { Statistics, Table } from '/site/content-types'
 import { GA_TRACKING_ID } from '/site/pages/default/default'
-import type { Table as TablePartConfig } from '.'
 import { DataSource as DataSourceType } from '/lib/ssb/repo/dataset'
 import { getContent, getComponent, pageUrl, assetUrl } from '/lib/xp/portal'
 
@@ -28,7 +27,7 @@ const view = resolve('./table.html')
 
 export function get(req: XP.Request): XP.Response {
   try {
-    const config = getComponent<TablePartConfig>()?.config
+    const config = getComponent<XP.PartComponent.Table>()?.config
     if (!config) throw Error('No part found')
 
     const page = getContent<Content<Statistics>>()

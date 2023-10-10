@@ -1,6 +1,5 @@
 import type { Phrases } from '/lib/types/language'
 import { render } from '/lib/enonic/react4xp'
-import type { PubArchiveCalendarLinks as PubArchiveCalendarLinksPartConfig } from '.'
 import { getContent, getComponent } from '/lib/xp/portal'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
@@ -24,7 +23,7 @@ const NO_LINKS_FOUND: object = {
 }
 
 function renderPart(req: XP.Request): XP.Response {
-  const config = getComponent<PubArchiveCalendarLinksPartConfig>()?.config
+  const config = getComponent<XP.PartComponent.PubArchiveCalendarLinks>()?.config
   if (!config) throw Error('No part found')
 
   const page = getContent()

@@ -2,7 +2,6 @@ import { render } from '/lib/enonic/react4xp'
 import { query, type Content } from '/lib/xp/content'
 import type { StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
 import type { GroupedBy, PreparedStatistics, YearReleases, Release } from '/lib/ssb/utils/variantUtils'
-import type { UpcomingReleases as UpcomingReleasesPartConfig } from '.'
 import type { UpcomingRelease } from '/site/content-types'
 import type { SubjectItem } from '/lib/ssb/utils/subjectUtils'
 import { formatDate, format } from '/lib/ssb/utils/dateUtils'
@@ -28,7 +27,7 @@ function renderPart(req: XP.Request) {
   const content = getContent()
   if (!content) throw Error('No page found')
 
-  const component = getComponent<UpcomingReleasesPartConfig>()
+  const component = getComponent<XP.PartComponent.UpcomingReleases>()
   if (!component) throw Error('No part found')
 
   const currentLanguage: string = content.language ? content.language : 'nb'

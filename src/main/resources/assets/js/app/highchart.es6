@@ -31,9 +31,11 @@ const EMPTY_CONFIG = {
 
 // HIGHCHART
 export function init() {
-  Highcharts.setOptions(accessibilityLang)
-
+  //Highchart language checker
   const lang = $('html').attr('lang')
+  if (lang !== 'en') {
+    Highcharts.setOptions(accessibilityLang)
+  }
 
   // Workaround for table ascending/descending sort.
   // There is a feature request in github, so a config option to disable the feature is being implemented.

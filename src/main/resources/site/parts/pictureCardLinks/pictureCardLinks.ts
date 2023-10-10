@@ -19,7 +19,7 @@ export function preview(req: XP.Request) {
 }
 
 function renderPart(req: XP.Request): XP.Response {
-  const config = getComponent()?.config as PictureCardLinksPartConfig
+  const config = getComponent<XP.PartComponent.PictureCardLinks>()?.config
   if (!config) throw Error('No part found')
 
   return render(

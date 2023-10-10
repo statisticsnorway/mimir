@@ -1,3 +1,5 @@
+import { formatDate as libTimeFormatDate } from '/lib/time'
+
 import { type Locale } from 'date-fns'
 import { default as nb } from 'date-fns/locale/nb'
 import { default as nn } from 'date-fns/locale/nn'
@@ -5,6 +7,7 @@ import { default as enGB } from 'date-fns/locale/en-GB'
 import { default as parseISO } from 'date-fns/parseISO'
 import { default as format } from 'date-fns/format'
 import { default as isWithinInterval } from 'date-fns/isWithinInterval'
+import { default as addDays } from 'date-fns/addDays'
 import { default as subDays } from 'date-fns/subDays'
 import { default as getMonth } from 'date-fns/getMonth'
 import { default as getYear } from 'date-fns/getYear'
@@ -17,6 +20,7 @@ import { default as formatDistanceToNowStrict } from 'date-fns/formatDistanceToN
 
 export {
   parseISO,
+  addDays,
   subDays,
   getMonth,
   format,
@@ -36,20 +40,55 @@ export function sameDay(d1: Date, d2: Date): boolean {
 export function formatDate(date: string | undefined, formatType: string, language?: string): string | undefined {
   if (date) {
     const parsedDate: Date = parseISO(date)
+    let parsedDateWithTimeZone = parsedDate
+
+    // If date has no specified timezone, add server offset so it become Europe/Oslo.
+    // If no timezone is specified, the parseISO function will assume the date is in local time, which for the server is UTC (Z, GMT+0)
+    if (!date.match(/(?:Z|[+-](?:2[0-3]|[01][0-9]):[0-5][0-9])$/gm)) {
+      const serverOffsetInMs: number = app.config?.['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
+      parsedDateWithTimeZone = new Date(parsedDateWithTimeZone.getTime() + serverOffsetInMs)
+    }
     const locale: object = language
       ? {
           locale: language === 'en' ? enGB : language === 'nn' ? nn : nb,
         }
       : {}
 
+    let dateFnsResult
     try {
-      const result = format(parsedDate, formatType, locale)
-      return result
+      dateFnsResult = format(parsedDate, formatType, locale)
     } catch (e) {
       log.error(`Error in formatDate, tried to format ${parsedDate} to ${formatType}`)
-      log.error(JSON.stringify(locale, null, 2))
-      throw e
     }
+
+    let libTimePattern = formatType
+    // https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/format/DateTimeFormatter.html#patterns
+    if (formatType === 'PPP') libTimePattern = language === 'en' ? 'd MMMM u' : 'd. MMMM u'
+    if (formatType === 'PPpp') libTimePattern = language === 'en' ? 'd MMM u, HH:mm:ss' : 'd. MMM u HH:mm:ss'
+
+    let libTimeResult
+    try {
+      libTimeResult = libTimeFormatDate({
+        date: parsedDateWithTimeZone.toISOString(),
+        pattern: libTimePattern,
+        locale: language,
+        timezoneId: 'Europe/Oslo',
+      })
+    } catch (e) {
+      log.error(`Error in formatDate with Lib time, tried to format ${parsedDate} to ${libTimePattern}`)
+      return dateFnsResult
+    }
+
+    // log.info(`${date} -- ${formatType} -- date-fns: ${dateFnsResult}, lib-time: ${libTimeResult}`)
+
+    // Track errors in logs
+    if (dateFnsResult && dateFnsResult !== libTimeResult) {
+      log.error(
+        `Error in formatDate, got different result with date-fns and lib-time when formatting (${date} - ${parsedDate}) to ${formatType}. date-fns: ${dateFnsResult}, lib-time: ${libTimeResult}`
+      )
+    }
+
+    return dateFnsResult || libTimeResult
   }
   return
 }

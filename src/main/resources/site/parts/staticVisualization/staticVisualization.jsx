@@ -42,6 +42,7 @@ function StaticVisualization(props) {
     return (
       <React.Fragment>
         <Tabs
+          id={props.id}
           className='pl-4'
           activeOnInit='figure'
           onClick={tabClicked}
@@ -142,12 +143,16 @@ function StaticVisualization(props) {
             </figcaption>
             {renderTabs()}
             {activeTab === 'figure' && (
-              <div className='static-visualization-chart'>
+              <div className='static-visualization-chart' id={`tabpanel-0-${props.id}`}>
                 <img alt={props.altText} src={props.imageSrc} />
               </div>
             )}
 
-            {activeTab === 'table' && <div className='static-visualization-data'>{createTable()}</div>}
+            {activeTab === 'table' && (
+              <div id={`tabpanel-1-${props.id}`} className='static-visualization-data'>
+                {createTable()}
+              </div>
+            )}
 
             <FactBox header={props.descriptionStaticVisualization} text={renderLongDescriptionAndSources()} />
           </figure>

@@ -1,8 +1,6 @@
-/* eslint-disable new-cap */
 // @ts-ignore
 import JSONstat from 'jsonstat-toolkit/import.mjs'
 import { getComponent, getContent } from '/lib/xp/portal'
-import type { Highchart as HighchartPartConfig } from '.'
 import { get as getContentByKey, type Content } from '/lib/xp/content'
 import type { Highchart } from '/site/content-types'
 import type { DatasetRepoNode } from '/lib/ssb/repo/dataset'
@@ -35,7 +33,7 @@ const { getTbprocessorKey } = __non_webpack_require__('/lib/ssb/dataset/tbproces
 
 export function get(req: XP.Request): XP.Response {
   try {
-    const part = getComponent<HighchartPartConfig>()
+    const part = getComponent<XP.PartComponent.Highchart>()
     if (!part) throw Error('No part found')
 
     const highchartIds: Array<string> = part.config.highchart ? forceArray(part.config.highchart) : []
@@ -192,10 +190,7 @@ function createHighchartsReactProps(
     type: highchart.data.graphType,
     contentKey: highchart._id,
     footnoteText: highchart.data.footnoteText,
-    creditsEnabled:
-      highchart.data.creditsHref || highchart.data.creditsText || highchart.data.sourceList ? true : false,
-    creditsHref: highchart.data.creditsHref,
-    creditsText: highchart.data.creditsText,
+    creditsEnabled: highchart.data.sourceList ? true : false,
     sourceList: highchart.data.sourceList ? forceArray(highchart.data.sourceList) : undefined,
     hideTitle: highchart.data.hideTitle,
   }
@@ -209,8 +204,6 @@ interface HighchartsReactProps {
   contentKey?: string
   footnoteText?: string
   creditsEnabled?: boolean
-  creditsHref?: string
-  creditsText?: string
   sourceList?: Highchart['sourceList']
   hideTitle?: boolean
 }

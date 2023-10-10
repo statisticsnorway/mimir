@@ -96,6 +96,9 @@ interface LibMap extends EnonicLibraryMap {
 
     // vendor
     '/lib/vendor/ramda': typeof import('./lib/vendor/ramda');
+
+    // rss
+    '/lib/ssb/rss/statkal': typeof import('./lib/ssb/rss/statkal');
 }
 
 declare const __non_webpack_require__: <K extends keyof LibMap | string = string>(path: K) => K extends keyof LibMap
@@ -193,8 +196,5 @@ interface MediaImageXData {
 }
 
 declare namespace XP {
-    type Request = import('@item-enonic-types/global/controller').Request;
-    type Response<ResponseBody = unknown> = import("@item-enonic-types/global/controller").Response<ResponseBody>;
     type PageContributions = import("@item-enonic-types/global/controller").Response['pageContributions'];
-    type MacroContext = import("@item-enonic-types/global/controller").MacroContext;
 }

@@ -1,7 +1,6 @@
 import { render } from '/lib/thymeleaf'
 import { render as r4XpRender } from '/lib/enonic/react4xp'
 import { getComponent } from '/lib/xp/portal'
-import type { FrontpageKeyfigures as FrontpageKeyfiguresPartConfig } from '.'
 import { type Content, get as getContentByKey } from '/lib/xp/content'
 import type { KeyFigure } from '/site/content-types'
 import type { KeyFigureView } from '/lib/ssb/parts/keyFigure'
@@ -30,7 +29,7 @@ const isKeyfigureData = (data: FrontPageKeyFigureData | undefined): data is Fron
 } // user-defined type guards <3
 
 function renderPart(req: XP.Request): XP.Response {
-  const part = getComponent<FrontpageKeyfiguresPartConfig>()
+  const part = getComponent<XP.PartComponent.FrontpageKeyfigures>()
   if (!part) throw Error('No part found')
 
   const keyFiguresPart: Array<FrontpageKeyfigure> = part.config.keyfiguresFrontpage

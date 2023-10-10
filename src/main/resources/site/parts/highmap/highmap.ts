@@ -4,7 +4,6 @@ import { isNumber, type RowValue } from '/lib/ssb/utils/utils'
 import { render } from '/lib/enonic/react4xp'
 import type { PreliminaryData, XmlParser } from '/lib/types/xmlParser'
 import type { Highmap } from '/site/content-types'
-import type { Highmap as HighmapPartConfig } from '.'
 import { getComponent, getContent } from '/lib/xp/portal'
 
 const {
@@ -65,7 +64,8 @@ interface HighmapProps {
 
 export function get(req: XP.Request): XP.Response {
   try {
-    const config = getComponent()?.config as HighmapPartConfig
+    const config = getComponent<XP.PartComponent.Highmap>()?.config
+    if (!config) throw Error('No page found')
     const highmapId: string | undefined = config.highmapId
 
     if (req.mode === 'edit') {

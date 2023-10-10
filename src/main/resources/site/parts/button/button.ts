@@ -1,7 +1,6 @@
 import { get as getContentByKey, type Content } from '/lib/xp/content'
 import type { Button } from '/site/content-types'
 import { attachmentUrl, getComponent, pageUrl } from '/lib/xp/portal'
-import type { Button as ButtonPartConfig } from '.'
 import { render } from '/lib/thymeleaf'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
@@ -10,7 +9,7 @@ const view = resolve('./button.html')
 
 export function get(req: XP.Request): XP.Response {
   try {
-    const part = getComponent<ButtonPartConfig>()
+    const part = getComponent<XP.PartComponent.Button>()
     if (!part) throw Error('No part found')
 
     const buttonsIds: Array<string> = part.config.button ? util.data.forceArray(part.config.button) : []

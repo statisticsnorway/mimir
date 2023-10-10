@@ -32,7 +32,7 @@ function renderPart(req: XP.Request): XP.Response {
   const page = getContent()
   if (!page) throw Error('No page found')
 
-  const part = getComponent<EntryLinksPartConfig>()
+  const part = getComponent<XP.PartComponent.EntryLinks>()
   if (!part) throw Error('No part found')
 
   const phrases: Phrases = getPhrases(page) as Phrases

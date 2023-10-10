@@ -1,5 +1,4 @@
 import { getComponent, processHtml } from '/lib/xp/portal'
-import type { FactBox as FactBoxPartConfig } from '.'
 import { render as r4XpRender } from '/lib/enonic/react4xp'
 import { get as getContentByKey, type Content } from '/lib/xp/content'
 import type { FactBox } from '/site/content-types'
@@ -11,7 +10,7 @@ const view = resolve('./factBox.html')
 
 export function get(req: XP.Request): XP.Response {
   try {
-    const part = getComponent<FactBoxPartConfig>()
+    const part = getComponent<XP.PartComponent.FactBox>()
     if (!part) throw Error('No part found')
 
     return renderPart(req, part.config.factBox)

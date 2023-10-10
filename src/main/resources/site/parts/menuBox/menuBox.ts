@@ -1,7 +1,6 @@
 import { get as getContentByKey, type Content } from '/lib/xp/content'
 import { render as r4XpRender } from '/lib/enonic/react4xp'
 import { render } from '/lib/thymeleaf'
-import type { MenuBox as MenuBoxPartConfig } from '.'
 import type { MenuBox } from '/site/content-types'
 import { pageUrl, getComponent } from '/lib/xp/portal'
 import { imageUrl } from '/lib/ssb/utils/imageUtils'
@@ -27,7 +26,7 @@ export function preview(req: XP.Request) {
 }
 
 function renderPart(req: XP.Request): XP.Response | string {
-  const part = getComponent<MenuBoxPartConfig>()
+  const part = getComponent<XP.PartComponent.MenuBox>()
   if (!part) throw Error('No part found')
 
   const menuBoxId: string = part.config.menu

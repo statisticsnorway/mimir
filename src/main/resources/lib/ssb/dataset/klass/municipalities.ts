@@ -1,10 +1,10 @@
 import { get as getContent, Content } from '/lib/xp/content'
+import { getSiteConfig } from '/lib/xp/portal'
 import { County } from '/lib/ssb/dataset/klass/counties'
 import { DatasetRepoNode } from '/lib/ssb/repo/dataset'
 import type { DataSource } from '/site/mixins/dataSource'
 
 const { sanitize } = __non_webpack_require__('/lib/xp/common')
-const { getSiteConfig } = __non_webpack_require__('/lib/xp/portal')
 const { list: countyList } = __non_webpack_require__('/lib/ssb/dataset/klass/counties')
 const { getDataset, extractKey } = __non_webpack_require__('/lib/ssb/dataset/dataset')
 const {
