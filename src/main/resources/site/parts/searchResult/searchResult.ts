@@ -1,19 +1,22 @@
+import { Node } from '@enonic-types/lib-node'
 import { get as getContentByKey, type Content } from '/lib/xp/content'
-import { render } from '/lib/enonic/react4xp'
-import type { PreparedSearchResult, SolrPrepResultAndTotal, Facet } from '/lib/ssb/utils/solrUtils'
-import type { SolrResponse } from '/lib/ssb/utils/nameSearchUtils'
-import { queryNodes, getNode } from '/lib/ssb/repo/common'
-import { formatDate } from '/lib/ssb/utils/dateUtils'
-import type { BestBetContent } from '/lib/ssb/repo/bestbet'
 import { sanitizeHtml, getContent, getComponent, pageUrl, serviceUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
-import { Node } from '@enonic-types/lib-node'
+import { render } from '/lib/enonic/react4xp'
+import {
+  type PreparedSearchResult,
+  type SolrPrepResultAndTotal,
+  type Facet,
+  solrSearch,
+} from '/lib/ssb/utils/solrUtils'
+import { type SolrResponse, getNameSearchResult } from '/lib/ssb/utils/nameSearchUtils'
+import { queryNodes, getNode } from '/lib/ssb/repo/common'
+import { formatDate } from '/lib/ssb/utils/dateUtils'
+import { type BestBetContent } from '/lib/ssb/repo/bestbet'
 
-const { solrSearch } = __non_webpack_require__('/lib/ssb/utils/solrUtils')
-const { getNameSearchResult } = __non_webpack_require__('/lib/ssb/utils/nameSearchUtils')
-const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
-const { sanitizeForSolr } = __non_webpack_require__('/lib/ssb/utils/textUtils')
-const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
+import { renderError } from '/lib/ssb/error/error'
+import { sanitizeForSolr } from '/lib/ssb/utils/textUtils'
+import { isEnabled } from '/lib/featureToggle'
 
 export function get(req: XP.Request): XP.Response {
   try {

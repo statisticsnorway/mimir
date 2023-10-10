@@ -1,13 +1,11 @@
-import { HttpRequestParams, HttpResponse } from '/lib/http-client'
+import { HttpRequestParams, HttpResponse, request } from '/lib/http-client'
 import { getRssItemsStatkal } from '/lib/ssb/rss/statkal'
-const { request } = __non_webpack_require__('/lib/http-client')
-const { encryptRssNews, encryptRssStatkal } = __non_webpack_require__('/lib/cipher/cipherRss')
+import { encryptRssNews, encryptRssStatkal } from '/lib/cipher/cipherRss'
 
 export function pushRssNews(): string {
-  const newsServiceUrl: string =
-    app.config && app.config['ssb.baseUrl']
-      ? app.config['ssb.baseUrl'] + '/_/service/mimir/news'
-      : 'https://www.utv.ssb.no/_/service/mimir/news'
+  const newsServiceUrl: string = app.config?.['ssb.baseUrl']
+    ? app.config['ssb.baseUrl'] + '/_/service/mimir/news'
+    : 'https://www.utv.ssb.no/_/service/mimir/news'
   const rssNews: RssItems = getRssNews(newsServiceUrl)
   if (rssNews.body !== null) {
     const encryptedBody: string = encryptRssNews(rssNews.body)
@@ -108,9 +106,4 @@ function postRssStatkal(encryptedRss: string): string {
 interface RssItems {
   body: string | null
   message: string
-}
-
-export interface PushRSSLib {
-  pushRssNews: () => string
-  pushRssStatkal: () => string
 }

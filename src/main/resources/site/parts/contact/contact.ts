@@ -1,15 +1,15 @@
-import type { Content } from '/lib/xp/content'
+import { type Content } from '/lib/xp/content'
 import { getContent, getComponent } from '/lib/xp/portal'
 import { render } from '/lib/thymeleaf'
-import type { Phrases } from '/lib/types/language'
-import type { Contact } from '/lib/ssb/dashboard/statreg/types'
-import type { Article, Statistics } from '/site/content-types'
+import { type Phrases } from '/lib/types/language'
+import { type Contact } from '/lib/ssb/dashboard/statreg/types'
 import { find } from '/lib/vendor/ramda'
 
-const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
-const { getContactsFromRepo } = __non_webpack_require__('/lib/ssb/statreg/contacts')
-const { ensureArray, chunkArray } = __non_webpack_require__('/lib/ssb/utils/arrayUtils')
-const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
+import { renderError } from '/lib/ssb/error/error'
+import { getContactsFromRepo } from '/lib/ssb/statreg/contacts'
+import { ensureArray, chunkArray } from '/lib/ssb/utils/arrayUtils'
+import { getPhrases } from '/lib/ssb/utils/language'
+import { type Article, type Statistics } from '/site/content-types'
 
 const view = resolve('./contact.html')
 

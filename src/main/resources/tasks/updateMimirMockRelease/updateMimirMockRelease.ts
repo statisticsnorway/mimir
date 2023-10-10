@@ -1,6 +1,6 @@
-const { updateMimirMockRelease } = __non_webpack_require__('/lib/ssb/repo/statreg')
+import { updateMimirMockRelease } from '/lib/ssb/repo/statreg'
 
-exports.run = function (): void {
+export function run(): void {
   log.info(`Run Task updateMimirMockRelease: ${new Date()}`)
   updateMimirMockRelease()
 }

@@ -1,4 +1,6 @@
 /* eslint-disable new-cap */
+// @ts-nocheck
+
 const { getMunicipality } = __non_webpack_require__('/lib/ssb/dataset/klass/municipalities')
 
 const { DataSource: DataSourceType } = __non_webpack_require__('/lib/ssb/repo/dataset')

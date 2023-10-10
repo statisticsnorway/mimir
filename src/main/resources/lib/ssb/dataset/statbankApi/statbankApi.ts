@@ -1,12 +1,11 @@
-import { DatasetRepoNode, DataSource as DataSourceType } from '/lib/ssb/repo/dataset'
 import { Content } from '/lib/xp/content'
-import type { DataSource } from '/site/mixins/dataSource'
+import { DatasetRepoNode, DataSource as DataSourceType, getDataset } from '/lib/ssb/repo/dataset'
 import { JSONstat } from '/lib/types/jsonstat-toolkit'
 import { get as fetchData } from '/lib/ssb/utils/datasetUtils'
 
-const { getDataset } = __non_webpack_require__('/lib/ssb/repo/dataset')
-const { logUserDataQuery, Events } = __non_webpack_require__('/lib/ssb/repo/query')
-const { isUrl } = __non_webpack_require__('/lib/ssb/utils/utils')
+import { logUserDataQuery, Events } from '/lib/ssb/repo/query'
+import { isUrl } from '/lib/ssb/utils/utils'
+import { type DataSource } from '/site/mixins/dataSource'
 
 export function getStatbankApi(content: Content<DataSource>, branch: string): DatasetRepoNode<JSONstat> | null {
   if (content?.data?.dataSource?._selected) {
@@ -80,11 +79,4 @@ export function getTableIdFromStatbankApi(content: Content<DataSource>): string 
     return content.data.dataSource?.statbankApi?.urlOrId.split('?').shift()?.replace(/\/$/, '').split('/').pop()
   }
   return
-}
-
-export interface StatbankApiLib {
-  getStatbankApi: (content: Content<DataSource>, branch: string) => DatasetRepoNode<JSONstat> | null
-  fetchStatbankApiData: (content: Content<DataSource>) => JSONstat | null
-  getStatbankApiKey: (content: Content<DataSource>) => string
-  getTableIdFromStatbankApi: (content: Content<DataSource>) => string | undefined
 }

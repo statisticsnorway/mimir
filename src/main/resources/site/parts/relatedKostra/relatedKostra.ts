@@ -1,14 +1,13 @@
-import type { MunicipalityWithCounty } from '/lib/ssb/dataset/klass/municipalities'
-import { render } from '/lib/enonic/react4xp'
 import { getComponent, getSiteConfig, processHtml } from '/lib/xp/portal'
+import { type MunicipalityWithCounty, getMunicipality, RequestWithCode } from '/lib/ssb/dataset/klass/municipalities'
+import { render } from '/lib/enonic/react4xp'
 
-const { getMunicipality } = __non_webpack_require__('/lib/ssb/dataset/klass/municipalities')
-const { pageMode } = __non_webpack_require__('/lib/ssb/utils/utils')
-const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
+import { pageMode } from '/lib/ssb/utils/utils'
+import { renderError } from '/lib/ssb/error/error'
 
 export function get(req: XP.Request): XP.Response {
   try {
-    let municipality: MunicipalityWithCounty | undefined = getMunicipality(req)
+    let municipality: MunicipalityWithCounty | undefined = getMunicipality(req as RequestWithCode)
     const mode: string = pageMode(req)
     if (!municipality && mode === 'edit') {
       const siteConfig = getSiteConfig<XP.SiteConfig>()
@@ -16,7 +15,7 @@ export function get(req: XP.Request): XP.Response {
 
       municipality = getMunicipality({
         code: siteConfig.defaultMunicipality,
-      } as unknown as XP.Request)
+      } as unknown as RequestWithCode)
     }
     return renderPart(req, municipality)
   } catch (e) {
@@ -30,7 +29,7 @@ export function preview(req: XP.Request): XP.Response {
 
   const municipality: MunicipalityWithCounty | undefined = getMunicipality({
     code: siteConfig.defaultMunicipality,
-  } as unknown as XP.Request)
+  } as unknown as RequestWithCode)
   return renderPart(req, municipality)
 }
 

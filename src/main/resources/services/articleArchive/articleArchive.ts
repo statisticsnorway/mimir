@@ -1,6 +1,6 @@
 import { parseArticleData, ParsedArticles } from '/site/parts/articleArchive/articleArchive'
 
-exports.get = (req: XP.Request): XP.Response => {
+export const get = (req: XP.Request): XP.Response => {
   const start: number = Number(req.params.start) ? Number(req.params.start) : 0
   const count: number = Number(req.params.count) ? Number(req.params.count) : 15
   const language: string = req.params.language ? req.params.language : 'nb'

@@ -1,15 +1,15 @@
-import type { Content } from '/lib/xp/content'
-import { render } from '/lib/thymeleaf'
-import type { StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
-import type { Phrases } from '/lib/types/language'
-import { render as r4xpRender } from '/lib/enonic/react4xp'
-import type { Statistics } from '/site/content-types'
+import { type Content } from '/lib/xp/content'
 import { getContent } from '/lib/xp/portal'
+import { render } from '/lib/thymeleaf'
+import { type Phrases } from '/lib/types/language'
+import { render as r4xpRender } from '/lib/enonic/react4xp'
+import { type StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
 
-const { getStatisticByIdFromRepo } = __non_webpack_require__('/lib/ssb/statreg/statistics')
-const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
-const util = __non_webpack_require__('/lib/util')
-const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
+import { getStatisticByIdFromRepo } from '/lib/ssb/statreg/statistics'
+import { renderError } from '/lib/ssb/error/error'
+import * as util from '/lib/util'
+import { getPhrases } from '/lib/ssb/utils/language'
+import { type Statistics } from '/site/content-types'
 const STATBANKWEB_URL: string =
   app.config && app.config['ssb.statbankweb.baseUrl']
     ? app.config['ssb.statbankweb.baseUrl']
@@ -35,7 +35,7 @@ function renderPart(req: XP.Request): XP.Response {
   const statistic: StatisticInListing = (page.data.statistic &&
     getStatisticByIdFromRepo(page.data.statistic)) as StatisticInListing
   const shortName: string | undefined = statistic && statistic.shortName ? statistic.shortName : undefined
-  const phrases: Phrases = getPhrases(page)
+  const phrases = getPhrases(page) as Phrases
 
   const title: string = phrases['statbankList.title']
   const linkTitle: string = phrases['statbankList.linkTitle']

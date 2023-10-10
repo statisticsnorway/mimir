@@ -1,20 +1,24 @@
-import { JobEventNode, JobInfoNode } from '/lib/ssb/repo/job'
-import { CreateOrUpdateStatus } from '/lib/ssb/dataset/dataset'
 import { query, Content } from '/lib/xp/content'
+import {
+  JobEventNode,
+  JobInfoNode,
+  completeJobLog,
+  startJobLog,
+  updateJobLog,
+  JOB_STATUS_COMPLETE,
+  JobNames,
+} from '/lib/ssb/repo/job'
+import { CreateOrUpdateStatus, refreshDataset } from '/lib/ssb/dataset/dataset'
 import { DATASET_BRANCH } from '/lib/ssb/repo/dataset'
-import type { DataSource } from '/site/mixins/dataSource'
-
-const { completeJobLog, startJobLog, updateJobLog, JOB_STATUS_COMPLETE, JobNames } =
-  __non_webpack_require__('/lib/ssb/repo/job')
-const { cronJobLog } = __non_webpack_require__('/lib/ssb/utils/serverLog')
-const { refreshDataset } = __non_webpack_require__('/lib/ssb/dataset/dataset')
+import { cronJobLog } from '/lib/ssb/utils/serverLog'
+import { type DataSource } from '/site/mixins/dataSource'
 
 export function updateSDDSTables(): void {
   cronJobLog('Start update SDDS tables job')
   const jobLogNode: JobEventNode = startJobLog(JobNames.REFRESH_DATASET_SDDS_TABLES_JOB)
   const hits: Array<Content<DataSource>> = getSDDSTableDataset()
 
-  if (hits && hits.length) {
+  if (hits?.length) {
     updateJobLog(jobLogNode._id, (node: JobInfoNode) => {
       node.data = {
         ...node.data,

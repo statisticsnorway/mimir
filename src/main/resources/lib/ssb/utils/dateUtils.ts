@@ -1,5 +1,3 @@
-import { formatDate as libTimeFormatDate } from '/lib/time'
-
 import { type Locale } from 'date-fns'
 import { default as nb } from 'date-fns/locale/nb'
 import { default as nn } from 'date-fns/locale/nn'
@@ -17,6 +15,7 @@ import { default as isBefore } from 'date-fns/isBefore'
 import { default as isSameDay } from 'date-fns/isSameDay'
 import { default as isSameSecond } from 'date-fns/isSameSecond'
 import { default as formatDistanceToNowStrict } from 'date-fns/formatDistanceToNowStrict'
+import { formatDate as libTimeFormatDate } from '/lib/time'
 
 export {
   parseISO,

@@ -1,21 +1,23 @@
-import type { Content } from '/lib/xp/content'
-import { render as r4XpRender } from '/lib/enonic/react4xp'
-import { render } from '/lib/thymeleaf'
-import type { MunicipalityWithCounty } from '/lib/ssb/dataset/klass/municipalities'
-import type { MenuDropdown } from '/site/content-types'
-import { randomUnsafeString, scriptAsset } from '/lib/ssb/utils/utils'
+import { type Content } from '/lib/xp/content'
 import { assetUrl, getContent, getComponent, pageUrl, getSiteConfig, serviceUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
+import { render } from '/lib/thymeleaf'
+import { render as r4XpRender } from '/lib/enonic/react4xp'
+import { randomUnsafeString, scriptAsset } from '/lib/ssb/utils/utils'
+import {
+  type MunicipalityWithCounty,
+  municipalsWithCounties,
+  getMunicipality,
+  removeCountyFromMunicipalityName,
+  RequestWithCode,
+} from '/lib/ssb/dataset/klass/municipalities'
 
-__non_webpack_require__('/lib/xp/portal')
-const { municipalsWithCounties, getMunicipality, removeCountyFromMunicipalityName } = __non_webpack_require__(
-  '/lib/ssb/dataset/klass/municipalities'
-)
-const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
+import { renderError } from '/lib/ssb/error/error'
+import { type MenuDropdown } from '/site/content-types'
 
 const view = resolve('./menuDropdown.html')
 
-export function get(req: XP.Request): XP.Response {
+export function get(req: RequestWithCode): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -23,11 +25,11 @@ export function get(req: XP.Request): XP.Response {
   }
 }
 
-export function preview(req: XP.Request) {
+export function preview(req: RequestWithCode) {
   return renderPart(req)
 }
 
-function renderPart(req: XP.Request): XP.Response {
+function renderPart(req: RequestWithCode): XP.Response {
   const parsedMunicipalities: Array<MunicipalityWithCounty> = municipalsWithCounties()
   const municipality: MunicipalityWithCounty | undefined = getMunicipality(req)
   const component = getComponent<XP.PartComponent.MenuDropdown>()

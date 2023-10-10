@@ -1,16 +1,15 @@
+// @ts-ignore
+import JSONstat from 'jsonstat-toolkit/import.mjs'
 import { create as createRepo } from '/lib/xp/repo'
 import { run } from '/lib/xp/context'
 import { connect, CreateNodeParams, type RepoConnection } from '/lib/xp/node'
-import type { Data, Dataset, Dimension } from '/lib/types/jsonstat-toolkit'
-import type { DatasetRepoNode } from '/lib/ssb/repo/dataset'
+import { type Data, type Dataset, type Dimension } from '/lib/types/jsonstat-toolkit'
+import { type DatasetRepoNode } from '/lib/ssb/repo/dataset'
 // @ts-ignore
-import JSONstat from 'jsonstat-toolkit/import.mjs'
 
 export const REPO_ID_NAME_GRAPH: 'no.ssb.name.graph' = 'no.ssb.name.graph' as const
 const { getNameGraphDataWithConfig } = __non_webpack_require__('/lib/ssb/dataset/calculator')
-const {
-  data: { forceArray },
-} = __non_webpack_require__('/lib/util')
+import * as util from '/lib/util'
 const { getRepo } = __non_webpack_require__('/lib/ssb/repo/repo')
 
 export function nameGraphRepoExists(): boolean {
@@ -107,7 +106,7 @@ export function getNameGraphDataFromRepo(names: string[]): NameData[] {
           {
             hasValue: {
               field: 'displayName',
-              values: forceArray(names),
+              values: util.data.forceArray(names),
             },
           },
         ],

@@ -3,13 +3,11 @@ import { Publication, Publisering, PubliseringXML } from '/lib/ssb/dashboard/sta
 import { XmlParser } from '/lib/types/xmlParser'
 import { HttpResponse } from '/lib/http-client'
 
-const { ensureArray } = __non_webpack_require__('/lib/ssb/utils/arrayUtils')
-const { getNode } = __non_webpack_require__('/lib/ssb/repo/common')
-const { STATREG_BRANCH, STATREG_REPO, getStatRegBaseUrl, PUBLICATIONS_URL } = __non_webpack_require__(
-  '/lib/ssb/dashboard/statreg/config'
-)
-const { fetchStatRegData } = __non_webpack_require__('/lib/ssb/dashboard/statreg/common')
-const { Events, logUserDataQuery } = __non_webpack_require__('/lib/ssb/repo/query')
+import { ensureArray } from '/lib/ssb/utils/arrayUtils'
+import { getNode } from '/lib/ssb/repo/common'
+import { STATREG_BRANCH, STATREG_REPO, getStatRegBaseUrl, PUBLICATIONS_URL } from '/lib/ssb/dashboard/statreg/config'
+import { fetchStatRegData } from '/lib/ssb/dashboard/statreg/common'
+import { Events, logUserDataQuery } from '/lib/ssb/repo/query'
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 
 export const STATREG_REPO_PUBLICATIONS_KEY = 'publications'
@@ -63,10 +61,4 @@ function getAllPublicationsFromRepo(): Array<Publication> {
 
 export function getPublicationsForStatistic(shortName: string): Array<Publication> {
   return ensureArray(getAllPublicationsFromRepo()).filter((pub: Publication) => pub.statisticsKey === shortName)
-}
-
-export interface StatRegPublicationsLib {
-  STATREG_REPO_PUBLICATIONS_KEY: string
-  fetchPublications: () => Array<Publication> | null
-  getPublicationsForStatistic: (shortName: string) => Array<Publication>
 }

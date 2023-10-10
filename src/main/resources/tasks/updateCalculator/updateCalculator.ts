@@ -1,17 +1,22 @@
-import { JobEventNode, JobInfoNode } from '/lib/ssb/repo/job'
-import { CreateOrUpdateStatus } from '/lib/ssb/dataset/dataset'
-import type { GenericDataImport } from '/site/content-types'
 import { Content } from '/lib/xp/content'
+import { CreateOrUpdateStatus, refreshDataset } from '/lib/ssb/dataset/dataset'
+import {
+  JobEventNode,
+  JobInfoNode,
+  completeJobLog,
+  startJobLog,
+  updateJobLog,
+  JOB_STATUS_COMPLETE,
+  JobNames,
+} from '/lib/ssb/repo/job'
 import { DATASET_BRANCH } from '/lib/ssb/repo/dataset'
 
-const { completeJobLog, startJobLog, updateJobLog, JOB_STATUS_COMPLETE, JobNames } =
-  __non_webpack_require__('/lib/ssb/repo/job')
-const { cronJobLog } = __non_webpack_require__('/lib/ssb/utils/serverLog')
-const { refreshDataset } = __non_webpack_require__('/lib/ssb/dataset/dataset')
-const { getAllCalculatorDataset } = __non_webpack_require__('/lib/ssb/dataset/calculator')
-const { clearPartFromPartCache } = __non_webpack_require__('/lib/ssb/cache/partCache')
+import { cronJobLog } from '/lib/ssb/utils/serverLog'
+import { getAllCalculatorDataset } from '/lib/ssb/dataset/calculator'
+import { clearPartFromPartCache } from '/lib/ssb/cache/partCache'
+import { type GenericDataImport } from '/site/content-types'
 
-exports.run = function (): void {
+export function run(): void {
   log.info(`Run Task updateCalculator: ${new Date()}`)
   const jobLogNode: JobEventNode = startJobLog(JobNames.REFRESH_DATASET_CALCULATOR_JOB)
   const dataSources: Array<Content<GenericDataImport>> = getAllCalculatorDataset()

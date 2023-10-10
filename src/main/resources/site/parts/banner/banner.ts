@@ -1,18 +1,19 @@
-import { render } from '/lib/thymeleaf'
-import type { Content } from '/lib/xp/content'
+import { type Content } from '/lib/xp/content'
 import { getContent, getComponent } from '/lib/xp/portal'
-import type { Banner as BannerPartConfig } from '.'
-import { MunicipalityWithCounty } from '/lib/ssb/dataset/klass/municipalities'
-import { imageUrl } from '/lib/ssb/utils/imageUtils'
-import type { Page } from '/site/content-types'
+import * as i18nLib from '/lib/xp/i18n'
+import {
+  MunicipalityWithCounty,
+  RequestWithCode,
+  getMunicipality,
+  removeCountyFromMunicipalityName,
+} from '/lib/ssb/dataset/klass/municipalities'
+import { imageUrl, getImageAlt } from '/lib/ssb/utils/imageUtils'
 
-const { getMunicipality, removeCountyFromMunicipalityName } = __non_webpack_require__(
-  '/lib/ssb/dataset/klass/municipalities'
-)
-const { getImageAlt } = __non_webpack_require__('/lib/ssb/utils/imageUtils')
-const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
+import { renderError } from '/lib/ssb/error/error'
 
-const i18nLib = __non_webpack_require__('/lib/xp/i18n')
+import { render } from '/lib/thymeleaf'
+import { type Page } from '/site/content-types'
+import { type Banner as BannerPartConfig } from '.'
 const view = resolve('./banner.html')
 
 export function get(req: XP.Request): XP.Response {
@@ -42,7 +43,7 @@ function renderPart(req: XP.Request): XP.Response {
     subTitleFactPage = pageType.faktaside.subTitle ? pageType.faktaside.subTitle : factsAbout
   }
   const municipality: MunicipalityWithCounty | undefined =
-    pageType._selected === 'kommunefakta' ? getMunicipality(req) : undefined
+    pageType._selected === 'kommunefakta' ? getMunicipality(req as RequestWithCode) : undefined
   const municipalityName: string | undefined = municipality
     ? removeCountyFromMunicipalityName(municipality.displayName)
     : undefined

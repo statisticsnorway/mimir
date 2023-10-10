@@ -1,14 +1,14 @@
-import { MunicipalityWithCounty } from '/lib/ssb/dataset/klass/municipalities'
 import { get, Content } from '/lib/xp/content'
+import { pageUrl, getSite } from '/lib/xp/portal'
+import { request } from '/lib/http-client'
+import {
+  MunicipalityWithCounty,
+  getMunicipalityByName,
+  municipalsWithCounties,
+} from '/lib/ssb/dataset/klass/municipalities'
+import { fromFilterCache } from '/lib/ssb/cache/cache'
 
-const { request } = __non_webpack_require__('/lib/http-client')
-const { pageUrl, getSite } = __non_webpack_require__('/lib/xp/portal')
-const { fromFilterCache } = __non_webpack_require__('/lib/ssb/cache/cache')
-const { getMunicipalityByName, municipalsWithCounties } = __non_webpack_require__(
-  '/lib/ssb/dataset/klass/municipalities'
-)
-
-exports.filter = function (req: XP.Request, next: (req: XP.Request) => XP.Response): XP.Response {
+export function filter(req: XP.Request, next: (req: XP.Request) => XP.Response): XP.Response {
   if (req.params.selfRequest) return next(req)
   const paramKommune: string | undefined = req.params.kommune
   const region: string | undefined = paramKommune ?? req.path.split('/').pop()

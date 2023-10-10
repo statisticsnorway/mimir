@@ -1,11 +1,10 @@
-import { DatasetRepoNode, DataSource as DataSourceType } from '/lib/ssb/repo/dataset'
 import { Content } from '/lib/xp/content'
-import type { DataSource } from '/site/mixins/dataSource'
+import { DatasetRepoNode, DataSource as DataSourceType, getDataset } from '/lib/ssb/repo/dataset'
 import { get as fetchData } from '/lib/ssb/utils/datasetUtils'
 
-const { getDataset } = __non_webpack_require__('/lib/ssb/repo/dataset')
-const { logUserDataQuery, Events } = __non_webpack_require__('/lib/ssb/repo/query')
-const { isUrl } = __non_webpack_require__('/lib/ssb/utils/utils')
+import { logUserDataQuery, Events } from '/lib/ssb/repo/query'
+import { isUrl } from '/lib/ssb/utils/utils'
+import { type DataSource } from '/site/mixins/dataSource'
 
 export function getKlass(content: Content<DataSource>, branch: string): DatasetRepoNode<object> | null {
   if (content.data.dataSource && content.data.dataSource._selected === DataSourceType.KLASS) {
@@ -48,10 +47,4 @@ export function fetchKlassData(content: Content<DataSource>) {
 
 export function getKlassKey(content: Content<DataSource>): string {
   return content._id
-}
-
-export interface KlassLib {
-  getKlass: (content: Content<DataSource>, branch: string) => DatasetRepoNode<object> | null
-  fetchKlassData: (content: Content<DataSource>) => object | null
-  getKlassKey: (content: Content<DataSource>) => string
 }

@@ -1,7 +1,11 @@
 import { mergeDeepRight } from '/lib/vendor/ramda'
-const { X_AXIS_TITLE_POSITION, Y_AXIS_TITLE_POSITION, createDefaultConfig, lineColor, style } = __non_webpack_require__(
-  '/lib/ssb/parts/highcharts/graph/config'
-)
+import {
+  X_AXIS_TITLE_POSITION,
+  Y_AXIS_TITLE_POSITION,
+  createDefaultConfig,
+  lineColor,
+  style,
+} from '/lib/ssb/parts/highcharts/graph/config'
 
 export function barNegativeConfig(highchartContent, options) {
   const defaultConfig = createDefaultConfig(

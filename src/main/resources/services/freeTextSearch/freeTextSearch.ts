@@ -1,8 +1,6 @@
-import { SolrPrepResultAndTotal } from '/lib/ssb/utils/solrUtils'
+import { SolrPrepResultAndTotal, solrSearch } from '/lib/ssb/utils/solrUtils'
 
-const { solrSearch } = __non_webpack_require__('/lib/ssb/utils/solrUtils')
-
-const { sanitizeForSolr } = __non_webpack_require__('/lib/ssb/utils/textUtils')
+import { sanitizeForSolr } from '/lib/ssb/utils/textUtils'
 
 export function get(req: XP.Request): XP.Response {
   const searchTerm: string | undefined = req.params.sok ? sanitizeForSolr(req.params.sok) : undefined

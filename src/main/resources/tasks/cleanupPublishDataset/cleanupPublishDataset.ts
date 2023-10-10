@@ -1,22 +1,22 @@
+import { send } from '/lib/xp/event'
 import {
   DataSourceStatisticsPublishResult,
   JobInfoNode,
   JOB_STATUS_COMPLETE,
   StatisticsPublishResult,
+  updateJobLog,
+  JobStatus,
+  getJobLog,
 } from '/lib/ssb/repo/job'
-import type { CleanupPublishDataset as CleanupPublishDatasetConfig } from '/tasks/cleanupPublishDataset'
+import { type CleanupPublishDataset as CleanupPublishDatasetConfig } from '/tasks/cleanupPublishDataset'
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 
-const { Events, logUserDataQuery } = __non_webpack_require__('/lib/ssb/repo/query')
-const {
-  data: { forceArray },
-} = __non_webpack_require__('/lib/util')
-const { deleteDataset, extractKey } = __non_webpack_require__('/lib/ssb/dataset/dataset')
-const { UNPUBLISHED_DATASET_BRANCH } = __non_webpack_require__('/lib/ssb/repo/dataset')
-const { updateJobLog, JobStatus, getJobLog } = __non_webpack_require__('/lib/ssb/repo/job')
-import { send } from '/lib/xp/event'
+import { Events, logUserDataQuery } from '/lib/ssb/repo/query'
+import * as util from '/lib/util'
+import { deleteDataset, extractKey } from '/lib/ssb/dataset/dataset'
+import { UNPUBLISHED_DATASET_BRANCH } from '/lib/ssb/repo/dataset'
 
-exports.run = function (props: CleanupPublishDatasetConfig): void {
+export function run(props: CleanupPublishDatasetConfig): void {
   const { jobId, statisticsContentId, publicationItem, statisticsId } = props
   const { dataSource, dataset } = JSON.parse(publicationItem)
 
@@ -29,7 +29,7 @@ exports.run = function (props: CleanupPublishDatasetConfig): void {
     const key: string | null = extractKey(dataSource)
 
     const job: JobInfoNode = getJobLog(jobId) as JobInfoNode
-    const jobRefreshResult: Array<StatisticsPublishResult> = forceArray(
+    const jobRefreshResult: Array<StatisticsPublishResult> = util.data.forceArray(
       job.data.refreshDataResult
     ) as Array<StatisticsPublishResult>
     const statRefreshResult: StatisticsPublishResult | undefined = jobRefreshResult.find((s) => {
@@ -55,26 +55,26 @@ function updateLogs(jobId: string, statisticsContentId: string, statisticsId: st
   let completed = false
 
   updateJobLog(jobId, (node: JobInfoNode) => {
-    const refreshDataResult: Array<StatisticsPublishResult> = forceArray(
+    const refreshDataResult: Array<StatisticsPublishResult> = util.data.forceArray(
       node.data.refreshDataResult
     ) as Array<StatisticsPublishResult>
     const statRefreshResult: StatisticsPublishResult | undefined = refreshDataResult.find((s) => {
       return s.statistic === statisticsContentId
     })
     if (statRefreshResult) {
-      const dataSourceRefreshResult: DataSourceStatisticsPublishResult | undefined = forceArray(
-        statRefreshResult.dataSources
-      ).find((ds) => {
-        return ds.id === dataSourceId
-      })
+      const dataSourceRefreshResult: DataSourceStatisticsPublishResult | undefined = util.data
+        .forceArray(statRefreshResult.dataSources)
+        .find((ds) => {
+          return ds.id === dataSourceId
+        })
       if (dataSourceRefreshResult) {
         dataSourceRefreshResult.status = JobStatus.COMPLETE
         // log.info(`Update jobLog ${jobId} - Datasource: ${dataSourceId} Statistikk: ${statisticsId}(content: ${statisticsContentId})  - COMPLETE`)
       }
       const allDataSourcesComplete: boolean =
-        forceArray(statRefreshResult.dataSources).filter((ds) => {
+        util.data.forceArray(statRefreshResult.dataSources).filter((ds) => {
           return ds.status === JobStatus.COMPLETE || ds.status === JobStatus.ERROR || ds.status === JobStatus.SKIPPED
-        }).length === forceArray(statRefreshResult.dataSources).length
+        }).length === util.data.forceArray(statRefreshResult.dataSources).length
       if (allDataSourcesComplete) {
         statRefreshResult.status = JobStatus.COMPLETE
         // log.info(`Update jobLog ${jobId} - All Datasources statistikk: ${statisticsId}(content: ${statisticsContentId})  - COMPLETE`)

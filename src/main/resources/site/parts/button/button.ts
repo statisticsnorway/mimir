@@ -1,10 +1,10 @@
 import { get as getContentByKey, type Content } from '/lib/xp/content'
-import type { Button } from '/site/content-types'
 import { attachmentUrl, getComponent, pageUrl } from '/lib/xp/portal'
 import { render } from '/lib/thymeleaf'
 
-const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
-const util = __non_webpack_require__('/lib/util')
+import { renderError } from '/lib/ssb/error/error'
+import * as util from '/lib/util'
+import { type Button } from '/site/content-types'
 const view = resolve('./button.html')
 
 export function get(req: XP.Request): XP.Response {

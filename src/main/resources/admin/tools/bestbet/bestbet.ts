@@ -1,18 +1,18 @@
-import type { ResourceKey } from '@enonic-types/core'
+import { type ResourceKey } from '@enonic-types/core'
+import { assetUrl, serviceUrl } from '/lib/xp/portal'
+import { localize } from '/lib/xp/i18n'
+import { getToolUrl } from '/lib/xp/admin'
 import { render } from '/lib/thymeleaf'
 import { getMainSubjects, SubjectItem } from '/lib/ssb/utils/subjectUtils'
 import { parseContributions } from '/lib/ssb/utils/utils'
 import { DropdownItems } from '/lib/types/components'
 import { render as r4XpRender } from '/lib/enonic/react4xp'
 
-const { assetUrl, serviceUrl } = __non_webpack_require__('/lib/xp/portal')
-const { localize } = __non_webpack_require__('/lib/xp/i18n')
-const { getToolUrl } = __non_webpack_require__('/lib/xp/admin')
-const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
+import { renderError } from '/lib/ssb/error/error'
 
 const view: ResourceKey = resolve('./bestbet.html')
 
-exports.get = function (req: XP.Request): XP.Response {
+export function get(req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -20,7 +20,7 @@ exports.get = function (req: XP.Request): XP.Response {
   }
 }
 
-exports.preview = (req: XP.Request): XP.Response => {
+export const preview = (req: XP.Request): XP.Response => {
   try {
     return renderPart(req)
   } catch (e) {

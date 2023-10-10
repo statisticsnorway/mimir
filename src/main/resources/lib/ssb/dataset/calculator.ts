@@ -1,13 +1,13 @@
-import { Dataset, JSONstat as JSONstatType } from '/lib/types/jsonstat-toolkit'
-import { query, get as getContent, Content } from '/lib/xp/content'
-import type { CalculatorConfig, GenericDataImport } from '/site/content-types'
-import { DatasetRepoNode } from '/lib/ssb/repo/dataset'
-/* eslint-disable new-cap */
 // @ts-ignore
 import JSONstat from 'jsonstat-toolkit/import.mjs'
-import type { DataSource } from '/site/mixins/dataSource'
-
-const { datasetOrUndefined } = __non_webpack_require__('/lib/ssb/cache/cache')
+import { query, get as getContent, Content } from '/lib/xp/content'
+import { Dataset, JSONstat as JSONstatType } from '/lib/types/jsonstat-toolkit'
+import { DatasetRepoNode } from '/lib/ssb/repo/dataset'
+import { datasetOrUndefined } from '/lib/ssb/cache/cache'
+import { type CalculatorConfig, type GenericDataImport } from '/site/content-types'
+/* eslint-disable new-cap */
+// @ts-ignore
+import { type DataSource } from '/site/mixins/dataSource'
 
 export function getCalculatorConfig(): Content<CalculatorConfig> | undefined {
   return query({
@@ -197,18 +197,4 @@ export function getChangeValue(startIndex: number, endIndex: number, chronologic
   } else {
     return (startIndex - endIndex) / endIndex
   }
-}
-export interface CalculatorLib {
-  getCalculatorConfig: () => Content<CalculatorConfig> | undefined
-  getKpiDatasetYear: (config: Content<CalculatorConfig>) => Dataset | null
-  getKpiDatasetMonth: (config: Content<CalculatorConfig> | undefined) => Dataset | null
-  getPifDataset: (config: Content<CalculatorConfig> | undefined) => Dataset | null
-  getBkibolDatasetEnebolig: (config: Content<CalculatorConfig>) => Dataset | null
-  getBkibolDatasetBoligblokk: (config: Content<CalculatorConfig>) => Dataset | null
-  getNameSearchGraphData: (config: Content<CalculatorConfig>) => DatasetRepoNode<JSONstatType> | null
-  getNameGraphDataWithConfig: () => DatasetRepoNode<JSONstatType> | null
-  getNameSearchGraphDatasetId: () => string | undefined
-  getAllCalculatorDataset: () => Array<Content<GenericDataImport>>
-  isChronological: (startYear: string, startMonth: string, endYear: string, endMonth: string) => boolean
-  getChangeValue: (startIndex: number, endIndex: number, chronological: boolean) => number
 }

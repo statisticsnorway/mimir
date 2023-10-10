@@ -8,8 +8,8 @@ import {
   type FindNodesByParentResult,
   type NodeQueryResult,
 } from '/lib/xp/node'
-import { EditorCallback } from '/lib/ssb/repo/eventLog'
 import { run } from '/lib/xp/context'
+import { EditorCallback } from '/lib/ssb/repo/eventLog'
 
 const ENONIC_PROJECT_ID: string = app.config && app.config['ssb.project.id'] ? app.config['ssb.project.id'] : 'default'
 export const ENONIC_CMS_DEFAULT_REPO = `com.enonic.cms.${ENONIC_PROJECT_ID}`
@@ -127,28 +127,4 @@ export function queryNodes(repository: string, branch: string, params: QueryNode
   return withConnection(repository, branch, (conn) => {
     return conn.query(params)
   })
-}
-
-export interface RepoCommonLib {
-  ENONIC_CMS_DEFAULT_REPO: string
-  withSuperUserContext: <T>(repository: string, branch: string, callback: ContextCallback<T>) => T
-  withLoggedInUserContext: <T>(branch: string, callback: UserContextCallback<T>) => T
-  withConnection: <T>(repository: string, branch: string, callback: ConnectionCallback<T>) => T
-  createNode: <T>(repository: string, branch: string, content: T & CreateNodeParams) => T & Node
-  getNode: (
-    repository: string,
-    branch: string,
-    key: string | Array<string>
-  ) => Node<Record<string, unknown>> | Node<Record<string, unknown>>[] | null
-  deleteNode: (repository: string, branch: string, key: string) => boolean
-  modifyNode: <T>(repository: string, branch: string, key: string, editor: EditorCallback<T>) => T
-  getChildNodes: (
-    repository: string,
-    branch: string,
-    key: string,
-    count?: number,
-    countOnly?: boolean
-  ) => FindNodesByParentResult
-  nodeExists: (repository: string, branch: string, key: string) => boolean
-  queryNodes: (repository: string, branch: string, params: QueryNodeParams) => NodeQueryResult
 }

@@ -1,15 +1,13 @@
 import { get as getContentByKey, type Content } from '/lib/xp/content'
-import { render } from '/lib/thymeleaf'
-import { render as r4XpRender } from '/lib/enonic/react4xp'
-import type { ActiveStatistics as ActiveStatisticsPartConfig } from '.'
-import type { Statistics } from '/site/content-types'
 import { getContent, getComponent, pageUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
+import { render } from '/lib/thymeleaf'
+import { render as r4XpRender } from '/lib/enonic/react4xp'
 
-const {
-  data: { forceArray },
-} = __non_webpack_require__('/lib/util')
-const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
+import * as util from '/lib/util'
+import { renderError } from '/lib/ssb/error/error'
+import { type Statistics } from '/site/content-types'
+import { type ActiveStatistics as ActiveStatisticsPartConfig } from '.'
 
 const view = resolve('./activeStatistics.html')
 
@@ -32,7 +30,7 @@ function renderPart(req: XP.Request) {
   const partConfig: ActiveStatisticsPartConfig = getComponent<XP.PartComponent.ActiveStatistics>()
     ?.config as ActiveStatisticsPartConfig
   const activeStatistics: ActiveStatisticsPartConfig['relatedStatisticsOptions'] = partConfig.relatedStatisticsOptions
-    ? forceArray(partConfig.relatedStatisticsOptions)
+    ? util.data.forceArray(partConfig.relatedStatisticsOptions)
     : []
 
   const statisticsTitle: string = localize({

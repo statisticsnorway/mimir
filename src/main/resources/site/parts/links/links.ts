@@ -1,9 +1,9 @@
 import { get as getContentByKey, type Content } from '/lib/xp/content'
 import { getComponent, attachmentUrl, pageUrl } from '/lib/xp/portal'
-import type { Links as LinksPartConfig } from '.'
 import { render } from '/lib/enonic/react4xp'
 import { renderError } from '/lib/ssb/error/error'
 import { GA_TRACKING_ID } from '/site/pages/default/default'
+import { type Links as LinksPartConfig } from '.'
 
 export function get(req: XP.Request): XP.Response {
   try {

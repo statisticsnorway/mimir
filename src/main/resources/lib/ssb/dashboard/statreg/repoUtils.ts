@@ -1,4 +1,4 @@
-const { ensureArray } = __non_webpack_require__('/lib/ssb/utils/arrayUtils')
+import { ensureArray } from '/lib/ssb/utils/arrayUtils'
 const contentType = 'application/json'
 
 function toOptions<T, A>(content: Array<T>, transform: (item: T) => A): Array<A> {
@@ -44,14 +44,4 @@ export function handleRepoGet<T, A>(
       status: 500,
     }
   }
-}
-
-export interface StatRegRepoUtilsLib {
-  handleRepoGet: <T, A>(
-    req: XP.Request,
-    repoName: string,
-    contentFetcher: () => Array<T>,
-    optionTransform: (o: T) => A,
-    applyFilters: (o: Array<T>, f: XP.Request['params']) => Array<T>
-  ) => XP.Response
 }

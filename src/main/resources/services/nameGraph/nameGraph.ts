@@ -1,5 +1,5 @@
-import { prepareNameGraphResult } from '/lib/ssb/utils/nameSearchUtils'
 import whitelist from 'validator/es/lib/whitelist'
+import { prepareNameGraphResult } from '/lib/ssb/utils/nameSearchUtils'
 
 export function get(req: XP.Request): XP.Response {
   if (!req.params.name) {

@@ -1,19 +1,25 @@
-import { render } from '/lib/enonic/react4xp'
 import { query, type Content } from '/lib/xp/content'
-import type { StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
-import type { GroupedBy, PreparedStatistics, YearReleases, Release } from '/lib/ssb/utils/variantUtils'
-import type { UpcomingRelease } from '/site/content-types'
-import type { SubjectItem } from '/lib/ssb/utils/subjectUtils'
-import { formatDate, format } from '/lib/ssb/utils/dateUtils'
-import { getContent, getComponent, processHtml, serviceUrl } from '/lib/xp/portal'
+import { getContent, getComponent, processHtml, serviceUrl, sanitizeHtml } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
-import { sanitizeHtml } from '/lib/xp/portal'
+import { type SubjectItem, getMainSubjects, getMainSubjectById } from '/lib/ssb/utils/subjectUtils'
+import { formatDate, format } from '/lib/ssb/utils/dateUtils'
+import {
+  type GroupedBy,
+  type PreparedStatistics,
+  type YearReleases,
+  type Release,
+  addMonthNames,
+  groupStatisticsByYearMonthAndDay,
+  prepareRelease,
+  filterOnComingReleases,
+  getUpcomingReleases,
+} from '/lib/ssb/utils/variantUtils'
+import { type StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
+import { render } from '/lib/enonic/react4xp'
 
-const { addMonthNames, groupStatisticsByYearMonthAndDay, prepareRelease, filterOnComingReleases, getUpcomingReleases } =
-  __non_webpack_require__('/lib/ssb/utils/variantUtils')
-const { getAllStatisticsFromRepo } = __non_webpack_require__('/lib/ssb/statreg/statistics')
-const { fromPartCache } = __non_webpack_require__('/lib/ssb/cache/partCache')
-const { getMainSubjects, getMainSubjectById } = __non_webpack_require__('/lib/ssb/utils/subjectUtils')
+import { getAllStatisticsFromRepo } from '/lib/ssb/statreg/statistics'
+import { fromPartCache } from '/lib/ssb/cache/partCache'
+import { type UpcomingRelease } from '/site/content-types'
 
 export function get(req: XP.Request) {
   return renderPart(req)

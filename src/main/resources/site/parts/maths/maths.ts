@@ -1,8 +1,8 @@
-import type { Maths as MathsPartConfig } from '.'
-import { render } from '/lib/enonic/react4xp'
 import { getComponent } from '/lib/xp/portal'
+import { render } from '/lib/enonic/react4xp'
 
-const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
+import { renderError } from '/lib/ssb/error/error'
+import { type Maths as MathsPartConfig } from '.'
 
 export function get(req: XP.Request): XP.Response {
   try {

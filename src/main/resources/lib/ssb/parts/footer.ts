@@ -1,13 +1,10 @@
-import type { MenuItem, Footer } from '/site/content-types'
-import { Language } from '/lib/types/language'
-import { Link } from '/lib/ssb/parts/menu'
 import { get, Content } from '/lib/xp/content'
-const { assetUrl } = __non_webpack_require__('/lib/xp/portal')
-const { createMenuTree, parseGlobalLinks } = __non_webpack_require__('/lib/ssb/parts/menu')
-const { localize } = __non_webpack_require__('/lib/xp/i18n')
-const {
-  data: { forceArray },
-} = __non_webpack_require__('/lib/util')
+import { assetUrl } from '/lib/xp/portal'
+import { localize } from '/lib/xp/i18n'
+import { Link, createMenuTree, parseGlobalLinks } from '/lib/ssb/parts/menu'
+import { Language } from '/lib/types/language'
+import * as util from '/lib/util'
+import { type MenuItem, type Footer } from '/site/content-types'
 
 export function getFooterContent(language: Language): FooterContent | undefined {
   if (language.footerId === undefined || language.footerId === null) {
@@ -33,8 +30,8 @@ export function getFooterContent(language: Language): FooterContent | undefined 
       linkedinUrl: footerContent.data.linkedinUrl,
       rssUrl: footerContent.data.rssUrl,
       globalLinks:
-        footerContent.data.globalLinks && forceArray(footerContent.data.globalLinks).length > 0
-          ? parseGlobalLinks(forceArray(footerContent.data.globalLinks))
+        footerContent.data.globalLinks && util.data.forceArray(footerContent.data.globalLinks).length > 0
+          ? parseGlobalLinks(util.data.forceArray(footerContent.data.globalLinks))
           : [],
       footerNavigation: footerContent.data.footerContentId ? createMenuTree(footerContent.data.footerContentId) : [],
       topButtonText: localize({
@@ -61,8 +58,4 @@ export interface FooterContent {
   footerNavigation?: Array<MenuItem>
   topButtonText?: string
   hiddenFooterText?: string
-}
-
-export interface FooterLib {
-  getFooterContent: (language: Language) => FooterContent | undefined
 }

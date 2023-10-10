@@ -1,17 +1,16 @@
 import { get as getContentByKey, getAttachmentStream, type ByteSource, type Content } from '/lib/xp/content'
-import type { RowData } from '/lib/ssb/parts/highcharts/data/htmlTable'
+import { getComponent, getContent } from '/lib/xp/portal'
+import { readText } from '/lib/xp/io'
+import { type RowData } from '/lib/ssb/parts/highcharts/data/htmlTable'
 import { isNumber, type RowValue } from '/lib/ssb/utils/utils'
 import { render } from '/lib/enonic/react4xp'
-import type { PreliminaryData, XmlParser } from '/lib/types/xmlParser'
-import type { Highmap } from '/site/content-types'
-import { getComponent, getContent } from '/lib/xp/portal'
+import { type PreliminaryData, type XmlParser } from '/lib/types/xmlParser'
 
-const {
-  data: { forceArray },
-} = __non_webpack_require__('/lib/util')
-const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
-const { readText } = __non_webpack_require__('/lib/xp/io')
-const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
+import * as util from '/lib/util'
+import { getPhrases } from '/lib/ssb/utils/language'
+import { renderError } from '/lib/ssb/error/error'
+import { Phrases } from '/lib/types/language'
+import { type Highmap } from '/site/content-types'
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 
 interface MapFeatures {
@@ -58,7 +57,7 @@ interface HighmapProps {
   legendTitle: Highmap['legendTitle']
   legendAlign: Highmap['legendAlign']
   footnoteText: Highmap['footnoteText']
-  phrases: object
+  phrases: Phrases | undefined
   language: string | undefined
 }
 
@@ -152,7 +151,7 @@ function renderPart(req: XP.Request, highmapId: string | undefined): XP.Response
     }
 
     const thresholdValues: Highmap['thresholdValues'] = highmapContent.data.thresholdValues
-      ? forceArray(highmapContent.data.thresholdValues)
+      ? util.data.forceArray(highmapContent.data.thresholdValues)
       : []
 
     const props: HighmapProps = {
@@ -169,7 +168,7 @@ function renderPart(req: XP.Request, highmapId: string | undefined): XP.Response
       seriesTitle: highmapContent.data.seriesTitle,
       legendTitle: highmapContent.data.legendTitle,
       legendAlign: highmapContent.data.legendAlign,
-      footnoteText: highmapContent.data.footnoteText ? forceArray(highmapContent.data.footnoteText) : [],
+      footnoteText: highmapContent.data.footnoteText ? util.data.forceArray(highmapContent.data.footnoteText) : [],
       phrases: getPhrases(page),
       language: page.language,
     }

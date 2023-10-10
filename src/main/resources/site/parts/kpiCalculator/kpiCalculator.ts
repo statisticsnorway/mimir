@@ -1,18 +1,18 @@
-import type { Content } from '/lib/xp/content'
-import { allMonths, lastPeriodKpi, monthLabel, nextPeriod } from '/lib/ssb/utils/calculatorUtils'
-import type { CalculatorPeriod } from '/lib/types/calculator'
-import type { Dataset } from '/lib/types/jsonstat-toolkit'
-import type { Language, Phrases } from '/lib/types/language'
-import { render } from '/lib/enonic/react4xp'
-import type { CalculatorConfig } from '/site/content-types'
-import { DropdownItems as MonthDropdownItems } from '/lib/types/components'
+import { type Content } from '/lib/xp/content'
 import { getContent, getComponent, serviceUrl, pageUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
+import { type CalculatorPeriod } from '/lib/types/calculator'
+import { type Dataset } from '/lib/types/jsonstat-toolkit'
+import { type Phrases } from '/lib/types/language'
+import { render } from '/lib/enonic/react4xp'
+import { DropdownItems as MonthDropdownItems } from '/lib/types/components'
+import { allMonths, lastPeriodKpi, monthLabel, nextPeriod } from '/lib/ssb/utils/calculatorUtils'
 
-const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
-const { getLanguage } = __non_webpack_require__('/lib/ssb/utils/language')
-const { getCalculatorConfig, getKpiDatasetMonth } = __non_webpack_require__('/lib/ssb/dataset/calculator')
-const { fromPartCache } = __non_webpack_require__('/lib/ssb/cache/partCache')
+import { renderError } from '/lib/ssb/error/error'
+import { getLanguage } from '/lib/ssb/utils/language'
+import { getCalculatorConfig, getKpiDatasetMonth } from '/lib/ssb/dataset/calculator'
+import { fromPartCache } from '/lib/ssb/cache/partCache'
+import { type CalculatorConfig } from '/site/content-types'
 
 export function get(req: XP.Request): XP.Response {
   try {
@@ -51,28 +51,28 @@ function getKpiCalculatorComponent(req: XP.Request, page: Content) {
 
   const frontPage = !!config.frontPage
   const frontPageIngress: string | null | undefined = config.ingressFrontpage && config.ingressFrontpage
-  const language: Language = getLanguage(page)
-  const phrases: Phrases = language.phrases as Phrases
+  const language = getLanguage(page)
+  const phrases: Phrases = language?.phrases as Phrases
   const calculatorConfig: Content<CalculatorConfig> | undefined = getCalculatorConfig()
-  const kpiDataMonth: Dataset | null = getKpiDatasetMonth(calculatorConfig)
+  const kpiDataMonth: Dataset | null = calculatorConfig ? getKpiDatasetMonth(calculatorConfig) : null
   const months: MonthDropdownItems = allMonths(phrases, frontPage)
   const lastUpdated: CalculatorPeriod = lastPeriodKpi(kpiDataMonth)
   const nextUpdate: CalculatorPeriod = nextPeriod(lastUpdated.month as string, lastUpdated.year as string)
   const nextReleaseMonth: number = (nextUpdate.month as number) === 12 ? 1 : (nextUpdate.month as number) + 1
   const nextPublishText: string = localize({
     key: 'calculatorNextPublishText',
-    locale: language.code,
+    locale: language?.code,
     values: [
-      monthLabel(months, language.code, lastUpdated.month as string),
+      monthLabel(months, language?.code, lastUpdated.month as string),
       lastUpdated.year as string,
-      monthLabel(months, language.code, nextUpdate.month as string),
-      monthLabel(months, language.code, nextReleaseMonth),
+      monthLabel(months, language?.code, nextUpdate.month as string),
+      monthLabel(months, language?.code, nextReleaseMonth),
     ],
   })
   const lastNumberText: string = localize({
     key: 'calculatorLastNumber',
-    locale: language.code,
-    values: [monthLabel(months, language.code, lastUpdated.month as string), lastUpdated.year as string],
+    locale: language?.code,
+    values: [monthLabel(months, language?.code, lastUpdated.month as string), lastUpdated.year as string],
   })
   const calculatorArticleUrl: string | null | undefined =
     config.kpiCalculatorArticle &&
@@ -86,7 +86,7 @@ function getKpiCalculatorComponent(req: XP.Request, page: Content) {
       kpiServiceUrl: serviceUrl({
         service: 'kpi',
       }),
-      language: language.code,
+      language: language?.code,
       months,
       phrases,
       calculatorArticleUrl,

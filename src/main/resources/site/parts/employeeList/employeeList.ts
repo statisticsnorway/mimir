@@ -1,10 +1,9 @@
 import { type Content, query, get as getContentByKey } from '/lib/xp/content'
-import type { Employee, Page } from '/site/content-types'
-import type { Default as DefaultPageConfig } from '/site/pages/default'
 import { getContent, getComponent, pageUrl } from '/lib/xp/portal'
+import { renderError } from '/lib/ssb/error/error'
 import { render } from '/lib/enonic/react4xp'
-
-const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
+import { type Employee, type Page } from '/site/content-types'
+import { type Default as DefaultPageConfig } from '/site/pages/default'
 
 export function get(req: XP.Request): XP.Response {
   try {

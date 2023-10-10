@@ -1,18 +1,17 @@
-import type { StaticVisualization as StaticVisualizationConfig } from '/site/macros/staticVisualization'
+import { renderError } from '/lib/ssb/error/error'
+import { type StaticVisualization as StaticVisualizationConfig } from '/site/macros/staticVisualization'
 
-const { preview } = __non_webpack_require__('../../parts/staticVisualization/staticVisualization')
+import { preview } from '../../parts/staticVisualization/staticVisualization'
 
-const { preview: dividerControllerPreview } = __non_webpack_require__('../../parts/divider/divider')
+import { preview as dividerControllerPreview } from '../../parts/divider/divider'
 
-const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
-
-exports.macro = (context: XP.MacroContext): XP.Response => {
+export const macro = (context: XP.MacroContext<StaticVisualizationConfig>): XP.Response => {
   try {
     const divider: XP.Response = dividerControllerPreview(context.request, {
       dark: false,
     })
 
-    const config: StaticVisualizationConfig = context.params
+    const config = context.params
     const staticVisualization: XP.Response = preview(context.request, config.staticVisualizationContent)
 
     if (staticVisualization.status && staticVisualization.status !== 200)

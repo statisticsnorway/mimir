@@ -1,13 +1,11 @@
+import * as taskLib from '/lib/xp/task'
 import { request, HttpResponse } from '/lib/http-client'
-import type { BanVarnishPageCache as BanVarnishPageCacheConfig } from '/tasks/banVarnishPageCache'
+import { type BanVarnishPageCache as BanVarnishPageCacheConfig } from '/tasks/banVarnishPageCache'
 
-const taskLib = __non_webpack_require__('/lib/xp/task')
-const {
-  data: { forceArray },
-} = __non_webpack_require__('/lib/util')
+import * as util from '/lib/util'
 
-exports.run = function (params: BanVarnishPageCacheConfig): void {
-  forceArray(params.pageIds).forEach((pageId) => {
+export function run(params: BanVarnishPageCacheConfig): void {
+  util.data.forceArray(params.pageIds).forEach((pageId) => {
     const result: HttpResponse = purgePageFromVarnish(pageId)
     taskLib.progress({
       info: 'sendt purge page request to varnish',

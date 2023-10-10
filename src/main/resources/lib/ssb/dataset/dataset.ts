@@ -1,30 +1,25 @@
 import { query, Content, ContentsResult } from '/lib/xp/content'
-import type { DataSource } from '/site/mixins/dataSource'
-import type { GenericDataImport } from '/site/content-types'
-import { DataSource as DataSourceType, DatasetRepoNode } from '/lib/ssb/repo/dataset'
-import { JSONstat } from '/lib/types/jsonstat-toolkit'
-import { StatbankSavedRaw, TbmlDataUniform } from '/lib/types/xmlParser'
 import { run, ContextParams } from '/lib/xp/context'
 import { getUser, User } from '/lib/xp/auth'
+import { JSONstat } from '/lib/types/jsonstat-toolkit'
+import { StatbankSavedRaw, TbmlDataUniform } from '/lib/types/xmlParser'
+import {
+  DataSource as DataSourceType,
+  DatasetRepoNode,
+  createOrUpdateDataset,
+  deleteDataset as deleteDatasetFromRepo,
+  DATASET_BRANCH,
+} from '/lib/ssb/repo/dataset'
 import { TbprocessorParsedResponse } from '/lib/ssb/dataset/tbprocessor/tbml'
 
-const { Events } = __non_webpack_require__('/lib/ssb/repo/query')
-const { getStatbankApi, fetchStatbankApiData, getStatbankApiKey } = __non_webpack_require__(
-  '/lib/ssb/dataset/statbankApi/statbankApi'
-)
-const { getStatbankSaved, fetchStatbankSavedData } = __non_webpack_require__(
-  '/lib/ssb/dataset/statbankSaved/statbankSaved'
-)
-const { getTbprocessor, getTbprocessorKey, fetchTbprocessorData } = __non_webpack_require__(
-  '/lib/ssb/dataset/tbprocessor/tbprocessor'
-)
-const { getKlass, getKlassKey, fetchKlassData } = __non_webpack_require__('/lib/ssb/dataset/klass/klass')
-const {
-  createOrUpdateDataset,
-  deleteDataset: deleteDatasetFromRepo,
-  DATASET_BRANCH,
-} = __non_webpack_require__('/lib/ssb/repo/dataset')
-const { ENONIC_CMS_DEFAULT_REPO } = __non_webpack_require__('/lib/ssb/repo/common')
+import { Events } from '/lib/ssb/repo/query'
+import { getStatbankApi, fetchStatbankApiData, getStatbankApiKey } from '/lib/ssb/dataset/statbankApi/statbankApi'
+import { getStatbankSaved, fetchStatbankSavedData } from '/lib/ssb/dataset/statbankSaved/statbankSaved'
+import { getTbprocessor, getTbprocessorKey, fetchTbprocessorData } from '/lib/ssb/dataset/tbprocessor/tbprocessor'
+import { getKlass, getKlassKey, fetchKlassData } from '/lib/ssb/dataset/klass/klass'
+import { ENONIC_CMS_DEFAULT_REPO } from '/lib/ssb/repo/common'
+import { type GenericDataImport } from '/site/content-types'
+import { type DataSource } from '/site/mixins/dataSource'
 
 export function getDataset(
   content: Content<DataSource>,
@@ -236,20 +231,4 @@ export interface CreateOrUpdateStatus {
   user: User | null
   newDataset?: object
   branch?: string
-}
-
-export interface DatasetLib {
-  getDataset: (
-    content: Content<DataSource>,
-    branch?: string
-  ) => DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null
-  extractKey: (content: Content<DataSource>) => string
-  refreshDataset: (content: Content<DataSource>, branch?: string, processXml?: string) => CreateOrUpdateStatus
-  refreshDatasetWithUserKey: (content: Content<DataSource>, userLogin: string, branch?: string) => CreateOrUpdateStatus
-  deleteDataset: (content: Content<DataSource>, branch?: string) => boolean
-  getContentWithDataSource: () => Array<Content<DataSource>>
-  isDataNew: (
-    data: JSONstat | TbmlDataUniform | object,
-    dataset: DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null
-  ) => boolean
 }

@@ -1,13 +1,12 @@
-import { formatDate } from '/lib/ssb/utils/dateUtils'
-import { render as r4xpRender } from '/lib/enonic/react4xp'
-import type { ProfiledBox as ProfiledBoxPartConfig } from '.'
+import { getContent, getComponent, pageUrl } from '/lib/xp/portal'
 import { render } from '/lib/thymeleaf'
 import { randomUnsafeString } from '/lib/ssb/utils/utils'
-import { getContent, getComponent, pageUrl } from '/lib/xp/portal'
-import { imageUrl } from '/lib/ssb/utils/imageUtils'
+import { render as r4xpRender } from '/lib/enonic/react4xp'
+import { formatDate } from '/lib/ssb/utils/dateUtils'
+import { imageUrl, getImageAlt } from '/lib/ssb/utils/imageUtils'
 
-const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
-const { getImageAlt } = __non_webpack_require__('/lib/ssb/utils/imageUtils')
+import { renderError } from '/lib/ssb/error/error'
+import { type ProfiledBox as ProfiledBoxPartConfig } from '.'
 
 const view = resolve('profiledBox.html')
 

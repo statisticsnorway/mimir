@@ -1,12 +1,11 @@
-import { render } from '/lib/enonic/react4xp'
-import type { Content, ContentsResult } from '/lib/xp/content'
-import type { PreparedArticles } from '/lib/ssb/utils/articleUtils'
-import type { Article } from '/site/content-types'
+import { type Content, type ContentsResult } from '/lib/xp/content'
 import { getContent, serviceUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
+import { type PreparedArticles, getChildArticles, prepareArticles } from '/lib/ssb/utils/articleUtils'
+import { render } from '/lib/enonic/react4xp'
 
-const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
-const { getChildArticles, prepareArticles } = __non_webpack_require__('/lib/ssb/utils/articleUtils')
+import { isEnabled } from '/lib/featureToggle'
+import { type Article } from '/site/content-types'
 
 export function get(req: XP.Request) {
   return renderPart(req)

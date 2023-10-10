@@ -1,7 +1,7 @@
 import { type SendMessageParams, send } from '/lib/xp/mail'
 import { type HttpRequestParams, type HttpResponse, request } from '/lib/http-client'
 
-exports.post = (req: XP.Request): XP.Response => {
+export const post = (req: XP.Request): XP.Response => {
   const formData: ContactFormData = JSON.parse(req.body)
 
   log.info('\n\n## data\n--------------\n%s\n', JSON.stringify(formData, null, 4))

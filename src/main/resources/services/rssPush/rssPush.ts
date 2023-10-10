@@ -1,6 +1,6 @@
-const { pushRssNews } = __non_webpack_require__('/lib/ssb/cron/pushRss')
+import { pushRssNews } from '/lib/ssb/cron/pushRss'
 
-exports.get = function (): XP.Response {
+export function get(): XP.Response {
   return {
     body: pushRssNews(),
     contentType: 'text/html',

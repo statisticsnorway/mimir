@@ -1,25 +1,27 @@
-import type { Content } from '/lib/xp/content'
-import { render } from '/lib/thymeleaf'
-import type { ReleaseDatesVariant, StatisticInListing, VariantInListing } from '/lib/ssb/dashboard/statreg/types'
-import { formatDate } from '/lib/ssb/utils/dateUtils'
-import { render as r4xpRender } from '/lib/enonic/react4xp'
-import type { Statistics } from '/site/content-types'
-import type { Phrases } from '/lib/types/language'
-import { randomUnsafeString } from '/lib/ssb/utils/utils'
+import { type Content } from '/lib/xp/content'
 import { getContent, pageUrl } from '/lib/xp/portal'
-import { isAfter } from '/lib/ssb/utils/dateUtils'
+import { sleep } from '/lib/xp/task'
+import { render } from '/lib/thymeleaf'
+import {
+  type ReleaseDatesVariant,
+  type StatisticInListing,
+  type VariantInListing,
+} from '/lib/ssb/dashboard/statreg/types'
+import { formatDate, isAfter } from '/lib/ssb/utils/dateUtils'
+import { render as r4xpRender } from '/lib/enonic/react4xp'
+import { type Phrases } from '/lib/types/language'
+import { randomUnsafeString } from '/lib/ssb/utils/utils'
 
-const { getStatisticByIdFromRepo, getReleaseDatesByVariants } = __non_webpack_require__('/lib/ssb/statreg/statistics')
-const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
-const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
-const { preview: keyFigurePreview } = __non_webpack_require__('../keyFigure/keyFigure')
-const { hasWritePermissionsAndPreview } = __non_webpack_require__('/lib/ssb/parts/permissions')
-const { sleep } = __non_webpack_require__('/lib/xp/task')
-const { currentlyWaitingForPublish } = __non_webpack_require__('/lib/ssb/dataset/publish')
-const { currentlyWaitingForPublish: currentlyWaitingForPublishOld } =
-  __non_webpack_require__('/lib/ssb/dataset/publishOld')
-const util = __non_webpack_require__('/lib/util')
-const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
+import { getStatisticByIdFromRepo, getReleaseDatesByVariants } from '/lib/ssb/statreg/statistics'
+import { getPhrases } from '/lib/ssb/utils/language'
+import { renderError } from '/lib/ssb/error/error'
+import { hasWritePermissionsAndPreview } from '/lib/ssb/parts/permissions'
+import { currentlyWaitingForPublish } from '/lib/ssb/dataset/publish'
+import { currentlyWaitingForPublish as currentlyWaitingForPublishOld } from '/lib/ssb/dataset/publishOld'
+import * as util from '/lib/util'
+import { isEnabled } from '/lib/featureToggle'
+import { type Statistics } from '/site/content-types'
+import { preview as keyFigurePreview } from '../keyFigure/keyFigure'
 
 const view = resolve('./statistics.html')
 
@@ -42,7 +44,7 @@ function renderPart(req: XP.Request): XP.Response {
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-  const phrases: Phrases = getPhrases(page)
+  const phrases = getPhrases(page) as Phrases
   const wait: number =
     app.config && app.config['ssb.statistics.publishWait'] ? parseInt(app.config['ssb.statistics.publishWait']) : 100
   const maxWait: number =

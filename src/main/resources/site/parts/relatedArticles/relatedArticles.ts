@@ -1,23 +1,25 @@
 import { type Content, get as getContentByKey, query } from '/lib/xp/content'
-import { render } from '/lib/thymeleaf'
-import type { ReleaseDatesVariant, StatisticInListing, VariantInListing } from '/lib/ssb/dashboard/statreg/types'
-import { formatDate } from '/lib/ssb/utils/dateUtils'
-import type { Phrases } from '/lib/types/language'
-import { render as r4xpRender } from '/lib/enonic/react4xp'
-import type { Article, Statistics } from '/site/content-types'
-import type { RelatedArticles } from '/site/mixins/relatedArticles'
-
 import { getContent, pageUrl, imagePlaceholder } from '/lib/xp/portal'
-import { imageUrl } from '/lib/ssb/utils/imageUtils'
+import { render } from '/lib/thymeleaf'
+import { type Phrases } from '/lib/types/language'
+import { render as r4xpRender } from '/lib/enonic/react4xp'
 
-const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
-const util = __non_webpack_require__('/lib/util')
-const { getImageAlt } = __non_webpack_require__('/lib/ssb/utils/imageUtils')
-const { getReleaseDatesByVariants } = __non_webpack_require__('/lib/ssb/statreg/statistics')
-const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
-const { fromRelatedArticlesCache } = __non_webpack_require__('/lib/ssb/cache/cache')
-const { getStatisticByIdFromRepo } = __non_webpack_require__('/lib/ssb/statreg/statistics')
-const { hasWritePermissionsAndPreview } = __non_webpack_require__('/lib/ssb/parts/permissions')
+import { formatDate } from '/lib/ssb/utils/dateUtils'
+import {
+  type ReleaseDatesVariant,
+  type StatisticInListing,
+  type VariantInListing,
+} from '/lib/ssb/dashboard/statreg/types'
+import { imageUrl, getImageAlt } from '/lib/ssb/utils/imageUtils'
+
+import { renderError } from '/lib/ssb/error/error'
+import * as util from '/lib/util'
+import { getReleaseDatesByVariants, getStatisticByIdFromRepo } from '/lib/ssb/statreg/statistics'
+import { getPhrases } from '/lib/ssb/utils/language'
+import { fromRelatedArticlesCache } from '/lib/ssb/cache/cache'
+import { hasWritePermissionsAndPreview } from '/lib/ssb/parts/permissions'
+import { type RelatedArticles } from '/site/mixins/relatedArticles'
+import { type Article, type Statistics } from '/site/content-types'
 
 const view = resolve('./relatedArticles.html')
 
@@ -47,7 +49,7 @@ function renderPart(req: XP.Request, relatedArticles: RelatedArticles['relatedAr
   if (!page) throw Error('No page found')
 
   const language: string = page.language === 'en' || page.language === 'nn' ? page.language : 'nb'
-  const phrases: Phrases = getPhrases(page)
+  const phrases = getPhrases(page) as Phrases
   const showPreview: boolean = (req.params.showDraft && hasWritePermissionsAndPreview(req, page._id)) as boolean
   if (page.type === `${app.name}:statistics`) {
     addDsArticle(page, relatedArticles, showPreview)

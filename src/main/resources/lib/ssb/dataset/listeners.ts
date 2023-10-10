@@ -1,14 +1,14 @@
 import { query, Content, ContentsResult } from '/lib/xp/content'
 import { listener, EnonicEvent, EnonicEventData } from '/lib/xp/event'
-import type { DataSource } from '/site/mixins/dataSource'
 import { run } from '/lib/xp/context'
 
-const { refreshDataset } = __non_webpack_require__('/lib/ssb/dataset/dataset')
-const { runOnMasterOnly, cronContext } = __non_webpack_require__('/lib/ssb/cron/cron')
-const { DataSource: DataSourceType } = __non_webpack_require__('/lib/ssb/repo/dataset')
-const { ENONIC_CMS_DEFAULT_REPO } = __non_webpack_require__('/lib/ssb/repo/common')
-const { executeFunction, sleep, isRunning } = __non_webpack_require__('/lib/xp/task')
-const { autoRefreshLog } = __non_webpack_require__('/lib/ssb/utils/serverLog')
+import { executeFunction, sleep, isRunning } from '/lib/xp/task'
+import { refreshDataset } from '/lib/ssb/dataset/dataset'
+import { runOnMasterOnly, cronContext } from '/lib/ssb/cron/cron'
+import { DataSource as DataSourceType } from '/lib/ssb/repo/dataset'
+import { ENONIC_CMS_DEFAULT_REPO } from '/lib/ssb/repo/common'
+import { autoRefreshLog } from '/lib/ssb/utils/serverLog'
+import { type DataSource } from '/site/mixins/dataSource'
 
 let refreshQueue: Array<Content<DataSource>> = []
 let refreshTask: string | null = null
@@ -93,8 +93,4 @@ function startRefreshTask(): void {
     autoRefreshLog('task already running')
     // do nothing
   }
-}
-
-export interface DatasetListenersLib {
-  setupFetchDataOnCreateListener: () => void
 }

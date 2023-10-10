@@ -1,4 +1,6 @@
-import type { Article } from '/site/content-types'
+import { get, modify, query, type Content, ContentsResult } from '/lib/xp/content'
+import { pageUrl } from '/lib/xp/portal'
+import { listener, EnonicEvent } from '/lib/xp/event'
 import {
   getAllMainSubjectByContent,
   getAllSubSubjectByContent,
@@ -8,11 +10,9 @@ import {
 } from '/lib/ssb/utils/subjectUtils'
 import { formatDate } from '/lib/ssb/utils/dateUtils'
 import { notNullOrUndefined } from '/lib/ssb/utils/coreUtils'
-import { get, modify, query, type Content, ContentsResult } from '/lib/xp/content'
-import { pageUrl } from '/lib/xp/portal'
-import { listener, EnonicEvent } from '/lib/xp/event'
 import { ENONIC_CMS_DEFAULT_REPO, withSuperUserContext } from '/lib/ssb/repo/common'
 import { arraysEqual, ensureArray } from '/lib/ssb/utils/arrayUtils'
+import { type Article } from '/site/content-types'
 
 const dummyReq: Partial<XP.Request> = {
   branch: 'master',
@@ -143,18 +143,6 @@ function shouldEdit(mainSubjects: Array<string>, subSubjects: Array<string>, art
   // Should skip editing if content already contains xdata equal to what it should have
   if (mainIdentical && subIdentical) return false
   else return true
-}
-
-export interface ArticleUtilsLib {
-  getChildArticles: (
-    currentPath: string,
-    subTopicId: string,
-    start: number,
-    count: number,
-    sort: string
-  ) => ContentsResult<Content<Article>>
-  prepareArticles: (articles: ContentsResult<Content<Article>>, language: string) => Array<PreparedArticles>
-  getAllArticles: (req: XP.Request, language: string, start: number, count: number) => ArticleResult
 }
 
 export interface PreparedArticles {

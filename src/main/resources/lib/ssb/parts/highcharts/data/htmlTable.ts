@@ -1,17 +1,14 @@
+import * as striptags from 'striptags'
+import { Content } from '/lib/xp/content'
 import { AreaLineLinearData, PieData, Series, SeriesAndCategories } from '/lib/ssb/parts/highcharts/highchartsData'
 import { XmlParser, PreliminaryData, TableRowUniform, TableCellUniform } from '/lib/types/xmlParser'
-import { Content } from '/lib/xp/content'
-import type { Highchart } from '/site/content-types'
-import { RowValue } from '/lib/ssb/utils/utils'
+import { RowValue, getRowValue } from '/lib/ssb/utils/utils'
 import { toString } from '/lib/vendor/ramda'
 // @ts-ignore
-import striptags from 'striptags'
 
-const {
-  data: { forceArray },
-} = __non_webpack_require__('/lib/util')
+import * as util from '/lib/util'
+import { type Highchart } from '/site/content-types'
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
-const { getRowValue } = __non_webpack_require__('/lib/ssb/utils/utils')
 
 export function seriesAndCategoriesFromHtmlTable(highChartsContent: Content<Highchart>): SeriesAndCategories {
   let stringJson: string | undefined
@@ -21,7 +18,7 @@ export function seriesAndCategoriesFromHtmlTable(highChartsContent: Content<High
     stringJson = __.toNativeObject(xmlParser.parse(sanitized))
   }
   const result: Table | undefined = stringJson ? JSON.parse(stringJson) : undefined
-  const tbody: Array<TableRowUniform> = result ? forceArray(result.table.tbody) : []
+  const tbody: Array<TableRowUniform> = result ? util.data.forceArray(result.table.tbody) : []
   const rows: TableRowUniform['tr'] = tbody[0].tr
   const categories: Array<number | string> = rows.reduce(
     (previous: Array<number | string>, tr: RowData, index: number) => {
@@ -82,7 +79,7 @@ function convertToCorrectGraphFormat(
   if (graphType === 'pie') {
     return {
       categories: seriesAndCategories.categories,
-      series: forceArray(dataFormatPie(seriesAndCategories)),
+      series: util.data.forceArray(dataFormatPie(seriesAndCategories)),
     }
   } else if ((graphType === 'area' || graphType === 'line') && xAxisType === 'linear') {
     return {
@@ -100,7 +97,7 @@ function convertToCorrectGraphFormat(
   } else {
     return {
       categories: seriesAndCategories.categories,
-      series: forceArray(dataFormatDefault(seriesAndCategories)),
+      series: util.data.forceArray(dataFormatDefault(seriesAndCategories)),
     }
   }
 }
@@ -108,7 +105,7 @@ function convertToCorrectGraphFormat(
 export function dataFormatDefault(seriesAndCategories: SeriesAndCategoriesRaw): Series {
   return {
     name: 'something',
-    data: forceArray(seriesAndCategories.series[0].data[0]),
+    data: util.data.forceArray(seriesAndCategories.series[0].data[0]),
   }
 }
 
@@ -118,7 +115,7 @@ function dataFormatAreaLineLinear(seriesAndCategories: SeriesAndCategoriesRaw): 
       name: cat,
       data: seriesAndCategories.series.map((row): AreaLineLinearData => {
         const name: number | string = row.name
-        const rowValue: RowValue = getRowValue(forceArray(row.data)[index])
+        const rowValue: RowValue = getRowValue(util.data.forceArray(row.data)[index])
 
         return [name, rowValue]
       }),
@@ -168,9 +165,4 @@ export interface SeriesRaw {
 interface SeriesAndCategoriesRaw {
   categories: Array<number | string>
   series: Array<SeriesRaw>
-}
-
-export interface HighchartsHtmlTableLib {
-  seriesAndCategoriesFromHtmlTable: (highChartsContent: Content<Highchart>) => SeriesAndCategories
-  dataFormatDefault: (seriesAndCategories: SeriesAndCategoriesRaw) => Series
 }

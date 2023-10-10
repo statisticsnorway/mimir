@@ -1,18 +1,18 @@
-import type { Content } from '/lib/xp/content'
-import { allMonths, monthLabel, nextPeriod } from '/lib/ssb/utils/calculatorUtils'
-import type { CalculatorPeriod } from '/lib/types/calculator'
-import { DropdownItems as MonthDropdownItems } from '/lib/types/components'
-import type { Dataset, Dimension } from '/lib/types/jsonstat-toolkit'
-import type { Language, Phrases } from '/lib/types/language'
-import { render } from '/lib/enonic/react4xp'
-import type { CalculatorConfig } from '/site/content-types'
+import { type Content } from '/lib/xp/content'
 import { getContent, getComponent, serviceUrl, pageUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
+import { type CalculatorPeriod } from '/lib/types/calculator'
+import { DropdownItems as MonthDropdownItems } from '/lib/types/components'
+import { type Dataset, type Dimension } from '/lib/types/jsonstat-toolkit'
+import { type Phrases } from '/lib/types/language'
+import { render } from '/lib/enonic/react4xp'
+import { allMonths, monthLabel, nextPeriod } from '/lib/ssb/utils/calculatorUtils'
 
-const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
-const { getLanguage } = __non_webpack_require__('/lib/ssb/utils/language')
-const { getCalculatorConfig, getPifDataset } = __non_webpack_require__('/lib/ssb/dataset/calculator')
-const { fromPartCache } = __non_webpack_require__('/lib/ssb/cache/partCache')
+import { renderError } from '/lib/ssb/error/error'
+import { getLanguage } from '/lib/ssb/utils/language'
+import { getCalculatorConfig, getPifDataset } from '/lib/ssb/dataset/calculator'
+import { fromPartCache } from '/lib/ssb/cache/partCache'
+import { type CalculatorConfig } from '/site/content-types'
 
 export function get(req: XP.Request): XP.Response {
   try {
@@ -46,28 +46,28 @@ function getPifCalculatorComponent(req: XP.Request, page: Content) {
   const partConfig = getComponent<XP.PartComponent.PifCalculator>()?.config
   if (!partConfig) throw Error('No part config found')
 
-  const language: Language = getLanguage(page)
-  const phrases: Phrases = language.phrases as Phrases
+  const language = getLanguage(page)
+  const phrases: Phrases = language?.phrases as Phrases
   const months: MonthDropdownItems = allMonths(phrases)
   const config: Content<CalculatorConfig> | undefined = getCalculatorConfig()
-  const pifData: Dataset | null = getPifDataset(config)
+  const pifData: Dataset | null = config ? getPifDataset(config) : null
   const lastUpdated: CalculatorPeriod | undefined = lastPeriod(pifData) as CalculatorPeriod
   const nextUpdate: CalculatorPeriod = nextPeriod(lastUpdated.month as string, lastUpdated.year as string)
   const nextReleaseMonth: number = (nextUpdate.month as number) === 12 ? 1 : (nextUpdate.month as number) + 1
   const nextPublishText: string = localize({
     key: 'calculatorNextPublishText',
-    locale: language.code,
+    locale: language?.code,
     values: [
-      monthLabel(months, language.code, lastUpdated.month),
+      monthLabel(months, language?.code, lastUpdated.month),
       lastUpdated.year as string,
-      monthLabel(months, language.code, nextUpdate.month),
-      monthLabel(months, language.code, nextReleaseMonth),
+      monthLabel(months, language?.code, nextUpdate.month),
+      monthLabel(months, language?.code, nextReleaseMonth),
     ],
   })
   const lastNumberText: string = localize({
     key: 'calculatorLastNumber',
-    locale: language.code,
-    values: [monthLabel(months, language.code, lastUpdated.month), lastUpdated.year as string],
+    locale: language?.code,
+    values: [monthLabel(months, language?.code, lastUpdated.month), lastUpdated.year as string],
   })
   const calculatorArticleUrl: string | undefined = partConfig.pifCalculatorArticle
     ? pageUrl({
@@ -81,7 +81,7 @@ function getPifCalculatorComponent(req: XP.Request, page: Content) {
       pifServiceUrl: serviceUrl({
         service: 'pif',
       }),
-      language: language.code,
+      language: language?.code,
       months,
       phrases,
       nextPublishText,
