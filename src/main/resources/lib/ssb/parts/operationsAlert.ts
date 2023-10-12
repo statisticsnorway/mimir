@@ -1,12 +1,11 @@
 import { query } from '/lib/xp/content'
 import { getContent } from '/lib/xp/portal'
 
-const contentTypeName = `${app.name}:operationsAlert`
-
 export const list = () => {
   const now = new Date()
+
   return query({
-    contentTypes: [contentTypeName],
+    contentTypes: [`${app.name}:operationsAlert`],
     query: `publish.from LIKE '*' AND (publish.to NOT LIKE '*' OR publish.to > '${now.toISOString()}')`,
     filters: {
       boolean: {
