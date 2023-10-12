@@ -1,6 +1,6 @@
 # ---
 # kind: pipeline
-# type: docker
+# type: docker   
 # name: "Test Environment"
 # # Builds and tests on pull request. Required success before merge can happen.
 # trigger:
