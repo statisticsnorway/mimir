@@ -4,8 +4,6 @@ import { AreaLineLinearData, PieData, Series, SeriesAndCategories } from '/lib/s
 import { XmlParser, PreliminaryData, TableRowUniform, TableCellUniform } from '/lib/types/xmlParser'
 import { RowValue, getRowValue } from '/lib/ssb/utils/utils'
 import { toString } from '/lib/vendor/ramda'
-// @ts-ignore
-
 import * as util from '/lib/util'
 import { type Highchart } from '/site/content-types'
 

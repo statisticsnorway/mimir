@@ -99,7 +99,6 @@ function getPifCalculatorComponent(req: XP.Request, page: Content) {
 }
 
 function lastPeriod(pifData: Dataset | null): CalculatorPeriod | undefined {
-  // eslint-disable-next-line new-cap
   const pifDataDimension: Dimension | null = pifData?.Dimension('Tid') as Dimension
   const dataTime: string | undefined = pifDataDimension?.id as string
 

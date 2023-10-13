@@ -5,13 +5,11 @@ import { run } from '/lib/xp/context'
 import { connect, CreateNodeParams, type RepoConnection } from '/lib/xp/node'
 import { type Data, type Dataset, type Dimension } from '/lib/types/jsonstat-toolkit'
 import { type DatasetRepoNode } from '/lib/ssb/repo/dataset'
-// @ts-ignore
-
-export const REPO_ID_NAME_GRAPH: 'no.ssb.name.graph' = 'no.ssb.name.graph' as const
-const { getNameGraphDataWithConfig } = __non_webpack_require__('/lib/ssb/dataset/calculator')
+import { getNameGraphDataWithConfig } from '/lib/ssb/dataset/calculator'
+import { getRepo } from '/lib/ssb/repo/repo'
 import * as util from '/lib/util'
 
-const { getRepo } = __non_webpack_require__('/lib/ssb/repo/repo')
+export const REPO_ID_NAME_GRAPH: 'no.ssb.name.graph' = 'no.ssb.name.graph' as const
 
 export function nameGraphRepoExists(): boolean {
   return !!getRepo(REPO_ID_NAME_GRAPH, 'master')

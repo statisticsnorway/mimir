@@ -22,7 +22,6 @@ export function filter(req: XP.Request, next: (req: XP.Request) => XP.Response):
   const pageTitle = createPageTitle(req.path, municipality)
 
   if (paramKommune) {
-    // @ts-ignore HMMMMMM this is probably really hacky
     req.params = {
       selfRequest: 'true',
       municipality: JSON.stringify(municipality),

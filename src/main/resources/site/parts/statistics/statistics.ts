@@ -42,8 +42,6 @@ function renderPart(req: XP.Request): XP.Response {
   const page = getContent<Content<Statistics>>()
   if (!page) throw Error('No page found')
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   const phrases = getPhrases(page) as Phrases
   const wait: number =
     app.config && app.config['ssb.statistics.publishWait'] ? parseInt(app.config['ssb.statistics.publishWait']) : 100

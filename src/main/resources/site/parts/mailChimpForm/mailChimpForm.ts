@@ -9,7 +9,7 @@ export function get(req: XP.Request) {
   if (!config) throw Error('No part found')
 
   const currentContent = getContent() ?? ({} as Content)
-  const phrases: Phrases = getPhrases(currentContent) as Phrases
+  const phrases = getPhrases(currentContent) as Phrases
 
   const props: PartProps = {
     text: config.text ?? '',

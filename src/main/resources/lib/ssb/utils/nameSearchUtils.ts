@@ -5,7 +5,6 @@ import { type Content } from '/lib/xp/content'
 import { type DatasetRepoNode } from '/lib/ssb/repo/dataset'
 import { type Data, type Dataset, type Dimension } from '/lib/types/jsonstat-toolkit'
 import { getNameGraphDataFromRepo, type NameData, nameGraphRepoExists } from '/lib/ssb/repo/nameGraph'
-// @ts-ignore
 import { request, HttpRequestParams, HttpResponse } from '/lib/http-client'
 
 import { getCalculatorConfig, getNameSearchGraphData } from '/lib/ssb/dataset/calculator'

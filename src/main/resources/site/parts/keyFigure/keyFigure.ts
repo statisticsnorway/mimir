@@ -17,7 +17,7 @@ export function get(req: XP.Request): XP.Response {
     if (!config) throw Error('No part found')
 
     const keyFigureIds: Array<string> | [] = config.figure ? util.data.forceArray(config.figure) : []
-    const municipality: MunicipalityWithCounty | undefined = getMunicipality(req)
+    const municipality: MunicipalityWithCounty | undefined = getMunicipality(req as RequestWithCode)
     return renderPart(req, municipality, keyFigureIds)
   } catch (e) {
     return renderError(req, 'Error in part', e)
@@ -32,7 +32,7 @@ export function preview(req: XP.Request, id: string): XP.Response {
     const defaultMunicipality: XP.SiteConfig['defaultMunicipality'] = siteConfig.defaultMunicipality
     const municipality: MunicipalityWithCounty | undefined = getMunicipality({
       code: defaultMunicipality,
-    } as unknown as RequestWithCode)
+    } as RequestWithCode)
     return renderPart(req, municipality, [id])
   } catch (e) {
     return renderError(req, 'Error in part', e)

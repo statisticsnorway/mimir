@@ -52,7 +52,7 @@ function getKpiCalculatorComponent(req: XP.Request, page: Content) {
   const frontPage = !!config.frontPage
   const frontPageIngress: string | null | undefined = config.ingressFrontpage && config.ingressFrontpage
   const language = getLanguage(page)
-  const phrases: Phrases = language?.phrases as Phrases
+  const phrases = language?.phrases as Phrases
   const calculatorConfig: Content<CalculatorConfig> | undefined = getCalculatorConfig()
   const kpiDataMonth: Dataset | null = calculatorConfig ? getKpiDatasetMonth(calculatorConfig) : null
   const months: MonthDropdownItems = allMonths(phrases, frontPage)

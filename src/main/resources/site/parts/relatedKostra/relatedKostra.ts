@@ -15,7 +15,7 @@ export function get(req: XP.Request): XP.Response {
 
       municipality = getMunicipality({
         code: siteConfig.defaultMunicipality,
-      } as unknown as RequestWithCode)
+      } as RequestWithCode)
     }
     return renderPart(req, municipality)
   } catch (e) {

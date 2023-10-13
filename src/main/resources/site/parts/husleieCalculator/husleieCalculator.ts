@@ -43,7 +43,7 @@ function getHusleiekalkulator(req: XP.Request, page: Content) {
   if (!config) throw Error('No part found')
 
   const language = getLanguage(page)
-  const phrases: Phrases = language?.phrases as Phrases
+  const phrases = language?.phrases as Phrases
   const calculatorConfig = getCalculatorConfig()
   const kpiDataMonth: Dataset | null = calculatorConfig ? getKpiDatasetMonth(calculatorConfig) : null
   const months: MonthDropdownItems = allMonths(phrases, false, 'husleie')

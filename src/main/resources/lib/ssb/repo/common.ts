@@ -1,13 +1,5 @@
 import { getUser, User, type PrincipalKey } from '/lib/xp/auth'
-import {
-  connect,
-  RepoConnection,
-  type Node,
-  type CreateNodeParams,
-  type QueryNodeParams,
-  type FindNodesByParentResult,
-  type NodeQueryResult,
-} from '/lib/xp/node'
+import { connect, RepoConnection, type Node, type CreateNodeParams, type QueryNodeParams } from '/lib/xp/node'
 import { run } from '/lib/xp/context'
 import { EditorCallback } from '/lib/ssb/repo/eventLog'
 
@@ -107,7 +99,6 @@ export function getChildNodes(
   childOrder = '_ts DESC'
 ) {
   return withConnection(repository, branch, (conn) => {
-    // @ts-ignore https://github.com/enonic/xp/issues/10138
     return conn.findChildren({
       parentKey: key,
       count,

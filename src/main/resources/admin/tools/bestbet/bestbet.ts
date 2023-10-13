@@ -29,8 +29,7 @@ export const preview = (req: XP.Request): XP.Response => {
 }
 
 function renderPart(req: XP.Request): XP.Response {
-  // @ts-ignore
-  const DEFAULT_CONTENTSTUDIO_URL: string = getToolUrl('com.enonic.app.contentstudio', 'main')
+  const DEFAULT_CONTENTSTUDIO_URL = getToolUrl('com.enonic.app.contentstudio', 'main')
   const ENONIC_PROJECT_ID: string =
     app.config && app.config['ssb.project.id'] ? app.config['ssb.project.id'] : 'default'
 

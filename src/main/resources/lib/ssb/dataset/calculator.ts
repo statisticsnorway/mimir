@@ -5,8 +5,6 @@ import { Dataset, JSONstat as JSONstatType } from '/lib/types/jsonstat-toolkit'
 import { DatasetRepoNode } from '/lib/ssb/repo/dataset'
 import { datasetOrUndefined } from '/lib/ssb/cache/cache'
 import { type CalculatorConfig, type GenericDataImport } from '/site/content-types'
-/* eslint-disable new-cap */
-// @ts-ignore
 import { type DataSource } from '/site/mixins/dataSource'
 
 export function getCalculatorConfig(): Content<CalculatorConfig> | undefined {
