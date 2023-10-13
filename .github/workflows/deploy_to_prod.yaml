@@ -1,18 +1,18 @@
-name: 'Deploy to QA'
+name: 'Deploy to PROD'
 on:
   push:
     branches:
-      - 'develop'
+      - 'master'
 
 concurrency:
-  group: mimir-qa
+  group: mimir-prod
   cancel-in-progress: true
 
 jobs:
   deploy_to_qa:
-    name: 'Deploy to QA'
+    name: 'Deploy to PROD'
     runs-on: 'ubuntu-latest'
-    environment: 'QA'
+    environment: 'PROD'
     steps:
       - id: build_app
         uses: enonic/release-tools/build-and-publish@master
@@ -21,9 +21,9 @@ jobs:
       - id: deploy_app_to_XP
         uses: 'enonic/action-app-deploy@main'
         with:
-          url: ${{ secrets.ENONIC_QA_URL }}
+          url: ${{ secrets.ENONIC_PROD_URL }}
           username: ${{ secrets.ENONIC_USER }}
-          password: ${{ secrets.ENONIC_QA_PASS }}
+          password: ${{ secrets.ENONIC_PROD_PASS }}
           client_cert: ${{ secrets.ENONIC_CERT }}
           client_key: ${{ secrets.ENONIC_KEY }}
           app_jar: "./build/libs/*.jar"
@@ -32,7 +32,7 @@ jobs:
         if: success()
         uses: actions/upload-artifact@v3
         with:
-          name: mimir-qa-${{ github.run_number }}
+          name: mimir-prod-${{ github.run_number }}
           path: "./build/libs/*.jar"
       - name: Send success message to Slack
         id: slack_success
@@ -75,7 +75,7 @@ jobs:
               ]
             }
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_ALERTS_QA }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_ALERTS_PROD }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
       - name: Send failure message to Slack
         id: slack_failure
@@ -118,20 +118,3 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_MIMIR_UTV }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-  mabl_test:
-    # Run this job after deploy is finished, and only run if deploy succeeded
-    needs: deploy_to_qa
-    if: ${{ always() && contains(join(needs.*.result, ','), 'success') }}
-    runs-on: ubuntu-latest
-    container: node:lts
-    steps:
-      - name: Git checkout
-        uses: actions/checkout@v3
-      - name: Branch name and commit hash
-        run: |
-              echo running on branch ${GITHUB_HEAD_REF##*/} or ${GITHUB_REF##*/}
-              echo running $(echo $GITHUB_SHA | cut -c1-8) and ${GITHUB_SHA}
-      - name: install mabl
-        run: npm install -g @mablhq/mabl-cli
-      - name: mabl end-to-end test - TEST
-        run: mabl deployments create --api-key ${{ secrets.MABLAPIKEY }} --application-id ${{ secrets.MABLAPPID }} --environment-id ${{ secrets.MABLENVQA }} --labels MIMIR --await-completion
