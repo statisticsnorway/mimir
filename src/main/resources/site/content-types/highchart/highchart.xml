@@ -238,6 +238,7 @@
       <items>
         <input name="footnoteText" type="TextArea">
           <label>Fotnote-tekst</label>
+          <occurrences minimum="0" maximum="3"/>
           <help-text>Inntil 3 fotnoter. For å få opphøyd fotnotetall: 1=ALT+251, 2=ALT+253, 3=ALT+252.</help-text>
         </input>
       </items>
