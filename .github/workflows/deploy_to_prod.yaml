@@ -9,7 +9,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  deploy_to_qa:
+  deploy_to_prod:
     name: 'Deploy to PROD'
     runs-on: 'ubuntu-latest'
     environment: 'PROD'
