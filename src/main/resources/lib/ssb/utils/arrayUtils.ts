@@ -8,7 +8,7 @@ export function forceArray<A>(data: A | Array<A> | undefined): ReadonlyArray<A> 
 }
 
 export function ensureArray<T>(candidate: Array<T> | null | undefined | T): Array<T> {
-  return candidate ? util.data.forceArray(candidate) : []
+  return candidate ? forceArray(candidate) : []
 }
 
 export function chunkArray<T>(myArray: Array<T>, chunkSize: number): Array<Array<T>> {

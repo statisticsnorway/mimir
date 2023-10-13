@@ -14,6 +14,7 @@ import { renderError } from '/lib/ssb/error/error'
 import { render } from '/lib/thymeleaf'
 import { type Page } from '/site/content-types'
 import { type Banner as BannerPartConfig } from '.'
+
 const view = resolve('./banner.html')
 
 export function get(req: XP.Request): XP.Response {

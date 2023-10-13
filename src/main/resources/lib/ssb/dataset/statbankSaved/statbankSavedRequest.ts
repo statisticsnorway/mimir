@@ -3,6 +3,7 @@ import { request, HttpRequestParams, HttpResponse } from '/lib/http-client'
 import { XmlParser } from '/lib/types/xmlParser'
 
 import { logUserDataQuery, Events } from '/lib/ssb/repo/query'
+
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 
 export function get(url: string, queryId?: string): object | null {

@@ -15,6 +15,7 @@ import { datasetOrUndefined } from '/lib/ssb/cache/cache'
 import { type AccordionData } from '/site/parts/accordion/accordion'
 import { GA_TRACKING_ID } from '/site/pages/default/default'
 import { type Statistics } from '/site/content-types'
+
 const tableController: { getProps: (req: XP.Request, tableId: string) => object } =
   __non_webpack_require__('../table/table')
 const highchartController: { preview: (req: XP.Request, id: string) => XP.Response } =

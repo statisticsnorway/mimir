@@ -1,3 +1,4 @@
+__non_webpack_require__('/lib/ssb/polyfills/nashorn')
 import { send } from '/lib/xp/event'
 import {
   DataSourceStatisticsPublishResult,
@@ -9,8 +10,6 @@ import {
   getJobLog,
 } from '/lib/ssb/repo/job'
 import { type CleanupPublishDataset as CleanupPublishDatasetConfig } from '/tasks/cleanupPublishDataset'
-__non_webpack_require__('/lib/ssb/polyfills/nashorn')
-
 import { Events, logUserDataQuery } from '/lib/ssb/repo/query'
 import * as util from '/lib/util'
 import { deleteDataset, extractKey } from '/lib/ssb/dataset/dataset'

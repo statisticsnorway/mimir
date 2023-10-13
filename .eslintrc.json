@@ -29,6 +29,7 @@
       ],
       "groups": ["builtin", "external", "internal", "parent", "sibling", "index", "object"]
     }],
+    "import/newline-after-import": ["error", { "count": 1 }],
     "complexity": ["warn", 20]
   },
   "globals": {

@@ -8,6 +8,7 @@ import { getNode } from '/lib/ssb/repo/common'
 import { STATREG_BRANCH, STATREG_REPO, getStatRegBaseUrl, PUBLICATIONS_URL } from '/lib/ssb/dashboard/statreg/config'
 import { fetchStatRegData } from '/lib/ssb/dashboard/statreg/common'
 import { Events, logUserDataQuery } from '/lib/ssb/repo/query'
+
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 
 export const STATREG_REPO_PUBLICATIONS_KEY = 'publications'

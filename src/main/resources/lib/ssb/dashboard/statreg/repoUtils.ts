@@ -1,4 +1,5 @@
 import { ensureArray } from '/lib/ssb/utils/arrayUtils'
+
 const contentType = 'application/json'
 
 function toOptions<T, A>(content: Array<T>, transform: (item: T) => A): Array<A> {

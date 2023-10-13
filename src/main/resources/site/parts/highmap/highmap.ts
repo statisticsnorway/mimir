@@ -11,6 +11,7 @@ import { getPhrases } from '/lib/ssb/utils/language'
 import { renderError } from '/lib/ssb/error/error'
 import { Phrases } from '/lib/types/language'
 import { type Highmap } from '/site/content-types'
+
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 
 interface MapFeatures {

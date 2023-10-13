@@ -21,13 +21,14 @@ import { createHighchartObject } from '/lib/ssb/parts/highcharts/highchartsUtils
 import { renderError } from '/lib/ssb/error/error'
 import { datasetOrUndefined } from '/lib/ssb/cache/cache'
 import { hasWritePermissionsAndPreview } from '/lib/ssb/parts/permissions'
-const view = resolve('./highchart.html')
 import { isEnabled } from '/lib/featureToggle'
 import { getPhrases } from '/lib/ssb/utils/language'
 import { getTbprocessorKey } from '/lib/ssb/dataset/tbprocessor/tbprocessor'
 import { GA_TRACKING_ID } from '/site/pages/default/default'
 import { type DataSource } from '/site/mixins/dataSource'
 import { type Highchart } from '/site/content-types'
+
+const view = resolve('./highchart.html')
 
 export function get(req: XP.Request): XP.Response {
   try {

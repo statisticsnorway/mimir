@@ -30,6 +30,7 @@ import { datasetOrUndefined } from '/lib/ssb/cache/cache'
 import { getRowValue } from '/lib/ssb/utils/utils'
 import { type DataSource } from '/site/mixins/dataSource'
 import { type Table } from '/site/content-types'
+
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser') as XmlParser
 
 export function parseTable(

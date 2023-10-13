@@ -5,6 +5,7 @@ import { render } from '/lib/thymeleaf'
 import { renderError } from '/lib/ssb/error/error'
 import * as util from '/lib/util'
 import { type Button } from '/site/content-types'
+
 const view = resolve('./button.html')
 
 export function get(req: XP.Request): XP.Response {

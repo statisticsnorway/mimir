@@ -8,6 +8,7 @@ import { toString } from '/lib/vendor/ramda'
 
 import * as util from '/lib/util'
 import { type Highchart } from '/site/content-types'
+
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 
 export function seriesAndCategoriesFromHtmlTable(highChartsContent: Content<Highchart>): SeriesAndCategories {

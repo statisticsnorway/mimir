@@ -6,6 +6,7 @@ import { ENONIC_CMS_DEFAULT_REPO } from '/lib/ssb/repo/common'
 
 import { addSubjectToXData } from '/lib/ssb/utils/articleUtils'
 import { Article } from '/site/content-types'
+
 const DEFAULT_CONTENTSTUDIO_URL = getToolUrl('com.enonic.app.contentstudio', 'main')
 const ENONIC_PROJECT_ID = app.config && app.config['ssb.project.id'] ? app.config['ssb.project.id'] : 'default'
 
