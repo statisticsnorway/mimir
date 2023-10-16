@@ -83,6 +83,18 @@ export function setup(): void {
   })
 
   listener({
+    type: 'node.updated',
+    localOnly: false,
+    callback: removePageFromVarnish,
+  })
+
+  listener({
+    type: 'node.deleted',
+    localOnly: false,
+    callback: removePageFromVarnish,
+  })
+
+  listener({
     type: 'custom.clearCache',
     callback: (e: EnonicEvent<CompletelyClearCacheOptions>) => completelyClearCache(e.data),
   })
@@ -120,6 +132,9 @@ function addToChangeQueue(event: EnonicEvent<EnonicEventData>): void {
     (n) => validRepos.includes(n.repo) && !n.path.includes('/issues/')
   )
   if (validNodes.length > 0) {
+    // TODO: Call remove page from varnish here? Applies for all node changes;
+    // * created, deleted, pushed, duplicated, updated, moved, renamed, sorted, stateUpdated
+    // ** On second thought... that may be too many events
     cacheLog(`cacheValidNodes :: ${JSON.stringify(validNodes, null, 2)}`)
     changeQueue = changeQueue.concat(validNodes)
     addClearTask()
