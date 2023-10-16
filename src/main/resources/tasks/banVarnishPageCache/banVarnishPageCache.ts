@@ -14,7 +14,9 @@ exports.run = function (params: BanVarnishPageCacheConfig): void {
     })
 
     // Keeping log line, want to monitor this for a while
-    log.info(`Cleared single page from Varnish. Result code: ${result.status} - and message: ${result.message}`)
+    log.info(
+      `Cleared page ${params.pageIds} from Varnish. Result code: ${result.status} - and message: ${result.message}`
+    )
   })
 }
 

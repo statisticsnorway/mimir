@@ -79,19 +79,16 @@ export function setup(): void {
   listener({
     type: 'node.pushed',
     localOnly: false,
-    callback: removePageFromVarnish,
-  })
-
-  listener({
-    type: 'node.updated',
-    localOnly: false,
-    callback: removePageFromVarnish,
+    callback: (e) => {
+      removePageFromVarnish(e)
+      alertsClearVarnishCache(e)
+    },
   })
 
   listener({
     type: 'node.deleted',
     localOnly: false,
-    callback: removePageFromVarnish,
+    callback: alertsClearVarnishCache,
   })
 
   listener({
@@ -104,6 +101,18 @@ export function setup(): void {
     callback: (e: EnonicEvent<{ path: string }>) => {
       clearCacheRepo(e.data.path)
     },
+  })
+}
+
+function alertsClearVarnishCache(event: EnonicEvent<EnonicEventData>): void {
+  event.data.nodes.forEach((n) => {
+    // Clear varnish cache for operation alerts
+    if (n.repo == 'com.enonic.cms.default' && n.branch == 'master' && n.path.includes('/driftsvarsler/')) {
+      const resultOfPurge = purgeVarnishCache()
+      log.info(
+        `Cleared Varnish for alerts. Result code: ${resultOfPurge.status} - and message: ${resultOfPurge.message}`
+      )
+    }
   })
 }
 
