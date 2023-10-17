@@ -1,4 +1,4 @@
 import React from 'react'
-import Variables from 'src/main/resources/react4xp/variables/Variables'
+import Variables from '../variables/Variables'
 
 export default (props) => <Variables {...props} />

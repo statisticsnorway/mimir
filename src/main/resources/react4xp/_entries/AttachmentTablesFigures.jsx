@@ -3,7 +3,7 @@ import { Accordion, Button } from '@statisticsnorway/ssb-component-library'
 import { ChevronDown, ChevronUp } from 'react-feather'
 
 import PropTypes from 'prop-types'
-import Table from 'src/main/resources/react4xp/table/Table'
+import Table from '../table/Table'
 import { addGtagForEvent } from '/react4xp/ReactGA'
 
 function AttachmentTableFigures(props) {

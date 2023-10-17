@@ -10,7 +10,7 @@ import highchartsModuleNoDataToDisplay from 'highcharts/modules/no-data-to-displ
 import highchartsModuleExportData from 'highcharts/modules/export-data'
 import zipcelx from 'zipcelx/lib/legacy'
 
-import accessibilityLang from 'src/main/resources/assets/js/highchart-lang.json'
+import accessibilityLang from '../highchart-lang.json'
 
 // Initialize exporting module.
 highchartsModuleData(Highcharts)
