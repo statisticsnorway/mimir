@@ -154,8 +154,8 @@ function createDataFromDataSource(
       hasWritePermissionsAndPreview(req, highchart._id) && type === 'tbprocessor' && paramShowDraft
     const draftData: DatasetRepoNode<TbmlDataUniform> | null =
       showPreviewDraft &&
-        highchart.data.dataSource._selected === DataSourceType.TBPROCESSOR &&
-        highchart.data.dataSource.tbprocessor?.urlOrId
+      highchart.data.dataSource._selected === DataSourceType.TBPROCESSOR &&
+      highchart.data.dataSource.tbprocessor?.urlOrId
         ? getDataset(type, UNPUBLISHED_DATASET_BRANCH, getTbprocessorKey(highchart))
         : null
 
