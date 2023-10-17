@@ -62,7 +62,7 @@ function renderPart(req: XP.Request, config: LinksPartConfig) {
           attachmentUrl({
             id: linkedContent,
           })
-        isPDFAttachment = /(.*?).pdf/.test(content._name)
+        isPDFAttachment = /.+?\.pdf/.test(content._name)
         attachmentTitle = content.displayName
       } else {
         contentUrl = linkedContent

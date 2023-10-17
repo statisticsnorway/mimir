@@ -62,7 +62,7 @@ function PifCalculator(props) {
   const onSubmitBtnElement = useRef(null)
 
   const validMaxMonth = props.lastUpdated.month
-  const yearRegexp = /^[1-9]{1}[0-9]{3}$/g
+  const yearRegexp = /^[1-9]\d{3}$/g
 
   useEffect(() => {
     if (!loading && scrollAnchor.current) {
@@ -147,7 +147,7 @@ function PifCalculator(props) {
 
   function isStartValueValid(value) {
     const startVal = value || startValue.value
-    const testStartValue = startVal.match(/^-?[0-9]+[.,]?[0-9]*$/g)
+    const testStartValue = startVal.match(/^-?\d+(?:[.,]\d*)?$/g)
     const isNumber = testStartValue && testStartValue.length === 1
     return !(!isNumber || isNaN(parseFloat(startVal)))
   }

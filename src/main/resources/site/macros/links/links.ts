@@ -48,7 +48,7 @@ exports.macro = function (context: XP.MacroContext) {
           attachmentUrl({
             id: linkedContent,
           })
-        isPDFAttachment = /(.*?).pdf/.test(content._name)
+        isPDFAttachment = /.+?\.pdf/.test(content._name)
         attachmentTitle = content.displayName
       } else {
         contentUrl = linkedContent
