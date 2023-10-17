@@ -52,7 +52,6 @@ function renderPart(
   if (!page) throw Error('No page found')
 
   const config = getComponent<XP.PartComponent.KeyFigure>()?.config
-  if (!config) throw Error('No part found')
 
   const showPreviewDraft: boolean = hasWritePermissionsAndPreview(req, page._id)
 
@@ -78,16 +77,16 @@ function renderPart(
     }) as Array<KeyFigureData>
   }
 
-  return renderKeyFigure(page, config, keyFigures, keyFiguresDraft, showPreviewDraft, req)
+  return renderKeyFigure(page, keyFigures, keyFiguresDraft, showPreviewDraft, req, config)
 }
 
 function renderKeyFigure(
   page: Content,
-  config: KeyFigurePartConfig,
   parsedKeyFigures: Array<KeyFigureData>,
   parsedKeyFiguresDraft: Array<KeyFigureData> | null,
   showPreviewDraft: boolean,
-  req: XP.Request
+  req: XP.Request,
+  config?: KeyFigurePartConfig
 ): XP.Response {
   const draftExist = !!parsedKeyFiguresDraft
   if ((parsedKeyFigures && parsedKeyFigures.length > 0) || draftExist) {
@@ -112,8 +111,8 @@ function renderKeyFigure(
           })
         : undefined,
       sourceLabel: getPhrases(page).source,
-      source: config && config.source,
-      columns: config && config.columns,
+      source: config?.source,
+      columns: !!config?.columns,
       showPreviewDraft,
       paramShowDraft: req.params.showDraft,
       draftExist,
