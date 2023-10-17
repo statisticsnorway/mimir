@@ -47,7 +47,7 @@ function getPifCalculatorComponent(req: XP.Request, page: Content) {
   if (!partConfig) throw Error('No part config found')
 
   const language = getLanguage(page)
-  const phrases: Phrases = language?.phrases as Phrases
+  const phrases = language?.phrases as Phrases
   const months: MonthDropdownItems = allMonths(phrases)
   const config: Content<CalculatorConfig> | undefined = getCalculatorConfig()
   const pifData: Dataset | null = config ? getPifDataset(config) : null

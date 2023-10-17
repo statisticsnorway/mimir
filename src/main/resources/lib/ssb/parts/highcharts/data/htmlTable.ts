@@ -1,4 +1,5 @@
-import * as striptags from 'striptags'
+// @ts-ignore
+import striptags from 'striptags'
 import { Content } from '/lib/xp/content'
 import { AreaLineLinearData, PieData, Series, SeriesAndCategories } from '/lib/ssb/parts/highcharts/highchartsData'
 import { XmlParser, PreliminaryData, TableRowUniform, TableCellUniform } from '/lib/types/xmlParser'
