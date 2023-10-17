@@ -513,7 +513,7 @@ function Table(props) {
 
   const { hiddenTitle } = props
   return (
-    <section className='xp-part table'>
+    <section className='xp-part part-table'>
       {!isEmpty(table) ? (
         <React.Fragment>
           <div className='d-none searchabletext'>
