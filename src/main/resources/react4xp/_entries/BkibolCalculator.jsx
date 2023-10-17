@@ -71,7 +71,7 @@ function BkibolCalculator(props) {
   // const validMaxYear = props.lastUpdated.year
   const validMaxMonth = props.lastUpdated.month
   const validMinYear = 1979
-  const yearRegexp = /^[1-9]{1}[0-9]{3}$/g
+  const yearRegexp = /^[1-9]\d{3}$/g
 
   const scrollAnchor = useRef(null)
   useEffect(() => {
@@ -197,7 +197,7 @@ function BkibolCalculator(props) {
 
   function isStartValueValid(value) {
     const startVal = value || startValue.value
-    const testStartValue = startVal.match(/^-?[0-9]+[.,]?[0-9]*$/g)
+    const testStartValue = startVal.match(/^-?\d+(?:[.,]\d*)?$/g)
     const isNumber = testStartValue && testStartValue.length === 1
     return !(!isNumber || isNaN(parseFloat(startVal)))
   }

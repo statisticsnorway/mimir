@@ -45,28 +45,23 @@ class KeyFigures extends React.Component {
 
     if (this.props.showPreviewDraft) {
       if (this.state.fetchUnPublished) {
-        return keyFigures.map((keyFigure) => {
-          if (this.props.draftExist && keyFigure.number) {
-            return (
-              <Col className={`col-12${this.props.isInStatisticsPage ? ' p-0' : ''}`}>
-                <Alert variant='info' className='mb-4'>
-                  Tallet i nøkkeltallet nedenfor er upublisert
-                </Alert>
-              </Col>
-            )
-          } else {
-            return (
-              <Col className={`col-12${this.props.isInStatisticsPage ? ' p-0' : ''}`}>
-                <Alert variant='warning' className='mb-4'>
-                  Finnes ikke upubliserte tall for dette nøkkeltallet
-                </Alert>
-              </Col>
-            )
-          }
+        return keyFigures.map((keyFigure, i) => {
+          const unpublishedDraft = this.props.draftExist && keyFigure.number
+          return (
+            <Col
+              key={`${keyFigure.number || keyFigure.title}${i}`}
+              className={`col-12${this.props.isInStatisticsPage ? ' p-0' : ''}`}
+            >
+              <Alert variant={unpublishedDraft ? 'info' : 'warning'} className='mb-4'>
+                {unpublishedDraft
+                  ? 'Tallet i nøkkeltallet nedenfor er upublisert'
+                  : 'Finnes ikke upubliserte tall for dette nøkkeltallet'}
+              </Alert>
+            </Col>
+          )
         })
       }
     }
-    return
   }
 
   createRows() {
@@ -197,7 +192,7 @@ KeyFigures.propTypes = {
       greenBox: PropTypes.bool,
       source: PropTypes.shape({
         url: PropTypes.string,
-        title: PropTypes.title,
+        title: PropTypes.string,
       }),
     })
   ),
@@ -220,14 +215,14 @@ KeyFigures.propTypes = {
       greenBox: PropTypes.bool,
       source: PropTypes.shape({
         url: PropTypes.string,
-        title: PropTypes.title,
+        title: PropTypes.string,
       }),
     })
   ),
   sourceLabel: PropTypes.string,
   source: PropTypes.shape({
     url: PropTypes.string,
-    title: PropTypes.title,
+    title: PropTypes.string,
   }),
   columns: PropTypes.bool,
   showPreviewDraft: PropTypes.bool,
@@ -235,7 +230,7 @@ KeyFigures.propTypes = {
   draftExist: PropTypes.bool,
   pageTypeKeyFigure: PropTypes.bool,
   hiddenTitle: PropTypes.string,
-  isInStatisticsPage: PropTypes.string,
+  isInStatisticsPage: PropTypes.bool,
 }
 
 export default (props) => <KeyFigures {...props} />
