@@ -141,7 +141,7 @@ function calculateQuarter(previousFrom: string, language: string): string {
   const quarter: number = Math.ceil(fromMonth / 3)
 
   if (language === 'en') {
-    const suffix = quarter === 1 ? 'st' : quarter === 2 ? 'nd' : quarter === 3 ? 'rd' : 'th'
+    const suffix = getSuffix(quarter)
     return `figures for ${quarter}${suffix} Quarter ${date.getFullYear()}`
   }
 
@@ -150,6 +150,19 @@ function calculateQuarter(previousFrom: string, language: string): string {
     locale: language,
     values: [quarter.toString(), date.getFullYear().toString()],
   })
+}
+
+function getSuffix(quarter: number): string {
+  switch (quarter) {
+    case 1:
+      return 'st'
+    case 2:
+      return 'nd'
+    case 3:
+      return 'rd'
+    default:
+      return 'th'
+  }
 }
 
 function calculateMonth(previousFrom: string, language: string): string {
