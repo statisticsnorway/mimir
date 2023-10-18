@@ -59,6 +59,7 @@ function UpcomingReleases(props) {
       }
       return false
     })
+    // eslint-disable-next-line complexity
     contentReleases.forEach((release) => {
       const releaseDate = new Date(release.date)
       let yearReleases
