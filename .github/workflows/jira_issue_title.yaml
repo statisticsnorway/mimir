@@ -1,5 +1,7 @@
 name: "Update Pull Request title with JIRA issue"
-on: pull_request
+on: 
+  pull_request:
+    types: [opened]
 
 permissions:
   contents: read
