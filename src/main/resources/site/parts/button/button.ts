@@ -26,12 +26,12 @@ export function preview(req: XP.Request, id: string): XP.Response {
 function renderPart(req: XP.Request, buttonIds: Array<string>): XP.Response {
   const buttons: Array<ButtonShape> = []
 
-  buttonIds.map((key: string) => {
+  buttonIds.forEach((key: string) => {
     const button: Content<Button> | null = getContentByKey({
       key,
     })
 
-    if (button && button.data.link) {
+    if (button?.data.link) {
       const target: Content | null = getContentByKey({
         key: button.data.link,
       })
