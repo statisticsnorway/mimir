@@ -481,7 +481,7 @@ function Table(props) {
       return (
         <div className='row mt-5 source'>
           <div className='w-100 col-12'>
-            <span>
+            <span className='source-title'>
               <strong>{sourceLabel}</strong>
             </span>
           </div>
@@ -497,7 +497,7 @@ function Table(props) {
           {sources.map((source, index) => {
             if (source.url && source.urlText) {
               return (
-                <div key={index} className='col-lg-3 col-12 mb-3'>
+                <div key={index} className='col-lg-3 col-12'>
                   <Link href={source.url} standAlone>
                     {source.urlText}
                   </Link>
