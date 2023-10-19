@@ -16,7 +16,7 @@ jobs:
         with:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
           base-branch-regex: 'master|develop'
-          head-branch-regex: 'MIMIR-\d{2,4}'
+          head-branch-regex: 'mimir-\d{2,4}'
           title-template: "[%headbranch%]"
           body-template: |
             [Link to ticket: %headbranch%](https://statistics-norway.atlassian.net/browse/%headbranch%)
