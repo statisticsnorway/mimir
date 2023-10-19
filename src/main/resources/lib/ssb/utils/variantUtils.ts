@@ -142,7 +142,11 @@ function calculateQuarter(previousFrom: string, language: string): string {
 
   if (language === 'en') {
     const suffix = getSuffix(quarter)
-    return `figures for ${quarter}${suffix} Quarter ${date.getFullYear()}`
+    return localize({
+      key: 'period.quarter',
+      locale: language,
+      values: [`${quarter}${suffix}`, date.getFullYear().toString()],
+    });
   }
 
   return localize({
