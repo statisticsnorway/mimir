@@ -9,8 +9,8 @@ permissions:
 
 jobs:
   update_pr:
-    continue-on-error: true
     runs-on: ubuntu-latest
+    if: contains(github.event.pull_request.title, 'MIMIR-')
     steps:
       - uses: the-wright-jamie/update-pr-info-action@v1
         with:
