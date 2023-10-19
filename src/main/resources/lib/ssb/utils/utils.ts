@@ -162,6 +162,9 @@ export function randomUnsafeString(): string {
 export function scriptAsset(path: string): string {
   return `<script defer src="${assetUrl({ path })}"></script>`
 }
+// @ts-ignore
+export const XP_RUN_MODE = ''.concat(Java.type('com.enonic.xp.server.RunMode').get())
+// ^ check for DEV mode
 
 export interface SourcesConfig {
   _selected: string
