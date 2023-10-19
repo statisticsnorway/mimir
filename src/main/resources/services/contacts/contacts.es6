@@ -24,7 +24,7 @@ const filterByIds = (contacts, filters) => {
     filters.ids &&
     filters.ids.split(',').reduce((acc, id) => {
       const found = contacts.find((c) => `${c.id}` === id)
-      return found ? acc.concat(found) : acc
+      return found ? acc.concat(found) : acc.concat({ id: id, name: 'Slettet kontakt', email: '' })
     }, [])
   )
 }
