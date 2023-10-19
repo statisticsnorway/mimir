@@ -6,7 +6,7 @@ const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
 const { pageUrl, getContent } = __non_webpack_require__('/lib/xp/portal')
 
 function addBreadcrumbs(page: Content, visitedPage: Content, breadcrumbs: Breadcrumbs = []): Breadcrumbs {
-  // hello
+  // hello 123
   if (page.type === 'portal:site') {
     breadcrumbs.unshift({
       text: getPhrases(visitedPage) ? getPhrases(visitedPage).home : 'Hjem',
