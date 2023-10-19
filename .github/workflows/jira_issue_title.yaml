@@ -10,7 +10,7 @@ permissions:
 jobs:
   update_pr:
     runs-on: ubuntu-latest
-    if: contains(github.event.pull_request.title, 'MIMIR-')
+    if: contains(github.head_ref, 'MIMIR-')
     steps:
       - uses: the-wright-jamie/update-pr-info-action@v1
         with:
