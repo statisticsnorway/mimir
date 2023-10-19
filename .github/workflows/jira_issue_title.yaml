@@ -1,0 +1,22 @@
+name: "Update Pull Request title with JIRA issue"
+on: 
+  pull_request:
+    types: [opened]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  update_pr:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: the-wright-jamie/update-pr-info-action@v1
+        with:
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          base-branch-regex: 'master|develop'
+          head-branch-regex: 'MIMIR-\d{2,4}'
+          title-template: "[%headbranch%]"
+          body-template: |
+            [Link to ticket: %headbranch%](https://statistics-norway.atlassian.net/browse/%headbranch%)
+          body-update-action: "suffix"
