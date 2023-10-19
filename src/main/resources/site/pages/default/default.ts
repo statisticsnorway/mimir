@@ -416,7 +416,7 @@ function getSubjectsPage(page: DefaultPage, req: XP.Request, language: string): 
   const secondaryMainSubjects: Array<string> = subTopics
     ? getSecondaryMainSubject(subTopics, allMainSubjects, allSubSubjects)
     : []
-  secondaryMainSubjects.map((subject) => {
+  secondaryMainSubjects.forEach((subject) => {
     if (!subjects.includes(subject)) {
       subjects.push(subject)
     }

@@ -22,8 +22,8 @@ export function getCalculatorConfig(): Content<CalculatorConfig> | undefined {
 export function getKpiDatasetYear(config: Content<CalculatorConfig>): Dataset | null {
   const kpiSourceYear: Content<GenericDataImport & DataSource> | null = config?.data.kpiSourceYear
     ? getContent({
-        key: config.data.kpiSourceYear,
-      })
+      key: config.data.kpiSourceYear,
+    })
     : null
 
   if (kpiSourceYear === null) {
@@ -40,8 +40,8 @@ export function getKpiDatasetYear(config: Content<CalculatorConfig>): Dataset | 
 export function getKpiDatasetMonth(config: Content<CalculatorConfig>): Dataset | null {
   const kpiSourceMonth: Content<GenericDataImport & DataSource> | null = config?.data.kpiSourceMonth
     ? getContent({
-        key: config.data.kpiSourceMonth,
-      })
+      key: config.data.kpiSourceMonth,
+    })
     : null
 
   if (kpiSourceMonth === null) {
@@ -58,8 +58,8 @@ export function getKpiDatasetMonth(config: Content<CalculatorConfig>): Dataset |
 export function getPifDataset(config: Content<CalculatorConfig>): Dataset | null {
   const pifSource: Content<GenericDataImport & DataSource> | null = config?.data.pifSource
     ? getContent({
-        key: config.data.pifSource,
-      })
+      key: config.data.pifSource,
+    })
     : null
 
   if (pifSource === null) {
@@ -76,8 +76,8 @@ export function getPifDataset(config: Content<CalculatorConfig>): Dataset | null
 export function getBkibolDatasetEnebolig(config: Content<CalculatorConfig>): Dataset | null {
   const bkibolSourceEnebolig: Content<GenericDataImport & DataSource> | null = config?.data.bkibolSourceEnebolig
     ? getContent({
-        key: config.data.bkibolSourceEnebolig,
-      })
+      key: config.data.bkibolSourceEnebolig,
+    })
     : null
 
   if (bkibolSourceEnebolig === null) {
@@ -94,8 +94,8 @@ export function getBkibolDatasetEnebolig(config: Content<CalculatorConfig>): Dat
 export function getBkibolDatasetBoligblokk(config: Content<CalculatorConfig>): Dataset | null {
   const bkibolSourceBoligblokk: Content<GenericDataImport & DataSource> | null = config?.data.bkibolSourceBoligblokk
     ? getContent({
-        key: config.data.bkibolSourceBoligblokk,
-      })
+      key: config.data.bkibolSourceBoligblokk,
+    })
     : null
 
   if (bkibolSourceBoligblokk === null) {
@@ -112,8 +112,8 @@ export function getBkibolDatasetBoligblokk(config: Content<CalculatorConfig>): D
 export function getNameSearchGraphData(config: Content<CalculatorConfig>): DatasetRepoNode<JSONstatType> | null {
   const nameSearchGraphData: Content<GenericDataImport & DataSource> | null = config?.data.nameSearchGraphData
     ? getContent({
-        key: config.data.nameSearchGraphData,
-      })
+      key: config.data.nameSearchGraphData,
+    })
     : null
 
   if (nameSearchGraphData === null) {
@@ -134,8 +134,8 @@ export function getNameGraphDataWithConfig(): DatasetRepoNode<JSONstatType> | nu
   }
   const nameSearchGraphData: Content<GenericDataImport & DataSource> | null = config?.data.nameSearchGraphData
     ? getContent({
-        key: config.data.nameSearchGraphData,
-      })
+      key: config.data.nameSearchGraphData,
+    })
     : null
 
   if (nameSearchGraphData === null) {
@@ -151,7 +151,7 @@ export function getNameGraphDataWithConfig(): DatasetRepoNode<JSONstatType> | nu
 
 export function getAllCalculatorDataset(): Array<Content<GenericDataImport>> {
   const calculatorConfig: Content<CalculatorConfig> | undefined = getCalculatorConfig()
-  const calculatorDatasetKeys: Array<string | undefined> = []
+  let calculatorDatasetKeys: Array<string | undefined> = []
   if (calculatorConfig?.data) {
     calculatorDatasetKeys.push(calculatorConfig.data.kpiSourceYear)
     calculatorDatasetKeys.push(calculatorConfig.data.kpiSourceMonth)
@@ -160,7 +160,7 @@ export function getAllCalculatorDataset(): Array<Content<GenericDataImport>> {
     calculatorDatasetKeys.push(calculatorConfig.data.bkibolSourceBoligblokk)
   }
 
-  calculatorDatasetKeys.filter((dataset) => dataset !== undefined)
+  calculatorDatasetKeys = calculatorDatasetKeys.filter((dataset) => dataset !== undefined)
 
   const datasources: Array<Content<GenericDataImport>> = []
   calculatorDatasetKeys.forEach((key: string) => {
@@ -184,7 +184,7 @@ export function isChronological(startYear: string, startMonth: string, endYear: 
   if (parseInt(startYear) < parseInt(endYear)) return true
   if (parseInt(endYear) < parseInt(startYear)) return false
 
-  if (startMonth != ('' || '90') && endMonth != ('' || '90')) {
+  if (startMonth != '90' && startMonth != '' && endMonth != '' && endMonth != '90') {
     if (parseInt(startMonth) < parseInt(endMonth)) return true
     if (parseInt(startMonth) > parseInt(endMonth)) return false
   }
