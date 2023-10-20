@@ -146,7 +146,7 @@ function calculateQuarter(previousFrom: string, language: string): string {
       key: 'period.quarter',
       locale: language,
       values: [`${quarter}${suffix}`, date.getFullYear().toString()],
-    });
+    })
   }
 
   return localize({
