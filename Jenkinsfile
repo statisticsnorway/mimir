@@ -1,7 +1,7 @@
 pipeline {
   agent {
     docker {
-      image 'enonic/enonic-ci:7.13.3'
+      image 'enonic/enonic-ci:7.13'
     }
   }
   environment {
