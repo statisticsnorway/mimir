@@ -139,11 +139,34 @@ function calculateQuarter(previousFrom: string, language: string): string {
   const date: Date = new Date(previousFrom)
   const fromMonth: number = date.getMonth() + 1
   const quarter: number = Math.ceil(fromMonth / 3)
+
+  if (language === 'en') {
+    const suffix = getSuffix(quarter)
+    return localize({
+      key: 'period.quarter',
+      locale: language,
+      values: [`${quarter}${suffix}`, date.getFullYear().toString()],
+    })
+  }
+
   return localize({
     key: 'period.quarter',
     locale: language,
     values: [quarter.toString(), date.getFullYear().toString()],
   })
+}
+
+function getSuffix(quarter: number): string {
+  switch (quarter) {
+    case 1:
+      return 'st'
+    case 2:
+      return 'nd'
+    case 3:
+      return 'rd'
+    default:
+      return 'th'
+  }
 }
 
 function calculateMonth(previousFrom: string, language: string): string {
