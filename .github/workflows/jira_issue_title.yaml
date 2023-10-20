@@ -10,12 +10,13 @@ permissions:
 jobs:
   update_pr:
     runs-on: ubuntu-latest
+    if: contains(github.head_ref, 'MIMIR-')
     steps:
       - uses: the-wright-jamie/update-pr-info-action@v1
         with:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
           base-branch-regex: 'master|develop'
-          head-branch-regex: 'MIMIR-\d{2,4}'
+          head-branch-regex: 'mimir-\d{2,4}'
           title-template: "[%headbranch%]"
           body-template: |
             [Link to ticket: %headbranch%](https://statistics-norway.atlassian.net/browse/%headbranch%)
