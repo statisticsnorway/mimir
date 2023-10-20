@@ -133,7 +133,7 @@ function prepareStatisticRelease(
 
     return {
       title: language === 'en' ? release.statisticNameEn : release.statisticName,
-      period: period.charAt(0).toUpperCase() + period.slice(1),
+      period: period.charAt(0) + period.slice(1),
       preface: aboutTheStatisticsContent ? aboutTheStatisticsContent.data.ingress : seoDescription,
       url: statisticsPageUrl,
       publishDate: publishDate ?? '',
