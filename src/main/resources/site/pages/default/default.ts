@@ -34,7 +34,6 @@ const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
 const partsWithPreview: Array<string> = [
   // Parts that has preview
   `${app.name}:map`,
-  `${app.name}:button`,
   `${app.name}:menuBox`,
   `${app.name}:accordion`,
   `${app.name}:highchart`,
