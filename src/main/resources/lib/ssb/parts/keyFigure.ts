@@ -205,17 +205,14 @@ function getDataWithFilterStatbankApi(
         yAxisLabel,
         filterTarget
       )
+
       // not all municipals have data, so if its missing, try the old one
-      if (
-        (!municipalData || municipalData.value === null || municipalData.value === 0) &&
-        municipality.changes &&
-        municipality.changes.length > 0
-      ) {
+      if ((!municipalData || municipalData.value === null) && municipality.changes && municipality.changes.length > 0) {
         municipalData = getDataFromMunicipalityCode(ds, municipality.changes[0].oldCode, yAxisLabel, filterTarget)
       }
       if (municipalData && municipalData.value !== null) {
         // add data to key figure view
-        keyFigureViewData.number = parseValue(municipalData.value)
+        keyFigureViewData.number = parseValueZeroSafe(municipalData.value)
         keyFigureViewData.time = localizeTimePeriod(municipalData.label)
       }
     }
@@ -277,7 +274,7 @@ function getDataFromMunicipalityCode(
 
 function parseValueZeroSafe(value: number | string | null): string | undefined {
   if (value === 0) {
-    return createHumanReadableFormat(value)
+    return value.toString()
   } else {
     return parseValue(value)
   }
