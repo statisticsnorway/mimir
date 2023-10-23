@@ -73,6 +73,9 @@ function renderPart(req) {
     ...assets,
     pageContributions,
     username: user.displayName,
+    linkToGuide: userHasAdmin
+      ? 'https://wiki.ssb.no/display/VEILEDNING/Brukerdokumentasjon+for+publisering+i+XP'
+      : 'https://wiki.ssb.no/display/VEILEDNING/Brukerdokumentasjon+i+publisering+i+XP+-+for+statistikkseksjon',
   }
 
   let body = render(view, model)
