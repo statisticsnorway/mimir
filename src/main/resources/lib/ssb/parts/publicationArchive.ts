@@ -264,8 +264,7 @@ function getStatistics(
       acc.push(preppedRelease)
     }
     return acc
-  },
-  [])
+  }, [])
 
   return statisticsReleases.sort((a, b) => new Date(b.publishDate).getTime() - new Date(a.publishDate).getTime())
 }

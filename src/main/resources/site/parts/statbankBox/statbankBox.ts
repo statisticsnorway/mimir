@@ -30,7 +30,7 @@ export function preview(req: XP.Request): XP.Response {
 function renderPart(req: XP.Request): XP.Response {
   const page = getContent<Content<Statistics>>()
   if (!page) throw Error('No page found')
-  const config = getComponent<StatbankBoxPartConfig>()?.config
+  const config = getComponent<XP.PartComponent.StatbankBox>()?.config
   if (!config) throw Error('No part found')
 
   const phrases: Phrases = getPhrases(page)

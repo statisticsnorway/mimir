@@ -1,6 +1,6 @@
 import { render } from '/lib/thymeleaf'
 import type { Content } from '/lib/xp/content'
-import { getContent, getComponent, type Component } from '/lib/xp/portal'
+import { getContent, getComponent } from '/lib/xp/portal'
 import type { Banner as BannerPartConfig } from '.'
 import { MunicipalityWithCounty } from '/lib/ssb/dataset/klass/municipalities'
 import { imageUrl } from '/lib/ssb/utils/imageUtils'
@@ -31,7 +31,8 @@ function renderPart(req: XP.Request): XP.Response {
   const page = getContent<Content<Page>>()
   if (!page) throw Error('No page found')
 
-  const part = getComponent() as Component<BannerPartConfig>
+  const part = getComponent<XP.PartComponent.Banner>()
+  if (!part) throw Error('No component found')
   const pageType: BannerPartConfig['pageType'] = part.config.pageType
   const factsAbout: string = i18nLib.localize({
     key: 'factsAbout',

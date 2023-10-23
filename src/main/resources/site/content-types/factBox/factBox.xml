@@ -9,7 +9,14 @@
             <occurrences minimum="1" maximum="1"/>
             <config>
                 <exclude>*</exclude>
-                <include>Bold | Italic | Link | Unlink | Subscript | Superscript</include>
+                <include> 
+                    Bold Italic Underline | 
+                    JustifyBlock JustifyLeft JustifyCenter JustifyRight | 
+                    BulletedList NumberedList Outdent Indent | 
+                    Link Unlink | 
+                    PasteModeSwitcher | 
+                    Strike Subscript Superscript
+                </include>
             </config>
         </input>
     </form>

@@ -8,7 +8,7 @@ const { fromPartCache } = __non_webpack_require__('/lib/ssb/cache/partCache')
 
 export function get(req: XP.Request): XP.Response {
   try {
-    const component = getComponent<DividerPartConfig>()
+    const component = getComponent<XP.PartComponent.Divider>()
     if (!component) throw Error('No component found')
 
     return renderPart(req, component.config)

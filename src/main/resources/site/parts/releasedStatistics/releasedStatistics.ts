@@ -4,7 +4,7 @@ import type { QueryDsl } from '/lib/xp/content'
 import { render } from '/lib/enonic/react4xp'
 import type { ReleasedStatistics as ReleasedStatisticsPartConfig } from '.'
 import type { YearReleases } from '/lib/ssb/utils/variantUtils'
-import { type Component, getComponent, getContent } from '/lib/xp/portal'
+import { getComponent, getContent } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 import type { ContentLight, Release as ReleaseVariant } from '/lib/ssb/repo/statisticVariant'
 import { getStatisticVariantsFromRepo } from '/lib/ssb/repo/statisticVariant'
@@ -32,15 +32,15 @@ export function renderPart(req: XP.Request) {
   if (!content) throw Error('No page found')
 
   const currentLanguage: string = content.language ? content.language : 'nb'
-  const part = getComponent<ReleasedStatisticsPartConfig>()
-  if (!part) throw Error('No part found')
+  const config = getComponent<XP.PartComponent.ReleasedStatistics>()?.config
+  if (!config) throw Error('No part found')
 
   const deactivatePartCacheEnabled: boolean = isEnabled('deactivate-partcache-released-statistics', true, 'ssb')
   const groupedWithMonthNames: Array<YearReleases> = !deactivatePartCacheEnabled
     ? fromPartCache(req, `${content._id}-releasedStatistics`, () => {
-        return getGroupedWithMonthNames(part, currentLanguage)
+        return getGroupedWithMonthNames(config, currentLanguage)
       })
-    : getGroupedWithMonthNames(part, currentLanguage)
+    : getGroupedWithMonthNames(config, currentLanguage)
 
   const props: PartProps = {
     releases: groupedWithMonthNames,
@@ -53,11 +53,8 @@ export function renderPart(req: XP.Request) {
   return render('ReleasedStatistics', props, req)
 }
 
-function getGroupedWithMonthNames(
-  part: Component<ReleasedStatisticsPartConfig>,
-  currentLanguage: string
-): Array<YearReleases> {
-  const numberOfReleases: number = part.config.numberOfStatistics ? parseInt(part.config.numberOfStatistics) : 8
+function getGroupedWithMonthNames(config: ReleasedStatisticsPartConfig, currentLanguage: string): Array<YearReleases> {
+  const numberOfReleases: number = config.numberOfStatistics ? parseInt(config.numberOfStatistics) : 8
 
   //To get releases 08.00 before data from statreg is updated
   const nextReleaseToday: ContentLight<ReleaseVariant>[] = getStatisticVariantsFromRepo(

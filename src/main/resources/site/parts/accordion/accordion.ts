@@ -1,7 +1,6 @@
 import { get as getContentByKey, type Content } from '/lib/xp/content'
 import { render } from '/lib/enonic/react4xp'
 import type { Accordion } from '/site/content-types'
-import type { Accordion as AccordionConfig } from '/site/macros/accordion'
 import { getComponent, getContent, processHtml } from '/lib/xp/portal'
 
 const {
@@ -12,8 +11,7 @@ const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
 export function get(req: XP.Request): XP.Response {
   try {
-    const config: AccordionConfig | undefined = getComponent<AccordionConfig>()?.config
-    if (!config) throw Error('No config found')
+    const config = getComponent<XP.PartComponent.Accordion>()?.config
 
     const accordionIds: Array<string> = config ? forceArray(config.accordion) : []
     return renderPart(req, accordionIds)
@@ -38,7 +36,7 @@ export function preview(req: XP.Request, accordionIds: Array<string> | string): 
 function renderPart(req: XP.Request, accordionIds: Array<string>) {
   const accordions: Array<AccordionData> = []
 
-  accordionIds.map((key) => {
+  accordionIds.forEach((key) => {
     const accordion: Content<Accordion> | null = key
       ? getContentByKey({
           key,
@@ -47,35 +45,33 @@ function renderPart(req: XP.Request, accordionIds: Array<string>) {
 
     if (accordion) {
       const accordionContents: Accordion['accordions'] = accordion.data.accordions
-        ? forceArray(accordion.data.accordions)
+        ? forceArray(accordion.data.accordions).filter((accordion) => !!accordion)
         : []
-      accordionContents
-        .filter((accordion) => !!accordion)
-        .map((accordion) => {
-          const items: Accordion['accordions'] = accordion.items ? forceArray(accordion.items) : []
+      accordionContents.forEach((accordion) => {
+        const items: Accordion['accordions'] = accordion.items ? forceArray(accordion.items) : []
 
-          accordions.push({
-            id: accordion.open && sanitize(accordion.open),
-            body:
-              accordion.body &&
-              processHtml({
-                value: accordion.body,
-              }),
-            open: accordion.open,
-            items: items.length
-              ? items.map((item) => {
-                  return {
-                    ...item,
-                    body:
-                      item.body &&
-                      processHtml({
-                        value: item.body,
-                      }),
-                  }
-                })
-              : [],
-          })
+        accordions.push({
+          id: accordion.open && sanitize(accordion.open),
+          body:
+            accordion.body &&
+            processHtml({
+              value: accordion.body,
+            }),
+          open: accordion.open,
+          items: items.length
+            ? items.map((item) => {
+                return {
+                  ...item,
+                  body:
+                    item.body &&
+                    processHtml({
+                      value: item.body,
+                    }),
+                }
+              })
+            : [],
         })
+      })
     }
   })
 

@@ -3,7 +3,6 @@ import type { Employee, Page } from '/site/content-types'
 import type { Default as DefaultPageConfig } from '/site/pages/default'
 import { getContent, getComponent, pageUrl } from '/lib/xp/portal'
 import { render } from '/lib/enonic/react4xp'
-import type { EmployeeList as EmployeeListPartConfig } from '.'
 
 const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
 
@@ -23,7 +22,7 @@ function renderPart(req: XP.Request) {
   const content = getContent<Content<Page>>()
   if (!content) throw Error('No page found')
 
-  const part = getComponent<EmployeeListPartConfig>()
+  const part = getComponent<XP.PartComponent.EmployeeList>()
   if (!part) throw Error('No part found')
 
   const queryResults = query<Content<Employee>>({

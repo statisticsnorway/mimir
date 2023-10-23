@@ -1,8 +1,9 @@
-.table {
+.part-table {
   .download-table-container {
     display: flex;
-    margin-bottom: $spacer * 1;
-
+    margin-top: $spacer * 2;
+    margin-bottom: $spacer * 2;
+    
     label {
       display: none;
     }
@@ -66,6 +67,23 @@
     overflow-x: auto;
   }
 
+  .source {
+    margin-bottom: $spacer;
+
+    .source-title{
+      color: $ssb-dark-6;
+    }
+
+    & > div {
+      padding-top: $spacer * 0.5;
+      padding-bottom: $spacer * 0.5;
+    }
+
+    & a {
+      margin-top: 10px;
+    }
+  }
+
   @include media-breakpoint-down(md) {
     width: 95%;
     margin: 0;
@@ -81,12 +99,6 @@
 
   .ssb-link {
     margin-top: 10px;
-  }
-
-  .source {
-    a {
-      margin-top: 10px;
-    }
   }
 }
 
@@ -114,30 +126,6 @@ td {
 td,
 th {
   padding: 0.4em 1em;
-}
-
-.table-content {
-  overflow: auto;
-}
-
-.table-header {
-  overflow: hidden;
-
-  h3 {
-    margin-bottom: 0.5em;
-  }
-}
-
-.table-footer {
-  margin: 0.5em 0;
-
-  a.standardtegn {
-    font-size: 1.2em;
-  }
-
-  span {
-    margin: 1em 0em;
-  }
 }
 
 //specific styling for statistics tables. remove class "statistics" if no longer needed
@@ -371,10 +359,6 @@ table.statistics {
   display: block;
   text-align: right;
   margin-right: 5px;
-}
-
-.table-footer p.kildehenvisning {
-  margin-bottom: 0.4em;
 }
 
 ul.statbankkilde {

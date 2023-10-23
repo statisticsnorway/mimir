@@ -25,7 +25,7 @@
         </div>
         <p data-th-text="${highchart.description}" class="d-none highcharts-description highcharts-linked-description"></p>
       </figure>
-      <div class="footnote" data-th-if="${highchart.footnoteText}" data-th-text="${highchart.footnoteText}"></div>
+      <div class="footnote col-12" data-th-each="footnote : ${highchart.footnoteText}" data-th-text="${footnote}"></div>
       <div class="d-none highcharts-table invisible" data-th-utext="${highchart.tableData}"></div>
     </div>
 

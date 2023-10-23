@@ -33,7 +33,6 @@ function PublicationArchive(props) {
   useEffect(() => {
     if (first) {
       setFirst(false)
-      setPublications(publications)
     }
     if (filterChanged) {
       fetchPublicationsFiltered()

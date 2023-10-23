@@ -1,4 +1,3 @@
-import type { Component } from '/lib/xp/portal'
 import { renderError } from '/lib/ssb/error/error'
 import { render } from '/lib/enonic/react4xp'
 import { GA_TRACKING_ID } from '/site/pages/default/default'
@@ -19,29 +18,29 @@ export function preview(req: XP.Request) {
 }
 
 function renderPart(req: XP.Request) {
-  const component = getComponent<NameSearchPartConfig>()
+  const component = getComponent<XP.PartComponent.NameSearch>()
   if (!component) throw Error('No part found')
 
   const urlToService: string = serviceUrl({
     service: 'nameSearch',
   })
 
+  const currentContent = getContent()
+
   const props: PartProperties = {
     urlToService: urlToService,
     aboutLink: aboutLinkResources(component.config),
     nameSearchDescription: component.config.nameSearchDescription,
     frontPage: component.config.frontPage,
-    phrases: partsPhrases(getContent().language),
-    language: getContent().language,
+    phrases: partsPhrases(currentContent?.language || 'nb'),
+    language: currentContent?.language || 'nb',
     GA_TRACKING_ID: GA_TRACKING_ID,
   }
 
   return render('site/parts/nameSearch/nameSearch', props, req)
 }
 
-function aboutLinkResources(
-  config: Component<NameSearchPartConfig>['config']
-): PartProperties['aboutLink'] | undefined {
+function aboutLinkResources(config: NameSearchPartConfig): PartProperties['aboutLink'] | undefined {
   if (config.aboutLinkTitle && config.aboutLinkTarget) {
     return {
       title: config.aboutLinkTitle,

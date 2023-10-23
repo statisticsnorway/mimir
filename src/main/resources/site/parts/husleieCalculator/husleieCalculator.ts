@@ -6,7 +6,6 @@ import type { Dataset } from '/lib/types/jsonstat-toolkit'
 import type { Language, Phrases } from '/lib/types/language'
 import { render } from '/lib/enonic/react4xp'
 import type { CalculatorConfig } from '/site/content-types'
-import type { HusleieCalculator as HusleieCalculatorPartConfig } from '.'
 import { getComponent, getContent, serviceUrl, pageUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 
@@ -41,7 +40,7 @@ function renderPart(req: XP.Request) {
 }
 
 function getHusleiekalkulator(req: XP.Request, page: Content) {
-  const config = getComponent()?.config as HusleieCalculatorPartConfig
+  const config = getComponent<XP.PartComponent.HusleieCalculator>()?.config
   if (!config) throw Error('No part found')
 
   const language: Language = getLanguage(page)

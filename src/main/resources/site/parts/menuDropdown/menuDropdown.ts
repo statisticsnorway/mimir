@@ -2,7 +2,6 @@ import type { Content } from '/lib/xp/content'
 import { render as r4XpRender } from '/lib/enonic/react4xp'
 import { render } from '/lib/thymeleaf'
 import type { MunicipalityWithCounty } from '/lib/ssb/dataset/klass/municipalities'
-import type { MenuDropdown as MenuDropdownPartConfig } from '.'
 import type { MenuDropdown } from '/site/content-types'
 import { randomUnsafeString, scriptAsset } from '/lib/ssb/utils/utils'
 import { assetUrl, getContent, getComponent, pageUrl, getSiteConfig, serviceUrl } from '/lib/xp/portal'
@@ -31,7 +30,7 @@ export function preview(req: XP.Request) {
 function renderPart(req: XP.Request): XP.Response {
   const parsedMunicipalities: Array<MunicipalityWithCounty> = municipalsWithCounties()
   const municipality: MunicipalityWithCounty | undefined = getMunicipality(req)
-  const component = getComponent<MenuDropdownPartConfig>()
+  const component = getComponent<XP.PartComponent.MenuDropdown>()
   if (!component) throw Error('No part found')
 
   const siteConfig = getSiteConfig<XP.SiteConfig>()

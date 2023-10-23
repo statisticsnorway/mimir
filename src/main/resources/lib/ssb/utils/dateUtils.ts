@@ -40,13 +40,14 @@ export function sameDay(d1: Date, d2: Date): boolean {
 export function formatDate(date: string | undefined, formatType: string, language?: string): string | undefined {
   if (date) {
     const parsedDate: Date = parseISO(date)
-    let parsedDateWithTimeZone = parsedDate
+    let parsedDateWithTimezone = parsedDate
+    let missingTimezone = false
 
-    // If date has no specified timezone, add server offset so it become Europe/Oslo.
-    // If no timezone is specified, the parseISO function will assume the date is in local time, which for the server is UTC (Z, GMT+0)
+    // If date has no specified timezone, add Z to the end of the string to make it UTC.
+    // We want the formated date to show the excact same time as the input, we need to trick both libs to not care about timezones
     if (!date.match(/(?:Z|[+-](?:2[0-3]|[01][0-9]):[0-5][0-9])$/gm)) {
-      const serverOffsetInMs: number = app.config?.['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
-      parsedDateWithTimeZone = new Date(parsedDateWithTimeZone.getTime() + serverOffsetInMs)
+      parsedDateWithTimezone = parseISO(date + 'Z')
+      missingTimezone = true
     }
     const locale: object = language
       ? {
@@ -69,10 +70,10 @@ export function formatDate(date: string | undefined, formatType: string, languag
     let libTimeResult
     try {
       libTimeResult = libTimeFormatDate({
-        date: parsedDateWithTimeZone.toISOString(),
+        date: parsedDateWithTimezone.toISOString(),
         pattern: libTimePattern,
         locale: language,
-        timezoneId: 'Europe/Oslo',
+        timezoneId: missingTimezone ? 'GMT+0000' : 'Europe/Oslo',
       })
     } catch (e) {
       log.error(`Error in formatDate with Lib time, tried to format ${parsedDate} to ${libTimePattern}`)
@@ -83,12 +84,12 @@ export function formatDate(date: string | undefined, formatType: string, languag
 
     // Track errors in logs
     if (dateFnsResult && dateFnsResult !== libTimeResult) {
-      log.error(
-        `Error in formatDate, got different result with date-fns and lib-time when formatting ${parsedDate} to ${formatType}. date-fns: ${dateFnsResult}, lib-time: ${libTimeResult}`
+      log.info(
+        `Error in formatDate, got different result with date-fns and lib-time when formatting (${date} - ${parsedDate}) to ${formatType}. date-fns: ${dateFnsResult}, lib-time: ${libTimeResult}`
       )
     }
 
-    return libTimeResult
+    return dateFnsResult || libTimeResult
   }
   return
 }

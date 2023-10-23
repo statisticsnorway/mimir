@@ -69,8 +69,14 @@ function Article(props) {
     if (bodyText) {
       return (
         <div className='col-lg-8 p-0'>
+          {/* 
+            Macros will not be SSR in the part itself (where the output is recorded for mismatch checking),
+            but swapped in after part render by XP pipeline.
+            Since they are present when hydrating it causes hydration mismatch, so we supress the warning.
+          */}
           <div
             className='article-body searchabletext'
+            suppressHydrationWarning={true}
             dangerouslySetInnerHTML={{
               __html: bodyText,
             }}
@@ -174,7 +180,7 @@ Article.propTypes = {
   title: PropTypes.string,
   ingress: PropTypes.string,
   serialNumber: PropTypes.string,
-  showPubDate: PropTypes.string,
+  showPubDate: PropTypes.bool,
   pubDate: PropTypes.string,
   modifiedDate: PropTypes.string,
   authors: PropTypes.arrayOf(
