@@ -184,17 +184,16 @@ export function DashboardTools() {
   function renderLinkTools() {
     const openLinks = (item) => {
       if (item.id === 'link-statreg') {
-        return openLinkInNewWindow(`${internalBaseUrl}/statistikkregisteret/publisering/list`)
+        openLinkInNewWindow(`${internalBaseUrl}/statistikkregisteret/publisering/list`)
       } else if (item.id === 'link-statbank') {
-        return openLinkInNewWindow(internalStatbankUrl)
+        openLinkInNewWindow(internalStatbankUrl)
       } else if (item.id === 'link-guide-publications') {
-        return openLinkInNewWindow('https://wiki.ssb.no/display/VEILEDNING/Brukerdokumentasjon+for+publisering+i+XP')
+        openLinkInNewWindow('https://wiki.ssb.no/display/VEILEDNING/Brukerdokumentasjon+for+publisering+i+XP')
       } else if (item.id === 'link-status-statreg') {
-        return openLinkInNewWindow(`${internalBaseUrl}/dashboard/statusrapport`)
+        openLinkInNewWindow(`${internalBaseUrl}/dashboard/statusrapport`)
       } else if (item.id === 'link-tbml-validation') {
-        return openLinkInNewWindow(`${internalBaseUrl}/tbprocessor/document/validateTbml/216725`)
+        openLinkInNewWindow(`${internalBaseUrl}/tbprocessor/document/validateTbml/216725`)
       }
-      return
     }
 
     return (
