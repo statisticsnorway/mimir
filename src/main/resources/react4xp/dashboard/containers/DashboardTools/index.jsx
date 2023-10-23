@@ -158,16 +158,20 @@ export function DashboardTools() {
         title: 'Statistikkregisteret',
       },
       {
-        id: 'link-designer',
-        title: 'Tabellbygger',
-      },
-      {
         id: 'link-statbank',
         title: 'Intern statistikkbank',
       },
       {
         id: 'link-guide-publications',
-        title: 'Veiledninger i publiseringer på ssb.no',
+        title: 'Veiledninger i publisering',
+      },
+      {
+        id: 'link-status-statreg',
+        title: 'Statusrapporter StatReg',
+      },
+      {
+        id: 'link-tbml-validation',
+        title: 'TBML validering',
       }
     )
     return linkOptions
@@ -181,12 +185,14 @@ export function DashboardTools() {
     const openLinks = (item) => {
       if (item.id === 'link-statreg') {
         return openLinkInNewWindow(`${internalBaseUrl}/statistikkregisteret/publisering/list`)
-      } else if (item.id === 'link-designer') {
-        return openLinkInNewWindow(`${internalBaseUrl}/designer`)
       } else if (item.id === 'link-statbank') {
         return openLinkInNewWindow(internalStatbankUrl)
       } else if (item.id === 'link-guide-publications') {
-        return openLinkInNewWindow('https://wiki.ssb.no/display/VEILEDNING/Home')
+        return openLinkInNewWindow('https://wiki.ssb.no/display/VEILEDNING/Brukerdokumentasjon+for+publisering+i+XP')
+      } else if (item.id === 'link-status-statreg') {
+        return openLinkInNewWindow(`${internalBaseUrl}/dashboard/statusrapport`)
+      } else if (item.id === 'link-tbml-validation') {
+        return openLinkInNewWindow(`${internalBaseUrl}/tbprocessor/document/validateTbml/216725`)
       }
       return
     }
