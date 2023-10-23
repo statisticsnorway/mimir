@@ -243,7 +243,6 @@ export function DashboardTools() {
           </Col>
         </Row>
         {statuses.map((statRegStatus, index) => {
-          const {} = statRegStatus
           return (
             <Row className='mb-4' key={index}>
               <Col>{makeStatRegRefreshOptions(statRegStatus)}</Col>
