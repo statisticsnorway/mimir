@@ -80,7 +80,7 @@
     "@types/ramda": "~0.29.5",
     "@types/react": "^18.2.28",
     "@types/uuid": "^9.0.6",
-    "@types/validator": "^13.11.3",
+    "@types/validator": "^13.11.5",
     "@types/zipcelx": "^1.5.1",
     "@typescript-eslint/eslint-plugin": "^5.59.7",
     "@typescript-eslint/parser": "^5.62.0",
