@@ -1,14 +1,13 @@
 import { Content } from '/lib/xp/content'
-import { CreateOrUpdateStatus } from '/lib/ssb/dataset/dataset'
-import type { DataSource } from '/site/mixins/dataSource'
+import { progress, executeFunction } from '/lib/xp/task'
 import { RSSFilterLogData } from '/lib/ssb/cron/rss'
 import { splitEvery } from '/lib/vendor/ramda'
 
-const { DATASET_BRANCH } = __non_webpack_require__('/lib/ssb/repo/dataset')
-const { refreshDataset } = __non_webpack_require__('/lib/ssb/dataset/dataset')
-const { progress, executeFunction } = __non_webpack_require__('/lib/xp/task')
-const { logUserDataQuery, Events } = __non_webpack_require__('/lib/ssb/repo/query')
-const { completeJobLog, JOB_STATUS_COMPLETE } = __non_webpack_require__('/lib/ssb/repo/job')
+import { DATASET_BRANCH } from '/lib/ssb/repo/dataset'
+import { CreateOrUpdateStatus, refreshDataset } from '/lib/ssb/dataset/dataset'
+import { logUserDataQuery, Events } from '/lib/ssb/repo/query'
+import { completeJobLog, JOB_STATUS_COMPLETE } from '/lib/ssb/repo/job'
+import { type DataSource } from '/site/mixins/dataSource'
 
 export function refreshQueriesAsync(
   httpQueries: Array<Content<DataSource>>,
@@ -59,13 +58,4 @@ export function refreshQueriesAsync(
       },
     })
   })
-}
-
-export interface SSBTaskLib {
-  refreshQueriesAsync: (
-    httpQueries: Array<Content<DataSource>>,
-    jobLogId: string,
-    filterInfo: RSSFilterLogData,
-    batchSize?: number
-  ) => Array<string>
 }

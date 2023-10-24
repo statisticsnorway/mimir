@@ -1,7 +1,7 @@
-import { render } from '/lib/enonic/react4xp'
 import { getComponent, attachmentUrl } from '/lib/xp/portal'
+import { render } from '/lib/enonic/react4xp'
 
-const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
+import { renderError } from '/lib/ssb/error/error'
 
 export function get(req: XP.Request) {
   try {

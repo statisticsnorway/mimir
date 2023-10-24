@@ -1,6 +1,6 @@
 import { query } from '/lib/xp/content'
 
-exports.get = (req: XP.Request): XP.Response => {
+export const get = (req: XP.Request): XP.Response => {
   const subtopicQuery = query({
     count: 1000,
     query: `components.page.config.mimir.default.subjectType LIKE "subSubject"`,

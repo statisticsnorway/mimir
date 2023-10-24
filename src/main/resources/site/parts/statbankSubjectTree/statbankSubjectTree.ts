@@ -1,10 +1,9 @@
-import { render } from '/lib/enonic/react4xp'
-import type { SubjectItem, StatisticItem } from '/lib/ssb/utils/subjectUtils'
-import type { Content } from '/lib/xp/content'
-import type { StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
+import { type Content } from '/lib/xp/content'
 import { getContent } from '/lib/xp/portal'
-
-const {
+import { render } from '/lib/enonic/react4xp'
+import {
+  type SubjectItem,
+  type StatisticItem,
   getMainSubjects,
   getSubSubjects,
   getSubSubjectsByPath,
@@ -12,11 +11,13 @@ const {
   getStatisticsByPath,
   getEndedStatisticsByPath,
   getSecondaryStatisticsBySubject,
-} = __non_webpack_require__('/lib/ssb/utils/subjectUtils')
-const { getAllStatisticsFromRepo } = __non_webpack_require__('/lib/ssb/statreg/statistics')
+} from '/lib/ssb/utils/subjectUtils'
+import { type StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
 
-const { ensureArray } = __non_webpack_require__('/lib/ssb/utils/arrayUtils')
-const { fromPartCache } = __non_webpack_require__('/lib/ssb/cache/partCache')
+import { getAllStatisticsFromRepo } from '/lib/ssb/statreg/statistics'
+
+import { ensureArray } from '/lib/ssb/utils/arrayUtils'
+import { fromPartCache } from '/lib/ssb/cache/partCache'
 
 export function get(req: XP.Request) {
   const content = getContent()

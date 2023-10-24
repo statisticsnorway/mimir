@@ -6,12 +6,10 @@ import { find } from '/lib/vendor/ramda'
 
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 
-const { fetchStatRegData } = __non_webpack_require__('/lib/ssb/dashboard/statreg/common')
-const { CONTACTS_URL, STATREG_BRANCH, STATREG_REPO, getStatRegBaseUrl } = __non_webpack_require__(
-  '/lib/ssb/dashboard/statreg/config'
-)
-const { getNode } = __non_webpack_require__('/lib/ssb/repo/common')
-const { Events, logUserDataQuery } = __non_webpack_require__('/lib/ssb/repo/query')
+import { fetchStatRegData } from '/lib/ssb/dashboard/statreg/common'
+import { CONTACTS_URL, STATREG_BRANCH, STATREG_REPO, getStatRegBaseUrl } from '/lib/ssb/dashboard/statreg/config'
+import { getNode } from '/lib/ssb/repo/common'
+import { Events, logUserDataQuery } from '/lib/ssb/repo/query'
 
 export const STATREG_REPO_CONTACTS_KEY = 'contacts'
 
@@ -59,10 +57,4 @@ export function fetchContacts(): Array<Contact> | null {
     })
   }
   return null
-}
-
-export interface StatRegContactsLib {
-  STATREG_REPO_CONTACTS_KEY: string
-  fetchContacts: () => Array<Contact> | null
-  getContactsFromRepo: () => Array<Contact>
 }

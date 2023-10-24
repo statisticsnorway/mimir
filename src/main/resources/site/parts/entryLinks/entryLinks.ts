@@ -1,18 +1,16 @@
-import { render as r4XpRender } from '/lib/enonic/react4xp'
 import { getComponent, getContent } from '/lib/xp/portal'
-import type { EntryLinks as EntryLinksPartConfig } from '.'
 import { type Content, get as getContentByKey } from '/lib/xp/content'
-import type { Phrases } from '/lib/types/language'
+import { render as r4XpRender } from '/lib/enonic/react4xp'
+import { type Phrases } from '/lib/types/language'
 import { render } from '/lib/thymeleaf'
 import { imageUrl } from '/lib/ssb/utils/imageUtils'
 
-const {
-  data: { forceArray },
-} = __non_webpack_require__('/lib/util')
-const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
+import * as util from '/lib/util'
+import { getPhrases } from '/lib/ssb/utils/language'
 
-const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
-const { getAttachmentContent } = __non_webpack_require__('/lib/ssb/utils/utils')
+import { renderError } from '/lib/ssb/error/error'
+import { getAttachmentContent } from '/lib/ssb/utils/utils'
+import { type EntryLinks as EntryLinksPartConfig } from '.'
 
 const view = resolve('./entryLinks.html')
 
@@ -38,7 +36,7 @@ function renderPart(req: XP.Request): XP.Response {
   const phrases: Phrases = getPhrases(page) as Phrases
 
   const entryLinksContent: EntryLinksPartConfig['entryLinks'] = part.config.entryLinks
-    ? forceArray(part.config.entryLinks)
+    ? util.data.forceArray(part.config.entryLinks)
     : []
   const headerTitle: string = phrases.entryLinksTitle
   if (entryLinksContent.length === 0) {

@@ -1,9 +1,9 @@
-import type { Phrases } from '/lib/types/language'
-import { render } from '/lib/enonic/react4xp'
 import { getContent, getComponent } from '/lib/xp/portal'
+import { type Phrases } from '/lib/types/language'
+import { render } from '/lib/enonic/react4xp'
 
-const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
-const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
+import { renderError } from '/lib/ssb/error/error'
+import { getPhrases } from '/lib/ssb/utils/language'
 
 export function get(req: XP.Request): XP.Response {
   try {
@@ -29,7 +29,7 @@ function renderPart(req: XP.Request): XP.Response {
   const page = getContent()
   if (!page) throw Error('No page found')
 
-  const phrases: Phrases = getPhrases(page)
+  const phrases = getPhrases(page) as Phrases
 
   const PublicationText: string = phrases.publicationLinkText
   const CalendarText: string = phrases.statCalendarText

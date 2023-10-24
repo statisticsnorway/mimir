@@ -1,16 +1,17 @@
-import type { ContentLight, Release as ReleaseVariant } from '/lib/ssb/repo/statisticVariant'
-import { getUpcompingStatisticVariantsFromRepo } from '/lib/ssb/repo/statisticVariant'
+import {
+  type ContentLight,
+  type Release as ReleaseVariant,
+  getUpcompingStatisticVariantsFromRepo,
+} from '/lib/ssb/repo/statisticVariant'
 import { Contact, ReleasesInListing } from '/lib/ssb/dashboard/statreg/types'
-import type { SubjectItem } from '/lib/ssb/utils/subjectUtils'
+import { type SubjectItem, getMainSubjects } from '/lib/ssb/utils/subjectUtils'
 import { calculatePeriod } from '/lib/ssb/utils/variantUtils'
 import { format, getTimeZoneIso, parseISO, addDays, isWithinInterval } from '/lib/ssb/utils/dateUtils'
 
-const { xmlEscape } = __non_webpack_require__('/lib/text-encoding')
-const {
-  data: { forceArray },
-} = __non_webpack_require__('/lib/util')
-const { getMainSubjects } = __non_webpack_require__('/lib/ssb/utils/subjectUtils')
-const { getContactsFromRepo } = __non_webpack_require__('/lib/ssb/statreg/contacts')
+// @ts-ignore
+import { xmlEscape } from '/lib/text-encoding'
+import * as util from '/lib/util'
+import { getContactsFromRepo } from '/lib/ssb/statreg/contacts'
 
 const dummyReq: Partial<XP.Request> = {
   branch: 'master',
@@ -63,7 +64,7 @@ function getUpcomingVariants(
   statisticVariants.forEach((statisticVariant) => {
     const lang: string = statisticVariant.language === 'en' ? 'en' : 'no'
     const mainSubjectName: string | undefined = statisticVariant.data.mainSubjects
-      ? forceArray(statisticVariant.data.mainSubjects)[0]
+      ? util.data.forceArray(statisticVariant.data.mainSubjects)[0]
       : undefined
     const mainSubject: SubjectItem | null = mainSubjectName
       ? getMainSubject(mainSubjectName, allMainSubjects, lang)
@@ -82,7 +83,7 @@ function getUpcomingVariants(
       subject: mainSubject ? mainSubject.name : '',
       language: statisticVariant.language,
       shortname: statisticVariant.data.shortName,
-      contacts: statisticVariant.data.contacts ? forceArray(statisticVariant.data.contacts) : [],
+      contacts: statisticVariant.data.contacts ? util.data.forceArray(statisticVariant.data.contacts) : [],
     })
   })
   return variants
@@ -95,7 +96,7 @@ function getUpcomingReleases(statisticVariants: ContentLight<ReleaseVariant>[]):
   const releases: StatkalRelease[] = []
   statisticVariants.forEach((statisticVariant) => {
     const allReleases: ReleasesInListing[] = statisticVariant.data.upcomingReleases
-      ? forceArray(statisticVariant.data.upcomingReleases)
+      ? util.data.forceArray(statisticVariant.data.upcomingReleases)
       : []
     const upcomingReleases: ReleasesInListing[] = allReleases.filter((release) =>
       isWithinInterval(new Date(release.publishTime), {
@@ -140,7 +141,7 @@ function getRssReleases(variants: StatkalVariant[], releases: StatkalRelease[]):
       pubDate: `${pubDate}${timeZoneIso}`,
       periode: release.periode,
       shortname: variant.shortname,
-      contacts: forceArray(contactsStatistic),
+      contacts: util.data.forceArray(contactsStatistic),
     })
   })
   return rssReleases

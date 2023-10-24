@@ -1,6 +1,7 @@
 /* eslint-disable prettier/prettier */
 
 import { PartComponent as _PartComponent, LayoutComponent as _LayoutComponent } from '@enonic-types/core'
+
 declare global {
   namespace XP {
     namespace PartComponent {
@@ -72,3 +73,4 @@ declare global {
     }
   }
 }
+

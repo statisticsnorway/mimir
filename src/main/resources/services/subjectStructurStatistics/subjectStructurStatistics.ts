@@ -1,6 +1,5 @@
-import { MainSubject, SubSubject, Title, StatisticItem } from '/lib/ssb/utils/subjectUtils'
-const { getSubjectStructur } = __non_webpack_require__('/lib/ssb/utils/subjectUtils')
-const { xmlEscape } = __non_webpack_require__('/lib/text-encoding')
+import { MainSubject, SubSubject, Title, StatisticItem, getSubjectStructur } from '/lib/ssb/utils/subjectUtils'
+import { xmlEscape } from '/lib/text-encoding'
 
 function get(req: XP.Request): XP.Response {
   const mainSubjects: Array<MainSubject> = getSubjectStructur(req, 'no')

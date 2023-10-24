@@ -1,10 +1,10 @@
 import { query, get as getContent, Content, ContentsResult } from '/lib/xp/content'
-import type { Statistics } from '/site/content-types'
-import type { DataSource } from '/site/mixins/dataSource'
 import { UNPUBLISHED_DATASET_BRANCH } from '/lib/ssb/repo/dataset'
 
-const { getDataSourceIdsFromStatistics } = __non_webpack_require__('/lib/ssb/dashboard/statistic')
-const { refreshDataset } = __non_webpack_require__('/lib/ssb/dataset/dataset')
+import { getDataSourceIdsFromStatistics } from '/lib/ssb/dashboard/statistic'
+import { refreshDataset } from '/lib/ssb/dataset/dataset'
+import { type DataSource } from '/site/mixins/dataSource'
+import { type Statistics } from '/site/content-types'
 
 export function updateUnpublishedMockTbml(): void {
   const res: ContentsResult<Content<Statistics>> = query({
@@ -24,8 +24,4 @@ export function updateUnpublishedMockTbml(): void {
     })
   }
   return
-}
-
-export interface MockUnpublishedLib {
-  updateUnpublishedMockTbml: () => void
 }

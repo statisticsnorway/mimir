@@ -2,7 +2,6 @@ __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 // @ts-ignore
 import striptags from 'striptags'
 import { Content } from '/lib/xp/content'
-import type { Table } from '/site/content-types'
 import {
   TbmlDataUniform,
   TableRowUniform,
@@ -18,16 +17,20 @@ import {
   TableCellRaw,
   XmlParser,
 } from '/lib/types/xmlParser'
-import { DatasetRepoNode, DataSource as DataSourceType } from '/lib/ssb/repo/dataset'
-import type { DataSource } from '/site/mixins/dataSource'
+import {
+  DatasetRepoNode,
+  DataSource as DataSourceType,
+  DATASET_BRANCH,
+  UNPUBLISHED_DATASET_BRANCH,
+} from '/lib/ssb/repo/dataset'
 
-const {
-  data: { forceArray },
-} = __non_webpack_require__('/lib/util')
-const { getDataset } = __non_webpack_require__('/lib/ssb/dataset/dataset')
-const { datasetOrUndefined } = __non_webpack_require__('/lib/ssb/cache/cache')
-const { DATASET_BRANCH, UNPUBLISHED_DATASET_BRANCH } = __non_webpack_require__('/lib/ssb/repo/dataset')
-const { getRowValue } = __non_webpack_require__('/lib/ssb/utils/utils')
+import * as util from '/lib/util'
+import { getDataset } from '/lib/ssb/dataset/dataset'
+import { datasetOrUndefined } from '/lib/ssb/cache/cache'
+import { getRowValue } from '/lib/ssb/utils/utils'
+import { type DataSource } from '/site/mixins/dataSource'
+import { type Table } from '/site/content-types'
+
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser') as XmlParser
 
 export function parseTable(
@@ -91,11 +94,13 @@ function parseHtmlTable(table: Content<Table & DataSource>): TableView {
       : undefined
   const tableData: string | undefined = datasourceHtmlTable ? datasourceHtmlTable.html : undefined
   const jsonTable: HtmlTableRaw | undefined = tableData ? parseStringToJson(tableData) : undefined
-  const tableRows: Array<HtmlTableRowRaw> = jsonTable ? forceArray(jsonTable.table.tbody.tr) : []
-  const theadRow: Array<HtmlTableRowRaw> = forceArray(tableRows[0])
+  const tableRows: Array<HtmlTableRowRaw> = jsonTable ? util.data.forceArray(jsonTable.table.tbody.tr) : []
+  const theadRow: Array<HtmlTableRowRaw> = util.data.forceArray(tableRows[0])
   const tbodyRows: Array<HtmlTableRowRaw> = tableRows.slice(1)
 
-  const footNotes: Array<string> = datasourceHtmlTable?.footnoteText ? forceArray(datasourceHtmlTable.footnoteText) : []
+  const footNotes: Array<string> = datasourceHtmlTable?.footnoteText
+    ? util.data.forceArray(datasourceHtmlTable.footnoteText)
+    : []
   const correctionText: string = table.data.correctionNotice || ''
   const noteRefs: Array<string> = footNotes ? footNotes.map((_note: string, index: number) => `note:${index + 1}`) : []
   const notes: Array<Note> = footNotes
@@ -123,7 +128,7 @@ function parseHtmlTable(table: Content<Table & DataSource>): TableView {
       tr: tbodyRows.map((row) => {
         const cells: Array<number | string> = getHtmlTableCells(row)
         return {
-          th: forceArray(cells[0]),
+          th: util.data.forceArray(cells[0]),
           td: cells.slice(1),
         }
       }),
@@ -148,7 +153,7 @@ function parseHtmlTable(table: Content<Table & DataSource>): TableView {
 }
 
 function getHtmlTableCells(row: HtmlTableRowRaw): Array<number | string> {
-  return forceArray(row.td).map((cell) => {
+  return util.data.forceArray(row.td).map((cell) => {
     const value: number | string = getRowValue(cell)
     return typeof value === 'string' ? value.replace(/&nbsp;/g, '') : value
   })
@@ -158,8 +163,8 @@ function getTableViewData(table: Content<Table>, dataContent: TbmlDataUniform): 
   const title: Title = dataContent.tbml.metadata.title
   const notes: NotesUniform = dataContent.tbml.metadata.notes
   const sourceList: Array<Source> = dataContent?.tbml?.metadata?.sourceList || []
-  const headRows: Array<TableRowUniform> = forceArray(dataContent.tbml.presentation.table.thead)
-  const bodyRows: Array<TableRowUniform> = forceArray(dataContent.tbml.presentation.table.tbody)
+  const headRows: Array<TableRowUniform> = util.data.forceArray(dataContent.tbml.presentation.table.thead)
+  const bodyRows: Array<TableRowUniform> = util.data.forceArray(dataContent.tbml.presentation.table.tbody)
 
   const headNoteRefs: Array<string> = headRows.reduce((acc: Array<string>, row: TableRowUniform) => {
     const tableCells: Array<TableCellUniform> = row.tr
@@ -250,11 +255,11 @@ function parseStringToJson(tableData: string): HtmlTableRaw | undefined {
 
 function getTableViewDataStatbankSaved(dataContent: StatbankSavedUniform): TableView {
   const title: Title = dataContent.table.caption
-  const headRows: Array<TableRowUniform> = forceArray(dataContent.table.thead).map((thead: Thead) => ({
-    tr: getTableCellHeader(forceArray(thead.tr)),
+  const headRows: Array<TableRowUniform> = util.data.forceArray(dataContent.table.thead).map((thead: Thead) => ({
+    tr: getTableCellHeader(util.data.forceArray(thead.tr)),
   }))
-  const bodyRows: Array<TableRowUniform> = forceArray(dataContent.table.tbody).map((tbody: Thead) => ({
-    tr: getTableCellBody(forceArray(tbody.tr)),
+  const bodyRows: Array<TableRowUniform> = util.data.forceArray(dataContent.table.tbody).map((tbody: Thead) => ({
+    tr: getTableCellBody(util.data.forceArray(tbody.tr)),
   }))
 
   return {
@@ -272,21 +277,21 @@ function getTableViewDataStatbankSaved(dataContent: StatbankSavedUniform): Table
 }
 
 function getTableCellHeader(tableCell: Array<TableCellRaw>): Array<TableCellUniform> {
-  return forceArray(tableCell).map((cell) => ({
-    td: typeof cell.td != 'undefined' ? forceArray(cell.td) : [],
-    th: typeof cell.th != 'undefined' ? forceArray(cell.th) : [],
+  return util.data.forceArray(tableCell).map((cell) => ({
+    td: typeof cell.td != 'undefined' ? util.data.forceArray(cell.td) : [],
+    th: typeof cell.th != 'undefined' ? util.data.forceArray(cell.th) : [],
   }))
 }
 
 function getTableCellBody(tableCell: Array<TableCellRaw>): Array<TableCellUniform> {
-  return forceArray(tableCell).map((cell) => ({
-    th: typeof cell.th != 'undefined' ? forceArray(cell.th) : [],
-    td: typeof cell.td != 'undefined' ? forceArray(cell.td) : [],
+  return util.data.forceArray(tableCell).map((cell) => ({
+    th: typeof cell.th != 'undefined' ? util.data.forceArray(cell.th) : [],
+    td: typeof cell.td != 'undefined' ? util.data.forceArray(cell.td) : [],
   }))
 }
 
 function getNoterefsHeader(row: TableCellUniform): Array<string> {
-  const values: Array<number | string | PreliminaryData> = forceArray(row.th)
+  const values: Array<number | string | PreliminaryData> = util.data.forceArray(row.th)
   const noteRefs: Array<string> = values.reduce((acc: Array<string>, cell: number | string | PreliminaryData) => {
     if (typeof cell === 'object') {
       if (cell.noterefs) {
@@ -317,11 +322,6 @@ export interface TableView {
 }
 
 export type TableSourceList = Array<Source>
-
-export interface TableLib {
-  parseTable: (req: XP.Request, table: Content<Table>, branch?: string) => TableView
-  parseHtmlString: (tableData: string) => HtmlTable
-}
 
 interface DatasourceHtmlTable {
   html: string | undefined

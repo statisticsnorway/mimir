@@ -9,16 +9,5 @@ export const STATREG_REPO = 'no.ssb.statreg'
 export const STATREG_BRANCH = 'master'
 
 export function getStatRegBaseUrl(): string {
-  return (app.config && app.config[STAT_REG_SVC_PROP]) || 'https://i.ssb.no/statistikkregisteret'
-}
-
-export interface StatRegConfigLib {
-  STAT_REG_SVC_PROP: string
-  CONTACTS_URL: string
-  STATISTICS_URL: string
-  PUBLICATIONS_URL: string
-  ALL_DATA_URL: string
-  STATREG_REPO: string
-  STATREG_BRANCH: string
-  getStatRegBaseUrl: () => string
+  return app.config?.[STAT_REG_SVC_PROP] || 'https://i.ssb.no/statistikkregisteret'
 }

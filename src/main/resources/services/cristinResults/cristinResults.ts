@@ -1,6 +1,6 @@
 import { fetchResultsCristin } from '/lib/ssb/cristin/cristin'
 
-exports.get = (req: XP.Request): XP.Response => {
+export const get = (req: XP.Request): XP.Response => {
   // eslint-disable-next-line camelcase
   const per_page: string = req.params.per_page ? req.params.per_page : '10'
   const contributor: string | undefined = req.params.contributor

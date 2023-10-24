@@ -1,8 +1,8 @@
 import { get, getChildren, query, Content, ContentsResult } from '/lib/xp/content'
-import type { MenuItem, Footer, Header } from '/site/content-types'
 
-const { pageUrl } = __non_webpack_require__('/lib/xp/portal')
-const { getAttachment } = __non_webpack_require__('/lib/ssb/utils/utils')
+import { pageUrl } from '/lib/xp/portal'
+import { getAttachment } from '/lib/ssb/utils/utils'
+import { type MenuItem, type Footer, type Header } from '/site/content-types'
 
 function flattenMenu(menuItems: Array<MenuItemParsed>): Array<MenuItemParsed> {
   return menuItems.reduce((acc: Array<MenuItemParsed>, menuItem) => {
@@ -142,12 +142,4 @@ export interface MenuItemParsed extends MenuItem {
 export interface Link {
   title: string
   path?: string
-}
-
-export interface MenuLib {
-  createMenuTree: (menuItemId: string) => Array<MenuItemParsed>
-  isMenuItemActive: (children: ContentsResult<Content<MenuItem>>, content: Content | null) => boolean
-  parseTopLinks: (topLinks: TopLinks) => Array<Link>
-  parseGlobalLinks: (globalLinks: GlobalLinks) => Array<Link>
-  getMenuIcons: (menuItemId: string) => Array<object>
 }

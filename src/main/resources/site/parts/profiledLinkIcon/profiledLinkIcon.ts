@@ -1,9 +1,9 @@
-import { render } from '/lib/enonic/react4xp'
-import type { ProfiledLinkIcon as ProfiledLinkIconPartConfig } from '.'
 import { getComponent, pageUrl } from '/lib/xp/portal'
+import { render } from '/lib/enonic/react4xp'
 
-const { data } = __non_webpack_require__('/lib/util')
-const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
+import { data } from '/lib/util'
+import { renderError } from '/lib/ssb/error/error'
+import { type ProfiledLinkIcon as ProfiledLinkIconPartConfig } from '.'
 
 export function get(req: XP.Request): XP.Response {
   try {

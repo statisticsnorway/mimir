@@ -1,11 +1,11 @@
+import { getContent, getComponent, pageUrl, serviceUrl } from '/lib/xp/portal'
+import { localize } from '/lib/xp/i18n'
 import { renderError } from '/lib/ssb/error/error'
 import { render } from '/lib/enonic/react4xp'
 import { GA_TRACKING_ID } from '/site/pages/default/default'
-import type { NameSearch as NameSearchPartConfig } from '.'
-import { getContent, getComponent, pageUrl, serviceUrl } from '/lib/xp/portal'
-import { localize } from '/lib/xp/i18n'
+import { type NameSearch as NameSearchPartConfig } from '.'
 
-exports.get = (req: XP.Request): XP.Response => {
+export const get = (req: XP.Request): XP.Response => {
   try {
     return renderPart(req)
   } catch (e) {

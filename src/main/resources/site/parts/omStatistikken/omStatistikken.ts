@@ -1,20 +1,21 @@
-import { formatDate } from '/lib/ssb/utils/dateUtils'
 import { get as getContentByKey, type Content } from '/lib/xp/content'
-import { render } from '/lib/enonic/react4xp'
-import type { Phrases } from '/lib/types/language'
-import type { Statistics, OmStatistikken } from '/site/content-types'
-import type { ReleaseDatesVariant, StatisticInListing, VariantInListing } from '/lib/ssb/dashboard/statreg/types'
-import type { Accordion, AccordionItem } from '/lib/types/components'
 import { getContent, processHtml } from '/lib/xp/portal'
+import {
+  type ReleaseDatesVariant,
+  type StatisticInListing,
+  type VariantInListing,
+} from '/lib/ssb/dashboard/statreg/types'
+import { type Accordion, type AccordionItem } from '/lib/types/components'
+import { type Phrases } from '/lib/types/language'
+import { render } from '/lib/enonic/react4xp'
+import { formatDate } from '/lib/ssb/utils/dateUtils'
 
-const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
-const { getStatisticByIdFromRepo } = __non_webpack_require__('/lib/ssb/statreg/statistics')
-const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
-const { getReleaseDatesByVariants } = __non_webpack_require__('/lib/ssb/statreg/statistics')
-const { fromPartCache } = __non_webpack_require__('/lib/ssb/cache/partCache')
-const {
-  data: { forceArray },
-} = __non_webpack_require__('/lib/util')
+import { renderError } from '/lib/ssb/error/error'
+import { getStatisticByIdFromRepo, getReleaseDatesByVariants } from '/lib/ssb/statreg/statistics'
+import { getPhrases } from '/lib/ssb/utils/language'
+import { fromPartCache } from '/lib/ssb/cache/partCache'
+import * as util from '/lib/util'
+import { type Statistics, type OmStatistikken } from '/site/content-types'
 
 export function get(req: XP.Request): XP.Response {
   try {
@@ -108,7 +109,7 @@ function getOmStatistikken(req: XP.Request, page: Content<any>, aboutTheStatisti
 }
 
 function getNextRelease(statistic: StatisticInListing, nextRelease: string, language: string): string {
-  const variants: Array<VariantInListing> = statistic.variants ? forceArray(statistic.variants) : []
+  const variants: Array<VariantInListing> = statistic.variants ? util.data.forceArray(statistic.variants) : []
   const releaseDates: ReleaseDatesVariant = getReleaseDatesByVariants(variants)
   const nextReleaseDate: string = releaseDates.nextRelease[0]
   const nextReleaseStatistic: string | undefined =

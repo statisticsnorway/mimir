@@ -1,6 +1,7 @@
 // Only used in Table part
 
 import jquery from 'jquery'
+
 window.jQuery = jquery
 window.$ = jquery
 

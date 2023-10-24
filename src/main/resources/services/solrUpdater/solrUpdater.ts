@@ -6,7 +6,7 @@ import { Article, Page, Statistics } from '/site/content-types'
 const yesterday: string = format(subDays(new Date(), 1), 'yyyy-MM-dd')
 const baseUrl: string = app.config && app.config['ssb.baseUrl'] ? app.config['ssb.baseUrl'] : 'https://www.ssb.no'
 
-exports.get = (): XP.Response => {
+export const get = (): XP.Response => {
   const changedContent = query<Content<Statistics | Article | Page>>({
     start: 0,
     count: 100,

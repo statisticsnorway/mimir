@@ -2,7 +2,7 @@ import { getComponent } from '/lib/xp/portal'
 import { render } from '/lib/thymeleaf'
 import { imageUrl } from '/lib/ssb/utils/imageUtils'
 
-const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
+import { renderError } from '/lib/ssb/error/error'
 
 const view = resolve('./frontPageBanner.html')
 

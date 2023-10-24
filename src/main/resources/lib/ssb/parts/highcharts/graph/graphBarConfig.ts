@@ -1,5 +1,5 @@
 import { mergeDeepRight } from '/lib/vendor/ramda'
-const { X_AXIS_TITLE_POSITION, createDefaultConfig } = __non_webpack_require__('/lib/ssb/parts/highcharts/graph/config')
+import { X_AXIS_TITLE_POSITION, createDefaultConfig } from '/lib/ssb/parts/highcharts/graph/config'
 
 export function barConfig(highchartContent, options) {
   const defaultConfig = createDefaultConfig(

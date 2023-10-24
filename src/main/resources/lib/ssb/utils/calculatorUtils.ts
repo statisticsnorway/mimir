@@ -114,10 +114,3 @@ export function lastPeriodKpi(kpiDataMonth: Dataset | null): CalculatorPeriod {
     year: lastYear,
   }
 }
-
-export interface CalculatorUtilsLib {
-  nextPeriod: (month: string, year: string) => CalculatorPeriod
-  allMonths: (phrases: Phrases, frontPage?: boolean, type?: string) => MonthDropdownItems
-  monthLabel: (months: MonthDropdownItems, language: string | undefined, month: number | string) => string
-  lastPeriodKpi: (kpiDataMonth: Dataset | null) => CalculatorPeriod
-}

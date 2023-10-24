@@ -29,8 +29,3 @@ export function imageUrl(params: ImageUrlParams) {
 
   return xpImageUrl(params)
 }
-
-export interface ImageUtilsLib {
-  getImageCaption: (imageId: string) => string | undefined
-  getImageAlt: (imageId: string) => string | undefined
-}

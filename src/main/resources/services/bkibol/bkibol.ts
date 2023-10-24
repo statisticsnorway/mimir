@@ -1,16 +1,21 @@
 import { type Content } from '/lib/xp/content'
 import { getContent } from '/lib/xp/portal'
+import { localize } from '/lib/xp/i18n'
 import { HttpRequestParams } from '/lib/http-client'
-import type { CalculatorConfig } from '/site/content-types'
 import { Dataset } from '/lib/types/jsonstat-toolkit'
 import { Language, Phrases } from '/lib/types/language'
 import { DropdownItems } from '/lib/types/components'
 import { allMonths, monthLabel } from '/lib/ssb/utils/calculatorUtils'
 
-const { localize } = __non_webpack_require__('/lib/xp/i18n')
-const { getLanguage } = __non_webpack_require__('/lib/ssb/utils/language')
-const { getCalculatorConfig, getBkibolDatasetEnebolig, getBkibolDatasetBoligblokk, isChronological, getChangeValue } =
-  __non_webpack_require__('/lib/ssb/dataset/calculator')
+import { getLanguage } from '/lib/ssb/utils/language'
+import {
+  getCalculatorConfig,
+  getBkibolDatasetEnebolig,
+  getBkibolDatasetBoligblokk,
+  isChronological,
+  getChangeValue,
+} from '/lib/ssb/dataset/calculator'
+import { type CalculatorConfig } from '/site/content-types'
 
 function get(req: HttpRequestParams): XP.Response {
   const domene: string | undefined = req.params?.domene || 'ENEBOLIG'

@@ -10,6 +10,7 @@ const fourOFourView = resolve('./404.html')
 const mainErrorView = resolve('./error.html')
 const genericErrorView = resolve('./generic.html')
 const { randomUnsafeString } = require('../../lib/ssb/utils/utils')
+
 exports.handle404 = function (err) {
   // getting language from site because 404 page is not connected to any content.
   // So unless we stop setting language via menu and start to set it via site, this will always show as 'nb'

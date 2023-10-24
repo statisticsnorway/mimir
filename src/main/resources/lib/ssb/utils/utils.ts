@@ -1,10 +1,10 @@
 import { get, getAttachmentStream, ByteSource, Content } from '/lib/xp/content'
-import type { Header } from '/site/content-types'
+
+import { getContent, pageUrl, assetUrl } from '/lib/xp/portal'
+import { readLines } from '/lib/xp/io'
 import { PreliminaryData } from '/lib/types/xmlParser'
 import { formatDate, fromNow } from '/lib/ssb/utils/dateUtils'
-
-const { getContent, pageUrl, assetUrl } = __non_webpack_require__('/lib/xp/portal')
-const { readLines } = __non_webpack_require__('/lib/xp/io')
+import { type Header } from '/site/content-types'
 
 function numberWithSpaces(x: number | string): string {
   const parts: Array<string> = x.toString().split('.')
@@ -188,17 +188,3 @@ interface ManualSearchPageResult {
 }
 
 export type SourceList = Array<Sources>
-export interface UtilsLib {
-  createHumanReadableFormat: (value: number | string | null) => string
-  dateToFormat: (dateString: string | undefined) => string
-  dateToReadable: (dateString: string | undefined) => string
-  isUrl: (urlOrId: string | undefined) => boolean | undefined
-  isNumber: (str: number | string | undefined) => boolean
-  getRowValue: (value: number | string | PreliminaryData | Array<number | string | PreliminaryData>) => RowValue
-  pageMode: (req: XP.Request) => string
-  pathFromStringOrContent: (urlSrc: Header['searchResultPage']) => string | undefined
-  getSources: (sourceConfig: Array<SourcesConfig>) => SourceList
-  getAttachmentContent: (contentId: string | undefined) => string | undefined
-  getAttachment: (attachmentContent: Content | null) => string | undefined
-  parseContributions: (contributions: XP.PageContributions) => XP.PageContributions
-}

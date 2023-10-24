@@ -1,10 +1,9 @@
 import { Content } from '/lib/xp/content'
+import { localize } from '/lib/xp/i18n'
 import { HttpRequestParams } from '/lib/http-client'
-import type { CalculatorConfig } from '/site/content-types'
 import { Dataset } from '/lib/types/jsonstat-toolkit'
-const { localize } = __non_webpack_require__('/lib/xp/i18n')
-const { getCalculatorConfig, getPifDataset, isChronological, getChangeValue } =
-  __non_webpack_require__('/lib/ssb/dataset/calculator')
+import { getCalculatorConfig, getPifDataset, isChronological, getChangeValue } from '/lib/ssb/dataset/calculator'
+import { type CalculatorConfig } from '/site/content-types'
 
 function get(req: HttpRequestParams): XP.Response {
   // Scope code for radio button group option pif-choose-home-import, which is set as default in frontend.

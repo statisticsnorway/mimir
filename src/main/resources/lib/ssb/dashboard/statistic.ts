@@ -1,36 +1,43 @@
-import type { Default as DefaultPageConfig } from '/site/pages/default'
-
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
-import { EventInfo } from '/lib/ssb/repo/query'
-import { Socket, SocketEmitter } from '/lib/types/socket'
+
 import { query, get as getContent, Content, ContentsResult } from '/lib/xp/content'
-import { StatisticInListing, VariantInListing } from '/lib/ssb/dashboard/statreg/types'
-import type { Statistics, Highchart, Table, KeyFigure } from '/site/content-types'
-import { ProcessXml, RefreshDatasetResult, DashboardJobInfo } from '/lib/ssb/dashboard/dashboard'
 import { run, type ContextParams } from '/lib/xp/context'
 import { sanitize } from '/lib/xp/common'
-import { DatasetRepoNode } from '/lib/ssb/repo/dataset'
-import type { DataSource } from '/site/mixins/dataSource'
-import { Source, TbmlDataUniform } from '/lib/types/xmlParser'
-import { JobEventNode, JobInfoNode, JobNames, JobStatus } from '/lib/ssb/repo/job'
 import { hasRole, User } from '/lib/xp/auth'
-import type { Statistic } from '/site/mixins/statistic'
 
-const { hasWritePermissions } = __non_webpack_require__('/lib/ssb/parts/permissions')
-const { fetchStatisticsWithRelease, getAllStatisticsFromRepo, getStatisticByIdFromRepo } =
-  __non_webpack_require__('/lib/ssb/statreg/statistics')
-const {
-  data: { forceArray },
-} = __non_webpack_require__('/lib/util')
-const { refreshDatasetHandler } = __non_webpack_require__('/lib/ssb/dashboard/dashboard')
-const { users } = __non_webpack_require__('/lib/ssb/dashboard/dashboardUtils')
-const { getTbprocessor, getTbprocessorKey } = __non_webpack_require__('/lib/ssb/dataset/tbprocessor/tbprocessor')
-const { encrypt } = __non_webpack_require__('/lib/cipher/cipher')
-const { completeJobLog, updateJobLog, startJobLog } = __non_webpack_require__('/lib/ssb/repo/job')
-const { withConnection, ENONIC_CMS_DEFAULT_REPO, getNode, queryNodes } = __non_webpack_require__('/lib/ssb/repo/common')
-const { EVENT_LOG_BRANCH, EVENT_LOG_REPO } = __non_webpack_require__('/lib/ssb/repo/eventLog')
-const { localize } = __non_webpack_require__('/lib/xp/i18n')
-const { executeFunction } = __non_webpack_require__('/lib/xp/task')
+import { localize } from '/lib/xp/i18n'
+import { executeFunction } from '/lib/xp/task'
+import { encrypt } from '/lib/cipher/cipher'
+import * as util from '/lib/util'
+import { Source, TbmlDataUniform } from '/lib/types/xmlParser'
+import { Socket, SocketEmitter } from '/lib/types/socket'
+import { EVENT_LOG_BRANCH, EVENT_LOG_REPO } from '/lib/ssb/repo/eventLog'
+import { withConnection, ENONIC_CMS_DEFAULT_REPO, getNode, queryNodes } from '/lib/ssb/repo/common'
+import { getTbprocessor, getTbprocessorKey } from '/lib/ssb/dataset/tbprocessor/tbprocessor'
+import { users } from '/lib/ssb/dashboard/dashboardUtils'
+import {
+  fetchStatisticsWithRelease,
+  getAllStatisticsFromRepo,
+  getStatisticByIdFromRepo,
+} from '/lib/ssb/statreg/statistics'
+import { hasWritePermissions } from '/lib/ssb/parts/permissions'
+import {
+  JobEventNode,
+  JobInfoNode,
+  JobNames,
+  JobStatus,
+  completeJobLog,
+  updateJobLog,
+  startJobLog,
+} from '/lib/ssb/repo/job'
+import { DatasetRepoNode } from '/lib/ssb/repo/dataset'
+import { ProcessXml, RefreshDatasetResult, DashboardJobInfo, refreshDatasetHandler } from '/lib/ssb/dashboard/dashboard'
+import { StatisticInListing, VariantInListing } from '/lib/ssb/dashboard/statreg/types'
+import { EventInfo } from '/lib/ssb/repo/query'
+import { type Default as DefaultPageConfig } from '/site/pages/default'
+import { type Statistic } from '/site/mixins/statistic'
+import { type DataSource } from '/site/mixins/dataSource'
+import { type Statistics, type Highchart, type Table, type KeyFigure } from '/site/content-types'
 
 export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): void {
   socket.on('get-statistics', () => {
@@ -229,7 +236,7 @@ export function getDataSourceIdsFromStatistics(statistic: Content<Statistics>): 
     ? [statistic.data.statisticsKeyFigure]
     : []
   const attachmentTablesFiguresIds: Array<string> = statistic.data.attachmentTablesFigures
-    ? forceArray(statistic.data.attachmentTablesFigures)
+    ? util.data.forceArray(statistic.data.attachmentTablesFigures)
     : []
   return [...mainTableId, ...statisticsKeyFigureId, ...attachmentTablesFiguresIds]
 }
@@ -245,7 +252,7 @@ function getSourcesForUserFromStatistic(sources: Array<SourceList>): Array<Owner
       dataset.data.tbml.metadata.sourceList
     ) {
       const tbmlId: string = dataset.data.tbml.metadata.instance.definitionId.toString()
-      forceArray(dataset.data.tbml.metadata.sourceList).forEach((source: Source) => {
+      util.data.forceArray(dataset.data.tbml.metadata.sourceList).forEach((source: Source) => {
         const userIndex: number = acc.findIndex((it) => it.ownerId == source.owner)
         if (userIndex != -1) {
           const tbmlIndex: number = acc[userIndex].tbmlList.findIndex((it) => it.tbmlId == tbmlId)
@@ -328,7 +335,7 @@ function getStatisticsJobLogInfo(id: string, count = 1): Array<DashboardJobInfo>
 }
 
 function prepStatisticsJobLogInfo(jobNode: JobInfoNode): DashboardJobInfo {
-  const jobResult: Array<RefreshDatasetResult> = forceArray(
+  const jobResult: Array<RefreshDatasetResult> = util.data.forceArray(
     jobNode.data.refreshDataResult || []
   ) as Array<RefreshDatasetResult>
   jobResult.forEach((datasetResult: RefreshDatasetResult) => {
@@ -365,7 +372,7 @@ function getEventLogsFromStatisticsJobLog(jobLogId: string): { user: User; datas
   const from: string = jobInfoNode.data.jobStarted
   const to: string = jobInfoNode.data.completionTime
   const datasets: Array<RefreshDatasetResult> =
-    (forceArray(jobInfoNode.data.refreshDataResult) as Array<RefreshDatasetResult>) || []
+    (util.data.forceArray(jobInfoNode.data.refreshDataResult) as Array<RefreshDatasetResult>) || []
   return {
     user: jobInfoNode.data.user,
     dataset: datasets.map((dataset) => {
@@ -510,7 +517,7 @@ function getStatregInfo(statisticStatreg: StatisticInListing | undefined): Statr
     }
   }
   const variants: Array<VariantInListing> = statisticStatreg.variants
-    ? forceArray(statisticStatreg.variants).sort((a: VariantInListing, b: VariantInListing) => {
+    ? util.data.forceArray(statisticStatreg.variants).sort((a: VariantInListing, b: VariantInListing) => {
         const aDate: Date = a.nextRelease ? new Date(a.nextRelease) : new Date('01.01.3000')
         const bDate: Date = b.nextRelease ? new Date(b.nextRelease) : new Date('01.01.3000')
         return aDate.getTime() - bDate.getTime()

@@ -2,21 +2,21 @@ __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 import { listener, send, EnonicEvent, EnonicEventData } from '/lib/xp/event'
 import { query, get, Content } from '/lib/xp/content'
 import { run } from '/lib/xp/context'
+import { executeFunction, sleep, submitTask } from '/lib/xp/task'
 import { JSONstat } from '/lib/types/jsonstat-toolkit'
 import { TbmlDataUniform } from '/lib/types/xmlParser'
-import { DATASET_REPO, DatasetRepoNode } from '/lib/ssb/repo/dataset'
 import { Socket } from '/lib/types/socket'
-import { MunicipalityWithCounty } from '/lib/ssb/dataset/klass/municipalities'
 import { newCache, Cache } from '/lib/cache'
-import type { DataSource } from '/site/mixins/dataSource'
 import { request, HttpResponse } from '/lib/http-client'
 
-const { executeFunction, sleep, submitTask } = __non_webpack_require__('/lib/xp/task')
-const { getDataset, extractKey } = __non_webpack_require__('/lib/ssb/dataset/dataset')
-const { cacheLog } = __non_webpack_require__('/lib/ssb/utils/serverLog')
-const { completelyClearSubjectCache, clearSubjectCache } = __non_webpack_require__('/lib/ssb/cache/subjectCache')
-const { completelyClearPartCache, clearPartCache } = __non_webpack_require__('/lib/ssb/cache/partCache')
-const { ENONIC_CMS_DEFAULT_REPO } = __non_webpack_require__('/lib/ssb/repo/common')
+import { MunicipalityWithCounty } from '/lib/ssb/dataset/klass/municipalities'
+import { DATASET_REPO, DatasetRepoNode } from '/lib/ssb/repo/dataset'
+import { getDataset, extractKey } from '/lib/ssb/dataset/dataset'
+import { cacheLog } from '/lib/ssb/utils/serverLog'
+import { completelyClearSubjectCache, clearSubjectCache } from '/lib/ssb/cache/subjectCache'
+import { completelyClearPartCache, clearPartCache } from '/lib/ssb/cache/partCache'
+import { ENONIC_CMS_DEFAULT_REPO } from '/lib/ssb/repo/common'
+import { type DataSource } from '/site/mixins/dataSource'
 
 const masterFilterCaches: Map<string, Cache> = new Map()
 const draftFilterCaches: Map<string, Cache> = new Map()
@@ -611,30 +611,4 @@ export interface CompletelyClearCacheOptions {
   clearParentTypeCache: boolean
   clearSubjectCache: boolean
   clearPartCache: boolean
-}
-
-export interface SSBCacheLibrary {
-  setup: () => void
-  fromFilterCache: (req: XP.Request, filterKey: string, key: string, fallback: () => XP.Response) => XP.Response
-  fromMenuCache: (req: XP.Request, key: string, fallback: () => unknown) => unknown
-  fromRelatedArticlesCache: (req: XP.Request, key: string, fallback: () => unknown) => unknown
-  fromDatasetRepoCache: (
-    key: string,
-    fallback: () => DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null
-  ) => DatasetRepoNode<JSONstat | TbmlDataUniform | object> | undefined
-  fromParsedMunicipalityCache: (
-    key: string,
-    fallback: () => Array<MunicipalityWithCounty>
-  ) => Array<MunicipalityWithCounty>
-  fromMunicipalityWithCodeCache: (
-    key: string,
-    fallback: () => MunicipalityWithCounty | undefined
-  ) => MunicipalityWithCounty | undefined
-  fromMunicipalityWithNameCache: (
-    key: string,
-    fallback: () => MunicipalityWithCounty | undefined
-  ) => MunicipalityWithCounty | undefined
-  fromParentTypeCache: (path: string, fallback: () => string | undefined) => string | undefined
-  datasetOrUndefined: (content: Content<DataSource>) => DatasetRepoNode<JSONstat | TbmlDataUniform | object> | undefined
-  setupHandlers: (socket: Socket) => void
 }

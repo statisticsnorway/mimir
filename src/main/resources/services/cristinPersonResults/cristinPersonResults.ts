@@ -1,6 +1,6 @@
 import { fetchPersonResultsCristin } from '/lib/ssb/cristin/cristin'
 
-exports.get = (req: XP.Request): XP.Response => {
+export const get = (req: XP.Request): XP.Response => {
   const personId: string | undefined = req.params.personId
   // eslint-disable-next-line camelcase
   const per_page: string = req.params.per_page ? req.params.per_page : '10'

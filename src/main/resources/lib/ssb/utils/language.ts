@@ -1,8 +1,7 @@
 import { exists, Content } from '/lib/xp/content'
 import { getSite, getSiteConfig, pageUrl } from '/lib/xp/portal'
+import * as i18n from '/lib/xp/i18n'
 import { Language, AlternativeLanguages, Phrases } from '/lib/types/language'
-
-const i18n = __non_webpack_require__('/lib/xp/i18n')
 
 let english: Phrases | undefined
 let norwegian: Phrases | undefined
@@ -16,7 +15,7 @@ try {
   e.toString()
 }
 
-exports.getLanguage = function (page: Content): Language | null {
+export function getLanguage(page: Content): Language | null {
   const site = getSite<XP.SiteConfig>()
   if (!site) return null
 
@@ -84,7 +83,7 @@ exports.getLanguage = function (page: Content): Language | null {
   return result
 }
 
-exports.getPhrases = (page: Content, isSite?: boolean): Phrases | undefined => {
+export const getPhrases = (page: Content, isSite?: boolean): Phrases | undefined => {
   if (page.language) {
     if (page.language === 'en') {
       return english
@@ -107,7 +106,7 @@ exports.getPhrases = (page: Content, isSite?: boolean): Phrases | undefined => {
  * @param {string} time
  * @return {string}
  */
-exports.localizeTimePeriod = (time: string): string => {
+export const localizeTimePeriod = (time: string): string => {
   return time.length === 4 ? time : parseTimeInterval(time)
 }
 
@@ -120,7 +119,7 @@ exports.localizeTimePeriod = (time: string): string => {
  * @return {string}
  */
 function parseTimeInterval(time: string): string {
-  const splitYearLetterNumberIntoArray = new RegExp(/(\d{4})([HKMTU])(\d{1,2})/)
+  const splitYearLetterNumberIntoArray = new RegExp(/(\d{4})([HKMTU-])(\d{1,2})/)
   const interval: RegExpExecArray | null = splitYearLetterNumberIntoArray.exec(time)
 
   let parsedTime = ''
@@ -150,6 +149,10 @@ function parseTimeInterval(time: string): string {
         parsedTime = `${i18n.localize({
           key: 'interval.' + interval[2],
         })} ${interval[3]} ${interval[1]}`
+        break
+      case '-':
+        // e.g. 2022-2023
+        parsedTime = time
         break
     }
     return parsedTime

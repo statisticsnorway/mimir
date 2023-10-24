@@ -1,15 +1,14 @@
-import type { Article } from '/site/content-types'
 import { pageUrl, getContent, getComponent } from '/lib/xp/portal'
-import { render } from '/lib/enonic/react4xp'
 import { query, type Content } from '/lib/xp/content'
-import { SubjectItem } from '/lib/ssb/utils/subjectUtils'
-import { formatDate } from '/lib/ssb/utils/dateUtils'
 import { localize } from '/lib/xp/i18n'
+import { render } from '/lib/enonic/react4xp'
+import { SubjectItem, getSubSubjects } from '/lib/ssb/utils/subjectUtils'
+import { formatDate } from '/lib/ssb/utils/dateUtils'
 
-const { getSubSubjects } = __non_webpack_require__('/lib/ssb/utils/subjectUtils')
-const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
-const { fromPartCache } = __non_webpack_require__('/lib/ssb/cache/partCache')
-const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
+import { renderError } from '/lib/ssb/error/error'
+import { fromPartCache } from '/lib/ssb/cache/partCache'
+import { isEnabled } from '/lib/featureToggle'
+import { type Article } from '/site/content-types'
 
 export function get(req: XP.Request): XP.Response {
   try {
