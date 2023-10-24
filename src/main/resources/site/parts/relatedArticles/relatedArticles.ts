@@ -166,7 +166,9 @@ function getSubTitle(articleContent: Content<Article> | null, phrases: Phrases, 
       type = phrases.articleName
     }
     let prettyDate: string | undefined = ''
-    if (articleContent.publish && articleContent.publish.from) {
+    if (articleContent.data?.showModifiedDate?.dateOption?.modifiedDate) {
+      prettyDate = formatDate(articleContent.data.showModifiedDate.dateOption.modifiedDate, 'PPP', language)
+    } else if (articleContent.publish?.from) {
       prettyDate = formatDate(articleContent.publish.from, 'PPP', language)
     } else {
       prettyDate = formatDate(articleContent.createdTime, 'PPP', language)
