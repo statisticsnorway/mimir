@@ -2,16 +2,16 @@ import React from 'react'
 import { Modal } from 'react-bootstrap'
 
 function ConnectionTimeoutModal(props) {
-  const { isConnected } = props
+  const { isConnected, serverTimeReceived } = props
 
-  // TODO: Ignore on page load; isConnected will return true the first few seconds
-  return (
-    <Modal size='lg' show={!isConnected} onHide={isConnected}>
-      <Modal.Header></Modal.Header>
-      <Modal.Body>Tilkobling avbrutt. Last siden på nytt.</Modal.Body>
-      <Modal.Footer></Modal.Footer>
-    </Modal>
-  )
+  // To prevent modal from opening during page render/reload, include serverTimeReceived check
+  if (serverTimeReceived) {
+    return (
+      <Modal size='lg' show={!isConnected} onHide={isConnected}>
+        <Modal.Body>Tilkobling avbrutt. Last siden på nytt.</Modal.Body>
+      </Modal>
+    )
+  }
 }
 
 export default ConnectionTimeoutModal
