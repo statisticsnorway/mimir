@@ -1,5 +1,6 @@
 import React from 'react'
 import { Modal } from 'react-bootstrap'
+import PropTypes from 'prop-types'
 
 function ConnectionTimeoutModal(props) {
   const { isConnected, serverTimeReceived } = props
@@ -12,6 +13,11 @@ function ConnectionTimeoutModal(props) {
       </Modal>
     )
   }
+}
+
+ConnectionTimeoutModal.propTypes = {
+  isConnected: PropTypes.bool,
+  serverTimeReceived: PropTypes.string,
 }
 
 export default ConnectionTimeoutModal
