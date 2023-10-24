@@ -13,8 +13,9 @@ function ConnectionTimeoutModal(props) {
     return (
       <Modal
         className='connection-timeout-modal'
-        size='lg'
+        backdropClassName='connection-timeout-modal-backdrop'
         backdrop='static'
+        size='lg'
         show={!isConnected && !hide}
         onHide={() => setHide(true)}
         centered

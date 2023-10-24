@@ -129,8 +129,13 @@
     margin-right: 1rem;
   }
 
+  .connection-timeout-modal-backdrop {
+    z-index: 1060;
+  }
+
   .connection-timeout-modal {
     padding: 1rem 2rem;
+    z-index: 1062;
 
     .modal-title {
       font-size: 1.5rem;
