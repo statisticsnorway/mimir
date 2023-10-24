@@ -14,6 +14,7 @@ import { Statistics } from '/react4xp/dashboard/containers/Statistics'
 import DashboardTools from '/react4xp/dashboard/containers/DashboardTools'
 import Jobs from '/react4xp/dashboard/containers/Jobs'
 import { ServerTime } from '/react4xp/dashboard/components/ServerTime'
+import ConnectionTimeoutModal from '../../components/ConnectionTimeoutModal'
 
 export function HomePage() {
   const isConnected = useSelector(selectIsConnected)
@@ -55,6 +56,7 @@ export function HomePage() {
       <div className='dashboard-info d-flex p-2'>
         <ServerTime serverTime={serverTime} serverTimeReceived={serverTimeReceived} />
         <ConnectionBadge isConnected={isConnected} />
+        <ConnectionTimeoutModal isConnected={isConnected} />
       </div>
       <Tabs defaultActiveKey='statistics'>
         <Tab eventKey='statistics' title='Statistikker'>
