@@ -1,19 +1,19 @@
-import { render as r4XpRender } from '/lib/enonic/react4xp'
 import { getComponent, getContent, serviceUrl, pageUrl } from '/lib/xp/portal'
-import type { BkibolCalculator as BkibolCalculatorPartConfig } from '.'
-import type { Dataset, Dimension } from '/lib/types/jsonstat-toolkit'
-import type { Content } from '/lib/xp/content'
-import type { CalculatorConfig } from '/site/content-types'
-import type { Language, Phrases } from '/lib/types/language'
-import { allMonths, monthLabel, nextPeriod } from '/lib/ssb/utils/calculatorUtils'
-import type { CalculatorPeriod } from '/lib/types/calculator'
-import type { DropdownItems } from '/lib/types/components'
+import { type Content } from '/lib/xp/content'
 import { localize } from '/lib/xp/i18n'
+import { type Language, type Phrases } from '/lib/types/language'
+import { allMonths, monthLabel, nextPeriod } from '/lib/ssb/utils/calculatorUtils'
+import { type CalculatorPeriod } from '/lib/types/calculator'
+import { type DropdownItems } from '/lib/types/components'
+import { type Dataset, type Dimension } from '/lib/types/jsonstat-toolkit'
+import { render as r4XpRender } from '/lib/enonic/react4xp'
 
-const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
-const { getLanguage } = __non_webpack_require__('/lib/ssb/utils/language')
-const { getCalculatorConfig, getBkibolDatasetEnebolig } = __non_webpack_require__('/lib/ssb/dataset/calculator')
-const { fromPartCache } = __non_webpack_require__('/lib/ssb/cache/partCache')
+import { renderError } from '/lib/ssb/error/error'
+import { getLanguage } from '/lib/ssb/utils/language'
+import { getCalculatorConfig, getBkibolDatasetEnebolig } from '/lib/ssb/dataset/calculator'
+import { fromPartCache } from '/lib/ssb/cache/partCache'
+import { type CalculatorConfig } from '/site/content-types'
+import { type BkibolCalculator as BkibolCalculatorPartConfig } from '.'
 
 export function get(req: XP.Request): XP.Response {
   try {

@@ -1,10 +1,9 @@
-import type { PictureCardLinks as PictureCardLinksPartConfig } from '.'
 import { getComponent, imagePlaceholder } from '/lib/xp/portal'
 import { render } from '/lib/enonic/react4xp'
-import { imageUrl } from '/lib/ssb/utils/imageUtils'
+import { imageUrl, getImageAlt } from '/lib/ssb/utils/imageUtils'
 
-const { getImageAlt } = __non_webpack_require__('/lib/ssb/utils/imageUtils')
-const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
+import { renderError } from '/lib/ssb/error/error'
+import { type PictureCardLinks as PictureCardLinksPartConfig } from '.'
 
 export function get(req: XP.Request): XP.Response {
   try {

@@ -1,9 +1,9 @@
-import { render } from '/lib/enonic/react4xp'
-import type { Language, Phrases } from '/lib/types/language'
 import { getContent, serviceUrl } from '/lib/xp/portal'
+import { render } from '/lib/enonic/react4xp'
+import { type Language, type Phrases } from '/lib/types/language'
 
-const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
-const { getLanguage } = __non_webpack_require__('/lib/ssb/utils/language')
+import { renderError } from '/lib/ssb/error/error'
+import { getLanguage } from '/lib/ssb/utils/language'
 
 export function get(req: XP.Request) {
   try {

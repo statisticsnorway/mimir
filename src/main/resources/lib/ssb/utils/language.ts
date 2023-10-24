@@ -1,8 +1,7 @@
 import { exists, Content } from '/lib/xp/content'
 import { getSite, getSiteConfig, pageUrl } from '/lib/xp/portal'
+import * as i18n from '/lib/xp/i18n'
 import { Language, AlternativeLanguages, Phrases } from '/lib/types/language'
-
-const i18n = __non_webpack_require__('/lib/xp/i18n')
 
 let english: Phrases | undefined
 let norwegian: Phrases | undefined
@@ -16,7 +15,7 @@ try {
   e.toString()
 }
 
-exports.getLanguage = function (page: Content): Language | null {
+export function getLanguage(page: Content): Language | null {
   const site = getSite<XP.SiteConfig>()
   if (!site) return null
 
@@ -84,7 +83,7 @@ exports.getLanguage = function (page: Content): Language | null {
   return result
 }
 
-exports.getPhrases = (page: Content, isSite?: boolean): Phrases | undefined => {
+export const getPhrases = (page: Content, isSite?: boolean): Phrases | undefined => {
   if (page.language) {
     if (page.language === 'en') {
       return english
@@ -107,7 +106,7 @@ exports.getPhrases = (page: Content, isSite?: boolean): Phrases | undefined => {
  * @param {string} time
  * @return {string}
  */
-exports.localizeTimePeriod = (time: string): string => {
+export const localizeTimePeriod = (time: string): string => {
   return time.length === 4 ? time : parseTimeInterval(time)
 }
 

@@ -1,15 +1,15 @@
-import { request, HttpRequestParams, HttpResponse } from '/lib/http-client'
-import type { Content } from '/lib/xp/content'
-import type { CalculatorConfig } from '/site/content-types'
-import type { DatasetRepoNode } from '/lib/ssb/repo/dataset'
-import type { Data, Dataset, Dimension } from '/lib/types/jsonstat-toolkit'
-import { getNameGraphDataFromRepo, type NameData, nameGraphRepoExists } from '/lib/ssb/repo/nameGraph'
 // @ts-ignore
 import JSONstat from 'jsonstat-toolkit/import.mjs'
 import whitelist from 'validator/es/lib/whitelist'
+import { type Content } from '/lib/xp/content'
+import { type DatasetRepoNode } from '/lib/ssb/repo/dataset'
+import { type Data, type Dataset, type Dimension } from '/lib/types/jsonstat-toolkit'
+import { getNameGraphDataFromRepo, type NameData, nameGraphRepoExists } from '/lib/ssb/repo/nameGraph'
+import { request, HttpRequestParams, HttpResponse } from '/lib/http-client'
 
-const { getCalculatorConfig, getNameSearchGraphData } = __non_webpack_require__('/lib/ssb/dataset/calculator')
-const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
+import { getCalculatorConfig, getNameSearchGraphData } from '/lib/ssb/dataset/calculator'
+import { isEnabled } from '/lib/featureToggle'
+import { type CalculatorConfig } from '/site/content-types'
 
 export function getNameSearchResult(name: string, includeGraphData: boolean): SolrResponse {
   const solrBaseUrl: string =

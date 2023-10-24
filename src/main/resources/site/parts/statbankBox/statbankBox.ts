@@ -1,14 +1,14 @@
-import type { Content } from '/lib/xp/content'
-import type { StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
-import type { Phrases } from '/lib/types/language'
-import { render } from '/lib/enonic/react4xp'
-import type { Statistics } from '/site/content-types'
-import type { StatbankBox as StatbankBoxPartConfig } from '.'
+import { type Content } from '/lib/xp/content'
 import { getComponent, getContent, assetUrl } from '/lib/xp/portal'
+import { type Phrases } from '/lib/types/language'
+import { render } from '/lib/enonic/react4xp'
+import { type StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
 
-const { getStatisticByIdFromRepo } = __non_webpack_require__('/lib/ssb/statreg/statistics')
-const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
-const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
+import { getStatisticByIdFromRepo } from '/lib/ssb/statreg/statistics'
+import { getPhrases } from '/lib/ssb/utils/language'
+import { renderError } from '/lib/ssb/error/error'
+import { type Statistics } from '/site/content-types'
+import { type StatbankBox as StatbankBoxPartConfig } from '.'
 
 const STATBANKWEB_URL: string =
   app.config && app.config['ssb.statbankweb.baseUrl']
@@ -33,7 +33,7 @@ function renderPart(req: XP.Request): XP.Response {
   const config = getComponent<XP.PartComponent.StatbankBox>()?.config
   if (!config) throw Error('No part found')
 
-  const phrases: Phrases = getPhrases(page)
+  const phrases = getPhrases(page) as Phrases
 
   return renderStatbankBox(req, parseStatbankBoxContent(page, config, phrases))
 }

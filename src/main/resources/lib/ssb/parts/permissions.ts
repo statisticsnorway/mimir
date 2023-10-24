@@ -26,8 +26,3 @@ export function hasWritePermissions(key: string): boolean {
     return permission.allow?.includes('WRITE_PERMISSIONS') || permission.allow?.includes('MODIFY')
   })
 }
-
-export interface PermissionsLib {
-  hasWritePermissions: (key: string) => boolean
-  hasWritePermissionsAndPreview: (req: XP.Request, key: string) => boolean
-}

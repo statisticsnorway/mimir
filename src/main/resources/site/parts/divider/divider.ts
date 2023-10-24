@@ -1,10 +1,10 @@
 import { getComponent } from '/lib/xp/portal'
 import { render } from '/lib/enonic/react4xp'
-import type { Divider as DividerPartConfig } from '.'
 import { scriptAsset } from '/lib/ssb/utils/utils'
 
-const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
-const { fromPartCache } = __non_webpack_require__('/lib/ssb/cache/partCache')
+import { renderError } from '/lib/ssb/error/error'
+import { fromPartCache } from '/lib/ssb/cache/partCache'
+import { type Divider as DividerPartConfig } from '.'
 
 export function get(req: XP.Request): XP.Response {
   try {

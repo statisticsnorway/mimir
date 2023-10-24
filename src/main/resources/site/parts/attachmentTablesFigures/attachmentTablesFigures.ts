@@ -1,22 +1,21 @@
 import { query, type Content } from '/lib/xp/content'
 import { getContent, processHtml } from '/lib/xp/portal'
-import type { DatasetRepoNode } from '/lib/ssb/repo/dataset'
-import type { JSONstat } from '/lib/types/jsonstat-toolkit'
-import type { Phrases } from '/lib/types/language'
+import { type DatasetRepoNode } from '/lib/ssb/repo/dataset'
+import { type JSONstat } from '/lib/types/jsonstat-toolkit'
+import { type Phrases } from '/lib/types/language'
 import { render as r4XpRender } from '/lib/enonic/react4xp'
-import type { TbmlDataUniform } from '/lib/types/xmlParser'
-import type { Statistics } from '/site/content-types'
-import { GA_TRACKING_ID } from '/site/pages/default/default'
+import { type TbmlDataUniform } from '/lib/types/xmlParser'
 import { contentArrayToRecord } from '/lib/ssb/utils/arrayUtils'
 import { notNullOrUndefined } from '/lib/ssb/utils/coreUtils'
-import type { AccordionData } from '/site/parts/accordion/accordion'
 
-const {
-  data: { forceArray },
-} = __non_webpack_require__('/lib/util')
-const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
-const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
-const { datasetOrUndefined } = __non_webpack_require__('/lib/ssb/cache/cache')
+import * as util from '/lib/util'
+import { getPhrases } from '/lib/ssb/utils/language'
+import { renderError } from '/lib/ssb/error/error'
+import { datasetOrUndefined } from '/lib/ssb/cache/cache'
+import { type AccordionData } from '/site/parts/accordion/accordion'
+import { GA_TRACKING_ID } from '/site/pages/default/default'
+import { type Statistics } from '/site/content-types'
+
 const tableController: { getProps: (req: XP.Request, tableId: string) => object } =
   __non_webpack_require__('../table/table')
 const highchartController: { preview: (req: XP.Request, id: string) => XP.Response } =
@@ -47,7 +46,7 @@ function getTablesAndFiguresComponent(page: Content<Statistics>, req: XP.Request
   const title: string = phrases.attachmentTablesFigures
 
   const attachmentTablesAndFigures: Array<string> = page.data.attachmentTablesFigures
-    ? forceArray(page.data.attachmentTablesFigures)
+    ? util.data.forceArray(page.data.attachmentTablesFigures)
     : []
   const attachmentTableAndFigureView: Array<AttachmentTablesFiguresData> = getTablesAndFigures(
     attachmentTablesAndFigures,

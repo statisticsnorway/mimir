@@ -1,17 +1,18 @@
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
-import { CreateOrUpdateStatus } from '/lib/ssb/dataset/dataset'
 import { get as getContent, query, Content } from '/lib/xp/content'
-import type { DataSource } from '/site/mixins/dataSource'
-import { Events, QueryInfoNode } from '/lib/ssb/repo/query'
-import { EVENT_LOG_REPO, EVENT_LOG_BRANCH, LogSummary } from '/lib/ssb/repo/eventLog'
 import { Node, NodeQueryResultHit } from '/lib/xp/node'
 import { run, type ContextParams } from '/lib/xp/context'
+import { User } from '/lib/xp/auth'
+import { sanitize } from '/lib/xp/common'
+import { localize } from '/lib/xp/i18n'
+import { executeFunction } from '/lib/xp/task'
+import { Events, QueryInfoNode, logUserDataQuery } from '/lib/ssb/repo/query'
+import { EVENT_LOG_REPO, EVENT_LOG_BRANCH, LogSummary, getQueryChildNodesStatus } from '/lib/ssb/repo/eventLog'
 import { Socket, SocketEmitter } from '/lib/types/socket'
 import { JSONstat } from '/lib/types/jsonstat-toolkit'
 import { TbmlDataUniform } from '/lib/types/xmlParser'
-import { DatasetRepoNode } from '/lib/ssb/repo/dataset'
-import { withConnection } from '/lib/ssb/repo/common'
-import { User } from '/lib/xp/auth'
+import { DatasetRepoNode, DATASET_BRANCH, UNPUBLISHED_DATASET_BRANCH } from '/lib/ssb/repo/dataset'
+import { withConnection, getNode, ENONIC_CMS_DEFAULT_REPO } from '/lib/ssb/repo/common'
 import {
   CalculatorRefreshResult,
   DatasetRefreshResult,
@@ -19,35 +20,26 @@ import {
   JOB_STATUS_COMPLETE,
   JOB_STATUS_STARTED,
   StatisticsPublishResult,
+  queryJobLogs,
+  getJobLog,
+  JobNames,
 } from '/lib/ssb/repo/job'
 import { StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
 import { StatRegRefreshResult } from '/lib/ssb/repo/statreg'
-import { StatRegJobInfo } from '/lib/ssb/dashboard/statreg'
-import type { Default as DefaultPageConfig } from '/site/pages/default'
-import type { Page, Statistics } from '/site/content-types'
-import { sanitize } from '/lib/xp/common'
+import { StatRegJobInfo, parseStatRegJobInfo } from '/lib/ssb/dashboard/statreg'
+import { users, showWarningIcon, WARNING_ICON_EVENTS, isPublished } from '/lib/ssb/dashboard/dashboardUtils'
+import { dateToFormat, dateToReadable } from '/lib/ssb/utils/utils'
+import { getParentType } from '/lib/ssb/utils/parentUtils'
 
-const { users, showWarningIcon, WARNING_ICON_EVENTS, isPublished } = __non_webpack_require__(
-  '/lib/ssb/dashboard/dashboardUtils'
-)
-const { dateToFormat, dateToReadable } = __non_webpack_require__('/lib/ssb/utils/utils')
-const { logUserDataQuery } = __non_webpack_require__('/lib/ssb/repo/query')
-const { getNode, ENONIC_CMS_DEFAULT_REPO } = __non_webpack_require__('/lib/ssb/repo/common')
-const { refreshDataset, extractKey, getDataset } = __non_webpack_require__('/lib/ssb/dataset/dataset')
-const { DATASET_BRANCH, UNPUBLISHED_DATASET_BRANCH } = __non_webpack_require__('/lib/ssb/repo/dataset')
-const { getParentType } = __non_webpack_require__('/lib/ssb/utils/parentUtils')
-const { localize } = __non_webpack_require__('/lib/xp/i18n')
-const { fromDatasetRepoCache } = __non_webpack_require__('/lib/ssb/cache/cache')
-const { getQueryChildNodesStatus } = __non_webpack_require__('/lib/ssb/repo/eventLog')
-const { executeFunction } = __non_webpack_require__('/lib/xp/task')
-const { queryJobLogs, getJobLog, JobNames } = __non_webpack_require__('/lib/ssb/repo/job')
-const {
-  data: { forceArray },
-} = __non_webpack_require__('/lib/util')
-const { getStatisticByIdFromRepo } = __non_webpack_require__('/lib/ssb/statreg/statistics')
-const { parseStatRegJobInfo } = __non_webpack_require__('/lib/ssb/dashboard/statreg')
-const { createOrUpdateNameGraphRepo } = __non_webpack_require__('/lib/ssb/repo/nameGraph')
-const { getNameSearchGraphDatasetId } = __non_webpack_require__('/lib/ssb/dataset/calculator')
+import { fromDatasetRepoCache } from '/lib/ssb/cache/cache'
+import { CreateOrUpdateStatus, refreshDataset, extractKey, getDataset } from '/lib/ssb/dataset/dataset'
+import * as util from '/lib/util'
+import { getStatisticByIdFromRepo } from '/lib/ssb/statreg/statistics'
+import { createOrUpdateNameGraphRepo } from '/lib/ssb/repo/nameGraph'
+import { getNameSearchGraphDatasetId } from '/lib/ssb/dataset/calculator'
+import { type Page, type Statistics } from '/site/content-types'
+import { type Default as DefaultPageConfig } from '/site/pages/default'
+import { type DataSource } from '/site/mixins/dataSource'
 
 export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): void {
   socket.on('get-error-data-sources', () => {
@@ -386,15 +378,16 @@ function parseResult(
   jobLog: JobInfoNode
 ): Array<DashboardPublishJobResult> | Array<StatRegJobInfo> | DatasetRefreshResult | CalculatorRefreshResult {
   if (jobLog.data.task === JobNames.PUBLISH_JOB) {
-    const refreshDataResult: Array<StatisticsPublishResult> = forceArray(
+    const refreshDataResult: Array<StatisticsPublishResult> = util.data.forceArray(
       jobLog.data.refreshDataResult || []
     ) as Array<StatisticsPublishResult>
     return refreshDataResult.map((statResult) => {
       const statregData: StatisticInListing | undefined = getStatisticByIdFromRepo(statResult.shortNameId)
       const statId: string = statResult.statistic
       const shortName: string = statregData ? statregData.shortName : statResult.shortNameId // get name from shortNameId
-      const dataSources: DashboardPublishJobResult['dataSources'] = forceArray(statResult.dataSources || []).map(
-        (ds) => {
+      const dataSources: DashboardPublishJobResult['dataSources'] = util.data
+        .forceArray(statResult.dataSources || [])
+        .map((ds) => {
           try {
             const dataSource: Content<DataSource> | null = getContent({
               key: ds.id,
@@ -417,8 +410,7 @@ function parseResult(
               datasetKey: 'innhold arkivert!!',
             }
           }
-        }
-      )
+        })
       return {
         id: statId,
         shortName,
@@ -427,7 +419,7 @@ function parseResult(
       }
     })
   } else if (jobLog.data.task === JobNames.STATREG_JOB) {
-    const refreshDataResult: Array<StatRegRefreshResult> = forceArray(
+    const refreshDataResult: Array<StatRegRefreshResult> = util.data.forceArray(
       jobLog.data.refreshDataResult || []
     ) as Array<StatRegRefreshResult>
     return parseStatRegJobInfo(refreshDataResult)
@@ -447,14 +439,14 @@ function parseResult(
         result: [],
       }
     }
-    result.filterInfo.start = forceArray(result.filterInfo.inRSSOrNoKey || [])
-    result.filterInfo.inRSSOrNoKey = forceArray(result.filterInfo.inRSSOrNoKey || [])
-    result.filterInfo.noData = forceArray(result.filterInfo.noData || [])
-    result.filterInfo.otherDataType = forceArray(result.filterInfo.otherDataType) || []
-    result.filterInfo.skipped = forceArray(result.filterInfo.skipped || [])
-    result.filterInfo.end = forceArray(result.filterInfo.end || [])
-    result.filterInfo.statistics = forceArray(result.filterInfo.statistics || [])
-    result.result = forceArray(result.result || []).map((ds) => {
+    result.filterInfo.start = util.data.forceArray(result.filterInfo.inRSSOrNoKey || [])
+    result.filterInfo.inRSSOrNoKey = util.data.forceArray(result.filterInfo.inRSSOrNoKey || [])
+    result.filterInfo.noData = util.data.forceArray(result.filterInfo.noData || [])
+    result.filterInfo.otherDataType = util.data.forceArray(result.filterInfo.otherDataType) || []
+    result.filterInfo.skipped = util.data.forceArray(result.filterInfo.skipped || [])
+    result.filterInfo.end = util.data.forceArray(result.filterInfo.end || [])
+    result.filterInfo.statistics = util.data.forceArray(result.filterInfo.statistics || [])
+    result.result = util.data.forceArray(result.result || []).map((ds) => {
       ds.hasError = showWarningIcon(ds.status as Events)
       ds.status = localize({
         key: ds.status,
@@ -474,7 +466,7 @@ function parseResult(
         result: [],
       }
     }
-    result.result = forceArray(result.result || []).map((ds) => {
+    result.result = util.data.forceArray(result.result || []).map((ds) => {
       ds.hasError = showWarningIcon(ds.status as Events)
       ds.status = localize({
         key: ds.status,
@@ -762,19 +754,6 @@ export interface DashboardRefreshResultLogData {
 
 export interface RefreshDatasetOptions {
   ids: Array<string>
-}
-
-export interface DashboardDatasetLib {
-  users: Array<User>
-  setupHandlers: (socket: Socket, socketEmitter: SocketEmitter) => void
-  showWarningIcon: (result: Events) => boolean
-  refreshDatasetHandler: (
-    ids: Array<string>,
-    socketEmitter: SocketEmitter,
-    processXml?: Array<ProcessXml>,
-    feedbackEventName?: string,
-    relatedStatisticsId?: string
-  ) => Array<RefreshDatasetResult>
 }
 
 export interface ProcessXml {

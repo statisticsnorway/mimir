@@ -1,16 +1,13 @@
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
-import { DatasetRepoNode, DataSource as dataSourceType } from '/lib/ssb/repo/dataset'
 import { Content } from '/lib/xp/content'
-import type { DataSource } from '/site/mixins/dataSource'
+import { DatasetRepoNode, DataSource as dataSourceType, getDataset, DATASET_BRANCH } from '/lib/ssb/repo/dataset'
 import { TbmlDataUniform, TbmlSourceListUniform } from '/lib/types/xmlParser'
-import { TbprocessorParsedResponse } from '/lib/ssb/dataset/tbprocessor/tbml'
+import { TbprocessorParsedResponse, getTbmlData, TbProcessorTypes } from '/lib/ssb/dataset/tbprocessor/tbml'
 import { mergeDeepLeft } from '/lib/vendor/ramda'
 
-const { getDataset } = __non_webpack_require__('/lib/ssb/repo/dataset')
-const { getTbmlData, TbProcessorTypes } = __non_webpack_require__('/lib/ssb/dataset/tbprocessor/tbml')
-const { logUserDataQuery, Events } = __non_webpack_require__('/lib/ssb/repo/query')
-const { isUrl } = __non_webpack_require__('/lib/ssb/utils/utils')
-const { DATASET_BRANCH } = __non_webpack_require__('/lib/ssb/repo/dataset')
+import { logUserDataQuery, Events } from '/lib/ssb/repo/query'
+import { isUrl } from '/lib/ssb/utils/utils'
+import { type DataSource } from '/site/mixins/dataSource'
 
 export function getTbprocessor(content: Content<DataSource>, branch: string): DatasetRepoNode<TbmlDataUniform> | null {
   if (content.data.dataSource && content.data.dataSource._selected === dataSourceType.TBPROCESSOR) {
@@ -260,16 +257,6 @@ export function getTableIdFromTbprocessor(data: TbmlDataUniform): Array<string> 
     return data.tbml.metadata.instance.publicRelatedTableIds
   }
   return []
-}
-
-export interface TbprocessorLib {
-  getTbprocessor: (content: Content<DataSource>, branch: string) => DatasetRepoNode<TbmlDataUniform> | null
-  fetchTbprocessorData: (
-    content: Content<DataSource>,
-    processXml?: string
-  ) => TbprocessorParsedResponse<TbmlDataUniform> | null
-  getTbprocessorKey: (content: Content<DataSource>) => string
-  getTableIdFromTbprocessor: (dataset: TbmlDataUniform) => Array<string>
 }
 
 export interface FetchTbProcessorData {

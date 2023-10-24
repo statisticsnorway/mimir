@@ -1,42 +1,41 @@
 // @ts-ignore
 import JSONstat from 'jsonstat-toolkit/import.mjs'
-import { getComponent, getContent } from '/lib/xp/portal'
 import { get as getContentByKey, type Content } from '/lib/xp/content'
-import type { Highchart } from '/site/content-types'
-import type { DatasetRepoNode } from '/lib/ssb/repo/dataset'
-import { JSONstat as JSONstatType } from '/lib/types/jsonstat-toolkit'
-import type { TbmlDataUniform } from '/lib/types/xmlParser'
-import type { HighchartsGraphConfig } from '/lib/types/highcharts'
-import { render } from '/lib/thymeleaf'
-import type { DataSource } from '/site/mixins/dataSource'
-import { render as r4XpRender } from '/lib/enonic/react4xp'
-import { GA_TRACKING_ID } from '/site/pages/default/default'
+import { getComponent, getContent } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
-import { scriptAsset } from '/lib/ssb/utils/utils'
-
-const {
-  DataSource: DataSourceType,
+import { JSONstat as JSONstatType } from '/lib/types/jsonstat-toolkit'
+import { type TbmlDataUniform } from '/lib/types/xmlParser'
+import { type HighchartsGraphConfig } from '/lib/types/highcharts'
+import { render } from '/lib/thymeleaf'
+import { render as r4XpRender } from '/lib/enonic/react4xp'
+import {
+  type DatasetRepoNode,
+  DataSource as DataSourceType,
   getDataset,
   UNPUBLISHED_DATASET_BRANCH,
-} = __non_webpack_require__('/lib/ssb/repo/dataset')
-const {
-  data: { forceArray },
-} = __non_webpack_require__('/lib/util')
-const { createHighchartObject } = __non_webpack_require__('/lib/ssb/parts/highcharts/highchartsUtils')
-const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
-const { datasetOrUndefined } = __non_webpack_require__('/lib/ssb/cache/cache')
-const { hasWritePermissionsAndPreview } = __non_webpack_require__('/lib/ssb/parts/permissions')
+} from '/lib/ssb/repo/dataset'
+import { scriptAsset } from '/lib/ssb/utils/utils'
+
+import * as util from '/lib/util'
+import { createHighchartObject } from '/lib/ssb/parts/highcharts/highchartsUtils'
+import { renderError } from '/lib/ssb/error/error'
+import { datasetOrUndefined } from '/lib/ssb/cache/cache'
+import { hasWritePermissionsAndPreview } from '/lib/ssb/parts/permissions'
+import { isEnabled } from '/lib/featureToggle'
+import { getPhrases } from '/lib/ssb/utils/language'
+import { getTbprocessorKey } from '/lib/ssb/dataset/tbprocessor/tbprocessor'
+import { GA_TRACKING_ID } from '/site/pages/default/default'
+import { type DataSource } from '/site/mixins/dataSource'
+import { type Highchart } from '/site/content-types'
+
 const view = resolve('./highchart.html')
-const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
-const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
-const { getTbprocessorKey } = __non_webpack_require__('/lib/ssb/dataset/tbprocessor/tbprocessor')
 
 export function get(req: XP.Request): XP.Response {
   try {
     const part = getComponent<XP.PartComponent.Highchart>()
     if (!part) throw Error('No part found')
 
-    const highchartIds: Array<string> = part.config.highchart ? forceArray(part.config.highchart) : []
+    const highchartIds: Array<string> = part.config.highchart ? util.data.forceArray(part.config.highchart) : []
     return renderPart(req, highchartIds)
   } catch (e) {
     return renderError(req, 'Error in part', e)
@@ -191,7 +190,7 @@ function createHighchartsReactProps(
     contentKey: highchart._id,
     footnoteText: highchart.data.footnoteText ? forceArray(highchart.data.footnoteText) : undefined,
     creditsEnabled: highchart.data.sourceList ? true : false,
-    sourceList: highchart.data.sourceList ? forceArray(highchart.data.sourceList) : undefined,
+    sourceList: highchart.data.sourceList ? util.data.forceArray(highchart.data.sourceList) : undefined,
     hideTitle: highchart.data.hideTitle,
   }
 }

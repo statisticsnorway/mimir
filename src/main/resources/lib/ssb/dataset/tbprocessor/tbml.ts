@@ -16,11 +16,9 @@ import {
 } from '/lib/types/xmlParser'
 
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
-const { logUserDataQuery, Events } = __non_webpack_require__('/lib/ssb/repo/query')
-const { getTbmlMock } = __non_webpack_require__('/lib/ssb/dataset/tbprocessor/tbmlMock')
-const {
-  data: { forceArray },
-} = __non_webpack_require__('/lib/util')
+import { logUserDataQuery, Events } from '/lib/ssb/repo/query'
+import { getTbmlMock } from '/lib/ssb/dataset/tbprocessor/tbmlMock'
+import * as util from '/lib/util'
 
 export enum TbProcessorTypes {
   DATA_SET = 'DATA_SET',
@@ -107,7 +105,9 @@ function getTbmlSourceListUniform(tbmlSourceList: TbmlSourceListRaw): TbmlSource
     sourceList: {
       tbml: {
         id: tbmlSourceList.sourceList.tbml.id,
-        source: tbmlSourceList.sourceList.tbml.source ? forceArray(tbmlSourceList.sourceList.tbml.source) : [],
+        source: tbmlSourceList.sourceList.tbml.source
+          ? util.data.forceArray(tbmlSourceList.sourceList.tbml.source)
+          : [],
       },
     },
   }
@@ -133,28 +133,28 @@ function getTbmlDataUniform(tbmlDataRaw: TbmlDataRaw): TbmlDataUniform {
 }
 
 function getTableHead(thead: TableRowRaw | Array<TableRowRaw>): Array<TableRowUniform> {
-  return forceArray(thead).map((thead) => ({
-    tr: getTableCellHeader(forceArray(thead.tr)),
+  return util.data.forceArray(thead).map((thead) => ({
+    tr: getTableCellHeader(util.data.forceArray(thead.tr)),
   }))
 }
 
 function getTableBody(tbody: TableRowRaw | Array<TableRowRaw>): Array<TableRowUniform> {
-  return forceArray(tbody).map((tbody) => ({
-    tr: getTableCellBody(forceArray(tbody.tr)),
+  return util.data.forceArray(tbody).map((tbody) => ({
+    tr: getTableCellBody(util.data.forceArray(tbody.tr)),
   }))
 }
 
 function getTableCellHeader(tableCell: Array<TableCellRaw>): Array<TableCellUniform> {
-  return forceArray(tableCell).map((cell) => ({
-    td: typeof cell.td != 'undefined' ? forceArray(cell.td) : [],
-    th: typeof cell.th != 'undefined' ? forceArray(cell.th) : [],
+  return util.data.forceArray(tableCell).map((cell) => ({
+    td: typeof cell.td != 'undefined' ? util.data.forceArray(cell.td) : [],
+    th: typeof cell.th != 'undefined' ? util.data.forceArray(cell.th) : [],
   }))
 }
 
 function getTableCellBody(tableCell: Array<TableCellRaw>): Array<TableCellUniform> {
-  return forceArray(tableCell).map((cell) => ({
-    th: typeof cell.th != 'undefined' ? forceArray(cell.th) : [],
-    td: typeof cell.td != 'undefined' ? forceArray(cell.td) : [],
+  return util.data.forceArray(tableCell).map((cell) => ({
+    th: typeof cell.th != 'undefined' ? util.data.forceArray(cell.th) : [],
+    td: typeof cell.td != 'undefined' ? util.data.forceArray(cell.td) : [],
   }))
 }
 
@@ -169,7 +169,7 @@ function getMetadataDataUniform(metadataRaw: MetadataRaw): MetadataUniform {
 
   const publicRelatedTableIds: string | number | undefined = metadataRaw.instance.publicRelatedTableIds
   const relatedTableIds: string = metadataRaw.instance.relatedTableIds
-  const notes: Array<Note> = metadataRaw.notes ? forceArray(metadataRaw.notes.note) : []
+  const notes: Array<Note> = metadataRaw.notes ? util.data.forceArray(metadataRaw.notes.note) : []
 
   return {
     instance: {
@@ -204,16 +204,6 @@ function xmlToJson<T>(xml: string, queryId?: string): T {
     }
     throw new Error(`Failed while parsing tbml data: ${e}`)
   }
-}
-
-export interface TbmlLib {
-  getTbmlData: <T extends TbmlDataUniform | TbmlSourceListUniform>(
-    url: string,
-    queryId?: string,
-    processXml?: string,
-    type?: string
-  ) => TbprocessorParsedResponse<T>
-  TbProcessorTypes: typeof TbProcessorTypes
 }
 
 export interface TbprocessorParsedResponse<T extends TbmlDataUniform | TbmlSourceListUniform> {

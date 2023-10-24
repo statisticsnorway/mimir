@@ -5,9 +5,7 @@ import { formatDate } from '/lib/ssb/utils/dateUtils'
 const SOLR_PARAM_QUERY = 'q'
 const SOLR_FORMAT = 'json'
 const SOLR_BASE_URL: string =
-  app.config && app.config['ssb.solrFreeTextSearch.baseUrl']
-    ? app.config['ssb.solrFreeTextSearch.baseUrl']
-    : 'https://www.ssb.no/solr/fritekstsok/select'
+  app.config?.['ssb.solrFreeTextSearch.baseUrl'] || 'https://www.ssb.no/solr/fritekstsok/select'
 
 export function solrSearch(
   term: string,
@@ -150,18 +148,6 @@ function createFacetsArray(solrResults: Array<string | number>): Array<Facet> {
 /*
  * Interfaces
  */
-export interface SolrUtilsLib {
-  solrSearch: (
-    term: string,
-    language: string,
-    numberOfHits: number,
-    start?: number,
-    filter?: string,
-    contentType?: string,
-    sortParam?: string
-  ) => SolrPrepResultAndTotal
-}
-
 interface SolrQueryParams {
   query: string
 }

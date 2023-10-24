@@ -1,18 +1,15 @@
-import { PreliminaryData, TbmlDataUniform } from '/lib/types/xmlParser'
-import type { Highchart } from '/site/content-types'
 import { Content } from '/lib/xp/content'
+import { PreliminaryData, TbmlDataUniform } from '/lib/types/xmlParser'
 import { JSONstat } from '/lib/types/jsonstat-toolkit'
-import type { DataSource } from '/site/mixins/dataSource'
-import { RowValue } from '/lib/ssb/utils/utils'
+import { RowValue, getRowValue } from '/lib/ssb/utils/utils'
 
-const { seriesAndCategoriesFromHtmlTable } = __non_webpack_require__('/lib/ssb/parts/highcharts/data/htmlTable')
-const { seriesAndCategoriesFromJsonStat } = __non_webpack_require__('/lib/ssb/parts/highcharts/data/statBank')
-const { seriesAndCategoriesFromTbml } = __non_webpack_require__('/lib/ssb/parts/highcharts/data/tbProcessor')
-const { DataSource: DataSourceType } = __non_webpack_require__('/lib/ssb/repo/dataset')
-const {
-  data: { forceArray },
-} = __non_webpack_require__('/lib/util')
-const { getRowValue } = __non_webpack_require__('/lib/ssb/utils/utils')
+import { seriesAndCategoriesFromHtmlTable } from '/lib/ssb/parts/highcharts/data/htmlTable'
+import { seriesAndCategoriesFromJsonStat } from '/lib/ssb/parts/highcharts/data/statBank'
+import { seriesAndCategoriesFromTbml } from '/lib/ssb/parts/highcharts/data/tbProcessor'
+import { DataSource as DataSourceType } from '/lib/ssb/repo/dataset'
+import * as util from '/lib/util'
+import { type Highchart } from '/site/content-types'
+import { type DataSource } from '/site/mixins/dataSource'
 
 export function prepareHighchartsData(
   req: XP.Request,
@@ -67,7 +64,7 @@ export function switchRowsAndColumnsCheck(
 }
 
 function switchRowsAndColumns(seriesAndCategories: SeriesAndCategories): SeriesAndCategories {
-  const categories: Array<string | number> = forceArray(getRowValue(seriesAndCategories.categories))
+  const categories: Array<string | number> = util.data.forceArray(getRowValue(seriesAndCategories.categories))
   const series: Array<Series> = categories.reduce((series: Array<Series>, category, index: number) => {
     const serie: Series = {
       name: category,
@@ -128,27 +125,4 @@ export type AreaLineLinearData = [number | string | Array<string | number | Prel
 export interface PieData {
   name: Array<string | number | PreliminaryData> | number | string
   y: Array<number> | number | string
-}
-
-export interface HighchartsDataLib {
-  prepareHighchartsData: (
-    req: XP.Request,
-    highchartsContent: Content<Highchart>,
-    data: JSONstat | TbmlDataUniform | object | string | undefined,
-    dataSource: DataSource['dataSource']
-  ) => SeriesAndCategories | undefined
-  getSeriesAndCategories: (
-    req: XP.Request,
-    highchart: Content<Highchart>,
-    data: JSONstat | TbmlDataUniform | object | string | undefined,
-    dataSource: DataSource['dataSource']
-  ) => SeriesAndCategories | undefined
-  switchRowsAndColumnsCheck: (
-    highchartContent: Content<Highchart>,
-    seriesAndCategories: SeriesAndCategories
-  ) => SeriesAndCategories
-  addDataProperties: (
-    highchartContent: Content<Highchart>,
-    seriesAndCategories: SeriesAndCategories
-  ) => SeriesAndCategories
 }

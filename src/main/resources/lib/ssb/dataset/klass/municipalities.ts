@@ -1,18 +1,17 @@
 import { get as getContent, Content } from '/lib/xp/content'
 import { getSiteConfig } from '/lib/xp/portal'
-import { County } from '/lib/ssb/dataset/klass/counties'
+import { sanitize } from '/lib/xp/common'
+import { County, list as countyList } from '/lib/ssb/dataset/klass/counties'
 import { DatasetRepoNode } from '/lib/ssb/repo/dataset'
-import type { DataSource } from '/site/mixins/dataSource'
 
-const { sanitize } = __non_webpack_require__('/lib/xp/common')
-const { list: countyList } = __non_webpack_require__('/lib/ssb/dataset/klass/counties')
-const { getDataset, extractKey } = __non_webpack_require__('/lib/ssb/dataset/dataset')
-const {
+import { getDataset, extractKey } from '/lib/ssb/dataset/dataset'
+import {
   fromDatasetRepoCache,
   fromParsedMunicipalityCache,
   fromMunicipalityWithCodeCache,
   fromMunicipalityWithNameCache,
-} = __non_webpack_require__('/lib/ssb/cache/cache')
+} from '/lib/ssb/cache/cache'
+import { type DataSource } from '/site/mixins/dataSource'
 
 /**
  * @return {array} Returns everything in the "code" node from ssb api
@@ -230,20 +229,7 @@ export interface MunicipalityChange {
   changeOccurred: string
 }
 
-export interface MunicipalitiesLib {
-  list: () => Array<MunicipalCode>
-  query: (queryString: string) => Array<MunicipalCode>
-  createPath(municipalName: string, countyName?: string): string
-  municipalsWithCounties(): Array<MunicipalityWithCounty>
-  getMunicipality(req: XP.Request): MunicipalityWithCounty | undefined
-  getMunicipalityByName: (
-    municipalities: Array<MunicipalityWithCounty>,
-    municipalityName: string
-  ) => MunicipalityWithCounty | undefined
-  removeCountyFromMunicipalityName: (municipalityName: string) => string
-}
-
-interface RequestWithCode extends XP.Request {
+export interface RequestWithCode extends XP.Request {
   code: string
 }
 

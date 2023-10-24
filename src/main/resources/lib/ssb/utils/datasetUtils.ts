@@ -1,7 +1,7 @@
+import { sleep } from '/lib/xp/task'
 import { request, HttpResponse, HttpRequestParams } from '/lib/http-client'
 import { JSONstat } from '/lib/types/jsonstat-toolkit'
-const { Events, logUserDataQuery } = __non_webpack_require__('/lib/ssb/repo/query')
-const { sleep } = __non_webpack_require__('/lib/xp/task')
+import { Events, logUserDataQuery } from '/lib/ssb/repo/query'
 
 const defaultSelectionFilter: SelectionFilter = {
   filter: 'all',

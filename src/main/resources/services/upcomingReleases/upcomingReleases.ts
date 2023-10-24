@@ -1,11 +1,19 @@
 import { StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
-import { GroupedBy, PreparedStatistics, YearReleases, Release } from '/lib/ssb/utils/variantUtils'
+import {
+  GroupedBy,
+  PreparedStatistics,
+  YearReleases,
+  Release,
+  addMonthNames,
+  groupStatisticsByYearMonthAndDay,
+  prepareRelease,
+  filterOnComingReleases,
+  getUpcomingReleases,
+} from '/lib/ssb/utils/variantUtils'
 
-const { addMonthNames, groupStatisticsByYearMonthAndDay, prepareRelease, filterOnComingReleases, getUpcomingReleases } =
-  __non_webpack_require__('/lib/ssb/utils/variantUtils')
-const { getAllStatisticsFromRepo } = __non_webpack_require__('../../lib/ssb/statreg/statistics')
+import { getAllStatisticsFromRepo } from '../../lib/ssb/statreg/statistics'
 
-exports.get = (req: XP.Request): XP.Response => {
+export const get = (req: XP.Request): XP.Response => {
   // Get statistics
   const statistics: Array<StatisticInListing> = getAllStatisticsFromRepo()
   const upComingReleases: Array<Release> = getUpcomingReleases(statistics)

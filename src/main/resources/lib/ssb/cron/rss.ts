@@ -1,33 +1,32 @@
-import { StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 import { Content } from '/lib/xp/content'
+import { StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
 import { request, HttpResponse } from '/lib/http-client'
-import type { DataSource } from '/site/mixins/dataSource'
 import { TbmlDataUniform, XmlParser } from '/lib/types/xmlParser'
 import { DatasetRepoNode, DataSource as DataSourceType } from '/lib/ssb/repo/dataset'
 import { JSONstat } from '/lib/types/jsonstat-toolkit'
 import { JobStatus } from '/lib/ssb/repo/job'
-import type { Statistics } from '/site/content-types'
-import type { Statistic } from '/site/mixins/statistic'
 import { subDays, isWithinInterval } from '/lib/ssb/utils/dateUtils'
 
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
-const { getTableIdFromTbprocessor } = __non_webpack_require__('/lib/ssb/dataset/tbprocessor/tbprocessor')
-const { getTableIdFromStatbankApi } = __non_webpack_require__('/lib/ssb/dataset/statbankApi/statbankApi')
-const { getDataset } = __non_webpack_require__('/lib/ssb/dataset/dataset')
-const { cronJobLog } = __non_webpack_require__('/lib/ssb/utils/serverLog')
-const { getParentType, getParentContent } = __non_webpack_require__('/lib/ssb/utils/parentUtils')
+import { getTableIdFromTbprocessor } from '/lib/ssb/dataset/tbprocessor/tbprocessor'
+import { getTableIdFromStatbankApi } from '/lib/ssb/dataset/statbankApi/statbankApi'
+import { getDataset } from '/lib/ssb/dataset/dataset'
+import { cronJobLog } from '/lib/ssb/utils/serverLog'
+import { getParentType, getParentContent } from '/lib/ssb/utils/parentUtils'
 
-const { fetchStatisticsWithReleaseToday } = __non_webpack_require__('/lib/ssb/statreg/statistics')
+import { fetchStatisticsWithReleaseToday } from '/lib/ssb/statreg/statistics'
+import { type Statistic } from '/site/mixins/statistic'
+import { type Statistics } from '/site/content-types'
+import { type DataSource } from '/site/mixins/dataSource'
 
 function fetchRSS(): Array<RSSItem> {
-  const statbankRssUrl: string | undefined =
-    app.config && app.config['ssb.rss.statbank'] ? app.config['ssb.rss.statbank'] : 'https://www.ssb.no/rss/statbank'
+  const statbankRssUrl: string | undefined = app.config?.['ssb.rss.statbank'] || 'https://www.ssb.no/rss/statbank'
   if (statbankRssUrl) {
     const response: HttpResponse = request({
       url: statbankRssUrl,
     })
-    if (response && response.body) {
+    if (response?.body) {
       cronJobLog(`STATBANK RSS :: ${response.body}`)
       const data: string = xmlParser.parse(response.body)
       const rss: RSS = JSON.parse(data)
@@ -38,7 +37,7 @@ function fetchRSS(): Array<RSSItem> {
 }
 
 function isValidType(dataSource: Content<DataSource>): boolean {
-  if (dataSource.data.dataSource && dataSource.data.dataSource._selected) {
+  if (dataSource?.data?.dataSource?._selected) {
     const dataSourceType: string = dataSource.data.dataSource._selected
     if (dataSourceType === DataSourceType.STATBANK_API || dataSourceType === DataSourceType.TBPROCESSOR) {
       return true
@@ -223,8 +222,4 @@ interface RSSContact {
   'ssbrss:person': string
   'ssbrss:phone': number | string
   'ssbrss:email': string
-}
-
-export interface DatasetRSSLib {
-  dataSourceRSSFilter: (dataSources: Array<Content<DataSource>>) => RSSFilter
 }

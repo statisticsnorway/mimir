@@ -1,13 +1,12 @@
-import { DatasetRepoNode, DataSource as DataSourceType } from '/lib/ssb/repo/dataset'
 import { Content } from '/lib/xp/content'
-import type { DataSource } from '/site/mixins/dataSource'
+import { DatasetRepoNode, DataSource as DataSourceType, getDataset } from '/lib/ssb/repo/dataset'
 import { JSONstat } from '/lib/types/jsonstat-toolkit'
 import { StatbankSavedRaw } from '/lib/types/xmlParser'
 
-const { getDataset } = __non_webpack_require__('/lib/ssb/repo/dataset')
-const { get: fetchData } = __non_webpack_require__('/lib/ssb/dataset/statbankSaved/statbankSavedRequest')
-const { logUserDataQuery, Events } = __non_webpack_require__('/lib/ssb/repo/query')
-const { isUrl } = __non_webpack_require__('/lib/ssb/utils/utils')
+import { get as fetchData } from '/lib/ssb/dataset/statbankSaved/statbankSavedRequest'
+import { logUserDataQuery, Events } from '/lib/ssb/repo/query'
+import { isUrl } from '/lib/ssb/utils/utils'
+import { type DataSource } from '/site/mixins/dataSource'
 
 export function getStatbankSaved(content: Content<DataSource>, branch: string): DatasetRepoNode<JSONstat> | null {
   if (content.data.dataSource && content.data.dataSource._selected === DataSourceType.STATBANK_SAVED) {
@@ -55,9 +54,4 @@ export function fetchStatbankSavedData(content: Content<DataSource>): object | n
   } else {
     return null
   }
-}
-
-export interface StatbankSavedLib {
-  getStatbankSaved(content: Content<DataSource>, branch: string): DatasetRepoNode<JSONstat> | null
-  fetchStatbankSavedData: (content: Content<DataSource>) => StatbankSavedRaw | null
 }

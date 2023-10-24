@@ -1,14 +1,13 @@
 import { get, Content } from '/lib/xp/content'
-import { StatbankFrameData } from '/site/pages/default/default'
+import { pageUrl, getContent } from '/lib/xp/portal'
 import { MunicipalityWithCounty } from '/lib/ssb/dataset/klass/municipalities'
-
-const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
-const { pageUrl, getContent } = __non_webpack_require__('/lib/xp/portal')
+import { getPhrases } from '/lib/ssb/utils/language'
+import { StatbankFrameData } from '/site/pages/default/default'
 
 function addBreadcrumbs(page: Content, visitedPage: Content, breadcrumbs: Breadcrumbs = []): Breadcrumbs {
   if (page.type === 'portal:site') {
     breadcrumbs.unshift({
-      text: getPhrases(visitedPage) ? getPhrases(visitedPage).home : 'Hjem',
+      text: getPhrases(visitedPage)?.home || 'Hjem',
       link: '/',
     })
   } else {
@@ -70,10 +69,3 @@ interface BreadcrumbsData {
 }
 
 export type Breadcrumbs = Array<BreadcrumbsData>
-export interface BreadcrumbsUtilsLib {
-  getBreadcrumbs: (
-    page: Content,
-    municipality: MunicipalityWithCounty | undefined,
-    statbank?: StatbankFrameData | undefined
-  ) => Breadcrumbs
-}

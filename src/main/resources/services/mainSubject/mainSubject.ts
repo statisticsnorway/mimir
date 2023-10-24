@@ -1,6 +1,6 @@
 import { query } from '/lib/xp/content'
 
-exports.get = (): XP.Response => {
+export const get = (): XP.Response => {
   const mainSubjects = query({
     count: 500,
     filters: {

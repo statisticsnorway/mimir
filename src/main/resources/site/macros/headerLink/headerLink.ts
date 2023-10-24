@@ -1,15 +1,15 @@
-import type { HeaderLink as HeaderLinkConfig } from '/site/macros/headerLink'
-import { render } from '/lib/enonic/react4xp'
 import { get, Content } from '/lib/xp/content'
 import { prepareText } from '/site/parts/links/links'
 
-const { attachmentUrl, pageUrl } = __non_webpack_require__('/lib/xp/portal')
+import { attachmentUrl, pageUrl } from '/lib/xp/portal'
+import { render } from '/lib/enonic/react4xp'
+import { type HeaderLink as HeaderLinkConfig } from '/site/macros/headerLink'
 
-exports.macro = (context: XP.MacroContext) => {
+export const macro = (context: XP.MacroContext) => {
   return renderPart(context)
 }
 
-exports.preview = (context: XP.MacroContext) => renderPart(context)
+export const preview = (context: XP.MacroContext) => renderPart(context)
 
 function renderPart(context: XP.MacroContext) {
   const { linkedContent, linkText } = context.params

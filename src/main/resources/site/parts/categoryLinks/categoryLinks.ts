@@ -1,11 +1,11 @@
-import { render } from '/lib/enonic/react4xp'
 import { getComponent, getContent, pageUrl } from '/lib/xp/portal'
-import { Language, type Phrases } from '/lib/types/language'
+import { render } from '/lib/enonic/react4xp'
+import { type Phrases } from '/lib/types/language'
 import { randomUnsafeString } from '/lib/ssb/utils/utils'
 
-const { data } = __non_webpack_require__('/lib/util')
-const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
-const { getLanguage } = __non_webpack_require__('/lib/ssb/utils/language')
+import { data } from '/lib/util'
+import { renderError } from '/lib/ssb/error/error'
+import { getLanguage } from '/lib/ssb/utils/language'
 
 export function get(req: XP.Request): XP.Response {
   try {
@@ -29,8 +29,8 @@ function renderPart(req: XP.Request): XP.Response {
   const page = getContent()
   if (!part || !page) throw new Error('No page or part')
 
-  const language: Language = getLanguage(page)
-  const phrases: Phrases = language.phrases as Phrases
+  const language = getLanguage(page)
+  const phrases: Phrases = language?.phrases as Phrases
   const links: Array<CategoryLink> = part.config.CategoryLinkItemSet
     ? data.forceArray(part.config.CategoryLinkItemSet)
     : []

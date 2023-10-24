@@ -1,9 +1,9 @@
-import { render } from '/lib/enonic/react4xp'
 import { getComponent } from '/lib/xp/portal'
+import { render } from '/lib/enonic/react4xp'
 import { imageUrl } from '/lib/ssb/utils/imageUtils'
 
-const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
-const { data } = __non_webpack_require__('/lib/util')
+import { renderError } from '/lib/ssb/error/error'
+import { data } from '/lib/util'
 
 export function get(req: XP.Request) {
   try {

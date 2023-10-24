@@ -1,10 +1,9 @@
 import { CreateNodeParams, Node } from '/lib/xp/node'
+import { localize } from '/lib/xp/i18n'
 import { EventInfo, QueryInfo } from '/lib/ssb/repo/query'
 
-const { localize } = __non_webpack_require__('/lib/xp/i18n')
-const { nodeExists, createNode, getNode, getChildNodes, withConnection } =
-  __non_webpack_require__('/lib/ssb/repo/common')
-const { repoExists, createRepo } = __non_webpack_require__('/lib/ssb/repo/repo')
+import { nodeExists, createNode, getNode, getChildNodes, withConnection } from '/lib/ssb/repo/common'
+import { repoExists, createRepo } from '/lib/ssb/repo/repo'
 
 export const EVENT_LOG_REPO = 'no.ssb.eventlog'
 export const EVENT_LOG_BRANCH = 'master'
@@ -79,15 +78,4 @@ export interface LogSummary {
   result: string | undefined
   modifiedTs: string | undefined
   by: string
-}
-
-export interface RepoEventLogLib {
-  EVENT_LOG_REPO: string
-  EVENT_LOG_BRANCH: string
-  setupEventLog: () => void
-  eventLogExists: () => boolean
-  createEventLogRepo: () => void
-  createEventLog: <T>(content: T & CreateNodeParams, createRepoIfNotFound?: boolean) => T & Node
-  updateEventLog: <T>(key: string, editor: EditorCallback<T>) => T & Node
-  getQueryChildNodesStatus: (queryId: string) => ReadonlyArray<LogSummary> | undefined
 }
