@@ -120,7 +120,7 @@ exports.localizeTimePeriod = (time: string): string => {
  * @return {string}
  */
 function parseTimeInterval(time: string): string {
-  const splitYearLetterNumberIntoArray = new RegExp(/(\d{4})([HKMTU])(\d{1,2})/)
+  const splitYearLetterNumberIntoArray = new RegExp(/(\d{4})([HKMTU-])(\d{1,2})/)
   const interval: RegExpExecArray | null = splitYearLetterNumberIntoArray.exec(time)
 
   let parsedTime = ''
@@ -150,6 +150,10 @@ function parseTimeInterval(time: string): string {
         parsedTime = `${i18n.localize({
           key: 'interval.' + interval[2],
         })} ${interval[3]} ${interval[1]}`
+        break
+      case '-':
+        // e.g. 2022-2023
+        parsedTime = time
         break
     }
     return parsedTime
