@@ -34,7 +34,7 @@ export function preview(req: XP.Request, accordionIds: Array<string> | string): 
 function renderPart(req: XP.Request, accordionIds: Array<string>) {
   const accordions: Array<AccordionData> = []
 
-  accordionIds.map((key) => {
+  accordionIds.forEach((key) => {
     const accordion: Content<Accordion> | null = key
       ? getContentByKey({
           key,
@@ -43,35 +43,33 @@ function renderPart(req: XP.Request, accordionIds: Array<string>) {
 
     if (accordion) {
       const accordionContents: Accordion['accordions'] = accordion.data.accordions
-        ? util.data.forceArray(accordion.data.accordions)
+        ? util.data.forceArray(accordion.data.accordions).filter((accordion) => !!accordion)
         : []
-      accordionContents
-        .filter((accordion) => !!accordion)
-        .map((accordion) => {
-          const items: Accordion['accordions'] = accordion.items ? util.data.forceArray(accordion.items) : []
+      accordionContents.forEach((accordion) => {
+        const items: Accordion['accordions'] = accordion.items ? util.data.forceArray(accordion.items) : []
 
-          accordions.push({
-            id: accordion.open && sanitize(accordion.open),
-            body:
-              accordion.body &&
-              processHtml({
-                value: accordion.body,
-              }),
-            open: accordion.open,
-            items: items.length
-              ? items.map((item) => {
-                  return {
-                    ...item,
-                    body:
-                      item.body &&
-                      processHtml({
-                        value: item.body,
-                      }),
-                  }
-                })
-              : [],
-          })
+        accordions.push({
+          id: accordion.open && sanitize(accordion.open),
+          body:
+            accordion.body &&
+            processHtml({
+              value: accordion.body,
+            }),
+          open: accordion.open,
+          items: items.length
+            ? items.map((item) => {
+                return {
+                  ...item,
+                  body:
+                    item.body &&
+                    processHtml({
+                      value: item.body,
+                    }),
+                }
+              })
+            : [],
         })
+      })
     }
   })
 

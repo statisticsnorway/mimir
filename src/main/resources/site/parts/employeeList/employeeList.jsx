@@ -47,9 +47,7 @@ function EmployeeList(props) {
             {employee.area.title == undefined
               ? null
               : (employee.area.title =
-                  !undefined && employee.email == '' && employee.phone == '' ? null : (
-                    <span className='dash-space'> / </span>
-                  ))}
+                  employee.email == '' && employee.phone == '' ? null : <span className='dash-space'> / </span>)}
 
             {employee.email != '' ? (
               <>

@@ -8,11 +8,13 @@ export function run(params: BanVarnishPageCacheConfig): void {
   util.data.forceArray(params.pageIds).forEach((pageId) => {
     const result: HttpResponse = purgePageFromVarnish(pageId)
     taskLib.progress({
-      info: 'sendt purge page request to varnish',
+      info: 'sent purge page request to varnish',
     })
 
     // Keeping log line, want to monitor this for a while
-    log.info(`Cleared single page from Varnish. Result code: ${result.status} - and message: ${result.message}`)
+    log.info(
+      `Cleared page ${params.pageIds} from Varnish. Result code: ${result.status} - and message: ${result.message}`
+    )
   })
 }
 

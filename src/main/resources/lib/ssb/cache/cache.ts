@@ -79,7 +79,16 @@ export function setup(): void {
   listener({
     type: 'node.pushed',
     localOnly: false,
-    callback: removePageFromVarnish,
+    callback: (e) => {
+      removePageFromVarnish(e)
+      alertsClearVarnishCache(e)
+    },
+  })
+
+  listener({
+    type: 'node.deleted',
+    localOnly: false,
+    callback: alertsClearVarnishCache,
   })
 
   listener({
@@ -95,9 +104,27 @@ export function setup(): void {
   })
 }
 
+function alertsClearVarnishCache(event: EnonicEvent<EnonicEventData>): void {
+  event.data.nodes.forEach((n) => {
+    // Clear varnish cache for operation alerts
+    if (n.repo == 'com.enonic.cms.default' && n.branch == 'master' && n.path.includes('/driftsvarsler/')) {
+      const resultOfPurge = purgeVarnishCache()
+      log.info(
+        `Cleared Varnish for alerts. Result code: ${resultOfPurge.status} - and message: ${resultOfPurge.message}`
+      )
+    }
+  })
+}
+
 function removePageFromVarnish(event: EnonicEvent<EnonicEventData>): void {
   const pageIds: string[] = event.data.nodes
-    .filter((n) => n.repo == 'com.enonic.cms.default' && n.branch == 'master' && n.path.startsWith('/content/'))
+    .filter(
+      (n) =>
+        n.repo == 'com.enonic.cms.default' &&
+        n.branch == 'master' &&
+        n.path.startsWith('/content/') &&
+        !n.path.includes('/driftsvarsler/')
+    )
     .map((n) => n.id)
 
   if (pageIds.length > 0) {

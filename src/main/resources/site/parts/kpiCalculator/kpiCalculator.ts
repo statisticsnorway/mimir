@@ -50,7 +50,7 @@ function getKpiCalculatorComponent(req: XP.Request, page: Content) {
   if (!config) throw Error('No part found')
 
   const frontPage = !!config.frontPage
-  const frontPageIngress: string | null | undefined = config.ingressFrontpage && config.ingressFrontpage
+  const frontPageIngress: string | null | undefined = config.ingressFrontpage
   const language = getLanguage(page)
   const phrases = language?.phrases as Phrases
   const calculatorConfig: Content<CalculatorConfig> | undefined = getCalculatorConfig()

@@ -109,7 +109,7 @@ function getGroupedWithMonthNames(config: ReleasedStatisticsPartConfig, currentL
 function prepReleases(
   variant: ContentLight<ReleaseVariant>,
   date: Date,
-  periodRelease: string | undefined
+  periodRelease: string
 ): PreparedStatistics {
   return {
     id: Number(variant.data.statisticId),
@@ -121,7 +121,7 @@ function prepReleases(
       monthNumber: date.getMonth(),
       year: date.getFullYear(),
       frequency: variant.data.frequency,
-      period: periodRelease ? periodRelease.toLowerCase() : '',
+      period: periodRelease,
     },
   }
 }

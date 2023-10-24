@@ -1,4 +1,4 @@
-/* eslint-disable prettier/prettier */ 
+/* eslint-disable prettier/prettier */
 
 import { PartComponent as _PartComponent, LayoutComponent as _LayoutComponent } from '@enonic-types/core'
 
@@ -13,7 +13,6 @@ declare global {
       export type AttachmentTablesFigures = _PartComponent<"mimir:attachmentTablesFigures">
       export type Banner = _PartComponent<"mimir:banner">
       export type BkibolCalculator = _PartComponent<"mimir:bkibolCalculator">
-      export type Button = _PartComponent<"mimir:button">
       export type CategoryLinks = _PartComponent<"mimir:categoryLinks">
       export type Contact = _PartComponent<"mimir:contact">
       export type ContactForm = _PartComponent<"mimir:contactForm">
