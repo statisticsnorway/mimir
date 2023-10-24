@@ -3,7 +3,6 @@ import { Modal } from 'react-bootstrap'
 import { AlertTriangle } from 'react-feather'
 import PropTypes from 'prop-types'
 
-// TODO: Close other modals when this modal is open
 function ConnectionTimeoutModal(props) {
   const { isConnected, serverTimeReceived } = props
   const [hide, setHide] = useState(false)
