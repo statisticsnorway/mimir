@@ -188,7 +188,7 @@ function createHighchartsReactProps(
     config: config,
     type: highchart.data.graphType,
     contentKey: highchart._id,
-    footnoteText: highchart.data.footnoteText ? forceArray(highchart.data.footnoteText) : undefined,
+    footnoteText: highchart.data.footnoteText ? util.data.forceArray(highchart.data.footnoteText) : undefined,
     creditsEnabled: highchart.data.sourceList ? true : false,
     sourceList: highchart.data.sourceList ? util.data.forceArray(highchart.data.sourceList) : undefined,
     hideTitle: highchart.data.hideTitle,
