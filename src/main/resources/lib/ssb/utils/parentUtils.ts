@@ -1,11 +1,11 @@
 import { get as getContent, query, Content, ContentsResult } from '/lib/xp/content'
-import type { Default as DefaultPageConfig } from '/site/pages/default'
-import type { Statistics, Page } from '/site/content-types'
 import { StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
 import { DefaultPage } from '/lib/types/defaultPage'
 
-const { getStatisticByShortNameFromRepo } = __non_webpack_require__('/lib/ssb/statreg/statistics')
-const { fromParentTypeCache } = __non_webpack_require__('/lib/ssb/cache/cache')
+import { getStatisticByShortNameFromRepo } from '/lib/ssb/statreg/statistics'
+import { fromParentTypeCache } from '/lib/ssb/cache/cache'
+import { type Statistics, type Page } from '/site/content-types'
+import { type Default as DefaultPageConfig } from '/site/pages/default'
 
 export function getParentType(path: string): string | undefined {
   return fromParentTypeCache(path, () => parentType(path))
@@ -83,13 +83,4 @@ export function getMainSubjectStatistic(statistic: Content<Statistics>): string 
       })
     : null
   return parentContent ? parentContent.displayName : ''
-}
-
-export interface ParentUtilsLib {
-  getParentType: (path: string) => string | undefined
-  getParentContent: (path: string) => Content<DefaultPageConfig | Statistics> | null
-  parentType: (path: string) => string | undefined
-  parentPath: (path: string) => string
-  getMainSubject: (shortName: string, language: string) => string
-  getMainSubjectStatistic: (statistic: Content<Statistics>) => string
 }

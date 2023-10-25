@@ -393,7 +393,3 @@ function getSourceListMock3(): HttpResponse {
     bodyStream: {} as unknown as ByteSource,
   }
 }
-
-export interface TbmlMockLib {
-  getTbmlMock: (url: string) => HttpResponse | null
-}

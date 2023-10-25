@@ -1,6 +1,6 @@
-import { render } from '/lib/enonic/react4xp'
 import { getContent, getSiteConfig } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
+import { render } from '/lib/enonic/react4xp'
 
 export function get(req: XP.Request) {
   return renderPart(req)

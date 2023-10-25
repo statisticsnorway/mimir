@@ -1,9 +1,8 @@
 import { QueryNodeParams, Node, NodeQueryResult } from '/lib/xp/node'
-import { EditorCallback } from '/lib/ssb/repo/eventLog'
 import { getUser, User } from '/lib/xp/auth'
+import { EditorCallback, EVENT_LOG_REPO, EVENT_LOG_BRANCH, createEventLog } from '/lib/ssb/repo/eventLog'
 import { DataSourceInfo, RSSFilterLogData } from '/lib/ssb/cron/rss'
-const { modifyNode, getNode, queryNodes } = __non_webpack_require__('/lib/ssb/repo/common')
-const { EVENT_LOG_REPO, EVENT_LOG_BRANCH, createEventLog } = __non_webpack_require__('/lib/ssb/repo/eventLog')
+import { modifyNode, getNode, queryNodes } from '/lib/ssb/repo/common'
 
 export enum JobStatus {
   STARTED = 'STARTED',
@@ -112,16 +111,4 @@ export function completeJobLog(jobLogId: string, message: string, refreshDataRes
     }
     return node as JobInfoNode
   })
-}
-
-export interface RepoJobLib {
-  JOB_STATUS_STARTED: typeof JOB_STATUS_STARTED
-  JOB_STATUS_COMPLETE: typeof JOB_STATUS_COMPLETE
-  JobNames: typeof JobNames
-  JobStatus: typeof JobStatus
-  startJobLog: (task?: string) => JobEventNode
-  updateJobLog: (jobId: string, editor: EditorCallback<JobInfoNode>) => JobInfoNode
-  queryJobLogs: (params: QueryNodeParams) => NodeQueryResult
-  getJobLog: (id: string) => JobInfoNode | ReadonlyArray<JobInfoNode> | null
-  completeJobLog: (jobLogId: string, message: string, refreshDataResult: object) => JobInfoNode
 }

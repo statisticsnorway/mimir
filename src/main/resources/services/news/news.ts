@@ -1,13 +1,13 @@
 import { query, Content } from '/lib/xp/content'
-import type { Page, Article, Statistics } from '/site/content-types'
-import type { Default as DefaultPageConfig } from '/site/pages/default'
+import { pageUrl } from '/lib/xp/portal'
 import { StatisticInListing, VariantInListing } from '/lib/ssb/dashboard/statreg/types'
-import type { Statistic } from '/site/mixins/statistic'
 import { subDays, isSameDay, format, parseISO, getTimeZoneIso } from '/lib/ssb/utils/dateUtils'
-const { fetchStatisticsWithReleaseToday } = __non_webpack_require__('/lib/ssb/statreg/statistics')
-const { pageUrl } = __non_webpack_require__('/lib/xp/portal')
-const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
-const { xmlEscape } = __non_webpack_require__('/lib/text-encoding')
+import { fetchStatisticsWithReleaseToday } from '/lib/ssb/statreg/statistics'
+import { isEnabled } from '/lib/featureToggle'
+import { xmlEscape } from '/lib/text-encoding'
+import { type Statistic } from '/site/mixins/statistic'
+import { type Default as DefaultPageConfig } from '/site/pages/default'
+import { type Page, type Article, type Statistics } from '/site/content-types'
 
 function get(): XP.Response {
   const rssNewsEnabled: boolean = isEnabled('rss-news', true, 'ssb')

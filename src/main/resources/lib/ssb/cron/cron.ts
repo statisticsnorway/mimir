@@ -1,31 +1,35 @@
 /* eslint-disable complexity */
 import { createUser, findUsers } from '/lib/xp/auth'
-import type { Content } from '/lib/xp/content'
+import { type Content } from '/lib/xp/content'
 import { run, type ContextParams } from '/lib/xp/context'
-import type { DataSource } from '/site/mixins/dataSource'
-import type { JobEventNode, JobInfoNode } from '/lib/ssb/repo/job'
-import type { StatRegRefreshResult } from '/lib/ssb/repo/statreg'
-import { list, schedule, type TaskMapper } from '/lib/cron'
-import type { RSSFilter } from '/lib/ssb/cron/rss'
 import { create, get as getScheduledJob, list as listScheduledJobs, modify, type ScheduledJob } from '/lib/xp/scheduler'
+import { isMaster } from '/lib/xp/cluster'
+import {
+  type JobEventNode,
+  type JobInfoNode,
+  completeJobLog,
+  startJobLog,
+  updateJobLog,
+  JOB_STATUS_COMPLETE,
+  JobNames,
+} from '/lib/ssb/repo/job'
+import { type StatRegRefreshResult, refreshStatRegData, STATREG_NODES } from '/lib/ssb/repo/statreg'
+import { list, schedule, type TaskMapper } from '/lib/cron'
+import { type RSSFilter, dataSourceRSSFilter } from '/lib/ssb/cron/rss'
 import { updateSDDSTables } from '/lib/ssb/cron/updateSDDSTables'
 
-const { clearPartFromPartCache } = __non_webpack_require__('/lib/ssb/cache/partCache')
-const { refreshStatRegData, STATREG_NODES } = __non_webpack_require__('/lib/ssb/repo/statreg')
-const { refreshQueriesAsync } = __non_webpack_require__('/lib/ssb/cron/task')
-const { getContentWithDataSource } = __non_webpack_require__('/lib/ssb/dataset/dataset')
-const { completeJobLog, startJobLog, updateJobLog, JOB_STATUS_COMPLETE, JobNames } =
-  __non_webpack_require__('/lib/ssb/repo/job')
-const { dataSourceRSSFilter } = __non_webpack_require__('/lib/ssb/cron/rss')
-const { deleteExpiredEventLogsForQueries } = __non_webpack_require__('/lib/ssb/cron/eventLog')
-const { isMaster } = __non_webpack_require__('/lib/xp/cluster')
-const { cronJobLog } = __non_webpack_require__('/lib/ssb/utils/serverLog')
-const { ENONIC_CMS_DEFAULT_REPO } = __non_webpack_require__('/lib/ssb/repo/common')
-const { updateUnpublishedMockTbml } = __non_webpack_require__('/lib/ssb/dataset/mockUnpublished')
-const { pushRssNews } = __non_webpack_require__('/lib/ssb/cron/pushRss')
-const { publishDataset } = __non_webpack_require__('/lib/ssb/dataset/publishOld')
-const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
-const { createOrUpdateStatisticsRepo } = __non_webpack_require__('/lib/ssb/repo/statisticVariant')
+import { clearPartFromPartCache } from '/lib/ssb/cache/partCache'
+import { refreshQueriesAsync } from '/lib/ssb/cron/task'
+import { getContentWithDataSource } from '/lib/ssb/dataset/dataset'
+import { deleteExpiredEventLogsForQueries } from '/lib/ssb/cron/eventLog'
+import { cronJobLog } from '/lib/ssb/utils/serverLog'
+import { ENONIC_CMS_DEFAULT_REPO } from '/lib/ssb/repo/common'
+import { updateUnpublishedMockTbml } from '/lib/ssb/dataset/mockUnpublished'
+import { pushRssNews } from '/lib/ssb/cron/pushRss'
+import { publishDataset } from '/lib/ssb/dataset/publishOld'
+import { isEnabled } from '/lib/featureToggle'
+import { createOrUpdateStatisticsRepo } from '/lib/ssb/repo/statisticVariant'
+import { type DataSource } from '/site/mixins/dataSource'
 
 const createUserContext: ContextParams = {
   // Master context (XP)
@@ -433,10 +437,4 @@ export function setupCronJobs(): void {
   const cronList: Array<TaskMapper> = list() as Array<TaskMapper>
   cronJobLog('All cron jobs registered')
   cronJobLog(JSON.stringify(cronList, null, 2))
-}
-
-export interface SSBCronLib {
-  setupCronJobs: () => void
-  runOnMasterOnly: (task: () => void) => void
-  cronContext: ContextParams
 }

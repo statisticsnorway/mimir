@@ -1,18 +1,17 @@
 import { type Content, query } from '/lib/xp/content'
-import type { Article, EndedStatisticList, Statistics } from '/site/content-types'
-import type { StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
-import type { Statistic } from '/site/mixins/statistic'
-import type { Subtopic } from '/site/mixins/subtopic'
-import type { DefaultPage } from '/lib/types/defaultPage'
+import { type StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
+import { type DefaultPage } from '/lib/types/defaultPage'
 import { fromSubjectCache } from '/lib/ssb/cache/subjectCache'
-import { forceArray } from '/lib/ssb/utils/arrayUtils'
+import { forceArray, ensureArray } from '/lib/ssb/utils/arrayUtils'
 
-const { getAllStatisticsFromRepo } = __non_webpack_require__('/lib/ssb/statreg/statistics')
-const { ensureArray } = __non_webpack_require__('/lib/ssb/utils/arrayUtils')
-const { parentPath } = __non_webpack_require__('/lib/ssb/utils/parentUtils')
+import { getAllStatisticsFromRepo } from '/lib/ssb/statreg/statistics'
+import { parentPath } from '/lib/ssb/utils/parentUtils'
+import { type Subtopic } from '/site/mixins/subtopic'
+import { type Statistic } from '/site/mixins/statistic'
+import { type Article, type EndedStatisticList, type Statistics } from '/site/content-types'
 
 export function getMainSubjects(request: XP.Request, language?: string): Array<SubjectItem> {
-  return fromSubjectCache<SubjectItem>(request, `mainsubject-${language ? language : 'all'}`, () =>
+  return fromSubjectCache<SubjectItem>(request, `mainsubject-${language ?? 'all'}`, () =>
     queryForSubjects({
       language,
       subjectType: 'mainSubject',
@@ -434,5 +433,3 @@ interface EndedStatistic {
   statistic?: string
   hideFromList: boolean
 }
-
-export type SubjectUtilsLib = typeof import('./subjectUtils')

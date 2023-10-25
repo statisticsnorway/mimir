@@ -1,27 +1,22 @@
 import { get as getContentByKey, type Content } from '/lib/xp/content'
+import { getContent, getComponent, pageUrl, assetUrl } from '/lib/xp/portal'
 import { render } from '/lib/thymeleaf'
-import type { TableSourceList, TableView } from '/lib/ssb/parts/table'
-import { SourceList, SourcesConfig, scriptAsset } from '/lib/ssb/utils/utils'
+import { type TableSourceList, type TableView, parseTable } from '/lib/ssb/parts/table'
+import { SourceList, SourcesConfig, scriptAsset, getSources } from '/lib/ssb/utils/utils'
 import {
   DropdownItem as TableDownloadDropdownItem,
   DropdownItems as TableDownloadDropdownItems,
 } from '/lib/types/components'
-import type { Language, Phrases } from '/lib/types/language'
+import { type Language, type Phrases } from '/lib/types/language'
 import { render as r4xpRender } from '/lib/enonic/react4xp'
-import type { Statistics, Table } from '/site/content-types'
-import { GA_TRACKING_ID } from '/site/pages/default/default'
-import { DataSource as DataSourceType } from '/lib/ssb/repo/dataset'
-import { getContent, getComponent, pageUrl, assetUrl } from '/lib/xp/portal'
+import { DataSource as DataSourceType, DATASET_BRANCH, UNPUBLISHED_DATASET_BRANCH } from '/lib/ssb/repo/dataset'
 
-const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
-const { parseTable } = __non_webpack_require__('/lib/ssb/parts/table')
-const { getSources } = __non_webpack_require__('/lib/ssb/utils/utils')
-const {
-  data: { forceArray },
-} = __non_webpack_require__('/lib/util')
-const { getLanguage, getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
-const { DATASET_BRANCH, UNPUBLISHED_DATASET_BRANCH } = __non_webpack_require__('/lib/ssb/repo/dataset')
-const { hasWritePermissionsAndPreview } = __non_webpack_require__('/lib/ssb/parts/permissions')
+import { renderError } from '/lib/ssb/error/error'
+import * as util from '/lib/util'
+import { getLanguage, getPhrases } from '/lib/ssb/utils/language'
+import { hasWritePermissionsAndPreview } from '/lib/ssb/parts/permissions'
+import { GA_TRACKING_ID } from '/site/pages/default/default'
+import { type Statistics, type Table } from '/site/content-types'
 
 const view = resolve('./table.html')
 
@@ -68,7 +63,7 @@ function getProps(req: XP.Request, tableId?: string): TableProps {
 
   // sources
   const sourceConfig: Table['sources'] | Array<SourcesConfig> = tableContent.data.sources
-    ? forceArray(tableContent.data.sources)
+    ? util.data.forceArray(tableContent.data.sources)
     : []
   const sourceLabel: string = phrases.source
   const sourceTableLabel: string = phrases.statbankTableSource
@@ -83,7 +78,7 @@ function getProps(req: XP.Request, tableId?: string): TableProps {
   )
   const baseUrl: string = app.config?.['ssb.baseUrl'] ? `${app.config['ssb.baseUrl'] as string}` : 'https://www.ssb.no'
   const statBankWebUrl: string = tableContent.language === 'en' ? baseUrl + '/en/statbank' : baseUrl + '/statbank'
-  const sourceList: TableSourceList = table.sourceList ? forceArray(table.sourceList) : []
+  const sourceList: TableSourceList = table.sourceList ? util.data.forceArray(table.sourceList) : []
   const sourceListExternal: TableSourceList =
     sourceList.length > 0 ? sourceList.filter((s) => s.tableApproved === 'internet') : []
   const uniqueTableIds: Array<string> =

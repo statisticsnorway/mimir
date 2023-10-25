@@ -1,28 +1,30 @@
 import { get as getContent, Content } from '/lib/xp/content'
-import type { Statistics } from '/site/content-types'
-import type { DataSource } from '/site/mixins/dataSource'
+import { create as createScheduledJob } from '/lib/xp/scheduler'
+import { PublicationItem } from '/lib/ssb/dataset/publish'
+import { ReleaseDatesVariant, StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
+
 import {
   JobEventNode,
   JobInfoNode,
   StatisticsPublishResult,
   DataSourceStatisticsPublishResult,
+  completeJobLog,
+  startJobLog,
+  updateJobLog,
+  JobNames,
+  JobStatus,
 } from '/lib/ssb/repo/job'
-import type { Statistic } from '/site/mixins/statistic'
-import { PublicationItem } from '/lib/ssb/dataset/publish'
-import { ReleaseDatesVariant, StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
+import { getDataSourceIdsFromStatistics, getStatisticsContent } from '/lib/ssb/dashboard/statistic'
+import { getDataset } from '/lib/ssb/dataset/dataset'
+import { UNPUBLISHED_DATASET_BRANCH } from '/lib/ssb/repo/dataset'
+import { getReleaseDatesByVariants, getStatisticByIdFromRepo } from '/lib/ssb/statreg/statistics'
+import { cronJobLog } from '/lib/ssb/utils/serverLog'
+import * as util from '/lib/util'
+import { type Statistic } from '/site/mixins/statistic'
+import { type DataSource } from '/site/mixins/dataSource'
+import { type Statistics } from '/site/content-types'
 
-const { create: createScheduledJob } = __non_webpack_require__('/lib/xp/scheduler')
-const { getDataSourceIdsFromStatistics, getStatisticsContent } = __non_webpack_require__('/lib/ssb/dashboard/statistic')
-const { getDataset } = __non_webpack_require__('/lib/ssb/dataset/dataset')
-const { UNPUBLISHED_DATASET_BRANCH } = __non_webpack_require__('/lib/ssb/repo/dataset')
-const { getReleaseDatesByVariants, getStatisticByIdFromRepo } = __non_webpack_require__('/lib/ssb/statreg/statistics')
-const { completeJobLog, startJobLog, updateJobLog, JobNames, JobStatus } = __non_webpack_require__('/lib/ssb/repo/job')
-const { cronJobLog } = __non_webpack_require__('/lib/ssb/utils/serverLog')
-const {
-  data: { forceArray },
-} = __non_webpack_require__('/lib/util')
-
-exports.run = function (): void {
+export function run(): void {
   cronJobLog('Start publish job')
   log.info('PublishJob - Start publish job')
   const jobLogNode: JobEventNode = startJobLog(JobNames.PUBLISH_JOB)
@@ -151,7 +153,9 @@ export function getNextRelease(statistic: Content<Statistics & Statistic>): stri
   if (statistic.data.statistic) {
     const statisticStatreg: StatisticInListing | undefined = getStatisticByIdFromRepo(statistic.data.statistic)
     if (statisticStatreg && statisticStatreg.variants) {
-      const releaseDates: ReleaseDatesVariant = getReleaseDatesByVariants(forceArray(statisticStatreg.variants))
+      const releaseDates: ReleaseDatesVariant = getReleaseDatesByVariants(
+        util.data.forceArray(statisticStatreg.variants)
+      )
       return releaseDates.nextRelease[0]
     }
   }

@@ -1,11 +1,10 @@
-import { render } from '/lib/enonic/react4xp'
-import type { PublicationResult } from '/lib/ssb/parts/publicationArchive'
-import type { SubjectItem } from '/lib/ssb/utils/subjectUtils'
 import { getContent, getComponent, serviceUrl } from '/lib/xp/portal'
+import { render } from '/lib/enonic/react4xp'
+import { type PublicationResult, getPublications } from '/lib/ssb/parts/publicationArchive'
+import { type SubjectItem, getMainSubjects } from '/lib/ssb/utils/subjectUtils'
 
-const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
-const { getPublications } = __non_webpack_require__('/lib/ssb/parts/publicationArchive')
-const { getMainSubjects } = __non_webpack_require__('/lib/ssb/utils/subjectUtils')
+import { getPhrases } from '/lib/ssb/utils/language'
+import { Phrases } from '/lib/types/language'
 
 export function get(req: XP.Request) {
   return renderPart(req)
@@ -22,7 +21,7 @@ function renderPart(req: XP.Request) {
   const part = getComponent<XP.PartComponent.PublicationArchive>()
   if (!part) throw Error('No part found')
 
-  const phrases: { [key: string]: string } = getPhrases(content)
+  const phrases = getPhrases(content) as Phrases
   const language: string = content.language ? content.language : 'nb'
   const publicationArchiveServiceUrl: string = serviceUrl({
     service: 'publicationArchive',

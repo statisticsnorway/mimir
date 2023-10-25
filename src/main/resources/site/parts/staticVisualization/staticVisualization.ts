@@ -1,21 +1,17 @@
 import { get as getContentByKey, type Content } from '/lib/xp/content'
-import type { SourceList, SourcesConfig } from '/lib/ssb/utils/utils'
-import { render } from '/lib/enonic/react4xp'
-import type { StaticVisualization } from '/site/content-types'
-import type { Default as DefaultPageConfig } from '/site/pages/default'
-import type { HtmlTable } from '/lib/ssb/parts/table'
 import { getContent, getComponent } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
+import { render } from '/lib/enonic/react4xp'
+import { type HtmlTable, parseHtmlString } from '/lib/ssb/parts/table'
+import { type SourceList, type SourcesConfig, randomUnsafeString, getSources } from '/lib/ssb/utils/utils'
 import { imageUrl } from '/lib/ssb/utils/imageUtils'
-import { randomUnsafeString } from '/lib/ssb/utils/utils'
 
-const {
-  data: { forceArray },
-} = __non_webpack_require__('/lib/util')
-const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
-const { getSources } = __non_webpack_require__('/lib/ssb/utils/utils')
-const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
-const { parseHtmlString } = __non_webpack_require__('/lib/ssb/parts/table')
+import * as util from '/lib/util'
+import { renderError } from '/lib/ssb/error/error'
+import { getPhrases } from '/lib/ssb/utils/language'
+import { Phrases } from '/lib/types/language'
+import { type Default as DefaultPageConfig } from '/site/pages/default'
+import { type StaticVisualization } from '/site/content-types'
 
 export function get(req: XP.Request): XP.Response {
   try {
@@ -40,7 +36,7 @@ export function preview(req: XP.Request, contentId: string | undefined): XP.Resp
 function renderPart(req: XP.Request, contentId: string | undefined): XP.Response {
   const content = getContent<Content<DefaultPage>>()
   if (!content?.page) throw Error('No content found')
-  const phrases: { source: string; descriptionStaticVisualization: string } = getPhrases(content)
+  const phrases = getPhrases(content as unknown as Content) as Phrases
   const sourcesLabel: string = phrases.source
   const descriptionStaticVisualization: string = phrases.descriptionStaticVisualization
 
@@ -52,7 +48,7 @@ function renderPart(req: XP.Request, contentId: string | undefined): XP.Response
 
   if (staticVisualizationsContent) {
     const sourceConfig: StaticVisualization['sources'] = staticVisualizationsContent.data.sources
-      ? forceArray(staticVisualizationsContent.data.sources)
+      ? util.data.forceArray(staticVisualizationsContent.data.sources)
       : []
     const language: string = staticVisualizationsContent.language ? staticVisualizationsContent.language : 'nb'
 
@@ -91,7 +87,9 @@ function renderPart(req: XP.Request, contentId: string | undefined): XP.Response
           ? imageData.data.caption
           : '',
       imageSrc: imageSrc,
-      footnotes: staticVisualizationsContent.data.footNote ? forceArray(staticVisualizationsContent.data.footNote) : [],
+      footnotes: staticVisualizationsContent.data.footNote
+        ? util.data.forceArray(staticVisualizationsContent.data.footNote)
+        : [],
       sources: getSources(sourceConfig as Array<SourcesConfig>),
       longDesc: staticVisualizationsContent.data.longDesc,
       sourcesLabel,

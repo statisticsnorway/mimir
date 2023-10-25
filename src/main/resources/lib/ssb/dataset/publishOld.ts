@@ -1,33 +1,39 @@
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 import { get as getContent, Content } from '/lib/xp/content'
-import type { Statistics } from '/site/content-types'
-import type { DataSource } from '/site/mixins/dataSource'
-import { DatasetRepoNode } from '/lib/ssb/repo/dataset'
-import { StatisticInListing, ReleaseDatesVariant } from '/lib/ssb/dashboard/statreg/types'
+import { NodeQueryResultHit } from '/lib/xp/node'
+import { send } from '/lib/xp/event'
+import { executeFunction, sleep } from '/lib/xp/task'
+import { isSameOrBefore, isSameDay } from '/lib/ssb/utils/dateUtils'
+
+import { Events, logUserDataQuery } from '/lib/ssb/repo/query'
+import { getDataSourceIdsFromStatistics, getStatisticsContent } from '/lib/ssb/dashboard/statistic'
+import { getStatisticByIdFromRepo, getReleaseDatesByVariants } from '/lib/ssb/statreg/statistics'
+import * as util from '/lib/util'
 import {
   JobEventNode,
   JobInfoNode,
   StatisticsPublishResult,
   DataSourceStatisticsPublishResult,
+  completeJobLog,
+  startJobLog,
+  updateJobLog,
+  JobNames,
+  JobStatus,
+  queryJobLogs,
+  getJobLog,
 } from '/lib/ssb/repo/job'
-import { NodeQueryResultHit } from '/lib/xp/node'
-import type { Statistic } from '/site/mixins/statistic'
-import { send } from '/lib/xp/event'
-import { isSameOrBefore, isSameDay } from '/lib/ssb/utils/dateUtils'
-
-const { Events, logUserDataQuery } = __non_webpack_require__('/lib/ssb/repo/query')
-const { getDataSourceIdsFromStatistics, getStatisticsContent } = __non_webpack_require__('/lib/ssb/dashboard/statistic')
-const { getStatisticByIdFromRepo, getReleaseDatesByVariants } = __non_webpack_require__('/lib/ssb/statreg/statistics')
-const {
-  data: { forceArray },
-} = __non_webpack_require__('/lib/util')
-const { executeFunction, sleep } = __non_webpack_require__('/lib/xp/task')
-const { deleteDataset, extractKey, getDataset } = __non_webpack_require__('/lib/ssb/dataset/dataset')
-const { createOrUpdateDataset, DATASET_BRANCH, UNPUBLISHED_DATASET_BRANCH } =
-  __non_webpack_require__('/lib/ssb/repo/dataset')
-const { completeJobLog, startJobLog, updateJobLog, JobNames, JobStatus, queryJobLogs, getJobLog } =
-  __non_webpack_require__('/lib/ssb/repo/job')
-const { cronJobLog } = __non_webpack_require__('/lib/ssb/utils/serverLog')
+import { StatisticInListing, ReleaseDatesVariant } from '/lib/ssb/dashboard/statreg/types'
+import {
+  DatasetRepoNode,
+  createOrUpdateDataset,
+  DATASET_BRANCH,
+  UNPUBLISHED_DATASET_BRANCH,
+} from '/lib/ssb/repo/dataset'
+import { deleteDataset, extractKey, getDataset } from '/lib/ssb/dataset/dataset'
+import { cronJobLog } from '/lib/ssb/utils/serverLog'
+import { type Statistic } from '/site/mixins/statistic'
+import { type DataSource } from '/site/mixins/dataSource'
+import { type Statistics } from '/site/content-types'
 
 const jobs: { [key: string]: JobEventNode | JobInfoNode } = {}
 
@@ -47,7 +53,7 @@ export function currentlyWaitingForPublish(statistic: Content<Statistics>): bool
   if (jobRes) {
     const job: JobInfoNode | null = getJobLog(jobRes.id) as JobInfoNode | null
     if (job) {
-      const jobRefreshResult: Array<StatisticsPublishResult> = forceArray(
+      const jobRefreshResult: Array<StatisticsPublishResult> = util.data.forceArray(
         job.data.refreshDataResult
       ) as Array<StatisticsPublishResult>
       const statRefreshResult: StatisticsPublishResult | undefined = jobRefreshResult.find((s) => {
@@ -227,7 +233,7 @@ function createTask(
         ts = Date.now()
 
         const job: JobInfoNode = jobs[jobId] as JobInfoNode
-        const jobRefreshResult: Array<StatisticsPublishResult> = forceArray(
+        const jobRefreshResult: Array<StatisticsPublishResult> = util.data.forceArray(
           job.data.refreshDataResult
         ) as Array<StatisticsPublishResult>
         const statRefreshResult: StatisticsPublishResult | undefined = jobRefreshResult.find((s) => {
@@ -275,11 +281,11 @@ function createTask(
           ts = Date.now()
 
           if (statRefreshResult) {
-            const dataSourceRefreshResult: DataSourceStatisticsPublishResult | undefined = forceArray(
-              statRefreshResult.dataSources
-            ).find((ds) => {
-              return ds.id === dataSource._id
-            })
+            const dataSourceRefreshResult: DataSourceStatisticsPublishResult | undefined = util.data
+              .forceArray(statRefreshResult.dataSources)
+              .find((ds) => {
+                return ds.id === dataSource._id
+              })
             if (dataSourceRefreshResult) {
               dataSourceRefreshResult.status = JobStatus.COMPLETE
             }
@@ -288,11 +294,11 @@ function createTask(
         // Update the statistics refresh result object
         if (job && statRefreshResult) {
           const allDataSourcesComplete: boolean =
-            forceArray(statRefreshResult.dataSources).filter((ds) => {
+            util.data.forceArray(statRefreshResult.dataSources).filter((ds) => {
               return (
                 ds.status === JobStatus.COMPLETE || ds.status === JobStatus.ERROR || ds.status === JobStatus.SKIPPED
               )
-            }).length === forceArray(statRefreshResult.dataSources).length
+            }).length === util.data.forceArray(statRefreshResult.dataSources).length
           if (allDataSourcesComplete) {
             log.info(`finished publishing statistic ${statistic.data.statistic}`)
             statRefreshResult.status = JobStatus.COMPLETE
@@ -336,7 +342,9 @@ function getNextRelease(statistic: Content<Statistics & Statistic>): string | nu
   if (statistic.data.statistic) {
     const statisticStatreg: StatisticInListing | undefined = getStatisticByIdFromRepo(statistic.data.statistic)
     if (statisticStatreg && statisticStatreg.variants) {
-      const releaseDates: ReleaseDatesVariant = getReleaseDatesByVariants(forceArray(statisticStatreg.variants))
+      const releaseDates: ReleaseDatesVariant = getReleaseDatesByVariants(
+        util.data.forceArray(statisticStatreg.variants)
+      )
       return releaseDates.nextRelease[0]
     }
   }
@@ -347,7 +355,9 @@ function getPreviousRelease(statistic: Content<Statistics & Statistic>): string 
   if (statistic.data.statistic) {
     const statisticStatreg: StatisticInListing | undefined = getStatisticByIdFromRepo(statistic.data.statistic)
     if (statisticStatreg && statisticStatreg.variants) {
-      const releaseDates: ReleaseDatesVariant = getReleaseDatesByVariants(forceArray(statisticStatreg.variants))
+      const releaseDates: ReleaseDatesVariant = getReleaseDatesByVariants(
+        util.data.forceArray(statisticStatreg.variants)
+      )
       return releaseDates.previousRelease[0]
     }
   }

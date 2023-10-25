@@ -1,4 +1,4 @@
-import type { StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
+import { type StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
 
 export function forceArray<A>(data: A | Array<A> | undefined): Array<A>
 export function forceArray<A>(data: A | ReadonlyArray<A> | undefined): ReadonlyArray<A>
@@ -59,11 +59,4 @@ export function arraysEqual<T>(a: T[], b: T[]): boolean {
     if (a[i] !== b[i]) return false
   }
   return true
-}
-
-export interface ArrayUtilsLib {
-  ensureArray: <T>(candidate: Array<T> | T | null | undefined) => Array<T>
-  chunkArray: <T>(myArray: Array<T>, chunkSize: number) => Array<Array<T>>
-  checkLimitAndTrim: <T>(releases: Array<T>, releasesOnThisDay: Array<T>, count: number) => Array<T>
-  arraysEqual: <T>(a: T[], b: T[]) => boolean
 }

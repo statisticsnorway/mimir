@@ -1,8 +1,8 @@
-import { render } from '/lib/thymeleaf'
 import { assetUrl, getSiteConfig, serviceUrl } from '/lib/xp/portal'
+import { render } from '/lib/thymeleaf'
 import { scriptAsset } from '/lib/ssb/utils/utils'
 
-const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
+import { renderError } from '/lib/ssb/error/error'
 
 const view = resolve('./map.html')
 

@@ -1,16 +1,23 @@
 import { query, get, Content } from '/lib/xp/content'
-import type { OmStatistikken, Statistics } from '/site/content-types'
+import { pageUrl } from '/lib/xp/portal'
+import { localize } from '/lib/xp/i18n'
 import { ReleasesInListing, StatisticInListing, VariantInListing } from '/lib/ssb/dashboard/statreg/types'
 import { groupBy } from '/lib/vendor/ramda'
 
-const { pageUrl } = __non_webpack_require__('/lib/xp/portal')
-const { getMainSubject, getMainSubjectStatistic } = __non_webpack_require__('/lib/ssb/utils/parentUtils')
-const { sameDay, createMonthName, parseISO, getMonth, getYear, getDate, isAfter, formatDate, isSameOrBefore } =
-  __non_webpack_require__('/lib/ssb/utils/dateUtils')
-const { localize } = __non_webpack_require__('/lib/xp/i18n')
-const {
-  data: { forceArray },
-} = __non_webpack_require__('/lib/util')
+import { getMainSubject, getMainSubjectStatistic } from '/lib/ssb/utils/parentUtils'
+import {
+  sameDay,
+  createMonthName,
+  parseISO,
+  getMonth,
+  getYear,
+  getDate,
+  isAfter,
+  formatDate,
+  isSameOrBefore,
+} from '/lib/ssb/utils/dateUtils'
+import * as util from '/lib/util'
+import { type OmStatistikken, type Statistics } from '/site/content-types'
 
 export function calculatePeriod(frequency: string, previousFrom: string, previousTo: string, language: string): string {
   switch (frequency) {
@@ -36,7 +43,7 @@ function calculatePeriodVariant(variant: VariantInListing, language: string, nex
   let previousTo: string = variant.previousTo
   if (nextReleasePassed) {
     const upcomingRelease: ReleasesInListing | undefined = variant.upcomingReleases
-      ? forceArray(variant.upcomingReleases).find((r) => {
+      ? util.data.forceArray(variant.upcomingReleases).find((r) => {
           return r && r.id === variant.nextReleaseId
         })
       : undefined
@@ -209,7 +216,7 @@ export function addMonthNames(
       const dayReleases: Array<DayReleases> = Object.keys(tmpYear[monthNumber]).map((day) => {
         return {
           day,
-          releases: forceArray(tmpMonth[day]),
+          releases: util.data.forceArray(tmpMonth[day]),
         }
       })
 
@@ -254,9 +261,9 @@ export function groupStatisticsByYearMonthAndDay(
   const groupedByYearMonthAndDay: GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>> = {}
   Object.keys(groupedByYear).forEach((year) => {
     const groupedByMonthAndDay: GroupedBy<GroupedBy<PreparedStatistics>> = {}
-    const tmpMonth: GroupedBy<PreparedStatistics> = groupStatisticsByMonth(forceArray(groupedByYear[year]))
+    const tmpMonth: GroupedBy<PreparedStatistics> = groupStatisticsByMonth(util.data.forceArray(groupedByYear[year]))
     Object.keys(tmpMonth).forEach((month) => {
-      groupedByMonthAndDay[month] = groupStatisticsByDay(forceArray(tmpMonth[month]))
+      groupedByMonthAndDay[month] = groupStatisticsByDay(util.data.forceArray(tmpMonth[month]))
     })
     groupedByYearMonthAndDay[year] = groupedByMonthAndDay
   })
@@ -457,7 +464,7 @@ export function nextReleasedPassed(variant: VariantInListing): boolean {
 }
 export function getPreviousRelease(nextReleasePassed: boolean, variant: VariantInListing): ReleasesInListing {
   const upComingReleases: Array<ReleasesInListing> = variant.upcomingReleases
-    ? forceArray(variant.upcomingReleases)
+    ? util.data.forceArray(variant.upcomingReleases)
     : []
   return nextReleasePassed && upComingReleases.length
     ? upComingReleases[0]
@@ -471,7 +478,7 @@ export function getPreviousRelease(nextReleasePassed: boolean, variant: VariantI
 
 export function getNextRelease(nextReleasePassed: boolean, variant: VariantInListing): ReleasesInListing | undefined {
   const upComingReleases: Array<ReleasesInListing> = variant.upcomingReleases
-    ? forceArray(variant.upcomingReleases)
+    ? util.data.forceArray(variant.upcomingReleases)
     : []
   return nextReleasePassed ? (upComingReleases.length > 1 ? upComingReleases[1] : undefined) : upComingReleases[0]
 }
@@ -511,7 +518,7 @@ function formatRelease(release: Release, language: string): PreparedVariant {
 export function getAllReleases(statisticList: Array<StatisticInListing>): Array<Release> {
   const releases: Array<Release> = []
   statisticList.forEach((statistic: StatisticInListing) => {
-    const variants: Array<VariantInListing> = statistic.variants ? forceArray(statistic.variants) : []
+    const variants: Array<VariantInListing> = statistic.variants ? util.data.forceArray(statistic.variants) : []
     variants.forEach((variant: VariantInListing) => {
       releases.push({
         publishTime: variant.previousRelease,
@@ -526,7 +533,7 @@ export function getAllReleases(statisticList: Array<StatisticInListing>): Array<
         status: statistic.status,
       })
       const upcomingRelease: Array<ReleasesInListing> = variant.upcomingReleases
-        ? forceArray(variant.upcomingReleases)
+        ? util.data.forceArray(variant.upcomingReleases)
         : []
       upcomingRelease.forEach((upcomingRelease: ReleasesInListing) => {
         releases.push({
@@ -566,37 +573,6 @@ export function getPreviousReleases(statisticList: Array<StatisticInListing>): A
     (release) => release.status === 'A' && isSameOrBefore(new Date(release.publishTime), new Date(), 'day')
   )
 }
-
-export interface VariantUtilsLib {
-  addMonthNames: (
-    groupedByYearMonthAndDay: GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>>,
-    language: string
-  ) => Array<YearReleases>
-  groupStatisticsByYear: (statistics: Array<PreparedStatistics>) => GroupedBy<PreparedStatistics>
-  groupStatisticsByMonth: (statistics: Array<PreparedStatistics>) => GroupedBy<PreparedStatistics>
-  groupStatisticsByDay: (statistics: Array<PreparedStatistics>) => GroupedBy<PreparedStatistics>
-  groupStatisticsByYearMonthAndDay: (
-    releasesPrepped: Array<PreparedStatistics>
-  ) => GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>>
-  getReleasesForDay: (
-    statisticList: Array<StatisticInListing>,
-    day: Date,
-    property?: keyof VariantInListing
-  ) => Array<StatisticInListing>
-  prepareStatisticRelease: (
-    release: StatisticInListing,
-    locale: string,
-    property?: keyof VariantInListing,
-    statisticsPageUrl?: string
-  ) => PreparedStatistics
-  prepareRelease: (release: Release, locale: string, statisticsPageUrl?: string) => PreparedStatistics
-  filterOnComingReleases: (stats: Array<Release>, daysInTheFuture: number, startDay?: string) => Array<Release>
-  getAllReleases: (statisticList: Array<StatisticInListing>) => Array<Release>
-  getUpcomingReleases: (statisticList: Array<StatisticInListing>) => Array<Release>
-  getPreviousReleases: (statisticList: Array<StatisticInListing>) => Array<Release>
-  calculatePeriodRelease: (release: Release, language: string) => string
-}
-
 export interface PreparedStatistics {
   id: number
   name: string

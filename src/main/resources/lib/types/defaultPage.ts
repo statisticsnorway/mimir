@@ -1,7 +1,7 @@
-import type { Page } from '/site/content-types'
 import { Content } from '/lib/xp/content'
-import type { Default as DefaultPageConfig } from '/site/pages/default'
 import { Region } from '/lib/xp/portal'
+import { type Page } from '/site/content-types'
+import { type Default as DefaultPageConfig } from '/site/pages/default'
 
 export interface DefaultPage extends Content<Page> {
   page: {

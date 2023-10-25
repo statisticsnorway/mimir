@@ -34,10 +34,3 @@ export const WARNING_ICON_EVENTS: ReadonlyArray<Events> = [
 export function showWarningIcon(result: Events): boolean {
   return WARNING_ICON_EVENTS.includes(result)
 }
-
-export interface DashboardUtilsLib {
-  isPublished: (content: Content<DataSource>) => boolean
-  WARNING_ICON_EVENTS: ReadonlyArray<Events>
-  users: Array<User>
-  showWarningIcon: (result: Events) => boolean
-}

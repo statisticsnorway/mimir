@@ -1,11 +1,8 @@
 import { AreaLineLinearData, Series, SeriesAndCategories } from '/lib/ssb/parts/highcharts/highchartsData'
 import { PreliminaryData, TableCellUniform, TableRowUniform, TbmlDataUniform } from '/lib/types/xmlParser'
-import { RowValue } from '/lib/ssb/utils/utils'
+import { RowValue, getRowValue } from '/lib/ssb/utils/utils'
 
-const {
-  data: { forceArray },
-} = __non_webpack_require__('/lib/util')
-const { getRowValue } = __non_webpack_require__('/lib/ssb/utils/utils')
+import * as util from '/lib/util'
 
 export function seriesAndCategoriesFromTbml(
   data: TbmlDataUniform,
@@ -65,7 +62,7 @@ function determineSeries(
     }))
     rows.forEach((row: TableCellUniform) => {
       series.forEach((serie, index) => {
-        serie.data.push(getRowValue(forceArray(row.td)[index]))
+        serie.data.push(getRowValue(util.data.forceArray(row.td)[index]))
       })
     })
     return series
@@ -84,8 +81,4 @@ function determineCategories(
   } else {
     return rows.map((row) => row.th[0])
   }
-}
-
-export interface HighchartsTbProcessorLib {
-  seriesAndCategoriesFromTbml: (data: TbmlDataUniform, graphType: string, xAxisType: string) => SeriesAndCategories
 }

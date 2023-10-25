@@ -1,15 +1,13 @@
 import { type Content, get as getContentByKey } from '/lib/xp/content'
-import type { Employee, Page } from '/site/content-types'
-import type { Default as DefaultPageConfig } from '/site/pages/default'
 import { localize } from '/lib/xp/i18n'
 import { getContent, pageUrl, attachmentUrl } from '/lib/xp/portal'
 import { render } from '/lib/enonic/react4xp'
 import { imageUrl } from '/lib/ssb/utils/imageUtils'
 
-const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
-const {
-  data: { forceArray },
-} = __non_webpack_require__('/lib/util')
+import { renderError } from '/lib/ssb/error/error'
+import * as util from '/lib/util'
+import { type Default as DefaultPageConfig } from '/site/pages/default'
+import { type Employee, type Page } from '/site/content-types'
 
 export function get(req: XP.Request): XP.Response {
   try {
@@ -30,7 +28,7 @@ function renderPart(req: XP.Request) {
   const language: string = page.language ? page.language : 'nb'
   const projectIds: Employee['projects'] = page.data.projects
   const projects: Array<Project> = projectIds && projectIds.length > 0 ? parseProject(projectIds) : []
-  const profileImageIds: Array<string> = page.data.profileImages ? forceArray(page.data.profileImages) : []
+  const profileImageIds: Array<string> = page.data.profileImages ? util.data.forceArray(page.data.profileImages) : []
 
   const profileImages: Array<string> | void[] = profileImageIds
     ? profileImageIds.map((image: string) => {
@@ -163,7 +161,7 @@ function renderPart(req: XP.Request) {
 }
 
 function parseProject(projects: Employee['projects']): Array<Project> {
-  const projectsIds: Array<string> = projects ? forceArray(projects) : []
+  const projectsIds: Array<string> = projects ? util.data.forceArray(projects) : []
   return projectsIds.map((projectId) => {
     const relatedProjectContent: Content<Page> | null = projectId
       ? getContentByKey({

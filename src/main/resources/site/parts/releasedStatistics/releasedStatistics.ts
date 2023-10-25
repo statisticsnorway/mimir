@@ -1,19 +1,21 @@
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 
-import type { QueryDsl } from '/lib/xp/content'
-import { render } from '/lib/enonic/react4xp'
-import type { ReleasedStatistics as ReleasedStatisticsPartConfig } from '.'
-import type { YearReleases } from '/lib/ssb/utils/variantUtils'
+import { type QueryDsl } from '/lib/xp/content'
 import { getComponent, getContent } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
-import type { ContentLight, Release as ReleaseVariant } from '/lib/ssb/repo/statisticVariant'
-import { getStatisticVariantsFromRepo } from '/lib/ssb/repo/statisticVariant'
+import { type YearReleases, addMonthNames, groupStatisticsByYearMonthAndDay } from '/lib/ssb/utils/variantUtils'
+import { render } from '/lib/enonic/react4xp'
+import {
+  type ContentLight,
+  type Release as ReleaseVariant,
+  getStatisticVariantsFromRepo,
+} from '/lib/ssb/repo/statisticVariant'
 import { stringToServerTime, parseISO } from '/lib/ssb/utils/dateUtils'
 
-const { fromPartCache } = __non_webpack_require__('/lib/ssb/cache/partCache')
-const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
-const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
-const { addMonthNames, groupStatisticsByYearMonthAndDay } = __non_webpack_require__('/lib/ssb/utils/variantUtils')
+import { fromPartCache } from '/lib/ssb/cache/partCache'
+import { renderError } from '/lib/ssb/error/error'
+import { isEnabled } from '/lib/featureToggle'
+import { type ReleasedStatistics as ReleasedStatisticsPartConfig } from '.'
 
 export function get(req: XP.Request): XP.Response {
   try {
@@ -107,7 +109,7 @@ function getGroupedWithMonthNames(config: ReleasedStatisticsPartConfig, currentL
 function prepReleases(
   variant: ContentLight<ReleaseVariant>,
   date: Date,
-  periodRelease: string | undefined
+  periodRelease: string
 ): PreparedStatistics {
   return {
     id: Number(variant.data.statisticId),
@@ -119,7 +121,7 @@ function prepReleases(
       monthNumber: date.getMonth(),
       year: date.getFullYear(),
       frequency: variant.data.frequency,
-      period: periodRelease ? periodRelease.toLowerCase() : '',
+      period: periodRelease,
     },
   }
 }

@@ -1,9 +1,8 @@
 import { Node } from '/lib/xp/node'
 
-const { createRepo, repoExists } = __non_webpack_require__('/lib/ssb/repo/repo')
-const { nodeExists, createNode, getNode, getChildNodes, modifyNode, deleteNode } =
-  __non_webpack_require__('/lib/ssb/repo/common')
-const { cronJobLog } = __non_webpack_require__('/lib/ssb/utils/serverLog')
+import { createRepo, repoExists } from '/lib/ssb/repo/repo'
+import { nodeExists, createNode, getNode, getChildNodes, modifyNode, deleteNode } from '/lib/ssb/repo/common'
+import { cronJobLog } from '/lib/ssb/utils/serverLog'
 
 function getBestBetData(bestBetContent: BestBetContent): BestBetContent {
   return {

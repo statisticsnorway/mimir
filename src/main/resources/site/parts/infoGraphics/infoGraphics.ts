@@ -1,18 +1,15 @@
 // @ts-ignore
 import { Base64 } from 'js-base64'
 import { get as getContentByKey, type Content } from '/lib/xp/content'
-import type { SourceList, SourcesConfig } from '/lib/ssb/utils/utils'
-import { render } from '/lib/enonic/react4xp'
 import { getContent, getComponent } from '/lib/xp/portal'
+import { render } from '/lib/enonic/react4xp'
+import { type SourceList, type SourcesConfig, getSources } from '/lib/ssb/utils/utils'
 import { imageUrl } from '/lib/ssb/utils/imageUtils'
-import type { InfoGraphics as InfoGraphicsPartConfig } from '.'
 
-const {
-  data: { forceArray },
-} = __non_webpack_require__('/lib/util')
-const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
-const { getSources } = __non_webpack_require__('/lib/ssb/utils/utils')
-const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
+import * as util from '/lib/util'
+import { renderError } from '/lib/ssb/error/error'
+import { getPhrases } from '/lib/ssb/utils/language'
+import { type InfoGraphics as InfoGraphicsPartConfig } from '.'
 
 export function get(req: XP.Request): XP.Response {
   try {
@@ -37,7 +34,7 @@ function renderPart(req: XP.Request) {
   const config = getComponent<XP.PartComponent.InfoGraphics>()?.config
   if (!config) throw Error('No part found')
 
-  const sourceConfig: InfoGraphicsPartConfig['sources'] = config.sources ? forceArray(config.sources) : []
+  const sourceConfig: InfoGraphicsPartConfig['sources'] = config.sources ? util.data.forceArray(config.sources) : []
 
   // Encodes string to base64 and turns it into a dataURI
   const desc: string = Base64.encodeURI(config.longDesc ? config.longDesc : '')
@@ -63,7 +60,7 @@ function renderPart(req: XP.Request) {
         ? imageData.data.caption
         : '',
     imageSrc: imageSrc,
-    footnotes: config.footNote ? forceArray(config.footNote) : [],
+    footnotes: config.footNote ? util.data.forceArray(config.footNote) : [],
     sources: getSources(sourceConfig as Array<SourcesConfig>),
     longDesc,
     sourcesLabel,

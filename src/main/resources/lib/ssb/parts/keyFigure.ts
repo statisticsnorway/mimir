@@ -3,29 +3,30 @@ __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 // @ts-ignore
 import JSONstat from 'jsonstat-toolkit/import.mjs'
 import { query, Content, ContentsResult } from '/lib/xp/content'
-import type { KeyFigure } from '/site/content-types'
+import { localize } from '/lib/xp/i18n'
 import { MunicipalityWithCounty } from '/lib/ssb/dataset/klass/municipalities'
 import { TbmlDataUniform, TableRowUniform, TableCellUniform, PreliminaryData } from '/lib/types/xmlParser'
 import { Category, Dimension, JSONstat as JSONstatType } from '/lib/types/jsonstat-toolkit'
-import { DatasetRepoNode, DataSource as DataSourceType } from '/lib/ssb/repo/dataset'
-import type { DataSource } from '/site/mixins/dataSource'
-import { imageUrl } from '/lib/ssb/utils/imageUtils'
+import {
+  DatasetRepoNode,
+  DataSource as DataSourceType,
+  DATASET_BRANCH,
+  UNPUBLISHED_DATASET_BRANCH,
+} from '/lib/ssb/repo/dataset'
+import { imageUrl, getImageCaption } from '/lib/ssb/utils/imageUtils'
 
-const { datasetOrUndefined } = __non_webpack_require__('/lib/ssb/cache/cache')
-const {
-  data: { forceArray },
-} = __non_webpack_require__('/lib/util')
-const { DATASET_BRANCH, UNPUBLISHED_DATASET_BRANCH } = __non_webpack_require__('/lib/ssb/repo/dataset')
-const { getDataset } = __non_webpack_require__('/lib/ssb/dataset/dataset')
-const { localizeTimePeriod } = __non_webpack_require__('/lib/ssb/utils/language')
-const { localize } = __non_webpack_require__('/lib/xp/i18n')
-const { createHumanReadableFormat } = __non_webpack_require__('/lib/ssb/utils/utils')
-const { getImageCaption } = __non_webpack_require__('/lib/ssb/utils/imageUtils')
+import { datasetOrUndefined } from '/lib/ssb/cache/cache'
+import * as util from '/lib/util'
+import { getDataset } from '/lib/ssb/dataset/dataset'
+import { localizeTimePeriod } from '/lib/ssb/utils/language'
+import { createHumanReadableFormat } from '/lib/ssb/utils/utils'
+import { type DataSource } from '/site/mixins/dataSource'
+import { type KeyFigure } from '/site/content-types'
 
 const contentTypeName = `${app.name}:keyFigure`
 
 export function get(keys: string | Array<string>): Array<Content<KeyFigure>> {
-  keys = forceArray(keys)
+  keys = util.data.forceArray(keys)
   const content: ContentsResult<Content<KeyFigure>> = query({
     contentTypes: [contentTypeName],
     query: ``,
@@ -316,13 +317,4 @@ export interface KeyFigureChanges {
   changeDirection: 'up' | 'down' | 'same'
   changeText?: string
   changePeriod: string
-}
-
-export interface KeyFigureLib {
-  get: (keys: string | Array<string>) => Array<Content<KeyFigure>>
-  parseKeyFigure: (
-    keyFigure: Content<KeyFigure>,
-    municipality?: MunicipalityWithCounty,
-    branch?: string
-  ) => KeyFigureView
 }

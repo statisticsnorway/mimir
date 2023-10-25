@@ -1,17 +1,14 @@
 import { get as getContentByKey, type Content } from '/lib/xp/content'
+import { getComponent, pageUrl } from '/lib/xp/portal'
 import { render } from '/lib/thymeleaf'
 import { render as r4xpRender } from '/lib/enonic/react4xp'
-import type { Statistics } from '/site/content-types'
-import type { StandardCardsList as StandardCardsListPartConfig } from '.'
 import { randomUnsafeString } from '/lib/ssb/utils/utils'
-import { getComponent, pageUrl } from '/lib/xp/portal'
-import { imageUrl } from '/lib/ssb/utils/imageUtils'
+import { imageUrl, getImageCaption, getImageAlt } from '/lib/ssb/utils/imageUtils'
 
-const {
-  data: { forceArray },
-} = __non_webpack_require__('/lib/util')
-const { getImageCaption, getImageAlt } = __non_webpack_require__('/lib/ssb/utils/imageUtils')
-const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
+import * as util from '/lib/util'
+import { renderError } from '/lib/ssb/error/error'
+import { type Statistics } from '/site/content-types'
+import { type StandardCardsList as StandardCardsListPartConfig } from '.'
 
 const view = resolve('standardCardsList.html')
 
@@ -32,7 +29,7 @@ function renderPart(req: XP.Request): XP.Response {
   if (!config) throw Error('No part found')
 
   const standardCardsListConfig: StandardCardsListPartConfig['statisticsItemSet'] = config.statisticsItemSet
-    ? forceArray(config.statisticsItemSet)
+    ? util.data.forceArray(config.statisticsItemSet)
     : []
 
   const statisticsTitle: string | undefined = config.title

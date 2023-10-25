@@ -11,7 +11,3 @@ export function sanitizeForSolr(term: string): string {
     .replace('"', '')
     .replace('\\+', '&2B')
 }
-
-export interface TextUtilsLib {
-  sanitizeForSolr: (term: string) => string
-}

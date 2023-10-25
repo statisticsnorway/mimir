@@ -2,7 +2,7 @@ __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 import { Content } from '/lib/xp/content'
 import { newCache, Cache } from '/lib/cache'
 
-const { cacheLog } = __non_webpack_require__('/lib/ssb/utils/serverLog')
+import { cacheLog } from '/lib/ssb/utils/serverLog'
 
 const masterPartCache: Cache = newCache({
   expire: 3600,
@@ -65,11 +65,4 @@ export function clearPartFromPartCache(part: string): void {
   cacheLog(`clear ${part} from part cache (draft and master)`)
   masterPartCache.removePattern(`.*${part}.*`)
   draftPartCache.removePattern(`.*${part}.*`)
-}
-
-export interface SSBPartCacheLibrary {
-  fromPartCache: <T>(req: XP.Request, key: string, fallback: () => T) => T
-  clearPartCache: (content: Content, branch: string) => void
-  completelyClearPartCache: (branch: string) => void
-  clearPartFromPartCache: (part: string) => void
 }

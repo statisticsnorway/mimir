@@ -1,17 +1,14 @@
 import { get as getContentByKey, query, type Content } from '/lib/xp/content'
-import type { Phrases } from '/lib/types/language'
-import { render } from '/lib/enonic/react4xp'
-import type { Article, ContentList } from '/site/content-types'
 import { imagePlaceholder, getComponent, getContent, pageUrl, serviceUrl } from '/lib/xp/portal'
-import { imageUrl } from '/lib/ssb/utils/imageUtils'
+import { render } from '/lib/enonic/react4xp'
+import { type Phrases } from '/lib/types/language'
+import { imageUrl, getImageAlt } from '/lib/ssb/utils/imageUtils'
 
-const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
-const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
-const { getImageAlt } = __non_webpack_require__('/lib/ssb/utils/imageUtils')
-const { fromPartCache } = __non_webpack_require__('/lib/ssb/cache/partCache')
-const {
-  data: { forceArray },
-} = __non_webpack_require__('/lib/util')
+import { renderError } from '/lib/ssb/error/error'
+import { getPhrases } from '/lib/ssb/utils/language'
+import { fromPartCache } from '/lib/ssb/cache/partCache'
+import * as util from '/lib/util'
+import { type Article, type ContentList } from '/site/content-types'
 
 export function get(req: XP.Request): XP.Response {
   try {
@@ -32,10 +29,10 @@ export function get(req: XP.Request): XP.Response {
     if (config.relatedFactPages || page.data.relatedFactPages) {
       let contentIdList: RelatedFactPageConfig['contentIdList'] = []
       if (config.relatedFactPages) {
-        contentIdList = forceArray(config.relatedFactPages)
+        contentIdList = util.data.forceArray(config.relatedFactPages)
       }
       if (page.data.relatedFactPages) {
-        contentIdList = forceArray(page.data.relatedFactPages)
+        contentIdList = util.data.forceArray(page.data.relatedFactPages)
       }
       relatedFactPageConfig = {
         inputType: 'relatedFactPage',
@@ -70,7 +67,7 @@ function renderRelatedFactPage(
   page: Content,
   relatedFactPageConfig: RelatedFactPageConfig | undefined
 ): XP.Response {
-  const phrases: Phrases = getPhrases(page)
+  const phrases = getPhrases(page) as Phrases
   const config = getComponent<XP.PartComponent.RelatedFactPage>()?.config
   if (!config) throw Error('No part found')
 
@@ -135,7 +132,7 @@ export function parseRelatedFactPageData(
       const relatedContent: RelatedFactPage | null = getContentByKey({
         key: relatedFactPageConfig.contentIdList as string,
       })
-      contentListId = forceArray((relatedContent?.data as ContentList).contentList) as Array<string>
+      contentListId = util.data.forceArray((relatedContent?.data as ContentList).contentList) as Array<string>
     }
 
     const relatedContentQueryResults = contentListId.length
