@@ -207,7 +207,11 @@ function getDataWithFilterStatbankApi(
       )
 
       // not all municipals have data, so if its missing, try the old one
-      if ((!municipalData || municipalData.value === null) && municipality.changes && municipality.changes.length > 0) {
+      if (
+        (!municipalData || municipalData.value === null || municipalData.value === 0) &&
+        municipality.changes &&
+        municipality.changes.length > 0
+      ) {
         municipalData = getDataFromMunicipalityCode(ds, municipality.changes[0].oldCode, yAxisLabel, filterTarget)
       }
       if (municipalData && municipalData.value !== null) {
