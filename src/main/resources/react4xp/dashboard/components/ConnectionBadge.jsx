@@ -1,5 +1,6 @@
 import React from 'react'
 import { Zap, ZapOff } from 'react-feather'
+import PropTypes from 'prop-types'
 
 export function ConnectionBadge(props) {
   const { isConnected } = props
@@ -18,4 +19,8 @@ export function ConnectionBadge(props) {
       </div>
     )
   }
+}
+
+ConnectionBadge.propTypes = {
+  isConnected: PropTypes.bool,
 }
