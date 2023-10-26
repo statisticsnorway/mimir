@@ -1,8 +1,8 @@
 import { renderError } from '/lib/ssb/error/error'
 import { type Highchart as HighchartConfig } from '/site/macros/highchart'
 
-import { preview as highchartControllerPreview } from '../../parts/highchart/highchart'
-import { preview as dividerControllerPreview } from '../../parts/divider/divider'
+import { preview as highchartControllerPreview } from '/site/parts/highchart/highchart'
+import { preview as dividerControllerPreview } from '/site/parts/divider/divider'
 
 export function macro(context: XP.MacroContext<HighchartConfig>): XP.Response {
   try {
