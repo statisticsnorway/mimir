@@ -4,11 +4,10 @@ import { AlertTriangle } from 'react-feather'
 import PropTypes from 'prop-types'
 
 function ConnectionTimeoutModal(props) {
-  const { isConnected, serverTimeReceived } = props
+  const { isConnected } = props
   const [hide, setHide] = useState(false)
 
-  // To prevent modal from opening during page render/reload, include serverTimeReceived check
-  if (serverTimeReceived) {
+  if (isConnected !== undefined) {
     return (
       <Modal
         className='connection-timeout-modal'
@@ -35,7 +34,6 @@ function ConnectionTimeoutModal(props) {
 
 ConnectionTimeoutModal.propTypes = {
   isConnected: PropTypes.bool,
-  serverTimeReceived: PropTypes.string,
 }
 
 export default ConnectionTimeoutModal

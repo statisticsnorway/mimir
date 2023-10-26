@@ -56,7 +56,7 @@ export function HomePage() {
       <div className='dashboard-info d-flex p-2'>
         <ServerTime serverTime={serverTime} serverTimeReceived={serverTimeReceived} />
         <ConnectionBadge isConnected={isConnected} />
-        <ConnectionTimeoutModal isConnected={isConnected} serverTimeReceived={serverTimeReceived} />
+        <ConnectionTimeoutModal isConnected={isConnected} />
       </div>
       <Tabs defaultActiveKey='statistics'>
         <Tab eventKey='statistics' title='Statistikker'>
