@@ -7,14 +7,14 @@ function ConnectionTimeoutModal(props) {
   const { isConnected } = props
   const [hide, setHide] = useState(false)
 
-  if (isConnected !== undefined) {
+  if (isConnected !== undefined && !isConnected) {
     return (
       <Modal
         className='connection-timeout-modal'
         backdropClassName='connection-timeout-modal-backdrop'
         backdrop='static'
         size='lg'
-        show={!isConnected && !hide}
+        show={!hide}
         onHide={() => setHide(true)}
         centered
       >
