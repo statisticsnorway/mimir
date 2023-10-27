@@ -72,9 +72,10 @@ export function DataSourceLog(props) {
           {renderJobLogs()}
         </Modal.Body>
         <Modal.Footer>
-          {/* NTR hva skal vi bruke for info-knapp?? */}
           <Button onClick={openToolBox}>Datatoolbox</Button>
-          <Button onClick={handleClose}>Lukk</Button>
+          <Button primary onClick={handleClose}>
+            Lukk
+          </Button>
         </Modal.Footer>
       </Modal>
     )
