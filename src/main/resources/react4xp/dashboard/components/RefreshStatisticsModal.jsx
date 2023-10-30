@@ -1,6 +1,7 @@
 import React, { useContext } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Button, Col, Modal, Row } from 'react-bootstrap'
+import { Col, Modal, Row } from 'react-bootstrap'
+import { Button } from '@statisticsnorway/ssb-component-library'
 import { RefreshStatisticsForm } from '/react4xp/dashboard/components/RefreshStatisticsForm'
 import { RefreshStatisticsStatus } from '/react4xp/dashboard/components/RefreshStatisticsStatus'
 import {
@@ -84,7 +85,7 @@ export function RefreshStatisticsModal(props) {
         {renderStatisticsForm()}
       </Modal.Body>
       <Modal.Footer>
-        <Button variant='secondary' disabled={modalLoading} onClick={() => handleClose()}>
+        <Button disabled={modalLoading} onClick={() => handleClose()}>
           Lukk
         </Button>
       </Modal.Footer>

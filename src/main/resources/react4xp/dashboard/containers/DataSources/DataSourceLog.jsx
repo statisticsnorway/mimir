@@ -1,9 +1,10 @@
 import React, { useContext, useState } from 'react'
 import PropTypes from 'prop-types'
-import { Button, Modal } from 'react-bootstrap'
+import { Modal } from 'react-bootstrap'
+import { Button } from '@statisticsnorway/ssb-component-library'
 import { AlertTriangle } from 'react-feather'
-import { requestEventLogData } from '/react4xp/dashboard/containers/DataSources/actions'
 import { useDispatch, useSelector } from 'react-redux'
+import { requestEventLogData } from '/react4xp/dashboard/containers/DataSources/actions'
 import { selectDataToolBoxBaseUrl } from '/react4xp/dashboard/containers/HomePage/selectors'
 import { selectDataSourceById } from '/react4xp/dashboard/containers/DataSources/selectors'
 import { WebSocketContext } from '/react4xp/dashboard/utils/websocket/WebsocketProvider'
@@ -71,10 +72,8 @@ export function DataSourceLog(props) {
           {renderJobLogs()}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant='info' onClick={openToolBox}>
-            Datatoolbox
-          </Button>
-          <Button variant='secondary' onClick={handleClose}>
+          <Button onClick={openToolBox}>Datatoolbox</Button>
+          <Button primary onClick={handleClose}>
             Lukk
           </Button>
         </Modal.Footer>
