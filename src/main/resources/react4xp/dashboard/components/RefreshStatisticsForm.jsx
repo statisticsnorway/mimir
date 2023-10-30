@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
-import { Button, Form, Row, Col } from 'react-bootstrap'
+import { Form, Row, Col } from 'react-bootstrap'
 import PropTypes from 'prop-types'
 import { selectInternalStatbankUrl } from '/react4xp/dashboard/containers/HomePage/selectors'
 import { useSelector } from 'react-redux'
-import { Link } from '@statisticsnorway/ssb-component-library'
+import { Button, Link } from '@statisticsnorway/ssb-component-library'
 
 export function RefreshStatisticsForm(props) {
   const { onSubmit, modalInfo } = props
@@ -129,7 +129,7 @@ export function RefreshStatisticsForm(props) {
       {modalInfo.ownersWithSources.map((owner, index) => {
         return renderOwnerInputForMultipleTbml(owner, index)
       })}
-      <Button type='submit' variant='primary'>
+      <Button type='submit' primary>
         Send
       </Button>
     </Form>
