@@ -1,7 +1,13 @@
 import React from 'react'
-import { Title, KeyFigures as SSBKeyFigures, References, Divider } from '@statisticsnorway/ssb-component-library'
+import {
+  Title,
+  Button,
+  KeyFigures as SSBKeyFigures,
+  References,
+  Divider,
+} from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
-import { Alert, Button, Row, Col } from 'react-bootstrap'
+import { Alert, Row, Col } from 'react-bootstrap'
 
 class KeyFigures extends React.Component {
   constructor(props) {
@@ -31,7 +37,7 @@ class KeyFigures extends React.Component {
     if (this.state.showPreviewToggle && this.props.pageTypeKeyFigure) {
       return (
         <Col>
-          <Button variant='primary' onClick={this.toggleDraft} className='mb-4'>
+          <Button primary onClick={this.toggleDraft} className='mb-4'>
             {!this.state.fetchUnPublished ? 'Vis upubliserte tall' : 'Vis publiserte tall'}
           </Button>
         </Col>

@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
-import { Button, Table, Row, Col } from 'react-bootstrap'
+import { Table, Row, Col } from 'react-bootstrap'
 import { RefreshCw } from 'react-feather'
-import { Accordion } from '@statisticsnorway/ssb-component-library'
+import { Accordion, Button } from '@statisticsnorway/ssb-component-library'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectStatuses, selectLoading } from '/react4xp/dashboard/containers/StatRegDashboard/selectors'
 import { WebSocketContext } from '/react4xp/dashboard/utils/websocket/WebsocketProvider'
@@ -35,7 +35,7 @@ export function StatRegDashboard() {
   function makeRefreshButton(statRegStatus) {
     return (
       <Button
-        variant='primary'
+        primary
         size='sm'
         className='mx-1'
         onClick={() => refreshStatReg(statRegStatus.key)}
@@ -102,6 +102,7 @@ export function StatRegDashboard() {
             <h2 className='d-inline-block w-75'>Data fra Statistikkregisteret</h2>
             <div className='d-inline-block float-end'>
               <Button
+                primary
                 onClick={() => refreshAll()}
                 disabled={statuses.filter((s) => s.loading).length === statuses.length}
               >
