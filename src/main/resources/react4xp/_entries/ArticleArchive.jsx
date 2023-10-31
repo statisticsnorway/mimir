@@ -4,7 +4,8 @@ import { Container, Row, Col } from 'react-bootstrap'
 import { ChevronDown } from 'react-feather'
 import { default as groupBy } from 'ramda/es/groupBy'
 import PropTypes from 'prop-types'
-import { get } from 'axios'
+import axios from 'axios'
+
 function ArticleArchive(props) {
   const {
     title,
@@ -28,14 +29,15 @@ function ArticleArchive(props) {
 
   function fetchArticles() {
     setLoading(true)
-    get(articleArchiveService, {
-      params: {
-        start: articles.length,
-        count: 15,
-        language: language,
-        pageId: pageId,
-      },
-    })
+    axios
+      .get(articleArchiveService, {
+        params: {
+          start: articles.length,
+          count: 15,
+          language: language,
+          pageId: pageId,
+        },
+      })
       .then((res) => {
         if (res.data.articles.length) {
           setArticles((prev) => [...prev, ...res.data.articles])
