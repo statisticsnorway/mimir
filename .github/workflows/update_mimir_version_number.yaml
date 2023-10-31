@@ -1,0 +1,20 @@
+name: 'Update MIMIR version number'
+on:
+  pull_request:
+
+jobs:
+  update_pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Determine Version Bump Type
+        id: determine_bump_type
+        run: |
+          if [[ "${{ github.event.pull_request.labels.*.name }}" == *"patch-release"* ]]; then
+            echo "patch"
+          elif [[ "${{ github.event.pull_request.labels.*.name }}" == *"minor-release"* ]]; then
+            echo "minor"
+          elif [[ "${{ github.event.pull_request.labels.*.name }}" == *"major-release"* ]]; then
+            echo "major"
+          else
+            echo "::error::Label indicating version bump type is required"
+          fi
