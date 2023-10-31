@@ -1,6 +1,6 @@
 name: 'Update MIMIR version number'
 on:
-  pull_request:
+  label:
 
 jobs:
   update_pr:
