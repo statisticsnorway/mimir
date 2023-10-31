@@ -1,8 +1,8 @@
 import React, { useContext } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { WebSocketContext } from '/react4xp/dashboard/utils/websocket/WebsocketProvider'
-import { Button, Modal } from 'react-bootstrap'
-import { Accordion, Link } from '@statisticsnorway/ssb-component-library'
+import { Modal } from 'react-bootstrap'
+import { Accordion, Link, Button } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
 import { requestDatasetUpdate } from '/react4xp/dashboard/containers/DataSources/actions'
 import { RefreshCw } from 'react-feather'
@@ -45,10 +45,10 @@ export function DataSourceTable(props) {
           </p>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant='secondary' onClick={() => setModalShow(false)}>
-            Avbryt
+          <Button onClick={() => setModalShow(false)}>Avbryt</Button>
+          <Button primary onClick={() => closeClick()}>
+            Ja, oppdater liste
           </Button>
-          <Button onClick={() => closeClick()}>Ja, oppdater liste</Button>
         </Modal.Footer>
       </Modal>
     )
