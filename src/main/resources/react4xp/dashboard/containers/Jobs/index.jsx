@@ -1,10 +1,10 @@
 import React, { useMemo, useState } from 'react'
-import { Col, Container, Row, Modal, Button } from 'react-bootstrap'
+import { Col, Container, Row, Modal } from 'react-bootstrap'
 import { useSelector } from 'react-redux'
 import { ReactTable } from '/react4xp/dashboard/components/ReactTable'
 import { selectJobs, selectLoading } from '/react4xp/dashboard/containers/Jobs/selectors'
 import { selectContentStudioBaseUrl } from '/react4xp/dashboard/containers/HomePage/selectors'
-import { Link, Accordion, Divider } from '@statisticsnorway/ssb-component-library'
+import { Link, Accordion, Divider, Button } from '@statisticsnorway/ssb-component-library'
 import { DataQueryBadges } from '/react4xp/dashboard/components/DataQueryBadges'
 import { default as format } from 'date-fns/format'
 
@@ -152,7 +152,7 @@ export function Jobs() {
         </Modal.Header>
         <Modal.Body>{renderJobLogs()}</Modal.Body>
         <Modal.Footer>
-          <Button variant='secondary' onClick={() => closeJobLogModal()}>
+          <Button secondary onClick={() => closeJobLogModal()}>
             Lukk
           </Button>
         </Modal.Footer>
