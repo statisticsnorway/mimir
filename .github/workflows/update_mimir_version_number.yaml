@@ -12,10 +12,10 @@ jobs:
       - name: Determine Version Bump Type
         id: determine_bump_type
         run: |
-          if: contains(github.event.pull_request.labels.*.name, 'major-release'); then
+          if [[ $(contains(github.event.pull_request.labels.*.name, 'major-release')) ]]; then
             echo "major"
-          elif: contains(github.event.pull_request.labels.*.name, 'minor-release'); then
+          elif [[ $(contains(github.event.pull_request.labels.*.name, 'minor-release')) ]]; then
             echo "minor"
-          elif: contains(github.event.pull_request.labels.*.name, 'patch-release'); then
+          elif [[ $(contains(github.event.pull_request.labels.*.name, 'patch-release')) ]]; then
             echo "patch"
           fi
