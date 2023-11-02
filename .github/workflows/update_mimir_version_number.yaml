@@ -21,6 +21,8 @@ jobs:
       #     elif [[ $LABELS == *"patch-release"* ]]; then
       #       echo "patch"
       #     fi
+      - name: Git checkout
+        uses: actions/checkout@v3
       - name: Read and Output Version Number
         run: |
           VERSION=$(awk -F' = ' '/^version/ {print $2}' ./gradle.properties)
