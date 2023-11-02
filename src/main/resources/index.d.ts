@@ -54,6 +54,7 @@ declare global {
       export type RelatedKostra = _PartComponent<"mimir:relatedKostra">
       export type RelatedStatistics = _PartComponent<"mimir:relatedStatistics">
       export type ReleasedStatistics = _PartComponent<"mimir:releasedStatistics">
+      export type SSBText = _PartComponent<"mimir:SSBText">
       export type SearchResult = _PartComponent<"mimir:searchResult">
       export type StandardCardsList = _PartComponent<"mimir:standardCardsList">
       export type StatbankBox = _PartComponent<"mimir:statbankBox">
