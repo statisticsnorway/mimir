@@ -9,15 +9,19 @@ jobs:
   update_pr:
     runs-on: ubuntu-latest
     steps:
-      - name: Determine Version Bump Type
-        id: determine_bump_type
-        run: |
-          LABELS="${{ github.event.pull_request.labels.*.name }}"
+      # - name: Determine Version Bump Type
+      #   id: determine_bump_type
+      #   run: |
+      #     LABELS="${{ github.event.pull_request.labels.*.name }}"
 
-          if [[ $LABELS == *"major-release"* ]]; then
-            echo "major"
-          elif [[ $LABELS == *"minor-release"* ]]; then
-            echo "minor"
-          elif [[ $LABELS == *"patch-release"* ]]; then
-            echo "patch"
-          fi
+      #     if [[ $LABELS == *"major-release"* ]]; then
+      #       echo "major"
+      #     elif [[ $LABELS == *"minor-release"* ]]; then
+      #       echo "minor"
+      #     elif [[ $LABELS == *"patch-release"* ]]; then
+      #       echo "patch"
+      #     fi
+      - name: Read and Output Version Number
+        run: |
+          VERSION=$(awk -F' = ' '/^version/ {print $2}' ./gradle.properties)
+          echo "Version Number: $VERSION"
