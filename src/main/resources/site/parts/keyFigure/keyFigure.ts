@@ -1,27 +1,23 @@
-import type { Content } from '/lib/xp/content'
-import type { MunicipalityWithCounty } from '/lib/ssb/dataset/klass/municipalities'
-import type { KeyFigureView } from '/lib/ssb/parts/keyFigure'
-import { render } from '/lib/enonic/react4xp'
-import type { KeyFigure as KeyFigurePartConfig } from '.'
+import { type Content } from '/lib/xp/content'
 import { getContent, getComponent, getSiteConfig } from '/lib/xp/portal'
+import { render } from '/lib/enonic/react4xp'
+import { type KeyFigureView, get as getKeyFigures, parseKeyFigure } from '/lib/ssb/parts/keyFigure'
+import { type MunicipalityWithCounty, getMunicipality, RequestWithCode } from '/lib/ssb/dataset/klass/municipalities'
 
-const { get: getKeyFigures, parseKeyFigure } = __non_webpack_require__('/lib/ssb/parts/keyFigure')
-const { getMunicipality } = __non_webpack_require__('/lib/ssb/dataset/klass/municipalities')
-const {
-  data: { forceArray },
-} = __non_webpack_require__('/lib/util')
-const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
-const { DATASET_BRANCH, UNPUBLISHED_DATASET_BRANCH } = __non_webpack_require__('/lib/ssb/repo/dataset')
-const { hasWritePermissionsAndPreview } = __non_webpack_require__('/lib/ssb/parts/permissions')
-const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
+import * as util from '/lib/util'
+import { renderError } from '/lib/ssb/error/error'
+import { DATASET_BRANCH, UNPUBLISHED_DATASET_BRANCH } from '/lib/ssb/repo/dataset'
+import { hasWritePermissionsAndPreview } from '/lib/ssb/parts/permissions'
+import { getPhrases } from '/lib/ssb/utils/language'
+import { type KeyFigure as KeyFigurePartConfig } from '.'
 
 export function get(req: XP.Request): XP.Response {
   try {
     const config = getComponent<XP.PartComponent.KeyFigure>()?.config
     if (!config) throw Error('No part found')
 
-    const keyFigureIds: Array<string> | [] = config.figure ? forceArray(config.figure) : []
-    const municipality: MunicipalityWithCounty | undefined = getMunicipality(req)
+    const keyFigureIds: Array<string> | [] = config.figure ? util.data.forceArray(config.figure) : []
+    const municipality: MunicipalityWithCounty | undefined = getMunicipality(req as RequestWithCode)
     return renderPart(req, municipality, keyFigureIds)
   } catch (e) {
     return renderError(req, 'Error in part', e)
@@ -36,7 +32,7 @@ export function preview(req: XP.Request, id: string): XP.Response {
     const defaultMunicipality: XP.SiteConfig['defaultMunicipality'] = siteConfig.defaultMunicipality
     const municipality: MunicipalityWithCounty | undefined = getMunicipality({
       code: defaultMunicipality,
-    } as unknown as XP.Request)
+    } as RequestWithCode)
     return renderPart(req, municipality, [id])
   } catch (e) {
     return renderError(req, 'Error in part', e)

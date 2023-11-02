@@ -2,16 +2,19 @@ import { Node } from '/lib/xp/node'
 import { StatisticInListing, StatRegBase } from '/lib/ssb/dashboard/statreg/types'
 import { equals } from '/lib/vendor/ramda'
 
-const { createNode, getNode, modifyNode } = __non_webpack_require__('/lib/ssb/repo/common')
-const { repoExists, createRepo } = __non_webpack_require__('/lib/ssb/repo/repo')
-const { STATREG_REPO_CONTACTS_KEY, fetchContacts } = __non_webpack_require__('/lib/ssb/statreg/contacts')
-const { STATREG_REPO_STATISTICS_KEY, fetchStatistics, createMimirMockReleaseStatreg } =
-  __non_webpack_require__('/lib/ssb/statreg/statistics')
-const { STATREG_REPO_PUBLICATIONS_KEY, fetchPublications } = __non_webpack_require__('/lib/ssb/statreg/publications')
-const { STATREG_BRANCH, STATREG_REPO } = __non_webpack_require__('/lib/ssb/dashboard/statreg/config')
-const { Events, logUserDataQuery } = __non_webpack_require__('/lib/ssb/repo/query')
-const { ensureArray } = __non_webpack_require__('/lib/ssb/utils/arrayUtils')
-const { cronJobLog } = __non_webpack_require__('/lib/ssb/utils/serverLog')
+import { createNode, getNode, modifyNode } from '/lib/ssb/repo/common'
+import { repoExists, createRepo } from '/lib/ssb/repo/repo'
+import { STATREG_REPO_CONTACTS_KEY, fetchContacts } from '/lib/ssb/statreg/contacts'
+import {
+  STATREG_REPO_STATISTICS_KEY,
+  fetchStatistics,
+  createMimirMockReleaseStatreg,
+} from '/lib/ssb/statreg/statistics'
+import { STATREG_REPO_PUBLICATIONS_KEY, fetchPublications } from '/lib/ssb/statreg/publications'
+import { STATREG_BRANCH, STATREG_REPO } from '/lib/ssb/dashboard/statreg/config'
+import { Events, logUserDataQuery } from '/lib/ssb/repo/query'
+import { ensureArray } from '/lib/ssb/utils/arrayUtils'
+import { cronJobLog } from '/lib/ssb/utils/serverLog'
 
 const STATREG_CONTACTS_NODE: StatRegNodeConfig = configureNode(STATREG_REPO_CONTACTS_KEY, fetchContacts)
 const STATREG_STATISTICS_NODE: StatRegNodeConfig = configureNode(STATREG_REPO_STATISTICS_KEY, fetchStatistics)
@@ -227,12 +230,4 @@ export interface StatRegRefreshResult {
   key: string
   status: string
   info: StatRegCompareResult
-}
-
-export interface StatRegRepoLib {
-  setupStatRegRepo: () => void
-  refreshStatRegData(nodeConfig?: Array<StatRegNodeConfig>): Array<StatRegRefreshResult>
-  getStatRegNode: (key: string) => StatRegNode | null
-  STATREG_NODES: Array<StatRegNodeConfig>
-  updateMimirMockRelease: () => void
 }

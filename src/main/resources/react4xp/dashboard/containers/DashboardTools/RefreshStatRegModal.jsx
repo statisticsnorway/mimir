@@ -1,7 +1,8 @@
 import React, { useContext } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { PropTypes } from 'prop-types'
-import { Button, Modal } from 'react-bootstrap'
+import { Button } from '@statisticsnorway/ssb-component-library'
+import { Modal } from 'react-bootstrap'
 import { selectStatRegStatus } from '/react4xp/dashboard/containers/StatRegDashboard/selectors'
 import { requestStatRegEventLogData } from '/react4xp/dashboard/containers/StatRegDashboard/actions'
 import { WebSocketContext } from '/react4xp/dashboard/utils/websocket/WebsocketProvider'
@@ -61,9 +62,7 @@ export function RefreshStatRegModal(props) {
       </Modal.Header>
       <Modal.Body>{renderMessage()}</Modal.Body>
       <Modal.Footer>
-        <Button variant='secondary' onClick={props.handleClose}>
-          Lukk
-        </Button>
+        <Button onClick={props.handleClose}>Lukk</Button>
       </Modal.Footer>
     </Modal>
   )

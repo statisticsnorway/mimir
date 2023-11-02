@@ -1,15 +1,13 @@
 import { get as getContentByKey, type Content } from '/lib/xp/content'
-import { render } from '/lib/thymeleaf'
-import type { Phrases } from '/lib/types/language'
-import { render as r4xpRender } from '/lib/enonic/react4xp'
-import type { Statistics } from '/site/content-types'
 import { getContent, pageUrl } from '/lib/xp/portal'
+import { render } from '/lib/thymeleaf'
+import { type Phrases } from '/lib/types/language'
+import { render as r4xpRender } from '/lib/enonic/react4xp'
 
-const {
-  data: { forceArray },
-} = __non_webpack_require__('/lib/util')
-const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
-const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
+import * as util from '/lib/util'
+import { getPhrases } from '/lib/ssb/utils/language'
+import { renderError } from '/lib/ssb/error/error'
+import { type Statistics } from '/site/content-types'
 
 const view = resolve('./relatedStatistics.html')
 
@@ -30,7 +28,7 @@ function renderPart(req: XP.Request): XP.Response {
   if (!page) throw Error('No page found')
 
   const relatedStatistics: Statistics['relatedStatisticsOptions'] = page.data.relatedStatisticsOptions
-  const phrases: Phrases = getPhrases(page)
+  const phrases = getPhrases(page) as Phrases
 
   const statisticsTitle: string = phrases.menuStatistics
   if (!relatedStatistics || relatedStatistics.length === 0) {
@@ -46,7 +44,7 @@ function renderPart(req: XP.Request): XP.Response {
   return renderRelatedStatistics(
     req,
     statisticsTitle,
-    parseRelatedContent(relatedStatistics ? forceArray(relatedStatistics) : []),
+    parseRelatedContent(relatedStatistics ? util.data.forceArray(relatedStatistics) : []),
     phrases
   )
 }

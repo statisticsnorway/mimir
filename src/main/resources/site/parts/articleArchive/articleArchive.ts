@@ -1,15 +1,14 @@
-import { render } from '/lib/enonic/react4xp'
 import { query, type Content } from '/lib/xp/content'
 import { getContent, pageUrl, processHtml, serviceUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
+import { render } from '/lib/enonic/react4xp'
 import { formatDate } from '/lib/ssb/utils/dateUtils'
-import { imageUrl } from '/lib/ssb/utils/imageUtils'
-import type { Article, ArticleArchive } from '/site/content-types'
+import { imageUrl, getImageAlt } from '/lib/ssb/utils/imageUtils'
 
-const { getImageAlt } = __non_webpack_require__('/lib/ssb/utils/imageUtils')
-const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
+import { renderError } from '/lib/ssb/error/error'
+import { type Article, type ArticleArchive } from '/site/content-types'
 
-exports.get = function (req: XP.Request): XP.Response {
+export function get(req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {

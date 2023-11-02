@@ -1,6 +1,8 @@
 /* eslint-disable complexity */
-const { localize } = __non_webpack_require__('/lib/xp/i18n')
-const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
+// @ts-nocheck
+
+import { localize } from '/lib/xp/i18n'
+import { isEnabled } from '/lib/featureToggle'
 import { ensureArray } from '/lib/ssb/utils/arrayUtils'
 
 export const style = {

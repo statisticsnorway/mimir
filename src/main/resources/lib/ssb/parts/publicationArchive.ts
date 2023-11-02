@@ -1,22 +1,25 @@
-import type { Article, OmStatistikken, Statistics } from '/site/content-types'
 import { type Content, get, query, QueryDsl, ContentsResult } from '/lib/xp/content'
-import type { StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
+import { pageUrl } from '/lib/xp/portal'
+import { type StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
 import { getAllStatisticsFromRepo } from '/lib/ssb/statreg/statistics'
-import { calculatePeriodRelease, type Release } from '/lib/ssb/utils/variantUtils'
-import type { SubjectItem } from '/lib/ssb/utils/subjectUtils'
+import { calculatePeriodRelease, type Release, getPreviousReleases } from '/lib/ssb/utils/variantUtils'
+import {
+  type SubjectItem,
+  getMainSubjects,
+  getSubSubjects,
+  getMainSubjectBySubSubject,
+} from '/lib/ssb/utils/subjectUtils'
 import { formatDate, stringToServerTime } from '/lib/ssb/utils/dateUtils'
-import type { ContentLight, Release as ReleaseVariant } from '/lib/ssb/repo/statisticVariant'
-import { getStatisticVariantsFromRepo } from '/lib/ssb/repo/statisticVariant'
+import {
+  type ContentLight,
+  type Release as ReleaseVariant,
+  getStatisticVariantsFromRepo,
+} from '/lib/ssb/repo/statisticVariant'
 
-const { pageUrl } = __non_webpack_require__('/lib/xp/portal')
-const { getPreviousReleases } = __non_webpack_require__('/lib/ssb/utils/variantUtils')
-const { getMainSubjects, getSubSubjects, getMainSubjectBySubSubject } =
-  __non_webpack_require__('/lib/ssb/utils/subjectUtils')
-const { fromPartCache } = __non_webpack_require__('/lib/ssb/cache/partCache')
-const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
-const {
-  data: { forceArray },
-} = __non_webpack_require__('/lib/util')
+import { fromPartCache } from '/lib/ssb/cache/partCache'
+import { isEnabled } from '/lib/featureToggle'
+import * as util from '/lib/util'
+import { type Article, type OmStatistikken, type Statistics } from '/site/content-types'
 
 export function getPublications(
   req: XP.Request,
@@ -124,7 +127,9 @@ function prepareStatisticRelease(
       statisticsPagesXP._path.startsWith(subject.path)
     )
     const mainSubjectName: string = mainSubject.length > 0 ? mainSubject[0].title : ''
-    const subtopics: Array<string> = statisticsPagesXP.data.subtopic ? forceArray(statisticsPagesXP.data.subtopic) : []
+    const subtopics: Array<string> = statisticsPagesXP.data.subtopic
+      ? util.data.forceArray(statisticsPagesXP.data.subtopic)
+      : []
     const secondaryMainSubjects: Array<string> = subtopics
       ? getSecondaryMainSubject(subtopics, mainSubjects, subSubjects)
       : []
@@ -159,7 +164,7 @@ function prepareArticle(
   const mainSubject: SubjectItem | undefined = mainSubjects.find((mainSubject) => {
     return article._path.startsWith(mainSubject.path)
   })
-  const subtopics: Array<string> = article.data.subtopic ? forceArray(article.data.subtopic) : []
+  const subtopics: Array<string> = article.data.subtopic ? util.data.forceArray(article.data.subtopic) : []
   const secondaryMainSubjects: Array<string> = subtopics
     ? getSecondaryMainSubject(subtopics, mainSubjects, subSubjects)
     : []
@@ -213,7 +218,9 @@ function getStatisticsRepo(language: string, mainSubjects: Array<SubjectItem>): 
     query
   )
   const previousReleases: PublicationItem[] = allPreviousStatisticVariantsFromRepo.map((release) => {
-    const mainSubjectsStatistic: string[] = release.data.mainSubjects ? forceArray(release.data.mainSubjects) : []
+    const mainSubjectsStatistic: string[] = release.data.mainSubjects
+      ? util.data.forceArray(release.data.mainSubjects)
+      : []
     const secondaryMainSubjects: string[] =
       mainSubjectsStatistic.length > 1 ? mainSubjectsStatistic.slice(1, mainSubjectsStatistic.length) : []
     const mainSubjectId: string = mainSubjectsStatistic.length ? mainSubjectsStatistic[0] : ''
@@ -285,17 +292,6 @@ function getSecondaryMainSubject(
     return acc
   }, [])
   return secondaryMainSubjects
-}
-
-export interface PublicationArchiveLib {
-  getPublications: (
-    req: XP.Request,
-    start: number,
-    count: number,
-    language: string,
-    contentType?: string,
-    subject?: string
-  ) => PublicationResult
 }
 
 export interface PublicationResult {

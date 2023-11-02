@@ -1,35 +1,44 @@
 /* eslint-disable complexity */
 import { type Content, query } from '/lib/xp/content'
-import { render } from '/lib/thymeleaf'
-import type { ReleaseDatesVariant, StatisticInListing, VariantInListing } from '/lib/ssb/dashboard/statreg/types'
-import type { MunicipalityWithCounty } from '/lib/ssb/dataset/klass/municipalities'
-import type { FooterContent } from '/lib/ssb/parts/footer'
-import type { AlertType, InformationAlertOptions, MunicipalityOptions } from '/lib/ssb/utils/alertUtils'
-import type { Breadcrumbs } from '/lib/ssb/utils/breadcrumbsUtils'
-import type { SubjectItem } from '/lib/ssb/utils/subjectUtils'
-import type { Language } from '/lib/types/language'
-import { render as r4xpRender } from '/lib/enonic/react4xp'
-import type { Page, Statistics } from '/site/content-types'
-import type { Default as DefaultPageConfig } from '/site/pages/default'
 import { assetUrl, type Component, getContent, getSiteConfig, pageUrl, processHtml } from '/lib/xp/portal'
+import { localize } from '/lib/xp/i18n'
+import { render } from '/lib/thymeleaf'
+import {
+  type ReleaseDatesVariant,
+  type StatisticInListing,
+  type VariantInListing,
+} from '/lib/ssb/dashboard/statreg/types'
+import { type MunicipalityWithCounty, getMunicipality, RequestWithCode } from '/lib/ssb/dataset/klass/municipalities'
+import { type FooterContent, getFooterContent } from '/lib/ssb/parts/footer'
+import {
+  type AlertType,
+  type InformationAlertOptions,
+  type MunicipalityOptions,
+  alertsForContext,
+} from '/lib/ssb/utils/alertUtils'
+import { type Breadcrumbs, getBreadcrumbs } from '/lib/ssb/utils/breadcrumbsUtils'
+import {
+  type SubjectItem,
+  getMainSubjects,
+  getSubSubjects,
+  getMainSubjectBySubSubject,
+} from '/lib/ssb/utils/subjectUtils'
+import { type Language } from '/lib/types/language'
+import { render as r4xpRender } from '/lib/enonic/react4xp'
 
-const {
-  data: { forceArray },
-} = __non_webpack_require__('/lib/util')
-const { getLanguage } = __non_webpack_require__('/lib/ssb/utils/language')
-const { localize } = __non_webpack_require__('/lib/xp/i18n')
-const { alertsForContext } = __non_webpack_require__('/lib/ssb/utils/alertUtils')
-const { getBreadcrumbs } = __non_webpack_require__('/lib/ssb/utils/breadcrumbsUtils')
-const { getMainSubjects, getSubSubjects, getMainSubjectBySubSubject } =
-  __non_webpack_require__('/lib/ssb/utils/subjectUtils')
-const { getReleaseDatesByVariants, getStatisticByIdFromRepo, getStatisticByShortNameFromRepo } =
-  __non_webpack_require__('/lib/ssb/statreg/statistics')
-const { getMunicipality } = __non_webpack_require__('/lib/ssb/dataset/klass/municipalities')
-const { getHeaderContent } = __non_webpack_require__('/lib/ssb/parts/header')
-const { getFooterContent } = __non_webpack_require__('/lib/ssb/parts/footer')
-const { fromMenuCache } = __non_webpack_require__('/lib/ssb/cache/cache')
+import * as util from '/lib/util'
+import { getLanguage } from '/lib/ssb/utils/language'
+import {
+  getReleaseDatesByVariants,
+  getStatisticByIdFromRepo,
+  getStatisticByShortNameFromRepo,
+} from '/lib/ssb/statreg/statistics'
+import { getHeaderContent } from '/lib/ssb/parts/header'
+import { fromMenuCache } from '/lib/ssb/cache/cache'
 
-const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
+import { isEnabled } from '/lib/featureToggle'
+import { type Default as DefaultPageConfig } from '/site/pages/default'
+import { type Page, type Statistics } from '/site/content-types'
 
 const partsWithPreview: Array<string> = [
   // Parts that has preview
@@ -55,14 +64,13 @@ const previewOverride: object = {
   contentList: 'relatedFactPage',
 }
 
-export const GA_TRACKING_ID: string | null = app.config && app.config.GA_TRACKING_ID ? app.config.GA_TRACKING_ID : null
-export const GTM_TRACKING_ID: string | null =
-  app.config && app.config.GTM_TRACKING_ID ? app.config.GTM_TRACKING_ID : null
-export const GTM_AUTH: string | null = app.config && app.config.GTM_AUTH ? app.config.GTM_AUTH : null
+export const GA_TRACKING_ID: string | null = app.config?.GA_TRACKING_ID || null
+export const GTM_TRACKING_ID: string | null = app.config?.GTM_TRACKING_ID || null
+export const GTM_AUTH: string | null = app.config?.GTM_AUTH || null
 
 const view = resolve('default.html')
 
-exports.get = function (req: XP.Request): XP.Response {
+export function get(req: XP.Request): XP.Response {
   const page = getContent<Content<Page> & DefaultPage>()
   if (!page) return { status: 404 }
 
@@ -168,7 +176,7 @@ exports.get = function (req: XP.Request): XP.Response {
 
   let municipality: MunicipalityWithCounty | undefined
   if (req.params.selfRequest) {
-    municipality = getMunicipality(req)
+    municipality = getMunicipality(req as RequestWithCode)
   }
 
   const pageType: string = pageConfig?.pageType || 'default'
@@ -303,14 +311,16 @@ function prepareRegions(isFragment: boolean, page: DefaultPage): RegionsContent 
     const pageData: ExtendedPage = page.page
     if (pageData) {
       regions = pageData.regions ? pageData.regions : {}
-      configRegions = pageData.config && pageData.config.regions ? forceArray(pageData.config.regions) : []
+      configRegions = pageData.config && pageData.config.regions ? util.data.forceArray(pageData.config.regions) : []
     }
   }
   configRegions.forEach((configRegion) => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    configRegion.components = regions[configRegion.region] ? forceArray(regions[configRegion.region].components) : []
+    configRegion.components = regions[configRegion.region]
+      ? util.data.forceArray(regions[configRegion.region].components)
+      : []
   })
 
   const mainRegionData: Regions['components'] | undefined =
@@ -367,7 +377,7 @@ function parseMetaInfoData(
   if (page.type === `${app.name}:statistics`) {
     const statistic: StatisticInListing | undefined = getStatisticByIdFromRepo(page.data.statistic)
     if (statistic) {
-      const variants: Array<VariantInListing | undefined> = forceArray(statistic.variants)
+      const variants: Array<VariantInListing | undefined> = util.data.forceArray(statistic.variants)
       const releaseDates: ReleaseDatesVariant = getReleaseDatesByVariants(variants as Array<VariantInListing>)
       const previousRelease: string = releaseDates.previousRelease[0]
       metaInfoSearchPublishFrom = previousRelease ? new Date(previousRelease).toISOString() : new Date().toISOString()
@@ -403,7 +413,7 @@ function getSubjectsPage(page: DefaultPage, req: XP.Request, language: string): 
   const allMainSubjects: Array<SubjectItem> = getMainSubjects(req, language === 'en' ? 'en' : 'nb')
   const allSubSubjects: Array<SubjectItem> = getSubSubjects(req, language === 'en' ? 'en' : 'nb')
   const subjects: Array<string> = []
-  const subTopics: Array<string> = page.data.subtopic ? forceArray(page.data.subtopic) : []
+  const subTopics: Array<string> = page.data.subtopic ? util.data.forceArray(page.data.subtopic) : []
   const mainSubject: SubjectItem | undefined = allMainSubjects.find((mainSubject) => {
     return page._path.startsWith(mainSubject.path)
   })

@@ -1,16 +1,15 @@
 import { get as getContentByKey, type Content } from '/lib/xp/content'
-import { formatDate } from '/lib/ssb/utils/dateUtils'
-import { render } from '/lib/enonic/react4xp'
-import type { Article } from '/site/content-types'
 import { processHtml, getContent, pageUrl } from '/lib/xp/portal'
+import { render } from '/lib/enonic/react4xp'
+import { formatDate } from '/lib/ssb/utils/dateUtils'
 import { scriptAsset } from '/lib/ssb/utils/utils'
 
-const {
-  data: { forceArray },
-} = __non_webpack_require__('/lib/util')
-const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
-const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
-const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
+import * as util from '/lib/util'
+import { getPhrases } from '/lib/ssb/utils/language'
+import { renderError } from '/lib/ssb/error/error'
+import { isEnabled } from '/lib/featureToggle'
+import { Phrases } from '/lib/types/language'
+import { type Article } from '/site/content-types'
 
 export function get(req: XP.Request): XP.Response {
   try {
@@ -25,7 +24,7 @@ function renderPart(req: XP.Request) {
   if (!page) throw Error('No page found')
 
   const language: string = page.language === 'en' || page.language === 'nn' ? page.language : 'nb'
-  const phrases: object = getPhrases(page)
+  const phrases = getPhrases(page)
 
   const bodyText: string | undefined = page.data.articleText
     ? processHtml({
@@ -43,7 +42,9 @@ function renderPart(req: XP.Request) {
     }
   }
 
-  const authorConfig: Article['authorItemSet'] = page.data.authorItemSet ? forceArray(page.data.authorItemSet) : []
+  const authorConfig: Article['authorItemSet'] = page.data.authorItemSet
+    ? util.data.forceArray(page.data.authorItemSet)
+    : []
   const authors: Article['authorItemSet'] | undefined = authorConfig.length
     ? authorConfig.map(({ name, email }) => {
         return {
@@ -54,11 +55,11 @@ function renderPart(req: XP.Request) {
     : undefined
 
   const associatedStatisticsConfig: Article['associatedStatistics'] = page.data.associatedStatistics
-    ? forceArray(page.data.associatedStatistics)
+    ? util.data.forceArray(page.data.associatedStatistics)
     : []
 
   const associatedArticleArchivesConfig: Article['articleArchive'] = page.data.articleArchive
-    ? forceArray(page.data.articleArchive)
+    ? util.data.forceArray(page.data.articleArchive)
     : []
 
   const props: ArticleProps = {
@@ -163,7 +164,7 @@ interface CMS {
 }
 
 interface ArticleProps {
-  phrases: object
+  phrases: Phrases | undefined
   introTitle: string | undefined
   title: string
   ingress: string | undefined

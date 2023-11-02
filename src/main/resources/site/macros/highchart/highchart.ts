@@ -1,17 +1,16 @@
-import type { Highchart as HighchartConfig } from '/site/macros/highchart'
+import { renderError } from '/lib/ssb/error/error'
+import { type Highchart as HighchartConfig } from '/site/macros/highchart'
 
-const { preview: highchartControllerPreview } = __non_webpack_require__('../../parts/highchart/highchart')
-const { preview: dividerControllerPreview } = __non_webpack_require__('../../parts/divider/divider')
+import { preview as highchartControllerPreview } from '/site/parts/highchart/highchart'
+import { preview as dividerControllerPreview } from '/site/parts/divider/divider'
 
-const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
-
-exports.macro = function (context: XP.MacroContext): XP.Response {
+export function macro(context: XP.MacroContext<HighchartConfig>): XP.Response {
   try {
     const divider: XP.Response = dividerControllerPreview(context.request, {
       dark: false,
     })
 
-    const config: HighchartConfig = context.params
+    const config = context.params
     const highchart: XP.Response = highchartControllerPreview(context.request, config.highchart)
 
     if (highchart.status && highchart.status !== 200) throw new Error(`Highchart with id ${config.highchart} missing`)

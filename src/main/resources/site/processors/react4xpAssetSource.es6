@@ -5,11 +5,7 @@ exports.responseProcessor = function (req, res) {
     res.pageContributions.bodyEnd &&
     res.pageContributions.bodyEnd.length
   ) {
-    if (req.mode === 'edit') {
-      res.pageContributions.bodyEnd = res.pageContributions.bodyEnd.filter(
-        (src) => src.indexOf('React4xp.CLIENT.hydrate') === -1 && src.indexOf('service/mimir/react4xp') === -1
-      )
-    } else {
+    if (req.mode !== 'edit') {
       const exp = new RegExp('srcs*=s*"(.+?)"')
       res.pageContributions.bodyEnd = res.pageContributions.bodyEnd.map((script) => {
         const match = exp.exec(script)

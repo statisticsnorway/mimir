@@ -1,5 +1,5 @@
 import { mergeDeepRight } from '/lib/vendor/ramda'
-const { createDefaultConfig } = __non_webpack_require__('/lib/ssb/parts/highcharts/graph/config')
+import { createDefaultConfig } from '/lib/ssb/parts/highcharts/graph/config'
 
 export function lineConfig(highchartContent, options) {
   const defaultConfig = createDefaultConfig(

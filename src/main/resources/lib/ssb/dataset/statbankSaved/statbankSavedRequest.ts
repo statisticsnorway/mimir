@@ -1,9 +1,10 @@
+import { sleep } from '/lib/xp/task'
 import { request, HttpRequestParams, HttpResponse } from '/lib/http-client'
-const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 import { XmlParser } from '/lib/types/xmlParser'
 
-const { sleep } = __non_webpack_require__('/lib/xp/task')
-const { logUserDataQuery, Events } = __non_webpack_require__('/lib/ssb/repo/query')
+import { logUserDataQuery, Events } from '/lib/ssb/repo/query'
+
+const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 
 export function get(url: string, queryId?: string): object | null {
   const requestParams: HttpRequestParams = {
@@ -53,8 +54,4 @@ export function get(url: string, queryId?: string): object | null {
     }
   }
   return null
-}
-
-export interface StatbankSavedRequestLib {
-  get: (url: string, queryId?: string) => object | null
 }

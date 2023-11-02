@@ -1,11 +1,10 @@
-import type { Default as DefaultPageConfig } from '/site/pages/default'
+import { processHtml } from '/lib/xp/portal'
 import { MunicipalityWithCounty } from '/lib/ssb/dataset/klass/municipalities'
 
-const { list: listOperationsAlerts } = __non_webpack_require__('/lib/ssb/parts/operationsAlert')
-const { list: listMunicipalityAlerts } = __non_webpack_require__('/lib/ssb/parts/municipalityAlert')
-const { list: listInformationAlerts } = __non_webpack_require__('/lib/ssb/parts/informationAlert')
-
-const { processHtml } = __non_webpack_require__('/lib/xp/portal')
+import { list as listOperationsAlerts } from '/lib/ssb/parts/operationsAlert'
+import { list as listMunicipalityAlerts } from '/lib/ssb/parts/municipalityAlert'
+import { list as listInformationAlerts } from '/lib/ssb/parts/informationAlert'
+import { type Default as DefaultPageConfig } from '/site/pages/default'
 
 function getInformationAlerts(options: InformationAlertOptions): Array<InformationAlert> {
   const alerts: Array<Alerts> = [
@@ -85,6 +84,3 @@ export interface MunicipalityOptions {
 }
 
 export type AlertType = Array<InformationAlert> | Array<MunicipalityAlert>
-export interface AlertUtilsLib {
-  alertsForContext: (config: DefaultPageConfig, options: InformationAlertOptions | MunicipalityOptions) => AlertType
-}

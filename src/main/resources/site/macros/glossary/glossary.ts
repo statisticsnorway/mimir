@@ -1,8 +1,8 @@
 import { React4xp } from '/lib/enonic/react4xp'
 
-const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
+import { renderError } from '/lib/ssb/error/error'
 
-exports.macro = function (context: XP.MacroContext) {
+export function macro(context: XP.MacroContext) {
   try {
     return renderMacro(context)
   } catch (e) {

@@ -1,17 +1,17 @@
-import { HighchartsGraphConfig } from '/lib/types/highcharts'
-import type { Highchart } from '/site/content-types'
 import { Content } from '/lib/xp/content'
-import type { DataSource } from '/site/mixins/dataSource'
+import { HighchartsGraphConfig } from '/lib/types/highcharts'
 import { PreliminaryData } from '/lib/types/xmlParser'
 
-const { createDefaultConfig } = __non_webpack_require__('/lib/ssb/parts/highcharts/graph/config')
-const { areaConfig } = __non_webpack_require__('/lib/ssb/parts/highcharts/graph/graphAreaConfig')
-const { pieConfig } = __non_webpack_require__('/lib/ssb/parts/highcharts/graph/graphPieConfig')
-const { barConfig } = __non_webpack_require__('/lib/ssb/parts/highcharts/graph/graphBarConfig')
-const { barNegativeConfig } = __non_webpack_require__('/lib/ssb/parts/highcharts/graph/graphBarNegativeConfig')
-const { columnConfig } = __non_webpack_require__('/lib/ssb/parts/highcharts/graph/graphColumnConfig')
-const { lineConfig } = __non_webpack_require__('/lib/ssb/parts/highcharts/graph/graphLineConfig')
-const { DataSource: DataSourceType } = __non_webpack_require__('/lib/ssb/repo/dataset')
+import { createDefaultConfig } from '/lib/ssb/parts/highcharts/graph/config'
+import { areaConfig } from '/lib/ssb/parts/highcharts/graph/graphAreaConfig'
+import { pieConfig } from '/lib/ssb/parts/highcharts/graph/graphPieConfig'
+import { barConfig } from '/lib/ssb/parts/highcharts/graph/graphBarConfig'
+import { barNegativeConfig } from '/lib/ssb/parts/highcharts/graph/graphBarNegativeConfig'
+import { columnConfig } from '/lib/ssb/parts/highcharts/graph/graphColumnConfig'
+import { lineConfig } from '/lib/ssb/parts/highcharts/graph/graphLineConfig'
+import { DataSource as DataSourceType } from '/lib/ssb/repo/dataset'
+import { type DataSource } from '/site/mixins/dataSource'
+import { type Highchart } from '/site/content-types'
 
 export function prepareHighchartsGraphConfig(
   highchartContent: Content<Highchart>,
@@ -61,12 +61,4 @@ interface GetGraphOptions {
   isJsonStat: boolean
   xAxisLabel: string | undefined
   categories: object | undefined
-}
-
-export interface HighchartsGraphConfigLib {
-  prepareHighchartsGraphConfig: (
-    highchartContent: Content<Highchart>,
-    dataFormat: DataSource['dataSource'],
-    categories?: Array<string | number | PreliminaryData>
-  ) => HighchartsGraphConfig
 }

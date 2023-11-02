@@ -1,11 +1,9 @@
-import { PreparedArticles } from '/lib/ssb/utils/articleUtils'
-
-const { getContent } = __non_webpack_require__('/lib/xp/portal')
-const { getChildArticles, prepareArticles } = __non_webpack_require__('/lib/ssb/utils/articleUtils')
+import { getContent } from '/lib/xp/portal'
+import { PreparedArticles, getChildArticles, prepareArticles } from '/lib/ssb/utils/articleUtils'
 
 let totalCount = 0
 
-exports.get = (req: XP.Request): XP.Response => {
+export const get = (req: XP.Request): XP.Response => {
   const currentPath: string = req.params.currentPath ? req.params.currentPath : '/'
   const start: number = Number(req.params.start) ? Number(req.params.start) : 0
   const count: number = Number(req.params.count) ? Number(req.params.count) : 10

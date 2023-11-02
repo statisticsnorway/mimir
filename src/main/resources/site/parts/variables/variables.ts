@@ -1,12 +1,12 @@
 import { getChildren, query, type Content } from '/lib/xp/content'
-import { render } from '/lib/enonic/react4xp'
-import type { Article } from '/site/content-types'
 import { attachmentUrl, getContent, pageUrl, processHtml } from '/lib/xp/portal'
-import { formatDate } from '/lib/ssb/utils/dateUtils'
 import { localize } from '/lib/xp/i18n'
+import { render } from '/lib/enonic/react4xp'
+import { formatDate } from '/lib/ssb/utils/dateUtils'
 
-const { data } = __non_webpack_require__('/lib/util')
-const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
+import { data } from '/lib/util'
+import { renderError } from '/lib/ssb/error/error'
+import { type Article } from '/site/content-types'
 
 export function get(req: XP.Request): XP.Response {
   try {

@@ -18,7 +18,7 @@ jobs:
         uses: dawidd6/action-download-artifact@v2.27.0
         with:
           workflow: deploy_to_qa.yaml
-          branch: master
+          branch: develop
           run_number: ${{ github.event.inputs.gh_run_number }}
       - name: display downloads
         run: ls -R

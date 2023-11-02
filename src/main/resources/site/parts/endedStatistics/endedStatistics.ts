@@ -1,15 +1,13 @@
-import { render } from '/lib/enonic/react4xp'
-import type { EndedStatistics as EndedStatisticsPartConfig } from '.'
 import { get as getContentByKey, type Content } from '/lib/xp/content'
-import type { Phrases } from '/lib/types/language'
-import type { Statistics } from '/site/content-types'
 import { getComponent, getContent, pageUrl } from '/lib/xp/portal'
+import { type Phrases } from '/lib/types/language'
+import { render } from '/lib/enonic/react4xp'
 
-const {
-  data: { forceArray },
-} = __non_webpack_require__('/lib/util')
-const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
-const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
+import * as util from '/lib/util'
+import { getPhrases } from '/lib/ssb/utils/language'
+import { renderError } from '/lib/ssb/error/error'
+import { type Statistics } from '/site/content-types'
+import { type EndedStatistics as EndedStatisticsPartConfig } from '.'
 
 export function get(req: XP.Request) {
   try {
@@ -31,7 +29,7 @@ function renderPart(req: XP.Request): XP.Response {
   if (!part) throw Error('No part config found')
 
   const endedStatistics: EndedStatisticsPartConfig['relatedStatisticsOptions'] = part.relatedStatisticsOptions
-    ? forceArray(part.relatedStatisticsOptions)
+    ? util.data.forceArray(part.relatedStatisticsOptions)
     : []
 
   const phrases: Phrases = getPhrases(page) as Phrases

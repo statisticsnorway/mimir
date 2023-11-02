@@ -1,6 +1,7 @@
-import type { Article } from '/site/content-types'
-import type { Content, QueryDsl } from '/lib/xp/content'
+import { type Content, type QueryDsl } from '/lib/xp/content'
 import { pageUrl } from '/lib/xp/portal'
+import { connect, multiRepoConnect, Node, type MultiRepoConnection } from '/lib/xp/node'
+import { get as getContext, type PrincipalKey } from '/lib/xp/context'
 import {
   getMainSubjectBySubSubject,
   getMainSubjects,
@@ -9,10 +10,9 @@ import {
 } from '/lib/ssb/utils/subjectUtils'
 import { formatDate } from '/lib/ssb/utils/dateUtils'
 import { forceArray } from '/lib/ssb/utils/arrayUtils'
-import { connect, multiRepoConnect, Node, type MultiRepoConnection } from '/lib/xp/node'
-import { get as getContext, type PrincipalKey } from '/lib/xp/context'
-import type { ContentLight, Release } from '/lib/ssb/repo/statisticVariant'
+import { type ContentLight, type Release } from '/lib/ssb/repo/statisticVariant'
 import { notEmptyOrUndefined } from '/lib/ssb/utils/coreUtils'
+import { type Article } from '/site/content-types'
 
 export function getPublicationsNew(
   req: XP.Request,

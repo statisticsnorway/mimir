@@ -2,19 +2,24 @@ import { create as createRepo, get as getRepo } from '/lib/xp/repo'
 import { connect, CreateNodeParams, type RepoConnection } from '/lib/xp/node'
 import { type Instant, instant, type LocalDateTime, localDateTime } from '/lib/xp/value'
 import { run } from '/lib/xp/context'
+import { type QueryDsl, type Content, query } from '/lib/xp/content'
 import { getAllStatisticsFromRepo } from '/lib/ssb/statreg/statistics'
 import { contentArrayToRecord, forceArray } from '/lib/ssb/utils/arrayUtils'
 import { notEmptyOrUndefined, notNullOrUndefined } from '/lib/ssb/utils/coreUtils'
-import type { ReleasesInListing, StatisticInListing, VariantInListing } from '/lib/ssb/dashboard/statreg/types'
-import type { QueryDsl } from '/lib/xp/content'
-import { type Content, query } from '/lib/xp/content'
-import type { OmStatistikken, Statistics } from '/site/content-types'
+import {
+  type ReleasesInListing,
+  type StatisticInListing,
+  type VariantInListing,
+} from '/lib/ssb/dashboard/statreg/types'
 import { capitalize } from '/lib/ssb/utils/stringUtils'
 import { calculatePeriod, getNextRelease, getPreviousRelease, nextReleasedPassed } from '/lib/ssb/utils/variantUtils'
-import type { SubjectItem } from '/lib/ssb/utils/subjectUtils'
-
-const { queryForSubjects, getAllMainSubjectByContent, getAllSubSubjectByContent } =
-  __non_webpack_require__('/lib/ssb/utils/subjectUtils')
+import {
+  type SubjectItem,
+  queryForSubjects,
+  getAllMainSubjectByContent,
+  getAllSubSubjectByContent,
+} from '/lib/ssb/utils/subjectUtils'
+import { type OmStatistikken, type Statistics } from '/site/content-types'
 
 export const REPO_ID_STATREG_STATISTICS: 'no.ssb.statreg.statistics.variants' =
   'no.ssb.statreg.statistics.variants' as const

@@ -73,12 +73,12 @@ Direct your favorite browser to http://localhost:8080
 ```
 $ git checkout master
 $ git pull
-$ git checkout -b MIMIR-9999_add-feature-x
+$ git checkout -b MIM-9999_add-feature-x
 ... do changes ...
 $ git commit -a -m "detailed commit message"
 $ git status
 ... verify that correct files are included ...
-$ git push -u origin MIMIR-9999_add-feature-x
+$ git push -u origin MIM-9999_add-feature-x
 ... create pull-request to master ...
 ```
 

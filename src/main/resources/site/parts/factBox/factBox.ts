@@ -1,10 +1,9 @@
 import { getComponent, processHtml } from '/lib/xp/portal'
-import { render as r4XpRender } from '/lib/enonic/react4xp'
 import { get as getContentByKey, type Content } from '/lib/xp/content'
-import type { FactBox } from '/site/content-types'
+import { render as r4XpRender } from '/lib/enonic/react4xp'
+import { renderError } from '/lib/ssb/error/error'
 import { render } from '/lib/thymeleaf'
-
-const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
+import { type FactBox } from '/site/content-types'
 
 const view = resolve('./factBox.html')
 

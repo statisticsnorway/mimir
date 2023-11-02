@@ -24,7 +24,3 @@ export function renderError(req: XP.Request, title: string, exception: Error): X
     status: 400,
   }
 }
-
-export interface ErrorLib {
-  renderError: (req: XP.Request, title: string, exception: Error) => XP.Response
-}

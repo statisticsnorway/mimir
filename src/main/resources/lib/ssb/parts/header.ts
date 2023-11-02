@@ -1,11 +1,10 @@
-import { Language } from '/lib/types/language'
 import { get, Content } from '/lib/xp/content'
-import type { Header, MenuItem } from '/site/content-types'
-import { Link } from '/lib/ssb/parts/menu'
-const { assetUrl } = __non_webpack_require__('/lib/xp/portal')
-const { createMenuTree, parseTopLinks } = __non_webpack_require__('/lib/ssb/parts/menu')
-const { pathFromStringOrContent } = __non_webpack_require__('/lib/ssb/utils/utils')
-const { localize } = __non_webpack_require__('/lib/xp/i18n')
+import { assetUrl } from '/lib/xp/portal'
+import { localize } from '/lib/xp/i18n'
+import { Link, createMenuTree, parseTopLinks } from '/lib/ssb/parts/menu'
+import { pathFromStringOrContent } from '/lib/ssb/utils/utils'
+import { Language } from '/lib/types/language'
+import { type Header, type MenuItem } from '/site/content-types'
 
 export function getHeaderContent(language: Language): HeaderContent | undefined {
   if (language.headerId === undefined || language.headerId === null) {
@@ -70,8 +69,4 @@ export interface HeaderContent {
   skipToContentText: string
   closeText: string
   menuText: string
-}
-
-export interface HeaderLib {
-  getHeaderContent: (language: Language) => HeaderContent | undefined
 }

@@ -1,19 +1,17 @@
 import { get as getContentByKey, type Content } from '/lib/xp/content'
-import { render } from '/lib/enonic/react4xp'
-import type { Accordion } from '/site/content-types'
 import { getComponent, getContent, processHtml } from '/lib/xp/portal'
+import { sanitize } from '/lib/xp/common'
+import { render } from '/lib/enonic/react4xp'
 
-const {
-  data: { forceArray },
-} = __non_webpack_require__('/lib/util')
-const { sanitize } = __non_webpack_require__('/lib/xp/common')
-const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
+import * as util from '/lib/util'
+import { renderError } from '/lib/ssb/error/error'
+import { type Accordion } from '/site/content-types'
 
 export function get(req: XP.Request): XP.Response {
   try {
     const config = getComponent<XP.PartComponent.Accordion>()?.config
 
-    const accordionIds: Array<string> = config ? forceArray(config.accordion) : []
+    const accordionIds: Array<string> = config ? util.data.forceArray(config.accordion) : []
     return renderPart(req, accordionIds)
   } catch (e) {
     return renderError(req, 'Error in part', e)
@@ -45,10 +43,10 @@ function renderPart(req: XP.Request, accordionIds: Array<string>) {
 
     if (accordion) {
       const accordionContents: Accordion['accordions'] = accordion.data.accordions
-        ? forceArray(accordion.data.accordions).filter((accordion) => !!accordion)
+        ? util.data.forceArray(accordion.data.accordions).filter((accordion) => !!accordion)
         : []
       accordionContents.forEach((accordion) => {
-        const items: Accordion['accordions'] = accordion.items ? forceArray(accordion.items) : []
+        const items: Accordion['accordions'] = accordion.items ? util.data.forceArray(accordion.items) : []
 
         accordions.push({
           id: accordion.open && sanitize(accordion.open),

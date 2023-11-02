@@ -1,6 +1,6 @@
 import { query } from '/lib/xp/content'
 
-exports.get = (req: XP.Request): XP.Response | object => {
+export const get = (req: XP.Request): XP.Response | object => {
   const queryString: string = req.params.query ? req.params.query : ''
   const result = query({
     start: 0,
@@ -9,7 +9,7 @@ exports.get = (req: XP.Request): XP.Response | object => {
     query: `fulltext('_alltext', '${queryString}', 'AND')`,
     contentTypes: [`${app.name}:page`, `${app.name}:article`, `${app.name}:statistics`],
   })
-  if (result && result.hits) {
+  if (result?.hits) {
     const response: object = {
       body: {
         hits: result.hits.map((hit) => ({

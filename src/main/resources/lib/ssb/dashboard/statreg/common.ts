@@ -1,6 +1,6 @@
 import { request, HttpRequestParams, HttpResponse } from '/lib/http-client'
 
-const { Events, logUserDataQuery } = __non_webpack_require__('/lib/ssb/repo/query')
+import { Events, logUserDataQuery } from '/lib/ssb/repo/query'
 
 export function fetchStatRegData(dataKey: string, serviceUrl: string): HttpResponse {
   const requestParams: HttpRequestParams = {
@@ -36,8 +36,4 @@ export function fetchStatRegData(dataKey: string, serviceUrl: string): HttpRespo
   }
 
   return response
-}
-
-export interface StatRegCommonLib {
-  fetchStatRegData: (dataKey: string, serviceUrl: string) => HttpResponse
 }

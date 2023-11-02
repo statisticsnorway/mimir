@@ -17,7 +17,7 @@ jobs:
       - name: Download workflow artifact
         uses: dawidd6/action-download-artifact@v2.27.0
         with:
-          workflow: deploy_to_qa.yaml
+          workflow: deploy_to_prod.yaml
           branch: master
           run_number: ${{ github.event.inputs.gh_run_number }}
       - name: display downloads

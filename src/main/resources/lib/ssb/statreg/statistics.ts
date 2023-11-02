@@ -9,13 +9,11 @@ import {
 import { HttpResponse } from '/lib/http-client'
 import { format, isDateBetween, isSameDay, isAfter } from '/lib/ssb/utils/dateUtils'
 
-const { ensureArray } = __non_webpack_require__('/lib/ssb/utils/arrayUtils')
-const { fetchStatRegData } = __non_webpack_require__('/lib/ssb/dashboard/statreg/common')
-const { getStatRegBaseUrl, STATISTICS_URL, STATREG_BRANCH, STATREG_REPO } = __non_webpack_require__(
-  '/lib/ssb/dashboard/statreg/config'
-)
-const { getNode } = __non_webpack_require__('/lib/ssb/repo/common')
-const { Events, logUserDataQuery } = __non_webpack_require__('/lib/ssb/repo/query')
+import { ensureArray } from '/lib/ssb/utils/arrayUtils'
+import { fetchStatRegData } from '/lib/ssb/dashboard/statreg/common'
+import { getStatRegBaseUrl, STATISTICS_URL, STATREG_BRANCH, STATREG_REPO } from '/lib/ssb/dashboard/statreg/config'
+import { getNode } from '/lib/ssb/repo/common'
+import { Events, logUserDataQuery } from '/lib/ssb/repo/query'
 
 export const STATREG_REPO_STATISTICS_KEY = 'statistics'
 
@@ -203,17 +201,4 @@ export function getReleaseDatesByVariants(variants: Array<VariantInListing>): Re
   releaseDatesStatistic.previousRelease = previousReleases
 
   return releaseDatesStatistic
-}
-
-export interface StatRegStatisticsLib {
-  STATREG_REPO_STATISTICS_KEY: string
-  fetchStatistics: () => Array<StatisticInListing> | null
-  fetchStatisticsWithRelease: (before: Date) => Array<StatisticInListing>
-  fetchStatisticsWithReleaseToday: () => Array<StatisticInListing>
-  fetchStatisticsWithPreviousReleaseBetween: (from: Date, to: Date) => Array<StatisticInListing>
-  getAllStatisticsFromRepo: () => Array<StatisticInListing>
-  getStatisticByIdFromRepo: (statId: string | undefined) => StatisticInListing | undefined
-  getStatisticByShortNameFromRepo: (shortName: string | undefined) => StatisticInListing | undefined
-  getReleaseDatesByVariants: (variants: Array<VariantInListing>) => ReleaseDatesVariant
-  createMimirMockReleaseStatreg: () => StatisticInListing
 }

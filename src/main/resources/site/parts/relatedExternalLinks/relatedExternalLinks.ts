@@ -1,14 +1,13 @@
-import type { Content } from '/lib/xp/content'
-import { render } from '/lib/thymeleaf'
-import type { Phrases } from '/lib/types/language'
-import { render as r4xpRender } from '/lib/enonic/react4xp'
+import { type Content } from '/lib/xp/content'
 import { getContent } from '/lib/xp/portal'
-import type { Article, Statistics } from '/site/content-types'
-import type { RelatedExternalLinks } from '/site/mixins/relatedExternalLinks'
-
-const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
-const util = __non_webpack_require__('/lib/util')
-const { getPhrases } = __non_webpack_require__('/lib/ssb/utils/language')
+import { render } from '/lib/thymeleaf'
+import { type Phrases } from '/lib/types/language'
+import { render as r4xpRender } from '/lib/enonic/react4xp'
+import { renderError } from '/lib/ssb/error/error'
+import { getPhrases } from '/lib/ssb/utils/language'
+import * as util from '/lib/util'
+import { type Article, type Statistics } from '/site/content-types'
+import { type RelatedExternalLinks } from '/site/mixins/relatedExternalLinks'
 
 const view = resolve('./relatedExternalLinks.html')
 
@@ -42,7 +41,7 @@ function renderPart(req: XP.Request, externalLinks: RelatedExternalLinks['relate
   const page = getContent()
   if (!page) throw Error('No page found')
 
-  const phrases: Phrases = getPhrases(page)
+  const phrases = getPhrases(page) as Phrases
   const externalLinksTitle: string = phrases.externalLinksHeading
   if (!externalLinks || externalLinks.length === 0) {
     if (req.mode === 'edit' && page.type !== `${app.name}:article` && page.type !== `${app.name}:statistics`) {

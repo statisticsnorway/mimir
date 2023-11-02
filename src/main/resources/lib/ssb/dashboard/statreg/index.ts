@@ -1,21 +1,25 @@
-import { StatRegNode, StatRegRefreshResult } from '/lib/ssb/repo/statreg'
+import { run, type ContextParams } from '/lib/xp/context'
+import { localize } from '/lib/xp/i18n'
+import {
+  StatRegNode,
+  StatRegRefreshResult,
+  STATREG_NODES,
+  refreshStatRegData,
+  getStatRegNode,
+} from '/lib/ssb/repo/statreg'
 import { Socket, SocketEmitter } from '/lib/types/socket'
 import { StatRegLatestFetchInfoNode } from '/lib/ssb/statreg/eventLog'
-import { LogSummary } from '/lib/ssb/repo/eventLog'
+import { LogSummary, EVENT_LOG_BRANCH, EVENT_LOG_REPO, getQueryChildNodesStatus } from '/lib/ssb/repo/eventLog'
 import { Events, QueryInfo } from '/lib/ssb/repo/query'
-import { run, type ContextParams } from '/lib/xp/context'
 import { DashboardRefreshResultLogData } from '/lib/ssb/dashboard/dashboard'
 
-const { STATREG_NODES, refreshStatRegData, getStatRegNode } = __non_webpack_require__('/lib/ssb/repo/statreg')
-const { STATREG_REPO_CONTACTS_KEY } = __non_webpack_require__('/lib/ssb/statreg/contacts')
-const { STATREG_REPO_STATISTICS_KEY } = __non_webpack_require__('/lib/ssb/statreg/statistics')
-const { STATREG_REPO_PUBLICATIONS_KEY } = __non_webpack_require__('/lib/ssb/statreg/publications')
-const { showWarningIcon, users } = __non_webpack_require__('/lib/ssb/dashboard/dashboardUtils')
-const { dateToReadable, dateToFormat } = __non_webpack_require__('/lib/ssb/utils/utils')
-const { getNode, ENONIC_CMS_DEFAULT_REPO } = __non_webpack_require__('/lib/ssb/repo/common')
-const { EVENT_LOG_BRANCH, EVENT_LOG_REPO, getQueryChildNodesStatus } = __non_webpack_require__('/lib/ssb/repo/eventLog')
-const { localize } = __non_webpack_require__('/lib/xp/i18n')
-const { createOrUpdateStatisticsRepo } = __non_webpack_require__('/lib/ssb/repo/statisticVariant')
+import { STATREG_REPO_CONTACTS_KEY } from '/lib/ssb/statreg/contacts'
+import { STATREG_REPO_STATISTICS_KEY } from '/lib/ssb/statreg/statistics'
+import { STATREG_REPO_PUBLICATIONS_KEY } from '/lib/ssb/statreg/publications'
+import { showWarningIcon, users } from '/lib/ssb/dashboard/dashboardUtils'
+import { dateToReadable, dateToFormat } from '/lib/ssb/utils/utils'
+import { getNode, ENONIC_CMS_DEFAULT_REPO } from '/lib/ssb/repo/common'
+import { createOrUpdateStatisticsRepo } from '/lib/ssb/repo/statisticVariant'
 
 export type StatRegLatestFetchInfoNodeType = StatRegLatestFetchInfoNode | readonly StatRegLatestFetchInfoNode[] | null
 
@@ -39,7 +43,7 @@ function toDisplayString(key: string): string {
 function getStatRegStatus(key: string): StatRegStatus {
   const logNode: QueryInfo | null = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/queries/${key}`) as QueryInfo | null
   const statRegNode: StatRegNode | null = getStatRegNode(key)
-  const modifiedResult: string = (logNode && logNode.data.modifiedResult) || ''
+  const modifiedResult: string = logNode?.data?.modifiedResult || ''
   const logMessage: string = localize({
     key: modifiedResult || '',
     values: [modifiedResult || ''],
@@ -169,9 +173,4 @@ export interface StatRegJobInfo {
   showWarningIcon: boolean
   hasNewData: boolean
   infoMessage: string
-}
-
-export interface SSBStatRegLib {
-  setupHandlers: (socket: Socket, socketEmitter: SocketEmitter) => void
-  parseStatRegJobInfo: (refreshDataResult: Array<StatRegRefreshResult>) => Array<StatRegJobInfo>
 }

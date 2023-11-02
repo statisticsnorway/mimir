@@ -1,18 +1,14 @@
 import { type Node } from '/lib/xp/node'
 import { sleep } from '/lib/xp/task'
-import { JobEventNode } from '/lib/ssb/repo/job'
+import { JobEventNode, startJobLog, updateJobLog, JOB_STATUS_COMPLETE } from '/lib/ssb/repo/job'
 
-const {
-  data: { forceArray },
-} = __non_webpack_require__('/lib/util')
+import * as util from '/lib/util'
 
-const { getChildNodes, queryNodes, withConnection, getNode } = __non_webpack_require__('/lib/ssb/repo/common')
+import { getChildNodes, queryNodes, withConnection, getNode } from '/lib/ssb/repo/common'
 
-const { EVENT_LOG_BRANCH, EVENT_LOG_REPO } = __non_webpack_require__('/lib/ssb/repo/eventLog')
+import { EVENT_LOG_BRANCH, EVENT_LOG_REPO } from '/lib/ssb/repo/eventLog'
 
-const { startJobLog, updateJobLog, JOB_STATUS_COMPLETE } = __non_webpack_require__('/lib/ssb/repo/job')
-
-const { cronJobLog } = __non_webpack_require__('/lib/ssb/utils/serverLog')
+import { cronJobLog } from '/lib/ssb/utils/serverLog'
 
 type DeletedCount = { contentId: string; deletedCount: number }
 
@@ -48,7 +44,7 @@ export function deleteExpiredEventLogsForQueries(): void {
     resultParents.hits.forEach((parentHit) => {
       const children = getChildNodes(EVENT_LOG_REPO, EVENT_LOG_BRANCH, parentHit.id, count, false)
       if (children.total > maxLogsBeforeDeleting) {
-        nodeTree[parentHit.id] = forceArray(
+        nodeTree[parentHit.id] = util.data.forceArray(
           getNode(
             EVENT_LOG_REPO,
             EVENT_LOG_BRANCH,
@@ -105,8 +101,4 @@ export function deleteExpiredEventLogsForQueries(): void {
   })
 
   cronJobLog(`Delete expired logs for queries complete. Total expired logs deleted: ${totalExpiredLogsDeleted}`)
-}
-
-export interface EventLogLib {
-  deleteExpiredEventLogsForQueries: () => void
 }

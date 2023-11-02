@@ -1,13 +1,17 @@
 import { Node } from '/lib/xp/node'
-import { EditorCallback } from '/lib/ssb/repo/eventLog'
 import { User } from '/lib/xp/auth'
+import {
+  EditorCallback,
+  EVENT_LOG_BRANCH,
+  EVENT_LOG_REPO,
+  createEventLog,
+  updateEventLog,
+} from '/lib/ssb/repo/eventLog'
 import { HttpRequestParams, HttpResponse } from '/lib/http-client'
 import { TbmlDataUniform } from '/lib/types/xmlParser'
-const { dateToFormat } = __non_webpack_require__('/lib/ssb/utils/utils')
-const { getNode, withConnection, withLoggedInUserContext, withSuperUserContext } =
-  __non_webpack_require__('/lib/ssb/repo/common')
-const { EVENT_LOG_BRANCH, EVENT_LOG_REPO, createEventLog, updateEventLog } =
-  __non_webpack_require__('/lib/ssb/repo/eventLog')
+import { dateToFormat } from '/lib/ssb/utils/utils'
+import { getNode, withConnection, withLoggedInUserContext, withSuperUserContext } from '/lib/ssb/repo/common'
+
 export type QueryInfoNode = QueryInfo & Node
 
 export interface QueryInfo {
@@ -135,9 +139,4 @@ function updateQueryLogStatus(queryId: string, user: User, status: QueryStatus):
     }
     return node
   })
-}
-
-export interface RepoQueryLib {
-  logUserDataQuery: (queryId: string, status: QueryStatus) => EventInfo & Node
-  Events: typeof Events
 }
