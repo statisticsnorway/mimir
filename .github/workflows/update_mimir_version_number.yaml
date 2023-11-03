@@ -53,7 +53,7 @@ jobs:
           git commit -m "Update version number to v$NEW_VERSION"
       - name: Git push
         run: |
-          git push
+          git push --set-upstream origin $TEMP_BRANCH
           gh pr create --base "${{ github.event.pull_request.head.ref }}"
           gh pr review --approve
           gh pr merge --auto --squash
