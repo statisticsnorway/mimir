@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react'
 import { Col, Container, Row, Modal } from 'react-bootstrap'
 import { useSelector } from 'react-redux'
+import { AlertTriangle } from 'react-feather'
 import { ReactTable } from '/react4xp/dashboard/components/ReactTable'
 import { selectJobs, selectLoading } from '/react4xp/dashboard/containers/Jobs/selectors'
 import { selectContentStudioBaseUrl } from '/react4xp/dashboard/containers/HomePage/selectors'
@@ -94,9 +95,17 @@ export function Jobs() {
   }
 
   function renderRefreshDatasetJobTaskMessage(job, updated, error, skipped) {
+    const warningClass = error != 0 ? 'add-warning modal-trigger' : 'modal-trigger'
     return job.status !== 'STARTED' ? (
-      <span className='modal-trigger' onClick={() => openJobLogModal(job)}>
+      <span className={warningClass} onClick={() => openJobLogModal(job)}>
         {job.status} - Oppdaterte {updated} spørringer, {error} feilet og {skipped} ignorert
+        {error != 0 ? (
+          <span className='warningIcon'>
+            <AlertTriangle size='12' color='#FF4500' />
+          </span>
+        ) : (
+          ''
+        )}
       </span>
     ) : (
       <span>{status}</span>
