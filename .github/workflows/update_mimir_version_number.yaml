@@ -1,38 +1,42 @@
 name: 'Update MIMIR version number'
 on:
   pull_request:
-    types: [labeled, unlabeled]
+    types: [labeled]
   # branches:
   #   - 'master'
 
 jobs:
   update_pr:
     runs-on: ubuntu-latest
+    if: contains(fromJSON('["patch-release", "major-release", "minor-release"]'), github.event.label.name)
     steps:
-      # - name: Determine Version Bump Type
-      #   id: determine_bump_type
-      #   run: |
-      #     LABELS="${{ github.event.pull_request.labels.*.name }}"
-
-      #     if [[ $LABELS == *"major-release"* ]]; then
-      #       echo "major"
-      #     elif [[ $LABELS == *"minor-release"* ]]; then
-      #       echo "minor"
-      #     elif [[ $LABELS == *"patch-release"* ]]; then
-      #       echo "patch"
-      #     fi
+      - name: Determine Version Bump Type
+        id: determine_bump_type
+        run: |
+          TYPE=${{ github.event.label.name }}
+          echo "TYPE=${TYPE}" >> $GITHUB_ENV
       - name: Git checkout
         uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.ref }}
           token: "${{ secrets.GITHUB_TOKEN }}"
-      - name: Get Version Number
+      - name: Get old version Number
         run: |
           VERSION=$(awk -F' = ' '/^version/ {print $2}' ./gradle.properties)
           echo "VERSION=${VERSION}" >> $GITHUB_ENV
+      - name: Get new version number
+        run: |
+          if [[ $TYPE == "major-release" ]]; then
+            NEW_VERSION=$(echo $VERSION | awk -F'.' '{print $1+1".0.0"}') 
+          elif [[ $TYPE == "minor-release" ]]; then
+            NEW_VERSION=$(echo $VERSION | awk -F'.' '{print $1"."$2+1".0"}') 
+          elif [[ $TYPE == "patch-release" ]]; then
+            NEW_VERSION=$(echo $VERSION | awk -F'.' '{print $1"."$2"."$3+1}') 
+          fi
+          echo "NEW_VERSION=${NEW_VERSION}" >> $GITHUB_ENV
       - name: Set Version Number
         run: |
-          ex -s -c "%s/$VERSION/1.1.1/g|x" ./gradle.properties
+          ex -s -c "%s/$VERSION/$NEW_VERSION/g|x" ./gradle.properties
       - name: Git add
         run: |
           git config user.name "GitHub Actions Bot"
@@ -40,11 +44,10 @@ jobs:
           git add ./gradle.properties
       - name: Git commit
         run: |
-          git commit -m "Update version number to 1.1.1"
+          git commit -m "Update version number to $NEW_VERSION"
       - name: Git push
         run: |
           git push
       - name: Print Version Number
         run: |
-          # Access the version number from the environment variable
-          echo "Using Version Number in Later Step: $VERSION"
+          echo "Updated version number to: $NEW_VERSION"
