@@ -95,9 +95,9 @@ export function Jobs() {
   }
 
   function renderRefreshDatasetJobTaskMessage(job, updated, error, skipped) {
-    const warningClass = error != 0 ? 'add-warning modal-trigger' : 'modal-trigger'
+    const classes = error != 0 ? 'add-warning modal-trigger' : 'modal-trigger'
     return job.status !== 'STARTED' ? (
-      <span className={warningClass} onClick={() => openJobLogModal(job)}>
+      <span className={classes} onClick={() => openJobLogModal(job)}>
         {job.status} - Oppdaterte {updated} spørringer, {error} feilet og {skipped} ignorert
         {error != 0 ? (
           <span className='warningIcon'>
