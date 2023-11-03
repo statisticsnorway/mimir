@@ -32,6 +32,8 @@ jobs:
           ex -s -c "%s/$VERSION/1.1.1/g|x" ./gradle.properties
       - name: Git add
         run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "<>"
           git add ./gradle.properties
       - name: Git commit
         run: |
