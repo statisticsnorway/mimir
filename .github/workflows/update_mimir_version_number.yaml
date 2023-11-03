@@ -52,11 +52,13 @@ jobs:
         run: |
           git commit -m "Update version number to v$NEW_VERSION"
       - name: Git push
+        with:
+          GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         run: |
           git push --set-upstream origin $TEMP_BRANCH
-          gh pr create --base "${{ github.event.pull_request.head.ref }}"
+          gh pr create --title "Bump version number v$NEW_VERSION" --base "${{ github.event.pull_request.head.ref }}"
           gh pr review --approve
-          gh pr merge --auto --squash
+          gh pr merge --auto --squash --delete-branch
       - name: Print Version Number
         run: |
           echo "Updated version number to: v$NEW_VERSION"
