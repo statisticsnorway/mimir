@@ -1,0 +1,35 @@
+<part>
+    <display-name>Videoembed</display-name>
+    <form>
+        <input name="title" type="TextLine">
+            <label>Tittel på video (UU)</label>
+            <occurrences minimum="1" maximum="1"/>
+        </input>
+        <option-set name="provider">
+            <label>Platform</label>
+            <occurrences minimum="1" maximum="1"/>  
+            <options minimum="1" maximum="1">   
+                <option name="vimeo">  
+                    <label>Vimeo</label>
+                    <items>
+                        <input name="value" type="TextLine">
+                            <label>URL / ID</label>
+                            <occurrences minimum="1" maximum="1"/>
+                            <help-text>URL eller ID til videoen på Vimeo, støttede formater: 389682203, https://www.vimeo.com/389682203, https://player.vimeo.com/video/389682203</help-text>
+                        </input>
+                    </items>
+                </option>
+                <option name="youtube">
+                    <label>Youtube</label>
+                    <items>
+                        <input name="value" type="TextArea">
+                            <label>URL / ID</label>
+                            <occurrences minimum="1" maximum="1"/>
+                            <help-text>URL eller ID til videoen på Youtube, støttede formater: eL28YW-Y06o, https://www.youtube.com/watch?v=eL28YW-Y06o, http://youtube.com/watch?v=eL28YW-Y06o, https://www.youtube.com/embed/eL28YW-Y06o, https://youtu.be/eL28YW-Y06o</help-text>
+                        </input>
+                    </items>
+                </option>
+            </options>
+        </option-set>
+    </form>
+</part>
