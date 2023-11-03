@@ -29,7 +29,7 @@ jobs:
           echo "VERSION=${VERSION}" >> $GITHUB_ENV
       - name: Set Version Number
         run: |
-          ex -s -c '%s/${VERSION}/1.1.1/g|x' ./gradle.properties
+          ex -s -c "%s/$VERSION/1.1.1/g|x" ./gradle.properties
       - name: Git add
         run: |
           git add ./gradle.properties
