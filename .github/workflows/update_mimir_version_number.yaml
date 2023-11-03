@@ -8,7 +8,7 @@ on:
 jobs:
   update_pr:
     runs-on: ubuntu-latest
-    if: contains(fromJSON('["patch-release", "major-release", "minor-release"]'), github.event.label.name)
+    if: contains(fromJSON('["patch-release", "major-release", "minor-release"]'), github.event.label.name) && contains(fromJSON('["omsaggau", "annesiri", "ssb-cgn", "Glenruben", "johnnadeluy", "Carl-OW"]'), github.actor)
     steps:
       - name: Determine Version Bump Type
         id: determine_bump_type
@@ -37,17 +37,26 @@ jobs:
       - name: Set Version Number
         run: |
           ex -s -c "%s/$VERSION/$NEW_VERSION/g|x" ./gradle.properties
-      - name: Git add
+      - name: Create new branch
         run: |
           git config user.name "GitHub Actions Bot"
           git config user.email "<>"
+          NOW=$(date +'%Y-%m-%dT%H_%M_%S')
+          TEMP_BRANCH="${{ github.event.pull_request.head.sha }}__$NOW"
+          echo "TEMP_BRANCH=${TEMP_BRANCH}" >> $GITHUB_ENV
+          git checkout -b $TEMP_BRANCH
+      - name: Git add
+        run: |
           git add ./gradle.properties
       - name: Git commit
         run: |
-          git commit -m "Update version number to $NEW_VERSION"
+          git commit -m "Update version number to v$NEW_VERSION"
       - name: Git push
         run: |
           git push
+          gh pr create --base "${{ github.event.pull_request.head.ref }}"
+          gh pr review --approve
+          gh pr merge --auto --squash
       - name: Print Version Number
         run: |
-          echo "Updated version number to: $NEW_VERSION"
+          echo "Updated version number to: v$NEW_VERSION"
