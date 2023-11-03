@@ -27,6 +27,13 @@ jobs:
         run: |
           VERSION=$(awk -F' = ' '/^version/ {print $2}' ./gradle.properties)
           echo "VERSION=${VERSION}" >> $GITHUB_ENV
+      - name: Set Version Number
+        run: |
+          ex -s -c '%s/$VERSION/1.1.1/g|x' ./gradle.properties
+          echo "$(cat ./gradle.properties)"
+          git add ./gradle.properties
+          git commit -m "Update version number to 1.1.1"
+          git push
       - name: Print Version Number
         run: |
           # Access the version number from the environment variable
