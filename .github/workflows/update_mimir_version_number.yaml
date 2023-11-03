@@ -30,10 +30,15 @@ jobs:
       - name: Set Version Number
         run: |
           ex -s -c '%s/${VERSION}/1.1.1/g|x' ./gradle.properties
-          echo "$(cat ./gradle.properties)"
+      - name: Git add
+        run: |
           git add ./gradle.properties
+      - name: Git commit
+        run: |
           git commit -m "Update version number to 1.1.1"
-          git push
+      - name: Git push
+        run: |
+          git push 
       - name: Print Version Number
         run: |
           # Access the version number from the environment variable
