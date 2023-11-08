@@ -159,7 +159,7 @@ function getHtmlTableCells(row: HtmlTableRowRaw): Array<number | string> {
   })
 }
 
-function getTableViewData(table: Content<Table>, dataContent: TbmlDataUniform): TableView {
+export function getTableViewData(table: Content<Table> | undefined, dataContent: TbmlDataUniform): TableView {
   const title: Title = dataContent.tbml.metadata.title
   const notes: NotesUniform = dataContent.tbml.metadata.notes
   const sourceList: Array<Source> = dataContent?.tbml?.metadata?.sourceList || []
@@ -195,7 +195,7 @@ function getTableViewData(table: Content<Table>, dataContent: TbmlDataUniform): 
     tableClass: dataContent.tbml.presentation.table.class ? dataContent.tbml.presentation.table.class : 'statistics',
     tfoot: {
       footnotes: notes ? notes.note : [],
-      correctionNotice: table.data.correctionNotice || '',
+      correctionNotice: table?.data.correctionNotice ?? '',
     },
     noteRefs: uniqueNoteRefs,
     sourceList,
