@@ -303,11 +303,11 @@
         .error {
           color: $ssb-red-3
         }
-
       }
-      td:has(span.add-warning) {
+    }
+    
+    .error-row{
         background-color: yellow;
-      }
     }
   }
 

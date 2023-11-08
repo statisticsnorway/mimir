@@ -44,6 +44,7 @@ export function Jobs() {
       const jobTime = job.completionTime ? job.completionTime : job.startTime
       const ts = jobTime ? format(new Date(jobTime), 'dd.MM.yyyy HH:mm') : null
       const name = getTranslatedJobName(job.task)
+      const hasError = !!job.result?.result?.filter((ds) => ds.hasError).length
 
       const info = renderInfo(job)
       return {
@@ -52,6 +53,7 @@ export function Jobs() {
         name,
         nameSort: name ? name.toLowerCase() : job.task,
         info,
+        hasError,
       }
     })
   }
