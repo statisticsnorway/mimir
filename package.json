@@ -83,7 +83,6 @@
     "@types/validator": "~13.11.5",
     "@types/zipcelx": "~1.5.1",
     "@typescript-eslint/eslint-plugin": "~6.9.1",
-    "@typescript-eslint/parser": "~6.9.1",
     "autoprefixer": "~10.4.16",
     "axios": "~0.27.2",
     "babel-loader": "~9.1.3",
