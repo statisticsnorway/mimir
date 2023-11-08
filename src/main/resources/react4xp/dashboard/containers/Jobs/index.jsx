@@ -44,7 +44,7 @@ export function Jobs() {
       const jobTime = job.completionTime ? job.completionTime : job.startTime
       const ts = jobTime ? format(new Date(jobTime), 'dd.MM.yyyy HH:mm') : null
       const name = getTranslatedJobName(job.task)
-      const hasError = !!job.result?.result?.filter((ds) => ds.hasError).length
+      const hasError = !!job.result?.result?.some((ds) => ds.hasError)
 
       const info = renderInfo(job)
       return {
@@ -97,9 +97,8 @@ export function Jobs() {
   }
 
   function renderRefreshDatasetJobTaskMessage(job, updated, error, skipped) {
-    const classes = error != 0 ? 'add-warning modal-trigger' : 'modal-trigger'
     return job.status !== 'STARTED' ? (
-      <span className={classes} onClick={() => openJobLogModal(job)}>
+      <span className='modal-trigger' onClick={() => openJobLogModal(job)}>
         {job.status} - Oppdaterte {updated} spørringer, {error} feilet og {skipped} ignorert
         {error != 0 ? (
           <span className='warningIcon'>
