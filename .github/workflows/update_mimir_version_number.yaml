@@ -9,9 +9,9 @@ jobs:
   update_pr:
     runs-on: ubuntu-latest
     if: >-
-      contains(fromJSON('["patch-release", "major-release", "minor-release"]'), github.event.label.name) 
+      contains(fromJSON('["patch-release", "major-release", "minor-release"]'), github.event.label.name)
     steps:
-    - name: Print access
+      - name: Print access
         run: |
           echo ${{github.event.pull_request.base.repo.permissions[github.actor]}}
       - name: Determine Version Bump Type
