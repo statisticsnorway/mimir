@@ -66,6 +66,7 @@ declare global {
       export type Table = _PartComponent<"mimir:table">
       export type UpcomingReleases = _PartComponent<"mimir:upcomingReleases">
       export type Variables = _PartComponent<"mimir:variables">
+      export type VideoEmbed = _PartComponent<"mimir:videoEmbed">
     }
 
     namespace LayoutComponent {
