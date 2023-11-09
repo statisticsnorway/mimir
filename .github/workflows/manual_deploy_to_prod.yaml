@@ -15,7 +15,7 @@ jobs:
     environment: 'production'
     steps:
       - name: Download workflow artifact
-        uses: dawidd6/action-download-artifact@v2.27.0
+        uses: dawidd6/action-download-artifact@v2.28.0
         with:
           workflow: deploy_to_prod.yaml
           branch: master
