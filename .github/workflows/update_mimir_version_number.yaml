@@ -2,18 +2,15 @@ name: 'Update MIMIR version number'
 on:
   pull_request:
     types: [labeled]
-  # branches:
-  #   - 'master'
+  branches:
+    - 'master'
 
 jobs:
   update_pr:
     runs-on: ubuntu-latest
     if: >-
-      contains(fromJSON('["patch-release", "major-release", "minor-release"]'), github.event.label.name)
+      contains(fromJSON('["patch-release", "major-release", "minor-release"]'), github.event.label.name && contains(fromJSON('["omsaggau", "annesiri", "ssb-cgn", "Glenruben", "johnnadeluy", "Carl-OW"]'), github.actor))
     steps:
-      - name: Print access
-        run: |
-          echo ${{github.event.pull_request.base.repo.permissions[github.actor]}}
       - name: Determine Version Bump Type
         id: determine_bump_type
         run: |
