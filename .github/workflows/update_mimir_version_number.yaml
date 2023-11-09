@@ -8,7 +8,7 @@ on:
 jobs:
   update_pr:
     runs-on: ubuntu-latest
-    if: contains(fromJSON('["patch-release", "major-release", "minor-release"]'), github.event.label.name) && (pull_request.author_association == 'MEMBER' || pull_request.author_association == 'OWNER')
+    if: contains(fromJSON('["patch-release", "major-release", "minor-release"]'), github.event.label.name) && (github.event.pull_request.author_association == 'MEMBER' || github.event.pull_request.author_association == 'OWNER')
     steps:
       - name: Determine Version Bump Type
         id: determine_bump_type
