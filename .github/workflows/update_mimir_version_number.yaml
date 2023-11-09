@@ -8,7 +8,7 @@ on:
 jobs:
   update_pr:
     runs-on: ubuntu-latest
-    if: contains(fromJSON('["patch-release", "major-release", "minor-release"]'), github.event.label.name) && contains(fromJSON('["omsaggau", "annesiri", "ssb-cgn", "Glenruben", "johnnadeluy", "Carl-OW"]'), github.actor)
+    if: contains(fromJSON('["patch-release", "major-release", "minor-release"]'), github.event.label.name) && (pull_request.author_association == 'MEMBER' || pull_request.author_association == 'OWNER')
     steps:
       - name: Determine Version Bump Type
         id: determine_bump_type
@@ -19,7 +19,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.ref }}
-          token: "${{ secrets.GITHUB_TOKEN }}"
+          token: '${{ secrets.GITHUB_TOKEN }}'
       - name: Get old version Number
         run: |
           VERSION=$(awk -F' = ' '/^version/ {print $2}' ./gradle.properties)
@@ -41,8 +41,7 @@ jobs:
         run: |
           git config user.name "GitHub Actions Bot"
           git config user.email "<>"
-          NOW=$(date +'%Y-%m-%dT%H_%M_%S')
-          TEMP_BRANCH="${{ github.event.pull_request.head.sha }}__$NOW"
+          TEMP_BRANCH="Bump-version-number-v$NEW_VERSION"
           echo "TEMP_BRANCH=${TEMP_BRANCH}" >> $GITHUB_ENV
           git checkout -b $TEMP_BRANCH
       - name: Git add
@@ -53,12 +52,10 @@ jobs:
           git commit -m "Update version number to v$NEW_VERSION"
       - name: Git push
         env:
-          GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          GH_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
         run: |
           git push --set-upstream origin $TEMP_BRANCH
           gh pr create --title "Bump version number v$NEW_VERSION" --fill --base "${{ github.event.pull_request.head.ref }}"
-          gh pr review --approve
-          gh pr merge --auto --squash --delete-branch
       - name: Print Version Number
         run: |
           echo "Updated version number to: v$NEW_VERSION"
