@@ -1,19 +1,21 @@
 {
   "extends": [
-    "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:@typescript-eslint/recommended",
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended-type-checked",
+    "plugin:@typescript-eslint/stylistic-type-checked",
     "plugin:import/errors",
     "prettier"
   ],
+  "parser": "@typescript-eslint/parser",
   "plugins": [
     "@typescript-eslint",
     "prettier",
     "import"
   ],
   "rules": {
+    "no-unused-vars": "off", // https://github.com/typescript-eslint/typescript-eslint/issues/2621
     "@typescript-eslint/no-unused-vars": "error",
     "prettier/prettier": ["warn"],
-    "no-unused-vars": "off", // https://github.com/typescript-eslint/typescript-eslint/issues/2621
     "no-use-before-define": "off",
     "@typescript-eslint/ban-types": "off",
     "@typescript-eslint/no-var-requires": "off",
@@ -21,7 +23,7 @@
     "import/no-duplicates": ["error", {"prefer-inline": true}],
     "import/no-unresolved": "off",
     "import/consistent-type-specifier-style": ["error", "prefer-inline"],
-    "import/order": ["error", { 
+    "import/order": ["error", {
       "pathGroups": [
         { "pattern": "/lib/xp/**", "group": "external", "position": "after"},
         { "pattern": "/lib/**", "group": "internal", "position": "before"},
@@ -50,6 +52,7 @@
       ],
       "files": "*.jsx",
       "parserOptions": {
+        "project": true,
         "ecmaFeatures": {
           "jsx": true
         }
