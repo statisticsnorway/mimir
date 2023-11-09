@@ -1,7 +1,7 @@
 // Only used in map and menuDropdown parts
 
 import $ from 'jquery'
-import * as axios from 'axios'
+import axios from 'axios'
 
 import Highcharts from 'highcharts'
 import A11y from 'highcharts/modules/accessibility'

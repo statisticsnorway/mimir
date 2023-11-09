@@ -7,9 +7,10 @@ import {
 export const get = (req: XP.Request): XP.Response => {
   const start: number = Number(req.params.start) ? Number(req.params.start) : 0
   const count: number = Number(req.params.count) ? Number(req.params.count) : 10
-  const partConfig: RelatedFactPageConfig | undefined = req.params.partConfig
-    ? (JSON.parse(req.params.partConfig) as RelatedFactPageConfig)
-    : undefined
+  const partConfig: RelatedFactPageConfig = {
+    inputType: req.params['partConfig[inputType]'],
+    contentIdList: req.params['partConfig[contentIdList]'],
+  }
 
   const result: RelatedFactPages = parseRelatedFactPageData(partConfig, start, count)
 
