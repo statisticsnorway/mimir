@@ -10,9 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     if: >-
       contains(fromJSON('["patch-release", "major-release", "minor-release"]'), github.event.label.name) 
-      && (github.event.pull_request.base.repo.permissions[github.actor] == 'write' ||
-      github.event.pull_request.base.repo.permissions[github.actor] == 'admin')
     steps:
+    - name: Print access
+        run: |
+          echo ${{github.event.pull_request.base.repo.permissions[github.actor]}}
       - name: Determine Version Bump Type
         id: determine_bump_type
         run: |

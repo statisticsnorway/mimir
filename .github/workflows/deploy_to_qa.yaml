@@ -26,14 +26,14 @@ jobs:
           password: ${{ secrets.ENONIC_QA_PASS }}
           client_cert: ${{ secrets.ENONIC_CERT }}
           client_key: ${{ secrets.ENONIC_KEY }}
-          app_jar: "./build/libs/*.jar"
+          app_jar: './build/libs/*.jar'
       - name: Upload artifacts
         id: upload_artifacts
         if: success()
         uses: actions/upload-artifact@v3
         with:
           name: mimir-qa-${{ github.run_number }}
-          path: "./build/libs/*.jar"
+          path: './build/libs/*.jar'
       - name: Send success message to Slack
         id: slack_success
         if: success()
@@ -129,8 +129,8 @@ jobs:
         uses: actions/checkout@v3
       - name: Branch name and commit hash
         run: |
-              echo running on branch ${GITHUB_HEAD_REF##*/} or ${GITHUB_REF##*/}
-              echo running $(echo $GITHUB_SHA | cut -c1-8) and ${GITHUB_SHA}
+          echo running on branch ${GITHUB_HEAD_REF##*/} or ${GITHUB_REF##*/}
+          echo running $(echo $GITHUB_SHA | cut -c1-8) and ${GITHUB_SHA}
       - name: install mabl
         run: npm install -g @mablhq/mabl-cli
       - name: mabl end-to-end test - TEST
