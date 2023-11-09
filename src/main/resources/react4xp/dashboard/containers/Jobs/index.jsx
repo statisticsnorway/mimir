@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react'
 import { Col, Container, Row, Modal } from 'react-bootstrap'
 import { useSelector } from 'react-redux'
+import { AlertTriangle } from 'react-feather'
 import { ReactTable } from '/react4xp/dashboard/components/ReactTable'
 import { selectJobs, selectLoading } from '/react4xp/dashboard/containers/Jobs/selectors'
 import { selectContentStudioBaseUrl } from '/react4xp/dashboard/containers/HomePage/selectors'
@@ -43,6 +44,7 @@ export function Jobs() {
       const jobTime = job.completionTime ? job.completionTime : job.startTime
       const ts = jobTime ? format(new Date(jobTime), 'dd.MM.yyyy HH:mm') : null
       const name = getTranslatedJobName(job.task)
+      const hasError = !!job.result?.result?.some((ds) => ds.hasError)
 
       const info = renderInfo(job)
       return {
@@ -51,6 +53,7 @@ export function Jobs() {
         name,
         nameSort: name ? name.toLowerCase() : job.task,
         info,
+        hasError,
       }
     })
   }
@@ -97,6 +100,13 @@ export function Jobs() {
     return job.status !== 'STARTED' ? (
       <span className='modal-trigger' onClick={() => openJobLogModal(job)}>
         {job.status} - Oppdaterte {updated} spørringer, {error} feilet og {skipped} ignorert
+        {error != 0 ? (
+          <span className='warningIcon'>
+            <AlertTriangle size='12' color='#FF4500' />
+          </span>
+        ) : (
+          ''
+        )}
       </span>
     ) : (
       <span>{status}</span>
