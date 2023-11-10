@@ -83,9 +83,11 @@ export function formatDate(date: string | undefined, formatType: string, languag
 
     // Track errors in logs
     if (dateFnsResult && dateFnsResult !== libTimeResult) {
-      log.info(
-        `Error in formatDate, got different result with date-fns and lib-time when formatting (${date} - ${parsedDate}) to ${formatType}. date-fns: ${dateFnsResult}, lib-time: ${libTimeResult}`
-      )
+      if (app.config?.['ssb.log.dateFormat'] === 'true') {
+        log.info(
+          `Error in formatDate, got different result with date-fns and lib-time when formatting (${date} - ${parsedDate}) to ${formatType}. date-fns: ${dateFnsResult}, lib-time: ${libTimeResult}`
+        )
+      }
     }
 
     return dateFnsResult || libTimeResult
