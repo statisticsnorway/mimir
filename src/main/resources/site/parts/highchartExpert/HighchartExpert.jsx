@@ -14,39 +14,23 @@ if (typeof Highcharts === 'object') {
   require('highcharts/modules/accessibility')(Highcharts)
 }
 
-/* TODO list
- * Display highcharts in edit mode
- * Show highcharts draft in content type edit mode button
- * Perfomance - highcharts react takes a bit longer to load
- * --- UU improvements ---
- * Show figure as highchart table functionality
- * Fix open xls exported file without dangerous file popup
- * Thousand seperator and decimal point corrections to highchart table
- * Option to replace Category in highchart table row
- * Show last point symbol for line graphs
- * ...etc
- * --- Rest ---
- * Cleanup - are there any files and lines of code we can delete after full conversion?
- */
 function Highchart(props) {
-  function renderHighcharts() {
-    const configProp = JSON.parse(props.config)
+  const configProp = JSON.parse(props.config)
 
-    const config = {
-      ...configProp,
-      ...accessibilityLang,
-    }
+  const config = {
+    ...configProp,
+    ...accessibilityLang,
+  }
 
-    return (
-      <Row key={`highchart-1231231`}>
+  return (
+    <Container>
+      <Row>
         <Col className='col-12'>
           <HighchartsReact highcharts={Highcharts} options={config} />
         </Col>
       </Row>
-    )
-  }
-
-  return <Container>{renderHighcharts()}</Container>
+    </Container>
+  )
 }
 
 Highchart.propTypes = {
