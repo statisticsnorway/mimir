@@ -1,5 +1,5 @@
 <part>
-  <display-name>Highchart ekspert</display-name>
+  <display-name>Highchart ekspert (TIL TESTING)</display-name>
   <form>
     <input name="config" type="TextArea">
       <label>JSON Konfigurasjon</label>
