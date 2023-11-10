@@ -7,17 +7,18 @@ import { renderError } from '/lib/ssb/error/error'
 export function get(req: XP.Request): XP.Response {
   try {
     const paramTbmlId = req.params.tbmlId
-    return renderPart(req, paramTbmlId)
+    const language: string = req.params.lang ? req.params.lang : 'no'
+    return renderPart(req, language, paramTbmlId)
   } catch (e) {
     return renderError(req, 'Error in part', e)
   }
 }
 
-function renderPart(req: XP.Request, tbmlId?: string): XP.Response {
+function renderPart(req: XP.Request, language: string, tbmlId?: string): XP.Response {
   const baseUrl: string = app.config?.['ssb.tbprocessor.baseUrl']
     ? (app.config['ssb.tbprocessor.baseUrl'] as string)
     : 'https://i.ssb.no/tbprocessor'
-  const tbProceessorUrl = `${baseUrl}/process/tbmldata/${tbmlId}`
+  const tbProceessorUrl = `${baseUrl}/process/tbmldata/${tbmlId}?lang=${language}`
   const tbmlData: TbprocessorParsedResponse<TbmlDataUniform | TbmlSourceListUniform> = getTbmlData(tbProceessorUrl)
   const tableData: TbmlDataUniform | undefined = (tbmlData.parsedBody as TbmlDataUniform) || undefined
 
@@ -28,6 +29,7 @@ function renderPart(req: XP.Request, tbmlId?: string): XP.Response {
   }
 
   const table: TableView = getTableViewData(undefined, tableData)
+  //log.info('Tabelldata: ' + JSON.stringify(table, null, 4))
 
   const props: TableProps = {
     displayName: `Forhåndsvisning TBML ${tbmlId}`,
@@ -37,7 +39,7 @@ function renderPart(req: XP.Request, tbmlId?: string): XP.Response {
       tbody: table.tbody,
       tfoot: table.tfoot,
       tableClass: table.tableClass,
-      language: 'nb',
+      language: language === 'en' ? 'en' : 'no',
       noteRefs: table.noteRefs,
     },
   }
