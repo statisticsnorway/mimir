@@ -69,7 +69,7 @@ export function parseTable(
     if (dataSource && dataSource._selected === DataSourceType.TBPROCESSOR) {
       const tbmlData: TbmlDataUniform = data as TbmlDataUniform
       if (tbmlData?.tbml?.metadata && tbmlData?.tbml?.presentation) {
-        tableViewData = getTableViewData(table, tbmlData)
+        tableViewData = getTableViewData(tbmlData, table)
       }
     }
 
@@ -159,7 +159,7 @@ function getHtmlTableCells(row: HtmlTableRowRaw): Array<number | string> {
   })
 }
 
-export function getTableViewData(table: Content<Table> | undefined, dataContent: TbmlDataUniform): TableView {
+export function getTableViewData(dataContent: TbmlDataUniform, table?: Content<Table>): TableView {
   const title: Title = dataContent.tbml.metadata.title
   const notes: NotesUniform = dataContent.tbml.metadata.notes
   const sourceList: Array<Source> = dataContent?.tbml?.metadata?.sourceList || []
