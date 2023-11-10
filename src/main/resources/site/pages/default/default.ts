@@ -128,29 +128,32 @@ export function get(req: XP.Request): XP.Response {
   if (preview && preview.pageContributions) {
     pageContributions = preview.pageContributions
   }
-
   const language: Language = getLanguage(page) as Language
   const menuCacheLanguage: string = language.code === 'en' ? 'en' : 'nb'
-  const headerContent: MenuContent | unknown = fromMenuCache(req, `header_${menuCacheLanguage}`, () => {
-    return getHeaderContent(language)
-  })
-  const header = r4xpRender(
-    'Header',
-    {
-      ...(headerContent as object),
-      language: language,
-      searchResult: req.params.sok,
-    },
-    req,
-    {
-      id: 'header',
-      body: '<div id="header"></div>',
-      pageContributions,
-    }
-  )
+  const hideHeader = pageConfig.hideHeader
+  let header
+  if (!hideHeader) {
+    const headerContent: MenuContent | unknown = fromMenuCache(req, `header_${menuCacheLanguage}`, () => {
+      return getHeaderContent(language)
+    })
+    header = r4xpRender(
+      'Header',
+      {
+        ...(headerContent as object),
+        language: language,
+        searchResult: req.params.sok,
+      },
+      req,
+      {
+        id: 'header',
+        body: '<div id="header"></div>',
+        pageContributions,
+      }
+    )
 
-  if (header) {
-    pageContributions = header.pageContributions
+    if (header) {
+      pageContributions = header.pageContributions
+    }
   }
 
   const footerContent: FooterContent | unknown = fromMenuCache(req, `footer_${menuCacheLanguage}`, () => {
@@ -241,10 +244,11 @@ export function get(req: XP.Request): XP.Response {
     GA_TRACKING_ID,
     GTM_TRACKING_ID,
     GTM_AUTH,
-    headerBody: header ? header.body : undefined,
-    footerBody: footer ? footer.body : undefined,
+    headerBody: header?.body,
+    footerBody: footer?.body,
     ...metaInfo,
     breadcrumbsReactId: breadcrumbId,
+    hideHeader,
     hideBreadcrumb,
     enabledEnalyzerScript: isEnabled('enable-enalyzer-script', true, 'ssb'),
     enabledChatScript: isEnabled('enable-chat-script', true, 'ssb') && innrapporteringRegexp.exec(page._path),
@@ -638,6 +642,7 @@ interface DefaultModel {
   headerBody: string | undefined
   footerBody: string | undefined
   breadcrumbsReactId: string | undefined
+  hideHeader: boolean
   hideBreadcrumb: boolean
   enabledEnalyzerScript: boolean
   enabledChatScript: boolean

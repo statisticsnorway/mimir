@@ -29,6 +29,9 @@
         </input>
       </items>
     </field-set>
+    <input name="hideHeader" type="CheckBox">
+      <label>Skjul Toppmeny</label>
+    </input>
     <input name="hide_breadcrumb" type="CheckBox">
       <label>Skjul Brødsmulesti</label>
     </input>
