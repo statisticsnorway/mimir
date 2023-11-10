@@ -1,0 +1,62 @@
+name: 'Update MIMIR version number'
+on:
+  pull_request:
+    types: [labeled]
+  branches:
+    - 'master'
+
+jobs:
+  update_pr:
+    runs-on: ubuntu-latest
+    if: >-
+      contains(fromJSON('["patch-release", "major-release", "minor-release"]'), github.event.label.name && contains(fromJSON('["omsaggau", "annesiri", "ssb-cgn", "Glenruben", "johnnadeluy", "Carl-OW"]'), github.actor))
+    steps:
+      - name: Determine Version Bump Type
+        id: determine_bump_type
+        run: |
+          TYPE=${{ github.event.label.name }}
+          echo "TYPE=${TYPE}" >> $GITHUB_ENV
+      - name: Git checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: '${{ secrets.GITHUB_TOKEN }}'
+      - name: Get old version Number
+        run: |
+          VERSION=$(awk -F' = ' '/^version/ {print $2}' ./gradle.properties)
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+      - name: Get new version number
+        run: |
+          if [[ $TYPE == "major-release" ]]; then
+            NEW_VERSION=$(echo $VERSION | awk -F'.' '{print $1+1".0.0"}') 
+          elif [[ $TYPE == "minor-release" ]]; then
+            NEW_VERSION=$(echo $VERSION | awk -F'.' '{print $1"."$2+1".0"}') 
+          elif [[ $TYPE == "patch-release" ]]; then
+            NEW_VERSION=$(echo $VERSION | awk -F'.' '{print $1"."$2"."$3+1}') 
+          fi
+          echo "NEW_VERSION=${NEW_VERSION}" >> $GITHUB_ENV
+      - name: Set Version Number
+        run: |
+          ex -s -c "%s/$VERSION/$NEW_VERSION/g|x" ./gradle.properties
+      - name: Create new branch
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "<>"
+          TEMP_BRANCH="Bump-version-number-v$NEW_VERSION"
+          echo "TEMP_BRANCH=${TEMP_BRANCH}" >> $GITHUB_ENV
+          git checkout -b $TEMP_BRANCH
+      - name: Git add
+        run: |
+          git add ./gradle.properties
+      - name: Git commit
+        run: |
+          git commit -m "Update version number to v$NEW_VERSION"
+      - name: Git push
+        env:
+          GH_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+        run: |
+          git push --set-upstream origin $TEMP_BRANCH
+          gh pr create --title "Bump version number v$NEW_VERSION" --fill --base "${{ github.event.pull_request.head.ref }}"
+      - name: Print Version Number
+        run: |
+          echo "Updated version number to: v$NEW_VERSION"
