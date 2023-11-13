@@ -10,11 +10,8 @@ import { imageUrl, getImageAlt } from '/lib/ssb/utils/imageUtils'
 
 import { renderError } from '/lib/ssb/error/error'
 
-// import { render } from '/lib/thymeleaf'
 import { render as r4XpRender } from '/lib/enonic/react4xp'
 import { type Page } from '/site/content-types'
-
-//const view = resolve('./banner.html')
 
 export function get(req: XP.Request): XP.Response {
   try {
@@ -49,29 +46,6 @@ function renderPart(req: XP.Request): XP.Response {
   // Remove uppercase for page title when accompanied by "Fakta om"
   const factPageTitle = `${subTitleFactPage} ${page.displayName}`.toLowerCase()
   const imageAlt = part.config.image ? getImageAlt(part.config.image) : undefined
-
-  // const body = render(view, {
-  //   ...imgSrcSet,
-  //   pageDisplayName: page.displayName,
-  //   bannerImageAltText: imageAlt ? imageAlt : ' ',
-  //   bannerImage: part.config.image
-  //     ? imageUrl({
-  //         id: part.config.image,
-  //         scale: 'block(350,100)',
-  //         format: 'jpg',
-  //       })
-  //     : undefined,
-  //   municipalityTitle: municipality ? municipalityName + ' (' + municipality.county.name + ')' : undefined,
-  //   pageType,
-  //   subTitleFactPage,
-  //   factPageTitle: factPageTitle.charAt(0).toUpperCase() + factPageTitle.slice(1),
-  //   // generalTitle: part.config.pageType._selected === 'general',
-  // })
-
-  // return {
-  //   body,
-  //   contentType: 'text/html',
-  // }
 
   const props = {
     ...imgSrcSet,
