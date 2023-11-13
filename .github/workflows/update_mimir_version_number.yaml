@@ -2,8 +2,8 @@ name: 'Update MIMIR version number'
 on:
   pull_request:
     types: [labeled]
-  branches:
-    - 'master'
+    branches:
+      - 'master'
 
 jobs:
   update_pr:
