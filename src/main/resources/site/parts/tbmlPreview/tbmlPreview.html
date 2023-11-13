@@ -1,5 +1,6 @@
 <section class="xp-part part-tbml-preview">
     <h1 data-th-text="${title}"></h1>
-    <span data-th-text="${language}"></span>
+    <p data-th-text="${subTitle}"></p>
+    <p data-th-if="${errorMessage}" data-th-text="${errorMessage}"></p>
     <div class="table-wrapper" data-th-id="${tbmlPreviewId}" data-th-remove="tag"/>
 </section>
