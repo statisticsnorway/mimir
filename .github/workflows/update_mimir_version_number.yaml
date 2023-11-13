@@ -17,7 +17,7 @@ jobs:
           TYPE=${{ github.event.label.name }}
           echo "TYPE=${TYPE}" >> $GITHUB_ENV
       - name: Git checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.ref }}
           token: '${{ secrets.GITHUB_TOKEN }}'
