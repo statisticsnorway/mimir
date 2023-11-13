@@ -2,7 +2,6 @@ import { type Content } from '/lib/xp/content'
 import { getContent, getComponent } from '/lib/xp/portal'
 import * as i18nLib from '/lib/xp/i18n'
 import {
-  MunicipalityWithCounty,
   RequestWithCode,
   getMunicipality,
   removeCountyFromMunicipalityName,
@@ -11,11 +10,11 @@ import { imageUrl, getImageAlt } from '/lib/ssb/utils/imageUtils'
 
 import { renderError } from '/lib/ssb/error/error'
 
-import { render } from '/lib/thymeleaf'
+// import { render } from '/lib/thymeleaf'
+import { render as r4XpRender } from '/lib/enonic/react4xp'
 import { type Page } from '/site/content-types'
-import { type Banner as BannerPartConfig } from '.'
 
-const view = resolve('./banner.html')
+//const view = resolve('./banner.html')
 
 export function get(req: XP.Request): XP.Response {
   try {
@@ -35,26 +34,46 @@ function renderPart(req: XP.Request): XP.Response {
 
   const part = getComponent<XP.PartComponent.Banner>()
   if (!part) throw Error('No component found')
-  const pageType: BannerPartConfig['pageType'] = part.config.pageType
-  const factsAbout: string = i18nLib.localize({
+  const pageType = part.config.pageType
+  const factsAbout = i18nLib.localize({
     key: 'factsAbout',
   })
   let subTitleFactPage = ''
   if ('faktaside' in pageType) {
     subTitleFactPage = pageType.faktaside.subTitle ? pageType.faktaside.subTitle : factsAbout
   }
-  const municipality: MunicipalityWithCounty | undefined =
-    pageType._selected === 'kommunefakta' ? getMunicipality(req as RequestWithCode) : undefined
-  const municipalityName: string | undefined = municipality
-    ? removeCountyFromMunicipalityName(municipality.displayName)
-    : undefined
-  const imgSrcSet: ImageConf | undefined = part.config.image ? imageSrcSet(part.config.image) : undefined
+  const municipality = pageType._selected === 'kommunefakta' ? getMunicipality(req as RequestWithCode) : undefined
+  const municipalityName = municipality ? removeCountyFromMunicipalityName(municipality.displayName) : undefined
+  const imgSrcSet = part.config.image ? imageSrcSet(part.config.image) : undefined
 
   // Remove uppercase for page title when accompanied by "Fakta om"
-  const factPageTitle: string = `${subTitleFactPage} ${page.displayName}`.toLowerCase()
-  const imageAlt: string | undefined = part.config.image ? getImageAlt(part.config.image) : undefined
+  const factPageTitle = `${subTitleFactPage} ${page.displayName}`.toLowerCase()
+  const imageAlt = part.config.image ? getImageAlt(part.config.image) : undefined
 
-  const body: string = render(view, {
+  // const body = render(view, {
+  //   ...imgSrcSet,
+  //   pageDisplayName: page.displayName,
+  //   bannerImageAltText: imageAlt ? imageAlt : ' ',
+  //   bannerImage: part.config.image
+  //     ? imageUrl({
+  //         id: part.config.image,
+  //         scale: 'block(350,100)',
+  //         format: 'jpg',
+  //       })
+  //     : undefined,
+  //   municipalityTitle: municipality ? municipalityName + ' (' + municipality.county.name + ')' : undefined,
+  //   pageType,
+  //   subTitleFactPage,
+  //   factPageTitle: factPageTitle.charAt(0).toUpperCase() + factPageTitle.slice(1),
+  //   // generalTitle: part.config.pageType._selected === 'general',
+  // })
+
+  // return {
+  //   body,
+  //   contentType: 'text/html',
+  // }
+
+  const props = {
     ...imgSrcSet,
     pageDisplayName: page.displayName,
     bannerImageAltText: imageAlt ? imageAlt : ' ',
@@ -66,19 +85,24 @@ function renderPart(req: XP.Request): XP.Response {
         })
       : undefined,
     municipalityTitle: municipality ? municipalityName + ' (' + municipality.county.name + ')' : undefined,
+    selectedPageType: pageType._selected,
     pageType,
     subTitleFactPage,
-    factPageTitle: factPageTitle.charAt(0).toUpperCase() + factPageTitle.slice(1),
-  })
-
-  return {
-    body,
-    contentType: 'text/html',
+    factPageTitle: 'faktaside' in pageType && pageType.faktaside.title,
+    fullFactPageTitle: factPageTitle.charAt(0).toUpperCase() + factPageTitle.slice(1),
+    generalPageTitle: 'general' in pageType && pageType.general.generalTitle,
   }
+
+  return r4XpRender('site/parts/banner/banner', props, req, {
+    body: `<section
+    class="xp-part part-banner position-relative clearfix col-12 searchabletext${
+      pageType._selected === 'faktaside' ? ' factpage-banner' : ''
+    }"></section>`,
+  })
 }
 
 // Inefficient, should only do one imageUrl call and then string replace the width
-function imageSrcSet(imageId: string): ImageConf {
+function imageSrcSet(imageId: string) {
   const widths = [3840, 2560, 2000, 1500, 1260, 800, 650]
   const srcset = widths
     .map(
@@ -100,9 +124,4 @@ function imageSrcSet(imageId: string): ImageConf {
     sizes,
     srcset,
   }
-}
-
-interface ImageConf {
-  sizes: string
-  srcset: string
 }
