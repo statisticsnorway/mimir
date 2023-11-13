@@ -16,8 +16,8 @@ export function get(req: XP.Request): XP.Response {
 }
 
 function renderPart(req: XP.Request): XP.Response {
-  const tbmlId = req.params.tbml
-  const language: string = req.params.lang ? req.params.lang : 'no'
+  const tbmlId = req.params.tbmlid
+  const language: string = req.params.sprak ? req.params.sprak : 'no'
   const baseUrl: string = app.config?.['ssb.tbprocessor.baseUrl']
     ? (app.config['ssb.tbprocessor.baseUrl'] as string)
     : 'https://i.ssb.no/tbprocessor'
