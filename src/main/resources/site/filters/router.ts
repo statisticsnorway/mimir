@@ -64,7 +64,7 @@ export function filter(req: XP.Request, next: (req: XP.Request) => XP.Response):
     if (site) {
       targetResponse.body = (targetResponse.body as string).replace(
         /(<title>)(.*?)(<\/title>)/i,
-        `<title>${pageTitle} - ${site.displayName}</title>`
+        `<title>${pageTitle} – ${site.displayName}</title>`
       )
     }
   }
