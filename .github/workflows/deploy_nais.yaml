@@ -3,10 +3,8 @@ name: NAIS Deploy
 
 on:
   workflow_run:
-    types:
-      - "completed"
-    workflows:
-      - "Deploy to Test"
+    workflows: [Deploy to Test]
+    types: [completed]
 
 jobs:
   nais-deploy:
