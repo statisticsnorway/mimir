@@ -32,10 +32,10 @@ jobs:
 
           echo "ARTIFACT URL: $ARTIFACT_URL"
           echo "ARTIFACT_URL=$ARTIFACT_URL" >> "$GITHUB_ENV"
-      - uses: nais/deploy/actions/deploy@v1
-        env:
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-          CLUSTER: staging
-          RESOURCE: nais.yaml
-          VAR: image=todoTag,artifactUrl=${{ env.ARTIFACT_URL }}
-          DEPLOY_SERVER: deploy.ssb.cloud.nais.io:443
+      # - uses: nais/deploy/actions/deploy@v1
+      #   env:
+      #     APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+      #     CLUSTER: staging
+      #     RESOURCE: nais.yaml
+      #     VAR: image=todoTag,artifactUrl=${{ env.ARTIFACT_URL }}
+      #     DEPLOY_SERVER: deploy.ssb.cloud.nais.io:443
