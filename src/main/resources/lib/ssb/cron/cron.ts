@@ -2,14 +2,7 @@
 import { createUser, findUsers } from '/lib/xp/auth'
 import { type Content } from '/lib/xp/content'
 import { run, type ContextParams } from '/lib/xp/context'
-import {
-  create,
-  get as getScheduledJob,
-  list as listScheduledJobs,
-  modify,
-  type ScheduledJob,
-  delete as deleteScheduledJob,
-} from '/lib/xp/scheduler'
+import { create, get as getScheduledJob, modify, delete as deleteScheduledJob } from '/lib/xp/scheduler'
 import { isMaster } from '/lib/xp/cluster'
 import {
   type JobEventNode,
@@ -48,8 +41,6 @@ const createUserContext: ContextParams = {
     idProvider: 'system',
   },
 }
-
-const newPublishJobEnabled: boolean = isEnabled('publishJob-lib-sheduler', false, 'ssb')
 
 export const cronContext: ContextParams = {
   // Master context (XP)
@@ -317,99 +308,23 @@ export function setupCronJobs(): void {
   const datasetPublishCron: string =
     app.config && app.config['ssb.cron.publishDataset'] ? app.config['ssb.cron.publishDataset'] : '50 05 * * *'
 
-  // Use feature-toggling to switch to lib-sheduler when testet in QA
-  if (!newPublishJobEnabled) {
-    log.info('Run old datasetPublishCron cron-library')
-    // publish dataset cron job
-    schedule({
-      name: 'Dataset publish',
-      cron: datasetPublishCron,
-      callback: () => {
-        libScheduleTestLog('datasetPublishCronTest', datasetPublishCron)
-        runOnMasterOnly(publishDataset)
-      },
-      context: cronContext,
-    })
-    libScheduleTest(
-      { name: 'datasetPublishCronTest', cron: '50 07 * * *', timeZone: 'Europe/Oslo' },
-      datasetPublishCron
-    )
-  } else {
-    log.info('Run new dailyPublishJob lib-scheduler')
-  }
+  log.info('Run old datasetPublishCron cron-library')
+  // publish dataset cron job
+  schedule({
+    name: 'Dataset publish',
+    cron: datasetPublishCron,
+    callback: () => {
+      libScheduleTestLog('datasetPublishCronTest', datasetPublishCron)
+      runOnMasterOnly(publishDataset)
+    },
+    context: cronContext,
+  })
+  libScheduleTest({ name: 'datasetPublishCronTest', cron: '50 07 * * *', timeZone: 'Europe/Oslo' }, datasetPublishCron)
 
   // Task
   if (isMaster()) {
     const timezone: string =
       app.config && app.config['ssb.cron.timezone'] ? app.config['ssb.cron.timezone'] : 'Europe/Oslo'
-    // publish dataset sheduler job
-    run(cronContext, () => {
-      const jobExists = !!getScheduledJob({
-        name: 'dailyPublishJob',
-      })
-      if (jobExists) {
-        modify({
-          name: 'dailyPublishJob',
-          editor: (job) => {
-            job.enabled = newPublishJobEnabled
-            job.schedule.value = datasetPublishCron
-            if (job.schedule.type === 'CRON') {
-              job.schedule.timeZone = timezone
-            }
-            return job
-          },
-        })
-      } else {
-        create({
-          name: 'dailyPublishJob',
-          descriptor: `${app.name}:publishJob`,
-          description: 'Publishing all dataset for statistics',
-          user: `user:system:cronjob`,
-          enabled: newPublishJobEnabled,
-          schedule: {
-            type: 'CRON',
-            value: datasetPublishCron,
-            timeZone: timezone,
-          },
-        })
-      }
-      const schedulerList: Array<ScheduledJob> = listScheduledJobs()
-      cronJobLog(JSON.stringify(schedulerList, null, 2))
-    })
-
-    // Test sheduler task
-    run(cronContext, () => {
-      const testTaskCron: string =
-        app.config && app.config['ssb.cron.testTask'] ? app.config['ssb.cron.testTask'] : '0 10 * * *'
-      const jobExists = !!getScheduledJob({
-        name: 'testTask',
-      })
-      if (jobExists) {
-        modify({
-          name: 'testTask',
-          editor: (job) => {
-            job.schedule.value = testTaskCron
-            if (job.schedule.type === 'CRON') {
-              job.schedule.timeZone = timezone
-            }
-            return job
-          },
-        })
-      } else {
-        create({
-          name: 'testTask',
-          descriptor: `${app.name}:testTask`,
-          description: 'Testing task',
-          user: `user:system:cronjob`,
-          enabled: true,
-          schedule: {
-            type: 'CRON',
-            value: testTaskCron,
-            timeZone: timezone,
-          },
-        })
-      }
-    })
 
     // Update calculators
     run(cronContext, () => {
