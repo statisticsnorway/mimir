@@ -1,5 +1,5 @@
 import { type Content } from '/lib/xp/content'
-import { getContent, getComponent } from '/lib/xp/portal'
+import { assetUrl, getContent, getComponent } from '/lib/xp/portal'
 import * as i18nLib from '/lib/xp/i18n'
 import {
   RequestWithCode,
@@ -47,6 +47,8 @@ function renderPart(req: XP.Request): XP.Response {
   const factPageTitle = `${subTitleFactPage} ${page.displayName}`.toLowerCase()
   const imageAlt = part.config.image ? getImageAlt(part.config.image) : undefined
 
+  const isLandingPage = 'general' in pageType && pageType.general.landingPage
+
   const props = {
     ...imgSrcSet,
     pageDisplayName: page.displayName,
@@ -65,13 +67,21 @@ function renderPart(req: XP.Request): XP.Response {
     factPageTitle: 'faktaside' in pageType && pageType.faktaside.title,
     fullFactPageTitle: factPageTitle.charAt(0).toUpperCase() + factPageTitle.slice(1),
     generalPageTitle: 'general' in pageType && pageType.general.generalTitle,
+    isLandingPage,
+    logoSrc: assetUrl({
+      path: 'SSB_logo_white.svg',
+    }),
+    logoAltText: i18nLib.localize({
+      key: 'logoAltText',
+      locale: page.language,
+    }),
   }
 
   return r4XpRender('site/parts/banner/banner', props, req, {
     body: `<section
     class="xp-part part-banner position-relative clearfix col-12 searchabletext${
-      pageType._selected === 'faktaside' ? ' factpage-banner' : ''
-    }"></section>`,
+      pageType._selected === 'faktaside' ? ' fact-page-banner' : ''
+    }${isLandingPage ? ' landing-page-banner' : ''}"></section>`,
   })
 }
 

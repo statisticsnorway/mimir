@@ -2,9 +2,13 @@
   min-height: 272px;
   overflow: hidden;
   color: white;
+
   .container {
     min-height: 272px;
+    display: flex;
+    align-items: center;
   }
+
   .banner-image {
     overflow: hidden;
     height: 100%;
@@ -13,31 +17,59 @@
       height: 100%;
     }
   }
+
   .subtitle {
     text-shadow: 0 0 4px rgba(0,0,0,0.4);
     font-size: $header-font-size;
   }
+
   h1 {
     line-height: 1.0;
     text-shadow: 0 0 4px rgba(0,0,0,0.4);
   }
+
   &.opacity-0 {
     opacity: 0;
   }
+
   &.opacity-1 {
     opacity: 1;
     transition: all .2s;
   }
-  &.factpage-banner {
+
+  &.fact-page-banner {
     background-color: $ssb-green-3;
   }
+
+  &.landing-page-banner {
+    min-height: 70vh;
+
+    .container {
+      min-height: 70vh;
+      display: flex;
+      align-items: start;
+    }
+
+    .logo {
+      padding-top: 4rem;
+    }
+
+    .landing-page-banner-title {
+      display: flex;
+      justify-content: center;
+    }
+  }
+
+
   @media print {
     min-height: 80px;
     color: #333;
+
     .container {
-       min-height: 80px;
+      min-height: 80px;
     }
   }
+
   @include media-breakpoint-down(sm) {
     min-height: 182px;
     padding: 0;

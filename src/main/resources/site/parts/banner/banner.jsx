@@ -14,7 +14,11 @@ function Banner(props) {
     factPageTitle,
     fullFactPageTitle,
     generalPageTitle,
+    isLandingPage,
+    logoSrc,
+    logoAltText,
   } = props
+
   return (
     <>
       {bannerImage && (
@@ -22,7 +26,7 @@ function Banner(props) {
           <img className=' d-print-none' sizes={sizes} src={bannerImage} srcSet={srcset} alt={bannerImageAltText} />
         </figure>
       )}
-      <div className='container h-100 d-flex align-items-center'>
+      <div className='container h-100'>
         <div className='row'>
           {selectedPageType === 'kommunefakta' && (
             <div className='col-12'>
@@ -44,11 +48,18 @@ function Banner(props) {
               </div>
             </div>
           )}
-
+          {/* TODO: Add logo and styling adjustments on landing pages */}
           {selectedPageType === 'general' && (
-            <div className='col-12'>
-              <h1 className='mt-0 pt-0 position-relative'>{generalPageTitle}</h1>
-            </div>
+            <>
+              {isLandingPage && (
+                <div className='col-12 position-relative'>
+                  <img className='logo' src={logoSrc} alt={logoAltText ? logoAltText : ' '} />
+                </div>
+              )}
+              <div className={`col-12${isLandingPage ? ' landing-page-banner-title' : ''}`}>
+                <h1 className='mt-0 pt-0 position-relative'>{generalPageTitle}</h1>
+              </div>
+            </>
           )}
         </div>
       </div>
@@ -68,6 +79,9 @@ Banner.propTypes = {
   factPageTitle: PropTypes.string,
   fullFactPageTitle: PropTypes.string,
   generalPageTitle: PropTypes.string,
+  isLandingPage: PropTypes.bool,
+  logoSrc: PropTypes.string,
+  logoAltText: PropTypes.string,
 }
 
 export default (props) => <Banner {...props} />
