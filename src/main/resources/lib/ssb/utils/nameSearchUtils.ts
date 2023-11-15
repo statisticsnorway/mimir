@@ -42,7 +42,7 @@ export function getNameSearchResult(name: string, includeGraphData: boolean): So
     }
   } else {
     log.error(
-      `getNameSearchResult: Failed to fetch data from solr name search: ${solrBaseUrl} - Statuscode: ${result.status}`
+      `getNameSearchResult: Failed to fetch data from solr name search: ${solrBaseUrl} - Statuscode: ${result.status}`,
     )
     return {
       body: '',
@@ -99,10 +99,10 @@ function replaceCharacters(name: string): string {
   return name
     .replace(/[ÈÉË]/g, 'E')
     .replace(/[ÔÒÓ]/g, 'O')
-    .replaceAll("'", '')
-    .replaceAll('Ä', 'Æ')
-    .replaceAll('Ü', 'Y')
-    .replaceAll('Ö', 'Ø')
+    .replace(/'/g, '')
+    .replace(/Ä/g, 'Æ')
+    .replace(/Ü/g, 'Y')
+    .replace(/Ö/g, 'Ø')
     .replace(/[ÀÁ]/g, 'A')
     .replace(/[ÐÞ∂þ]/g, 'D')
 }

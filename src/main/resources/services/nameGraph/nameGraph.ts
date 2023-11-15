@@ -35,11 +35,10 @@ export function sanitizeQuery(name: string): string {
 
 export function replaceCharacters(name: string): string {
   return name
-    .replaceAll('É', 'E')
-    .replaceAll('È', 'E')
-    .replaceAll('Ô', 'O')
-    .replaceAll("'", '')
-    .replaceAll('Ä', 'Æ')
-    .replaceAll('Ü', 'Y')
-    .replaceAll('Ö', 'Ø')
+    .replace(/ÉÈ/g, 'E')
+    .replace(/Ô/g, 'O')
+    .replace(/'/g, '')
+    .replace(/Ä/g, 'Æ')
+    .replace(/Ü/g, 'Y')
+    .replace(/Ö/g, 'Ø')
 }
