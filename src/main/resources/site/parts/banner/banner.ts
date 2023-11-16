@@ -69,6 +69,7 @@ function renderPart(req: XP.Request): XP.Response {
     fullFactPageTitle: factPageTitle.charAt(0).toUpperCase() + factPageTitle.slice(1),
     generalPageTitle: 'general' in pageType && pageType.general.generalTitle,
     isLandingPage,
+    logoUrl: app?.config?.['ssb.baseUrl'] ?? 'https://www.ssb.no',
     logoSrc: assetUrl({
       path: 'SSB_logo_white.svg',
     }),

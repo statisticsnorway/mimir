@@ -15,6 +15,7 @@ function Banner(props) {
     fullFactPageTitle,
     generalPageTitle,
     isLandingPage,
+    logoUrl,
     logoSrc,
     logoAltText,
   } = props
@@ -52,7 +53,9 @@ function Banner(props) {
             <>
               {isLandingPage && (
                 <div className='col-12 position-relative'>
-                  <img className='logo' src={logoSrc} alt={logoAltText ? logoAltText : ' '} />
+                  <a href={logoUrl}>
+                    <img className='logo' src={logoSrc} alt={logoAltText ? logoAltText : ' '} />
+                  </a>
                 </div>
               )}
               <div className={`col-12${isLandingPage ? ' landing-page-banner-title' : ''}`}>
@@ -79,6 +82,7 @@ Banner.propTypes = {
   fullFactPageTitle: PropTypes.string,
   generalPageTitle: PropTypes.string,
   isLandingPage: PropTypes.bool,
+  logoUrl: PropTypes.string,
   logoSrc: PropTypes.string,
   logoAltText: PropTypes.string,
 }
