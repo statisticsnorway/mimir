@@ -44,7 +44,8 @@ export function Jobs() {
       const jobTime = job.completionTime ? job.completionTime : job.startTime
       const ts = jobTime ? format(new Date(jobTime), 'dd.MM.yyyy HH:mm') : null
       const name = getTranslatedJobName(job.task)
-      const hasError = !!job.result?.result?.some((ds) => ds.hasError)
+      const hasError =
+        !!job.result?.result?.some((ds) => ds.hasError) || (job.status != 'COMPLETE' && job.status != 'STARTED')
 
       const info = renderInfo(job)
       return {
@@ -109,7 +110,7 @@ export function Jobs() {
         )}
       </span>
     ) : (
-      <span>{status}</span>
+      <span>{job.status}</span>
     )
   }
 
