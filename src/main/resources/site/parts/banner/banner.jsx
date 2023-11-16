@@ -7,6 +7,7 @@ function Banner(props) {
     bannerImageAltText,
     sizes,
     srcset,
+    pageType,
     selectedPageType,
     municipalityTitle,
     pageDisplayName,
@@ -49,7 +50,7 @@ function Banner(props) {
               </div>
             </div>
           )}
-          {selectedPageType === 'general' && (
+          {selectedPageType === 'general' && pageType !== 'municipality' && (
             <>
               {isLandingPage && (
                 <div className='col-12 position-relative'>
@@ -74,6 +75,7 @@ Banner.propTypes = {
   bannerImageAltText: PropTypes.string,
   sizes: PropTypes.string,
   srcset: PropTypes.string,
+  pageType: PropTypes.string,
   selectedPageType: PropTypes.string,
   municipalityTitle: PropTypes.string,
   pageDisplayName: PropTypes.string,

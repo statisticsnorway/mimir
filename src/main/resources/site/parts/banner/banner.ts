@@ -62,8 +62,8 @@ function renderPart(req: XP.Request): XP.Response {
         })
       : undefined,
     municipalityTitle: municipality ? municipalityName + ' (' + municipality.county.name + ')' : undefined,
+    pageType: page.page?.config.pageType,
     selectedPageType: pageType._selected,
-    pageType,
     subTitleFactPage,
     factPageTitle: 'faktaside' in pageType && pageType.faktaside.title,
     fullFactPageTitle: factPageTitle.charAt(0).toUpperCase() + factPageTitle.slice(1),
