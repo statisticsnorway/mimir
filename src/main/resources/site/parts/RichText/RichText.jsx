@@ -1,48 +1,20 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { LeadParagraph, Paragraph, Text } from '@statisticsnorway/ssb-component-library'
+import '@statisticsnorway/ssb-component-library'
 
 const RichText = ({ text, textType }) => {
-  const renderText = () => {
-    const processedText = text.replace(/<(\/*)p>/gm, '<$1span>')
+  const processedText = text.replace(/<(\/*)p>/gm, '<$1span>')
 
-    switch (textType) {
-      case 'ingress':
-        return (
-          <LeadParagraph>
-            <div
-              dangerouslySetInnerHTML={{
-                __html: processedText,
-              }}
-            />
-          </LeadParagraph>
-        )
-      case 'brodtekst':
-        return (
-          <Paragraph>
-            <div
-              dangerouslySetInnerHTML={{
-                __html: processedText,
-              }}
-            />
-          </Paragraph>
-        )
-      case 'mikrotekst':
-        return (
-          <Text small>
-            <div
-              dangerouslySetInnerHTML={{
-                __html: processedText,
-              }}
-            />
-          </Text>
-        )
-      default:
-        return <span dangerouslySetInnerHTML={{ __html: processedText }} />
-    }
-  }
+  const className =
+    textType === 'ingress'
+      ? 'ssb-lead-paragraph'
+      : textType === 'brodtekst'
+      ? 'ssb-paragraph'
+      : textType === 'mikrotekst'
+      ? 'ssb-text-small'
+      : ''
 
-  return <div>{text ? renderText() : <span>Please provide text content.</span>}</div>
+  return <div className={className} dangerouslySetInnerHTML={{ __html: processedText }} />
 }
 
 RichText.propTypes = {
