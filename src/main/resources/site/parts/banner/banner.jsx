@@ -48,7 +48,6 @@ function Banner(props) {
               </div>
             </div>
           )}
-          {/* TODO: Add logo and styling adjustments on landing pages */}
           {selectedPageType === 'general' && (
             <>
               {isLandingPage && (

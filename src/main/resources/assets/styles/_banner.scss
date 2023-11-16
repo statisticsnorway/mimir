@@ -47,16 +47,33 @@
     .container {
       min-height: 70vh;
       display: flex;
-      align-items: start;
+      align-items: stretch;
+    }
+
+    .col-12 {
+      padding: 0;
     }
 
     .logo {
       padding-top: 4rem;
+      width: 20rem;
     }
 
     .landing-page-banner-title {
       display: flex;
       justify-content: center;
+    }
+
+    @include media-breakpoint-down(sm) {
+      min-height: 60vh;
+
+      .container {
+        min-height: 60vh;
+      }
+
+      .logo {
+        width: 15rem;
+      }
     }
   }
 
