@@ -1,6 +1,5 @@
 import { type Content } from '/lib/xp/content'
 import { assetUrl, getContent, getComponent } from '/lib/xp/portal'
-import * as i18nLib from '/lib/xp/i18n'
 import {
   RequestWithCode,
   getMunicipality,
@@ -11,6 +10,8 @@ import { imageUrl, getImageAlt } from '/lib/ssb/utils/imageUtils'
 import { renderError } from '/lib/ssb/error/error'
 
 import { render as r4XpRender } from '/lib/enonic/react4xp'
+import { getPhrases } from '/lib/ssb/utils/language'
+import { type Phrases } from '/lib/types/language'
 import { type Page } from '/site/content-types'
 
 export function get(req: XP.Request): XP.Response {
@@ -32,9 +33,9 @@ function renderPart(req: XP.Request): XP.Response {
   const part = getComponent<XP.PartComponent.Banner>()
   if (!part) throw Error('No component found')
   const pageType = part.config.pageType
-  const factsAbout = i18nLib.localize({
-    key: 'factsAbout',
-  })
+  const phrases = getPhrases(page) as Phrases
+
+  const factsAbout = phrases.factsAbout
   let subTitleFactPage = ''
   if ('faktaside' in pageType) {
     subTitleFactPage = pageType.faktaside.subTitle ? pageType.faktaside.subTitle : factsAbout
@@ -71,10 +72,7 @@ function renderPart(req: XP.Request): XP.Response {
     logoSrc: assetUrl({
       path: 'SSB_logo_white.svg',
     }),
-    logoAltText: i18nLib.localize({
-      key: 'logoAltText',
-      locale: page.language,
-    }),
+    logoAltText: phrases.logoAltText,
   }
 
   return r4XpRender('site/parts/banner/banner', props, req, {
