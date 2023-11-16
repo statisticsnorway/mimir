@@ -5,14 +5,18 @@ import '@statisticsnorway/ssb-component-library'
 const RichText = ({ text, textType }) => {
   const processedText = text.replace(/<(\/*)p>/gm, '<$1span>')
 
-  const className =
-    textType === 'ingress'
-      ? 'ssb-lead-paragraph'
-      : textType === 'brodtekst'
-      ? 'ssb-paragraph'
-      : textType === 'mikrotekst'
-      ? 'ssb-text-small'
-      : ''
+  let className = ''
+
+  switch (textType) {
+    case 'ingress':
+      className = 'ssb-lead-paragraph'
+      break
+    case 'brodtekst':
+      className = 'ssb-paragraph'
+      break
+    case 'mikrotekst':
+      className = 'ssb-text-wrapper small-text'
+  }
 
   return <div className={className} dangerouslySetInnerHTML={{ __html: processedText }} />
 }

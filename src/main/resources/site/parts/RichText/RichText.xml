@@ -2,7 +2,7 @@
 <part>
   <display-name>Rik tekst</display-name>
   <super-type>base:structured</super-type>
-  <description>Tekst part</description>
+  <description>Tekst komponent</description>
   <form>
     <input type="RadioButton" name="textType">
       <label>Tekst type</label>

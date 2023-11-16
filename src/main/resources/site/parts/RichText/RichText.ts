@@ -22,7 +22,7 @@ export function renderPart(req: XP.Request): XP.Response {
       textType: part.config.textType,
     }
 
-    return r4xpRender('site/parts/RichText/RichText', props)
+    return r4xpRender('site/parts/richText/richText', props)
   } catch (error) {
     return renderError(req, 'Error loading the part', error)
   }
