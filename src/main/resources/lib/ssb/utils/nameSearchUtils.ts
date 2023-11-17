@@ -87,7 +87,7 @@ function pad(word: string): string {
   return '"' + word + '"'
 }
 
-function sanitizeQuery(name: string): string {
+export function sanitizeQuery(name: string): string {
   if (name.toLowerCase() === 'and' || name.toLowerCase() === 'or') {
     return name.toLowerCase()
   }
