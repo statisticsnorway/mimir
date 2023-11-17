@@ -9,7 +9,7 @@ function ConnectionTimeoutModal(props) {
   const [hide, setHide] = useState(false)
 
   function handlePageRefresh() {
-    location.reload(true)
+    window.location.reload()
   }
 
   if (isConnected !== undefined && !isConnected) {
