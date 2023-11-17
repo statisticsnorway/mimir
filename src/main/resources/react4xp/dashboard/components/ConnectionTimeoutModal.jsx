@@ -30,9 +30,8 @@ function ConnectionTimeoutModal(props) {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>Last inn siden på nytt.</p>
           <Button primary onClick={handlePageRefresh}>
-            <RefreshCw size={18} />
+            <RefreshCw size={22} className='pe-2' /> Last inn siden på nytt
           </Button>
         </Modal.Body>
       </Modal>
