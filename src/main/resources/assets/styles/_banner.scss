@@ -62,6 +62,10 @@
     .landing-page-banner-title {
       display: flex;
       justify-content: center;
+
+      h1 {
+        font-size: 4rem;
+      }
     }
 
     @include media-breakpoint-down(sm) {
@@ -71,8 +75,19 @@
         min-height: 60vh;
       }
 
+      .col-12 {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+      }
+
       .logo {
         width: 15rem;
+      }
+
+      .landing-page-banner-title {
+        h1 {
+          font-size: 2rem;
+        }
       }
     }
   }
