@@ -139,12 +139,14 @@
 
     .modal-title {
       font-size: 1.5rem;
+
+      svg {
+        color: $ssb-white;
+        background-color: $ssb-red-3;
+        margin-right: .5rem;
+      }
     }
 
-    svg {
-      color: $ssb-red-3;
-      padding-right: .5rem;
-    }
   }
 
   .tables-wrapper {
@@ -305,7 +307,7 @@
         }
       }
     }
-    
+
     .error-row{
         background-color: yellow;
     }
