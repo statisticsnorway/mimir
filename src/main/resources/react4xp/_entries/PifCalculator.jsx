@@ -29,8 +29,7 @@ function PifCalculator(props) {
     errorMsg: props.lastNumberText,
     value: '',
   })
-  // Differentiate validMinYear based on selected market
-  const validMinYear = scopeCode.value === '3' ? 1926 : 1977
+  const validMinYear = getStartYearRelevantDataset()
   const validMinYearPhrase = pifValidateYear.replaceAll('{0}', validMinYear)
   const validYearErrorMsg = `${validMinYearPhrase} ${validMaxYear}`
   const [startYear, setStartYear] = useState({
@@ -139,6 +138,15 @@ function PifCalculator(props) {
       .finally(() => {
         setLoading(false)
       })
+  }
+
+  function getStartYearRelevantDataset() {
+    // Datasets available from 1977 for home market
+    if (scopeCode.value === '2') return 1977
+    // Datasets available from 1953 for home and import market with spesific product type
+    if (scopeCode.value === '3' && productGroup.value && productGroup.value !== 'SITCT') return 1953
+    // Datasets available from 1926 for home and import market and product type 'all'
+    return 1926
   }
 
   function isFormValid() {
