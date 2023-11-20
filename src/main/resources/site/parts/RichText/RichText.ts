@@ -15,14 +15,17 @@ export function renderPart(req: XP.Request): XP.Response {
     const part = getComponent<XP.PartComponent.RichText>()
     if (!part) throw Error('No part found')
 
-    const processedText = processAndSanitizeText(part.config.text)
+    // Set a default value for text if it's not provided
+    const defaultText = 'Skriv her...'
+    const textContent = part.config.text || defaultText
+    const processedText = processAndSanitizeText(textContent)
 
     const props = {
       text: processedText,
       textType: part.config.textType,
     }
 
-    return r4xpRender('site/parts/richText/richText', props)
+    return r4xpRender('site/parts/richText/richText', props, req)
   } catch (error) {
     return renderError(req, 'Error loading the part', error)
   }

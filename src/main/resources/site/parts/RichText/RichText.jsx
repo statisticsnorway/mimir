@@ -3,28 +3,19 @@ import PropTypes from 'prop-types'
 import '@statisticsnorway/ssb-component-library'
 
 const RichText = ({ text, textType }) => {
-  // Check if text is provided, if not, set default text
-  const displayText = text || 'Skriv her...'
-
-  const processedText = displayText.replace(/<(\/*)p>/gm, '<$1span>')
-
-  let className = ''
+  const processedText = text.replace(/<(\/*)p>/gm, '<$1span>')
+  const textElement = <div dangerouslySetInnerHTML={{ __html: processedText }} />
 
   switch (textType) {
     case 'ingress':
-      className = 'ssb-lead-paragraph'
-      break
+      return React.cloneElement(textElement, { className: 'ssb-lead-paragraph' })
     case 'brodtekst':
-      className = 'ssb-paragraph'
-      break
+      return React.cloneElement(textElement, { className: 'ssb-paragraph' })
     case 'mikrotekst':
-      className = 'ssb-text-wrapper small-text'
-      break
+      return React.cloneElement(textElement, { className: 'ssb-text-wrapper small-text' })
     default:
-    // Optional: handle the default case if needed
+      return textElement
   }
-
-  return <div className={className} dangerouslySetInnerHTML={{ __html: processedText }} />
 }
 
 RichText.propTypes = {

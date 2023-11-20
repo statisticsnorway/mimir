@@ -9,8 +9,8 @@
       <occurrences minimum="0" maximum="1" />
       <config>
         <option value="brodtekst">Brødtekst</option>
-        <option name="ingress" value="ingress">Ingress</option>
-        <option name="mikrotekst" value="mikrotekst">Mikrotekst</option>
+        <option value="ingress">Ingress</option>
+        <option value="mikrotekst">Mikrotekst</option>
       </config>
     </input>
     <input type="HtmlArea" name="text">
