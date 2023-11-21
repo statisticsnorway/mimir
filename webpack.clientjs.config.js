@@ -31,6 +31,7 @@ function addBabelSupport(cfg) {
     setEntry('map', './app/map.es6'),
     setEntry('menuDropdown', './app/menuDropdown.es6'),
     setEntry('tableExport', './app/tableExport.es6'),
+    setEntry('editModeUpdate', './app/editModeUpdate.es6'),
 
     setEntry('bundle', './main.es6'),
     setEntry('ie', './ie.es6'),

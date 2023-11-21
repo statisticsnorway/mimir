@@ -3,6 +3,7 @@ import { getComponent } from '/lib/xp/portal'
 import { render as r4XpRender } from '/lib/enonic/react4xp'
 import { renderError } from '/lib/ssb/error/error'
 import { isEnabled } from '/lib/featureToggle'
+import { scriptAsset } from '/lib/ssb/utils/utils'
 
 export function get(req: XP.Request): XP.Response {
   try {
@@ -31,7 +32,7 @@ function renderPart(req: XP.Request): XP.Response {
 
   // R4xp disables hydration in edit mode, but highcharts need hydration to show
   // we sneaky swap mode since we want a render of higchart in edit mode
-  const _req = req
+  const _req = { ...req }
   if (req.mode === 'edit') _req.mode = 'preview'
 
   const highchartConfigString = component.config.config
@@ -44,9 +45,29 @@ function renderPart(req: XP.Request): XP.Response {
     return errorConfig()
   }
 
-  return r4XpRender('site/parts/highchartExpert/HighchartExpert', { config: component.config.config }, _req, {
-    body: '<section class="xp-part part-highchart-expert"></section>',
-  })
+  const id = component.path?.split('/').join('-')
+  const renderResult = r4XpRender(
+    'site/parts/highchartExpert/HighchartExpert',
+    { config: component.config.config },
+    _req,
+    {
+      id,
+      body: `<section class="xp-part part-highchart-expert" data-react4xp-id="${id}" data-config></section>`,
+    }
+  )
+
+  if (req.mode === 'edit') {
+    renderResult.pageContributions.bodyEnd.push(scriptAsset('js/editModeUpdate.js'))
+    const script = renderResult.pageContributions.headEnd[7].substring('')
+    renderResult.body = renderResult.body.replace(
+      'data-config>',
+      `data-config=${encodeURIComponent(
+        JSON.stringify(script.substring(script.indexOf('json">') + 6, script.length - 9))
+      )}>`
+    )
+  }
+
+  return renderResult
 }
 
 function errorConfig(title = 'Feil i JSON konfigurasjon', message = '') {
