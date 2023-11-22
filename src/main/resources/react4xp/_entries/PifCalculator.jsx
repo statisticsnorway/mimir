@@ -27,7 +27,7 @@ function PifCalculator(props) {
   const [startMonth, setStartMonth] = useState({
     error: false,
     errorMsg: props.lastNumberText,
-    value: '',
+    value: '90',
   })
   // Differentiate validMinYear based on selected market
   const validMinYear = scopeCode.value === '3' ? 1926 : 1977
@@ -41,7 +41,7 @@ function PifCalculator(props) {
   const [endMonth, setEndMonth] = useState({
     error: false,
     errorMsg: props.lastNumberText,
-    value: '',
+    value: '90',
   })
   const [endYear, setEndYear] = useState({
     error: false,

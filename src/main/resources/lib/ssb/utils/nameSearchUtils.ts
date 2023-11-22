@@ -42,7 +42,7 @@ export function getNameSearchResult(name: string, includeGraphData: boolean): So
     }
   } else {
     log.error(
-      `getNameSearchResult: Failed to fetch data from solr name search: ${solrBaseUrl} - Statuscode: ${result.status}`
+      `getNameSearchResult: Failed to fetch data from solr name search: ${solrBaseUrl} - Statuscode: ${result.status}`,
     )
     return {
       body: '',
@@ -97,14 +97,14 @@ function sanitizeQuery(name: string): string {
 
 function replaceCharacters(name: string): string {
   return name
-    .replace(/[ÈÉË]/, 'E')
-    .replace(/[ÔÒÓ]/, 'O')
-    .replace("'", '')
-    .replace('Ä', 'Æ')
-    .replace('Ü', 'Y')
-    .replace('Ö', 'Ø')
-    .replace(/[ÀÁ]/, 'A')
-    .replace(/[ÐÞ∂þ]/, 'D')
+    .replace(/[ÈÉË]/g, 'E')
+    .replace(/[ÔÒÓ]/g, 'O')
+    .replace(/'/g, '')
+    .replace(/Ä/g, 'Æ')
+    .replace(/Ü/g, 'Y')
+    .replace(/Ö/g, 'Ø')
+    .replace(/[ÀÁ]/g, 'A')
+    .replace(/[ÐÞ∂þ]/g, 'D')
 }
 
 //Uses when repo dont exist
