@@ -8,10 +8,10 @@ import { X } from 'react-feather'
 
 function PifCalculator(props) {
   const validMaxYear = props.lastUpdated.year
-  const { pifErrorMarket, pifErrorProduct, calculatorValidateAmountNumber, pifValidateYear } = props.phrases
+  const { pifErrorProduct, calculatorValidateAmountNumber, pifValidateYear } = props.phrases
   const [scopeCode, setScopeCode] = useState({
     error: false,
-    errorMsg: pifErrorMarket,
+    errorMsg: '',
     value: '',
   })
   const [productGroup, setProductGroup] = useState({
@@ -150,7 +150,21 @@ function PifCalculator(props) {
   }
 
   function isFormValid() {
-    return isStartValueValid() && isStartYearValid() && isStartMonthValid() && isEndYearValid() && isEndMonthValid()
+    return (
+      haveDatasetForChosenProductGroup() &&
+      isStartValueValid() &&
+      isStartYearValid() &&
+      isStartMonthValid() &&
+      isEndYearValid() &&
+      isEndMonthValid()
+    )
+  }
+
+  function haveDatasetForChosenProductGroup(scopeCodeValue, productGroupValue) {
+    // Dataset not available for pifProductOil (SITC4) for home market
+    const productGroupChosen = productGroupValue || productGroup.value
+    const scopeCodeChosen = scopeCodeValue || scopeCode.value
+    return !(productGroupChosen === 'SITC4' && scopeCodeChosen === '2')
   }
 
   function isStartValueValid(value) {
@@ -243,12 +257,17 @@ function PifCalculator(props) {
           ...scopeCode,
           value: value,
         })
+        setProductGroup({
+          ...productGroup,
+          error: !haveDatasetForChosenProductGroup(value, productGroup.value),
+        })
         break
       }
       case 'product-group': {
         setProductGroup({
           ...productGroup,
           value: value.id,
+          error: !haveDatasetForChosenProductGroup(scopeCode.value, value.id),
         })
         break
       }
@@ -367,6 +386,8 @@ function PifCalculator(props) {
         }}
         items={props.productGroups}
         ariaLabel={props.phrases.pifProductTypeHeader}
+        error={productGroup.error}
+        errorMessage={productGroup.errorMsg}
       />
     )
   }
