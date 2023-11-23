@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Button, Divider, Link, Title, Text, Dropdown } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
 import Truncate from 'react-truncate'
-import NumberFormat from 'react-number-format'
+import { NumericFormat } from 'react-number-format'
 import { ChevronDown } from 'react-feather'
 import axios from 'axios'
 
@@ -222,7 +222,7 @@ function PublicationArchive(props) {
             <div className='row'>
               <div className='col'>
                 {showingPhrase.replace('{0}', publications.length)}&nbsp;
-                <NumberFormat value={Number(total)} displayType={'text'} thousandSeparator={' '} />
+                <NumericFormat value={Number(total)} displayType='text' thousandSeparator=' ' />
                 <Divider className='mb-4' dark></Divider>
               </div>
             </div>

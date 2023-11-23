@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { Form, Container, Row, Col } from 'react-bootstrap'
 import { Input, Button, Dropdown, Divider, FormError, Link, RadioGroup } from '@statisticsnorway/ssb-component-library'
 import axios from 'axios'
-import NumberFormat from 'react-number-format'
+import { NumericFormat } from 'react-number-format'
 import { X } from 'react-feather'
 
 function PifCalculator(props) {
@@ -378,13 +378,13 @@ function PifCalculator(props) {
       const decimalSeparator = language === 'en' ? '.' : ','
       return (
         <React.Fragment>
-          <NumberFormat
+          <NumericFormat
             value={Number(value)}
-            displayType={'text'}
-            thousandSeparator={' '}
+            displayType='text'
+            thousandSeparator=' '
             decimalSeparator={decimalSeparator}
             decimalScale={2}
-            fixedDecimalScale={true}
+            fixedDecimalScale
           />{' '}
           {valute}
         </React.Fragment>
@@ -398,13 +398,13 @@ function PifCalculator(props) {
       const decimalSeparator = language === 'en' ? '.' : ','
       return (
         <React.Fragment>
-          <NumberFormat
+          <NumericFormat
             value={Number(changeValue)}
-            displayType={'text'}
-            thousandSeparator={' '}
+            displayType='text'
+            thousandSeparator=' '
             decimalSeparator={decimalSeparator}
             decimalScale={1}
-            fixedDecimalScale={true}
+            fixedDecimalScale
           />{' '}
           %
         </React.Fragment>
@@ -417,13 +417,13 @@ function PifCalculator(props) {
       const decimalSeparator = language === 'en' ? '.' : ','
       return (
         <React.Fragment>
-          <NumberFormat
+          <NumericFormat
             value={Number(value)}
-            displayType={'text'}
-            thousandSeparator={' '}
+            displayType='text'
+            thousandSeparator=' '
             decimalSeparator={decimalSeparator}
             decimalScale={1}
-            fixedDecimalScale={true}
+            fixedDecimalScale
           />
         </React.Fragment>
       )
