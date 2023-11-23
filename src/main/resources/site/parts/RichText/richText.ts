@@ -25,7 +25,7 @@ export function renderPart(req: XP.Request): XP.Response {
       textType: part.config.textType,
     }
 
-    return r4xpRender('site/parts/richText/richText', props, req)
+    return r4xpRender('site/parts/richText/RichText', props, req)
   } catch (error) {
     return renderError(req, 'Error loading the part', error)
   }
@@ -36,7 +36,7 @@ function processAndSanitizeText(text: string): string {
     value: text,
   })
 
-  processedText = sanitizeHtml(processedText)
+  processedText = sanitizeHtml(processedText).replace(/<(\/*)p/gm, '<$1span')
 
   return processedText
 }
