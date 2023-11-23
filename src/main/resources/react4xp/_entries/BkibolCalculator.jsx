@@ -501,11 +501,11 @@ function BkibolCalculator(props) {
         <React.Fragment>
           <NumericFormat
             value={Number(value)}
-            displayType={'text'}
-            thousandSeparator={' '}
+            displayType='text'
+            thousandSeparator=' '
             decimalSeparator={decimalSeparator}
             decimalScale={1}
-            fixedDecimalScale={true}
+            fixedDecimalScale
           />
         </React.Fragment>
       )
@@ -520,11 +520,11 @@ function BkibolCalculator(props) {
         <React.Fragment>
           <NumericFormat
             value={Number(value)}
-            displayType={'text'}
-            thousandSeparator={' '}
+            displayType='text'
+            thousandSeparator=' '
             decimalSeparator={decimalSeparator}
             decimalScale={2}
-            fixedDecimalScale={true}
+            fixedDecimalScale
           />{' '}
           {valute}
         </React.Fragment>
@@ -540,11 +540,11 @@ function BkibolCalculator(props) {
         <React.Fragment>
           <NumericFormat
             value={Number(changeValue)}
-            displayType={'text'}
-            thousandSeparator={' '}
+            displayType='text'
+            thousandSeparator=' '
             decimalSeparator={decimalSeparator}
             decimalScale={1}
-            fixedDecimalScale={true}
+            fixedDecimalScale
           />{' '}
           %
         </React.Fragment>
