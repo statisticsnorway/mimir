@@ -25,7 +25,7 @@ export function renderPart(req: XP.Request): XP.Response {
       textType: part.config.textType,
     }
 
-    return r4xpRender('site/parts/richText/RichText', props, req, { hydrate: false })
+    return r4xpRender('site/parts/richText/richText', props, req, { hydrate: false })
   } catch (error) {
     return renderError(req, 'Error loading the part', error)
   }
