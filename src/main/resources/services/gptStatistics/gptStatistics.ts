@@ -22,7 +22,7 @@ export const get = (req: XP.Request): XP.Response => {
       contentTypes: ['mimir:statistics'],
     })
 
-    const mainTable = getContent
+    // const mainTable = getContent
 
     return {
       status: 200,
