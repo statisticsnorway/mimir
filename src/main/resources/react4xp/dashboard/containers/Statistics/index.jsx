@@ -1,9 +1,9 @@
 import React, { useContext } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Button, Table } from 'react-bootstrap'
+import { Table } from 'react-bootstrap'
 import { selectStatistics, selectLoading, selectOpenModal } from '/react4xp/dashboard/containers/Statistics/selectors'
 import { RefreshCw } from 'react-feather'
-import { Link } from '@statisticsnorway/ssb-component-library'
+import { Link, Button } from '@statisticsnorway/ssb-component-library'
 import { selectContentStudioBaseUrl, selectInternalBaseUrl } from '/react4xp/dashboard/containers/HomePage/selectors'
 import { setOpenStatistic, setOpenModal } from '/react4xp/dashboard/containers/Statistics/actions'
 import { StatisticsLog } from '/react4xp/dashboard/containers/Statistics/StatisticsLog'
@@ -74,7 +74,7 @@ export function Statistics() {
   function makeRefreshButton(statistic) {
     return (
       <Button
-        variant='primary'
+        primary
         size='sm'
         className='mx-1'
         onClick={() => onRefreshStatistic(statistic)}

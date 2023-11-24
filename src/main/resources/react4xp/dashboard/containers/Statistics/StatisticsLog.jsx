@@ -1,8 +1,9 @@
 import React, { useContext, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
+import { Modal } from 'react-bootstrap'
+import { Button } from '@statisticsnorway/ssb-component-library'
 import { WebSocketContext } from '/react4xp/dashboard/utils/websocket/WebsocketProvider'
-import { Button, Modal } from 'react-bootstrap'
 import { requestStatisticsJobLog } from '/react4xp/dashboard/containers/Statistics/actions'
 import { default as groupBy } from 'ramda/es/groupBy'
 import { StatisticsLogJob } from '/react4xp/dashboard/containers/Statistics/StatisticsLogJob'
@@ -118,9 +119,7 @@ export function StatisticsLog(props) {
           {/* <StatisticsLogJob selectStatistic={getStatisticSelector} /> */}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant='secondary' onClick={handleClose}>
-            Lukk
-          </Button>
+          <Button onClick={handleClose}>Lukk</Button>
         </Modal.Footer>
       </Modal>
     )

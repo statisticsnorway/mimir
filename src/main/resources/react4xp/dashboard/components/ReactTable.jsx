@@ -49,7 +49,7 @@ export function ReactTable(props) {
             <tr key={index} {...row.getRowProps()} className='small'>
               {row.cells.map((cell, i) => {
                 return (
-                  <td key={i} {...cell.getCellProps}>
+                  <td key={i} {...cell.getCellProps} className={row.original.hasError ? 'error-row ' : ''}>
                     {cell.render('Cell')}
                   </td>
                 )

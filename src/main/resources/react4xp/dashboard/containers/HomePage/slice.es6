@@ -1,7 +1,7 @@
 import { createSlice } from '/react4xp/dashboard/utils/@reduxjs/toolkit'
 
 export const initialState = {
-  isConnected: false,
+  isConnected: undefined,
   loadingClearCache: false,
   loadingPurgeVarnish: false,
   loadingRefreshNameGraph: false,

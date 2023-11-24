@@ -57,7 +57,7 @@ function WebsocketProvider({ children }) {
               connectionStatus = 'closed'
               closeConnection()
             }
-          }, 1000 * 30)
+          }, 1000 * 20)
         }
 
         // setup store listeners

@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { Dropdown, Link } from '@statisticsnorway/ssb-component-library'
+import { Dropdown, Link, Button } from '@statisticsnorway/ssb-component-library'
 import { default as isEmpty } from 'ramda/es/isEmpty'
 import NumberFormat from 'react-number-format'
-import { Alert, Button } from 'react-bootstrap'
+import { Alert } from 'react-bootstrap'
 import { ChevronLeft, ChevronRight } from 'react-feather'
 import { addGtagForEvent } from '/react4xp/ReactGA'
 
@@ -450,7 +450,7 @@ function Table(props) {
   function addPreviewButton() {
     if (showPreviewToggle && !props.pageTypeStatistic) {
       return (
-        <Button variant='primary' onClick={toggleDraft}>
+        <Button primary onClick={toggleDraft}>
           {!fetchUnPublished ? 'Vis upubliserte tall' : 'Vis publiserte tall'}
         </Button>
       )

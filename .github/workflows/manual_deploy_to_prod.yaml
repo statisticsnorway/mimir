@@ -15,9 +15,9 @@ jobs:
     environment: 'production'
     steps:
       - name: Download workflow artifact
-        uses: dawidd6/action-download-artifact@v2.27.0
+        uses: dawidd6/action-download-artifact@v2.28.0
         with:
-          workflow: deploy_to_qa.yaml
+          workflow: deploy_to_prod.yaml
           branch: master
           run_number: ${{ github.event.inputs.gh_run_number }}
       - name: display downloads
@@ -32,6 +32,16 @@ jobs:
           client_cert: ${{ secrets.ENONIC_CERT }}
           client_key: ${{ secrets.ENONIC_KEY }}
           app_jar: "*.jar"
+      - name: Get Version Number
+        id: get_version_number
+        run: |
+          VERSION=$(awk -F' = ' '/^version/ {print $2}' ./gradle.properties)
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+      - name: Create tag and release
+        id: tag_and_release
+        run: gh release create $VERSION --generate-notes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Send success message to Slack
         id: slack_success
         if: success()

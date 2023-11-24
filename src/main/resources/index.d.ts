@@ -27,6 +27,7 @@ declare global {
       export type FrontPageBanner = _PartComponent<"mimir:frontPageBanner">
       export type FrontpageKeyfigures = _PartComponent<"mimir:frontpageKeyfigures">
       export type Highchart = _PartComponent<"mimir:highchart">
+      export type HighchartExpert = _PartComponent<"mimir:highchartExpert">
       export type Highmap = _PartComponent<"mimir:highmap">
       export type HusleieCalculator = _PartComponent<"mimir:husleieCalculator">
       export type InfoGraphics = _PartComponent<"mimir:infoGraphics">
@@ -67,6 +68,7 @@ declare global {
       export type Table = _PartComponent<"mimir:table">
       export type UpcomingReleases = _PartComponent<"mimir:upcomingReleases">
       export type Variables = _PartComponent<"mimir:variables">
+      export type VideoEmbed = _PartComponent<"mimir:videoEmbed">
     }
 
     namespace LayoutComponent {

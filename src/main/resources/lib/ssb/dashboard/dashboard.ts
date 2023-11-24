@@ -66,7 +66,7 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
     executeFunction({
       description: 'get-fact-page-data-sources',
       func: () => {
-        const dataSources: Array<DashboardDataSource> = getFactPageDataSources(id)
+        const dataSources: Array<DashboardDataSource> = prepDataSources(getFactPageDataSources(id))
         socket.emit('fact-page-data-sources-result', {
           id,
           dataSources,
@@ -89,7 +89,7 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
     executeFunction({
       description: 'get-statistics-data-sources',
       func: () => {
-        const dataSources: Array<DashboardDataSource> = getStatisticsDataSources(id)
+        const dataSources: Array<DashboardDataSource> = prepDataSources(getStatisticsDataSources(id))
         socket.emit('statistics-data-sources-result', {
           id,
           dataSources,
@@ -112,7 +112,7 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
     executeFunction({
       description: 'get-municipal-data-sources',
       func: () => {
-        const dataSources: Array<DashboardDataSource> = getMunicipalDataSources(id)
+        const dataSources: Array<DashboardDataSource> = prepDataSources(getMunicipalDataSources(id))
         socket.emit('municipal-data-sources-result', {
           id,
           dataSources,
@@ -259,7 +259,7 @@ function getFactPageGroups(): Array<DashboardDataSourceGroups> {
   })
 }
 
-function getFactPageDataSources(factPageId: string): Array<DashboardDataSource> {
+function getFactPageDataSources(factPageId: string): Array<Content<DataSource>> {
   const factPage: Content<Page> | null = getContent({
     key: factPageId,
   })
@@ -268,7 +268,7 @@ function getFactPageDataSources(factPageId: string): Array<DashboardDataSource> 
       query: `_path LIKE "/content${factPage._path}/*" AND data.dataSource._selected LIKE "*" AND data.dataSource._selected NOT LIKE "htmlTable"`,
       count: 1000,
     }).hits as unknown as Array<Content<DataSource>>
-    return prepDataSources(hits)
+    return hits
   }
   return []
 }
@@ -290,7 +290,7 @@ function getStatisticsGroups(): Array<DashboardDataSourceGroups> {
   })
 }
 
-function getStatisticsDataSources(statisticId: string): Array<DashboardDataSource> {
+function getStatisticsDataSources(statisticId: string): Array<Content<DataSource>> {
   const statistic: Content<Page> | null = getContent({
     key: statisticId,
   })
@@ -299,7 +299,7 @@ function getStatisticsDataSources(statisticId: string): Array<DashboardDataSourc
       query: `_path LIKE "/content${statistic._path}/*" AND data.dataSource._selected LIKE "*" AND data.dataSource._selected NOT LIKE "htmlTable"`,
       count: 100,
     }).hits as unknown as Array<Content<DataSource>>
-    return prepDataSources(hits)
+    return hits
   }
   return []
 }
@@ -321,7 +321,7 @@ function getMunicipalGroups(): Array<DashboardDataSourceGroups> {
   })
 }
 
-function getMunicipalDataSources(municipalId: string): Array<DashboardDataSource> {
+function getMunicipalDataSources(municipalId: string): Array<Content<DataSource>> {
   const municipal: Content<Page> | null = getContent({
     key: municipalId,
   })
@@ -330,22 +330,36 @@ function getMunicipalDataSources(municipalId: string): Array<DashboardDataSource
       query: `_path LIKE "/content${municipal._path}/*" AND data.dataSource._selected LIKE "*" AND data.dataSource._selected NOT LIKE "htmlTable"`,
       count: 100,
     }).hits as unknown as Array<Content<DataSource>>
-    return prepDataSources(hits)
+    return hits
   }
   return []
 }
 
 function getDefaultDataSources(): Array<DashboardDataSource> {
-  const factPageGroupPaths: Array<string> = getFactPageGroups().map((g) => g.path)
-  const municipalGroupPaths: Array<string> = getMunicipalGroups().map((g) => g.path)
-  const statisticsGroupPaths: Array<string> = getStatisticsGroups().map((g) => g.path)
-  const paths: Array<string> = Array<string>().concat(factPageGroupPaths, municipalGroupPaths, statisticsGroupPaths)
+  // We want all the data sources that are not in the groups below
+  const factPageDataSourceIds: string[][] = getFactPageGroups().map((g) => getFactPageDataSources(g.id).map(ds => ds._id))
+  const municipalDataSourceIds: string[][] = getMunicipalGroups().map((g) => getMunicipalDataSources(g.id).map(ds => ds._id))
+  const statisticsDataSourceIds: string[][] = getStatisticsGroups().map((g) => getStatisticsDataSources(g.id).map(ds => ds._id))
+
+  const dataSourceIds = [
+    ...factPageDataSourceIds.reduce((acc, g) => [...acc, ...g], []),
+    ...municipalDataSourceIds.reduce((acc, g) => [...acc, ...g], []),
+    ...statisticsDataSourceIds.reduce((acc, g) => [...acc, ...g], [])
+  ];
   const hits: Array<Content<DataSource>> = query({
-    query: `${paths
-      .map((p) => `_path NOT LIKE "/content${p}/*"`)
-      .join(' AND ')} AND data.dataSource._selected LIKE "*" AND data.dataSource._selected NOT LIKE "htmlTable"`,
-    count: 1000,
+    query: `data.dataSource._selected LIKE "*" AND data.dataSource._selected NOT LIKE "htmlTable"`,
+    filters: {
+      boolean: {
+        mustNot: {
+          ids: {
+            values: dataSourceIds
+          }
+        }
+      }
+    },
+    count: 10000,
   }).hits as unknown as Array<Content<DataSource>>
+
   return prepDataSources(hits)
 }
 

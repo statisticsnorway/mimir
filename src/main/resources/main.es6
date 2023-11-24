@@ -99,6 +99,10 @@ try {
           feature: 'push-rss-statkal',
           enabled: false,
         },
+        {
+          feature: 'highchart-expert',
+          enabled: false,
+        },
       ],
     },
   ])

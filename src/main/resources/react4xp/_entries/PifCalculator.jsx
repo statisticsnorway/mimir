@@ -8,10 +8,10 @@ import { X } from 'react-feather'
 
 function PifCalculator(props) {
   const validMaxYear = props.lastUpdated.year
-  const { pifErrorMarket, pifErrorProduct, calculatorValidateAmountNumber, pifValidateYear } = props.phrases
+  const { pifErrorProduct, calculatorValidateAmountNumber, pifValidateYear } = props.phrases
   const [scopeCode, setScopeCode] = useState({
     error: false,
-    errorMsg: pifErrorMarket,
+    errorMsg: '',
     value: '',
   })
   const [productGroup, setProductGroup] = useState({
@@ -27,10 +27,9 @@ function PifCalculator(props) {
   const [startMonth, setStartMonth] = useState({
     error: false,
     errorMsg: props.lastNumberText,
-    value: '',
+    value: '90',
   })
-  // Differentiate validMinYear based on selected market
-  const validMinYear = scopeCode.value === '3' ? 1926 : 1977
+  const validMinYear = getStartYearRelevantDataset()
   const validMinYearPhrase = pifValidateYear.replaceAll('{0}', validMinYear)
   const validYearErrorMsg = `${validMinYearPhrase} ${validMaxYear}`
   const [startYear, setStartYear] = useState({
@@ -41,7 +40,7 @@ function PifCalculator(props) {
   const [endMonth, setEndMonth] = useState({
     error: false,
     errorMsg: props.lastNumberText,
-    value: '',
+    value: '90',
   })
   const [endYear, setEndYear] = useState({
     error: false,
@@ -141,8 +140,31 @@ function PifCalculator(props) {
       })
   }
 
+  function getStartYearRelevantDataset() {
+    // Datasets available from 1977 for home market
+    if (scopeCode.value === '2') return 1977
+    // Datasets available from 1953 for home and import market with spesific product type
+    if (scopeCode.value === '3' && productGroup.value && productGroup.value !== 'SITCT') return 1953
+    // Datasets available from 1926 for home and import market and product type 'all'
+    return 1926
+  }
+
   function isFormValid() {
-    return isStartValueValid() && isStartYearValid() && isStartMonthValid() && isEndYearValid() && isEndMonthValid()
+    return (
+      haveDatasetForChosenProductGroup() &&
+      isStartValueValid() &&
+      isStartYearValid() &&
+      isStartMonthValid() &&
+      isEndYearValid() &&
+      isEndMonthValid()
+    )
+  }
+
+  function haveDatasetForChosenProductGroup(scopeCodeValue, productGroupValue) {
+    // Dataset not available for pifProductOil (SITC4) for home market
+    const productGroupChosen = productGroupValue || productGroup.value
+    const scopeCodeChosen = scopeCodeValue || scopeCode.value
+    return !(productGroupChosen === 'SITC4' && scopeCodeChosen === '2')
   }
 
   function isStartValueValid(value) {
@@ -235,12 +257,17 @@ function PifCalculator(props) {
           ...scopeCode,
           value: value,
         })
+        setProductGroup({
+          ...productGroup,
+          error: !haveDatasetForChosenProductGroup(value, productGroup.value),
+        })
         break
       }
       case 'product-group': {
         setProductGroup({
           ...productGroup,
           value: value.id,
+          error: !haveDatasetForChosenProductGroup(scopeCode.value, value.id),
         })
         break
       }
@@ -359,6 +386,8 @@ function PifCalculator(props) {
         }}
         items={props.productGroups}
         ariaLabel={props.phrases.pifProductTypeHeader}
+        error={productGroup.error}
+        errorMessage={productGroup.errorMsg}
       />
     )
   }
