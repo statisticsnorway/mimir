@@ -29,6 +29,7 @@ export const get = (req: XP.Request): XP.Response => {
       body: {
         result: result2.hits.map((hit) => {
           return {
+            publishDate: hit.publish?.first,
             title: hit.displayName,
             url:
               'https://www.ssb.no' +
