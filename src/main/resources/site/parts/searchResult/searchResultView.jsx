@@ -14,7 +14,7 @@ import {
 } from '@statisticsnorway/ssb-component-library'
 import { ChevronDown, User, X } from 'react-feather'
 import axios from 'axios'
-import NumberFormat from 'react-number-format'
+import { NumericFormat } from 'react-number-format'
 import { Col, Row } from 'react-bootstrap'
 import { addGtagForEvent } from '../../../react4xp/ReactGA'
 
@@ -212,7 +212,7 @@ function SearchResult(props) {
         <div className='row mb-4'>
           <Col className='total-hits col-12 col-md-4' aria-live='polite' aria-atomic='true'>
             {props.showingPhrase.replace('{0}', currentAmount)}&nbsp;
-            <NumberFormat value={Number(totalHits)} displayType={'text'} thousandSeparator={' '} />
+            <NumericFormat value={Number(totalHits)} displayType='text' thousandSeparator=' ' />
           </Col>
           <Col className='choose-sorting col-12 col-md-8'>
             <span className='sort-title'>{`${props.sortPhrase}:`}</span>
