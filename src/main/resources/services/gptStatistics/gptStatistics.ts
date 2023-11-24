@@ -42,7 +42,7 @@ export const get = (req: XP.Request): XP.Response => {
               pageUrl({
                 id: hit.data.mainTable ?? '',
               }),
-              sourceTable:
+            // sourceTable: 'test tekst her',
             statbankLinkItemSet: hit.data.statbankLinkItemSet,
           }
         }),
