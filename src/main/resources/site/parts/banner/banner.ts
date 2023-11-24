@@ -42,13 +42,12 @@ function renderPart(req: XP.Request): XP.Response {
   }
   const municipality = pageType._selected === 'kommunefakta' ? getMunicipality(req as RequestWithCode) : undefined
   const municipalityName = municipality ? removeCountyFromMunicipalityName(municipality.displayName) : undefined
-  const imgSrcSet = part.config.image ? imageSrcSet(part.config.image) : undefined
+  const isLandingPage = 'general' in pageType && pageType.general.landingPage
+  const imgSrcSet = part.config.image ? imageSrcSet(part.config.image, isLandingPage) : undefined
 
   // Remove uppercase for page title when accompanied by "Fakta om"
   const factPageTitle = `${subTitleFactPage} ${page.displayName}`.toLowerCase()
   const imageAlt = part.config.image ? getImageAlt(part.config.image) : undefined
-
-  const isLandingPage = 'general' in pageType && pageType.general.landingPage
 
   const props = {
     ...imgSrcSet,
@@ -85,14 +84,14 @@ function renderPart(req: XP.Request): XP.Response {
 }
 
 // Inefficient, should only do one imageUrl call and then string replace the width
-function imageSrcSet(imageId: string) {
+function imageSrcSet(imageId: string, isLandingPage: boolean) {
   const widths = [3840, 2560, 2000, 1500, 1260, 800, 650]
   const srcset = widths
     .map(
       (width: number) =>
         `${imageUrl({
           id: imageId,
-          scale: `block(${width},272)`,
+          scale: `block(${width},${isLandingPage ? '930' : '272'})`,
         })} ${width}w`
     )
     .join(', ')
