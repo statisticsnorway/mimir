@@ -20,8 +20,8 @@ export function getCalculatorConfig(): Content<CalculatorConfig> | undefined {
 export function getKpiDatasetYear(config: Content<CalculatorConfig>): Dataset | null {
   const kpiSourceYear: Content<GenericDataImport & DataSource> | null = config?.data.kpiSourceYear
     ? getContent({
-      key: config.data.kpiSourceYear,
-    })
+        key: config.data.kpiSourceYear,
+      })
     : null
 
   if (kpiSourceYear === null) {
@@ -38,8 +38,8 @@ export function getKpiDatasetYear(config: Content<CalculatorConfig>): Dataset | 
 export function getKpiDatasetMonth(config: Content<CalculatorConfig>): Dataset | null {
   const kpiSourceMonth: Content<GenericDataImport & DataSource> | null = config?.data.kpiSourceMonth
     ? getContent({
-      key: config.data.kpiSourceMonth,
-    })
+        key: config.data.kpiSourceMonth,
+      })
     : null
 
   if (kpiSourceMonth === null) {
@@ -56,8 +56,8 @@ export function getKpiDatasetMonth(config: Content<CalculatorConfig>): Dataset |
 export function getPifDataset(config: Content<CalculatorConfig>): Dataset | null {
   const pifSource: Content<GenericDataImport & DataSource> | null = config?.data.pifSource
     ? getContent({
-      key: config.data.pifSource,
-    })
+        key: config.data.pifSource,
+      })
     : null
 
   if (pifSource === null) {
@@ -74,8 +74,8 @@ export function getPifDataset(config: Content<CalculatorConfig>): Dataset | null
 export function getBkibolDatasetEnebolig(config: Content<CalculatorConfig>): Dataset | null {
   const bkibolSourceEnebolig: Content<GenericDataImport & DataSource> | null = config?.data.bkibolSourceEnebolig
     ? getContent({
-      key: config.data.bkibolSourceEnebolig,
-    })
+        key: config.data.bkibolSourceEnebolig,
+      })
     : null
 
   if (bkibolSourceEnebolig === null) {
@@ -92,8 +92,8 @@ export function getBkibolDatasetEnebolig(config: Content<CalculatorConfig>): Dat
 export function getBkibolDatasetBoligblokk(config: Content<CalculatorConfig>): Dataset | null {
   const bkibolSourceBoligblokk: Content<GenericDataImport & DataSource> | null = config?.data.bkibolSourceBoligblokk
     ? getContent({
-      key: config.data.bkibolSourceBoligblokk,
-    })
+        key: config.data.bkibolSourceBoligblokk,
+      })
     : null
 
   if (bkibolSourceBoligblokk === null) {
@@ -110,8 +110,8 @@ export function getBkibolDatasetBoligblokk(config: Content<CalculatorConfig>): D
 export function getNameSearchGraphData(config: Content<CalculatorConfig>): DatasetRepoNode<JSONstatType> | null {
   const nameSearchGraphData: Content<GenericDataImport & DataSource> | null = config?.data.nameSearchGraphData
     ? getContent({
-      key: config.data.nameSearchGraphData,
-    })
+        key: config.data.nameSearchGraphData,
+      })
     : null
 
   if (nameSearchGraphData === null) {
@@ -132,8 +132,8 @@ export function getNameGraphDataWithConfig(): DatasetRepoNode<JSONstatType> | nu
   }
   const nameSearchGraphData: Content<GenericDataImport & DataSource> | null = config?.data.nameSearchGraphData
     ? getContent({
-      key: config.data.nameSearchGraphData,
-    })
+        key: config.data.nameSearchGraphData,
+      })
     : null
 
   if (nameSearchGraphData === null) {
