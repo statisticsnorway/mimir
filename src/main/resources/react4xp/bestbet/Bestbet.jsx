@@ -3,9 +3,9 @@ import PropTypes from 'prop-types'
 import { Container, Row, Col } from 'react-bootstrap'
 import { Title, Link, Tag, Button, Divider } from '@statisticsnorway/ssb-component-library'
 import { XCircle, Edit, Trash, Plus } from 'react-feather'
+import axios from 'axios'
 import BestBetModal from './BestBetModal'
 import BestBetForm from './BestBetForm'
-import axios from 'axios'
 
 export const BestBetContext = createContext()
 function Bestbet(props) {
