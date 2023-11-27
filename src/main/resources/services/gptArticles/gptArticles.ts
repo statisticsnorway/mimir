@@ -16,7 +16,13 @@ export const get = (req: XP.Request): XP.Response => {
       start: start,
       count: count,
       sort: 'modifiedTime DESC',
-      query: `fulltext('data.articleText', '${searchTerm}', 'AND')`,
+      query: {
+        fulltext: {
+          fields: ['data.articleText', 'displayName'],
+          query: searchTerm,
+          operator: 'OR',
+        },
+      },
       contentTypes: ['mimir:article'],
     })
 
