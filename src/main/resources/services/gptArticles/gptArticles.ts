@@ -86,11 +86,11 @@ function getAssociatedStatisticsLinks(
 }
 
 interface AssociatedLink {
-  text: string | undefined
-  href: string | undefined
+  text?: string
+  href?: string
 }
 
 interface CMS {
-  href?: string | undefined
-  title?: string | undefined
+  href?: string
+  title?: string
 }
