@@ -17,7 +17,7 @@ const RichText = ({ text, textType }) => {
     }
   }
 
-  return <div className='xp-part rich-text'>{renderText()}</div>
+  return <div className='xp-part rich-text container'>{renderText()}</div>
 }
 
 RichText.propTypes = {
