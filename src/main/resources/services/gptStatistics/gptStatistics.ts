@@ -13,7 +13,6 @@ export const get = (req: XP.Request): XP.Response => {
     const count = Number(req.params.count) ? Number(req.params.count) : 10
     const start = Number(req.params.start) ? Number(req.params.start) : 0
 
-    // Query content using aggregations.
     const result: ContentsResult<Content<Statistics>> = query({
       start: start,
       count: count,
@@ -21,8 +20,6 @@ export const get = (req: XP.Request): XP.Response => {
       query: `data.statistic = "${searchTerm}"`,
       contentTypes: ['mimir:statistics'],
     })
-
-    // const mainTable = getContent
 
     return {
       status: 200,
@@ -35,11 +32,10 @@ export const get = (req: XP.Request): XP.Response => {
               id: hit._id,
               type: 'absolute',
             }),
-            mainTable:
-              'https://www.ssb.no' +
-              pageUrl({
-                id: hit.data.mainTable ?? '',
-              }),
+            mainTable: pageUrl({
+              id: hit.data.mainTable ?? '',
+              type: 'absolute',
+            }),
             statbankLinkItemSet: hit.data.statbankLinkItemSet,
           }
         }),
