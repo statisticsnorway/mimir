@@ -19,7 +19,7 @@ export const get = (req: XP.Request): XP.Response => {
       query: {
         fulltext: {
           fields: ['data.articleText', 'displayName'],
-          query: searchTerm,
+          query: decodeURI(searchTerm).split(' ').join('~2 ') + '~2', // Gives us levensthein distance of 2
           operator: 'OR',
         },
       },
