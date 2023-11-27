@@ -4,8 +4,6 @@ import { isEnabled } from '/lib/featureToggle'
 import { sanitizeQuery } from '/lib/ssb/utils/nameSearchUtils'
 import { Article } from '/site/content-types'
 
-// import { getContent } from '/lib/xp/portal'
-
 export const get = (req: XP.Request): XP.Response => {
   const gptServiceEnabled: boolean = isEnabled('gpt-service', false, 'ssb')
   if (gptServiceEnabled) {
@@ -14,7 +12,6 @@ export const get = (req: XP.Request): XP.Response => {
     const count = Number(req.params.count) ? Number(req.params.count) : 10
     const start = Number(req.params.start) ? Number(req.params.start) : 0
 
-    // Query content using aggregations.
     const result2: ContentsResult<Content<Article>> = query({
       start: start,
       count: count,

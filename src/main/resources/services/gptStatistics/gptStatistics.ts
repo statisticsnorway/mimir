@@ -1,9 +1,7 @@
-import { query, get as getContent, ContentsResult, Content } from '/lib/xp/content'
+import { query, ContentsResult, Content } from '/lib/xp/content'
 import { pageUrl } from '/lib/xp/portal'
 import { isEnabled } from '/lib/featureToggle'
 import { Statistics } from '/site/content-types'
-
-// import { getContent } from '/lib/xp/portal'
 
 export const get = (req: XP.Request): XP.Response => {
   const gptServiceEnabled: boolean = isEnabled('gpt-service', false, 'ssb')
