@@ -31,12 +31,10 @@ export const get = (req: XP.Request): XP.Response => {
           return {
             publishDate: hit.publish?.first,
             title: hit.displayName,
-            url:
-              'https://www.ssb.no' +
-              pageUrl({
-                id: hit._id,
-                // type: 'absolute',
-              }),
+            url: pageUrl({
+              id: hit._id,
+              type: 'absolute',
+            }),
             associatedStatistics: getAssociatedStatisticsLinks(hit.data.associatedStatistics),
             ingress: hit.data.ingress,
             articleText: hit.data.articleText,
@@ -69,16 +67,15 @@ function getAssociatedStatisticsLinks(
             return {
               text: associatedStatisticsXPContent.displayName,
               href: associatedStatisticsXP
-                ? 'https://www.ssb.no' +
-                  pageUrl({
+                ? pageUrl({
                     path: associatedStatisticsXPContent._path,
+                    type: 'absolute',
                   })
                 : '',
             }
           }
         } else if (option?._selected === 'CMS') {
           const associatedStatisticsCMS: CMS | undefined = option.CMS
-
           return {
             text: associatedStatisticsCMS?.title,
             href: 'https://www.ssb.no' + associatedStatisticsCMS?.href,

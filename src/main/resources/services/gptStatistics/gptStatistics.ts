@@ -31,34 +31,19 @@ export const get = (req: XP.Request): XP.Response => {
         agg: result.hits.map((hit) => {
           return {
             title: hit.displayName,
-            url:
-              'https://www.ssb.no' +
-              pageUrl({
-                id: hit._id,
-                // type: 'absolute',
-              }),
+            url: pageUrl({
+              id: hit._id,
+              type: 'absolute',
+            }),
             mainTable:
               'https://www.ssb.no' +
               pageUrl({
                 id: hit.data.mainTable ?? '',
               }),
-            // sourceTable: 'test tekst her',
             statbankLinkItemSet: hit.data.statbankLinkItemSet,
           }
         }),
         result,
-        // result: result2.hits.map((hit) => {
-        //   return {
-        //     title: hit.displayName,
-        //     url:
-        //       'https://www.ssb.no' +
-        //       pageUrl({
-        //         id: hit._id,
-        //         // type: 'absolute',
-        //       }),
-        //     associatedStatistics: getAssociatedStatisticsLinks(hit.data),
-        //   }
-        // }),
       },
     }
   } else {
