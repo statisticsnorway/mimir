@@ -123,6 +123,11 @@ section.part-divider + section.part-divider {
   background-color: $ssb-dark-5;
   padding-top: 20px;
   padding-bottom: 20px;
+
+  /* Set text color to white for all child elements */
+  & * {
+    color: white;
+  }
 }
 
 .premain {
@@ -153,3 +158,4 @@ section.part-divider + section.part-divider {
     color: $ssb-red-3;
   }
 }
+
