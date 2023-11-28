@@ -130,7 +130,7 @@ export function get(req: XP.Request): XP.Response {
   }
   const language: Language = getLanguage(page) as Language
   const menuCacheLanguage: string = language.code === 'en' ? 'en' : 'nb'
-  const hideHeader = pageConfig.hideHeader
+  const hideHeader = pageConfig.hideHeader && isEnabled('hide-header-in-qa', true, 'ssb')
   let header
   if (!hideHeader) {
     const headerContent: MenuContent | unknown = fromMenuCache(req, `header_${menuCacheLanguage}`, () => {

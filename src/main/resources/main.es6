@@ -103,6 +103,10 @@ try {
           feature: 'highchart-expert',
           enabled: false,
         },
+        {
+          feature: 'hide-header-in-qa',
+          enabled: false,
+        },
       ],
     },
   ])

@@ -30,7 +30,7 @@
       </items>
     </field-set>
     <input name="hideHeader" type="CheckBox">
-      <label>Skjul Toppmeny</label>
+      <label>Skjul Toppmeny (Kun i QA)</label>
     </input>
     <input name="hide_breadcrumb" type="CheckBox">
       <label>Skjul Brødsmulesti</label>
