@@ -64,10 +64,6 @@ try {
           enabled: false,
         },
         {
-          feature: 'publishJob-lib-sheduler',
-          enabled: false,
-        },
-        {
           feature: 'enable-chat-script',
           enabled: false,
         },
