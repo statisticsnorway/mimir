@@ -15,7 +15,7 @@ jobs:
     environment: 'QA'
     steps:
       - name: Download workflow artifact
-        uses: dawidd6/action-download-artifact@v2.27.0
+        uses: dawidd6/action-download-artifact@v2.28.0
         with:
           workflow: deploy_to_qa.yaml
           branch: develop
@@ -124,7 +124,7 @@ jobs:
     container: node:lts
     steps:
       - name: Git checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Branch name and commit hash
         run: |
               echo running on branch ${GITHUB_HEAD_REF##*/} or ${GITHUB_REF##*/}

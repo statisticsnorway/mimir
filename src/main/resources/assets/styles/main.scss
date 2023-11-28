@@ -82,6 +82,8 @@ $container-max-widths: (
 @import "./employee";
 @import "./employeeList";
 @import "./project";
+@import "./richText";
+@import "./videoEmbed";
 
 body {
   -moz-osx-font-smoothing: grayscale;
@@ -117,6 +119,17 @@ section.part-divider + section.part-divider {
   padding-bottom: 20px;
 }
 
+.region-dark-grey {
+  background-color: $ssb-dark-5;
+  padding-top: 20px;
+  padding-bottom: 20px;
+
+  /* Set text color to white for all child elements */
+  & * {
+    color: $ssb-white;
+  }
+}
+
 .premain {
   max-width: 100%;
   background: white;
@@ -135,3 +148,14 @@ section.part-divider + section.part-divider {
     width: 95%;
   }
 }
+
+
+.part-config-error {
+  background: $ssb-red-1;
+  padding: 1rem;
+
+  h2 {
+    color: $ssb-red-3;
+  }
+}
+

@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { PictureCard, Button } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
-import { get } from 'axios'
+import axios from 'axios'
 
 function RelatedBoxes(props) {
   const {
@@ -31,13 +31,14 @@ function RelatedBoxes(props) {
 
   function fetchAllRelatedFactPages() {
     setLoading(true)
-    get(relatedFactPageServiceUrl, {
-      params: {
-        start: relatedFactPages.length,
-        count: total - relatedFactPages.length,
-        partConfig,
-      },
-    })
+    axios
+      .get(relatedFactPageServiceUrl, {
+        params: {
+          start: relatedFactPages.length,
+          count: total - relatedFactPages.length,
+          partConfig,
+        },
+      })
       .then((res) => {
         if (res.data.relatedFactPages.length) {
           setRelatedFactPages((prev) => [...prev, ...res.data.relatedFactPages])
@@ -51,13 +52,14 @@ function RelatedBoxes(props) {
 
   function fetchFirstRelatedFactPages() {
     setLoading(true)
-    get(relatedFactPageServiceUrl, {
-      params: {
-        start: 0,
-        count: 4,
-        partConfig,
-      },
-    })
+    axios
+      .get(relatedFactPageServiceUrl, {
+        params: {
+          start: 0,
+          count: 4,
+          partConfig,
+        },
+      })
       .then((res) => {
         if (res.data.relatedFactPages.length) {
           setRelatedFactPages(res.data.relatedFactPages)
