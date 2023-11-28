@@ -1,6 +1,7 @@
 .xp-part.rich-text {
   > * {
-    margin: 0 auto
+    margin: 0 auto;
+    max-width: $max-readable-width;
   }
 
   span {
