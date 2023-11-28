@@ -187,7 +187,7 @@ export function getAssociatedStatisticsLinks(
 export function getAssociatedArticleArchiveLinks(
   associatedArticleArchivesConfig: Article['articleArchive']
 ): Array<AssociatedLink> | [] {
-  if (associatedArticleArchivesConfig && associatedArticleArchivesConfig.length) {
+  if (associatedArticleArchivesConfig?.length) {
     return (associatedArticleArchivesConfig as Array<string>)
       .map((articleArchive: string) => {
         const articleArchiveContent: Content | null = articleArchive
