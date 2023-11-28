@@ -1,7 +1,8 @@
-import { query, get as getContentByKey, ContentsResult, Content } from '/lib/xp/content'
+import { query, ContentsResult, Content } from '/lib/xp/content'
 import { pageUrl } from '/lib/xp/portal'
 import { isEnabled } from '/lib/featureToggle'
 import { sanitizeQuery } from '/lib/ssb/utils/nameSearchUtils'
+import { getAssociatedStatisticsLinks } from '/lib/ssb/utils/articleUtils'
 import { Article } from '/site/content-types'
 
 export const get = (req: XP.Request): XP.Response => {
@@ -50,53 +51,4 @@ export const get = (req: XP.Request): XP.Response => {
       status: 404,
     }
   }
-}
-
-function getAssociatedStatisticsLinks(
-  associatedStatisticsConfig: Article['associatedStatistics']
-): Array<AssociatedLink> | [] {
-  if (associatedStatisticsConfig && associatedStatisticsConfig.length) {
-    return associatedStatisticsConfig
-      .map((option) => {
-        if (option?._selected === 'XP') {
-          const associatedStatisticsXP: string | undefined = option.XP?.content
-          const associatedStatisticsXPContent: Content | null = associatedStatisticsXP
-            ? getContentByKey({
-                key: associatedStatisticsXP,
-              })
-            : null
-
-          if (associatedStatisticsXPContent) {
-            return {
-              text: associatedStatisticsXPContent.displayName,
-              href: associatedStatisticsXP
-                ? pageUrl({
-                    path: associatedStatisticsXPContent._path,
-                    type: 'absolute',
-                  })
-                : '',
-            }
-          }
-        } else if (option?._selected === 'CMS') {
-          const associatedStatisticsCMS: CMS | undefined = option.CMS
-          return {
-            text: associatedStatisticsCMS?.title,
-            href: 'https://www.ssb.no' + associatedStatisticsCMS?.href,
-          }
-        }
-        return
-      })
-      .filter((statistics) => !!statistics) as Array<AssociatedLink>
-  }
-  return []
-}
-
-interface AssociatedLink {
-  text?: string
-  href?: string
-}
-
-interface CMS {
-  href?: string
-  title?: string
 }
