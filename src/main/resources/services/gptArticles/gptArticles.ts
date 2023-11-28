@@ -9,11 +9,10 @@ export const get = (req: XP.Request): XP.Response => {
   const gptServiceEnabled: boolean = isEnabled('gpt-service', false, 'ssb')
   if (gptServiceEnabled) {
     const searchTerm = req.params.query ? sanitizeQuery(req.params.query) : ''
-    log.info(`queryParam: ${searchTerm}`)
     const count = Number(req.params.count) ? Number(req.params.count) : 10
     const start = Number(req.params.start) ? Number(req.params.start) : 0
 
-    const result2: ContentsResult<Content<Article>> = query({
+    const result: ContentsResult<Content<Article>> = query({
       start: start,
       count: count,
       sort: 'modifiedTime DESC',
@@ -31,7 +30,7 @@ export const get = (req: XP.Request): XP.Response => {
       status: 200,
       contentType: 'application/json',
       body: {
-        result: result2.hits.map((hit) => {
+        result: result.hits.map((hit) => {
           return {
             publishDate: hit.publish?.first,
             title: hit.displayName,

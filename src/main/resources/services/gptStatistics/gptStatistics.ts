@@ -7,7 +7,6 @@ export const get = (req: XP.Request): XP.Response => {
   const gptServiceEnabled: boolean = isEnabled('gpt-service', false, 'ssb')
   if (gptServiceEnabled) {
     const searchTerm = req.params.query ? parseInt(req.params.query) : 0
-    log.info(`queryParam: ${searchTerm}`)
     const count = Number(req.params.count) ? Number(req.params.count) : 10
     const start = Number(req.params.start) ? Number(req.params.start) : 0
 
