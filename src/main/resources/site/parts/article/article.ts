@@ -1,8 +1,13 @@
-import { get as getContentByKey, type Content } from '/lib/xp/content'
-import { processHtml, getContent, pageUrl } from '/lib/xp/portal'
+import { type Content } from '/lib/xp/content'
+import { processHtml, getContent } from '/lib/xp/portal'
 import { render } from '/lib/enonic/react4xp'
 import { formatDate } from '/lib/ssb/utils/dateUtils'
 import { scriptAsset } from '/lib/ssb/utils/utils'
+import {
+  getAssociatedStatisticsLinks,
+  getAssociatedArticleArchiveLinks,
+  type AssociatedLink,
+} from '/lib/ssb/utils/articleUtils'
 
 import * as util from '/lib/util'
 import { getPhrases } from '/lib/ssb/utils/language'
@@ -75,7 +80,7 @@ function renderPart(req: XP.Request) {
     serialNumber: page.data.serialNumber,
     associatedStatistics: getAssociatedStatisticsLinks(associatedStatisticsConfig),
     associatedArticleArchives: getAssociatedArticleArchiveLinks(associatedArticleArchivesConfig),
-    isbn: isEnabled('article-isbn', true) && page.data.isbnNumber,
+    isbn: isEnabled('article-isbn', true) ? page.data.isbnNumber : undefined,
   }
 
   return render('site/parts/article/article', props, req, {
@@ -83,84 +88,6 @@ function renderPart(req: XP.Request) {
       bodyEnd: [scriptAsset('js/divider.js')],
     },
   })
-}
-
-function getAssociatedStatisticsLinks(
-  associatedStatisticsConfig: Article['associatedStatistics']
-): Array<AssociatedLink> | [] {
-  if (associatedStatisticsConfig && associatedStatisticsConfig.length) {
-    return associatedStatisticsConfig
-      .map((option) => {
-        if (option?._selected === 'XP') {
-          const associatedStatisticsXP: string | undefined = option.XP?.content
-          const associatedStatisticsXPContent: Content | null = associatedStatisticsXP
-            ? getContentByKey({
-                key: associatedStatisticsXP,
-              })
-            : null
-
-          if (associatedStatisticsXPContent) {
-            return {
-              text: associatedStatisticsXPContent.displayName,
-              href: associatedStatisticsXP
-                ? pageUrl({
-                    path: associatedStatisticsXPContent._path,
-                  })
-                : '',
-            }
-          }
-        } else if (option?._selected === 'CMS') {
-          const associatedStatisticsCMS: CMS | undefined = option.CMS
-
-          return {
-            text: associatedStatisticsCMS?.title,
-            href: associatedStatisticsCMS?.href,
-          }
-        }
-        return
-      })
-      .filter((statistics) => !!statistics) as Array<AssociatedLink>
-  }
-  return []
-}
-
-function getAssociatedArticleArchiveLinks(
-  associatedArticleArchivesConfig: Article['articleArchive']
-): Array<AssociatedLink> | [] {
-  if (associatedArticleArchivesConfig && associatedArticleArchivesConfig.length) {
-    return (associatedArticleArchivesConfig as Array<string>)
-      .map((articleArchive: string) => {
-        const articleArchiveContent: Content | null = articleArchive
-          ? getContentByKey({
-              key: articleArchive,
-            })
-          : null
-
-        if (articleArchiveContent) {
-          return {
-            text: articleArchiveContent.displayName,
-            href: articleArchive
-              ? pageUrl({
-                  path: articleArchiveContent._path,
-                })
-              : '',
-          }
-        }
-        return
-      })
-      .filter((articleArchive) => !!articleArchive) as Array<AssociatedLink>
-  }
-  return []
-}
-
-interface AssociatedLink {
-  text: string | undefined
-  href: string | undefined
-}
-
-interface CMS {
-  href?: string | undefined
-  title?: string | undefined
 }
 
 interface ArticleProps {
