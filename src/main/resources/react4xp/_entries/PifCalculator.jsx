@@ -247,6 +247,7 @@ function PifCalculator(props) {
         // Missing data for pifProductOil (SITC4) and home market (2)
         if (value === '2' && productGroup.value === 'SITC4') {
           setReset(reset + 1)
+          setProductGroup({ ...productGroup, value: 'SITCT' })
         }
         break
       }
