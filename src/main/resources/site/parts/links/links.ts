@@ -32,8 +32,8 @@ function renderPart(req: XP.Request, config: LinksPartConfig) {
     if (linkTypes._selected === 'tableLink') {
       const href: string | undefined = linkTypes.tableLink.relatedContent
         ? pageUrl({
-          id: linkTypes.tableLink.relatedContent,
-        })
+            id: linkTypes.tableLink.relatedContent,
+          })
         : linkTypes.tableLink.url
 
       props = {
@@ -49,8 +49,8 @@ function renderPart(req: XP.Request, config: LinksPartConfig) {
 
       const content: Content | null = linkedContent
         ? getContentByKey({
-          key: linkedContent,
-        })
+            key: linkedContent,
+          })
         : null
 
       let contentUrl: string | undefined
@@ -67,8 +67,8 @@ function renderPart(req: XP.Request, config: LinksPartConfig) {
       } else {
         contentUrl = linkedContent
           ? pageUrl({
-            id: linkedContent,
-          })
+              id: linkedContent,
+            })
           : linkTypes.headerLink.headerLinkHref
       }
 
@@ -87,8 +87,8 @@ function renderPart(req: XP.Request, config: LinksPartConfig) {
         children: linkTypes.profiledLink.text,
         href: linkTypes.profiledLink.contentUrl
           ? pageUrl({
-            id: linkTypes.profiledLink.contentUrl,
-          })
+              id: linkTypes.profiledLink.contentUrl,
+            })
           : linkTypes.profiledLink.profiledLinkHref,
         withIcon: !!linkTypes.profiledLink.withIcon,
         linkType: 'profiled',

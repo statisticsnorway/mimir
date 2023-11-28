@@ -82,6 +82,7 @@ $container-max-widths: (
 @import "./employee";
 @import "./employeeList";
 @import "./project";
+@import "./richText";
 @import "./videoEmbed";
 
 body {
@@ -118,6 +119,17 @@ section.part-divider + section.part-divider {
   padding-bottom: 20px;
 }
 
+.region-dark-grey {
+  background-color: $ssb-dark-5;
+  padding-top: 20px;
+  padding-bottom: 20px;
+
+  /* Set text color to white for all child elements */
+  & * {
+    color: $ssb-white;
+  }
+}
+
 .premain {
   max-width: 100%;
   background: white;
@@ -146,3 +158,4 @@ section.part-divider + section.part-divider {
     color: $ssb-red-3;
   }
 }
+

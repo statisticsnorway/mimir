@@ -3,17 +3,18 @@ import PropTypes from 'prop-types'
 import { Form, Container, Row, Col } from 'react-bootstrap'
 import { Input, Button, Dropdown, Divider, FormError, Link, RadioGroup } from '@statisticsnorway/ssb-component-library'
 import axios from 'axios'
-import NumberFormat from 'react-number-format'
+import { NumericFormat } from 'react-number-format'
 import { X } from 'react-feather'
 
 function PifCalculator(props) {
   const validMaxYear = props.lastUpdated.year
-  const { pifErrorMarket, pifErrorProduct, calculatorValidateAmountNumber, pifValidateYear } = props.phrases
+  const { pifErrorProduct, calculatorValidateAmountNumber, pifValidateYear } = props.phrases
   const [scopeCode, setScopeCode] = useState({
     error: false,
-    errorMsg: pifErrorMarket,
+    errorMsg: '',
     value: '',
   })
+  const [reset, setReset] = useState(0)
   const [productGroup, setProductGroup] = useState({
     error: false,
     errorMsg: pifErrorProduct,
@@ -27,10 +28,9 @@ function PifCalculator(props) {
   const [startMonth, setStartMonth] = useState({
     error: false,
     errorMsg: props.lastNumberText,
-    value: '',
+    value: '90',
   })
-  // Differentiate validMinYear based on selected market
-  const validMinYear = scopeCode.value === '3' ? 1926 : 1977
+  const validMinYear = getStartYearRelevantDataset()
   const validMinYearPhrase = pifValidateYear.replaceAll('{0}', validMinYear)
   const validYearErrorMsg = `${validMinYearPhrase} ${validMaxYear}`
   const [startYear, setStartYear] = useState({
@@ -41,7 +41,7 @@ function PifCalculator(props) {
   const [endMonth, setEndMonth] = useState({
     error: false,
     errorMsg: props.lastNumberText,
-    value: '',
+    value: '90',
   })
   const [endYear, setEndYear] = useState({
     error: false,
@@ -141,6 +141,15 @@ function PifCalculator(props) {
       })
   }
 
+  function getStartYearRelevantDataset() {
+    // Datasets available from 1977 for home market
+    if (scopeCode.value === '2') return 1977
+    // Datasets available from 1953 for home and import market with spesific product type
+    if (scopeCode.value === '3' && productGroup.value && productGroup.value !== 'SITCT') return 1953
+    // Datasets available from 1926 for home and import market and product type 'all'
+    return 1926
+  }
+
   function isFormValid() {
     return isStartValueValid() && isStartYearValid() && isStartMonthValid() && isEndYearValid() && isEndMonthValid()
   }
@@ -235,6 +244,11 @@ function PifCalculator(props) {
           ...scopeCode,
           value: value,
         })
+        // Missing data for pifProductOil (SITC4) and home market (2)
+        if (value === '2' && productGroup.value === 'SITC4') {
+          setReset(reset + 1)
+          setProductGroup({ ...productGroup, value: 'SITCT' })
+        }
         break
       }
       case 'product-group': {
@@ -350,6 +364,7 @@ function PifCalculator(props) {
       <Dropdown
         className='productGroup'
         id={id}
+        key={`productGroup-${reset}`}
         onSelect={(value) => {
           onChange(id, value)
         }}
@@ -357,7 +372,8 @@ function PifCalculator(props) {
           title: productGroupAll,
           id: 'SITCT',
         }}
-        items={props.productGroups}
+        // Dataset not available for pifProductOil (SITC4) for home market (2)
+        items={scopeCode.value === '2' ? props.productGroups.toSpliced(5, 1) : props.productGroups}
         ariaLabel={props.phrases.pifProductTypeHeader}
       />
     )
@@ -378,13 +394,13 @@ function PifCalculator(props) {
       const decimalSeparator = language === 'en' ? '.' : ','
       return (
         <React.Fragment>
-          <NumberFormat
+          <NumericFormat
             value={Number(value)}
-            displayType={'text'}
-            thousandSeparator={' '}
+            displayType='text'
+            thousandSeparator=' '
             decimalSeparator={decimalSeparator}
             decimalScale={2}
-            fixedDecimalScale={true}
+            fixedDecimalScale
           />{' '}
           {valute}
         </React.Fragment>
@@ -398,13 +414,13 @@ function PifCalculator(props) {
       const decimalSeparator = language === 'en' ? '.' : ','
       return (
         <React.Fragment>
-          <NumberFormat
+          <NumericFormat
             value={Number(changeValue)}
-            displayType={'text'}
-            thousandSeparator={' '}
+            displayType='text'
+            thousandSeparator=' '
             decimalSeparator={decimalSeparator}
             decimalScale={1}
-            fixedDecimalScale={true}
+            fixedDecimalScale
           />{' '}
           %
         </React.Fragment>
@@ -417,13 +433,13 @@ function PifCalculator(props) {
       const decimalSeparator = language === 'en' ? '.' : ','
       return (
         <React.Fragment>
-          <NumberFormat
+          <NumericFormat
             value={Number(value)}
-            displayType={'text'}
-            thousandSeparator={' '}
+            displayType='text'
+            thousandSeparator=' '
             decimalSeparator={decimalSeparator}
             decimalScale={1}
-            fixedDecimalScale={true}
+            fixedDecimalScale
           />
         </React.Fragment>
       )

@@ -337,25 +337,31 @@ function getMunicipalDataSources(municipalId: string): Array<Content<DataSource>
 
 function getDefaultDataSources(): Array<DashboardDataSource> {
   // We want all the data sources that are not in the groups below
-  const factPageDataSourceIds: string[][] = getFactPageGroups().map((g) => getFactPageDataSources(g.id).map(ds => ds._id))
-  const municipalDataSourceIds: string[][] = getMunicipalGroups().map((g) => getMunicipalDataSources(g.id).map(ds => ds._id))
-  const statisticsDataSourceIds: string[][] = getStatisticsGroups().map((g) => getStatisticsDataSources(g.id).map(ds => ds._id))
+  const factPageDataSourceIds: string[][] = getFactPageGroups().map((g) =>
+    getFactPageDataSources(g.id).map((ds) => ds._id)
+  )
+  const municipalDataSourceIds: string[][] = getMunicipalGroups().map((g) =>
+    getMunicipalDataSources(g.id).map((ds) => ds._id)
+  )
+  const statisticsDataSourceIds: string[][] = getStatisticsGroups().map((g) =>
+    getStatisticsDataSources(g.id).map((ds) => ds._id)
+  )
 
   const dataSourceIds = [
     ...factPageDataSourceIds.reduce((acc, g) => [...acc, ...g], []),
     ...municipalDataSourceIds.reduce((acc, g) => [...acc, ...g], []),
-    ...statisticsDataSourceIds.reduce((acc, g) => [...acc, ...g], [])
-  ];
+    ...statisticsDataSourceIds.reduce((acc, g) => [...acc, ...g], []),
+  ]
   const hits: Array<Content<DataSource>> = query({
     query: `data.dataSource._selected LIKE "*" AND data.dataSource._selected NOT LIKE "htmlTable"`,
     filters: {
       boolean: {
         mustNot: {
           ids: {
-            values: dataSourceIds
-          }
-        }
-      }
+            values: dataSourceIds,
+          },
+        },
+      },
     },
     count: 10000,
   }).hits as unknown as Array<Content<DataSource>>

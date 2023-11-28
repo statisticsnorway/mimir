@@ -38,6 +38,12 @@
             <input name="generalTitle" type="TextLine">
               <label>Tittel</label>
             </input>
+            <input name="landingPage" type="CheckBox">
+              <label>Bruk på landingsside</label>
+              <config>
+                  <alignment>right</alignment>
+              </config>
+          </input>
           </items>
         </option>
       </options>

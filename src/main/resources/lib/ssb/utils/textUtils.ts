@@ -1,13 +1,3 @@
 export function sanitizeForSolr(term: string): string {
-  return term
-    .replace("'", '')
-    .replace('<', '')
-    .replace('>', '')
-    .replace(';', '')
-    .replace('.', '')
-    .replace(',', '')
-    .replace('´', '')
-    .replace('`', '')
-    .replace('"', '')
-    .replace('\\+', '&2B')
+  return term.replace(/['<>;.,´`"]/g, '').replace(/\\+/g, '&2B')
 }
