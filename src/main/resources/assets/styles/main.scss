@@ -126,7 +126,7 @@ section.part-divider + section.part-divider {
 
   /* Set text color to white for all child elements */
   & * {
-    color: white;
+    color: $ssb-white;
   }
 }
 
