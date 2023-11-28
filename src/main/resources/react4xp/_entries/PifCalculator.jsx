@@ -14,6 +14,7 @@ function PifCalculator(props) {
     errorMsg: '',
     value: '',
   })
+  const [reset, setReset] = useState(0)
   const [productGroup, setProductGroup] = useState({
     error: false,
     errorMsg: pifErrorProduct,
@@ -150,21 +151,7 @@ function PifCalculator(props) {
   }
 
   function isFormValid() {
-    return (
-      haveDatasetForChosenProductGroup() &&
-      isStartValueValid() &&
-      isStartYearValid() &&
-      isStartMonthValid() &&
-      isEndYearValid() &&
-      isEndMonthValid()
-    )
-  }
-
-  function haveDatasetForChosenProductGroup(scopeCodeValue, productGroupValue) {
-    // Dataset not available for pifProductOil (SITC4) for home market
-    const productGroupChosen = productGroupValue || productGroup.value
-    const scopeCodeChosen = scopeCodeValue || scopeCode.value
-    return !(productGroupChosen === 'SITC4' && scopeCodeChosen === '2')
+    return isStartValueValid() && isStartYearValid() && isStartMonthValid() && isEndYearValid() && isEndMonthValid()
   }
 
   function isStartValueValid(value) {
@@ -257,17 +244,17 @@ function PifCalculator(props) {
           ...scopeCode,
           value: value,
         })
-        setProductGroup({
-          ...productGroup,
-          error: !haveDatasetForChosenProductGroup(value, productGroup.value),
-        })
+        // Missing data for pifProductOil (SITC4) and home market (2)
+        if (value === '2' && productGroup.value === 'SITC4') {
+          setReset(reset + 1)
+          setProductGroup({ ...productGroup, value: 'SITCT' })
+        }
         break
       }
       case 'product-group': {
         setProductGroup({
           ...productGroup,
           value: value.id,
-          error: !haveDatasetForChosenProductGroup(scopeCode.value, value.id),
         })
         break
       }
@@ -377,6 +364,7 @@ function PifCalculator(props) {
       <Dropdown
         className='productGroup'
         id={id}
+        key={`productGroup-${reset}`}
         onSelect={(value) => {
           onChange(id, value)
         }}
@@ -384,10 +372,9 @@ function PifCalculator(props) {
           title: productGroupAll,
           id: 'SITCT',
         }}
-        items={props.productGroups}
+        // Dataset not available for pifProductOil (SITC4) for home market (2)
+        items={scopeCode.value === '2' ? props.productGroups.toSpliced(5, 1) : props.productGroups}
         ariaLabel={props.phrases.pifProductTypeHeader}
-        error={productGroup.error}
-        errorMessage={productGroup.errorMsg}
       />
     )
   }
