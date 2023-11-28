@@ -106,11 +106,7 @@ function getGroupedWithMonthNames(config: ReleasedStatisticsPartConfig, currentL
   return addMonthNames(groupedByYearMonthAndDay, currentLanguage)
 }
 
-function prepReleases(
-  variant: ContentLight<ReleaseVariant>,
-  date: Date,
-  periodRelease: string
-): PreparedStatistics {
+function prepReleases(variant: ContentLight<ReleaseVariant>, date: Date, periodRelease: string): PreparedStatistics {
   return {
     id: Number(variant.data.statisticId),
     name: variant.data.name,

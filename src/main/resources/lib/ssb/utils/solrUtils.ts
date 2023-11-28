@@ -1,4 +1,5 @@
 import { sanitizeHtml } from '/lib/xp/portal'
+import { localize } from '/lib/xp/i18n'
 import { request, HttpResponse } from '/lib/http-client'
 import { formatDate } from '/lib/ssb/utils/dateUtils'
 
@@ -12,9 +13,9 @@ export function solrSearch(
   language: string,
   numberOfHits: number,
   start = 0,
-  mainSubject: string,
-  contentType: string,
-  sortParam: string | undefined
+  mainSubject?: string | undefined,
+  contentType?: string,
+  sortParam?: string | undefined
 ): SolrPrepResultAndTotal {
   const lang: string = language === 'en' ? 'en' : 'no'
   const languageQuery = `fq=sprak${encodeURIComponent(':')}${lang}`
@@ -61,11 +62,17 @@ function nerfSearchResult(solrResult: SolrResult, language: string): Array<Prepa
       const highlight: SolrHighlighting | undefined = solrResult.highlighting[doc.id]
       const mainSubjects: Array<string> = doc.hovedemner ? doc.hovedemner.split(';') : []
       const secondarySubjects: Array<string> = mainSubjects.filter((subject) => subject !== mainSubjects[0])
+
+      const contentTypeTranslated = localize({
+        locale: language,
+        key: `contentType.search.${doc.innholdstype.toLowerCase()}`,
+      })
+
       acc.push({
         id: doc.id,
         title: sanitizeHtml(highlight.tittel ? highlight.tittel[0] : doc.tittel),
         preface: sanitizeHtml(highlight.innhold ? highlight.innhold[0] : doc.tittel),
-        contentType: doc.innholdstype,
+        contentType: contentTypeTranslated !== 'NOT_TRANSLATED' ? contentTypeTranslated : doc.innholdstype,
         url: doc.url,
         mainSubject: mainSubjects.length > 0 ? mainSubjects[0] : '',
         secondaryMainSubject: secondarySubjects.join(';'),

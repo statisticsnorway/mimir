@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { PropTypes } from 'prop-types'
 import { Link, FactBox, Tabs, Divider } from '@statisticsnorway/ssb-component-library'
 import { Row, Col } from 'react-bootstrap'
-import NumberFormat from 'react-number-format'
+import { NumericFormat } from 'react-number-format'
 
 function StaticVisualization(props) {
   const [activeTab, changeTab] = useState('figure')
@@ -112,13 +112,13 @@ function StaticVisualization(props) {
       if (typeof value === 'number' || (typeof value === 'string' && !isNaN(value))) {
         const decimals = value.toString().indexOf('.') > -1 ? value.toString().split('.')[1].length : 0
         return (
-          <NumberFormat
+          <NumericFormat
             value={Number(value)}
-            displayType={'text'}
-            thousandSeparator={' '}
+            displayType='text'
+            thousandSeparator=' '
             decimalSeparator={decimalSeparator}
             decimalScale={decimals}
-            fixedDecimalScale={true}
+            fixedDecimalScale
           />
         )
       }
