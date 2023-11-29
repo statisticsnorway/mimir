@@ -17,6 +17,17 @@ export const get = (req: XP.Request): XP.Response => {
       OR = 'OR',
     }
 
+    if (Object.keys(req.params).length == 0) {
+      // If no query parameters are given, return a 400 with instructions
+      return {
+        status: 400,
+        contentType: 'application/json',
+        body: {
+          message: 'Missing query parameter. Example: ?query=population%20density&count=10&start=0&operator=AND',
+        },
+      }
+    }
+
     const result: ContentsResult<Content<Article>> = query({
       start: start,
       count: count,
