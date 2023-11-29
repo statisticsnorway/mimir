@@ -3,6 +3,7 @@ import { pageUrl } from '/lib/xp/portal'
 import { isEnabled } from '/lib/featureToggle'
 import { sanitizeQuery } from '/lib/ssb/utils/nameSearchUtils'
 import { getAssociatedStatisticsLinks } from '/lib/ssb/utils/articleUtils'
+import { ensureArray } from '/lib/ssb/utils/arrayUtils'
 import { Article } from '/site/content-types'
 
 export const get = (req: XP.Request): XP.Response => {
@@ -11,6 +12,10 @@ export const get = (req: XP.Request): XP.Response => {
     const searchTerm = req.params.query ? sanitizeQuery(req.params.query) : ''
     const count = Number(req.params.count) ? Number(req.params.count) : 10
     const start = Number(req.params.start) ? Number(req.params.start) : 0
+    enum operator {
+      AND = 'AND',
+      OR = 'OR',
+    }
 
     const result: ContentsResult<Content<Article>> = query({
       start: start,
@@ -19,8 +24,8 @@ export const get = (req: XP.Request): XP.Response => {
       query: {
         fulltext: {
           fields: ['data.articleText', 'displayName'],
-          query: decodeURI(searchTerm).split(' ').join('~2 ') + '~2', // Gives us levensthein distance of 2
-          operator: 'OR',
+          query: decodeURI(searchTerm).split(' ').join('~1 ') + '~1', // Gives us levensthein distance of 2
+          operator: req.params.operator == operator.AND ? operator.AND : operator.OR,
         },
       },
       contentTypes: ['mimir:article'],
@@ -38,7 +43,7 @@ export const get = (req: XP.Request): XP.Response => {
               id: hit._id,
               type: 'absolute',
             }),
-            associatedStatistics: getAssociatedStatisticsLinks(hit.data.associatedStatistics),
+            associatedStatistics: getAssociatedStatisticsLinks(ensureArray(hit.data.associatedStatistics)),
             ingress: hit.data.ingress,
             articleText: hit.data.articleText,
           }
