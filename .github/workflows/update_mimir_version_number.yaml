@@ -9,7 +9,7 @@ jobs:
   update_pr:
     runs-on: ubuntu-latest
     if: >-
-      contains(fromJSON('["patch-release", "major-release", "minor-release"]'), github.event.label.name && contains(fromJSON('["omsaggau", "annesiri", "ssb-cgn", "Glenruben", "johnnadeluy", "Carl-OW"]'), github.actor))
+      contains(fromJSON('["patch-release", "major-release", "minor-release"]'), github.event.label.name) && contains(fromJSON('["omsaggau", "annesiri", "ssb-cgn", "Glenruben", "johnnadeluy", "Carl-OW"]'), github.actor)
     steps:
       - name: Determine Version Bump Type
         id: determine_bump_type
