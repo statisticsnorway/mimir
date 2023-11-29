@@ -10,6 +10,17 @@ export const get = (req: XP.Request): XP.Response => {
     const count = Number(req.params.count) ? Number(req.params.count) : 10
     const start = Number(req.params.start) ? Number(req.params.start) : 0
 
+    if (Object.keys(req.params).length == 0) {
+      // If no query parameters are given, return a 400 with instructions
+      return {
+        status: 400,
+        contentType: 'application/json',
+        body: {
+          message: 'Missing query parameter. Example: ?query=2334&count=10&start=0',
+        },
+      }
+    }
+
     const result: ContentsResult<Content<Statistics>> = query({
       start: start,
       count: count,
