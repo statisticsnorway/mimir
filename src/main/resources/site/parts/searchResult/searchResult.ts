@@ -83,6 +83,41 @@ export function renderPart(req: XP.Request) {
         locale: language,
       }),
     },
+    {
+      id: 'publikasjon',
+      title: localize({
+        key: 'contentType.search.publikasjon',
+        locale: language,
+      }),
+    },
+    {
+      id: 'report',
+      title: localize({
+        key: 'contentType.search.report',
+        locale: language,
+      }),
+    },
+    {
+      id: 'note',
+      title: localize({
+        key: 'contentType.search.note',
+        locale: language,
+      }),
+    },
+    {
+      id: 'economicTrends',
+      title: localize({
+        key: 'contentType.search.economicTrends',
+        locale: language,
+      }),
+    },
+    {
+      id: 'discussionPaper',
+      title: localize({
+        key: 'contentType.search.discussionPaper',
+        locale: language,
+      }),
+    },
   ]
 
   function bestBet(): PreparedSearchResult | undefined {
