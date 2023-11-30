@@ -66,6 +66,7 @@ function BkibolCalculator(props) {
   const [startValueResult, setStartValueResult] = useState(null)
   const [startIndex, setStartIndex] = useState(null)
   const [endIndex, setEndIndex] = useState(null)
+  const [resultScreenReaderText, setResultScreenReaderText] = useState('')
   const language = props.language ? props.language : 'nb'
 
   // const validMaxYear = props.lastUpdated.year
@@ -181,6 +182,16 @@ function BkibolCalculator(props) {
       })
       .finally(() => {
         setLoading(false)
+        const changeValue = change && change.charAt(0) === '-' ? change.replaceAll('-', '') : change
+        setResultScreenReaderText(
+          props.phrases.bkibolResultScreenReader
+            .replaceAll('{0}', endValue)
+            .replaceAll('{1}', changeValue)
+            .replaceAll('{2}', startPeriod)
+            .replaceAll('{3}', endPeriod)
+            .replaceAll('{4}', startIndex)
+            .replaceAll('{5}', endIndex)
+        )
       })
   }
 
@@ -534,7 +545,7 @@ function BkibolCalculator(props) {
 
   function renderNumberChangeValue() {
     if (endValue && change) {
-      const changeValue = change.charAt(0) === '-' ? change.replace('-', '') : change
+      const changeValue = change.charAt(0) === '-' ? change.replaceAll('-', '') : change
       const decimalSeparator = language === 'en' ? '.' : ','
       return (
         <React.Fragment>
@@ -554,6 +565,7 @@ function BkibolCalculator(props) {
 
   function calculatorResult() {
     const priceChangeLabel = change.charAt(0) === '-' ? props.phrases.priceDecrease : props.phrases.priceIncrease
+
     return (
       <Container className='calculator-result' ref={scrollAnchor}>
         <Row className='mb-5'>
@@ -791,8 +803,9 @@ function BkibolCalculator(props) {
     <Container className='bkibol-calculator'>
       {renderForm()}
       <div aria-live='polite' aria-atomic='true'>
-        {renderResult()}
+        <span className='sr-only'>{resultScreenReaderText}</span>
       </div>
+      {renderResult()}
     </Container>
   )
 }
