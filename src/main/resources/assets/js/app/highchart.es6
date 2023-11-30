@@ -119,20 +119,18 @@ export function init() {
           },
         }
 
-        // Only show plotOption marker on last data element
-        if (canvas.data('type') === 'line') {
-          config.series.forEach(function (series) {
-            const lastIndex = series.data.length - 1
-            series.data.forEach(function (data, index) {
-              series.data[index] = {
-                y: parseFloat(data),
-                marker: {
-                  enabled: index === lastIndex,
-                },
-              }
-            })
-          })
-        }
+        // Only show plotOption marker on last data element / single data point series
+        config.series.forEach((series) => {
+          const isLineSeries = canvas.data('type') === 'line'
+          const nonNullPoints = series.data.filter((data) => data !== null).length
+
+          series.data = series.data.map((data, index) => ({
+            y: parseFloat(data),
+            marker: {
+              enabled: isLineSeries && (nonNullPoints === 1 || index === series.data.length - 1),
+            },
+          }))
+        })
 
         const category = 'Highcharts'
         const action = 'Lastet ned highcharts'
