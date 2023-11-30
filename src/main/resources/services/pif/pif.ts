@@ -10,9 +10,9 @@ function get(req: HttpRequestParams): XP.Response {
   const scopeCode: string | undefined = req.params?.scopeCode ?? '3'
   const productGroup: string | undefined = req.params?.productGroup || 'SITCT'
   const startValue: string | undefined = req.params?.startValue
-  const startMonth: string | undefined = req.params?.startMonth || ''
+  const startMonth: string | undefined = req.params?.startMonth || '90'
   const startYear: string | undefined = req.params?.startYear
-  const endMonth: string | undefined = req.params?.endMonth || ''
+  const endMonth: string | undefined = req.params?.endMonth || '90'
   const endYear: string | undefined = req.params?.endYear
   const language: string | undefined = req.params?.language ? req.params.language : 'nb'
   const errorValidateStartMonth: string = localize({
@@ -48,7 +48,7 @@ function get(req: HttpRequestParams): XP.Response {
       pifDataset
     )
     const chronological: boolean = isChronological(startYear, startMonth, endYear, endMonth)
-    if (indexResult.startIndex !== null && indexResult.endIndex !== null) {
+    if (indexResult.startIndex != null && indexResult.endIndex != null) {
       const changeValue: number = getChangeValue(indexResult.startIndex, indexResult.endIndex, chronological)
       return {
         body: {
@@ -88,8 +88,8 @@ function getIndexes(
   endYear: string,
   pifData: Dataset | null
 ): IndexResult {
-  const start: string = startMonth !== '' ? startYear + 'M' + startMonth : startYear
-  const end: string = endMonth !== '' ? endYear + 'M' + endMonth : endYear
+  const start: string = startMonth !== '90' ? startYear + 'M' + startMonth : startYear
+  const end: string = endMonth !== '90' ? endYear + 'M' + endMonth : endYear
 
   const startIndex: null | number =
     start.length == 4

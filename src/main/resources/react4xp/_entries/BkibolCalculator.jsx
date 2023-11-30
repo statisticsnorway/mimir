@@ -12,7 +12,7 @@ import {
   Title,
 } from '@statisticsnorway/ssb-component-library'
 import axios from 'axios'
-import NumberFormat from 'react-number-format'
+import { NumericFormat } from 'react-number-format'
 import { X } from 'react-feather'
 
 function BkibolCalculator(props) {
@@ -499,13 +499,13 @@ function BkibolCalculator(props) {
       const decimalSeparator = language === 'en' ? '.' : ','
       return (
         <React.Fragment>
-          <NumberFormat
+          <NumericFormat
             value={Number(value)}
-            displayType={'text'}
-            thousandSeparator={' '}
+            displayType='text'
+            thousandSeparator=' '
             decimalSeparator={decimalSeparator}
             decimalScale={1}
-            fixedDecimalScale={true}
+            fixedDecimalScale
           />
         </React.Fragment>
       )
@@ -518,13 +518,13 @@ function BkibolCalculator(props) {
       const decimalSeparator = language === 'en' ? '.' : ','
       return (
         <React.Fragment>
-          <NumberFormat
+          <NumericFormat
             value={Number(value)}
-            displayType={'text'}
-            thousandSeparator={' '}
+            displayType='text'
+            thousandSeparator=' '
             decimalSeparator={decimalSeparator}
             decimalScale={2}
-            fixedDecimalScale={true}
+            fixedDecimalScale
           />{' '}
           {valute}
         </React.Fragment>
@@ -538,13 +538,13 @@ function BkibolCalculator(props) {
       const decimalSeparator = language === 'en' ? '.' : ','
       return (
         <React.Fragment>
-          <NumberFormat
+          <NumericFormat
             value={Number(changeValue)}
-            displayType={'text'}
-            thousandSeparator={' '}
+            displayType='text'
+            thousandSeparator=' '
             decimalSeparator={decimalSeparator}
             decimalScale={1}
-            fixedDecimalScale={true}
+            fixedDecimalScale
           />{' '}
           %
         </React.Fragment>

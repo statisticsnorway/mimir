@@ -27,6 +27,7 @@ declare global {
       export type FrontPageBanner = _PartComponent<"mimir:frontPageBanner">
       export type FrontpageKeyfigures = _PartComponent<"mimir:frontpageKeyfigures">
       export type Highchart = _PartComponent<"mimir:highchart">
+      export type HighchartExpert = _PartComponent<"mimir:highchartExpert">
       export type Highmap = _PartComponent<"mimir:highmap">
       export type HusleieCalculator = _PartComponent<"mimir:husleieCalculator">
       export type InfoGraphics = _PartComponent<"mimir:infoGraphics">
@@ -54,6 +55,7 @@ declare global {
       export type RelatedKostra = _PartComponent<"mimir:relatedKostra">
       export type RelatedStatistics = _PartComponent<"mimir:relatedStatistics">
       export type ReleasedStatistics = _PartComponent<"mimir:releasedStatistics">
+      export type RichText = _PartComponent<"mimir:richText">
       export type SearchResult = _PartComponent<"mimir:searchResult">
       export type StandardCardsList = _PartComponent<"mimir:standardCardsList">
       export type StatbankBox = _PartComponent<"mimir:statbankBox">

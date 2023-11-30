@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Dropdown, Link, Button } from '@statisticsnorway/ssb-component-library'
 import { default as isEmpty } from 'ramda/es/isEmpty'
-import NumberFormat from 'react-number-format'
+import { NumericFormat } from 'react-number-format'
 import { Alert } from 'react-bootstrap'
 import { ChevronLeft, ChevronRight } from 'react-feather'
 import { addGtagForEvent } from '/react4xp/ReactGA'
@@ -101,13 +101,13 @@ function Table(props) {
       if (typeof value === 'number' || (typeof value === 'string' && !isNaN(value))) {
         const decimals = value.toString().indexOf('.') > -1 ? value.toString().split('.')[1].length : 0
         return (
-          <NumberFormat
+          <NumericFormat
             value={Number(value)}
-            displayType={'text'}
-            thousandSeparator={' '}
+            displayType='text'
+            thousandSeparator=' '
             decimalSeparator={decimalSeparator}
             decimalScale={decimals}
-            fixedDecimalScale={true}
+            fixedDecimalScale
           />
         )
       }

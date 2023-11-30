@@ -16,10 +16,8 @@ import { getStatisticByIdFromRepo, getReleaseDatesByVariants } from '/lib/ssb/st
 import { getPhrases } from '/lib/ssb/utils/language'
 import { renderError } from '/lib/ssb/error/error'
 import { hasWritePermissionsAndPreview } from '/lib/ssb/parts/permissions'
-import { currentlyWaitingForPublish } from '/lib/ssb/dataset/publish'
 import { currentlyWaitingForPublish as currentlyWaitingForPublishOld } from '/lib/ssb/dataset/publishOld'
 import * as util from '/lib/util'
-import { isEnabled } from '/lib/featureToggle'
 import { type Statistics } from '/site/content-types'
 import { preview as keyFigurePreview } from '../keyFigure/keyFigure'
 
@@ -49,10 +47,7 @@ function renderPart(req: XP.Request): XP.Response {
     app.config && app.config['ssb.statistics.publishMaxWait']
       ? parseInt(app.config['ssb.statistics.publishMaxWait'])
       : 10000
-  const newPublishJobEnabled: boolean = isEnabled('publishJob-lib-sheduler', false, 'ssb')
-  const currentlyWaiting: boolean = newPublishJobEnabled
-    ? currentlyWaitingForPublish(page)
-    : currentlyWaitingForPublishOld(page)
+  const currentlyWaiting: boolean = currentlyWaitingForPublishOld(page)
   let waitedFor = 0
   while (currentlyWaiting && waitedFor < maxWait) {
     waitedFor += wait

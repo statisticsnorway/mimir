@@ -1,8 +1,8 @@
 import { get, Content } from '/lib/xp/content'
-import { prepareText } from '/site/parts/links/links'
 
 import { attachmentUrl, pageUrl } from '/lib/xp/portal'
 import { render } from '/lib/enonic/react4xp'
+import { prepareText } from '/site/parts/links/links'
 import { type HeaderLink as HeaderLinkConfig } from '/site/macros/headerLink'
 
 export const macro = (context: XP.MacroContext) => {
