@@ -346,14 +346,28 @@ function KpiCalculator(props) {
 
   function calculatorResult() {
     const priceChangeLabel = change.charAt(0) === '-' ? props.phrases.priceDecrease : props.phrases.priceIncrease
+    const changeValue = change.charAt(0) === '-' ? change.replace(/\-/g, '') : change
+    const resultScreenReader = props.phrases.kpiResultScreenReader
+      .replace('{0}', language === 'en' ? endValue : endValue.replace(/\./g, ','))
+      .replace('{1}', language === 'en' ? changeValue : changeValue.replace(/\./g, ','))
+      .replace('{2}', startPeriod)
+      .replace('{3}', endPeriod)
+
     return (
       <Container className='calculator-result' ref={scrollAnchor} tabIndex='0'>
+        <div className='kpi-result' aria-live='polite' aria-atomic='true'>
+          <span className='sr-only'>{resultScreenReader}</span>
+        </div>
         <Row className='mb-5'>
           <Col className='amount-equal align-self-end col-12 col-md-4'>
-            <Title size={3}>{props.phrases.kpiAmountEqualled}</Title>
+            <h3 className='ssb-title' aria-hidden='true'>
+              {props.phrases.kpiAmountEqualled}
+            </h3>
           </Col>
           <Col className='end-value col-12 col-md-8'>
-            <span className='float-start float-md-end'>{renderNumberValute(endValue)}</span>
+            <span className='float-start float-md-end' aria-hidden='true'>
+              {renderNumberValute(endValue)}
+            </span>
           </Col>
           <Col className='col-12'>
             <Divider dark />
@@ -361,29 +375,39 @@ function KpiCalculator(props) {
         </Row>
         <Row className='mb-5'>
           <Col className='price-increase col-12 col-lg-4'>
-            <span>{priceChangeLabel}</span>
-            <span className='float-end'>{renderNumberChangeValue()}</span>
+            <span aria-hidden='true'>{priceChangeLabel}</span>
+            <span className='float-end' aria-hidden='true'>
+              {renderNumberChangeValue()}
+            </span>
             <Divider dark />
           </Col>
           <Col className='start-value col-12 col-lg-4'>
-            <span>
+            <span aria-hidden='true'>
               {props.phrases.amount} {startPeriod}
             </span>
-            <span className='float-end'>{renderNumberValute(startValueResult)}</span>
+            <span className='float-end' aria-hidden='true'>
+              {renderNumberValute(startValueResult)}
+            </span>
             <Divider dark />
           </Col>
           <Col className='amount col-12 col-lg-4'>
-            <span>
+            <span aria-hidden='true'>
               {props.phrases.amount} {endPeriod}
             </span>
-            <span className='float-end'>{renderNumberValute(endValue)}</span>
+            <span className='float-end' aria-hidden='true'>
+              {renderNumberValute(endValue)}
+            </span>
             <Divider dark />
           </Col>
         </Row>
         <Row className='my-4'>
           <Col className='col-12 col-md-8'>
-            <span className='info-title'>{props.phrases.kpiCalculatorInfoTitle}</span>
-            <p className='info-text'>{props.phrases.kpiCalculatorInfoText}</p>
+            <span className='info-title' aria-hidden='true'>
+              {props.phrases.kpiCalculatorInfoTitle}
+            </span>
+            <p className='info-text' aria-hidden='true'>
+              {props.phrases.kpiCalculatorInfoText}
+            </p>
           </Col>
         </Row>
         <Row>
