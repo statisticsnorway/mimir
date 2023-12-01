@@ -66,10 +66,9 @@ function BkibolCalculator(props) {
   const [startValueResult, setStartValueResult] = useState(null)
   const [startIndex, setStartIndex] = useState(null)
   const [endIndex, setEndIndex] = useState(null)
-  const [resultScreenReaderText, setResultScreenReaderText] = useState('')
+  const [resultScreenReaderText, setResultScreenReaderText] = useState(props.phrases.bkibolResultScreenReader)
   const language = props.language ? props.language : 'nb'
 
-  // const validMaxYear = props.lastUpdated.year
   const validMaxMonth = props.lastUpdated.month
   const validMinYear = 1979
   const yearRegexp = /^[1-9]\d{3}$/g
@@ -82,6 +81,17 @@ function BkibolCalculator(props) {
         block: 'end',
         inline: 'nearest',
       })
+
+      const changeValue = change.charAt(0) === '-' ? change.replaceAll('-', '') : change
+      setResultScreenReaderText(
+        props.phrases.bkibolResultScreenReader
+          .replaceAll('{0}', endValue)
+          .replaceAll('{1}', changeValue)
+          .replaceAll('{2}', startPeriod)
+          .replaceAll('{3}', endPeriod)
+          .replaceAll('{4}', startIndex)
+          .replaceAll('{5}', endIndex)
+      )
     }
   }, [loading])
 
@@ -182,16 +192,6 @@ function BkibolCalculator(props) {
       })
       .finally(() => {
         setLoading(false)
-        const changeValue = change && change.charAt(0) === '-' ? change.replaceAll('-', '') : change
-        setResultScreenReaderText(
-          props.phrases.bkibolResultScreenReader
-            .replaceAll('{0}', endValue)
-            .replaceAll('{1}', changeValue)
-            .replaceAll('{2}', startPeriod)
-            .replaceAll('{3}', endPeriod)
-            .replaceAll('{4}', startIndex)
-            .replaceAll('{5}', endIndex)
-        )
       })
   }
 
@@ -568,7 +568,7 @@ function BkibolCalculator(props) {
 
     return (
       <Container className='calculator-result' ref={scrollAnchor}>
-        <Row className='mb-5'>
+        <Row className='mb-5' aria-hidden='true'>
           <Col className='amount-equal col-12 col-md-4'>
             <h3>{props.phrases.amountEqualled}</h3>
           </Col>
@@ -579,7 +579,7 @@ function BkibolCalculator(props) {
             <Divider dark />
           </Col>
         </Row>
-        <Row className='mb-0 mb-lg-5'>
+        <Row className='mb-0 mb-lg-5' aria-hidden='true'>
           <Col className='price-increase col-12 col-lg-4'>
             <span>{priceChangeLabel}</span>
             <span className='float-end'>{renderNumberChangeValue()}</span>
@@ -600,7 +600,7 @@ function BkibolCalculator(props) {
             <Divider dark />
           </Col>
         </Row>
-        <Row>
+        <Row aria-hidden='true'>
           <Col className='start-value col-12 col-lg-4 offset-lg-4'>
             <span>
               {props.phrases.index} {startPeriod}
@@ -802,6 +802,7 @@ function BkibolCalculator(props) {
   return (
     <Container className='bkibol-calculator'>
       {renderForm()}
+      {/* TODO: Element gets read twice; first during state change then after navigating to element */}
       <div aria-live='polite' aria-atomic='true'>
         <span className='sr-only'>{resultScreenReaderText}</span>
       </div>
