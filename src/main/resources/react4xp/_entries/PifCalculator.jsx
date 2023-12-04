@@ -126,8 +126,8 @@ function PifCalculator(props) {
         setStartPeriod(startPeriod)
         setEndPeriod(endPeriod)
         setStartValueResult(startValue.value)
-        setStartIndex(res.data.startIndex.toFixed())
-        setEndIndex(res.data.endIndex)
+        setStartIndex(res.data.startIndex.toFixed(2))
+        setEndIndex(res.data.endIndex.toFixed(2))
       })
       .catch((err) => {
         if (err && err.response && err.response.data && err.response.data.error) {
@@ -452,8 +452,8 @@ function PifCalculator(props) {
       .replace('{0}', language === 'en' ? endValue : endValue.replace(/\./g, ','))
       .replace('{1}', priceChangeLabel)
       .replace('{2}', language === 'en' ? changeValue : changeValue.replace(/\./g, ','))
-      .replace('{3}', startMonth)
-      .replace('{4}', endPeriod)
+      .replaceAll('{3}', startMonth.value) // Denne blir feil i resultatet skjermleser leser opp
+      .replaceAll('{4}', endPeriod.value) // Denne blir feil i resultatet skjermleser leser opp
       .replace('{5}', language === 'en' ? startIndex : startIndex.replace(/\./g, ','))
       .replace('{6}', language === 'en' ? endIndex : endIndex.replace(/\./g, ','))
 
