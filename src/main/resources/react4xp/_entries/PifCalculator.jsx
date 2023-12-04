@@ -126,7 +126,7 @@ function PifCalculator(props) {
         setStartPeriod(startPeriod)
         setEndPeriod(endPeriod)
         setStartValueResult(startValue.value)
-        setStartIndex(res.data.startIndex)
+        setStartIndex(res.data.startIndex.toFixed())
         setEndIndex(res.data.endIndex)
       })
       .catch((err) => {
@@ -407,9 +407,8 @@ function PifCalculator(props) {
     }
   }
 
-  function renderNumberChangeValue() {
+  function renderNumberChangeValue(changeValue) {
     if (endValue && change) {
-      const changeValue = change.charAt(0) === '-' ? change.replace('-', '') : change
       const decimalSeparator = language === 'en' ? '.' : ','
       return (
         <React.Fragment>
@@ -447,14 +446,30 @@ function PifCalculator(props) {
 
   function calculatorResult() {
     const priceChangeLabel = change.charAt(0) === '-' ? props.phrases.priceDecrease : props.phrases.priceIncrease
+    const changeValue = change.charAt(0) === '-' ? change.replace('-', '') : change
+    console.log(endValue, priceChangeLabel, changeValue, startPeriod, endPeriod, startIndex, endIndex)
+    const pifResultForScreenreader = props.phrases.pifResultForScreenreader
+      .replace('{0}', language === 'en' ? endValue : endValue.replace(/\./g, ','))
+      .replace('{1}', priceChangeLabel)
+      .replace('{2}', language === 'en' ? changeValue : changeValue.replace(/\./g, ','))
+      .replace('{3}', startMonth)
+      .replace('{4}', endPeriod)
+      .replace('{5}', language === 'en' ? startIndex : startIndex.replace(/\./g, ','))
+      .replace('{6}', language === 'en' ? endIndex : endIndex.replace(/\./g, ','))
+
     return (
       <Container className='calculator-result' ref={scrollAnchor} tabIndex='0'>
+        <div aria-live='polite' aria-atomic='true'>
+          <span className='sr-only'>{pifResultForScreenreader}</span>
+        </div>
         <Row className='mb-5'>
           <Col className='amount-equal col-12 col-md-4'>
-            <h3>{props.phrases.pifAmountEqualled}</h3>
+            <h3 aria-hidden='true'>{props.phrases.pifAmountEqualled}</h3>
           </Col>
           <Col className='end-value col-12 col-md-8'>
-            <span className='float-start float-md-end'>{renderNumberValute(endValue)}</span>
+            <span className='float-start float-md-end' aria-hidden='true'>
+              {renderNumberValute(endValue)}
+            </span>
           </Col>
           <Col className='col-12'>
             <Divider dark />
@@ -462,22 +477,28 @@ function PifCalculator(props) {
         </Row>
         <Row className='mb-5'>
           <Col className='col-12 col-lg-4'>
-            <span>{priceChangeLabel}</span>
-            <span className='float-end'>{renderNumberChangeValue()}</span>
+            <span aria-hidden='true'>{priceChangeLabel}</span>
+            <span className='float-end' aria-hidden='true'>
+              {renderNumberChangeValue(changeValue)}
+            </span>
             <Divider dark />
           </Col>
           <Col className='start-value col-12 col-lg-4'>
-            <span>
+            <span aria-hidden='true'>
               {props.phrases.amount} {startPeriod}
             </span>
-            <span className='float-end'>{renderNumberValute(startValueResult)}</span>
+            <span className='float-end' aria-hidden='true'>
+              {renderNumberValute(startValueResult)}
+            </span>
             <Divider dark />
           </Col>
           <Col className='col-12 col-lg-4'>
-            <span>
+            <span aria-hidden='true'>
               {props.phrases.amount} {endPeriod}
             </span>
-            <span className='float-end'>{renderNumberValute(endValue)}</span>
+            <span className='float-end' aria-hidden='true'>
+              {renderNumberValute(endValue)}
+            </span>
             <Divider dark />
           </Col>
         </Row>
