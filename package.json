@@ -76,7 +76,7 @@
     "@item-enonic-types/lib-thymeleaf": "~2.1.0",
     "@item-enonic-types/lib-time": "~1.0.3",
     "@reduxjs/toolkit": "~1.9.7",
-    "@statisticsnorway/ssb-component-library": "~2.0.95",
+    "@statisticsnorway/ssb-component-library": "~2.0.96",
     "@types/ramda": "~0.29.9",
     "@types/react": "~18.2.38",
     "@types/uuid": "~9.0.7",

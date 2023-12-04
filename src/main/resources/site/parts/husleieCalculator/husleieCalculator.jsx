@@ -93,7 +93,7 @@ function HusleieCalculator(props) {
         endYear: calculatorRentOneYearLater,
       },
       newestNumbersPhrase:
-        getMonthLabel(validMaxMonth) + ' ' + validMaxYear + ' (' + props.phrases.husleieLatestFigures + ' )',
+        getMonthLabel(validMaxMonth) + ' ' + validMaxYear + ' (' + props.phrases.husleieLatestFigures + ')',
     })
     setShowResult(true)
     setChoosePeriod(false)
