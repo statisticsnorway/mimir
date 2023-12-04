@@ -8,7 +8,7 @@ import { X } from 'react-feather'
 
 function PifCalculator(props) {
   const validMaxYear = props.lastUpdated.year
-  const { pifErrorProduct, calculatorValidateAmountNumber, pifValidateYear } = props.phrases
+  const { calculatorValidateAmountNumber, pifValidateYear } = props.phrases
   const [scopeCode, setScopeCode] = useState({
     error: false,
     errorMsg: '',
@@ -17,7 +17,7 @@ function PifCalculator(props) {
   const [reset, setReset] = useState(0)
   const [productGroup, setProductGroup] = useState({
     error: false,
-    errorMsg: pifErrorProduct,
+    errorMsg: '',
     value: '',
   })
   const [startValue, setStartValue] = useState({
@@ -362,7 +362,6 @@ function PifCalculator(props) {
 
     return (
       <Dropdown
-        className='productGroup'
         id={id}
         key={`productGroup-${reset}`}
         onSelect={(value) => {
@@ -462,7 +461,7 @@ function PifCalculator(props) {
           </Col>
         </Row>
         <Row className='mb-5'>
-          <Col className='price-increase col-12 col-lg-4'>
+          <Col className='col-12 col-lg-4'>
             <span>{priceChangeLabel}</span>
             <span className='float-end'>{renderNumberChangeValue()}</span>
             <Divider dark />
@@ -474,7 +473,7 @@ function PifCalculator(props) {
             <span className='float-end'>{renderNumberValute(startValueResult)}</span>
             <Divider dark />
           </Col>
-          <Col className='amount col-12 col-lg-4'>
+          <Col className='col-12 col-lg-4'>
             <span>
               {props.phrases.amount} {endPeriod}
             </span>
@@ -483,7 +482,7 @@ function PifCalculator(props) {
           </Col>
         </Row>
         <Row className='mb-5'>
-          <Col className='price-increase col-12 col-lg-4'></Col>
+          <Col className='col-12 col-lg-4'></Col>
           <Col className='start-value col-12 col-lg-4'>
             <span>
               {props.phrases.pifIndex} {startPeriod}
@@ -491,7 +490,7 @@ function PifCalculator(props) {
             <span className='float-end'>{renderNumber(startIndex)}</span>
             <Divider dark />
           </Col>
-          <Col className='amount col-12 col-lg-4'>
+          <Col className='col-12 col-lg-4'>
             <span>
               {props.phrases.pifIndex} {endPeriod}
             </span>
@@ -592,7 +591,7 @@ function PifCalculator(props) {
               </Col>
             </Row>
             <Row>
-              <Col className='select-product-group'>
+              <Col>
                 <h3>{props.phrases.pifProductTypeHeader}</h3>
                 {addDropdownProduct('product-group')}
               </Col>
