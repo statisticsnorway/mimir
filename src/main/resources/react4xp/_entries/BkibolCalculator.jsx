@@ -66,7 +66,7 @@ function BkibolCalculator(props) {
   const [startValueResult, setStartValueResult] = useState(null)
   const [startIndex, setStartIndex] = useState(null)
   const [endIndex, setEndIndex] = useState(null)
-  const [resultScreenReaderText, setResultScreenReaderText] = useState(props.phrases.bkibolResultScreenReader)
+  const [resultScreenReaderText, setResultScreenReaderText] = useState('')
   const language = props.language ? props.language : 'nb'
 
   const validMaxMonth = props.lastUpdated.month
@@ -81,16 +81,18 @@ function BkibolCalculator(props) {
         block: 'end',
         inline: 'nearest',
       })
+    }
 
+    if (endValue && change && startIndex && endIndex) {
       const changeValue = change.charAt(0) === '-' ? change.replaceAll('-', '') : change
       setResultScreenReaderText(
         props.phrases.bkibolResultScreenReader
-          .replaceAll('{0}', endValue)
-          .replaceAll('{1}', changeValue)
+          .replaceAll('{0}', language === 'en' ? endValue : endValue.replace(/\./g, ','))
+          .replaceAll('{1}', language === 'en' ? changeValue : changeValue.replace(/\./g, ','))
           .replaceAll('{2}', startPeriod)
           .replaceAll('{3}', endPeriod)
-          .replaceAll('{4}', startIndex)
-          .replaceAll('{5}', endIndex)
+          .replaceAll('{4}', language === 'en' ? startIndex : startIndex.toString().replace(/\./g, ','))
+          .replaceAll('{5}', language === 'en' ? endIndex : endIndex.toString().replace(/\./g, ','))
       )
     }
   }, [loading])
@@ -544,8 +546,9 @@ function BkibolCalculator(props) {
   }
 
   function renderNumberChangeValue() {
+    const changeValue = change && change.charAt(0) === '-' ? change.replaceAll('-', '') : change
+
     if (endValue && change) {
-      const changeValue = change.charAt(0) === '-' ? change.replaceAll('-', '') : change
       const decimalSeparator = language === 'en' ? '.' : ','
       return (
         <React.Fragment>
@@ -568,6 +571,9 @@ function BkibolCalculator(props) {
 
     return (
       <Container className='calculator-result' ref={scrollAnchor}>
+        <div aria-live='polite' aria-atomic='true'>
+          <span className='sr-only'>{resultScreenReaderText}</span>
+        </div>
         <Row className='mb-5' aria-hidden='true'>
           <Col className='amount-equal col-12 col-md-4'>
             <h3>{props.phrases.amountEqualled}</h3>
@@ -802,10 +808,6 @@ function BkibolCalculator(props) {
   return (
     <Container className='bkibol-calculator'>
       {renderForm()}
-      {/* TODO: Element gets read twice; first during state change then after navigating to element */}
-      <div aria-live='polite' aria-atomic='true'>
-        <span className='sr-only'>{resultScreenReaderText}</span>
-      </div>
       {renderResult()}
     </Container>
   )
