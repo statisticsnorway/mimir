@@ -60,14 +60,12 @@ function BkibolCalculator(props) {
   const [errorMessage, setErrorMessage] = useState(null)
   const [loading, setLoading] = useState(false)
   const [endValue, setEndValue] = useState(null)
-  const [changeValue, setChangeValue] = useState(null)
-  const [priceChangeLabel, setPriceChangeLabel] = useState(false)
+  const [change, setChange] = useState(null)
   const [startPeriod, setStartPeriod] = useState(null)
   const [endPeriod, setEndPeriod] = useState(null)
   const [startValueResult, setStartValueResult] = useState(null)
   const [startIndex, setStartIndex] = useState(null)
   const [endIndex, setEndIndex] = useState(null)
-  const [resultScreenReaderText, setResultScreenReaderText] = useState('')
   const language = props.language ? props.language : 'nb'
 
   const validMaxMonth = props.lastUpdated.month
@@ -82,19 +80,6 @@ function BkibolCalculator(props) {
         block: 'end',
         inline: 'nearest',
       })
-
-      if (endValue && changeValue && startIndex && endIndex) {
-        setResultScreenReaderText(
-          props.phrases.bkibolResultScreenReader
-            .replaceAll('{0}', language === 'en' ? endValue : endValue.replaceAll('.', ','))
-            .replaceAll('{1}', priceChangeLabel)
-            .replaceAll('{2}', language === 'en' ? changeValue : changeValue.replaceAll('.', ','))
-            .replaceAll('{3}', startPeriod)
-            .replaceAll('{4}', endPeriod)
-            .replaceAll('{5}', language === 'en' ? startIndex : startIndex.toString().replaceAll('.', ','))
-            .replaceAll('{6}', language === 'en' ? endIndex : endIndex.toString().replaceAll('.', ','))
-        )
-      }
     }
   }, [loading])
 
@@ -146,7 +131,7 @@ function BkibolCalculator(props) {
   function onSubmit(e) {
     e.preventDefault()
     if (loading) return
-    setChangeValue(null)
+    setChange(null)
     setEndValue(null)
     if (!isFormValid()) {
       onBlur('start-value')
@@ -178,9 +163,7 @@ function BkibolCalculator(props) {
         const endVal = res.data.endValue.toFixed(2)
         const startPeriod = getPeriod(startYear.value, startMonth.value)
         const endPeriod = getPeriod(endYear.value, endMonth.value)
-
-        setChangeValue(changeVal.charAt(0) === '-' ? changeVal.replaceAll('-', '') : changeVal)
-        setPriceChangeLabel(changeVal.charAt(0) === '-' ? props.phrases.priceDecrease : props.phrases.priceIncrease)
+        setChange(changeVal)
         setEndValue(endVal)
         setStartPeriod(startPeriod)
         setEndPeriod(endPeriod)
@@ -511,7 +494,7 @@ function BkibolCalculator(props) {
   }
 
   function renderNumber(value) {
-    if (endValue && changeValue) {
+    if (endValue && change) {
       const decimalSeparator = language === 'en' ? '.' : ','
       return (
         <React.Fragment>
@@ -529,7 +512,7 @@ function BkibolCalculator(props) {
   }
 
   function renderNumberValute(value) {
-    if (endValue && changeValue) {
+    if (endValue && change) {
       const valute = language === 'en' ? 'NOK' : 'kr'
       const decimalSeparator = language === 'en' ? '.' : ','
       return (
@@ -548,7 +531,7 @@ function BkibolCalculator(props) {
     }
   }
 
-  function renderNumberChangeValue() {
+  function renderNumberChangeValue(changeValue) {
     if (endValue && changeValue) {
       const decimalSeparator = language === 'en' ? '.' : ','
       return (
@@ -568,6 +551,17 @@ function BkibolCalculator(props) {
   }
 
   function calculatorResult() {
+    const priceChangeLabel = change.charAt(0) === '-' ? props.phrases.priceDecrease : props.phrases.priceIncrease
+    const changeValue = change.charAt(0) === '-' ? change.replaceAll('-', '') : change
+    const resultScreenReaderText = props.phrases.bkibolResultScreenReader
+      .replaceAll('{0}', language === 'en' ? endValue : endValue.replaceAll('.', ','))
+      .replaceAll('{1}', priceChangeLabel)
+      .replaceAll('{2}', language === 'en' ? changeValue : changeValue.replaceAll('.', ','))
+      .replaceAll('{3}', startPeriod)
+      .replaceAll('{4}', endPeriod)
+      .replaceAll('{5}', language === 'en' ? startIndex : startIndex.toString().replaceAll('.', ','))
+      .replaceAll('{6}', language === 'en' ? endIndex : endIndex.toString().replaceAll('.', ','))
+
     return (
       <Container className='calculator-result' ref={scrollAnchor}>
         <div aria-live='polite' aria-atomic='true'>
@@ -587,7 +581,7 @@ function BkibolCalculator(props) {
         <Row className='mb-0 mb-lg-5' aria-hidden='true'>
           <Col className='price-increase col-12 col-lg-4'>
             <span>{priceChangeLabel}</span>
-            <span className='float-end'>{renderNumberChangeValue()}</span>
+            <span className='float-end'>{renderNumberChangeValue(changeValue)}</span>
             <Divider dark />
           </Col>
           <Col className='start-value col-12 col-lg-4'>
@@ -656,7 +650,7 @@ function BkibolCalculator(props) {
         </Container>
       )
     }
-    if (endValue && changeValue) {
+    if (endValue && change) {
       return calculatorResult()
     }
   }
