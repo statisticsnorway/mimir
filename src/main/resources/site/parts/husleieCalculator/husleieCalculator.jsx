@@ -562,6 +562,7 @@ function HusleieCalculator(props) {
                       <Input
                         className='input-year'
                         label={props.phrases.fromYear}
+                        ariaLabel={props.phrases.fromYearScreenReader}
                         handleChange={(value) => onChange('start-year', value)}
                         error={startYear.error}
                         errorMessage={startYear.errorMsg}

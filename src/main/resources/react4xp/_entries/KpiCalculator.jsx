@@ -553,6 +553,7 @@ function KpiCalculator(props) {
                       <Input
                         className='input-year'
                         label={props.phrases.fromYear}
+                        ariaLabel={props.phrases.fromYearScreenReader}
                         handleChange={(value) => onChange('start-year', value)}
                         error={startYear.error}
                         errorMessage={startYear.errorMsg}
@@ -571,6 +572,7 @@ function KpiCalculator(props) {
                       <Input
                         className='input-year'
                         label={props.phrases.toYear}
+                        ariaLabel={props.phrases.toYearScreenReader}
                         handleChange={(value) => onChange('end-year', value)}
                         error={endYear.error}
                         errorMessage={endYear.errorMsg}
