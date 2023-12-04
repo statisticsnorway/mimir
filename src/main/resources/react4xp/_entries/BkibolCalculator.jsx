@@ -61,7 +61,7 @@ function BkibolCalculator(props) {
   const [loading, setLoading] = useState(false)
   const [endValue, setEndValue] = useState(null)
   const [changeValue, setChangeValue] = useState(null)
-  const [isPriceDecrease, setIsPriceDecrease] = useState(false)
+  const [priceChangeLabel, setPriceChangeLabel] = useState(false)
   const [startPeriod, setStartPeriod] = useState(null)
   const [endPeriod, setEndPeriod] = useState(null)
   const [startValueResult, setStartValueResult] = useState(null)
@@ -87,11 +87,12 @@ function BkibolCalculator(props) {
         setResultScreenReaderText(
           props.phrases.bkibolResultScreenReader
             .replaceAll('{0}', language === 'en' ? endValue : endValue.replaceAll('.', ','))
-            .replaceAll('{1}', language === 'en' ? changeValue : changeValue.replaceAll('.', ','))
-            .replaceAll('{2}', startPeriod)
-            .replaceAll('{3}', endPeriod)
-            .replaceAll('{4}', language === 'en' ? startIndex : startIndex.toString().replaceAll('.', ','))
-            .replaceAll('{5}', language === 'en' ? endIndex : endIndex.toString().replaceAll('.', ','))
+            .replaceAll('{1}', priceChangeLabel)
+            .replaceAll('{2}', language === 'en' ? changeValue : changeValue.replaceAll('.', ','))
+            .replaceAll('{3}', startPeriod)
+            .replaceAll('{4}', endPeriod)
+            .replaceAll('{5}', language === 'en' ? startIndex : startIndex.toString().replaceAll('.', ','))
+            .replaceAll('{6}', language === 'en' ? endIndex : endIndex.toString().replaceAll('.', ','))
         )
       }
     }
@@ -179,7 +180,7 @@ function BkibolCalculator(props) {
         const endPeriod = getPeriod(endYear.value, endMonth.value)
 
         setChangeValue(changeVal.charAt(0) === '-' ? changeVal.replaceAll('-', '') : changeVal)
-        setIsPriceDecrease(changeVal.charAt(0) === '-')
+        setPriceChangeLabel(changeVal.charAt(0) === '-' ? props.phrases.priceDecrease : props.phrases.priceIncrease)
         setEndValue(endVal)
         setStartPeriod(startPeriod)
         setEndPeriod(endPeriod)
@@ -567,8 +568,6 @@ function BkibolCalculator(props) {
   }
 
   function calculatorResult() {
-    const priceChangeLabel = isPriceDecrease ? props.phrases.priceDecrease : props.phrases.priceIncrease
-
     return (
       <Container className='calculator-result' ref={scrollAnchor}>
         <div aria-live='polite' aria-atomic='true'>
