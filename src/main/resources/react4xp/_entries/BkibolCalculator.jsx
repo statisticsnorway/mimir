@@ -579,7 +579,7 @@ function BkibolCalculator(props) {
           </Col>
         </Row>
         <Row className='mb-0 mb-lg-5' aria-hidden='true'>
-          <Col className='price-increase col-12 col-lg-4'>
+          <Col className='col-12 col-lg-4'>
             <span>{priceChangeLabel}</span>
             <span className='float-end'>{renderNumberChangeValue(changeValue)}</span>
             <Divider dark />
@@ -591,7 +591,7 @@ function BkibolCalculator(props) {
             <span className='float-end'>{renderNumberValute(startValueResult)}</span>
             <Divider dark />
           </Col>
-          <Col className='amount col-12 col-lg-4'>
+          <Col className='col-12 col-lg-4'>
             <span>
               {props.phrases.amount} {endPeriod}
             </span>
@@ -607,7 +607,7 @@ function BkibolCalculator(props) {
             <span className='float-end'>{renderNumber(startIndex)}</span>
             <Divider dark />
           </Col>
-          <Col className='amount col-12 col-lg-4'>
+          <Col className='col-12 col-lg-4'>
             <span>
               {props.phrases.index} {endPeriod}
             </span>
@@ -684,7 +684,7 @@ function BkibolCalculator(props) {
         <Form onSubmit={onSubmit}>
           <Container>
             <Row className='my-5'>
-              <Col className='choose-domene col-12 col-md-6 col-xl-4 mb-3 mb-md-0'>
+              <Col className='col-12 col-md-6 col-xl-4 mb-3 mb-md-0'>
                 <Title size={3}>{props.phrases.bkibolChooseDwellingType}</Title>
                 <RadioGroup
                   groupName='dwellingType'
