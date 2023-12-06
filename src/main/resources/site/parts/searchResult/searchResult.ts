@@ -84,13 +84,6 @@ export function renderPart(req: XP.Request) {
       }),
     },
     {
-      id: 'publikasjon',
-      title: localize({
-        key: 'contentType.search.publikasjon',
-        locale: language,
-      }),
-    },
-    {
       id: 'report',
       title: localize({
         key: 'contentType.search.report',
