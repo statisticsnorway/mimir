@@ -70,7 +70,7 @@ function nerfSearchResult(solrResult: SolrResult, language: string): Array<Prepa
 
       const contentTypeTranslated = localize({
         locale: language,
-        key: `contentType.search.${doc.innholdstype.toLowerCase()}`,
+        key: `contentType.search.${doc.innholdstype}`,
       })
 
       acc.push({
