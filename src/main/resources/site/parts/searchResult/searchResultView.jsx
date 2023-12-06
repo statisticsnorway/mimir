@@ -16,6 +16,7 @@ import { ChevronDown, User, X } from 'react-feather'
 import axios from 'axios'
 import { NumericFormat } from 'react-number-format'
 import { Col, Row } from 'react-bootstrap'
+import { toUpper } from 'ramda'
 import { addGtagForEvent } from '../../../react4xp/ReactGA'
 
 function SearchResult(props) {
@@ -439,10 +440,18 @@ function SearchResult(props) {
       },
     ].concat(
       contentTypes.map((type) => {
-        const phrase = props.contentTypePhrases.find((phrase) => phrase.id === type.title)
-        return {
-          id: type.title,
-          title: `${phrase.title} (${type.count})`,
+        if (type.title) {
+          const phrase = props.contentTypePhrases.find((phrase) => phrase.id === type.title)
+          return {
+            id: type.title,
+            title: `${phrase.title} (${type.count})`,
+          }
+        } else {
+          log.error('Missing title for content type', JSON.stringify(type, null, 2))
+          return {
+            id: 'error',
+            title: 'errorTitle',
+          }
         }
       })
     )
