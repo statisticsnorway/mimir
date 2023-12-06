@@ -447,7 +447,6 @@ function PifCalculator(props) {
   function calculatorResult() {
     const priceChangeLabel = change.charAt(0) === '-' ? props.phrases.priceDecrease : props.phrases.priceIncrease
     const changeValue = change.charAt(0) === '-' ? change.replace('-', '') : change
-    console.log(endValue, priceChangeLabel, changeValue, startPeriod, endPeriod, startIndex, endIndex)
     const pifResultForScreenreader = props.phrases.pifResultForScreenreader
       .replace('{0}', language === 'en' ? endValue : endValue.replace('.', ','))
       .replace('{1}', priceChangeLabel)
