@@ -126,8 +126,8 @@ function PifCalculator(props) {
         setStartPeriod(startPeriod)
         setEndPeriod(endPeriod)
         setStartValueResult(startValue.value)
-        setStartIndex(res.data.startIndex.toFixed(2))
-        setEndIndex(res.data.endIndex.toFixed(2))
+        setStartIndex(res.data.startIndex.toFixed(1))
+        setEndIndex(res.data.endIndex.toFixed(1))
       })
       .catch((err) => {
         if (err && err.response && err.response.data && err.response.data.error) {
@@ -453,7 +453,7 @@ function PifCalculator(props) {
       .replace('{1}', priceChangeLabel)
       .replace('{2}', language === 'en' ? changeValue : changeValue.replace('.', ','))
       .replaceAll('{3}', startMonth.value !== '90' ? startPeriod : startYear.value)
-      .replaceAll('{4}', endMonth !== '90' ? endPeriod : endYear.value)
+      .replaceAll('{4}', endMonth.value !== '90' ? endPeriod : endYear.value)
       .replace('{5}', language === 'en' ? startIndex : startIndex.replace('.', ','))
       .replace('{6}', language === 'en' ? endIndex : endIndex.replace('.', ','))
 
@@ -462,47 +462,39 @@ function PifCalculator(props) {
         <div aria-live='polite' aria-atomic='true'>
           <span className='sr-only'>{pifResultForScreenreader}</span>
         </div>
-        <Row className='mb-5'>
+        <Row className='mb-5' aria-hidden='true'>
           <Col className='amount-equal col-12 col-md-4'>
-            <h3 aria-hidden='true'>{props.phrases.pifAmountEqualled}</h3>
+            <h3>{props.phrases.pifAmountEqualled}</h3>
           </Col>
           <Col className='end-value col-12 col-md-8'>
-            <span className='float-start float-md-end' aria-hidden='true'>
-              {renderNumberValute(endValue)}
-            </span>
+            <span className='float-start float-md-end'>{renderNumberValute(endValue)}</span>
           </Col>
           <Col className='col-12'>
             <Divider dark />
           </Col>
         </Row>
-        <Row className='mb-5'>
+        <Row className='mb-5' aria-hidden='true'>
           <Col className='col-12 col-lg-4'>
             <span aria-hidden='true'>{priceChangeLabel}</span>
-            <span className='float-end' aria-hidden='true'>
-              {renderNumberChangeValue(changeValue)}
-            </span>
+            <span className='float-end'>{renderNumberChangeValue(changeValue)}</span>
             <Divider dark />
           </Col>
           <Col className='start-value col-12 col-lg-4'>
             <span aria-hidden='true'>
               {props.phrases.amount} {startPeriod}
             </span>
-            <span className='float-end' aria-hidden='true'>
-              {renderNumberValute(startValueResult)}
-            </span>
+            <span className='float-end'>{renderNumberValute(startValueResult)}</span>
             <Divider dark />
           </Col>
           <Col className='col-12 col-lg-4'>
-            <span aria-hidden='true'>
+            <span>
               {props.phrases.amount} {endPeriod}
             </span>
-            <span className='float-end' aria-hidden='true'>
-              {renderNumberValute(endValue)}
-            </span>
+            <span className='float-end'>{renderNumberValute(endValue)}</span>
             <Divider dark />
           </Col>
         </Row>
-        <Row className='mb-5'>
+        <Row className='mb-5' aria-hidden='true'>
           <Col className='col-12 col-lg-4'></Col>
           <Col className='start-value col-12 col-lg-4'>
             <span>
