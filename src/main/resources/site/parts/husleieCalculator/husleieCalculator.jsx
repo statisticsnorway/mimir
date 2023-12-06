@@ -467,19 +467,21 @@ function HusleieCalculator(props) {
       return (
         <Container ref={scrollAnchor}>
           <Divider className='my-5' />
-          <Row>
+          <Row aria-live='polite'>
             <Title size={3} className='col-12 mb-2'>
               {props.phrases.husleieValidateOver1Year}
             </Title>
             <p className='col-12 mb-4'>{props.phrases.husleieChooseFiguresToCalculateRent}</p>
           </Row>
-          <Row className='ms-0'>
+          <Row className='ms-0' aria-live='polite'>
             <Button className='submit-one-year' onClick={submitOneYearLater} ref={submitButton}>
               {chooseFiguresToCalculateRent.oneYearLater.phraseOneYearLater}
             </Button>
+            <span className='visually-hidden'>, knapp eller</span>
             <Button className='submit-last-period' onClick={submitLastPeriod} ref={submitButton}>
               {chooseFiguresToCalculateRent.newestNumbersPhrase}
             </Button>
+            <span className='visually-hidden'>, knapp</span>
           </Row>
         </Container>
       )
