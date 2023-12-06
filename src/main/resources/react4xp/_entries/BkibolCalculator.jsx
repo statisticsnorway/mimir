@@ -68,7 +68,6 @@ function BkibolCalculator(props) {
   const [endIndex, setEndIndex] = useState(null)
   const language = props.language ? props.language : 'nb'
 
-  // const validMaxYear = props.lastUpdated.year
   const validMaxMonth = props.lastUpdated.month
   const validMinYear = 1979
   const yearRegexp = /^[1-9]\d{3}$/g
@@ -532,9 +531,8 @@ function BkibolCalculator(props) {
     }
   }
 
-  function renderNumberChangeValue() {
-    if (endValue && change) {
-      const changeValue = change.charAt(0) === '-' ? change.replace('-', '') : change
+  function renderNumberChangeValue(changeValue) {
+    if (endValue && changeValue) {
       const decimalSeparator = language === 'en' ? '.' : ','
       return (
         <React.Fragment>
@@ -554,9 +552,22 @@ function BkibolCalculator(props) {
 
   function calculatorResult() {
     const priceChangeLabel = change.charAt(0) === '-' ? props.phrases.priceDecrease : props.phrases.priceIncrease
+    const changeValue = change.charAt(0) === '-' ? change.replaceAll('-', '') : change
+    const resultScreenReaderText = props.phrases.bkibolResultScreenReader
+      .replaceAll('{0}', language === 'en' ? endValue : endValue.replaceAll('.', ','))
+      .replaceAll('{1}', priceChangeLabel)
+      .replaceAll('{2}', language === 'en' ? changeValue : changeValue.replaceAll('.', ','))
+      .replaceAll('{3}', startPeriod)
+      .replaceAll('{4}', endPeriod)
+      .replaceAll('{5}', language === 'en' ? startIndex : startIndex.toString().replaceAll('.', ','))
+      .replaceAll('{6}', language === 'en' ? endIndex : endIndex.toString().replaceAll('.', ','))
+
     return (
       <Container className='calculator-result' ref={scrollAnchor}>
-        <Row className='mb-5'>
+        <div aria-live='polite' aria-atomic='true'>
+          <span className='sr-only'>{resultScreenReaderText}</span>
+        </div>
+        <Row className='mb-5' aria-hidden='true'>
           <Col className='amount-equal col-12 col-md-4'>
             <h3>{props.phrases.amountEqualled}</h3>
           </Col>
@@ -567,10 +578,10 @@ function BkibolCalculator(props) {
             <Divider dark />
           </Col>
         </Row>
-        <Row className='mb-0 mb-lg-5'>
+        <Row className='mb-0 mb-lg-5' aria-hidden='true'>
           <Col className='col-12 col-lg-4'>
             <span>{priceChangeLabel}</span>
-            <span className='float-end'>{renderNumberChangeValue()}</span>
+            <span className='float-end'>{renderNumberChangeValue(changeValue)}</span>
             <Divider dark />
           </Col>
           <Col className='start-value col-12 col-lg-4'>
@@ -588,7 +599,7 @@ function BkibolCalculator(props) {
             <Divider dark />
           </Col>
         </Row>
-        <Row>
+        <Row aria-hidden='true'>
           <Col className='start-value col-12 col-lg-4 offset-lg-4'>
             <span>
               {props.phrases.index} {startPeriod}
@@ -792,9 +803,7 @@ function BkibolCalculator(props) {
   return (
     <Container className='bkibol-calculator'>
       {renderForm()}
-      <div aria-live='polite' aria-atomic='true'>
-        {renderResult()}
-      </div>
+      {renderResult()}
     </Container>
   )
 }
