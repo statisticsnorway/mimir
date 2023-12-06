@@ -374,7 +374,7 @@ function KpiCalculator(props) {
           </Col>
         </Row>
         <Row className='mb-5'>
-          <Col className='price-increase col-12 col-lg-4'>
+          <Col className='col-12 col-lg-4'>
             <span aria-hidden='true'>{priceChangeLabel}</span>
             <span className='float-end' aria-hidden='true'>
               {renderNumberChangeValue()}
@@ -390,7 +390,7 @@ function KpiCalculator(props) {
             </span>
             <Divider dark />
           </Col>
-          <Col className='amount col-12 col-lg-4'>
+          <Col className='col-12 col-lg-4'>
             <span aria-hidden='true'>
               {props.phrases.amount} {endPeriod}
             </span>
@@ -439,7 +439,7 @@ function KpiCalculator(props) {
           </Col>
         </Row>
         <Row>
-          <Col className='price-increase col-12'>
+          <Col className='col-12'>
             <span>{priceChangeLabel} </span>
             <span>{renderNumberChangeValue()}</span>
           </Col>
@@ -577,6 +577,7 @@ function KpiCalculator(props) {
                       <Input
                         className='input-year'
                         label={props.phrases.fromYear}
+                        ariaLabel={props.phrases.fromYearScreenReader}
                         handleChange={(value) => onChange('start-year', value)}
                         error={startYear.error}
                         errorMessage={startYear.errorMsg}
@@ -595,6 +596,7 @@ function KpiCalculator(props) {
                       <Input
                         className='input-year'
                         label={props.phrases.toYear}
+                        ariaLabel={props.phrases.toYearScreenReader}
                         handleChange={(value) => onChange('end-year', value)}
                         error={endYear.error}
                         errorMessage={endYear.errorMsg}
