@@ -439,18 +439,10 @@ function SearchResult(props) {
       },
     ].concat(
       contentTypes.map((type) => {
-        if (type.title) {
-          const phrase = props.contentTypePhrases.find((phrase) => phrase.id === type.title)
-          return {
-            id: type.title,
-            title: `${phrase.title} (${type.count})`,
-          }
-        } else {
-          log.error('Missing title for content type', JSON.stringify(type, null, 2))
-          return {
-            id: 'error',
-            title: 'errorTitle',
-          }
+        const phrase = props.contentTypePhrases.find((phrase) => phrase.id === type.title)
+        return {
+          id: type.title,
+          title: `${phrase.title} (${type.count})`,
         }
       })
     )
