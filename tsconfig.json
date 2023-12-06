@@ -10,7 +10,8 @@
     "lib": ["ES5", "ES6"],
     "types": [
       "node",
-      "@item-enonic-types/global"
+      "@item-enonic-types/global",
+      "jest"
     ],
     "rootDirs": [
       "./src/main/resources",
