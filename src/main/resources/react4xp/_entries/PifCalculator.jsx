@@ -475,12 +475,12 @@ function PifCalculator(props) {
         </Row>
         <Row className='mb-5' aria-hidden='true'>
           <Col className='col-12 col-lg-4'>
-            <span aria-hidden='true'>{priceChangeLabel}</span>
+            <span>{priceChangeLabel}</span>
             <span className='float-end'>{renderNumberChangeValue(changeValue)}</span>
             <Divider dark />
           </Col>
           <Col className='start-value col-12 col-lg-4'>
-            <span aria-hidden='true'>
+            <span>
               {props.phrases.amount} {startPeriod}
             </span>
             <span className='float-end'>{renderNumberValute(startValueResult)}</span>
