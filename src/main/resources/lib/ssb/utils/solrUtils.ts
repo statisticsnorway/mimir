@@ -32,6 +32,11 @@ export function solrSearch(
     'faktaside',
     'statistikkbanktabell',
     'publikasjon',
+    'report',
+    'note',
+    'analysis',
+    'economicTrends',
+    'discussionPaper',
   ]
   const inValidFiltersMainSubject: Array<string> = ['Uten emne', 'No topic']
   const facetContentTypes: Array<Facet> = searchResult
