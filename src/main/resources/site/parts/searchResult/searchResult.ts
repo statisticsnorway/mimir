@@ -98,6 +98,13 @@ export function renderPart(req: XP.Request) {
       }),
     },
     {
+      id: 'analysis',
+      title: localize({
+        key: 'contentType.search.analysis',
+        locale: language,
+      }),
+    },
+    {
       id: 'economicTrends',
       title: localize({
         key: 'contentType.search.economicTrends',
