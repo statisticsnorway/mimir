@@ -80,6 +80,16 @@ function getArticles(req: XP.Request, language: string): Array<Content<Article>>
     query: `(${pagePaths.join(' OR ')}) ${languageQuery}`,
     contentTypes: [`${app.name}:article`],
     sort: sort as unknown as string,
+    filters: {
+      boolean: {
+        mustNot: {
+          hasValue: {
+            field: 'data.frontPagePriority',
+            values: ['hideArticle'],
+          },
+        },
+      },
+    },
   }).hits as unknown as Array<Content<Article>>
   return articles
 }
