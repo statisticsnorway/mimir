@@ -31,6 +31,7 @@ jobs:
           name: mimir-nais-${{ github.run_number }}
           path: "./build/libs/*.jar"
   build_image_and_push:
+    needs: build_xp
     permissions:
       contents: "read"
       id-token: "write"
@@ -44,6 +45,7 @@ jobs:
       - name: Checkout docker
         uses: actions/checkout@v4
         with:
+          token: ${{ secrets.GITHUB_TOKEN }}
           ref: "master"
           path: "ssbno-xp-docker"
           repository: "statisticsnorway/ssbno-xp-docker"
