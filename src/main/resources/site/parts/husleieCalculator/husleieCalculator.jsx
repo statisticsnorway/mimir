@@ -410,7 +410,7 @@ function HusleieCalculator(props) {
           </Col>
         </Row>
         <Row>
-          <Col className='price-change col-12 col-md-5 col-lg-4'>
+          <Col className='col-12 col-md-5 col-lg-4'>
             <span>{props.phrases.calculatorChange}</span>
             <span className='float-end'>{renderNumberChangeValue()}</span>
             <Divider dark />
@@ -562,6 +562,7 @@ function HusleieCalculator(props) {
                       <Input
                         className='input-year'
                         label={props.phrases.fromYear}
+                        ariaLabel={props.phrases.fromYearScreenReader}
                         handleChange={(value) => onChange('start-year', value)}
                         error={startYear.error}
                         errorMessage={startYear.errorMsg}
