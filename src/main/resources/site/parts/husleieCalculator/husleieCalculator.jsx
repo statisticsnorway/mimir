@@ -84,6 +84,7 @@ function HusleieCalculator(props) {
     const calculateRentStartMonth = startMonth.value
     const calculatorRentYear = Number(startYear.value)
     const calculatorRentOneYearLater = (calculatorRentYear + 1).toString()
+
     setChooseFiguresToCalculateRent({
       startValue: startValue.value,
       startMonth: calculateRentStartMonth,
@@ -465,15 +466,15 @@ function HusleieCalculator(props) {
   function renderChooseHusleiePeriode() {
     if (choosePeriod && showResult) {
       return (
-        <Container ref={scrollAnchor}>
+        <Container ref={scrollAnchor} aria-atomic='true' aria-live='polite'>
           <Divider className='my-5' />
-          <Row aria-live='polite'>
+          <Row>
             <Title size={3} className='col-12 mb-2'>
               {props.phrases.husleieValidateOver1Year}
             </Title>
             <p className='col-12 mb-4'>{props.phrases.husleieChooseFiguresToCalculateRent}</p>
           </Row>
-          <Row className='ms-0' aria-live='polite'>
+          <Row className='ms-0'>
             <Button className='submit-one-year' onClick={submitOneYearLater} ref={submitButton}>
               {chooseFiguresToCalculateRent.oneYearLater.phraseOneYearLater}
             </Button>
@@ -581,7 +582,7 @@ function HusleieCalculator(props) {
                 </Button>
               </Col>
             </Row>
-            <div aria-live='polite'>{renderChooseHusleiePeriode()}</div>
+            {renderChooseHusleiePeriode()}
           </Container>
         </Form>
       </div>
