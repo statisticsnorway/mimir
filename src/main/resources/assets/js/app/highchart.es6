@@ -119,18 +119,17 @@ export function init() {
           },
         }
 
-        // Only show plotOption marker on last data element
+        // Only show plotOption marker on last data element / single data point series
         if (canvas.data('type') === 'line') {
-          config.series.forEach(function (series) {
-            const lastIndex = series.data.length - 1
-            series.data.forEach(function (data, index) {
-              series.data[index] = {
-                y: parseFloat(data),
-                marker: {
-                  enabled: index === lastIndex,
-                },
-              }
-            })
+          config.series.forEach((series) => {
+            const nonNullPoints = series.data.filter((data) => data !== null).length
+
+            series.data = series.data.map((data, index) => ({
+              y: parseFloat(data),
+              marker: {
+                enabled: nonNullPoints === 1 || index === nonNullPoints - 1,
+              },
+            }))
           })
         }
 
