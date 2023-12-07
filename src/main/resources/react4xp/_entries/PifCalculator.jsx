@@ -126,8 +126,8 @@ function PifCalculator(props) {
         setStartPeriod(startPeriod)
         setEndPeriod(endPeriod)
         setStartValueResult(startValue.value)
-        setStartIndex(res.data.startIndex)
-        setEndIndex(res.data.endIndex)
+        setStartIndex(res.data.startIndex.toFixed(1))
+        setEndIndex(res.data.endIndex.toFixed(1))
       })
       .catch((err) => {
         if (err && err.response && err.response.data && err.response.data.error) {
@@ -407,9 +407,8 @@ function PifCalculator(props) {
     }
   }
 
-  function renderNumberChangeValue() {
+  function renderNumberChangeValue(changeValue) {
     if (endValue && change) {
-      const changeValue = change.charAt(0) === '-' ? change.replace('-', '') : change
       const decimalSeparator = language === 'en' ? '.' : ','
       return (
         <React.Fragment>
@@ -447,9 +446,22 @@ function PifCalculator(props) {
 
   function calculatorResult() {
     const priceChangeLabel = change.charAt(0) === '-' ? props.phrases.priceDecrease : props.phrases.priceIncrease
+    const changeValue = change.charAt(0) === '-' ? change.replace('-', '') : change
+    const pifResultForScreenreader = props.phrases.pifResultForScreenreader
+      .replace('{0}', language === 'en' ? endValue : endValue.replace('.', ','))
+      .replace('{1}', priceChangeLabel)
+      .replace('{2}', language === 'en' ? changeValue : changeValue.replace('.', ','))
+      .replaceAll('{3}', startMonth.value !== '90' ? startPeriod : startYear.value)
+      .replaceAll('{4}', endMonth.value !== '90' ? endPeriod : endYear.value)
+      .replace('{5}', language === 'en' ? startIndex : startIndex.replace('.', ','))
+      .replace('{6}', language === 'en' ? endIndex : endIndex.replace('.', ','))
+
     return (
       <Container className='calculator-result' ref={scrollAnchor} tabIndex='0'>
-        <Row className='mb-5'>
+        <div aria-live='polite' aria-atomic='true'>
+          <span className='sr-only'>{pifResultForScreenreader}</span>
+        </div>
+        <Row className='mb-5' aria-hidden='true'>
           <Col className='amount-equal col-12 col-md-4'>
             <h3>{props.phrases.pifAmountEqualled}</h3>
           </Col>
@@ -460,10 +472,10 @@ function PifCalculator(props) {
             <Divider dark />
           </Col>
         </Row>
-        <Row className='mb-5'>
+        <Row className='mb-5' aria-hidden='true'>
           <Col className='col-12 col-lg-4'>
             <span>{priceChangeLabel}</span>
-            <span className='float-end'>{renderNumberChangeValue()}</span>
+            <span className='float-end'>{renderNumberChangeValue(changeValue)}</span>
             <Divider dark />
           </Col>
           <Col className='start-value col-12 col-lg-4'>
@@ -481,7 +493,7 @@ function PifCalculator(props) {
             <Divider dark />
           </Col>
         </Row>
-        <Row className='mb-5'>
+        <Row className='mb-5' aria-hidden='true'>
           <Col className='col-12 col-lg-4'></Col>
           <Col className='start-value col-12 col-lg-4'>
             <span>
@@ -665,9 +677,7 @@ function PifCalculator(props) {
   return (
     <Container className='pif-calculator'>
       {renderForm()}
-      <div aria-live='polite' aria-atomic='true'>
-        {renderResult()}
-      </div>
+      {renderResult()}
     </Container>
   )
 }
