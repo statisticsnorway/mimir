@@ -102,11 +102,18 @@ jobs:
     needs: build_image_and_push
     runs-on: ubuntu-latest
     steps:
+      - name: "Sanitize Branch name"
+        id: sanitize_branch
+        shell: bash
+        run: |
+          SANITIZED_BRANCH_NAME=$(echo -n ${{ github.head_ref }} | tr "_" "-")
+          echo "Sanitized branch name: $SANITIZED_BRANCH_NAME"
+          echo "sanitized_branch_name=$SANITIZED_BRANCH_NAME" >> $GITHUB_ENV;
       - uses: actions/checkout@v4
       - uses: nais/deploy/actions/deploy@v1
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: staging
           RESOURCE: nais.yaml
-          VAR: image=${{ env.REGISTRY }}/${{env.IMAGE}}:${{ env.TAG }},branch=${{ github.head_ref }}
+          VAR: image=${{ env.REGISTRY }}/${{env.IMAGE}}:${{ env.TAG }},branch=${{ env.SANITIZED_BRANCH_NAME }}
           DEPLOY_SERVER: deploy.ssb.cloud.nais.io:443
