@@ -132,8 +132,8 @@ function HusleieCalculator(props) {
         },
       })
       .then((res) => {
-        setEndMonth(res.data.endMonth)
-        setEndYear(res.data.endYear)
+        setEndMonth(endMonth)
+        setEndYear(endYear)
         const changeVal = (res.data.change * 100).toFixed(1)
         const endVal = res.data.endValue.toFixed(2)
         const phraseTo = language === 'en' ? 'to' : 'til'
@@ -405,10 +405,9 @@ function HusleieCalculator(props) {
   function calculatorResult() {
     const resultScreenReaderText = props.phrases.husleieNewRentResult
       .replace('{0}', endValue)
-      .replace('{1}', language === 'en' ? 'NOK' : 'kroner')
-      .replace('{2}', change)
-      .replace('{3}', `${getMonthLabel(startMonth.value)} ${startYear.value}`)
-      .replace('{4}', `${getMonthLabel(endMonth.value)} ${endYear.value}`)
+      .replace('{1}', change)
+      .replace('{2}', `${getMonthLabel(startMonth.value)} ${startYear.value}`)
+      .replace('{3}', `${getMonthLabel(endMonth)} ${endYear}`)
 
     return (
       <Container className='calculator-result' ref={scrollAnchor}>
