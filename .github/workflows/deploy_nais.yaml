@@ -97,16 +97,16 @@ jobs:
           tags: ${{ steps.metadata.outputs.tags }}
           #         tags: ${{ github.ref_name }}-${{ github.sha }}
           labels: ${{ steps.metadata.outputs.labels }}
-  # deploy:
-  #   name: Deploy to NAIS
-  #   needs: build_image_and_push
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - uses: nais/deploy/actions/deploy@v1
-  #       env:
-  #         APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-  #         CLUSTER: staging
-  #         RESOURCE: nais.yaml
-  #         VAR: image=${{ env.REGISTRY }}/${{env.IMAGE}}:${{ env.TAG }}
-  #         DEPLOY_SERVER: deploy.ssb.cloud.nais.io:443
+  deploy:
+    name: Deploy to NAIS
+    needs: build_image_and_push
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: staging
+          RESOURCE: nais.yaml
+          VAR: image=${{ env.REGISTRY }}/${{env.IMAGE}}:${{ env.TAG }},branch=${{ github.head_ref }}
+          DEPLOY_SERVER: deploy.ssb.cloud.nais.io:443

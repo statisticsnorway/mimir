@@ -1,0 +1,23 @@
+apiVersion: nais.io/v1alpha1
+kind: Application
+metadata:
+  name: mimir-branch
+  namespace: ssbno
+  labels:
+    team: ssbno
+spec:
+  image: {{ image }}
+#  image: europe-north1-docker.pkg.dev/nais-management-b3a7/ssbno/ssbno-mimir/mimir:...
+  #       ^--- interpolated from the ${{ env.docker_image }} variable in the action
+
+  replicas:
+    disableAutoScaling: true
+    max: 1
+    min: 1
+  port: 8080
+
+  prometheus:
+    enabled: false
+
+  ingresses:
+    - https://ssbno-{{branch}}.external.staging.ssb.cloud.nais.io
