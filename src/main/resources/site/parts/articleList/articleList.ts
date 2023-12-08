@@ -2,7 +2,7 @@ import { pageUrl, getContent, getComponent } from '/lib/xp/portal'
 import { query, type Content } from '/lib/xp/content'
 import { localize } from '/lib/xp/i18n'
 import { render } from '/lib/enonic/react4xp'
-import { SubjectItem, getSubSubjects } from '/lib/ssb/utils/subjectUtils'
+import { getSubSubjects } from '/lib/ssb/utils/subjectUtils'
 import { formatDate } from '/lib/ssb/utils/dateUtils'
 
 import { renderError } from '/lib/ssb/error/error'
@@ -26,7 +26,7 @@ function renderPart(req: XP.Request) {
   const content = getContent()
   if (!content) throw Error('No page found')
 
-  const articleListCacheDisabled: boolean = isEnabled('deactivate-part-cache-article-list', true, 'ssb')
+  const articleListCacheDisabled = isEnabled('deactivate-part-cache-article-list', true, 'ssb')
   if (req.mode === 'edit' || req.mode === 'inline' || articleListCacheDisabled) {
     return getArticleList(req, content)
   } else {
@@ -38,20 +38,20 @@ function getArticleList(req: XP.Request, content: Content) {
   const component = getComponent<XP.PartComponent.ArticleList>()
   if (!component) throw Error('No component found')
 
-  const language: string = content.language ? content.language : 'nb'
-  const articles: Array<Content<Article>> = getArticles(req, language)
-  const preparedArticles: Array<PreparedArticles> = prepareArticles(articles, language)
+  const language = content.language ? content.language : 'nb'
+  const articles = getArticles(req, language)
+  const preparedArticles = prepareArticles(articles, language)
 
-  const archiveLinkText: string = localize({
+  const archiveLinkText = localize({
     key: 'publicationLinkText',
     locale: language,
   })
-  const headerText: string = localize({
+  const headerText = localize({
     key: 'articleList.heading',
     locale: language,
   })
 
-  const props: PartProperties = {
+  const props = {
     title: headerText,
     articles: preparedArticles,
     archiveLinkText: archiveLinkText,
@@ -60,10 +60,9 @@ function getArticleList(req: XP.Request, content: Content) {
   return render('site/parts/articleList/articleList', props, req)
 }
 
-function getArticles(req: XP.Request, language: string): Array<Content<Article>> {
-  const subjectItems: Array<SubjectItem> = getSubSubjects(req, language)
-  const pagePaths: Array<string> = subjectItems.map((sub) => `_parentPath LIKE "/content${sub.path}/*"`)
-  const languageQuery: string = language !== 'en' ? 'AND language != "en"' : 'AND language = "en"'
+function getArticles(req: XP.Request, language: string) {
+  const subjectItems = getSubSubjects(req, language)
+  const pagePaths = subjectItems.map((sub) => `_parentPath LIKE "/content${sub.path}/*"`)
 
   const sort = [
     {
@@ -75,16 +74,34 @@ function getArticles(req: XP.Request, language: string): Array<Content<Article>>
       direction: 'DESC',
     },
   ]
-  const articles: Array<Content<Article>> = query({
+  const articles = query({
     count: 4,
-    query: `(${pagePaths.join(' OR ')}) ${languageQuery}`,
+    query: `(${pagePaths.join(' OR ')})`,
     contentTypes: [`${app.name}:article`],
     sort: sort as unknown as string,
+    filters: {
+      boolean: {
+        must: [
+          {
+            hasValue: {
+              field: 'language',
+              values: language === 'en' ? ['en'] : ['no', 'nb', 'nn'],
+            },
+          },
+        ],
+        mustNot: {
+          hasValue: {
+            field: 'data.frontPagePriority',
+            values: ['hideArticle'],
+          },
+        },
+      },
+    },
   }).hits as unknown as Array<Content<Article>>
   return articles
 }
 
-function prepareArticles(articles: Array<Content<Article>>, language: string): Array<PreparedArticles> {
+function prepareArticles(articles: Array<Content<Article>>, language: string) {
   return articles.map((article: Content<Article>) => {
     return {
       title: article.displayName,
@@ -98,18 +115,4 @@ function prepareArticles(articles: Array<Content<Article>>, language: string): A
       frontPagePriority: article.data.frontPagePriority,
     }
   })
-}
-
-interface PreparedArticles {
-  title: string
-  preface: string
-  url: string
-  publishDate: string
-}
-
-interface PartProperties {
-  title: string
-  articles: Array<PreparedArticles>
-  archiveLinkText: string
-  archiveLinkUrl: string
 }

@@ -164,6 +164,7 @@
 					<config>
 						<option value="0">Ikke prioritert</option>
 						<option value="1">Prioritert</option>
+            <option value="hideArticle">Ikke vis på forsiden</option>
 					</config>
 					<default>0</default>
 				</input>
