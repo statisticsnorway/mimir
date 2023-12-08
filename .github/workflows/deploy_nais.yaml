@@ -42,10 +42,13 @@ jobs:
         run: echo ${{ env.REGISTRY }} && echo ${{ env.IMAGE }} && echo ${{ env.TAG }}
       - name: Checkout mimir
         uses: actions/checkout@v4
+      - name: Give GitHub Actions acces to docker repo
+        uses: webfactory/ssh-agent@v0.5.4
+        with:
+          ssh-private-key: ${{ secrets.DOCKER_REPO_READ_KEY }}
       - name: Checkout docker
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
           ref: "master"
           path: "ssbno-xp-docker"
           repository: "statisticsnorway/ssbno-xp-docker"
