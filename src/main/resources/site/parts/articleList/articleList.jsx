@@ -28,13 +28,8 @@ function ArticleList(props) {
           </div>
         )
       })}
-      <Link
-        href={archiveLinkUrl ? archiveLinkUrl : '#'}
-        linkType='profiled'
-        icon={<ArrowRight size='20' />}
-        className='mt-5 d-md-none'
-      >
-        {archiveLinkText ? archiveLinkText : 'empty'}
+      <Link href={archiveLinkUrl ?? '#'} linkType='profiled' icon={<ArrowRight size='20' />} className='mt-5 d-md-none'>
+        {archiveLinkText ?? 'empty'}
       </Link>
     </section>
   )
