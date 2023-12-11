@@ -16,7 +16,7 @@ spec:
     min: 1
   port: 8080
 
-  ttl: 1w
+  ttl: 168h
 
   prometheus:
     enabled: false
