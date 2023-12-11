@@ -49,7 +49,7 @@
     "@enonic-types/global": "7.13.5",
     "@enonic-types/lib-admin": "7.13.5",
     "@enonic-types/lib-auth": "7.13.5",
-    "@enonic-types/lib-cluster": "7.13.4",
+    "@enonic-types/lib-cluster": "7.13.5",
     "@enonic-types/lib-common": "7.13.5",
     "@enonic-types/lib-content": "7.13.5",
     "@enonic-types/lib-context": "7.13.5",
