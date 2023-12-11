@@ -46,7 +46,7 @@
     "@babel/preset-stage-0": "~7.8.3",
     "@babel/register": "~7.22.15",
     "@babel/runtime": "~7.23.5",
-    "@enonic-types/global": "7.13.4",
+    "@enonic-types/global": "7.13.5",
     "@enonic-types/lib-admin": "7.13.4",
     "@enonic-types/lib-auth": "7.13.5",
     "@enonic-types/lib-cluster": "7.13.4",
