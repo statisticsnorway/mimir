@@ -3,6 +3,9 @@ kind: Application
 metadata:
   name: mimir-branch
   namespace: ssbno
+  annotations:
+    nais.io/read-only-file-system: "false"
+    nais.io/run-as-user: "1337"
   labels:
     team: ssbno
 spec:
