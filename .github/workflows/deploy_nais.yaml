@@ -113,6 +113,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: "Sanitize Branch name"
+        id: sanitize_branch
+        shell: bash
+        run: |
+          SANITIZED_BRANCH_NAME=$(echo -n ${{ github.head_ref }} | tr "_" "-")
+          echo "Sanitized branch name: $SANITIZED_BRANCH_NAME"
+          echo "sanitized_branch_name=$SANITIZED_BRANCH_NAME" >> $GITHUB_ENV;
       - uses: nais/deploy/actions/deploy@v1
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
