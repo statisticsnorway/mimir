@@ -201,7 +201,7 @@ function UpcomingReleases(props) {
     axios
       .get(props.upcomingReleasesServiceUrl, {
         params: {
-          start: `${lastCountedDay.year}-${parseInt(lastCountedDay.month) + 1}-${parseInt(lastCountedDay.day)}`,
+          start: `${lastCountedDay.year}-${parseInt(lastCountedDay.month)}-${parseInt(lastCountedDay.day)}`,
           showAll: true,
           language: props.language,
         },
