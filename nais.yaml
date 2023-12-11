@@ -20,4 +20,4 @@ spec:
     enabled: false
 
   ingresses:
-    - https://ssbno-{{branch}}.external.staging.ssb.cloud.nais.io
+    - https://ssbno-{{branch}}.external.staging.ssb.cloud.nais.io  # must match vhost

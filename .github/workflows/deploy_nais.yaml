@@ -52,6 +52,16 @@ jobs:
           ref: "master"
           path: "ssbno-xp-docker"
           repository: "statisticsnorway/ssbno-xp-docker"
+      - name: "Sanitize Branch name"
+        id: sanitize_branch
+        shell: bash
+        run: |
+          SANITIZED_BRANCH_NAME=$(echo -n ${{ github.head_ref }} | tr "_" "-")
+          echo "Sanitized branch name: $SANITIZED_BRANCH_NAME"
+          echo "sanitized_branch_name=$SANITIZED_BRANCH_NAME" >> $GITHUB_ENV;
+      - name: Inject NAIS URL to vhost
+        run: |
+          sed -i "s/REPLACE_ME/ssbno-${{ env.sanitized_branch_name }}.external.staging.ssb.cloud.nais.io/g" ssbno-xp-docker/config/com.enonic.xp.web.vhost.cfg
       - name: Download artifacts
         uses: actions/download-artifact@v3
         with:
@@ -102,13 +112,6 @@ jobs:
     needs: build_image_and_push
     runs-on: ubuntu-latest
     steps:
-      - name: "Sanitize Branch name"
-        id: sanitize_branch
-        shell: bash
-        run: |
-          SANITIZED_BRANCH_NAME=$(echo -n ${{ github.head_ref }} | tr "_" "-")
-          echo "Sanitized branch name: $SANITIZED_BRANCH_NAME"
-          echo "sanitized_branch_name=$SANITIZED_BRANCH_NAME" >> $GITHUB_ENV;
       - uses: actions/checkout@v4
       - uses: nais/deploy/actions/deploy@v1
         env:
