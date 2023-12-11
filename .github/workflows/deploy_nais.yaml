@@ -62,7 +62,9 @@ jobs:
       - name: Inject NAIS URL to vhost
         run: |
           sed -i "s/REPLACE_ME/ssbno-${{ env.sanitized_branch_name }}.external.staging.ssb.cloud.nais.io/g" ssbno-xp-docker/config/com.enonic.xp.web.vhost.cfg
-          echo "$(ssbno-xp-docker/config/com.enonic.xp.web.vhost.cfg)"
+
+          VHOST_VALUE="$(cat ssbno-xp-docker/config/com.enonic.xp.web.vhost.cfg)"
+          echo "$VHOST_VALUE"
       - name: Download artifacts
         uses: actions/download-artifact@v3
         with:
