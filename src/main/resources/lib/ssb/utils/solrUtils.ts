@@ -32,6 +32,11 @@ export function solrSearch(
     'faktaside',
     'statistikkbanktabell',
     'publikasjon',
+    'report',
+    'note',
+    'analysis',
+    'economicTrends',
+    'discussionPaper',
   ]
   const inValidFiltersMainSubject: Array<string> = ['Uten emne', 'No topic']
   const facetContentTypes: Array<Facet> = searchResult
@@ -65,7 +70,7 @@ function nerfSearchResult(solrResult: SolrResult, language: string): Array<Prepa
 
       const contentTypeTranslated = localize({
         locale: language,
-        key: `contentType.search.${doc.innholdstype.toLowerCase()}`,
+        key: `contentType.search.${doc.innholdstype}`,
       })
 
       acc.push({
