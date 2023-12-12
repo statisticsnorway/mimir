@@ -23,6 +23,9 @@ spec:
     outbound:
       external:
         - host: market.enonic.com
+        - host: repo.enonic.com
+        - host: github.com
+        - host: raw.githubusercontent.com
 
   resources:
     limits:
