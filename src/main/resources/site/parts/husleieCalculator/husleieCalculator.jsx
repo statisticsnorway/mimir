@@ -479,6 +479,8 @@ function HusleieCalculator(props) {
   }
 
   function renderChooseHusleiePeriode() {
+    const buttonPhrase = props.language === 'en' ? 'button' : 'knapp'
+
     if (choosePeriod && showResult) {
       return (
         <Container ref={scrollAnchor} aria-atomic='true' aria-live='polite'>
@@ -491,11 +493,11 @@ function HusleieCalculator(props) {
           </Row>
           <Row className='ms-0'>
             <Button className='submit-one-year' onClick={submitOneYearLater} ref={submitButton}>
-              {chooseFiguresToCalculateRent.oneYearLater.phraseOneYearLater}
+              {`${chooseFiguresToCalculateRent.oneYearLater.phraseOneYearLater}, ${buttonPhrase} eller`}
             </Button>
             <span className='visually-hidden'>, knapp eller</span>
             <Button className='submit-last-period' onClick={submitLastPeriod} ref={submitButton}>
-              {chooseFiguresToCalculateRent.newestNumbersPhrase}
+              {`${chooseFiguresToCalculateRent.newestNumbersPhrase}, ${buttonPhrase}`}
             </Button>
             <span className='visually-hidden'>, knapp</span>
           </Row>
