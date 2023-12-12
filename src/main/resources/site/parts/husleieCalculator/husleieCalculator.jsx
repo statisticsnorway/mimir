@@ -404,8 +404,8 @@ function HusleieCalculator(props) {
 
   function calculatorResult() {
     const resultScreenReaderText = props.phrases.husleieNewRentResult
-      .replace('{0}', endValue)
-      .replace('{1}', change)
+      .replace('{0}', language === 'en' ? endValue : endValue.replace(/\./g, ','))
+      .replace('{1}', language === 'en' ? change : change.replace(/\./g, ','))
       .replace('{2}', `${getMonthLabel(startMonth.value)} ${startYear.value}`)
       .replace('{3}', `${getMonthLabel(endMonth)} ${endYear}`)
 
