@@ -66,53 +66,56 @@ jobs:
         id: jira_issue_number
         run: |
           BRANCH="${{ github.head_ref }}"
-          echo "ISSUE_NUMBER=${BRANCH:0:8}" >> $GITHUB_ENV;
+          ISSUE_NUMBER=${BRANCH:0:8}
+          echo "ISSUE_NUMBER=${ISSUE_NUMBER}" >> $GITHUB_ENV;
           echo "Issue number: $ISSUE_NUMBER";
       - name: Inject NAIS URL to vhost
         run: |
           sed -i "s/enabled=false/enabled=true/g" ssbno-xp-docker/config/com.enonic.xp.web.vhost.cfg
           sed -i "s/REPLACE_ME/ssbno-${{ env.ISSUE_NUMBER }}.external.staging.ssb.cloud.nais.io/g" ssbno-xp-docker/config/com.enonic.xp.web.vhost.cfg
 
-      - id: "auth"
-        name: "Authenticate to Google Cloud"
-        uses: "google-github-actions/auth@v0.6.0"
-        with:
-          workload_identity_provider: "projects/906675412832/locations/global/workloadIdentityPools/ssb-identity-pool/providers/github-oidc-provider"
-          service_account: "gh-ssb@nais-management-b3a7.iam.gserviceaccount.com"
-          token_format: "access_token"
-      - name: Set up Docker Buildx
-        id: buildx
-        uses: docker/setup-buildx-action@v1
-      - name: Login to registry
-        uses: docker/login-action@v1
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: "oauth2accesstoken"
-          password: "${{ steps.auth.outputs.access_token }}"
-      - name: Docker meta
-        id: metadata
-        uses: docker/metadata-action@v3
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE }}
-          # Docker tags based on the following events/attributes
-          tags: |
-            type=schedule
-            type=ref,event=branch
-            type=ref,event=pr
-            type=semver,pattern=v{{version}}
-            type=semver,pattern=v{{major}}.{{minor}}
-            type=semver,pattern=v{{major}}
-            type=sha
-            type=raw,value=${{ env.TAG }}, enable=true
-      - name: Build and push
-        uses: docker/build-push-action@v4
-        with:
-          context: ./ssbno-xp-docker
-          file: "./ssbno-xp-docker/Dockerfile"
-          push: true
-          tags: ${{ steps.metadata.outputs.tags }}
-          #         tags: ${{ github.ref_name }}-${{ github.sha }}
-          labels: ${{ steps.metadata.outputs.labels }}
+          VHOST_VALUE="$(cat ssbno-xp-docker/config/com.enonic.xp.web.vhost.cfg)"
+          echo "$VHOST_VALUE"
+      #- id: "auth"
+      #  name: "Authenticate to Google Cloud"
+      #  uses: "google-github-actions/auth@v0.6.0"
+      #  with:
+      #    workload_identity_provider: "projects/906675412832/locations/global/workloadIdentityPools/ssb-identity-pool/providers/github-oidc-provider"
+      #    service_account: "gh-ssb@nais-management-b3a7.iam.gserviceaccount.com"
+      #    token_format: "access_token"
+      #- name: Set up Docker Buildx
+      #  id: buildx
+      #  uses: docker/setup-buildx-action@v1
+      #- name: Login to registry
+      #  uses: docker/login-action@v1
+      #  with:
+      #    registry: ${{ env.REGISTRY }}
+      #    username: "oauth2accesstoken"
+      #    password: "${{ steps.auth.outputs.access_token }}"
+      #- name: Docker meta
+      #  id: metadata
+      #  uses: docker/metadata-action@v3
+      #  with:
+      #    images: ${{ env.REGISTRY }}/${{ env.IMAGE }}
+      #    # Docker tags based on the following events/attributes
+      #    tags: |
+      #      type=schedule
+      #      type=ref,event=branch
+      #      type=ref,event=pr
+      #      type=semver,pattern=v{{version}}
+      #      type=semver,pattern=v{{major}}.{{minor}}
+      #      type=semver,pattern=v{{major}}
+      #      type=sha
+      #      type=raw,value=${{ env.TAG }}, enable=true
+      #- name: Build and push
+      #  uses: docker/build-push-action@v4
+      #  with:
+      #    context: ./ssbno-xp-docker
+      #    file: "./ssbno-xp-docker/Dockerfile"
+      #    push: true
+      #    tags: ${{ steps.metadata.outputs.tags }}
+      #    #         tags: ${{ github.ref_name }}-${{ github.sha }}
+      #    labels: ${{ steps.metadata.outputs.labels }}
 
   deploy:
     name: Deploy to NAIS
@@ -121,7 +124,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: "Get JIRA issue number"
-        id: jira_issue_number
+        id: jira_issue_number_2
         run: echo ${{ env.REGISTRY }} && echo ${{ env.IMAGE }} && echo ${{ env.TAG }} && echo ${{ env.ISSUE_NUMBER }}
       #- uses: nais/deploy/actions/deploy@v1
       #  env:
