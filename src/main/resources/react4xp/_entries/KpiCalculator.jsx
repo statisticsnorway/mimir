@@ -360,7 +360,7 @@ function KpiCalculator(props) {
         </div>
         <Row className='mb-5' aria-hidden='true'>
           <Col className='amount-equal align-self-end col-12 col-md-4'>
-            <h3 className='ssb-title'>{props.phrases.amountEqualled}</h3>
+            <Title size={3}>{props.phrases.kpiAmountEqualled}</Title>
           </Col>
           <Col className='end-value col-12 col-md-8'>
             <span className='float-start float-md-end'>{renderNumberValute(endValue)}</span>
