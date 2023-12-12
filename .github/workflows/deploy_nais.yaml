@@ -13,25 +13,27 @@ env:
   REGISTRY: europe-north1-docker.pkg.dev/nais-management-b3a7/ssbno/ssbno-mimir
   IMAGE: mimir
   TAG: ${{ github.head_ref }}-${{ github.sha }}
+  ISSUE_NUMBER: 'replaced in build image step'
 
 jobs:
-  build_xp:
-    name: 'Build XP jar'
-    runs-on: 'ubuntu-latest'
-    steps:
-      - id: build_app
-        uses: enonic/release-tools/build-and-publish@master
-        with:
-          skipPublishing: true
-      - name: Upload artifacts
-        id: upload_artifacts
-        if: success()
-        uses: actions/upload-artifact@v3
-        with:
-          name: mimir-nais-${{ github.run_number }}
-          path: "./build/libs/*.jar"
+  # build_xp:
+  #   name: 'Build XP jar'
+  #   runs-on: 'ubuntu-latest'
+  #   if: startsWith(github.head_ref, 'MIM-') || startsWith(github.head_ref, 'mim-')
+  #   steps:
+  #     - id: build_app
+  #       uses: enonic/release-tools/build-and-publish@master
+  #       with:
+  #         skipPublishing: true
+  #     - name: Upload artifacts
+  #       id: upload_artifacts
+  #       if: success()
+  #       uses: actions/upload-artifact@v3
+  #       with:
+  #         name: mimir-nais-${{ github.run_number }}
+  #         path: "./build/libs/*.jar"
   build_image_and_push:
-    needs: build_xp
+    # needs: build_xp
     permissions:
       contents: "read"
       id-token: "write"
@@ -40,8 +42,10 @@ jobs:
       - name: Calculate sha
         id: calculate_sha
         run: echo ${{ env.REGISTRY }} && echo ${{ env.IMAGE }} && echo ${{ env.TAG }}
+
       - name: Checkout mimir
         uses: actions/checkout@v4
+
       - name: Give GitHub Actions acces to docker repo
         uses: webfactory/ssh-agent@v0.8.0
         with:
@@ -52,22 +56,23 @@ jobs:
           ref: "master"
           path: "ssbno-xp-docker"
           repository: "statisticsnorway/ssbno-xp-docker"
-      - name: "Sanitize Branch name"
-        id: sanitize_branch
-        shell: bash
+      # - name: Download artifacts
+      #   uses: actions/download-artifact@v3
+      #   with:
+      #     name: mimir-nais-${{ github.run_number }}
+      #     path: "./ssbno-xp-docker"
+
+      - name: "Get JIRA issue number"
+        id: jira_issue_number
         run: |
-          SANITIZED_BRANCH_NAME=$(echo -n ${{ github.head_ref }} | tr "_" "-")
-          echo "Sanitized branch name: $SANITIZED_BRANCH_NAME"
-          echo "sanitized_branch_name=$SANITIZED_BRANCH_NAME" >> $GITHUB_ENV;
+          BRANCH="${{ github.head_ref }}"
+          echo "ISSUE_NUMBER=${BRANCH:0:8}" >> $GITHUB_ENV;
+          echo "Issue number: $ISSUE_NUMBER";
       - name: Inject NAIS URL to vhost
         run: |
           sed -i "s/enabled=false/enabled=true/g" ssbno-xp-docker/config/com.enonic.xp.web.vhost.cfg
-          sed -i "s/REPLACE_ME/ssbno-${{ env.sanitized_branch_name }}.external.staging.ssb.cloud.nais.io/g" ssbno-xp-docker/config/com.enonic.xp.web.vhost.cfg
-      - name: Download artifacts
-        uses: actions/download-artifact@v3
-        with:
-          name: mimir-nais-${{ github.run_number }}
-          path: "./ssbno-xp-docker"
+          sed -i "s/REPLACE_ME/ssbno-${{ env.ISSUE_NUMBER }}.external.staging.ssb.cloud.nais.io/g" ssbno-xp-docker/config/com.enonic.xp.web.vhost.cfg
+
       - id: "auth"
         name: "Authenticate to Google Cloud"
         uses: "google-github-actions/auth@v0.6.0"
@@ -108,23 +113,20 @@ jobs:
           tags: ${{ steps.metadata.outputs.tags }}
           #         tags: ${{ github.ref_name }}-${{ github.sha }}
           labels: ${{ steps.metadata.outputs.labels }}
+
   deploy:
     name: Deploy to NAIS
     needs: build_image_and_push
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: "Sanitize Branch name"
-        id: sanitize_branch
-        shell: bash
-        run: |
-          SANITIZED_BRANCH_NAME=$(echo -n ${{ github.head_ref }} | tr "_" "-")
-          echo "Sanitized branch name: $SANITIZED_BRANCH_NAME"
-          echo "sanitized_branch_name=$SANITIZED_BRANCH_NAME" >> $GITHUB_ENV;
-      - uses: nais/deploy/actions/deploy@v1
-        env:
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-          CLUSTER: staging
-          RESOURCE: nais.yaml
-          VAR: image=${{ env.REGISTRY }}/${{env.IMAGE}}:${{ env.TAG }},branch=${{ env.sanitized_branch_name }}
-          DEPLOY_SERVER: deploy.ssb.cloud.nais.io:443
+      - name: "Get JIRA issue number"
+        id: jira_issue_number
+        run: echo ${{ env.REGISTRY }} && echo ${{ env.IMAGE }} && echo ${{ env.TAG }} && echo ${{ env.ISSUE_NUMBER }}
+      #- uses: nais/deploy/actions/deploy@v1
+      #  env:
+      #    APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+      #    CLUSTER: staging
+      #    RESOURCE: nais.yaml
+      #    VAR: image=${{ env.REGISTRY }}/${{env.IMAGE}}:${{ env.TAG }},branch=${{ env.ISSUE_NUMBER }}
+      #    DEPLOY_SERVER: deploy.ssb.cloud.nais.io:443
