@@ -19,6 +19,11 @@ spec:
     min: 1
   port: 8080
 
+  accessPolicy:
+    outbound:
+      external:
+        - host: market.enonic.com
+
   resources:
     limits:
       memory: 3Gi
