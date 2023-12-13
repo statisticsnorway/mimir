@@ -66,6 +66,7 @@ jobs:
         run: |
           BRANCH="${{ github.head_ref }}"
           ISSUE_NUMBER=${BRANCH:0:8}
+          ISSUE_NUMBER=$(echo $ISSUE_NUMBER | tr '[:upper:]' '[:lower:]')
           echo "ISSUE_NUMBER=${ISSUE_NUMBER}" >> $GITHUB_ENV;
           echo "Issue number: $ISSUE_NUMBER";
       - name: Inject NAIS URL to vhost
@@ -127,6 +128,7 @@ jobs:
         run: |
           BRANCH="${{ github.head_ref }}"
           ISSUE_NUMBER=${BRANCH:0:8}
+          ISSUE_NUMBER=$(echo $ISSUE_NUMBER | tr '[:upper:]' '[:lower:]')
           echo "ISSUE_NUMBER=${ISSUE_NUMBER}" >> $GITHUB_ENV;
           echo "Issue number: $ISSUE_NUMBER";
       - uses: nais/deploy/actions/deploy@v1
