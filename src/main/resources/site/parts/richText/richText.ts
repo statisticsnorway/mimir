@@ -23,9 +23,15 @@ export function renderPart(req: XP.Request): XP.Response {
     const props = {
       text: processedText,
       textType: part.config.textType,
+      maxWidth: part.config.maxWidth,
     }
 
-    return r4xpRender('site/parts/richText/richText', props, req, { hydrate: false })
+    return r4xpRender('site/parts/richText/richText', props, req, {
+      hydrate: false,
+      body: `<section class="xp-part rich-text ${
+        props.maxWidth ? 'max-width' : ''
+      } container searchabletext"></section>`,
+    })
   } catch (error) {
     return renderError(req, 'Error loading the part', error)
   }
