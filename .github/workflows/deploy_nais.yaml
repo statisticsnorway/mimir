@@ -35,6 +35,9 @@ jobs:
 
   build_image_and_push:
     needs: build_xp
+    permissions:
+      contents: "read"
+      id-token: "write"
     runs-on: ubuntu-latest
     steps:
       - name: Calculate sha
