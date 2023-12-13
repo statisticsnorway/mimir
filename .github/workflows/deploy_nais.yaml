@@ -18,7 +18,7 @@ jobs:
   build_xp:
     name: 'Build XP jar'
     runs-on: 'ubuntu-latest'
-    if: startsWith(github.head_ref, 'MIM-') || startsWith(github.head_ref, 'mim-')
+    if: (startsWith(github.head_ref, 'MIM-') || startsWith(github.head_ref, 'mim-') && contains(fromJSON('["omsaggau", "annesiri", "ssb-cgn", "Glenruben", "johnnadeluy", "Carl-OW", "michaelpande"]'), github.actor))
     steps:
       - id: build_app
         uses: enonic/release-tools/build-and-publish@master
@@ -31,11 +31,10 @@ jobs:
         with:
           name: mimir-nais-${{ github.run_number }}
           path: "./build/libs/*.jar"
+
+
   build_image_and_push:
     needs: build_xp
-    permissions:
-      contents: "read"
-      id-token: "write"
     runs-on: ubuntu-latest
     steps:
       - name: Calculate sha
@@ -61,6 +60,7 @@ jobs:
           name: mimir-nais-${{ github.run_number }}
           path: "./ssbno-xp-docker"
 
+      # turn 'MIM-9876_new_feature' into 'mim-9876' so it can be used in URL, it can be found in env.ISSUE_NUMBER
       - name: "Get JIRA issue number"
         id: jira_issue_number
         run: |
@@ -69,13 +69,7 @@ jobs:
           ISSUE_NUMBER=$(echo $ISSUE_NUMBER | tr '[:upper:]' '[:lower:]')
           echo "ISSUE_NUMBER=${ISSUE_NUMBER}" >> $GITHUB_ENV;
           echo "Issue number: $ISSUE_NUMBER";
-      - name: Inject NAIS URL to vhost
-        run: |
-          sed -i "s/enabled=false/enabled=true/g" ssbno-xp-docker/config/com.enonic.xp.web.vhost.cfg
-          sed -i "s/REPLACE_ME/ssbno-${{ env.ISSUE_NUMBER }}.external.staging.ssb.cloud.nais.io/g" ssbno-xp-docker/config/com.enonic.xp.web.vhost.cfg
 
-          VHOST_VALUE="$(cat ssbno-xp-docker/config/com.enonic.xp.web.vhost.cfg)"
-          echo "$VHOST_VALUE"
       - id: "auth"
         name: "Authenticate to Google Cloud"
         uses: "google-github-actions/auth@v0.6.0"
@@ -116,6 +110,7 @@ jobs:
           tags: ${{ steps.metadata.outputs.tags }}
           #         tags: ${{ github.ref_name }}-${{ github.sha }}
           labels: ${{ steps.metadata.outputs.labels }}
+
 
   deploy:
     name: Deploy to NAIS

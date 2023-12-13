@@ -1,7 +1,7 @@
 apiVersion: nais.io/v1alpha1
 kind: Application
 metadata:
-  name: mimir-branch
+  name: mimir-branch-{{branch}}
   namespace: ssbno
   annotations:
     nais.io/read-only-file-system: "false"
@@ -19,6 +19,7 @@ spec:
     min: 1
   port: 8080
 
+  # Server needs to be able to access these hosts to download and install apps from market, not a complete list, some apps can't be installed
   accessPolicy:
     outbound:
       external:
@@ -37,6 +38,10 @@ spec:
 
   prometheus:
     enabled: false
+
+  env: 
+    - name: VHOST_HOST
+      value: ssbno-{{branch}}.external.staging.ssb.cloud.nais.io
 
   ingresses:
     - https://ssbno-{{branch}}.external.staging.ssb.cloud.nais.io  # must match vhost
