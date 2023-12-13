@@ -29,11 +29,11 @@ spec:
 
   resources:
     limits:
-      memory: 3Gi
-    requests:
       memory: 2Gi
+    requests:
+      memory: 1Gi
 
-  ttl: 168h
+  ttl: 1h
 
   prometheus:
     enabled: false
