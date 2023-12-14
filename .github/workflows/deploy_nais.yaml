@@ -1,39 +1,139 @@
-
 name: NAIS Deploy
 
 on:
-  workflow_run:
-    workflows: [Deploy to Test]
-    types: [completed]
+  pull_request:
+    types: [labeled]
+    # types: [opened]
+    # paths:
+    #   - 'src/**'
+    #   - 'build.gradle'
+    #   - 'package.json'
+
+  
+env:
+  REGISTRY: europe-north1-docker.pkg.dev/nais-management-b3a7/ssbno/ssbno-mimir
+  IMAGE: mimir
+  TAG: ${{ github.head_ref }}-${{ github.sha }}
 
 jobs:
-  nais-deploy:
-    if: github.event.workflow_run.conclusion == 'success'
+  build_xp:
+    name: 'Build XP jar'
+    runs-on: 'ubuntu-latest'
+    if: (startsWith(github.head_ref, 'MIM-') || startsWith(github.head_ref, 'mim-') && github.event.label.name == 'nais' && contains(fromJSON('["omsaggau", "annesiri", "ssb-cgn", "Glenruben", "johnnadeluy", "Carl-OW", "michaelpande"]'), github.actor))
+    steps:
+      - id: build_app
+        uses: enonic/release-tools/build-and-publish@master
+        with:
+          skipPublishing: true
+      - name: Upload artifacts
+        id: upload_artifacts
+        if: success()
+        uses: actions/upload-artifact@v3
+        with:
+          name: mimir-nais-${{ github.run_number }}
+          path: "./build/libs/*.jar"
+
+
+  build_image_and_push:
+    needs: build_xp
+    permissions:
+      contents: "read"
+      id-token: "write"
     runs-on: ubuntu-latest
     steps:
-      - name: Get Artifact URL
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-          OWNER: ${{ github.repository_owner }}
-          REPO: ${{ github.event.repository.name }}
-          WORKFLOW_RUN_EVENT_OBJ: ${{ toJSON(github.event.workflow_run) }}
+      - name: Calculate sha
+        id: calculate_sha
+        run: echo ${{ env.REGISTRY }} && echo ${{ env.IMAGE }} && echo ${{ env.TAG }}
+
+      - name: Checkout mimir
+        uses: actions/checkout@v4
+
+      - name: Give GitHub Actions acces to docker repo
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.DOCKER_REPO_READ_KEY }}
+      - name: Checkout docker
+        uses: actions/checkout@v4
+        with:
+          ref: "master"
+          path: "ssbno-xp-docker"
+          repository: "statisticsnorway/ssbno-xp-docker"
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: mimir-nais-${{ github.run_number }}
+          path: "./ssbno-xp-docker"
+
+      # turn 'MIM-9876_new_feature' into 'mim-9876' so it can be used in URL, it can be found in env.ISSUE_NUMBER
+      - name: "Get JIRA issue number"
+        id: jira_issue_number
         run: |
-          PREVIOUS_JOB_ID=$(jq -r '.id' <<< "$WORKFLOW_RUN_EVENT_OBJ")
-          echo "Previous Job ID: $PREVIOUS_JOB_ID"
-          echo "PREVIOUS_JOB_ID=$PREVIOUS_JOB_ID" >> "$GITHUB_ENV"
+          BRANCH="${{ github.head_ref }}"
+          ISSUE_NUMBER=${BRANCH:0:8}
+          ISSUE_NUMBER=$(echo $ISSUE_NUMBER | tr '[:upper:]' '[:lower:]')
+          echo "ISSUE_NUMBER=${ISSUE_NUMBER}" >> $GITHUB_ENV;
+          echo "Issue number: $ISSUE_NUMBER";
 
-          ARTIFACT_URL=$(gh api "/repos/$OWNER/$REPO/actions/artifacts" \
-            --jq ".artifacts.[] |
-            select(.workflow_run.id==${PREVIOUS_JOB_ID}) |
-            select(.expired==false) |
-            .archive_download_url")
+      - id: "auth"
+        name: "Authenticate to Google Cloud"
+        uses: "google-github-actions/auth@v0.6.0"
+        with:
+          workload_identity_provider: "projects/906675412832/locations/global/workloadIdentityPools/ssb-identity-pool/providers/github-oidc-provider"
+          service_account: "gh-ssb@nais-management-b3a7.iam.gserviceaccount.com"
+          token_format: "access_token"
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Login to registry
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: "oauth2accesstoken"
+          password: "${{ steps.auth.outputs.access_token }}"
+      - name: Docker meta
+        id: metadata
+        uses: docker/metadata-action@v3
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE }}
+          # Docker tags based on the following events/attributes
+          tags: |
+            type=schedule
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern=v{{version}}
+            type=semver,pattern=v{{major}}.{{minor}}
+            type=semver,pattern=v{{major}}
+            type=sha
+            type=raw,value=${{ env.TAG }}, enable=true
+      - name: Build and push
+        uses: docker/build-push-action@v4
+        with:
+          context: ./ssbno-xp-docker
+          file: "./ssbno-xp-docker/Dockerfile"
+          push: true
+          tags: ${{ steps.metadata.outputs.tags }}
+          #         tags: ${{ github.ref_name }}-${{ github.sha }}
+          labels: ${{ steps.metadata.outputs.labels }}
 
-          echo "ARTIFACT URL: $ARTIFACT_URL"
-          echo "ARTIFACT_URL=$ARTIFACT_URL" >> "$GITHUB_ENV"
-      # - uses: nais/deploy/actions/deploy@v1
-      #   env:
-      #     APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-      #     CLUSTER: staging
-      #     RESOURCE: nais.yaml
-      #     VAR: image=todoTag,artifactUrl=${{ env.ARTIFACT_URL }}
-      #     DEPLOY_SERVER: deploy.ssb.cloud.nais.io:443
+
+  deploy:
+    name: Deploy to NAIS
+    needs: build_image_and_push
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: "Get JIRA issue number"
+        id: jira_issue_number
+        run: |
+          BRANCH="${{ github.head_ref }}"
+          ISSUE_NUMBER=${BRANCH:0:8}
+          ISSUE_NUMBER=$(echo $ISSUE_NUMBER | tr '[:upper:]' '[:lower:]')
+          echo "ISSUE_NUMBER=${ISSUE_NUMBER}" >> $GITHUB_ENV;
+          echo "Issue number: $ISSUE_NUMBER";
+      - uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: staging
+          RESOURCE: nais.yaml
+          VAR: image=${{ env.REGISTRY }}/${{env.IMAGE}}:${{ env.TAG }},branch=${{ env.ISSUE_NUMBER }}
+          DEPLOY_SERVER: deploy.ssb.cloud.nais.io:443
