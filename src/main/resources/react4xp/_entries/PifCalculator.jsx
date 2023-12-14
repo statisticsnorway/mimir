@@ -463,7 +463,7 @@ function PifCalculator(props) {
         </div>
         <Row className='mb-5' aria-hidden='true'>
           <Col className='amount-equal col-12 col-md-4'>
-            <h3>{props.phrases.pifAmountEqualled}</h3>
+            <h3>{props.phrases.amountEqualled}</h3>
           </Col>
           <Col className='end-value col-12 col-md-8'>
             <span className='float-start float-md-end'>{renderNumberValute(endValue)}</span>

@@ -324,9 +324,8 @@ function KpiCalculator(props) {
     }
   }
 
-  function renderNumberChangeValue() {
+  function renderNumberChangeValue(changeValue) {
     if (endValue && change) {
-      const changeValue = change.charAt(0) === '-' ? change.replace('-', '') : change
       const decimalSeparator = language === 'en' ? '.' : ','
       return (
         <React.Fragment>
@@ -346,9 +345,20 @@ function KpiCalculator(props) {
 
   function calculatorResult() {
     const priceChangeLabel = change.charAt(0) === '-' ? props.phrases.priceDecrease : props.phrases.priceIncrease
+    const changeValue = change.charAt(0) === '-' ? change.replace('-', '') : change
+    const resultScreenReader = props.phrases.kpiResultScreenReader
+      .replace('{0}', language === 'en' ? endValue : endValue.replace(/\./g, ','))
+      .replace('{1}', priceChangeLabel)
+      .replace('{2}', language === 'en' ? changeValue : changeValue.replace(/\./g, ','))
+      .replace('{3}', startPeriod)
+      .replace('{4}', endPeriod)
+
     return (
-      <Container className='calculator-result' ref={scrollAnchor} tabIndex='0'>
-        <Row className='mb-5'>
+      <Container className='calculator-result' ref={scrollAnchor}>
+        <div aria-live='polite' aria-atomic='true'>
+          <span className='sr-only'>{resultScreenReader}</span>
+        </div>
+        <Row className='mb-5' aria-hidden='true'>
           <Col className='amount-equal align-self-end col-12 col-md-4'>
             <Title size={3}>{props.phrases.kpiAmountEqualled}</Title>
           </Col>
@@ -359,10 +369,10 @@ function KpiCalculator(props) {
             <Divider dark />
           </Col>
         </Row>
-        <Row className='mb-5'>
+        <Row className='mb-5' aria-hidden='true'>
           <Col className='col-12 col-lg-4'>
             <span>{priceChangeLabel}</span>
-            <span className='float-end'>{renderNumberChangeValue()}</span>
+            <span className='float-end'>{renderNumberChangeValue(changeValue)}</span>
             <Divider dark />
           </Col>
           <Col className='start-value col-12 col-lg-4'>
@@ -401,11 +411,19 @@ function KpiCalculator(props) {
 
   function calculatorResultFrontpage() {
     const priceChangeLabel = change.charAt(0) === '-' ? props.phrases.priceDecrease : props.phrases.priceIncrease
+    const changeValue = change.charAt(0) === '-' ? change.replace('-', '') : change
+    const resultScreenReader = props.phrases.kpiResultFrontpageScreenReader
+      .replace('{0}', language === 'en' ? endValue : endValue.replace(/\./g, ','))
+      .replace('{1}', priceChangeLabel)
+      .replace('{2}', language === 'en' ? changeValue : changeValue.replace(/\./g, ','))
     return (
-      <Container className='calculator-result-frontpage' ref={scrollAnchor} tabIndex='0'>
-        <Row className='mb-3'>
+      <Container className='calculator-result-frontpage' ref={scrollAnchor}>
+        <div aria-live='polite' aria-atomic='true'>
+          <span className='sr-only'>{resultScreenReader}</span>
+        </div>
+        <Row className='mb-3' aria-hidden='true'>
           <Col className='amount-equal align-self-end col-12 col-lg-5'>
-            <Title size={3}>{props.phrases.kpiAmountEqualled}</Title>
+            <Title size={3}>{props.phrases.amountEqualled}</Title>
           </Col>
           <Col className='end-value col-12 col-lg-7'>
             <span className='float-lg-end'>{renderNumberValute(endValue)}</span>
@@ -414,10 +432,10 @@ function KpiCalculator(props) {
             <Divider dark />
           </Col>
         </Row>
-        <Row>
+        <Row aria-hidden='true'>
           <Col className='col-12'>
             <span>{priceChangeLabel} </span>
-            <span>{renderNumberChangeValue()}</span>
+            <span>{renderNumberChangeValue(changeValue)}</span>
           </Col>
         </Row>
         <Row>
