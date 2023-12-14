@@ -2,6 +2,7 @@ name: NAIS Deploy
 
 on:
   pull_request:
+    types: [labeled]
     # types: [opened]
     # paths:
     #   - 'src/**'
@@ -18,7 +19,7 @@ jobs:
   build_xp:
     name: 'Build XP jar'
     runs-on: 'ubuntu-latest'
-    if: (startsWith(github.head_ref, 'MIM-') || startsWith(github.head_ref, 'mim-') && contains(fromJSON('["omsaggau", "annesiri", "ssb-cgn", "Glenruben", "johnnadeluy", "Carl-OW", "michaelpande"]'), github.actor))
+    if: (startsWith(github.head_ref, 'MIM-') || startsWith(github.head_ref, 'mim-') && github.event.label.name == 'nais' && contains(fromJSON('["omsaggau", "annesiri", "ssb-cgn", "Glenruben", "johnnadeluy", "Carl-OW", "michaelpande"]'), github.actor))
     steps:
       - id: build_app
         uses: enonic/release-tools/build-and-publish@master
