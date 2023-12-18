@@ -28,7 +28,7 @@ jobs:
       - name: Upload artifacts
         id: upload_artifacts
         if: success()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: mimir-nais-${{ github.run_number }}
           path: "./build/libs/*.jar"
