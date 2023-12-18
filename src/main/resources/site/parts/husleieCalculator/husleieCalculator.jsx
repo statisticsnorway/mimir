@@ -33,6 +33,10 @@ function HusleieCalculator(props) {
     errorMsg: `${props.phrases.husleieValidateYear} ${validMaxYear}`,
     value: '',
   })
+
+  const [endMonth, setEndMonth] = useState(null)
+  const [endYear, setEndYear] = useState(null)
+
   const defaultAdjustRentWarning = {
     warning: false,
     warningTitle: '',
@@ -84,6 +88,7 @@ function HusleieCalculator(props) {
     const calculateRentStartMonth = startMonth.value
     const calculatorRentYear = Number(startYear.value)
     const calculatorRentOneYearLater = (calculatorRentYear + 1).toString()
+
     setChooseFiguresToCalculateRent({
       startValue: startValue.value,
       startMonth: calculateRentStartMonth,
@@ -93,7 +98,7 @@ function HusleieCalculator(props) {
         endYear: calculatorRentOneYearLater,
       },
       newestNumbersPhrase:
-        getMonthLabel(validMaxMonth) + ' ' + validMaxYear + ' (' + props.phrases.husleieLatestFigures + ' )',
+        getMonthLabel(validMaxMonth) + ' ' + validMaxYear + ' (' + props.phrases.husleieLatestFigures + ')',
     })
     setShowResult(true)
     setChoosePeriod(false)
@@ -127,6 +132,8 @@ function HusleieCalculator(props) {
         },
       })
       .then((res) => {
+        setEndMonth(endMonth)
+        setEndYear(endYear)
         const changeVal = (res.data.change * 100).toFixed(1)
         const endVal = res.data.endValue.toFixed(2)
         const phraseTo = language === 'en' ? 'to' : 'til'
@@ -396,6 +403,12 @@ function HusleieCalculator(props) {
   }
 
   function calculatorResult() {
+    const resultScreenReaderText = props.phrases.husleieNewRentResult
+      .replace('{0}', language === 'en' ? endValue : endValue.replace(/\./g, ','))
+      .replace('{1}', language === 'en' ? change : change.replace(/\./g, ','))
+      .replace('{2}', `${getMonthLabel(startMonth.value)} ${startYear.value}`)
+      .replace('{3}', `${getMonthLabel(endMonth)} ${endYear}`)
+
     return (
       <Container className='calculator-result' ref={scrollAnchor}>
         <Row className='mb-3 mb-sm-5'>
@@ -410,13 +423,16 @@ function HusleieCalculator(props) {
           </Col>
         </Row>
         <Row>
-          <Col className='price-change col-12 col-md-5 col-lg-4'>
+          <Col className='col-12 col-md-5 col-lg-4'>
             <span>{props.phrases.calculatorChange}</span>
             <span className='float-end'>{renderNumberChangeValue()}</span>
             <Divider dark />
           </Col>
           <Col className='price-change-text col-12 col-md-7 col-lg-6'>
-            <span>{resultText}</span>
+            <span aria-hidden='true'>{resultText}</span>
+            <span aria-live='polite' className='visually-hidden'>
+              {resultScreenReaderText}
+            </span>
           </Col>
         </Row>
       </Container>
@@ -463,9 +479,12 @@ function HusleieCalculator(props) {
   }
 
   function renderChooseHusleiePeriode() {
+    const buttonPhrase = props.language === 'en' ? 'button' : 'knapp'
+    const orPhrase = props.language === 'en' ? 'or' : 'eller'
+
     if (choosePeriod && showResult) {
       return (
-        <Container ref={scrollAnchor}>
+        <Container ref={scrollAnchor} aria-atomic='true' aria-live='polite'>
           <Divider className='my-5' />
           <Row>
             <Title size={3} className='col-12 mb-2'>
@@ -477,9 +496,11 @@ function HusleieCalculator(props) {
             <Button className='submit-one-year' onClick={submitOneYearLater} ref={submitButton}>
               {chooseFiguresToCalculateRent.oneYearLater.phraseOneYearLater}
             </Button>
+            <span className='visually-hidden'>{`, ${buttonPhrase} ${orPhrase}`}</span>
             <Button className='submit-last-period' onClick={submitLastPeriod} ref={submitButton}>
               {chooseFiguresToCalculateRent.newestNumbersPhrase}
             </Button>
+            <span className='visually-hidden'>{`, ${buttonPhrase}`}</span>
           </Row>
         </Container>
       )
@@ -502,9 +523,7 @@ function HusleieCalculator(props) {
     return (
       <Container className='husleie-calculator'>
         {renderForm()}
-        <div aria-live='polite' aria-atomic='true'>
-          {renderResult()}
-        </div>
+        {renderResult()}
       </Container>
     )
   }
@@ -562,6 +581,7 @@ function HusleieCalculator(props) {
                       <Input
                         className='input-year'
                         label={props.phrases.fromYear}
+                        ariaLabel={props.phrases.fromYearScreenReader}
                         handleChange={(value) => onChange('start-year', value)}
                         error={startYear.error}
                         errorMessage={startYear.errorMsg}
@@ -579,7 +599,7 @@ function HusleieCalculator(props) {
                 </Button>
               </Col>
             </Row>
-            <div aria-live='polite'>{renderChooseHusleiePeriode()}</div>
+            {renderChooseHusleiePeriode()}
           </Container>
         </Form>
       </div>

@@ -64,10 +64,6 @@ try {
           enabled: false,
         },
         {
-          feature: 'publishJob-lib-sheduler',
-          enabled: false,
-        },
-        {
           feature: 'enable-chat-script',
           enabled: false,
         },
@@ -101,6 +97,10 @@ try {
         },
         {
           feature: 'highchart-expert',
+          enabled: false,
+        },
+        {
+          feature: 'gpt-service',
           enabled: false,
         },
         {

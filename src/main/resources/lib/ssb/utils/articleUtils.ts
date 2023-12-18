@@ -145,6 +145,74 @@ function shouldEdit(mainSubjects: Array<string>, subSubjects: Array<string>, art
   else return true
 }
 
+export function getAssociatedStatisticsLinks(
+  associatedStatisticsConfig: Article['associatedStatistics']
+): Array<AssociatedLink> | [] {
+  if (associatedStatisticsConfig && associatedStatisticsConfig.length) {
+    return associatedStatisticsConfig
+      .map((option) => {
+        if (option?._selected === 'XP') {
+          const associatedStatisticsXP: string | undefined = option.XP?.content
+          const associatedStatisticsXPContent: Content | null = associatedStatisticsXP
+            ? get({
+                key: associatedStatisticsXP,
+              })
+            : null
+
+          if (associatedStatisticsXPContent) {
+            return {
+              text: associatedStatisticsXPContent.displayName,
+              href: associatedStatisticsXP
+                ? pageUrl({
+                    path: associatedStatisticsXPContent._path,
+                  })
+                : '',
+            }
+          }
+        } else if (option?._selected === 'CMS') {
+          const associatedStatisticsCMS: CMS | undefined = option.CMS
+
+          return {
+            text: associatedStatisticsCMS?.title,
+            href: associatedStatisticsCMS?.href,
+          }
+        }
+        return
+      })
+      .filter((statistics) => !!statistics) as Array<AssociatedLink>
+  }
+  return []
+}
+
+export function getAssociatedArticleArchiveLinks(
+  associatedArticleArchivesConfig: Article['articleArchive']
+): Array<AssociatedLink> | [] {
+  if (associatedArticleArchivesConfig?.length) {
+    return (associatedArticleArchivesConfig as Array<string>)
+      .map((articleArchive: string) => {
+        const articleArchiveContent: Content | null = articleArchive
+          ? get({
+              key: articleArchive,
+            })
+          : null
+
+        if (articleArchiveContent) {
+          return {
+            text: articleArchiveContent.displayName,
+            href: articleArchive
+              ? pageUrl({
+                  path: articleArchiveContent._path,
+                })
+              : '',
+          }
+        }
+        return
+      })
+      .filter((articleArchive) => !!articleArchive) as Array<AssociatedLink>
+  }
+  return []
+}
+
 export interface PreparedArticles {
   title: string
   preface: string
@@ -155,4 +223,14 @@ export interface PreparedArticles {
 export interface ArticleResult {
   total: number
   articles: Array<PreparedArticles>
+}
+
+export interface AssociatedLink {
+  text: string | undefined
+  href: string | undefined
+}
+
+export interface CMS {
+  href?: string | undefined
+  title?: string | undefined
 }

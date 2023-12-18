@@ -2,7 +2,7 @@
 import { createUser, findUsers } from '/lib/xp/auth'
 import { type Content } from '/lib/xp/content'
 import { run, type ContextParams } from '/lib/xp/context'
-import { create, get as getScheduledJob, list as listScheduledJobs, modify, type ScheduledJob } from '/lib/xp/scheduler'
+import { create, get as getScheduledJob, modify, delete as deleteScheduledJob } from '/lib/xp/scheduler'
 import { isMaster } from '/lib/xp/cluster'
 import {
   type JobEventNode,
@@ -42,8 +42,6 @@ const createUserContext: ContextParams = {
   },
 }
 
-const newPublishJobEnabled: boolean = isEnabled('publishJob-lib-sheduler', false, 'ssb')
-
 export const cronContext: ContextParams = {
   // Master context (XP)
   repository: ENONIC_CMS_DEFAULT_REPO,
@@ -53,6 +51,39 @@ export const cronContext: ContextParams = {
     login: 'cronjob',
     idProvider: 'system',
   },
+}
+
+function libScheduleTest(params: { name: string; cron: string; timeZone: string }, cronLibCron: string) {
+  log.info(
+    `Scheduling lib-sheduler test for ${params.name} at ${params.cron} with timezone ${params.timeZone}, libCron was scheduled with ${cronLibCron}`
+  )
+
+  run(cronContext, () => {
+    deleteScheduledJob({
+      name: params.name!,
+    })
+
+    create({
+      name: params.name!,
+      descriptor: 'mimir:libSchedulerTester',
+      user: `user:system:cronjob`,
+      enabled: true,
+      schedule: {
+        type: 'CRON',
+        value: params.cron,
+        timeZone: params.timeZone,
+      },
+      config: {
+        name: params.name,
+        cronLibCron,
+        cron: params.cron,
+        timeZone: params.timeZone,
+      },
+    })
+  })
+}
+function libScheduleTestLog(name: string, cron: string): void {
+  log.info(`libSchedulerTester - cron - ${name} was set to run at ${cron} and is running at ${new Date()}`)
 }
 
 function setupCronJobUser(): void {
@@ -125,87 +156,6 @@ export function runOnMasterOnly(task: () => void): void {
 export function setupCronJobs(): void {
   run(createUserContext, setupCronJobUser)
 
-  // setup dataquery cron job
-  const dataqueryCron: string =
-    app.config && app.config['ssb.cron.dataquery'] ? app.config['ssb.cron.dataquery'] : '0 15 * * *'
-  schedule({
-    name: 'Data from datasource endpoints',
-    cron: dataqueryCron,
-    callback: () => runOnMasterOnly(job),
-    context: cronContext,
-  })
-
-  // clear calculator parts cache cron
-  const clearCalculatorPartsCacheCron: string =
-    app.config && app.config['ssb.cron.clearCalculatorCache']
-      ? app.config['ssb.cron.clearCalculatorCache']
-      : '15 07 * * *'
-
-  schedule({
-    name: 'Clear calculator parts cache',
-    cron: clearCalculatorPartsCacheCron,
-    callback: () => {
-      clearPartFromPartCache('kpiCalculator')
-      clearPartFromPartCache('pifCalculator')
-      clearPartFromPartCache('bkibolCalculator')
-      clearPartFromPartCache('husleieCalculator')
-    },
-    context: cronContext,
-  })
-
-  // and setup a cron for periodic executions in the future
-  const statregCron: string =
-    app.config && app.config['ssb.cron.statreg'] ? app.config['ssb.cron.statreg'] : '30 14 * * *'
-  schedule({
-    name: 'StatReg Periodic Refresh',
-    cron: statregCron,
-    callback: () => runOnMasterOnly(statRegJob),
-    context: cronContext,
-  })
-
-  // Update repo no.ssb.statistic.variant
-  const updateStatisticRepoCron: string =
-    app.config && app.config['ssb.cron.updateStatisticRepo'] ? app.config['ssb.cron.updateStatisticRepo'] : '0 7 * * *'
-
-  schedule({
-    name: 'Update no.ssb.statistics Repo',
-    cron: updateStatisticRepoCron,
-    callback: () => runOnMasterOnly(createOrUpdateStatisticsRepo),
-    context: cronContext,
-  })
-
-  const deleteExpiredEventLogCron: string =
-    app.config && app.config['ssb.cron.deleteLogs'] ? app.config['ssb.cron.deleteLogs'] : '45 13 * * *'
-  schedule({
-    name: 'Delete expired event logs for queries',
-    cron: deleteExpiredEventLogCron,
-    callback: () => runOnMasterOnly(deleteExpiredEventLogsForQueries),
-    context: cronContext,
-  })
-
-  if (app.config && app.config['ssb.mock.enable'] === 'true') {
-    const updateUnpublishedMockCron: string =
-      app.config && app.config['ssb.cron.updateUnpublishedMock']
-        ? app.config['ssb.cron.updateUnpublishedMock']
-        : '0 04 * * *'
-    schedule({
-      name: 'Update unpublished mock tbml',
-      cron: updateUnpublishedMockCron,
-      callback: () => runOnMasterOnly(updateUnpublishedMockTbml),
-      context: cronContext,
-    })
-  }
-
-  // push news to rss feed
-  const pushRssNewsCron: string =
-    app.config && app.config['ssb.cron.pushRssNews'] ? app.config['ssb.cron.pushRssNews'] : '02 06 * * *'
-  schedule({
-    name: 'Push RSS news',
-    cron: pushRssNewsCron,
-    callback: () => runOnMasterOnly(pushRssNewsJob),
-    context: cronContext,
-  })
-
   // clear specific cache once an hour
   const clearCacheCron: string =
     app.config && app.config['ssb.cron.clearCacheCron'] ? app.config['ssb.cron.clearCacheCron'] : '01 * * * *'
@@ -228,105 +178,153 @@ export function setupCronJobs(): void {
     context: cronContext,
   })
 
-  // Update SDDS tables
-  const updateSDDSTablesCron: string =
-    app.config && app.config['ssb.cron.updateSDDSTables'] ? app.config['ssb.cron.updateSDDSTables'] : '01 09 * * *'
+  // clear calculator parts cache cron
+  const clearCalculatorPartsCacheCron: string =
+    app.config && app.config['ssb.cron.clearCalculatorCache']
+      ? app.config['ssb.cron.clearCalculatorCache']
+      : '15 07 * * *'
+
   schedule({
-    name: 'Update SDDS tables',
-    cron: updateSDDSTablesCron,
-    callback: () => runOnMasterOnly(updateSDDSTables),
+    name: 'Clear calculator parts cache',
+    cron: clearCalculatorPartsCacheCron,
+    callback: () => {
+      libScheduleTestLog('clearCalculatorCronTest', clearCalculatorPartsCacheCron)
+      clearPartFromPartCache('kpiCalculator')
+      clearPartFromPartCache('pifCalculator')
+      clearPartFromPartCache('bkibolCalculator')
+      clearPartFromPartCache('husleieCalculator')
+    },
     context: cronContext,
   })
 
-  const datasetPublishCron: string =
-    app.config && app.config['ssb.cron.publishDataset'] ? app.config['ssb.cron.publishDataset'] : '50 05 * * *'
+  if (isMaster()) {
+    // setup dataquery cron job
+    const dataqueryCron: string =
+      app.config && app.config['ssb.cron.dataquery'] ? app.config['ssb.cron.dataquery'] : '0 15 * * *'
+    schedule({
+      name: 'Data from datasource endpoints',
+      cron: dataqueryCron,
+      callback: () => {
+        libScheduleTestLog('dataqueryCronTest', dataqueryCron)
+        job()
+      },
+      context: cronContext,
+    })
+    // using config in https://github.com/statisticsnorway/mimir-config/blob/master/prod/mimir.cfg as base
+    libScheduleTest({ name: 'dataqueryCronTest', cron: '03 08 * * *', timeZone: 'Europe/Oslo' }, dataqueryCron)
 
-  // Use feature-toggling to switch to lib-sheduler when testet in QA
-  if (!newPublishJobEnabled) {
+    // and setup a cron for periodic executions in the future
+    const statregCron: string =
+      app.config && app.config['ssb.cron.statreg'] ? app.config['ssb.cron.statreg'] : '30 14 * * *'
+    schedule({
+      name: 'StatReg Periodic Refresh',
+      cron: statregCron,
+      callback: () => {
+        libScheduleTestLog('statregRefreshCronTest', statregCron)
+        statRegJob()
+      },
+      context: cronContext,
+    })
+    libScheduleTest({ name: 'statregRefreshCronTest', cron: '05 8 * * *', timeZone: 'Europe/Oslo' }, statregCron)
+
+    // Update repo no.ssb.statistic.variant
+    const updateStatisticRepoCron: string =
+      app.config && app.config['ssb.cron.updateStatisticRepo']
+        ? app.config['ssb.cron.updateStatisticRepo']
+        : '0 7 * * *'
+
+    schedule({
+      name: 'Update no.ssb.statistics Repo',
+      cron: updateStatisticRepoCron,
+      callback: () => {
+        libScheduleTestLog('statregUpdateCronTest', updateStatisticRepoCron)
+        createOrUpdateStatisticsRepo()
+      },
+      context: cronContext,
+    })
+    libScheduleTest(
+      { name: 'statregUpdateCronTest', cron: '0 8 * * *', timeZone: 'Europe/Oslo' },
+      updateStatisticRepoCron
+    )
+
+    const deleteExpiredEventLogCron: string =
+      app.config && app.config['ssb.cron.deleteLogs'] ? app.config['ssb.cron.deleteLogs'] : '45 13 * * *'
+    schedule({
+      name: 'Delete expired event logs for queries',
+      cron: deleteExpiredEventLogCron,
+      callback: () => {
+        libScheduleTestLog('deleteExpireCronTest', deleteExpiredEventLogCron)
+        deleteExpiredEventLogsForQueries()
+      },
+      context: cronContext,
+    })
+    libScheduleTest(
+      { name: 'deleteExpireCronTest', cron: '20 15 * * *', timeZone: 'Europe/Oslo' },
+      deleteExpiredEventLogCron
+    )
+
+    if (app.config && app.config['ssb.mock.enable'] === 'true') {
+      const updateUnpublishedMockCron: string =
+        app.config && app.config['ssb.cron.updateUnpublishedMock']
+          ? app.config['ssb.cron.updateUnpublishedMock']
+          : '0 04 * * *'
+      schedule({
+        name: 'Update unpublished mock tbml',
+        cron: updateUnpublishedMockCron,
+        callback: () => updateUnpublishedMockTbml(),
+        context: cronContext,
+      })
+    }
+
+    // push news to rss feed
+    const pushRssNewsCron: string =
+      app.config && app.config['ssb.cron.pushRssNews'] ? app.config['ssb.cron.pushRssNews'] : '02 06 * * *'
+    schedule({
+      name: 'Push RSS news',
+      cron: pushRssNewsCron,
+      callback: () => {
+        libScheduleTestLog('pushRssNewsCronTest', pushRssNewsCron)
+        pushRssNewsJob()
+      },
+      context: cronContext,
+    })
+    libScheduleTest({ name: 'pushRssNewsCronTest', cron: '01 08 * * *', timeZone: 'Europe/Oslo' }, pushRssNewsCron)
+
+    // Update SDDS tables
+    const updateSDDSTablesCron: string =
+      app.config && app.config['ssb.cron.updateSDDSTables'] ? app.config['ssb.cron.updateSDDSTables'] : '01 09 * * *'
+    schedule({
+      name: 'Update SDDS tables',
+      cron: updateSDDSTablesCron,
+      callback: () => {
+        libScheduleTestLog('updateSDDSCronTest', updateSDDSTablesCron)
+        updateSDDSTables()
+      },
+      context: cronContext,
+    })
+    libScheduleTest({ name: 'updateSDDSCronTest', cron: '01 09 * * *', timeZone: 'Europe/Oslo' }, updateSDDSTablesCron)
+
+    const datasetPublishCron: string =
+      app.config && app.config['ssb.cron.publishDataset'] ? app.config['ssb.cron.publishDataset'] : '50 05 * * *'
+
     log.info('Run old datasetPublishCron cron-library')
     // publish dataset cron job
     schedule({
       name: 'Dataset publish',
       cron: datasetPublishCron,
-      callback: () => runOnMasterOnly(publishDataset),
+      callback: () => {
+        libScheduleTestLog('datasetPublishCronTest', datasetPublishCron)
+        publishDataset()
+      },
       context: cronContext,
     })
-  } else {
-    log.info('Run new dailyPublishJob lib-scheduler')
-  }
+    libScheduleTest(
+      { name: 'datasetPublishCronTest', cron: '50 07 * * *', timeZone: 'Europe/Oslo' },
+      datasetPublishCron
+    )
 
-  // Task
-  if (isMaster()) {
     const timezone: string =
       app.config && app.config['ssb.cron.timezone'] ? app.config['ssb.cron.timezone'] : 'Europe/Oslo'
-    // publish dataset sheduler job
-    run(cronContext, () => {
-      const jobExists = !!getScheduledJob({
-        name: 'dailyPublishJob',
-      })
-      if (jobExists) {
-        modify({
-          name: 'dailyPublishJob',
-          editor: (job) => {
-            job.enabled = newPublishJobEnabled
-            job.schedule.value = datasetPublishCron
-            if (job.schedule.type === 'CRON') {
-              job.schedule.timeZone = timezone
-            }
-            return job
-          },
-        })
-      } else {
-        create({
-          name: 'dailyPublishJob',
-          descriptor: `${app.name}:publishJob`,
-          description: 'Publishing all dataset for statistics',
-          user: `user:system:cronjob`,
-          enabled: newPublishJobEnabled,
-          schedule: {
-            type: 'CRON',
-            value: datasetPublishCron,
-            timeZone: timezone,
-          },
-        })
-      }
-      const schedulerList: Array<ScheduledJob> = listScheduledJobs()
-      cronJobLog(JSON.stringify(schedulerList, null, 2))
-    })
-
-    // Test sheduler task
-    run(cronContext, () => {
-      const testTaskCron: string =
-        app.config && app.config['ssb.cron.testTask'] ? app.config['ssb.cron.testTask'] : '0 10 * * *'
-      const jobExists = !!getScheduledJob({
-        name: 'testTask',
-      })
-      if (jobExists) {
-        modify({
-          name: 'testTask',
-          editor: (job) => {
-            job.schedule.value = testTaskCron
-            if (job.schedule.type === 'CRON') {
-              job.schedule.timeZone = timezone
-            }
-            return job
-          },
-        })
-      } else {
-        create({
-          name: 'testTask',
-          descriptor: `${app.name}:testTask`,
-          description: 'Testing task',
-          user: `user:system:cronjob`,
-          enabled: true,
-          schedule: {
-            type: 'CRON',
-            value: testTaskCron,
-            timeZone: timezone,
-          },
-        })
-      }
-    })
 
     // Update calculators
     run(cronContext, () => {

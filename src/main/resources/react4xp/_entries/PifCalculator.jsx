@@ -8,7 +8,7 @@ import { X } from 'react-feather'
 
 function PifCalculator(props) {
   const validMaxYear = props.lastUpdated.year
-  const { pifErrorProduct, calculatorValidateAmountNumber, pifValidateYear } = props.phrases
+  const { calculatorValidateAmountNumber, pifValidateYear } = props.phrases
   const [scopeCode, setScopeCode] = useState({
     error: false,
     errorMsg: '',
@@ -17,7 +17,7 @@ function PifCalculator(props) {
   const [reset, setReset] = useState(0)
   const [productGroup, setProductGroup] = useState({
     error: false,
-    errorMsg: pifErrorProduct,
+    errorMsg: '',
     value: '',
   })
   const [startValue, setStartValue] = useState({
@@ -126,8 +126,8 @@ function PifCalculator(props) {
         setStartPeriod(startPeriod)
         setEndPeriod(endPeriod)
         setStartValueResult(startValue.value)
-        setStartIndex(res.data.startIndex)
-        setEndIndex(res.data.endIndex)
+        setStartIndex(res.data.startIndex.toFixed(1))
+        setEndIndex(res.data.endIndex.toFixed(1))
       })
       .catch((err) => {
         if (err && err.response && err.response.data && err.response.data.error) {
@@ -362,7 +362,6 @@ function PifCalculator(props) {
 
     return (
       <Dropdown
-        className='productGroup'
         id={id}
         key={`productGroup-${reset}`}
         onSelect={(value) => {
@@ -408,9 +407,8 @@ function PifCalculator(props) {
     }
   }
 
-  function renderNumberChangeValue() {
+  function renderNumberChangeValue(changeValue) {
     if (endValue && change) {
-      const changeValue = change.charAt(0) === '-' ? change.replace('-', '') : change
       const decimalSeparator = language === 'en' ? '.' : ','
       return (
         <React.Fragment>
@@ -448,11 +446,24 @@ function PifCalculator(props) {
 
   function calculatorResult() {
     const priceChangeLabel = change.charAt(0) === '-' ? props.phrases.priceDecrease : props.phrases.priceIncrease
+    const changeValue = change.charAt(0) === '-' ? change.replace('-', '') : change
+    const pifResultForScreenreader = props.phrases.pifResultForScreenreader
+      .replace('{0}', language === 'en' ? endValue : endValue.replace('.', ','))
+      .replace('{1}', priceChangeLabel)
+      .replace('{2}', language === 'en' ? changeValue : changeValue.replace('.', ','))
+      .replaceAll('{3}', startMonth.value !== '90' ? startPeriod : startYear.value)
+      .replaceAll('{4}', endMonth.value !== '90' ? endPeriod : endYear.value)
+      .replace('{5}', language === 'en' ? startIndex : startIndex.replace('.', ','))
+      .replace('{6}', language === 'en' ? endIndex : endIndex.replace('.', ','))
+
     return (
       <Container className='calculator-result' ref={scrollAnchor} tabIndex='0'>
-        <Row className='mb-5'>
+        <div aria-live='polite' aria-atomic='true'>
+          <span className='sr-only'>{pifResultForScreenreader}</span>
+        </div>
+        <Row className='mb-5' aria-hidden='true'>
           <Col className='amount-equal col-12 col-md-4'>
-            <h3>{props.phrases.pifAmountEqualled}</h3>
+            <h3>{props.phrases.amountEqualled}</h3>
           </Col>
           <Col className='end-value col-12 col-md-8'>
             <span className='float-start float-md-end'>{renderNumberValute(endValue)}</span>
@@ -461,10 +472,10 @@ function PifCalculator(props) {
             <Divider dark />
           </Col>
         </Row>
-        <Row className='mb-5'>
-          <Col className='price-increase col-12 col-lg-4'>
+        <Row className='mb-5' aria-hidden='true'>
+          <Col className='col-12 col-lg-4'>
             <span>{priceChangeLabel}</span>
-            <span className='float-end'>{renderNumberChangeValue()}</span>
+            <span className='float-end'>{renderNumberChangeValue(changeValue)}</span>
             <Divider dark />
           </Col>
           <Col className='start-value col-12 col-lg-4'>
@@ -474,7 +485,7 @@ function PifCalculator(props) {
             <span className='float-end'>{renderNumberValute(startValueResult)}</span>
             <Divider dark />
           </Col>
-          <Col className='amount col-12 col-lg-4'>
+          <Col className='col-12 col-lg-4'>
             <span>
               {props.phrases.amount} {endPeriod}
             </span>
@@ -482,8 +493,8 @@ function PifCalculator(props) {
             <Divider dark />
           </Col>
         </Row>
-        <Row className='mb-5'>
-          <Col className='price-increase col-12 col-lg-4'></Col>
+        <Row className='mb-5' aria-hidden='true'>
+          <Col className='col-12 col-lg-4'></Col>
           <Col className='start-value col-12 col-lg-4'>
             <span>
               {props.phrases.pifIndex} {startPeriod}
@@ -491,7 +502,7 @@ function PifCalculator(props) {
             <span className='float-end'>{renderNumber(startIndex)}</span>
             <Divider dark />
           </Col>
-          <Col className='amount col-12 col-lg-4'>
+          <Col className='col-12 col-lg-4'>
             <span>
               {props.phrases.pifIndex} {endPeriod}
             </span>
@@ -592,7 +603,7 @@ function PifCalculator(props) {
               </Col>
             </Row>
             <Row>
-              <Col className='select-product-group'>
+              <Col>
                 <h3>{props.phrases.pifProductTypeHeader}</h3>
                 {addDropdownProduct('product-group')}
               </Col>
@@ -619,6 +630,7 @@ function PifCalculator(props) {
                       <Input
                         className='input-year'
                         label={props.phrases.fromYear}
+                        ariaLabel={props.phrases.fromYearScreenReader}
                         handleChange={(value) => onChange('start-year', value)}
                         error={startYear.error}
                         errorMessage={startYear.errorMsg}
@@ -637,6 +649,7 @@ function PifCalculator(props) {
                       <Input
                         className='input-year'
                         label={props.phrases.toYear}
+                        ariaLabel={props.phrases.toYearScreenReader}
                         handleChange={(value) => onChange('end-year', value)}
                         error={endYear.error}
                         errorMessage={endYear.errorMsg}
@@ -664,9 +677,7 @@ function PifCalculator(props) {
   return (
     <Container className='pif-calculator'>
       {renderForm()}
-      <div aria-live='polite' aria-atomic='true'>
-        {renderResult()}
-      </div>
+      {renderResult()}
     </Container>
   )
 }

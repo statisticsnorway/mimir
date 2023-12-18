@@ -130,7 +130,7 @@ export function get(req: XP.Request): XP.Response {
   }
   const language: Language = getLanguage(page) as Language
   const menuCacheLanguage: string = language.code === 'en' ? 'en' : 'nb'
-  const hideHeader = pageConfig.hideHeader && isEnabled('hide-header-in-qa', true, 'ssb')
+  const hideHeader = isEnabled('hide-header-in-qa', false, 'ssb') ? pageConfig?.hideHeader : false
   let header
   if (!hideHeader) {
     const headerContent: MenuContent | unknown = fromMenuCache(req, `header_${menuCacheLanguage}`, () => {
@@ -392,13 +392,7 @@ function parseMetaInfoData(
   }
 
   if (page.type === `${app.name}:article`) {
-    if (page.data.articleType == 'report' || page.data.articleType == 'note') {
-      // We use the old content type publikasjon for this, as we want to group these three together in the search results filter.
-      // Note and Report are the new content types that replaces Publikasjon.
-      metaInfoSearchContentType = 'publikasjon'
-    } else {
-      metaInfoSearchContentType = 'artikkel'
-    }
+    metaInfoSearchContentType = page.data.articleType ? page.data.articleType : 'artikkel'
   }
 
   return {

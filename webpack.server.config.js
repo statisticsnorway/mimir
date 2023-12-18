@@ -31,7 +31,9 @@ const config = {
   },
   resolve: {
     extensions: [
-      // '.ts', '.js', '.json' // prependExtensions will handle this
+      '.ts',
+      '.es6',
+      '.json', // prependExtensions will handle this
     ],
   },
   optimization: {

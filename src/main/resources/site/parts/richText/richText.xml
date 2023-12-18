@@ -28,5 +28,8 @@
         </include>
       </config>
     </input>
+    <input name="maxWidth" type="CheckBox">
+      <label>Sett på maks bredde (Bør helst styres gjennom layout)</label>
+    </input>
   </form>
 </part>
