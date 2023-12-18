@@ -24,6 +24,8 @@ export function renderPart(req: XP.Request): XP.Response {
       text: processedText,
       textType: part.config.textType,
       maxWidth: part.config.maxWidth,
+      // "/Rad_A/5" -> no layout, "/Rad_A/3/left/0" -> layout
+      inLayout: part.path ? part.path.split('/').length > 3 : false,
     }
 
     return r4xpRender('site/parts/richText/richText', props, req, {
