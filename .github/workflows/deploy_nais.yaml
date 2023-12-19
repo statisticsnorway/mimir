@@ -92,7 +92,7 @@ jobs:
           password: "${{ steps.auth.outputs.access_token }}"
       - name: Docker meta
         id: metadata
-        uses: docker/metadata-action@v3
+        uses: docker/metadata-action@v5
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE }}
           # Docker tags based on the following events/attributes
