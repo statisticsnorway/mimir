@@ -95,7 +95,7 @@
     "eslint-config-google": "~0.14.0",
     "eslint-config-prettier": "~9.1.0",
     "eslint-plugin-import": "~2.29.1",
-    "eslint-plugin-prettier": "~5.0.1",
+    "eslint-plugin-prettier": "~5.1.2",
     "eslint-plugin-react": "~7.33.2",
     "feather-icons": "~4.29.1",
     "file-loader": "~6.2.0",
