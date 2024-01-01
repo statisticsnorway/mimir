@@ -136,7 +136,7 @@
     "redux-saga": "~1.2.3",
     "regenerator-runtime": "~0.14.1",
     "sass": "~1.69.5",
-    "sass-loader": "~13.3.2",
+    "sass-loader": "~13.3.3",
     "style-loader": "~3.3.3",
     "swc-loader": "~0.2.3",
     "ts-loader": "~9.5.1",
