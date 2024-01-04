@@ -2,7 +2,7 @@ import { query, type Content } from '/lib/xp/content'
 import { getContent, getComponent, processHtml, serviceUrl, sanitizeHtml } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 import { type SubjectItem, getMainSubjects, getMainSubjectById } from '/lib/ssb/utils/subjectUtils'
-import { formatDate, format } from '/lib/ssb/utils/dateUtils'
+import { formatDate, format, addDays, isDateBetween } from '/lib/ssb/utils/dateUtils'
 import {
   type GroupedBy,
   type PreparedStatistics,
@@ -52,6 +52,8 @@ function renderPart(req: XP.Request) {
   const allMainSubjects: Array<SubjectItem> = getMainSubjects(req, content.language === 'en' ? 'en' : 'nb')
 
   const groupedWithMonthNames: Array<YearReleases> = fromPartCache(req, `${content._id}-upcomingReleases`, () => {
+    // TODO NTR: Denne biten er nesten prikk lik det som er i servicen. Så vi burde kunne bruke servicen her også
+
     // Get statistics
     const statistics: Array<StatisticInListing> = getAllStatisticsFromRepo()
     const upComingReleases: Array<Release> = getUpcomingReleases(statistics)
@@ -86,10 +88,7 @@ function renderPart(req: XP.Request) {
     const mainSubjectItem: SubjectItem | null = getMainSubjectById(allMainSubjects, r.data.mainSubject)
     const mainSubject: string = mainSubjectItem ? mainSubjectItem.title : ''
     const contentType: string = r.data.contentType
-      ? localize({
-          key: `contentType.${r.data.contentType}`,
-          locale: currentLanguage,
-        })
+      ? localize({ key: `contentType.${r.data.contentType}`, locale: currentLanguage })
       : ''
 
     return {
@@ -106,20 +105,29 @@ function renderPart(req: XP.Request) {
     }
   })
 
+  const today = new Date()
+  const limit = addDays(today, count)
+  const contentReleasesNextXDays: PreparedUpcomingRelease[] = []
+  const contentReleasesAfterXDays: PreparedUpcomingRelease[] = []
+  for (const release of contentReleases) {
+    if (isDateBetween(release.date, today.toDateString(), limit.toDateString())) {
+      contentReleasesNextXDays.push(release)
+    } else {
+      contentReleasesAfterXDays.push(release)
+    }
+  }
+
   const props: PartProps = {
     title: content.displayName,
     releases: groupedWithMonthNames,
-    preface: component.config.preface
-      ? processHtml({
-          value: component.config.preface,
-        })
-      : undefined,
+    preface: component.config.preface ? processHtml({ value: component.config.preface }) : undefined,
     language: currentLanguage,
     count,
     upcomingReleasesServiceUrl,
     buttonTitle,
     statisticsPageUrlText,
-    contentReleases,
+    contentReleasesNextXDays,
+    contentReleasesAfterXDays,
   }
 
   return render('site/parts/upcomingReleases/upcomingReleases', props, req)
@@ -137,7 +145,8 @@ interface PartProps {
   upcomingReleasesServiceUrl: string
   buttonTitle: string
   statisticsPageUrlText: string
-  contentReleases: Array<PreparedUpcomingRelease>
+  contentReleasesNextXDays: Array<PreparedUpcomingRelease>
+  contentReleasesAfterXDays: Array<PreparedUpcomingRelease>
 }
 interface PreparedUpcomingRelease {
   id: string
