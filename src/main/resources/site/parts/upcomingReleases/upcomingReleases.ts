@@ -2,7 +2,7 @@ import { query, type Content } from '/lib/xp/content'
 import { getContent, getComponent, processHtml, serviceUrl, sanitizeHtml } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 import { type SubjectItem, getMainSubjects, getMainSubjectById } from '/lib/ssb/utils/subjectUtils'
-import { formatDate, format, addDays, isDateBetween } from '/lib/ssb/utils/dateUtils'
+import { formatDate, format, addDays, isAfter, isBefore } from '/lib/ssb/utils/dateUtils'
 import {
   type GroupedBy,
   type PreparedStatistics,
@@ -29,6 +29,32 @@ export function preview(req: XP.Request) {
   return renderPart(req)
 }
 
+function filterReleasesIntoArrays(contentReleases: Array<PreparedUpcomingRelease>, count: number) {
+  const serverOffsetInMs: number =
+    app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
+  let start = new Date(new Date().getTime() + serverOffsetInMs)
+  const limit = addDays(start, count)
+  // Content releases has date at midnaight, not correct publish time at 8 AM
+  const publishTime = new Date(new Date().setHours(8) + serverOffsetInMs)
+
+  if (isAfter(start, publishTime)) {
+    // We show todays releases only until published at 8 AM
+    start = addDays(start, 1)
+  }
+  const contentReleasesNextXDays: PreparedUpcomingRelease[] = []
+  const contentReleasesAfterXDays: PreparedUpcomingRelease[] = []
+
+  for (const release of contentReleases) {
+    if (isAfter(new Date(release.date), start) && isBefore(new Date(release.date), limit)) {
+      contentReleasesNextXDays.push(release)
+    } else {
+      contentReleasesAfterXDays.push(release)
+    }
+  }
+
+  return { contentReleasesNextXDays, contentReleasesAfterXDays }
+}
+
 function renderPart(req: XP.Request) {
   const content = getContent()
   if (!content) throw Error('No page found')
@@ -52,8 +78,6 @@ function renderPart(req: XP.Request) {
   const allMainSubjects: Array<SubjectItem> = getMainSubjects(req, content.language === 'en' ? 'en' : 'nb')
 
   const groupedWithMonthNames: Array<YearReleases> = fromPartCache(req, `${content._id}-upcomingReleases`, () => {
-    // TODO NTR: Denne biten er nesten prikk lik det som er i servicen. Så vi burde kunne bruke servicen her også
-
     // Get statistics
     const statistics: Array<StatisticInListing> = getAllStatisticsFromRepo()
     const allReleases: Array<Release> = getAllReleases(statistics)
@@ -105,17 +129,7 @@ function renderPart(req: XP.Request) {
     }
   })
 
-  const today = new Date()
-  const limit = addDays(today, count)
-  const contentReleasesNextXDays: PreparedUpcomingRelease[] = []
-  const contentReleasesAfterXDays: PreparedUpcomingRelease[] = []
-  for (const release of contentReleases) {
-    if (isDateBetween(release.date, today.toDateString(), limit.toDateString())) {
-      contentReleasesNextXDays.push(release)
-    } else {
-      contentReleasesAfterXDays.push(release)
-    }
-  }
+  const { contentReleasesNextXDays, contentReleasesAfterXDays } = filterReleasesIntoArrays(contentReleases, count)
 
   const props: PartProps = {
     title: content.displayName,
