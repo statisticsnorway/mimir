@@ -15,6 +15,8 @@ import {
   isAfter,
   formatDate,
   isSameOrBefore,
+  addDays,
+  isBefore,
 } from '/lib/ssb/utils/dateUtils'
 import * as util from '/lib/util'
 import { type OmStatistikken, type Statistics } from '/site/content-types'
@@ -44,8 +46,8 @@ function calculatePeriodVariant(variant: VariantInListing, language: string, nex
   if (nextReleasePassed) {
     const upcomingRelease: ReleasesInListing | undefined = variant.upcomingReleases
       ? util.data.forceArray(variant.upcomingReleases).find((r) => {
-          return r && r.id === variant.nextReleaseId
-        })
+        return r && r.id === variant.nextReleaseId
+      })
       : undefined
 
     if (upcomingRelease) {
@@ -279,11 +281,11 @@ export function getReleasesForDay(
   return statisticList.reduce((acc: Array<StatisticInListing>, stat: StatisticInListing) => {
     const thisDayReleasedVariants: Array<VariantInListing> | undefined = Array.isArray(stat.variants)
       ? stat.variants.filter((variant: VariantInListing) => {
-          return checkVariantReleaseDate(variant, day, property)
-        })
+        return checkVariantReleaseDate(variant, day, property)
+      })
       : stat.variants && checkVariantReleaseDate(stat.variants, day, property)
-      ? [stat.variants]
-      : undefined
+        ? [stat.variants]
+        : undefined
     if (thisDayReleasedVariants && thisDayReleasedVariants.length > 0) {
       acc.push({
         ...stat,
@@ -294,23 +296,26 @@ export function getReleasesForDay(
   }, [])
 }
 
-export function filterOnComingReleases(releases: Array<Release>, count: number, startDay?: string): Array<Release> {
-  const releaseArray: Array<Release> = []
-  const day: Date = startDay ? new Date(startDay) : new Date()
-
-  const releasesToDay: Array<Release> = releases.filter((release: Release) => {
-    return checkReleaseDateToday(release, day)
-  })
-  releaseArray.push(...releasesToDay)
-
-  for (let i = 0; i < count + 1; i++) {
-    day.setDate(day.getDate() + 1)
-    const releasesOnThisDay: Array<Release> = releases.filter((release: Release) => {
-      return checkReleaseDateToday(release, day)
-    })
-    releaseArray.push(...releasesOnThisDay)
+export function filterOnComingReleases(releases: Array<Release>, count?: number, startDay?: string): Array<Release> {
+  let start: Date
+  if (!startDay) {
+    // To make sure todays publications shows until actually published
+    const serverOffsetInMs: number =
+      app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
+    start = new Date(new Date().getTime() + serverOffsetInMs)
+  } else {
+    start = new Date(startDay)
   }
-  return releaseArray
+
+  if (!!count) {
+    const upperLimit = addDays(start, count)
+    return releases.filter(
+      (release: Release) =>
+        isAfter(new Date(release.publishTime), start) && isBefore(new Date(release.publishTime), upperLimit)
+    )
+  } else {
+    return releases.filter((release: Release) => isAfter(new Date(release.publishTime), start))
+  }
 }
 
 export function checkVariantReleaseDate(
@@ -326,32 +331,26 @@ export function checkVariantReleaseDate(
   }
 }
 
-export function checkReleaseDateToday(release: Release, day: Date): boolean {
-  const releaseDate: string = release.publishTime
-  return sameDay(new Date(releaseDate), day)
-}
-
 export function prepareRelease(release: Release, language: string): PreparedStatistics | null {
   if (release) {
     const preparedVariant: PreparedVariant = formatRelease(release, language)
 
     const statisticsPagesXP = query<Content<Statistics>>({
       count: 1,
-      query: `data.statistic LIKE "${release.statisticId}" AND language IN (${
-        language === 'nb' ? '"nb", "nn"' : '"en"'
-      })`,
+      query: `data.statistic LIKE "${release.statisticId}" AND language IN (${language === 'nb' ? '"nb", "nn"' : '"en"'
+        })`,
       contentTypes: [`${app.name}:statistics`],
     }).hits[0]
     const statisticsPageUrl: string | undefined = statisticsPagesXP
       ? pageUrl({
-          path: statisticsPagesXP._path,
-        })
+        path: statisticsPagesXP._path,
+      })
       : undefined
     const aboutTheStatisticsContent: Content<OmStatistikken> | null =
       statisticsPagesXP && statisticsPagesXP.data.aboutTheStatistics
         ? get({
-            key: statisticsPagesXP.data.aboutTheStatistics,
-          })
+          key: statisticsPagesXP.data.aboutTheStatistics,
+        })
         : null
     const seoDescription: string | undefined = statisticsPagesXP
       ? statisticsPagesXP.x['com-enonic-app-metafields']?.['meta-data']?.seoDescription
@@ -393,14 +392,14 @@ export function prepareStatisticRelease(
     }).hits[0]
     const statisticsPageUrl: string | undefined = statisticsPagesXP
       ? pageUrl({
-          path: statisticsPagesXP._path,
-        })
+        path: statisticsPagesXP._path,
+      })
       : undefined
     const aboutTheStatisticsContent: Content<OmStatistikken> | null =
       statisticsPagesXP && statisticsPagesXP.data.aboutTheStatistics
         ? get({
-            key: statisticsPagesXP.data.aboutTheStatistics,
-          })
+          key: statisticsPagesXP.data.aboutTheStatistics,
+        })
         : null
     const seoDescription: string | undefined = statisticsPagesXP
       ? statisticsPagesXP.x['com-enonic-app-metafields']?.['meta-data']?.seoDescription
@@ -462,6 +461,7 @@ export function nextReleasedPassed(variant: VariantInListing): boolean {
   const nextRelease: Date = new Date(variant.nextRelease)
   return isSameOrBefore(new Date(nextRelease), serverTime)
 }
+
 export function getPreviousRelease(nextReleasePassed: boolean, variant: VariantInListing): ReleasesInListing {
   const upComingReleases: Array<ReleasesInListing> = variant.upcomingReleases
     ? util.data.forceArray(variant.upcomingReleases)
@@ -469,11 +469,11 @@ export function getPreviousRelease(nextReleasePassed: boolean, variant: VariantI
   return nextReleasePassed && upComingReleases.length
     ? upComingReleases[0]
     : {
-        id: variant.id,
-        publishTime: variant.previousRelease,
-        periodFrom: variant.previousFrom,
-        periodTo: variant.previousTo,
-      }
+      id: variant.id,
+      publishTime: variant.previousRelease,
+      periodFrom: variant.previousFrom,
+      periodTo: variant.previousTo,
+    }
 }
 
 export function getNextRelease(nextReleasePassed: boolean, variant: VariantInListing): ReleasesInListing | undefined {
@@ -551,20 +551,8 @@ export function getAllReleases(statisticList: Array<StatisticInListing>): Array<
       })
     })
   })
-  const publicationsSorted: Array<Release> = releases.sort((a, b) => {
-    return new Date(a.publishTime || '01.01.3000').getTime() - new Date(b.publishTime || '01.01.3000').getTime()
-  })
 
-  return publicationsSorted
-}
-
-export function getUpcomingReleases(statisticList: Array<StatisticInListing>): Array<Release> {
-  const allReleases: Array<Release> = getAllReleases(statisticList)
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-  const serverOffsetInMs: number =
-    app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
-  const serverTime: Date = new Date(new Date().getTime() + serverOffsetInMs)
-  return allReleases.filter((release) => isAfter(new Date(release.publishTime), serverTime))
+  return releases
 }
 
 export function getPreviousReleases(statisticList: Array<StatisticInListing>): Array<Release> {
@@ -573,6 +561,7 @@ export function getPreviousReleases(statisticList: Array<StatisticInListing>): A
     (release) => release.status === 'A' && isSameOrBefore(new Date(release.publishTime), new Date(), 'day')
   )
 }
+
 export interface PreparedStatistics {
   id: number
   name: string

@@ -12,7 +12,7 @@ import {
   groupStatisticsByYearMonthAndDay,
   prepareRelease,
   filterOnComingReleases,
-  getUpcomingReleases,
+  getAllReleases,
 } from '/lib/ssb/utils/variantUtils'
 import { type StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
 import { render } from '/lib/enonic/react4xp'
@@ -54,10 +54,10 @@ function renderPart(req: XP.Request) {
   const groupedWithMonthNames: Array<YearReleases> = fromPartCache(req, `${content._id}-upcomingReleases`, () => {
     // Get statistics
     const statistics: Array<StatisticInListing> = getAllStatisticsFromRepo()
-    const upComingReleases: Array<Release> = getUpcomingReleases(statistics)
+    const allReleases: Array<Release> = getAllReleases(statistics)
 
-    // All statistics published today, and fill up with previous releases.
-    const releasesFiltered: Array<Release> = filterOnComingReleases(upComingReleases, count)
+    // All statistics from today and a number of days
+    const releasesFiltered: Array<Release> = filterOnComingReleases(allReleases, count)
 
     // Choose the right variant and prepare the date in a way it works with the groupBy function
     const releasesPrepped: Array<PreparedStatistics> = releasesFiltered.map((release: Release) =>
@@ -67,9 +67,6 @@ function renderPart(req: XP.Request) {
     // group by year, then month, then day
     const groupedByYearMonthAndDay: GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>> =
       groupStatisticsByYearMonthAndDay(releasesPrepped)
-
-    // iterate and format month names
-    // const groupedWithMonthNames: Array<YearReleases> = addMonthNames(groupedByYearMonthAndDay, currentLanguage)
 
     return addMonthNames(groupedByYearMonthAndDay, currentLanguage)
   })
@@ -87,9 +84,9 @@ function renderPart(req: XP.Request) {
     const mainSubject: string = mainSubjectItem ? mainSubjectItem.title : ''
     const contentType: string = r.data.contentType
       ? localize({
-          key: `contentType.${r.data.contentType}`,
-          locale: currentLanguage,
-        })
+        key: `contentType.${r.data.contentType}`,
+        locale: currentLanguage,
+      })
       : ''
 
     return {
@@ -111,8 +108,8 @@ function renderPart(req: XP.Request) {
     releases: groupedWithMonthNames,
     preface: component.config.preface
       ? processHtml({
-          value: component.config.preface,
-        })
+        value: component.config.preface,
+      })
       : undefined,
     language: currentLanguage,
     count,
