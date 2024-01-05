@@ -16,7 +16,7 @@ import {
   formatDate,
   isSameOrBefore,
   addDays,
-  isDateBetween,
+  isBefore,
 } from '/lib/ssb/utils/dateUtils'
 import * as util from '/lib/util'
 import { type OmStatistikken, type Statistics } from '/site/content-types'
@@ -297,14 +297,24 @@ export function getReleasesForDay(
 }
 
 export function filterOnComingReleases(releases: Array<Release>, count?: number, startDay?: string): Array<Release> {
-  const day: Date = startDay ? new Date(startDay) : new Date()
+  let start: Date
+  if (!startDay) {
+    // To make sure todays publications shows until actually published
+    const serverOffsetInMs: number =
+      app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
+    start = new Date(new Date().getTime() + serverOffsetInMs)
+  } else {
+    start = new Date(startDay)
+  }
+
   if (!!count) {
-    const upperLimit = addDays(day, count)
-    return releases.filter((release: Release) =>
-      isDateBetween(release.publishTime, day.toDateString(), upperLimit.toDateString())
+    const upperLimit = addDays(start, count)
+    return releases.filter(
+      (release: Release) =>
+        isAfter(new Date(release.publishTime), start) && isBefore(new Date(release.publishTime), upperLimit)
     )
   } else {
-    return releases.filter((release: Release) => isAfter(new Date(release.publishTime), day))
+    return releases.filter((release: Release) => isAfter(new Date(release.publishTime), start))
   }
 }
 
