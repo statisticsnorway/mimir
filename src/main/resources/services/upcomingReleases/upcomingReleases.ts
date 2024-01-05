@@ -8,7 +8,7 @@ import {
   groupStatisticsByYearMonthAndDay,
   prepareRelease,
   filterOnComingReleases,
-  getUpcomingReleases,
+  getAllReleases,
 } from '/lib/ssb/utils/variantUtils'
 
 import { getAllStatisticsFromRepo } from '../../lib/ssb/statreg/statistics'
@@ -16,14 +16,14 @@ import { getAllStatisticsFromRepo } from '../../lib/ssb/statreg/statistics'
 export const get = (req: XP.Request): XP.Response => {
   // Get statistics
   const statistics: Array<StatisticInListing> = getAllStatisticsFromRepo()
-  const upComingReleases: Array<Release> = getUpcomingReleases(statistics)
+  const allReleases: Array<Release> = getAllReleases(statistics)
   const count: number = req.params.count ? parseInt(req.params.count) : 2
   const showAll = !!(req.params.showAll && req.params.showAll === 'true')
 
-  const language: string = req.params.language ? req.params.language : 'nb'
-  const numberOfDays: number = showAll ? getDaysToLatestRelease(upComingReleases) : count
-  // All statistics published today, and fill up with previous releases.
-  const releasesFiltered: Array<Release> = filterOnComingReleases(upComingReleases, numberOfDays, req.params.start)
+  const language = req.params.language ? req.params.language : 'nb'
+  const numberOfDays = showAll ? undefined : count
+  // All statistics from today and a number of days
+  const releasesFiltered: Array<Release> = filterOnComingReleases(allReleases, numberOfDays, req.params.start)
 
   // Choose the right variant and prepare the date in a way it works with the groupBy function
   const releasesPrepped: Array<PreparedStatistics> = releasesFiltered.map((release: Release) =>
@@ -45,13 +45,4 @@ export const get = (req: XP.Request): XP.Response => {
       count,
     },
   }
-}
-
-function getDaysToLatestRelease(upComingReleases: Array<Release>): number {
-  const lastUpcomingRelease: Release = upComingReleases[upComingReleases.length - 1]
-  const today: Date = new Date()
-  const releaseDate: Date = new Date(lastUpcomingRelease.publishTime)
-  const diff: number = Math.abs(today.getTime() - releaseDate.getTime())
-  const diffDays: number = Math.ceil(diff / (1000 * 3600 * 24))
-  return diffDays
 }

@@ -296,13 +296,16 @@ export function getReleasesForDay(
   }, [])
 }
 
-export function filterOnComingReleases(releases: Array<Release>, count: number, startDay?: string): Array<Release> {
+export function filterOnComingReleases(releases: Array<Release>, count?: number, startDay?: string): Array<Release> {
   const day: Date = startDay ? new Date(startDay) : new Date()
-  const upperLimit = addDays(day, count)
-
-  return releases.filter((release: Release) =>
-    isDateBetween(release.publishTime, day.toDateString(), upperLimit.toDateString())
-  )
+  if (!!count) {
+    const upperLimit = addDays(day, count)
+    return releases.filter((release: Release) =>
+      isDateBetween(release.publishTime, day.toDateString(), upperLimit.toDateString())
+    )
+  } else {
+    return releases.filter((release: Release) => isAfter(new Date(release.publishTime), day))
+  }
 }
 
 export function checkVariantReleaseDate(
@@ -316,11 +319,6 @@ export function checkVariantReleaseDate(
   } else {
     return sameDay(new Date(dayFromVariant), day)
   }
-}
-
-export function checkReleaseDateToday(release: Release, day: Date): boolean {
-  const releaseDate: string = release.publishTime
-  return sameDay(new Date(releaseDate), day)
 }
 
 export function prepareRelease(release: Release, language: string): PreparedStatistics | null {
@@ -453,6 +451,7 @@ export function nextReleasedPassed(variant: VariantInListing): boolean {
   const nextRelease: Date = new Date(variant.nextRelease)
   return isSameOrBefore(new Date(nextRelease), serverTime)
 }
+
 export function getPreviousRelease(nextReleasePassed: boolean, variant: VariantInListing): ReleasesInListing {
   const upComingReleases: Array<ReleasesInListing> = variant.upcomingReleases
     ? util.data.forceArray(variant.upcomingReleases)
@@ -542,20 +541,8 @@ export function getAllReleases(statisticList: Array<StatisticInListing>): Array<
       })
     })
   })
-  const publicationsSorted: Array<Release> = releases.sort((a, b) => {
-    return new Date(a.publishTime || '01.01.3000').getTime() - new Date(b.publishTime || '01.01.3000').getTime()
-  })
 
-  return publicationsSorted
-}
-
-export function getUpcomingReleases(statisticList: Array<StatisticInListing>): Array<Release> {
-  const allReleases: Array<Release> = getAllReleases(statisticList)
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-  const serverOffsetInMs: number =
-    app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
-  const serverTime: Date = new Date(new Date().getTime() + serverOffsetInMs)
-  return allReleases.filter((release) => isAfter(new Date(release.publishTime), serverTime))
+  return releases
 }
 
 export function getPreviousReleases(statisticList: Array<StatisticInListing>): Array<Release> {
@@ -564,6 +551,7 @@ export function getPreviousReleases(statisticList: Array<StatisticInListing>): A
     (release) => release.status === 'A' && isSameOrBefore(new Date(release.publishTime), new Date(), 'day')
   )
 }
+
 export interface PreparedStatistics {
   id: number
   name: string
