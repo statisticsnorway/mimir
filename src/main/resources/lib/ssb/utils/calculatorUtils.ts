@@ -1,3 +1,4 @@
+import { localize } from '/lib/xp/i18n'
 import { DropdownItem as MonthDropdownItem, DropdownItems as MonthDropdownItems } from '/lib/types/components'
 import { CalculatorPeriod } from '/lib/types/calculator'
 import { Phrases } from '/lib/types/language'
@@ -113,4 +114,24 @@ export function lastPeriodKpi(kpiDataMonth: Dataset | null): CalculatorPeriod {
     month: lastMonth,
     year: lastYear,
   }
+}
+
+const seriesLocalizationMap = {
+  ALT: 'bkibolWorkTypeAll',
+  STEIN: 'bkibolWorkTypeStone',
+  GRUNNARBEID: 'bkibolWorkTypeGroundwork',
+  BYGGEARBEIDER: 'bkibolWorkTypeWithoutStone',
+  TOMRING: 'bkibolWorkTypeCarpentry',
+  MALING: 'bkibolWorkTypePainting',
+  RORLEGGERARBEID: 'bkibolWorkTypePlumbing',
+} as const
+
+export type SeriesKey = keyof typeof seriesLocalizationMap
+
+export function serieLocalization(language: string, series: SeriesKey): string {
+  return localize({
+    key: seriesLocalizationMap[series],
+    locale: language,
+    values: [],
+  }) as string
 }

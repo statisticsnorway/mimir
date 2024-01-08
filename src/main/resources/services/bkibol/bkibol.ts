@@ -5,7 +5,7 @@ import { HttpRequestParams } from '/lib/http-client'
 import { Dataset } from '/lib/types/jsonstat-toolkit'
 import { Language, Phrases } from '/lib/types/language'
 import { DropdownItems } from '/lib/types/components'
-import { allMonths, monthLabel } from '/lib/ssb/utils/calculatorUtils'
+import { allMonths, monthLabel, serieLocalization, SeriesKey } from '/lib/ssb/utils/calculatorUtils'
 
 import { getLanguage } from '/lib/ssb/utils/language'
 import {
@@ -17,6 +17,7 @@ import {
 } from '/lib/ssb/dataset/calculator'
 import { type CalculatorConfig } from '/site/content-types'
 
+// eslint-disable-next-line complexity
 function get(req: HttpRequestParams): XP.Response {
   const domene: string | undefined = req.params?.domene || 'ENEBOLIG'
   const scope: string | undefined = req.params?.scope || 'IALT'
@@ -31,15 +32,17 @@ function get(req: HttpRequestParams): XP.Response {
   const lang: Language = getLanguage(getContent()) as Language
   const phrases: Phrases = lang.phrases as Phrases
   const months: DropdownItems = allMonths(phrases, false, 'bkibol')
+  const serieLocalized = serieLocalization(language, serie as SeriesKey)
+
   const errorValidateStartMonth: string = localize({
     key: 'bkibolServiceValidateStartMonth',
     locale: language,
-    values: [monthLabel(months, lang.code, +startMonth), startYear || '', serie.toLowerCase()],
+    values: [monthLabel(months, lang.code, +startMonth), startYear || '', serieLocalized],
   })
   const errorValidateEndMonth: string = localize({
     key: 'bkibolServiceValidateEndMonth',
     locale: language,
-    values: [monthLabel(months, lang.code, +endMonth), endYear || '', serie.toLowerCase()],
+    values: [monthLabel(months, lang.code, +endMonth), endYear || '', serieLocalized],
   })
 
   if (!domene || !serie || !serie || !startValue || !startYear || !startMonth || !endYear || !endMonth) {
