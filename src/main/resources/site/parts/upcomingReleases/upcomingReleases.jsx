@@ -212,7 +212,7 @@ function UpcomingReleases(props) {
             flattenReleases(res.data.releases),
             flattenContentReleases(props.contentReleasesAfterXDays)
           )
-          const allReleases = releases.concat(newReleases)
+          const allReleases = mergeAndSortReleases(releases, newReleases)
           setReleases(allReleases)
         } else {
           setLoading(true)
