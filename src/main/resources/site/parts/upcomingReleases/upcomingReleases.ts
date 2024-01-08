@@ -2,7 +2,7 @@ import { query, type Content } from '/lib/xp/content'
 import { getContent, getComponent, processHtml, serviceUrl, sanitizeHtml } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 import { type SubjectItem, getMainSubjects, getMainSubjectById } from '/lib/ssb/utils/subjectUtils'
-import { formatDate, format } from '/lib/ssb/utils/dateUtils'
+import { formatDate, format, addDays, isAfter, isBefore } from '/lib/ssb/utils/dateUtils'
 import {
   type GroupedBy,
   type PreparedStatistics,
@@ -27,6 +27,32 @@ export function get(req: XP.Request) {
 
 export function preview(req: XP.Request) {
   return renderPart(req)
+}
+
+function filterReleasesIntoArrays(contentReleases: Array<PreparedUpcomingRelease>, count: number) {
+  const serverOffsetInMs: number =
+    app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
+  let start = new Date(new Date().getTime() + serverOffsetInMs)
+  const limit = addDays(start, count)
+  // Content releases has date at midnight, not correct publish time at 8 AM
+  const publishTime = new Date(new Date().setHours(8) + serverOffsetInMs)
+
+  if (isAfter(start, publishTime)) {
+    // We show todays releases only until published at 8 AM
+    start = addDays(start, 1)
+  }
+  const contentReleasesNextXDays: PreparedUpcomingRelease[] = []
+  const contentReleasesAfterXDays: PreparedUpcomingRelease[] = []
+
+  for (const release of contentReleases) {
+    if (isAfter(new Date(release.date), start) && isBefore(new Date(release.date), limit)) {
+      contentReleasesNextXDays.push(release)
+    } else {
+      contentReleasesAfterXDays.push(release)
+    }
+  }
+
+  return { contentReleasesNextXDays, contentReleasesAfterXDays }
 }
 
 function renderPart(req: XP.Request) {
@@ -103,6 +129,8 @@ function renderPart(req: XP.Request) {
     }
   })
 
+  const { contentReleasesNextXDays, contentReleasesAfterXDays } = filterReleasesIntoArrays(contentReleases, count)
+
   const props: PartProps = {
     title: content.displayName,
     releases: groupedWithMonthNames,
@@ -116,7 +144,8 @@ function renderPart(req: XP.Request) {
     upcomingReleasesServiceUrl,
     buttonTitle,
     statisticsPageUrlText,
-    contentReleases,
+    contentReleasesNextXDays,
+    contentReleasesAfterXDays,
   }
 
   return render('site/parts/upcomingReleases/upcomingReleases', props, req)
@@ -134,7 +163,8 @@ interface PartProps {
   upcomingReleasesServiceUrl: string
   buttonTitle: string
   statisticsPageUrlText: string
-  contentReleases: Array<PreparedUpcomingRelease>
+  contentReleasesNextXDays: Array<PreparedUpcomingRelease>
+  contentReleasesAfterXDays: Array<PreparedUpcomingRelease>
 }
 interface PreparedUpcomingRelease {
   id: string
