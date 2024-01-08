@@ -34,7 +34,7 @@ function filterReleasesIntoArrays(contentReleases: Array<PreparedUpcomingRelease
     app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
   let start = new Date(new Date().getTime() + serverOffsetInMs)
   const limit = addDays(start, count)
-  // Content releases has date at midnaight, not correct publish time at 8 AM
+  // Content releases has date at midnight, not correct publish time at 8 AM
   const publishTime = new Date(new Date().setHours(8) + serverOffsetInMs)
 
   if (isAfter(start, publishTime)) {
