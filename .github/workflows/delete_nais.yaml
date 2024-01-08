@@ -1,0 +1,39 @@
+name: NAIS Deploy
+
+on:
+  pull_request:
+    types: [closed]
+  
+jobs:
+  delete:
+    name: 'Delete app from cluster'
+    permissions:
+      contents: "read"
+      id-token: "write"
+    runs-on: ubuntu-latest
+    if: (startsWith(github.head_ref, 'MIM-') || startsWith(github.head_ref, 'mim-') && contains(github.event.issue.labels.*.name, 'nais') && contains(fromJSON('["omsaggau", "annesiri", "ssb-cgn", "Glenruben", "johnnadeluy", "Carl-OW", "michaelpande"]'), github.actor))
+    steps:
+      # turn 'MIM-9876_new_feature' into 'mim-9876' so it can be used in URL, it can be found in env.ISSUE_NUMBER
+      - name: "Get JIRA issue number"
+        id: jira_issue_number
+        run: |
+          BRANCH="${{ github.head_ref }}"
+          ISSUE_NUMBER=${BRANCH:0:8}
+          ISSUE_NUMBER=$(echo $ISSUE_NUMBER | tr '[:upper:]' '[:lower:]')
+          echo "ISSUE_NUMBER=${ISSUE_NUMBER}" >> $GITHUB_ENV;
+          echo "Issue number: $ISSUE_NUMBER";
+
+      - id: "auth"
+        name: "Authenticate to Google Cloud"
+        uses: "google-github-actions/auth@v0.6.0"
+        with:
+          workload_identity_provider: "projects/906675412832/locations/global/workloadIdentityPools/ssb-identity-pool/providers/github-oidc-provider"
+          service_account: "gh-ssb@nais-management-b3a7.iam.gserviceaccount.com"
+          token_format: "access_token"
+      - id: "get-credentials"
+        uses: 'google-github-actions/get-gke-credentials@v2'
+        with:
+          cluster_name: 'nais-staging'
+          location: 'europe-north1'
+      - id: "delete"
+        run: "kubectl delete pod -n ssbno --selector=app=mimir-branch-${{ env.ISSUE_NUMBER }} --ignore-not-found=true"
