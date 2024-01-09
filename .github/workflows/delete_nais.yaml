@@ -30,5 +30,10 @@ jobs:
           workload_identity_provider: "projects/906675412832/locations/global/workloadIdentityPools/ssb-identity-pool/providers/github-oidc-provider"
           service_account: "gh-ssb@nais-management-b3a7.iam.gserviceaccount.com"
           token_format: "access_token"
+      - id: "get-credentials"
+        uses: 'google-github-actions/get-gke-credentials@v2'
+        with:
+          cluster_name: 'nais-staging'
+          location: 'europe-north1'
       - id: "delete"
         run: "kubectl delete pod -n ssbno --selector=app=mimir-branch-${{ env.ISSUE_NUMBER }} --ignore-not-found=true"
