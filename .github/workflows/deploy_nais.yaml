@@ -130,7 +130,7 @@ jobs:
           ISSUE_NUMBER=$(echo $ISSUE_NUMBER | tr '[:upper:]' '[:lower:]')
           echo "ISSUE_NUMBER=${ISSUE_NUMBER}" >> $GITHUB_ENV;
           echo "Issue number: $ISSUE_NUMBER";
-      - uses: nais/deploy/actions/deploy@v1
+      - uses: nais/deploy/actions/deploy@v2
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: staging
