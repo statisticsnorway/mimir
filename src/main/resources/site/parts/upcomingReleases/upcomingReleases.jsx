@@ -189,7 +189,7 @@ function getMonthName(monthNumber, language) {
 
 function UpcomingReleases(props) {
   const [releases, setReleases] = useState(
-    mergeAndSortReleases(flattenReleases(props.releases), flattenContentReleases(props.contentReleases))
+    mergeAndSortReleases(flattenReleases(props.releases), flattenContentReleases(props.contentReleasesNextXDays))
   )
   const [loading, setLoading] = useState(false)
   const [showAll, setShowAll] = useState(false)
@@ -208,8 +208,12 @@ function UpcomingReleases(props) {
       })
       .then((res) => {
         if (res.data.releases.length) {
-          const newReleases = mergeAndSortReleases(releases, flattenReleases(res.data.releases))
-          setReleases(newReleases)
+          const newReleases = mergeAndSortReleases(
+            flattenReleases(res.data.releases),
+            flattenContentReleases(props.contentReleasesAfterXDays)
+          )
+          const allReleases = mergeAndSortReleases(releases, newReleases)
+          setReleases(allReleases)
         } else {
           setLoading(true)
         }
@@ -347,7 +351,22 @@ UpcomingReleases.propTypes = {
       ),
     })
   ),
-  contentReleases: PropTypes.arrayOf(
+  contentReleasesNextXDays: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string,
+      name: PropTypes.string,
+      date: PropTypes.string,
+      type: PropTypes.string,
+      mainSubject: PropTypes.string,
+      day: PropTypes.string,
+      month: PropTypes.string,
+      monthName: PropTypes.string,
+      year: PropTypes.string,
+      upcomingReleaseLink: PropTypes.string,
+      statisticsPageUrl: PropTypes.string,
+    })
+  ),
+  contentReleasesAfterXDays: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string,
       name: PropTypes.string,
