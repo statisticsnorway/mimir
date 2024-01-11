@@ -1,0 +1,48 @@
+<part>
+  <display-name>Spørring Statistikkbanken</display-name>
+  <super-type>base:structured</super-type>
+  <allow-child-content>true</allow-child-content>
+  <form>
+    <input name="icon" type="ImageSelector">
+      <label>Ikon</label>
+      <occurrences minimum="0" maximum="1"/>
+      <config>
+        <allowPath>${site}/</allowPath>
+      </config>
+    </input>
+    <input name="ingress" type="HtmlArea">
+      <label>Tekst</label>
+      <occurrences minimum="1" maximum="1"/>
+    </input>
+    <input name="table" type="Long">
+      <label>Tabell</label>
+      <occurrences minimum="1" maximum="1"/>
+    </input>
+    <input name="code" type="TextLine">
+      <label>Code</label>
+      <occurrences minimum="1" maximum="1"/>
+    </input>
+    <input name="placeholder" type="TextLine">
+      <label>Plassholder (bakgrunnstekst til tekstfeltet)</label>
+      <occurrences minimum="0" maximum="1"/>
+    </input>
+    <input name="template" type="RadioButton">
+      <label>Mal for liste med alternativer</label>
+      <occurrences minimum="1" maximum="1"/>
+      <config>
+        <option value="text">tekst</option>
+        <option value="value-text">verdi og tekst</option>
+      </config>
+      <default>value-text</default>
+    </input>
+    <input name="json" type="TextArea">
+      <label>Spørring i JSON-format</label>
+      <occurrences minimum="1" maximum="1"/>
+    </input>
+    <input name="body" type="HtmlArea">
+      <label>Innhold</label>
+      <help-text>Sett inn {value} og {time} som plassholdere for verdi og tid.</help-text>
+      <occurrences minimum="1" maximum="1"/>
+    </input>
+  </form>
+</part>
