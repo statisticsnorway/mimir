@@ -458,7 +458,7 @@ function PifCalculator(props) {
 
     return (
       <Container className='calculator-result' ref={scrollAnchor} tabIndex='0'>
-        <div aria-live='polite' aria-atomic='true'>
+        <div aria-atomic='true'>
           <span className='sr-only'>{pifResultForScreenreader}</span>
         </div>
         <Row className='mb-5' aria-hidden='true'>
@@ -510,13 +510,13 @@ function PifCalculator(props) {
             <Divider dark />
           </Col>
         </Row>
-        <Row>
+        <Row aria-live='off'>
           <Col className='md-6'>
-            <Button className='close-button' onClick={() => closeResult()} type='button'>
+            <button className='ssb-btn close-button' onClick={() => closeResult()} autoFocus>
               {' '}
               <X size='18' />
               {props.phrases.close}
-            </Button>
+            </button>
           </Col>
         </Row>
       </Container>
@@ -677,7 +677,7 @@ function PifCalculator(props) {
   return (
     <Container className='pif-calculator'>
       {renderForm()}
-      {renderResult()}
+      <div aria-live='polite'>{renderResult()}</div>
     </Container>
   )
 }

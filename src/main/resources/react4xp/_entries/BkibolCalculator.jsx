@@ -564,7 +564,7 @@ function BkibolCalculator(props) {
 
     return (
       <Container className='calculator-result' ref={scrollAnchor}>
-        <div aria-live='polite' aria-atomic='true'>
+        <div aria-atomic='true'>
           <span className='sr-only'>{resultScreenReaderText}</span>
         </div>
         <Row className='mb-5' aria-hidden='true'>
@@ -615,13 +615,13 @@ function BkibolCalculator(props) {
             <Divider dark />
           </Col>
         </Row>
-        <Row>
+        <Row aria-live='off'>
           <Col className='md-6'>
-            <Button className='close-button' onClick={() => closeResult()} type='button'>
+            <button className='ssb-btn close-button' onClick={() => closeResult()} autoFocus>
               {' '}
               <X size='18' />
               {props.phrases.close}
-            </Button>
+            </button>
           </Col>
         </Row>
       </Container>
@@ -803,7 +803,7 @@ function BkibolCalculator(props) {
   return (
     <Container className='bkibol-calculator'>
       {renderForm()}
-      {renderResult()}
+      <div aria-live='polite'>{renderResult()}</div>
     </Container>
   )
 }
