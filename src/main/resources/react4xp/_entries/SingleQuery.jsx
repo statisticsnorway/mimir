@@ -1,50 +1,90 @@
-import React from 'react'
-import { Row } from 'react-bootstrap'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { Input, Divider } from '@statisticsnorway/ssb-component-library'
-
-function handleChange() {}
-
-function getTableData(table, code, query) {
-  return null
-}
-
-function getResultfromTable() {
-  return '75900'
-}
-
-function renderIcon(icon, altText) {
-  if (!!icon) {
-    return (
-      <div>
-        <img src={icon} alt={altText ? altText : ''} className='desktop-icons' />
-      </div>
-    )
-  } else {
-    return
-  }
-}
+import axios from 'axios'
+import { Dropdown, Divider } from '@statisticsnorway/ssb-component-library'
 
 function SingleQuery(props) {
-  const { icon, altText, ingress, placeholder, resultLayout, table, code, query } = props
-  const tableData = getTableData(table, code, query) // query to backend
-  const result = getResultfromTable()
-  const resultView = resultLayout.replace('{value}', result)
-  const textIngress = <span dangerouslySetInnerHTML={{ __html: ingress }} />
-  const textResult = <span dangerouslySetInnerHTML={{ __html: resultView }} />
+  const { icon, altText, ingress, placeholder, resultLayout, table, code, query, singleQueryServiceUrl } = props
+  const dropdownElements = getTableCategories(table, code, query)
 
-  return (
-    <React.Fragment key={`single-query-tema`}>
-      <Row>
-        {renderIcon(icon, altText)}
+  // TODO: Hentet denne fra richText-part. Kan denne saniteres?
+  const textIngress = <span dangerouslySetInnerHTML={{ __html: ingress }} />
+
+  const [result, setResult] = useState(null)
+
+  function handleChange(value) {
+    if (!!value) {
+      const temp = getResultfromTable(value.id)
+      setResult(temp)
+    }
+  }
+
+  // TODO: Hente kategorier fra tabellen for å populere autocomplete
+  function getTableCategories() {
+    return [
+      { id: 0, title: 'lærer' },
+      { id: 1, title: 'ingeniør' },
+      { id: 2, title: 'lege' },
+    ]
+  }
+
+  // TODO: Hente resultat i tabellen når man har valgt et yrke
+  function getResultfromTable(selected) {
+    // const salery = ['55900', '45900', '75900']
+    // return salery[selected]
+
+    // TODO: Fikse spørring til servicen
+    axios
+      .get(singleQueryServiceUrl, {
+        params: {},
+      })
+      .then((res) => {
+        setResult(res.data)
+        console.log(res.data)
+      })
+  }
+
+  function renderIcon(icon, altText) {
+    if (!!icon) {
+      return (
         <div>
-          <div>{textIngress}</div>
-          <Input label={placeholder} handleChange={handleChange} value={tableData}></Input>
+          <img src={icon} alt={altText ? altText : ''} className='desktop-icons' aria-hidden='true' />
         </div>
-      </Row>
-      <Divider light />
-      <Row>{textResult}</Row>
-    </React.Fragment>
+      )
+    } else {
+      return
+    }
+  }
+
+  function renderResult(resultLayout) {
+    if (result) {
+      const resultView = resultLayout.replace('{value}', result)
+      // TODO: Hentet denne fra richText-part. Kan denne saniteres?
+      const textResult = <span dangerouslySetInnerHTML={{ __html: resultView }} />
+      return (
+        <div>
+          <Divider light />
+          {textResult}
+        </div>
+      )
+    }
+  }
+
+  // TODO: Fikse styling
+  return (
+    <div>
+      <div>
+        {renderIcon(icon, altText)}
+        <Dropdown
+          header={textIngress}
+          searchable
+          items={dropdownElements}
+          onSelect={handleChange}
+          placeholder={placeholder}
+        />
+      </div>
+      {renderResult(resultLayout)}
+    </div>
   )
 }
 
@@ -58,6 +98,7 @@ SingleQuery.propTypes = {
   code: PropTypes.string,
   query: PropTypes.string,
   resultLayout: PropTypes.string,
+  singleQueryServiceUrl: PropTypes.string,
 }
 
 export default (props) => <SingleQuery {...props} />
