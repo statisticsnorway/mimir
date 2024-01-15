@@ -6,7 +6,7 @@ import {
 import { Contact, ReleasesInListing } from '/lib/ssb/dashboard/statreg/types'
 import { type SubjectItem, getMainSubjects } from '/lib/ssb/utils/subjectUtils'
 import { calculatePeriod } from '/lib/ssb/utils/variantUtils'
-import { format, getTimeZoneIso, parseISO, addDays, isWithinInterval } from '/lib/ssb/utils/dateUtils'
+import { format, formatDate, getTimeZoneIso, parseISO, addDays, isWithinInterval } from '/lib/ssb/utils/dateUtils'
 
 // @ts-ignore
 import { xmlEscape } from '/lib/text-encoding'
@@ -38,14 +38,14 @@ export function getRssItemsStatkal(): string | null {
 		<subject>${r.subject}</subject>
 		<language>${r.language}</language>
 		${r.contacts
-      .map(
-        (c: Contact) => `<contact>
+            .map(
+              (c: Contact) => `<contact>
 			<name>${c.name}</name>
 			<email>${c.email}</email>
 			<phone>${c.telephone}</phone>
 		</contact>`
-      )
-      .join('')}
+            )
+            .join('')}
 	  	<pubDate>${r.pubDate}</pubDate>
 	  	<shortname>${r.shortname}</shortname>
 	  </rssitem>`
@@ -160,7 +160,7 @@ function getMainSubject(mainSubjectName: string, allMainSubjects: SubjectItem[],
 
 function createTitle(release: RssRelease): string {
   const pattern = release.language === 'en' ? 'dd/MM/yyyy' : 'dd.MM.yyyy'
-  const dateFormattet = format(new Date(release.pubDate), pattern)
+  const dateFormattet = formatDate(release.pubDate, pattern, release.language)
   return `${dateFormattet}: ${release.title}, ${release.periode}`
 }
 
