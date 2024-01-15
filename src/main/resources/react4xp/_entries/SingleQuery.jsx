@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import axios from 'axios'
 import { Dropdown, Divider } from '@statisticsnorway/ssb-component-library'
 
+// TODO: Flytt så denne ligger i mappen sammen med ts-fila og xml-fila??
 function SingleQuery(props) {
   const { icon, altText, ingress, placeholder, resultLayout, table, code, query, singleQueryServiceUrl } = props
   const dropdownElements = getTableCategories(table, code, query)
@@ -28,20 +29,20 @@ function SingleQuery(props) {
     ]
   }
 
-  // TODO: Hente resultat i tabellen når man har valgt et yrke
   function getResultfromTable(selected) {
-    // const salery = ['55900', '45900', '75900']
-    // return salery[selected]
+    // TODO: Skrive om så denne kun henter ut resultatet basert på innkommen tabell
+    const salery = ['55900', '45900', '75900']
+    return salery[selected]
 
     // TODO: Fikse spørring til servicen
-    axios
-      .get(singleQueryServiceUrl, {
-        params: {},
-      })
-      .then((res) => {
-        setResult(res.data)
-        console.log(res.data)
-      })
+    // axios
+    //   .get(singleQueryServiceUrl, {
+    //     params: {},
+    //   })
+    //   .then((res) => {
+    //     setResult(res.data)
+    //     console.log(res.data)
+    //   })
   }
 
   function renderIcon(icon, altText) {
@@ -70,7 +71,7 @@ function SingleQuery(props) {
     }
   }
 
-  // TODO: Fikse styling
+  // TODO: Fikse styling (kopiere klasser og styling fra gammel app??)
   return (
     <div>
       <div>

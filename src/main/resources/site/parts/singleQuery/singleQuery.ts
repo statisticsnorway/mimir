@@ -36,6 +36,8 @@ function renderPart(req: XP.Request): XP.Response {
   const part = getComponent<XP.PartComponent.SingleQuery>()
   if (!part) throw Error('No part found')
 
+  // TODO: Trenger sannsynligvis ikke service. Men logikk for å hente alle valgene for code (eks yrker)
+  // og resultatet som skal vises (eks. gjennomsnittslønn) her i forkant i stedet
   const singleQueryServiceUrl: string = serviceUrl({
     service: 'singleQuery',
   })

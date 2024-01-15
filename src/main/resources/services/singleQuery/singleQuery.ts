@@ -5,6 +5,7 @@ function pad(num, size = 5) {
   return s.substr(s.length - size)
 }
 
+// TODO: Tror denne ikke trengs likevel
 export function get(req: XP.Request): XP.Response {
   // TODO: Denne tok opprinnelig imot valgt verdi og id til content og så hentet den selv ut alle parameterne satt for contentet. Tror det er bedre måte å gjøre det på?
 
