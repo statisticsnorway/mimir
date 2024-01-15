@@ -2,6 +2,7 @@ import { getComponent, serviceUrl } from '/lib/xp/portal'
 import { renderError } from '/lib/ssb/error/error'
 import { render } from '/lib/enonic/react4xp'
 import { imageUrl, getImageAlt } from '/lib/ssb/utils/imageUtils'
+import { isEnabled } from '/lib/featureToggle'
 
 export function get(req: XP.Request) {
   try {
@@ -30,6 +31,8 @@ function getImageAltText(icon?: string) {
 }
 
 function renderPart(req: XP.Request): XP.Response {
+  if (!isEnabled('single-query-part', false, 'ssb')) return { body: '' }
+
   const part = getComponent<XP.PartComponent.SingleQuery>()
   if (!part) throw Error('No part found')
 

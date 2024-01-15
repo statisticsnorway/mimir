@@ -107,6 +107,10 @@ try {
           feature: 'hide-header-in-qa',
           enabled: false,
         },
+        {
+          feature: 'single-query-part',
+          enabled: true,
+        },
       ],
     },
   ])
