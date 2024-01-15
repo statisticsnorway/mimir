@@ -37,7 +37,11 @@ function SingleQuery(props) {
 
   function renderIcon(icon, altText) {
     if (!!icon) {
-      return <img className='icon' src={icon} alt={altText ? altText : ''} aria-hidden='true' />
+      return (
+        <Col>
+          <img className='icon' src={icon} alt={altText ? altText : ''} aria-hidden='true' />
+        </Col>
+      )
     } else {
       return
     }
@@ -60,7 +64,7 @@ function SingleQuery(props) {
   return (
     <div className='single-query'>
       <Row className='content'>
-        <Col>{renderIcon(icon, altText)}</Col>
+        {renderIcon(icon, altText)}
         <Col>
           <div className='warning-text'>Akkurat nå vises kun statiske data</div>
           <Dropdown
