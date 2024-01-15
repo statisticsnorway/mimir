@@ -109,7 +109,7 @@ try {
         },
         {
           feature: 'single-query-part',
-          enabled: true,
+          enabled: false,
         },
       ],
     },

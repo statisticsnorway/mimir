@@ -53,10 +53,10 @@ function SingleQuery(props) {
       // TODO: Hentet denne fra richText-part. Kan denne saniteres?
       const textResult = <span dangerouslySetInnerHTML={{ __html: resultView }} />
       return (
-        <Row className='content'>
+        <div>
           <Divider light />
-          {textResult}
-        </Row>
+          <Row className='content'>{textResult}</Row>
+        </div>
       )
     }
   }
