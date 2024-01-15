@@ -1,4 +1,4 @@
-import { getComponent, serviceUrl } from '/lib/xp/portal'
+import { getComponent } from '/lib/xp/portal'
 import { renderError } from '/lib/ssb/error/error'
 import { render } from '/lib/enonic/react4xp'
 import { imageUrl, getImageAlt } from '/lib/ssb/utils/imageUtils'
@@ -36,11 +36,8 @@ function renderPart(req: XP.Request): XP.Response {
   const part = getComponent<XP.PartComponent.SingleQuery>()
   if (!part) throw Error('No part found')
 
-  // TODO: Trenger sannsynligvis ikke service. Men logikk for å hente alle valgene for code (eks yrker)
+  // TODO: Legge inn logikk for å hente alle valgene for code (eks yrker)
   // og resultatet som skal vises (eks. gjennomsnittslønn) her i forkant i stedet
-  const singleQueryServiceUrl: string = serviceUrl({
-    service: 'singleQuery',
-  })
 
   const props = {
     icon: getImageUrl(part.config.icon),
