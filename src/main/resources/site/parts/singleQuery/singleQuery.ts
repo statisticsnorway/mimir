@@ -43,12 +43,8 @@ function renderPart(req: XP.Request): XP.Response {
     icon: getImageUrl(part.config.icon),
     ingress: part.config.ingress,
     placeholder: part.config.placeholder ?? '',
-    code: part.config.code,
     altText: getImageAltText(part.config.icon),
-    table: part.config.table,
-    query: part.config.json,
     resultLayout: part.config.body,
-    singleQueryServiceUrl,
   }
 
   return render('SingleQuery', props, req, {

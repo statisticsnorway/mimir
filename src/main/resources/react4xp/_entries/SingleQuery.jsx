@@ -5,8 +5,8 @@ import { Dropdown, Divider } from '@statisticsnorway/ssb-component-library'
 
 // TODO: Flytt så denne ligger i mappen sammen med ts-fila og xml-fila??
 function SingleQuery(props) {
-  const { icon, altText, ingress, placeholder, resultLayout, table, code, query, singleQueryServiceUrl } = props
-  const dropdownElements = getTableCategories(table, code, query)
+  const { icon, altText, ingress, placeholder, resultLayout } = props
+  const dropdownElements = getTableCategories()
 
   // TODO: Hentet denne fra richText-part. Kan denne saniteres?
   const textIngress = <span dangerouslySetInnerHTML={{ __html: ingress }} />
@@ -33,16 +33,6 @@ function SingleQuery(props) {
     // TODO: Skrive om så denne kun henter ut resultatet basert på innkommen tabell
     const salery = ['55900', '45900', '75900']
     return salery[selected]
-
-    // TODO: Fikse spørring til servicen
-    // axios
-    //   .get(singleQueryServiceUrl, {
-    //     params: {},
-    //   })
-    //   .then((res) => {
-    //     setResult(res.data)
-    //     console.log(res.data)
-    //   })
   }
 
   function renderIcon(icon, altText) {
@@ -88,16 +78,11 @@ function SingleQuery(props) {
 }
 
 SingleQuery.propTypes = {
-  code: PropTypes.string,
   icon: PropTypes.string,
   altText: PropTypes.string,
   ingress: PropTypes.string,
   placeholder: PropTypes.string,
-  table: PropTypes.string,
-  code: PropTypes.string,
-  query: PropTypes.string,
   resultLayout: PropTypes.string,
-  singleQueryServiceUrl: PropTypes.string,
 }
 
 export default (props) => <SingleQuery {...props} />
