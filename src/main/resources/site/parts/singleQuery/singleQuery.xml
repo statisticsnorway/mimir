@@ -1,5 +1,5 @@
 <part>
-  <display-name>Spørring Statistikkbanken</display-name>
+  <display-name>Spørring Statistikkbanken (TIL TESTING)</display-name>
   <super-type>base:structured</super-type>
   <allow-child-content>true</allow-child-content>
   <form>

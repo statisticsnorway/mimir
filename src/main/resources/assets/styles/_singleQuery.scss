@@ -1,0 +1,19 @@
+.single-query {
+  margin: 0;
+    border: 5px solid #6D58A4;
+    display: inline-block;
+  
+  .content {
+    margin: 40px;
+  }
+
+  .icon {
+    max-width: 85px;
+  }
+
+  .warning-text{
+    color: red;
+  }
+
+  // TODO: Visning på mobil er ikke ivaretatt siden endelig design ikke er på plass
+}
