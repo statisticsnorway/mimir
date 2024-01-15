@@ -110,9 +110,9 @@ function renderPart(req: XP.Request) {
     const mainSubject: string = mainSubjectItem ? mainSubjectItem.title : ''
     const contentType: string = r.data.contentType
       ? localize({
-        key: `contentType.${r.data.contentType}`,
-        locale: currentLanguage,
-      })
+          key: `contentType.${r.data.contentType}`,
+          locale: currentLanguage,
+        })
       : ''
 
     return {
@@ -136,8 +136,8 @@ function renderPart(req: XP.Request) {
     releases: groupedWithMonthNames,
     preface: component.config.preface
       ? processHtml({
-        value: component.config.preface,
-      })
+          value: component.config.preface,
+        })
       : undefined,
     language: currentLanguage,
     count,

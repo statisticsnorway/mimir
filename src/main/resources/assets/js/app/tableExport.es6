@@ -445,13 +445,11 @@ function init() {
             docData += '<Table>'
 
             // Header
-            let cols = 0
             $hrows.each(function () {
               trData = ''
               ForEachVisibleCell(this, 'th,td', rowIndex, $hrows.length, function (cell, row, col) {
                 if (cell !== null) {
                   trData += '<Cell><Data ss:Type="String">' + parseString(cell, row, col) + '</Data></Cell>'
-                  cols++
                 }
               })
               if (trData.length > 0) {
@@ -554,8 +552,8 @@ function init() {
               typeof defaults.worksheetName === 'string'
                 ? defaults.worksheetName + ' ' + (j + 1)
                 : typeof defaults.worksheetName[j] !== 'undefined'
-                ? defaults.worksheetName[j]
-                : 'Table ' + (j + 1)
+                  ? defaults.worksheetName[j]
+                  : 'Table ' + (j + 1)
 
             docFile += '<Worksheet ss:Name="' + ssName + '">' + docDatas[j] + '<WorksheetOptions/> ' + '</Worksheet>'
           }
