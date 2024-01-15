@@ -84,6 +84,7 @@ $container-max-widths: (
 @import "./project";
 @import "./richText";
 @import "./videoEmbed";
+@import "./singleQuery";
 
 body {
   -moz-osx-font-smoothing: grayscale;
