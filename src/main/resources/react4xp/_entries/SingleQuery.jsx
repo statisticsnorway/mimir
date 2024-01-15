@@ -14,7 +14,7 @@ function SingleQuery(props) {
   const [result, setResult] = useState(null)
 
   function handleChange(value) {
-    if (!!value) {
+    if (value) {
       const temp = getResultfromTable(value.id)
       setResult(temp)
     }

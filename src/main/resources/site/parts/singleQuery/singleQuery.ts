@@ -17,7 +17,7 @@ export function preview(req: XP.Request) {
 }
 
 function getImageUrl(icon?: string) {
-  return !!icon
+  return icon
     ? imageUrl({
       id: icon,
       scale: 'block(100,100)',
@@ -27,7 +27,7 @@ function getImageUrl(icon?: string) {
 }
 
 function getImageAltText(icon?: string) {
-  return !!icon ? getImageAlt(icon) : 'No description found'
+  return icon ? getImageAlt(icon) : 'No description found'
 }
 
 function renderPart(req: XP.Request): XP.Response {
