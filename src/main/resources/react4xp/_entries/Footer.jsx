@@ -11,7 +11,7 @@ class Footer extends React.Component {
   renderFooterMenuDesktop(footerNavigation) {
     return footerNavigation.map((topMenuItem, index) => {
       if (topMenuItem && topMenuItem.title) {
-        const titleId = topMenuItem.title.replace(' ', '-').toLowerCase()
+        const titleId = topMenuItem.title.replaceAll(' ', '-').toLowerCase()
         const listTitle = `footer-link-title-${titleId}`
         return (
           <div key={index} className='footer-link'>
@@ -28,7 +28,7 @@ class Footer extends React.Component {
   renderFooterMenuMobile(footerNavigation) {
     return footerNavigation.map((topMenuItem, index) => {
       if (topMenuItem && topMenuItem.title) {
-        const titleId = topMenuItem.title.replace(' ', '-').toLowerCase()
+        const titleId = topMenuItem.title.replaceAll(' ', '-').toLowerCase()
         const listTitle = `footer-mobile-link-title-${titleId}`
         return (
           <Accordion key={index} header={topMenuItem.title}>
