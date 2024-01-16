@@ -355,7 +355,7 @@ function KpiCalculator(props) {
 
     return (
       <Container className='calculator-result' ref={scrollAnchor}>
-        <div aria-live='polite' aria-atomic='true'>
+        <div aria-atomic='true'>
           <span className='sr-only'>{resultScreenReader}</span>
         </div>
         <Row className='mb-5' aria-hidden='true'>
@@ -438,13 +438,13 @@ function KpiCalculator(props) {
             <span>{renderNumberChangeValue(changeValue)}</span>
           </Col>
         </Row>
-        <Row>
+        <Row aria-live='off'>
           <Col className='md-6'>
-            <Button className='close-button' onClick={() => closeResult()} type='button'>
+            <button className='ssb-btn close-button' onClick={() => closeResult()} autoFocus>
               {' '}
               <X size='18' />
               {props.phrases.close}
-            </Button>
+            </button>
           </Col>
         </Row>
       </Container>
@@ -527,7 +527,7 @@ function KpiCalculator(props) {
       return (
         <Container className='kpi-calculator'>
           {renderForm()}
-          {renderResult()}
+          <div aria-live='polite'>{renderResult()}</div>
         </Container>
       )
     }
