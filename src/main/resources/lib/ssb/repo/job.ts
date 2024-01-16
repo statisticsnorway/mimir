@@ -1,4 +1,4 @@
-import { QueryNodeParams, Node, NodeQueryResult } from '/lib/xp/node'
+import { QueryNodeParams, Node } from '/lib/xp/node'
 import { getUser, User } from '/lib/xp/auth'
 import { EditorCallback, EVENT_LOG_REPO, EVENT_LOG_BRANCH, createEventLog } from '/lib/ssb/repo/eventLog'
 import { DataSourceInfo, RSSFilterLogData } from '/lib/ssb/cron/rss'
