@@ -108,7 +108,7 @@ try {
           enabled: false,
         },
         {
-          feature: 'single-query-part',
+          feature: 'simple-statbank-part',
           enabled: false,
         },
       ],

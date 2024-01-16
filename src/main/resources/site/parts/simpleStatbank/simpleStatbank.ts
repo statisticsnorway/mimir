@@ -31,9 +31,9 @@ function getImageAltText(icon?: string) {
 }
 
 function renderPart(req: XP.Request): XP.Response {
-  if (!isEnabled('single-query-part', false, 'ssb')) return { body: '' }
+  if (!isEnabled('simple-statbank-part', false, 'ssb')) return { body: '' }
 
-  const part = getComponent<XP.PartComponent.SingleQuery>()
+  const part = getComponent<XP.PartComponent.SimpleStatbank>()
   if (!part) throw Error('No part found')
 
   // TODO: Legge inn logikk for å hente alle valgene for code (eks yrker)
@@ -47,7 +47,7 @@ function renderPart(req: XP.Request): XP.Response {
     resultLayout: part.config.body,
   }
 
-  return render('SingleQuery', props, req, {
+  return render('site/parts/simpleStatbank/simpleStatbank', props, req, {
     body: '<section class="xp-part"></section>',
   })
 }

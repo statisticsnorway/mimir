@@ -4,7 +4,7 @@ import { Row, Col } from 'react-bootstrap'
 import { Dropdown, Divider } from '@statisticsnorway/ssb-component-library'
 
 // TODO: Flytt så denne ligger i mappen sammen med ts-fila og xml-fila??
-function SingleQuery(props) {
+function SimpleStatbank(props) {
   const { icon, altText, ingress, placeholder, resultLayout } = props
   const dropdownElements = getTableCategories()
 
@@ -62,7 +62,7 @@ function SingleQuery(props) {
   }
 
   return (
-    <div className='single-query'>
+    <div className='simple-statbank'>
       <Row className='content'>
         {renderIcon(icon, altText)}
         <Col>
@@ -81,7 +81,7 @@ function SingleQuery(props) {
   )
 }
 
-SingleQuery.propTypes = {
+SimpleStatbank.propTypes = {
   icon: PropTypes.string,
   altText: PropTypes.string,
   ingress: PropTypes.string,
@@ -89,4 +89,4 @@ SingleQuery.propTypes = {
   resultLayout: PropTypes.string,
 }
 
-export default (props) => <SingleQuery {...props} />
+export default (props) => <SimpleStatbank {...props} />
