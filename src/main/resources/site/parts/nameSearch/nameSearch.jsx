@@ -425,7 +425,7 @@ function NameSearch(props) {
   }
 
   return (
-    <section className='name-search container-fluid p-0'>
+    <section className='name-search container-fluid p-0' id='navnesok'>
       <Container className='name-search-input'>
         <Row>
           <Col lg='12'>
