@@ -1,4 +1,4 @@
-import { getComponent } from '/lib/xp/portal'
+import { getComponent, serviceUrl } from '/lib/xp/portal'
 import { renderError } from '/lib/ssb/error/error'
 import { render } from '/lib/enonic/react4xp'
 import { imageUrl, getImageAlt } from '/lib/ssb/utils/imageUtils'
@@ -36,6 +36,10 @@ function renderPart(req: XP.Request): XP.Response {
   const part = getComponent<XP.PartComponent.SimpleStatbank>()
   if (!part) throw Error('No part found')
 
+  const simpleStatbankServiceUrl: string = serviceUrl({
+    service: 'simpleStatbank',
+  })
+
   // TODO: Legge inn logikk for å hente alle valgene for code (eks yrker)
   // og resultatet som skal vises (eks. gjennomsnittslønn) her i forkant i stedet
 
@@ -45,6 +49,10 @@ function renderPart(req: XP.Request): XP.Response {
     placeholder: part.config.placeholder ?? '',
     altText: getImageAltText(part.config.icon),
     resultLayout: part.config.body,
+    simpleStatbankServiceUrl,
+    json: part.config.json,
+    code: part.config.code,
+    table: part.config.table,
   }
 
   return render('site/parts/simpleStatbank/simpleStatbank', props, req, {
