@@ -409,7 +409,7 @@ function HusleieCalculator(props) {
 
     return (
       <Container className='calculator-result' ref={scrollAnchor}>
-        <Row className='mb-3 mb-sm-5'>
+        <Row className='mb-3 mb-sm-5' aria-hidden='true'>
           <Col className='amount-equal align-self-end col-12 col-md-4'>
             <Title size={3}>{props.phrases.husleieNewRent}</Title>
           </Col>
@@ -420,7 +420,7 @@ function HusleieCalculator(props) {
             <Divider dark />
           </Col>
         </Row>
-        <Row>
+        <Row aria-hidden='true'>
           <Col className='col-12 col-md-5 col-lg-4'>
             <span>{props.phrases.calculatorChange}</span>
             <span className='float-end'>{renderNumberChangeValue()}</span>
@@ -428,9 +428,11 @@ function HusleieCalculator(props) {
           </Col>
           <Col className='price-change-text col-12 col-md-7 col-lg-6'>
             <span aria-hidden='true'>{resultText}</span>
-            <span className='visually-hidden'>{resultScreenReaderText}</span>
           </Col>
         </Row>
+        <div aria-atomic='true'>
+          <span className='sr-only'>{resultScreenReaderText}</span>
+        </div>
       </Container>
     )
   }
