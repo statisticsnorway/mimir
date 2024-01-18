@@ -427,7 +427,7 @@ export const get = (req: XP.Request): XP.Response => {
 
   dataDimension.forEach(function (dimension) {
     const data: Data | null = dataset?.Data({
-      Yrke: dimension,
+      [dimensionCode]: dimension,
     }) as Data
     const verdi: Data['value'] = data?.value
     dataValues.push(Number(verdi))
