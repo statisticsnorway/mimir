@@ -26,7 +26,8 @@
     "install:prod": "npm install",
     "lint": "eslint --fix ./src --ext .es6 --ext .ts --ext .jsx",
     "lint-dry": "eslint ./src --ext .es6 --ext .ts --ext .jsx",
-    "gradlew-dev-mode": "cross-env NODE_ENV=development ./gradlew clientJsWebpack stylesWebpack serverWebpack -t"
+    "gradlew-dev-mode": "cross-env NODE_ENV=development ./gradlew clientJsWebpack stylesWebpack serverWebpack -t",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
