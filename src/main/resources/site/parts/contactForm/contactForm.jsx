@@ -286,6 +286,7 @@ function ContactForm(props) {
                   <Col className='email py-2'>
                     <Input
                       className='email'
+                      type='email'
                       label={props.phrases.contactFormLabelEmail}
                       handleChange={(value) => onChange('email', value)}
                       onBlur={() => onBlur('email')}
