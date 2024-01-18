@@ -1,11 +1,10 @@
 // @ts-ignore
 import JSONstat from 'jsonstat-toolkit/import.mjs'
-import { type Dataset, type Data, type Dimension, Category } from '/lib/types/jsonstat-toolkit'
-import { forceArray } from '/lib/ssb/utils/arrayUtils'
+import { type Dataset, type Data, type Dimension } from '/lib/types/jsonstat-toolkit'
 
 export const get = (req: XP.Request): XP.Response => {
   //const { code, table } = req.params
-  const dimensionCode: string = req.params.dimensionCode ? req.params.dimensionCode : ''
+  const dimensionCode: string = req.params.dimensionCode ? req.params.dimensionCode : 'Yrke'
 
   //TODO call function to fetchStatbankApiData
   const mockQueryResult: JSONstat = {
@@ -421,45 +420,40 @@ export const get = (req: XP.Request): XP.Response => {
     },
   }
 
-  return {
-    status: 200,
-    contentType: 'application/json',
-    body: [{ index: 1, label: 'Lege', value: '23000' }],
-  }
-
   const dataset: Dataset | null = mockQueryResult ? JSONstat(mockQueryResult).Dataset('dataset') : null
-  const filterDimension: Dimension | null = dataset?.Dimension(dimensionCode) as Dimension | null
-  const dataDimension: Array<string> = filterDimension?.id as Array<string>
-  const dataValues: Array<Number> = []
+  const filterDimensionCode: Dimension | null = dataset?.Dimension(dimensionCode) as Dimension | null
+  const dataDimensions: Array<string> = filterDimensionCode?.id as Array<string>
+  const filterDimensionTime: Dimension | null = dataset?.Dimension('Tid') as Dimension
+  const timeDimensions: Array<string> = filterDimensionTime?.id as Array<string>
 
-  dataDimension.forEach(function (dimension) {
-    const data: Data | null = dataset?.Data({
-      [dimensionCode]: dimension,
-    }) as Data
-    const verdi: Data['value'] = data?.value
-    dataValues.push(Number(verdi))
-  })
+  try {
+    const result = dataDimensions.map(function (dataDimension) {
+      const values = timeDimensions.map((timeDimension) => {
+        const data: Data | null = dataset?.Data({
+          [dimensionCode]: dataDimension,
+          Tid: timeDimension,
+        }) as Data
 
-  const categories: Category | Array<Category> | null =
-    filterDimension && !(filterDimension instanceof Array) ? filterDimension.Category() : null
-
-  const labels = categories
-    ? forceArray(categories).map((category) => {
+        return data.value ?? data.status
+      })
       return {
-        index: category.index,
-        label: category.label,
+        displayName: filterDimensionCode?.Category(dataDimension)?.label,
+        dataCode: dataDimension,
+        value: values[0],
       }
     })
-    : []
 
-  const result = {
-    values: dataValues,
-    dropdownLabels: labels,
-  }
-
-  return {
-    status: 200,
-    contentType: 'application/json',
-    body: result,
+    return {
+      status: 200,
+      contentType: 'application/json',
+      body: { tid: timeDimensions[0], data: result },
+    }
+  } catch (error) {
+    log.error(error)
+    return {
+      status: 404,
+      contentType: 'application/json',
+      body: 'query, table or code is wrong',
+    }
   }
 }

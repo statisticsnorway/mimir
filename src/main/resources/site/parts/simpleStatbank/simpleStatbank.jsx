@@ -11,8 +11,9 @@ function SimpleStatbank(props) {
   const textIngress = <span dangerouslySetInnerHTML={{ __html: ingress }} />
 
   const [selectedValue, setSelectedValue] = useState(null)
-  const [loading, setLoading] = useState(null)
+  // const [loading, setLoading] = useState(null)
   const [data, setData] = useState(null)
+  const [time, setTime] = useState(null)
 
   useEffect(() => {
     if (simpleStatbankServiceUrl && json && code && table) {
@@ -26,9 +27,8 @@ function SimpleStatbank(props) {
     }
   }
 
-  // TODO: Hente kategorier fra tabellen for å populere autocomplete
   function fetchTableData() {
-    setLoading(true)
+    // setLoading(true)
     axios
       .get(simpleStatbankServiceUrl, {
         params: {
@@ -39,18 +39,21 @@ function SimpleStatbank(props) {
       })
       .then((res) => {
         if (res) {
-          // Her må vi få inn id (index), time, value, label, og index i resultarray
-          const items = res.data.map((element) => ({ id: element.index, title: element.label, value: element.value }))
-          console.log(items)
+          const items = res.data.data.map((element) => ({
+            id: element.datacode,
+            title: element.displayName,
+            value: element.value,
+          }))
+          setTime(res.data.tid)
           setData(items)
         }
       })
       .catch((err) => {
         console.log(err)
       })
-      .finally(() => {
-        setLoading(false)
-      })
+    //     .finally(() => {
+    //       setLoading(false)
+    //     })
   }
 
   function renderIcon(icon, altText) {
@@ -67,8 +70,10 @@ function SimpleStatbank(props) {
 
   function renderResult() {
     if (selectedValue) {
-      const resultView = resultLayout.replace('{value}', selectedValue.value)
-      // TODO: Hentet denne fra richText-part. Kan denne saniteres?
+      // Håndtere visning hvis resultatet er:
+      // : = Vises ikke av konfidensialitetshensyn. Tall publiseres ikke for å unngå å identifisere personer eller virksomheter.
+      // . = Ikke mulig å oppgi tall. Tall finnes ikke på dette tidspunktet fordi kategorien ikke var i bruk da tallene ble samlet inn.
+      const resultView = resultLayout.replace('{value}', selectedValue.value).replace('{time}', time)
       const textResult = <span dangerouslySetInnerHTML={{ __html: resultView }} />
       return (
         <div>
@@ -80,28 +85,19 @@ function SimpleStatbank(props) {
   }
 
   function renderForm() {
-    if (!loading && data) {
-      return (
-        <Row className='content'>
-          {renderIcon(icon, altText)}
-          <Col>
-            <div className='warning-text'>Akkurat nå vises kun statiske data</div>
-            <Dropdown header={textIngress} searchable items={data} onSelect={handleChange} placeholder={placeholder} />
-          </Col>
-        </Row>
-      )
-    }
-  }
-
-  function renderLoading() {
-    if (loading) {
-      return <div>loading</div>
-    }
+    return (
+      <Row className='content'>
+        {renderIcon(icon, altText)}
+        <Col>
+          <div className='warning-text'>Akkurat nå vises kun statiske data</div>
+          <Dropdown header={textIngress} searchable items={data} onSelect={handleChange} placeholder={placeholder} />
+        </Col>
+      </Row>
+    )
   }
 
   return (
     <div className='simple-statbank'>
-      {renderLoading()}
       {renderForm()}
       {renderResult()}
     </div>
