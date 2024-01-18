@@ -438,8 +438,8 @@ export const get = (req: XP.Request): XP.Response => {
       })
       return {
         displayName: filterDimensionCode?.Category(dataDimension)?.label,
-        dataCode: dataDimension,
-        value: values[0],
+        dataCode: dataDimension, // Hvis vi må ta høyde for at de dytter inn mer enn en dimensjon her må det hånderes
+        value: values[0], // Forventer at dette arryayet kun har et element (kun en tidsserie)
       }
     })
 
