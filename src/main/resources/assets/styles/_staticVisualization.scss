@@ -37,6 +37,13 @@
     }
   }
 
+  .navigation-item {
+    &:focus {
+      outline: $ssb-purple-3 solid 2px;
+      outline-offset: 1px;
+    }
+  }
+
   .static-visualization-chart {
     margin-top: 40px;
   }
