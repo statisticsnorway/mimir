@@ -23,15 +23,15 @@
       <occurrences minimum="1" maximum="1"/>
     </input>
     <input name="placeholder" type="TextLine">
-      <label>Plassholder (bakgrunnstekst til tekstfeltet)</label>
+      <label>Plassholder (bakgrunnstekst til dropdown)</label>
       <occurrences minimum="0" maximum="1"/>
     </input>
-    <input name="template" type="RadioButton">
-      <label>Mal for liste med alternativer</label>
+    <input name="selectDisplay" type="RadioButton">
+      <label>Visning i dropdown</label>
       <occurrences minimum="1" maximum="1"/>
       <config>
         <option value="text">tekst</option>
-        <option value="value-text">verdi og tekst</option>
+        <option value="code-text">kode: tekst</option>
       </config>
       <default>value-text</default>
     </input>

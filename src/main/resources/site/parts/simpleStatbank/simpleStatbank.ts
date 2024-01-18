@@ -53,6 +53,7 @@ function renderPart(req: XP.Request): XP.Response {
     json: part.config.json,
     code: part.config.code,
     table: part.config.table,
+    selectDisplay: part.config.selectDisplay,
   }
 
   return render('site/parts/simpleStatbank/simpleStatbank', props, req, {

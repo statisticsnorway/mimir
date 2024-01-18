@@ -5,7 +5,18 @@ import { Dropdown, Divider } from '@statisticsnorway/ssb-component-library'
 import axios from 'axios'
 
 function SimpleStatbank(props) {
-  const { icon, altText, ingress, placeholder, resultLayout, simpleStatbankServiceUrl, json, code, table } = props
+  const {
+    icon,
+    altText,
+    ingress,
+    placeholder,
+    resultLayout,
+    simpleStatbankServiceUrl,
+    json,
+    code,
+    table,
+    selectDisplay,
+  } = props
 
   // TODO: Hentet denne fra richText-part. Kan denne saniteres?
   const textIngress = <span dangerouslySetInnerHTML={{ __html: ingress }} />
@@ -40,8 +51,8 @@ function SimpleStatbank(props) {
       .then((res) => {
         if (res) {
           const items = res.data.data.map((element) => ({
-            id: element.datacode,
-            title: element.displayName,
+            id: element.dataCode,
+            title: selectDisplay == 'text' ? element.displayName : `${element.dataCode}: ${element.displayName}`,
             value: element.value,
           }))
           setTime(res.data.tid)
@@ -114,6 +125,7 @@ SimpleStatbank.propTypes = {
   json: PropTypes.string,
   code: PropTypes.string,
   table: PropTypes.string,
+  selectDisplay: PropTypes.string,
 }
 
 export default (props) => <SimpleStatbank {...props} />
