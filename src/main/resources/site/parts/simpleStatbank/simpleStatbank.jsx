@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Row, Col } from 'react-bootstrap'
 import { Dropdown, Divider } from '@statisticsnorway/ssb-component-library'
@@ -10,21 +10,19 @@ function SimpleStatbank(props) {
   // TODO: Hentet denne fra richText-part. Kan denne saniteres?
   const textIngress = <span dangerouslySetInnerHTML={{ __html: ingress }} />
 
-  const [result, setResult] = useState(null)
+  const [selectedValue, setSelectedValue] = useState(null)
   const [loading, setLoading] = useState(null)
   const [data, setData] = useState(null)
-  const [options, setOptions] = useState([
-    { id: 0, title: 'lærer' },
-    { id: 1, title: 'ingeniør' },
-    { id: 2, title: 'lege' },
-  ])
 
-  fetchTableData()
+  useEffect(() => {
+    if (simpleStatbankServiceUrl && json && code && table) {
+      fetchTableData()
+    }
+  }, [simpleStatbankServiceUrl, json, code, table])
 
   function handleChange(value) {
     if (value) {
-      const temp = getResultfromTable(value.id)
-      setResult(temp)
+      setSelectedValue(value)
     }
   }
 
@@ -41,18 +39,18 @@ function SimpleStatbank(props) {
       })
       .then((res) => {
         if (res) {
-          console.log(res)
+          // Her må vi få inn id (index), time, value, label, og index i resultarray
+          const items = res.data.map((element) => ({ id: element.index, title: element.label, value: element.value }))
+          console.log(items)
+          setData(items)
         }
+      })
+      .catch((err) => {
+        console.log(err)
       })
       .finally(() => {
         setLoading(false)
       })
-  }
-
-  function getResultfromTable(selected) {
-    // TODO: Skrive om så denne kun henter ut resultatet basert på innkommen tabell
-    const salery = ['55900', '45900', '75900']
-    return salery[selected]
   }
 
   function renderIcon(icon, altText) {
@@ -67,9 +65,9 @@ function SimpleStatbank(props) {
     }
   }
 
-  function renderResult(resultLayout) {
-    if (result) {
-      const resultView = resultLayout.replace('{value}', result)
+  function renderResult() {
+    if (selectedValue) {
+      const resultView = resultLayout.replace('{value}', selectedValue.value)
       // TODO: Hentet denne fra richText-part. Kan denne saniteres?
       const textResult = <span dangerouslySetInnerHTML={{ __html: resultView }} />
       return (
@@ -81,16 +79,31 @@ function SimpleStatbank(props) {
     }
   }
 
+  function renderForm() {
+    if (!loading && data) {
+      return (
+        <Row className='content'>
+          {renderIcon(icon, altText)}
+          <Col>
+            <div className='warning-text'>Akkurat nå vises kun statiske data</div>
+            <Dropdown header={textIngress} searchable items={data} onSelect={handleChange} placeholder={placeholder} />
+          </Col>
+        </Row>
+      )
+    }
+  }
+
+  function renderLoading() {
+    if (loading) {
+      return <div>loading</div>
+    }
+  }
+
   return (
     <div className='simple-statbank'>
-      <Row className='content'>
-        {renderIcon(icon, altText)}
-        <Col>
-          <div className='warning-text'>Akkurat nå vises kun statiske data</div>
-          <Dropdown header={textIngress} searchable items={options} onSelect={handleChange} placeholder={placeholder} />
-        </Col>
-      </Row>
-      {renderResult(resultLayout)}
+      {renderLoading()}
+      {renderForm()}
+      {renderResult()}
     </div>
   )
 }

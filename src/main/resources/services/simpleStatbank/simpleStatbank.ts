@@ -1,3 +1,4 @@
+// @ts-ignore
 import JSONstat from 'jsonstat-toolkit/import.mjs'
 import { type Dataset, type Data, type Dimension, Category } from '/lib/types/jsonstat-toolkit'
 import { forceArray } from '/lib/ssb/utils/arrayUtils'
@@ -420,6 +421,12 @@ export const get = (req: XP.Request): XP.Response => {
     },
   }
 
+  return {
+    status: 200,
+    contentType: 'application/json',
+    body: [{ index: 1, label: 'Lege', value: '23000' }],
+  }
+
   const dataset: Dataset | null = mockQueryResult ? JSONstat(mockQueryResult).Dataset('dataset') : null
   const filterDimension: Dimension | null = dataset?.Dimension(dimensionCode) as Dimension | null
   const dataDimension: Array<string> = filterDimension?.id as Array<string>
@@ -438,11 +445,11 @@ export const get = (req: XP.Request): XP.Response => {
 
   const labels = categories
     ? forceArray(categories).map((category) => {
-        return {
-          index: category.index,
-          label: category.label,
-        }
-      })
+      return {
+        index: category.index,
+        label: category.label,
+      }
+    })
     : []
 
   const result = {
