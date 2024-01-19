@@ -19,10 +19,10 @@ export function preview(req: XP.Request) {
 function getImageUrl(icon?: string) {
   return icon
     ? imageUrl({
-      id: icon,
-      scale: 'block(100,100)',
-      format: 'jpg',
-    })
+        id: icon,
+        scale: 'block(100,100)',
+        format: 'jpg',
+      })
     : null
 }
 

@@ -45,8 +45,8 @@ function SimpleStatbank(props) {
         params: {
           table,
           code,
+          json,
         },
-        body: json,
       })
       .then((res) => {
         if (res) {
