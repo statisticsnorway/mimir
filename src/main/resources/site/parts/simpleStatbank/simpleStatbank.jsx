@@ -18,7 +18,6 @@ function SimpleStatbank(props) {
     selectDisplay,
   } = props
 
-  // TODO: Hentet denne fra richText-part. Kan denne saniteres?
   const textIngress = <span dangerouslySetInnerHTML={{ __html: ingress }} />
 
   const [selectedValue, setSelectedValue] = useState(null)

@@ -19,10 +19,10 @@ export function preview(req: XP.Request) {
 function getImageUrl(icon?: string) {
   return icon
     ? imageUrl({
-        id: icon,
-        scale: 'block(100,100)',
-        format: 'jpg',
-      })
+      id: icon,
+      scale: 'block(100,100)',
+      format: 'jpg',
+    })
     : null
 }
 
@@ -39,9 +39,6 @@ function renderPart(req: XP.Request): XP.Response {
   const simpleStatbankServiceUrl: string = serviceUrl({
     service: 'simpleStatbank',
   })
-
-  // TODO: Legge inn logikk for å hente alle valgene for code (eks yrker)
-  // og resultatet som skal vises (eks. gjennomsnittslønn) her i forkant i stedet
 
   const props = {
     icon: getImageUrl(part.config.icon),
