@@ -1,69 +1,20 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { Row, Col } from 'react-bootstrap'
 import { Dropdown, Divider } from '@statisticsnorway/ssb-component-library'
-import axios from 'axios'
 
 function SimpleStatbank(props) {
-  const {
-    icon,
-    altText,
-    ingress,
-    placeholder,
-    resultLayout,
-    simpleStatbankServiceUrl,
-    json,
-    code,
-    urlOrId,
-    selectDisplay,
-  } = props
+  const { icon, altText, ingress, placeholder, resultLayout, selectDisplay, statbankApiData } = props
 
+  // TODO: Hentet denne fra richText-part. Kan denne saniteres?
   const textIngress = <span dangerouslySetInnerHTML={{ __html: ingress }} />
 
   const [selectedValue, setSelectedValue] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [data, setData] = useState([])
-  const [time, setTime] = useState(null)
-
-  useEffect(() => {
-    if (simpleStatbankServiceUrl && json && code && urlOrId) {
-      fetchTableData()
-    }
-  }, [simpleStatbankServiceUrl, json, code, urlOrId])
 
   function handleChange(value) {
     if (value) {
       setSelectedValue(value)
     }
-  }
-
-  function fetchTableData() {
-    setLoading(true)
-    axios
-      .get(simpleStatbankServiceUrl, {
-        params: {
-          urlOrId,
-          code,
-          json,
-        },
-      })
-      .then((res) => {
-        if (res?.data?.data) {
-          const items = res.data.data.map((element) => ({
-            id: element.dataCode,
-            title: selectDisplay == 'text' ? element.displayName : `${element.dataCode}: ${element.displayName}`,
-            value: element.value,
-          }))
-          setTime(res.data.tid)
-          setData(items)
-        }
-      })
-      .catch((err) => {
-        console.log(err)
-      })
-      .finally(() => {
-        setLoading(false)
-      })
   }
 
   function renderIcon(icon, altText) {
@@ -81,7 +32,7 @@ function SimpleStatbank(props) {
   function renderResult() {
     if (selectedValue) {
       const result = Number(selectedValue.value) > 0 ? selectedValue.value : '-'
-      const resultView = resultLayout.replace('{value}', result).replace('{time}', time)
+      const resultView = resultLayout.replace('{value}', result).replace('{time}', statbankApiData.time)
       const textResult = <span dangerouslySetInnerHTML={{ __html: resultView }} />
       return (
         <div>
@@ -92,19 +43,30 @@ function SimpleStatbank(props) {
     }
   }
 
+  function addDropdown() {
+    const items = statbankApiData
+      ? statbankApiData.data.map((element) => ({
+          id: element.dataCode,
+          title: selectDisplay == 'text' ? element.displayName : `${element.dataCode}: ${element.displayName}`,
+          value: element.value,
+        }))
+      : []
+    return (
+      <Dropdown
+        header={textIngress}
+        searchable
+        items={items}
+        onSelect={handleChange}
+        placeholder={statbankApiData ? placeholder : 'Ingen data'}
+      />
+    )
+  }
+
   function renderForm() {
     return (
       <Row className='content'>
         {renderIcon(icon, altText)}
-        <Col>
-          <Dropdown
-            header={textIngress}
-            searchable
-            items={data}
-            onSelect={handleChange}
-            placeholder={loading ? 'loading...' : placeholder}
-          />
-        </Col>
+        <Col>{addDropdown()}</Col>
       </Row>
     )
   }
@@ -128,6 +90,10 @@ SimpleStatbank.propTypes = {
   code: PropTypes.string,
   urlOrId: PropTypes.string,
   selectDisplay: PropTypes.string,
+  statbankApiData: PropTypes.objectOf({
+    time: PropTypes.string,
+    data: PropTypes.object,
+  }),
 }
 
 export default (props) => <SimpleStatbank {...props} />

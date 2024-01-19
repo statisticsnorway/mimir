@@ -1,8 +1,9 @@
-import { getComponent, serviceUrl } from '/lib/xp/portal'
+import { getComponent } from '/lib/xp/portal'
 import { renderError } from '/lib/ssb/error/error'
 import { render } from '/lib/enonic/react4xp'
 import { imageUrl, getImageAlt } from '/lib/ssb/utils/imageUtils'
 import { isEnabled } from '/lib/featureToggle'
+import { getStatbankApiData, type SimpleStatbankResult } from '/lib/ssb/parts/simpleStatbank'
 
 export function get(req: XP.Request) {
   try {
@@ -19,10 +20,10 @@ export function preview(req: XP.Request) {
 function getImageUrl(icon?: string) {
   return icon
     ? imageUrl({
-      id: icon,
-      scale: 'block(100,100)',
-      format: 'jpg',
-    })
+        id: icon,
+        scale: 'block(100,100)',
+        format: 'jpg',
+      })
     : null
 }
 
@@ -34,11 +35,14 @@ function renderPart(req: XP.Request): XP.Response {
   if (!isEnabled('simple-statbank-part', false, 'ssb')) return { body: '' }
 
   const part = getComponent<XP.PartComponent.SimpleStatbank>()
+
   if (!part) throw Error('No part found')
 
-  const simpleStatbankServiceUrl: string = serviceUrl({
-    service: 'simpleStatbank',
-  })
+  const statbankApiData: SimpleStatbankResult | undefined = getStatbankApiData(
+    part.config.code,
+    part.config.urlOrId,
+    part.config.json
+  )
 
   const props = {
     icon: getImageUrl(part.config.icon),
@@ -46,11 +50,8 @@ function renderPart(req: XP.Request): XP.Response {
     placeholder: part.config.placeholder ?? '',
     altText: getImageAltText(part.config.icon),
     resultLayout: part.config.resultText,
-    simpleStatbankServiceUrl,
-    json: part.config.json,
-    urlOrId: part.config.urlOrId,
-    code: part.config.code,
     selectDisplay: part.config.selectDisplay,
+    statbankApiData,
   }
 
   return render('site/parts/simpleStatbank/simpleStatbank', props, req, {
