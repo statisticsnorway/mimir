@@ -81,10 +81,8 @@ function SimpleStatbank(props) {
 
   function renderResult() {
     if (selectedValue) {
-      // Håndtere visning hvis resultatet er:
-      // : = Vises ikke av konfidensialitetshensyn. Tall publiseres ikke for å unngå å identifisere personer eller virksomheter.
-      // . = Ikke mulig å oppgi tall. Tall finnes ikke på dette tidspunktet fordi kategorien ikke var i bruk da tallene ble samlet inn.
-      const resultView = resultLayout.replace('{value}', selectedValue.value).replace('{time}', time)
+      const result = Number(selectedValue.value) > 0 ? selectedValue.value : '-'
+      const resultView = resultLayout.replace('{value}', result).replace('{time}', time)
       const textResult = <span dangerouslySetInnerHTML={{ __html: resultView }} />
       return (
         <div>
