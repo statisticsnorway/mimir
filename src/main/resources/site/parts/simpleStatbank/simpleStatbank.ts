@@ -48,11 +48,11 @@ function renderPart(req: XP.Request): XP.Response {
     ingress: part.config.ingress,
     placeholder: part.config.placeholder ?? '',
     altText: getImageAltText(part.config.icon),
-    resultLayout: part.config.body,
+    resultLayout: part.config.resultText,
     simpleStatbankServiceUrl,
     json: part.config.json,
+    urlOrId: part.config.urlOrId,
     code: part.config.code,
-    table: part.config.table,
     selectDisplay: part.config.selectDisplay,
   }
 

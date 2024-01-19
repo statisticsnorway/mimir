@@ -14,7 +14,7 @@ function SimpleStatbank(props) {
     simpleStatbankServiceUrl,
     json,
     code,
-    table,
+    urlOrId,
     selectDisplay,
   } = props
 
@@ -27,10 +27,10 @@ function SimpleStatbank(props) {
   const [time, setTime] = useState(null)
 
   useEffect(() => {
-    if (simpleStatbankServiceUrl && json && code && table) {
+    if (simpleStatbankServiceUrl && json && code && urlOrId) {
       fetchTableData()
     }
-  }, [simpleStatbankServiceUrl, json, code, table])
+  }, [simpleStatbankServiceUrl, json, code, urlOrId])
 
   function handleChange(value) {
     if (value) {
@@ -43,7 +43,7 @@ function SimpleStatbank(props) {
     axios
       .get(simpleStatbankServiceUrl, {
         params: {
-          table,
+          urlOrId,
           code,
           json,
         },
@@ -129,7 +129,7 @@ SimpleStatbank.propTypes = {
   simpleStatbankServiceUrl: PropTypes.string,
   json: PropTypes.string,
   code: PropTypes.string,
-  table: PropTypes.string,
+  urlOrId: PropTypes.string,
   selectDisplay: PropTypes.string,
 }
 

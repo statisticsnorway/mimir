@@ -5,10 +5,10 @@ import { fetchStatbankApiDataQuery } from '/lib/ssb/dataset/statbankApi/statbank
 
 export const get = (req: XP.Request): XP.Response => {
   const dimensionCode: string = req.params.code ?? ''
-  const tableId: string = req.params.table ?? ''
+  const urlOrId: string = req.params.urlOrId ?? ''
   const query: string = req.params.json ?? ''
 
-  const statbankApiData: JSONstat = fetchStatbankApiDataQuery(tableId, query)
+  const statbankApiData: JSONstat = fetchStatbankApiDataQuery(urlOrId, query)
   const dataset: Dataset | null = statbankApiData ? JSONstat(statbankApiData).Dataset('dataset') : null
   const filterDimensionCode: Dimension | null = dataset?.Dimension(dimensionCode) as Dimension | null
   const dataDimensions: Array<string> = filterDimensionCode?.id as Array<string>
