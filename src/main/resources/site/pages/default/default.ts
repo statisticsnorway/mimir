@@ -250,7 +250,6 @@ export function get(req: XP.Request): XP.Response {
     breadcrumbsReactId: breadcrumbId,
     hideHeader,
     hideBreadcrumb,
-    enabledEnalyzerScript: isEnabled('enable-enalyzer-script', true, 'ssb'),
     enabledChatScript: isEnabled('enable-chat-script', true, 'ssb') && innrapporteringRegexp.exec(page._path),
     tableView: page.type === 'mimir:table',
   }
@@ -638,7 +637,6 @@ interface DefaultModel {
   breadcrumbsReactId: string | undefined
   hideHeader: boolean
   hideBreadcrumb: boolean
-  enabledEnalyzerScript: boolean
   enabledChatScript: boolean
   tableView: boolean
 }
