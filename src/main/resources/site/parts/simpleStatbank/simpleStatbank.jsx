@@ -22,8 +22,8 @@ function SimpleStatbank(props) {
   const textIngress = <span dangerouslySetInnerHTML={{ __html: ingress }} />
 
   const [selectedValue, setSelectedValue] = useState(null)
-  // const [loading, setLoading] = useState(null)
-  const [data, setData] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [data, setData] = useState([])
   const [time, setTime] = useState(null)
 
   useEffect(() => {
@@ -39,7 +39,7 @@ function SimpleStatbank(props) {
   }
 
   function fetchTableData() {
-    // setLoading(true)
+    setLoading(true)
     axios
       .get(simpleStatbankServiceUrl, {
         params: {
@@ -49,7 +49,7 @@ function SimpleStatbank(props) {
         },
       })
       .then((res) => {
-        if (res) {
+        if (res?.data?.data) {
           const items = res.data.data.map((element) => ({
             id: element.dataCode,
             title: selectDisplay == 'text' ? element.displayName : `${element.dataCode}: ${element.displayName}`,
@@ -62,9 +62,9 @@ function SimpleStatbank(props) {
       .catch((err) => {
         console.log(err)
       })
-    //     .finally(() => {
-    //       setLoading(false)
-    //     })
+      .finally(() => {
+        setLoading(false)
+      })
   }
 
   function renderIcon(icon, altText) {
@@ -100,8 +100,13 @@ function SimpleStatbank(props) {
       <Row className='content'>
         {renderIcon(icon, altText)}
         <Col>
-          <div className='warning-text'>Akkurat nå vises kun statiske data</div>
-          <Dropdown header={textIngress} searchable items={data} onSelect={handleChange} placeholder={placeholder} />
+          <Dropdown
+            header={textIngress}
+            searchable
+            items={data}
+            onSelect={handleChange}
+            placeholder={loading ? 'loading...' : placeholder}
+          />
         </Col>
       </Row>
     )
