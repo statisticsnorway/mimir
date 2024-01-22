@@ -32,7 +32,7 @@ function SimpleStatbank(props) {
   function renderResult() {
     if (selectedValue) {
       const result = Number(selectedValue.value) > 0 ? selectedValue.value : '-'
-      const resultView = resultLayout.replace('{value}', result).replace('{time}', statbankApiData.time)
+      const resultView = resultLayout.replace('{value}', result).replace('{time}', selectedValue.time)
       const textResult = <span dangerouslySetInnerHTML={{ __html: resultView }} />
       return (
         <div>
@@ -49,6 +49,7 @@ function SimpleStatbank(props) {
           id: element.dataCode,
           title: selectDisplay == 'text' ? element.displayName : `${element.dataCode}: ${element.displayName}`,
           value: element.value,
+          time: element.time,
         }))
       : []
     return (
@@ -91,7 +92,6 @@ SimpleStatbank.propTypes = {
   urlOrId: PropTypes.string,
   selectDisplay: PropTypes.string,
   statbankApiData: PropTypes.objectOf({
-    time: PropTypes.string,
     data: PropTypes.object,
   }),
 }

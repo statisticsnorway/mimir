@@ -1,6 +1,6 @@
 // @ts-ignore
 import JSONstat from 'jsonstat-toolkit/import.mjs'
-import { type Dataset, type Data, type Dimension } from '/lib/types/jsonstat-toolkit'
+import { type Dataset, type Data, type Dimension, Category } from '/lib/types/jsonstat-toolkit'
 import { fetchStatbankApiDataQuery } from '/lib/ssb/dataset/statbankApi/statbankApi'
 
 export function getStatbankApiData(
@@ -17,24 +17,21 @@ export function getStatbankApiData(
 
   try {
     const result: DimensionData[] = dataDimensions.map(function (dataDimension: string) {
-      const values = timeDimensions.map((timeDimension) => {
-        const data: Data | null = dataset?.Data({
-          [dimensionCode]: dataDimension,
-          Tid: timeDimension,
-        }) as Data
+      const data: Data | null = dataset?.Data({
+        [dimensionCode]: dataDimension,
+      }) as Data
 
-        return data.value ?? data.status
-      })
+      const filterCategory: Category | null = filterDimensionCode?.Category(dataDimension) as Category | null
 
       return {
-        displayName: filterDimensionCode?.Category(dataDimension)?.label,
+        displayName: filterCategory ? filterCategory.label : '',
         dataCode: dataDimension, // Hvis vi må ta høyde for at de dytter inn mer enn en dimensjon her må det hånderes
-        value: values[0], // Forventer at dette arryayet kun har et element (kun en tidsserie)
+        value: data.value ?? data.status, // Forventer at dette arryayet kun har et element (kun en tidsserie)
+        time: dimensionCode === 'Tid' ? dataDimension : timeDimensions[0],
       }
     })
 
     return {
-      time: timeDimensions[0],
       data: result,
     }
   } catch (error) {
@@ -44,7 +41,6 @@ export function getStatbankApiData(
 }
 
 export interface SimpleStatbankResult {
-  time: string
   data: DimensionData[]
 }
 
@@ -52,4 +48,5 @@ interface DimensionData {
   displayName: string
   dataCode: string
   value: (string | number)[]
+  time: string
 }
