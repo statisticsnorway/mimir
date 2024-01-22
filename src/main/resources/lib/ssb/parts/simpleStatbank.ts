@@ -25,8 +25,8 @@ export function getStatbankApiData(
 
       return {
         displayName: filterCategory ? filterCategory.label : '',
-        dataCode: dataDimension, // Hvis vi må ta høyde for at de dytter inn mer enn en dimensjon her må det hånderes
-        value: data.value ?? data.status, // Forventer at dette arryayet kun har et element (kun en tidsserie)
+        dataCode: dataDimension,
+        value: data.value ?? data.status,
         time: dimensionCode === 'Tid' ? dataDimension : timeDimensions[0],
       }
     })
