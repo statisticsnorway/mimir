@@ -2,7 +2,6 @@ import React from 'react'
 import { Link, Title } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
 import { ArrowRight } from 'react-feather'
-import Truncate from 'react-truncate'
 
 function ArticleList(props) {
   const { articles, title, archiveLinkUrl, archiveLinkText } = props
@@ -19,11 +18,7 @@ function ArticleList(props) {
                 {article.title}
               </Link>
             </Title>
-            <p>
-              <Truncate lines={2} className='truncate'>
-                {article.preface}
-              </Truncate>
-            </p>
+            <p className='truncate-2-lines'>{article.preface}</p>
             <time dateTime={article.publishDate}>{article.publishDateHuman}</time>
           </div>
         )

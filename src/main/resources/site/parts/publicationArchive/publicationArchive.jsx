@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Divider, Link, Title, Text, Dropdown } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
-import Truncate from 'react-truncate'
 import { NumericFormat } from 'react-number-format'
 import { ChevronDown } from 'react-feather'
 import axios from 'axios'
@@ -106,9 +105,7 @@ function PublicationArchive(props) {
               {publication.title}
             </Link>
             {publication.period && <p className='mt-1 mb-0'>{publication.period}</p>}
-            <p className='my-1'>
-              <Truncate lines={2}>{publication.preface}</Truncate>
-            </p>
+            <p className='truncate-2-lines'>{publication.preface}</p>
             <Text small>
               {getArticleType(publication)} /&nbsp;
               <time dateTime={publication.publishDate}>{publication.publishDateHuman}</time>
