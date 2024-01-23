@@ -160,6 +160,7 @@ section.part-divider + section.part-divider {
   }
 }
 
+// Looks weird, but is supported by all major browsers https://caniuse.com/?search=-webkit-line-clamp
 .truncate-2-lines {
   overflow: hidden;
   display: -webkit-box;
