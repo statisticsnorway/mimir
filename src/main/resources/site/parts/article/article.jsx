@@ -6,7 +6,7 @@ function Article(props) {
   const phrases = props.phrases
 
   function renderTitleIngress() {
-    const { introTitle, title, ingress } = props
+    const { introTitle, title, preface } = props
 
     return (
       <div className='title-ingress-wrapper col-12 col-lg-8 p-0'>
@@ -14,7 +14,7 @@ function Article(props) {
         <Title size={1} className='searchabletext'>
           {title}
         </Title>
-        {ingress && <p className='ingress searchabletext'>{ingress}</p>}
+        {preface && <p className='ingress searchabletext'>{preface}</p>}
       </div>
     )
   }
@@ -178,7 +178,7 @@ Article.propTypes = {
   phrases: PropTypes.object,
   introTitle: PropTypes.string,
   title: PropTypes.string,
-  ingress: PropTypes.string,
+  preface: PropTypes.string,
   serialNumber: PropTypes.string,
   showPubDate: PropTypes.bool,
   pubDate: PropTypes.string,
