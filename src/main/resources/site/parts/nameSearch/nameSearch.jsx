@@ -332,6 +332,12 @@ function NameSearch(props) {
           text: phrases.graphHeader + ' ' + nameForRender,
           x: 20,
         },
+        subtitle: {
+          align: 'center',
+          verticalAlign: 'bottom',
+          widthAdjust: 0,
+          text: phrases.threeOrLessTextGraph,
+        },
         xAxis: {
           lineColor,
           tickColor: lineColor,
@@ -498,6 +504,7 @@ NameSearch.propTypes = {
     errorMessage: PropTypes.string,
     networkErrorMessage: PropTypes.string,
     threeOrLessText: PropTypes.string,
+    threeOrLessTextGraph: PropTypes.string,
     yAxis: PropTypes.string,
     graphHeader: PropTypes.string,
     historicalTrend: PropTypes.string,
