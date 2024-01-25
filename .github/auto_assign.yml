@@ -8,7 +8,9 @@ addAssignees: true
 assignees:
   - ssb-cgn
   - Glenruben
-  - johnnadeluy
+  # - johnnadeluy 🏝️
+  - annesiri
+  - Carl-OW
   - omsaggau
 
 # A number of assignees to add to the pull request

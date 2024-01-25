@@ -87,7 +87,7 @@ function renderPart(req: XP.Request, highchartIds: Array<string>): XP.Response {
     .filter((key) => !!key)
 
   const inlineScript: Array<string> = highcharts.map(
-    (highchart) => `<script inline="javascript">
+    (highchart) => `<script type="text/javascript">
    window['highchart' + '${highchart.contentKey}'] = ${JSON.stringify(highchart.config)}
    </script>`
   )

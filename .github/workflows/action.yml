@@ -18,7 +18,7 @@ jobs:
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
       - name: Assign PR
-        uses: kentaro-m/auto-assign-action@v1.2.5
+        uses: kentaro-m/auto-assign-action@v1.2.6
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 

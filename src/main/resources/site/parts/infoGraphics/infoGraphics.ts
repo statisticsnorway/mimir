@@ -57,8 +57,8 @@ function renderPart(req: XP.Request) {
       imageData && imageData.data.altText
         ? imageData.data.altText
         : imageData && imageData.data.caption
-        ? imageData.data.caption
-        : '',
+          ? imageData.data.caption
+          : '',
     imageSrc: imageSrc,
     footnotes: config.footNote ? util.data.forceArray(config.footNote) : [],
     sources: getSources(sourceConfig as Array<SourcesConfig>),

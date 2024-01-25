@@ -46,8 +46,8 @@ function calculatePeriodVariant(variant: VariantInListing, language: string, nex
   if (nextReleasePassed) {
     const upcomingRelease: ReleasesInListing | undefined = variant.upcomingReleases
       ? util.data.forceArray(variant.upcomingReleases).find((r) => {
-        return r && r.id === variant.nextReleaseId
-      })
+          return r && r.id === variant.nextReleaseId
+        })
       : undefined
 
     if (upcomingRelease) {
@@ -281,8 +281,8 @@ export function getReleasesForDay(
   return statisticList.reduce((acc: Array<StatisticInListing>, stat: StatisticInListing) => {
     const thisDayReleasedVariants: Array<VariantInListing> | undefined = Array.isArray(stat.variants)
       ? stat.variants.filter((variant: VariantInListing) => {
-        return checkVariantReleaseDate(variant, day, property)
-      })
+          return checkVariantReleaseDate(variant, day, property)
+        })
       : stat.variants && checkVariantReleaseDate(stat.variants, day, property)
         ? [stat.variants]
         : undefined
@@ -337,20 +337,21 @@ export function prepareRelease(release: Release, language: string): PreparedStat
 
     const statisticsPagesXP = query<Content<Statistics>>({
       count: 1,
-      query: `data.statistic LIKE "${release.statisticId}" AND language IN (${language === 'nb' ? '"nb", "nn"' : '"en"'
-        })`,
+      query: `data.statistic LIKE "${release.statisticId}" AND language IN (${
+        language === 'nb' ? '"nb", "nn"' : '"en"'
+      })`,
       contentTypes: [`${app.name}:statistics`],
     }).hits[0]
     const statisticsPageUrl: string | undefined = statisticsPagesXP
       ? pageUrl({
-        path: statisticsPagesXP._path,
-      })
+          path: statisticsPagesXP._path,
+        })
       : undefined
     const aboutTheStatisticsContent: Content<OmStatistikken> | null =
       statisticsPagesXP && statisticsPagesXP.data.aboutTheStatistics
         ? get({
-          key: statisticsPagesXP.data.aboutTheStatistics,
-        })
+            key: statisticsPagesXP.data.aboutTheStatistics,
+          })
         : null
     const seoDescription: string | undefined = statisticsPagesXP
       ? statisticsPagesXP.x['com-enonic-app-metafields']?.['meta-data']?.seoDescription
@@ -392,14 +393,14 @@ export function prepareStatisticRelease(
     }).hits[0]
     const statisticsPageUrl: string | undefined = statisticsPagesXP
       ? pageUrl({
-        path: statisticsPagesXP._path,
-      })
+          path: statisticsPagesXP._path,
+        })
       : undefined
     const aboutTheStatisticsContent: Content<OmStatistikken> | null =
       statisticsPagesXP && statisticsPagesXP.data.aboutTheStatistics
         ? get({
-          key: statisticsPagesXP.data.aboutTheStatistics,
-        })
+            key: statisticsPagesXP.data.aboutTheStatistics,
+          })
         : null
     const seoDescription: string | undefined = statisticsPagesXP
       ? statisticsPagesXP.x['com-enonic-app-metafields']?.['meta-data']?.seoDescription
@@ -469,11 +470,11 @@ export function getPreviousRelease(nextReleasePassed: boolean, variant: VariantI
   return nextReleasePassed && upComingReleases.length
     ? upComingReleases[0]
     : {
-      id: variant.id,
-      publishTime: variant.previousRelease,
-      periodFrom: variant.previousFrom,
-      periodTo: variant.previousTo,
-    }
+        id: variant.id,
+        publishTime: variant.previousRelease,
+        periodFrom: variant.previousFrom,
+        periodTo: variant.previousTo,
+      }
 }
 
 export function getNextRelease(nextReleasePassed: boolean, variant: VariantInListing): ReleasesInListing | undefined {

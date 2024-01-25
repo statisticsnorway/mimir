@@ -52,10 +52,6 @@ try {
           enabled: true,
         },
         {
-          feature: 'enable-enalyzer-script',
-          enabled: false,
-        },
-        {
           feature: 'highchart-show-datatable',
           enabled: false,
         },
@@ -105,6 +101,10 @@ try {
         },
         {
           feature: 'hide-header-in-qa',
+          enabled: false,
+        },
+        {
+          feature: 'simple-statbank-part',
           enabled: false,
         },
       ],

@@ -332,6 +332,12 @@ function NameSearch(props) {
           text: phrases.graphHeader + ' ' + nameForRender,
           x: 20,
         },
+        subtitle: {
+          align: 'center',
+          verticalAlign: 'bottom',
+          widthAdjust: 0,
+          text: phrases.threeOrLessTextGraph,
+        },
         xAxis: {
           lineColor,
           tickColor: lineColor,
@@ -425,7 +431,7 @@ function NameSearch(props) {
   }
 
   return (
-    <section className='name-search container-fluid p-0'>
+    <section className='name-search container-fluid p-0' id='navnesok'>
       <Container className='name-search-input'>
         <Row>
           <Col lg='12'>
@@ -498,6 +504,7 @@ NameSearch.propTypes = {
     errorMessage: PropTypes.string,
     networkErrorMessage: PropTypes.string,
     threeOrLessText: PropTypes.string,
+    threeOrLessTextGraph: PropTypes.string,
     yAxis: PropTypes.string,
     graphHeader: PropTypes.string,
     historicalTrend: PropTypes.string,

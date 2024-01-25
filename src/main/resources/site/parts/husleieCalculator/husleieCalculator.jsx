@@ -76,8 +76,6 @@ function HusleieCalculator(props) {
     }
   }, [loading, choosePeriod])
 
-  const submitButton = useRef(null)
-
   function onSubmit(e) {
     e.preventDefault()
     if (loading) return
@@ -411,7 +409,7 @@ function HusleieCalculator(props) {
 
     return (
       <Container className='calculator-result' ref={scrollAnchor}>
-        <Row className='mb-3 mb-sm-5'>
+        <Row className='mb-3 mb-sm-5' aria-hidden='true'>
           <Col className='amount-equal align-self-end col-12 col-md-4'>
             <Title size={3}>{props.phrases.husleieNewRent}</Title>
           </Col>
@@ -422,7 +420,7 @@ function HusleieCalculator(props) {
             <Divider dark />
           </Col>
         </Row>
-        <Row>
+        <Row aria-hidden='true'>
           <Col className='col-12 col-md-5 col-lg-4'>
             <span>{props.phrases.calculatorChange}</span>
             <span className='float-end'>{renderNumberChangeValue()}</span>
@@ -430,11 +428,11 @@ function HusleieCalculator(props) {
           </Col>
           <Col className='price-change-text col-12 col-md-7 col-lg-6'>
             <span aria-hidden='true'>{resultText}</span>
-            <span aria-live='polite' className='visually-hidden'>
-              {resultScreenReaderText}
-            </span>
           </Col>
         </Row>
+        <div aria-atomic='true'>
+          <span className='sr-only'>{resultScreenReaderText}</span>
+        </div>
       </Container>
     )
   }
@@ -481,7 +479,7 @@ function HusleieCalculator(props) {
   function renderChooseHusleiePeriode() {
     if (choosePeriod && showResult) {
       return (
-        <Container ref={scrollAnchor} aria-atomic='true' aria-live='polite'>
+        <Container ref={scrollAnchor} aria-atomic='true'>
           <Divider className='my-5' />
           <Row>
             <Title size={3} className='col-12 mb-2'>
@@ -490,10 +488,10 @@ function HusleieCalculator(props) {
             <p className='col-12 mb-4'>{props.phrases.husleieChooseFiguresToCalculateRent}</p>
           </Row>
           <Row className='ms-0'>
-            <Button className='submit-one-year' onClick={submitOneYearLater} ref={submitButton}>
+            <button className='ssb-btn submit-one-year' onClick={submitOneYearLater} autoFocus>
               {chooseFiguresToCalculateRent.oneYearLater.phraseOneYearLater}
-            </Button>
-            <Button className='submit-last-period' onClick={submitLastPeriod} ref={submitButton}>
+            </button>
+            <Button className='submit-last-period' onClick={submitLastPeriod}>
               {chooseFiguresToCalculateRent.newestNumbersPhrase}
             </Button>
           </Row>
@@ -518,7 +516,7 @@ function HusleieCalculator(props) {
     return (
       <Container className='husleie-calculator'>
         {renderForm()}
-        {renderResult()}
+        <div aria-live='polite'>{renderResult()}</div>
       </Container>
     )
   }
@@ -589,12 +587,12 @@ function HusleieCalculator(props) {
             </Row>
             <Row className='submit'>
               <Col>
-                <Button className='submit-button' primary type='submit' disabled={loading} ref={submitButton}>
+                <Button className='submit-button' primary type='submit' disabled={loading}>
                   {props.phrases.husleieSubmit}
                 </Button>
               </Col>
             </Row>
-            {renderChooseHusleiePeriode()}
+            <div aria-live='polite'>{renderChooseHusleiePeriode()}</div>
           </Container>
         </Form>
       </div>

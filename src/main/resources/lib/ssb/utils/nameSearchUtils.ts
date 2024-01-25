@@ -42,7 +42,7 @@ export function getNameSearchResult(name: string, includeGraphData: boolean): So
     }
   } else {
     log.error(
-      `getNameSearchResult: Failed to fetch data from solr name search: ${solrBaseUrl} - Statuscode: ${result.status}`,
+      `getNameSearchResult: Failed to fetch data from solr name search: ${solrBaseUrl} - Statuscode: ${result.status}`
     )
     return {
       body: '',

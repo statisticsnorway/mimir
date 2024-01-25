@@ -67,6 +67,24 @@ export function fetchStatbankApiData(content: Content<DataSource>) {
   return data
 }
 
+export function fetchStatbankApiDataQuery(urlOrId: string, jsonQuery: string) {
+  const baseUrl: string = app?.config?.['ssb.pxwebapi.baseUrl']
+    ? app.config['ssb.pxwebapi.baseUrl']
+    : 'https://data.ssb.no/api/v0/no'
+  let data: object | JSONstat | null = null
+  try {
+    let url = `${baseUrl}/table/${urlOrId}`
+    if (isUrl(urlOrId)) {
+      url = urlOrId as string
+    }
+    data = fetchData(url, jsonQuery && JSON.parse(jsonQuery), undefined)
+  } catch (e) {
+    const message = `Failed to fetch data from statbankApi: ${urlOrId} (${e})`
+    log.error(message)
+  }
+  return data
+}
+
 export function getStatbankApiKey(content: Content<DataSource>): string {
   return content._id
 }
