@@ -20,7 +20,7 @@
           <config>
             <option value="mainSubject">Hovedemne</option>
             <option value="subSubject">Delemne</option>
-            <option value="noSubject">Ingen</option>
+            <option value=" ">Ingen</option>
           </config>
         </input>
         <input type="TextLine" name="subjectCode">

@@ -409,7 +409,6 @@ function parseMetaInfoData(
 
 function getSubjectsPage(page: DefaultPage, req: XP.Request, language: string): Array<string> {
   const allMainSubjects: Array<SubjectItem> = getMainSubjects(req, language === 'en' ? 'en' : 'nb')
-  log.info('AllMainSubject: ' + JSON.stringify(allMainSubjects, null, 4))
   const allSubSubjects: Array<SubjectItem> = getSubSubjects(req, language === 'en' ? 'en' : 'nb')
   const subjects: Array<string> = []
   const subTopics: Array<string> = page.data.subtopic ? util.data.forceArray(page.data.subtopic) : []
