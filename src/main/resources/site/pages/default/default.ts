@@ -78,8 +78,8 @@ export function get(req: XP.Request): XP.Response {
 
   const ingress: string | undefined = page.data.ingress
     ? processHtml({
-      value: page.data.ingress.replace(/&nbsp;/g, ' '),
-    })
+        value: page.data.ingress.replace(/&nbsp;/g, ' '),
+      })
     : undefined
   const showIngress: string | boolean | undefined = ingress && page.type === 'mimir:page'
 
@@ -279,23 +279,23 @@ export function get(req: XP.Request): XP.Response {
   const alertOptions: MunicipalityOptions | InformationAlertOptions =
     pageConfig && pageConfig.pageType === 'municipality'
       ? ({
-        municipality,
-        municipalPageType,
-      } as MunicipalityOptions)
+          municipality,
+          municipalPageType,
+        } as MunicipalityOptions)
       : ({
-        pageType: page.type,
-        pageTypeId: page._id,
-        statbankWeb: statbankFane || page._path === '/ssb/statbank',
-      } as InformationAlertOptions)
+          pageType: page.type,
+          pageTypeId: page._id,
+          statbankWeb: statbankFane || page._path === '/ssb/statbank',
+        } as InformationAlertOptions)
 
   const alerts: AlertType = alertsForContext(pageConfig, alertOptions)
   const body: string = bodyWithBreadCrumbs ? breadcrumbComponent.body : thymeleafRenderBody
   const bodyWithAlerts: XP.Response = alerts.length
     ? addAlerts(alerts, body, pageContributions, req)
     : ({
-      body,
-      pageContributions,
-    } as XP.Response)
+        body,
+        pageContributions,
+      } as XP.Response)
 
   return {
     body: `<!DOCTYPE html>${bodyWithAlerts.body}`,
@@ -459,18 +459,18 @@ function parseStatbankFrameContent(statbankFane: boolean, req: XP.Request, page:
   // Since the fallback will only either be in bokmål or english, we will have to run two queries
   const statisticInXP: Content<Statistics> | undefined = req.params.shortname
     ? query<Content<Statistics>>({
-      count: 1,
-      query: `_path LIKE "*/${req.params.shortname}" AND language = "${pageLanguage}"`,
-      contentTypes: [`${app.name}:statistics`],
-    }).hits[0]
+        count: 1,
+        query: `_path LIKE "*/${req.params.shortname}" AND language = "${pageLanguage}"`,
+        contentTypes: [`${app.name}:statistics`],
+      }).hits[0]
     : undefined
 
   const nynorskStatisticInXP: Content<Statistics> | undefined = req.params.shortname
     ? query<Content<Statistics>>({
-      count: 1,
-      query: `_path LIKE "*/${req.params.shortname}" AND language = "nn"`,
-      contentTypes: [`${app.name}:statistics`],
-    }).hits[0]
+        count: 1,
+        query: `_path LIKE "*/${req.params.shortname}" AND language = "nn"`,
+        contentTypes: [`${app.name}:statistics`],
+      }).hits[0]
     : undefined
 
   if (statbankFane) {
