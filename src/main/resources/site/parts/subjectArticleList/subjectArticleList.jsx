@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { Link, Button, Divider, Dropdown } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
 import { ChevronDown } from 'react-feather'
-import Truncate from 'react-truncate'
 import axios from 'axios'
 
 /* TODO:
@@ -80,11 +79,7 @@ function SubjectArticleList(props) {
               <Link href={article.url} className='ssb-link header' standAlone>
                 {article.title}
               </Link>
-              <p>
-                <Truncate lines={2} className='article-list-ingress'>
-                  {article.preface}
-                </Truncate>
-              </p>
+              <p className='truncate-2-lines'>{article.preface}</p>
               <time dateTime={article.publishDate}>{article.publishDateHuman}</time>
             </li>
           )
