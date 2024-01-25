@@ -16,6 +16,7 @@ function addBabelSupport(cfg) {
       presets: [
         [
           '@babel/preset-env',
+          '@babel/preset-typescript',
           {
             // false means polyfill not required runtime
             useBuiltIns: false,

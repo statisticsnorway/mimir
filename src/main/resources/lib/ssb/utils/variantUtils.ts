@@ -12,11 +12,8 @@ import {
   getMonth,
   getYear,
   getDate,
-  isAfter,
   formatDate,
   isSameOrBefore,
-  addDays,
-  isBefore,
 } from '/lib/ssb/utils/dateUtils'
 import * as util from '/lib/util'
 import { type OmStatistikken, type Statistics } from '/site/content-types'
@@ -294,28 +291,6 @@ export function getReleasesForDay(
     }
     return acc
   }, [])
-}
-
-export function filterOnComingReleases(releases: Array<Release>, count?: number, startDay?: string): Array<Release> {
-  let start: Date
-  if (!startDay) {
-    // To make sure todays publications shows until actually published
-    const serverOffsetInMs: number =
-      app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
-    start = new Date(new Date().getTime() + serverOffsetInMs)
-  } else {
-    start = new Date(startDay)
-  }
-
-  if (!!count) {
-    const upperLimit = addDays(start, count)
-    return releases.filter(
-      (release: Release) =>
-        isAfter(new Date(release.publishTime), start) && isBefore(new Date(release.publishTime), upperLimit)
-    )
-  } else {
-    return releases.filter((release: Release) => isAfter(new Date(release.publishTime), start))
-  }
 }
 
 export function checkVariantReleaseDate(
