@@ -1,9 +1,9 @@
 import { filterReleasesIntoArrays } from './filterReleasesUtils'
 
 describe('Upcoming Releases', () => {
+  let count = 10
+  let serverOffsetInMs = 0
   test('content releases filters correctly for today before 8 AM', () => {
-    const count = 10
-    const serverOffsetInMs = 0
     const now = new Date('2023-11-08T07:55:00.000Z')
     const expectedContentOutput = {
       contentReleasesNextXDays: contentReleasesTestingData.slice(1, 3),
@@ -13,8 +13,6 @@ describe('Upcoming Releases', () => {
     expect(result).toEqual(expectedContentOutput)
   })
   test('content releases filters correctly for today after 8 AM', () => {
-    const count = 10
-    const serverOffsetInMs = 0
     const now = new Date('2023-11-08T08:05:00.000Z')
     const expectedContentOutput = {
       contentReleasesNextXDays: contentReleasesTestingData.slice(2, 3),
@@ -26,7 +24,6 @@ describe('Upcoming Releases', () => {
 
   test('content releases filters correctly for day before first release and next 2 years', () => {
     const count = 2 * 365
-    const serverOffsetInMs = 0
     const now = new Date('2023-11-01T08:05:00.000Z')
     const expectedContentOutput = {
       contentReleasesNextXDays: contentReleasesTestingData,
@@ -37,8 +34,7 @@ describe('Upcoming Releases', () => {
   })
 
   test('content releases filters correctly for today before 8 AM using locale time', () => {
-    const count = 10
-    const serverOffsetInMs = 60 * 60 * 1000
+    serverOffsetInMs = 60 * 60 * 1000
     const now = new Date('08 Nov 2023 07:55:00 GMT+1')
     const expectedContentOutput = {
       contentReleasesNextXDays: contentReleasesTestingData.slice(1, 3),
