@@ -50,7 +50,6 @@ function renderPart(req: XP.Request): XP.Response | string {
   const props: MenuBoxProps = {
     boxes,
     height,
-    anchor: part.config.anchor ?? '',
   }
 
   return r4XpRender('MenuBox', props, req)
@@ -92,9 +91,12 @@ function getHref(menuConfig: MenuConfig): string {
   if (menuConfig.urlSrc && menuConfig.urlSrc._selected === 'manual') {
     return menuConfig.urlSrc.manual.url
   } else if (menuConfig.urlSrc && menuConfig.urlSrc.content) {
-    return pageUrl({
+    const url = pageUrl({
       id: menuConfig.urlSrc.content.contentId,
     })
+    if (menuConfig.urlSrc.content.anchor) {
+      return url + '#' + menuConfig.urlSrc.content.anchor
+    } else return url
   }
   return ''
 }
@@ -114,7 +116,6 @@ function getTitleSize(title: string): string {
 interface MenuBoxProps {
   boxes: Array<MenuItem>
   height: string
-  anchor: string
 }
 
 interface MenuConfig {
@@ -135,6 +136,7 @@ interface hrefContent {
   _selected: 'content'
   content: {
     contentId: string
+    anchor: string
   }
 }
 

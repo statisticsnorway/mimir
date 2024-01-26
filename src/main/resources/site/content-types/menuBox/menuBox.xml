@@ -4,20 +4,20 @@
   <super-type>base:structured</super-type>
   <form>
     <item-set name="menu">
-      <occurrences minimum="0" maximum="99"/>
+      <occurrences minimum="0" maximum="99" />
       <label>Kort</label>
       <items>
         <input type="TextLine" name="title">
           <label>Tittel</label>
-          <occurrences minimum="0" maximum="1"/>
+          <occurrences minimum="0" maximum="1" />
         </input>
         <input type="TextLine" name="subtitle">
           <label>Undertittel</label>
-          <occurrences minimum="0" maximum="1"/>
+          <occurrences minimum="0" maximum="1" />
         </input>
 
         <input name="image" type="imageSelector">
-          <occurrences minimum="0" maximum="1"/>
+          <occurrences minimum="0" maximum="1" />
           <label>Bilde</label>
           <config>
             <allowPath>${site}</allowPath>
@@ -27,7 +27,7 @@
         <option-set name="urlSrc">
           <label>Lenkemål</label>
           <expanded>true</expanded>
-          <occurrences minimum="1" maximum="1"/>
+          <occurrences minimum="1" maximum="1" />
           <options minimum="1" maximum="1">
             <option name="manual">
               <label>Url</label>
@@ -36,7 +36,7 @@
               <items>
                 <input name="url" type="TextLine">
                   <label>Kildelenke</label>
-                  <occurrences minimum="1" maximum="1"/>
+                  <occurrences minimum="1" maximum="1" />
                 </input>
               </items>
             </option>
@@ -46,8 +46,12 @@
               <items>
                 <input name="contentId" type="ContentSelector">
                   <label>Relatert innhold</label>
-                  <occurrences minimum="1" maximum="1"/>
-                  <config/>
+                  <occurrences minimum="1" maximum="1" />
+                  <config />
+                </input>
+                <input name="anchor" type="TextLine">
+                  <label>Anker som lenkekortet skal peke til</label>
+                  <occurrences minimum="0" maximum="1" />
                 </input>
               </items>
             </option>
