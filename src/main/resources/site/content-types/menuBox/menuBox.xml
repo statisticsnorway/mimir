@@ -50,8 +50,12 @@
                   <config />
                 </input>
                 <input name="anchor" type="TextLine">
-                  <label>Anker som lenkekortet skal peke til</label>
+                  <label>Anker som lenkekortet skal peke til. Ingen mellomrom, æøå eller spesialtegn.</label>
+                  <help-text>OBS: Kun bokstaver a-z, tall og bindestrek/underscore er tillatt!</help-text>
                   <occurrences minimum="0" maximum="1" />
+                  <config>
+                    <regexp>[A-Za-z0-9_-]</regexp>
+                  </config>
                 </input>
               </items>
             </option>
