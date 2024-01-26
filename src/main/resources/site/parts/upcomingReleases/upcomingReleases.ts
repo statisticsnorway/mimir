@@ -13,7 +13,11 @@ import {
   prepareRelease,
   getAllReleases,
 } from '/lib/ssb/utils/variantUtils'
-import { filterReleasesIntoArrays, filterOnComingReleases } from '/lib/ssb/utils/filterReleasesUtils'
+import {
+  filterReleasesIntoArrays,
+  filterOnComingReleases,
+  type PreparedUpcomingRelease,
+} from '/lib/ssb/utils/filterReleasesUtils'
 import { type StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
 import { render } from '/lib/enonic/react4xp'
 
@@ -29,13 +33,6 @@ export function preview(req: XP.Request) {
   return renderPart(req)
 }
 
-export function filterReleases(contentReleases: Array<PreparedUpcomingRelease>, count: number) {
-  const serverOffsetInMs: number =
-    app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
-
-  return filterReleasesIntoArrays(contentReleases, count, serverOffsetInMs, new Date())
-}
-
 function renderPart(req: XP.Request) {
   const content = getContent()
   if (!content) throw Error('No page found')
@@ -45,6 +42,9 @@ function renderPart(req: XP.Request) {
 
   const currentLanguage: string = content.language ? content.language : 'nb'
   const count: number = parseInt(component.config.numberOfDays)
+  const serverOffsetInMs: number =
+    app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
+
   const buttonTitle: string = localize({
     key: 'button.showAll',
     locale: currentLanguage,
@@ -64,7 +64,7 @@ function renderPart(req: XP.Request) {
     const allReleases: Array<Release> = getAllReleases(statistics)
 
     // All statistics from today and a number of days
-    const releasesFiltered: Array<Release> = filterOnComingReleases(allReleases, count)
+    const releasesFiltered: Array<Release> = filterOnComingReleases(allReleases, serverOffsetInMs, count)
 
     // Choose the right variant and prepare the date in a way it works with the groupBy function
     const releasesPrepped: Array<PreparedStatistics> = releasesFiltered.map((release: Release) =>
@@ -110,7 +110,12 @@ function renderPart(req: XP.Request) {
     }
   })
 
-  const { contentReleasesNextXDays, contentReleasesAfterXDays } = filterReleases(contentReleases, count)
+  const { contentReleasesNextXDays, contentReleasesAfterXDays } = filterReleasesIntoArrays(
+    contentReleases,
+    count,
+    serverOffsetInMs,
+    new Date()
+  )
 
   const props: PartProps = {
     title: content.displayName,
@@ -146,16 +151,4 @@ interface PartProps {
   statisticsPageUrlText: string
   contentReleasesNextXDays: Array<PreparedUpcomingRelease>
   contentReleasesAfterXDays: Array<PreparedUpcomingRelease>
-}
-interface PreparedUpcomingRelease {
-  id: string
-  name: string
-  type: string
-  date: string
-  mainSubject: string
-  day: string
-  month: string
-  monthName: string
-  year: string
-  upcomingReleaseLink?: string
 }

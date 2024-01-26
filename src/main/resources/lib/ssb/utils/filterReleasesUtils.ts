@@ -1,4 +1,5 @@
 import { isAfter, addDays, isBefore, isSameDay } from 'date-fns'
+import { type Release } from '/lib/ssb/utils/variantUtils'
 
 export function filterReleasesIntoArrays(
   contentReleases: Array<PreparedUpcomingRelease>,
@@ -7,7 +8,7 @@ export function filterReleasesIntoArrays(
   nowServerTime: Date
 ) {
   let start = new Date(nowServerTime.getTime() + serverOffsetInMs)
-  const limit = addDays(start, count)
+  const upperLimit = addDays(start, count)
   // Content releases has date at midnight, not correct publish time at 8 AM
   const publishTime = new Date(nowServerTime.setHours(8) + serverOffsetInMs)
 
@@ -19,9 +20,9 @@ export function filterReleasesIntoArrays(
   const contentReleasesAfterXDays: PreparedUpcomingRelease[] = []
 
   for (const release of contentReleases) {
-    if (isSameDayOrAfter(new Date(release.date), start) && isBefore(new Date(release.date), limit)) {
+    if (isSameDayOrAfter(new Date(release.date), start) && isBefore(new Date(release.date), upperLimit)) {
       contentReleasesNextXDays.push(release)
-    } else if (isSameDayOrAfter(new Date(release.date), limit)) {
+    } else if (isSameDayOrAfter(new Date(release.date), upperLimit)) {
       contentReleasesAfterXDays.push(release)
     }
   }
@@ -29,12 +30,15 @@ export function filterReleasesIntoArrays(
   return { contentReleasesNextXDays, contentReleasesAfterXDays }
 }
 
-export function filterOnComingReleases(releases: Array<Release>, count?: number, startDay?: string): Array<Release> {
+export function filterOnComingReleases(
+  releases: Array<Release>,
+  serverOffsetInMs: number,
+  count?: number,
+  startDay?: string
+): Array<Release> {
   let start: Date
   if (!startDay) {
     // To make sure todays publications shows until actually published
-    const serverOffsetInMs: number =
-      app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
     start = new Date(new Date().getTime() + serverOffsetInMs)
   } else {
     start = new Date(startDay)
@@ -66,17 +70,4 @@ export interface PreparedUpcomingRelease {
   monthName: string
   year: string
   upcomingReleaseLink?: string
-}
-
-export interface Release {
-  publishTime: string
-  periodFrom: string
-  periodTo: string
-  frequency: string
-  variantId: string
-  statisticId: number
-  shortName: string
-  statisticName: string
-  statisticNameEn: string
-  status: string
 }
