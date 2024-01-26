@@ -19,5 +19,10 @@
       </config>
       <default>default</default>
     </input>
+    <input name="anchor" type="TextLine">
+      <label>Anker for å lenke direkte til lenkekort, med scroll-down</label>
+      <label>Anker</label>
+      <occurrences minimum="0" maximum="1"/>
+    </input>
   </form>
 </part>

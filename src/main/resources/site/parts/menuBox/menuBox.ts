@@ -50,6 +50,7 @@ function renderPart(req: XP.Request): XP.Response | string {
   const props: MenuBoxProps = {
     boxes,
     height,
+    anchor: part.config.anchor ?? '',
   }
 
   return r4XpRender('MenuBox', props, req)
@@ -113,6 +114,7 @@ function getTitleSize(title: string): string {
 interface MenuBoxProps {
   boxes: Array<MenuItem>
   height: string
+  anchor: string
 }
 
 interface MenuConfig {

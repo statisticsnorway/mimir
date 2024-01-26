@@ -4,7 +4,7 @@ import { Card, Text } from '@statisticsnorway/ssb-component-library'
 
 const MenuBox = (props) => {
   return (
-    <section className='xp-part menu-box container'>
+    <section className='xp-part menu-box container' id={props.anchor || undefined}>
       <div className='menu-boxes'>
         {props.boxes.map((box, index) => {
           return (
@@ -41,6 +41,7 @@ MenuBox.propTypes = {
     })
   ),
   height: PropTypes.string,
+  anchor: PropTypes.string,
 }
 
 export default (props) => <MenuBox {...props} />
