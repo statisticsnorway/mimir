@@ -3,30 +3,8 @@
   .container {
     z-index: 3;
   }
-  .container >div {
+  .sticky-content {
     min-height: 92px;
-    @include media-breakpoint-down(md) {
-      flex-direction: column !important; // Override d-flex
-    }
-  }
-  .title-container {
-    min-height: 92px;
-    @include media-breakpoint-down(md) {
-      width: 100%;
-      justify-content: start;
-      
-      .title-choose-municipality {
-        padding: 0;
-      }
-    }
-    @include media-breakpoint-down(sm) {
-      .municipality {
-        max-width: 70vw;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-    }
   }
   .opacity-zero {
     opacity: 0;
@@ -42,16 +20,20 @@
   .subtitle {
     font-size: 14px;
   }
-  .dropdown {
-    left: 0;
+  #search-container {
+    display: flex;
+    align-items: center;
+
+    .change-municipality {
+      margin-right: $spacer * 1.5;
+    }
+
+    .choose-municipality-search {
+      display: flex;
+      align-items: center;
+    } 
   }
-  .dropdown-menu {
-    left: 0;
-    overflow-y: auto;
-    overflow-x: hidden;
-    max-height: 30vh;
-    min-width: 100%;
-  }
+
   .show-map {
     margin-left: 30px;
     text-decoration: none;
@@ -116,35 +98,27 @@
     outline: inherit;
   }
 
-  #search-container {
-    display: flex;
-    align-items: center;
-
-    .change-municipality {
-      margin-right: $spacer * 1.5;
-    }
-  }
-  .card {
-    @include media-breakpoint-up(lg) {
-      display: flex;
-      flex-direction: row;
-    }
-    align-items: center;
-    border: none;
-  }
+  
   @include media-breakpoint-down(md) {
+    .title-container {
+      min-height: 0;
+    }
+    .sticky-content {
+      min-height: 0;
+    }
     .title-choose-municipality {
       padding-left: 20px;
       font-size: 28px;
     }
-    .card {
-      border-radius: 0;
-      align-items: normal;
+
+    .container >div {
+      flex-direction: column !important; // Override d-flex
     }
+    
     #search-container {
       border-top: 1px solid $ssb-green-2;
       width: 100%;
-      top: 92px;
+      top: 0;
       position: absolute;
       border-bottom: 1px solid #aaaaaa;
       background-color: #ffffff;
@@ -153,8 +127,27 @@
       &.choose-municipality-search {
         border: none;
       }
-      
-      &.hide-search {
+      .hide-map {
+        display: none;
+      }
+    }
+  
+    &.fixed-top{
+      .sticky-content {
+        min-height: 50px;
+      }
+      .title-container {
+        width: 100%;
+        justify-content: start;
+        min-height: 50px;
+        margin-top: 25px;
+        
+        .title-choose-municipality {
+          padding: 0;
+        }
+      }
+
+      #search-container {
         display: none;
       }
     }
@@ -162,9 +155,13 @@
   @include media-breakpoint-down(sm) {
     .title-container {
       margin-left: 40px;
-    }
-    #search-container {
-      padding: 20px;
+
+      .municipality {
+        max-width: 70vw;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
     }
   }
 }
