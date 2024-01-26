@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { requestJobLogDetails } from '/react4xp/dashboard/containers/Statistics/actions'
 import { WebSocketContext } from '/react4xp/dashboard/utils/websocket/WebsocketProvider'
 import { selectJobLog, selectJobLogDetailsLoaded } from '/react4xp/dashboard/containers/Statistics/selectors'
-import { default as format } from 'date-fns/format'
+import { default as format } from '/format'
 
 export function StatisticsLogJob(props) {
   const io = useContext(WebSocketContext)
