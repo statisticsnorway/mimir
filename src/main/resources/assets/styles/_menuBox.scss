@@ -22,10 +22,15 @@
           & > a {
             height: 100%;
           }
+
+          & > div {
+            height: 100%;
+          }
   
           .card-content {
             height: 100%;
-  
+
+            
             .card-text {
               width: 100%;
               display: -webkit-box;
@@ -41,7 +46,6 @@
           &.title-size-lg .card-content .card-text{
             -webkit-line-clamp: 1;
           }
-  
         }
       }
       
