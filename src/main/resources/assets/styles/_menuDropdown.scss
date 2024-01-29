@@ -123,6 +123,10 @@
     .change-municipality {
       margin-right: $spacer * 1.5;
     }
+    .choose-municipality-search{
+      display: flex;
+      align-items: center;
+    }
   }
   .card {
     @include media-breakpoint-up(lg) {

@@ -1,9 +1,8 @@
 import { type Content } from '/lib/xp/content'
 import { assetUrl, getContent, getComponent, pageUrl, getSiteConfig, serviceUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
-import { render } from '/lib/thymeleaf'
-import { render as r4XpRender } from '/lib/enonic/react4xp'
-import { randomUnsafeString, scriptAsset } from '/lib/ssb/utils/utils'
+import { render } from '/lib/enonic/react4xp'
+import { randomUnsafeString } from '/lib/ssb/utils/utils'
 import {
   type MunicipalityWithCounty,
   municipalsWithCounties,
@@ -14,8 +13,6 @@ import {
 
 import { renderError } from '/lib/ssb/error/error'
 import { type MenuDropdown } from '/site/content-types'
-
-const view = resolve('./menuDropdown.html')
 
 export function get(req: RequestWithCode): XP.Response {
   try {
@@ -77,10 +74,13 @@ function renderPart(req: RequestWithCode): XP.Response {
     : undefined
   const reactUuid: string = randomUnsafeString()
 
-  const model: ThymeleafModel = {
+  const props: MenuDropdownProps = {
     modeMunicipality: component.config.modeMunicipality,
     displayName: page.displayName,
-    baseUrl,
+    ariaLabel: searchBarText,
+    placeholder: searchBarText,
+    items: municipalityItems,
+    baseUrl: baseUrl,
     dataPathAssetUrl,
     dataServiceUrl,
     municipality: municipality,
@@ -89,26 +89,7 @@ function renderPart(req: RequestWithCode): XP.Response {
     dropdownId: reactUuid,
   }
 
-  const thymeleafRender: string = render(view, model)
-
-  // Dropdown react object for sticky menu
-  return r4XpRender(
-    'site/parts/menuDropdown/DropdownMunicipality',
-    {
-      ariaLabel: searchBarText,
-      placeholder: searchBarText,
-      items: municipalityItems,
-      baseUrl: baseUrl,
-    },
-    req,
-    {
-      id: reactUuid,
-      body: thymeleafRender,
-      pageContributions: {
-        bodyEnd: [scriptAsset('js/map.js'), scriptAsset('js/menuDropdown.js')],
-      },
-    }
-  )
+  return render('site/parts/menuDropdown/menuDropdown', props, req)
 }
 
 interface Municipality {
@@ -116,9 +97,12 @@ interface Municipality {
   title: string
 }
 
-interface ThymeleafModel {
+interface MenuDropdownProps {
   modeMunicipality: boolean
   displayName: string
+  ariaLabel: string
+  placeholder: string
+  items: Municipality[]
   baseUrl: string
   dataPathAssetUrl: string
   dataServiceUrl: string
