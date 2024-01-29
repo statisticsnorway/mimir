@@ -50,11 +50,10 @@ function MenuDropdown(props) {
   const renderTitleContainer = () => {
     if (modeMunicipality) {
       return (
-        <div className='title-container opacity-zero'>
+        <div className='title-container'>
           <div className='roboto-plain subtitle d-none d-md-block'>{displayName}</div>
           <div className='roboto-bold municipality'>
-            {municipality && <div>{municipalityName}</div>}
-            {municipality && <div>{`(${municipality.county.name})`}</div>}
+            {municipality && <div>{`${municipalityName} (${municipality.county.name})`}</div>}
           </div>
         </div>
       )
