@@ -1,9 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Dropdown } from '@statisticsnorway/ssb-component-library'
+import { Dropdown, ButtonTertiary } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
 
 function MenuDropdown(props) {
-  const { baseUrl, displayName, modeMunicipality, municipality, municipalityName, municipalityList } = props
+  const {
+    baseUrl,
+    dataPathAssetUrl,
+    dataServiceUrl,
+    displayName,
+    modeMunicipality,
+    municipality,
+    municipalityName,
+    municipalityList,
+  } = props
   const stickyMenuRef = useRef(null)
   const [fixedClass, setFixedClass] = useState('')
 
@@ -83,6 +92,27 @@ function MenuDropdown(props) {
             />
           </div>
         </div>
+        <div className='show-map'>{renderShowMapButton()}</div>
+      </div>
+    )
+  }
+
+  const renderShowMapButton = () => {
+    return (
+      <ButtonTertiary
+        id='show-map'
+        header='Velg i kart'
+        className={`button-margin-top d-none d-lg-inline-block`}
+      ></ButtonTertiary>
+    )
+  }
+
+  const renderMap = () => {
+    return (
+      <div id='js-show-map' className='container collapse'>
+        <section className='xp-part part-map'>
+          <div id='map' className='map-border' data-path={dataPathAssetUrl} data-service={dataServiceUrl}></div>
+        </section>
       </div>
     )
   }

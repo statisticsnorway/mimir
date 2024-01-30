@@ -1,7 +1,8 @@
 import { type Content } from '/lib/xp/content'
 import { assetUrl, getContent, getComponent, pageUrl, getSiteConfig, serviceUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
-import { render } from '/lib/enonic/react4xp'
+import { render } from '/lib/thymeleaf'
+import { render as r4XpRender } from '/lib/enonic/react4xp'
 import { randomUnsafeString } from '/lib/ssb/utils/utils'
 import {
   type MunicipalityWithCounty,
@@ -13,6 +14,8 @@ import {
 
 import { renderError } from '/lib/ssb/error/error'
 import { type MenuDropdown } from '/site/content-types'
+
+const view = resolve('./menuDropdown.html')
 
 export function get(req: RequestWithCode): XP.Response {
   try {
@@ -89,7 +92,15 @@ function renderPart(req: RequestWithCode): XP.Response {
     dropdownId: reactUuid,
   }
 
-  return render('site/parts/menuDropdown/menuDropdown', props, req)
+  return r4XpRender('site/parts/menuDropdown/menuDropdown', props, req, {
+    id: 'menu-dropdown',
+    body: render(view, {
+      menuDropdownId: 'menu-dropdown',
+      modeMunicipality: component.config.modeMunicipality,
+      dataPathAssetUrl,
+      dataServiceUrl,
+    }),
+  })
 }
 
 interface Municipality {
