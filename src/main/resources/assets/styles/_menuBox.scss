@@ -18,10 +18,6 @@
       &.fixed-height {
         @include media-breakpoint-up(md) {
           height: 370px;
-  
-          & > a {
-            height: 100%;
-          }
 
           & > div {
             height: 100%;
@@ -30,7 +26,6 @@
           .card-content {
             height: 100%;
 
-            
             .card-text {
               width: 100%;
               display: -webkit-box;
