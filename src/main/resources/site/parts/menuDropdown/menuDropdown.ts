@@ -3,7 +3,7 @@ import { assetUrl, getContent, getComponent, pageUrl, getSiteConfig, serviceUrl 
 import { localize } from '/lib/xp/i18n'
 import { render } from '/lib/thymeleaf'
 import { render as r4XpRender } from '/lib/enonic/react4xp'
-import { randomUnsafeString } from '/lib/ssb/utils/utils'
+import { randomUnsafeString, scriptAsset } from '/lib/ssb/utils/utils'
 import {
   type MunicipalityWithCounty,
   municipalsWithCounties,
@@ -100,6 +100,9 @@ function renderPart(req: RequestWithCode): XP.Response {
       dataPathAssetUrl,
       dataServiceUrl,
     }),
+    pageContributions: {
+      bodyEnd: [scriptAsset('js/map.js'), scriptAsset('js/menuDropdown.js')],
+    },
   })
 }
 

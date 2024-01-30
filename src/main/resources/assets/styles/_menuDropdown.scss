@@ -11,8 +11,10 @@
     font-size: 20px;
     line-height: normal;
   }
-  .title-container {    
-    opacity: 0;
+  .title-container {  
+    &.opacity-zero {
+      opacity: 0;
+    }  
   }
   .subtitle {
     font-size: 14px;
@@ -44,10 +46,10 @@
     &:focus {
       border: $ssb-green-4 1px solid;
     }
-    i {
+    svg {
       color: $green4;
     }
-    i.map {
+  /*   i.map {
       padding: 3px 5px 5px 5px;
     }
     i.chevron svg {
@@ -63,7 +65,7 @@
           transform: rotate(-180deg);
           transition: all .5s;
         }
-    }
+    } */
     @include media-breakpoint-down(md) {
       position: absolute;
       top: 30px;

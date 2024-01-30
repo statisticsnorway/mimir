@@ -12,11 +12,17 @@ function init() {
     let animate
     const map = $('#js-show-map')
 
-    $('.show-map').on('click', (e) => {
-      e.preventDefault()
-      e.stopPropagation()
+    $('.show-map').on('click', () => {
+      console.log('Klikk på kart')
+      if (map.hasClass('collapse')) {
+        map.removeClass('collapse')
+      } else {
+        map.addClass('collapse')
+      }
 
-      const el = $('.part-menu-dropdown')[0]
+      //map.collapse('show')
+
+      /* const el = $('.part-menu-dropdown')[0]
 
       const { top } = el.getBoundingClientRect()
 
@@ -41,10 +47,10 @@ function init() {
               setTimeout(onSwingTimeout, 50)
             }
           )
-      }
+      } */
     })
 
-    map.on('show.bs.collapse', () => {
+    /* map.on('show.bs.collapse', () => {
       map.parent().addClass('map-container')
       $('.show-map').attr('aria-expanded', 'true').addClass('active')
 
@@ -65,7 +71,7 @@ function init() {
       map.parent().removeClass('map-container')
       $('.show-map').attr('aria-expanded', 'false').removeClass('active')
       map.css('transition', 'none')
-    })
+    }) */
 
     $('.part-menu-dropdown').each((i, el) => {
       $(window).on('scroll', () => {

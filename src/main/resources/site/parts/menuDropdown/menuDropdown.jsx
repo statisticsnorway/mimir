@@ -1,20 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Dropdown, ButtonTertiary } from '@statisticsnorway/ssb-component-library'
+import { Dropdown } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
+import { ChevronDown, ChevronUp } from 'react-feather'
 
 function MenuDropdown(props) {
-  const {
-    baseUrl,
-    dataPathAssetUrl,
-    dataServiceUrl,
-    displayName,
-    modeMunicipality,
-    municipality,
-    municipalityName,
-    municipalityList,
-  } = props
+  const { baseUrl, displayName, modeMunicipality, municipality, municipalityName, municipalityList } = props
   const stickyMenuRef = useRef(null)
   const [fixedClass, setFixedClass] = useState('')
+  const [mapOpen, setMapOpen] = useState(false)
 
   const stickyMenu = () => {
     const stickyMenu = stickyMenuRef.current
@@ -59,7 +52,7 @@ function MenuDropdown(props) {
   const renderTitleContainer = () => {
     if (modeMunicipality) {
       return (
-        <div className='title-container'>
+        <div className='title-container opacity-zero'>
           <div className='roboto-plain subtitle d-none d-md-block'>{displayName}</div>
           <div className='roboto-bold municipality'>
             {municipality && <div>{`${municipalityName} (${municipality.county.name})`}</div>}
@@ -92,28 +85,17 @@ function MenuDropdown(props) {
             />
           </div>
         </div>
-        <div className='show-map'>{renderShowMapButton()}</div>
+        {modeMunicipality && renderShowMapButton()}
       </div>
     )
   }
 
   const renderShowMapButton = () => {
     return (
-      <ButtonTertiary
-        id='show-map'
-        header='Velg i kart'
-        className={`button-margin-top d-none d-lg-inline-block`}
-      ></ButtonTertiary>
-    )
-  }
-
-  const renderMap = () => {
-    return (
-      <div id='js-show-map' className='container collapse'>
-        <section className='xp-part part-map'>
-          <div id='map' className='map-border' data-path={dataPathAssetUrl} data-service={dataServiceUrl}></div>
-        </section>
-      </div>
+      <button className='show-map text-nowrap btn-drawer-toggler' onClick={() => setMapOpen(!mapOpen)}>
+        <span className='d-none d-lg-inline-block'>Velg i kart</span>
+        {mapOpen ? <ChevronUp size='24' /> : <ChevronDown size='24' />}
+      </button>
     )
   }
 
@@ -144,8 +126,6 @@ MenuDropdown.propTypes = {
   placeholder: PropTypes.string,
   items: PropTypes.object,
   baseUrl: PropTypes.string,
-  dataPathAssetUrl: PropTypes.string,
-  dataServiceUrl: PropTypes.string,
   municipality: PropTypes.object,
   municipalityName: PropTypes.string,
   municipalityList: PropTypes.object,
