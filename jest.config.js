@@ -2,7 +2,7 @@ module.exports = {
   testMatch: ['**/src/**/*-test.[tj]s?(x)'],
   moduleNameMapper: {
     // Example: If relying on relative imports in ts files to make test work one might need to map the module here
-    // '^/admin/(.*)$': '<rootDir>/src/main/resources/admin/$1',
+    '^/lib/vendor/(.*)$': '<rootDir>/src/main/resources/lib/vendor/$1',
     // '^/lib/enonic/react4xp$': '<rootDir>/node_modules/@enonic/react4xp',
     // '^/lib/(?!xp)(.*)$': [
     //   '<rootDir>/src/main/resources/lib/$1',

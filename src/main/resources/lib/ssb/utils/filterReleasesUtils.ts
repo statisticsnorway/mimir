@@ -1,4 +1,4 @@
-import { isAfter, addDays, isBefore, isSameDay } from 'date-fns'
+import { isAfter, addDays, isBefore, isSameDay } from '/lib/vendor/dateFns'
 import { type Release } from '/lib/ssb/utils/variantUtils'
 
 export function filterReleasesIntoArrays(
