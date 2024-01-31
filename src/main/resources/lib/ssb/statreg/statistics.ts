@@ -7,7 +7,8 @@ import {
   ReleaseDatesVariant,
 } from '/lib/ssb/dashboard/statreg/types'
 import { HttpResponse } from '/lib/http-client'
-import { format, isDateBetween, isSameDay, isAfter } from '/lib/ssb/utils/dateUtils'
+import { format, isSameDay, isAfter } from '/lib/vendor/dateFns'
+import { isDateBetween } from '/lib/ssb/utils/dateUtils'
 
 import { ensureArray } from '/lib/ssb/utils/arrayUtils'
 import { fetchStatRegData } from '/lib/ssb/dashboard/statreg/common'

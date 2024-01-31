@@ -10,7 +10,8 @@ import {
   type Release as ReleaseVariant,
   getStatisticVariantsFromRepo,
 } from '/lib/ssb/repo/statisticVariant'
-import { stringToServerTime, parseISO } from '/lib/ssb/utils/dateUtils'
+import { stringToServerTime } from '/lib/ssb/utils/dateUtils'
+import { parseISO } from '/lib/vendor/dateFns'
 
 import { fromPartCache } from '/lib/ssb/cache/partCache'
 import { renderError } from '/lib/ssb/error/error'

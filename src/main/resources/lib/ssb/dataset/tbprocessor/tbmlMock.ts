@@ -1,7 +1,7 @@
 import '/lib/ssb/polyfills/nashorn'
 import { ByteSource } from '/lib/xp/content'
 import { HttpResponse } from '/lib/http-client'
-import { format } from '/lib/ssb/utils/dateUtils'
+import { format } from '/lib/vendor/dateFns'
 
 export function getTbmlMock(url: string): HttpResponse | null {
   if (app.config && app.config['ssb.mock.enable'] === 'true') {
