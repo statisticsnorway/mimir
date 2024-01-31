@@ -45,6 +45,7 @@
     "@babel/preset-env": "~7.23.9",
     "@babel/preset-react": "~7.23.3",
     "@babel/preset-stage-0": "~7.8.3",
+    "@babel/preset-typescript": "^7.23.3",
     "@babel/register": "~7.23.7",
     "@babel/runtime": "~7.23.8",
     "@enonic-types/global": "7.13.5",
@@ -154,7 +155,8 @@
   "babel": {
     "presets": [
       "@babel/env",
-      "@babel/react"
+      "@babel/react",
+      "@babel/preset-typescript"
     ]
   },
   "engines": {

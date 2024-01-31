@@ -7,9 +7,9 @@ import {
   addMonthNames,
   groupStatisticsByYearMonthAndDay,
   prepareRelease,
-  filterOnComingReleases,
   getAllReleases,
 } from '/lib/ssb/utils/variantUtils'
+import { filterOnComingReleases } from '/lib/ssb/utils/filterReleasesUtils'
 
 import { getAllStatisticsFromRepo } from '../../lib/ssb/statreg/statistics'
 
@@ -22,8 +22,15 @@ export const get = (req: XP.Request): XP.Response => {
 
   const language = req.params.language ? req.params.language : 'nb'
   const numberOfDays = showAll ? undefined : count
+  const serverOffsetInMs: number =
+    app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
   // All statistics from today and a number of days
-  const releasesFiltered: Array<Release> = filterOnComingReleases(allReleases, numberOfDays, req.params.start)
+  const releasesFiltered: Array<Release> = filterOnComingReleases(
+    allReleases,
+    serverOffsetInMs,
+    numberOfDays,
+    req.params.start
+  )
 
   // Choose the right variant and prepare the date in a way it works with the groupBy function
   const releasesPrepped: Array<PreparedStatistics> = releasesFiltered.map((release: Release) =>
