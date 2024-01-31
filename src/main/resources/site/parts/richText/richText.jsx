@@ -17,7 +17,11 @@ const RichText = ({ text, textType, inLayout }) => {
     }
   }
 
-  return <div className={inLayout ? '' : 'row'}>{renderText()}</div>
+  return (
+    <div style={{ background: 'blue' }} className={inLayout ? '' : 'row'}>
+      {renderText()}
+    </div>
+  )
 }
 
 RichText.propTypes = {

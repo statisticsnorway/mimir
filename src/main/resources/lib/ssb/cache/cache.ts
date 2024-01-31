@@ -1,4 +1,4 @@
-__non_webpack_require__('/lib/ssb/polyfills/nashorn')
+import '/lib/ssb/polyfills/nashorn'
 import { listener, send, EnonicEvent, EnonicEventData } from '/lib/xp/event'
 import { query, get, Content } from '/lib/xp/content'
 import { run } from '/lib/xp/context'

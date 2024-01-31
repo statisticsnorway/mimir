@@ -1,10 +1,10 @@
-const { query } = __non_webpack_require__('/lib/xp/content')
-const { getContent } = __non_webpack_require__('/lib/xp/portal')
+import { query } from '/lib/xp/content'
+import { getContent } from '/lib/xp/portal'
 
 const contentTypeName = `${app.name}:informationAlert`
 const oldContentTypeName = `${app.name}:statisticAlert` // remove when this content type is not in use anymore
 
-export const get = (key) => {
+export const get = (key: { key: string }) => {
   const content = query({
     contentTypes: [contentTypeName, oldContentTypeName],
     query: `_id = '${key.key}'`,
@@ -16,7 +16,7 @@ export const get = (key) => {
       }
 }
 
-export const list = (pageType, pageTypeId, statbankWeb) => {
+export const list = (pageType: string, pageTypeId: string, statbankWeb: boolean) => {
   const now = new Date()
   let queryString = `(data.informationAlertVariations.pages.pageIds IN ('${pageTypeId}') 
   OR data.informationAlertVariations.articles.articleIds IN ('${pageTypeId}'))`
@@ -30,7 +30,7 @@ export const list = (pageType, pageTypeId, statbankWeb) => {
     queryString = `(data.informationAlertVariations.statbank.selectAllStatbankPages = 'true')`
   }
 
-  const language = getContent().language === 'en' ? 'en' : 'nb' // Alerts are the same for bokmål and nynorsk
+  const language = getContent()?.language === 'en' ? 'en' : 'nb' // Alerts are the same for bokmål and nynorsk
   const languageQuery = language !== 'en' ? 'AND language != "en"' : 'AND language = "en"'
   return query({
     query: `${queryString} 

@@ -1,4 +1,4 @@
-__non_webpack_require__('/lib/ssb/polyfills/nashorn')
+import '/lib/ssb/polyfills/nashorn'
 
 import { query, get as getContent, Content, ContentsResult } from '/lib/xp/content'
 import { run, type ContextParams } from '/lib/xp/context'

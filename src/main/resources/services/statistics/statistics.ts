@@ -1,12 +1,9 @@
+import '/lib/ssb/polyfills/nashorn'
 import { run } from '/lib/xp/context'
-
-__non_webpack_require__('/lib/ssb/polyfills/nashorn')
-const { getAllStatisticsFromRepo } = __non_webpack_require__('/lib/ssb/statreg/statistics')
-const { handleRepoGet } = __non_webpack_require__('/lib/ssb/dashboard/statreg/repoUtils')
-
-const { publishDataset } = __non_webpack_require__('/lib/ssb/dataset/publish')
-
-const { cronContext } = __non_webpack_require__('/lib/ssb/cron/cron')
+import { getAllStatisticsFromRepo } from '/lib/ssb/statreg/statistics'
+import { handleRepoGet } from '/lib/ssb/dashboard/statreg/repoUtils'
+import { publishDataset } from '/lib/ssb/dataset/publishOld'
+import { cronContext } from '/lib/ssb/cron/cron'
 
 const toOption = (stat) => ({
   ...stat,
@@ -33,7 +30,7 @@ const filterByIds = (stats, filters) => {
   )
 }
 
-exports.get = (req) => {
+export function get(req: XP.Request) {
   return handleRepoGet(
     req,
     'Statistics',
@@ -43,7 +40,7 @@ exports.get = (req) => {
   )
 }
 
-exports.post = (req) => {
+export function post(req: XP.Request) {
   if (req.params.runPublishDataset === 'OK') {
     run(cronContext, publishDataset)
     return {
@@ -53,5 +50,10 @@ exports.post = (req) => {
       contentType: 'application/json',
       status: 200,
     }
+  }
+
+  return {
+    contentType: 'application/json',
+    status: 400,
   }
 }

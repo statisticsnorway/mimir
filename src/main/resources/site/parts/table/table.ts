@@ -39,7 +39,7 @@ export function preview(req: XP.Request, id?: string): XP.Response {
   return renderPart(req, id)
 }
 
-function getProps(req: XP.Request, tableId?: string): TableProps {
+export function getProps(req: XP.Request, tableId?: string): TableProps {
   const page = getContent<Content<Table>>()
   if (!page) throw Error('No page found')
 
@@ -126,8 +126,6 @@ function getProps(req: XP.Request, tableId?: string): TableProps {
     GA_TRACKING_ID: GA_TRACKING_ID,
   }
 }
-exports.getProps = getProps
-
 function renderPart(req: XP.Request, tableId?: string): XP.Response {
   const page = getContent<Content<Table>>()
   if (!page) throw Error('No page found')

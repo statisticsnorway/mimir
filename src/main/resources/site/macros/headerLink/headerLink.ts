@@ -5,13 +5,13 @@ import { render } from '/lib/enonic/react4xp'
 import { prepareText } from '/site/parts/links/links'
 import { type HeaderLink as HeaderLinkConfig } from '/site/macros/headerLink'
 
-export const macro = (context: XP.MacroContext) => {
+export const macro = (context: XP.MacroContext<HeaderLinkConfig>) => {
   return renderPart(context)
 }
 
-export const preview = (context: XP.MacroContext) => renderPart(context)
+export const preview = (context: XP.MacroContext<HeaderLinkConfig>) => renderPart(context)
 
-function renderPart(context: XP.MacroContext) {
+function renderPart(context: XP.MacroContext<HeaderLinkConfig>) {
   const { linkedContent, linkText } = context.params
 
   const content: Content | null = get({

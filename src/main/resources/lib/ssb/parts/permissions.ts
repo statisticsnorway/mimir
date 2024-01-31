@@ -1,4 +1,4 @@
-__non_webpack_require__('/lib/ssb/polyfills/nashorn')
+import '/lib/ssb/polyfills/nashorn'
 import { getPermissions } from '/lib/xp/content'
 import { get as getContext, PrincipalKey } from '/lib/xp/context'
 

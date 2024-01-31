@@ -1,8 +1,8 @@
-const { query } = __non_webpack_require__('/lib/xp/content')
+import { query } from '/lib/xp/content'
 
 const contentTypeName = `${app.name}:municipalityAlert`
 
-export const get = (key) => {
+export const get = (key: { key: string }) => {
   const content = query({
     contentTypes: [contentTypeName],
     query: `_id = '${key.key}'`,
@@ -14,13 +14,13 @@ export const get = (key) => {
       }
 }
 
-export const list = (municipalCode, municipalPageType) => {
+export const list = (municipalCode: string, municipalPageType: string) => {
   const now = new Date()
   return query({
     query: `(data.selectAllMunicipals = 'true' OR data.municipalCodes IN ('${municipalCode}')) 
     AND (data.municipalPageType IN ('${municipalPageType}') OR data.municipalPageType = 'showOnAll') 
     AND publish.from LIKE '*' 
     AND (publish.to NOT LIKE '*' OR publish.to > '${now.toISOString()}')`,
-    contentType: contentTypeName,
+    contentTypes: [contentTypeName],
   })
 }

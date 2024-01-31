@@ -1,12 +1,12 @@
-const { getComponent } = __non_webpack_require__('/lib/xp/portal')
-const { render } = __non_webpack_require__('/lib/thymeleaf')
+import { getComponent } from '/lib/xp/portal'
+import { render } from '/lib/thymeleaf'
+import { React4xp } from '/lib/enonic/react4xp'
 
-const { React4xp } = __non_webpack_require__('/lib/enonic/react4xp')
 const view = resolve('columns.html')
 
-exports.get = function (req) {
-  const component = getComponent()
-  const { size, title, hideTitle, verticalBorder } = component.config
+export function get(req: XP.Request): XP.Response {
+  const component = getComponent<XP.LayoutComponent.Columns>()!
+  const { size, title, hideTitle } = component.config
   const isGrid = component.config.isGrid && req.mode !== 'edit'
 
   const divider = new React4xp('Divider')
@@ -52,7 +52,7 @@ exports.get = function (req) {
         gridComponents.push({
           path: left.path,
           classes: `order-0 ${leftSize}${!prevRight && i !== 0 ? ` ${leftOffset}` : ''}`,
-          order: left.path.slice(-1), // Get the last char of the path (path i.e. /Rad_H/1/left/1)
+          order: left.path?.slice(-1), // Get the last char of the path (path i.e. /Rad_H/1/left/1)
           regionSide: 'left',
         })
       }
@@ -60,7 +60,7 @@ exports.get = function (req) {
         gridComponents.push({
           path: right.path,
           classes: `order-1 order-md-0 ${rightSize}${!left ? ` ${rightOffset}` : ''}`,
-          order: right.path.slice(-1),
+          order: right.path?.slice(-1),
           regionSide: 'right',
         })
       }
@@ -77,7 +77,6 @@ exports.get = function (req) {
     rightSize,
     isGrid,
     gridComponents,
-    verticalBorder,
   }
 
   const body =

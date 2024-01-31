@@ -15,11 +15,8 @@ import { datasetOrUndefined } from '/lib/ssb/cache/cache'
 import { type AccordionData } from '/site/parts/accordion/accordion'
 import { GA_TRACKING_ID } from '/site/pages/default/default'
 import { type Statistics } from '/site/content-types'
-
-const tableController: { getProps: (req: XP.Request, tableId: string) => object } =
-  __non_webpack_require__('../table/table')
-const highchartController: { preview: (req: XP.Request, id: string) => XP.Response } =
-  __non_webpack_require__('../highchart/highchart')
+import { getProps } from '../table/table'
+import { preview as highchartPreview } from '../highchart/highchart'
 
 export function get(req: XP.Request): XP.Response {
   try {
@@ -124,7 +121,7 @@ function getTablesAndFigures(
         ++tableIndex
         return getTableReturnObject(
           attachmentTablesFiguresMap[id],
-          tableController.getProps(req, id),
+          getProps(req, id),
           `${phrases.table} ${tableIndex}`,
           index
         )
@@ -132,7 +129,7 @@ function getTablesAndFigures(
         ++figureIndex
         return getFigureReturnObject(
           attachmentTablesFiguresMap[id],
-          highchartController.preview(req, id),
+          highchartPreview(req, id),
           `${phrases.figure} ${figureIndex}`,
           index
         )

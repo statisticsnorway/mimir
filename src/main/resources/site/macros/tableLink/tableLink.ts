@@ -1,11 +1,13 @@
+import { pageUrl } from '/lib/xp/portal'
 import { render } from '/lib/thymeleaf'
 
-const { pageUrl } = __non_webpack_require__('/lib/xp/portal')
-const { React4xp } = __non_webpack_require__('/lib/enonic/react4xp')
-const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
+import { React4xp } from '/lib/enonic/react4xp'
+import { renderError } from '/lib/ssb/error/error'
+import { TableLink } from '.'
+
 const view = resolve('./tableLink.html')
 
-exports.macro = function (context) {
+export function macro(context: XP.MacroContext<TableLink>) {
   try {
     return renderMacro(context)
   } catch (e) {
@@ -13,7 +15,7 @@ exports.macro = function (context) {
   }
 }
 
-const renderMacro = (context) => {
+const renderMacro = (context: XP.MacroContext<TableLink>) => {
   const linkSrc = context.params.relatedContent
     ? pageUrl({
         id: context.params.relatedContent,

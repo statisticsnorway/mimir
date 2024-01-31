@@ -1,4 +1,4 @@
-__non_webpack_require__('/lib/ssb/polyfills/nashorn')
+import '/lib/ssb/polyfills/nashorn'
 import { Node } from '/lib/xp/node'
 import { Repository } from '/lib/xp/repo'
 
