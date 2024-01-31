@@ -96,12 +96,9 @@ function renderPart(req: RequestWithCode): XP.Response {
     id: 'menu-dropdown',
     body: render(view, {
       menuDropdownId: 'menu-dropdown',
-      modeMunicipality: component.config.modeMunicipality,
-      dataPathAssetUrl,
-      dataServiceUrl,
     }),
     pageContributions: {
-      bodyEnd: [scriptAsset('js/map.js'), scriptAsset('js/menuDropdown.js')],
+      bodyEnd: [scriptAsset('js/map.js')],
     },
   })
 }

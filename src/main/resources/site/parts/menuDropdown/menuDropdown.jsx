@@ -4,7 +4,16 @@ import PropTypes from 'prop-types'
 import { ChevronDown, ChevronUp } from 'react-feather'
 
 function MenuDropdown(props) {
-  const { baseUrl, displayName, modeMunicipality, municipality, municipalityName, municipalityList } = props
+  const {
+    baseUrl,
+    dataPathAssetUrl,
+    dataServiceUrl,
+    displayName,
+    modeMunicipality,
+    municipality,
+    municipalityName,
+    municipalityList,
+  } = props
   const stickyMenuRef = useRef(null)
   const [fixedClass, setFixedClass] = useState('')
   const [mapOpen, setMapOpen] = useState(false)
@@ -90,9 +99,32 @@ function MenuDropdown(props) {
     )
   }
 
+  const openMap = () => {
+    setMapOpen(!mapOpen)
+    if (!mapOpen) {
+      console.log('\x1b[32m%s\x1b[0m', 'SCROLL')
+      window.scroll({
+        top: stickyMenuRef.current.offsetTop,
+        behavior: 'smooth',
+      })
+    }
+  }
+
+  const renderMap = () => {
+    return (
+      <div>
+        <div id='js-show-map' className={mapOpen ? 'container' : 'container collapse'}>
+          <section className='xp-part part-map'>
+            <div id='map' className='map-border' data-path={dataPathAssetUrl} data-service={dataServiceUrl}></div>
+          </section>
+        </div>
+      </div>
+    )
+  }
+
   const renderShowMapButton = () => {
     return (
-      <button className='show-map text-nowrap btn-drawer-toggler' onClick={() => setMapOpen(!mapOpen)}>
+      <button className='show-map text-nowrap btn-drawer-toggler' onClick={() => openMap()}>
         <span className='d-none d-lg-inline-block'>Velg i kart</span>
         {mapOpen ? <ChevronUp size='24' /> : <ChevronDown size='24' />}
       </button>
@@ -100,7 +132,7 @@ function MenuDropdown(props) {
   }
 
   return (
-    <div id='sticky-menu' className='w-100' ref={stickyMenuRef}>
+    <div id='sticky-menu' className='sticky-menu w-100' ref={stickyMenuRef}>
       <section className={`xp-part part-menu-dropdown d-print-none ${fixedClass}`}>
         <div className='container position-relative'>
           <div className='sticky-content d-flex flex-row align-items-center justify-content-between'>
@@ -109,6 +141,7 @@ function MenuDropdown(props) {
           </div>
         </div>
       </section>
+      {modeMunicipality && renderMap()}
       {!modeMunicipality && renderMunicipalityLinks()}
     </div>
   )
@@ -130,6 +163,8 @@ MenuDropdown.propTypes = {
   municipalityName: PropTypes.string,
   municipalityList: PropTypes.object,
   dropdownId: PropTypes.string,
+  dataPathAssetUrl: PropTypes.string,
+  dataServiceUrl: PropTypes.string,
 }
 
 export default (props) => <MenuDropdown {...props} />
