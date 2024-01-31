@@ -109,6 +109,7 @@ processResources {
     exclude '**/*.es'
     exclude '**/*.es6'
     exclude '**/*.ts'
+    exclude '**/*.test.js'
     exclude 'assets/js/**/*.js'
     include 'assets/js/bundle.js'
     exclude 'assets/styles/**/*.less'
