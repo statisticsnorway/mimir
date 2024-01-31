@@ -7,7 +7,8 @@ import {
   type StatisticInListing,
   type VariantInListing,
 } from '/lib/ssb/dashboard/statreg/types'
-import { formatDate, isAfter } from '/lib/ssb/utils/dateUtils'
+import { formatDate } from '/lib/ssb/utils/dateUtils'
+import { isAfter } from '/lib/vendor/dateFns'
 import { render as r4xpRender } from '/lib/enonic/react4xp'
 import { type Phrases } from '/lib/types/language'
 import { randomUnsafeString } from '/lib/ssb/utils/utils'

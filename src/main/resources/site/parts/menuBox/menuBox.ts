@@ -91,9 +91,12 @@ function getHref(menuConfig: MenuConfig): string {
   if (menuConfig.urlSrc && menuConfig.urlSrc._selected === 'manual') {
     return menuConfig.urlSrc.manual.url
   } else if (menuConfig.urlSrc && menuConfig.urlSrc.content) {
-    return pageUrl({
+    const url = pageUrl({
       id: menuConfig.urlSrc.content.contentId,
     })
+    if (menuConfig.urlSrc.content.anchor) {
+      return url + '#' + menuConfig.urlSrc.content.anchor
+    } else return url
   }
   return ''
 }
@@ -133,6 +136,7 @@ interface hrefContent {
   _selected: 'content'
   content: {
     contentId: string
+    anchor: string
   }
 }
 

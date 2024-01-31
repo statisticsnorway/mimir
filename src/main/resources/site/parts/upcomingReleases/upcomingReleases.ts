@@ -2,7 +2,8 @@ import { query, type Content } from '/lib/xp/content'
 import { getContent, getComponent, processHtml, serviceUrl, sanitizeHtml } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 import { type SubjectItem, getMainSubjects, getMainSubjectById } from '/lib/ssb/utils/subjectUtils'
-import { formatDate, format } from '/lib/ssb/utils/dateUtils'
+import { formatDate } from '/lib/ssb/utils/dateUtils'
+import { format } from '/lib/vendor/dateFns'
 import {
   type GroupedBy,
   type PreparedStatistics,

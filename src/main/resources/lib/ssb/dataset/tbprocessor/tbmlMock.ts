@@ -1,6 +1,6 @@
 import { ByteSource } from '/lib/xp/content'
 import { HttpResponse } from '/lib/http-client'
-import { format } from '/lib/ssb/utils/dateUtils'
+import { format } from '/lib/vendor/dateFns'
 
 __non_webpack_require__('/lib/ssb/polyfills/nashorn')
 

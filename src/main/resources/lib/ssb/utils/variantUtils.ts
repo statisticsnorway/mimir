@@ -5,16 +5,8 @@ import { ReleasesInListing, StatisticInListing, VariantInListing } from '/lib/ss
 import { groupBy } from '/lib/vendor/ramda'
 
 import { getMainSubject, getMainSubjectStatistic } from '/lib/ssb/utils/parentUtils'
-import {
-  sameDay,
-  createMonthName,
-  parseISO,
-  getMonth,
-  getYear,
-  getDate,
-  formatDate,
-  isSameOrBefore,
-} from '/lib/ssb/utils/dateUtils'
+import { sameDay, createMonthName, formatDate, isSameOrBefore } from '/lib/ssb/utils/dateUtils'
+import { parseISO, getMonth, getYear, getDate } from '/lib/vendor/dateFns'
 import * as util from '/lib/util'
 import { type OmStatistikken, type Statistics } from '/site/content-types'
 
