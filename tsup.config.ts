@@ -10,5 +10,5 @@ export default defineConfig((options: Options) => {
   if (options.d === DIR_DST_ASSETS) {
     return import('./tsup/client-asset').then((m) => m.default())
   }
-  throw new Error(`Unconfigured directory:${options.d}!`)
+  throw new Error(`Unconfigured directory: ${options.d}!`)
 })

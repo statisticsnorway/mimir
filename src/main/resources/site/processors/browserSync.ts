@@ -7,9 +7,6 @@ export function responseProcessor(request: XP.Request, res: XP.Response) {
 
   const { mode } = request
 
-  log.info('mode:%s', mode)
-  log.info('XP_RUN_MODE:%s', XP_RUN_MODE)
-
   if (XP_RUN_MODE === 'PROD' || mode === 'inline' || mode === 'live') {
     return res
   }
@@ -21,7 +18,9 @@ export function responseProcessor(request: XP.Request, res: XP.Response) {
 
   const contribution = getBrowserSyncScript({ request })
 
-  if (!res.pageContributions.bodyEnd) {
+  if (!res.pageContributions) res.pageContributions = {}
+
+  if (!res?.pageContributions?.bodyEnd) {
     res.pageContributions.bodyEnd = [contribution]
   } else if (Array.isArray(res.pageContributions.bodyEnd)) {
     res.pageContributions.bodyEnd.push(contribution)
