@@ -1,6 +1,7 @@
 bin/
 dist
 build
+build_webpack
 .xp-codegen
 *.swp
 .gradle
