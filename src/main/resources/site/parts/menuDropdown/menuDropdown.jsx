@@ -61,16 +61,16 @@ function MenuDropdown(props) {
   const renderTitleContainer = () => {
     if (modeMunicipality) {
       return (
-        <div className='title-container opacity-zero'>
+        <div className='title-container'>
           <div className='roboto-plain subtitle d-none d-md-block'>{displayName}</div>
-          <div className='roboto-bold municipality'>
-            {municipality && <div>{`${municipalityName} (${municipality.county.name})`}</div>}
-          </div>
+          {municipality && (
+            <div className='roboto-bold municipality'>{`${municipalityName} (${municipality.county.name.trim()})`}</div>
+          )}
         </div>
       )
     } else {
       return (
-        <div className='title-container'>
+        <div className='title-container d-flex align-items-center'>
           <div className='roboto-bold title-choose-municipality municipality'>Velg kommune i kart</div>
         </div>
       )
@@ -124,7 +124,7 @@ function MenuDropdown(props) {
 
   const renderShowMapButton = () => {
     return (
-      <button className='show-map text-nowrap btn-drawer-toggler' onClick={() => openMap()}>
+      <button className='show-map' onClick={() => openMap()}>
         <span className='d-none d-lg-inline-block'>Velg i kart</span>
         {mapOpen ? <ChevronUp size='24' /> : <ChevronDown size='24' />}
       </button>
@@ -133,8 +133,10 @@ function MenuDropdown(props) {
 
   return (
     <div id='sticky-menu' className='sticky-menu w-100' ref={stickyMenuRef}>
-      <section className={`xp-part part-menu-dropdown d-print-none ${fixedClass}`}>
-        <div className='container position-relative'>
+      <section className={`part-menu-dropdown d-print-none ${fixedClass}`}>
+        <div
+          className={modeMunicipality ? 'container position-relative municipality-mode' : 'container position-relative'}
+        >
           <div className='sticky-content d-flex flex-row align-items-center justify-content-between'>
             {renderTitleContainer()}
             {renderSearchContainer()}
