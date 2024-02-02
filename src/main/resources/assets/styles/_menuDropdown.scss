@@ -72,15 +72,19 @@
   
   @include media-breakpoint-down(md) {   
 
+    .sticky-content {
+      min-height: 56px;
+    }
+
     .title-container {
-      min-height: 92px;
+      min-height: 56px;
       width: 100%;
-      justify-content: start;      
+      justify-content: start;    
     }
 
     .title-choose-municipality {
       padding-left: 0;
-      font-size: 28px;
+      font-size: 20px;
     }
 
     .container >div {
@@ -90,11 +94,11 @@
     #search-container {
       border-top: none;
       width: 100%;
-      top: 92px;
+      top: 56px;
       position: absolute;
       border-bottom: 1px solid #aaaaaa;
       background-color: #ffffff;
-      padding: 20px;
+      padding-bottom: 20px; 
 
       .choose-municipality-search {
         border: none;
@@ -110,36 +114,47 @@
     }
   
     &.fixed-top{
-      .sticky-content {
-        min-height: 50px;
+
+      .title-container{
+        padding: 12px 20px 12px;  
       }
-      .title-container {
-        min-height: 50px;
-        margin-top: 25px;
-        
-        .title-choose-municipality {
-          padding: 0;
+
+      #search-container {
+        padding: 0 20px 12px; 
+      }
+
+      .municipality-mode {
+        .sticky-content {
+          min-height: 56px;
+        }
+        .title-container {
+          min-height: 56px;
+          
+          .title-choose-municipality {
+            padding: 0;
+          }
+        }
+
+        #search-container {
+          display: none;
         }
       }
-
-      #search-container {
-        display: none;
-      }
-    }
+    } 
 
     .municipality-mode {
-      .title-container, .sticky-content {
-        min-height: 50px;
+      .title-container {
+        padding: 12px 20px 12px;
+        min-height: 56px;
       }
+
       #search-container {
         top: 0;
+        padding: 20px;
       }
     }
   }
   @include media-breakpoint-down(sm) {
     .title-container {
-      margin-left: 40px;
-
       .municipality {
         max-width: 70vw;
         white-space: nowrap;
