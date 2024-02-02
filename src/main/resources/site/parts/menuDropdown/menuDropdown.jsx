@@ -136,44 +136,22 @@ function MenuDropdown(props) {
     )
   }
 
-  const renderMenuDropdown = () => {
-    if (modeMunicipality) {
-      return (
-        <div id='sticky-menu' className='sticky-menu w-100' ref={stickyMenuRef}>
-          <section className={`part-menu-dropdown d-print-none ${fixedClass}`}>
-            <div className={`container position-relative municipality-mode`}>
-              <div className='menu-content sticky-content d-flex flex-row align-items-center justify-content-between'>
-                {renderTitleContainer()}
-                {renderSearchContainer()}
-              </div>
-            </div>
-          </section>
-          {renderMap()}
-        </div>
-      )
-    } else {
-      return (
-        <section className='part-menu-dropdown d-print-none'>
-          <div className='container position-relative'>
-            <div className='menu-content d-flex flex-row align-items-center justify-content-between'>
-              {renderTitleContainer()}
-              {renderSearchContainer()}
-            </div>
+  return (
+    <div id='sticky-menu' className='sticky-menu w-100' ref={stickyMenuRef}>
+      <section className={`part-menu-dropdown d-print-none ${fixedClass}`}>
+        <div
+          className={modeMunicipality ? `container position-relative municipality-mode` : `container position-relative`}
+        >
+          <div className='menu-content d-flex flex-row align-items-center justify-content-between'>
+            {renderTitleContainer()}
+            {renderSearchContainer()}
           </div>
-          {renderMunicipalityLinks()}
-        </section>
-      )
-    }
-  }
-
-  return renderMenuDropdown()
-
-  /* return (
-    <section className='part-menu-dropdown d-print-none'>
-      {renderMenuDropdown()}
+        </div>
+        {modeMunicipality && renderMap()}
+      </section>
       {!modeMunicipality && renderMunicipalityLinks()}
-    </section>
-  ) */
+    </div>
+  )
 }
 
 MenuDropdown.propTypes = {
