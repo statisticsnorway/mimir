@@ -84,7 +84,7 @@ function MenuDropdown(props) {
 
   const renderSearchContainer = () => {
     return (
-      <div className='search-container collapse d-flex align-items-center'>
+      <div className='search-container d-flex align-items-center'>
         <div className='choose-municipality-search d-flex align-items-center'>
           {modeMunicipality && <div className='change-municipality roboto-bold text-nowrap'>Bytt kommune:</div>}
           <div className='component-dropdown w-100'>
