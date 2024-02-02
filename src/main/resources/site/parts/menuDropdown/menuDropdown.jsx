@@ -38,6 +38,11 @@ function MenuDropdown(props) {
     return () => window.removeEventListener('scroll', stickyMenu)
   }, [])
 
+  const onSelectMunicipality = (e, baseUrl) => {
+    const url = baseUrl + e.id
+    window.location.href = url
+  }
+
   const renderMunicipalityLinks = () => {
     if (municipalityList) {
       return (
@@ -147,11 +152,6 @@ function MenuDropdown(props) {
       {!modeMunicipality && renderMunicipalityLinks()}
     </div>
   )
-}
-
-const onSelectMunicipality = (e, baseUrl) => {
-  const url = baseUrl + e.id
-  window.location.href = url
 }
 
 MenuDropdown.propTypes = {

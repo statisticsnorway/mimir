@@ -78,22 +78,17 @@
       justify-content: start;      
     }
 
-    /* .sticky-content {
-      min-height: 92px;
-      width: 100%;
-      justify-content: start;      
-    } */
     .title-choose-municipality {
-      padding-left: 0;//20px;
+      padding-left: 0;
       font-size: 28px;
     }
 
     .container >div {
-      flex-direction: column !important; // Override d-flex
+      flex-direction: column !important; 
     }
     
     #search-container {
-      border-top: 1px solid $ssb-green-2;
+      border-top: none;
       width: 100%;
       top: 92px;
       position: absolute;
@@ -109,7 +104,7 @@
           display: none;
         }
       }
-      .hide-map {
+      .show-map {
         display: none;
       }
     }
@@ -119,8 +114,6 @@
         min-height: 50px;
       }
       .title-container {
-        /* width: 100%;
-        justify-content: start; */
         min-height: 50px;
         margin-top: 25px;
         
