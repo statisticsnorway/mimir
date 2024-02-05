@@ -6,7 +6,7 @@ import { TbmlDataUniform, XmlParser } from '/lib/types/xmlParser'
 import { DatasetRepoNode, DataSource as DataSourceType } from '/lib/ssb/repo/dataset'
 import { JSONstat } from '/lib/types/jsonstat-toolkit'
 import { JobStatus } from '/lib/ssb/repo/job'
-import { subDays, isWithinInterval } from '/lib/ssb/utils/dateUtils'
+import { subDays, isWithinInterval } from '/lib/vendor/dateFns'
 
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 import { getTableIdFromTbprocessor } from '/lib/ssb/dataset/tbprocessor/tbprocessor'

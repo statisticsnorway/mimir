@@ -6,7 +6,8 @@ import {
 import { Contact, ReleasesInListing } from '/lib/ssb/dashboard/statreg/types'
 import { type SubjectItem, getMainSubjects } from '/lib/ssb/utils/subjectUtils'
 import { calculatePeriod } from '/lib/ssb/utils/variantUtils'
-import { format, formatDate, getTimeZoneIso, parseISO, addDays, isWithinInterval } from '/lib/ssb/utils/dateUtils'
+import { addDays, isWithinInterval } from '/lib/vendor/dateFns'
+import { formatDate, getTimeZoneIso } from '/lib/ssb/utils/dateUtils'
 
 // @ts-ignore
 import { xmlEscape } from '/lib/text-encoding'

@@ -1,6 +1,6 @@
 import { Content, query } from '/lib/xp/content'
 import { render } from '/lib/thymeleaf'
-import { subDays, format } from '/lib/ssb/utils/dateUtils'
+import { subDays, format } from '/lib/vendor/dateFns'
 import { Article, Page, Statistics } from '/site/content-types'
 
 const yesterday: string = format(subDays(new Date(), 1), 'yyyy-MM-dd')

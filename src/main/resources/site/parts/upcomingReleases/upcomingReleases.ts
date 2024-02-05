@@ -2,7 +2,8 @@ import { query, type Content } from '/lib/xp/content'
 import { getContent, getComponent, processHtml, serviceUrl, sanitizeHtml } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 import { type SubjectItem, getMainSubjects, getMainSubjectById } from '/lib/ssb/utils/subjectUtils'
-import { formatDate, format, addDays, isAfter, isBefore } from '/lib/ssb/utils/dateUtils'
+import { formatDate } from '/lib/ssb/utils/dateUtils'
+import { format } from '/lib/vendor/dateFns'
 import {
   type GroupedBy,
   type PreparedStatistics,
@@ -11,9 +12,13 @@ import {
   addMonthNames,
   groupStatisticsByYearMonthAndDay,
   prepareRelease,
-  filterOnComingReleases,
   getAllReleases,
 } from '/lib/ssb/utils/variantUtils'
+import {
+  filterReleasesIntoArrays,
+  filterOnComingReleases,
+  type PreparedUpcomingRelease,
+} from '/lib/ssb/utils/filterReleasesUtils'
 import { type StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
 import { render } from '/lib/enonic/react4xp'
 
@@ -29,32 +34,6 @@ export function preview(req: XP.Request) {
   return renderPart(req)
 }
 
-function filterReleasesIntoArrays(contentReleases: Array<PreparedUpcomingRelease>, count: number) {
-  const serverOffsetInMs: number =
-    app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
-  let start = new Date(new Date().getTime() + serverOffsetInMs)
-  const limit = addDays(start, count)
-  // Content releases has date at midnight, not correct publish time at 8 AM
-  const publishTime = new Date(new Date().setHours(8) + serverOffsetInMs)
-
-  if (isAfter(start, publishTime)) {
-    // We show todays releases only until published at 8 AM
-    start = addDays(start, 1)
-  }
-  const contentReleasesNextXDays: PreparedUpcomingRelease[] = []
-  const contentReleasesAfterXDays: PreparedUpcomingRelease[] = []
-
-  for (const release of contentReleases) {
-    if (isAfter(new Date(release.date), start) && isBefore(new Date(release.date), limit)) {
-      contentReleasesNextXDays.push(release)
-    } else {
-      contentReleasesAfterXDays.push(release)
-    }
-  }
-
-  return { contentReleasesNextXDays, contentReleasesAfterXDays }
-}
-
 function renderPart(req: XP.Request) {
   const content = getContent()
   if (!content) throw Error('No page found')
@@ -64,6 +43,9 @@ function renderPart(req: XP.Request) {
 
   const currentLanguage: string = content.language ? content.language : 'nb'
   const count: number = parseInt(component.config.numberOfDays)
+  const serverOffsetInMs: number =
+    app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
+
   const buttonTitle: string = localize({
     key: 'button.showAll',
     locale: currentLanguage,
@@ -83,7 +65,7 @@ function renderPart(req: XP.Request) {
     const allReleases: Array<Release> = getAllReleases(statistics)
 
     // All statistics from today and a number of days
-    const releasesFiltered: Array<Release> = filterOnComingReleases(allReleases, count)
+    const releasesFiltered: Array<Release> = filterOnComingReleases(allReleases, serverOffsetInMs, count)
 
     // Choose the right variant and prepare the date in a way it works with the groupBy function
     const releasesPrepped: Array<PreparedStatistics> = releasesFiltered.map((release: Release) =>
@@ -129,7 +111,12 @@ function renderPart(req: XP.Request) {
     }
   })
 
-  const { contentReleasesNextXDays, contentReleasesAfterXDays } = filterReleasesIntoArrays(contentReleases, count)
+  const { contentReleasesNextXDays, contentReleasesAfterXDays } = filterReleasesIntoArrays(
+    contentReleases,
+    count,
+    serverOffsetInMs,
+    new Date()
+  )
 
   const props: PartProps = {
     title: content.displayName,
@@ -165,16 +152,4 @@ interface PartProps {
   statisticsPageUrlText: string
   contentReleasesNextXDays: Array<PreparedUpcomingRelease>
   contentReleasesAfterXDays: Array<PreparedUpcomingRelease>
-}
-interface PreparedUpcomingRelease {
-  id: string
-  name: string
-  type: string
-  date: string
-  mainSubject: string
-  day: string
-  month: string
-  monthName: string
-  year: string
-  upcomingReleaseLink?: string
 }

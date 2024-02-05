@@ -71,7 +71,7 @@ function renderPart(req: XP.Request) {
     phrases,
     introTitle: page.data.introTitle,
     title: page.displayName,
-    ingress: page.data.ingress,
+    preface: page.data.ingress,
     bodyText,
     showPubDate: page.data.showPublishDate,
     pubDate,
@@ -94,7 +94,7 @@ interface ArticleProps {
   phrases: Phrases | undefined
   introTitle: string | undefined
   title: string
-  ingress: string | undefined
+  preface: string | undefined
   bodyText: string | undefined
   showPubDate: boolean
   pubDate: string | undefined
