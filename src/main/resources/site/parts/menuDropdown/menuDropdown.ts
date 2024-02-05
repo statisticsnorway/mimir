@@ -76,7 +76,6 @@ function renderPart(req: RequestWithCode): XP.Response {
 
   const props: MenuDropdownProps = {
     modeMunicipality: component.config.modeMunicipality,
-    displayName: page.displayName,
     ariaLabel: searchBarText,
     placeholder: searchBarText,
     items: municipalityItems,
@@ -104,7 +103,6 @@ interface Municipality {
 
 interface MenuDropdownProps {
   modeMunicipality: boolean
-  displayName: string
   ariaLabel: string
   placeholder: string
   items: Municipality[]

@@ -8,7 +8,6 @@ function MenuDropdown(props) {
     baseUrl,
     dataPathAssetUrl,
     dataServiceUrl,
-    displayName,
     modeMunicipality,
     municipality,
     municipalityName,
@@ -66,8 +65,7 @@ function MenuDropdown(props) {
   const renderTitleContainer = () => {
     if (modeMunicipality) {
       return (
-        <div className='title-container'>
-          <div className='roboto-plain subtitle d-none d-md-block'>{displayName}</div>
+        <div className='title-container d-flex align-items-center'>
           {municipality && (
             <div className='roboto-bold municipality'>{`${municipalityName} (${municipality.county.name.trim()})`}</div>
           )}
@@ -156,7 +154,6 @@ function MenuDropdown(props) {
 
 MenuDropdown.propTypes = {
   modeMunicipality: PropTypes.bool,
-  displayName: PropTypes.string,
   ariaLabel: PropTypes.string,
   placeholder: PropTypes.string,
   items: PropTypes.object,
