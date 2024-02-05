@@ -117,7 +117,7 @@
     "numeral": "~2.0.6",
     "popper.js": "~1.16.1",
     "postcss": "~8.4.33",
-    "postcss-loader": "~7.3.4",
+    "postcss-loader": "~8.1.0",
     "postcss-normalize": "~10.0.1",
     "prettier": "~3.2.2",
     "prop-types": "~15.8.1",
