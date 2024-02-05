@@ -56,7 +56,7 @@
     "@enonic-types/lib-content": "7.13.5",
     "@enonic-types/lib-context": "7.13.5",
     "@enonic-types/lib-event": "7.13.5",
-    "@enonic-types/lib-i18n": "7.13.5",
+    "@enonic-types/lib-i18n": "7.14.0",
     "@enonic-types/lib-io": "7.13.5",
     "@enonic-types/lib-mail": "7.13.5",
     "@enonic-types/lib-node": "7.13.5",
