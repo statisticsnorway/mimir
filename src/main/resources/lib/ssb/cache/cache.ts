@@ -5,7 +5,7 @@ import { run } from '/lib/xp/context'
 import { executeFunction, sleep, submitTask } from '/lib/xp/task'
 import { JSONstat } from '/lib/types/jsonstat-toolkit'
 import { TbmlDataUniform } from '/lib/types/xmlParser'
-import { Socket } from '/lib/types/socket'
+import { type Socket } from '/lib/wsUtil'
 import { newCache, Cache } from '/lib/cache'
 import { request, HttpResponse } from '/lib/http-client'
 

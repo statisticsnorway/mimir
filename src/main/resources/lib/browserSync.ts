@@ -10,10 +10,7 @@ const isRunningCache = newCache({
 
 export function getBrowserSyncUrl({ request }: { request: XP.Request }): string {
   const { host, scheme } = request
-  return `${scheme}://${host}:${
-    // @ts-expect-error Is replaced at build time by tsup:
-    process.env.BROWSER_SYNC_PORT
-  }/browser-sync/browser-sync-client.js`
+  return `${scheme}://${host}:${process.env.BROWSER_SYNC_PORT}/browser-sync/browser-sync-client.js`
 }
 
 export function isRunning({ request }: { request: XP.Request }): boolean {
