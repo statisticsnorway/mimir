@@ -20,7 +20,7 @@ function MenuDropdown(props) {
 
   const stickyMenu = () => {
     const stickyMenu = stickyMenuRef.current
-    if (stickyMenu) {
+    if (stickyMenu && modeMunicipality) {
       const boundingRect = stickyMenu.getBoundingClientRect()
       const stickyTop = boundingRect.top
       if (stickyTop < 0) {
@@ -129,8 +129,8 @@ function MenuDropdown(props) {
 
   const renderShowMapButton = () => {
     return (
-      <button className='show-map' onClick={() => openMap()}>
-        <span className='d-none d-lg-inline-block'>Velg i kart</span>
+      <button className='show-map d-none d-lg-inline-block' onClick={() => openMap()}>
+        <span>Velg i kart</span>
         {mapOpen ? <ChevronUp size='24' /> : <ChevronDown size='24' />}
       </button>
     )

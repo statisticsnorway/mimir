@@ -12,6 +12,7 @@
 
   .title-container {
     opacity: 1;
+    min-height: 92px;
 
     .subtitle {
       font-size: 14px;
@@ -21,6 +22,10 @@
       font-size: 20px;
       line-height: normal;
     }
+  }
+
+  .search-container {
+    min-height: 92px;
   }
 
   .municipality-mode {
@@ -66,14 +71,10 @@
   }
 
   @include media-breakpoint-down(md) {
-    .menu-content {
-      min-height: 56px;
-    }
-
     .title-container {
-      min-height: 56px;
       width: 100%;
       justify-content: start;
+      padding: 10px 10px 20px;
     }
 
     .title-choose-municipality {
@@ -91,7 +92,7 @@
       width: 100%;
       position: absolute;
       background-color: #ffffff;
-      padding: 10px 0 20px;
+      padding: 10px 10px 20px;
 
       .choose-municipality-search {
         width: 100%;
@@ -107,6 +108,14 @@
     }
 
     .municipality-mode {
+      .menu-content {
+        min-height: 56px;
+      }
+
+      .title-container {
+        min-height: 56px;
+      }
+
       .search-container {
         top: 0;
       }
@@ -117,19 +126,21 @@
         padding: 12px 20px 12px;
       }
 
-      .sticky-content {
-        min-height: 56px;
-      }
-      .title-container {
-        min-height: 56px;
-
-        .title-choose-municipality {
-          padding: 0;
+      .municipality-mode {
+        .sticky-content {
+          min-height: 56px;
         }
-      }
+        .title-container {
+          min-height: 56px;
 
-      .search-container {
-        display: none !important;
+          .title-choose-municipality {
+            padding: 0;
+          }
+        }
+
+        .search-container {
+          display: none !important;
+        }
       }
     }
   }

@@ -90,6 +90,7 @@ function renderPart(req: RequestWithCode): XP.Response {
   }
 
   return render('site/parts/menuDropdown/menuDropdown', props, req, {
+    body: '<section class="xp-part menu-dropdown container"></section>',
     pageContributions: {
       bodyEnd: [scriptAsset('js/map.js')],
     },
