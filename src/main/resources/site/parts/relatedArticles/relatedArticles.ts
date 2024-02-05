@@ -89,7 +89,7 @@ function renderPart(req: XP.Request, relatedArticles: RelatedArticles['relatedAr
               }
 
               let imageSrc: string | undefined
-              let imageAlt: string | undefined = ' '
+              let imageAlt: string | undefined = ''
 
               if (!articleContent.x['com-enonic-app-metafields']?.['meta-data']?.seoImage) {
                 imageSrc = imagePlaceholder({
@@ -104,7 +104,7 @@ function renderPart(req: XP.Request, relatedArticles: RelatedArticles['relatedAr
                   scale: 'block(320, 180)', // 16:9
                   format: 'jpg',
                 })
-                imageAlt = getImageAlt(image) ? getImageAlt(image) : ' '
+                imageAlt = getImageAlt(image) ? getImageAlt(image) : ''
               }
 
               return {
