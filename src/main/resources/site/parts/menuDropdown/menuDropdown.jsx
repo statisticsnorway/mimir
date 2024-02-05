@@ -63,21 +63,15 @@ function MenuDropdown(props) {
   }
 
   const renderTitleContainer = () => {
-    if (modeMunicipality) {
-      return (
-        <div className='title-container d-flex align-items-center'>
-          {municipality && (
-            <div className='roboto-bold municipality'>{`${municipalityName} (${municipality.county.name.trim()})`}</div>
-          )}
-        </div>
-      )
-    } else {
-      return (
-        <div className='title-container d-flex align-items-center'>
-          <div className='roboto-bold title-choose-municipality municipality'>Velg kommune i kart</div>
-        </div>
-      )
-    }
+    return (
+      <div className='title-container d-flex align-items-center'>
+        {modeMunicipality && municipality ? (
+          <div className='roboto-bold municipality'>{`${municipalityName} (${municipality.county.name.trim()})`}</div>
+        ) : (
+          <div className='roboto-bold municipality'>Velg kommune i kart</div>
+        )}
+      </div>
+    )
   }
 
   const renderSearchContainer = () => {
@@ -105,7 +99,6 @@ function MenuDropdown(props) {
   const openMap = () => {
     setMapOpen(!mapOpen)
     if (!mapOpen) {
-      console.log('\x1b[32m%s\x1b[0m', 'SCROLL')
       window.scroll({
         top: stickyMenuRef.current.offsetTop,
         behavior: 'smooth',

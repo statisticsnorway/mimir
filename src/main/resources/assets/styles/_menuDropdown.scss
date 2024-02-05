@@ -26,16 +26,15 @@
 
   .search-container {
     min-height: 92px;
+    .change-municipality {
+      margin-right: $spacer * 1.5;
+    }
   }
 
   .municipality-mode {
     .title-container {
       opacity: 0;
     }
-  }
-
-  .change-municipality {
-    margin-right: $spacer * 1.5;
   }
 
   &.fixed-top {
@@ -75,15 +74,11 @@
       width: 100%;
       justify-content: start;
       padding: 10px 10px 20px;
-    }
 
-    .title-choose-municipality {
-      padding-left: 0;
-      font-size: 20px;
-    }
-
-    .container > div {
-      flex-direction: column !important;
+      .municipality {
+        padding-left: 0;
+        font-size: 20px;
+      }
     }
 
     .search-container {
@@ -108,10 +103,7 @@
     }
 
     .municipality-mode {
-      .menu-content {
-        min-height: 56px;
-      }
-
+      .menu-content,
       .title-container {
         min-height: 56px;
       }
@@ -126,21 +118,8 @@
         padding: 12px 20px 12px;
       }
 
-      .municipality-mode {
-        .sticky-content {
-          min-height: 56px;
-        }
-        .title-container {
-          min-height: 56px;
-
-          .title-choose-municipality {
-            padding: 0;
-          }
-        }
-
-        .search-container {
-          display: none !important;
-        }
+      .search-container {
+        display: none !important;
       }
     }
   }
