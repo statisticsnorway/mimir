@@ -29,15 +29,19 @@ export default function buildAssetConfig(): Options {
     'styles/bundle': `${DIR_SRC_ASSETS}/styles/main.scss`,
     'styles/bundle_menu': `${DIR_SRC_ASSETS}/styles/main_menu.scss`,
   }
+
   // print(FILES_ASSETS, { maxItems: Infinity });
   return {
-    bundle: true, // Needed to bundle @enonic/js-utils and dayjs
+    bundle: true,
     dts: false, // d.ts files are use useless at runtime
     entry: { ...SCRIPT_FILES_ASSETS, ...STYLE_FILES_ASSETS },
     esbuildPlugins: [
+      // TSUP/Esbuild plugins don't have a great watching mechanism, so we use sass cli for that
+      // We keep the sassPlugin for autoprefixer and cssnano used when building for production
       sassPlugin({
+        // These settings should match build:style in package.json somewhat
         style: isDev ? 'expanded' : 'compressed',
-        loadPaths: ['node_modules', 'node_modules/bootstrap/scss'],
+        loadPaths: ['node_modules', 'node_modules/bootstrap/scss', 'node_modules/@statisticsnorway'],
         async transform(source) {
           const transformers: postcss.AcceptedPlugin[] = [autoprefixer]
           if (!isDev) transformers.push(cssnanoPlugin)
