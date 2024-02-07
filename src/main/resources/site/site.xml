@@ -69,7 +69,7 @@
         <input name="label" type="TextLine">
           <label>Språktittel (brukt til lenke i header)</label>
           <occurrences minimum="1" maximum="1"/>
-          <default>Norsk (Bokmål)</default>
+          <default>Norsk</default>
         </input>
         <input name="code" type="TextLine">
           <label>Språkkode (f.eks. "en", "no")</label>
