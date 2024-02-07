@@ -58,6 +58,7 @@
 
   @include media-breakpoint-down(md) {
     visibility: hidden;
+    display: none;
 
     &:after {
       visibility: hidden;
