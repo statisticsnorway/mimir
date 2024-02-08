@@ -97,7 +97,7 @@ function RelatedArticles(props) {
               <Card
                 href={article.href}
                 imagePlacement='top'
-                image={<img src={article.imageSrc} alt={article.imageAlt ? article.imageAlt : ' '} />}
+                image={<img src={article.imageSrc} alt={article.imageAlt ?? ''} />}
                 title={article.title}
                 subTitle={article.subTitle}
                 ariaLabel={article.title + ' ' + article.subTitle}
