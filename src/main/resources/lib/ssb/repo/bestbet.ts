@@ -32,7 +32,7 @@ export function setupBestBetRepo(): void {
   cronJobLog('BestBet Repo setup complete.')
 }
 
-export function listBestBets(count?: number): ReadonlyArray<Node> | Node | null {
+export function listBestBets(count?: number) {
   const nodes = getChildNodes(BESTBET_REPO, BESTBET_BRANCH, '/', count ? count : undefined)
   const ids: Array<string> = nodes.hits.map((hit) => {
     return hit.id

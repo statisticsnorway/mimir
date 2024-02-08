@@ -1,4 +1,4 @@
-__non_webpack_require__('/lib/ssb/polyfills/nashorn')
+import '/lib/ssb/polyfills/nashorn'
 /* eslint-disable new-cap */
 // @ts-ignore
 import JSONstat from 'jsonstat-toolkit/import.mjs'

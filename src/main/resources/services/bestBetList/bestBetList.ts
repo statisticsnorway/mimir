@@ -1,13 +1,13 @@
 import { sanitize } from '/lib/xp/common'
+import { listBestBets, createBestBet, deleteBestBet, BestBetContent } from '/lib/ssb/repo/bestbet'
+import { ensureArray } from '/lib/ssb/utils/arrayUtils'
 
-const { listBestBets, createBestBet, deleteBestBet } = __non_webpack_require__('/lib/ssb/repo/bestbet')
-const { ensureArray } = __non_webpack_require__('/lib/ssb/utils/arrayUtils')
-
-exports.get = () => {
+export function get() {
   const bestbets = ensureArray(listBestBets(1000))
   if (bestbets) {
     return {
-      body: bestbets.map((bet) => {
+      body: bestbets.map((_bet) => {
+        const bet = _bet as unknown as { _id: string; data: BestBetContent }
         return {
           id: bet._id,
           linkedSelectedContentResult: bet.data.linkedSelectedContentResult,
@@ -24,7 +24,7 @@ exports.get = () => {
     }
   } else return {}
 }
-exports.post = (req) => {
+export function post(req: XP.Request) {
   const body = JSON.parse(req.body)
 
   const response = createBestBet({
@@ -41,6 +41,7 @@ exports.post = (req) => {
   })
   return response
 }
-exports.delete = (req) => {
+function del(req: XP.Request) {
   return deleteBestBet(req.params.key)
 }
+export { del as delete }

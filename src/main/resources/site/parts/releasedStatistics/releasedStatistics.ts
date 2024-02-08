@@ -1,4 +1,4 @@
-__non_webpack_require__('/lib/ssb/polyfills/nashorn')
+import '/lib/ssb/polyfills/nashorn'
 
 import { type QueryDsl } from '/lib/xp/content'
 import { getComponent, getContent } from '/lib/xp/portal'

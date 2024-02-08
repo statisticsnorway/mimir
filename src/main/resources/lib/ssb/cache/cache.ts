@@ -1,11 +1,11 @@
-__non_webpack_require__('/lib/ssb/polyfills/nashorn')
+import '/lib/ssb/polyfills/nashorn'
 import { listener, send, EnonicEvent, EnonicEventData } from '/lib/xp/event'
 import { query, get, Content } from '/lib/xp/content'
 import { run } from '/lib/xp/context'
 import { executeFunction, sleep, submitTask } from '/lib/xp/task'
 import { JSONstat } from '/lib/types/jsonstat-toolkit'
 import { TbmlDataUniform } from '/lib/types/xmlParser'
-import { Socket } from '/lib/types/socket'
+import { type Socket } from '/lib/wsUtil'
 import { newCache, Cache } from '/lib/cache'
 import { request, HttpResponse } from '/lib/http-client'
 

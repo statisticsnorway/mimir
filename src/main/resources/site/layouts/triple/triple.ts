@@ -1,10 +1,10 @@
+import { getComponent } from '/lib/xp/portal'
 import { render } from '/lib/thymeleaf'
 
-const portal = __non_webpack_require__('/lib/xp/portal')
 const view = resolve('triple.html')
 
-exports.get = function () {
-  const component = portal.getComponent()
+export function get() {
+  const component = getComponent<XP.LayoutComponent.Triple>()!
   const { title, hideTitle } = component.config
 
   const model = {

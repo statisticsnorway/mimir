@@ -1,14 +1,14 @@
 try {
-  const { setupEventLog } = __non_webpack_require__('/lib/ssb/repo/eventLog')
-  const { setupStatRegRepo } = __non_webpack_require__('/lib/ssb/repo/statreg')
-  const { setupDatasetRepo } = __non_webpack_require__('/lib/ssb/repo/dataset')
-  const { setupBestBetRepo } = __non_webpack_require__('/lib/ssb/repo/bestbet')
-  const cache = __non_webpack_require__('/lib/ssb/cache/cache')
-  const { setupFetchDataOnCreateListener } = __non_webpack_require__('/lib/ssb/dataset/listeners')
-  const { setupCronJobs } = __non_webpack_require__('/lib/ssb/cron/cron')
-  const { create } = __non_webpack_require__('/lib/featureToggle')
-  const { setupTaskListener } = __non_webpack_require__('/lib/ssb/dataset/publish')
-  const { setupArticleListener } = __non_webpack_require__('/lib/ssb/utils/articleUtils')
+  const { setupEventLog } = require('/lib/ssb/repo/eventLog')
+  const { setupStatRegRepo } = require('/lib/ssb/repo/statreg')
+  const { setupDatasetRepo } = require('/lib/ssb/repo/dataset')
+  const { setupBestBetRepo } = require('/lib/ssb/repo/bestbet')
+  const cache = require('/lib/ssb/cache/cache')
+  const { setupFetchDataOnCreateListener } = require('/lib/ssb/dataset/listeners')
+  const { setupCronJobs } = require('/lib/ssb/cron/cron')
+  const { create } = require('/lib/featureToggle')
+  const { setupTaskListener } = require('/lib/ssb/dataset/publish')
+  const { setupArticleListener } = require('/lib/ssb/utils/articleUtils')
 
   log.info('Application ' + app.name + ' started') // Log application started
   __.disposer(() => log.info('Application ' + app.name + ' stopped')) // Log application stoppped

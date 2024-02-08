@@ -147,5 +147,6 @@
   <processors>
     <response-processor name="searchableText" order="10"/>
     <response-processor name="react4xpAssetSource" order="11"/>
+    <response-processor name="browserSync" order="12"/>
   </processors>
 </site>

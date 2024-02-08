@@ -1,4 +1,4 @@
-__non_webpack_require__('/lib/ssb/polyfills/nashorn')
+import '/lib/ssb/polyfills/nashorn'
 import { Content } from '/lib/xp/content'
 import { DatasetRepoNode, DataSource as dataSourceType, getDataset, DATASET_BRANCH } from '/lib/ssb/repo/dataset'
 import { TbmlDataUniform, TbmlSourceListUniform } from '/lib/types/xmlParser'

@@ -1,17 +1,20 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "allowUmdGlobalAccess": true,
+    "baseUrl": "./",
+		"moduleResolution": "node",
     "sourceMap": true,
     "allowJs": true,
     "noImplicitAny": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
     "strictNullChecks": true,
-    "lib": ["ES5", "ES6"],
+    "skipLibCheck": true,
+    "lib": [],
     "types": [
       "node",
       "@item-enonic-types/global",
-      "jest"
+      "global",
     ],
     "rootDirs": [
       "./src/main/resources",
@@ -35,8 +38,13 @@
     }
   },
   "include": [
+    "node_modules/typescript/lib/lib.es5.d.ts",
     "./.xp-codegen/**/*",
-    "./src/main/resources/**/*"
+  	"src/main/resources/**/*.tsx",
+		"src/main/resources/**/*.ts"
   ],
-  "exclude": ["./build/*"]
+  "exclude": [
+    "./build/*",
+    "src/main/resources/assets/**/*.*",
+  ]
 }

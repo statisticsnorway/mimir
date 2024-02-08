@@ -160,7 +160,12 @@ export function randomUnsafeString(): string {
  * @returns HTML script tag <script>
  */
 export function scriptAsset(path: string): string {
-  return `<script defer src="${assetUrl({ path })}"></script>`
+  const url = assetUrl({ path })
+
+  return `
+  <script defer src="${url}" type="module"></script>
+  <script defer src="${url.replace('.js', '.legacy.js')}" nomodule type="text/javascript"></script>
+  `
 }
 // @ts-ignore
 export const XP_RUN_MODE = ''.concat(Java.type('com.enonic.xp.server.RunMode').get())
