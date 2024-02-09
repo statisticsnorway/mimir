@@ -7,6 +7,7 @@ import { X } from 'react-feather'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import highchartsExporting from 'highcharts/modules/exporting'
+import highchartsExportingOffline from 'highcharts/modules/offline-exporting'
 import highchartsExportData from 'highcharts/modules/export-data'
 import highchartsAccessibility from 'highcharts/modules/accessibility'
 import { useMediaQuery } from 'react-responsive'
@@ -16,6 +17,7 @@ import accessibilityLang from './../../../assets/js/highchart-lang.json'
 
 if (typeof window !== 'undefined' && typeof Highcharts === 'object') {
   highchartsExporting(Highcharts)
+  highchartsExportingOffline(Highcharts)
   highchartsExportData(Highcharts)
   highchartsAccessibility(Highcharts)
 }
