@@ -36,8 +36,8 @@ function RelatedBoxes(props) {
         params: {
           start: relatedFactPages.length,
           count: total - relatedFactPages.length,
-          'partConfig[inputType]': partConfig.inputType,
-          'partConfig[contentIdList]': JSON.stringify(partConfig.contentIdList),
+          ...partConfig,
+          contentIdList: JSON.stringify(partConfig.contentIdList),
         },
       })
       .then((res) => {
@@ -51,8 +51,9 @@ function RelatedBoxes(props) {
         setLoading(false)
       })
   }
+  
 
-  function fetchFirstRelatedFactPages() {
+  function resetRelatedFactPages() {
     setLoading(true)
     setRelatedFactPages(firstRelatedContents.relatedFactPages)
     setTotal(firstRelatedContents.total)
@@ -64,7 +65,7 @@ function RelatedBoxes(props) {
     if (total > relatedFactPages.length) {
       fetchAllRelatedFactPages()
     } else {
-      fetchFirstRelatedFactPages()
+      resetRelatedFactPages()
     }
   }
 
