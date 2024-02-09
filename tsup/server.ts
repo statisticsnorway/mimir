@@ -37,7 +37,7 @@ export default function buildServerConfig(): Options {
     loader: {
       '.es6': 'js',
     },
-    external: [/^\/lib\//, /^\/react4xp\//],
+    external: [/^\/lib\//, /^\/react4xp\//, /^\/site\//],
     format: 'cjs',
     inject: [
       // Injects makes it possible to use some functionality in any file :)

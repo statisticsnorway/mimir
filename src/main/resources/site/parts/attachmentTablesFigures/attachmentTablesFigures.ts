@@ -15,8 +15,8 @@ import { datasetOrUndefined } from '/lib/ssb/cache/cache'
 import { type AccordionData } from '/site/parts/accordion/accordion'
 import { GA_TRACKING_ID } from '/site/pages/default/default'
 import { type Statistics } from '/site/content-types'
-import { getProps } from '../table/table'
-import { preview as highchartPreview } from '../highchart/highchart'
+import { getProps } from '/site/parts/table/table'
+import { preview as highchartPreview } from '/site/parts/highchart/highchart'
 
 export function get(req: XP.Request): XP.Response {
   try {

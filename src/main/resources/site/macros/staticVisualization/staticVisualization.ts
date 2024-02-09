@@ -1,9 +1,9 @@
 import { renderError } from '/lib/ssb/error/error'
 import { type StaticVisualization as StaticVisualizationConfig } from '/site/macros/staticVisualization'
 
-import { preview } from '../../parts/staticVisualization/staticVisualization'
+import { preview } from '/site/parts/staticVisualization/staticVisualization'
 
-import { preview as dividerControllerPreview } from '../../parts/divider/divider'
+import { preview as dividerControllerPreview } from '/site/parts/divider/divider'
 
 export const macro = (context: XP.MacroContext<StaticVisualizationConfig>): XP.Response => {
   try {

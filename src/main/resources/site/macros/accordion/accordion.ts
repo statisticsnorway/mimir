@@ -1,5 +1,5 @@
 import { data } from '/lib/util'
-import { preview } from '../../parts/accordion/accordion'
+import { preview } from '/site/parts/accordion/accordion'
 import { Accordion } from '.'
 
 export function macro(context: XP.MacroContext<Accordion>) {
