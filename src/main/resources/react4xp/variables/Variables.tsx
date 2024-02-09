@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Text } from '@statisticsnorway/ssb-component-library'
-import VariableCardsList from './VariableCardsList.jsx'
+import VariableCardsList from './VariableCardsList'
 import { variableType } from './types'
 
 export const DISPLAY_TYPE_CARDS = 'CARDS'

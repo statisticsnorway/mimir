@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import VariableCard from './VariableCard.jsx'
+import VariableCard from './VariableCard'
 import { variableType } from './types'
 
 class VariableCardsList extends React.Component {

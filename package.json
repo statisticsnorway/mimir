@@ -13,14 +13,14 @@
     "watch:style": "cross-env NODE_ENV=development npx sass \"src/main/resources/assets/styles/main.scss\":\"build/resources/main/assets/styles/bundle.css\" \"src/main/resources/assets/styles/main_menu.scss\":\"build/resources/main/assets/styles/bundle_menu.css\" --load-path=node_modules --load-path=node_modules/bootstrap/scss --watch --style=expanded",
     "watch:server": "cross-env NODE_ENV=development npm run build:server -- --watch",
     "watch:react4xp": "cross-env WATCH=true NODE_ENV=development R4X_APP_NAME=mimir R4X_DIR_PATH_ABSOLUTE_PROJECT=$INIT_CWD npm run components:react4xp",
-    "watch:browserSync": "npx browser-sync start --files \"src/main/resources/**/*.html\" \"src/main/resources/**/*.xml\" \"src/main/resources/**/*.jsx\" \"src/main/resources/**/*.scss\" \"build/resources/main\" --reload-delay 0 --no-snippet --watch",
+    "watch:browserSync": "npx browser-sync start --files \"src/main/resources/**/*.html\" \"src/main/resources/**/*.xml\" \"src/main/resources/**/*.tsx\" \"src/main/resources/**/*.scss\" \"build/resources/main\" --reload-delay 0 --no-snippet --watch",
     "components:react4xp": "npm explore @enonic/react4xp -- npm run webpack:components",
     "compile:react4xp": "npm explore @enonic/react4xp -- npm run build:react4xp",
     "start": "enonic project deploy --dev",
     "install:dev": "nsi",
     "install:prod": "npm install",
-    "lint": "eslint --fix ./src --ext .es6 --ext .ts --ext .jsx",
-    "lint-dry": "eslint ./src --ext .es6 --ext .ts --ext .jsx",
+    "lint": "eslint --fix ./src --ext .es6 --ext .ts --ext .tsx",
+    "lint-dry": "eslint ./src --ext .es6 --ext .ts --ext .tsx",
     "test": "jest"
   },
   "repository": {

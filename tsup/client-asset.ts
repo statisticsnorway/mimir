@@ -9,7 +9,7 @@ import { type Options } from '.'
 
 export default function buildAssetConfig(): Options {
   const isDev = process.env.NODE_ENV === 'development'
-  const SCRIPT_GLOB_EXTENSIONS_ASSETS = '{tsx,ts,jsx,js,es6}'
+  const SCRIPT_GLOB_EXTENSIONS_ASSETS = '{ts,jsx,js,es6}'
 
   // Use object entry to force flat output folder structure, object key is destination path
   const SCRIPT_FILES_ASSETS = globSync(`${DIR_SRC_ASSETS}/**/*.${SCRIPT_GLOB_EXTENSIONS_ASSETS}`)
@@ -64,6 +64,7 @@ export default function buildAssetConfig(): Options {
     // and peerDependencies in your packages.json are always excluded
     external: [
       // Must be loaded into global scope instead
+      'react'
     ],
     format: [
       'iife', // For browser
