@@ -161,7 +161,7 @@ function Highchart(props) {
                     addGtagForEvent(props.GA_TRACKING_ID, action, category, label)
                   }
 
-                  this.exportChartlocal() // png is default
+                  this.exportChartLocal() // png is default
                 },
               },
               downloadJPEG: {
