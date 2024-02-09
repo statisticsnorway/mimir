@@ -14,7 +14,6 @@ import zipcelx from 'zipcelx/lib/legacy'
 import accessibilityLang from '../highchart-lang.json'
 
 // Initialize exporting module.
-window.Highcharts = Highcharts
 highchartsModuleData(Highcharts)
 highchartsModuleAccessibility(Highcharts)
 highchartsModuleNoDataToDisplay(Highcharts)
