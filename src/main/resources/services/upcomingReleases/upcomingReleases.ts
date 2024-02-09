@@ -11,7 +11,7 @@ import {
 } from '/lib/ssb/utils/variantUtils'
 import { filterOnComingReleases } from '/lib/ssb/utils/filterReleasesUtils'
 
-import { getAllStatisticsFromRepo } from '../../lib/ssb/statreg/statistics'
+import { getAllStatisticsFromRepo } from '/lib/ssb/statreg/statistics'
 
 export const get = (req: XP.Request): XP.Response => {
   // Get statistics

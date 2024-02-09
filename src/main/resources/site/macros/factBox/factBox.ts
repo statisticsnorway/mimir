@@ -1,5 +1,5 @@
 import { renderError } from '/lib/ssb/error/error'
-import { preview } from '../../parts/factBox/factBox'
+import { preview } from '/site/parts/highchart/highchart'
 import { type FactBox } from '.'
 
 export function macro(context: XP.MacroContext<FactBox>) {

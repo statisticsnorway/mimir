@@ -1,5 +1,5 @@
 import { renderError } from '/lib/ssb/error/error'
-import { preview } from '../../parts/highmap/highmap'
+import { preview } from '/site/parts/highmap/highmap'
 import { Highmap } from '.'
 
 export function macro(context: XP.MacroContext<Highmap>) {
