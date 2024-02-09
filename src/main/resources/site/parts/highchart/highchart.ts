@@ -141,7 +141,7 @@ function determinConfigType(
 
 function createDataFromHtmlTable(req: XP.Request, highchart: Content<Highchart & DataSource>): HighchartsExtendedProps {
   return {
-    ...createHighchartObject(req, highchart, highchart.data, undefined),
+    ...createHighchartObject(req, highchart, highchart.data, highchart.data.dataSource ?? undefined),
   }
 }
 
@@ -151,6 +151,9 @@ function createDataFromDataSource(
 ): HighchartsExtendedProps | undefined {
   if (highchart && highchart.data && highchart.data.dataSource) {
     const type: string = highchart.data.dataSource._selected
+    if (type === 'htmlTable') {
+      return createDataFromHtmlTable(req, highchart)
+    }
 
     // get draft
     const paramShowDraft: boolean = req.params.showDraft !== undefined && req.params.showDraft === 'true'

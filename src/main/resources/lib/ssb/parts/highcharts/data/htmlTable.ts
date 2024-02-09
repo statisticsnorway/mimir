@@ -6,15 +6,23 @@ import { XmlParser, PreliminaryData, TableRowUniform, TableCellUniform } from '/
 import { RowValue, getRowValue } from '/lib/ssb/utils/utils'
 import { toString } from '/lib/vendor/ramda'
 import * as util from '/lib/util'
+import { DataSource as DataSourceType } from '/lib/ssb/repo/dataset'
 import { type Highchart } from '/site/content-types'
 
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 
 export function seriesAndCategoriesFromHtmlTable(highChartsContent: Content<Highchart>): SeriesAndCategories {
   let stringJson: string | undefined
+  let htmlTable: string | undefined
 
-  if (highChartsContent.data.htmlTable) {
-    const sanitized = striptags(highChartsContent.data.htmlTable, ['table', 'thead', 'tbody', 'tr', 'th', 'td'])
+  if (highChartsContent.data.dataSource && highChartsContent.data.dataSource._selected === DataSourceType.HTMLTABLE) {
+    htmlTable = highChartsContent.data.dataSource.htmlTable.html
+  } else {
+    htmlTable = highChartsContent.data.htmlTable ?? undefined
+  }
+
+  if (htmlTable) {
+    const sanitized = striptags(htmlTable, ['table', 'thead', 'tbody', 'tr', 'th', 'td'])
     stringJson = __.toNativeObject(xmlParser.parse(sanitized))
   }
   const result: Table | undefined = stringJson ? JSON.parse(stringJson) : undefined

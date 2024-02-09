@@ -29,6 +29,8 @@ export function prepareHighchartsData(
       ? addDataProperties(highchartsContent, seriesAndCategories)
       : seriesAndCategories
 
+  log.info('\x1b[36m%s\x1b[0m', 'seriesAndCategoriesOrData: ' + JSON.stringify(seriesAndCategoriesOrData, null, 2))
+
   return seriesAndCategoriesOrData !== undefined
     ? switchRowsAndColumnsCheck(highchartsContent, seriesAndCategoriesOrData)
     : seriesAndCategoriesOrData
@@ -40,7 +42,6 @@ export function getSeriesAndCategories(
   data: JSONstat | TbmlDataUniform | object | string | undefined,
   dataSource: DataSource['dataSource']
 ): SeriesAndCategories | undefined {
-  //
   if (dataSource && dataSource._selected === DataSourceType.STATBANK_API) {
     return seriesAndCategoriesFromJsonStat(req, highchart, data, dataSource)
   } else if (dataSource && dataSource._selected === DataSourceType.TBPROCESSOR) {
@@ -49,7 +50,7 @@ export function getSeriesAndCategories(
       highchart.data.graphType,
       highchart.data.xAxisType || 'linear'
     )
-  } else if (highchart.data.htmlTable) {
+  } else if (highchart.data.htmlTable || (dataSource && dataSource._selected === DataSourceType.HTMLTABLE)) {
     return seriesAndCategoriesFromHtmlTable(highchart)
   }
   return undefined
