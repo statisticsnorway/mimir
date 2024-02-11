@@ -1,12 +1,32 @@
 import React, { useState, useRef, useEffect } from 'react'
-import PropTypes from 'prop-types'
 import { Form, Container, Row, Col } from 'react-bootstrap'
 import { Input, Button, Dropdown, Divider, FormError, Link, RadioGroup } from '@statisticsnorway/ssb-component-library'
 import axios from 'axios'
 import { NumericFormat } from 'react-number-format'
 import { X } from 'react-feather'
 
-function PifCalculator(props) {
+interface PifCalculatorProps {
+  pifServiceUrl?: string;
+  language?: string;
+  months?: {
+    id?: string;
+    title?: string;
+  }[];
+  productGroups?: {
+    id?: string;
+    title?: string;
+  }[];
+  phrases?: string[];
+  nextPublishText?: string;
+  lastNumberText?: string;
+  lastUpdated?: {
+    month?: string;
+    year?: string;
+  };
+  calculatorArticleUrl?: string;
+}
+
+function PifCalculator(props: PifCalculatorProps) {
   const validMaxYear = props.lastUpdated.year
   const { calculatorValidateAmountNumber, pifValidateYear } = props.phrases
   const [scopeCode, setScopeCode] = useState({
@@ -685,31 +705,6 @@ function PifCalculator(props) {
 PifCalculator.defaultValue = {
   pifServiceUrl: null,
   language: 'nb',
-}
-
-PifCalculator.propTypes = {
-  pifServiceUrl: PropTypes.string,
-  language: PropTypes.string,
-  months: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string,
-      title: PropTypes.string,
-    })
-  ),
-  productGroups: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string,
-      title: PropTypes.string,
-    })
-  ),
-  phrases: PropTypes.arrayOf(PropTypes.string),
-  nextPublishText: PropTypes.string,
-  lastNumberText: PropTypes.string,
-  lastUpdated: PropTypes.shape({
-    month: PropTypes.string,
-    year: PropTypes.string,
-  }),
-  calculatorArticleUrl: PropTypes.string,
 }
 
 export default (props) => <PifCalculator {...props} />

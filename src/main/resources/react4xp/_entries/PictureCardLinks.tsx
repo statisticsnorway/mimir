@@ -1,8 +1,25 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { ArrowRight, ArrowRightCircle } from 'react-feather'
 
-const PictureLink = ({ href, title, subTitle, id, ariaDescribedBy, className, imageSources }) => {
+interface PictureLinkProps {
+  title?: string;
+  subTitle?: string;
+  href?: string;
+  imageSources?: object;
+  className?: string;
+  id?: string;
+  ariaDescribedBy?: string;
+}
+
+const PictureLink = ({
+  href,
+  title,
+  subTitle,
+  id,
+  ariaDescribedBy,
+  className,
+  imageSources
+}: PictureLinkProps) => {
   return (
     <a
       className={`ssb-picture-card vertical ${className || ''} group`}
@@ -29,17 +46,17 @@ const PictureLink = ({ href, title, subTitle, id, ariaDescribedBy, className, im
   )
 }
 
-PictureLink.propTypes = {
-  title: PropTypes.string,
-  subTitle: PropTypes.string,
-  href: PropTypes.string,
-  imageSources: PropTypes.object,
-  className: PropTypes.string,
-  id: PropTypes.string,
-  ariaDescribedBy: PropTypes.string,
+interface PictureCardLinksProps {
+  pictureCardLinks?: {
+    title?: string;
+    subTitle?: string;
+    href?: string;
+    imageSources?: object;
+  }[];
+  react4xpId?: string;
 }
 
-const PictureCardLinks = (props) => {
+const PictureCardLinks = (props: PictureCardLinksProps) => {
   function getColSize(length, index) {
     if (length === 2 || (length === 3 && index === 0)) return 'col-md-6'
     if (length === 3 && index > 0) return 'col-md-3'
@@ -72,18 +89,6 @@ const PictureCardLinks = (props) => {
 
 PictureCardLinks.defaultProps = {
   pictureCardLinks: [],
-}
-
-PictureCardLinks.propTypes = {
-  pictureCardLinks: PropTypes.arrayOf(
-    PropTypes.shape({
-      title: PropTypes.string,
-      subTitle: PropTypes.string,
-      href: PropTypes.string,
-      imageSources: PropTypes.object,
-    })
-  ),
-  react4xpId: PropTypes.string,
 }
 
 export default (props) => <PictureCardLinks {...props} />

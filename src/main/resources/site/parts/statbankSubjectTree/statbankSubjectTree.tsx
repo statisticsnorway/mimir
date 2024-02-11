@@ -1,8 +1,12 @@
 import { Accordion, NestedAccordion, Link } from '@statisticsnorway/ssb-component-library'
-import PropTypes from 'prop-types'
 import React from 'react'
 
-function StatbankSubjectTree(props) {
+interface StatbankSubjectTreeProps {
+  statbankBaseUrl?: string;
+  mainSubjects?: unknown[];
+}
+
+function StatbankSubjectTree(props: StatbankSubjectTreeProps) {
   function renderStatisticLink(statistic) {
     return (
       <li>
@@ -32,28 +36,6 @@ function StatbankSubjectTree(props) {
       {props.mainSubjects.map((mainSubject) => renderMainSubjects(mainSubject))}
     </section>
   )
-}
-
-StatbankSubjectTree.propTypes = {
-  statbankBaseUrl: PropTypes.string,
-  mainSubjects: PropTypes.arrayOf({
-    title: PropTypes.string,
-    subjectCode: PropTypes.string,
-    path: PropTypes.string,
-    language: PropTypes.string,
-    name: PropTypes.string,
-    subSubjects: PropTypes.arrayOf({
-      title: PropTypes.string,
-      subjectCode: PropTypes.string,
-      path: PropTypes.string,
-      language: PropTypes.string,
-      name: PropTypes.string,
-      statistics: PropTypes.arrayOf({
-        title: PropTypes.string,
-        url: PropTypes.string,
-      }),
-    }),
-  }),
 }
 
 export default (props) => <StatbankSubjectTree {...props} />

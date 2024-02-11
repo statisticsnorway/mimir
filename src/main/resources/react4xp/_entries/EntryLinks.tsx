@@ -1,8 +1,17 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { Link, Title } from '@statisticsnorway/ssb-component-library'
 
-class EntryLinks extends React.Component {
+interface EntryLinksProps {
+  headerTitle?: string;
+  entryLinks: {
+    title: string;
+    href: string;
+    icon: string;
+    altText?: string;
+  }[];
+}
+
+class EntryLinks extends React.Component<EntryLinksProps> {
   renderIcon(icon) {
     return (
       <span
@@ -60,18 +69,6 @@ class EntryLinks extends React.Component {
       </div>
     )
   }
-}
-
-EntryLinks.propTypes = {
-  headerTitle: PropTypes.string,
-  entryLinks: PropTypes.arrayOf(
-    PropTypes.shape({
-      title: PropTypes.string.isRequired,
-      href: PropTypes.string.isRequired,
-      icon: PropTypes.string.isRequired,
-      altText: PropTypes.string,
-    })
-  ).isRequired,
 }
 
 export default (props) => <EntryLinks {...props} />

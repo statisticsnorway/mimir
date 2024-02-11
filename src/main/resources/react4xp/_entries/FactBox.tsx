@@ -1,8 +1,12 @@
 import React from 'react'
 import { FactBox as FactBoxComponent } from '@statisticsnorway/ssb-component-library'
-import PropTypes from 'prop-types'
 
-const FactBox = (props) => {
+interface FactBoxProps {
+  header?: string;
+  text?: string;
+}
+
+const FactBox = (props: FactBoxProps) => {
   const createText = (text) => (
     <div
       dangerouslySetInnerHTML={{
@@ -12,11 +16,6 @@ const FactBox = (props) => {
   )
 
   return <FactBoxComponent header={props.header} text={createText(props.text)}></FactBoxComponent>
-}
-
-FactBox.propTypes = {
-  header: PropTypes.string,
-  text: PropTypes.string,
 }
 
 export default FactBox

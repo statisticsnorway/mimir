@@ -1,8 +1,15 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { Modal } from 'react-bootstrap'
 
-function BestBetModal(props) {
+interface BestBetModalProps {
+  show?: unknown;
+  onHide?: unknown;
+  title?: string;
+  body?: React.ReactNode;
+  footer?: React.ReactNode;
+}
+
+function BestBetModal(props: BestBetModalProps) {
   return (
     <Modal size='lg' show={props.show} onHide={props.onHide}>
       <Modal.Header closeButton>
@@ -12,14 +19,6 @@ function BestBetModal(props) {
       <Modal.Footer>{props.footer}</Modal.Footer>
     </Modal>
   )
-}
-
-BestBetModal.propTypes = {
-  show: PropTypes.boolean,
-  onHide: PropTypes.boolean,
-  title: PropTypes.string,
-  body: PropTypes.node,
-  footer: PropTypes.node,
 }
 
 export default BestBetModal

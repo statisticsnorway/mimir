@@ -1,11 +1,26 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Divider, Link, Title, Text, Dropdown } from '@statisticsnorway/ssb-component-library'
-import PropTypes from 'prop-types'
 import { NumericFormat } from 'react-number-format'
 import { ChevronDown } from 'react-feather'
 import axios from 'axios'
 
-function PublicationArchive(props) {
+interface PublicationArchiveProps {
+  title?: string;
+  ingress?: string;
+  buttonTitle?: string;
+  showingPhrase?: string;
+  defineContentPhrase?: string;
+  chooseSubjectPhrase?: string;
+  chooseContentTypePhrase?: string;
+  language?: string;
+  publicationArchiveServiceUrl?: string;
+  firstPublications?: Record<string, unknown>;
+  articleTypePhrases?: Record<string, string>;
+  dropDownSubjects?: unknown[];
+  dropDownTypes?: unknown[];
+}
+
+function PublicationArchive(props: PublicationArchiveProps) {
   const {
     title,
     ingress,
@@ -196,7 +211,7 @@ function PublicationArchive(props) {
   }
 
   return (
-    <section className='publication-archive container-fluid'>
+    (<section className='publication-archive container-fluid'>
       <div className='row'>
         <div className='col-12 publication-archive-head py-5 px-2'>
           <div className='container'>
@@ -238,27 +253,8 @@ function PublicationArchive(props) {
         </div>
       </div>
       {addHiddenLinkSolrArticleList()}
-    </section>
-  )
+    </section>)
+  );
 }
 
 export default (props) => <PublicationArchive {...props} />
-
-PublicationArchive.propTypes = {
-  title: PropTypes.string,
-  ingress: PropTypes.string,
-  buttonTitle: PropTypes.string,
-  showingPhrase: PropTypes.string,
-  defineContentPhrase: PropTypes.string,
-  chooseSubjectPhrase: PropTypes.string,
-  chooseContentTypePhrase: PropTypes.string,
-  language: PropTypes.string,
-  publicationArchiveServiceUrl: PropTypes.string,
-  firstPublications: PropTypes.objectOf({
-    total: PropTypes.number,
-    publications: PropTypes.array,
-  }),
-  articleTypePhrases: PropTypes.objectOf(PropTypes.string),
-  dropDownSubjects: PropTypes.array,
-  dropDownTypes: PropTypes.array,
-}

@@ -1,8 +1,13 @@
 import React from 'react'
 import { Glossary } from '@statisticsnorway/ssb-component-library'
-import PropTypes from 'prop-types'
 
-const ModifiedDate = (props) => {
+interface ModifiedDateProps {
+  children?: React.ReactNode;
+  className?: string;
+  explanation?: string;
+}
+
+const ModifiedDate = (props: ModifiedDateProps) => {
   return (
     <React.Fragment>
       <Glossary className={props.className} explanation={props.explanation}>
@@ -14,12 +19,6 @@ const ModifiedDate = (props) => {
       </Glossary>
     </React.Fragment>
   )
-}
-
-ModifiedDate.propTypes = {
-  children: PropTypes.node,
-  className: PropTypes.string,
-  explanation: PropTypes.string,
 }
 
 export default ModifiedDate

@@ -1,8 +1,21 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { ArrowRight } from 'react-feather'
 
-function FrontpageKeyfigures({ keyFigures }) {
+interface FrontpageKeyfiguresProps {
+  keyFigures?: {
+    id?: string;
+    title?: string;
+    url?: string;
+    urlText?: string;
+    number?: string;
+    numberDescription?: string;
+    noNumberText?: string;
+  }[];
+}
+
+function FrontpageKeyfigures({
+  keyFigures
+}: FrontpageKeyfiguresProps) {
   return (
     <div className='container'>
       <div className='row d-flex flex-wrap'>
@@ -43,20 +56,6 @@ function FrontpageKeyfigures({ keyFigures }) {
       </div>
     </div>
   )
-}
-
-FrontpageKeyfigures.propTypes = {
-  keyFigures: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string,
-      title: PropTypes.string,
-      url: PropTypes.string,
-      urlText: PropTypes.string,
-      number: PropTypes.string,
-      numberDescription: PropTypes.string,
-      noNumberText: PropTypes.string,
-    })
-  ),
 }
 
 export default (props) => <FrontpageKeyfigures {...props} />

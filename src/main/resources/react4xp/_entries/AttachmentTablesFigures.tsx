@@ -2,11 +2,27 @@ import React, { useState, useRef, useEffect } from 'react'
 import { Accordion, Button } from '@statisticsnorway/ssb-component-library'
 import { ChevronDown, ChevronUp } from 'react-feather'
 
-import PropTypes from 'prop-types'
 import Table from '../table/Table'
 import { addGtagForEvent } from '/react4xp/ReactGA'
 
-function AttachmentTableFigures(props) {
+interface AttachmentTableFiguresProps {
+  accordions?: {
+    id?: string;
+    contentType?: string;
+    open: string;
+    subHeader?: string;
+    body?: string;
+    props?: object;
+  }[];
+  freeText?: string;
+  showAll?: string;
+  showLess?: string;
+  appName?: string;
+  GA_TRACKING_ID?: string;
+  title?: string;
+}
+
+function AttachmentTableFigures(props: AttachmentTableFiguresProps) {
   const [isHidden, setIsHidden] = useState(true)
   const { accordions, freeText, showAll, showLess, title } = props
   const currentElement = useRef(null)
@@ -143,25 +159,6 @@ function AttachmentTableFigures(props) {
       )}
     </React.Fragment>
   )
-}
-
-AttachmentTableFigures.propTypes = {
-  accordions: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string,
-      contentType: PropTypes.string,
-      open: PropTypes.string.isRequired,
-      subHeader: PropTypes.string,
-      body: PropTypes.string,
-      props: PropTypes.object,
-    })
-  ),
-  freeText: PropTypes.string,
-  showAll: PropTypes.string,
-  showLess: PropTypes.string,
-  appName: PropTypes.string,
-  GA_TRACKING_ID: PropTypes.string,
-  title: PropTypes.string,
 }
 
 export default (props) => <AttachmentTableFigures {...props} />

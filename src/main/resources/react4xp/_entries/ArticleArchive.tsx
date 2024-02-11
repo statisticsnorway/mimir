@@ -3,10 +3,26 @@ import { Divider, Button, LeadParagraph, Paragraph, Link } from '@statisticsnorw
 import { Container, Row, Col } from 'react-bootstrap'
 import { ChevronDown } from 'react-feather'
 import { default as groupBy } from 'ramda/es/groupBy'
-import PropTypes from 'prop-types'
 import axios from 'axios'
 
-function ArticleArchive(props) {
+interface ArticleArchiveProps {
+  title?: string;
+  preamble?: string;
+  image?: string;
+  imageAltText?: string;
+  freeText?: string;
+  issnNumber?: string;
+  listOfArticlesSectionTitle?: string;
+  firstArticles?: unknown[];
+  articleArchiveService?: string;
+  pageId?: string;
+  language?: string;
+  showMore?: string;
+  showLess?: string;
+  showMorePagination?: string;
+}
+
+function ArticleArchive(props: ArticleArchiveProps) {
   const {
     title,
     preamble,
@@ -158,23 +174,6 @@ function ArticleArchive(props) {
       </Row>
     </Container>
   )
-}
-
-ArticleArchive.propTypes = {
-  title: PropTypes.string,
-  preamble: PropTypes.string,
-  image: PropTypes.string,
-  imageAltText: PropTypes.string,
-  freeText: PropTypes.string,
-  issnNumber: PropTypes.string,
-  listOfArticlesSectionTitle: PropTypes.string,
-  firstArticles: PropTypes.array,
-  articleArchiveService: PropTypes.string,
-  pageId: PropTypes.string,
-  language: PropTypes.string,
-  showMore: PropTypes.string,
-  showLess: PropTypes.string,
-  showMorePagination: PropTypes.string,
 }
 
 export default (props) => <ArticleArchive {...props} />

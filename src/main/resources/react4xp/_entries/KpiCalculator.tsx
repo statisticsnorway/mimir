@@ -1,12 +1,30 @@
 import React, { useState } from 'react'
-import PropTypes from 'prop-types'
 import { Form, Container, Row, Col } from 'react-bootstrap'
 import { Input, Button, Dropdown, Divider, FormError, Link, Title } from '@statisticsnorway/ssb-component-library'
 import axios from 'axios'
 import { NumericFormat } from 'react-number-format'
 import { X } from 'react-feather'
 
-function KpiCalculator(props) {
+interface KpiCalculatorProps {
+  kpiServiceUrl?: string;
+  language?: string;
+  months?: {
+    id?: string;
+    title?: string;
+  }[];
+  phrases?: object;
+  calculatorArticleUrl?: string;
+  nextPublishText?: string;
+  lastNumberText?: string;
+  lastUpdated?: {
+    month?: string;
+    year?: string;
+  };
+  frontPage?: boolean;
+  frontPageIngress?: string;
+}
+
+function KpiCalculator(props: KpiCalculatorProps) {
   const validMaxYear = props.lastUpdated.year
   const [startValue, setStartValue] = useState({
     error: false,
@@ -688,27 +706,6 @@ function KpiCalculator(props) {
 KpiCalculator.defaultValue = {
   kpiServiceUrl: null,
   language: 'nb',
-}
-
-KpiCalculator.propTypes = {
-  kpiServiceUrl: PropTypes.string,
-  language: PropTypes.string,
-  months: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string,
-      title: PropTypes.string,
-    })
-  ),
-  phrases: PropTypes.object,
-  calculatorArticleUrl: PropTypes.string,
-  nextPublishText: PropTypes.string,
-  lastNumberText: PropTypes.string,
-  lastUpdated: PropTypes.shape({
-    month: PropTypes.string,
-    year: PropTypes.string,
-  }),
-  frontPage: PropTypes.bool,
-  frontPageIngress: PropTypes.string,
 }
 
 export default (props) => <KpiCalculator {...props} />

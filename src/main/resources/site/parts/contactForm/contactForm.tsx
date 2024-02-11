@@ -1,10 +1,16 @@
 import React, { useEffect, useState } from 'react'
-import PropTypes from 'prop-types'
 import { Form, Container, Row, Col } from 'react-bootstrap'
 import { Input, Button, Dropdown, TextArea, Divider, Title, FormError } from '@statisticsnorway/ssb-component-library'
 import axios from 'axios'
 
-function ContactForm(props) {
+interface ContactFormProps {
+  recaptchaSiteKey?: string;
+  contactFormServiceUrl?: string;
+  phrases?: object;
+  language?: string;
+}
+
+function ContactForm(props: ContactFormProps) {
   const { contactFormServiceUrl, recaptchaSiteKey } = props
   const [receiver, setReceiver] = useState({
     error: false,
@@ -333,13 +339,6 @@ function ContactForm(props) {
   }
 
   return renderContactForm()
-}
-
-ContactForm.propTypes = {
-  recaptchaSiteKey: PropTypes.string,
-  contactFormServiceUrl: PropTypes.string,
-  phrases: PropTypes.object,
-  language: PropTypes.string,
 }
 
 export default (props) => <ContactForm {...props} />

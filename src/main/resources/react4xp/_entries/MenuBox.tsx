@@ -1,8 +1,21 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { Card, Text } from '@statisticsnorway/ssb-component-library'
 
-const MenuBox = (props) => {
+interface MenuBoxProps {
+  boxes?: {
+    title?: string;
+    subtitle?: string;
+    icon?: {
+      src: string;
+      alt?: string;
+    };
+    href: string;
+    titleSize?: string;
+  }[];
+  height?: string;
+}
+
+const MenuBox = (props: MenuBoxProps) => {
   return (
     <section className='xp-part menu-box container'>
       <div className='menu-boxes'>
@@ -25,22 +38,6 @@ const MenuBox = (props) => {
       </div>
     </section>
   )
-}
-
-MenuBox.propTypes = {
-  boxes: PropTypes.arrayOf(
-    PropTypes.shape({
-      title: PropTypes.string,
-      subtitle: PropTypes.string,
-      icon: PropTypes.shape({
-        src: PropTypes.string.isRequired,
-        alt: PropTypes.string,
-      }),
-      href: PropTypes.string.isRequired,
-      titleSize: PropTypes.string,
-    })
-  ),
-  height: PropTypes.string,
 }
 
 export default (props) => <MenuBox {...props} />

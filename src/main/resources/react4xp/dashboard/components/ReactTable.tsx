@@ -2,9 +2,13 @@ import React from 'react'
 import { useTable, useSortBy } from 'react-table'
 import { Table } from 'react-bootstrap'
 import { ChevronUp, ChevronDown } from 'react-feather'
-import PropTypes from 'prop-types'
 
-export function ReactTable(props) {
+interface ReactTableProps {
+  columns?: unknown[];
+  data?: unknown[];
+}
+
+export function ReactTable(props: ReactTableProps) {
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
     {
       columns: props.columns,
@@ -60,11 +64,6 @@ export function ReactTable(props) {
       </tbody>
     </Table>
   )
-}
-
-ReactTable.propTypes = {
-  columns: PropTypes.array,
-  data: PropTypes.array,
 }
 
 export default (props) => <ReactTable {...props} />

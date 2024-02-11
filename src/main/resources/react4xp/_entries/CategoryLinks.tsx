@@ -1,8 +1,17 @@
 import React from 'react'
 import { CategoryLink } from '@statisticsnorway/ssb-component-library'
-import PropTypes from 'prop-types'
 
-class CategoryLinks extends React.Component {
+interface CategoryLinksProps {
+  links?: {
+    href: string;
+    titleText: string;
+    subText: string;
+  }[];
+  methodsAndDocumentationUrl?: string;
+  methodsAndDocumentationLabel?: string;
+}
+
+class CategoryLinks extends React.Component<CategoryLinksProps> {
   constructor(props) {
     super(props)
   }
@@ -40,18 +49,6 @@ class CategoryLinks extends React.Component {
       )
     }
   }
-}
-
-CategoryLinks.propTypes = {
-  links: PropTypes.arrayOf(
-    PropTypes.shape({
-      href: PropTypes.string.isRequired,
-      titleText: PropTypes.string.isRequired,
-      subText: PropTypes.string.isRequired,
-    })
-  ),
-  methodsAndDocumentationUrl: PropTypes.string,
-  methodsAndDocumentationLabel: PropTypes.string,
 }
 
 export default (props) => <CategoryLinks {...props} />

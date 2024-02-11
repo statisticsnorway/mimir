@@ -1,10 +1,31 @@
 import React, { useState } from 'react'
-import { PropTypes } from 'prop-types'
 import { Link, FactBox, Tabs, Divider } from '@statisticsnorway/ssb-component-library'
 import { Row, Col } from 'react-bootstrap'
 import { NumericFormat } from 'react-number-format'
 
-function StaticVisualization(props) {
+interface StaticVisualizationProps {
+  title?: string;
+  imageSrc?: string;
+  altText?: string;
+  longDesc?: string;
+  descriptionStaticVisualization?: string;
+  footnotes?: unknown[];
+  sourcesLabel?: string;
+  showAsGraphLabel?: string;
+  showAsTableLabel?: string;
+  sources?: {
+    url?: string;
+    urlText?: string;
+  }[];
+  inFactPage?: boolean;
+  language?: string;
+  tableData?: {
+    table?: unknown;
+  };
+  id?: string;
+}
+
+function StaticVisualization(props: StaticVisualizationProps) {
   const [activeTab, changeTab] = useState('figure')
   const tabClicked = (e) => changeTab(e)
 
@@ -160,46 +181,6 @@ function StaticVisualization(props) {
       </Row>
     </section>
   )
-}
-
-StaticVisualization.propTypes = {
-  title: PropTypes.string,
-  imageSrc: PropTypes.string,
-  altText: PropTypes.string,
-  longDesc: PropTypes.string,
-  descriptionStaticVisualization: PropTypes.string,
-  footnotes: PropTypes.array,
-  sourcesLabel: PropTypes.string,
-  showAsGraphLabel: PropTypes.string,
-  showAsTableLabel: PropTypes.string,
-  sources: PropTypes.arrayOf(
-    PropTypes.shape({
-      url: PropTypes.string,
-      urlText: PropTypes.string,
-    })
-  ),
-  inFactPage: PropTypes.bool,
-  language: PropTypes.string,
-  tableData: PropTypes.shape({
-    table: {
-      thead: {
-        tr: {
-          th: PropTypes.array,
-        },
-      },
-      tbody: PropTypes.arrayOf(
-        PropTypes.shape({
-          tr: PropTypes.arrayOf(
-            PropTypes.shape({
-              th: PropTypes.array,
-              td: PropTypes.array,
-            })
-          ),
-        })
-      ),
-    },
-  }),
-  id: PropTypes.string,
 }
 
 export default (props) => <StaticVisualization {...props} />

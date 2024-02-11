@@ -1,9 +1,16 @@
 import React from 'react'
 import { Breadcrumb, Link } from '@statisticsnorway/ssb-component-library'
-import PropTypes, { object } from 'prop-types'
 import { Col, Container, Row } from 'react-bootstrap'
 
-function StatbankFrame(props) {
+interface StatbankFrameProps {
+  title?: string;
+  breadcrumb?: unknown[];
+  statbankHelpText?: string;
+  statbankFrontPage?: string;
+  statbankHelpLink?: string;
+}
+
+function StatbankFrame(props: StatbankFrameProps) {
   function breadcrumb(bread) {
     return (
       <nav className='row pt-2 mt-2' aria-label='secondary'>
@@ -35,14 +42,6 @@ function StatbankFrame(props) {
       <div id='statbank-placeholder'></div>
     </>
   )
-}
-
-StatbankFrame.propTypes = {
-  title: PropTypes.string,
-  breadcrumb: PropTypes.arrayOf(object),
-  statbankHelpText: PropTypes.string,
-  statbankFrontPage: PropTypes.string,
-  statbankHelpLink: PropTypes.string,
 }
 
 export default (props) => <StatbankFrame {...props} />

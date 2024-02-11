@@ -1,8 +1,13 @@
 import React from 'react'
 import { Title, Dropdown } from '@statisticsnorway/ssb-component-library'
-import PropTypes from 'prop-types'
 
-class LocalSearch extends React.Component {
+interface LocalSearchProps {
+  title?: string;
+  placeholder?: string;
+  items?: unknown[];
+}
+
+class LocalSearch extends React.Component<LocalSearchProps> {
   constructor(props) {
     super(props)
   }
@@ -33,16 +38,6 @@ class LocalSearch extends React.Component {
       </section>
     )
   }
-}
-
-LocalSearch.propTypes = {
-  title: PropTypes.string,
-  placeholder: PropTypes.string,
-  items: PropTypes.arrayOf({
-    title: PropTypes.string,
-    id: PropTypes.string,
-    url: PropTypes.string,
-  }),
 }
 
 export default (props) => <LocalSearch {...props} />

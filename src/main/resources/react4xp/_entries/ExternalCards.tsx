@@ -1,9 +1,18 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { Card, Text } from '@statisticsnorway/ssb-component-library'
 import { Container, Row, Col } from 'react-bootstrap'
 
-const ExternalCards = (props) => {
+interface ExternalCardsProps {
+  links?: {
+    image?: string;
+    imageAlt?: string;
+    content?: string;
+    href: string;
+    children?: string;
+  }[];
+}
+
+const ExternalCards = (props: ExternalCardsProps) => {
   return (
     <Container>
       <Row className='justify-content-start'>
@@ -27,18 +36,6 @@ const ExternalCards = (props) => {
       </Row>
     </Container>
   )
-}
-
-ExternalCards.propTypes = {
-  links: PropTypes.arrayOf(
-    PropTypes.shape({
-      image: PropTypes.string,
-      imageAlt: PropTypes.string,
-      content: PropTypes.string,
-      href: PropTypes.string.isRequired,
-      children: PropTypes.string,
-    })
-  ),
 }
 
 export default ExternalCards

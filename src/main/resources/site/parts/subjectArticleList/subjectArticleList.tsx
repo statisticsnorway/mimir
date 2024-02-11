@@ -1,8 +1,26 @@
 import React, { useEffect, useState } from 'react'
 import { Link, Button, Divider, Dropdown } from '@statisticsnorway/ssb-component-library'
-import PropTypes from 'prop-types'
 import { ChevronDown } from 'react-feather'
 import axios from 'axios'
+
+interface SubjectArticleListProps {
+  title?: string;
+  buttonTitle?: string;
+  articleServiceUrl?: string;
+  currentPath?: string;
+  start?: number;
+  count?: number;
+  showSortAndFilter?: boolean;
+  language?: string;
+  articles?: {
+    title?: string;
+    preface?: string;
+    url?: string;
+    publishDate?: string;
+  }[];
+  totalArticles?: number;
+  showAllArticles?: boolean;
+}
 
 /* TODO:
 - Fikse sortering (?)
@@ -12,7 +30,7 @@ import axios from 'axios'
 - profit
 */
 
-function SubjectArticleList(props) {
+function SubjectArticleList(props: SubjectArticleListProps) {
   const [articles, setArticles] = useState(props.articles)
   const [articleStart, setArticleStart] = useState(props.start)
   const [loadedFirst, setLoadedFirst] = useState(true)
@@ -156,27 +174,6 @@ function SubjectArticleList(props) {
       </div>
     </section>
   )
-}
-
-SubjectArticleList.propTypes = {
-  title: PropTypes.string,
-  buttonTitle: PropTypes.string,
-  articleServiceUrl: PropTypes.string,
-  currentPath: PropTypes.string,
-  start: PropTypes.number,
-  count: PropTypes.number,
-  showSortAndFilter: PropTypes.bool,
-  language: PropTypes.string,
-  articles: PropTypes.arrayOf(
-    PropTypes.shape({
-      title: PropTypes.string,
-      preface: PropTypes.string,
-      url: PropTypes.string,
-      publishDate: PropTypes.string,
-    })
-  ),
-  totalArticles: PropTypes.number,
-  showAllArticles: PropTypes.bool,
 }
 
 export default (props) => <SubjectArticleList {...props} />

@@ -1,6 +1,5 @@
 import React, { useContext } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { PropTypes } from 'prop-types'
 import { Button } from '@statisticsnorway/ssb-component-library'
 import { Modal } from 'react-bootstrap'
 import { selectStatRegStatus } from '/react4xp/dashboard/containers/StatRegDashboard/selectors'
@@ -8,7 +7,12 @@ import { requestStatRegEventLogData } from '/react4xp/dashboard/containers/StatR
 import { WebSocketContext } from '/react4xp/dashboard/utils/websocket/WebsocketProvider'
 import { AlertTriangle } from 'react-feather'
 
-export function RefreshStatRegModal(props) {
+interface RefreshStatRegModalProps {
+  statRegKey?: string;
+  handleClose?(...args: unknown[]): unknown;
+}
+
+export function RefreshStatRegModal(props: RefreshStatRegModalProps) {
   const io = useContext(WebSocketContext)
   const dispatch = useDispatch()
 
@@ -66,9 +70,4 @@ export function RefreshStatRegModal(props) {
       </Modal.Footer>
     </Modal>
   )
-}
-
-RefreshStatRegModal.propTypes = {
-  statRegKey: PropTypes.string,
-  handleClose: PropTypes.func,
 }

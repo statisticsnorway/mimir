@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from 'react'
-import PropTypes from 'prop-types'
 import { Form, Container, Row, Col } from 'react-bootstrap'
 import {
   Input,
@@ -15,7 +14,24 @@ import axios from 'axios'
 import { NumericFormat } from 'react-number-format'
 import { X } from 'react-feather'
 
-function BkibolCalculator(props) {
+interface BkibolCalculatorProps {
+  bkibolServiceUrl?: string;
+  language?: string;
+  months?: {
+    id?: string;
+    title?: string;
+  }[];
+  phrases?: string[];
+  calculatorArticleUrl?: string;
+  nextPublishText?: string;
+  lastNumberText?: string;
+  lastUpdated?: {
+    month?: string;
+    year?: string;
+  };
+}
+
+function BkibolCalculator(props: BkibolCalculatorProps) {
   const validMaxYear = props.lastUpdated.year
   const [scope, setScope] = useState({
     error: false,
@@ -811,25 +827,6 @@ function BkibolCalculator(props) {
 BkibolCalculator.defaultValue = {
   bkibolServiceUrl: null,
   language: 'nb',
-}
-
-BkibolCalculator.propTypes = {
-  bkibolServiceUrl: PropTypes.string,
-  language: PropTypes.string,
-  months: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string,
-      title: PropTypes.string,
-    })
-  ),
-  phrases: PropTypes.arrayOf(PropTypes.string),
-  calculatorArticleUrl: PropTypes.string,
-  nextPublishText: PropTypes.string,
-  lastNumberText: PropTypes.string,
-  lastUpdated: PropTypes.shape({
-    month: PropTypes.string,
-    year: PropTypes.string,
-  }),
 }
 
 export default (props) => <BkibolCalculator {...props} />

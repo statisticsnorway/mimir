@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from 'react'
-import PropTypes from 'prop-types'
 import { Form, Container, Row, Col } from 'react-bootstrap'
 import {
   Input,
@@ -14,7 +13,24 @@ import {
 import axios from 'axios'
 import { NumericFormat } from 'react-number-format'
 
-function HusleieCalculator(props) {
+interface HusleieCalculatorProps {
+  kpiServiceUrl?: string;
+  language?: string;
+  months?: {
+    id?: string;
+    title?: string;
+  }[];
+  phrases?: object;
+  calculatorArticleUrl?: string;
+  nextPublishText?: string;
+  lastNumberText?: string;
+  lastUpdated?: {
+    month?: string;
+    year?: string;
+  };
+}
+
+function HusleieCalculator(props: HusleieCalculatorProps) {
   const validMaxYear = props.lastUpdated.year
   const validMaxMonth = props.lastUpdated.month
 
@@ -605,25 +621,6 @@ function HusleieCalculator(props) {
 HusleieCalculator.defaultValue = {
   kpiServiceUrl: null,
   language: 'nb',
-}
-
-HusleieCalculator.propTypes = {
-  kpiServiceUrl: PropTypes.string,
-  language: PropTypes.string,
-  months: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string,
-      title: PropTypes.string,
-    })
-  ),
-  phrases: PropTypes.object,
-  calculatorArticleUrl: PropTypes.string,
-  nextPublishText: PropTypes.string,
-  lastNumberText: PropTypes.string,
-  lastUpdated: PropTypes.shape({
-    month: PropTypes.string,
-    year: PropTypes.string,
-  }),
 }
 
 export default (props) => <HusleieCalculator {...props} />

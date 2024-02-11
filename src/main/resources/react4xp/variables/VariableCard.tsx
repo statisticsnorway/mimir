@@ -2,7 +2,13 @@ import React from 'react'
 import { Card, Text } from '@statisticsnorway/ssb-component-library'
 import { variableType } from './types'
 
-const VariableCard = ({ variable }) => {
+interface VariableCardProps {
+  variable?: unknown;
+}
+
+const VariableCard = ({
+  variable
+}: VariableCardProps) => {
   const { icon, description, ...rest } = variable
 
   return (
@@ -10,10 +16,6 @@ const VariableCard = ({ variable }) => {
       <Text>{description}</Text>
     </Card>
   )
-}
-
-VariableCard.propTypes = {
-  variable: variableType,
 }
 
 export default VariableCard

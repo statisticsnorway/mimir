@@ -7,7 +7,37 @@ import { Alert } from 'react-bootstrap'
 import { ChevronLeft, ChevronRight } from 'react-feather'
 import { addGtagForEvent } from '/react4xp/ReactGA'
 
-function Table(props) {
+interface TableProps {
+  downloadTableLabel?: string;
+  downloadTableTitle?: object;
+  downloadTableOptions?: {
+    title?: string;
+    id?: string;
+  }[];
+  standardSymbol?: {
+    href?: string;
+    text?: string;
+  };
+  sourceLabel?: string;
+  sources?: {
+    urlText?: string;
+    url?: string;
+  }[];
+  iconUrl?: string;
+  table?: unknown;
+  tableDraft?: unknown;
+  showPreviewDraft?: boolean;
+  paramShowDraft?: boolean;
+  draftExist?: boolean;
+  pageTypeStatistic?: boolean;
+  sourceListTables?: string[];
+  sourceTableLabel?: string;
+  statBankWebUrl?: string;
+  hiddenTitle?: string;
+  GA_TRACKING_ID?: string;
+}
+
+function Table(props: TableProps) {
   const [prevClientWidth, setPrevClientWidth] = useState(0)
   const [table, setTable] = useState(props.paramShowDraft && props.draftExist ? props.tableDraft : props.table)
   const [fetchUnPublished, setFetchUnPublished] = useState(props.paramShowDraft)
@@ -617,39 +647,5 @@ const tableDataShape = PropTypes.shape({
   language: PropTypes.string,
   noteRefs: PropTypes.arrayOf(PropTypes.string),
 })
-
-Table.propTypes = {
-  downloadTableLabel: PropTypes.string,
-  downloadTableTitle: PropTypes.object,
-  downloadTableOptions: PropTypes.arrayOf(
-    PropTypes.shape({
-      title: PropTypes.string,
-      id: PropTypes.string,
-    })
-  ),
-  standardSymbol: PropTypes.shape({
-    href: PropTypes.string,
-    text: PropTypes.string,
-  }),
-  sourceLabel: PropTypes.string,
-  sources: PropTypes.arrayOf(
-    PropTypes.shape({
-      urlText: PropTypes.string,
-      url: PropTypes.string,
-    })
-  ),
-  iconUrl: PropTypes.string,
-  table: tableDataShape,
-  tableDraft: tableDataShape,
-  showPreviewDraft: PropTypes.bool,
-  paramShowDraft: PropTypes.bool,
-  draftExist: PropTypes.bool,
-  pageTypeStatistic: PropTypes.bool,
-  sourceListTables: PropTypes.arrayOf(PropTypes.string),
-  sourceTableLabel: PropTypes.string,
-  statBankWebUrl: PropTypes.string,
-  hiddenTitle: PropTypes.string,
-  GA_TRACKING_ID: PropTypes.string,
-}
 
 export default Table

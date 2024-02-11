@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
-import PropTypes from 'prop-types'
 import { Text } from '@statisticsnorway/ssb-component-library'
 import { Col, Row } from 'react-bootstrap'
 import { useMediaQuery } from 'react-responsive'
@@ -30,7 +29,26 @@ function renderFootnotes(footnotes) {
   return
 }
 
-function Highmap(props) {
+interface HighmapProps {
+  title?: string;
+  subtitle?: string;
+  description?: string;
+  mapFile?: string;
+  tableData?: unknown[];
+  thresholdValues?: unknown[];
+  hideTitle?: unknown;
+  colorPalette?: string;
+  numberDecimals?: string;
+  heightAspectRatio?: string;
+  seriesTitle?: string;
+  legendTitle?: string;
+  legendAlign?: string;
+  footnoteText?: unknown[];
+  phrases?: object;
+  language?: string;
+}
+
+function Highmap(props: HighmapProps) {
   useEffect(() => {
     if (props.language !== 'en') {
       Highcharts.setOptions({
@@ -176,25 +194,6 @@ function Highmap(props) {
       {renderFootnotes(props.footnoteText)}
     </section>
   )
-}
-
-Highmap.propTypes = {
-  title: PropTypes.string,
-  subtitle: PropTypes.string,
-  description: PropTypes.string,
-  mapFile: PropTypes.string,
-  tableData: PropTypes.array,
-  thresholdValues: PropTypes.array,
-  hideTitle: PropTypes.boolean,
-  colorPalette: PropTypes.string,
-  numberDecimals: PropTypes.string,
-  heightAspectRatio: PropTypes.string,
-  seriesTitle: PropTypes.string,
-  legendTitle: PropTypes.string,
-  legendAlign: PropTypes.string,
-  footnoteText: PropTypes.array,
-  phrases: PropTypes.object,
-  language: PropTypes.string,
 }
 
 export default (props) => <Highmap {...props} />

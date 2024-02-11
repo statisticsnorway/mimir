@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { Button, Link } from '@statisticsnorway/ssb-component-library'
-import PropTypes from 'prop-types'
 import axios from 'axios'
 import { ChevronDown } from 'react-feather'
 
@@ -112,15 +111,15 @@ function renderRelease(release, index, date, statisticsPageUrlText) {
   const showPeriod = type === 'statistikk' || type === 'statistic'
 
   return (
-    <li key={index} className='mb-3'>
+    (<li key={index} className='mb-3'>
       <div>
         {!upcomingReleaseLink && <span className='sr-only'>{`${name} - ${showPeriod ? variant.period : ''}`}</span>}
 
         {upcomingReleaseLink ? (
           // deepcode ignore DOMXSS: URL is sanitized in the backend
-          <Link href={upcomingReleaseLink} linkType='header'>
+          (<Link href={upcomingReleaseLink} linkType='header'>
             {name}
-          </Link>
+          </Link>)
         ) : (
           <h3 className='mb-0' aria-hidden='true'>
             {name}
@@ -136,14 +135,13 @@ function renderRelease(release, index, date, statisticsPageUrlText) {
           {day}. {monthName} {year} / <span className='type'>{type}</span> / {mainSubject}
         </p>
       </div>
-
       {url && (
         <div className='statisticsPageLink'>
           <Link href={url}>{statisticsPageUrlText}</Link>
         </div>
       )}
-    </li>
-  )
+    </li>)
+  );
 }
 
 function getShortMonthName(monthNumber, language) {
@@ -187,7 +185,70 @@ function getMonthName(monthNumber, language) {
   return monthNames[monthNumber]
 }
 
-function UpcomingReleases(props) {
+interface UpcomingReleasesProps {
+  title?: string;
+  preface?: string;
+  language?: string;
+  upcomingReleasesServiceUrl?: string;
+  count?: number;
+  buttonTitle?: string;
+  statisticsPageUrlText?: string;
+  releases?: {
+    year?: string;
+    releases?: {
+      month?: string;
+      monthName?: string;
+      releases?: {
+        day?: string;
+        releases?: {
+          date?: {
+            day?: string;
+            month?: string;
+            year?: string;
+          };
+          statistics?: {
+            shortName?: string;
+            name?: string;
+            nameEN?: string;
+            modifiedTime?: string;
+            type?: string;
+            mainSubject?: string;
+            variants?: unknown;
+            statisticsPageUrl?: string;
+          }[];
+        }[];
+      }[];
+    }[];
+  }[];
+  contentReleasesNextXDays?: {
+    id?: string;
+    name?: string;
+    date?: string;
+    type?: string;
+    mainSubject?: string;
+    day?: string;
+    month?: string;
+    monthName?: string;
+    year?: string;
+    upcomingReleaseLink?: string;
+    statisticsPageUrl?: string;
+  }[];
+  contentReleasesAfterXDays?: {
+    id?: string;
+    name?: string;
+    date?: string;
+    type?: string;
+    mainSubject?: string;
+    day?: string;
+    month?: string;
+    monthName?: string;
+    year?: string;
+    upcomingReleaseLink?: string;
+    statisticsPageUrl?: string;
+  }[];
+}
+
+function UpcomingReleases(props: UpcomingReleasesProps) {
   const [releases, setReleases] = useState(
     mergeAndSortReleases(flattenReleases(props.releases), flattenContentReleases(props.contentReleasesNextXDays))
   )
@@ -275,7 +336,7 @@ function UpcomingReleases(props) {
   }
 
   return (
-    <section className='nextStatisticsReleases container-fluid p-0'>
+    (<section className='nextStatisticsReleases container-fluid p-0'>
       <div className='row extended-banner'>
         <div className='col-12 upcoming-releases-head px-4'>
           <div className='container py-5'>
@@ -299,88 +360,8 @@ function UpcomingReleases(props) {
           </div>
         </div>
       </div>
-    </section>
-  )
-}
-
-UpcomingReleases.propTypes = {
-  title: PropTypes.string,
-  preface: PropTypes.string,
-  language: PropTypes.string,
-  upcomingReleasesServiceUrl: PropTypes.string,
-  count: PropTypes.number,
-  buttonTitle: PropTypes.string,
-  statisticsPageUrlText: PropTypes.string,
-  releases: PropTypes.arrayOf(
-    PropTypes.shape({
-      year: PropTypes.string,
-      releases: PropTypes.arrayOf(
-        PropTypes.shape({
-          month: PropTypes.string,
-          monthName: PropTypes.string,
-          releases: PropTypes.arrayOf(
-            PropTypes.shape({
-              day: PropTypes.string,
-              releases: PropTypes.arrayOf(
-                PropTypes.shape({
-                  date: PropTypes.shape({
-                    day: PropTypes.string,
-                    month: PropTypes.string,
-                    year: PropTypes.string,
-                  }),
-                  statistics: PropTypes.arrayOf(
-                    PropTypes.shape({
-                      shortName: PropTypes.string,
-                      name: PropTypes.string,
-                      nameEN: PropTypes.string,
-                      modifiedTime: PropTypes.string,
-                      type: PropTypes.string,
-                      mainSubject: PropTypes.string,
-                      variants: {
-                        frekvens: PropTypes.string,
-                        nextRelease: PropTypes.string,
-                      },
-                      statisticsPageUrl: PropTypes.string,
-                    })
-                  ),
-                })
-              ),
-            })
-          ),
-        })
-      ),
-    })
-  ),
-  contentReleasesNextXDays: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string,
-      name: PropTypes.string,
-      date: PropTypes.string,
-      type: PropTypes.string,
-      mainSubject: PropTypes.string,
-      day: PropTypes.string,
-      month: PropTypes.string,
-      monthName: PropTypes.string,
-      year: PropTypes.string,
-      upcomingReleaseLink: PropTypes.string,
-      statisticsPageUrl: PropTypes.string,
-    })
-  ),
-  contentReleasesAfterXDays: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string,
-      name: PropTypes.string,
-      date: PropTypes.string,
-      type: PropTypes.string,
-      mainSubject: PropTypes.string,
-      day: PropTypes.string,
-      month: PropTypes.string,
-      monthName: PropTypes.string,
-      year: PropTypes.string,
-      upcomingReleaseLink: PropTypes.string,
-      statisticsPageUrl: PropTypes.string,
-    })
-  ),
+    </section>)
+  );
 }
 
 export default (props) => <UpcomingReleases {...props} />

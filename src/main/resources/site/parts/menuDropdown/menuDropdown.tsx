@@ -1,9 +1,22 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Dropdown } from '@statisticsnorway/ssb-component-library'
-import PropTypes from 'prop-types'
 import { ChevronDown, ChevronUp } from 'react-feather'
 
-function MenuDropdown(props) {
+interface MenuDropdownProps {
+  modeMunicipality?: boolean;
+  ariaLabel?: string;
+  placeholder?: string;
+  items?: object;
+  baseUrl?: string;
+  municipality?: object;
+  municipalityName?: string;
+  municipalityList?: object;
+  dropdownId?: string;
+  dataPathAssetUrl?: string;
+  dataServiceUrl?: string;
+}
+
+function MenuDropdown(props: MenuDropdownProps) {
   const {
     baseUrl,
     dataPathAssetUrl,
@@ -143,20 +156,6 @@ function MenuDropdown(props) {
       {!modeMunicipality && renderMunicipalityLinks()}
     </div>
   )
-}
-
-MenuDropdown.propTypes = {
-  modeMunicipality: PropTypes.bool,
-  ariaLabel: PropTypes.string,
-  placeholder: PropTypes.string,
-  items: PropTypes.object,
-  baseUrl: PropTypes.string,
-  municipality: PropTypes.object,
-  municipalityName: PropTypes.string,
-  municipalityList: PropTypes.object,
-  dropdownId: PropTypes.string,
-  dataPathAssetUrl: PropTypes.string,
-  dataServiceUrl: PropTypes.string,
 }
 
 export default (props) => <MenuDropdown {...props} />

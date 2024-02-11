@@ -1,5 +1,4 @@
 import React, { useContext } from 'react'
-import PropTypes from 'prop-types'
 import { Row, Col } from 'react-bootstrap'
 import { Input, TextArea, Dropdown, Button, Divider, Tabs, RadioGroup } from '@statisticsnorway/ssb-component-library'
 import axios from 'axios'
@@ -8,7 +7,17 @@ import 'regenerator-runtime'
 import { BestBetContext } from './Bestbet'
 import { customAsyncSelectStyles } from './customAsyncSelectStyles'
 
-function BestBetForm(props) {
+interface BestBetFormProps {
+  bestBetListServiceUrl?: string;
+  contentSearchServiceUrl?: string;
+  contentTypes?: unknown[];
+  mainSubjects?: unknown[];
+  mainSubjectsEnglish?: unknown[];
+  renderSearchWord?(...args: unknown[]): unknown;
+  handleTag?(...args: unknown[]): unknown;
+}
+
+function BestBetForm(props: BestBetFormProps) {
   const { formState, dispatch } = useContext(BestBetContext)
 
   function handleTabOnClick(item) {
@@ -230,16 +239,6 @@ function BestBetForm(props) {
       </Row>
     </div>
   )
-}
-
-BestBetForm.propTypes = {
-  bestBetListServiceUrl: PropTypes.string,
-  contentSearchServiceUrl: PropTypes.string,
-  contentTypes: PropTypes.array,
-  mainSubjects: PropTypes.array,
-  mainSubjectsEnglish: PropTypes.array,
-  renderSearchWord: PropTypes.func,
-  handleTag: PropTypes.func,
 }
 
 export default BestBetForm

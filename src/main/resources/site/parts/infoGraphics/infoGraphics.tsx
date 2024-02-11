@@ -1,9 +1,24 @@
 import React from 'react'
-import { PropTypes } from 'prop-types'
 import { Title, Link } from '@statisticsnorway/ssb-component-library'
 import { Row, Col } from 'react-bootstrap'
 
-function InfoGraphics(props) {
+interface InfoGraphicsProps {
+  title?: string;
+  imageSrc?: string;
+  altText?: string;
+  longDesc?: string;
+  descriptionStaticVisualization?: string;
+  footnotes?: unknown[];
+  sourcesLabel?: string;
+  sources?: {
+    url?: string;
+    urlText?: string;
+  }[];
+  inFactPage?: boolean;
+  oldContent?: boolean;
+}
+
+function InfoGraphics(props: InfoGraphicsProps) {
   return (
     <section className='container xp-part part-infoGraphic'>
       <Row>
@@ -48,24 +63,6 @@ function InfoGraphics(props) {
       </Row>
     </section>
   )
-}
-
-InfoGraphics.propTypes = {
-  title: PropTypes.string,
-  imageSrc: PropTypes.string,
-  altText: PropTypes.string,
-  longDesc: PropTypes.string,
-  descriptionStaticVisualization: PropTypes.string,
-  footnotes: PropTypes.array,
-  sourcesLabel: PropTypes.string,
-  sources: PropTypes.arrayOf(
-    PropTypes.shape({
-      url: PropTypes.string,
-      urlText: PropTypes.string,
-    })
-  ),
-  inFactPage: PropTypes.bool,
-  oldContent: PropTypes.bool, // TODO: Remove after content has been transferred to the content type
 }
 
 export default (props) => <InfoGraphics {...props} />

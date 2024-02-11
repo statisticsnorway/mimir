@@ -1,9 +1,46 @@
 import React, { useState, useCallback, useEffect } from 'react'
-import PropTypes from 'prop-types'
 import { Divider, Input, Link } from '@statisticsnorway/ssb-component-library'
 import { ChevronDown, ChevronRight, Menu, X } from 'react-feather'
 
-function Header(props) {
+interface HeaderProps {
+  searchText?: string;
+  searchResultPageUrl?: string;
+  topLinks?: {
+    title?: string;
+    path?: string;
+  }[];
+  mainNavigation?: {
+    title?: string;
+    path?: string;
+    isActive?: boolean;
+    menuItems?: {
+      title?: string;
+      path?: string;
+      isActive?: boolean;
+      iconAltText?: string;
+      iconSvgTag?: string;
+    }[];
+  }[];
+  logoUrl?: string;
+  logoSrc?: string;
+  logoAltText?: string;
+  language?: {
+    menuContentId?: string;
+    code?: string;
+    alternativeLanguages?: {
+      title?: string;
+      path?: string;
+      code?: string;
+    }[];
+  };
+  skipToContentText?: string;
+  closeText?: string;
+  menuText?: string;
+  mainMenuText?: string;
+  searchResult?: string;
+}
+
+function Header(props: HeaderProps) {
   const [showSubMenu, setShowSubMenu] = useState(false)
   const [showMainMenuOnMobile, setShowMainMenuOnMobile] = useState(false)
   const [indexForCurrentActiveMenuItem, setIndexForCurrentActiveMenuItem] = useState(undefined)
@@ -211,52 +248,6 @@ function Header(props) {
       </div>
     </header>
   )
-}
-
-Header.propTypes = {
-  searchText: PropTypes.string,
-  searchResultPageUrl: PropTypes.string,
-  topLinks: PropTypes.arrayOf(
-    PropTypes.shape({
-      title: PropTypes.string,
-      path: PropTypes.string,
-    })
-  ),
-  mainNavigation: PropTypes.arrayOf(
-    PropTypes.shape({
-      title: PropTypes.string,
-      path: PropTypes.string,
-      isActive: PropTypes.bool,
-      menuItems: PropTypes.arrayOf(
-        PropTypes.shape({
-          title: PropTypes.string,
-          path: PropTypes.string,
-          isActive: PropTypes.bool,
-          iconAltText: PropTypes.string,
-          iconSvgTag: PropTypes.string,
-        })
-      ),
-    })
-  ),
-  logoUrl: PropTypes.string,
-  logoSrc: PropTypes.string,
-  logoAltText: PropTypes.string,
-  language: PropTypes.shape({
-    menuContentId: PropTypes.string,
-    code: PropTypes.string,
-    alternativeLanguages: PropTypes.arrayOf(
-      PropTypes.shape({
-        title: PropTypes.string,
-        path: PropTypes.string,
-        code: PropTypes.string,
-      })
-    ),
-  }),
-  skipToContentText: PropTypes.string,
-  closeText: PropTypes.string,
-  menuText: PropTypes.string,
-  mainMenuText: PropTypes.string,
-  searchResult: PropTypes.string,
 }
 
 export default (props) => <Header {...props} />

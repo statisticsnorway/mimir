@@ -1,8 +1,22 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { Link, Divider, Text } from '@statisticsnorway/ssb-component-library'
 
-function EmployeeList(props) {
+interface EmployeeListProps {
+  employees?: {
+    surname?: string;
+    name?: string;
+    position?: string;
+    path?: string;
+    phone?: string;
+    email?: string;
+    area?: string;
+  }[];
+  total?: number;
+  pageTitle?: string;
+  pageDescription?: string;
+}
+
+function EmployeeList(props: EmployeeListProps) {
   const { employees, total, pageTitle, pageDescription } = props
 
   const sanitizeMobileNo = (number) => {
@@ -122,20 +136,3 @@ function EmployeeList(props) {
 }
 
 export default (props) => <EmployeeList {...props} />
-
-EmployeeList.propTypes = {
-  employees: PropTypes.arrayOf(
-    PropTypes.shape({
-      surname: PropTypes.string,
-      name: PropTypes.string,
-      position: PropTypes.string,
-      path: PropTypes.string,
-      phone: PropTypes.string,
-      email: PropTypes.string,
-      area: PropTypes.string,
-    })
-  ),
-  total: PropTypes.number,
-  pageTitle: PropTypes.string,
-  pageDescription: PropTypes.string,
-}

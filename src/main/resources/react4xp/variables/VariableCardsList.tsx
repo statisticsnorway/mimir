@@ -1,9 +1,12 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import VariableCard from './VariableCard'
 import { variableType } from './types'
 
-class VariableCardsList extends React.Component {
+interface VariableCardsListProps {
+  variables?: unknown[];
+}
+
+class VariableCardsList extends React.Component<VariableCardsListProps> {
   constructor(props) {
     super(props)
   }
@@ -17,10 +20,6 @@ class VariableCardsList extends React.Component {
       </div>
     )
   }
-}
-
-VariableCardsList.propTypes = {
-  variables: PropTypes.arrayOf(variableType),
 }
 
 export default VariableCardsList

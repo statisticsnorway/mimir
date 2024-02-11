@@ -1,9 +1,27 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { PictureCard, Button } from '@statisticsnorway/ssb-component-library'
-import PropTypes from 'prop-types'
 import axios from 'axios'
 
-function RelatedBoxes(props) {
+interface RelatedBoxesProps {
+  firstRelatedContents?: {
+    total?: number;
+    relatedFactPages?: {
+      title?: string;
+      link?: string;
+      image?: string;
+      imageAlt?: string;
+    }[];
+  };
+  relatedFactPageServiceUrl?: string;
+  partConfig?: object;
+  showAll?: string;
+  showLess?: string;
+  mainTitle?: string;
+  factpagePluralName?: string;
+  showingPhrase?: string;
+}
+
+function RelatedBoxes(props: RelatedBoxesProps) {
   const {
     firstRelatedContents,
     relatedFactPageServiceUrl,
@@ -143,27 +161,6 @@ function RelatedBoxes(props) {
       {renderRelatedFactPages()}
     </div>
   )
-}
-
-RelatedBoxes.propTypes = {
-  firstRelatedContents: PropTypes.shape({
-    total: PropTypes.number,
-    relatedFactPages: PropTypes.arrayOf(
-      PropTypes.shape({
-        title: PropTypes.string,
-        link: PropTypes.string,
-        image: PropTypes.string,
-        imageAlt: PropTypes.string,
-      })
-    ),
-  }),
-  relatedFactPageServiceUrl: PropTypes.string,
-  partConfig: PropTypes.object,
-  showAll: PropTypes.string,
-  showLess: PropTypes.string,
-  mainTitle: PropTypes.string,
-  factpagePluralName: PropTypes.string,
-  showingPhrase: PropTypes.string,
 }
 
 export default (props) => <RelatedBoxes {...props} />

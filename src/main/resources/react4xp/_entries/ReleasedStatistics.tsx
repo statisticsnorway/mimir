@@ -1,8 +1,36 @@
 import React from 'react'
 import { Link } from '@statisticsnorway/ssb-component-library'
-import PropTypes from 'prop-types'
 
-class ReleasedStatistics extends React.Component {
+interface ReleasedStatisticsProps {
+  title?: string;
+  language?: string;
+  releases?: {
+    year?: string;
+    releases?: {
+      month?: string;
+      monthName?: string;
+      releases?: {
+        day?: string;
+        releases?: {
+          date?: {
+            day?: string;
+            month?: string;
+            year?: string;
+          };
+          statistics?: {
+            shortName?: string;
+            name?: string;
+            nameEN?: string;
+            modifiedTime?: string;
+            variants?: unknown;
+          }[];
+        }[];
+      }[];
+    }[];
+  }[];
+}
+
+class ReleasedStatistics extends React.Component<ReleasedStatisticsProps> {
   constructor(props) {
     super(props)
   }
@@ -95,48 +123,6 @@ class ReleasedStatistics extends React.Component {
       </section>
     )
   }
-}
-
-ReleasedStatistics.propTypes = {
-  title: PropTypes.string,
-  language: PropTypes.string,
-  releases: PropTypes.arrayOf(
-    PropTypes.shape({
-      year: PropTypes.string,
-      releases: PropTypes.arrayOf(
-        PropTypes.shape({
-          month: PropTypes.string,
-          monthName: PropTypes.string,
-          releases: PropTypes.arrayOf(
-            PropTypes.shape({
-              day: PropTypes.string,
-              releases: PropTypes.arrayOf(
-                PropTypes.shape({
-                  date: PropTypes.shape({
-                    day: PropTypes.string,
-                    month: PropTypes.string,
-                    year: PropTypes.string,
-                  }),
-                  statistics: PropTypes.arrayOf(
-                    PropTypes.shape({
-                      shortName: PropTypes.string,
-                      name: PropTypes.string,
-                      nameEN: PropTypes.string,
-                      modifiedTime: PropTypes.string,
-                      variants: {
-                        frekvens: PropTypes.string,
-                        nextRelease: PropTypes.string,
-                      },
-                    })
-                  ),
-                })
-              ),
-            })
-          ),
-        })
-      ),
-    })
-  ),
 }
 
 export default (props) => <ReleasedStatistics {...props} />

@@ -1,9 +1,21 @@
 import React from 'react'
 import { Link } from '@statisticsnorway/ssb-component-library'
 import { ArrowRight, ExternalLink } from 'react-feather'
-import PropTypes from 'prop-types'
 
-const Links = (props) => {
+interface LinksProps {
+  links?: {
+    children?: string;
+    className?: string;
+    href: string;
+    icon?: React.ReactNode;
+    iconType?: string;
+    isExternal?: boolean;
+    linkType?: "regular" | "profiled" | "header";
+    negative?: boolean;
+  }[];
+}
+
+const Links = (props: LinksProps) => {
   return (
     <React.Fragment>
       {props.links.map((link, index) => {
@@ -33,21 +45,6 @@ const Links = (props) => {
       })}
     </React.Fragment>
   )
-}
-
-Links.propTypes = {
-  links: PropTypes.arrayOf(
-    PropTypes.shape({
-      children: PropTypes.string,
-      className: PropTypes.string,
-      href: PropTypes.string.isRequired,
-      icon: PropTypes.node,
-      iconType: PropTypes.string,
-      isExternal: PropTypes.bool,
-      linkType: PropTypes.oneOf(['regular', 'profiled', 'header']),
-      negative: PropTypes.bool,
-    })
-  ),
 }
 
 export default Links

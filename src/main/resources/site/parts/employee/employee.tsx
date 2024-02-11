@@ -1,9 +1,37 @@
 import React from 'react'
 import { Button, Title, Link, Paragraph, Accordion } from '@statisticsnorway/ssb-component-library'
-import PropTypes from 'prop-types'
 import { Share2, Send, Smartphone, Eye, Home, Download, Image } from 'react-feather'
 
-const Employee = (props) => {
+interface EmployeeProps {
+  title?: string;
+  email?: string;
+  position?: string;
+  phone?: string;
+  description?: string;
+  profileImages?: unknown[];
+  myCV?: string;
+  projects?: unknown[];
+  area?: object;
+  cvInformation?: object;
+  isResearcher?: boolean;
+  cristinId?: unknown;
+  emailPhrase?: string;
+  phonePhrase?: string;
+  positionPhrase?: string;
+  researchAreaPhrase?: string;
+  departmentPhrase?: string;
+  briefSummaryPhrase?: string;
+  projectsPhrase?: string;
+  downloadPdfPhrase?: string;
+  publicationsPhrase?: string;
+  pressPicturesPhrase?: string;
+  pressPicturesDescrPhrase?: string;
+  pressPictureLabelPhrase?: string;
+  imagePhrase?: string;
+  profilePicturePhrase?: string;
+}
+
+const Employee = (props: EmployeeProps) => {
   const {
     title,
     email,
@@ -267,35 +295,6 @@ const Employee = (props) => {
       </div>
     </section>
   )
-}
-
-Employee.propTypes = {
-  title: PropTypes.string,
-  email: PropTypes.string,
-  position: PropTypes.string,
-  phone: PropTypes.string,
-  description: PropTypes.string,
-  profileImages: PropTypes.array,
-  myCV: PropTypes.string,
-  projects: PropTypes.array,
-  area: PropTypes.object,
-  cvInformation: PropTypes.object,
-  isResearcher: PropTypes.bool,
-  cristinId: PropTypes.string || null,
-  emailPhrase: PropTypes.string,
-  phonePhrase: PropTypes.string,
-  positionPhrase: PropTypes.string,
-  researchAreaPhrase: PropTypes.string,
-  departmentPhrase: PropTypes.string,
-  briefSummaryPhrase: PropTypes.string,
-  projectsPhrase: PropTypes.string,
-  downloadPdfPhrase: PropTypes.string,
-  publicationsPhrase: PropTypes.string,
-  pressPicturesPhrase: PropTypes.string,
-  pressPicturesDescrPhrase: PropTypes.string,
-  pressPictureLabelPhrase: PropTypes.string,
-  imagePhrase: PropTypes.string,
-  profilePicturePhrase: PropTypes.string,
 }
 
 export default (props) => <Employee {...props} />

@@ -1,10 +1,21 @@
 import React from 'react'
 import { Link, TableLink } from '@statisticsnorway/ssb-component-library'
 import { ArrowRight } from 'react-feather'
-import PropTypes from 'prop-types'
 import { addGtagForEvent } from '/react4xp/ReactGA'
 
-const Links = (props) => {
+interface LinksProps {
+  children?: React.ReactNode;
+  href?: string;
+  withIcon?: unknown;
+  linkType?: "regular" | "profiled" | "header";
+  text?: string;
+  description?: string;
+  GA_TRACKING_ID?: string;
+  isPDFAttachment?: boolean;
+  attachmentTitle?: string;
+}
+
+const Links = (props: LinksProps) => {
   const { children, href, withIcon, linkType, text, description, GA_TRACKING_ID, isPDFAttachment, attachmentTitle } =
     props
 
@@ -35,18 +46,6 @@ const Links = (props) => {
 
   const tableLinkProps = text && description
   return <section className='xp-part part-links'>{tableLinkProps ? renderTableLink() : renderLinks()}</section>
-}
-
-Links.propTypes = {
-  children: PropTypes.node,
-  href: PropTypes.string,
-  withIcon: PropTypes.bool | PropTypes.string,
-  linkType: PropTypes.oneOf(['regular', 'profiled', 'header']),
-  text: PropTypes.string,
-  description: PropTypes.string,
-  GA_TRACKING_ID: PropTypes.string,
-  isPDFAttachment: PropTypes.bool,
-  attachmentTitle: PropTypes.string,
 }
 
 export default Links

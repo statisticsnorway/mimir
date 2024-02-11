@@ -1,9 +1,15 @@
 import React from 'react'
 import { Link } from '@statisticsnorway/ssb-component-library'
-import PropTypes from 'prop-types'
 import { ArrowRight, Calendar } from 'react-feather'
 
-const PubArchiveStatCalendarLinks = (props) => {
+interface PubArchiveStatCalendarLinksProps {
+  PublicationLink: string;
+  PublicationText?: string;
+  CalendarLink: string;
+  CalendarText?: string;
+}
+
+const PubArchiveStatCalendarLinks = (props: PubArchiveStatCalendarLinksProps) => {
   return (
     <React.Fragment>
       <div className='container'>
@@ -35,13 +41,6 @@ const PubArchiveStatCalendarLinks = (props) => {
       </div>
     </React.Fragment>
   )
-}
-
-PubArchiveStatCalendarLinks.propTypes = {
-  PublicationLink: PropTypes.string.isRequired,
-  PublicationText: PropTypes.string,
-  CalendarLink: PropTypes.string.isRequired,
-  CalendarText: PropTypes.string,
 }
 
 export default PubArchiveStatCalendarLinks

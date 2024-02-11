@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react'
-import PropTypes from 'prop-types'
 import {
   Card,
   Divider,
@@ -18,7 +17,87 @@ import { NumericFormat } from 'react-number-format'
 import { Col, Row } from 'react-bootstrap'
 import { addGtagForEvent } from '../../../react4xp/ReactGA'
 
-function SearchResult(props) {
+interface SearchResultProps {
+  title?: string;
+  total?: number;
+  buttonTitle?: string;
+  searchServiceUrl?: string;
+  searchPageUrl?: string;
+  nameSearchUrl?: string;
+  language?: string;
+  term?: string;
+  showingPhrase?: string;
+  limitResultPhrase?: string;
+  removeFilterPhrase?: string;
+  mainSearchPhrase?: string;
+  chooseSubjectPhrase?: string;
+  chooseContentTypePhrase?: string;
+  searchText?: string;
+  sortPhrase?: string;
+  sortBestHitPhrase?: string;
+  sortDatePhrase?: string;
+  allContentTypesPhrase?: string;
+  allSubjectsPhrase?: string;
+  count?: number;
+  noHitMessage?: string;
+  nameSearchToggle?: boolean;
+  nameSearchData?: object;
+  namePhrases?: {
+    readMore?: string;
+    thereAre?: string;
+    with?: string;
+    asTheir?: string;
+    have?: string;
+    threeOrLessText?: string;
+    women?: string;
+    men?: string;
+    types?: {
+      firstgivenandfamily?: string;
+      middleandfamily?: string;
+      family?: string;
+      onlygiven?: string;
+      onlygivenandfamily?: string;
+      firstgiven?: string;
+    };
+  };
+  bestBetHit?: {
+    title?: string;
+    url?: string;
+    preface?: string;
+    mainSubject?: string;
+    contentType?: string;
+    publishDate?: string;
+    publishDateHuman?: string;
+  };
+  hits?: {
+    id?: string;
+    title?: string;
+    url?: string;
+    preface?: string;
+    mainSubject?: string;
+    contentType?: string;
+    publishDate?: string;
+    publishDateHuman?: string;
+  }[];
+  contentTypePhrases?: {
+    id?: string;
+    title?: string;
+  }[];
+  contentTypes?: {
+    title?: string;
+    count?: number;
+  }[];
+  subjects?: {
+    title?: string;
+    count?: number;
+  }[];
+  GA_TRACKING_ID?: string;
+  contentTypeUrlParam?: string;
+  subjectUrlParam?: string;
+  searchResultSRText?: string;
+}
+
+function SearchResult(props: SearchResultProps) {
   const [hits, setHits] = useState(props.hits)
   const [searchTerm, setSearchTerm] = useState(props.term)
   const [loading, setLoading] = useState(false)
@@ -164,7 +243,7 @@ function SearchResult(props) {
     if (hit) {
       const last = i === hits.length - props.count
       return (
-        <li key={hit.id || i || undefined} className='mb-4'>
+        (<li key={hit.id || i || undefined} className='mb-4'>
           <a
             ref={last ? currentElement : null}
             className='ssb-link header'
@@ -196,8 +275,8 @@ function SearchResult(props) {
             {hit.publishDateHuman && hit.mainSubject && ` / `}
             {hit.mainSubject}
           </Paragraph>
-        </li>
-      )
+        </li>)
+      );
     }
     return null
   }
@@ -419,15 +498,15 @@ function SearchResult(props) {
       addGtagForEvent(props.GA_TRACKING_ID, 'Navnesøket', 'Søk', searchTerm)
       return (
         //  TODO: Legge til en bedre url til navnestatistikken
-        <Card
+        (<Card
           title={mainNameResult && parseResultText(mainNameResult)}
           className={'pb-5'}
           href={'/navn'}
           icon={<User size={32} />}
         >
           {props.namePhrases.readMore}
-        </Card>
-      )
+        </Card>)
+      );
     } else return null
   }
 
@@ -555,94 +634,6 @@ function SearchResult(props) {
       </div>
     </section>
   )
-}
-
-SearchResult.propTypes = {
-  title: PropTypes.string,
-  total: PropTypes.number,
-  buttonTitle: PropTypes.string,
-  searchServiceUrl: PropTypes.string,
-  searchPageUrl: PropTypes.string,
-  nameSearchUrl: PropTypes.string,
-  language: PropTypes.string,
-  term: PropTypes.string,
-  showingPhrase: PropTypes.string,
-  limitResultPhrase: PropTypes.string,
-  removeFilterPhrase: PropTypes.string,
-  mainSearchPhrase: PropTypes.string,
-  chooseSubjectPhrase: PropTypes.string,
-  chooseContentTypePhrase: PropTypes.string,
-  searchText: PropTypes.string,
-  sortPhrase: PropTypes.string,
-  sortBestHitPhrase: PropTypes.string,
-  sortDatePhrase: PropTypes.string,
-  allContentTypesPhrase: PropTypes.string,
-  allSubjectsPhrase: PropTypes.string,
-  count: PropTypes.number,
-  noHitMessage: PropTypes.string,
-  nameSearchToggle: PropTypes.bool,
-  nameSearchData: PropTypes.object,
-  namePhrases: PropTypes.shape({
-    readMore: PropTypes.string,
-    thereAre: PropTypes.string,
-    with: PropTypes.string,
-    asTheir: PropTypes.string,
-    have: PropTypes.string,
-    threeOrLessText: PropTypes.string,
-    women: PropTypes.string,
-    men: PropTypes.string,
-    types: PropTypes.shape({
-      firstgivenandfamily: PropTypes.string,
-      middleandfamily: PropTypes.string,
-      family: PropTypes.string,
-      onlygiven: PropTypes.string,
-      onlygivenandfamily: PropTypes.string,
-      firstgiven: PropTypes.string,
-    }),
-  }),
-  bestBetHit: PropTypes.shape({
-    title: PropTypes.string,
-    url: PropTypes.string,
-    preface: PropTypes.string,
-    mainSubject: PropTypes.string,
-    contentType: PropTypes.string,
-    publishDate: PropTypes.string,
-    publishDateHuman: PropTypes.string,
-  }),
-  hits: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string,
-      title: PropTypes.string,
-      url: PropTypes.string,
-      preface: PropTypes.string,
-      mainSubject: PropTypes.string,
-      contentType: PropTypes.string,
-      publishDate: PropTypes.string,
-      publishDateHuman: PropTypes.string,
-    })
-  ),
-  contentTypePhrases: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string,
-      title: PropTypes.string,
-    })
-  ),
-  contentTypes: PropTypes.arrayOf(
-    PropTypes.shape({
-      title: PropTypes.string,
-      count: PropTypes.number,
-    })
-  ),
-  subjects: PropTypes.arrayOf(
-    PropTypes.shape({
-      title: PropTypes.string,
-      count: PropTypes.number,
-    })
-  ),
-  GA_TRACKING_ID: PropTypes.string,
-  contentTypeUrlParam: PropTypes.string,
-  subjectUrlParam: PropTypes.string,
-  searchResultSRText: PropTypes.string,
 }
 
 export default (props) => <SearchResult {...props} />

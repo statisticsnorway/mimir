@@ -1,5 +1,4 @@
 import React, { useContext, useState } from 'react'
-import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import { Modal } from 'react-bootstrap'
 import { Button } from '@statisticsnorway/ssb-component-library'
@@ -10,7 +9,11 @@ import { StatisticsLogJob } from '/react4xp/dashboard/containers/Statistics/Stat
 import { selectStatisticsLogDataLoaded, selectStatistic } from '/react4xp/dashboard/containers/Statistics/selectors'
 import { default as format } from 'date-fns/format'
 
-export function StatisticsLog(props) {
+interface StatisticsLogProps {
+  statisticId?: string;
+}
+
+export function StatisticsLog(props: StatisticsLogProps) {
   const { statisticId } = props
 
   const io = useContext(WebSocketContext)
@@ -126,8 +129,4 @@ export function StatisticsLog(props) {
   }
 
   return renderLogData()
-}
-
-StatisticsLog.propTypes = {
-  statisticId: PropTypes.string,
 }

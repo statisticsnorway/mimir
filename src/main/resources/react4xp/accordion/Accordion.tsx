@@ -1,9 +1,20 @@
 import React from 'react'
 import { Accordion as AccordionComponent, NestedAccordion } from '@statisticsnorway/ssb-component-library'
 
-import PropTypes from 'prop-types'
+interface AccordionProps {
+  accordions?: {
+    id?: string;
+    open: string;
+    subHeader?: string;
+    body?: string;
+    items?: {
+      title?: string;
+      body?: string;
+    }[];
+  }[];
+}
 
-class Accordion extends React.Component {
+class Accordion extends React.Component<AccordionProps> {
   renderNestedAccordions(items) {
     return items.map((item, i) => (
       <NestedAccordion key={i} header={item.title}>
@@ -15,7 +26,7 @@ class Accordion extends React.Component {
   createMarkup(html) {
     return {
       __html: html.replace(/&nbsp;/g, ' '),
-    }
+    };
   }
 
   render() {
@@ -45,23 +56,6 @@ class Accordion extends React.Component {
       </section>
     )
   }
-}
-
-Accordion.propTypes = {
-  accordions: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string,
-      open: PropTypes.string.isRequired,
-      subHeader: PropTypes.string,
-      body: PropTypes.string,
-      items: PropTypes.arrayOf(
-        PropTypes.shape({
-          title: PropTypes.string,
-          body: PropTypes.string,
-        })
-      ),
-    })
-  ),
 }
 
 export default Accordion

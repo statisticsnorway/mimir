@@ -1,8 +1,16 @@
 import React, { useState } from 'react'
-import PropTypes from 'prop-types'
 import { Button, Input, Paragraph } from '@statisticsnorway/ssb-component-library'
 
-function MailchimpForm(props) {
+interface MailchimpFormProps {
+  text?: string;
+  emailLabel?: string;
+  buttonTitle?: string;
+  endpoint?: string;
+  id?: string;
+  validateEmailMsg?: string;
+}
+
+function MailchimpForm(props: MailchimpFormProps) {
   const [email, setEmail] = useState({
     error: false,
     errorMsg: props.validateEmailMsg,
@@ -42,15 +50,6 @@ function MailchimpForm(props) {
       </form>
     </section>
   )
-}
-
-MailchimpForm.propTypes = {
-  text: PropTypes.string,
-  emailLabel: PropTypes.string,
-  buttonTitle: PropTypes.string,
-  endpoint: PropTypes.string,
-  id: PropTypes.string,
-  validateEmailMsg: PropTypes.string,
 }
 
 export default (props) => <MailchimpForm {...props} />

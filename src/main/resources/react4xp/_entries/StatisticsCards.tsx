@@ -1,9 +1,21 @@
 import React from 'react'
 import { Button, Card, Text } from '@statisticsnorway/ssb-component-library'
 import { Col, Container, Row } from 'react-bootstrap'
-import PropTypes from 'prop-types'
 
-class RelatedStatistics extends React.Component {
+interface RelatedStatisticsProps {
+  headerTitle?: string;
+  statistics: {
+    icon?: string;
+    iconAlt?: string;
+    title: string;
+    preamble: string;
+    href: string;
+  }[];
+  showAll?: string;
+  showLess?: string;
+}
+
+class RelatedStatistics extends React.Component<RelatedStatisticsProps> {
   constructor(props) {
     super(props)
 
@@ -86,21 +98,6 @@ class RelatedStatistics extends React.Component {
       </Container>
     )
   }
-}
-
-RelatedStatistics.propTypes = {
-  headerTitle: PropTypes.string,
-  statistics: PropTypes.arrayOf(
-    PropTypes.shape({
-      icon: PropTypes.string,
-      iconAlt: PropTypes.string,
-      title: PropTypes.string.isRequired,
-      preamble: PropTypes.string.isRequired,
-      href: PropTypes.string.isRequired,
-    })
-  ).isRequired,
-  showAll: PropTypes.string,
-  showLess: PropTypes.string,
 }
 
 export default (props) => <RelatedStatistics {...props} />

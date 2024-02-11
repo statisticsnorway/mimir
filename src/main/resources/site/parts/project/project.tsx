@@ -1,9 +1,27 @@
 import React from 'react'
 import { Title, Accordion, Link } from '@statisticsnorway/ssb-component-library'
-import PropTypes from 'prop-types'
 import { User, Calendar, Settings } from 'react-feather'
 
-const Project = (props) => {
+interface ProjectProps {
+  introTitle?: string;
+  projectTitle?: string;
+  manager?: string;
+  projectType?: string;
+  projectPeriod?: string;
+  financier?: string;
+  heading?: string;
+  ingress?: unknown;
+  body?: string;
+  participants?: string;
+  collaborators?: string;
+  periodPhrase?: string;
+  financierPhrase?: string;
+  participantsPhrase?: string;
+  projectParticipantsPhrase?: string;
+  collaboratorsPhrase?: string;
+}
+
+const Project = (props: ProjectProps) => {
   const {
     introTitle,
     projectTitle,
@@ -138,25 +156,6 @@ const Project = (props) => {
       </div>
     </section>
   )
-}
-
-Project.propTypes = {
-  introTitle: PropTypes.string,
-  projectTitle: PropTypes.string,
-  manager: PropTypes.string,
-  projectType: PropTypes.string,
-  projectPeriod: PropTypes.string,
-  financier: PropTypes.string,
-  heading: PropTypes.string,
-  ingress: PropTypes.string | undefined,
-  body: PropTypes.string,
-  participants: PropTypes.string,
-  collaborators: PropTypes.string,
-  periodPhrase: PropTypes.string,
-  financierPhrase: PropTypes.string,
-  participantsPhrase: PropTypes.string,
-  projectParticipantsPhrase: PropTypes.string,
-  collaboratorsPhrase: PropTypes.string,
 }
 
 export default (props) => <Project {...props} />

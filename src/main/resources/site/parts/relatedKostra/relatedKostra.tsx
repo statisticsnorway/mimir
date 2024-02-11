@@ -1,9 +1,13 @@
 import React from 'react'
 import { Link } from '@statisticsnorway/ssb-component-library'
 import { ArrowRight } from 'react-feather'
-import PropTypes from 'prop-types'
 
-class RelatedKostra extends React.Component {
+interface RelatedKostraProps {
+  title?: string;
+  description?: string;
+}
+
+class RelatedKostra extends React.Component<RelatedKostraProps> {
   constructor(props) {
     super(props)
   }
@@ -32,11 +36,6 @@ class RelatedKostra extends React.Component {
       </section>
     )
   }
-}
-
-RelatedKostra.propTypes = {
-  title: PropTypes.string,
-  description: PropTypes.string,
 }
 
 export default (props) => <RelatedKostra {...props} />

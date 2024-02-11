@@ -1,9 +1,25 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { Card, Text, Button } from '@statisticsnorway/ssb-component-library'
-import PropTypes from 'prop-types'
 import { useMediaQuery } from 'react-responsive'
 
-function RelatedArticles(props) {
+interface RelatedArticlesProps {
+  relatedArticles: {
+    title: string;
+    subTitle?: string;
+    preface?: string;
+    href: string;
+    imageSrc: string;
+    imageAlt?: string;
+  }[];
+  showAll: string;
+  showLess: string;
+  heading: string;
+  articlePluralName: string;
+  showAllAriaLabel: string;
+  showingPhrase?: string;
+}
+
+function RelatedArticles(props: RelatedArticlesProps) {
   const [isHidden, setIsHidden] = useState(true)
   const [focusElement, setFocusElement] = useState(false)
   const currentElement = useRef(null)
@@ -111,25 +127,6 @@ function RelatedArticles(props) {
       {firstShownArticles.length < relatedArticles.length && renderShowMoreButton()}
     </div>
   )
-}
-
-RelatedArticles.propTypes = {
-  relatedArticles: PropTypes.arrayOf(
-    PropTypes.shape({
-      title: PropTypes.string.isRequired,
-      subTitle: PropTypes.string,
-      preface: PropTypes.string,
-      href: PropTypes.string.isRequired,
-      imageSrc: PropTypes.string.isRequired,
-      imageAlt: PropTypes.string,
-    })
-  ).isRequired,
-  showAll: PropTypes.string.isRequired,
-  showLess: PropTypes.string.isRequired,
-  heading: PropTypes.string.isRequired,
-  articlePluralName: PropTypes.string.isRequired,
-  showAllAriaLabel: PropTypes.string.isRequired,
-  showingPhrase: PropTypes.string,
 }
 
 export default (props) => <RelatedArticles {...props} />

@@ -1,9 +1,35 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { Accordion, Button, Link } from '@statisticsnorway/ssb-component-library'
 import { ArrowRight, ArrowUp, Facebook, Twitter, Rss, Linkedin } from 'react-feather'
 
-class Footer extends React.Component {
+interface FooterProps {
+  globalLinks?: {
+    title?: string;
+    path?: string;
+  }[];
+  footerNavigation?: {
+    title?: string;
+    path?: string;
+    isActive?: boolean;
+    menuItems?: {
+      title?: string;
+      path?: string;
+      isActive?: boolean;
+    }[];
+  }[];
+  logoUrl?: string;
+  copyrightUrl?: string;
+  copyrightText?: string;
+  facebookUrl?: string;
+  twitterUrl?: string;
+  linkedinUrl?: string;
+  rssUrl?: string;
+  topButtonText?: string;
+  hiddenFooterText?: string;
+  language?: object;
+}
+
+class Footer extends React.Component<FooterProps> {
   constructor(props) {
     super(props)
   }
@@ -153,39 +179,6 @@ class Footer extends React.Component {
       )
     }
   }
-}
-
-Footer.propTypes = {
-  globalLinks: PropTypes.arrayOf(
-    PropTypes.shape({
-      title: PropTypes.string,
-      path: PropTypes.string,
-    })
-  ),
-  footerNavigation: PropTypes.arrayOf(
-    PropTypes.shape({
-      title: PropTypes.string,
-      path: PropTypes.string,
-      isActive: PropTypes.bool,
-      menuItems: PropTypes.arrayOf(
-        PropTypes.shape({
-          title: PropTypes.string,
-          path: PropTypes.string,
-          isActive: PropTypes.bool,
-        })
-      ),
-    })
-  ),
-  logoUrl: PropTypes.string,
-  copyrightUrl: PropTypes.string,
-  copyrightText: PropTypes.string,
-  facebookUrl: PropTypes.string,
-  twitterUrl: PropTypes.string,
-  linkedinUrl: PropTypes.string,
-  rssUrl: PropTypes.string,
-  topButtonText: PropTypes.string,
-  hiddenFooterText: PropTypes.string,
-  language: PropTypes.object,
 }
 
 export default (props) => <Footer {...props} />

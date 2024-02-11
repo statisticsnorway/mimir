@@ -2,9 +2,12 @@ import React, { useState } from 'react'
 import { Modal } from 'react-bootstrap'
 import { RefreshCw, ZapOff } from 'react-feather'
 import { Button } from '@statisticsnorway/ssb-component-library'
-import PropTypes from 'prop-types'
 
-function ConnectionTimeoutModal(props) {
+interface ConnectionTimeoutModalProps {
+  isConnected?: boolean;
+}
+
+function ConnectionTimeoutModal(props: ConnectionTimeoutModalProps) {
   const { isConnected } = props
   const [hide, setHide] = useState(false)
 
@@ -37,10 +40,6 @@ function ConnectionTimeoutModal(props) {
       </Modal>
     )
   }
-}
-
-ConnectionTimeoutModal.propTypes = {
-  isConnected: PropTypes.bool,
 }
 
 export default ConnectionTimeoutModal

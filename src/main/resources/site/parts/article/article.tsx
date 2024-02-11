@@ -1,8 +1,32 @@
 import React from 'react'
 import { Title, Link, Divider } from '@statisticsnorway/ssb-component-library'
-import PropTypes from 'prop-types'
 
-function Article(props) {
+interface ArticleProps {
+  phrases?: object;
+  introTitle?: string;
+  title?: string;
+  preface?: string;
+  serialNumber?: string;
+  showPubDate?: boolean;
+  pubDate?: string;
+  modifiedDate?: string;
+  authors?: {
+    email?: string;
+    name?: string;
+  }[];
+  bodyText?: string;
+  associatedStatistics?: {
+    text?: string;
+    href?: string;
+  }[];
+  associatedArticleArchives?: {
+    text?: string;
+    href?: string;
+  }[];
+  isbn?: string;
+}
+
+function Article(props: ArticleProps) {
   const phrases = props.phrases
 
   function renderTitleIngress() {
@@ -172,37 +196,6 @@ function Article(props) {
       </div>
     </section>
   )
-}
-
-Article.propTypes = {
-  phrases: PropTypes.object,
-  introTitle: PropTypes.string,
-  title: PropTypes.string,
-  preface: PropTypes.string,
-  serialNumber: PropTypes.string,
-  showPubDate: PropTypes.bool,
-  pubDate: PropTypes.string,
-  modifiedDate: PropTypes.string,
-  authors: PropTypes.arrayOf(
-    PropTypes.shape({
-      email: PropTypes.string,
-      name: PropTypes.string,
-    })
-  ),
-  bodyText: PropTypes.string,
-  associatedStatistics: PropTypes.arrayOf(
-    PropTypes.shape({
-      text: PropTypes.string,
-      href: PropTypes.string,
-    })
-  ),
-  associatedArticleArchives: PropTypes.arrayOf(
-    PropTypes.shape({
-      text: PropTypes.string,
-      href: PropTypes.string,
-    })
-  ),
-  isbn: PropTypes.string,
 }
 
 export default (props) => <Article {...props} />

@@ -17,11 +17,26 @@ import { configureAppStore } from '/react4xp/dashboard/store/configureStore'
 import { requestStatuses } from '/react4xp/dashboard/containers/StatRegDashboard/actions'
 import { requestStatistics, requestStatisticsSearchList } from '/react4xp/dashboard/containers/Statistics/actions'
 import { actions as commonActions } from '/react4xp/dashboard/containers/HomePage/slice'
-import PropTypes from 'prop-types'
 import { setUserServerSide, requestServerTime } from '/react4xp/dashboard/containers/HomePage/actions'
 import { requestJobs } from '/react4xp/dashboard/containers/Jobs/actions'
 
-function Dashboard(props) {
+interface DashboardProps {
+  user?: object;
+  dashboardOptionsForUser?: {
+    dashboardTools?: boolean;
+    statistics?: boolean;
+    jobLogs?: boolean;
+    dataSources?: boolean;
+    statisticRegister?: boolean;
+  };
+  contentStudioBaseUrl?: string;
+  dataToolBoxBaseUrl?: string;
+  internalBaseUrl?: string;
+  internalStatbankUrl?: string;
+  toggleDebugging?: unknown;
+}
+
+function Dashboard(props: DashboardProps) {
   return (
     <Provider store={configureAppStore(props.toggleDebugging)}>
       <WebsocketProvider>
@@ -40,23 +55,22 @@ function Dashboard(props) {
   )
 }
 
-Dashboard.propTypes = {
-  user: PropTypes.object,
-  dashboardOptionsForUser: PropTypes.shape({
-    dashboardTools: PropTypes.bool,
-    statistics: PropTypes.bool,
-    jobLogs: PropTypes.bool,
-    dataSources: PropTypes.bool,
-    statisticRegister: PropTypes.bool,
-  }),
-  contentStudioBaseUrl: PropTypes.string,
-  dataToolBoxBaseUrl: PropTypes.string,
-  internalBaseUrl: PropTypes.string,
-  internalStatbankUrl: PropTypes.string,
-  toggleDebugging: PropTypes.boolean,
+interface DashboardRouterProps {
+  user?: object;
+  dashboardOptionsForUser?: {
+    dashboardTools?: boolean;
+    statistics?: boolean;
+    jobLogs?: boolean;
+    dataSources?: boolean;
+    statisticRegister?: boolean;
+  };
+  contentStudioBaseUrl?: string;
+  dataToolBoxBaseUrl?: string;
+  internalBaseUrl?: string;
+  internalStatbankUrl?: string;
 }
 
-function DashboardRouter(props) {
+function DashboardRouter(props: DashboardRouterProps) {
   // all initial fetches
   const dispatch = useDispatch()
   const io = React.useContext(WebSocketContext)
@@ -100,21 +114,6 @@ function DashboardRouter(props) {
       </Switch>
     </BrowserRouter>
   )
-}
-
-DashboardRouter.propTypes = {
-  user: PropTypes.object,
-  dashboardOptionsForUser: PropTypes.shape({
-    dashboardTools: PropTypes.bool,
-    statistics: PropTypes.bool,
-    jobLogs: PropTypes.bool,
-    dataSources: PropTypes.bool,
-    statisticRegister: PropTypes.bool,
-  }),
-  contentStudioBaseUrl: PropTypes.string,
-  dataToolBoxBaseUrl: PropTypes.string,
-  internalBaseUrl: PropTypes.string,
-  internalStatbankUrl: PropTypes.string,
 }
 
 export default (props) => <Dashboard {...props} />

@@ -7,12 +7,15 @@ import {
   selectFactPageDataSources,
   selectFactPageLoading,
 } from '/react4xp/dashboard/containers/DataSources/selectors'
-import PropTypes from 'prop-types'
 import { requestFactPageGroups, requestFactPageDataSources } from '/react4xp/dashboard/containers/DataSources/actions'
 import { WebSocketContext } from '/react4xp/dashboard/utils/websocket/WebsocketProvider'
 import { DataSourceTable } from '/react4xp/dashboard/containers/DataSources/DataSourceTable'
 
-export function FactPageDataSources(props) {
+interface FactPageDataSourcesProps {
+  openByDefault?: boolean;
+}
+
+export function FactPageDataSources(props: FactPageDataSourcesProps) {
   const [firstOpen, setFirstOpen] = React.useState(true)
   const io = useContext(WebSocketContext)
   const dispatch = useDispatch()
@@ -56,10 +59,6 @@ export function FactPageDataSources(props) {
 
 FactPageDataSources.defaultProps = {
   openByDefault: false,
-}
-
-FactPageDataSources.propTypes = {
-  openByDefault: PropTypes.bool,
 }
 
 export default (props) => <FactPageDataSources {...props} />

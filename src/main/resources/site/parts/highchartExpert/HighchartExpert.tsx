@@ -1,7 +1,6 @@
 import React from 'react'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
-import PropTypes from 'prop-types'
 import { Row, Col, Container } from 'react-bootstrap'
 
 import accessibilityLang from './../../../assets/js/highchart-lang.json'
@@ -14,7 +13,11 @@ if (typeof Highcharts === 'object') {
   require('highcharts/modules/accessibility')(Highcharts)
 }
 
-function Highchart(props) {
+interface HighchartProps {
+  config?: object;
+}
+
+function Highchart(props: HighchartProps) {
   const configProp = JSON.parse(props.config)
 
   const config = {
@@ -31,10 +34,6 @@ function Highchart(props) {
       </Row>
     </Container>
   )
-}
-
-Highchart.propTypes = {
-  config: PropTypes.object,
 }
 
 export default (props) => <Highchart {...props} />

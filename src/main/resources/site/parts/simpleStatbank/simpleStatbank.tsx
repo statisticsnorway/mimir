@@ -1,9 +1,22 @@
 import React, { useState } from 'react'
-import PropTypes from 'prop-types'
 import { Row, Col } from 'react-bootstrap'
 import { Dropdown, Divider } from '@statisticsnorway/ssb-component-library'
 
-function SimpleStatbank(props) {
+interface SimpleStatbankProps {
+  icon?: string;
+  altText?: string;
+  ingress?: string;
+  placeholder?: string;
+  resultLayout?: string;
+  simpleStatbankServiceUrl?: string;
+  json?: string;
+  code?: string;
+  urlOrId?: string;
+  selectDisplay?: string;
+  statbankApiData?: Record<string, unknown>;
+}
+
+function SimpleStatbank(props: SimpleStatbankProps) {
   const { icon, altText, ingress, placeholder, resultLayout, selectDisplay, statbankApiData } = props
 
   const textIngress = <span dangerouslySetInnerHTML={{ __html: ingress }} />
@@ -77,22 +90,6 @@ function SimpleStatbank(props) {
       {renderResult()}
     </div>
   )
-}
-
-SimpleStatbank.propTypes = {
-  icon: PropTypes.string,
-  altText: PropTypes.string,
-  ingress: PropTypes.string,
-  placeholder: PropTypes.string,
-  resultLayout: PropTypes.string,
-  simpleStatbankServiceUrl: PropTypes.string,
-  json: PropTypes.string,
-  code: PropTypes.string,
-  urlOrId: PropTypes.string,
-  selectDisplay: PropTypes.string,
-  statbankApiData: PropTypes.objectOf({
-    data: PropTypes.object,
-  }),
 }
 
 export default (props) => <SimpleStatbank {...props} />

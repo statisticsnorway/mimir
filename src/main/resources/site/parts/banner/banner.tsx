@@ -1,7 +1,25 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 
-function Banner(props) {
+interface BannerProps {
+  bannerImage?: string;
+  bannerImageAltText?: string;
+  sizes?: string;
+  srcset?: string;
+  pageType?: string;
+  selectedPageType?: string;
+  municipalityTitle?: string;
+  pageDisplayName?: string;
+  subTitleFactPage?: string;
+  factPageTitle?: string;
+  fullFactPageTitle?: string;
+  generalPageTitle?: string;
+  isLandingPage?: boolean;
+  logoUrl?: string;
+  logoSrc?: string;
+  logoAltText?: string;
+}
+
+function Banner(props: BannerProps) {
   const {
     bannerImage,
     bannerImageAltText,
@@ -68,25 +86,6 @@ function Banner(props) {
       </div>
     </>
   )
-}
-
-Banner.propTypes = {
-  bannerImage: PropTypes.string,
-  bannerImageAltText: PropTypes.string,
-  sizes: PropTypes.string,
-  srcset: PropTypes.string,
-  pageType: PropTypes.string,
-  selectedPageType: PropTypes.string,
-  municipalityTitle: PropTypes.string,
-  pageDisplayName: PropTypes.string,
-  subTitleFactPage: PropTypes.string,
-  factPageTitle: PropTypes.string,
-  fullFactPageTitle: PropTypes.string,
-  generalPageTitle: PropTypes.string,
-  isLandingPage: PropTypes.bool,
-  logoUrl: PropTypes.string,
-  logoSrc: PropTypes.string,
-  logoAltText: PropTypes.string,
 }
 
 export default (props) => <Banner {...props} />

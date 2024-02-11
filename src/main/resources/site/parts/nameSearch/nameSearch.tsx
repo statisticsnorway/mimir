@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Accordion, Button, Divider, Input, Link, Title } from '@statisticsnorway/ssb-component-library'
-import PropTypes from 'prop-types'
 import { Col, Container, Row, Form } from 'react-bootstrap'
 import axios from 'axios'
 import { X } from 'react-feather'
@@ -20,12 +19,70 @@ if (typeof window !== 'undefined' && typeof Highcharts === 'object') {
   highchartsAccessibility(Highcharts)
 }
 
+interface NameSearchProps {
+  urlToService?: string;
+  urlToGraphService?: string;
+  aboutLink?: {
+    title?: string;
+    url?: string;
+  };
+  nameSearchDescription?: string;
+  frontPage?: boolean;
+  phrases?: {
+    nameSearchTitle?: string;
+    nameSearchInputLabel?: string;
+    nameSearchButtonText?: string;
+    interestingFacts?: string;
+    nameSearchResultTitle?: string;
+    thereAre?: string;
+    with?: string;
+    have?: string;
+    asTheir?: string;
+    errorMessage?: string;
+    networkErrorMessage?: string;
+    threeOrLessText?: string;
+    threeOrLessTextGraph?: string;
+    yAxis?: string;
+    graphHeader?: string;
+    historicalTrend?: string;
+    chart?: string;
+    women?: string;
+    men?: string;
+    types?: {
+      firstgivenandfamily?: string;
+      middleandfamily?: string;
+      family?: string;
+      onlygiven?: string;
+      onlygivenandfamily?: string;
+      firstgiven?: string;
+    };
+    printChart?: string;
+    downloadPNG?: string;
+    downloadJPEG?: string;
+    downloadPDF?: string;
+    downloadSVG?: string;
+    downloadCSV?: string;
+    downloadXLS?: string;
+    chartContainerLabel?: string;
+    chartMenuLabel?: string;
+    menuButtonLabel?: string;
+    beforeRegionLabel?: string;
+    legendItem?: string;
+    legendLabel?: string;
+    legendLabelNoTitle?: string;
+    close?: string;
+  };
+  language?: string;
+  graphData?: boolean;
+  GA_TRACKING_ID?: string;
+}
+
 /* TODO
 - Etternavn må få rett visning av beste-treff
 - Skjule mindre interessante resultater - må sikkert diskuteres noen runder med Siv og Ina
 */
 
-function NameSearch(props) {
+function NameSearch(props: NameSearchProps) {
   const [name, setName] = useState({
     error: false,
     errorMessage: props.phrases.errorMessage,
@@ -431,7 +488,7 @@ function NameSearch(props) {
   }
 
   return (
-    <section className='name-search container-fluid p-0' id='navnesok'>
+    (<section className='name-search container-fluid p-0' id='navnesok'>
       <Container className='name-search-input'>
         <Row>
           <Col lg='12'>
@@ -478,66 +535,8 @@ function NameSearch(props) {
         </Form>
       </Container>
       {renderResult()}
-    </section>
-  )
-}
-
-NameSearch.propTypes = {
-  urlToService: PropTypes.string,
-  urlToGraphService: PropTypes.string,
-  aboutLink: PropTypes.shape({
-    title: PropTypes.string,
-    url: PropTypes.string,
-  }),
-  nameSearchDescription: PropTypes.string,
-  frontPage: PropTypes.bool,
-  phrases: PropTypes.shape({
-    nameSearchTitle: PropTypes.string,
-    nameSearchInputLabel: PropTypes.string,
-    nameSearchButtonText: PropTypes.string,
-    interestingFacts: PropTypes.string,
-    nameSearchResultTitle: PropTypes.string,
-    thereAre: PropTypes.string,
-    with: PropTypes.string,
-    have: PropTypes.string,
-    asTheir: PropTypes.string,
-    errorMessage: PropTypes.string,
-    networkErrorMessage: PropTypes.string,
-    threeOrLessText: PropTypes.string,
-    threeOrLessTextGraph: PropTypes.string,
-    yAxis: PropTypes.string,
-    graphHeader: PropTypes.string,
-    historicalTrend: PropTypes.string,
-    chart: PropTypes.string,
-    women: PropTypes.string,
-    men: PropTypes.string,
-    types: PropTypes.shape({
-      firstgivenandfamily: PropTypes.string,
-      middleandfamily: PropTypes.string,
-      family: PropTypes.string,
-      onlygiven: PropTypes.string,
-      onlygivenandfamily: PropTypes.string,
-      firstgiven: PropTypes.string,
-    }),
-    printChart: PropTypes.string,
-    downloadPNG: PropTypes.string,
-    downloadJPEG: PropTypes.string,
-    downloadPDF: PropTypes.string,
-    downloadSVG: PropTypes.string,
-    downloadCSV: PropTypes.string,
-    downloadXLS: PropTypes.string,
-    chartContainerLabel: PropTypes.string,
-    chartMenuLabel: PropTypes.string,
-    menuButtonLabel: PropTypes.string,
-    beforeRegionLabel: PropTypes.string,
-    legendItem: PropTypes.string,
-    legendLabel: PropTypes.string,
-    legendLabelNoTitle: PropTypes.string,
-    close: PropTypes.string,
-  }),
-  language: PropTypes.string,
-  graphData: PropTypes.bool,
-  GA_TRACKING_ID: PropTypes.string,
+    </section>)
+  );
 }
 
 export default (props) => <NameSearch {...props} />

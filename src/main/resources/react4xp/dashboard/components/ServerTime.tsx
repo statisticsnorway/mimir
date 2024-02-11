@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import PropTypes from 'prop-types'
 import { default as format } from 'date-fns/format'
 
-export function ServerTime(props) {
+interface ServerTimeProps {
+  serverTime?: string;
+  serverTimeReceived?: string;
+}
+
+export function ServerTime(props: ServerTimeProps) {
   const { serverTime, serverTimeReceived } = props
 
   const [currentServerTime, setCurrentServerTime] = useState(null)
@@ -27,9 +31,4 @@ export function ServerTime(props) {
   }
 
   return <div className='server-time'>Serverklokke {renderServerTime()}</div>
-}
-
-ServerTime.propTypes = {
-  serverTime: PropTypes.string,
-  serverTimeReceived: PropTypes.string,
 }

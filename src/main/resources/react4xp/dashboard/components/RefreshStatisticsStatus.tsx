@@ -1,8 +1,11 @@
 import React from 'react'
 import { Col, Row } from 'react-bootstrap'
-import PropTypes from 'prop-types'
 
-export function RefreshStatisticsStatus(props) {
+interface RefreshStatisticsStatusProps {
+  modal?: object;
+}
+
+export function RefreshStatisticsStatus(props: RefreshStatisticsStatusProps) {
   const { modalDisplay, updateMessages } = props.modal
 
   return (
@@ -32,10 +35,6 @@ export function RefreshStatisticsStatus(props) {
       })}
     </React.Fragment>
   )
-}
-
-RefreshStatisticsStatus.propTypes = {
-  modal: PropTypes.object,
 }
 
 export default (props) => <RefreshStatisticsStatus {...props} />

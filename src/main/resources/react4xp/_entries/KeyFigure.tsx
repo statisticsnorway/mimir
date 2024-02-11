@@ -6,10 +6,67 @@ import {
   References,
   Divider,
 } from '@statisticsnorway/ssb-component-library'
-import PropTypes from 'prop-types'
 import { Alert, Row, Col } from 'react-bootstrap'
 
-class KeyFigures extends React.Component {
+interface KeyFiguresProps {
+  displayName?: string;
+  keyFiguresDraft?: {
+    iconUrl?: string;
+    iconAltText?: string;
+    number?: string;
+    numberDescription?: string;
+    noNumberText?: string;
+    size?: string;
+    title?: string;
+    time?: string;
+    changes?: {
+      changeDirection?: string;
+      changeText?: string;
+      changePeriod?: string;
+    };
+    glossary?: string;
+    greenBox?: boolean;
+    source?: {
+      url?: string;
+      title?: string;
+    };
+  }[];
+  keyFigures?: {
+    iconUrl?: string;
+    iconAltText?: string;
+    number?: string;
+    numberDescription?: string;
+    noNumberText?: string;
+    size?: string;
+    title?: string;
+    time?: string;
+    changes?: {
+      changeDirection?: string;
+      changeText?: string;
+      changePeriod?: string;
+    };
+    glossary?: string;
+    greenBox?: boolean;
+    source?: {
+      url?: string;
+      title?: string;
+    };
+  }[];
+  sourceLabel?: string;
+  source?: {
+    url?: string;
+    title?: string;
+  };
+  columns?: boolean;
+  showPreviewDraft?: boolean;
+  paramShowDraft?: boolean;
+  draftExist?: boolean;
+  pageTypeKeyFigure?: boolean;
+  hiddenTitle?: string;
+  isInStatisticsPage?: boolean;
+}
+
+class KeyFigures extends React.Component<KeyFiguresProps> {
   constructor(props) {
     super(props)
 
@@ -175,68 +232,6 @@ class KeyFigures extends React.Component {
       </React.Fragment>
     )
   }
-}
-
-KeyFigures.propTypes = {
-  displayName: PropTypes.string,
-  keyFiguresDraft: PropTypes.arrayOf(
-    PropTypes.shape({
-      iconUrl: PropTypes.string,
-      iconAltText: PropTypes.string,
-      number: PropTypes.string,
-      numberDescription: PropTypes.string,
-      noNumberText: PropTypes.string,
-      size: PropTypes.string,
-      title: PropTypes.string,
-      time: PropTypes.string,
-      changes: PropTypes.shape({
-        changeDirection: PropTypes.string,
-        changeText: PropTypes.string,
-        changePeriod: PropTypes.string,
-      }),
-      glossary: PropTypes.string,
-      greenBox: PropTypes.bool,
-      source: PropTypes.shape({
-        url: PropTypes.string,
-        title: PropTypes.string,
-      }),
-    })
-  ),
-  keyFigures: PropTypes.arrayOf(
-    PropTypes.shape({
-      iconUrl: PropTypes.string,
-      iconAltText: PropTypes.string,
-      number: PropTypes.string,
-      numberDescription: PropTypes.string,
-      noNumberText: PropTypes.string,
-      size: PropTypes.string,
-      title: PropTypes.string,
-      time: PropTypes.string,
-      changes: PropTypes.shape({
-        changeDirection: PropTypes.string,
-        changeText: PropTypes.string,
-        changePeriod: PropTypes.string,
-      }),
-      glossary: PropTypes.string,
-      greenBox: PropTypes.bool,
-      source: PropTypes.shape({
-        url: PropTypes.string,
-        title: PropTypes.string,
-      }),
-    })
-  ),
-  sourceLabel: PropTypes.string,
-  source: PropTypes.shape({
-    url: PropTypes.string,
-    title: PropTypes.string,
-  }),
-  columns: PropTypes.bool,
-  showPreviewDraft: PropTypes.bool,
-  paramShowDraft: PropTypes.bool,
-  draftExist: PropTypes.bool,
-  pageTypeKeyFigure: PropTypes.bool,
-  hiddenTitle: PropTypes.string,
-  isInStatisticsPage: PropTypes.bool,
 }
 
 export default (props) => <KeyFigures {...props} />

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
-import PropTypes from 'prop-types'
 import { Row, Col, Container } from 'react-bootstrap'
 import { Title, Button, Tabs, Divider, Link } from '@statisticsnorway/ssb-component-library'
 import { addGtagForEvent } from '/react4xp/ReactGA'
@@ -14,6 +13,23 @@ if (typeof Highcharts === 'object') {
   require('highcharts/modules/data')(Highcharts)
   require('highcharts/modules/no-data-to-display')(Highcharts)
   require('highcharts/modules/accessibility')(Highcharts)
+}
+
+interface HighchartProps {
+  highcharts?: {
+    config?: object;
+    description?: string;
+    type?: string;
+    contentKey?: string;
+    footnoteText?: string;
+    creditsEnabled?: unknown;
+    sourceList?: unknown;
+    hideTitle?: unknown;
+  }[];
+  phrases?: object;
+  appName?: string;
+  pageType?: string;
+  GA_TRACKING_ID?: string;
 }
 
 /* TODO list
@@ -30,7 +46,7 @@ if (typeof Highcharts === 'object') {
  * --- Rest ---
  * Cleanup - are there any files and lines of code we can delete after full conversion?
  */
-function Highchart(props) {
+function Highchart(props: HighchartProps) {
   const [showDraft, setShowDraft] = useState(false)
   const [showTable, setShowTable] = useState(false)
 
@@ -251,25 +267,6 @@ function Highchart(props) {
   }
 
   return <Container>{renderHighcharts()}</Container>
-}
-
-Highchart.propTypes = {
-  highcharts: PropTypes.arrayOf(
-    PropTypes.shape({
-      config: PropTypes.object,
-      description: PropTypes.string,
-      type: PropTypes.string,
-      contentKey: PropTypes.string,
-      footnoteText: PropTypes.string,
-      creditsEnabled: PropTypes.boolean,
-      sourceList: Highchart['sourceList'],
-      hideTitle: PropTypes.boolean,
-    })
-  ),
-  phrases: PropTypes.object,
-  appName: PropTypes.string,
-  pageType: PropTypes.string,
-  GA_TRACKING_ID: PropTypes.string,
 }
 
 export default (props) => <Highchart {...props} />
