@@ -7,7 +7,7 @@ import { selectJobs, selectLoading } from '/react4xp/dashboard/containers/Jobs/s
 import { selectContentStudioBaseUrl } from '/react4xp/dashboard/containers/HomePage/selectors'
 import { Link, Accordion, Divider, Button } from '@statisticsnorway/ssb-component-library'
 import { DataQueryBadges } from '/react4xp/dashboard/components/DataQueryBadges'
-import { default as format } from 'date-fns/format'
+import { format } from 'date-fns/format'
 
 export function Jobs() {
   const loading = useSelector(selectLoading)

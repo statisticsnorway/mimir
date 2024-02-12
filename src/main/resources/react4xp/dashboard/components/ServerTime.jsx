@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { default as format } from 'date-fns/format'
+import { format } from 'date-fns/format'
 
 export function ServerTime(props) {
   const { serverTime, serverTimeReceived } = props
