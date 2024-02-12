@@ -139,7 +139,7 @@
     "style-loader": "~3.3.4",
     "swc-loader": "~0.2.3",
     "ts-loader": "~9.5.1",
-    "tsup": "^8.0.1",
+    "tsup": "^8.0.2",
     "typescript": "~5.2.2",
     "validator": "~13.11.0",
     "webpack": "~5.89.0",
