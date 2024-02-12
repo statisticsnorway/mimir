@@ -36,7 +36,8 @@ function RelatedBoxes(props) {
         params: {
           start: relatedFactPages.length,
           count: total - relatedFactPages.length,
-          partConfig,
+          ...partConfig,
+          contentIdList: JSON.stringify(partConfig.contentIdList),
         },
       })
       .then((res) => {
@@ -46,36 +47,25 @@ function RelatedBoxes(props) {
         }
       })
       .finally(() => {
+        setFocusElement(false)
         setLoading(false)
       })
   }
+  
 
-  function fetchFirstRelatedFactPages() {
+  function resetRelatedFactPages() {
     setLoading(true)
-    axios
-      .get(relatedFactPageServiceUrl, {
-        params: {
-          start: 0,
-          count: 4,
-          partConfig,
-        },
-      })
-      .then((res) => {
-        if (res.data.relatedFactPages.length) {
-          setRelatedFactPages(res.data.relatedFactPages)
-          setTotal(res.data.total)
-        }
-      })
-      .finally(() => {
-        setLoading(false)
-      })
+    setRelatedFactPages(firstRelatedContents.relatedFactPages)
+    setTotal(firstRelatedContents.total)
+    setFocusElement(false)
+    setLoading(false)
   }
 
   function handleButtonOnClick() {
-    if (total === relatedFactPages.length) {
-      fetchFirstRelatedFactPages()
-    } else {
+    if (total > relatedFactPages.length) {
       fetchAllRelatedFactPages()
+    } else {
+      resetRelatedFactPages()
     }
   }
 
