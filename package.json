@@ -142,7 +142,7 @@
     "tsup": "^8.0.2",
     "typescript": "~5.2.2",
     "validator": "~13.11.0",
-    "webpack": "~5.89.0",
+    "webpack": "~5.90.1",
     "webpack-bundle-analyzer": "~4.10.1",
     "webpack-cli": "~5.1.4",
     "xlsx": "~0.18.5"
