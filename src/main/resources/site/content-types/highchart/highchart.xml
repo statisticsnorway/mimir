@@ -130,6 +130,7 @@
       <items>
         <input name="xAxisTitle" type="TextLine">
           <label>X-akse, tittel</label>
+          <occurrences minimum="1" maximum="1"/>
         </input>
         <input name="xAxisType" type="RadioButton">
           <label>X-skala</label>
@@ -174,6 +175,7 @@
       <items>
         <input name="yAxisTitle" type="TextLine">
           <label>Y-akse, tittel</label>
+          <occurrences minimum="1" maximum="1"/>
         </input>
         <input name="yAxisOffset" type="TextLine">
           <label>Plassering av y-aksetittel</label>
