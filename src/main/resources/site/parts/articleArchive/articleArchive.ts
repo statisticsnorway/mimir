@@ -131,7 +131,7 @@ export function parseArticleData(pageId: string, start: number, count: number, l
 
   const parsedArticles: Array<ParsedArticleData> = articles.hits.map((articleContent) => {
     const articleType = articleContent.data.articleType
-      ? 'contentType.search.${articleContent.data.articleType}'
+      ? `contentType.search.${articleContent.data.articleType}`
       : 'articleName'
     const articleNamePhrase: string = localize({
       key: articleType,
