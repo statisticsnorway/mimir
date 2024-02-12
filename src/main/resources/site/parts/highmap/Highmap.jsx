@@ -152,7 +152,7 @@ function Highmap(props) {
   }
 
   return (
-    <section className='xp-part part-highchart'>
+    <section className='xp-part highchart-wrapper'>
       <Row>
         <Col className='col-12'>
           <figure className='highcharts-figure mb-0 hide-title'>
