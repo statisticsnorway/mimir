@@ -12,6 +12,7 @@ import { type Highchart } from '/site/content-types'
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 
 export function seriesAndCategoriesFromHtmlTable(highChartsContent: Content<Highchart>): SeriesAndCategories {
+  log.info('\x1b[32m%s\x1b[0m', '6. seriesAndCategoriesFromHtmlTable')
   let stringJson: string | undefined
   let htmlTable: string | undefined
 
@@ -55,16 +56,36 @@ export function seriesAndCategoriesFromHtmlTable(highChartsContent: Content<High
 
   dataInSeries.splice(0, 1) // remove the first because its garbage
 
-  const seriesAndCategories: SeriesAndCategories = convertToCorrectGraphFormat(
-    {
-      categories,
-      series: dataInSeries,
-    },
-    highChartsContent.data.graphType,
-    highChartsContent.data.xAxisType
-  )
+  const isCombinedGraph: boolean = highChartsContent.type === 'mimir:combinedGraph'
 
+  const seriesAndCategories: SeriesAndCategories = !isCombinedGraph
+    ? convertToCorrectGraphFormat(
+        {
+          categories,
+          series: dataInSeries,
+        },
+        highChartsContent.data.graphType,
+        highChartsContent.data.xAxisType
+      )
+    : {
+        categories: categories,
+        series: dataFormatCombinedGraph({
+          categories,
+          series: dataInSeries,
+        }),
+      }
+  //log.info('\x1b[32m%s\x1b[0m', 'seriesAndCategories: ' + JSON.stringify(seriesAndCategories, null, 2))
   return seriesAndCategories
+}
+
+function dataFormatCombinedGraph(seriesAndCategories: SeriesAndCategoriesRaw): Array<Series> {
+  log.info('\x1b[32m%s\x1b[0m', '7. dataFormatCombinedGraph')
+  return seriesAndCategories.series.map((row) => {
+    return {
+      name: row.name,
+      data: row.data,
+    }
+  })
 }
 
 function parseValue(value: string): number | string {

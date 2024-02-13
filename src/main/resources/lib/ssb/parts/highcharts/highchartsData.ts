@@ -17,6 +17,7 @@ export function prepareHighchartsData(
   data: JSONstat | TbmlDataUniform | object | string | undefined,
   dataSource: DataSource['dataSource']
 ): SeriesAndCategories | undefined {
+  log.info('\x1b[32m%s\x1b[0m', '4. prepareHighchartsData')
   const seriesAndCategories: SeriesAndCategories | undefined = getSeriesAndCategories(
     req,
     highchartsContent,
@@ -29,8 +30,6 @@ export function prepareHighchartsData(
       ? addDataProperties(highchartsContent, seriesAndCategories)
       : seriesAndCategories
 
-  log.info('\x1b[36m%s\x1b[0m', 'seriesAndCategoriesOrData: ' + JSON.stringify(seriesAndCategoriesOrData, null, 2))
-
   return seriesAndCategoriesOrData !== undefined
     ? switchRowsAndColumnsCheck(highchartsContent, seriesAndCategoriesOrData)
     : seriesAndCategoriesOrData
@@ -42,6 +41,7 @@ export function getSeriesAndCategories(
   data: JSONstat | TbmlDataUniform | object | string | undefined,
   dataSource: DataSource['dataSource']
 ): SeriesAndCategories | undefined {
+  log.info('\x1b[32m%s\x1b[0m', '5. getSeriesAndCategories')
   if (dataSource && dataSource._selected === DataSourceType.STATBANK_API) {
     return seriesAndCategoriesFromJsonStat(req, highchart, data, dataSource)
   } else if (dataSource && dataSource._selected === DataSourceType.TBPROCESSOR) {

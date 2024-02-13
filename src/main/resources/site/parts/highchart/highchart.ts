@@ -17,7 +17,7 @@ import {
 import { scriptAsset } from '/lib/ssb/utils/utils'
 
 import * as util from '/lib/util'
-import { createHighchartObject } from '/lib/ssb/parts/highcharts/highchartsUtils'
+import { createHighchartObject, createCombinedGraphObject } from '/lib/ssb/parts/highcharts/highchartsUtils'
 import { renderError } from '/lib/ssb/error/error'
 import { datasetOrUndefined } from '/lib/ssb/cache/cache'
 import { hasWritePermissionsAndPreview } from '/lib/ssb/parts/permissions'
@@ -51,6 +51,7 @@ export function preview(req: XP.Request, id: string): XP.Response {
 }
 
 function renderPart(req: XP.Request, highchartIds: Array<string>): XP.Response {
+  log.info('\x1b[32m%s\x1b[0m', '1. renderPart')
   const page = getContent()
   if (!page) throw Error('No page found')
 
@@ -92,6 +93,8 @@ function renderPart(req: XP.Request, highchartIds: Array<string>): XP.Response {
    </script>`
   )
 
+  //log.info('\x1b[36m%s\x1b[0m', 'highcharts: ' + JSON.stringify(highcharts, null, 2))
+
   const HighchartProps: object = {
     highcharts: highcharts,
     phrases: getPhrases(page),
@@ -131,17 +134,24 @@ function determinConfigType(
   req: XP.Request,
   highchart: Content<Highchart & DataSource>
 ): HighchartsExtendedProps | undefined {
-  if (highchart && highchart.data.dataSource) {
+  if (highchart.data.dataSource && highchart.data.dataSource?._selected !== 'htmlTable') {
     return createDataFromDataSource(req, highchart)
-  } else if (highchart && highchart.data.htmlTable) {
+  } else if (highchart?.data.htmlTable || highchart.data.dataSource?._selected === 'htmlTable') {
     return createDataFromHtmlTable(req, highchart)
   }
   return undefined
 }
 
 function createDataFromHtmlTable(req: XP.Request, highchart: Content<Highchart & DataSource>): HighchartsExtendedProps {
-  return {
-    ...createHighchartObject(req, highchart, highchart.data, highchart.data.dataSource ?? undefined),
+  log.info('\x1b[32m%s\x1b[0m', '2. createDataFromHtmlTable')
+  if (highchart.type === 'mimir:combinedGraph') {
+    return {
+      ...createCombinedGraphObject(req, highchart, highchart.data, highchart.data.dataSource ?? undefined),
+    }
+  } else {
+    return {
+      ...createHighchartObject(req, highchart, highchart.data, highchart.data.dataSource ?? undefined),
+    }
   }
 }
 
@@ -151,10 +161,6 @@ function createDataFromDataSource(
 ): HighchartsExtendedProps | undefined {
   if (highchart && highchart.data && highchart.data.dataSource) {
     const type: string = highchart.data.dataSource._selected
-    if (type === 'htmlTable') {
-      return createDataFromHtmlTable(req, highchart)
-    }
-
     // get draft
     const paramShowDraft: boolean = req.params.showDraft !== undefined && req.params.showDraft === 'true'
     const showPreviewDraft: boolean =
