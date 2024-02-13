@@ -1,4 +1,4 @@
-exports.responseProcessor = function (req, res) {
+export function responseProcessor(req: XP.Request, res: XP.Response) {
   if (
     res.status === 200 &&
     res.pageContributions &&
@@ -7,7 +7,7 @@ exports.responseProcessor = function (req, res) {
   ) {
     if (req.mode !== 'edit') {
       const exp = new RegExp('srcs*=s*"(.+?)"')
-      res.pageContributions.bodyEnd = res.pageContributions.bodyEnd.map((script) => {
+      res.pageContributions.bodyEnd = res.pageContributions.bodyEnd.map((script: string) => {
         const match = exp.exec(script)
         if (match && match.length === 2 && match[1].indexOf('/_/service/mimir/react4xp') >= 1) {
           let adminPath = ''

@@ -92,7 +92,11 @@ export function get(req: XP.Request): XP.Response {
       // @ts-ignore
       name = previewOverride[name]
     }
-    const controller: Controller = __non_webpack_require__(`../../parts/${name}/${name}`)
+
+    // Our build system can't handle a wildcard require directly. All builders assume you are node or browser, since we are not we need to circumvent this.
+    // If we use a require directly it gets swapped out with a errounous function. Bybass by proxying through a variable
+    const _require = require
+    const controller: Controller = _require(`../../parts/${name}/${name}`)
     if (controller.preview) {
       preview = controller.preview(req, page._id)
     }

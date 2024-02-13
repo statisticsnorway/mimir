@@ -1,4 +1,4 @@
-const { list, query } = __non_webpack_require__('/lib/ssb/dataset/klass/municipalities')
+import { list, query } from '/lib/ssb/dataset/klass/municipalities'
 
 /**
  * @param {object} req: Enonics request object
@@ -11,9 +11,9 @@ const { list, query } = __non_webpack_require__('/lib/ssb/dataset/klass/municipa
  *  count: number}
  * }}
  */
-exports.get = (req) => {
+export function get(req: XP.Request) {
   // deepcode ignore Sqli: This is not SQL, simply string regex matching
-  const municipals = req.params.query ? query(req.params.query) : list(req.params.count)
+  const municipals = req.params.query ? query(req.params.query) : list()
 
   return {
     body: {

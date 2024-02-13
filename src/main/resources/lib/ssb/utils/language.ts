@@ -95,7 +95,7 @@ export const getPhrases = (page: Content, isSite?: boolean): Phrases | undefined
   }
 
   if (!isSite) {
-    return exports.getPhrases(getSite(), true)
+    return getPhrases(getSite()!, true)
   }
 
   return norwegian

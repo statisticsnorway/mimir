@@ -1,21 +1,25 @@
-const { render } = __non_webpack_require__('/lib/thymeleaf')
-
-const { render: r4xpRender } = __non_webpack_require__('/lib/enonic/react4xp')
-const { getSite, assetUrl } = __non_webpack_require__('/lib/xp/portal')
-const { getLanguage } = __non_webpack_require__('/lib/ssb/utils/language')
-
-const i18nLib = __non_webpack_require__('/lib/xp/i18n')
+import { getSite, assetUrl } from '/lib/xp/portal'
+import { localize } from '/lib/xp/i18n'
+import { render } from '/lib/thymeleaf'
+import { render as r4xpRender } from '/lib/enonic/react4xp'
+import { getLanguage } from '/lib/ssb/utils/language'
+import { Language } from '/lib/types/language'
 
 const fourOFourView = resolve('./404.html')
 const mainErrorView = resolve('./error.html')
 const genericErrorView = resolve('./generic.html')
 const { randomUnsafeString } = require('../../lib/ssb/utils/utils')
 
-exports.handle404 = function (err) {
+type Error = {
+  request: XP.Request
+  status: number
+}
+
+export function handle404(err: Error) {
   // getting language from site because 404 page is not connected to any content.
   // So unless we stop setting language via menu and start to set it via site, this will always show as 'nb'
   // TODO: find another way to find and set locale of 404 page
-  const page = getSite()
+  const page = getSite()!
   const language = getLanguage(page)
   const searchId = 'searchBox-' + randomUnsafeString()
 
@@ -28,22 +32,21 @@ exports.handle404 = function (err) {
   return r4xpRender(
     'Search',
     {
-      searchText: i18nLib.localize({
+      searchText: localize({
         key: 'menuSearch',
       }),
       searchResultPageUrl: 'https://www.ssb.no/sok',
       className: 'show',
     },
-    undefined,
+    err.request,
     {
       id: searchId,
       body: getMainErrorBody(err.status, fourOFourBody, language),
-      clientRender: err.request.mode !== 'edit',
     }
   )
 }
 
-exports.handleError = function (err) {
+export function handleError(err: Error) {
   try {
     const genericModel = {
       ...getGenericAssets(),
@@ -51,7 +54,7 @@ exports.handleError = function (err) {
     }
     const genericViewBody = render(genericErrorView, genericModel)
 
-    const page = getSite()
+    const page = getSite()!
     const language = getLanguage(page)
     const body = getMainErrorBody(err.status, genericViewBody, language)
     return {
@@ -68,7 +71,7 @@ exports.handleError = function (err) {
   }
 }
 
-function getMainErrorBody(status, contentHtml, language) {
+function getMainErrorBody(status: number, contentHtml: string, language: Language | null) {
   const mainErrorModel = {
     ...getAssets(),
     language,
@@ -83,47 +86,47 @@ function getMainErrorBody(status, contentHtml, language) {
 
 function getFourOFourLocalizations() {
   return {
-    title: i18nLib.localize({
+    title: localize({
       key: '404.title',
     }),
-    text: i18nLib.localize({
+    text: localize({
       key: '404.text',
     }),
-    goBack: i18nLib.localize({
+    goBack: localize({
       key: '404.goBack',
     }),
-    frontPage: i18nLib.localize({
+    frontPage: localize({
       key: '404.frontPage',
     }),
-    or: i18nLib.localize({
+    or: localize({
       key: '404.or',
     }),
-    search: i18nLib.localize({
+    search: localize({
       key: '404.search',
     }),
   }
 }
 
-function getGenericLocalizations(status) {
+function getGenericLocalizations(status: number) {
   return {
-    title: i18nLib.localize({
+    title: localize({
       key: 'error.title',
     }),
     text:
-      i18nLib.localize({
+      localize({
         key: 'error.text1',
       }) +
       ` ${status}` +
-      i18nLib.localize({
+      localize({
         key: 'error.text2',
       }),
-    goBack: i18nLib.localize({
+    goBack: localize({
       key: 'error.goBack',
     }),
-    frontPage: i18nLib.localize({
+    frontPage: localize({
       key: 'error.frontPage',
     }),
-    or: i18nLib.localize({
+    or: localize({
       key: 'error.or',
     }),
   }

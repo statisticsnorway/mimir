@@ -110,7 +110,7 @@ function renderPart(req: XP.Request, highchartIds: Array<string>): XP.Response {
     if (req.mode === 'edit') _req.mode = 'preview'
 
     return r4XpRender('site/parts/highchart/Highchart', HighchartProps, _req, {
-      body: '<section class="xp-part part-highchart"></section>',
+      body: '<section class="xp-part highchart-wrapper"></section>',
     })
   } else {
     return {

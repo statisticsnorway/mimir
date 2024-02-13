@@ -20,7 +20,7 @@ import { hasWritePermissionsAndPreview } from '/lib/ssb/parts/permissions'
 import { currentlyWaitingForPublish as currentlyWaitingForPublishOld } from '/lib/ssb/dataset/publishOld'
 import * as util from '/lib/util'
 import { type Statistics } from '/site/content-types'
-import { preview as keyFigurePreview } from '../keyFigure/keyFigure'
+import { preview as keyFigurePreview } from '/site/parts/keyFigure/keyFigure'
 
 const view = resolve('./statistics.html')
 

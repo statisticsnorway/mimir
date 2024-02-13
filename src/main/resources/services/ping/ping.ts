@@ -1,4 +1,4 @@
-const { getVersion } = __non_webpack_require__('/lib/xp/admin')
+import { getVersion } from '/lib/xp/admin'
 
 export function get() {
   const contentType = 'application/xml'

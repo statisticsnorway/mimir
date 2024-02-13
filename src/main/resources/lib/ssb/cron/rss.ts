@@ -1,4 +1,4 @@
-__non_webpack_require__('/lib/ssb/polyfills/nashorn')
+import '/lib/ssb/polyfills/nashorn'
 import { Content } from '/lib/xp/content'
 import { StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
 import { request, HttpResponse } from '/lib/http-client'

@@ -1,8 +1,8 @@
-const { getMunicipality } = __non_webpack_require__('/lib/ssb/dataset/klass/municipalities')
+import { getMunicipality } from '/lib/ssb/dataset/klass/municipalities'
 
 const contentType = 'application/json'
 
-exports.get = function (req) {
+export function get(req: XP.Request) {
   const municipality = getMunicipality({
     code: req.params.postalCode,
   })

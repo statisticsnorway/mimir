@@ -1,4 +1,4 @@
-__non_webpack_require__('/lib/ssb/polyfills/nashorn')
+import '/lib/ssb/polyfills/nashorn'
 // @ts-ignore
 import striptags from 'striptags'
 import { Content } from '/lib/xp/content'
