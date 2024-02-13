@@ -168,6 +168,7 @@
     "redux-logger": "~3.0.6",
     "striptags": "~3.2.0",
     "uuid": "~9.0.1",
+    "xss": "^1.0.14",
     "zipcelx": "~1.6.2"
   },
   "overrides": {
