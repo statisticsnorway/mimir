@@ -8,6 +8,7 @@ function SearchExperiment(props) {
   const [loading, setLoading] = useState(false)
   const [searchResults, setSearchResults] = useState(null)
   const [query, setQuery] = useState(props.query || '')
+  const [sort, setSort] = useState('relevance')
 
   function fetchSearchResult() {
     if (!query) {
@@ -20,6 +21,7 @@ function SearchExperiment(props) {
         params: {
           start: 0,
           q: query,
+          sort: sort,
         },
       })
       .then((res) => {
@@ -33,13 +35,13 @@ function SearchExperiment(props) {
     if (loading) {
       return <p>Loading...</p>
     }
-    if (searchResults) {
+    if (searchResults && searchResults.items && searchResults.items.length > 0) {
       return searchResults.items.map((item) => (
         <li key={item.cacheId}>
           <Row>
             <Divider />
             <a href={item.link}>
-              <Title size={4}>{item.title}</Title>
+              <Title size={4}>{item.pagemap?.metatags[0]['og:title'] || item.title}</Title>
               <p>{item.snippet}</p>
             </a>
           </Row>
@@ -55,12 +57,16 @@ function SearchExperiment(props) {
     }
   }
 
+  function handleRadioChange(event) {
+    setSort(event.target.value)
+  }
+
   return (
     <div className='search-experiment'>
       <Title size={3}>Søk med Google!</Title>
       <div>
         <Container fluid='sm'>
-          <Row className='align-items-start'>
+          <Row className='align-items-start mb-2'>
             <Col sm={10}>
               <input
                 name='searchTerm'
@@ -74,6 +80,21 @@ function SearchExperiment(props) {
             <Col lg={2}>
               <button onClick={fetchSearchResult}>Search</button>
             </Col>
+          </Row>
+          <Row className='mb-3'>
+            <label>
+              <input
+                type='radio'
+                value='relevance'
+                checked={sort === 'relevance'}
+                onChange={(e) => handleRadioChange(e)}
+              />
+              Relevance
+            </label>
+            <label>
+              <input type='radio' value='date' checked={sort === 'date'} onChange={(e) => handleRadioChange(e)} />
+              Date
+            </label>
           </Row>
         </Container>
         <ul className='list-unstyled '>{showSearchResults()}</ul>
