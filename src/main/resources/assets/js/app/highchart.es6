@@ -114,6 +114,10 @@ export function init() {
           }
         }
 
+        if (canvas.data('type') === 'bar' || canvas.data('type') === 'column') {
+          config.yAxis.reversedStacks = false
+        }
+
         config.plotOptions.series.events = {
           legendItemClick: function (e) {
             // Possible bug: untested browser support for browserEvent (but works in IE8, chrome, FF...)
