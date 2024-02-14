@@ -77,7 +77,7 @@ export function getSeriesAndCategories(
       highchart.data.graphType,
       highchart.data.xAxisType || 'linear'
     )
-  } else if (highchart.data.htmlTable || (dataSource && dataSource._selected === DataSourceType.HTMLTABLE)) {
+  } else if (highchart.data.htmlTable) {
     return seriesAndCategoriesFromHtmlTable(highchart)
   }
   return undefined

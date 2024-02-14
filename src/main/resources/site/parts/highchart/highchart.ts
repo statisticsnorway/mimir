@@ -51,7 +51,6 @@ export function preview(req: XP.Request, id: string): XP.Response {
 }
 
 function renderPart(req: XP.Request, highchartIds: Array<string>): XP.Response {
-  log.info('\x1b[32m%s\x1b[0m', '1. renderPart Higchart')
   const page = getContent()
   if (!page) throw Error('No page found')
 
@@ -132,18 +131,17 @@ function determinConfigType(
   req: XP.Request,
   highchart: Content<Highchart & DataSource>
 ): HighchartsExtendedProps | undefined {
-  if (highchart.data.dataSource && highchart.data.dataSource?._selected !== 'htmlTable') {
+  if (highchart && highchart.data.dataSource) {
     return createDataFromDataSource(req, highchart)
-  } else if (highchart?.data.htmlTable || highchart.data.dataSource?._selected === 'htmlTable') {
+  } else if (highchart && highchart.data.htmlTable) {
     return createDataFromHtmlTable(req, highchart)
   }
   return undefined
 }
 
 function createDataFromHtmlTable(req: XP.Request, highchart: Content<Highchart & DataSource>): HighchartsExtendedProps {
-  log.info('\x1b[32m%s\x1b[0m', '2. createDataFromHtmlTable')
   return {
-    ...createHighchartObject(req, highchart, highchart.data, highchart.data.dataSource ?? undefined),
+    ...createHighchartObject(req, highchart, highchart.data, undefined),
   }
 }
 
@@ -153,6 +151,7 @@ function createDataFromDataSource(
 ): HighchartsExtendedProps | undefined {
   if (highchart && highchart.data && highchart.data.dataSource) {
     const type: string = highchart.data.dataSource._selected
+
     // get draft
     const paramShowDraft: boolean = req.params.showDraft !== undefined && req.params.showDraft === 'true'
     const showPreviewDraft: boolean =
