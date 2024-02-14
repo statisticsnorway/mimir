@@ -9,7 +9,7 @@ import { setOpenStatistic, setOpenModal } from '/react4xp/dashboard/containers/S
 import { StatisticsLog } from '/react4xp/dashboard/containers/Statistics/StatisticsLog'
 import { RefreshStatisticsModal } from '/react4xp/dashboard/components/RefreshStatisticsModal'
 import { WebSocketContext } from '/react4xp/dashboard/utils/websocket/WebsocketProvider'
-import { default as format } from 'date-fns/format'
+import { format } from 'date-fns/format'
 
 export function Statistics() {
   const statistics = useSelector(selectStatistics)

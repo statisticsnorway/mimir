@@ -8,7 +8,7 @@ import { requestStatisticsJobLog } from '/react4xp/dashboard/containers/Statisti
 import { default as groupBy } from 'ramda/es/groupBy'
 import { StatisticsLogJob } from '/react4xp/dashboard/containers/Statistics/StatisticsLogJob'
 import { selectStatisticsLogDataLoaded, selectStatistic } from '/react4xp/dashboard/containers/Statistics/selectors'
-import { default as format } from 'date-fns/format'
+import { format } from 'date-fns/format'
 
 export function StatisticsLog(props) {
   const { statisticId } = props

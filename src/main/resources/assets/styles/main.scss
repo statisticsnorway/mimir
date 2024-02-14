@@ -35,7 +35,6 @@ $container-max-widths: (
 @import "./variableCardsList";
 @import "./layout";
 @import "./banner";
-@import "./popper";
 @import "./dropdown"; // TODO: remove when implemented correctly from design system
 @import "./highchart";
 @import "./keyFigures";
@@ -166,4 +165,51 @@ section.part-divider + section.part-divider {
   display: -webkit-box;
   -webkit-line-clamp: 2; /* number of lines to show */
   -webkit-box-orient: vertical;
+}
+
+.link-anchor {
+  position: relative;
+  width: 0;
+  font-size: .8em;
+  opacity: 0;
+  transition: opacity .2s ease-in-out;
+}
+.anchor-wrapper {
+  border: none;
+}
+.anchor-wrapper:hover .link-anchor {
+  opacity: 1;
+}
+
+section h1[id]:focus,
+section h2[id]:focus,
+section h3[id]:focus,
+section h4[id]:focus,
+section h5[id]:focus {
+  outline: 0;
+}
+
+p.thin {
+    font-weight: 100;
+    margin: 0;
+    line-height: 1.2em;
+    color: #fff;
+}
+
+p.bold {
+    font-weight: 900;
+    margin: 0;
+    margin-top: -5px;
+    color: #fff;
+}
+
+.rel {
+    width: 30%;
+    margin: 0 auto;
+    position: relative;
+    text-align: center;
+    padding: 20px;
+    border-style: dotted;
+    border-color: white;
+    border-width: medium;
 }

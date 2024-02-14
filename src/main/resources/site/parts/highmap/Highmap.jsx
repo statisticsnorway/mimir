@@ -44,6 +44,12 @@ function Highmap(props) {
   const mapOptions = {
     chart: {
       height: desktop && props.heightAspectRatio && `${props.heightAspectRatio}%`,
+      style: {
+        color: '#21383a',
+        fontSize: '14px',
+        fontWeight: 'normal',
+        fontFamily: '"Open Sans Regular", "Arial", "DejaVu Sans", sans-serif',
+      }
     },
     accessibility: {
       enabled: true,
@@ -109,6 +115,9 @@ function Highmap(props) {
     exporting: {
       buttons: {
         contextButton: {
+          symbol: 'menu',
+          symbolStroke: '#00824D', // ssb-green-4
+          text: props.phrases['highcharts.download'],
           menuItems: [
             'printChart',
             'separator',
@@ -179,6 +188,7 @@ Highmap.propTypes = {
   description: PropTypes.string,
   mapFile: PropTypes.string,
   tableData: PropTypes.array,
+  style: PropTypes.object,
   thresholdValues: PropTypes.array,
   hideTitle: PropTypes.boolean,
   colorPalette: PropTypes.string,
