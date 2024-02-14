@@ -81,8 +81,6 @@ function renderPart(req: XP.Request, highchartIds: Array<string>): XP.Response {
    </script>`
   )
 
-  //log.info('\x1b[36m%s\x1b[0m', 'combinedGraphs: ' + JSON.stringify(highcharts, null, 2))
-
   const HighchartProps: object = {
     highcharts,
     phrases: getPhrases(page),

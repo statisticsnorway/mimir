@@ -54,6 +54,10 @@ export function prepareCombinedGraphConfig(
         text: data.yAxisTitle,
       },
       opposite: index === 1 ? true : undefined,
+      allowDecimals: data.yAxisDecimalPlaces ? Number(data.yAxisDecimalPlaces) > 0 : undefined,
+      labels: {
+        format: `{value:,.${data.yAxisDecimalPlaces || 0}f}`,
+      },
     }
     return mergeDeepRight(defaultConfig.yAxis, yAxisConfig)
   })

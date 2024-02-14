@@ -31,10 +31,6 @@
             </option>
         </options>
     </option-set>
-    <input name="switchRowsAndColumns" type="CheckBox">
-        <label>Bytt rader og kolonner</label>
-        <help-text>Bytt mellom å tolke tabelldataene horisontalt eller vertikalt før grafen tegnes, med hensyn til gruppering</help-text>
-    </input>
 
     <item-set name="combinedGraphData">  
         <label>Kombinerte grafer</label>  
@@ -54,10 +50,6 @@
             <input name="yAxisTitle" type="TextLine">
                 <label>Y-akse, tittel</label>
             </input>
-            <input name="yAxisOffset" type="TextLine">
-                <label>Plassering av y-aksetittel</label>
-                <help-text>Anvendes ved lange y-aksetitler. Negative tall flytter teksten slik at selve aksen går i flukt med venstremargen. Prøv deg litt fram med ulike verdier.</help-text>
-            </input>
             <input name="yAxisType" type="RadioButton">
                 <label>Y-skala</label>
                 <config>
@@ -67,18 +59,6 @@
                 </config>
                 <default>linear</default>
                 <help-text>Logaritmisk skala brukes kun i helt spesielle tilfeller</help-text>
-            </input>
-            <input name="yAxisMin" type="TextLine">
-                <label>Y-akse, minste verdi</label>
-                <size value="12" />
-                <help-text>Må være et heltall eller desimaltall. La feltet være blankt for automatisk justering. Hvis aksen er unike kategorier, brukes heltall fra 0 og oppover.</help-text>
-                <regexp>^[0-9]*[,.]?[0-9]+$</regexp>
-            </input>
-            <input name="yAxisMax" type="TextLine">
-                <label>Y-akse, største verdi</label>
-                <size value="12" />
-                <help-text>Må være et heltall eller desimaltall. La feltet være blankt for automatisk justering. Hvis aksen er unike kategorier, brukes heltall fra 0 og oppover.</help-text>
-                <regexp>^[0-9]*[,.]?[0-9]+$</regexp>
             </input>
             <input name="yAxisDecimalPlaces" type="RadioButton">
                 <label>Vis desimaler på Y-akseverdiene, antall:</label>
@@ -90,6 +70,17 @@
                 <default>0</default>
                 <help-text>Her velger du hvor mange desimalplasser du vil vise i y-akse</help-text>
             </input> 
+            <input name="numberDecimals" type="RadioButton">
+              <label>Antall desimaler som skal vises på verdiene ved mouseover:</label>
+              <config>
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+              </config>
+              <default>0</default>
+              <help-text>Her velger du hvor mange desimalplasser du vil vise</help-text>
+            </input>
         </items>     
     </item-set>
 
@@ -98,51 +89,9 @@
     <field-set>
       <label>Bearbeide visningen</label>
       <items>
-        <input name="hideTitle" type="CheckBox">
-          <label>Skjul tittel (gjelder kun figur til faktasider o.l.)</label>
-        </input>
         <input name="combineInfo" type="CheckBox">
           <label>Kombinere forklaringer</label>
           <help-text>Vise forklaringer til alle linjer i en mouseoverboksen</help-text>
-        </input>
-        <input name="numberDecimals" type="RadioButton">
-          <label>Antall desimaler som skal vises på verdiene ved mouseover:</label>
-          <config>
-            <option value="0">0</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-          </config>
-          <default>0</default>
-          <help-text>Her velger du hvor mange desimalplasser du vil vise</help-text>
-        </input>
-        <input name="stacking" type="RadioButton">
-          <label>Stabling av verdier (for stolpe- og arealdiagram)</label>
-          <config>
-            <option value="disabled">Ingen</option>
-            <option value="normal">Kumulativ</option>
-            <option value="percent">Prosentvis</option>
-          </config>
-          <default>disabled</default>
-          <help-text>Grupperte verdier kan vises hver for seg (ingen stabling) eller summeres i en felles søyle med stabling</help-text>
-        </input>
-        <input name="showStackedTotal" type="Checkbox">
-          <label>Vis stablesum</label>
-          <help-text>
-            Hvis stabling av verdier er skrudd på OG dette feltet er avkrysset,
-            vises summen av alle verdiene fra en stabel som en etikett utenfor stabelen.
-            Er avslått som standard, da etikettene kan få plassproblemer ved større datasett og/eller store verdier.
-          </help-text>
-        </input>
-        <input name="zoomType" type="RadioButton">
-          <label>Zoom i graf</label>
-          <config>
-            <option value="null">Ingen zoom</option>
-            <option value="x">Bare i x-aksen</option>
-            <option value="y">Bare i y-aksen</option>
-            <option value="xy">Både x- og y-aksen</option>
-          </config>
-          <default>null</default>
         </input>
         <input name="heightAspectRatio" type="TextLine">
           <label>Høyde i prosent av bredde</label>
@@ -167,11 +116,7 @@
           <default>center</default>
         </input>
         <input name="noLegend" type="CheckBox">
-          <label>Skjul tegnforklaringen (gjelder ikke for kakediagram).</label>
-        </input>
-        <input name="pieLegend" type="CheckBox">
-          <label>Tegnforklaring under (gjelder kun for kakediagram).</label>
-          <help-text>Huk av denne dersom du ønsker tegnforklaring under diagrammet istede for rundt.</help-text>
+          <label>Skjul tegnforklaringen.</label>
         </input>
       </items>
     </field-set>
@@ -208,10 +153,6 @@
           <size value="12" />
           <regexp>^[0-9]*[,.]?[0-9]+$</regexp>
           <help-text>Skriv for eksempel 10 for å vise hvert 10. år ved årstall.</help-text>
-        </input>
-        <input name="xEnableLabel" type="CheckBox">
-          <label>Skjul aksemarkører</label>
-          <help-text>Kan skrus på dersom det ikke ønskes markører langs X-aksen (f.eks dersom tegnforklaringen gir tilstrekkelig info).</help-text>
         </input>
         <input name="xAxisFlip" type="CheckBox">
           <label>Reverser X-akse</label>
