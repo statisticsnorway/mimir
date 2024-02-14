@@ -14,6 +14,7 @@ import { useMediaQuery } from 'react-responsive'
 import { addGtagForEvent } from '/react4xp/ReactGA'
 
 import accessibilityLang from './../../../assets/js/highchart-lang.json'
+import { sanitize } from '../../../lib/ssb/utils/htmlUtils'
 
 if (typeof window !== 'undefined' && typeof Highcharts === 'object') {
   highchartsExporting(Highcharts)
@@ -443,7 +444,7 @@ function NameSearch(props) {
             <Col lg='12'>
               <div
                 dangerouslySetInnerHTML={{
-                  __html: props.nameSearchDescription.replace(/&nbsp;/g, ' '),
+                  __html: sanitize(props.nameSearchDescription.replace(/&nbsp;/g, ' ')),
                 }}
               ></div>
             </Col>
