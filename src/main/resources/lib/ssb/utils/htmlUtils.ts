@@ -4,7 +4,6 @@ import * as xss from 'xss'
  * @param html string that contains html
  * @returns string with clean html
  */
-export function sanitizeHtml(html: string): string {
-  console.log(JSON.stringify(xss.whiteList))
-  return 'clean- ' + new xss.FilterXSS().process(html) + '-/clean'
+export function sanitize(html: string): string {
+  return new xss.FilterXSS({ allowCommentTag: true, escapeHtml: (text) => text }).process(html)
 }
