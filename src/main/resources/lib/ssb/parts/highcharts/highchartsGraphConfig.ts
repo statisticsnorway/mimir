@@ -12,7 +12,7 @@ import { lineConfig } from '/lib/ssb/parts/highcharts/graph/graphLineConfig'
 import { combinedGraphConfig } from '/lib/ssb/parts/highcharts/graph/combinedGraphConfig'
 import { DataSource as DataSourceType } from '/lib/ssb/repo/dataset'
 import { type DataSource } from '/site/mixins/dataSource'
-import { type Highchart } from '/site/content-types'
+import { type CombinedGraph, type Highchart } from '/site/content-types'
 
 export function prepareHighchartsGraphConfig(
   highchartContent: Content<Highchart>,
@@ -37,28 +37,12 @@ export function prepareHighchartsGraphConfig(
 }
 
 export function prepareCombinedGraphConfig(
-  highchartContent: Content<Highchart>,
-  dataFormat: DataSource['dataSource'],
+  combinedGraphContent: Content<CombinedGraph>,
   categories: Array<string | number | PreliminaryData> | undefined = undefined,
   series
 ): HighchartsGraphConfig {
   log.info('\x1b[32m%s\x1b[0m', '8. prepareCombinedGraphConfig')
-  const isJsonStat: boolean =
-    dataFormat !== undefined &&
-    dataFormat._selected !== undefined &&
-    dataFormat._selected === DataSourceType.STATBANK_API
-
-  const options: GetGraphOptions = {
-    isJsonStat,
-    xAxisLabel:
-      isJsonStat && dataFormat && dataFormat._selected === DataSourceType.STATBANK_API
-        ? dataFormat['statbankApi'].xAxisLabel
-        : undefined,
-    categories,
-  }
-
-  //log.info('\x1b[32m%s\x1b[0m', 'CONFIG: ' + JSON.stringify(categories, null, 2))
-  const yAxis = highchartContent.data.combinedGraphData.map((data) => {
+  const yAxis = combinedGraphContent.data.combinedGraphData?.map((data) => {
     return {
       title: {
         text: data.yAxisTitle,
@@ -71,7 +55,7 @@ export function prepareCombinedGraphConfig(
     }
   })
 
-  const seriesOption = highchartContent.data.combinedGraphData.map((data, index) => {
+  const seriesOption = combinedGraphContent.data.combinedGraphData?.map((data, index) => {
     return {
       type: data.graphType,
       data: series[index].data,
@@ -86,7 +70,7 @@ export function prepareCombinedGraphConfig(
     yAxis,
     categories,
   }
-  return combinedGraphConfig(highchartContent, combinedOptions)
+  return combinedGraphConfig(combinedGraphContent, combinedOptions)
 
   //return getGraphConfig(highchartContent, options)
 }

@@ -1,0 +1,36 @@
+<section class="xp-part highchart-wrapper" data-th-each="highchart: ${highcharts}">
+  <span data-th-utext="${dataScript}" data-th-remove="tag"></span>
+  <div class="row position-relative">
+    <div class="col-12">
+      <figure data-th-fragment="graph" class="highcharts-figure mb-0" data-th-classappend="${highchart.hideTitle == true || showDataTableEnabled ? 'hide-title' : ''}" data-th-id="figure- + ${highchart.contentKey}" data-th-if="${highchart && highchart.config}">
+        <figcaption class="figure-title" data-th-if="${highchart.config.title && highchart.config.title.text}" data-th-text="${highchart.config.title.text}"/>
+        <p class="figure-subtitle" data-th-if="${highchart.config.subtitle && highchart.config.subtitle.text}" data-th-text="${highchart.config.subtitle.text}"/>
+        <div class="show-datatable" data-th-if="${showDataTableEnabled}">
+          <div class="ssb-tabs" role="tablist">
+            <button class="navigation-item active" data-th-id="show-graph- + ${highchart.contentKey}" role="tab">
+              <span data-th-text="${showAsGraphText}"></span>
+            </button>
+            <button class="navigation-item" data-th-id="show-tabledata- + ${highchart.contentKey}" role="tab">
+              <span data-th-text="${showAsTableText}"></span>
+            </button>
+          </div>
+        </div>
+        <hr class="ssb-divider type-dark mb-3" aria-hidden="true" />
+        <div data-th-id="highcharts- + ${highchart.contentKey}"
+          class="highcharts-canvas"
+          data-th-attr="data-contentkey=${highchart.contentKey},
+          data-type=${highchart.type}">
+        </div>
+        <p data-th-text="${highchart.description}" class="d-none highcharts-description highcharts-linked-description"></p>
+      </figure>
+      <div class="footnote col-12" data-th-each="footnote : ${highchart.footnoteText}" data-th-text="${footnote}"></div>
+      <div class="d-none highcharts-table invisible" data-th-utext="${highchart.tableData}"></div>
+    </div>
+
+    <div data-th-if="${highchart.creditsEnabled}" class="col-12 highcharts-source">
+      <div data-th-if="${highchart.sourceList}" data-th-each="source : ${highchart.sourceList}" class="mt-3">
+        <a class="ssb-link stand-alone" data-th-href="${source.sourceHref}" data-th-text="${sourceText + ' ' + source.sourceText}" />
+      </div>
+    </div>
+  </div>
+</section>
