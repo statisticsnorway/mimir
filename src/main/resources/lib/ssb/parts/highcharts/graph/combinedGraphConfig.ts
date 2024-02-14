@@ -3,6 +3,7 @@ import { createDefaultConfig } from '/lib/ssb/parts/highcharts/graph/config'
 
 export function combinedGraphConfig(highchartContent, options) {
   log.info('\x1b[32m%s\x1b[0m', '9. combinedGraphConfig')
+  log.info('\x1b[36m%s\x1b[0m', 'options: ' + JSON.stringify(options, null, 2))
   const defaultConfig = createDefaultConfig(
     highchartContent.data,
     highchartContent.displayName,
@@ -11,7 +12,8 @@ export function combinedGraphConfig(highchartContent, options) {
   const customConfig = {
     chart: {
       zoomType: 'xy',
-      type: null,
+      type: undefined,
+      marginTop: 70,
     },
     series: options.series,
     yAxis: options.yAxis,

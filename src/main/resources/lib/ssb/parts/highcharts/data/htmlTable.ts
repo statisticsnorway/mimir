@@ -12,7 +12,6 @@ import { type CombinedGraph, type Highchart } from '/site/content-types'
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 
 export function seriesAndCategoriesFromHtmlTable(highChartsContent: Content<Highchart>): SeriesAndCategories {
-  log.info('\x1b[32m%s\x1b[0m', '6. seriesAndCategoriesFromHtmlTable')
   const htmlTable: string | undefined = highChartsContent.data.htmlTable ?? undefined
   const seriesAndCategoriesRaw = getSeriesAndCategoriesFromTable(htmlTable)
 

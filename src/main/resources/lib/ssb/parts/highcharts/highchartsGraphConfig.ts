@@ -11,6 +11,7 @@ import { columnConfig } from '/lib/ssb/parts/highcharts/graph/graphColumnConfig'
 import { lineConfig } from '/lib/ssb/parts/highcharts/graph/graphLineConfig'
 import { combinedGraphConfig } from '/lib/ssb/parts/highcharts/graph/combinedGraphConfig'
 import { DataSource as DataSourceType } from '/lib/ssb/repo/dataset'
+import { mergeDeepRight } from '/lib/vendor/ramda'
 import { type DataSource } from '/site/mixins/dataSource'
 import { type CombinedGraph, type Highchart } from '/site/content-types'
 
@@ -42,17 +43,19 @@ export function prepareCombinedGraphConfig(
   series
 ): HighchartsGraphConfig {
   log.info('\x1b[32m%s\x1b[0m', '8. prepareCombinedGraphConfig')
-  const yAxis = combinedGraphContent.data.combinedGraphData?.map((data) => {
-    return {
+  const defaultConfig = createDefaultConfig(
+    combinedGraphContent.data,
+    combinedGraphContent.displayName,
+    combinedGraphContent.language
+  )
+  const yAxis = combinedGraphContent.data.combinedGraphData?.map((data, index) => {
+    const yAxisConfig = {
       title: {
         text: data.yAxisTitle,
-        align: 'high',
-        y: -10,
       },
-      labels: {
-        format: '{value:,.0f}',
-      },
+      opposite: index === 1 ? true : undefined,
     }
+    return mergeDeepRight(defaultConfig.yAxis, yAxisConfig)
   })
 
   const seriesOption = combinedGraphContent.data.combinedGraphData?.map((data, index) => {
@@ -61,11 +64,10 @@ export function prepareCombinedGraphConfig(
       data: series[index].data,
       name: series[index].name,
       yAxis: index,
-      opposite: index === 1,
     }
   })
 
-  const combinedOptions: GetGraphOptions = {
+  const combinedOptions: GetCombinedGraphOptions = {
     series: seriesOption,
     yAxis,
     categories,
@@ -101,5 +103,11 @@ function defaultConfig(highchartsContent: Content<Highchart>): HighchartsGraphCo
 interface GetGraphOptions {
   isJsonStat: boolean
   xAxisLabel: string | undefined
+  categories: object | undefined
+}
+
+interface GetCombinedGraphOptions {
+  series: object | undefined
+  yAxis: object | undefined
   categories: object | undefined
 }
