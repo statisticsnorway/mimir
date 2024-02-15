@@ -50,8 +50,8 @@ function ContactForm(props) {
       return
     }
     setLoading(true)
-    grecaptcha.ready(function () {
-      grecaptcha
+    grecaptcha.enterprise.ready(function () {
+      grecaptcha.enterprise
         .execute(recaptchaSiteKey, {
           action: 'submitContactForm',
         })
