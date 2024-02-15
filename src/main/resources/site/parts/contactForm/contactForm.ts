@@ -23,6 +23,7 @@ function renderPart(req: XP.Request) {
 
   const language: Language = getLanguage(page) as Language
   const phrases: Phrases = language.phrases as Phrases
+  // TODO: Hvordan håndtere localhost?
   const recaptchaSiteKey: string =
     app.config && app.config['GCP_RECAPTCHA_SITE_KEY'] && typeof app.config['GCP_RECAPTCHA_SITE_KEY'] == 'string'
       ? app.config['GCP_RECAPTCHA_SITE_KEY']
