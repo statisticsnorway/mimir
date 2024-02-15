@@ -227,7 +227,6 @@ export function get(req: XP.Request): XP.Response {
   )
   const breadcrumbId = 'breadcrumbs'
   const hideBreadcrumb = !!pageConfig?.hide_breadcrumb
-  const innrapporteringRegexp = /^\/ssb(\/en)?\/innrapportering/ // Skal matche alle sider under /innrapportering på norsk og engelsk
 
   const model: DefaultModel = {
     isFragment,
@@ -254,7 +253,6 @@ export function get(req: XP.Request): XP.Response {
     breadcrumbsReactId: breadcrumbId,
     hideHeader,
     hideBreadcrumb,
-    enabledChatScript: isEnabled('enable-chat-script', true, 'ssb') && innrapporteringRegexp.exec(page._path),
     tableView: page.type === 'mimir:table',
   }
 
@@ -641,6 +639,5 @@ interface DefaultModel {
   breadcrumbsReactId: string | undefined
   hideHeader: boolean
   hideBreadcrumb: boolean
-  enabledChatScript: boolean
   tableView: boolean
 }
