@@ -20,14 +20,27 @@ function RelatedBoxes(props) {
   )
   const [total, setTotal] = useState(firstRelatedContents ? firstRelatedContents.total : 0)
   const [loading, setLoading] = useState(false)
-  const [focusElement, setFocusElement] = useState(false)
-  const currentElement = useRef(null)
+  const [interactionType, setInteractionType] = useState('')
+  const [isReset, setIsReset] = useState(false)
+  const itemRefs = useRef([])
 
   useEffect(() => {
-    if (focusElement && currentElement.current) {
-      currentElement.current.firstChild.focus()
+    if (interactionType === 'key' && !isReset && relatedFactPages.length > 0) {
+      const newElementIndex = firstRelatedContents ? firstRelatedContents.relatedFactPages.length : 0
+      const firstNewElement = itemRefs.current[newElementIndex]
+      if (firstNewElement) {
+        const focusableElement = firstNewElement.querySelector('a')
+        if (focusableElement) {
+          focusableElement.focus()
+        }
+      }
     }
-  }, [relatedFactPages])
+    setIsReset(false)
+  }, [relatedFactPages.length, interactionType, isReset])
+
+  useEffect(() => {
+    itemRefs.current = itemRefs.current.slice(0, relatedFactPages.length)
+  }, [relatedFactPages.length])
 
   function fetchAllRelatedFactPages() {
     setLoading(true)
@@ -47,21 +60,20 @@ function RelatedBoxes(props) {
         }
       })
       .finally(() => {
-        setFocusElement(false)
         setLoading(false)
       })
   }
-  
 
   function resetRelatedFactPages() {
     setLoading(true)
-    setRelatedFactPages(firstRelatedContents.relatedFactPages)
-    setTotal(firstRelatedContents.total)
-    setFocusElement(false)
+    setRelatedFactPages(firstRelatedContents ? firstRelatedContents.relatedFactPages : [])
+    setTotal(firstRelatedContents ? firstRelatedContents.total : 0)
+    setIsReset(true)
     setLoading(false)
   }
 
-  function handleButtonOnClick() {
+  function handleButtonClick(eventType) {
+    setInteractionType(eventType)
     if (total > relatedFactPages.length) {
       fetchAllRelatedFactPages()
     } else {
@@ -69,62 +81,53 @@ function RelatedBoxes(props) {
     }
   }
 
-  function renderButtonText() {
-    if (!loading) {
-      if (total > relatedFactPages.length) {
-        return `${showAll} (${total})`
-      } else {
-        return showLess
-      }
-    } else {
-      return <span className='spinner-border spinner-border-sm' />
-    }
-  }
-
   function renderRelatedFactPages() {
-    if (relatedFactPages.length) {
-      return (
-        <>
+    return relatedFactPages.length ? (
+      <>
+        <div className='row'>
+          <ul
+            className='image-box-wrapper'
+            aria-label={`${showingPhrase.replace('{0}', relatedFactPages.length)} ${total} ${factpagePluralName}`}
+          >
+            {relatedFactPages.map((relatedFactPageContent, index) => (
+              <li key={index} ref={(el) => (itemRefs.current[index] = el)}>
+                <PictureCard
+                  className='mb-3'
+                  imageSrc={relatedFactPageContent.image}
+                  altText={relatedFactPageContent.imageAlt ?? ''}
+                  link={relatedFactPageContent.link}
+                  title={relatedFactPageContent.title}
+                />
+              </li>
+            ))}
+          </ul>
+        </div>
+        {total > 4 && (
           <div className='row'>
-            <ul
-              className='image-box-wrapper'
-              aria-label={`${showingPhrase.replace('{0}', relatedFactPages.length)} ${total} ${factpagePluralName}`}
-            >
-              {relatedFactPages.map((relatedFactPageContent, index) => (
-                <li key={index} ref={index === 4 ? currentElement : null}>
-                  <PictureCard
-                    className='mb-3'
-                    imageSrc={relatedFactPageContent.image}
-                    altText={relatedFactPageContent.imageAlt ?? ''}
-                    link={relatedFactPageContent.link}
-                    title={relatedFactPageContent.title}
-                  />
-                </li>
-              ))}
-            </ul>
-          </div>
-          {total > 4 && (
-            <div className='row'>
-              <div className='col-auto'>
-                <Button
-                  ariaLabel={total > relatedFactPages.length && `${showAll} - ${total} ${factpagePluralName}`}
-                  onClick={handleButtonOnClick}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault()
-                      setFocusElement((prev) => !prev)
-                      handleButtonOnClick()
-                    }
-                  }}
-                >
-                  {renderButtonText()}
-                </Button>
-              </div>
+            <div className='col-auto'>
+              <Button
+                ariaLabel={total > relatedFactPages.length ? `${showAll} - ${total} ${factpagePluralName}` : ''}
+                onClick={() => handleButtonClick('click')}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault()
+                    handleButtonClick('key')
+                  }
+                }}
+              >
+                {loading ? (
+                  <span className='spinner-border spinner-border-sm' />
+                ) : total > relatedFactPages.length ? (
+                  `${showAll} (${total})`
+                ) : (
+                  showLess
+                )}
+              </Button>
             </div>
-          )}
-        </>
-      )
-    }
+          </div>
+        )}
+      </>
+    ) : null
   }
 
   return (
