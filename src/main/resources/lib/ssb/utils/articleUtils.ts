@@ -56,12 +56,13 @@ export function getAllArticles(req: XP.Request, language: string, start: 0, coun
   const languageQuery: string = language !== 'en' ? 'AND language != "en"' : 'AND language = "en"'
   const now: string = new Date().toISOString()
   const publishFromQuery = `(publish.from LIKE '*' AND publish.from < '${now}')`
-  const pagePaths: Array<string> = mainSubjects.map((mainSubject) => `_parentPath LIKE "/content${mainSubject.path}/*"`)
-  pagePaths.push(`_parentPath LIKE "/content/ssb/innrapportering/*"`)
-  pagePaths.push(`_parentPath LIKE "/content/ssb/omssb/*"`)
-  pagePaths.push(`_parentPath LIKE "/content/ssb/forskning/*"`)
+  const pagePaths: Array<string> = mainSubjects.map((mainSubject) => `_parentPath LIKE "/content${mainSubject.path}*"`)
+  pagePaths.push(`_parentPath LIKE "/content/ssb/innrapportering*"`)
+  pagePaths.push(`_parentPath LIKE "/content/ssb/omssb*"`)
+  pagePaths.push(`_parentPath LIKE "/content/ssb/forskning*"`)
   const subjectQuery = `(${pagePaths.join(' OR ')})`
   const queryString = `${publishFromQuery} AND ${subjectQuery} ${languageQuery}`
+  log.info('\x1b[32m%s\x1b[0m', JSON.stringify(pagePaths, null, 2))
 
   const articlesContent: ContentsResult<Content<Article>> = query({
     start: start,
