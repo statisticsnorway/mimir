@@ -62,7 +62,6 @@ export function getAllArticles(req: XP.Request, language: string, start: 0, coun
   pagePaths.push(`_parentPath LIKE "/content/ssb/forskning*"`)
   const subjectQuery = `(${pagePaths.join(' OR ')})`
   const queryString = `${publishFromQuery} AND ${subjectQuery} ${languageQuery}`
-  log.info('\x1b[32m%s\x1b[0m', JSON.stringify(pagePaths, null, 2))
 
   const articlesContent: ContentsResult<Content<Article>> = query({
     start: start,
