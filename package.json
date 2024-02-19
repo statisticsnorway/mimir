@@ -136,7 +136,7 @@
     "sass": "~1.70.0",
     "sass-loader": "~14.1.0",
     "style-loader": "~3.3.4",
-    "swc-loader": "~0.2.3",
+    "swc-loader": "~0.2.6",
     "ts-loader": "~9.5.1",
     "tsup": "^8.0.2",
     "typescript": "~5.2.2",
