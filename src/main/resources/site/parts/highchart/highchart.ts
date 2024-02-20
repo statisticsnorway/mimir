@@ -103,6 +103,7 @@ function renderPart(req: XP.Request, highchartIds: Array<string>): XP.Response {
   if (isEnabled('highchart-react', true, 'ssb')) {
     // R4xp disables hydration in edit mode, but highcharts need hydration to show
     // we sneaky swap mode since we want a render of higchart in edit mode
+    // Works good for highchart macro, not so much when part
     const _req = req
     if (req.mode === 'edit') _req.mode = 'preview'
 
