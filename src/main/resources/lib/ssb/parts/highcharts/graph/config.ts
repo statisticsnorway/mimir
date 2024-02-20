@@ -46,16 +46,19 @@ export const createDefaultConfig = (highchartData, displayName, language) => ({
   chart: {
     height: highchartData.heightAspectRatio > 0 ? `${highchartData.heightAspectRatio}%` : null,
     plotBorderColor: '#e6e6e6',
-    spacingBottom: 18,
     plotBorderWidth: 0,
     style: {
       fontFamily: '"Open Sans Regular", "Arial", "DejaVu Sans", sans-serif',
       fontSize: '14px',
     },
     type: 'bar',
-    spacing: [0, 10, 0, 0],
     zoomType: highchartData.zoomType,
-    marginTop: 50,
+    spacingRight: 10,
+    spacingLeft: 0,
+    spacingBottom: 18,
+    // TODO: Med bar-chart kolliderer legend og y-akse-label
+    spacingTop: highchartData.legendAlign === 'top' ? 18 : 0,
+    marginTop: highchartData.legendAlign === 'top' ? null : 50,
   },
   // SSB color palette:
   colors: [
