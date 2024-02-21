@@ -2,7 +2,7 @@
   <span data-th-utext="${dataScript}" data-th-remove="tag"></span>
   <div class="row position-relative">
     <div class="col-12">
-      <figure data-th-fragment="graph" class="highcharts-figure mb-0" data-th-classappend="${highchart.hideTitle == true || showDataTableEnabled ? 'hide-title' : ''}" data-th-id="figure- + ${highchart.contentKey}" data-th-if="${highchart && highchart.config}">
+      <figure data-th-fragment="graph" class="highcharts-figure mb-0 hide-title" data-th-id="figure- + ${highchart.contentKey}" data-th-if="${highchart && highchart.config}">
         <figcaption class="figure-title" data-th-if="${highchart.config.title && highchart.config.title.text}" data-th-text="${highchart.config.title.text}"/>
         <p class="figure-subtitle" data-th-if="${highchart.config.subtitle && highchart.config.subtitle.text}" data-th-text="${highchart.config.subtitle.text}"/>
         <div class="show-datatable" data-th-if="${showDataTableEnabled}">
