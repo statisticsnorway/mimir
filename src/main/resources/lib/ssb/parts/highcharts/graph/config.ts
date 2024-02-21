@@ -56,7 +56,6 @@ export const createDefaultConfig = (highchartData, displayName, language) => ({
     spacingRight: 10,
     spacingLeft: 0,
     spacingBottom: 18,
-    // TODO: Med bar-chart kolliderer legend og y-akse-label
     spacingTop: highchartData.legendAlign === 'top' ? 18 : 0,
     marginTop: highchartData.legendAlign === 'top' ? null : 50,
   },
