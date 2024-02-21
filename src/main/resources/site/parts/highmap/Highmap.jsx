@@ -49,7 +49,7 @@ function Highmap(props) {
         fontSize: '14px',
         fontWeight: 'normal',
         fontFamily: '"Open Sans Regular", "Arial", "DejaVu Sans", sans-serif',
-      }
+      },
     },
     accessibility: {
       enabled: true,
@@ -161,6 +161,16 @@ function Highmap(props) {
     },
   }
 
+  function renderHighchartsSource(sourceLink, index) {
+    return (
+      <div key={index} className='mt-3'>
+        <a className='ssb-link stand-alone' href={sourceLink.sourceHref}>
+          {props.phrases.source}: {sourceLink.sourceText}
+        </a>
+      </div>
+    )
+  }
+
   return (
     <section className='xp-part highchart-wrapper'>
       <Row>
@@ -176,6 +186,7 @@ function Highmap(props) {
                 {footnote && <Text>{footnote}</Text>}
               </Col>
             ))}
+          {props.sourceList && props.sourceList.map(renderHighchartsSource)}
         </Col>
       </Row>
     </section>
@@ -197,6 +208,7 @@ Highmap.propTypes = {
   seriesTitle: PropTypes.string,
   legendTitle: PropTypes.string,
   legendAlign: PropTypes.string,
+  sourceList: PropTypes.array,
   footnoteText: PropTypes.array,
   phrases: PropTypes.object,
   language: PropTypes.string,

@@ -14,54 +14,6 @@ import { type Highmap } from '/site/content-types'
 
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 
-interface MapFeatures {
-  properties: {
-    name?: string
-    capitalName?: string
-  }
-}
-
-interface MapResult {
-  features: Array<MapFeatures>
-}
-
-interface HighmapTable {
-  table: {
-    tbody: {
-      tr: Array<RowData>
-    }
-  }
-}
-
-interface HighmapFormattedTableData {
-  capitalName: string
-  value: number
-}
-
-interface ThresholdValues {
-  to: number | undefined
-  from: number | undefined
-}
-
-interface HighmapProps {
-  title: string
-  subtitle: Highmap['subtitle']
-  description: Highmap['description']
-  mapFile: object
-  tableData: Array<HighmapFormattedTableData>
-  thresholdValues: Array<ThresholdValues>
-  hideTitle: Highmap['hideTitle']
-  colorPalette: Highmap['colorPalette']
-  numberDecimals: number | undefined
-  heightAspectRatio: Highmap['heightAspectRatio']
-  seriesTitle: Highmap['seriesTitle']
-  legendTitle: Highmap['legendTitle']
-  legendAlign: Highmap['legendAlign']
-  footnoteText: Highmap['footnoteText']
-  phrases: Phrases | undefined
-  language: string | undefined
-}
-
 export function get(req: XP.Request): XP.Response {
   try {
     const config = getComponent<XP.PartComponent.Highmap>()?.config
@@ -105,6 +57,7 @@ function renderPart(req: XP.Request, highmapId: string | undefined): XP.Response
         key: highmapId,
       })
     : null
+
 
   const mapFile: Content | null =
     highmapContent && highmapContent.data.mapFile
@@ -155,6 +108,8 @@ function renderPart(req: XP.Request, highmapId: string | undefined): XP.Response
       ? util.data.forceArray(highmapContent.data.thresholdValues)
       : []
 
+
+
     const props: HighmapProps = {
       title: highmapContent.displayName,
       subtitle: highmapContent.data.subtitle,
@@ -169,12 +124,11 @@ function renderPart(req: XP.Request, highmapId: string | undefined): XP.Response
       seriesTitle: highmapContent.data.seriesTitle,
       legendTitle: highmapContent.data.legendTitle,
       legendAlign: highmapContent.data.legendAlign,
+      sourceList: highmapContent.data.sourceList ? util.data.forceArray(highmapContent.data.sourceList) : undefined,
       footnoteText: highmapContent.data.footnoteText ? util.data.forceArray(highmapContent.data.footnoteText) : [],
       phrases: getPhrases(page),
       language: page.language,
     }
-
-
     // R4xp disables hydration in edit mode, but highmap need hydration to show
     // we sneaky swap mode since we want a render of highmap in edit mode
     // Works good for highmap macro, not so much when part
@@ -256,4 +210,53 @@ function getDataClass(formattedThresholdValues: Array<number>): Array<ThresholdV
   })
 
   return dataClasses
+}
+
+interface MapFeatures {
+  properties: {
+    name?: string
+    capitalName?: string
+  }
+}
+
+interface MapResult {
+  features: Array<MapFeatures>
+}
+
+interface HighmapTable {
+  table: {
+    tbody: {
+      tr: Array<RowData>
+    }
+  }
+}
+
+interface HighmapFormattedTableData {
+  capitalName: string
+  value: number
+}
+
+interface ThresholdValues {
+  to: number | undefined
+  from: number | undefined
+}
+
+interface HighmapProps {
+  title: string
+  subtitle: Highmap['subtitle']
+  description: Highmap['description']
+  mapFile: object
+  tableData: Array<HighmapFormattedTableData>
+  thresholdValues: Array<ThresholdValues>
+  hideTitle: Highmap['hideTitle']
+  colorPalette: Highmap['colorPalette']
+  numberDecimals: number | undefined
+  heightAspectRatio: Highmap['heightAspectRatio']
+  seriesTitle: Highmap['seriesTitle']
+  legendTitle: Highmap['legendTitle']
+  legendAlign: Highmap['legendAlign']
+  sourceList?: Highmap['sourceList']
+  footnoteText: Highmap['footnoteText']
+  phrases: Phrases | undefined
+  language: string | undefined
 }
