@@ -49,7 +49,7 @@ function Highmap(props) {
         fontSize: '14px',
         fontWeight: 'normal',
         fontFamily: '"Open Sans Regular", "Arial", "DejaVu Sans", sans-serif',
-      }
+      },
     },
     accessibility: {
       enabled: true,

@@ -422,7 +422,6 @@ function concatReleaseTimes(
 
 // If import from statreg failed use nextRelease instead of previousRelease
 export function nextReleasedPassed(variant: VariantInListing): boolean {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   const serverOffsetInMs: number =
     app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
   const serverTime: Date = new Date(new Date().getTime() + serverOffsetInMs)
