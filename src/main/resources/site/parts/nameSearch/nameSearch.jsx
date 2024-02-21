@@ -13,8 +13,8 @@ import highchartsAccessibility from 'highcharts/modules/accessibility'
 import { useMediaQuery } from 'react-responsive'
 import { addGtagForEvent } from '/react4xp/ReactGA'
 
-import accessibilityLang from './../../../assets/js/highchart-lang.json'
 import { sanitize } from '../../../lib/ssb/utils/htmlUtils'
+import accessibilityLang from './../../../assets/js/highchart-lang.json'
 
 if (typeof window !== 'undefined' && typeof Highcharts === 'object') {
   highchartsExporting(Highcharts)
