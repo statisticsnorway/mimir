@@ -177,7 +177,6 @@ function SearchResult(props) {
           >
             <span
               dangerouslySetInnerHTML={{
-                // deepcode ignore DOMXSS: We sanitize this field in backend
                 __html: sanitize(hit.title.replace(/&nbsp;/g, ' ')),
               }}
             ></span>
@@ -185,7 +184,6 @@ function SearchResult(props) {
           <Paragraph className='search-result-ingress my-1'>
             <span
               dangerouslySetInnerHTML={{
-                // deepcode ignore DOMXSS: We sanitize this field in backend
                 __html: sanitize(hit.preface.replace(/&nbsp;/g, ' ')),
               }}
             ></span>
