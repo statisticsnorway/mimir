@@ -5,6 +5,7 @@ import { ChevronDown } from 'react-feather'
 import { default as groupBy } from 'ramda/es/groupBy'
 import PropTypes from 'prop-types'
 import axios from 'axios'
+import { sanitize } from '../../lib/ssb/utils/htmlUtils'
 
 function ArticleArchive(props) {
   const {
@@ -142,7 +143,7 @@ function ArticleArchive(props) {
               <div
                 className='free-text'
                 dangerouslySetInnerHTML={{
-                  __html: freeText,
+                  __html: sanitize(freeText),
                 }}
               />
             </div>

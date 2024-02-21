@@ -17,6 +17,7 @@ import axios from 'axios'
 import { NumericFormat } from 'react-number-format'
 import { Col, Row } from 'react-bootstrap'
 import { addGtagForEvent } from '../../../react4xp/ReactGA'
+import { sanitize } from '../../../lib/ssb/utils/htmlUtils'
 
 function SearchResult(props) {
   const [hits, setHits] = useState(props.hits)
@@ -177,7 +178,7 @@ function SearchResult(props) {
             <span
               dangerouslySetInnerHTML={{
                 // deepcode ignore DOMXSS: We sanitize this field in backend
-                __html: hit.title.replace(/&nbsp;/g, ' '),
+                __html: sanitize(hit.title.replace(/&nbsp;/g, ' ')),
               }}
             ></span>
           </a>
@@ -185,7 +186,7 @@ function SearchResult(props) {
             <span
               dangerouslySetInnerHTML={{
                 // deepcode ignore DOMXSS: We sanitize this field in backend
-                __html: hit.preface.replace(/&nbsp;/g, ' '),
+                __html: sanitize(hit.preface.replace(/&nbsp;/g, ' ')),
               }}
             ></span>
           </Paragraph>
