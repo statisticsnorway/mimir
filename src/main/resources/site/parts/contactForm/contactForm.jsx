@@ -49,6 +49,7 @@ function ContactForm(props) {
       onBlur('text')
       return
     }
+    console.log('sending form')
     setLoading(true)
     grecaptcha.enterprise.ready(function () {
       grecaptcha.enterprise
