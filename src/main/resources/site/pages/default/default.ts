@@ -320,9 +320,7 @@ function prepareRegions(isFragment: boolean, page: DefaultPage): RegionsContent 
     }
   }
   configRegions.forEach((configRegion) => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     configRegion.components = regions[configRegion.region]
       ? util.data.forceArray(regions[configRegion.region].components)
       : []

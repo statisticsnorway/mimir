@@ -587,7 +587,6 @@ export function setupHandlers(socket: Socket): void {
 }
 
 function purgeVarnishCache(): HttpResponse {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const baseUrl: string =
     app.config && app.config['ssb.internal.baseUrl'] ? app.config['ssb.internal.baseUrl'] : 'https://i.ssb.no'
   const response: HttpResponse = request({
