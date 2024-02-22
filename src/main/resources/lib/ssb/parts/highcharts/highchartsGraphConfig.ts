@@ -12,6 +12,7 @@ import { lineConfig } from '/lib/ssb/parts/highcharts/graph/graphLineConfig'
 import { combinedGraphConfig } from '/lib/ssb/parts/highcharts/graph/combinedGraphConfig'
 import { DataSource as DataSourceType } from '/lib/ssb/repo/dataset'
 import { mergeDeepRight } from '/lib/vendor/ramda'
+import { Series } from '/lib/ssb/parts/highcharts/highchartsData'
 import { type DataSource } from '/site/mixins/dataSource'
 import { type CombinedGraph, type Highchart } from '/site/content-types'
 
@@ -39,10 +40,10 @@ export function prepareHighchartsGraphConfig(
 
 export function prepareCombinedGraphConfig(
   combinedGraphContent: Content<CombinedGraph>,
-  categories: Array<string | number | PreliminaryData> | undefined = undefined,
-  series
+  categories: Array<string | number | PreliminaryData> | undefined,
+  series: Array<Series> | undefined
 ): HighchartsGraphConfig {
-  log.info('\x1b[32m%s\x1b[0m', '8. prepareCombinedGraphConfig')
+  log.info('\x1b[32m%s\x1b[0m', '6. prepareCombinedGraphConfig')
   const defaultConfig = createDefaultConfig(
     combinedGraphContent.data,
     combinedGraphContent.displayName,
@@ -62,14 +63,16 @@ export function prepareCombinedGraphConfig(
     return mergeDeepRight(defaultConfig.yAxis, yAxisConfig)
   })
 
-  const seriesOption = combinedGraphContent.data.combinedGraphData?.map((data, index) => {
-    return {
-      type: data.graphType,
-      data: series[index].data,
-      name: series[index].name,
-      yAxis: index,
-    }
-  })
+  const seriesOption = series
+    ? combinedGraphContent.data.combinedGraphData?.map((data, index) => {
+        return {
+          type: data.graphType,
+          data: series[index].data,
+          name: series[index].name,
+          yAxis: index,
+        }
+      })
+    : []
 
   const combinedOptions: GetCombinedGraphOptions = {
     series: seriesOption,
@@ -104,13 +107,13 @@ function defaultConfig(highchartsContent: Content<Highchart>): HighchartsGraphCo
   return createDefaultConfig(highchartsContent.data, highchartsContent.displayName, highchartsContent.language)
 }
 
-interface GetGraphOptions {
+export interface GetGraphOptions {
   isJsonStat: boolean
   xAxisLabel: string | undefined
   categories: object | undefined
 }
 
-interface GetCombinedGraphOptions {
+export interface GetCombinedGraphOptions {
   series: object | undefined
   yAxis: object | undefined
   categories: object | undefined

@@ -5,7 +5,7 @@
       <figure data-th-fragment="graph" class="highcharts-figure mb-0 hide-title" data-th-id="figure- + ${highchart.contentKey}" data-th-if="${highchart && highchart.config}">
         <figcaption class="figure-title" data-th-if="${highchart.config.title && highchart.config.title.text}" data-th-text="${highchart.config.title.text}"/>
         <p class="figure-subtitle" data-th-if="${highchart.config.subtitle && highchart.config.subtitle.text}" data-th-text="${highchart.config.subtitle.text}"/>
-        <div class="show-datatable" data-th-if="${showDataTableEnabled}">
+        <div class="show-datatable">
           <div class="ssb-tabs" role="tablist">
             <button class="navigation-item active" data-th-id="show-graph- + ${highchart.contentKey}" role="tab">
               <span data-th-text="${showAsGraphText}"></span>

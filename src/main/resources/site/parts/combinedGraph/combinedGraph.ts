@@ -5,7 +5,7 @@ import { type HighchartsGraphConfig } from '/lib/types/highcharts'
 import { render } from '/lib/thymeleaf'
 import { scriptAsset } from '/lib/ssb/utils/utils'
 import { forceArray } from '/lib/ssb/utils/arrayUtils'
-import { createCombinedGraphObject } from '/lib/ssb/parts/highcharts/highchartsUtils'
+import { createCombinedGraphConfig } from '/lib/ssb/parts/highcharts/highchartsUtils'
 import { renderError } from '/lib/ssb/error/error'
 import { type CombinedGraph } from '/site/content-types'
 
@@ -63,7 +63,7 @@ function renderPart(req: XP.Request, highchartIds: Array<string>): XP.Response {
       const highchart: Content<CombinedGraph> | null = getContentByKey({
         key,
       })
-      const config: HighchartsGraphConfig | undefined = highchart ? determinConfigType(req, highchart) : undefined
+      const config: HighchartsGraphConfig | undefined = highchart ? createCombinedGraphConfig(highchart) : undefined
       return highchart && config ? createHighchartsProps(highchart, config) : {}
     })
     .filter((key) => !!key)
@@ -86,20 +86,6 @@ function renderPart(req: XP.Request, highchartIds: Array<string>): XP.Response {
       bodyEnd: [...inlineScript, scriptAsset('js/highchart.js')],
     },
     contentType: 'text/html',
-  }
-}
-
-function determinConfigType(req: XP.Request, highchart: Content<CombinedGraph>): HighchartsGraphConfig | undefined {
-  if (highchart.data.dataSource?._selected === 'htmlTable') {
-    return createDataFromHtmlTable(req, highchart)
-  }
-  return undefined
-}
-
-function createDataFromHtmlTable(req: XP.Request, highchart: Content<CombinedGraph>): HighchartsGraphConfig {
-  log.info('\x1b[32m%s\x1b[0m', '2. createDataFromHtmlTable')
-  return {
-    ...createCombinedGraphObject(req, highchart, highchart.data, highchart.data.dataSource ?? undefined),
   }
 }
 

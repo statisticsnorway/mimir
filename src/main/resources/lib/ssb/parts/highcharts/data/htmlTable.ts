@@ -29,7 +29,7 @@ export function seriesAndCategoriesFromHtmlTable(highChartsContent: Content<High
 export function seriesAndCategoriesFromHtmlTableCombinedGraph(
   combinedGraphContent: Content<CombinedGraph>
 ): SeriesAndCategories {
-  log.info('\x1b[32m%s\x1b[0m', '6. seriesAndCategoriesFromHtmlTableCombinedGraph')
+  log.info('\x1b[32m%s\x1b[0m', '4. seriesAndCategoriesFromHtmlTableCombinedGraph')
   const htmlTable: string | undefined =
     combinedGraphContent.data.dataSource?._selected === DataSourceType.HTMLTABLE
       ? combinedGraphContent.data.dataSource?.htmlTable.html
@@ -51,7 +51,7 @@ export function seriesAndCategoriesFromHtmlTableCombinedGraph(
 }
 
 function getSeriesAndCategoriesFromTable(htmlTable: string | undefined): SeriesAndCategoriesRaw {
-  log.info('\x1b[32m%s\x1b[0m', '7. getSeriesAndCategoriesFromTable')
+  log.info('\x1b[32m%s\x1b[0m', '5. getSeriesAndCategoriesFromTable')
   let stringJson: string | undefined
   if (htmlTable) {
     const sanitized = striptags(htmlTable, ['table', 'thead', 'tbody', 'tr', 'th', 'td'])

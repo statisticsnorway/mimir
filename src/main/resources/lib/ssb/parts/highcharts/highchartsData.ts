@@ -38,30 +38,6 @@ export function prepareHighchartsData(
     : seriesAndCategoriesOrData
 }
 
-export function prepareCombinedGraphData(
-  req: XP.Request,
-  combinedGraphContent: Content<CombinedGraph>,
-  data: object | string | undefined,
-  dataSource: DataSource['dataSource']
-): SeriesAndCategories | undefined {
-  log.info('\x1b[32m%s\x1b[0m', '4. prepareHighchartsData')
-  const seriesAndCategories: SeriesAndCategories | undefined = getSeriesAndCategoriesCombinedGraph(
-    req,
-    combinedGraphContent,
-    data,
-    dataSource
-  )
-
-  const seriesAndCategoriesOrData: SeriesAndCategories | undefined =
-    seriesAndCategories && !seriesAndCategories.series
-      ? addDataProperties(combinedGraphContent, seriesAndCategories)
-      : seriesAndCategories
-
-  return seriesAndCategoriesOrData !== undefined
-    ? switchRowsAndColumnsCheck(combinedGraphContent, seriesAndCategoriesOrData)
-    : seriesAndCategoriesOrData
-}
-
 export function getSeriesAndCategories(
   req: XP.Request,
   highchart: Content<Highchart>,
@@ -84,13 +60,10 @@ export function getSeriesAndCategories(
 }
 
 export function getSeriesAndCategoriesCombinedGraph(
-  req: XP.Request,
-  combinedGraph: Content<CombinedGraph>,
-  data: JSONstat | TbmlDataUniform | object | string | undefined,
-  dataSource: DataSource['dataSource']
+  combinedGraph: Content<CombinedGraph>
 ): SeriesAndCategories | undefined {
-  log.info('\x1b[32m%s\x1b[0m', '5. getSeriesAndCategoriesCombinedGraph')
-  if (dataSource && dataSource._selected === DataSourceType.HTMLTABLE) {
+  log.info('\x1b[32m%s\x1b[0m', '3. getSeriesAndCategoriesCombinedGraph')
+  if (combinedGraph.data.dataSource && combinedGraph.data.dataSource._selected === DataSourceType.HTMLTABLE) {
     return seriesAndCategoriesFromHtmlTableCombinedGraph(combinedGraph)
   }
   return undefined
@@ -151,7 +124,7 @@ export interface SeriesAndCategories {
   series: Array<Series>
   title?: string | object | undefined
   data?: {
-    switchRowsAndColumns: boolean
+    switchRowsAndColumns?: boolean
     decimalPoint: string
     table: string
   }

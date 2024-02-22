@@ -5,7 +5,7 @@ import { HighchartsGraphConfig } from '/lib/types/highcharts'
 import {
   SeriesAndCategories,
   prepareHighchartsData,
-  prepareCombinedGraphData,
+  getSeriesAndCategoriesCombinedGraph,
 } from '/lib/ssb/parts/highcharts/highchartsData'
 import { mergeDeepRight } from '/lib/vendor/ramda'
 
@@ -31,21 +31,10 @@ export function createHighchartObject(
   return mergeDeepRight(highchartsData || {}, highchartsGraphConfig) as unknown as HighchartsGraphConfig
 }
 
-export function createCombinedGraphObject(
-  req: XP.Request,
-  combinedGraph: Content<CombinedGraph>,
-  data: JSONstat | TbmlDataUniform | object | string | undefined,
-  dataSource: DataSource['dataSource']
-): HighchartsGraphConfig {
-  log.info('\x1b[32m%s\x1b[0m', '3. createCombinedGraphObject')
-  const combinedGraphData: SeriesAndCategories | undefined = prepareCombinedGraphData(
-    req,
-    combinedGraph,
-    data,
-    dataSource
-  )
+export function createCombinedGraphConfig(combinedGraph: Content<CombinedGraph>): HighchartsGraphConfig {
+  log.info('\x1b[32m%s\x1b[0m', '2. createCombinedGraphConfig')
+  const combinedGraphData: SeriesAndCategories | undefined = getSeriesAndCategoriesCombinedGraph(combinedGraph)
 
-  //log.info('\x1b[32m%s\x1b[0m', 'combinedGraphData: ' + JSON.stringify(combinedGraphData, null, 2))
   const combinedGraphConfig: HighchartsGraphConfig = prepareCombinedGraphConfig(
     combinedGraph,
     combinedGraphData?.categories,
