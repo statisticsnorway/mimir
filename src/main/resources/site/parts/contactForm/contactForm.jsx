@@ -56,6 +56,7 @@ function ContactForm(props) {
           action: 'submitContactForm',
         })
         .then(function (token) {
+          console.log('%ctoken', 'color: #00ff00', JSON.stringify(token, null, 2))
           axios
             .post(contactFormServiceUrl, {
               receiver: receiver.value,
