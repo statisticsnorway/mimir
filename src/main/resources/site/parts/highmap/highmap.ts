@@ -58,7 +58,6 @@ function renderPart(req: XP.Request, highmapId: string | undefined): XP.Response
       })
     : null
 
-
   const mapFile: Content | null =
     highmapContent && highmapContent.data.mapFile
       ? getContentByKey({
@@ -107,8 +106,6 @@ function renderPart(req: XP.Request, highmapId: string | undefined): XP.Response
     const thresholdValues: Highmap['thresholdValues'] = highmapContent.data.thresholdValues
       ? util.data.forceArray(highmapContent.data.thresholdValues)
       : []
-
-
 
     const props: HighmapProps = {
       title: highmapContent.displayName,
@@ -211,18 +208,15 @@ function getDataClass(formattedThresholdValues: Array<number>): Array<ThresholdV
 
   return dataClasses
 }
-
 interface MapFeatures {
   properties: {
     name?: string
     capitalName?: string
   }
 }
-
 interface MapResult {
   features: Array<MapFeatures>
 }
-
 interface HighmapTable {
   table: {
     tbody: {
@@ -230,17 +224,14 @@ interface HighmapTable {
     }
   }
 }
-
 interface HighmapFormattedTableData {
   capitalName: string
   value: number
 }
-
 interface ThresholdValues {
   to: number | undefined
   from: number | undefined
 }
-
 interface HighmapProps {
   title: string
   subtitle: Highmap['subtitle']
