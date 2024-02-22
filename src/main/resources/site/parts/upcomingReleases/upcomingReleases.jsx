@@ -3,6 +3,7 @@ import { Button, Link } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
 import axios from 'axios'
 import { ChevronDown } from 'react-feather'
+import { sanitize } from '../../../lib/ssb/utils/htmlUtils'
 
 export const mergeAndSortReleases = (releases1, releases2) => {
   const merged = new Map()
@@ -283,7 +284,7 @@ function UpcomingReleases(props) {
             <div
               className='upcoming-releases-ingress'
               dangerouslySetInnerHTML={{
-                __html: props.preface.replace(/&nbsp;/g, ' '),
+                __html: sanitize(props.preface.replace(/&nbsp;/g, ' ')),
               }}
             ></div>
           </div>

@@ -51,7 +51,6 @@ function RelatedBoxes(props) {
         setLoading(false)
       })
   }
-  
 
   function resetRelatedFactPages() {
     setLoading(true)

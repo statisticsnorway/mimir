@@ -1,10 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { LeadParagraph, Text, Paragraph } from '@statisticsnorway/ssb-component-library'
+import { sanitize } from '../../../lib/ssb/utils/htmlUtils'
 
 const RichText = ({ text, textType, inLayout }) => {
   const renderText = () => {
-    const textComponent = <span dangerouslySetInnerHTML={{ __html: text }} />
+    const textComponent = <span dangerouslySetInnerHTML={{ __html: sanitize(text) }} />
     switch (textType) {
       case 'ingress':
         return <LeadParagraph>{textComponent}</LeadParagraph>

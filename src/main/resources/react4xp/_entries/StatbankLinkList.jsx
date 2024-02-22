@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from '@statisticsnorway/ssb-component-library'
 import { ArrowRight } from 'react-feather'
 import PropTypes from 'prop-types'
+import { sanitize } from '../../lib/ssb/utils/htmlUtils'
 
 const StatbankLinkList = (props) => {
   return (
@@ -15,7 +16,7 @@ const StatbankLinkList = (props) => {
       >
         <span
           dangerouslySetInnerHTML={{
-            __html: props.children,
+            __html: sanitize(props.children),
           }}
         />
       </Link>
