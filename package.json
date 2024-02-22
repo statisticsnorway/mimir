@@ -163,6 +163,7 @@
     "react-ga": "~3.3.1",
     "react-select": "~5.8.0",
     "redux-logger": "~3.0.6",
+    "schema-dts": "^1.1.2",
     "striptags": "~3.2.0",
     "uuid": "~9.0.1",
     "xss": "^1.0.14",
