@@ -1,20 +1,30 @@
-<div class="container">
-  <h3 data-th-if="${hideTitle && title}" class="sr-only sr-only-focusable" data-th-text="${title}"></h3>
-  <h3 data-th-if="${!hideTitle && title}" data-th-text="${title}"></h3>
-  <div class="xp-layout row row-cols-1 row-cols-md-2">
+<div class="col xp-layout">
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <h3 data-th-if="${hideTitle && title}" class="sr-only sr-only-focusable" data-th-text="${title}"></h3>
+        <h3 data-th-if="${!hideTitle && title}" class="layout-title" data-th-text="${title}"></h3>
+      </div>
+    </div>
+  </div>
+  <div class="row row-cols-1 row-cols-md-2">
     <div data-th-if="${!isGrid}" data-th-remove="tag">
       <div data-portal-region="left" class="xp-region" data-th-classappend="${leftSize}">
         <div data-th-each="component : ${leftRegion}" data-th-remove="tag">
           <div data-portal-component="${component.path}" data-th-remove="tag" />
         </div>
       </div>
-      <div data-portal-region="right" class="xp-region mt-3 mt-md-0" data-th-classappend="${rightSize}">
+      <div data-th-id="${dividerId}" data-th-if="${!#lists.isEmpty(rightRegion)}" class="d-md-none w-100 pt-5 pb-4 col-12 col-md-6"></div>
+      <div data-portal-region="right" class="xp-region mt-3 mt-md-0" data-th-classappend="${rightSize}" >
         <div data-th-each="component : ${rightRegion}" data-th-remove="tag">
           <div data-portal-component="${component.path}" data-th-remove="tag" />
         </div>
       </div>
     </div>
-    <div data-th-if="${isGrid}" data-th-remove="tag" data-th-each="component : ${gridComponents}">
+    <div data-th-if="${isGrid}" data-th-remove="tag" data-th-each="component, i: ${gridComponents}">
+      <div data-th-id="${dividerId}"
+           data-th-if="${component.regionSide == 'right' && component.order % 2 != 0}"
+           class="d-md-none w-100 py-5 col-12 col-md-6 grid-divider"></div>
       <div data-th-classappend="${component.classes}">
         <div data-portal-component="${component.path}" data-th-remove="tag" />
       </div>

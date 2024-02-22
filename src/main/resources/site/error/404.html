@@ -1,0 +1,26 @@
+<div class="row d-flex justify-content-center error-page">
+    <div class="logo col-12 mt-4">
+        <a href="/">
+            <img data-th-src="${logo}" alt="SSB logo" />
+        </a>
+    </div>
+    <div class="col-12 title-wrapper d-flex justify-content-center">
+        <h1 class="col-12 col-md-8 pl-md-5 ml-md-3" data-th-text="${title}">Denne siden finnes ikke</h1>
+    </div>
+    <div class="col-12 col-md-4 ml-md-5 mt-md-5 mt-5 text-wrapper">
+        <p data-th-text="${text}">Du har dessverre havnet på en side som ikke finnes.</p>
+        <ul>
+            <li>
+                <a href="javascript:history.back()" data-th-text="${goBack}">tilbake</a>
+                <span data-th-text="${or}">Eller</span>
+                <a href="/" data-th-text="${frontPage}">forsiden</a>
+            </li>
+            <li><span data-th-text="${search}">eller prøve søket</span></li>
+        </ul>
+        <div class="search-wrapper mt-md-5 mt-4" data-th-id="${searchBoxId}">
+        </div>
+    </div>
+    <div class="col-8 col-md-3 mt-md-4 ml-md-5 illustration">
+        <img data-th-src="${illustration}" alt="404 feil / Error 404" />
+    </div>
+</div>

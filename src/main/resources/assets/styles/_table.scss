@@ -1,0 +1,372 @@
+.part-table {
+  .download-table-container {
+    display: flex;
+    margin-top: $spacer * 2;
+    margin-bottom: $spacer * 2;
+    
+    label {
+      display: none;
+    }
+
+    @include media-breakpoint-up(lg) {
+      justify-content: flex-end;
+    }
+
+    @include media-breakpoint-down(md) {
+      margin-top: $spacer * 2;
+      margin-bottom: $spacer * 2;
+    }
+
+    .ssb-dropdown {
+      @include media-breakpoint-down(md) {
+        width: 100%;
+      }
+    }
+  }
+
+  .table-controls-desktop {
+    color: $ssb-green-4;
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 40px;
+    height: 0;
+    user-select: none;
+
+    span {
+      cursor: pointer;
+      z-index: 1;
+
+      &.disabled {
+        color: $ssb-dark-2;
+        cursor: default;
+      }
+    }
+
+    @include media-breakpoint-down(md) {
+      display: none;
+    }
+  }
+
+  .table-controls-mobile {
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 20px;
+    height: 0;
+
+    & > img {
+      height: 40px;
+      margin-top: 5px;
+    }
+
+    @include media-breakpoint-up(lg) {
+      display: none;
+    }
+  }
+
+  .table-wrapper {
+    overflow-x: auto;
+  }
+
+  .source {
+    margin-bottom: $spacer;
+
+    .source-title{
+      color: $ssb-dark-6;
+    }
+
+    & > div {
+      padding-top: $spacer * 0.5;
+      padding-bottom: $spacer * 0.5;
+    }
+
+    & a {
+      margin-top: 10px;
+    }
+  }
+
+  @include media-breakpoint-down(md) {
+    width: 95%;
+    margin: 0;
+
+    .source > div {
+      padding: 0;
+    }
+  }
+
+  font-family: $font-roboto-plain;
+  width: 100%;
+  border-collapse: collapse;
+
+  .ssb-link {
+    margin-top: 10px;
+  }
+}
+
+thead {
+  background-color: $ssb-white;
+}
+
+tbody tr {
+  background-color: $ssb-white;
+
+  &:nth-child(odd) {
+    background-color: $ssb-green-1;
+  }
+
+  &:hover,
+  &:nth-child(odd):hover {
+    background-color: $ssb-purple-1;
+  }
+}
+
+td {
+  vertical-align: top;
+}
+
+td,
+th {
+  padding: 0.4em 1em;
+}
+
+//specific styling for statistics tables. remove class "statistics" if no longer needed
+table.statistics {
+  width: 100%;
+
+  caption {
+    border: 1px solid $ssb-dark-5;
+    border-bottom: none;
+    caption-side: top;
+    color: $ssb-dark-6;
+    font-weight: bold;
+    text-align: left;
+    padding: 1.5em 0 1.5em 0.625em;
+
+    .caption-text-wrapper {
+      max-width: 800px;
+    }
+
+    @include media-breakpoint-down(md) {
+      padding-top: 50px;
+
+      .caption-text-wrapper {
+        max-width: initial;
+      }
+    }
+  }
+
+  colgroup,
+  colgroup.first-col {
+    border-left: none;
+  }
+
+  colgroup.border-right {
+    border-right: 1px solid $ssb-dark-2;
+  }
+
+  th {
+    font-weight: normal;
+  }
+
+  th,
+  td {
+    padding: 0.5em 1em;
+  }
+
+  td a {
+    white-space: normal;
+  }
+
+  thead,
+  tbody {
+
+    th,
+    td {
+      border-top: 1px solid $ssb-dark-2;
+      border-right: 1px solid $ssb-dark-2;
+      border-bottom: 1px solid $ssb-dark-2;
+    }
+
+    th.level1 {
+      padding-left: 1.75em;
+    }
+
+    th.level2 {
+      padding-left: 2.50em;
+    }
+
+    th.level3 {
+      padding-left: 3.25em;
+    }
+
+    th.sum,
+    td.sum {
+      font-weight: bold;
+    }
+
+    td.preliminary:before {
+      content: "*";
+    }
+  }
+
+  thead {
+    border-bottom: none;
+    border-top: 1px solid $ssb-dark-5;
+  }
+
+  tbody {
+    border: 1px solid $ssb-dark-5;
+
+    .head {
+      background-color: $ssb-white;
+    }
+
+    tr {
+      border-top: 1px solid $ssb-dark-2;
+      border-bottom: 1px solid $ssb-dark-2;
+
+      &:first-child {
+        border-top: 1px solid $ssb-dark-5;
+
+        th,
+        td {
+          border-top: 1px solid $ssb-dark-5;
+        }
+      }
+
+      &:last-child {
+        border-bottom: 1px solid $ssb-dark-5;
+
+        th,
+        td {
+          border-bottom: 1px solid $ssb-dark-5;
+        }
+      }
+      td:last-child {
+        border-right: 1px solid $ssb-dark-5;
+      }
+    }
+
+    th,
+    td {
+      text-align: right;
+      vertical-align: bottom;
+      //height works like min-height in tables and min-height won't work
+      height: 36px;
+    }
+
+    th {
+
+      &:first-child {
+        text-align: left;
+        border-left: none;
+      }
+
+      &.colspan {
+        border-top: 1px solid $ssb-dark-5;
+        border-bottom: 1px solid $ssb-dark-5;
+        text-align: left;
+        font-weight: bold;
+      }
+
+      &:last-child {
+        border-right: none;
+      }
+
+      &.title {
+        font-weight: bold;
+        font-size: 1.1em;
+      }
+    }
+
+    td {
+      white-space: nowrap;
+
+      &.important {
+        font-weight: bold;
+      }
+    }
+  }
+
+  thead,
+  tbody tr.head {
+
+    th,
+    td {
+      text-align: right;
+      border: 1px solid $ssb-dark-5;
+    }
+
+    th {
+      padding-top: 1.5em;
+      text-align: right;
+
+      &[colspan] {
+        text-align: center;
+        font-weight: normal;
+      }
+    }
+
+    td {
+      white-space: nowrap;
+    }
+
+  }
+
+  tfoot {
+    border: 1px solid black;
+
+    tr {
+      border: none;
+
+      td {
+        padding: 0.2em 0.6em 0.2em 0.6em;
+        word-wrap: break-word;
+        border: none;
+        line-height: 28px;
+      }
+
+      &.footnote {
+        td {
+          sup {
+            padding-right: 1em;
+            padding-left: .5em;
+          }
+        }
+      }
+      &.correction-notice {
+        td {
+          padding-top: 1em;
+        }
+      }
+
+      &:first-of-type > td {
+        padding-top: 2em
+      }
+      &:last-of-type > td {
+        padding-bottom: 2em
+      }
+    }
+  }
+}
+
+
+// TODO: stylen under er for scroll piler som må legges til med javascript på et senere tidspunkt
+// scroll arrow for tables that are too wide (class added in JavaScript)
+.table-scroll-x,
+.table-scroll-x:hover {
+  font-size: 30px;
+  color: #3e8601;
+  display: block;
+  text-align: right;
+  margin-right: 5px;
+}
+
+ul.statbankkilde {
+  padding-left: 1em;
+  font-size:1.3em;
+  list-style-type: none;
+
+  li {
+    margin-bottom: 0.4em;
+  }
+}

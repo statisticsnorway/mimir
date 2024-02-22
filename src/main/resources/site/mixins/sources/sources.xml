@@ -1,0 +1,40 @@
+<mixin>
+	<display-name>Kilder</display-name>
+	<form>
+		<option-set name="sources">
+			<label>	Kilder</label>
+			<expanded>true</expanded>
+			<occurrences minimum="0" maximum="0" />
+			<options minimum="1" maximum="1">
+				<option name="urlSource">
+					<label>	Kilde fra url</label>
+					<help-text>Fritt url-felt. Legges inn som dette eks. "http://www.ssb.no"</help-text>
+					<items>
+						<input name="urlText" type="TextLine">
+							<label>Tekst til kildelenke</label>
+							<occurrences minimum="1" maximum="1" />
+						</input>
+						<input name="url" type="TextLine">
+							<label>Kildelenke</label>
+							<occurrences minimum="1" maximum="1" />
+						</input>
+					</items>
+				</option>
+				<option name="relatedSource">
+					<label>Kilde fra XP</label>
+					<items>
+						<input name="urlText" type="TextLine">
+							<label>Tekst til kildelenke</label>
+							<occurrences minimum="0" maximum="1" />
+						</input>
+						<input name="sourceSelector" type="ContentSelector">
+							<label>Relatert innhold</label>
+							<occurrences minimum="0" maximum="1" />
+							<config />
+						</input>
+					</items>
+				</option>
+			</options>
+		</option-set>
+	</form>
+</mixin>

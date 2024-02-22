@@ -1,3 +1,5 @@
+$grid-gutter-width: 20px;
+
 $grid-breakpoints: (
   // Extra small screen / phone
   xs: 0,
@@ -8,14 +10,16 @@ $grid-breakpoints: (
   // Large screen / desktop
   lg: 992px,
   // Extra large screen / wide desktop
-  xl: 1280px
+  xl: 1260px,
+  // Extra Extra large / 1440p and up
+  xxl: 2000px
 );
 
 $container-max-widths: (
   sm: 540px,
   md: 720px,
   lg: 960px,
-  xl: 1200px
+  xl: 1180px
 );
 
 @import "bootstrap";
@@ -25,14 +29,12 @@ $container-max-widths: (
 @import "./color";
 @import "./font";
 @import "./header";
+@import "./footer";
 @import "./menuBox";
 @import "./dashboard";
-@import "./button";
-@import "./datasets";
-@import "./factbox";
+@import "./variableCardsList";
 @import "./layout";
 @import "./banner";
-@import "./popper";
 @import "./dropdown"; // TODO: remove when implemented correctly from design system
 @import "./highchart";
 @import "./keyFigures";
@@ -41,7 +43,47 @@ $container-max-widths: (
 @import "./preface";
 @import "./globalStyles";
 @import "./infoGraphic";
-@import "./_profiledBox";
+@import "./profiledBox";
+@import "./article";
+@import "./contacts";
+@import "./relatedContentBox";
+@import "./profiledLinkIcon";
+@import "./downloadLink";
+@import "./relatedArticles";
+@import "./relatedExternalLinks";
+@import "./relatedFactPage";
+@import "./statistics";
+@import "./relatedStatistics";
+@import "./statbankBox";
+@import "./articleArchive";
+@import "./table";
+@import "./statbankLinkList";
+@import "./attachmentTablesFigures";
+@import "./omStatistikken";
+@import "./404";
+@import "./externalCard";
+@import "./endedStatistics";
+@import "./frontPageBanner";
+@import "./frontpage";
+@import "./entryLinks";
+@import "./upcomingReleases";
+@import "./articleList";
+@import "./calculator";
+@import "./categoryLinks";
+@import "./nameSearch";
+@import "./publicationArchive";
+@import "./statbankSubjectTree";
+@import "./contactForm";
+@import "./searchResult";
+@import "./localSearch";
+@import "./bestbet";
+@import "./staticVisualization";
+@import "./employee";
+@import "./employeeList";
+@import "./project";
+@import "./richText";
+@import "./videoEmbed";
+@import "./simpleStatbank";
 
 body {
   -moz-osx-font-smoothing: grayscale;
@@ -51,63 +93,123 @@ body {
   overflow-x: hidden; // removes horisontal scroll bar created by part preface
 }
 
-.ingress {
-  font-size: 20px;
-  line-height: 1.7;
-  p:last-child {
-    margin-bottom: 40px
-  }
+section {
+  width: 100%;
 }
 
-.article h2 {
-  font-size: 20px;
+section + section, .xp-layout + .xp-layout {
+  margin-top: $spacer * 3;
 }
 
-
-.row + section, section + section {
-  margin-top: 20px;
+section.part-divider + section.part-divider {
+  display: none;
 }
 
-.a-plain {
-  color: #212529;
-  outline: none;
-  text-decoration: none;
-  &:hover {
-    color: #212529;
-    text-decoration: none;
-  }
+.part-error {
+  background-color: $ssb-red-3;
 }
-
-.a-white {
-  color: white;
-  &:hover {
-    transition: all .2s;
-    color: #CCCCCC;
-  }
-}
-
-a.btn {
-  text-decoration: none;
-}
-
-footer {
-  margin-top: 40px;
-}
-
-
 
 .bkg-grey {
   background-color: $ssb-dark-1;
 }
 
-// class used to hide elements from sighted users and still allowing it to be picked up by screen readers
-.screen-reader-only {
-  clip: rect(1px, 1px, 1px, 1px);
-  clip-path: inset(50%);
-  height: 1px;
-  width: 1px;
-  margin: -1px;
+.region-grey {
+  background-color: $ssb-dark-1;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.region-dark-grey {
+  background-color: $ssb-dark-5;
+  padding-top: 20px;
+  padding-bottom: 20px;
+
+  /* Set text color to white for all child elements */
+  & * {
+    color: $ssb-white;
+  }
+}
+
+.premain {
+  max-width: 100%;
+  background: white;
+}
+
+.row {
+  @include media-breakpoint-down(md) {
+    margin-right: 0;
+    margin-left: 0;
+  }
+}
+
+.xp-region {
+  @include media-breakpoint-down(md) {
+    margin: 0 auto;
+    width: 95%;
+  }
+}
+
+
+.part-config-error {
+  background: $ssb-red-1;
+  padding: 1rem;
+
+  h2 {
+    color: $ssb-red-3;
+  }
+}
+
+// Looks weird, but is supported by all major browsers https://caniuse.com/?search=-webkit-line-clamp
+.truncate-2-lines {
   overflow: hidden;
-  padding: 0;
-  position: absolute;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* number of lines to show */
+  -webkit-box-orient: vertical;
+}
+
+.link-anchor {
+  position: relative;
+  width: 0;
+  font-size: .8em;
+  opacity: 0;
+  transition: opacity .2s ease-in-out;
+}
+.anchor-wrapper {
+  border: none;
+}
+.anchor-wrapper:hover .link-anchor {
+  opacity: 1;
+}
+
+section h1[id]:focus,
+section h2[id]:focus,
+section h3[id]:focus,
+section h4[id]:focus,
+section h5[id]:focus {
+  outline: 0;
+}
+
+p.thin {
+    font-weight: 100;
+    margin: 0;
+    line-height: 1.2em;
+    color: #fff;
+}
+
+p.bold {
+    font-weight: 900;
+    margin: 0;
+    margin-top: -5px;
+    color: #fff;
+}
+
+.rel {
+    width: 30%;
+    margin: 0 auto;
+    position: relative;
+    text-align: center;
+    padding: 20px;
+    border-style: dotted;
+    border-color: white;
+    border-width: medium;
 }

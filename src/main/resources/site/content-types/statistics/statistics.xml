@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<content-type>
+	<display-name>Statistikk</display-name>
+	<super-type>base:structured</super-type>
+	<form>
+		<mixin name="statistic" />
+		<field-set>
+			<items>
+				<option-set name="showModifiedDate">
+					<label>Endringsdato</label>
+					<expanded>false</expanded>
+					<occurrences minimum="0" maximum="1" />
+					<options minimum="1" maximum="1">
+						<option name="modifiedOption">
+							<label>Endringsmelding</label>
+							<default>true</default>
+							<items>
+								<input name="lastModified" type="DateTime">
+									<label>Dato og tid</label>
+								</input>
+								<input name="modifiedText" type="TextLine">
+									<label>Endringstekst</label>
+								</input>
+							</items>
+						</option>
+					</options>
+				</option-set>
+			</items>
+		</field-set>
+		<field-set>
+			<label>Hovedtallstabell</label>
+			<items>
+				<input name="mainTable" type="ContentSelector">
+					<label>Tabell</label>
+					<occurrences minimum="0" maximum="1" />
+					<config>
+						<allowType>table</allowType>
+						<description>Legg til Hovedtallstabell</description>
+					</config>
+				</input>
+			</items>
+		</field-set>
+		<field-set>
+			<label>Vedleggstabeller og figurer</label>
+			<items>
+				<input name="attachmentTablesFigures" type="ContentSelector">
+					<label>Vedleggstabell eller figur</label>
+					<occurrences minimum="0" maximum="0" />
+					<config>
+						<allowType>table</allowType>
+						<allowType>highchart</allowType>
+						<description>Legg til Vedleggstabell</description>
+					</config>
+				</input>
+				<input name="freeTextAttachmentTablesFigures" type="HtmlArea">
+					<label>Fritekstfelt</label>
+					<occurences minimum="0" maximum="1" />
+					<config>
+						<include>Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote</include>
+					</config>
+				</input>
+			</items>
+		</field-set>
+		<field-set>
+			<label>Om Statistikken</label>
+			<items>
+				<input name="aboutTheStatistics" type="ContentSelector">
+					<label>Om Statistikken</label>
+					<occurrences minimum="0" maximum="1" />
+					<config>
+						<allowType>omStatistikken</allowType>
+						<description>Legg til Om Statistikken</description>
+					</config>
+				</input>
+			</items>
+		</field-set>
+		<field-set>
+			<label>Nøkkeltall</label>
+			<items>
+				<input name="statisticsKeyFigure" type="ContentSelector">
+					<label>Nøkkeltall</label>
+					<occurrences minimum="0" maximum="1" />
+					<config>
+						<allowType>keyFigure</allowType>
+						<description>Legg til nøkkeltall</description>
+					</config>
+				</input>
+			</items>
+		</field-set>
+		<field-set>
+			<items>
+				<item-set name="statbankLinkItemSet">
+					<label>Lenker til tabeller i statistikkbanken</label>
+					<occurrences minimum="0" maximum="5" />
+					<items>
+						<input type="TextLine" name="urlText">
+							<label>Lenketekst</label>
+							<occurrences minimum="1" maximum="1" />
+						</input>
+						<input type="TextLine" name="url">
+							<label>URL</label>
+							<occurrences minimum="1" maximum="1" />
+						</input>
+					</items>
+				</item-set>
+				<input type="TextLine" name="linkNumber">
+					<label>Antall tabeller i statbank</label>
+					<occurrences minimum="0" maximum="1" />
+				</input>
+			</items>
+		</field-set>
+		<mixin name="relatedStatistics" />
+		<mixin name="relatedExternalLinks" />
+		<mixin name="relatedArticles" />
+		<mixin name="relatedFactPage" />
+		<mixin name="contacts" />
+		<field-set>
+			<label>Metainformasjon</label>
+			<items>
+				<input name="keywords" type="TextArea">
+					<label>Stikkord</label>
+					<occurrences minimum="0" maximum="1" />
+					<help-text>Stikkordene brukes av søket, men vises ikke på ssb.no. Komma brukes for å skille stikkord</help-text>
+				</input>
+			</items>
+		</field-set>
+		<field-set>
+			<label>Sekundærplassering</label>
+			<items>
+				<mixin name="subtopic" />
+			</items>
+		</field-set>
+		<input name="hideFromList" type="CheckBox">
+			<label>Skjul statistikk fra statbank emnetre</label>
+		</input>
+	</form>
+</content-type>

@@ -13,40 +13,55 @@ h3,h4,h5,h6 {
   margin-top: 0;
 }
 h1 {
-  font-size: 56px;
-  line-height: 80px;
+  font-size: 3.5rem;
+  line-height: 5rem;
 }
 h2 {
-  font-size: 28px;
-  line-height: 40px;
+  font-size: 1.75rem;
+  line-height: 2.5rem;
+
+  &.statbank-title{
+	font-size: 28px;
+	line-height: 40px;
+  }
 }
 h3 {
-  font-size: 20px;
-  line-height: 32px;
+  font-size: 1.25rem;
+  line-height: 2rem;
 }
 h4 {
-  font-size: 16px;
-  line-height: 28px;
+  font-size: 1rem;
+  line-height: 1.75rem;
 }
 h5 {
-  font-size: 18px;
+  font-size: 1.125rem;
   line-height: 1.7;
 }
 h6 {
-  font-size: 16px;
+  font-size: 1rem;
   line-height: 1.7;
 }
 
 @media #{$mobile} {
   h1 {
-    font-size: 44px;
-    line-height: 56px;
+    font-size: 2.75rem;
+    line-height: 3.5rem;
   }
   h2 {
-    font-size: 28px;
-    line-height: 36px;
+    font-size: 1.75rem;
+    line-height: 2.25rem;
+
+	&.statbank-title{
+		font-size: 28px;
+		line-height: 36px;
+	}	
   }
 }
+
+h1 {
+  hyphens: auto;
+}
+
 /* -- End headings -- */
 
 
@@ -60,14 +75,14 @@ body {
 p {
   @include open-sans;
   color: $ssb-dark-6;
-  font-size: 16px;
+  font-size: 1rem;
   font-style: normal;
   letter-spacing: normal;
   line-height: 1.7;
   //max-width: $max-readable-width; <-- this is screwing with center alignment of text, TODO: maybe find a fix? (not critical)
 
   &.small-text {
-    font-size: 14px;
+    font-size: 0.875rem;
   }
 
   &.negative {
@@ -79,12 +94,12 @@ p {
 
 /* -- Links -- */
 
-$default-font-size: 16px;
-$profiled-font-size: 18px;
-$header-font-size: 20px;
+$default-font-size: 1rem;
+$profiled-font-size: 1.125rem;
+$header-font-size: 1.25rem;
 $icon-padding: 8px;
 
-a {
+p > a, p > strong > a, ul > li > a, ol > li > a, table a, .rich-text span a {
   @include open-sans;
   align-items: center;
   background-image: linear-gradient(120deg, $ssb-green-4 0%, $ssb-green-4 100%);
@@ -94,9 +109,9 @@ a {
   border-bottom: 1px solid $ssb-green-4;
   color: $ssb-green-4;
   cursor: pointer;
-  display: inline-flex;
+  display: inline;
   font-size: $default-font-size;
-  line-height: 1.25;
+  line-height: 1.7;
   margin-top: -3px;
   margin-bottom: -2px;
   padding: 0 1px 2px 1px;
@@ -151,9 +166,11 @@ a {
     &.with-icon {
       padding: 2px 2px 0;
       border-bottom: none;
+      display: inline-flex;
+      align-items: flex-start;
 
       i {
-        font-size: 20px;
+        font-size: 1.25rem;
       }
 
       .link-text, span {
@@ -189,9 +206,11 @@ a {
   &.with-icon {
     padding: 2px 2px 0;
     border-bottom: none;
+    display: inline-flex;
+    align-items: flex-start;
 
     i {
-      font-size: 16px;
+      font-size: 1rem;
     }
 
     .link-text, span {
@@ -217,4 +236,52 @@ a {
     }
   }
 }
+
+p > strong > a {
+  font-weight: inherit;
+}
+
 /* -- End links -- */
+
+/* -- Blockquote -- */
+blockquote > p {
+  @include open-sans;
+  background-image: linear-gradient(120deg, $ssb-green-1 0%, $ssb-green-1 100%);
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  background-size: 100% 50%;
+  display: inline;
+  font-size: 1.25rem;
+  font-style: normal;
+  letter-spacing: normal;
+  line-height: 1.6;
+}
+/* -- End Blockquote -- */
+
+/* -- Table -- */
+
+table {
+  border-collapse: collapse;
+
+  td, th {
+    border: 1px solid black;
+    padding: 5px;
+  }
+
+}
+/* -- End Table -- */
+
+/* -- Placeholder -- */
+.edit-placeholder {
+  border: 3px solid $ssb-dark-4;
+  padding: 16px;
+  margin: 16px 0
+}
+
+/* -- End Placeholder -- */
+
+/* -- Opacity Divider,Fix in komponent library later -- */
+.ssb-divider {
+  opacity: 1;
+}
+

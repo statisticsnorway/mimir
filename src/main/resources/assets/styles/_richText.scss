@@ -1,0 +1,20 @@
+.xp-part.rich-text {
+  &.max-width > * {
+    max-width: $max-readable-width;
+  }
+
+  * { 
+    margin: 0 auto;
+    max-width: none;
+  }
+
+  span {
+    display: block;
+  }
+
+  a {
+    font-size: inherit;
+    line-height: inherit;
+    font-weight: inherit;
+  }
+}

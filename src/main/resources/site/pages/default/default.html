@@ -1,99 +1,192 @@
-<!DOCTYPE html>
 <html data-th-lang="${language.code}">
 <head>
-  <script async data-th-if="${GA_TRACKING_ID}" data-th-src="|https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}|"></script>
-  <script th:inline="javascript">
-    var highchart = []
-  </script>
-  <script th:inline="javascript" data-th-if="${GA_TRACKING_ID}">
-    /*<![CDATA[*/
-    <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script>
     window.dataLayer = window.dataLayer || [];
+  </script>
+  <!-- Google Tag Manager -->
+  <script th:inline="javascript" data-th-if="${GTM_TRACKING_ID}">
+    (function(w,d,s,l,i) {
+      w[l]=w[l]||[];w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});
+      var f=d.getElementsByTagName(s)[0],
+          j=d.createElement(s),
+          dl=l!='dataLayer'?'&l='+l:'';
+      j.defer=true;
+      j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl[(${GTM_AUTH} ? '+"&gtm_auth='+${GTM_AUTH}+'&gtm_preview=env-3&gtm_cookies_win=x"' : '')];
+      f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer', [[${GTM_TRACKING_ID}]]);
+  </script>
+  <!-- End Google Tag Manager -->
+
+  <!-- UA GA tracking script with added GA4 gtag config -->
+  <script defer data-th-if="${GA_TRACKING_ID}" data-th-src="|https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}|"></script>
+
+  <script th:inline="javascript" data-th-if="${GA_TRACKING_ID}">
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-    gtag('config', /*[[${GA_TRACKING_ID}]]*/);
-    /*]]>*/
+    gtag('config', [[${GA_TRACKING_ID}]], { 'anonymize_ip': true });
   </script>
 
-  <meta charset="UTF-8" />
-  <meta http-equiv="Cache-control" content="NO-CACHE" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta data-th-if="${page.data.metaDescription}" name="description" data-th-content="${page.data.metaDescription}" />
+  <script data-th-src="${jsLibsUrl}" defer="defer"></script>
+
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta data-th-if="${page.data.metaDescription}" name="description" data-th-content="${page.data.metaDescription}"/>
   <title data-th-text="${pageTitle}"></title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans|Open+Sans:700|Roboto:700|Roboto+Condensed:700" />
-  <link rel="stylesheet" data-th-href="${stylesUrl}" />
-  <link rel="alternate" data-th-if="${alternateLanguageVersionUrl}" data-th-href="${alternateLanguageVersionUrl}" data-th-hreflang="${language.alternate}" />
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous" />
+  <link rel="preload" data-th-href="${stylesUrl}" as="style" />
+  <link rel="stylesheet" data-th-href="${stylesUrl}"/>
+  <link rel="alternate" data-th-if="${alternateLanguageVersionUrl}" data-th-href="${alternateLanguageVersionUrl}" data-th-hreflang="${language.alternate}"/>
+  <link data-th-if="${canonicalUrl}" rel="canonical" data-th-href="${canonicalUrl}" />
+
 </head>
 <body class="xp-page" data-th-classappend="${bodyClasses}">
+  <!-- Google Tag Manager (noscript) -->
+  <noscript data-th-if="${GTM_TRACKING_ID}">
+    <iframe
+      title="GTM tag"
+      data-th-src="'https://www.googletagmanager.com/ns.html?id=' + ${GTM_TRACKING_ID} + (${GTM_AUTH} ? '&gtm_auth='+${GTM_AUTH}+'&gtm_preview=env-3&gtm_cookies_win=x' : '')"
+      height="0" width="0" style="display:none;visibility:hidden"
+    ></iframe>
+  </noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
   <!-- HEADER -->
-  <div class="container">
-    <div class="row">
-      <div class="col">
-        <div id="header"></div>
+  <div class="header-wrapper" data-th-unless="${hideHeader}">
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <div data-th-if="${headerBody}" id="header" data-th-utext="${headerBody}" data-th-remove="tag"></div>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- Metainfo to make the page searchable -->
-  <div id="metainfo-container" data-th-include="mimir:/site/includes/metainfoSearch.html" data-th-remove="tag"></div>
+  <div id="metainfo-container" data-th-if="${addMetaInfoSearch}" data-th-insert="~{mimir:/site/includes/metainfoSearch.html}" data-th-remove="tag"></div>
 
   <!-- MAIN -->
-  <main class="xp-region" data-th-if="${!isFragment}">
-    <div class="container-fluid bg-white pt-2 pb-4">
-      <!-- breadcrumbs -->
-      <div id="breadcrumbs" class="container d-print-none"></div>
-
-      <!-- Alerts Info and error -->
-      <section class="xp-part container pt-2" id="alerts"></section>
-    </div>
-
-    <div data-th-if="${page.data.title}" class="container mb-5">
-      <h1 data-th-text="${page.data.title}"></h1>
+  <main class="xp-region" id="content" data-th-if="${!isFragment}">
+    <div class="container premain">
+      <div class="row">
+        <div class="col">
+          <div class="container bg-white pt-2 pb-4" data-th-unless="${hideBreadcrumb}">
+            <!-- breadcrumbs -->
+            <div data-th-id="${breadcrumbsReactId}" class="d-print-none"></div>
+          </div>
+          <div id="browser-warning" class="container"></div>
+          <!-- Alerts Info and error -->
+          <section class="xp-part" id="alerts"></section>
+          <!-- Statbank title and links -->
+          <div class="statbank-header container mb-2" data-th-if="${statbankWeb}">
+            <div class="row">
+              <div class="col-md-4">
+                <span class="h2 statbank-title roboto-bold">Statistikkbanken</span>
+              </div>
+              <div class="col-md-8 text-end">
+                <div class="col-md-12">
+                  <a data-th-href="${statbankHelpLink}" class="ssb-link mb-0 roboto-bold">
+                    <span class="link-text" data-th-text="${statbankHelpText}">tom boks statbank-hjelp</span>
+                  </a>
+                </div>
+                <div class="col-md-12">
+                  <a data-th-href="${statbankStatisticsUrl}" class="ssb-link roboto-plain">
+                    <span class="link-text" data-th-text="${statbankMainFigures}">tom boks hovedtall</span>
+                  </a>
+                </div>
+                <div class="col-md-12">
+                  <a data-th-href="${language.code == 'en'} ? '/en/statbank' : '/statbank'" class="ssb-link roboto-plain">
+                    <span class="link-text" data-th-text="${statbankFrontPage}">tom boks statbank-forside</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Statbank title and placeholder -->
+          <div data-th-if="${statbankWeb}" class="container mb-5">
+            <div class="row">
+              <div class="col">
+                <h1 data-th-text="${statbankStatisticsTitle}"></h1>
+              </div>
+            </div>
+            <div id="statbank-placeholder"></div>
+          </div>
+          <!-- Page Title -->
+          <div data-th-if="${page.data.title}" data-th-unless="${statbankWeb}" class="container mb-5">
+            <div class="row">
+              <div class="col">
+                <h1 data-th-text="${page.data.title}"></h1>
+              </div>
+            </div>
+          </div>
+		  <!-- Page Title Tables in full view -->
+          <div data-th-if="${tableView}" class="container mb-5">
+            <div class="row">
+              <div class="col">
+                <h1 data-th-text="${page.displayName}"></h1>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- preview -->
-    <div class="container pt-5" data-th-if="${preview}" data-th-utext="${preview.body}">
-    </div>
-
-    <div data-th-if="${showIngress}" class="container ingress">
-      <div class="row">
-        <div class="mt-3 mt-md-0 col-lg-8" data-th-utext="${ingress}"></div>
-      </div>
+    <div class="container pt-2" data-th-if="${preview}" data-th-utext="${preview.body}">
     </div>
 
     <div
       data-th-each="region : ${configRegions}"
       data-th-remove="tag"
+      data-th-unless="${statbankWeb}"
     >
-      <div data-th-if="${region.showGreyTriangle}" class="grey-triangle"/>
-      <div
-        class="searchabletext"
-        data-th-classappend="${region.view} == 'card' ? 'layout-topic border-top-green container' : 'container-fluid p-0'"
-      >
-      <h2 data-th-if="${region.hideTitle && region.title}" class="sr-only sr-only-focusable" data-th-text="${region.title}"></h2>
-      <h2 data-th-if="${!region.hideTitle && region.title}" data-th-text="${region.title}"></h2>
-        <div 
-          class="row"
-          data-th-data-portal-region="${region.region}"
+      <div data-th-if="${region.showGreyTriangle}" class="grey-triangle"></div>
+      <div data-th-classappend="${region.showDarkGreyBackground ? 'region-dark-grey' : (region.showGreyBackground ? 'region-grey' : (region.topBorder ? 'border-columns' : ''))}">
+        <div
+          data-th-classappend="${region.view == 'full' ? 'container-fluid p-0' : region.view == 'card' ? 'border-top-green container' : 'container'}"
         >
-          <div data-th-each="component : ${region.components}" data-th-remove="tag">
-            <div data-portal-component="${component.path}" data-th-remove="tag"/>
+          <!-- Subtitle for content in default pages -->
+          <div data-th-if="${region.view != 'card'}" class="row">
+            <div class="col">
+              <div class="container">
+                <div class="row">
+                  <div class="col">
+                    <h2 data-th-if="${region.hideTitle && region.title}" class="sr-only sr-only-focusable mb-5" data-th-text="${region.title}"></h2>
+                    <h2 data-th-if="${!region.hideTitle && region.title}" class="mb-5 mt-2 pt-5" data-th-text="${region.title}"></h2>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Subtitle for content in border-top-green containers -->
+          <h2 data-th-if="${region.view == 'card' && region.hideTitle && region.title}" class="sr-only sr-only-focusable mb-5" data-th-text="${region.title}"></h2>
+          <h2 data-th-if="${region.view == 'card' && !region.hideTitle && region.title}" class="mb-5" data-th-text="${region.title}"></h2>
+
+          <div
+            class="row row-cols-1"
+            data-th-data-portal-region="${region.region}"
+          >
+            <div data-th-each="component : ${region.components}" data-th-remove="tag">
+              <div data-portal-component="${component.path}" data-th-remove="tag"/>
+            </div>
           </div>
         </div>
       </div>
     </div>
-    <div data-th-if="${mainRegionComponents}" data-portal-region="main" class="searchabletext">
+    <div data-th-if="${mainRegionComponents}" data-portal-region="main" data-th-unless="${statbankWeb}">
       <div data-th-each="component : ${mainRegionComponents}" data-th-remove="tag">
         <div data-portal-component="${component.path}" data-th-remove="tag" ></div>
       </div>
     </div>
   </main>
 
+  <main class="xp-region" id="content" data-th-if="${isFragment}">
+      <div data-portal-component="fragment" data-th-remove="tag"></div>
+  </main>
+
   <!-- FOOTER -->
-  <footer>
+  <footer data-th-if="${footerBody}" id="footer" data-th-utext="${footerBody}" data-th-remove="tag">
   </footer>
 
-  <script type="text/javascript" data-th-src="${jsLibsUrl}"></script>
+  <script data-th-src="${ieUrl}" defer></script>
 </body>
 </html>

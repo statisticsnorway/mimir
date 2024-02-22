@@ -1,0 +1,20 @@
+<div class="row d-flex justify-content-center error-page">
+    <div class="logo col-12 mt-4">
+        <a href="/">
+            <img data-th-src="${logo}" alt="SSB logo" />
+        </a>
+    </div>
+    <div class="col-12 title-wrapper d-flex justify-content-center">
+        <h1 class="col-12 col-md-8 pl-md-5 ml-md-3" data-th-text="${title}">Siden feilet</h1>
+    </div>
+    <div class="col-12 col-md-4 ml-md-5 mt-md-5 mt-5 text-wrapper">
+        <p data-th-text="${text}">Siden feilet å laste med feilkode xxx, vennligst prøv igjen. Om problemet vedvarer, ta kontakt med SSB.</p>
+        <ul>
+            <li>
+                <a href="javascript:history.back()" data-th-text="${goBack}">tilbake</a>
+                <span data-th-text="${or}">Eller</span>
+                <a href="/" data-th-text="${frontPage}">forsiden</a>
+            </li>
+        </ul>
+    </div>
+</div>

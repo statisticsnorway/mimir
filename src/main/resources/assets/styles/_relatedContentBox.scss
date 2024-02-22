@@ -1,0 +1,43 @@
+.part-picture-card {
+  background-color: white;
+
+  & .row:first-of-type {
+    margin-top: $spacer * 1.5;
+  }
+
+  h2 {
+    max-width: 1200px;
+  }
+  .hide-show-btn {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 1200px;
+  }
+  .image-box-wrapper {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-right: auto;
+    max-width: 1200px;
+    width: 100%;
+    margin-left: -15px;
+  }
+  .ssb-picture-card {
+    background-image: none;
+    border: none;
+    margin-bottom: 40px;
+    margin-left: 15px;
+    z-index: 1; // z-index is needed to prevent background image displaying behind all other layouts
+    
+    &:hover {
+      background-size: 0;
+      border: none;
+    }
+
+    span {
+      color: white;
+      width: 100%;
+    }
+
+  }
+}

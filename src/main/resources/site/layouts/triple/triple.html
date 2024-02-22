@@ -1,18 +1,18 @@
-<div class="container">
+<div class="col xp-layout">
   <h3 data-th-if="${hideTitle && title}" class="sr-only sr-only-focusable" data-th-text="${title}"></h3>
-  <h3 data-th-if="${!hideTitle && title}" data-th-text="${title}"></h3>
-  <div class="xp-layout row d-flex align-content-stretch flex-wrap">
-    <div data-portal-region="left" class="xp-region col-md-4 border">
+  <h3 data-th-if="${!hideTitle && title}" class="layout-title" data-th-text="${title}"></h3>
+  <div class="row d-flex align-content-stretch flex-wrap">
+    <div data-portal-region="left" class="xp-region col-md-4">
       <div data-th-each="component : ${leftRegion.components}" data-th-remove="tag">
         <div data-portal-component="${component.path}" data-th-remove="tag" />
       </div>
     </div>
-    <div data-portal-region="center" class="xp-region col-md-4 border">
+    <div data-portal-region="center" class="xp-region col-md-4">
       <div data-th-each="component : ${centerRegion.components}" data-th-remove="tag">
         <div data-portal-component="${component.path}" data-th-remove="tag" />
       </div>
     </div>
-    <div data-portal-region="right" class="xp-region col-md-4 border">
+    <div data-portal-region="right" class="xp-region col-md-4">
       <div data-th-each="component : ${rightRegion.components}" data-th-remove="tag">
         <div data-portal-component="${component.path}" data-th-remove="tag" />
       </div>

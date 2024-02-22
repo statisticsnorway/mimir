@@ -1,0 +1,28 @@
+<content-type>
+    <display-name>Statisk visualisering</display-name>
+    <description>Infografikk eller visualisering med tittel og beskrivelse</description>
+    <super-type>base:structured</super-type>
+    <form>
+        <input name="image" type="ImageSelector">
+            <label>Legg til infografikk eller visualisering</label>
+            <occurrences minimum="1" maximum="1"/>
+            <config>
+                <allowPath>${site}</allowPath>
+            </config>
+        </input>
+
+        <input name="longDesc" type="TextArea">
+            <label>Beskrivende hjelpetekst</label>
+            <default></default>
+        </input>
+
+        <input name="tableData" type="HtmlArea">
+            <label>Tabelldata</label>
+            <occurrences minimum="0" maximum="1" />
+        </input>
+
+        <mixin name="sources" />
+
+        <mixin name="footnote" />
+    </form>
+</content-type>

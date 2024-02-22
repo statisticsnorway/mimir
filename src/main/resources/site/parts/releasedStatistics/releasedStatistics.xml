@@ -1,0 +1,11 @@
+<part>
+    <display-name>Siste statistikkpubliseringer</display-name>
+    <description>Liste over de siste statistikkpubliseringene</description>
+    <form>
+        <input type="TextLine" name="numberOfStatistics">
+            <label>Antall statistikker i liste</label>
+            <default>8</default>
+            <occurrences minimum="1" maximum="1" />
+        </input>
+    </form>
+</part>

@@ -1,0 +1,12 @@
+<mixin>
+    <display-name>Sekundærplassering</display-name>
+    <form>
+        <input name="subtopic" type="CustomSelector">
+            <label>Delemner</label>
+            <occurrences minimum="0" maximum="0" />
+            <config>
+                <service>subtopic</service>
+            </config>
+        </input>
+    </form>
+</mixin>

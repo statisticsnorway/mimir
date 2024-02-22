@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html data-th-lang="${language.code}">
+    <head>
+        <script async="true" data-th-if="${GA_TRACKING_ID}" data-th-src="|https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}|"></script>
+        <script th:inline="javascript" data-th-if="${GA_TRACKING_ID}">
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', /*[[${GA_TRACKING_ID}]]*/);
+        </script>
+
+        <meta http-equiv="Content-Type" content="text/html;" charset="UTF-8"/>
+        <title data-th-text="${pageTitle}">Side ikke funnet / Page not found</title>
+        <meta name="viewport" content="width=device-width"/>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans%7COpen+Sans:700%7CRoboto:700%7CRoboto+Condensed:700"/>
+        <link rel="stylesheet" data-th-href="${stylesUrl}"/>
+        <link rel="alternate" data-th-if="${alternateLanguageVersionUrl}" data-th-href="${alternateLanguageVersionUrl}" data-th-hreflang="${language.alternate}"/>
+    </head>
+    <body class="xp-page" data-th-classappend="${bodyClasses}">
+        <div class="container">
+            <div data-th-utext="${contentHtml}" data-th-remove="tag"></div>
+        </div>
+    </body>
+</html>

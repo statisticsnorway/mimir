@@ -1,0 +1,34 @@
+<mixin>
+    <display-name>Tabell lenke</display-name>
+    <form>
+        <input name="title" type="TextLine">
+            <label>Tittel</label>
+            <occurrences minimum="0" maximum="1"/>
+        </input>
+
+        <input name="description" type="TextLine">
+            <label>Lenketekst</label>
+            <occurrences minimum="0" maximum="1"/>
+        </input>
+
+        <field-set>
+            <label>Velg url eller innhold som mål</label>
+            <items>
+                <input name="url" type="TextLine">
+                    <label>Url</label>
+                    <occurrences minimum="0" maximum="1"/>
+                </input>
+
+                <input name="relatedContent" type="ContentSelector">
+                    <label>Relatert innhold</label>
+                    <occurrences minimum="0" maximum="1"/>
+                    <help-text>NB! Hvis både Url og Relatert innhold er fylt ut blir relatert innhold valgt</help-text>
+                    <config>
+                        <allowContentType>${app}:*</allowContentType>
+                        <treeMode>true</treeMode>
+                    </config>
+                </input>
+            </items>
+        </field-set>
+    </form>
+</mixin>

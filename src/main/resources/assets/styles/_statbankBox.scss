@@ -1,0 +1,75 @@
+.part-statbank-box {
+  margin-bottom: 40px;
+
+  .statbank-link {
+    display: block;
+    text-decoration: none;
+    width: 100%;
+
+    &:focus {
+      outline: $ssb-purple-3 solid 2px;
+      outline-offset: 1px;
+    }
+
+    &:hover {
+
+      .title {
+        background-color: $ssb-green-4;
+        border-bottom: none;
+        color: $ssb-white;
+        margin-bottom: 10px;
+      }
+    }
+
+    @include media-breakpoint-down(md) {
+      padding: 0;
+    }
+  }
+
+  .content {
+    background: $ssb-white;
+    border: 1px solid $ssb-dark-2;
+    border-top: 5px solid $ssb-green-3;
+    display: flex;
+    padding: 20px 10px 25px 40px;
+    width: 100%;
+
+    @include media-breakpoint-down(sm) {
+      padding-left: 20px;
+    }
+    
+    .arrow-icon {
+      display: block;
+      color: $ssb-green-3;
+      margin-left: auto;
+      margin-top: $spacer * 1.5;
+      margin-right: $spacer;
+
+      @include media-breakpoint-down(md) {
+        display: none;
+      }
+    }
+  }
+
+  .icon-wrapper {
+    img {
+      width: 70px;
+      height: 70px;
+    }
+  }
+
+  .title-wrapper {
+    display: -webkit-box;
+    align-items: center;
+    margin-left: 40px;
+
+    .title {
+      display: inline;
+      border-bottom: 2px solid $ssb-green-4;
+    }
+
+    @include media-breakpoint-down(sm) {
+      margin-left: 20px;
+    }
+  }
+}

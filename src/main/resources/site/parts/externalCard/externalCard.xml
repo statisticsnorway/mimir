@@ -1,0 +1,35 @@
+<part>
+    <display-name>Ekstern card</display-name>
+    <description>ekstern card for lenker</description>
+    <form>
+        <item-set name="externalCards">
+            <label>Ekstern card</label>
+            <expanded>false</expanded>
+            <occurrences minimum="1" maximum="0"/>
+            <items minimum="1" maximum="1">
+                <input name="image" type="ImageSelector">
+                    <label>Bilde</label>
+                    <occurrences minimum="1" maximum="1"/>
+                    <config>
+                        <allowPath>${site}</allowPath>
+                    </config>
+                </input>
+                <input name="content" type="TextArea">
+                    <label>Tekst</label>
+                    <occurrences minimum="1" maximum="1"/>
+                    <default>Her kommer teksten i boksen</default>
+                </input>
+
+                <input name="linkText" type="TextLine">
+                    <label>Lenke tekst</label>
+                    <occurrences minimum="1" maximum="1"/>
+                </input>
+
+                <input name="linkUrl" type="TextLine">
+                    <label>Lenke url</label>
+                    <occurrences minimum="1" maximum="1"/>
+                </input>
+            </items>
+        </item-set>
+    </form>
+</part>

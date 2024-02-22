@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<content-type>
+    <display-name>Avsluttede statistikker</display-name>
+    <super-type>base:structured</super-type>
+    <description>Liste med avsluttede statistikker</description>
+    <form>
+        <field-set>
+            <items>
+                <item-set name="endedStatistics">
+                    <label>Statistikk</label>
+                    <occurrences minimum="0" maximum="0" />
+                    <items>
+                        <input name="statistic" type="CustomSelector">
+                            <label>Kortnavn</label>
+                            <occurrences minimum="1" maximum="1"/>
+                            <config>
+                                <service>statistics</service>
+                            </config>
+                        </input>
+                        <input name="hideFromList" type="CheckBox">
+                            <label>Skjul statistikk fra statbank inngang</label>
+                        </input>
+                    </items>
+                </item-set>
+            </items>
+        </field-set>
+    </form>
+</content-type>

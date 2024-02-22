@@ -1,0 +1,103 @@
+<content-type>
+    <display-name>Footer konfigurasjon</display-name>
+    <super-type>base:structured</super-type>
+    <form>
+        <input name="footerContentId" type="ContentSelector">
+            <label>Footer Menypunkter</label>
+            <occurrences minimum="0" maximum="1"/>
+            <config>
+                <allowContentType>menuitem</allowContentType>
+                <treeMode>false</treeMode>
+                <showStatus>true</showStatus>
+                <hideToggleIcon>false</hideToggleIcon>
+            </config>
+        </input>
+
+        <input name="copyrightUrl" type="TextLine" >
+            <label>Lenke Copyright</label>
+            <occurrences minimum="1" maximum="1"/>
+            <default>https://www.ssb.no/informasjon/copyright</default>
+        </input>
+
+        <field-set>
+            <label>Globale lenker</label>
+            <items>
+
+                <item-set name="globalLinks">
+                    <label>Bunn lenker</label>
+                    <expanded>false</expanded>
+                    <occurrences minimum="0" maximum="0"/>
+                    <items>
+
+                        <input type="TextLine" name="linkTitle">
+                            <label>Lenketittel</label>
+                            <occurrences minimum="1" maximum="1"/>
+                        </input>
+
+                        <option-set name="urlSrc">
+                            <label>Lenkemål</label>
+                            <expanded>false</expanded>
+                            <occurrences minimum="0" maximum="1"/>
+                            <options minimum="1" maximum="1">
+                                <option name="manual">
+                                    <label>Url lenke</label>
+                                    <default>true</default>
+                                    <help-text>Fri url felt. Legges inn som dette eks. "http://www.ssb.no"</help-text>
+                                    <items>
+                                        <input name="url" type="TextLine">
+                                            <label>Kildelenke</label>
+                                            <occurrences minimum="0" maximum="1"/>
+                                        </input>
+                                    </items>
+                                </option>
+
+                                <option name="content">
+                                    <label>Lenke til internt innhold</label>
+                                    <items>
+                                        <input name="contentId" type="ContentSelector">
+                                            <label>Relatert innhold</label>
+                                            <occurrences minimum="0" maximum="1"/>
+                                            <config/>
+                                        </input>
+                                    </items>
+                                </option>
+                            </options>
+                        </option-set>
+                    </items>
+                </item-set>
+
+            </items>
+        </field-set>
+
+        <field-set>
+            <label>Sosiale lenker</label>
+            <items>
+
+                <input name="facebookUrl" type="TextLine" >
+                    <label>Lenke Facebook</label>
+                    <occurrences minimum="1" maximum="1"/>
+                    <default>https://www.facebook.com/statistisksentralbyra/</default>
+                </input>
+
+                <input name="twitterUrl" type="TextLine" >
+                    <label>Lenke Twitter</label>
+                    <occurrences minimum="1" maximum="1"/>
+                    <default>https://twitter.com/ssbnytt</default>
+                </input>
+
+                <input name="linkedinUrl" type="TextLine" >
+                    <label>Lenke Linkedin</label>
+                    <occurrences minimum="1" maximum="1"/>
+                    <default>https://www.linkedin.com/company/statistics-norway/</default>
+                </input>
+
+                <input name="rssUrl" type="TextLine" >
+                    <label>Lenke RSS</label>
+                    <occurrences minimum="1" maximum="1"/>
+                    <default>https://www.ssb.no/informasjon/rss</default>
+                </input>
+
+            </items>
+        </field-set>
+    </form>
+</content-type>

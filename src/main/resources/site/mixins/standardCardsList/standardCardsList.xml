@@ -1,0 +1,52 @@
+<mixin>
+    <display-name>Liste standard kort</display-name>
+    <form>
+        <input name="title" type="TextLine">
+            <label>Tittel</label>
+            <occurrences minimum="0" maximum="1" />
+        </input>
+        <item-set name="statisticsItemSet">
+            <label>Innhold</label>
+            <occurrences minimum="0" maximum="0" />
+            <items>
+                <input name="icon" type="ImageSelector">
+                    <label>Ikon</label>
+                    <occurrences minimum="0" maximum="1" />
+                </input>
+
+                <field-set>
+                <label>Innhold fra XP</label>
+                    <items>
+                        <input name="contentXP" type="ContentSelector">
+                            <label>Innhold fra XP</label>
+                            <occurrences minimum="0" maximum="1" />
+                            <config>
+                                <allowContentType>article</allowContentType>
+                                <allowContentType>statistics</allowContentType>
+                                <allowContentType>page</allowContentType>
+                            </config>
+                        </input>
+                    </items>
+                </field-set>
+
+                <field-set>
+                <label>Manuell lenke</label>
+                    <items>
+                        <input name="title" type="TextLine">
+                            <label>Tittel</label>
+                            <occurrences minimum="0" maximum="1" />
+                        </input>
+                        <input name="profiledText" type="TextArea">
+                            <label>Profileringstekst</label>
+                            <occurrences minimum="0" maximum="1" />
+                        </input>
+                        <input name="href" type="TextLine">
+                            <label>Lenke</label>
+                            <occurrences minimum="0" maximum="1" />
+                        </input>
+                    </items>
+                </field-set>
+            </items>
+        </item-set>
+    </form>
+</mixin>

@@ -1,0 +1,77 @@
+<content-type>
+    <display-name>Kalkulator Konfigurasjon</display-name>
+    <super-type>base:structured</super-type>
+    <allow-child-content>true</allow-child-content>
+    <form>
+        <field-set>
+            <label>				KPI Kalkulator            </label>
+            <items>
+                <input name="kpiSourceYear" type="ContentSelector">
+                    <label>Kilde Årstall</label>
+                    <occurrences minimum="0" maximum="1"/>
+                    <config>
+                        <allowPath>${site}</allowPath>
+                        <allowContentType>genericDataImport</allowContentType>
+                    </config>
+                </input>
+                <input name="kpiSourceMonth" type="ContentSelector">
+                    <label>Kilde Måned</label>
+                    <occurrences minimum="0" maximum="1"/>
+                    <config>
+                        <allowPath>${site}</allowPath>
+                        <allowContentType>genericDataImport</allowContentType>
+                    </config>
+                </input>
+            </items>
+        </field-set>
+        <field-set>
+            <label>PIF Kalkulator</label>
+            <items>
+                <input name="pifSource" type="ContentSelector">
+                    <label>Kilde</label>
+                    <occurrences minimum="0" maximum="1"/>
+                    <config>
+                        <allowPath>${site}</allowPath>
+                        <allowContentType>genericDataImport</allowContentType>
+                    </config>
+                </input>
+            </items>
+        </field-set>
+        <field-set>
+            <label>BKIBOL Kalkulator</label>
+            <items>
+                <input name="bkibolSourceEnebolig" type="ContentSelector">
+                    <label>Kilde enebolig</label>
+                    <occurrences minimum="0" maximum="1"/>
+                    <config>
+                        <allowPath>${site}</allowPath>
+                        <allowContentType>genericDataImport</allowContentType>
+                    </config>
+                </input>
+                <input name="bkibolSourceBoligblokk" type="ContentSelector">
+                    <label>Kilde boligblokk</label>
+                    <occurrences minimum="0" maximum="1"/>
+                    <config>
+                        <allowPath>${site}</allowPath>
+                        <allowContentType>genericDataImport</allowContentType>
+                    </config>
+                </input>
+            </items>
+        </field-set>
+        <field-set>
+            <label>Datakilde for graf i navnesøket</label>
+            <items>
+                <input name="nameSearchGraphData" type="ContentSelector">
+                    <label>PX-API spørring for historiske navnedata</label>
+                    <occurrences minimum="0" maximum="1"/>
+                    <config>
+                        <allowContentType>genericDataImport</allowContentType>
+                        <treeMode>true</treeMode>
+                        <showStatus>true</showStatus>
+                        <hideToggleIcon>false</hideToggleIcon>
+                    </config>
+                </input>
+            </items>
+        </field-set>
+    </form>
+</content-type>

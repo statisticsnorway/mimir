@@ -1,0 +1,172 @@
+.employees-list {
+	.row .container {
+		max-width: 1180px;
+
+		.page-title {
+			margin-bottom: 1.25rem;
+		}
+
+		.page-description p {
+			inline-size: 66%;
+			font-size: 20px;
+			line-height: 32px;
+		}
+
+    .person-count p {
+      margin-bottom: .5rem;
+    }
+	}
+
+	.banner {
+		margin-bottom: 3.75rem;
+		padding: 3.75rem 0 5rem;
+		background-color: #f0f8f9;
+	}
+
+	.letter-list-container {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+
+		.letter-list {
+			width: 780px;
+			display: flex;
+			flex-direction: column;
+			padding-left: 0;
+			margin: 0;
+
+			.list-item {
+				width: 100%;
+				margin: 1.7rem 0;
+				display: flex;
+				list-style: none;
+
+				.letter {
+					width: 80px;
+					height: 80px;
+					min-width: 80px;
+					max-width: 80px;
+					padding-top: 10px;
+					margin: .5rem 1.3rem 0 0;
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					border: 2px solid $ssb-dark-5;
+					background: white;
+					color: $ssb-dark-5;
+
+					h2 {
+						font-size: 40px;
+					}
+				}
+
+				.empty-letter {
+					min-width: 80px;
+					max-width: 80px;
+					margin: .5rem 1rem 0 0;
+				}
+
+				.employee-info {
+					width: 100%;
+					min-height: 94.78px;
+					display: flex;
+					justify-content: space-between;
+
+					> div .position {
+						margin-top: .3rem;
+					}
+
+					> div .contact-details {
+						margin-top: .3rem;
+
+						span .dash-space {
+							margin: 0 0.2rem;
+						}
+					}
+
+					> div > div > span > a > .link-text {
+						font-size: 14px;
+					}
+				}
+			}
+		}
+	}
+}
+
+@include media-breakpoint-down(md) {
+	.employees-list {
+
+		.banner {
+			width: 100vw;
+      position: relative;
+      left: 50%;
+      margin-left: -50vw;
+			padding: 2rem 0 2.5rem;
+			margin-bottom: 2.5rem;
+
+			.container {
+				padding: 0 20px;
+
+				.page-description p {
+					inline-size: 100%;
+				}
+			}
+		}
+
+		.row .container {
+      div p {
+        inline-size: 100%;
+      }
+
+      .person-count p {
+        margin-bottom: .75rem;
+      }
+    }
+
+
+		.letter-list-container .letter-list {
+			max-width: 100%;
+
+			.list-item {
+				flex-direction: column;
+
+				.letter {
+					margin: 0 0 0.5rem;
+					width: 72px;
+					height: 28px;
+					line-height: 1.75;
+					display: flex;
+					color: white;
+					background: $ssb-dark-5;
+					border: 2px solid $ssb-dark-5;
+
+					h2 {
+						font-size: 16px;
+					}
+				}
+
+				.empty-letter {
+					margin: 0;
+					display: none;
+				}
+			}
+		}
+
+	}
+}
+
+@include media-breakpoint-down(xl) {
+  .employees-list {
+		.row .container {
+			max-width: 960px;
+		}
+	}
+}
+
+@include media-breakpoint-down(lg) {
+  .employees-list {
+		.row .container {
+			max-width: 760px;
+		}
+	}
+}

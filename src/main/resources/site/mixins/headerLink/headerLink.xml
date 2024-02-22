@@ -1,0 +1,27 @@
+<mixin>
+    <display-name>Uthevet lenke</display-name>
+    <form>
+        <input name="linkText" type="TextLine">
+            <label>Lenketekst</label>
+            <occurrences minimum="0" maximum="1"/>
+        </input>
+        <field-set>
+            <label>Velg url eller innhold som mål</label>
+            <items>
+                <input name="headerLinkHref" type="TextLine">
+                    <label>URL</label>
+                    <occurrences minimum="0" maximum="1" />
+                </input>
+                <input name="linkedContent" type="ContentSelector">
+                    <label>Innhold</label>
+                    <help-text>NB! Hvis både Url og innhold er fylt ut blir innhold valgt</help-text>
+                    <occurrences minimum="0" maximum="1"/>
+                    <config>
+                        <treeMode>false</treeMode>
+                        <showStatus>true</showStatus>
+                    </config>
+                </input>
+            </items>
+        </field-set>
+    </form>
+</mixin>

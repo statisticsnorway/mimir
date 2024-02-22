@@ -1,0 +1,17 @@
+<part>
+    <display-name>BKiBOL kalkulator</display-name>
+    <form>
+        <field-set>
+            <label>BKiBOL kalkulator</label>
+            <items>
+                <input name="bkibolCalculatorArticle" type="ContentSelector">
+                    <label>Artikkel BKIBOL kalkulator</label>
+                    <occurrences minimum="0" maximum="1" />
+                    <config>
+                        <allowContentType>article</allowContentType>
+                    </config>
+                </input>
+            </items>
+        </field-set>
+    </form>
+</part>

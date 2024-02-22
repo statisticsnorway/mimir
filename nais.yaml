@@ -1,0 +1,47 @@
+apiVersion: nais.io/v1alpha1
+kind: Application
+metadata:
+  name: mimir-branch-{{branch}}
+  namespace: ssbno
+  annotations:
+    nais.io/read-only-file-system: "false"
+    nais.io/run-as-user: "1337"
+  labels:
+    team: ssbno
+spec:
+  image: {{ image }}
+#  image: europe-north1-docker.pkg.dev/nais-management-b3a7/ssbno/ssbno-mimir/mimir:...
+  #       ^--- interpolated from the ${{ env.docker_image }} variable in the action
+
+  replicas:
+    disableAutoScaling: true
+    max: 1
+    min: 1
+  port: 8080
+
+  # Server needs to be able to access these hosts to download and install apps from market, not a complete list, some apps can't be installed
+  accessPolicy:
+    outbound:
+      external:
+        - host: market.enonic.com
+        - host: repo.enonic.com
+        - host: github.com
+        - host: raw.githubusercontent.com
+
+  resources:
+    limits:
+      memory: 2Gi
+    requests:
+      memory: 1Gi
+
+  ttl: 1h
+
+  prometheus:
+    enabled: false
+
+  env: 
+    - name: VHOST_HOST
+      value: ssbno-{{branch}}.external.staging.ssb.cloud.nais.io
+
+  ingresses:
+    - https://ssbno-{{branch}}.external.staging.ssb.cloud.nais.io  # must match vhost

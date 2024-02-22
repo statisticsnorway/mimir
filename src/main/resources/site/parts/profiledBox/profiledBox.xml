@@ -1,5 +1,5 @@
 <part>
-    <display-name>Profileringsboks</display-name>
+    <display-name>Profileringsboks (Editorial card)</display-name>
     <description>Emneblokk for artikler i faktasidene</description>
     <form>
         <input name="cardOrientation" type="RadioButton">

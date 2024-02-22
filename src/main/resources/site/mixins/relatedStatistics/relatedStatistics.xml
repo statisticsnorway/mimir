@@ -1,0 +1,45 @@
+<mixin>
+    <display-name>Relaterte statistikker</display-name>
+    <form>
+        <field-set>
+            <label>Relaterte statistikker</label>
+            <items>
+                <option-set name="relatedStatisticsOptions">
+                    <expanded>false</expanded>
+                    <occurrences minimum="0" maximum="0" />
+                    <options minimum="1" maximum="1">
+                        <option name="xp">
+                            <label>Statistikk fra XP</label>
+                            <items>
+                                <input name="contentId" type="ContentSelector">
+                                    <label>Statistikk</label>
+                                    <occurrences minimum="0" maximum="1" />
+                                    <config>
+                                        <allowContentType>statistics</allowContentType>
+                                    </config>
+                                </input>
+                            </items>
+                        </option>
+                        <option name="cms">
+                            <label>Statistikk fra 4.7</label>
+                            <items>
+                                <input name="title" type="TextLine">
+                                    <label>Tittel</label>
+                                    <occurrences minimum="1" maximum="1" />
+                                </input>
+                                <input name="profiledText" type="TextArea">
+                                    <label>Profileringstekst</label>
+                                    <occurrences minimum="1" maximum="1" />
+                                </input>
+                                <input name="url" type="TextLine">
+                                    <label>URL</label>
+                                    <occurrences minimum="1" maximum="1" />
+                                </input>
+                            </items>
+                        </option>
+                    </options>
+                </option-set>
+            </items>
+        </field-set>
+    </form>
+</mixin>

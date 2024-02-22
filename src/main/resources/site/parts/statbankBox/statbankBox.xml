@@ -1,0 +1,24 @@
+<part>
+    <display-name>Inngang Statistikkbanken</display-name>
+    <form>
+        <field-set>
+            <label>Inngang til Statbank</label>
+            <items>
+                <input name="title" type="TextLine">
+                    <label>Overstyr tittel</label>
+                    <occurrences minimum="0" maximum="1" />
+                </input>
+                <input name="href" type="TextLine">
+                    <label>Overstyr lenke</label>
+                    <occurrences minimum="0" maximum="1" />
+                </input>
+                <input name="fullWidthCheckBox" type="CheckBox">
+                    <label>Full bredde på boksen</label>
+                    <config>
+                        <alignment>right</alignment>
+                    </config>
+                </input>
+            </items>
+        </field-set>
+    </form>
+</part>

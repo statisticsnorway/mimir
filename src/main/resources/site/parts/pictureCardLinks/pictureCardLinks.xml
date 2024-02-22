@@ -1,0 +1,32 @@
+<part>
+    <display-name>Redaksjonelle bokser</display-name>
+    <description></description>
+    <form>
+        <item-set name="pictureCardLinks">
+            <label>Redaksjonell boks</label>
+            <occurrences minimum="2" maximum="4"/>
+            <items>
+                <input type="TextLine" name="title">
+                    <label>Tittel</label>
+                    <occurrences minimum="1" maximum="1"/>
+                </input>
+                <input type="TextLine" name="subTitle">
+                    <label>Ingress</label>
+                    <occurrences minimum="1" maximum="1"/>
+                </input>
+                <input name="href" type="TextLine">
+                    <label>Lenke</label>
+                    <occurrences minimum="1" maximum="1"/>
+                </input>
+                <input name="image" type="ContentSelector">
+                    <label>Bilde</label>
+                    <occurrences minimum="1" maximum="1"/>
+                    <config>
+                        <allowContentType>media:image</allowContentType>
+                        <allowPath>${site}</allowPath>
+                    </config>
+                </input>
+            </items>
+        </item-set>
+    </form>
+</part>

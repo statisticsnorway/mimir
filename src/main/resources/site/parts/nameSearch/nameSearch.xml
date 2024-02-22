@@ -1,0 +1,30 @@
+<part>
+  <display-name>Navnesøk</display-name>
+  <form>
+    <field-set>
+      <label>Navnesøk</label>
+      <items>
+      <input name="nameSearchDescription" type="HtmlArea">
+          <label>Ingress</label>
+          <occurrences minimum="0" maximum="1"/>
+        </input>
+        <input name="aboutLinkTitle" type="TextLine">
+          <label>Lenke tittel</label>
+          <occurrences minimum="1" maximum="1"/>
+        </input>
+        <input name="aboutLinkTarget" type="ContentSelector">
+          <label>Lenkemål</label>
+          <occurrences minimum="0" maximum="1"/>
+          <config>
+            <allowPath>${site}</allowPath>
+            <allowType>page</allowType>
+            <allowType>article</allowType>
+          </config>
+        </input>
+        <input name="frontPage" type="CheckBox">
+            <label>Bruk på Forside</label>
+        </input>
+      </items>
+    </field-set>
+  </form>
+</part>

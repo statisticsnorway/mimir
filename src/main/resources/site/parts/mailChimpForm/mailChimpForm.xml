@@ -1,0 +1,18 @@
+<part>
+    <display-name>Påmeldingskjema for nyhetsbrev</display-name>
+    <form>
+        <input type="TextArea" name="text">
+            <label>Ingress</label>
+            <occurrences minimum="0" maximum="1"/>
+        </input>
+        <input type="TextLine" name="mailchimpEndpoint">
+            <label>Mailchimp endepunkt eller mailmojo url</label>
+            <occurrences minimum="1" maximum="1"/>
+        </input>
+        <input type="TextLine" name="mailchimpId">
+            <label>Mailchimp ID</label>
+            <help-text>Dette feltet er kun for mailchimp skjemaer. Feltet må være tom for mailmojo url-er.</help-text>
+            <occurrences minimum="0" maximum="1"/>
+        </input>
+    </form>
+</part>

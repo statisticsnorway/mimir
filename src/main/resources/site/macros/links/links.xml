@@ -1,0 +1,41 @@
+<macro>
+    <display-name>Lenker</display-name>
+    <form>
+        <field-set>
+            <label>Lenker</label>
+            <items>
+                <input name="linkTypes" type="RadioButton">
+                <label>Velg lenketype</label>
+                <occurrences minimum="1" maximum="1"/>
+                <config>
+                    <option value="tableLink">Tabell lenke</option>
+                    <option value="headerLink">Uthevet lenke</option>
+                    <option value="profiledLink">Profilert lenke</option>
+                </config>
+                <default>one</default>
+                </input>
+            </items>
+        </field-set>
+
+        <field-set>
+            <label>Tabell lenke</label>
+            <items>
+                <mixin name="tableLink" />
+            </items>
+        </field-set>
+
+        <field-set>
+            <label>Uthevet lenke</label>
+            <items>
+                <mixin name="headerLink" />
+            </items>
+        </field-set>
+
+        <field-set>
+            <label>Profilert lenke</label>
+            <items>
+                <mixin name="profiledLink" />
+            </items>
+        </field-set>
+    </form>
+</macro>

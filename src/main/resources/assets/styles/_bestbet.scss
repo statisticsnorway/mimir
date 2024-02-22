@@ -1,0 +1,62 @@
+.page-bestbet {
+    background-color: $ssb-dark-1;
+    padding-top: $spacer * 1.5;
+    margin-right: $spacer * 3.5;
+    margin-left: $spacer * 3.5;
+
+    .bestbet-header {
+        padding: 0;
+        margin-bottom: $spacer * 3;
+
+        .logo {
+            max-width: 184px;
+        }
+
+        h1 {
+            border-left: 2px solid $ssb-green-3;
+            font-size: 36px;
+            line-height: 1;
+            margin-left: $spacer;
+            margin-bottom: 0;
+            padding-left: $spacer * .5;
+        }
+    }
+
+    .bestbet-list {
+        background-color: $ssb-white;
+        border: 2px solid $ssb-green-5;
+        margin-bottom: $spacer;
+        padding: $spacer * 3;
+
+        h2 {
+            font-size: 24px;
+        }
+
+        .ssb-dropdown, .ssb-input {
+            margin: 0;
+            
+            & > * {
+                margin: 0;
+                width: 100%;
+            }
+        }
+
+        .search-words {
+            display: flex;
+            align-items: center;
+            background: $ssb-dark-3;
+            padding: 8px 16px;
+            color: $ssb-white;
+            font-weight: 700;
+            border-color: 1px solid $ssb-dark-3;
+            border-radius: 20px;
+        }
+    }
+
+    .best-bet-form {
+        .ssb-input, .ssb-dropdown, .ssb-text-area {
+            max-width: 100%;
+            margin-bottom: $spacer;
+        }
+    }
+}

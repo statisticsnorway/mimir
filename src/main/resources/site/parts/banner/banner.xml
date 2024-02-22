@@ -23,6 +23,10 @@
           <label>Faktaside</label>
           <help-text>Skal banner ligge på faktaside må du fylle ut litt tekst.</help-text>
           <items>
+            <input name="subTitle" type="TextLine">
+              <label>Stikktittel</label>
+              <help-text>Hvis ikke utfylt er default tekst :Fakta om</help-text>
+            </input>
             <input name="title" type="TextLine">
               <label>Tittel på faktaside</label>
             </input>
@@ -34,6 +38,12 @@
             <input name="generalTitle" type="TextLine">
               <label>Tittel</label>
             </input>
+            <input name="landingPage" type="CheckBox">
+              <label>Bruk på landingsside</label>
+              <config>
+                  <alignment>right</alignment>
+              </config>
+          </input>
           </items>
         </option>
       </options>

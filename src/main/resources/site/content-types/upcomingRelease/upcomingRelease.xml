@@ -1,0 +1,34 @@
+<content-type>
+    <display-name>Innhold til publiseringskalender</display-name>
+    <super-type>base:structured</super-type>
+    <form>
+        <input type="Date" name="date">
+            <label>Publisering</label>
+            <default>now</default>
+            <occurrences minimum="1" maximum="1" />
+        </input>
+        <input name="contentType" type="ComboBox">
+            <label>Innholdstype</label>
+            <occurrences minimum="1" maximum="1"/>
+            <config>
+                <option value="article">Artikkel</option>
+                <option value="report">Rapport</option>
+                <option value="analysis">SSB analyse</option>
+                <option value="table">Tabell</option>
+                <option value="activity">Aktivitet</option>
+                <option value="statistics">Statistikk</option>
+            </config>
+        </input>
+        <input name="mainSubject" type="CustomSelector">
+            <label>Hovedemne</label>
+            <occurrences minimum="1" maximum="1" />
+            <config>
+                <service>mainSubject</service>
+            </config>
+        </input>
+        <input name="href" type="TextLine">
+            <label>Lenke</label>
+            <occurrences minimum="0" maximum="1" />
+        </input>
+    </form>
+</content-type>

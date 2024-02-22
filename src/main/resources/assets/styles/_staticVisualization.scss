@@ -1,0 +1,58 @@
+.part-static-visualization {
+  .footnote {
+      list-style-type: none;
+      margin-top: 40px;
+      padding-left: 0;
+
+    li {
+        margin-top: 5px;
+    }
+  }
+  .ssb-fact-box {
+    margin-top: 40px;
+    padding: 20px 40px;
+
+    .accordion-header {
+      font-size: 16px;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
+    ul {
+      margin-top: $spacer * .5;
+    }
+  }
+  .sources {
+      margin-top: 0;
+  }
+  img {
+    width: 100%;
+  }
+  .static-visualization-data {
+    overflow-x: auto;
+    margin-top: 40px;
+
+    thead th:first-child {
+      text-align: left;
+    }
+  }
+
+  .navigation-item {
+    &:focus {
+      outline: $ssb-purple-3 solid 2px;
+      outline-offset: 1px;
+    }
+  }
+
+  .static-visualization-chart {
+    margin-top: 40px;
+  }
+
+  figcaption {
+    @include roboto;
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 32px;
+    margin-bottom: $spacer * 0.5;
+  }
+}

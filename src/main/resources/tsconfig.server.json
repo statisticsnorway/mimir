@@ -1,8 +1,15 @@
 {
   "extends": "../../../tsconfig",
   "compilerOptions": {
-    "module": "commonjs",
-    "moduleResolution": "node"
+    "module": "commonjs", // NOTE: I suspect module:'commonjs' breaks tree-shaking. Let SWC handle the formatting instead.
+    "moduleResolution": "node",
+    "sourceMap": false,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "types": [
+      "node",
+      "@item-enonic-types/global"
+    ]
   },
   "exclude": [
     "assets"

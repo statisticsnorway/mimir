@@ -1,19 +1,50 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "allowUmdGlobalAccess": true,
+    "baseUrl": "./",
+		"moduleResolution": "node",
     "sourceMap": true,
     "allowJs": true,
     "noImplicitAny": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
     "strictNullChecks": true,
-    "lib": ["ES5", "ES6", "DOM"]
+    "skipLibCheck": true,
+    "lib": [],
+    "types": [
+      "node",
+      "@item-enonic-types/global",
+      "global",
+    ],
+    "rootDirs": [
+      "./src/main/resources",
+      "./.xp-codegen"
+    ],
+    "paths": {
+      "/admin/*": ["./src/main/resources/admin/*"],
+      "/lib/xp/*": ["./node_modules/@enonic-types/lib-*"],
+      "/lib/enonic/react4xp": ["./node_modules/@enonic-types/lib-react4xp"],
+      "/lib/*": [ "./node_modules/@item-enonic-types/lib-*" ,"./src/main/resources/lib/*", "./src/main/resources/lib/types/*"],
+      "/react4xp/*": ["./src/main/resources/react4xp/*"],
+      "/services/*": ["./src/main/resources/services/*"],
+      "/site/*": [
+        "./.xp-codegen/site/*",
+        "./src/main/resources/site/*"
+      ],
+      "/tasks/*": [
+        "./.xp-codegen/tasks/*",
+        "./src/main/resources/tasks/*"
+      ],
+    }
   },
-  "types": [
-    "types",
-    "cypress"
-  ],
   "include": [
-    "src/**/*.ts",    
+    "node_modules/typescript/lib/lib.es5.d.ts",
+    "./.xp-codegen/**/*",
+  	"src/main/resources/**/*.tsx",
+		"src/main/resources/**/*.ts"
+  ],
+  "exclude": [
+    "./build/*",
+    "src/main/resources/assets/**/*.*",
   ]
 }

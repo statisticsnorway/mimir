@@ -1,0 +1,31 @@
+$grid-gutter-width: 20px;
+
+$grid-breakpoints: (
+  // Extra small screen / phone
+        xs: 0,
+  // Small screen / phone
+        sm: 576px,
+  // Medium screen / tablet
+        md: 768px,
+  // Large screen / desktop
+        lg: 992px,
+  // Extra large screen / wide desktop
+        xl: 1260px,
+  // Extra Extra large / 1440p and up
+        xxl: 2000px
+);
+
+$container-max-widths: (
+  sm: 540px,
+  md: 720px,
+  lg: 960px,
+  xl: 1180px
+);
+
+@import "bootstrap";
+@import "@statisticsnorway/ssb-component-library/src/main.scss";
+@import "./font";
+@import "./header";
+@import "./footer";
+
+

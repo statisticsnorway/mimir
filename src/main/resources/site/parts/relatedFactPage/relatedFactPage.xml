@@ -1,0 +1,20 @@
+<part>
+  <display-name>Relaterte Faktasider</display-name>
+  <form>
+    <input type="TextLine" name="title">
+      <label>Tittel</label>
+      <occurrences minimum="0" maximum="1"/>
+    </input>
+    <input name="itemList" type="ContentSelector">
+      <label>Innholdsliste</label>
+      <occurrences minimum="0" maximum="1"/>
+      <config>
+        <allowPath>${site}</allowPath>
+        <allowType>contentList</allowType>
+        <treeMode>false</treeMode>
+        <description>Henter alt innhold i listen og lager lenker av de.</description>
+      </config>
+    </input>
+ 		<mixin name="relatedFactPage" />
+  </form>
+</part>

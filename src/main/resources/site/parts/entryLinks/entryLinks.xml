@@ -1,0 +1,27 @@
+<part>
+    <display-name>Innganger med ikoner</display-name>
+    <form>
+        <item-set name="entryLinks">
+            <label>Inngang</label>
+            <occurrences minimum="0" maximum="4" />
+            <items>
+                <input name="title" type="TextLine">
+                    <label>Tittel</label>
+                    <occurrences minimum="1" maximum="1" />
+                </input>
+                <input name="href" type="TextLine">
+                    <label>URL</label>
+                    <occurrences minimum="1" maximum="1" />
+                </input>
+                <input name="icon" type="ImageSelector">
+                    <label>Ikon</label>
+                    <occurrences minimum="1" maximum="1" />
+                </input>
+                <input name="mobileIcon" type="ImageSelector">
+                    <label>Mobil-Ikon</label>
+                    <occurrences minimum="1" maximum="1" />
+                </input>
+            </items>
+        </item-set>
+    </form>
+</part>

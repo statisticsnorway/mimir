@@ -1,0 +1,16 @@
+.part-related-articles {
+  & .row:first-of-type {
+    margin-top: $spacer * 1.5;
+  }
+
+  ul {
+    list-style: none;
+    padding-left: 0;
+  }
+
+  @include media-breakpoint-down(md) {
+    .col, .col-auto, .ssb-card {
+      padding: 0;
+    }
+  }
+}

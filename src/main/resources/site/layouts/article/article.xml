@@ -1,9 +1,0 @@
-<layout>
-  <display-name>Artikkel</display-name>
-  <description>Dato til venstre og tekst til høyre</description>
-  <form>
-  </form>
-  <regions>
-    <region name="aside"/>
-  </regions>
-</layout>

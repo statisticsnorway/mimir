@@ -1,53 +1,180 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <content-type>
-    <display-name>Artikkel</display-name>
-    <super-type>base:structured</super-type>
-    <form>
-        <input name="author" type="ContentSelector">
-            <label>Forfatter</label>
-            <occurrences minimum="0" maximum="0"/>
-            <config>
-                <allowContentType>mimir:contact</allowContentType>
-                <treeMode>true</treeMode>
-            </config>
-        </input>
-        <input name="showPublishDate" type="CheckBox">
-            <label>Vis publiseringsdato</label>
-            <default>checked</default>
-        </input>
-        <option-set name="showModifiedDate">
-            <label>Vis tidspunkt for sist redigering</label>
-            <expanded>false</expanded>
-            <occurrences minimum="0" maximum="1"/>
-            <help-text>You can select up to 2 options</help-text>
-            <options minimum="1" maximum="2">
-                <option name="dateOption">
-                    <label>Skal det vises dato?</label>
-                    <help-text>Hjelpetekst, den nyttigste</help-text>
-                    <items>
-                        <input name="showModifiedTime" type="CheckBox">
-                            <label>Vis klokkeslett for publisering</label>
-                            <default>unchecked</default>
-                        </input>
-                        <input name="modifiedDate" type="DateTime">
-                            <label>Tidspunkt for endring</label>
-                        </input>
-                    </items>
-                </option>
-            </options>
-        </option-set>
-
-        <input name="ingress" type="TextArea">
-            <occurrences minimum="1" maximum="1" />
-            <label>Ingress</label>
-        </input>
-
-        <input name="articleText" type="HtmlArea">
-            <label>Artikkeltekst</label>
-            <config>
-                <include>*</include>
-                <allowHeadings>h3 h4 h5</allowHeadings>
-            </config>
-        </input>
-    </form>
+	<display-name>Artikkel</display-name>
+	<super-type>base:structured</super-type>
+	<form>
+		<field-set>
+			<label>Stikktittel</label>
+			<items>
+				<input name="introTitle" type="TextLine">
+					<label>Stikktittel</label>
+					<occurrences minimum="0" maximum="1" />
+				</input>
+			</items>
+		</field-set>
+		<field-set>
+			<label>Publisering</label>
+			<items>
+				<input name="showPublishDate" type="CheckBox">
+					<label>Vis publiseringsdato</label>
+					<default>checked</default>
+				</input>
+			</items>
+		</field-set>
+		<field-set>
+			<items>
+				<option-set name="showModifiedDate">
+					<label>Endringsdato</label>
+					<expanded>false</expanded>
+					<occurrences minimum="0" maximum="1" />
+					<options minimum="1" maximum="2">
+						<option name="dateOption">
+							<label>Skal det vises dato?</label>
+							<items>
+								<input name="showModifiedTime" type="CheckBox">
+									<label>Vis klokkeslett for publisering</label>
+									<default>unchecked</default>
+								</input>
+								<input name="modifiedDate" type="DateTime">
+									<label>Tidspunkt for endring</label>
+								</input>
+							</items>
+						</option>
+					</options>
+				</option-set>
+			</items>
+		</field-set>
+		<field-set>
+			<items>
+				<item-set name="authorItemSet">
+					<label>Forfattere</label>
+					<occurrences minimum="0" maximum="0" />
+					<items>
+						<input name="name" type="TextLine">
+							<label>Navn</label>
+							<occurrences minimum="0" maximum="1" />
+						</input>
+						<input name="email" type="TextLine">
+							<label>E-post</label>
+							<occurrences minimum="0" maximum="1" />
+						</input>
+					</items>
+				</item-set>
+			</items>
+		</field-set>
+		<field-set>
+			<label>Ingress</label>
+			<items>
+				<input name="ingress" type="TextArea">
+					<occurrences minimum="0" maximum="1" />
+					<label>Ingress</label>
+				</input>
+			</items>
+		</field-set>
+		<field-set>
+			<label>Artikkeltekst</label>
+			<items>
+				<input name="articleText" type="HtmlArea">
+					<label>Artikkeltekst</label>
+					<config>
+						<include>Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote</include>
+						<allowHeadings>h2 h3 h4 h5</allowHeadings>
+					</config>
+				</input>
+			</items>
+		</field-set>
+		<field-set>
+			<items>
+				<option-set name="associatedStatistics">
+					<label>Tilhørende statistikk</label>
+					<expanded>false</expanded>
+					<occurrences minimum="0" maximum="0" />
+					<options minimum="1" maximum="1">
+						<option name="XP">
+							<label>Lenke til tilhørende statistikk (XP)</label>
+							<items>
+								<input name="content" type="ContentSelector">
+									<label>Statistikk</label>
+									<occurrences minimum="0" maximum="1" />
+									<config>
+										<allowContentType>statistics</allowContentType>
+									</config>
+								</input>
+							</items>
+						</option>
+						<option name="CMS">
+							<label>Lenke til tilhørende statistikk (4.7.)</label>
+							<items>
+								<input name="href" type="TextLine">
+									<label>URL</label>
+									<occurrences minimum="0" maximum="1" />
+								</input>
+								<input name="title" type="TextLine">
+									<label>Tittel</label>
+									<occurrences minimum="0" maximum="1" />
+								</input>
+							</items>
+						</option>
+					</options>
+				</option-set>
+			</items>
+		</field-set>
+		<field-set>
+			<label>Artikkelarkiv</label>
+			<items>
+				<input name="articleArchive" type="ContentSelector">
+					<label>Arkiv</label>
+					<occurrences minimum="0" maximum="0" />
+					<config>
+						<allowContentType>articleArchive</allowContentType>
+					</config>
+				</input>
+			</items>
+		</field-set>
+		<mixin name="relatedStatistics" />
+		<mixin name="relatedExternalLinks" />
+		<mixin name="relatedArticles" />
+		<mixin name="relatedFactPage" />
+		<mixin name="contacts" />
+		<field-set>
+			<label>Metainformasjon</label>
+			<items>
+				<input name="articleType" type="ComboBox">
+					<label>Innholdstype</label>
+					<occurrences minimum="0" maximum="1"/>
+					<config>
+						<option value="report">Rapport</option>
+						<option value="note">Notat</option>
+						<option value="analysis">Analyse</option>
+						<option value="economicTrends">Konjunkturtendensene</option>
+						<option value="discussionPaper">Discussion paper</option>
+					</config>
+				</input>
+				<input name="serialNumber" type="TextLine">
+					<label>Løpenummer</label>
+					<occurrences minimum="0" maximum="1" />
+				</input>
+				<input name="isbnNumber" type="TextLine">
+					<label>ISBN-nummer</label>
+					<occurrences minimum="0" maximum="1" />
+				</input>
+				<input name="frontPagePriority" type="RadioButton">
+					<label>Prioritert visning på forside</label>
+					<occurrences minimum="1" maximum="1"/>
+					<config>
+						<option value="0">Ikke prioritert</option>
+						<option value="1">Prioritert</option>
+            <option value="hideArticle">Ikke vis på forsiden</option>
+					</config>
+					<default>0</default>
+				</input>
+			</items>
+		</field-set>
+		<field-set>
+			<label>Sekundærplassering</label>
+			<items>
+				<mixin name="subtopic" />
+			</items>
+		</field-set>
+	</form>
 </content-type>

@@ -7,13 +7,5 @@
       <label>Tittel</label>
       <occurrences minimum="0" maximum="1"/>
     </input>
-    <input type="TextLine" name="subtitle">
-      <label>Alternativ tittel</label>
-      <occurrences minimum="0" maximum="1"/>
-    </input>
-    <input type="HtmlArea" name="ingress">
-      <label>Ingress</label>
-      <occurrences minimum="0" maximum="1"/>
-    </input>
   </form>
 </content-type>

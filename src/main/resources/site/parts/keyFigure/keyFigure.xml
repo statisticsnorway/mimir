@@ -13,6 +13,10 @@
         <allowType>keyFigure</allowType>
       </config>
     </input>
+    <input name="columns" type="CheckBox">
+      <label>Vis i kolonner</label>
+      <help-text>Vis i 2 kolonner (gjelder ikke store nøkkeltall eller mobilvisning)</help-text>
+    </input>
     <item-set name="source">
       <occurrences minimum="0" maximum="1"/>
       <label>Kilde</label>

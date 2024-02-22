@@ -1,14 +1,23 @@
 <part>
-  <display-name>Boksmeny</display-name>
-  <description>En sticky-meny med Kommue, fylkenavn og en dropdown-meny med søk.</description>
+  <display-name>Liste profilerte kort</display-name>
+  <description>En liste med profilerte kort</description>
   <form>
     <input name="menu" type="ContentSelector">
-      <label>Boks</label>
+      <label>Kort</label>
       <occurrences minimum="1" maximum="1"/>
       <config>
         <allowPath>${site}</allowPath>
         <allowType>menuBox</allowType>
       </config>
+    </input>
+    <input name="height" type="RadioButton">
+      <label>Høyde på bokser</label>
+      <occurrences minimum="1" maximum="1"/>
+      <config>
+        <option value="default">Dynamisk</option>
+        <option value="fixed">Fast (370px)</option>
+      </config>
+      <default>default</default>
     </input>
   </form>
 </part>

@@ -1,76 +1,41 @@
 <part>
-  <display-name>Infografikk / Visualisering</display-name>
-  <description>Inforgrafikk eller visualisering med tittel og beskrivelse</description>
+  <display-name>Infografikk / Visualisering (IKKE BRUK)</display-name>
+  <description>Infografikk eller visualisering med tittel og beskrivelse</description>
   <form>
-    <input name="title" type="TextLine">
-      <label>Tittel på visualinseringen</label>
-      <occurrences minimum="1" maximum="1" />
-    </input>
+    <field-set>
+      <label>Gammelt (Ikke bruk)</label>
+      <items>
+        <input name="title" type="TextLine">
+          <label>Tittel på visualinseringen</label>
+          <occurrences minimum="1" maximum="1" />
+        </input>
 
-    <input name="image" type="ImageSelector">
-      <label>Infografikk eller visualisering</label>
-      <occurrences minimum="1" maximum="1"/>
-      <config>
-        <allowPath>${site}</allowPath>
-      </config>
-    </input>
+        <input name="image" type="ImageSelector">
+          <label>Infografikk eller visualisering</label>
+          <occurrences minimum="1" maximum="1"/>
+          <config>
+            <allowPath>${site}</allowPath>
+          </config>
+        </input>
 
-    <option-set name="checkOptionSet">
-      <label>Kildelenke</label>
-      <expanded>true</expanded>
-      <occurrences minimum="0" maximum="2"/>
-      <options minimum="1" maximum="1">
-        <option name="urlSource">
-          <label>Url lenke</label>
-          <default>true</default>
-          <help-text>Fri url felt. Legges inn som dette eks. "http://www.ssb.no"</help-text>
-          <items>
-            <input name="urlText" type="TextLine">
-              <label>Tekst til kildelenke</label>
-              <occurrences minimum="0" maximum="1" />
-            </input>
-            <input name="url" type="TextLine">
-              <label>Kildelenke</label>
-              <occurrences minimum="0" maximum="1" />
-              <default>https://</default>
-            </input>
-          </items>
-        </option>
+        <mixin name="sources" />
 
-        <option name="relatedSource">
-          <label>Lenke til internt innhold</label>
-          <items>
-            <input name="urlText" type="TextLine">
-              <label>Tekst til kildelenke</label>
-              <occurrences minimum="0" maximum="1" />
-            </input>
-            <input name="sourceSelector" type="ContentSelector">
-              <label>Relatert innhold</label>
-              <occurrences minimum="0" maximum="1"/>
-              <config/>
-            </input>
-          </items>
-        </option>
-      </options>
-    </option-set>
+        <mixin name="footnote" />
 
-    <input name="footNote" type="TextLine">
-      <label>Fotnote til bilde</label>
-      <occurrences minimum="0" maximum="2" />
-    </input>
+        <!-- TODO: remove altText when all content has been mended to use alt text on image instead -->
+        <input name="altText" type="TextLine">
+          <label>*IKKE LENGER I BRUK* (bruk alt tekst på valgt bilde)</label>
+          <occurrences minimum="0" maximum="1" />
+        </input>
 
-    <input name="altText" type="TextLine">
-      <label>Alternativ tekst til bilde</label>
-      <occurrences minimum="1" maximum="1" />
-    </input>
-
-    <input name="longDesc" type="TextArea">
-      <label>Beskrivende hjelpetekst for blinde</label>
-      <default></default>
-      <config>
-        <max-length>600</max-length>
-      </config>
-    </input>
-
+        <input name="longDesc" type="TextArea">
+          <label>Beskrivende hjelpetekst for blinde</label>
+          <default></default>
+          <config>
+            <max-length>600</max-length>
+          </config>
+        </input>
+      </items>
+    </field-set>
   </form>
 </part>

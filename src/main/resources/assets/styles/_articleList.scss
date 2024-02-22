@@ -1,0 +1,37 @@
+.article-list-ingress span {
+    white-space: nowrap;
+}
+
+.article-list {
+  padding-top: 59px;
+
+    h2 {
+      margin-bottom: 30px;
+    }
+    p {
+      margin-top: 8px;
+      margin-bottom: 5px;
+    }
+    time {
+      font-size: 14px;
+    }
+    @include media-breakpoint-down(md) {
+        padding-top: 80px;
+
+        & > .ssb-link.profiled {
+          font-size: 16px;
+
+          svg {
+            width: 18px;
+            height: 18px;
+          }
+        }
+    }
+}
+
+.truncate {
+  // ca 2 lines
+  max-height: 50px;
+  overflow: hidden;
+  display: block;
+}

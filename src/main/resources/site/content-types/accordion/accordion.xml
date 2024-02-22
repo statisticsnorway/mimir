@@ -3,26 +3,38 @@
   <super-type>base:structured</super-type>
   <allow-child-content>true</allow-child-content>
   <form>
-    <input name="open" type="TextLine">
-      <label>Tekst til åpne-knapp</label>
-      <occurrences minimum="0" maximum="1"/>
-    </input>
-    <input name="body" type="HtmlArea">
-      <label>Innhold</label>
-      <occurrences minimum="0" maximum="1"/>
-    </input>
-    <item-set name="items">
-      <occurrences minimum="0" maximum="999"/>
-      <label>Underpunkt</label>
+    <item-set name="accordions">
+      <label>Trekkspill</label>
+      <occurrences minimum="1" maximum="0"/>
       <items>
-        <input type="TextLine" name="title">
-          <label>Tekst til åpneknapp</label>
+        <input name="open" type="TextLine">
+          <label>Tekst til åpne-knapp</label>
           <occurrences minimum="0" maximum="1"/>
         </input>
-        <input type="HtmlArea" name="body">
-          <label>Brødtekst</label>
+        <input name="body" type="HtmlArea">
+          <label>Innhold</label>
+          <config>
+            <include>Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote</include>
+          </config>
           <occurrences minimum="0" maximum="1"/>
         </input>
+        <item-set name="items">
+          <occurrences minimum="0" maximum="0"/>
+          <label>Underpunkt</label>
+          <items>
+            <input type="TextLine" name="title">
+              <label>Tekst til åpneknapp</label>
+              <occurrences minimum="0" maximum="1"/>
+            </input>
+            <input type="HtmlArea" name="body">
+              <label>Brødtekst</label>
+              <config>
+                <include>Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote</include>
+              </config>
+              <occurrences minimum="0" maximum="1"/>
+            </input>
+          </items>
+        </item-set>
       </items>
     </item-set>
   </form>

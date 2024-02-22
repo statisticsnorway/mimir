@@ -1,41 +1,18 @@
 .key-figures {
-  .ssb-number {
-    line-height: normal;
-  }
-  .icon-container {
-    padding-top: 10px;
-    padding-right: 20px;
-    &.small {
-      min-width: 130px;
-    }
-    &.medium {
-      min-width: 180px;
-    }
-    &.large {
-      min-width: 230px;
-    }
-  }
-  .feather {
-    stroke: $ssb-green-3;
-  }
   h3 {
     @include roboto-condenced;
-    font-size: 28px;
+    font-weight: bold;
+    font-size: 28px !important;
   }
-}
-.key-figures + .key-figures, .popper + .key-figures {
-  margin-top: 40px;
-}
-.divider {
 
-  @include media-breakpoint-down (md) {
-    border-bottom: 1px solid #cccccc;
-    padding-bottom: 50px;
-    padding-left: 0;
-    padding-right: 0;
-    margin-left: auto;
-    margin-right: auto;
-    max-width: 90%;
-
+  & .divider:not(:last-child) {
+    @include media-breakpoint-down (md) {
+      border-bottom: 1px solid #cccccc;
+      padding-bottom: 50px;
+      padding-left: 0;
+      padding-right: 0;
+      margin-left: auto;
+      margin-right: auto;
+    }
   }
 }

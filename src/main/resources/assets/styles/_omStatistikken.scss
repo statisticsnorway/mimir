@@ -1,0 +1,27 @@
+.part-om-statistikken {
+  padding: 0;
+
+  .title-wrapper {
+    font-family: $font-roboto-condensed-bold;
+    margin-bottom: $spacer * 2;
+
+    @include media-breakpoint-down(md) {
+      padding: 0;
+    }
+  }
+
+  .ingress-wrapper {
+    margin-bottom: $spacer * 2;
+    font-size: 1.25rem;
+
+    @include media-breakpoint-down(md) {
+      padding: 0;
+    }
+  }
+
+  .om-statistikken-accordion {
+    @include media-breakpoint-down(md) {
+      padding: 0;
+    }
+  }
+}

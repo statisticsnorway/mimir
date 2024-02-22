@@ -1,0 +1,130 @@
+name: 'Deploy to PROD'
+on:
+  push:
+    branches:
+      - 'master'
+
+concurrency:
+  group: mimir-prod
+  cancel-in-progress: true
+
+jobs:
+  deploy_to_prod:
+    name: 'Deploy to PROD'
+    runs-on: 'ubuntu-latest'
+    environment: 'production'
+    steps:
+      - id: build_app
+        uses: enonic/release-tools/build-and-publish@master
+        with:
+          skipPublishing: true
+      - id: deploy_app_to_XP
+        uses: 'enonic/action-app-deploy@main'
+        with:
+          url: ${{ secrets.ENONIC_PROD_URL }}
+          username: ${{ secrets.ENONIC_USER }}
+          password: ${{ secrets.ENONIC_PROD_PASS }}
+          client_cert: ${{ secrets.ENONIC_CERT }}
+          client_key: ${{ secrets.ENONIC_KEY }}
+          app_jar: "./build/libs/*.jar"
+      - name: Upload artifacts
+        id: upload_artifacts
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mimir-prod-${{ github.run_number }}
+          path: "./build/libs/*.jar"
+      - name: Get Version Number
+        id: get_version_number
+        run: |
+          VERSION=$(awk -F' = ' '/^version/ {print $2}' ./gradle.properties)
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+      - name: Create tag and release
+        id: tag_and_release
+        run: gh release create $VERSION --generate-notes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Send success message to Slack
+        id: slack_success
+        if: success()
+        uses: slackapi/slack-github-action@v1
+        with:
+          # Using Github block kit (https://api.slack.com/reference/block-kit/blocks) to configure the Slack message, see https://docs.github.com/en/actions/learn-github-actions/contexts
+          # for more information about context variables
+          payload: |
+            {
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "${{ github.workflow }}"
+                  }
+                },
+                {
+                  "type": "context",
+                  "elements": [
+                    {
+                      "type": "image",
+                      "image_url": "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
+                      "alt_text" : "Github logo"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "Run by: *${{ github.actor }}* on: *${{ github.ref_name }}*"
+                    }
+                  ]
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "🛠 Build ${{ github.run_number }} is a *${{ job.status }}*, well done!\n<${{ github.event.pull_request.html_url || github.event.head_commit.url }}|Commit or PR>"
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_ALERTS_PROD }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+      - name: Send failure message to Slack
+        id: slack_failure
+        if: failure()
+        uses: slackapi/slack-github-action@v1
+        with:
+          payload: |
+            {
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "${{ github.workflow }}"
+                  }
+                },
+                {
+                  "type": "context",
+                  "elements": [
+                    {
+                      "type": "image",
+                      "image_url": "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
+                      "alt_text" : "Github logo"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "Run by: *${{ github.actor }}* on: *${{ github.ref_name }}*"
+                    }
+                  ]
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "💣 Build ${{ github.run_number }} is a *${{ job.status }}*, and that's cool!\nIf you want to fix it, start by looking at the <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|workflow output>"
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_MIMIR_UTV }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK

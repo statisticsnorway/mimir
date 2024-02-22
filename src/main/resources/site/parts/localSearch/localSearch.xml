@@ -1,0 +1,25 @@
+<part>
+    <display-name>Lokalt søk</display-name>
+    <description>Avgrenset søk på valgt innhold</description>
+    <form>
+        <input name="title" type="TextLine">
+            <label>Søke tittel</label>
+            <occurrences minimum="1" maximum="1"/>
+            <default>Her kommer tittelen</default>
+        </input>
+        <input name="searchPlaceholder" type="TextLine">
+            <label>Tekst i søkefelt</label>
+            <occurrences minimum="1" maximum="1"/>
+            <default>Her kommer tekst i søkefeltet</default>
+        </input>
+        <input name="searchFolder" type="ContentSelector">
+            <label>Søkbar mappe</label>
+            <occurrences minimum="1" maximum="1"/>
+            <config>
+                <treeMode>true</treeMode>
+                <hideToggleIcon>true</hideToggleIcon>
+            </config>
+        </input>
+
+    </form>
+</part>

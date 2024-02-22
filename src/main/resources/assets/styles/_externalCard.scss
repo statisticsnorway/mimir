@@ -1,0 +1,18 @@
+.external-card {
+
+  &.ssb-card {
+
+  .card-content {
+    border-top: 1px solid $ssb-dark-2;
+  }
+
+  .clickable {
+
+    &:hover {
+      .card-content {
+        border-top: 1px solid $ssb-green-4;
+      }
+    }
+  }
+  }
+}

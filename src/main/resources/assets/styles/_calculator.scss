@@ -1,0 +1,415 @@
+
+  .kpi-calculator, .pif-calculator, .bkibol-calculator, .husleie-calculator {
+    border: solid 1px $ssb-dark-5;
+    border-top: 4px solid $green3;
+    background: $ssb-white;
+
+    .calculator-form {
+      padding: 60px 100px;
+
+      .publish-text {
+        margin-bottom: 0;
+        padding: 0;
+      }
+
+      .start-value {
+        width: 180px;
+      }
+
+      .input-amount {
+        padding-top: 32px;
+        padding-bottom: 32px;
+      }
+
+      .calculate-from {
+        padding-right: 30px;
+      }
+
+      .calculate-to {
+        padding-left: 30px;
+      }
+
+      .submit {
+        padding-top: 32px;
+      }
+
+      .choose-scope {
+        padding-top: 32px;
+        padding-bottom: 32px;
+      }
+
+      .input-year {
+        label {
+          margin-bottom: 5px;
+        }
+      }
+    }
+
+    .calculator-result {
+      padding: 60px 100px;
+      border-top: solid 1px $ssb-dark-5;
+      background-color: $ssb-dark-1;
+
+      .amount-equal {
+        @include roboto;
+        font-size: 20px;
+      }
+
+      .end-value {
+        @include roboto-condenced ;
+        font-size: 56px;
+      }
+
+      .info-title {
+        @include roboto;
+        font-weight: bold;
+      }
+
+      .close-button {
+        margin: auto;
+        margin-top: 2em;
+      }
+    }
+
+    .calculator-error {
+      padding: 0 100px 60px 100px;
+    }
+
+    &.frontpage {
+      margin-top: 40px;
+      
+      .calculator-error {
+        padding: 0 60px 55px 60px;
+      }
+    }
+
+    .calculator-form-frontpage {
+      padding: 60px;
+
+      .input-amount {
+        padding-right: 20px;
+      }
+
+      .select-year {
+        max-width: 110px;
+        min-width: 100px;
+        padding-right: 4px;
+      }
+
+      .select-month {
+        padding-left: 0;
+      }
+
+      .calculate-from {
+        .select-year {
+          padding-left: 0;
+        }
+      }
+
+      .select-month, .ssb-dropdown.month, .list-of-options {
+        min-width: 100px;
+      }
+
+      .submit {
+        padding-top: 32px;
+      }
+    }
+
+    .calculator-result-frontpage {
+      padding: 40px 60px;
+      border-top: solid 1px $ssb-dark-5;
+      background-color: $ssb-dark-1;
+
+      .amount-equal {
+        @include roboto;
+        font-size: 20px;
+      }
+
+      .end-value {
+        @include roboto-condenced ;
+        font-size: 28px;
+      }
+
+      .close-button {
+        margin: auto;
+        margin-top: 2em;
+      }
+    }
+
+    @include media-breakpoint-up(lg) {
+      .calculator-form-frontpage {
+        height: 25rem;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+
+        .submit {
+          padding-top: 0;
+        }
+
+        .select-year {
+          max-width: 120px;
+        }
+
+        .calculate-from {
+          .select-year {
+            padding-left: 10px;
+          }
+        }
+
+        .start-value {
+          margin-bottom: 20px;
+        }
+      }
+    }
+
+    @include media-breakpoint-down(lg) {
+      .calculator-form {
+        
+        .calculate-from {
+          padding-right: 10px;
+        }
+
+        .calculate-to {
+          padding-left: 10px;
+          padding-top: 10px;
+        }
+      }
+    }
+
+    @include media-breakpoint-down(md) {
+      .calculator-form {
+        padding: 20px;
+
+        .select-year {
+          padding-right: 5px;
+          padding-left: 0;
+        }
+
+        .select-year, .input-year {
+          max-width: 110px;
+          min-width: 105px;
+        }
+
+        .select-month {
+          padding-left: 5px;
+        }
+
+        .calculate-from {
+          padding-right: 10px;
+        }
+
+        .calculate-to {
+          padding-left: 10px;
+        }
+
+        .ssb-btn {
+          display: flex;
+          justify-content: center;
+        }
+      }
+
+      .calculator-form-frontpage {
+        .calculate-from, .calculate-to {
+          .select-year {
+            padding-left: 0;
+          }
+        }
+
+        .article-link {
+          margin-top: 20px;
+        }
+
+        .calculate-from, .calculate-from {
+          margin-bottom: 20px;
+          width: 100%;
+        }
+      }
+
+      .calculator-result {
+        .end-value {
+          font-size: 28px;
+        }
+      }
+
+      .calculator-error, .calculator-result  {
+        padding: 20px;
+      }
+
+      .calculator-result-frontpage {
+        padding: 0;
+      }
+    }
+
+    @include media-breakpoint-down(sm) {
+      .calculator-form {
+
+        .article-link {
+          margin-bottom: 20px;
+        }
+
+        .calculate-from {
+          margin-bottom: 20px;
+        }
+
+        .input-amount, .start-value {
+          width: 100%;
+        }
+
+        .select-year, .input-year {
+          max-width: 105px;
+          min-width: 105px;
+        }
+
+        .select-month {
+          padding-right: 0;
+          margin-top: 20px;
+        }
+
+        .select-month, .ssb-dropdown.month, .list-of-options {
+          min-width: 95px;
+          padding-left: 0;
+        }
+
+        .submit-button {
+          width: 100%;
+        }
+
+      }
+
+      .calculator-form-frontpage {
+        padding: 60px 20px 20px;
+
+        .input-amount {
+          margin-bottom: 20px;
+        }
+
+        .input-amount, .start-value {
+          width: 100%;
+        }
+
+        .select-year {
+          margin-right: $spacer * .5;
+        }
+
+        .submit-button {
+          width: 100%;
+          display: flex;
+          justify-content: center;
+        }
+
+        h2, .publish-text, .col {
+          padding: 0;
+        }
+      }
+
+      .calculator-result-frontpage {
+        padding: 40px 20px 20px;
+
+        .col {
+          padding: 0;
+        }
+      }
+
+      &.frontpage {
+        .calculator-error {
+          padding: 20px;
+        }
+      }
+    }
+
+  }
+
+  .bkibol-calculator .calculator-form {
+
+    .select-serie, .ssb-dropdown.serie-enebolig, .ssb-dropdown.serie-boligblokk, .list-of-options {
+      max-width: 300px;
+    }
+
+    .start-value {
+      width: 280px;
+    }
+
+    .input-amount {
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
+    .choose-scope {
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
+    @include media-breakpoint-down(lg) {
+      .start-value {
+        width: 100%;
+      }
+    }
+
+    @include media-breakpoint-down(sm) {
+      .input-amount, .start-value {
+        width: 100%;
+      }
+
+      .select-serie, .ssb-dropdown.serie-enebolig, .ssb-dropdown.serie-boligblokk .list-of-options {
+        min-width: 95px;
+      }
+    }
+
+  }
+
+  .husleie-calculator{
+
+   .calculator-form {
+
+    .submit-one-year, .submit-last-period {
+      margin-right: 20px;
+      width: auto;
+    }
+
+    @include media-breakpoint-down(md) {
+      .ssb-dropdown {
+        max-width: none;
+      }
+      .ssb-input {
+        max-width: none;
+      }
+
+      .select-month {
+        padding-right: 5px;
+        padding-left:0;
+      }
+
+    }
+
+    @include media-breakpoint-down(sm) {
+      .submit-one-year{
+        margin-right: 0;
+        margin-bottom: 10px;
+      }
+
+      .submit-one-year, .submit-last-period {
+        width: 100%;
+      }
+
+      .select-month {
+        padding-right: 0;
+        margin-bottom: 20px;
+      }
+
+      .select-month, .ssb-dropdown.month, .list-of-options {
+        margin-top: 0;
+      }
+    }
+  }
+
+  .calculator-result {
+    
+    @include media-breakpoint-down(sm) {
+      .price-change-text{
+        margin-top: 15px;
+      }
+
+    }
+  }
+}

@@ -1,0 +1,120 @@
+<mixin>
+	<display-name>Datakilde</display-name>
+	<form>
+		<option-set name="dataSource">
+			<label>Datakilde</label>
+			<expanded>true</expanded>
+			<occurrences minimum="0" maximum="1" />
+			<options minimum="1" maximum="1">
+				<option name="tbprocessor">
+					<label>Tall fra tabellbygger</label>
+					<items>
+						<input name="urlOrId" type="TextLine">
+							<label>URL eller TBML-id</label>
+							<occurrences minimum="0" maximum="1" />
+						</input>
+					</items>
+				</option>
+				<option name="statbankApi">
+					<label>Api-spørring mot statistikkbanken</label>
+					<items>
+						<input name="urlOrId" type="TextLine">
+							<label>URL eller tabell-id</label>
+							<occurrences minimum="0" maximum="1" />
+						</input>
+						<input name="json" type="TextArea">
+							<label>API-spørring mot statistikkbanken (JSON-format)</label>
+							<occurrences minimum="0" maximum="1" />
+						</input>
+						<input name="xAxisLabel" type="TextLine">
+							<label>Navn på x-akse dimensjon</label>
+							<occurrences minimum="0" maximum="1" />
+						</input>
+						<input name="yAxisLabel" type="TextLine">
+							<label>Navn på y-akse dimensjon</label>
+							<occurrences minimum="0" maximum="1" />
+						</input>
+						<option-set name="datasetFilterOptions">
+							<label>Filtrering på dataset</label>
+							<expanded>false</expanded>
+							<occurrences minimum="0" maximum="1" />
+							<options minimum="0" maximum="1">
+								<option name="municipalityFilter">
+									<label>Filtrer på kommune</label>
+									<help-text>Hvis grafen skal vises filtrert på kommunenummer</help-text>
+									<items>
+										<input type="TextLine" name="municipalityDimension">
+											<label>Hvilken dimensjon skal filtreres på kommunenummer</label>
+											<occurrences minimum="1" maximum="1" />
+										</input>
+									</items>
+								</option>
+							</options>
+						</option-set>
+					</items>
+				</option>
+				<option name="statbankSaved">
+					<label>Lagrede spørringer mot statistikkbanken</label>
+					<items>
+						<input name="urlOrId" type="TextLine">
+							<label>URL eller tabell-id</label>
+							<occurrences minimum="0" maximum="1" />
+						</input>
+					</items>
+				</option>
+				<option name="htmlTable">
+					<label>Excel (Kun på innholdstype Tabell) </label>
+					<items>
+						<input name="html" type="HtmlArea">
+							<label>Kildetabell limt inn fra Excel</label>
+							<occurrences minimum="0" maximum="1"/>
+							<config>
+								<include>
+									Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote
+								</include>
+							</config>
+							<help-text>Lim inn (Ctrl-V) en tabell rett fra Excel. Tabeller bør være så enkle som mulig (Overskrifter i første rad/kolonne og ellers bare tall, ingen spesialformatering, manglende tall må være tomme celler)</help-text>
+						</input>
+						<field-set>
+							<label>Fotnoter</label>
+							<items>
+								<input type="TextArea" name="footnoteText">
+									<label>Fotnote-tekst</label>
+									<help-text>Inntil 3 fotnoter</help-text>
+									<occurrences minimum="0" maximum="3" />
+								</input>
+							</items>
+						</field-set>						
+					</items>
+				</option>
+				<option name="dataset">
+					<label>(Ikke i bruk) Ferdige dataset</label>
+					<items>
+						<input name="id" type="TextLine">
+							<label>ID</label>
+							<occurrences minimum="0" maximum="1" />
+						</input>
+						<input name="format" type="ComboBox">
+							<label>Format</label>
+							<occurrences minimum="1" maximum="1" />
+							<config>
+								<option value="json">JSON</option>
+								<option value="csv">CSV</option>
+							</config>
+							<default>json</default>
+						</input>
+					</items>
+				</option>
+				<option name="klass">
+					<label>Klass</label>
+					<items>
+						<input name="urlOrId" type="TextLine">
+							<label>URL</label>
+							<occurrences minimum="0" maximum="1" />
+						</input>
+					</items>
+				</option>
+			</options>
+		</option-set>
+	</form>
+</mixin>

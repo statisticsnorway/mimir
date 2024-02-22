@@ -1,0 +1,10 @@
+<part>
+  <display-name>Matematisk formel</display-name>
+  <description>Fyll inn LaTeX formel.</description>
+  <form>
+    <input name="mathsFormula" type="TextLine">
+      <label>Formel</label>
+      <occurrences minimum="1" maximum="1"/>
+    </input>
+  </form>
+</part>

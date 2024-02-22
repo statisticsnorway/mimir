@@ -1,81 +1,138 @@
 <page>
   <display-name>Standard side</display-name>
   <form>
-  	<input name="bkg_color" type="RadioButton">
-  		<label>Velg bakgrunnsfarge</label>
-  		<occurrences minimum="1" maximum="1"/> 
-  		<config>
-    		<option value="white">Hvit</option> 
-    		<option value="grey">Grå</option>
+    <input name="pageType" type="RadioButton">
+      <label>Sidetype</label>
+      <occurrences minimum="1" maximum="1" />
+      <config>
+        <option value="default">Standard</option>
+        <option value="municipality">Kommunefakta</option>
+        <option value="factPage">Faktaside</option>
       </config>
-      <default>white</default> 
+      <default>default</default>
+    </input>
+    <field-set>
+      <label>Emneinformasjon</label>
+      <items>
+        <input name="subjectType" type="RadioButton">
+          <label>Hovedemne eller Delemne</label>
+          <occurrences minimum="0" maximum="1" />
+          <config>
+            <option value="mainSubject">Hovedemne</option>
+            <option value="subSubject">Delemne</option>
+            <option value="noSubject">Ingen</option>
+          </config>
+        </input>
+        <input type="TextLine" name="subjectCode">
+          <label>Emnekode</label>
+          <help-text>Hvert hovedemne og delemne har en kode, finner det i emnestrukturen i 4.7</help-text>
+          <occurrences minimum="0" maximum="1" />
+        </input>
+      </items>
+    </field-set>
+    <input name="hideHeader" type="CheckBox">
+      <label>Skjul Toppmeny (Kun i QA)</label>
+    </input>
+    <input name="hide_breadcrumb" type="CheckBox">
+      <label>Skjul Brødsmulesti</label>
+    </input>
+    <input name="bkg_color" type="RadioButton">
+      <label>Velg bakgrunnsfarge</label>
+      <occurrences minimum="1" maximum="1" />
+      <config>
+        <option value="white">Hvit</option>
+        <option value="grey">Grå</option>
+      </config>
+      <default>white</default>
     </input>
     <item-set name="regions">
-      <label>Region</label> 
-      <occurrences minimum="1" maximum="15"/> 
+      <label>Region</label>
+      <occurrences minimum="1" maximum="26" />
       <items>
-        <mixin name="title"/>
+        <mixin name="title" />
         <input name="view" type="RadioButton">
           <label>Visningstype</label>
-          <occurrences minimum="1" maximum="1"/> 
+          <occurrences minimum="1" maximum="1" />
           <config>
-            <option value="full">Full bredde</option> 
+            <option value="full">Full bredde</option>
             <option value="card">Seksjon med grønn stripe</option>
+            <option value="plainSection">Seksjon</option>
           </config>
         </input>
         <input name="region" type="ComboBox">
           <label>Region</label>
-          <occurrences minimum="1" maximum="1"/>
+          <occurrences minimum="1" maximum="1" />
           <config>
-            <option value="Rad_A">Rad A</option> 
-            <option value="Rad_B">Rad B</option> 
-            <option value="Rad_C">Rad C</option> 
-            <option value="Rad_D">Rad D</option> 
-            <option value="Rad_E">Rad E</option> 
-            <option value="Rad_F">Rad F</option> 
-            <option value="Rad_G">Rad G</option> 
-            <option value="Rad_H">Rad H</option> 
-            <option value="Rad_I">Rad I</option> 
-            <option value="Rad_J">Rad J</option> 
-            <option value="Rad_K">Rad K</option> 
-            <option value="Rad_L">Rad L</option> 
-            <option value="Rad_M">Rad M</option> 
-            <option value="Rad_N">Rad N</option> 
-            <option value="Rad_O">Rad O</option> 
-            <option value="Rad_P">Rad P</option> 
-            <option value="Rad_Q">Rad Q</option> 
-            <option value="Rad_R">Rad R</option> 
-            <option value="Rad_S">Rad S</option> 
-            <option value="Rad_T">Rad T</option> 
+            <option value="Rad_A">Rad A</option>
+            <option value="Rad_B">Rad B</option>
+            <option value="Rad_C">Rad C</option>
+            <option value="Rad_D">Rad D</option>
+            <option value="Rad_E">Rad E</option>
+            <option value="Rad_F">Rad F</option>
+            <option value="Rad_G">Rad G</option>
+            <option value="Rad_H">Rad H</option>
+            <option value="Rad_I">Rad I</option>
+            <option value="Rad_J">Rad J</option>
+            <option value="Rad_K">Rad K</option>
+            <option value="Rad_L">Rad L</option>
+            <option value="Rad_M">Rad M</option>
+            <option value="Rad_N">Rad N</option>
+            <option value="Rad_O">Rad O</option>
+            <option value="Rad_P">Rad P</option>
+            <option value="Rad_Q">Rad Q</option>
+            <option value="Rad_R">Rad R</option>
+            <option value="Rad_S">Rad S</option>
+            <option value="Rad_T">Rad T</option>
+            <option value="Rad_U">Rad U</option>
+            <option value="Rad_V">Rad V</option>
+            <option value="Rad_W">Rad W</option>
+            <option value="Rad_X">Rad X</option>
+            <option value="Rad_Y">Rad Y</option>
+            <option value="Rad_Z">Rad Z</option>
           </config>
         </input>
         <input name="showGreyTriangle" type="CheckBox">
           <label>Med mørk og skrå bakgrunn</label>
         </input>
+        <input name="showGreyBackground" type="CheckBox">
+          <label>Grå bakgrunn på region</label>
+        </input>
+        <input name="showDarkGreyBackground" type="CheckBox">
+          <label>Mørk grå bakgrunn på region</label>
+        </input>
+        <input name="topBorder" type="CheckBox">
+          <label>Toppramme</label>
+        </input>
       </items>
     </item-set>
   </form>
   <regions>
-    <region name="Rad_A"/>
-    <region name="Rad_B"/>
-    <region name="Rad_C"/>
-    <region name="Rad_D"/>
-    <region name="Rad_E"/>
-    <region name="Rad_F"/>
-    <region name="Rad_G"/>
-    <region name="Rad_H"/>
-    <region name="Rad_I"/>
-    <region name="Rad_J"/>
-    <region name="Rad_K"/>
-    <region name="Rad_L"/>
-    <region name="Rad_M"/>
-    <region name="Rad_N"/>
-    <region name="Rad_O"/>
-    <region name="Rad_P"/>
-    <region name="Rad_Q"/>
-    <region name="Rad_R"/>
-    <region name="Rad_S"/>
-    <region name="Rad_T"/>
-    <region name="main"/>
+    <region name="Rad_A" />
+    <region name="Rad_B" />
+    <region name="Rad_C" />
+    <region name="Rad_D" />
+    <region name="Rad_E" />
+    <region name="Rad_F" />
+    <region name="Rad_G" />
+    <region name="Rad_H" />
+    <region name="Rad_I" />
+    <region name="Rad_J" />
+    <region name="Rad_K" />
+    <region name="Rad_L" />
+    <region name="Rad_M" />
+    <region name="Rad_N" />
+    <region name="Rad_O" />
+    <region name="Rad_P" />
+    <region name="Rad_Q" />
+    <region name="Rad_R" />
+    <region name="Rad_S" />
+    <region name="Rad_T" />
+    <region name="Rad_U" />
+    <region name="Rad_V" />
+    <region name="Rad_W" />
+    <region name="Rad_X" />
+    <region name="Rad_Y" />
+    <region name="Rad_Z" />
+    <region name="main" />
   </regions>
 </page>

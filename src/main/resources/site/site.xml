@@ -1,65 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
+  <x-data name="subjectTag" allowContentTypes="article"/>
   <form>
-    <field-set>
-      <label>Header og meny</label>
-      <items>
-
-        <input name="searchResultPageId" type="ContentSelector">
-          <label>Søkeresultat side</label>
-          <occurrences minimum="0" maximum="1"/>
-          <config>
-            <allowContentType>page</allowContentType>
-            <treeMode>true</treeMode>
-            <showStatus>true</showStatus>
-            <hideToggleIcon>true</hideToggleIcon>
-          </config>
-        </input>
-
-        <item-set name="topLinks">
-          <label>Topp lenker</label>
-          <expanded>false</expanded>
-          <occurrences minimum="0" maximum="0"/>
-          <items>
-
-            <input type="TextLine" name="linkTitle">
-              <label>Lenketittel</label>
-              <occurrences minimum="1" maximum="1"/>
-            </input>
-
-            <option-set name="urlSrc">
-              <label>Lenkemål</label>
-              <expanded>false</expanded>
-              <occurrences minimum="0" maximum="1"/>
-              <options minimum="1" maximum="1">
-                <option name="manual">
-                  <label>Url lenke</label>
-                  <default>true</default>
-                  <help-text>Fri url felt. Legges inn som dette eks. "http://www.ssb.no"</help-text>
-                  <items>
-                    <input name="url" type="TextLine">
-                      <label>Kildelenke</label>
-                      <occurrences minimum="0" maximum="1"/>
-                    </input>
-                  </items>
-                </option>
-
-                <option name="content">
-                  <label>Lenke til internt innhold</label>
-                  <items>
-                    <input name="contentId" type="ContentSelector">
-                      <label>Relatert innhold</label>
-                      <occurrences minimum="0" maximum="1"/>
-                      <config/>
-                    </input>
-                  </items>
-                </option>
-              </options>
-            </option-set>
-          </items>
-        </item-set>
-      </items>
-    </field-set>
     <field-set>
       <label>Kommunefakta</label>
       <items>
@@ -67,7 +9,7 @@
           <label>Kommunedata innhold fra api</label>
           <occurrences minimum="0" maximum="1"/>
           <config>
-            <allowContentType>dataquery</allowContentType>
+            <allowContentType>genericDataImport</allowContentType>
             <treeMode>true</treeMode>
             <showStatus>true</showStatus>
             <hideToggleIcon>true</hideToggleIcon>
@@ -77,7 +19,7 @@
           <label>Fylkedata innhold fra api</label>
           <occurrences minimum="0" maximum="1"/>
           <config>
-            <allowContentType>dataquery</allowContentType>
+            <allowContentType>genericDataImport</allowContentType>
             <treeMode>true</treeMode>
             <showStatus>true</showStatus>
             <hideToggleIcon>true</hideToggleIcon>
@@ -87,27 +29,22 @@
           <label>Endringslister fra api</label>
           <occurrences minimum="0" maximum="1"/>
           <config>
-            <allowContentType>dataquery</allowContentType>
+            <allowContentType>genericDataImport</allowContentType>
             <treeMode>true</treeMode>
             <showStatus>true</showStatus>
             <hideToggleIcon>false</hideToggleIcon>
           </config>
         </input>
-        <input type="TextLine" name="defaultMunicipality">
+        <input type="CustomSelector" name="defaultMunicipality">
           <label>Standard kommune for å vise i "preview" mode</label>
           <occurrences minimum="1" maximum="1"/>
-          <default>0101</default>
-        </input>
-        <input type="CustomSelector" name="defaultMunicipality2">
-          <label>Velg hvilken kommuner det gjelder her.</label>
-          <help-text>Varselet vil bare synes på valgte kommuner under /kommunefakta.</help-text>
-          <occurrences minimum="0" maximum="1"/>
+          <default>0301</default>
           <config>
             <service>customSelectorMunicipals</service>
           </config>
         </input>
         <item-set name="kommunefakta">
-          <label>Kommunefakta instillinger</label>
+          <label>Kommunefakta innstillinger</label>
           <occurrences minimum="0" maximum="1"/>
           <items>
             <input type="TextLine" name="mapfolder">
@@ -119,15 +56,20 @@
         </item-set>
       </items>
     </field-set>
+    <input name="statbankHelpLink" type="TextLine">
+      <label>URL til hjelpeside for statistikkbanken.</label>
+      <occurrences minimum="1" maximum="1"/>
+      <default>/informasjon/om-statistikkbanken/hvordan-bruke-statistikkbanken</default>
+    </input>
     <item-set name="language">
-      <label>Språk instillinger</label>
+      <label>Språk innstillinger</label>
       <expanded>false</expanded>
       <occurrences minimum="1" maximum="2"/>
       <items>
         <input name="label" type="TextLine">
           <label>Språktittel (brukt til lenke i header)</label>
           <occurrences minimum="1" maximum="1"/>
-          <default>Norsk (Bokmål)</default>
+          <default>Norsk</default>
         </input>
         <input name="code" type="TextLine">
           <label>Språkkode (f.eks. "en", "no")</label>
@@ -158,65 +100,53 @@
             <hideToggleIcon>false</hideToggleIcon>
           </config>
         </input>
-        <input name="menuContentId" type="ContentSelector">
-          <label>Meny</label>
-          <occurrences minimum="1" maximum="1"/>
+        <input name="headerId" type="ContentSelector">
+          <label>Header</label>
+          <occurrences minimum="0" maximum="1"/>
           <config>
-            <allowContentType>menuitem</allowContentType>
+            <allowContentType>header</allowContentType>
             <treeMode>false</treeMode>
             <showStatus>true</showStatus>
             <hideToggleIcon>false</hideToggleIcon>
           </config>
         </input>
+        <input name="footerId" type="ContentSelector">
+          <label>Footer</label>
+          <occurrences minimum="0" maximum="1"/>
+          <config>
+            <allowContentType>footer</allowContentType>
+            <treeMode>false</treeMode>
+            <showStatus>true</showStatus>
+            <hideToggleIcon>false</hideToggleIcon>
+          </config>
+        </input>
+        <input name="standardSymbolPage" type="ContentSelector">
+          <label>Standardtegn i tabeller</label>
+          <occurrences minimum="0" maximum="1"/>
+          <config>
+            <allowPath>${site}</allowPath>
+          </config>
+        </input>
       </items>
     </item-set>
-    <field-set>
-      <label>Nettstedrouting (mappings)</label>
-      <items>
-        <item-set name="router">
-          <label>Routing</label>
-          <expanded>false</expanded>
-          <occurrences minimum="0" maximum="0"/>
-          <items>
-            <input name="source" type="ContentSelector">
-              <label>Fra</label>
-              <help-text>
-                Alle spørringer etter denne kontrolleren vil bli sendt til valgt kontroller under.
-                Så fremt det ikke finnes et eskisterende innhold.
-              </help-text>
-              <occurrences minimum="1" maximum="1"/>
-              <config>
-                <treeMode>true</treeMode>
-                <showStatus>true</showStatus>
-                <hideToggleIcon>false</hideToggleIcon>
-              </config>
-            </input>
-            <input name="target" type="ContentSelector">
-              <label>Til</label>
-              <help-text>Hvor spørringene skal lande.</help-text>
-              <occurrences minimum="1" maximum="1"/>
-              <config>
-                <treeMode>true</treeMode>
-                <showStatus>true</showStatus>
-                <hideToggleIcon>false</hideToggleIcon>
-              </config>
-            </input>
-            <input name="pageTitle" type="TextLine">
-              <label>Sidetittel på rutede sider</label>
-              <occurrences minimum="0" maximum="1"/>
-              <default></default>
-            </input>
-          </items>
-        </item-set>
-      </items>
-    </field-set>
   </form>
   <mappings>
     <mapping filter="/site/filters/router.js" order="10">
-      <pattern>/.*</pattern>
+      <pattern>/(kommuneareal|kommunefakta|barn-og-unge|jakt-i-din-kommune)/?[^/]+$</pattern>
     </mapping>
     <mapping controller="/site/pages/default/default.js">
       <match>type:'portal:fragment'</match>
     </mapping>
+    <mapping controller="/services/securitytxt/securitytxt.js" order="10">
+      <pattern>/security.txt</pattern>
+    </mapping>
+    <mapping controller="/services/securitytxt/securitytxt.js" order="10">
+      <pattern>/.well-known/security.txt</pattern>
+    </mapping>
   </mappings>
+  <processors>
+    <response-processor name="searchableText" order="10"/>
+    <response-processor name="react4xpAssetSource" order="11"/>
+    <response-processor name="browserSync" order="12"/>
+  </processors>
 </site>

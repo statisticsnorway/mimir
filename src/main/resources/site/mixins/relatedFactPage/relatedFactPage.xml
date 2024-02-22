@@ -1,0 +1,20 @@
+<mixin>
+    <display-name>Relaterte Faktasider</display-name>
+    <form>
+        <field-set>
+            <label>Relaterte Faktasider</label>
+            <items>
+                <input name="relatedFactPages" type="ContentSelector">
+                    <label>Faktasider</label>
+                    <occurrences minimum="0" maximum="0"/>
+                    <config>
+                        <allowPath>${site}</allowPath>
+                        <allowType>page</allowType>
+                        <treeMode>false</treeMode>
+                        <description>Legg til faktasider</description>
+                    </config>
+                </input>
+            </items>
+        </field-set>
+    </form>
+</mixin>

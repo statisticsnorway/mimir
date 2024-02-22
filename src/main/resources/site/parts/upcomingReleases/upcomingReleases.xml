@@ -1,0 +1,18 @@
+<part>
+    <display-name>Publiseringskalender</display-name>
+    <description>Liste over kommende statistikk publiseringer</description>
+    <form>
+        <input type="HtmlArea" name="preface">
+            <label>Ingress</label>
+            <occurrences minimum="1" maximum="1"/>
+        </input>
+        <input type="TextLine" name="numberOfDays">
+            <label>Antall dager pr "side"</label>
+            <occurrences minimum="1" maximum="1"/>
+            <default>7</default>
+            <config>
+                <regexp>\d</regexp>
+            </config>
+        </input>
+    </form>
+</part>

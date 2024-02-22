@@ -1,0 +1,13 @@
+<part>
+    <display-name>Publikasjonsarkiv og statistikkalender lenker</display-name>
+    <form>
+        <input type="TextLine" name="pubArchiveUrl">
+            <label>Lenke til Publikasjonsarkiv</label>
+            <occurrences minimum="1" maximum="1"/>
+        </input>
+        <input type="TextLine" name="statCalendarUrl">
+            <label>Lenke til Statistikk kalender</label>
+            <occurrences minimum="1" maximum="1"/>
+        </input>
+    </form>
+</part>

@@ -1,19 +1,4 @@
-<section class="xp-part menu-box">
-  <nav class="row" data-th-if="${menus}">
-    <div class="col-6 col-lg-3 mb-4" data-th-each="menu, i: ${menus}">
-      <a 
-        data-th-href="${menu.href}" 
-        class="pt-3 pt-md-4 pb-3 px-3 border border-dark d-block a-plain h-100 d-flex flex-column"
-      >
-        <h3 class="text-center roboto-plain" data-th-text="${menu.title}"></h3>
-        <img 
-          alt="Ikon til menyvalg" 
-          data-th-if="${menu.hasImage}" 
-          data-th-src="${menu.imageSrc}" 
-          class="d-block ml-auto mr-auto">
-        </img>
-        <div class="text-bottom text-center pt-2 mt-auto" data-th-utext="${menu.subtitle}"></div>
-      </a>
-    </div>
-  </nav>
+<section class="xp-part menu-box container" data-th-id="${menuBoxId}">
+    <h2 data-th-if="${title}" data-th-text="${title}"></h2>
+    <p data-th-if="${message}" data-th-text="${message}"></p>
 </section>

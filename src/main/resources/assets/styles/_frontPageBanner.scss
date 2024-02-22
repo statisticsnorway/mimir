@@ -1,0 +1,27 @@
+.part-frontpage-banner {
+  h1 {
+    font-family: $font-roboto-condensed-bold !important;
+    font-size: 28px;
+    line-height: 40px;
+  }
+
+  .banner-text-wrapper {
+    margin-top: 26px;
+  }
+
+  img {
+    min-height: 86px;
+    min-width: 86px;
+  }
+  
+  @include media-breakpoint-down (sm) {
+    h1 {
+      font-family: $font-roboto-bold !important;
+      font-weight: 700;
+      font-size: 20px;
+    }
+    .banner-text-wrapper {
+      margin-top: 0px;
+    }
+  }
+}

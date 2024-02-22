@@ -1,0 +1,53 @@
+# This is a workflow that is manually triggered
+
+name: MANUELL MIMIR MABL TEST
+
+# Controls when the action will run. Workflow runs when manually triggered using the UI
+# or API.
+on:
+  workflow_dispatch:
+   # Inputs the workflow accepts.
+    inputs:
+      commit_id:
+        # Friendly description to be shown in the UI instead of 'comit_id'
+        description: 'PR Commit ID'
+        # Default value if no value is explicitly provided
+        default: ''
+        # Input has to be provided for the workflow to run
+        required: true
+      branch:
+        # Friendly description to be shown in the UI instead of 'branch'
+        description: 'MABL Branch'
+        # Default value if no value is explicitly provided
+        default: 'mimir-'
+        # Input has to be provided for the workflow to run
+        required: true
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "greet"
+  mabl_test:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    container: node:lts
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v4
+    - name: Branch name and commit hash
+      run: |
+            echo running on branch ${GITHUB_HEAD_REF##*/} or ${GITHUB_REF##*/}
+            echo running $(echo $GITHUB_SHA | cut -c1-8) and ${GITHUB_SHA}
+            echo running ${{ github.event.inputs.commit_id }}
+    - name: install mabl
+      run: npm install -g @mablhq/mabl-cli
+    - name: mabl end-to-end test - TEST
+      env:
+        MABL_API_KEY: ${{ secrets.MABLAPIKEY }}
+        MABL_APP_ID: ${{ secrets.MABLAPPID }}
+        ENV_ID_QA: ${{ secrets.MABLENVQA }}
+        ENV_ID_TEST: ${{ secrets.MABLENVTEST }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        REV: ${{ github.event.inputs.commit_id }}
+        MABL_BRANCH:  ${{ github.event.inputs.branch }}
+      run: mabl deployments create --api-key $MABL_API_KEY --application-id $MABL_APP_ID --environment-id $ENV_ID_TEST --labels MIMIR --revision $REV --await-completion
+    

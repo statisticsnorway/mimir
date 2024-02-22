@@ -1,0 +1,17 @@
+.part-profiledLinkIcon {
+  @include make-row();
+  padding-top: $spacer * 3;
+
+  @include media-breakpoint-down(md) {
+    padding: 0;
+  }
+
+  & > * {
+    @include make-col-ready();
+    @include make-col(12);
+
+    display: flex;
+    justify-content: center;
+    margin-bottom: $spacer * 2;
+  }
+}

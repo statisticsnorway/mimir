@@ -1,0 +1,135 @@
+.nextStatisticsReleases {
+  padding-top: 8px;
+
+  @include media-breakpoint-up(md) {
+    padding-top: 59px;
+  }
+
+  .upcoming-releases-head {
+    background-color: $ssb-dark-1;
+
+    .upcoming-releases-preface {
+      max-width: 780px
+    }
+  }
+
+  @include media-breakpoint-down(md) {
+    .extended-banner {
+      width: 100vw;
+      position: relative;
+      left: 50%;
+      margin-left: -50vw;
+    }
+
+    .calendar-day {
+      flex-direction: column;
+      padding-top: 0;
+    }
+  }
+
+  article, .calendar-day {
+    display: flex;
+    border-bottom: solid 1px #c3dcdc;
+    padding-top: 20px;
+
+    &:nth-child(1) {
+      border-top: 1px solid $ssb-dark-5;
+    }
+
+    &:last-child .releaseList {
+      border-bottom: 0 none;
+    }
+  }
+
+  .releaseList {
+    list-style: none;
+    padding: 0;
+    width: 100%;
+
+    .front-page-released-statistic {
+      margin-bottom: 1rem;
+    }
+
+    .ssb-paragraph:first-letter {
+      text-transform: capitalize;
+    }
+
+    @include media-breakpoint-up(lg) {
+      li:not(.front-page-released-statistic) {
+        display: flex;
+        justify-content: space-between;
+      }
+    }
+
+    @include media-breakpoint-down(md) {
+      .statisticsPageLink {
+        margin-bottom: $spacer * 3;
+      }
+    }
+  }
+
+  .button-more, .text-center {
+    margin-top: $spacer * .5;
+    margin-left: auto;
+    margin-right: auto;
+
+    @include media-breakpoint-down(md) {
+      margin-top: none;
+    }
+  }
+
+  time {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 4px 6px;
+    background: $ssb-dark-5;
+    color: white;
+    border: 2px solid $ssb-dark-5;
+    width: 72px;
+    height: 28px;
+    margin: 20px 0;
+    text-align: center;
+
+    .day {
+      font-size: 16px;
+      font-family: $font-roboto-condensed-bold;
+      line-height: 1.75;
+    }
+
+    .month {
+      font-size: 16px;
+      font-family: $font-roboto-plain;
+      line-height: 1.75;
+    }
+  }
+
+  @include media-breakpoint-up(md) {
+    time {
+      display: block;
+      border: 2px solid $ssb-dark-5;
+      width: 97px;
+      height: 80px;
+      margin: 8px 20px 3px 0;
+      padding: 7px;
+      text-align: center;
+      background: white;
+      color: $ssb-dark-5;
+
+      .day {
+        font-size: 40px;
+        font-family: $font-roboto-condensed-bold;
+        line-height: 1;
+        display: block;
+      }
+    }
+  }
+
+  .metadata {
+    font-size: 14px;
+  }
+  .type {
+    text-transform: capitalize;
+  }
+
+}

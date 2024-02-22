@@ -1,0 +1,16 @@
+<part>
+    <display-name>Nedlastingslenke som knapp</display-name>
+    <form>
+        <input name="text" type="TextLine">
+            <label>Tekst</label>
+            <occurrences minimum="0" maximum="1"/>
+        </input>
+        <input name="file" type="ContentSelector">
+            <label>Innhold</label>
+            <occurrences minimum="0" maximum="1"/>
+            <config>
+                <allowPath>${site}</allowPath>
+            </config>
+        </input>
+    </form>
+</part>

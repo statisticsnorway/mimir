@@ -1,0 +1,17 @@
+<mixin>
+    <display-name>Statistikk</display-name>
+    <form>
+        <field-set>
+            <label>Statistikk</label>
+            <items>
+                <input name="statistic" type="CustomSelector">
+                    <occurrences minimum="0" maximum="1" />
+                    <label>Statistikk</label>
+                    <config>
+                        <service>statistics</service>
+                    </config>
+                </input>
+            </items>
+        </field-set>
+    </form>
+</mixin>

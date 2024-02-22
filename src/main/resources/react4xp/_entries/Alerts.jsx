@@ -1,27 +1,23 @@
 import React from 'react'
 import { Dialog } from '@statisticsnorway/ssb-component-library'
+import { Container } from 'react-bootstrap'
 import PropTypes from 'prop-types'
 
 const Alerts = (props) => {
   return (
-    <React.Fragment>
+    <Container>
       {props.alerts.map((alert, index) => {
         return (
-          <Dialog
-            className="mt-4 mb-3"
-            key={`alert-${index}`}
-            type={alert.messageType}
-            title={alert.title}
-          >
+          <Dialog className='mt-4 mb-3' key={`alert-${index}`} type={alert.messageType} title={alert.title}>
             <div
               dangerouslySetInnerHTML={{
-                __html: alert.message
+                __html: alert.message.replace(/&nbsp;/g, ' '),
               }}
             />
           </Dialog>
         )
       })}
-    </React.Fragment>
+    </Container>
   )
 }
 
@@ -30,9 +26,9 @@ Alerts.propTypes = {
     PropTypes.shape({
       messageType: PropTypes.string,
       title: PropTypes.string,
-      message: PropTypes.string
+      message: PropTypes.string,
     })
-  ).isRequired
+  ).isRequired,
 }
 
 export default Alerts

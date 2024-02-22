@@ -1,3 +1,45 @@
-.part-profiledBox {
-  margin-top: 60px
+.part-profiled-box {
+  display: flex;
+
+  .left-orientation {
+
+    .card-content.with-image {
+
+      .preambleText {
+        display: -webkit-box;
+        -webkit-line-clamp: 5;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+
+        @include media-breakpoint-down (lg) {
+          &.title-size-md {
+            -webkit-line-clamp: 4;
+          }
+          &.title-size-lg {
+            -webkit-line-clamp: 3;
+          }
+          &.title-size-xl {
+            -webkit-line-clamp: 2;
+          }
+        }
+
+        @include media-breakpoint-down (md) {
+
+          &.title-size-md {
+            -webkit-line-clamp: 3;
+          }
+          &.title-size-lg {
+            -webkit-line-clamp: 2;
+          }
+          &.title-size-xl {
+            -webkit-line-clamp: 1;
+          }
+        }
+
+      }
+    }
+  }
+
+
+
 }

@@ -1,0 +1,335 @@
+<content-type>
+	<display-name>Om statistikken</display-name>
+	<description>Innhold Om statistikken</description>
+	<super-type>base:structured</super-type>
+	<form>
+		<field-set>
+			<label>Ingress</label>
+			<items>
+				<input name="ingress" type="TextArea">
+					<occurrences minimum="1" maximum="1" />
+					<label>Ingress</label>
+				</input>
+			</items>
+		</field-set>
+		<field-set>
+			<items>
+				<item-set name="definition">
+					<label>Definisjoner</label>
+					<occurrences minimum="0" maximum="1" />
+					<items>
+						<input name="conceptsAndVariables" type="HtmlArea">
+							<occurrences minimum="0" maximum="1" />
+							<label>Definisjoner av viktige begrep og variabler</label>
+							<config>
+								<include>Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote</include>
+								<allowHeadings>h3 h4</allowHeadings>
+							</config>
+						</input>
+						<input name="standardRatings" type="HtmlArea">
+							<occurrences minimum="0" maximum="1" />
+							<label>Standard klassifikasjoner</label>
+							<config>
+								<include>Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote</include>
+								<allowHeadings>h3 h4</allowHeadings>
+							</config>
+						</input>
+					</items>
+				</item-set>
+			</items>
+		</field-set>
+		<field-set>
+			<items>
+				<item-set name="administrativeInformation">
+					<label>Administrative opplysninger</label>
+					<occurrences minimum="0" maximum="1" />
+					<items>
+						<input name="nameAndSubject" type="HtmlArea">
+							<occurrences minimum="0" maximum="1" />
+							<label>Navn og emne</label>
+							<config>
+								<include>Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote</include>
+								<allowHeadings>h3 h4</allowHeadings>
+							</config>
+						</input>
+						<input name="responsibleDept" type="HtmlArea">
+							<occurrences minimum="0" maximum="1" />
+							<label>Ansvarlig Seksjon</label>
+							<config>
+								<include>Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote</include>
+								<allowHeadings>h3 h4</allowHeadings>
+							</config>
+						</input>
+						<input name="regionalLevel" type="HtmlArea">
+							<occurrences minimum="0" maximum="1" />
+							<label>Regionalt nivå</label>
+							<config>
+								<include>Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote</include>
+								<allowHeadings>									h3 h4								</allowHeadings>
+							</config>
+						</input>
+						<input name="frequency" type="HtmlArea">
+							<occurrences minimum="0" maximum="1" />
+							<label>Hyppighet og aktualitet</label>
+							<config>
+								<include>Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote</include>
+								<allowHeadings>h3 h4</allowHeadings>
+							</config>
+						</input>
+						<input name="internationalReporting" type="HtmlArea">
+							<occurrences minimum="0" maximum="1" />
+							<label>Internasjonal rapportering</label>
+							<config>
+								<include>Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote</include>
+								<allowHeadings>h3 h4</allowHeadings>
+							</config>
+						</input>
+						<input name="storageAndUse" type="HtmlArea">
+							<occurrences minimum="0" maximum="1" />
+							<label>Lagring og anvendelse av grunnlagsmaterialet</label>
+							<config>
+								<include>Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote</include>
+								<allowHeadings>h3 h4</allowHeadings>
+							</config>
+						</input>
+					</items>
+				</item-set>
+			</items>
+		</field-set>
+		<field-set>
+			<items>
+				<item-set name="background">
+					<label>Bakgrunn</label>
+					<occurrences minimum="0" maximum="1" />
+					<items>
+						<input name="purposeAndHistory" type="HtmlArea">
+							<occurrences minimum="0" maximum="1" />
+							<label>Formål og historie</label>
+							<config>
+								<include>Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote</include>
+								<allowHeadings>h3 h4</allowHeadings>
+							</config>
+						</input>
+						<input name="usersAndUse" type="HtmlArea">
+							<occurrences minimum="0" maximum="1" />
+							<label>Brukere og bruksområder</label>
+							<config>
+								<include>Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote</include>
+								<allowHeadings>h3 h4</allowHeadings>
+							</config>
+						</input>
+						<input name="equalTreatmentUsers" type="HtmlArea">
+							<occurrences minimum="0" maximum="1" />
+							<label>Likebehandling av brukere</label>
+							<config>
+								<include>Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote</include>
+								<allowHeadings>h3 h4</allowHeadings>
+							</config>
+						</input>
+						<input name="relationOtherStatistics" type="HtmlArea">
+							<occurrences minimum="0" maximum="1" />
+							<label>Sammenheng med annen statistikk</label>
+							<config>
+								<include>Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote</include>
+								<allowHeadings>h3 h4</allowHeadings>
+							</config>
+						</input>
+						<input name="legalAuthority" type="HtmlArea">
+							<occurrences minimum="0" maximum="1" />
+							<label>Lovhjemmel</label>
+							<config>
+								<include>Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote</include>
+								<allowHeadings>h3 h4</allowHeadings>
+							</config>
+						</input>
+						<input name="eeaReference" type="HtmlArea">
+							<occurrences minimum="0" maximum="1" />
+							<label>EØS-referanse</label>
+							<config>
+								<include>Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote</include>
+								<allowHeadings>h3 h4</allowHeadings>
+							</config>
+						</input>
+					</items>
+				</item-set>
+			</items>
+		</field-set>
+		<field-set>
+			<items>
+				<item-set name="production">
+					<label>Produksjon</label>
+					<occurrences minimum="0" maximum="1" />
+					<items>
+						<input name="scope" type="HtmlArea">
+							<occurrences minimum="0" maximum="1" />
+							<label>Omfang</label>
+							<config>
+								<include>Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote</include>
+								<allowHeadings>h3 h4</allowHeadings>
+							</config>
+						</input>
+						<input name="dataSourcesAndSamples" type="HtmlArea">
+							<occurrences minimum="0" maximum="1" />
+							<label>Datakilder og utvalg</label>
+							<config>
+								<include>Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote</include>
+								<allowHeadings>h3 h4</allowHeadings>
+							</config>
+						</input>
+						<input name="dataCollectionEditingAndCalculations" type="HtmlArea">
+							<occurrences minimum="0" maximum="1" />
+							<label>Datainnsamling, editering og beregninger</label>
+							<config>
+								<include>Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote</include>
+								<allowHeadings>h3 h4</allowHeadings>
+							</config>
+						</input>
+						<input name="seasonalAdjustment" type="HtmlArea">
+							<occurrences minimum="0" maximum="1" />
+							<label>Sesongjustering</label>
+							<config>
+								<include>Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote</include>
+								<allowHeadings>h3 h4</allowHeadings>
+							</config>
+						</input>
+						<input name="confidentiality" type="HtmlArea">
+							<occurrences minimum="0" maximum="1" />
+							<label>Konfidensialitet</label>
+							<config>
+								<include>Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote</include>
+								<allowHeadings>h3 h4</allowHeadings>
+							</config>
+						</input>
+						<input name="comparability" type="HtmlArea">
+							<occurrences minimum="0" maximum="1" />
+							<label>Sammenlignbarhet over tid og sted</label>
+							<config>
+								<include>Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote</include>
+								<allowHeadings>h3 h4</allowHeadings>
+							</config>
+						</input>
+					</items>
+				</item-set>
+			</items>
+		</field-set>
+		<field-set>
+			<items>
+				<item-set name="accuracyAndReliability">
+					<label>Nøyaktighet og pålitelighet</label>
+					<occurrences minimum="0" maximum="1" />
+					<items>
+						<input name="errorSources" type="HtmlArea">
+							<occurrences minimum="0" maximum="1" />
+							<label>Feilkilder og usikkerhet</label>
+							<config>
+								<include>Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote</include>
+								<allowHeadings>h3 h4</allowHeadings>
+							</config>
+						</input>
+						<input name="revision" type="HtmlArea">
+							<occurrences minimum="0" maximum="1" />
+							<label>Revisjon</label>
+							<config>
+								<include>Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote</include>
+								<allowHeadings>h3 h4</allowHeadings>
+							</config>
+						</input>
+					</items>
+				</item-set>
+			</items>
+		</field-set>
+		<field-set>
+			<label>Relevant dokumentasjon</label>
+			<items>
+				<input name="relevantDocumentation" type="HtmlArea">
+					<occurrences minimum="0" maximum="1" />
+					<label>Relevant dokumentasjon</label>
+					<config>
+						<include>Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote</include>
+					</config>
+				</input>
+			</items>
+		</field-set>
+		<field-set>
+			<items>
+				<item-set name="aboutSeasonalAdjustment">
+					<label>Om sesongjustering</label>
+					<occurrences minimum="0" maximum="1" />
+					<items>
+						<input name="generalInformation" type="HtmlArea">
+							<occurrences minimum="0" maximum="1" />
+							<label>Generelt om sesongjustering</label>
+							<config>
+								<include>Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote</include>
+								<allowHeadings>h3</allowHeadings>
+							</config>
+						</input>
+						<input name="whySeasonallyAdjustStatistic" type="HtmlArea">
+							<occurrences minimum="0" maximum="1" />
+							<label>Hvorfor sesongjusteres denne statistikken?</label>
+							<config>
+								<include>Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote</include>
+								<allowHeadings>h3 h4</allowHeadings>
+							</config>
+						</input>
+						<input name="preTreatment" type="HtmlArea">
+							<occurrences minimum="0" maximum="1" />
+							<label>Prekorrigering</label>
+							<config>
+								<include>Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote</include>
+								<allowHeadings>h3 h4</allowHeadings>
+							</config>
+						</input>
+						<input name="seasonalAdjustment" type="HtmlArea">
+							<occurrences minimum="0" maximum="1" />
+							<label>Sesongjustering</label>
+							<config>
+								<include>Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote</include>
+								<allowHeadings>h3 h4</allowHeadings>
+							</config>
+						</input>
+						<input name="auditProcedures" type="HtmlArea">
+							<occurrences minimum="0" maximum="1" />
+							<label>Revisjonsrutiner</label>
+							<config>
+								<include>Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote</include>
+								<allowHeadings>h3 h4</allowHeadings>
+							</config>
+						</input>
+						<input name="qualityOfSeasonalAdjustment" type="HtmlArea">
+							<occurrences minimum="0" maximum="1" />
+							<label>Kvalitet på sesongjustering</label>
+							<config>
+								<include>Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote</include>
+								<allowHeadings>h3 h4</allowHeadings>
+							</config>
+						</input>
+						<input name="specialCases" type="HtmlArea">
+							<occurrences minimum="0" maximum="1" />
+							<label>Spesielle tilfeller</label>
+							<config>
+								<include>Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote</include>
+								<allowHeadings>h3 h4</allowHeadings>
+							</config>
+						</input>
+						<input name="postingProcedures" type="HtmlArea">
+							<occurrences minimum="0" maximum="1" />
+							<label>Publiseringsrutiner</label>
+							<config>
+								<include>Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote</include>
+								<allowHeadings>h3 h4</allowHeadings>
+							</config>
+						</input>
+						<input name="relevantDocumentation" type="HtmlArea">
+							<occurrences minimum="0" maximum="1" />
+							<label>Relevant dokumentasjon</label>
+							<config>
+								<include>Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote</include>
+							</config>
+						</input>
+					</items>
+				</item-set>
+			</items>
+		</field-set>
+	</form>
+</content-type>

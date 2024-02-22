@@ -1,20 +1,70 @@
-.part-highchart {
+.highchart-wrapper {
   .highcharts-credits {
     display: none;
   }
-  .highcharts-exporting-group {
-    display: none;
+  .highcharts-figure {
+    margin: 0;
+  }
+  @include media-breakpoint-down(sm) {
+    .col-12 {
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
+  .ssb-tabs {
+    padding-left: $spacer * 1.5;
+    margin-top: 40px;
+
+    .navigation-item {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding-top: 0;
+      min-height: 44px;
+      padding-bottom: 6px;
+
+      @include media-breakpoint-down(md) {
+        width: 50%;
+        margin-right: 0;
+      }
+
+      span {
+        display: inline-block;
+        min-height: 28px;
+        margin-bottom: -6px;
+      }
+
+      &:focus {
+        outline: $ssb-purple-3 solid 2px;
+        outline-offset: 1px;
+      }
+    }
+
+    @include media-breakpoint-down(md) {
+      padding-left: 0;
+      display: flex;
+    }
   }
 }
+
 .btn-highchart-export {
   z-index: 200;
-  top: 0px;
+  bottom: 60px;
   right: 10px;
   background-color: transparent;
+  font-size: 14px;
+
+  @include media-breakpoint-down(sm) {
+    bottom: 55px;
+  }
+
   i {
     color: $ssb-green-4;
+    pointer-events: none;
   }
-  font-size: 14px;
+  span {
+    pointer-events: none;
+  }
 }
 .hc-container {
   .footnote {
@@ -31,12 +81,64 @@
     }
   }
 }
-.highcharts-figure >div {
-  height: 50vh;
+.highcharts-canvas {
+  min-height: 500px;
+  height: auto;
+  width: 100%;
+
+  //TODO: remove min-heights for mobile when responsive configs are implemented
   @include media-breakpoint-down(sm) {
-    height: calc(100vh - 50px - 50px - 92px);
+    min-height: auto;
+    height: auto;
+    width: 100%;
+
+    .highcharts-container, .highcharts-root, .highcharts-background {
+      min-height: 300px !important;
+    }
   }
 }
-.highcharts-figure.hide-title .highcharts-title>tspan {
-  fill: transparent;
+.highcharts-figure.hide-title {
+  .highcharts-title, .highcharts-subtitle {
+    display: none !important;
+  }
+}
+
+.highcharts-figure {
+
+  .figure-title {
+    font-size: 20px;
+    @include roboto;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  .figure-subtitle {
+    font-size: 14px;
+  }
+}
+
+ .highcharts-data-table {
+    overflow-x: auto;
+    margin-top: 50px;
+
+   thead th:first-child {
+     text-align: left;
+   }
+
+   caption {
+     display: none;
+   }
+}
+
+.hide-div {
+  display: none!important;
+}
+
+.show-div {
+  display: block!important;
+}
+
+// Highcharts Keyboard navigation tab fix (accessibility elements fix)
+.highcharts-a11y-proxy-button.highcharts-no-tooltip{
+  top:0!important;
 }

@@ -1,19 +1,374 @@
-.part-dashboard {
-  .dataset:before {
-    content: "\25CF";
-    margin-right: 5px;
-  }
-  .dataset-ok:before {
-    color: green;
-  }
-  .dataset-missing:before {
-    color: red;
+.page-dashboard {
+  background: $ssb-dark-1;
+
+  header {
+    margin-bottom: 30px;
+    padding-left: $spacer * 3;
+    padding-right: $spacer * 3;
   }
 
-  .alert {
-    position: fixed;
-    top: 20%;
-    left: 20%;
-    right: 20%;
+  .part-dashboard {
+    .dataset:before {
+      content: "\25CF";
+      margin-right: 5px;
+    }
+    .dataset-ok:before {
+      color: green;
+    }
+    .dataset-missing:before {
+      color: red;
+    }
+
+    .alert {
+      position: fixed;
+      top: 20%;
+      left: 20%;
+      right: 20%;
+    }
+
+    .accordion-body {
+      padding: 20px 0;
+    }
   }
+  .tbmlModalLink {
+    span {
+      font-size: small;
+    }
+  }
+
+  .tbml, .tbprocessor {
+    background: #af00ff57;
+  }
+
+  .jsonStat, .statbankApi{
+    background: #90cc93;
+  }
+
+  .klass {
+    background: skyblue;
+  }
+
+  .highchartsType {
+    background: goldenrod;
+  }
+
+  .tableType {
+    background: rosybrown;
+  }
+
+  .keyfigureType {
+    background: lightseagreen;
+  }
+
+  .unpublished {
+    background: indianred;
+    color: white;
+  }
+
+  .statbankSaved{
+    background: pink;
+  }
+
+  h1 {
+    font-size: 36px;
+    border-left: 2px solid $ssb-green-3;
+    line-height: 1;
+
+    padding-left: $spacer * .5;
+    margin-left: $spacer;
+  }
+
+  h2 {
+    font-size: 24px;
+  }
+
+  header {
+    nav {
+      float: right;
+    }
+
+    .misc {
+      display: flex;
+      width: 100%;
+      align-items: baseline;
+    }
+
+    .logo{
+      width: 184px;
+      height: 36px;
+    }
+  }
+
+  .dashboard-info {
+    float: right;
+    margin-top: -65px;
+    font-size: 0.8em;
+    font-weight: bold;
+    & > * {
+      padding-top: $spacer * 0.5;
+      padding-left: $spacer * 1;
+      padding-bottom: $spacer * 0.5;
+      padding-right: $spacer * 1;
+      min-height: 40px;
+    }
+  }
+
+  .connected-wrapper {
+    background-color: $ssb-blue-3;
+    color: $ssb-white;
+  }
+
+  .disconnected-wrapper {
+    background-color: $ssb-red-3;
+    color: $ssb-white;
+  }
+
+  .server-time {
+    background-color: $ssb-white;
+    border: 1px solid $ssb-dark-6;
+    margin-right: 1rem;
+  }
+
+  .connection-timeout-modal-backdrop {
+    z-index: 1060;
+  }
+
+  .connection-timeout-modal {
+    padding: 1rem 2rem;
+    z-index: 1062;
+
+    .modal-title {
+      font-size: 1.5rem;
+
+      svg {
+        color: $ssb-white;
+        background-color: $ssb-red-3;
+        margin-right: .5rem;
+      }
+    }
+  }
+
+  .tables-wrapper {
+    border: 2px solid $ssb-green-5;
+    background: white;
+    margin-bottom: $spacer * 3;
+
+    .actions {
+      display: flex;
+      justify-content: space-around;
+      border-bottom: 0 none;
+      border-top: 0 none;
+    }
+
+    &.joblog, &.datasources, &.statreg {
+      table {
+        thead tr th {
+          border: 2px solid #dee2e6;
+        }
+      }
+    }
+  }
+
+  .next-release {
+    height: 600px;
+    overflow: auto;
+
+    table {
+      thead tr th {
+        border: 2px solid #dee2e6;
+      }
+      tbody tr {
+        background-color: $ssb-white;
+
+        &:nth-child(4n+1), &:nth-child(4n+2) {
+          background: #F2F2F2;
+        }
+
+        td {
+          background-color: inherit;
+        }
+      }
+
+      .ssb-link {
+        margin-top: 0;
+      }
+    }
+
+  }
+
+  .errorMsg {
+    display: block;
+  }
+  .ok:before {
+    color: $ssb-green-4
+  }
+  .error:before {
+    color: $ssb-red-3
+  }
+
+  .nav {
+    border-bottom: none;
+    .nav-link {
+      color: black;
+      background: $ssb-green-1;
+      border-color: $ssb-green-5 $ssb-green-5 transparent;
+
+      &:hover {
+        border-color: black black transparent;
+      }
+      &.active {
+        background: $ssb-white;
+        border-bottom: 2px solid $ssb-white;
+        margin-bottom: -2px;
+      }
+    }
+  }
+
+  .detail {
+    padding: 3px 5px;
+    border-radius: 3px;
+    margin: 0 5px;
+    text-transform: uppercase;
+  }
+
+  .table-bordered {
+    th {
+      border: 1px solid #dee2e6;
+      padding: $spacer;
+    }
+
+    tr {
+      border-top: 1px solid #dee2e6;
+      border-bottom: 1px solid #dee2e6;
+      border-right: 0 none;
+      border-left: 0 none;
+    }
+    td {
+      padding: $spacer;
+      border-top: 0 none;
+      border-bottom: 0 none;
+      border-right: 1px solid #dee2e6;
+      border-left: 1px solid #dee2e6;
+    }
+
+    th.sortable-column {
+      .sortable-column-header {
+        display: flex;
+        justify-content: space-between;
+        white-space: nowrap;
+        vertical-align: middle;
+
+        span {
+          margin-right: 1rem;
+        }
+
+        .sort-icon.active {
+          color: #1a9d49;
+        }
+
+        .sort-icon.inactive {
+          color: #000000;
+        }
+      }
+    }
+  }
+  .ssbPopoverBody p {
+    font-size: 12px;
+  }
+
+  .haveList {
+    cursor: pointer;
+  }
+
+  .small {
+    font-size: 13px;
+  }
+
+  .warningIcon {
+    margin: 0 0 0 4px;
+    svg {
+      margin-bottom: 2px
+    }
+  }
+
+  .job-log-container {
+    .row {
+      .col {
+        max-height: 400px;
+        overflow: auto;
+
+        .modal-trigger {
+          cursor: pointer;
+        }
+
+        .error {
+          color: $ssb-red-3
+        }
+      }
+    }
+
+    .error-row{
+        background-color: yellow;
+    }
+  }
+
+  .ssb-accordion.warning .accordion-header .sub-header {
+    color: $ssb-red-3;
+  }
+
+  .ssb-dropdown label, .dropdown-update-statistics svg {
+    display: none;
+  }
+
+  .dropdown-update-statistics {
+    margin-right: $spacer * .5;
+  }
+
+  .nested-accordion-body {
+    padding: 20px;
+  }
+
+  .other-tools-dropdown {
+    max-width: 100%;
+    margin-right: 0;
+  }
+
+  .fetch-published-checkbox {
+    display: flex;
+    align-items: center;
+
+    .form-check-input {
+      width: 1.5em;
+      height: 1.5em;
+    }
+
+    .form-check-label {
+      font-weight: bold;
+      margin-left: $spacer * .5;
+      padding-top: 3px;
+    }
+  }
+
+  // Danger Zone is no more, but lives on in obscurity, ready for the day it might be needed once again.
+  // .danger-zone {
+  //   legend {
+  //     width: auto;
+  //     color: white;
+  //     background-color: black;
+  //     margin: auto;
+  //     padding: 2px 4px;
+  //     font-family: 'Roboto Condensed';
+  //     font-style: oblique;
+  //   }
+  //   background: repeating-linear-gradient(
+  //   45deg,
+  //   yellow,
+  //   yellow 10px,
+  //   black 10px,
+  //   black 20px
+  //   );
+  //   max-width: 300px;
+  //   border: thick double black;
+  //   border-radius: 10%;
+  // }
 }

@@ -1,0 +1,43 @@
+.attachment-tables-figures {
+  .part-accordion {
+    div ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+  }
+
+  h2 {
+    margin-bottom: $spacer * 3;
+  }
+
+  .accordion-header {
+    .sub-header {
+      width: 75px;
+    }
+  }
+
+  .accordion-body {
+    padding-right: 0;
+  }
+
+  .ssb-accordion {
+    @include media-breakpoint-down(md) {
+      padding: 0;
+    }
+  }
+
+  .free-text-wrapper {
+    background: $ssb-dark-1;
+    margin-left: auto;
+    margin-right: auto;
+    padding: $spacer * 3;
+
+    @include media-breakpoint-down(md) {
+      padding-top: $spacer * 3;
+      padding-left: $spacer * 1;
+      padding-bottom: $spacer * 3;
+      padding-right: $spacer * 1;
+    }
+  }
+}

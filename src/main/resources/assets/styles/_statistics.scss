@@ -1,0 +1,15 @@
+.statistics {
+  & > .row > .col-12 {
+    @include media-breakpoint-down(md) {
+      padding: 0;
+    }
+  }
+
+  .titles-dates-wrapper {
+    .col-12 {
+      @include media-breakpoint-down(md) {
+        padding: 0;
+      }
+    }
+  }
+}

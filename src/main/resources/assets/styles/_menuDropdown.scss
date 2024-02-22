@@ -1,133 +1,136 @@
 .part-menu-dropdown {
+  @include roboto;
   background-color: white;
+
   .container {
     z-index: 3;
   }
-  .container >div {
+
+  .menu-content {
     min-height: 92px;
-    @include media-breakpoint-down(md) {
-      flex-direction: column !important; // Override d-flex
+  }
+
+  .title-container {
+    opacity: 1;
+    min-height: 92px;
+
+    .subtitle {
+      font-size: 14px;
+    }
+
+    .municipality {
+      font-size: 20px;
+      line-height: normal;
     }
   }
-  .title-container {
+
+  .search-container {
     min-height: 92px;
-    @include media-breakpoint-down(md) {
-      margin-left: 10px;
+    .change-municipality {
+      margin-right: $spacer * 1.5;
     }
-    @include media-breakpoint-down(sm) {
+  }
+
+  .municipality-mode {
+    .title-container {
+      opacity: 0;
+    }
+  }
+
+  &.fixed-top {
+    .municipality-mode {
+      .title-container {
+        opacity: 1;
+      }
+    }
+  }
+
+  button.show-map {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    outline: inherit;
+
+    margin-left: 30px;
+    text-decoration: none;
+    color: #030303;
+    &:focus {
+      border: $ssb-green-4 1px solid;
+    }
+    svg {
+      color: $green4;
+    }
+  }
+
+  .ssb-dropdown {
+    width: 100%; // Override design system
+    min-width: 100%; // Override design system
+    max-width: 100%; // Override design system
+  }
+
+  @include media-breakpoint-down(md) {
+    .title-container {
+      width: 100%;
+      justify-content: start;
+      padding: 10px 10px 20px;
+
+      .municipality {
+        padding-left: 0;
+        font-size: 20px;
+      }
+    }
+
+    .search-container {
+      top: 56px;
+      border-top: none;
+      width: 100%;
+      position: absolute;
+      background-color: #ffffff;
+      padding: 10px 10px 20px;
+
+      .choose-municipality-search {
+        width: 100%;
+        display: block !important;
+
+        .change-municipality {
+          padding-bottom: 10px;
+        }
+      }
+      .show-map {
+        display: none;
+      }
+    }
+
+    .municipality-mode {
+      .menu-content,
+      .title-container {
+        min-height: 56px;
+      }
+
+      .search-container {
+        top: 0;
+      }
+    }
+
+    &.fixed-top {
+      .title-container {
+        padding: 12px 20px 12px;
+      }
+
+      .search-container {
+        display: none !important;
+      }
+    }
+  }
+  @include media-breakpoint-down(sm) {
+    .title-container {
       .municipality {
         max-width: 70vw;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
       }
-    }
-  }
-  .opacity-zero {
-    opacity: 0;
-  }
-  .opacity-one {
-    opacity: 1;
-    transition: all .5s;
-  }
-  .municipality {
-    font-size: 20px;
-    line-height: normal;
-  }
-  .subtitle {
-    font-size: 14px;
-  }
-  .dropdown {
-    left: 0;
-  }
-  .dropdown-menu {
-    left: 0;
-    overflow-y: auto;
-    overflow-x: hidden;
-    max-height: 30vh;
-    min-width: 100%;
-  }
-  .show-map {
-    margin-left: 30px;
-    text-decoration: none;
-    color: #030303;
-    i {
-      color: $green4;
-    }
-    i.map {
-      padding: 3px 5px 5px 5px;
-    }
-    i.chevron svg {
-      transform: rotate(0deg);
-      transition: all .5s;
-    }
-    &.active i.chevron svg {
-      transform: rotate(-180deg);
-      transition: all .5s;
-    }
-    @include media-breakpoint-down(md) {
-      position: absolute;
-      top: 30px;
-      right: 70px;
-    }
-  }
-  .show-search[aria-expanded="true"] {
-    color: white;
-    background-color: $ssb-green-4;
-  }
-  .show-map.active i.map {
-    color: white;
-    background-color: $ssb-green-4;
-  }
-  .ssb-dropdown {
-    width: 100%; // Override design system
-    min-width: 100%; // Override design system
-    max-width: 100%; // Override design system
-  }
-  .show-search {
-    padding: 3px 5px 5px 5px;
-    color: $ssb-green-4;
-    right: 0px;
-    top: 30px;
-  }
-  .card {
-    @include media-breakpoint-up(lg) {
-      display: flex;
-      flex-direction: row;
-    }
-    align-items: center;
-    border: none;
-  }
-  .choose-map-a {
-    all: unset;
-    span {
-      all: unset;
-    }
-  }
-  @include media-breakpoint-down(md) {
-    .title-container {
-      margin-left: 10px;
-    }
-    .card {
-      border-radius: 0;
-      padding: 20px 40px;
-      align-items: normal;
-    }
-    #search-container {
-      border-top: 1px solid #aaaaaa;
-      width: 100%;
-      top: 92px;
-      position: absolute;
-      border-bottom: 1px solid #aaaaaa;
-
-      &.no-border {
-        border: 0 none;
-      }
-    }
-  }
-  @include media-breakpoint-down(sm) {
-    .card {
-      padding: 20px 10px;
     }
   }
 }

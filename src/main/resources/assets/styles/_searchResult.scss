@@ -1,0 +1,123 @@
+.search-result {
+  .search-result-head {
+    background-color: $ssb-dark-2;
+
+    .container {
+      padding: ($spacer * 3) 0;
+    }
+
+    .search-result-ingress {
+      max-width: 780px
+    }
+
+    .limit-result {
+      display: block;
+      font-size: 16px;
+      font-family: $font-roboto-bold;
+      font-weight: bold;
+    }
+
+    .ssb-input {
+      max-width: 100%;
+    }
+
+    .filter {
+      margin-top: $spacer * 3;
+    }
+
+    .ssb-dropdown.DropdownMainSubject, .ssb-dropdown.DropdownContentType {
+      max-width: 100%
+    }
+
+    .ssb-tag {
+      margin-top: $spacer * 1.5;
+    }
+
+    @include media-breakpoint-down(md) {
+      .container {
+        padding: 40px 0;
+      }
+
+      h1 {
+        margin-bottom: 20px;
+      }
+  
+      .search-result-dropdown {
+        padding: 0;
+      }
+
+      .ssb-dropdown.DropdownContentType {
+        padding-top: 20px;
+      }
+
+      .filter {
+        margin-top: $spacer * 1.5;
+
+        .ssb-accordion {
+          .accordion-header {
+            font-size: 16px;
+            padding: $spacer 0;
+
+            .button-grid {
+              grid-column-gap: 5px;
+              grid-template-columns: max-content 15px;
+            }
+          }
+
+          .accordion-body {
+            padding: 8px 0;
+            margin-bottom: $spacer * .5;
+          }
+        }
+      }
+      
+      .ssb-tag {
+        margin-top: $spacer * .5;
+      }
+    }
+  }
+
+  .search-result-body {
+    & > * {
+      max-width: 580px;
+    }
+
+    .choose-sorting {
+      display: flex;
+      justify-content: end;
+      .sort-title {
+        margin-right: 12px;
+      }
+      .ssb-radio-group .flex-row {
+        gap: 20px;
+
+        .ssb-radio {
+          min-width: 0;
+        }
+      }
+      
+    }
+
+    @include media-breakpoint-down(md) {
+      .ssb-radio .radio-label:before {
+        margin-right: 8px;
+      }
+      
+      .choose-sorting {
+        justify-content: start;
+        padding-left: 0;
+        padding-top: 20px;
+      }
+
+      .total-hits {
+        padding-left: 0;
+      }
+    }
+  }
+  .metadata {
+    font-size: 14px;
+  }
+  .type {
+    text-transform: capitalize;
+  }
+}

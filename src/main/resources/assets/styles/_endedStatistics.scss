@@ -1,0 +1,52 @@
+.part-ended-statistics {
+  margin-top: 0;
+
+  .ssb-btn-tertiary .accordion-body {
+    padding: 0;
+  }
+
+  .button-margin-top {
+    margin-top: 40px;
+  }
+
+  .ssb-card {
+    width: 33%;
+
+    .card-content {
+      background-color: transparent;
+      border-color: $ssb-dark-6;
+
+      .arrow-icon {
+        width: 22px;
+        height: 22px;
+        color: $ssb-dark-6;
+      }
+
+      .href-text {
+        font-weight: normal;
+        font-size: 14px;
+        padding-left: 10px;
+      }
+    }
+
+    .clickable:hover .card-content {
+      border-color: $ssb-dark-6;
+
+      .card-action {
+        background-color: $ssb-dark-6;
+      }
+    }
+  }
+
+  @include media-breakpoint-down(md) {
+
+    .button-margin-top {
+      margin-top: 36px;
+    }
+
+    .ssb-card {
+      width: 100%;
+      padding: 0;
+    }
+  }
+}

@@ -1,0 +1,57 @@
+<mixin>
+	<display-name>Relaterte artikler</display-name>
+	<form>
+		<field-set>
+			<items>
+				<option-set name="relatedArticles">
+					<label>Relaterte artikler</label>
+					<expanded>false</expanded>
+					<occurrences minimum="0" maximum="0" />
+					<options minimum="1" maximum="1">
+						<option name="article">
+							<label>Artikkel</label>
+							<items>
+								<input name="article" type="ContentSelector">
+									<label>Artikkel fra XP</label>
+									<occurrences minimum="1" maximum="1" />
+									<config>
+										<allowContentType>article</allowContentType>
+									</config>
+								</input>
+							</items>
+						</option>
+						<option name="externalArticle">
+							<label>Artikkel fra 4.7-CMS</label>
+							<items>
+								<input name="url" type="TextLine">
+									<label>URL</label>
+									<occurrences minimum="1" maximum="1" />
+								</input>
+								<input name="title" type="TextLine">
+									<label>Tittel</label>
+									<occurrences minimum="1" maximum="1" />
+								</input>
+								<input name="type" type="TextLine">
+									<label>Type</label>
+									<occurrences minimum="0" maximum="1" />
+								</input>
+								<input name="date" type="Date">
+									<label>Dato</label>
+									<occurrences minimum="0" maximum="1" />
+								</input>
+								<input name="preface" type="TextArea">
+									<label>Ingress</label>
+									<occurrences minimum="1" maximum="1" />
+								</input>
+								<input name="image" type="ImageSelector">
+									<label>Bilde</label>
+									<occurrences minimum="1" maximum="1" />
+								</input>
+							</items>
+						</option>
+					</options>
+				</option-set>
+			</items>
+		</field-set>
+	</form>
+</mixin>

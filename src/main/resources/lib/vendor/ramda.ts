@@ -1,0 +1,7 @@
+export { default as equals } from 'ramda/es/equals'
+export { default as find } from 'ramda/es/find'
+export { default as groupBy } from 'ramda/es/groupBy'
+export { default as mergeDeepLeft } from 'ramda/es/mergeDeepLeft'
+export { default as mergeDeepRight } from 'ramda/es/mergeDeepRight'
+export { default as toString } from 'ramda/es/toString'
+export { default as splitEvery } from 'ramda/es/splitEvery'

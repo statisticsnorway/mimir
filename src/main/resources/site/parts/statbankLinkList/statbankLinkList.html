@@ -1,0 +1,15 @@
+<section class="xp-part part-statbank-link">
+    <div class="statbank-list-wrapper">
+        <div data-th-if="${title}" class="title-wrapper">
+            <h2 class="title" data-th-text="${title}">Finn flere tall i Statistikkbanken</h2>
+        </div>
+        <ul class="statbank-link-list" id="statbankLinkList">
+            <li data-th-each="statbankLink : ${statbankLinks}">
+                <a class="statbank-list-link ssb-link stand-alone" data-th-href="${statbankLink.url}">
+                    <span data-th-text="${statbankLink.urlText}"></span>
+                </a>
+            </li>
+        </ul>
+        <div id="statbankLinkId"></div>
+    </div>
+</section>

@@ -1,10 +1,11 @@
 <div class="metainfo" style="display:none">
-    <div class="id" data-th-text="${page._id}">199391</div>
-    <div class="gruppering" data-th-text="${page._id}">199391</div>
+    <div class="id" data-th-text="${metaInfoSearchId}">199391</div>
+    <div class="gruppering" data-th-text="${metaInfoSearchGroup}">199391</div>
     <div data-th-if=${page.data.subtitle} class="undertittel" data-th-text="${page.data.subtitle}">Eksempel på undertittel</div>
-    <div class="innholdstype">mimirside</div>
-    <div class="publiseringsdato" data-th-text="${page.createdTime}">2077-05-12T10:00:00.000Z</div>
-    <div class="hovedemner">Test av mimir</div>
+    <div class="innholdstype" data-th-text="${metaInfoSearchContentType}">innholdstype</div>
+    <div class="publiseringsdato" data-th-text="${metaInfoSearchPublishFrom}">2077-05-12T10:00:00.000Z</div>
     <div class="sprak" data-th-text="${language.code == 'en'}? 'en' : 'no'">nb</div>
-    <div class="stikkord">mimirprosjekt</div>
+    <div data-th-if=${metaInfoMainSubject} class="hovedemner" data-th-text="${metaInfoMainSubject}">Hovedemner</div>
+    <div data-th-if=${metaInfoSearchKeywords}  class="stikkord" data-th-text="${metaInfoSearchKeywords}">Stikkord</div>
+    <div data-th-if=${metaInfoDescription}  class="meta-description searchabletext" data-th-text="${metaInfoDescription}">Metadescrition</div>
 </div>

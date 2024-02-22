@@ -1,0 +1,251 @@
+footer {
+  margin-top: 40px;
+
+  .ssb-footer-wrapper {
+    padding: 32px 112px 58px;
+
+    @include media-breakpoint-down(md) {
+      padding: 32px 0 40px;
+    }
+
+    .container {
+      padding: 0;
+    }
+  }
+
+  .footer-top-row {
+    border-bottom: 1px solid white;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 45px;
+
+    > * {
+      margin-bottom: 31px;
+    }
+
+    img {
+      width: 248px;
+    }
+
+    @include media-breakpoint-down(lg) {
+      border-bottom: none;
+      justify-content: center;
+      margin-bottom: 32px;
+
+      > * {
+        margin-bottom: 0;
+      }
+
+      img {
+        display: none;
+      }
+    }
+  }
+
+  .footer-content {
+
+    .ssb-title {
+      margin-bottom: 10px;
+    }
+
+    ul, ol {
+      list-style: none;
+      margin-bottom: 0;
+      padding-left: 0;
+    }
+
+    li {
+      margin-top: 6px;
+    }
+
+    @include media-breakpoint-down(md) {
+      margin-bottom: 40px;
+    }
+
+  }
+
+  .footer-menu {
+    display: grid;
+    grid-auto-columns: 1fr;
+    grid-auto-flow: column;
+
+    .ssb-accordion {
+
+      .expand-icon * {
+        color: $ssb-green-2;
+        font-size: 20px;
+      }
+
+      .header-text {
+        color: $ssb-white;
+        margin-left: 20px;
+      }
+
+      .sub-header {
+        color: $ssb-white;
+      }
+
+      .accordion-body {
+        color: $ssb-white;
+        margin-left: 20px;
+
+        .ssb-link {
+          min-width: 44px;
+          padding: 9px 4px 9px 2px;
+
+          .icon-wrapper {
+            margin-top: 3px;
+          }
+        }
+      }
+
+      &:hover {
+
+        .header-text, .sub-header {
+          color: $ssb-green-2;
+        }
+      }
+    }
+
+
+    .footer-link {
+      display: flex;
+      flex-direction: column;
+
+      .icon-wrapper {
+        margin-top: 3px;
+      }
+
+      .ssb-link {
+        min-width: 44px;
+        padding: 9px 4px 9px 2px;
+      }
+
+      .ssb-title {
+        font-size: 16px;
+        font-family: $font-roboto-plain;
+      }
+    }
+
+    &.showOnMobile {
+      grid-auto-flow: row;
+
+      @include media-breakpoint-up(lg){
+        display: none;
+      }
+    }
+
+    &:not(.showOnMobile) {
+      @include media-breakpoint-down(lg) {
+        display: none;
+      }
+    }
+  }
+
+  .footer-bottom-row {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 40px;
+
+    &.showOnMobile {
+      display: grid;
+      justify-content: center;
+
+      @include media-breakpoint-up(lg){
+        display: none;
+      }
+    }
+
+    &:not(.showOnMobile) {
+      @include media-breakpoint-down(lg) {
+        display: none;
+      }
+    }
+
+    .copyright {
+      margin-right: 20px;
+
+      @include media-breakpoint-down(md) {
+        margin-right: 0;
+        text-align: center;
+      }
+
+      .ssb-link {
+        padding: 11px 4px 11px 2px;
+        border: none;
+
+        .link-text {
+          border-bottom: 1px solid $ssb-green-2;
+          padding-bottom: 2px;
+        }
+      }
+    }
+
+    .global-links {
+
+      > * {
+        margin-right: 20px;
+      }
+
+      @include media-breakpoint-down(md) {
+        display: grid;
+        grid-auto-flow: column;
+        grid-column-gap: 20px;
+        justify-content: center;
+        margin-bottom: 30px;
+
+        > * {
+          margin-right: 0;
+        }
+      }
+
+      .ssb-link {
+        padding: 11px 4px 11px 2px;
+        border: none;
+
+        .link-text {
+          border-bottom: 1px solid $ssb-green-2;
+          padding-bottom: 2px;
+        }
+      }
+    }
+
+    .links-left {
+      display: flex;
+      padding-top: 5px;
+
+      @include media-breakpoint-down(md) {
+        padding-top: 0;
+      }
+    }
+
+    .social-links {
+      > * {
+        margin-left: 12px;
+      }
+
+      @include media-breakpoint-down(md) {
+        display: grid;
+        grid-auto-flow: column;
+        grid-column-gap: 15px;
+        justify-content: center;
+        margin-bottom: 30px;
+
+        > * {
+          margin-left: 0;
+        }
+
+      }
+
+      .ssb-link {
+        padding: 8px;
+      }
+    }
+
+    @include media-breakpoint-down(md) {
+      margin-top: 10px;
+    }
+  }
+
+
+}

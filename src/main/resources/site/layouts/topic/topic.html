@@ -1,9 +1,17 @@
-<div class="container">
-  <h3 data-th-if="${hideTitle && title}" class="sr-only sr-only-focusable" data-th-text="${title}"></h3>
-  <h3 data-th-if="${!hideTitle && title}" data-th-text="${title}"></h3>
-  <div data-portal-region="main">
-    <div data-th-each="component, i : ${mainRegion.components}" data-th-remove="tag">
-      <div data-portal-component="${component.path}" data-th-remove="tag" />
+<div class="col xp-layout">
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <h3 data-th-if="${hideTitle && title}" class="sr-only sr-only-focusable" data-th-text="${title}"></h3>
+        <h3 data-th-if="${!hideTitle && title}" class="layout-title" data-th-text="${title}"></h3>
+      </div>
+    </div>
+  </div>
+  <div class="row row-cols-1">
+    <div class="col xp-region" data-portal-region="main">
+      <div data-th-each="component, i : ${mainRegion.components}" data-th-remove="tag">
+        <div data-portal-component="${component.path}" data-th-remove="tag" />
+      </div>
     </div>
   </div>
 </div>

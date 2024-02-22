@@ -1,0 +1,22 @@
+<part>
+    <display-name>Profilerte lenker med ikoner (IKKE BRUK)</display-name>
+    <form>
+        <item-set name="profiledLinkItemSet">
+            <label>Lenker</label>
+            <occurrences minimum="0" maximum="0"/>
+            <items>
+                <input name="text" type="TextLine">
+                    <label>Lenketekst</label>
+                    <occurrences minimum="0" maximum="1"/>
+                </input>
+                <input name="href" type="ContentSelector">
+                    <label>Innhold</label>
+                    <occurrences minimum="0" maximum="1"/>
+                    <config>
+                        <allowPath>${site}</allowPath>
+                    </config>
+                </input>
+            </items>
+        </item-set>
+    </form>
+</part>

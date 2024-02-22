@@ -1,0 +1,31 @@
+<section class="xp-part statistics container">
+    <div class="row">
+        <div class="col-12" data-th-if="${showPreviewDraft}">
+            <a class="ssb-btn primary-btn float-end" data-th-text="${draftButtonText}"  data-th-href="${draftUrl}">
+            </a>
+        </div>
+        <div class="col-12">
+            <h1 class="mb-5 mt-4 p-0" data-th-text="${title}" />
+        </div>
+        <div class="col-12 col-lg-6">
+            <div class="titles-dates-wrapper container">
+                <div class="row">
+                    <p class="col-md-6 mb-2 col-12" id="updatedDate">
+                        <span class="fw-bold" data-th-text="${updated}" />
+                        <span data-th-text="${previousRelease}" />
+                    </p>
+                    <p class="col-md-6 col-12" data-th-if="${changeDate}" id="changedDate">
+                        <span class="fw-bold" data-th-text="${changed}" />
+                        <span data-th-text="${changeDate}" data-th-id="${modifiedDateId}" />
+                    </p>
+                    <p class="col-12" id="nextUpdateDate">
+                        <span class="fw-bold" data-th-text="${nextUpdate}" />
+                        <span data-th-text="${nextRelease}" />
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-6" data-th-if="${statisticsKeyFigure}" data-th-utext="${statisticsKeyFigure}">
+        </div>
+    </div>
+</section>

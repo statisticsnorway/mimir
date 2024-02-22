@@ -1,0 +1,12 @@
+<part>
+    <display-name>Tabell</display-name>
+    <form>
+        <input name="table" type="ContentSelector">
+            <label>Velg tabell</label>
+            <occurrences minimum="0" maximum="1" />
+            <config>
+                <allowContentType>table</allowContentType>
+            </config>
+        </input>
+    </form>
+</part>

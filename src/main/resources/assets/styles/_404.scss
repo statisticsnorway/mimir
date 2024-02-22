@@ -1,0 +1,45 @@
+.error-page {
+  h1 {
+    color: $ssb-green-3;
+  }
+  ul {
+    list-style-type: none;
+    padding-left: 0;
+  }
+  p, ul, a {
+    font-weight: bold;
+  }
+  .logo {
+    img {
+      max-width: 230px;
+      max-height: 50px;
+    }
+  }
+  .title-wrapper {
+    margin-top: 70px;
+    padding: 0 0 0 3px;
+  }
+  .search-wrapper {
+    max-width: 300px;
+  }
+
+  @include media-breakpoint-down(md) {
+    flex-direction: column;
+
+    .title-wrapper {
+      padding: 0;
+    }
+    .text-wrapper {
+      order: 2;
+    }
+    .search-wrapper {
+      width: 100%;
+      max-width: initial;
+      padding-bottom: 100px;
+    }
+    .illustration {
+      order: 1;
+      align-self: center;
+    }
+  }
+}

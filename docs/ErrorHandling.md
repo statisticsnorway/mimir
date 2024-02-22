@@ -14,9 +14,9 @@ the part content and rendering in the try part, and a error rendering
 function in the catch part.
 
 ```&typescript
-const { renderError } = __non_webpack_require__( '/lib/error/error') 
+import { renderError } from '/lib/error/error' 
 
-export function get(req: Request): Response {
+export function get(req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -24,7 +24,7 @@ export function get(req: Request): Response {
   }
 }
 
-function renderPart(req: Request): Response {
+function renderPart(req: XP.Request): XP.Response {
 
   ... part logic ...
 }

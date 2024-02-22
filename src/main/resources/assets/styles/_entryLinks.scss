@@ -1,0 +1,21 @@
+.part-entry-links {
+    .desktop-icons {
+        max-width: 80px;
+    }
+    
+    .mobile-link-icon{
+        font-size: 16px; 
+
+        .icon-wrapper{
+            margin-top: 0px;
+            margin-right: 6px;
+            
+            .box-mobileIcon {
+                svg {
+                    height: 15px;
+                    width: 15px;
+                }
+            }
+        }
+    }
+}

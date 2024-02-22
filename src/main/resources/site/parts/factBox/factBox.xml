@@ -1,0 +1,14 @@
+<part>
+  <display-name>Faktaboks</display-name>
+  <description></description>
+  <form>
+    <input name="factBox" type="ContentSelector">
+      <label>Faktaboks</label>
+      <occurrences minimum="1" maximum="1"/>
+      <config>
+        <allowPath>${site}</allowPath>
+        <allowType>factBox</allowType>
+      </config>
+    </input>
+  </form>
+</part>

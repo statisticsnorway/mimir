@@ -1,0 +1,12 @@
+<part>
+    <display-name>Husleie kalkulator</display-name>
+    <form>
+        <input name="husleieCalculatorArticle" type="ContentSelector">
+            <label>Artikkel Husleie kalkulator</label>
+            <occurrences minimum="0" maximum="1" />
+            <config>
+                <allowContentType>article</allowContentType>
+            </config>
+        </input>
+    </form>
+</part>

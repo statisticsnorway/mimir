@@ -1,39 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <content-type>
-  <display-name>Boksmeny</display-name>
+  <display-name>Liste profilerte kort</display-name>
   <super-type>base:structured</super-type>
   <form>
     <item-set name="menu">
-      <occurrences minimum="0" maximum="99"/>
-      <label>Boks</label>
+      <occurrences minimum="0" maximum="99" />
+      <label>Kort</label>
       <items>
         <input type="TextLine" name="title">
           <label>Tittel</label>
-          <occurrences minimum="0" maximum="1"/>
+          <occurrences minimum="0" maximum="1" />
         </input>
         <input type="TextLine" name="subtitle">
           <label>Undertittel</label>
-          <occurrences minimum="0" maximum="1"/>
+          <occurrences minimum="0" maximum="1" />
         </input>
+
         <input name="image" type="imageSelector">
-          <occurrences minimum="0" maximum="1"/>
+          <occurrences minimum="0" maximum="1" />
           <label>Bilde</label>
           <config>
             <allowPath>${site}</allowPath>
           </config>
         </input>
-        <input type="TextLine" name="link">
-          <label>Lenke</label>
-          <occurrences minimum="0" maximum="0"/>
-        </input>
-        <input name="content" type="ContentSelector">
-          <label>Innhold</label>
-          <occurrences minimum="0" maximum="0"/>
-          <config>
-            <allowPath>${site}</allowPath>
-            <allowType>page</allowType>
-          </config>
-        </input>
+
+        <option-set name="urlSrc">
+          <label>Lenkemål</label>
+          <expanded>true</expanded>
+          <occurrences minimum="1" maximum="1" />
+          <options minimum="1" maximum="1">
+            <option name="manual">
+              <label>Url</label>
+              <default>true</default>
+              <help-text>Fritt url-felt. Legges inn som dette eks. "http://www.ssb.no"</help-text>
+              <items>
+                <input name="url" type="TextLine">
+                  <label>Kildelenke</label>
+                  <occurrences minimum="1" maximum="1" />
+                </input>
+              </items>
+            </option>
+
+            <option name="content">
+              <label>Lenke til internt innhold</label>
+              <items>
+                <input name="contentId" type="ContentSelector">
+                  <label>Relatert innhold</label>
+                  <occurrences minimum="1" maximum="1" />
+                  <config />
+                </input>
+                <input name="anchor" type="TextLine">
+                  <label>Anker som lenkekortet skal peke til. Ingen mellomrom, æøå eller spesialtegn.</label>
+                  <help-text>OBS: Kun bokstaver a-z, tall og bindestrek/underscore er tillatt!</help-text>
+                  <occurrences minimum="0" maximum="1" />
+                  <config>
+                    <regexp>[A-Za-z0-9_-]</regexp>
+                  </config>
+                </input>
+              </items>
+            </option>
+          </options>
+        </option-set>
       </items>
     </item-set>
   </form>

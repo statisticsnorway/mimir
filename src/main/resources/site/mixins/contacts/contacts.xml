@@ -1,0 +1,17 @@
+<mixin>
+    <display-name>Kontakter</display-name>
+    <form>
+        <field-set>
+        <label>Kontakter</label>
+        <items>
+            <input name="contacts" type="CustomSelector">
+                <occurrences minimum="0" maximum="0" />
+                <label>Kontakter</label>
+                <config>
+                    <service>contacts</service>
+                </config>
+            </input>
+        </items>
+        </field-set>
+    </form>
+</mixin>

@@ -1,0 +1,21 @@
+.part-contacts {
+  .contacts {
+    .part-contact-name {
+      font-weight: bold;
+      color: $ssb-dark-6;
+      font-size: 20px;
+      line-height: 32px;
+    }
+
+    .part-contact-email,
+    .part-contact-telephone {
+      font-size: 16px;
+      line-height: 28px;
+    }
+
+    @include media-breakpoint-down(md) {
+      padding: 0;
+      margin-top: $spacer * 2;
+    }
+  }
+}

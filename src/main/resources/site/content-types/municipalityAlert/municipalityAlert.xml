@@ -5,15 +5,36 @@
     <form>
         <input type="HtmlArea" name="message">
             <label>Tekst</label>
+            <config>
+                <include>
+                    Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote
+                </include>
+            </config>
             <occurrences minimum="1" maximum="1"/>
+        </input>
+        <input name="municipalPageType" type="RadioButton">
+            <label>Velg hvilke sidetype varselet skal vises på</label>
+            <occurrences minimum="1" maximum="1"/>
+            <config>
+                <option value="kommunefakta">Vis på Kommunefakta</option>
+                <option value="kommuneareal">Vis på Kommuneareal</option>
+                <option value="barn-og-unge">Vis på Barn og unge</option>
+                <option value="jakt-i-din-kommune">Vis på Jakt i din kommune</option>
+                <option value="showOnAll">Vis på alle sider</option>
+            </config>
+            <default>kommunefakta</default>
         </input>
         <input type="CustomSelector" name="municipalCodes">
             <label>Velg hvilken kommuner det gjelder her.</label>
-            <help-text >Varselet vil bare synes på valgte kommuner under /kommunefakta.</help-text>
-            <occurrences minimum="0" maximum="1"/>
+            <help-text >Varselet vil bare synes på valgte kommuner på valgt side</help-text>
+            <occurrences minimum="0" maximum="0"/>
             <config>
                 <service>customSelectorMunicipals</service>
             </config>
+        </input>
+        <input name="selectAllMunicipals" type="CheckBox">
+            <label>Velg for å gjelde alle kommuner</label>
+            <default>unchecked</default>
         </input>
     </form>
 </content-type>

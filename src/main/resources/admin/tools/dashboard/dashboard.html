@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html data-th-lang="no">
+  <head>
+    <meta charset="UTF-8"></meta>
+    <meta http-equiv="Cache-control" content="NO-CACHE"></meta>
+    <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Open+Sans|Open+Sans:700|Roboto:700|Roboto+Condensed:700"></link>
+    <link rel="stylesheet" data-th-href="${stylesUrl}"></link>
+    <span data-th-each="scr : ${pageContributions.headEnd}" data-th-remove="tag">
+      <span data-th-utext="${scr}" data-th-remove="tag"></span>
+    </span>
+  </head>
+  <body class="xp-page page-dashboard">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col">
+          <header>
+            <nav class="y-2">
+              <span data-th-text="${username}"></span> |
+              <a href="mailto:desken@ssb.no">desken@ssb.no</a> |
+              <a th:href="${linkToGuide}">Veiledning</a>
+            </nav>
+            <div class="misc">
+              <img data-th-src="${logoUrl}" class="logo" alt=""></img>
+              <h1>Dashboard</h1>
+            </div>
+          </header>
+          <div id="dashboard"></div>
+
+        </div>
+      </div>
+    </div>
+
+    <script type="text/javascript" data-th-src="${jsLibsUrl}"></script>
+    <script type="text/javascript" data-th-src="${wsServiceUrl}"></script>
+    <span data-th-each="scr : ${pageContributions.bodyEnd}" data-th-remove="tag">
+        <span data-th-utext="${scr}" data-th-remove="tag"></span>
+    </span>
+  </body>
+</html>

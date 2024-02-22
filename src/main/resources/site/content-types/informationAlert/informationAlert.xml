@@ -1,0 +1,80 @@
+<content-type>
+  <display-name>Informasjonsvarsel</display-name>
+  <super-type>base:structured</super-type>
+  <form>
+    <input type="HtmlArea" name="message">
+      <label>Tekst</label>
+      <config>
+        <include>
+          Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote
+        </include>
+      </config>
+      <occurrences minimum="1" maximum="1"/>
+    </input>
+
+    <option-set name="informationAlertVariations">
+      <label>Sidetype</label>
+      <occurrences minimum="1" maximum="1" />
+      <options minimum="1" maximum="1">
+        <option name="statistics">
+          <label>Statistikk</label>
+          <help-text>Legg til en varsel på en eller flere statistikker</help-text>
+          <items>
+            <input name="statisticsIds" type="ContentSelector">
+              <label>Velg hvilken statistikk det gjelder her.</label>
+              <help-text >Varselet vil bare synes på valgte statistikk</help-text>
+              <occurrences minimum="0" maximum="0"/>
+              <config>
+                <allowContentType>statistics</allowContentType>
+              </config>
+            </input>
+
+            <input name="selectAllStatistics" type="CheckBox">
+              <label>Velg for å gjelde alle statistikker</label>
+              <default>unchecked</default>
+            </input>
+          </items>
+        </option>
+
+        <option name="pages">
+          <label>Side</label>
+          <help-text>Legg til en varsel på en eller flere sider</help-text>
+          <items>
+            <input name="pageIds" type="ContentSelector">
+              <label>Velg hvilken side det gjelder her.</label>
+              <occurrences minimum="1" maximum="0" />
+              <config>
+                <allowContentType>page</allowContentType>
+              </config>
+            </input>
+          </items>
+        </option>
+
+        <option name="articles">
+          <label>Artikkel</label>
+            <help-text>Legg til en varsel på en eller flere artikler</help-text>
+          <items>
+            <input name="articleIds" type="ContentSelector">
+              <label>Velg hvilken artikkel det gjelder her.</label>
+              <occurrences minimum="1" maximum="0" />
+              <config>
+                <allowContentType>article</allowContentType>
+              </config>
+            </input>
+          </items>
+        </option>
+
+        <option name="statbank">
+          <label>Statistikkbanken</label>
+          <help-text>Legg til en varsel på statistikkbank rammen</help-text>
+          <items>
+            <input name="selectAllStatbankPages" type="CheckBox">
+              <label>Velg for å gjelde hele Statistikkbanken</label>
+              <default>unchecked</default>
+            </input>
+          </items>
+        </option>
+      </options>
+    </option-set>
+  </form>
+</content-type>
