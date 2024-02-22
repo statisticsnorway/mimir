@@ -21,6 +21,7 @@ module.exports = function (env, config) {
   // Take these packages out of vendor.js and put them in their own file.
   // These are big packages that are not used on every page, thus we let webpack only load them when needed.
   const vendorSplits = [
+    'xss',
     'highcharts',
     'react-select',
     'react-table',
@@ -46,7 +47,7 @@ module.exports = function (env, config) {
     config.plugins.push(new WatcherTouchPlugin())
     config.watch = true
   }
-  /* 
+  /*
     Pro tip, Add:
     process.env.NODE_ENV = 'development';
     to the top of the function in node_modules/@enonic/react4xp/dist/webpack.config.globals.js

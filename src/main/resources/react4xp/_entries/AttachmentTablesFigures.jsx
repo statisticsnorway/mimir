@@ -5,6 +5,7 @@ import { ChevronDown, ChevronUp } from 'react-feather'
 import PropTypes from 'prop-types'
 import Table from '../table/Table'
 import { addGtagForEvent } from '/react4xp/ReactGA'
+import { sanitize } from '../../lib/ssb/utils/htmlUtils'
 
 function AttachmentTableFigures(props) {
   const [isHidden, setIsHidden] = useState(true)
@@ -74,7 +75,7 @@ function AttachmentTableFigures(props) {
 
   function createMarkup(html) {
     return {
-      __html: html,
+      __html: sanitize(html),
     }
   }
 

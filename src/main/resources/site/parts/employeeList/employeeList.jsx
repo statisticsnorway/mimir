@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Link, Divider, Text } from '@statisticsnorway/ssb-component-library'
+import { sanitize } from '../../../lib/ssb/utils/htmlUtils'
 
 function EmployeeList(props) {
   const { employees, total, pageTitle, pageDescription } = props
@@ -103,7 +104,7 @@ function EmployeeList(props) {
             <div
               className='page-description'
               dangerouslySetInnerHTML={{
-                __html: pageDescription,
+                __html: sanitize(pageDescription),
               }}
             ></div>
           ) : null}

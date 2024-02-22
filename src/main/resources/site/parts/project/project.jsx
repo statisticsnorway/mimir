@@ -2,6 +2,7 @@ import React from 'react'
 import { Title, Accordion, Link } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
 import { User, Calendar, Settings } from 'react-feather'
+import { sanitize } from '../../../lib/ssb/utils/htmlUtils'
 
 const Project = (props) => {
   const {
@@ -85,7 +86,7 @@ const Project = (props) => {
             <div
               className='project-paragraph'
               dangerouslySetInnerHTML={{
-                __html: body,
+                __html: sanitize(body),
               }}
             />
           </div>
@@ -104,7 +105,7 @@ const Project = (props) => {
               <div
                 className='ssb-paragraph lh-lg'
                 dangerouslySetInnerHTML={{
-                  __html: participants,
+                  __html: sanitize(participants),
                 }}
               />
             </Accordion>
@@ -118,7 +119,7 @@ const Project = (props) => {
               <div
                 className='ssb-paragraph lh-lg'
                 dangerouslySetInnerHTML={{
-                  __html: collaborators,
+                  __html: sanitize(collaborators),
                 }}
               />
             </Accordion>
