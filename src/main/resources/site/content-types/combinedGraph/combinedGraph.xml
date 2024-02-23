@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <content-type>
   <display-name>Kombinert Graf</display-name>
-  <super-type>base:structured</super-type>  <!-- The most common super-type. You rarely need to know anything else about this than to remember to add it. Read the docs for more info. -->
-
+  <super-type>base:structured</super-type>
+  <description>Graf med 2 y-akser</description>
   <form>
     <input name="subtitle" type="TextLine">
       <label>Undertittel</label>
@@ -32,10 +32,14 @@
         </options>
     </option-set>
 
-    <item-set name="combinedGraphData">  
-        <label>Kombinerte grafer</label>  
+    <item-set name="graphs">  
+        <label>Grafer</label>  
         <occurrences minimum="0" maximum="2"/>  
         <items>
+            <input name="yAxisTitle" type="TextLine">
+                <label>Y-akse, tittel</label>
+                <occurrences minimum="1" maximum="1"/>
+            </input>
             <input name="graphType" type="RadioButton">
                 <label>Graftype</label>
                 <occurrences minimum="1" maximum="1"/>
@@ -45,10 +49,6 @@
                     <option value="bar">Liggende stolpe</option>
                     <option value="area">Areal</option>
                 </config>
-                <!-- <default>line</default> -->
-            </input>
-            <input name="yAxisTitle" type="TextLine">
-                <label>Y-akse, tittel</label>
             </input>
             <input name="yAxisType" type="RadioButton">
                 <label>Y-skala</label>
@@ -126,6 +126,7 @@
       <items>
         <input name="xAxisTitle" type="TextLine">
           <label>X-akse, tittel</label>
+          <occurrences minimum="1" maximum="1"/>
         </input>
         <input name="xAxisType" type="RadioButton">
           <label>X-skala</label>

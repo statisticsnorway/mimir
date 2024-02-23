@@ -49,7 +49,7 @@ export function prepareCombinedGraphConfig(
     combinedGraphContent.displayName,
     combinedGraphContent.language
   )
-  const yAxis = combinedGraphContent.data.combinedGraphData?.map((data, index) => {
+  const yAxis = combinedGraphContent.data.graphs?.map((data, index) => {
     const yAxisConfig = {
       title: {
         text: data.yAxisTitle,
@@ -64,7 +64,7 @@ export function prepareCombinedGraphConfig(
   })
 
   const seriesOption = series
-    ? combinedGraphContent.data.combinedGraphData?.map((data, index) => {
+    ? combinedGraphContent.data.graphs?.map((data, index) => {
         return {
           type: data.graphType,
           data: series[index].data,

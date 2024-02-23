@@ -1,5 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"  width="24" height="24" viewBox="0 0 24 24">
-  <path fill="#000000" d="M22,21H2V3H4V19H6V17H10V19H12V16H16V19H18V17H22V21M18,14H22V16H18V14M12,6H16V9H12V6M16,15H12V10H16V15M6,10H10V12H6V10M10,16H6V13H10V16Z" />
+<svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <g>
+  <path id="svg_1" d="m22,21l-20,0l0,-18l2,0l0,16l2,0l0,-2l4,0l0,2l2,0l0,-3l4,0l0,3l2,0l0,-2l4,0l0,4m-4,-7l4,0l0,2l-4,0l0,-2m-6,-8l4,0l0,3l-4,0l0,-3m4,9l-4,0l0,-5l4,0l0,5m-10,-5l4,0l0,2l-4,0l0,-2m4,6l-4,0l0,-3l4,0l0,3z" fill="#000000"/>
+  <line stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_2" y2="8.9376" x2="10.12506" y1="13.81244" x1="3.1253" stroke="#000" fill="none"/>
+  <line stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_3" y2="8.81261" x2="9.75008" y1="11.81251" x1="18.24978" stroke="#000" fill="none"/>
+  <line stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_4" y2="11.56251" x2="17.8748" y1="4.43776" x1="21.87466" stroke="#000" fill="none"/>
+ </g>
 </svg>
