@@ -5,7 +5,6 @@ import { RowValue, getRowValue } from '/lib/ssb/utils/utils'
 
 import {
   seriesAndCategoriesFromHtmlTable,
-  seriesAndCategoriesFromHtmlTableCombinedGraph,
 } from '/lib/ssb/parts/highcharts/data/htmlTable'
 import { seriesAndCategoriesFromJsonStat } from '/lib/ssb/parts/highcharts/data/statBank'
 import { seriesAndCategoriesFromTbml } from '/lib/ssb/parts/highcharts/data/tbProcessor'
@@ -44,7 +43,6 @@ export function getSeriesAndCategories(
   data: JSONstat | TbmlDataUniform | object | string | undefined,
   dataSource: DataSource['dataSource']
 ): SeriesAndCategories | undefined {
-  log.info('\x1b[32m%s\x1b[0m', '5. getSeriesAndCategories')
   if (dataSource && dataSource._selected === DataSourceType.STATBANK_API) {
     return seriesAndCategoriesFromJsonStat(req, highchart, data, dataSource)
   } else if (dataSource && dataSource._selected === DataSourceType.TBPROCESSOR) {
@@ -64,7 +62,7 @@ export function getSeriesAndCategoriesCombinedGraph(
 ): SeriesAndCategories | undefined {
   log.info('\x1b[32m%s\x1b[0m', '3. getSeriesAndCategoriesCombinedGraph')
   if (combinedGraph.data.dataSource && combinedGraph.data.dataSource._selected === DataSourceType.HTMLTABLE) {
-    return seriesAndCategoriesFromHtmlTableCombinedGraph(combinedGraph)
+    return seriesAndCategoriesFromHtmlTable(combinedGraph)
   }
   return undefined
 }

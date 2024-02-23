@@ -43,7 +43,7 @@ export function prepareCombinedGraphConfig(
   categories: Array<string | number | PreliminaryData> | undefined,
   series: Array<Series> | undefined
 ): HighchartsGraphConfig {
-  log.info('\x1b[32m%s\x1b[0m', '6. prepareCombinedGraphConfig')
+  log.info('\x1b[32m%s\x1b[0m', '5. prepareCombinedGraphConfig')
   const defaultConfig = createDefaultConfig(
     combinedGraphContent.data,
     combinedGraphContent.displayName,
@@ -65,13 +65,13 @@ export function prepareCombinedGraphConfig(
 
   const seriesOption = series
     ? combinedGraphContent.data.graphs?.map((data, index) => {
-        return {
-          type: data.graphType,
-          data: series[index].data,
-          name: series[index].name,
-          yAxis: index,
-        }
-      })
+      return {
+        type: data.graphType,
+        data: series[index].data,
+        name: series[index].name,
+        yAxis: index,
+      }
+    })
     : []
 
   const combinedOptions: GetCombinedGraphOptions = {

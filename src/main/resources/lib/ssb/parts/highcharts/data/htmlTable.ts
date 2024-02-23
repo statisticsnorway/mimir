@@ -6,52 +6,15 @@ import { XmlParser, PreliminaryData, TableRowUniform, TableCellUniform } from '/
 import { RowValue, getRowValue } from '/lib/ssb/utils/utils'
 import { toString } from '/lib/vendor/ramda'
 import * as util from '/lib/util'
-import { DataSource as DataSourceType } from '/lib/ssb/repo/dataset'
 import { type CombinedGraph, type Highchart } from '/site/content-types'
 
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 
-export function seriesAndCategoriesFromHtmlTable(highChartsContent: Content<Highchart>): SeriesAndCategories {
-  const htmlTable: string | undefined = highChartsContent.data.htmlTable ?? undefined
-  const seriesAndCategoriesRaw = getSeriesAndCategoriesFromTable(htmlTable)
-
-  const seriesAndCategories: SeriesAndCategories = convertToCorrectGraphFormat(
-    {
-      categories: seriesAndCategoriesRaw.categories,
-      series: seriesAndCategoriesRaw.series,
-    },
-    highChartsContent.data.graphType,
-    highChartsContent.data.xAxisType
-  )
-  return seriesAndCategories
-}
-
-export function seriesAndCategoriesFromHtmlTableCombinedGraph(
-  combinedGraphContent: Content<CombinedGraph>
+export function seriesAndCategoriesFromHtmlTable(
+  highChartsContent: Content<Highchart | CombinedGraph>
 ): SeriesAndCategories {
-  log.info('\x1b[32m%s\x1b[0m', '4. seriesAndCategoriesFromHtmlTableCombinedGraph')
-  const htmlTable: string | undefined =
-    combinedGraphContent.data.dataSource?._selected === DataSourceType.HTMLTABLE
-      ? combinedGraphContent.data.dataSource?.htmlTable.html
-      : undefined
-  const categoriesAndSeriesRaw = htmlTable ? getSeriesAndCategoriesFromTable(htmlTable) : undefined
-  const categories = categoriesAndSeriesRaw ? categoriesAndSeriesRaw.categories : undefined
-  const series: Array<Series> = categoriesAndSeriesRaw
-    ? categoriesAndSeriesRaw.series.map((row) => {
-        return {
-          name: row.name,
-          data: row.data,
-        }
-      })
-    : []
-  return {
-    categories,
-    series,
-  }
-}
-
-function getSeriesAndCategoriesFromTable(htmlTable: string | undefined): SeriesAndCategoriesRaw {
-  log.info('\x1b[32m%s\x1b[0m', '5. getSeriesAndCategoriesFromTable')
+  log.info('\x1b[32m%s\x1b[0m', '4. seriesAndCategoriesFromHtmlTable')
+  const htmlTable: string | undefined = highChartsContent.data.dataSource?.htmlTable.html || highChartsContent.data.htmlTable
   let stringJson: string | undefined
   if (htmlTable) {
     const sanitized = striptags(htmlTable, ['table', 'thead', 'tbody', 'tr', 'th', 'td'])
@@ -87,19 +50,27 @@ function getSeriesAndCategoriesFromTable(htmlTable: string | undefined): SeriesA
 
   dataInSeries.splice(0, 1)
 
-  return {
-    categories: categories,
-    series: dataInSeries,
-  }
+
+  const graphType: string = highChartsContent.type === 'mimir:combinedGraph' ? 'combined' : highChartsContent.data.graphType
+
+  const seriesAndCategories: SeriesAndCategories = convertToCorrectGraphFormat(
+    {
+      categories,
+      series: dataInSeries,
+    },
+    graphType,
+    highChartsContent.data.xAxisType
+  )
+  return seriesAndCategories
 }
 
 function parseValue(value: string): number | string {
   const number: string =
     typeof value === 'string'
       ? value
-          .replace(',', '.')
-          .replace(/&nbsp;/g, '')
-          .replace(' ', '')
+        .replace(',', '.')
+        .replace(/&nbsp;/g, '')
+        .replace(' ', '')
       : value
 
   return parseFloat(number)
@@ -128,6 +99,21 @@ function convertToCorrectGraphFormat(
     graphType === 'line'
   ) {
     return seriesAndCategories
+  } else if (
+    graphType === 'combined'
+  ) {
+    const series: Array<Series> = seriesAndCategories
+      ? seriesAndCategories.series.map((row) => {
+        return {
+          name: row.name,
+          data: row.data,
+        }
+      })
+      : []
+    return {
+      categories: seriesAndCategories.categories,
+      series,
+    }
   } else {
     return {
       categories: seriesAndCategories.categories,

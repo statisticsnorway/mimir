@@ -5,7 +5,7 @@ import { type HighchartsGraphConfig } from '/lib/types/highcharts'
 import { render } from '/lib/thymeleaf'
 import { scriptAsset } from '/lib/ssb/utils/utils'
 import { forceArray } from '/lib/ssb/utils/arrayUtils'
-import { createCombinedGraphConfig } from '/lib/ssb/parts/highcharts/highchartsUtils'
+import { createCombinedGraphObject } from '/lib/ssb/parts/highcharts/highchartsUtils'
 import { renderError } from '/lib/ssb/error/error'
 import { type CombinedGraph } from '/site/content-types'
 
@@ -63,7 +63,7 @@ function renderPart(req: XP.Request, highchartIds: Array<string>): XP.Response {
       const highchart: Content<CombinedGraph> | null = getContentByKey({
         key,
       })
-      const config: HighchartsGraphConfig | undefined = highchart ? createCombinedGraphConfig(highchart) : undefined
+      const config: HighchartsGraphConfig | undefined = highchart ? createCombinedGraphObject(highchart) : undefined
       return highchart && config ? createHighchartsProps(highchart, config) : {}
     })
     .filter((key) => !!key)

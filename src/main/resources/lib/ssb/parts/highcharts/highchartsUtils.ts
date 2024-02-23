@@ -31,7 +31,7 @@ export function createHighchartObject(
   return mergeDeepRight(highchartsData || {}, highchartsGraphConfig) as unknown as HighchartsGraphConfig
 }
 
-export function createCombinedGraphConfig(combinedGraph: Content<CombinedGraph>): HighchartsGraphConfig {
+export function createCombinedGraphObject(combinedGraph: Content<CombinedGraph>): HighchartsGraphConfig {
   log.info('\x1b[32m%s\x1b[0m', '2. createCombinedGraphConfig')
   const combinedGraphData: SeriesAndCategories | undefined = getSeriesAndCategoriesCombinedGraph(combinedGraph)
 
