@@ -217,19 +217,14 @@ export function get(req: XP.Request): XP.Response {
   const metaInfo: MetaInfoData = parseMetaInfoData(municipality, pageType, page, language, req)
 
   let jsonLd: Article | undefined
-  log.info('\x1b[32m%s\x1b[0m', JSON.stringify(ensureArray(page.x?.mimir?.subjectTag?.mainSubjects)[0], null, 2))
   if (page.type === 'mimir:article' && isEnabled('structured-data', false, 'ssb'))
     jsonLd = {
+      // @ts-ignore  ssssh its ok
       '@context': 'https://schema.org',
       '@type': 'Article',
       articleSection: ensureArray(page.x?.mimir?.subjectTag?.mainSubjects)[0],
       additionalType: page.data.articleType, // For eksempel
       headline: page.data.title,
-      // image: [
-      //   'https://example.com/photos/1x1/photo.jpg',
-      //   'https://example.com/photos/4x3/photo.jpg',
-      //   'https://example.com/photos/16x9/photo.jpg',
-      // ],
       datePublished: page.publish?.first,
       dateModified: page.data.showModifiedDate?.dateOption?.showModifiedTime
         ? page.data.showModifiedDate.dateOption.modifiedDate
@@ -596,6 +591,18 @@ interface DefaultPage extends Content {
     statistic: string
     subtopic: Array<string>
     articleType: string
+    showModifiedDate: {
+      dateOption: {
+        showModifiedTime: boolean
+        modifiedDate: string
+      }
+    }
+    authorItemSet: [
+      {
+        name: string
+        email: string
+      },
+    ]
   }
   page: ExtendedPage
 }
