@@ -12,7 +12,6 @@ const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 
 export function seriesAndCategoriesFromHtmlTable(highChartsContent: Content<Highchart>): SeriesAndCategories {
   let stringJson: string | undefined
-
   if (highChartsContent.data.htmlTable) {
     const sanitized = striptags(highChartsContent.data.htmlTable, ['table', 'thead', 'tbody', 'tr', 'th', 'td'])
     stringJson = __.toNativeObject(xmlParser.parse(sanitized))
@@ -65,9 +64,8 @@ function parseValue(value: string): number | string {
       ? value
           .replace(',', '.')
           .replace(/&nbsp;/g, '')
-          .replace(' ', '')
+          .replace(/ /g, '')
       : value
-
   return parseFloat(number)
 }
 
