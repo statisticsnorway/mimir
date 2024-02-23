@@ -50,16 +50,6 @@
                     <option value="area">Areal</option>
                 </config>
             </input>
-            <input name="yAxisType" type="RadioButton">
-                <label>Y-skala</label>
-                <config>
-                    <option value="category">Ingen (unike kategorier)</option>
-                    <option value="linear">Lineær</option>
-                    <option value="logarithmic">Logaritmisk</option>
-                </config>
-                <default>linear</default>
-                <help-text>Logaritmisk skala brukes kun i helt spesielle tilfeller</help-text>
-            </input>
             <input name="yAxisDecimalPlaces" type="RadioButton">
                 <label>Vis desimaler på Y-akseverdiene, antall:</label>
                 <config>
@@ -70,56 +60,8 @@
                 <default>0</default>
                 <help-text>Her velger du hvor mange desimalplasser du vil vise i y-akse</help-text>
             </input> 
-            <input name="numberDecimals" type="RadioButton">
-              <label>Antall desimaler som skal vises på verdiene ved mouseover:</label>
-              <config>
-                <option value="0">0</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-              </config>
-              <default>0</default>
-              <help-text>Her velger du hvor mange desimalplasser du vil vise</help-text>
-            </input>
         </items>     
     </item-set>
-
-    
-
-    <field-set>
-      <label>Bearbeide visningen</label>
-      <items>
-        <input name="combineInfo" type="CheckBox">
-          <label>Kombinere forklaringer</label>
-          <help-text>Vise forklaringer til alle linjer i en mouseoverboksen</help-text>
-        </input>
-        <input name="heightAspectRatio" type="TextLine">
-          <label>Høyde i prosent av bredde</label>
-          <default>75</default>
-          <help-text>
-            Et heltall større enn 0. Anbefalt er 75 som gir 4:3-forhold. 100 er kvadrat (1:1),
-            62 er det gylne snitt liggende, 56 er kinolerret (16:9), 162 er det gylne snitt stående.
-          </help-text>
-        </input>
-      </items>
-    </field-set>
-
-    <field-set>
-      <label>Tegnforklaring</label>
-      <items>
-        <input name="legendAlign" type="RadioButton">
-          <label>Plassering av tegnforklaring</label>
-          <config>
-            <option value="right">Høyrestilt</option>
-            <option value="center">Midtstilt, under</option>
-          </config>
-          <default>center</default>
-        </input>
-        <input name="noLegend" type="CheckBox">
-          <label>Skjul tegnforklaringen.</label>
-        </input>
-      </items>
-    </field-set>
 
     <field-set>
       <label>X-akse, tilpasning</label>
@@ -160,7 +102,42 @@
           <help-text>Sortere visningen av søylene i motsatt rekkefølge.</help-text>
         </input>
       </items>
-    </field-set>   
+    </field-set> 
+
+    <field-set>
+      <label>Bearbeide visningen</label>
+      <items>
+        <input name="combineInfo" type="CheckBox">
+          <label>Kombinere forklaringer (mouseover)</label>
+          <help-text>Vise forklaringer til alle linjer i en mouseoverboksen</help-text>
+        </input>
+        <input name="heightAspectRatio" type="TextLine">
+          <label>Høyde i prosent av bredde</label>
+          <default>75</default>
+          <help-text>
+            Et heltall større enn 0. Anbefalt er 75 som gir 4:3-forhold. 100 er kvadrat (1:1),
+            62 er det gylne snitt liggende, 56 er kinolerret (16:9), 162 er det gylne snitt stående.
+          </help-text>
+        </input>
+      </items>
+    </field-set>
+
+    <field-set>
+      <label>Tegnforklaring</label>
+      <items>
+        <input name="legendAlign" type="RadioButton">
+          <label>Plassering av tegnforklaring</label>
+          <config>
+            <option value="right">Høyrestilt</option>
+            <option value="center">Midtstilt, under</option>
+          </config>
+          <default>center</default>
+        </input>
+        <input name="noLegend" type="CheckBox">
+          <label>Skjul tegnforklaringen.</label>
+        </input>
+      </items>
+    </field-set>
 
     <field-set>
       <label>Kilder</label>
