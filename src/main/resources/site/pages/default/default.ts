@@ -218,7 +218,7 @@ export function get(req: XP.Request): XP.Response {
 
   let jsonLd: Article | undefined
   log.info('\x1b[32m%s\x1b[0m', JSON.stringify(ensureArray(page.x?.mimir?.subjectTag?.mainSubjects)[0], null, 2))
-  if (page.type === 'mimir:article')
+  if (page.type === 'mimir:article' && isEnabled('structured-data', false, 'ssb'))
     jsonLd = {
       '@context': 'https://schema.org',
       '@type': 'Article',
