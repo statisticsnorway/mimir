@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import PropTypes from 'prop-types'
-import { Text } from '@statisticsnorway/ssb-component-library'
+import { Link, Text } from '@statisticsnorway/ssb-component-library'
 import { Col, Row } from 'react-bootstrap'
 import { useMediaQuery } from 'react-responsive'
 
@@ -164,9 +164,9 @@ function Highmap(props) {
   function renderHighchartsSource(sourceLink, index) {
     return (
       <div key={index} className='mt-3'>
-        <a className='ssb-link stand-alone' href={sourceLink.sourceHref}>
+        <Link className='ssb-link stand-alone' href={sourceLink.sourceHref}>
           {props.phrases.source}: {sourceLink.sourceText}
-        </a>
+        </Link>
       </div>
     )
   }
