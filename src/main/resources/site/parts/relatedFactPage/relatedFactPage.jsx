@@ -20,12 +20,12 @@ function RelatedBoxes(props) {
   )
   const [total, setTotal] = useState(firstRelatedContents ? firstRelatedContents.total : 0)
   const [loading, setLoading] = useState(false)
-  const [focusElement, setFocusElement] = useState(false)
-  const currentElement = useRef(null)
+  const [wasClicked, setWasClicked] = useState(false)
+  const cards = useRef([])
 
   useEffect(() => {
-    if (focusElement && currentElement.current) {
-      currentElement.current.firstChild.focus()
+    if (cards.current.length > 4 && cards.current[4] && !wasClicked) {
+      cards.current[4].focus()
     }
   }, [relatedFactPages])
 
@@ -47,7 +47,6 @@ function RelatedBoxes(props) {
         }
       })
       .finally(() => {
-        setFocusElement(false)
         setLoading(false)
       })
   }
@@ -56,11 +55,12 @@ function RelatedBoxes(props) {
     setLoading(true)
     setRelatedFactPages(firstRelatedContents.relatedFactPages)
     setTotal(firstRelatedContents.total)
-    setFocusElement(false)
     setLoading(false)
   }
 
-  function handleButtonOnClick() {
+  function handleButtonOnClick(wasClicked) {
+    setWasClicked(wasClicked)
+
     if (total > relatedFactPages.length) {
       fetchAllRelatedFactPages()
     } else {
@@ -90,8 +90,9 @@ function RelatedBoxes(props) {
               aria-label={`${showingPhrase.replace('{0}', relatedFactPages.length)} ${total} ${factpagePluralName}`}
             >
               {relatedFactPages.map((relatedFactPageContent, index) => (
-                <li key={index} ref={index === 4 ? currentElement : null}>
+                <li key={index}>
                   <PictureCard
+                    ref={(element) => (cards.current[index] = element)}
                     className='mb-3'
                     imageSrc={relatedFactPageContent.image}
                     altText={relatedFactPageContent.imageAlt ?? ''}
@@ -107,12 +108,11 @@ function RelatedBoxes(props) {
               <div className='col-auto'>
                 <Button
                   ariaLabel={total > relatedFactPages.length && `${showAll} - ${total} ${factpagePluralName}`}
-                  onClick={handleButtonOnClick}
+                  onClick={() => handleButtonOnClick(true)}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' || e.key === ' ') {
                       e.preventDefault()
-                      setFocusElement((prev) => !prev)
-                      handleButtonOnClick()
+                      handleButtonOnClick(false)
                     }
                   }}
                 >
