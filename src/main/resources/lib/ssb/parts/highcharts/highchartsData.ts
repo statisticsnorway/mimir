@@ -2,10 +2,7 @@ import { Content } from '/lib/xp/content'
 import { PreliminaryData, TbmlDataUniform } from '/lib/types/xmlParser'
 import { JSONstat } from '/lib/types/jsonstat-toolkit'
 import { RowValue, getRowValue } from '/lib/ssb/utils/utils'
-
-import {
-  seriesAndCategoriesFromHtmlTable,
-} from '/lib/ssb/parts/highcharts/data/htmlTable'
+import { seriesAndCategoriesFromHtmlTable } from '/lib/ssb/parts/highcharts/data/htmlTable'
 import { seriesAndCategoriesFromJsonStat } from '/lib/ssb/parts/highcharts/data/statBank'
 import { seriesAndCategoriesFromTbml } from '/lib/ssb/parts/highcharts/data/tbProcessor'
 import { DataSource as DataSourceType } from '/lib/ssb/repo/dataset'
