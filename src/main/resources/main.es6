@@ -103,6 +103,10 @@ try {
           feature: 'simple-statbank-part',
           enabled: false,
         },
+        {
+          feature: 'structured-data',
+          enabled: false,
+        },
       ],
     },
   ])
