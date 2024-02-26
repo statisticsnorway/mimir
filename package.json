@@ -103,7 +103,7 @@
     "jquery": "~3.7.1",
     "jquery-bridget": "~3.0.1",
     "jquery-ui-dist": "~1.13.2",
-    "js-base64": "~3.7.6",
+    "js-base64": "~3.7.7",
     "jsonstat-toolkit": "~1.4.2",
     "lodash": "~4.17.21",
     "mini-css-extract-plugin": "~2.8.0",
