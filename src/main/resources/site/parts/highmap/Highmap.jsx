@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import PropTypes from 'prop-types'
-import { Text } from '@statisticsnorway/ssb-component-library'
+import { Link, Text } from '@statisticsnorway/ssb-component-library'
 import { Col, Row } from 'react-bootstrap'
 import { useMediaQuery } from 'react-responsive'
 
@@ -161,6 +161,16 @@ function Highmap(props) {
     },
   }
 
+  function renderHighchartsSource(sourceLink, index) {
+    return (
+      <div key={index} className='mt-3'>
+        <Link className='ssb-link stand-alone' href={sourceLink.sourceHref}>
+          {props.phrases.source}: {sourceLink.sourceText}
+        </Link>
+      </div>
+    )
+  }
+
   return (
     <section className='xp-part highchart-wrapper'>
       <Row>
@@ -176,6 +186,7 @@ function Highmap(props) {
                 {footnote && <Text>{footnote}</Text>}
               </Col>
             ))}
+          {props.sourceList && props.sourceList.map(renderHighchartsSource)}
         </Col>
       </Row>
     </section>
@@ -197,6 +208,7 @@ Highmap.propTypes = {
   seriesTitle: PropTypes.string,
   legendTitle: PropTypes.string,
   legendAlign: PropTypes.string,
+  sourceList: PropTypes.array,
   footnoteText: PropTypes.array,
   phrases: PropTypes.object,
   language: PropTypes.string,
