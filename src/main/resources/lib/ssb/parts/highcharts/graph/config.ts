@@ -46,16 +46,18 @@ export const createDefaultConfig = (highchartData, displayName, language) => ({
   chart: {
     height: highchartData.heightAspectRatio > 0 ? `${highchartData.heightAspectRatio}%` : null,
     plotBorderColor: '#e6e6e6',
-    spacingBottom: 18,
     plotBorderWidth: 0,
     style: {
       fontFamily: '"Open Sans Regular", "Arial", "DejaVu Sans", sans-serif',
       fontSize: '14px',
     },
     type: 'bar',
-    spacing: [0, 10, 0, 0],
     zoomType: highchartData.zoomType,
-    marginTop: 50,
+    spacingRight: 10,
+    spacingLeft: 0,
+    spacingBottom: 18,
+    spacingTop: highchartData.legendAlign === 'top' ? 18 : 0,
+    marginTop: highchartData.legendAlign === 'top' ? null : 50,
   },
   // SSB color palette:
   colors: [
@@ -137,7 +139,7 @@ export const createDefaultConfig = (highchartData, displayName, language) => ({
   legend: {
     enabled: !highchartData.noLegend,
     align: highchartData.legendAlign === 'right' ? 'right' : 'center',
-    verticalAlign: highchartData.legendAlign == 'right' ? 'top' : 'bottom',
+    verticalAlign: highchartData.legendAlign == 'right' || highchartData.legendAlign == 'top' ? 'top' : 'bottom',
     layout: highchartData.legendAlign == 'right' ? 'vertical' : 'horizontal',
     x: highchartData.legendAlign == 'right' ? 10 : 0,
     y: highchartData.legendAlign == 'right' ? 65 : 0,
@@ -148,6 +150,7 @@ export const createDefaultConfig = (highchartData, displayName, language) => ({
       fontSize: '12px',
       fontWeight: 'normal',
     },
+    width: highchartData.legendAlign == 'top' ? '75%' : 'auto',
     useHTML: true,
   },
   plotOptions: {

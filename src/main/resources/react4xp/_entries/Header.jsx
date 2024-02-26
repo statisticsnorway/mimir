@@ -2,6 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Divider, Input, Link } from '@statisticsnorway/ssb-component-library'
 import { ChevronDown, ChevronRight, Menu, X } from 'react-feather'
+import { sanitize } from '../../lib/ssb/utils/htmlUtils'
 
 function Header(props) {
   const [showSubMenu, setShowSubMenu] = useState(false)
@@ -59,7 +60,7 @@ function Header(props) {
       <span
         aria-hidden='true'
         dangerouslySetInnerHTML={{
-          __html: icon,
+          __html: sanitize(icon),
         }}
       ></span>
     )

@@ -112,6 +112,7 @@
           <config>
             <option value="right">Høyrestilt</option>
             <option value="center">Midtstilt, under</option>
+            <option value="top">Midtstilt, over</option>
           </config>
           <default>center</default>
         </input>

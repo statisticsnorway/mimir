@@ -103,6 +103,25 @@
                 </input>
             </items>
         </field-set>
+
+        <field-set>
+            <label>Kilder</label>
+            <items>
+              <item-set name="sourceList">
+                <occurrences minimum="0" maximum="0"/>
+                <items>
+                  <input name="sourceText" type="TextArea">
+                    <label>Kildetekst</label>
+                    <default>Statistisk sentralbyrå</default>
+                  </input>
+                  <input name="sourceHref" type="TextLine">
+                    <label>Kilde-URL</label>
+                    <default>https://www.ssb.no</default>
+                  </input>
+                </items>
+              </item-set>
+            </items>  
+          </field-set>
         
         <field-set>
             <label>Fotnoter</label>
