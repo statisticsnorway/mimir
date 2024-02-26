@@ -27,8 +27,6 @@ function renderPart(req: XP.Request) {
     app.config && app.config['GCP_RECAPTCHA_SITE_KEY'] && typeof app.config['GCP_RECAPTCHA_SITE_KEY'] == 'string'
       ? app.config['GCP_RECAPTCHA_SITE_KEY']
       : ''
-  log.info('\x1b[32m%s\x1b[0m', 'Sitekey')
-  log.info('\x1b[32m%s\x1b[0m', JSON.stringify(recaptchaSiteKey, null, 2))
 
   return render(
     'site/parts/contactForm/contactForm',

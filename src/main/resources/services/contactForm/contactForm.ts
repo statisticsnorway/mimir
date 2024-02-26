@@ -4,8 +4,6 @@ import { type HttpRequestParams, type HttpResponse, request } from '/lib/http-cl
 export const post = (req: XP.Request): XP.Response => {
   const formData: ContactFormData = JSON.parse(req.body)
 
-  log.info('\n\n## data\n--------------\n%s\n', JSON.stringify(formData, null, 4))
-
   const siteKey = app.config && app.config['GCP_RECAPTCHA_SITE_KEY'] ? app.config['GCP_RECAPTCHA_SITE_KEY'] : null
   const secret = app.config && app.config['GCP_API_KEY'] ? app.config['GCP_API_KEY'] : null
   const gcpProject = app.config && app.config['GCP_PROJECT'] ? app.config['GCP_PROJECT'] : null
