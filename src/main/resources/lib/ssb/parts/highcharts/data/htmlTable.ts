@@ -14,7 +14,10 @@ export function seriesAndCategoriesFromHtmlTable(
   highChartsContent: Content<Highchart | CombinedGraph>
 ): SeriesAndCategories {
   log.info('\x1b[32m%s\x1b[0m', '4. seriesAndCategoriesFromHtmlTable')
-  const htmlTable: string | undefined = highChartsContent.data.dataSource?.htmlTable.html || highChartsContent.data.htmlTable
+  const isCombinedGraph: boolean = highChartsContent.type === `${app.name}:combinedGraph`
+  const htmlTable: string | undefined = isCombinedGraph
+    ? (highChartsContent as Content<CombinedGraph>).data.dataSource?.htmlTable.html
+    : (highChartsContent as Content<Highchart>).data.htmlTable
   let stringJson: string | undefined
   if (htmlTable) {
     const sanitized = striptags(htmlTable, ['table', 'thead', 'tbody', 'tr', 'th', 'td'])
@@ -50,8 +53,7 @@ export function seriesAndCategoriesFromHtmlTable(
 
   dataInSeries.splice(0, 1)
 
-
-  const graphType: string = highChartsContent.type === 'mimir:combinedGraph' ? 'combined' : highChartsContent.data.graphType
+  const graphType: string = isCombinedGraph ? 'combined' : (highChartsContent as Content<Highchart>).data.graphType
 
   const seriesAndCategories: SeriesAndCategories = convertToCorrectGraphFormat(
     {
@@ -68,9 +70,9 @@ function parseValue(value: string): number | string {
   const number: string =
     typeof value === 'string'
       ? value
-        .replace(',', '.')
-        .replace(/&nbsp;/g, '')
-        .replace(' ', '')
+          .replace(',', '.')
+          .replace(/&nbsp;/g, '')
+          .replace(' ', '')
       : value
 
   return parseFloat(number)
@@ -99,16 +101,14 @@ function convertToCorrectGraphFormat(
     graphType === 'line'
   ) {
     return seriesAndCategories
-  } else if (
-    graphType === 'combined'
-  ) {
+  } else if (graphType === 'combined') {
     const series: Array<Series> = seriesAndCategories
       ? seriesAndCategories.series.map((row) => {
-        return {
-          name: row.name,
-          data: row.data,
-        }
-      })
+          return {
+            name: row.name,
+            data: row.data,
+          }
+        })
       : []
     return {
       categories: seriesAndCategories.categories,

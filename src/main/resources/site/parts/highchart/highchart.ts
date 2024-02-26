@@ -17,7 +17,7 @@ import {
 import { scriptAsset } from '/lib/ssb/utils/utils'
 
 import * as util from '/lib/util'
-import { createHighchartObject } from '/lib/ssb/parts/highcharts/highchartsUtils'
+import { createHighchartObject, createCombinedGraphObject } from '/lib/ssb/parts/highcharts/highchartsUtils'
 import { renderError } from '/lib/ssb/error/error'
 import { datasetOrUndefined } from '/lib/ssb/cache/cache'
 import { hasWritePermissionsAndPreview } from '/lib/ssb/parts/permissions'
@@ -26,7 +26,7 @@ import { getPhrases } from '/lib/ssb/utils/language'
 import { getTbprocessorKey } from '/lib/ssb/dataset/tbprocessor/tbprocessor'
 import { GA_TRACKING_ID } from '/site/pages/default/default'
 import { type DataSource } from '/site/mixins/dataSource'
-import { type Highchart } from '/site/content-types'
+import { type CombinedGraph, type Highchart } from '/site/content-types'
 
 const view = resolve('./highchart.html')
 
@@ -78,11 +78,14 @@ function renderPart(req: XP.Request, highchartIds: Array<string>): XP.Response {
 
   const highcharts: Array<HighchartsReactProps> = highchartIds
     .map((key) => {
-      const highchart: Content<Highchart & DataSource> | null = getContentByKey({
+      const highchart: Content<Highchart & DataSource> | Content<CombinedGraph> | null = getContentByKey({
         key,
       })
-      const config: HighchartsExtendedProps | undefined = highchart ? determinConfigType(req, highchart) : undefined
-      return highchart && config ? createHighchartsReactProps(highchart, config) : {}
+      const config: HighchartsExtendedProps | undefined =
+        highchart?.type === `${app.name}:combinedGraph`
+          ? createCombinedGraphObject(highchart as Content<CombinedGraph>)
+          : determinConfigType(req, highchart as Content<Highchart & DataSource>)
+      return highchart && config ? createHighchartsReactProps(highchart as Content<Highchart>, config) : {}
     })
     .filter((key) => !!key)
 
@@ -192,7 +195,7 @@ function createHighchartsReactProps(
 ): HighchartsReactProps {
   return {
     config: config,
-    type: highchart.data.graphType,
+    type: highchart.type === 'mimir:combinedGraph' ? 'combined' : highchart.data.graphType,
     contentKey: highchart._id,
     footnoteText: highchart.data.footnoteText ? util.data.forceArray(highchart.data.footnoteText) : undefined,
     creditsEnabled: highchart.data.sourceList ? true : false,

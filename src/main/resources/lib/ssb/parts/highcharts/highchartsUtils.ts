@@ -5,7 +5,7 @@ import { HighchartsGraphConfig } from '/lib/types/highcharts'
 import {
   SeriesAndCategories,
   prepareHighchartsData,
-  getSeriesAndCategoriesCombinedGraph,
+  prepareCombinedGraphData,
 } from '/lib/ssb/parts/highcharts/highchartsData'
 import { mergeDeepRight } from '/lib/vendor/ramda'
 
@@ -32,9 +32,7 @@ export function createHighchartObject(
 }
 
 export function createCombinedGraphObject(combinedGraph: Content<CombinedGraph>): HighchartsGraphConfig {
-  log.info('\x1b[32m%s\x1b[0m', '2. createCombinedGraphConfig')
-  const combinedGraphData: SeriesAndCategories | undefined = getSeriesAndCategoriesCombinedGraph(combinedGraph)
-
+  const combinedGraphData: SeriesAndCategories | undefined = prepareCombinedGraphData(combinedGraph)
   const combinedGraphConfig: HighchartsGraphConfig = prepareCombinedGraphConfig(
     combinedGraph,
     combinedGraphData?.categories,

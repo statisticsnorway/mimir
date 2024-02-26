@@ -16,7 +16,6 @@ export function prepareHighchartsData(
   data: JSONstat | TbmlDataUniform | object | string | undefined,
   dataSource: DataSource['dataSource']
 ): SeriesAndCategories | undefined {
-  log.info('\x1b[32m%s\x1b[0m', '4. prepareHighchartsData')
   const seriesAndCategories: SeriesAndCategories | undefined = getSeriesAndCategories(
     req,
     highchartsContent,
@@ -54,10 +53,8 @@ export function getSeriesAndCategories(
   return undefined
 }
 
-export function getSeriesAndCategoriesCombinedGraph(
-  combinedGraph: Content<CombinedGraph>
-): SeriesAndCategories | undefined {
-  log.info('\x1b[32m%s\x1b[0m', '3. getSeriesAndCategoriesCombinedGraph')
+export function prepareCombinedGraphData(combinedGraph: Content<CombinedGraph>): SeriesAndCategories | undefined {
+  log.info('\x1b[32m%s\x1b[0m', '3. prepareCombinedGraphData')
   if (combinedGraph.data.dataSource && combinedGraph.data.dataSource._selected === DataSourceType.HTMLTABLE) {
     return seriesAndCategoriesFromHtmlTable(combinedGraph)
   }
