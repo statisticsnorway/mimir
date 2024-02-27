@@ -95,7 +95,7 @@ function renderPart(req: XP.Request, highmapId: string | undefined): XP.Response
             const name: string = getRowValue(row.td[0]) as string
             const value: number = getRowValue(row.td[1]) as number
             tableData.push({
-              capitalName: name, // Matches map result name
+              capitalName: name.toUpperCase(), // Matches map result name
               value: value,
             })
           }
