@@ -73,6 +73,7 @@ function renderPart(req: XP.Request): XP.Response {
       {
         id: id,
         body: `<section class="xp-part part-category-link"></section>`,
+        hydrate: false,
       }
     )
 

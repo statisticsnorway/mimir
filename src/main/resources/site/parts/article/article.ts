@@ -87,6 +87,7 @@ function renderPart(req: XP.Request) {
     pageContributions: {
       bodyEnd: [scriptAsset('js/divider.js')],
     },
+    hydrate: false,
   })
 }
 

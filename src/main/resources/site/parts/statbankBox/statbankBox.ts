@@ -47,6 +47,7 @@ function renderStatbankBox(req: XP.Request, statbankBoxContent: StatbankBoxProps
     req,
     {
       body: '<section class="xp-part part-statbank-box"></section>',
+      hydrate: false,
     }
   )
 }

@@ -29,6 +29,7 @@ function renderPart(req: XP.Request): XP.Response {
     req,
     {
       body: '<section class="xp-part picture-card-links container my-5"></section>',
+      hydrate: false,
     }
   )
 }

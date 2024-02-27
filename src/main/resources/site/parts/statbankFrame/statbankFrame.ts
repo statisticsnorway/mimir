@@ -49,7 +49,9 @@ function renderPart(req: XP.Request) {
     statbankHelpLink,
   }
 
-  return render('site/parts/statbankFrame/statbankFrame', props, req)
+  return render('site/parts/statbankFrame/statbankFrame', props, req, {
+    hydrate: false,
+  })
 }
 
 interface PartProperties {

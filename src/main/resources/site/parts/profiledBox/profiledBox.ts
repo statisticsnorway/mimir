@@ -58,6 +58,7 @@ function renderPart(req: XP.Request): XP.Response {
   return r4xpRender('site/parts/profiledBox/profiledBox', props, req, {
     id: id,
     body: body,
+    hydrate: false,
   })
 }
 
