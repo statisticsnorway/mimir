@@ -5,7 +5,6 @@ import { GetCombinedGraphOptions } from '/lib/ssb/parts/highcharts/highchartsGra
 import { CombinedGraph } from '/site/content-types'
 
 export function combinedGraphConfig(highchartContent: Content<CombinedGraph>, options: GetCombinedGraphOptions) {
-  log.info('\x1b[32m%s\x1b[0m', '6. combinedGraphConfig')
   const defaultConfig = createDefaultConfig(
     highchartContent.data,
     highchartContent.displayName,

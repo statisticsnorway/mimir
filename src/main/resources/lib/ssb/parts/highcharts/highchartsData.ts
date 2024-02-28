@@ -12,7 +12,7 @@ import { type DataSource } from '/site/mixins/dataSource'
 
 export function prepareHighchartsData(
   req: XP.Request,
-  highchartsContent: Content<Highchart>,
+  highchartsContent: Content<Highchart | CombinedGraph>,
   data: JSONstat | TbmlDataUniform | object | string | undefined,
   dataSource: DataSource['dataSource']
 ): SeriesAndCategories | undefined {
@@ -22,20 +22,22 @@ export function prepareHighchartsData(
     data,
     dataSource
   )
-
+  if (highchartsContent.type === `${app.name}:combinedGraph`) {
+    return seriesAndCategories
+  }
   const seriesAndCategoriesOrData: SeriesAndCategories | undefined =
     seriesAndCategories && !seriesAndCategories.series
-      ? addDataProperties(highchartsContent, seriesAndCategories)
+      ? addDataProperties(highchartsContent as Content<Highchart>, seriesAndCategories)
       : seriesAndCategories
 
   return seriesAndCategoriesOrData !== undefined
-    ? switchRowsAndColumnsCheck(highchartsContent, seriesAndCategoriesOrData)
+    ? switchRowsAndColumnsCheck(highchartsContent as Content<Highchart>, seriesAndCategoriesOrData)
     : seriesAndCategoriesOrData
 }
 
 export function getSeriesAndCategories(
   req: XP.Request,
-  highchart: Content<Highchart>,
+  highchart: Content<Highchart | CombinedGraph>,
   data: JSONstat | TbmlDataUniform | object | string | undefined,
   dataSource: DataSource['dataSource']
 ): SeriesAndCategories | undefined {
@@ -44,19 +46,14 @@ export function getSeriesAndCategories(
   } else if (dataSource && dataSource._selected === DataSourceType.TBPROCESSOR) {
     return seriesAndCategoriesFromTbml(
       data as TbmlDataUniform,
-      highchart.data.graphType,
+      (highchart as Content<Highchart>).data.graphType,
       highchart.data.xAxisType || 'linear'
     )
-  } else if (highchart.data.htmlTable) {
+  } else if (
+    (highchart as Content<Highchart>).data.htmlTable ||
+    (highchart.data.dataSource && highchart.data.dataSource._selected === DataSourceType.HTMLTABLE)
+  ) {
     return seriesAndCategoriesFromHtmlTable(highchart)
-  }
-  return undefined
-}
-
-export function prepareCombinedGraphData(combinedGraph: Content<CombinedGraph>): SeriesAndCategories | undefined {
-  log.info('\x1b[32m%s\x1b[0m', '3. prepareCombinedGraphData')
-  if (combinedGraph.data.dataSource && combinedGraph.data.dataSource._selected === DataSourceType.HTMLTABLE) {
-    return seriesAndCategoriesFromHtmlTable(combinedGraph)
   }
   return undefined
 }

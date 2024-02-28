@@ -17,7 +17,7 @@ import {
 import { scriptAsset } from '/lib/ssb/utils/utils'
 
 import * as util from '/lib/util'
-import { createHighchartObject, createCombinedGraphObject } from '/lib/ssb/parts/highcharts/highchartsUtils'
+import { createHighchartObject } from '/lib/ssb/parts/highcharts/highchartsUtils'
 import { renderError } from '/lib/ssb/error/error'
 import { datasetOrUndefined } from '/lib/ssb/cache/cache'
 import { hasWritePermissionsAndPreview } from '/lib/ssb/parts/permissions'
@@ -81,10 +81,8 @@ function renderPart(req: XP.Request, highchartIds: Array<string>): XP.Response {
       const highchart: Content<Highchart & DataSource> | Content<CombinedGraph> | null = getContentByKey({
         key,
       })
-      const config: HighchartsExtendedProps | undefined =
-        highchart?.type === `${app.name}:combinedGraph`
-          ? createCombinedGraphObject(highchart as Content<CombinedGraph>)
-          : determinConfigType(req, highchart as Content<Highchart & DataSource>)
+      const isCombinedGraph: boolean = highchart?.type === `${app.name}:combinedGraph`
+      const config: HighchartsExtendedProps | undefined = determinConfigType(req, highchart, isCombinedGraph)
       return highchart && config ? createHighchartsReactProps(highchart as Content<Highchart>, config) : {}
     })
     .filter((key) => !!key)
@@ -133,17 +131,24 @@ function renderPart(req: XP.Request, highchartIds: Array<string>): XP.Response {
 
 function determinConfigType(
   req: XP.Request,
-  highchart: Content<Highchart & DataSource>
+  highchart: Content<Highchart & DataSource> | Content<CombinedGraph> | null,
+  isCombinedGraph: boolean
 ): HighchartsExtendedProps | undefined {
+  if (isCombinedGraph) {
+    return createDataFromHtmlTable(req, highchart as Content<CombinedGraph>)
+  }
   if (highchart && highchart.data.dataSource) {
-    return createDataFromDataSource(req, highchart)
-  } else if (highchart && highchart.data.htmlTable) {
-    return createDataFromHtmlTable(req, highchart)
+    return createDataFromDataSource(req, highchart as Content<Highchart & DataSource>)
+  } else if ((highchart as Content<Highchart>)?.data.htmlTable) {
+    return createDataFromHtmlTable(req, highchart as Content<Highchart>)
   }
   return undefined
 }
 
-function createDataFromHtmlTable(req: XP.Request, highchart: Content<Highchart & DataSource>): HighchartsExtendedProps {
+function createDataFromHtmlTable(
+  req: XP.Request,
+  highchart: Content<Highchart & DataSource> | Content<CombinedGraph>
+): HighchartsExtendedProps {
   return {
     ...createHighchartObject(req, highchart, highchart.data, undefined),
   }

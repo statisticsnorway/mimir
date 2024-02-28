@@ -13,7 +13,6 @@ const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 export function seriesAndCategoriesFromHtmlTable(
   highChartsContent: Content<Highchart | CombinedGraph>
 ): SeriesAndCategories {
-  log.info('\x1b[32m%s\x1b[0m', '4. seriesAndCategoriesFromHtmlTable')
   const isCombinedGraph: boolean = highChartsContent.type === `${app.name}:combinedGraph`
   const htmlTable: string | undefined = isCombinedGraph
     ? (highChartsContent as Content<CombinedGraph>).data.dataSource?.htmlTable.html
