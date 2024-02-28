@@ -2,6 +2,7 @@ import { getContent, getComponent, pageUrl, serviceUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 import { renderError } from '/lib/ssb/error/error'
 import { render } from '/lib/enonic/react4xp'
+import { NameSearchProps } from '/lib/types/partTypes/nameSearch'
 import { GA_TRACKING_ID } from '/site/pages/default/default'
 import { type NameSearch as NameSearchPartConfig } from '.'
 
@@ -27,7 +28,7 @@ function renderPart(req: XP.Request) {
 
   const currentContent = getContent()
 
-  const props: PartProperties = {
+  const props: NameSearchProps = {
     urlToService: urlToService,
     aboutLink: aboutLinkResources(component.config),
     nameSearchDescription: component.config.nameSearchDescription,
@@ -40,7 +41,7 @@ function renderPart(req: XP.Request) {
   return render('site/parts/nameSearch/nameSearch', props, req)
 }
 
-function aboutLinkResources(config: NameSearchPartConfig): PartProperties['aboutLink'] | undefined {
+function aboutLinkResources(config: NameSearchPartConfig): NameSearchProps['aboutLink'] | undefined {
   if (config.aboutLinkTitle && config.aboutLinkTarget) {
     return {
       title: config.aboutLinkTitle,
@@ -52,7 +53,7 @@ function aboutLinkResources(config: NameSearchPartConfig): PartProperties['about
   return undefined
 }
 
-function partsPhrases(locale: string): PartProperties['phrases'] {
+function partsPhrases(locale: string): NameSearchProps['phrases'] {
   return {
     nameSearchTitle: localize({
       key: 'nameSearch.title',
@@ -221,61 +222,4 @@ function partsPhrases(locale: string): PartProperties['phrases'] {
       locale,
     }),
   }
-}
-
-interface PartProperties {
-  urlToService: string
-  aboutLink?: {
-    title: string
-    url: string
-  }
-  nameSearchDescription?: string
-  frontPage: boolean
-  phrases: {
-    nameSearchTitle: string
-    nameSearchInputLabel: string
-    nameSearchButtonText: string
-    interestingFacts: string
-    nameSearchResultTitle: string
-    thereAre: string
-    with: string
-    have: string
-    asTheir: string
-    errorMessage: string
-    networkErrorMessage: string
-    threeOrLessText: string
-    yAxis: string
-    graphHeader: string
-    loadingGraph: string
-    threeOrLessTextGraph: string
-    historicalTrend: string
-    chart: string
-    women: string
-    men: string
-    types: {
-      firstgivenandfamily: string
-      middleandfamily: string
-      family: string
-      onlygiven: string
-      onlygivenandfamily: string
-      firstgiven: string
-    }
-    printChart: string
-    downloadPNG: string
-    downloadJPEG: string
-    downloadPDF: string
-    downloadSVG: string
-    downloadCSV: string
-    downloadXLS: string
-    chartContainerLabel: string
-    chartMenuLabel: string
-    menuButtonLabel: string
-    beforeRegionLabel: string
-    legendItem: string
-    legendLabel: string
-    legendLabelNoTitle: string
-    close: string
-  }
-  language: string
-  GA_TRACKING_ID: string | null
 }

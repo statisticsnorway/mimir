@@ -1,22 +1,17 @@
-import { Node } from '@enonic-types/lib-node'
 import { get as getContentByKey, type Content } from '/lib/xp/content'
 import { sanitizeHtml, getContent, getComponent, pageUrl, serviceUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 import { render } from '/lib/enonic/react4xp'
-import {
-  type PreparedSearchResult,
-  type SolrPrepResultAndTotal,
-  type Facet,
-  solrSearch,
-} from '/lib/ssb/utils/solrUtils'
-import { type SolrResponse, getNameSearchResult } from '/lib/ssb/utils/nameSearchUtils'
+import { solrSearch } from '/lib/ssb/utils/solrUtils'
+import { getNameSearchResult } from '/lib/ssb/utils/nameSearchUtils'
+import { type SolrResponse, type PreparedSearchResult, type SolrPrepResultAndTotal } from '/lib/types/solr'
 import { queryNodes, getNode } from '/lib/ssb/repo/common'
 import { formatDate } from '/lib/ssb/utils/dateUtils'
-import { type BestBetContent } from '/lib/ssb/repo/bestbet'
 
 import { renderError } from '/lib/ssb/error/error'
 import { sanitizeForSolr } from '/lib/ssb/utils/textUtils'
 import { isEnabled } from '/lib/featureToggle'
+import { BestBet, ContentTypePhrase, SearchResultProps } from '/lib/types/partTypes/searchResult'
 
 export function get(req: XP.Request): XP.Response {
   try {
@@ -389,78 +384,4 @@ export function renderPart(req: XP.Request) {
   }
 
   return render('site/parts/searchResult/searchResultView', props, req)
-}
-
-interface BestBet extends Node {
-  data: {
-    linkedSelectedContentResult: BestBetContent['linkedSelectedContentResult']
-    linkedContentTitle: BestBetContent['linkedContentTitle']
-    linkedContentHref: BestBetContent['linkedContentHref']
-    linkedContentIngress: BestBetContent['linkedContentIngress']
-    linkedContentType: BestBetContent['linkedContentType']
-    linkedContentDate: BestBetContent['linkedContentDate']
-    linkedContentSubject: BestBetContent['linkedContentSubject']
-    linkedEnglishContentSubject: BestBetContent['linkedEnglishContentSubject']
-    searchWords: BestBetContent['searchWords']
-  }
-}
-
-interface SearchResultProps {
-  bestBetHit: PreparedSearchResult | undefined
-  hits: Array<PreparedSearchResult>
-  title: string
-  total: number
-  count: number
-  term: string
-  buttonTitle: string
-  noHitMessage: string
-  showingPhrase: string
-  limitResultPhrase: string
-  removeFilterPhrase: string
-  mainSearchPhrase: string
-  chooseSubjectPhrase: string
-  chooseContentTypePhrase: string
-  searchText: string
-  sortPhrase: string
-  sortBestHitPhrase: string
-  sortDatePhrase: string
-  allContentTypesPhrase: string
-  allSubjectsPhrase: string
-  searchServiceUrl: string
-  nameSearchToggle: boolean
-  nameSearchData: object | undefined
-  nameSearchUrl: string
-  namePhrases: {
-    readMore: string
-    nameSearchResultTitle: string
-    thereAre: string
-    with: string
-    have: string
-    asTheir: string
-    threeOrLessText: string
-    women: string
-    men: string
-    types: {
-      firstgivenandfamily: string
-      middleandfamily: string
-      family: string
-      onlygiven: string
-      onlygivenandfamily: string
-      firstgiven: string
-    }
-  }
-  searchPageUrl: string
-  language: string
-  contentTypePhrases: Array<ContentTypePhrase>
-  contentTypes: Array<Facet>
-  subjects: Array<Facet>
-  GA_TRACKING_ID: string | null
-  contentTypeUrlParam: string | undefined
-  subjectUrlParam: string | undefined
-  searchResultSRText: string
-}
-
-interface ContentTypePhrase {
-  id: string
-  title: string
 }

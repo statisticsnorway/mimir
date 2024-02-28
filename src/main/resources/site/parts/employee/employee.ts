@@ -6,6 +6,7 @@ import { imageUrl } from '/lib/ssb/utils/imageUtils'
 
 import { renderError } from '/lib/ssb/error/error'
 import * as util from '/lib/util'
+import { Area, CVinformation, EmployeeProp, Project } from '/lib/types/partTypes/employee'
 import { type Default as DefaultPageConfig } from '/site/pages/default'
 import { type Employee, type Page } from '/site/content-types'
 
@@ -178,48 +179,4 @@ function parseProject(projects: Employee['projects']): Array<Project> {
       description: seoDescription ?? '',
     }
   })
-}
-
-interface EmployeeProp {
-  title: string
-  email: string
-  position: string
-  phone: string
-  description: string
-  profileImages: Array<string> | void[]
-  myCV: string | null
-  projects: Array<Project>
-  area: Area | null
-  isResearcher: boolean
-  cristinId: string | null
-  cvInformation: CVinformation
-  emailPhrase: string
-  phonePhrase: string
-  positionPhrase: string
-  researchAreaPhrase: string
-  departmentPhrase: string
-  briefSummaryPhrase: string
-  projectsPhrase: string
-  downloadPdfPhrase: string
-  publicationsPhrase: string
-  pressPicturesPhrase: string
-  pressPicturesDescrPhrase: string
-  pressPictureLabelPhrase: string
-  imagePhrase: string
-}
-
-interface Project {
-  href: string
-  title: string
-  description: string
-}
-interface Area {
-  href: string
-  title: string
-}
-
-interface CVinformation {
-  name: string
-  size: number
-  mimeType: string
 }

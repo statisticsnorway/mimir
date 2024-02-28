@@ -2,6 +2,7 @@ import { get as getContentByKey, type Content } from '/lib/xp/content'
 import { getComponent, attachmentUrl, pageUrl } from '/lib/xp/portal'
 import { render } from '/lib/enonic/react4xp'
 import { renderError } from '/lib/ssb/error/error'
+import { LinksProps } from '/lib/types/partTypes/links'
 import { GA_TRACKING_ID } from '/site/pages/default/default'
 import { type Links as LinksPartConfig } from '.'
 
@@ -119,13 +120,4 @@ export function prepareText(content: Content, linkText: string | undefined): str
   }
 
   return linkText
-}
-
-export interface LinksProps {
-  children: string
-  href: string
-  withIcon: boolean | string
-  linkType: string
-  description: string
-  title: string
 }

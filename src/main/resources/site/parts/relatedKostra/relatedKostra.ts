@@ -4,6 +4,7 @@ import { render } from '/lib/enonic/react4xp'
 
 import { pageMode } from '/lib/ssb/utils/utils'
 import { renderError } from '/lib/ssb/error/error'
+import { RelatedKostraProps } from '/lib/types/partTypes/relatedKostra'
 
 export function get(req: XP.Request): XP.Response {
   try {
@@ -50,12 +51,4 @@ function renderPart(req: XP.Request, municipality: MunicipalityWithCounty | unde
   }
 
   return render('site/parts/relatedKostra/relatedKostra', props, req)
-}
-
-interface RelatedKostraProps {
-  title: string
-  description: string
-  href: string
-  children: string
-  linkType: string
 }

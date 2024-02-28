@@ -18,6 +18,12 @@ import { getAllStatisticsFromRepo } from '/lib/ssb/statreg/statistics'
 
 import { ensureArray } from '/lib/ssb/utils/arrayUtils'
 import { fromPartCache } from '/lib/ssb/cache/partCache'
+import {
+  MainSubjectWithSubs,
+  PreparedSubs,
+  StatbankSubjectTreeProps,
+  SubSubjectsWithStatistics,
+} from '/lib/types/partTypes/StatbankSubjectTree'
 
 export function get(req: XP.Request) {
   const content = getContent()
@@ -51,7 +57,7 @@ function getStatbankSubjectTree(req: XP.Request, content: Content) {
   const baseUrl: string = app.config && app.config['ssb.baseUrl'] ? app.config['ssb.baseUrl'] : 'https://www.ssb.no'
   const statbankBaseUrl: string =
     content.language && content.language === 'en' ? baseUrl + '/en/statbank/list/' : baseUrl + '/statbank/list/'
-  const props: ReactProps = {
+  const props: StatbankSubjectTreeProps = {
     statbankBaseUrl,
     mainSubjects,
   }
@@ -115,21 +121,4 @@ function prepareSubSubjects(
     ...subSubject,
     statistics: allStatistics,
   }
-}
-
-type MainSubjectWithSubs = SubjectItem & SubSubs
-
-type SubSubjectsWithStatistics = SubjectItem & PreparedSubs
-
-interface SubSubs {
-  subSubjects: Array<PreparedSubs>
-}
-
-interface PreparedSubs {
-  statistics: Array<{ title: string; url: string }>
-}
-
-interface ReactProps {
-  statbankBaseUrl: string
-  mainSubjects: Array<MainSubjectWithSubs>
 }

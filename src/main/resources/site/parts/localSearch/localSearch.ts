@@ -3,6 +3,7 @@ import { getComponent, pageUrl } from '/lib/xp/portal'
 import { render } from '/lib/enonic/react4xp'
 
 import { renderError } from '/lib/ssb/error/error'
+import { LocalSearchProps, SearchFolderItem, SearchItem } from '/lib/types/partTypes/localSearch'
 
 export function get(req: XP.Request): XP.Response {
   try {
@@ -44,31 +45,11 @@ function renderPart(req: XP.Request) {
       })
     : []
 
-  const props: PartProperties = {
+  const props: LocalSearchProps = {
     title: config.title,
     placeholder: config.searchPlaceholder,
     items: filteredItems,
   }
 
   return render('site/parts/localSearch/localSearch', props, req)
-}
-
-interface PartProperties {
-  title: string
-  placeholder: string
-  items: object
-}
-
-interface SearchItem {
-  title: string
-  id: string
-  url: string
-}
-
-interface SearchFolderItem {
-  _id: string
-  displayName: string
-  data: {
-    serialNumber?: string
-  }
 }

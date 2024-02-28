@@ -15,6 +15,7 @@ import { getStatisticByIdFromRepo, getReleaseDatesByVariants } from '/lib/ssb/st
 import { getPhrases } from '/lib/ssb/utils/language'
 import { fromPartCache } from '/lib/ssb/cache/partCache'
 import * as util from '/lib/util'
+import { AboutTheStatisticsProps, Category, Items } from '/lib/types/partTypes/omStatistikken'
 import { type Statistics, type OmStatistikken } from '/site/content-types'
 
 export function get(req: XP.Request): XP.Response {
@@ -95,7 +96,7 @@ function getOmStatistikken(req: XP.Request, page: Content<any>, aboutTheStatisti
 
   const aboutTheStatisticsData: OmStatistikken | undefined = aboutTheStatisticsContent?.data
 
-  const props: AboutTheStatisticProps = {
+  const props: AboutTheStatisticsProps = {
     accordions: aboutTheStatisticsData ? getAccordionData(aboutTheStatisticsData, phrases, nextRelease) : [],
     label: phrases.aboutTheStatistics,
     ingress: aboutTheStatisticsData?.ingress ?? '',
@@ -277,23 +278,4 @@ function isNotEmpty(obj: object | undefined): boolean {
     return Object.keys(obj).length > 0
   }
   return false
-}
-
-interface Items {
-  definition: Array<string>
-  administrativeInformation: Array<string>
-  background: Array<string>
-  production: Array<string>
-  accuracyAndReliability: Array<string>
-  aboutSeasonalAdjustment: Array<string>
-}
-
-interface Category {
-  [key: string]: string
-}
-
-interface AboutTheStatisticProps {
-  accordions: Array<Accordion>
-  label: string
-  ingress: string
 }

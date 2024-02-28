@@ -7,6 +7,7 @@ import { type KeyFigureView, parseKeyFigure } from '/lib/ssb/parts/keyFigure'
 import { renderError } from '/lib/ssb/error/error'
 import { data } from '/lib/util'
 import { DATASET_BRANCH } from '/lib/ssb/repo/dataset'
+import { FrontPageKeyFigureData, FrontpageKeyfigure } from '/lib/types/partTypes/frontpageKeyfigures'
 import { type KeyFigure } from '/site/content-types'
 
 const view = resolve('./frontpageKeyfigures.html')
@@ -83,20 +84,4 @@ function renderFrontpageKeyfigures(req: XP.Request, frontpageKeyfigures: Array<F
       body: render(view),
     }
   )
-}
-
-interface FrontpageKeyfigure {
-  keyfigure?: string
-  urlText: string
-  url: string
-}
-
-interface FrontPageKeyFigureData {
-  id: string
-  title: string
-  urlText: string
-  url: string
-  number?: string
-  numberDescription?: string
-  noNumberText: string
 }

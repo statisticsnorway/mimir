@@ -1,4 +1,5 @@
-import { SolrPrepResultAndTotal, solrSearch } from '/lib/ssb/utils/solrUtils'
+import { SolrPrepResultAndTotal } from '/lib/types/solr'
+import { solrSearch } from '/lib/ssb/utils/solrUtils'
 
 import { sanitizeForSolr } from '/lib/ssb/utils/textUtils'
 

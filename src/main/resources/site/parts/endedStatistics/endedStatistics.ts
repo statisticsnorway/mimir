@@ -6,6 +6,7 @@ import { render } from '/lib/enonic/react4xp'
 import * as util from '/lib/util'
 import { getPhrases } from '/lib/ssb/utils/language'
 import { renderError } from '/lib/ssb/error/error'
+import { EndedStatistic } from '/lib/types/partTypes/endedStatistics'
 import { type Statistics } from '/site/content-types'
 import { type EndedStatistics as EndedStatisticsPartConfig } from '.'
 
@@ -39,7 +40,7 @@ function renderPart(req: XP.Request): XP.Response {
 
 function renderEndedStatistics(
   req: XP.Request,
-  endedStatisticsContent: Array<EndedStatistic | undefined>,
+  endedStatisticsContent: Array<EndedStatistic@@ | undefined>,
   phrases: Phrases
 ) {
   if (endedStatisticsContent && endedStatisticsContent.length) {
@@ -100,10 +101,4 @@ function parseContent(
       })
       .filter((statistics) => !!statistics)
   } else return []
-}
-
-interface EndedStatistic {
-  title: string
-  preamble: string
-  href: string
 }

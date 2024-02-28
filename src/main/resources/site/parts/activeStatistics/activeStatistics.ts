@@ -6,6 +6,7 @@ import { render as r4XpRender } from '/lib/enonic/react4xp'
 
 import * as util from '/lib/util'
 import { renderError } from '/lib/ssb/error/error'
+import { ActiveStatistic } from '/lib/types/partTypes/activeStatistics'
 import { type Statistics } from '/site/content-types'
 import { type ActiveStatistics as ActiveStatisticsPartConfig } from '.'
 
@@ -121,10 +122,4 @@ function parseContent(
       })
       .filter((statistics) => !!statistics)
   } else return []
-}
-
-interface ActiveStatistic {
-  title: string
-  preamble: string
-  href: string
 }

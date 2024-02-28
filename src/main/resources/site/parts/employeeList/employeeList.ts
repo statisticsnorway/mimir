@@ -2,6 +2,13 @@ import { type Content, query, get as getContentByKey } from '/lib/xp/content'
 import { getContent, getComponent, pageUrl } from '/lib/xp/portal'
 import { renderError } from '/lib/ssb/error/error'
 import { render } from '/lib/enonic/react4xp'
+import {
+  Area,
+  EmployeeListProps,
+  IEmployeeMap,
+  IObjectKeys,
+  IPreparedEmployee,
+} from '/lib/types/partTypes/employeeList'
 import { type Employee, type Page } from '/site/content-types'
 import { type Default as DefaultPageConfig } from '/site/pages/default'
 
@@ -34,7 +41,7 @@ function renderPart(req: XP.Request) {
   const preparedResults: Array<IPreparedEmployee> = prepareEmployees(queryResults.hits)
   const alphabeticalEmployeesList: Array<IEmployeeMap> = createAlphabeticalEmployeesList(preparedResults)
 
-  const props: IPartProps = {
+  const props: EmployeeListProps = {
     employees: alphabeticalEmployeesList,
     total: queryResults.total,
     pageTitle: content.displayName,
@@ -89,35 +96,4 @@ function createAlphabeticalEmployeesList(preparedResults: IPreparedEmployee[]): 
 
   const result: Array<IEmployeeMap> = Object.keys(data).map((key) => data[key])
   return result
-}
-
-interface IPartProps {
-  employees: IEmployeeMap[]
-  total: number
-  pageTitle: string
-  pageDescription: string
-}
-
-interface IPreparedEmployee {
-  surname: string
-  name: string
-  position: string
-  path: string
-  phone: string
-  email: string
-  area: string | Area
-}
-
-interface Area {
-  href: string
-  title: string
-}
-
-interface IObjectKeys {
-  [key: string]: IEmployeeMap
-}
-
-interface IEmployeeMap {
-  alphabet: string
-  record: IPreparedEmployee[]
 }

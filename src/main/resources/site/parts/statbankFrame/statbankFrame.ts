@@ -1,6 +1,7 @@
 import { getContent, getSiteConfig } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 import { render } from '/lib/enonic/react4xp'
+import { StatbankFrameProps } from '/lib/types/partTypes/statbankFrame'
 
 export function get(req: XP.Request) {
   return renderPart(req)
@@ -41,7 +42,7 @@ function renderPart(req: XP.Request) {
     },
   ]
 
-  const props: PartProperties = {
+  const props: StatbankFrameProps = {
     title: 'Statistikkbanken',
     breadcrumb: testCrumbs,
     statbankHelpText,
@@ -50,12 +51,4 @@ function renderPart(req: XP.Request) {
   }
 
   return render('site/parts/statbankFrame/statbankFrame', props, req)
-}
-
-interface PartProperties {
-  title: string
-  breadcrumb: Array<object>
-  statbankHelpText: string
-  statbankFrontPage: string
-  statbankHelpLink: string
 }

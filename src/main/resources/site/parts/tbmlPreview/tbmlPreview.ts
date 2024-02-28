@@ -4,6 +4,7 @@ import { type TbmlDataUniform } from '/lib/types/xmlParser'
 import { render } from '/lib/thymeleaf'
 import { render as r4xpRender } from '/lib/enonic/react4xp'
 import { renderError } from '/lib/ssb/error/error'
+import { TbmlPreviewProps } from '/lib/types/partTypes/tbmlPreview'
 
 const view = resolve('./tbmlPreview.html')
 
@@ -42,7 +43,7 @@ function renderPart(req: XP.Request): XP.Response {
   }
 
   const table: TableView = getTableViewData(tbmlData.parsedBody)
-  const props: TableProps = {
+  const props: TbmlPreviewProps = {
     displayName: `Forhåndsvisning TBML ${tbmlId}`,
     table: {
       caption: table.caption,
@@ -59,9 +60,4 @@ function renderPart(req: XP.Request): XP.Response {
     id,
     body: body,
   })
-}
-
-interface TableProps {
-  displayName: string
-  table: object
 }

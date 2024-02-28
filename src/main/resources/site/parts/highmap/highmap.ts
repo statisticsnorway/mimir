@@ -1,7 +1,6 @@
 import { get as getContentByKey, getAttachmentStream, type ByteSource, type Content } from '/lib/xp/content'
 import { getComponent, getContent } from '/lib/xp/portal'
 import { readText } from '/lib/xp/io'
-import { type RowData } from '/lib/ssb/parts/highcharts/data/htmlTable'
 import { isNumber, type RowValue } from '/lib/ssb/utils/utils'
 import { render } from '/lib/enonic/react4xp'
 import { type PreliminaryData, type XmlParser } from '/lib/types/xmlParser'
@@ -9,7 +8,13 @@ import { type PreliminaryData, type XmlParser } from '/lib/types/xmlParser'
 import * as util from '/lib/util'
 import { getPhrases } from '/lib/ssb/utils/language'
 import { renderError } from '/lib/ssb/error/error'
-import { Phrases } from '/lib/types/language'
+import {
+  HighmapFormattedTableData,
+  HighmapProps,
+  HighmapTable,
+  MapResult,
+  ThresholdValues,
+} from '/lib/types/partTypes/highmap'
 import { type Highmap } from '/site/content-types'
 
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
@@ -207,47 +212,4 @@ function getDataClass(formattedThresholdValues: Array<number>): Array<ThresholdV
   })
 
   return dataClasses
-}
-interface MapFeatures {
-  properties: {
-    name?: string
-    capitalName?: string
-  }
-}
-interface MapResult {
-  features: Array<MapFeatures>
-}
-interface HighmapTable {
-  table: {
-    tbody: {
-      tr: Array<RowData>
-    }
-  }
-}
-interface HighmapFormattedTableData {
-  capitalName: string
-  value: number
-}
-interface ThresholdValues {
-  to: number | undefined
-  from: number | undefined
-}
-interface HighmapProps {
-  title: string
-  subtitle: Highmap['subtitle']
-  description: Highmap['description']
-  mapFile: object
-  tableData: Array<HighmapFormattedTableData>
-  thresholdValues: Array<ThresholdValues>
-  hideTitle: Highmap['hideTitle']
-  colorPalette: Highmap['colorPalette']
-  numberDecimals: number | undefined
-  heightAspectRatio: Highmap['heightAspectRatio']
-  seriesTitle: Highmap['seriesTitle']
-  legendTitle: Highmap['legendTitle']
-  legendAlign: Highmap['legendAlign']
-  sourceList?: Highmap['sourceList']
-  footnoteText: Highmap['footnoteText']
-  phrases: Phrases | undefined
-  language: string | undefined
 }

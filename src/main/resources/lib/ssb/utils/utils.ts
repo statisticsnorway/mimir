@@ -4,6 +4,7 @@ import { getContent, pageUrl, assetUrl } from '/lib/xp/portal'
 import { readLines } from '/lib/xp/io'
 import { PreliminaryData } from '/lib/types/xmlParser'
 import { formatDate, fromNow } from '/lib/ssb/utils/dateUtils'
+import { SourceList, SourcesConfig } from '/lib/types/sources'
 import { type Header } from '/site/content-types'
 
 function numberWithSpaces(x: number | string): string {
@@ -171,22 +172,6 @@ export function scriptAsset(path: string): string {
 export const XP_RUN_MODE = ''.concat(Java.type('com.enonic.xp.server.RunMode').get())
 // ^ check for DEV mode
 
-export interface SourcesConfig {
-  _selected: string
-  urlSource: {
-    urlText: string
-    url: string
-  }
-  relatedSource: {
-    urlText: string
-    sourceSelector: string
-  }
-}
-
-interface Sources {
-  urlText: string
-  url: string
-}
 interface ContentSearchPageResult {
   contentId?: string
 }
@@ -194,5 +179,3 @@ interface ContentSearchPageResult {
 interface ManualSearchPageResult {
   url?: string
 }
-
-export type SourceList = Array<Sources>

@@ -4,6 +4,7 @@ import { imageUrl } from '/lib/ssb/utils/imageUtils'
 
 import { renderError } from '/lib/ssb/error/error'
 import { data } from '/lib/util'
+import { ExternalCard } from '/lib/types/partTypes/externalCard'
 
 export function get(req: XP.Request) {
   try {
@@ -54,11 +55,4 @@ const renderExternalCard = (req: XP.Request, links: Array<ExternalCard>) => {
     )
   }
   return NO_LINKS_FOUND
-}
-
-interface ExternalCard {
-  image: string
-  content: string
-  linkText: string
-  linkUrl: string
 }

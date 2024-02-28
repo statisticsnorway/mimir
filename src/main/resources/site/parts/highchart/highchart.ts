@@ -5,7 +5,6 @@ import { getComponent, getContent } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 import { JSONstat as JSONstatType } from '/lib/types/jsonstat-toolkit'
 import { type TbmlDataUniform } from '/lib/types/xmlParser'
-import { type HighchartsGraphConfig } from '/lib/types/highcharts'
 import { render } from '/lib/thymeleaf'
 import { render as r4XpRender } from '/lib/enonic/react4xp'
 import {
@@ -24,6 +23,7 @@ import { hasWritePermissionsAndPreview } from '/lib/ssb/parts/permissions'
 import { isEnabled } from '/lib/featureToggle'
 import { getPhrases } from '/lib/ssb/utils/language'
 import { getTbprocessorKey } from '/lib/ssb/dataset/tbprocessor/tbprocessor'
+import { HighchartsExtendedProps, HighchartsReactProps } from '/lib/types/partTypes/HighchartsReact'
 import { GA_TRACKING_ID } from '/site/pages/default/default'
 import { type DataSource } from '/site/mixins/dataSource'
 import { type Highchart } from '/site/content-types'
@@ -199,21 +199,4 @@ function createHighchartsReactProps(
     sourceList: highchart.data.sourceList ? util.data.forceArray(highchart.data.sourceList) : undefined,
     hideTitle: highchart.data.hideTitle,
   }
-}
-type HighchartsExtendedProps = HighchartsGraphConfig & HighchartsReactExtraProps
-
-interface HighchartsReactProps {
-  config?: HighchartsExtendedProps
-  description?: string
-  type?: string
-  contentKey?: string
-  footnoteText?: string[]
-  creditsEnabled?: boolean
-  sourceList?: Highchart['sourceList']
-  hideTitle?: boolean
-}
-
-interface HighchartsReactExtraProps {
-  draft?: boolean
-  noDraftAvailable?: boolean
 }

@@ -2,6 +2,7 @@ import { type Content, get as getTheContent } from '/lib/xp/content'
 import { localize } from '/lib/xp/i18n'
 import { getContent, pageUrl, processHtml } from '/lib/xp/portal'
 import { render } from '/lib/enonic/react4xp'
+import { ManagerLink, ProjectProps } from '/lib/types/partTypes/project'
 import { type Project } from '/site/content-types'
 
 export function preview(req: XP.Request) {
@@ -126,28 +127,4 @@ function getManager(managerId?: string | undefined): ManagerLink | undefined {
     }
   }
   return undefined
-}
-
-interface ManagerLink {
-  text: string
-  href: string
-}
-
-interface ProjectProps {
-  introTitle?: string
-  projectTitle?: string
-  manager?: ManagerLink
-  projectType?: string
-  projectPeriod?: string
-  financier?: string
-  heading?: string
-  ingress?: string
-  body?: string
-  participants?: string
-  collaborators?: string
-  periodPhrase?: string
-  financierPhrase?: string
-  participantsPhrase?: string
-  projectParticipantsPhrase?: string
-  collaboratorsPhrase?: string
 }

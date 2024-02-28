@@ -12,6 +12,7 @@ import {
 } from '/lib/ssb/dataset/klass/municipalities'
 
 import { renderError } from '/lib/ssb/error/error'
+import { MenuDropdownProps, Municipality } from '/lib/types/partTypes/menuDropdown'
 import { type MenuDropdown } from '/site/content-types'
 
 export function get(req: RequestWithCode): XP.Response {
@@ -94,23 +95,4 @@ function renderPart(req: RequestWithCode): XP.Response {
       bodyEnd: [scriptAsset('js/map.js')],
     },
   })
-}
-
-interface Municipality {
-  id: string
-  title: string
-}
-
-interface MenuDropdownProps {
-  modeMunicipality: boolean
-  ariaLabel: string
-  placeholder: string
-  items: Municipality[]
-  baseUrl: string
-  dataPathAssetUrl: string
-  dataServiceUrl: string
-  municipality: MunicipalityWithCounty | undefined
-  municipalityName: string | undefined
-  municipalityList: Array<Municipality>
-  dropdownId: string
 }

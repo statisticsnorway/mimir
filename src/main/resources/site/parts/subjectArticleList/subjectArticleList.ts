@@ -1,10 +1,12 @@
 import { type Content, type ContentsResult } from '/lib/xp/content'
 import { getContent, serviceUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
-import { type PreparedArticles, getChildArticles, prepareArticles } from '/lib/ssb/utils/articleUtils'
+import { getChildArticles, prepareArticles } from '/lib/ssb/utils/articleUtils'
 import { render } from '/lib/enonic/react4xp'
 
 import { isEnabled } from '/lib/featureToggle'
+import { SubjectArticleListProps } from '/lib/types/partTypes/subjectArticleList'
+import { PreparedArticles } from '/lib/types/article'
 import { type Article } from '/site/content-types'
 
 export function get(req: XP.Request) {
@@ -46,7 +48,7 @@ function renderPart(req: XP.Request) {
     locale: language === 'nb' ? 'no' : language,
   })
 
-  const props: PartProperties = {
+  const props: SubjectArticleListProps = {
     title: headerText,
     buttonTitle: buttonText,
     articleServiceUrl: articleServiceUrl,
@@ -61,18 +63,4 @@ function renderPart(req: XP.Request) {
   }
 
   return render('site/parts/subjectArticleList/subjectArticleList', props, req)
-}
-
-interface PartProperties {
-  title: string
-  buttonTitle: string
-  articleServiceUrl: string
-  currentPath: string
-  start: number
-  count: number
-  showSortAndFilter: boolean
-  language: string
-  articles: Array<PreparedArticles>
-  totalArticles: number
-  showAllArticles: boolean
 }
