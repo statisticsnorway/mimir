@@ -74,6 +74,8 @@ declare global {
 
     namespace LayoutComponent {
       export type Triple = _LayoutComponent<'mimir:triple', XpLayoutMap['mimir:triple']>
+      export type Topic = _LayoutComponent<'mimir:topic', XpLayoutMap['mimir:topic']>
+      export type Columns = _LayoutComponent<'mimir:columns', XpLayoutMap['mimir:columns']>
     }
   }
 }

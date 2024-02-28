@@ -1,4 +1,4 @@
-__non_webpack_require__('/lib/ssb/polyfills/nashorn')
+import '/lib/ssb/polyfills/nashorn'
 import { get as getContent, Content } from '/lib/xp/content'
 import { NodeQueryResultHit } from '/lib/xp/node'
 import { send } from '/lib/xp/event'

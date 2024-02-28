@@ -17,12 +17,11 @@ _OBS_ : the examples are self-referential and use other functions from the same 
 Execute `callback: () => T` using SuperUser credentials
 
 **Example**
-```javascript
-const repo: RepoLibrary = __non_webpack_require__('/lib/xp/repo')
-
+```typescript
+import { get } from '/lib/xp/repo'
 const getRepo = (repoName, branch) => {
   return withSuperUserContex(repoName, branch, () => {
-    return repo.get(repoName); 
+    return get(repoName); 
   });  
 }
 ``` 

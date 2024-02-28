@@ -1,170 +1,136 @@
 .part-menu-dropdown {
+  @include roboto;
   background-color: white;
+
   .container {
     z-index: 3;
   }
-  .container >div {
+
+  .menu-content {
     min-height: 92px;
-    @include media-breakpoint-down(md) {
-      flex-direction: column !important; // Override d-flex
-    }
   }
+
   .title-container {
-    min-height: 92px;
-    @include media-breakpoint-down(md) {
-      width: 100%;
-      justify-content: start;
-      
-      .title-choose-municipality {
-        padding: 0;
-      }
-    }
-    @include media-breakpoint-down(sm) {
-      .municipality {
-        max-width: 70vw;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-    }
-  }
-  .opacity-zero {
-    opacity: 0;
-  }
-  .opacity-one {
     opacity: 1;
-    transition: all .5s;
+    min-height: 92px;
+
+    .subtitle {
+      font-size: 14px;
+    }
+
+    .municipality {
+      font-size: 20px;
+      line-height: normal;
+    }
   }
-  .municipality {
-    font-size: 20px;
-    line-height: normal;
+
+  .search-container {
+    min-height: 92px;
+    .change-municipality {
+      margin-right: $spacer * 1.5;
+    }
   }
-  .subtitle {
-    font-size: 14px;
+
+  .municipality-mode {
+    .title-container {
+      opacity: 0;
+    }
   }
-  .dropdown {
-    left: 0;
+
+  &.fixed-top {
+    .municipality-mode {
+      .title-container {
+        opacity: 1;
+      }
+    }
   }
-  .dropdown-menu {
-    left: 0;
-    overflow-y: auto;
-    overflow-x: hidden;
-    max-height: 30vh;
-    min-width: 100%;
-  }
-  .show-map {
+
+  button.show-map {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    outline: inherit;
+
     margin-left: 30px;
     text-decoration: none;
     color: #030303;
     &:focus {
       border: $ssb-green-4 1px solid;
     }
-    i {
+    svg {
       color: $green4;
     }
-    i.map {
-      padding: 3px 5px 5px 5px;
-    }
-    i.chevron svg {
-      transform: rotate(0deg);
-      transition: all .5s;
-    }
-    &[aria-expanded="true"]{
-      i.map {
-        color: white;
-        background-color: $ssb-green-4;
-      }
-      i.chevron svg {
-          transform: rotate(-180deg);
-          transition: all .5s;
-        }
-    }
-    @include media-breakpoint-down(md) {
-      position: absolute;
-      top: 30px;
-      right: 55px;
-    }
   }
+
   .ssb-dropdown {
     width: 100%; // Override design system
     min-width: 100%; // Override design system
     max-width: 100%; // Override design system
   }
-  .show-search {
-    color: $ssb-green-4;
-    right: 0px;
-    i.search {
-      padding: 3px 5px 5px 5px;
-    }
-    &[aria-expanded="true"] {
-      i.search {
-        color: white;
-        background-color: $ssb-green-4;
-      }
-    }
-    @include media-breakpoint-down(md) {
-      position: absolute;
-      top: 33px;
-      right: 65px;
-    }
-  }
-  .btn-drawer-toggler {
-    background: none;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    outline: inherit;
-  }
 
-  #search-container {
-    display: flex;
-    align-items: center;
-
-    .change-municipality {
-      margin-right: $spacer * 1.5;
-    }
-  }
-  .card {
-    @include media-breakpoint-up(lg) {
-      display: flex;
-      flex-direction: row;
-    }
-    align-items: center;
-    border: none;
-  }
   @include media-breakpoint-down(md) {
-    .title-choose-municipality {
-      padding-left: 20px;
-      font-size: 28px;
-    }
-    .card {
-      border-radius: 0;
-      align-items: normal;
-    }
-    #search-container {
-      border-top: 1px solid $ssb-green-2;
+    .title-container {
       width: 100%;
-      top: 92px;
-      position: absolute;
-      border-bottom: 1px solid #aaaaaa;
-      background-color: #ffffff;
-      padding: 20px;
+      justify-content: start;
+      padding: 10px 10px 20px;
 
-      &.choose-municipality-search {
-        border: none;
+      .municipality {
+        padding-left: 0;
+        font-size: 20px;
       }
-      
-      &.hide-search {
+    }
+
+    .search-container {
+      top: 56px;
+      border-top: none;
+      width: 100%;
+      position: absolute;
+      background-color: #ffffff;
+      padding: 10px 10px 20px;
+
+      .choose-municipality-search {
+        width: 100%;
+        display: block !important;
+
+        .change-municipality {
+          padding-bottom: 10px;
+        }
+      }
+      .show-map {
         display: none;
+      }
+    }
+
+    .municipality-mode {
+      .menu-content,
+      .title-container {
+        min-height: 56px;
+      }
+
+      .search-container {
+        top: 0;
+      }
+    }
+
+    &.fixed-top {
+      .title-container {
+        padding: 12px 20px 12px;
+      }
+
+      .search-container {
+        display: none !important;
       }
     }
   }
   @include media-breakpoint-down(sm) {
     .title-container {
-      margin-left: 40px;
-    }
-    #search-container {
-      padding: 20px;
+      .municipality {
+        max-width: 70vw;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
     }
   }
 }

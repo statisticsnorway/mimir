@@ -1,6 +1,7 @@
 import React from 'react'
 import { Title, Link, Divider } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
+import { sanitize } from '../../../lib/ssb/utils/htmlUtils'
 
 function Article(props) {
   const phrases = props.phrases
@@ -65,11 +66,10 @@ function Article(props) {
 
   function renderArticleBody() {
     const { bodyText } = props
-
     if (bodyText) {
       return (
         <div className='col-lg-8 p-0'>
-          {/* 
+          {/*
             Macros will not be SSR in the part itself (where the output is recorded for mismatch checking),
             but swapped in after part render by XP pipeline.
             Since they are present when hydrating it causes hydration mismatch, so we supress the warning.
@@ -78,7 +78,7 @@ function Article(props) {
             className='article-body searchabletext'
             suppressHydrationWarning={true}
             dangerouslySetInnerHTML={{
-              __html: bodyText,
+              __html: sanitize(bodyText),
             }}
           />
         </div>

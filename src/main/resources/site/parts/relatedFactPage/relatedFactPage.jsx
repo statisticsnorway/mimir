@@ -20,12 +20,12 @@ function RelatedBoxes(props) {
   )
   const [total, setTotal] = useState(firstRelatedContents ? firstRelatedContents.total : 0)
   const [loading, setLoading] = useState(false)
-  const [focusElement, setFocusElement] = useState(false)
-  const currentElement = useRef(null)
+  const [wasClicked, setWasClicked] = useState(false)
+  const cards = useRef([])
 
   useEffect(() => {
-    if (focusElement && currentElement.current) {
-      currentElement.current.firstChild.focus()
+    if (cards.current.length > 4 && cards.current[4] && !wasClicked) {
+      cards.current[4].focus()
     }
   }, [relatedFactPages])
 
@@ -36,7 +36,8 @@ function RelatedBoxes(props) {
         params: {
           start: relatedFactPages.length,
           count: total - relatedFactPages.length,
-          partConfig,
+          ...partConfig,
+          contentIdList: JSON.stringify(partConfig.contentIdList),
         },
       })
       .then((res) => {
@@ -50,32 +51,20 @@ function RelatedBoxes(props) {
       })
   }
 
-  function fetchFirstRelatedFactPages() {
+  function resetRelatedFactPages() {
     setLoading(true)
-    axios
-      .get(relatedFactPageServiceUrl, {
-        params: {
-          start: 0,
-          count: 4,
-          partConfig,
-        },
-      })
-      .then((res) => {
-        if (res.data.relatedFactPages.length) {
-          setRelatedFactPages(res.data.relatedFactPages)
-          setTotal(res.data.total)
-        }
-      })
-      .finally(() => {
-        setLoading(false)
-      })
+    setRelatedFactPages(firstRelatedContents.relatedFactPages)
+    setTotal(firstRelatedContents.total)
+    setLoading(false)
   }
 
-  function handleButtonOnClick() {
-    if (total === relatedFactPages.length) {
-      fetchFirstRelatedFactPages()
-    } else {
+  function handleButtonOnClick(wasClicked) {
+    setWasClicked(wasClicked)
+
+    if (total > relatedFactPages.length) {
       fetchAllRelatedFactPages()
+    } else {
+      resetRelatedFactPages()
     }
   }
 
@@ -101,8 +90,9 @@ function RelatedBoxes(props) {
               aria-label={`${showingPhrase.replace('{0}', relatedFactPages.length)} ${total} ${factpagePluralName}`}
             >
               {relatedFactPages.map((relatedFactPageContent, index) => (
-                <li key={index} ref={index === 4 ? currentElement : null}>
+                <li key={index}>
                   <PictureCard
+                    ref={(element) => (cards.current[index] = element)}
                     className='mb-3'
                     imageSrc={relatedFactPageContent.image}
                     altText={relatedFactPageContent.imageAlt ?? ''}
@@ -118,12 +108,11 @@ function RelatedBoxes(props) {
               <div className='col-auto'>
                 <Button
                   ariaLabel={total > relatedFactPages.length && `${showAll} - ${total} ${factpagePluralName}`}
-                  onClick={handleButtonOnClick}
+                  onClick={() => handleButtonOnClick(true)}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' || e.key === ' ') {
                       e.preventDefault()
-                      setFocusElement((prev) => !prev)
-                      handleButtonOnClick()
+                      handleButtonOnClick(false)
                     }
                   }}
                 >

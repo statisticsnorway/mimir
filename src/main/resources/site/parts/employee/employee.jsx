@@ -2,6 +2,7 @@ import React from 'react'
 import { Button, Title, Link, Paragraph, Accordion } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
 import { Share2, Send, Smartphone, Eye, Home, Download, Image } from 'react-feather'
+import { sanitize } from '../../../lib/ssb/utils/htmlUtils'
 
 const Employee = (props) => {
   const {
@@ -208,7 +209,7 @@ const Employee = (props) => {
             <h2>{briefSummaryPhrase}</h2>
             <div
               dangerouslySetInnerHTML={{
-                __html: description,
+                __html: sanitize(description),
               }}
             ></div>
           </div>

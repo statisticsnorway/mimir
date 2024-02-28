@@ -7,7 +7,7 @@ import {
   refreshStatRegData,
   getStatRegNode,
 } from '/lib/ssb/repo/statreg'
-import { Socket, SocketEmitter } from '/lib/types/socket'
+import { type Socket, type SocketEmitter } from '/lib/wsUtil'
 import { StatRegLatestFetchInfoNode } from '/lib/ssb/statreg/eventLog'
 import { LogSummary, EVENT_LOG_BRANCH, EVENT_LOG_REPO, getQueryChildNodesStatus } from '/lib/ssb/repo/eventLog'
 import { Events, QueryInfo } from '/lib/ssb/repo/query'

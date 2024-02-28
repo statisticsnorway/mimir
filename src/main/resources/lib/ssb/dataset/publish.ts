@@ -1,4 +1,4 @@
-__non_webpack_require__('/lib/ssb/polyfills/nashorn')
+import '/lib/ssb/polyfills/nashorn'
 import { Content } from '/lib/xp/content'
 import { listener, EnonicEvent } from '/lib/xp/event'
 import { TaskInfo } from '/lib/xp/task'

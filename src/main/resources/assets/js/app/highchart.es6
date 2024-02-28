@@ -6,6 +6,7 @@ import Highcharts from 'highcharts'
 import highchartsModuleData from 'highcharts/modules/data'
 import highchartsModuleAccessibility from 'highcharts/modules/accessibility'
 import highchartsModuleExporting from 'highcharts/modules/exporting'
+import highchartsModuleOfflineExporting from 'highcharts/modules/offline-exporting'
 import highchartsModuleNoDataToDisplay from 'highcharts/modules/no-data-to-display'
 import highchartsModuleExportData from 'highcharts/modules/export-data'
 import zipcelx from 'zipcelx/lib/legacy'
@@ -15,8 +16,9 @@ import accessibilityLang from '../highchart-lang.json'
 // Initialize exporting module.
 highchartsModuleData(Highcharts)
 highchartsModuleAccessibility(Highcharts)
-highchartsModuleExporting(Highcharts)
 highchartsModuleNoDataToDisplay(Highcharts)
+highchartsModuleExporting(Highcharts)
+highchartsModuleOfflineExporting(Highcharts)
 highchartsModuleExportData(Highcharts)
 
 const EMPTY_CONFIG = {
@@ -112,6 +114,10 @@ export function init() {
           }
         }
 
+        if (canvas.data('type') === 'bar' || canvas.data('type') === 'column') {
+          config.yAxis.reversedStacks = false
+        }
+
         config.plotOptions.series.events = {
           legendItemClick: function (e) {
             // Possible bug: untested browser support for browserEvent (but works in IE8, chrome, FF...)
@@ -156,9 +162,7 @@ export function init() {
                 event_label: label,
               })
 
-              this.exportChart({
-                type: 'png',
-              })
+              this.exportChartLocal() //png is default
             },
           },
           downloadJPEG: {
@@ -169,8 +173,8 @@ export function init() {
                 event_label: label,
               })
 
-              this.exportChart({
-                type: 'jpeg',
+              this.exportChartLocal({
+                type: 'image/jpeg',
               })
             },
           },
@@ -182,7 +186,7 @@ export function init() {
                 event_label: label,
               })
 
-              this.exportChart({
+              this.exportChartLocal({
                 type: 'application/pdf',
               })
             },
@@ -195,8 +199,8 @@ export function init() {
                 event_label: label,
               })
 
-              this.exportChart({
-                type: 'svg',
+              this.exportChartLocal({
+                type: 'image/svg+xml',
               })
             },
           },

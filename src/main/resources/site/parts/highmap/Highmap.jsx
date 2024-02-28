@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import PropTypes from 'prop-types'
-import { Text } from '@statisticsnorway/ssb-component-library'
+import { Link, Text } from '@statisticsnorway/ssb-component-library'
 import { Col, Row } from 'react-bootstrap'
 import { useMediaQuery } from 'react-responsive'
 
@@ -11,23 +11,9 @@ import accessibilityLang from './../../../assets/js/highchart-lang.json'
 if (typeof Highcharts === 'object') {
   require('highcharts/modules/accessibility')(Highcharts)
   require('highcharts/modules/exporting')(Highcharts)
+  require('highcharts/modules/offline-exporting')(Highcharts)
   require('highcharts/modules/export-data')(Highcharts)
   require('highcharts/modules/map')(Highcharts)
-}
-
-function renderFootnotes(footnotes) {
-  if (footnotes.length) {
-    return (
-      <Row>
-        {footnotes.map((footnote) => (
-          <Col className='col-12' key={`footnote-${footnote}`}>
-            {footnote && <Text>{footnote}</Text>}
-          </Col>
-        ))}
-      </Row>
-    )
-  }
-  return
 }
 
 function Highmap(props) {
@@ -58,6 +44,12 @@ function Highmap(props) {
   const mapOptions = {
     chart: {
       height: desktop && props.heightAspectRatio && `${props.heightAspectRatio}%`,
+      style: {
+        color: '#21383a',
+        fontSize: '14px',
+        fontWeight: 'normal',
+        fontFamily: '"Open Sans Regular", "Arial", "DejaVu Sans", sans-serif',
+      },
     },
     accessibility: {
       enabled: true,
@@ -123,6 +115,9 @@ function Highmap(props) {
     exporting: {
       buttons: {
         contextButton: {
+          symbol: 'menu',
+          symbolStroke: '#00824D', // ssb-green-4
+          text: props.phrases['highcharts.download'],
           menuItems: [
             'printChart',
             'separator',
@@ -166,14 +161,34 @@ function Highmap(props) {
     },
   }
 
+  function renderHighchartsSource(sourceLink, index) {
+    return (
+      <div key={index} className='mt-3'>
+        <Link className='ssb-link stand-alone' href={sourceLink.sourceHref}>
+          {props.phrases.source}: {sourceLink.sourceText}
+        </Link>
+      </div>
+    )
+  }
+
   return (
-    <section className='part-highmap container'>
+    <section className='xp-part highchart-wrapper'>
       <Row>
-        <Col className='col-12 p-lg-0'>
-          <HighchartsReact highcharts={Highcharts} constructorType={'mapChart'} options={mapOptions} />
+        <Col className='col-12'>
+          <figure className='highcharts-figure mb-0 hide-title'>
+            {mapOptions.title?.text && <figcaption className='figure-title'>{mapOptions.title.text}</figcaption>}
+            {mapOptions.subtitle?.text && <p className='figure-subtitle'>{mapOptions.subtitle.text}</p>}
+            <HighchartsReact highcharts={Highcharts} constructorType={'mapChart'} options={mapOptions} />
+          </figure>
+          {props.footnoteText &&
+            props.footnoteText.map((footnote) => (
+              <Col className='footnote col-12' key={`footnote-${footnote}`}>
+                {footnote && <Text>{footnote}</Text>}
+              </Col>
+            ))}
+          {props.sourceList && props.sourceList.map(renderHighchartsSource)}
         </Col>
       </Row>
-      {renderFootnotes(props.footnoteText)}
     </section>
   )
 }
@@ -184,6 +199,7 @@ Highmap.propTypes = {
   description: PropTypes.string,
   mapFile: PropTypes.string,
   tableData: PropTypes.array,
+  style: PropTypes.object,
   thresholdValues: PropTypes.array,
   hideTitle: PropTypes.boolean,
   colorPalette: PropTypes.string,
@@ -192,6 +208,7 @@ Highmap.propTypes = {
   seriesTitle: PropTypes.string,
   legendTitle: PropTypes.string,
   legendAlign: PropTypes.string,
+  sourceList: PropTypes.array,
   footnoteText: PropTypes.array,
   phrases: PropTypes.object,
   language: PropTypes.string,

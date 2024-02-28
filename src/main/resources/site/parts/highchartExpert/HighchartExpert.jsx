@@ -8,6 +8,7 @@ import accessibilityLang from './../../../assets/js/highchart-lang.json'
 
 if (typeof Highcharts === 'object') {
   require('highcharts/modules/exporting')(Highcharts)
+  require('highcharts/modules/offline-exporting')(Highcharts)
   require('highcharts/modules/export-data')(Highcharts)
   require('highcharts/modules/data')(Highcharts)
   require('highcharts/modules/no-data-to-display')(Highcharts)

@@ -45,7 +45,7 @@ function renderPart(req: XP.Request): XP.Response {
   }
 
   return r4XpRender('site/parts/highchartExpert/HighchartExpert', { config: component.config.config }, _req, {
-    body: '<section class="xp-part part-highchart-expert"></section>',
+    body: '<section class="xp-part highchart-wrapper-expert"></section>',
   })
 }
 
@@ -60,7 +60,7 @@ function errorConfig(title = 'Feil i JSON konfigurasjon', message = '') {
     Det må begynne med <strong>{</strong> og slutte med <strong>}</strong>`
 
   return {
-    body: `<section class="xp-part part-highchart-expert part-config-error">
+    body: `<section class="xp-part highchart-wrapper-expert part-config-error">
     <h2>Highchart Ekspert - ${title}</h2>
     <p>
      ${_message}

@@ -1,8 +1,8 @@
 import { React4xp } from '/lib/enonic/react4xp'
-
 import { renderError } from '/lib/ssb/error/error'
+import { Glossary } from '.'
 
-export function macro(context: XP.MacroContext) {
+export function macro(context: XP.MacroContext<Glossary>) {
   try {
     return renderMacro(context)
   } catch (e) {
@@ -10,7 +10,7 @@ export function macro(context: XP.MacroContext) {
   }
 }
 
-const renderMacro = (context: XP.MacroContext) => {
+const renderMacro = (context: XP.MacroContext<Glossary>) => {
   const { text, explanation } = context.params
 
   if (!text) throw new Error('Missing param text')

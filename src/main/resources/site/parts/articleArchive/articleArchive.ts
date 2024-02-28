@@ -99,11 +99,6 @@ function getSubTitle(articleContent: Content<Article>, articleNamePhrase: string
 }
 
 export function parseArticleData(pageId: string, start: number, count: number, language: string): ParsedArticles {
-  const articleNamePhrase: string = localize({
-    key: 'articleName',
-    locale: language,
-  })
-
   const articles = query<Content<Article>>({
     start,
     count,
@@ -135,6 +130,13 @@ export function parseArticleData(pageId: string, start: number, count: number, l
   })
 
   const parsedArticles: Array<ParsedArticleData> = articles.hits.map((articleContent) => {
+    const articleType = articleContent.data.articleType
+      ? `contentType.search.${articleContent.data.articleType}`
+      : 'articleName'
+    const articleNamePhrase: string = localize({
+      key: articleType,
+      locale: language,
+    })
     return {
       year:
         // checking against an empty articleContent.publish object to throw a false

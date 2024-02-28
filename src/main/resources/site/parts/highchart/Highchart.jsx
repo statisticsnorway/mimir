@@ -10,6 +10,7 @@ import accessibilityLang from './../../../assets/js/highchart-lang.json'
 
 if (typeof Highcharts === 'object') {
   require('highcharts/modules/exporting')(Highcharts)
+  require('highcharts/modules/offline-exporting')(Highcharts)
   require('highcharts/modules/export-data')(Highcharts)
   require('highcharts/modules/data')(Highcharts)
   require('highcharts/modules/no-data-to-display')(Highcharts)
@@ -160,9 +161,7 @@ function Highchart(props) {
                     addGtagForEvent(props.GA_TRACKING_ID, action, category, label)
                   }
 
-                  this.exportChart({
-                    type: 'png',
-                  })
+                  this.exportChartLocal() // png is default
                 },
               },
               downloadJPEG: {
@@ -173,8 +172,8 @@ function Highchart(props) {
                     addGtagForEvent(props.GA_TRACKING_ID, action, category, label)
                   }
 
-                  this.exportChart({
-                    type: 'jpeg',
+                  this.exportChartLocal({
+                    type: 'image/jpeg',
                   })
                 },
               },
@@ -186,7 +185,7 @@ function Highchart(props) {
                     addGtagForEvent(props.GA_TRACKING_ID, action, category, label)
                   }
 
-                  this.exportChart({
+                  this.exportChartLocal({
                     type: 'application/pdf',
                   })
                 },
@@ -199,8 +198,8 @@ function Highchart(props) {
                     addGtagForEvent(props.GA_TRACKING_ID, action, category, label)
                   }
 
-                  this.exportChart({
-                    type: 'svg',
+                  this.exportChartLocal({
+                    type: 'image/svg+xml',
                   })
                 },
               },

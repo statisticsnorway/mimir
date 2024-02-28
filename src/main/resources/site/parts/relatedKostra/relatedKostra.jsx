@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from '@statisticsnorway/ssb-component-library'
 import { ArrowRight } from 'react-feather'
 import PropTypes from 'prop-types'
+import { sanitize } from '../../../lib/ssb/utils/htmlUtils'
 
 class RelatedKostra extends React.Component {
   constructor(props) {
@@ -10,7 +11,7 @@ class RelatedKostra extends React.Component {
 
   createMarkup(html) {
     return {
-      __html: html,
+      __html: sanitize(html),
     }
   }
 

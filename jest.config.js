@@ -1,5 +1,5 @@
 module.exports = {
-  testMatch: ['**/src/**/*-test.[tj]s?(x)'],
+  testMatch: ['**/src/**/*.test.[tj]s?(x)'],
   moduleNameMapper: {
     // Example: If relying on relative imports in ts files to make test work one might need to map the module here
     '^/lib/vendor/(.*)$': '<rootDir>/src/main/resources/lib/vendor/$1',

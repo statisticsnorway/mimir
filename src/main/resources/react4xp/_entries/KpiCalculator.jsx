@@ -5,6 +5,7 @@ import { Input, Button, Dropdown, Divider, FormError, Link, Title } from '@stati
 import axios from 'axios'
 import { NumericFormat } from 'react-number-format'
 import { X } from 'react-feather'
+import { sanitize } from '../../lib/ssb/utils/htmlUtils';
 
 function KpiCalculator(props) {
   const validMaxYear = props.lastUpdated.year
@@ -508,7 +509,7 @@ function KpiCalculator(props) {
         <div
           className='publish-text pb-2'
           dangerouslySetInnerHTML={{
-            __html: props.frontPageIngress,
+            __html: sanitize(props.frontPageIngress),
           }}
         />
       )

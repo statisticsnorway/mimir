@@ -17,12 +17,12 @@ export function get(req: XP.Request): XP.Response {
   }
 }
 
-export function preview(req: XP.Request): XP.Response {
-  return renderPart(req, {})
+export function preview(req: XP.Request, config = {}): XP.Response {
+  return renderPart(req, config)
 }
 
 function renderPart(req: XP.Request, config: DividerPartConfig): XP.Response {
-  const dividerColor: string = config.dividerColor || 'light'
+  const dividerColor: string = config.dividerColor ?? 'light'
 
   return fromPartCache(req, `divider${dividerColor}`, () => {
     const result = render('Divider', setColor(dividerColor), req, {

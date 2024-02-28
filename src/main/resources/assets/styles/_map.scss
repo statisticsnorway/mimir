@@ -11,6 +11,10 @@
   opacity: 1;
   background-color: white;
   height: 70vh;
+
+  @include media-breakpoint-down(md) {
+    height: 80vh;
+  }
 }
 .map-container {
   top: 92px;
@@ -18,7 +22,7 @@
   position: fixed;
   height: 100vh;
   z-index: 9999;
-  background-color: rgba(39,66,71,0.7);
+  background-color: rgba(39, 66, 71, 0.7);
   .part-map {
     @include media-breakpoint-down(md) {
       padding: 0px;

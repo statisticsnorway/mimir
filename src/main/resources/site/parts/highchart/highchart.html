@@ -1,4 +1,4 @@
-<section class="xp-part part-highchart" data-th-each="highchart: ${highcharts}">
+<section class="xp-part highchart-wrapper" data-th-each="highchart: ${highcharts}">
   <span data-th-utext="${dataScript}" data-th-remove="tag"></span>
   <div class="row position-relative">
     <div data-th-if="${highchart && highchart.config && highchart.config.draft}" class="alert alert-info mb-4" role="alert" data-th-text="${'Tallet i figuren nedenfor er upublisert'}"></div>

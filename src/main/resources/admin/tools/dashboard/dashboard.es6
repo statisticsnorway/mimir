@@ -1,13 +1,12 @@
+import { assetUrl, serviceUrl } from '/lib/xp/portal'
+import { getUser, hasRole } from '/lib/xp/auth'
+import { getToolUrl } from '/lib/xp/admin'
 import { parseContributions } from '/lib/ssb/utils/utils'
 
-const { assetUrl, serviceUrl } = __non_webpack_require__('/lib/xp/portal')
-
-const { render } = __non_webpack_require__('/lib/thymeleaf')
-const { renderError } = __non_webpack_require__('/lib/ssb/error/error')
-const { React4xp } = __non_webpack_require__('/lib/enonic/react4xp')
-const { getUser, hasRole } = __non_webpack_require__('/lib/xp/auth')
-const { getToolUrl } = __non_webpack_require__('/lib/xp/admin')
-const { isEnabled } = __non_webpack_require__('/lib/featureToggle')
+import { render } from '/lib/thymeleaf'
+import { renderError } from '/lib/ssb/error/error'
+import { React4xp } from '/lib/enonic/react4xp'
+import { isEnabled } from '/lib/featureToggle'
 
 const view = resolve('./dashboard.html')
 const DEFAULT_CONTENTSTUDIO_URL = getToolUrl('com.enonic.app.contentstudio', 'main')
