@@ -106,14 +106,8 @@ function defaultConfig(highchartsContent: Content<Highchart>): HighchartsGraphCo
   return createDefaultConfig(highchartsContent.data, highchartsContent.displayName, highchartsContent.language)
 }
 
-export interface GetGraphOptions {
+interface GetGraphOptions {
   isJsonStat: boolean
   xAxisLabel: string | undefined
-  categories: object | undefined
-}
-
-export interface GetCombinedGraphOptions {
-  series: object | undefined
-  yAxis: object | undefined
   categories: object | undefined
 }

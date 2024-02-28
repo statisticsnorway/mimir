@@ -1,7 +1,6 @@
 import { type Content } from '/lib/xp/content'
 import { mergeDeepRight } from '/lib/vendor/ramda'
 import { createDefaultConfig } from '/lib/ssb/parts/highcharts/graph/config'
-import { GetCombinedGraphOptions } from '/lib/ssb/parts/highcharts/highchartsGraphConfig'
 import { CombinedGraph } from '/site/content-types'
 
 export function combinedGraphConfig(highchartContent: Content<CombinedGraph>, options: GetCombinedGraphOptions) {
@@ -24,4 +23,10 @@ export function combinedGraphConfig(highchartContent: Content<CombinedGraph>, op
   }
 
   return mergeDeepRight(defaultConfig, customConfig)
+}
+
+interface GetCombinedGraphOptions {
+  series: object | undefined
+  yAxis: object | undefined
+  categories: object | undefined
 }
