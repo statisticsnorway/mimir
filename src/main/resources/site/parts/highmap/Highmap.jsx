@@ -41,6 +41,8 @@ function Highmap(props) {
     y = desktop ? 40 : 95
   }
 
+  const isCategorized = props.thresholdValues.length === 0
+
   const mapOptions = {
     chart: {
       height: desktop && props.heightAspectRatio && `${props.heightAspectRatio}%`,
@@ -50,6 +52,7 @@ function Highmap(props) {
         fontWeight: 'normal',
         fontFamily: '"Open Sans Regular", "Arial", "DejaVu Sans", sans-serif',
       },
+      map: props.mapFile,
     },
     accessibility: {
       enabled: true,
@@ -71,10 +74,12 @@ function Highmap(props) {
       props.colorPalette === 'green'
         ? ['#e3f1e6', '#90cc93', '#25a23c', '#007e50', '#005245']
         : ['#f9f2d1', '#e8d780', '#d2bc2a', '#a67c36', '#6e4735'],
-    colorAxis: {
-      dataClasses: props.thresholdValues,
-      dataClassColor: 'category',
-    },
+    colorAxis: !isCategorized
+      ? {
+          dataClasses: props.thresholdValues,
+          dataClassColor: 'category',
+        }
+      : undefined,
     legend: {
       title: {
         text: props.legendTitle,
@@ -93,21 +98,42 @@ function Highmap(props) {
       symbolRadius: 0,
       symbolHeight: 14,
     },
-    series: [
-      {
-        mapData: props.mapFile,
-        data: props.tableData,
-        name: props.seriesTitle ? props.seriesTitle : '',
+    plotOptions: {
+      map: {
+        allAreas: false,
         joinBy: 'capitalName',
         dataLabels: {
           enabled: !props.hideTitle,
           format: '{point.properties.name}',
         },
         tooltip: {
-          pointFormat: '{point.properties.name}: {point.value}',
+          pointFormat: isCategorized ? '{point.properties.name}' : props.legendTitle + ': {point.code}',
           valueDecimals: props.numberDecimals,
         },
       },
+    },
+    series: [
+      {
+        // dummy series to show outline of all areas
+        allAreas: true,
+        showInLegend: false,
+      },
+      ...Object.entries(
+        props.tableData.reduce((acc, [name, value]) => {
+          if (!acc[name]) {
+            acc[name] = [value]
+          } else {
+            acc[name].push(value)
+          }
+          return acc
+        }, {})
+      ).map(([name, values]) => ({
+        name: String(name),
+        data: values.map((value) => ({
+          capitalName: props.mapDataSecondColumn ? String(value).toUpperCase() : String(name).toUpperCase(),
+          code: value,
+        })),
+      })),
     ],
     credits: {
       enabled: false,
@@ -199,6 +225,7 @@ Highmap.propTypes = {
   description: PropTypes.string,
   mapFile: PropTypes.string,
   tableData: PropTypes.array,
+  mapDataSecondColumn: PropTypes.bool,
   style: PropTypes.object,
   thresholdValues: PropTypes.array,
   hideTitle: PropTypes.boolean,
