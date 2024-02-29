@@ -107,9 +107,6 @@
     <field-set>
       <label>Bearbeide visningen</label>
       <items>
-        <input name="hideTitle" type="CheckBox">
-          <label>Skjul tittel (gjelder kun figur til faktasider o.l.)</label>
-        </input>
         <input name="combineInfo" type="CheckBox">
           <label>Kombinere forklaringer (mouseover)</label>
           <help-text>Vise forklaringer til alle linjer i en mouseoverboksen</help-text>
