@@ -24,8 +24,7 @@ export function combinedGraphConfig(highchartContent: Content<CombinedGraph>, op
 
   return mergeDeepRight(defaultConfig, customConfig)
 }
-
-interface GetCombinedGraphOptions {
+export interface GetCombinedGraphOptions {
   series: object | undefined
   yAxis: object | undefined
   categories: object | undefined

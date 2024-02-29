@@ -9,7 +9,7 @@ import { barConfig } from '/lib/ssb/parts/highcharts/graph/graphBarConfig'
 import { barNegativeConfig } from '/lib/ssb/parts/highcharts/graph/graphBarNegativeConfig'
 import { columnConfig } from '/lib/ssb/parts/highcharts/graph/graphColumnConfig'
 import { lineConfig } from '/lib/ssb/parts/highcharts/graph/graphLineConfig'
-import { combinedGraphConfig } from '/lib/ssb/parts/highcharts/graph/combinedGraphConfig'
+import { combinedGraphConfig, type GetCombinedGraphOptions } from '/lib/ssb/parts/highcharts/graph/combinedGraphConfig'
 import { DataSource as DataSourceType } from '/lib/ssb/repo/dataset'
 import { mergeDeepRight } from '/lib/vendor/ramda'
 import { Series } from '/lib/ssb/parts/highcharts/highchartsData'
@@ -34,7 +34,6 @@ export function prepareHighchartsGraphConfig(
         : undefined,
     categories,
   }
-
   return getGraphConfig(highchartContent, options)
 }
 
@@ -79,8 +78,6 @@ export function prepareCombinedGraphConfig(
     categories,
   }
   return combinedGraphConfig(combinedGraphContent, combinedOptions)
-
-  //return getGraphConfig(highchartContent, options)
 }
 
 function getGraphConfig(highchartContent: Content<Highchart>, options: GetGraphOptions): HighchartsGraphConfig {

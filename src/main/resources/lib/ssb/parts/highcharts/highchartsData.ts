@@ -113,7 +113,7 @@ export interface SeriesAndCategories {
   series: Array<Series>
   title?: string | object | undefined
   data?: {
-    switchRowsAndColumns?: boolean
+    switchRowsAndColumns: boolean
     decimalPoint: string
     table: string
   }
