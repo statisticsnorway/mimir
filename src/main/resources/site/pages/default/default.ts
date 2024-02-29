@@ -1,4 +1,5 @@
 /* eslint-disable complexity */
+import { Article } from 'schema-dts'
 import { type Content, query } from '/lib/xp/content'
 import { assetUrl, type Component, getContent, getSiteConfig, pageUrl, processHtml } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
@@ -37,6 +38,7 @@ import { getHeaderContent } from '/lib/ssb/parts/header'
 import { fromMenuCache } from '/lib/ssb/cache/cache'
 
 import { isEnabled } from '/lib/featureToggle'
+import { ensureArray } from '/lib/ssb/utils/arrayUtils'
 import { type Default as DefaultPageConfig } from '/site/pages/default'
 import { type Page, type Statistics } from '/site/content-types'
 
@@ -215,6 +217,36 @@ export function get(req: XP.Request): XP.Response {
 
   const metaInfo: MetaInfoData = parseMetaInfoData(municipality, pageType, page, language, req)
 
+  let jsonLd: Article | undefined
+  if (page.type === 'mimir:article' && isEnabled('structured-data', false, 'ssb'))
+    jsonLd = {
+      // @ts-ignore  ssssh its ok
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      articleSection: ensureArray(page.x?.mimir?.subjectTag?.mainSubjects)[0],
+      additionalType: page.data.articleType, // For eksempel
+      headline: page.data.title,
+      datePublished: page.publish?.first,
+      dateModified: page.data.showModifiedDate?.dateOption?.showModifiedTime
+        ? page.data.showModifiedDate.dateOption.modifiedDate
+        : undefined,
+      author: page.data.authorItemSet?.map((f) => {
+        return {
+          '@type': 'Person',
+          name: f.name,
+          email: f.email,
+        }
+      }),
+      publisher: {
+        '@type': 'Organization',
+        name: 'Statistisk sentralbyrå',
+        logo: {
+          '@type': 'ImageObject',
+          url: 'https://www.ssb.no/_/asset/mimir:0000018b60c47e20/SSB_logo_black.svg',
+        },
+      },
+    }
+
   const statbankFane: boolean = req.params.xpframe === 'statbank'
   const statBankContent: StatbankFrameData = parseStatbankFrameContent(statbankFane, req, page)
   if (statbankFane) {
@@ -251,6 +283,7 @@ export function get(req: XP.Request): XP.Response {
     headerBody: header?.body,
     footerBody: footer?.body,
     ...metaInfo,
+    jsonLd,
     breadcrumbsReactId: breadcrumbId,
     hideHeader,
     hideBreadcrumb,
@@ -559,6 +592,18 @@ interface DefaultPage extends Content {
     statistic: string
     subtopic: Array<string>
     articleType: string
+    showModifiedDate: {
+      dateOption: {
+        showModifiedTime: boolean
+        modifiedDate: string
+      }
+    }
+    authorItemSet: [
+      {
+        name: string
+        email: string
+      },
+    ]
   }
   page: ExtendedPage
 }
@@ -633,6 +678,7 @@ interface DefaultModel {
   GA_TRACKING_ID: string | null
   GTM_TRACKING_ID: string | null
   GTM_AUTH: string | null
+  jsonLd: NewsArticle | undefined
   headerBody: string | undefined
   footerBody: string | undefined
   breadcrumbsReactId: string | undefined
