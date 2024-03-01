@@ -113,6 +113,33 @@ function Highmap(props) {
       enabled: false,
     },
     exporting: {
+      chartOptions: {
+        chart: {
+          spacingBottom: 80 + props.sourceList.length * 30,
+        },
+        xAxis: {
+          labels: {
+            step: 1,
+          },
+        },
+        credits: {
+          enabled: !!props.sourceList,
+          text: props.sourceList.reduce((combinedSources, currentSource) => {
+            return (
+              combinedSources + `<b style="color:#274247">${props.phrases.source}: </b>${currentSource.sourceText}</br>`
+            )
+          }, ''),
+          position: {
+            align: 'left',
+            x: 10,
+            y: -20 - props.sourceList.length * 20,
+          },
+          style: {
+            color: '#00824d',
+            fontSize: '16px',
+          },
+        },
+      },
       buttons: {
         contextButton: {
           symbol: 'menu',
