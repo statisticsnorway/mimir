@@ -31,6 +31,7 @@ export function setupFetchDataOnCreateListener(): void {
                 )`,
             contentTypes: [
               `${app.name}:highchart`,
+              `${app.name}:highmap`,
               `${app.name}:keyFigure`,
               `${app.name}:table`,
               `${app.name}:genericDataImport`,
@@ -60,6 +61,8 @@ export function setupFetchDataOnCreateListener(): void {
 
 function startRefreshTask(): void {
   autoRefreshLog('try to start task')
+
+  log.info('setupFetchDataOnCreateListener')
   if (!refreshTask || !isRunning(refreshTask)) {
     autoRefreshLog('task not running, start new')
     const refreshQueueLength: number = refreshQueue.length

@@ -16,6 +16,38 @@
                 </input>
             </items>
         </field-set>
+
+        <option-set name="dataSource">
+            <label>Datakilde</label>
+            <expanded>true</expanded>
+            <occurrences minimum="0" maximum="1" />
+            <options minimum="1" maximum="1">
+                <option name="htmlTable">
+                    <label>Excel</label>
+                    <items>
+                        <input name="html" type="HtmlArea">
+                            <label>Kildetabell limt inn fra Excel</label>
+                            <occurrences minimum="0" maximum="1"/>
+                            <config>
+                                <include>
+                                    Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote
+                                </include>
+                            </config>
+                            <help-text>Lim inn (Ctrl-V) en tabell rett fra Excel. Hvis denne er fylt ut vil den gjelde istedenfor eget felt lengre ned</help-text>
+                        </input>                                
+                    </items>
+                </option>
+                <option name="tbprocessor">
+                <label>Tall fra tabellbygger</label>
+                    <items>
+                        <input name="urlOrId" type="TextLine">
+                            <label>URL eller TBML-id</label>
+                            <occurrences minimum="0" maximum="1" />
+                        </input>
+                    </items>
+                </option>
+            </options>
+        </option-set>
         
         <field-set>
             <label>Tallkilde</label>
@@ -25,7 +57,7 @@
                     <help-text>Velg kartet som skal brukes</help-text>
                 </input>
                 <input name="htmlTable" type="HtmlArea">
-                    <label>Kartdata fra tabell (tabell limt inn fra excel)</label>
+                    <label>Kartdata fra tabell (tabell limt inn fra excel) - Bruk valg under Datakilde</label>
                     <occurrences minimum="0" maximum="1"/>
                     <config>
                         <include>

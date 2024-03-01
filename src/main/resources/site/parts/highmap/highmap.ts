@@ -4,12 +4,13 @@ import { readText } from '/lib/xp/io'
 import { type RowData } from '/lib/ssb/parts/highcharts/data/htmlTable'
 import { isNumber, type RowValue } from '/lib/ssb/utils/utils'
 import { render } from '/lib/enonic/react4xp'
-import { type PreliminaryData, type XmlParser } from '/lib/types/xmlParser'
-
+import { type PreliminaryData, type XmlParser, type TbmlDataUniform, TableRowUniform } from '/lib/types/xmlParser'
 import * as util from '/lib/util'
 import { getPhrases } from '/lib/ssb/utils/language'
 import { renderError } from '/lib/ssb/error/error'
 import { Phrases } from '/lib/types/language'
+import { datasetOrUndefined } from '/lib/ssb/cache/cache'
+import { type DatasetRepoNode, DataSource as DataSourceType } from '/lib/ssb/repo/dataset'
 import { type Highmap } from '/site/content-types'
 
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
@@ -81,23 +82,7 @@ function renderPart(req: XP.Request, highmapId: string | undefined): XP.Response
   })
 
   if (highmapContent) {
-    const tableData: Array<RowValue[]> = []
-    if (highmapContent.data.htmlTable) {
-      const stringJson: string | undefined = highmapContent.data.htmlTable
-        ? __.toNativeObject(xmlParser.parse(highmapContent.data.htmlTable))
-        : undefined
-      const result: HighmapTable | undefined = stringJson ? JSON.parse(stringJson) : undefined
-      const tableRow: HighmapTable['table']['tbody']['tr'] | undefined = result ? result.table.tbody.tr : undefined
-
-      if (tableRow) {
-        tableRow.forEach((row) => {
-          if (row) {
-            tableData.push([getRowValue(row.td[0]), getRowValue(row.td[1])])
-          }
-        })
-      }
-    }
-
+    const tableData: Array<RowValue[]> = getTableData(highmapContent)
     const thresholdValues: Highmap['thresholdValues'] = highmapContent.data.thresholdValues
       ? util.data.forceArray(highmapContent.data.thresholdValues)
       : []
@@ -132,6 +117,55 @@ function renderPart(req: XP.Request, highmapId: string | undefined): XP.Response
     body: '',
     contentType: 'text/html',
   }
+}
+
+function getTableData(highmap: Content<Highmap>): Array<RowValue[]> {
+  if (highmap?.data.dataSource) {
+    if (highmap.data.dataSource._selected === DataSourceType.HTMLTABLE) {
+      return getHtmlTableData(highmap.data.dataSource.htmlTable.html)
+    } else if (highmap.data.dataSource?._selected === DataSourceType.TBPROCESSOR) {
+      return getTBMLData(highmap)
+    }
+  } else if (highmap.data.htmlTable) {
+    return getHtmlTableData(highmap.data.htmlTable)
+  }
+  return []
+}
+
+function getHtmlTableData(htmlTable: string | undefined): Array<RowValue[]> {
+  const tableData: Array<RowValue[]> = []
+
+  if (htmlTable) {
+    const stringJson: string | undefined = htmlTable ? __.toNativeObject(xmlParser.parse(htmlTable)) : undefined
+    const result: HighmapTable | undefined = stringJson ? JSON.parse(stringJson) : undefined
+    const tableRow: HighmapTable['table']['tbody']['tr'] | undefined = result ? result.table.tbody.tr : undefined
+
+    if (tableRow) {
+      tableRow.forEach((row) => {
+        if (row) {
+          tableData.push([getRowValue(row.td[0]), getRowValue(row.td[1])])
+        }
+      })
+    }
+  }
+  return tableData
+}
+
+function getTBMLData(highmap: Content<Highmap>): Array<RowValue[]> {
+  const datasetFromRepo: DatasetRepoNode<TbmlDataUniform | object> | undefined = datasetOrUndefined(highmap)
+  const parsedData: TbmlDataUniform | object | string | undefined = datasetFromRepo && datasetFromRepo.data
+  if (parsedData) {
+    const tbmlData: TbmlDataUniform = parsedData as TbmlDataUniform
+    const tbody: Array<TableRowUniform> = tbmlData.tbml.presentation.table.tbody
+    const rows: TableRowUniform['tr'] = tbody[0].tr
+    return rows
+      ? rows.map((row) => {
+          return [getRowValue(row.th[0]), getRowValue(row.td[0])]
+        })
+      : []
+  }
+
+  return []
 }
 
 function getRowValue(value: number | string | PreliminaryData | Array<number | string | PreliminaryData>): RowValue {
