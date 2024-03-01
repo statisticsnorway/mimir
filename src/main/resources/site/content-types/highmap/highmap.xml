@@ -34,6 +34,9 @@
                     </config>
                     <help-text>Lim inn (Ctrl-V) en tabell rett fra Excel. Tabeller bør være så enkle som mulig</help-text>
                 </input>
+                <input name="mapDataSecondColumn" type="Checkbox">
+                    <label>Andre kolonne i tabell inneholder kartdata (kommunenavn, fylkenavn, osv)</label>
+                </input>
             </items>
         </field-set>
         
@@ -42,7 +45,7 @@
             <items>
                 <input name="thresholdValues" type="TextLine">
                     <label>Terskelverdi</label> 
-                    <occurrences minimum="1" maximum="4"/> 
+                    <occurrences minimum="0" maximum="4"/> 
                 </input>
             </items>
         </field-set>

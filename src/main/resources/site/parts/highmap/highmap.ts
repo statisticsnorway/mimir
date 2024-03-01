@@ -81,7 +81,7 @@ function renderPart(req: XP.Request, highmapId: string | undefined): XP.Response
   })
 
   if (highmapContent) {
-    const tableData: Array<HighmapFormattedTableData> = []
+    const tableData: Array<RowValue[]> = []
     if (highmapContent.data.htmlTable) {
       const stringJson: string | undefined = highmapContent.data.htmlTable
         ? __.toNativeObject(xmlParser.parse(highmapContent.data.htmlTable))
@@ -92,12 +92,7 @@ function renderPart(req: XP.Request, highmapId: string | undefined): XP.Response
       if (tableRow) {
         tableRow.forEach((row) => {
           if (row) {
-            const name: string = getRowValue(row.td[0]) as string
-            const value: number = getRowValue(row.td[1]) as number
-            tableData.push({
-              capitalName: name, // Matches map result name
-              value: value,
-            })
+            tableData.push([getRowValue(row.td[0]), getRowValue(row.td[1])])
           }
         })
       }
@@ -113,6 +108,7 @@ function renderPart(req: XP.Request, highmapId: string | undefined): XP.Response
       description: highmapContent.data.description,
       mapFile: mapResult,
       tableData,
+      mapDataSecondColumn: highmapContent.data.mapDataSecondColumn,
       thresholdValues: sortedThresholdValues(thresholdValues),
       hideTitle: highmapContent.data.hideTitle,
       colorPalette: highmapContent.data.colorPalette,
@@ -224,10 +220,6 @@ interface HighmapTable {
     }
   }
 }
-interface HighmapFormattedTableData {
-  capitalName: string
-  value: number
-}
 interface ThresholdValues {
   to: number | undefined
   from: number | undefined
@@ -237,7 +229,8 @@ interface HighmapProps {
   subtitle: Highmap['subtitle']
   description: Highmap['description']
   mapFile: object
-  tableData: Array<HighmapFormattedTableData>
+  tableData: Array<RowValue[]>
+  mapDataSecondColumn: boolean
   thresholdValues: Array<ThresholdValues>
   hideTitle: Highmap['hideTitle']
   colorPalette: Highmap['colorPalette']
