@@ -1,6 +1,7 @@
-import { sanitizeHtml } from '/lib/xp/portal'
+import { customsearch_v1 } from '@googleapis/customsearch'
+import { sanitizeHtml, getSiteConfig } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
-import { request, HttpResponse } from '/lib/http-client'
+import { request, HttpResponse, HttpRequestParams } from '/lib/http-client'
 import { formatDate } from '/lib/ssb/utils/dateUtils'
 
 const SOLR_PARAM_QUERY = 'q'
@@ -52,6 +53,62 @@ export function solrSearch(
         total: searchResult.grouped.gruppering.matches,
         contentTypes: facetContentTypes.filter((contentType) => validFiltersContentType.includes(contentType.title)),
         subjects: facetMainSubjects.filter((mainSubject) => !inValidFiltersMainSubject.includes(mainSubject.title)),
+      }
+    : {
+        hits: [],
+        total: 0,
+        contentTypes: [],
+        subjects: [],
+      }
+}
+
+export function googleSearch(
+  term: string,
+  start?: number,
+  language?: string,
+  numberOfHits?: number,
+  mainSubject?: string,
+  contentType?: string,
+  sortParam?: string
+): SolrPrepResultAndTotal {
+  const sortString: string = sortParam === 'date' || sortParam === 'publiseringsdato' ? 'date' : ''
+  const siteConfig: XP.SiteConfig = getSiteConfig()!
+
+  const requestParams: HttpRequestParams = {
+    url: `https://www.googleapis.com/customsearch/v1`,
+    method: 'get',
+    contentType: 'application/json',
+    connectionTimeout: 60000,
+    readTimeout: 10000,
+    params: {
+      key: siteConfig.googleSearchApiKey,
+      cx: siteConfig.googleSearchEngineId,
+      q: term,
+      sort: sortString,
+      start: start || 0,
+    },
+  }
+
+  const search = request(requestParams)
+
+  const results: customsearch_v1.Schema$Search = JSON.parse(search.body!)
+  const solrFormatResults: Array<PreparedSearchResult> | undefined = results.items?.map((item) => ({
+    contentType: 'artikkel',
+    id: item.pagemap?.metatags[0].pageid || '1234',
+    title: item.pagemap?.metatags[0]['og:title'] || 'tittel',
+    preface: item.htmlSnippet || '',
+    url: item.link || '',
+    mainSubject: 'befolkning',
+    secondaryMainSubject: 'befolkning',
+    publishDate: '2024-02-28T08:00:00Z',
+    publishDateHuman: formatDate('2024-02-28T08:00:00Z', 'PPP', 'no'),
+  }))
+  return solrFormatResults
+    ? {
+        hits: solrFormatResults,
+        total: Number(results.searchInformation?.totalResults) || 0,
+        contentTypes: [{ count: 10, title: 'artikkel' }],
+        subjects: [{ count: 10, title: 'befolkning' }],
       }
     : {
         hits: [],

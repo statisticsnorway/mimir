@@ -8,6 +8,7 @@ import {
   type SolrPrepResultAndTotal,
   type Facet,
   solrSearch,
+  googleSearch,
 } from '/lib/ssb/utils/solrUtils'
 import { type SolrResponse, getNameSearchResult } from '/lib/ssb/utils/nameSearchUtils'
 import { queryNodes, getNode } from '/lib/ssb/repo/common'
@@ -218,21 +219,40 @@ export function renderPart(req: XP.Request) {
   }
 
   /* query solr */
-  const solrResult: SolrPrepResultAndTotal = sanitizedTerm
-    ? solrSearch(
-        sanitizedTerm,
-        language,
-        parseInt(part.config.numberOfHits),
-        0,
-        req.params.emne,
-        req.params.innholdstype
-      )
-    : {
-        total: 0,
-        hits: [],
-        contentTypes: [],
-        subjects: [],
-      }
+  let solrResult: SolrPrepResultAndTotal
+  if (part.config.searchEngine === 'google') {
+    solrResult = sanitizedTerm
+      ? googleSearch(
+          sanitizedTerm,
+          0,
+          language,
+          parseInt(part.config.numberOfHits),
+          req.params.emne,
+          req.params.innholdstype
+        )
+      : {
+          total: 0,
+          hits: [],
+          contentTypes: [],
+          subjects: [],
+        }
+  } else {
+    solrResult = sanitizedTerm
+      ? solrSearch(
+          sanitizedTerm,
+          language,
+          parseInt(part.config.numberOfHits),
+          0,
+          req.params.emne,
+          req.params.innholdstype
+        )
+      : {
+          total: 0,
+          hits: [],
+          contentTypes: [],
+          subjects: [],
+        }
+  }
 
   const totalHits = bestBet() ? solrResult.total + 1 : solrResult.total
   const showNameSearch = isEnabled('name-search-in-freetext-search') ? true : false
@@ -268,7 +288,7 @@ export function renderPart(req: XP.Request) {
       locale: language,
     }),
     searchServiceUrl: serviceUrl({
-      service: 'freeTextSearch',
+      service: part.config.searchEngine === 'google' ? 'googleSearch' : 'freeTextSearch',
     }),
     nameSearchUrl: serviceUrl({
       service: 'nameSearch',

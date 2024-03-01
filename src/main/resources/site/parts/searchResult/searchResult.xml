@@ -1,17 +1,26 @@
 <part>
-    <display-name>Søkeresultat</display-name>
-    <form>
-        <input name="searchResultPage" type="ContentSelector">
-            <label>Side for søkeresultat</label>
-            <occurrences minimum="0" maximum="1" />
-        </input>
-        <input type="TextLine" name="numberOfHits">
-            <label>Antall treff pr side</label>
-            <occurrences minimum="1" maximum="1"/>
-            <default>15</default>
-            <config>
-                <regexp>\d</regexp>
-            </config>
-        </input>
-    </form>
+  <display-name>Søkeresultat</display-name>
+  <form>
+    <input name="searchResultPage" type="ContentSelector">
+      <label>Side for søkeresultat</label>
+      <occurrences minimum="0" maximum="1" />
+    </input>
+    <input type="TextLine" name="numberOfHits">
+      <label>Antall treff pr side</label>
+      <occurrences minimum="1" maximum="1" />
+      <default>15</default>
+      <config>
+        <regexp>\d</regexp>
+      </config>
+    </input>
+    <input name="searchEngine" type="RadioButton">
+      <label>Velg Søkemotor</label>
+      <occurrences minimum="1" maximum="1" />
+      <config>
+        <option value="solr">Solr intern</option>
+        <option value="google">Google Custoom Search</option>
+      </config>
+      <default>solr</default>
+    </input>
+  </form>
 </part>
