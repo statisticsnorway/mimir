@@ -111,7 +111,7 @@
     "npm-safe-install": "~1.1.0",
     "numeral": "~2.0.6",
     "postcss": "~8.4.35",
-    "postcss-loader": "~8.1.0",
+    "postcss-loader": "~8.1.1",
     "postcss-normalize": "~10.0.1",
     "prettier": "~3.2.5",
     "prop-types": "~15.8.1",
