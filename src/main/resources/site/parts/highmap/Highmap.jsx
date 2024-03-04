@@ -16,6 +16,83 @@ if (typeof Highcharts === 'object') {
   require('highcharts/modules/map')(Highcharts)
 }
 
+function generateColors(color, thresholdValues) {
+  const obj = {}
+
+  if (!color || color?._selected === 'green') {
+    obj.colors = ['#e3f1e6', '#90cc93', '#25a23c', '#007e50', '#005245']
+  }
+
+  if (thresholdValues.length > 0) {
+    obj.colorAxis = {
+      dataClasses: thresholdValues,
+      // 'category' uses colors field, tween uses minColor and maxColor
+      dataClassColor: color?._selected === 'gradient' ? 'tween' : 'category',
+    }
+  }
+
+  // colorAxis only works if we have numerical values, so wont work with data like Red: Oslo, Blue: Bergen etc
+  if (color?._selected === 'gradient') {
+    obj.colorAxis = obj.colorAxis || {}
+    obj.colorAxis.minColor = color.gradient.color1
+    obj.colorAxis.maxColor = color.gradient.color2
+  }
+
+  return obj
+}
+
+function isNumeric(value) {
+  if (typeof value === 'number') return true
+  if (typeof value != 'string') return false
+  return (
+    !isNaN(value) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
+    !isNaN(parseFloat(value))
+  ) // ...and ensure strings of whitespace fail
+}
+
+function generateSeries(tableData, mapDataSecondColumn, color) {
+  const dataSeries = tableData.reduce((acc, [name, value]) => {
+    if (!acc[name]) {
+      acc[name] = [value]
+    } else {
+      acc[name].push(value)
+    }
+    return acc
+  }, {})
+
+  let definedColors
+  if (color?._selected === 'defined') {
+    if (!Array.isArray(color.defined.colorSerie)) color.defined.colorSerie = [color.defined.colorSerie]
+
+    definedColors = color.defined.colorSerie.reduce((acc, color) => {
+      if (!color.serie || !color.color) return acc
+
+      acc[color.serie] = color.color
+      return acc
+    }, {})
+  }
+
+  const series = [
+    {
+      // dummy series to show outline of all areas
+      allAreas: true,
+      showInLegend: false,
+    },
+    ...Object.entries(dataSeries).map(([name, values]) => {
+      return {
+        name: String(name),
+        color: definedColors ? definedColors[name] : undefined,
+        data: values.map((value) => ({
+          capitalName: mapDataSecondColumn ? String(value).toUpperCase() : String(name).toUpperCase(),
+          code: value,
+          value: isNumeric(value) ? value : undefined,
+        })),
+      }
+    }),
+  ]
+  return series
+}
+
 function Highmap(props) {
   useEffect(() => {
     if (props.language !== 'en') {
@@ -41,7 +118,8 @@ function Highmap(props) {
     y = desktop ? 40 : 95
   }
 
-  const isCategorized = props.thresholdValues.length === 0
+  const hasThreshhold = props.thresholdValues.length > 0
+  const series = generateSeries(props.tableData, props.mapDataSecondColumn, props.color)
 
   const mapOptions = {
     chart: {
@@ -70,16 +148,7 @@ function Highmap(props) {
     mapNavigation: {
       enabled: true,
     },
-    colors:
-      props.colorPalette === 'green'
-        ? ['#e3f1e6', '#90cc93', '#25a23c', '#007e50', '#005245']
-        : ['#f9f2d1', '#e8d780', '#d2bc2a', '#a67c36', '#6e4735'],
-    colorAxis: !isCategorized
-      ? {
-          dataClasses: props.thresholdValues,
-          dataClassColor: 'category',
-        }
-      : undefined,
+    ...generateColors(props.color, props.thresholdValues),
     legend: {
       title: {
         text: props.legendTitle,
@@ -107,34 +176,12 @@ function Highmap(props) {
           format: '{point.properties.name}',
         },
         tooltip: {
-          pointFormat: isCategorized ? '{point.properties.name}' : props.legendTitle + ': {point.code}',
+          pointFormat: !hasThreshhold ? '{point.properties.name}' : props.legendTitle + ': {point.code}',
           valueDecimals: props.numberDecimals,
         },
       },
     },
-    series: [
-      {
-        // dummy series to show outline of all areas
-        allAreas: true,
-        showInLegend: false,
-      },
-      ...Object.entries(
-        props.tableData.reduce((acc, [name, value]) => {
-          if (!acc[name]) {
-            acc[name] = [value]
-          } else {
-            acc[name].push(value)
-          }
-          return acc
-        }, {})
-      ).map(([name, values]) => ({
-        name: String(name),
-        data: values.map((value) => ({
-          capitalName: props.mapDataSecondColumn ? String(value).toUpperCase() : String(name).toUpperCase(),
-          code: value,
-        })),
-      })),
-    ],
+    series,
     credits: {
       enabled: false,
     },
@@ -229,7 +276,7 @@ Highmap.propTypes = {
   style: PropTypes.object,
   thresholdValues: PropTypes.array,
   hideTitle: PropTypes.boolean,
-  colorPalette: PropTypes.string,
+  color: PropTypes.object,
   numberDecimals: PropTypes.string,
   heightAspectRatio: PropTypes.string,
   seriesTitle: PropTypes.string,
