@@ -71,9 +71,8 @@ function parseValue(value: string): number | string {
       ? value
           .replace(',', '.')
           .replace(/&nbsp;/g, '')
-          .replace(' ', '')
+          .replace(/ /g, '')
       : value
-
   return parseFloat(number)
 }
 
