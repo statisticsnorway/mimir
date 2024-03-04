@@ -61,8 +61,6 @@ export function setupFetchDataOnCreateListener(): void {
 
 function startRefreshTask(): void {
   autoRefreshLog('try to start task')
-
-  log.info('setupFetchDataOnCreateListener')
   if (!refreshTask || !isRunning(refreshTask)) {
     autoRefreshLog('task not running, start new')
     const refreshQueueLength: number = refreshQueue.length
