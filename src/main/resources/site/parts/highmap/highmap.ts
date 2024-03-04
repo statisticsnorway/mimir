@@ -158,14 +158,21 @@ function getTBMLData(highmap: Content<Highmap>): Array<RowValue[]> {
     const tbmlData: TbmlDataUniform = parsedData as TbmlDataUniform
     const tbody: Array<TableRowUniform> = tbmlData.tbml.presentation.table.tbody
     const rows: TableRowUniform['tr'] = tbody[0].tr
+
     return rows
       ? rows.map((row) => {
-          return [getRowValue(row.th[0]), getRowValue(row.td[0])]
+          const capitalName: RowValue = highmap.data.removePartOfName
+            ? firstPartOfCapitalName(getRowValue(row.th[0]))
+            : getRowValue(row.th[0])
+          return [capitalName, getRowValue(row.td[0])]
         })
       : []
   }
-
   return []
+}
+
+function firstPartOfCapitalName(name: RowValue): RowValue {
+  return name && name.toString().indexOf(' - ') > 0 ? name.toString().split(' - ')[0] : name
 }
 
 function getRowValue(value: number | string | PreliminaryData | Array<number | string | PreliminaryData>): RowValue {
