@@ -166,7 +166,7 @@
     "schema-dts": "^1.1.2",
     "striptags": "~3.2.0",
     "uuid": "~9.0.1",
-    "xss": "^1.0.14",
+    "xss": "^1.0.15",
     "zipcelx": "~1.6.2"
   },
   "overrides": {
