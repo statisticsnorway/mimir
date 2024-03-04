@@ -19,7 +19,7 @@ if (typeof Highcharts === 'object') {
 function generateColors(color, thresholdValues) {
   const obj = {}
 
-  if (!color || color?._selected === 'green') {
+  if (!color?._selected || color?._selected === 'green') {
     obj.colors = ['#e3f1e6', '#90cc93', '#25a23c', '#007e50', '#005245']
   }
 
@@ -176,7 +176,11 @@ function Highmap(props) {
           format: '{point.properties.name}',
         },
         tooltip: {
-          pointFormat: !hasThreshhold ? '{point.properties.name}' : props.legendTitle + ': {point.code}',
+          pointFormat: !hasThreshhold
+            ? '{point.properties.name}'
+            : props.legendTitle
+              ? `${props.legendTitle}: {point.code}`
+              : '{point.code}',
           valueDecimals: props.numberDecimals,
         },
       },
