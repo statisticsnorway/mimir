@@ -52,8 +52,11 @@
         <field-set>
             <label>Tallkilde</label>
             <items>
-                <input name="mapFile" type="ContentSelector">
+                <input name="mapFile" type="MediaSelector">
                     <label>Kart fil (json format)</label>
+                    <config>  
+                        <allowContentType>media:code</allowContentType>
+                    </config>
                     <help-text>Velg kartet som skal brukes</help-text>
                 </input>
                 <input name="htmlTable" type="HtmlArea">
