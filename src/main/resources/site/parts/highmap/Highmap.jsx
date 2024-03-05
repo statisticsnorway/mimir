@@ -115,12 +115,7 @@ function Highmap(props) {
     exporting: {
       chartOptions: {
         chart: {
-          spacingBottom: 80 + props.sourceList.length * 30,
-        },
-        xAxis: {
-          labels: {
-            step: 1,
-          },
+          spacingBottom: 30 + (props.sourceList ? props.sourceList.length * 30 : 0),
         },
         credits: {
           enabled: !!props.sourceList,
@@ -132,7 +127,7 @@ function Highmap(props) {
           position: {
             align: 'left',
             x: 10,
-            y: -20 - props.sourceList.length * 20,
+            y: -20 - (props.sourceList ? props.sourceList.length * 20 : 0),
           },
           style: {
             color: '#00824d',
