@@ -96,7 +96,7 @@ function renderPart(req: XP.Request, highmapId: string | undefined): XP.Response
       mapDataSecondColumn: highmapContent.data.mapDataSecondColumn,
       thresholdValues: sortedThresholdValues(thresholdValues),
       hideTitle: highmapContent.data.hideTitle,
-      colorPalette: highmapContent.data.colorPalette,
+      color: highmapContent.data.color,
       numberDecimals: highmapContent.data.numberDecimals ? parseInt(highmapContent.data.numberDecimals) : undefined,
       heightAspectRatio: highmapContent.data.heightAspectRatio,
       seriesTitle: highmapContent.data.seriesTitle,
@@ -191,7 +191,7 @@ function getRowValue(value: number | string | PreliminaryData | Array<number | s
 }
 
 function sortedThresholdValues(thresholdValues: Highmap['thresholdValues']): Array<ThresholdValues> {
-  if (thresholdValues.length) {
+  if (thresholdValues?.length) {
     const formattedThresholdValues: Array<number> = (thresholdValues as Array<string>)
       .map((t) => Number(t.replace(',', '.')))
       .sort((a, b) => a - b)
@@ -274,7 +274,7 @@ interface HighmapProps {
   mapDataSecondColumn: boolean
   thresholdValues: Array<ThresholdValues>
   hideTitle: Highmap['hideTitle']
-  colorPalette: Highmap['colorPalette']
+  color: Highmap['color']
   numberDecimals: number | undefined
   heightAspectRatio: Highmap['heightAspectRatio']
   seriesTitle: Highmap['seriesTitle']
