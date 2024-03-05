@@ -119,11 +119,14 @@ function Highmap(props) {
         },
         credits: {
           enabled: !!props.sourceList,
-          text: props.sourceList.reduce((combinedSources, currentSource) => {
-            return (
-              combinedSources + `<b style="color:#274247">${props.phrases.source}: </b>${currentSource.sourceText}</br>`
-            )
-          }, ''),
+          text:
+            props.sourceList &&
+            props.sourceList.reduce((combinedSources, currentSource) => {
+              return (
+                combinedSources +
+                `<b style="color:#274247">${props.phrases.source}: </b>${currentSource.sourceText}</br>`
+              )
+            }, ''),
           position: {
             align: 'left',
             x: 10,
