@@ -20,14 +20,9 @@ export const post = (req: XP.Request): XP.Response => {
       body: json,
     }
     const response: HttpResponse = request(requestParams)
-    const recaptchaInfo: RecaptchaResponse | null = response.body ? JSON.parse(response.body) : null
+    const { tokenProperties, riskAnalysis }: RecaptchaResponse = response.body ? JSON.parse(response.body) : {}
 
-    if (
-      recaptchaInfo &&
-      recaptchaInfo.tokenProperties.valid &&
-      recaptchaInfo.riskAnalysis.score > 0.5 &&
-      recaptchaInfo.tokenProperties.action === 'submitContactForm'
-    ) {
+    if (tokenProperties.valid && riskAnalysis.score > 0.5 && tokenProperties.action === 'submitContactForm') {
       return postMail(formData)
     }
   }
