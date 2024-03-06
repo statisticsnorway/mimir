@@ -4,27 +4,25 @@ import { type HttpRequestParams, type HttpResponse, request } from '/lib/http-cl
 export const post = (req: XP.Request): XP.Response => {
   const formData: ContactFormData = JSON.parse(req.body)
 
-  log.info('\n\n## data\n--------------\n%s\n', JSON.stringify(formData, null, 4))
-
-  const secret = app.config && app.config['RECAPTCHA_SECRET_KEY'] ? app.config['RECAPTCHA_SECRET_KEY'] : null
-  if (secret) {
-    const requestParams: HttpRequestParams = {
-      url: 'https://www.google.com/recaptcha/api/siteverify',
-      method: 'POST',
-      queryParams: {
-        secret,
-        response: formData.token,
+  const siteKey = app.config && app.config['GCP_RECAPTCHA_SITE_KEY'] ? app.config['GCP_RECAPTCHA_SITE_KEY'] : null
+  const secret = app.config && app.config['GCP_API_KEY'] ? app.config['GCP_API_KEY'] : null
+  const gcpProject = app.config && app.config['GCP_PROJECT'] ? app.config['GCP_PROJECT'] : null
+  if (secret && siteKey && gcpProject) {
+    const json = JSON.stringify({
+      event: {
+        siteKey,
+        token: formData.token,
       },
+    })
+    const requestParams: HttpRequestParams = {
+      url: `https://recaptchaenterprise.googleapis.com/v1/projects/${gcpProject}/assessments?key=${secret}`,
+      method: 'POST',
+      body: json,
     }
     const response: HttpResponse = request(requestParams)
-    const recaptchaInfo: RecaptchaResponse | null = response.body ? JSON.parse(response.body) : null
+    const { tokenProperties, riskAnalysis }: RecaptchaResponse = response.body ? JSON.parse(response.body) : {}
 
-    if (
-      recaptchaInfo &&
-      recaptchaInfo.success &&
-      recaptchaInfo.score > 0.5 &&
-      recaptchaInfo.action === 'submitContactForm'
-    ) {
+    if (tokenProperties.valid && riskAnalysis.score > 0.5 && tokenProperties.action === 'submitContactForm') {
       return postMail(formData)
     }
   }
@@ -52,12 +50,16 @@ interface ContactFormData {
 }
 
 interface RecaptchaResponse {
-  success: boolean
-  // eslint-disable-next-line camelcase
-  challenge_ts: string
-  hostname: string
-  score: number
-  action: string
+  riskAnalysis: {
+    score: number
+    reasons: []
+  }
+  tokenProperties: {
+    valid: boolean
+    invalidReason: string
+    action: string
+    createTime: Date
+  }
 }
 
 function postMail(formData: ContactFormData): XP.Response {
