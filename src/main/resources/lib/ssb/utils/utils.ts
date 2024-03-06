@@ -5,6 +5,7 @@ import { readLines } from '/lib/xp/io'
 import { PreliminaryData } from '/lib/types/xmlParser'
 import { formatDate, fromNow } from '/lib/ssb/utils/dateUtils'
 import { SourceList, SourcesConfig } from '/lib/types/sources'
+import { type RowValue } from '/lib/types/util'
 import { type Header } from '/site/content-types'
 
 function numberWithSpaces(x: number | string): string {
@@ -59,8 +60,6 @@ export function getRowValue(
   }
   return value as RowValue
 }
-
-export type RowValue = number | string
 
 // Returns page mode for Kommunefakta page based on request mode or request path
 export function pageMode(req: XP.Request): string {

@@ -40,7 +40,7 @@ function renderPart(req: XP.Request): XP.Response {
 
 function renderEndedStatistics(
   req: XP.Request,
-  endedStatisticsContent: Array<EndedStatistic@@ | undefined>,
+  endedStatisticsContent: Array<EndedStatistic | undefined>,
   phrases: Phrases
 ) {
   if (endedStatisticsContent && endedStatisticsContent.length) {

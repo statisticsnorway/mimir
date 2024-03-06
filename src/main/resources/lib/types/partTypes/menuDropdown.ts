@@ -1,4 +1,4 @@
-import { MunicipalityWithCounty } from '/lib/ssb/dataset/klass/municipalities'
+import { MunicipalityWithCounty } from '../municipalities'
 
 export interface MenuDropdownProps {
   modeMunicipality: boolean

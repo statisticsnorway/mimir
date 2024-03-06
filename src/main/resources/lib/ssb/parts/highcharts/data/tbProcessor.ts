@@ -1,7 +1,7 @@
 import { AreaLineLinearData, Series, SeriesAndCategories } from '/lib/ssb/parts/highcharts/highchartsData'
 import { PreliminaryData, TableCellUniform, TableRowUniform, TbmlDataUniform } from '/lib/types/xmlParser'
-import { RowValue, getRowValue } from '/lib/ssb/utils/utils'
-
+import { RowValue } from '/lib/types/util'
+import { getRowValue } from '/lib/ssb/utils/utils'
 import * as util from '/lib/util'
 
 export function seriesAndCategoriesFromTbml(

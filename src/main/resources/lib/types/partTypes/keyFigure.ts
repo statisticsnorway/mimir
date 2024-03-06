@@ -1,4 +1,3 @@
-import { KeyFigureView } from '/lib/ssb/parts/keyFigure'
 import { KeyFigure } from '/site/content-types/keyFigure'
 
 export interface KeyFigureProps {
@@ -31,4 +30,29 @@ export interface KeyFigureData {
   glossaryText?: KeyFigureView['glossaryText']
   glossary?: string
   source: object | undefined
+}
+
+export interface MunicipalData {
+  value: number | null
+  label?: string
+}
+
+export interface KeyFigureView {
+  iconUrl?: string
+  iconAltText?: string
+  number?: string
+  numberDescription?: string
+  noNumberText: string
+  size?: string
+  title: string
+  time?: string
+  changes?: KeyFigureChanges
+  greenBox: boolean
+  glossaryText?: string
+}
+
+export interface KeyFigureChanges {
+  changeDirection: 'up' | 'down' | 'same'
+  changeText?: string
+  changePeriod: string
 }

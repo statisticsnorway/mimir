@@ -1,7 +1,7 @@
-import { RowData } from '/lib/ssb/parts/highcharts/data/htmlTable'
-import { RowValue } from '/lib/ssb/utils/utils'
+import { RowValue } from '/lib/types/util'
+import { Phrases } from '/lib/types/language'
+import { RowData } from '/lib/types/partTypes/highcharts'
 import { Highmap } from '/site/content-types/highmap'
-import { Phrases } from '../language'
 
 export interface HighmapProps {
   title: string

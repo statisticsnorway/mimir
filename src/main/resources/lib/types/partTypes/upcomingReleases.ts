@@ -1,5 +1,5 @@
 import { PreparedUpcomingRelease } from '/lib/ssb/utils/filterReleasesUtils'
-import { YearReleases } from '../variants'
+import { YearReleases } from '/lib/types/variants'
 
 export interface UpcomingReleasesProps {
   releases: Array<YearReleases>
