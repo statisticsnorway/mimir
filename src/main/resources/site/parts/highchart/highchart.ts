@@ -26,7 +26,7 @@ import { getTbprocessorKey } from '/lib/ssb/dataset/tbprocessor/tbprocessor'
 import { HighchartsExtendedProps, HighchartsReactProps } from '/lib/types/partTypes/HighchartsReact'
 import { GA_TRACKING_ID } from '/site/pages/default/default'
 import { type DataSource } from '/site/mixins/dataSource'
-import { type Highchart } from '/site/content-types'
+import { type CombinedGraph, type Highchart } from '/site/content-types'
 
 const view = resolve('./highchart.html')
 
@@ -78,11 +78,12 @@ function renderPart(req: XP.Request, highchartIds: Array<string>): XP.Response {
 
   const highcharts: Array<HighchartsReactProps> = highchartIds
     .map((key) => {
-      const highchart: Content<Highchart & DataSource> | null = getContentByKey({
+      const highchart: Content<Highchart & DataSource> | Content<CombinedGraph> | null = getContentByKey({
         key,
       })
-      const config: HighchartsExtendedProps | undefined = highchart ? determinConfigType(req, highchart) : undefined
-      return highchart && config ? createHighchartsReactProps(highchart, config) : {}
+      const isCombinedGraph: boolean = highchart?.type === `${app.name}:combinedGraph`
+      const config: HighchartsExtendedProps | undefined = determinConfigType(req, highchart, isCombinedGraph)
+      return highchart && config ? createHighchartsReactProps(highchart as Content<Highchart>, config) : {}
     })
     .filter((key) => !!key)
 
@@ -130,17 +131,24 @@ function renderPart(req: XP.Request, highchartIds: Array<string>): XP.Response {
 
 function determinConfigType(
   req: XP.Request,
-  highchart: Content<Highchart & DataSource>
+  highchart: Content<Highchart & DataSource> | Content<CombinedGraph> | null,
+  isCombinedGraph: boolean
 ): HighchartsExtendedProps | undefined {
+  if (isCombinedGraph) {
+    return createDataFromHtmlTable(req, highchart as Content<CombinedGraph>)
+  }
   if (highchart && highchart.data.dataSource) {
-    return createDataFromDataSource(req, highchart)
-  } else if (highchart && highchart.data.htmlTable) {
-    return createDataFromHtmlTable(req, highchart)
+    return createDataFromDataSource(req, highchart as Content<Highchart & DataSource>)
+  } else if ((highchart as Content<Highchart>)?.data.htmlTable) {
+    return createDataFromHtmlTable(req, highchart as Content<Highchart>)
   }
   return undefined
 }
 
-function createDataFromHtmlTable(req: XP.Request, highchart: Content<Highchart & DataSource>): HighchartsExtendedProps {
+function createDataFromHtmlTable(
+  req: XP.Request,
+  highchart: Content<Highchart & DataSource> | Content<CombinedGraph>
+): HighchartsExtendedProps {
   return {
     ...createHighchartObject(req, highchart, highchart.data, undefined),
   }
@@ -192,7 +200,7 @@ function createHighchartsReactProps(
 ): HighchartsReactProps {
   return {
     config: config,
-    type: highchart.data.graphType,
+    type: highchart.type === 'mimir:combinedGraph' ? 'combined' : highchart.data.graphType,
     contentKey: highchart._id,
     footnoteText: highchart.data.footnoteText ? util.data.forceArray(highchart.data.footnoteText) : undefined,
     creditsEnabled: highchart.data.sourceList ? true : false,

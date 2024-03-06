@@ -1,4 +1,5 @@
 import { RowData } from '/lib/ssb/parts/highcharts/data/htmlTable'
+import { RowValue } from '/lib/ssb/utils/utils'
 import { Highmap } from '/site/content-types/highmap'
 import { Phrases } from '../language'
 
@@ -7,10 +8,11 @@ export interface HighmapProps {
   subtitle: Highmap['subtitle']
   description: Highmap['description']
   mapFile: object
-  tableData: Array<HighmapFormattedTableData>
+  tableData: Array<RowValue[]>
+  mapDataSecondColumn: boolean
   thresholdValues: Array<ThresholdValues>
   hideTitle: Highmap['hideTitle']
-  colorPalette: Highmap['colorPalette']
+  color: Highmap['color']
   numberDecimals: number | undefined
   heightAspectRatio: Highmap['heightAspectRatio']
   seriesTitle: Highmap['seriesTitle']

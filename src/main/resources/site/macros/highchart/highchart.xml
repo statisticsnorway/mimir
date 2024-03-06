@@ -8,6 +8,7 @@
             <config>
                 <allowPath>${site}</allowPath>
                 <allowType>highchart</allowType>
+                <allowType>combinedGraph</allowType>
             </config>
         </input>
     </form>

@@ -31,6 +31,7 @@ export function setupFetchDataOnCreateListener(): void {
                 )`,
             contentTypes: [
               `${app.name}:highchart`,
+              `${app.name}:highmap`,
               `${app.name}:keyFigure`,
               `${app.name}:table`,
               `${app.name}:genericDataImport`,

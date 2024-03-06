@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<content-type>
+  <display-name>Kombinert Graf</display-name>
+  <super-type>base:structured</super-type>
+  <description>Graf med 2 y-akser</description>
+  <form>
+    <input name="subtitle" type="TextLine">
+      <label>Undertittel</label>
+    </input>
+
+    <option-set name="dataSource">
+        <label>Datakilde</label>
+        <expanded>true</expanded>
+        <occurrences minimum="0" maximum="1" />
+        <options minimum="1" maximum="1">
+            <option name="htmlTable">
+                <label>Excel</label>
+                <default>true</default>
+                <items>
+                    <input name="html" type="HtmlArea">
+                        <label>Kildetabell limt inn fra Excel</label>
+                        <occurrences minimum="0" maximum="1"/>
+                        <config>
+                            <include>
+                                Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote
+                            </include>
+                        </config>
+                        <help-text>Lim inn (Ctrl-V) en tabell rett fra Excel. Tabeller bør være så enkle som mulig (Overskrifter i første rad/kolonne og ellers bare tall, ingen spesialformatering, manglende tall må være tomme celler)</help-text>
+                    </input>                    						
+                </items>
+            </option>
+        </options>
+    </option-set>
+
+    <item-set name="graphs">  
+        <label>Grafer</label>  
+        <occurrences minimum="0" maximum="2"/>  
+        <items>
+            <input name="yAxisTitle" type="TextLine">
+                <label>Y-akse, tittel</label>
+                <occurrences minimum="1" maximum="1"/>
+            </input>
+            <input name="graphType" type="RadioButton">
+                <label>Graftype</label>
+                <occurrences minimum="1" maximum="1"/>
+                <config>
+                    <option value="line">Linje</option>
+                    <option value="column">Stolpe</option>
+                    <option value="bar">Liggende stolpe</option>
+                    <option value="area">Areal</option>
+                </config>
+            </input>
+            <input name="yAxisDecimalPlaces" type="RadioButton">
+                <label>Vis desimaler på Y-akseverdiene, antall:</label>
+                <config>
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                </config>
+                <default>0</default>
+                <help-text>Her velger du hvor mange desimalplasser du vil vise i y-akse</help-text>
+            </input> 
+        </items>     
+    </item-set>
+
+    <field-set>
+      <label>X-akse, tilpasning</label>
+      <items>
+        <input name="xAxisTitle" type="TextLine">
+          <label>X-akse, tittel</label>
+          <occurrences minimum="1" maximum="1"/>
+        </input>
+        <input name="xAxisType" type="RadioButton">
+          <label>X-skala</label>
+          <config>
+            <option value="category">Ingen (unike kategorier)</option>
+            <option value="linear">Lineær</option>
+            <option value="logarithmic">Logaritmisk</option>
+          </config>
+          <default>category</default>
+        </input>
+        <input name="xAxisMin" type="TextLine">
+          <label>X-akse, minste verdi</label>
+          <size value="12" />
+          <help-text>Må være et heltall eller desimaltall. La feltet være blankt for automatisk justering. Hvis aksen er unike kategorier, brukes heltall fra 0 og oppover.</help-text>
+          <regexp>^[0-9]*[,.]?[0-9]+$</regexp>
+        </input>
+        <input name="xAxisMax" type="TextLine">
+          <label>X-akse, største verdi</label>
+          <size value="12" />
+          <help-text>Må være et heltall eller desimaltall. La feltet være blankt for automatisk justering. Hvis aksen er unike kategorier, brukes heltall fra 0 og oppover.</help-text>
+          <regexp>^[0-9]*[,.]?[0-9]+$</regexp>
+        </input>
+        <input name="tickInterval" type="TextLine">
+          <label>Tickintervall (overstyring av avstand mellom verdier på x-aksen).</label>
+          <size value="12" />
+          <regexp>^[0-9]*[,.]?[0-9]+$</regexp>
+          <help-text>Skriv for eksempel 10 for å vise hvert 10. år ved årstall.</help-text>
+        </input>
+        <input name="xAxisFlip" type="CheckBox">
+          <label>Reverser X-akse</label>
+          <help-text>Sortere visningen av søylene i motsatt rekkefølge.</help-text>
+        </input>
+      </items>
+    </field-set> 
+
+    <field-set>
+      <label>Bearbeide visningen</label>
+      <items>
+        <input name="combineInfo" type="CheckBox">
+          <label>Kombinere forklaringer (mouseover)</label>
+          <help-text>Vise forklaringer til alle linjer i en mouseoverboksen</help-text>
+        </input>
+        <input name="heightAspectRatio" type="TextLine">
+          <label>Høyde i prosent av bredde</label>
+          <default>75</default>
+          <help-text>
+            Et heltall større enn 0. Anbefalt er 75 som gir 4:3-forhold. 100 er kvadrat (1:1),
+            62 er det gylne snitt liggende, 56 er kinolerret (16:9), 162 er det gylne snitt stående.
+          </help-text>
+        </input>
+      </items>
+    </field-set>
+
+    <field-set>
+      <label>Tegnforklaring</label>
+      <items>
+        <input name="legendAlign" type="RadioButton">
+          <label>Plassering av tegnforklaring</label>
+          <config>
+            <option value="right">Høyrestilt</option>
+            <option value="center">Midtstilt, under</option>
+          </config>
+          <default>center</default>
+        </input>
+        <input name="noLegend" type="CheckBox">
+          <label>Skjul tegnforklaringen.</label>
+        </input>
+      </items>
+    </field-set>
+
+    <field-set>
+      <label>Kilder</label>
+      <items>
+        <item-set name="sourceList">
+          <occurrences minimum="0" maximum="0"/>
+          <items>
+            <input name="sourceText" type="TextArea">
+              <label>Kildetekst</label>
+              <default>Statistisk sentralbyrå</default>
+            </input>
+            <input name="sourceHref" type="TextLine">
+              <label>Kilde-URL</label>
+              <default>https://www.ssb.no</default>
+            </input>
+          </items>
+        </item-set>
+      </items>  
+    </field-set>
+
+    <field-set>
+      <label>Fotnoter</label>
+      <items>
+        <input name="footnoteText" type="TextArea">
+          <label>Fotnote-tekst</label>
+          <occurrences minimum="0" maximum="3"/>
+          <help-text>Inntil 3 fotnoter. For å få opphøyd fotnotetall: 1=ALT+251, 2=ALT+253, 3=ALT+252.</help-text>
+        </input>
+      </items>
+    </field-set>
+  </form>
+</content-type>
