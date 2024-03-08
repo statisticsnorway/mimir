@@ -36,7 +36,7 @@
 #       MABL_ENV_ID_TEST:
 #         from_secret: mabl-env-test
 #     commands:
-#       - npm install -g @mablhq/mabl-cli 
+#       - npm install -g @mablhq/mabl-cli
 #       - mabl deployments create --api-key $MABL_API_KEY --application-id $MABL_APP_ID --labels MIMIR_SMOKE --environment-id $MABL_ENV_ID_TEST --revision $DRONE_COMMIT_SHA --await-completion
 # ---
 # kind: pipeline

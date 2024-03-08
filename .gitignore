@@ -13,4 +13,5 @@ nashorn_code_cache
 .enonic
 .DS_Store
 .project
+cypress/screenshots
 .dccache

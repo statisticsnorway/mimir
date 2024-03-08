@@ -21,7 +21,13 @@
     "install:prod": "npm install",
     "lint": "eslint --fix ./src --ext .es6 --ext .ts --ext .jsx",
     "lint-dry": "eslint ./src --ext .es6 --ext .ts --ext .jsx",
-    "test": "jest"
+    "test": "jest",
+    "cy:open": "cypress open",
+    "cy:run": "cypress run",
+    "cy:run:test": "cypress run --spec cypress/integration/localhost/**/*",
+    "cy:run:ci": "cypress run --spec cypress/integration/e2e/**/* --config-file cypress/cypress.qa.json",
+    "cy:run:e2e": "cross-env CYPRESS_baseUrl=https://www.test.ssb.no start-server-and-test start https-get://www.test.ssb.no cy:run:ci",
+    "cy:run:local": "start-server-and-test start http-get://localhost:8080 cy:run:test"
   },
   "repository": {
     "type": "git",
@@ -86,6 +92,7 @@
     "browser-sync": "^3.0.2",
     "cross-env": "~7.0.3",
     "cssnano": "~6.0.1",
+    "cypress": "^13.6.5",
     "esbuild-plugin-replace": "^1.4.0",
     "esbuild-sass-plugin": "^2.16.1",
     "eslint": "~8.56.0",
