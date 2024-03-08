@@ -61,6 +61,7 @@ const partsWithPreview: Array<string> = [
   `${app.name}:employee`,
   `${app.name}:project`,
   `${app.name}:combinedGraph`,
+  `${app.name}:simpleStatbank`,
 ]
 
 const previewOverride: object = {
