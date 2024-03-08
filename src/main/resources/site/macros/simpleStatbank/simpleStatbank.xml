@@ -1,6 +1,6 @@
 <macro>
     <display-name>Spørring Statistikkbanken</display-name>
-    <description></description>
+    <description>Mini(stat)bank</description>
     <form>
         <input name="simpleStatbank" type="ContentSelector">
             <label>Spørring Statistikkbanken</label>

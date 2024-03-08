@@ -1,9 +1,10 @@
 <content-type>
-	<display-name>Spørring Statistikkbanken</display-name>
-	<super-type>base:structured</super-type>
-	<allow-child-content>true</allow-child-content>
-	<form>
-		<field-set>  
+    <display-name>Spørring Statistikkbanken</display-name>
+    <description>Mini(stat)bank</description>
+    <super-type>base:structured</super-type>
+    <allow-child-content>true</allow-child-content>
+    <form>
+        <field-set>  
             <label>Visningsfelt</label>
             <items>
                 <input name="icon" type="ImageSelector">
@@ -36,8 +37,8 @@
                     <default>text</default>
                 </input>
             </items>
-            </field-set> 
-            <field-set>
+        </field-set> 
+        <field-set>
             <label>Api-spørring mot statistikkbanken</label>
             <items>
                 <input name="urlOrId" type="TextLine">
@@ -55,6 +56,6 @@
                     <help-text>Velg hvilket kode (Code) i spørringen som skal være valgbar i dropdown</help-text>
                 </input>
             </items>
-            </field-set>  
-	</form>
+        </field-set>  
+    </form>
 </content-type>

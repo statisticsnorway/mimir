@@ -1,14 +1,15 @@
 <part>
   <display-name>Spørring Statistikkbanken</display-name>
+  <description>Mini(stat)bank</description>
   <super-type>base:structured</super-type>
   <allow-child-content>true</allow-child-content>
   <form>
     <input name="simpleStatbank" type="ContentSelector">
-        <label>Spørring Statistikkbanken</label>
-        <occurrences minimum="0" maximum="1"/>
-        <config>
-          <allowType>simpleStatbank</allowType>
-        </config>
-      </input> 
+      <label>Spørring Statistikkbanken</label>
+      <occurrences minimum="0" maximum="1"/>
+      <config>
+        <allowType>simpleStatbank</allowType>
+      </config>
+    </input> 
   </form>
 </part>
