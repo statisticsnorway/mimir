@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from '@statisticsnorway/ssb-component-library'
 import { ArrowRight } from 'react-feather'
 import PropTypes from 'prop-types'
-import { sanitize } from '/lib/ssb/utils/htmlUtils'
+import { sanitize } from '../../lib/ssb/utils/htmlUtils'
 
 const StatbankLinkList = (props) => {
   return (

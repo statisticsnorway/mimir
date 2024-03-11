@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Link, Divider, Text } from '@statisticsnorway/ssb-component-library'
-import { sanitize } from '/lib/ssb/utils/htmlUtils'
+import { sanitize } from '../../../lib/ssb/utils/htmlUtils'
 
 function EmployeeList(props) {
   const { employees, total, pageTitle, pageDescription } = props

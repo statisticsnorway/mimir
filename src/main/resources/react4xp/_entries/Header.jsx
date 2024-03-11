@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Divider, Input, Link } from '@statisticsnorway/ssb-component-library'
 import { ChevronDown, ChevronRight, Menu, X } from 'react-feather'
-import { sanitize } from '/lib/ssb/utils/htmlUtils'
+import { sanitize } from '../../lib/ssb/utils/htmlUtils'
 
 function Header(props) {
   const [showSubMenu, setShowSubMenu] = useState(false)

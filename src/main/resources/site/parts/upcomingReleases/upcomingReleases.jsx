@@ -3,7 +3,7 @@ import { Button, Link } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
 import axios from 'axios'
 import { ChevronDown } from 'react-feather'
-import { sanitize } from '/lib/ssb/utils/htmlUtils'
+import { sanitize } from '../../../lib/ssb/utils/htmlUtils'
 
 export const mergeAndSortReleases = (releases1, releases2) => {
   const merged = new Map()

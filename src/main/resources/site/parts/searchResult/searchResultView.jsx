@@ -16,7 +16,8 @@ import { ChevronDown, User, X } from 'react-feather'
 import axios from 'axios'
 import { NumericFormat } from 'react-number-format'
 import { Col, Row } from 'react-bootstrap'
-import { sanitize } from '/lib/ssb/utils/htmlUtils'
+import { sanitize } from '../../../lib/ssb/utils/htmlUtils'
+
 import { addGtagForEvent } from '../../../react4xp/ReactGA'
 
 function SearchResult(props) {

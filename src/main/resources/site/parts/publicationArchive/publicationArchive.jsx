@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import { NumericFormat } from 'react-number-format'
 import { ChevronDown } from 'react-feather'
 import axios from 'axios'
-import { sanitize } from '/lib/ssb/utils/htmlUtils'
+import { sanitize } from '../../../lib/ssb/utils/htmlUtils'
 
 function PublicationArchive(props) {
   const {

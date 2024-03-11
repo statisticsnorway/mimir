@@ -1,7 +1,7 @@
 import React from 'react'
 import { FactBox as FactBoxComponent } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
-import { sanitize } from '/lib/ssb/utils/htmlUtils'
+import { sanitize } from '../../lib/ssb/utils/htmlUtils'
 
 const FactBox = (props) => {
   const createText = (text) => (
