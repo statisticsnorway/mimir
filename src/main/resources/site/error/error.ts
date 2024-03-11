@@ -8,7 +8,7 @@ import { Language } from '/lib/types/language'
 const fourOFourView = resolve('./404.html')
 const mainErrorView = resolve('./error.html')
 const genericErrorView = resolve('./generic.html')
-const { randomUnsafeString } = require('../../lib/ssb/utils/utils')
+const { randomUnsafeString } = require('/lib/ssb/utils/utils')
 
 type Error = {
   request: XP.Request

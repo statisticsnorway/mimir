@@ -5,7 +5,7 @@ import { ChevronDown } from 'react-feather'
 import { default as groupBy } from 'ramda/es/groupBy'
 import PropTypes from 'prop-types'
 import axios from 'axios'
-import { sanitize } from '../../lib/ssb/utils/htmlUtils'
+import { sanitize } from '/lib/ssb/utils/htmlUtils'
 
 function ArticleArchive(props) {
   const {

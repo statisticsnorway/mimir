@@ -16,8 +16,8 @@ import { ChevronDown, User, X } from 'react-feather'
 import axios from 'axios'
 import { NumericFormat } from 'react-number-format'
 import { Col, Row } from 'react-bootstrap'
+import { sanitize } from '/lib/ssb/utils/htmlUtils'
 import { addGtagForEvent } from '../../../react4xp/ReactGA'
-import { sanitize } from '../../../lib/ssb/utils/htmlUtils'
 
 function SearchResult(props) {
   const [hits, setHits] = useState(props.hits)

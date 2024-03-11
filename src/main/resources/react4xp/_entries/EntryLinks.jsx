@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Link, Title } from '@statisticsnorway/ssb-component-library'
-import { sanitize } from '../../lib/ssb/utils/htmlUtils'
+import { sanitize } from '/lib/ssb/utils/htmlUtils'
 
 class EntryLinks extends React.Component {
   renderIcon(icon) {

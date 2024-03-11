@@ -2,7 +2,7 @@ import React from 'react'
 import { Accordion as AccordionComponent, NestedAccordion } from '@statisticsnorway/ssb-component-library'
 
 import PropTypes from 'prop-types'
-import { sanitize } from '../../lib/ssb/utils/htmlUtils'
+import { sanitize } from '/lib/ssb/utils/htmlUtils'
 
 class Accordion extends React.Component {
   renderNestedAccordions(items) {

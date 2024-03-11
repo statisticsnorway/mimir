@@ -2,7 +2,7 @@ import React from 'react'
 import { Title, Accordion, Link } from '@statisticsnorway/ssb-component-library'
 import PropTypes from 'prop-types'
 import { User, Calendar, Settings } from 'react-feather'
-import { sanitize } from '../../../lib/ssb/utils/htmlUtils'
+import { sanitize } from '/lib/ssb/utils/htmlUtils'
 
 const Project = (props) => {
   const {
