@@ -44,7 +44,7 @@ function tryRequestTbmlData<T extends TbmlDataUniform | TbmlSourceListUniform>(
   } catch (e) {
     const message = `Failed to fetch ${
       type ? formatTbProcessorType(type) : 'data'
-    } from tbprocessor: ${contentId} (${e})`
+    } from tbprocessor: ${contentId} (url: ${url}) (${e})`
     if (contentId) {
       logUserDataQuery(contentId, {
         file: '/lib/ssb/dataset/tbprocessor/tbprocessor.ts',
