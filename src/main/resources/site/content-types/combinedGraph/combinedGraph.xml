@@ -60,6 +60,10 @@
                 <default>0</default>
                 <help-text>Her velger du hvor mange desimalplasser du vil vise i y-akse</help-text>
             </input> 
+            <input name="yAxisOffset" type="TextLine">
+              <label>Plassering av y-aksetittel</label>
+              <help-text>Anvendes ved lange y-aksetitler. Negative tall flytter teksten slik at selve aksen går i flukt med venstre/høyre marg. Prøv deg litt fram med ulike verdier.</help-text>
+            </input>
         </items>     
     </item-set>
 

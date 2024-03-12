@@ -51,6 +51,7 @@ export function prepareCombinedGraphConfig(
     const yAxisConfig = {
       title: {
         text: data.yAxisTitle,
+        offset: data.yAxisOffset ? parseFloat(data.yAxisOffset) : 0,
       },
       opposite: index === 1 ? true : undefined,
       allowDecimals: data.yAxisDecimalPlaces ? Number(data.yAxisDecimalPlaces) > 0 : undefined,
