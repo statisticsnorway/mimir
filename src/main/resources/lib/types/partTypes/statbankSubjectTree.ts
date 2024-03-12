@@ -1,5 +1,4 @@
-// TODO NTR: Må hentes fra en types fil
-import { type SubjectItem } from '/lib/ssb/utils/subjectUtils'
+import { type SubjectItem } from '../subject'
 
 export interface StatbankSubjectTreeProps {
   statbankBaseUrl: string

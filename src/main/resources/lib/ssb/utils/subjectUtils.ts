@@ -6,6 +6,14 @@ import { forceArray, ensureArray } from '/lib/ssb/utils/arrayUtils'
 
 import { getAllStatisticsFromRepo } from '/lib/ssb/statreg/statistics'
 import { parentPath } from '/lib/ssb/utils/parentUtils'
+import {
+  type EndedStatistic,
+  type MainSubject,
+  type StatisticItem,
+  type SubSubject,
+  type SubjectItem,
+  type Title,
+} from '/lib/types/subject'
 import { type Subtopic } from '/site/mixins/subtopic'
 import { type Statistic } from '/site/mixins/statistic'
 import { type Article, type EndedStatisticList, type Statistics } from '/site/content-types'
@@ -388,48 +396,4 @@ export function getMainSubjectBySubSubject(
   mainSubjects: Array<SubjectItem>
 ): SubjectItem | undefined {
   return mainSubjects.find((mainSubject) => mainSubject.path === parentPath(subSubject.path))
-}
-
-export interface SubjectItem {
-  id: string
-  title: string
-  subjectCode?: string
-  path: string
-  language: string
-  name: string
-}
-
-export interface MainSubject {
-  subjectCode: string
-  name: string
-  titles: Array<Title>
-  subSubjects: Array<SubSubject>
-}
-
-export interface SubSubject {
-  id: string
-  subjectCode: string
-  name: string
-  titles: Array<Title>
-  statistics: Array<StatisticItem>
-}
-
-export interface Title {
-  title: string
-  language: string
-}
-
-export interface StatisticItem {
-  path: string
-  language: string
-  shortName: string
-  isPrimaryLocated: boolean
-  titles: Array<Title>
-  hideFromList: boolean
-  secondarySubject: Array<string>
-}
-
-interface EndedStatistic {
-  statistic?: string
-  hideFromList: boolean
 }

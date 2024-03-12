@@ -1,8 +1,7 @@
-// TODO NTR: Fix denne
-import { type HtmlTable } from '/lib/ssb/parts/table'
 import { type SourceList } from '/lib/types/sources'
 import { type StaticVisualization } from '/site/content-types/staticVisualization'
 import { type Default } from '/site/pages/default'
+import { type HtmlTable } from './table'
 
 export interface StaticVisualizationProps {
   id: string
