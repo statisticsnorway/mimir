@@ -1,4 +1,4 @@
-import { type Node } from '@enonic-types/lib-node'
+import { type Node } from '/lib/xp/node'
 import { type BestBetContent } from '/lib/types/bestebet'
 import { type Facet, type PreparedSearchResult } from '/lib/types/solr'
 
