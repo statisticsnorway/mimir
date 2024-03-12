@@ -6,7 +6,7 @@ import { imageUrl, getImageAlt } from '/lib/ssb/utils/imageUtils'
 
 import { renderError } from '/lib/ssb/error/error'
 import * as util from '/lib/util'
-import { Image, MenuBoxProps, MenuConfig, MenuItem } from '/lib/types/partTypes/menuBox'
+import { type Image, type MenuBoxProps, type MenuConfig, type MenuItem } from '/lib/types/partTypes/menuBox'
 import { type MenuBox } from '/site/content-types'
 
 const view = resolve('./menuBox.html')

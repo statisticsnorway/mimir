@@ -12,11 +12,11 @@ import {
   fromMunicipalityWithNameCache,
 } from '/lib/ssb/cache/cache'
 import {
-  MunicipalCode,
-  MunicipalityChange,
-  MunicipalityChangeList,
-  MunicipalityWithCounty,
-  RequestWithCode,
+  type MunicipalCode,
+  type MunicipalityChange,
+  type MunicipalityChangeList,
+  type MunicipalityWithCounty,
+  type RequestWithCode,
 } from '/lib/types/municipalities'
 import { type DataSource } from '/site/mixins/dataSource'
 

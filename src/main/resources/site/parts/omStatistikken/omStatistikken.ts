@@ -15,7 +15,7 @@ import { getStatisticByIdFromRepo, getReleaseDatesByVariants } from '/lib/ssb/st
 import { getPhrases } from '/lib/ssb/utils/language'
 import { fromPartCache } from '/lib/ssb/cache/partCache'
 import * as util from '/lib/util'
-import { AboutTheStatisticsProps, Category, Items } from '/lib/types/partTypes/omStatistikken'
+import { type AboutTheStatisticsProps, type Category, type Items } from '/lib/types/partTypes/omStatistikken'
 import { type Statistics, type OmStatistikken } from '/site/content-types'
 
 export function get(req: XP.Request): XP.Response {

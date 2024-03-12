@@ -4,8 +4,8 @@ import { getPublications } from '/lib/ssb/parts/publicationArchive'
 import { type SubjectItem, getMainSubjects } from '/lib/ssb/utils/subjectUtils'
 
 import { getPhrases } from '/lib/ssb/utils/language'
-import { Phrases } from '/lib/types/language'
-import { Dropdown, PublicationArchiveProps } from '/lib/types/partTypes/publicationArchive'
+import { type Phrases } from '/lib/types/language'
+import { type Dropdown, type PublicationArchiveProps } from '/lib/types/partTypes/publicationArchive'
 
 export function get(req: XP.Request) {
   return renderPart(req)

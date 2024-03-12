@@ -3,11 +3,11 @@ import { getContent, getComponent, pageUrl } from '/lib/xp/portal'
 import { renderError } from '/lib/ssb/error/error'
 import { render } from '/lib/enonic/react4xp'
 import {
-  Area,
-  EmployeeListProps,
-  IEmployeeMap,
-  IObjectKeys,
-  IPreparedEmployee,
+  type Area,
+  type EmployeeListProps,
+  type IEmployeeMap,
+  type IObjectKeys,
+  type IPreparedEmployee,
 } from '/lib/types/partTypes/employeeList'
 import { type Employee, type Page } from '/site/content-types'
 import { type Default as DefaultPageConfig } from '/site/pages/default'

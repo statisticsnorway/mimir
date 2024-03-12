@@ -6,7 +6,7 @@ import { randomUnsafeString } from '/lib/ssb/utils/utils'
 import { data } from '/lib/util'
 import { renderError } from '/lib/ssb/error/error'
 import { getLanguage } from '/lib/ssb/utils/language'
-import { CategoryLink, DocumentationContent, DocumentationUrl } from '/lib/types/partTypes/categoryLinks'
+import { type CategoryLink, type DocumentationContent, type DocumentationUrl } from '/lib/types/partTypes/categoryLinks'
 
 export function get(req: XP.Request): XP.Response {
   try {

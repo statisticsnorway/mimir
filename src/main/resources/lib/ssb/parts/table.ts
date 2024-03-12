@@ -3,19 +3,19 @@ import '/lib/ssb/polyfills/nashorn'
 import striptags from 'striptags'
 import { Content } from '/lib/xp/content'
 import {
-  TbmlDataUniform,
-  TableRowUniform,
-  TableCellUniform,
-  Note,
-  NotesUniform,
-  PreliminaryData,
-  Title,
-  Source,
-  Thead,
-  StatbankSavedRaw,
-  StatbankSavedUniform,
-  TableCellRaw,
-  XmlParser,
+  type TbmlDataUniform,
+  type TableRowUniform,
+  type TableCellUniform,
+  type Note,
+  type NotesUniform,
+  type PreliminaryData,
+  type Title,
+  type Source,
+  type Thead,
+  type StatbankSavedRaw,
+  type StatbankSavedUniform,
+  type TableCellRaw,
+  type XmlParser,
 } from '/lib/types/xmlParser'
 import {
   DatasetRepoNode,
@@ -29,12 +29,12 @@ import { getDataset } from '/lib/ssb/dataset/dataset'
 import { datasetOrUndefined } from '/lib/ssb/cache/cache'
 import { getRowValue } from '/lib/ssb/utils/utils'
 import {
-  DatasourceHtmlTable,
-  HtmlTable,
-  HtmlTableRaw,
-  HtmlTableRowRaw,
-  BodyCell,
-  TableView,
+  type DatasourceHtmlTable,
+  type HtmlTable,
+  type HtmlTableRaw,
+  type HtmlTableRowRaw,
+  type BodyCell,
+  type TableView,
 } from '/lib/types/partTypes/table'
 import { type DataSource } from '/site/mixins/dataSource'
 import { type Table } from '/site/content-types'

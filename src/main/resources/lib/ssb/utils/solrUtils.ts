@@ -3,14 +3,14 @@ import { localize } from '/lib/xp/i18n'
 import { request, HttpResponse } from '/lib/http-client'
 import { formatDate } from '/lib/ssb/utils/dateUtils'
 import {
-  Facet,
-  PreparedSearchResult,
-  SolrDoc,
-  SolrHighlighting,
-  SolrPrepResultAndTotal,
-  SolrQueryParams,
-  SolrResponse,
-  SolrResult,
+  type Facet,
+  type PreparedSearchResult,
+  type SolrDoc,
+  type SolrHighlighting,
+  type SolrPrepResultAndTotal,
+  type SolrQueryParams,
+  type SolrResponse,
+  type SolrResult,
 } from '/lib/types/solr'
 
 const SOLR_PARAM_QUERY = 'q'

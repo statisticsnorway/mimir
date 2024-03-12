@@ -7,7 +7,7 @@ import { imageUrl, getImageCaption, getImageAlt } from '/lib/ssb/utils/imageUtil
 
 import * as util from '/lib/util'
 import { renderError } from '/lib/ssb/error/error'
-import { StandardCardsListProps } from '/lib/types/partTypes/standardCardsList'
+import { type StandardCardsListProps } from '/lib/types/partTypes/standardCardsList'
 import { type Statistics } from '/site/content-types'
 import { type StandardCardsList as StandardCardsListPartConfig } from '.'
 

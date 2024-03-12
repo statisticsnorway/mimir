@@ -1,4 +1,4 @@
-import { KeyFigure } from '/site/content-types/keyFigure'
+import { type KeyFigure } from '/site/content-types/keyFigure'
 
 export interface KeyFigureProps {
   displayName: KeyFigure['title']

@@ -1,4 +1,4 @@
-import { MunicipalityWithCounty } from '../municipalities'
+import { type MunicipalityWithCounty } from '../municipalities'
 
 export interface MenuDropdownProps {
   modeMunicipality: boolean

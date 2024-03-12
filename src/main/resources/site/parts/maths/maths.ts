@@ -2,7 +2,7 @@ import { getComponent } from '/lib/xp/portal'
 import { render } from '/lib/enonic/react4xp'
 
 import { renderError } from '/lib/ssb/error/error'
-import { MathsProps } from '/lib/types/partTypes/maths'
+import { type MathsProps } from '/lib/types/partTypes/maths'
 import { type Maths as MathsPartConfig } from '.'
 
 export function get(req: XP.Request): XP.Response {

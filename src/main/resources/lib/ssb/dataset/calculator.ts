@@ -1,7 +1,7 @@
 // @ts-ignore
 import JSONstat from 'jsonstat-toolkit/import.mjs'
 import { query, get as getContent, Content } from '/lib/xp/content'
-import { Dataset, JSONstat as JSONstatType } from '/lib/types/jsonstat-toolkit'
+import { type Dataset, type JSONstat as JSONstatType } from '/lib/types/jsonstat-toolkit'
 import { DatasetRepoNode } from '/lib/ssb/repo/dataset'
 import { datasetOrUndefined } from '/lib/ssb/cache/cache'
 import { type CalculatorConfig, type GenericDataImport } from '/site/content-types'

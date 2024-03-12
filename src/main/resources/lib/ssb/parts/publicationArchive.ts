@@ -19,8 +19,8 @@ import {
 import { fromPartCache } from '/lib/ssb/cache/partCache'
 import { isEnabled } from '/lib/featureToggle'
 import * as util from '/lib/util'
-import { PublicationItem, PublicationResult } from '/lib/types/partTypes/publicationArchive'
-import { Release } from '/lib/types/variants'
+import { type PublicationItem, type PublicationResult } from '/lib/types/partTypes/publicationArchive'
+import { type Release } from '/lib/types/variants'
 import { type Article, type OmStatistikken, type Statistics } from '/site/content-types'
 
 export function getPublications(

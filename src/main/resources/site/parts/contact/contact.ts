@@ -9,7 +9,7 @@ import { renderError } from '/lib/ssb/error/error'
 import { getContactsFromRepo } from '/lib/ssb/statreg/contacts'
 import { ensureArray, chunkArray } from '/lib/ssb/utils/arrayUtils'
 import { getPhrases } from '/lib/ssb/utils/language'
-import { ContactModel, TransformedContact } from '/lib/types/partTypes/contact'
+import { type ContactModel, type TransformedContact } from '/lib/types/partTypes/contact'
 import { type Article, type Statistics } from '/site/content-types'
 
 const view = resolve('./contact.html')

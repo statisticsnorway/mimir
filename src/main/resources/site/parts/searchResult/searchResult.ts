@@ -11,7 +11,7 @@ import { formatDate } from '/lib/ssb/utils/dateUtils'
 import { renderError } from '/lib/ssb/error/error'
 import { sanitizeForSolr } from '/lib/ssb/utils/textUtils'
 import { isEnabled } from '/lib/featureToggle'
-import { BestBet, ContentTypePhrase, SearchResultProps } from '/lib/types/partTypes/searchResult'
+import { type BestBet, type ContentTypePhrase, type SearchResultProps } from '/lib/types/partTypes/searchResult'
 
 export function get(req: XP.Request): XP.Response {
   try {

@@ -1,18 +1,18 @@
 import { request, HttpRequestParams, HttpResponse } from '/lib/http-client'
 import {
-  TbmlDataRaw,
-  TableRowRaw,
-  TableCellRaw,
-  TbmlDataUniform,
-  TableRowUniform,
-  TableCellUniform,
-  MetadataUniform,
-  TbmlSourceListRaw,
-  TbmlSourceListUniform,
-  XmlParser,
-  MetadataRaw,
-  Title,
-  Note,
+  type TbmlDataRaw,
+  type TableRowRaw,
+  type TableCellRaw,
+  type TbmlDataUniform,
+  type TableRowUniform,
+  type TableCellUniform,
+  type MetadataUniform,
+  type TbmlSourceListRaw,
+  type TbmlSourceListUniform,
+  type XmlParser,
+  type MetadataRaw,
+  type Title,
+  type Note,
 } from '/lib/types/xmlParser'
 
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')

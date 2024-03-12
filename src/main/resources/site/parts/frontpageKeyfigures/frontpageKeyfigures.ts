@@ -2,12 +2,13 @@ import { getComponent } from '/lib/xp/portal'
 import { type Content, get as getContentByKey } from '/lib/xp/content'
 import { render as r4XpRender } from '/lib/enonic/react4xp'
 import { render } from '/lib/thymeleaf'
-import { type KeyFigureView, parseKeyFigure } from '/lib/ssb/parts/keyFigure'
+import { parseKeyFigure } from '/lib/ssb/parts/keyFigure'
 
 import { renderError } from '/lib/ssb/error/error'
 import { data } from '/lib/util'
 import { DATASET_BRANCH } from '/lib/ssb/repo/dataset'
-import { FrontPageKeyFigureData, FrontpageKeyfigure } from '/lib/types/partTypes/frontpageKeyfigures'
+import { type FrontPageKeyFigureData, type FrontpageKeyfigure } from '/lib/types/partTypes/frontpageKeyfigures'
+import { type KeyFigureView } from '/lib/types/partTypes/keyFigure'
 import { type KeyFigure } from '/site/content-types'
 
 const view = resolve('./frontpageKeyfigures.html')

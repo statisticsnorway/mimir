@@ -12,7 +12,7 @@ import { formatDate } from '/lib/ssb/utils/dateUtils'
 import { notNullOrUndefined } from '/lib/ssb/utils/coreUtils'
 import { ENONIC_CMS_DEFAULT_REPO, withSuperUserContext } from '/lib/ssb/repo/common'
 import { arraysEqual, ensureArray } from '/lib/ssb/utils/arrayUtils'
-import { ArticleResult, AssociatedLink, CMS, PreparedArticles } from '/lib/types/article'
+import { type ArticleResult, type AssociatedLink, type CMS, type PreparedArticles } from '/lib/types/article'
 import { type Article } from '/site/content-types'
 
 const dummyReq: Partial<XP.Request> = {

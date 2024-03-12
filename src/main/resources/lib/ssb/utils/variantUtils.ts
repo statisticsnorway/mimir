@@ -9,13 +9,13 @@ import { sameDay, createMonthName, formatDate, isSameOrBefore } from '/lib/ssb/u
 import { parseISO, getMonth, getYear, getDate } from '/lib/vendor/dateFns'
 import * as util from '/lib/util'
 import {
-  DayReleases,
-  GroupedBy,
-  MonthReleases,
-  PreparedStatistics,
-  PreparedVariant,
-  Release,
-  YearReleases,
+  type DayReleases,
+  type GroupedBy,
+  type MonthReleases,
+  type PreparedStatistics,
+  type PreparedVariant,
+  type Release,
+  type YearReleases,
 } from '/lib/types/variants'
 import { type OmStatistikken, type Statistics } from '/site/content-types'
 

@@ -16,8 +16,8 @@ import { parseISO } from '/lib/vendor/dateFns'
 import { fromPartCache } from '/lib/ssb/cache/partCache'
 import { renderError } from '/lib/ssb/error/error'
 import { isEnabled } from '/lib/featureToggle'
-import { PreparedStatistics, YearReleases } from '/lib/types/variants'
-import { GroupedBy, ReleasedStatisticsProps } from '/lib/types/partTypes/releasedStatistics'
+import { type PreparedStatistics, type YearReleases } from '/lib/types/variants'
+import { type GroupedBy, type ReleasedStatisticsProps } from '/lib/types/partTypes/releasedStatistics'
 import { type ReleasedStatistics as ReleasedStatisticsPartConfig } from '.'
 
 export function get(req: XP.Request): XP.Response {

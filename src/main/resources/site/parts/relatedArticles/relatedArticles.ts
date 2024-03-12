@@ -18,7 +18,7 @@ import { getReleaseDatesByVariants, getStatisticByIdFromRepo } from '/lib/ssb/st
 import { getPhrases } from '/lib/ssb/utils/language'
 import { fromRelatedArticlesCache } from '/lib/ssb/cache/cache'
 import { hasWritePermissionsAndPreview } from '/lib/ssb/parts/permissions'
-import { RelatedArticle, RelatedArticlesContent } from '/lib/types/partTypes/relatedArticles'
+import { type RelatedArticle, type RelatedArticlesContent } from '/lib/types/partTypes/relatedArticles'
 import { type RelatedArticles } from '/site/mixins/relatedArticles'
 import { type Article, type Statistics } from '/site/content-types'
 

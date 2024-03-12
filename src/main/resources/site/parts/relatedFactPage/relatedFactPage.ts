@@ -9,10 +9,10 @@ import { getPhrases } from '/lib/ssb/utils/language'
 import { fromPartCache } from '/lib/ssb/cache/partCache'
 import * as util from '/lib/util'
 import {
-  RelatedFactPageConfig,
-  RelatedFactPageContent,
-  RelatedFactPageProps,
-  RelatedFactPages,
+  type RelatedFactPageConfig,
+  type RelatedFactPageContent,
+  type RelatedFactPageProps,
+  type RelatedFactPages,
 } from '/lib/types/partTypes/relatedFactPage'
 import { type Article, type ContentList } from '/site/content-types'
 

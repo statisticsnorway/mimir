@@ -1,6 +1,6 @@
 import { get as getContent, query, Content, ContentsResult } from '/lib/xp/content'
 import { StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
-import { DefaultPage } from '/lib/types/defaultPage'
+import { type DefaultPage } from '/lib/types/defaultPage'
 
 import { getStatisticByShortNameFromRepo } from '/lib/ssb/statreg/statistics'
 import { fromParentTypeCache } from '/lib/ssb/cache/cache'

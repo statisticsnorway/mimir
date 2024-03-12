@@ -5,8 +5,8 @@ import { getChildArticles, prepareArticles } from '/lib/ssb/utils/articleUtils'
 import { render } from '/lib/enonic/react4xp'
 
 import { isEnabled } from '/lib/featureToggle'
-import { SubjectArticleListProps } from '/lib/types/partTypes/subjectArticleList'
-import { PreparedArticles } from '/lib/types/article'
+import { type SubjectArticleListProps } from '/lib/types/partTypes/subjectArticleList'
+import { type PreparedArticles } from '/lib/types/article'
 import { type Article } from '/site/content-types'
 
 export function get(req: XP.Request) {

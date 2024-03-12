@@ -6,7 +6,7 @@ import { formatDate } from '/lib/ssb/utils/dateUtils'
 
 import { data } from '/lib/util'
 import { renderError } from '/lib/ssb/error/error'
-import { Variables } from '/lib/types/partTypes/variables'
+import { type Variables } from '/lib/types/partTypes/variables'
 import { type Article } from '/site/content-types'
 
 export function get(req: XP.Request): XP.Response {

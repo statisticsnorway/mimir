@@ -8,7 +8,7 @@ import {
 import { filterOnComingReleases } from '/lib/ssb/utils/filterReleasesUtils'
 
 import { getAllStatisticsFromRepo } from '/lib/ssb/statreg/statistics'
-import { GroupedBy, PreparedStatistics, Release, YearReleases } from '/lib/types/variants'
+import { type GroupedBy, type PreparedStatistics, type Release, type YearReleases } from '/lib/types/variants'
 
 export const get = (req: XP.Request): XP.Response => {
   // Get statistics

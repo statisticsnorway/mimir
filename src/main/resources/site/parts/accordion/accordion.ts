@@ -5,7 +5,7 @@ import { render } from '/lib/enonic/react4xp'
 
 import * as util from '/lib/util'
 import { renderError } from '/lib/ssb/error/error'
-import { AccordionProp } from '/lib/types/partTypes/accordion'
+import { type AccordionProp } from '/lib/types/partTypes/accordion'
 import { type Accordion } from '/site/content-types'
 
 export function get(req: XP.Request): XP.Response {

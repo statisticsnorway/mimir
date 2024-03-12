@@ -10,7 +10,7 @@ import { getPhrases } from '/lib/ssb/utils/language'
 
 import { renderError } from '/lib/ssb/error/error'
 import { getAttachmentContent } from '/lib/ssb/utils/utils'
-import { EntryLinkProps } from '/lib/types/partTypes/entryLinks'
+import { type EntryLinkProps } from '/lib/types/partTypes/entryLinks'
 import { type EntryLinks as EntryLinksPartConfig } from '.'
 
 const view = resolve('./entryLinks.html')

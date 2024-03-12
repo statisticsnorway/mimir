@@ -1,12 +1,12 @@
 import { get as getContentByKey, type Content } from '/lib/xp/content'
 import { getContent, getComponent, pageUrl, assetUrl } from '/lib/xp/portal'
 import { render } from '/lib/thymeleaf'
-import { type TableSourceList, type TableView, parseTable } from '/lib/ssb/parts/table'
-import { SourceList, SourcesConfig } from '/lib/types/sources'
+import { parseTable } from '/lib/ssb/parts/table'
+import { type SourceList, type SourcesConfig } from '/lib/types/sources'
 import { scriptAsset, getSources } from '/lib/ssb/utils/utils'
 import {
-  DropdownItem as TableDownloadDropdownItem,
-  DropdownItems as TableDownloadDropdownItems,
+  type DropdownItem as TableDownloadDropdownItem,
+  type DropdownItems as TableDownloadDropdownItems,
 } from '/lib/types/components'
 import { type Language, type Phrases } from '/lib/types/language'
 import { render as r4xpRender } from '/lib/enonic/react4xp'
@@ -16,7 +16,12 @@ import { renderError } from '/lib/ssb/error/error'
 import * as util from '/lib/util'
 import { getLanguage, getPhrases } from '/lib/ssb/utils/language'
 import { hasWritePermissionsAndPreview } from '/lib/ssb/parts/permissions'
-import { TableProps, TableStandardSymbolLink } from '/lib/types/partTypes/table'
+import {
+  type TableView,
+  type TableProps,
+  type TableStandardSymbolLink,
+  type TableSourceList,
+} from '/lib/types/partTypes/table'
 import { GA_TRACKING_ID } from '/site/pages/default/default'
 import { type Statistics, type Table } from '/site/content-types'
 

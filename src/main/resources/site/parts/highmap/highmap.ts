@@ -8,7 +8,12 @@ import { type PreliminaryData, type XmlParser, type TbmlDataUniform, TableRowUni
 import * as util from '/lib/util'
 import { getPhrases } from '/lib/ssb/utils/language'
 import { renderError } from '/lib/ssb/error/error'
-import { HighmapProps, HighmapTable, MapResult, ThresholdValues } from '/lib/types/partTypes/highmap'
+import {
+  type HighmapProps,
+  type HighmapTable,
+  type MapResult,
+  type ThresholdValues,
+} from '/lib/types/partTypes/highmap'
 import { datasetOrUndefined } from '/lib/ssb/cache/cache'
 import { type DatasetRepoNode, DataSource as DataSourceType } from '/lib/ssb/repo/dataset'
 import { type Highmap } from '/site/content-types'

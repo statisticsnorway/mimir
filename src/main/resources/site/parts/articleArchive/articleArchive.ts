@@ -6,7 +6,11 @@ import { formatDate } from '/lib/ssb/utils/dateUtils'
 import { imageUrl, getImageAlt } from '/lib/ssb/utils/imageUtils'
 
 import { renderError } from '/lib/ssb/error/error'
-import { ArticleArchiveProps, ParsedArticles, ParsedArticleData } from '/lib/types/partTypes/articleArchive'
+import {
+  type ArticleArchiveProps,
+  type ParsedArticles,
+  type ParsedArticleData,
+} from '/lib/types/partTypes/articleArchive'
 import { type Article, type ArticleArchive } from '/site/content-types'
 
 export function get(req: XP.Request): XP.Response {

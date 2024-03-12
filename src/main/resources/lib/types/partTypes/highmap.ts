@@ -1,7 +1,7 @@
-import { RowValue } from '/lib/types/util'
-import { Phrases } from '/lib/types/language'
-import { RowData } from '/lib/types/partTypes/highcharts'
-import { Highmap } from '/site/content-types/highmap'
+import { type RowValue } from '/lib/types/util'
+import { type Phrases } from '/lib/types/language'
+import { type RowData } from '/lib/types/partTypes/highcharts'
+import { type Highmap } from '/site/content-types/highmap'
 
 export interface HighmapProps {
   title: string

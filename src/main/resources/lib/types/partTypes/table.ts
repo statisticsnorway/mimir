@@ -1,6 +1,6 @@
-import { SourceList } from '/lib/types/sources'
-import { DropdownItems } from '/lib/types/components'
-import { Note, PreliminaryData, Source, TableRowUniform, Title } from '/lib/types/xmlParser'
+import { type SourceList } from '/lib/types/sources'
+import { type DropdownItems } from '/lib/types/components'
+import { type Note, type PreliminaryData, type Source, type TableRowUniform, type Title } from '/lib/types/xmlParser'
 
 export interface TableProps {
   downloadTableLabel: string

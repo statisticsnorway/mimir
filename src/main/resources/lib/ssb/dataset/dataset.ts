@@ -1,8 +1,8 @@
 import { query, Content, ContentsResult } from '/lib/xp/content'
 import { run, ContextParams } from '/lib/xp/context'
 import { getUser, User } from '/lib/xp/auth'
-import { JSONstat } from '/lib/types/jsonstat-toolkit'
-import { StatbankSavedRaw, TbmlDataUniform } from '/lib/types/xmlParser'
+import { type JSONstat } from '/lib/types/jsonstat-toolkit'
+import { type StatbankSavedRaw, type TbmlDataUniform } from '/lib/types/xmlParser'
 import {
   DataSource as DataSourceType,
   DatasetRepoNode,

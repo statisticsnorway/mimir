@@ -7,7 +7,7 @@ import { type StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
 import { getStatisticByIdFromRepo } from '/lib/ssb/statreg/statistics'
 import { getPhrases } from '/lib/ssb/utils/language'
 import { renderError } from '/lib/ssb/error/error'
-import { StatbankBoxProps } from '/lib/types/partTypes/statbankBox'
+import { type StatbankBoxProps } from '/lib/types/partTypes/statbankBox'
 import { type Statistics } from '/site/content-types'
 import { type StatbankBox as StatbankBoxPartConfig } from '.'
 

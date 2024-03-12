@@ -1,10 +1,11 @@
-import { type TableView, getTableViewData } from '/lib/ssb/parts/table'
-import { type TbprocessorParsedResponse, getTbmlData } from '/lib/ssb/dataset/tbprocessor/tbml'
+import { getTableViewData } from '/lib/ssb/parts/table'
+import { getTbmlData, type TbprocessorParsedResponse } from '/lib/ssb/dataset/tbprocessor/tbml'
 import { type TbmlDataUniform } from '/lib/types/xmlParser'
 import { render } from '/lib/thymeleaf'
 import { render as r4xpRender } from '/lib/enonic/react4xp'
 import { renderError } from '/lib/ssb/error/error'
-import { TbmlPreviewProps } from '/lib/types/partTypes/tbmlPreview'
+import { type TbmlPreviewProps } from '/lib/types/partTypes/tbmlPreview'
+import { type TableView } from '/lib/types/partTypes/table'
 
 const view = resolve('./tbmlPreview.html')
 

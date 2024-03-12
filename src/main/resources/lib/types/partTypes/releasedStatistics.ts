@@ -1,4 +1,4 @@
-import { YearReleases } from '/lib/types/variants'
+import { type YearReleases } from '/lib/types/variants'
 
 export interface ReleasedStatisticsProps {
   releases: Array<YearReleases>

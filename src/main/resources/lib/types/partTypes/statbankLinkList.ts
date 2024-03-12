@@ -1,4 +1,4 @@
-import { Statistics } from '/site/content-types/statistics'
+import { type Statistics } from '/site/content-types/statistics'
 
 export interface StatbankLinkListModel {
   title: string

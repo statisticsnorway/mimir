@@ -3,7 +3,7 @@ import { localize } from '/lib/xp/i18n'
 import { render } from '/lib/thymeleaf'
 import { render as r4xpRender } from '/lib/enonic/react4xp'
 import { getLanguage } from '/lib/ssb/utils/language'
-import { Language } from '/lib/types/language'
+import { type Language } from '/lib/types/language'
 
 const fourOFourView = resolve('./404.html')
 const mainErrorView = resolve('./error.html')

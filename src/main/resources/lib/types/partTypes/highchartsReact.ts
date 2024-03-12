@@ -1,5 +1,5 @@
-import { HighchartsGraphConfig } from '/lib/types/highcharts'
-import { Highchart } from '/site/content-types/highchart'
+import { type HighchartsGraphConfig } from '/lib/types/highcharts'
+import { type Highchart } from '/site/content-types/highchart'
 
 export interface HighchartsReactProps {
   config?: HighchartsExtendedProps

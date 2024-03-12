@@ -2,7 +2,7 @@ import { getContent, getComponent, pageUrl, serviceUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 import { renderError } from '/lib/ssb/error/error'
 import { render } from '/lib/enonic/react4xp'
-import { NameSearchProps } from '/lib/types/partTypes/nameSearch'
+import { type NameSearchProps } from '/lib/types/partTypes/nameSearch'
 import { GA_TRACKING_ID } from '/site/pages/default/default'
 import { type NameSearch as NameSearchPartConfig } from '.'
 

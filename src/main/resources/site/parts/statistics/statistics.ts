@@ -19,7 +19,7 @@ import { renderError } from '/lib/ssb/error/error'
 import { hasWritePermissionsAndPreview } from '/lib/ssb/parts/permissions'
 import { currentlyWaitingForPublish as currentlyWaitingForPublishOld } from '/lib/ssb/dataset/publishOld'
 import * as util from '/lib/util'
-import { StatisticsProps } from '/lib/types/partTypes/statistics'
+import { type StatisticsProps } from '/lib/types/partTypes/statistics'
 import { type Statistics } from '/site/content-types'
 import { preview as keyFigurePreview } from '/site/parts/keyFigure/keyFigure'
 

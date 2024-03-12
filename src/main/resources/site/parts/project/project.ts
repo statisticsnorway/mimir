@@ -2,7 +2,7 @@ import { type Content, get as getTheContent } from '/lib/xp/content'
 import { localize } from '/lib/xp/i18n'
 import { getContent, pageUrl, processHtml } from '/lib/xp/portal'
 import { render } from '/lib/enonic/react4xp'
-import { ManagerLink, ProjectProps } from '/lib/types/partTypes/project'
+import { type ManagerLink, type ProjectProps } from '/lib/types/partTypes/project'
 import { type Project } from '/site/content-types'
 
 export function preview(req: XP.Request) {

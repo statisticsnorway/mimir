@@ -2,9 +2,9 @@ import { get, getAttachmentStream, ByteSource, Content } from '/lib/xp/content'
 
 import { getContent, pageUrl, assetUrl } from '/lib/xp/portal'
 import { readLines } from '/lib/xp/io'
-import { PreliminaryData } from '/lib/types/xmlParser'
+import { type PreliminaryData } from '/lib/types/xmlParser'
 import { formatDate, fromNow } from '/lib/ssb/utils/dateUtils'
-import { SourceList, SourcesConfig } from '/lib/types/sources'
+import { type SourceList, type SourcesConfig } from '/lib/types/sources'
 import { type RowValue } from '/lib/types/util'
 import { type Header } from '/site/content-types'
 

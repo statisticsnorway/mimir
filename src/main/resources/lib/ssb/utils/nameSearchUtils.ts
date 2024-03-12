@@ -9,7 +9,7 @@ import { request, HttpRequestParams, HttpResponse } from '/lib/http-client'
 
 import { getCalculatorConfig, getNameSearchGraphData } from '/lib/ssb/dataset/calculator'
 import { isEnabled } from '/lib/featureToggle'
-import { SolrResponse } from '/lib/types/solr'
+import { type SolrResponse } from '/lib/types/solr'
 import { type CalculatorConfig } from '/site/content-types'
 
 export function getNameSearchResult(name: string, includeGraphData: boolean): SolrResponse {

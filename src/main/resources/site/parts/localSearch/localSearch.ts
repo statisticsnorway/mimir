@@ -3,7 +3,7 @@ import { getComponent, pageUrl } from '/lib/xp/portal'
 import { render } from '/lib/enonic/react4xp'
 
 import { renderError } from '/lib/ssb/error/error'
-import { LocalSearchProps, SearchFolderItem, SearchItem } from '/lib/types/partTypes/localSearch'
+import { type LocalSearchProps, type SearchFolderItem, type SearchItem } from '/lib/types/partTypes/localSearch'
 
 export function get(req: XP.Request): XP.Response {
   try {

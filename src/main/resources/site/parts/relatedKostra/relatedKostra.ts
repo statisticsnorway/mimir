@@ -1,10 +1,11 @@
 import { getComponent, getSiteConfig, processHtml } from '/lib/xp/portal'
-import { type MunicipalityWithCounty, getMunicipality, RequestWithCode } from '/lib/ssb/dataset/klass/municipalities'
+import { getMunicipality } from '/lib/ssb/dataset/klass/municipalities'
 import { render } from '/lib/enonic/react4xp'
 
 import { pageMode } from '/lib/ssb/utils/utils'
 import { renderError } from '/lib/ssb/error/error'
-import { RelatedKostraProps } from '/lib/types/partTypes/relatedKostra'
+import { type RelatedKostraProps } from '/lib/types/partTypes/relatedKostra'
+import { type MunicipalityWithCounty, type RequestWithCode } from '/lib/types/municipalities'
 
 export function get(req: XP.Request): XP.Response {
   try {

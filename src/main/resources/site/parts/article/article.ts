@@ -9,7 +9,7 @@ import * as util from '/lib/util'
 import { getPhrases } from '/lib/ssb/utils/language'
 import { renderError } from '/lib/ssb/error/error'
 import { isEnabled } from '/lib/featureToggle'
-import { ArticleProps } from '/lib/types/partTypes/article'
+import { type ArticleProps } from '/lib/types/partTypes/article'
 import { type Article } from '/site/content-types'
 
 export function get(req: XP.Request): XP.Response {

@@ -1,6 +1,7 @@
 import { sanitize } from '/lib/xp/common'
-import { listBestBets, createBestBet, deleteBestBet, BestBetContent } from '/lib/ssb/repo/bestbet'
+import { listBestBets, createBestBet, deleteBestBet } from '/lib/ssb/repo/bestbet'
 import { ensureArray } from '/lib/ssb/utils/arrayUtils'
+import { type BestBetContent } from '/lib/types/bestebet'
 
 export function get() {
   const bestbets = ensureArray(listBestBets(1000))

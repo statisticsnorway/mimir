@@ -1,4 +1,4 @@
-import { Accordion } from '/site/content-types'
+import { type Accordion } from '/site/content-types'
 
 export interface Items {
   definition: Array<string>

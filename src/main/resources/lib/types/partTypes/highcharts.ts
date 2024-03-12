@@ -1,4 +1,4 @@
-import { PreliminaryData, TableRowUniform } from '../xmlParser'
+import { type PreliminaryData, type TableRowUniform } from '../xmlParser'
 
 export interface Table {
   table: {

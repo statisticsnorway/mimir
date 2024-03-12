@@ -10,7 +10,7 @@ import { imageUrl } from '/lib/ssb/utils/imageUtils'
 import * as util from '/lib/util'
 import { renderError } from '/lib/ssb/error/error'
 import { getPhrases } from '/lib/ssb/utils/language'
-import { InfoGraphicsProps } from '/lib/types/partTypes/infoGraphics'
+import { type InfoGraphicsProps } from '/lib/types/partTypes/infoGraphics'
 import { type InfoGraphics as InfoGraphicsPartConfig } from '.'
 
 export function get(req: XP.Request): XP.Response {

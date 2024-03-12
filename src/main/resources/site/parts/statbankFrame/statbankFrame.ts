@@ -1,7 +1,7 @@
 import { getContent, getSiteConfig } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 import { render } from '/lib/enonic/react4xp'
-import { StatbankFrameProps } from '/lib/types/partTypes/statbankFrame'
+import { type StatbankFrameProps } from '/lib/types/partTypes/statbankFrame'
 
 export function get(req: XP.Request) {
   return renderPart(req)

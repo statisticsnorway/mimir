@@ -1,5 +1,5 @@
-import { SourceList } from '/lib/types/sources'
-import { InfoGraphics } from '/site/parts/infoGraphics'
+import { type SourceList } from '/lib/types/sources'
+import { type InfoGraphics } from '/site/parts/infoGraphics'
 
 export interface InfoGraphicsProps {
   title: string

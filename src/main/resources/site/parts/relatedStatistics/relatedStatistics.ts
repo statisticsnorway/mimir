@@ -7,7 +7,7 @@ import { render as r4xpRender } from '/lib/enonic/react4xp'
 import * as util from '/lib/util'
 import { getPhrases } from '/lib/ssb/utils/language'
 import { renderError } from '/lib/ssb/error/error'
-import { RelatedStatisticsContent } from '/lib/types/partTypes/relatedStatistics'
+import { type RelatedStatisticsContent } from '/lib/types/partTypes/relatedStatistics'
 import { type Statistics } from '/site/content-types'
 
 const view = resolve('./relatedStatistics.html')

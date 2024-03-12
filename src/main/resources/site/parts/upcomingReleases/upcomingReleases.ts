@@ -21,7 +21,7 @@ import { render } from '/lib/enonic/react4xp'
 
 import { getAllStatisticsFromRepo } from '/lib/ssb/statreg/statistics'
 import { fromPartCache } from '/lib/ssb/cache/partCache'
-import { UpcomingReleasesProps } from '/lib/types/partTypes/upcomingReleases'
+import { type UpcomingReleasesProps } from '/lib/types/partTypes/upcomingReleases'
 import { type UpcomingRelease } from '/site/content-types'
 
 export function get(req: XP.Request) {

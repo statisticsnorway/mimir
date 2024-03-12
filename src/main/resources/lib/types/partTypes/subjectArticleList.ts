@@ -1,4 +1,4 @@
-import { PreparedArticles } from '/lib/types/article'
+import { type PreparedArticles } from '/lib/types/article'
 
 export interface SubjectArticleListProps {
   title: string

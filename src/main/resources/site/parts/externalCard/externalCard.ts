@@ -4,7 +4,7 @@ import { imageUrl } from '/lib/ssb/utils/imageUtils'
 
 import { renderError } from '/lib/ssb/error/error'
 import { data } from '/lib/util'
-import { ExternalCard } from '/lib/types/partTypes/externalCard'
+import { type ExternalCard } from '/lib/types/partTypes/externalCard'
 
 export function get(req: XP.Request) {
   try {

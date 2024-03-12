@@ -4,8 +4,13 @@ import '/lib/ssb/polyfills/nashorn'
 import JSONstat from 'jsonstat-toolkit/import.mjs'
 import { query, Content, ContentsResult } from '/lib/xp/content'
 import { localize } from '/lib/xp/i18n'
-import { TbmlDataUniform, TableRowUniform, TableCellUniform, PreliminaryData } from '/lib/types/xmlParser'
-import { Category, Dimension, JSONstat as JSONstatType } from '/lib/types/jsonstat-toolkit'
+import {
+  type TbmlDataUniform,
+  type TableRowUniform,
+  type TableCellUniform,
+  type PreliminaryData,
+} from '/lib/types/xmlParser'
+import { type Category, type Dimension, type JSONstat as JSONstatType } from '/lib/types/jsonstat-toolkit'
 import {
   DatasetRepoNode,
   DataSource as DataSourceType,
@@ -19,8 +24,8 @@ import * as util from '/lib/util'
 import { getDataset } from '/lib/ssb/dataset/dataset'
 import { localizeTimePeriod } from '/lib/ssb/utils/language'
 import { createHumanReadableFormat } from '/lib/ssb/utils/utils'
-import { KeyFigureChanges, KeyFigureView, MunicipalData } from '/lib/types/partTypes/keyFigure'
-import { MunicipalityWithCounty } from '/lib/types/municipalities'
+import { type KeyFigureChanges, type KeyFigureView, type MunicipalData } from '/lib/types/partTypes/keyFigure'
+import { type MunicipalityWithCounty } from '/lib/types/municipalities'
 import { type DataSource } from '/site/mixins/dataSource'
 import { type KeyFigure } from '/site/content-types'
 

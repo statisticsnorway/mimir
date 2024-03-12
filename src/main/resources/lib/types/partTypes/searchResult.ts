@@ -1,6 +1,6 @@
-import { Node } from '@enonic-types/lib-node'
-import { BestBetContent } from '/lib/types/bestebet'
-import { Facet, PreparedSearchResult } from '/lib/types/solr'
+import { type Node } from '@enonic-types/lib-node'
+import { type BestBetContent } from '/lib/types/bestebet'
+import { type Facet, type PreparedSearchResult } from '/lib/types/solr'
 
 export interface SearchResultProps {
   bestBetHit: PreparedSearchResult | undefined

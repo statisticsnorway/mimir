@@ -19,11 +19,11 @@ import { getAllStatisticsFromRepo } from '/lib/ssb/statreg/statistics'
 import { ensureArray } from '/lib/ssb/utils/arrayUtils'
 import { fromPartCache } from '/lib/ssb/cache/partCache'
 import {
-  MainSubjectWithSubs,
-  PreparedSubs,
-  StatbankSubjectTreeProps,
-  SubSubjectsWithStatistics,
-} from '/lib/types/partTypes/StatbankSubjectTree'
+  type MainSubjectWithSubs,
+  type PreparedSubs,
+  type StatbankSubjectTreeProps,
+  type SubSubjectsWithStatistics,
+} from '/lib/types/partTypes/statbankSubjectTree'
 
 export function get(req: XP.Request) {
   const content = getContent()

@@ -2,12 +2,12 @@
 import striptags from 'striptags'
 import { Content } from '/lib/xp/content'
 import { AreaLineLinearData, PieData, Series, SeriesAndCategories } from '/lib/ssb/parts/highcharts/highchartsData'
-import { XmlParser, PreliminaryData, TableRowUniform, TableCellUniform } from '/lib/types/xmlParser'
-import { RowValue } from '/lib/types/util'
+import { type XmlParser, type PreliminaryData, type TableRowUniform, type TableCellUniform } from '/lib/types/xmlParser'
+import { type RowValue } from '/lib/types/util'
 import { getRowValue } from '/lib/ssb/utils/utils'
 import { toString } from '/lib/vendor/ramda'
 import * as util from '/lib/util'
-import { RowData, SeriesAndCategoriesRaw, SeriesRaw, Table } from '/lib/types/partTypes/highcharts'
+import { type RowData, type SeriesAndCategoriesRaw, type SeriesRaw, type Table } from '/lib/types/partTypes/highcharts'
 import { type CombinedGraph, type Highchart } from '/site/content-types'
 
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
