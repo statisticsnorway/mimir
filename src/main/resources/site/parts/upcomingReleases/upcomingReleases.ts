@@ -2,7 +2,7 @@ import { query, type Content } from '/lib/xp/content'
 import { getContent, getComponent, processHtml, serviceUrl, sanitizeHtml } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 import { type GroupedBy, type PreparedStatistics, type YearReleases, type Release } from '/lib/types/variants'
-import { type SubjectItem, getMainSubjects, getMainSubjectById } from '/lib/ssb/utils/subjectUtils'
+import { getMainSubjects, getMainSubjectById } from '/lib/ssb/utils/subjectUtils'
 import { formatDate } from '/lib/ssb/utils/dateUtils'
 import { format } from '/lib/vendor/dateFns'
 import {
@@ -22,6 +22,7 @@ import { render } from '/lib/enonic/react4xp'
 import { getAllStatisticsFromRepo } from '/lib/ssb/statreg/statistics'
 import { fromPartCache } from '/lib/ssb/cache/partCache'
 import { type UpcomingReleasesProps } from '/lib/types/partTypes/upcomingReleases'
+import { type SubjectItem } from '/lib/types/subject'
 import { type UpcomingRelease } from '/site/content-types'
 
 export function get(req: XP.Request) {

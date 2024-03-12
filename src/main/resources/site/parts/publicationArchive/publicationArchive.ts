@@ -1,11 +1,11 @@
 import { getContent, getComponent, serviceUrl } from '/lib/xp/portal'
 import { render } from '/lib/enonic/react4xp'
 import { getPublications } from '/lib/ssb/parts/publicationArchive'
-import { type SubjectItem, getMainSubjects } from '/lib/ssb/utils/subjectUtils'
-
+import { getMainSubjects } from '/lib/ssb/utils/subjectUtils'
 import { getPhrases } from '/lib/ssb/utils/language'
 import { type Phrases } from '/lib/types/language'
 import { type Dropdown, type PublicationArchiveProps } from '/lib/types/partTypes/publicationArchive'
+import { type SubjectItem } from '/lib/types/subject'
 
 export function get(req: XP.Request) {
   return renderPart(req)

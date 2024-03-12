@@ -2,8 +2,6 @@ import { type Content } from '/lib/xp/content'
 import { getContent } from '/lib/xp/portal'
 import { render } from '/lib/enonic/react4xp'
 import {
-  type SubjectItem,
-  type StatisticItem,
   getMainSubjects,
   getSubSubjects,
   getSubSubjectsByPath,
@@ -13,9 +11,7 @@ import {
   getSecondaryStatisticsBySubject,
 } from '/lib/ssb/utils/subjectUtils'
 import { type StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
-
 import { getAllStatisticsFromRepo } from '/lib/ssb/statreg/statistics'
-
 import { ensureArray } from '/lib/ssb/utils/arrayUtils'
 import { fromPartCache } from '/lib/ssb/cache/partCache'
 import {
@@ -24,6 +20,7 @@ import {
   type StatbankSubjectTreeProps,
   type SubSubjectsWithStatistics,
 } from '/lib/types/partTypes/statbankSubjectTree'
+import { type StatisticItem, type SubjectItem } from '/lib/types/subject'
 
 export function get(req: XP.Request) {
   const content = getContent()
