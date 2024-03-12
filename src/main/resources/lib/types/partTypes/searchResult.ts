@@ -1,6 +1,6 @@
 import { type Node } from '/lib/xp/node'
-import { type BestBetContent } from '/lib/types/bestebet'
 import { type Facet, type PreparedSearchResult } from '/lib/types/solr'
+import { type BestBetContent } from '../bestbet'
 
 export interface SearchResultProps {
   bestBetHit: PreparedSearchResult | undefined
