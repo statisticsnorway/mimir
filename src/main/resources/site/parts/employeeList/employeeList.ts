@@ -41,7 +41,9 @@ function renderPart(req: XP.Request) {
     pageDescription: part.config.ingress || '',
   }
 
-  return render('site/parts/employeeList/employeeList', props, req)
+  return render('site/parts/employeeList/employeeList', props, req, {
+    hydrate: false,
+  })
 }
 
 function prepareEmployees(results: readonly Content<Employee>[]) {

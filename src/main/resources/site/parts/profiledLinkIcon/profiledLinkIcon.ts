@@ -50,6 +50,7 @@ function renderProfiledLinks(req: XP.Request, links: ProfiledLinkIconPartConfig[
       req,
       {
         body: '<section class="xp-part part-profiledLinkIcon"></section>',
+        hydrate: false,
       }
     )
   }

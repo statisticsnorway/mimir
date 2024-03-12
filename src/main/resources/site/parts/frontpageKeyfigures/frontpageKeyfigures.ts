@@ -81,6 +81,7 @@ function renderFrontpageKeyfigures(req: XP.Request, frontpageKeyfigures: Array<F
     req,
     {
       body: render(view),
+      hydrate: false,
     }
   )
 }

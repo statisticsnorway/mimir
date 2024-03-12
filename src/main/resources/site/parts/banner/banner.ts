@@ -80,6 +80,7 @@ function renderPart(req: XP.Request): XP.Response {
     class="xp-part part-banner position-relative clearfix col-12 searchabletext${
       pageType._selected === 'faktaside' ? ' fact-page-banner' : ''
     }${isLandingPage ? ' landing-page-banner' : ''}"></section>`,
+    hydrate: false,
   })
 }
 
