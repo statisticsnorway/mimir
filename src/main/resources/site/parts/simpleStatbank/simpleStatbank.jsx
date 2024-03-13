@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { Row, Col } from 'react-bootstrap'
-import { Dropdown, Divider } from '@statisticsnorway/ssb-component-library'
+import { Row, Col, Container, Form } from 'react-bootstrap'
+import { Dropdown, Title } from '@statisticsnorway/ssb-component-library'
+import { sanitize } from '../../../lib/ssb/utils/htmlUtils'
 
 function SimpleStatbank(props) {
-  const { icon, altText, ingress, placeholder, resultLayout, selectDisplay, statbankApiData } = props
-
-  const textIngress = <span dangerouslySetInnerHTML={{ __html: ingress }} />
+  const { icon, altText, title, ingress, labelDropdown, resultText, resultFooter, timeLabel, statbankApiData, unit } =
+    props
 
   const [selectedValue, setSelectedValue] = useState(null)
 
@@ -19,9 +19,9 @@ function SimpleStatbank(props) {
   function renderIcon(icon, altText) {
     if (!!icon) {
       return (
-        <Col>
-          <img className='icon' src={icon} alt={altText ? altText : ''} aria-hidden='true' />
-        </Col>
+        <div className='icon-wrapper'>
+          <img src={icon} alt={altText ? altText : ''} aria-hidden='true' />
+        </div>
       )
     } else {
       return
@@ -30,13 +30,38 @@ function SimpleStatbank(props) {
 
   function renderResult() {
     if (selectedValue) {
-      const result = Number(selectedValue.value) > 0 ? selectedValue.value : '-'
-      const resultView = resultLayout.replace('{value}', result).replace('{time}', selectedValue.time)
-      const textResult = <span dangerouslySetInnerHTML={{ __html: resultView }} />
+      const value = selectedValue.value ?? '-'
+      const time = selectedValue.time
       return (
         <div>
-          <Divider light />
-          <Row className='content'>{textResult}</Row>
+          <Container className='simple-statbank-result'>
+            <Row>
+              <Title size={3} className='result-title'>
+                {resultText}
+              </Title>
+            </Row>
+            <Row>
+              <span className='time'>
+                {timeLabel} {time}
+              </span>
+            </Row>
+            <Row>
+              <div className='result'>
+                <span className='value float-md-end'>
+                  {value} {unit}
+                </span>
+              </div>
+            </Row>
+            {resultFooter && (
+              <Row>
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: sanitize(resultFooter.replace(/&nbsp;/g, ' ')),
+                  }}
+                ></div>
+              </Row>
+            )}
+          </Container>
         </div>
       )
     }
@@ -46,50 +71,63 @@ function SimpleStatbank(props) {
     const items = statbankApiData
       ? statbankApiData.data.map((element) => ({
           id: element.dataCode,
-          title: selectDisplay == 'text' ? element.displayName : `${element.dataCode}: ${element.displayName}`,
+          title: element.displayName, // : `${element.dataCode}: ${element.displayName}`,
           value: element.value,
           time: element.time,
         }))
       : []
     return (
       <Dropdown
-        header={textIngress}
+        header={labelDropdown}
         searchable
         items={items}
         onSelect={handleChange}
-        placeholder={statbankApiData ? placeholder : 'Ingen data'}
+        placeholder={statbankApiData ? labelDropdown : 'Ingen data'}
       />
     )
   }
 
   function renderForm() {
     return (
-      <Row className='content'>
-        {renderIcon(icon, altText)}
-        <Col>{addDropdown()}</Col>
-      </Row>
+      <Container className='simple-statbank-input'>
+        <Row>
+          <Col className='col-12 col-md-8'>
+            {props.title && <Title size={3}>{title}</Title>}
+            {props.ingress && (
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: sanitize(ingress.replace(/&nbsp;/g, ' ')),
+                }}
+              ></div>
+            )}
+            {addDropdown()}
+          </Col>
+          <Col className='col-md-4'>{renderIcon(icon, altText)}</Col>
+        </Row>
+      </Container>
     )
   }
 
   return (
-    <div className='simple-statbank'>
+    <section className='simple-statbank container-fluid p-0'>
       {renderForm()}
       {renderResult()}
-    </div>
+    </section>
   )
 }
 
 SimpleStatbank.propTypes = {
   icon: PropTypes.string,
   altText: PropTypes.string,
+  title: PropTypes.string,
   ingress: PropTypes.string,
-  placeholder: PropTypes.string,
-  resultLayout: PropTypes.string,
-  simpleStatbankServiceUrl: PropTypes.string,
-  json: PropTypes.string,
+  labelDropdown: PropTypes.string,
+  resultText: PropTypes.string,
+  unit: PropTypes.string,
+  timeLabel: PropTypes.string,
+  resultFooter: PropTypes.string,
   code: PropTypes.string,
   urlOrId: PropTypes.string,
-  selectDisplay: PropTypes.string,
   statbankApiData: PropTypes.objectOf({
     data: PropTypes.object,
   }),

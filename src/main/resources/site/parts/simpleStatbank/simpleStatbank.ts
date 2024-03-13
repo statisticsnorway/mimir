@@ -67,15 +67,16 @@ function renderPart(req: XP.Request, simpleStatbankId?: string): XP.Response {
 
   const props = {
     icon: getImageUrl(simpleStatbank.data.icon),
-    ingress: simpleStatbank.data.ingress,
-    placeholder: simpleStatbank.data.placeholder ?? '',
     altText: getImageAltText(simpleStatbank.data.icon),
-    resultLayout: simpleStatbank.data.resultText,
-    selectDisplay: simpleStatbank.data.selectDisplay,
+    title: simpleStatbank.data.simpleStatbankTitle,
+    ingress: simpleStatbank.data.ingress,
+    labelDropdown: simpleStatbank.data.labelDropdown,
+    resultText: simpleStatbank.data.resultText,
+    unit: simpleStatbank.data.unit,
+    timeLabel: simpleStatbank.data.timeLabel,
+    resultFooter: simpleStatbank.data.resultFooter,
     statbankApiData,
   }
 
-  return render('site/parts/simpleStatbank/simpleStatbank', props, req, {
-    body: '<section class="xp-part"></section>',
-  })
+  return render('site/parts/simpleStatbank/simpleStatbank', props, req)
 }

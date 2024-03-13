@@ -2,6 +2,7 @@
 import JSONstat from 'jsonstat-toolkit/import.mjs'
 import { type Dataset, type Data, type Dimension, Category } from '/lib/types/jsonstat-toolkit'
 import { fetchStatbankApiDataQuery } from '/lib/ssb/dataset/statbankApi/statbankApi'
+import { createHumanReadableFormat } from '/lib/ssb/utils/utils'
 
 export function getStatbankApiData(
   dimensionCode: string,
@@ -22,11 +23,12 @@ export function getStatbankApiData(
       }) as Data
 
       const filterCategory: Category | null = filterDimensionCode?.Category(dataDimension) as Category | null
+      const value: number | string | null = data.value && !(data.value instanceof Array) ? data.value : null
 
       return {
         displayName: filterCategory ? filterCategory.label : '',
         dataCode: dataDimension,
-        value: data.value ?? data.status,
+        value: value ? createHumanReadableFormat(value) : undefined,
         time: dimensionCode === 'Tid' ? dataDimension : timeDimensions[0],
       }
     })
@@ -47,6 +49,6 @@ export interface SimpleStatbankResult {
 interface DimensionData {
   displayName: string
   dataCode: string
-  value: (string | number)[]
+  value: string | undefined
   time: string
 }
