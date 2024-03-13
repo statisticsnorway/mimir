@@ -24,8 +24,10 @@
 
     .result {
       @include roboto-condenced;
+      margin-top: 10px;
+      margin-bottom: 10px;
 
-      .value {
+      .number {
         font-size: 3.5rem;
       }
 
@@ -37,7 +39,7 @@
 
       .no-number {
         color: $ssb-dark-3;
-        font-size: 20px;
+        font-size: 1.25rem;
         font-weight: bold;
       }
     }
@@ -56,7 +58,11 @@
     .icon-wrapper {
       display: none;
     }
-  }
 
-  // TODO: Visning på mobil er ikke ivaretatt siden endelig design ikke er på plass
+    .simple-statbank-result {
+      .result .number {
+        font-size: 2.25rem;
+      }
+    }
+  }
 }

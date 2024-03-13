@@ -40,6 +40,19 @@ function SimpleStatbank(props) {
     }
   }
 
+  function renderNumber() {
+    if (selectedValue.value) {
+      return (
+        <div className='number-section float-md-end'>
+          <span className='number'>{selectedValue.value}</span>
+          {unit && <span className='unit'>{unit}</span>}
+        </div>
+      )
+    } else {
+      return <span className='no-number'>{noNumberText}</span>
+    }
+  }
+
   function renderResult() {
     if (selectedValue) {
       return (
@@ -56,15 +69,7 @@ function SimpleStatbank(props) {
               </span>
             </Row>
             <Row>
-              <div className='result'>
-                {selectedValue.value ? (
-                  <span className='value float-md-end'>
-                    {selectedValue.value} {unit}
-                  </span>
-                ) : (
-                  <span className='no-number float-md-end'>{noNumberText}</span>
-                )}
-              </div>
+              <div className='result'>{renderNumber()}</div>
             </Row>
             {resultFooter && (
               <Row>
