@@ -1,12 +1,24 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { Row, Col, Container, Form } from 'react-bootstrap'
+import { Row, Col, Container } from 'react-bootstrap'
 import { Dropdown, Title } from '@statisticsnorway/ssb-component-library'
 import { sanitize } from '../../../lib/ssb/utils/htmlUtils'
 
 function SimpleStatbank(props) {
-  const { icon, altText, title, ingress, labelDropdown, resultText, resultFooter, timeLabel, statbankApiData, unit } =
-    props
+  const {
+    icon,
+    altText,
+    title,
+    ingress,
+    labelDropdown,
+    resultText,
+    resultFooter,
+    timeLabel,
+    statbankApiData,
+    unit,
+    placeholderDropdown,
+    noNumberText,
+  } = props
 
   const [selectedValue, setSelectedValue] = useState(null)
 
@@ -30,8 +42,6 @@ function SimpleStatbank(props) {
 
   function renderResult() {
     if (selectedValue) {
-      const value = selectedValue.value ?? '-'
-      const time = selectedValue.time
       return (
         <div>
           <Container className='simple-statbank-result'>
@@ -42,14 +52,18 @@ function SimpleStatbank(props) {
             </Row>
             <Row>
               <span className='time'>
-                {timeLabel} {time}
+                {timeLabel} {selectedValue.time}
               </span>
             </Row>
             <Row>
               <div className='result'>
-                <span className='value float-md-end'>
-                  {value} {unit}
-                </span>
+                {selectedValue.value ? (
+                  <span className='value float-md-end'>
+                    {selectedValue.value} {unit}
+                  </span>
+                ) : (
+                  <span className='no-number float-md-end'>{noNumberText}</span>
+                )}
               </div>
             </Row>
             {resultFooter && (
@@ -71,7 +85,7 @@ function SimpleStatbank(props) {
     const items = statbankApiData
       ? statbankApiData.data.map((element) => ({
           id: element.dataCode,
-          title: element.displayName, // : `${element.dataCode}: ${element.displayName}`,
+          title: element.displayName,
           value: element.value,
           time: element.time,
         }))
@@ -82,7 +96,7 @@ function SimpleStatbank(props) {
         searchable
         items={items}
         onSelect={handleChange}
-        placeholder={statbankApiData ? labelDropdown : 'Ingen data'}
+        placeholder={placeholderDropdown ?? ''}
       />
     )
   }
@@ -122,12 +136,12 @@ SimpleStatbank.propTypes = {
   title: PropTypes.string,
   ingress: PropTypes.string,
   labelDropdown: PropTypes.string,
+  placeholderDropdown: PropTypes.string,
   resultText: PropTypes.string,
   unit: PropTypes.string,
   timeLabel: PropTypes.string,
   resultFooter: PropTypes.string,
-  code: PropTypes.string,
-  urlOrId: PropTypes.string,
+  noNumberText: PropTypes.string,
   statbankApiData: PropTypes.objectOf({
     data: PropTypes.object,
   }),

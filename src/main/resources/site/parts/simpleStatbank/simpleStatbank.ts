@@ -1,5 +1,6 @@
 import { getComponent } from '/lib/xp/portal'
 import { type Content, get as getContentByKey } from '/lib/xp/content'
+import { localize } from '/lib/xp/i18n'
 import { renderError } from '/lib/ssb/error/error'
 import { render } from '/lib/enonic/react4xp'
 import { imageUrl, getImageAlt } from '/lib/ssb/utils/imageUtils'
@@ -71,10 +72,14 @@ function renderPart(req: XP.Request, simpleStatbankId?: string): XP.Response {
     title: simpleStatbank.data.simpleStatbankTitle,
     ingress: simpleStatbank.data.ingress,
     labelDropdown: simpleStatbank.data.labelDropdown,
+    placeholderDropdown: simpleStatbank.data.placeholderDropdown,
     resultText: simpleStatbank.data.resultText,
     unit: simpleStatbank.data.unit,
     timeLabel: simpleStatbank.data.timeLabel,
     resultFooter: simpleStatbank.data.resultFooter,
+    noNumberText: localize({
+      key: 'value.notFound',
+    }),
     statbankApiData,
   }
 

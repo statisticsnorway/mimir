@@ -26,6 +26,10 @@
                     <label>Label på nedtrekksmeny</label>
                     <occurrences minimum="0" maximum="1"/>
                 </input>
+                <input name="placeholderDropdown" type="TextLine">
+                    <label>Placeholder nedtrekksmeny</label>
+                    <occurrences minimum="0" maximum="1"/>
+                </input>
             </items>
         </field-set> 
         <field-set>  
