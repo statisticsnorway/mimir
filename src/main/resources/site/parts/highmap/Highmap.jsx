@@ -34,8 +34,17 @@ function generateColors(color, thresholdValues) {
   // colorAxis only works if we have numerical values, so wont work with data like Red: Oslo, Blue: Bergen etc
   if (color?._selected === 'gradient') {
     obj.colorAxis = obj.colorAxis || {}
-    obj.colorAxis.minColor = color.gradient.color1
-    obj.colorAxis.maxColor = color.gradient.color2
+    obj.colorAxis.minColor = color.gradient.startColor
+    obj.colorAxis.maxColor = color.gradient.endColor
+    if (color.gradient.stops) {
+      if (!Array.isArray(color.gradient.stops)) color.gradient.stops = [color.gradient.stops]
+
+      obj.colorAxis.stops = [
+        [0, color.gradient.startColor],
+        ...color.gradient.stops.map((stop) => [stop.value, stop.color]),
+        [1, color.gradient.endColor],
+      ]
+    }
   }
 
   return obj
@@ -77,6 +86,7 @@ function generateSeries(tableData, mapDataSecondColumn, color) {
       // dummy series to show outline of all areas
       allAreas: true,
       showInLegend: false,
+      opacity: 0.3,
     },
     ...Object.entries(dataSeries).map(([name, values]) => {
       return {
@@ -165,7 +175,6 @@ function Highmap(props) {
       valueDecimals: props.numberDecimals,
       backgroundColor: Highcharts.theme?.legendBackgroundColor || 'rgba(255, 255, 255, 0.85)',
       symbolRadius: 0,
-      symbolHeight: 14,
     },
     plotOptions: {
       map: {
