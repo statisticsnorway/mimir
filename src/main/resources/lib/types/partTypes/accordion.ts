@@ -1,4 +1,4 @@
-import { Accordion } from '/site/content-types/accordion'
+import { type Accordion } from '/site/content-types/accordion'
 
 export interface AccordionData {
   id?: string

@@ -1,4 +1,4 @@
-import { Contact } from '/site/content-types/contact'
+import { type Contact } from '/site/content-types/contact'
 
 export interface ContactModel {
   contactTitle: string
