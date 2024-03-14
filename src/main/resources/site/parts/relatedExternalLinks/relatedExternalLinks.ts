@@ -75,6 +75,7 @@ function renderPart(req: XP.Request, externalLinks: RelatedExternalLinks['relate
     req,
     {
       body: body,
+      hydrate: false,
     }
   )
 }

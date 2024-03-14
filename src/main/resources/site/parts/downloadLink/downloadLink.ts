@@ -30,6 +30,7 @@ function renderPart(req: XP.Request) {
     req,
     {
       body: '<section class="xp-part part-download-link"></section>',
+      hydrate: false,
     }
   )
 }

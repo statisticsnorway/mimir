@@ -57,7 +57,7 @@ function getArticleList(req: XP.Request, content: Content) {
     archiveLinkText: archiveLinkText,
     archiveLinkUrl: component.config.pubArchiveUrl ? component.config.pubArchiveUrl : '#',
   }
-  return render('site/parts/articleList/articleList', props, req)
+  return render('site/parts/articleList/articleList', props, req, { hydrate: false })
 }
 
 function getArticles(req: XP.Request, language: string) {

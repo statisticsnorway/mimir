@@ -62,6 +62,7 @@ function renderVariables(req: XP.Request, variables: Array<Variables>): XP.Respo
       req,
       {
         body: '<section class="xp-part part-variableCardsList container"/>',
+        hydrate: false,
       }
     )
   }
