@@ -6,6 +6,7 @@ import { formatDate } from '/lib/ssb/utils/dateUtils'
 import { imageUrl, getImageAlt } from '/lib/ssb/utils/imageUtils'
 
 import { renderError } from '/lib/ssb/error/error'
+import { type ProfiledBoxProps } from '/lib/types/partTypes/profiledBox'
 import { type ProfiledBox as ProfiledBoxPartConfig } from '.'
 
 const view = resolve('profiledBox.html')
@@ -102,18 +103,4 @@ function getTitleSize(title: string): string {
     titleSize = 'xl'
   }
   return titleSize
-}
-
-interface ProfiledBoxProps {
-  imgUrl: string
-  imageAltText: string | undefined
-  imagePlacement: string
-  href: string | undefined
-  subTitle: string
-  title: string
-  preambleText: string
-  linkType: string
-  titleSize: string
-  ariaLabel: string | undefined
-  ariaDescribedBy: string | undefined
 }

@@ -1,6 +1,6 @@
 import { Content } from '/lib/xp/content'
-import { HighchartsGraphConfig } from '/lib/types/highcharts'
-import { PreliminaryData } from '/lib/types/xmlParser'
+import { type HighchartsGraphConfig } from '/lib/types/highcharts'
+import { type PreliminaryData } from '/lib/types/xmlParser'
 
 import { createDefaultConfig } from '/lib/ssb/parts/highcharts/graph/config'
 import { areaConfig } from '/lib/ssb/parts/highcharts/graph/graphAreaConfig'

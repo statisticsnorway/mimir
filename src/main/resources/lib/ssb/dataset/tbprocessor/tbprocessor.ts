@@ -1,7 +1,7 @@
 import '/lib/ssb/polyfills/nashorn'
 import { Content } from '/lib/xp/content'
 import { DatasetRepoNode, DataSource as dataSourceType, getDataset, DATASET_BRANCH } from '/lib/ssb/repo/dataset'
-import { TbmlDataUniform, TbmlSourceListUniform } from '/lib/types/xmlParser'
+import { type TbmlDataUniform, type TbmlSourceListUniform } from '/lib/types/xmlParser'
 import { TbprocessorParsedResponse, getTbmlData, TbProcessorTypes } from '/lib/ssb/dataset/tbprocessor/tbml'
 import { mergeDeepLeft } from '/lib/vendor/ramda'
 

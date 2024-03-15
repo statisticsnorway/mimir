@@ -1,6 +1,6 @@
 import { StatRegNode } from '/lib/ssb/repo/statreg'
 import { Publication, Publisering, PubliseringXML } from '/lib/ssb/dashboard/statreg/types'
-import { XmlParser } from '/lib/types/xmlParser'
+import { type XmlParser } from '/lib/types/xmlParser'
 import { HttpResponse } from '/lib/http-client'
 
 import { ensureArray } from '/lib/ssb/utils/arrayUtils'

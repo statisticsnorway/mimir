@@ -2,7 +2,7 @@ import { get, Content } from '/lib/xp/content'
 import { assetUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 import { Link, createMenuTree, parseGlobalLinks } from '/lib/ssb/parts/menu'
-import { Language } from '/lib/types/language'
+import { type Language } from '/lib/types/language'
 import * as util from '/lib/util'
 import { type MenuItem, type Footer } from '/site/content-types'
 

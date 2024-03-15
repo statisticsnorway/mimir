@@ -3,7 +3,7 @@ import { assetUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 import { Link, createMenuTree, parseTopLinks } from '/lib/ssb/parts/menu'
 import { pathFromStringOrContent } from '/lib/ssb/utils/utils'
-import { Language } from '/lib/types/language'
+import { type Language } from '/lib/types/language'
 import { type Header, type MenuItem } from '/site/content-types'
 
 export function getHeaderContent(language: Language): HeaderContent | undefined {

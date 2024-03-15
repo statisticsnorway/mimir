@@ -2,15 +2,17 @@ import { get as getContentByKey, type Content } from '/lib/xp/content'
 import { getContent, getComponent } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 import { render } from '/lib/enonic/react4xp'
-import { type HtmlTable, parseHtmlString } from '/lib/ssb/parts/table'
-import { type SourceList, type SourcesConfig, randomUnsafeString, getSources } from '/lib/ssb/utils/utils'
+import { parseHtmlString } from '/lib/ssb/parts/table'
+import { randomUnsafeString, getSources } from '/lib/ssb/utils/utils'
+import { type SourcesConfig } from '/lib/types/sources'
 import { imageUrl } from '/lib/ssb/utils/imageUtils'
 
 import * as util from '/lib/util'
 import { renderError } from '/lib/ssb/error/error'
 import { getPhrases } from '/lib/ssb/utils/language'
-import { Phrases } from '/lib/types/language'
-import { type Default as DefaultPageConfig } from '/site/pages/default'
+import { type Phrases } from '/lib/types/language'
+import { type DefaultPage, type StaticVisualizationProps } from '/lib/types/partTypes/staticVisualization'
+import { type HtmlTable } from '/lib/types/partTypes/table'
 import { type StaticVisualization } from '/site/content-types'
 
 export function get(req: XP.Request): XP.Response {
@@ -107,27 +109,4 @@ function renderPart(req: XP.Request, contentId: string | undefined): XP.Response
   return {
     body: null,
   }
-}
-
-interface DefaultPage {
-  page: {
-    config: DefaultPageConfig
-  }
-}
-
-interface StaticVisualizationProps {
-  id: string
-  title: string
-  altText: string
-  imageSrc: string
-  footnotes: StaticVisualization['footNote']
-  sources: SourceList
-  longDesc: string | undefined
-  sourcesLabel: string
-  showAsGraphLabel: string
-  showAsTableLabel: string
-  descriptionStaticVisualization: string
-  inFactPage?: boolean
-  language: string
-  tableData: HtmlTable | undefined
 }

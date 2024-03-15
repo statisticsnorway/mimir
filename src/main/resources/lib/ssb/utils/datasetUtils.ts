@@ -1,6 +1,6 @@
 import { sleep } from '/lib/xp/task'
 import { request, HttpResponse, HttpRequestParams } from '/lib/http-client'
-import { JSONstat } from '/lib/types/jsonstat-toolkit'
+import { type JSONstat } from '/lib/types/jsonstat-toolkit'
 import { Events, logUserDataQuery } from '/lib/ssb/repo/query'
 
 const defaultSelectionFilter: SelectionFilter = {

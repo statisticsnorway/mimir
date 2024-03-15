@@ -1,7 +1,7 @@
 import { Content } from '/lib/xp/content'
 import { localize } from '/lib/xp/i18n'
 import { HttpRequestParams } from '/lib/http-client'
-import { Dataset } from '/lib/types/jsonstat-toolkit'
+import { type Dataset } from '/lib/types/jsonstat-toolkit'
 import {
   getCalculatorConfig,
   getKpiDatasetYear,

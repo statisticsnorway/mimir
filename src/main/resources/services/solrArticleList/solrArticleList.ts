@@ -1,4 +1,5 @@
-import { PreparedArticles, ArticleResult, getAllArticles } from '/lib/ssb/utils/articleUtils'
+import { getAllArticles } from '/lib/ssb/utils/articleUtils'
+import { type ArticleResult, type PreparedArticles } from '/lib/types/article'
 
 export const get = (req: XP.Request): XP.Response => {
   const start: number = Number(req.params.start) ? Number(req.params.start) : 0
