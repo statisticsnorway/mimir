@@ -68,7 +68,9 @@ function renderPart(req: XP.Request) {
     oldContent: true,
   }
 
-  return render('site/parts/infoGraphics/infoGraphics', props, req)
+  return render('site/parts/infoGraphics/infoGraphics', props, req, {
+    hydrate: false,
+  })
 }
 
 interface InfoGraphicsProps {

@@ -9,9 +9,12 @@ import { barConfig } from '/lib/ssb/parts/highcharts/graph/graphBarConfig'
 import { barNegativeConfig } from '/lib/ssb/parts/highcharts/graph/graphBarNegativeConfig'
 import { columnConfig } from '/lib/ssb/parts/highcharts/graph/graphColumnConfig'
 import { lineConfig } from '/lib/ssb/parts/highcharts/graph/graphLineConfig'
+import { combinedGraphConfig, type GetCombinedGraphOptions } from '/lib/ssb/parts/highcharts/graph/combinedGraphConfig'
 import { DataSource as DataSourceType } from '/lib/ssb/repo/dataset'
+import { mergeDeepRight } from '/lib/vendor/ramda'
+import { Series } from '/lib/ssb/parts/highcharts/highchartsData'
 import { type DataSource } from '/site/mixins/dataSource'
-import { type Highchart } from '/site/content-types'
+import { type CombinedGraph, type Highchart } from '/site/content-types'
 
 export function prepareHighchartsGraphConfig(
   highchartContent: Content<Highchart>,
@@ -32,6 +35,50 @@ export function prepareHighchartsGraphConfig(
     categories,
   }
   return getGraphConfig(highchartContent, options)
+}
+
+export function prepareCombinedGraphConfig(
+  combinedGraphContent: Content<CombinedGraph>,
+  categories: Array<string | number | PreliminaryData> | undefined,
+  series: Array<Series> | undefined
+): HighchartsGraphConfig {
+  const defaultConfig = createDefaultConfig(
+    combinedGraphContent.data,
+    combinedGraphContent.displayName,
+    combinedGraphContent.language
+  )
+  const yAxis = combinedGraphContent.data.graphs?.map((data, index) => {
+    const yAxisConfig = {
+      title: {
+        text: data.yAxisTitle,
+        offset: data.yAxisOffset ? parseFloat(data.yAxisOffset) : 0,
+      },
+      opposite: index === 1 ? true : undefined,
+      allowDecimals: data.yAxisDecimalPlaces ? Number(data.yAxisDecimalPlaces) > 0 : undefined,
+      labels: {
+        format: `{value:,.${data.yAxisDecimalPlaces || 0}f}`,
+      },
+    }
+    return mergeDeepRight(defaultConfig.yAxis, yAxisConfig)
+  })
+
+  const seriesOption = series
+    ? combinedGraphContent.data.graphs?.map((data, index) => {
+        return {
+          type: data.graphType,
+          data: series[index].data,
+          name: series[index].name,
+          yAxis: index,
+        }
+      })
+    : []
+
+  const combinedOptions: GetCombinedGraphOptions = {
+    series: seriesOption,
+    yAxis,
+    categories,
+  }
+  return combinedGraphConfig(combinedGraphContent, combinedOptions)
 }
 
 function getGraphConfig(highchartContent: Content<Highchart>, options: GetGraphOptions): HighchartsGraphConfig {

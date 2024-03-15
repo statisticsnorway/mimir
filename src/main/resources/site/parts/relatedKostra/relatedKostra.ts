@@ -49,7 +49,9 @@ function renderPart(req: XP.Request, municipality: MunicipalityWithCounty | unde
     linkType: 'profiled',
   }
 
-  return render('site/parts/relatedKostra/relatedKostra', props, req)
+  return render('site/parts/relatedKostra/relatedKostra', props, req, {
+    hydrate: false,
+  })
 }
 
 interface RelatedKostraProps {

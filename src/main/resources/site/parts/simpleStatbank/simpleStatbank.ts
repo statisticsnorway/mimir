@@ -1,20 +1,30 @@
 import { getComponent } from '/lib/xp/portal'
+import { type Content, get as getContentByKey } from '/lib/xp/content'
 import { renderError } from '/lib/ssb/error/error'
 import { render } from '/lib/enonic/react4xp'
 import { imageUrl, getImageAlt } from '/lib/ssb/utils/imageUtils'
 import { isEnabled } from '/lib/featureToggle'
 import { getStatbankApiData, type SimpleStatbankResult } from '/lib/ssb/parts/simpleStatbank'
+import { type SimpleStatbank } from '/site/content-types'
 
-export function get(req: XP.Request) {
+export function get(req: XP.Request): XP.Response {
   try {
-    return renderPart(req)
+    const config = getComponent<XP.PartComponent.SimpleStatbank>()?.config
+    if (!config) throw Error('No part found')
+
+    const simpleStatbankId: string | undefined = config.simpleStatbank ? config.simpleStatbank : undefined
+    return renderPart(req, simpleStatbankId)
   } catch (e) {
-    return renderError(req, 'Error in part ', e)
+    return renderError(req, 'Error in part', e)
   }
 }
 
-export function preview(req: XP.Request) {
-  return renderPart(req)
+export function preview(req: XP.Request, id: string): XP.Response {
+  try {
+    return renderPart(req, id)
+  } catch (e) {
+    return renderError(req, 'Error in part', e)
+  }
 }
 
 function getImageUrl(icon?: string) {
@@ -31,26 +41,37 @@ function getImageAltText(icon?: string) {
   return icon ? getImageAlt(icon) : 'No description found'
 }
 
-function renderPart(req: XP.Request): XP.Response {
+function missingConfig(message: string) {
+  return `<div class="simple-statbank"><div class='content'>${message}</div></div>`
+}
+
+function renderPart(req: XP.Request, simpleStatbankId?: string): XP.Response {
   if (!isEnabled('simple-statbank-part', false, 'ssb')) return { body: '' }
+  if (!simpleStatbankId) {
+    return {
+      body: missingConfig('Mangler innhold! Velg Spørring Statistikkbanken'),
+    }
+  }
 
-  const part = getComponent<XP.PartComponent.SimpleStatbank>()
+  const simpleStatbank: Content<SimpleStatbank> | null = getContentByKey({
+    key: simpleStatbankId as string,
+  }) as Content<SimpleStatbank>
 
-  if (!part) throw Error('No part found')
+  if (!simpleStatbank) throw Error('No content found')
 
   const statbankApiData: SimpleStatbankResult | undefined = getStatbankApiData(
-    part.config.code,
-    part.config.urlOrId,
-    part.config.json
+    simpleStatbank.data.code,
+    simpleStatbank.data.urlOrId,
+    simpleStatbank.data.json
   )
 
   const props = {
-    icon: getImageUrl(part.config.icon),
-    ingress: part.config.ingress,
-    placeholder: part.config.placeholder ?? '',
-    altText: getImageAltText(part.config.icon),
-    resultLayout: part.config.resultText,
-    selectDisplay: part.config.selectDisplay,
+    icon: getImageUrl(simpleStatbank.data.icon),
+    ingress: simpleStatbank.data.ingress,
+    placeholder: simpleStatbank.data.placeholder ?? '',
+    altText: getImageAltText(simpleStatbank.data.icon),
+    resultLayout: simpleStatbank.data.resultText,
+    selectDisplay: simpleStatbank.data.selectDisplay,
     statbankApiData,
   }
 

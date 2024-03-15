@@ -53,7 +53,9 @@ export function renderPart(req: XP.Request) {
     }),
     language: currentLanguage,
   }
-  return render('ReleasedStatistics', props, req)
+  return render('ReleasedStatistics', props, req, {
+    hydrate: false,
+  })
 }
 
 function getGroupedWithMonthNames(config: ReleasedStatisticsPartConfig, currentLanguage: string): Array<YearReleases> {

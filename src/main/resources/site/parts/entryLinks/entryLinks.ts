@@ -66,6 +66,7 @@ function renderEntryLinks(req: XP.Request, headerTitle: string, entryLinksConten
         body: render(view, {
           entryLinksId: 'entry-links',
         }),
+        hydrate: false,
       }
     )
   } else {

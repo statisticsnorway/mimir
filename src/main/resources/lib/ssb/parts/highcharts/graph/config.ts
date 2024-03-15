@@ -56,8 +56,8 @@ export const createDefaultConfig = (highchartData, displayName, language) => ({
     spacingRight: 10,
     spacingLeft: 0,
     spacingBottom: 18,
-    spacingTop: highchartData.legendAlign === 'top' ? 18 : 0,
-    marginTop: highchartData.legendAlign === 'top' ? null : 50,
+    spacingTop: 0,
+    marginTop: 50,
   },
   // SSB color palette:
   colors: [
@@ -139,7 +139,7 @@ export const createDefaultConfig = (highchartData, displayName, language) => ({
   legend: {
     enabled: !highchartData.noLegend,
     align: highchartData.legendAlign === 'right' ? 'right' : 'center',
-    verticalAlign: highchartData.legendAlign == 'right' || highchartData.legendAlign == 'top' ? 'top' : 'bottom',
+    verticalAlign: highchartData.legendAlign == 'right' ? 'top' : 'bottom',
     layout: highchartData.legendAlign == 'right' ? 'vertical' : 'horizontal',
     x: highchartData.legendAlign == 'right' ? 10 : 0,
     y: highchartData.legendAlign == 'right' ? 65 : 0,
@@ -150,7 +150,6 @@ export const createDefaultConfig = (highchartData, displayName, language) => ({
       fontSize: '12px',
       fontWeight: 'normal',
     },
-    width: highchartData.legendAlign == 'top' ? '75%' : 'auto',
     useHTML: true,
   },
   plotOptions: {

@@ -3,9 +3,10 @@ import { Accordion, Button } from '@statisticsnorway/ssb-component-library'
 import { ChevronDown, ChevronUp } from 'react-feather'
 
 import PropTypes from 'prop-types'
+import { sanitize } from '../../lib/ssb/utils/htmlUtils'
+
 import Table from '../table/Table'
 import { addGtagForEvent } from '/react4xp/ReactGA'
-// import { sanitize } from '../../lib/ssb/utils/htmlUtils'
 
 function AttachmentTableFigures(props) {
   const [isHidden, setIsHidden] = useState(true)
@@ -73,13 +74,6 @@ function AttachmentTableFigures(props) {
     )
   }
 
-  function createMarkup(html) {
-    return {
-      // __html: sanitize(html),
-      __html: html,
-    }
-  }
-
   function getBreakpoint(index) {
     if (isHidden && index > 4) {
       return 'd-none'
@@ -98,7 +92,8 @@ function AttachmentTableFigures(props) {
     if (accordion.contentType === `${props.appName}:table`) {
       return <Table {...accordion.props} />
     } else {
-      return <div dangerouslySetInnerHTML={createMarkup(accordion.body)}></div>
+      // Table or figure from content studio (no user input), hence no need to sanitize
+      return <div dangerouslySetInnerHTML={{ __html: accordion.body }}></div>
     }
   }
 
@@ -138,7 +133,7 @@ function AttachmentTableFigures(props) {
             </ul>
           </div>
           <div className={`row free-text-wrapper ${getFreeTextBreakpoint()}`}>
-            <div className='col-12 col-lg-6' dangerouslySetInnerHTML={createMarkup(freeText)}></div>
+            <div className='col-12 col-lg-6' dangerouslySetInnerHTML={{ __html: sanitize(freeText) }}></div>
           </div>
           {renderShowMoreButton()}
         </div>

@@ -6,15 +6,20 @@ import { XmlParser, PreliminaryData, TableRowUniform, TableCellUniform } from '/
 import { RowValue, getRowValue } from '/lib/ssb/utils/utils'
 import { toString } from '/lib/vendor/ramda'
 import * as util from '/lib/util'
-import { type Highchart } from '/site/content-types'
+import { type CombinedGraph, type Highchart } from '/site/content-types'
 
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 
-export function seriesAndCategoriesFromHtmlTable(highChartsContent: Content<Highchart>): SeriesAndCategories {
+export function seriesAndCategoriesFromHtmlTable(
+  highChartsContent: Content<Highchart | CombinedGraph>
+): SeriesAndCategories {
+  const isCombinedGraph: boolean = highChartsContent.type === `${app.name}:combinedGraph`
+  const htmlTable: string | undefined = isCombinedGraph
+    ? (highChartsContent as Content<CombinedGraph>).data.dataSource?.htmlTable.html
+    : (highChartsContent as Content<Highchart>).data.htmlTable
   let stringJson: string | undefined
-
-  if (highChartsContent.data.htmlTable) {
-    const sanitized = striptags(highChartsContent.data.htmlTable, ['table', 'thead', 'tbody', 'tr', 'th', 'td'])
+  if (htmlTable) {
+    const sanitized = striptags(htmlTable, ['table', 'thead', 'tbody', 'tr', 'th', 'td'])
     stringJson = __.toNativeObject(xmlParser.parse(sanitized))
   }
   const result: Table | undefined = stringJson ? JSON.parse(stringJson) : undefined
@@ -45,17 +50,18 @@ export function seriesAndCategoriesFromHtmlTable(highChartsContent: Content<High
     []
   )
 
-  dataInSeries.splice(0, 1) // remove the first because its garbage
+  dataInSeries.splice(0, 1)
+
+  const graphType: string = isCombinedGraph ? 'combined' : (highChartsContent as Content<Highchart>).data.graphType
 
   const seriesAndCategories: SeriesAndCategories = convertToCorrectGraphFormat(
     {
       categories,
       series: dataInSeries,
     },
-    highChartsContent.data.graphType,
+    graphType,
     highChartsContent.data.xAxisType
   )
-
   return seriesAndCategories
 }
 
@@ -65,9 +71,8 @@ function parseValue(value: string): number | string {
       ? value
           .replace(',', '.')
           .replace(/&nbsp;/g, '')
-          .replace(' ', '')
+          .replace(/ /g, '')
       : value
-
   return parseFloat(number)
 }
 
@@ -94,6 +99,19 @@ function convertToCorrectGraphFormat(
     graphType === 'line'
   ) {
     return seriesAndCategories
+  } else if (graphType === 'combined') {
+    const series: Array<Series> = seriesAndCategories
+      ? seriesAndCategories.series.map((row) => {
+          return {
+            name: row.name,
+            data: row.data,
+          }
+        })
+      : []
+    return {
+      categories: seriesAndCategories.categories,
+      series,
+    }
   } else {
     return {
       categories: seriesAndCategories.categories,

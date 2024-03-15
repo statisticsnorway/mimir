@@ -52,7 +52,9 @@ function renderPart(req: XP.Request): XP.Response | string {
     height,
   }
 
-  return r4XpRender('MenuBox', props, req)
+  return r4XpRender('MenuBox', props, req, {
+    hydrate: false,
+  })
 }
 
 function buildMenu(menuBoxContent: Content<MenuBox>): Array<MenuItem> {

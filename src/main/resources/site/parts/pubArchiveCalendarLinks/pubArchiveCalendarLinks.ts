@@ -47,6 +47,7 @@ function renderPart(req: XP.Request): XP.Response {
       {
         id: 'CalendarLinks',
         body: '<section class="xp-part part-pubarchive-link"></section>',
+        hydrate: false,
       }
     )
   }
