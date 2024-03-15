@@ -80,6 +80,9 @@ function renderPart(req: XP.Request, simpleStatbankId?: string): XP.Response {
     noNumberText: localize({
       key: 'value.notFound',
     }),
+    closeText: localize({
+      key: 'close',
+    }),
     statbankApiData,
   }
 

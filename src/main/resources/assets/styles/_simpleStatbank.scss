@@ -22,6 +22,10 @@
     border-top: 1px solid $ssb-green-5;
     background-color: $ssb-dark-1;
 
+    .periode {
+      font-size: 1rem;
+    }
+
     .result {
       @include roboto-condenced;
       margin-top: 10px;
@@ -47,6 +51,11 @@
     .result-footer p {
       margin-bottom: 0;
     }
+
+    .close-button {
+      margin: auto;
+      margin-top: 2em;
+    }
   }
 
   .ssb-dropdown {
@@ -59,7 +68,12 @@
       display: none;
     }
 
+    .simple-statbank-input {
+      padding: 40px 20px 40px;
+    }
+
     .simple-statbank-result {
+      padding: 40px 20px 40px;
       .result .number {
         font-size: 2.25rem;
       }

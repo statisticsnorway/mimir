@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { Row, Col, Container } from 'react-bootstrap'
-import { Dropdown, Title } from '@statisticsnorway/ssb-component-library'
+import { Dropdown, Title, Button } from '@statisticsnorway/ssb-component-library'
+import { X } from 'react-feather'
 import { sanitize } from '../../../lib/ssb/utils/htmlUtils'
 
 function SimpleStatbank(props) {
@@ -18,13 +19,20 @@ function SimpleStatbank(props) {
     unit,
     placeholderDropdown,
     noNumberText,
+    closeText,
   } = props
 
   const [selectedValue, setSelectedValue] = useState(null)
+  const [showResult, setShowResult] = useState(null)
+
+  function closeResult() {
+    setShowResult(false)
+  }
 
   function handleChange(value) {
     if (value) {
       setSelectedValue(value)
+      setShowResult(true)
     }
   }
 
@@ -43,7 +51,7 @@ function SimpleStatbank(props) {
   function renderNumber() {
     if (selectedValue.value) {
       return (
-        <div className='number-section float-md-end'>
+        <div className='number-section'>
           <span className='number'>{selectedValue.value}</span>
           {unit && <span className='unit'>{unit}</span>}
         </div>
@@ -54,34 +62,44 @@ function SimpleStatbank(props) {
   }
 
   function renderResult() {
-    if (selectedValue) {
+    if (selectedValue && showResult) {
       return (
-        <div>
-          <Container className='simple-statbank-result'>
+        <Container className='simple-statbank-result'>
+          <div aria-live='polite' aria-atomic='true'>
             <Row>
               <Title size={3} className='result-title'>
                 {resultText}
               </Title>
             </Row>
             <Row>
-              <span className='time'>
+              <span className='periode'>
                 {timeLabel} {selectedValue.time}
               </span>
             </Row>
             <Row>
-              <div className='result'>{renderNumber()}</div>
+              <div className='result' aria-atomic='true'>
+                {renderNumber()}
+              </div>
             </Row>
-            {resultFooter && (
-              <Row>
-                <div
-                  dangerouslySetInnerHTML={{
-                    __html: sanitize(resultFooter.replace(/&nbsp;/g, ' ')),
-                  }}
-                ></div>
-              </Row>
-            )}
-          </Container>
-        </div>
+          </div>
+          {resultFooter && (
+            <Row>
+              <div
+                className='result-footer'
+                dangerouslySetInnerHTML={{
+                  __html: sanitize(resultFooter.replace(/&nbsp;/g, ' ')),
+                }}
+              ></div>
+            </Row>
+          )}
+          <Row>
+            <Col className='md-6'>
+              <Button className='close-button' icon={<X size={18} />} onClick={() => closeResult()}>
+                {closeText}
+              </Button>
+            </Col>
+          </Row>
+        </Container>
       )
     }
   }
@@ -89,7 +107,7 @@ function SimpleStatbank(props) {
   function addDropdown() {
     const items = statbankApiData
       ? statbankApiData.data.map((element) => ({
-          id: element.dataCode,
+          id: `code_${element.dataCode}`,
           title: element.displayName,
           value: element.value,
           time: element.time,
@@ -97,6 +115,7 @@ function SimpleStatbank(props) {
       : []
     return (
       <Dropdown
+        // id={id}
         header={labelDropdown}
         searchable
         items={items}
@@ -147,6 +166,7 @@ SimpleStatbank.propTypes = {
   timeLabel: PropTypes.string,
   resultFooter: PropTypes.string,
   noNumberText: PropTypes.string,
+  closeText: PropTypes.string,
   statbankApiData: PropTypes.objectOf({
     data: PropTypes.object,
   }),
