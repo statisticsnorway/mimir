@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { Row, Col, Container } from 'react-bootstrap'
 import { Dropdown, Title, Button } from '@statisticsnorway/ssb-component-library'
@@ -24,6 +24,18 @@ function SimpleStatbank(props) {
 
   const [selectedValue, setSelectedValue] = useState(null)
   const [showResult, setShowResult] = useState(null)
+  const scrollAnchor = useRef(null)
+
+  useEffect(() => {
+    if (showResult && scrollAnchor.current !== null) {
+      scrollAnchor.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'end',
+        inline: 'nearest',
+      })
+      scrollAnchor.current.focus()
+    }
+  }, [showResult])
 
   function closeResult() {
     setShowResult(false)
@@ -64,7 +76,7 @@ function SimpleStatbank(props) {
   function renderResult() {
     if (selectedValue && showResult) {
       return (
-        <Container className='simple-statbank-result'>
+        <Container className='simple-statbank-result' ref={scrollAnchor} tabIndex='0'>
           <div aria-live='polite' aria-atomic='true'>
             <Row>
               <Title size={3} className='result-title'>
