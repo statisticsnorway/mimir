@@ -142,7 +142,7 @@ function SimpleStatbank(props) {
       <Container className='simple-statbank-input'>
         <Row>
           <Col className='col-12 col-md-8'>
-            {props.title && <Title size={3}>{title}</Title>}
+            {props.title && <Title size={2}>{title}</Title>}
             {props.ingress && (
               <div
                 dangerouslySetInnerHTML={{
