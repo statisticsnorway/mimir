@@ -1,15 +1,82 @@
 .simple-statbank {
-  margin: 0;
-    border: 5px solid #6D58A4;
-    display: inline-block;
-  
-  .content {
-    margin: 40px;
+  display: inline-block;
+  border: 1px solid $ssb-green-5;
+  border-top: 4px solid $ssb-green-3;
+  max-width: 600px;
+
+  .simple-statbank-input {
+    padding: 40px;
+    background: white;
+
+    .icon-wrapper {
+      float: right;
+      img {
+        width: 110px;
+        height: 110px;
+      }
+    }
   }
 
-  .icon {
-    width: 85px;
+  .simple-statbank-result {
+    padding: 40px;
+    border-top: 1px solid $ssb-green-5;
+    background-color: $ssb-dark-1;
+
+    .periode {
+      font-size: 1rem;
+    }
+
+    .result {
+      @include roboto-condenced;
+      margin-top: 10px;
+      margin-bottom: 10px;
+
+      .number {
+        font-size: 3.5rem;
+      }
+
+      .unit {
+        font-size: 1.25rem;
+        margin-bottom: 3px;
+        margin-left: 4px;
+      }
+
+      .no-number {
+        color: $ssb-dark-3;
+        font-size: 1.25rem;
+        font-weight: bold;
+      }
+    }
+
+    .result-footer p {
+      margin-bottom: 0;
+    }
+
+    .close-button {
+      margin: auto;
+      margin-top: 2em;
+    }
   }
 
-  // TODO: Visning på mobil er ikke ivaretatt siden endelig design ikke er på plass
+  .ssb-dropdown {
+    max-width: 100%;
+    padding-right: 0;
+  }
+
+  @include media-breakpoint-down(md) {
+    .icon-wrapper {
+      display: none;
+    }
+
+    .simple-statbank-input {
+      padding: 40px 20px 40px;
+    }
+
+    .simple-statbank-result {
+      padding: 40px 20px 40px;
+      .result .number {
+        font-size: 2.25rem;
+      }
+    }
+  }
 }

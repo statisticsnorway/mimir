@@ -14,20 +14,27 @@
                         <allowPath>${site}/</allowPath>
                     </config>
                 </input>
+                <input name="simpleStatbankTitle" type="TextLine">
+                    <label>Tittel</label>
+                    <occurrences minimum="1" maximum="1"/>
+                </input>
                 <input name="ingress" type="HtmlArea">
                     <label>Tekst</label>
+                    <occurrences minimum="0" maximum="1"/>
+                    <config>
+                        <exclude>*</exclude>
+                        <include>Bold | Italic | Link | Unlink</include>
+                    </config>
+                </input>
+                <input name="labelDropdown" type="TextLine">
+                    <label>Label på nedtrekksmeny</label>
                     <occurrences minimum="1" maximum="1"/>
                 </input>
-                <input name="resultText" type="HtmlArea">
-                    <label>Resultat tekst</label>
-                    <help-text>Sett inn {value} og {time} som plassholdere for verdi og tid.</help-text>
-                    <occurrences minimum="1" maximum="1"/>
-                </input>
-                <input name="placeholder" type="TextLine">
-                    <label>Plassholder (bakgrunnstekst til dropdown)</label>
+                <input name="placeholderDropdown" type="TextLine">
+                    <label>Placeholder nedtrekksmeny</label>
                     <occurrences minimum="0" maximum="1"/>
                 </input>
-                <input name="selectDisplay" type="RadioButton">
+                <input name="displayDropdown" type="RadioButton">
                     <label>Visning i dropdown</label>
                     <occurrences minimum="1" maximum="1"/>
                     <config>
@@ -36,6 +43,31 @@
                     </config>
                     <default>text</default>
                 </input>
+            </items>
+        </field-set> 
+        <field-set>  
+            <label>Resultatvisning</label>
+            <items>
+                <input name="resultText" type="TextLine">
+                    <label>Resultattekst</label>
+                    <occurrences minimum="1" maximum="1"/>
+                </input>
+                <input name="unit" type="TextLine">
+                    <label>Benevning</label>
+                    <occurrences minimum="0" maximum="1" />
+                </input>
+                <input name="timeLabel" type="TextLine">
+                    <label>Etikett for tid/periode (feks Gjelder per)</label>
+                    <occurrences minimum="1" maximum="1"/>
+                </input>
+                <input name="resultFooter" type="HtmlArea">
+                    <label>Tekst i bunnen av resultat</label>
+                    <config>
+                        <exclude>*</exclude>
+                        <include>Bold | Italic | Link | Unlink</include>
+                    </config>
+                    <occurrences minimum="0" maximum="1"/>
+                </input> 
             </items>
         </field-set> 
         <field-set>
