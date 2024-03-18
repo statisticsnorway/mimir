@@ -21,6 +21,10 @@
                 <input name="ingress" type="HtmlArea">
                     <label>Tekst</label>
                     <occurrences minimum="0" maximum="1"/>
+                    <config>
+                        <exclude>*</exclude>
+                        <include>Bold | Italic | Link | Unlink</include>
+                    </config>
                 </input>
                 <input name="labelDropdown" type="TextLine">
                     <label>Label på nedtrekksmeny</label>
@@ -45,19 +49,23 @@
             <label>Resultatvisning</label>
             <items>
                 <input name="resultText" type="TextLine">
-                    <label>Resultat tekst</label>
+                    <label>Resultattekst</label>
                     <occurrences minimum="1" maximum="1"/>
                 </input>
                 <input name="unit" type="TextLine">
                     <label>Benevning</label>
-                    <occurrences minimum="1" maximum="1" />
+                    <occurrences minimum="0" maximum="1" />
                 </input>
                 <input name="timeLabel" type="TextLine">
-                    <label>Etikett før tid (feks Gjelder per)</label>
+                    <label>Etikett for tid/periode (feks Gjelder per)</label>
                     <occurrences minimum="1" maximum="1"/>
                 </input>
                 <input name="resultFooter" type="HtmlArea">
                     <label>Tekst i bunnen av resultat</label>
+                    <config>
+                        <exclude>*</exclude>
+                        <include>Bold | Italic | Link | Unlink</include>
+                    </config>
                     <occurrences minimum="0" maximum="1"/>
                 </input> 
             </items>

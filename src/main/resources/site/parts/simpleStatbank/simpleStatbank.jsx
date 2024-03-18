@@ -128,7 +128,6 @@ function SimpleStatbank(props) {
       : []
     return (
       <Dropdown
-        // id={id}
         header={labelDropdown}
         searchable
         items={items}
