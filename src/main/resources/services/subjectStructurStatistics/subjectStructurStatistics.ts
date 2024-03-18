@@ -1,4 +1,4 @@
-import { MainSubject, SubSubject, Title, StatisticItem } from '/lib/types/subject'
+import { type MainSubject, type SubSubject, type Title, type StatisticItem } from '/lib/types/subject'
 import { getSubjectStructur } from '/lib/ssb/utils/subjectUtils'
 import { xmlEscape } from '/lib/text-encoding'
 
