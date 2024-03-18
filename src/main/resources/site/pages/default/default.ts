@@ -9,7 +9,7 @@ import {
   type StatisticInListing,
   type VariantInListing,
 } from '/lib/ssb/dashboard/statreg/types'
-import { type MunicipalityWithCounty, getMunicipality, RequestWithCode } from '/lib/ssb/dataset/klass/municipalities'
+import { getMunicipality } from '/lib/ssb/dataset/klass/municipalities'
 import { type FooterContent, getFooterContent } from '/lib/ssb/parts/footer'
 import {
   type AlertType,
@@ -18,12 +18,7 @@ import {
   alertsForContext,
 } from '/lib/ssb/utils/alertUtils'
 import { type Breadcrumbs, getBreadcrumbs } from '/lib/ssb/utils/breadcrumbsUtils'
-import {
-  type SubjectItem,
-  getMainSubjects,
-  getSubSubjects,
-  getMainSubjectBySubSubject,
-} from '/lib/ssb/utils/subjectUtils'
+import { getMainSubjects, getSubSubjects, getMainSubjectBySubSubject } from '/lib/ssb/utils/subjectUtils'
 import { type Language } from '/lib/types/language'
 import { render as r4xpRender } from '/lib/enonic/react4xp'
 
@@ -39,6 +34,8 @@ import { fromMenuCache } from '/lib/ssb/cache/cache'
 
 import { isEnabled } from '/lib/featureToggle'
 import { ensureArray } from '/lib/ssb/utils/arrayUtils'
+import { type SubjectItem } from '/lib/types/subject'
+import { type MunicipalityWithCounty, type RequestWithCode } from '/lib/types/municipalities'
 import { type Default as DefaultPageConfig } from '/site/pages/default'
 import { type Page, type Statistics } from '/site/content-types'
 

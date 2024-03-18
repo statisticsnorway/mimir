@@ -6,7 +6,6 @@ import { type Dataset } from '/lib/types/jsonstat-toolkit'
 import { type Language, type Phrases } from '/lib/types/language'
 import { type DropdownItems } from '/lib/types/components'
 import { allMonths, monthLabel, serieLocalization, SeriesKey } from '/lib/ssb/utils/calculatorUtils'
-
 import { getLanguage } from '/lib/ssb/utils/language'
 import {
   getCalculatorConfig,

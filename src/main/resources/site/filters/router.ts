@@ -1,12 +1,9 @@
 import { get, Content } from '/lib/xp/content'
 import { pageUrl, getSite } from '/lib/xp/portal'
 import { request } from '/lib/http-client'
-import {
-  MunicipalityWithCounty,
-  getMunicipalityByName,
-  municipalsWithCounties,
-} from '/lib/ssb/dataset/klass/municipalities'
+import { getMunicipalityByName, municipalsWithCounties } from '/lib/ssb/dataset/klass/municipalities'
 import { fromFilterCache } from '/lib/ssb/cache/cache'
+import { type MunicipalityWithCounty } from '/lib/types/municipalities'
 
 export function filter(req: XP.Request, next: (req: XP.Request) => XP.Response): XP.Response {
   if (req.params.selfRequest) return next(req)

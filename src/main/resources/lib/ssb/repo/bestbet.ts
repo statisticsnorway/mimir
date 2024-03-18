@@ -1,4 +1,4 @@
-import { type BestBetContent } from 'lib/types/bestBet'
+import { type BestBetContent } from '/lib/types/bestbet'
 import { createRepo, repoExists } from '/lib/ssb/repo/repo'
 import { nodeExists, createNode, getNode, getChildNodes, modifyNode, deleteNode } from '/lib/ssb/repo/common'
 import { cronJobLog } from '/lib/ssb/utils/serverLog'

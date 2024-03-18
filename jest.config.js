@@ -3,6 +3,8 @@ module.exports = {
   moduleNameMapper: {
     // Example: If relying on relative imports in ts files to make test work one might need to map the module here
     '^/lib/vendor/(.*)$': '<rootDir>/src/main/resources/lib/vendor/$1',
+    '^/lib/types/(.*)$': '<rootDir>/src/main/resources/lib/types/$1',
+    '^/lib/ssb/(.*)$': '<rootDir>/src/main/resources/lib/ssb/$1',
     // '^/lib/enonic/react4xp$': '<rootDir>/node_modules/@enonic/react4xp',
     // '^/lib/(?!xp)(.*)$': [
     //   '<rootDir>/src/main/resources/lib/$1',

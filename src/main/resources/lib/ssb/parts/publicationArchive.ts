@@ -3,12 +3,7 @@ import { pageUrl } from '/lib/xp/portal'
 import { type StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
 import { getAllStatisticsFromRepo } from '/lib/ssb/statreg/statistics'
 import { calculatePeriodRelease, getPreviousReleases } from '/lib/ssb/utils/variantUtils'
-import {
-  type SubjectItem,
-  getMainSubjects,
-  getSubSubjects,
-  getMainSubjectBySubSubject,
-} from '/lib/ssb/utils/subjectUtils'
+import { getMainSubjects, getSubSubjects, getMainSubjectBySubSubject } from '/lib/ssb/utils/subjectUtils'
 import { formatDate, stringToServerTime } from '/lib/ssb/utils/dateUtils'
 import {
   type ContentLight,
@@ -21,6 +16,7 @@ import { isEnabled } from '/lib/featureToggle'
 import * as util from '/lib/util'
 import { type PublicationItem, type PublicationResult } from '/lib/types/partTypes/publicationArchive'
 import { type Release } from '/lib/types/variants'
+import { type SubjectItem } from '/lib/types/subject'
 import { type Article, type OmStatistikken, type Statistics } from '/site/content-types'
 
 export function getPublications(
