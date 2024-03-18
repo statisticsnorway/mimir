@@ -5,6 +5,7 @@ import { render } from '/lib/enonic/react4xp'
 
 import * as util from '/lib/util'
 import { renderError } from '/lib/ssb/error/error'
+import { type AccordionData, type AccordionProp } from '/lib/types/partTypes/accordion'
 import { type Accordion } from '/site/content-types'
 
 export function get(req: XP.Request): XP.Response {
@@ -86,15 +87,4 @@ function renderPart(req: XP.Request, accordionIds: Array<string>) {
   }
 
   return render('Accordion', props, req)
-}
-
-export interface AccordionData {
-  id?: string
-  body?: string | undefined
-  open?: string | undefined
-  items?: Accordion['accordions']
-}
-
-interface AccordionProp {
-  accordions: Array<AccordionData>
 }

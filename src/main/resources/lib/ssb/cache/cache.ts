@@ -8,14 +8,13 @@ import { TbmlDataUniform } from '/lib/types/xmlParser'
 import { type Socket } from '/lib/wsUtil'
 import { newCache, Cache } from '/lib/cache'
 import { request, HttpResponse } from '/lib/http-client'
-
-import { MunicipalityWithCounty } from '/lib/ssb/dataset/klass/municipalities'
 import { DATASET_REPO, DatasetRepoNode } from '/lib/ssb/repo/dataset'
 import { getDataset, extractKey } from '/lib/ssb/dataset/dataset'
 import { cacheLog } from '/lib/ssb/utils/serverLog'
 import { completelyClearSubjectCache, clearSubjectCache } from '/lib/ssb/cache/subjectCache'
 import { completelyClearPartCache, clearPartCache } from '/lib/ssb/cache/partCache'
 import { ENONIC_CMS_DEFAULT_REPO } from '/lib/ssb/repo/common'
+import { type MunicipalityWithCounty } from '/lib/types/municipalities'
 import { type DataSource } from '/site/mixins/dataSource'
 
 const masterFilterCaches: Map<string, Cache> = new Map()

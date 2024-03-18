@@ -3,17 +3,13 @@ import { processHtml, getContent } from '/lib/xp/portal'
 import { render } from '/lib/enonic/react4xp'
 import { formatDate } from '/lib/ssb/utils/dateUtils'
 import { scriptAsset } from '/lib/ssb/utils/utils'
-import {
-  getAssociatedStatisticsLinks,
-  getAssociatedArticleArchiveLinks,
-  type AssociatedLink,
-} from '/lib/ssb/utils/articleUtils'
+import { getAssociatedStatisticsLinks, getAssociatedArticleArchiveLinks } from '/lib/ssb/utils/articleUtils'
 
 import * as util from '/lib/util'
 import { getPhrases } from '/lib/ssb/utils/language'
 import { renderError } from '/lib/ssb/error/error'
 import { isEnabled } from '/lib/featureToggle'
-import { Phrases } from '/lib/types/language'
+import { type ArticleProps } from '/lib/types/partTypes/article'
 import { type Article } from '/site/content-types'
 
 export function get(req: XP.Request): XP.Response {
@@ -89,20 +85,4 @@ function renderPart(req: XP.Request) {
     },
     hydrate: false,
   })
-}
-
-interface ArticleProps {
-  phrases: Phrases | undefined
-  introTitle: string | undefined
-  title: string
-  preface: string | undefined
-  bodyText: string | undefined
-  showPubDate: boolean
-  pubDate: string | undefined
-  modifiedDate: string | undefined
-  authors: Article['authorItemSet'] | undefined
-  serialNumber: string | undefined
-  associatedStatistics: Array<AssociatedLink> | []
-  associatedArticleArchives: Array<AssociatedLink> | []
-  isbn: string | undefined
 }

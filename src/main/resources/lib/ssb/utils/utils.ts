@@ -2,8 +2,10 @@ import { get, getAttachmentStream, ByteSource, Content } from '/lib/xp/content'
 
 import { getContent, pageUrl, assetUrl } from '/lib/xp/portal'
 import { readLines } from '/lib/xp/io'
-import { PreliminaryData } from '/lib/types/xmlParser'
+import { type PreliminaryData } from '/lib/types/xmlParser'
 import { formatDate, fromNow } from '/lib/ssb/utils/dateUtils'
+import { type SourceList, type SourcesConfig } from '/lib/types/sources'
+import { type RowValue } from '/lib/types/util'
 import { type Header } from '/site/content-types'
 
 function numberWithSpaces(x: number | string): string {
@@ -58,8 +60,6 @@ export function getRowValue(
   }
   return value as RowValue
 }
-
-export type RowValue = number | string
 
 // Returns page mode for Kommunefakta page based on request mode or request path
 export function pageMode(req: XP.Request): string {
@@ -171,22 +171,6 @@ export function scriptAsset(path: string): string {
 export const XP_RUN_MODE = ''.concat(Java.type('com.enonic.xp.server.RunMode').get())
 // ^ check for DEV mode
 
-export interface SourcesConfig {
-  _selected: string
-  urlSource: {
-    urlText: string
-    url: string
-  }
-  relatedSource: {
-    urlText: string
-    sourceSelector: string
-  }
-}
-
-interface Sources {
-  urlText: string
-  url: string
-}
 interface ContentSearchPageResult {
   contentId?: string
 }
@@ -194,5 +178,3 @@ interface ContentSearchPageResult {
 interface ManualSearchPageResult {
   url?: string
 }
-
-export type SourceList = Array<Sources>

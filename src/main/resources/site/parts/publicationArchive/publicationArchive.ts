@@ -1,10 +1,11 @@
 import { getContent, getComponent, serviceUrl } from '/lib/xp/portal'
 import { render } from '/lib/enonic/react4xp'
-import { type PublicationResult, getPublications } from '/lib/ssb/parts/publicationArchive'
-import { type SubjectItem, getMainSubjects } from '/lib/ssb/utils/subjectUtils'
-
+import { getPublications } from '/lib/ssb/parts/publicationArchive'
+import { getMainSubjects } from '/lib/ssb/utils/subjectUtils'
 import { getPhrases } from '/lib/ssb/utils/language'
-import { Phrases } from '/lib/types/language'
+import { type Phrases } from '/lib/types/language'
+import { type Dropdown, type PublicationArchiveProps } from '/lib/types/partTypes/publicationArchive'
+import { type SubjectItem } from '/lib/types/subject'
 
 export function get(req: XP.Request) {
   return renderPart(req)
@@ -79,7 +80,7 @@ function renderPart(req: XP.Request) {
     },
   ]
 
-  const props: PartProperties = {
+  const props: PublicationArchiveProps = {
     title: content.displayName,
     ingress: part.config.ingress || '',
     buttonTitle: phrases['button.showMore'],
@@ -104,27 +105,4 @@ function renderPart(req: XP.Request) {
   }
 
   return render('site/parts/publicationArchive/publicationArchive', props, req)
-}
-
-interface PartProperties {
-  title: string
-  ingress: string
-  buttonTitle: string
-  showingPhrase: string
-  defineContentPhrase: string
-  chooseSubjectPhrase: string
-  chooseContentTypePhrase: string
-  language: string
-  publicationArchiveServiceUrl: string
-  firstPublications: PublicationResult
-  articleTypePhrases: {
-    [key: string]: string
-  }
-  dropDownSubjects: Array<Dropdown>
-  dropDownTypes: Array<Dropdown>
-}
-
-interface Dropdown {
-  id: string
-  title: string
 }

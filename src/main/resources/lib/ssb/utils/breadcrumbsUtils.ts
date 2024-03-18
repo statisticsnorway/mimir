@@ -1,7 +1,7 @@
 import { get, Content } from '/lib/xp/content'
 import { pageUrl, getContent } from '/lib/xp/portal'
-import { MunicipalityWithCounty } from '/lib/ssb/dataset/klass/municipalities'
 import { getPhrases } from '/lib/ssb/utils/language'
+import { type MunicipalityWithCounty } from '/lib/types/municipalities'
 import { StatbankFrameData } from '/site/pages/default/default'
 
 function addBreadcrumbs(page: Content, visitedPage: Content, breadcrumbs: Breadcrumbs = []): Breadcrumbs {

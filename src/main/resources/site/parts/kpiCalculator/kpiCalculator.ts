@@ -5,7 +5,7 @@ import { type CalculatorPeriod } from '/lib/types/calculator'
 import { type Dataset } from '/lib/types/jsonstat-toolkit'
 import { type Phrases } from '/lib/types/language'
 import { render } from '/lib/enonic/react4xp'
-import { DropdownItems as MonthDropdownItems } from '/lib/types/components'
+import { type DropdownItems as MonthDropdownItems } from '/lib/types/components'
 import { allMonths, lastPeriodKpi, monthLabel, nextPeriod } from '/lib/ssb/utils/calculatorUtils'
 
 import { renderError } from '/lib/ssb/error/error'

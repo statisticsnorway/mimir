@@ -1,5 +1,4 @@
-import { Node } from '/lib/xp/node'
-
+import { type BestBetContent } from '/lib/types/bestbet'
 import { createRepo, repoExists } from '/lib/ssb/repo/repo'
 import { nodeExists, createNode, getNode, getChildNodes, modifyNode, deleteNode } from '/lib/ssb/repo/common'
 import { cronJobLog } from '/lib/ssb/utils/serverLog'
@@ -57,23 +56,4 @@ export function createBestBet(bestBetContent: BestBetContent): void {
       }
     })
   }
-}
-
-interface SelectedContentResult {
-  value: string
-  label: string
-  title: string
-}
-
-export interface BestBetContent {
-  id?: string | undefined
-  linkedSelectedContentResult: SelectedContentResult
-  linkedContentTitle: string | undefined
-  linkedContentHref: string | undefined
-  linkedContentIngress: string
-  linkedContentType: string
-  linkedContentDate: string
-  linkedContentSubject: string
-  linkedEnglishContentSubject: string
-  searchWords: Array<string>
 }

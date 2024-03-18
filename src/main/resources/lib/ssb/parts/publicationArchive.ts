@@ -2,13 +2,8 @@ import { type Content, get, query, QueryDsl, ContentsResult } from '/lib/xp/cont
 import { pageUrl } from '/lib/xp/portal'
 import { type StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
 import { getAllStatisticsFromRepo } from '/lib/ssb/statreg/statistics'
-import { calculatePeriodRelease, type Release, getPreviousReleases } from '/lib/ssb/utils/variantUtils'
-import {
-  type SubjectItem,
-  getMainSubjects,
-  getSubSubjects,
-  getMainSubjectBySubSubject,
-} from '/lib/ssb/utils/subjectUtils'
+import { calculatePeriodRelease, getPreviousReleases } from '/lib/ssb/utils/variantUtils'
+import { getMainSubjects, getSubSubjects, getMainSubjectBySubSubject } from '/lib/ssb/utils/subjectUtils'
 import { formatDate, stringToServerTime } from '/lib/ssb/utils/dateUtils'
 import {
   type ContentLight,
@@ -19,6 +14,9 @@ import {
 import { fromPartCache } from '/lib/ssb/cache/partCache'
 import { isEnabled } from '/lib/featureToggle'
 import * as util from '/lib/util'
+import { type PublicationItem, type PublicationResult } from '/lib/types/partTypes/publicationArchive'
+import { type Release } from '/lib/types/variants'
+import { type SubjectItem } from '/lib/types/subject'
 import { type Article, type OmStatistikken, type Statistics } from '/site/content-types'
 
 export function getPublications(
@@ -292,24 +290,4 @@ function getSecondaryMainSubject(
     return acc
   }, [])
   return secondaryMainSubjects
-}
-
-export interface PublicationResult {
-  total: number
-  publications: Array<PublicationItem>
-}
-
-export interface PublicationItem {
-  title: string
-  period?: string
-  preface: string
-  url: string
-  publishDate: string
-  publishDateHuman: string | undefined
-  contentType: string
-  articleType: string
-  mainSubjectId: string
-  mainSubject: string
-  secondaryMainSubjects: Array<string>
-  appName: string
 }

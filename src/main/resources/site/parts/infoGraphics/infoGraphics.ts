@@ -3,12 +3,14 @@ import { Base64 } from 'js-base64'
 import { get as getContentByKey, type Content } from '/lib/xp/content'
 import { getContent, getComponent } from '/lib/xp/portal'
 import { render } from '/lib/enonic/react4xp'
-import { type SourceList, type SourcesConfig, getSources } from '/lib/ssb/utils/utils'
+import { getSources } from '/lib/ssb/utils/utils'
+import { type SourcesConfig } from '/lib/types/sources'
 import { imageUrl } from '/lib/ssb/utils/imageUtils'
 
 import * as util from '/lib/util'
 import { renderError } from '/lib/ssb/error/error'
 import { getPhrases } from '/lib/ssb/utils/language'
+import { type InfoGraphicsProps } from '/lib/types/partTypes/infoGraphics'
 import { type InfoGraphics as InfoGraphicsPartConfig } from '.'
 
 export function get(req: XP.Request): XP.Response {
@@ -71,17 +73,4 @@ function renderPart(req: XP.Request) {
   return render('site/parts/infoGraphics/infoGraphics', props, req, {
     hydrate: false,
   })
-}
-
-interface InfoGraphicsProps {
-  title: string
-  altText: string
-  imageSrc: string
-  footnotes: InfoGraphicsPartConfig['footNote']
-  sources: SourceList
-  longDesc: string
-  sourcesLabel: string
-  descriptionStaticVisualization: string
-  inFactPage?: boolean
-  oldContent?: boolean
 }

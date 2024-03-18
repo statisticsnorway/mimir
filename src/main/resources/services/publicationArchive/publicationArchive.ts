@@ -1,4 +1,5 @@
-import { PublicationResult, getPublications } from '/lib/ssb/parts/publicationArchive'
+import { getPublications } from '/lib/ssb/parts/publicationArchive'
+import { type PublicationResult } from '/lib/types/partTypes/publicationArchive'
 
 export const get = (req: XP.Request): XP.Response => {
   const start: number = Number(req.params.start) ? Number(req.params.start) : 0

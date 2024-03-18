@@ -1,7 +1,7 @@
 import { Content } from '/lib/xp/content'
-import { JSONstat } from '/lib/types/jsonstat-toolkit'
-import { TbmlDataUniform } from '/lib/types/xmlParser'
-import { HighchartsGraphConfig } from '/lib/types/highcharts'
+import { type JSONstat } from '/lib/types/jsonstat-toolkit'
+import { type TbmlDataUniform } from '/lib/types/xmlParser'
+import { type HighchartsGraphConfig } from '/lib/types/highcharts'
 import { SeriesAndCategories, prepareHighchartsData } from '/lib/ssb/parts/highcharts/highchartsData'
 import { mergeDeepRight } from '/lib/vendor/ramda'
 

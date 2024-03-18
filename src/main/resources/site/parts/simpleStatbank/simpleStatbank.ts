@@ -1,5 +1,5 @@
 import { getComponent } from '/lib/xp/portal'
-import { type Content, get as getContentByKey } from '/lib/xp/content'
+import { get as getContentByKey, type Content } from '/lib/xp/content'
 import { localize } from '/lib/xp/i18n'
 import { renderError } from '/lib/ssb/error/error'
 import { render } from '/lib/enonic/react4xp'

@@ -1,5 +1,6 @@
 import { getContent } from '/lib/xp/portal'
-import { PreparedArticles, getChildArticles, prepareArticles } from '/lib/ssb/utils/articleUtils'
+import { getChildArticles, prepareArticles } from '/lib/ssb/utils/articleUtils'
+import { type PreparedArticles } from '/lib/types/article'
 
 let totalCount = 0
 

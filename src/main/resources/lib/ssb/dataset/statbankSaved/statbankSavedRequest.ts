@@ -1,6 +1,6 @@
 import { sleep } from '/lib/xp/task'
 import { request, HttpRequestParams, HttpResponse } from '/lib/http-client'
-import { XmlParser } from '/lib/types/xmlParser'
+import { type XmlParser } from '/lib/types/xmlParser'
 
 import { logUserDataQuery, Events } from '/lib/ssb/repo/query'
 
