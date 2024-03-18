@@ -1,4 +1,5 @@
-import { getNameSearchResult, type SolrResponse } from '/lib/ssb/utils/nameSearchUtils'
+import { getNameSearchResult } from '/lib/ssb/utils/nameSearchUtils'
+import { type SolrResponse } from '/lib/types/solr'
 
 export function get(req: XP.Request): XP.Response {
   if (!req.params.name) {

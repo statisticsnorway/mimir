@@ -1,7 +1,6 @@
 import '/lib/ssb/polyfills/nashorn'
 import { Content } from '/lib/xp/content'
 import { newCache, Cache } from '/lib/cache'
-
 import { cacheLog } from '/lib/ssb/utils/serverLog'
 
 const masterSubjectCache: Cache = newCache({

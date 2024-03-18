@@ -1,8 +1,5 @@
-import {
-  parseRelatedFactPageData,
-  RelatedFactPages,
-  RelatedFactPageConfig,
-} from '/site/parts/relatedFactPage/relatedFactPage'
+import { type RelatedFactPageConfig, type RelatedFactPages } from '/lib/types/partTypes/relatedFactPage'
+import { parseRelatedFactPageData } from '/site/parts/relatedFactPage/relatedFactPage'
 
 export const get = (req: XP.Request): XP.Response => {
   const start: number = Number(req.params.start) || 0
