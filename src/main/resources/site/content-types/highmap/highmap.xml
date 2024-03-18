@@ -105,17 +105,34 @@
                             <default>true</default>
                         </option>
                         <option name="gradient">
-                            <label>Sjattering (bare for tallverdier)</label>
+                            <label>Gradient (bare for kontinuerlige variabler)</label>
                             <items>
-                                <input name="color1" type="CustomSelector">
-                                    <label>Farge 1</label>
+                                <input name="startColor" type="CustomSelector">
+                                    <label>Start-farge</label>
                                     <occurrences minimum="1" maximum="1"/>
                                     <config>
                                         <service>colorPreview</service>  
                                     </config>
                                 </input>
-                                <input name="color2" type="CustomSelector">
-                                    <label>Farge 2</label>
+                                <item-set name="stops">
+                                    <label>Mellom-farge (ikke kompatibel med terskelverdier)</label>
+                                    <occurrences minimum="0" maximum="0"/>
+                                    <items>
+                                        <input name="value" type="TextLine">
+                                            <label>Verdi (mellom 0 og 1)</label>
+                                            <occurrences minimum="1" maximum="1"/>
+                                        </input>
+                                        <input name="color" type="CustomSelector">
+                                            <label>Farge</label>
+                                            <occurrences minimum="1" maximum="1"/>
+                                            <config>
+                                                <service>colorPreview</service>  
+                                            </config>
+                                        </input>
+                                    </items>
+                                </item-set>
+                                <input name="endColor" type="CustomSelector">
+                                    <label>Slutt-farge</label>
                                     <occurrences minimum="1" maximum="1"/>
                                     <config>
                                         <service>colorPreview</service>  
