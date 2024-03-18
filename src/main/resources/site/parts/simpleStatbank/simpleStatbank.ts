@@ -6,6 +6,7 @@ import { render } from '/lib/enonic/react4xp'
 import { imageUrl, getImageAlt } from '/lib/ssb/utils/imageUtils'
 import { isEnabled } from '/lib/featureToggle'
 import { getStatbankApiData, type SimpleStatbankResult } from '/lib/ssb/parts/simpleStatbank'
+import { type SimpleStatbankProps } from '/lib/types/partTypes/simpleStatbank'
 import { type SimpleStatbank } from '/site/content-types'
 
 export function get(req: XP.Request): XP.Response {
@@ -35,7 +36,7 @@ function getImageUrl(icon?: string) {
         scale: 'block(100,100)',
         format: 'jpg',
       })
-    : null
+    : ''
 }
 
 function getImageAltText(icon?: string) {
@@ -66,17 +67,18 @@ function renderPart(req: XP.Request, simpleStatbankId?: string): XP.Response {
     simpleStatbank.data.json
   )
 
-  const props = {
+  const props: SimpleStatbankProps = {
     icon: getImageUrl(simpleStatbank.data.icon),
     altText: getImageAltText(simpleStatbank.data.icon),
     title: simpleStatbank.data.simpleStatbankTitle,
-    ingress: simpleStatbank.data.ingress,
+    ingress: simpleStatbank.data.ingress ?? '',
     labelDropdown: simpleStatbank.data.labelDropdown,
-    placeholderDropdown: simpleStatbank.data.placeholderDropdown,
+    placeholderDropdown: simpleStatbank.data.placeholderDropdown ?? '',
+    displayDropdown: simpleStatbank.data.displayDropdown ?? '',
     resultText: simpleStatbank.data.resultText,
     unit: simpleStatbank.data.unit,
     timeLabel: simpleStatbank.data.timeLabel,
-    resultFooter: simpleStatbank.data.resultFooter,
+    resultFooter: simpleStatbank.data.resultFooter ?? '',
     noNumberText: localize({
       key: 'value.notFound',
     }),

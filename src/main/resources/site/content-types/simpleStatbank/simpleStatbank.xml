@@ -30,6 +30,15 @@
                     <label>Placeholder nedtrekksmeny</label>
                     <occurrences minimum="0" maximum="1"/>
                 </input>
+                <input name="displayDropdown" type="RadioButton">
+                    <label>Visning i dropdown</label>
+                    <occurrences minimum="1" maximum="1"/>
+                    <config>
+                        <option value="text">tekst</option>
+                        <option value="code-text">kode: tekst</option>
+                    </config>
+                    <default>text</default>
+                </input>
             </items>
         </field-set> 
         <field-set>  

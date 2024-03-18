@@ -12,6 +12,7 @@ function SimpleStatbank(props) {
     title,
     ingress,
     labelDropdown,
+    displayDropdown,
     resultText,
     resultFooter,
     timeLabel,
@@ -120,7 +121,7 @@ function SimpleStatbank(props) {
     const items = statbankApiData
       ? statbankApiData.data.map((element) => ({
           id: `code_${element.dataCode}`,
-          title: element.displayName,
+          title: displayDropdown == 'text' ? element.displayName : `${element.dataCode}: ${element.displayName}`,
           value: element.value,
           time: element.time,
         }))
@@ -173,6 +174,7 @@ SimpleStatbank.propTypes = {
   ingress: PropTypes.string,
   labelDropdown: PropTypes.string,
   placeholderDropdown: PropTypes.string,
+  displayDropdown: PropTypes.string,
   resultText: PropTypes.string,
   unit: PropTypes.string,
   timeLabel: PropTypes.string,
