@@ -1,9 +1,12 @@
 import React, { useState } from 'react'
 import { Button, Link } from '@statisticsnorway/ssb-component-library'
-import PropTypes from 'prop-types'
 import axios from 'axios'
 import { ChevronDown } from 'react-feather'
 import { sanitize } from '../../../lib/ssb/utils/htmlUtils'
+import { type UpcomingReleasesProps } from '../../../lib/types/partTypes/upcomingReleases'
+import { PreparedUpcomingRelease, type YearReleases } from '../../../lib/types/variants'
+
+// TODO: Need the flattened and transformed data to be typed
 
 export const mergeAndSortReleases = (releases1, releases2) => {
   const merged = new Map()
@@ -42,7 +45,7 @@ export const mergeAndSortReleases = (releases1, releases2) => {
   return sortedArray
 }
 
-export const flattenReleases = (data) => {
+export const flattenReleases = (data: YearReleases[]) => {
   return data.flatMap((yearItem) =>
     yearItem.releases.flatMap((monthItem) =>
       monthItem.releases.flatMap((dayItem) => {
@@ -71,7 +74,7 @@ export const flattenReleases = (data) => {
   )
 }
 
-export const flattenContentReleases = (contentReleases) => {
+export const flattenContentReleases = (contentReleases: PreparedUpcomingRelease[]) => {
   const releases = []
 
   contentReleases.forEach((item) => {
@@ -137,7 +140,6 @@ function renderRelease(release, index, date, statisticsPageUrlText) {
           {day}. {monthName} {year} / <span className='type'>{type}</span> / {mainSubject}
         </p>
       </div>
-
       {url && (
         <div className='statisticsPageLink'>
           <Link href={url}>{statisticsPageUrlText}</Link>
@@ -188,7 +190,7 @@ function getMonthName(monthNumber, language) {
   return monthNames[monthNumber]
 }
 
-function UpcomingReleases(props) {
+function UpcomingReleases(props: UpcomingReleasesProps) {
   const [releases, setReleases] = useState(
     mergeAndSortReleases(flattenReleases(props.releases), flattenContentReleases(props.contentReleasesNextXDays))
   )
@@ -270,8 +272,8 @@ function UpcomingReleases(props) {
     }
   }
 
-  function renderList(releases, statisticsPageUrlText) {
-    const list = releases.map((day) => renderDay(day, props.language, false, statisticsPageUrlText))
+  function renderList(_releases, statisticsPageUrlText: string) {
+    const list = _releases.map((day) => renderDay(day, props.language, false, statisticsPageUrlText))
     return list
   }
 
@@ -284,7 +286,7 @@ function UpcomingReleases(props) {
             <div
               className='upcoming-releases-ingress'
               dangerouslySetInnerHTML={{
-                __html: sanitize(props.preface.replace(/&nbsp;/g, ' ')),
+                __html: sanitize(props.preface!.replace(/&nbsp;/g, ' ')),
               }}
             ></div>
           </div>
@@ -304,84 +306,4 @@ function UpcomingReleases(props) {
   )
 }
 
-UpcomingReleases.propTypes = {
-  title: PropTypes.string,
-  preface: PropTypes.string,
-  language: PropTypes.string,
-  upcomingReleasesServiceUrl: PropTypes.string,
-  count: PropTypes.number,
-  buttonTitle: PropTypes.string,
-  statisticsPageUrlText: PropTypes.string,
-  releases: PropTypes.arrayOf(
-    PropTypes.shape({
-      year: PropTypes.string,
-      releases: PropTypes.arrayOf(
-        PropTypes.shape({
-          month: PropTypes.string,
-          monthName: PropTypes.string,
-          releases: PropTypes.arrayOf(
-            PropTypes.shape({
-              day: PropTypes.string,
-              releases: PropTypes.arrayOf(
-                PropTypes.shape({
-                  date: PropTypes.shape({
-                    day: PropTypes.string,
-                    month: PropTypes.string,
-                    year: PropTypes.string,
-                  }),
-                  statistics: PropTypes.arrayOf(
-                    PropTypes.shape({
-                      shortName: PropTypes.string,
-                      name: PropTypes.string,
-                      nameEN: PropTypes.string,
-                      modifiedTime: PropTypes.string,
-                      type: PropTypes.string,
-                      mainSubject: PropTypes.string,
-                      variants: {
-                        frekvens: PropTypes.string,
-                        nextRelease: PropTypes.string,
-                      },
-                      statisticsPageUrl: PropTypes.string,
-                    })
-                  ),
-                })
-              ),
-            })
-          ),
-        })
-      ),
-    })
-  ),
-  contentReleasesNextXDays: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string,
-      name: PropTypes.string,
-      date: PropTypes.string,
-      type: PropTypes.string,
-      mainSubject: PropTypes.string,
-      day: PropTypes.string,
-      month: PropTypes.string,
-      monthName: PropTypes.string,
-      year: PropTypes.string,
-      upcomingReleaseLink: PropTypes.string,
-      statisticsPageUrl: PropTypes.string,
-    })
-  ),
-  contentReleasesAfterXDays: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string,
-      name: PropTypes.string,
-      date: PropTypes.string,
-      type: PropTypes.string,
-      mainSubject: PropTypes.string,
-      day: PropTypes.string,
-      month: PropTypes.string,
-      monthName: PropTypes.string,
-      year: PropTypes.string,
-      upcomingReleaseLink: PropTypes.string,
-      statisticsPageUrl: PropTypes.string,
-    })
-  ),
-}
-
-export default (props) => <UpcomingReleases {...props} />
+export default (props: UpcomingReleasesProps) => <UpcomingReleases {...props} />

@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types'
 import { Accordion, NestedAccordion } from '@statisticsnorway/ssb-component-library'
 import React, { useContext } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -7,7 +6,17 @@ import { WebSocketContext } from '/react4xp/dashboard/utils/websocket/WebsocketP
 import { selectJobLog, selectJobLogDetailsLoaded } from '/react4xp/dashboard/containers/Statistics/selectors'
 import { format } from 'date-fns/format'
 
-export function StatisticsLogJob(props) {
+interface StatisticsLogJobProps {
+  statisticId?: string;
+  jobId?: string;
+  accordionOpenStatus?: boolean;
+  setAccordionStatusOnIndex?: (...args: unknown[]) => unknown;
+  index?: number;
+  nestedAccordionStatus?: unknown[];
+  setNestedAccordionWithIndexes?: (...args: unknown[]) => unknown;
+}
+
+export function StatisticsLogJob(props: StatisticsLogJobProps) {
   const io = useContext(WebSocketContext)
   const dispatch = useDispatch()
   const [firstOpen, setFirstOpen] = React.useState(true)
@@ -72,14 +81,4 @@ export function StatisticsLogJob(props) {
       {renderAccordionBody()}
     </Accordion>
   )
-}
-
-StatisticsLogJob.propTypes = {
-  statisticId: PropTypes.string,
-  jobId: PropTypes.string,
-  accordionOpenStatus: PropTypes.bool,
-  setAccordionStatusOnIndex: PropTypes.func,
-  index: PropTypes.number,
-  nestedAccordionStatus: PropTypes.array,
-  setNestedAccordionWithIndexes: PropTypes.func,
 }

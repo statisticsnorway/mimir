@@ -1,10 +1,10 @@
 import React from 'react'
 import { Button, Title, Link, Paragraph, Accordion } from '@statisticsnorway/ssb-component-library'
-import PropTypes from 'prop-types'
 import { Share2, Send, Smartphone, Eye, Home, Download, Image } from 'react-feather'
 import { sanitize } from '../../../lib/ssb/utils/htmlUtils'
+import { EmployeeProps } from '../../../lib/types/partTypes/employee'
 
-const Employee = (props) => {
+const Employee = (props: EmployeeProps) => {
   const {
     title,
     email,
@@ -33,14 +33,14 @@ const Employee = (props) => {
     imagePhrase,
   } = props
 
-  const calculateCvSize = (bytes) => {
+  const calculateCvSize = (bytes: number) => {
     return Math.round(bytes / 1000)
   }
 
-  const sanitizeMobileNo = (number) => {
+  const sanitizeMobileNo = (number: string) => {
     const spacesRemoved = number.split(' ').join('')
     const numberMatchesInTwo = spacesRemoved.match(/.{1,2}/g)
-    return numberMatchesInTwo.join(' ')
+    return numberMatchesInTwo?.join(' ')
   }
 
   const renderPortraitImages = () => {
@@ -48,7 +48,7 @@ const Employee = (props) => {
       <div className='grid-row'>
         {profileImages.map((href, i) => {
           const pressPictureNumber = i + 1
-          const pressPicturePhrase = pressPictureLabelPhrase.replace('{0}', pressPictureNumber)
+          const pressPicturePhrase = pressPictureLabelPhrase.replace('{0}', pressPictureNumber.toString())
           return (
             <div key={i} className='grid-column'>
               <a href={href} target='_blank' rel='noreferrer' type='image/jpeg' aria-label={pressPicturePhrase}>
@@ -68,9 +68,9 @@ const Employee = (props) => {
     )
   }
 
-  const downloadPDF = (url) => {
+  const downloadPDF = (url: string | null) => {
     const link = document.createElement('a')
-    link.href = url
+    link.href = url || ''
     link.click()
   }
 
@@ -263,40 +263,11 @@ const Employee = (props) => {
         <div className='col-12 col-md-6 row-gutter-mobile mt-4'>
           {description ? renderEmployeeDescription() : null}
           {projects.length != 0 ? renderProjects() : null}
-          {cristinId ? renderPublications : null}
+          {cristinId ? renderPublications() : null}
         </div>
       </div>
     </section>
   )
 }
 
-Employee.propTypes = {
-  title: PropTypes.string,
-  email: PropTypes.string,
-  position: PropTypes.string,
-  phone: PropTypes.string,
-  description: PropTypes.string,
-  profileImages: PropTypes.array,
-  myCV: PropTypes.string,
-  projects: PropTypes.array,
-  area: PropTypes.object,
-  cvInformation: PropTypes.object,
-  isResearcher: PropTypes.bool,
-  cristinId: PropTypes.string || null,
-  emailPhrase: PropTypes.string,
-  phonePhrase: PropTypes.string,
-  positionPhrase: PropTypes.string,
-  researchAreaPhrase: PropTypes.string,
-  departmentPhrase: PropTypes.string,
-  briefSummaryPhrase: PropTypes.string,
-  projectsPhrase: PropTypes.string,
-  downloadPdfPhrase: PropTypes.string,
-  publicationsPhrase: PropTypes.string,
-  pressPicturesPhrase: PropTypes.string,
-  pressPicturesDescrPhrase: PropTypes.string,
-  pressPictureLabelPhrase: PropTypes.string,
-  imagePhrase: PropTypes.string,
-  profilePicturePhrase: PropTypes.string,
-}
-
-export default (props) => <Employee {...props} />
+export default (props: EmployeeProps) => <Employee {...props} />

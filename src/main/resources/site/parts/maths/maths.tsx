@@ -1,10 +1,13 @@
 import React from 'react'
 
 import MathJax from 'react-mathjax'
-import PropTypes from 'prop-types'
 
-class Maths extends React.Component {
-  constructor(props) {
+interface MathsProps {
+  mathsFormula: string
+}
+
+class Maths extends React.Component<MathsProps> {
+  constructor(props: MathsProps) {
     super(props)
   }
 
@@ -17,8 +20,4 @@ class Maths extends React.Component {
   }
 }
 
-Maths.propTypes = {
-  mathsFormula: PropTypes.string,
-}
-
-export default (props) => <Maths {...props} />
+export default (props: MathsProps) => <Maths {...props} />

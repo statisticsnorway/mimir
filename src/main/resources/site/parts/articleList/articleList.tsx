@@ -1,9 +1,21 @@
 import React from 'react'
 import { Link, Title } from '@statisticsnorway/ssb-component-library'
-import PropTypes from 'prop-types'
 import { ArrowRight } from 'react-feather'
 
-function ArticleList(props) {
+interface ArticleListProps {
+  title?: string
+  articles: {
+    title?: string
+    preface?: string
+    url?: string
+    publishDate?: string
+    publishDateHuman: string
+  }[]
+  archiveLinkText?: string
+  archiveLinkUrl?: string
+}
+
+function ArticleList(props: ArticleListProps) {
   const { articles, title, archiveLinkUrl, archiveLinkText } = props
   return (
     <section className='article-list container-fluid'>
@@ -30,18 +42,4 @@ function ArticleList(props) {
   )
 }
 
-ArticleList.propTypes = {
-  title: PropTypes.string,
-  articles: PropTypes.arrayOf(
-    PropTypes.shape({
-      title: PropTypes.string,
-      preface: PropTypes.string,
-      url: PropTypes.string,
-      publishDate: PropTypes.string,
-    })
-  ),
-  archiveLinkText: PropTypes.string,
-  archiveLinkUrl: PropTypes.string,
-}
-
-export default (props) => <ArticleList {...props} />
+export default (props: ArticleListProps) => <ArticleList {...props} />

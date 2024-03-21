@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react'
-import PropTypes from 'prop-types'
 import {
   Card,
   Divider,
@@ -18,23 +17,26 @@ import { NumericFormat } from 'react-number-format'
 import { Col, Row } from 'react-bootstrap'
 import { addGtagForEvent } from '../../../react4xp/ReactGA'
 import { sanitize } from '../../../lib/ssb/utils/htmlUtils'
+import { type SearchResultProps } from '../../../lib/types/partTypes/searchResult'
+import { type DropdownItem } from '../../../lib/types/partTypes/publicationArchive'
+import { type PreparedSearchResult } from '../../../lib/types/solr'
 
-function SearchResult(props) {
+function SearchResult(props: SearchResultProps) {
   const [hits, setHits] = useState(props.hits)
   const [searchTerm, setSearchTerm] = useState(props.term)
   const [loading, setLoading] = useState(false)
   const [total, setTotal] = useState(props.total)
   const [contentTypes, setContentTypes] = useState(props.contentTypes)
   const [subjects, setSubjects] = useState(props.subjects)
-  const [filterChanged, setFilterChanged] = useState(false)
+  const [filterChanged, setFilterChanged] = useState<string | boolean>(false)
   const [sortChanged, setSortChanged] = useState(false)
-  const [sortList, setSortList] = useState(undefined)
+  const [sortList, setSortList] = useState<string | undefined>(undefined)
   const [filter, setFilter] = useState({
     mainSubject: props.subjectUrlParam || '',
     contentType: props.contentTypeUrlParam || '',
   })
   const [reset, setReset] = useState(0)
-  const [searchResultSRText, setSearchResultSRText] = useState(null)
+  const [searchResultSRText, setSearchResultSRText] = useState<null | string>(null)
   const allContentTypeItem = {
     id: 'allTypes',
     title: props.allContentTypesPhrase,
@@ -64,12 +66,12 @@ function SearchResult(props) {
   const [selectedMainSubject, setSelectedMainSubject] = useState(preselectedSubjectDropdownItem)
   const [numberChanged, setNumberChanged] = useState(0)
   const [openAccordion, setOpenAccordion] = useState(false)
-  const currentElement = useRef(null)
-  const inputSearchElement = useRef(null)
+  const currentElement = useRef<HTMLAnchorElement>(null)
+  const inputSearchElement = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (searchTerm && inputSearchElement.current) {
-      inputSearchElement.current.firstChild.focus()
+      ;(inputSearchElement.current.firstChild as HTMLInputElement)?.focus()
     }
 
     const announceSearchResultScreenReader = setTimeout(() => {
@@ -97,7 +99,7 @@ function SearchResult(props) {
     }
   }, [filter, sortList])
 
-  function onChange(id, value) {
+  function onChange(id: string, value: any) {
     setFilterChanged(id)
 
     if (id === 'mainSubject') {
@@ -132,7 +134,7 @@ function SearchResult(props) {
     }
   }
 
-  function onChangeSortList(value) {
+  function onChangeSortList(value: string) {
     setSortChanged(true)
     setSortList(value)
 
@@ -144,7 +146,7 @@ function SearchResult(props) {
       }
     }
   }
-  function onShowMoreSearchResults(focusElement) {
+  function onShowMoreSearchResults(focusElement: boolean) {
     fetchSearchResult(focusElement)
     addGtagForEvent(props.GA_TRACKING_ID, 'Klikk', 'Søk', 'Vis flere')
   }
@@ -161,7 +163,7 @@ function SearchResult(props) {
     addGtagForEvent(props.GA_TRACKING_ID, 'Klikk', 'Søk', 'Fjern alle filtervalg')
   }
 
-  function renderListItem(hit, i) {
+  function renderListItem(hit: PreparedSearchResult, i?: number) {
     if (hit) {
       const last = i === hits.length - props.count
       return (
@@ -217,7 +219,7 @@ function SearchResult(props) {
             <span className='sort-title'>{`${props.sortPhrase}:`}</span>
             <RadioGroup
               className='float-end'
-              onChange={(value) => {
+              onChange={(value: string) => {
                 onChangeSortList(value)
               }}
               selectedValue='best'
@@ -238,7 +240,7 @@ function SearchResult(props) {
         </div>
         {props.nameSearchToggle && props.nameSearchData ? renderNameResult() : undefined}
         <ol className='list-unstyled '>
-          {renderListItem(bestBetHit)}
+          {renderListItem(bestBetHit!)}
           {hits.map((hit, i) => {
             return renderListItem(hit, i)
           })}
@@ -291,7 +293,7 @@ function SearchResult(props) {
       })
   }
 
-  function fetchSearchResult(focusElement) {
+  function fetchSearchResult(focusElement: boolean) {
     setLoading(true)
     axios
       .get(props.searchServiceUrl, {
@@ -314,7 +316,7 @@ function SearchResult(props) {
       .finally(() => {
         setLoading(false)
         if (focusElement) {
-          currentElement.current.focus()
+          currentElement.current?.focus()
         }
       })
   }
@@ -379,10 +381,10 @@ function SearchResult(props) {
 
   function goToSearchResultPage() {
     // deepcode ignore OR: pageUrl and content._path is used to generate the URL in the backend
-    window.location = `${props.searchPageUrl}?sok=${searchTerm}`
+    window.location.href = `${props.searchPageUrl}?sok=${searchTerm}`
   }
 
-  function capitalizeNames(name) {
+  function capitalizeNames(name: string) {
     const nameTokens = name.toLowerCase().split(' ')
     const capitalizedTokens = nameTokens.map((n) => {
       const first = n.slice(0, 1).toUpperCase()
@@ -398,7 +400,7 @@ function SearchResult(props) {
       ${capitalizeNames(doc.name)}
       ${props.namePhrases.asTheir} ${translateName(doc.type)}`
   }
-  function formatGender(gender) {
+  function formatGender(gender: string) {
     switch (gender) {
       case 'F':
         return props.namePhrases.women
@@ -408,8 +410,8 @@ function SearchResult(props) {
         return ''
     }
   }
-  function translateName(nameCode) {
-    return props.namePhrases.types[nameCode]
+  function translateName(nameCode: string) {
+    return props.namePhrases!.types![nameCode]
   }
 
   function renderNameResult() {
@@ -501,7 +503,7 @@ function SearchResult(props) {
                     className='DropdownMainSubject'
                     id='mainSubject'
                     key={`mainSubject-${reset}`}
-                    onSelect={(value) => {
+                    onSelect={(value: DropdownItem) => {
                       onChange('mainSubject', value)
                       addGtagForEvent(props.GA_TRACKING_ID, 'Valgt emne', 'Søk', value.title)
                       if (!openAccordion) {
@@ -518,7 +520,7 @@ function SearchResult(props) {
                     className='DropdownContentType'
                     id='contentType'
                     key={`contentType-${reset}`}
-                    onSelect={(value) => {
+                    onSelect={(value: DropdownItem) => {
                       onChange('contentType', value)
                       addGtagForEvent(props.GA_TRACKING_ID, 'Valgt innholdstype', 'Søk', value.title)
                       if (!openAccordion) {
@@ -556,92 +558,4 @@ function SearchResult(props) {
   )
 }
 
-SearchResult.propTypes = {
-  title: PropTypes.string,
-  total: PropTypes.number,
-  buttonTitle: PropTypes.string,
-  searchServiceUrl: PropTypes.string,
-  searchPageUrl: PropTypes.string,
-  nameSearchUrl: PropTypes.string,
-  language: PropTypes.string,
-  term: PropTypes.string,
-  showingPhrase: PropTypes.string,
-  limitResultPhrase: PropTypes.string,
-  removeFilterPhrase: PropTypes.string,
-  mainSearchPhrase: PropTypes.string,
-  chooseSubjectPhrase: PropTypes.string,
-  chooseContentTypePhrase: PropTypes.string,
-  searchText: PropTypes.string,
-  sortPhrase: PropTypes.string,
-  sortBestHitPhrase: PropTypes.string,
-  sortDatePhrase: PropTypes.string,
-  allContentTypesPhrase: PropTypes.string,
-  allSubjectsPhrase: PropTypes.string,
-  count: PropTypes.number,
-  noHitMessage: PropTypes.string,
-  nameSearchToggle: PropTypes.bool,
-  nameSearchData: PropTypes.object,
-  namePhrases: PropTypes.shape({
-    readMore: PropTypes.string,
-    thereAre: PropTypes.string,
-    with: PropTypes.string,
-    asTheir: PropTypes.string,
-    have: PropTypes.string,
-    threeOrLessText: PropTypes.string,
-    women: PropTypes.string,
-    men: PropTypes.string,
-    types: PropTypes.shape({
-      firstgivenandfamily: PropTypes.string,
-      middleandfamily: PropTypes.string,
-      family: PropTypes.string,
-      onlygiven: PropTypes.string,
-      onlygivenandfamily: PropTypes.string,
-      firstgiven: PropTypes.string,
-    }),
-  }),
-  bestBetHit: PropTypes.shape({
-    title: PropTypes.string,
-    url: PropTypes.string,
-    preface: PropTypes.string,
-    mainSubject: PropTypes.string,
-    contentType: PropTypes.string,
-    publishDate: PropTypes.string,
-    publishDateHuman: PropTypes.string,
-  }),
-  hits: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string,
-      title: PropTypes.string,
-      url: PropTypes.string,
-      preface: PropTypes.string,
-      mainSubject: PropTypes.string,
-      contentType: PropTypes.string,
-      publishDate: PropTypes.string,
-      publishDateHuman: PropTypes.string,
-    })
-  ),
-  contentTypePhrases: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string,
-      title: PropTypes.string,
-    })
-  ),
-  contentTypes: PropTypes.arrayOf(
-    PropTypes.shape({
-      title: PropTypes.string,
-      count: PropTypes.number,
-    })
-  ),
-  subjects: PropTypes.arrayOf(
-    PropTypes.shape({
-      title: PropTypes.string,
-      count: PropTypes.number,
-    })
-  ),
-  GA_TRACKING_ID: PropTypes.string,
-  contentTypeUrlParam: PropTypes.string,
-  subjectUrlParam: PropTypes.string,
-  searchResultSRText: PropTypes.string,
-}
-
-export default (props) => <SearchResult {...props} />
+export default (props: SearchResultProps) => <SearchResult {...props} />

@@ -1,9 +1,15 @@
 import React from 'react'
 import { Card, Text, ButtonTertiary } from '@statisticsnorway/ssb-component-library'
 import { Col, Container, Row } from 'react-bootstrap'
-import PropTypes from 'prop-types'
+import { EndedStatistic } from '../../lib/types/partTypes/endedStatistics'
 
-const EndedStatistics = (props) => {
+interface EndedStatisticsProps {
+  endedStatistics: EndedStatistic[]
+  iconText: string
+  buttonText: string
+}
+
+const EndedStatistics = (props: EndedStatisticsProps) => {
   const { endedStatistics, iconText } = props
 
   const renderContent = () => {
@@ -42,16 +48,4 @@ const EndedStatistics = (props) => {
   return <Container>{renderShowMoreButton()}</Container>
 }
 
-EndedStatistics.propTypes = {
-  endedStatistics: PropTypes.arrayOf(
-    PropTypes.shape({
-      title: PropTypes.string.isRequired,
-      preamble: PropTypes.string.isRequired,
-      href: PropTypes.string.isRequired,
-    })
-  ).isRequired,
-  iconText: PropTypes.string,
-  buttonText: PropTypes.string.isRequired,
-}
-
-export default EndedStatistics
+export default (props: EndedStatisticsProps) => <EndedStatistics {...props} />

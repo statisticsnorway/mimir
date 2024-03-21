@@ -1,22 +1,29 @@
 import React, { useState } from 'react'
-import PropTypes from 'prop-types'
 import { Row, Col } from 'react-bootstrap'
 import { Dropdown, Divider } from '@statisticsnorway/ssb-component-library'
+import { type DimensionData, type SimpleStatbankProps } from '../../../lib/types/partTypes/simpleStatbank'
 
-function SimpleStatbank(props) {
+type DropdownItem = {
+  id: string
+  title: string
+  value: DimensionData['value']
+  time: string
+}
+
+function SimpleStatbank(props: SimpleStatbankProps) {
   const { icon, altText, ingress, placeholder, resultLayout, selectDisplay, statbankApiData } = props
 
   const textIngress = <span dangerouslySetInnerHTML={{ __html: ingress }} />
 
-  const [selectedValue, setSelectedValue] = useState(null)
+  const [selectedValue, setSelectedValue] = useState<null | DropdownItem>(null)
 
-  function handleChange(value) {
+  function handleChange(value: DropdownItem) {
     if (value) {
       setSelectedValue(value)
     }
   }
 
-  function renderIcon(icon, altText) {
+  function renderIcon(icon: string, altText: string) {
     if (!!icon) {
       return (
         <Col>
@@ -29,7 +36,7 @@ function SimpleStatbank(props) {
   }
 
   function renderResult() {
-    if (selectedValue) {
+    if (selectedValue?.value) {
       const result = Number(selectedValue.value) > 0 ? selectedValue.value : '-'
       const resultView = resultLayout.replace('{value}', result).replace('{time}', selectedValue.time)
       const textResult = <span dangerouslySetInnerHTML={{ __html: resultView }} />
@@ -65,7 +72,7 @@ function SimpleStatbank(props) {
   function renderForm() {
     return (
       <Row className='content'>
-        {renderIcon(icon, altText)}
+        {renderIcon(icon!, altText!)}
         <Col>{addDropdown()}</Col>
       </Row>
     )
@@ -79,20 +86,4 @@ function SimpleStatbank(props) {
   )
 }
 
-SimpleStatbank.propTypes = {
-  icon: PropTypes.string,
-  altText: PropTypes.string,
-  ingress: PropTypes.string,
-  placeholder: PropTypes.string,
-  resultLayout: PropTypes.string,
-  simpleStatbankServiceUrl: PropTypes.string,
-  json: PropTypes.string,
-  code: PropTypes.string,
-  urlOrId: PropTypes.string,
-  selectDisplay: PropTypes.string,
-  statbankApiData: PropTypes.objectOf({
-    data: PropTypes.object,
-  }),
-}
-
-export default (props) => <SimpleStatbank {...props} />
+export default (props: SimpleStatbankProps) => <SimpleStatbank {...props} />

@@ -1,13 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react'
-import PropTypes from 'prop-types'
 import { Dropdown, Link, Button } from '@statisticsnorway/ssb-component-library'
 import { default as isEmpty } from 'ramda/es/isEmpty'
 import { NumericFormat } from 'react-number-format'
 import { Alert } from 'react-bootstrap'
 import { ChevronLeft, ChevronRight } from 'react-feather'
 import { addGtagForEvent } from '/react4xp/ReactGA'
+import { type TableProps } from '../../lib/types/partTypes/table'
+import { PreliminaryData, type TableCellUniform } from '../../lib/types/xmlParser'
 
-function Table(props) {
+function Table(props: TableProps) {
   const [prevClientWidth, setPrevClientWidth] = useState(0)
   const [table, setTable] = useState(props.paramShowDraft && props.draftExist ? props.tableDraft : props.table)
   const [fetchUnPublished, setFetchUnPublished] = useState(props.paramShowDraft)
@@ -15,11 +16,11 @@ function Table(props) {
   const showPreviewToggle =
     props.showPreviewDraft && (!props.pageTypeStatistic || (props.paramShowDraft && props.pageTypeStatistic))
 
-  const captionRef = useRef(null)
-  const tableControlsDesktopRef = useRef(null)
-  const tableControlsMobileRef = useRef(null)
-  const tableRef = useRef(null)
-  const tableWrapperRef = useRef(null)
+  const captionRef = useRef<HTMLTableCaptionElement>(null)
+  const tableControlsDesktopRef = useRef<HTMLDivElement>(null)
+  const tableControlsMobileRef = useRef<HTMLDivElement>(null)
+  const tableRef = useRef<HTMLTableElement>(null)
+  const tableWrapperRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     updateTableControlsDesktop()
@@ -35,17 +36,25 @@ function Table(props) {
   }, [])
 
   function widthCheck() {
-    if (tableWrapperRef.current.clientWidth !== prevClientWidth) {
-      setPrevClientWidth(tableWrapperRef.current.clientWidth)
+    if (tableWrapperRef.current?.clientWidth !== prevClientWidth) {
+      setPrevClientWidth(tableWrapperRef.current!.clientWidth)
       updateTableControlsDesktop()
     }
   }
 
   function updateTableControlsDesktop() {
+    if (
+      !tableWrapperRef.current ||
+      !tableControlsDesktopRef.current ||
+      !captionRef.current ||
+      !tableControlsMobileRef.current
+    )
+      return
+
     const controls = tableControlsDesktopRef.current
     const tableWrapper = tableWrapperRef.current
-    const left = controls.children.item(0)
-    const right = controls.children.item(1)
+    const left = controls.children.item(0)! as HTMLElement
+    const right = controls.children.item(1)! as HTMLElement
 
     // hide controlls if there is no scrollbar
     if (tableWrapper.scrollWidth > tableWrapper.clientWidth || tableWrapper.clientWidth === 0) {
@@ -77,23 +86,23 @@ function Table(props) {
   }
 
   function scrollLeft() {
-    tableWrapperRef.current.scrollLeft -= 100
+    tableWrapperRef.current!.scrollLeft -= 100
     updateTableControlsDesktop()
   }
 
   function scrollRight() {
-    tableWrapperRef.current.scrollLeft += 100
+    tableWrapperRef.current!.scrollLeft += 100
     updateTableControlsDesktop()
   }
 
-  function trimValue(value) {
+  function trimValue(value: string | number) {
     if (value && typeof value === 'string') {
       return value.trim()
     }
     return value
   }
 
-  function formatNumber(value) {
+  function formatNumber(value: string | number) {
     const language = props.table.language
     const decimalSeparator = language === 'en' ? '.' : ','
     value = trimValue(value)
@@ -115,11 +124,11 @@ function Table(props) {
     return value
   }
 
-  function addDownloadTableDropdown(mobile) {
+  function addDownloadTableDropdown(mobile: boolean) {
     const { downloadTableLabel, downloadTableTitle, downloadTableOptions } = props
 
     if (downloadTableLabel && downloadTableTitle && downloadTableOptions) {
-      const downloadTable = (item) => {
+      const downloadTable = (item: { id: string }) => {
         if (item.id === 'downloadTableAsCSV') {
           {
             downloadTableAsCSV()
@@ -196,7 +205,7 @@ function Table(props) {
     return (
       <table className={tableClass} ref={tableRef}>
         {addCaption()}
-        {table.thead.map((t, index) => {
+        {table.thead!.map((t, index) => {
           return (
             <React.Fragment key={index}>
               {addThead(index)}
@@ -245,19 +254,19 @@ function Table(props) {
     )
   }
 
-  function addThead(index) {
-    return <thead>{createRowsHead(table.thead[index].tr)}</thead>
+  function addThead(index: number) {
+    return <thead>{createRowsHead(table.thead![index].tr)}</thead>
   }
 
-  function addTbody(index) {
-    return <tbody>{createRowsBody(table.tbody[index].tr)}</tbody>
+  function addTbody(index: number) {
+    return <tbody>{createRowsBody(table.tbody![index].tr)}</tbody>
   }
 
   function renderCorrectionNotice() {
-    if (table.tfoot.correctionNotice) {
+    if (table.tfoot!.correctionNotice) {
       return (
         <tr className='correction-notice'>
-          <td colSpan='100%'>{table.tfoot.correctionNotice}</td>
+          <td colSpan='100%'>{table.tfoot!.correctionNotice}</td>
         </tr>
       )
     }
@@ -265,14 +274,14 @@ function Table(props) {
   }
 
   function addTFoot() {
-    const { footnotes, correctionNotice } = table.tfoot
+    const { footnotes, correctionNotice } = table.tfoot!
 
     const noteRefs = table.noteRefs
 
     if ((noteRefs && noteRefs.length > 0) || correctionNotice) {
       return (
         <tfoot>
-          {noteRefs.map((note, index) => {
+          {noteRefs!.map((note, index) => {
             const current = footnotes && footnotes.find((footnote) => footnote.noteid === note)
             if (current) {
               return (
@@ -294,7 +303,7 @@ function Table(props) {
     return null
   }
 
-  function createRowsHead(rows) {
+  function createRowsHead(rows: TableCellUniform[]) {
     if (rows) {
       return rows.map((row, i) => {
         return <tr key={i}>{createHeaderCell(row)}</tr>
@@ -302,7 +311,7 @@ function Table(props) {
     }
   }
 
-  function createRowsBody(rows) {
+  function createRowsBody(rows: TableCellUniform[]) {
     if (rows) {
       return rows.map((row, i) => {
         return (
@@ -315,8 +324,8 @@ function Table(props) {
     }
   }
 
-  function createHeaderCell(row) {
-    return Object.keys(row).map((keyName) => {
+  function createHeaderCell(row: TableCellUniform) {
+    return Object.keys(row).map((keyName: 'th' | 'td') => {
       const value = row[keyName]
       if (keyName === 'th') {
         return createHeadTh(value)
@@ -326,7 +335,7 @@ function Table(props) {
     })
   }
 
-  function createHeadTh(value) {
+  function createHeadTh(value: (string | number | PreliminaryData)[]) {
     return value.map((cellValue, i) => {
       if (typeof cellValue === 'object') {
         if (Array.isArray(cellValue)) {
@@ -356,7 +365,7 @@ function Table(props) {
     })
   }
 
-  function createHeadTd(value) {
+  function createHeadTd(value: (string | number | PreliminaryData)[]) {
     return value.map((cellValue, i) => {
       if (typeof cellValue === 'object') {
         return (
@@ -371,8 +380,8 @@ function Table(props) {
     })
   }
 
-  function createBodyTh(row) {
-    return Object.keys(row).map((key) => {
+  function createBodyTh(row: TableCellUniform) {
+    return Object.keys(row).map((key: 'th' | 'td') => {
       const value = row[key]
       if (key === 'th') {
         return value.map((cellValue, i) => {
@@ -401,8 +410,8 @@ function Table(props) {
     })
   }
 
-  function createBodyTd(row) {
-    return Object.keys(row).map((keyName) => {
+  function createBodyTd(row: TableCellUniform) {
+    return Object.keys(row).map((keyName: 'th' | 'td') => {
       const value = row[keyName]
       if (keyName === 'td') {
         return value.map((cellValue, i) => {
@@ -420,11 +429,11 @@ function Table(props) {
     })
   }
 
-  function addNoteRefs(noteRefId) {
+  function addNoteRefs(noteRefId: string) {
     if (noteRefId) {
       const noteRefs = table.noteRefs
       const noteIDs = noteRefId.split(' ')
-      const notesToReturn = noteRefs.reduce((acc, current, index) => {
+      const notesToReturn = noteRefs!.reduce((acc, current, index) => {
         // Lag et array av indeksen til alle id-enene i footer
         return noteIDs.some((element) => element === current) ? acc.concat(index) : acc
       }, [])
@@ -544,112 +553,6 @@ function Table(props) {
       )}
     </section>
   )
-}
-
-const tableDataShape = PropTypes.shape({
-  caption: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.shape({
-      content: PropTypes.string,
-      noterefs: PropTypes.string,
-    }),
-  ]),
-  tableClass: PropTypes.string,
-  thead: PropTypes.arrayOf(
-    PropTypes.shape({
-      td: PropTypes.oneOfType([
-        PropTypes.array,
-        PropTypes.number,
-        PropTypes.string,
-        PropTypes.shape({
-          rowspan: PropTypes.number,
-          colspan: PropTypes.number,
-          content: PropTypes.string,
-          class: PropTypes.string,
-        }),
-      ]),
-      th: PropTypes.oneOfType([
-        PropTypes.array,
-        PropTypes.number,
-        PropTypes.string,
-        PropTypes.shape({
-          rowspan: PropTypes.number,
-          colspan: PropTypes.number,
-          content: PropTypes.string,
-          class: PropTypes.string,
-          noterefs: PropTypes.string,
-        }),
-      ]),
-    })
-  ),
-  tbody: PropTypes.arrayOf(
-    PropTypes.shape({
-      th: PropTypes.oneOfType([
-        PropTypes.array,
-        PropTypes.number,
-        PropTypes.string,
-        PropTypes.shape({
-          content: PropTypes.string,
-          class: PropTypes.string,
-          noterefs: PropTypes.string,
-        }),
-      ]),
-      td: PropTypes.oneOfType([
-        PropTypes.array,
-        PropTypes.number,
-        PropTypes.string,
-        PropTypes.shape({
-          content: PropTypes.string,
-          class: PropTypes.string,
-        }),
-      ]),
-    })
-  ),
-  tfoot: PropTypes.shape({
-    footnotes: PropTypes.arrayOf(
-      PropTypes.shape({
-        noteid: PropTypes.string,
-        content: PropTypes.string,
-      })
-    ),
-    correctionNotice: PropTypes.string,
-  }),
-  language: PropTypes.string,
-  noteRefs: PropTypes.arrayOf(PropTypes.string),
-})
-
-Table.propTypes = {
-  downloadTableLabel: PropTypes.string,
-  downloadTableTitle: PropTypes.object,
-  downloadTableOptions: PropTypes.arrayOf(
-    PropTypes.shape({
-      title: PropTypes.string,
-      id: PropTypes.string,
-    })
-  ),
-  standardSymbol: PropTypes.shape({
-    href: PropTypes.string,
-    text: PropTypes.string,
-  }),
-  sourceLabel: PropTypes.string,
-  sources: PropTypes.arrayOf(
-    PropTypes.shape({
-      urlText: PropTypes.string,
-      url: PropTypes.string,
-    })
-  ),
-  iconUrl: PropTypes.string,
-  table: tableDataShape,
-  tableDraft: tableDataShape,
-  showPreviewDraft: PropTypes.bool,
-  paramShowDraft: PropTypes.bool,
-  draftExist: PropTypes.bool,
-  pageTypeStatistic: PropTypes.bool,
-  sourceListTables: PropTypes.arrayOf(PropTypes.string),
-  sourceTableLabel: PropTypes.string,
-  statBankWebUrl: PropTypes.string,
-  hiddenTitle: PropTypes.string,
-  GA_TRACKING_ID: PropTypes.string,
 }
 
 export default Table

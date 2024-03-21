@@ -1,16 +1,32 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { Card, Text, Button } from '@statisticsnorway/ssb-component-library'
-import PropTypes from 'prop-types'
 import { useMediaQuery } from 'react-responsive'
 
-function RelatedArticles(props) {
+interface RelatedArticlesProps {
+  relatedArticles: {
+    title: string
+    subTitle?: string
+    preface?: string
+    href: string
+    imageSrc: string
+    imageAlt?: string
+  }[]
+  showAll: string
+  showLess: string
+  heading: string
+  articlePluralName: string
+  showAllAriaLabel: string
+  showingPhrase: string
+}
+
+function RelatedArticles(props: RelatedArticlesProps) {
   const [isHidden, setIsHidden] = useState(true)
   const [focusElement, setFocusElement] = useState(false)
-  const currentElement = useRef(null)
+  const currentElement = useRef<null | HTMLLIElement>(null)
 
   const { relatedArticles, heading, showAll, showLess, showAllAriaLabel, articlePluralName } = props
 
-  const handleMediaQueryChange = (matches) => {
+  const handleMediaQueryChange = (matches: boolean) => {
     if (isHidden) {
       matches ? setCount(6) : setCount(3)
     }
@@ -35,24 +51,25 @@ function RelatedArticles(props) {
   }, [count])
 
   useEffect(() => {
-    if (focusElement) {
-      currentElement.current && currentElement.current.firstChild.firstChild.focus()
+    if (focusElement && currentElement.current) {
+      const focusable = currentElement.current.firstChild?.firstChild as HTMLAnchorElement
+      focusable.focus()
     }
   }, [shownArticles])
 
-  function toggleBox(focus) {
+  function toggleBox(focus: boolean) {
     shownArticles.length < relatedArticles.length ? showMore(focus) : showFewer(focus)
     setIsHidden((prev) => !prev)
   }
 
-  function showMore(focus) {
+  function showMore(focus: boolean) {
     if (focus) {
       setFocusElement(true)
     }
     setShownArticles(relatedArticles)
   }
 
-  function showFewer(focus) {
+  function showFewer(focus: boolean) {
     if (focus) {
       setFocusElement(false)
     }
@@ -65,7 +82,7 @@ function RelatedArticles(props) {
         <div className='col-auto'>
           <Button
             onClick={() => toggleBox(false)}
-            onKeyDown={(e) => {
+            onKeyDown={(e: React.KeyboardEvent<HTMLButtonElement>) => {
               if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault()
                 toggleBox(true)
@@ -87,7 +104,7 @@ function RelatedArticles(props) {
       </div>
       <ul
         className='row mb-5'
-        aria-label={`${props.showingPhrase.replace('{0}', shownArticles.length)} ${
+        aria-label={`${props.showingPhrase.replace('{0}', shownArticles.length.toString())} ${
           relatedArticles.length
         } ${articlePluralName}`}
       >
@@ -113,23 +130,4 @@ function RelatedArticles(props) {
   )
 }
 
-RelatedArticles.propTypes = {
-  relatedArticles: PropTypes.arrayOf(
-    PropTypes.shape({
-      title: PropTypes.string.isRequired,
-      subTitle: PropTypes.string,
-      preface: PropTypes.string,
-      href: PropTypes.string.isRequired,
-      imageSrc: PropTypes.string.isRequired,
-      imageAlt: PropTypes.string,
-    })
-  ).isRequired,
-  showAll: PropTypes.string.isRequired,
-  showLess: PropTypes.string.isRequired,
-  heading: PropTypes.string.isRequired,
-  articlePluralName: PropTypes.string.isRequired,
-  showAllAriaLabel: PropTypes.string.isRequired,
-  showingPhrase: PropTypes.string,
-}
-
-export default (props) => <RelatedArticles {...props} />
+export default (props: RelatedArticlesProps) => <RelatedArticles {...props} />

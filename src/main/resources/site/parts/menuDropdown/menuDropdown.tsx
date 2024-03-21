@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Dropdown } from '@statisticsnorway/ssb-component-library'
-import PropTypes from 'prop-types'
 import { ChevronDown, ChevronUp } from 'react-feather'
+import { type MenuDropdownProps, type Municipality } from '../../../lib/types/partTypes/menuDropdown'
 
-function MenuDropdown(props) {
+function MenuDropdown(props: MenuDropdownProps) {
   const {
     baseUrl,
     dataPathAssetUrl,
@@ -13,7 +13,7 @@ function MenuDropdown(props) {
     municipalityName,
     municipalityList,
   } = props
-  const stickyMenuRef = useRef(null)
+  const stickyMenuRef = useRef<HTMLDivElement>(null)
   const [fixedClass, setFixedClass] = useState('')
   const [mapOpen, setMapOpen] = useState(false)
 
@@ -37,8 +37,8 @@ function MenuDropdown(props) {
     return () => window.removeEventListener('scroll', stickyMenu)
   }, [])
 
-  const onSelectMunicipality = (e, baseUrl) => {
-    const url = baseUrl + e.id
+  const onSelectMunicipality = (mun: Municipality, baseUrl: string) => {
+    const url = baseUrl + mun.id
     window.location.href = url
   }
 
@@ -85,8 +85,8 @@ function MenuDropdown(props) {
               searchable
               placeholder={props.placeholder}
               ariaLabel={props.ariaLabel}
-              onSelect={(e) => {
-                onSelectMunicipality(e, props.baseUrl)
+              onSelect={(item: Municipality) => {
+                onSelectMunicipality(item, props.baseUrl)
               }}
             />
           </div>
@@ -98,7 +98,7 @@ function MenuDropdown(props) {
 
   const openMap = () => {
     setMapOpen(!mapOpen)
-    if (!mapOpen) {
+    if (!mapOpen && stickyMenuRef.current) {
       window.scroll({
         top: stickyMenuRef.current.offsetTop,
         behavior: 'smooth',
@@ -145,18 +145,4 @@ function MenuDropdown(props) {
   )
 }
 
-MenuDropdown.propTypes = {
-  modeMunicipality: PropTypes.bool,
-  ariaLabel: PropTypes.string,
-  placeholder: PropTypes.string,
-  items: PropTypes.object,
-  baseUrl: PropTypes.string,
-  municipality: PropTypes.object,
-  municipalityName: PropTypes.string,
-  municipalityList: PropTypes.object,
-  dropdownId: PropTypes.string,
-  dataPathAssetUrl: PropTypes.string,
-  dataServiceUrl: PropTypes.string,
-}
-
-export default (props) => <MenuDropdown {...props} />
+export default (props: MenuDropdownProps) => <MenuDropdown {...props} />

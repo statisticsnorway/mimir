@@ -1,9 +1,14 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { LeadParagraph, Text, Paragraph } from '@statisticsnorway/ssb-component-library'
 import { sanitize } from '../../../lib/ssb/utils/htmlUtils'
 
-const RichText = ({ text, textType, inLayout }) => {
+interface RichTextProps {
+  text: string
+  textType: string
+  inLayout: boolean
+}
+
+const RichText = ({ text, textType, inLayout }: RichTextProps) => {
   const renderText = () => {
     const textComponent = <span dangerouslySetInnerHTML={{ __html: sanitize(text) }} />
     switch (textType) {
@@ -21,10 +26,4 @@ const RichText = ({ text, textType, inLayout }) => {
   return <div className={inLayout ? '' : 'row'}>{renderText()}</div>
 }
 
-RichText.propTypes = {
-  text: PropTypes.string.isRequired,
-  textType: PropTypes.string.isRequired,
-  inLayout: PropTypes.bool.isRequired,
-}
-
-export default (props) => <RichText {...props} />
+export default (props: RichTextProps) => <RichText {...props} />

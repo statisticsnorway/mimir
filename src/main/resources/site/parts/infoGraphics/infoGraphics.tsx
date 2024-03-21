@@ -1,14 +1,14 @@
 import React from 'react'
-import { PropTypes } from 'prop-types'
 import { Title, Link } from '@statisticsnorway/ssb-component-library'
 import { Row, Col } from 'react-bootstrap'
+import { InfoGraphicsProps } from '../../../lib/types/partTypes/infoGraphics'
 
-function InfoGraphics(props) {
+function InfoGraphics(props: InfoGraphicsProps) {
   return (
     <section className='container xp-part part-infoGraphic'>
       <Row>
         <Col className='col-12 p-0'>
-          <div className={props.oldContent && 'border-top-green'}>
+          <div className={props.oldContent ? 'border-top-green' : ''}>
             <Title size={2} className='mt-0'>
               {props.title}
             </Title>
@@ -20,9 +20,9 @@ function InfoGraphics(props) {
               </a>
             </div>
 
-            {props.footnotes.length ? (
+            {props.footnotes?.length ? (
               <ul className={`footnote${props.inFactPage ? '' : ' pl-0'}`}>
-                {props.footnotes.map((footnote, index) => (
+                {(props.footnotes as string[]).map((footnote, index) => (
                   <li key={`footnote-${index}`}>
                     <sup>{index + 1}</sup>
                     <span>{footnote}</span>
@@ -50,22 +50,4 @@ function InfoGraphics(props) {
   )
 }
 
-InfoGraphics.propTypes = {
-  title: PropTypes.string,
-  imageSrc: PropTypes.string,
-  altText: PropTypes.string,
-  longDesc: PropTypes.string,
-  descriptionStaticVisualization: PropTypes.string,
-  footnotes: PropTypes.array,
-  sourcesLabel: PropTypes.string,
-  sources: PropTypes.arrayOf(
-    PropTypes.shape({
-      url: PropTypes.string,
-      urlText: PropTypes.string,
-    })
-  ),
-  inFactPage: PropTypes.bool,
-  oldContent: PropTypes.bool, // TODO: Remove after content has been transferred to the content type
-}
-
-export default (props) => <InfoGraphics {...props} />
+export default (props: InfoGraphicsProps) => <InfoGraphics {...props} />

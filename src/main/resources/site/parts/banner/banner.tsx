@@ -1,7 +1,7 @@
 import React from 'react'
-import PropTypes from 'prop-types'
+import { BannerProps } from '../../../lib/types/partTypes/banner'
 
-function Banner(props) {
+function Banner(props: BannerProps) {
   const {
     bannerImage,
     bannerImageAltText,
@@ -70,23 +70,4 @@ function Banner(props) {
   )
 }
 
-Banner.propTypes = {
-  bannerImage: PropTypes.string,
-  bannerImageAltText: PropTypes.string,
-  sizes: PropTypes.string,
-  srcset: PropTypes.string,
-  pageType: PropTypes.string,
-  selectedPageType: PropTypes.string,
-  municipalityTitle: PropTypes.string,
-  pageDisplayName: PropTypes.string,
-  subTitleFactPage: PropTypes.string,
-  factPageTitle: PropTypes.string,
-  fullFactPageTitle: PropTypes.string,
-  generalPageTitle: PropTypes.string,
-  isLandingPage: PropTypes.bool,
-  logoUrl: PropTypes.string,
-  logoSrc: PropTypes.string,
-  logoAltText: PropTypes.string,
-}
-
-export default (props) => <Banner {...props} />
+export default (props: BannerProps) => <Banner {...props} />

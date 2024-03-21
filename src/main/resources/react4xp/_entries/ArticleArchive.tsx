@@ -3,11 +3,11 @@ import { Divider, Button, LeadParagraph, Paragraph, Link } from '@statisticsnorw
 import { Container, Row, Col } from 'react-bootstrap'
 import { ChevronDown } from 'react-feather'
 import { default as groupBy } from 'ramda/es/groupBy'
-import PropTypes from 'prop-types'
 import axios from 'axios'
 import { sanitize } from '../../lib/ssb/utils/htmlUtils'
+import { type ArticleArchiveProps, type ParsedArticleData } from '../../lib/types/partTypes/articleArchive'
 
-function ArticleArchive(props) {
+function ArticleArchive(props: ArticleArchiveProps) {
   const {
     title,
     preamble,
@@ -26,7 +26,7 @@ function ArticleArchive(props) {
 
   const [articles, setArticles] = useState(firstArticles.articles)
   const [totalCount, setTotalCount] = useState(firstArticles.total)
-  const [loading, setLoading] = useState()
+  const [loading, setLoading] = useState<boolean>()
 
   function fetchArticles() {
     setLoading(true)
@@ -56,7 +56,7 @@ function ArticleArchive(props) {
         <Row className='justify-content-center'>
           <Col className='col-auto'>
             <Button onClick={() => fetchArticles()}>
-              <span className='sr-only'>{`${showMorePagination.replace('{0}', articles.length)} ${totalCount}`}</span>
+              <span className='sr-only'>{`${showMorePagination.replace('{0}', articles.length.toString())} ${totalCount}`}</span>
               {!loading ? (
                 <span aria-hidden='true'>
                   <ChevronDown size='18' className='chevron-icons' />
@@ -75,8 +75,8 @@ function ArticleArchive(props) {
 
   function addArticles() {
     if (articles.length) {
-      const groupByYear = groupBy((articles) => {
-        return articles.year
+      const groupByYear = groupBy((articles: ParsedArticleData) => {
+        return articles.year as string
       })
       const groupArticlesByYearDesc = Object.entries(groupByYear(articles)).reverse()
       return groupArticlesByYearDesc.map(([year, articles], index) => {
@@ -87,7 +87,7 @@ function ArticleArchive(props) {
             </Col>
             <Col id='article-archive-list' className='col-12 col-lg-8 p-0'>
               <ol className='row p-0' aria-labelledby={`article-archive-heading archive-articles-${year}`}>
-                {articles.map((article, index) => {
+                {articles?.map((article, index) => {
                   const srSubtitle = article.subtitle.replace(' / ', ' ')
                   return (
                     <li key={`articles-${year}-${index}`} className='article-container col-12 p-0 mb-5'>
@@ -161,21 +161,4 @@ function ArticleArchive(props) {
   )
 }
 
-ArticleArchive.propTypes = {
-  title: PropTypes.string,
-  preamble: PropTypes.string,
-  image: PropTypes.string,
-  imageAltText: PropTypes.string,
-  freeText: PropTypes.string,
-  issnNumber: PropTypes.string,
-  listOfArticlesSectionTitle: PropTypes.string,
-  firstArticles: PropTypes.array,
-  articleArchiveService: PropTypes.string,
-  pageId: PropTypes.string,
-  language: PropTypes.string,
-  showMore: PropTypes.string,
-  showLess: PropTypes.string,
-  showMorePagination: PropTypes.string,
-}
-
-export default (props) => <ArticleArchive {...props} />
+export default (props: ArticleArchiveProps) => <ArticleArchive {...props} />

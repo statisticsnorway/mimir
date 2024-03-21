@@ -1,10 +1,17 @@
 import React from 'react'
 import { Dialog } from '@statisticsnorway/ssb-component-library'
 import { Container } from 'react-bootstrap'
-import PropTypes from 'prop-types'
 import { sanitize } from '../../lib/ssb/utils/htmlUtils'
 
-const Alerts = (props) => {
+interface AlertsProps {
+  alerts: {
+    messageType: string
+    title: string
+    message: string
+  }[]
+}
+
+const Alerts = (props: AlertsProps) => {
   return (
     <Container>
       {props.alerts.map((alert, index) => {
@@ -22,14 +29,4 @@ const Alerts = (props) => {
   )
 }
 
-Alerts.propTypes = {
-  alerts: PropTypes.arrayOf(
-    PropTypes.shape({
-      messageType: PropTypes.string,
-      title: PropTypes.string,
-      message: PropTypes.string,
-    })
-  ).isRequired,
-}
-
-export default Alerts
+export default (props: AlertsProps) => <Alerts {...props} />

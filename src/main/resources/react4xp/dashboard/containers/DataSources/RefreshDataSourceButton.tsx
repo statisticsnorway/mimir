@@ -1,5 +1,4 @@
 import React, { useContext } from 'react'
-import PropTypes from 'prop-types'
 import { requestDatasetUpdate } from '/react4xp/dashboard/containers/DataSources/actions'
 import { RefreshCw } from 'react-feather'
 import { Button } from '@statisticsnorway/ssb-component-library'
@@ -7,7 +6,11 @@ import { WebSocketContext } from '/react4xp/dashboard/utils/websocket/WebsocketP
 import { useDispatch, useSelector } from 'react-redux'
 import { selectDataSourceById } from '/react4xp/dashboard/containers/DataSources/selectors'
 
-export function RefreshDataSourceButton(props) {
+interface RefreshDataSourceButtonProps {
+  dataSourceId?: string;
+}
+
+export function RefreshDataSourceButton(props: RefreshDataSourceButtonProps) {
   const io = useContext(WebSocketContext)
   const dispatch = useDispatch()
   const dataSource = useSelector(selectDataSourceById(props.dataSourceId))
@@ -18,10 +21,6 @@ export function RefreshDataSourceButton(props) {
       {loading ? <span className='spinner-border spinner-border-sm' /> : <RefreshCw size={16} />}
     </Button>
   )
-}
-
-RefreshDataSourceButton.propTypes = {
-  dataSourceId: PropTypes.string,
 }
 
 export default (props) => <RefreshDataSourceButton {...props} />

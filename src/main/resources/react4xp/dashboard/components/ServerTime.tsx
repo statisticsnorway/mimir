@@ -1,18 +1,22 @@
 import React, { useState, useEffect } from 'react'
-import PropTypes from 'prop-types'
 import { format } from 'date-fns/format'
 
-export function ServerTime(props) {
+interface ServerTimeProps {
+  serverTime?: string
+  serverTimeReceived?: string
+}
+
+export function ServerTime(props: ServerTimeProps) {
   const { serverTime, serverTimeReceived } = props
 
-  const [currentServerTime, setCurrentServerTime] = useState(null)
+  const [currentServerTime, setCurrentServerTime] = useState<null | string>(null)
 
   useEffect(() => {
     if (serverTime && serverTimeReceived) {
       const timeInterval = setInterval(() => {
         // TODO: Maybe a bad solution
         const serverTimeWithoutZone = new Date(serverTime.replace('Z', ''))
-        const msToAdd = new Date() - new Date(serverTimeReceived)
+        const msToAdd = +new Date() - +new Date(serverTimeReceived)
         setCurrentServerTime(format(new Date(serverTimeWithoutZone.getTime() + msToAdd), 'HH.mm.ss'))
       }, 1000)
       return () => clearInterval(timeInterval)
@@ -27,9 +31,4 @@ export function ServerTime(props) {
   }
 
   return <div className='server-time'>Serverklokke {renderServerTime()}</div>
-}
-
-ServerTime.propTypes = {
-  serverTime: PropTypes.string,
-  serverTimeReceived: PropTypes.string,
 }

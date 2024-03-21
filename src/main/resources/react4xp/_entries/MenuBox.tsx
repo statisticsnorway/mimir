@@ -1,17 +1,15 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { Card, Text } from '@statisticsnorway/ssb-component-library'
+import { MenuBoxProps } from '../../lib/types/partTypes/menuBox'
 
-const MenuBox = (props) => {
+const MenuBox = ({ boxes, height }: MenuBoxProps) => {
   return (
     <section className='xp-part menu-box container'>
       <div className='menu-boxes'>
-        {props.boxes.map((box, index) => {
+        {boxes.map((box, index) => {
           return (
             <Card
-              className={`${
-                props.height == 'fixed' && box.titleSize ? `fixed-height title-size-${box.titleSize}` : ''
-              }`}
+              className={`${height == 'fixed' && box.titleSize ? `fixed-height title-size-${box.titleSize}` : ''}`}
               key={`box_${index}`}
               title={box.title}
               href={box.href}
@@ -27,20 +25,4 @@ const MenuBox = (props) => {
   )
 }
 
-MenuBox.propTypes = {
-  boxes: PropTypes.arrayOf(
-    PropTypes.shape({
-      title: PropTypes.string,
-      subtitle: PropTypes.string,
-      icon: PropTypes.shape({
-        src: PropTypes.string.isRequired,
-        alt: PropTypes.string,
-      }),
-      href: PropTypes.string.isRequired,
-      titleSize: PropTypes.string,
-    })
-  ),
-  height: PropTypes.string,
-}
-
-export default (props) => <MenuBox {...props} />
+export default (props: MenuBoxProps) => <MenuBox {...props} />

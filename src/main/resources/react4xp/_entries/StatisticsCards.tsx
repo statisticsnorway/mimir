@@ -1,10 +1,26 @@
 import React from 'react'
 import { Button, Card, Text } from '@statisticsnorway/ssb-component-library'
 import { Col, Container, Row } from 'react-bootstrap'
-import PropTypes from 'prop-types'
 
-class RelatedStatistics extends React.Component {
-  constructor(props) {
+interface RelatedStatisticsProps {
+  headerTitle?: string
+  statistics: {
+    icon?: string
+    iconAlt?: string
+    title: string
+    preamble: string
+    href: string
+  }[]
+  showAll?: string
+  showLess?: string
+}
+
+interface RelatedStatisticsState {
+  isHidden: boolean
+}
+
+class RelatedStatistics extends React.Component<RelatedStatisticsProps, RelatedStatisticsState> {
+  constructor(props: RelatedStatisticsProps) {
     super(props)
 
     this.state = {
@@ -46,7 +62,7 @@ class RelatedStatistics extends React.Component {
     )
   }
 
-  getBreakpoints(index, hasButton) {
+  getBreakpoints(index: number, hasButton: boolean) {
     const hideCard = hasButton && this.state.isHidden ? ' d-none' : ''
     if (index < 3) {
       return ' d-block'
@@ -69,7 +85,7 @@ class RelatedStatistics extends React.Component {
           </Col>
           {statistics.map(({ icon, iconAlt, href, title, preamble }, index) => {
             return (
-              <Col key={title + index} className={`mb-3 col-12 col-lg-4${this.getBreakpoints(index, hasButton)}`}>
+              <Col key={title + index} className={`mb-3 col-12 col-lg-4${this.getBreakpoints(index, !!hasButton)}`}>
                 <Card
                   href={href}
                   title={title}
@@ -88,19 +104,4 @@ class RelatedStatistics extends React.Component {
   }
 }
 
-RelatedStatistics.propTypes = {
-  headerTitle: PropTypes.string,
-  statistics: PropTypes.arrayOf(
-    PropTypes.shape({
-      icon: PropTypes.string,
-      iconAlt: PropTypes.string,
-      title: PropTypes.string.isRequired,
-      preamble: PropTypes.string.isRequired,
-      href: PropTypes.string.isRequired,
-    })
-  ).isRequired,
-  showAll: PropTypes.string,
-  showLess: PropTypes.string,
-}
-
-export default (props) => <RelatedStatistics {...props} />
+export default (props: RelatedStatisticsProps) => <RelatedStatistics {...props} />

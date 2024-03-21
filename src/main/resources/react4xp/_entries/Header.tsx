@@ -1,23 +1,23 @@
 import React, { useState, useCallback, useEffect } from 'react'
-import PropTypes from 'prop-types'
 import { Divider, Input, Link } from '@statisticsnorway/ssb-component-library'
 import { ChevronDown, ChevronRight, Menu, X } from 'react-feather'
 import { sanitize } from '../../lib/ssb/utils/htmlUtils'
+import { HeaderContent } from '../../lib/types/header'
 
-function Header(props) {
+function Header(props: HeaderContent) {
   const [showSubMenu, setShowSubMenu] = useState(false)
   const [showMainMenuOnMobile, setShowMainMenuOnMobile] = useState(false)
-  const [indexForCurrentActiveMenuItem, setIndexForCurrentActiveMenuItem] = useState(undefined)
+  const [indexForCurrentActiveMenuItem, setIndexForCurrentActiveMenuItem] = useState<number | undefined>(undefined)
 
-  function goToSearchResultPage(value) {
-    window.location = `${props.searchResultPageUrl}?sok=${value}`
+  function goToSearchResultPage(value: string) {
+    window.location.href = `${props.searchResultPageUrl}?sok=${value}`
   }
 
   function toggleMainMenu() {
     setShowMainMenuOnMobile(!showMainMenuOnMobile)
   }
 
-  function toggleSubMenu(index) {
+  function toggleSubMenu(index: number) {
     const activeIndex = indexForCurrentActiveMenuItem === index ? undefined : index
 
     if (window && window.innerWidth >= 992 && document.activeElement instanceof HTMLElement)
@@ -45,8 +45,8 @@ function Header(props) {
   }
 
   function languageLinks() {
-    const { alternativeLanguages } = props.language
-    return alternativeLanguages.map((altLanguage, index) => {
+    const { alternativeLanguages } = props.language!
+    return alternativeLanguages?.map((altLanguage, index) => {
       return (
         <Link title={'language-changer'} key={'link_' + index} href={altLanguage.path} standAlone>
           {altLanguage.title}
@@ -55,7 +55,7 @@ function Header(props) {
     })
   }
 
-  function renderIcon(icon) {
+  function renderIcon(icon: string) {
     return (
       <span
         aria-hidden='true'
@@ -66,7 +66,7 @@ function Header(props) {
     )
   }
 
-  function renderSubMenu(topMenuItem, activeMenuItem) {
+  function renderSubMenu(topMenuItem: HeaderContent['mainNavigation'][0], activeMenuItem: boolean | undefined) {
     return (
       topMenuItem.menuItems &&
       topMenuItem.menuItems.map((menuItem, itemIndex) => {
@@ -86,7 +86,7 @@ function Header(props) {
   }
 
   function topLinks() {
-    return props.topLinks.map((topLink, index) => {
+    return props.topLinks?.map((topLink, index) => {
       return (
         <Link key={'link_' + index} href={topLink.path} standAlone>
           {topLink.title}
@@ -97,13 +97,13 @@ function Header(props) {
 
   // CLOSE submenu when esc key is pressed
   const escKeyListener = useCallback(
-    (event) => {
+    (event: KeyboardEvent) => {
       if (event.keyCode === 27 || event.key == 'Escape') {
         if (window && window.innerWidth >= 992 && document.activeElement instanceof HTMLElement)
           document.activeElement.blur()
 
         setShowSubMenu(false)
-        const activeMenuButton = document.getElementById(indexForCurrentActiveMenuItem)
+        const activeMenuButton = document.getElementById(indexForCurrentActiveMenuItem as string) as HTMLButtonElement
         activeMenuButton.focus()
         setIndexForCurrentActiveMenuItem(undefined)
       }
@@ -131,8 +131,8 @@ function Header(props) {
     searchResult,
   } = props
 
-  const globalLinksLabel = language.code === 'en' ? 'global links' : 'globale lenker'
-  const mainMenuLabel = language.code === 'en' ? 'main menu' : 'hovedmeny'
+  const globalLinksLabel = language?.code === 'en' ? 'global links' : 'globale lenker'
+  const mainMenuLabel = language?.code === 'en' ? 'main menu' : 'hovedmeny'
 
   return (
     <header className='ssb-header-wrapper'>
@@ -214,50 +214,4 @@ function Header(props) {
   )
 }
 
-Header.propTypes = {
-  searchText: PropTypes.string,
-  searchResultPageUrl: PropTypes.string,
-  topLinks: PropTypes.arrayOf(
-    PropTypes.shape({
-      title: PropTypes.string,
-      path: PropTypes.string,
-    })
-  ),
-  mainNavigation: PropTypes.arrayOf(
-    PropTypes.shape({
-      title: PropTypes.string,
-      path: PropTypes.string,
-      isActive: PropTypes.bool,
-      menuItems: PropTypes.arrayOf(
-        PropTypes.shape({
-          title: PropTypes.string,
-          path: PropTypes.string,
-          isActive: PropTypes.bool,
-          iconAltText: PropTypes.string,
-          iconSvgTag: PropTypes.string,
-        })
-      ),
-    })
-  ),
-  logoUrl: PropTypes.string,
-  logoSrc: PropTypes.string,
-  logoAltText: PropTypes.string,
-  language: PropTypes.shape({
-    menuContentId: PropTypes.string,
-    code: PropTypes.string,
-    alternativeLanguages: PropTypes.arrayOf(
-      PropTypes.shape({
-        title: PropTypes.string,
-        path: PropTypes.string,
-        code: PropTypes.string,
-      })
-    ),
-  }),
-  skipToContentText: PropTypes.string,
-  closeText: PropTypes.string,
-  menuText: PropTypes.string,
-  mainMenuText: PropTypes.string,
-  searchResult: PropTypes.string,
-}
-
-export default (props) => <Header {...props} />
+export default (props: HeaderContent) => <Header {...props} />

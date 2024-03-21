@@ -2,23 +2,26 @@ import React, { useState, useRef, useEffect } from 'react'
 import { Accordion, Button } from '@statisticsnorway/ssb-component-library'
 import { ChevronDown, ChevronUp } from 'react-feather'
 
-import PropTypes from 'prop-types'
 import { sanitize } from '../../lib/ssb/utils/htmlUtils'
+import {
+  type AttachmentTablesFiguresProps,
+  type AttachmentTablesFiguresData,
+} from '../../lib/types/partTypes/attachmentTablesFigures'
 
 import Table from '../table/Table'
 import { addGtagForEvent } from '/react4xp/ReactGA'
 
-function AttachmentTableFigures(props) {
+function AttachmentTableFigures(props: AttachmentTablesFiguresProps) {
   const [isHidden, setIsHidden] = useState(true)
   const { accordions, freeText, showAll, showLess, title } = props
-  const currentElement = useRef(null)
+  const currentElement = useRef<null | HTMLLIElement>(null)
   const [focusElement, setFocusElement] = useState(false)
 
   function toggleBox() {
     setIsHidden((prevState) => !prevState)
   }
 
-  function keyDownToggleBox(e) {
+  function keyDownToggleBox(e: React.KeyboardEvent<HTMLButtonElement>) {
     if (e.keyCode === 13 || e.key == 'Enter' || e.keyCode === 32 || e.key == 'Space') {
       e.preventDefault()
       setIsHidden((prevState) => !prevState)
@@ -26,7 +29,7 @@ function AttachmentTableFigures(props) {
     }
   }
 
-  function toggleAccordion(isOpen, index) {
+  function toggleAccordion(isOpen: boolean, index: number) {
     const { contentType, subHeader, open } = accordions[index]
 
     if (isOpen && contentType === `${props.appName}:table` && props.GA_TRACKING_ID) {
@@ -66,7 +69,7 @@ function AttachmentTableFigures(props) {
     return (
       <div className={`row mt-5 hide-show-btn justify-content-center ${getButtonBreakpoint()}`}>
         <div className='col-auto'>
-          <Button onClick={toggleBox} onKeyDown={(e) => keyDownToggleBox(e)}>
+          <Button onClick={toggleBox} onKeyDown={(e: React.KeyboardEvent<HTMLButtonElement>) => keyDownToggleBox(e)}>
             {getButtonText()}
           </Button>
         </div>
@@ -74,7 +77,7 @@ function AttachmentTableFigures(props) {
     )
   }
 
-  function getBreakpoint(index) {
+  function getBreakpoint(index: number) {
     if (isHidden && index > 4) {
       return 'd-none'
     }
@@ -88,12 +91,12 @@ function AttachmentTableFigures(props) {
     return 'mt-5'
   }
 
-  function renderAccordionBody(accordion) {
+  function renderAccordionBody(accordion: AttachmentTablesFiguresData) {
     if (accordion.contentType === `${props.appName}:table`) {
       return <Table {...accordion.props} />
     } else {
       // Table or figure from content studio (no user input), hence no need to sanitize
-      return <div dangerouslySetInnerHTML={{ __html: accordion.body }}></div>
+      return <div dangerouslySetInnerHTML={{ __html: accordion.body! }}></div>
     }
   }
 
@@ -101,8 +104,9 @@ function AttachmentTableFigures(props) {
   const anchor = location && location.hash !== '' ? location.hash.substr(1) : undefined
 
   useEffect(() => {
-    if (focusElement) {
-      currentElement.current && currentElement.current.firstChild.firstChild.focus()
+    if (focusElement && currentElement.current) {
+      const btn = currentElement.current.firstChild?.firstChild as HTMLButtonElement
+      btn.focus()
     }
   }, [isHidden])
 
@@ -123,7 +127,7 @@ function AttachmentTableFigures(props) {
                       header={accordion.open}
                       subHeader={accordion.subHeader}
                       openByDefault={anchor && accordion.id && accordion.id === anchor}
-                      onToggle={(isOpen) => toggleAccordion(isOpen, index)}
+                      onToggle={(isOpen: boolean) => toggleAccordion(isOpen, index)}
                     >
                       {renderAccordionBody(accordion)}
                     </Accordion>
@@ -133,7 +137,7 @@ function AttachmentTableFigures(props) {
             </ul>
           </div>
           <div className={`row free-text-wrapper ${getFreeTextBreakpoint()}`}>
-            <div className='col-12 col-lg-6' dangerouslySetInnerHTML={{ __html: sanitize(freeText) }}></div>
+            <div className='col-12 col-lg-6' dangerouslySetInnerHTML={{ __html: sanitize(freeText!) }}></div>
           </div>
           {renderShowMoreButton()}
         </div>
@@ -142,23 +146,4 @@ function AttachmentTableFigures(props) {
   )
 }
 
-AttachmentTableFigures.propTypes = {
-  accordions: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string,
-      contentType: PropTypes.string,
-      open: PropTypes.string.isRequired,
-      subHeader: PropTypes.string,
-      body: PropTypes.string,
-      props: PropTypes.object,
-    })
-  ),
-  freeText: PropTypes.string,
-  showAll: PropTypes.string,
-  showLess: PropTypes.string,
-  appName: PropTypes.string,
-  GA_TRACKING_ID: PropTypes.string,
-  title: PropTypes.string,
-}
-
-export default (props) => <AttachmentTableFigures {...props} />
+export default (props: AttachmentTablesFiguresProps) => <AttachmentTableFigures {...props} />

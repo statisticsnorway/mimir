@@ -1,10 +1,15 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { Link, Title } from '@statisticsnorway/ssb-component-library'
 import { sanitize } from '../../lib/ssb/utils/htmlUtils'
+import { EntryLinkProps as EntryLink } from '../../lib/types/partTypes/entryLinks'
 
-class EntryLinks extends React.Component {
-  renderIcon(icon) {
+interface EntryLinksProps {
+  headerTitle?: string
+  entryLinks: EntryLink[]
+}
+
+class EntryLinks extends React.Component<EntryLinksProps> {
+  renderIcon(icon: string) {
     return (
       <span
         className='box-mobileIcon'
@@ -33,7 +38,7 @@ class EntryLinks extends React.Component {
                 <Link
                   href={href}
                   linkType='profiled'
-                  icon={this.renderIcon(mobileIcon)}
+                  icon={this.renderIcon(mobileIcon!)}
                   className='d-md-none mobile-link-icon'
                   standAlone
                 >
@@ -63,16 +68,4 @@ class EntryLinks extends React.Component {
   }
 }
 
-EntryLinks.propTypes = {
-  headerTitle: PropTypes.string,
-  entryLinks: PropTypes.arrayOf(
-    PropTypes.shape({
-      title: PropTypes.string.isRequired,
-      href: PropTypes.string.isRequired,
-      icon: PropTypes.string.isRequired,
-      altText: PropTypes.string,
-    })
-  ).isRequired,
-}
-
-export default (props) => <EntryLinks {...props} />
+export default (props: EntryLinksProps) => <EntryLinks {...props} />

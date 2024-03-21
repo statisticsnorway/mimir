@@ -1,9 +1,9 @@
 import React from 'react'
 import { Card, Paragraph } from '@statisticsnorway/ssb-component-library'
-import PropTypes from 'prop-types'
+import { ProfiledBoxProps } from '../../../lib/types/partTypes/profiledBox'
 
-class ProfiledBox extends React.Component {
-  constructor(props) {
+class ProfiledBox extends React.Component<ProfiledBoxProps> {
+  constructor(props: ProfiledBoxProps) {
     super(props)
   }
 
@@ -21,11 +21,4 @@ class ProfiledBox extends React.Component {
   }
 }
 
-ProfiledBox.propTypes = {
-  imgUrl: PropTypes.string,
-  imageAltText: PropTypes.string,
-  titleSize: PropTypes.string,
-  preambleText: PropTypes.string,
-}
-
-export default (props) => <ProfiledBox {...props} />
+export default (props: ProfiledBoxProps) => <ProfiledBox {...props} />

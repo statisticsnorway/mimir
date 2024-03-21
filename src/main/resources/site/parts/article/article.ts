@@ -25,7 +25,7 @@ function renderPart(req: XP.Request) {
   if (!page) throw Error('No page found')
 
   const language: string = page.language === 'en' || page.language === 'nn' ? page.language : 'nb'
-  const phrases = getPhrases(page)
+  const phrases = getPhrases(page)!
 
   const bodyText: string | undefined = page.data.articleText
     ? processHtml({

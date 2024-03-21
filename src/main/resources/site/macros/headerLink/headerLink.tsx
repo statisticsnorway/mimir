@@ -1,9 +1,13 @@
 import React from 'react'
 import { Link } from '@statisticsnorway/ssb-component-library'
-import PropTypes from 'prop-types'
 
-class HeaderLink extends React.Component {
-  constructor(props) {
+interface HeaderLinkProps {
+  linkText?: string
+  linkedContent?: string
+}
+
+class HeaderLink extends React.Component<HeaderLinkProps> {
+  constructor(props: HeaderLinkProps) {
     super(props)
   }
 
@@ -18,9 +22,4 @@ class HeaderLink extends React.Component {
   }
 }
 
-export default (props) => <HeaderLink {...props} />
-
-HeaderLink.propTypes = {
-  linkText: PropTypes.string,
-  linkedContent: PropTypes.string,
-}
+export default (props: HeaderLinkProps) => <HeaderLink {...props} />

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { Link, Button, Divider, Dropdown } from '@statisticsnorway/ssb-component-library'
-import PropTypes from 'prop-types'
 import { ChevronDown } from 'react-feather'
 import axios from 'axios'
+import { type SubjectArticleListProps } from '../../../lib/types/partTypes/subjectArticleList'
+import { type DropdownItem } from '../../../lib/types/partTypes/publicationArchive'
 
 /* TODO:
 - Fikse sortering (?)
@@ -12,7 +13,7 @@ import axios from 'axios'
 - profit
 */
 
-function SubjectArticleList(props) {
+function SubjectArticleList(props: SubjectArticleListProps) {
   const [articles, setArticles] = useState(props.articles)
   const [articleStart, setArticleStart] = useState(props.start)
   const [loadedFirst, setLoadedFirst] = useState(true)
@@ -50,7 +51,7 @@ function SubjectArticleList(props) {
       })
   }
 
-  function fetchArticlesStartOver(order) {
+  function fetchArticlesStartOver(order: string) {
     setArticleStart(props.start)
     axios
       .get(props.articleServiceUrl, {
@@ -109,7 +110,7 @@ function SubjectArticleList(props) {
               title: 'Nyeste',
               id: 'DESC',
             }}
-            onSelect={(selected) => {
+            onSelect={(selected: DropdownItem) => {
               setSort(selected.id)
               fetchArticlesStartOver(selected.id)
             }}
@@ -158,25 +159,4 @@ function SubjectArticleList(props) {
   )
 }
 
-SubjectArticleList.propTypes = {
-  title: PropTypes.string,
-  buttonTitle: PropTypes.string,
-  articleServiceUrl: PropTypes.string,
-  currentPath: PropTypes.string,
-  start: PropTypes.number,
-  count: PropTypes.number,
-  showSortAndFilter: PropTypes.bool,
-  language: PropTypes.string,
-  articles: PropTypes.arrayOf(
-    PropTypes.shape({
-      title: PropTypes.string,
-      preface: PropTypes.string,
-      url: PropTypes.string,
-      publishDate: PropTypes.string,
-    })
-  ),
-  totalArticles: PropTypes.number,
-  showAllArticles: PropTypes.bool,
-}
-
-export default (props) => <SubjectArticleList {...props} />
+export default (props: SubjectArticleListProps) => <SubjectArticleList {...props} />

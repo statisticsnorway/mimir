@@ -4,18 +4,17 @@
     "baseUrl": "./",
 		"moduleResolution": "node",
     "sourceMap": true,
-    "allowJs": true,
     "noImplicitAny": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
     "strictNullChecks": true,
-    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "skipLibCheck": false,
     "jsx": "react",
     "lib": [],
     "types": [
       "node",
       "@item-enonic-types/global",
-      "global",
     ],
     "rootDirs": [
       "./src/main/resources",
@@ -41,11 +40,17 @@
   "include": [
     "node_modules/typescript/lib/lib.es5.d.ts",
     "./.xp-codegen/**/*",
-  	"src/main/resources/**/*.tsx",
 		"src/main/resources/**/*.ts"
   ],
   "exclude": [
     "./build/*",
+    "src/**/*.js",
+    "src/main/resources/**/*.tsx",
     "src/main/resources/assets/**/*.*",
-  ]
+    "./src/main/resources/lib/ssb/polyfills/nashorn.js",
+    "/Users/ole.saggau/dev/mimir/src/main/resources/lib/ssb/polyfills/nashorn.js"
+  ],
+  "references": [
+    { "path": "./src/tsconfig.react4xp.json" },
+  ],
 }

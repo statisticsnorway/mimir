@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { WebSocketContext } from '/react4xp/dashboard/utils/websocket/WebsocketProvider'
 import { Modal } from 'react-bootstrap'
 import { Accordion, Link, Button } from '@statisticsnorway/ssb-component-library'
-import PropTypes from 'prop-types'
 import { requestDatasetUpdate } from '/react4xp/dashboard/containers/DataSources/actions'
 import { RefreshCw } from 'react-feather'
 import { selectContentStudioBaseUrl } from '/react4xp/dashboard/containers/HomePage/selectors'
@@ -12,7 +11,16 @@ import { DataQueryBadges } from '/react4xp/dashboard/components/DataQueryBadges'
 import { DataSourceLog } from '/react4xp/dashboard/containers/DataSources/DataSourceLog'
 import { RefreshDataSourceButton } from '/react4xp/dashboard/containers/DataSources/RefreshDataSourceButton'
 
-export function DataSourceTable(props) {
+interface DataSourceTableProps {
+  header?: string;
+  openByDefault?: boolean;
+  dataSourceSelector: (...args: unknown[]) => unknown;
+  loadingSelector: (...args: unknown[]) => unknown;
+  requestDataSources: (...args: unknown[]) => unknown;
+  type?: React.ElementType;
+}
+
+export function DataSourceTable(props: DataSourceTableProps) {
   const dataSources = useSelector(props.dataSourceSelector)
   const contentStudioBaseUrl = useSelector(selectContentStudioBaseUrl)
   const isLoading = useSelector(props.loadingSelector)
@@ -169,15 +177,6 @@ export function DataSourceTable(props) {
 DataSourceTable.defaultProps = {
   openByDefault: false,
   type: Accordion,
-}
-
-DataSourceTable.propTypes = {
-  header: PropTypes.string,
-  openByDefault: PropTypes.bool,
-  dataSourceSelector: PropTypes.func.isRequired,
-  loadingSelector: PropTypes.func.isRequired,
-  requestDataSources: PropTypes.func.isRequired,
-  type: PropTypes.elementType,
 }
 
 export default (props) => <DataSourceTable {...props} />

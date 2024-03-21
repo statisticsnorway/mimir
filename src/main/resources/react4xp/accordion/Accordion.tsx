@@ -1,19 +1,19 @@
 import React from 'react'
 import { Accordion as AccordionComponent, NestedAccordion } from '@statisticsnorway/ssb-component-library'
 
-import PropTypes from 'prop-types'
 import { sanitize } from '../../lib/ssb/utils/htmlUtils'
+import { type AccordionData, type AccordionProps } from '../../lib/types/partTypes/accordion'
 
-class Accordion extends React.Component {
-  renderNestedAccordions(items) {
-    return items.map((item, i) => (
+class Accordion extends React.Component<AccordionProps> {
+  renderNestedAccordions(items: AccordionData['items']) {
+    return items!.map((item, i) => (
       <NestedAccordion key={i} header={item.title}>
         {item.body && <div dangerouslySetInnerHTML={this.createMarkup(item.body)} />}
       </NestedAccordion>
     ))
   }
 
-  createMarkup(html) {
+  createMarkup(html: string) {
     return {
       __html: sanitize(html.replace(/&nbsp;/g, ' ')),
     }
@@ -46,23 +46,6 @@ class Accordion extends React.Component {
       </section>
     )
   }
-}
-
-Accordion.propTypes = {
-  accordions: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string,
-      open: PropTypes.string.isRequired,
-      subHeader: PropTypes.string,
-      body: PropTypes.string,
-      items: PropTypes.arrayOf(
-        PropTypes.shape({
-          title: PropTypes.string,
-          body: PropTypes.string,
-        })
-      ),
-    })
-  ),
 }
 
 export default Accordion

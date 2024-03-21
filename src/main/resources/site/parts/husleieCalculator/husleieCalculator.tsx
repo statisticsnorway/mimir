@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from 'react'
-import PropTypes from 'prop-types'
 import { Form, Container, Row, Col } from 'react-bootstrap'
 import {
   Input,
@@ -13,8 +12,10 @@ import {
 } from '@statisticsnorway/ssb-component-library'
 import axios from 'axios'
 import { NumericFormat } from 'react-number-format'
+import { KpiCalculatorProps } from '../../../lib/types/partTypes/kpiCalculator'
+import { DropdownItem } from '../../../lib/types/partTypes/publicationArchive'
 
-function HusleieCalculator(props) {
+function HusleieCalculator(props: KpiCalculatorProps) {
   const validMaxYear = props.lastUpdated.year
   const validMaxMonth = props.lastUpdated.month
 
@@ -56,16 +57,16 @@ function HusleieCalculator(props) {
 
   const [errorMessage, setErrorMessage] = useState(null)
   const [loading, setLoading] = useState(false)
-  const [endValue, setEndValue] = useState(null)
-  const [change, setChange] = useState(null)
+  const [endValue, setEndValue] = useState<null | number>(null)
+  const [change, setChange] = useState<null | string>(null)
   const language = props.language ? props.language : 'nb'
   const [choosePeriod, setChoosePeriod] = useState(false)
-  const [resultText, setResultText] = useState(null)
+  const [resultText, setResultText] = useState<null | string>(null)
   const [showResult, setShowResult] = useState(false)
   const validMinYear = 1950
   const yearRegexp = /^[1-9]\d{3}$/g
 
-  const scrollAnchor = useRef(null)
+  const scrollAnchor = useRef<HTMLDivElement>(null)
   useEffect(() => {
     if (!loading && scrollAnchor.current !== null) {
       scrollAnchor.current.scrollIntoView({
@@ -76,7 +77,7 @@ function HusleieCalculator(props) {
     }
   }, [loading, choosePeriod])
 
-  function onSubmit(e) {
+  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     if (loading) return
     setChange(null)
@@ -176,14 +177,14 @@ function HusleieCalculator(props) {
     )
   }
 
-  function isStartValueValid(value) {
+  function isStartValueValid(value?: string) {
     const startVal = value || startValue.value
     const testStartValue = startVal.match(/^-?\d+(?:[.,]\d*)?$/g)
     const isNumber = testStartValue && testStartValue.length === 1
     return !(!isNumber || isNaN(parseFloat(startVal)))
   }
 
-  function isStartYearValid(value) {
+  function isStartYearValid(value?: string) {
     const startYearValue = value || startYear.value
     const testStartYear = startYearValue.match(yearRegexp)
     const isStartYearValid = testStartYear && testStartYear.length === 1
@@ -191,7 +192,7 @@ function HusleieCalculator(props) {
     return !(!isStartYearValid || isNaN(intStartYear) || intStartYear < validMinYear || intStartYear > validMaxYear)
   }
 
-  function isStartMonthValid(value) {
+  function isStartMonthValid(value?: string) {
     const startMonthValue = value || startMonth.value
     const startMonthEmpty = startMonthValue === ''
     const startMonthValid = !(startYear.value === validMaxYear && startMonthValue > validMaxMonth)
@@ -199,7 +200,7 @@ function HusleieCalculator(props) {
   }
 
   function isRentPeriodValid() {
-    const startDate = new Date(startYear.value, Number(startMonth.value) - 1, 1)
+    const startDate = new Date(+startYear.value, Number(startMonth.value) - 1, 1)
     const lastPublishDate = new Date(validMaxYear, Number(validMaxMonth) - 1, 1)
     const today = new Date()
     const monthsSinceLastPublished = diffMonths(startDate, lastPublishDate)
@@ -270,7 +271,7 @@ function HusleieCalculator(props) {
     }
   }
 
-  function onBlur(id) {
+  function onBlur(id: string) {
     switch (id) {
       case 'start-value': {
         setStartValue({
@@ -296,7 +297,7 @@ function HusleieCalculator(props) {
     }
   }
 
-  function onChange(id, value) {
+  function onChange(id: string, value: any) {
     setShowResult(false)
     switch (id) {
       case 'start-value': {
@@ -336,16 +337,16 @@ function HusleieCalculator(props) {
     }
   }
 
-  function diffMonths(fromDate, toDate) {
+  function diffMonths(fromDate: Date, toDate: Date) {
     return toDate.getMonth() + 12 * toDate.getFullYear() - (fromDate.getMonth() + 12 * fromDate.getFullYear())
   }
 
-  function getMonthLabel(month) {
+  function getMonthLabel(month: string | number) {
     const monthLabel = props.months.find((m) => parseInt(m.id) === parseInt(month))
     return monthLabel ? monthLabel.title : ''
   }
 
-  function getNextPeriod(month, year) {
+  function getNextPeriod(month: string, year: string) {
     let nextPeriodMonth = parseInt(month) + 1
     let nextPeriodYear = parseInt(year)
 
@@ -360,7 +361,7 @@ function HusleieCalculator(props) {
     }
   }
 
-  function renderNumberValute(value) {
+  function renderNumberValute(value: string | number) {
     if (endValue && change) {
       const valute = language === 'en' ? 'NOK' : 'kr'
       const decimalSeparator = language === 'en' ? '.' : ','
@@ -402,8 +403,8 @@ function HusleieCalculator(props) {
 
   function calculatorResult() {
     const resultScreenReaderText = props.phrases.husleieNewRentResult
-      .replace('{0}', language === 'en' ? endValue : endValue.replace(/\./g, ','))
-      .replace('{1}', language === 'en' ? change : change.replace(/\./g, ','))
+      .replace('{0}', language === 'en' ? endValue : endValue?.replace(/\./g, ','))
+      .replace('{1}', language === 'en' ? change : change?.replace(/\./g, ','))
       .replace('{2}', `${getMonthLabel(startMonth.value)} ${startYear.value}`)
       .replace('{3}', `${getMonthLabel(endMonth)} ${endYear}`)
 
@@ -544,7 +545,7 @@ function HusleieCalculator(props) {
                 <Input
                   className='start-value'
                   label={props.phrases.enterAmount}
-                  handleChange={(value) => onChange('start-value', value)}
+                  handleChange={(value: string) => onChange('start-value', value)}
                   error={startValue.error}
                   errorMessage={startValue.errorMsg}
                   onBlur={() => onBlur('start-value')}
@@ -561,7 +562,7 @@ function HusleieCalculator(props) {
                         className='month'
                         id='start-month'
                         header={props.phrases.chooseMonth}
-                        onSelect={(value) => {
+                        onSelect={(value: DropdownItem) => {
                           onChange('start-month', value)
                         }}
                         placeholder={props.phrases.chooseMonth}
@@ -575,7 +576,7 @@ function HusleieCalculator(props) {
                         className='input-year'
                         label={props.phrases.fromYear}
                         ariaLabel={props.phrases.fromYearScreenReader}
-                        handleChange={(value) => onChange('start-year', value)}
+                        handleChange={(value: string) => onChange('start-year', value)}
                         error={startYear.error}
                         errorMessage={startYear.errorMsg}
                         onBlur={() => onBlur('start-year')}
@@ -607,23 +608,4 @@ HusleieCalculator.defaultValue = {
   language: 'nb',
 }
 
-HusleieCalculator.propTypes = {
-  kpiServiceUrl: PropTypes.string,
-  language: PropTypes.string,
-  months: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string,
-      title: PropTypes.string,
-    })
-  ),
-  phrases: PropTypes.object,
-  calculatorArticleUrl: PropTypes.string,
-  nextPublishText: PropTypes.string,
-  lastNumberText: PropTypes.string,
-  lastUpdated: PropTypes.shape({
-    month: PropTypes.string,
-    year: PropTypes.string,
-  }),
-}
-
-export default (props) => <HusleieCalculator {...props} />
+export default (props: KpiCalculatorProps) => <HusleieCalculator {...props} />

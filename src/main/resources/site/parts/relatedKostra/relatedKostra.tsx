@@ -1,15 +1,15 @@
 import React from 'react'
 import { Link } from '@statisticsnorway/ssb-component-library'
 import { ArrowRight } from 'react-feather'
-import PropTypes from 'prop-types'
 import { sanitize } from '../../../lib/ssb/utils/htmlUtils'
+import { RelatedKostraProps } from '../../../lib/types/partTypes/relatedKostra'
 
-class RelatedKostra extends React.Component {
-  constructor(props) {
+class RelatedKostra extends React.Component<RelatedKostraProps> {
+  constructor(props: RelatedKostraProps) {
     super(props)
   }
 
-  createMarkup(html) {
+  createMarkup(html: string) {
     return {
       __html: sanitize(html),
     }
@@ -35,9 +35,4 @@ class RelatedKostra extends React.Component {
   }
 }
 
-RelatedKostra.propTypes = {
-  title: PropTypes.string,
-  description: PropTypes.string,
-}
-
-export default (props) => <RelatedKostra {...props} />
+export default (props: RelatedKostraProps) => <RelatedKostra {...props} />

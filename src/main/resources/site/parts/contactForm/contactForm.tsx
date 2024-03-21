@@ -1,10 +1,17 @@
 import React, { useEffect, useState } from 'react'
-import PropTypes from 'prop-types'
 import { Form, Container, Row, Col } from 'react-bootstrap'
 import { Input, Button, Dropdown, TextArea, Divider, Title, FormError } from '@statisticsnorway/ssb-component-library'
 import axios from 'axios'
+import { type Phrases } from '../../../lib/types/language'
 
-function ContactForm(props) {
+interface ContactFormProps {
+  recaptchaSiteKey?: string
+  contactFormServiceUrl: string
+  phrases: Phrases
+  language?: string
+}
+
+function ContactForm(props: ContactFormProps) {
   const { contactFormServiceUrl, recaptchaSiteKey } = props
   const [receiver, setReceiver] = useState({
     error: false,
@@ -40,7 +47,7 @@ function ContactForm(props) {
     }
   }, [])
 
-  function onSubmit(e) {
+  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     if (!isFormValid()) {
       onBlur('receiver')
@@ -55,7 +62,7 @@ function ContactForm(props) {
         .execute(recaptchaSiteKey, {
           action: 'submitContactForm',
         })
-        .then(function (token) {
+        .then(function (token: string) {
           axios
             .post(contactFormServiceUrl, {
               receiver: receiver.value,
@@ -86,7 +93,7 @@ function ContactForm(props) {
     return isReceiverValid() && isNameValid() && isEmailValid() && isTextValid()
   }
 
-  function isReceiverValid(value) {
+  function isReceiverValid(value?: string) {
     const receiverValid = !!(value || receiver.value)
     if (!receiverValid) {
       setReceiver({
@@ -97,11 +104,11 @@ function ContactForm(props) {
     return receiverValid
   }
 
-  function isNameValid(value) {
+  function isNameValid(value?: string) {
     return !!(value || name.value)
   }
 
-  function isEmailValid(value) {
+  function isEmailValid(value?: string) {
     // eslint-disable-next-line max-len
     const regEx =
       /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
@@ -110,12 +117,12 @@ function ContactForm(props) {
     return !!testEmail
   }
 
-  function isTextValid(value) {
+  function isTextValid(value?: string) {
     const textValue = value || text.value
     return !!(textValue && textValue.length > 10)
   }
 
-  function onBlur(id) {
+  function onBlur(id: string) {
     switch (id) {
       case 'receiver': {
         setReceiver({
@@ -151,7 +158,7 @@ function ContactForm(props) {
     }
   }
 
-  function onChange(id, value) {
+  function onChange(id: string, value: any) {
     switch (id) {
       case 'receiver': {
         setReceiver({
@@ -257,7 +264,7 @@ function ContactForm(props) {
                     <Dropdown
                       className='receiver'
                       id='receiver'
-                      onSelect={(value) => {
+                      onSelect={(value: object) => {
                         onChange('receiver', value)
                       }}
                       header={props.phrases.contactFormChooseReceiver}
@@ -275,7 +282,7 @@ function ContactForm(props) {
                     <Input
                       className='input-name'
                       label={props.phrases.contactFormLabelName}
-                      handleChange={(value) => onChange('name', value)}
+                      handleChange={(value: string) => onChange('name', value)}
                       onBlur={() => onBlur('name')}
                       error={name.error}
                       errorMessage={name.errorMsg}
@@ -288,7 +295,7 @@ function ContactForm(props) {
                       className='email'
                       type='email'
                       label={props.phrases.contactFormLabelEmail}
-                      handleChange={(value) => onChange('email', value)}
+                      handleChange={(value: string) => onChange('email', value)}
                       onBlur={() => onBlur('email')}
                       error={email.error}
                       errorMessage={email.errorMsg}
@@ -299,7 +306,7 @@ function ContactForm(props) {
                   <Col className='text py-2'>
                     <TextArea
                       rows={7}
-                      handleChange={(value) => onChange('text', value)}
+                      handleChange={(value: string) => onChange('text', value)}
                       onBlur={() => onBlur('text')}
                       label={props.phrases.contactFormLabelText}
                       error={text.error}
@@ -335,11 +342,4 @@ function ContactForm(props) {
   return renderContactForm()
 }
 
-ContactForm.propTypes = {
-  recaptchaSiteKey: PropTypes.string,
-  contactFormServiceUrl: PropTypes.string,
-  phrases: PropTypes.object,
-  language: PropTypes.string,
-}
-
-export default (props) => <ContactForm {...props} />
+export default (props: ContactFormProps) => <ContactForm {...props} />

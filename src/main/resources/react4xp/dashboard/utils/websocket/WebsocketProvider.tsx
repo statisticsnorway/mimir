@@ -1,5 +1,4 @@
 import React, { createContext } from 'react'
-import PropTypes from 'prop-types'
 import { actions as commonActions } from '/react4xp/dashboard/containers/HomePage/slice'
 import setupStatRegListeners from '/react4xp/dashboard/containers/StatRegDashboard/listeners'
 import setupHomePageListeners from '/react4xp/dashboard/containers/HomePage/listeners'
@@ -10,7 +9,13 @@ import setupJobsListeners from '/react4xp/dashboard/containers/Jobs/listeners'
 const WebSocketContext = createContext(null)
 export { WebSocketContext }
 
-function WebsocketProvider({ children }) {
+interface WebsocketProviderProps {
+  children?: any;
+}
+
+function WebsocketProvider({
+  children
+}: WebsocketProviderProps) {
   let io
   let wsConnection
   let pingInterval
@@ -89,10 +94,6 @@ function WebsocketProvider({ children }) {
   }
 
   return <WebSocketContext.Provider value={provider}>{children}</WebSocketContext.Provider>
-}
-
-WebsocketProvider.propTypes = {
-  children: PropTypes.any,
 }
 
 export default (props) => <WebsocketProvider {...props} />

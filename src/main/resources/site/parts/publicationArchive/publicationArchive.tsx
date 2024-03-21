@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Divider, Link, Title, Text, Dropdown } from '@statisticsnorway/ssb-component-library'
-import PropTypes from 'prop-types'
 import { NumericFormat } from 'react-number-format'
 import { ChevronDown } from 'react-feather'
 import axios from 'axios'
 import { sanitize } from '../../../lib/ssb/utils/htmlUtils'
+import { DropdownItem, PublicationArchiveProps, PublicationItem } from '../../../lib/types/partTypes/publicationArchive'
 
-function PublicationArchive(props) {
+function PublicationArchive(props: PublicationArchiveProps) {
   const {
     title,
     ingress,
@@ -39,7 +39,7 @@ function PublicationArchive(props) {
     }
   }, [filter])
 
-  function onChange(id, value) {
+  function onChange(id: string, value: DropdownItem) {
     setFilterChanged(true)
     if (id === 'articleType') {
       setFilter({
@@ -118,7 +118,7 @@ function PublicationArchive(props) {
     })
   }
 
-  function getArticleType(publication) {
+  function getArticleType(publication: PublicationItem) {
     return articleTypePhrases[publication.articleType]
   }
 
@@ -150,12 +150,12 @@ function PublicationArchive(props) {
     )
   }
 
-  function addDropdownSubject(id) {
+  function addDropdownSubject(id: string) {
     return (
       <Dropdown
         className='mainSubject'
         id={id}
-        onSelect={(value) => {
+        onSelect={(value: DropdownItem) => {
           onChange(id, value)
         }}
         selectedItem={dropDownSubjects[0]}
@@ -165,12 +165,12 @@ function PublicationArchive(props) {
     )
   }
 
-  function addDropdownArticleType(id) {
+  function addDropdownArticleType(id: string) {
     return (
       <Dropdown
         className='contentType'
         id={id}
-        onSelect={(value) => {
+        onSelect={(value: DropdownItem) => {
           onChange(id, value)
         }}
         selectedItem={dropDownTypes[0]}
@@ -219,7 +219,7 @@ function PublicationArchive(props) {
           <div className='container mb-5'>
             <div className='row'>
               <div className='col'>
-                {showingPhrase.replace('{0}', publications.length)}&nbsp;
+                {showingPhrase.replace('{0}', publications.length.toString())}&nbsp;
                 <NumericFormat value={Number(total)} displayType='text' thousandSeparator=' ' />
                 <Divider className='mb-4' dark></Divider>
               </div>
@@ -243,23 +243,4 @@ function PublicationArchive(props) {
   )
 }
 
-export default (props) => <PublicationArchive {...props} />
-
-PublicationArchive.propTypes = {
-  title: PropTypes.string,
-  ingress: PropTypes.string,
-  buttonTitle: PropTypes.string,
-  showingPhrase: PropTypes.string,
-  defineContentPhrase: PropTypes.string,
-  chooseSubjectPhrase: PropTypes.string,
-  chooseContentTypePhrase: PropTypes.string,
-  language: PropTypes.string,
-  publicationArchiveServiceUrl: PropTypes.string,
-  firstPublications: PropTypes.objectOf({
-    total: PropTypes.number,
-    publications: PropTypes.array,
-  }),
-  articleTypePhrases: PropTypes.objectOf(PropTypes.string),
-  dropDownSubjects: PropTypes.array,
-  dropDownTypes: PropTypes.array,
-}
+export default (props: PublicationArchiveProps) => <PublicationArchive {...props} />

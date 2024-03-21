@@ -1,13 +1,22 @@
 import React from 'react'
 import { Title, Dropdown } from '@statisticsnorway/ssb-component-library'
-import PropTypes from 'prop-types'
 
-class LocalSearch extends React.Component {
-  constructor(props) {
+interface LocalSearchProps {
+  title?: string
+  placeholder?: string
+  items: {
+    title: string
+    url: string
+    id: string
+  }[]
+}
+
+class LocalSearch extends React.Component<LocalSearchProps> {
+  constructor(props: LocalSearchProps) {
     super(props)
   }
 
-  onSelect(selectedItem) {
+  onSelect(selectedItem: LocalSearchProps['items'][0]) {
     window.location.href = selectedItem.url
   }
 
@@ -22,7 +31,7 @@ class LocalSearch extends React.Component {
                 placeholder={this.props.placeholder}
                 searchable
                 largeSize
-                onSelect={(selectedItem) => this.onSelect(selectedItem)}
+                onSelect={(selectedItem: LocalSearchProps['items'][0]) => this.onSelect(selectedItem)}
                 items={this.props.items}
                 className='search-field'
                 ariaLabel={this.props.placeholder}
@@ -35,14 +44,4 @@ class LocalSearch extends React.Component {
   }
 }
 
-LocalSearch.propTypes = {
-  title: PropTypes.string,
-  placeholder: PropTypes.string,
-  items: PropTypes.arrayOf({
-    title: PropTypes.string,
-    id: PropTypes.string,
-    url: PropTypes.string,
-  }),
-}
-
-export default (props) => <LocalSearch {...props} />
+export default (props: LocalSearchProps) => <LocalSearch {...props} />

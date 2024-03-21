@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { PictureCard, Button } from '@statisticsnorway/ssb-component-library'
-import PropTypes from 'prop-types'
 import axios from 'axios'
+import { RelatedFactPageProps } from '../../../lib/types/partTypes/relatedFactPage'
 
-function RelatedBoxes(props) {
+function RelatedBoxes(props: RelatedFactPageProps) {
   const {
     firstRelatedContents,
     relatedFactPageServiceUrl,
@@ -21,7 +21,7 @@ function RelatedBoxes(props) {
   const [total, setTotal] = useState(firstRelatedContents ? firstRelatedContents.total : 0)
   const [loading, setLoading] = useState(false)
   const [wasClicked, setWasClicked] = useState(false)
-  const cards = useRef([])
+  const cards = useRef<HTMLAnchorElement[]>([])
 
   useEffect(() => {
     if (cards.current.length > 4 && cards.current[4] && !wasClicked) {
@@ -37,7 +37,7 @@ function RelatedBoxes(props) {
           start: relatedFactPages.length,
           count: total - relatedFactPages.length,
           ...partConfig,
-          contentIdList: JSON.stringify(partConfig.contentIdList),
+          contentIdList: JSON.stringify(partConfig?.contentIdList),
         },
       })
       .then((res) => {
@@ -58,7 +58,7 @@ function RelatedBoxes(props) {
     setLoading(false)
   }
 
-  function handleButtonOnClick(wasClicked) {
+  function handleButtonOnClick(wasClicked: boolean) {
     setWasClicked(wasClicked)
 
     if (total > relatedFactPages.length) {
@@ -87,12 +87,12 @@ function RelatedBoxes(props) {
           <div className='row'>
             <ul
               className='image-box-wrapper'
-              aria-label={`${showingPhrase.replace('{0}', relatedFactPages.length)} ${total} ${factpagePluralName}`}
+              aria-label={`${showingPhrase.replace('{0}', relatedFactPages.length.toString())} ${total} ${factpagePluralName}`}
             >
               {relatedFactPages.map((relatedFactPageContent, index) => (
                 <li key={index}>
                   <PictureCard
-                    ref={(element) => (cards.current[index] = element)}
+                    ref={(element: HTMLAnchorElement) => (cards.current[index] = element)}
                     className='mb-3'
                     imageSrc={relatedFactPageContent.image}
                     altText={relatedFactPageContent.imageAlt ?? ''}
@@ -109,7 +109,7 @@ function RelatedBoxes(props) {
                 <Button
                   ariaLabel={total > relatedFactPages.length && `${showAll} - ${total} ${factpagePluralName}`}
                   onClick={() => handleButtonOnClick(true)}
-                  onKeyDown={(e) => {
+                  onKeyDown={(e: React.KeyboardEvent<HTMLButtonElement>) => {
                     if (e.key === 'Enter' || e.key === ' ') {
                       e.preventDefault()
                       handleButtonOnClick(false)
@@ -134,25 +134,4 @@ function RelatedBoxes(props) {
   )
 }
 
-RelatedBoxes.propTypes = {
-  firstRelatedContents: PropTypes.shape({
-    total: PropTypes.number,
-    relatedFactPages: PropTypes.arrayOf(
-      PropTypes.shape({
-        title: PropTypes.string,
-        link: PropTypes.string,
-        image: PropTypes.string,
-        imageAlt: PropTypes.string,
-      })
-    ),
-  }),
-  relatedFactPageServiceUrl: PropTypes.string,
-  partConfig: PropTypes.object,
-  showAll: PropTypes.string,
-  showLess: PropTypes.string,
-  mainTitle: PropTypes.string,
-  factpagePluralName: PropTypes.string,
-  showingPhrase: PropTypes.string,
-}
-
-export default (props) => <RelatedBoxes {...props} />
+export default (props: RelatedFactPageProps) => <RelatedBoxes {...props} />

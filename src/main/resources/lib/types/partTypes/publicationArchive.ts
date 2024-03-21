@@ -20,6 +20,7 @@ export interface Dropdown {
   id: string
   title: string
 }
+export type DropdownItem = Dropdown
 
 export interface PublicationResult {
   total: number

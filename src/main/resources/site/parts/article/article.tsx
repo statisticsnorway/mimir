@@ -1,9 +1,9 @@
 import React from 'react'
 import { Title, Link, Divider } from '@statisticsnorway/ssb-component-library'
-import PropTypes from 'prop-types'
 import { sanitize } from '../../../lib/ssb/utils/htmlUtils'
+import { ArticleProps } from '../../../lib/types/partTypes/article'
 
-function Article(props) {
+function Article(props: ArticleProps) {
   const phrases = props.phrases
 
   function renderTitleIngress() {
@@ -132,7 +132,7 @@ function Article(props) {
     }
   }
 
-  function renderISBN(mobile) {
+  function renderISBN(mobile: boolean) {
     const { isbn } = props
 
     if (isbn) {
@@ -174,35 +174,4 @@ function Article(props) {
   )
 }
 
-Article.propTypes = {
-  phrases: PropTypes.object,
-  introTitle: PropTypes.string,
-  title: PropTypes.string,
-  preface: PropTypes.string,
-  serialNumber: PropTypes.string,
-  showPubDate: PropTypes.bool,
-  pubDate: PropTypes.string,
-  modifiedDate: PropTypes.string,
-  authors: PropTypes.arrayOf(
-    PropTypes.shape({
-      email: PropTypes.string,
-      name: PropTypes.string,
-    })
-  ),
-  bodyText: PropTypes.string,
-  associatedStatistics: PropTypes.arrayOf(
-    PropTypes.shape({
-      text: PropTypes.string,
-      href: PropTypes.string,
-    })
-  ),
-  associatedArticleArchives: PropTypes.arrayOf(
-    PropTypes.shape({
-      text: PropTypes.string,
-      href: PropTypes.string,
-    })
-  ),
-  isbn: PropTypes.string,
-}
-
-export default (props) => <Article {...props} />
+export default (props: ArticleProps) => <Article {...props} />

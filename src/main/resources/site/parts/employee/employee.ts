@@ -6,7 +6,7 @@ import { imageUrl } from '/lib/ssb/utils/imageUtils'
 
 import { renderError } from '/lib/ssb/error/error'
 import * as util from '/lib/util'
-import { type Area, type CVinformation, type EmployeeProp, type Project } from '/lib/types/partTypes/employee'
+import { type Area, type CVinformation, type EmployeeProps, type Project } from '/lib/types/partTypes/employee'
 import { type Default as DefaultPageConfig } from '/site/pages/default'
 import { type Employee, type Page } from '/site/content-types'
 
@@ -130,7 +130,7 @@ function renderPart(req: XP.Request) {
     locale: language,
   })
 
-  const props: EmployeeProp = {
+  const props: EmployeeProps = {
     title: page.displayName,
     email: page.data.email || '',
     position: page.data.position || '',

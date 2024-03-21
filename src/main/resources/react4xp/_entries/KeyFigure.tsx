@@ -6,11 +6,17 @@ import {
   References,
   Divider,
 } from '@statisticsnorway/ssb-component-library'
-import PropTypes from 'prop-types'
 import { Alert, Row, Col } from 'react-bootstrap'
+import { type KeyFigureData, type KeyFigureProps } from '../../lib/types/partTypes/keyFigure'
 
-class KeyFigures extends React.Component {
-  constructor(props) {
+type KeyFigureState = {
+  showPreviewToggle: string | boolean | undefined
+  fetchUnPublished: string | boolean | undefined
+  keyFigures: KeyFigureData[]
+}
+
+class KeyFigures extends React.Component<KeyFigureProps, KeyFigureState> {
+  constructor(props: KeyFigureProps) {
     super(props)
 
     this.state = {
@@ -18,8 +24,9 @@ class KeyFigures extends React.Component {
         this.props.showPreviewDraft &&
         (this.props.pageTypeKeyFigure || (this.props.paramShowDraft && !this.props.pageTypeKeyFigure)),
       fetchUnPublished: this.props.paramShowDraft,
-      keyFigures:
-        this.props.paramShowDraft && this.props.draftExist ? this.props.keyFiguresDraft : this.props.keyFigures,
+      keyFigures: (this.props.paramShowDraft && this.props.draftExist
+        ? this.props.keyFiguresDraft
+        : this.props.keyFigures)!,
     }
 
     this.toggleDraft = this.toggleDraft.bind(this)
@@ -28,8 +35,9 @@ class KeyFigures extends React.Component {
   toggleDraft() {
     this.setState({
       fetchUnPublished: !this.state.fetchUnPublished,
-      keyFigures:
-        !this.state.fetchUnPublished && this.props.draftExist ? this.props.keyFiguresDraft : this.props.keyFigures,
+      keyFigures: (!this.state.fetchUnPublished && this.props.draftExist
+        ? this.props.keyFiguresDraft
+        : this.props.keyFigures)!,
     })
   }
 
@@ -102,7 +110,7 @@ class KeyFigures extends React.Component {
     })
   }
 
-  addKeyFigureSource(keyFigure) {
+  addKeyFigureSource(keyFigure: KeyFigureData) {
     if ((!this.props.source || !this.props.source.url) && keyFigure.source && keyFigure.source.url) {
       const sourceLabel = this.props.sourceLabel
 
@@ -177,66 +185,4 @@ class KeyFigures extends React.Component {
   }
 }
 
-KeyFigures.propTypes = {
-  displayName: PropTypes.string,
-  keyFiguresDraft: PropTypes.arrayOf(
-    PropTypes.shape({
-      iconUrl: PropTypes.string,
-      iconAltText: PropTypes.string,
-      number: PropTypes.string,
-      numberDescription: PropTypes.string,
-      noNumberText: PropTypes.string,
-      size: PropTypes.string,
-      title: PropTypes.string,
-      time: PropTypes.string,
-      changes: PropTypes.shape({
-        changeDirection: PropTypes.string,
-        changeText: PropTypes.string,
-        changePeriod: PropTypes.string,
-      }),
-      glossary: PropTypes.string,
-      greenBox: PropTypes.bool,
-      source: PropTypes.shape({
-        url: PropTypes.string,
-        title: PropTypes.string,
-      }),
-    })
-  ),
-  keyFigures: PropTypes.arrayOf(
-    PropTypes.shape({
-      iconUrl: PropTypes.string,
-      iconAltText: PropTypes.string,
-      number: PropTypes.string,
-      numberDescription: PropTypes.string,
-      noNumberText: PropTypes.string,
-      size: PropTypes.string,
-      title: PropTypes.string,
-      time: PropTypes.string,
-      changes: PropTypes.shape({
-        changeDirection: PropTypes.string,
-        changeText: PropTypes.string,
-        changePeriod: PropTypes.string,
-      }),
-      glossary: PropTypes.string,
-      greenBox: PropTypes.bool,
-      source: PropTypes.shape({
-        url: PropTypes.string,
-        title: PropTypes.string,
-      }),
-    })
-  ),
-  sourceLabel: PropTypes.string,
-  source: PropTypes.shape({
-    url: PropTypes.string,
-    title: PropTypes.string,
-  }),
-  columns: PropTypes.bool,
-  showPreviewDraft: PropTypes.bool,
-  paramShowDraft: PropTypes.bool,
-  draftExist: PropTypes.bool,
-  pageTypeKeyFigure: PropTypes.bool,
-  hiddenTitle: PropTypes.string,
-  isInStatisticsPage: PropTypes.bool,
-}
-
-export default (props) => <KeyFigures {...props} />
+export default (props: KeyFigureProps) => <KeyFigures {...props} />

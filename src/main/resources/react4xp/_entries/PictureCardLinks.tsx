@@ -1,8 +1,18 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { ArrowRight, ArrowRightCircle } from 'react-feather'
+import { type ImageUrls, type PictureCardLinksContent } from '../../lib/types/partTypes/pictureCardLinks'
 
-const PictureLink = ({ href, title, subTitle, id, ariaDescribedBy, className, imageSources }) => {
+interface PictureLinkProps {
+  title?: string
+  subTitle?: string
+  href?: string
+  imageSources: ImageUrls
+  className?: string
+  id?: string
+  ariaDescribedBy?: string
+}
+
+const PictureLink = ({ href, title, subTitle, id, ariaDescribedBy, className, imageSources }: PictureLinkProps) => {
   return (
     <a
       className={`ssb-picture-card vertical ${className || ''} group`}
@@ -29,18 +39,12 @@ const PictureLink = ({ href, title, subTitle, id, ariaDescribedBy, className, im
   )
 }
 
-PictureLink.propTypes = {
-  title: PropTypes.string,
-  subTitle: PropTypes.string,
-  href: PropTypes.string,
-  imageSources: PropTypes.object,
-  className: PropTypes.string,
-  id: PropTypes.string,
-  ariaDescribedBy: PropTypes.string,
+interface PictureCardLinksProps {
+  pictureCardLinks: PictureCardLinksContent[]
 }
 
-const PictureCardLinks = (props) => {
-  function getColSize(length, index) {
+const PictureCardLinks = ({ pictureCardLinks }: PictureCardLinksProps) => {
+  function getColSize(length: number, index: number) {
     if (length === 2 || (length === 3 && index === 0)) return 'col-md-6'
     if (length === 3 && index > 0) return 'col-md-3'
     return 'col-md-3'
@@ -48,11 +52,11 @@ const PictureCardLinks = (props) => {
 
   return (
     <div className='row'>
-      {props.pictureCardLinks.map((pictureCard, index) => {
+      {pictureCardLinks.map((pictureCard, index) => {
         return (
           <div
-            key={`picture-card-link-${props.react4xpId}-${index}`}
-            className={getColSize(props.pictureCardLinks.length, index) + ' col-12 mb-4 mb-md-0'}
+            key={`picture-card-link-${index}`}
+            className={getColSize(pictureCardLinks.length, index) + ' col-12 mb-4 mb-md-0'}
           >
             <PictureLink
               className='w-100'
@@ -74,16 +78,4 @@ PictureCardLinks.defaultProps = {
   pictureCardLinks: [],
 }
 
-PictureCardLinks.propTypes = {
-  pictureCardLinks: PropTypes.arrayOf(
-    PropTypes.shape({
-      title: PropTypes.string,
-      subTitle: PropTypes.string,
-      href: PropTypes.string,
-      imageSources: PropTypes.object,
-    })
-  ),
-  react4xpId: PropTypes.string,
-}
-
-export default (props) => <PictureCardLinks {...props} />
+export default (props: PictureCardLinksProps) => <PictureCardLinks {...props} />

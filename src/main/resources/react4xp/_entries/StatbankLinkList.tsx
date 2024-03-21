@@ -1,10 +1,18 @@
 import React from 'react'
 import { Link } from '@statisticsnorway/ssb-component-library'
 import { ArrowRight } from 'react-feather'
-import PropTypes from 'prop-types'
 import { sanitize } from '../../lib/ssb/utils/htmlUtils'
 
-const StatbankLinkList = (props) => {
+interface StatbankLinkListProps {
+  children: string
+  className: string
+  href: string
+  icon: React.ReactNode
+  iconType: string
+  linkType: 'regular' | 'profiled' | 'header'
+}
+
+const StatbankLinkList = (props: StatbankLinkListProps) => {
   return (
     <React.Fragment>
       <Link
@@ -24,14 +32,4 @@ const StatbankLinkList = (props) => {
   )
 }
 
-StatbankLinkList.propTypes = {
-  children: PropTypes.node,
-  className: PropTypes.string,
-  href: PropTypes.string.isRequired,
-  icon: PropTypes.node,
-  iconType: PropTypes.string,
-  linkType: PropTypes.oneOf(['regular', 'profiled', 'header']),
-  negative: PropTypes.bool,
-}
-
-export default StatbankLinkList
+export default (props: StatbankLinkListProps) => <StatbankLinkList {...props} />

@@ -1,8 +1,12 @@
 import React from 'react'
 import { Download } from 'react-feather'
-import PropTypes from 'prop-types'
 
-const DownloadLink = ({ fileLocation, downloadText }) => {
+interface DownloadLinkProps {
+  downloadText: string
+  fileLocation: string
+}
+
+const DownloadLink = ({ fileLocation, downloadText }: DownloadLinkProps) => {
   return (
     <div className='download-link-wrapper'>
       <a download href={fileLocation} className='ssb-btn primary-btn'>
@@ -13,9 +17,4 @@ const DownloadLink = ({ fileLocation, downloadText }) => {
   )
 }
 
-DownloadLink.propTypes = {
-  downloadText: PropTypes.string,
-  fileLocation: PropTypes.string,
-}
-
-export default DownloadLink
+export default (props: DownloadLinkProps) => <DownloadLink {...props} />

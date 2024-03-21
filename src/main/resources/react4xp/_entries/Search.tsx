@@ -1,8 +1,13 @@
 import React from 'react'
 import { Input } from '@statisticsnorway/ssb-component-library'
-import PropTypes from 'prop-types'
 
-const Search = (props) => {
+interface SearchProps {
+  searchText: string
+  className: string
+  searchResultPageUrl: string
+}
+
+const Search = (props: SearchProps) => {
   // No pageContributions in error mode, so can't hydrate React components. Thus we go for a simple form.
   return (
     <form action={props.searchResultPageUrl} method='get'>
@@ -19,10 +24,4 @@ const Search = (props) => {
   )
 }
 
-Search.propTypes = {
-  searchText: PropTypes.string,
-  className: PropTypes.string,
-  searchResultPageUrl: PropTypes.string,
-}
-
-export default (props) => <Search {...props} />
+export default (props: SearchProps) => <Search {...props} />

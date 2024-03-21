@@ -1,5 +1,4 @@
 import React, { useContext, useState } from 'react'
-import PropTypes from 'prop-types'
 import { Modal } from 'react-bootstrap'
 import { Button } from '@statisticsnorway/ssb-component-library'
 import { AlertTriangle } from 'react-feather'
@@ -11,7 +10,12 @@ import { WebSocketContext } from '/react4xp/dashboard/utils/websocket/WebsocketP
 import { selectStatRegStatus } from '/react4xp/dashboard/containers/StatRegDashboard/selectors'
 import { requestStatRegEventLogData } from '/react4xp/dashboard/containers/StatRegDashboard/actions.es6'
 
-export function DataSourceLog(props) {
+interface DataSourceLogProps {
+  dataSourceId?: string;
+  isStatReg?: boolean;
+}
+
+export function DataSourceLog(props: DataSourceLogProps) {
   const { dataSourceId, isStatReg } = props
   const dispatch = useDispatch()
   const io = useContext(WebSocketContext)
@@ -98,9 +102,4 @@ export function DataSourceLog(props) {
   }
 
   return renderLogData()
-}
-
-DataSourceLog.propTypes = {
-  dataSourceId: PropTypes.string,
-  isStatReg: PropTypes.bool,
 }

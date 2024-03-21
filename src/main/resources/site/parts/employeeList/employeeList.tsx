@@ -1,18 +1,23 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { Link, Divider, Text } from '@statisticsnorway/ssb-component-library'
 import { sanitize } from '../../../lib/ssb/utils/htmlUtils'
+import {
+  type Area,
+  type EmployeeListProps,
+  type IEmployeeMap,
+  type IPreparedEmployee,
+} from '../../../lib/types/partTypes/employeeList'
 
-function EmployeeList(props) {
+function EmployeeList(props: EmployeeListProps) {
   const { employees, total, pageTitle, pageDescription } = props
 
-  const sanitizeMobileNo = (number) => {
+  const sanitizeMobileNo = (number: string) => {
     const spacesRemoved = number.split(' ').join('')
     const numberMatchesInTwo = spacesRemoved.match(/.{1,2}/g)
-    return numberMatchesInTwo.join(' ')
+    return numberMatchesInTwo?.join(' ')
   }
 
-  const renderLetterBlock = (index, alphabetLetter) => {
+  const renderLetterBlock = (index: number, alphabetLetter: string) => {
     return (
       <>
         {index == 0 ? (
@@ -26,7 +31,7 @@ function EmployeeList(props) {
     )
   }
 
-  const employeeDetails = (employee) => {
+  const employeeDetails = (employee: IPreparedEmployee) => {
     return (
       <div>
         <Link href={employee.path} linkType='header'>
@@ -39,15 +44,15 @@ function EmployeeList(props) {
         ) : null}
         <div className='contact-details'>
           <Text small>
-            {employee.area.title != undefined ? (
+            {(employee.area as Area).title != undefined ? (
               <>
-                <Link href={employee.area.href}>{employee.area.title}</Link>
+                <Link href={(employee.area as Area).href}>{(employee.area as Area).title}</Link>
               </>
             ) : null}
 
-            {employee.area.title == undefined
+            {(employee.area as Area).title == undefined
               ? null
-              : (employee.area.title =
+              : ((employee.area as Area).title =
                   employee.email == '' && employee.phone == '' ? null : <span className='dash-space'> / </span>)}
 
             {employee.email != '' ? (
@@ -68,7 +73,7 @@ function EmployeeList(props) {
     )
   }
 
-  const createListItems = (list) => {
+  const createListItems = (list: IEmployeeMap) => {
     return list.record.map((employee, i) => {
       return (
         <>
@@ -115,28 +120,11 @@ function EmployeeList(props) {
           <div className='person-count'>
             <p>Det er {total} personer i avdelingen</p>
           </div>
-          {employees != [] ? renderEmployees() : null}
+          {employees.length > 0 ? renderEmployees() : null}
         </div>
       </div>
     </section>
   )
 }
 
-export default (props) => <EmployeeList {...props} />
-
-EmployeeList.propTypes = {
-  employees: PropTypes.arrayOf(
-    PropTypes.shape({
-      surname: PropTypes.string,
-      name: PropTypes.string,
-      position: PropTypes.string,
-      path: PropTypes.string,
-      phone: PropTypes.string,
-      email: PropTypes.string,
-      area: PropTypes.string,
-    })
-  ),
-  total: PropTypes.number,
-  pageTitle: PropTypes.string,
-  pageDescription: PropTypes.string,
-}
+export default (props: EmployeeListProps) => <EmployeeList {...props} />

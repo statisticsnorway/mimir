@@ -1,8 +1,8 @@
 import React from 'react'
-import { PropTypes } from 'prop-types'
 import { ArrowRight } from 'react-feather'
+import { type StatbankBoxProps } from '../../lib/types/partTypes/statbankBox'
 
-class StatbankBox extends React.Component {
+class StatbankBox extends React.Component<StatbankBoxProps> {
   render() {
     const { title, href, icon, fullWidth } = this.props
 
@@ -31,11 +31,4 @@ class StatbankBox extends React.Component {
   }
 }
 
-StatbankBox.propTypes = {
-  title: PropTypes.string,
-  href: PropTypes.string,
-  icon: PropTypes.string,
-  fullWidth: PropTypes.bool,
-}
-
-export default (props) => <StatbankBox {...props} />
+export default (props: StatbankBoxProps) => <StatbankBox {...props} />

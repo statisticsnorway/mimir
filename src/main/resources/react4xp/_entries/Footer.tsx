@@ -1,15 +1,15 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { Accordion, Button, Link } from '@statisticsnorway/ssb-component-library'
 import { ArrowRight, ArrowUp, Facebook, Twitter, Rss, Linkedin } from 'react-feather'
+import { FooterContent } from '../../lib/types/footer'
 
-class Footer extends React.Component {
-  constructor(props) {
+class Footer extends React.Component<FooterContent> {
+  constructor(props: FooterContent) {
     super(props)
   }
 
-  renderFooterMenuDesktop(footerNavigation) {
-    return footerNavigation.map((topMenuItem, index) => {
+  renderFooterMenuDesktop(footerNavigation: FooterContent['footerNavigation']) {
+    return footerNavigation?.map((topMenuItem, index) => {
       if (topMenuItem && topMenuItem.title) {
         const titleId = topMenuItem.title.replaceAll(' ', '-').toLowerCase()
         const listTitle = `footer-link-title-${titleId}`
@@ -25,8 +25,8 @@ class Footer extends React.Component {
     })
   }
 
-  renderFooterMenuMobile(footerNavigation) {
-    return footerNavigation.map((topMenuItem, index) => {
+  renderFooterMenuMobile(footerNavigation: FooterContent['footerNavigation']) {
+    return footerNavigation?.map((topMenuItem, index) => {
       if (topMenuItem && topMenuItem.title) {
         const titleId = topMenuItem.title.replaceAll(' ', '-').toLowerCase()
         const listTitle = `footer-mobile-link-title-${titleId}`
@@ -42,7 +42,7 @@ class Footer extends React.Component {
     })
   }
 
-  renderFooterLinkMenu(topMenuItem) {
+  renderFooterLinkMenu(topMenuItem: FooterContent['footerNavigation'][0]) {
     return (
       topMenuItem.menuItems &&
       topMenuItem.menuItems.map((menuItem, itemIndex) => {
@@ -110,14 +110,14 @@ class Footer extends React.Component {
       top: 0,
       behavior: 'smooth',
     })
-    document.getElementById('header-logo').focus({
+    document.getElementById('header-logo')!.focus({
       preventScroll: true,
     })
   }
 
   render() {
     const { logoUrl, footerNavigation, topButtonText, hiddenFooterText, language } = this.props
-    const footerNavigationLabel = language.code === 'en' ? 'footer links' : 'bunnmeny lenker'
+    const footerNavigationLabel = language?.code === 'en' ? 'footer links' : 'bunnmeny lenker'
     if (logoUrl && footerNavigation && topButtonText) {
       return (
         <div className='ssb-footer-wrapper'>
@@ -155,37 +155,4 @@ class Footer extends React.Component {
   }
 }
 
-Footer.propTypes = {
-  globalLinks: PropTypes.arrayOf(
-    PropTypes.shape({
-      title: PropTypes.string,
-      path: PropTypes.string,
-    })
-  ),
-  footerNavigation: PropTypes.arrayOf(
-    PropTypes.shape({
-      title: PropTypes.string,
-      path: PropTypes.string,
-      isActive: PropTypes.bool,
-      menuItems: PropTypes.arrayOf(
-        PropTypes.shape({
-          title: PropTypes.string,
-          path: PropTypes.string,
-          isActive: PropTypes.bool,
-        })
-      ),
-    })
-  ),
-  logoUrl: PropTypes.string,
-  copyrightUrl: PropTypes.string,
-  copyrightText: PropTypes.string,
-  facebookUrl: PropTypes.string,
-  twitterUrl: PropTypes.string,
-  linkedinUrl: PropTypes.string,
-  rssUrl: PropTypes.string,
-  topButtonText: PropTypes.string,
-  hiddenFooterText: PropTypes.string,
-  language: PropTypes.object,
-}
-
-export default (props) => <Footer {...props} />
+export default (props: FooterContent) => <Footer {...props} />

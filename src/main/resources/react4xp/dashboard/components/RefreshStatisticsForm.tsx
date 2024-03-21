@@ -1,11 +1,28 @@
 import React, { useState } from 'react'
 import { Form, Row, Col } from 'react-bootstrap'
-import PropTypes from 'prop-types'
 import { selectInternalStatbankUrl } from '/react4xp/dashboard/containers/HomePage/selectors'
 import { useSelector } from 'react-redux'
 import { Button, Link } from '@statisticsnorway/ssb-component-library'
 
-export function RefreshStatisticsForm(props) {
+interface RefreshStatisticsFormProps {
+  onSubmit?: (...args: unknown[]) => unknown;
+  owner?: string;
+  sources?: {
+    tableId?: unknown;
+  }[];
+  modalInfo?: {
+    ownersWithSources?: {
+      ownerId?: number;
+      tbmlList?: {
+        tbmlId?: number;
+        sourceTableIds?: string[];
+        statbankTableIds?: string[];
+      }[];
+    }[];
+  };
+}
+
+export function RefreshStatisticsForm(props: RefreshStatisticsFormProps) {
   const { onSubmit, modalInfo } = props
 
   const [owners, setOwners] = useState([])
@@ -134,30 +151,6 @@ export function RefreshStatisticsForm(props) {
       </Button>
     </Form>
   )
-}
-
-RefreshStatisticsForm.propTypes = {
-  onSubmit: PropTypes.func,
-  owner: PropTypes.string,
-  sources: PropTypes.arrayOf(
-    PropTypes.shape({
-      tableId: PropTypes.number | PropTypes.string,
-    })
-  ),
-  modalInfo: PropTypes.shape({
-    ownersWithSources: PropTypes.arrayOf(
-      PropTypes.shape({
-        ownerId: PropTypes.number,
-        tbmlList: PropTypes.arrayOf(
-          PropTypes.shape({
-            tbmlId: PropTypes.number,
-            sourceTableIds: PropTypes.arrayOf(PropTypes.string),
-            statbankTableIds: PropTypes.arrayOf(PropTypes.string),
-          })
-        ),
-      })
-    ),
-  }),
 }
 
 export default (props) => <RefreshStatisticsForm {...props} />

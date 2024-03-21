@@ -1,7 +1,13 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 
-export function DataQueryBadges(props) {
+interface DataQueryBadgesProps {
+  contentType: string
+  format?: string
+  isPublished?: boolean
+  floatRight?: boolean
+}
+
+export function DataQueryBadges(props: DataQueryBadgesProps) {
   const { contentType, format, isPublished, floatRight = true } = props
 
   function decideType() {
@@ -26,11 +32,4 @@ export function DataQueryBadges(props) {
       ) : null}
     </>
   )
-}
-
-DataQueryBadges.propTypes = {
-  contentType: PropTypes.string,
-  format: PropTypes.string,
-  isPublished: PropTypes.bool,
-  floatRight: PropTypes.bool,
 }

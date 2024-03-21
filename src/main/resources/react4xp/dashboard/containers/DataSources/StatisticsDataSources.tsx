@@ -7,7 +7,6 @@ import {
   selectStatisticsDataSources,
   selectStatisticsLoading,
 } from '/react4xp/dashboard/containers/DataSources/selectors'
-import PropTypes from 'prop-types'
 import {
   requestStatisticsGroups,
   requestStatisticsDataSources,
@@ -15,14 +14,18 @@ import {
 import { WebSocketContext } from '/react4xp/dashboard/utils/websocket/WebsocketProvider'
 import { DataSourceTable } from '/react4xp/dashboard/containers/DataSources/DataSourceTable'
 
-export function StatisticsDataSources(props) {
+interface StatisticsDataSourcesProps {
+  openByDefault?: boolean
+}
+
+export function StatisticsDataSources(props: StatisticsDataSourcesProps) {
   const [firstOpen, setFirstOpen] = React.useState(true)
   const io = useContext(WebSocketContext)
   const dispatch = useDispatch()
   const isLoading = useSelector(selectLoadingStatisticsGroups)
   const statistics = useSelector(selectStatisticsGroups)
 
-  function onToggleAccordion(isOpen) {
+  function onToggleAccordion(isOpen: boolean) {
     if (firstOpen && isOpen) {
       setFirstOpen(false)
       requestStatisticsGroups(dispatch, io)
@@ -51,7 +54,11 @@ export function StatisticsDataSources(props) {
 
   onToggleAccordion(props.openByDefault)
   return (
-    <Accordion header='Spørringer fra Statistikker' className='mx-0' onToggle={(isOpen) => onToggleAccordion(isOpen)}>
+    <Accordion
+      header='Spørringer fra Statistikker'
+      className='mx-0'
+      onToggle={(isOpen: boolean) => onToggleAccordion(isOpen)}
+    >
       {renderAccordionBody()}
     </Accordion>
   )
@@ -59,10 +66,6 @@ export function StatisticsDataSources(props) {
 
 StatisticsDataSources.defaultProps = {
   openByDefault: false,
-}
-
-StatisticsDataSources.propTypes = {
-  openByDefault: PropTypes.bool,
 }
 
 export default (props) => <StatisticsDataSources {...props} />

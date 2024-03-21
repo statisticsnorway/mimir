@@ -1,4 +1,4 @@
-import { Release } from '/lib/types/variants'
+import { type PreparedUpcomingRelease, type Release } from '/lib/types/variants'
 import { isAfter, addDays, isBefore, isSameDay } from '/lib/vendor/dateFns'
 
 export function filterReleasesIntoArrays(
@@ -57,17 +57,4 @@ export function filterOnComingReleases(
 
 function isSameDayOrAfter(d1: Date, d2: Date): boolean {
   return isSameDay(d1, d2) || isAfter(d1, d2)
-}
-
-export interface PreparedUpcomingRelease {
-  id: string
-  name: string
-  type: string
-  date: string
-  mainSubject: string
-  day: string
-  month: string
-  monthName: string
-  year: string
-  upcomingReleaseLink?: string
 }

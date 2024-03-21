@@ -1,9 +1,13 @@
 import { Accordion, NestedAccordion, Link } from '@statisticsnorway/ssb-component-library'
-import PropTypes from 'prop-types'
 import React from 'react'
+import {
+  type MainSubjectWithSubs,
+  type PreparedSubs,
+  type StatbankSubjectTreeProps,
+} from '../../../lib/types/partTypes/statbankSubjectTree'
 
-function StatbankSubjectTree(props) {
-  function renderStatisticLink(statistic) {
+function StatbankSubjectTree(props: StatbankSubjectTreeProps) {
+  function renderStatisticLink(statistic: PreparedSubs['statistics'][0]) {
     return (
       <li>
         <Link href={props.statbankBaseUrl + statistic.url}>{statistic.title}</Link>
@@ -11,7 +15,7 @@ function StatbankSubjectTree(props) {
     )
   }
 
-  function renderSubSubjects(subSubject) {
+  function renderSubSubjects(subSubject: PreparedSubs) {
     return (
       <NestedAccordion header={subSubject.title}>
         <ol className='statbank-list'>{subSubject.statistics.map((statistic) => renderStatisticLink(statistic))}</ol>
@@ -19,7 +23,7 @@ function StatbankSubjectTree(props) {
     )
   }
 
-  function renderMainSubjects(mainSubject) {
+  function renderMainSubjects(mainSubject: MainSubjectWithSubs) {
     return (
       <Accordion header={mainSubject.title}>
         {mainSubject.subSubjects.map((subSubject) => renderSubSubjects(subSubject))}
@@ -34,26 +38,4 @@ function StatbankSubjectTree(props) {
   )
 }
 
-StatbankSubjectTree.propTypes = {
-  statbankBaseUrl: PropTypes.string,
-  mainSubjects: PropTypes.arrayOf({
-    title: PropTypes.string,
-    subjectCode: PropTypes.string,
-    path: PropTypes.string,
-    language: PropTypes.string,
-    name: PropTypes.string,
-    subSubjects: PropTypes.arrayOf({
-      title: PropTypes.string,
-      subjectCode: PropTypes.string,
-      path: PropTypes.string,
-      language: PropTypes.string,
-      name: PropTypes.string,
-      statistics: PropTypes.arrayOf({
-        title: PropTypes.string,
-        url: PropTypes.string,
-      }),
-    }),
-  }),
-}
-
-export default (props) => <StatbankSubjectTree {...props} />
+export default (props: StatbankSubjectTreeProps) => <StatbankSubjectTree {...props} />

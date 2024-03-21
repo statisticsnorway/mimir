@@ -7,12 +7,15 @@ import {
   selectMunicipalDataSources,
   selectMunicipalLoading,
 } from '/react4xp/dashboard/containers/DataSources/selectors'
-import PropTypes from 'prop-types'
 import { requestMunicipalGroups, requestMunicipalDataSources } from '/react4xp/dashboard/containers/DataSources/actions'
 import { WebSocketContext } from '/react4xp/dashboard/utils/websocket/WebsocketProvider'
 import { DataSourceTable } from '/react4xp/dashboard/containers/DataSources/DataSourceTable'
 
-export function MunicipalDataSources(props) {
+interface MunicipalDataSourcesProps {
+  openByDefault?: boolean;
+}
+
+export function MunicipalDataSources(props: MunicipalDataSourcesProps) {
   const [firstOpen, setFirstOpen] = React.useState(true)
   const io = useContext(WebSocketContext)
   const dispatch = useDispatch()
@@ -56,10 +59,6 @@ export function MunicipalDataSources(props) {
 
 MunicipalDataSources.defaultProps = {
   openByDefault: false,
-}
-
-MunicipalDataSources.propTypes = {
-  openByDefault: PropTypes.bool,
 }
 
 export default (props) => <MunicipalDataSources {...props} />

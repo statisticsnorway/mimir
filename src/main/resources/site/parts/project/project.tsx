@@ -1,10 +1,10 @@
 import React from 'react'
 import { Title, Accordion, Link } from '@statisticsnorway/ssb-component-library'
-import PropTypes from 'prop-types'
 import { User, Calendar, Settings } from 'react-feather'
 import { sanitize } from '../../../lib/ssb/utils/htmlUtils'
+import { ProjectProps } from '../../../lib/types/partTypes/project'
 
-const Project = (props) => {
+const Project = (props: ProjectProps) => {
   const {
     introTitle,
     projectTitle,
@@ -86,7 +86,7 @@ const Project = (props) => {
             <div
               className='project-paragraph'
               dangerouslySetInnerHTML={{
-                __html: sanitize(body),
+                __html: sanitize(body!),
               }}
             />
           </div>
@@ -105,7 +105,7 @@ const Project = (props) => {
               <div
                 className='ssb-paragraph lh-lg'
                 dangerouslySetInnerHTML={{
-                  __html: sanitize(participants),
+                  __html: sanitize(participants!),
                 }}
               />
             </Accordion>
@@ -119,7 +119,7 @@ const Project = (props) => {
               <div
                 className='ssb-paragraph lh-lg'
                 dangerouslySetInnerHTML={{
-                  __html: sanitize(collaborators),
+                  __html: sanitize(collaborators!),
                 }}
               />
             </Accordion>
@@ -141,23 +141,4 @@ const Project = (props) => {
   )
 }
 
-Project.propTypes = {
-  introTitle: PropTypes.string,
-  projectTitle: PropTypes.string,
-  manager: PropTypes.string,
-  projectType: PropTypes.string,
-  projectPeriod: PropTypes.string,
-  financier: PropTypes.string,
-  heading: PropTypes.string,
-  ingress: PropTypes.string | undefined,
-  body: PropTypes.string,
-  participants: PropTypes.string,
-  collaborators: PropTypes.string,
-  periodPhrase: PropTypes.string,
-  financierPhrase: PropTypes.string,
-  participantsPhrase: PropTypes.string,
-  projectParticipantsPhrase: PropTypes.string,
-  collaboratorsPhrase: PropTypes.string,
-}
-
-export default (props) => <Project {...props} />
+export default (props: ProjectProps) => <Project {...props} />

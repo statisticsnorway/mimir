@@ -51,3 +51,16 @@ export interface PreparedStatistics {
   statisticsPageUrl?: string
   aboutTheStatisticsDescription?: string
 }
+
+export interface PreparedUpcomingRelease {
+  id: string
+  name: string
+  type: string
+  date: string
+  mainSubject: string
+  day: string
+  month: string
+  monthName: string
+  year: string
+  upcomingReleaseLink?: string
+}

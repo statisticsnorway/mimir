@@ -1,20 +1,21 @@
 import React, { useState } from 'react'
-import { PropTypes } from 'prop-types'
 import { Link, FactBox, Tabs, Divider } from '@statisticsnorway/ssb-component-library'
 import { Row, Col } from 'react-bootstrap'
 import { NumericFormat } from 'react-number-format'
+import { type StaticVisualizationProps } from '../../../lib/types/partTypes/staticVisualization'
+import { HtmlTable, type BodyCell } from '../../../lib/types/partTypes/table'
 
-function StaticVisualization(props) {
+function StaticVisualization(props: StaticVisualizationProps) {
   const [activeTab, changeTab] = useState('figure')
-  const tabClicked = (e) => changeTab(e)
+  const tabClicked = (e: string) => changeTab(e)
 
   function renderLongDescriptionAndSources() {
     return (
-      <React.Fragment>
+      <>
         {props.longDesc ? <p className='pt-4'>{props.longDesc}</p> : null}
-        {props.footnotes.length ? (
+        {props.footnotes?.length ? (
           <ul className={`footnote${props.inFactPage ? '' : ' pl-0'}`}>
-            {props.footnotes.map((footnote, index) => (
+            {(props.footnotes as string[]).map((footnote, index) => (
               <li key={`footnote-${index}`}>
                 <sup>{index + 1}</sup>
                 <span>{footnote}</span>
@@ -34,13 +35,13 @@ function StaticVisualization(props) {
             ))}
           </div>
         ) : null}
-      </React.Fragment>
+      </>
     )
   }
 
   function renderTabs() {
     return (
-      <React.Fragment>
+      <>
         <Tabs
           id={props.id}
           className='pl-4'
@@ -58,7 +59,7 @@ function StaticVisualization(props) {
           ]}
         />
         <Divider />
-      </React.Fragment>
+      </>
     )
   }
 
@@ -80,7 +81,7 @@ function StaticVisualization(props) {
     }
   }
 
-  function createHeaderCell(row) {
+  function createHeaderCell(row: HtmlTable['table']['thead']['tr']) {
     return row.th.map((cellValue, i) => {
       return (
         <th key={i} scope='col'>
@@ -90,7 +91,7 @@ function StaticVisualization(props) {
     })
   }
 
-  function createBodyCells(row) {
+  function createBodyCells(row: BodyCell) {
     return row.td.map((cellValue, i) => {
       if (i > 0) {
         return <td key={i}>{formatNumber(cellValue)}</td>
@@ -104,7 +105,7 @@ function StaticVisualization(props) {
     })
   }
 
-  function formatNumber(value) {
+  function formatNumber(value: string | number) {
     const language = props.language
     const decimalSeparator = language === 'en' ? '.' : ','
     value = trimValue(value)
@@ -126,7 +127,7 @@ function StaticVisualization(props) {
     return value
   }
 
-  function trimValue(value) {
+  function trimValue(value: string | number) {
     if (value && typeof value === 'string') {
       return value.trim()
     }
@@ -162,44 +163,4 @@ function StaticVisualization(props) {
   )
 }
 
-StaticVisualization.propTypes = {
-  title: PropTypes.string,
-  imageSrc: PropTypes.string,
-  altText: PropTypes.string,
-  longDesc: PropTypes.string,
-  descriptionStaticVisualization: PropTypes.string,
-  footnotes: PropTypes.array,
-  sourcesLabel: PropTypes.string,
-  showAsGraphLabel: PropTypes.string,
-  showAsTableLabel: PropTypes.string,
-  sources: PropTypes.arrayOf(
-    PropTypes.shape({
-      url: PropTypes.string,
-      urlText: PropTypes.string,
-    })
-  ),
-  inFactPage: PropTypes.bool,
-  language: PropTypes.string,
-  tableData: PropTypes.shape({
-    table: {
-      thead: {
-        tr: {
-          th: PropTypes.array,
-        },
-      },
-      tbody: PropTypes.arrayOf(
-        PropTypes.shape({
-          tr: PropTypes.arrayOf(
-            PropTypes.shape({
-              th: PropTypes.array,
-              td: PropTypes.array,
-            })
-          ),
-        })
-      ),
-    },
-  }),
-  id: PropTypes.string,
-}
-
-export default (props) => <StaticVisualization {...props} />
+export default (props: StaticVisualizationProps) => <StaticVisualization {...props} />
