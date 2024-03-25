@@ -1,17 +1,3 @@
-export interface SimpleStatbankProps {
-  icon?: string | null
-  altText?: string
-  ingress: string
-  placeholder?: string
-  resultLayout: string
-  simpleStatbankServiceUrl?: string
-  json?: string
-  code?: string
-  urlOrId?: string
-  selectDisplay?: string
-  statbankApiData?: SimpleStatbankResult | undefined
-}
-
 export interface SimpleStatbankResult {
   data: DimensionData[]
 }
@@ -19,6 +5,22 @@ export interface SimpleStatbankResult {
 export interface DimensionData {
   displayName: string
   dataCode: string
-  value: (string | number)[]
+  value: string | undefined
   time: string
+}
+export interface SimpleStatbankProps {
+  icon: string
+  altText: string | undefined
+  title: string
+  ingress: string
+  labelDropdown: string
+  placeholderDropdown: string
+  displayDropdown: string
+  resultText: string
+  unit: string
+  timeLabel: string
+  resultFooter: string
+  noNumberText: string
+  closeText: string
+  statbankApiData: SimpleStatbankResult | undefined
 }
