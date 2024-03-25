@@ -10,12 +10,10 @@ const WebSocketContext = createContext(null)
 export { WebSocketContext }
 
 interface WebsocketProviderProps {
-  children?: any;
+  children?: any
 }
 
-function WebsocketProvider({
-  children
-}: WebsocketProviderProps) {
+function WebsocketProvider({ children }: WebsocketProviderProps) {
   let io
   let wsConnection
   let pingInterval

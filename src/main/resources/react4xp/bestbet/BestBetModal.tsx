@@ -2,11 +2,11 @@ import React from 'react'
 import { Modal } from 'react-bootstrap'
 
 interface BestBetModalProps {
-  show?: unknown;
-  onHide?: unknown;
-  title?: string;
-  body?: React.ReactNode;
-  footer?: React.ReactNode;
+  show?: unknown
+  onHide?: unknown
+  title?: string
+  body?: React.ReactNode
+  footer?: React.ReactNode
 }
 
 function BestBetModal(props: BestBetModalProps) {

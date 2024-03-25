@@ -12,7 +12,7 @@ import { WebSocketContext } from '/react4xp/dashboard/utils/websocket/WebsocketP
 import { DataSourceTable } from '/react4xp/dashboard/containers/DataSources/DataSourceTable'
 
 interface MunicipalDataSourcesProps {
-  openByDefault?: boolean;
+  openByDefault?: boolean
 }
 
 export function MunicipalDataSources(props: MunicipalDataSourcesProps) {

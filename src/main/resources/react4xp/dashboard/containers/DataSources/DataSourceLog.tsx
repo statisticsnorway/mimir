@@ -11,8 +11,8 @@ import { selectStatRegStatus } from '/react4xp/dashboard/containers/StatRegDashb
 import { requestStatRegEventLogData } from '/react4xp/dashboard/containers/StatRegDashboard/actions.es6'
 
 interface DataSourceLogProps {
-  dataSourceId?: string;
-  isStatReg?: boolean;
+  dataSourceId?: string
+  isStatReg?: boolean
 }
 
 export function DataSourceLog(props: DataSourceLogProps) {

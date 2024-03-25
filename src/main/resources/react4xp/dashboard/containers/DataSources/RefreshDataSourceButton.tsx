@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { selectDataSourceById } from '/react4xp/dashboard/containers/DataSources/selectors'
 
 interface RefreshDataSourceButtonProps {
-  dataSourceId?: string;
+  dataSourceId?: string
 }
 
 export function RefreshDataSourceButton(props: RefreshDataSourceButtonProps) {

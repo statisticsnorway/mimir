@@ -12,12 +12,12 @@ import { DataSourceLog } from '/react4xp/dashboard/containers/DataSources/DataSo
 import { RefreshDataSourceButton } from '/react4xp/dashboard/containers/DataSources/RefreshDataSourceButton'
 
 interface DataSourceTableProps {
-  header?: string;
-  openByDefault?: boolean;
-  dataSourceSelector: (...args: unknown[]) => unknown;
-  loadingSelector: (...args: unknown[]) => unknown;
-  requestDataSources: (...args: unknown[]) => unknown;
-  type?: React.ElementType;
+  header?: string
+  openByDefault?: boolean
+  dataSourceSelector: (...args: unknown[]) => unknown
+  loadingSelector: (...args: unknown[]) => unknown
+  requestDataSources: (...args: unknown[]) => unknown
+  type?: React.ElementType
 }
 
 export function DataSourceTable(props: DataSourceTableProps) {

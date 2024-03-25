@@ -8,13 +8,13 @@ import { BestBetContext } from './Bestbet'
 import { customAsyncSelectStyles } from './customAsyncSelectStyles'
 
 interface BestBetFormProps {
-  bestBetListServiceUrl?: string;
-  contentSearchServiceUrl?: string;
-  contentTypes?: unknown[];
-  mainSubjects?: unknown[];
-  mainSubjectsEnglish?: unknown[];
-  renderSearchWord?: (...args: unknown[]) => unknown;
-  handleTag?: (...args: unknown[]) => unknown;
+  bestBetListServiceUrl?: string
+  contentSearchServiceUrl?: string
+  contentTypes?: unknown[]
+  mainSubjects?: unknown[]
+  mainSubjectsEnglish?: unknown[]
+  renderSearchWord?: (...args: unknown[]) => unknown
+  handleTag?: (...args: unknown[]) => unknown
 }
 
 function BestBetForm(props: BestBetFormProps) {

@@ -5,21 +5,21 @@ import { useSelector } from 'react-redux'
 import { Button, Link } from '@statisticsnorway/ssb-component-library'
 
 interface RefreshStatisticsFormProps {
-  onSubmit?: (...args: unknown[]) => unknown;
-  owner?: string;
+  onSubmit?: (...args: unknown[]) => unknown
+  owner?: string
   sources?: {
-    tableId?: unknown;
-  }[];
+    tableId?: unknown
+  }[]
   modalInfo?: {
     ownersWithSources?: {
-      ownerId?: number;
+      ownerId?: number
       tbmlList?: {
-        tbmlId?: number;
-        sourceTableIds?: string[];
-        statbankTableIds?: string[];
-      }[];
-    }[];
-  };
+        tbmlId?: number
+        sourceTableIds?: string[]
+        statbankTableIds?: string[]
+      }[]
+    }[]
+  }
 }
 
 export function RefreshStatisticsForm(props: RefreshStatisticsFormProps) {

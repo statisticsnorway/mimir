@@ -10,7 +10,7 @@ import { selectStatisticsLogDataLoaded, selectStatistic } from '/react4xp/dashbo
 import { format } from 'date-fns/format'
 
 interface StatisticsLogProps {
-  statisticId?: string;
+  statisticId?: string
 }
 
 export function StatisticsLog(props: StatisticsLogProps) {

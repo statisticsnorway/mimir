@@ -7,13 +7,13 @@ import { selectJobLog, selectJobLogDetailsLoaded } from '/react4xp/dashboard/con
 import { format } from 'date-fns/format'
 
 interface StatisticsLogJobProps {
-  statisticId?: string;
-  jobId?: string;
-  accordionOpenStatus?: boolean;
-  setAccordionStatusOnIndex?: (...args: unknown[]) => unknown;
-  index?: number;
-  nestedAccordionStatus?: unknown[];
-  setNestedAccordionWithIndexes?: (...args: unknown[]) => unknown;
+  statisticId?: string
+  jobId?: string
+  accordionOpenStatus?: boolean
+  setAccordionStatusOnIndex?: (...args: unknown[]) => unknown
+  index?: number
+  nestedAccordionStatus?: unknown[]
+  setNestedAccordionWithIndexes?: (...args: unknown[]) => unknown
 }
 
 export function StatisticsLogJob(props: StatisticsLogJobProps) {

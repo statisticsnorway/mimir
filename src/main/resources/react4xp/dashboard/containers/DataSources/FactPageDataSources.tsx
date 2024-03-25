@@ -12,7 +12,7 @@ import { WebSocketContext } from '/react4xp/dashboard/utils/websocket/WebsocketP
 import { DataSourceTable } from '/react4xp/dashboard/containers/DataSources/DataSourceTable'
 
 interface FactPageDataSourcesProps {
-  openByDefault?: boolean;
+  openByDefault?: boolean
 }
 
 export function FactPageDataSources(props: FactPageDataSourcesProps) {

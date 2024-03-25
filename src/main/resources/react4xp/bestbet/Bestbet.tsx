@@ -9,13 +9,13 @@ import BestBetForm from './BestBetForm'
 export const BestBetContext = createContext()
 
 interface BestbetProps {
-  logoUrl?: string;
-  bestBetListServiceUrl?: string;
-  contentSearchServiceUrl?: string;
-  contentStudioBaseUrl?: string;
-  mainSubjectsEnglish?: unknown[];
-  contentTypes?: unknown[];
-  mainSubjects?: unknown[];
+  logoUrl?: string
+  bestBetListServiceUrl?: string
+  contentSearchServiceUrl?: string
+  contentStudioBaseUrl?: string
+  mainSubjectsEnglish?: unknown[]
+  contentTypes?: unknown[]
+  mainSubjects?: unknown[]
 }
 
 function Bestbet(props: BestbetProps) {

@@ -2,7 +2,7 @@ import React from 'react'
 import { Zap, ZapOff } from 'react-feather'
 
 interface ConnectionBadgeProps {
-  isConnected?: boolean;
+  isConnected?: boolean
 }
 
 export function ConnectionBadge(props: ConnectionBadgeProps) {

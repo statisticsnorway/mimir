@@ -8,8 +8,8 @@ import { WebSocketContext } from '/react4xp/dashboard/utils/websocket/WebsocketP
 import { AlertTriangle } from 'react-feather'
 
 interface RefreshStatRegModalProps {
-  statRegKey?: string;
-  handleClose?: (...args: unknown[]) => unknown;
+  statRegKey?: string
+  handleClose?: (...args: unknown[]) => unknown
 }
 
 export function RefreshStatRegModal(props: RefreshStatRegModalProps) {

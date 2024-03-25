@@ -4,8 +4,8 @@ import { Table } from 'react-bootstrap'
 import { ChevronUp, ChevronDown } from 'react-feather'
 
 interface ReactTableProps {
-  columns?: unknown[];
-  data?: unknown[];
+  columns?: unknown[]
+  data?: unknown[]
 }
 
 export function ReactTable(props: ReactTableProps) {

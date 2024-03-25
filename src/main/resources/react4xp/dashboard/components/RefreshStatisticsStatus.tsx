@@ -2,7 +2,7 @@ import React from 'react'
 import { Col, Row } from 'react-bootstrap'
 
 interface RefreshStatisticsStatusProps {
-  modal?: object;
+  modal?: object
 }
 
 export function RefreshStatisticsStatus(props: RefreshStatisticsStatusProps) {

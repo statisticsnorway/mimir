@@ -4,7 +4,7 @@ import { RefreshCw, ZapOff } from 'react-feather'
 import { Button } from '@statisticsnorway/ssb-component-library'
 
 interface ConnectionTimeoutModalProps {
-  isConnected?: boolean;
+  isConnected?: boolean
 }
 
 function ConnectionTimeoutModal(props: ConnectionTimeoutModalProps) {
