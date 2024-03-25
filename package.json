@@ -75,7 +75,7 @@
     "@reduxjs/toolkit": "~1.9.7",
     "@statisticsnorway/ssb-component-library": "~2.0.98",
     "@types/ramda": "~0.29.11",
-    "@types/react": "~18.2.66",
+    "@types/react": "~18.2.69",
     "@types/uuid": "~9.0.8",
     "@types/validator": "~13.11.9",
     "@types/zipcelx": "~1.5.2",
