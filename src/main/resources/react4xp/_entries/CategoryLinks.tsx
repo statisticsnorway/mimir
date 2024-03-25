@@ -1,15 +1,6 @@
 import React from 'react'
 import { CategoryLink } from '@statisticsnorway/ssb-component-library'
-
-interface CategoryLinksProps {
-  links?: {
-    href: string
-    titleText: string
-    subText: string
-  }[]
-  methodsAndDocumentationUrl?: string
-  methodsAndDocumentationLabel?: string
-}
+import { type CategoryLinksProps } from '../../lib/types/partTypes/categoryLinks'
 
 class CategoryLinks extends React.Component<CategoryLinksProps> {
   constructor(props: CategoryLinksProps) {

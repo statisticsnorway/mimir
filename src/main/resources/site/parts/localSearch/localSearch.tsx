@@ -1,14 +1,11 @@
 import React from 'react'
 import { Title, Dropdown } from '@statisticsnorway/ssb-component-library'
+import { type SearchItem } from '../../../lib/types/partTypes/localSearch'
 
 interface LocalSearchProps {
   title?: string
   placeholder?: string
-  items: {
-    title: string
-    url: string
-    id: string
-  }[]
+  items: SearchItem[]
 }
 
 class LocalSearch extends React.Component<LocalSearchProps> {

@@ -1,14 +1,8 @@
 import React from 'react'
 import Accordion from '/react4xp/accordion/Accordion'
-import { AccordionData } from '../../../lib/types/partTypes/accordion'
+import { type AboutTheStatisticsProps } from '../../../lib/types/partTypes/omStatistikken'
 
-interface OmStatistikkenProps {
-  label?: string
-  ingress?: string
-  accordions: AccordionData[]
-}
-
-const OmStatistikken = (props: OmStatistikkenProps) => {
+const OmStatistikken = (props: AboutTheStatisticsProps) => {
   const { ingress, label, accordions } = props
 
   function renderIngress() {

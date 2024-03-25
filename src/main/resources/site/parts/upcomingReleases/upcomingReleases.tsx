@@ -4,7 +4,7 @@ import axios from 'axios'
 import { ChevronDown } from 'react-feather'
 import { sanitize } from '../../../lib/ssb/utils/htmlUtils'
 import { type UpcomingReleasesProps } from '../../../lib/types/partTypes/upcomingReleases'
-import { PreparedUpcomingRelease, type YearReleases } from '../../../lib/types/variants'
+import { type PreparedUpcomingRelease, type YearReleases } from '../../../lib/types/variants'
 
 // TODO: Need the flattened and transformed data to be typed
 

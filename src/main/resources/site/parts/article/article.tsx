@@ -1,7 +1,7 @@
 import React from 'react'
 import { Title, Link, Divider } from '@statisticsnorway/ssb-component-library'
 import { sanitize } from '../../../lib/ssb/utils/htmlUtils'
-import { ArticleProps } from '../../../lib/types/partTypes/article'
+import { type ArticleProps } from '../../../lib/types/partTypes/article'
 
 function Article(props: ArticleProps) {
   const phrases = props.phrases

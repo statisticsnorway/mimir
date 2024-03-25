@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link, Title } from '@statisticsnorway/ssb-component-library'
 import { sanitize } from '../../lib/ssb/utils/htmlUtils'
-import { EntryLinkProps as EntryLink } from '../../lib/types/partTypes/entryLinks'
+import { EntryLink } from '../../lib/types/partTypes/entryLinks'
 
 interface EntryLinksProps {
   headerTitle?: string

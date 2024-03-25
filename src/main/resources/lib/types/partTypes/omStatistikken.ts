@@ -1,4 +1,4 @@
-import { type Accordion } from '/site/content-types'
+import { type AccordionData } from './accordion'
 
 export interface Items {
   definition: Array<string>
@@ -14,7 +14,7 @@ export interface Category {
 }
 
 export interface AboutTheStatisticsProps {
-  accordions: Array<Accordion>
+  accordions: Array<AccordionData>
   label: string
   ingress: string
 }

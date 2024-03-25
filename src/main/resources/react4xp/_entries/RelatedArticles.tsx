@@ -1,16 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { Card, Text, Button } from '@statisticsnorway/ssb-component-library'
 import { useMediaQuery } from 'react-responsive'
+import { type RelatedArticlesContent } from '../../lib/types/partTypes/relatedArticles'
 
 interface RelatedArticlesProps {
-  relatedArticles: {
-    title: string
-    subTitle?: string
-    preface?: string
-    href: string
-    imageSrc: string
-    imageAlt?: string
-  }[]
+  relatedArticles: RelatedArticlesContent[]
   showAll: string
   showLess: string
   heading: string

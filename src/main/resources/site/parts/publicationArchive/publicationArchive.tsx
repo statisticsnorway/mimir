@@ -4,7 +4,11 @@ import { NumericFormat } from 'react-number-format'
 import { ChevronDown } from 'react-feather'
 import axios from 'axios'
 import { sanitize } from '../../../lib/ssb/utils/htmlUtils'
-import { DropdownItem, PublicationArchiveProps, PublicationItem } from '../../../lib/types/partTypes/publicationArchive'
+import {
+  type DropdownItem,
+  type PublicationArchiveProps,
+  type PublicationItem,
+} from '../../../lib/types/partTypes/publicationArchive'
 
 function PublicationArchive(props: PublicationArchiveProps) {
   const {

@@ -1,5 +1,5 @@
-import { MenuItemParsed, type Link } from './header'
-import { Language } from './language'
+import { type MenuItemParsed, type Link } from './header'
+import { type Language } from './language'
 
 export interface FooterContent {
   logoUrl: string

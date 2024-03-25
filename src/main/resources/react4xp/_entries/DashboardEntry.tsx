@@ -20,20 +20,8 @@ import { actions as commonActions } from '/react4xp/dashboard/containers/HomePag
 import { setUserServerSide, requestServerTime } from '/react4xp/dashboard/containers/HomePage/actions'
 import { requestJobs } from '/react4xp/dashboard/containers/Jobs/actions'
 
-interface DashboardProps {
-  user?: object;
-  dashboardOptionsForUser?: {
-    dashboardTools?: boolean;
-    statistics?: boolean;
-    jobLogs?: boolean;
-    dataSources?: boolean;
-    statisticRegister?: boolean;
-  };
-  contentStudioBaseUrl?: string;
-  dataToolBoxBaseUrl?: string;
-  internalBaseUrl?: string;
-  internalStatbankUrl?: string;
-  toggleDebugging?: unknown;
+type DashboardProps = DashboardRouterProps & {
+  toggleDebugging?: unknown
 }
 
 function Dashboard(props: DashboardProps) {
@@ -56,18 +44,18 @@ function Dashboard(props: DashboardProps) {
 }
 
 interface DashboardRouterProps {
-  user?: object;
+  user?: object
   dashboardOptionsForUser?: {
-    dashboardTools?: boolean;
-    statistics?: boolean;
-    jobLogs?: boolean;
-    dataSources?: boolean;
-    statisticRegister?: boolean;
-  };
-  contentStudioBaseUrl?: string;
-  dataToolBoxBaseUrl?: string;
-  internalBaseUrl?: string;
-  internalStatbankUrl?: string;
+    dashboardTools?: boolean
+    statistics?: boolean
+    jobLogs?: boolean
+    dataSources?: boolean
+    statisticRegister?: boolean
+  }
+  contentStudioBaseUrl?: string
+  dataToolBoxBaseUrl?: string
+  internalBaseUrl?: string
+  internalStatbankUrl?: string
 }
 
 function DashboardRouter(props: DashboardRouterProps) {
@@ -116,4 +104,4 @@ function DashboardRouter(props: DashboardRouterProps) {
   )
 }
 
-export default (props) => <Dashboard {...props} />
+export default (props: DashboardRouterProps) => <Dashboard {...props} />

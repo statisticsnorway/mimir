@@ -38,4 +38,4 @@ const ExternalCards = (props: ExternalCardsProps) => {
   )
 }
 
-export default (props) => <ExternalCards {...props} />
+export default (props: ExternalCardsProps) => <ExternalCards {...props} />
