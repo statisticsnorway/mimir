@@ -5,8 +5,8 @@ import { renderError } from '/lib/ssb/error/error'
 import { render } from '/lib/enonic/react4xp'
 import { imageUrl, getImageAlt } from '/lib/ssb/utils/imageUtils'
 import { isEnabled } from '/lib/featureToggle'
-import { getStatbankApiData, type SimpleStatbankResult } from '/lib/ssb/parts/simpleStatbank'
-import { type SimpleStatbankProps } from '/lib/types/partTypes/simpleStatbank'
+import { getStatbankApiData } from '/lib/ssb/parts/simpleStatbank'
+import { SimpleStatbankProps, type SimpleStatbankResult } from '/lib/types/partTypes/simpleStatbank'
 import { type SimpleStatbank } from '/site/content-types'
 
 export function get(req: XP.Request): XP.Response {

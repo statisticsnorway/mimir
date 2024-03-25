@@ -1,10 +1,11 @@
 import { get, Content } from '/lib/xp/content'
 import { assetUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
-import { Link, createMenuTree, parseGlobalLinks } from '/lib/ssb/parts/menu'
+import { createMenuTree, parseGlobalLinks } from '/lib/ssb/parts/menu'
 import { type Language } from '/lib/types/language'
 import * as util from '/lib/util'
-import { type MenuItem, type Footer } from '/site/content-types'
+import { type FooterContent } from '/lib/types/footer'
+import { type Footer } from '/site/content-types'
 
 export function getFooterContent(language: Language): FooterContent | undefined {
   if (language.footerId === undefined || language.footerId === null) {
@@ -44,18 +45,4 @@ export function getFooterContent(language: Language): FooterContent | undefined 
       }),
     }
   }
-}
-
-export interface FooterContent {
-  logoUrl: string
-  copyrightUrl: string
-  copyrightText: string
-  facebookUrl: string
-  twitterUrl: string
-  linkedinUrl: string
-  rssUrl: string
-  globalLinks: Array<Link>
-  footerNavigation?: Array<MenuItem>
-  topButtonText?: string
-  hiddenFooterText?: string
 }

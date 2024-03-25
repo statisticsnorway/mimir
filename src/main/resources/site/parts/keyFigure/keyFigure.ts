@@ -108,7 +108,7 @@ function renderKeyFigure(
             }
           })
         : undefined,
-      sourceLabel: getPhrases(page).source,
+      sourceLabel: getPhrases(page)!.source,
       source: config?.source,
       columns: !!config?.columns,
       showPreviewDraft,

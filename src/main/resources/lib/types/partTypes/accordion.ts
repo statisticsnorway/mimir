@@ -5,8 +5,9 @@ export interface AccordionData {
   body?: string | undefined
   open?: string | undefined
   items?: Accordion['accordions']
+  subHeader?: string
 }
 
-export interface AccordionProp {
+export interface AccordionProps {
   accordions: Array<AccordionData>
 }

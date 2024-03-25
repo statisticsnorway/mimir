@@ -1,10 +1,10 @@
-export interface EmployeeProp {
+export interface EmployeeProps {
   title: string
   email: string
   position: string
   phone: string
   description: string
-  profileImages: Array<string> | void[]
+  profileImages: Array<string>
   myCV: string | null
   projects: Array<Project>
   area: Area | null

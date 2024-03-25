@@ -1,5 +1,13 @@
-import { type SimpleStatbankResult } from '/lib/ssb/parts/simpleStatbank'
+export interface SimpleStatbankResult {
+  data: DimensionData[]
+}
 
+export interface DimensionData {
+  displayName: string
+  dataCode: string
+  value: string | undefined
+  time: string
+}
 export interface SimpleStatbankProps {
   icon: string
   altText: string | undefined

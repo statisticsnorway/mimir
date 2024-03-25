@@ -21,3 +21,9 @@ export interface DocumentationContent extends MethodDocumentation {
     content?: string
   }
 }
+
+export interface CategoryLinksProps {
+  links: CategoryLink[]
+  methodsAndDocumentationUrl?: string
+  methodsAndDocumentationLabel?: string
+}

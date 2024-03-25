@@ -1,4 +1,4 @@
-import { type KeyFigure } from '/site/content-types/keyFigure'
+import { type KeyFigure } from '/site/parts/keyFigure'
 
 export interface KeyFigureProps {
   displayName: KeyFigure['title']
@@ -29,7 +29,7 @@ export interface KeyFigureData {
   greenBox: KeyFigureView['greenBox']
   glossaryText?: KeyFigureView['glossaryText']
   glossary?: string
-  source: object | undefined
+  source: KeyFigure['source'] | undefined
 }
 
 export interface MunicipalData {

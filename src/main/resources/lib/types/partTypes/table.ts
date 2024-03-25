@@ -7,8 +7,10 @@ export interface TableProps {
   downloadTableTitle: object
   downloadTableOptions: DropdownItems
   displayName: string
-  table: object
-  tableDraft: object
+  table: Partial<TableView> & {
+    language: string | undefined
+  }
+  tableDraft: Partial<TableView>
   standardSymbol: TableStandardSymbolLink | undefined
   sources: SourceList
   sourceLabel: string

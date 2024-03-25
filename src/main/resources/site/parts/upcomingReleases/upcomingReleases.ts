@@ -1,7 +1,13 @@
 import { query, type Content } from '/lib/xp/content'
 import { getContent, getComponent, processHtml, serviceUrl, sanitizeHtml } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
-import { type GroupedBy, type PreparedStatistics, type YearReleases, type Release } from '/lib/types/variants'
+import {
+  type GroupedBy,
+  type PreparedStatistics,
+  type YearReleases,
+  type Release,
+  type PreparedUpcomingRelease,
+} from '/lib/types/variants'
 import { getMainSubjects, getMainSubjectById } from '/lib/ssb/utils/subjectUtils'
 import { formatDate } from '/lib/ssb/utils/dateUtils'
 import { format } from '/lib/vendor/dateFns'
@@ -11,11 +17,7 @@ import {
   prepareRelease,
   getAllReleases,
 } from '/lib/ssb/utils/variantUtils'
-import {
-  filterReleasesIntoArrays,
-  filterOnComingReleases,
-  type PreparedUpcomingRelease,
-} from '/lib/ssb/utils/filterReleasesUtils'
+import { filterReleasesIntoArrays, filterOnComingReleases } from '/lib/ssb/utils/filterReleasesUtils'
 import { type StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
 import { render } from '/lib/enonic/react4xp'
 

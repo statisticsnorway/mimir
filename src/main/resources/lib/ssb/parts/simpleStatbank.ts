@@ -2,6 +2,7 @@
 import JSONstat from 'jsonstat-toolkit/import.mjs'
 import { type Dataset, type Data, type Dimension, Category } from '/lib/types/jsonstat-toolkit'
 import { fetchStatbankApiDataQuery } from '/lib/ssb/dataset/statbankApi/statbankApi'
+import { type SimpleStatbankResult, type DimensionData } from '/lib/types/partTypes/simpleStatbank'
 import { createHumanReadableFormat } from '/lib/ssb/utils/utils'
 import { localizeTimePeriod } from '/lib/ssb/utils/language'
 
@@ -41,15 +42,4 @@ export function getStatbankApiData(
     log.error('getStatbankApiData failed: ' + error)
     return undefined
   }
-}
-
-export interface SimpleStatbankResult {
-  data: DimensionData[]
-}
-
-interface DimensionData {
-  displayName: string
-  dataCode: string
-  value: string | undefined
-  time: string
 }

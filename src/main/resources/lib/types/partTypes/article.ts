@@ -3,7 +3,7 @@ import { type Phrases } from '/lib/types/language'
 import { type Article } from '/site/content-types/article'
 
 export interface ArticleProps {
-  phrases: Phrases | undefined
+  phrases: Phrases
   introTitle: string | undefined
   title: string
   preface: string | undefined

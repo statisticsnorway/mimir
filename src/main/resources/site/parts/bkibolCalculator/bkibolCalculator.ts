@@ -12,6 +12,7 @@ import { renderError } from '/lib/ssb/error/error'
 import { getLanguage } from '/lib/ssb/utils/language'
 import { getCalculatorConfig, getBkibolDatasetEnebolig } from '/lib/ssb/dataset/calculator'
 import { fromPartCache } from '/lib/ssb/cache/partCache'
+import { type BkibolCalculatorProps } from '/lib/types/partTypes/bkibolCalculator'
 import { type CalculatorConfig } from '/site/content-types'
 import { type BkibolCalculator as BkibolCalculatorPartConfig } from '.'
 
@@ -79,25 +80,22 @@ function getBkibolCalculatorComponent(req: XP.Request, page: Content<BkibolCalcu
       id: part.config.bkibolCalculatorArticle,
     })
 
-  return r4XpRender(
-    'BkibolCalculator',
-    {
-      bkibolServiceUrl: serviceUrl({
-        service: 'bkibol',
-      }),
-      language: language.code,
-      months,
-      phrases,
-      calculatorArticleUrl,
-      nextPublishText,
-      lastNumberText,
-      lastUpdated,
-    },
-    req,
-    {
-      body: `<section class="xp-part part-bkibol-calculator container"></section>`,
-    }
-  )
+  const props: BkibolCalculatorProps = {
+    bkibolServiceUrl: serviceUrl({
+      service: 'bkibol',
+    }),
+    language: language.code!,
+    months,
+    phrases,
+    calculatorArticleUrl,
+    nextPublishText,
+    lastNumberText,
+    lastUpdated,
+  }
+
+  return r4XpRender('BkibolCalculator', props, req, {
+    body: `<section class="xp-part part-bkibol-calculator container"></section>`,
+  })
 }
 
 function lastPeriod(bkibolData: Dataset | null): CalculatorPeriod {
