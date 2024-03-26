@@ -5,6 +5,7 @@ import { sanitize } from '../../lib/ssb/utils/htmlUtils'
 import { HeaderContent } from '../../lib/types/header'
 
 function Header(props: HeaderContent) {
+  const { showMenuPrototype } = props
   const [showSubMenu, setShowSubMenu] = useState(false)
   const [showMainMenuOnMobile, setShowMainMenuOnMobile] = useState(false)
   const [indexForCurrentActiveMenuItem, setIndexForCurrentActiveMenuItem] = useState<number | undefined>(undefined)
@@ -58,6 +59,13 @@ function Header(props: HeaderContent) {
   function renderIcon(icon: string) {
     return (
       <span
+        style={
+          showMenuPrototype
+            ? {
+                display: 'none',
+              }
+            : {}
+        }
         aria-hidden='true'
         dangerouslySetInnerHTML={{
           __html: sanitize(icon),
@@ -67,6 +75,7 @@ function Header(props: HeaderContent) {
   }
 
   function renderSubMenu(topMenuItem: HeaderContent['mainNavigation'][0], activeMenuItem: boolean | undefined) {
+    if (showMenuPrototype && !activeMenuItem) return
     return (
       topMenuItem.menuItems &&
       topMenuItem.menuItems.map((menuItem, itemIndex) => {
@@ -135,7 +144,7 @@ function Header(props: HeaderContent) {
   const mainMenuLabel = language?.code === 'en' ? 'main menu' : 'hovedmeny'
 
   return (
-    <header className='ssb-header-wrapper'>
+    <header className={showMenuPrototype ? 'ssb-header-wrapper show-prototype-styling' : 'ssb-header-wrapper'}>
       <nav className='global-links hideOnMobile' aria-label={globalLinksLabel}>
         <Link className='skip-to-content' href='#content'>
           {skipToContentText}
@@ -201,6 +210,9 @@ function Header(props: HeaderContent) {
               )
             })}
           </ul>
+          <div className={showMainMenuOnMobile ? 'fill-width hideOnMobile' : ' fill-width'}>
+            <Divider />
+          </div>
         </nav>
         <nav
           className={showMainMenuOnMobile ? 'active global-bottom-links' : 'global-bottom-links'}
