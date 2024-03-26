@@ -21,7 +21,6 @@ import { updateSDDSTables } from '/lib/ssb/cron/updateSDDSTables'
 import { clearPartFromPartCache } from '/lib/ssb/cache/partCache'
 import { refreshQueriesAsync } from '/lib/ssb/cron/task'
 import { getContentWithDataSource } from '/lib/ssb/dataset/dataset'
-import { deleteExpiredEventLogsForQueries } from '/lib/ssb/cron/eventLog'
 import { cronJobLog } from '/lib/ssb/utils/serverLog'
 import { ENONIC_CMS_DEFAULT_REPO } from '/lib/ssb/repo/common'
 import { updateUnpublishedMockTbml } from '/lib/ssb/dataset/mockUnpublished'
@@ -231,22 +230,6 @@ export function setupCronJobs(): void {
     updateStatisticRepoCron
   )
 
-  const deleteExpiredEventLogCron: string =
-    app.config && app.config['ssb.cron.deleteLogs'] ? app.config['ssb.cron.deleteLogs'] : '45 13 * * *'
-  schedule({
-    name: 'Delete expired event logs for queries',
-    cron: deleteExpiredEventLogCron,
-    callback: () => {
-      libScheduleTestLog('deleteExpireCronTest', deleteExpiredEventLogCron)
-      runOnMasterOnly(deleteExpiredEventLogsForQueries)
-    },
-    context: cronContext,
-  })
-  libScheduleTest(
-    { name: 'deleteExpireCronTest', cron: '20 15 * * *', timeZone: 'Europe/Oslo' },
-    deleteExpiredEventLogCron
-  )
-
   if (app.config && app.config['ssb.mock.enable'] === 'true') {
     const updateUnpublishedMockCron: string =
       app.config && app.config['ssb.cron.updateUnpublishedMock']
@@ -332,112 +315,99 @@ export function setupCronJobs(): void {
       app.config && app.config['ssb.cron.timezone'] ? app.config['ssb.cron.timezone'] : 'Europe/Oslo'
 
     // Update calculators
-    run(cronContext, () => {
-      const updateCalculatorCron: string =
-        app.config && app.config['ssb.cron.updateCalculator'] ? app.config['ssb.cron.updateCalculator'] : '01 8 * * *'
-      const jobExists = !!getScheduledJob({
-        name: 'updateCalculator',
-      })
-      if (jobExists) {
-        modify({
-          name: 'updateCalculator',
-          editor: (job) => {
-            job.schedule.value = updateCalculatorCron
-            if (job.schedule.type === 'CRON') {
-              job.schedule.timeZone = timezone
-            }
-            return job
-          },
-        })
-      } else {
-        create({
-          name: 'updateCalculator',
-          descriptor: `${app.name}:updateCalculator`,
-          description: 'Update data calculators',
-          user: `user:system:cronjob`,
-          enabled: true,
-          schedule: {
-            type: 'CRON',
-            value: updateCalculatorCron,
-            timeZone: timezone,
-          },
-        })
-      }
+    scheduleJob({
+      name: 'updateCalculator',
+      cronConfigName: 'ssb.cron.updateCalculator',
+      description: 'Update data calculators',
+      descriptor: 'updateCalculator',
+      timeZone: timezone,
     })
 
     // Update next release Mimir QA
     if (app.config && app.config['ssb.mock.enable'] === 'true') {
-      run(cronContext, () => {
-        const updateMimirMockReleaseCron: string =
-          app.config && app.config['ssb.cron.updateMimirReleasedMock']
-            ? app.config['ssb.cron.updateMimirReleasedMock']
-            : '01 8 * * *'
-        const jobExists = !!getScheduledJob({
-          name: 'updateMimirMockRelease',
-        })
-        if (jobExists) {
-          modify({
-            name: 'updateMimirMockRelease',
-            editor: (job) => {
-              job.schedule.value = updateMimirMockReleaseCron
-              return job
-            },
-          })
-        } else {
-          create({
-            name: 'updateMimirMockRelease',
-            descriptor: `${app.name}:updateMimirMockRelease`,
-            description: 'Update next release Mimir QA',
-            user: `user:system:cronjob`,
-            enabled: true,
-            schedule: {
-              type: 'CRON',
-              value: updateMimirMockReleaseCron,
-              timeZone: 'Europe/Oslo',
-            },
-          })
-        }
+      scheduleJob({
+        name: 'updateMimirMockRelease',
+        cronConfigName: 'ssb.cron.updateMimirReleasedMock',
+        description: 'Update next release Mimir QA',
+        descriptor: 'updateMimirMockRelease',
+        timeZone: timezone,
       })
     }
 
     // Push Rss Statkal
     const pushRssStatkalEnabled: boolean = isEnabled('push-rss-statkal', false, 'ssb')
-    run(cronContext, () => {
-      const pushRssStatkalCron: string =
-        app.config && app.config['ssb.cron.pushRssStatkal'] ? app.config['ssb.cron.pushRssStatkal'] : '10 08 * * *'
-      const jobExists = !!getScheduledJob({
-        name: 'pushRssStatkal',
-      })
-      if (jobExists) {
-        modify({
-          name: 'pushRssStatkal',
-          editor: (job) => {
-            job.enabled = pushRssStatkalEnabled
-            job.schedule.value = pushRssStatkalCron
-            if (job.schedule.type === 'CRON') {
-              job.schedule.timeZone = timezone
-            }
-            return job
-          },
-        })
-      } else {
-        create({
-          name: 'pushRssStatkal',
-          descriptor: `${app.name}:pushRssStatkal`,
-          description: 'Push kommende publiseringer til rss/statkal',
-          user: `user:system:cronjob`,
-          enabled: pushRssStatkalEnabled,
-          schedule: {
-            type: 'CRON',
-            value: pushRssStatkalCron,
-            timeZone: timezone,
-          },
-        })
-      }
+    scheduleJob({
+      name: 'pushRssStatkal',
+      cronConfigName: 'ssb.cron.pushRssStatkal',
+      description: 'Push kommende publiseringer til rss/statkal',
+      descriptor: 'pushRssStatkal',
+      timeZone: timezone,
+      updateEnabledTo: pushRssStatkalEnabled,
+    })
+
+    // Delete expired event logs for queries
+    scheduleJob({
+      name: 'deleteExpiredEventLog',
+      cronConfigName: 'ssb.cron.deleteLogs',
+      description: 'Delete expired event logs for queries',
+      descriptor: 'deleteExpiredEventLog',
+      timeZone: timezone,
     })
   }
 
   const cronList: Array<TaskMapper> = list() as Array<TaskMapper>
   cronJobLog('All cron jobs registered')
   cronJobLog(JSON.stringify(cronList, null, 2))
+}
+
+type ScheduleJobParams = {
+  name: string
+  cronConfigName: string
+  description: string
+  descriptor: string
+  timeZone?: string
+  updateEnabledTo?: boolean | undefined
+}
+
+function scheduleJob({
+  name,
+  cronConfigName,
+  description,
+  descriptor,
+  timeZone = 'Europe/Oslo',
+  updateEnabledTo,
+}: ScheduleJobParams) {
+  run(cronContext, () => {
+    const cronValue: string = app.config && app.config[cronConfigName] ? app.config[cronConfigName] : '0 12 * * *'
+    const jobExists = !!getScheduledJob({
+      name,
+    })
+    if (jobExists) {
+      modify({
+        name,
+        editor: (job) => {
+          if (updateEnabledTo !== undefined) job.enabled = updateEnabledTo
+
+          job.schedule.value = cronValue
+          if (job.schedule.type === 'CRON') {
+            job.schedule.timeZone = timeZone
+          }
+          return job
+        },
+      })
+    } else {
+      create({
+        name,
+        descriptor: `${app.name}:${descriptor}`,
+        description,
+        user: `user:system:cronjob`,
+        enabled: updateEnabledTo !== undefined ? updateEnabledTo : true,
+        schedule: {
+          type: 'CRON',
+          value: cronValue,
+          timeZone: timeZone,
+        },
+      })
+    }
+  })
 }
