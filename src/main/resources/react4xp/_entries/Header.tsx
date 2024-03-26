@@ -59,13 +59,7 @@ function Header(props: HeaderContent) {
   function renderIcon(icon: string) {
     return (
       <span
-        style={
-          showMenuPrototype
-            ? {
-                display: 'none',
-              }
-            : {}
-        }
+        className='icon'
         aria-hidden='true'
         dangerouslySetInnerHTML={{
           __html: sanitize(icon),
