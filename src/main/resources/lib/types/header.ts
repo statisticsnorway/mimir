@@ -15,6 +15,7 @@ export interface HeaderContent {
   language?: Language
   closeText: string
   menuText: string
+  showMenuPrototype: boolean
 }
 
 export interface UrlContent {
