@@ -52,8 +52,8 @@ function getNews(mainSubjects: Array<Content<Page & DefaultPageConfig>>): Array<
   const from: string = subDays(new Date(), 1).toISOString()
   const to: string = new Date().toISOString()
   const baseUrl: string = app.config?.['ssb.baseUrl'] || ''
-  const serverOffsetInMinutes: number = parseInt(app.config?.['serverOffsetInMs']) || 0
-  const timeZoneIso: string = getTimeZoneIso(serverOffsetInMinutes)
+  const serverOffsetInMilliSeconds: number = parseInt(app.config?.['serverOffsetInMs']) || 0
+  const timeZoneIso: string = getTimeZoneIso(serverOffsetInMilliSeconds)
 
   const news: Array<News> = []
   mainSubjects.forEach((mainSubject) => {
@@ -65,7 +65,7 @@ function getNews(mainSubjects: Array<Content<Page & DefaultPageConfig>>): Array<
     }).hits as unknown as Array<Content<Article>>
     articles.forEach((article) => {
       const pubDate: string | undefined = article.publish?.from
-        ? formatPubDateArticle(article.publish.from, serverOffsetInMinutes, timeZoneIso)
+        ? formatPubDateArticle(article.publish.from, serverOffsetInMilliSeconds, timeZoneIso)
         : undefined
       if (pubDate) {
         news.push({
