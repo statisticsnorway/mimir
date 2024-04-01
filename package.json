@@ -74,7 +74,7 @@
     "@item-enonic-types/lib-time": "~1.0.4",
     "@reduxjs/toolkit": "~1.9.7",
     "@statisticsnorway/ssb-component-library": "~2.0.98",
-    "@types/ramda": "~0.29.11",
+    "@types/ramda": "~0.29.12",
     "@types/react": "~18.2.73",
     "@types/react-mathjax": "^1.0.4",
     "@types/react-router-dom": "^5.3.3",
