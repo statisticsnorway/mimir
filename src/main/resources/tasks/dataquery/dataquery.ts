@@ -12,13 +12,14 @@ import { type RSSFilter, dataSourceRSSFilter } from '/lib/ssb/cron/rss'
 import { getContentWithDataSource } from '/lib/ssb/dataset/dataset'
 import { refreshQueriesAsync } from '/lib/ssb/cron/task'
 import {libScheduleTestLog} from '/lib/ssb/cron/cron'
+import { Content } from '@enonic-types/lib-content'
+import { DataSource } from '/site/mixins/dataSource'
 
-
-const dataqueryCron: string =
-    app.config && app.config['ssb.cron.dataquery'] ? app.config['ssb.cron.dataquery'] : '0 15 * * *'
+const dataqueryCron: string = app.config && app.config['ssb.cron.dataquery'] ? app.config['ssb.cron.dataquery'] : '0 15 * * *'
 
 export function run(): void {
   libScheduleTestLog('dataqueryCronTest', dataqueryCron)
+ 
 
     cronJobLog(JobNames.REFRESH_DATASET_JOB)
     const jobLogNode: JobEventNode = startJobLog(JobNames.REFRESH_DATASET_JOB)
@@ -40,6 +41,5 @@ export function run(): void {
         result: [],
       })
     }
-    cronJobLog(JobNames.REFRESH_DATASET_JOB)
-  
+    cronJobLog(JobNames.REFRESH_DATASET_JOB) 
 }

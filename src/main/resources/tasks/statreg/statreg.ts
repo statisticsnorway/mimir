@@ -11,9 +11,7 @@ import {
 import { type StatRegRefreshResult, refreshStatRegData, STATREG_NODES } from '/lib/ssb/repo/statreg'
 import { createOrUpdateStatisticsRepo } from '/lib/ssb/repo/statisticVariant'
 
-
-const statregCron: string =
-app.config && app.config['ssb.cron.statreg'] ? app.config['ssb.cron.statreg'] : '30 14 * * *'
+const statregCron: string = app.config && app.config['ssb.cron.statreg'] ? app.config['ssb.cron.statreg'] : '30 14 * * *'
 
 export function run(): void {
   libScheduleTestLog('statregRefreshCronTest', statregCron)

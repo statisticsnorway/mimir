@@ -7,9 +7,7 @@ import {
 } from '/lib/ssb/repo/job'
 import { pushRssNews } from '/lib/ssb/cron/pushRss'
 
-
-const pushRssNewsCron: string =
-app.config && app.config['ssb.cron.pushRssNews'] ? app.config['ssb.cron.pushRssNews'] : '02 06 * * *'
+const pushRssNewsCron: string = app.config && app.config['ssb.cron.pushRssNews'] ? app.config['ssb.cron.pushRssNews'] : '02 06 * * *'
 
 export function run(): void {
   libScheduleTestLog('pushRssNewsCronTest', pushRssNewsCron)
