@@ -429,7 +429,10 @@ header.ssb-header-wrapper {
 
   button .navigation-item {
     margin-right: 0 !important;
-    width: 320px; 
+    width: 320px;
+    span{
+      font-size: 20px !important;
+    }
   }
 
   .subMenu {
