@@ -19,7 +19,6 @@ const dataqueryCron: string = app.config && app.config['ssb.cron.dataquery'] ? a
 
 export function run(): void {
   libScheduleTestLog('dataqueryCronTest', dataqueryCron)
- 
 
     cronJobLog(JobNames.REFRESH_DATASET_JOB)
     const jobLogNode: JobEventNode = startJobLog(JobNames.REFRESH_DATASET_JOB)
