@@ -238,7 +238,7 @@ export function setupCronJobs(): void {
     // clear specific cache once an hour
     scheduleJob({
       name: 'clearCache',
-      cronConfigName: 'ssb.cron.clearCacheCron',
+      cronConfigName: 'ssb.cron.clearCache',
       description: 'Clear cache',
       descriptor: 'clearCache',
       timeZone: timezone,
