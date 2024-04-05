@@ -166,10 +166,10 @@ function SimpleStatbank(props: SimpleStatbankProps) {
   }
 
   return (
-    <section className='simple-statbank container-fluid p-0'>
+    <div className='container-fluid p-0'>
       {renderForm()}
       {renderResult()}
-    </section>
+    </div>
   )
 }
 

@@ -88,5 +88,7 @@ function renderPart(req: XP.Request, simpleStatbankId?: string): XP.Response {
     statbankApiData,
   }
 
-  return render('site/parts/simpleStatbank/simpleStatbank', props, req)
+  return render('site/parts/simpleStatbank/simpleStatbank', props, req, {
+    body: '<section class="xp-part simple-statbank"></section>',
+  })
 }
