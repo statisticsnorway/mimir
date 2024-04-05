@@ -200,7 +200,7 @@ export function setupCronJobs(): void {
     // clear calculator parts cache 
     scheduleJob({
       name: 'clearCalculatorPartsCache',
-      cronConfigName: 'clearCalculatorPartsCacheCron',
+      cronConfigName: 'ssb.cron.clearCalculatorCache',
       description: 'Clear calculator parts cache',
       descriptor: 'clearCalculatorPartsCache',
       timeZone: timezone,
