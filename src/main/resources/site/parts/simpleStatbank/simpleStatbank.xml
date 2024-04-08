@@ -1,6 +1,6 @@
 <part>
-  <display-name>Spørring Statistikkbanken</display-name>
-  <description>Mini(stat)bank</description>
+  <display-name>Ministatbank</display-name>
+  <description>Spørring Statistikkbanken</description>
   <super-type>base:structured</super-type>
   <allow-child-content>true</allow-child-content>
   <form>
