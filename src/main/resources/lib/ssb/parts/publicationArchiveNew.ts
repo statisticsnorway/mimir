@@ -2,16 +2,12 @@ import { type Content, type QueryDsl } from '/lib/xp/content'
 import { pageUrl } from '/lib/xp/portal'
 import { connect, multiRepoConnect, Node, type MultiRepoConnection } from '/lib/xp/node'
 import { get as getContext, type PrincipalKey } from '/lib/xp/context'
-import {
-  getMainSubjectBySubSubject,
-  getMainSubjects,
-  getSubSubjects,
-  type SubjectItem,
-} from '/lib/ssb/utils/subjectUtils'
+import { getMainSubjectBySubSubject, getMainSubjects, getSubSubjects } from '/lib/ssb/utils/subjectUtils'
 import { formatDate } from '/lib/ssb/utils/dateUtils'
 import { forceArray } from '/lib/ssb/utils/arrayUtils'
 import { type ContentLight, type Release } from '/lib/ssb/repo/statisticVariant'
 import { notEmptyOrUndefined } from '/lib/ssb/utils/coreUtils'
+import { type SubjectItem } from '/lib/types/subject'
 import { type Article } from '/site/content-types'
 
 export function getPublicationsNew(

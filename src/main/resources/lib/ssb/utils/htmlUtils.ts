@@ -5,5 +5,11 @@ import * as xss from 'xss'
  * @returns string with clean html
  */
 export function sanitize(html: string): string {
-  return new xss.FilterXSS({ allowCommentTag: true, escapeHtml: (text) => text }).process(html)
+  const allowList = xss.getDefaultWhiteList()
+  allowList.a?.push('id', 'name')
+  return new xss.FilterXSS({
+    allowCommentTag: true,
+    allowList,
+    escapeHtml: (text) => text,
+  }).process(html)
 }

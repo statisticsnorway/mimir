@@ -1,0 +1,54 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "allowUmdGlobalAccess": true,
+    "baseUrl": "./",
+		"moduleResolution": "node",
+    "sourceMap": true,
+    "allowJs": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "strictNullChecks": true,
+    "esModuleInterop": true,
+    "skipLibCheck": false,
+    "jsx": "react",
+    "lib": ["es2021", "dom", "ES2021.String"],
+    "types": [
+      "@item-enonic-types/global",
+    ],
+    "rootDirs": [
+      "./main/resources",
+      "../.xp-codegen"
+    ],
+    "paths": {
+      "/admin/*": ["./main/resources/admin/*"],
+      "/lib/xp/*": ["../node_modules/@enonic-types/lib-*"],
+      "/lib/enonic/react4xp": ["../node_modules/@enonic-types/lib-react4xp"],
+      "/lib/*": [ "../node_modules/@item-enonic-types/lib-*" ,"./main/resources/lib/*", "./main/resources/lib/types/*"],
+      "/react4xp/*": ["./main/resources/react4xp/*"],
+      "/services/*": ["./main/resources/services/*"],
+      "/site/*": [
+        "../.xp-codegen/site/*",
+        "./main/resources/site/*"
+      ],
+      "/tasks/*": [
+        "../.xp-codegen/tasks/*",
+        "./main/resources/tasks/*"
+      ],
+    }
+  },
+  "include": [
+    "../.xp-codegen/**/*",
+    "main/resources/react4xp/**/*.ts",
+    "main/resources/react4xp/**/*.es6",
+  	"main/resources/**/*.tsx",
+    "main/resources/lib/types/**/*",
+    "main/resources/lib/ssb/utils/htmlUtils.ts",
+    "main/**/*.d.ts", "main/resources/site/parts/highchartExpert/HighchartExpert.jsx", "main/resources/site/parts/highchart/Highchart.jsx", "main/resources/site/parts/highmap/Highmap.jsx", "main/resources/site/parts/nameSearch/nameSearch.jsx",
+  ],
+  "exclude": [
+    "main/**/*.js",
+    "main/resources/assets/**/*.*",
+  ]
+}

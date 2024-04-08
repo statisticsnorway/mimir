@@ -1,4 +1,4 @@
-import { flattenReleases, flattenContentReleases, mergeAndSortReleases } from './upcomingReleases'
+import { flattenReleases, flattenContentReleases, mergeAndSortReleases } from './upcomingReleases.tsx'
 
 describe('Upcoming Releases', () => {
   test('flattens content release data correctly', () => {

@@ -12,7 +12,10 @@ import * as util from '/lib/util'
 import { getPhrases } from '/lib/ssb/utils/language'
 import { renderError } from '/lib/ssb/error/error'
 import { datasetOrUndefined } from '/lib/ssb/cache/cache'
-import { type AccordionData } from '/site/parts/accordion/accordion'
+import {
+  type AttachmentTablesFiguresData,
+  type AttachmentTablesFiguresProps,
+} from '/lib/types/partTypes/attachmentTablesFigures'
 import { GA_TRACKING_ID } from '/site/pages/default/default'
 import { type Statistics } from '/site/content-types'
 import { getProps } from '/site/parts/table/table'
@@ -50,7 +53,7 @@ function getTablesAndFiguresComponent(page: Content<Statistics>, req: XP.Request
     req,
     phrases
   )
-  const attachmentTablesFiguresProps: object = {
+  const attachmentTablesFiguresProps: AttachmentTablesFiguresProps = {
     accordions: attachmentTableAndFigureView.map(({ id, open, subHeader, body, contentType, props }) => {
       return {
         id,
@@ -203,11 +206,4 @@ function getFinalPageContributions(
     }
   }
   return accordionPageContributions
-}
-
-interface AttachmentTablesFiguresData extends AccordionData {
-  contentType: string
-  subHeader: string
-  props?: object
-  pageContributions?: XP.PageContributions
 }

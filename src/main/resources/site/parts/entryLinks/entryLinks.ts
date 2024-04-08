@@ -10,6 +10,7 @@ import { getPhrases } from '/lib/ssb/utils/language'
 
 import { renderError } from '/lib/ssb/error/error'
 import { getAttachmentContent } from '/lib/ssb/utils/utils'
+import { type EntryLink } from '/lib/types/partTypes/entryLinks'
 import { type EntryLinks as EntryLinksPartConfig } from '.'
 
 const view = resolve('./entryLinks.html')
@@ -77,7 +78,7 @@ function renderEntryLinks(req: XP.Request, headerTitle: string, entryLinksConten
   }
 }
 
-function parseEntryLinks(entryLinksContent: EntryLinksPartConfig['entryLinks']): Array<LinkEntry> | undefined {
+function parseEntryLinks(entryLinksContent: EntryLinksPartConfig['entryLinks']): Array<EntryLink> | undefined {
   return (
     entryLinksContent &&
     entryLinksContent.map(({ title, href, icon, mobileIcon }) => {
@@ -107,12 +108,4 @@ function parseEntryLinks(entryLinksContent: EntryLinksPartConfig['entryLinks']):
       }
     })
   )
-}
-
-interface LinkEntry {
-  title: string
-  href: string
-  icon: string
-  mobileIcon?: string
-  altText: string
 }

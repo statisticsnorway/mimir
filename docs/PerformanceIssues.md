@@ -10,7 +10,7 @@
 - [ ] Move part CSS to its own file that is then included in part pageContributions if not done already. 
 - [x] Move part JS that is not jsx to its own file that is then included in part pageContributions if not done already. 
 - [ ] Don't import from @statisticsnorway/ssb-component-library, (bundle file). Import so that we support treeshaking. If lib does not support that, update lib so that it does.
-- [ ] Disable hydration on react4xp parts where there is no hooks or event listeneres.
+- [x] Disable hydration on react4xp parts where there is no hooks or event listeneres.
 
 
 

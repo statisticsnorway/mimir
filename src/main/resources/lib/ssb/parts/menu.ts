@@ -2,6 +2,7 @@ import { get, getChildren, query, Content, ContentsResult } from '/lib/xp/conten
 
 import { pageUrl } from '/lib/xp/portal'
 import { getAttachment } from '/lib/ssb/utils/utils'
+import { Link, MenuItemParsed, UrlContent } from '/lib/types/header'
 import { type MenuItem, type Footer, type Header } from '/site/content-types'
 
 function flattenMenu(menuItems: Array<MenuItemParsed>): Array<MenuItemParsed> {
@@ -122,24 +123,4 @@ function parseUrl(urlSrc: MenuItem['urlSrc']): string | undefined {
   }
 
   return undefined
-}
-
-interface UrlContent {
-  contentId?: string
-  url?: string
-}
-
-export interface MenuItemParsed extends MenuItem {
-  title: string
-  path?: string
-  isActive: boolean
-  iconId?: string
-  iconAltText?: string
-  iconSvgTag?: string
-  menuItems?: Array<MenuItemParsed> | undefined
-}
-
-export interface Link {
-  title: string
-  path?: string
 }

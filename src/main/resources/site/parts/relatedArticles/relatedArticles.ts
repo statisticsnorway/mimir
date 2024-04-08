@@ -18,6 +18,7 @@ import { getReleaseDatesByVariants, getStatisticByIdFromRepo } from '/lib/ssb/st
 import { getPhrases } from '/lib/ssb/utils/language'
 import { fromRelatedArticlesCache } from '/lib/ssb/cache/cache'
 import { hasWritePermissionsAndPreview } from '/lib/ssb/parts/permissions'
+import { type RelatedArticle, type RelatedArticlesContent } from '/lib/types/partTypes/relatedArticles'
 import { type RelatedArticles } from '/site/mixins/relatedArticles'
 import { type Article, type Statistics } from '/site/content-types'
 
@@ -226,20 +227,4 @@ function getDsArticle(statisticId: string, statisticPublishDate: string): Relate
       : undefined
 
   return articleObject
-}
-
-interface RelatedArticlesContent {
-  title: string
-  subTitle: string
-  preface: string
-  href: string
-  imageSrc: string
-  imageAlt: string
-}
-
-interface RelatedArticle {
-  _selected: 'article'
-  article: {
-    article: string
-  }
 }

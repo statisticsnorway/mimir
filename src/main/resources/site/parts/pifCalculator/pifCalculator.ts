@@ -2,7 +2,7 @@ import { type Content } from '/lib/xp/content'
 import { getContent, getComponent, serviceUrl, pageUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 import { type CalculatorPeriod } from '/lib/types/calculator'
-import { DropdownItems as MonthDropdownItems } from '/lib/types/components'
+import { type DropdownItems as MonthDropdownItems } from '/lib/types/components'
 import { type Dataset, type Dimension } from '/lib/types/jsonstat-toolkit'
 import { type Phrases } from '/lib/types/language'
 import { render } from '/lib/enonic/react4xp'
@@ -12,6 +12,7 @@ import { renderError } from '/lib/ssb/error/error'
 import { getLanguage } from '/lib/ssb/utils/language'
 import { getCalculatorConfig, getPifDataset } from '/lib/ssb/dataset/calculator'
 import { fromPartCache } from '/lib/ssb/cache/partCache'
+import { type PifCalculatorProps } from '/lib/types/partTypes/pifCalculaor'
 import { type CalculatorConfig } from '/site/content-types'
 
 export function get(req: XP.Request): XP.Response {
@@ -75,27 +76,24 @@ function getPifCalculatorComponent(req: XP.Request, page: Content) {
       })
     : undefined
 
-  return render(
-    'PifCalculator',
-    {
-      pifServiceUrl: serviceUrl({
-        service: 'pif',
-      }),
-      language: language?.code,
-      months,
-      phrases,
-      nextPublishText,
-      lastNumberText,
-      lastUpdated,
-      productGroups: productGroups(phrases),
-      calculatorArticleUrl,
-    },
-    req,
-    {
-      id: 'pifCalculatorId',
-      body: '<section class="xp-part part-pif-calculator container"></section>',
-    }
-  )
+  const props: PifCalculatorProps = {
+    pifServiceUrl: serviceUrl({
+      service: 'pif',
+    }),
+    language: language!.code!,
+    months,
+    phrases,
+    nextPublishText,
+    lastNumberText,
+    lastUpdated,
+    productGroups: productGroups(phrases),
+    calculatorArticleUrl,
+  }
+
+  return render('PifCalculator', props, req, {
+    id: 'pifCalculatorId',
+    body: '<section class="xp-part part-pif-calculator container"></section>',
+  })
 }
 
 function lastPeriod(pifData: Dataset | null): CalculatorPeriod | undefined {

@@ -1,9 +1,11 @@
 import { getComponent, getSiteConfig, processHtml } from '/lib/xp/portal'
-import { type MunicipalityWithCounty, getMunicipality, RequestWithCode } from '/lib/ssb/dataset/klass/municipalities'
+import { getMunicipality } from '/lib/ssb/dataset/klass/municipalities'
 import { render } from '/lib/enonic/react4xp'
 
 import { pageMode } from '/lib/ssb/utils/utils'
 import { renderError } from '/lib/ssb/error/error'
+import { type RelatedKostraProps } from '/lib/types/partTypes/relatedKostra'
+import { type MunicipalityWithCounty, type RequestWithCode } from '/lib/types/municipalities'
 
 export function get(req: XP.Request): XP.Response {
   try {
@@ -52,12 +54,4 @@ function renderPart(req: XP.Request, municipality: MunicipalityWithCounty | unde
   return render('site/parts/relatedKostra/relatedKostra', props, req, {
     hydrate: false,
   })
-}
-
-interface RelatedKostraProps {
-  title: string
-  description: string
-  href: string
-  children: string
-  linkType: string
 }

@@ -6,6 +6,7 @@ import { imageUrl, getImageAlt } from '/lib/ssb/utils/imageUtils'
 
 import { renderError } from '/lib/ssb/error/error'
 import * as util from '/lib/util'
+import { type Image, type MenuBoxProps, type MenuConfig, type MenuItem } from '/lib/types/partTypes/menuBox'
 import { type MenuBox } from '/site/content-types'
 
 const view = resolve('./menuBox.html')
@@ -113,44 +114,4 @@ function getTitleSize(title: string): string {
     titleSize = 'lg'
   }
   return titleSize
-}
-
-interface MenuBoxProps {
-  boxes: Array<MenuItem>
-  height: string
-}
-
-interface MenuConfig {
-  title?: string
-  subtitle?: string
-  image?: string
-  urlSrc?: hrefManual | hrefContent
-}
-
-interface hrefManual {
-  _selected: 'manual'
-  manual: {
-    url: string
-  }
-}
-
-interface hrefContent {
-  _selected: 'content'
-  content: {
-    contentId: string
-    anchor: string
-  }
-}
-
-interface MenuItem {
-  title: string
-  subtitle: string
-  icon: Image | undefined
-  href: string
-  titleSize: string
-}
-
-interface Image {
-  src: string
-  alt: string | undefined
 }

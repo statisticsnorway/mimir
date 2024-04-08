@@ -1,6 +1,6 @@
 import { Content } from '/lib/xp/content'
 import { DatasetRepoNode, DataSource as DataSourceType, getDataset } from '/lib/ssb/repo/dataset'
-import { JSONstat } from '/lib/types/jsonstat-toolkit'
+import { type JSONstat } from '/lib/types/jsonstat-toolkit'
 import { get as fetchData } from '/lib/ssb/utils/datasetUtils'
 
 import { logUserDataQuery, Events } from '/lib/ssb/repo/query'

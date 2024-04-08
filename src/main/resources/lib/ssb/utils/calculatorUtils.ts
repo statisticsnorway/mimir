@@ -1,8 +1,8 @@
 import { localize } from '/lib/xp/i18n'
-import { DropdownItem as MonthDropdownItem, DropdownItems as MonthDropdownItems } from '/lib/types/components'
-import { CalculatorPeriod } from '/lib/types/calculator'
-import { Phrases } from '/lib/types/language'
-import { Data, Dataset, Dimension } from '/lib/types/jsonstat-toolkit'
+import { type DropdownItem as MonthDropdownItem, type DropdownItems as MonthDropdownItems } from '/lib/types/components'
+import { type CalculatorPeriod } from '/lib/types/calculator'
+import { type Phrases } from '/lib/types/language'
+import { type Data, type Dataset, type Dimension } from '/lib/types/jsonstat-toolkit'
 
 export function nextPeriod(month: string, year: string): CalculatorPeriod {
   let nextPeriodMonth: number = parseInt(month) + 1

@@ -2,10 +2,12 @@
 import striptags from 'striptags'
 import { Content } from '/lib/xp/content'
 import { AreaLineLinearData, PieData, Series, SeriesAndCategories } from '/lib/ssb/parts/highcharts/highchartsData'
-import { XmlParser, PreliminaryData, TableRowUniform, TableCellUniform } from '/lib/types/xmlParser'
-import { RowValue, getRowValue } from '/lib/ssb/utils/utils'
+import { type XmlParser, type PreliminaryData, type TableRowUniform, type TableCellUniform } from '/lib/types/xmlParser'
+import { type RowValue } from '/lib/types/util'
+import { getRowValue } from '/lib/ssb/utils/utils'
 import { toString } from '/lib/vendor/ramda'
 import * as util from '/lib/util'
+import { type RowData, type SeriesAndCategoriesRaw, type SeriesRaw, type Table } from '/lib/types/partTypes/highcharts'
 import { type CombinedGraph, type Highchart } from '/site/content-types'
 
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
@@ -163,24 +165,4 @@ function dataFormatPie(seriesAndCategories: SeriesAndCategoriesRaw): Series {
       }),
     }
   }
-}
-
-interface Table {
-  table: {
-    tbody: Array<TableRowUniform>
-  }
-}
-
-export interface RowData {
-  td: Array<number | string | PreliminaryData>
-}
-
-export interface SeriesRaw {
-  name: string
-  data: Array<number | string>
-}
-
-interface SeriesAndCategoriesRaw {
-  categories: Array<number | string>
-  series: Array<SeriesRaw>
 }

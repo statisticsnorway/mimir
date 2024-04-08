@@ -4,7 +4,7 @@ import {
   getUpcompingStatisticVariantsFromRepo,
 } from '/lib/ssb/repo/statisticVariant'
 import { Contact, ReleasesInListing } from '/lib/ssb/dashboard/statreg/types'
-import { type SubjectItem, getMainSubjects } from '/lib/ssb/utils/subjectUtils'
+import { getMainSubjects } from '/lib/ssb/utils/subjectUtils'
 import { calculatePeriod } from '/lib/ssb/utils/variantUtils'
 import { addDays, isWithinInterval } from '/lib/vendor/dateFns'
 import { formatDate, getTimeZoneIso } from '/lib/ssb/utils/dateUtils'
@@ -13,6 +13,7 @@ import { formatDate, getTimeZoneIso } from '/lib/ssb/utils/dateUtils'
 import { xmlEscape } from '/lib/text-encoding'
 import * as util from '/lib/util'
 import { getContactsFromRepo } from '/lib/ssb/statreg/contacts'
+import { type SubjectItem } from '/lib/types/subject'
 
 const dummyReq: Partial<XP.Request> = {
   branch: 'master',
@@ -123,8 +124,8 @@ function getUpcomingReleases(statisticVariants: ContentLight<ReleaseVariant>[]):
 function getRssReleases(variants: StatkalVariant[], releases: StatkalRelease[]): RssRelease[] {
   const rssReleases: RssRelease[] = []
   const contacts: Contact[] = getContactsFromRepo()
-  const serverOffsetInMinutes: number = parseInt(app.config?.['serverOffsetInMs']) || 0
-  const timeZoneIso: string = getTimeZoneIso(serverOffsetInMinutes)
+  const serverOffsetInMilliSeconds: number = parseInt(app.config?.['serverOffsetInMs']) || 0
+  const timeZoneIso: string = getTimeZoneIso(serverOffsetInMilliSeconds)
   releases.forEach((release: StatkalRelease) => {
     const variant: StatkalVariant = variants.filter(
       (variant) => variant.statisticId == release.statisticId && variant.language === release.language

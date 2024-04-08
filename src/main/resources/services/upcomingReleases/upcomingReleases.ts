@@ -1,9 +1,5 @@
 import { StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
 import {
-  GroupedBy,
-  PreparedStatistics,
-  YearReleases,
-  Release,
   addMonthNames,
   groupStatisticsByYearMonthAndDay,
   prepareRelease,
@@ -12,6 +8,7 @@ import {
 import { filterOnComingReleases } from '/lib/ssb/utils/filterReleasesUtils'
 
 import { getAllStatisticsFromRepo } from '/lib/ssb/statreg/statistics'
+import { type GroupedBy, type PreparedStatistics, type Release, type YearReleases } from '/lib/types/variants'
 
 export const get = (req: XP.Request): XP.Response => {
   // Get statistics

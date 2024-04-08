@@ -107,6 +107,10 @@ try {
           feature: 'structured-data',
           enabled: false,
         },
+        {
+          feature: 'show-menu-prototype',
+          enabled: false,
+        },
       ],
     },
   ])

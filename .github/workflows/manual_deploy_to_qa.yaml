@@ -15,7 +15,7 @@ jobs:
     environment: 'QA'
     steps:
       - name: Download workflow artifact
-        uses: dawidd6/action-download-artifact@v3.1.2
+        uses: dawidd6/action-download-artifact@v3.1.4
         with:
           workflow: deploy_to_qa.yaml
           branch: develop

@@ -7,3 +7,5 @@ interface UtilDataLibrary {
 }
 
 export declare const data: UtilDataLibrary
+
+export type RowValue = number | string

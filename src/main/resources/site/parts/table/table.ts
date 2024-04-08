@@ -1,11 +1,12 @@
 import { get as getContentByKey, type Content } from '/lib/xp/content'
 import { getContent, getComponent, pageUrl, assetUrl } from '/lib/xp/portal'
 import { render } from '/lib/thymeleaf'
-import { type TableSourceList, type TableView, parseTable } from '/lib/ssb/parts/table'
-import { SourceList, SourcesConfig, scriptAsset, getSources } from '/lib/ssb/utils/utils'
+import { parseTable } from '/lib/ssb/parts/table'
+import { type SourceList, type SourcesConfig } from '/lib/types/sources'
+import { scriptAsset, getSources } from '/lib/ssb/utils/utils'
 import {
-  DropdownItem as TableDownloadDropdownItem,
-  DropdownItems as TableDownloadDropdownItems,
+  type DropdownItem as TableDownloadDropdownItem,
+  type DropdownItems as TableDownloadDropdownItems,
 } from '/lib/types/components'
 import { type Language, type Phrases } from '/lib/types/language'
 import { render as r4xpRender } from '/lib/enonic/react4xp'
@@ -15,6 +16,12 @@ import { renderError } from '/lib/ssb/error/error'
 import * as util from '/lib/util'
 import { getLanguage, getPhrases } from '/lib/ssb/utils/language'
 import { hasWritePermissionsAndPreview } from '/lib/ssb/parts/permissions'
+import {
+  type TableView,
+  type TableProps,
+  type TableStandardSymbolLink,
+  type TableSourceList,
+} from '/lib/types/partTypes/table'
 import { GA_TRACKING_ID } from '/site/pages/default/default'
 import { type Statistics, type Table } from '/site/content-types'
 
@@ -186,30 +193,4 @@ function getStandardSymbolPage(
     }
   }
   return
-}
-
-interface TableStandardSymbolLink {
-  href: string
-  text: string
-}
-interface TableProps {
-  downloadTableLabel: string
-  downloadTableTitle: object
-  downloadTableOptions: TableDownloadDropdownItems
-  displayName: string
-  table: object
-  tableDraft: object
-  standardSymbol: TableStandardSymbolLink | undefined
-  sources: SourceList
-  sourceLabel: string
-  iconUrl: string
-  showPreviewDraft: boolean
-  paramShowDraft: boolean
-  draftExist: boolean | undefined
-  pageTypeStatistic: boolean
-  sourceListTables: Array<string>
-  sourceTableLabel: string
-  statBankWebUrl: string
-  hiddenTitle: string | undefined
-  GA_TRACKING_ID: string | null
 }

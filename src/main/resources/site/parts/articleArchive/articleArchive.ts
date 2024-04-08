@@ -6,6 +6,11 @@ import { formatDate } from '/lib/ssb/utils/dateUtils'
 import { imageUrl, getImageAlt } from '/lib/ssb/utils/imageUtils'
 
 import { renderError } from '/lib/ssb/error/error'
+import {
+  type ArticleArchiveProps,
+  type ParsedArticles,
+  type ParsedArticleData,
+} from '/lib/types/partTypes/articleArchive'
 import { type Article, type ArticleArchive } from '/site/content-types'
 
 export function get(req: XP.Request): XP.Response {
@@ -157,34 +162,4 @@ export function parseArticleData(pageId: string, start: number, count: number, l
     articles: parsedArticles,
     total: articles.total,
   }
-}
-
-interface ArticleArchiveProps {
-  title: string | undefined
-  preamble: string | undefined
-  image: string | undefined
-  imageAltText: string | undefined
-  freeText: string | undefined
-  issnNumber: string | undefined
-  listOfArticlesSectionTitle: string
-  language: string
-  pageId: string
-  firstArticles: ParsedArticles
-  articleArchiveService: string
-  showMore: string
-  showMorePagination: string
-}
-
-interface ParsedArticleData {
-  preamble: string | undefined
-  year: string | undefined
-  subtitle: string
-  href: string
-  title: string
-  date: string
-}
-
-export interface ParsedArticles {
-  articles: Array<ParsedArticleData>
-  total: number
 }
