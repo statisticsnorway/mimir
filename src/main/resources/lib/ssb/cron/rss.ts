@@ -115,7 +115,7 @@ export function dataSourceRSSFilter(dataSources: Array<Content<DataSource>>): RS
   // only keep those with updates for the last 2 days, to the end of today
   const RSSItems: Array<RSSItem> = fetchRSS().filter((item) =>
     isWithinInterval(new Date(item.pubDate), {
-      start: subDays(new Date().setHours(8, 0, 0, 0), 1),
+      start: subDays(new Date().setHours(6, 0, 0, 0), 1),
       end: new Date().setHours(23, 59, 59, 999),
     })
   )
