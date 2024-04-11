@@ -102,7 +102,6 @@ function inRSSItems(
 }
 
 export function dataSourceRSSFilter(dataSources: Array<Content<DataSource>>): RSSFilter {
-  log.info('dataSourceRSSFilter')
   const logData: RSSFilterLogData = {
     rssTableIds: [],
     noData: [],
