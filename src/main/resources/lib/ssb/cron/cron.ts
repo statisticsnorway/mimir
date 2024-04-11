@@ -197,7 +197,7 @@ export function setupCronJobs(): void {
       timeZone: timezone,
     })
 
-    // clear calculator parts cache 
+    // clear calculator parts cache
     scheduleJob({
       name: 'clearCalculatorPartsCache',
       cronConfigName: 'ssb.cron.clearCalculatorCache',
@@ -243,7 +243,6 @@ export function setupCronJobs(): void {
       descriptor: 'clearCache',
       timeZone: timezone,
     })
-    
   }
 
   const cronList: Array<TaskMapper> = list() as Array<TaskMapper>
