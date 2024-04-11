@@ -24,7 +24,7 @@ export function run(): void {
     updateJobLog(jobLogNode._id, (node: JobInfoNode) => {
       node.data = {
         ...node.data,
-        queryIds: dataSourceQueries.map((q: { _id: any }) => q._id),
+        queryIds: dataSourceQueries.map((q) => q._id),
       }
       return node
     })
