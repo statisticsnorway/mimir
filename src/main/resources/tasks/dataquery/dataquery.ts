@@ -1,3 +1,4 @@
+import { Content } from '@enonic-types/lib-content'
 import { cronJobLog } from '/lib/ssb/utils/serverLog'
 import {
   type JobEventNode,
@@ -11,10 +12,10 @@ import {
 import { type RSSFilter, dataSourceRSSFilter } from '/lib/ssb/cron/rss'
 import { getContentWithDataSource } from '/lib/ssb/dataset/dataset'
 import { refreshQueriesAsync } from '/lib/ssb/cron/task'
-import { Content } from '@enonic-types/lib-content'
 import { DataSource } from '/site/mixins/dataSource'
 
 export function run(): void {
+  log.info(`Run Task: dataquery (RSS) ${new Date()}`)
   cronJobLog(JobNames.REFRESH_DATASET_JOB)
   const jobLogNode: JobEventNode = startJobLog(JobNames.REFRESH_DATASET_JOB)
 

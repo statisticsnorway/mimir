@@ -11,11 +11,12 @@ import { type StatRegRefreshResult, refreshStatRegData, STATREG_NODES } from '/l
 import { createOrUpdateStatisticsRepo } from '/lib/ssb/repo/statisticVariant'
 
 export function run(): void {
+  log.info(`Run Task: refreshStatRegData ${new Date()}`)
   const jobLogNode: JobEventNode = startJobLog(JobNames.STATREG_JOB)
   updateJobLog(jobLogNode._id, (node: JobInfoNode) => {
     node.data = {
       ...node.data,
-      queryIds: STATREG_NODES.map((s: { key: any }) => s.key),
+      queryIds: STATREG_NODES.map((s) => s.key),
     }
     return node
   })

@@ -17,7 +17,7 @@ import { clearPartFromPartCache } from '/lib/ssb/cache/partCache'
 import { type GenericDataImport } from '/site/content-types'
 
 export function run(): void {
-  log.info(`Run Task updateCalculator: ${new Date()}`)
+  log.info(`Run Task: updateCalculatorData ${new Date()}`)
   const jobLogNode: JobEventNode = startJobLog(JobNames.REFRESH_DATASET_CALCULATOR_JOB)
   const dataSources: Array<Content<GenericDataImport>> = getAllCalculatorDataset()
 
