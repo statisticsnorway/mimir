@@ -4,12 +4,10 @@ import { run, type ContextParams } from '/lib/xp/context'
 import { create, get as getScheduledJob, modify, delete as deleteScheduledJob } from '/lib/xp/scheduler'
 import { isMaster } from '/lib/xp/cluster'
 import { list, schedule, type TaskMapper } from '/lib/cron'
-import { updateSDDSTables } from '/lib/ssb/cron/updateSDDSTables'
 import { cronJobLog } from '/lib/ssb/utils/serverLog'
 import { ENONIC_CMS_DEFAULT_REPO } from '/lib/ssb/repo/common'
 import { publishDataset } from '/lib/ssb/dataset/publishOld'
 import { isEnabled } from '/lib/featureToggle'
-import { createOrUpdateStatisticsRepo } from '/lib/ssb/repo/statisticVariant'
 
 const createUserContext: ContextParams = {
   // Master context (XP)
@@ -94,38 +92,6 @@ export function runOnMasterOnly(task: () => void): void {
 
 export function setupCronJobs(): void {
   run(createUserContext, setupCronJobUser)
-
-  // Update repo no.ssb.statistic.variant
-  const updateStatisticRepoCron: string =
-    app.config && app.config['ssb.cron.updateStatisticRepo'] ? app.config['ssb.cron.updateStatisticRepo'] : '0 7 * * *'
-
-  schedule({
-    name: 'Update no.ssb.statistics Repo',
-    cron: updateStatisticRepoCron,
-    callback: () => {
-      libScheduleTestLog('statregUpdateCronTest', updateStatisticRepoCron)
-      runOnMasterOnly(createOrUpdateStatisticsRepo)
-    },
-    context: cronContext,
-  })
-  libScheduleTest(
-    { name: 'statregUpdateCronTest', cron: '0 8 * * *', timeZone: 'Europe/Oslo' },
-    updateStatisticRepoCron
-  )
-
-  // Update SDDS tables
-  const updateSDDSTablesCron: string =
-    app.config && app.config['ssb.cron.updateSDDSTables'] ? app.config['ssb.cron.updateSDDSTables'] : '01 09 * * *'
-  schedule({
-    name: 'Update SDDS tables',
-    cron: updateSDDSTablesCron,
-    callback: () => {
-      libScheduleTestLog('updateSDDSCronTest', updateSDDSTablesCron)
-      runOnMasterOnly(updateSDDSTables)
-    },
-    context: cronContext,
-  })
-  libScheduleTest({ name: 'updateSDDSCronTest', cron: '01 09 * * *', timeZone: 'Europe/Oslo' }, updateSDDSTablesCron)
 
   const datasetPublishCron: string =
     app.config && app.config['ssb.cron.publishDataset'] ? app.config['ssb.cron.publishDataset'] : '50 05 * * *'
@@ -252,6 +218,28 @@ export function setupCronJobs(): void {
       description: 'Clear cache',
       descriptor: 'clearCache',
       cronValue: '01 * * * *',
+      timeZone: timezone,
+    })
+
+    // Update SDDS tables
+    scheduleJob({
+      name: 'updateSDDSTables',
+      description: 'Update SDDS Tables',
+      descriptor: 'updateSDDSTables',
+      cronValue:
+        app.config && app.config['ssb.cron.updateSDDSTables'] ? app.config['ssb.cron.updateSDDSTables'] : '01 09 * * *',
+      timeZone: timezone,
+    })
+
+    // Update statistic Repo
+    scheduleJob({
+      name: 'updateStatisticRepo',
+      description: 'Update no.ssb.statistics Repo',
+      descriptor: 'updateStatisticRepo',
+      cronValue:
+        app.config && app.config['ssb.cron.updateStatisticRepo']
+          ? app.config['ssb.cron.updateStatisticRepo']
+          : '0 8 * * *',
       timeZone: timezone,
     })
   }
