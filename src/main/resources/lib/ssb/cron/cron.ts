@@ -151,9 +151,10 @@ export function setupCronJobs(): void {
     // Update calculators
     scheduleJob({
       name: 'updateCalculator',
-      cronConfigName: 'ssb.cron.updateCalculator',
       description: 'Update data calculators',
       descriptor: 'updateCalculator',
+      cronValue:
+        app.config && app.config['ssb.cron.updateCalculator'] ? app.config['ssb.cron.updateCalculator'] : '01 8 * * *',
       timeZone: timezone,
     })
 
@@ -161,9 +162,12 @@ export function setupCronJobs(): void {
     if (app.config && app.config['ssb.mock.enable'] === 'true') {
       scheduleJob({
         name: 'updateMimirMockRelease',
-        cronConfigName: 'ssb.cron.updateMimirReleasedMock',
         description: 'Update next release Mimir QA',
         descriptor: 'updateMimirMockRelease',
+        cronValue:
+          app.config && app.config['ssb.cron.updateMimirReleasedMock']
+            ? app.config['ssb.cron.updateMimirReleasedMock']
+            : '01 8 * * *',
         timeZone: timezone,
       })
     }
@@ -172,9 +176,10 @@ export function setupCronJobs(): void {
     const pushRssStatkalEnabled: boolean = isEnabled('push-rss-statkal', false, 'ssb')
     scheduleJob({
       name: 'pushRssStatkal',
-      cronConfigName: 'ssb.cron.pushRssStatkal',
       description: 'Push kommende publiseringer til rss/statkal',
       descriptor: 'pushRssStatkal',
+      cronValue:
+        app.config && app.config['ssb.cron.pushRssStatkal'] ? app.config['ssb.cron.pushRssStatkal'] : '10 08 * * *',
       timeZone: timezone,
       updateEnabledTo: pushRssStatkalEnabled,
     })
@@ -182,36 +187,39 @@ export function setupCronJobs(): void {
     // Delete expired event logs for queries
     scheduleJob({
       name: 'deleteExpiredEventLog',
-      cronConfigName: 'ssb.cron.deleteLogs',
       description: 'Delete expired event logs for queries',
       descriptor: 'deleteExpiredEventLog',
+      cronValue: app.config && app.config['ssb.cron.deleteLogs'] ? app.config['ssb.cron.deleteLogs'] : '20 14 * * *',
       timeZone: timezone,
     })
 
     // dataquery
     scheduleJob({
       name: 'dataquery',
-      cronConfigName: 'ssb.cron.dataquery',
       description: 'Data from datasource endpoints',
       descriptor: 'dataquery',
+      cronValue: app.config && app.config['ssb.cron.dataquery'] ? app.config['ssb.cron.dataquery'] : '03 08 * * *',
       timeZone: timezone,
     })
 
     // clear calculator parts cache
     scheduleJob({
       name: 'clearCalculatorPartsCache',
-      cronConfigName: 'ssb.cron.clearCalculatorCache',
       description: 'Clear calculator parts cache',
       descriptor: 'clearCalculatorPartsCache',
+      cronValue:
+        app.config && app.config['ssb.cron.clearCalculatorCache']
+          ? app.config['ssb.cron.clearCalculatorCache']
+          : '15 08 * * *',
       timeZone: timezone,
     })
 
     // statreg
     scheduleJob({
       name: 'statreg',
-      cronConfigName: 'ssb.cron.statreg',
       description: 'StatReg Periodic Refresh',
       descriptor: 'statreg',
+      cronValue: app.config && app.config['ssb.cron.statreg'] ? app.config['ssb.cron.statreg'] : '05 08 * * *',
       timeZone: timezone,
     })
 
@@ -219,9 +227,12 @@ export function setupCronJobs(): void {
     if (app.config && app.config['ssb.mock.enable'] === 'true') {
       scheduleJob({
         name: 'updateUnpublishedMock',
-        cronConfigName: 'ssb.cron.updateUnpublishedMock',
         description: 'Update unpublished mock tbml',
         descriptor: 'updateUnpublishedMock',
+        cronValue:
+          app.config && app.config['ssb.cron.updateUnpublishedMock']
+            ? app.config['ssb.cron.updateUnpublishedMock']
+            : '0 04 * * *',
         timeZone: timezone,
       })
     }
@@ -229,18 +240,18 @@ export function setupCronJobs(): void {
     // push news to rss feed
     scheduleJob({
       name: 'pushRssNews',
-      cronConfigName: 'ssb.cron.pushRssNews',
       description: 'Push RSS news',
       descriptor: 'pushRssNews',
+      cronValue: app.config && app.config['ssb.cron.pushRssNews'] ? app.config['ssb.cron.pushRssNews'] : '01 08 * * *',
       timeZone: timezone,
     })
 
     // clear specific cache once an hour
     scheduleJob({
       name: 'clearCache',
-      cronConfigName: 'ssb.cron.clearCache',
       description: 'Clear cache',
       descriptor: 'clearCache',
+      cronValue: '01 * * * *',
       timeZone: timezone,
     })
   }
@@ -252,23 +263,22 @@ export function setupCronJobs(): void {
 
 type ScheduleJobParams = {
   name: string
-  cronConfigName: string
   description: string
   descriptor: string
+  cronValue: string
   timeZone?: string
   updateEnabledTo?: boolean | undefined
 }
 
 function scheduleJob({
   name,
-  cronConfigName,
   description,
   descriptor,
+  cronValue,
   timeZone = 'Europe/Oslo',
   updateEnabledTo,
 }: ScheduleJobParams) {
   run(cronContext, () => {
-    const cronValue: string = app.config && app.config[cronConfigName] ? app.config[cronConfigName] : '0 12 * * *'
     const jobExists = !!getScheduledJob({
       name,
     })
