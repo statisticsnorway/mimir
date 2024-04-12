@@ -77,7 +77,7 @@ export function fetchStatbankApiDataQuery(urlOrId: string, jsonQuery: string) {
     if (isUrl(urlOrId)) {
       url = urlOrId as string
     }
-    data = fetchData(url, jsonQuery && JSON.parse(jsonQuery), undefined)
+    data = fetchData(url, jsonQuery && JSON.parse(jsonQuery), undefined, undefined, true)
   } catch (e) {
     const message = `Failed to fetch data from statbankApi: ${urlOrId} (${e})`
     log.error(message)
