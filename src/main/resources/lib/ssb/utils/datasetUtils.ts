@@ -12,9 +12,10 @@ export function get(
   url: string,
   json: DataqueryRequestData | undefined,
   selection: SelectionFilter = defaultSelectionFilter,
-  queryId?: string
+  queryId?: string,
+  noDefaultFilterRegion?: boolean
 ): JSONstat | object | null {
-  if (json?.query) {
+  if (json?.query && !noDefaultFilterRegion) {
     for (const query of json.query) {
       if (query.code === 'KOKkommuneregion0000' || query.code === 'Region') {
         query.selection = selection
