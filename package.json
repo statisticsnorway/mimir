@@ -59,7 +59,7 @@
     "@enonic-types/lib-repo": "7.13.5",
     "@enonic-types/lib-scheduler": "7.13.5",
     "@enonic-types/lib-task": "7.13.5",
-    "@enonic-types/lib-value": "7.13.5",
+    "@enonic-types/lib-value": "7.14.1",
     "@enonic-types/lib-websocket": "7.13.5",
     "@enonic/react-components": "4.0.0",
     "@enonic/react4xp": "5.0.2",
