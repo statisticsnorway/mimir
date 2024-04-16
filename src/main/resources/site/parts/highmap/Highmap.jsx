@@ -41,7 +41,7 @@ function generateColors(color, thresholdValues) {
 
       obj.colorAxis.stops = [
         [0, color.gradient.startColor],
-        ...color.gradient.stops.map((stop) => [stop.value, stop.color]),
+        ...color.gradient.stops.map((stop) => [stop.value.replace(',', '.'), stop.color]),
         [1, color.gradient.endColor],
       ]
     }
