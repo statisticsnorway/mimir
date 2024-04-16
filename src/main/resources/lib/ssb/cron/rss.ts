@@ -5,7 +5,6 @@ import { request, HttpResponse } from '/lib/http-client'
 import { type TbmlDataUniform, type XmlParser } from '/lib/types/xmlParser'
 import { DataSource as DataSourceType, DatasetRepoNode } from '/lib/ssb/repo/dataset'
 import { type JSONstat } from '/lib/types/jsonstat-toolkit'
-import { JobStatus } from '/lib/ssb/repo/job'
 import { subDays, isWithinInterval } from '/lib/vendor/dateFns'
 
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
@@ -88,6 +87,7 @@ function inRSSItems(
       }
     }
   }
+
   return (
     RSSItems.filter((item) => {
       const tableId: string = item['ssbrss:tableid'].toString()
@@ -103,22 +103,29 @@ function inRSSItems(
 
 export function dataSourceRSSFilter(dataSources: Array<Content<DataSource>>): RSSFilter {
   const logData: RSSFilterLogData = {
-    start: dataSources.map((ds) => ds._id),
+    rssTableIds: [],
     noData: [],
     otherDataType: [],
     inRSSOrNoKey: [],
     skipped: [],
-    statistics: [],
+    savedQueryStatistics: [],
     end: [],
   }
 
   // only keep those with updates for the last 2 days, to the end of today
   const RSSItems: Array<RSSItem> = fetchRSS().filter((item) =>
     isWithinInterval(new Date(item.pubDate), {
-      start: subDays(new Date(), 1),
+      start: subDays(new Date().setHours(6, 0, 0, 0), 1),
       end: new Date().setHours(23, 59, 59, 999),
     })
   )
+
+  RSSItems.forEach((item) => {
+    logData.rssTableIds.push({
+      tableId: item['ssbrss:tableid'].toString(),
+      pubDate: item.pubDate,
+    })
+  })
 
   const statisticsWithReleaseToday: Array<string> = fetchStatisticsWithReleaseToday().map((s: StatisticInListing) =>
     s.id.toString()
@@ -129,8 +136,8 @@ export function dataSourceRSSFilter(dataSources: Array<Content<DataSource>>): RS
       const parentType: string | undefined = getParentType(dataSource._path)
       if (parentType === `${app.name}:statistics`) {
         // only keep datasources from statistics if they are saved queries with release today
-        logData.statistics.push(dataSource._id)
         if (isSavedQuerysStatistic(statisticsWithReleaseToday, dataSource)) {
+          logData.savedQueryStatistics.push(dataSource._id)
           t.push(dataSource)
         }
       } else if (isValidType(dataSource)) {
@@ -142,13 +149,7 @@ export function dataSourceRSSFilter(dataSources: Array<Content<DataSource>>): RS
           logData.inRSSOrNoKey.push(dataSource._id)
           t.push(dataSource)
         } else {
-          logData.skipped.push({
-            id: dataSource._id,
-            displayName: dataSource.displayName,
-            contentType: dataSource.type,
-            dataSourceType: dataSource.data.dataSource?._selected,
-            status: JobStatus.SKIPPED,
-          })
+          logData.skipped.push(dataSource._id)
         }
       } else {
         logData.otherDataType.push(dataSource._id)
@@ -169,12 +170,12 @@ export function dataSourceRSSFilter(dataSources: Array<Content<DataSource>>): RS
 }
 
 export interface RSSFilterLogData {
-  start: Array<string>
+  rssTableIds: Array<RSSTableItem>
   noData: Array<string>
   otherDataType: Array<string>
   inRSSOrNoKey: Array<string>
-  statistics: Array<string>
-  skipped: Array<DataSourceInfo>
+  savedQueryStatistics: Array<string>
+  skipped: Array<string>
   end: Array<string>
 }
 
@@ -222,4 +223,9 @@ interface RSSContact {
   'ssbrss:person': string
   'ssbrss:phone': number | string
   'ssbrss:email': string
+}
+
+interface RSSTableItem {
+  tableId: string
+  pubDate: string
 }
