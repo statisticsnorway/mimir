@@ -33,6 +33,7 @@ export interface TableStandardSymbolLink {
 
 export interface DatasourceHtmlTable {
   html: string | undefined
+  numberHeadRows: string | undefined
   footnoteText: Array<string>
 }
 
