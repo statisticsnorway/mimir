@@ -1,4 +1,5 @@
 /* eslint-disable complexity */
+import { Article } from 'schema-dts'
 import { type Content, query } from '/lib/xp/content'
 import { assetUrl, type Component, getContent, getSiteConfig, pageUrl, processHtml } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
@@ -8,7 +9,7 @@ import {
   type StatisticInListing,
   type VariantInListing,
 } from '/lib/ssb/dashboard/statreg/types'
-import { type MunicipalityWithCounty, getMunicipality, RequestWithCode } from '/lib/ssb/dataset/klass/municipalities'
+import { getMunicipality } from '/lib/ssb/dataset/klass/municipalities'
 import { type FooterContent, getFooterContent } from '/lib/ssb/parts/footer'
 import {
   type AlertType,
@@ -17,12 +18,7 @@ import {
   alertsForContext,
 } from '/lib/ssb/utils/alertUtils'
 import { type Breadcrumbs, getBreadcrumbs } from '/lib/ssb/utils/breadcrumbsUtils'
-import {
-  type SubjectItem,
-  getMainSubjects,
-  getSubSubjects,
-  getMainSubjectBySubSubject,
-} from '/lib/ssb/utils/subjectUtils'
+import { getMainSubjects, getSubSubjects, getMainSubjectBySubSubject } from '/lib/ssb/utils/subjectUtils'
 import { type Language } from '/lib/types/language'
 import { render as r4xpRender } from '/lib/enonic/react4xp'
 
@@ -37,6 +33,9 @@ import { getHeaderContent } from '/lib/ssb/parts/header'
 import { fromMenuCache } from '/lib/ssb/cache/cache'
 
 import { isEnabled } from '/lib/featureToggle'
+import { ensureArray } from '/lib/ssb/utils/arrayUtils'
+import { type SubjectItem } from '/lib/types/subject'
+import { type MunicipalityWithCounty, type RequestWithCode } from '/lib/types/municipalities'
 import { type Default as DefaultPageConfig } from '/site/pages/default'
 import { type Page, type Statistics } from '/site/content-types'
 
@@ -58,6 +57,8 @@ const partsWithPreview: Array<string> = [
   `${app.name}:staticVisualization`,
   `${app.name}:employee`,
   `${app.name}:project`,
+  `${app.name}:combinedGraph`,
+  `${app.name}:simpleStatbank`,
 ]
 
 const previewOverride: object = {
@@ -214,6 +215,36 @@ export function get(req: XP.Request): XP.Response {
 
   const metaInfo: MetaInfoData = parseMetaInfoData(municipality, pageType, page, language, req)
 
+  let jsonLd: Article | undefined
+  if (page.type === 'mimir:article' && isEnabled('structured-data', false, 'ssb'))
+    jsonLd = {
+      // @ts-ignore  ssssh its ok
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      articleSection: ensureArray(page.x?.mimir?.subjectTag?.mainSubjects)[0],
+      additionalType: page.data.articleType, // For eksempel
+      headline: page.data.title,
+      datePublished: page.publish?.first,
+      dateModified: page.data.showModifiedDate?.dateOption?.showModifiedTime
+        ? page.data.showModifiedDate.dateOption.modifiedDate
+        : undefined,
+      author: page.data.authorItemSet?.map((f) => {
+        return {
+          '@type': 'Person',
+          name: f.name,
+          email: f.email,
+        }
+      }),
+      publisher: {
+        '@type': 'Organization',
+        name: 'Statistisk sentralbyrå',
+        logo: {
+          '@type': 'ImageObject',
+          url: 'https://www.ssb.no/_/asset/mimir:0000018b60c47e20/SSB_logo_black.svg',
+        },
+      },
+    }
+
   const statbankFane: boolean = req.params.xpframe === 'statbank'
   const statBankContent: StatbankFrameData = parseStatbankFrameContent(statbankFane, req, page)
   if (statbankFane) {
@@ -227,7 +258,6 @@ export function get(req: XP.Request): XP.Response {
   )
   const breadcrumbId = 'breadcrumbs'
   const hideBreadcrumb = !!pageConfig?.hide_breadcrumb
-  const innrapporteringRegexp = /^\/ssb(\/en)?\/innrapportering/ // Skal matche alle sider under /innrapportering på norsk og engelsk
 
   const model: DefaultModel = {
     isFragment,
@@ -251,10 +281,10 @@ export function get(req: XP.Request): XP.Response {
     headerBody: header?.body,
     footerBody: footer?.body,
     ...metaInfo,
+    jsonLd,
     breadcrumbsReactId: breadcrumbId,
     hideHeader,
     hideBreadcrumb,
-    enabledChatScript: isEnabled('enable-chat-script', true, 'ssb') && innrapporteringRegexp.exec(page._path),
     tableView: page.type === 'mimir:table',
   }
 
@@ -322,9 +352,7 @@ function prepareRegions(isFragment: boolean, page: DefaultPage): RegionsContent 
     }
   }
   configRegions.forEach((configRegion) => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     configRegion.components = regions[configRegion.region]
       ? util.data.forceArray(regions[configRegion.region].components)
       : []
@@ -562,6 +590,18 @@ interface DefaultPage extends Content {
     statistic: string
     subtopic: Array<string>
     articleType: string
+    showModifiedDate: {
+      dateOption: {
+        showModifiedTime: boolean
+        modifiedDate: string
+      }
+    }
+    authorItemSet: [
+      {
+        name: string
+        email: string
+      },
+    ]
   }
   page: ExtendedPage
 }
@@ -636,11 +676,11 @@ interface DefaultModel {
   GA_TRACKING_ID: string | null
   GTM_TRACKING_ID: string | null
   GTM_AUTH: string | null
+  jsonLd: NewsArticle | undefined
   headerBody: string | undefined
   footerBody: string | undefined
   breadcrumbsReactId: string | undefined
   hideHeader: boolean
   hideBreadcrumb: boolean
-  enabledChatScript: boolean
   tableView: boolean
 }

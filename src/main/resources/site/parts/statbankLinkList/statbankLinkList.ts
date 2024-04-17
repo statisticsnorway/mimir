@@ -9,6 +9,7 @@ import { getStatisticByIdFromRepo } from '/lib/ssb/statreg/statistics'
 import { renderError } from '/lib/ssb/error/error'
 import * as util from '/lib/util'
 import { getPhrases } from '/lib/ssb/utils/language'
+import { type StatbankLinkListModel } from '/lib/types/partTypes/statbankLinkList'
 import { type Statistics } from '/site/content-types'
 
 const STATBANKWEB_URL: string =
@@ -81,11 +82,7 @@ function renderPart(req: XP.Request): XP.Response {
     {
       id: 'statbankLinkId',
       body: body,
+      hydrate: false,
     }
   )
-}
-
-interface StatbankLinkListModel {
-  title: string
-  statbankLinks: Statistics['statbankLinkItemSet']
 }

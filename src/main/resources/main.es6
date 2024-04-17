@@ -60,10 +60,6 @@ try {
           enabled: false,
         },
         {
-          feature: 'enable-chat-script',
-          enabled: false,
-        },
-        {
           feature: 'highcharts-y-axix-title-mobile',
           enabled: false,
         },
@@ -105,6 +101,10 @@ try {
         },
         {
           feature: 'simple-statbank-part',
+          enabled: false,
+        },
+        {
+          feature: 'structured-data',
           enabled: false,
         },
       ],

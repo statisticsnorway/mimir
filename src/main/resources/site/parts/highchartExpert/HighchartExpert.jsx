@@ -4,7 +4,7 @@ import HighchartsReact from 'highcharts-react-official'
 import PropTypes from 'prop-types'
 import { Row, Col, Container } from 'react-bootstrap'
 
-import accessibilityLang from './../../../assets/js/highchart-lang.json'
+import accessibilityLang from '../../../assets/js/highchart-lang.json'
 
 if (typeof Highcharts === 'object') {
   require('highcharts/modules/exporting')(Highcharts)

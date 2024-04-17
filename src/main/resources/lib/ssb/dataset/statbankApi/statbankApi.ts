@@ -1,6 +1,6 @@
 import { Content } from '/lib/xp/content'
 import { DatasetRepoNode, DataSource as DataSourceType, getDataset } from '/lib/ssb/repo/dataset'
-import { JSONstat } from '/lib/types/jsonstat-toolkit'
+import { type JSONstat } from '/lib/types/jsonstat-toolkit'
 import { get as fetchData } from '/lib/ssb/utils/datasetUtils'
 
 import { logUserDataQuery, Events } from '/lib/ssb/repo/query'
@@ -77,7 +77,7 @@ export function fetchStatbankApiDataQuery(urlOrId: string, jsonQuery: string) {
     if (isUrl(urlOrId)) {
       url = urlOrId as string
     }
-    data = fetchData(url, jsonQuery && JSON.parse(jsonQuery), undefined)
+    data = fetchData(url, jsonQuery && JSON.parse(jsonQuery), undefined, undefined, true)
   } catch (e) {
     const message = `Failed to fetch data from statbankApi: ${urlOrId} (${e})`
     log.error(message)

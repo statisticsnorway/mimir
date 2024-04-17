@@ -3,7 +3,7 @@ import '/lib/ssb/polyfills/nashorn'
 import { type QueryDsl } from '/lib/xp/content'
 import { getComponent, getContent } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
-import { type YearReleases, addMonthNames, groupStatisticsByYearMonthAndDay } from '/lib/ssb/utils/variantUtils'
+import { addMonthNames, groupStatisticsByYearMonthAndDay } from '/lib/ssb/utils/variantUtils'
 import { render } from '/lib/enonic/react4xp'
 import {
   type ContentLight,
@@ -16,6 +16,8 @@ import { parseISO } from '/lib/vendor/dateFns'
 import { fromPartCache } from '/lib/ssb/cache/partCache'
 import { renderError } from '/lib/ssb/error/error'
 import { isEnabled } from '/lib/featureToggle'
+import { type PreparedStatistics, type YearReleases } from '/lib/types/variants'
+import { type GroupedBy, type ReleasedStatisticsProps } from '/lib/types/partTypes/releasedStatistics'
 import { type ReleasedStatistics as ReleasedStatisticsPartConfig } from '.'
 
 export function get(req: XP.Request): XP.Response {
@@ -45,7 +47,7 @@ export function renderPart(req: XP.Request) {
       })
     : getGroupedWithMonthNames(config, currentLanguage)
 
-  const props: PartProps = {
+  const props: ReleasedStatisticsProps = {
     releases: groupedWithMonthNames,
     title: localize({
       key: 'newStatistics',
@@ -53,7 +55,9 @@ export function renderPart(req: XP.Request) {
     }),
     language: currentLanguage,
   }
-  return render('ReleasedStatistics', props, req)
+  return render('ReleasedStatistics', props, req, {
+    hydrate: false,
+  })
 }
 
 function getGroupedWithMonthNames(config: ReleasedStatisticsPartConfig, currentLanguage: string): Array<YearReleases> {
@@ -121,34 +125,4 @@ function prepReleases(variant: ContentLight<ReleaseVariant>, date: Date, periodR
       period: periodRelease,
     },
   }
-}
-
-/*
- *  Interfaces
- */
-
-interface PartProps {
-  releases: Array<YearReleases>
-  title: string
-  language: string
-}
-
-interface PreparedStatistics {
-  id: number
-  name: string
-  shortName: string
-  variant: PreparedVariant
-}
-
-interface PreparedVariant {
-  id: string
-  day: number
-  monthNumber: number
-  year: number
-  frequency: string
-  period: string
-}
-
-interface GroupedBy<T> {
-  [key: string]: Array<T> | T
 }

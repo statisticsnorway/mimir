@@ -46,15 +46,17 @@ export const createDefaultConfig = (highchartData, displayName, language) => ({
   chart: {
     height: highchartData.heightAspectRatio > 0 ? `${highchartData.heightAspectRatio}%` : null,
     plotBorderColor: '#e6e6e6',
-    spacingBottom: 18,
     plotBorderWidth: 0,
     style: {
       fontFamily: '"Open Sans Regular", "Arial", "DejaVu Sans", sans-serif',
       fontSize: '14px',
     },
     type: 'bar',
-    spacing: [0, 10, 0, 0],
     zoomType: highchartData.zoomType,
+    spacingRight: 10,
+    spacingLeft: 0,
+    spacingBottom: 18,
+    spacingTop: 0,
     marginTop: 50,
   },
   // SSB color palette:

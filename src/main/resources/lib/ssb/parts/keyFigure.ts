@@ -4,9 +4,13 @@ import '/lib/ssb/polyfills/nashorn'
 import JSONstat from 'jsonstat-toolkit/import.mjs'
 import { query, Content, ContentsResult } from '/lib/xp/content'
 import { localize } from '/lib/xp/i18n'
-import { MunicipalityWithCounty } from '/lib/ssb/dataset/klass/municipalities'
-import { TbmlDataUniform, TableRowUniform, TableCellUniform, PreliminaryData } from '/lib/types/xmlParser'
-import { Category, Dimension, JSONstat as JSONstatType } from '/lib/types/jsonstat-toolkit'
+import {
+  type TbmlDataUniform,
+  type TableRowUniform,
+  type TableCellUniform,
+  type PreliminaryData,
+} from '/lib/types/xmlParser'
+import { type Category, type Dimension, type JSONstat as JSONstatType } from '/lib/types/jsonstat-toolkit'
 import {
   DatasetRepoNode,
   DataSource as DataSourceType,
@@ -20,6 +24,8 @@ import * as util from '/lib/util'
 import { getDataset } from '/lib/ssb/dataset/dataset'
 import { localizeTimePeriod } from '/lib/ssb/utils/language'
 import { createHumanReadableFormat } from '/lib/ssb/utils/utils'
+import { type KeyFigureChanges, type KeyFigureView, type MunicipalData } from '/lib/types/partTypes/keyFigure'
+import { type MunicipalityWithCounty } from '/lib/types/municipalities'
 import { type DataSource } from '/site/mixins/dataSource'
 import { type KeyFigure } from '/site/content-types'
 
@@ -292,29 +298,4 @@ function parseValue(value: number | string | null): string | undefined {
     hasValue = false
   }
   return hasValue ? createHumanReadableFormat(value) : undefined
-}
-
-interface MunicipalData {
-  value: number | null
-  label?: string
-}
-
-export interface KeyFigureView {
-  iconUrl?: string
-  iconAltText?: string
-  number?: string
-  numberDescription?: string
-  noNumberText: string
-  size?: string
-  title: string
-  time?: string
-  changes?: KeyFigureChanges
-  greenBox: boolean
-  glossaryText?: string
-}
-
-export interface KeyFigureChanges {
-  changeDirection: 'up' | 'down' | 'same'
-  changeText?: string
-  changePeriod: string
 }

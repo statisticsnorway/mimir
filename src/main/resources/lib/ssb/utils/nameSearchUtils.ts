@@ -9,6 +9,7 @@ import { request, HttpRequestParams, HttpResponse } from '/lib/http-client'
 
 import { getCalculatorConfig, getNameSearchGraphData } from '/lib/ssb/dataset/calculator'
 import { isEnabled } from '/lib/featureToggle'
+import { type SolrResponse } from '/lib/types/solr'
 import { type CalculatorConfig } from '/site/content-types'
 
 export function getNameSearchResult(name: string, includeGraphData: boolean): SolrResponse {
@@ -188,8 +189,4 @@ interface Keyable {
   [key: string]: string
 }
 
-export interface SolrResponse {
-  status: number
-  body: string | null
-}
 export type NameSearchUtilsLib = typeof import('./nameSearchUtils')

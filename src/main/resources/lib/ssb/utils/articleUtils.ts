@@ -6,12 +6,13 @@ import {
   getAllSubSubjectByContent,
   getMainSubjects,
   getSubSubjects,
-  type SubjectItem,
 } from '/lib/ssb/utils/subjectUtils'
 import { formatDate } from '/lib/ssb/utils/dateUtils'
 import { notNullOrUndefined } from '/lib/ssb/utils/coreUtils'
 import { ENONIC_CMS_DEFAULT_REPO, withSuperUserContext } from '/lib/ssb/repo/common'
 import { arraysEqual, ensureArray } from '/lib/ssb/utils/arrayUtils'
+import { type ArticleResult, type AssociatedLink, type CMS, type PreparedArticles } from '/lib/types/article'
+import { type SubjectItem } from '/lib/types/subject'
 import { type Article } from '/site/content-types'
 
 const dummyReq: Partial<XP.Request> = {
@@ -56,7 +57,10 @@ export function getAllArticles(req: XP.Request, language: string, start: 0, coun
   const languageQuery: string = language !== 'en' ? 'AND language != "en"' : 'AND language = "en"'
   const now: string = new Date().toISOString()
   const publishFromQuery = `(publish.from LIKE '*' AND publish.from < '${now}')`
-  const pagePaths: Array<string> = mainSubjects.map((mainSubject) => `_parentPath LIKE "/content${mainSubject.path}/*"`)
+  const pagePaths: Array<string> = mainSubjects.map((mainSubject) => `_parentPath LIKE "/content${mainSubject.path}*"`)
+  pagePaths.push(`_parentPath LIKE "/content/ssb/innrapportering*"`)
+  pagePaths.push(`_parentPath LIKE "/content/ssb/omssb*"`)
+  pagePaths.push(`_parentPath LIKE "/content/ssb/forskning*"`)
   const subjectQuery = `(${pagePaths.join(' OR ')})`
   const queryString = `${publishFromQuery} AND ${subjectQuery} ${languageQuery}`
 
@@ -211,26 +215,4 @@ export function getAssociatedArticleArchiveLinks(
       .filter((articleArchive) => !!articleArchive) as Array<AssociatedLink>
   }
   return []
-}
-
-export interface PreparedArticles {
-  title: string
-  preface: string
-  url: string
-  publishDate: string
-}
-
-export interface ArticleResult {
-  total: number
-  articles: Array<PreparedArticles>
-}
-
-export interface AssociatedLink {
-  text: string | undefined
-  href: string | undefined
-}
-
-export interface CMS {
-  href?: string | undefined
-  title?: string | undefined
 }

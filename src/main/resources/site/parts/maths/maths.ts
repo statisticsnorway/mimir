@@ -2,6 +2,7 @@ import { getComponent } from '/lib/xp/portal'
 import { render } from '/lib/enonic/react4xp'
 
 import { renderError } from '/lib/ssb/error/error'
+import { type MathsProps } from '/lib/types/partTypes/maths'
 import { type Maths as MathsPartConfig } from '.'
 
 export function get(req: XP.Request): XP.Response {
@@ -22,13 +23,9 @@ export function preview(req: XP.Request, config: MathsPartConfig) {
 }
 
 function renderPart(req: XP.Request, config: MathsPartConfig) {
-  const props: PartProperties = {
+  const props: MathsProps = {
     mathsFormula: config.mathsFormula,
   }
 
   return render('site/parts/maths/maths', props, req)
-}
-
-interface PartProperties {
-  mathsFormula: string
 }

@@ -1,66 +1,24 @@
 import { get as getContentByKey, getAttachmentStream, type ByteSource, type Content } from '/lib/xp/content'
 import { getComponent, getContent } from '/lib/xp/portal'
 import { readText } from '/lib/xp/io'
-import { type RowData } from '/lib/ssb/parts/highcharts/data/htmlTable'
-import { isNumber, type RowValue } from '/lib/ssb/utils/utils'
+import { isNumber } from '/lib/ssb/utils/utils'
+import { type RowValue } from '/lib/types/util'
 import { render } from '/lib/enonic/react4xp'
-import { type PreliminaryData, type XmlParser } from '/lib/types/xmlParser'
-
+import { type PreliminaryData, type XmlParser, type TbmlDataUniform, TableRowUniform } from '/lib/types/xmlParser'
 import * as util from '/lib/util'
 import { getPhrases } from '/lib/ssb/utils/language'
 import { renderError } from '/lib/ssb/error/error'
-import { Phrases } from '/lib/types/language'
+import {
+  type HighmapProps,
+  type HighmapTable,
+  type MapResult,
+  type ThresholdValues,
+} from '/lib/types/partTypes/highmap'
+import { datasetOrUndefined } from '/lib/ssb/cache/cache'
+import { type DatasetRepoNode, DataSource as DataSourceType } from '/lib/ssb/repo/dataset'
 import { type Highmap } from '/site/content-types'
 
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
-
-interface MapFeatures {
-  properties: {
-    name?: string
-    capitalName?: string
-  }
-}
-
-interface MapResult {
-  features: Array<MapFeatures>
-}
-
-interface HighmapTable {
-  table: {
-    tbody: {
-      tr: Array<RowData>
-    }
-  }
-}
-
-interface HighmapFormattedTableData {
-  capitalName: string
-  value: number
-}
-
-interface ThresholdValues {
-  to: number | undefined
-  from: number | undefined
-}
-
-interface HighmapProps {
-  title: string
-  subtitle: Highmap['subtitle']
-  description: Highmap['description']
-  mapFile: object
-  tableData: Array<HighmapFormattedTableData>
-  thresholdValues: Array<ThresholdValues>
-  hideTitle: Highmap['hideTitle']
-  colorPalette: Highmap['colorPalette']
-  numberDecimals: number | undefined
-  heightAspectRatio: Highmap['heightAspectRatio']
-  seriesTitle: Highmap['seriesTitle']
-  legendTitle: Highmap['legendTitle']
-  legendAlign: Highmap['legendAlign']
-  footnoteText: Highmap['footnoteText']
-  phrases: Phrases | undefined
-  language: string | undefined
-}
 
 export function get(req: XP.Request): XP.Response {
   try {
@@ -129,28 +87,7 @@ function renderPart(req: XP.Request, highmapId: string | undefined): XP.Response
   })
 
   if (highmapContent) {
-    const tableData: Array<HighmapFormattedTableData> = []
-    if (highmapContent.data.htmlTable) {
-      const stringJson: string | undefined = highmapContent.data.htmlTable
-        ? __.toNativeObject(xmlParser.parse(highmapContent.data.htmlTable))
-        : undefined
-      const result: HighmapTable | undefined = stringJson ? JSON.parse(stringJson) : undefined
-      const tableRow: HighmapTable['table']['tbody']['tr'] | undefined = result ? result.table.tbody.tr : undefined
-
-      if (tableRow) {
-        tableRow.forEach((row) => {
-          if (row) {
-            const name: string = getRowValue(row.td[0]) as string
-            const value: number = getRowValue(row.td[1]) as number
-            tableData.push({
-              capitalName: name, // Matches map result name
-              value: value,
-            })
-          }
-        })
-      }
-    }
-
+    const tableData: Array<RowValue[]> = getTableData(highmapContent)
     const thresholdValues: Highmap['thresholdValues'] = highmapContent.data.thresholdValues
       ? util.data.forceArray(highmapContent.data.thresholdValues)
       : []
@@ -161,25 +98,86 @@ function renderPart(req: XP.Request, highmapId: string | undefined): XP.Response
       description: highmapContent.data.description,
       mapFile: mapResult,
       tableData,
+      mapDataSecondColumn: highmapContent.data.mapDataSecondColumn,
       thresholdValues: sortedThresholdValues(thresholdValues),
       hideTitle: highmapContent.data.hideTitle,
-      colorPalette: highmapContent.data.colorPalette,
+      color: highmapContent.data.color,
       numberDecimals: highmapContent.data.numberDecimals ? parseInt(highmapContent.data.numberDecimals) : undefined,
       heightAspectRatio: highmapContent.data.heightAspectRatio,
       seriesTitle: highmapContent.data.seriesTitle,
       legendTitle: highmapContent.data.legendTitle,
       legendAlign: highmapContent.data.legendAlign,
+      sourceList: highmapContent.data.sourceList ? util.data.forceArray(highmapContent.data.sourceList) : undefined,
       footnoteText: highmapContent.data.footnoteText ? util.data.forceArray(highmapContent.data.footnoteText) : [],
       phrases: getPhrases(page),
       language: page.language,
     }
-
+    // R4xp disables hydration in edit mode, but highmap need hydration to show
+    // we sneaky swap mode since we want a render of highmap in edit mode
+    // Works good for highmap macro, not so much when part
+    if (req.mode === 'edit') req.mode = 'preview'
     return render('site/parts/highmap/Highmap', props, req)
   }
   return {
     body: '',
     contentType: 'text/html',
   }
+}
+
+function getTableData(highmap: Content<Highmap>): Array<RowValue[]> {
+  if (highmap?.data.dataSource) {
+    if (highmap.data.dataSource._selected === DataSourceType.HTMLTABLE) {
+      return getHtmlTableData(highmap.data.dataSource.htmlTable.html)
+    } else if (highmap.data.dataSource?._selected === DataSourceType.TBPROCESSOR) {
+      return getTBMLData(highmap)
+    }
+  } else if (highmap.data.htmlTable) {
+    return getHtmlTableData(highmap.data.htmlTable)
+  }
+  return []
+}
+
+function getHtmlTableData(htmlTable: string | undefined): Array<RowValue[]> {
+  const tableData: Array<RowValue[]> = []
+
+  if (htmlTable) {
+    const stringJson: string | undefined = htmlTable ? __.toNativeObject(xmlParser.parse(htmlTable)) : undefined
+    const result: HighmapTable | undefined = stringJson ? JSON.parse(stringJson) : undefined
+    const tableRow: HighmapTable['table']['tbody']['tr'] | undefined = result ? result.table.tbody.tr : undefined
+
+    if (tableRow) {
+      tableRow.forEach((row) => {
+        if (row) {
+          tableData.push([getRowValue(row.td[0]), getRowValue(row.td[1])])
+        }
+      })
+    }
+  }
+  return tableData
+}
+
+function getTBMLData(highmap: Content<Highmap>): Array<RowValue[]> {
+  const datasetFromRepo: DatasetRepoNode<TbmlDataUniform | object> | undefined = datasetOrUndefined(highmap)
+  const parsedData: TbmlDataUniform | object | string | undefined = datasetFromRepo && datasetFromRepo.data
+  if (parsedData) {
+    const tbmlData: TbmlDataUniform = parsedData as TbmlDataUniform
+    const tbody: Array<TableRowUniform> = tbmlData.tbml.presentation.table.tbody
+    const rows: TableRowUniform['tr'] = tbody[0].tr
+
+    return rows
+      ? rows.map((row) => {
+          const capitalName: RowValue = highmap.data.removePartOfName
+            ? firstPartOfCapitalName(getRowValue(row.th[0]))
+            : getRowValue(row.th[0])
+          return [capitalName, getRowValue(row.td[0])]
+        })
+      : []
+  }
+  return []
+}
+
+function firstPartOfCapitalName(name: RowValue): RowValue {
+  return name && name.toString().indexOf(' - ') > 0 ? name.toString().split(' - ')[0] : name
 }
 
 function getRowValue(value: number | string | PreliminaryData | Array<number | string | PreliminaryData>): RowValue {
@@ -198,7 +196,7 @@ function getRowValue(value: number | string | PreliminaryData | Array<number | s
 }
 
 function sortedThresholdValues(thresholdValues: Highmap['thresholdValues']): Array<ThresholdValues> {
-  if (thresholdValues.length) {
+  if (thresholdValues?.length) {
     const formattedThresholdValues: Array<number> = (thresholdValues as Array<string>)
       .map((t) => Number(t.replace(',', '.')))
       .sort((a, b) => a - b)

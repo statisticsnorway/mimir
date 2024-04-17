@@ -8,6 +8,15 @@ import { getMainSubject, getMainSubjectStatistic } from '/lib/ssb/utils/parentUt
 import { sameDay, createMonthName, formatDate, isSameOrBefore } from '/lib/ssb/utils/dateUtils'
 import { parseISO, getMonth, getYear, getDate } from '/lib/vendor/dateFns'
 import * as util from '/lib/util'
+import {
+  type DayReleases,
+  type GroupedBy,
+  type MonthReleases,
+  type PreparedStatistics,
+  type PreparedVariant,
+  type Release,
+  type YearReleases,
+} from '/lib/types/variants'
 import { type OmStatistikken, type Statistics } from '/site/content-types'
 
 export function calculatePeriod(frequency: string, previousFrom: string, previousTo: string, language: string): string {
@@ -422,7 +431,6 @@ function concatReleaseTimes(
 
 // If import from statreg failed use nextRelease instead of previousRelease
 export function nextReleasedPassed(variant: VariantInListing): boolean {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   const serverOffsetInMs: number =
     app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
   const serverTime: Date = new Date(new Date().getTime() + serverOffsetInMs)
@@ -528,58 +536,4 @@ export function getPreviousReleases(statisticList: Array<StatisticInListing>): A
   return allReleases.filter(
     (release) => release.status === 'A' && isSameOrBefore(new Date(release.publishTime), new Date(), 'day')
   )
-}
-
-export interface PreparedStatistics {
-  id: number
-  name: string
-  shortName: string
-  variant: PreparedVariant
-  type?: string
-  date?: string
-  mainSubject?: string
-  statisticsPageUrl?: string
-  aboutTheStatisticsDescription?: string
-}
-
-export interface PreparedVariant {
-  id: string
-  day: number
-  monthNumber: number
-  year: number
-  frequency: string
-  period: string
-}
-
-export interface Release {
-  publishTime: string
-  periodFrom: string
-  periodTo: string
-  frequency: string
-  variantId: string
-  statisticId: number
-  shortName: string
-  statisticName: string
-  statisticNameEn: string
-  status: string
-}
-
-export interface DayReleases {
-  day: string
-  releases: Array<PreparedStatistics>
-}
-
-export interface MonthReleases {
-  month: string
-  monthName: string
-  releases: Array<DayReleases>
-}
-
-export interface YearReleases {
-  year: string
-  releases: Array<MonthReleases>
-}
-
-export interface GroupedBy<T> {
-  [key: string]: Array<T> | T
 }

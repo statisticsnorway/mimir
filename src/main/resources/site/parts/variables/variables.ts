@@ -6,6 +6,7 @@ import { formatDate } from '/lib/ssb/utils/dateUtils'
 
 import { data } from '/lib/util'
 import { renderError } from '/lib/ssb/error/error'
+import { type VariablesProps, type Variables } from '/lib/types/partTypes/variables'
 import { type Article } from '/site/content-types'
 
 export function get(req: XP.Request): XP.Response {
@@ -46,24 +47,22 @@ function renderVariables(req: XP.Request, variables: Array<Variables>): XP.Respo
       key: 'variables.download',
     })
 
-    return render(
-      'Variables',
-      {
-        variables: variables.map(({ title, description, fileHref, fileModifiedDate, href }) => {
-          return {
-            title,
-            description,
-            fileLocation: fileHref,
-            downloadText: download + ' (' + 'per ' + fileModifiedDate + ')',
-            href,
-          }
-        }),
-      },
-      req,
-      {
-        body: '<section class="xp-part part-variableCardsList container"/>',
-      }
-    )
+    const props: VariablesProps = {
+      variables: variables.map(({ title, description, fileHref, fileModifiedDate, href }) => {
+        return {
+          title,
+          description,
+          fileLocation: fileHref,
+          downloadText: download + ' (' + 'per ' + fileModifiedDate + ')',
+          href,
+        }
+      }),
+    }
+
+    return render('Variables', props, req, {
+      body: '<section class="xp-part part-variableCardsList container"/>',
+      hydrate: false,
+    })
   }
 
   return NO_VARIABLES_FOUND
@@ -99,12 +98,4 @@ function contentArrayToVariables(content: Array<Content<Article>>, language: str
       ...fileInfo,
     }
   }) as Array<Variables>
-}
-
-interface Variables {
-  title: string
-  description: string
-  href: string
-  fileHref: string
-  fileModifiedDate: string
 }

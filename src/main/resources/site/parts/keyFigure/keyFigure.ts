@@ -1,14 +1,16 @@
 import { type Content } from '/lib/xp/content'
 import { getContent, getComponent, getSiteConfig } from '/lib/xp/portal'
 import { render } from '/lib/enonic/react4xp'
-import { type KeyFigureView, get as getKeyFigures, parseKeyFigure } from '/lib/ssb/parts/keyFigure'
-import { type MunicipalityWithCounty, getMunicipality, RequestWithCode } from '/lib/ssb/dataset/klass/municipalities'
+import { get as getKeyFigures, parseKeyFigure } from '/lib/ssb/parts/keyFigure'
+import { getMunicipality } from '/lib/ssb/dataset/klass/municipalities'
 
 import * as util from '/lib/util'
 import { renderError } from '/lib/ssb/error/error'
 import { DATASET_BRANCH, UNPUBLISHED_DATASET_BRANCH } from '/lib/ssb/repo/dataset'
 import { hasWritePermissionsAndPreview } from '/lib/ssb/parts/permissions'
 import { getPhrases } from '/lib/ssb/utils/language'
+import { type KeyFigureView, type KeyFigureData, type KeyFigureProps } from '/lib/types/partTypes/keyFigure'
+import { type MunicipalityWithCounty, type RequestWithCode } from '/lib/types/municipalities'
 import { type KeyFigure as KeyFigurePartConfig } from '.'
 
 export function get(req: XP.Request): XP.Response {
@@ -106,7 +108,7 @@ function renderKeyFigure(
             }
           })
         : undefined,
-      sourceLabel: getPhrases(page).source,
+      sourceLabel: getPhrases(page)!.source,
       source: config?.source,
       columns: !!config?.columns,
       showPreviewDraft,
@@ -126,35 +128,4 @@ function renderKeyFigure(
     body: '',
     contentType: 'text/html',
   }
-}
-
-interface KeyFigureData {
-  id: string
-  iconUrl?: KeyFigureView['iconUrl']
-  iconAltText?: KeyFigureView['iconAltText']
-  number?: KeyFigureView['number']
-  numberDescription?: KeyFigureView['numberDescription']
-  noNumberText: KeyFigureView['noNumberText']
-  size?: KeyFigureView['size']
-  title: KeyFigureView['title']
-  time?: KeyFigureView['time']
-  changes?: KeyFigureView['changes']
-  greenBox: KeyFigureView['greenBox']
-  glossaryText?: KeyFigureView['glossaryText']
-  glossary?: string
-  source: object | undefined
-}
-interface KeyFigureProps {
-  displayName: KeyFigurePartConfig['title']
-  keyFigures: Array<KeyFigureData> | undefined
-  keyFiguresDraft: Array<KeyFigureData> | undefined
-  sourceLabel: string
-  source: KeyFigurePartConfig['source']
-  columns: KeyFigurePartConfig['columns']
-  showPreviewDraft: boolean
-  paramShowDraft: string | undefined
-  draftExist: boolean
-  pageTypeKeyFigure: boolean
-  hiddenTitle: string
-  isInStatisticsPage: boolean
 }

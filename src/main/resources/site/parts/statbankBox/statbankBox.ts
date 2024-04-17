@@ -7,6 +7,7 @@ import { type StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
 import { getStatisticByIdFromRepo } from '/lib/ssb/statreg/statistics'
 import { getPhrases } from '/lib/ssb/utils/language'
 import { renderError } from '/lib/ssb/error/error'
+import { type StatbankBoxProps } from '/lib/types/partTypes/statbankBox'
 import { type Statistics } from '/site/content-types'
 import { type StatbankBox as StatbankBoxPartConfig } from '.'
 
@@ -47,6 +48,7 @@ function renderStatbankBox(req: XP.Request, statbankBoxContent: StatbankBoxProps
     req,
     {
       body: '<section class="xp-part part-statbank-box"></section>',
+      hydrate: false,
     }
   )
 }
@@ -93,11 +95,4 @@ function parseStatbankBoxContent(
     }),
     fullWidth,
   }
-}
-
-interface StatbankBoxProps {
-  title: string
-  href: string
-  icon: string
-  fullWidth: boolean
 }

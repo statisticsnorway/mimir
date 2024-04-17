@@ -3,6 +3,11 @@ import { render } from '/lib/enonic/react4xp'
 import { imageUrl, getImageAlt } from '/lib/ssb/utils/imageUtils'
 
 import { renderError } from '/lib/ssb/error/error'
+import {
+  type ImageUrls,
+  type PictureCardLink,
+  type PictureCardLinksContent,
+} from '/lib/types/partTypes/pictureCardLinks'
 import { type PictureCardLinks as PictureCardLinksPartConfig } from '.'
 
 export function get(req: XP.Request): XP.Response {
@@ -29,6 +34,7 @@ function renderPart(req: XP.Request): XP.Response {
     req,
     {
       body: '<section class="xp-part picture-card-links container my-5"></section>',
+      hydrate: false,
     }
   )
 }
@@ -82,25 +88,4 @@ function createImageUrls(pictureCardLink: PictureCardLink, i: number): ImageUrls
   }
 
   return imageUrls
-}
-
-interface PictureCardLink {
-  title: string
-  subTitle: string
-  href: string
-  image?: string
-}
-
-interface ImageUrls {
-  portraitSrcSet: string
-  landscapeSrcSet: string
-  imageSrc: string
-  imageAlt: string
-}
-
-interface PictureCardLinksContent {
-  title: string
-  subTitle: string
-  href: string
-  imageSources: ImageUrls
 }

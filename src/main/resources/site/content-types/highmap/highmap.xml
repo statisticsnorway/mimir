@@ -16,16 +16,51 @@
                 </input>
             </items>
         </field-set>
+
+        <option-set name="dataSource">
+            <label>Datakilde</label>
+            <expanded>true</expanded>
+            <occurrences minimum="0" maximum="1" />
+            <options minimum="1" maximum="1">
+                <option name="htmlTable">
+                    <label>Excel</label>
+                    <items>
+                        <input name="html" type="HtmlArea">
+                            <label>Kildetabell limt inn fra Excel</label>
+                            <occurrences minimum="0" maximum="1"/>
+                            <config>
+                                <include>
+                                    Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote
+                                </include>
+                            </config>
+                            <help-text>Lim inn (Ctrl-V) en tabell rett fra Excel. Hvis denne er fylt ut vil den gjelde istedenfor eget felt lengre ned</help-text>
+                        </input>                                
+                    </items>
+                </option>
+                <option name="tbprocessor">
+                <label>Tall fra tabellbygger</label>
+                    <items>
+                        <input name="urlOrId" type="TextLine">
+                            <label>URL eller TBML-id</label>
+                            <occurrences minimum="0" maximum="1" />
+                        </input>
+                    </items>
+                </option>
+            </options>
+        </option-set>
         
         <field-set>
             <label>Tallkilde</label>
             <items>
-                <input name="mapFile" type="ContentSelector">
+                <input name="mapFile" type="MediaSelector">
                     <label>Kart fil (json format)</label>
+                    <config>  
+                        <allowContentType>media:code</allowContentType>
+                    </config>
                     <help-text>Velg kartet som skal brukes</help-text>
                 </input>
                 <input name="htmlTable" type="HtmlArea">
-                    <label>Kartdata fra tabell (tabell limt inn fra excel)</label>
+                    <label>Kartdata fra tabell - BRUK VALG UNDER DATAKILDE!!</label>
                     <occurrences minimum="0" maximum="1"/>
                     <config>
                         <include>
@@ -33,6 +68,9 @@
                         </include>
                     </config>
                     <help-text>Lim inn (Ctrl-V) en tabell rett fra Excel. Tabeller bør være så enkle som mulig</help-text>
+                </input>
+                <input name="mapDataSecondColumn" type="Checkbox">
+                    <label>Andre kolonne i tabell inneholder kartdata (kommunenavn, fylkenavn, osv)</label>
                 </input>
             </items>
         </field-set>
@@ -42,7 +80,7 @@
             <items>
                 <input name="thresholdValues" type="TextLine">
                     <label>Terskelverdi</label> 
-                    <occurrences minimum="1" maximum="4"/> 
+                    <occurrences minimum="0" maximum="4"/> 
                 </input>
             </items>
         </field-set>
@@ -54,15 +92,79 @@
                     <label>Skjul navn i kart</label>
                     <help-text>Huk av denne dersom du vil skjule navn på kartet.</help-text>
                 </input>
-                <input name="colorPalette" type="RadioButton">
-                    <label>Velg fargepalett</label>
-                    <occurrences minimum="1" maximum="1"/>
-                    <config>
-                        <option value="green">Grønn</option>
-                        <option value="yellow">Gul</option>
-                    </config>
-                    <default>green</default>
+                 <input name="removePartOfName" type="CheckBox">
+                    <label>Fjene siste del av navn (samiske navn) fra dynamisk datakilde</label>
+                    <help-text>Hvis navn i datakilde inneholder " - " hent kun første del. Gjelder kun hvis TBML som kilde</help-text>
                 </input>
+                <option-set name="color">
+                    <label>Farger</label>
+                    <occurrences minimum="1" maximum="1" />
+					<options minimum="1" maximum="1">
+                        <option name="green">
+                            <label>Grønnpalett</label>
+                            <default>true</default>
+                        </option>
+                        <option name="gradient">
+                            <label>Gradient (bare for kontinuerlige variabler)</label>
+                            <items>
+                                <input name="startColor" type="CustomSelector">
+                                    <label>Start-farge</label>
+                                    <occurrences minimum="1" maximum="1"/>
+                                    <config>
+                                        <service>colorPreview</service>  
+                                    </config>
+                                </input>
+                                <item-set name="stops">
+                                    <label>Mellom-farge (ikke kompatibel med terskelverdier)</label>
+                                    <occurrences minimum="0" maximum="0"/>
+                                    <items>
+                                        <input name="value" type="TextLine">
+                                            <label>Verdi (mellom 0 og 1)</label>
+                                            <occurrences minimum="1" maximum="1"/>
+                                        </input>
+                                        <input name="color" type="CustomSelector">
+                                            <label>Farge</label>
+                                            <occurrences minimum="1" maximum="1"/>
+                                            <config>
+                                                <service>colorPreview</service>  
+                                            </config>
+                                        </input>
+                                    </items>
+                                </item-set>
+                                <input name="endColor" type="CustomSelector">
+                                    <label>Slutt-farge</label>
+                                    <occurrences minimum="1" maximum="1"/>
+                                    <config>
+                                        <service>colorPreview</service>  
+                                    </config>
+                                </input>
+                            </items>
+                        </option>
+                        <option name="defined">
+                            <label>Velg selv (ikke kompatibel med terskelverdier)</label>
+                            <items>
+                                <item-set name="colorSerie">
+                                    <label>Seriefarge</label>
+                                    <occurrences minimum="1" maximum="0"/>
+                                    <items>
+                                        <input name="serie" type="TextLine">
+                                            <label>Navn (likt med data i første kolonne)</label>
+                                            <occurrences minimum="1" maximum="1"/>
+                                        </input>
+                                        <input name="color" type="CustomSelector">
+                                            <label>Farge</label>
+                                            <occurrences minimum="1" maximum="1"/>
+                                            <config>
+                                                <service>colorPreview</service>  
+                                            </config>
+                                        </input>
+                                    </items>
+                                </item-set>
+                            </items>
+                        </option>
+
+                    </options>
+                </option-set>                
                 <input name="numberDecimals" type="TextLine">
                     <label>Antall desimalplasser som vises</label>
                     <config>
@@ -103,6 +205,25 @@
                 </input>
             </items>
         </field-set>
+
+        <field-set>
+            <label>Kilder</label>
+            <items>
+              <item-set name="sourceList">
+                <occurrences minimum="0" maximum="0"/>
+                <items>
+                  <input name="sourceText" type="TextArea">
+                    <label>Kildetekst</label>
+                    <default>Statistisk sentralbyrå</default>
+                  </input>
+                  <input name="sourceHref" type="TextLine">
+                    <label>Kilde-URL</label>
+                    <default>https://www.ssb.no</default>
+                  </input>
+                </items>
+              </item-set>
+            </items>  
+          </field-set>
         
         <field-set>
             <label>Fotnoter</label>

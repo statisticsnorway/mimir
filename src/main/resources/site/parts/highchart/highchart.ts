@@ -5,7 +5,6 @@ import { getComponent, getContent } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 import { JSONstat as JSONstatType } from '/lib/types/jsonstat-toolkit'
 import { type TbmlDataUniform } from '/lib/types/xmlParser'
-import { type HighchartsGraphConfig } from '/lib/types/highcharts'
 import { render } from '/lib/thymeleaf'
 import { render as r4XpRender } from '/lib/enonic/react4xp'
 import {
@@ -24,9 +23,10 @@ import { hasWritePermissionsAndPreview } from '/lib/ssb/parts/permissions'
 import { isEnabled } from '/lib/featureToggle'
 import { getPhrases } from '/lib/ssb/utils/language'
 import { getTbprocessorKey } from '/lib/ssb/dataset/tbprocessor/tbprocessor'
+import { type HighchartsExtendedProps, type HighchartsReactProps } from '/lib/types/partTypes/highchartsReact'
 import { GA_TRACKING_ID } from '/site/pages/default/default'
 import { type DataSource } from '/site/mixins/dataSource'
-import { type Highchart } from '/site/content-types'
+import { type CombinedGraph, type Highchart } from '/site/content-types'
 
 const view = resolve('./highchart.html')
 
@@ -78,11 +78,12 @@ function renderPart(req: XP.Request, highchartIds: Array<string>): XP.Response {
 
   const highcharts: Array<HighchartsReactProps> = highchartIds
     .map((key) => {
-      const highchart: Content<Highchart & DataSource> | null = getContentByKey({
+      const highchart: Content<Highchart & DataSource> | Content<CombinedGraph> | null = getContentByKey({
         key,
       })
-      const config: HighchartsExtendedProps | undefined = highchart ? determinConfigType(req, highchart) : undefined
-      return highchart && config ? createHighchartsReactProps(highchart, config) : {}
+      const isCombinedGraph: boolean = highchart?.type === `${app.name}:combinedGraph`
+      const config: HighchartsExtendedProps | undefined = determinConfigType(req, highchart, isCombinedGraph)
+      return highchart && config ? createHighchartsReactProps(highchart as Content<Highchart>, config) : {}
     })
     .filter((key) => !!key)
 
@@ -103,6 +104,7 @@ function renderPart(req: XP.Request, highchartIds: Array<string>): XP.Response {
   if (isEnabled('highchart-react', true, 'ssb')) {
     // R4xp disables hydration in edit mode, but highcharts need hydration to show
     // we sneaky swap mode since we want a render of higchart in edit mode
+    // Works good for highchart macro, not so much when part
     const _req = req
     if (req.mode === 'edit') _req.mode = 'preview'
 
@@ -129,17 +131,24 @@ function renderPart(req: XP.Request, highchartIds: Array<string>): XP.Response {
 
 function determinConfigType(
   req: XP.Request,
-  highchart: Content<Highchart & DataSource>
+  highchart: Content<Highchart & DataSource> | Content<CombinedGraph> | null,
+  isCombinedGraph: boolean
 ): HighchartsExtendedProps | undefined {
+  if (isCombinedGraph) {
+    return createDataFromHtmlTable(req, highchart as Content<CombinedGraph>)
+  }
   if (highchart && highchart.data.dataSource) {
-    return createDataFromDataSource(req, highchart)
-  } else if (highchart && highchart.data.htmlTable) {
-    return createDataFromHtmlTable(req, highchart)
+    return createDataFromDataSource(req, highchart as Content<Highchart & DataSource>)
+  } else if ((highchart as Content<Highchart>)?.data.htmlTable) {
+    return createDataFromHtmlTable(req, highchart as Content<Highchart>)
   }
   return undefined
 }
 
-function createDataFromHtmlTable(req: XP.Request, highchart: Content<Highchart & DataSource>): HighchartsExtendedProps {
+function createDataFromHtmlTable(
+  req: XP.Request,
+  highchart: Content<Highchart & DataSource> | Content<CombinedGraph>
+): HighchartsExtendedProps {
   return {
     ...createHighchartObject(req, highchart, highchart.data, undefined),
   }
@@ -191,28 +200,11 @@ function createHighchartsReactProps(
 ): HighchartsReactProps {
   return {
     config: config,
-    type: highchart.data.graphType,
+    type: highchart.type === 'mimir:combinedGraph' ? 'combined' : highchart.data.graphType,
     contentKey: highchart._id,
     footnoteText: highchart.data.footnoteText ? util.data.forceArray(highchart.data.footnoteText) : undefined,
     creditsEnabled: highchart.data.sourceList ? true : false,
     sourceList: highchart.data.sourceList ? util.data.forceArray(highchart.data.sourceList) : undefined,
     hideTitle: highchart.data.hideTitle,
   }
-}
-type HighchartsExtendedProps = HighchartsGraphConfig & HighchartsReactExtraProps
-
-interface HighchartsReactProps {
-  config?: HighchartsExtendedProps
-  description?: string
-  type?: string
-  contentKey?: string
-  footnoteText?: string[]
-  creditsEnabled?: boolean
-  sourceList?: Highchart['sourceList']
-  hideTitle?: boolean
-}
-
-interface HighchartsReactExtraProps {
-  draft?: boolean
-  noDraftAvailable?: boolean
 }

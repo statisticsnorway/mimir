@@ -6,6 +6,7 @@ import { randomUnsafeString } from '/lib/ssb/utils/utils'
 import { data } from '/lib/util'
 import { renderError } from '/lib/ssb/error/error'
 import { getLanguage } from '/lib/ssb/utils/language'
+import { type CategoryLink, type DocumentationContent, type DocumentationUrl } from '/lib/types/partTypes/categoryLinks'
 
 export function get(req: XP.Request): XP.Response {
   try {
@@ -73,34 +74,11 @@ function renderPart(req: XP.Request): XP.Response {
       {
         id: id,
         body: `<section class="xp-part part-category-link"></section>`,
+        hydrate: false,
       }
     )
 
     return categoryLinksComponent
   }
   return NO_LINKS_FOUND
-}
-
-interface CategoryLink {
-  titleText: string
-  subText: string
-  href: string
-}
-
-interface MethodDocumentation {
-  _selected: string
-}
-
-interface DocumentationUrl extends MethodDocumentation {
-  _selected: 'urlSource'
-  urlSource: {
-    url: string
-  }
-}
-
-interface DocumentationContent extends MethodDocumentation {
-  _selected: 'relatedSource'
-  relatedSource: {
-    content?: string
-  }
 }

@@ -1,10 +1,11 @@
 import { get, Content } from '/lib/xp/content'
 import { assetUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
-import { Link, createMenuTree, parseTopLinks } from '/lib/ssb/parts/menu'
+import { createMenuTree, parseTopLinks } from '/lib/ssb/parts/menu'
 import { pathFromStringOrContent } from '/lib/ssb/utils/utils'
-import { Language } from '/lib/types/language'
-import { type Header, type MenuItem } from '/site/content-types'
+import { type Language } from '/lib/types/language'
+import { type HeaderContent } from '/lib/types/header'
+import { type Header } from '/site/content-types'
 
 export function getHeaderContent(language: Language): HeaderContent | undefined {
   if (language.headerId === undefined || language.headerId === null) {
@@ -55,18 +56,4 @@ export function getHeaderContent(language: Language): HeaderContent | undefined 
           : undefined,
     }
   }
-}
-
-export interface HeaderContent {
-  logoUrl: string
-  logoSrc: string
-  logoAltText: string
-  searchResultPageUrl?: string
-  searchText: string
-  mainMenuText: string
-  mainNavigation?: Array<MenuItem>
-  topLinks?: Array<Link>
-  skipToContentText: string
-  closeText: string
-  menuText: string
 }

@@ -1,0 +1,93 @@
+<content-type>
+    <display-name>Ministatbank</display-name>
+    <description>Spørring Statistikkbanken</description>
+    <super-type>base:structured</super-type>
+    <allow-child-content>true</allow-child-content>
+    <form>
+        <field-set>  
+            <label>Visningsfelt</label>
+            <items>
+                <input name="icon" type="ImageSelector">
+                    <label>Ikon</label>
+                    <occurrences minimum="0" maximum="1"/>
+                    <config>
+                        <allowPath>${site}/</allowPath>
+                    </config>
+                </input>
+                <input name="simpleStatbankTitle" type="TextLine">
+                    <label>Tittel</label>
+                    <occurrences minimum="1" maximum="1"/>
+                </input>
+                <input name="ingress" type="HtmlArea">
+                    <label>Tekst</label>
+                    <occurrences minimum="0" maximum="1"/>
+                    <config>
+                        <exclude>*</exclude>
+                        <include>Bold | Italic | Link | Unlink</include>
+                    </config>
+                </input>
+                <input name="labelDropdown" type="TextLine">
+                    <label>Label på nedtrekksmeny</label>
+                    <occurrences minimum="1" maximum="1"/>
+                </input>
+                <input name="placeholderDropdown" type="TextLine">
+                    <label>Placeholder nedtrekksmeny</label>
+                    <occurrences minimum="0" maximum="1"/>
+                </input>
+                <input name="displayDropdown" type="RadioButton">
+                    <label>Visning i dropdown</label>
+                    <occurrences minimum="1" maximum="1"/>
+                    <config>
+                        <option value="text">tekst</option>
+                        <option value="code-text">kode: tekst</option>
+                    </config>
+                    <default>text</default>
+                </input>
+            </items>
+        </field-set> 
+        <field-set>  
+            <label>Resultatvisning</label>
+            <items>
+                <input name="resultText" type="TextLine">
+                    <label>Resultattekst</label>
+                    <occurrences minimum="1" maximum="1"/>
+                </input>
+                <input name="unit" type="TextLine">
+                    <label>Benevning</label>
+                    <occurrences minimum="0" maximum="1" />
+                </input>
+                <input name="timeLabel" type="TextLine">
+                    <label>Etikett for tid/periode (feks Gjelder per)</label>
+                    <occurrences minimum="1" maximum="1"/>
+                </input>
+                <input name="resultFooter" type="HtmlArea">
+                    <label>Tekst i bunnen av resultat</label>
+                    <config>
+                        <exclude>*</exclude>
+                        <include>Bold | Italic | Link | Unlink</include>
+                    </config>
+                    <occurrences minimum="0" maximum="1"/>
+                </input> 
+            </items>
+        </field-set> 
+        <field-set>
+            <label>Api-spørring mot statistikkbanken</label>
+            <items>
+                <input name="urlOrId" type="TextLine">
+                    <label>URL eller tabell-id</label>
+                    <occurrences minimum="1" maximum="1" />
+                    <help-text>Velg tabellId eller full url til tabell, feks https://data.utv.ssb.no/api/v0/no/table/[TabellId]</help-text>
+                </input>
+                <input name="json" type="TextArea">
+                    <label>Spørring i JSON-format</label>
+                    <occurrences minimum="1" maximum="1"/>
+                </input>
+                <input name="code" type="TextLine">
+                    <label>Code</label>
+                    <occurrences minimum="1" maximum="1"/>
+                    <help-text>Velg hvilket kode (Code) i spørringen som skal være valgbar i dropdown</help-text>
+                </input>
+            </items>
+        </field-set>  
+    </form>
+</content-type>

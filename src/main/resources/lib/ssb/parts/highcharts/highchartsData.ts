@@ -1,19 +1,19 @@
 import { Content } from '/lib/xp/content'
-import { PreliminaryData, TbmlDataUniform } from '/lib/types/xmlParser'
-import { JSONstat } from '/lib/types/jsonstat-toolkit'
-import { RowValue, getRowValue } from '/lib/ssb/utils/utils'
-
+import { type PreliminaryData, type TbmlDataUniform } from '/lib/types/xmlParser'
+import { type JSONstat } from '/lib/types/jsonstat-toolkit'
+import { type RowValue } from '/lib/types/util'
+import { getRowValue } from '/lib/ssb/utils/utils'
 import { seriesAndCategoriesFromHtmlTable } from '/lib/ssb/parts/highcharts/data/htmlTable'
 import { seriesAndCategoriesFromJsonStat } from '/lib/ssb/parts/highcharts/data/statBank'
 import { seriesAndCategoriesFromTbml } from '/lib/ssb/parts/highcharts/data/tbProcessor'
 import { DataSource as DataSourceType } from '/lib/ssb/repo/dataset'
 import * as util from '/lib/util'
-import { type Highchart } from '/site/content-types'
+import { type CombinedGraph, type Highchart } from '/site/content-types'
 import { type DataSource } from '/site/mixins/dataSource'
 
 export function prepareHighchartsData(
   req: XP.Request,
-  highchartsContent: Content<Highchart>,
+  highchartsContent: Content<Highchart | CombinedGraph>,
   data: JSONstat | TbmlDataUniform | object | string | undefined,
   dataSource: DataSource['dataSource']
 ): SeriesAndCategories | undefined {
@@ -23,33 +23,37 @@ export function prepareHighchartsData(
     data,
     dataSource
   )
-
+  if (highchartsContent.type === `${app.name}:combinedGraph`) {
+    return seriesAndCategories
+  }
   const seriesAndCategoriesOrData: SeriesAndCategories | undefined =
     seriesAndCategories && !seriesAndCategories.series
-      ? addDataProperties(highchartsContent, seriesAndCategories)
+      ? addDataProperties(highchartsContent as Content<Highchart>, seriesAndCategories)
       : seriesAndCategories
 
   return seriesAndCategoriesOrData !== undefined
-    ? switchRowsAndColumnsCheck(highchartsContent, seriesAndCategoriesOrData)
+    ? switchRowsAndColumnsCheck(highchartsContent as Content<Highchart>, seriesAndCategoriesOrData)
     : seriesAndCategoriesOrData
 }
 
 export function getSeriesAndCategories(
   req: XP.Request,
-  highchart: Content<Highchart>,
+  highchart: Content<Highchart | CombinedGraph>,
   data: JSONstat | TbmlDataUniform | object | string | undefined,
   dataSource: DataSource['dataSource']
 ): SeriesAndCategories | undefined {
-  //
   if (dataSource && dataSource._selected === DataSourceType.STATBANK_API) {
     return seriesAndCategoriesFromJsonStat(req, highchart, data, dataSource)
   } else if (dataSource && dataSource._selected === DataSourceType.TBPROCESSOR) {
     return seriesAndCategoriesFromTbml(
       data as TbmlDataUniform,
-      highchart.data.graphType,
+      (highchart as Content<Highchart>).data.graphType,
       highchart.data.xAxisType || 'linear'
     )
-  } else if (highchart.data.htmlTable) {
+  } else if (
+    (highchart as Content<Highchart>).data.htmlTable ||
+    (highchart.data.dataSource && highchart.data.dataSource._selected === DataSourceType.HTMLTABLE)
+  ) {
     return seriesAndCategoriesFromHtmlTable(highchart)
   }
   return undefined

@@ -1,4 +1,5 @@
-import { MainSubject, SubSubject, Title, StatisticItem, getSubjectStructur } from '/lib/ssb/utils/subjectUtils'
+import { type MainSubject, type SubSubject, type Title, type StatisticItem } from '/lib/types/subject'
+import { getSubjectStructur } from '/lib/ssb/utils/subjectUtils'
 import { xmlEscape } from '/lib/text-encoding'
 
 function get(req: XP.Request): XP.Response {

@@ -12,6 +12,7 @@ import { renderError } from '/lib/ssb/error/error'
 import { render as r4XpRender } from '/lib/enonic/react4xp'
 import { getPhrases } from '/lib/ssb/utils/language'
 import { type Phrases } from '/lib/types/language'
+import { type BannerProps } from '/lib/types/partTypes/banner'
 import { type Page } from '/site/content-types'
 
 export function get(req: XP.Request): XP.Response {
@@ -49,7 +50,7 @@ function renderPart(req: XP.Request): XP.Response {
   const factPageTitle = `${subTitleFactPage} ${page.displayName}`.toLowerCase()
   const imageAlt = part.config.image ? getImageAlt(part.config.image) : undefined
 
-  const props = {
+  const props: BannerProps = {
     ...imgSrcSet,
     pageDisplayName: page.displayName,
     bannerImageAltText: imageAlt ? imageAlt : ' ',
@@ -61,7 +62,7 @@ function renderPart(req: XP.Request): XP.Response {
         })
       : undefined,
     municipalityTitle: municipality ? municipalityName + ' (' + municipality.county.name + ')' : undefined,
-    pageType: page.page?.config.pageType,
+    pageType: page.page?.config.pageType as string,
     selectedPageType: pageType._selected,
     subTitleFactPage,
     factPageTitle: 'faktaside' in pageType && pageType.faktaside.title,
@@ -80,6 +81,7 @@ function renderPart(req: XP.Request): XP.Response {
     class="xp-part part-banner position-relative clearfix col-12 searchabletext${
       pageType._selected === 'faktaside' ? ' fact-page-banner' : ''
     }${isLandingPage ? ' landing-page-banner' : ''}"></section>`,
+    hydrate: false,
   })
 }
 

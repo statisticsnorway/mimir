@@ -4,14 +4,14 @@ import { localize } from '/lib/xp/i18n'
 import { render } from '/lib/enonic/react4xp'
 import { randomUnsafeString, scriptAsset } from '/lib/ssb/utils/utils'
 import {
-  type MunicipalityWithCounty,
   municipalsWithCounties,
   getMunicipality,
   removeCountyFromMunicipalityName,
-  RequestWithCode,
 } from '/lib/ssb/dataset/klass/municipalities'
 
 import { renderError } from '/lib/ssb/error/error'
+import { type MenuDropdownProps, type Municipality } from '/lib/types/partTypes/menuDropdown'
+import { type MunicipalityWithCounty, type RequestWithCode } from '/lib/types/municipalities'
 import { type MenuDropdown } from '/site/content-types'
 
 export function get(req: RequestWithCode): XP.Response {
@@ -94,23 +94,4 @@ function renderPart(req: RequestWithCode): XP.Response {
       bodyEnd: [scriptAsset('js/map.js')],
     },
   })
-}
-
-interface Municipality {
-  id: string
-  title: string
-}
-
-interface MenuDropdownProps {
-  modeMunicipality: boolean
-  ariaLabel: string
-  placeholder: string
-  items: Municipality[]
-  baseUrl: string
-  dataPathAssetUrl: string
-  dataServiceUrl: string
-  municipality: MunicipalityWithCounty | undefined
-  municipalityName: string | undefined
-  municipalityList: Array<Municipality>
-  dropdownId: string
 }

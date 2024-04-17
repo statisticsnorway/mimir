@@ -13,12 +13,8 @@ import {
 } from '/lib/ssb/dashboard/statreg/types'
 import { capitalize } from '/lib/ssb/utils/stringUtils'
 import { calculatePeriod, getNextRelease, getPreviousRelease, nextReleasedPassed } from '/lib/ssb/utils/variantUtils'
-import {
-  type SubjectItem,
-  queryForSubjects,
-  getAllMainSubjectByContent,
-  getAllSubSubjectByContent,
-} from '/lib/ssb/utils/subjectUtils'
+import { queryForSubjects, getAllMainSubjectByContent, getAllSubSubjectByContent } from '/lib/ssb/utils/subjectUtils'
+import { type SubjectItem } from '/lib/types/subject'
 import { type OmStatistikken, type Statistics } from '/site/content-types'
 
 export const REPO_ID_STATREG_STATISTICS: 'no.ssb.statreg.statistics.variants' =

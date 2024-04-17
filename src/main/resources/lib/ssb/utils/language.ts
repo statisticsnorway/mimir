@@ -1,7 +1,7 @@
 import { exists, Content } from '/lib/xp/content'
 import { getSite, getSiteConfig, pageUrl } from '/lib/xp/portal'
 import * as i18n from '/lib/xp/i18n'
-import { Language, AlternativeLanguages, Phrases } from '/lib/types/language'
+import { type Language, type AlternativeLanguages, type Phrases } from '/lib/types/language'
 
 let english: Phrases | undefined
 let norwegian: Phrases | undefined

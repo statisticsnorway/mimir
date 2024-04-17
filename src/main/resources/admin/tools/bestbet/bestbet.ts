@@ -3,12 +3,13 @@ import { assetUrl, serviceUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 import { getToolUrl } from '/lib/xp/admin'
 import { render } from '/lib/thymeleaf'
-import { getMainSubjects, SubjectItem } from '/lib/ssb/utils/subjectUtils'
+import { getMainSubjects } from '/lib/ssb/utils/subjectUtils'
 import { parseContributions } from '/lib/ssb/utils/utils'
-import { DropdownItems } from '/lib/types/components'
+import { type DropdownItems } from '/lib/types/components'
 import { render as r4XpRender } from '/lib/enonic/react4xp'
 
 import { renderError } from '/lib/ssb/error/error'
+import { type SubjectItem } from '/lib/types/subject'
 
 const view: ResourceKey = resolve('./bestbet.html')
 
