@@ -127,7 +127,7 @@ function parseHtmlTable(table: Content<Table & DataSource>): TableView {
     {
       tr: theadRows.map((row) => {
         return {
-          th: util.data.forceArray(row.td),
+          th: getHtmlTableCells(row),
           td: [],
         }
       }),
@@ -137,7 +137,7 @@ function parseHtmlTable(table: Content<Table & DataSource>): TableView {
   const tbody: Array<TableRowUniform> = [
     {
       tr: tbodyRows.map((row) => {
-        const cells: Array<number | string | PreliminaryData> = util.data.forceArray(row.td)
+        const cells: Array<number | string | PreliminaryData> = getHtmlTableCells(row)
         return {
           th: util.data.forceArray(cells[0]),
           td: cells.slice(1),
@@ -161,6 +161,19 @@ function parseHtmlTable(table: Content<Table & DataSource>): TableView {
     noteRefs: noteRefs,
     sourceList: [],
   }
+}
+
+function getHtmlTableCells(row: HtmlTableRowRaw): Array<number | string | PreliminaryData> {
+  const tablecells: Array<number | string | PreliminaryData> = util.data.forceArray(row.td)
+  return tablecells.map((cell) => {
+    return typeof cell === 'object' && cell.strong
+      ? {
+          ...cell,
+          content: cell.strong,
+          class: 'title',
+        }
+      : cell
+  })
 }
 
 export function getTableViewData(dataContent: TbmlDataUniform, table?: Content<Table>): TableView {
@@ -251,7 +264,7 @@ export function parseHtmlString(tableData: string): HtmlTable {
 }
 
 function parseStringToJson(tableData: string): HtmlTableRaw | undefined {
-  const sanitized = striptags(tableData, ['table', 'thead', 'tbody', 'tr', 'th', 'td'])
+  const sanitized = striptags(tableData, ['table', 'thead', 'tbody', 'tr', 'th', 'td', 'strong'])
   const tableRaw: string = __.toNativeObject(xmlParser.parse(sanitized)) as string
   const jsonTable: HtmlTableRaw | undefined = tableRaw ? (JSON.parse(tableRaw) as HtmlTableRaw) : undefined
   return jsonTable

@@ -199,4 +199,7 @@ export interface PreliminaryData {
   class: string
   content: number | string
   noterefs: string
+  rowspan?: number
+  colspan?: number
+  strong?: number | string
 }
