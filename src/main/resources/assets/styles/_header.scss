@@ -419,42 +419,4 @@ header.ssb-header-wrapper {
   }
 }
 
-// Overriding styling for prototype. To be removed after user testing
-.show-prototype-styling .tabItem {
-  @include media-breakpoint-down(lg){
-    &.activeTab{
-      max-height: 600px !important;
-    }
-  }
-
-  button .navigation-item {
-    margin-right: 0 !important;
-    width: 320px;
-    span{
-      font-size: 20px !important;
-    }
-  }
-
-  .subMenu {
-      width: 320px;
-      max-width: 320px !important;
-    }
-  
-}
-
-.show-prototype-styling .fill-width{
-  height: 60px;
-  width: 100%;
-  padding-top: 60px;
-
-  &.hideOnMobile {
-    display:none;
-  }
-}
-
-.show-prototype-styling .icon{
-  display:none;
-}
-
-
 
