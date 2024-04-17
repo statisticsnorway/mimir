@@ -113,6 +113,7 @@
                                     <config>
                                         <service>colorPreview</service>  
                                     </config>
+                                    <help-text>Angi hex for farge på formen #000000 og velg forhåndsvisningen som dukker opp</help-text>
                                 </input>
                                 <item-set name="stops">
                                     <label>Mellom-farge (ikke kompatibel med terskelverdier)</label>
@@ -129,6 +130,7 @@
                                             <config>
                                                 <service>colorPreview</service>  
                                             </config>
+                                            <help-text>Angi hex for farge på formen #000000 og velg forhåndsvisningen som dukker opp</help-text>
                                         </input>
                                     </items>
                                 </item-set>
@@ -138,6 +140,7 @@
                                     <config>
                                         <service>colorPreview</service>  
                                     </config>
+                                    <help-text>Angi hex for farge på formen #000000 og velg forhåndsvisningen som dukker opp</help-text>
                                 </input>
                             </items>
                         </option>
