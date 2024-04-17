@@ -121,8 +121,7 @@
                                         <input name="value" type="TextLine">
                                             <label>Verdi (mellom 0 og 1)</label>
                                             <occurrences minimum="1" maximum="1"/>
-                                            <help-text>Start-fargen er 0 og slutt-fargen er 1. Dette tallet forteller hvor på dette spekteret mellom-fargen er definert.
-                                            Dersom data går fra 0 til 1000 vil en mellomfarge på 0,25 angi hvilken farge verdien 250 vil ha.</help-text>
+                                            <help-text>Verdien angir hvor mellomfargen skal slå inn på en skala der startfargen er 0 og sluttfargen er 1. Hvis tallene i tabellen går fra 0 til 1000, vil en verdi på 0,25 bety at tall fra 0 til 250 fordeler seg mellom startfargen og mellomfargen, mens tall fra 250 til 1000 fordeler seg mellom mellomfargen og sluttfargen.</help-text>
                                         </input>
                                         <input name="color" type="CustomSelector">
                                             <label>Farge</label>
