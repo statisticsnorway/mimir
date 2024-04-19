@@ -10,7 +10,8 @@ import {
   type VariantInListing,
 } from '/lib/ssb/dashboard/statreg/types'
 import { getMunicipality } from '/lib/ssb/dataset/klass/municipalities'
-import { type FooterContent, getFooterContent } from '/lib/ssb/parts/footer'
+import { getFooterContent } from '/lib/ssb/parts/footer'
+import { type FooterContent } from '/lib/types/footer'
 import {
   type AlertType,
   type InformationAlertOptions,
@@ -228,13 +229,15 @@ export function get(req: XP.Request): XP.Response {
       dateModified: page.data.showModifiedDate?.dateOption?.showModifiedTime
         ? page.data.showModifiedDate.dateOption.modifiedDate
         : undefined,
-      author: page.data.authorItemSet?.map((f) => {
-        return {
-          '@type': 'Person',
-          name: f.name,
-          email: f.email,
-        }
-      }),
+      author: page.data.authorItemSet
+        ? ensureArray(page.data.authorItemSet).map((f) => {
+            return {
+              '@type': 'Person',
+              name: f.name,
+              email: f.email,
+            }
+          })
+        : undefined,
       publisher: {
         '@type': 'Organization',
         name: 'Statistisk sentralbyrå',
