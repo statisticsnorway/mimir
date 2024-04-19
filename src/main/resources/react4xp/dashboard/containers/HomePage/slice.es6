@@ -13,6 +13,7 @@ export const initialState = {
   dataToolBoxBaseUrl: '',
   internalBaseUrl: '',
   internalStatbankUrl: '',
+  statregRapportUrl: '',
   serverTime: undefined,
   serverTimeReceived: undefined,
 }
@@ -32,6 +33,9 @@ const commonSlice = createSlice({
     },
     setInternalStatbankUrl(state, action) {
       state.internalStatbankUrl = action.internalStatbankUrl
+    },
+    setStatregRapportUrl(state, action) {
+      state.statregRapportUrl = action.statregRapportUrl
     },
     setUser(state, action) {
       state.user = action.user

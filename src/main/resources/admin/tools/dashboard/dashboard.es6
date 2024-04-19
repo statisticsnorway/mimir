@@ -13,6 +13,10 @@ const DEFAULT_CONTENTSTUDIO_URL = getToolUrl('com.enonic.app.contentstudio', 'ma
 const DEFAULT_TOOLBOX_URL = getToolUrl('systems.rcd.enonic.datatoolbox', 'data-toolbox')
 const INTERNAL_BASE_URL =
   app.config && app.config['ssb.internal.baseUrl'] ? app.config['ssb.internal.baseUrl'] : 'https://i.ssb.no'
+const STATREG_RAPPORT_URL =
+  app.config && app.config['ssb.statregRapport.url']
+    ? app.config['ssb.statregRapport.url']
+    : 'https://statreg-rapport.ssb.no/'
 const INTERNAL_STATBANK_URL =
   app.config && app.config['ssb.statbankintern.baseUrl']
     ? app.config['ssb.statbankintern.baseUrl']
@@ -57,6 +61,7 @@ function renderPart(req) {
       dataToolBoxBaseUrl: `${DEFAULT_TOOLBOX_URL}#nodes?repo=no.ssb.eventlog&branch=master&path=%2Fqueries%2F`,
       internalBaseUrl: `${INTERNAL_BASE_URL}`,
       internalStatbankUrl: `${INTERNAL_STATBANK_URL}`,
+      statregRapportUrl: `${STATREG_RAPPORT_URL}`,
       toggleDebugging: isEnabled('dashboard-redux-logging-debugging', true, 'ssb'),
     })
     .setId('dashboard')

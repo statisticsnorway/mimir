@@ -8,6 +8,7 @@ import {
   selectVarnishPurgeResult,
   selectLoadingRefreshNameGraph,
   selectRefreshNameGraphResult,
+  selectStatregRapportUrl,
 } from '/react4xp/dashboard/containers/HomePage/selectors'
 import { WebSocketContext } from '/react4xp/dashboard/utils/websocket/WebsocketProvider'
 import {
@@ -49,6 +50,7 @@ export function DashboardTools() {
   const statuses = useSelector(selectStatuses)
   const internalBaseUrl = useSelector(selectInternalBaseUrl)
   const internalStatbankUrl = useSelector(selectInternalStatbankUrl)
+  const statregRapportUrl = useSelector(selectStatregRapportUrl)
 
   const [selectedStatRegKey, setSelectStatRegKey] = useState(null)
   const [modalShow, setModalShow] = useState(false)
@@ -106,7 +108,7 @@ export function DashboardTools() {
       })
   }
 
-  function renderIcon(loading) {
+  function renderIcon(loading: boolean) {
     if (loading) {
       return <span className='spinner-border spinner-border-sm' />
     }
@@ -190,7 +192,7 @@ export function DashboardTools() {
       } else if (item.id === 'link-guide-publications') {
         openLinkInNewWindow('https://wiki.ssb.no/display/VEILEDNING/Brukerdokumentasjon+for+publisering+i+XP')
       } else if (item.id === 'link-status-statreg') {
-        openLinkInNewWindow(`${internalBaseUrl}/dashboard/statusrapport`)
+        openLinkInNewWindow(`${statregRapportUrl}`)
       } else if (item.id === 'link-tbml-validation') {
         openLinkInNewWindow(`${internalBaseUrl}/tbprocessor/document/validateTbml/216725`)
       }
