@@ -216,37 +216,11 @@ export function get(req: XP.Request): XP.Response {
 
   const metaInfo: MetaInfoData = parseMetaInfoData(municipality, pageType, page, language, req)
 
-  let jsonLd: Article | undefined
-  if (page.type === 'mimir:article' && isEnabled('structured-data', false, 'ssb'))
-    jsonLd = {
-      // @ts-ignore  ssssh its ok
-      '@context': 'https://schema.org',
-      '@type': 'Article',
-      articleSection: ensureArray(page.x?.mimir?.subjectTag?.mainSubjects)[0],
-      additionalType: page.data.articleType, // For eksempel
-      headline: page.data.title,
-      datePublished: page.publish?.first,
-      dateModified: page.data.showModifiedDate?.dateOption?.showModifiedTime
-        ? page.data.showModifiedDate.dateOption.modifiedDate
-        : undefined,
-      author: page.data.authorItemSet
-        ? ensureArray(page.data.authorItemSet).map((f) => {
-            return {
-              '@type': 'Person',
-              name: f.name,
-              email: f.email,
-            }
-          })
-        : undefined,
-      publisher: {
-        '@type': 'Organization',
-        name: 'Statistisk sentralbyrå',
-        logo: {
-          '@type': 'ImageObject',
-          url: 'https://www.ssb.no/_/asset/mimir:0000018b60c47e20/SSB_logo_black.svg',
-        },
-      },
-    }
+  //Teste strukturerte data
+  const jsonLd: Article | undefined =
+    page.type === 'mimir:article' && isEnabled('structured-data', false, 'ssb')
+      ? prepareStructuredData(page)
+      : undefined
 
   const statbankFane: boolean = req.params.xpframe === 'statbank'
   const statBankContent: StatbankFrameData = parseStatbankFrameContent(statbankFane, req, page)
@@ -367,6 +341,57 @@ function prepareRegions(isFragment: boolean, page: DefaultPage): RegionsContent 
   return {
     mainRegionData,
     configRegions,
+  }
+}
+
+function prepareStructuredData(page: DefaultPage): Article {
+  let publishedDate: string | undefined = page.publish && page.publish.from
+  let additionalType: string | undefined
+
+  if (page.type === `${app.name}:statistics`) {
+    const statistic: StatisticInListing | undefined = getStatisticByIdFromRepo(page.data.statistic)
+    if (statistic) {
+      const variants: Array<VariantInListing | undefined> = util.data.forceArray(statistic.variants)
+      const releaseDates: ReleaseDatesVariant = getReleaseDatesByVariants(variants as Array<VariantInListing>)
+      const previousRelease: string = releaseDates.previousRelease[0]
+      publishedDate = previousRelease ? new Date(previousRelease).toISOString() : new Date().toISOString()
+    }
+    additionalType = page.data.articleType ?? 'statistic'
+  }
+
+  if (page.type === `${app.name}:article`) {
+    additionalType = page.data.articleType ?? 'article'
+  }
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    additionalType,
+    headline: page.displayName,
+    datePublished: publishedDate,
+    dateModified: page.data.showModifiedDate?.dateOption?.showModifiedTime
+      ? page.data.showModifiedDate.dateOption.modifiedDate
+      : undefined,
+    author: page.data.authorItemSet
+      ? ensureArray(page.data.authorItemSet).map((f) => {
+          return {
+            '@type': 'Person',
+            name: f.name,
+            email: f.email,
+          }
+        })
+      : undefined,
+    description: page.x['com-enonic-app-metafields']?.['meta-data']?.seoDescription ?? '',
+    articleSection: ensureArray(page.x?.mimir?.subjectTag?.mainSubjects)[0],
+    keywords: page.data.keywords ? page.data.keywords : '',
+    publisher: {
+      '@type': 'Organization',
+      name: 'Statistisk sentralbyrå',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://www.ssb.no/_/asset/mimir:0000018b60c47e20/SSB_logo_black.svg',
+      },
+    },
   }
 }
 
@@ -679,7 +704,7 @@ interface DefaultModel {
   GA_TRACKING_ID: string | null
   GTM_TRACKING_ID: string | null
   GTM_AUTH: string | null
-  jsonLd: NewsArticle | undefined
+  jsonLd: Article | undefined
   headerBody: string | undefined
   footerBody: string | undefined
   breadcrumbsReactId: string | undefined
