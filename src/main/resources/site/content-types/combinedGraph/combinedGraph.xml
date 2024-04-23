@@ -32,13 +32,13 @@
         </options>
     </option-set>
 
-    <item-set name="graphs">  
-        <label>Grafer</label>  
-        <occurrences minimum="0" maximum="2"/>  
+    <item-set name="series">  
+        <label>Serier</label>  
+        <occurrences minimum="0" maximum="10"/>  
         <items>
-            <input name="yAxisTitle" type="TextLine">
-                <label>Y-akse, tittel</label>
-                <occurrences minimum="1" maximum="1"/>
+            <input name="serieTitle" type="TextLine">
+              <label>Tittel</label>
+              <occurrences minimum="1" maximum="1"/>
             </input>
             <input name="graphType" type="RadioButton">
                 <label>Graftype</label>
@@ -49,6 +49,36 @@
                     <option value="bar">Liggende stolpe</option>
                     <option value="area">Areal</option>
                 </config>
+            </input>
+            <input name="yAxis" type="RadioButton">
+              <label>Tilhører Y-akse</label>
+              <occurrences minimum="1" maximum="1"/>  
+              <config>
+                <option value="1">1</option>  
+                <option value="2">2</option>
+              </config>
+              <default>1</default>  
+            </input>
+        </items>     
+    </item-set>
+
+    <item-set name="yAxis">  
+        <label>Y-akse</label>  
+        <occurrences minimum="0" maximum="2"/>  
+        <items>
+            <input name="yAxisTitle" type="TextLine">
+                <label>Y-akse, tittel</label>
+                <occurrences minimum="1" maximum="1"/>
+            </input>
+            <input name="yAxisMin" type="TextLine">
+              <label>Y-akse, minste verdi</label>
+              <help-text>Må være et heltall eller desimaltall. La feltet være blankt for automatisk justering. Hvis aksen er unike kategorier, brukes heltall fra 0 og oppover.</help-text>
+              <regexp>^[0-9]*[,.]?[0-9]+$</regexp>
+            </input>
+            <input name="yAxisMax" type="TextLine">
+              <label>Y-akse, største verdi</label>
+              <help-text>Må være et heltall eller desimaltall. La feltet være blankt for automatisk justering. Hvis aksen er unike kategorier, brukes heltall fra 0 og oppover.</help-text>
+              <regexp>^[0-9]*[,.]?[0-9]+$</regexp>
             </input>
             <input name="yAxisDecimalPlaces" type="RadioButton">
                 <label>Vis desimaler på Y-akseverdiene, antall:</label>
