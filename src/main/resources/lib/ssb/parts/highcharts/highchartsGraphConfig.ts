@@ -52,15 +52,15 @@ export function prepareCombinedGraphConfig(
     const yAxisConfig = {
       title: {
         text: data?.yAxisTitle,
-        offset: data.yAxisOffset ? parseFloat(data.yAxisOffset) : 0,
+        offset: data?.yAxisOffset ? parseFloat(data.yAxisOffset) : 0,
       },
       opposite: index === 1 ? true : undefined,
-      allowDecimals: data.yAxisDecimalPlaces ? Number(data.yAxisDecimalPlaces) > 0 : undefined,
+      allowDecimals: data?.yAxisDecimalPlaces ? Number(data?.yAxisDecimalPlaces) > 0 : undefined,
       labels: {
-        format: `{value:,.${data.yAxisDecimalPlaces || 0}f}`,
+        format: `{value:,.${data?.yAxisDecimalPlaces || 0}f}`,
       },
-      min: data.yAxisMin && !isNaN(parseFloat(data.yAxisMin)) ? parseFloat(data.yAxisMin) : undefined,
-      max: data.yAxisMax && !isNaN(parseFloat(data.yAxisMax)) ? parseFloat(data.yAxisMax) : undefined,
+      min: data?.yAxisMin && !isNaN(parseFloat(data?.yAxisMin)) ? parseFloat(data?.yAxisMin) : undefined,
+      max: data?.yAxisMax && !isNaN(parseFloat(data?.yAxisMax)) ? parseFloat(data?.yAxisMax) : undefined,
     }
     return mergeDeepRight(defaultConfig.yAxis, yAxisConfig)
   })
