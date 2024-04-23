@@ -1,7 +1,7 @@
 import { Content } from '/lib/xp/content'
 import { type HighchartsGraphConfig } from '/lib/types/highcharts'
 import { type PreliminaryData } from '/lib/types/xmlParser'
-
+import * as util from '/lib/util'
 import { createDefaultConfig } from '/lib/ssb/parts/highcharts/graph/config'
 import { areaConfig } from '/lib/ssb/parts/highcharts/graph/graphAreaConfig'
 import { pieConfig } from '/lib/ssb/parts/highcharts/graph/graphPieConfig'
@@ -48,10 +48,10 @@ export function prepareCombinedGraphConfig(
     combinedGraphContent.language
   )
 
-  const yAxis = combinedGraphContent.data.yAxis?.map((data, index) => {
+  const yAxis = util.data.forceArray(combinedGraphContent.data.yAxis!).map((data, index) => {
     const yAxisConfig = {
       title: {
-        text: data.yAxisTitle,
+        text: data?.yAxisTitle,
         offset: data.yAxisOffset ? parseFloat(data.yAxisOffset) : 0,
       },
       opposite: index === 1 ? true : undefined,
@@ -59,12 +59,14 @@ export function prepareCombinedGraphConfig(
       labels: {
         format: `{value:,.${data.yAxisDecimalPlaces || 0}f}`,
       },
+      min: data.yAxisMin && !isNaN(parseFloat(data.yAxisMin)) ? parseFloat(data.yAxisMin) : undefined,
+      max: data.yAxisMax && !isNaN(parseFloat(data.yAxisMax)) ? parseFloat(data.yAxisMax) : undefined,
     }
     return mergeDeepRight(defaultConfig.yAxis, yAxisConfig)
   })
 
   const seriesOption = series
-    ? combinedGraphContent.data.series?.map((data, index) => {
+    ? util.data.forceArray(combinedGraphContent.data.series!).map((data, index) => {
         return {
           type: data.graphType,
           data: series[index].data,
