@@ -48,7 +48,7 @@ jobs:
                   "type": "header",
                   "text": {
                     "type": "plain_text",
-                    "text": "${{ github.workflow }}"
+                    "text": "${{ github.workflow }} in ${{ github.repository }}"
                   }
                 },
                 {
@@ -89,7 +89,7 @@ jobs:
                   "type": "header",
                   "text": {
                     "type": "plain_text",
-                    "text": "${{ github.workflow }}"
+                    "text": "${{ github.workflow }} in ${{ github.repository }}"
                   }
                 },
                 {

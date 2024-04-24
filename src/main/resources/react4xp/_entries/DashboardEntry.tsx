@@ -36,6 +36,7 @@ function Dashboard(props: DashboardProps) {
             dataToolBoxBaseUrl={props.dataToolBoxBaseUrl}
             internalBaseUrl={props.internalBaseUrl}
             internalStatbankUrl={props.internalStatbankUrl}
+            statregRapportUrl={props.statregRapportUrl}
           />
         </HelmetProvider>
       </WebsocketProvider>
@@ -56,6 +57,7 @@ interface DashboardRouterProps {
   dataToolBoxBaseUrl?: string
   internalBaseUrl?: string
   internalStatbankUrl?: string
+  statregRapportUrl?: string
 }
 
 function DashboardRouter(props: DashboardRouterProps) {
@@ -82,6 +84,10 @@ function DashboardRouter(props: DashboardRouterProps) {
   dispatch({
     type: commonActions.setInternalBaseUrl.type,
     internalBaseUrl: props.internalBaseUrl,
+  })
+  dispatch({
+    type: commonActions.setStatregRapportUrl.type,
+    statregRapportUrl: props.statregRapportUrl,
   })
   dispatch({
     type: commonActions.setInternalStatbankUrl.type,
