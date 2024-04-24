@@ -36,10 +36,6 @@
         <label>Serier</label>  
         <occurrences minimum="0" maximum="10"/>  
         <items>
-            <input name="serieTitle" type="TextLine">
-              <label>Tittel</label>
-              <occurrences minimum="1" maximum="1"/>
-            </input>
             <input name="graphType" type="RadioButton">
                 <label>Graftype</label>
                 <occurrences minimum="1" maximum="1"/>
