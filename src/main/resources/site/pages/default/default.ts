@@ -219,7 +219,7 @@ export function get(req: XP.Request): XP.Response {
   //Teste strukturerte data
   const jsonLd: Article | undefined =
     page.type === 'mimir:article' && isEnabled('structured-data', false, 'ssb')
-      ? prepareStructuredData(page)
+      ? prepareStructuredData(metaInfo, page)
       : undefined
 
   const statbankFane: boolean = req.params.xpframe === 'statbank'
@@ -344,31 +344,13 @@ function prepareRegions(isFragment: boolean, page: DefaultPage): RegionsContent 
   }
 }
 
-function prepareStructuredData(page: DefaultPage): Article {
-  let publishedDate: string | undefined = page.publish && page.publish.from
-  let additionalType: string | undefined
-
-  if (page.type === `${app.name}:statistics`) {
-    const statistic: StatisticInListing | undefined = getStatisticByIdFromRepo(page.data.statistic)
-    if (statistic) {
-      const variants: Array<VariantInListing | undefined> = util.data.forceArray(statistic.variants)
-      const releaseDates: ReleaseDatesVariant = getReleaseDatesByVariants(variants as Array<VariantInListing>)
-      const previousRelease: string = releaseDates.previousRelease[0]
-      publishedDate = previousRelease ? new Date(previousRelease).toISOString() : new Date().toISOString()
-    }
-    additionalType = page.data.articleType ?? 'statistic'
-  }
-
-  if (page.type === `${app.name}:article`) {
-    additionalType = page.data.articleType ?? 'article'
-  }
-
+function prepareStructuredData(metaInfo: MetaInfoData, page: DefaultPage): Article {
   return {
     '@context': 'https://schema.org',
     '@type': 'Article',
-    additionalType,
+    additionalType: metaInfo.metaInfoSearchContentType,
     headline: page.displayName,
-    datePublished: publishedDate,
+    datePublished: metaInfo.metaInfoSearchPublishFrom,
     dateModified: page.data.showModifiedDate?.dateOption?.showModifiedTime
       ? page.data.showModifiedDate.dateOption.modifiedDate
       : undefined,
@@ -381,9 +363,9 @@ function prepareStructuredData(page: DefaultPage): Article {
           }
         })
       : undefined,
-    description: page.x['com-enonic-app-metafields']?.['meta-data']?.seoDescription ?? '',
-    articleSection: ensureArray(page.x?.mimir?.subjectTag?.mainSubjects)[0],
-    keywords: page.data.keywords ? page.data.keywords : '',
+    description: metaInfo.metaInfoDescription,
+    articleSection: metaInfo.metaInfoMainSubject,
+    keywords: metaInfo.metaInfoSearchKeywords,
     publisher: {
       '@type': 'Organization',
       name: 'Statistisk sentralbyrå',
