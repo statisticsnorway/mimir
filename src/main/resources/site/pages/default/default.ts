@@ -218,7 +218,7 @@ export function get(req: XP.Request): XP.Response {
 
   //Teste strukturerte data
   const jsonLd: Article | undefined =
-    page.type === 'mimir:article' && isEnabled('structured-data', false, 'ssb')
+    metaInfo.addMetaInfoSearch && isEnabled('structured-data', false, 'ssb')
       ? prepareStructuredData(metaInfo, page)
       : undefined
 
@@ -347,9 +347,9 @@ function prepareRegions(isFragment: boolean, page: DefaultPage): RegionsContent 
 function prepareStructuredData(metaInfo: MetaInfoData, page: DefaultPage): Article {
   return {
     '@context': 'https://schema.org',
-    '@type': 'Article',
+    '@type': 'Article', //eller NewArticle
     additionalType: metaInfo.metaInfoSearchContentType,
-    headline: page.displayName,
+    headline: page.displayName, //TODO:tittel på kommunesidene må sees på
     datePublished: metaInfo.metaInfoSearchPublishFrom,
     dateModified: page.data.showModifiedDate?.dateOption?.showModifiedTime
       ? page.data.showModifiedDate.dateOption.modifiedDate
@@ -363,17 +363,11 @@ function prepareStructuredData(metaInfo: MetaInfoData, page: DefaultPage): Artic
           }
         })
       : undefined,
-    description: metaInfo.metaInfoDescription,
+    description: metaInfo.metaInfoDescription
+      ? metaInfo.metaInfoDescription
+      : page.x['com-enonic-app-metafields']?.['meta-data']?.seoDescription || undefined,
     articleSection: metaInfo.metaInfoMainSubject,
     keywords: metaInfo.metaInfoSearchKeywords,
-    publisher: {
-      '@type': 'Organization',
-      name: 'Statistisk sentralbyrå',
-      logo: {
-        '@type': 'ImageObject',
-        url: 'https://www.ssb.no/_/asset/mimir:0000018b60c47e20/SSB_logo_black.svg',
-      },
-    },
   }
 }
 
