@@ -75,6 +75,14 @@
 							</config>
 							<help-text>Lim inn (Ctrl-V) en tabell rett fra Excel. Tabeller bør være så enkle som mulig (Overskrifter i første rad/kolonne og ellers bare tall, ingen spesialformatering, manglende tall må være tomme celler)</help-text>
 						</input>
+						<input name="numberHeadRows" type="TextLine">
+							<label>Antall rader tabellhode</label>							
+							<help-text>Må være et heltall. Hvis ikke utfylt er det første rad som er tabellhode.</help-text>
+							<occurrences minimum="0" maximum="1" />
+							<config>
+								<regexp>^[0-9]*[,.]?[0-9]+$</regexp>
+							</config>
+						</input>
 						<field-set>
 							<label>Fotnoter</label>
 							<items>
