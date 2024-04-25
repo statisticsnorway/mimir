@@ -68,10 +68,10 @@ export function prepareCombinedGraphConfig(
   const seriesOption = series
     ? util.data.forceArray(combinedGraphContent.data.series!).map((data, index) => {
         return {
-          type: data.graphType,
-          data: series[index].data,
-          name: series[index].name,
-          yAxis: data.yAxis && Number(data.yAxis) === 2 ? 1 : undefined,
+          type: data?.graphType,
+          data: series[index]?.data,
+          name: series[index]?.name,
+          yAxis: data?.yAxis && Number(data.yAxis) === 2 ? 1 : undefined,
         }
       })
     : []
