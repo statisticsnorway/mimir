@@ -1,4 +1,4 @@
-import { type Content } from '/lib/xp/content'
+import { type Content, get as getContentByKey } from '/lib/xp/content'
 import { getContent, pageUrl } from '/lib/xp/portal'
 import { sleep } from '/lib/xp/task'
 import { render } from '/lib/thymeleaf'
@@ -20,7 +20,8 @@ import { hasWritePermissionsAndPreview } from '/lib/ssb/parts/permissions'
 import { currentlyWaitingForPublish as currentlyWaitingForPublishOld } from '/lib/ssb/dataset/publishOld'
 import * as util from '/lib/util'
 import { type StatisticsProps } from '/lib/types/partTypes/statistics'
-import { type Statistics } from '/site/content-types'
+import { isEnabled } from '/lib/featureToggle'
+import { type Statistics, type OmStatistikken } from '/site/content-types'
 import { preview as keyFigurePreview } from '/site/parts/keyFigure/keyFigure'
 
 const view = resolve('./statistics.html')
@@ -139,8 +140,23 @@ function renderPart(req: XP.Request): XP.Response {
     draftUrl,
     draftButtonText,
   }
+  let body: string = render(view, model)
+  const conceptSprintStatisticPage: boolean = isEnabled('conceptsprint-statistic-page', false, 'ssb')
 
-  const body: string = render(view, model)
+  if (conceptSprintStatisticPage) {
+    const aboutTheStatisticsContent: Content<OmStatistikken> | null = page.data.aboutTheStatistics
+      ? getContentByKey({
+          key: page.data.aboutTheStatistics,
+        })
+      : null
+    const props = {
+      ...model,
+      ingress: aboutTheStatisticsContent?.data.ingress || undefined,
+      showIngress: true,
+    }
+    body = render(view, props)
+  }
+
   const pageContributions: XP.PageContributions = {
     bodyEnd:
       statisticsKeyFigure && statisticsKeyFigure.pageContributions ? statisticsKeyFigure.pageContributions.bodyEnd : [],

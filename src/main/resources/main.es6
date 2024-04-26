@@ -107,6 +107,10 @@ try {
           feature: 'structured-data',
           enabled: false,
         },
+        {
+          feature: 'conceptsprint-statistic-page',
+          enabled: false,
+        },
       ],
     },
   ])
