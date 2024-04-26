@@ -72,6 +72,10 @@ export function prepareCombinedGraphConfig(
           data: series[index]?.data,
           name: series[index]?.name,
           yAxis: data?.yAxis && Number(data.yAxis) === 2 ? 1 : undefined,
+          marker: {
+            enabled: false,
+            states: { hover: { enabled: true } },
+          },
         }
       })
     : []
