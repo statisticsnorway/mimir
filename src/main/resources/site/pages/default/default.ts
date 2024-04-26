@@ -347,9 +347,9 @@ function prepareRegions(isFragment: boolean, page: DefaultPage): RegionsContent 
 function prepareStructuredData(metaInfo: MetaInfoData, page: DefaultPage): Article {
   return {
     '@context': 'https://schema.org',
-    '@type': 'Article', //eller NewArticle
+    '@type': 'Article',
     additionalType: metaInfo.metaInfoSearchContentType,
-    headline: page.displayName, //TODO:tittel på kommunesidene må sees på
+    headline: metaInfo.metaInfoTitle,
     datePublished: metaInfo.metaInfoSearchPublishFrom,
     dateModified: page.data.showModifiedDate?.dateOption?.showModifiedTime
       ? page.data.showModifiedDate.dateOption.modifiedDate
@@ -386,6 +386,8 @@ function parseMetaInfoData(
   let metaInfoDescription: string | undefined
   let metaInfoSearchPublishFrom: string | undefined = page.publish && page.publish.from
   let metaInfoMainSubject: string | undefined
+  let metaInfoTitle: string | undefined =
+    page.x['com-enonic-app-metafields']?.['meta-data']?.seoTitle || page.displayName
 
   if (pageType === 'municipality') {
     metaInfoSearchContentType = 'kommunefakta'
@@ -402,6 +404,7 @@ function parseMetaInfoData(
     metaInfoSearchId = metaInfoSearchId + '_' + municipality.code
     metaInfoSearchGroup = metaInfoSearchGroup + '_' + municipality.code
     metaInfoSearchKeywords = municipality.displayName + ' kommune'
+    metaInfoTitle = metaInfoTitle + ' - ' + municipality.displayName
   }
 
   if (pageType === 'factPage') {
@@ -439,6 +442,7 @@ function parseMetaInfoData(
     metaInfoDescription,
     metaInfoSearchPublishFrom,
     metaInfoMainSubject,
+    metaInfoTitle,
   }
 }
 
@@ -651,6 +655,7 @@ interface MetaInfoData {
   metaInfoDescription: string | undefined
   metaInfoSearchPublishFrom: string | undefined
   metaInfoMainSubject: string | undefined
+  metaInfoTitle: string | undefined
 }
 
 export interface StatbankFrameData {
