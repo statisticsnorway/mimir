@@ -12,7 +12,7 @@ export function getImageAlt(imageId: string): string | undefined {
   const imageContent: Content<MediaImage> | null = get({
     key: imageId,
   })
-  return imageContent && imageContent !== undefined ? imageContent.data.altText : ' '
+  return imageContent && imageContent !== undefined ? imageContent.data.altText : ''
 }
 
 export function imageUrl(params: ImageUrlParams) {
