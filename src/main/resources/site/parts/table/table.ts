@@ -116,6 +116,7 @@ export function getProps(req: XP.Request, tableId?: string): TableProps {
       thead: tableDraft ? tableDraft.thead : undefined,
       tbody: tableDraft ? tableDraft.tbody : undefined,
       tfoot: tableDraft ? tableDraft.tfoot : undefined,
+      tableClass: tableDraft ? tableDraft.tableClass : undefined,
       noteRefs: tableDraft ? tableDraft.noteRefs : undefined,
     },
     standardSymbol: standardSymbol,

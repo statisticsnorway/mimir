@@ -200,7 +200,7 @@ function Table(props: TableProps) {
   }
 
   function createTable() {
-    const { tableClass } = props.table
+    const tableClass = table.tableClass ?? 'statistics'
 
     return (
       <table className={tableClass} ref={tableRef}>
