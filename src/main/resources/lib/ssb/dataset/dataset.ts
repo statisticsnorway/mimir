@@ -201,7 +201,7 @@ export function getContentWithDataSource(): Array<Content<DataSource>> {
     const result: ContentsResult<Content<DataSource>> = query({
       start,
       count,
-      query: `data.dataSource._selected LIKE "*" AND data.dataSource._selected NOT LIKE "htmlTable"`,
+      query: `data.dataSource._selected LIKE "*" AND data.dataSource._selected NOT LIKE "htmlTable" AND publish.from LIKE "*"`,
     })
     count = result.count
     start += count
