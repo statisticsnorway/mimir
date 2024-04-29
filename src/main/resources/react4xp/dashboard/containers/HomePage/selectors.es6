@@ -35,6 +35,8 @@ export const selectDataToolBoxBaseUrl = createSelector([selectDomain], (commonSt
 
 export const selectInternalBaseUrl = createSelector([selectDomain], (commonState) => commonState.internalBaseUrl)
 
+export const selectStatregRapportUrl = createSelector([selectDomain], (commonState) => commonState.statregRapportUrl)
+
 export const selectInternalStatbankUrl = createSelector(
   [selectDomain],
   (commonState) => commonState.internalStatbankUrl

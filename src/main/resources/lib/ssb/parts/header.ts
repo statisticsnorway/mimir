@@ -5,7 +5,6 @@ import { createMenuTree, parseTopLinks } from '/lib/ssb/parts/menu'
 import { pathFromStringOrContent } from '/lib/ssb/utils/utils'
 import { type Language } from '/lib/types/language'
 import { type HeaderContent } from '/lib/types/header'
-import { isEnabled } from '/lib/featureToggle'
 import { type Header } from '/site/content-types'
 
 export function getHeaderContent(language: Language): HeaderContent | undefined {
@@ -55,7 +54,6 @@ export function getHeaderContent(language: Language): HeaderContent | undefined 
         headerContent.data.globalLinks && headerContent.data.globalLinks.length > 0
           ? parseTopLinks(headerContent.data.globalLinks)
           : undefined,
-      showMenuPrototype: isEnabled('show-menu-prototype'),
     }
   }
 }
