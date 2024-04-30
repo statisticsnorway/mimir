@@ -157,10 +157,8 @@ function renderPart(req: XP.Request): XP.Response {
     body = render(view, props)
   }
 
-  const pageContributions: XP.PageContributions = {
-    bodyEnd:
-      statisticsKeyFigure && statisticsKeyFigure.pageContributions ? statisticsKeyFigure.pageContributions.bodyEnd : [],
-  }
+  const pageContributions: XP.PageContributions =
+    statisticsKeyFigure && statisticsKeyFigure.pageContributions ? statisticsKeyFigure.pageContributions : {}
 
   if (changeDate) {
     return r4xpRender(
