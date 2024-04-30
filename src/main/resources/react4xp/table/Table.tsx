@@ -21,6 +21,7 @@ function Table(props: TableProps) {
   const tableControlsMobileRef = useRef<HTMLDivElement>(null)
   const tableRef = useRef<HTMLTableElement>(null)
   const tableWrapperRef = useRef<HTMLDivElement>(null)
+  const tableDataExist = (table.thead && table.thead?.length > 0) || (table.tbody && table.tbody.length > 0)
 
   useEffect(() => {
     updateTableControlsDesktop()
@@ -36,7 +37,7 @@ function Table(props: TableProps) {
   }, [])
 
   function widthCheck() {
-    if (tableWrapperRef.current?.clientWidth !== prevClientWidth) {
+    if (tableDataExist && tableWrapperRef.current?.clientWidth !== prevClientWidth) {
       setPrevClientWidth(tableWrapperRef.current!.clientWidth)
       updateTableControlsDesktop()
     }
@@ -528,23 +529,25 @@ function Table(props: TableProps) {
           <div className='d-none searchabletext'>
             <span>{hiddenTitle}</span>
           </div>
-          <div className='container border-0'>
-            {addPreviewButton()}
-            {addDownloadTableDropdown(false)}
-            {addPreviewInfo()}
-            {createScrollControlsDesktop()}
-            {createScrollControlsMobile()}
-            <div
-              className='table-wrapper searchabletext'
-              onScroll={() => updateTableControlsDesktop()}
-              ref={tableWrapperRef}
-            >
-              {createTable()}
+          {tableDataExist && (
+            <div className='container border-0'>
+              {addPreviewButton()}
+              {addDownloadTableDropdown(false)}
+              {addPreviewInfo()}
+              {createScrollControlsDesktop()}
+              {createScrollControlsMobile()}
+              <div
+                className='table-wrapper searchabletext'
+                onScroll={() => updateTableControlsDesktop()}
+                ref={tableWrapperRef}
+              >
+                {createTable()}
+              </div>
+              {addDownloadTableDropdown(true)}
+              {addStandardSymbols()}
+              {renderSources()}
             </div>
-            {addDownloadTableDropdown(true)}
-            {addStandardSymbols()}
-            {renderSources()}
-          </div>
+          )}
         </React.Fragment>
       ) : (
         <div>
