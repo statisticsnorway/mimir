@@ -1,4 +1,4 @@
-name: 'Manual deploy to QA'
+name: 'Deploy former build to QA'
 # Action that will download previously created artifact and deploy it to the QA environment
 on:
   workflow_dispatch:
