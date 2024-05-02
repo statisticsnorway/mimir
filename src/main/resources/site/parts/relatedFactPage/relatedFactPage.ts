@@ -178,7 +178,7 @@ export function parseRelatedFactPageData(
 function parseRelatedContent(relatedContent: RelatedFactPage): RelatedFactPageContent {
   let imageId: string | undefined
   let image: string | undefined
-  let imageAlt = ' '
+  let imageAlt = ''
   if (relatedContent.x['com-enonic-app-metafields']?.['meta-data']?.seoImage) {
     imageId = relatedContent.x['com-enonic-app-metafields']?.['meta-data']?.seoImage
     imageAlt = getImageAlt(imageId) ?? ''

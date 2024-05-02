@@ -61,9 +61,8 @@
       </div>
     </div>
   </div>
+  <script type="application/ld+json" data-th-if="${jsonLd}" th:inline="javascript">[[${jsonLd}]]</script>
 
-  <script type="application/ld+json" data-th-if="${jsonLd}" data-th-utext="${jsonLd}">
-</script>
 
   <!-- Metainfo to make the page searchable -->
   <div id="metainfo-container" data-th-if="${addMetaInfoSearch}"
