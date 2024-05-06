@@ -143,6 +143,9 @@ function renderPart(req: XP.Request): XP.Response {
   let body: string = render(view, model)
   const conceptSprintStatisticPage: boolean = isEnabled('conceptsprint-statistic-page', false, 'ssb')
 
+  const pageContributions: XP.PageContributions =
+    statisticsKeyFigure && statisticsKeyFigure.pageContributions ? statisticsKeyFigure.pageContributions : {}
+
   if (conceptSprintStatisticPage) {
     const aboutTheStatisticsContent: Content<OmStatistikken> | null = page.data.aboutTheStatistics
       ? getContentByKey({
@@ -156,9 +159,6 @@ function renderPart(req: XP.Request): XP.Response {
     }
     body = render(view, props)
   }
-
-  const pageContributions: XP.PageContributions =
-    statisticsKeyFigure && statisticsKeyFigure.pageContributions ? statisticsKeyFigure.pageContributions : {}
 
   if (changeDate) {
     return r4xpRender(
