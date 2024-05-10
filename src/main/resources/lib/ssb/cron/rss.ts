@@ -30,6 +30,8 @@ function fetchRSS(): Array<RSSItem> {
       const data: string = xmlParser.parse(response.body)
       const rss: RSS = JSON.parse(data)
       return rss.rss.channel.item
+    } else {
+      cronJobLog(`STATBANK RSS failed :: ${response.status} - ${response.message}`)
     }
   }
   return []
@@ -112,13 +114,16 @@ export function dataSourceRSSFilter(dataSources: Array<Content<DataSource>>): RS
     end: [],
   }
 
+  const allRSSItems: Array<RSSItem> = fetchRSS()
   // only keep those with updates for the last 2 days, to the end of today
-  const RSSItems: Array<RSSItem> = fetchRSS().filter((item) =>
-    isWithinInterval(new Date(item.pubDate), {
-      start: subDays(new Date().setHours(6, 0, 0, 0), 1),
-      end: new Date().setHours(23, 59, 59, 999),
-    })
-  )
+  const RSSItems: Array<RSSItem> = allRSSItems
+    ? allRSSItems.filter((item) =>
+        isWithinInterval(new Date(item.pubDate), {
+          start: subDays(new Date().setHours(6, 0, 0, 0), 1),
+          end: new Date().setHours(23, 59, 59, 999),
+        })
+      )
+    : []
 
   RSSItems.forEach((item) => {
     logData.rssTableIds.push({
@@ -161,7 +166,7 @@ export function dataSourceRSSFilter(dataSources: Array<Content<DataSource>>): RS
   )
 
   logData.end = filteredDatasourcesRSS.map((ds) => ds._id)
-  cronJobLog(JSON.stringify(logData, null, 2))
+  cronJobLog('logData Dataquery Rss: ' + JSON.stringify(logData, null, 2))
 
   return {
     logData,
