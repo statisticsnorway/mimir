@@ -58,7 +58,7 @@ function renderPart(req: XP.Request, aboutTheStatisticsId: string | undefined): 
       }
     }
   } else {
-    if (req.mode === 'edit' || req.mode === 'inline') {
+    if (req.mode === 'edit' || req.mode === 'inline' || req.mode === 'preview') {
       return getOmStatistikken(req, page, aboutTheStatisticsId)
     } else {
       return fromPartCache(req, `${page._id}-omStatistikken`, () => {
@@ -126,7 +126,7 @@ function getAccordionData(content: OmStatistikken, phrases: Phrases, nextUpdate:
   const accordions: Array<Accordion> = []
 
   const items: Items = {
-    definition: ['conceptsAndVariables', 'standardRatings'],
+    definition: ['conceptsAndVariables', 'standardRatings', 'unitOfMeasure'],
     administrativeInformation: [
       'nameAndSubject',
       'nextUpdate',
@@ -135,6 +135,7 @@ function getAccordionData(content: OmStatistikken, phrases: Phrases, nextUpdate:
       'frequency',
       'internationalReporting',
       'storageAndUse',
+      'qualityAssurance',
     ],
     background: [
       'purposeAndHistory',
@@ -143,6 +144,7 @@ function getAccordionData(content: OmStatistikken, phrases: Phrases, nextUpdate:
       'relationOtherStatistics',
       'legalAuthority',
       'eeaReference',
+      'timeCoverage',
     ],
     production: [
       'scope',
@@ -151,8 +153,10 @@ function getAccordionData(content: OmStatistikken, phrases: Phrases, nextUpdate:
       'seasonalAdjustment',
       'confidentiality',
       'comparability',
+      'sectorCoverage',
+      'basePeriod',
     ],
-    accuracyAndReliability: ['errorSources', 'revision'],
+    accuracyAndReliability: ['errorSources', 'revision', 'qualityAssessment'],
     aboutSeasonalAdjustment: [
       'generalInformation',
       'whySeasonallyAdjustStatistic',
@@ -264,16 +268,33 @@ function getAccordion(
 }
 
 function getItems(category: Category, variables: Array<string>, phrases: Phrases): Array<AccordionItem> {
-  return variables.map((variable) => {
-    return {
-      title: phrases[variable],
-      body: category[variable]
-        ? processHtml({
-            value: category[variable].replace(/&nbsp;/g, ' '),
-          })
-        : phrases.notRelevant,
+  const items: Array<AccordionItem> = []
+  variables.forEach((variable) => {
+    //TODO: When all om statistikken has content in new items remove check isNewItem.
+    if ((isNewItem(variable) && category[variable]) || !isNewItem(variable)) {
+      items.push({
+        title: phrases[variable],
+        body: category[variable]
+          ? processHtml({
+              value: category[variable].replace(/&nbsp;/g, ' '),
+            })
+          : phrases.notRelevant,
+      })
     }
   })
+  return items
+}
+
+function isNewItem(variable: string): boolean {
+  const newItems: Array<string> = [
+    'sectorCoverage',
+    'basePeriod',
+    'timeCoverage',
+    'unitOfMeasure',
+    'qualityAssurance',
+    'qualityAssessment',
+  ]
+  return newItems.includes(variable)
 }
 
 function isNotEmpty(obj: object | undefined): boolean {
