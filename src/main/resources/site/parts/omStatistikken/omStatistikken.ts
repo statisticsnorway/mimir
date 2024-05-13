@@ -95,11 +95,14 @@ function getOmStatistikken(req: XP.Request, page: Content<any>, aboutTheStatisti
   }
 
   const aboutTheStatisticsData: OmStatistikken | undefined = aboutTheStatisticsContent?.data
+  const lastUpdated: string | undefined = formatDate(aboutTheStatisticsContent?.modifiedTime, 'PPP', language)
 
   const props: AboutTheStatisticsProps = {
     accordions: aboutTheStatisticsData ? getAccordionData(aboutTheStatisticsData, phrases, nextRelease) : [],
     label: phrases.aboutTheStatistics,
     ingress: aboutTheStatisticsData?.ingress ?? '',
+    lastUpdatedPhrase: phrases.lastUpdated,
+    lastUpdated: lastUpdated ?? '',
   }
 
   return render('site/parts/omStatistikken/omStatistikken', props, req, {
