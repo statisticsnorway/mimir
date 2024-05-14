@@ -270,7 +270,7 @@ function getAccordion(
 function getItems(category: Category, variables: Array<string>, phrases: Phrases): Array<AccordionItem> {
   const items: Array<AccordionItem> = []
   variables.forEach((variable) => {
-    //TODO: When all om statistikken has content in new items remove check isNewItem.
+    //TODO: This check (isNewItem) can be removed when the period in which content producers must enter data in new fields is over.
     if ((isNewItem(variable) && category[variable]) || !isNewItem(variable)) {
       items.push({
         title: phrases[variable],
