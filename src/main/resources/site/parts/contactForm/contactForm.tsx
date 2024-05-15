@@ -158,6 +158,7 @@ function ContactForm(props: ContactFormProps) {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function onChange(id: string, value: any) {
     switch (id) {
       case 'receiver': {

@@ -99,6 +99,7 @@ function SearchResult(props: SearchResultProps) {
     }
   }, [filter, sortList])
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function onChange(id: string, value: any) {
     setFilterChanged(id)
 

@@ -297,6 +297,7 @@ function HusleieCalculator(props: KpiCalculatorProps) {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function onChange(id: string, value: any) {
     setShowResult(false)
     switch (id) {
