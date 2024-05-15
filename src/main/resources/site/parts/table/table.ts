@@ -1,6 +1,5 @@
 import { get as getContentByKey, type Content } from '/lib/xp/content'
 import { getContent, getComponent, pageUrl, assetUrl } from '/lib/xp/portal'
-import { render } from '/lib/thymeleaf'
 import { parseTable } from '/lib/ssb/parts/table'
 import { type SourceList, type SourcesConfig } from '/lib/types/sources'
 import { scriptAsset, getSources } from '/lib/ssb/utils/utils'
@@ -24,8 +23,6 @@ import {
 } from '/lib/types/partTypes/table'
 import { GA_TRACKING_ID } from '/site/pages/default/default'
 import { type Statistics, type Table } from '/site/content-types'
-
-const view = resolve('./table.html')
 
 export function get(req: XP.Request): XP.Response {
   try {
@@ -138,14 +135,10 @@ function renderPart(req: XP.Request, tableId?: string): XP.Response {
   const page = getContent<Content<Table>>()
   if (!page) throw Error('No page found')
 
-  const phrases: Phrases = getPhrases(page) as Phrases
-
   if (!tableId) {
     if (req.mode === 'edit' && page.type !== `${app.name}:statistics`) {
       return {
-        body: render(view, {
-          label: phrases.table,
-        }),
+        body: `<div class="part-table"><h2>Tabell</h2></div>`,
       }
     } else {
       return {
