@@ -141,6 +141,7 @@ function renderPart(req: XP.Request): XP.Response {
     draftUrl,
     draftButtonText,
   }
+
   const body: string = render(view, model)
   const pageContributions: XP.PageContributions = {
     bodyEnd:
