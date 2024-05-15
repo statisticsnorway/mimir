@@ -13,7 +13,7 @@ jobs:
   deploy_to_prod:
     name: 'Deploy to PROD'
     runs-on: 'ubuntu-latest'
-    environment: 'production'
+    environment: 'PROD_mimir'
     steps:
       - id: build_app
         uses: enonic/release-tools/build-and-publish@master
