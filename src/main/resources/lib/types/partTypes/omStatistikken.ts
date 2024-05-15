@@ -17,4 +17,6 @@ export interface AboutTheStatisticsProps {
   accordions: Array<AccordionData>
   label: string
   ingress: string
+  lastUpdatedPhrase: string
+  lastUpdated: string
 }
