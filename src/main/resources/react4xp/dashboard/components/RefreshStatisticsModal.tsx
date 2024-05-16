@@ -14,9 +14,7 @@ import {
 import { createSelectModalDisplay, selectOpenStatistic } from '/react4xp/dashboard/containers/Statistics/selectors'
 import { WebSocketContext } from '/react4xp/dashboard/utils/websocket/WebsocketProvider'
 
-interface RefreshStatisticsModalProps {}
-
-export function RefreshStatisticsModal(props: RefreshStatisticsModalProps) {
+export function RefreshStatisticsModal() {
   const io = useContext(WebSocketContext)
   const dispatch = useDispatch()
 
@@ -95,4 +93,4 @@ export function RefreshStatisticsModal(props: RefreshStatisticsModalProps) {
   )
 }
 
-export default (props) => <RefreshStatisticsModal {...props} />
+export default () => <RefreshStatisticsModal />

@@ -70,6 +70,7 @@ function formatTbProcessorType(type: string): string {
   }
 }
 
+// eslint-disable-next-line complexity
 function getDataAndMetaData(
   content: Content<DataSource>,
   processXml?: string

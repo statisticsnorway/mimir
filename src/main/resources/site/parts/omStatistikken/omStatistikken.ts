@@ -68,6 +68,7 @@ function renderPart(req: XP.Request, aboutTheStatisticsId: string | undefined): 
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function getOmStatistikken(req: XP.Request, page: Content<any>, aboutTheStatisticsId: string | undefined): XP.Response {
   const phrases: Phrases = getPhrases(page) as Phrases
   const language: string = page.language === 'en' || page.language === 'nn' ? page.language : 'nb'

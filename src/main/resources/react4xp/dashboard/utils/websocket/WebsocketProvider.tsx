@@ -10,7 +10,7 @@ const WebSocketContext = createContext(null)
 export { WebSocketContext }
 
 interface WebsocketProviderProps {
-  children?: any
+  children?: React.ReactNode
 }
 
 function WebsocketProvider({ children }: WebsocketProviderProps) {
