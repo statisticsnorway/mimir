@@ -14,10 +14,13 @@ app {
     systemVersion = "${xpVersion}"}
 
 dependencies {
-    implementation platform('com.google.cloud:libraries-bom:26.37.0')
-    implementation 'com.google.cloud:google-cloud-discoveryengine'
+    // implementation platform('com.google.cloud:libraries-bom:26.37.0')
+    // implementation 'com.google.cloud:google-cloud-discoveryengine'
     // https://mvnrepository.com/artifact/com.google.cloud/google-cloud-discoveryengine
     // implementation 'com.google.cloud:google-cloud-discoveryengine:0.38.0'
+    implementation 'com.google.guava:guava:31.0.1-jre'
+    include 'com.google.cloud:google-cloud-discoveryengine:0.38.0'
+    // https://mvnrepository.com/artifact/com.google.guava/guava
     include "com.enonic.lib:lib-thymeleaf:2.1.0"
     implementation "com.enonic.xp:core-api:${xpVersion}"
     implementation "com.enonic.xp:portal-api:${xpVersion}"
