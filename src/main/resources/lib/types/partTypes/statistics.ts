@@ -12,4 +12,5 @@ export interface StatisticsProps {
   showPreviewDraft: boolean
   draftUrl: string
   draftButtonText: string
+  ingress: string
 }

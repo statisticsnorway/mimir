@@ -1,4 +1,4 @@
-import { type Content } from '/lib/xp/content'
+import { type Content, get as getContentByKey } from '/lib/xp/content'
 import { getContent, pageUrl } from '/lib/xp/portal'
 import { sleep } from '/lib/xp/task'
 import { render } from '/lib/thymeleaf'
@@ -21,7 +21,7 @@ import { currentlyWaitingForPublish as currentlyWaitingForPublishOld } from '/li
 import * as util from '/lib/util'
 import { type StatisticsProps } from '/lib/types/partTypes/statistics'
 import { isEnabled } from '/lib/featureToggle'
-import { type Statistics } from '/site/content-types'
+import { type Statistics, type OmStatistikken } from '/site/content-types'
 import { preview as keyFigurePreview } from '/site/parts/keyFigure/keyFigure'
 
 const view = resolve('./statistics.html')
@@ -125,6 +125,12 @@ function renderPart(req: XP.Request): XP.Response {
   }
 
   const id: string = 'modifiedDate' + randomUnsafeString()
+  const aboutTheStatisticsContent: Content<OmStatistikken> | null =
+    conceptSprintStatisticPage && page.data.aboutTheStatistics
+      ? getContentByKey({
+          key: page.data.aboutTheStatistics,
+        })
+      : null
 
   const model: StatisticsProps = {
     title,
@@ -140,6 +146,7 @@ function renderPart(req: XP.Request): XP.Response {
     showPreviewDraft,
     draftUrl,
     draftButtonText,
+    ingress: aboutTheStatisticsContent?.data.ingress || '',
   }
 
   const body: string = render(view, model)
