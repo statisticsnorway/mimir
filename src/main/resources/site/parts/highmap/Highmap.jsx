@@ -185,11 +185,12 @@ function Highmap(props) {
           format: '{point.properties.name}',
         },
         tooltip: {
-          pointFormat: !hasThreshhold
-            ? '{point.properties.name}'
-            : props.legendTitle
-              ? `${props.legendTitle}: {point.code}`
-              : '{point.code}',
+          pointFormatter: function () {
+            let value = props.language !== 'en' ? this.value.toString().replace('.', ',') : this.value
+            return !hasThreshhold
+              ? this.properties.name
+              : `${props.legendTitle ? props.legendTitle + ': ' : ''}${value}`
+          },
           valueDecimals: props.numberDecimals,
         },
       },
