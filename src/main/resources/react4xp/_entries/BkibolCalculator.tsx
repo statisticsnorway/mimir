@@ -317,6 +317,7 @@ function BkibolCalculator(props: BkibolCalculatorProps) {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function onChange(id: string, value: any) {
     switch (id) {
       case 'scope': {

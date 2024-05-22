@@ -21,7 +21,7 @@ export function RefreshStatisticsStatus(props: RefreshStatisticsStatusProps) {
               {msg.status}
               <br />
               {msg.result &&
-                msg.result.map((rst, t) => {
+                msg.result.map((rst) => {
                   return (
                     <>
                       {rst}

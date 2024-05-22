@@ -115,6 +115,7 @@ export function renderPart(req: XP.Request) {
     },
   ]
 
+  // eslint-disable-next-line complexity
   function bestBet(): PreparedSearchResult | undefined {
     const result = queryNodes('no.ssb.bestbet', 'master', {
       start: 0,

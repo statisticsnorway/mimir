@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 // Only used in Table part
 
 import jquery from 'jquery'
@@ -110,6 +111,7 @@ function init() {
         }
 
         const FONT_ROW_RATIO = 1.15
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
         const el = this
         let DownloadEvt = null
         let $hrows = []
@@ -468,7 +470,6 @@ function init() {
             //    $rows.push.apply($rows, $table.find('tfoot').find(defaults.tfootSelector));
 
             $($rows).each(function () {
-              const $row = $(this)
               trData = ''
               ForEachVisibleCell(this, 'td,th', rowIndex, $hrows.length + $rows.length, function (cell, row, col) {
                 if (cell !== null) {
@@ -1115,7 +1116,7 @@ function init() {
                       'td,th',
                       $hrows.length + rowCount,
                       $hrows.length + $rows.length,
-                      function (cell, row, col) {
+                      function (cell) {
                         if (typeof cell !== 'undefined' && cell !== null) {
                           const kids = $(cell).children()
                           if (typeof kids != 'undefined' && kids.length > 0) {
@@ -1132,7 +1133,7 @@ function init() {
               $rows = []
             }
 
-            loadImages(teOptions, function (imageCount) {
+            loadImages(teOptions, function () {
               $(el)
                 .filter(function () {
                   return (
@@ -1322,6 +1323,7 @@ function init() {
                     let lastrow = rowIndex - 1
                     while (lastrow >= 0) {
                       $.each(teOptions.headerrows[lastrow], function () {
+                        // eslint-disable-next-line @typescript-eslint/no-this-alias
                         let obj = this
 
                         if (lastrow > 0 && this.rect === null) {
@@ -1428,17 +1430,6 @@ function init() {
               teOptions.doc = null
             })
           }
-        }
-
-        function FindColObject(objects, colIndex, rowIndex) {
-          let result = null
-          $.each(objects, function () {
-            if (this.rowIndex == rowIndex && this.key == colIndex) {
-              result = this
-              return false
-            }
-          })
-          return result
         }
 
         function GetColumnNames(table) {
@@ -1906,6 +1897,7 @@ function init() {
           return value
         }
 
+        // eslint-disable-next-line complexity
         function parseString(cell, rowIndex, colIndex) {
           let result = ''
 

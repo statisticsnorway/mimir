@@ -61,6 +61,7 @@ interface DatasetFilterOptions {
   }
 }
 
+// eslint-disable-next-line complexity
 export function parseKeyFigure(
   keyFigure: Content<KeyFigure & DataSource>,
   municipality?: MunicipalityWithCounty,
