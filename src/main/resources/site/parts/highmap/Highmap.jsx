@@ -103,18 +103,16 @@ function generateSeries(tableData, mapDataSecondColumn, color) {
   return series
 }
 
-function Highmap(props) {
-  useEffect(() => {
-    if (props.language !== 'en') {
-      Highcharts.setOptions({
-        lang: {
-          decimalPoint: ',',
-          thousandsSep: ' ',
-        },
-      })
+const getPointFormatter = (language, hasThreshhold, legendTitle) =>
+  function () {
+    const value = language !== 'en' ? String(this.value).replace('.', ',') : this.value
+    if (!hasThreshhold) {
+      return this.properties.name
     }
-  }, [])
+    return `${legendTitle ? legendTitle + ': ' : ''}${value}`
+  }
 
+function Highmap(props) {
   const desktop = useMediaQuery({
     minWidth: 992,
   })
@@ -185,11 +183,7 @@ function Highmap(props) {
           format: '{point.properties.name}',
         },
         tooltip: {
-          pointFormat: !hasThreshhold
-            ? '{point.properties.name}'
-            : props.legendTitle
-              ? `${props.legendTitle}: {point.code}`
-              : '{point.code}',
+          pointFormatter: getPointFormatter(props.language, hasThreshhold, props.legendTitle),
           valueDecimals: props.numberDecimals,
         },
       },
@@ -313,7 +307,7 @@ Highmap.propTypes = {
   mapDataSecondColumn: PropTypes.bool,
   style: PropTypes.object,
   thresholdValues: PropTypes.array,
-  hideTitle: PropTypes.boolean,
+  hideTitle: PropTypes.bool,
   color: PropTypes.object,
   numberDecimals: PropTypes.string,
   heightAspectRatio: PropTypes.string,
