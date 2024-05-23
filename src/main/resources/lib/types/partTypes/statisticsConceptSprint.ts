@@ -1,4 +1,4 @@
-export interface StatisticsProps {
+export interface StatisticsPropsConceptSprint {
   title: string
   updated: string
   nextUpdate: string
@@ -12,4 +12,6 @@ export interface StatisticsProps {
   showPreviewDraft: boolean
   draftUrl: string
   draftButtonText: string
+  conceptSprintStatisticPage: boolean
+  ingress: string
 }

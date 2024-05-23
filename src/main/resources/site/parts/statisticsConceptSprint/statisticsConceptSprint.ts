@@ -1,4 +1,4 @@
-import { type Content } from '/lib/xp/content'
+import { type Content, get as getContentByKey } from '/lib/xp/content'
 import { getContent, pageUrl } from '/lib/xp/portal'
 import { sleep } from '/lib/xp/task'
 import { render } from '/lib/thymeleaf'
@@ -19,11 +19,11 @@ import { renderError } from '/lib/ssb/error/error'
 import { hasWritePermissionsAndPreview } from '/lib/ssb/parts/permissions'
 import { currentlyWaitingForPublish as currentlyWaitingForPublishOld } from '/lib/ssb/dataset/publishOld'
 import * as util from '/lib/util'
-import { type StatisticsProps } from '/lib/types/partTypes/statistics'
-import { type Statistics } from '/site/content-types'
-import { preview as keyFigurePreview } from '/site/parts/keyFigure/keyFigure'
+import { type StatisticsPropsConceptSprint } from '/lib/types/partTypes/statisticsConceptSprint'
+import { isEnabled } from '/lib/featureToggle'
+import { type Statistics, type OmStatistikken } from '/site/content-types'
 
-const view = resolve('./statistics.html')
+const view = resolve('./statisticsConceptSprint.html')
 
 export function get(req: XP.Request): XP.Response {
   try {
@@ -90,6 +90,7 @@ function renderPart(req: XP.Request): XP.Response {
       })
   const draftButtonText: string = paramShowDraft ? 'Vis publiserte tall' : 'Vis upubliserte tall'
   const language: string = page.language === 'en' || page.language === 'nn' ? page.language : 'nb'
+  const conceptSprintStatisticPage: boolean = isEnabled('conceptsprint-statistic-page', false, 'ssb')
 
   const statistic: StatisticInListing | undefined = getStatisticByIdFromRepo(page.data.statistic)
   if (statistic) {
@@ -112,10 +113,6 @@ function renderPart(req: XP.Request): XP.Response {
     }
   }
 
-  if (page.data.statisticsKeyFigure) {
-    statisticsKeyFigure = keyFigurePreview(req, page.data.statisticsKeyFigure)
-  }
-
   if (page.data.showModifiedDate && previousReleaseDate && modifiedDate) {
     if (isAfter(new Date(modifiedDate), new Date(previousReleaseDate))) {
       changeDate = formatDate(modifiedDate, 'PPpp', language)
@@ -123,8 +120,14 @@ function renderPart(req: XP.Request): XP.Response {
   }
 
   const id: string = 'modifiedDate' + randomUnsafeString()
+  const aboutTheStatisticsContent: Content<OmStatistikken> | null =
+    conceptSprintStatisticPage && page.data.aboutTheStatistics
+      ? getContentByKey({
+          key: page.data.aboutTheStatistics,
+        })
+      : null
 
-  const model: StatisticsProps = {
+  const model: StatisticsPropsConceptSprint = {
     title,
     updated,
     nextUpdate,
@@ -138,6 +141,8 @@ function renderPart(req: XP.Request): XP.Response {
     showPreviewDraft,
     draftUrl,
     draftButtonText,
+    conceptSprintStatisticPage,
+    ingress: aboutTheStatisticsContent?.data.ingress || '',
   }
 
   const body: string = render(view, model)
