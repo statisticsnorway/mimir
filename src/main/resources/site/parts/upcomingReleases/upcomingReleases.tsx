@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Button, Link } from '@statisticsnorway/ssb-component-library'
 import axios from 'axios'
 import { ChevronDown } from 'react-feather'
+import { parseISO } from 'date-fns/parseISO'
 import { sanitize } from '../../../lib/ssb/utils/htmlUtils'
 import { type UpcomingReleasesProps } from '../../../lib/types/partTypes/upcomingReleases'
 import { type PreparedUpcomingRelease, type YearReleases } from '../../../lib/types/variants'
@@ -227,7 +228,7 @@ function UpcomingReleases(props: UpcomingReleasesProps) {
   }
 
   function renderDay(dayWithReleases, language, isFirst, statisticsPageUrlText) {
-    const date = new Date(dayWithReleases.date)
+    const date = parseISO(dayWithReleases.date)
     const releaseDate = {
       day: date.getDate(),
       monthName: getShortMonthName(date.getMonth(), language),
