@@ -8,10 +8,6 @@ export interface StatisticsPropsConceptSprint {
   previousRelease: string | undefined
   nextRelease: string | undefined
   modifiedDateId: string
-  statisticsKeyFigure: string | object | null | undefined
-  showPreviewDraft: boolean
-  draftUrl: string
-  draftButtonText: string
   conceptSprintStatisticPage: boolean
   ingress: string
 }

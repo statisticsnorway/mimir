@@ -1,7 +1,6 @@
 import { type Content, get as getContentByKey } from '/lib/xp/content'
-import { getContent, pageUrl } from '/lib/xp/portal'
+import { getContent } from '/lib/xp/portal'
 import { sleep } from '/lib/xp/task'
-import { render } from '/lib/thymeleaf'
 import {
   type ReleaseDatesVariant,
   type StatisticInListing,
@@ -16,14 +15,13 @@ import { randomUnsafeString } from '/lib/ssb/utils/utils'
 import { getStatisticByIdFromRepo, getReleaseDatesByVariants } from '/lib/ssb/statreg/statistics'
 import { getPhrases } from '/lib/ssb/utils/language'
 import { renderError } from '/lib/ssb/error/error'
-import { hasWritePermissionsAndPreview } from '/lib/ssb/parts/permissions'
 import { currentlyWaitingForPublish as currentlyWaitingForPublishOld } from '/lib/ssb/dataset/publishOld'
 import * as util from '/lib/util'
 import { type StatisticsPropsConceptSprint } from '/lib/types/partTypes/statisticsConceptSprint'
 import { isEnabled } from '/lib/featureToggle'
 import { type Statistics, type OmStatistikken } from '/site/content-types'
 
-const view = resolve('./statisticsConceptSprint.html')
+//const view = resolve('./statisticsConceptSprint.html')
 
 export function get(req: XP.Request): XP.Response {
   try {
@@ -60,6 +58,7 @@ function renderPart(req: XP.Request): XP.Response {
   }
   let title: string = page.displayName
   const updated: string = phrases.updated + ': '
+  let previousRelease: string | undefined = phrases.notAvailable
   const nextUpdate: string = phrases.nextUpdate + ': '
   const changed: string = phrases.modified + ': '
   const modifiedText: string | undefined = page.data.showModifiedDate
@@ -68,27 +67,11 @@ function renderPart(req: XP.Request): XP.Response {
   const modifiedDate: string | undefined = page.data.showModifiedDate
     ? page.data.showModifiedDate.modifiedOption.lastModified
     : undefined
-  let previousRelease: string | undefined = phrases.notAvailable
   let nextRelease: string | undefined = phrases.notYetDetermined
-  let previewNextRelease: string | undefined = phrases.notYetDetermined
-  let statisticsKeyFigure: XP.Response | undefined
   let changeDate: string | undefined
   let nextReleaseDate: string | undefined
   let previousReleaseDate: string | undefined
-  const showPreviewDraft: boolean = hasWritePermissionsAndPreview(req, page._id)
-  const paramShowDraft = !!req.params.showDraft
-  const draftUrl: string = paramShowDraft
-    ? pageUrl({
-        path: page._path,
-      })
-    : pageUrl({
-        // TODO - test this
-        path: page._path,
-        params: {
-          showDraft: true,
-        },
-      })
-  const draftButtonText: string = paramShowDraft ? 'Vis publiserte tall' : 'Vis upubliserte tall'
+
   const language: string = page.language === 'en' || page.language === 'nn' ? page.language : 'nb'
   const conceptSprintStatisticPage: boolean = isEnabled('conceptsprint-statistic-page', false, 'ssb')
 
@@ -99,11 +82,6 @@ function renderPart(req: XP.Request): XP.Response {
     const releaseDates: ReleaseDatesVariant = getReleaseDatesByVariants(variants as Array<VariantInListing>)
     nextReleaseDate = releaseDates.nextRelease[0]
     previousReleaseDate = releaseDates.previousRelease[0]
-
-    if (releaseDates.nextRelease.length > 1 && releaseDates.nextRelease[1] !== '') {
-      previewNextRelease = formatDate(releaseDates.nextRelease[1], 'PPP', language)
-    }
-
     if (previousReleaseDate && previousReleaseDate !== '') {
       previousRelease = formatDate(previousReleaseDate, 'PPP', language)
     }
@@ -127,50 +105,19 @@ function renderPart(req: XP.Request): XP.Response {
         })
       : null
 
-  const model: StatisticsPropsConceptSprint = {
+  const props: StatisticsPropsConceptSprint = {
     title,
     updated,
     nextUpdate,
     changed,
     changeDate,
     modifiedText,
-    previousRelease: paramShowDraft && showPreviewDraft ? nextRelease : previousRelease,
-    nextRelease: paramShowDraft && showPreviewDraft ? previewNextRelease : nextRelease,
+    previousRelease: previousRelease,
+    nextRelease: nextRelease,
     modifiedDateId: id,
-    statisticsKeyFigure: statisticsKeyFigure?.body || null,
-    showPreviewDraft,
-    draftUrl,
-    draftButtonText,
     conceptSprintStatisticPage,
     ingress: aboutTheStatisticsContent?.data.ingress || '',
   }
 
-  const body: string = render(view, model)
-  const pageContributions: XP.PageContributions = {
-    bodyEnd:
-      statisticsKeyFigure && statisticsKeyFigure.pageContributions ? statisticsKeyFigure.pageContributions.bodyEnd : [],
-  }
-
-  if (changeDate) {
-    return r4xpRender(
-      'ModifiedDate',
-      {
-        explanation: modifiedText,
-        children: changeDate,
-      },
-      req,
-      {
-        id: id,
-        body: body,
-        pageContributions,
-        ssr: req.mode === 'edit', // Component has to be clientside rendered so it doesn't get inserted twice
-      }
-    )
-  }
-
-  return {
-    body,
-    pageContributions,
-    contentType: 'text/html',
-  }
+  return r4xpRender('site/parts/statisticsConceptSprint/statisticsConceptSprint', props, req)
 }
