@@ -202,6 +202,7 @@ function KpiCalculator(props: KpiCalculatorProps) {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function onChange(id: string | number, value: any) {
     switch (id) {
       case 'start-value': {

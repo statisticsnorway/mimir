@@ -17,7 +17,7 @@ const statRegSlice = createSlice({
       state.statuses = action.statuses
       state.loading = false
     },
-    fetchStatusesError(state, action) {
+    fetchStatusesError(state) {
       state.loading = false
     },
     startRefreshStatus(state, action) {

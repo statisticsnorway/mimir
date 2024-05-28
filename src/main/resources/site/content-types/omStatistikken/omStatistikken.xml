@@ -34,6 +34,14 @@
 								<allowHeadings>h3 h4</allowHeadings>
 							</config>
 						</input>
+						<input name="unitOfMeasure" type="HtmlArea">
+							<occurrences minimum="0" maximum="1" />
+							<label>Måleenhet</label>
+							<config>
+								<include>Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote</include>
+								<allowHeadings>h3 h4</allowHeadings>
+							</config>
+						</input>
 					</items>
 				</item-set>
 			</items>
@@ -87,6 +95,14 @@
 						<input name="storageAndUse" type="HtmlArea">
 							<occurrences minimum="0" maximum="1" />
 							<label>Lagring og anvendelse av grunnlagsmaterialet</label>
+							<config>
+								<include>Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote</include>
+								<allowHeadings>h3 h4</allowHeadings>
+							</config>
+						</input>
+						<input name="qualityAssurance" type="HtmlArea">
+							<occurrences minimum="0" maximum="1" />
+							<label>Kvalitetssikring</label>
 							<config>
 								<include>Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote</include>
 								<allowHeadings>h3 h4</allowHeadings>
@@ -150,6 +166,14 @@
 								<allowHeadings>h3 h4</allowHeadings>
 							</config>
 						</input>
+						<input name="timeCoverage" type="HtmlArea">
+							<occurrences minimum="0" maximum="1" />
+							<label>Tidsperiode</label>
+							<config>
+								<include>Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote</include>
+								<allowHeadings>h3 h4</allowHeadings>
+							</config>
+						</input>
 					</items>
 				</item-set>
 			</items>
@@ -208,6 +232,22 @@
 								<allowHeadings>h3 h4</allowHeadings>
 							</config>
 						</input>
+						<input name="sectorCoverage" type="HtmlArea">
+							<occurrences minimum="0" maximum="1" />
+							<label>Sektordekning</label>
+							<config>
+								<include>Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote</include>
+								<allowHeadings>h3 h4</allowHeadings>
+							</config>
+						</input>
+						<input name="basePeriod" type="HtmlArea">
+							<occurrences minimum="0" maximum="1" />
+							<label>Basisperiode</label>
+							<config>
+								<include>Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote</include>
+								<allowHeadings>h3 h4</allowHeadings>
+							</config>
+						</input>
 					</items>
 				</item-set>
 			</items>
@@ -229,6 +269,14 @@
 						<input name="revision" type="HtmlArea">
 							<occurrences minimum="0" maximum="1" />
 							<label>Revisjon</label>
+							<config>
+								<include>Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote</include>
+								<allowHeadings>h3 h4</allowHeadings>
+							</config>
+						</input>
+						<input name="qualityAssessment" type="HtmlArea">
+							<occurrences minimum="0" maximum="1" />
+							<label>Kvalitetsvurdering</label>
 							<config>
 								<include>Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote</include>
 								<allowHeadings>h3 h4</allowHeadings>
