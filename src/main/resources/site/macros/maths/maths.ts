@@ -4,12 +4,10 @@ import { type Maths } from '/site/macros/maths'
 
 export function macro(context: XP.MacroContext<Maths>) {
   try {
-    const { mathsFormula } = context.params
-    if (!mathsFormula) throw new Error('Missing param formula test')
-    const maths = preview(context.request, context.params)
-
-    if (maths.status && maths.status !== 200)
-      throw new Error(`simpleStatbank with id ${context.params.mathsFormula} missing`)
+    const config = context.params
+    const maths: XP.Response = preview(context.request, config)
+    if (maths.status && maths.status !== 200) throw new Error(`Maths with id ${config.mathsFormula} is missing`)
+    maths.body = `<div class="macro-maths">${maths.body}</div>`
 
     return maths
   } catch (e) {

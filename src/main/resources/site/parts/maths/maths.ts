@@ -27,5 +27,11 @@ function renderPart(req: XP.Request, config: MathsPartConfig) {
     mathsFormula: config.mathsFormula,
   }
 
+  if (req.mode === 'edit') {
+    return render('site/parts/maths/maths', props, req, {
+      body: `<div class="part-maths info-text"><span>NB!! Formel vises ikke i edit mode, se i forhåndsvisning</span></div>`,
+    })
+  }
+
   return render('site/parts/maths/maths', props, req)
 }
