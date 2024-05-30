@@ -230,7 +230,6 @@ Highchart.propTypes = {
   phrases: PropTypes.object,
   appName: PropTypes.string,
   pageType: PropTypes.string,
-  GA_TRACKING_ID: PropTypes.string,
 }
 
 export default (props) => <Highchart {...props} />

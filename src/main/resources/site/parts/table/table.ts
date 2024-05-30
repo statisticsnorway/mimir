@@ -22,7 +22,6 @@ import {
   type TableStandardSymbolLink,
   type TableSourceList,
 } from '/lib/types/partTypes/table'
-import { GA_TRACKING_ID } from '/site/pages/default/default'
 import { type Statistics, type Table } from '/site/content-types'
 
 const view = resolve('./table.html')
@@ -130,7 +129,6 @@ export function getProps(req: XP.Request, tableId?: string): TableProps {
     sourceTableLabel,
     statBankWebUrl,
     hiddenTitle: table.caption ? table.caption.content : undefined,
-    GA_TRACKING_ID: GA_TRACKING_ID,
   }
 }
 function renderPart(req: XP.Request, tableId?: string): XP.Response {

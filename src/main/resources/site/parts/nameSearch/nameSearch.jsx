@@ -534,7 +534,6 @@ NameSearch.propTypes = {
   }),
   language: PropTypes.string,
   graphData: PropTypes.bool,
-  GA_TRACKING_ID: PropTypes.string,
 }
 
 export default (props) => <NameSearch {...props} />
