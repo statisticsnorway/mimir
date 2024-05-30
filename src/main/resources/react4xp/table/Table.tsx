@@ -4,7 +4,6 @@ import { default as isEmpty } from 'ramda/es/isEmpty'
 import { NumericFormat } from 'react-number-format'
 import { Alert } from 'react-bootstrap'
 import { ChevronLeft, ChevronRight } from 'react-feather'
-import { addGtagForEvent } from '/react4xp/ReactGA'
 import { type TableProps } from '../../lib/types/partTypes/table'
 import { PreliminaryData, type TableCellUniform } from '../../lib/types/xmlParser'
 
@@ -156,10 +155,6 @@ function Table(props: TableProps) {
   }
 
   function downloadTableAsCSV() {
-    if (props.GA_TRACKING_ID) {
-      addGtagForEvent(props.GA_TRACKING_ID, 'Lastet ned csv tabell', 'Statistikkside tabeller', 'Last ned csv tabell')
-    }
-
     if (window && window.downloadTableFile) {
       window.downloadTableFile(tableRef.current, {
         type: 'csv',
@@ -172,15 +167,6 @@ function Table(props: TableProps) {
   }
 
   function downloadTableAsExcel() {
-    if (props.GA_TRACKING_ID) {
-      addGtagForEvent(
-        props.GA_TRACKING_ID,
-        'Lastet ned excell tabell',
-        'Statistikkside tabeller',
-        'Last ned excell tabell'
-      )
-    }
-
     if (window && window.downloadTableFile) {
       window.downloadTableFile(tableRef.current, {
         type: 'xlsx',
