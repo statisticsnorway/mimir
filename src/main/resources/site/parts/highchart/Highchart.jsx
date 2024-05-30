@@ -4,7 +4,6 @@ import HighchartsReact from 'highcharts-react-official'
 import PropTypes from 'prop-types'
 import { Row, Col, Container } from 'react-bootstrap'
 import { Title, Button, Tabs, Divider, Link } from '@statisticsnorway/ssb-component-library'
-import { addGtagForEvent } from '/react4xp/ReactGA'
 
 import accessibilityLang from './../../../assets/js/highchart-lang.json'
 
@@ -145,33 +144,18 @@ function Highchart(props) {
               printChart: {
                 text: props.phrases['highcharts.printChart'],
                 onclick: function () {
-                  const label = `${highchart.config.title.text} - Skriv ut graf`
-                  if (props.GA_TRACKING_ID) {
-                    addGtagForEvent(props.GA_TRACKING_ID, action, category, label)
-                  }
-
                   this.print()
                 },
               },
               downloadPNG: {
                 text: props.phrases['highcharts.downloadPNG'],
                 onclick: function () {
-                  const label = `${highchart.config.title.text} - Last ned som PNG`
-                  if (props.GA_TRACKING_ID) {
-                    addGtagForEvent(props.GA_TRACKING_ID, action, category, label)
-                  }
-
                   this.exportChartLocal() // png is default
                 },
               },
               downloadJPEG: {
                 text: props.phrases['highcharts.downloadJPEG'],
                 onclick: function () {
-                  const label = `${highchart.config.title.text} - Last ned som JPEG`
-                  if (props.GA_TRACKING_ID) {
-                    addGtagForEvent(props.GA_TRACKING_ID, action, category, label)
-                  }
-
                   this.exportChartLocal({
                     type: 'image/jpeg',
                   })
@@ -180,11 +164,6 @@ function Highchart(props) {
               downloadPDF: {
                 text: props.phrases['highcharts.downloadPDF'],
                 onclick: function () {
-                  const label = `${highchart.config.title.text} - Last ned som PDF`
-                  if (props.GA_TRACKING_ID) {
-                    addGtagForEvent(props.GA_TRACKING_ID, action, category, label)
-                  }
-
                   this.exportChartLocal({
                     type: 'application/pdf',
                   })
@@ -193,11 +172,6 @@ function Highchart(props) {
               downloadSVG: {
                 text: props.phrases['highcharts.downloadSVG'],
                 onclick: function () {
-                  const label = `${highchart.config.title.text} - Last ned som SVG`
-                  if (props.GA_TRACKING_ID) {
-                    addGtagForEvent(props.GA_TRACKING_ID, action, category, label)
-                  }
-
                   this.exportChartLocal({
                     type: 'image/svg+xml',
                   })
@@ -205,25 +179,13 @@ function Highchart(props) {
               },
               downloadXLS: {
                 text: props.phrases['highcharts.downloadXLS'],
-
                 onclick: function () {
-                  const label = `${highchart.config.title.text} - Last ned som XLS`
-                  if (props.GA_TRACKING_ID) {
-                    addGtagForEvent(props.GA_TRACKING_ID, action, category, label)
-                  }
-
-                  // TODO: Re-implement zipcelx fix (are there other alternatives for react?)
                   this.downloadXLS()
                 },
               },
               downloadCSV: {
                 text: props.phrases['highcharts.downloadCSV'],
                 onclick: function () {
-                  const label = `${highchart.config.title.text} - Last ned som CSV`
-                  if (props.GA_TRACKING_ID) {
-                    addGtagForEvent(props.GA_TRACKING_ID, action, category, label)
-                  }
-
                   this.downloadCSV()
                 },
               },
