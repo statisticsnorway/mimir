@@ -1,17 +1,13 @@
 import React from 'react'
 import { Link, TableLink } from '@statisticsnorway/ssb-component-library'
 import { ArrowRight } from 'react-feather'
-import { addGtagForEvent } from '/react4xp/ReactGA'
 import { LinksProps } from '../../../lib/types/partTypes/links'
 
 const Links = (props: LinksProps) => {
-  const { children, href, withIcon, linkType, text, description, GA_TRACKING_ID, isPDFAttachment, attachmentTitle } =
-    props
+  const { children, href, withIcon, linkType, text, description } = props
 
   const handleClick = () => {
-    if (linkType === 'header') {
-      if (GA_TRACKING_ID && isPDFAttachment) addGtagForEvent(GA_TRACKING_ID, 'Åpne PDF', 'Nedlasting', attachmentTitle)
-    }
+    // Removed gtag event tracking
   }
 
   const renderLinks = () => {
