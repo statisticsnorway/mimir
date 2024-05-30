@@ -381,6 +381,12 @@ function preparePageMap(metainfo: MetaInfoData, page: DefaultPage): string {
   const author = page.data.authorItemSet
     ? `<Attribute name="author" value="${ensureArray(page.data.authorItemSet)[0].name}"/>`
     : ''
+  const category = metainfo.metaInfoMainSubject
+    ? `<Attribute name="category" value="${metainfo.metaInfoMainSubject}"/>`
+    : ''
+  const contentType = metainfo.metaInfoSearchContentType
+    ? `<Attribute name="contenttype" value="${metainfo.metaInfoSearchContentType}"/>`
+    : ''
   return `<!--
     <PageMap>
       <DataObject type="publication">
@@ -390,8 +396,8 @@ function preparePageMap(metainfo: MetaInfoData, page: DefaultPage): string {
             ? page.data.showModifiedDate.dateOption.modifiedDate
             : metainfo.metaInfoSearchPublishFrom
         }"/>
-        <Attribute name="category" value="${metainfo.metaInfoMainSubject}"/>
-        <Attribute name="contenttype" value="${metainfo.metaInfoSearchContentType}"/>
+        ${category}
+        ${contentType}
         ${keywords}
       </DataObject>
     </PageMap>
