@@ -9,7 +9,6 @@ import {
 } from '../../lib/types/partTypes/attachmentTablesFigures'
 
 import Table from '../table/Table'
-import { addGtagForEvent } from '/react4xp/ReactGA'
 
 function AttachmentTableFigures(props: AttachmentTablesFiguresProps) {
   const [isHidden, setIsHidden] = useState(true)
@@ -29,18 +28,9 @@ function AttachmentTableFigures(props: AttachmentTablesFiguresProps) {
     }
   }
 
-  function toggleAccordion(isOpen: boolean, index: number) {
-    const { contentType, subHeader, open } = accordions[index]
-
-    if (isOpen && contentType === `${props.appName}:table` && props.GA_TRACKING_ID) {
-      addGtagForEvent(
-        props.GA_TRACKING_ID,
-        'Utvidet vedleggstabell',
-        'Statistikkside vedleggstabeller',
-        `${subHeader} ${open}`
-      )
-    }
-  }
+  //function toggleAccordion(isOpen: boolean, index: number) {
+  // Removed gtag event tracking
+  //}
 
   function getButtonBreakpoint() {
     if (accordions.length > 5) {
