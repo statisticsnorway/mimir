@@ -387,9 +387,14 @@ function preparePageMap(metainfo: MetaInfoData, page: DefaultPage): string {
   const contentType = metainfo.metaInfoSearchContentType
     ? `<Attribute name="contenttype" value="${metainfo.metaInfoSearchContentType}"/>`
     : ''
+  const description = metainfo.metaInfoDescription
+    ? metainfo.metaInfoDescription
+    : page.x['com-enonic-app-metafields']?.['meta-data']?.seoDescription || ''
   return `<!--
     <PageMap>
       <DataObject type="publication">
+        <Attribute name="title">${metainfo.metaInfoTitle}</Attribute>
+        <Attribute name="description">${description}</Attribute>
         ${author}
         <Attribute name="date" value="${
           page.data.showModifiedDate?.dateOption?.showModifiedTime
