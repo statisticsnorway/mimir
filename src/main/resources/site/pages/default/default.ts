@@ -376,7 +376,7 @@ function prepareStructuredData(metaInfo: MetaInfoData, page: DefaultPage): Artic
 
 function preparePageMap(metainfo: MetaInfoData, page: DefaultPage): string {
   const keywords = metainfo.metaInfoSearchKeywords
-    ? `<Attribute name="keywords" value="${metainfo.metaInfoSearchKeywords}"/>`
+    ? `<Attribute name="keywords" value="[${metainfo.metaInfoSearchKeywords}]"/>`
     : ''
   const author = page.data.authorItemSet
     ? `<Attribute name="author" value="${ensureArray(page.data.authorItemSet)[0].name}"/>`
