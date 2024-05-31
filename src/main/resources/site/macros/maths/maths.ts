@@ -7,7 +7,7 @@ export function macro(context: XP.MacroContext<Maths>) {
     const config = context.params
     const maths: XP.Response = preview(context.request, config)
     if (maths.status && maths.status !== 200) throw new Error(`Maths with id ${config.mathsFormula} is missing`)
-    maths.body = `<div class="macro-maths">${maths.body}</div>`
+    maths.body = `<div">${maths.body}</div>`
 
     return maths
   } catch (e) {
