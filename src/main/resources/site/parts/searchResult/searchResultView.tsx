@@ -314,16 +314,18 @@ function SearchResult(props: SearchResultProps) {
             disabled={loading || total === hits.length}
             className='button-more mt-5'
             onClick={() => onShowMoreSearchResults(false)}
-            onKeyDown={(e) => {
+            onKeyDown={(e: React.KeyboardEvent<HTMLButtonElement>) => {
               if (e.key === 'Enter' || e.key === ' ') {
                 onShowMoreSearchResults(true)
-              }}
-            >
-              <ChevronDown size='18' /> {props.buttonTitle}
+              }
+            }}
+          >
+            <ChevronDown size='18' /> {props.buttonTitle}
           </Button>
         </div>
       )
     }
+    return null
   }
 
   function renderNoHitMessage() {
