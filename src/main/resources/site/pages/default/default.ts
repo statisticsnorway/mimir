@@ -393,7 +393,6 @@ function preparePageMap(metainfo: MetaInfoData, page: DefaultPage): string {
   return `<!--
     <PageMap>
       <DataObject type="publication">
-        <Attribute name="title">${metainfo.metaInfoTitle}</Attribute>
         <Attribute name="description">${description}</Attribute>
         ${author}
         <Attribute name="date" value="${
