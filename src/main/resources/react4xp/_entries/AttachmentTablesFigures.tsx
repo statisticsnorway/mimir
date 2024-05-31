@@ -28,10 +28,6 @@ function AttachmentTableFigures(props: AttachmentTablesFiguresProps) {
     }
   }
 
-  //function toggleAccordion(isOpen: boolean, index: number) {
-  // Removed gtag event tracking
-  //}
-
   function getButtonBreakpoint() {
     if (accordions.length > 5) {
       return ''
@@ -117,7 +113,6 @@ function AttachmentTableFigures(props: AttachmentTablesFiguresProps) {
                       header={accordion.open}
                       subHeader={accordion.subHeader}
                       openByDefault={anchor && accordion.id && accordion.id === anchor}
-                      onToggle={(isOpen: boolean) => toggleAccordion(isOpen, index)}
                     >
                       {renderAccordionBody(accordion)}
                     </Accordion>

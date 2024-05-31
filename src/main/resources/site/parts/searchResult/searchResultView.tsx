@@ -63,6 +63,7 @@ function SearchResult(props: SearchResultProps) {
     : allSubjectsItem
   const [selectedContentType, setSelectedContentType] = useState(preselectedContentTypeDropdownItem)
   const [selectedMainSubject, setSelectedMainSubject] = useState(preselectedSubjectDropdownItem)
+  const [numberChanged, setNumberChanged] = useState(0)
   const [openAccordion, setOpenAccordion] = useState(false)
   const currentElement = useRef<HTMLAnchorElement>(null)
   const inputSearchElement = useRef<HTMLDivElement>(null)
@@ -129,6 +130,10 @@ function SearchResult(props: SearchResultProps) {
   function onChangeSortList(value: string) {
     setSortChanged(true)
     setSortList(value)
+
+    if (sortChanged) {
+      setNumberChanged((prev) => prev + 1)
+    }
   }
 
   function onShowMoreSearchResults(focusElement: boolean) {
@@ -312,10 +317,9 @@ function SearchResult(props: SearchResultProps) {
             onKeyDown={(e) => {
               if (e.key === 'Enter' || e.key === ' ') {
                 onShowMoreSearchResults(true)
-              }
-            }}
-          >
-            <ChevronDown size='18' /> {props.buttonTitle}
+              }}
+            >
+              <ChevronDown size='18' /> {props.buttonTitle}
           </Button>
         </div>
       )
@@ -396,7 +400,7 @@ function SearchResult(props: SearchResultProps) {
 
   function renderNameResult() {
     const mainNameResult = props.nameSearchData
-    if (mainNameResult && mainNameResult.count && !filterChanged) {
+    if (mainNameResult && mainNameResult.count && !filterChanged && numberChanged === 0) {
       return (
         //  TODO: Legge til en bedre url til navnestatistikken
         <Card
