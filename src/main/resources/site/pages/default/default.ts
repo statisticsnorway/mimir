@@ -66,7 +66,6 @@ const previewOverride: object = {
   contentList: 'relatedFactPage',
 }
 
-export const GA_TRACKING_ID: string | null = app.config?.GA_TRACKING_ID || null
 export const GTM_TRACKING_ID: string | null = app.config?.GTM_TRACKING_ID || null
 export const GTM_AUTH: string | null = app.config?.GTM_AUTH || null
 
@@ -254,7 +253,6 @@ export function get(req: XP.Request): XP.Response {
     language,
     statbankWeb: statbankFane,
     ...statBankContent,
-    GA_TRACKING_ID,
     GTM_TRACKING_ID,
     GTM_AUTH,
     headerBody: header?.body,
@@ -719,7 +717,6 @@ interface DefaultModel {
   ieUrl: string
   language: Language
   statbankWeb: boolean
-  GA_TRACKING_ID: string | null
   GTM_TRACKING_ID: string | null
   GTM_AUTH: string | null
   jsonLd: Article | undefined
