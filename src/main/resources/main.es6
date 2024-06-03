@@ -103,6 +103,10 @@ try {
           feature: 'structured-data',
           enabled: false,
         },
+        {
+          feature: 'pageMap',
+          enabled: false,
+        },
       ],
     },
   ])

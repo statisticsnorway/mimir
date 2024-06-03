@@ -63,6 +63,12 @@
   </div>
   <script type="application/ld+json" data-th-if="${jsonLd}" th:inline="javascript">[[${jsonLd}]]</script>
 
+  <div data-th-if="${pageMap}" data-th-remove="tag">
+    <!-- PageMap supplies structured data to search engines, for filtering and rich search -->
+    [(${pageMap})]
+  </div>
+
+
 
   <!-- Metainfo to make the page searchable -->
   <div id="metainfo-container" data-th-if="${addMetaInfoSearch}"
