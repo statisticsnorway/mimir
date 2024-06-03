@@ -20,7 +20,16 @@ export function get(req: XP.Request): XP.Response {
 
     const keyFigureIds: Array<string> | [] = config.figure ? util.data.forceArray(config.figure) : []
     const municipality: MunicipalityWithCounty | undefined = getMunicipality(req as RequestWithCode)
-    return renderPart(req, municipality, keyFigureIds)
+    return renderPart(req, municipality, keyFigureIds, false)
+  } catch (e) {
+    return renderError(req, 'Error in part', e)
+  }
+}
+
+export function macroPreview(req: XP.Request, id: string): XP.Response {
+  try {
+    const municipality = getSiteConfigAndMunicipality()
+    return renderPart(req, municipality, [id], true)
   } catch (e) {
     return renderError(req, 'Error in part', e)
   }
@@ -28,23 +37,29 @@ export function get(req: XP.Request): XP.Response {
 
 export function preview(req: XP.Request, id: string): XP.Response {
   try {
-    const siteConfig = getSiteConfig<XP.SiteConfig>()
-    if (!siteConfig) throw Error('No site config found')
-
-    const defaultMunicipality: XP.SiteConfig['defaultMunicipality'] = siteConfig.defaultMunicipality
-    const municipality: MunicipalityWithCounty | undefined = getMunicipality({
-      code: defaultMunicipality,
-    } as RequestWithCode)
-    return renderPart(req, municipality, [id])
+    const municipality = getSiteConfigAndMunicipality()
+    return renderPart(req, municipality, [id], false)
   } catch (e) {
     return renderError(req, 'Error in part', e)
   }
 }
 
+function getSiteConfigAndMunicipality() {
+  const siteConfig = getSiteConfig<XP.SiteConfig>()
+  if (!siteConfig) throw Error('No site config found')
+
+  const defaultMunicipality: XP.SiteConfig['defaultMunicipality'] = siteConfig.defaultMunicipality
+  const municipality: MunicipalityWithCounty | undefined = getMunicipality({
+    code: defaultMunicipality,
+  } as RequestWithCode)
+  return municipality
+}
+
 function renderPart(
   req: XP.Request,
   municipality: MunicipalityWithCounty | undefined,
-  keyFigureIds: Array<string>
+  keyFigureIds: Array<string>,
+  isMacro: boolean
 ): XP.Response {
   const page = getContent()
   if (!page) throw Error('No page found')
@@ -75,7 +90,7 @@ function renderPart(
     }) as Array<KeyFigureData>
   }
 
-  return renderKeyFigure(page, keyFigures, keyFiguresDraft, showPreviewDraft, req, config)
+  return renderKeyFigure(page, keyFigures, keyFiguresDraft, showPreviewDraft, req, isMacro, config)
 }
 
 function renderKeyFigure(
@@ -84,6 +99,7 @@ function renderKeyFigure(
   parsedKeyFiguresDraft: Array<KeyFigureData> | null,
   showPreviewDraft: boolean,
   req: XP.Request,
+  isMacro: boolean,
   config?: KeyFigurePartConfig
 ): XP.Response {
   const draftExist = !!parsedKeyFiguresDraft
@@ -117,6 +133,7 @@ function renderKeyFigure(
       pageTypeKeyFigure: page.type === `${app.name}:keyFigure`,
       hiddenTitle: hiddenTitle.toString().replace(/[\[\]']+/g, ''),
       isInStatisticsPage: page.type === `${app.name}:statistics`,
+      isMacro,
     }
 
     return render('KeyFigure', props, req, {
