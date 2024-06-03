@@ -220,6 +220,8 @@ export function get(req: XP.Request): XP.Response {
     metaInfo.addMetaInfoSearch && isEnabled('structured-data', false, 'ssb')
       ? prepareStructuredData(metaInfo, page)
       : undefined
+  const pageMap: string | undefined =
+    metaInfo.addMetaInfoSearch && isEnabled('pageMap', false, 'ssb') ? preparePageMap(metaInfo, page) : undefined
 
   const statbankFane: boolean = req.params.xpframe === 'statbank'
   const statBankContent: StatbankFrameData = parseStatbankFrameContent(statbankFane, req, page)
@@ -257,6 +259,7 @@ export function get(req: XP.Request): XP.Response {
     footerBody: footer?.body,
     ...metaInfo,
     jsonLd,
+    pageMap,
     breadcrumbsReactId: breadcrumbId,
     hideHeader,
     hideBreadcrumb,
@@ -367,6 +370,40 @@ function prepareStructuredData(metaInfo: MetaInfoData, page: DefaultPage): Artic
     articleSection: metaInfo.metaInfoMainSubject,
     keywords: metaInfo.metaInfoSearchKeywords,
   }
+}
+
+function preparePageMap(metainfo: MetaInfoData, page: DefaultPage): string {
+  const keywords = metainfo.metaInfoSearchKeywords
+    ? `<Attribute name="keywords" value="[${metainfo.metaInfoSearchKeywords}]"/>`
+    : ''
+  const author = page.data.authorItemSet
+    ? `<Attribute name="author" value="${ensureArray(page.data.authorItemSet)[0].name}"/>`
+    : ''
+  const category = metainfo.metaInfoMainSubject
+    ? `<Attribute name="category" value="${metainfo.metaInfoMainSubject}"/>`
+    : ''
+  const contentType = metainfo.metaInfoSearchContentType
+    ? `<Attribute name="contenttype" value="${metainfo.metaInfoSearchContentType}"/>`
+    : ''
+  const description = metainfo.metaInfoDescription
+    ? metainfo.metaInfoDescription
+    : page.x['com-enonic-app-metafields']?.['meta-data']?.seoDescription || ''
+  return `<!--
+    <PageMap>
+      <DataObject type="publication">
+        <Attribute name="description">${description}</Attribute>
+        ${author}
+        <Attribute name="date" value="${
+          page.data.showModifiedDate?.dateOption?.showModifiedTime
+            ? page.data.showModifiedDate.dateOption.modifiedDate
+            : metainfo.metaInfoSearchPublishFrom
+        }"/>
+        ${category}
+        ${contentType}
+        ${keywords}
+      </DataObject>
+    </PageMap>
+  -->`
 }
 
 function parseMetaInfoData(
@@ -683,6 +720,7 @@ interface DefaultModel {
   GTM_TRACKING_ID: string | null
   GTM_AUTH: string | null
   jsonLd: Article | undefined
+  pageMap: string | undefined
   headerBody: string | undefined
   footerBody: string | undefined
   breadcrumbsReactId: string | undefined

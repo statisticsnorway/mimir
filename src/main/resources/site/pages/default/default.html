@@ -18,6 +18,16 @@
   </script>
   <!-- End Google Tag Manager -->
 
+  <!-- UA GA tracking script with added GA4 gtag config -->
+  <script defer data-th-if="${GA_TRACKING_ID}"
+    data-th-src="|https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}|"></script>
+  
+  <script th:inline="javascript" data-th-if="${GA_TRACKING_ID}">
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', [[${ GA_TRACKING_ID }]], { 'anonymize_ip': true });
+  </script>
+  
   <script data-th-src="${jsLibsUrl}" defer="defer"></script>
 
   <meta charset="UTF-8" />
@@ -52,6 +62,12 @@
     </div>
   </div>
   <script type="application/ld+json" data-th-if="${jsonLd}" th:inline="javascript">[[${jsonLd}]]</script>
+
+  <div data-th-if="${pageMap}" data-th-remove="tag">
+    <!-- PageMap supplies structured data to search engines, for filtering and rich search -->
+    [(${pageMap})]
+  </div>
+
 
 
   <!-- Metainfo to make the page searchable -->
