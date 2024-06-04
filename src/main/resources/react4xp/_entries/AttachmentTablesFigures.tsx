@@ -9,7 +9,6 @@ import {
 } from '../../lib/types/partTypes/attachmentTablesFigures'
 
 import Table from '../table/Table'
-import { addGtagForEvent } from '/react4xp/ReactGA'
 
 function AttachmentTableFigures(props: AttachmentTablesFiguresProps) {
   const [isHidden, setIsHidden] = useState(true)
@@ -26,19 +25,6 @@ function AttachmentTableFigures(props: AttachmentTablesFiguresProps) {
       e.preventDefault()
       setIsHidden((prevState) => !prevState)
       setFocusElement(!focusElement)
-    }
-  }
-
-  function toggleAccordion(isOpen: boolean, index: number) {
-    const { contentType, subHeader, open } = accordions[index]
-
-    if (isOpen && contentType === `${props.appName}:table` && props.GA_TRACKING_ID) {
-      addGtagForEvent(
-        props.GA_TRACKING_ID,
-        'Utvidet vedleggstabell',
-        'Statistikkside vedleggstabeller',
-        `${subHeader} ${open}`
-      )
     }
   }
 
@@ -127,7 +113,6 @@ function AttachmentTableFigures(props: AttachmentTablesFiguresProps) {
                       header={accordion.open}
                       subHeader={accordion.subHeader}
                       openByDefault={anchor && accordion.id && accordion.id === anchor}
-                      onToggle={(isOpen: boolean) => toggleAccordion(isOpen, index)}
                     >
                       {renderAccordionBody(accordion)}
                     </Accordion>

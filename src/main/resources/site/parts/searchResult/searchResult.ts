@@ -374,7 +374,6 @@ export function renderPart(req: XP.Request) {
     contentTypePhrases: contentTypePhrases,
     contentTypes: solrResult.contentTypes,
     subjects: solrResult.subjects,
-    GA_TRACKING_ID: app.config && app.config.GA_TRACKING_ID ? app.config.GA_TRACKING_ID : null,
     contentTypeUrlParam: req.params.innholdstype,
     subjectUrlParam: req.params.emne,
     searchResultSRText: localize({

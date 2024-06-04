@@ -52,5 +52,4 @@ export interface NameSearchProps {
     close: string
   }
   language: string
-  GA_TRACKING_ID: string | null
 }

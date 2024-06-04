@@ -16,7 +16,6 @@ import {
   type AttachmentTablesFiguresData,
   type AttachmentTablesFiguresProps,
 } from '/lib/types/partTypes/attachmentTablesFigures'
-import { GA_TRACKING_ID } from '/site/pages/default/default'
 import { type Statistics } from '/site/content-types'
 import { getProps } from '/site/parts/table/table'
 import { preview as highchartPreview } from '/site/parts/highchart/highchart'
@@ -72,7 +71,6 @@ function getTablesAndFiguresComponent(page: Content<Statistics>, req: XP.Request
     showAll: phrases.showAll,
     showLess: phrases.showLess,
     appName: app.name,
-    GA_TRACKING_ID: GA_TRACKING_ID,
     title,
   }
 
