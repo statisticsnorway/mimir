@@ -6,7 +6,6 @@ export type AttachmentTablesFiguresProps = {
   showAll: string
   showLess: string
   appName: string
-  GA_TRACKING_ID: string | null
   title: string
 }
 
