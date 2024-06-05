@@ -3,7 +3,6 @@ import { getComponent, attachmentUrl, pageUrl } from '/lib/xp/portal'
 import { render } from '/lib/enonic/react4xp'
 import { renderError } from '/lib/ssb/error/error'
 import { type LinksProps } from '/lib/types/partTypes/links'
-import { GA_TRACKING_ID } from '/site/pages/default/default'
 import { type Links as LinksPartConfig } from '.'
 
 export function get(req: XP.Request): XP.Response {
@@ -77,7 +76,6 @@ function renderPart(req: XP.Request, config: LinksPartConfig) {
         children: content ? prepareText(content, linkText) : linkText,
         href: contentUrl,
         linkType: 'header',
-        GA_TRACKING_ID: GA_TRACKING_ID,
         isPDFAttachment,
         attachmentTitle,
       }

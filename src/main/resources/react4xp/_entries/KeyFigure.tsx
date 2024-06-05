@@ -87,6 +87,7 @@ class KeyFigures extends React.Component<KeyFigureProps, KeyFigureState> {
       isRight = !columns || (columns && !isRight) || keyFigure.size === 'large'
       return (
         <React.Fragment key={`figure-${i}`}>
+          {this.props.isMacro && !keyFigure.greenBox ? this.addDivider(isRight) : null}
           <Col
             className={`col-12${columns && keyFigure.size !== 'large' ? ' col-md-6' : ''}${
               this.props.isInStatisticsPage ? ' p-0' : ''
@@ -102,12 +103,15 @@ class KeyFigures extends React.Component<KeyFigureProps, KeyFigureState> {
             />
             {this.addKeyFigureSource(keyFigure)}
           </Col>
-          {i < keyFigures.length - 1 ? (
-            <Divider className={`my-5 d-block ${!isRight ? 'd-md-none' : ''}`} light />
-          ) : null}
+          {i < keyFigures.length - 1 ? this.addDivider(isRight) : null}
+          {this.props.isMacro && !keyFigure.greenBox ? this.addDivider(isRight) : null}
         </React.Fragment>
       )
     })
+  }
+
+  addDivider(isRight: boolean) {
+    return <Divider className={`my-5 d-block ${!isRight ? 'd-md-none' : ''}`} light />
   }
 
   addKeyFigureSource(keyFigure: KeyFigureData) {
