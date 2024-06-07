@@ -54,7 +54,7 @@ h6 {
 	&.statbank-title{
 		font-size: 28px;
 		line-height: 36px;
-	}	
+	}
   }
 }
 
@@ -89,6 +89,13 @@ p {
     color: $ssb-white;
   }
 }
+
+ul {
+  li, ol {
+    line-height: 1.7rem;
+  }
+}
+
 /* -- End text -- */
 
 
@@ -111,7 +118,7 @@ p > a, p > strong > a, ul > li > a, ol > li > a, table a, .rich-text span a {
   cursor: pointer;
   display: inline;
   font-size: $default-font-size;
-  line-height: 1.7;
+  line-height: 1.7rem;
   margin-top: -3px;
   margin-bottom: -2px;
   padding: 0 1px 2px 1px;
