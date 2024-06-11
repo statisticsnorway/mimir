@@ -39,7 +39,7 @@ function renderPart(req: XP.Request) {
   if (showModifiedDate) {
     modifiedDate = formatDate(showModifiedDate.dateOption?.modifiedDate, 'PPP', language)
     if (showModifiedDate.dateOption?.showModifiedTime) {
-      modifiedDate = formatDate(page.data.showModifiedDate?.dateOption?.modifiedDate, 'PPpp', language)
+      modifiedDate = formatDate(page.data.showModifiedDate?.dateOption?.modifiedDate, 'PPp', language)
     }
   }
 
