@@ -118,7 +118,7 @@ function renderPart(req: XP.Request): XP.Response {
 
   if (page.data.showModifiedDate && previousReleaseDate && modifiedDate) {
     if (isAfter(new Date(modifiedDate), new Date(previousReleaseDate))) {
-      changeDate = formatDate(modifiedDate, 'PPpp', language)
+      changeDate = formatDate(modifiedDate, 'PPp', language)
     }
   }
 
