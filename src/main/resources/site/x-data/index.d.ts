@@ -5,6 +5,7 @@ declare global {
     'com-enonic-app-metafields': {
       'meta-data': {
         seoImage: string
+        seoTitle: string
         seoDescription: string
       }
     }

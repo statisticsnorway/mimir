@@ -13,6 +13,7 @@ export interface KeyFigureProps {
   pageTypeKeyFigure: boolean
   hiddenTitle: string
   isInStatisticsPage: boolean
+  isMacro: boolean
 }
 
 export interface KeyFigureData {

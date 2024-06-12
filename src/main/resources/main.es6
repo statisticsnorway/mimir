@@ -100,11 +100,11 @@ try {
           enabled: false,
         },
         {
-          feature: 'simple-statbank-part',
+          feature: 'structured-data',
           enabled: false,
         },
         {
-          feature: 'structured-data',
+          feature: 'pageMap',
           enabled: false,
         },
       ],

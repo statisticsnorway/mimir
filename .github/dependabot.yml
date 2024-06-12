@@ -12,6 +12,17 @@ updates:
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 10
+    # Grouping patch updates and minor updates into two pull requests for all packages
+    groups:
+      dependencies-patch-updates:
+        update-types:
+          - "patch"
+      dependencies-minor-updates:
+        update-types:
+          - "minor"
+    ignore:
+      # enonic types should update only when updating enonic version on server
+      - dependency-name: "@enonic-types/*"
   - package-ecosystem: "gradle"
     directory: "/"
     schedule:

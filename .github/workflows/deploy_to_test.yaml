@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - 'MIMIR-1227_updates-and-manual-deploy'
+  workflow_dispatch:  # Allows the workflow to be manually triggered.
 
 concurrency:
   group: mimir-test

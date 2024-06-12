@@ -58,7 +58,7 @@ function renderPart(req: XP.Request, aboutTheStatisticsId: string | undefined): 
       }
     }
   } else {
-    if (req.mode === 'edit' || req.mode === 'inline') {
+    if (req.mode === 'edit' || req.mode === 'inline' || req.mode === 'preview') {
       return getOmStatistikken(req, page, aboutTheStatisticsId)
     } else {
       return fromPartCache(req, `${page._id}-omStatistikken`, () => {
@@ -68,6 +68,7 @@ function renderPart(req: XP.Request, aboutTheStatisticsId: string | undefined): 
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function getOmStatistikken(req: XP.Request, page: Content<any>, aboutTheStatisticsId: string | undefined): XP.Response {
   const phrases: Phrases = getPhrases(page) as Phrases
   const language: string = page.language === 'en' || page.language === 'nn' ? page.language : 'nb'
@@ -95,11 +96,14 @@ function getOmStatistikken(req: XP.Request, page: Content<any>, aboutTheStatisti
   }
 
   const aboutTheStatisticsData: OmStatistikken | undefined = aboutTheStatisticsContent?.data
+  const lastUpdated: string | undefined = formatDate(aboutTheStatisticsContent?.modifiedTime, 'PPP', language)
 
   const props: AboutTheStatisticsProps = {
     accordions: aboutTheStatisticsData ? getAccordionData(aboutTheStatisticsData, phrases, nextRelease) : [],
     label: phrases.aboutTheStatistics,
     ingress: aboutTheStatisticsData?.ingress ?? '',
+    lastUpdatedPhrase: phrases.lastUpdated,
+    lastUpdated: lastUpdated ?? '',
   }
 
   return render('site/parts/omStatistikken/omStatistikken', props, req, {
@@ -123,7 +127,7 @@ function getAccordionData(content: OmStatistikken, phrases: Phrases, nextUpdate:
   const accordions: Array<Accordion> = []
 
   const items: Items = {
-    definition: ['conceptsAndVariables', 'standardRatings'],
+    definition: ['conceptsAndVariables', 'standardRatings', 'unitOfMeasure'],
     administrativeInformation: [
       'nameAndSubject',
       'nextUpdate',
@@ -132,6 +136,7 @@ function getAccordionData(content: OmStatistikken, phrases: Phrases, nextUpdate:
       'frequency',
       'internationalReporting',
       'storageAndUse',
+      'qualityAssurance',
     ],
     background: [
       'purposeAndHistory',
@@ -140,6 +145,7 @@ function getAccordionData(content: OmStatistikken, phrases: Phrases, nextUpdate:
       'relationOtherStatistics',
       'legalAuthority',
       'eeaReference',
+      'timeCoverage',
     ],
     production: [
       'scope',
@@ -148,8 +154,10 @@ function getAccordionData(content: OmStatistikken, phrases: Phrases, nextUpdate:
       'seasonalAdjustment',
       'confidentiality',
       'comparability',
+      'sectorCoverage',
+      'basePeriod',
     ],
-    accuracyAndReliability: ['errorSources', 'revision'],
+    accuracyAndReliability: ['errorSources', 'revision', 'qualityAssessment'],
     aboutSeasonalAdjustment: [
       'generalInformation',
       'whySeasonallyAdjustStatistic',
@@ -261,16 +269,33 @@ function getAccordion(
 }
 
 function getItems(category: Category, variables: Array<string>, phrases: Phrases): Array<AccordionItem> {
-  return variables.map((variable) => {
-    return {
-      title: phrases[variable],
-      body: category[variable]
-        ? processHtml({
-            value: category[variable].replace(/&nbsp;/g, ' '),
-          })
-        : phrases.notRelevant,
+  const items: Array<AccordionItem> = []
+  variables.forEach((variable) => {
+    //TODO: This check (isNewItem) can be removed when the period in which content producers must enter data in new fields is over.
+    if ((isNewItem(variable) && category[variable]) || !isNewItem(variable)) {
+      items.push({
+        title: phrases[variable],
+        body: category[variable]
+          ? processHtml({
+              value: category[variable].replace(/&nbsp;/g, ' '),
+            })
+          : phrases.notRelevant,
+      })
     }
   })
+  return items
+}
+
+function isNewItem(variable: string): boolean {
+  const newItems: Array<string> = [
+    'sectorCoverage',
+    'basePeriod',
+    'timeCoverage',
+    'unitOfMeasure',
+    'qualityAssurance',
+    'qualityAssessment',
+  ]
+  return newItems.includes(variable)
 }
 
 function isNotEmpty(obj: object | undefined): boolean {

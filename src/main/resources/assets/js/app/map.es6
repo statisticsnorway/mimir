@@ -46,6 +46,7 @@ function init() {
           events: {
             drilldown: function (e) {
               if (!e.seriesOptions) {
+                // eslint-disable-next-line @typescript-eslint/no-this-alias
                 const chart = this
                 const mapKey = 'no-fylke-' + e.point.drilldown
                 let fail = setTimeout(function () {

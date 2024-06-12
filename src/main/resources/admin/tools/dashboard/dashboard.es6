@@ -78,8 +78,8 @@ function renderPart(req) {
     pageContributions,
     username: user.displayName,
     linkToGuide: userHasAdmin
-      ? 'https://wiki.ssb.no/display/VEILEDNING/Brukerdokumentasjon+for+publisering+i+XP'
-      : 'https://wiki.ssb.no/display/VEILEDNING/Brukerdokumentasjon+i+publisering+i+XP+-+for+statistikkseksjon',
+      ? 'https://statistics-norway.atlassian.net/wiki/spaces/A600/pages/3717136497/Veiledninger+for+KOM'
+      : 'https://statistics-norway.atlassian.net/wiki/spaces/PUBLISERING/overview',
   }
 
   let body = render(view, model)

@@ -4,7 +4,6 @@ import { localize } from '/lib/xp/i18n'
 import { renderError } from '/lib/ssb/error/error'
 import { render } from '/lib/enonic/react4xp'
 import { imageUrl, getImageAlt } from '/lib/ssb/utils/imageUtils'
-import { isEnabled } from '/lib/featureToggle'
 import { getStatbankApiData } from '/lib/ssb/parts/simpleStatbank'
 import { SimpleStatbankProps, type SimpleStatbankResult } from '/lib/types/partTypes/simpleStatbank'
 import { type SimpleStatbank } from '/site/content-types'
@@ -48,7 +47,6 @@ function missingConfig(message: string) {
 }
 
 function renderPart(req: XP.Request, simpleStatbankId?: string): XP.Response {
-  if (!isEnabled('simple-statbank-part', false, 'ssb')) return { body: '' }
   if (!simpleStatbankId) {
     return {
       body: missingConfig('Mangler innhold! Velg Spørring Statistikkbanken'),

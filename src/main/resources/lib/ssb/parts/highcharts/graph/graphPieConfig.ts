@@ -1,7 +1,14 @@
 import { mergeDeepRight } from '/lib/vendor/ramda'
 import { createDefaultConfig } from '/lib/ssb/parts/highcharts/graph/config'
 
-export function pieConfig(highchartContent, options) {
+interface HighchartContent {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  data: any
+  displayName: string
+  language: string
+}
+
+export function pieConfig(highchartContent: HighchartContent) {
   const defaultConfig = createDefaultConfig(
     highchartContent.data,
     highchartContent.displayName,

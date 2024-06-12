@@ -5,7 +5,6 @@ export interface LinksProps {
   linkType?: 'regular' | 'profiled' | 'header'
   text?: string
   description?: string
-  GA_TRACKING_ID?: string
   isPDFAttachment?: boolean
   attachmentTitle?: string
 }

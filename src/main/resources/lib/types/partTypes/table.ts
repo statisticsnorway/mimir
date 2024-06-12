@@ -23,7 +23,6 @@ export interface TableProps {
   sourceTableLabel: string
   statBankWebUrl: string
   hiddenTitle: string | undefined
-  GA_TRACKING_ID: string | null
 }
 
 export interface TableStandardSymbolLink {
