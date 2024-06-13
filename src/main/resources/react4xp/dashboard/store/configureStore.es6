@@ -34,14 +34,14 @@ export function configureAppStore(toggleDebugging) {
     statReg: statRegReducer,
     dataSources: dataSourcesReducer,
     statistics: statisticsReducer,
-    jobs: jobsReducer
+    jobs: jobsReducer,
   }
 
   const store = configureStore({
     reducer: rootReducer,
     middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(middlewares),
     devTools: process.env.NODE_ENV !== 'production',
-    enhancers: (defaultEnhancers) => [...defaultEnhancers(), ...enhancers]
+    enhancers: (defaultEnhancers) => [...defaultEnhancers(), ...enhancers],
   })
 
   return store
