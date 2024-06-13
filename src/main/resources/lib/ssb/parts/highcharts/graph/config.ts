@@ -315,7 +315,7 @@ export const createDefaultConfig = (highchartData, displayName, language) => ({
             },
           },
           yAxis: [
-            // overrides left y axis
+            // left y axis
             {
               labels: {
                 align: 'right',
@@ -329,7 +329,7 @@ export const createDefaultConfig = (highchartData, displayName, language) => ({
                 text: isEnabled('highcharts-y-axix-title-mobile', true, 'ssb') ? highchartData.yAxisTitle : '',
               },
             },
-            // overrides right y axis
+            // right y axis
             {
               labels: {
                 align: 'left',
