@@ -1,6 +1,5 @@
 import React from 'react'
-import { LeadParagraph, Text, Paragraph } from '@statisticsnorway/ssb-component-library'
-import { sanitize } from '../../../lib/ssb/utils/htmlUtils'
+import { Text } from '@statisticsnorway/ssb-component-library'
 
 interface RichTextProps {
   text: string
@@ -10,12 +9,13 @@ interface RichTextProps {
 
 const RichText = ({ text, textType, inLayout }: RichTextProps) => {
   const renderText = () => {
-    const textComponent = <span dangerouslySetInnerHTML={{ __html: sanitize(text) }} />
+    // Text is sanitized in ts file
+    const textComponent = <span dangerouslySetInnerHTML={{ __html: text }} />
     switch (textType) {
       case 'ingress':
-        return <LeadParagraph>{textComponent}</LeadParagraph>
+        return <div className='ssb-lead-paragraph'>{textComponent}</div>
       case 'brodtekst':
-        return <Paragraph>{textComponent}</Paragraph>
+        return <div className='ssb-paragraph'>{textComponent}</div>
       case 'mikrotekst':
         return <Text small>{textComponent}</Text>
       default:
