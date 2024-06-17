@@ -1,4 +1,4 @@
-<part>
+<macro>
   <display-name>Matematisk formel</display-name>
   <description>Fyll inn LaTeX formel.</description>
   <form>
@@ -11,4 +11,4 @@
       </config>
     </input>
   </form>
-</part>
+</macro>
