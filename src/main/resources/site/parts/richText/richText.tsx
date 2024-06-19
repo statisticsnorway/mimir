@@ -13,9 +13,9 @@ const RichText = ({ text, textType, inLayout }: RichTextProps) => {
     const textComponent = <span dangerouslySetInnerHTML={{ __html: text }} />
     switch (textType) {
       case 'ingress':
-        return <div className='ssb-lead-paragraph'>{textComponent}</div>
+        return <div className='rich-text-lead-paragraph'>{textComponent}</div>
       case 'brodtekst':
-        return <div className='ssb-paragraph'>{textComponent}</div>
+        return <div className='rich-text-paragraph'>{textComponent}</div>
       case 'mikrotekst':
         return <Text small>{textComponent}</Text>
       default:
