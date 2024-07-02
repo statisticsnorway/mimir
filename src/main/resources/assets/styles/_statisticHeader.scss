@@ -1,0 +1,51 @@
+.statistic-header {
+  & > .row > .col-12 {
+    @include media-breakpoint-down(md) {
+      padding: 0;
+    }
+  }
+
+  .title-ingress-wrapper {
+    display: block;
+    margin-bottom: $spacer * 1;
+    margin-top: 50px;
+
+    @include media-breakpoint-down(md) {
+      padding: 0;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      padding: 0;
+    }
+
+    .ingress {
+      font-size: 1.25rem;
+      padding-left: 0;
+    }
+
+    .introTitle {
+      @include roboto;
+      font-size: 1.25rem;
+      line-height: 1.6;
+      margin-bottom: 4px;
+    }
+  }
+
+  .titles-dates-wrapper {
+    //TODO: Fix this in ssb-component-library
+    .glossary-button {
+      background-image: none;
+      &:hover,
+      &:focus {
+        background-image: linear-gradient(to right, $ssb-green-2 50%, #fff 50%);
+      }
+    }
+
+    .updatedDate,
+    .nextUpdateDate,
+    .modifiedDate {
+      font-size: 1rem;
+    }
+  }
+}
