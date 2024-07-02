@@ -8,6 +8,8 @@ export interface StatisticFiguresProps {
   appName: string
   title: string
   icon: string
+  iconStatbankBox: string
+  statbankHref: string
 }
 
 export interface StatisticFiguresData extends AccordionData {

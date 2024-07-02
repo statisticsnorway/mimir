@@ -4,9 +4,11 @@ import { type DatasetRepoNode } from '/lib/ssb/repo/dataset'
 import { type JSONstat } from '/lib/types/jsonstat-toolkit'
 import { type Phrases } from '/lib/types/language'
 import { render as r4XpRender } from '/lib/enonic/react4xp'
+import { type StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
 import { type TbmlDataUniform } from '/lib/types/xmlParser'
 import { contentArrayToRecord } from '/lib/ssb/utils/arrayUtils'
 import { notNullOrUndefined } from '/lib/ssb/utils/coreUtils'
+import { getStatisticByIdFromRepo } from '/lib/ssb/statreg/statistics'
 
 import * as util from '/lib/util'
 import { getPhrases } from '/lib/ssb/utils/language'
@@ -16,6 +18,11 @@ import { type StatisticFiguresData, type StatisticFiguresProps } from '/lib/type
 import { type Statistics } from '/site/content-types'
 import { getProps } from '/site/parts/table/table'
 import { preview as highchartPreview } from '/site/parts/highchart/highchart'
+
+const STATBANKWEB_URL: string =
+  app.config && app.config['ssb.statbankweb.baseUrl']
+    ? app.config['ssb.statbankweb.baseUrl']
+    : 'https://www.ssb.no/statbank'
 
 export function get(req: XP.Request): XP.Response {
   try {
@@ -40,6 +47,10 @@ function getTablesAndFiguresComponent(page: Content<Statistics>, req: XP.Request
   const phrases: Phrases = getPhrases(page) as Phrases
 
   const title: string = phrases.attachmentTablesFigures
+
+  const statistic: StatisticInListing | undefined = (page.data.statistic &&
+    getStatisticByIdFromRepo(page.data.statistic)) as StatisticInListing | undefined
+  const shortName: string | undefined = statistic && statistic.shortName ? statistic.shortName : undefined
 
   const attachmentTablesAndFigures: Array<string> = page.data.attachmentTablesFigures
     ? util.data.forceArray(page.data.attachmentTablesFigures)
@@ -76,6 +87,10 @@ function getTablesAndFiguresComponent(page: Content<Statistics>, req: XP.Request
     icon: assetUrl({
       path: 'SSB_ikon_figures.svg',
     }),
+    iconStatbankBox: assetUrl({
+      path: 'SSB_ikon_statbank.svg',
+    }),
+    statbankHref: `${STATBANKWEB_URL}/list/${shortName}`,
   }
 
   const accordionComponent = r4XpRender('StatisticFigures', StatisticFiguresProps, req, {

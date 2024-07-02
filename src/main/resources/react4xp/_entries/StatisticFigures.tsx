@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { Accordion, Button, Title } from '@statisticsnorway/ssb-component-library'
-import { ChevronDown, ChevronUp } from 'react-feather'
+import { ArrowRight, ChevronDown, ChevronUp } from 'react-feather'
 
 import { sanitize } from '../../lib/ssb/utils/htmlUtils'
 import { type StatisticFiguresProps, type StatisticFiguresData } from '../../lib/types/partTypes/statisticFigures'
@@ -9,7 +9,7 @@ import Table from '../table/Table'
 
 function StatisticFigures(props: StatisticFiguresProps) {
   const [isHidden, setIsHidden] = useState(true)
-  const { accordions, freeText, showAll, showLess, icon } = props
+  const { accordions, freeText, showAll, showLess, icon, iconStatbankBox, statbankHref } = props
   const currentElement = useRef<null | HTMLLIElement>(null)
   const [focusElement, setFocusElement] = useState(false)
 
@@ -55,6 +55,28 @@ function StatisticFigures(props: StatisticFiguresProps) {
           <Button onClick={toggleBox} onKeyDown={(e: React.KeyboardEvent<HTMLButtonElement>) => keyDownToggleBox(e)}>
             {getButtonText()}
           </Button>
+        </div>
+      </div>
+    )
+  }
+
+  function renderStatbankBox() {
+    return (
+      <div className='statbank-box'>
+        <div className='content'>
+          <div className='icon-wrapper'>
+            <img src={iconStatbankBox} alt='' />
+          </div>
+          <div className='title-text-wrapper'>
+            <a className='title' href={statbankHref} id='statbankLink' aria-label='Se alle tall fra denne statistikken'>
+              Se alle tall fra denne statistikken
+            </a>
+            <span className='text'>
+              Vi har flere tall for denne statistikken i Statistikkbanken. Lag figurer og tabeller med tallene du
+              trenger.
+            </span>
+          </div>
+          <ArrowRight size={28} className='arrow-icon' aria-hidden='true' />
         </div>
       </div>
     )
@@ -129,6 +151,7 @@ function StatisticFigures(props: StatisticFiguresProps) {
           {renderShowMoreButton()}
         </div>
       )}
+      {renderStatbankBox()}
     </React.Fragment>
   )
 }
