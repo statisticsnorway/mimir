@@ -1,14 +1,4 @@
 <part>
     <display-name>Prototype Statistikk</display-name>
     <description>Kun til testing i QA</description>
-  <form>
-    <input type="TextLine" name="phraseUpdated">
-      <label>Frase - Statistikk oppdatert</label>
-      <occurrences minimum="0" maximum="1"/>
-    </input>
-    <input type="TextLine" name="phraseUpdatedEnglish">
-      <label>Frase Engelsk - Statistikk oppdatert</label>
-      <occurrences minimum="0" maximum="1"/>
-    </input>
-  </form>
 </part>

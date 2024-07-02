@@ -67,6 +67,7 @@ declare global {
       export type StaticVisualization = _PartComponent<'mimir:staticVisualization'>
       export type Statistics = _PartComponent<'mimir:statistics'>
       export type StatisticHeader = _PartComponent<'mimir:statisticHeader'>
+      export type StatisticFigures = _PartComponent<'mimir:statisticFigures'>
       export type SubjectArticleList = _PartComponent<'mimir:subjectArticleList'>
       export type Table = _PartComponent<'mimir:table'>
       export type UpcomingReleases = _PartComponent<'mimir:upcomingReleases'>
