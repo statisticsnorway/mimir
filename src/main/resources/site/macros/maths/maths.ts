@@ -4,9 +4,9 @@ import { type Maths } from '/site/macros/maths'
 
 export function macro(context: XP.MacroContext<Maths>) {
   try {
-    const config = context.params
+    const config = context.params.contentId
     const maths: XP.Response = preview(context.request, config)
-    if (maths.status && maths.status !== 200) throw new Error(`Maths with id ${config.contentId} is missing`)
+    if (maths.status && maths.status !== 200) throw new Error(`Maths with id ${config} is missing`)
     maths.body = `<div>${maths.body}</div>`
 
     return maths
