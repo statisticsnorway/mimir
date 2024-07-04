@@ -15,6 +15,10 @@
 							<label>Endringsmelding</label>
 							<default>true</default>
 							<items>
+                <input name="showModifiedTime" type="CheckBox">
+									<label>Vis klokkeslett for publisering</label>
+									<default>unchecked</default>
+								</input>
 								<input name="lastModified" type="DateTime">
 									<label>Dato og tid</label>
 								</input>

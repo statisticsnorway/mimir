@@ -3,7 +3,6 @@ import { localize } from '/lib/xp/i18n'
 import { renderError } from '/lib/ssb/error/error'
 import { render } from '/lib/enonic/react4xp'
 import { type NameSearchProps } from '/lib/types/partTypes/nameSearch'
-import { GA_TRACKING_ID } from '/site/pages/default/default'
 import { type NameSearch as NameSearchPartConfig } from '.'
 
 export const get = (req: XP.Request): XP.Response => {
@@ -35,7 +34,6 @@ function renderPart(req: XP.Request) {
     frontPage: component.config.frontPage,
     phrases: partsPhrases(currentContent?.language || 'nb'),
     language: currentContent?.language || 'nb',
-    GA_TRACKING_ID: GA_TRACKING_ID,
   }
 
   return render('site/parts/nameSearch/nameSearch', props, req)

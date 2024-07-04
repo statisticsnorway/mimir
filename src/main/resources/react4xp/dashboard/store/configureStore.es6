@@ -29,18 +29,19 @@ export function configureAppStore(toggleDebugging) {
     }),
   ]
 
+  const rootReducer = {
+    common: commonReducer,
+    statReg: statRegReducer,
+    dataSources: dataSourcesReducer,
+    statistics: statisticsReducer,
+    jobs: jobsReducer,
+  }
+
   const store = configureStore({
-    reducer: {
-      common: commonReducer,
-      statReg: statRegReducer,
-      dataSources: dataSourcesReducer,
-      statistics: statisticsReducer,
-      jobs: jobsReducer,
-    },
-    // middleware: [...getDefaultMiddleware(), ...middlewares],
+    reducer: rootReducer,
     middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(middlewares),
     devTools: process.env.NODE_ENV !== 'production',
-    enhancers,
+    enhancers: (defaultEnhancers) => [...defaultEnhancers(), ...enhancers],
   })
 
   return store

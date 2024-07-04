@@ -17,8 +17,7 @@ const OmStatistikken = (props: AboutTheStatisticsProps) => {
       {renderIngress()}
       {lastUpdated && (
         <p>
-          <span className='fw-bold'>{lastUpdatedPhrase}:</span>
-          {` ${lastUpdated}`}
+          <i>{`${lastUpdatedPhrase} ${lastUpdated}.`}</i>
         </p>
       )}
       <div className='om-statistikken-accordion col-lg-7'>

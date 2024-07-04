@@ -24,7 +24,6 @@ import { isEnabled } from '/lib/featureToggle'
 import { getPhrases } from '/lib/ssb/utils/language'
 import { getTbprocessorKey } from '/lib/ssb/dataset/tbprocessor/tbprocessor'
 import { type HighchartsExtendedProps, type HighchartsReactProps } from '/lib/types/partTypes/highchartsReact'
-import { GA_TRACKING_ID } from '/site/pages/default/default'
 import { type DataSource } from '/site/mixins/dataSource'
 import { type CombinedGraph, type Highchart } from '/site/content-types'
 
@@ -98,7 +97,6 @@ function renderPart(req: XP.Request, highchartIds: Array<string>): XP.Response {
     phrases: getPhrases(page),
     appName: app.name,
     pageType: page.type,
-    GA_TRACKING_ID: GA_TRACKING_ID,
   }
 
   if (isEnabled('highchart-react', true, 'ssb')) {

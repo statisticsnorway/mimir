@@ -190,7 +190,9 @@ export function DashboardTools() {
       } else if (item.id === 'link-statbank') {
         openLinkInNewWindow(internalStatbankUrl)
       } else if (item.id === 'link-guide-publications') {
-        openLinkInNewWindow('https://wiki.ssb.no/display/VEILEDNING/Brukerdokumentasjon+for+publisering+i+XP')
+        openLinkInNewWindow(
+          'https://statistics-norway.atlassian.net/wiki/spaces/A600/pages/3717136497/Veiledninger+for+KOM'
+        )
       } else if (item.id === 'link-status-statreg') {
         openLinkInNewWindow(`${statregRapportUrl}`)
       } else if (item.id === 'link-tbml-validation') {

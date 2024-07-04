@@ -128,51 +128,31 @@ export function init() {
         // Only show plotOption marker on last data element / single data point series
         if (canvas.data('type') === 'line') {
           config.series.forEach((series) => {
-            const nonNullPoints = series.data.filter((data) => data !== null).length
+            const indices = series.data.map((element) => element !== null)
+            const lastIndex = indices.lastIndexOf(true)
 
             series.data = series.data.map((data, index) => ({
               y: parseFloat(data),
               marker: {
-                enabled: nonNullPoints === 1 || index === nonNullPoints - 1,
+                enabled: index === lastIndex,
               },
             }))
           })
         }
 
-        const category = 'Highcharts'
-        const action = 'Lastet ned highcharts'
-
         config.exporting.menuItemDefinitions = {
           printChart: {
             onclick: function () {
-              const label = `${config.title.text} - Skriv ut graf`
-              gtag('event', action, {
-                event_category: category,
-                event_label: label,
-              })
-
               this.print()
             },
           },
           downloadPNG: {
             onclick: function () {
-              const label = `${config.title.text} - Last ned som PNG`
-              gtag('event', action, {
-                event_category: category,
-                event_label: label,
-              })
-
               this.exportChartLocal() //png is default
             },
           },
           downloadJPEG: {
             onclick: function () {
-              const label = `${config.title.text} - Last ned som JPEG`
-              gtag('event', action, {
-                event_category: category,
-                event_label: label,
-              })
-
               this.exportChartLocal({
                 type: 'image/jpeg',
               })
@@ -180,12 +160,6 @@ export function init() {
           },
           downloadPDF: {
             onclick: function () {
-              const label = `${config.title.text} - Last ned som PDF`
-              gtag('event', action, {
-                event_category: category,
-                event_label: label,
-              })
-
               this.exportChartLocal({
                 type: 'application/pdf',
               })
@@ -193,12 +167,6 @@ export function init() {
           },
           downloadSVG: {
             onclick: function () {
-              const label = `${config.title.text} - Last ned som SVG`
-              gtag('event', action, {
-                event_category: category,
-                event_label: label,
-              })
-
               this.exportChartLocal({
                 type: 'image/svg+xml',
               })
@@ -206,11 +174,6 @@ export function init() {
           },
           downloadXLS: {
             onclick: function () {
-              const label = `${config.title.text} - Last ned som XLS`
-              gtag('event', action, {
-                event_category: category,
-                event_label: label,
-              })
               const rows = this.getDataRows(true)
               const xlsxRows = rows.slice(1).map(function (row) {
                 return row.map(function (column) {
@@ -230,12 +193,6 @@ export function init() {
           },
           downloadCSV: {
             onclick: function () {
-              const label = `${config.title.text} - Last ned som CSV`
-              gtag('event', action, {
-                event_category: category,
-                event_label: label,
-              })
-
               this.downloadCSV()
             },
           },
