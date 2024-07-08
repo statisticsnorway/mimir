@@ -11,7 +11,7 @@ export const get = (): XP.Response => {
     start: 0,
     count: 100,
     sort: 'modifiedTime DESC',
-    query: `modifiedtime >= date('${yesterday}')`,
+    query: `modifiedtime >= date('${yesterday}') OR publish.from >= date('${yesterday}')`,
     contentTypes: [`${app.name}:statistics`, `${app.name}:article`, `${app.name}:page`],
   })
 

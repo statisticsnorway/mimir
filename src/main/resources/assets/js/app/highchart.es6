@@ -128,12 +128,13 @@ export function init() {
         // Only show plotOption marker on last data element / single data point series
         if (canvas.data('type') === 'line') {
           config.series.forEach((series) => {
-            const nonNullPoints = series.data.filter((data) => data !== null).length
+            const indices = series.data.map((element) => element !== null)
+            const lastIndex = indices.lastIndexOf(true)
 
             series.data = series.data.map((data, index) => ({
               y: parseFloat(data),
               marker: {
-                enabled: nonNullPoints === 1 || index === nonNullPoints - 1,
+                enabled: index === lastIndex,
               },
             }))
           })
