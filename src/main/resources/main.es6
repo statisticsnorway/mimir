@@ -28,23 +28,7 @@ try {
       space: 'ssb',
       features: [
         {
-          feature: 'rss-news',
-          enabled: true,
-        },
-        {
-          feature: 'rss-news-statistics',
-          enabled: false,
-        },
-        {
           feature: 'articlelist-sorting',
-          enabled: false,
-        },
-        {
-          feature: 'name-graph',
-          enabled: false,
-        },
-        {
-          feature: 'highchart-show-datatable',
           enabled: false,
         },
         {
@@ -52,19 +36,7 @@ try {
           enabled: false,
         },
         {
-          feature: 'highcharts-y-axix-title-mobile',
-          enabled: false,
-        },
-        {
-          feature: 'name-search-in-freetext-search',
-          enabled: false,
-        },
-        {
           feature: 'new-publication-archive',
-          enabled: false,
-        },
-        {
-          feature: 'push-rss-statkal',
           enabled: false,
         },
         {

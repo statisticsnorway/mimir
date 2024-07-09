@@ -4,25 +4,20 @@ import { StatisticInListing, VariantInListing } from '/lib/ssb/dashboard/statreg
 import { getTimeZoneIso } from '/lib/ssb/utils/dateUtils'
 import { subDays, isSameDay, format, parseISO } from '/lib/vendor/dateFns'
 import { fetchStatisticsWithReleaseToday } from '/lib/ssb/statreg/statistics'
-import { isEnabled } from '/lib/featureToggle'
 import { xmlEscape } from '/lib/text-encoding'
 import { type Statistic } from '/site/mixins/statistic'
 import { type Default as DefaultPageConfig } from '/site/pages/default'
 import { type Page, type Article, type Statistics } from '/site/content-types'
 
 function get(): XP.Response {
-  const rssNewsEnabled: boolean = isEnabled('rss-news', true, 'ssb')
-  const rssStatisticsEnabled: boolean = isEnabled('rss-news-statistics', false, 'ssb')
-  const mainSubjects: Array<Content<Page & DefaultPageConfig>> = rssNewsEnabled
-    ? (query({
-        start: 0,
-        count: 100,
-        query: 'components.page.config.mimir.default.subjectType LIKE "mainSubject"',
-      }).hits as unknown as Array<Content<Page & DefaultPageConfig>>)
-    : []
+  const mainSubjects: Array<Content<Page & DefaultPageConfig>> = query({
+    start: 0,
+    count: 100,
+    query: 'components.page.config.mimir.default.subjectType LIKE "mainSubject"',
+  }).hits as unknown as Array<Content<Page & DefaultPageConfig>>
 
-  const news: Array<News> = rssNewsEnabled ? getNews(mainSubjects) : []
-  const statistics: Array<News> = rssNewsEnabled && rssStatisticsEnabled ? getStatisticsNews(mainSubjects) : []
+  const news: Array<News> = getNews(mainSubjects)
+  const statistics: Array<News> = getStatisticsNews(mainSubjects)
   const xml = `<?xml version="1.0" encoding="utf-8"?>
   <rssitems count="${news.length + statistics.length}">
     ${[...news, ...statistics]
@@ -162,7 +157,7 @@ function formatPubDateStatistic(date: string, timeZoneIso: string): string {
   return `${pubDate}${timeZoneIso}`
 }
 
-/* 
+/*
 function testPubDates() {
   const serverOffsetInMS: number = parseInt(app.config?.['serverOffsetInMs']) || 0
   const timeZoneIso: string = getTimeZoneIso(serverOffsetInMS)
