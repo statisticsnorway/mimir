@@ -6,7 +6,6 @@ import { parseContributions } from '/lib/ssb/utils/utils'
 import { render } from '/lib/thymeleaf'
 import { renderError } from '/lib/ssb/error/error'
 import { React4xp } from '/lib/enonic/react4xp'
-import { isEnabled } from '/lib/featureToggle'
 
 const view = resolve('./dashboard.html')
 const DEFAULT_CONTENTSTUDIO_URL = getToolUrl('com.enonic.app.contentstudio', 'main')
@@ -62,7 +61,6 @@ function renderPart(req) {
       internalBaseUrl: `${INTERNAL_BASE_URL}`,
       internalStatbankUrl: `${INTERNAL_STATBANK_URL}`,
       statregRapportUrl: `${STATREG_RAPPORT_URL}`,
-      toggleDebugging: isEnabled('dashboard-redux-logging-debugging', true, 'ssb'),
     })
     .setId('dashboard')
 

@@ -36,20 +36,12 @@ try {
           enabled: false,
         },
         {
-          feature: 'article-isbn',
-          enabled: true,
-        },
-        {
           feature: 'articlelist-sorting',
           enabled: false,
         },
         {
           feature: 'name-graph',
           enabled: false,
-        },
-        {
-          feature: 'dashboard-redux-logging-debugging',
-          enabled: true,
         },
         {
           feature: 'highchart-show-datatable',
@@ -68,19 +60,7 @@ try {
           enabled: false,
         },
         {
-          feature: 'deactivate-partcache-released-statistics',
-          enabled: true,
-        },
-        {
-          feature: 'deactivate-part-cache-article-list',
-          enabled: true,
-        },
-        {
           feature: 'new-publication-archive',
-          enabled: false,
-        },
-        {
-          feature: 'datefns-publication-archive',
           enabled: false,
         },
         {
