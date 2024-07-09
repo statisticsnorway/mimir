@@ -86,6 +86,7 @@ $container-max-widths: (
 @import './simpleStatbank';
 @import './statisticHeader';
 @import './statisticFigures';
+@import './statisticDescription';
 
 body {
   -moz-osx-font-smoothing: grayscale;

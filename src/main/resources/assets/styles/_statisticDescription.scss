@@ -1,0 +1,27 @@
+.statistic-description {
+  background-color: white;
+  padding: 40px;
+  margin-top: 100px;
+  border-radius: 32px;
+
+  .om-statistikken-tags {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 40px;
+
+    .ssb-tag.active {
+      background: $ssb-green-4;
+      color: $ssb-white;
+    }
+
+    .ssb-tag:not(:last-of-type) {
+      margin-right: 10px;
+    }
+  }
+
+  .selected-category {
+    .ssb-fact-box {
+      border-radius: 8px;
+    }
+  }
+}
