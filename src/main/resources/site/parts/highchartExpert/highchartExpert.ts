@@ -2,6 +2,7 @@
 import { getComponent } from '/lib/xp/portal'
 import { render as r4XpRender } from '/lib/enonic/react4xp'
 import { renderError } from '/lib/ssb/error/error'
+import { isEnabled } from '/lib/featureToggle'
 
 export function get(req: XP.Request): XP.Response {
   try {
@@ -23,6 +24,8 @@ export function preview(req: XP.Request): XP.Response {
 }
 
 function renderPart(req: XP.Request): XP.Response {
+  if (!isEnabled('highchart-expert', false, 'ssb')) return { body: '' }
+
   const component = getComponent<XP.PartComponent.HighchartExpert>()
   if (!component) throw Error('No part found')
 
