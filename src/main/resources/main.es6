@@ -40,10 +40,6 @@ try {
           enabled: false,
         },
         {
-          feature: 'highchart-expert',
-          enabled: false,
-        },
-        {
           feature: 'gpt-service',
           enabled: false,
         },

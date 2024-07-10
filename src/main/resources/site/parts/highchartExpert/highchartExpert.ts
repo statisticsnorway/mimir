@@ -2,7 +2,6 @@
 import { getComponent } from '/lib/xp/portal'
 import { render as r4XpRender } from '/lib/enonic/react4xp'
 import { renderError } from '/lib/ssb/error/error'
-import { isEnabled } from '/lib/featureToggle'
 
 export function get(req: XP.Request): XP.Response {
   try {
@@ -24,8 +23,6 @@ export function preview(req: XP.Request): XP.Response {
 }
 
 function renderPart(req: XP.Request): XP.Response {
-  if (!isEnabled('highchart-expert', false, 'ssb')) return { body: '' }
-
   const component = getComponent<XP.PartComponent.HighchartExpert>()
   if (!component) throw Error('No part found')
 
@@ -52,11 +49,11 @@ function renderPart(req: XP.Request): XP.Response {
 function errorConfig(title = 'Feil i JSON konfigurasjon', message = '') {
   const _message =
     message ||
-    `JSON konfigurasjonen er ikke gyldig. 
+    `JSON konfigurasjonen er ikke gyldig.
     <br/>
     Sjekk validitet av JSON på <a href="https://jsonlint.com/" target="_blank">jsonlint.com</a>
     <br/>
-    Hvis du har kopiert fra en kodesnutt på nettet, kan du prøve å konvertere den til JSON på <a href="https://www.convertsimple.com/convert-javascript-to-json/" target="_blank">convertsimple.com</a>. 
+    Hvis du har kopiert fra en kodesnutt på nettet, kan du prøve å konvertere den til JSON på <a href="https://www.convertsimple.com/convert-javascript-to-json/" target="_blank">convertsimple.com</a>.
     Det må begynne med <strong>{</strong> og slutte med <strong>}</strong>`
 
   return {
