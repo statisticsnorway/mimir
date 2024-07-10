@@ -36,7 +36,7 @@ import { fromMenuCache } from '/lib/ssb/cache/cache'
 import { ensureArray } from '/lib/ssb/utils/arrayUtils'
 import { type SubjectItem } from '/lib/types/subject'
 import { type MunicipalityWithCounty, type RequestWithCode } from '/lib/types/municipalities'
-import { isEnabled } from '/lib/types/featureToggle'
+import { isEnabled } from '/lib/featureToggle'
 import { type Default as DefaultPageConfig } from '/site/pages/default'
 import { type Page, type Statistics } from '/site/content-types'
 
