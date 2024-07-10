@@ -44,10 +44,6 @@ try {
           enabled: false,
         },
         {
-          feature: 'hide-header-in-qa',
-          enabled: false,
-        },
-        {
           feature: 'structured-data',
           enabled: false,
         },
