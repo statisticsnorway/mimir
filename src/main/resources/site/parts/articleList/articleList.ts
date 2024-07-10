@@ -7,6 +7,7 @@ import { formatDate } from '/lib/ssb/utils/dateUtils'
 
 import { renderError } from '/lib/ssb/error/error'
 import { fromPartCache } from '/lib/ssb/cache/partCache'
+import { isEnabled } from '/lib/featureToggle'
 import { type Article } from '/site/content-types'
 
 export function get(req: XP.Request): XP.Response {
@@ -25,7 +26,8 @@ function renderPart(req: XP.Request) {
   const content = getContent()
   if (!content) throw Error('No page found')
 
-  if (req.mode === 'edit' || req.mode === 'inline') {
+  const articleListCacheDisabled = isEnabled('deactivate-part-cache-article-list', true, 'ssb')
+  if (req.mode === 'edit' || req.mode === 'inline' || articleListCacheDisabled) {
     return getArticleList(req, content)
   } else {
     return fromPartCache(req, `${content._id}-articleList`, () => getArticleList(req, content))

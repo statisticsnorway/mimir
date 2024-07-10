@@ -14,6 +14,7 @@ import { stringToServerTime } from '/lib/ssb/utils/dateUtils'
 import { parseISO } from '/lib/vendor/dateFns'
 import { fromPartCache } from '/lib/ssb/cache/partCache'
 import { renderError } from '/lib/ssb/error/error'
+import { isEnabled } from '/lib/featureToggle'
 import { type PreparedStatistics, type YearReleases } from '/lib/types/variants'
 import { type GroupedBy, type ReleasedStatisticsProps } from '/lib/types/partTypes/releasedStatistics'
 import { type ReleasedStatistics as ReleasedStatisticsPartConfig } from '.'
@@ -38,9 +39,12 @@ export function renderPart(req: XP.Request) {
   const config = getComponent<XP.PartComponent.ReleasedStatistics>()?.config
   if (!config) throw Error('No part found')
 
-  const groupedWithMonthNames: Array<YearReleases> = fromPartCache(req, `${content._id}-releasedStatistics`, () => {
-    return getGroupedWithMonthNames(config, currentLanguage)
-  })
+  const deactivatePartCacheEnabled: boolean = isEnabled('deactivate-partcache-released-statistics', true, 'ssb')
+  const groupedWithMonthNames: Array<YearReleases> = !deactivatePartCacheEnabled
+    ? fromPartCache(req, `${content._id}-releasedStatistics`, () => {
+        return getGroupedWithMonthNames(config, currentLanguage)
+      })
+    : getGroupedWithMonthNames(config, currentLanguage)
 
   const props: ReleasedStatisticsProps = {
     releases: groupedWithMonthNames,
