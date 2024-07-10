@@ -277,24 +277,22 @@ function Highmap(props) {
   }
 
   return (
-    <section className='xp-part highchart-wrapper'>
-      <Row>
-        <Col className='col-12'>
-          <figure className='highcharts-figure mb-0 hide-title'>
-            {mapOptions.title?.text && <figcaption className='figure-title'>{mapOptions.title.text}</figcaption>}
-            {mapOptions.subtitle?.text && <p className='figure-subtitle'>{mapOptions.subtitle.text}</p>}
-            <HighchartsReact highcharts={Highcharts} constructorType={'mapChart'} options={mapOptions} />
-          </figure>
-          {props.footnoteText &&
-            props.footnoteText.map((footnote) => (
-              <Col className='footnote col-12' key={`footnote-${footnote}`}>
-                {footnote && <Text>{footnote}</Text>}
-              </Col>
-            ))}
-          {props.sourceList && props.sourceList.map(renderHighchartsSource)}
-        </Col>
-      </Row>
-    </section>
+    <Row>
+      <Col className='col-12'>
+        <figure className='highcharts-figure mb-0 hide-title'>
+          {mapOptions.title?.text && <figcaption className='figure-title'>{mapOptions.title.text}</figcaption>}
+          {mapOptions.subtitle?.text && <p className='figure-subtitle'>{mapOptions.subtitle.text}</p>}
+          <HighchartsReact highcharts={Highcharts} constructorType={'mapChart'} options={mapOptions} />
+        </figure>
+        {props.footnoteText &&
+          props.footnoteText.map((footnote) => (
+            <Col className='footnote col-12' key={`footnote-${footnote}`}>
+              {footnote && <Text>{footnote}</Text>}
+            </Col>
+          ))}
+        {props.sourceList && props.sourceList.map(renderHighchartsSource)}
+      </Col>
+    </Row>
   )
 }
 
