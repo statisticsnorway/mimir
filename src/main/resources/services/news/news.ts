@@ -66,7 +66,7 @@ function getNews(mainSubjects: Array<Content<Page & DefaultPageConfig>>): Array<
         boolean: {
           mustNot: {
             hasValue: {
-              field: 'data.frontPagePriority',
+              field: 'data',
               values: ['hideArticleInRSS'],
             },
           },
