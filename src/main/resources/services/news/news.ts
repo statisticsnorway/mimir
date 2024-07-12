@@ -66,8 +66,8 @@ function getNews(mainSubjects: Array<Content<Page & DefaultPageConfig>>): Array<
         boolean: {
           mustNot: {
             hasValue: {
-              field: 'data',
-              values: ['hideArticleInRSS'],
+              field: 'data.hideArticleInRSS',
+              values: [true],
             },
           },
         },
