@@ -6,7 +6,7 @@ exports.responseProcessor = (req: XP.Request, res: XP.Response) => {
     environment = XP_RUN_MODE
   } else {
     // XP_RUN_MODE for UTV, TEST, and QA is 'PROD', so we fetch environment from app config here
-    environment = app.config && app.config['ssb.env'] ? app.config['ssb.env'].toUpperCase() : ''
+    environment = app.config?.['ssb.env'] ? app.config['ssb.env'].toUpperCase() : ''
   }
 
   if (environment) {
