@@ -26,7 +26,7 @@ export function getHeaderContent(language: Language): HeaderContent | undefined 
         key: 'logoAltText',
         locale: language.code,
       }),
-      environment: getEnvironmentString(),
+      environmentText: getEnvironmentString(),
       searchResultPageUrl: headerContent.data.searchResultPage
         ? pathFromStringOrContent(headerContent.data.searchResultPage)
         : undefined,
