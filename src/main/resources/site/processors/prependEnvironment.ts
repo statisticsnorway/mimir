@@ -6,13 +6,11 @@ exports.responseProcessor = (req: XP.Request, res: XP.Response) => {
   const titleRegex = /<title>(.*?)<\/title>/
 
   let environment: string = ''
-  const baseUrl = app.config && app.config['ssb.baseUrl']
   if (XP_RUN_MODE === 'DEV') {
     environment = XP_RUN_MODE
   } else {
-    // XP_RUN_MODE for UTV, TEST, and QA is 'PROD', so we fetch environment from baseUrl here
-    const envRegEx = /(utv|qa|test)/
-    environment = baseUrl.match(envRegEx) ? baseUrl.match(envRegEx)[0].toUpperCase() : ''
+    // XP_RUN_MODE for UTV, TEST, and QA is 'PROD', so we fetch environment from app config here
+    environment = app.config && app.config['ssb.env'] ? app.config['ssb.env'].toUpperCase() : ''
   }
 
   if (environment) {
