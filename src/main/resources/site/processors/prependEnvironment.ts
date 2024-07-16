@@ -5,7 +5,6 @@ exports.responseProcessor = (req: XP.Request, res: XP.Response) => {
   const headRegex = /<head>([\s\S]*?)<\/head>/
   const titleRegex = /<title>(.*?)<\/title>/
 
-  // TODO: XP_RUN_MODE only returns DEV or PROD. Consider using baseUrl?
   let environment: string = ''
   const baseUrl = app.config && app.config['ssb.baseUrl']
   if (XP_RUN_MODE === 'DEV') {
@@ -13,7 +12,7 @@ exports.responseProcessor = (req: XP.Request, res: XP.Response) => {
   } else {
     // XP_RUN_MODE for UTV, TEST, and QA is 'PROD', so we fetch environment from baseUrl here
     const envRegEx = /(utv|qa|test)/
-    environment = baseUrl.match(envRegEx).toUpperCase()
+    environment = baseUrl.match(envRegEx) ? baseUrl.match(envRegEx)[0].toUpperCase() : ''
   }
 
   if (environment) {
