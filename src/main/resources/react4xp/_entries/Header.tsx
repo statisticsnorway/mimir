@@ -147,6 +147,7 @@ function Header(props: HeaderContent) {
       <div className='misc top-row flex-row justify-space-between flex-wrap'>
         <a id='header-logo' className='plainLink' href={logoUrl}>
           <img src={logoSrc} alt={logoAltText ? logoAltText : ' '} className='logo' />
+          {props.environment ? <span className='environment-logo-overlay'>[{props.environment}]</span> : null}
         </a>
 
         <button

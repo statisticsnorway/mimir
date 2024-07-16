@@ -5,6 +5,7 @@ export interface HeaderContent {
   logoUrl: string
   logoSrc: string
   logoAltText: string
+  environment: string
   searchResultPageUrl?: string
   searchResult?: string
   searchText: string

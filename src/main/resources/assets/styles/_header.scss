@@ -110,6 +110,11 @@ header.ssb-header-wrapper {
         height: 36px;
       }
     }
+
+    .environment-logo-overlay {
+      font-weight: bold;
+      color: $ssb-green-3;
+    }
   }
 
   .hamburger {
