@@ -90,12 +90,26 @@
     .misc {
       display: flex;
       width: 100%;
-      align-items: baseline;
-    }
+      align-items: center;
 
-    .logo{
-      width: 184px;
-      height: 36px;
+      .logo-wrapper {
+        position: relative;
+        margin-bottom: 0.6rem;
+
+        .logo{
+          width: 184px;
+          height: 36px;
+        }
+
+        .environment-logo-overlay {
+          position: absolute;
+          right: 0;
+          bottom: 0;
+
+          font-weight: bold;
+          color: $ssb-red-3;
+        }
+      }
     }
   }
 

@@ -77,6 +77,7 @@ function renderPart(req) {
 
   const model = {
     ...assets,
+    environmentText: environmentString ? `[${environmentString}]` : '',
     pageContributions,
     username: user.displayName,
     linkToGuide: userHasAdmin
