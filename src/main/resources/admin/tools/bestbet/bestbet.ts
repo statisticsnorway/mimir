@@ -116,6 +116,7 @@ function renderPart(req: XP.Request): XP.Response {
     }
   )
 
+  const environmentString = getEnvironmentString()
   return {
     body: render(view, {
       ...getAssets(),
