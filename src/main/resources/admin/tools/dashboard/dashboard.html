@@ -22,7 +22,10 @@
               <a th:href="${linkToGuide}">Veiledning</a>
             </nav>
             <div class="misc">
-              <img data-th-src="${logoUrl}" class="logo" alt=""></img>
+              <div class="logo-container">
+                <img data-th-src="${logoUrl}" class="logo" alt="" />
+                <span data-th-if="${environmentText}" data-th-utext="${environmentText}" class="environment-logo-overlay" />
+              </div>
               <h1>Dashboard</h1>
             </div>
           </header>
