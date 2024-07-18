@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { Tag, NestedAccordion, ExpansionBox } from '@statisticsnorway/ssb-component-library'
+import { Tag, NestedAccordion, ExpansionBox, Title } from '@statisticsnorway/ssb-component-library'
+import { Info } from 'react-feather'
 
 import { sanitize } from '../../../lib/ssb/utils/htmlUtils'
 import { type AccordionData } from '../../../lib/types/partTypes/accordion'
@@ -55,7 +56,12 @@ function StatisticDescription(props: StatisticDescriptionProps) {
 
   return (
     <div className='row'>
-      <h2 className='title-wrapper col-12'>{label}</h2>
+      <div className='title-wrapper'>
+        <Title size={2}>{label}</Title>
+        <div className='icon-wrapper'>
+          <Info size={52} />
+        </div>
+      </div>
       {renderIngress()}
       {lastUpdated && (
         <p>

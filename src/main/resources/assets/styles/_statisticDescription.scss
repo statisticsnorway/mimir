@@ -4,6 +4,20 @@
   margin-top: 100px;
   border-radius: 32px;
 
+  .title-wrapper {
+    display: flex;
+    h2 {
+      margin-bottom: 30px;
+    }
+    .icon-wrapper {
+      margin-left: auto;
+      img {
+        width: 50px;
+        height: 50px;
+      }
+    }
+  }
+
   .om-statistikken-tags {
     display: flex;
     flex-direction: row;
@@ -20,8 +34,8 @@
   }
 
   .selected-category {
-    .ssb-fact-box {
-      border-radius: 8px;
+    .ssb-expansion-box.sneak-peek .content.closed {
+      max-height: 8rem;
     }
   }
 }
