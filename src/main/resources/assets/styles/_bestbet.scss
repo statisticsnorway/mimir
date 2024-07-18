@@ -8,8 +8,21 @@
         padding: 0;
         margin-bottom: $spacer * 3;
 
-        .logo {
-            max-width: 184px;
+        .logo-container {
+          position: relative;
+
+          .logo {
+            width: 184px;
+          }
+
+          .environment-logo-overlay {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+
+            font-weight: bold;
+            color: $ssb-red-3;
+          }
         }
 
         h1 {
@@ -34,7 +47,7 @@
 
         .ssb-dropdown, .ssb-input {
             margin: 0;
-            
+
             & > * {
                 margin: 0;
                 width: 100%;

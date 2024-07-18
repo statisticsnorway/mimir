@@ -91,6 +91,7 @@ function renderPart(req: XP.Request): XP.Response {
     ...contentTypesList,
   ]
 
+  const environmentString = getEnvironmentString()
   const bestBetComponent = r4XpRender(
     'Bestbet',
     {
@@ -107,6 +108,7 @@ function renderPart(req: XP.Request): XP.Response {
       contentTypes: contentTypesDropdownItems,
       mainSubjects: mainSubjectDropdownItems,
       mainSubjectsEnglish: englishMainSubjectDropdownItems,
+      environmentText: environmentString,
     },
     req,
     {
@@ -114,7 +116,6 @@ function renderPart(req: XP.Request): XP.Response {
     }
   )
 
-  const environmentString = getEnvironmentString()
   return {
     body: render(view, {
       ...getAssets(),
