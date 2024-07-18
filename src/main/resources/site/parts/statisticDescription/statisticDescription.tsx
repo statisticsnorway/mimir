@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Tag, FactBox, NestedAccordion } from '@statisticsnorway/ssb-component-library'
+import { Tag, NestedAccordion, ExpansionBox } from '@statisticsnorway/ssb-component-library'
 
 import { sanitize } from '../../../lib/ssb/utils/htmlUtils'
 import { type AccordionData } from '../../../lib/types/partTypes/accordion'
@@ -26,7 +26,7 @@ function StatisticDescription(props: StatisticDescriptionProps) {
 
   function renderNestedAccordions(items: AccordionData['items']) {
     return items!.map((item, i) => (
-      <NestedAccordion key={i} header={item.title}>
+      <NestedAccordion key={i} header={item.title} openByDefault={i === 0}>
         {item.body && (
           <div
             dangerouslySetInnerHTML={{
@@ -42,7 +42,11 @@ function StatisticDescription(props: StatisticDescriptionProps) {
     if (selectedCategory) {
       return (
         <div className='selected-category col-lg-12'>
-          <FactBox header={selectedCategory.open} text={renderNestedAccordions(selectedCategory.items)} openByDefault />
+          <ExpansionBox
+            header={selectedCategory.open}
+            text={renderNestedAccordions(selectedCategory.items)}
+            sneakPeek
+          />
         </div>
       )
     }
