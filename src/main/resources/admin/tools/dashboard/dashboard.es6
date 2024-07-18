@@ -1,7 +1,7 @@
 import { assetUrl, serviceUrl } from '/lib/xp/portal'
 import { getUser, hasRole } from '/lib/xp/auth'
 import { getToolUrl } from '/lib/xp/admin'
-import { parseContributions } from '/lib/ssb/utils/utils'
+import { parseContributions, getEnvironmentString } from '/lib/ssb/utils/utils'
 
 import { render } from '/lib/thymeleaf'
 import { renderError } from '/lib/ssb/error/error'
@@ -53,6 +53,7 @@ function renderPart(req) {
     statisticRegister: userHasAdmin,
   }
 
+  const environmentString = getEnvironmentString()
   const dashboardDataset = new React4xp('DashboardEntry')
     .setProps({
       user,
@@ -63,6 +64,7 @@ function renderPart(req) {
       internalStatbankUrl: `${INTERNAL_STATBANK_URL}`,
       statregRapportUrl: `${STATREG_RAPPORT_URL}`,
       toggleDebugging: isEnabled('dashboard-redux-logging-debugging', true, 'ssb'),
+      title: `${environmentString ? `${environmentString}: ` : ''}SSB Dashboard`,
     })
     .setId('dashboard')
 
