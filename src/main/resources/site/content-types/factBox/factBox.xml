@@ -4,20 +4,42 @@
     <super-type>base:structured</super-type>
     <description></description>
     <form>
-        <input type="HtmlArea" name="text">
-            <label>Tekst</label>
-            <occurrences minimum="1" maximum="1"/>
-            <config>
-                <exclude>*</exclude>
-                <include> 
-                    Bold Italic Underline | 
-                    JustifyBlock JustifyLeft JustifyCenter JustifyRight | 
-                    BulletedList NumberedList Outdent Indent | 
-                    Link Unlink | 
-                    PasteModeSwitcher | 
-                    Strike Subscript Superscript
-                </include>
-            </config>
-        </input>
+        <field-set>
+         <label>Tekst</label>
+         <items>
+            <input type="HtmlArea" name="text">
+                <label>Tekst</label>
+                <occurrences minimum="1" maximum="1"/>
+                <config>
+                    <exclude>*</exclude>
+                    <include> 
+                        Bold Italic Underline | 
+                        JustifyBlock JustifyLeft JustifyCenter JustifyRight | 
+                        BulletedList NumberedList Outdent Indent | 
+                        Link Unlink | 
+                        PasteModeSwitcher | 
+                        Strike Subscript Superscript
+                        <allowHeadings>h3 h4 h5</allowHeadings>
+                    </include>
+                </config>
+            </input>
+         </items>
+      </field-set>
+      <field-set>
+         <label>Visning</label>
+         <items>
+                <input name="icon" type="ImageSelector">
+                    <label>Ikon</label>
+                    <occurrences minimum="0" maximum="1" />
+                    <config>
+                        <allowPath>${site}/</allowPath>
+                    </config>
+                </input>
+                <input name="sneakPeek" type="Checkbox">
+                    <label>Vis en sniktitt av innhold</label>
+                    <occurrences minimum="0" maximum="1" />
+                </input>
+         </items>
+      </field-set>
     </form>
 </content-type>

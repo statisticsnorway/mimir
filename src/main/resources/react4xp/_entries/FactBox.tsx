@@ -1,10 +1,11 @@
 import React from 'react'
-import { FactBox as FactBoxComponent } from '@statisticsnorway/ssb-component-library'
+import { ExpansionBox as FactBoxComponent } from '@statisticsnorway/ssb-component-library'
 import { sanitize } from '../../lib/ssb/utils/htmlUtils'
 
 interface FactBoxProps {
   header?: string
   text: string
+  showSneakPeek: boolean
 }
 
 const FactBox = (props: FactBoxProps) => {
@@ -16,7 +17,7 @@ const FactBox = (props: FactBoxProps) => {
     ></div>
   )
 
-  return <FactBoxComponent header={props.header} text={createText(props.text)}></FactBoxComponent>
+  return <FactBoxComponent header={props.header} text={createText(props.text)} sneakPeek={props.showSneakPeek} />
 }
 
 export default FactBox
