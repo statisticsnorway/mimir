@@ -2,7 +2,7 @@ import { get, Content } from '/lib/xp/content'
 import { assetUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 import { createMenuTree, parseTopLinks } from '/lib/ssb/parts/menu'
-import { pathFromStringOrContent } from '/lib/ssb/utils/utils'
+import { getEnvironmentString, pathFromStringOrContent } from '/lib/ssb/utils/utils'
 import { type Language } from '/lib/types/language'
 import { type HeaderContent } from '/lib/types/header'
 import { type Header } from '/site/content-types'
@@ -26,6 +26,7 @@ export function getHeaderContent(language: Language): HeaderContent | undefined 
         key: 'logoAltText',
         locale: language.code,
       }),
+      environmentText: getEnvironmentString(),
       searchResultPageUrl: headerContent.data.searchResultPage
         ? pathFromStringOrContent(headerContent.data.searchResultPage)
         : undefined,
