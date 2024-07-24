@@ -8,7 +8,6 @@ import { getAssociatedStatisticsLinks, getAssociatedArticleArchiveLinks } from '
 import * as util from '/lib/util'
 import { getPhrases } from '/lib/ssb/utils/language'
 import { renderError } from '/lib/ssb/error/error'
-import { isEnabled } from '/lib/featureToggle'
 import { type ArticleProps } from '/lib/types/partTypes/article'
 import { type Article } from '/site/content-types'
 
@@ -76,7 +75,7 @@ function renderPart(req: XP.Request) {
     serialNumber: page.data.serialNumber,
     associatedStatistics: getAssociatedStatisticsLinks(associatedStatisticsConfig),
     associatedArticleArchives: getAssociatedArticleArchiveLinks(associatedArticleArchivesConfig),
-    isbn: isEnabled('article-isbn', true) ? page.data.isbnNumber : undefined,
+    isbn: page.data.isbnNumber,
   }
 
   return render('site/parts/article/article', props, req, {
