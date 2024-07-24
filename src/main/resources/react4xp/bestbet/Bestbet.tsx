@@ -10,6 +10,7 @@ export const BestBetContext = createContext()
 
 interface BestbetProps {
   logoUrl?: string
+  environmentText?: string
   bestBetListServiceUrl?: string
   contentSearchServiceUrl?: string
   contentStudioBaseUrl?: string
@@ -397,7 +398,12 @@ function Bestbet(props: BestbetProps) {
       <Container fluid>
         <Row className='bestbet-header'>
           <Col className='flex-row align-items-center'>
-            <img src={props.logoUrl} className='logo' />
+            <div className='logo-container'>
+              <img src={props.logoUrl} className='logo' />
+              {props.environmentText ? (
+                <span className='environment-logo-overlay'>[{props.environmentText}]</span>
+              ) : null}
+            </div>
             <Title size={1}>Best bet søk</Title>
           </Col>
         </Row>
