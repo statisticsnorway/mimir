@@ -57,6 +57,16 @@ function getNews(mainSubjects: Array<Content<Page & DefaultPageConfig>>): Array<
       count: 1000,
       contentTypes: [`${app.name}:article`],
       query: `_path LIKE "/content${mainSubject._path}/*" AND range("publish.from", instant("${from}"), instant("${to}"))`,
+      filters: {
+        boolean: {
+          mustNot: {
+            hasValue: {
+              field: 'data.hideArticleInRSS',
+              values: [true],
+            },
+          },
+        },
+      },
     }).hits as unknown as Array<Content<Article>>
     articles.forEach((article) => {
       const pubDate: string | undefined = article.publish?.from
