@@ -33,6 +33,7 @@ import {
 import { getHeaderContent } from '/lib/ssb/parts/header'
 import { fromMenuCache } from '/lib/ssb/cache/cache'
 
+import { isEnabled } from '/lib/featureToggle'
 import { ensureArray } from '/lib/ssb/utils/arrayUtils'
 import { type SubjectItem } from '/lib/types/subject'
 import { type MunicipalityWithCounty, type RequestWithCode } from '/lib/types/municipalities'
@@ -136,27 +137,30 @@ export function get(req: XP.Request): XP.Response {
   }
   const language: Language = getLanguage(page) as Language
   const menuCacheLanguage: string = language.code === 'en' ? 'en' : 'nb'
+  const hideHeader = isEnabled('hide-header-in-qa', false, 'ssb') ? pageConfig?.hideHeader : false
+  let header
+  if (!hideHeader) {
+    const headerContent: MenuContent | unknown = fromMenuCache(req, `header_${menuCacheLanguage}`, () => {
+      return getHeaderContent(language)
+    })
+    header = r4xpRender(
+      'Header',
+      {
+        ...(headerContent as object),
+        language: language,
+        searchResult: req.params.sok,
+      },
+      req,
+      {
+        id: 'header',
+        body: '<div id="header"></div>',
+        pageContributions,
+      }
+    )
 
-  const headerContent: MenuContent | unknown = fromMenuCache(req, `header_${menuCacheLanguage}`, () => {
-    return getHeaderContent(language)
-  })
-  const header = r4xpRender(
-    'Header',
-    {
-      ...(headerContent as object),
-      language: language,
-      searchResult: req.params.sok,
-    },
-    req,
-    {
-      id: 'header',
-      body: '<div id="header"></div>',
-      pageContributions,
+    if (header) {
+      pageContributions = header.pageContributions
     }
-  )
-
-  if (header) {
-    pageContributions = header.pageContributions
   }
 
   const footerContent: FooterContent | unknown = fromMenuCache(req, `footer_${menuCacheLanguage}`, () => {
@@ -259,6 +263,7 @@ export function get(req: XP.Request): XP.Response {
     jsonLd,
     pageMap,
     breadcrumbsReactId: breadcrumbId,
+    hideHeader,
     hideBreadcrumb,
     tableView: page.type === 'mimir:table',
   }
@@ -721,6 +726,7 @@ interface DefaultModel {
   headerBody: string | undefined
   footerBody: string | undefined
   breadcrumbsReactId: string | undefined
+  hideHeader: boolean
   hideBreadcrumb: boolean
   tableView: boolean
 }
