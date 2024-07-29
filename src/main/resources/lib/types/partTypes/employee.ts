@@ -24,6 +24,7 @@ export interface EmployeeProps {
   pressPicturesDescrPhrase: string
   pressPictureLabelPhrase: string
   imagePhrase: string
+  pressImageAltText?: string
 }
 
 export interface Project {
