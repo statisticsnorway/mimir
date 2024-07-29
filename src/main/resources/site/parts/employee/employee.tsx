@@ -91,7 +91,7 @@ const Employee = (props: EmployeeProps) => {
       <div className='employee-head col-12'>
         {profileImages.length != 0 ? (
           <div className='employee-image'>
-            <img alt={pressImageAltText ?? ''} src={props.profileImages[0]} aria-hidden='true' />
+            <img alt={pressImageAltText ?? ''} src={props.profileImages[0]} />
           </div>
         ) : null}
         {profileImages.length != 0 ? (
