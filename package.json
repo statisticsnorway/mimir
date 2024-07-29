@@ -181,5 +181,9 @@
       "react": "$react",
       "react-dom": "$react-dom"
     }
+  },
+  "resolutions": {
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
   }
 }
