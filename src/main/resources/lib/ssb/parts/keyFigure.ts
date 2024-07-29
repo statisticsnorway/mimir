@@ -232,7 +232,7 @@ function getDataWithFilterStatbankApi(
       if (municipalData && municipalData.value !== null) {
         // add data to key figure view
         keyFigureViewData.number = parseValueZeroSafe(municipalData.value)
-        keyFigureViewData.time = localizeTimePeriod(municipalData.label)
+        keyFigureViewData.time = localizeTimePeriod(municipalData.label as string)
       }
     }
   }
