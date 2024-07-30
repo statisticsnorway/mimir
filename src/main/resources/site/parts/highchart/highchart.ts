@@ -115,7 +115,6 @@ function renderPart(req: XP.Request, highchartIds: Array<string>): XP.Response {
         highcharts,
         downloadText,
         sourceText,
-        showDataTableEnabled: isEnabled('highchart-show-datatable', false, 'ssb'),
         showAsGraphText,
         showAsTableText,
       }),

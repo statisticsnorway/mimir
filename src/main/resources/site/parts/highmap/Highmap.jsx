@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import PropTypes from 'prop-types'
@@ -86,7 +86,7 @@ function generateSeries(tableData, mapDataSecondColumn, color) {
       // dummy series to show outline of all areas
       allAreas: true,
       showInLegend: false,
-      opacity: 0.3,
+      opacity: 1,
     },
     ...Object.entries(dataSeries).map(([name, values]) => {
       return {
@@ -277,24 +277,22 @@ function Highmap(props) {
   }
 
   return (
-    <section className='xp-part highchart-wrapper'>
-      <Row>
-        <Col className='col-12'>
-          <figure className='highcharts-figure mb-0 hide-title'>
-            {mapOptions.title?.text && <figcaption className='figure-title'>{mapOptions.title.text}</figcaption>}
-            {mapOptions.subtitle?.text && <p className='figure-subtitle'>{mapOptions.subtitle.text}</p>}
-            <HighchartsReact highcharts={Highcharts} constructorType={'mapChart'} options={mapOptions} />
-          </figure>
-          {props.footnoteText &&
-            props.footnoteText.map((footnote) => (
-              <Col className='footnote col-12' key={`footnote-${footnote}`}>
-                {footnote && <Text>{footnote}</Text>}
-              </Col>
-            ))}
-          {props.sourceList && props.sourceList.map(renderHighchartsSource)}
-        </Col>
-      </Row>
-    </section>
+    <Row>
+      <Col className='col-12'>
+        <figure className='highcharts-figure mb-0 hide-title'>
+          {mapOptions.title?.text && <figcaption className='figure-title'>{mapOptions.title.text}</figcaption>}
+          {mapOptions.subtitle?.text && <p className='figure-subtitle'>{mapOptions.subtitle.text}</p>}
+          <HighchartsReact highcharts={Highcharts} constructorType={'mapChart'} options={mapOptions} />
+        </figure>
+        {props.footnoteText &&
+          props.footnoteText.map((footnote) => (
+            <Col className='footnote col-12' key={`footnote-${footnote}`}>
+              {footnote && <Text>{footnote}</Text>}
+            </Col>
+          ))}
+        {props.sourceList && props.sourceList.map(renderHighchartsSource)}
+      </Col>
+    </Row>
   )
 }
 

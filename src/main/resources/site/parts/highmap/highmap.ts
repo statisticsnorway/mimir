@@ -116,7 +116,9 @@ function renderPart(req: XP.Request, highmapId: string | undefined): XP.Response
     // we sneaky swap mode since we want a render of highmap in edit mode
     // Works good for highmap macro, not so much when part
     if (req.mode === 'edit') req.mode = 'preview'
-    return render('site/parts/highmap/Highmap', props, req)
+    return render('site/parts/highmap/Highmap', props, req, {
+      body: '<section class="xp-part highchart-wrapper"></section>',
+    })
   }
   return {
     body: '',
@@ -131,8 +133,6 @@ function getTableData(highmap: Content<Highmap>): Array<RowValue[]> {
     } else if (highmap.data.dataSource?._selected === DataSourceType.TBPROCESSOR) {
       return getTBMLData(highmap)
     }
-  } else if (highmap.data.htmlTable) {
-    return getHtmlTableData(highmap.data.htmlTable)
   }
   return []
 }

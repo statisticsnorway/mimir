@@ -96,10 +96,12 @@ header.ssb-header-wrapper {
 }
 
   #header-logo {
-      &:focus {
-        outline: $ssb-purple-3 solid 2px;
-        outline-offset: 2px;
-      }
+    position: relative;
+
+    &:focus {
+      outline: $ssb-purple-3 solid 2px;
+      outline-offset: 2px;
+    }
 
     .logo {
       width: 248px;
@@ -108,6 +110,19 @@ header.ssb-header-wrapper {
       @include media-breakpoint-down(lg) {
         width: 197px;
         height: 36px;
+      }
+    }
+
+    .environment-logo-overlay {
+      position: absolute;
+      right: 0;
+      bottom: .2rem;
+
+      font-weight: bold;
+      color: $ssb-red-3;
+
+      @include media-breakpoint-down(md) {
+        bottom: 0;
       }
     }
   }
