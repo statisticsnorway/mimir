@@ -56,4 +56,5 @@ export interface KeyFigureChanges {
   changeDirection: 'up' | 'down' | 'same'
   changeText?: string
   changePeriod: string
+  srChangeText?: string
 }
