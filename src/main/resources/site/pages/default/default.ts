@@ -37,7 +37,6 @@ import { isEnabled } from '/lib/featureToggle'
 import { ensureArray } from '/lib/ssb/utils/arrayUtils'
 import { type SubjectItem } from '/lib/types/subject'
 import { type MunicipalityWithCounty, type RequestWithCode } from '/lib/types/municipalities'
-import { isEnabled } from '/lib/featureToggle'
 import { type Default as DefaultPageConfig } from '/site/pages/default'
 import { type Page, type Statistics } from '/site/content-types'
 
