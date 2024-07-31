@@ -63,7 +63,7 @@ function ContactForm(props: ContactFormProps) {
     setLoading(true)
     grecaptcha.enterprise.ready(function () {
       grecaptcha.enterprise
-        .execute(recaptchaSiteKey, {
+        .execute(recaptchaSiteKey as string, {
           action: 'submitContactForm',
         })
         .then(function (token: string) {
@@ -86,9 +86,6 @@ function ContactForm(props: ContactFormProps) {
             .finally(() => {
               setLoading(false)
             })
-        })
-        .catch((e) => {
-          console.trace(e)
         })
     })
   }
@@ -219,6 +216,7 @@ function ContactForm(props: ContactFormProps) {
         </Row>
       )
     }
+    return
   }
 
   function renderEmailSentError() {
@@ -233,6 +231,7 @@ function ContactForm(props: ContactFormProps) {
         </Row>
       )
     }
+    return
   }
 
   function renderForm() {
@@ -329,6 +328,7 @@ function ContactForm(props: ContactFormProps) {
         </Row>
       )
     }
+    return
   }
 
   function renderContactForm() {
@@ -340,7 +340,6 @@ function ContactForm(props: ContactFormProps) {
       </section>
     )
   }
-
   return renderContactForm()
 }
 
