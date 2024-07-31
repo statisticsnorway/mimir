@@ -13,10 +13,14 @@ interface ContactFormProps {
 
 function ContactForm(props: ContactFormProps) {
   const { contactFormServiceUrl, recaptchaSiteKey } = props
+  const DEFAULT_RECEIVER_ITEM = {
+    title: props.phrases.contactFormReceiverGenerell,
+    id: 'generell',
+  }
   const [receiver, setReceiver] = useState({
     error: false,
     errorMsg: props.phrases.contactFormValidateReveicer,
-    value: '',
+    value: DEFAULT_RECEIVER_ITEM,
   })
   const [name, setName] = useState({
     error: false,
@@ -234,10 +238,7 @@ function ContactForm(props: ContactFormProps) {
   function renderForm() {
     if (!emailSent) {
       const items = [
-        {
-          title: props.phrases.contactFormReceiverGenerell,
-          id: 'generell',
-        },
+        DEFAULT_RECEIVER_ITEM,
         {
           title: props.phrases.contactFormReceiverStatistikk,
           id: 'statistikk',
@@ -266,11 +267,11 @@ function ContactForm(props: ContactFormProps) {
                       className='receiver'
                       id='receiver'
                       onSelect={(value: object) => {
+                        console.log(`value in onSelect: ${JSON.stringify(value)}`)
                         onChange('receiver', value)
                       }}
                       header={props.phrases.contactFormChooseReceiver}
-                      placeholder={''}
-                      selectedItem={items[0]}
+                      selectedItem={receiver.value}
                       error={receiver.error}
                       errorMessage={receiver.errorMsg}
                       items={items}
