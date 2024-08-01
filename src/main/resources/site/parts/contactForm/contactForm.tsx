@@ -266,7 +266,6 @@ function ContactForm(props: ContactFormProps) {
                       className='receiver'
                       id='receiver'
                       onSelect={(value: object) => {
-                        console.log(`value in onSelect: ${JSON.stringify(value)}`)
                         onChange('receiver', value)
                       }}
                       header={props.phrases.contactFormChooseReceiver}
