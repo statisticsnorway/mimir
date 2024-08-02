@@ -21,25 +21,25 @@ if (!String.prototype.includes) {
 
 if (!String.prototype.padStart) {
   // eslint-disable-next-line no-extend-native
-  String.prototype.padStart = function(targetLength, padString) {
-    targetLength = Math.floor(targetLength) || 0;
-    if(targetLength < this.length) return String(this);
+  String.prototype.padStart = function (targetLength, padString) {
+    targetLength = Math.floor(targetLength) || 0
+    if (targetLength < this.length) return String(this)
 
-    padString = padString ? String(padString) : " ";
+    padString = padString ? String(padString) : ' '
 
-    var pad = "";
-    var len = targetLength - this.length;
-    var i = 0;
-    while(pad.length < len) {
-        if(!padString[i]) {
-            i = 0;
-        }
-        pad += padString[i];
-        i++;
+    var pad = ''
+    var len = targetLength - this.length
+    var i = 0
+    while (pad.length < len) {
+      if (!padString[i]) {
+        i = 0
+      }
+      pad += padString[i]
+      i++
     }
 
-    return pad + String(this).slice(0);
-  };
+    return pad + String(this).slice(0)
+  }
 }
 
 /** Array ************************************************************/
@@ -202,28 +202,45 @@ if (!Array.prototype.findIndex) {
 // Object::assign
 
 if (!Object.assign) {
-  Object.assign = function(target, varArgs) { // .length of function is 2
-    if (target == null) { // TypeError if undefined or null
-      throw new TypeError('Cannot convert undefined or null to object');
+  Object.assign = function (target, varArgs) {
+    // .length of function is 2
+    if (target == null) {
+      // TypeError if undefined or null
+      throw new TypeError('Cannot convert undefined or null to object')
     }
 
-    var to = Object(target);
+    var to = Object(target)
 
     for (var index = 1; index < arguments.length; index++) {
-      var nextSource = arguments[index];
+      var nextSource = arguments[index]
 
-      if (nextSource != null) { // Skip over if undefined or null
+      if (nextSource != null) {
+        // Skip over if undefined or null
         for (var nextKey in nextSource) {
           // Avoid bugs when hasOwnProperty is shadowed
           if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
-            to[nextKey] = nextSource[nextKey];
+            to[nextKey] = nextSource[nextKey]
           }
         }
       }
     }
-    return to;
-  };
+    return to
+  }
 }
+
+// Object.entries
+
+// https://stackoverflow.com/a/47978439
+
+if (!Object.entries)
+  Object.entries = function (obj) {
+    var ownProps = Object.keys(obj),
+      i = ownProps.length,
+      resArray = new Array(i) // preallocate the Array
+
+    while (i--) resArray[i] = [ownProps[i], obj[ownProps[i]]]
+    return resArray
+  }
 
 /** Math **************************************************************/
 
@@ -231,6 +248,6 @@ if (!Object.assign) {
 
 if (!Math.trunc) {
   Math.trunc = function trunc(x) {
-    return x < 0 ? Math.ceil(x) : Math.floor(x);
-  };
+    return x < 0 ? Math.ceil(x) : Math.floor(x)
+  }
 }
