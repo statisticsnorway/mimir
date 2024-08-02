@@ -240,8 +240,8 @@ function CustomTable({
   }
 
   function createHeaderCell(row: TableCellUniform) {
-    return Object.keys(row)
-      .map((keyName: 'th' | 'td') => {
+    return (Object.keys(row) as ('th' | 'td')[])
+      .map((keyName) => {
         const value = row[keyName]
         if (keyName === 'th') {
           return createHeadTh(value)
@@ -322,8 +322,8 @@ function CustomTable({
   }
 
   function createBodyTh(row: TableCellUniform) {
-    return Object.keys(row)
-      .map((key: 'th' | 'td') => {
+    return (Object.keys(row) as ('th' | 'td')[])
+      .map((key) => {
         const value = row[key]
         if (key === 'th') {
           return value.map((cellValue, i) => {
@@ -356,8 +356,8 @@ function CustomTable({
   }
 
   function createBodyTd(row: TableCellUniform) {
-    return Object.keys(row)
-      .map((keyName: 'th' | 'td') => {
+    return (Object.keys(row) as ('th' | 'td')[])
+      .map((keyName) => {
         const value = row[keyName]
         if (keyName === 'td') {
           return value.map((cellValue, i) => {
