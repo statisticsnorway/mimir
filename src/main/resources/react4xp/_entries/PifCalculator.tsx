@@ -39,7 +39,7 @@ function PifCalculator(props: PifCalculatorProps) {
     value: defaultMonthValue,
   })
   const validMinYear = getStartYearRelevantDataset()
-  const validMinYearPhrase = pifValidateYear.replaceAll('{0}', validMinYear)
+  const validMinYearPhrase = pifValidateYear.replaceAll('{0}', validMinYear.toString())
   const validYearErrorMsg = `${validMinYearPhrase} ${validMaxYear}`
   const [startYear, setStartYear] = useState({
     error: false,
@@ -174,7 +174,12 @@ function PifCalculator(props: PifCalculatorProps) {
     const testStartYear = startYearValue.match(yearRegexp)
     const isStartYearValid = testStartYear && testStartYear.length === 1
     const intStartYear = parseInt(startYearValue)
-    return !(!isStartYearValid || isNaN(intStartYear) || intStartYear < validMinYear || intStartYear > validMaxYear)
+    return !(
+      !isStartYearValid ||
+      isNaN(intStartYear) ||
+      intStartYear < validMinYear ||
+      intStartYear > (validMaxYear as number)
+    )
   }
 
   function isEndYearValid(value?: string) {
@@ -182,7 +187,7 @@ function PifCalculator(props: PifCalculatorProps) {
     const testEndYear = endYearValue.match(yearRegexp)
     const isEndYearValid = testEndYear && testEndYear.length === 1
     const intEndYear = parseInt(endYearValue)
-    return !(!isEndYearValid || isNaN(intEndYear) || intEndYear < validMinYear || intEndYear > validMaxYear)
+    return !(!isEndYearValid || isNaN(intEndYear) || intEndYear < validMinYear || intEndYear > (validMaxYear as number))
   }
 
   function isStartMonthValid(value?: string) {
@@ -370,7 +375,7 @@ function PifCalculator(props: PifCalculatorProps) {
         }}
         selectedItem={productGroup.value}
         // Dataset not available for pifProductOil (SITC4) for home market (2)
-        items={scopeCode.value === '2' ? props.productGroups.toSpliced(5, 1) : props.productGroups}
+        items={scopeCode.value === '2' ? props.productGroups.splice(5, 1) : props.productGroups}
         ariaLabel={props.phrases.pifProductTypeHeader}
       />
     )
@@ -444,18 +449,21 @@ function PifCalculator(props: PifCalculatorProps) {
 
   function calculatorResult() {
     const priceChangeLabel = change?.charAt(0) === '-' ? props.phrases.priceDecrease : props.phrases.priceIncrease
-    const changeValue = change?.charAt(0) === '-' ? change.replace('-', '') : change
+    const changeValue = change?.charAt(0) === '-' ? change.replace('-', '') : (change ?? '')
+    const endValueText = endValue?.toString() ?? ''
+    const startIndexText = startIndex?.toString() ?? ''
+    const endIndexText = endIndex?.toString() ?? ''
     const pifResultForScreenreader = props.phrases.pifResultForScreenreader
-      .replace('{0}', language === 'en' ? endValue : endValue?.replace('.', ','))
+      .replace('{0}', language === 'en' ? endValueText : endValueText.replace('.', ','))
       .replace('{1}', priceChangeLabel)
-      .replace('{2}', language === 'en' ? changeValue : changeValue?.replace('.', ','))
-      .replaceAll('{3}', startMonth.value.id !== '90' ? startPeriod : startYear.value)
-      .replaceAll('{4}', endMonth.value.id !== '90' ? endPeriod : endYear.value)
-      .replace('{5}', language === 'en' ? startIndex : startIndex?.replace('.', ','))
-      .replace('{6}', language === 'en' ? endIndex : endIndex?.replace('.', ','))
+      .replace('{2}', language === 'en' ? changeValue : changeValue.replace('.', ','))
+      .replaceAll('{3}', startMonth.value.id !== '90' ? (startPeriod ?? '') : startYear.value)
+      .replaceAll('{4}', endMonth.value.id !== '90' ? (endPeriod ?? '') : endYear.value)
+      .replace('{5}', language === 'en' ? startIndexText : startIndexText.replace('.', ','))
+      .replace('{6}', language === 'en' ? endIndexText : endIndexText.replace('.', ','))
 
     return (
-      <Container className='calculator-result' ref={scrollAnchor} tabIndex='0'>
+      <Container className='calculator-result' ref={scrollAnchor} tabIndex={0}>
         <div aria-atomic='true'>
           <span className='sr-only'>{pifResultForScreenreader}</span>
         </div>

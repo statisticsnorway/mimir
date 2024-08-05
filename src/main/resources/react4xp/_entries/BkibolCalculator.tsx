@@ -554,15 +554,18 @@ function BkibolCalculator(props: BkibolCalculatorProps) {
 
   function calculatorResult() {
     const priceChangeLabel = change?.charAt(0) === '-' ? props.phrases.priceDecrease : props.phrases.priceIncrease
-    const changeValue = change?.charAt(0) === '-' ? change?.replaceAll('-', '') : change
+    const changeValue = change?.charAt(0) === '-' ? change?.replaceAll('-', '') : (change ?? '')
+    const endValueText = endValue?.toString() ?? ''
+    const startIndexText = startIndex?.toString() ?? ''
+    const endIndexText = endIndex?.toString() ?? ''
     const resultScreenReaderText = props.phrases.bkibolResultScreenReader
-      .replaceAll('{0}', language === 'en' ? endValue : endValue.replaceAll('.', ','))
+      .replaceAll('{0}', language === 'en' ? endValueText : endValueText.replaceAll('.', ','))
       .replaceAll('{1}', priceChangeLabel)
       .replaceAll('{2}', language === 'en' ? changeValue : changeValue.replaceAll('.', ','))
-      .replaceAll('{3}', startPeriod)
-      .replaceAll('{4}', endPeriod)
-      .replaceAll('{5}', language === 'en' ? startIndex : startIndex.toString().replaceAll('.', ','))
-      .replaceAll('{6}', language === 'en' ? endIndex : endIndex.toString().replaceAll('.', ','))
+      .replaceAll('{3}', startPeriod as string)
+      .replaceAll('{4}', endPeriod as string)
+      .replaceAll('{5}', language === 'en' ? startIndexText : startIndexText.replaceAll('.', ','))
+      .replaceAll('{6}', language === 'en' ? endIndexText : endIndexText.replaceAll('.', ','))
 
     return (
       <Container className='calculator-result' ref={scrollAnchor}>

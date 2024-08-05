@@ -352,13 +352,14 @@ function KpiCalculator(props: KpiCalculatorProps) {
 
   function calculatorResult() {
     const priceChangeLabel = change?.charAt(0) === '-' ? props.phrases.priceDecrease : props.phrases.priceIncrease
-    const changeValue = change?.charAt(0) === '-' ? change.replace('-', '') : change
+    const changeValue = change?.charAt(0) === '-' ? change.replace('-', '') : (change ?? '')
+    const endValueText = endValue?.toString() ?? ''
     const resultScreenReader = props.phrases.kpiResultScreenReader
-      .replace('{0}', language === 'en' ? endValue : endValue?.replace(/\./g, ','))
+      .replace('{0}', language === 'en' ? endValueText : endValueText.replace(/\./g, ','))
       .replace('{1}', priceChangeLabel)
-      .replace('{2}', language === 'en' ? changeValue : changeValue?.replace(/\./g, ','))
-      .replace('{3}', startPeriod)
-      .replace('{4}', endPeriod)
+      .replace('{2}', language === 'en' ? changeValue : changeValue.replace(/\./g, ','))
+      .replace('{3}', startPeriod as string)
+      .replace('{4}', endPeriod as string)
 
     return (
       <Container className='calculator-result' ref={scrollAnchor}>
@@ -418,11 +419,12 @@ function KpiCalculator(props: KpiCalculatorProps) {
 
   function calculatorResultFrontpage() {
     const priceChangeLabel = change?.charAt(0) === '-' ? props.phrases.priceDecrease : props.phrases.priceIncrease
-    const changeValue = change?.charAt(0) === '-' ? change.replace('-', '') : change
+    const changeValue = change?.charAt(0) === '-' ? change.replace('-', '') : (change ?? '')
+    const endValueText = endValue?.toString() ?? ''
     const resultScreenReader = props.phrases.kpiResultFrontpageScreenReader
-      .replace('{0}', language === 'en' ? endValue : endValue?.replace(/\./g, ','))
+      .replace('{0}', language === 'en' ? endValueText : endValueText.replace(/\./g, ','))
       .replace('{1}', priceChangeLabel)
-      .replace('{2}', language === 'en' ? changeValue : changeValue?.replace(/\./g, ','))
+      .replace('{2}', language === 'en' ? changeValue : changeValue.replace(/\./g, ','))
     return (
       <Container className='calculator-result-frontpage' ref={scrollAnchor}>
         <div aria-live='polite' aria-atomic='true'>
