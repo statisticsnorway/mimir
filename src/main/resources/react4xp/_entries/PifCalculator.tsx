@@ -8,9 +8,13 @@ import { PifCalculatorProps } from '../../lib/types/partTypes/pifCalculaor'
 
 function PifCalculator(props: PifCalculatorProps) {
   const validMaxYear = props.lastUpdated.year
-  const DEFAULT_PRODUCT_GROUP_TYPE = {
+  const defaultProductGroupType = {
     title: props.phrases.pifProductTypeAll,
     id: 'SITCT',
+  }
+  const defaultMonthValue = {
+    title: props.phrases.calculatorMonthAverage,
+    id: '90',
   }
   const { calculatorValidateAmountNumber, pifValidateYear } = props.phrases
   const [scopeCode, setScopeCode] = useState({
@@ -22,7 +26,7 @@ function PifCalculator(props: PifCalculatorProps) {
   const [productGroup, setProductGroup] = useState({
     error: false,
     errorMsg: '',
-    value: DEFAULT_PRODUCT_GROUP_TYPE,
+    value: defaultProductGroupType,
   })
   const [startValue, setStartValue] = useState({
     error: false,
@@ -32,10 +36,7 @@ function PifCalculator(props: PifCalculatorProps) {
   const [startMonth, setStartMonth] = useState({
     error: false,
     errorMsg: props.lastNumberText,
-    value: {
-      title: props.phrases.calculatorMonthAverage,
-      id: '90',
-    },
+    value: defaultMonthValue,
   })
   const validMinYear = getStartYearRelevantDataset()
   const validMinYearPhrase = pifValidateYear.replaceAll('{0}', validMinYear)
@@ -48,10 +49,7 @@ function PifCalculator(props: PifCalculatorProps) {
   const [endMonth, setEndMonth] = useState({
     error: false,
     errorMsg: props.lastNumberText,
-    value: {
-      title: props.phrases.calculatorMonthAverage,
-      id: '90',
-    },
+    value: defaultMonthValue,
   })
   const [endYear, setEndYear] = useState({
     error: false,
@@ -258,7 +256,7 @@ function PifCalculator(props: PifCalculatorProps) {
         // Missing data for pifProductOil (SITC4) and home market (2)
         if (value === '2' && productGroup.value.id === 'SITC4') {
           setReset(reset + 1)
-          setProductGroup({ ...productGroup, value: DEFAULT_PRODUCT_GROUP_TYPE })
+          setProductGroup({ ...productGroup, value: defaultProductGroupType })
         }
         break
       }

@@ -9,6 +9,10 @@ import { KpiCalculatorProps } from '../../lib/types/partTypes/kpiCalculator'
 
 function KpiCalculator(props: KpiCalculatorProps) {
   const validMaxYear = props.lastUpdated.year
+  const defaultMonthValue = {
+    title: props.frontPage ? props.phrases.calculatorMonthAverageFrontpage : props.phrases.calculatorMonthAverage,
+    id: '90',
+  }
   const [startValue, setStartValue] = useState({
     error: false,
     errorMsg: props.phrases.calculatorValidateAmountNumber,
@@ -17,10 +21,7 @@ function KpiCalculator(props: KpiCalculatorProps) {
   const [startMonth, setStartMonth] = useState({
     error: false,
     errorMsg: props.lastNumberText,
-    value: {
-      title: props.frontPage ? props.phrases.calculatorMonthAverageFrontpage : props.phrases.calculatorMonthAverage,
-      id: '90',
-    },
+    value: defaultMonthValue,
   })
   const [startYear, setStartYear] = useState({
     error: false,
@@ -30,10 +31,7 @@ function KpiCalculator(props: KpiCalculatorProps) {
   const [endMonth, setEndMonth] = useState({
     error: false,
     errorMsg: props.lastNumberText,
-    value: {
-      title: props.frontPage ? props.phrases.calculatorMonthAverageFrontpage : props.phrases.calculatorMonthAverage,
-      id: '90',
-    },
+    value: defaultMonthValue,
   })
   const [endYear, setEndYear] = useState({
     error: false,

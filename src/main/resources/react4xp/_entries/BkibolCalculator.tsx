@@ -17,8 +17,12 @@ import { BkibolCalculatorProps } from '../../lib/types/partTypes/bkibolCalculato
 
 function BkibolCalculator(props: BkibolCalculatorProps) {
   const validMaxYear = props.lastUpdated.year
-  const DEFAULT_SERIE_VALUE = {
+  const defaultSerieValue = {
     title: props.phrases.bkibolChooseWork,
+    id: '',
+  }
+  const defaultMonthValue = {
+    title: props.phrases.chooseMonth,
     id: '',
   }
   const [scope, setScope] = useState({
@@ -34,7 +38,7 @@ function BkibolCalculator(props: BkibolCalculatorProps) {
   const [serie, setSerie] = useState({
     error: false,
     errorMsg: props.phrases.bkibolValidateSerie,
-    value: DEFAULT_SERIE_VALUE,
+    value: defaultSerieValue,
   })
   const [startValue, setStartValue] = useState({
     error: false,
@@ -44,10 +48,7 @@ function BkibolCalculator(props: BkibolCalculatorProps) {
   const [startMonth, setStartMonth] = useState({
     error: false,
     errorMsg: props.phrases.calculatorValidateDropdownMonth,
-    value: {
-      title: props.phrases.chooseMonth,
-      id: '',
-    },
+    value: defaultMonthValue,
   })
   const [startYear, setStartYear] = useState({
     error: false,
@@ -57,10 +58,7 @@ function BkibolCalculator(props: BkibolCalculatorProps) {
   const [endMonth, setEndMonth] = useState({
     error: false,
     errorMsg: props.phrases.calculatorValidateDropdownMonth,
-    value: {
-      title: props.phrases.chooseMonth,
-      id: '',
-    },
+    value: defaultMonthValue,
   })
   const [endYear, setEndYear] = useState({
     error: false,
@@ -345,7 +343,7 @@ function BkibolCalculator(props: BkibolCalculatorProps) {
         setSerie({
           error: false,
           errorMsg: props.phrases.bkibolValidateSerie,
-          value: DEFAULT_SERIE_VALUE,
+          value: defaultSerieValue,
         })
         break
       }
