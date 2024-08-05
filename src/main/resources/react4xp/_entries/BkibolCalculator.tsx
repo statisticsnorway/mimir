@@ -17,6 +17,10 @@ import { BkibolCalculatorProps } from '../../lib/types/partTypes/bkibolCalculato
 
 function BkibolCalculator(props: BkibolCalculatorProps) {
   const validMaxYear = props.lastUpdated.year
+  const DEFAULT_SERIE_VALUE = {
+    title: props.phrases.bkibolChooseWork,
+    id: '',
+  }
   const [scope, setScope] = useState({
     error: false,
     errorMsg: 'Feil markedskode',
@@ -30,7 +34,7 @@ function BkibolCalculator(props: BkibolCalculatorProps) {
   const [serie, setSerie] = useState({
     error: false,
     errorMsg: props.phrases.bkibolValidateSerie,
-    value: '',
+    value: DEFAULT_SERIE_VALUE,
   })
   const [startValue, setStartValue] = useState({
     error: false,
@@ -40,7 +44,10 @@ function BkibolCalculator(props: BkibolCalculatorProps) {
   const [startMonth, setStartMonth] = useState({
     error: false,
     errorMsg: props.phrases.calculatorValidateDropdownMonth,
-    value: '',
+    value: {
+      title: props.phrases.chooseMonth,
+      id: '',
+    },
   })
   const [startYear, setStartYear] = useState({
     error: false,
@@ -50,7 +57,10 @@ function BkibolCalculator(props: BkibolCalculatorProps) {
   const [endMonth, setEndMonth] = useState({
     error: false,
     errorMsg: props.phrases.calculatorValidateDropdownMonth,
-    value: '',
+    value: {
+      title: props.phrases.chooseMonth,
+      id: '',
+    },
   })
   const [endYear, setEndYear] = useState({
     error: false,
@@ -149,20 +159,20 @@ function BkibolCalculator(props: BkibolCalculatorProps) {
         params: {
           scope: scope.value,
           domene: domene.value,
-          serie: serie.value,
+          serie: serie.value.id,
           startValue: startValue.value,
           startYear: startYear.value,
-          startMonth: startMonth.value,
+          startMonth: startMonth.value.id,
           endYear: endYear.value,
-          endMonth: endMonth.value,
+          endMonth: endMonth.value.id,
           language: language,
         },
       })
       .then((res) => {
         const changeVal = (res.data.change * 100).toFixed(1)
         const endVal = res.data.endValue.toFixed(2)
-        const startPeriod = getPeriod(startYear.value, startMonth.value)
-        const endPeriod = getPeriod(endYear.value, endMonth.value)
+        const startPeriod = getPeriod(startYear.value, startMonth.value.id)
+        const endPeriod = getPeriod(endYear.value, endMonth.value.id)
         setChange(changeVal)
         setEndValue(endVal)
         setStartPeriod(startPeriod)
@@ -223,7 +233,7 @@ function BkibolCalculator(props: BkibolCalculatorProps) {
   }
 
   function isSerieValid(value?: string) {
-    const serieValue = value || serie.value
+    const serieValue = value || serie.value.id
     const serieValid = serieValue !== ''
     if (!serieValid) {
       setSerie({
@@ -235,7 +245,7 @@ function BkibolCalculator(props: BkibolCalculatorProps) {
   }
 
   function isStartMonthValid(value?: string) {
-    const startMonthValue = value || startMonth.value
+    const startMonthValue = value || startMonth.value.id
     const startMonthEmpty = startMonthValue === ''
     if (startMonthEmpty) {
       setStartMonth({
@@ -255,7 +265,7 @@ function BkibolCalculator(props: BkibolCalculatorProps) {
   }
 
   function isEndMonthValid(value?: string) {
-    const endMonthValue = value || endMonth.value
+    const endMonthValue = value || endMonth.value.id
     const endMonthEmpty = endMonthValue === ''
     if (endMonthEmpty) {
       setEndMonth({
@@ -335,14 +345,14 @@ function BkibolCalculator(props: BkibolCalculatorProps) {
         setSerie({
           error: false,
           errorMsg: props.phrases.bkibolValidateSerie,
-          value: '',
+          value: DEFAULT_SERIE_VALUE,
         })
         break
       }
       case 'serie': {
         setSerie({
           ...serie,
-          value: value.id,
+          value,
           error: serie.error ? !isSerieValid(value.id) : serie.error,
         })
         break
@@ -359,7 +369,7 @@ function BkibolCalculator(props: BkibolCalculatorProps) {
       case 'start-month': {
         setStartMonth({
           ...startMonth,
-          value: value.id,
+          value,
           error: startMonth.error ? !isStartMonthValid(value.id) : startMonth.error,
         })
         break
@@ -381,7 +391,7 @@ function BkibolCalculator(props: BkibolCalculatorProps) {
       case 'end-month': {
         setEndMonth({
           ...endMonth,
-          value: value.id,
+          value,
           error: endMonth.error ? !isEndMonthValid(value.id) : endMonth.error,
         })
         break
@@ -417,10 +427,7 @@ function BkibolCalculator(props: BkibolCalculatorProps) {
         }}
         error={startMonth.error}
         errorMessage={startMonth.errorMsg}
-        selectedItem={{
-          title: props.phrases.chooseMonth,
-          id: '',
-        }}
+        selectedItem={startMonth.value}
         items={props.months}
       />
     )
@@ -437,10 +444,7 @@ function BkibolCalculator(props: BkibolCalculatorProps) {
         }}
         error={endMonth.error}
         errorMessage={endMonth.errorMsg}
-        selectedItem={{
-          title: props.phrases.chooseMonth,
-          id: '',
-        }}
+        selectedItem={endMonth.value}
         items={props.months}
       />
     )
@@ -457,10 +461,7 @@ function BkibolCalculator(props: BkibolCalculatorProps) {
           }}
           error={serie.error}
           errorMessage={serie.errorMsg}
-          selectedItem={{
-            title: props.phrases.bkibolChooseWork,
-            id: '',
-          }}
+          selectedItem={serie.value}
           items={serieItemsDomene('ENEBOLIG')}
           ariaLabel={props.phrases.bkibolWorkTypeDone}
         />
@@ -479,10 +480,7 @@ function BkibolCalculator(props: BkibolCalculatorProps) {
           }}
           error={serie.error}
           errorMessage={serie.errorMsg}
-          selectedItem={{
-            title: props.phrases.bkibolChooseWork,
-            id: '',
-          }}
+          selectedItem={serie.value}
           items={serieItemsDomene('BOLIGBLOKK')}
           ariaLabel={props.phrases.bkibolWorkTypeDone}
         />
