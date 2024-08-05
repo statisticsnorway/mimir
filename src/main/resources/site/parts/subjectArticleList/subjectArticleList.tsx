@@ -18,7 +18,10 @@ function SubjectArticleList(props: SubjectArticleListProps) {
   const [articleStart, setArticleStart] = useState(props.start)
   const [loadedFirst, setLoadedFirst] = useState(true)
   const [totalCount, setTotalCount] = useState(props.articles.length)
-  const [sort, setSort] = useState('DESC')
+  const [sort, setSort] = useState({
+    title: 'Nyeste',
+    id: 'DESC',
+  })
   const showCountLabel =
     props.language == 'en'
       ? `Showing ${articles.length} of ${props.totalArticles}`
@@ -38,7 +41,7 @@ function SubjectArticleList(props: SubjectArticleListProps) {
           currentPath: props.currentPath,
           start: articleStart,
           count: props.count,
-          sort: sort,
+          sort: sort.id,
           language: props.language,
         },
       })
@@ -95,7 +98,7 @@ function SubjectArticleList(props: SubjectArticleListProps) {
         <div className='col-md-6 col-12'>
           <span className='mb-3'>Sorter innholdet</span>
           <Dropdown
-            header='sorter etter dato'
+            header='Sorter etter dato'
             items={[
               {
                 title: 'Nyeste',
@@ -106,12 +109,9 @@ function SubjectArticleList(props: SubjectArticleListProps) {
                 id: 'ASC',
               },
             ]}
-            selectedItem={{
-              title: 'Nyeste',
-              id: 'DESC',
-            }}
+            selectedItem={sort}
             onSelect={(selected: DropdownItem) => {
-              setSort(selected.id)
+              setSort(selected)
               fetchArticlesStartOver(selected.id)
             }}
           />
