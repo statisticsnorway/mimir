@@ -9,7 +9,6 @@ export interface UpcomingReleasesProps {
   count: number
   upcomingReleasesServiceUrl: string
   buttonTitle: string
-  statisticsPageUrlText: string
   contentReleasesNextXDays: Array<PreparedUpcomingRelease>
   contentReleasesAfterXDays: Array<PreparedUpcomingRelease>
 }

@@ -51,10 +51,6 @@ function renderPart(req: XP.Request) {
     key: 'button.showAll',
     locale: currentLanguage,
   })
-  const statisticsPageUrlText: string = localize({
-    key: 'upcomingReleases.statisticsPageText',
-    locale: currentLanguage,
-  })
   const upcomingReleasesServiceUrl: string = serviceUrl({
     service: 'upcomingReleases',
   })
@@ -131,7 +127,6 @@ function renderPart(req: XP.Request) {
     count,
     upcomingReleasesServiceUrl,
     buttonTitle,
-    statisticsPageUrlText,
     contentReleasesNextXDays,
     contentReleasesAfterXDays,
   }

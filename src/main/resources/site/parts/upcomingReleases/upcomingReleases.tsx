@@ -111,7 +111,7 @@ const getLastReleaseDateInArray = (releases) => {
   }
 }
 
-function renderRelease(release, index, date, statisticsPageUrlText) {
+function renderRelease(release, index, date) {
   const { type, name, variant, mainSubject, url, upcomingReleaseLink } = release
   const { day, monthName, year } = date
   const showPeriod = type === 'statistikk' || type === 'statistic'
@@ -121,9 +121,9 @@ function renderRelease(release, index, date, statisticsPageUrlText) {
       <div>
         {!upcomingReleaseLink && <span className='sr-only'>{`${name} - ${showPeriod ? variant.period : ''}`}</span>}
 
-        {upcomingReleaseLink ? (
+        {upcomingReleaseLink || url ? (
           // deepcode ignore DOMXSS: URL is sanitized in the backend
-          <Link href={upcomingReleaseLink} linkType='header'>
+          <Link href={upcomingReleaseLink || url} linkType='header'>
             {name}
           </Link>
         ) : (
@@ -141,11 +141,6 @@ function renderRelease(release, index, date, statisticsPageUrlText) {
           {day}. {monthName} {year} / <span className='type'>{type}</span> / {mainSubject}
         </p>
       </div>
-      {url && (
-        <div className='statisticsPageLink'>
-          <Link href={url}>{statisticsPageUrlText}</Link>
-        </div>
-      )}
     </li>
   )
 }
