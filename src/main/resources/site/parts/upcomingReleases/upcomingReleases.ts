@@ -65,13 +65,12 @@ function renderPart(req: XP.Request) {
     const releasesFiltered: Array<Release> = filterOnComingReleases(allReleases, serverOffsetInMs, count)
 
     // Choose the right variant and prepare the date in a way it works with the groupBy function
-    const releasesPrepped: Array<PreparedStatistics> = releasesFiltered.map((release: Release) =>
-      prepareRelease(release, currentLanguage)
-    )
+    const releasesPrepped: Array<PreparedStatistics | null> =
+      releasesFiltered.map((release: Release) => prepareRelease(release, currentLanguage)) ?? []
 
     // group by year, then month, then day
     const groupedByYearMonthAndDay: GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>> =
-      groupStatisticsByYearMonthAndDay(releasesPrepped)
+      groupStatisticsByYearMonthAndDay(releasesPrepped as Array<PreparedStatistics>)
 
     return addMonthNames(groupedByYearMonthAndDay, currentLanguage)
   })
