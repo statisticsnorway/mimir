@@ -1,4 +1,4 @@
-import { type PreparedUpcomingRelease, type YearReleases } from '/lib/types/variants'
+import { type PreparedContentRelease, type YearReleases, type PreparedUpcomingRelease } from '/lib/types/variants'
 
 export interface UpcomingReleasesProps {
   releases: Array<YearReleases>
@@ -8,6 +8,17 @@ export interface UpcomingReleasesProps {
   count: number
   upcomingReleasesServiceUrl: string
   buttonTitle: string
-  contentReleasesNextXDays: Array<PreparedUpcomingRelease>
-  contentReleasesAfterXDays: Array<PreparedUpcomingRelease>
+  contentReleasesNextXDays: Array<PreparedContentRelease>
+  contentReleasesAfterXDays: Array<PreparedContentRelease>
+}
+
+export interface FlattenedUpcomingReleases {
+  date: string
+  releases: Array<PreparedUpcomingRelease>
+}
+
+export interface FlattenedUpcomingReleasesDate {
+  day: number
+  monthName: string
+  year: number
 }

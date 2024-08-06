@@ -6,7 +6,7 @@ import {
   type PreparedStatistics,
   type YearReleases,
   type Release,
-  type PreparedUpcomingRelease,
+  type PreparedContentRelease,
 } from '/lib/types/variants'
 import { getMainSubjects, getMainSubjectById } from '/lib/ssb/utils/subjectUtils'
 import { formatDate } from '/lib/ssb/utils/dateUtils'
@@ -75,7 +75,7 @@ function renderPart(req: XP.Request) {
     return addMonthNames(groupedByYearMonthAndDay, currentLanguage)
   })
 
-  const contentReleases: Array<PreparedUpcomingRelease> = query<Content<UpcomingRelease>>({
+  const contentReleases: Array<PreparedContentRelease> = query<Content<UpcomingRelease>>({
     start: 0,
     count: 500,
     query: `type = "${app.name}:upcomingRelease" AND language = "${currentLanguage}" AND data.date >= "${format(
