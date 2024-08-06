@@ -76,7 +76,7 @@ export const flattenReleases = (data: YearReleases[]) => {
 }
 
 export const flattenContentReleases = (contentReleases: PreparedUpcomingRelease[]) => {
-  const releases = []
+  const releases: PreparedUpcomingRelease[] = []
 
   contentReleases.forEach((item) => {
     const date = item.date.split('T')[0] // Get date, ignore rest
@@ -224,7 +224,7 @@ function UpcomingReleases(props: UpcomingReleasesProps) {
       })
   }
 
-  function renderDay(dayWithReleases, language, isFirst, statisticsPageUrlText) {
+  function renderDay(dayWithReleases, language, isFirst) {
     const date = parseISO(dayWithReleases.date)
     const releaseDate = {
       day: date.getDate(),
@@ -245,9 +245,7 @@ function UpcomingReleases(props: UpcomingReleasesProps) {
           language
         )}`}</span>
         <ol className='releaseList' aria-labelledby={`heading-upcoming-releases datemonth-${day.date}`}>
-          {dayWithReleases.releases.map((release, releaseIndex) =>
-            renderRelease(release, releaseIndex, releaseDate, statisticsPageUrlText)
-          )}
+          {dayWithReleases.releases.map((release, releaseIndex) => renderRelease(release, releaseIndex, releaseDate))}
         </ol>
       </div>
     )
@@ -270,8 +268,8 @@ function UpcomingReleases(props: UpcomingReleasesProps) {
     }
   }
 
-  function renderList(_releases, statisticsPageUrlText: string) {
-    const list = _releases.map((day) => renderDay(day, props.language, false, statisticsPageUrlText))
+  function renderList(_releases) {
+    const list = _releases.map((day) => renderDay(day, props.language, false))
     return list
   }
 
@@ -293,7 +291,7 @@ function UpcomingReleases(props: UpcomingReleasesProps) {
           <div className='container mt-5'>
             <div className='row d-flex justify-content-center'>
               <div className='col-12 p-0'>
-                {renderList(releases, props.statisticsPageUrlText)}
+                {renderList(releases)}
                 {renderButton()}
               </div>
             </div>
