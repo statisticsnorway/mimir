@@ -119,7 +119,9 @@ function renderRelease(release, index, date) {
   return (
     <li key={index} className='mb-3'>
       <div>
-        {!upcomingReleaseLink && <span className='sr-only'>{`${name} - ${showPeriod ? variant.period : ''}`}</span>}
+        {(!upcomingReleaseLink || !url) && (
+          <span className='sr-only'>{`${name} - ${showPeriod ? variant.period : ''}`}</span>
+        )}
 
         {upcomingReleaseLink || url ? (
           // deepcode ignore DOMXSS: URL is sanitized in the backend
