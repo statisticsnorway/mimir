@@ -66,10 +66,10 @@ export interface PreparedContentRelease {
 }
 
 export interface PreparedUpcomingRelease {
-  id: string
+  id: string | number
   name: string
-  type: string
-  mainSubject: string
+  type?: string
+  mainSubject?: string
   variant?: PreparedVariant
   url?: string
   upcomingReleaseLink?: string

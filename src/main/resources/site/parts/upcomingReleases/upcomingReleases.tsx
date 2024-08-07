@@ -11,23 +11,30 @@ import {
 } from '../../../lib/types/partTypes/upcomingReleases'
 import {
   type PreparedContentRelease,
-  type YearReleases,
   type PreparedUpcomingRelease,
   type PreparedVariant,
+  type PreparedStatistics,
+  type YearReleases,
+  type MonthReleases,
 } from '../../../lib/types/variants'
 
 // TODO: Need the flattened and transformed data to be typed
 
-export const mergeAndSortReleases = (releases1: YearReleases[], releases2: PreparedContentRelease[]) => {
+export const mergeAndSortReleases = (
+  releases1: YearReleases[] | FlattenedUpcomingReleases[],
+  releases2: PreparedContentRelease[] | FlattenedUpcomingReleases[]
+) => {
   const merged = new Map()
 
   // Helper function to add data to the map
-  const addToMap = (array) => {
+  const addToMap = (array: PreparedContentRelease[] | FlattenedUpcomingReleases[]) => {
     array.forEach((item) => {
       // Check if the date already exists in the map
       if (merged.has(item.date)) {
         // If it does, concat the releases
-        merged.get(item.date).releases = merged.get(item.date).releases.concat(item.releases)
+        merged.get(item.date).releases = merged
+          .get(item.date)
+          .releases.concat((item as FlattenedUpcomingReleases).releases)
       } else {
         // If not, add the item to the map
         merged.set(item.date, { ...item })
@@ -36,7 +43,7 @@ export const mergeAndSortReleases = (releases1: YearReleases[], releases2: Prepa
   }
 
   // Add both arrays to the map
-  addToMap(releases1)
+  addToMap(releases1 as FlattenedUpcomingReleases[])
   addToMap(releases2)
 
   // Remove duplicate releases
@@ -56,17 +63,17 @@ export const mergeAndSortReleases = (releases1: YearReleases[], releases2: Prepa
 }
 
 export const flattenReleases = (data: YearReleases[]) => {
-  const flattenedReleases = data.flatMap((yearItem) =>
+  const flattenedReleases: FlattenedUpcomingReleases[] = data.flatMap((yearItem) =>
     yearItem.releases.flatMap((monthItem) =>
-      monthItem.releases.flatMap((dayItem) => {
+      (monthItem as MonthReleases).releases.flatMap((dayItem) => {
         // Construct the full date string
         const day = parseInt(dayItem.day) >= 10 ? dayItem.day : '0' + dayItem.day // Add 0-padding
-        let month: string | number = parseInt(monthItem.month) + 1 // From the API -> January is 0, Dec is 11
+        let month: string | number = parseInt((monthItem as MonthReleases).month) + 1 // From the API -> January is 0, Dec is 11
         month = month >= 10 ? month : '0' + month // Add 0-padding
-        const fullDate = `${yearItem.year}-${month}-${day}`
+        const fullDate = `${(yearItem as YearReleases).year}-${month}-${day}`
 
         // eslint-disable-next-line max-nested-callbacks
-        const releases = dayItem.releases.map((release) => ({
+        const releases = dayItem.releases.map((release: PreparedStatistics) => ({
           id: release.id,
           name: release.name,
           type: release.type,
@@ -86,7 +93,7 @@ export const flattenReleases = (data: YearReleases[]) => {
 }
 
 export const flattenContentReleases = (contentReleases: PreparedContentRelease[]) => {
-  const releases: Array<FlattenedUpcomingReleases> = []
+  const releases: FlattenedUpcomingReleases[] = []
 
   contentReleases.forEach((item) => {
     const date = item.date.split('T')[0] // Get date, ignore rest
