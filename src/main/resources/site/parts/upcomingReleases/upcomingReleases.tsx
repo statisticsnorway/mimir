@@ -57,7 +57,7 @@ export const mergeAndSortReleases = (
 
   // Sort by date
   const array = Array.from(merged.values())
-  const sortedArray = array.sort((a, b) => new Date(a.date).valueOf() - new Date(b.date).valueOf())
+  const sortedArray = [...array].sort((a, b) => new Date(a.date).valueOf() - new Date(b.date).valueOf())
   return sortedArray
 }
 
