@@ -15,7 +15,6 @@ import {
   type PreparedVariant,
   type PreparedStatistics,
   type YearReleases,
-  type MonthReleases,
 } from '../../../lib/types/variants'
 
 // TODO: Need the flattened and transformed data to be typed
@@ -65,12 +64,12 @@ export const mergeAndSortReleases = (
 export const flattenReleases = (data: YearReleases[]) => {
   const flattenedReleases: FlattenedUpcomingReleases[] = data.flatMap((yearItem) =>
     yearItem.releases.flatMap((monthItem) =>
-      (monthItem as MonthReleases).releases.flatMap((dayItem) => {
+      monthItem.releases.flatMap((dayItem) => {
         // Construct the full date string
         const day = parseInt(dayItem.day) >= 10 ? dayItem.day : '0' + dayItem.day // Add 0-padding
-        let month: string | number = parseInt((monthItem as MonthReleases).month) + 1 // From the API -> January is 0, Dec is 11
+        let month: string | number = parseInt(monthItem.month) + 1 // From the API -> January is 0, Dec is 11
         month = month >= 10 ? month : '0' + month // Add 0-padding
-        const fullDate = `${(yearItem as YearReleases).year}-${month}-${day}`
+        const fullDate = `${yearItem.year}-${month}-${day}`
 
         // eslint-disable-next-line max-nested-callbacks
         const releases = dayItem.releases.map((release: PreparedStatistics) => ({
@@ -78,7 +77,7 @@ export const flattenReleases = (data: YearReleases[]) => {
           name: release.name,
           type: release.type,
           mainSubject: release.mainSubject,
-          url: release.statisticsPageUrl || '',
+          url: release.statisticsPageUrl ?? '',
           variant: release.variant,
         }))
 
@@ -119,7 +118,7 @@ export const flattenContentReleases = (contentReleases: PreparedContentRelease[]
 }
 
 const getLastReleaseDateInArray = (releases: PreparedContentRelease[]) => {
-  const sorted = releases.sort((a, b) => new Date(a.date).valueOf() - new Date(b.date).valueOf())
+  const sorted = [...releases].sort((a, b) => new Date(a.date).valueOf() - new Date(b.date).valueOf())
   const lastDate = sorted[releases.length - 1].date.split('-')
   return {
     year: lastDate[0],
@@ -142,7 +141,7 @@ function renderRelease(release: PreparedUpcomingRelease, index: number, date: Fl
 
         {upcomingReleaseLink || url ? (
           // deepcode ignore DOMXSS: URL is sanitized in the backend
-          <Link href={upcomingReleaseLink || url} linkType='header'>
+          <Link href={upcomingReleaseLink ?? url} linkType='header'>
             {name}
           </Link>
         ) : (

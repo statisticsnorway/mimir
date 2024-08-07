@@ -74,7 +74,6 @@ function renderPart(req: XP.Request) {
 
     return addMonthNames(groupedByYearMonthAndDay, currentLanguage)
   })
-  log.info(JSON.stringify(groupedWithMonthNames, null, 2))
 
   const contentReleases: Array<PreparedContentRelease> = query<Content<UpcomingRelease>>({
     start: 0,
