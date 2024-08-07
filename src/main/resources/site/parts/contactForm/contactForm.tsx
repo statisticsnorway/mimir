@@ -13,14 +13,14 @@ interface ContactFormProps {
 
 function ContactForm(props: ContactFormProps) {
   const { contactFormServiceUrl, recaptchaSiteKey } = props
-  const DEFAULT_RECEIVER_ITEM = {
+  const defaultReceiverItem = {
     title: props.phrases.contactFormReceiverGenerell,
     id: 'generell',
   }
   const [receiver, setReceiver] = useState({
     error: false,
     errorMsg: props.phrases.contactFormValidateReveicer,
-    value: DEFAULT_RECEIVER_ITEM,
+    value: defaultReceiverItem,
   })
   const [name, setName] = useState({
     error: false,
@@ -237,7 +237,7 @@ function ContactForm(props: ContactFormProps) {
   function renderForm() {
     if (!emailSent) {
       const items = [
-        DEFAULT_RECEIVER_ITEM,
+        defaultReceiverItem,
         {
           title: props.phrases.contactFormReceiverStatistikk,
           id: 'statistikk',
