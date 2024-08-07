@@ -375,7 +375,7 @@ function PifCalculator(props: PifCalculatorProps) {
         }}
         selectedItem={productGroup.value}
         // Dataset not available for pifProductOil (SITC4) for home market (2)
-        items={scopeCode.value === '2' ? props.productGroups.splice(5, 1) : props.productGroups}
+        items={scopeCode.value === '2' ? props.productGroups.toSpliced(5, 1) : props.productGroups} // TODO: To get rid of the typescript error we have to upgrade the tsconfig to "ES2023"
         ariaLabel={props.phrases.pifProductTypeHeader}
       />
     )
