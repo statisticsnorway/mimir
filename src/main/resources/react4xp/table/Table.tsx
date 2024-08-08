@@ -3,7 +3,7 @@ import {
   Dropdown,
   Link,
   Button,
-  Table,
+  Table as SSBTable,
   TableHead,
   TableBody,
   TableFooter,
@@ -18,115 +18,63 @@ import { PreliminaryData, type TableCellUniform } from '../../lib/types/xmlParse
 
 declare global {
   interface Window {
-    downloadTableFile: (element: HTMLDivElement | null, options: DownloadTableOptions) => void
+    downloadTableFile: (element: HTMLDivElement | null, options: unknown) => void
   }
 }
 
-interface DownloadTableOptions {
-  type: 'csv' | 'xlsx'
-  fileName: string
-  csvSeparator?: string
-  csvEnclosure?: string
-  tfootSelector?: string
-  numbers?: {
-    html: {
-      decimalMark: string
-      thousandsSeparator: string
-    }
-    output: {
-      decimalMark: string
-      thousandsSeparator: string
-    }
-  }
-}
-
-function CustomTable({
-  downloadTableLabel,
-  downloadTableTitle,
-  downloadTableOptions,
-  table,
-  tableDraft,
-  standardSymbol,
-  sources,
-  sourceLabel,
-  sourceListTables,
-  sourceTableLabel,
-  statBankWebUrl,
-  hiddenTitle,
-  showPreviewDraft,
-  paramShowDraft,
-  draftExist,
-  pageTypeStatistic,
-}: TableProps) {
-  const [currentTable, setCurrentTable] = useState(paramShowDraft && draftExist ? tableDraft : table)
-  const [fetchUnPublished, setFetchUnPublished] = useState(paramShowDraft)
-
-  const showPreviewToggle = showPreviewDraft && (!pageTypeStatistic || (paramShowDraft && pageTypeStatistic))
-
+function Table(props: TableProps) {
+  const [currentTable, setCurrentTable] = useState(
+    props.paramShowDraft && props.draftExist ? props.tableDraft : props.table
+  )
+  const [fetchUnPublished, setFetchUnPublished] = useState(props.paramShowDraft)
+  const showPreviewToggle =
+    props.showPreviewDraft && (!props.pageTypeStatistic || (props.paramShowDraft && props.pageTypeStatistic))
   const tableWrapperRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const widthCheckInterval = setInterval(() => {
-      widthCheck()
-    }, 250)
-    window.addEventListener('resize', widthCheck)
+    window.addEventListener('resize', updateTableControlsDesktop)
     return () => {
-      clearInterval(widthCheckInterval)
-      window.removeEventListener('resize', widthCheck)
+      window.removeEventListener('resize', updateTableControlsDesktop)
     }
   }, [])
 
-  function widthCheck() {
-    // No longer need to manage scroll controls, so this can be simplified
-  }
-
   function trimValue(value: string | number) {
-    if (value && typeof value === 'string') {
-      return value.trim()
-    }
-    return value
+    return typeof value === 'string' ? value.trim() : value
   }
 
   function formatNumber(value: string | number) {
-    const language = table.language
+    const language = props.table.language
     const decimalSeparator = language === 'en' ? '.' : ','
     value = trimValue(value)
-    if (value) {
-      if (typeof value === 'number' || (typeof value === 'string' && !isNaN(Number(value)))) {
-        const decimals = value.toString().indexOf('.') > -1 ? value.toString().split('.')[1].length : 0
-        return (
-          <NumericFormat
-            value={Number(value)}
-            displayType='text'
-            thousandSeparator=' '
-            decimalSeparator={decimalSeparator}
-            decimalScale={decimals}
-            fixedDecimalScale
-          />
-        )
-      }
+    if (value && (typeof value === 'number' || !isNaN(Number(value)))) {
+      const decimals = value.toString().includes('.') ? value.toString().split('.')[1].length : 0
+      return (
+        <NumericFormat
+          value={Number(value)}
+          displayType='text'
+          thousandSeparator=' '
+          decimalSeparator={decimalSeparator}
+          decimalScale={decimals}
+          fixedDecimalScale
+        />
+      )
     }
     return value
   }
 
   function addDownloadTableDropdown(mobile: boolean) {
-    if (downloadTableLabel && downloadTableTitle && downloadTableOptions) {
+    if (props.downloadTableLabel && props.downloadTableTitle && props.downloadTableOptions) {
       const downloadTable = (item: { id: string }) => {
-        if (item.id === 'downloadTableAsCSV') {
-          downloadTableAsCSV()
-        }
-
-        if (item.id === 'downloadTableAsXLSX') {
-          downloadTableAsExcel()
-        }
+        if (item.id === 'downloadTableAsCSV') downloadTableAsCSV()
+        if (item.id === 'downloadTableAsXLSX') downloadTableAsExcel()
       }
 
       return (
         <div className={`download-table-container ${mobile ? 'd-flex d-lg-none' : 'd-none d-lg-flex'}`}>
           <Dropdown
-            selectedItem={downloadTableTitle}
-            items={downloadTableOptions}
-            ariaLabel={downloadTableLabel}
+            selectedItem={props.downloadTableTitle}
+            items={props.downloadTableOptions}
+            ariaLabel={props.downloadTableLabel}
             onSelect={downloadTable}
           />
         </div>
@@ -169,25 +117,23 @@ function CustomTable({
   function addCaption() {
     const { caption } = currentTable
     if (caption) {
-      const hasNoteRefs = typeof caption === 'object'
-      return hasNoteRefs ? caption.content : caption
+      return typeof caption === 'object' ? caption.content : caption
     }
     return null
   }
 
   function createTable() {
-    const { tableClass } = table
-
+    const { tableClass } = props.table
     return (
-      <Table className={tableClass} caption={addCaption()} dataNoteRefs={table.caption?.noterefs}>
-        {table.thead?.map((t, index) => (
+      <SSBTable className={tableClass} caption={addCaption()} dataNoteRefs={props.table.caption?.noterefs}>
+        {props.table.thead?.map((t, index) => (
           <React.Fragment key={index}>
             {addThead(index)}
             {addTbody(index)}
           </React.Fragment>
         ))}
         {addTFoot()}
-      </Table>
+      </SSBTable>
     )
   }
 
@@ -212,14 +158,13 @@ function CustomTable({
 
   function addTFoot() {
     const { footnotes, correctionNotice } = currentTable.tfoot || {}
-
     const noteRefs = currentTable.noteRefs
 
     if ((noteRefs && noteRefs.length > 0) || correctionNotice) {
       return (
         <TableFooter>
           {noteRefs?.map((note, index) => {
-            const current = footnotes && footnotes.find((footnote) => footnote.noteid === note)
+            const current = footnotes?.find((footnote) => footnote.noteid === note)
             if (current) {
               return (
                 <TableRow key={index} className='footnote'>
@@ -240,36 +185,25 @@ function CustomTable({
   }
 
   function createHeaderCell(row: TableCellUniform) {
-    return (Object.keys(row) as ('th' | 'td')[])
-      .map((keyName) => {
-        const value = row[keyName]
-        if (keyName === 'th') {
-          return createHeadTh(value)
-        } else if (keyName === 'td') {
-          return createHeadTd(value)
-        }
-        return [] // Ensure all paths return a value
-      })
-      .flat() // Ensure a flat array
+    return (Object.keys(row) as ('th' | 'td')[]).flatMap((keyName) => {
+      const value = row[keyName]
+      if (keyName === 'th') return createHeadTh(value)
+      if (keyName === 'td') return createHeadTd(value)
+      return []
+    })
   }
 
   function createRowsHead(rows: TableCellUniform[]) {
-    if (rows) {
-      return rows.map((row, i) => <TableRow key={i}>{createHeaderCell(row)}</TableRow>)
-    }
-    return null
+    return rows?.map((row, i) => <TableRow key={i}>{createHeaderCell(row)}</TableRow>)
   }
 
   function createRowsBody(rows: TableCellUniform[]) {
-    if (rows) {
-      return rows.map((row, i) => (
-        <TableRow key={i}>
-          {createBodyTh(row)}
-          {createBodyTd(row)}
-        </TableRow>
-      ))
-    }
-    return null
+    return rows?.map((row, i) => (
+      <TableRow key={i}>
+        {createBodyTh(row)}
+        {createBodyTd(row)}
+      </TableRow>
+    ))
   }
 
   function createHeadTh(value: (string | number | PreliminaryData)[]) {
@@ -322,59 +256,55 @@ function CustomTable({
   }
 
   function createBodyTh(row: TableCellUniform) {
-    return (Object.keys(row) as ('th' | 'td')[])
-      .map((key) => {
-        const value = row[key]
-        if (key === 'th') {
-          return value.map((cellValue, i) => {
-            if (typeof cellValue === 'object') {
-              return (
-                <TableCell
-                  key={i}
-                  type='th'
-                  className={cellValue.class}
-                  rowSpan={cellValue.rowspan}
-                  colSpan={cellValue.colspan}
-                  scope={cellValue.rowspan || cellValue.colspan ? 'rowgroup' : 'row'}
-                >
-                  {trimValue(cellValue.content)}
-                  {addNoteRefs(cellValue.noterefs)}
-                </TableCell>
-              )
-            } else {
-              return (
-                <TableCell key={i} type='th' scope='row'>
-                  {trimValue(cellValue)}
-                </TableCell>
-              )
-            }
-          })
-        }
-        return null // Ensure all paths return a value
-      })
-      .flat() // Ensure a flat array
+    return (Object.keys(row) as ('th' | 'td')[]).flatMap((key) => {
+      const value = row[key]
+      if (key === 'th') {
+        return value.map((cellValue, i) => {
+          if (typeof cellValue === 'object') {
+            return (
+              <TableCell
+                key={i}
+                type='th'
+                className={cellValue.class}
+                rowSpan={cellValue.rowspan}
+                colSpan={cellValue.colspan}
+                scope={cellValue.rowspan || cellValue.colspan ? 'rowgroup' : 'row'}
+              >
+                {trimValue(cellValue.content)}
+                {addNoteRefs(cellValue.noterefs)}
+              </TableCell>
+            )
+          } else {
+            return (
+              <TableCell key={i} type='th' scope='row'>
+                {trimValue(cellValue)}
+              </TableCell>
+            )
+          }
+        })
+      }
+      return []
+    })
   }
 
   function createBodyTd(row: TableCellUniform) {
-    return (Object.keys(row) as ('th' | 'td')[])
-      .map((keyName) => {
-        const value = row[keyName]
-        if (keyName === 'td') {
-          return value.map((cellValue, i) => {
-            if (typeof cellValue === 'object') {
-              return (
-                <TableCell key={i} className={cellValue.class} rowSpan={cellValue.rowspan} colSpan={cellValue.colspan}>
-                  {formatNumber(cellValue.content)}
-                </TableCell>
-              )
-            } else {
-              return <TableCell key={i}>{formatNumber(cellValue)}</TableCell>
-            }
-          })
-        }
-        return null // Ensure all paths return a value
-      })
-      .flat() // Ensure a flat array
+    return (Object.keys(row) as ('th' | 'td')[]).flatMap((keyName) => {
+      const value = row[keyName]
+      if (keyName === 'td') {
+        return value.map((cellValue, i) => {
+          if (typeof cellValue === 'object') {
+            return (
+              <TableCell key={i} className={cellValue.class} rowSpan={cellValue.rowspan} colSpan={cellValue.colspan}>
+                {formatNumber(cellValue.content)}
+              </TableCell>
+            )
+          } else {
+            return <TableCell key={i}>{formatNumber(cellValue)}</TableCell>
+          }
+        })
+      }
+      return []
+    })
   }
 
   function addNoteRefs(noteRefId: string) {
@@ -382,10 +312,10 @@ function CustomTable({
       const noteRefs = currentTable.noteRefs
       const noteIDs = noteRefId.split(' ')
       const notesToReturn = noteRefs!.reduce((acc, current, index) => {
-        return noteIDs.some((element) => element === current) ? acc.concat(index) : acc
+        return noteIDs.includes(current) ? [...acc, index] : acc
       }, [] as number[])
 
-      if (notesToReturn) {
+      if (notesToReturn.length) {
         return <sup>{notesToReturn.map((noteRef) => `${noteRef + 1} `)}</sup>
       }
     }
@@ -393,10 +323,10 @@ function CustomTable({
   }
 
   function addStandardSymbols() {
-    if (standardSymbol && standardSymbol.href && standardSymbol.text) {
+    if (props.standardSymbol && props.standardSymbol.href && props.standardSymbol.text) {
       return (
-        <Link href={standardSymbol.href} standAlone>
-          {standardSymbol.text}
+        <Link href={props.standardSymbol.href} standAlone>
+          {props.standardSymbol.text}
         </Link>
       )
     }
@@ -404,7 +334,7 @@ function CustomTable({
   }
 
   function addPreviewButton() {
-    if (showPreviewToggle && !pageTypeStatistic) {
+    if (showPreviewToggle && !props.pageTypeStatistic) {
       return (
         <Button primary onClick={toggleDraft}>
           {!fetchUnPublished ? 'Vis upubliserte tall' : 'Vis publiserte tall'}
@@ -416,14 +346,14 @@ function CustomTable({
 
   function toggleDraft() {
     setFetchUnPublished(!fetchUnPublished)
-    setCurrentTable(!fetchUnPublished && draftExist ? tableDraft : table)
+    setCurrentTable(!fetchUnPublished && props.draftExist ? props.tableDraft : props.table)
   }
 
   function addPreviewInfo() {
-    if (showPreviewDraft) {
-      if (fetchUnPublished && draftExist) {
+    if (props.showPreviewDraft) {
+      if (fetchUnPublished && props.draftExist) {
         return <Alert variant='info'>Tallene i tabellen nedenfor er upublisert</Alert>
-      } else if (fetchUnPublished && !draftExist) {
+      } else if (fetchUnPublished && !props.draftExist) {
         return <Alert variant='warning'>Finnes ikke upubliserte tall for denne tabellen</Alert>
       }
     }
@@ -431,22 +361,22 @@ function CustomTable({
   }
 
   function renderSources() {
-    if ((sourceListTables && sourceListTables.length > 0) || (sources && sources.length > 0)) {
+    if ((props.sourceListTables && props.sourceListTables.length > 0) || (props.sources && props.sources.length > 0)) {
       return (
         <div className='row mt-5 source'>
           <div className='w-100 col-12'>
             <span className='source-title'>
-              <strong>{sourceLabel}</strong>
+              <strong>{props.sourceLabel}</strong>
             </span>
           </div>
-          {sourceListTables.map((tableId, index) => (
+          {props.sourceListTables.map((tableId, index) => (
             <div key={index} className='col-lg-3 col-12'>
-              <Link href={`${statBankWebUrl}/table/${tableId}`} standAlone>
-                {`${sourceTableLabel} ${tableId}`}
+              <Link href={`${props.statBankWebUrl}/table/${tableId}`} standAlone>
+                {`${props.sourceTableLabel} ${tableId}`}
               </Link>
             </div>
           ))}
-          {sources.map((source, index) => (
+          {props.sources.map((source, index) => (
             <div key={index} className='col-lg-3 col-12'>
               {source.url && source.urlText && (
                 <Link href={source.url} standAlone>
@@ -461,18 +391,22 @@ function CustomTable({
     return null
   }
 
+  function updateTableControlsDesktop() {
+    // This function can be updated or left empty as needed
+  }
+
   return (
     <section className='xp-part part-table'>
       {!isEmpty(currentTable) ? (
         <>
           <div className='d-none searchabletext'>
-            <span>{hiddenTitle}</span>
+            <span>{props.hiddenTitle}</span>
           </div>
           <div className='container border-0'>
             {addPreviewButton()}
             {addDownloadTableDropdown(false)}
             {addPreviewInfo()}
-            <div className='table-wrapper searchabletext' onScroll={widthCheck} ref={tableWrapperRef}>
+            <div className='table-wrapper searchabletext' ref={tableWrapperRef}>
               {createTable()}
             </div>
             {addDownloadTableDropdown(true)}
@@ -489,4 +423,4 @@ function CustomTable({
   )
 }
 
-export default CustomTable
+export default Table
