@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef } from 'react'
 import {
   Dropdown,
   Link,
@@ -30,13 +30,6 @@ function Table(props: TableProps) {
   const showPreviewToggle =
     props.showPreviewDraft && (!props.pageTypeStatistic || (props.paramShowDraft && props.pageTypeStatistic))
   const tableWrapperRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    window.addEventListener('resize', updateTableControlsDesktop)
-    return () => {
-      window.removeEventListener('resize', updateTableControlsDesktop)
-    }
-  }, [])
 
   function trimValue(value: string | number) {
     return typeof value === 'string' ? value.trim() : value
@@ -389,10 +382,6 @@ function Table(props: TableProps) {
       )
     }
     return null
-  }
-
-  function updateTableControlsDesktop() {
-    // This function can be updated or left empty as needed
   }
 
   return (
