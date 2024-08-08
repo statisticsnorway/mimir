@@ -111,7 +111,7 @@ function RelatedArticles(props: RelatedArticlesProps) {
                 image={<img src={article.imageSrc} alt={article.imageAlt ?? ''} />}
                 title={article.title}
                 subTitle={article.subTitle}
-                ariaLabel={article.title + ' ' + article.subTitle}
+                ariaLabel={article.title + ' ' + article.subTitle} // TODO: ariaLabel is not a prop that exists in Card
               >
                 <Text>{article.preface}</Text>
               </Card>

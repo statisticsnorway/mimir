@@ -6,8 +6,6 @@ export interface ProfiledBoxProps {
   subTitle: string
   title: string
   preambleText: string
-  linkType: string
   titleSize: string
   ariaLabel: string | undefined
-  ariaDescribedBy: string | undefined
 }

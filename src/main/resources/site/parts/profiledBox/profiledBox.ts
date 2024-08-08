@@ -50,10 +50,8 @@ function renderPart(req: XP.Request): XP.Response {
     subTitle: getSubtitle(config.content, config.date, language),
     title: config.title,
     preambleText: config.preamble,
-    linkType: 'header',
     titleSize: titleSize,
     ariaLabel: config.title,
-    ariaDescribedBy: 'subtitle',
   }
 
   return r4xpRender('site/parts/profiledBox/profiledBox', props, req, {
