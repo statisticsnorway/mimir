@@ -9,6 +9,10 @@ import { KpiCalculatorProps } from '../../lib/types/partTypes/kpiCalculator'
 
 function KpiCalculator(props: KpiCalculatorProps) {
   const validMaxYear = props.lastUpdated.year
+  const defaultMonthValue = {
+    title: props.frontPage ? props.phrases.calculatorMonthAverageFrontpage : props.phrases.calculatorMonthAverage,
+    id: '90',
+  }
   const [startValue, setStartValue] = useState({
     error: false,
     errorMsg: props.phrases.calculatorValidateAmountNumber,
@@ -17,7 +21,7 @@ function KpiCalculator(props: KpiCalculatorProps) {
   const [startMonth, setStartMonth] = useState({
     error: false,
     errorMsg: props.lastNumberText,
-    value: '90',
+    value: defaultMonthValue,
   })
   const [startYear, setStartYear] = useState({
     error: false,
@@ -27,7 +31,7 @@ function KpiCalculator(props: KpiCalculatorProps) {
   const [endMonth, setEndMonth] = useState({
     error: false,
     errorMsg: props.lastNumberText,
-    value: '90',
+    value: defaultMonthValue,
   })
   const [endYear, setEndYear] = useState({
     error: false,
@@ -83,17 +87,17 @@ function KpiCalculator(props: KpiCalculatorProps) {
         params: {
           startValue: startValue.value,
           startYear: startYear.value,
-          startMonth: startMonth.value,
+          startMonth: startMonth.value.id,
           endYear: endYear.value,
-          endMonth: endMonth.value,
+          endMonth: endMonth.value.id,
           language: language,
         },
       })
       .then((res) => {
         const changeVal = (res.data.change * 100).toFixed(1)
         const endVal = res.data.endValue.toFixed(2)
-        const startPeriod = getPeriod(startYear.value, startMonth.value)
-        const endPeriod = getPeriod(endYear.value, endMonth.value)
+        const startPeriod = getPeriod(startYear.value, startMonth.value.id)
+        const endPeriod = getPeriod(endYear.value, endMonth.value.id)
         setChange(changeVal)
         setEndValue(endVal)
         setStartPeriod(startPeriod)
@@ -146,7 +150,7 @@ function KpiCalculator(props: KpiCalculatorProps) {
   }
 
   function isStartMonthValid(value?: string) {
-    const startMonthValue = value || startMonth.value
+    const startMonthValue = value || startMonth.value.id
     const startMonthValid = !(startYear.value === validMaxYear && startMonthValue > validMaxMonth)
     if (!startMonthValid) {
       setStartMonth({
@@ -158,7 +162,7 @@ function KpiCalculator(props: KpiCalculatorProps) {
   }
 
   function isEndMonthValid(value?: string) {
-    const endMonthValue = value || endMonth.value
+    const endMonthValue = value || endMonth.value.id
     const maxYearAverage = Number(validMaxMonth) === 12 ? validMaxYear : Number(validMaxYear) - 1
     const endMonthValid =
       endMonthValue === '90'
@@ -217,7 +221,7 @@ function KpiCalculator(props: KpiCalculatorProps) {
       case 'start-month': {
         setStartMonth({
           ...startMonth,
-          value: value.id,
+          value,
           error: startMonth.error ? !isStartMonthValid(value.id) : startMonth.error,
         })
         break
@@ -239,7 +243,7 @@ function KpiCalculator(props: KpiCalculatorProps) {
       case 'end-month': {
         setEndMonth({
           ...endMonth,
-          value: value.id,
+          value,
           error: endMonth.error ? !isEndMonthValid(value.id) : endMonth.error,
         })
         break
@@ -275,10 +279,7 @@ function KpiCalculator(props: KpiCalculatorProps) {
         }}
         error={startMonth.error}
         errorMessage={startMonth.errorMsg}
-        selectedItem={{
-          title: props.frontPage ? props.phrases.calculatorMonthAverageFrontpage : props.phrases.calculatorMonthAverage,
-          id: '90',
-        }}
+        selectedItem={startMonth.value}
         items={props.months}
       />
     )
@@ -295,10 +296,7 @@ function KpiCalculator(props: KpiCalculatorProps) {
         }}
         error={endMonth.error}
         errorMessage={endMonth.errorMsg}
-        selectedItem={{
-          title: props.frontPage ? props.phrases.calculatorMonthAverageFrontpage : props.phrases.calculatorMonthAverage,
-          id: '90',
-        }}
+        selectedItem={endMonth.value}
         items={props.months}
       />
     )
@@ -354,13 +352,14 @@ function KpiCalculator(props: KpiCalculatorProps) {
 
   function calculatorResult() {
     const priceChangeLabel = change?.charAt(0) === '-' ? props.phrases.priceDecrease : props.phrases.priceIncrease
-    const changeValue = change?.charAt(0) === '-' ? change.replace('-', '') : change
+    const changeValue = change?.charAt(0) === '-' ? change.replace('-', '') : (change ?? '')
+    const endValueText = endValue?.toString() ?? ''
     const resultScreenReader = props.phrases.kpiResultScreenReader
-      .replace('{0}', language === 'en' ? endValue : endValue?.replace(/\./g, ','))
+      .replace('{0}', language === 'en' ? endValueText : endValueText.replace(/\./g, ','))
       .replace('{1}', priceChangeLabel)
-      .replace('{2}', language === 'en' ? changeValue : changeValue?.replace(/\./g, ','))
-      .replace('{3}', startPeriod)
-      .replace('{4}', endPeriod)
+      .replace('{2}', language === 'en' ? changeValue : changeValue.replace(/\./g, ','))
+      .replace('{3}', startPeriod as string)
+      .replace('{4}', endPeriod as string)
 
     return (
       <Container className='calculator-result' ref={scrollAnchor}>
@@ -420,11 +419,12 @@ function KpiCalculator(props: KpiCalculatorProps) {
 
   function calculatorResultFrontpage() {
     const priceChangeLabel = change?.charAt(0) === '-' ? props.phrases.priceDecrease : props.phrases.priceIncrease
-    const changeValue = change?.charAt(0) === '-' ? change.replace('-', '') : change
+    const changeValue = change?.charAt(0) === '-' ? change.replace('-', '') : (change ?? '')
+    const endValueText = endValue?.toString() ?? ''
     const resultScreenReader = props.phrases.kpiResultFrontpageScreenReader
-      .replace('{0}', language === 'en' ? endValue : endValue?.replace(/\./g, ','))
+      .replace('{0}', language === 'en' ? endValueText : endValueText.replace(/\./g, ','))
       .replace('{1}', priceChangeLabel)
-      .replace('{2}', language === 'en' ? changeValue : changeValue?.replace(/\./g, ','))
+      .replace('{2}', language === 'en' ? changeValue : changeValue.replace(/\./g, ','))
     return (
       <Container className='calculator-result-frontpage' ref={scrollAnchor}>
         <div aria-live='polite' aria-atomic='true'>
