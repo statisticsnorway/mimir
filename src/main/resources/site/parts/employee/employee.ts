@@ -2,7 +2,7 @@ import { type Content, get as getContentByKey } from '/lib/xp/content'
 import { localize } from '/lib/xp/i18n'
 import { getContent, pageUrl, attachmentUrl } from '/lib/xp/portal'
 import { render } from '/lib/enonic/react4xp'
-import { imageUrl } from '/lib/ssb/utils/imageUtils'
+import { getImageAlt, imageUrl } from '/lib/ssb/utils/imageUtils'
 
 import { renderError } from '/lib/ssb/error/error'
 import * as util from '/lib/util'
@@ -31,6 +31,7 @@ function renderPart(req: XP.Request) {
   const projects: Array<Project> = projectIds && projectIds.length > 0 ? parseProject(projectIds) : []
   const profileImageIds: Array<string> = page.data.profileImages ? util.data.forceArray(page.data.profileImages) : []
 
+  const pressImageAltText = profileImageIds.length ? getImageAlt(profileImageIds[0]) : ''
   const profileImages: Array<string> | void[] = profileImageIds
     ? profileImageIds.map((image: string) => {
         return imageUrl({
@@ -156,6 +157,7 @@ function renderPart(req: XP.Request) {
     pressPicturesDescrPhrase,
     pressPictureLabelPhrase,
     imagePhrase,
+    pressImageAltText,
   }
 
   return render('site/parts/employee/employee', props, req)

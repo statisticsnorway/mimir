@@ -1,12 +1,11 @@
 import { assetUrl, serviceUrl } from '/lib/xp/portal'
 import { getUser, hasRole } from '/lib/xp/auth'
 import { getToolUrl } from '/lib/xp/admin'
-import { parseContributions } from '/lib/ssb/utils/utils'
+import { parseContributions, getEnvironmentString } from '/lib/ssb/utils/utils'
 
 import { render } from '/lib/thymeleaf'
 import { renderError } from '/lib/ssb/error/error'
 import { React4xp } from '/lib/enonic/react4xp'
-import { isEnabled } from '/lib/featureToggle'
 
 const view = resolve('./dashboard.html')
 const DEFAULT_CONTENTSTUDIO_URL = getToolUrl('com.enonic.app.contentstudio', 'main')
@@ -53,6 +52,7 @@ function renderPart(req) {
     statisticRegister: userHasAdmin,
   }
 
+  const environmentString = getEnvironmentString()
   const dashboardDataset = new React4xp('DashboardEntry')
     .setProps({
       user,
@@ -62,7 +62,7 @@ function renderPart(req) {
       internalBaseUrl: `${INTERNAL_BASE_URL}`,
       internalStatbankUrl: `${INTERNAL_STATBANK_URL}`,
       statregRapportUrl: `${STATREG_RAPPORT_URL}`,
-      toggleDebugging: isEnabled('dashboard-redux-logging-debugging', true, 'ssb'),
+      title: `${environmentString ? `${environmentString}: ` : ''}SSB Dashboard`,
     })
     .setId('dashboard')
 
@@ -75,6 +75,7 @@ function renderPart(req) {
 
   const model = {
     ...assets,
+    environmentText: environmentString ? `[${environmentString}]` : '',
     pageContributions,
     username: user.displayName,
     linkToGuide: userHasAdmin

@@ -29,7 +29,7 @@ function getRssNews(url: string): RssItems {
   const requestParams: HttpRequestParams = {
     url,
     method: 'GET',
-    readTimeout: 40000,
+    readTimeout: 60000,
   }
 
   const status: RssItems = {
@@ -65,6 +65,8 @@ function postRssNews(encryptedRss: string): string {
     url: rssNewsBaseUrl,
     method: 'POST',
     body: encryptedRss,
+    connectionTimeout: 60000,
+    readTimeout: 60000,
   }
 
   try {
@@ -89,6 +91,8 @@ function postRssStatkal(encryptedRss: string): string {
     url: rssStatkalBaseUrl,
     method: 'POST',
     body: encryptedRss,
+    connectionTimeout: 60000,
+    readTimeout: 60000,
   }
 
   try {

@@ -4,7 +4,7 @@ import { localize } from '/lib/xp/i18n'
 import { getToolUrl } from '/lib/xp/admin'
 import { render } from '/lib/thymeleaf'
 import { getMainSubjects } from '/lib/ssb/utils/subjectUtils'
-import { parseContributions } from '/lib/ssb/utils/utils'
+import { getEnvironmentString, parseContributions } from '/lib/ssb/utils/utils'
 import { type DropdownItems } from '/lib/types/components'
 import { render as r4XpRender } from '/lib/enonic/react4xp'
 
@@ -91,6 +91,7 @@ function renderPart(req: XP.Request): XP.Response {
     ...contentTypesList,
   ]
 
+  const environmentString = getEnvironmentString()
   const bestBetComponent = r4XpRender(
     'Bestbet',
     {
@@ -107,6 +108,7 @@ function renderPart(req: XP.Request): XP.Response {
       contentTypes: contentTypesDropdownItems,
       mainSubjects: mainSubjectDropdownItems,
       mainSubjectsEnglish: englishMainSubjectDropdownItems,
+      environmentText: environmentString,
     },
     req,
     {
@@ -118,6 +120,7 @@ function renderPart(req: XP.Request): XP.Response {
     body: render(view, {
       ...getAssets(),
       pageContributions: parseContributions(bestBetComponent.pageContributions),
+      title: `${environmentString ? `${environmentString}: ` : ''}SSB Bestbet`,
     }),
   }
 }

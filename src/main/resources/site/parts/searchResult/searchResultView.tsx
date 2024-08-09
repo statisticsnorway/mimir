@@ -96,14 +96,7 @@ function SearchResult(props: SearchResultProps) {
     setFilterChanged(id)
 
     if (id === 'mainSubject') {
-      const selectedSubject =
-        value.id === 'allSubjects'
-          ? value
-          : {
-              id: value.id,
-              title: value.id,
-            }
-      setSelectedMainSubject(selectedSubject)
+      setSelectedMainSubject(value)
       setFilter({
         ...filter,
         mainSubject: value.id === '' || value.id === 'allSubjects' ? '' : value.id,
@@ -111,15 +104,7 @@ function SearchResult(props: SearchResultProps) {
     }
 
     if (id === 'contentType') {
-      const selectedContentType =
-        value.id === 'allTypes'
-          ? value
-          : {
-              id: value.id,
-              title: props.contentTypePhrases.find((phrase) => phrase.id === value.id).title,
-            }
-
-      setSelectedContentType(selectedContentType)
+      setSelectedContentType(value)
       setFilter({
         ...filter,
         contentType: value.id === '' || value.id === 'allTypes' ? '' : value.id,
@@ -223,7 +208,7 @@ function SearchResult(props: SearchResultProps) {
           </Col>
           <Divider dark />
         </div>
-        {props.nameSearchToggle && props.nameSearchData ? renderNameResult() : undefined}
+        {props.nameSearchData ? renderNameResult() : undefined}
         <ol className='list-unstyled '>
           {renderListItem(bestBetHit!)}
           {hits.map((hit, i) => {
@@ -332,7 +317,7 @@ function SearchResult(props: SearchResultProps) {
     if (props.language === 'en') {
       return (
         <div>
-          {props.nameSearchToggle ? renderNameResult() : undefined}
+          {renderNameResult()}
           <Title size={2}>{props.noHitMessage}</Title>
           <p>
             Go to <Link href='/en/navn'>name search</Link>
@@ -348,7 +333,7 @@ function SearchResult(props: SearchResultProps) {
     } else {
       return (
         <div>
-          {props.nameSearchToggle ? renderNameResult() : undefined}
+          {renderNameResult()}
           <Title size={2}>{props.noHitMessage}</Title>
           <p>
             Her finner du <Link href='/navn'>navnesøk</Link>
