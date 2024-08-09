@@ -39,14 +39,13 @@ function renderPart(req: XP.Request): XP.Response {
 
   const title = config.title
   const subTitle = getSubtitle(config.content, config.date, language)
-  log.info('aria-label: ' + getProfiledCardAriaLabel(config.title, subTitle))
   const props: ProfiledBoxProps = {
     imgUrl: imageUrl({
       id: config.image,
       scale: 'block(315, 215)',
       format: 'jpg',
     }),
-    imageAltText: getImageAlt(config.image) ? getImageAlt(config.image) : ' ',
+    imageAltText: getImageAlt(config.image) ?? ' ',
     imagePlacement: config.cardOrientation == 'horizontal' ? 'left' : 'top',
     href: getLink(urlContentSelector),
     subTitle,

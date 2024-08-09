@@ -137,7 +137,6 @@ function renderPart(req: XP.Request, relatedArticles: RelatedArticles['relatedAr
             }
 
             const title = article.externalArticle.title
-            log.info('aria-label: ' + getProfiledCardAriaLabel(title, subTitle))
             return {
               title,
               subTitle,
