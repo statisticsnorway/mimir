@@ -109,15 +109,18 @@ function renderPart(req: XP.Request, relatedArticles: RelatedArticles['relatedAr
                 imageAlt = getImageAlt(image) ? getImageAlt(image) : ''
               }
 
+              const title = articleContent.displayName
+              const subTitle = getSubTitle(articleContent, phrases, language) ?? ''
               return {
-                title: articleContent.displayName,
-                subTitle: getSubTitle(articleContent, phrases, language),
+                title,
+                subTitle,
                 preface: articleContent.data.ingress,
                 href: pageUrl({
                   id: articleContent._id,
                 }),
                 imageSrc,
                 imageAlt,
+                ariaLabel: getProfiledCardAriaLabel(title, subTitle),
               }
             })
           } else if (article._selected === 'externalArticle') {
