@@ -11,6 +11,7 @@ import {
   type VariantInListing,
 } from '/lib/ssb/dashboard/statreg/types'
 import { imageUrl, getImageAlt } from '/lib/ssb/utils/imageUtils'
+import { getProfiledCardAriaLabel } from '/lib/ssb/utils/utils'
 
 import { renderError } from '/lib/ssb/error/error'
 import * as util from '/lib/util'
@@ -135,13 +136,16 @@ function renderPart(req: XP.Request, relatedArticles: RelatedArticles['relatedAr
               subTitle += prettyDate && `${subTitle ? ' / ' : ''}${prettyDate}`
             }
 
+            const title = article.externalArticle.title
+            log.info('aria-label: ' + getProfiledCardAriaLabel(title, subTitle))
             return {
-              title: article.externalArticle.title,
+              title,
               subTitle,
               preface: article.externalArticle.preface,
               href: article.externalArticle.url,
               imageSrc,
               imageAlt,
+              ariaLabel: getProfiledCardAriaLabel(title, subTitle),
             }
           }
           return null

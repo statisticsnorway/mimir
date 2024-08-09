@@ -5,6 +5,7 @@ export interface RelatedArticlesContent {
   href: string
   imageSrc: string
   imageAlt: string
+  ariaLabel: string
 }
 
 export interface RelatedArticle {

@@ -13,11 +13,11 @@ const ProfiledBox = (props: ProfiledBoxProps) => {
       title={title}
       linkType='header'
       image={<img src={imgUrl} alt={imageAltText} aria-hidden='true' />}
-      // TODO: Neither aria-label or aria-describedby is supported by the Card component
       ariaLabel={ariaLabel}
-      ariaDescribedBy='subtitle'
     >
-      <Paragraph className={`preambleText${titleSize ? ` title-size-${titleSize}` : ''}`}>{preambleText}</Paragraph>
+      <Paragraph className={`preambleText${titleSize ? ` title-size-${titleSize}` : ''}`} aria-hidden='true'>
+        {preambleText}
+      </Paragraph>
     </Card>
   )
 }
