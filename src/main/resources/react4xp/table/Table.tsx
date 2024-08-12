@@ -110,7 +110,13 @@ function Table(props: TableProps) {
   function addCaption() {
     const { caption } = currentTable
     if (caption) {
-      return typeof caption === 'object' ? caption.content : caption
+      const hasNoteRefs = typeof caption === 'object'
+      return (
+        <>
+          {hasNoteRefs ? caption.content : caption}
+          {hasNoteRefs && addNoteRefs(caption.noterefs)}
+        </>
+      )
     }
     return null
   }
