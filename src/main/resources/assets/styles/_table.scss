@@ -31,7 +31,7 @@
       color: $ssb-dark-6;
     }
 
-    &>div {
+    & > div {
       padding-top: $spacer * 0.5;
       padding-bottom: $spacer * 0.5;
     }
@@ -96,7 +96,7 @@ table.statistics {
 
     th,
     td {
-      height: 36px; //empty lines heihgt
+      height: 36px;
     }
 
     th {
@@ -185,11 +185,11 @@ table.statistics {
         }
       }
 
-      &:first-of-type>td {
+      &:first-of-type > td {
         padding-top: 2em
       }
 
-      &:last-of-type>td {
+      &:last-of-type > td {
         padding-bottom: 2em
       }
     }
