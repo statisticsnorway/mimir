@@ -52,7 +52,7 @@ function renderPart(req: XP.Request): XP.Response {
     title,
     preambleText: config.preamble,
     titleSize: getTitleSize(title),
-    ariaLabel: getProfiledCardAriaLabel(title, subTitle),
+    ariaLabel: getProfiledCardAriaLabel(subTitle),
   }
 
   return r4xpRender('site/parts/profiledBox/profiledBox', props, req, {
