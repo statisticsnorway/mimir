@@ -60,12 +60,6 @@
         justify-content: space-between;
       }
     }
-
-    @include media-breakpoint-down(md) {
-      .statisticsPageLink {
-        margin-bottom: $spacer * 3;
-      }
-    }
   }
 
   .button-more, .text-center {
