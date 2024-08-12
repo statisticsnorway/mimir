@@ -1,6 +1,6 @@
 import { getContent, getComponent, pageUrl } from '/lib/xp/portal'
 import { render } from '/lib/thymeleaf'
-import { randomUnsafeString } from '/lib/ssb/utils/utils'
+import { getProfiledCardAriaLabel, randomUnsafeString } from '/lib/ssb/utils/utils'
 import { render as r4xpRender } from '/lib/enonic/react4xp'
 import { formatDate } from '/lib/ssb/utils/dateUtils'
 import { imageUrl, getImageAlt } from '/lib/ssb/utils/imageUtils'
@@ -32,28 +32,27 @@ function renderPart(req: XP.Request): XP.Response {
 
   const language: string = page.language === 'en' || page.language === 'nn' ? page.language : 'nb'
   const urlContentSelector: ProfiledBoxPartConfig['urlContentSelector'] = config.urlContentSelector
-  const titleSize: string = getTitleSize(config.title)
   const id: string = 'profiled-box-' + randomUnsafeString()
   const body: string = render(view, {
     profiledBoxId: id,
   })
 
+  const title = config.title
+  const subTitle = getSubtitle(config.content, config.date, language)
   const props: ProfiledBoxProps = {
     imgUrl: imageUrl({
       id: config.image,
       scale: 'block(315, 215)',
       format: 'jpg',
     }),
-    imageAltText: getImageAlt(config.image) ? getImageAlt(config.image) : ' ',
+    imageAltText: getImageAlt(config.image) ?? ' ',
     imagePlacement: config.cardOrientation == 'horizontal' ? 'left' : 'top',
     href: getLink(urlContentSelector),
-    subTitle: getSubtitle(config.content, config.date, language),
-    title: config.title,
+    subTitle,
+    title,
     preambleText: config.preamble,
-    linkType: 'header',
-    titleSize: titleSize,
-    ariaLabel: config.title,
-    ariaDescribedBy: 'subtitle',
+    titleSize: getTitleSize(title),
+    ariaLabel: getProfiledCardAriaLabel(title, subTitle),
   }
 
   return r4xpRender('site/parts/profiledBox/profiledBox', props, req, {

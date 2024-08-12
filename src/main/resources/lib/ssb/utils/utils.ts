@@ -181,6 +181,15 @@ export function getEnvironmentString(): string {
   return environment
 }
 
+export function getProfiledCardAriaLabel(title: string, subTitle: string): string {
+  if (title && subTitle) {
+    const titleLastCharacter = title.substring(title.length - 1)
+    const titleScreenReaderText = titleLastCharacter === '?' || titleLastCharacter === '.' ? title : `${title},`
+    return `${titleScreenReaderText} ${subTitle.replace(' /', ',')}`
+  }
+  return ''
+}
+
 interface ContentSearchPageResult {
   contentId?: string
 }

@@ -11,6 +11,7 @@ import {
   type VariantInListing,
 } from '/lib/ssb/dashboard/statreg/types'
 import { imageUrl, getImageAlt } from '/lib/ssb/utils/imageUtils'
+import { getProfiledCardAriaLabel } from '/lib/ssb/utils/utils'
 
 import { renderError } from '/lib/ssb/error/error'
 import * as util from '/lib/util'
@@ -108,15 +109,18 @@ function renderPart(req: XP.Request, relatedArticles: RelatedArticles['relatedAr
                 imageAlt = getImageAlt(image) ? getImageAlt(image) : ''
               }
 
+              const title = articleContent.displayName
+              const subTitle = getSubTitle(articleContent, phrases, language) ?? ''
               return {
-                title: articleContent.displayName,
-                subTitle: getSubTitle(articleContent, phrases, language),
+                title,
+                subTitle,
                 preface: articleContent.data.ingress,
                 href: pageUrl({
                   id: articleContent._id,
                 }),
                 imageSrc,
                 imageAlt,
+                ariaLabel: getProfiledCardAriaLabel(title, subTitle),
               }
             })
           } else if (article._selected === 'externalArticle') {
@@ -135,13 +139,15 @@ function renderPart(req: XP.Request, relatedArticles: RelatedArticles['relatedAr
               subTitle += prettyDate && `${subTitle ? ' / ' : ''}${prettyDate}`
             }
 
+            const title = article.externalArticle.title
             return {
-              title: article.externalArticle.title,
+              title,
               subTitle,
               preface: article.externalArticle.preface,
               href: article.externalArticle.url,
               imageSrc,
               imageAlt,
+              ariaLabel: getProfiledCardAriaLabel(title, subTitle),
             }
           }
           return null
