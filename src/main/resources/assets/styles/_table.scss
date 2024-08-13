@@ -50,10 +50,6 @@
     }
   }
 
-  font-family: $font-roboto-plain;
-  width: 100%;
-  border-collapse: collapse;
-
   .ssb-link {
     margin-top: 10px;
   }
@@ -105,8 +101,6 @@ table.statistics {
       }
 
       &.colspan {
-        border-top: 1px solid $ssb-dark-5;
-        border-bottom: 1px solid $ssb-dark-5;
         text-align: left;
         font-weight: bold;
       }
@@ -122,8 +116,6 @@ table.statistics {
     }
 
     td {
-      white-space: nowrap;
-
       &.important {
         font-weight: bold;
       }
@@ -132,64 +124,11 @@ table.statistics {
 
   thead,
   tbody tr.head {
-
-    th,
-    td {
-      text-align: right;
-      border: 1px solid $ssb-dark-5;
-    }
-
     th {
-      padding-top: 1.5em;
-      text-align: right;
-
       &[colspan] {
         text-align: center;
         font-weight: normal;
         font-weight: bold;
-      }
-    }
-
-    td {
-      white-space: nowrap;
-    }
-
-  }
-
-  tfoot {
-    border: 1px solid black;
-
-    tr {
-      border: none;
-
-      td {
-        padding: 0.2em 0.6em 0.2em 0.6em;
-        word-wrap: break-word;
-        border: none;
-        line-height: 28px;
-      }
-
-      &.footnote {
-        td {
-          sup {
-            padding-right: 1em;
-            padding-left: .5em;
-          }
-        }
-      }
-
-      &.correction-notice {
-        td {
-          padding-top: 1em;
-        }
-      }
-
-      &:first-of-type > td {
-        padding-top: 2em
-      }
-
-      &:last-of-type > td {
-        padding-bottom: 2em
       }
     }
   }
