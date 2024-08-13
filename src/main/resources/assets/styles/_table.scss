@@ -114,12 +114,6 @@ table.statistics {
         font-size: 1.1em;
       }
     }
-
-    td {
-      &.important {
-        font-weight: bold;
-      }
-    }
   }
 
   thead,
@@ -127,8 +121,6 @@ table.statistics {
     th {
       &[colspan] {
         text-align: center;
-        font-weight: normal;
-        font-weight: bold;
       }
     }
   }
@@ -140,6 +132,14 @@ table.statistics tbody tr td:not(:first-child) {
 
 table.statistics thead tr:last-child th {
   text-align: right;
+}
+
+table.statistics {
+  thead {
+    th[scope="colgroup"] {
+      text-align: right;
+    }
+  }
 }
 
 ul.statbankkilde {
