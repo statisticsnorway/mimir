@@ -31,7 +31,7 @@
       color: $ssb-dark-6;
     }
 
-    & > div {
+    &>div {
       padding-top: $spacer * 0.5;
       padding-bottom: $spacer * 0.5;
     }
@@ -63,7 +63,7 @@ table.statistics thead tr:last-child th {
   text-align: right;
 }
 
-table.statistics thead th{
+table.statistics thead th {
   text-align: right !important;
 }
 
