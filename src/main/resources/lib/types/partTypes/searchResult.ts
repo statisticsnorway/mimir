@@ -24,7 +24,6 @@ export interface SearchResultProps {
   allContentTypesPhrase: string
   allSubjectsPhrase: string
   searchServiceUrl: string
-  nameSearchToggle: boolean
   nameSearchData: object | undefined
   nameSearchUrl: string
   namePhrases: {

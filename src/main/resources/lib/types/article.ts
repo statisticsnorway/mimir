@@ -3,6 +3,7 @@ export interface PreparedArticles {
   preface: string
   url: string
   publishDate: string
+  publishDateHuman?: string
 }
 
 export interface ArticleResult {

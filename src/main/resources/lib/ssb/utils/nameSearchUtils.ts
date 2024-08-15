@@ -8,7 +8,6 @@ import { getNameGraphDataFromRepo, type NameData, nameGraphRepoExists } from '/l
 import { request, HttpRequestParams, HttpResponse } from '/lib/http-client'
 
 import { getCalculatorConfig, getNameSearchGraphData } from '/lib/ssb/dataset/calculator'
-import { isEnabled } from '/lib/featureToggle'
 import { type SolrResponse } from '/lib/types/solr'
 import { type CalculatorConfig } from '/site/content-types'
 
@@ -53,10 +52,9 @@ export function getNameSearchResult(name: string, includeGraphData: boolean): So
 }
 
 export function prepareNameGraphResult(name: string): string {
-  const nameSearchGraphEnabled: boolean = isEnabled('name-graph', true, 'ssb')
   const obj: ResultType = JSON.parse('{}')
   obj.originalName = name
-  obj.nameGraph = nameSearchGraphEnabled ? prepareGraph(name) : []
+  obj.nameGraph = prepareGraph(name)
   return JSON.stringify(obj)
 }
 
@@ -65,10 +63,9 @@ export function prepareGraph(name: string): Array<NameGraph> {
 }
 
 function prepareResult(result: string, name: string, includeGraphData: boolean): string {
-  const nameSearchGraphEnabled: boolean = isEnabled('name-graph', true, 'ssb')
   const obj: ResultType = JSON.parse(result)
   obj.originalName = name
-  obj.nameGraphData = nameSearchGraphEnabled && includeGraphData ? prepareGraph(name) : []
+  obj.nameGraphData = includeGraphData ? prepareGraph(name) : []
   return JSON.stringify(obj)
 }
 

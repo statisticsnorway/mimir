@@ -8,6 +8,14 @@ import { PifCalculatorProps } from '../../lib/types/partTypes/pifCalculaor'
 
 function PifCalculator(props: PifCalculatorProps) {
   const validMaxYear = props.lastUpdated.year
+  const defaultProductGroupType = {
+    title: props.phrases.pifProductTypeAll,
+    id: 'SITCT',
+  }
+  const defaultMonthValue = {
+    title: props.phrases.calculatorMonthAverage,
+    id: '90',
+  }
   const { calculatorValidateAmountNumber, pifValidateYear } = props.phrases
   const [scopeCode, setScopeCode] = useState({
     error: false,
@@ -18,7 +26,7 @@ function PifCalculator(props: PifCalculatorProps) {
   const [productGroup, setProductGroup] = useState({
     error: false,
     errorMsg: '',
-    value: '',
+    value: defaultProductGroupType,
   })
   const [startValue, setStartValue] = useState({
     error: false,
@@ -28,10 +36,10 @@ function PifCalculator(props: PifCalculatorProps) {
   const [startMonth, setStartMonth] = useState({
     error: false,
     errorMsg: props.lastNumberText,
-    value: '90',
+    value: defaultMonthValue,
   })
   const validMinYear = getStartYearRelevantDataset()
-  const validMinYearPhrase = pifValidateYear.replaceAll('{0}', validMinYear)
+  const validMinYearPhrase = pifValidateYear.replaceAll('{0}', validMinYear.toString())
   const validYearErrorMsg = `${validMinYearPhrase} ${validMaxYear}`
   const [startYear, setStartYear] = useState({
     error: false,
@@ -41,7 +49,7 @@ function PifCalculator(props: PifCalculatorProps) {
   const [endMonth, setEndMonth] = useState({
     error: false,
     errorMsg: props.lastNumberText,
-    value: '90',
+    value: defaultMonthValue,
   })
   const [endYear, setEndYear] = useState({
     error: false,
@@ -107,20 +115,20 @@ function PifCalculator(props: PifCalculatorProps) {
       .get(props.pifServiceUrl, {
         params: {
           scopeCode: scopeCode.value,
-          productGroup: productGroup.value,
+          productGroup: productGroup.value.id,
           startValue: startValue.value,
           startYear: startYear.value,
-          startMonth: startMonth.value,
+          startMonth: startMonth.value.id,
           endYear: endYear.value,
-          endMonth: endMonth.value,
+          endMonth: endMonth.value.id,
           language: language,
         },
       })
       .then((res) => {
         const changeVal = (res.data.change * 100).toFixed(1)
         const endVal = res.data.endValue.toFixed(2)
-        const startPeriod = getPeriod(startYear.value, startMonth.value)
-        const endPeriod = getPeriod(endYear.value, endMonth.value)
+        const startPeriod = getPeriod(startYear.value, startMonth.value.id)
+        const endPeriod = getPeriod(endYear.value, endMonth.value.id)
         setChange(changeVal)
         setEndValue(endVal)
         setStartPeriod(startPeriod)
@@ -145,7 +153,7 @@ function PifCalculator(props: PifCalculatorProps) {
     // Datasets available from 1977 for home market
     if (scopeCode.value === '2') return 1977
     // Datasets available from 1953 for home and import market with spesific product type
-    if (scopeCode.value === '3' && productGroup.value && productGroup.value !== 'SITCT') return 1953
+    if (scopeCode.value === '3' && productGroup.value && productGroup.value.id !== 'SITCT') return 1953
     // Datasets available from 1926 for home and import market and product type 'all'
     return 1926
   }
@@ -166,7 +174,12 @@ function PifCalculator(props: PifCalculatorProps) {
     const testStartYear = startYearValue.match(yearRegexp)
     const isStartYearValid = testStartYear && testStartYear.length === 1
     const intStartYear = parseInt(startYearValue)
-    return !(!isStartYearValid || isNaN(intStartYear) || intStartYear < validMinYear || intStartYear > validMaxYear)
+    return !(
+      !isStartYearValid ||
+      isNaN(intStartYear) ||
+      intStartYear < validMinYear ||
+      intStartYear > (validMaxYear as number)
+    )
   }
 
   function isEndYearValid(value?: string) {
@@ -174,11 +187,11 @@ function PifCalculator(props: PifCalculatorProps) {
     const testEndYear = endYearValue.match(yearRegexp)
     const isEndYearValid = testEndYear && testEndYear.length === 1
     const intEndYear = parseInt(endYearValue)
-    return !(!isEndYearValid || isNaN(intEndYear) || intEndYear < validMinYear || intEndYear > validMaxYear)
+    return !(!isEndYearValid || isNaN(intEndYear) || intEndYear < validMinYear || intEndYear > (validMaxYear as number))
   }
 
   function isStartMonthValid(value?: string) {
-    const startMonthValue = value || startMonth.value
+    const startMonthValue = value || startMonth.value.id
     const startMonthValid = !(
       startYear.value === validMaxYear &&
       (startMonthValue === '' || startMonthValue > validMaxMonth)
@@ -193,7 +206,7 @@ function PifCalculator(props: PifCalculatorProps) {
   }
 
   function isEndMonthValid(value?: string) {
-    const endMonthValue = value || endMonth.value
+    const endMonthValue = value || endMonth.value.id
     const maxYearAverage = Number(validMaxMonth) === 12 ? validMaxYear : Number(validMaxYear) - 1
     const endMonthValid =
       endMonthValue === ''
@@ -246,16 +259,16 @@ function PifCalculator(props: PifCalculatorProps) {
           value: value,
         })
         // Missing data for pifProductOil (SITC4) and home market (2)
-        if (value === '2' && productGroup.value === 'SITC4') {
+        if (value === '2' && productGroup.value.id === 'SITC4') {
           setReset(reset + 1)
-          setProductGroup({ ...productGroup, value: 'SITCT' })
+          setProductGroup({ ...productGroup, value: defaultProductGroupType })
         }
         break
       }
       case 'product-group': {
         setProductGroup({
           ...productGroup,
-          value: value.id,
+          value,
         })
         break
       }
@@ -271,7 +284,7 @@ function PifCalculator(props: PifCalculatorProps) {
       case 'start-month': {
         setStartMonth({
           ...startMonth,
-          value: value.id,
+          value,
           error: startMonth.error ? !isStartMonthValid(value.id) : startMonth.error,
         })
         break
@@ -293,7 +306,7 @@ function PifCalculator(props: PifCalculatorProps) {
       case 'end-month': {
         setEndMonth({
           ...endMonth,
-          value: value.id,
+          value,
           error: endMonth.error ? !isEndMonthValid(value.id) : endMonth.error,
         })
         break
@@ -329,10 +342,7 @@ function PifCalculator(props: PifCalculatorProps) {
         }}
         error={startMonth.error}
         errorMessage={startMonth.errorMsg}
-        selectedItem={{
-          title: props.phrases.calculatorMonthAverage,
-          id: '',
-        }}
+        selectedItem={startMonth.value}
         items={props.months}
       />
     )
@@ -349,18 +359,13 @@ function PifCalculator(props: PifCalculatorProps) {
         }}
         error={endMonth.error}
         errorMessage={endMonth.errorMsg}
-        selectedItem={{
-          title: props.phrases.calculatorMonthAverage,
-          id: '',
-        }}
+        selectedItem={endMonth.value}
         items={props.months}
       />
     )
   }
 
   function addDropdownProduct(id: string | number) {
-    const productGroupAll = props.phrases.pifProductTypeAll
-
     return (
       <Dropdown
         id={id}
@@ -368,12 +373,9 @@ function PifCalculator(props: PifCalculatorProps) {
         onSelect={(value: object) => {
           onChange(id, value)
         }}
-        selectedItem={{
-          title: productGroupAll,
-          id: 'SITCT',
-        }}
+        selectedItem={productGroup.value}
         // Dataset not available for pifProductOil (SITC4) for home market (2)
-        items={scopeCode.value === '2' ? props.productGroups.toSpliced(5, 1) : props.productGroups}
+        items={scopeCode.value === '2' ? props.productGroups.toSpliced(5, 1) : props.productGroups} // TODO: To get rid of the typescript error we have to upgrade the tsconfig to "ES2023"
         ariaLabel={props.phrases.pifProductTypeHeader}
       />
     )
@@ -447,18 +449,21 @@ function PifCalculator(props: PifCalculatorProps) {
 
   function calculatorResult() {
     const priceChangeLabel = change?.charAt(0) === '-' ? props.phrases.priceDecrease : props.phrases.priceIncrease
-    const changeValue = change?.charAt(0) === '-' ? change.replace('-', '') : change
+    const changeValue = change?.charAt(0) === '-' ? change.replace('-', '') : (change ?? '')
+    const endValueText = endValue?.toString() ?? ''
+    const startIndexText = startIndex?.toString() ?? ''
+    const endIndexText = endIndex?.toString() ?? ''
     const pifResultForScreenreader = props.phrases.pifResultForScreenreader
-      .replace('{0}', language === 'en' ? endValue : endValue?.replace('.', ','))
+      .replace('{0}', language === 'en' ? endValueText : endValueText.replace('.', ','))
       .replace('{1}', priceChangeLabel)
-      .replace('{2}', language === 'en' ? changeValue : changeValue?.replace('.', ','))
-      .replaceAll('{3}', startMonth.value !== '90' ? startPeriod : startYear.value)
-      .replaceAll('{4}', endMonth.value !== '90' ? endPeriod : endYear.value)
-      .replace('{5}', language === 'en' ? startIndex : startIndex?.replace('.', ','))
-      .replace('{6}', language === 'en' ? endIndex : endIndex?.replace('.', ','))
+      .replace('{2}', language === 'en' ? changeValue : changeValue.replace('.', ','))
+      .replaceAll('{3}', startMonth.value.id !== '90' ? (startPeriod ?? '') : startYear.value)
+      .replaceAll('{4}', endMonth.value.id !== '90' ? (endPeriod ?? '') : endYear.value)
+      .replace('{5}', language === 'en' ? startIndexText : startIndexText.replace('.', ','))
+      .replace('{6}', language === 'en' ? endIndexText : endIndexText.replace('.', ','))
 
     return (
-      <Container className='calculator-result' ref={scrollAnchor} tabIndex='0'>
+      <Container className='calculator-result' ref={scrollAnchor} tabIndex={0}>
         <div aria-atomic='true'>
           <span className='sr-only'>{pifResultForScreenreader}</span>
         </div>
