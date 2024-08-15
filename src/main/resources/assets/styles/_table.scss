@@ -55,6 +55,34 @@
   }
 }
 
+table.statistics tbody tr td:not(:first-child) {
+  text-align: right;
+}
+
+table.statistics thead tr:last-child th {
+  text-align: right;
+}
+
+table.statistics thead th{
+  text-align: right !important;
+}
+
+table.statistics thead th[scope="colgroup"] {
+  text-align: center !important;
+}
+
+table.statistics {
+  thead {
+    th[scope="colspan"] {
+      text-align: right;
+    }
+  }
+}
+
+table.statistics thead th[scope="col"] {
+  text-align: right !important;
+}
+
 table.statistics {
   width: 100%;
 
@@ -122,22 +150,6 @@ table.statistics {
       &[colspan] {
         text-align: center;
       }
-    }
-  }
-}
-
-table.statistics tbody tr td:not(:first-child) {
-  text-align: right;
-}
-
-table.statistics thead tr:last-child th {
-  text-align: right;
-}
-
-table.statistics {
-  thead {
-    th[scope="colgroup"] {
-      text-align: right;
     }
   }
 }
