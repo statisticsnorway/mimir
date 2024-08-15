@@ -4,7 +4,6 @@ import { ProfiledBoxProps } from '../../../lib/types/partTypes/profiledBox'
 
 const ProfiledBox = (props: ProfiledBoxProps) => {
   const { imgUrl, imageAltText, imagePlacement, href, subTitle, title, titleSize, preambleText, ariaLabel } = props
-
   return (
     <Card
       href={href}

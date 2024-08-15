@@ -109,10 +109,9 @@ function renderPart(req: XP.Request, relatedArticles: RelatedArticles['relatedAr
                 imageAlt = getImageAlt(image) ? getImageAlt(image) : ''
               }
 
-              const title = articleContent.displayName
               const subTitle = getSubTitle(articleContent, phrases, language) ?? ''
               return {
-                title,
+                title: articleContent.displayName,
                 subTitle,
                 preface: articleContent.data.ingress,
                 href: pageUrl({
@@ -120,7 +119,7 @@ function renderPart(req: XP.Request, relatedArticles: RelatedArticles['relatedAr
                 }),
                 imageSrc,
                 imageAlt,
-                ariaLabel: getProfiledCardAriaLabel(title, subTitle),
+                ariaLabel: getProfiledCardAriaLabel(subTitle),
               }
             })
           } else if (article._selected === 'externalArticle') {
@@ -139,15 +138,14 @@ function renderPart(req: XP.Request, relatedArticles: RelatedArticles['relatedAr
               subTitle += prettyDate && `${subTitle ? ' / ' : ''}${prettyDate}`
             }
 
-            const title = article.externalArticle.title
             return {
-              title,
+              title: article.externalArticle.title,
               subTitle,
               preface: article.externalArticle.preface,
               href: article.externalArticle.url,
               imageSrc,
               imageAlt,
-              ariaLabel: getProfiledCardAriaLabel(title, subTitle),
+              ariaLabel: getProfiledCardAriaLabel(subTitle),
             }
           }
           return null
