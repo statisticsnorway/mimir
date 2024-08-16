@@ -99,23 +99,31 @@
   }
 
   @include media-breakpoint-up(md) {
-    time {
-      display: block;
+    .time-wrapper{
+      display: table;
+      text-align: center;
       border: 2px solid $ssb-dark-5;
       width: 97px;
-      height: 80px;
+      max-height: 80px;
       margin: 8px 20px 3px 0;
-      padding: 7px;
       text-align: center;
-      background: white;
-      color: $ssb-dark-5;
 
-      .day {
-        font-size: 40px;
-        font-family: $font-roboto-condensed-bold;
-        line-height: 1;
-        display: block;
+      time {
+        display: table-cell;
+        vertical-align: middle;
+        margin: 7px;
+        background: white;
+        color: $ssb-dark-5;
+        border: none;
+
+        .day {
+          display: block;
+          font-size: 40px;
+          font-family: $font-roboto-condensed-bold;
+          line-height: 1;
+        }
       }
+
     }
   }
 
