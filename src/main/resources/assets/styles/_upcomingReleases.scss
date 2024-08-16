@@ -101,17 +101,16 @@
   @include media-breakpoint-up(md) {
     .time-wrapper{
       display: table;
-      text-align: center;
-      border: 2px solid $ssb-dark-5;
+      border: 0.125rem solid $ssb-dark-5;
       width: 97px;
       max-height: 80px;
-      margin: 8px 20px 3px 0;
+      margin: .5rem 1.25rem 0.1rem 0;
       text-align: center;
 
       time {
         display: table-cell;
         vertical-align: middle;
-        margin: 7px;
+        margin: .5rem;
         background: white;
         color: $ssb-dark-5;
         border: none;
