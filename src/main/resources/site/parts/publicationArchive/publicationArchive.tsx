@@ -164,7 +164,7 @@ function PublicationArchive(props: PublicationArchiveProps) {
         }}
         selectedItem={dropDownSubjects[0]}
         items={dropDownSubjects}
-        ariaLabel={props.chooseSubjectPhrase}
+        header={props.chooseSubjectPhrase}
       />
     )
   }
@@ -179,7 +179,7 @@ function PublicationArchive(props: PublicationArchiveProps) {
         }}
         selectedItem={dropDownTypes[0]}
         items={dropDownTypes}
-        ariaLabel={props.chooseContentTypePhrase}
+        header={props.chooseContentTypePhrase}
       />
     )
   }
