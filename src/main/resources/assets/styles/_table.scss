@@ -143,14 +143,15 @@ table.statistics {
     }
   }
 
-  thead,
-  tbody tr.head {
-    th {
-      &[colspan] {
-        text-align: center;
-      }
+thead,
+tbody tr.head {
+  th {
+    &[colspan],
+    &[colgroup] {
+      text-align: center !important;
     }
   }
+}
 }
 
 ul.statbankkilde {
