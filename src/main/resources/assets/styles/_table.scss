@@ -67,6 +67,10 @@ table.statistics thead th {
   text-align: right !important;
 }
 
+.highcharts-data-table.ssb-table-wrapper .ssb-table thead tr:first-child th:first-child {
+  text-align: left !important;
+}
+
 table.statistics {
   thead {
     th[scope="colspan"] {
