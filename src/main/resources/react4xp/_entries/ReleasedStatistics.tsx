@@ -71,10 +71,12 @@ class ReleasedStatistics extends React.Component<ReleasedStatisticsProps> {
 
     return (
       <div className={`calendar-day ${index === 0 && 'first'}`} key={index}>
-        <time aria-hidden='true' dateTime={dateTime}>
-          <span className='day'>{day.day}</span>
-          <span className='month'>{month.monthName}</span>
-        </time>
+        <div className='time-wrapper'>
+          <time aria-hidden='true' dateTime={dateTime}>
+            <span className='day'>{day.day}</span>
+            <span className='month'>{month.monthName}</span>
+          </time>
+        </div>
         <span
           id={`datemonth-${monthNumber}${index}`}
           aria-hidden='true'
