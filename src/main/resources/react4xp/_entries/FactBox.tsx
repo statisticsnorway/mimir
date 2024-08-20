@@ -6,6 +6,7 @@ interface FactBoxProps {
   header?: string
   text: string
   showSneakPeek: boolean
+  aiIcon: boolean
 }
 
 const FactBox = (props: FactBoxProps) => {
@@ -17,7 +18,14 @@ const FactBox = (props: FactBoxProps) => {
     ></div>
   )
 
-  return <FactBoxComponent header={props.header} text={createText(props.text)} sneakPeek={props.showSneakPeek} />
+  return (
+    <FactBoxComponent
+      header={props.header}
+      text={createText(props.text)}
+      sneakPeek={props.showSneakPeek}
+      aiIcon={props.aiIcon}
+    />
+  )
 }
 
 export default FactBox

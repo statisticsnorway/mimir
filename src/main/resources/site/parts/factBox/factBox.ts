@@ -51,6 +51,7 @@ function renderPart(req: XP.Request, factBoxId: string): XP.Response {
       header: factBoxContent.displayName,
       text,
       showSneakPeek: factBoxContent.data.sneakPeek,
+      aiIcon: factBoxContent.data.aiIcon,
     },
     req,
     {

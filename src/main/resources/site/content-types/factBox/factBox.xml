@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <content-type>
-    <display-name>Faktaboks</display-name>
+    <display-name>Ekspansjonsboks (Faktaboks)</display-name>
     <super-type>base:structured</super-type>
     <description></description>
     <form>
@@ -28,15 +28,12 @@
       <field-set>
          <label>Visning</label>
          <items>
-                <input name="icon" type="ImageSelector">
-                    <label>Ikon</label>
-                    <occurrences minimum="0" maximum="1" />
-                    <config>
-                        <allowPath>${site}/</allowPath>
-                    </config>
-                </input>
                 <input name="sneakPeek" type="Checkbox">
                     <label>Vis en sniktitt av innhold</label>
+                    <occurrences minimum="0" maximum="1" />
+                </input>
+                <input name="aiIcon" type="Checkbox">
+                    <label>Vis KI ikon til venstre for tittel</label>
                     <occurrences minimum="0" maximum="1" />
                 </input>
          </items>
