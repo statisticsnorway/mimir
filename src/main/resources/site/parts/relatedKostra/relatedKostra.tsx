@@ -35,4 +35,4 @@ class RelatedKostra extends React.Component<RelatedKostraProps> {
   }
 }
 
-export default (props: RelatedKostraProps) => <RelatedKostra {...props} />
+export default RelatedKostra

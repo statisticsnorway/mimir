@@ -41,4 +41,4 @@ class LocalSearch extends React.Component<LocalSearchProps> {
   }
 }
 
-export default (props: LocalSearchProps) => <LocalSearch {...props} />
+export default LocalSearch
