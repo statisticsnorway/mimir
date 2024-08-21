@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   Title,
   Button,
@@ -9,44 +9,38 @@ import {
 import { Alert, Row, Col } from 'react-bootstrap'
 import { type KeyFigureData, type KeyFigureProps } from '../../lib/types/partTypes/keyFigure'
 
-type KeyFigureState = {
-  showPreviewToggle: string | boolean | undefined
-  fetchUnPublished: string | boolean | undefined
-  keyFigures: KeyFigureData[]
-}
+function KeyFigures(props: KeyFigureProps) {
+  const {
+    showPreviewDraft,
+    pageTypeKeyFigure,
+    paramShowDraft,
+    draftExist,
+    keyFiguresDraft,
+    keyFigures,
+    columns,
+    isMacro,
+    isInStatisticsPage,
+    source,
+    sourceLabel,
+    displayName,
+    hiddenTitle,
+  } = props
+  const showPreviewToggle = showPreviewDraft && (pageTypeKeyFigure || (paramShowDraft && !pageTypeKeyFigure))
 
-class KeyFigures extends React.Component<KeyFigureProps, KeyFigureState> {
-  constructor(props: KeyFigureProps) {
-    super(props)
+  const [fetchUnPublished, setFetchUnPublished] = useState(paramShowDraft)
+  const [keyFiguresList, setKeyFiguresList] = useState((paramShowDraft && draftExist ? keyFiguresDraft : keyFigures)!)
 
-    this.state = {
-      showPreviewToggle:
-        this.props.showPreviewDraft &&
-        (this.props.pageTypeKeyFigure || (this.props.paramShowDraft && !this.props.pageTypeKeyFigure)),
-      fetchUnPublished: this.props.paramShowDraft,
-      keyFigures: (this.props.paramShowDraft && this.props.draftExist
-        ? this.props.keyFiguresDraft
-        : this.props.keyFigures)!,
-    }
-
-    this.toggleDraft = this.toggleDraft.bind(this)
+  function toggleDraft() {
+    setFetchUnPublished(!fetchUnPublished)
+    setKeyFiguresList((!fetchUnPublished && draftExist ? keyFiguresDraft : keyFigures)!)
   }
 
-  toggleDraft() {
-    this.setState({
-      fetchUnPublished: !this.state.fetchUnPublished,
-      keyFigures: (!this.state.fetchUnPublished && this.props.draftExist
-        ? this.props.keyFiguresDraft
-        : this.props.keyFigures)!,
-    })
-  }
-
-  addPreviewButton() {
-    if (this.state.showPreviewToggle && this.props.pageTypeKeyFigure) {
+  function addPreviewButton() {
+    if (showPreviewToggle && pageTypeKeyFigure) {
       return (
         <Col>
-          <Button primary onClick={this.toggleDraft} className='mb-4'>
-            {!this.state.fetchUnPublished ? 'Vis upubliserte tall' : 'Vis publiserte tall'}
+          <Button primary onClick={toggleDraft} className='mb-4'>
+            {!fetchUnPublished ? 'Vis upubliserte tall' : 'Vis publiserte tall'}
           </Button>
         </Col>
       )
@@ -54,17 +48,15 @@ class KeyFigures extends React.Component<KeyFigureProps, KeyFigureState> {
     return
   }
 
-  addPreviewInfo() {
-    const keyFigures = this.state.keyFigures
-
-    if (this.props.showPreviewDraft) {
-      if (this.state.fetchUnPublished) {
-        return keyFigures.map((keyFigure, i) => {
-          const unpublishedDraft = this.props.draftExist && keyFigure.number
+  function addPreviewInfo() {
+    if (showPreviewDraft) {
+      if (fetchUnPublished) {
+        return keyFiguresList.map((keyFigure, i) => {
+          const unpublishedDraft = draftExist && keyFigure.number
           return (
             <Col
               key={`${keyFigure.number || keyFigure.title}${i}`}
-              className={`col-12${this.props.isInStatisticsPage ? ' p-0' : ''}`}
+              className={`col-12${isInStatisticsPage ? ' p-0' : ''}`}
             >
               <Alert variant={unpublishedDraft ? 'info' : 'warning'} className='mb-4'>
                 {unpublishedDraft
@@ -75,22 +67,21 @@ class KeyFigures extends React.Component<KeyFigureProps, KeyFigureState> {
           )
         })
       }
+      return
     }
+    return
   }
 
-  createRows() {
-    const keyFigures = this.state.keyFigures
-    const columns = this.props.columns
-
+  function createRows() {
     let isRight = true
-    return keyFigures.map((keyFigure, i) => {
+    return keyFiguresList.map((keyFigure, i) => {
       isRight = !columns || (columns && !isRight) || keyFigure.size === 'large'
       return (
         <React.Fragment key={`figure-${i}`}>
-          {this.props.isMacro && !keyFigure.greenBox ? this.addDivider(isRight) : null}
+          {isMacro && !keyFigure.greenBox ? addDivider(isRight) : null}
           <Col
             className={`col-12${columns && keyFigure.size !== 'large' ? ' col-md-6' : ''}${
-              this.props.isInStatisticsPage ? ' p-0' : ''
+              isInStatisticsPage ? ' p-0' : ''
             }`}
           >
             <SSBKeyFigures
@@ -101,23 +92,21 @@ class KeyFigures extends React.Component<KeyFigureProps, KeyFigureState> {
                 )
               }
             />
-            {this.addKeyFigureSource(keyFigure)}
+            {addKeyFigureSource(keyFigure)}
           </Col>
-          {i < keyFigures.length - 1 ? this.addDivider(isRight) : null}
-          {this.props.isMacro && !keyFigure.greenBox ? this.addDivider(isRight) : null}
+          {i < keyFiguresList.length - 1 ? addDivider(isRight) : null}
+          {isMacro && !keyFigure.greenBox ? addDivider(isRight) : null}
         </React.Fragment>
       )
     })
   }
 
-  addDivider(isRight: boolean) {
+  function addDivider(isRight: boolean) {
     return <Divider className={`my-5 d-block ${!isRight ? 'd-md-none' : ''}`} light />
   }
 
-  addKeyFigureSource(keyFigure: KeyFigureData) {
-    if ((!this.props.source || !this.props.source.url) && keyFigure.source && keyFigure.source.url) {
-      const sourceLabel = this.props.sourceLabel
-
+  function addKeyFigureSource(keyFigure: KeyFigureData) {
+    if ((!source || !source.url) && keyFigure.source && keyFigure.source.url) {
       return (
         <References
           className={`${keyFigure.size !== 'large' ? 'mt-3' : ''}`}
@@ -134,10 +123,8 @@ class KeyFigures extends React.Component<KeyFigureProps, KeyFigureState> {
     return
   }
 
-  addSource() {
-    if (this.props.source && this.props.source.url) {
-      const sourceLabel = this.props.sourceLabel
-
+  function addSource() {
+    if (source && source.url) {
       return (
         <Col className='col-12'>
           <References
@@ -145,8 +132,8 @@ class KeyFigures extends React.Component<KeyFigureProps, KeyFigureState> {
             title={sourceLabel}
             referenceList={[
               {
-                href: this.props.source.url,
-                label: this.props.source.title,
+                href: source.url,
+                label: source.title,
               },
             ]}
           />
@@ -156,12 +143,12 @@ class KeyFigures extends React.Component<KeyFigureProps, KeyFigureState> {
     return
   }
 
-  addHeader() {
-    if (this.props.displayName) {
+  function addHeader() {
+    if (displayName) {
       return (
         <Col>
           <Title size={3} className='mb-5'>
-            {this.props.displayName}
+            {displayName}
           </Title>
         </Col>
       )
@@ -169,24 +156,22 @@ class KeyFigures extends React.Component<KeyFigureProps, KeyFigureState> {
     return
   }
 
-  render() {
-    return (
-      <React.Fragment>
-        <Row className='d-none searchabletext'>
-          <Col className='col-12'>{this.props.hiddenTitle}</Col>
-        </Row>
-        <Row>
-          {this.addPreviewButton()}
-          {this.addPreviewInfo()}
-          {this.addHeader()}
-        </Row>
-        <Row className={`${this.props.isInStatisticsPage && 'mt-1 mb-5 mt-lg-0'}`}>
-          {this.createRows()}
-          {this.addSource()}
-        </Row>
-      </React.Fragment>
-    )
-  }
+  return (
+    <>
+      <Row className='d-none searchabletext'>
+        <Col className='col-12'>{hiddenTitle}</Col>
+      </Row>
+      <Row>
+        {addPreviewButton()}
+        {addPreviewInfo()}
+        {addHeader()}
+      </Row>
+      <Row className={`${isInStatisticsPage && 'mt-1 mb-5 mt-lg-0'}`}>
+        {createRows()}
+        {addSource()}
+      </Row>
+    </>
+  )
 }
 
 export default (props: KeyFigureProps) => <KeyFigures {...props} />
