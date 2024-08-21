@@ -3,122 +3,6 @@ import { Accordion, Button, Link } from '@statisticsnorway/ssb-component-library
 import { ArrowRight, ArrowUp, Facebook, Twitter, Rss, Linkedin } from 'react-feather'
 import { FooterContent } from '../../lib/types/footer'
 
-function renderFooterMenuDesktop(footerNavigation: FooterContent['footerNavigation']) {
-  return footerNavigation?.map((topMenuItem, index) => {
-    if (topMenuItem && topMenuItem.title) {
-      const titleId = topMenuItem.title.replaceAll(' ', '-').toLowerCase()
-      const listTitle = `footer-link-title-${titleId}`
-      return (
-        <div key={index} className='footer-link'>
-          <h3 className='ssb-title negative' id={listTitle}>
-            {topMenuItem.title}
-          </h3>
-          <ul aria-labelledby={listTitle}>{renderFooterLinkMenu(topMenuItem)}</ul>
-        </div>
-      )
-    }
-    return
-  })
-}
-
-function renderFooterMenuMobile(footerNavigation: FooterContent['footerNavigation']) {
-  return footerNavigation?.map((topMenuItem, index) => {
-    if (topMenuItem && topMenuItem.title) {
-      const titleId = topMenuItem.title.replaceAll(' ', '-').toLowerCase()
-      const listTitle = `footer-mobile-link-title-${titleId}`
-      return (
-        <Accordion key={index} header={topMenuItem.title}>
-          <h3 className='sr-only sr-only-focusable' id={listTitle}>
-            {topMenuItem.title}
-          </h3>
-          <ul aria-labelledby={listTitle}>{renderFooterLinkMenu(topMenuItem)}</ul>
-        </Accordion>
-      )
-    }
-    return
-  })
-}
-
-function renderFooterLinkMenu(topMenuItem: FooterContent['footerNavigation'][0]) {
-  return (
-    topMenuItem.menuItems &&
-    topMenuItem.menuItems.map((menuItem, itemIndex) => {
-      if (menuItem && menuItem.path && menuItem.title) {
-        return (
-          <li key={itemIndex}>
-            <Link negative href={menuItem.path} icon={<ArrowRight size='20' />}>
-              {menuItem.title}
-            </Link>
-          </li>
-        )
-      }
-      return
-    })
-  )
-}
-
-function renderSocialLinks(
-  facebookUrl: FooterContent['facebookUrl'],
-  twitterUrl: FooterContent['twitterUrl'],
-  linkedinUrl: FooterContent['linkedinUrl'],
-  rssUrl: FooterContent['rssUrl']
-) {
-  if (facebookUrl && twitterUrl && linkedinUrl && rssUrl) {
-    return (
-      <div className='social-links'>
-        <Link ariaLabel='Facebook' href={facebookUrl} isExternal negative icon={<Facebook size={24} />} standAlone />
-        <Link ariaLabel='Twitter' href={twitterUrl} isExternal negative icon={<Twitter size={24} />} standAlone />
-        <Link ariaLabel='Linkedin' href={linkedinUrl} isExternal negative icon={<Linkedin size={24} />} standAlone />
-        <Link ariaLabel='Rss' href={rssUrl} negative icon={<Rss size={24} />} standAlone />
-      </div>
-    )
-  }
-  return
-}
-
-function renderGlobalLinks(globalLinks: FooterContent['globalLinks']) {
-  if (globalLinks) {
-    return (
-      <div className='global-links'>
-        {globalLinks.map((globalLink, index) => {
-          if (globalLink && globalLink.path && globalLink.title) {
-            return (
-              <Link key={'link_' + index} href={globalLink.path} negative>
-                {globalLink.title}
-              </Link>
-            )
-          }
-          return
-        })}
-      </div>
-    )
-  }
-  return
-}
-
-function renderCopyRight(copyrightUrl: FooterContent['copyrightUrl'], copyrightText: FooterContent['copyrightText']) {
-  if (copyrightUrl && copyrightText) {
-    return (
-      <div className='copyright'>
-        <Link href={copyrightUrl} isExternal negative>
-          {copyrightText}
-        </Link>
-      </div>
-    )
-  }
-  return
-}
-
-function goToTop() {
-  window.scroll({
-    top: 0,
-    behavior: 'smooth',
-  })
-  document.getElementById('header-logo')!.focus({
-    preventScroll: true,
-  })
-}
-
 function Footer(props: FooterContent) {
   const {
     logoUrl,
@@ -136,6 +20,117 @@ function Footer(props: FooterContent) {
   } = props
   const footerNavigationLabel = language?.code === 'en' ? 'footer links' : 'bunnmeny lenker'
 
+  function renderFooterMenuDesktop() {
+    return footerNavigation?.map((topMenuItem, index) => {
+      if (topMenuItem && topMenuItem.title) {
+        const titleId = topMenuItem.title.replaceAll(' ', '-').toLowerCase()
+        const listTitle = `footer-link-title-${titleId}`
+        return (
+          <div key={index} className='footer-link'>
+            <h3 className='ssb-title negative' id={listTitle}>
+              {topMenuItem.title}
+            </h3>
+            <ul aria-labelledby={listTitle}>{renderFooterLinkMenu(topMenuItem)}</ul>
+          </div>
+        )
+      }
+      return
+    })
+  }
+
+  function renderFooterMenuMobile() {
+    return footerNavigation?.map((topMenuItem, index) => {
+      if (topMenuItem && topMenuItem.title) {
+        const titleId = topMenuItem.title.replaceAll(' ', '-').toLowerCase()
+        const listTitle = `footer-mobile-link-title-${titleId}`
+        return (
+          <Accordion key={index} header={topMenuItem.title}>
+            <h3 className='sr-only sr-only-focusable' id={listTitle}>
+              {topMenuItem.title}
+            </h3>
+            <ul aria-labelledby={listTitle}>{renderFooterLinkMenu(topMenuItem)}</ul>
+          </Accordion>
+        )
+      }
+      return
+    })
+  }
+
+  function renderFooterLinkMenu(topMenuItem: FooterContent['footerNavigation'][0]) {
+    return (
+      topMenuItem.menuItems &&
+      topMenuItem.menuItems.map((menuItem, itemIndex) => {
+        if (menuItem && menuItem.path && menuItem.title) {
+          return (
+            <li key={itemIndex}>
+              <Link negative href={menuItem.path} icon={<ArrowRight size='20' />}>
+                {menuItem.title}
+              </Link>
+            </li>
+          )
+        }
+        return
+      })
+    )
+  }
+
+  function renderSocialLinks() {
+    if (facebookUrl && twitterUrl && linkedinUrl && rssUrl) {
+      return (
+        <div className='social-links'>
+          <Link ariaLabel='Facebook' href={facebookUrl} isExternal negative icon={<Facebook size={24} />} standAlone />
+          <Link ariaLabel='Twitter' href={twitterUrl} isExternal negative icon={<Twitter size={24} />} standAlone />
+          <Link ariaLabel='Linkedin' href={linkedinUrl} isExternal negative icon={<Linkedin size={24} />} standAlone />
+          <Link ariaLabel='Rss' href={rssUrl} negative icon={<Rss size={24} />} standAlone />
+        </div>
+      )
+    }
+    return
+  }
+
+  function renderGlobalLinks() {
+    if (globalLinks) {
+      return (
+        <div className='global-links'>
+          {globalLinks.map((globalLink, index) => {
+            if (globalLink && globalLink.path && globalLink.title) {
+              return (
+                <Link key={'link_' + index} href={globalLink.path} negative>
+                  {globalLink.title}
+                </Link>
+              )
+            }
+            return
+          })}
+        </div>
+      )
+    }
+    return
+  }
+
+  function renderCopyRight() {
+    if (copyrightUrl && copyrightText) {
+      return (
+        <div className='copyright'>
+          <Link href={copyrightUrl} isExternal negative>
+            {copyrightText}
+          </Link>
+        </div>
+      )
+    }
+    return
+  }
+
+  function goToTop() {
+    window.scroll({
+      top: 0,
+      behavior: 'smooth',
+    })
+    document.getElementById('header-logo')!.focus({
+      preventScroll: true,
+    })
+  }
+
   if (logoUrl && footerNavigation && topButtonText) {
     return (
       <div className='ssb-footer-wrapper'>
@@ -150,21 +145,21 @@ function Footer(props: FooterContent) {
           </div>
           <div className='footer-content'>
             <nav id='footerMenu' aria-label={footerNavigationLabel}>
-              <div className='footer-menu'>{renderFooterMenuDesktop(footerNavigation)}</div>
-              <div className='showOnMobile footer-menu'>{renderFooterMenuMobile(footerNavigation)}</div>
+              <div className='footer-menu'>{renderFooterMenuDesktop()}</div>
+              <div className='showOnMobile footer-menu'>{renderFooterMenuMobile()}</div>
             </nav>
           </div>
           <div className='footer-bottom-row'>
             <div className='links-left'>
-              {renderCopyRight(copyrightUrl, copyrightText)}
-              {renderGlobalLinks(globalLinks)}
+              {renderCopyRight()}
+              {renderGlobalLinks()}
             </div>
-            {renderSocialLinks(facebookUrl, twitterUrl, linkedinUrl, rssUrl)}
+            {renderSocialLinks()}
           </div>
           <div className='showOnMobile footer-bottom-row'>
-            {renderSocialLinks(facebookUrl, twitterUrl, linkedinUrl, rssUrl)}
-            {renderGlobalLinks(globalLinks)}
-            {renderCopyRight(copyrightUrl, copyrightText)}
+            {renderSocialLinks()}
+            {renderGlobalLinks()}
+            {renderCopyRight()}
           </div>
         </div>
       </div>
