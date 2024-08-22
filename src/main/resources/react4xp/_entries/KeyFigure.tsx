@@ -103,7 +103,7 @@ const KeyFigures = (props: KeyFigureProps) => {
   }
 
   function addKeyFigureSource(keyFigure: KeyFigureData) {
-    if ((!source || !source.url) && keyFigure.source && keyFigure.source.url) {
+    if (!source?.url && keyFigure.source?.url) {
       return (
         <References
           className={`${keyFigure.size !== 'large' ? 'mt-3' : ''}`}
@@ -120,7 +120,7 @@ const KeyFigures = (props: KeyFigureProps) => {
   }
 
   function addSource() {
-    if (source && source.url) {
+    if (source?.url) {
       return (
         <Col className='col-12'>
           <References

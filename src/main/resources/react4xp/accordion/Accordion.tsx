@@ -9,7 +9,7 @@ const Accordion = (props: AccordionProps) => {
 
   function renderNestedAccordions(items: AccordionData['items']) {
     return (items as AccordionProps['accordions'])!.map((item, i) => (
-      <NestedAccordion key={i} header={(item as AccordionItems).title}>
+      <NestedAccordion key={`accordion-${(item as AccordionItems).title}-${i}`} header={(item as AccordionItems).title}>
         {item.body && <div dangerouslySetInnerHTML={createMarkup(item.body)} />}
       </NestedAccordion>
     ))
@@ -29,7 +29,7 @@ const Accordion = (props: AccordionProps) => {
       <div className='row'>
         {accordions.map((accordion, index) => (
           <AccordionComponent
-            key={index}
+            key={`accordion-${accordion.open}-${index}`}
             className='col-12'
             id={accordion.id}
             header={accordion.open}
