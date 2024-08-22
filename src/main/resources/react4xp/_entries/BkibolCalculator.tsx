@@ -25,6 +25,7 @@ function BkibolCalculator(props: BkibolCalculatorProps) {
     title: props.phrases.chooseMonth,
     id: '',
   }
+  const defaultMonthErrorMsg = props.phrases.calculatorValidateDropdownMonth
   const [scope, setScope] = useState({
     error: false,
     errorMsg: 'Feil markedskode',
@@ -47,7 +48,7 @@ function BkibolCalculator(props: BkibolCalculatorProps) {
   })
   const [startMonth, setStartMonth] = useState({
     error: false,
-    errorMsg: props.phrases.calculatorValidateDropdownMonth,
+    errorMsg: defaultMonthErrorMsg,
     value: defaultMonthValue,
   })
   const [startYear, setStartYear] = useState({
@@ -57,7 +58,7 @@ function BkibolCalculator(props: BkibolCalculatorProps) {
   })
   const [endMonth, setEndMonth] = useState({
     error: false,
-    errorMsg: props.phrases.calculatorValidateDropdownMonth,
+    errorMsg: defaultMonthErrorMsg,
     value: defaultMonthValue,
   })
   const [endYear, setEndYear] = useState({
@@ -243,43 +244,15 @@ function BkibolCalculator(props: BkibolCalculatorProps) {
   }
 
   function isStartMonthValid(value?: string) {
-    const startMonthValue = value || startMonth.value.id
-    const startMonthEmpty = startMonthValue === ''
-    if (startMonthEmpty) {
-      setStartMonth({
-        ...startMonth,
-        error: true,
-      })
-    }
+    const startMonthValue = value ?? startMonth.value.id
     const startMonthValid = !(startYear.value === validMaxYear && startMonthValue > validMaxMonth)
-    if (!startMonthValid) {
-      setStartMonth({
-        ...startMonth,
-        error: true,
-        errorMsg: props.lastNumberText,
-      })
-    }
-    return startMonthEmpty ? false : startMonthValid
+    return startMonthValue === '' ? false : startMonthValid
   }
 
   function isEndMonthValid(value?: string) {
-    const endMonthValue = value || endMonth.value.id
-    const endMonthEmpty = endMonthValue === ''
-    if (endMonthEmpty) {
-      setEndMonth({
-        ...endMonth,
-        error: true,
-      })
-    }
+    const endMonthValue = value ?? endMonth.value.id
     const endMonthValid = !(endYear.value === validMaxYear && endMonthValue > validMaxMonth)
-    if (!endMonthValid) {
-      setEndMonth({
-        ...endMonth,
-        error: true,
-        errorMsg: props.lastNumberText,
-      })
-    }
-    return endMonthEmpty ? false : endMonthValid
+    return endMonthValue === '' ? false : endMonthValid
   }
 
   function onBlur(id: string) {
@@ -369,6 +342,7 @@ function BkibolCalculator(props: BkibolCalculatorProps) {
           ...startMonth,
           value,
           error: startMonth.error ? !isStartMonthValid(value.id) : startMonth.error,
+          errorMsg: value.id !== '' ? props.lastNumberText : defaultMonthErrorMsg,
         })
         break
       }
@@ -391,6 +365,7 @@ function BkibolCalculator(props: BkibolCalculatorProps) {
           ...endMonth,
           value,
           error: endMonth.error ? !isEndMonthValid(value.id) : endMonth.error,
+          errorMsg: value.id !== '' ? props.lastNumberText : defaultMonthErrorMsg,
         })
         break
       }
