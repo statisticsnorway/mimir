@@ -47,6 +47,10 @@ export function init() {
     function () {
       this.dataTableDiv2 = this.dataTableDiv
       this.dataTableDiv = null
+        const table = document.getElementById('highcharts-data-table-0');
+        if (table) {
+          table.style.minWidth = 'unset';
+        }
     },
     {
       order: 0,
