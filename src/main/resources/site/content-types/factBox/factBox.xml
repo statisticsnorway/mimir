@@ -33,7 +33,7 @@
                     <occurrences minimum="0" maximum="1" />
                 </input>
                 <input name="aiIcon" type="Checkbox">
-                    <label>Vis KI ikon til venstre for tittel</label>
+                    <label>Vis KI ikon</label>
                     <occurrences minimum="0" maximum="1" />
                 </input>
          </items>
