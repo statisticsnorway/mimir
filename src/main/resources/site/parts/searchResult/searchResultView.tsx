@@ -151,13 +151,12 @@ function SearchResult(props: SearchResultProps) {
     setFilterChanged(true) // we want the useEffect to trigger fetching of results, and new filters
   }
 
-  function renderListItem(hit: PreparedSearchResult, i?: number) {
+  function renderListItem(hit: PreparedSearchResult, i?: number, focus?: boolean) {
     if (hit) {
-      const last = i === hits.length - props.count
       return (
         <li key={hit.id || i || undefined} className='mb-4'>
           <a
-            ref={last ? currentElement : null}
+            ref={focus ? currentElement : null}
             className='ssb-link header'
             // deepcode ignore DOMXSS: url comes from pageUrl which escapes  + Reacts own escaping
             href={hit.url}
@@ -227,6 +226,9 @@ function SearchResult(props: SearchResultProps) {
         <ol className='list-unstyled '>
           {renderListItem(bestBetHit!)}
           {hits.map((hit, i) => {
+            if (i === hits.length - 1) {
+              return renderListItem(hit, i, true)
+            }
             return renderListItem(hit, i)
           })}
         </ol>
