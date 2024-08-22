@@ -24,10 +24,6 @@
     }
   }
 
-    .highcharts-data-table .ssb-table {
-      min-width: 0;
-    }
-
   .source {
     margin-bottom: $spacer;
 
@@ -57,6 +53,10 @@
   .ssb-link {
     margin-top: 10px;
   }
+}
+
+.highcharts-data-table .ssb-table {
+  min-width: 0;
 }
 
 table.statistics tbody tr td:not(:first-child) {
