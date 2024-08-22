@@ -2,17 +2,17 @@
 
 ## Server-side Rendering (SSR)
 
-We should try to use server-side rendering for all React components because of crawlers or users that run the website without javascript. For now, there are at least one case where we can't use SSR for now, and that is where we need to use `dangerouslySetInnerHTML` for HTML Content. Remember to always sanitize input before using it in dangerouslySetInnerHTML. Ref. [issue](https://github.com/enonic/lib-react4xp/issues/33)
+Server-side rendering (SSR) ensures that content is available to web crawlers and users who may have disabled JavaScript. React components should be server-side rendered whenever possible. There are specific cases where server-side rendering cannot be applied, and that is where we need to use `dangerouslySetInnerHTML` when inserting HTML content that cannot be safely handled otherwise. Always sanitize inputs before using it in `dangerouslySetInnerHTML± to minimize security risks. For more details, refer to this [issue](https://github.com/enonic/lib-react4xp/issues/33)
 
-Example for SSR only: [Breadcrumbs.tsx](/src/main/resources/react4xp/_entries/Breadcrumb.tsx) and [default.ts](/src/main/resources/site/pages/default/default.ts)
+Here is an example of a server-side rendered component: [Breadcrumbs.tsx](/src/main/resources/react4xp/_entries/Breadcrumb.tsx) and [default.ts](/src/main/resources/site/pages/default/default.ts)
 
 ## Hydrate (Without SSR)
 
-If there are cases where a React component cannot be server-side rendered, the parameter `ssr: false` can be passed in the React4xp render function. We should try to avoid that as much as possible, because the part will not be visible/rendered for non-js users, or in edit mode in Content Studio.
+In scenarios where a React component cannot be server-side rendered, you can pass the parameter `ssr: false` in the React4xp render function for client-side rendering. However, this should be avoided whenever possible, as components rendered without server-side rendering will not be visible to non-JavaScript users or in edit mode in Content Studio.
 
 ## SSR and Hydrate
 
-Hydration is needed for React components with client-side interaction. You need to pass the `pageContributions` parameter in the React4xp render function for this to work (See [glossary.ts](/src/main/resources/site/macros/glossary/glossary.ts) as an example).
+Hydration is neccessary for React components that require client-side interaction. You must include the `pageContributions` parameter in the React4xp render function, along with `ssr: false`. (See [glossary.ts](/src/main/resources/site/macros/glossary/glossary.ts) as an example).
 
 ## State and Side Effects
 
@@ -22,6 +22,6 @@ To create more complex components in React, we can use a combination of function
 
 ## Entries
 
-It is important that any file in `react4xp/_entries` is not imported into any other file. An entry is a bridge between XP and React, not a reusable React component. They should only be used through the various render methods in `lib-react4xp` in our controllers.
+It is important that files within the `react4xp/_entries` directory is not imported into any other file. An entry is a bridge between XP and React, not a reusable React component. They should only be used through the various render methods in `lib-react4xp` in our controllers.
 
-After you've run `enonic project build` or `enonic project deploy` at least once, you'll have a file in your build folder with a list of all react4xp components available. `/build/resources/main/assets/react4xp/entries.json`
+After you've run `enonic project build` or `enonic project deploy` at least once, you'll have a file in your build folder with a list of all react4xp components available. `/build/resources/main/react4xp/_entries`
