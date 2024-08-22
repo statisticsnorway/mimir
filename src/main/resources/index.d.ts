@@ -71,6 +71,7 @@ declare global {
       export type UpcomingReleases = _PartComponent<'mimir:upcomingReleases'>
       export type Variables = _PartComponent<'mimir:variables'>
       export type VideoEmbed = _PartComponent<'mimir:videoEmbed'>
+      export type WebcruiterAdvertismentList = _PartComponent<'mimir:webrecruiterAdvertismentList'>
     }
 
     namespace LayoutComponent {
