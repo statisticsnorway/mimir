@@ -45,7 +45,6 @@ const KeyFigures = (props: KeyFigureProps) => {
         </Col>
       )
     }
-    return
   }
 
   function addPreviewInfo() {
@@ -67,9 +66,7 @@ const KeyFigures = (props: KeyFigureProps) => {
           )
         })
       }
-      return
     }
-    return
   }
 
   function createRows() {
@@ -120,7 +117,6 @@ const KeyFigures = (props: KeyFigureProps) => {
         />
       )
     }
-    return
   }
 
   function addSource() {
@@ -140,7 +136,6 @@ const KeyFigures = (props: KeyFigureProps) => {
         </Col>
       )
     }
-    return
   }
 
   function addHeader() {
@@ -153,7 +148,6 @@ const KeyFigures = (props: KeyFigureProps) => {
         </Col>
       )
     }
-    return
   }
 
   return (

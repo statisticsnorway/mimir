@@ -34,7 +34,6 @@ const Footer = (props: FooterContent) => {
           </div>
         )
       }
-      return
     })
   }
 
@@ -52,7 +51,6 @@ const Footer = (props: FooterContent) => {
           </Accordion>
         )
       }
-      return
     })
   }
 
@@ -69,7 +67,6 @@ const Footer = (props: FooterContent) => {
             </li>
           )
         }
-        return
       })
     )
   }
@@ -85,7 +82,6 @@ const Footer = (props: FooterContent) => {
         </div>
       )
     }
-    return
   }
 
   function renderGlobalLinks() {
@@ -100,12 +96,10 @@ const Footer = (props: FooterContent) => {
                 </Link>
               )
             }
-            return
           })}
         </div>
       )
     }
-    return
   }
 
   function renderCopyRight() {
@@ -118,7 +112,6 @@ const Footer = (props: FooterContent) => {
         </div>
       )
     }
-    return
   }
 
   function goToTop() {
@@ -165,7 +158,6 @@ const Footer = (props: FooterContent) => {
       </div>
     )
   }
-  return
 }
 
 export default (props: FooterContent) => <Footer {...props} />

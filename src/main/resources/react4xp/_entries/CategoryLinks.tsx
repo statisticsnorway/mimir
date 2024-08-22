@@ -17,7 +17,6 @@ const CategoryLinks = (props: CategoryLinksProps) => {
         </div>
       )
     }
-    return
   }
 
   return (
