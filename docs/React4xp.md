@@ -2,21 +2,23 @@
 
 ## Server-side Rendering (SSR)
 
-We should try to use server-side rendering for all react components because of crawlers or other that run the website without javascript. For now, there are at least one case where we can't use SSR for now, and that is where we need to use `dangerouslySetInnerHTML` for HTML Content. Remember to always sanitize input before using it in dangerouslySetInnerHTML. Ref. [issue](https://github.com/enonic/lib-react4xp/issues/33)
+We should try to use server-side rendering for all React components because of crawlers or users that run the website without javascript. For now, there are at least one case where we can't use SSR for now, and that is where we need to use `dangerouslySetInnerHTML` for HTML Content. Remember to always sanitize input before using it in dangerouslySetInnerHTML. Ref. [issue](https://github.com/enonic/lib-react4xp/issues/33)
 
-Example for SSR only: [Breadcrumbs.jsx](/src/main/resources/react4xp/_entries/Breadcrumb.jsx) and [default.es6](/src/main/resources/site/pages/default/default.es6)
+Example for SSR only: [Breadcrumbs.tsx](/src/main/resources/react4xp/_entries/Breadcrumb.tsx) and [default.ts](/src/main/resources/site/pages/default/default.ts)
 
 ## Hydrate (Without SSR)
 
-If there are problems where SSR doesn't work at all, `ssr: false` can be used in render functions. We should try to never use it, because then the part will never be visible/rendered for non-js users.
+If there are cases where a React component cannot be server-side rendered, the parameter `ssr: false` can be passed in the React4xp render function. We should try to avoid that as much as possible, because the part will not be visible/rendered for non-js users, or in edit mode in Content Studio.
 
 ## SSR and Hydrate
 
-Hydration is needed for react components with client side interaction. You need to add pageContributions for this to work (ref. [factBox.ts](/src/main/resources/site/parts/factBox/factBox.ts)).
+Hydration is needed for React components with client-side interaction. You need to pass the `pageContributions` parameter in the React4xp render function for this to work (See [glossary.ts](/src/main/resources/site/macros/glossary/glossary.ts) as an example).
 
-## LifeCycle and State
+## State and Side Effects
 
-If we want to make more complex components/containers for react we can create classes that extends the React.Component class. This will open of for the possibility to use [state](https://reactjs.org/docs/state-and-lifecycle.html#adding-local-state-to-a-class) and [lifecycles](https://reactjs.org/docs/react-component.html#the-component-lifecycle). Ref. [Header.jsx](/src/main/resources/react4xp/_entries/Header.jsx)
+To create more complex components in React, we can use a combination of functional components and React hooks. This approach allows us to manage [state](https://react.dev/learn/state-a-components-memory) and handle [side effects](https://react.dev/learn/synchronizing-with-effects), among other things, in a more concise and efficient way. (See [Header.tsx](/src/main/resources/react4xp/_entries/Header.tsx) as an example).
+
+[Learn more about hooks here.](https://react.dev/reference/react/hooks)
 
 ## Entries
 
