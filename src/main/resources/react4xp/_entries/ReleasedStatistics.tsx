@@ -92,9 +92,9 @@ const ReleasedStatistics = (props: ReleasedStatisticsProps) => {
       <h2 className='mb-4' id='heading-released-statistics'>
         {title}
       </h2>
-      {releases.reverse().map((year) => {
-        return year.releases.reverse().map((month) => {
-          return month.releases.reverse().map((day, index) => renderDay(day, month, year, index))
+      {[...releases].reverse().map((year) => {
+        return [...year.releases].reverse().map((month) => {
+          return [...month.releases].reverse().map((day, index) => renderDay(day, month, year, index))
         })
       })}
     </section>
