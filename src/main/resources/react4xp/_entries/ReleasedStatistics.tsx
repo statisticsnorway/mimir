@@ -8,13 +8,11 @@ import {
   type PreparedStatistics,
 } from '../../lib/types/variants'
 
-class ReleasedStatistics extends React.Component<ReleasedStatisticsProps> {
-  constructor(props: ReleasedStatisticsProps) {
-    super(props)
-  }
+function ReleasedStatistics(props: ReleasedStatisticsProps) {
+  const { language, title, releases } = props
 
-  renderRelease(release: PreparedStatistics, index: number) {
-    const hrefStatistic = this.props.language === 'en' ? `/en/${release.shortName}` : `/${release.shortName}`
+  function renderRelease(release: PreparedStatistics, index: number) {
+    const hrefStatistic = language === 'en' ? `/en/${release.shortName}` : `/${release.shortName}`
     return (
       <li key={index} className='front-page-released-statistic'>
         <Link
@@ -32,13 +30,13 @@ class ReleasedStatistics extends React.Component<ReleasedStatisticsProps> {
     )
   }
 
-  renderDay(day: DayReleases, month: MonthReleases, year: YearReleases, index: number) {
+  function renderDay(day: DayReleases, month: MonthReleases, year: YearReleases, index: number) {
     const monthNumber = Number(month.month)
     const monthPadded = monthNumber < 9 ? '0' + (monthNumber + 1) : monthNumber + 1
     const dayPadded = +day.day < 10 ? '0' + day.day : day.day
     const dateTime = `${year.year}-${monthPadded}-${dayPadded}`
     const monthNames =
-      this.props.language === 'en'
+      language === 'en'
         ? [
             'january',
             'february',
@@ -83,26 +81,24 @@ class ReleasedStatistics extends React.Component<ReleasedStatisticsProps> {
           className='sr-only'
         >{`${day.day}. ${monthNameLong}`}</span>
         <ol className='releaseList' aria-labelledby={`heading-released-statistics datemonth-${monthNumber}${index}`}>
-          {day.releases.map((release, releaseIndex) => this.renderRelease(release, releaseIndex))}
+          {day.releases.map((release, releaseIndex) => renderRelease(release, releaseIndex))}
         </ol>
       </div>
     )
   }
 
-  render() {
-    return (
-      <section className='nextStatisticsReleases container-fluid'>
-        <h2 className='mb-4' id='heading-released-statistics'>
-          {this.props.title}
-        </h2>
-        {this.props.releases.reverse().map((year) => {
-          return year.releases.reverse().map((month) => {
-            return month.releases.reverse().map((day, index) => this.renderDay(day, month, year, index))
-          })
-        })}
-      </section>
-    )
-  }
+  return (
+    <section className='nextStatisticsReleases container-fluid'>
+      <h2 className='mb-4' id='heading-released-statistics'>
+        {title}
+      </h2>
+      {releases.reverse().map((year) => {
+        return year.releases.reverse().map((month) => {
+          return month.releases.reverse().map((day, index) => renderDay(day, month, year, index))
+        })
+      })}
+    </section>
+  )
 }
 
 export default (props: ReleasedStatisticsProps) => <ReleasedStatistics {...props} />
