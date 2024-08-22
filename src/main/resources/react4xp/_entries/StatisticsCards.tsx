@@ -15,7 +15,7 @@ interface RelatedStatisticsProps {
   showLess?: string
 }
 
-function RelatedStatistics(props: RelatedStatisticsProps) {
+const RelatedStatistics = (props: RelatedStatisticsProps) => {
   const { headerTitle, statistics, showAll, showLess } = props
   const [isHidden, setIsHidden] = useState(true)
 

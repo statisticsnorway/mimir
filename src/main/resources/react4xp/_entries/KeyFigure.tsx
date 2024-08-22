@@ -9,7 +9,7 @@ import {
 import { Alert, Row, Col } from 'react-bootstrap'
 import { type KeyFigureData, type KeyFigureProps } from '../../lib/types/partTypes/keyFigure'
 
-function KeyFigures(props: KeyFigureProps) {
+const KeyFigures = (props: KeyFigureProps) => {
   const {
     showPreviewDraft,
     pageTypeKeyFigure,

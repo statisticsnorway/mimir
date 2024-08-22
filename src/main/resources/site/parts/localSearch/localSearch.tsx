@@ -8,7 +8,7 @@ interface LocalSearchProps {
   items: SearchItem[]
 }
 
-function LocalSearch(props: LocalSearchProps) {
+const LocalSearch = (props: LocalSearchProps) => {
   const { title, placeholder, items } = props
 
   function onSelect(selectedItem: LocalSearchProps['items'][0]) {

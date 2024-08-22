@@ -8,7 +8,7 @@ interface EntryLinksProps {
   entryLinks: EntryLink[]
 }
 
-function EntryLinks(props: EntryLinksProps) {
+const EntryLinks = (props: EntryLinksProps) => {
   const { headerTitle, entryLinks } = props
 
   function renderIcon(icon: string) {

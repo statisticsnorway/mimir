@@ -4,7 +4,7 @@ import { Accordion as AccordionComponent, NestedAccordion } from '@statisticsnor
 import { type AccordionData, type AccordionItems, type AccordionProps } from '../../lib/types/partTypes/accordion'
 import { sanitize } from '../../lib/ssb/utils/htmlUtils'
 
-function Accordion(props: AccordionProps) {
+const Accordion = (props: AccordionProps) => {
   const { accordions } = props
 
   function renderNestedAccordions(items: AccordionData['items']) {

@@ -3,7 +3,7 @@ import { Accordion, Button, Link } from '@statisticsnorway/ssb-component-library
 import { ArrowRight, ArrowUp, Facebook, Twitter, Rss, Linkedin } from 'react-feather'
 import { FooterContent } from '../../lib/types/footer'
 
-function Footer(props: FooterContent) {
+const Footer = (props: FooterContent) => {
   const {
     logoUrl,
     footerNavigation,

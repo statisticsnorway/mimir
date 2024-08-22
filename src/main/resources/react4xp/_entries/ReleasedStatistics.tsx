@@ -8,7 +8,7 @@ import {
   type PreparedStatistics,
 } from '../../lib/types/variants'
 
-function ReleasedStatistics(props: ReleasedStatisticsProps) {
+const ReleasedStatistics = (props: ReleasedStatisticsProps) => {
   const { language, title, releases } = props
 
   function renderRelease(release: PreparedStatistics, index: number) {

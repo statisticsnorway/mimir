@@ -2,7 +2,7 @@ import React from 'react'
 import { CategoryLink } from '@statisticsnorway/ssb-component-library'
 import { type CategoryLinksProps } from '../../lib/types/partTypes/categoryLinks'
 
-function CategoryLinks(props: CategoryLinksProps) {
+const CategoryLinks = (props: CategoryLinksProps) => {
   const { links, methodsAndDocumentationUrl, methodsAndDocumentationLabel } = props
 
   function addMethodAndDocumentation() {

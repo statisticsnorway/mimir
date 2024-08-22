@@ -4,7 +4,7 @@ import { ArrowRight } from 'react-feather'
 import { sanitize } from '../../../lib/ssb/utils/htmlUtils'
 import { RelatedKostraProps } from '../../../lib/types/partTypes/relatedKostra'
 
-function RelatedKostra(props: RelatedKostraProps) {
+const RelatedKostra = (props: RelatedKostraProps) => {
   const { title, description, href, children, linkType } = props
   return (
     <section className='container part-related-kostra border-top-green'>

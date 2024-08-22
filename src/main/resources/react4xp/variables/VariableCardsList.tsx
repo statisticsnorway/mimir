@@ -6,7 +6,7 @@ interface VariableCardsListProps {
   variables: VariablesProps['variables']
 }
 
-function VariableCardsList(props: VariableCardsListProps) {
+const VariableCardsList = (props: VariableCardsListProps) => {
   const { variables } = props
   return (
     <div className='variable-cardlist grid-column grid-4'>
