@@ -24,6 +24,10 @@
     }
   }
 
+    .highcharts-data-table .ssb-table {
+      min-width: 0;
+    }
+
   .source {
     margin-bottom: $spacer;
 
@@ -93,7 +97,7 @@ table.statistics {
 
   thead,
   tbody {
-    
+
     th.sum,
     td.sum {
       font-weight: bold;
