@@ -26,7 +26,7 @@ function CategoryLinks(props: CategoryLinksProps) {
         {links?.map((link, index) => {
           return (
             <div className='col-12 col-md-6 mb-4' key={index}>
-              <CategoryLink href={link.href} titleText={link.titleText} subText={link.subText} className='' />
+              <CategoryLink href={link.href} titleText={link.titleText} subText={link.subText} />
             </div>
           )
         })}
