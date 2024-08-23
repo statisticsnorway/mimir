@@ -8,37 +8,33 @@ interface LocalSearchProps {
   items: SearchItem[]
 }
 
-class LocalSearch extends React.Component<LocalSearchProps> {
-  constructor(props: LocalSearchProps) {
-    super(props)
-  }
+const LocalSearch = (props: LocalSearchProps) => {
+  const { title, placeholder, items } = props
 
-  onSelect(selectedItem: LocalSearchProps['items'][0]) {
+  function onSelect(selectedItem: LocalSearchProps['items'][0]) {
     window.location.href = selectedItem.url
   }
 
-  render() {
-    return (
-      <section className='xp-part part-local-search container'>
-        <div className='container'>
-          <div className='row'>
-            <div className='col-12'>
-              <Title size={2}>{this.props.title}</Title>
-              <Dropdown
-                placeholder={this.props.placeholder}
-                searchable
-                largeSize
-                onSelect={(selectedItem: LocalSearchProps['items'][0]) => this.onSelect(selectedItem)}
-                items={this.props.items}
-                className='search-field'
-                ariaLabel={this.props.placeholder}
-              />
-            </div>
+  return (
+    <section className='xp-part part-local-search container'>
+      <div className='container'>
+        <div className='row'>
+          <div className='col-12'>
+            <Title size={2}>{title}</Title>
+            <Dropdown
+              placeholder={placeholder}
+              searchable
+              largeSize
+              onSelect={(selectedItem: LocalSearchProps['items'][0]) => onSelect(selectedItem)}
+              items={items}
+              className='search-field'
+              ariaLabel={placeholder}
+            />
           </div>
         </div>
-      </section>
-    )
-  }
+      </div>
+    </section>
+  )
 }
 
-export default (props: LocalSearchProps) => <LocalSearch {...props} />
+export default LocalSearch
