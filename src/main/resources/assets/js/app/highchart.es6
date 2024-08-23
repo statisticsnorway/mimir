@@ -210,8 +210,8 @@ export function init() {
         Highcharts.chart(chart, config)
 
         // Hide data table when highchart is loaded
-        $('.highcharts-data-table').addClass('hide-div')
-        $('.highcharts-data-table').find('table').addClass('statistics')
+        $('.highcharts-data-table').addClass('hide-div ssb-table-wrapper')
+        $('.highcharts-data-table').find('table').addClass('statistics ssb-table')
 
         const graph = $('#figure-' + highchartsContentKey + ' .highcharts-canvas')
         const dataTable = $('#figure-' + highchartsContentKey + ' .highcharts-data-table')
