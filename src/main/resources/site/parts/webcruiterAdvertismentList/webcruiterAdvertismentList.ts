@@ -4,6 +4,7 @@ import { type WebcruiterAdvertismentListProps } from '/lib/types/partTypes/webcr
 
 import { renderError } from '/lib/ssb/error/error'
 import { render } from '/lib/enonic/react4xp'
+import { fetchWebcruiterAdvertismentListRSSFeed } from '/services/webcruiterAdvertismentList/webcruiterAdvertismentList'
 
 export function get(req: XP.Request): XP.Response {
   try {
@@ -23,9 +24,15 @@ function renderPart(req: XP.Request) {
 
   const config = getComponent<XP.PartComponent.WebcruiterAdvertismentList>()?.config
   const phrases = getPhrases(content)
+
+  fetchWebcruiterAdvertismentListRSSFeed(config?.webcruiterRssUrl as string)
   const props: WebcruiterAdvertismentListProps = {
     title: config?.title ?? '',
     showingPhrase: phrases?.['publicationArchive.showing'],
+    professionalFieldPhrase: phrases?.['webcruiterAdvertismentList.professionalField'],
+    locationPhrase: phrases?.['webcruiterAdvertismentList.location'],
+    employmentTypePhrase: phrases?.['webcruiterAdvertismentList.employmentType'],
+    applicationDeadlinePhrase: phrases?.['webcruiterAdvertismentList.applicationDeadline'],
   }
   return render('site/parts/webcruiterAdvertismentList/WebcruiterAdvertismentList', props, req, {
     body: `<section class="xp-part subject-article-list container-fluid"></section>`,
