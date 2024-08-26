@@ -19,59 +19,59 @@ const WebcruiterAdvertistmentList = (props: WebcruiterAdvertismentListProps) => 
   function renderAdvertismentList() {
     return (
       <ol className='list-unstyled'>
-        {advertismentList.length > 1 ? (
-          advertismentList.map(
-            (
-              {
-                positionTitle,
-                positionAdvertismentUrl,
-                professionalField,
-                location,
-                employmentType,
-                applicationDeadline,
-              },
-              index
-            ) => {
-              return (
-                <li key={`webcruiter-advertisment-list-${applicationDeadline}-${index}`}>
+        {advertismentList.map(
+          (
+            {
+              positionTitle,
+              positionAdvertismentUrl,
+              professionalField,
+              location,
+              employmentType,
+              applicationDeadline,
+            },
+            index
+          ) => {
+            return (
+              <li key={`webcruiter-advertisment-list-${applicationDeadline}-${index}`}>
+                {positionTitle && positionAdvertismentUrl ? (
                   <Link linkType='header' href={positionAdvertismentUrl}>
                     {positionTitle}
                   </Link>
-                  <div className='d-flex flex-column mt-2'>
-                    {professionalField && (
-                      <span>
-                        {professionalFieldPhrase}: {professionalField as string}
-                      </span>
-                    )}
-                    {location && (
-                      <span>
-                        {locationPhrase}: {location as string}
-                      </span>
-                    )}
-                    {employmentType && (
-                      <span>
-                        {employmentTypePhrase}: {employmentType as string}
-                      </span>
-                    )}
-                    {applicationDeadline && (
-                      <span>
-                        {applicationDeadlinePhrase}: {applicationDeadline as string}
-                      </span>
-                    )}
-                  </div>
-                </li>
-              )
-            }
-          )
-        ) : (
-          <li>{advertismentList[0].positionTitle as string}</li>
+                ) : (
+                  <span>{positionTitle as string}</span>
+                )}
+                <div className='d-flex flex-column mt-2'>
+                  {professionalField && (
+                    <span>
+                      {professionalFieldPhrase}: {professionalField as string}
+                    </span>
+                  )}
+                  {location && (
+                    <span>
+                      {locationPhrase}: {location as string}
+                    </span>
+                  )}
+                  {employmentType && (
+                    <span>
+                      {employmentTypePhrase}: {employmentType as string}
+                    </span>
+                  )}
+                  {applicationDeadline && (
+                    <span>
+                      {applicationDeadlinePhrase}: {applicationDeadline as string}
+                    </span>
+                  )}
+                </div>
+              </li>
+            )
+          }
         )}
       </ol>
     )
   }
 
-  // There will always be one item even if there are no advertisments published
-  const advertismentListCount = advertismentList.length > 1 ? advertismentList.length : 0
+  // TODO: Fix when there is one result but no actual listing
+  const advertismentListCount = advertismentList.length
   return (
     <div className='container'>
       {title && <Title size={2}>{title}</Title>}
