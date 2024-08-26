@@ -13,10 +13,8 @@ export function fetchWebcruiterAdvertismentListRSSFeed(url: string) {
     })
 
     const xmlToJSON = xmlParser.parse(response?.body as string)
-    const parsedJSON = JSON.parse(xmlToJSON)
-
-    log.info(JSON.stringify(parsedJSON, null, 2))
-    return parsedJSON
+    const parseJSON = JSON.parse(xmlToJSON)
+    return parseJSON
   } catch (e) {
     log.error(e)
   }
