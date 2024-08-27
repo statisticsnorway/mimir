@@ -13,5 +13,9 @@
     li, .button-more {
       margin-top: 3rem;
     }
+
+    li:has(span.no-results) {
+      margin-top: 0;
+    }
   }
 }

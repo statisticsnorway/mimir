@@ -17,5 +17,6 @@ export function fetchWebcruiterAdvertismentListRSSFeed(url: string) {
     return parseJSON
   } catch (e) {
     log.error(e)
+    // TODO: Better error handling here as well?
   }
 }

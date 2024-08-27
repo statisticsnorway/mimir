@@ -3,17 +3,17 @@ import { getPhrases } from '/lib/ssb/utils/language'
 import {
   type WebcruiterAdvertismentListRssFeed,
   type WebcruiterAdvertismentListProps,
-  NestedItemTag,
+  NestedItemValue,
 } from '/lib/types/partTypes/webcruiterAdvertismentList'
 import { renderError } from '/lib/ssb/error/error'
 import { render } from '/lib/enonic/react4xp'
 import { ensureArray } from '/lib/ssb/utils/arrayUtils'
 import { formatDate } from '/lib/ssb/utils/dateUtils'
+import { fromPartCache } from '/lib/ssb/cache/partCache'
 
 import { fetchWebcruiterAdvertismentListRSSFeed } from '/services/webcruiterAdvertismentList/webcruiterAdvertismentList'
 
 export function get(req: XP.Request): XP.Response {
-  // TODO: Save to part cache
   try {
     return renderPart(req)
   } catch (e) {
@@ -32,8 +32,10 @@ function renderPart(req: XP.Request) {
   const config = getComponent<XP.PartComponent.WebcruiterAdvertismentList>()?.config
   const phrases = getPhrases(content)
 
-  const webcruiterAdvertismentListRSSFeedResponse = fetchWebcruiterAdvertismentListRSSFeed(
-    config?.webcruiterRssUrl as string
+  const webcruiterAdvertismentListRSSFeedResponse = fromPartCache(
+    req,
+    `${content._id}-webcruiterAdvertismentList`,
+    () => fetchWebcruiterAdvertismentListRSSFeed(config?.webcruiterRssUrl as string)
   )
   const props: WebcruiterAdvertismentListProps = {
     title: config?.title ?? '',
@@ -59,10 +61,10 @@ function prepareAdvertistmentListData(webcruiterAdvertismentList: WebcruiterAdve
     return {
       positionTitle: item.title ?? '',
       positionAdvertismentUrl: item.link ?? '',
-      professionalField: (item['wc:CompanyInfo'] as NestedItemTag)?.['wc:CompanyOrgName'] ?? '',
+      professionalField: (item['wc:CompanyInfo'] as NestedItemValue)?.['wc:CompanyOrgName'] ?? '',
       location: item['wc:WorkplacePostaddress'] ?? '',
       employmentType:
-        ((item['wc:EmploymentTypes'] as NestedItemTag)?.['wc:EmploymentType'] as NestedItemTag)?.[
+        ((item['wc:EmploymentTypes'] as NestedItemValue)?.['wc:EmploymentType'] as NestedItemValue)?.[
           'wc:EmploymentTypeName'
         ] ?? '',
       applicationDeadline: item['wc:apply_within_date']

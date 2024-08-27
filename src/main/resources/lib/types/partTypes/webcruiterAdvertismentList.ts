@@ -1,14 +1,14 @@
 interface AdvertismentList {
-  positionTitle?: string | NestedItemTag
-  positionAdvertismentUrl?: string | NestedItemTag
-  professionalField?: string | NestedItemTag
-  location?: string | NestedItemTag
-  employmentType?: string | NestedItemTag
-  applicationDeadline?: string | NestedItemTag
+  positionTitle?: string | NestedItemValue
+  positionAdvertismentUrl?: string | NestedItemValue
+  professionalField?: string | NestedItemValue
+  location?: string | NestedItemValue
+  employmentType?: string | NestedItemValue
+  applicationDeadline?: string | NestedItemValue
 }
 
 interface WebcruiterAdvertismentListItem {
-  [key: string]: string | NestedItemTag | undefined
+  [key: string]: string | NestedItemValue | undefined
 }
 
 export interface WebcruiterAdvertismentListRssFeed {
@@ -19,8 +19,8 @@ export interface WebcruiterAdvertismentListRssFeed {
   }
 }
 
-export interface NestedItemTag {
-  [key: string]: string | NestedItemTag | undefined
+export interface NestedItemValue {
+  [key: string]: string | NestedItemValue | undefined
 }
 export interface WebcruiterAdvertismentListProps {
   title?: string
