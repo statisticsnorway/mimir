@@ -14,6 +14,7 @@ const WebcruiterAdvertistmentList = (props: WebcruiterAdvertismentListProps) => 
     locationPhrase,
     employmentTypePhrase,
     applicationDeadlinePhrase,
+    noResultsPhrase,
   } = props
 
   function renderAdvertismentList() {
@@ -38,7 +39,7 @@ const WebcruiterAdvertistmentList = (props: WebcruiterAdvertismentListProps) => 
                     {positionTitle}
                   </Link>
                 ) : (
-                  <span className='no-results'>{positionTitle as string}</span>
+                  <span className='no-results'>{noResultsPhrase}</span>
                 )}
                 <div className='d-flex flex-column mt-2'>
                   {professionalField && (

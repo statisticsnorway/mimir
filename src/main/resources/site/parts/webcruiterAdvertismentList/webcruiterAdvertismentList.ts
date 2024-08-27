@@ -3,7 +3,7 @@ import { getPhrases } from '/lib/ssb/utils/language'
 import {
   type WebcruiterAdvertismentListRssFeed,
   type WebcruiterAdvertismentListProps,
-  NestedItemValue,
+  type NestedItemValue,
 } from '/lib/types/partTypes/webcruiterAdvertismentList'
 import { renderError } from '/lib/ssb/error/error'
 import { render } from '/lib/enonic/react4xp'
@@ -48,6 +48,7 @@ function renderPart(req: XP.Request) {
     locationPhrase: phrases?.['webcruiterAdvertismentList.location'],
     employmentTypePhrase: phrases?.['webcruiterAdvertismentList.employmentType'],
     applicationDeadlinePhrase: phrases?.['webcruiterAdvertismentList.applicationDeadline'],
+    noResultsPhrase: phrases?.['webcruiterAdvertismentList.noResults'],
   }
   return render('site/parts/webcruiterAdvertismentList/WebcruiterAdvertismentList', props, req, {
     body: `<section class="xp-part subject-article-list container-fluid"></section>`,
@@ -55,7 +56,7 @@ function renderPart(req: XP.Request) {
 }
 
 function prepareAdvertistmentListData(webcruiterAdvertismentList: WebcruiterAdvertismentListRssFeed, language: string) {
-  const webcruiterAdvertismentListItems = ensureArray(webcruiterAdvertismentList.rss.channel.item) ?? []
+  const webcruiterAdvertismentListItems = ensureArray(webcruiterAdvertismentList?.rss?.channel?.item) ?? []
 
   const webcruiterAdvertismentListData = webcruiterAdvertismentListItems.map((item) => {
     return {

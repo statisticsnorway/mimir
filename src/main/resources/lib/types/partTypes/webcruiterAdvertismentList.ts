@@ -30,4 +30,5 @@ export interface WebcruiterAdvertismentListProps {
   locationPhrase?: string
   employmentTypePhrase?: string
   applicationDeadlinePhrase?: string
+  noResultsPhrase?: string
 }
