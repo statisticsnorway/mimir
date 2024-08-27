@@ -13,14 +13,15 @@
                 <config>
                     <exclude>*</exclude>
                     <include> 
+                        Format | 
                         Bold Italic Underline | 
                         JustifyBlock JustifyLeft JustifyCenter JustifyRight | 
                         BulletedList NumberedList Outdent Indent | 
                         Link Unlink | 
                         PasteModeSwitcher | 
                         Strike Subscript Superscript
-                        <allowHeadings>h3 h4 h5</allowHeadings>
                     </include>
+                    <allowHeadings>h3 h4 h5</allowHeadings>
                 </config>
             </input>
          </items>
@@ -28,14 +29,17 @@
       <field-set>
          <label>Visning</label>
          <items>
-                <input name="sneakPeek" type="Checkbox">
-                    <label>Vis en sniktitt av innhold</label>
-                    <occurrences minimum="0" maximum="1" />
-                </input>
-                <input name="aiIcon" type="Checkbox">
-                    <label>Vis KI ikon</label>
-                    <occurrences minimum="0" maximum="1" />
-                </input>
+            <input name="expansionBoxType" type="RadioButton">
+                <label>Velg hvilken type ExpansionBox</label>
+                <help-text>Standard brukes der innholdet i boksen kan beskrives med en kort tittel. SneakPeek brukes der bruker trenger kontekst for å forstå innholdet i boksen. AI brukes kun til AI-generert innhold. </help-text>
+                <occurrences minimum="1" maximum="1"/>
+                <config>
+                    <option value="default">Standard</option>
+                    <option value="sneakPeek">SneakPeek</option>
+                    <option value="aiIcon">AI</option>
+                </config>
+                <default>default</default>
+            </input>
          </items>
       </field-set>
     </form>

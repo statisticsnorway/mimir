@@ -5,8 +5,7 @@ import { sanitize } from '../../lib/ssb/utils/htmlUtils'
 interface FactBoxProps {
   header?: string
   text: string
-  showSneakPeek: boolean
-  aiIcon: boolean
+  expansionBoxType: string
 }
 
 const FactBox = (props: FactBoxProps) => {
@@ -22,8 +21,8 @@ const FactBox = (props: FactBoxProps) => {
     <FactBoxComponent
       header={props.header}
       text={createText(props.text)}
-      sneakPeek={props.showSneakPeek}
-      aiIcon={props.aiIcon}
+      sneakPeek={props.expansionBoxType === 'sneakPeek' || props.expansionBoxType === 'aiIcon'}
+      aiIcon={props.expansionBoxType === 'aiIcon'}
     />
   )
 }
