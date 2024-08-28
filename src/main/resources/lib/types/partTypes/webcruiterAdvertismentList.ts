@@ -1,4 +1,31 @@
-interface AdvertismentList {
+interface WebcruiterAdvertismentListItem {
+  [key: string]: string | NestedItemValue | undefined
+}
+
+interface WebcruiterAdvertismentListRssFeed {
+  rss: {
+    channel: {
+      item: WebcruiterAdvertismentListItem[]
+    }
+  }
+}
+
+export interface WebcruiterAdvertismentListRssFeedResponseErrorMessage {
+  errorMessage?: string
+}
+
+export interface WebcruiterAdvertismentListRssFeedResponse {
+  status: number
+  message?: string
+  body: WebcruiterAdvertismentListRssFeed
+  application: string
+}
+
+export interface NestedItemValue {
+  [key: string]: string | NestedItemValue | undefined
+}
+
+export interface AdvertismentList {
   positionTitle?: string | NestedItemValue
   positionAdvertismentUrl?: string | NestedItemValue
   professionalField?: string | NestedItemValue
@@ -7,25 +34,10 @@ interface AdvertismentList {
   applicationDeadline?: string | NestedItemValue
 }
 
-interface WebcruiterAdvertismentListItem {
-  [key: string]: string | NestedItemValue | undefined
-}
-
-export interface WebcruiterAdvertismentListRssFeed {
-  rss: {
-    channel: {
-      item: WebcruiterAdvertismentListItem[]
-    }
-  }
-}
-
-export interface NestedItemValue {
-  [key: string]: string | NestedItemValue | undefined
-}
 export interface WebcruiterAdvertismentListProps {
   title?: string
   showingPhrase?: string
-  advertismentList: AdvertismentList[]
+  advertismentList: AdvertismentList[] | WebcruiterAdvertismentListRssFeedResponseErrorMessage
   professionalFieldPhrase?: string
   locationPhrase?: string
   employmentTypePhrase?: string

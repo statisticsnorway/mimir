@@ -1,7 +1,7 @@
 import { getComponent, getContent } from '/lib/xp/portal'
 import { getPhrases } from '/lib/ssb/utils/language'
 import {
-  type WebcruiterAdvertismentListRssFeed,
+  type WebcruiterAdvertismentListRssFeedResponse,
   type WebcruiterAdvertismentListProps,
   type NestedItemValue,
 } from '/lib/types/partTypes/webcruiterAdvertismentList'
@@ -37,13 +37,11 @@ function renderPart(req: XP.Request) {
     `${content._id}-webcruiterAdvertismentList`,
     () => fetchWebcruiterAdvertismentListRSSFeed(config?.webcruiterRssUrl as string)
   )
+
   const props: WebcruiterAdvertismentListProps = {
     title: config?.title ?? '',
     showingPhrase: phrases?.['publicationArchive.showing'],
-    advertismentList: prepareAdvertistmentListData(
-      webcruiterAdvertismentListRSSFeedResponse,
-      content?.language as string
-    ),
+    advertismentList: prepareAdvertistmentListData(webcruiterAdvertismentListRSSFeedResponse),
     professionalFieldPhrase: phrases?.['webcruiterAdvertismentList.professionalField'],
     locationPhrase: phrases?.['webcruiterAdvertismentList.location'],
     employmentTypePhrase: phrases?.['webcruiterAdvertismentList.employmentType'],
@@ -55,23 +53,33 @@ function renderPart(req: XP.Request) {
   })
 }
 
-function prepareAdvertistmentListData(webcruiterAdvertismentList: WebcruiterAdvertismentListRssFeed, language: string) {
-  const webcruiterAdvertismentListItems = ensureArray(webcruiterAdvertismentList?.rss?.channel?.item) ?? []
-
-  const webcruiterAdvertismentListData = webcruiterAdvertismentListItems.map((item) => {
+function prepareAdvertistmentListData(
+  webcruiterAdvertismentListRSSFeedResponse: WebcruiterAdvertismentListRssFeedResponse
+) {
+  const { status, message, body } = webcruiterAdvertismentListRSSFeedResponse
+  if (status !== 200) {
+    const errorMessage = `${status} ${message} - ${body}`
+    log.error(errorMessage)
     return {
-      positionTitle: item.title ?? '',
-      positionAdvertismentUrl: item.link ?? '',
-      professionalField: (item['wc:CompanyInfo'] as NestedItemValue)?.['wc:CompanyOrgName'] ?? '',
-      location: item['wc:WorkplacePostaddress'] ?? '',
-      employmentType:
-        ((item['wc:EmploymentTypes'] as NestedItemValue)?.['wc:EmploymentType'] as NestedItemValue)?.[
-          'wc:EmploymentTypeName'
-        ] ?? '',
-      applicationDeadline: item['wc:apply_within_date']
-        ? formatDate(item['wc:apply_within_date'] as string, 'PPP', language)
-        : '',
+      errorMessage,
     }
-  })
-  return webcruiterAdvertismentListData
+  } else {
+    const webcruiterAdvertismentListItems = ensureArray(body.rss?.channel?.item) ?? []
+    const webcruiterAdvertismentListData = webcruiterAdvertismentListItems.map((item) => {
+      return {
+        positionTitle: item.title ?? '',
+        positionAdvertismentUrl: item.link ?? '',
+        professionalField: (item['wc:CompanyInfo'] as NestedItemValue)?.['wc:CompanyOrgName'] ?? '',
+        location: item['wc:WorkplacePostaddress'] ?? '',
+        employmentType:
+          ((item['wc:EmploymentTypes'] as NestedItemValue)?.['wc:EmploymentType'] as NestedItemValue)?.[
+            'wc:EmploymentTypeName'
+          ] ?? '',
+        applicationDeadline: item['wc:apply_within_date']
+          ? formatDate(item['wc:apply_within_date'] as string, 'dd.MM.yy')
+          : '',
+      }
+    })
+    return webcruiterAdvertismentListData
+  }
 }
