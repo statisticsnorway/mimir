@@ -76,10 +76,9 @@ const WebcruiterAdvertistmentList = (props: WebcruiterAdvertismentListProps) => 
 
   const advertismentListCount = (advertismentList as AdvertismentList[]).length
   const hasResults =
-    !(advertismentList as WebcruiterAdvertismentListRssFeedResponseErrorMessage).errorMessage ||
-    (advertismentListCount &&
-      (advertismentList as AdvertismentList[])[0]?.positionTitle &&
-      (advertismentList as AdvertismentList[])[0]?.positionAdvertismentUrl)
+    !(advertismentList as WebcruiterAdvertismentListRssFeedResponseErrorMessage).errorMessage &&
+    (advertismentList as AdvertismentList[])[0]?.positionTitle &&
+    (advertismentList as AdvertismentList[])[0]?.positionAdvertismentUrl
   return (
     <div className='container'>
       {title && <Title size={2}>{title}</Title>}
