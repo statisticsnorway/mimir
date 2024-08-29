@@ -385,7 +385,7 @@ function preparePageMap(metainfo: MetaInfoData, page: DefaultPage): string {
         .map((subject) => {
           return `<Attribute name="category" value="${subject}"/>`
         })
-        .toString()
+        .join('\n')
     : ''
   const contentType = metainfo.metaInfoSearchContentType
     ? `<Attribute name="contenttype" value="${metainfo.metaInfoSearchContentType}"/>`
