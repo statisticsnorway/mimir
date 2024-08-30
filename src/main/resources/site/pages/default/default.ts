@@ -259,6 +259,7 @@ export function get(req: XP.Request): XP.Response {
     headerBody: header?.body,
     footerBody: footer?.body,
     ...metaInfo,
+    metaInfoMainSubjects: metaInfo.metaInfoMainSubjects?.join(';'),
     jsonLd,
     pageMap,
     breadcrumbsReactId: breadcrumbId,
@@ -727,6 +728,7 @@ interface DefaultModel {
   pageMap: string | undefined
   headerBody: string | undefined
   footerBody: string | undefined
+  metaInfoMainSubjects: string | undefined
   breadcrumbsReactId: string | undefined
   hideHeader: boolean
   hideBreadcrumb: boolean
