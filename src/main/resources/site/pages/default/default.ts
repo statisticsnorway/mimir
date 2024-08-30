@@ -268,8 +268,6 @@ export function get(req: XP.Request): XP.Response {
     tableView: page.type === 'mimir:table',
   }
 
-  log.info(JSON.stringify(model, null, 2))
-
   const thymeleafRenderBody = render(view, model)
 
   const breadcrumbComponent = r4xpRender(
