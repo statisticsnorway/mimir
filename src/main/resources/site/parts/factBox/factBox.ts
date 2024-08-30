@@ -50,6 +50,7 @@ function renderPart(req: XP.Request, factBoxId: string): XP.Response {
     {
       header: factBoxContent.displayName,
       text,
+      expansionBoxType: factBoxContent.data.expansionBoxType,
     },
     req,
     {

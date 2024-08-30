@@ -368,20 +368,24 @@ function prepareStructuredData(metaInfo: MetaInfoData, page: DefaultPage): Artic
     description: metaInfo.metaInfoDescription
       ? metaInfo.metaInfoDescription
       : page.x['com-enonic-app-metafields']?.['meta-data']?.seoDescription || undefined,
-    articleSection: metaInfo.metaInfoMainSubject,
+    articleSection: metaInfo.metaInfoMainSubjects?.toString(),
     keywords: metaInfo.metaInfoSearchKeywords,
   }
 }
 
 function preparePageMap(metainfo: MetaInfoData, page: DefaultPage): string {
   const keywords = metainfo.metaInfoSearchKeywords
-    ? `<Attribute name="keywords" value="[${metainfo.metaInfoSearchKeywords}]"/>`
+    ? `<Attribute name="keywords" value="${metainfo.metaInfoSearchKeywords}"/>`
     : ''
   const author = page.data.authorItemSet
     ? `<Attribute name="author" value="${ensureArray(page.data.authorItemSet)[0].name}"/>`
     : ''
-  const category = metainfo.metaInfoMainSubject
-    ? `<Attribute name="category" value="${metainfo.metaInfoMainSubject}"/>`
+  const category = metainfo.metaInfoMainSubjects
+    ? metainfo.metaInfoMainSubjects
+        .map((subject) => {
+          return `<Attribute name="category" value="${subject}"/>`
+        })
+        .join('\n')
     : ''
   const contentType = metainfo.metaInfoSearchContentType
     ? `<Attribute name="contenttype" value="${metainfo.metaInfoSearchContentType}"/>`
@@ -421,7 +425,7 @@ function parseMetaInfoData(
   let metaInfoSearchKeywords: string | undefined
   let metaInfoDescription: string | undefined
   let metaInfoSearchPublishFrom: string | undefined = page.publish && page.publish.from
-  let metaInfoMainSubject: string | undefined
+  let metaInfoMainSubjects: string[] | undefined
   let metaInfoTitle: string | undefined =
     page.x['com-enonic-app-metafields']?.['meta-data']?.seoTitle || page.displayName
 
@@ -448,8 +452,7 @@ function parseMetaInfoData(
   }
 
   if (page.type === `${app.name}:article` || page.type === `${app.name}:statistics`) {
-    const mainSubjects: string = getSubjectsPage(page, req, language.code as string).join(';')
-    metaInfoMainSubject = mainSubjects
+    metaInfoMainSubjects = getSubjectsPage(page, req, language.code as string)
   }
 
   if (page.type === `${app.name}:statistics`) {
@@ -477,7 +480,7 @@ function parseMetaInfoData(
     metaInfoSearchKeywords,
     metaInfoDescription,
     metaInfoSearchPublishFrom,
-    metaInfoMainSubject,
+    metaInfoMainSubjects,
     metaInfoTitle,
   }
 }
@@ -690,7 +693,7 @@ interface MetaInfoData {
   metaInfoSearchKeywords: string | undefined
   metaInfoDescription: string | undefined
   metaInfoSearchPublishFrom: string | undefined
-  metaInfoMainSubject: string | undefined
+  metaInfoMainSubjects: string[] | undefined
   metaInfoTitle: string | undefined
 }
 
