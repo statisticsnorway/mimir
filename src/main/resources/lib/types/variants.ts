@@ -52,7 +52,7 @@ export interface PreparedStatistics {
   aboutTheStatisticsDescription?: string
 }
 
-export interface PreparedUpcomingRelease {
+export interface PreparedContentRelease {
   id: string
   name: string
   type: string
@@ -62,5 +62,15 @@ export interface PreparedUpcomingRelease {
   month: string
   monthName: string
   year: string
+  upcomingReleaseLink?: string
+}
+
+export interface PreparedUpcomingRelease {
+  id: string | number
+  name: string
+  type?: string
+  mainSubject?: string
+  variant?: PreparedVariant
+  url?: string
   upcomingReleaseLink?: string
 }
