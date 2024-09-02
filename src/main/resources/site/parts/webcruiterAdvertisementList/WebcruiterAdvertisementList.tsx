@@ -4,16 +4,16 @@ import { Title, Divider, Link } from '@statisticsnorway/ssb-component-library'
 import { NumericFormat } from 'react-number-format'
 
 import {
-  type WebcruiterAdvertismentListProps,
-  type AdvertismentList,
-  type WebcruiterAdvertismentListRssFeedResponseErrorMessage,
-} from '/lib/types/partTypes/webcruiterAdvertismentList'
+  type WebcruiterAdvertisementListProps,
+  type AdvertisementList,
+  type WebcruiterAdvertisementListRssFeedResponseErrorMessage,
+} from '../../../lib/types/partTypes/webcruiterAdvertisementList'
 
-const WebcruiterAdvertistmentList = (props: WebcruiterAdvertismentListProps) => {
+const WebcruiterAdvertistmentList = (props: WebcruiterAdvertisementListProps) => {
   const {
     title,
     showingPhrase,
-    advertismentList,
+    advertisementList,
     professionalFieldPhrase,
     locationPhrase,
     employmentTypePhrase,
@@ -21,25 +21,25 @@ const WebcruiterAdvertistmentList = (props: WebcruiterAdvertismentListProps) => 
     noResultsPhrase,
   } = props
 
-  function renderAdvertismentListItem() {
-    if ((advertismentList as WebcruiterAdvertismentListRssFeedResponseErrorMessage).errorMessage) {
+  function renderAdvertisementListItem() {
+    if ((advertisementList as WebcruiterAdvertisementListRssFeedResponseErrorMessage).errorMessage) {
       return (
         <li>
           <span className='no-results'>
-            {(advertismentList as WebcruiterAdvertismentListRssFeedResponseErrorMessage).errorMessage}
+            {(advertisementList as WebcruiterAdvertisementListRssFeedResponseErrorMessage).errorMessage}
           </span>
         </li>
       )
     } else {
-      return (advertismentList as AdvertismentList[]).map(
+      return (advertisementList as AdvertisementList[]).map(
         (
-          { positionTitle, positionAdvertismentUrl, professionalField, location, employmentType, applicationDeadline },
+          { positionTitle, positionAdvertisementUrl, professionalField, location, employmentType, applicationDeadline },
           index
         ) => {
           return (
-            <li key={`webcruiter-advertisment-list-${applicationDeadline}-${index}`}>
-              {positionTitle && positionAdvertismentUrl ? (
-                <Link linkType='header' href={positionAdvertismentUrl}>
+            <li key={`webcruiter-advertisement-list-${applicationDeadline}-${index}`}>
+              {positionTitle && positionAdvertisementUrl ? (
+                <Link linkType='header' href={positionAdvertisementUrl}>
                   {positionTitle}
                 </Link>
               ) : (
@@ -74,11 +74,11 @@ const WebcruiterAdvertistmentList = (props: WebcruiterAdvertismentListProps) => 
     }
   }
 
-  const advertismentListCount = (advertismentList as AdvertismentList[]).length
+  const advertisementListCount = (advertisementList as AdvertisementList[]).length
   const hasResults =
-    !(advertismentList as WebcruiterAdvertismentListRssFeedResponseErrorMessage).errorMessage &&
-    (advertismentList as AdvertismentList[])[0]?.positionTitle &&
-    (advertismentList as AdvertismentList[])[0]?.positionAdvertismentUrl
+    !(advertisementList as WebcruiterAdvertisementListRssFeedResponseErrorMessage).errorMessage &&
+    (advertisementList as AdvertisementList[])[0]?.positionTitle &&
+    (advertisementList as AdvertisementList[])[0]?.positionAdvertisementUrl
   return (
     <div className='container'>
       {title && <Title size={2}>{title}</Title>}
@@ -87,13 +87,13 @@ const WebcruiterAdvertistmentList = (props: WebcruiterAdvertismentListProps) => 
           {hasResults && (
             <>
               <div className='total-count'>
-                {showingPhrase?.replace('{0}', advertismentListCount.toString())}&nbsp;
-                <NumericFormat value={Number(advertismentListCount)} displayType='text' thousandSeparator=' ' />
+                {showingPhrase?.replace('{0}', advertisementListCount.toString())}&nbsp;
+                <NumericFormat value={Number(advertisementListCount)} displayType='text' thousandSeparator=' ' />
               </div>
               <Divider />
             </>
           )}
-          <ol className='list-unstyled'>{renderAdvertismentListItem()}</ol>
+          <ol className='list-unstyled'>{renderAdvertisementListItem()}</ol>
         </div>
       </div>
     </div>

@@ -1,23 +1,23 @@
-interface WebcruiterAdvertismentListItem {
+interface WebcruiterAdvertisementListItem {
   [key: string]: string | NestedItemValue | undefined
 }
 
-interface WebcruiterAdvertismentListRssFeed {
+interface WebcruiterAdvertisementListRssFeed {
   rss: {
     channel: {
-      item: WebcruiterAdvertismentListItem[]
+      item: WebcruiterAdvertisementListItem[]
     }
   }
 }
 
-export interface WebcruiterAdvertismentListRssFeedResponseErrorMessage {
+export interface WebcruiterAdvertisementListRssFeedResponseErrorMessage {
   errorMessage?: string
 }
 
-export interface WebcruiterAdvertismentListRssFeedResponse {
+export interface WebcruiterAdvertisementListRssFeedResponse {
   status: number
   message?: string
-  body: WebcruiterAdvertismentListRssFeed
+  body: WebcruiterAdvertisementListRssFeed
   application: string
 }
 
@@ -25,19 +25,19 @@ export interface NestedItemValue {
   [key: string]: string | NestedItemValue | undefined
 }
 
-export interface AdvertismentList {
+export interface AdvertisementList {
   positionTitle?: string | NestedItemValue
-  positionAdvertismentUrl?: string | NestedItemValue
+  positionAdvertisementUrl?: string | NestedItemValue
   professionalField?: string | NestedItemValue
   location?: string | NestedItemValue
   employmentType?: string | NestedItemValue
   applicationDeadline?: string | NestedItemValue
 }
 
-export interface WebcruiterAdvertismentListProps {
+export interface WebcruiterAdvertisementListProps {
   title?: string
   showingPhrase?: string
-  advertismentList: AdvertismentList[] | WebcruiterAdvertismentListRssFeedResponseErrorMessage
+  advertisementList: AdvertisementList[] | WebcruiterAdvertisementListRssFeedResponseErrorMessage
   professionalFieldPhrase?: string
   locationPhrase?: string
   employmentTypePhrase?: string

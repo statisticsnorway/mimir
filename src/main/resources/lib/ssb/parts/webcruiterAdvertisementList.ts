@@ -3,7 +3,7 @@ import { type XmlParser } from '/lib/types/xmlParser'
 
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 
-export function fetchWebcruiterAdvertismentListRSSFeed(url: string) {
+export function fetchWebcruiterAdvertisementListRSSFeed(url: string) {
   const response = request({
     url,
     method: 'GET',
