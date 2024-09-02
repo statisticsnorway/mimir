@@ -1,5 +1,5 @@
 import { request } from '/lib/http-client'
-import { type XmlParser } from '/lib/types/xmlParser'
+import { type XmlParser } from '../../../lib/types/xmlParser'
 
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 
