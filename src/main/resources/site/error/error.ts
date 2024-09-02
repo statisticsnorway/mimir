@@ -77,7 +77,6 @@ function getMainErrorBody(status: number, contentHtml: string, language: Languag
     language,
     pageTitle: status === 404 ? 'Side ikke funnet / Page not found' : 'Siden feilet / Page error',
     bodyClasses: '',
-    GA_TRACKING_ID: app.config && app.config.GA_TRACKING_ID ? app.config.GA_TRACKING_ID : null,
     contentHtml,
   }
   const mainErrorBody = render(mainErrorView, mainErrorModel)

@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - 'master'
+  workflow_dispatch:  # Allows the workflow to be manually triggered.
 
 concurrency:
   group: mimir-prod
@@ -58,7 +59,7 @@ jobs:
                   "type": "header",
                   "text": {
                     "type": "plain_text",
-                    "text": "${{ github.workflow }}"
+                    "text": "${{ github.workflow }}  in ${{ github.repository }}"
                   }
                 },
                 {
@@ -99,7 +100,7 @@ jobs:
                   "type": "header",
                   "text": {
                     "type": "plain_text",
-                    "text": "${{ github.workflow }}"
+                    "text": "${{ github.workflow }} in ${{ github.repository }}"
                   }
                 },
                 {

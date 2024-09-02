@@ -1,4 +1,4 @@
-name: 'Manual deploy to PROD'
+name: 'Deploy former build to PROD'
 # Action that will download previously created artifact and deploy it to the production environment
 on:
   workflow_dispatch:
@@ -15,7 +15,7 @@ jobs:
     environment: 'production'
     steps:
       - name: Download workflow artifact
-        uses: dawidd6/action-download-artifact@v3.1.4
+        uses: dawidd6/action-download-artifact@v6
         with:
           workflow: deploy_to_prod.yaml
           branch: master
@@ -56,7 +56,7 @@ jobs:
                   "type": "header",
                   "text": {
                     "type": "plain_text",
-                    "text": "${{ github.workflow }}"
+                    "text": "${{ github.workflow }} in ${{ github.repository }}"
                   }
                 },
                 {
@@ -97,7 +97,7 @@ jobs:
                   "type": "header",
                   "text": {
                     "type": "plain_text",
-                    "text": "${{ github.workflow }}"
+                    "text": "${{ github.workflow }} in ${{ github.repository }}"
                   }
                 },
                 {

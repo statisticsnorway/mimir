@@ -24,7 +24,6 @@ export interface SearchResultProps {
   allContentTypesPhrase: string
   allSubjectsPhrase: string
   searchServiceUrl: string
-  nameSearchToggle: boolean
   nameSearchData: object | undefined
   nameSearchUrl: string
   namePhrases: {
@@ -51,7 +50,6 @@ export interface SearchResultProps {
   contentTypePhrases: Array<ContentTypePhrase>
   contentTypes: Array<Facet>
   subjects: Array<Facet>
-  GA_TRACKING_ID: string | null
   contentTypeUrlParam: string | undefined
   subjectUrlParam: string | undefined
   searchResultSRText: string

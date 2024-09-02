@@ -6,7 +6,6 @@ import { prepareText } from '/site/parts/links/links'
 import { type TableLink } from '/site/mixins/tableLink'
 import { type HeaderLink } from '/site/mixins/headerLink'
 import { type ProfiledLink } from '/site/mixins/profiledLink'
-import { GA_TRACKING_ID } from '/site/pages/default/default'
 import { type Links as LinksConfig } from '.'
 
 export function macro(context: XP.MacroContext<LinksConfig>) {
@@ -62,7 +61,6 @@ export function macro(context: XP.MacroContext<LinksConfig>) {
         children: content ? prepareText(content, linkText) : linkText,
         href: contentUrl,
         linkType: 'header',
-        GA_TRACKING_ID: GA_TRACKING_ID,
         isPDFAttachment,
         attachmentTitle,
       }

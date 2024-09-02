@@ -171,6 +171,23 @@ export function scriptAsset(path: string): string {
 export const XP_RUN_MODE = ''.concat(Java.type('com.enonic.xp.server.RunMode').get())
 // ^ check for DEV mode
 
+export function getEnvironmentString(): string {
+  let environment = ''
+  if (XP_RUN_MODE === 'DEV') {
+    environment = XP_RUN_MODE
+  } else {
+    environment = app.config?.['ssb.env'] ? app.config['ssb.env'].toUpperCase() : ''
+  }
+  return environment
+}
+
+export function getProfiledCardAriaLabel(subTitle: string): string {
+  if (subTitle) {
+    return `${subTitle.replace(' /', ',')}`
+  }
+  return ''
+}
+
 interface ContentSearchPageResult {
   contentId?: string
 }

@@ -3,7 +3,7 @@ import Accordion from '/react4xp/accordion/Accordion'
 import { type AboutTheStatisticsProps } from '../../../lib/types/partTypes/omStatistikken'
 
 const OmStatistikken = (props: AboutTheStatisticsProps) => {
-  const { ingress, label, accordions } = props
+  const { ingress, label, lastUpdatedPhrase, lastUpdated, accordions } = props
 
   function renderIngress() {
     if (ingress) {
@@ -15,6 +15,11 @@ const OmStatistikken = (props: AboutTheStatisticsProps) => {
     <div className='row'>
       <h2 className='title-wrapper col-12'>{label}</h2>
       {renderIngress()}
+      {lastUpdated && (
+        <p>
+          <i>{`${lastUpdatedPhrase} ${lastUpdated}.`}</i>
+        </p>
+      )}
       <div className='om-statistikken-accordion col-lg-7'>
         <Accordion accordions={accordions} />
       </div>

@@ -28,43 +28,11 @@ try {
       space: 'ssb',
       features: [
         {
-          feature: 'rss-news',
-          enabled: true,
-        },
-        {
-          feature: 'rss-news-statistics',
-          enabled: false,
-        },
-        {
-          feature: 'article-isbn',
-          enabled: true,
-        },
-        {
           feature: 'articlelist-sorting',
           enabled: false,
         },
         {
-          feature: 'name-graph',
-          enabled: false,
-        },
-        {
-          feature: 'dashboard-redux-logging-debugging',
-          enabled: true,
-        },
-        {
-          feature: 'highchart-show-datatable',
-          enabled: false,
-        },
-        {
           feature: 'highchart-react',
-          enabled: false,
-        },
-        {
-          feature: 'highcharts-y-axix-title-mobile',
-          enabled: false,
-        },
-        {
-          feature: 'name-search-in-freetext-search',
           enabled: false,
         },
         {
@@ -80,14 +48,6 @@ try {
           enabled: false,
         },
         {
-          feature: 'datefns-publication-archive',
-          enabled: false,
-        },
-        {
-          feature: 'push-rss-statkal',
-          enabled: false,
-        },
-        {
           feature: 'highchart-expert',
           enabled: false,
         },
@@ -100,11 +60,11 @@ try {
           enabled: false,
         },
         {
-          feature: 'simple-statbank-part',
+          feature: 'structured-data',
           enabled: false,
         },
         {
-          feature: 'structured-data',
+          feature: 'pageMap',
           enabled: false,
         },
       ],

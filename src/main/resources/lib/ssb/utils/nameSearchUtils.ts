@@ -8,7 +8,6 @@ import { getNameGraphDataFromRepo, type NameData, nameGraphRepoExists } from '/l
 import { request, HttpRequestParams, HttpResponse } from '/lib/http-client'
 
 import { getCalculatorConfig, getNameSearchGraphData } from '/lib/ssb/dataset/calculator'
-import { isEnabled } from '/lib/featureToggle'
 import { type SolrResponse } from '/lib/types/solr'
 import { type CalculatorConfig } from '/site/content-types'
 
@@ -53,10 +52,9 @@ export function getNameSearchResult(name: string, includeGraphData: boolean): So
 }
 
 export function prepareNameGraphResult(name: string): string {
-  const nameSearchGraphEnabled: boolean = isEnabled('name-graph', true, 'ssb')
   const obj: ResultType = JSON.parse('{}')
   obj.originalName = name
-  obj.nameGraph = nameSearchGraphEnabled ? prepareGraph(name) : []
+  obj.nameGraph = prepareGraph(name)
   return JSON.stringify(obj)
 }
 
@@ -65,10 +63,9 @@ export function prepareGraph(name: string): Array<NameGraph> {
 }
 
 function prepareResult(result: string, name: string, includeGraphData: boolean): string {
-  const nameSearchGraphEnabled: boolean = isEnabled('name-graph', true, 'ssb')
   const obj: ResultType = JSON.parse(result)
   obj.originalName = name
-  obj.nameGraphData = nameSearchGraphEnabled && includeGraphData ? prepareGraph(name) : []
+  obj.nameGraphData = includeGraphData ? prepareGraph(name) : []
   return JSON.stringify(obj)
 }
 
@@ -92,20 +89,10 @@ export function sanitizeQuery(name: string): string {
   if (name.toLowerCase() === 'and' || name.toLowerCase() === 'or') {
     return name.toLowerCase()
   }
-  const approved = 'ABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ '
-  return whitelist(replaceCharacters(name.toUpperCase()), approved)
-}
-
-function replaceCharacters(name: string): string {
-  return name
-    .replace(/[ÈÉË]/g, 'E')
-    .replace(/[ÔÒÓ]/g, 'O')
-    .replace(/'/g, '')
-    .replace(/Ä/g, 'Æ')
-    .replace(/Ü/g, 'Y')
-    .replace(/Ö/g, 'Ø')
-    .replace(/[ÀÁ]/g, 'A')
-    .replace(/[ÐÞ∂þ]/g, 'D')
+  // Allowed characters, extracted from name data using this little script, ensuring we include all actually used characters:
+  // https://gist.github.com/Glenruben/2e2b2a32ddbfe4216d8b0791e3667635
+  const approved = '-ABCDEFGHIJKLMNOPQRSTUVWXYZÁÄÅÆÈÉËÍÏÑÓÔÖØÜÝ '
+  return whitelist(name.toUpperCase(), approved)
 }
 
 //Uses when repo dont exist

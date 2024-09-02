@@ -3,12 +3,24 @@ import { Accordion, Button, Link } from '@statisticsnorway/ssb-component-library
 import { ArrowRight, ArrowUp, Facebook, Twitter, Rss, Linkedin } from 'react-feather'
 import { FooterContent } from '../../lib/types/footer'
 
-class Footer extends React.Component<FooterContent> {
-  constructor(props: FooterContent) {
-    super(props)
-  }
+const Footer = (props: FooterContent) => {
+  const {
+    logoUrl,
+    footerNavigation,
+    topButtonText,
+    hiddenFooterText,
+    language,
+    facebookUrl,
+    twitterUrl,
+    linkedinUrl,
+    rssUrl,
+    globalLinks,
+    copyrightUrl,
+    copyrightText,
+  } = props
+  const footerNavigationLabel = language?.code === 'en' ? 'footer links' : 'bunnmeny lenker'
 
-  renderFooterMenuDesktop(footerNavigation: FooterContent['footerNavigation']) {
+  function renderFooterMenuDesktop() {
     return footerNavigation?.map((topMenuItem, index) => {
       if (topMenuItem && topMenuItem.title) {
         const titleId = topMenuItem.title.replaceAll(' ', '-').toLowerCase()
@@ -18,14 +30,14 @@ class Footer extends React.Component<FooterContent> {
             <h3 className='ssb-title negative' id={listTitle}>
               {topMenuItem.title}
             </h3>
-            <ul aria-labelledby={listTitle}>{this.renderFooterLinkMenu(topMenuItem)}</ul>
+            <ul aria-labelledby={listTitle}>{renderFooterLinkMenu(topMenuItem)}</ul>
           </div>
         )
       }
     })
   }
 
-  renderFooterMenuMobile(footerNavigation: FooterContent['footerNavigation']) {
+  function renderFooterMenuMobile() {
     return footerNavigation?.map((topMenuItem, index) => {
       if (topMenuItem && topMenuItem.title) {
         const titleId = topMenuItem.title.replaceAll(' ', '-').toLowerCase()
@@ -35,14 +47,14 @@ class Footer extends React.Component<FooterContent> {
             <h3 className='sr-only sr-only-focusable' id={listTitle}>
               {topMenuItem.title}
             </h3>
-            <ul aria-labelledby={listTitle}>{this.renderFooterLinkMenu(topMenuItem)}</ul>
+            <ul aria-labelledby={listTitle}>{renderFooterLinkMenu(topMenuItem)}</ul>
           </Accordion>
         )
       }
     })
   }
 
-  renderFooterLinkMenu(topMenuItem: FooterContent['footerNavigation'][0]) {
+  function renderFooterLinkMenu(topMenuItem: FooterContent['footerNavigation'][0]) {
     return (
       topMenuItem.menuItems &&
       topMenuItem.menuItems.map((menuItem, itemIndex) => {
@@ -59,8 +71,7 @@ class Footer extends React.Component<FooterContent> {
     )
   }
 
-  renderSocialLinks() {
-    const { facebookUrl, twitterUrl, linkedinUrl, rssUrl } = this.props
+  function renderSocialLinks() {
     if (facebookUrl && twitterUrl && linkedinUrl && rssUrl) {
       return (
         <div className='social-links'>
@@ -73,8 +84,7 @@ class Footer extends React.Component<FooterContent> {
     }
   }
 
-  renderGlobalLinks() {
-    const { globalLinks } = this.props
+  function renderGlobalLinks() {
     if (globalLinks) {
       return (
         <div className='global-links'>
@@ -92,8 +102,7 @@ class Footer extends React.Component<FooterContent> {
     }
   }
 
-  renderCopyRight() {
-    const { copyrightUrl, copyrightText } = this.props
+  function renderCopyRight() {
     if (copyrightUrl && copyrightText) {
       return (
         <div className='copyright'>
@@ -105,7 +114,7 @@ class Footer extends React.Component<FooterContent> {
     }
   }
 
-  goToTop() {
+  function goToTop() {
     window.scroll({
       top: 0,
       behavior: 'smooth',
@@ -115,43 +124,39 @@ class Footer extends React.Component<FooterContent> {
     })
   }
 
-  render() {
-    const { logoUrl, footerNavigation, topButtonText, hiddenFooterText, language } = this.props
-    const footerNavigationLabel = language?.code === 'en' ? 'footer links' : 'bunnmeny lenker'
-    if (logoUrl && footerNavigation && topButtonText) {
-      return (
-        <div className='ssb-footer-wrapper'>
-          <div className='container'>
-            <h2 className='sr-only'>{hiddenFooterText}</h2>
-            <div className='footer-top-row'>
-              <img src={logoUrl} alt='' />
-              <Button negative onClick={() => this.goToTop()}>
-                <ArrowUp size='22' className='me-2' />
-                {topButtonText}
-              </Button>
+  if (logoUrl && footerNavigation && topButtonText) {
+    return (
+      <div className='ssb-footer-wrapper'>
+        <div className='container'>
+          <h2 className='sr-only'>{hiddenFooterText}</h2>
+          <div className='footer-top-row'>
+            <img src={logoUrl} alt='' />
+            <Button negative onClick={() => goToTop()}>
+              <ArrowUp size='22' className='me-2' />
+              {topButtonText}
+            </Button>
+          </div>
+          <div className='footer-content'>
+            <nav id='footerMenu' aria-label={footerNavigationLabel}>
+              <div className='footer-menu'>{renderFooterMenuDesktop()}</div>
+              <div className='showOnMobile footer-menu'>{renderFooterMenuMobile()}</div>
+            </nav>
+          </div>
+          <div className='footer-bottom-row'>
+            <div className='links-left'>
+              {renderCopyRight()}
+              {renderGlobalLinks()}
             </div>
-            <div className='footer-content'>
-              <nav id='footerMenu' aria-label={footerNavigationLabel}>
-                <div className='footer-menu'>{this.renderFooterMenuDesktop(footerNavigation)}</div>
-                <div className='showOnMobile footer-menu'>{this.renderFooterMenuMobile(footerNavigation)}</div>
-              </nav>
-            </div>
-            <div className='footer-bottom-row'>
-              <div className='links-left'>
-                {this.renderCopyRight()}
-                {this.renderGlobalLinks()}
-              </div>
-              {this.renderSocialLinks()}
-            </div>
-            <div className='showOnMobile footer-bottom-row'>
-              {this.renderSocialLinks()}
-              {this.renderGlobalLinks()}
-              {this.renderCopyRight()}
-            </div>
+            {renderSocialLinks()}
+          </div>
+          <div className='showOnMobile footer-bottom-row'>
+            {renderSocialLinks()}
+            {renderGlobalLinks()}
+            {renderCopyRight()}
           </div>
         </div>
-      )
-    }
+      </div>
+    )
   }
 }
 

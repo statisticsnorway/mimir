@@ -2,7 +2,7 @@
 <content-type>
     <display-name>Highmap</display-name>
     <super-type>base:structured</super-type>
-    
+
     <form>
         <field-set>
             <label>Beskrivelse</label>
@@ -34,7 +34,7 @@
                                 </include>
                             </config>
                             <help-text>Lim inn (Ctrl-V) en tabell rett fra Excel. Hvis denne er fylt ut vil den gjelde istedenfor eget felt lengre ned</help-text>
-                        </input>                                
+                        </input>
                     </items>
                 </option>
                 <option name="tbprocessor">
@@ -48,39 +48,29 @@
                 </option>
             </options>
         </option-set>
-        
+
         <field-set>
-            <label>Tallkilde</label>
+            <label>Kartgrunnlag</label>
             <items>
                 <input name="mapFile" type="MediaSelector">
                     <label>Kart fil (json format)</label>
-                    <config>  
+                    <config>
                         <allowContentType>media:code</allowContentType>
                     </config>
                     <help-text>Velg kartet som skal brukes</help-text>
-                </input>
-                <input name="htmlTable" type="HtmlArea">
-                    <label>Kartdata fra tabell - BRUK VALG UNDER DATAKILDE!!</label>
-                    <occurrences minimum="0" maximum="1"/>
-                    <config>
-                        <include>
-                            Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote
-                        </include>
-                    </config>
-                    <help-text>Lim inn (Ctrl-V) en tabell rett fra Excel. Tabeller bør være så enkle som mulig</help-text>
                 </input>
                 <input name="mapDataSecondColumn" type="Checkbox">
                     <label>Andre kolonne i tabell inneholder kartdata (kommunenavn, fylkenavn, osv)</label>
                 </input>
             </items>
         </field-set>
-        
+
         <field-set>
             <label>Terskelverdier</label>
             <items>
                 <input name="thresholdValues" type="TextLine">
-                    <label>Terskelverdi</label> 
-                    <occurrences minimum="0" maximum="4"/> 
+                    <label>Terskelverdi</label>
+                    <occurrences minimum="0" maximum="4"/>
                 </input>
             </items>
         </field-set>
@@ -111,8 +101,9 @@
                                     <label>Start-farge</label>
                                     <occurrences minimum="1" maximum="1"/>
                                     <config>
-                                        <service>colorPreview</service>  
+                                        <service>colorPreview</service>
                                     </config>
+                                    <help-text>Angi hex for farge på formen #000000 og velg forhåndsvisningen som dukker opp</help-text>
                                 </input>
                                 <item-set name="stops">
                                     <label>Mellom-farge (ikke kompatibel med terskelverdier)</label>
@@ -121,13 +112,15 @@
                                         <input name="value" type="TextLine">
                                             <label>Verdi (mellom 0 og 1)</label>
                                             <occurrences minimum="1" maximum="1"/>
+                                            <help-text>Verdien angir hvor mellomfargen skal slå inn på en skala der startfargen er 0 og sluttfargen er 1. Hvis tallene i tabellen går fra 0 til 1000, vil en verdi på 0,25 bety at tall fra 0 til 250 fordeler seg mellom startfargen og mellomfargen, mens tall fra 250 til 1000 fordeler seg mellom mellomfargen og sluttfargen.</help-text>
                                         </input>
                                         <input name="color" type="CustomSelector">
                                             <label>Farge</label>
                                             <occurrences minimum="1" maximum="1"/>
                                             <config>
-                                                <service>colorPreview</service>  
+                                                <service>colorPreview</service>
                                             </config>
+                                            <help-text>Angi hex for farge på formen #000000 og velg forhåndsvisningen som dukker opp</help-text>
                                         </input>
                                     </items>
                                 </item-set>
@@ -135,8 +128,9 @@
                                     <label>Slutt-farge</label>
                                     <occurrences minimum="1" maximum="1"/>
                                     <config>
-                                        <service>colorPreview</service>  
+                                        <service>colorPreview</service>
                                     </config>
+                                    <help-text>Angi hex for farge på formen #000000 og velg forhåndsvisningen som dukker opp</help-text>
                                 </input>
                             </items>
                         </option>
@@ -155,7 +149,7 @@
                                             <label>Farge</label>
                                             <occurrences minimum="1" maximum="1"/>
                                             <config>
-                                                <service>colorPreview</service>  
+                                                <service>colorPreview</service>
                                             </config>
                                         </input>
                                     </items>
@@ -164,7 +158,7 @@
                         </option>
 
                     </options>
-                </option-set>                
+                </option-set>
                 <input name="numberDecimals" type="TextLine">
                     <label>Antall desimalplasser som vises</label>
                     <config>
@@ -185,7 +179,7 @@
                 </input>
             </items>
         </field-set>
-        
+
         <field-set>
             <label>Tegnforklaring</label>
             <items>
@@ -222,9 +216,9 @@
                   </input>
                 </items>
               </item-set>
-            </items>  
+            </items>
           </field-set>
-        
+
         <field-set>
             <label>Fotnoter</label>
             <items>
@@ -235,6 +229,6 @@
                 </input>
             </items>
         </field-set>
-        
+
     </form>
 </content-type>

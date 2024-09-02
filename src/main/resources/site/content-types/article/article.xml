@@ -168,6 +168,10 @@
 					</config>
 					<default>0</default>
 				</input>
+        <input name="hideArticleInRSS" type="Checkbox">
+          <label>Ikke vis i RSS (og nyhetsbrev)</label>
+          <occurrences minimum="0" maximum="1" />
+        </input>
 			</items>
 		</field-set>
 		<field-set>

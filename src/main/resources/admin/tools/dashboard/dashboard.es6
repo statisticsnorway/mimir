@@ -1,18 +1,21 @@
 import { assetUrl, serviceUrl } from '/lib/xp/portal'
 import { getUser, hasRole } from '/lib/xp/auth'
 import { getToolUrl } from '/lib/xp/admin'
-import { parseContributions } from '/lib/ssb/utils/utils'
+import { parseContributions, getEnvironmentString } from '/lib/ssb/utils/utils'
 
 import { render } from '/lib/thymeleaf'
 import { renderError } from '/lib/ssb/error/error'
 import { React4xp } from '/lib/enonic/react4xp'
-import { isEnabled } from '/lib/featureToggle'
 
 const view = resolve('./dashboard.html')
 const DEFAULT_CONTENTSTUDIO_URL = getToolUrl('com.enonic.app.contentstudio', 'main')
 const DEFAULT_TOOLBOX_URL = getToolUrl('systems.rcd.enonic.datatoolbox', 'data-toolbox')
 const INTERNAL_BASE_URL =
   app.config && app.config['ssb.internal.baseUrl'] ? app.config['ssb.internal.baseUrl'] : 'https://i.ssb.no'
+const STATREG_RAPPORT_URL =
+  app.config && app.config['ssb.statregRapport.url']
+    ? app.config['ssb.statregRapport.url']
+    : 'https://statreg-rapport.ssb.no/'
 const INTERNAL_STATBANK_URL =
   app.config && app.config['ssb.statbankintern.baseUrl']
     ? app.config['ssb.statbankintern.baseUrl']
@@ -49,6 +52,7 @@ function renderPart(req) {
     statisticRegister: userHasAdmin,
   }
 
+  const environmentString = getEnvironmentString()
   const dashboardDataset = new React4xp('DashboardEntry')
     .setProps({
       user,
@@ -57,7 +61,8 @@ function renderPart(req) {
       dataToolBoxBaseUrl: `${DEFAULT_TOOLBOX_URL}#nodes?repo=no.ssb.eventlog&branch=master&path=%2Fqueries%2F`,
       internalBaseUrl: `${INTERNAL_BASE_URL}`,
       internalStatbankUrl: `${INTERNAL_STATBANK_URL}`,
-      toggleDebugging: isEnabled('dashboard-redux-logging-debugging', true, 'ssb'),
+      statregRapportUrl: `${STATREG_RAPPORT_URL}`,
+      title: `${environmentString ? `${environmentString}: ` : ''}SSB Dashboard`,
     })
     .setId('dashboard')
 
@@ -70,11 +75,12 @@ function renderPart(req) {
 
   const model = {
     ...assets,
+    environmentText: environmentString ? `[${environmentString}]` : '',
     pageContributions,
     username: user.displayName,
     linkToGuide: userHasAdmin
-      ? 'https://wiki.ssb.no/display/VEILEDNING/Brukerdokumentasjon+for+publisering+i+XP'
-      : 'https://wiki.ssb.no/display/VEILEDNING/Brukerdokumentasjon+i+publisering+i+XP+-+for+statistikkseksjon',
+      ? 'https://statistics-norway.atlassian.net/wiki/spaces/A600/pages/3717136497/Veiledninger+for+KOM'
+      : 'https://statistics-norway.atlassian.net/wiki/spaces/PUBLISERING/overview',
   }
 
   let body = render(view, model)

@@ -1,4 +1,4 @@
-name: 'Manual deploy to QA'
+name: 'Deploy former build to QA'
 # Action that will download previously created artifact and deploy it to the QA environment
 on:
   workflow_dispatch:
@@ -12,10 +12,10 @@ jobs:
   deploy-artifact:
     name: 'Deploy artifact'
     runs-on: ubuntu-latest
-    environment: 'QA'
+    environment: 'QA_mimir'
     steps:
       - name: Download workflow artifact
-        uses: dawidd6/action-download-artifact@v3.1.4
+        uses: dawidd6/action-download-artifact@v6
         with:
           workflow: deploy_to_qa.yaml
           branch: develop
@@ -46,7 +46,7 @@ jobs:
                   "type": "header",
                   "text": {
                     "type": "plain_text",
-                    "text": "${{ github.workflow }}"
+                    "text": "${{ github.workflow }} in ${{ github.repository }}"
                   }
                 },
                 {
@@ -87,7 +87,7 @@ jobs:
                   "type": "header",
                   "text": {
                     "type": "plain_text",
-                    "text": "${{ github.workflow }}"
+                    "text": "${{ github.workflow }} in ${{ github.repository }}"
                   }
                 },
                 {

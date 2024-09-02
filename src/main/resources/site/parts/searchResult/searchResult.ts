@@ -10,7 +10,6 @@ import { formatDate } from '/lib/ssb/utils/dateUtils'
 
 import { renderError } from '/lib/ssb/error/error'
 import { sanitizeForSolr } from '/lib/ssb/utils/textUtils'
-import { isEnabled } from '/lib/featureToggle'
 import { type BestBet, type ContentTypePhrase, type SearchResultProps } from '/lib/types/partTypes/searchResult'
 
 export function get(req: XP.Request): XP.Response {
@@ -115,6 +114,7 @@ export function renderPart(req: XP.Request) {
     },
   ]
 
+  // eslint-disable-next-line complexity
   function bestBet(): PreparedSearchResult | undefined {
     const result = queryNodes('no.ssb.bestbet', 'master', {
       start: 0,
@@ -249,8 +249,6 @@ export function renderPart(req: XP.Request) {
   }
 
   const totalHits = bestBet() ? solrResult.total + 1 : solrResult.total
-  const showNameSearch = isEnabled('name-search-in-freetext-search') ? true : false
-
   /* prepare props */
   const props: SearchResultProps = {
     bestBetHit: bestBet(),
@@ -259,8 +257,7 @@ export function renderPart(req: XP.Request) {
     term: sanitizedTerm,
     count,
     title: content.displayName,
-    nameSearchToggle: showNameSearch,
-    nameSearchData: showNameSearch ? getNameDataResult() : undefined,
+    nameSearchData: getNameDataResult(),
     noHitMessage: localize({
       key: 'searchResult.noHitMessage',
       locale: language,
@@ -392,7 +389,6 @@ export function renderPart(req: XP.Request) {
     contentTypePhrases: contentTypePhrases,
     contentTypes: solrResult.contentTypes,
     subjects: solrResult.subjects,
-    GA_TRACKING_ID: app.config && app.config.GA_TRACKING_ID ? app.config.GA_TRACKING_ID : null,
     contentTypeUrlParam: req.params.innholdstype,
     subjectUrlParam: req.params.emne,
     searchResultSRText: localize({

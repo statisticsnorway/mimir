@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - 'develop'
+  workflow_dispatch:  # Allows the workflow to be manually triggered.
 
 concurrency:
   group: mimir-qa
@@ -12,7 +13,7 @@ jobs:
   deploy_to_qa:
     name: 'Deploy to QA'
     runs-on: 'ubuntu-latest'
-    environment: 'QA'
+    environment: 'QA_mimir'
     steps:
       - id: build_app
         uses: enonic/release-tools/build-and-publish@master
@@ -48,7 +49,7 @@ jobs:
                   "type": "header",
                   "text": {
                     "type": "plain_text",
-                    "text": "${{ github.workflow }}"
+                    "text": "${{ github.workflow }} in ${{ github.repository }}"
                   }
                 },
                 {
@@ -89,7 +90,7 @@ jobs:
                   "type": "header",
                   "text": {
                     "type": "plain_text",
-                    "text": "${{ github.workflow }}"
+                    "text": "${{ github.workflow }} in ${{ github.repository }}"
                   }
                 },
                 {

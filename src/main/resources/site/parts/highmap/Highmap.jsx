@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import PropTypes from 'prop-types'
@@ -41,7 +41,7 @@ function generateColors(color, thresholdValues) {
 
       obj.colorAxis.stops = [
         [0, color.gradient.startColor],
-        ...color.gradient.stops.map((stop) => [stop.value, stop.color]),
+        ...color.gradient.stops.map((stop) => [stop.value.replace(',', '.'), stop.color]),
         [1, color.gradient.endColor],
       ]
     }
@@ -86,7 +86,7 @@ function generateSeries(tableData, mapDataSecondColumn, color) {
       // dummy series to show outline of all areas
       allAreas: true,
       showInLegend: false,
-      opacity: 0.3,
+      opacity: 1,
     },
     ...Object.entries(dataSeries).map(([name, values]) => {
       return {
@@ -103,18 +103,16 @@ function generateSeries(tableData, mapDataSecondColumn, color) {
   return series
 }
 
-function Highmap(props) {
-  useEffect(() => {
-    if (props.language !== 'en') {
-      Highcharts.setOptions({
-        lang: {
-          decimalPoint: ',',
-          thousandsSep: ' ',
-        },
-      })
+const getPointFormatter = (language, hasThreshhold, legendTitle) =>
+  function () {
+    const value = language !== 'en' ? String(this.value).replace('.', ',') : this.value
+    if (!hasThreshhold) {
+      return this.properties.name
     }
-  }, [])
+    return `${legendTitle ? legendTitle + ': ' : ''}${value}`
+  }
 
+function Highmap(props) {
   const desktop = useMediaQuery({
     minWidth: 992,
   })
@@ -185,11 +183,7 @@ function Highmap(props) {
           format: '{point.properties.name}',
         },
         tooltip: {
-          pointFormat: !hasThreshhold
-            ? '{point.properties.name}'
-            : props.legendTitle
-              ? `${props.legendTitle}: {point.code}`
-              : '{point.code}',
+          pointFormatter: getPointFormatter(props.language, hasThreshhold, props.legendTitle),
           valueDecimals: props.numberDecimals,
         },
       },
@@ -283,24 +277,22 @@ function Highmap(props) {
   }
 
   return (
-    <section className='xp-part highchart-wrapper'>
-      <Row>
-        <Col className='col-12'>
-          <figure className='highcharts-figure mb-0 hide-title'>
-            {mapOptions.title?.text && <figcaption className='figure-title'>{mapOptions.title.text}</figcaption>}
-            {mapOptions.subtitle?.text && <p className='figure-subtitle'>{mapOptions.subtitle.text}</p>}
-            <HighchartsReact highcharts={Highcharts} constructorType={'mapChart'} options={mapOptions} />
-          </figure>
-          {props.footnoteText &&
-            props.footnoteText.map((footnote) => (
-              <Col className='footnote col-12' key={`footnote-${footnote}`}>
-                {footnote && <Text>{footnote}</Text>}
-              </Col>
-            ))}
-          {props.sourceList && props.sourceList.map(renderHighchartsSource)}
-        </Col>
-      </Row>
-    </section>
+    <Row>
+      <Col className='col-12'>
+        <figure className='highcharts-figure mb-0 hide-title'>
+          {mapOptions.title?.text && <figcaption className='figure-title'>{mapOptions.title.text}</figcaption>}
+          {mapOptions.subtitle?.text && <p className='figure-subtitle'>{mapOptions.subtitle.text}</p>}
+          <HighchartsReact highcharts={Highcharts} constructorType={'mapChart'} options={mapOptions} />
+        </figure>
+        {props.footnoteText &&
+          props.footnoteText.map((footnote) => (
+            <Col className='footnote col-12' key={`footnote-${footnote}`}>
+              {footnote && <Text>{footnote}</Text>}
+            </Col>
+          ))}
+        {props.sourceList && props.sourceList.map(renderHighchartsSource)}
+      </Col>
+    </Row>
   )
 }
 
@@ -313,7 +305,7 @@ Highmap.propTypes = {
   mapDataSecondColumn: PropTypes.bool,
   style: PropTypes.object,
   thresholdValues: PropTypes.array,
-  hideTitle: PropTypes.boolean,
+  hideTitle: PropTypes.bool,
   color: PropTypes.object,
   numberDecimals: PropTypes.string,
   heightAspectRatio: PropTypes.string,

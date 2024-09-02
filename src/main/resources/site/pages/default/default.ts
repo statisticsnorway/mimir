@@ -10,7 +10,8 @@ import {
   type VariantInListing,
 } from '/lib/ssb/dashboard/statreg/types'
 import { getMunicipality } from '/lib/ssb/dataset/klass/municipalities'
-import { type FooterContent, getFooterContent } from '/lib/ssb/parts/footer'
+import { getFooterContent } from '/lib/ssb/parts/footer'
+import { type FooterContent } from '/lib/types/footer'
 import {
   type AlertType,
   type InformationAlertOptions,
@@ -59,13 +60,13 @@ const partsWithPreview: Array<string> = [
   `${app.name}:project`,
   `${app.name}:combinedGraph`,
   `${app.name}:simpleStatbank`,
+  `${app.name}:maths`,
 ]
 
 const previewOverride: object = {
   contentList: 'relatedFactPage',
 }
 
-export const GA_TRACKING_ID: string | null = app.config?.GA_TRACKING_ID || null
 export const GTM_TRACKING_ID: string | null = app.config?.GTM_TRACKING_ID || null
 export const GTM_AUTH: string | null = app.config?.GTM_AUTH || null
 
@@ -215,35 +216,13 @@ export function get(req: XP.Request): XP.Response {
 
   const metaInfo: MetaInfoData = parseMetaInfoData(municipality, pageType, page, language, req)
 
-  let jsonLd: Article | undefined
-  if (page.type === 'mimir:article' && isEnabled('structured-data', false, 'ssb'))
-    jsonLd = {
-      // @ts-ignore  ssssh its ok
-      '@context': 'https://schema.org',
-      '@type': 'Article',
-      articleSection: ensureArray(page.x?.mimir?.subjectTag?.mainSubjects)[0],
-      additionalType: page.data.articleType, // For eksempel
-      headline: page.data.title,
-      datePublished: page.publish?.first,
-      dateModified: page.data.showModifiedDate?.dateOption?.showModifiedTime
-        ? page.data.showModifiedDate.dateOption.modifiedDate
-        : undefined,
-      author: page.data.authorItemSet?.map((f) => {
-        return {
-          '@type': 'Person',
-          name: f.name,
-          email: f.email,
-        }
-      }),
-      publisher: {
-        '@type': 'Organization',
-        name: 'Statistisk sentralbyrå',
-        logo: {
-          '@type': 'ImageObject',
-          url: 'https://www.ssb.no/_/asset/mimir:0000018b60c47e20/SSB_logo_black.svg',
-        },
-      },
-    }
+  //Teste strukturerte data
+  const jsonLd: Article | undefined =
+    metaInfo.addMetaInfoSearch && isEnabled('structured-data', false, 'ssb')
+      ? prepareStructuredData(metaInfo, page)
+      : undefined
+  const pageMap: string | undefined =
+    metaInfo.addMetaInfoSearch && isEnabled('pageMap', false, 'ssb') ? preparePageMap(metaInfo, page) : undefined
 
   const statbankFane: boolean = req.params.xpframe === 'statbank'
   const statBankContent: StatbankFrameData = parseStatbankFrameContent(statbankFane, req, page)
@@ -275,13 +254,14 @@ export function get(req: XP.Request): XP.Response {
     language,
     statbankWeb: statbankFane,
     ...statBankContent,
-    GA_TRACKING_ID,
     GTM_TRACKING_ID,
     GTM_AUTH,
     headerBody: header?.body,
     footerBody: footer?.body,
     ...metaInfo,
+    metaInfoMainSubjects: metaInfo.metaInfoMainSubjects?.join(';'),
     jsonLd,
+    pageMap,
     breadcrumbsReactId: breadcrumbId,
     hideHeader,
     hideBreadcrumb,
@@ -367,6 +347,71 @@ function prepareRegions(isFragment: boolean, page: DefaultPage): RegionsContent 
   }
 }
 
+function prepareStructuredData(metaInfo: MetaInfoData, page: DefaultPage): Article {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    additionalType: metaInfo.metaInfoSearchContentType,
+    headline: metaInfo.metaInfoTitle,
+    datePublished: metaInfo.metaInfoSearchPublishFrom,
+    dateModified: page.data.showModifiedDate?.dateOption?.showModifiedTime
+      ? page.data.showModifiedDate.dateOption.modifiedDate
+      : undefined,
+    author: page.data.authorItemSet
+      ? ensureArray(page.data.authorItemSet).map((f) => {
+          return {
+            '@type': 'Person',
+            name: f.name,
+            email: f.email,
+          }
+        })
+      : undefined,
+    description: metaInfo.metaInfoDescription
+      ? metaInfo.metaInfoDescription
+      : page.x['com-enonic-app-metafields']?.['meta-data']?.seoDescription || undefined,
+    articleSection: metaInfo.metaInfoMainSubjects?.toString(),
+    keywords: metaInfo.metaInfoSearchKeywords,
+  }
+}
+
+function preparePageMap(metainfo: MetaInfoData, page: DefaultPage): string {
+  const keywords = metainfo.metaInfoSearchKeywords
+    ? `<Attribute name="keywords" value="${metainfo.metaInfoSearchKeywords}"/>`
+    : ''
+  const author = page.data.authorItemSet
+    ? `<Attribute name="author" value="${ensureArray(page.data.authorItemSet)[0].name}"/>`
+    : ''
+  const category = metainfo.metaInfoMainSubjects
+    ? metainfo.metaInfoMainSubjects
+        .map((subject) => {
+          return `<Attribute name="category" value="${subject}"/>`
+        })
+        .join('\n')
+    : ''
+  const contentType = metainfo.metaInfoSearchContentType
+    ? `<Attribute name="contenttype" value="${metainfo.metaInfoSearchContentType}"/>`
+    : ''
+  const description = metainfo.metaInfoDescription
+    ? metainfo.metaInfoDescription
+    : page.x['com-enonic-app-metafields']?.['meta-data']?.seoDescription || ''
+  return `<!--
+    <PageMap>
+      <DataObject type="publication">
+        <Attribute name="description">${description}</Attribute>
+        ${author}
+        <Attribute name="date" value="${
+          page.data.showModifiedDate?.dateOption?.showModifiedTime
+            ? page.data.showModifiedDate.dateOption.modifiedDate
+            : metainfo.metaInfoSearchPublishFrom
+        }"/>
+        ${category}
+        ${contentType}
+        ${keywords}
+      </DataObject>
+    </PageMap>
+  -->`
+}
+
 function parseMetaInfoData(
   municipality: MunicipalityWithCounty | undefined,
   pageType: string,
@@ -381,7 +426,9 @@ function parseMetaInfoData(
   let metaInfoSearchKeywords: string | undefined
   let metaInfoDescription: string | undefined
   let metaInfoSearchPublishFrom: string | undefined = page.publish && page.publish.from
-  let metaInfoMainSubject: string | undefined
+  let metaInfoMainSubjects: string[] | undefined
+  let metaInfoTitle: string | undefined =
+    page.x['com-enonic-app-metafields']?.['meta-data']?.seoTitle || page.displayName
 
   if (pageType === 'municipality') {
     metaInfoSearchContentType = 'kommunefakta'
@@ -398,6 +445,7 @@ function parseMetaInfoData(
     metaInfoSearchId = metaInfoSearchId + '_' + municipality.code
     metaInfoSearchGroup = metaInfoSearchGroup + '_' + municipality.code
     metaInfoSearchKeywords = municipality.displayName + ' kommune'
+    metaInfoTitle = metaInfoTitle + ' - ' + municipality.displayName
   }
 
   if (pageType === 'factPage') {
@@ -405,8 +453,7 @@ function parseMetaInfoData(
   }
 
   if (page.type === `${app.name}:article` || page.type === `${app.name}:statistics`) {
-    const mainSubjects: string = getSubjectsPage(page, req, language.code as string).join(';')
-    metaInfoMainSubject = mainSubjects
+    metaInfoMainSubjects = getSubjectsPage(page, req, language.code as string)
   }
 
   if (page.type === `${app.name}:statistics`) {
@@ -434,7 +481,8 @@ function parseMetaInfoData(
     metaInfoSearchKeywords,
     metaInfoDescription,
     metaInfoSearchPublishFrom,
-    metaInfoMainSubject,
+    metaInfoMainSubjects,
+    metaInfoTitle,
   }
 }
 
@@ -646,7 +694,8 @@ interface MetaInfoData {
   metaInfoSearchKeywords: string | undefined
   metaInfoDescription: string | undefined
   metaInfoSearchPublishFrom: string | undefined
-  metaInfoMainSubject: string | undefined
+  metaInfoMainSubjects: string[] | undefined
+  metaInfoTitle: string | undefined
 }
 
 export interface StatbankFrameData {
@@ -673,12 +722,13 @@ interface DefaultModel {
   ieUrl: string
   language: Language
   statbankWeb: boolean
-  GA_TRACKING_ID: string | null
   GTM_TRACKING_ID: string | null
   GTM_AUTH: string | null
-  jsonLd: NewsArticle | undefined
+  jsonLd: Article | undefined
+  pageMap: string | undefined
   headerBody: string | undefined
   footerBody: string | undefined
+  metaInfoMainSubjects: string | undefined
   breadcrumbsReactId: string | undefined
   hideHeader: boolean
   hideBreadcrumb: boolean

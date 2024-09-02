@@ -61,6 +61,7 @@ interface DatasetFilterOptions {
   }
 }
 
+// eslint-disable-next-line complexity
 export function parseKeyFigure(
   keyFigure: Content<KeyFigure & DataSource>,
   municipality?: MunicipalityWithCounty,
@@ -164,12 +165,22 @@ function getDataTbProcessor(
         changeText += ` ${denomination}`
       }
     }
+    const changePeriod = row2.th.toString()
     // set arrow direction based on change
     let changeDirection: KeyFigureChanges['changeDirection'] = 'same'
+    let srChangeText
     if (+change > 0) {
       changeDirection = 'up'
+      const changeDirectionText = localize({
+        key: 'keyFigure.increase',
+      })
+      srChangeText = `${changeDirectionText} ${changeText} ${changePeriod}`
     } else if (+change < 0) {
       changeDirection = 'down'
+      const changeDirectionText = localize({
+        key: 'keyFigure.decrease',
+      })
+      srChangeText = `${changeDirectionText} ${changeText} ${changePeriod}`
     } else {
       changeText = localize({
         key: 'keyFigure.noChange',
@@ -179,7 +190,8 @@ function getDataTbProcessor(
     keyFigureViewData.changes = {
       changeDirection,
       changeText,
-      changePeriod: row2.th.toString(),
+      changePeriod,
+      srChangeText,
     }
   }
 
@@ -214,17 +226,13 @@ function getDataWithFilterStatbankApi(
       )
 
       // not all municipals have data, so if its missing, try the old one
-      if (
-        (!municipalData || municipalData.value === null || municipalData.value === 0) &&
-        municipality.changes &&
-        municipality.changes.length > 0
-      ) {
+      if (!municipalData && municipality.changes && municipality.changes.length > 0) {
         municipalData = getDataFromMunicipalityCode(ds, municipality.changes[0].oldCode, yAxisLabel, filterTarget)
       }
       if (municipalData && municipalData.value !== null) {
         // add data to key figure view
         keyFigureViewData.number = parseValueZeroSafe(municipalData.value)
-        keyFigureViewData.time = localizeTimePeriod(municipalData.label)
+        keyFigureViewData.time = localizeTimePeriod(municipalData.label as string)
       }
     }
   }

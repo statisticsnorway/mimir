@@ -11,7 +11,6 @@ import highchartsExportingOffline from 'highcharts/modules/offline-exporting'
 import highchartsExportData from 'highcharts/modules/export-data'
 import highchartsAccessibility from 'highcharts/modules/accessibility'
 import { useMediaQuery } from 'react-responsive'
-import { addGtagForEvent } from '/react4xp/ReactGA'
 import { sanitize } from '../../../lib/ssb/utils/htmlUtils'
 import accessibilityLang from './../../../assets/js/highchart-lang.json'
 
@@ -208,10 +207,6 @@ function NameSearch(props) {
     setErrorMessage(undefined) // Clear network error message, if any
     setSearchedTerm(name.value)
 
-    if (props.GA_TRACKING_ID) {
-      addGtagForEvent(props.GA_TRACKING_ID, 'Navn det søkes på', 'Navnekalkulator', name.value)
-    }
-
     axios
       .get(props.urlToService, {
         params: {
@@ -256,7 +251,8 @@ function NameSearch(props) {
 
   function isNameValid(nameToCheck) {
     // Regexp: Note use of 'i' flag, making the match case insensitive. Also, remember regexp ranges are based on unicode character codes.
-    const invalidCharacters = !!nameToCheck && nameToCheck.match(/[^a-zÐÞ∂þèéëôòóáäüöæøå\-\s]/gim)
+    const invalidCharacters =
+      !!nameToCheck && nameToCheck.match(/[^a-zABCDEFGHIJKLMNOPQRSTUVWXYZÁÄÅÆÈÉËÍÏÑÓÔÖØÜÝ\-\s]/gim)
     return !invalidCharacters
   }
 
@@ -539,7 +535,6 @@ NameSearch.propTypes = {
   }),
   language: PropTypes.string,
   graphData: PropTypes.bool,
-  GA_TRACKING_ID: PropTypes.string,
 }
 
 export default (props) => <NameSearch {...props} />

@@ -13,10 +13,14 @@ interface ContactFormProps {
 
 function ContactForm(props: ContactFormProps) {
   const { contactFormServiceUrl, recaptchaSiteKey } = props
+  const defaultReceiverItem = {
+    title: props.phrases.contactFormReceiverGenerell,
+    id: 'generell',
+  }
   const [receiver, setReceiver] = useState({
     error: false,
     errorMsg: props.phrases.contactFormValidateReveicer,
-    value: '',
+    value: defaultReceiverItem,
   })
   const [name, setName] = useState({
     error: false,
@@ -59,7 +63,7 @@ function ContactForm(props: ContactFormProps) {
     setLoading(true)
     grecaptcha.enterprise.ready(function () {
       grecaptcha.enterprise
-        .execute(recaptchaSiteKey, {
+        .execute(recaptchaSiteKey as string, {
           action: 'submitContactForm',
         })
         .then(function (token: string) {
@@ -82,9 +86,6 @@ function ContactForm(props: ContactFormProps) {
             .finally(() => {
               setLoading(false)
             })
-        })
-        .catch((e) => {
-          console.trace(e)
         })
     })
   }
@@ -158,6 +159,7 @@ function ContactForm(props: ContactFormProps) {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function onChange(id: string, value: any) {
     switch (id) {
       case 'receiver': {
@@ -214,6 +216,7 @@ function ContactForm(props: ContactFormProps) {
         </Row>
       )
     }
+    return
   }
 
   function renderEmailSentError() {
@@ -228,15 +231,13 @@ function ContactForm(props: ContactFormProps) {
         </Row>
       )
     }
+    return
   }
 
   function renderForm() {
     if (!emailSent) {
       const items = [
-        {
-          title: props.phrases.contactFormReceiverGenerell,
-          id: 'generell',
-        },
+        defaultReceiverItem,
         {
           title: props.phrases.contactFormReceiverStatistikk,
           id: 'statistikk',
@@ -268,8 +269,7 @@ function ContactForm(props: ContactFormProps) {
                         onChange('receiver', value)
                       }}
                       header={props.phrases.contactFormChooseReceiver}
-                      placeholder={''}
-                      selectedItem={items[0]}
+                      selectedItem={receiver.value}
                       error={receiver.error}
                       errorMessage={receiver.errorMsg}
                       items={items}
@@ -327,6 +327,7 @@ function ContactForm(props: ContactFormProps) {
         </Row>
       )
     }
+    return
   }
 
   function renderContactForm() {
@@ -338,7 +339,6 @@ function ContactForm(props: ContactFormProps) {
       </section>
     )
   }
-
   return renderContactForm()
 }
 

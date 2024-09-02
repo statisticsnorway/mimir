@@ -65,6 +65,7 @@ function renderPart(req: XP.Request): XP.Response {
   const modifiedText: string | undefined = page.data.showModifiedDate
     ? page.data.showModifiedDate.modifiedOption.modifiedText
     : undefined
+  const showModifiedTime: boolean | undefined = page.data.showModifiedDate?.modifiedOption.showModifiedTime
   const modifiedDate: string | undefined = page.data.showModifiedDate
     ? page.data.showModifiedDate.modifiedOption.lastModified
     : undefined
@@ -118,7 +119,8 @@ function renderPart(req: XP.Request): XP.Response {
 
   if (page.data.showModifiedDate && previousReleaseDate && modifiedDate) {
     if (isAfter(new Date(modifiedDate), new Date(previousReleaseDate))) {
-      changeDate = formatDate(modifiedDate, 'PPpp', language)
+      const dateFormat = showModifiedTime ? 'PPp' : 'PPP'
+      changeDate = formatDate(modifiedDate, dateFormat, language)
     }
   }
 

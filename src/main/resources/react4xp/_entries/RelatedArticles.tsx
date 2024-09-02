@@ -103,17 +103,18 @@ function RelatedArticles(props: RelatedArticlesProps) {
         } ${articlePluralName}`}
       >
         {shownArticles.map((article, index) => {
+          const { href, imageSrc, imageAlt, title, subTitle, preface, ariaLabel } = article
           return (
             <li key={index} className={`col-auto col-12 col-lg-4 mb-3`} ref={index === count ? currentElement : null}>
               <Card
-                href={article.href}
+                href={href}
                 imagePlacement='top'
-                image={<img src={article.imageSrc} alt={article.imageAlt ?? ''} />}
-                title={article.title}
-                subTitle={article.subTitle}
-                ariaLabel={article.title + ' ' + article.subTitle}
+                image={<img src={imageSrc} alt={imageAlt ?? ''} />}
+                title={title}
+                subTitle={subTitle}
+                ariaLabel={ariaLabel}
               >
-                <Text>{article.preface}</Text>
+                <Text>{preface}</Text>
               </Card>
             </li>
           )

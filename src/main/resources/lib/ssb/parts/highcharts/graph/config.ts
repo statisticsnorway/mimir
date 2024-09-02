@@ -2,7 +2,6 @@
 // @ts-nocheck
 
 import { localize } from '/lib/xp/i18n'
-import { isEnabled } from '/lib/featureToggle'
 import { ensureArray } from '/lib/ssb/utils/arrayUtils'
 
 export const style = {
@@ -314,19 +313,36 @@ export const createDefaultConfig = (highchartData, displayName, language) => ({
               text: '',
             },
           },
-          yAxis: {
-            labels: {
-              align: 'left',
-              x: -10,
-              y: -1,
-              style: {
-                fontSize: '10px',
+          yAxis: [
+            // left y axis
+            {
+              labels: {
+                align: 'right',
+                x: -3,
+                y: -1,
+                style: {
+                  fontSize: '10px',
+                },
+              },
+              title: {
+                text: highchartData.yAxisTitle,
               },
             },
-            title: {
-              text: isEnabled('highcharts-y-axix-title-mobile', true, 'ssb') ? highchartData.yAxisTitle : '',
+            // right y axis
+            {
+              labels: {
+                align: 'left',
+                x: 3,
+                y: -1,
+                style: {
+                  fontSize: '10px',
+                },
+              },
+              title: {
+                text: highchartData.yAxisTitle,
+              },
             },
-          },
+          ],
         },
       },
     ],

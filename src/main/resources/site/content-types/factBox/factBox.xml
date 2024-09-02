@@ -1,23 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <content-type>
-    <display-name>Faktaboks</display-name>
+    <display-name>Ekspansjonsboks (Faktaboks)</display-name>
     <super-type>base:structured</super-type>
     <description></description>
     <form>
-        <input type="HtmlArea" name="text">
-            <label>Tekst</label>
-            <occurrences minimum="1" maximum="1"/>
-            <config>
-                <exclude>*</exclude>
-                <include> 
-                    Bold Italic Underline | 
-                    JustifyBlock JustifyLeft JustifyCenter JustifyRight | 
-                    BulletedList NumberedList Outdent Indent | 
-                    Link Unlink | 
-                    PasteModeSwitcher | 
-                    Strike Subscript Superscript
-                </include>
-            </config>
-        </input>
+        <field-set>
+         <label>Tekst</label>
+         <items>
+            <input type="HtmlArea" name="text">
+                <label>Tekst</label>
+                <occurrences minimum="1" maximum="1"/>
+                <config>
+                    <exclude>*</exclude>
+                    <include> 
+                        Format | 
+                        Bold Italic Underline | 
+                        JustifyBlock JustifyLeft JustifyCenter JustifyRight | 
+                        BulletedList NumberedList Outdent Indent | 
+                        Link Unlink | 
+                        PasteModeSwitcher | 
+                        Strike Subscript Superscript
+                    </include>
+                    <allowHeadings>h3 h4 h5</allowHeadings>
+                </config>
+            </input>
+         </items>
+      </field-set>
+      <field-set>
+         <label>Visning</label>
+         <items>
+            <input name="expansionBoxType" type="RadioButton">
+                <label>Velg hvilken type ExpansionBox</label>
+                <help-text>Standard brukes der innholdet i boksen kan beskrives med en kort tittel. SneakPeek brukes der bruker trenger kontekst for å forstå innholdet i boksen. AI brukes kun til AI-generert innhold. </help-text>
+                <occurrences minimum="1" maximum="1"/>
+                <config>
+                    <option value="default">Standard</option>
+                    <option value="sneakPeek">SneakPeek</option>
+                    <option value="aiIcon">AI</option>
+                </config>
+                <default>default</default>
+            </input>
+         </items>
+      </field-set>
     </form>
 </content-type>

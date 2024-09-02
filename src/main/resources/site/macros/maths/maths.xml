@@ -1,0 +1,14 @@
+<macro>
+  <display-name>Matematisk formel</display-name>
+  <description>Fyll inn LaTeX formel.</description>
+  <form>
+    <input name="contentId" type="ContentSelector">
+      <label>Matematisk formel</label>
+      <occurrences minimum="1" maximum="1"/>
+      <config>
+        <allowPath>${site}</allowPath>
+        <allowType>maths</allowType>
+      </config>
+    </input>
+  </form>
+</macro>

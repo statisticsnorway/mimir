@@ -15,7 +15,6 @@ import { ChevronDown, User, X } from 'react-feather'
 import axios from 'axios'
 import { NumericFormat } from 'react-number-format'
 import { Col, Row } from 'react-bootstrap'
-import { addGtagForEvent } from '../../../react4xp/ReactGA'
 import { sanitize } from '../../../lib/ssb/utils/htmlUtils'
 import { type SearchResultProps } from '../../../lib/types/partTypes/searchResult'
 import { type DropdownItem } from '../../../lib/types/partTypes/publicationArchive'
@@ -90,27 +89,14 @@ function SearchResult(props: SearchResultProps) {
     if (filterChanged || sortChanged) {
       fetchFilteredSearchResult()
     }
-    // GA events for best bet and zero hits results
-    if (props.bestBetHit) {
-      addGtagForEvent(props.GA_TRACKING_ID, 'Best Bet', 'Søk', searchTerm)
-    }
-    if (!props.bestBetHit && !hits.length) {
-      addGtagForEvent(props.GA_TRACKING_ID, 'Null treff', 'Søk', searchTerm)
-    }
   }, [filter, sortList])
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function onChange(id: string, value: any) {
     setFilterChanged(id)
 
     if (id === 'mainSubject') {
-      const selectedSubject =
-        value.id === 'allSubjects'
-          ? value
-          : {
-              id: value.id,
-              title: value.id,
-            }
-      setSelectedMainSubject(selectedSubject)
+      setSelectedMainSubject(value)
       setFilter({
         ...filter,
         mainSubject: value.id === '' || value.id === 'allSubjects' ? '' : value.id,
@@ -118,15 +104,7 @@ function SearchResult(props: SearchResultProps) {
     }
 
     if (id === 'contentType') {
-      const selectedContentType =
-        value.id === 'allTypes'
-          ? value
-          : {
-              id: value.id,
-              title: props.contentTypePhrases.find((phrase) => phrase.id === value.id).title,
-            }
-
-      setSelectedContentType(selectedContentType)
+      setSelectedContentType(value)
       setFilter({
         ...filter,
         contentType: value.id === '' || value.id === 'allTypes' ? '' : value.id,
@@ -140,15 +118,11 @@ function SearchResult(props: SearchResultProps) {
 
     if (sortChanged) {
       setNumberChanged((prev) => prev + 1)
-      if (props.GA_TRACKING_ID && numberChanged < 2) {
-        const sortLabel = value === 'best' ? props.sortBestHitPhrase : props.sortDatePhrase
-        addGtagForEvent(props.GA_TRACKING_ID, 'Sorter', 'Søk', sortLabel)
-      }
     }
   }
+
   function onShowMoreSearchResults(focusElement: boolean) {
     fetchSearchResult(focusElement)
-    addGtagForEvent(props.GA_TRACKING_ID, 'Klikk', 'Søk', 'Vis flere')
   }
 
   function removeFilter() {
@@ -160,7 +134,6 @@ function SearchResult(props: SearchResultProps) {
     setSelectedContentType(allContentTypeItem)
     setSelectedMainSubject(allSubjectsItem)
     setFilterChanged(true) // we want the useEffect to trigger fetching of results, and new filters
-    addGtagForEvent(props.GA_TRACKING_ID, 'Klikk', 'Søk', 'Fjern alle filtervalg')
   }
 
   function renderListItem(hit: PreparedSearchResult, i?: number) {
@@ -173,9 +146,6 @@ function SearchResult(props: SearchResultProps) {
             className='ssb-link header'
             // deepcode ignore DOMXSS: url comes from pageUrl which escapes  + Reacts own escaping
             href={hit.url}
-            onClick={() => {
-              addGtagForEvent(props.GA_TRACKING_ID, 'Klikk på lenke', 'Søk', `${searchTerm} - Lenke nummer: ${i + 1}`)
-            }}
           >
             <span
               dangerouslySetInnerHTML={{
@@ -238,7 +208,7 @@ function SearchResult(props: SearchResultProps) {
           </Col>
           <Divider dark />
         </div>
-        {props.nameSearchToggle && props.nameSearchData ? renderNameResult() : undefined}
+        {props.nameSearchData ? renderNameResult() : undefined}
         <ol className='list-unstyled '>
           {renderListItem(bestBetHit!)}
           {hits.map((hit, i) => {
@@ -329,7 +299,7 @@ function SearchResult(props: SearchResultProps) {
             disabled={loading || total === hits.length}
             className='button-more mt-5'
             onClick={() => onShowMoreSearchResults(false)}
-            onKeyDown={(e) => {
+            onKeyDown={(e: React.KeyboardEvent<HTMLButtonElement>) => {
               if (e.key === 'Enter' || e.key === ' ') {
                 onShowMoreSearchResults(true)
               }
@@ -340,13 +310,14 @@ function SearchResult(props: SearchResultProps) {
         </div>
       )
     }
+    return null
   }
 
   function renderNoHitMessage() {
     if (props.language === 'en') {
       return (
         <div>
-          {props.nameSearchToggle ? renderNameResult() : undefined}
+          {renderNameResult()}
           <Title size={2}>{props.noHitMessage}</Title>
           <p>
             Go to <Link href='/en/navn'>name search</Link>
@@ -362,7 +333,7 @@ function SearchResult(props: SearchResultProps) {
     } else {
       return (
         <div>
-          {props.nameSearchToggle ? renderNameResult() : undefined}
+          {renderNameResult()}
           <Title size={2}>{props.noHitMessage}</Title>
           <p>
             Her finner du <Link href='/navn'>navnesøk</Link>
@@ -417,7 +388,6 @@ function SearchResult(props: SearchResultProps) {
   function renderNameResult() {
     const mainNameResult = props.nameSearchData
     if (mainNameResult && mainNameResult.count && !filterChanged && numberChanged === 0) {
-      addGtagForEvent(props.GA_TRACKING_ID, 'Navnesøket', 'Søk', searchTerm)
       return (
         //  TODO: Legge til en bedre url til navnestatistikken
         <Card
@@ -505,7 +475,6 @@ function SearchResult(props: SearchResultProps) {
                     key={`mainSubject-${reset}`}
                     onSelect={(value: DropdownItem) => {
                       onChange('mainSubject', value)
-                      addGtagForEvent(props.GA_TRACKING_ID, 'Valgt emne', 'Søk', value.title)
                       if (!openAccordion) {
                         setOpenAccordion(true)
                       }
@@ -522,7 +491,6 @@ function SearchResult(props: SearchResultProps) {
                     key={`contentType-${reset}`}
                     onSelect={(value: DropdownItem) => {
                       onChange('contentType', value)
-                      addGtagForEvent(props.GA_TRACKING_ID, 'Valgt innholdstype', 'Søk', value.title)
                       if (!openAccordion) {
                         setOpenAccordion(true)
                       }

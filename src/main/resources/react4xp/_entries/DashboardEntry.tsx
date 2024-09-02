@@ -36,6 +36,8 @@ function Dashboard(props: DashboardProps) {
             dataToolBoxBaseUrl={props.dataToolBoxBaseUrl}
             internalBaseUrl={props.internalBaseUrl}
             internalStatbankUrl={props.internalStatbankUrl}
+            statregRapportUrl={props.statregRapportUrl}
+            title={props.title}
           />
         </HelmetProvider>
       </WebsocketProvider>
@@ -56,6 +58,8 @@ interface DashboardRouterProps {
   dataToolBoxBaseUrl?: string
   internalBaseUrl?: string
   internalStatbankUrl?: string
+  statregRapportUrl?: string
+  title: string
 }
 
 function DashboardRouter(props: DashboardRouterProps) {
@@ -84,6 +88,10 @@ function DashboardRouter(props: DashboardRouterProps) {
     internalBaseUrl: props.internalBaseUrl,
   })
   dispatch({
+    type: commonActions.setStatregRapportUrl.type,
+    statregRapportUrl: props.statregRapportUrl,
+  })
+  dispatch({
     type: commonActions.setInternalStatbankUrl.type,
     internalStatbankUrl: props.internalStatbankUrl,
   })
@@ -95,7 +103,7 @@ function DashboardRouter(props: DashboardRouterProps) {
   requestServerTime(dispatch, io)
   return (
     <BrowserRouter>
-      <Helmet titleTemplate='SSB Dashboard' defaultTitle='SSB Dashboard'></Helmet>
+      <Helmet titleTemplate={props.title} defaultTitle={props.title}></Helmet>
 
       <Switch>
         <Route path='/' component={HomePage} />
