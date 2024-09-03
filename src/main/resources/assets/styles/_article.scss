@@ -36,7 +36,7 @@
 
     @include media-breakpoint-down(md) {
       p {
-        margin-bottom: $spacer * .5;
+        margin-bottom: $spacer * 0.5;
       }
     }
 
@@ -56,14 +56,17 @@
 
   .part-fact-box {
     padding: 0;
+    margin: 16px 0;
   }
 
   .article-body {
-    & > * + section.part-divider, section.part-divider + * {
+    & > * + section.part-divider,
+    section.part-divider + * {
       margin-top: $spacer * 3;
     }
 
-    ul, ol {
+    ul,
+    ol {
       padding-left: 1rem;
     }
 
@@ -71,8 +74,13 @@
       margin-bottom: $spacer * 1.5;
     }
 
-    h1, h2, h3, h4, h5, h6 {
-      margin-bottom: $spacer * .5;
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      margin-bottom: $spacer * 0.5;
     }
 
     .part-fact-box .accordion-header {
@@ -89,7 +97,7 @@
     }
   }
 
-  blockquote  {
+  blockquote {
     padding-left: 40px !important;
 
     @include media-breakpoint-down(md) {
@@ -97,19 +105,20 @@
     }
   }
 
-  .associated-statistics, .associated-article-archives {
+  .associated-statistics,
+  .associated-article-archives {
     margin-top: $spacer * 2.5;
     padding: 0;
 
     & > * {
-    div {
-      margin-top: $spacer * 0.5;
+      div {
+        margin-top: $spacer * 0.5;
 
-      & > * {
-        margin-bottom: $spacer * 1;
+        & > * {
+          margin-bottom: $spacer * 1;
+        }
       }
     }
-  }
 
     @include media-breakpoint-up(lg) {
       border-left: 1px solid $ssb-dark-2;
