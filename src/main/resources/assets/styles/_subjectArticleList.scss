@@ -1,0 +1,21 @@
+.subject-article-list {
+  padding: 3rem 0;
+
+  .container {
+    h2 {
+      margin-bottom: 3rem;
+    }
+
+    .total-count {
+      margin-bottom: .5rem;
+    }
+
+    li, .button-more {
+      margin-top: 3rem;
+    }
+
+    li:has(span.no-results) {
+      margin-top: 0;
+    }
+  }
+}

@@ -1,0 +1,13 @@
+<part>
+  <display-name>Webcruiter annonseliste</display-name>
+  <form>
+      <input name="title" type="TextLine">
+        <label>Tittel</label>
+        <occurences minimum="1" maximum="1" />
+      </input>
+      <input name="webcruiterRssUrl" type="TextLine">
+        <label>Webcruiter RSS Url</label>
+        <occurences minimum="1" maximum="1" />
+      </input>
+  </form>
+</part>
