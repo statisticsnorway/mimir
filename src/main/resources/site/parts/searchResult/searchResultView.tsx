@@ -105,14 +105,7 @@ function SearchResult(props: SearchResultProps) {
     setFilterChanged(id)
 
     if (id === 'mainSubject') {
-      const selectedSubject =
-        value.id === 'allSubjects'
-          ? value
-          : {
-              id: value.id,
-              title: value.id,
-            }
-      setSelectedMainSubject(selectedSubject)
+      setSelectedMainSubject(value)
       setFilter({
         ...filter,
         mainSubject: value.id === '' || value.id === 'allSubjects' ? '' : value.id,
@@ -120,15 +113,7 @@ function SearchResult(props: SearchResultProps) {
     }
 
     if (id === 'contentType') {
-      const selectedContentType =
-        value.id === 'allTypes'
-          ? value
-          : {
-              id: value.id,
-              title: props.contentTypePhrases.find((phrase) => phrase.id === value.id).title,
-            }
-
-      setSelectedContentType(selectedContentType)
+      setSelectedContentType(value)
       setFilter({
         ...filter,
         contentType: value.id === '' || value.id === 'allTypes' ? '' : value.id,
