@@ -1,5 +1,5 @@
 <macro>
-    <display-name>Ekspansjonsboks (Faktaboks)</display-name>
+    <display-name>Faktaboks (ExpansionBox)</display-name>
     <description></description>
     <form>
         <input name="factBox" type="ContentSelector">

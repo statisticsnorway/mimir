@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <content-type>
-    <display-name>Ekspansjonsboks (Faktaboks)</display-name>
+    <display-name>Faktaboks (ExpansionBox)</display-name>
     <super-type>base:structured</super-type>
     <description></description>
     <form>
@@ -30,13 +30,12 @@
          <label>Visning</label>
          <items>
             <input name="expansionBoxType" type="RadioButton">
-                <label>Velg hvilken type ExpansionBox</label>
-                <help-text>Standard brukes der innholdet i boksen kan beskrives med en kort tittel. SneakPeek brukes der bruker trenger kontekst for å forstå innholdet i boksen. AI brukes kun til AI-generert innhold. </help-text>
+                <label>Velg visning av faktaboksen</label>
                 <occurrences minimum="1" maximum="1"/>
                 <config>
-                    <option value="default">Standard</option>
-                    <option value="sneakPeek">SneakPeek</option>
-                    <option value="aiIcon">AI</option>
+                    <option value="default">Bare tittel (standard)</option>
+                    <option value="sneakPeek">Tittel og litt av forklaringsteksten</option>
+                    <option value="aiIcon">Tittel og litt av forklaringsteksten + KI-ikon</option>
                 </config>
                 <default>default</default>
             </input>
