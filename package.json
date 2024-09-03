@@ -35,7 +35,7 @@
   },
   "homepage": "https://github.com/statisticsnorway/mimir#readme",
   "devDependencies": {
-    "@babel/cli": "~7.24.8",
+    "@babel/cli": "~7.25.6",
     "@babel/core": "~7.25.2",
     "@babel/preset-env": "~7.25.4",
     "@babel/preset-react": "~7.24.7",
@@ -95,7 +95,7 @@
     "eslint": "~8.57.0",
     "eslint-config-google": "~0.14.0",
     "eslint-config-prettier": "~9.1.0",
-    "eslint-plugin-import": "~2.29.1",
+    "eslint-plugin-import": "~2.30.0",
     "eslint-plugin-prettier": "~5.2.1",
     "eslint-plugin-react": "~7.35.0",
     "feather-icons": "~4.29.2",
