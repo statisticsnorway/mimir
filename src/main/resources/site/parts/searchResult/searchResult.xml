@@ -19,6 +19,7 @@
       <config>
         <option value="solr">Solr intern</option>
         <option value="google">Google Custoom Search</option>
+        <option value="vertex">Vertex AI Search</option>
       </config>
       <default>solr</default>
     </input>

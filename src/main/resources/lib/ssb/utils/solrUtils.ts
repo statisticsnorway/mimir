@@ -1,4 +1,5 @@
 import { customsearch_v1 } from '@googleapis/customsearch'
+
 import { sanitizeHtml, getSiteConfig } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 import { request, HttpResponse, HttpRequestParams } from '/lib/http-client'
@@ -117,6 +118,62 @@ export function googleSearch(
     ? {
         hits: solrFormatResults,
         total: Number(results.searchInformation?.totalResults) || 0,
+        contentTypes: [{ count: 10, title: 'artikkel' }],
+        subjects: [{ count: 10, title: 'befolkning' }],
+      }
+    : {
+        hits: [],
+        total: 0,
+        contentTypes: [],
+        subjects: [],
+      }
+}
+export function vertexServiceSearch(
+  term: string,
+  start?: number,
+  language?: string,
+  numberOfHits?: number,
+  mainSubject?: string,
+  contentType?: string,
+  sortParam?: string
+): SolrPrepResultAndTotal {
+  const sortString: string = sortParam === 'date' || sortParam === 'publiseringsdato' ? 'date' : ''
+
+  const requestParams: HttpRequestParams = {
+    url: `http://localhost:3000/query`,
+    method: 'get',
+    contentType: 'application/json',
+    connectionTimeout: 60000,
+    readTimeout: 10000,
+    params: {
+      q: term,
+      sort: sortString,
+      offset: start?.toString() || '',
+      contenttype: contentType,
+      category: mainSubject,
+    },
+  }
+
+  const search = request(requestParams)
+
+  const results = JSON.parse(search.body!)
+  log.info('\x1b[32m%s\x1b[0m', JSON.stringify(results, null, 2))
+
+  const solrFormatResults: Array<PreparedSearchResult> | undefined = results.results?.map((item) => ({
+    contentType: item.document?.structData?.fields?.contenttype?.listValue?.values[0]?.stringValue,
+    id: item.id || '1234',
+    title: item.document.derivedStructData.fields.title.stringValue || 'tittel',
+    preface: 'Her kommer tekst fra dokumentet',
+    url: item.document.derivedStructData.fields.link.stringValue || '',
+    mainSubject: item.document.structData.fields?.category?.listValue?.values[0]?.stringValue || 'test0',
+    secondaryMainSubject: item.document.structData.fields?.category?.listValue?.values[1]?.stringValue || 'test1',
+    publishDate: '2024-02-28T08:00:00Z',
+    publishDateHuman: formatDate('2024-02-28T08:00:00Z', 'PPP', 'no'),
+  }))
+  return solrFormatResults
+    ? {
+        hits: solrFormatResults,
+        total: Number(results.totalSize) || 0,
         contentTypes: [{ count: 10, title: 'artikkel' }],
         subjects: [{ count: 10, title: 'befolkning' }],
       }

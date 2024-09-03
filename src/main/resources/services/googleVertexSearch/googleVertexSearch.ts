@@ -1,8 +1,8 @@
-import { googleSearch } from '/lib/ssb/utils/solrUtils'
+import { vertexServiceSearch } from '/lib/ssb/utils/solrUtils'
 import { SolrPrepResultAndTotal } from '/lib/types/solr'
 
 export function get(req: XP.Request): XP.Response {
-  const results: SolrPrepResultAndTotal = googleSearch(
+  const results: SolrPrepResultAndTotal = vertexServiceSearch(
     req.params.sok || 'kpi',
     Number(req.params.start) || 0,
     req.params.language || 'nb',

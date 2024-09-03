@@ -2,7 +2,7 @@ import { get as getContentByKey, type Content } from '/lib/xp/content'
 import { sanitizeHtml, getContent, getComponent, pageUrl, serviceUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 import { render } from '/lib/enonic/react4xp'
-import { solrSearch, googleSearch } from '/lib/ssb/utils/solrUtils'
+import { solrSearch, googleSearch, vertexServiceSearch } from '/lib/ssb/utils/solrUtils'
 import { getNameSearchResult } from '/lib/ssb/utils/nameSearchUtils'
 import { type SolrResponse, type PreparedSearchResult, type SolrPrepResultAndTotal } from '/lib/types/solr'
 import { queryNodes, getNode } from '/lib/ssb/repo/common'
@@ -230,6 +230,23 @@ export function renderPart(req: XP.Request) {
           contentTypes: [],
           subjects: [],
         }
+  }
+  if (part.config.searchEngine === 'vertex') {
+    solrResult = sanitizedTerm
+      ? vertexServiceSearch(
+          sanitizedTerm,
+          0,
+          language,
+          parseInt(part.config.numberOfHits),
+          req.params.emne,
+          req.params.innholdstype
+        )
+      : {
+          total: 0,
+          hits: [],
+          contentTypes: [],
+          subjects: [],
+        }
   } else {
     solrResult = sanitizedTerm
       ? solrSearch(
@@ -279,7 +296,7 @@ export function renderPart(req: XP.Request) {
       locale: language,
     }),
     searchServiceUrl: serviceUrl({
-      service: part.config.searchEngine === 'google' ? 'googleSearch' : 'freeTextSearch',
+      service: part.config.searchEngine === 'vertex' ? 'googleVertexSearch' : 'freeTextSearch',
     }),
     nameSearchUrl: serviceUrl({
       service: 'nameSearch',
