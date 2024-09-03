@@ -8,7 +8,6 @@ interface VariableCardProps {
 
 const VariableCard = ({ variable }: VariableCardProps) => {
   const { icon, description, ...rest } = variable
-
   return (
     <Card {...rest} icon={icon ? <img src={icon} alt={variable.title ? variable.title : ' '} /> : null}>
       <Text>{description}</Text>

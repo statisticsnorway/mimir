@@ -1,5 +1,15 @@
 import React, { useState } from 'react'
-import { Link, FactBox, Tabs, Divider } from '@statisticsnorway/ssb-component-library'
+import {
+  Link,
+  FactBox,
+  Tabs,
+  Divider,
+  Table as SSBTable,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+} from '@statisticsnorway/ssb-component-library'
 import { Row, Col } from 'react-bootstrap'
 import { NumericFormat } from 'react-number-format'
 import { type StaticVisualizationProps } from '../../../lib/types/partTypes/staticVisualization'
@@ -67,16 +77,16 @@ function StaticVisualization(props: StaticVisualizationProps) {
     const tableData = props.tableData
     if (tableData) {
       return (
-        <table className='statistics' aria-labelledby={`figure-caption-${props.id}`}>
-          <thead>
-            <tr>{createHeaderCell(tableData.table.thead.tr)}</tr>
-          </thead>
-          <tbody>
+        <SSBTable aria-labelledby={`figure-caption-${props.id}`}>
+          <TableHead>
+            <TableRow>{createHeaderCell(tableData.table.thead.tr)}</TableRow>
+          </TableHead>
+          <TableBody>
             {tableData.table.tbody.tr.map((row, index) => {
-              return <tr key={index}>{createBodyCells(row)}</tr>
+              return <TableRow key={index}>{createBodyCells(row)}</TableRow>
             })}
-          </tbody>
-        </table>
+          </TableBody>
+        </SSBTable>
       )
     }
   }
@@ -84,9 +94,9 @@ function StaticVisualization(props: StaticVisualizationProps) {
   function createHeaderCell(row: HtmlTable['table']['thead']['tr']) {
     return row.th.map((cellValue, i) => {
       return (
-        <th key={i} scope='col'>
+        <TableCell key={i} type='th' scope='col' align={i !== 0 ? 'right' : ''}>
           {trimValue(cellValue)}
-        </th>
+        </TableCell>
       )
     })
   }
@@ -94,12 +104,16 @@ function StaticVisualization(props: StaticVisualizationProps) {
   function createBodyCells(row: BodyCell) {
     return row.td.map((cellValue, i) => {
       if (i > 0) {
-        return <td key={i}>{formatNumber(cellValue)}</td>
+        return (
+          <TableCell key={i} align='right'>
+            {formatNumber(cellValue)}
+          </TableCell>
+        )
       } else {
         return (
-          <th key={i} scope='row'>
+          <TableCell key={i} type='th' scope='row'>
             {trimValue(cellValue)}
-          </th>
+          </TableCell>
         )
       }
     })
