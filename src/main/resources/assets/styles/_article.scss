@@ -2,14 +2,14 @@
   .title-ingress-wrapper {
     display: block;
     margin-bottom: $spacer * 1;
-    margin-top: 50px;
+    margin-top: 3rem;
 
     @include media-breakpoint-down(md) {
       padding: 0;
     }
 
     h1 {
-      margin-bottom: 20px;
+      margin-bottom: 1.25rem;
       padding: 0;
     }
 
@@ -22,16 +22,16 @@
       @include roboto;
       font-size: 1.25rem;
       line-height: 1.6;
-      margin-bottom: 4px;
+      margin-bottom: 0.25rem;
     }
   }
 
   .snr-dates-wrapper {
-    margin-bottom: 8px;
+    margin-bottom: 0.5rem;
 
     p {
       margin-bottom: 0;
-      margin-right: 20px;
+      margin-right: 1.25rem;
     }
 
     @include media-breakpoint-down(md) {
@@ -56,7 +56,7 @@
 
   .part-fact-box {
     padding: 0;
-    margin: 16px 0;
+    margin: 1rem 0;
   }
 
   .article-body {
@@ -83,11 +83,6 @@
       margin-bottom: $spacer * 0.5;
     }
 
-    .part-fact-box .accordion-header {
-      padding: 0;
-      min-height: 44px;
-    }
-
     @include media-breakpoint-down(md) {
       margin-bottom: $spacer * 3;
     }
@@ -98,7 +93,7 @@
   }
 
   blockquote {
-    padding-left: 40px !important;
+    padding-left: 2.5rem !important;
 
     @include media-breakpoint-down(md) {
       padding-left: 0 !important;

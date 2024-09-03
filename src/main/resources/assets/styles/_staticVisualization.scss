@@ -1,15 +1,15 @@
 .part-static-visualization {
   .footnote {
     list-style-type: none;
-    margin-top: 40px;
+    margin-top: 2.5rem;
     padding-left: 0;
 
     li {
-      margin-top: 5px;
+      margin-top: 0.3rem;
     }
   }
   .ssb-expansion-box {
-    margin-top: 40px;
+    margin-top: 2.5rem;
   }
   .sources {
     margin-top: 0;
@@ -19,7 +19,7 @@
   }
   .static-visualization-data {
     overflow-x: auto;
-    margin-top: 40px;
+    margin-top: 2.5rem;
 
     thead th:first-child {
       text-align: left;
@@ -34,14 +34,14 @@
   }
 
   .static-visualization-chart {
-    margin-top: 40px;
+    margin-top: 2.5rem;
   }
 
   figcaption {
     @include roboto;
     font-weight: bold;
-    font-size: 20px;
-    line-height: 32px;
+    font-size: 1.25rem;
+    line-height: 2rem;
     margin-bottom: $spacer * 0.5;
   }
 }
