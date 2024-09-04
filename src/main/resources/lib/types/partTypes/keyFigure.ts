@@ -8,7 +8,7 @@ export interface KeyFigureProps {
   source: KeyFigure['source']
   columns: KeyFigure['columns']
   showPreviewDraft: boolean
-  paramShowDraft: string | undefined
+  paramShowDraft: string | boolean | undefined
   draftExist: boolean
   pageTypeKeyFigure: boolean
   hiddenTitle: string
@@ -56,4 +56,5 @@ export interface KeyFigureChanges {
   changeDirection: 'up' | 'down' | 'same'
   changeText?: string
   changePeriod: string
+  srChangeText?: string
 }

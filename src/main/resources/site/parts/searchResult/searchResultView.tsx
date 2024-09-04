@@ -20,8 +20,11 @@ import { type SearchResultProps } from '../../../lib/types/partTypes/searchResul
 import { type DropdownItem } from '../../../lib/types/partTypes/publicationArchive'
 import { type PreparedSearchResult } from '../../../lib/types/solr'
 
+const ADDITIONAL_HITS_LENGTH = 15
+
 function SearchResult(props: SearchResultProps) {
   const [hits, setHits] = useState(props.hits)
+  const [keyboardNavigation, setKeyboardNavigation] = useState(false)
   const [searchTerm, setSearchTerm] = useState(props.term)
   const [loading, setLoading] = useState(false)
   const [total, setTotal] = useState(props.total)
@@ -91,19 +94,18 @@ function SearchResult(props: SearchResultProps) {
     }
   }, [filter, sortList])
 
+  useEffect(() => {
+    if (keyboardNavigation) {
+      currentElement.current?.focus()
+    }
+  }, [hits])
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function onChange(id: string, value: any) {
     setFilterChanged(id)
 
     if (id === 'mainSubject') {
-      const selectedSubject =
-        value.id === 'allSubjects'
-          ? value
-          : {
-              id: value.id,
-              title: value.id,
-            }
-      setSelectedMainSubject(selectedSubject)
+      setSelectedMainSubject(value)
       setFilter({
         ...filter,
         mainSubject: value.id === '' || value.id === 'allSubjects' ? '' : value.id,
@@ -111,15 +113,7 @@ function SearchResult(props: SearchResultProps) {
     }
 
     if (id === 'contentType') {
-      const selectedContentType =
-        value.id === 'allTypes'
-          ? value
-          : {
-              id: value.id,
-              title: props.contentTypePhrases.find((phrase) => phrase.id === value.id).title,
-            }
-
-      setSelectedContentType(selectedContentType)
+      setSelectedContentType(value)
       setFilter({
         ...filter,
         contentType: value.id === '' || value.id === 'allTypes' ? '' : value.id,
@@ -136,8 +130,8 @@ function SearchResult(props: SearchResultProps) {
     }
   }
 
-  function onShowMoreSearchResults(focusElement: boolean) {
-    fetchSearchResult(focusElement)
+  function onShowMoreSearchResults() {
+    fetchSearchResult()
   }
 
   function removeFilter() {
@@ -151,13 +145,12 @@ function SearchResult(props: SearchResultProps) {
     setFilterChanged(true) // we want the useEffect to trigger fetching of results, and new filters
   }
 
-  function renderListItem(hit: PreparedSearchResult, i?: number) {
+  function renderListItem(hit: PreparedSearchResult, i?: number, focus?: boolean) {
     if (hit) {
-      const last = i === hits.length - props.count
       return (
         <li key={hit.id || i || undefined} className='mb-4'>
           <a
-            ref={last ? currentElement : null}
+            ref={focus ? currentElement : null}
             className='ssb-link header'
             // deepcode ignore DOMXSS: url comes from pageUrl which escapes  + Reacts own escaping
             href={hit.url}
@@ -223,10 +216,13 @@ function SearchResult(props: SearchResultProps) {
           </Col>
           <Divider dark />
         </div>
-        {props.nameSearchToggle && props.nameSearchData ? renderNameResult() : undefined}
+        {props.nameSearchData ? renderNameResult() : undefined}
         <ol className='list-unstyled '>
           {renderListItem(bestBetHit!)}
           {hits.map((hit, i) => {
+            if (i === hits.length - ADDITIONAL_HITS_LENGTH) {
+              return renderListItem(hit, i, true)
+            }
             return renderListItem(hit, i)
           })}
         </ol>
@@ -278,7 +274,7 @@ function SearchResult(props: SearchResultProps) {
       })
   }
 
-  function fetchSearchResult(focusElement: boolean) {
+  function fetchSearchResult() {
     setLoading(true)
     axios
       .get(props.searchServiceUrl, {
@@ -300,9 +296,6 @@ function SearchResult(props: SearchResultProps) {
       })
       .finally(() => {
         setLoading(false)
-        if (focusElement) {
-          currentElement.current?.focus()
-        }
       })
   }
 
@@ -313,10 +306,14 @@ function SearchResult(props: SearchResultProps) {
           <Button
             disabled={loading || total === hits.length}
             className='button-more mt-5'
-            onClick={() => onShowMoreSearchResults(false)}
+            onClick={() => {
+              setKeyboardNavigation(false)
+              onShowMoreSearchResults()
+            }}
             onKeyDown={(e: React.KeyboardEvent<HTMLButtonElement>) => {
               if (e.key === 'Enter' || e.key === ' ') {
-                onShowMoreSearchResults(true)
+                setKeyboardNavigation(true)
+                onShowMoreSearchResults()
               }
             }}
           >
@@ -332,7 +329,7 @@ function SearchResult(props: SearchResultProps) {
     if (props.language === 'en') {
       return (
         <div>
-          {props.nameSearchToggle ? renderNameResult() : undefined}
+          {renderNameResult()}
           <Title size={2}>{props.noHitMessage}</Title>
           <p>
             Go to <Link href='/en/navn'>name search</Link>
@@ -348,7 +345,7 @@ function SearchResult(props: SearchResultProps) {
     } else {
       return (
         <div>
-          {props.nameSearchToggle ? renderNameResult() : undefined}
+          {renderNameResult()}
           <Title size={2}>{props.noHitMessage}</Title>
           <p>
             Her finner du <Link href='/navn'>navnesøk</Link>

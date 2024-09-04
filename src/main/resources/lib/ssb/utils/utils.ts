@@ -181,6 +181,13 @@ export function getEnvironmentString(): string {
   return environment
 }
 
+export function getProfiledCardAriaLabel(subTitle: string): string {
+  if (subTitle) {
+    return `${subTitle.replace(' /', ',')}`
+  }
+  return ''
+}
+
 interface ContentSearchPageResult {
   contentId?: string
 }

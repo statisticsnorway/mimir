@@ -16,6 +16,7 @@
     "lib": ["es2021", "dom", "ES2021.String"],
     "types": [
       "@item-enonic-types/global",
+      "@types/grecaptcha"
     ],
     "rootDirs": [
       "./main/resources",

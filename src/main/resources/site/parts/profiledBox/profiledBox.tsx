@@ -2,23 +2,23 @@ import React from 'react'
 import { Card, Paragraph } from '@statisticsnorway/ssb-component-library'
 import { ProfiledBoxProps } from '../../../lib/types/partTypes/profiledBox'
 
-class ProfiledBox extends React.Component<ProfiledBoxProps> {
-  constructor(props: ProfiledBoxProps) {
-    super(props)
-  }
-
-  render() {
-    return (
-      <Card {...this.props} image={<img src={this.props.imgUrl} alt={this.props.imageAltText} aria-hidden='true' />}>
-        <Paragraph
-          className={`preambleText${this.props.titleSize ? ` title-size-${this.props.titleSize}` : ''}`}
-          {...this.props}
-        >
-          {this.props.preambleText}
-        </Paragraph>
-      </Card>
-    )
-  }
+const ProfiledBox = (props: ProfiledBoxProps) => {
+  const { imgUrl, imageAltText, imagePlacement, href, subTitle, title, titleSize, preambleText, ariaLabel } = props
+  return (
+    <Card
+      href={href}
+      imagePlacement={imagePlacement}
+      subTitle={subTitle}
+      title={title}
+      linkType='header'
+      image={<img src={imgUrl} alt={imageAltText} />}
+      ariaLabel={ariaLabel}
+    >
+      <Paragraph className={`preambleText${titleSize ? ` title-size-${titleSize}` : ''}`} aria-hidden='true'>
+        {preambleText}
+      </Paragraph>
+    </Card>
+  )
 }
 
 export default (props: ProfiledBoxProps) => <ProfiledBox {...props} />

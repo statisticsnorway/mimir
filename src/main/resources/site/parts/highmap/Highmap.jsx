@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import PropTypes from 'prop-types'
@@ -86,7 +86,7 @@ function generateSeries(tableData, mapDataSecondColumn, color) {
       // dummy series to show outline of all areas
       allAreas: true,
       showInLegend: false,
-      opacity: 0.3,
+      opacity: 1,
     },
     ...Object.entries(dataSeries).map(([name, values]) => {
       return {

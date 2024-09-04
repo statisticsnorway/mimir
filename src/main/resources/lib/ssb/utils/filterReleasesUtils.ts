@@ -1,8 +1,8 @@
-import { type PreparedUpcomingRelease, type Release } from '/lib/types/variants'
+import { type PreparedContentRelease, type Release } from '/lib/types/variants'
 import { isAfter, addDays, isBefore, isSameDay } from '/lib/vendor/dateFns'
 
 export function filterReleasesIntoArrays(
-  contentReleases: Array<PreparedUpcomingRelease>,
+  contentReleases: Array<PreparedContentRelease>,
   count: number,
   serverOffsetInMs: number,
   nowServerTime: Date
@@ -16,8 +16,8 @@ export function filterReleasesIntoArrays(
     // We show todays releases only until published at 8 AM
     start = addDays(start, 1)
   }
-  const contentReleasesNextXDays: PreparedUpcomingRelease[] = []
-  const contentReleasesAfterXDays: PreparedUpcomingRelease[] = []
+  const contentReleasesNextXDays: PreparedContentRelease[] = []
+  const contentReleasesAfterXDays: PreparedContentRelease[] = []
 
   for (const release of contentReleases) {
     if (isSameDayOrAfter(new Date(release.date), start) && isBefore(new Date(release.date), upperLimit)) {

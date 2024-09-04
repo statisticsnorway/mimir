@@ -7,7 +7,6 @@ import { list, schedule, type TaskMapper } from '/lib/cron'
 import { cronJobLog } from '/lib/ssb/utils/serverLog'
 import { ENONIC_CMS_DEFAULT_REPO } from '/lib/ssb/repo/common'
 import { publishDataset } from '/lib/ssb/dataset/publishOld'
-import { isEnabled } from '/lib/featureToggle'
 
 const createUserContext: ContextParams = {
   // Master context (XP)
@@ -139,7 +138,6 @@ export function setupCronJobs(): void {
     }
 
     // Push RSS Statkal
-    const pushRssStatkalEnabled: boolean = isEnabled('push-rss-statkal', false, 'ssb')
     scheduleJob({
       name: 'pushRssStatkal',
       description: 'Push kommende publiseringer til rss/statkal',
@@ -147,7 +145,6 @@ export function setupCronJobs(): void {
       cronValue:
         app.config && app.config['ssb.task.pushRssStatkal'] ? app.config['ssb.task.pushRssStatkal'] : '10 08 * * *',
       timeZone: timezone,
-      updateEnabledTo: pushRssStatkalEnabled,
     })
 
     // Delete expired event logs for queries

@@ -133,8 +133,6 @@ function getTableData(highmap: Content<Highmap>): Array<RowValue[]> {
     } else if (highmap.data.dataSource?._selected === DataSourceType.TBPROCESSOR) {
       return getTBMLData(highmap)
     }
-  } else if (highmap.data.htmlTable) {
-    return getHtmlTableData(highmap.data.htmlTable)
   }
   return []
 }

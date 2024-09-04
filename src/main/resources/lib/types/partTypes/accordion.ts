@@ -1,17 +1,18 @@
+import { type Accordion } from '/site/content-types/accordion'
+
+export interface AccordionItems {
+  title?: string
+  body?: string
+}
+
 export interface AccordionData {
-  id: string
-  title?: string | undefined
+  id?: string
   body?: string | undefined
   open?: string | undefined
-  items?: Array<AccordionItems>
+  items?: Accordion['accordions'] | AccordionItems
   subHeader?: string
 }
 
-export interface AccordionItems {
-  title?: string | undefined
-  body?: string | undefined
-}
-
 export interface AccordionProps {
-  accordions: Array<AccordionData>
+  accordions: AccordionData[]
 }

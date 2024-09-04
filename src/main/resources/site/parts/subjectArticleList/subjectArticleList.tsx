@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Link, Button, Divider, Dropdown } from '@statisticsnorway/ssb-component-library'
+import { Title, Link, Button, Divider, Dropdown } from '@statisticsnorway/ssb-component-library'
 import { ChevronDown } from 'react-feather'
 import axios from 'axios'
 import { type SubjectArticleListProps } from '../../../lib/types/partTypes/subjectArticleList'
@@ -18,7 +18,10 @@ function SubjectArticleList(props: SubjectArticleListProps) {
   const [articleStart, setArticleStart] = useState(props.start)
   const [loadedFirst, setLoadedFirst] = useState(true)
   const [totalCount, setTotalCount] = useState(props.articles.length)
-  const [sort, setSort] = useState('DESC')
+  const [sort, setSort] = useState({
+    title: 'Nyeste',
+    id: 'DESC',
+  })
   const showCountLabel =
     props.language == 'en'
       ? `Showing ${articles.length} of ${props.totalArticles}`
@@ -38,7 +41,7 @@ function SubjectArticleList(props: SubjectArticleListProps) {
           currentPath: props.currentPath,
           start: articleStart,
           count: props.count,
-          sort: sort,
+          sort: sort.id,
           language: props.language,
         },
       })
@@ -75,9 +78,9 @@ function SubjectArticleList(props: SubjectArticleListProps) {
       <ol className='list-unstyled'>
         {articles.map((article, i) => {
           return (
-            <li key={i} className='mt-5'>
+            <li key={i}>
               {/* deepcode ignore DOMXSS: url comes from pageUrl which escapes + Reacts own escaping */}
-              <Link href={article.url} className='ssb-link header' standAlone>
+              <Link href={article.url} linkType='header' standAlone>
                 {article.title}
               </Link>
               <p className='truncate-2-lines'>{article.preface}</p>
@@ -95,7 +98,7 @@ function SubjectArticleList(props: SubjectArticleListProps) {
         <div className='col-md-6 col-12'>
           <span className='mb-3'>Sorter innholdet</span>
           <Dropdown
-            header='sorter etter dato'
+            header='Sorter etter dato'
             items={[
               {
                 title: 'Nyeste',
@@ -106,12 +109,9 @@ function SubjectArticleList(props: SubjectArticleListProps) {
                 id: 'ASC',
               },
             ]}
-            selectedItem={{
-              title: 'Nyeste',
-              id: 'DESC',
-            }}
+            selectedItem={sort}
             onSelect={(selected: DropdownItem) => {
-              setSort(selected.id)
+              setSort(selected)
               fetchArticlesStartOver(selected.id)
             }}
           />
@@ -126,7 +126,7 @@ function SubjectArticleList(props: SubjectArticleListProps) {
         <div>
           <Button
             disabled={totalCount > 0 && totalCount >= props.totalArticles}
-            className='button-more mt-5'
+            className='button-more'
             onClick={fetchMoreArticles}
           >
             <ChevronDown size='18' />
@@ -139,17 +139,15 @@ function SubjectArticleList(props: SubjectArticleListProps) {
 
   return (
     <section className='subject-article-list container-fluid'>
-      <div className='container pt-5 pb-5'>
-        <h2 className='mb-5'>{props.title}</h2>
-
+      <div className='container'>
+        <div className='row'>
+          <Title size={2}>{props.title}</Title>
+        </div>
         <div className='row justify-content-md-center'>
           {renderSortAndFilter()}
-
           <div className='col-md-6 col-12'>
-            <div className='total-count mb-2'>{showCountLabel}</div>
-
-            <Divider dark={true} />
-
+            <div className='total-count'>{showCountLabel}</div>
+            <Divider />
             {renderArticles()}
             {renderShowMoreButton()}
           </div>

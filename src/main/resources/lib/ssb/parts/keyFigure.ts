@@ -165,12 +165,22 @@ function getDataTbProcessor(
         changeText += ` ${denomination}`
       }
     }
+    const changePeriod = row2.th.toString()
     // set arrow direction based on change
     let changeDirection: KeyFigureChanges['changeDirection'] = 'same'
+    let srChangeText
     if (+change > 0) {
       changeDirection = 'up'
+      const changeDirectionText = localize({
+        key: 'keyFigure.increase',
+      })
+      srChangeText = `${changeDirectionText} ${changeText} ${changePeriod}`
     } else if (+change < 0) {
       changeDirection = 'down'
+      const changeDirectionText = localize({
+        key: 'keyFigure.decrease',
+      })
+      srChangeText = `${changeDirectionText} ${changeText} ${changePeriod}`
     } else {
       changeText = localize({
         key: 'keyFigure.noChange',
@@ -180,7 +190,8 @@ function getDataTbProcessor(
     keyFigureViewData.changes = {
       changeDirection,
       changeText,
-      changePeriod: row2.th.toString(),
+      changePeriod,
+      srChangeText,
     }
   }
 
@@ -221,7 +232,7 @@ function getDataWithFilterStatbankApi(
       if (municipalData && municipalData.value !== null) {
         // add data to key figure view
         keyFigureViewData.number = parseValueZeroSafe(municipalData.value)
-        keyFigureViewData.time = localizeTimePeriod(municipalData.label)
+        keyFigureViewData.time = localizeTimePeriod(municipalData.label as string)
       }
     }
   }

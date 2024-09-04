@@ -17,6 +17,15 @@ import { BkibolCalculatorProps } from '../../lib/types/partTypes/bkibolCalculato
 
 function BkibolCalculator(props: BkibolCalculatorProps) {
   const validMaxYear = props.lastUpdated.year
+  const defaultSerieValue = {
+    title: props.phrases.bkibolChooseWork,
+    id: '',
+  }
+  const defaultMonthValue = {
+    title: props.phrases.chooseMonth,
+    id: '',
+  }
+  const defaultMonthErrorMsg = props.phrases.calculatorValidateDropdownMonth
   const [scope, setScope] = useState({
     error: false,
     errorMsg: 'Feil markedskode',
@@ -30,7 +39,7 @@ function BkibolCalculator(props: BkibolCalculatorProps) {
   const [serie, setSerie] = useState({
     error: false,
     errorMsg: props.phrases.bkibolValidateSerie,
-    value: '',
+    value: defaultSerieValue,
   })
   const [startValue, setStartValue] = useState({
     error: false,
@@ -39,8 +48,8 @@ function BkibolCalculator(props: BkibolCalculatorProps) {
   })
   const [startMonth, setStartMonth] = useState({
     error: false,
-    errorMsg: props.phrases.calculatorValidateDropdownMonth,
-    value: '',
+    errorMsg: defaultMonthErrorMsg,
+    value: defaultMonthValue,
   })
   const [startYear, setStartYear] = useState({
     error: false,
@@ -49,8 +58,8 @@ function BkibolCalculator(props: BkibolCalculatorProps) {
   })
   const [endMonth, setEndMonth] = useState({
     error: false,
-    errorMsg: props.phrases.calculatorValidateDropdownMonth,
-    value: '',
+    errorMsg: defaultMonthErrorMsg,
+    value: defaultMonthValue,
   })
   const [endYear, setEndYear] = useState({
     error: false,
@@ -149,20 +158,20 @@ function BkibolCalculator(props: BkibolCalculatorProps) {
         params: {
           scope: scope.value,
           domene: domene.value,
-          serie: serie.value,
+          serie: serie.value.id,
           startValue: startValue.value,
           startYear: startYear.value,
-          startMonth: startMonth.value,
+          startMonth: startMonth.value.id,
           endYear: endYear.value,
-          endMonth: endMonth.value,
+          endMonth: endMonth.value.id,
           language: language,
         },
       })
       .then((res) => {
         const changeVal = (res.data.change * 100).toFixed(1)
         const endVal = res.data.endValue.toFixed(2)
-        const startPeriod = getPeriod(startYear.value, startMonth.value)
-        const endPeriod = getPeriod(endYear.value, endMonth.value)
+        const startPeriod = getPeriod(startYear.value, startMonth.value.id)
+        const endPeriod = getPeriod(endYear.value, endMonth.value.id)
         setChange(changeVal)
         setEndValue(endVal)
         setStartPeriod(startPeriod)
@@ -223,7 +232,7 @@ function BkibolCalculator(props: BkibolCalculatorProps) {
   }
 
   function isSerieValid(value?: string) {
-    const serieValue = value || serie.value
+    const serieValue = value || serie.value.id
     const serieValid = serieValue !== ''
     if (!serieValid) {
       setSerie({
@@ -235,43 +244,15 @@ function BkibolCalculator(props: BkibolCalculatorProps) {
   }
 
   function isStartMonthValid(value?: string) {
-    const startMonthValue = value || startMonth.value
-    const startMonthEmpty = startMonthValue === ''
-    if (startMonthEmpty) {
-      setStartMonth({
-        ...startMonth,
-        error: true,
-      })
-    }
+    const startMonthValue = value ?? startMonth.value.id
     const startMonthValid = !(startYear.value === validMaxYear && startMonthValue > validMaxMonth)
-    if (!startMonthValid) {
-      setStartMonth({
-        ...startMonth,
-        error: true,
-        errorMsg: props.lastNumberText,
-      })
-    }
-    return startMonthEmpty ? false : startMonthValid
+    return startMonthValue === '' ? false : startMonthValid
   }
 
   function isEndMonthValid(value?: string) {
-    const endMonthValue = value || endMonth.value
-    const endMonthEmpty = endMonthValue === ''
-    if (endMonthEmpty) {
-      setEndMonth({
-        ...endMonth,
-        error: true,
-      })
-    }
+    const endMonthValue = value ?? endMonth.value.id
     const endMonthValid = !(endYear.value === validMaxYear && endMonthValue > validMaxMonth)
-    if (!endMonthValid) {
-      setEndMonth({
-        ...endMonth,
-        error: true,
-        errorMsg: props.lastNumberText,
-      })
-    }
-    return endMonthEmpty ? false : endMonthValid
+    return endMonthValue === '' ? false : endMonthValid
   }
 
   function onBlur(id: string) {
@@ -335,14 +316,14 @@ function BkibolCalculator(props: BkibolCalculatorProps) {
         setSerie({
           error: false,
           errorMsg: props.phrases.bkibolValidateSerie,
-          value: '',
+          value: defaultSerieValue,
         })
         break
       }
       case 'serie': {
         setSerie({
           ...serie,
-          value: value.id,
+          value,
           error: serie.error ? !isSerieValid(value.id) : serie.error,
         })
         break
@@ -359,8 +340,9 @@ function BkibolCalculator(props: BkibolCalculatorProps) {
       case 'start-month': {
         setStartMonth({
           ...startMonth,
-          value: value.id,
+          value,
           error: startMonth.error ? !isStartMonthValid(value.id) : startMonth.error,
+          errorMsg: value.id !== '' ? props.lastNumberText : defaultMonthErrorMsg,
         })
         break
       }
@@ -381,8 +363,9 @@ function BkibolCalculator(props: BkibolCalculatorProps) {
       case 'end-month': {
         setEndMonth({
           ...endMonth,
-          value: value.id,
+          value,
           error: endMonth.error ? !isEndMonthValid(value.id) : endMonth.error,
+          errorMsg: value.id !== '' ? props.lastNumberText : defaultMonthErrorMsg,
         })
         break
       }
@@ -417,10 +400,7 @@ function BkibolCalculator(props: BkibolCalculatorProps) {
         }}
         error={startMonth.error}
         errorMessage={startMonth.errorMsg}
-        selectedItem={{
-          title: props.phrases.chooseMonth,
-          id: '',
-        }}
+        selectedItem={startMonth.value}
         items={props.months}
       />
     )
@@ -437,10 +417,7 @@ function BkibolCalculator(props: BkibolCalculatorProps) {
         }}
         error={endMonth.error}
         errorMessage={endMonth.errorMsg}
-        selectedItem={{
-          title: props.phrases.chooseMonth,
-          id: '',
-        }}
+        selectedItem={endMonth.value}
         items={props.months}
       />
     )
@@ -457,10 +434,7 @@ function BkibolCalculator(props: BkibolCalculatorProps) {
           }}
           error={serie.error}
           errorMessage={serie.errorMsg}
-          selectedItem={{
-            title: props.phrases.bkibolChooseWork,
-            id: '',
-          }}
+          selectedItem={serie.value}
           items={serieItemsDomene('ENEBOLIG')}
           ariaLabel={props.phrases.bkibolWorkTypeDone}
         />
@@ -479,10 +453,7 @@ function BkibolCalculator(props: BkibolCalculatorProps) {
           }}
           error={serie.error}
           errorMessage={serie.errorMsg}
-          selectedItem={{
-            title: props.phrases.bkibolChooseWork,
-            id: '',
-          }}
+          selectedItem={serie.value}
           items={serieItemsDomene('BOLIGBLOKK')}
           ariaLabel={props.phrases.bkibolWorkTypeDone}
         />
@@ -558,15 +529,18 @@ function BkibolCalculator(props: BkibolCalculatorProps) {
 
   function calculatorResult() {
     const priceChangeLabel = change?.charAt(0) === '-' ? props.phrases.priceDecrease : props.phrases.priceIncrease
-    const changeValue = change?.charAt(0) === '-' ? change?.replaceAll('-', '') : change
+    const changeValue = change?.charAt(0) === '-' ? change?.replaceAll('-', '') : (change ?? '')
+    const endValueText = endValue?.toString() ?? ''
+    const startIndexText = startIndex?.toString() ?? ''
+    const endIndexText = endIndex?.toString() ?? ''
     const resultScreenReaderText = props.phrases.bkibolResultScreenReader
-      .replaceAll('{0}', language === 'en' ? endValue : endValue.replaceAll('.', ','))
+      .replaceAll('{0}', language === 'en' ? endValueText : endValueText.replaceAll('.', ','))
       .replaceAll('{1}', priceChangeLabel)
       .replaceAll('{2}', language === 'en' ? changeValue : changeValue.replaceAll('.', ','))
-      .replaceAll('{3}', startPeriod)
-      .replaceAll('{4}', endPeriod)
-      .replaceAll('{5}', language === 'en' ? startIndex : startIndex.toString().replaceAll('.', ','))
-      .replaceAll('{6}', language === 'en' ? endIndex : endIndex.toString().replaceAll('.', ','))
+      .replaceAll('{3}', startPeriod as string)
+      .replaceAll('{4}', endPeriod as string)
+      .replaceAll('{5}', language === 'en' ? startIndexText : startIndexText.replaceAll('.', ','))
+      .replaceAll('{6}', language === 'en' ? endIndexText : endIndexText.replaceAll('.', ','))
 
     return (
       <Container className='calculator-result' ref={scrollAnchor}>
