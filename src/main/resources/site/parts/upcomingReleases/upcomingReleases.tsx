@@ -252,10 +252,12 @@ function UpcomingReleases(props: UpcomingReleasesProps) {
 
     return (
       <div className={`calendar-day ${isFirst ? 'first' : ''}`} key={day}>
-        <time aria-hidden='true' dateTime={date.toISOString()}>
-          <span className='day'>{day}</span>
-          <span className='month'>{getShortMonthName(month, language)}</span>
-        </time>
+        <div className='time-wrapper'>
+          <time aria-hidden='true' dateTime={date.toISOString()}>
+            <span className='day'>{day}</span>
+            <span className='month'>{getShortMonthName(month, language)}</span>
+          </time>
+        </div>
         <span id={`datemonth-${day}`} className='sr-only' aria-hidden='true'>{`${day}. ${getShortMonthName(
           month,
           language

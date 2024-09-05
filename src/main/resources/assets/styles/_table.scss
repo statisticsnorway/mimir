@@ -55,6 +55,10 @@
   }
 }
 
+.highcharts-data-table .ssb-table {
+  min-width: 0;
+}
+
 table.statistics tbody tr td:not(:first-child) {
   text-align: right;
 }
@@ -65,6 +69,10 @@ table.statistics thead tr:last-child th {
 
 table.statistics thead th {
   text-align: right !important;
+}
+
+.highcharts-data-table.ssb-table-wrapper .ssb-table thead tr:first-child th:first-child {
+  text-align: left !important;
 }
 
 table.statistics {
@@ -82,24 +90,8 @@ table.statistics thead th[scope="col"] {
 table.statistics {
   width: 100%;
 
-  caption {
-    caption-side: top;
-    color: $ssb-dark-6;
-  }
-
   thead,
   tbody {
-    th.level1 {
-      padding-left: 1.75em;
-    }
-
-    th.level2 {
-      padding-left: 2.5em;
-    }
-
-    th.level3 {
-      padding-left: 3.25em;
-    }
 
     th.sum,
     td.sum {
@@ -142,8 +134,9 @@ table.statistics {
   thead,
   tbody tr.head {
     th {
-      &[colspan] {
-        text-align: center;
+      &[colspan],
+      &[colgroup] {
+        text-align: center !important;
       }
     }
   }
