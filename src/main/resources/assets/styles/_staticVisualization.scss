@@ -1,36 +1,25 @@
 .part-static-visualization {
   .footnote {
-      list-style-type: none;
-      margin-top: 40px;
-      padding-left: 0;
+    list-style-type: none;
+    margin-top: 2.5rem;
+    padding-left: 0;
 
     li {
-        margin-top: 5px;
+      margin-top: 0.3rem;
     }
   }
-  .ssb-fact-box {
-    margin-top: 40px;
-    padding: 20px 40px;
-
-    .accordion-header {
-      font-size: 16px;
-      padding-top: 0;
-      padding-bottom: 0;
-    }
-
-    ul {
-      margin-top: $spacer * .5;
-    }
+  .ssb-expansion-box {
+    margin-top: 2.5rem;
   }
   .sources {
-      margin-top: 0;
+    margin-top: 0;
   }
   img {
     width: 100%;
   }
   .static-visualization-data {
     overflow-x: auto;
-    margin-top: 40px;
+    margin-top: 2.5rem;
 
     thead th:first-child {
       text-align: left;
@@ -45,14 +34,14 @@
   }
 
   .static-visualization-chart {
-    margin-top: 40px;
+    margin-top: 2.5rem;
   }
 
   figcaption {
     @include roboto;
     font-weight: bold;
-    font-size: 20px;
-    line-height: 32px;
+    font-size: 1.25rem;
+    line-height: 2rem;
     margin-bottom: $spacer * 0.5;
   }
 }

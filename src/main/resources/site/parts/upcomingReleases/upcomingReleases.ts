@@ -6,7 +6,7 @@ import {
   type PreparedStatistics,
   type YearReleases,
   type Release,
-  type PreparedUpcomingRelease,
+  type PreparedContentRelease,
 } from '/lib/types/variants'
 import { getMainSubjects, getMainSubjectById } from '/lib/ssb/utils/subjectUtils'
 import { formatDate } from '/lib/ssb/utils/dateUtils'
@@ -51,10 +51,6 @@ function renderPart(req: XP.Request) {
     key: 'button.showAll',
     locale: currentLanguage,
   })
-  const statisticsPageUrlText: string = localize({
-    key: 'upcomingReleases.statisticsPageText',
-    locale: currentLanguage,
-  })
   const upcomingReleasesServiceUrl: string = serviceUrl({
     service: 'upcomingReleases',
   })
@@ -69,18 +65,17 @@ function renderPart(req: XP.Request) {
     const releasesFiltered: Array<Release> = filterOnComingReleases(allReleases, serverOffsetInMs, count)
 
     // Choose the right variant and prepare the date in a way it works with the groupBy function
-    const releasesPrepped: Array<PreparedStatistics> = releasesFiltered.map((release: Release) =>
-      prepareRelease(release, currentLanguage)
-    )
+    const releasesPrepped: Array<PreparedStatistics | null> =
+      releasesFiltered.map((release: Release) => prepareRelease(release, currentLanguage)) ?? []
 
     // group by year, then month, then day
     const groupedByYearMonthAndDay: GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>> =
-      groupStatisticsByYearMonthAndDay(releasesPrepped)
+      groupStatisticsByYearMonthAndDay(releasesPrepped as Array<PreparedStatistics>)
 
     return addMonthNames(groupedByYearMonthAndDay, currentLanguage)
   })
 
-  const contentReleases: Array<PreparedUpcomingRelease> = query<Content<UpcomingRelease>>({
+  const contentReleases: Array<PreparedContentRelease> = query<Content<UpcomingRelease>>({
     start: 0,
     count: 500,
     query: `type = "${app.name}:upcomingRelease" AND language = "${currentLanguage}" AND data.date >= "${format(
@@ -131,7 +126,6 @@ function renderPart(req: XP.Request) {
     count,
     upcomingReleasesServiceUrl,
     buttonTitle,
-    statisticsPageUrlText,
     contentReleasesNextXDays,
     contentReleasesAfterXDays,
   }

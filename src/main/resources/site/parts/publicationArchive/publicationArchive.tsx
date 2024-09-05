@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Button, Divider, Link, Title, Text, Dropdown } from '@statisticsnorway/ssb-component-library'
 import { NumericFormat } from 'react-number-format'
 import { ChevronDown } from 'react-feather'
@@ -33,6 +33,10 @@ function PublicationArchive(props: PublicationArchiveProps) {
     mainSubject: '',
     articleType: '',
   })
+  const [keyboardNavigation, setKeyboardNavigation] = useState(false)
+
+  const currentElement = useRef<HTMLAnchorElement>(null)
+  const ADDITIONAL_PUBLICATIONS_LENGTH = 10
 
   useEffect(() => {
     if (first) {
@@ -42,6 +46,12 @@ function PublicationArchive(props: PublicationArchiveProps) {
       fetchPublicationsFiltered()
     }
   }, [filter])
+
+  useEffect(() => {
+    if (keyboardNavigation) {
+      currentElement.current?.focus()
+    }
+  }, [publications])
 
   function onChange(id: string, value: DropdownItem) {
     setFilterChanged(true)
@@ -106,9 +116,14 @@ function PublicationArchive(props: PublicationArchiveProps) {
       return (
         <div key={i} className='row mb-5'>
           <div className='col'>
-            <Link href={publication.url} className='ssb-link header'>
+            <Link
+              ref={i === publications.length - ADDITIONAL_PUBLICATIONS_LENGTH ? currentElement : null}
+              href={publication.url}
+              className='ssb-link header'
+            >
               {publication.title}
             </Link>
+
             {publication.period && <p className='mt-1 mb-0'>{publication.period}</p>}
             <p className='my-1 truncate-2-lines'>{publication.preface}</p>
             <Text small>
@@ -164,7 +179,7 @@ function PublicationArchive(props: PublicationArchiveProps) {
         }}
         selectedItem={dropDownSubjects[0]}
         items={dropDownSubjects}
-        ariaLabel={props.chooseSubjectPhrase}
+        header={props.chooseSubjectPhrase}
       />
     )
   }
@@ -179,7 +194,7 @@ function PublicationArchive(props: PublicationArchiveProps) {
         }}
         selectedItem={dropDownTypes[0]}
         items={dropDownTypes}
-        ariaLabel={props.chooseContentTypePhrase}
+        header={props.chooseContentTypePhrase}
       />
     )
   }
@@ -234,7 +249,16 @@ function PublicationArchive(props: PublicationArchiveProps) {
               <Button
                 disabled={loading || total === publications.length}
                 className='button-more mt-5'
-                onClick={fetchPublications}
+                onClick={() => {
+                  setKeyboardNavigation(false)
+                  fetchPublications()
+                }}
+                onKeyDown={(e: React.KeyboardEvent<HTMLButtonElement>) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    setKeyboardNavigation(true)
+                    fetchPublications()
+                  }
+                }}
               >
                 <ChevronDown size='18' /> {buttonTitle}
               </Button>

@@ -1,13 +1,11 @@
 export interface ProfiledBoxProps {
   imgUrl: string
-  imageAltText: string | undefined
+  imageAltText?: string
   imagePlacement: string
-  href: string | undefined
+  href?: string
   subTitle: string
   title: string
   preambleText: string
-  linkType: string
   titleSize: string
-  ariaLabel: string | undefined
-  ariaDescribedBy: string | undefined
+  ariaLabel?: string
 }
