@@ -66,6 +66,7 @@ declare global {
       export type StatbankSubjectTree = _PartComponent<'mimir:statbankSubjectTree'>
       export type StaticVisualization = _PartComponent<'mimir:staticVisualization'>
       export type Statistics = _PartComponent<'mimir:statistics'>
+      export type StatisticContact = _PartComponent<'mimir:statisticContact'>
       export type StatisticHeader = _PartComponent<'mimir:statisticHeader'>
       export type StatisticFigures = _PartComponent<'mimir:statisticFigures'>
       export type StatisticDescription = _PartComponent<'mimir:statisticDescription'>
