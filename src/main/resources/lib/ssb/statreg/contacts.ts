@@ -41,6 +41,7 @@ function transformContact(kontakt: Kontakt): Contact {
 }
 
 export function fetchContacts(): Array<Contact> | null {
+  log.info('fetchContacts - getStatRegBaseUrl: ' + getStatRegBaseUrl())
   try {
     const response: HttpResponse = fetchStatRegData('Contacts', getStatRegBaseUrl() + CONTACTS_URL)
     if (response.status === 200 && response.body) {

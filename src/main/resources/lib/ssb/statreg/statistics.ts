@@ -19,6 +19,7 @@ import { Events, logUserDataQuery } from '/lib/ssb/repo/query'
 export const STATREG_REPO_STATISTICS_KEY = 'statistics'
 
 export function fetchStatistics(): Array<StatisticInListing> | null {
+  log.info('fetchStatistics - getStatRegBaseUrl: ' + getStatRegBaseUrl())
   try {
     const response: HttpResponse = fetchStatRegData('Statistics', getStatRegBaseUrl() + STATISTICS_URL)
     if (response.status === 200 && response.body) {
