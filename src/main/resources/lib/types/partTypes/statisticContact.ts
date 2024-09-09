@@ -3,8 +3,10 @@ export interface StatisticContactProps {
   contacts: Array<Contact>
 }
 
-interface Contact {
+export interface Contact {
+  id: number
   name: string
   email?: string
   phone?: string
+  phoneLink?: string
 }
