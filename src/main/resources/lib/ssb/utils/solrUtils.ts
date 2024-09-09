@@ -1,5 +1,7 @@
 import { customsearch_v1 } from '@googleapis/customsearch'
 
+// import { ISearchResponse } from '@google-cloud/discoveryengine'
+
 import { sanitizeHtml, getSiteConfig } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 import { request, HttpResponse, HttpRequestParams } from '/lib/http-client'
@@ -159,11 +161,18 @@ export function vertexServiceSearch(
   const results = JSON.parse(search.body!)
   log.info('\x1b[32m%s\x1b[0m', JSON.stringify(results, null, 2))
 
+  // const facets = {
+  //   contenttype: results.facets.find(),
+  //   category: [],
+  // }
+
   const solrFormatResults: Array<PreparedSearchResult> | undefined = results.results?.map((item) => ({
     contentType: item.document?.structData?.fields?.contenttype?.listValue?.values[0]?.stringValue,
     id: item.id || '1234',
     title: item.document.derivedStructData.fields.title.stringValue || 'tittel',
-    preface: 'Her kommer tekst fra dokumentet',
+    preface:
+      item.document.derivedStructData?.fields?.snippets?.listValue?.values[0]?.structValue?.fields?.snippet
+        ?.stringValue || 'Her kommer tekst fra dokumentet',
     url: item.document.derivedStructData.fields.link.stringValue || '',
     mainSubject: item.document.structData.fields?.category?.listValue?.values[0]?.stringValue || 'test0',
     secondaryMainSubject: item.document.structData.fields?.category?.listValue?.values[1]?.stringValue || 'test1',

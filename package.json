@@ -159,6 +159,7 @@
     ]
   },
   "dependencies": {
+    "@google-cloud/discoveryengine": "^1.13.0",
     "@googleapis/customsearch": "^1.1.0",
     "bootstrap": "~5.3.3",
     "core-js": "~3.38.1",
