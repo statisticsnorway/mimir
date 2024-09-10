@@ -38,4 +38,25 @@
       max-height: 8rem;
     }
   }
+
+  @include media-breakpoint-down(md) {
+    padding: 40px 20px;
+
+    .om-statistikken-tags {
+      display: block;
+      .ssb-tag {
+        width: 100%;
+        margin-bottom: 1rem;
+      }
+    }
+
+    .part-accordion {
+      padding: 0;
+
+      .accordion-body {
+        overflow-x: auto;
+        padding: 0;
+      }
+    }
+  }
 }

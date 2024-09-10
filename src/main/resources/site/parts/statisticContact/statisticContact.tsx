@@ -1,6 +1,6 @@
 import React from 'react'
 import { Row } from 'react-bootstrap'
-import { ExpansionBox, Title } from '@statisticsnorway/ssb-component-library'
+import { Link, ExpansionBox, Title } from '@statisticsnorway/ssb-component-library'
 import { User } from 'react-feather'
 //import { type ContactModel } from '../../../lib/types/partTypes/contact'
 import { type StatisticContactProps, type Contact } from '/lib/types/partTypes/statisticContact'
@@ -10,29 +10,31 @@ function StatisticContact(props: StatisticContactProps) {
 
   console.log('Kontakter: ' + JSON.stringify(contacts, null, 4))
 
-  function contactInfo(contact: Contact) {
+  function renderContact(contact: Contact) {
     return (
-      <div className='contact'>
+      <div className='contact col-auto col-12 col-lg-4'>
+        <Title size={3} className='contact-name'>
+          {contact.name}
+        </Title>
         {contact.email && (
-          <p className='part-contact-email mb-0'>
-            <a className='roboto-plain ssb-link stand-alone' href="@{'mailto:' + ${contact.email}}">
-              {contact.email}
-            </a>
-          </p>
+          <Link className='email' href={`mailto:${contact.email}`} standAlone>
+            {contact.email}
+          </Link>
         )}
         {contact.phone != '' && (
-          <p className='part-contact-telephone'>
-            <a
-              className='ssb-link stand-alone'
-              data-th-text='${contact.telephone}'
-              href="@{'tel:' + ${contact.phonelink}}"
-            >
-              {contact.phone}
-            </a>
-          </p>
+          <Link className='phone' href={`tel:${contact.phoneLink}`} standAlone>
+            {contact.phone}
+          </Link>
         )}
       </div>
     )
+  }
+
+  function contactsInfo() {
+    if (contacts?.length) {
+      return <div className='contacts'>{contacts.map((contact) => renderContact(contact))}</div>
+    }
+    return null
   }
 
   return (
@@ -44,15 +46,7 @@ function StatisticContact(props: StatisticContactProps) {
             <User size={52} />
           </div>
         </div>
-        <div className='contacts mb-4'>
-          {contacts?.length && (
-            <div className='om-statistikken-tags'>
-              {contacts.map((contact) => (
-                <ExpansionBox className='mb-4' header={contact.name} text={contactInfo(contact)} openByDefault />
-              ))}
-            </div>
-          )}
-        </div>
+        {contacts?.length && <ExpansionBox className='mb-4' header={label} text={contactsInfo()} openByDefault />}
       </Row>
     </section>
   )

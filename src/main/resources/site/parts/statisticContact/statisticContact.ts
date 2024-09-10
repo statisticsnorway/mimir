@@ -24,16 +24,10 @@ export function preview(req: XP.Request) {
   return renderPart(req)
 }
 
-// split 8-digit phone numbers into groups of 2 digits each dvs. "12345678" => "12 34 56 78"
-function treatPhoneNumber(phone: string): string {
-  const matcher = /..?/g
-  const phoneArr: Array<string> | null = phone.match(matcher)
-  if (phoneArr) {
-    return phoneArr.join(' ')
-  } else {
-    return ''
-  }
+function splitPhoneNumber(number: string): string {
+  return number?.match(/.{1,2}/g)?.join(' ') || ''
 }
+
 const landCodeVisual = '(+47) '
 const landCode = '+47'
 
@@ -44,14 +38,13 @@ function transformContact(contact: StatRegContacts, language: string): Contact {
     email: contact.email,
     phone:
       language == 'en' && contact.telephone != ''
-        ? landCodeVisual.concat(treatPhoneNumber(contact.telephone as string))
-        : treatPhoneNumber(contact.telephone as string),
+        ? landCodeVisual.concat(splitPhoneNumber(contact.telephone as string))
+        : splitPhoneNumber(contact.telephone as string),
     phoneLink: landCode.concat(contact.telephone as string),
   }
 }
 
 function renderPart(req: XP.Request): XP.Response {
-  //const WIDTH = 4 // how many boxes in a row
   const page = getContent<Content<Article | Statistics>>()
   if (!page) throw Error('No page found')
 

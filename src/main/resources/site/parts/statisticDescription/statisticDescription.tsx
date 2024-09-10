@@ -27,7 +27,7 @@ function StatisticDescription(props: StatisticDescriptionProps) {
 
   function renderNestedAccordions(items: AccordionData['items']) {
     return items!.map((item, i) => (
-      <NestedAccordion key={i} header={item.title} openByDefault={i === 0}>
+      <NestedAccordion key={i} header={item.title} openByDefault>
         {item.body && (
           <div
             dangerouslySetInnerHTML={{
@@ -68,12 +68,12 @@ function StatisticDescription(props: StatisticDescriptionProps) {
           <i>{`${lastUpdatedPhrase} ${lastUpdated}.`}</i>
         </p>
       )}
-      <div className='om-statistikken-tags'>
+      <div className='om-statistikken-tags col-auto col-12 col-lg-4'>
         {accordions.map((accordion, index) => (
           <Tag
             className={index === 0 && !selectedTag ? 'active' : undefined}
             key={accordion.id}
-            onClick={() => setCategory(accordion.id)}
+            onClick={() => setCategory(accordion.id as string)}
           >
             {accordion.open}
           </Tag>

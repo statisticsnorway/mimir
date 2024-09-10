@@ -17,4 +17,18 @@
       }
     }
   }
+
+  .contacts {
+    display: flex;
+    flex-wrap: wrap;
+
+    .contact {
+      margin-bottom: 1.5rem;
+    }
+
+    .email,
+    .phone {
+      width: 100%;
+    }
+  }
 }
