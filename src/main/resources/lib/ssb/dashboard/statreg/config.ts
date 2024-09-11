@@ -1,4 +1,4 @@
-export const STAT_REG_SVC_PROP = 'ssb.statreg.baseUrl'
+export const STAT_REG_SVC_PROP = 'ssb.statreg.serverside.baseUrl'
 
 export const CONTACTS_URL = `/kontakt/listSomXml`
 export const STATISTICS_URL = `/statistics`
