@@ -73,8 +73,11 @@ function renderPart(req: XP.Request): XP.Response {
 
   const props: StatisticContactProps = {
     label: phrases.contact,
-    contacts: selectedContacts,
+    contacts: ensureArray(selectedContacts),
   }
 
-  return render('site/parts/statisticContact/statisticContact', props, req)
+  return render('site/parts/statisticContact/statisticContact', props, req, {
+    id: 'contacts',
+    body: `<section class="xp-part statistic-contacts"></section>`,
+  })
 }

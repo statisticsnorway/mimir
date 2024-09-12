@@ -1,13 +1,13 @@
 .statistic-description {
   background-color: white;
-  padding: 40px;
-  margin-top: 100px;
-  border-radius: 32px;
+  padding: 2.5rem;
+  margin-top: 6rem;
+  border-radius: 2rem;
 
   .title-wrapper {
     display: flex;
     h2 {
-      margin-bottom: 30px;
+      margin-bottom: 2rem;
     }
     .icon-wrapper {
       margin-left: auto;
@@ -20,16 +20,13 @@
 
   .om-statistikken-tags {
     display: flex;
-    flex-direction: row;
-    margin-bottom: 40px;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 2.5rem;
 
     .ssb-tag.active {
       background: $ssb-green-4;
       color: $ssb-white;
-    }
-
-    .ssb-tag:not(:last-of-type) {
-      margin-right: 10px;
     }
   }
 
@@ -40,15 +37,7 @@
   }
 
   @include media-breakpoint-down(md) {
-    padding: 40px 20px;
-
-    .om-statistikken-tags {
-      display: block;
-      .ssb-tag {
-        width: 100%;
-        margin-bottom: 1rem;
-      }
-    }
+    padding: 2.5rem 1.25rem;
 
     .part-accordion {
       padding: 0;

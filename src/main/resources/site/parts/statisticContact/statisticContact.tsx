@@ -12,8 +12,8 @@ function StatisticContact(props: StatisticContactProps) {
 
   function renderContact(contact: Contact) {
     return (
-      <div className='contact col-auto col-12 col-lg-4'>
-        <Title size={3} className='contact-name'>
+      <div className='contact col-md-4 col-lg-3'>
+        <Title size={3} className='name text-wrap'>
           {contact.name}
         </Title>
         {contact.email && (
@@ -32,23 +32,21 @@ function StatisticContact(props: StatisticContactProps) {
 
   function contactsInfo() {
     if (contacts?.length) {
-      return <div className='contacts'>{contacts.map((contact) => renderContact(contact))}</div>
+      return <Row className='contact-info'>{contacts.map((contact) => renderContact(contact))}</Row>
     }
     return null
   }
 
   return (
-    <section className='xp-part statistic-contacts'>
-      <Row>
-        <div className='title-wrapper'>
-          <Title size={2}>{label}</Title>
-          <div className='icon-wrapper'>
-            <User size={52} />
-          </div>
+    <React.Fragment>
+      <div className='title-wrapper'>
+        <Title size={2}>{label}</Title>
+        <div className='icon-wrapper'>
+          <User size={52} />
         </div>
-        {contacts?.length && <ExpansionBox className='mb-4' header={label} text={contactsInfo()} openByDefault />}
-      </Row>
-    </section>
+      </div>
+      {contacts?.length && <ExpansionBox header={label} text={contactsInfo()} openByDefault />}
+    </React.Fragment>
   )
 }
 

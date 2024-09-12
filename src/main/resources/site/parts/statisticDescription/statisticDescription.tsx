@@ -68,7 +68,7 @@ function StatisticDescription(props: StatisticDescriptionProps) {
           <i>{`${lastUpdatedPhrase} ${lastUpdated}.`}</i>
         </p>
       )}
-      <div className='om-statistikken-tags col-auto col-12 col-lg-4'>
+      <div className='om-statistikken-tags'>
         {accordions.map((accordion, index) => (
           <Tag
             className={index === 0 && !selectedTag ? 'active' : undefined}

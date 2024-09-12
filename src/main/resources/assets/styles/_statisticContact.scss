@@ -1,14 +1,14 @@
 .statistic-contacts {
   background-color: white;
-  padding: 40px;
-  margin-top: 100px;
-  border-radius: 32px;
+  padding: 2.5rem;
+  margin-top: 6rem;
+  margin-bottom: 4rem;
+  border-radius: 2rem;
 
   .title-wrapper {
     display: flex;
-    h2 {
-      margin-bottom: 30px;
-    }
+    margin-bottom: 2rem;
+
     .icon-wrapper {
       margin-left: auto;
       img {
@@ -18,9 +18,10 @@
     }
   }
 
-  .contacts {
+  .contact-info {
     display: flex;
     flex-wrap: wrap;
+    //gap: 1.25rem;
 
     .contact {
       margin-bottom: 1.5rem;
@@ -30,5 +31,9 @@
     .phone {
       width: 100%;
     }
+  }
+
+  @include media-breakpoint-down(md) {
+    padding: 2.5rem 1.25rem;
   }
 }
