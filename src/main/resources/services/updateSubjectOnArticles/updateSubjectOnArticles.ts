@@ -13,7 +13,9 @@ const ENONIC_PROJECT_ID = app.config && app.config['ssb.project.id'] ? app.confi
 const contentStudioBaseUrl = `${DEFAULT_CONTENTSTUDIO_URL}/${ENONIC_PROJECT_ID}/edit/`
 
 const INTERNAL_BASE_URL =
-  app.config && app.config['ssb.internal.baseUrl'] ? app.config['ssb.internal.baseUrl'] : 'https://i.ssb.no'
+  app.config && app.config['ssb.internal.serverside.baseUrl']
+    ? app.config['ssb.internal.serverside.baseUrl']
+    : 'https://i.ssb.no'
 
 export function get(req: XP.Request): XP.Response {
   const contentToFix = query<Content<Article>>({
