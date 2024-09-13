@@ -1,10 +1,4 @@
 .statistic-header {
-  & > .row > .col-12 {
-    @include media-breakpoint-down(md) {
-      padding: 0;
-    }
-  }
-
   .title-ingress-wrapper {
     display: block;
     margin-bottom: $spacer * 1;
@@ -33,6 +27,12 @@
   }
 
   .titles-dates-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3rem;
+    column-gap: 3rem;
+    row-gap: 0.5rem;
+
     //TODO: Fix this in ssb-component-library
     .glossary-button {
       background-image: none;
@@ -45,7 +45,7 @@
     .updatedDate,
     .nextUpdateDate,
     .modifiedDate {
-      font-size: 1rem;
+      font-size: 1.25rem;
     }
   }
 }

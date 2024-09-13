@@ -20,17 +20,17 @@ function StatisticHeader(props: StatisticHeader) {
           </div>
         </div>
       </Row>
-      <Row className='titles-dates-wrapper'>
-        <div className='updatedDate col-lg-4 col-12'>
+      <div className='titles-dates-wrapper'>
+        <div className='updatedDate'>
           <span className='fw-bold'>{updated}</span>
           <span>{previousRelease}</span>
         </div>
-        <div className='nextUpdateDate col-lg-4 col-12'>
+        <div className='nextUpdateDate'>
           <span className='fw-bold'>{nextUpdate}</span>
           <span data-th-text='${nextRelease}'>{nextRelease}</span>
         </div>
         {changeDate?.length && modifiedText ? (
-          <div className='modifiedDate col-lg-4 col-12'>
+          <div className='modifiedDate'>
             <span className='fw-bold'>{changed}</span>
             <Glossary explanation={modifiedText}>
               <span
@@ -41,7 +41,7 @@ function StatisticHeader(props: StatisticHeader) {
             </Glossary>
           </div>
         ) : null}
-      </Row>
+      </div>
     </section>
   )
 }
