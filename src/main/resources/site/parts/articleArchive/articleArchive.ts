@@ -47,9 +47,9 @@ function renderPart(req: XP.Request) {
       })
     : undefined
 
-const imageSrcSet: { mobile: string; tablet: string; desktop: string } | undefined = page.data.image
-  ? generateSrcSet(page.data.image)
-  : undefined
+  const imageSrcSet: { mobile: string; tablet: string; desktop: string } | undefined = page.data.image
+    ? generateSrcSet(page.data.image)
+    : undefined
 
   const imageAltText: string | undefined = page.data.image ? getImageAlt(page.data.image) : ' '
 
