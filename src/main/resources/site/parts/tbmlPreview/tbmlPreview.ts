@@ -20,7 +20,7 @@ export function get(req: XP.Request): XP.Response {
 function renderPart(req: XP.Request): XP.Response {
   const tbmlId = req.params.tbmlid
   const language = req.params.sprak ?? 'no'
-  const baseUrl: string = app.config?.['ssb.tbprocessor.baseUrl'] || 'https://i.ssb.no/tbprocessor'
+  const baseUrl: string = app.config?.['ssb.tbprocessor.serverside.baseUrl'] ?? 'https://ext-i.ssb.no/tbprocessor'
   const tbProceessorUrl = `${baseUrl}/process/tbmldata/${tbmlId}?lang=${language}`
   const tbmlData: TbprocessorParsedResponse<TbmlDataUniform> | null = tbmlId
     ? (getTbmlData(tbProceessorUrl) as TbprocessorParsedResponse<TbmlDataUniform>)
