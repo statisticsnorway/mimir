@@ -31,6 +31,7 @@ export function fetchStatistics(): Array<StatisticInListing> | null {
     }
   } catch (error) {
     const message = `Failed to fetch data from statreg: Statistics (${error})`
+    log.error(message)
     logUserDataQuery('Statistics', {
       file: '/lib/ssb/statreg/statistics.ts',
       function: 'fetchStatistics',
