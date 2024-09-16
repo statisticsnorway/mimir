@@ -19,7 +19,7 @@ export function run(params: BanVarnishPageCacheConfig): void {
 }
 
 function purgePageFromVarnish(pageId: string): HttpResponse {
-  const baseUrl: string = app.config?.['ssb.internal.serverside.baseUrl'] ?? 'https://i.ssb.no'
+  const baseUrl: string = app.config?.['ssb.internal.serverside.baseUrl'] ?? 'https://ext-i.ssb.no'
   const response: HttpResponse = request({
     url: `${baseUrl}/xp_page_clear`,
     method: 'PURGE',

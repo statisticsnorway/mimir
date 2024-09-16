@@ -75,7 +75,7 @@ function getDataAndMetaData(
   content: Content<DataSource>,
   processXml?: string
 ): TbprocessorParsedResponse<TbmlDataUniform> | null {
-  const baseUrl: string = app.config?.['ssb.tbprocessor.serverside.baseUrl'] ?? 'https://i.ssb.no/tbprocessor'
+  const baseUrl: string = app.config?.['ssb.tbprocessor.serverside.baseUrl'] ?? 'https://ext-i.ssb.no/tbprocessor'
   const dataPath = `/process/tbmldata/`
   const sourceListPath = `/document/sourceList/`
   const language: string = content.language || ''

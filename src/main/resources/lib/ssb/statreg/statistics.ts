@@ -19,10 +19,8 @@ import { Events, logUserDataQuery } from '/lib/ssb/repo/query'
 export const STATREG_REPO_STATISTICS_KEY = 'statistics'
 
 export function fetchStatistics(): Array<StatisticInListing> | null {
-  log.info('fetchStatistics - getStatRegBaseUrl: ' + getStatRegBaseUrl() + STATISTICS_URL)
   try {
     const response: HttpResponse = fetchStatRegData('Statistics', getStatRegBaseUrl() + STATISTICS_URL)
-    log.info('fetchStatistics - response: ' + response.status)
     if (response.status === 200 && response.body) {
       const statistics: Array<StatisticInListing> = extractStatistics(response.body)
       if (app.config && app.config['ssb.mock.enable'] === 'true') {
