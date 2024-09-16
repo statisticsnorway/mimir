@@ -124,7 +124,7 @@ function ArticleArchive(props: ArticleArchiveProps) {
         </Col>
         {image && (
           <Col className='col-12 d-flex justify-content-center'>
-            <img src={image} alt={imageAltText} />
+            <img src={image} alt={imageAltText} loading='lazy'/>
           </Col>
         )}
         <Col className='col-12 col-lg-10 offset-lg-1 p-0'>

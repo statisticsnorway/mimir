@@ -60,7 +60,7 @@ function SimpleStatbank(props: SimpleStatbankProps) {
     if (!!icon) {
       return (
         <div className='icon-wrapper'>
-          <img src={icon} alt={altText ? altText : ''} aria-hidden='true' />
+          <img src={icon} alt={altText ? altText : ''} aria-hidden='true' loading='lazy' />
         </div>
       )
     } else {

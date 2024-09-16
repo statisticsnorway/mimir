@@ -16,7 +16,7 @@ const StatbankBox = (props: StatbankBoxProps) => {
         >
           <div className='content'>
             <div className='icon-wrapper'>
-              <img src={icon} alt='' />
+              <img src={icon} alt='' loading='lazy' />
             </div>
             <div className='title-wrapper'>
               <h3 className='title'>{title}</h3>

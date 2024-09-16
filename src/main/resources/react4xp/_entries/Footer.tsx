@@ -130,7 +130,7 @@ const Footer = (props: FooterContent) => {
         <div className='container'>
           <h2 className='sr-only'>{hiddenFooterText}</h2>
           <div className='footer-top-row'>
-            <img src={logoUrl} alt='' />
+            <img src={logoUrl} alt='' loading='lazy' />
             <Button negative onClick={() => goToTop()}>
               <ArrowUp size='22' className='me-2' />
               {topButtonText}

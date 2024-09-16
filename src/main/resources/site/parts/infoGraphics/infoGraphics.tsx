@@ -14,7 +14,7 @@ function InfoGraphics(props: InfoGraphicsProps) {
             </Title>
 
             <div className='d-flex justify-content-center'>
-              <img alt={props.altText} src={props.imageSrc} />
+              <img alt={props.altText} src={props.imageSrc} loading='lazy' />
               <a href={props.longDesc} className='sr-only'>
                 {props.descriptionStaticVisualization}
               </a>
