@@ -12,7 +12,6 @@ function ArticleArchive(props: ArticleArchiveProps) {
     title,
     preamble,
     image,
-    imageSrcSet,
     imageAltText,
     freeText,
     issnNumber,
@@ -131,8 +130,8 @@ function ArticleArchive(props: ArticleArchiveProps) {
           <Col className='col-12 d-flex justify-content-center'>
             <img
               src={image}
-              srcSet={`${imageSrcSet?.mobile} 600w, ${imageSrcSet?.tablet} 992w, ${imageSrcSet?.desktop} 1180w`}
-              sizes='(max-width: 600px) 600px, (max-width: 992px) 992px, 1180px'
+              srcSet={`${image} 300w, ${image} 992w, ${image} 1180w`}
+              sizes='(max-width: 300px) 300px, (max-width: 992px) 992px, 1180px'
               alt={imageAltText}
               loading='lazy'
             />

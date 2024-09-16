@@ -3,7 +3,7 @@ import { getContent, pageUrl, processHtml, serviceUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 import { render } from '/lib/enonic/react4xp'
 import { formatDate } from '/lib/ssb/utils/dateUtils'
-import { imageUrl, getImageAlt, generateSrcSet } from '/lib/ssb/utils/imageUtils'
+import { imageUrl, getImageAlt} from '/lib/ssb/utils/imageUtils'
 
 import { renderError } from '/lib/ssb/error/error'
 import {
@@ -48,10 +48,6 @@ function renderPart(req: XP.Request) {
       })
     : undefined
 
-  const imageSrcSet: { mobile: string; tablet: string; desktop: string } | undefined = page.data.image
-    ? generateSrcSet(page.data.image)
-    : undefined
-
   const imageAltText: string | undefined = page.data.image ? getImageAlt(page.data.image) : ' '
 
   const freeText: string | undefined = page.data.freeText
@@ -66,7 +62,6 @@ function renderPart(req: XP.Request) {
     title,
     preamble,
     image,
-    imageSrcSet,
     imageAltText,
     freeText,
     issnNumber,

@@ -2,7 +2,6 @@ export interface ArticleArchiveProps {
   title: string | undefined
   preamble: string | undefined
   image: string | undefined
-  imageSrcSet: { mobile: string; tablet: string; desktop: string } | undefined
   imageAltText: string | undefined
   freeText: string | undefined
   issnNumber: string | undefined
