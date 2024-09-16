@@ -39,6 +39,7 @@ function renderPart(req: XP.Request) {
 
   const preamble: string | undefined = page.data.preamble ? page.data.preamble : undefined
 
+  //IMAGE
   const image: string | undefined = page.data.image
     ? imageUrl({
         id: page.data.image,

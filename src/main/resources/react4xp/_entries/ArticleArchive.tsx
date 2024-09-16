@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Divider, Button, LeadParagraph, Paragraph, Link } from '@statisticsnorway/ssb-component-library'
 import { Container, Row, Col } from 'react-bootstrap'
 import { ChevronDown } from 'react-feather'
@@ -12,6 +12,7 @@ function ArticleArchive(props: ArticleArchiveProps) {
     title,
     preamble,
     image,
+    imageSrcSet,
     imageAltText,
     freeText,
     issnNumber,
@@ -27,6 +28,10 @@ function ArticleArchive(props: ArticleArchiveProps) {
   const [articles, setArticles] = useState(firstArticles.articles)
   const [totalCount, setTotalCount] = useState(firstArticles.total)
   const [loading, setLoading] = useState<boolean>()
+
+  useEffect(() => {
+    console.log(image)
+  }, [])
 
   function fetchArticles() {
     setLoading(true)
@@ -124,7 +129,13 @@ function ArticleArchive(props: ArticleArchiveProps) {
         </Col>
         {image && (
           <Col className='col-12 d-flex justify-content-center'>
-            <img src={image} alt={imageAltText} loading='lazy' />
+            <img
+              src={image}
+              srcSet={`${imageSrcSet?.mobile} 600w, ${imageSrcSet?.tablet} 992w, ${imageSrcSet?.desktop} 1180w`}
+              sizes='(max-width: 600px) 600px, (max-width: 992px) 992px, 1180px'
+              alt={imageAltText}
+              loading='lazy'
+            />
           </Col>
         )}
         <Col className='col-12 col-lg-10 offset-lg-1 p-0'>
