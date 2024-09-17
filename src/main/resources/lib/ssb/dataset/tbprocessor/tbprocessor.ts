@@ -91,8 +91,9 @@ function getDataAndMetaData(
     dataSource.tbprocessor &&
     isUrl(dataSource.tbprocessor.urlOrId)
   ) {
-    tbmlDataUrl = `${dataSource.tbprocessor.urlOrId as string}${language === 'en' ? `?lang=${language}` : ''}`
-    sourceListUrl = `${dataSource.tbprocessor.urlOrId as string}`.replace(dataPath, sourceListPath)
+    const tbprocessorUrl = fixTbProcessorUrl(dataSource.tbprocessor.urlOrId as string)
+    tbmlDataUrl = `${tbprocessorUrl}${language === 'en' ? `?lang=${language}` : ''}`
+    sourceListUrl = `${tbprocessorUrl}`.replace(dataPath, sourceListPath)
   }
 
   const tbmlParsedResponse: TbprocessorParsedResponse<TbmlDataUniform> | null = tryRequestTbmlData<TbmlDataUniform>(
@@ -216,6 +217,19 @@ function addSourceList(
   return tbmlParsedResponse && tbmlParsedResponse.parsedBody && sourceListObject
     ? mergeDeepLeft(tbmlParsedResponse.parsedBody, sourceListObject)
     : null
+}
+
+function fixTbProcessorUrl(url: string): string {
+  if (url.includes('/i.test.ssb.no')) {
+    return url.replace('/i.test.ssb.no', '/ext-i.test.ssb.no')
+  }
+  if (url.includes('/i.qa.ssb.no')) {
+    return url.replace('/i.qa.ssb.no', '/ext-i.qa.ssb.no')
+  }
+  if (url.includes('/i.ssb.no')) {
+    return url.replace('/i.ssb.no', '/ext-i.ssb.no')
+  }
+  return url
 }
 
 export function fetchTbprocessorData(
