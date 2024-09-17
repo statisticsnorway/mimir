@@ -8,6 +8,7 @@ export interface FooterContent {
   facebookUrl: string
   twitterUrl: string
   linkedinUrl: string
+  instagramUrl: string
   rssUrl: string
   globalLinks: Array<Link>
   footerNavigation: Array<MenuItemParsed>
