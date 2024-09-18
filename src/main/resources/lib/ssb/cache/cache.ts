@@ -589,7 +589,7 @@ function purgeVarnishCache(): HttpResponse {
   const baseUrl: string =
     app.config && app.config['ssb.internal.serverside.baseUrl']
       ? app.config['ssb.internal.serverside.baseUrl']
-      : 'https://i.ssb.no'
+      : 'https://ext-i.ssb.no'
   const response: HttpResponse = request({
     url: `${baseUrl}/xp_clear`,
     method: 'PURGE',
