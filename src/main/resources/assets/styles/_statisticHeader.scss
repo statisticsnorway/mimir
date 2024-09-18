@@ -2,27 +2,30 @@
   .title-ingress-wrapper {
     display: block;
     margin-bottom: $spacer * 1;
-    margin-top: 50px;
+    margin-top: 3rem;
 
     @include media-breakpoint-down(md) {
       padding: 0;
     }
 
     h1 {
-      margin-bottom: 20px;
+      margin-bottom: 2rem;
       padding: 0;
     }
 
     .ingress {
-      font-size: 1.25rem;
-      padding-left: 0;
+      margin-bottom: 2rem;
+
+      p {
+        font-size: 1.25rem;
+      }
     }
 
     .introTitle {
       @include roboto;
       font-size: 1.25rem;
       line-height: 1.6;
-      margin-bottom: 4px;
+      margin-bottom: 0.25rem;
     }
   }
 

@@ -59,6 +59,7 @@ function renderPart(req: XP.Request): XP.Response {
   let previousRelease: string | undefined = phrases.notAvailable
   const nextUpdate: string = `${phrases.nextUpdate}: `
   const changed: string = `${phrases.modified}: `
+  const statisticsAbout: string = phrases.statisticsAbout
   const modifiedText: string | undefined = page.data.showModifiedDate
     ? page.data.showModifiedDate.modifiedOption.modifiedText
     : undefined
@@ -108,6 +109,7 @@ function renderPart(req: XP.Request): XP.Response {
     updated,
     nextUpdate,
     changed,
+    statisticsAbout,
     changeDate,
     modifiedText,
     previousRelease: previousRelease,
@@ -117,5 +119,8 @@ function renderPart(req: XP.Request): XP.Response {
     ingress: aboutTheStatisticsContent?.data.ingress || '',
   }
 
-  return r4xpRender('site/parts/statisticHeader/statisticHeader', props, req)
+  return r4xpRender('site/parts/statisticHeader/statisticHeader', props, req, {
+    id: 'statisticHeader',
+    body: `<section class="xp-part statistic-header"></section>`,
+  })
 }

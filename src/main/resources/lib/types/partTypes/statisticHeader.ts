@@ -3,6 +3,7 @@ export interface StatisticHeader {
   updated: string
   nextUpdate: string
   changed: string
+  statisticsAbout: string
   changeDate: string | undefined
   modifiedText: string | null | undefined
   previousRelease: string | undefined
