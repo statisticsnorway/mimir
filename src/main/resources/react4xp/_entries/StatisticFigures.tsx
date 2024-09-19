@@ -4,6 +4,7 @@ import { ArrowRight, ChevronDown, ChevronUp } from 'react-feather'
 
 import { sanitize } from '../../lib/ssb/utils/htmlUtils'
 import { type StatisticFiguresProps, type StatisticFiguresData } from '../../lib/types/partTypes/statisticFigures'
+import { type TableProps } from '../../lib/types/partTypes/table'
 
 import Table from '../table/Table'
 
@@ -12,6 +13,14 @@ function StatisticFigures(props: StatisticFiguresProps) {
   const { accordions, freeText, showAll, showLess, icon, iconStatbankBox, statbankHref } = props
   const currentElement = useRef<null | HTMLLIElement>(null)
   const [focusElement, setFocusElement] = useState(false)
+  /*   const [checkOverflow, setCheckOverflow] = useState(false) */
+
+  useEffect(() => {
+    if (focusElement && currentElement.current) {
+      const btn = currentElement.current.firstChild?.firstChild as HTMLButtonElement
+      btn.focus()
+    }
+  }, [isHidden])
 
   function toggleBox() {
     setIsHidden((prevState) => !prevState)
@@ -98,7 +107,8 @@ function StatisticFigures(props: StatisticFiguresProps) {
 
   function renderAccordionBody(accordion: StatisticFiguresData) {
     if (accordion.contentType === `${props.appName}:table`) {
-      return <Table {...accordion.props} />
+      return <Table {...(accordion.props as TableProps)} />
+      /* return <Table checkIsOverflowing={checkOverflow} {...(accordion.props as TableProps)} /> */
     } else {
       // Table or figure from content studio (no user input), hence no need to sanitize
       return <div dangerouslySetInnerHTML={{ __html: accordion.body! }}></div>
@@ -107,13 +117,6 @@ function StatisticFigures(props: StatisticFiguresProps) {
 
   const location = window.location
   const anchor = location && location.hash !== '' ? location.hash.substr(1) : undefined
-
-  useEffect(() => {
-    if (focusElement && currentElement.current) {
-      const btn = currentElement.current.firstChild?.firstChild as HTMLButtonElement
-      btn.focus()
-    }
-  }, [isHidden])
 
   return (
     <React.Fragment>
@@ -137,6 +140,10 @@ function StatisticFigures(props: StatisticFiguresProps) {
                       header={accordion.open}
                       subHeader={accordion.subHeader}
                       openByDefault={index === 0 || (anchor && accordion.id && accordion.id === anchor)}
+                      /* onToggle={() => {
+                        // Check for Table overflow when toggling accordion
+                        setCheckOverflow((prev) => !prev)
+                      }} */
                     >
                       {renderAccordionBody(accordion)}
                     </Accordion>

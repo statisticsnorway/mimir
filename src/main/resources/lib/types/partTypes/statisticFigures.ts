@@ -1,4 +1,5 @@
 import { type AccordionData } from '/lib/types/partTypes/accordion'
+import { type TableProps } from '/lib/types/partTypes/table'
 
 export interface StatisticFiguresProps {
   accordions: StatisticFiguresData[]
@@ -15,6 +16,6 @@ export interface StatisticFiguresProps {
 export interface StatisticFiguresData extends AccordionData {
   contentType: string
   subHeader: string
-  props?: object
+  props?: TableProps | object
   pageContributions?: XP.PageContributions
 }
