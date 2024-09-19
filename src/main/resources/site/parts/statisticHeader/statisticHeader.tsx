@@ -1,5 +1,5 @@
 import React from 'react'
-import { Glossary, Title } from '@statisticsnorway/ssb-component-library'
+import { Button, Glossary, Title } from '@statisticsnorway/ssb-component-library'
 import { type StatisticHeader } from '../../../lib/types/partTypes/statisticHeader'
 import { sanitize } from '../../../lib/ssb/utils/htmlUtils'
 
@@ -15,10 +15,27 @@ function StatisticHeader(props: StatisticHeader) {
     changeDate,
     modifiedText,
     previousRelease,
+    showPreviewDraft,
+    draftUrl,
+    draftButtonText,
   } = props
+
+  function renderShowDraftButton() {
+    if (showPreviewDraft) {
+      return (
+        <div className='show-draft col-12'>
+          <Button className='float-end' primary onClick={() => (window.location.href = draftUrl)}>
+            {draftButtonText}
+          </Button>
+        </div>
+      )
+    }
+    return null
+  }
 
   return (
     <React.Fragment>
+      {renderShowDraftButton()}
       <div className='title-ingress-wrapper'>
         <p className='introTitle'>{statisticsAbout}</p>
         <Title size={1}>{title}</Title>
@@ -33,7 +50,7 @@ function StatisticHeader(props: StatisticHeader) {
         </div>
         <div className='nextUpdateDate'>
           <span className='fw-bold'>{nextUpdate}</span>
-          <span data-th-text='${nextRelease}'>{nextRelease}</span>
+          <span>{nextRelease}</span>
         </div>
         {changeDate?.length && modifiedText ? (
           <div className='modifiedDate'>

@@ -1,5 +1,5 @@
 import { type Content, get as getContentByKey } from '/lib/xp/content'
-import { getContent } from '/lib/xp/portal'
+import { getContent, pageUrl } from '/lib/xp/portal'
 import { sleep } from '/lib/xp/task'
 import {
   type ReleaseDatesVariant,
@@ -15,10 +15,10 @@ import { randomUnsafeString } from '/lib/ssb/utils/utils'
 import { getStatisticByIdFromRepo, getReleaseDatesByVariants } from '/lib/ssb/statreg/statistics'
 import { getPhrases } from '/lib/ssb/utils/language'
 import { renderError } from '/lib/ssb/error/error'
+import { hasWritePermissionsAndPreview } from '/lib/ssb/parts/permissions'
 import { currentlyWaitingForPublish as currentlyWaitingForPublishOld } from '/lib/ssb/dataset/publishOld'
 import * as util from '/lib/util'
 import { type StatisticHeader } from '/lib/types/partTypes/statisticHeader'
-import { isEnabled } from '/lib/featureToggle'
 import { type Statistics, type OmStatistikken } from '/site/content-types'
 
 export function get(req: XP.Request): XP.Response {
@@ -69,10 +69,24 @@ function renderPart(req: XP.Request): XP.Response {
   let nextRelease: string | undefined = phrases.notYetDetermined
   let changeDate: string | undefined
   let nextReleaseDate: string | undefined
+  let previewNextRelease: string | undefined = phrases.notYetDetermined
   let previousReleaseDate: string | undefined
+  const showPreviewDraft: boolean = hasWritePermissionsAndPreview(req, page._id)
+  const paramShowDraft = !!req.params.showDraft
+  const draftUrl: string = paramShowDraft
+    ? pageUrl({
+        path: page._path,
+      })
+    : pageUrl({
+        // TODO - test this
+        path: page._path,
+        params: {
+          showDraft: true,
+        },
+      })
 
+  const draftButtonText: string = paramShowDraft ? 'Vis publiserte tall' : 'Vis upubliserte tall'
   const language: string = page.language === 'en' || page.language === 'nn' ? page.language : 'nb'
-  const conceptSprintStatisticPage: boolean = isEnabled('conceptsprint-statistic-page', false, 'ssb')
 
   const statistic: StatisticInListing | undefined = getStatisticByIdFromRepo(page.data.statistic)
   if (statistic) {
@@ -81,6 +95,11 @@ function renderPart(req: XP.Request): XP.Response {
     const releaseDates: ReleaseDatesVariant = getReleaseDatesByVariants(variants as Array<VariantInListing>)
     nextReleaseDate = releaseDates.nextRelease[0]
     previousReleaseDate = releaseDates.previousRelease[0]
+
+    if (releaseDates.nextRelease.length > 1 && releaseDates.nextRelease[1] !== '') {
+      previewNextRelease = formatDate(releaseDates.nextRelease[1], 'PPP', language)
+    }
+
     if (previousReleaseDate && previousReleaseDate !== '') {
       previousRelease = formatDate(previousReleaseDate, 'PPP', language)
     }
@@ -97,12 +116,11 @@ function renderPart(req: XP.Request): XP.Response {
   }
 
   const id: string = 'modifiedDate' + randomUnsafeString()
-  const aboutTheStatisticsContent: Content<OmStatistikken> | null =
-    conceptSprintStatisticPage && page.data.aboutTheStatistics
-      ? getContentByKey({
-          key: page.data.aboutTheStatistics,
-        })
-      : null
+  const aboutTheStatisticsContent: Content<OmStatistikken> | null = page.data.aboutTheStatistics
+    ? getContentByKey({
+        key: page.data.aboutTheStatistics,
+      })
+    : null
 
   const props: StatisticHeader = {
     title,
@@ -112,11 +130,13 @@ function renderPart(req: XP.Request): XP.Response {
     statisticsAbout,
     changeDate,
     modifiedText,
-    previousRelease: previousRelease,
-    nextRelease: nextRelease,
+    previousRelease: paramShowDraft && showPreviewDraft ? nextRelease : previousRelease,
+    nextRelease: paramShowDraft && showPreviewDraft ? previewNextRelease : nextRelease,
     modifiedDateId: id,
-    conceptSprintStatisticPage,
     ingress: aboutTheStatisticsContent?.data.ingress || '',
+    showPreviewDraft,
+    draftUrl,
+    draftButtonText,
   }
 
   return r4xpRender('site/parts/statisticHeader/statisticHeader', props, req, {

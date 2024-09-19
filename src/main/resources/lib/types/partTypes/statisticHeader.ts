@@ -9,6 +9,8 @@ export interface StatisticHeader {
   previousRelease: string | undefined
   nextRelease: string | undefined
   modifiedDateId: string
-  conceptSprintStatisticPage: boolean
   ingress: string
+  showPreviewDraft: boolean
+  draftUrl: string
+  draftButtonText: string
 }
