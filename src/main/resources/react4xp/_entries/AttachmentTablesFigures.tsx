@@ -7,6 +7,7 @@ import {
   type AttachmentTablesFiguresProps,
   type AttachmentTablesFiguresData,
 } from '../../lib/types/partTypes/attachmentTablesFigures'
+import { type TableProps } from '../../lib/types/partTypes/table'
 
 import Table from '../table/Table'
 
@@ -15,6 +16,14 @@ function AttachmentTableFigures(props: AttachmentTablesFiguresProps) {
   const { accordions, freeText, showAll, showLess, title } = props
   const currentElement = useRef<null | HTMLLIElement>(null)
   const [focusElement, setFocusElement] = useState(false)
+  const [checkOverflow, setCheckOverflow] = useState(false)
+
+  useEffect(() => {
+    if (focusElement && currentElement.current) {
+      const btn = currentElement.current.firstChild?.firstChild as HTMLButtonElement
+      btn.focus()
+    }
+  }, [isHidden])
 
   function toggleBox() {
     setIsHidden((prevState) => !prevState)
@@ -79,7 +88,7 @@ function AttachmentTableFigures(props: AttachmentTablesFiguresProps) {
 
   function renderAccordionBody(accordion: AttachmentTablesFiguresData) {
     if (accordion.contentType === `${props.appName}:table`) {
-      return <Table {...accordion.props} />
+      return <Table checkIsOverflowing={checkOverflow} {...(accordion.props as TableProps)} />
     } else {
       // Table or figure from content studio (no user input), hence no need to sanitize
       return <div dangerouslySetInnerHTML={{ __html: accordion.body! }}></div>
@@ -88,13 +97,6 @@ function AttachmentTableFigures(props: AttachmentTablesFiguresProps) {
 
   const location = window.location
   const anchor = location && location.hash !== '' ? location.hash.substr(1) : undefined
-
-  useEffect(() => {
-    if (focusElement && currentElement.current) {
-      const btn = currentElement.current.firstChild?.firstChild as HTMLButtonElement
-      btn.focus()
-    }
-  }, [isHidden])
 
   return (
     <React.Fragment>
@@ -113,6 +115,10 @@ function AttachmentTableFigures(props: AttachmentTablesFiguresProps) {
                       header={accordion.open}
                       subHeader={accordion.subHeader}
                       openByDefault={anchor && accordion.id && accordion.id === anchor}
+                      onToggle={() => {
+                        // Check for Table overflow when toggling accordion
+                        setCheckOverflow((prev) => !prev)
+                      }}
                     >
                       {renderAccordionBody(accordion)}
                     </Accordion>
