@@ -13,7 +13,7 @@ function StatisticFigures(props: StatisticFiguresProps) {
   const { accordions, freeText, showAll, showLess, icon, iconStatbankBox, statbankHref } = props
   const currentElement = useRef<null | HTMLLIElement>(null)
   const [focusElement, setFocusElement] = useState(false)
-  /*   const [checkOverflow, setCheckOverflow] = useState(false) */
+  const [checkOverflow, setCheckOverflow] = useState(false)
 
   useEffect(() => {
     if (focusElement && currentElement.current) {
@@ -107,8 +107,7 @@ function StatisticFigures(props: StatisticFiguresProps) {
 
   function renderAccordionBody(accordion: StatisticFiguresData) {
     if (accordion.contentType === `${props.appName}:table`) {
-      return <Table {...(accordion.props as TableProps)} />
-      /* return <Table checkIsOverflowing={checkOverflow} {...(accordion.props as TableProps)} /> */
+      return <Table checkIsOverflowing={checkOverflow} {...(accordion.props as TableProps)} />
     } else {
       // Table or figure from content studio (no user input), hence no need to sanitize
       return <div dangerouslySetInnerHTML={{ __html: accordion.body! }}></div>
@@ -140,10 +139,10 @@ function StatisticFigures(props: StatisticFiguresProps) {
                       header={accordion.open}
                       subHeader={accordion.subHeader}
                       openByDefault={index === 0 || (anchor && accordion.id && accordion.id === anchor)}
-                      /* onToggle={() => {
+                      onToggle={() => {
                         // Check for Table overflow when toggling accordion
                         setCheckOverflow((prev) => !prev)
-                      }} */
+                      }}
                     >
                       {renderAccordionBody(accordion)}
                     </Accordion>

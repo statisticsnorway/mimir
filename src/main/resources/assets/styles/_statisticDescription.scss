@@ -39,14 +39,5 @@
 
   @include media-breakpoint-down(md) {
     padding: 2.5rem 1.25rem;
-
-    .part-accordion {
-      padding: 0;
-
-      .accordion-body {
-        overflow-x: auto;
-        padding: 0;
-      }
-    }
   }
 }
