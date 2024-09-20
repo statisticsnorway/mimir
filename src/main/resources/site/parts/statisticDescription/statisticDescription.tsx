@@ -3,7 +3,7 @@ import { Tag, NestedAccordion, ExpansionBox, Title } from '@statisticsnorway/ssb
 import { Info } from 'react-feather'
 
 import { sanitize } from '../../../lib/ssb/utils/htmlUtils'
-import { type AccordionData } from '../../../lib/types/partTypes/accordion'
+import { type AccordionData, AccordionItems, AccordionProps } from '../../../lib/types/partTypes/accordion'
 import { type StatisticDescriptionProps } from '../../../lib/types/partTypes/statisticDescription'
 
 function StatisticDescription(props: StatisticDescriptionProps) {
@@ -25,29 +25,38 @@ function StatisticDescription(props: StatisticDescriptionProps) {
     return null
   }
 
-  function renderNestedAccordions(items: AccordionData['items']) {
-    return items!.map((item, i) => (
-      <NestedAccordion key={i} header={item.title} openByDefault>
-        {item.body && (
+  function renderNestedAccordions(category: AccordionData) {
+    return (
+      <div>
+        {category.body && (
           <div
             dangerouslySetInnerHTML={{
-              __html: sanitize(item.body.replace(/&nbsp;/g, ' ')),
+              __html: sanitize(category.body.replace(/&nbsp;/g, ' ')),
             }}
           />
         )}
-      </NestedAccordion>
-    ))
+        {(category.items as AccordionProps['accordions'])!.map((item: AccordionItems, i: number) => {
+          return (
+            <NestedAccordion key={i} header={item.title} openByDefault>
+              {item.body && (
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: sanitize(item.body.replace(/&nbsp;/g, ' ')),
+                  }}
+                />
+              )}
+            </NestedAccordion>
+          )
+        })}
+      </div>
+    )
   }
 
   function renderCategory() {
     if (selectedCategory) {
       return (
         <div className='selected-category col-lg-12'>
-          <ExpansionBox
-            header={selectedCategory.open}
-            text={renderNestedAccordions(selectedCategory.items)}
-            sneakPeek
-          />
+          <ExpansionBox header={selectedCategory.open} text={renderNestedAccordions(selectedCategory)} sneakPeek />
         </div>
       )
     }
