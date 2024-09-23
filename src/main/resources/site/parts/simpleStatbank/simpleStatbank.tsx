@@ -69,9 +69,8 @@ function SimpleStatbank(props: SimpleStatbankProps) {
   }
 
   function getResultText() {
-    const newResultText = resultText.split(' ')
-    newResultText.splice(2, 0, selectedValue?.title as string)
-    return newResultText.join(' ')
+    const newResultText = resultText.replace(/\[(.*?)\]/g, selectedValue?.title as string)
+    return newResultText
   }
 
   function renderNumber() {
