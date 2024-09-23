@@ -69,7 +69,7 @@ function SimpleStatbank(props: SimpleStatbankProps) {
   }
 
   function getResultText() {
-    const newResultText = resultText.replace(/\[(.*?)\]/g, (match, p1) => {
+    const newResultText = resultText.replace(/\[([a-zA-Z]+)\]/g, (match, p1) => {
       const dropdownValue = selectedValue?.title as string
       if (p1 === 'region') {
         return dropdownValue
@@ -78,7 +78,7 @@ function SimpleStatbank(props: SimpleStatbankProps) {
           // For values such as occupation; first letter of dropdown value should be lower case
           return value[0].toLowerCase() + value.slice(1)
         })
-        return dropdownValueFirstLetterLowerCase?.join(' ')
+        return dropdownValueFirstLetterLowerCase.join(' ')
       }
     })
     return newResultText
