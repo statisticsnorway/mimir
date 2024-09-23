@@ -69,7 +69,7 @@ function SimpleStatbank(props: SimpleStatbankProps) {
   }
 
   function getResultText() {
-    const newResultText = resultText.replace(/\[([a-zA-Z]+)\]/g, (match, p1) => {
+    const newResultText = resultText.replace(/\[(\w+)\]/g, (match, p1) => {
       const dropdownValue = selectedValue?.title as string
       if (p1 === 'region') {
         return dropdownValue
