@@ -60,12 +60,18 @@ function SimpleStatbank(props: SimpleStatbankProps) {
     if (!!icon) {
       return (
         <div className='icon-wrapper'>
-          <img src={icon} alt={altText ? altText : ''} aria-hidden='true' />
+          <img src={icon} alt={altText ?? ''} aria-hidden='true' />
         </div>
       )
     } else {
       return
     }
+  }
+
+  function getResultText() {
+    const newResultText = resultText.split(' ')
+    newResultText.splice(2, 0, selectedValue?.title as string)
+    return newResultText.join(' ')
   }
 
   function renderNumber() {
@@ -84,11 +90,11 @@ function SimpleStatbank(props: SimpleStatbankProps) {
   function renderResult() {
     if (selectedValue && showResult) {
       return (
-        <Container className='simple-statbank-result' ref={scrollAnchor} tabIndex='0'>
+        <Container className='simple-statbank-result' ref={scrollAnchor} tabIndex={0}>
           <div aria-live='polite' aria-atomic='true'>
             <Row>
               <Title size={3} className='result-title'>
-                {resultText}
+                {getResultText()}
               </Title>
             </Row>
             <Row>
