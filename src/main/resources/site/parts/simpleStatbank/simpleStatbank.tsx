@@ -69,7 +69,18 @@ function SimpleStatbank(props: SimpleStatbankProps) {
   }
 
   function getResultText() {
-    const newResultText = resultText.replace(/\[(.*?)\]/g, selectedValue?.title as string)
+    const newResultText = resultText.replace(/\[(.*?)\]/g, (match, p1) => {
+      const dropdownValue = selectedValue?.title as string
+      if (p1 === 'region') {
+        return dropdownValue
+      } else {
+        const dropdownValueFirstLetterLowerCase = dropdownValue.split(' ').map((value) => {
+          // For values such as occupation; first letter of dropdown value should be lower case
+          return value[0].toLowerCase() + value.slice(1)
+        })
+        return dropdownValueFirstLetterLowerCase?.join(' ')
+      }
+    })
     return newResultText
   }
 
