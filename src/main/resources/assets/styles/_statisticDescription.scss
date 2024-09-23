@@ -35,6 +35,10 @@
     .ssb-expansion-box.sneak-peek .content.closed {
       max-height: 8rem;
     }
+
+    .ssb-nested-accordion {
+      min-width: auto;
+    }
   }
 
   @include media-breakpoint-down(md) {

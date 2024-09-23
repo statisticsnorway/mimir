@@ -87,10 +87,6 @@
   @include media-breakpoint-down(md) {
     padding: 2.5rem 1.25rem;
 
-    .nested-accordion-body {
-      overflow-x: auto;
-    }
-
     .statbank-box {
       padding: 2.5rem 0.5rem;
 
