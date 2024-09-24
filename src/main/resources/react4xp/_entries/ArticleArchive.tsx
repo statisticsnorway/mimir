@@ -5,7 +5,7 @@ import { ChevronDown } from 'react-feather'
 import { default as groupBy } from 'ramda/es/groupBy'
 import axios from 'axios'
 import { sanitize } from '../../lib/ssb/utils/htmlUtils'
-import { generateImageUrls } from '../../lib/ssb/utils/generateImageUrls'
+import { generateImageUrls } from '../../lib/ssb/utils/generateImageUrlUtils'
 import { type ArticleArchiveProps, type ParsedArticleData } from '../../lib/types/partTypes/articleArchive'
 
 function ArticleArchive(props: ArticleArchiveProps) {
@@ -134,7 +134,7 @@ function ArticleArchive(props: ArticleArchiveProps) {
         {image && (
           <Col className='col-12 d-flex justify-content-center'>
             <img
-              src={generateImageUrls(image).imageMobileUrl}
+              src={image}
               srcSet={`${generateImageUrls(image).imageMobileUrl} 600w, 
            ${generateImageUrls(image).imageTabletUrl} 992w, 
            ${image} 1180w`}
