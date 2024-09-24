@@ -494,6 +494,19 @@ function parseResult(
       return ds
     })
     return result
+  } else if (jobLog.data.task === JobNames.PUSH_RSS_NEWS || jobLog.data.task === JobNames.PUSH_RSS_STATKAL) {
+    let result = jobLog.data.refreshDataResult
+    if (!result) {
+      result = {
+        result: [],
+      }
+    }
+    return {
+      result: util.data.forceArray({
+        ...result,
+        hasError: showWarningIcon(result?.status as Events),
+      }),
+    }
   }
   return []
 }

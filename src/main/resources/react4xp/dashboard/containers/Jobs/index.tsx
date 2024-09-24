@@ -148,12 +148,11 @@ export function Jobs() {
       const errorCount = job.result.result.filter((ds) => ds.hasError).length
       return renderRefreshDatasetJobTaskMessage(job, updated, errorCount, skipped)
     } else if (job.task === 'Push RSS news' || job.task === 'Push RSS statkal') {
-      console.log(job)
+      const errorCount = job.result.result.filter((ds) => ds.hasError).length
       return (
         <span>
           {job.status} - {job.message}
-          {/* TODO: Alert is WIP; job.result is empty */}
-          {job.result.length && job.result.status ? (
+          {errorCount > 0 ? (
             <span className='warningIcon'>
               <AlertTriangle size='12' color='#FF4500' />
             </span>
