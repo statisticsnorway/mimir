@@ -23,6 +23,7 @@ export interface TableProps {
   sourceTableLabel: string
   statBankWebUrl: string
   hiddenTitle: string | undefined
+  checkIsOverflowing?: boolean
 }
 
 export interface TableStandardSymbolLink {

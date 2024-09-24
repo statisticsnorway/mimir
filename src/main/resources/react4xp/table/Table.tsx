@@ -124,7 +124,12 @@ function Table(props: TableProps) {
   function createTable() {
     const { tableClass } = props.table
     return (
-      <SSBTable className={tableClass} caption={addCaption()} dataNoteRefs={props.table.caption?.noterefs}>
+      <SSBTable
+        className={tableClass}
+        caption={addCaption()}
+        dataNoteRefs={props.table.caption?.noterefs}
+        checkIsOverflowing={props.checkIsOverflowing}
+      >
         {props.table.thead?.map((t, index) => (
           <React.Fragment key={index}>
             {addThead(index)}
