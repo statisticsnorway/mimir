@@ -6,8 +6,6 @@ export function run(): void {
   log.info(`Run Task: pushRssStatkal ${new Date()}`)
   const jobLogNode: JobEventNode = startJobLog(JobNames.PUSH_RSS_STATKAL)
   const result: string = pushRssStatkal()
-  completeJobLog(jobLogNode._id, result, {
-    result,
-  })
+  completeJobLog(jobLogNode._id, result.message, { status: result?.status })
   cronJobLog(JobNames.PUSH_RSS_STATKAL)
 }
