@@ -5,6 +5,7 @@ import { ChevronDown } from 'react-feather'
 import { default as groupBy } from 'ramda/es/groupBy'
 import axios from 'axios'
 import { sanitize } from '../../lib/ssb/utils/htmlUtils'
+import { generateImageUrls } from '../../lib/ssb/utils/generateImageUrls'
 import { type ArticleArchiveProps, type ParsedArticleData } from '../../lib/types/partTypes/articleArchive'
 
 function ArticleArchive(props: ArticleArchiveProps) {
@@ -29,8 +30,12 @@ function ArticleArchive(props: ArticleArchiveProps) {
   const [loading, setLoading] = useState<boolean>()
 
   useEffect(() => {
-    console.log(image)
-  }, [])
+    if (image) {
+      const { imageMobileUrl, imageTabletUrl } = generateImageUrls(image)
+      console.log({ imageMobileUrl, imageTabletUrl })
+      console.log(image)
+    }
+  }, [image])
 
   function fetchArticles() {
     setLoading(true)
@@ -129,11 +134,15 @@ function ArticleArchive(props: ArticleArchiveProps) {
         {image && (
           <Col className='col-12 d-flex justify-content-center'>
             <img
-              src={image}
-              srcSet={`${image} 300w, ${image} 992w, ${image} 1180w`}
-              sizes='(max-width: 300px) 300px, (max-width: 992px) 992px, 1180px'
+              src={generateImageUrls(image).imageMobileUrl}
+              srcSet={`${generateImageUrls(image).imageMobileUrl} 600w, 
+           ${generateImageUrls(image).imageTabletUrl} 992w, 
+           ${image} 1180w`}
+              sizes='(max-width: 600px) 600px, (max-width: 992px) 992px, 1180px'
               alt={imageAltText}
               loading='lazy'
+              decoding='async'
+              style={{ width: '100%', height: 'auto', objectFit: 'contain' }}
             />
           </Col>
         )}
