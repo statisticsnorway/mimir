@@ -3,6 +3,7 @@ import { get as getContent, Content } from '/lib/xp/content'
 import { NodeQueryResultHit } from '/lib/xp/node'
 import { send } from '/lib/xp/event'
 import { executeFunction, sleep } from '/lib/xp/task'
+import { run, type ContextParams } from '/lib/xp/context'
 import { isSameOrBefore } from '/lib/ssb/utils/dateUtils'
 import { isSameDay } from '/lib/vendor/dateFns'
 
@@ -111,6 +112,17 @@ export function publishDataset(): void {
           status: JobStatus.STARTED,
           dataSources: [],
         }
+
+        const draftContext: ContextParams = {
+          branch: 'draft',
+        }
+
+        const statisticDraft: Content<Statistics> | null = run(draftContext, () => {
+          return getContent({ key: stat._id })
+        })
+
+        log.info('draftVersion Statistikk: ' + JSON.stringify(statisticDraft, null, 4))
+
         const dataSourceIds: Array<string> = getDataSourceIdsFromStatistics(stat)
         const dataSources: Array<Content<DataSource> | null> = dataSourceIds.map((key) => {
           return getContent({
