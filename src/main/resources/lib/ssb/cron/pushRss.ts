@@ -48,11 +48,12 @@ function getRssNews(url: string): RssItems {
       }
     } else {
       status.message = 'Henting av nyheter XP feilet - ' + rssNewsResponse.status
+      status.status = Events.REQUEST_GOT_ERROR_RESPONSE
     }
   } catch (e) {
     status.message = 'Henting av nyheter XP feilet - ' + e
+    status.status = Events.REQUEST_GOT_ERROR_RESPONSE
   }
-
   return status
 }
 
@@ -75,7 +76,6 @@ function postRssNews(encryptedRss: string): RssResult {
     if (pushRssNewsResponse.status === 200) {
       return {
         message: 'Push av RSS nyheter OK',
-        status: 'COMPLETED',
       }
     } else {
       return {
@@ -108,7 +108,7 @@ function postRssStatkal(encryptedRss: string): RssResult {
   try {
     const pushRssStatkalResponse: HttpResponse = request(requestParams)
     if (pushRssStatkalResponse.status === 200) {
-      return { message: 'Push av RSS statkal OK', status: 'COMPLETED' }
+      return { message: 'Push av RSS statkal OK' }
     } else {
       return {
         message: `Push av RSS statkal til ${rssStatkalBaseUrl} feilet - ${pushRssStatkalResponse.status}`,
@@ -122,7 +122,8 @@ function postRssStatkal(encryptedRss: string): RssResult {
 
 interface RssItems {
   body: string | null
-  message: string
+  message: RssResult['message']
+  status?: RssResult['status']
 }
 
 export interface RssResult {
