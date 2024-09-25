@@ -3,7 +3,7 @@ import { getRssItemsStatkal } from '/lib/ssb/rss/statkal'
 import { encryptRssNews, encryptRssStatkal } from '/lib/cipher/cipherRss'
 import { Events } from '/lib/ssb/repo/query'
 
-export function pushRssNews(): object {
+export function pushRssNews(): RssResult {
   const newsServiceUrl: string = app.config?.['ssb.baseUrl']
     ? app.config['ssb.baseUrl'] + '/_/service/mimir/news'
     : 'https://www.utv.ssb.no/_/service/mimir/news'
@@ -16,7 +16,7 @@ export function pushRssNews(): object {
   }
 }
 
-export function pushRssStatkal(): object {
+export function pushRssStatkal(): RssResult {
   const rssStatkal: string | null = getRssItemsStatkal()
   if (rssStatkal !== null) {
     const encryptedBody: string = encryptRssStatkal(rssStatkal)
@@ -56,7 +56,7 @@ function getRssNews(url: string): RssItems {
   return status
 }
 
-function postRssNews(encryptedRss: string): object {
+function postRssNews(encryptedRss: string): RssResult {
   const rssNewsBaseUrl: string =
     app.config && app.config['ssb.baseUrl']
       ? app.config['ssb.baseUrl'] + '/rss/populate/news'
@@ -91,7 +91,7 @@ function postRssNews(encryptedRss: string): object {
   }
 }
 
-function postRssStatkal(encryptedRss: string): object {
+function postRssStatkal(encryptedRss: string): RssResult {
   const rssStatkalBaseUrl: string =
     app.config && app.config['ssb.baseUrl']
       ? app.config['ssb.baseUrl'] + '/rss/populate/statkal'
@@ -123,4 +123,9 @@ function postRssStatkal(encryptedRss: string): object {
 interface RssItems {
   body: string | null
   message: string
+}
+
+export interface RssResult {
+  message: string
+  status?: string
 }

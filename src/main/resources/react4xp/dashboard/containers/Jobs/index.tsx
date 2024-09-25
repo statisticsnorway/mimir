@@ -14,30 +14,33 @@ export function Jobs() {
   const jobs = useSelector(selectJobs)
   const contentStudioBaseUrl = useSelector(selectContentStudioBaseUrl)
   const [currentModalJob, setCurrentModalJob] = useState(null)
-  const columns = useMemo(() => [
-    {
-      Header: 'Tidspunkt',
-      accessor: 'ts',
-      sortType: (a, b) => {
-        return a.original.tsSort > b.original.tsSort ? 1 : -1
-      },
-    },
-    {
-      Header: 'Jobbnavn',
-      accessor: 'name',
-      sortType: (a, b) => {
-        if (a.original.nameSort === b.original.nameSort) {
+  const columns = useMemo(
+    () => [
+      {
+        Header: 'Tidspunkt',
+        accessor: 'ts',
+        sortType: (a, b) => {
           return a.original.tsSort > b.original.tsSort ? 1 : -1
-        }
-        return a.original.nameSort > b.original.nameSort ? 1 : -1
+        },
       },
-    },
-    {
-      Header: 'Info',
-      accessor: 'info',
-      disableSortBy: true,
-    },
-  ])
+      {
+        Header: 'Jobbnavn',
+        accessor: 'name',
+        sortType: (a, b) => {
+          if (a.original.nameSort === b.original.nameSort) {
+            return a.original.tsSort > b.original.tsSort ? 1 : -1
+          }
+          return a.original.nameSort > b.original.nameSort ? 1 : -1
+        },
+      },
+      {
+        Header: 'Info',
+        accessor: 'info',
+        disableSortBy: true,
+      },
+    ],
+    []
+  )
 
   function getJobRows() {
     return jobs.map((job) => {
@@ -258,4 +261,4 @@ export function Jobs() {
   )
 }
 
-export default (props) => <Jobs {...props} />
+export default Jobs

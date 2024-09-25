@@ -23,6 +23,7 @@ import {
   queryJobLogs,
   getJobLog,
   JobNames,
+  PushRSSResult,
 } from '/lib/ssb/repo/job'
 import { StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
 import { StatRegRefreshResult } from '/lib/ssb/repo/statreg'
@@ -40,6 +41,7 @@ import { getNameSearchGraphDatasetId } from '/lib/ssb/dataset/calculator'
 import { type Page, type Statistics } from '/site/content-types'
 import { type Default as DefaultPageConfig } from '/site/pages/default'
 import { type DataSource } from '/site/mixins/dataSource'
+import { RssResult } from '../cron/pushRss'
 
 export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): void {
   socket.on('get-error-data-sources', () => {
@@ -396,144 +398,142 @@ function getJobs(): Array<DashboardJobInfo> {
 
 function parseResult(
   jobLog: JobInfoNode
-): Array<DashboardPublishJobResult> | Array<StatRegJobInfo> | DatasetRefreshResult | CalculatorRefreshResult {
+):
+  | Array<DashboardPublishJobResult>
+  | Array<StatRegJobInfo>
+  | DatasetRefreshResult
+  | CalculatorRefreshResult
+  | PushRSSResult {
   if (jobLog.data.task === JobNames.PUBLISH_JOB) {
-    const refreshDataResult: Array<StatisticsPublishResult> = util.data.forceArray(
+    const refreshDataResult = util.data.forceArray(
       jobLog.data.refreshDataResult || []
     ) as Array<StatisticsPublishResult>
-    return refreshDataResult.map((statResult) => {
-      const statregData: StatisticInListing | undefined = getStatisticByIdFromRepo(statResult.shortNameId)
-      const statId: string = statResult.statistic
-      const shortName: string = statregData ? statregData.shortName : statResult.shortNameId // get name from shortNameId
-      const dataSources: DashboardPublishJobResult['dataSources'] = util.data
-        .forceArray(statResult.dataSources || [])
-        .map((ds) => {
-          try {
-            const dataSource: Content<DataSource> | null = getContent({
-              key: ds.id,
-            })
-            return {
-              id: ds.id,
-              displayName: dataSource ? dataSource.displayName : ds.id,
-              status: ds.status,
-              type: dataSource?.type,
-              datasetType: dataSource?.data?.dataSource?._selected,
-              datasetKey: dataSource ? extractKey(dataSource) : undefined,
-            }
-          } catch (e) {
-            return {
-              id: ds.id,
-              displayName: ds.id,
-              status: ds.status,
-              type: `Datakilde finnes ikke lengre`,
-              datasetType: '',
-              datasetKey: 'innhold arkivert!!',
-            }
-          }
-        })
-      return {
-        id: statId,
-        shortName,
-        status: statResult.status,
-        dataSources,
-      }
-    })
+    return getPublishJobParsedResult(refreshDataResult)
   } else if (jobLog.data.task === JobNames.STATREG_JOB) {
     const refreshDataResult: Array<StatRegRefreshResult> = util.data.forceArray(
       jobLog.data.refreshDataResult || []
     ) as Array<StatRegRefreshResult>
     return parseStatRegJobInfo(refreshDataResult)
   } else if (jobLog.data.task === JobNames.REFRESH_DATASET_JOB) {
-    let result: DatasetRefreshResult | undefined = jobLog.data.refreshDataResult as DatasetRefreshResult | undefined
-    if (!result || !result.filterInfo) {
-      result = {
-        filterInfo: {
-          start: [],
-          end: [],
-          inRSSOrNoKey: [],
-          noData: [],
-          otherDataType: [],
-          statistics: [],
-          skipped: [],
-        },
-        result: [],
-      }
-    }
-    result.filterInfo.start = util.data.forceArray(result.filterInfo.inRSSOrNoKey || [])
-    result.filterInfo.inRSSOrNoKey = util.data.forceArray(result.filterInfo.inRSSOrNoKey || [])
-    result.filterInfo.noData = util.data.forceArray(result.filterInfo.noData || [])
-    result.filterInfo.otherDataType = util.data.forceArray(result.filterInfo.otherDataType) || []
-    result.filterInfo.skipped = util.data.forceArray(result.filterInfo.skipped || [])
-    result.filterInfo.end = util.data.forceArray(result.filterInfo.end || [])
-    result.filterInfo.statistics = util.data.forceArray(result.filterInfo.statistics || [])
-    result.result = util.data.forceArray(result.result || []).map((ds) => {
-      ds.hasError = showWarningIcon(ds.status as Events)
-      ds.status = localize({
-        key: ds.status,
-      })
-      return ds
-    })
-    return result
+    const result = jobLog.data.refreshDataResult as DatasetRefreshResult | undefined
+    return getStatregJobParsedResult(result)
   } else if (
     jobLog.data.task === JobNames.REFRESH_DATASET_CALCULATOR_JOB ||
     jobLog.data.task === JobNames.REFRESH_DATASET_SDDS_TABLES_JOB
   ) {
-    let result: CalculatorRefreshResult | undefined = jobLog.data.refreshDataResult as
-      | CalculatorRefreshResult
-      | undefined
-    if (!result) {
-      result = {
-        result: [],
-      }
+    const result = jobLog.data.refreshDataResult as CalculatorRefreshResult | undefined
+    return getCalculatorAndSDDSTablesJobParsedResult(result)
+  } else if (jobLog.data.task === JobNames.PUSH_RSS_NEWS || jobLog.data.task === JobNames.PUSH_RSS_STATKAL) {
+    const result = jobLog.data.refreshDataResult as RssResult
+    return getRSSJobsParsedResult(result)
+  }
+  return []
+}
+
+function getPublishJobParsedResult(refreshDataResult: Array<StatisticsPublishResult>) {
+  return refreshDataResult.map((statResult) => {
+    const statregData: StatisticInListing | undefined = getStatisticByIdFromRepo(statResult.shortNameId)
+    const statId: string = statResult.statistic
+    const shortName: string = statregData ? statregData.shortName : statResult.shortNameId // get name from shortNameId
+    const dataSources: DashboardPublishJobResult['dataSources'] = util.data
+      .forceArray(statResult.dataSources || [])
+      .map((ds) => {
+        try {
+          const dataSource: Content<DataSource> | null = getContent({
+            key: ds.id,
+          })
+          return {
+            id: ds.id,
+            displayName: dataSource ? dataSource.displayName : ds.id,
+            status: ds.status,
+            type: dataSource?.type,
+            datasetType: dataSource?.data?.dataSource?._selected,
+            datasetKey: dataSource ? extractKey(dataSource) : null,
+          }
+        } catch (e) {
+          return {
+            id: ds.id,
+            displayName: ds.id,
+            status: ds.status,
+            type: `Datakilde finnes ikke lengre`,
+            datasetType: '',
+            datasetKey: 'innhold arkivert!!',
+          }
+        }
+      })
+    return {
+      id: statId,
+      shortName,
+      status: statResult.status,
+      dataSources,
     }
-    result.result = util.data.forceArray(result.result || []).map((ds) => {
+  })
+}
+
+function getStatregJobParsedResult(result: DatasetRefreshResult | undefined) {
+  if (!result || !result.filterInfo) {
+    return {
+      filterInfo: {
+        start: [],
+        end: [],
+        inRSSOrNoKey: [],
+        noData: [],
+        otherDataType: [],
+        statistics: [],
+        skipped: [],
+      },
+      result: [],
+    }
+  }
+
+  return {
+    filterInfo: {
+      start: util.data.forceArray(result.filterInfo.inRSSOrNoKey || []),
+      end: util.data.forceArray(result.filterInfo.end || []),
+      inRSSOrNoKey: util.data.forceArray(result.filterInfo.inRSSOrNoKey || []),
+      noData: util.data.forceArray(result.filterInfo.noData || []),
+      otherDataType: util.data.forceArray(result.filterInfo.otherDataType) || [],
+      statistics: util.data.forceArray(result.filterInfo.statistics || []),
+      skipped: util.data.forceArray(result.filterInfo.skipped || []),
+    },
+    result: util.data.forceArray(result.result || []).map((ds) => {
       ds.hasError = showWarningIcon(ds.status as Events)
       ds.status = localize({
         key: ds.status,
       })
       return ds
-    })
-    return result
-  } else if (jobLog.data.task === JobNames.PUSH_RSS_NEWS || jobLog.data.task === JobNames.PUSH_RSS_STATKAL) {
-    let result = jobLog.data.refreshDataResult
-    if (!result) {
-      result = {
-        result: [],
-      }
-    }
-    return {
-      result: util.data.forceArray({
-        ...result,
-        hasError: showWarningIcon(result?.status as Events),
-      }),
-    }
+    }),
   }
-  return []
 }
 
-interface DashboardPublishJobResult {
-  id: string
-  shortName: string
-  status: string
-  dataSources: Array<{
-    id: string
-    displayName: string
-    status: string
-    type?: string
-    datasetType?: string
-    datasetKey?: string
-  }>
+function getCalculatorAndSDDSTablesJobParsedResult(result: CalculatorRefreshResult | undefined) {
+  if (!result) {
+    result = {
+      result: [],
+    }
+  }
+  result.result = util.data.forceArray(result.result || []).map((ds) => {
+    ds.hasError = showWarningIcon(ds.status as Events)
+    ds.status = localize({
+      key: ds.status,
+    })
+    return ds
+  })
+  return result
 }
-export interface DashboardJobInfo {
-  id: string
-  task: string
-  status: typeof JOB_STATUS_STARTED | typeof JOB_STATUS_COMPLETE
-  startTime: string
-  completionTime?: string
-  message: string
-  result: Array<unknown> | object
-  user?: User
-  details: Array<object>
+
+function getRSSJobsParsedResult(result: RssResult): PushRSSResult {
+  if (!result) {
+    return {
+      result: [],
+    }
+  }
+  return {
+    result: util.data.forceArray({
+      ...result,
+      hasError: showWarningIcon(result?.status as Events),
+    }),
+  }
 }
 
 function prepDataSources(dataSources: Array<Content<DataSource>>): Array<DashboardDataSource> {
@@ -610,7 +610,7 @@ export function refreshDatasetHandler(
       key: id,
     })
     if (dataSource) {
-      const dataSourceKey: number = parseInt(extractKey(dataSource))
+      const dataSourceKey: number = parseInt(extractKey(dataSource) as string)
 
       feedbackEventName &&
         socketEmitter.broadcast(feedbackEventName, {
@@ -770,6 +770,31 @@ interface DashboardRefreshResultDataset {
   newDatasetData: boolean
   modified: string
   modifiedReadable: string
+}
+
+interface DashboardPublishJobResult {
+  id: string
+  shortName: string
+  status: string
+  dataSources: Array<{
+    id: string
+    displayName: string
+    status: string
+    type?: string
+    datasetType?: string
+    datasetKey: string | null
+  }>
+}
+export interface DashboardJobInfo {
+  id: string
+  task: string
+  status: typeof JOB_STATUS_STARTED | typeof JOB_STATUS_COMPLETE
+  startTime: string
+  completionTime?: string
+  message: string
+  result: Array<unknown> | object
+  user?: User
+  details: Array<object>
 }
 
 export interface RefreshDatasetResult {
