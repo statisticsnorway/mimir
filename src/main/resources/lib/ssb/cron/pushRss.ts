@@ -1,7 +1,8 @@
 import { HttpRequestParams, HttpResponse, request } from '/lib/http-client'
-import { getRssItemsStatkal } from '/lib/ssb/rss/statkal'
-import { encryptRssNews, encryptRssStatkal } from '/lib/cipher/cipherRss'
-import { Events } from '/lib/ssb/repo/query'
+
+import { getRssItemsStatkal } from '../../../lib/ssb/rss/statkal'
+import { encryptRssNews, encryptRssStatkal } from '../../../lib/cipher/cipherRss'
+import { Events } from '../../../lib/ssb/repo/query'
 
 export function pushRssNews(): RssResult {
   const newsServiceUrl: string = app.config?.['ssb.baseUrl']
