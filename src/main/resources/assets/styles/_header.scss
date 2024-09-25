@@ -12,6 +12,7 @@
 
 header.ssb-header-wrapper {
   padding: 0;
+  color:red;
 
   @include media-breakpoint-down(lg){
     padding-top: 20px;
