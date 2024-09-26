@@ -78,7 +78,7 @@ function SimpleStatbank(props: SimpleStatbankProps) {
       })
       dropdownValue = dropdownValueFirstLetterLowerCase.join(' ')
     }
-    return resultText.replace(/\[(\w+)\]/g, dropdownValue)
+    return resultText.replace(/\[([a-zA-Z]+)\]/g, dropdownValue)
   }
 
   function renderNumber() {
