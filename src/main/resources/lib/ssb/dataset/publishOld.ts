@@ -121,9 +121,15 @@ export function publishDataset(): void {
           return getContent({ key: stat._id })
         })
 
-        log.info('draftVersion Statistikk: ' + JSON.stringify(statisticDraft, null, 4))
+        const dataSourceIdsMaster: Array<string> = getDataSourceIdsFromStatistics(stat)
+        const dataSourceIdsDraft: Array<string> = statisticDraft ? getDataSourceIdsFromStatistics(statisticDraft) : []
+        const uniqueDatasourceDraft: Array<string> = dataSourceIdsDraft.filter(
+          (item) => !dataSourceIdsMaster.includes(item)
+        )
+        const dataSourceIds: Array<string> = dataSourceIdsMaster.concat(uniqueDatasourceDraft)
 
-        const dataSourceIds: Array<string> = getDataSourceIdsFromStatistics(stat)
+        log.info('DatasourceIds: ' + JSON.stringify(dataSourceIds, null, 4))
+
         const dataSources: Array<Content<DataSource> | null> = dataSourceIds.map((key) => {
           return getContent({
             key,
