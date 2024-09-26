@@ -133,7 +133,7 @@ jobs:
       - uses: nais/deploy/actions/deploy@v2
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-          CLUSTER: staging
+          CLUSTER: test
           RESOURCE: nais.yaml
           VAR: image=${{ env.REGISTRY }}/${{env.IMAGE}}:${{ env.TAG }},branch=${{ env.ISSUE_NUMBER }}
           DEPLOY_SERVER: deploy.ssb.cloud.nais.io:443
