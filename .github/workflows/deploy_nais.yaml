@@ -19,7 +19,7 @@ jobs:
   build_xp:
     name: 'Build XP jar'
     runs-on: 'ubuntu-latest'
-    if: (startsWith(github.head_ref, 'MIM-') || startsWith(github.head_ref, 'mim-') && github.event.label.name == 'nais' && contains(fromJSON('["omsaggau", "annesiri", "ssb-cgn", "Glenruben", "johnnadeluy", "Carl-OW", "michaelpande"]'), github.actor))
+    if: (startsWith(github.head_ref, 'MIM-') || startsWith(github.head_ref, 'mim-') && github.event.label.name == 'nais' && contains(fromJSON('["annesiri", "ssb-cgn", "Glenruben", "johnnadeluy", "Carl-OW", "michaelpande"]'), github.actor))
     steps:
       - id: build_app
         uses: enonic/release-tools/build-and-publish@master
@@ -133,7 +133,7 @@ jobs:
       - uses: nais/deploy/actions/deploy@v2
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-          CLUSTER: staging
+          CLUSTER: test
           RESOURCE: nais.yaml
           VAR: image=${{ env.REGISTRY }}/${{env.IMAGE}}:${{ env.TAG }},branch=${{ env.ISSUE_NUMBER }}
           DEPLOY_SERVER: deploy.ssb.cloud.nais.io:443
