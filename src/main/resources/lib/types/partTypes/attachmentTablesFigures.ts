@@ -1,3 +1,4 @@
+import { type TableProps } from '/lib/types/partTypes/table'
 import { type AccordionData } from '/lib/types/partTypes/accordion'
 
 export type AttachmentTablesFiguresProps = {
@@ -12,6 +13,6 @@ export type AttachmentTablesFiguresProps = {
 export interface AttachmentTablesFiguresData extends AccordionData {
   contentType: string
   subHeader: string
-  props?: object
+  props?: TableProps | object
   pageContributions?: XP.PageContributions
 }
