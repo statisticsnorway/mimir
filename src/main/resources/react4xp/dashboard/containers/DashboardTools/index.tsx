@@ -97,7 +97,7 @@ export function DashboardTools() {
       .get('/xp/admin/_/service/mimir/rssPush')
       .then((response) => {
         setRssStatus('success')
-        setPushRssResult(response.data)
+        setPushRssResult(response.data.message)
       })
       .catch((error) => {
         setRssStatus('danger')
