@@ -51,9 +51,10 @@
                 <input name="resultText" type="TextLine">
                     <label>Resultattekst</label>
                     <occurrences minimum="1" maximum="1"/>
+                    <help-text>For å inkludere resultatvariablen i resultatteksten så kan man skrive inn [code]. F.eks. så blir "Folketall i [code] kommune" til "Folketall i Kongsvinger kommune"</help-text>
                 </input>
                 <input  name="lowerCaseVariableFirstLetter" type="CheckBox">
-                  <label>Liten forbokstav for resultatvariabel</label>
+                  <label>Liten forbokstav for resultatvariabel [code]</label>
                   <default>unchecked</default>
                   <config>
                     <alignment>right</alignment>
