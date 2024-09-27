@@ -13,8 +13,8 @@ export function getStatbankApiData(
 ): SimpleStatbankResult | undefined {
   const statbankApiData: JSONstat = fetchStatbankApiDataQuery(urlOrId, query)
   const dataset: Dataset | null = statbankApiData ? JSONstat(statbankApiData).Dataset('dataset') : null
-  const filterDimensionCode: Dimension | null = dataset?.Dimension(dimensionCode) as Dimension | null
-  const dataDimensions: Array<string> = filterDimensionCode?.id as Array<string>
+  const filterDimensionCode: Dimension | Dimension[] | null | undefined = dataset?.Dimension(dimensionCode)
+  const dataDimensions: Array<string> = (filterDimensionCode as Dimension)?.id as Array<string>
   const filterDimensionTime: Dimension | null = dataset?.Dimension('Tid') as Dimension
   const timeDimensions: Array<string> = filterDimensionTime?.id as Array<string>
 
@@ -24,7 +24,9 @@ export function getStatbankApiData(
         [dimensionCode]: dataDimension,
       }) as Data
 
-      const filterCategory: Category | null = filterDimensionCode?.Category(dataDimension) as Category | null
+      const filterCategory: Category | null = (filterDimensionCode as Dimension)?.Category(
+        dataDimension
+      ) as Category | null
       const value: number | string | null = data.value && !(data.value instanceof Array) ? data.value : null
 
       return {

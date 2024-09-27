@@ -4,7 +4,7 @@
     <super-type>base:structured</super-type>
     <allow-child-content>true</allow-child-content>
     <form>
-        <field-set>  
+        <field-set>
             <label>Visningsfelt</label>
             <items>
                 <input name="icon" type="ImageSelector">
@@ -44,13 +44,22 @@
                     <default>text</default>
                 </input>
             </items>
-        </field-set> 
-        <field-set>  
+        </field-set>
+        <field-set>
             <label>Resultatvisning</label>
             <items>
                 <input name="resultText" type="TextLine">
                     <label>Resultattekst</label>
                     <occurrences minimum="1" maximum="1"/>
+                    <help-text>For å inkludere resultatvariablen i resultatteksten så kan man skrive inn [code]. F.eks. så blir "Folketall i [code] kommune" til "Folketall i Kongsvinger kommune"</help-text>
+                </input>
+                <input  name="lowerCaseVariableFirstLetter" type="CheckBox">
+                  <label>Liten forbokstav for resultatvariabel [code]</label>
+                  <default>unchecked</default>
+                  <config>
+                    <alignment>right</alignment>
+                  </config>
+                  <occurrences minimum="0" maximum="0" />
                 </input>
                 <input name="unit" type="TextLine">
                     <label>Benevning</label>
@@ -67,9 +76,9 @@
                         <include>Bold | Italic | Link | Unlink</include>
                     </config>
                     <occurrences minimum="0" maximum="1"/>
-                </input> 
+                </input>
             </items>
-        </field-set> 
+        </field-set>
         <field-set>
             <label>Api-spørring mot statistikkbanken</label>
             <items>
@@ -88,6 +97,6 @@
                     <help-text>Velg hvilket kode (Code) i spørringen som skal være valgbar i dropdown</help-text>
                 </input>
             </items>
-        </field-set>  
+        </field-set>
     </form>
 </content-type>
