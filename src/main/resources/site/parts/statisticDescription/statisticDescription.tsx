@@ -1,13 +1,12 @@
 import React, { useState } from 'react'
 import { Tag, NestedAccordion, ExpansionBox, Title } from '@statisticsnorway/ssb-component-library'
-import { Info } from 'react-feather'
 
 import { sanitize } from '../../../lib/ssb/utils/htmlUtils'
 import { type AccordionData, AccordionItems, AccordionProps } from '../../../lib/types/partTypes/accordion'
 import { type StatisticDescriptionProps } from '../../../lib/types/partTypes/statisticDescription'
 
 function StatisticDescription(props: StatisticDescriptionProps) {
-  const { ingress, label, lastUpdatedPhrase, lastUpdated, accordions } = props
+  const { icon, ingress, label, lastUpdatedPhrase, lastUpdated, accordions } = props
   const [selectedTag, setSelectedTag] = useState<string | undefined>(undefined)
   const [selectedCategory, setSelectedCategory] = useState<AccordionData | undefined>(
     accordions.find((item) => item.id === 'om-statistikken-definisjoner')
@@ -68,7 +67,7 @@ function StatisticDescription(props: StatisticDescriptionProps) {
       <div className='title-wrapper'>
         <Title size={2}>{label}</Title>
         <div className='icon-wrapper'>
-          <Info size={52} />
+          <img src={icon} alt='' />
         </div>
       </div>
       {renderIngress()}

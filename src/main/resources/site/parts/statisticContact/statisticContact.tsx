@@ -1,16 +1,14 @@
 import React from 'react'
 import { Row } from 'react-bootstrap'
 import { Link, Title } from '@statisticsnorway/ssb-component-library'
-import { User } from 'react-feather'
-//import { type ContactModel } from '../../../lib/types/partTypes/contact'
 import { type StatisticContactProps, type Contact } from '/lib/types/partTypes/statisticContact'
 
 function StatisticContact(props: StatisticContactProps) {
-  const { label, contacts } = props
+  const { icon, label, contacts } = props
 
   function renderContact(contact: Contact) {
     return (
-      <div className='contact col-md-4 col-lg-3'>
+      <div className='contact col-12 col-md-6 col-lg-4 col-xl-3'>
         <Title size={3} className='name text-wrap'>
           {contact.name}
         </Title>
@@ -30,7 +28,7 @@ function StatisticContact(props: StatisticContactProps) {
 
   function renderContactsInfo() {
     if (contacts?.length) {
-      return <Row className='contact-wrapper'>{contacts.map((contact) => renderContact(contact))}</Row>
+      return <div className='contact-wrapper'>{contacts.map((contact) => renderContact(contact))}</div>
     }
     return null
   }
@@ -40,7 +38,7 @@ function StatisticContact(props: StatisticContactProps) {
       <div className='title-wrapper'>
         <Title size={2}>{label}</Title>
         <div className='icon-wrapper'>
-          <User size={52} />
+          <img src={icon} alt='' />
         </div>
       </div>
       {contacts?.length && <div className='contact-list'>{renderContactsInfo()}</div>}

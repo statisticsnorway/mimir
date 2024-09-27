@@ -1,5 +1,5 @@
 import { get as getContentByKey, type Content } from '/lib/xp/content'
-import { getContent, processHtml } from '/lib/xp/portal'
+import { getContent, processHtml, assetUrl } from '/lib/xp/portal'
 import {
   type ReleaseDatesVariant,
   type StatisticInListing,
@@ -15,7 +15,9 @@ import { getStatisticByIdFromRepo, getReleaseDatesByVariants } from '/lib/ssb/st
 import { getPhrases } from '/lib/ssb/utils/language'
 import { fromPartCache } from '/lib/ssb/cache/partCache'
 import * as util from '/lib/util'
-import { type AboutTheStatisticsProps, type Category, type Items } from '/lib/types/partTypes/omStatistikken'
+import { type Category, type Items } from '/lib/types/partTypes/omStatistikken'
+import { type StatisticDescriptionProps } from '/lib/types/partTypes/statisticDescription'
+
 import { type Statistics, type OmStatistikken } from '/site/content-types'
 
 export function get(req: XP.Request): XP.Response {
@@ -43,7 +45,7 @@ function renderPart(req: XP.Request, aboutTheStatisticsId: string | undefined): 
         'site/parts/statisticDescription/statisticDescription',
         {
           accordions: [],
-          label: 'Om statistikken',
+          label: 'Om statistikken Carina',
           ingress: '',
         },
         req,
@@ -98,9 +100,12 @@ function getOmStatistikken(req: XP.Request, page: Content<any>, aboutTheStatisti
   const aboutTheStatisticsData: OmStatistikken | undefined = aboutTheStatisticsContent?.data
   const lastUpdated: string | undefined = formatDate(aboutTheStatisticsContent?.modifiedTime, 'PPP', language)
 
-  const props: AboutTheStatisticsProps = {
+  const props: StatisticDescriptionProps = {
     accordions: aboutTheStatisticsData ? getAccordionData(aboutTheStatisticsData, phrases, nextRelease) : [],
     label: phrases.aboutTheStatistics,
+    icon: assetUrl({
+      path: 'SSB_ikon_statisticDescription.svg',
+    }),
     ingress: aboutTheStatisticsData?.ingress ?? '',
     lastUpdatedPhrase: phrases.lastUpdated,
     lastUpdated: lastUpdated ?? '',

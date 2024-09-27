@@ -85,7 +85,7 @@ function getTablesAndFiguresComponent(page: Content<Statistics>, req: XP.Request
     appName: app.name,
     title,
     icon: assetUrl({
-      path: 'SSB_ikon_figures.svg',
+      path: 'SSB_ikon_statisticFigures.svg',
     }),
     iconStatbankBox: assetUrl({
       path: 'SSB_ikon_statbank.svg',
