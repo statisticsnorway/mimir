@@ -45,7 +45,7 @@ function renderPart(req: XP.Request, aboutTheStatisticsId: string | undefined): 
         'site/parts/statisticDescription/statisticDescription',
         {
           accordions: [],
-          label: 'Om statistikken Carina',
+          label: 'Om statistikken',
           ingress: '',
         },
         req,
