@@ -180,8 +180,10 @@ export interface RSSFilterLogData {
   otherDataType: Array<string>
   inRSSOrNoKey: Array<string>
   savedQueryStatistics: Array<string>
+  start?: Array<string>
   skipped: Array<string>
   end: Array<string>
+  statistics?: Array<string>
 }
 
 export interface DataSourceInfo {

@@ -14,30 +14,33 @@ export function Jobs() {
   const jobs = useSelector(selectJobs)
   const contentStudioBaseUrl = useSelector(selectContentStudioBaseUrl)
   const [currentModalJob, setCurrentModalJob] = useState(null)
-  const columns = useMemo(() => [
-    {
-      Header: 'Tidspunkt',
-      accessor: 'ts',
-      sortType: (a, b) => {
-        return a.original.tsSort > b.original.tsSort ? 1 : -1
-      },
-    },
-    {
-      Header: 'Jobbnavn',
-      accessor: 'name',
-      sortType: (a, b) => {
-        if (a.original.nameSort === b.original.nameSort) {
+  const columns = useMemo(
+    () => [
+      {
+        Header: 'Tidspunkt',
+        accessor: 'ts',
+        sortType: (a, b) => {
           return a.original.tsSort > b.original.tsSort ? 1 : -1
-        }
-        return a.original.nameSort > b.original.nameSort ? 1 : -1
+        },
       },
-    },
-    {
-      Header: 'Info',
-      accessor: 'info',
-      disableSortBy: true,
-    },
-  ])
+      {
+        Header: 'Jobbnavn',
+        accessor: 'name',
+        sortType: (a, b) => {
+          if (a.original.nameSort === b.original.nameSort) {
+            return a.original.tsSort > b.original.tsSort ? 1 : -1
+          }
+          return a.original.nameSort > b.original.nameSort ? 1 : -1
+        },
+      },
+      {
+        Header: 'Info',
+        accessor: 'info',
+        disableSortBy: true,
+      },
+    ],
+    []
+  )
 
   function getJobRows() {
     return jobs.map((job) => {
@@ -147,6 +150,20 @@ export function Jobs() {
       const updated = job.result.result.filter((ds) => ds.status === 'Dataset hentet og oppdatert').length
       const errorCount = job.result.result.filter((ds) => ds.hasError).length
       return renderRefreshDatasetJobTaskMessage(job, updated, errorCount, skipped)
+    } else if (job.task === 'Push RSS news' || job.task === 'Push RSS statkal') {
+      const errorCount = job.result.result.filter((ds) => ds.hasError).length
+      return (
+        <span>
+          {job.status} - {job.message}
+          {errorCount > 0 ? (
+            <span className='warningIcon'>
+              <AlertTriangle size='12' color='#FF4500' />
+            </span>
+          ) : (
+            ''
+          )}
+        </span>
+      )
     }
     return (
       <span>
@@ -244,4 +261,4 @@ export function Jobs() {
   )
 }
 
-export default (props) => <Jobs {...props} />
+export default Jobs

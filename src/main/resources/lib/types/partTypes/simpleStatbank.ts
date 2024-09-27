@@ -17,6 +17,7 @@ export interface SimpleStatbankProps {
   placeholderDropdown: string
   displayDropdown: string
   resultText: string
+  lowerCaseVariableFirstLetter?: boolean
   unit: string
   timeLabel: string
   resultFooter: string
