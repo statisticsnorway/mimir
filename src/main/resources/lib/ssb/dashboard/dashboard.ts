@@ -416,7 +416,7 @@ function parseResult(
     return parseStatRegJobInfo(refreshDataResult)
   } else if (jobLog.data.task === JobNames.REFRESH_DATASET_JOB) {
     const result = jobLog.data.refreshDataResult as DatasetRefreshResult | undefined
-    return getStatregJobParsedResult(result)
+    return getRefreshDatasetJobParsedResult(result)
   } else if (
     jobLog.data.task === JobNames.REFRESH_DATASET_CALCULATOR_JOB ||
     jobLog.data.task === JobNames.REFRESH_DATASET_SDDS_TABLES_JOB
@@ -470,7 +470,7 @@ function getPublishJobParsedResult(refreshDataResult: Array<StatisticsPublishRes
   })
 }
 
-function getStatregJobParsedResult(result: DatasetRefreshResult | undefined) {
+function getRefreshDatasetJobParsedResult(result: DatasetRefreshResult | undefined) {
   if (!result || !result.filterInfo) {
     return {
       filterInfo: {
