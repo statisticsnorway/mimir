@@ -1,7 +1,6 @@
 .statistic-figures {
   background-color: white;
-  padding: 2.5rem;
-  margin-top: 6rem;
+  padding: 4.5rem 2.5rem;
   border-radius: 2rem;
 
   .title-wrapper {
@@ -32,11 +31,15 @@
 
     .part-table {
       width: 100%;
+
+      .ssb-link {
+        margin-top: 0;
+      }
     }
   }
 
   .statbank-box {
-    padding: 60px 55px 30px 55px;
+    padding: 70px 55px 10px 55px;
 
     .content {
       align-items: center;

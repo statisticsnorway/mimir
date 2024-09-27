@@ -1,4 +1,6 @@
 .statistic-header {
+  margin-bottom: 8rem;
+
   .title-ingress-wrapper {
     display: block;
     margin-bottom: $spacer * 1;
@@ -14,7 +16,7 @@
     }
 
     .ingress {
-      margin-bottom: 2rem;
+      margin-bottom: 4rem;
 
       p {
         font-size: 1.25rem;
@@ -50,5 +52,9 @@
     .modifiedDate {
       font-size: 1.25rem;
     }
+  }
+
+  @include media-breakpoint-down(md) {
+    margin-bottom: 6rem;
   }
 }

@@ -30,7 +30,7 @@ function StatisticContact(props: StatisticContactProps) {
 
   function renderContactsInfo() {
     if (contacts?.length) {
-      return <div className='contact-wrapper'>{contacts.map((contact) => renderContact(contact))}</div>
+      return <Row className='contact-wrapper'>{contacts.map((contact) => renderContact(contact))}</Row>
     }
     return null
   }

@@ -367,21 +367,21 @@ function Table(props: TableProps) {
   function renderSources() {
     if ((props.sourceListTables && props.sourceListTables.length > 0) || (props.sources && props.sources.length > 0)) {
       return (
-        <div className='row mt-5 source'>
+        <div className='row source'>
           <div className='w-100 col-12'>
             <span className='source-title'>
               <strong>{props.sourceLabel}</strong>
             </span>
           </div>
           {props.sourceListTables.map((tableId, index) => (
-            <div key={index} className='col-lg-3 col-12'>
+            <div key={index} className='source-link col-lg-3 col-12'>
               <Link href={`${props.statBankWebUrl}/table/${tableId}`} standAlone>
                 {`${props.sourceTableLabel} ${tableId}`}
               </Link>
             </div>
           ))}
           {props.sources.map((source, index) => (
-            <div key={index} className='col-lg-3 col-12'>
+            <div key={index} className='source-link col-lg-3 col-12'>
               {source.url && source.urlText && (
                 <Link href={source.url} standAlone>
                   {source.urlText}
