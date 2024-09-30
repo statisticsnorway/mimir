@@ -1,12 +1,12 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Divider, Button, LeadParagraph, Paragraph, Link } from '@statisticsnorway/ssb-component-library'
 import { Container, Row, Col } from 'react-bootstrap'
 import { ChevronDown } from 'react-feather'
 import { default as groupBy } from 'ramda/es/groupBy'
 import axios from 'axios'
 import { sanitize } from '../../lib/ssb/utils/htmlUtils'
-import { generateImageUrls } from '../../lib/ssb/utils/generateImageUrlUtils'
 import { type ArticleArchiveProps, type ParsedArticleData } from '../../lib/types/partTypes/articleArchive'
+import { generateImageUrls } from '../../lib/ssb/utils/generateImageUrlUtils'
 
 function ArticleArchive(props: ArticleArchiveProps) {
   const {
@@ -29,9 +29,13 @@ function ArticleArchive(props: ArticleArchiveProps) {
   const [totalCount, setTotalCount] = useState(firstArticles.total)
   const [loading, setLoading] = useState<boolean>()
 
-  const { imageMobileUrl, imageTabletUrl } = image
-    ? generateImageUrls(image)
-    : { imageMobileUrl: '', imageTabletUrl: '' }
+  useEffect(() => {
+    if (image) {
+      const { imageMobileUrl, imageTabletUrl } = generateImageUrls(image)
+      console.log({ imageMobileUrl, imageTabletUrl })
+      console.log(image)
+    }
+  }, [image])
 
   function fetchArticles() {
     setLoading(true)
@@ -131,7 +135,9 @@ function ArticleArchive(props: ArticleArchiveProps) {
           <Col className='col-12 d-flex justify-content-center'>
             <img
               src={image}
-              srcSet={`${imageMobileUrl} 600w, ${imageTabletUrl} 992w, ${image} 1180w`}
+              srcSet={`${generateImageUrls(image).imageMobileUrl} 600w, 
+           ${generateImageUrls(image).imageTabletUrl} 992w, 
+           ${image} 1180w`}
               sizes='(max-width: 600px) 600px, (max-width: 992px) 992px, 1180px'
               alt={imageAltText}
               loading='lazy'
