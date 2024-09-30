@@ -8,7 +8,7 @@ function StatisticContact(props: StatisticContactProps) {
 
   function renderContact(contact: Contact) {
     return (
-      <div className='contact col-12 col-md-6 col-lg-4 col-xl-3'>
+      <div className='contact col-12 col-md-6 col-lg-4'>
         <Title size={3} className='name text-wrap'>
           {contact.name}
         </Title>
