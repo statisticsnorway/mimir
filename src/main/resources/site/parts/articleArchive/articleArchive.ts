@@ -39,7 +39,7 @@ function renderPart(req: XP.Request) {
 
   const preamble: string | undefined = page.data.preamble ? page.data.preamble : undefined
 
-  /* TODO: Image needs to rescale dynamically in mobile version */
+  //IMAGE
   const image: string | undefined = page.data.image
     ? imageUrl({
         id: page.data.image,

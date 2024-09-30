@@ -109,7 +109,7 @@ function RelatedArticles(props: RelatedArticlesProps) {
               <Card
                 href={href}
                 imagePlacement='top'
-                image={<img src={imageSrc} alt={imageAlt ?? ''} />}
+                image={<img src={imageSrc} alt={imageAlt ?? ''} loading='lazy' />}
                 title={title}
                 subTitle={subTitle}
                 ariaLabel={ariaLabel}

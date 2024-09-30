@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import {
   Link,
-  ExpansionBox,
+  FactBox,
   Tabs,
   Divider,
   Table as SSBTable,
@@ -159,7 +159,7 @@ function StaticVisualization(props: StaticVisualizationProps) {
             {renderTabs()}
             {activeTab === 'figure' && (
               <div className='static-visualization-chart' id={`tabpanel-0-${props.id}`}>
-                <img alt={props.altText} src={props.imageSrc} />
+                <img alt={props.altText} src={props.imageSrc} loading='lazy' />
               </div>
             )}
 
@@ -169,7 +169,7 @@ function StaticVisualization(props: StaticVisualizationProps) {
               </div>
             )}
 
-            <ExpansionBox header={props.descriptionStaticVisualization} text={renderLongDescriptionAndSources()} />
+            <FactBox header={props.descriptionStaticVisualization} text={renderLongDescriptionAndSources()} />
           </figure>
         </Col>
       </Row>

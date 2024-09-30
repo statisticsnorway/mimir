@@ -73,7 +73,7 @@ const RelatedStatistics = (props: RelatedStatisticsProps) => {
                 href={href}
                 title={title}
                 ariaDescribedBy='text'
-                icon={icon && <img src={icon} alt={iconAlt ?? ''} />}
+                icon={icon && <img src={icon} alt={iconAlt ?? ''} loading='lazy' />}
               >
                 <Text>{preamble}</Text>
               </Card>

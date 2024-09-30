@@ -399,7 +399,7 @@ function Bestbet(props: BestbetProps) {
         <Row className='bestbet-header'>
           <Col className='flex-row align-items-center'>
             <div className='logo-container'>
-              <img src={props.logoUrl} className='logo' />
+              <img src={props.logoUrl} className='logo' loading='lazy' />
               {props.environmentText ? (
                 <span className='environment-logo-overlay'>[{props.environmentText}]</span>
               ) : null}
