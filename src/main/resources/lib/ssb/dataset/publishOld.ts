@@ -112,24 +112,18 @@ export function publishDataset(): void {
           status: JobStatus.STARTED,
           dataSources: [],
         }
-
         const draftContext: ContextParams = {
           branch: 'draft',
         }
-
         const statisticDraft: Content<Statistics> | null = run(draftContext, () => {
           return getContent({ key: stat._id })
         })
-
         const dataSourceIdsMaster: Array<string> = getDataSourceIdsFromStatistics(stat)
         const dataSourceIdsDraft: Array<string> = statisticDraft ? getDataSourceIdsFromStatistics(statisticDraft) : []
         const uniqueDatasourceDraft: Array<string> = dataSourceIdsDraft.filter(
           (item) => !dataSourceIdsMaster.includes(item)
         )
         const dataSourceIds: Array<string> = dataSourceIdsMaster.concat(uniqueDatasourceDraft)
-
-        log.info('DatasourceIds: ' + JSON.stringify(dataSourceIds, null, 4))
-
         const dataSources: Array<Content<DataSource> | null> = dataSourceIds.map((key) => {
           return getContent({
             key,
