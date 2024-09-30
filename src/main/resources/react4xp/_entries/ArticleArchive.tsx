@@ -29,14 +29,6 @@ function ArticleArchive(props: ArticleArchiveProps) {
   const [totalCount, setTotalCount] = useState(firstArticles.total)
   const [loading, setLoading] = useState<boolean>()
 
-  useEffect(() => {
-    if (image) {
-      const { imageMobileUrl, imageTabletUrl } = generateImageUrls(image)
-      console.log({ imageMobileUrl, imageTabletUrl })
-      console.log(image)
-    }
-  }, [image])
-
   function fetchArticles() {
     setLoading(true)
     axios
