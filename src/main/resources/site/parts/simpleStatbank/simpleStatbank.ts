@@ -74,6 +74,7 @@ function renderPart(req: XP.Request, simpleStatbankId?: string): XP.Response {
     placeholderDropdown: simpleStatbank.data.placeholderDropdown ?? '',
     displayDropdown: simpleStatbank.data.displayDropdown ?? '',
     resultText: simpleStatbank.data.resultText,
+    lowerCaseVariableFirstLetter: simpleStatbank.data.lowerCaseVariableFirstLetter,
     unit: simpleStatbank.data.unit ?? '',
     timeLabel: simpleStatbank.data.timeLabel,
     resultFooter: simpleStatbank.data.resultFooter ?? '',
