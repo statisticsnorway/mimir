@@ -43,6 +43,7 @@ function renderPart(req) {
   // finn ut om brukern er fag eller admin
   const userHasDashboardFagRole = hasRole(DASHBOARD_FAG)
   const userHasAdmin = hasRole('system.admin')
+  //nais delete test comment 
 
   const dashboardOptionsForUser = {
     dashboardTools: userHasAdmin,
