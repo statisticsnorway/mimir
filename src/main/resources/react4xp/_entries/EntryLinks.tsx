@@ -28,7 +28,7 @@ const EntryLinks = (props: EntryLinksProps) => {
         <div className='col-md-3 mt-4 p-0' key={`entry-link-${index}`}>
           <div className='row text-start text-md-center '>
             <div className='col-md-12 col-auto align-items-end d-none d-md-inline'>
-              <img src={icon} alt={altText ? altText : ''} className='desktop-icons' />
+              <img src={icon} alt={altText ? altText : ''} className='desktop-icons' loading='lazy' />
             </div>
             <div className='col-md-12 col-10 mt-md-4 d-md-flex justify-content-center'>
               <Link href={href} linkType='header' className='d-none d-md-block pt-1' standAlone>

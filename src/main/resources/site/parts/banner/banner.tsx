@@ -25,7 +25,14 @@ function Banner(props: BannerProps) {
     <>
       {bannerImage && (
         <figure className='banner-image position-absolute d-flex justify-content-center'>
-          <img className=' d-print-none' sizes={sizes} src={bannerImage} srcSet={srcset} alt={bannerImageAltText} />
+          <img
+            className=' d-print-none'
+            sizes={sizes}
+            src={bannerImage}
+            srcSet={srcset}
+            alt={bannerImageAltText}
+            loading='lazy'
+          />
         </figure>
       )}
       <div className='container h-100'>
@@ -55,7 +62,7 @@ function Banner(props: BannerProps) {
               {isLandingPage && (
                 <div className='col-12 position-relative'>
                   <a href={logoUrl}>
-                    <img className='logo' src={logoSrc} alt={logoAltText ? logoAltText : ' '} />
+                    <img className='logo' src={logoSrc} alt={logoAltText ? logoAltText : ' '} loading='lazy' />
                   </a>
                 </div>
               )}

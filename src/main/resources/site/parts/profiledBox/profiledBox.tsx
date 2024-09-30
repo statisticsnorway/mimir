@@ -11,7 +11,7 @@ const ProfiledBox = (props: ProfiledBoxProps) => {
       subTitle={subTitle}
       title={title}
       linkType='header'
-      image={<img src={imgUrl} alt={imageAltText} />}
+      image={<img src={imgUrl} alt={imageAltText} loading='lazy' />}
       ariaLabel={ariaLabel}
     >
       <Paragraph className={`preambleText${titleSize ? ` title-size-${titleSize}` : ''}`} aria-hidden='true'>
