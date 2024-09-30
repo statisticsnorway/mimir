@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Divider, Button, LeadParagraph, Paragraph, Link } from '@statisticsnorway/ssb-component-library'
 import { Container, Row, Col } from 'react-bootstrap'
 import { ChevronDown } from 'react-feather'
@@ -29,13 +29,9 @@ function ArticleArchive(props: ArticleArchiveProps) {
   const [totalCount, setTotalCount] = useState(firstArticles.total)
   const [loading, setLoading] = useState<boolean>()
 
-  useEffect(() => {
-    if (image) {
-      const { imageMobileUrl, imageTabletUrl } = generateImageUrls(image)
-      console.log({ imageMobileUrl, imageTabletUrl })
-      console.log(image)
-    }
-  }, [image])
+  const { imageMobileUrl, imageTabletUrl } = image
+    ? generateImageUrls(image)
+    : { imageMobileUrl: '', imageTabletUrl: '' }
 
   function fetchArticles() {
     setLoading(true)
@@ -135,9 +131,7 @@ function ArticleArchive(props: ArticleArchiveProps) {
           <Col className='col-12 d-flex justify-content-center'>
             <img
               src={image}
-              srcSet={`${generateImageUrls(image).imageMobileUrl} 600w, 
-           ${generateImageUrls(image).imageTabletUrl} 992w, 
-           ${image} 1180w`}
+              srcSet={`${imageMobileUrl} 600w, ${imageTabletUrl} 992w, ${image} 1180w`}
               sizes='(max-width: 600px) 600px, (max-width: 992px) 992px, 1180px'
               alt={imageAltText}
               loading='lazy'
