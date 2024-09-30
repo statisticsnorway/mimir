@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Divider, Button, LeadParagraph, Paragraph, Link } from '@statisticsnorway/ssb-component-library'
 import { Container, Row, Col } from 'react-bootstrap'
 import { ChevronDown } from 'react-feather'
