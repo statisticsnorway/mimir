@@ -2,15 +2,14 @@ import { type Content } from '/lib/xp/content'
 import { getContent, getComponent, assetUrl } from '/lib/xp/portal'
 import { type Phrases } from '/lib/types/language'
 import { type Contact as StatRegContacts } from '/lib/ssb/dashboard/statreg/types'
-import { find } from '/lib/vendor/ramda'
 import { render } from '/lib/enonic/react4xp'
-
 import { renderError } from '/lib/ssb/error/error'
 import { getContactsFromRepo } from '/lib/ssb/statreg/contacts'
+import { getSelectedContacts } from '/lib/ssb/parts/contact'
 import { ensureArray } from '/lib/ssb/utils/arrayUtils'
 import { getPhrases } from '/lib/ssb/utils/language'
-import { type StatisticContactProps, type Contact } from '/lib/types/partTypes/statisticContact'
-import { type Article, type Statistics } from '/site/content-types'
+import { type StatisticContactProps } from '/lib/types/partTypes/statisticContact'
+import { type Statistics } from '/site/content-types'
 
 export function get(req: XP.Request) {
   try {
@@ -24,28 +23,8 @@ export function preview(req: XP.Request) {
   return renderPart(req)
 }
 
-function splitPhoneNumber(number: string): string {
-  return number?.match(/.{1,2}/g)?.join(' ') || ''
-}
-
-const landCodeVisual = '(+47) '
-const landCode = '+47'
-
-function transformContact(contact: StatRegContacts, language: string): Contact {
-  return {
-    id: contact.id,
-    name: contact.name,
-    email: contact.email,
-    phone:
-      language == 'en' && contact.telephone != ''
-        ? landCodeVisual.concat(splitPhoneNumber(contact.telephone as string))
-        : splitPhoneNumber(contact.telephone as string),
-    phoneLink: landCode.concat(contact.telephone as string),
-  }
-}
-
 function renderPart(req: XP.Request): XP.Response {
-  const page = getContent<Content<Article | Statistics>>()
+  const page = getContent<Content<Statistics>>()
   if (!page) throw Error('No page found')
 
   const pageLanguage: string = page.language ? page.language : 'nb'
@@ -57,19 +36,11 @@ function renderPart(req: XP.Request): XP.Response {
   const statRegContacts: Array<StatRegContacts> = getContactsFromRepo()
   let contactIds: Array<string> = []
 
-  if (part.config.contacts) {
-    contactIds = contactIds.concat(ensureArray(part.config.contacts))
-  }
   if (page.data.contacts) {
     contactIds = contactIds.concat(ensureArray(page.data.contacts))
   }
 
-  const selectedContacts = contactIds.reduce((acc: Array<Contact>, contactId) => {
-    const found: StatRegContacts | undefined = statRegContacts
-      ? find((contact: StatRegContacts) => `${contact.id}` === `${contactId}`)(statRegContacts)
-      : undefined
-    return found ? acc.concat(transformContact(found, pageLanguage)) : acc
-  }, [])
+  const selectedContacts = getSelectedContacts(contactIds, statRegContacts, pageLanguage)
 
   const props: StatisticContactProps = {
     icon: assetUrl({
