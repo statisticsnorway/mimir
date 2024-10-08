@@ -3,6 +3,7 @@ import { getUser, User } from '/lib/xp/auth'
 import { EditorCallback, EVENT_LOG_REPO, EVENT_LOG_BRANCH, createEventLog } from '/lib/ssb/repo/eventLog'
 import { DataSourceInfo, RSSFilterLogData } from '/lib/ssb/cron/rss'
 import { modifyNode, getNode, queryNodes } from '/lib/ssb/repo/common'
+import { RssResult } from '../cron/pushRss'
 
 export enum JobStatus {
   STARTED = 'STARTED',
@@ -33,7 +34,12 @@ export interface JobInfo {
   data: {
     status: typeof JOB_STATUS_STARTED | typeof JOB_STATUS_COMPLETE
     task: string
-    refreshDataResult: object | Array<StatisticsPublishResult> | DatasetRefreshResult | CalculatorRefreshResult
+    refreshDataResult:
+      | object
+      | Array<StatisticsPublishResult>
+      | DatasetRefreshResult
+      | CalculatorRefreshResult
+      | RssResult
     message: string
     httpStatusCode?: number
     jobStarted: string
@@ -63,6 +69,9 @@ export interface DataSourceStatisticsPublishResult {
   id: string
   status: string
   message: string
+}
+export interface PushRSSResult {
+  result: Array<RssResult>
 }
 export interface JobEvent {
   data: {

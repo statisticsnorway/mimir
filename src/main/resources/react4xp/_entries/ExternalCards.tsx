@@ -22,7 +22,7 @@ const ExternalCards = (props: ExternalCardsProps) => {
               <Card
                 href={link.href}
                 hrefText={link.children}
-                icon={link.image && <img src={link.image} alt='' />}
+                icon={link.image && <img src={link.image} alt='' loading='lazy' />}
                 profiled
                 external
                 ariaLabel={link.children}

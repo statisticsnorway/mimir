@@ -21,6 +21,7 @@ function SimpleStatbank(props: SimpleStatbankProps) {
     labelDropdown,
     displayDropdown,
     resultText,
+    lowerCaseVariableFirstLetter,
     resultFooter,
     timeLabel,
     statbankApiData,
@@ -60,12 +61,24 @@ function SimpleStatbank(props: SimpleStatbankProps) {
     if (!!icon) {
       return (
         <div className='icon-wrapper'>
-          <img src={icon} alt={altText ? altText : ''} aria-hidden='true' />
+          <img src={icon} alt={altText ? altText : ''} aria-hidden='true' loading='lazy' />
         </div>
       )
     } else {
       return
     }
+  }
+
+  function getResultText() {
+    let dropdownValue = selectedValue?.title as string
+    if (lowerCaseVariableFirstLetter) {
+      const dropdownValueFirstLetterLowerCase = dropdownValue.split(' ').map((value) => {
+        // For values such as occupation; first letter of dropdown value should be lower case
+        return value[0].toLowerCase() + value.slice(1)
+      })
+      dropdownValue = dropdownValueFirstLetterLowerCase.join(' ')
+    }
+    return resultText.replace('[code]', dropdownValue)
   }
 
   function renderNumber() {
@@ -84,11 +97,11 @@ function SimpleStatbank(props: SimpleStatbankProps) {
   function renderResult() {
     if (selectedValue && showResult) {
       return (
-        <Container className='simple-statbank-result' ref={scrollAnchor} tabIndex='0'>
+        <Container className='simple-statbank-result' ref={scrollAnchor} tabIndex={0}>
           <div aria-live='polite' aria-atomic='true'>
             <Row>
               <Title size={3} className='result-title'>
-                {resultText}
+                {getResultText()}
               </Title>
             </Row>
             <Row>

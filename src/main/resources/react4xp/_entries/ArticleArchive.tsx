@@ -6,6 +6,7 @@ import { default as groupBy } from 'ramda/es/groupBy'
 import axios from 'axios'
 import { sanitize } from '../../lib/ssb/utils/htmlUtils'
 import { type ArticleArchiveProps, type ParsedArticleData } from '../../lib/types/partTypes/articleArchive'
+import { generateImageUrls } from '../../lib/ssb/utils/generateImageUrlUtils'
 
 function ArticleArchive(props: ArticleArchiveProps) {
   const {
@@ -124,7 +125,17 @@ function ArticleArchive(props: ArticleArchiveProps) {
         </Col>
         {image && (
           <Col className='col-12 d-flex justify-content-center'>
-            <img src={image} alt={imageAltText} />
+            <img
+              src={image}
+              srcSet={`${generateImageUrls(image).imageMobileUrl} 600w, 
+           ${generateImageUrls(image).imageTabletUrl} 992w, 
+           ${image} 1180w`}
+              sizes='(max-width: 600px) 600px, (max-width: 992px) 992px, 1180px'
+              alt={imageAltText}
+              loading='lazy'
+              decoding='async'
+              style={{ width: '100%', height: 'auto', objectFit: 'contain' }}
+            />
           </Col>
         )}
         <Col className='col-12 col-lg-10 offset-lg-1 p-0'>

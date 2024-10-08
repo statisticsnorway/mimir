@@ -1,6 +1,6 @@
 import React from 'react'
 import { Accordion, Button, Link } from '@statisticsnorway/ssb-component-library'
-import { ArrowRight, ArrowUp, Facebook, Twitter, Rss, Linkedin } from 'react-feather'
+import { ArrowRight, ArrowUp, Facebook, Twitter, Rss, Linkedin, Instagram } from 'react-feather'
 import { FooterContent } from '../../lib/types/footer'
 
 const Footer = (props: FooterContent) => {
@@ -13,6 +13,7 @@ const Footer = (props: FooterContent) => {
     facebookUrl,
     twitterUrl,
     linkedinUrl,
+    instagramUrl,
     rssUrl,
     globalLinks,
     copyrightUrl,
@@ -72,16 +73,30 @@ const Footer = (props: FooterContent) => {
   }
 
   function renderSocialLinks() {
-    if (facebookUrl && twitterUrl && linkedinUrl && rssUrl) {
-      return (
-        <div className='social-links'>
+    return (
+      <div className='social-links'>
+        {facebookUrl && (
           <Link ariaLabel='Facebook' href={facebookUrl} isExternal negative icon={<Facebook size={24} />} standAlone />
+        )}
+        {twitterUrl && (
           <Link ariaLabel='Twitter' href={twitterUrl} isExternal negative icon={<Twitter size={24} />} standAlone />
+        )}
+        {linkedinUrl && (
           <Link ariaLabel='Linkedin' href={linkedinUrl} isExternal negative icon={<Linkedin size={24} />} standAlone />
-          <Link ariaLabel='Rss' href={rssUrl} negative icon={<Rss size={24} />} standAlone />
-        </div>
-      )
-    }
+        )}
+        {instagramUrl && (
+          <Link
+            ariaLabel='Instagram'
+            href={instagramUrl}
+            isExternal
+            negative
+            icon={<Instagram size={24} />}
+            standAlone
+          />
+        )}
+        {rssUrl && <Link ariaLabel='Rss' href={rssUrl} negative icon={<Rss size={24} />} standAlone />}
+      </div>
+    )
   }
 
   function renderGlobalLinks() {
@@ -130,7 +145,7 @@ const Footer = (props: FooterContent) => {
         <div className='container'>
           <h2 className='sr-only'>{hiddenFooterText}</h2>
           <div className='footer-top-row'>
-            <img src={logoUrl} alt='' />
+            <img src={logoUrl} alt='' loading='lazy' />
             <Button negative onClick={() => goToTop()}>
               <ArrowUp size='22' className='me-2' />
               {topButtonText}
