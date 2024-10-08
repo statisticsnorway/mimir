@@ -19,72 +19,73 @@ $container-max-widths: (
   sm: 540px,
   md: 720px,
   lg: 960px,
-  xl: 1180px
+  xl: 1180px,
 );
 
-@import "bootstrap";
-@import "@statisticsnorway/ssb-component-library/src/main.scss";
+@import 'bootstrap';
+@import '@statisticsnorway/ssb-component-library/src/main.scss';
 
-@import "./map";
-@import "./color";
-@import "./font";
-@import "./header";
-@import "./footer";
-@import "./menuBox";
-@import "./dashboard";
-@import "./variableCardsList";
-@import "./layout";
-@import "./banner";
-@import "./dropdown"; // TODO: remove when implemented correctly from design system
-@import "./highchart";
-@import "./keyFigures";
-@import "./menuDropdown";
-@import "./menu";
-@import "./preface";
-@import "./globalStyles";
-@import "./infoGraphic";
-@import "./profiledBox";
-@import "./article";
-@import "./contacts";
-@import "./relatedContentBox";
-@import "./profiledLinkIcon";
-@import "./downloadLink";
-@import "./relatedArticles";
-@import "./relatedExternalLinks";
-@import "./relatedFactPage";
-@import "./statistics";
-@import "./relatedStatistics";
-@import "./statbankBox";
-@import "./articleArchive";
-@import "./table";
-@import "./statbankLinkList";
-@import "./attachmentTablesFigures";
-@import "./omStatistikken";
-@import "./404";
-@import "./externalCard";
-@import "./endedStatistics";
-@import "./frontPageBanner";
-@import "./frontpage";
-@import "./entryLinks";
-@import "./upcomingReleases";
-@import "./articleList";
-@import "./calculator";
-@import "./categoryLinks";
-@import "./nameSearch";
-@import "./publicationArchive";
-@import "./statbankSubjectTree";
-@import "./contactForm";
-@import "./searchResult";
-@import "./localSearch";
-@import "./bestbet";
-@import "./staticVisualization";
-@import "./employee";
-@import "./employeeList";
-@import "./project";
-@import "./richText";
-@import "./videoEmbed";
-@import "./simpleStatbank";
-@import "./subjectArticleList";
+@import './map';
+@import './color';
+@import './font';
+@import './header';
+@import './footer';
+@import './menuBox';
+@import './dashboard';
+@import './variableCardsList';
+@import './layout';
+@import './banner';
+@import './dropdown'; // TODO: remove when implemented correctly from design system
+@import './highchart';
+@import './keyFigures';
+@import './menuDropdown';
+@import './menu';
+@import './preface';
+@import './globalStyles';
+@import './infoGraphic';
+@import './profiledBox';
+@import './article';
+@import './contacts';
+@import './relatedContentBox';
+@import './profiledLinkIcon';
+@import './downloadLink';
+@import './relatedArticles';
+@import './relatedExternalLinks';
+@import './relatedFactPage';
+@import './statistics';
+@import './relatedStatistics';
+@import './statbankBox';
+@import './articleArchive';
+@import './table';
+@import './statbankLinkList';
+@import './attachmentTablesFigures';
+@import './omStatistikken';
+@import './404';
+@import './externalCard';
+@import './endedStatistics';
+@import './frontPageBanner';
+@import './frontpage';
+@import './entryLinks';
+@import './upcomingReleases';
+@import './articleList';
+@import './calculator';
+@import './categoryLinks';
+@import './nameSearch';
+@import './publicationArchive';
+@import './statbankSubjectTree';
+@import './contactForm';
+@import './searchResult';
+@import './localSearch';
+@import './bestbet';
+@import './staticVisualization';
+@import './employee';
+@import './employeeList';
+@import './project';
+@import './richText';
+@import './videoEmbed';
+@import './simpleStatbank';
+@import './subjectArticleList';
+@import './popup';
 
 body {
   -moz-osx-font-smoothing: grayscale;
@@ -98,7 +99,8 @@ section {
   width: 100%;
 }
 
-section + section, .xp-layout + .xp-layout {
+section + section,
+.xp-layout + .xp-layout {
   margin-top: $spacer * 3;
 }
 
@@ -150,7 +152,6 @@ section.part-divider + section.part-divider {
   }
 }
 
-
 .part-config-error {
   background: $ssb-red-1;
   padding: 1rem;
@@ -171,9 +172,9 @@ section.part-divider + section.part-divider {
 .link-anchor {
   position: relative;
   width: 0;
-  font-size: .8em;
+  font-size: 0.8em;
   opacity: 0;
-  transition: opacity .2s ease-in-out;
+  transition: opacity 0.2s ease-in-out;
 }
 .anchor-wrapper {
   border: none;
@@ -191,26 +192,26 @@ section h5[id]:focus {
 }
 
 p.thin {
-    font-weight: 100;
-    margin: 0;
-    line-height: 1.2em;
-    color: #fff;
+  font-weight: 100;
+  margin: 0;
+  line-height: 1.2em;
+  color: #fff;
 }
 
 p.bold {
-    font-weight: 900;
-    margin: 0;
-    margin-top: -5px;
-    color: #fff;
+  font-weight: 900;
+  margin: 0;
+  margin-top: -5px;
+  color: #fff;
 }
 
 .rel {
-    width: 30%;
-    margin: 0 auto;
-    position: relative;
-    text-align: center;
-    padding: 20px;
-    border-style: dotted;
-    border-color: white;
-    border-width: medium;
+  width: 30%;
+  margin: 0 auto;
+  position: relative;
+  text-align: center;
+  padding: 20px;
+  border-style: dotted;
+  border-color: white;
+  border-width: medium;
 }

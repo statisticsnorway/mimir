@@ -1,0 +1,96 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background-color: transparent;
+}
+
+.popup-container {
+  width: 346px;
+  background-color: #00824d;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.3s ease-in-out;
+  z-index: 9999;
+  position: fixed;
+  bottom: 3px;
+  right: 20px;
+}
+
+.popup-container.closed .popup-content {
+  display: none;
+}
+
+.popup-container.open {
+  background-color: #00824d;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px;
+  background-color: #00824d;
+  border: none;
+  width: 100%;
+  cursor: pointer;
+  outline: none;
+}
+
+.popup-container.open .popup-header {
+  padding-bottom: 0;
+}
+
+.header-text {
+  color: white;
+  font-family: Roboto, sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  text-align: left;
+  margin: 0;
+  line-height: 28px;
+}
+
+.icon-wrapper {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup-content {
+  padding: 14px;
+  padding-top: 0;
+  margin-top: 0;
+  height: 144px;
+}
+
+.popup-content p {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: white;
+  margin-top: 0;
+  line-height: 24px;
+  text-align: left;
+}
+
+.popup-content .popup-button {
+  width: 169px;
+  height: 44px;
+  margin-top: 0;
+  padding: 8px 20px;
+  background-color: #b6e8b8;
+  border-radius: 2px;
+  font-family: Roboto, sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: #274247;
+  border: none;
+  cursor: pointer;
+  line-height: 28px;
+  white-space: nowrap;
+}
