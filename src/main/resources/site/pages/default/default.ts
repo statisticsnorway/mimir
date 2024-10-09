@@ -85,7 +85,7 @@ export function get(req: XP.Request): XP.Response {
     : undefined
   const showIngress: string | boolean | undefined = ingress && page.type === 'mimir:page'
 
-  // Create preview if available
+  // Create preview if availablee
   let preview: XP.Response | undefined
   if (partsWithPreview.includes(page.type)) {
     let name: string = page.type.replace(/^.*:/, '')
