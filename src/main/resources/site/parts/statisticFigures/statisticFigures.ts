@@ -82,6 +82,9 @@ function getTablesAndFiguresComponent(page: Content<Statistics>, req: XP.Request
       : undefined,
     showAll: phrases.showAll,
     showLess: phrases.showLess,
+    selectedFigures: phrases.statisticSelectedFigures,
+    statbankBoxTitle: phrases.statisticStatbankBoxTitle,
+    statbankBoxText: phrases.statisticStatbankBoxText,
     appName: app.name,
     title,
     icon: assetUrl({

@@ -10,7 +10,18 @@ import Table from '../table/Table'
 
 function StatisticFigures(props: StatisticFiguresProps) {
   const [isHidden, setIsHidden] = useState(true)
-  const { accordions, freeText, showAll, showLess, icon, iconStatbankBox, statbankHref } = props
+  const {
+    accordions,
+    freeText,
+    showAll,
+    showLess,
+    selectedFigures,
+    statbankBoxTitle,
+    statbankBoxText,
+    icon,
+    iconStatbankBox,
+    statbankHref,
+  } = props
   const currentElement = useRef<null | HTMLLIElement>(null)
   const [focusElement, setFocusElement] = useState(false)
   const [checkOverflow, setCheckOverflow] = useState(false)
@@ -77,13 +88,10 @@ function StatisticFigures(props: StatisticFiguresProps) {
             <img src={iconStatbankBox} alt='' />
           </div>
           <div className='title-text-wrapper'>
-            <a className='title' href={statbankHref} id='statbankLink' aria-label='Se alle tall fra denne statistikken'>
-              Se alle tall fra denne statistikken
+            <a className='title' href={statbankHref} id='statbankLink'>
+              {statbankBoxTitle}
             </a>
-            <span className='text'>
-              Vi har flere tall for denne statistikken i Statistikkbanken. Lag figurer og tabeller med tallene du
-              trenger.
-            </span>
+            <span className='text'>{statbankBoxText}</span>
           </div>
           <ArrowRight size={28} className='arrow-icon' aria-hidden='true' />
         </div>
@@ -120,7 +128,7 @@ function StatisticFigures(props: StatisticFiguresProps) {
   return (
     <React.Fragment>
       <div className='title-wrapper'>
-        <Title size={2}>Utvalgte tall fra denne statistikken</Title>
+        <Title size={2}>{selectedFigures}</Title>
         <div className='icon-wrapper'>
           <img src={icon} alt='' />
         </div>

@@ -6,6 +6,9 @@ export interface StatisticFiguresProps {
   freeText: string | undefined
   showAll: string
   showLess: string
+  selectedFigures: string
+  statbankBoxTitle: string
+  statbankBoxText: string
   appName: string
   title: string
   icon: string
