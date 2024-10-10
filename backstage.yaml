@@ -2,6 +2,11 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: mimir
+  description: |
+    Publiseringsløsning for ssb.no
+  links:
+    - title: Enonic Admin
+      url: https://ssb-xp7p-admin.enonic.cloud/xp/admin/tool
   tags:
     - typescript
     - javascript
@@ -10,7 +15,7 @@ metadata:
   annotations:
     github.com/project-slug: statisticsnorway/mimir
 spec:
-  type: service
+  type: website
   system: SSBNO
   owner: ssbno-developers
   lifecycle: production
