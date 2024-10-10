@@ -3,7 +3,7 @@ kind: Component
 metadata:
   name: mimir
   description: |
-    Publication solution for ssb.no
+    Content Management Solution for ssb.no
   links:
     - title: Enonic Admin
       url: https://ssb-xp7p-admin.enonic.cloud/xp/admin/tool
@@ -11,7 +11,7 @@ metadata:
     - typescript
     - javascript
     - react
-    - enonic xp
+    - enonic-xp
   annotations:
     github.com/project-slug: statisticsnorway/mimir
 spec:
