@@ -11,6 +11,6 @@ export interface StatisticHeader {
   modifiedDateId: string
   ingress: string
   showPreviewDraft: boolean
-  draftUrl: string
-  draftButtonText: string
+  previewButtonUrl: string
+  previewButtonText: string
 }

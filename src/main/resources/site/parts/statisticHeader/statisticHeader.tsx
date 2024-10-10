@@ -16,16 +16,16 @@ function StatisticHeader(props: StatisticHeader) {
     modifiedText,
     previousRelease,
     showPreviewDraft,
-    draftUrl,
-    draftButtonText,
+    previewButtonUrl,
+    previewButtonText,
   } = props
 
   function renderShowDraftButton() {
     if (showPreviewDraft) {
       return (
         <div className='show-draft col-12'>
-          <Button className='float-end' primary onClick={() => (window.location.href = draftUrl)}>
-            {draftButtonText}
+          <Button className='float-end' primary onClick={() => (window.location.href = previewButtonUrl)}>
+            {previewButtonText}
           </Button>
         </div>
       )

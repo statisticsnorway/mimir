@@ -73,19 +73,14 @@ function renderPart(req: XP.Request): XP.Response {
   let previousReleaseDate: string | undefined
   const showPreviewDraft: boolean = hasWritePermissionsAndPreview(req, page._id)
   const paramShowDraft = !!req.params.showDraft
-  const draftUrl: string = paramShowDraft
-    ? pageUrl({
-        path: page._path,
-      })
-    : pageUrl({
-        // TODO - test this
-        path: page._path,
-        params: {
-          showDraft: true,
-        },
-      })
+  const previewButtonUrl: string = pageUrl({
+    path: page._path,
+    params: {
+      showDraft: !paramShowDraft,
+    },
+  })
 
-  const draftButtonText: string = paramShowDraft ? 'Vis publiserte tall' : 'Vis upubliserte tall'
+  const previewButtonText: string = paramShowDraft ? 'Vis publiserte tall' : 'Vis upubliserte tall'
   const language: string = page.language === 'en' || page.language === 'nn' ? page.language : 'nb'
 
   const statistic: StatisticInListing | undefined = getStatisticByIdFromRepo(page.data.statistic)
@@ -135,8 +130,8 @@ function renderPart(req: XP.Request): XP.Response {
     modifiedDateId: id,
     ingress: aboutTheStatisticsContent?.data.ingress || '',
     showPreviewDraft,
-    draftUrl,
-    draftButtonText,
+    previewButtonUrl,
+    previewButtonText,
   }
 
   return r4xpRender('site/parts/statisticHeader/statisticHeader', props, req, {
