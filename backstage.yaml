@@ -1,0 +1,21 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: mimir
+  description: |
+    Content Management Solution for ssb.no
+  links:
+    - title: Enonic Admin
+      url: https://ssb-xp7p-admin.enonic.cloud/xp/admin/tool
+  tags:
+    - typescript
+    - javascript
+    - react
+    - enonic-xp
+  annotations:
+    github.com/project-slug: statisticsnorway/mimir
+spec:
+  type: website
+  system: SSBNO
+  owner: ssbno-developers
+  lifecycle: production
