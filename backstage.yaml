@@ -1,0 +1,16 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: mimir
+  tags:
+    - typescript
+    - javascript
+    - react
+    - enonic xp
+  annotations:
+    github.com/project-slug: statisticsnorway/mimir
+spec:
+  type: service
+  system: ssbno
+  owner: ssbno-developers
+  lifecycle: production
