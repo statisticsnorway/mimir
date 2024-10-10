@@ -11,6 +11,6 @@ metadata:
     github.com/project-slug: statisticsnorway/mimir
 spec:
   type: service
-  system: ssbno
+  system: SSBNO
   owner: ssbno-developers
   lifecycle: production
