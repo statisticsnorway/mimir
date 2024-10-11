@@ -1,16 +1,19 @@
-export interface StatisticHeader {
+export interface StatisticHeader extends StatisticsDates {
   title: string
-  updated: string
-  nextUpdate: string
-  changed: string
-  statisticsAbout: string
-  changeDate: string | undefined
   modifiedText: string | null | undefined
-  previousRelease: string | undefined
-  nextRelease: string | undefined
   modifiedDateId: string
   ingress: string
+  statisticsAbout: string
   showPreviewDraft: boolean
   previewButtonUrl: string
   previewButtonText: string
+}
+
+export interface StatisticsDates {
+  updatedPhrase: string
+  nextUpdatePhrase: string
+  changedPhrase: string
+  changeDate: string | undefined
+  previousRelease: string | undefined
+  nextRelease: string | undefined
 }

@@ -8,9 +8,9 @@ function StatisticHeader(props: StatisticHeader) {
     title,
     ingress,
     nextRelease,
-    nextUpdate,
-    updated,
-    changed,
+    nextUpdatePhrase,
+    updatedPhrase,
+    changedPhrase,
     statisticsAbout,
     changeDate,
     modifiedText,
@@ -45,16 +45,16 @@ function StatisticHeader(props: StatisticHeader) {
       </div>
       <div className='titles-dates-wrapper'>
         <div className='updatedDate'>
-          <span className='fw-bold'>{updated}</span>
+          <span className='fw-bold'>{updatedPhrase}</span>
           <span>{previousRelease}</span>
         </div>
         <div className='nextUpdateDate'>
-          <span className='fw-bold'>{nextUpdate}</span>
+          <span className='fw-bold'>{nextUpdatePhrase}</span>
           <span>{nextRelease}</span>
         </div>
         {changeDate?.length && modifiedText ? (
           <div className='modifiedDate'>
-            <span className='fw-bold'>{changed}</span>
+            <span className='fw-bold'>{changedPhrase}</span>
             <Glossary explanation={modifiedText}>
               <span
                 dangerouslySetInnerHTML={{
