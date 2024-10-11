@@ -186,16 +186,19 @@ export function get(req: XP.Request): XP.Response {
   // Get the value of 'hidePopup' cookie
   const hidePopupCookie = req.cookies ? req.cookies['hidePopup'] : undefined
 
-  // Conditionally render the popup only if the cookie is NOT set to 'true'
+  // Check if the feature 'show-popup-survey' is enabled
+  const isPopupEnabled = isEnabled('show-popup-survey', false, 'ssb')
+
+  // Conditionally render the popup only if the feature is enabled and the cookie is NOT set to 'true'
   const popupComponent =
-    hidePopupCookie !== 'true'
+    isPopupEnabled && hidePopupCookie !== 'true'
       ? r4xpRender(
           'Popup',
           {}, // Pass props if needed
           req,
           { id: 'popup', body: '<div id="popup"></div>', pageContributions }
         )
-      : { body: '' } // Return an empty body when the cookie is set
+      : { body: '' } // Return an empty body when the cookie is set or feature is disabled
 
   // Assign pageContributions only when popup is rendered
   if (popupComponent && popupComponent.body && hidePopupCookie !== 'true') {
