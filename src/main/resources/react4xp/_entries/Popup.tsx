@@ -2,14 +2,34 @@ import React, { useState, useEffect } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
 
 const Popup = () => {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(window.innerWidth > 767) // Default open on larger viewports, closed on mobile
   const [isVisible, setIsVisible] = useState(true)
+  const [isReady, setIsReady] = useState(false) // Delay rendering until state is ready
 
+  // Check if the hidePopup cookie is set
   useEffect(() => {
     const hidePopupCookie = document.cookie.split('; ').find((row) => row.startsWith('hidePopup='))
     if (hidePopupCookie) {
       setIsVisible(false)
+    } else {
+      // Determine open state based on viewport width
+      setIsOpen(window.innerWidth > 767)
+      setIsVisible(true)
     }
+    setIsReady(true) // Ready to render after determining the state
+  }, [])
+
+  // Handle screen resizing for popup state
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 767) {
+        setIsOpen(false) // Close on mobile view
+      } else {
+        setIsOpen(true) // Open on larger view
+      }
+    }
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
   }, [])
 
   const toggleOpen = () => {
@@ -18,7 +38,14 @@ const Popup = () => {
 
   const closePopup = () => {
     setIsVisible(false)
-    document.cookie = 'hidePopup=true; max-age=600; path=/' // Store choice in cookies for 10 minutes
+
+    // Create an expiration date for 30 days from now
+    const date = new Date()
+    date.setTime(date.getTime() + 30 * 24 * 60 * 60 * 1000) // 30 days in milliseconds
+    const expires = `expires=${date.toUTCString()}`
+
+    // Set the cookie with the expires attribute and path
+    document.cookie = `hidePopup=true; ${expires}; path=/; SameSite=Lax`
   }
 
   const openLinkInNewTab = () => {
@@ -27,25 +54,15 @@ const Popup = () => {
       '_blank',
       'noopener,noreferrer'
     )
+    // Close popup after the button is clicked
+    setIsOpen(false)
   }
 
-  if (!isVisible) return null
+  // Render nothing until the state is fully determined
+  if (!isReady || !isVisible) return null
 
   return (
     <div className={`popup-container ${isOpen ? 'open' : 'closed'}`}>
-      <span
-        onClick={closePopup}
-        style={{
-          position: 'absolute',
-          top: '10px',
-          left: '10px',
-          color: 'white',
-          fontSize: '16px',
-          cursor: 'pointer',
-        }}
-      >
-        X
-      </span>
       <button className='popup-header' aria-expanded={isOpen ? 'true' : 'false'} onClick={toggleOpen}>
         <h4 className='header-text'>Hvordan opplever du ssb.no?</h4>
         <div className='icon-wrapper'>
@@ -65,6 +82,9 @@ const Popup = () => {
           <button className='popup-button' onClick={openLinkInNewTab}>
             Til undersøkelsen
           </button>
+          <span className='close-popup' onClick={closePopup}>
+            X
+          </span>
         </div>
       )}
     </div>
