@@ -1,24 +1,51 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
 
 const Popup = () => {
   const [isOpen, setIsOpen] = useState(false)
+  const [isVisible, setIsVisible] = useState(true)
+
+  useEffect(() => {
+    const hidePopupCookie = document.cookie.split('; ').find((row) => row.startsWith('hidePopup='))
+    if (hidePopupCookie) {
+      setIsVisible(false)
+    }
+  }, [])
 
   const toggleOpen = () => {
     setIsOpen(!isOpen)
-    console.log(`State: ${!isOpen ? 'open' : 'closed'}, Icon: ${!isOpen ? 'ChevronUp' : 'ChevronDown'}`)
+  }
+
+  const closePopup = () => {
+    setIsVisible(false)
+    document.cookie = 'hidePopup=true; max-age=600; path=/' // Store choice in cookies for 10 minutes
   }
 
   const openLinkInNewTab = () => {
     window.open(
       'https://forms.office.com/Pages/ResponsePage.aspx?id=knAhx0CyHU69YfqXupdcvJkAFGNmKDFCsjsXHsjRxlJUNjkzSVZRVDdaOFpEWlJOOE1PNUJLMVdFMS4u&embed=true',
-      '_blank', // Open in new tab
-      'noopener,noreferrer' // Ensures security best practices
+      '_blank',
+      'noopener,noreferrer'
     )
   }
 
+  if (!isVisible) return null
+
   return (
     <div className={`popup-container ${isOpen ? 'open' : 'closed'}`}>
+      <span
+        onClick={closePopup}
+        style={{
+          position: 'absolute',
+          top: '10px',
+          left: '10px',
+          color: 'white',
+          fontSize: '16px',
+          cursor: 'pointer',
+        }}
+      >
+        X
+      </span>
       <button className='popup-header' aria-expanded={isOpen ? 'true' : 'false'} onClick={toggleOpen}>
         <h4 className='header-text'>Hvordan opplever du ssb.no?</h4>
         <div className='icon-wrapper'>
