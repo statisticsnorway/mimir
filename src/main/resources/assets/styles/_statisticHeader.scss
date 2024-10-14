@@ -6,10 +6,6 @@
     margin-bottom: $spacer * 1;
     margin-top: 3rem;
 
-    @include media-breakpoint-down(md) {
-      padding: 0;
-    }
-
     h1 {
       margin-bottom: 2rem;
       padding: 0;
@@ -21,6 +17,10 @@
       p {
         font-size: 1.25rem;
       }
+
+      @include media-breakpoint-down(md) {
+        margin-bottom: 3rem;
+      }
     }
 
     .introTitle {
@@ -28,6 +28,11 @@
       font-size: 1.25rem;
       line-height: 1.6;
       margin-bottom: 0.25rem;
+    }
+
+    @include media-breakpoint-down(md) {
+      padding: 0;
+      margin-bottom: 2rem;
     }
   }
 
@@ -38,7 +43,6 @@
     column-gap: 3rem;
     row-gap: 0.5rem;
 
-    //TODO: Fix this in ssb-component-library
     .glossary-button {
       background-image: none;
       &:hover,
@@ -51,10 +55,15 @@
     .nextUpdateDate,
     .modifiedDate {
       font-size: 1.25rem;
+
+      @include media-breakpoint-down(md) {
+        font-size: 1rem;
+        line-height: 2rem;
+      }
     }
   }
 
   @include media-breakpoint-down(md) {
-    margin-bottom: 6rem;
+    margin-bottom: 4rem;
   }
 }

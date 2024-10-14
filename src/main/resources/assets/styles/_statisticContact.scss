@@ -6,11 +6,14 @@
   border-radius: 2rem;
 
   .title-wrapper {
+    margin-bottom: 2rem;
+    margin-top: 1.5rem;
+    align-items: center;
     display: flex;
 
     h2 {
-      margin-bottom: 2rem;
-      margin-top: 1rem;
+      margin-bottom: 0;
+      margin-right: 0.5rem;
     }
 
     .icon-wrapper {
@@ -38,7 +41,16 @@
   }
 
   @include media-breakpoint-down(md) {
-    padding: 2.5rem 1.25rem;
+    padding: 1.5rem 1.25rem;
+
+    .title-wrapper {
+      margin-top: 1rem;
+
+      .icon-wrapper img {
+        height: 33px;
+        width: 33px;
+      }
+    }
 
     .contact-wrapper {
       padding: 1.25rem;
