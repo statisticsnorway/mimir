@@ -1,8 +1,7 @@
-import { type AccordionData } from '/lib/types/partTypes/accordion'
-import { type TableProps } from '/lib/types/partTypes/table'
+import { type AttachmentTablesFiguresData } from '/lib/types/partTypes/attachmentTablesFigures'
 
 export interface StatisticFiguresProps {
-  accordions: StatisticFiguresData[]
+  accordions: AttachmentTablesFiguresData[]
   freeText: string | undefined
   showAll: string
   showLess: string
@@ -14,11 +13,4 @@ export interface StatisticFiguresProps {
   icon: string
   iconStatbankBox: string
   statbankHref: string
-}
-
-export interface StatisticFiguresData extends AccordionData {
-  contentType: string
-  subHeader: string
-  props?: TableProps | object
-  pageContributions?: XP.PageContributions
 }
