@@ -28,7 +28,7 @@ jobs:
         uses: 'google-github-actions/auth@v2.1.6'
         with:
           workload_identity_provider: 'projects/906675412832/locations/global/workloadIdentityPools/ssb-identity-pool/providers/github-oidc-provider'
-          service_account: 'gh-ssbno@nais-management-b3a7.iam.gserviceaccount.com'
+          service_account: 'gh-ssb@nais-management-b3a7.iam.gserviceaccount.com'
           token_format: 'access_token'
       - id: 'get-credentials'
         uses: 'google-github-actions/get-gke-credentials@v2'
