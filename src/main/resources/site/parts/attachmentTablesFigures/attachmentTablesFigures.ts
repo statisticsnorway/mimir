@@ -98,7 +98,7 @@ function getTablesAndFiguresComponent(page: Content<Statistics>, req: XP.Request
     }
   }
 }
-
+//TODO Use lib/ssb/part/attachmentTablesFigures.ts like statisticFigures.ts
 function getTablesAndFigures(
   attachmentTablesAndFigures: Array<string>,
   req: XP.Request,
