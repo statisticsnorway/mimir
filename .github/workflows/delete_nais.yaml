@@ -31,7 +31,7 @@ jobs:
           service_account: 'gh-ssb@nais-management-b3a7.iam.gserviceaccount.com'
           token_format: 'access_token'
       - id: 'get-credentials'
-        uses: 'google-github-actions/get-gke-credentials@v2.1.6'
+        uses: 'google-github-actions/get-gke-credentials@vv2.2.1'
         with:
           cluster_name: 'nais-test'
           location: 'europe-north1'
