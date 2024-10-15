@@ -1,4 +1,4 @@
-name: NAIS Deploy
+name: NAIS Delete
 
 on:
   pull_request:
