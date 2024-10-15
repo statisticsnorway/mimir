@@ -87,7 +87,7 @@
     "axios": "~1.6.0",
     "babel-loader": "~9.2.1",
     "babel-preset-env": "~1.7.0",
-    "browser-sync": "^3.0.2",
+    "browser-sync": "^3.0.3",
     "cross-env": "~7.0.3",
     "cssnano": "~7.0.6",
     "esbuild-plugin-replace": "^1.4.0",
