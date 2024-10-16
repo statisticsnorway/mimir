@@ -5,7 +5,7 @@ import { sanitize } from '/lib/ssb/utils/htmlUtils'
 import { type AccordionData, AccordionItems, AccordionProps } from '/lib/types/partTypes/accordion'
 import { type StatisticDescriptionProps } from '/lib/types/partTypes/statisticDescription'
 
-function StatisticDescription(props: StatisticDescriptionProps) {
+function StatisticDescription(props: Readonly<StatisticDescriptionProps>) {
   const { icon, ingress, label, lastUpdatedPhrase, lastUpdated, accordions } = props
   const [selectedTag, setSelectedTag] = useState<string | undefined>(undefined)
   const [selectedCategory, setSelectedCategory] = useState<AccordionData | undefined>(

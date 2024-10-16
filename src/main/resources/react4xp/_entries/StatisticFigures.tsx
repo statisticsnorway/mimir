@@ -9,7 +9,7 @@ import { type TableProps } from '/lib/types/partTypes/table'
 
 import Table from '../table/Table'
 
-function StatisticFigures(props: StatisticFiguresProps) {
+function StatisticFigures(props: Readonly<StatisticFiguresProps>) {
   const [isHidden, setIsHidden] = useState(true)
   const {
     accordions,

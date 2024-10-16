@@ -53,14 +53,12 @@ function renderPart(req: XP.Request, aboutTheStatisticsId: string | undefined): 
         body: null,
       }
     }
+  } else if (req.mode === 'edit' || req.mode === 'inline' || req.mode === 'preview') {
+    return getOmStatistikken(req, page, aboutTheStatisticsId)
   } else {
-    if (req.mode === 'edit' || req.mode === 'inline' || req.mode === 'preview') {
+    return fromPartCache(req, `${page._id}-omStatistikken`, () => {
       return getOmStatistikken(req, page, aboutTheStatisticsId)
-    } else {
-      return fromPartCache(req, `${page._id}-omStatistikken`, () => {
-        return getOmStatistikken(req, page, aboutTheStatisticsId)
-      })
-    }
+    })
   }
 }
 

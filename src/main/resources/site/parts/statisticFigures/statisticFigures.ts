@@ -82,7 +82,7 @@ function getStatisticFiguresProps(
   const title: string = phrases.attachmentTablesFigures
   const statistic: StatisticInListing | undefined = (page.data.statistic &&
     getStatisticByIdFromRepo(page.data.statistic)) as StatisticInListing | undefined
-  const shortName: string | undefined = statistic && statistic.shortName ? statistic.shortName : undefined
+  const shortName: string | undefined = statistic?.shortName
 
   return {
     accordions: attachmentTableAndFigureView.map(({ id, open, subHeader, body, contentType, props }) => {

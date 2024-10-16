@@ -3,7 +3,7 @@ import { Row } from 'react-bootstrap'
 import { Link, Title } from '@statisticsnorway/ssb-component-library'
 import { type StatisticContactProps, type Contact } from '/lib/types/partTypes/statisticContact'
 
-function StatisticContact(props: StatisticContactProps) {
+function StatisticContact(props: Readonly<StatisticContactProps>) {
   const { icon, label, contacts } = props
 
   function renderContact(contact: Contact) {
@@ -27,7 +27,7 @@ function StatisticContact(props: StatisticContactProps) {
   }
 
   function renderContactsInfo() {
-    if (contacts?.length) {
+    if (contacts.length) {
       return <div className='contact-wrapper'>{contacts.map((contact) => renderContact(contact))}</div>
     }
     return null
@@ -41,7 +41,7 @@ function StatisticContact(props: StatisticContactProps) {
           <img src={icon} alt='' />
         </div>
       </div>
-      {contacts?.length && <div className='contact-list'>{renderContactsInfo()}</div>}
+      {contacts.length && <div className='contact-list'>{renderContactsInfo()}</div>}
     </Row>
   )
 }

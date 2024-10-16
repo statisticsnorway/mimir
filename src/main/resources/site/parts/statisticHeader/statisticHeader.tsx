@@ -3,7 +3,7 @@ import { Button, Glossary, Title } from '@statisticsnorway/ssb-component-library
 import { type StatisticHeader } from '/lib/types/partTypes/statisticHeader'
 import { sanitize } from '/lib/ssb/utils/htmlUtils'
 
-function StatisticHeader(props: StatisticHeader) {
+function StatisticHeader(props: Readonly<StatisticHeader>) {
   const {
     title,
     ingress,
