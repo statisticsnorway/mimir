@@ -9,15 +9,12 @@ import { Phrases } from '/lib/types/language'
 import { getReleaseDatesByVariants } from '/lib/ssb/statreg/statistics'
 import { type Statistics } from '/site/content-types'
 
-export function getStatisticTitle(
-  statisticsContent: Content<Statistics>,
-  statistic: StatisticInListing | undefined
-): string {
-  return statistic
-    ? statisticsContent.language === 'en' && statistic.nameEN
-      ? statistic.nameEN
-      : statistic.name
-    : statisticsContent.displayName
+export function getStatisticTitle(statisticsContent: Content<Statistics>, statistic?: StatisticInListing): string {
+  if (!statistic) {
+    return statisticsContent.displayName
+  }
+
+  return statisticsContent.language === 'en' && statistic.nameEN ? statistic.nameEN : statistic.name
 }
 
 export function getStatisticsDates(
@@ -27,9 +24,7 @@ export function getStatisticsDates(
   showDraft: boolean
 ): StatisticsDates {
   const showModifiedTime: boolean | undefined = statisticsContent.data.showModifiedDate?.modifiedOption.showModifiedTime
-  const modifiedDate: string | undefined = statisticsContent.data.showModifiedDate
-    ? statisticsContent.data.showModifiedDate.modifiedOption.lastModified
-    : undefined
+  const modifiedDate: string | undefined = statisticsContent.data.showModifiedDate?.modifiedOption?.lastModified
   let previousRelease: string | undefined = phrases.notAvailable
   let nextRelease: string | undefined = phrases.notYetDetermined
   let previewNextRelease: string | undefined = phrases.notYetDetermined

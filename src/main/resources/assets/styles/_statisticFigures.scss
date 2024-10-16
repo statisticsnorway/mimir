@@ -1,7 +1,7 @@
 .statistic-figures {
   background-color: white;
   padding: 1.5rem 2.5rem 4.5rem;
-  border-radius: 2rem;
+  border-radius: 32px;
 
   .title-wrapper {
     margin-bottom: 2rem;
@@ -20,8 +20,7 @@
   }
 
   .part-accordion {
-    padding: 10px;
-    div ul {
+    ul {
       list-style-type: none;
       padding: 0;
       margin: 0;
@@ -41,7 +40,7 @@
   }
 
   .statbank-box {
-    padding: 70px 55px 10px 55px;
+    padding: 3rem 2rem 0 2rem;
 
     .content {
       align-items: center;
@@ -49,7 +48,7 @@
       border: 1px solid $ssb-dark-2;
       border-top: 5px solid $ssb-green-3;
       display: flex;
-      padding: 25px;
+      padding: 1.5rem;
       width: 100%;
 
       .icon-wrapper {
@@ -72,8 +71,8 @@
           display: block;
           font-family: 'Roboto', sans-serif;
           font-weight: bold;
-          font-size: 20px;
-          margin-bottom: 10px;
+          font-size: 1.25rem;
+          margin-bottom: 0.5rem;
         }
       }
 
@@ -96,6 +95,7 @@
 
   @include media-breakpoint-down(md) {
     padding: 1.5rem 1.25rem;
+    border-radius: 22px;
 
     .title-wrapper {
       margin-top: 1rem;

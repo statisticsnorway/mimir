@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import { Tag, NestedAccordion, ExpansionBox, Title } from '@statisticsnorway/ssb-component-library'
 
-import { sanitize } from '../../../lib/ssb/utils/htmlUtils'
-import { type AccordionData, AccordionItems, AccordionProps } from '../../../lib/types/partTypes/accordion'
-import { type StatisticDescriptionProps } from '../../../lib/types/partTypes/statisticDescription'
+import { sanitize } from '/lib/ssb/utils/htmlUtils'
+import { type AccordionData, AccordionItems, AccordionProps } from '/lib/types/partTypes/accordion'
+import { type StatisticDescriptionProps } from '/lib/types/partTypes/statisticDescription'
 
 function StatisticDescription(props: StatisticDescriptionProps) {
   const { icon, ingress, label, lastUpdatedPhrase, lastUpdated, accordions } = props
@@ -34,9 +34,9 @@ function StatisticDescription(props: StatisticDescriptionProps) {
             }}
           />
         )}
-        {(category.items as AccordionProps['accordions'])!.map((item: AccordionItems, i: number) => {
+        {(category.items as AccordionProps['accordions'])!.map((item: AccordionItems) => {
           return (
-            <NestedAccordion key={i} header={item.title} openByDefault>
+            <NestedAccordion key={item.title} header={item.title} openByDefault>
               {item.body && (
                 <div
                   dangerouslySetInnerHTML={{

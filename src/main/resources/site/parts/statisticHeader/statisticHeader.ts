@@ -34,12 +34,8 @@ function renderPart(req: XP.Request): XP.Response {
   if (!page) throw Error('No page found')
 
   const phrases = getPhrases(page) as Phrases
-  const wait: number =
-    app.config && app.config['ssb.statistics.publishWait'] ? parseInt(app.config['ssb.statistics.publishWait']) : 100
-  const maxWait: number =
-    app.config && app.config['ssb.statistics.publishMaxWait']
-      ? parseInt(app.config['ssb.statistics.publishMaxWait'])
-      : 10000
+  const wait: number = parseInt(app.config?.['ssb.statistics.publishWait'] ?? '100')
+  const maxWait: number = parseInt(app.config?.['ssb.statistics.publishMaxWait'] ?? '10000')
   const currentlyWaiting: boolean = currentlyWaitingForPublishOld(page)
   let waitedFor = 0
   while (currentlyWaiting && waitedFor < maxWait) {
@@ -65,9 +61,7 @@ function renderPart(req: XP.Request): XP.Response {
       })
     : null
 
-  const modifiedText: string | undefined = page.data.showModifiedDate
-    ? page.data.showModifiedDate.modifiedOption.modifiedText
-    : undefined
+  const modifiedText: string | undefined = page.data.showModifiedDate?.modifiedOption?.modifiedText
 
   const statistic: StatisticInListing | undefined = getStatisticByIdFromRepo(page.data.statistic)
   const title: string = getStatisticTitle(page, statistic)

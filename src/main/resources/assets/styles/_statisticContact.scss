@@ -3,7 +3,7 @@
   padding: 1.5rem 2.5rem 4.5rem;
   margin-top: 5rem;
   margin-bottom: 4rem;
-  border-radius: 2rem;
+  border-radius: 32px;
 
   .title-wrapper {
     margin-bottom: 2rem;
@@ -42,6 +42,7 @@
 
   @include media-breakpoint-down(md) {
     padding: 1.5rem 1.25rem;
+    border-radius: 22px;
 
     .title-wrapper {
       margin-top: 1rem;

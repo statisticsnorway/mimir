@@ -27,7 +27,7 @@ function renderPart(req: XP.Request): XP.Response {
   const page = getContent<Content<Statistics>>()
   if (!page) throw Error('No page found')
 
-  const pageLanguage: string = page.language ? page.language : 'nb'
+  const pageLanguage: string = page.language ?? 'nb'
   const part = getComponent<XP.PartComponent.StatisticContact>()
   if (!part) throw Error('No part found')
 

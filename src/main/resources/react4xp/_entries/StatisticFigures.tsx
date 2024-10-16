@@ -2,9 +2,10 @@ import React, { useState, useRef, useEffect } from 'react'
 import { Accordion, Button, Title } from '@statisticsnorway/ssb-component-library'
 import { ArrowRight, ChevronDown, ChevronUp } from 'react-feather'
 
-import { sanitize } from '../../lib/ssb/utils/htmlUtils'
-import { type StatisticFiguresProps, type StatisticFiguresData } from '../../lib/types/partTypes/statisticFigures'
-import { type TableProps } from '../../lib/types/partTypes/table'
+import { sanitize } from '/lib/ssb/utils/htmlUtils'
+import { type StatisticFiguresProps } from '/lib/types/partTypes/statisticFigures'
+import { type AttachmentTablesFiguresData } from '/lib/types/partTypes/attachmentTablesFigures'
+import { type TableProps } from '/lib/types/partTypes/table'
 
 import Table from '../table/Table'
 
@@ -113,7 +114,7 @@ function StatisticFigures(props: StatisticFiguresProps) {
     return 'mt-5'
   }
 
-  function renderAccordionBody(accordion: StatisticFiguresData) {
+  function renderAccordionBody(accordion: AttachmentTablesFiguresData) {
     if (accordion.contentType === `${props.appName}:table`) {
       return <Table checkIsOverflowing={checkOverflow} {...(accordion.props as TableProps)} />
     } else {
@@ -126,7 +127,7 @@ function StatisticFigures(props: StatisticFiguresProps) {
   const anchor = location && location.hash !== '' ? location.hash.substr(1) : undefined
 
   return (
-    <React.Fragment>
+    <>
       <div className='title-wrapper'>
         <Title size={2}>{selectedFigures}</Title>
         <div className='icon-wrapper'>
@@ -135,30 +136,27 @@ function StatisticFigures(props: StatisticFiguresProps) {
       </div>
       {accordions && (
         <div className='xp-part part-accordion'>
-          <div className='row'>
-            <ul>
-              {accordions.map((accordion, index) => {
-                return (
-                  <li key={index} ref={index === 4 ? currentElement : null}>
-                    <Accordion
-                      key={index}
-                      className={`col-12 ${getBreakpoint(index)}`}
-                      id={accordion.id}
-                      header={accordion.open}
-                      subHeader={accordion.subHeader}
-                      openByDefault={index === 0 || (anchor && accordion.id && accordion.id === anchor)}
-                      onToggle={() => {
-                        // Check for Table overflow when toggling accordion
-                        setCheckOverflow((prev) => !prev)
-                      }}
-                    >
-                      {renderAccordionBody(accordion)}
-                    </Accordion>
-                  </li>
-                )
-              })}
-            </ul>
-          </div>
+          <ul>
+            {accordions.map((accordion, index) => {
+              return (
+                <li key={accordion.id} ref={index === 4 ? currentElement : null}>
+                  <Accordion
+                    className={`col-12 ${getBreakpoint(index)}`}
+                    id={accordion.id}
+                    header={accordion.open}
+                    subHeader={accordion.subHeader}
+                    openByDefault={index === 0 || (anchor && accordion.id && accordion.id === anchor)}
+                    onToggle={() => {
+                      // Check for Table overflow when toggling accordion
+                      setCheckOverflow((prev) => !prev)
+                    }}
+                  >
+                    {renderAccordionBody(accordion)}
+                  </Accordion>
+                </li>
+              )
+            })}
+          </ul>
           <div className={`row free-text-wrapper ${getFreeTextBreakpoint()}`}>
             <div className='col-12 col-lg-6' dangerouslySetInnerHTML={{ __html: sanitize(freeText!) }}></div>
           </div>
@@ -166,7 +164,7 @@ function StatisticFigures(props: StatisticFiguresProps) {
         </div>
       )}
       {renderStatbankBox()}
-    </React.Fragment>
+    </>
   )
 }
 

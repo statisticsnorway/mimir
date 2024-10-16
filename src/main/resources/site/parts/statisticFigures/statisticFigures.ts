@@ -12,10 +12,7 @@ import { renderError } from '/lib/ssb/error/error'
 import { type StatisticFiguresProps } from '/lib/types/partTypes/statisticFigures'
 import { type Statistics } from '/site/content-types'
 
-const STATBANKWEB_URL: string =
-  app.config && app.config['ssb.statbankweb.baseUrl']
-    ? app.config['ssb.statbankweb.baseUrl']
-    : 'https://www.ssb.no/statbank'
+const STATBANKWEB_URL: string = app.config?.['ssb.statbankweb.baseUrl'] ?? 'https://www.ssb.no/statbank'
 
 export function get(req: XP.Request): XP.Response {
   try {

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button, Glossary, Title } from '@statisticsnorway/ssb-component-library'
-import { type StatisticHeader } from '../../../lib/types/partTypes/statisticHeader'
-import { sanitize } from '../../../lib/ssb/utils/htmlUtils'
+import { type StatisticHeader } from '/lib/types/partTypes/statisticHeader'
+import { sanitize } from '/lib/ssb/utils/htmlUtils'
 
 function StatisticHeader(props: StatisticHeader) {
   const {
@@ -34,7 +34,7 @@ function StatisticHeader(props: StatisticHeader) {
   }
 
   return (
-    <React.Fragment>
+    <>
       {renderShowDraftButton()}
       <div className='title-ingress-wrapper'>
         <p className='introTitle'>{statisticsAbout}</p>
@@ -65,7 +65,7 @@ function StatisticHeader(props: StatisticHeader) {
           </div>
         ) : null}
       </div>
-    </React.Fragment>
+    </>
   )
 }
 

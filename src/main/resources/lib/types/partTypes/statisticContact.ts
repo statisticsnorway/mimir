@@ -1,7 +1,7 @@
 export interface StatisticContactProps {
   icon: string
   label: string
-  contacts: Array<Contact>
+  contacts: Contact[]
 }
 
 export interface Contact {

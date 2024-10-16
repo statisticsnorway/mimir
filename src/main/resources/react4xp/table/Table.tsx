@@ -373,15 +373,15 @@ function Table(props: TableProps) {
               <strong>{props.sourceLabel}</strong>
             </span>
           </div>
-          {props.sourceListTables.map((tableId, index) => (
-            <div key={index} className='source-link col-lg-3 col-12'>
+          {props.sourceListTables.map((tableId) => (
+            <div key={tableId} className='source-link col-lg-3 col-12'>
               <Link href={`${props.statBankWebUrl}/table/${tableId}`} standAlone>
                 {`${props.sourceTableLabel} ${tableId}`}
               </Link>
             </div>
           ))}
-          {props.sources.map((source, index) => (
-            <div key={index} className='source-link col-lg-3 col-12'>
+          {props.sources.map((source) => (
+            <div key={source.url} className='source-link col-lg-3 col-12'>
               {source.url && source.urlText && (
                 <Link href={source.url} standAlone>
                   {source.urlText}

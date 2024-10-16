@@ -6,5 +6,5 @@ export interface StatisticDescriptionProps {
   label: string
   lastUpdatedPhrase: string
   lastUpdated: string
-  accordions: Array<AccordionData>
+  accordions: AccordionData[]
 }
