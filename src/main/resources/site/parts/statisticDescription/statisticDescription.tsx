@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Tag, NestedAccordion, ExpansionBox, Title } from '@statisticsnorway/ssb-component-library'
 
 import { sanitize } from '/lib/ssb/utils/htmlUtils'
-import { type AccordionData, AccordionItems, AccordionProps } from '/lib/types/partTypes/accordion'
+import { type AccordionData, AccordionItems } from '/lib/types/partTypes/accordion'
 import { type StatisticDescriptionProps } from '/lib/types/partTypes/statisticDescription'
 
 function StatisticDescription(props: Readonly<StatisticDescriptionProps>) {
@@ -25,6 +25,7 @@ function StatisticDescription(props: Readonly<StatisticDescriptionProps>) {
   }
 
   function renderNestedAccordions(category: AccordionData) {
+    const items: AccordionItems[] = Array.isArray(category.items) ? category.items : []
     return (
       <div>
         {category.body && (
@@ -34,7 +35,7 @@ function StatisticDescription(props: Readonly<StatisticDescriptionProps>) {
             }}
           />
         )}
-        {(category.items as AccordionProps['accordions'])!.map((item: AccordionItems) => {
+        {items.map((item: AccordionItems) => {
           return (
             <NestedAccordion key={item.title} header={item.title} openByDefault>
               {item.body && (

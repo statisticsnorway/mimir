@@ -124,7 +124,7 @@ function StatisticFigures(props: Readonly<StatisticFiguresProps>) {
   }
 
   const location = window.location
-  const anchor = location && location.hash !== '' ? location.hash.substr(1) : undefined
+  const anchor = location && location.hash !== '' ? location.hash.substring(1) : undefined
 
   return (
     <>

@@ -41,7 +41,7 @@ function StatisticContact(props: Readonly<StatisticContactProps>) {
           <img src={icon} alt='' />
         </div>
       </div>
-      {contacts.length && <div className='contact-list'>{renderContactsInfo()}</div>}
+      {contacts.length > 0 && <div className='contact-list'>{renderContactsInfo()}</div>}
     </Row>
   )
 }
