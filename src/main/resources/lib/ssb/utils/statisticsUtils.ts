@@ -19,52 +19,71 @@ export function getStatisticTitle(statisticsContent: Content<Statistics>, statis
 
 export function getStatisticsDates(
   statisticsContent: Content<Statistics>,
-  statistic: StatisticInListing | undefined,
   phrases: Phrases,
-  showDraft: boolean
+  showDraft: boolean,
+  statistic?: StatisticInListing
 ): StatisticsDates {
-  const showModifiedTime: boolean | undefined = statisticsContent.data.showModifiedDate?.modifiedOption.showModifiedTime
-  const modifiedDate: string | undefined = statisticsContent.data.showModifiedDate?.modifiedOption?.lastModified
-  let previousRelease: string | undefined = phrases.notAvailable
-  let nextRelease: string | undefined = phrases.notYetDetermined
-  let previewNextRelease: string | undefined = phrases.notYetDetermined
-  let changeDate: string | undefined
-  let nextReleaseDate: string | undefined
-  let previousReleaseDate: string | undefined
   const language = statisticsContent.language === 'en' ? 'en' : 'nb'
+  const showModifiedTime: boolean = statisticsContent.data.showModifiedDate?.modifiedOption.showModifiedTime ?? false
+  const modifiedDate: string | undefined = statisticsContent.data.showModifiedDate?.modifiedOption?.lastModified
+  const variants: Array<VariantInListing | undefined> = statistic ? ensureArray(statistic.variants) : []
+  const releaseDates: ReleaseDatesVariant = getReleaseDatesByVariants(variants as Array<VariantInListing>)
+  const nextReleases = releaseDates.nextRelease ?? []
+  const previousReleases = releaseDates.previousRelease ?? []
+  const previousReleaseDate = previousReleases.length ? previousReleases[0] : undefined
 
-  if (statistic) {
-    const variants: Array<VariantInListing | undefined> = ensureArray(statistic.variants)
-    const releaseDates: ReleaseDatesVariant = getReleaseDatesByVariants(variants as Array<VariantInListing>)
-    nextReleaseDate = releaseDates.nextRelease[0]
-    previousReleaseDate = releaseDates.previousRelease[0]
+  const changeDate: string | undefined = getChangeDate(previousReleaseDate, modifiedDate, language, showModifiedTime)
 
-    if (releaseDates.nextRelease.length > 1 && releaseDates.nextRelease[1] !== '') {
-      previewNextRelease = formatDate(releaseDates.nextRelease[1], 'PPP', language)
-    }
-
-    if (previousReleaseDate) {
-      previousRelease = formatDate(previousReleaseDate, 'PPP', language)
-    }
-
-    if (nextReleaseDate) {
-      nextRelease = formatDate(nextReleaseDate, 'PPP', language)
-    }
-  }
-
-  if (statisticsContent.data.showModifiedDate && previousReleaseDate && modifiedDate) {
-    if (isAfter(new Date(modifiedDate), new Date(previousReleaseDate))) {
-      const dateFormat = showModifiedTime ? 'PPp' : 'PPP'
-      changeDate = formatDate(modifiedDate, dateFormat, language)
-    }
-  }
+  const { previousRelease, nextRelease, previewNextRelease } = getNextReleaseDates(
+    nextReleases,
+    previousReleases,
+    phrases.notAvailable,
+    phrases.notYetDetermined,
+    language
+  )
 
   return {
-    updatedPhrase: phrases.updated + ': ',
-    nextUpdatePhrase: phrases.nextUpdate + ': ',
-    changedPhrase: phrases.modified + ': ',
     changeDate,
     previousRelease: showDraft ? nextRelease : previousRelease,
     nextRelease: showDraft ? previewNextRelease : nextRelease,
   }
+}
+
+function getNextReleaseDates(
+  nextReleases: string[],
+  previousReleases: string[],
+  notAvailablePhrase: string,
+  notYetDeterminedPhrase: string,
+  language: string
+): {
+  previousRelease: string | undefined
+  nextRelease: string | undefined
+  previewNextRelease: string | undefined
+} {
+  const previousRelease = previousReleases.length
+    ? formatDate(previousReleases[0], 'PPP', language)
+    : notAvailablePhrase
+  const nextRelease = nextReleases.length ? formatDate(nextReleases[0], 'PPP', language) : notYetDeterminedPhrase
+  const previewNextRelease =
+    nextReleases.length > 1 ? formatDate(nextReleases[1], 'PPP', language) : notYetDeterminedPhrase
+
+  return {
+    previousRelease,
+    nextRelease,
+    previewNextRelease,
+  }
+}
+
+function getChangeDate(
+  previousReleaseDate: string | undefined,
+  modifiedDate: string | undefined,
+  language: string,
+  showModifiedTime: boolean
+): string | undefined {
+  if (previousReleaseDate && modifiedDate && isAfter(new Date(modifiedDate), new Date(previousReleaseDate))) {
+    const dateFormat = showModifiedTime ? 'PPp' : 'PPP'
+    return formatDate(modifiedDate, dateFormat, language)
+  }
+
+  return undefined
 }

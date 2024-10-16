@@ -7,12 +7,12 @@ export interface StatisticHeader extends StatisticsDates {
   showPreviewDraft: boolean
   previewButtonUrl: string
   previewButtonText: string
-}
-
-export interface StatisticsDates {
   updatedPhrase: string
   nextUpdatePhrase: string
   changedPhrase: string
+}
+
+export interface StatisticsDates {
   changeDate: string | undefined
   previousRelease: string | undefined
   nextRelease: string | undefined

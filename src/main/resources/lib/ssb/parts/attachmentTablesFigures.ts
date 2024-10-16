@@ -45,7 +45,6 @@ export function getTablesAndFigures(
           index
         )
       }
-      return
     }) as Array<AttachmentTablesFiguresData>
   }
   return []
@@ -60,7 +59,7 @@ function getTableReturnObject(
   const datasetFromRepo: DatasetRepoNode<JSONstat | TbmlDataUniform | object> | undefined = datasetOrUndefined(content)
   const data: TbmlDataUniform | undefined = datasetFromRepo && (datasetFromRepo.data as TbmlDataUniform)
   const title: string | TbmlDataUniform['tbml']['metadata']['title'] =
-    data && data.tbml && data.tbml.metadata ? data.tbml.metadata.title : content.displayName
+    data?.tbml?.metadata?.title ?? content.displayName
   return {
     id: `attachment-table-figure-${index + 1}`,
     contentType: content.type,
@@ -79,7 +78,7 @@ function getFigureReturnObject(
   const datasetFromRepo: DatasetRepoNode<JSONstat | TbmlDataUniform | object> | undefined = datasetOrUndefined(content)
   const data: TbmlDataUniform | undefined = datasetFromRepo && (datasetFromRepo.data as TbmlDataUniform)
   const title: string | TbmlDataUniform['tbml']['metadata']['title'] =
-    data && data.tbml && data.tbml.metadata ? data.tbml.metadata.title : content.displayName
+    data?.tbml?.metadata?.title ?? content.displayName
   return {
     id: `attachment-table-figure-${index + 1}`,
     contentType: content.type,
@@ -95,7 +94,7 @@ export function getFinalPageContributions(
   attachmentTableAndFigure: Array<AttachmentTablesFiguresData>
 ): XP.PageContributions {
   const pageContributions: Array<XP.PageContributions> = attachmentTableAndFigure.reduce((acc, attachment) => {
-    if (attachment.pageContributions && attachment.pageContributions.bodyEnd) {
+    if (attachment.pageContributions?.bodyEnd) {
       acc = acc.concat(attachment.pageContributions.bodyEnd as unknown as ConcatArray<never>)
     }
     return acc

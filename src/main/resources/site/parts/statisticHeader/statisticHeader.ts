@@ -65,13 +65,13 @@ function renderPart(req: XP.Request): XP.Response {
 
   const statistic: StatisticInListing | undefined = getStatisticByIdFromRepo(page.data.statistic)
   const title: string = getStatisticTitle(page, statistic)
-  const statisticDates = getStatisticsDates(page, statistic, phrases, paramShowDraft && showPreviewDraft)
+  const statisticDates = getStatisticsDates(page, phrases, paramShowDraft && showPreviewDraft, statistic)
 
   const props: StatisticHeader = {
     title,
-    updatedPhrase: statisticDates.updatedPhrase,
-    nextUpdatePhrase: statisticDates.nextUpdatePhrase,
-    changedPhrase: statisticDates.changedPhrase,
+    updatedPhrase: phrases.nextUpdate + ': ',
+    nextUpdatePhrase: phrases.nextUpdate + ': ',
+    changedPhrase: phrases.modified + ': ',
     changeDate: statisticDates.changeDate,
     modifiedText,
     previousRelease: statisticDates.previousRelease,

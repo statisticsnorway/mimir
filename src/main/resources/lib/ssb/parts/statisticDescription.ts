@@ -19,7 +19,7 @@ export function getNextRelease(statistic: StatisticInListing, nextRelease: strin
   const nextReleaseStatistic: string | undefined =
     nextReleaseDate && nextReleaseDate !== '' ? formatDate(nextReleaseDate, 'PPP', language) : undefined
 
-  return nextReleaseStatistic ? nextReleaseStatistic : nextRelease
+  return nextReleaseStatistic ?? nextRelease
 }
 
 export function getAccordionData(content: OmStatistikken, phrases: Phrases, nextUpdate: string): Array<Accordion> {
