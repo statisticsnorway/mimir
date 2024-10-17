@@ -1,11 +1,8 @@
 name: NAIS Delete
 
 on:
-  workflow_dispatch:
-    inputs:
-      branch:
-        description: 'Select branch to run the workflow on'
-        required: true
+  pull_request:
+    types: [closed]
 
 jobs:
   delete:
