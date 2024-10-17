@@ -9,7 +9,7 @@ metadata:
   labels:
     team: ssbno
 spec:
-  image: '{{ image }}'
+  image: { { image } }
   #  image: europe-north1-docker.pkg.dev/nais-management-b3a7/ssbno/ssbno-mimir/mimir:...
   #       ^--- interpolated from the ${{ env.docker_image }} variable in the action
 
@@ -41,7 +41,7 @@ spec:
 
   env:
     - name: VHOST_HOST
-      value: 'ssbno-{{branch}}.external.test.ssb.cloud.nais.io'
+      value: ssbno-{{branch}}.external.test.ssb.cloud.nais.io
 
   ingresses:
-    - 'https://ssbno-{{branch}}.external.test.ssb.cloud.nais.io' # must match vhost
+    - https://ssbno-{{branch}}.external.test.ssb.cloud.nais.io # must match vhost
