@@ -114,5 +114,6 @@ function getStatisticFiguresProps(
       path: 'SSB_ikon_statbank.svg',
     }),
     statbankHref: `${STATBANKWEB_URL}/list/${shortName}`,
+    firstItemOpen: true,
   }
 }
