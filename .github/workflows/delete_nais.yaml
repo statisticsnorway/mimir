@@ -40,7 +40,7 @@ jobs:
       # Update the TTL to 0 instead of deleting the pod
       - id: 'update_ttl'
         run: |
-          kubectl patch application mimir-branch-${{ env.ISSUE_NUMBER }} \
+          kubectl patch deployment mimir-branch-${{ env.ISSUE_NUMBER }} \
             -n ssbno \
             --type=merge \
             -p '{"spec": {"ttl": "0"}}'
