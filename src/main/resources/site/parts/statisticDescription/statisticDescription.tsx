@@ -3,9 +3,9 @@ import { Tag, NestedAccordion, ExpansionBox, Title } from '@statisticsnorway/ssb
 
 import { sanitize } from '/lib/ssb/utils/htmlUtils'
 import { type AccordionData, AccordionItems } from '/lib/types/partTypes/accordion'
-import { type StatisticDescriptionProps } from '/lib/types/partTypes/statisticDescription'
+import { type AboutTheStatisticsProps } from '/lib/types/partTypes/omStatistikken'
 
-function StatisticDescription(props: Readonly<StatisticDescriptionProps>) {
+function StatisticDescription(props: Readonly<AboutTheStatisticsProps>) {
   const { icon, ingress, label, lastUpdatedPhrase, lastUpdated, accordions } = props
   const [selectedTag, setSelectedTag] = useState<string | undefined>(undefined)
   const [selectedCategory, setSelectedCategory] = useState<AccordionData | undefined>(
@@ -94,4 +94,4 @@ function StatisticDescription(props: Readonly<StatisticDescriptionProps>) {
   )
 }
 
-export default (props: StatisticDescriptionProps) => <StatisticDescription {...props} />
+export default (props: AboutTheStatisticsProps) => <StatisticDescription {...props} />

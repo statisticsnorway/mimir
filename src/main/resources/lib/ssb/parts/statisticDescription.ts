@@ -1,4 +1,5 @@
-import { processHtml } from '/lib/xp/portal'
+import { getContent, processHtml } from '/lib/xp/portal'
+import { get as getContentByKey, type Content } from '/lib/xp/content'
 import {
   type ReleaseDatesVariant,
   type StatisticInListing,
@@ -7,12 +8,55 @@ import {
 import { type Accordion, type AccordionItem } from '/lib/types/components'
 import { type Phrases } from '/lib/types/language'
 import { formatDate } from '/lib/ssb/utils/dateUtils'
-import { getReleaseDatesByVariants } from '/lib/ssb/statreg/statistics'
+import { getReleaseDatesByVariants, getStatisticByIdFromRepo } from '/lib/ssb/statreg/statistics'
+import { getPhrases } from '/lib/ssb/utils/language'
 import * as util from '/lib/util'
-import { type Category, type Items } from '/lib/types/partTypes/omStatistikken'
-import { type OmStatistikken } from '/site/content-types'
+import { type AboutTheStatisticsProps, type Category, type Items } from '/lib/types/partTypes/omStatistikken'
+import { type Statistics, type OmStatistikken } from '/site/content-types'
 
-export function getNextRelease(statistic: StatisticInListing, nextRelease: string, language: string): string {
+export function getAboutTheStatisticsProps(
+  req: XP.Request,
+  page: Content<OmStatistikken>,
+  aboutTheStatisticsId: string | undefined
+): AboutTheStatisticsProps {
+  const phrases: Phrases = getPhrases(page) as Phrases
+  const language: string = page.language === 'en' || page.language === 'nn' ? page.language : 'nb'
+  let nextRelease: string = phrases.notYetDetermined
+  const statisticPage = getContent<Content<Statistics>>()
+  if (!statisticPage) throw Error('No page found')
+
+  const statisticId: string | undefined = statisticPage.data.statistic
+
+  const aboutTheStatisticsContent: Content<OmStatistikken> | null = aboutTheStatisticsId
+    ? getContentByKey({
+        key: aboutTheStatisticsId,
+      })
+    : null
+
+  const statistic: StatisticInListing | undefined = statisticId ? getStatisticByIdFromRepo(statisticId) : undefined
+
+  if (statistic) {
+    nextRelease = getNextRelease(statistic, nextRelease, language)
+  }
+
+  if (page.type === `${app.name}:omStatistikken` && (req.mode === 'edit' || req.mode === 'preview')) {
+    // Kun ment for internt bruk, i forhåndsvisning av om-statistikken.
+    nextRelease = '<i>Kan kun vises på statistikksiden, ikke i forhåndsvisning av om-statistikken</i>'
+  }
+
+  const aboutTheStatisticsData: OmStatistikken | undefined = aboutTheStatisticsContent?.data
+  const lastUpdated: string | undefined = formatDate(aboutTheStatisticsContent?.modifiedTime, 'PPP', language)
+
+  return {
+    accordions: aboutTheStatisticsData ? getAccordionData(aboutTheStatisticsData, phrases, nextRelease) : [],
+    label: phrases.aboutTheStatistics,
+    ingress: aboutTheStatisticsData?.ingress ?? '',
+    lastUpdatedPhrase: phrases.lastUpdated,
+    lastUpdated: lastUpdated ?? '',
+  }
+}
+
+function getNextRelease(statistic: StatisticInListing, nextRelease: string, language: string): string {
   const variants: Array<VariantInListing> = statistic.variants ? util.data.forceArray(statistic.variants) : []
   const releaseDates: ReleaseDatesVariant = getReleaseDatesByVariants(variants)
   const nextReleaseDate: string = releaseDates.nextRelease[0]
@@ -22,7 +66,7 @@ export function getNextRelease(statistic: StatisticInListing, nextRelease: strin
   return nextReleaseStatistic ?? nextRelease
 }
 
-export function getAccordionData(content: OmStatistikken, phrases: Phrases, nextUpdate: string): Array<Accordion> {
+function getAccordionData(content: OmStatistikken, phrases: Phrases, nextUpdate: string): Array<Accordion> {
   const accordions: Array<Accordion> = []
 
   const items: Items = {

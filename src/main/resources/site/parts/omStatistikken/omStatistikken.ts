@@ -1,17 +1,11 @@
-import { get as getContentByKey, type Content } from '/lib/xp/content'
+import { type Content } from '/lib/xp/content'
 import { getContent } from '/lib/xp/portal'
-import { type StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
-import { getNextRelease, getAccordionData } from '/lib/ssb/parts/statisticDescription'
-import { type Phrases } from '/lib/types/language'
+import { getAboutTheStatisticsProps } from '/lib/ssb/parts/statisticDescription'
 import { render } from '/lib/enonic/react4xp'
-import { formatDate } from '/lib/ssb/utils/dateUtils'
-
 import { renderError } from '/lib/ssb/error/error'
-import { getStatisticByIdFromRepo } from '/lib/ssb/statreg/statistics'
-import { getPhrases } from '/lib/ssb/utils/language'
 import { fromPartCache } from '/lib/ssb/cache/partCache'
 import { type AboutTheStatisticsProps } from '/lib/types/partTypes/omStatistikken'
-import { type Statistics, type OmStatistikken } from '/site/content-types'
+import { type Statistics } from '/site/content-types'
 
 export function get(req: XP.Request): XP.Response {
   try {
@@ -65,41 +59,7 @@ function renderPart(req: XP.Request, aboutTheStatisticsId: string | undefined): 
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function getOmStatistikken(req: XP.Request, page: Content<any>, aboutTheStatisticsId: string | undefined): XP.Response {
-  const phrases: Phrases = getPhrases(page) as Phrases
-  const language: string = page.language === 'en' || page.language === 'nn' ? page.language : 'nb'
-  let nextRelease: string = phrases.notYetDetermined
-  const statisticPage = getContent<Content<Statistics>>()
-  if (!statisticPage) throw Error('No page found')
-
-  const statisticId: string | undefined = statisticPage.data.statistic
-
-  const aboutTheStatisticsContent: Content<OmStatistikken> | null = aboutTheStatisticsId
-    ? getContentByKey({
-        key: aboutTheStatisticsId,
-      })
-    : null
-
-  const statistic: StatisticInListing | undefined = statisticId ? getStatisticByIdFromRepo(statisticId) : undefined
-
-  if (statistic) {
-    nextRelease = getNextRelease(statistic, nextRelease, language)
-  }
-
-  if (page.type === `${app.name}:omStatistikken` && (req.mode === 'edit' || req.mode === 'preview')) {
-    // Kun ment for internt bruk, i forhåndsvisning av om-statistikken.
-    nextRelease = '<i>Kan kun vises på statistikksiden, ikke i forhåndsvisning av om-statistikken</i>'
-  }
-
-  const aboutTheStatisticsData: OmStatistikken | undefined = aboutTheStatisticsContent?.data
-  const lastUpdated: string | undefined = formatDate(aboutTheStatisticsContent?.modifiedTime, 'PPP', language)
-
-  const props: AboutTheStatisticsProps = {
-    accordions: aboutTheStatisticsData ? getAccordionData(aboutTheStatisticsData, phrases, nextRelease) : [],
-    label: phrases.aboutTheStatistics,
-    ingress: aboutTheStatisticsData?.ingress ?? '',
-    lastUpdatedPhrase: phrases.lastUpdated,
-    lastUpdated: lastUpdated ?? '',
-  }
+  const props: AboutTheStatisticsProps = getAboutTheStatisticsProps(req, page, aboutTheStatisticsId)
 
   return render('site/parts/omStatistikken/omStatistikken', props, req, {
     // for now, this needs to be a section, so we get correct spacing between parts
