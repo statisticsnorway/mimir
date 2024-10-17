@@ -9,7 +9,7 @@ metadata:
   labels:
     team: ssbno
 spec:
-  image: { { image } }
+  image: '{{ image }}'
   #  image: europe-north1-docker.pkg.dev/nais-management-b3a7/ssbno/ssbno-mimir/mimir:...
   #       ^--- interpolated from the ${{ env.docker_image }} variable in the action
 
@@ -19,7 +19,7 @@ spec:
     min: 1
   port: 8080
 
-  # Server needs to be able to access these hosts to download and install apps from market, not a complete list, some apps can't be installed.
+  # Server needs to be able to access these hosts to download and install apps from market, not a complete list, some apps can't be installed
   accessPolicy:
     outbound:
       external:
