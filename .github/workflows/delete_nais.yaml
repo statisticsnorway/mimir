@@ -1,11 +1,8 @@
 name: NAIS Delete
 
 on:
-  workflow_dispatch:
-    inputs:
-      branch:
-        description: 'Select branch to run the workflow on'
-        required: true
+  pull_request:
+    types: [closed]
 
 jobs:
   delete:
@@ -14,7 +11,7 @@ jobs:
       contents: 'read'
       id-token: 'write'
     runs-on: ubuntu-latest
-    if: if: ${{ startsWith(github.event.inputs.branch, 'MIM-') || startsWith(github.event.inputs.branch, 'mim-') }}
+    if: (startsWith(github.head_ref, 'MIM-') || startsWith(github.head_ref, 'mim-') && contains(github.event.issue.labels.*.name, 'nais') && contains(fromJSON('["annesiri", "ssb-cgn", "Glenruben", "johnnadeluy", "Carl-OW", "michaelpande"]'), github.actor))
     steps:
       # Get the JIRA issue number (same logic from deploy)
       - name: 'Get JIRA issue number'
