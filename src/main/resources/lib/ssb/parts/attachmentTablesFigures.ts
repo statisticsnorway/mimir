@@ -56,10 +56,7 @@ function getTableReturnObject(
   subHeader: string,
   index: number
 ): AttachmentTablesFiguresData {
-  const datasetFromRepo: DatasetRepoNode<JSONstat | TbmlDataUniform | object> | undefined = datasetOrUndefined(content)
-  const data: TbmlDataUniform | undefined = datasetFromRepo && (datasetFromRepo.data as TbmlDataUniform)
-  const title: string | TbmlDataUniform['tbml']['metadata']['title'] =
-    data?.tbml?.metadata?.title ?? content.displayName
+  const title: string | TbmlDataUniform['tbml']['metadata']['title'] = getTitleFromDataset(content)
   return {
     id: `attachment-table-figure-${index + 1}`,
     contentType: content.type,
@@ -75,10 +72,7 @@ function getFigureReturnObject(
   subHeader: string,
   index: number
 ): AttachmentTablesFiguresData {
-  const datasetFromRepo: DatasetRepoNode<JSONstat | TbmlDataUniform | object> | undefined = datasetOrUndefined(content)
-  const data: TbmlDataUniform | undefined = datasetFromRepo && (datasetFromRepo.data as TbmlDataUniform)
-  const title: string | TbmlDataUniform['tbml']['metadata']['title'] =
-    data?.tbml?.metadata?.title ?? content.displayName
+  const title: string | TbmlDataUniform['tbml']['metadata']['title'] = getTitleFromDataset(content)
   return {
     id: `attachment-table-figure-${index + 1}`,
     contentType: content.type,
@@ -87,6 +81,12 @@ function getFigureReturnObject(
     body: preview.body as string | undefined,
     pageContributions: preview.pageContributions,
   }
+}
+
+function getTitleFromDataset(content: Content): string | TbmlDataUniform['tbml']['metadata']['title'] {
+  const datasetFromRepo: DatasetRepoNode<JSONstat | TbmlDataUniform | object> | undefined = datasetOrUndefined(content)
+  const data: TbmlDataUniform | undefined = datasetFromRepo && (datasetFromRepo.data as TbmlDataUniform)
+  return data?.tbml?.metadata?.title ?? content.displayName
 }
 
 export function getFinalPageContributions(
