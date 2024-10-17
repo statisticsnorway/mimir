@@ -11,7 +11,7 @@ import { type TableProps } from '../../lib/types/partTypes/table'
 
 import Table from '../table/Table'
 
-function AttachmentTableFigures(props: AttachmentTablesFiguresProps) {
+function AttachmentTableFigures(props: Readonly<AttachmentTablesFiguresProps>) {
   const [isHidden, setIsHidden] = useState(true)
   const { accordions, freeText, showAll, showLess, firstItemOpen } = props
   const currentElement = useRef<null | HTMLLIElement>(null)
@@ -96,7 +96,7 @@ function AttachmentTableFigures(props: AttachmentTablesFiguresProps) {
   }
 
   const location = window.location
-  const anchor = location && location.hash !== '' ? location.hash.substr(1) : undefined
+  const anchor = location && location.hash !== '' ? location.hash.substring(1) : undefined
 
   return (
     <React.Fragment>
