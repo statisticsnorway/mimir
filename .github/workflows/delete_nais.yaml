@@ -55,7 +55,7 @@ jobs:
       # Modify nais.yaml to set TTL to 0
       - name: Set TTL to 0 in nais.yaml
         run: |
-          sed -i '' 's/ttl: .*/ttl: 0/' nais.yaml
+          sed -i 's/ttl: .*/ttl: 0/' nais.yaml
 
       # Redeploy the application with the modified TTL and correct image and branch variables
       - uses: nais/deploy/actions/deploy@v2
