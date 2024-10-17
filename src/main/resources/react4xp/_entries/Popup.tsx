@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { ChevronDown, ChevronUp } from 'react-feather'
+import { X } from 'react-feather'
 
 const Popup = () => {
   const [isOpen, setIsOpen] = useState(window.innerWidth > 767) // Default open on larger viewports, closed on mobile
@@ -66,11 +66,7 @@ const Popup = () => {
       <button className='popup-header' aria-expanded={isOpen ? 'true' : 'false'} onClick={toggleOpen}>
         <h4 className='header-text'>Hvordan opplever du ssb.no?</h4>
         <div className='icon-wrapper'>
-          {isOpen ? (
-            <ChevronUp className='expand-icon' size={24} color='white' />
-          ) : (
-            <ChevronDown className='expand-icon' size={24} color='white' />
-          )}
+          <X className='expand-icon' size={24} color='white' onClick={closePopup} />
         </div>
       </button>
       {isOpen && (
@@ -82,9 +78,6 @@ const Popup = () => {
           <button className='popup-button' onClick={openLinkInNewTab}>
             Til undersøkelsen
           </button>
-          <span className='close-popup' onClick={closePopup}>
-            X
-          </span>
         </div>
       )}
     </div>
