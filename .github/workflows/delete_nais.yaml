@@ -13,6 +13,12 @@ jobs:
     runs-on: ubuntu-latest
     if: (startsWith(github.head_ref, 'MIM-') || startsWith(github.head_ref, 'mim-') && contains(github.event.issue.labels.*.name, 'nais') && contains(fromJSON('["annesiri", "ssb-cgn", "Glenruben", "johnnadeluy", "Carl-OW", "michaelpande"]'), github.actor))
     steps:
+      # Checkout the PR branch (e.g., MIM-2005-nais-deploy-test-6)
+      - name: Checkout the PR branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }} # Check out the branch associated with the PR
+
       # Get the JIRA issue number (same logic from deploy)
       - name: 'Get JIRA issue number'
         id: jira_issue_number
@@ -23,6 +29,7 @@ jobs:
           echo "ISSUE_NUMBER=${ISSUE_NUMBER}" >> $GITHUB_ENV;
           echo "Issue number: $ISSUE_NUMBER";
 
+      # Authenticate to Google Cloud
       - id: 'auth'
         name: 'Authenticate to Google Cloud'
         uses: 'google-github-actions/auth@v2.1.6'
@@ -31,17 +38,20 @@ jobs:
           service_account: 'gh-ssb@nais-management-b3a7.iam.gserviceaccount.com'
           token_format: 'access_token'
 
-      # Skip the GKE credentials step (this is where the issue happens)
-      # - id: 'get-credentials'
-      #   uses: 'google-github-actions/get-gke-credentials@v2.2.1'
-      #   with:
-      #     cluster_name: 'nais-test'
-      #     location: 'europe-north1'
-
-      # Redeploy the application with TTL set to 0
-      - name: 'Set TTL to 0 in nais.yaml'
+      # Verify nais.yaml exists
+      - name: Verify nais.yaml exists
         run: |
-          sed -i 's/ttl: .*/ttl: 0/' ../../nais.yaml
+          if [ ! -f "nais.yaml" ]; then
+            echo "nais.yaml not found!"
+            exit 1
+          else
+            echo "nais.yaml found."
+          fi
+
+      # Modify nais.yaml to set TTL to 0
+      - name: Set TTL to 0 in nais.yaml
+        run: |
+          sed -i 's/ttl: .*/ttl: 0/' nais.yaml
 
       # Redeploy the application with the modified TTL
       - uses: nais/deploy/actions/deploy@v2
