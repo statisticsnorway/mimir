@@ -4,13 +4,13 @@ metadata:
   name: mimir-branch-{{branch}}
   namespace: ssbno
   annotations:
-    nais.io/read-only-file-system: "false"
-    nais.io/run-as-user: "1337"
+    nais.io/read-only-file-system: 'false'
+    nais.io/run-as-user: '1337'
   labels:
     team: ssbno
 spec:
-  image: {{ image }}
-#  image: europe-north1-docker.pkg.dev/nais-management-b3a7/ssbno/ssbno-mimir/mimir:...
+  image: '{{ image }}'
+  #  image: europe-north1-docker.pkg.dev/nais-management-b3a7/ssbno/ssbno-mimir/mimir:...
   #       ^--- interpolated from the ${{ env.docker_image }} variable in the action
 
   replicas:
@@ -39,9 +39,9 @@ spec:
   prometheus:
     enabled: false
 
-  env: 
+  env:
     - name: VHOST_HOST
-      value: ssbno-{{branch}}.external.test.ssb.cloud.nais.io
+      value: 'ssbno-{{branch}}.external.test.ssb.cloud.nais.io'
 
   ingresses:
-    - https://ssbno-{{branch}}.external.test.ssb.cloud.nais.io  # must match vhost
+    - 'https://ssbno-{{branch}}.external.test.ssb.cloud.nais.io' # must match vhost
