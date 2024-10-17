@@ -31,12 +31,12 @@ jobs:
           service_account: 'gh-ssb@nais-management-b3a7.iam.gserviceaccount.com'
           token_format: 'access_token'
 
-      # Get GKE credentials
-      - id: 'get-credentials'
-        uses: 'google-github-actions/get-gke-credentials@v2.2.1'
-        with:
-          cluster_name: 'nais-test'
-          location: 'europe-north1'
+      # Skip the GKE credentials step (this is where the issue happens)
+      # - id: 'get-credentials'
+      #   uses: 'google-github-actions/get-gke-credentials@v2.2.1'
+      #   with:
+      #     cluster_name: 'nais-test'
+      #     location: 'europe-north1'
 
       # Redeploy the application with TTL set to 0
       - name: 'Set TTL to 0 in nais.yaml'
