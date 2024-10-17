@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     if: (startsWith(github.head_ref, 'MIM-') || startsWith(github.head_ref, 'mim-') && contains(github.event.issue.labels.*.name, 'nais') && contains(fromJSON('["annesiri", "ssb-cgn", "Glenruben", "johnnadeluy", "Carl-OW", "michaelpande"]'), github.actor))
     steps:
-      # turn 'MIM-9876_new_feature' into 'mim-9876' so it can be used in URL, it can be found in env.ISSUE_NUMBER
+      # Get the JIRA issue number (same logic from deploy)
       - name: 'Get JIRA issue number'
         id: jira_issue_number
         run: |
@@ -31,16 +31,23 @@ jobs:
           service_account: 'gh-ssb@nais-management-b3a7.iam.gserviceaccount.com'
           token_format: 'access_token'
 
+      # Get GKE credentials
       - id: 'get-credentials'
         uses: 'google-github-actions/get-gke-credentials@v2.2.1'
         with:
           cluster_name: 'nais-test'
           location: 'europe-north1'
 
-      # Update the TTL to 0 instead of deleting the pod
-      - id: 'update_ttl'
+      # Redeploy the application with TTL set to 0
+      - name: 'Set TTL to 0 in nais.yaml'
         run: |
-          kubectl patch deployment mimir-branch-${{ env.ISSUE_NUMBER }} \
-            -n ssbno \
-            --type=merge \
-            -p '{"spec": {"ttl": "0"}}'
+          sed -i 's/ttl: .*/ttl: 0/' nais.yaml  # Update the TTL to 0
+
+      # Redeploy the application with the modified TTL
+      - uses: nais/deploy/actions/deploy@v2
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: test
+          RESOURCE: nais.yaml
+          VAR: image=${{ env.REGISTRY }}/${{env.IMAGE}}:${{ env.TAG }},branch=${{ env.ISSUE_NUMBER }}
+          DEPLOY_SERVER: deploy.ssb.cloud.nais.io:443
