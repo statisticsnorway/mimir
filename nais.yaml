@@ -9,7 +9,7 @@ metadata:
   labels:
     team: ssbno
 spec:
-  image: { { image } }
+  image: '{{ image }}'
   #  image: europe-north1-docker.pkg.dev/nais-management-b3a7/ssbno/ssbno-mimir/mimir:...
   #       ^--- interpolated from the ${{ env.docker_image }} variable in the action
 
