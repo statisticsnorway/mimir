@@ -1,0 +1,7 @@
+<part>
+  <display-name>Statistikkside - Kontakt (Prototype)</display-name>
+  <description>Viser fire kontaker per linje</description>
+  <form>
+    <mixin name="contacts" />
+  </form>
+</part>
