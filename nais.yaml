@@ -19,7 +19,7 @@ spec:
     min: 1
   port: 8080
 
-  # Server needs to be able to access these hosts to download and install apps from market, not a complete list, some apps can't be installed.
+  # Server needs to be able to access these hosts to download and install apps from market, not a complete list, some apps can't be installed
   accessPolicy:
     outbound:
       external:
