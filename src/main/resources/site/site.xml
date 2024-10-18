@@ -61,6 +61,14 @@
       <occurrences minimum="1" maximum="1"/>
       <default>/informasjon/om-statistikkbanken/hvordan-bruke-statistikkbanken</default>
     </input>
+    <input name="googleSearchEngineId" type="TextLine">
+      <label>Unik ID for vårt custom google søk.</label>
+      <occurrences minimum="1" maximum="1"/>
+    </input>
+    <input name="googleSearchApiKey" type="TextLine">
+      <label>API-nøkkel for google seach.</label>
+      <occurrences minimum="1" maximum="1"/>
+    </input>
     <item-set name="language">
       <label>Språk innstillinger</label>
       <expanded>false</expanded>
