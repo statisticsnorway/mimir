@@ -99,7 +99,7 @@ function AttachmentTableFigures(props: Readonly<AttachmentTablesFiguresProps>) {
   const anchor = location && location.hash !== '' ? location.hash.substring(1) : undefined
 
   return (
-    <React.Fragment>
+    <>
       {accordions && (
         <div className='xp-part part-accordion container'>
           <div className='row'>
@@ -133,7 +133,7 @@ function AttachmentTableFigures(props: Readonly<AttachmentTablesFiguresProps>) {
           {renderShowMoreButton()}
         </div>
       )}
-    </React.Fragment>
+    </>
   )
 }
 
