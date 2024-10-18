@@ -26,13 +26,13 @@
 
   .source {
     margin-bottom: $spacer;
+    margin-top: 1.5rem;
 
     .source-title {
       color: $ssb-dark-6;
     }
 
-    &>div {
-      padding-top: $spacer * 0.5;
+    .source-link {
       padding-bottom: $spacer * 0.5;
     }
 
@@ -45,7 +45,7 @@
     width: 95%;
     margin: 0;
 
-    .source>div {
+    .source > div {
       padding: 0;
     }
   }
@@ -77,13 +77,13 @@ table.statistics thead th {
 
 table.statistics {
   thead {
-    th[scope="colspan"] {
+    th[scope='colspan'] {
       text-align: right;
     }
   }
 }
 
-table.statistics thead th[scope="col"] {
+table.statistics thead th[scope='col'] {
   text-align: right !important;
 }
 
@@ -92,19 +92,17 @@ table.statistics {
 
   thead,
   tbody {
-
     th.sum,
     td.sum {
       font-weight: bold;
     }
 
     td.preliminary:before {
-      content: "*";
+      content: '*';
     }
   }
 
   tbody {
-
     th,
     td {
       height: 36px;
@@ -126,7 +124,7 @@ table.statistics {
 
       &.title {
         font-weight: bold;
-        font-size: 1.1em;
+        font-size: 1.1rem;
       }
     }
   }
@@ -143,15 +141,15 @@ table.statistics {
 }
 
 ul.statbankkilde {
-  padding-left: 1em;
-  font-size: 1.3em;
+  padding-left: 1rem;
+  font-size: 1.3rem;
   list-style-type: none;
 
   li {
-    margin-bottom: 0.4em;
+    margin-bottom: 0.4rem;
   }
 }
 
 sup {
-    margin: 0 0.3em;
+  margin: 0 0.3rem;
 }
