@@ -52,10 +52,10 @@ jobs:
             echo "nais.yaml found."
           fi
 
-      # Modify nais.yaml to set TTL to "0h" (must be string value)
-      - name: Set TTL to "0h" in nais.yaml
+      # Modify nais.yaml to set TTL to "10m" (must be string value)
+      - name: Set TTL to "10m" in nais.yaml
         run: |
-          sed -i 's/ttl: .*/ttl: "0h"/' nais.yaml
+          sed -i 's/ttl: .*/ttl: "10m"/' nais.yaml
 
       # Redeploy the application with the modified TTL and correct image and branch variables
       - uses: nais/deploy/actions/deploy@v2
