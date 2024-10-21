@@ -18,7 +18,8 @@
   @include media-breakpoint-down(md) {
     padding: 20px 20px;
 
-    .col , .col-12 {
+    .col,
+    .col-12 {
       padding-right: 0;
       padding-left: 0;
     }
@@ -48,12 +49,12 @@
   &:after {
     top: 100px;
     position: absolute;
-    content: "";
+    content: '';
     left: 0px;
     right: 0px;
     border-width: 33vw 49.6vw;
     border-style: solid;
-    border-color: $ssb-dark-5 rgba(0,0,0,0) rgba(0,0,0,0) $ssb-dark-5;
+    border-color: $ssb-dark-5 rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) $ssb-dark-5;
   }
 
   @include media-breakpoint-down(md) {
@@ -66,12 +67,13 @@
   }
 }
 
-.grey-triangle + .container, .grey-triangle + .container-fluid {
+.grey-triangle + .container,
+.grey-triangle + .container-fluid {
   margin-top: -50px;
   position: relative;
 }
 
-.container-fluid .part-picture-card  {
+.container-fluid .part-picture-card {
   margin-top: 60px;
   margin-bottom: -40px;
 }
@@ -80,12 +82,12 @@
   border-top: 1px solid $ssb-dark-2;
 
   @include media-breakpoint-up(md) {
-    [data-portal-region="left"] {
+    [data-portal-region='left'] {
       padding-right: 100px;
       border-right: 1px solid $ssb-dark-2;
     }
 
-    [data-portal-region="right"] {
+    [data-portal-region='right'] {
       padding-left: 100px;
     }
   }

@@ -43,12 +43,12 @@ footer {
   }
 
   .footer-content {
-
     .ssb-title {
       margin-bottom: 10px;
     }
 
-    ul, ol {
+    ul,
+    ol {
       list-style: none;
       margin-bottom: 0;
       padding-left: 0;
@@ -61,7 +61,6 @@ footer {
     @include media-breakpoint-down(md) {
       margin-bottom: 40px;
     }
-
   }
 
   .footer-menu {
@@ -70,7 +69,6 @@ footer {
     grid-auto-flow: column;
 
     .ssb-accordion {
-
       .expand-icon * {
         color: $ssb-green-2;
         font-size: 20px;
@@ -100,13 +98,12 @@ footer {
       }
 
       &:hover {
-
-        .header-text, .sub-header {
+        .header-text,
+        .sub-header {
           color: $ssb-green-2;
         }
       }
     }
-
 
     .footer-link {
       display: flex;
@@ -130,7 +127,7 @@ footer {
     &.showOnMobile {
       grid-auto-flow: row;
 
-      @include media-breakpoint-up(lg){
+      @include media-breakpoint-up(lg) {
         display: none;
       }
     }
@@ -151,7 +148,7 @@ footer {
       display: grid;
       justify-content: center;
 
-      @include media-breakpoint-up(lg){
+      @include media-breakpoint-up(lg) {
         display: none;
       }
     }
@@ -182,7 +179,6 @@ footer {
     }
 
     .global-links {
-
       > * {
         margin-right: 20px;
       }
@@ -234,7 +230,6 @@ footer {
         > * {
           margin-left: 0;
         }
-
       }
 
       .ssb-link {
@@ -246,6 +241,4 @@ footer {
       margin-top: 10px;
     }
   }
-
-
 }
