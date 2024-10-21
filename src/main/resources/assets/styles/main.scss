@@ -147,7 +147,16 @@ section.part-divider + section.part-divider {
 .xp-region {
   @include media-breakpoint-down(md) {
     margin: 0 auto;
-    width: 95%;
+
+    .xp-part {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+
+    .row > * {
+      margin: 0;
+      padding: 0;
+    }
   }
 }
 
