@@ -1,8 +1,6 @@
 name: NAIS Delete
 
-on:
-  pull_request:
-    types: [closed]
+on: workflow_dispatch
 
 jobs:
   delete:
