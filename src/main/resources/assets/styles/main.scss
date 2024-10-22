@@ -148,9 +148,9 @@ section.part-divider + section.part-divider {
   @include media-breakpoint-down(md) {
     margin: 0 auto;
 
-    .xp-part {
-      padding-left: 1rem;
-      padding-right: 1rem;
+    section {
+      padding-left: 1rem !important;
+      padding-right: 1rem !important;
     }
 
     .row > * {
@@ -222,4 +222,11 @@ p.bold {
   border-style: dotted;
   border-color: white;
   border-width: medium;
+}
+
+#breadcrumbs {
+  @include media-breakpoint-down(md) {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
 }

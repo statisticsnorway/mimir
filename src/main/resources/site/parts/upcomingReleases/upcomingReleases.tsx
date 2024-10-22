@@ -293,25 +293,23 @@ function UpcomingReleases(props: UpcomingReleasesProps) {
 
   return (
     <section className='nextStatisticsReleases container-fluid p-0'>
-      <div className='row extended-banner'>
-        <div className='col-12 upcoming-releases-head px-4'>
-          <div className='container py-5'>
-            <h1 id='heading-upcoming-releases'>{props.title ? props.title : undefined}</h1>
-            <div
-              className='upcoming-releases-ingress'
-              dangerouslySetInnerHTML={{
-                __html: sanitize(props.preface!.replace(/&nbsp;/g, ' ')),
-              }}
-            ></div>
-          </div>
+      <div className='col-12 full-width-background'>
+        <div className='container py-5'>
+          <h1 id='heading-upcoming-releases'>{props.title ? props.title : undefined}</h1>
+          <div
+            className='upcoming-releases-ingress'
+            dangerouslySetInnerHTML={{
+              __html: sanitize(props.preface!.replace(/&nbsp;/g, ' ')),
+            }}
+          ></div>
         </div>
-        <div className='col-12 release-list px-4'>
-          <div className='container mt-5'>
-            <div className='row d-flex justify-content-center'>
-              <div className='col-12 p-0'>
-                {renderList(releases)}
-                {renderButton()}
-              </div>
+      </div>
+      <div className='col-12 release-list'>
+        <div className='container mt-5'>
+          <div className='row d-flex justify-content-center'>
+            <div className='col-12 p-0'>
+              {renderList(releases)}
+              {renderButton()}
             </div>
           </div>
         </div>
