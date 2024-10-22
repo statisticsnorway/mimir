@@ -56,11 +56,10 @@ jobs:
         run: |
           sed -i 's/ttl: .*/ttl: "10m"/' nais.yaml
 
-      # Use the previously built image by reusing the tag from the initial deployment
+      # Use the stored image tag from the deploy job
       - name: Retrieve the original image tag
         run: |
-          echo "Retrieving original image tag"
-          echo "IMAGE_TAG=${{ github.sha }}" >> $GITHUB_ENV
+          echo "Using stored image tag: ${{ env.IMAGE_TAG }}"
 
       # Redeploy the application with the modified TTL and correct image and branch variables
       - uses: nais/deploy/actions/deploy@v2
@@ -68,5 +67,5 @@ jobs:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: test
           RESOURCE: nais.yaml
-          VAR: image=${{ env.REGISTRY }}/${{ env.IMAGE }}:${{ env.IMAGE_TAG }},branch=${{ env.ISSUE_NUMBER }}
+          VAR: image=${{ env.REGISTRY }}/${{ env.IMAGE }}:${{ env.TAG }},branch=${{ env.ISSUE_NUMBER }}
           DEPLOY_SERVER: deploy.ssb.cloud.nais.io:443
