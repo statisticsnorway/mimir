@@ -90,7 +90,7 @@ function AttachmentTableFigures(props: AttachmentTablesFiguresProps) {
     if (accordion.contentType === `${props.appName}:table`) {
       return <Table checkIsOverflowing={checkOverflow} {...(accordion.props as TableProps)} />
     } else {
-      // Table or figure from content studio (no user input), hence no need to sanitize
+      // Table or figure from content studio (no user input), hence no need to sanitizee
       return <div dangerouslySetInnerHTML={{ __html: accordion.body! }}></div>
     }
   }
