@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { X, Clipboard } from 'react-feather'
 
 const Popup = () => {
-  const [isOpen, setIsOpen] = useState<boolean | null>(null) // Start with null to avoid initial render flicker
+  const [isOpen, setIsOpen] = useState<boolean | null>(null)
   const [isVisible, setIsVisible] = useState(true)
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 767)
 
@@ -10,24 +10,24 @@ const Popup = () => {
     const handleResize = () => {
       const isCurrentlyMobile = window.innerWidth <= 767
       if (!isCurrentlyMobile && isMobile && !isOpen) {
-        setIsOpen(true) // Open popup only when moving from mobile to desktop and it was closed
+        setIsOpen(true)
       }
-      setIsMobile(isCurrentlyMobile) // Update isMobile state based on window size
+      setIsMobile(isCurrentlyMobile)
     }
 
     window.addEventListener('resize', handleResize)
 
     return () => {
-      window.removeEventListener('resize', handleResize) // Cleanup on unmount
+      window.removeEventListener('resize', handleResize)
     }
-  }, [isMobile, isOpen]) // Only re-run when isMobile or isOpen changes
+  }, [isMobile, isOpen])
 
   useEffect(() => {
     const initialIsMobile = window.innerWidth <= 767
-    setIsOpen(!initialIsMobile) // Set initial state based on window size
+    setIsOpen(!initialIsMobile)
   }, [])
 
-  if (isOpen === null || !isVisible) return null // Prevent rendering until isOpen is determined
+  if (isOpen === null || !isVisible) return null
 
   const toggleOpen = () => {
     setIsOpen(!isOpen)
