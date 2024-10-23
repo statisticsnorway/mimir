@@ -395,14 +395,10 @@ function Table(props: TableProps) {
     return null
   }
 
-  function isTableEmpty(): boolean {
-    return isEmpty(currentTable) || (isEmpty(currentTable.thead) && isEmpty(currentTable.tbody))
-  }
-
   return (
     <section className='xp-part part-table'>
       {addPreviewButton()}
-      {!isTableEmpty() ? (
+      {!isEmpty(currentTable) ? (
         <>
           <div className='d-none searchabletext'>
             <span>{props.hiddenTitle}</span>
