@@ -27,6 +27,17 @@
     justify-content: center;
     align-items: center;
     border-radius: 2px;
+
+    .clipboard-icon {
+      stroke: white;
+      margin: 0;
+      display: block;
+    }
+
+    .closed-text {
+      position: absolute;
+      opacity: 0;
+    }
   }
 
   @media (max-width: 767px) {

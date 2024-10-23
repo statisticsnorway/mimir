@@ -5,13 +5,20 @@ const Popup = () => {
   const [isOpen, setIsOpen] = useState<boolean | null>(null)
   const [isVisible, setIsVisible] = useState(true)
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 767)
+  const [isScrolled, setIsScrolled] = useState(false)
 
   useEffect(() => {
     const handleResize = () => {
       const isCurrentlyMobile = window.innerWidth <= 767
+
       if (!isCurrentlyMobile && isMobile && !isOpen) {
         setIsOpen(true)
       }
+
+      if (!isCurrentlyMobile && !isOpen) {
+        setIsScrolled(false)
+      }
+
       setIsMobile(isCurrentlyMobile)
     }
 
@@ -27,10 +34,27 @@ const Popup = () => {
     setIsOpen(!initialIsMobile)
   }, [])
 
-  if (isOpen === null || !isVisible) return null
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!isOpen && isMobile) {
+        setIsScrolled(true)
+      }
+    }
+
+    if (isMobile && !isOpen) {
+      window.addEventListener('scroll', handleScroll)
+    } else {
+      setIsScrolled(false)
+    }
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [isMobile, isOpen])
 
   const toggleOpen = () => {
     setIsOpen(!isOpen)
+    setIsScrolled(false)
   }
 
   const closePopup = (e: React.MouseEvent) => {
@@ -51,10 +75,13 @@ const Popup = () => {
       'noopener,noreferrer'
     )
     setIsOpen(false)
+    setIsScrolled(false)
   }
 
+  if (isOpen === null || !isVisible) return null
+
   return (
-    <div className={`popup-container ${isOpen ? 'open' : 'closed'}`}>
+    <div className={`popup-container ${isOpen ? 'open' : isScrolled ? 'scrolled' : 'closed'}`}>
       {!isOpen ? (
         <div className='popup-closed' onClick={toggleOpen}>
           <Clipboard className='clipboard-icon' size={20} />
