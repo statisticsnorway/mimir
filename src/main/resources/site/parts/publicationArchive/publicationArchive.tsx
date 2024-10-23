@@ -217,52 +217,47 @@ function PublicationArchive(props: PublicationArchiveProps) {
 
   return (
     <section className='publication-archive container-fluid'>
-      <div className='row'>
-        <div className='col-12 publication-archive-head py-5 px-2'>
-          <div className='container'>
-            <div className='row'>
-              <div className='col-12'>
-                <Title>{title}</Title>
-                <div
-                  className='publication-archive-ingress'
-                  dangerouslySetInnerHTML={{
-                    __html: sanitize(ingress.replace(/&nbsp;/g, ' ')),
-                  }}
-                ></div>
-                {renderFilter()}
-              </div>
+      <div className='publication-archive-head'>
+        <div className='container py-5'>
+          <Title>{title}</Title>
+          <div
+            className='publication-archive-ingress'
+            dangerouslySetInnerHTML={{
+              __html: sanitize(ingress.replace(/&nbsp;/g, ' ')),
+            }}
+          ></div>
+          {renderFilter()}
+        </div>
+      </div>
+
+      <div className='col-12 publication-archive-body mt-5'>
+        <div className='container mb-5'>
+          <div className='row'>
+            <div className='col'>
+              {showingPhrase.replace('{0}', publications.length.toString())}&nbsp;
+              <NumericFormat value={Number(total)} displayType='text' thousandSeparator=' ' />
+              <Divider className='mb-4' dark></Divider>
             </div>
           </div>
-        </div>
-        <div className='col-12 publication-archive-body mt-5'>
-          <div className='container mb-5'>
-            <div className='row'>
-              <div className='col'>
-                {showingPhrase.replace('{0}', publications.length.toString())}&nbsp;
-                <NumericFormat value={Number(total)} displayType='text' thousandSeparator=' ' />
-                <Divider className='mb-4' dark></Divider>
-              </div>
-            </div>
-            {renderPublications()}
-            {renderLoading()}
-            <div>
-              <Button
-                disabled={loading || total === publications.length}
-                className='button-more mt-5'
-                onClick={() => {
-                  setKeyboardNavigation(false)
+          {renderPublications()}
+          {renderLoading()}
+          <div>
+            <Button
+              disabled={loading || total === publications.length}
+              className='button-more mt-5'
+              onClick={() => {
+                setKeyboardNavigation(false)
+                fetchPublications()
+              }}
+              onKeyDown={(e: React.KeyboardEvent<HTMLButtonElement>) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  setKeyboardNavigation(true)
                   fetchPublications()
-                }}
-                onKeyDown={(e: React.KeyboardEvent<HTMLButtonElement>) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    setKeyboardNavigation(true)
-                    fetchPublications()
-                  }
-                }}
-              >
-                <ChevronDown size='18' /> {buttonTitle}
-              </Button>
-            </div>
+                }
+              }}
+            >
+              <ChevronDown size='18' /> {buttonTitle}
+            </Button>
           </div>
         </div>
       </div>

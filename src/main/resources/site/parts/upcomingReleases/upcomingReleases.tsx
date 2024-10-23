@@ -293,7 +293,7 @@ function UpcomingReleases(props: UpcomingReleasesProps) {
 
   return (
     <section className='nextStatisticsReleases container-fluid p-0'>
-      <div className='col-12 full-width-background'>
+      <div className='col-12 upcoming-releases-head'>
         <div className='container py-5'>
           <h1 id='heading-upcoming-releases'>{props.title ? props.title : undefined}</h1>
           <div

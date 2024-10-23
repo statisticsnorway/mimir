@@ -5,20 +5,25 @@
     padding-top: 3rem;
   }
 
-  .full-width-background {
+  .upcoming-releases-head {
     background-color: $ssb-dark-1;
     width: 100vw;
     position: relative;
     left: 50%;
     margin-left: -50vw;
-  }
 
-  @include media-breakpoint-down(md) {
-    .full-width-background {
+    .upcoming-releases-ingress {
+      max-width: 780px;
+      margin-top: 1rem;
+    }
+
+    @include media-breakpoint-down(md) {
       padding-left: 1rem;
       padding-right: 1rem;
     }
+  }
 
+  @include media-breakpoint-down(md) {
     .calendar-day {
       flex-direction: column;
       padding-top: 0;
@@ -66,10 +71,6 @@
     margin-top: $spacer * 0.5;
     margin-left: auto;
     margin-right: auto;
-
-    @include media-breakpoint-down(md) {
-      margin-top: none;
-    }
   }
 
   time {
