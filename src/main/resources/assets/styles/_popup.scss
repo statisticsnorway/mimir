@@ -8,6 +8,12 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   border: 1px solid #00824d;
 
+  top: auto;
+  left: auto;
+  transform: translateZ(0);
+  touch-action: none;
+  will-change: top, bottom;
+
   &.open {
     width: 358px;
     border-radius: 8px;

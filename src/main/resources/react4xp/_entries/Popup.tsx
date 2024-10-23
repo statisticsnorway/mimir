@@ -3,9 +3,17 @@ import { X, Clipboard } from 'react-feather'
 
 const Popup = () => {
   const [isOpen, setIsOpen] = useState<boolean | null>(null)
-  const [isVisible, setIsVisible] = useState(true)
+  const [isVisible, setIsVisible] = useState(false)
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 767)
   const [isScrolled, setIsScrolled] = useState(false)
+  const [hasUserScrolled, setHasUserScrolled] = useState(false)
+
+  useEffect(() => {
+    const initialIsMobile = window.innerWidth <= 767
+    setIsMobile(initialIsMobile)
+    setIsOpen(!initialIsMobile)
+    setIsVisible(true)
+  }, [])
 
   useEffect(() => {
     const handleResize = () => {
@@ -30,31 +38,37 @@ const Popup = () => {
   }, [isMobile, isOpen])
 
   useEffect(() => {
-    const initialIsMobile = window.innerWidth <= 767
-    setIsOpen(!initialIsMobile)
-  }, [])
+    let scrollTimeout: ReturnType<typeof setTimeout> | null = null
 
-  useEffect(() => {
     const handleScroll = () => {
-      if (!isOpen && isMobile) {
+      if (!isOpen && isMobile && hasUserScrolled) {
         setIsScrolled(true)
       }
     }
+    const onManualScroll = () => {
+      setHasUserScrolled(true)
+    }
 
     if (isMobile && !isOpen) {
-      window.addEventListener('scroll', handleScroll)
-    } else {
-      setIsScrolled(false)
+      scrollTimeout = setTimeout(() => {
+        window.addEventListener('scroll', handleScroll)
+        window.addEventListener('scroll', onManualScroll)
+      }, 500)
     }
 
     return () => {
+      if (scrollTimeout) {
+        clearTimeout(scrollTimeout)
+      }
       window.removeEventListener('scroll', handleScroll)
+      window.removeEventListener('scroll', onManualScroll)
     }
-  }, [isMobile, isOpen])
+  }, [isMobile, isOpen, hasUserScrolled])
 
   const toggleOpen = () => {
     setIsOpen(!isOpen)
     setIsScrolled(false)
+    setHasUserScrolled(false)
   }
 
   const closePopup = (e: React.MouseEvent) => {
@@ -74,7 +88,6 @@ const Popup = () => {
       '_blank',
       'noopener,noreferrer'
     )
-    setIsOpen(false)
     setIsScrolled(false)
   }
 
