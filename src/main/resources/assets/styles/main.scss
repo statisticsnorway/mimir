@@ -153,8 +153,12 @@ section.part-divider + section.part-divider {
       padding-right: 1rem !important;
     }
 
+    section section {
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+    }
+
     .row > * {
-      margin: 0;
       padding: 0;
     }
   }
@@ -224,7 +228,9 @@ p.bold {
   border-width: medium;
 }
 
-#breadcrumbs {
+#breadcrumbs,
+.page-title,
+.page-subtitle {
   @include media-breakpoint-down(md) {
     padding-left: 1rem;
     padding-right: 1rem;
