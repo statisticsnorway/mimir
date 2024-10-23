@@ -122,7 +122,11 @@
               <div id="statbank-placeholder"></div>
             </div>
             <!-- Page Title -->
-            <div data-th-if="${page.data.title}" data-th-unless="${statbankWeb}" class="page-title container mb-5">
+            <div
+              data-th-if="${page.data.title}"
+              data-th-unless="${statbankWeb}"
+              class="default-page-title container mb-5"
+            >
               <div class="row">
                 <div class="col">
                   <h1 data-th-text="${page.data.title}"></h1>
@@ -130,7 +134,7 @@
               </div>
             </div>
             <!-- Page Title Tables in full view -->
-            <div data-th-if="${tableView}" class="page-title container mb-5">
+            <div data-th-if="${tableView}" class="default-page-title container mb-5">
               <div class="row">
                 <div class="col">
                   <h1 data-th-text="${page.displayName}"></h1>
@@ -153,7 +157,7 @@
             data-th-classappend="${region.view == 'full' ? 'container-fluid full-width' : region.view == 'card' ? 'border-top-green container' : 'container'}"
           >
             <!-- Subtitle for content in default pages -->
-            <div data-th-if="${region.view != 'card'}" class="page-subtitle row">
+            <div data-th-if="${region.view != 'card'}" class="default-page-subtitle row">
               <div class="col">
                 <div class="container">
                   <div class="row">

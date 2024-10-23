@@ -39,7 +39,7 @@ function EmployeeList(props: EmployeeListProps) {
         </Link>
         {employee.position ? (
           <div className='position'>
-            <Text small>{employee.position}</Text>
+            <Text>{employee.position}</Text>
           </div>
         ) : null}
         <div className='contact-details'>

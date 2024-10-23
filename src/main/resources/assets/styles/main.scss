@@ -229,8 +229,8 @@ p.bold {
 }
 
 #breadcrumbs,
-.page-title,
-.page-subtitle {
+.default-page-title,
+.default-page-subtitle {
   @include media-breakpoint-down(md) {
     padding-left: 1rem;
     padding-right: 1rem;
