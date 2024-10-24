@@ -183,6 +183,28 @@ export function get(req: XP.Request): XP.Response {
     pageContributions = footer.pageContributions
   }
 
+  // Get the value of 'hidePopup' cookie
+  const hidePopupCookie = req.cookies ? req.cookies['hidePopup'] : undefined
+
+  // Check if the feature 'show-popup-survey' is enabled
+  const isPopupEnabled = isEnabled('show-popup-survey', false, 'ssb')
+
+  // Conditionally render the popup only if the feature is enabled and the cookie is NOT set to 'true'
+  const popupComponent =
+    isPopupEnabled && hidePopupCookie !== 'true'
+      ? r4xpRender(
+          'Popup',
+          {}, // Pass props if needed
+          req,
+          { id: 'popup', body: '<div id="popup"></div>', pageContributions }
+        )
+      : { body: '' } // Return an empty body when the cookie is set or feature is disabled
+
+  // Assign pageContributions only when popup is rendered
+  if (popupComponent && popupComponent.body && hidePopupCookie !== 'true') {
+    pageContributions = popupComponent.pageContributions
+  }
+
   let municipality: MunicipalityWithCounty | undefined
   if (req.params.selfRequest) {
     municipality = getMunicipality(req as RequestWithCode)
@@ -266,6 +288,7 @@ export function get(req: XP.Request): XP.Response {
     hideHeader,
     hideBreadcrumb,
     tableView: page.type === 'mimir:table',
+    popupBody: popupComponent.body, // Add Popup body to the model
   }
 
   const thymeleafRenderBody = render(view, model)
@@ -733,4 +756,5 @@ interface DefaultModel {
   hideHeader: boolean
   hideBreadcrumb: boolean
   tableView: boolean
+  popupBody: string | undefined // Added for Popup component
 }
