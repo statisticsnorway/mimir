@@ -148,11 +148,11 @@ const Popup = () => {
             onKeyDown={handleKeyDown} // Add keyboard interaction
           >
             <h4 className='header-text'>Hvordan opplever du ssb.no?</h4>
-            <div className='close-icon-wrapper' onClick={closePopup}>
+            <div className='close-icon-wrapper' role='button' onClick={closePopup}>
               <X className='close-icon' size={24} />
             </div>
           </div>
-          <div className='popup-content' onClick={toggleOpen}>
+          <div className='popup-content' role='button' onClick={toggleOpen}>
             <p>
               Hjelp oss å gjøre opplevelsen din på ssb.no bedre. Det tar omtrent 6 minutter å svare på vår årlige
               brukerundersøkelse.
