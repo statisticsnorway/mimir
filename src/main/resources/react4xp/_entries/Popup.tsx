@@ -128,13 +128,25 @@ const Popup = () => {
       ref={popupContainerRef}
     >
       {!isOpen ? (
-        <div className='popup-closed' onClick={toggleOpen}>
+        <div
+          className='popup-closed'
+          role='button'
+          tabIndex={0}
+          onClick={toggleOpen}
+          onKeyDown={handleKeyDown} // Add keyboard interaction
+        >
           <Clipboard className='clipboard-icon' size={20} />
           <span className='closed-text'>Undersøkelse ssb.no</span>
         </div>
       ) : (
         <>
-          <div className='popup-header' onClick={toggleOpen}>
+          <div
+            className='popup-header'
+            role='button'
+            tabIndex={0}
+            onClick={toggleOpen}
+            onKeyDown={handleKeyDown} // Add keyboard interaction
+          >
             <h4 className='header-text'>Hvordan opplever du ssb.no?</h4>
             <div className='close-icon-wrapper' onClick={closePopup}>
               <X className='close-icon' size={24} />

@@ -80,7 +80,7 @@
 }
 
 .closed-text {
-  font-family: Roboto;
+  font-family: Roboto, sans-serif;
   font-size: 16px;
   font-weight: 700;
   color: white;
@@ -134,7 +134,7 @@
 }
 
 .popup-content p {
-  font-family: 'Open Sans';
+  font-family: 'Open Sans', sans-serif;
   font-size: 14px;
   color: #00824d;
   font-weight: 100;
@@ -168,7 +168,7 @@
   height: 44px;
   background-color: #ecfeed;
   color: #00824d;
-  font-family: Roboto;
+  font-family: Roboto, sans-serif;
   font-weight: 700;
   border: 2px solid #00824d;
   border-radius: 2px;
@@ -182,4 +182,10 @@
   outline: 2px solid #9272fc;
   outline-offset: 2px;
   border-radius: 2px;
+}
+
+@media (min-width: 768px) {
+  .header-text {
+    font-size: 20px;
+  }
 }
