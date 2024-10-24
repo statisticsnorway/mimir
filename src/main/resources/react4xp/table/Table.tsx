@@ -127,10 +127,10 @@ function Table(props: TableProps) {
       <SSBTable
         className={tableClass}
         caption={addCaption()}
-        dataNoteRefs={props.table.caption?.noterefs}
+        dataNoteRefs={currentTable.caption?.noterefs}
         checkIsOverflowing={props.checkIsOverflowing}
       >
-        {props.table.thead?.map((t, index) => (
+        {currentTable.thead?.map((t, index) => (
           <React.Fragment key={index}>
             {addThead(index)}
             {addTbody(index)}
@@ -340,7 +340,7 @@ function Table(props: TableProps) {
   function addPreviewButton() {
     if (showPreviewToggle && !props.pageTypeStatistic) {
       return (
-        <Button primary onClick={toggleDraft}>
+        <Button primary onClick={toggleDraft} className='mb-2'>
           {!fetchUnPublished ? 'Vis upubliserte tall' : 'Vis publiserte tall'}
         </Button>
       )
@@ -397,13 +397,13 @@ function Table(props: TableProps) {
 
   return (
     <section className='xp-part part-table'>
+      {addPreviewButton()}
       {!isEmpty(currentTable) ? (
         <>
           <div className='d-none searchabletext'>
             <span>{props.hiddenTitle}</span>
           </div>
           <div className='container border-0'>
-            {addPreviewButton()}
             {addDownloadTableDropdown(false)}
             {addPreviewInfo()}
             <div className='table-wrapper searchabletext' ref={tableWrapperRef}>

@@ -42,3 +42,7 @@ Further improvements and more test coverage might be a useful addition.
 - Begin with the [quick start](https://gatling.io/docs/gatling/tutorials/quickstart/) to Gatling
 - Refer do the [Cheat sheet](https://gatling.io/docs/gatling/reference/current/cheat-sheet/) and further documentation for reference. 
 - The Gatling zip package contains useful examples, don't forget to check them out!
+
+## Deploying feature branches to Nais
+We use a gihub pull request label to ensure we control which branches are deployed to Nais. 
+Add the branch `nais` to deploy your branch with a minimal set of test content! Maybe it even takes down the branch environment when you close the PR!

@@ -1,20 +1,27 @@
-name: NAIS Deploy
+name: NAIS Delete
 
-on:
-  pull_request:
-    types: [closed]
-  
+on: workflow_dispatch
+
 jobs:
   delete:
     name: 'Delete app from cluster'
     permissions:
-      contents: "read"
-      id-token: "write"
+      contents: 'read'
+      id-token: 'write'
     runs-on: ubuntu-latest
-    if: (startsWith(github.head_ref, 'MIM-') || startsWith(github.head_ref, 'mim-') && contains(github.event.issue.labels.*.name, 'nais') && contains(fromJSON('["annesiri", "ssb-cgn", "Glenruben", "johnnadeluy", "Carl-OW", "michaelpande"]'), github.actor))
+    if: (startsWith(github.head_ref, 'MIM-') || startsWith(github.head_ref, 'mim-') && contains(github.event.pull_request.labels.*.name, 'nais') && contains(fromJSON('["annesiri", "ssb-cgn", "Glenruben", "johnnadeluy", "Carl-OW", "michaelpande"]'), github.actor))
+    env:
+      REGISTRY: europe-north1-docker.pkg.dev/nais-management-b3a7/ssbno/ssbno-mimir
+      IMAGE: mimir
     steps:
-      # turn 'MIM-9876_new_feature' into 'mim-9876' so it can be used in URL, it can be found in env.ISSUE_NUMBER
-      - name: "Get JIRA issue number"
+      # Checkout the PR branch (e.g., MIM-2005-nais-deploy-test-6)
+      - name: Checkout the PR branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }} # Check out the branch associated with the PR
+
+      # Get the JIRA issue number (same logic from deploy)
+      - name: 'Get JIRA issue number'
         id: jira_issue_number
         run: |
           BRANCH="${{ github.head_ref }}"
@@ -23,17 +30,40 @@ jobs:
           echo "ISSUE_NUMBER=${ISSUE_NUMBER}" >> $GITHUB_ENV;
           echo "Issue number: $ISSUE_NUMBER";
 
-      - id: "auth"
-        name: "Authenticate to Google Cloud"
-        uses: "google-github-actions/auth@v0.6.0"
+      # Authenticate to Google Cloud
+      - id: 'auth'
+        name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v2.1.6'
         with:
-          workload_identity_provider: "projects/906675412832/locations/global/workloadIdentityPools/ssb-identity-pool/providers/github-oidc-provider"
-          service_account: "gh-ssb@nais-management-b3a7.iam.gserviceaccount.com"
-          token_format: "access_token"
-      - id: "get-credentials"
-        uses: 'google-github-actions/get-gke-credentials@v2'
-        with:
-          cluster_name: 'nais-test'
-          location: 'europe-north1'
-      - id: "delete"
-        run: "kubectl delete pod -n ssbno --selector=app=mimir-branch-${{ env.ISSUE_NUMBER }} --ignore-not-found=true"
+          workload_identity_provider: 'projects/906675412832/locations/global/workloadIdentityPools/ssb-identity-pool/providers/github-oidc-provider'
+          service_account: 'gh-ssb@nais-management-b3a7.iam.gserviceaccount.com'
+          token_format: 'access_token'
+
+      # Verify nais.yaml exists
+      - name: Verify nais.yaml exists
+        run: |
+          if [ ! -f "nais.yaml" ]; then
+            echo "nais.yaml not found!"
+            exit 1
+          else
+            echo "nais.yaml found."
+          fi
+
+      # Modify nais.yaml to set TTL to "10m" (must be string value)
+      - name: Set TTL to "10m" in nais.yaml
+        run: |
+          sed -i 's/ttl: .*/ttl: "10m"/' nais.yaml
+
+      # Use the stored image tag from the deploy job
+      - name: Retrieve the original image tag
+        run: |
+          echo "Using stored image tag: ${{ env.IMAGE_TAG }}"
+
+      # Redeploy the application with the modified TTL and correct image and branch variables
+      - uses: nais/deploy/actions/deploy@v2
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: test
+          RESOURCE: nais.yaml
+          VAR: image=${{ env.REGISTRY }}/${{ env.IMAGE }}:${{ env.TAG }},branch=${{ env.ISSUE_NUMBER }}
+          DEPLOY_SERVER: deploy.ssb.cloud.nais.io:443
