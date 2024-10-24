@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { X, Clipboard } from 'react-feather'
 
 const Popup = () => {
@@ -7,6 +7,7 @@ const Popup = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 767)
   const [isScrolled, setIsScrolled] = useState(false)
   const [hasUserScrolled, setHasUserScrolled] = useState(false)
+  const popupContainerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const initialIsMobile = window.innerWidth <= 767
@@ -69,6 +70,23 @@ const Popup = () => {
     setIsOpen(!isOpen)
     setIsScrolled(false)
     setHasUserScrolled(false)
+    if (popupContainerRef.current) {
+      popupContainerRef.current.focus()
+    }
+  }
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault()
+      toggleOpen()
+    }
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const handleClick = (e: React.MouseEvent) => {
+    if (popupContainerRef.current) {
+      popupContainerRef.current.blur()
+    }
   }
 
   const closePopup = (e: React.MouseEvent) => {
@@ -89,12 +107,26 @@ const Popup = () => {
       'noopener,noreferrer'
     )
     setIsScrolled(false)
+    setIsVisible(false)
   }
 
-  if (isOpen === null || !isVisible) return null
+  const handleButtonKeyDown = (e: React.KeyboardEvent, action: Function) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault()
+      action(e)
+    }
+  }
+
+  if (!isVisible || isOpen === null) return null
 
   return (
-    <div className={`popup-container ${isOpen ? 'open' : isScrolled ? 'scrolled' : 'closed'}`}>
+    <div
+      className={`popup-container ${isOpen ? 'open' : isScrolled ? 'scrolled' : 'closed'}`}
+      tabIndex={0}
+      onKeyDown={handleKeyDown}
+      onClick={handleClick}
+      ref={popupContainerRef}
+    >
       {!isOpen ? (
         <div className='popup-closed' onClick={toggleOpen}>
           <Clipboard className='clipboard-icon' size={20} />
@@ -115,10 +147,18 @@ const Popup = () => {
             </p>
           </div>
           <div className='button-group'>
-            <button className='popup-secondary-button' onClick={closePopup}>
+            <button
+              className='popup-secondary-button'
+              onClick={closePopup}
+              onKeyDown={(e) => handleButtonKeyDown(e, closePopup)}
+            >
               Svar senere
             </button>
-            <button className='popup-button' onClick={openLinkInNewTab}>
+            <button
+              className='popup-button'
+              onClick={openLinkInNewTab}
+              onKeyDown={(e) => handleButtonKeyDown(e, openLinkInNewTab)}
+            >
               Til undersøkelsen
             </button>
           </div>

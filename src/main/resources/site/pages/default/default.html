@@ -72,6 +72,8 @@
       data-th-remove="tag"
     ></div>
 
+    <div id="popup" data-th-utext="${popupBody}"></div>
+
     <!-- MAIN -->
     <main class="xp-region" id="content" data-th-if="${!isFragment}">
       <div class="container premain">
@@ -204,8 +206,6 @@
     <main class="xp-region" id="content" data-th-if="${isFragment}">
       <div data-portal-component="fragment" data-th-remove="tag"></div>
     </main>
-
-    <div id="popup" data-th-utext="${popupBody}"></div>
 
     <!-- FOOTER -->
     <footer data-th-if="${footerBody}" id="footer" data-th-utext="${footerBody}" data-th-remove="tag"></footer>
