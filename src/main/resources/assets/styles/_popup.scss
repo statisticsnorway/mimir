@@ -8,11 +8,12 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   border: 1px solid #00824d;
 
+  //For jittery scroll - might not be needeed
+  transform: translateZ(0);
+  backface-visibility: hidden;
   top: auto;
   left: auto;
-  transform: translateZ(0);
-  touch-action: none;
-  will-change: top, bottom;
+  overscroll-behavior: none;
 
   &.open {
     width: 358px;
