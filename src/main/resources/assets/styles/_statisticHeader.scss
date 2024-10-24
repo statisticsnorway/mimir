@@ -1,0 +1,69 @@
+.statistic-header {
+  margin-bottom: 8rem;
+
+  .title-ingress-wrapper {
+    display: block;
+    margin-bottom: $spacer * 1;
+    margin-top: 3rem;
+
+    h1 {
+      margin-bottom: 2rem;
+      padding: 0;
+    }
+
+    .ingress {
+      margin-bottom: 4rem;
+
+      p {
+        font-size: 1.25rem;
+      }
+
+      @include media-breakpoint-down(md) {
+        margin-bottom: 3rem;
+      }
+    }
+
+    .introTitle {
+      @include roboto;
+      font-size: 1.25rem;
+      line-height: 1.6;
+      margin-bottom: 0.25rem;
+    }
+
+    @include media-breakpoint-down(md) {
+      padding: 0;
+      margin-bottom: 2rem;
+    }
+  }
+
+  .titles-dates-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3rem;
+    column-gap: 3rem;
+    row-gap: 0.5rem;
+
+    .glossary-button {
+      background-image: none;
+      &:hover,
+      &:focus {
+        background-image: linear-gradient(to right, $ssb-green-2 50%, #fff 50%);
+      }
+    }
+
+    .updatedDate,
+    .nextUpdateDate,
+    .modifiedDate {
+      font-size: 1.25rem;
+
+      @include media-breakpoint-down(md) {
+        font-size: 1rem;
+        line-height: 2rem;
+      }
+    }
+  }
+
+  @include media-breakpoint-down(md) {
+    margin-bottom: 4rem;
+  }
+}
