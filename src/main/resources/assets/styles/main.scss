@@ -148,12 +148,14 @@ section.part-divider + section.part-divider {
   @include media-breakpoint-down(md) {
     margin: 0 auto;
 
-    section {
+    section,
+    figure {
       padding-left: 1rem !important;
       padding-right: 1rem !important;
     }
 
-    section section {
+    section section,
+    section figure {
       padding-left: 0 !important;
       padding-right: 0 !important;
     }
