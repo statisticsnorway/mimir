@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import { Accordion, Button } from '@statisticsnorway/ssb-component-library'
 import { ChevronDown, ChevronUp } from 'react-feather'
 
-import { sanitize } from '../../lib/ssb/utils/htmlUtils'
+import { sanitize } from '/lib/ssb/utils/htmlUtils'
 import {
   type AttachmentTablesFiguresProps,
   type AttachmentTablesFiguresData,
