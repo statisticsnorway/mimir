@@ -2,12 +2,14 @@
 .pif-calculator,
 .bkibol-calculator,
 .husleie-calculator {
-  border: solid 1px $ssb-dark-5;
-  border-top: 4px solid $green3;
-  background: $ssb-white;
+  .content {
+    border: solid 1px $ssb-dark-5;
+    border-top: 4px solid $green3;
+    background: $ssb-white;
+  }
 
   .calculator-form {
-    padding: 60px 100px;
+    padding: 3.75rem 6.25rem;
 
     .publish-text {
       margin-bottom: 0;
@@ -19,25 +21,25 @@
     }
 
     .input-amount {
-      padding-top: 32px;
-      padding-bottom: 32px;
+      padding-top: 2rem;
+      padding-bottom: 2rem;
     }
 
     .calculate-from {
-      padding-right: 30px;
+      padding-right: 2rem;
     }
 
     .calculate-to {
-      padding-left: 30px;
+      padding-left: 2rem;
     }
 
     .submit {
-      padding-top: 32px;
+      padding-top: 2rem;
     }
 
     .choose-scope {
-      padding-top: 32px;
-      padding-bottom: 32px;
+      padding-top: 2rem;
+      padding-bottom: 2rem;
     }
 
     .input-year {
@@ -48,13 +50,13 @@
   }
 
   .calculator-result {
-    padding: 60px 100px;
+    padding: 3.75rem 6.25rem;
     border-top: solid 1px $ssb-dark-5;
     background-color: $ssb-dark-1;
 
     .amount-equal {
       @include roboto;
-      font-size: 20px;
+      font-size: 1.25rem;
     }
 
     .end-value {
@@ -74,22 +76,22 @@
   }
 
   .calculator-error {
-    padding: 0 100px 60px 100px;
+    padding: 0 6.25rem 3.75rem 6.25rem;
   }
 
   &.frontpage {
-    margin-top: 40px;
+    margin-top: 2.5rem;
 
     .calculator-error {
-      padding: 0 60px 55px 60px;
+      padding: 0 3.75rem 3.4rem 3.75rem;
     }
   }
 
   .calculator-form-frontpage {
-    padding: 60px;
+    padding: 3.75rem;
 
     .input-amount {
-      padding-right: 20px;
+      padding-right: 1.25rem;
     }
 
     .select-year {
@@ -115,23 +117,23 @@
     }
 
     .submit {
-      padding-top: 32px;
+      padding-top: 2rem;
     }
   }
 
   .calculator-result-frontpage {
-    padding: 40px 60px;
+    padding: 2.5rem 3.75rem;
     border-top: solid 1px $ssb-dark-5;
     background-color: $ssb-dark-1;
 
     .amount-equal {
       @include roboto;
-      font-size: 20px;
+      font-size: 1.25rem;
     }
 
     .end-value {
       @include roboto-condenced;
-      font-size: 28px;
+      font-size: 1.75rem;
     }
 
     .close-button {
@@ -157,12 +159,12 @@
 
       .calculate-from {
         .select-year {
-          padding-left: 10px;
+          padding-left: 1rem;
         }
       }
 
       .start-value {
-        margin-bottom: 20px;
+        margin-bottom: 1.25rem;
       }
     }
   }
@@ -170,22 +172,22 @@
   @include media-breakpoint-down(lg) {
     .calculator-form {
       .calculate-from {
-        padding-right: 10px;
+        padding-right: 1rem;
       }
 
       .calculate-to {
-        padding-left: 10px;
-        padding-top: 10px;
+        padding-left: 1rem;
+        padding-top: 1rem;
       }
     }
   }
 
   @include media-breakpoint-down(md) {
     .calculator-form {
-      padding: 20px;
+      padding: 1.25rem;
 
       .select-year {
-        padding-right: 5px;
+        margin-right: 1rem;
         padding-left: 0;
       }
 
@@ -196,15 +198,15 @@
       }
 
       .select-month {
-        padding-left: 5px;
+        padding-left: 0;
       }
 
       .calculate-from {
-        padding-right: 10px;
+        padding-right: 0;
       }
 
       .calculate-to {
-        padding-left: 10px;
+        padding-left: 0;
       }
 
       .ssb-btn {
@@ -222,25 +224,25 @@
       }
 
       .article-link {
-        margin-top: 20px;
+        margin-top: 1.25rem;
       }
 
       .calculate-from,
       .calculate-from {
-        margin-bottom: 20px;
+        margin-bottom: 1.25rem;
         width: 100%;
       }
     }
 
     .calculator-result {
       .end-value {
-        font-size: 28px;
+        font-size: 1.75rem;
       }
     }
 
     .calculator-error,
     .calculator-result {
-      padding: 20px;
+      padding: 1.25rem;
     }
 
     .calculator-result-frontpage {
@@ -251,11 +253,11 @@
   @include media-breakpoint-down(sm) {
     .calculator-form {
       .article-link {
-        margin-bottom: 20px;
+        margin-bottom: 1.25rem;
       }
 
       .calculate-from {
-        margin-bottom: 20px;
+        margin-bottom: 1.25rem;
       }
 
       .input-amount,
@@ -271,7 +273,7 @@
 
       .select-month {
         padding-right: 0;
-        margin-top: 20px;
+        margin-top: 1.25rem;
       }
 
       .select-month,
@@ -287,10 +289,10 @@
     }
 
     .calculator-form-frontpage {
-      padding: 60px 20px 20px;
+      padding: 3.75rem 1.25rem 1.25rem;
 
       .input-amount {
-        margin-bottom: 20px;
+        margin-bottom: 1.25rem;
       }
 
       .input-amount,
@@ -316,7 +318,7 @@
     }
 
     .calculator-result-frontpage {
-      padding: 40px 20px 20px;
+      padding: 2.5rem 1.25rem 1.25rem;
 
       .col {
         padding: 0;
@@ -325,20 +327,13 @@
 
     &.frontpage {
       .calculator-error {
-        padding: 20px;
+        padding: 1.25rem;
       }
     }
   }
 }
 
 .bkibol-calculator .calculator-form {
-  .select-serie,
-  .ssb-dropdown.serie-enebolig,
-  .ssb-dropdown.serie-boligblokk,
-  .list-of-options {
-    max-width: 300px;
-  }
-
   .start-value {
     width: 280px;
   }
@@ -377,7 +372,7 @@
   .calculator-form {
     .submit-one-year,
     .submit-last-period {
-      margin-right: 20px;
+      margin-right: 1.25rem;
       width: auto;
     }
 
@@ -390,7 +385,7 @@
       }
 
       .select-month {
-        padding-right: 5px;
+        padding-right: 0.5rem;
         padding-left: 0;
       }
     }
@@ -398,7 +393,7 @@
     @include media-breakpoint-down(sm) {
       .submit-one-year {
         margin-right: 0;
-        margin-bottom: 10px;
+        margin-bottom: 1rem;
       }
 
       .submit-one-year,
@@ -408,7 +403,7 @@
 
       .select-month {
         padding-right: 0;
-        margin-bottom: 20px;
+        margin-bottom: 1.25rem;
       }
 
       .select-month,
@@ -422,7 +417,7 @@
   .calculator-result {
     @include media-breakpoint-down(sm) {
       .price-change-text {
-        margin-top: 15px;
+        margin-top: 1rem;
       }
     }
   }
