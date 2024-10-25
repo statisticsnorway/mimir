@@ -82,15 +82,7 @@ const Popup = () => {
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const handleClick = (e: React.MouseEvent) => {
-    if (popupContainerRef.current) {
-      popupContainerRef.current.blur()
-    }
-  }
-
-  const closePopup = (e: React.MouseEvent) => {
-    e.stopPropagation()
+  const closePopup = () => {
     setIsVisible(false)
 
     const date = new Date()
@@ -99,8 +91,7 @@ const Popup = () => {
     document.cookie = `hidePopup=true; ${expires}; path=/; SameSite=Lax`
   }
 
-  const openLinkInNewTab = (e: React.MouseEvent) => {
-    e.stopPropagation()
+  const openLinkInNewTab = () => {
     window.open(
       'https://forms.office.com/Pages/ResponsePage.aspx?id=knAhx0CyHU69YfqXupdcvJkAFGNmKDFCsjsXHsjRxlJUNjkzSVZRVDdaOFpEWlJOOE1PNUJLMVdFMS4u&embed=true',
       '_blank',
@@ -110,10 +101,11 @@ const Popup = () => {
     setIsVisible(false)
   }
 
-  const handleButtonKeyDown = (e: React.KeyboardEvent, action: Function) => {
+  // Key handler to perform action on Enter/Space
+  const handleButtonKeyDown = (e: React.KeyboardEvent, action: () => void) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault()
-      action(e)
+      action() // Execute the respective action
     }
   }
 
@@ -122,37 +114,37 @@ const Popup = () => {
   return (
     <div
       className={`popup-container ${isOpen ? 'open' : isScrolled ? 'scrolled' : 'closed'}`}
-      tabIndex={0}
-      onKeyDown={handleKeyDown}
-      onClick={handleClick}
+      tabIndex={0} // Makes the popup container focusable
       ref={popupContainerRef}
+      onKeyDown={handleKeyDown} // Handles "Enter" or "Space" to toggle open/close
     >
       {!isOpen ? (
-        <div
-          className='popup-closed'
-          role='button'
-          tabIndex={0}
-          onClick={toggleOpen}
-          onKeyDown={handleKeyDown} // Add keyboard interaction
-        >
-          <Clipboard className='clipboard-icon' size={20} />
+        <div className='popup-closed' role='button' onClick={toggleOpen}>
+          <Clipboard className='clipboard-icon' size={20} focusable='false' />
           <span className='closed-text'>Undersøkelse ssb.no</span>
         </div>
       ) : (
         <>
           <div
             className='popup-header'
-            role='button'
-            tabIndex={0}
-            onClick={toggleOpen}
-            onKeyDown={handleKeyDown} // Add keyboard interaction
+            role='presentation' // Non-focusable and non-interactive from keyboard perspective
+            onClick={toggleOpen} // Still clickable with a mouse
           >
             <h4 className='header-text'>Hvordan opplever du ssb.no?</h4>
-            <div className='close-icon-wrapper' role='button' onClick={closePopup}>
+            <div
+              className='close-icon-wrapper'
+              role='button'
+              tabIndex={-1} // Not focusable, but clickable
+              onClick={closePopup}
+            >
               <X className='close-icon' size={24} />
             </div>
           </div>
-          <div className='popup-content' role='button' onClick={toggleOpen}>
+          <div
+            className='popup-content'
+            role='presentation' // Not focusable
+            onClick={toggleOpen} // Clickable only with mouse
+          >
             <p>
               Hjelp oss å gjøre opplevelsen din på ssb.no bedre. Det tar omtrent 6 minutter å svare på vår årlige
               brukerundersøkelse.
@@ -162,14 +154,14 @@ const Popup = () => {
             <button
               className='popup-secondary-button'
               onClick={closePopup}
-              onKeyDown={(e) => handleButtonKeyDown(e, closePopup)}
+              onKeyDown={(e) => handleButtonKeyDown(e, closePopup)} // Handles Enter/Space for secondary button
             >
               Svar senere
             </button>
             <button
               className='popup-button'
               onClick={openLinkInNewTab}
-              onKeyDown={(e) => handleButtonKeyDown(e, openLinkInNewTab)}
+              onKeyDown={(e) => handleButtonKeyDown(e, openLinkInNewTab)} // Handles Enter/Space for primary button
             >
               Til undersøkelsen
             </button>
