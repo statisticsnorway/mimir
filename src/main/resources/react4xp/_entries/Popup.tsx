@@ -118,7 +118,13 @@ const Popup = () => {
       onKeyDown={handleKeyDown}
     >
       {!isOpen ? (
-        <div className='popup-closed' role='button' onClick={toggleOpen}>
+        <div
+          className='popup-closed'
+          role='button'
+          tabIndex={-1} // Not focusable, but must have key interaction
+          onClick={toggleOpen}
+          onKeyDown={handleKeyDown} // Handles "Enter" or "Space" to toggle open
+        >
           <Clipboard className='clipboard-icon' size={20} focusable='false' />
           <span className='closed-text'>Undersøkelse ssb.no</span>
         </div>
@@ -126,7 +132,13 @@ const Popup = () => {
         <>
           <div className='popup-header' role='presentation' onClick={toggleOpen}>
             <h4 className='header-text'>Hvordan opplever du ssb.no?</h4>
-            <div className='close-icon-wrapper' role='button' onClick={closePopup}>
+            <div
+              className='close-icon-wrapper'
+              role='button'
+              tabIndex={-1} // Not focusable, but must have key interaction
+              onClick={closePopup}
+              onKeyDown={(e) => handleButtonKeyDown(e, closePopup)} // Handles "Enter" or "Space" to close the popup
+            >
               <X className='close-icon' size={24} />
             </div>
           </div>
