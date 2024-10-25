@@ -101,11 +101,10 @@ const Popup = () => {
     setIsVisible(false)
   }
 
-  // Key handler to perform action on Enter/Space
   const handleButtonKeyDown = (e: React.KeyboardEvent, action: () => void) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault()
-      action() // Execute the respective action
+      action()
     }
   }
 
@@ -114,9 +113,9 @@ const Popup = () => {
   return (
     <div
       className={`popup-container ${isOpen ? 'open' : isScrolled ? 'scrolled' : 'closed'}`}
-      tabIndex={0} // Makes the popup container focusable
+      tabIndex={0}
       ref={popupContainerRef}
-      onKeyDown={handleKeyDown} // Handles "Enter" or "Space" to toggle open/close
+      onKeyDown={handleKeyDown}
     >
       {!isOpen ? (
         <div className='popup-closed' role='button' onClick={toggleOpen}>
@@ -125,26 +124,13 @@ const Popup = () => {
         </div>
       ) : (
         <>
-          <div
-            className='popup-header'
-            role='presentation' // Non-focusable and non-interactive from keyboard perspective
-            onClick={toggleOpen} // Still clickable with a mouse
-          >
+          <div className='popup-header' role='presentation' onClick={toggleOpen}>
             <h4 className='header-text'>Hvordan opplever du ssb.no?</h4>
-            <div
-              className='close-icon-wrapper'
-              role='button'
-              tabIndex={-1} // Not focusable, but clickable
-              onClick={closePopup}
-            >
+            <div className='close-icon-wrapper' role='button' tabIndex={-1} onClick={closePopup}>
               <X className='close-icon' size={24} />
             </div>
           </div>
-          <div
-            className='popup-content'
-            role='presentation' // Not focusable
-            onClick={toggleOpen} // Clickable only with mouse
-          >
+          <div className='popup-content' role='presentation' onClick={toggleOpen}>
             <p>
               Hjelp oss å gjøre opplevelsen din på ssb.no bedre. Det tar omtrent 6 minutter å svare på vår årlige
               brukerundersøkelse.
@@ -154,14 +140,14 @@ const Popup = () => {
             <button
               className='popup-secondary-button'
               onClick={closePopup}
-              onKeyDown={(e) => handleButtonKeyDown(e, closePopup)} // Handles Enter/Space for secondary button
+              onKeyDown={(e) => handleButtonKeyDown(e, closePopup)}
             >
               Svar senere
             </button>
             <button
               className='popup-button'
               onClick={openLinkInNewTab}
-              onKeyDown={(e) => handleButtonKeyDown(e, openLinkInNewTab)} // Handles Enter/Space for primary button
+              onKeyDown={(e) => handleButtonKeyDown(e, openLinkInNewTab)}
             >
               Til undersøkelsen
             </button>
