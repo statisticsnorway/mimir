@@ -126,7 +126,7 @@ const Popup = () => {
         <>
           <div className='popup-header' role='presentation' onClick={toggleOpen}>
             <h4 className='header-text'>Hvordan opplever du ssb.no?</h4>
-            <div className='close-icon-wrapper' role='button' tabIndex={-1} onClick={closePopup}>
+            <div className='close-icon-wrapper' role='button' onClick={closePopup}>
               <X className='close-icon' size={24} />
             </div>
           </div>
