@@ -1,6 +1,7 @@
-export interface ContactModel {
-  contactTitle: string
-  contacts: Array<Array<Contact>>
+export interface StatisticContactProps {
+  icon: string
+  label: string
+  contacts: Contact[]
 }
 
 export interface Contact {
