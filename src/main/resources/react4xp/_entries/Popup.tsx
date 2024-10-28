@@ -2,19 +2,13 @@ import React, { useState, useEffect, useRef } from 'react'
 import { X, Clipboard } from 'react-feather'
 
 const Popup = () => {
-  const [isOpen, setIsOpen] = useState<boolean | null>(null)
-  const [isVisible, setIsVisible] = useState(false)
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 767)
+  const isInitiallyMobile = window.innerWidth <= 767
+  const [isOpen, setIsOpen] = useState(!isInitiallyMobile)
+  const [isVisible, setIsVisible] = useState(true)
+  const [isMobile, setIsMobile] = useState(isInitiallyMobile)
   const [isScrolled, setIsScrolled] = useState(false)
   const [hasUserScrolled, setHasUserScrolled] = useState(false)
   const popupContainerRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const initialIsMobile = window.innerWidth <= 767
-    setIsMobile(initialIsMobile)
-    setIsOpen(!initialIsMobile)
-    setIsVisible(true)
-  }, [])
 
   useEffect(() => {
     const handleResize = () => {
@@ -118,32 +112,22 @@ const Popup = () => {
       onKeyDown={handleKeyDown}
     >
       {!isOpen ? (
-        <div
-          className='popup-closed'
-          role='button'
-          onClick={toggleOpen}
-          onKeyDown={handleKeyDown} // Adds keyboard interaction without making it focusable
-        >
+        <button className='popup-closed' tabIndex={-1} onClick={toggleOpen} onKeyDown={handleKeyDown}>
           <Clipboard className='clipboard-icon' size={20} focusable='false' />
           <span className='closed-text'>Undersøkelse ssb.no</span>
-        </div>
+        </button>
       ) : (
         <>
-          <div
-            className='popup-header'
-            role='presentation'
-            onClick={toggleOpen}
-            onKeyDown={handleKeyDown} // Adds keyboard interaction without making it focusable
-          >
+          <div className='popup-header' role='presentation' onClick={toggleOpen} onKeyDown={handleKeyDown}>
             <h4 className='header-text'>Hvordan opplever du ssb.no?</h4>
-            <div
+            <button
               className='close-icon-wrapper'
-              role='button'
+              tabIndex={-1}
               onClick={closePopup}
-              onKeyDown={(e) => handleButtonKeyDown(e, closePopup)} // Adds keyboard interaction without making it focusable
+              onKeyDown={(e) => handleButtonKeyDown(e, closePopup)}
             >
               <X className='close-icon' size={24} />
-            </div>
+            </button>
           </div>
           <div className='popup-content' role='presentation' onClick={toggleOpen}>
             <p>
