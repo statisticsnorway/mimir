@@ -45,4 +45,4 @@ Further improvements and more test coverage might be a useful addition.
 
 ## Deploying feature branches to Nais
 We use a gihub pull request label to ensure we control which branches are deployed to Nais. 
-Add the branch `nais` to deploy your branch with a minimal set of test content!
+Add the branch `nais` to deploy your branch with a minimal set of test content! Maybe it even takes down the branch environment when you close the PR!
