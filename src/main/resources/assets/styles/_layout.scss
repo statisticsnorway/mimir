@@ -20,7 +20,7 @@
   padding: 60px 100px;
 
   @include media-breakpoint-down(md) {
-    padding: 20px 20px;
+    padding: 1.25rem 1rem;
 
     .col,
     .col-12 {
