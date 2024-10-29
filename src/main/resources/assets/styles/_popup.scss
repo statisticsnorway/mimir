@@ -3,17 +3,10 @@
   overflow: hidden;
   z-index: 9999;
   position: fixed;
-  bottom: 10px;
+  bottom: 25px;
   right: clamp(25px, calc(400px - (3500px - 100vw) / 2), 400px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   border: 1px solid #00824d;
-
-  //For jittery scroll - might not be needeed
-  transform: translateZ(0);
-  backface-visibility: hidden;
-  top: auto;
-  left: auto;
-  overscroll-behavior: none;
 
   &.open {
     width: 358px;
@@ -116,12 +109,15 @@
   align-items: center;
   border-radius: 50%;
   border: none;
+  padding: 0;
+  outline: none;
   cursor: pointer;
   transition: background-color 0.2s ease-in-out;
   background: none;
 }
 
-.close-icon-wrapper:hover {
+.close-icon-wrapper:hover,
+.close-icon-wrapper:focus-visible {
   background-color: #ecfeed;
 }
 
@@ -129,7 +125,8 @@
   stroke: white;
 }
 
-.close-icon-wrapper:hover .close-icon {
+.close-icon-wrapper:hover .close-icon,
+.close-icon-wrapper:focus-visible .close-icon {
   stroke: #00824d;
 }
 
@@ -181,7 +178,6 @@
   cursor: pointer;
 }
 
-.popup-closed:focus-visible,
 .popup-container:focus-visible,
 .popup-button:focus-visible,
 .popup-secondary-button:focus-visible {

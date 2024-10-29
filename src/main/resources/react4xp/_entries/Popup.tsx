@@ -2,39 +2,25 @@ import React, { useState, useEffect, useRef } from 'react'
 import { X, Clipboard } from 'react-feather'
 
 const Popup = () => {
-  const isInitiallyMobile = window.innerWidth <= 767
-  const [isOpen, setIsOpen] = useState(!isInitiallyMobile)
+  const [isOpen, setIsOpen] = useState(true)
   const [isVisible, setIsVisible] = useState(true)
-  const [isMobile, setIsMobile] = useState(isInitiallyMobile)
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 767)
   const [isScrolled, setIsScrolled] = useState(false)
   const [hasUserScrolled, setHasUserScrolled] = useState(false)
   const popupContainerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const handleResize = () => {
-      const isCurrentlyMobile = window.innerWidth <= 767
-
-      if (!isCurrentlyMobile && isMobile && !isOpen) {
-        setIsOpen(true)
-      }
-
-      if (!isCurrentlyMobile && !isOpen) {
-        setIsScrolled(false)
-      }
-
-      setIsMobile(isCurrentlyMobile)
+      setIsMobile(window.innerWidth <= 767)
     }
 
     window.addEventListener('resize', handleResize)
-
     return () => {
       window.removeEventListener('resize', handleResize)
     }
-  }, [isMobile, isOpen])
+  }, [])
 
   useEffect(() => {
-    let scrollTimeout: ReturnType<typeof setTimeout> | null = null
-
     const handleScroll = () => {
       if (!isOpen && isMobile && hasUserScrolled) {
         setIsScrolled(true)
@@ -45,16 +31,13 @@ const Popup = () => {
     }
 
     if (isMobile && !isOpen) {
-      scrollTimeout = setTimeout(() => {
+      setTimeout(() => {
         window.addEventListener('scroll', handleScroll)
         window.addEventListener('scroll', onManualScroll)
       }, 500)
     }
 
     return () => {
-      if (scrollTimeout) {
-        clearTimeout(scrollTimeout)
-      }
       window.removeEventListener('scroll', handleScroll)
       window.removeEventListener('scroll', onManualScroll)
     }
@@ -64,41 +47,32 @@ const Popup = () => {
     setIsOpen(!isOpen)
     setIsScrolled(false)
     setHasUserScrolled(false)
-    if (popupContainerRef.current) {
+    if (!isOpen && popupContainerRef.current) {
       popupContainerRef.current.focus()
-    }
-  }
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault()
-      toggleOpen()
     }
   }
 
   const closePopup = () => {
     setIsVisible(false)
-
     const date = new Date()
     date.setTime(date.getTime() + 7 * 24 * 60 * 60 * 1000)
     const expires = `expires=${date.toUTCString()}`
     document.cookie = `hidePopup=true; ${expires}; path=/; SameSite=Lax`
   }
 
-  const openLinkInNewTab = () => {
+  const handlePrimaryButtonClick = () => {
+    closePopup()
     window.open(
       'https://forms.office.com/Pages/ResponsePage.aspx?id=knAhx0CyHU69YfqXupdcvJkAFGNmKDFCsjsXHsjRxlJUNjkzSVZRVDdaOFpEWlJOOE1PNUJLMVdFMS4u&embed=true',
       '_blank',
       'noopener,noreferrer'
     )
-    setIsScrolled(false)
-    setIsVisible(false)
   }
 
-  const handleButtonKeyDown = (e: React.KeyboardEvent, action: () => void) => {
+  const handleClosedButtonKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault()
-      action()
+      toggleOpen()
     }
   }
 
@@ -107,29 +81,24 @@ const Popup = () => {
   return (
     <div
       className={`popup-container ${isOpen ? 'open' : isScrolled ? 'scrolled' : 'closed'}`}
-      tabIndex={0}
       ref={popupContainerRef}
-      onKeyDown={handleKeyDown}
+      tabIndex={isOpen ? -1 : 0}
+      onKeyDown={!isOpen ? handleClosedButtonKeyDown : undefined}
     >
       {!isOpen ? (
-        <button className='popup-closed' tabIndex={-1} onClick={toggleOpen} onKeyDown={handleKeyDown}>
+        <button className='popup-closed' tabIndex={-1} onClick={toggleOpen} onKeyDown={handleClosedButtonKeyDown}>
           <Clipboard className='clipboard-icon' size={20} focusable='false' />
           <span className='closed-text'>Undersøkelse ssb.no</span>
         </button>
       ) : (
         <>
-          <div className='popup-header' role='presentation' onClick={toggleOpen} onKeyDown={handleKeyDown}>
+          <div className='popup-header' role='presentation'>
             <h4 className='header-text'>Hvordan opplever du ssb.no?</h4>
-            <button
-              className='close-icon-wrapper'
-              tabIndex={-1}
-              onClick={closePopup}
-              onKeyDown={(e) => handleButtonKeyDown(e, closePopup)}
-            >
+            <button className='close-icon-wrapper' tabIndex={0} onClick={closePopup}>
               <X className='close-icon' size={24} />
             </button>
           </div>
-          <div className='popup-content' role='presentation' onClick={toggleOpen}>
+          <div className='popup-content' role='presentation'>
             <p>
               Hjelp oss å gjøre opplevelsen din på ssb.no bedre. Det tar omtrent 6 minutter å svare på vår årlige
               brukerundersøkelse.
@@ -138,16 +107,16 @@ const Popup = () => {
           <div className='button-group'>
             <button
               className='popup-secondary-button'
-              onClick={closePopup}
-              onKeyDown={(e) => handleButtonKeyDown(e, closePopup)}
+              onClick={() => {
+                toggleOpen()
+                if (popupContainerRef.current) {
+                  popupContainerRef.current.focus()
+                }
+              }}
             >
               Svar senere
             </button>
-            <button
-              className='popup-button'
-              onClick={openLinkInNewTab}
-              onKeyDown={(e) => handleButtonKeyDown(e, openLinkInNewTab)}
-            >
+            <button className='popup-button' onClick={handlePrimaryButtonClick}>
               Til undersøkelsen
             </button>
           </div>
