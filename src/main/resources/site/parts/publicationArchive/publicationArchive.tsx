@@ -119,7 +119,7 @@ function PublicationArchive(props: PublicationArchiveProps) {
             <Link
               ref={i === publications.length - ADDITIONAL_PUBLICATIONS_LENGTH ? currentElement : null}
               href={publication.url}
-              className='ssb-link header'
+              linkType='header'
             >
               {publication.title}
             </Link>
