@@ -19,4 +19,5 @@ export interface AboutTheStatisticsProps {
   ingress: string
   lastUpdatedPhrase: string
   lastUpdated: string
+  icon?: string
 }
