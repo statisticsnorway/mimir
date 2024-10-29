@@ -1,5 +1,4 @@
 import React from 'react'
-import { Row } from 'react-bootstrap'
 import { Link, Title } from '@statisticsnorway/ssb-component-library'
 import { type StatisticContactProps, type Contact } from '/lib/types/partTypes/statisticContact'
 
@@ -34,7 +33,7 @@ function StatisticContact(props: Readonly<StatisticContactProps>) {
   }
 
   return (
-    <Row>
+    <div className='content-wrapper'>
       <div className='title-wrapper'>
         <Title size={2}>{label}</Title>
         <div className='icon-wrapper'>
@@ -42,7 +41,7 @@ function StatisticContact(props: Readonly<StatisticContactProps>) {
         </div>
       </div>
       {contacts.length > 0 && <div className='contact-list'>{renderContactsInfo()}</div>}
-    </Row>
+    </div>
   )
 }
 
