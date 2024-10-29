@@ -94,7 +94,7 @@ const Popup = () => {
         <>
           <div className='popup-header' role='presentation'>
             <h4 className='header-text'>Hvordan opplever du ssb.no?</h4>
-            <button className='close-icon-wrapper' tabIndex={0} onClick={closePopup}>
+            <button className='close-icon-wrapper' aria-label='Lukk' tabIndex={0} onClick={closePopup}>
               <X className='close-icon' size={24} />
             </button>
           </div>
