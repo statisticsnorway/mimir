@@ -145,9 +145,9 @@ function renderRelease(release: PreparedUpcomingRelease, index: number, date: Fl
             {name}
           </Link>
         ) : (
-          <h3 className='mb-0' aria-hidden='true'>
+          <h2 className='mb-0 h3' aria-hidden='true'>
             {name}
-          </h3>
+          </h2>
         )}
 
         {showPeriod && (
