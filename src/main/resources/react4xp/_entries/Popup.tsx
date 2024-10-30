@@ -2,12 +2,20 @@ import React, { useState, useEffect, useRef } from 'react'
 import { X, Clipboard } from 'react-feather'
 
 const Popup = () => {
-  const [isOpen, setIsOpen] = useState(true)
-  const [isVisible, setIsVisible] = useState(true)
+  const [isOpen, setIsOpen] = useState(false)
+  const [isVisible, setIsVisible] = useState(false)
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 767)
   const [isScrolled, setIsScrolled] = useState(false)
   const [hasUserScrolled, setHasUserScrolled] = useState(false)
   const popupContainerRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const checkCookie = document.cookie.split(';').some((cookie) => cookie.trim().startsWith('hidePopup='))
+    if (!checkCookie) {
+      setIsVisible(true)
+      setIsOpen(true)
+    }
+  }, [])
 
   useEffect(() => {
     const handleResize = () => {
@@ -76,7 +84,7 @@ const Popup = () => {
     }
   }
 
-  if (!isVisible || isOpen === null) return null
+  if (!isVisible) return null
 
   return (
     <div
