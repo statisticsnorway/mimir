@@ -90,6 +90,9 @@ const Popup = () => {
     <div
       className={`popup-container ${isOpen ? 'open' : isScrolled ? 'scrolled' : 'closed'}`}
       ref={popupContainerRef}
+      role='dialog'
+      aria-labelledby='popup-header'
+      aria-describedby='popup-content'
       tabIndex={isOpen ? -1 : 0}
       onKeyDown={!isOpen ? handleClosedButtonKeyDown : undefined}
     >
@@ -100,18 +103,18 @@ const Popup = () => {
         </button>
       ) : (
         <>
-          <div className='popup-header' role='presentation'>
+          <header className='popup-header' id='popup-header'>
             <h4 className='header-text'>Hvordan opplever du ssb.no?</h4>
             <button className='close-icon-wrapper' aria-label='Lukk' tabIndex={0} onClick={closePopup}>
               <X className='close-icon' size={24} />
             </button>
-          </div>
-          <div className='popup-content' role='presentation'>
+          </header>
+          <main className='popup-content' id='popup-content'>
             <p>
               Hjelp oss å gjøre opplevelsen din på ssb.no bedre. Det tar omtrent 6 minutter å svare på vår årlige
               brukerundersøkelse.
             </p>
-          </div>
+          </main>
           <div className='button-group'>
             <button
               className='popup-secondary-button'
