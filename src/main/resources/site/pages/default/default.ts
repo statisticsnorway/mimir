@@ -183,14 +183,11 @@ export function get(req: XP.Request): XP.Response {
     pageContributions = footer.pageContributions
   }
 
-  const hidePopupCookie = req.cookies ? req.cookies['hidePopup'] : undefined
-
   const isPopupEnabled = isEnabled('show-popup-survey', false, 'ssb')
 
-  const popupComponent =
-    isPopupEnabled && hidePopupCookie !== 'true'
-      ? r4xpRender('Popup', {}, req, { id: 'popup', body: '<div id="popup"></div>', pageContributions })
-      : undefined
+  const popupComponent = isPopupEnabled
+    ? r4xpRender('Popup', {}, req, { id: 'popup', body: '<div id="popup"></div>', pageContributions })
+    : undefined
 
   if (popupComponent) {
     pageContributions = popupComponent.pageContributions
