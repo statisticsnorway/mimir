@@ -34,7 +34,7 @@ spec:
     requests:
       memory: 1Gi
 
-  ttl: 1h
+  ttl: 7d
 
   prometheus:
     enabled: false

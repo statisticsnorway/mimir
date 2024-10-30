@@ -89,6 +89,7 @@ $container-max-widths: (
 @import './statisticFigures';
 @import './statisticDescription';
 @import './statisticContact';
+@import "./popup";
 
 body {
   -moz-osx-font-smoothing: grayscale;
