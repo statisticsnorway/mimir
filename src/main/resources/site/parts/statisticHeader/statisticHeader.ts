@@ -69,7 +69,7 @@ function renderPart(req: XP.Request): XP.Response {
 
   const props: StatisticHeader = {
     title,
-    updatedPhrase: phrases.nextUpdate + ': ',
+    updatedPhrase: phrases.updated + ': ',
     nextUpdatePhrase: phrases.nextUpdate + ': ',
     changedPhrase: phrases.modified + ': ',
     changeDate: statisticDates.changeDate,
