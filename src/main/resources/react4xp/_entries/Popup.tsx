@@ -103,18 +103,18 @@ const Popup = () => {
         </button>
       ) : (
         <>
-          <header className='popup-header' id='popup-header'>
+          <div className='popup-header' id='popup-header'>
             <h4 className='header-text'>Hvordan opplever du ssb.no?</h4>
             <button className='close-icon-wrapper' aria-label='Lukk' tabIndex={0} onClick={closePopup}>
               <X className='close-icon' size={24} />
             </button>
-          </header>
-          <main className='popup-content' id='popup-content'>
+          </div>
+          <div className='popup-content' id='popup-content'>
             <p>
               Hjelp oss å gjøre opplevelsen din på ssb.no bedre. Det tar omtrent 6 minutter å svare på vår årlige
               brukerundersøkelse.
             </p>
-          </main>
+          </div>
           <div className='button-group'>
             <button
               className='popup-secondary-button'
