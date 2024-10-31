@@ -191,3 +191,26 @@
     font-size: 20px;
   }
 }
+
+@media (max-width: 767px) {
+  .popup-container.open {
+    max-width: 358px;
+    width: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+
+  @media (max-width: 400px) {
+    .popup-container.open {
+      transform: translateX(-50%) scale(0.9);
+    }
+  }
+
+  @media (max-width: 360px) {
+    .popup-container.open {
+      transform: translateX(-50%) scale(0.9);
+   
+    }
+  }
+}
