@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { X, Clipboard } from 'react-feather'
+import { Button } from '@statisticsnorway/ssb-component-library'
 
 const Popup = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -11,10 +12,14 @@ const Popup = () => {
 
   useEffect(() => {
     const checkCookie = document.cookie.split(';').some((cookie) => cookie.trim().startsWith('hidePopup='))
-    if (!checkCookie) {
-      setIsVisible(true)
-      setIsOpen(true)
+
+    if (!localStorage.getItem('popupOpen')) {
+      localStorage.setItem('popupOpen', 'true')
     }
+
+    const savedIsOpen = localStorage.getItem('popupOpen') === 'true'
+    setIsOpen(savedIsOpen)
+    setIsVisible(!checkCookie)
   }, [])
 
   useEffect(() => {
@@ -30,10 +35,13 @@ const Popup = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      if (!isOpen && isMobile && hasUserScrolled) {
+      if (window.scrollY === 0) {
+        setIsScrolled(false)
+      } else if (!isOpen && isMobile && hasUserScrolled) {
         setIsScrolled(true)
       }
     }
+
     const onManualScroll = () => {
       setHasUserScrolled(true)
     }
@@ -52,7 +60,9 @@ const Popup = () => {
   }, [isMobile, isOpen, hasUserScrolled])
 
   const toggleOpen = () => {
-    setIsOpen(!isOpen)
+    const newState = !isOpen
+    setIsOpen(newState)
+    localStorage.setItem('popupOpen', newState.toString())
     setIsScrolled(false)
     setHasUserScrolled(false)
     if (!isOpen && popupContainerRef.current) {
@@ -62,6 +72,7 @@ const Popup = () => {
 
   const closePopup = () => {
     setIsVisible(false)
+    localStorage.removeItem('popupOpen')
     const date = new Date()
     date.setTime(date.getTime() + 7 * 24 * 60 * 60 * 1000)
     const expires = `expires=${date.toUTCString()}`
@@ -91,7 +102,7 @@ const Popup = () => {
       className={`popup-container ${isOpen ? 'open' : isScrolled ? 'scrolled' : 'closed'}`}
       ref={popupContainerRef}
       role='dialog'
-      aria-labelledby='popup-header'
+      aria-labelledby='popup-title'
       aria-describedby='popup-content'
       tabIndex={isOpen ? -1 : 0}
       onKeyDown={!isOpen ? handleClosedButtonKeyDown : undefined}
@@ -104,7 +115,9 @@ const Popup = () => {
       ) : (
         <>
           <div className='popup-header' id='popup-header'>
-            <h4 className='header-text'>Hvordan opplever du ssb.no?</h4>
+            <h4 className='header-text' id='popup-title'>
+              Hvordan opplever du ssb.no?
+            </h4>
             <button className='close-icon-wrapper' aria-label='Lukk' tabIndex={0} onClick={closePopup}>
               <X className='close-icon' size={24} />
             </button>
@@ -116,8 +129,8 @@ const Popup = () => {
             </p>
           </div>
           <div className='button-group'>
-            <button
-              className='popup-secondary-button'
+            <Button
+              className='ssb-secondary-button'
               onClick={() => {
                 toggleOpen()
                 if (popupContainerRef.current) {
@@ -126,10 +139,10 @@ const Popup = () => {
               }}
             >
               Svar senere
-            </button>
-            <button className='popup-button' onClick={handlePrimaryButtonClick}>
+            </Button>
+            <Button primary className='ssb-primary-button' onClick={handlePrimaryButtonClick}>
               Til undersøkelsen
-            </button>
+            </Button>
           </div>
         </>
       )}
