@@ -50,6 +50,26 @@
     &.open {
       left: 50%;
       transform: translateX(-50%);
+      
+        @media (max-width: 380px) {
+          transform: translateX(-50%) scale(0.9);
+          bottom: 12px;
+        }
+      
+        @media (max-width: 360px) {
+          transform: translateX(-50%) scale(0.9);
+          bottom: 12px;
+        }
+      
+        @media (max-width: 345px) {
+          transform: translateX(-50%) scale(0.85);
+          bottom: 6px;
+        }
+      
+        @media (max-width: 330px) {
+          transform: translateX(-50%) scale(0.8);
+          bottom: -2px;
+        }
     }
 
     &.closed,
