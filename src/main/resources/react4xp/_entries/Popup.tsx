@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { X, Clipboard } from 'react-feather'
+import { Button } from '@statisticsnorway/ssb-component-library'
 
 const Popup = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -12,8 +13,9 @@ const Popup = () => {
   useEffect(() => {
     const checkCookie = document.cookie.split(';').some((cookie) => cookie.trim().startsWith('hidePopup='))
     if (!checkCookie) {
+      const savedIsOpen = localStorage.getItem('popupOpen') === 'true'
       setIsVisible(true)
-      setIsOpen(true)
+      setIsOpen(savedIsOpen)
     }
   }, [])
 
@@ -30,10 +32,13 @@ const Popup = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      if (!isOpen && isMobile && hasUserScrolled) {
+      if (window.scrollY === 0) {
+        setIsScrolled(false)
+      } else if (!isOpen && isMobile && hasUserScrolled) {
         setIsScrolled(true)
       }
     }
+
     const onManualScroll = () => {
       setHasUserScrolled(true)
     }
@@ -53,6 +58,7 @@ const Popup = () => {
 
   const toggleOpen = () => {
     setIsOpen(!isOpen)
+    localStorage.setItem('popupOpen', (!isOpen).toString())
     setIsScrolled(false)
     setHasUserScrolled(false)
     if (!isOpen && popupContainerRef.current) {
@@ -116,8 +122,8 @@ const Popup = () => {
             </p>
           </div>
           <div className='button-group'>
-            <button
-              className='popup-secondary-button'
+            <Button
+              className='ssb-secondary-button'
               onClick={() => {
                 toggleOpen()
                 if (popupContainerRef.current) {
@@ -126,10 +132,10 @@ const Popup = () => {
               }}
             >
               Svar senere
-            </button>
-            <button className='popup-button' onClick={handlePrimaryButtonClick}>
+            </Button>
+            <Button primary className='ssb-primary-button' onClick={handlePrimaryButtonClick}>
               Til undersøkelsen
-            </button>
+            </Button>
           </div>
         </>
       )}
