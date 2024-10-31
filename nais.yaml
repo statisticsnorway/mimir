@@ -41,7 +41,7 @@ spec:
 
   env:
     - name: VHOST_HOST
-      value: ssbno-{{branch}}.external.test.ssb.cloud.nais.io
+      value: ssbno-{{branch}}.internal.test.ssb.cloud.nais.io
 
   ingresses:
-    - https://ssbno-{{branch}}.external.test.ssb.cloud.nais.io # must match vhost
+    - https://ssbno-{{branch}}.internal.test.ssb.cloud.nais.io # must match vhost
