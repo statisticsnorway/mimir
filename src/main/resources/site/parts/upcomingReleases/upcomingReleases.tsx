@@ -141,7 +141,7 @@ function renderRelease(release: PreparedUpcomingRelease, index: number, date: Fl
 
         {upcomingReleaseLink || url ? (
           // deepcode ignore DOMXSS: URL is sanitized in the backend
-          <Link href={upcomingReleaseLink ?? url} linkType='header'>
+          <Link href={upcomingReleaseLink ?? url} linkType='header' headingSize={2}>
             {name}
           </Link>
         ) : (
