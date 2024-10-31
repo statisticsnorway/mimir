@@ -10,7 +10,12 @@ import { formatDate } from '/lib/ssb/utils/dateUtils'
 
 import { renderError } from '/lib/ssb/error/error'
 import { sanitizeForSolr } from '/lib/ssb/utils/textUtils'
-import { type BestBet, type ContentTypePhrase, type SearchResultProps } from '/lib/types/partTypes/searchResult'
+import {
+  NameSearchData,
+  type BestBet,
+  type ContentTypePhrase,
+  type SearchResultProps,
+} from '/lib/types/partTypes/searchResult'
 
 export function get(req: XP.Request): XP.Response {
   try {
@@ -197,10 +202,10 @@ export function renderPart(req: XP.Request) {
     if (solrNameResult.status === 200 && solrNameResult.body) {
       const body = JSON.parse(solrNameResult.body)
       const docs = body.response.docs
-      const filteredResult = docs.filter((doc) => doc.name === sanitizedTerm.toUpperCase())
+      const filteredResult = docs.filter((doc: NameSearchData) => doc.name === sanitizedTerm.toUpperCase())
       const mainRes =
         filteredResult.length &&
-        filteredResult.reduce((acc, current) => {
+        filteredResult.reduce((acc: NameSearchData, current: NameSearchData) => {
           if (!acc || acc.count < current.count) {
             acc = current // get the hit with the highest count
           }

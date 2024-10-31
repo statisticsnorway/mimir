@@ -16,7 +16,7 @@ import axios from 'axios'
 import { NumericFormat } from 'react-number-format'
 import { Col, Row } from 'react-bootstrap'
 import { sanitize } from '../../../lib/ssb/utils/htmlUtils'
-import { type SearchResultProps } from '../../../lib/types/partTypes/searchResult'
+import { NameSearchData, type SearchResultProps } from '../../../lib/types/partTypes/searchResult'
 import { type DropdownItem } from '../../../lib/types/partTypes/publicationArchive'
 import { type PreparedSearchResult } from '../../../lib/types/solr'
 
@@ -378,7 +378,7 @@ function SearchResult(props: SearchResultProps) {
     return capitalizedTokens.join(' ')
   }
 
-  const parseResultText = (doc) => {
+  const parseResultText = (doc: NameSearchData) => {
     return `${doc.count}
       ${formatGender(doc.gender)} ${props.namePhrases.have}
       ${capitalizeNames(doc.name)}
@@ -426,7 +426,7 @@ function SearchResult(props: SearchResultProps) {
         const phrase = props.contentTypePhrases.find((phrase) => phrase.id === type.title)
         return {
           id: type.title,
-          title: `${phrase.title} (${type.count})`,
+          title: `${phrase?.title} (${type.count})`,
         }
       })
     )
