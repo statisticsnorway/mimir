@@ -12,11 +12,14 @@ const Popup = () => {
 
   useEffect(() => {
     const checkCookie = document.cookie.split(';').some((cookie) => cookie.trim().startsWith('hidePopup='))
-    if (!checkCookie) {
-      const savedIsOpen = localStorage.getItem('popupOpen') === 'true'
-      setIsVisible(true)
-      setIsOpen(savedIsOpen)
+
+    if (!localStorage.getItem('popupOpen')) {
+      localStorage.setItem('popupOpen', 'true')
     }
+
+    const savedIsOpen = localStorage.getItem('popupOpen') === 'true'
+    setIsOpen(savedIsOpen)
+    setIsVisible(!checkCookie)
   }, [])
 
   useEffect(() => {
@@ -57,8 +60,9 @@ const Popup = () => {
   }, [isMobile, isOpen, hasUserScrolled])
 
   const toggleOpen = () => {
-    setIsOpen(!isOpen)
-    localStorage.setItem('popupOpen', (!isOpen).toString())
+    const newState = !isOpen
+    setIsOpen(newState)
+    localStorage.setItem('popupOpen', newState.toString())
     setIsScrolled(false)
     setHasUserScrolled(false)
     if (!isOpen && popupContainerRef.current) {
@@ -68,6 +72,7 @@ const Popup = () => {
 
   const closePopup = () => {
     setIsVisible(false)
+    localStorage.removeItem('popupOpen')
     const date = new Date()
     date.setTime(date.getTime() + 7 * 24 * 60 * 60 * 1000)
     const expires = `expires=${date.toUTCString()}`
@@ -97,7 +102,7 @@ const Popup = () => {
       className={`popup-container ${isOpen ? 'open' : isScrolled ? 'scrolled' : 'closed'}`}
       ref={popupContainerRef}
       role='dialog'
-      aria-labelledby='popup-header'
+      aria-labelledby='popup-title'
       aria-describedby='popup-content'
       tabIndex={isOpen ? -1 : 0}
       onKeyDown={!isOpen ? handleClosedButtonKeyDown : undefined}
@@ -110,7 +115,9 @@ const Popup = () => {
       ) : (
         <>
           <div className='popup-header' id='popup-header'>
-            <h4 className='header-text'>Hvordan opplever du ssb.no?</h4>
+            <h4 className='header-text' id='popup-title'>
+              Hvordan opplever du ssb.no?
+            </h4>
             <button className='close-icon-wrapper' aria-label='Lukk' tabIndex={0} onClick={closePopup}>
               <X className='close-icon' size={24} />
             </button>
