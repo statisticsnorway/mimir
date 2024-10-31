@@ -149,18 +149,19 @@ function SearchResult(props: SearchResultProps) {
     if (hit) {
       return (
         <li key={hit.id || i || undefined} className='mb-4'>
-          <a
+          <Link
             ref={focus ? currentElement : null}
-            className='ssb-link header'
             // deepcode ignore DOMXSS: url comes from pageUrl which escapes  + Reacts own escaping
             href={hit.url}
+            linkType='header'
+            headingSize={2}
           >
             <span
               dangerouslySetInnerHTML={{
                 __html: sanitize(hit.title.replace(/&nbsp;/g, ' ')),
               }}
             ></span>
-          </a>
+          </Link>
           <Paragraph className='search-result-ingress my-1'>
             <span
               dangerouslySetInnerHTML={{
