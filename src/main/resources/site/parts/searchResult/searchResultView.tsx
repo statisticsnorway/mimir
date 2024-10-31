@@ -34,8 +34,8 @@ function SearchResult(props: SearchResultProps) {
   const [sortChanged, setSortChanged] = useState(false)
   const [sortList, setSortList] = useState<string | undefined>(undefined)
   const [filter, setFilter] = useState({
-    mainSubject: props.subjectUrlParam || '',
-    contentType: props.contentTypeUrlParam || '',
+    mainSubject: props.subjectUrlParam ?? '',
+    contentType: props.contentTypeUrlParam ?? '',
   })
   const [reset, setReset] = useState(0)
   const [searchResultSRText, setSearchResultSRText] = useState<null | string>(null)
@@ -148,7 +148,7 @@ function SearchResult(props: SearchResultProps) {
   function renderListItem(hit: PreparedSearchResult, i?: number, focus?: boolean) {
     if (hit) {
       return (
-        <li key={hit.id || i || undefined} className='mb-4'>
+        <li key={hit.id ?? i ?? undefined} className='mb-4'>
           <Link
             ref={focus ? currentElement : null}
             // deepcode ignore DOMXSS: url comes from pageUrl which escapes  + Reacts own escaping
@@ -395,12 +395,12 @@ function SearchResult(props: SearchResultProps) {
     }
   }
   function translateName(nameCode: string) {
-    return props.namePhrases!.types![nameCode]
+    return props.namePhrases.types[nameCode]
   }
 
   function renderNameResult() {
     const mainNameResult = props.nameSearchData
-    if (mainNameResult && mainNameResult.count && !filterChanged && numberChanged === 0) {
+    if (mainNameResult?.count && !filterChanged && numberChanged === 0) {
       return (
         //  TODO: Legge til en bedre url til navnestatistikken
         <Card
