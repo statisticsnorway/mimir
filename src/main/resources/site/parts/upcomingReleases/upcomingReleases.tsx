@@ -61,6 +61,17 @@ export const mergeAndSortReleases = (
   return sortedArray
 }
 
+const parseReleases = (releases: PreparedStatistics[]) => {
+  return releases.map(({ id, name, type, mainSubject, statisticsPageUrl, variant }) => ({
+    id,
+    name,
+    type,
+    mainSubject,
+    url: statisticsPageUrl ?? '',
+    variant,
+  }))
+}
+
 export const flattenReleases = (data: YearReleases[]) => {
   const flattenedReleases: FlattenedUpcomingReleases[] = data.flatMap((yearItem) =>
     yearItem.releases.flatMap((monthItem) =>
@@ -71,19 +82,9 @@ export const flattenReleases = (data: YearReleases[]) => {
         month = month >= 10 ? month : '0' + month // Add 0-padding
         const fullDate = `${yearItem.year}-${month}-${day}`
 
-        // eslint-disable-next-line max-nested-callbacks
-        const releases = dayItem.releases.map((release: PreparedStatistics) => ({
-          id: release.id,
-          name: release.name,
-          type: release.type,
-          mainSubject: release.mainSubject,
-          url: release.statisticsPageUrl ?? '',
-          variant: release.variant,
-        }))
-
         return {
           date: fullDate,
-          releases,
+          releases: parseReleases(dayItem.releases),
         }
       })
     )
@@ -141,13 +142,13 @@ function renderRelease(release: PreparedUpcomingRelease, index: number, date: Fl
 
         {upcomingReleaseLink || url ? (
           // deepcode ignore DOMXSS: URL is sanitized in the backend
-          <Link href={upcomingReleaseLink ?? url} linkType='header'>
+          <Link href={upcomingReleaseLink ?? url} linkType='header' headingSize={2}>
             {name}
           </Link>
         ) : (
-          <h3 className='mb-0' aria-hidden='true'>
+          <h2 className='mb-0 h3' aria-hidden='true'>
             {name}
-          </h3>
+          </h2>
         )}
 
         {showPeriod && (

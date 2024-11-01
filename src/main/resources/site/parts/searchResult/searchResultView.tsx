@@ -16,7 +16,7 @@ import axios from 'axios'
 import { NumericFormat } from 'react-number-format'
 import { Col, Row } from 'react-bootstrap'
 import { sanitize } from '../../../lib/ssb/utils/htmlUtils'
-import { type SearchResultProps } from '../../../lib/types/partTypes/searchResult'
+import { NameSearchData, type SearchResultProps } from '../../../lib/types/partTypes/searchResult'
 import { type DropdownItem } from '../../../lib/types/partTypes/publicationArchive'
 import { type PreparedSearchResult } from '../../../lib/types/solr'
 
@@ -34,8 +34,8 @@ function SearchResult(props: SearchResultProps) {
   const [sortChanged, setSortChanged] = useState(false)
   const [sortList, setSortList] = useState<string | undefined>(undefined)
   const [filter, setFilter] = useState({
-    mainSubject: props.subjectUrlParam || '',
-    contentType: props.contentTypeUrlParam || '',
+    mainSubject: props.subjectUrlParam ?? '',
+    contentType: props.contentTypeUrlParam ?? '',
   })
   const [reset, setReset] = useState(0)
   const [searchResultSRText, setSearchResultSRText] = useState<null | string>(null)
@@ -148,19 +148,20 @@ function SearchResult(props: SearchResultProps) {
   function renderListItem(hit: PreparedSearchResult, i?: number, focus?: boolean) {
     if (hit) {
       return (
-        <li key={hit.id || i || undefined} className='mb-4'>
-          <a
+        <li key={hit.id ?? i ?? undefined} className='mb-4'>
+          <Link
             ref={focus ? currentElement : null}
-            className='ssb-link header'
             // deepcode ignore DOMXSS: url comes from pageUrl which escapes  + Reacts own escaping
             href={hit.url}
+            linkType='header'
+            headingSize={2}
           >
             <span
               dangerouslySetInnerHTML={{
                 __html: sanitize(hit.title.replace(/&nbsp;/g, ' ')),
               }}
             ></span>
-          </a>
+          </Link>
           <Paragraph className='search-result-ingress my-1'>
             <span
               dangerouslySetInnerHTML={{
@@ -377,7 +378,7 @@ function SearchResult(props: SearchResultProps) {
     return capitalizedTokens.join(' ')
   }
 
-  const parseResultText = (doc) => {
+  const parseResultText = (doc: NameSearchData) => {
     return `${doc.count}
       ${formatGender(doc.gender)} ${props.namePhrases.have}
       ${capitalizeNames(doc.name)}
@@ -394,12 +395,12 @@ function SearchResult(props: SearchResultProps) {
     }
   }
   function translateName(nameCode: string) {
-    return props.namePhrases!.types![nameCode]
+    return props.namePhrases.types[nameCode]
   }
 
   function renderNameResult() {
     const mainNameResult = props.nameSearchData
-    if (mainNameResult && mainNameResult.count && !filterChanged && numberChanged === 0) {
+    if (mainNameResult?.count && !filterChanged && numberChanged === 0) {
       return (
         //  TODO: Legge til en bedre url til navnestatistikken
         <Card
@@ -425,7 +426,7 @@ function SearchResult(props: SearchResultProps) {
         const phrase = props.contentTypePhrases.find((phrase) => phrase.id === type.title)
         return {
           id: type.title,
-          title: `${phrase.title} (${type.count})`,
+          title: `${phrase?.title} (${type.count})`,
         }
       })
     )
