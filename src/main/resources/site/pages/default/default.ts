@@ -183,6 +183,16 @@ export function get(req: XP.Request): XP.Response {
     pageContributions = footer.pageContributions
   }
 
+  const isPopupEnabled = isEnabled('show-popup-survey', false, 'ssb')
+
+  const popupComponent = isPopupEnabled
+    ? r4xpRender('Popup', {}, req, { id: 'popup', body: '<div id="popup"></div>', pageContributions })
+    : undefined
+
+  if (popupComponent) {
+    pageContributions = popupComponent.pageContributions
+  }
+
   let municipality: MunicipalityWithCounty | undefined
   if (req.params.selfRequest) {
     municipality = getMunicipality(req as RequestWithCode)
@@ -266,6 +276,7 @@ export function get(req: XP.Request): XP.Response {
     hideHeader,
     hideBreadcrumb,
     tableView: page.type === 'mimir:table',
+    popupBody: popupComponent?.body,
   }
 
   const thymeleafRenderBody = render(view, model)
@@ -733,4 +744,5 @@ interface DefaultModel {
   hideHeader: boolean
   hideBreadcrumb: boolean
   tableView: boolean
+  popupBody: string | undefined // Added for Popup component
 }
