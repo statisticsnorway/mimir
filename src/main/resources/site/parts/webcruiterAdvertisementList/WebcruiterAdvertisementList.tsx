@@ -39,7 +39,7 @@ const WebcruiterAdvertistmentList = (props: WebcruiterAdvertisementListProps) =>
           return (
             <li key={`webcruiter-advertisement-list-${applicationDeadline}-${index}`}>
               {positionTitle && positionAdvertisementUrl ? (
-                <Link linkType='header' href={positionAdvertisementUrl}>
+                <Link linkType='header' headingSize={3} href={positionAdvertisementUrl}>
                   {positionTitle}
                 </Link>
               ) : (

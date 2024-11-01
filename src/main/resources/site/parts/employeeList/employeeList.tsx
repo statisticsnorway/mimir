@@ -34,7 +34,7 @@ function EmployeeList(props: EmployeeListProps) {
   const employeeDetails = (employee: IPreparedEmployee) => {
     return (
       <div>
-        <Link href={employee.path} linkType='header'>
+        <Link href={employee.path} linkType='header' headingSize={3}>
           {employee.surname}, {employee.name}
         </Link>
         {employee.position ? (

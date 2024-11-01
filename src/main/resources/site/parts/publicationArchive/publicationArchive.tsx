@@ -120,6 +120,7 @@ function PublicationArchive(props: PublicationArchiveProps) {
               ref={i === publications.length - ADDITIONAL_PUBLICATIONS_LENGTH ? currentElement : null}
               href={publication.url}
               linkType='header'
+              headingSize={2}
             >
               {publication.title}
             </Link>

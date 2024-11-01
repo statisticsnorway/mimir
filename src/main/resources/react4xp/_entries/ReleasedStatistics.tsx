@@ -18,6 +18,7 @@ const ReleasedStatistics = (props: ReleasedStatisticsProps) => {
         <Link
           href={hrefStatistic}
           linkType='header'
+          headingSize={3}
           ariaLabel={`${release.name} - ${release.variant.period}`}
           standAlone
         >
