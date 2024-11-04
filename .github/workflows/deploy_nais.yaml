@@ -140,7 +140,6 @@ jobs:
               owner: context.repo.owner,
               issue_number: context.issue.number,
               repo: context.repo.repo,
-              body: |
-                URL to deployed app on NAIS:
-                https://ssbno-${{ github.head_ref }}.external.test.ssb.cloud.nais.io
+              body: `URL to deployed app on NAIS:
+                https://ssbno-${{ env.ISSUE_NUMBER }}.external.test.ssb.cloud.nais.io`
             })
