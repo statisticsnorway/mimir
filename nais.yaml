@@ -39,6 +39,14 @@ spec:
   prometheus:
     enabled: false
 
+  envFrom:
+    - secret: gitpull-key-private
+    - configmap: gitpull-repo
+  filesFrom:
+    - secret: gitpull-key-private
+    - configmap: id_exdsa_nais
+      mountPath: /enonic-xp/home/config/ssh
+
   env:
     - name: VHOST_HOST
       value: ssbno-{{branch}}.external.test.ssb.cloud.nais.io
