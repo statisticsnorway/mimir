@@ -131,3 +131,16 @@ jobs:
           RESOURCE: nais.yaml
           VAR: image=${{ env.REGISTRY }}/${{env.IMAGE}}:${{ env.TAG }},branch=${{ env.ISSUE_NUMBER }}
           DEPLOY_SERVER: deploy.ssb.cloud.nais.io:443
+      - name: Add comment to PR
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            github.rest.issues.createComment({
+              owner: context.repo.owner,
+              issue_number: context.issue.number,
+              repo: context.repo.repo,
+              body: |
+                URL to deployed app on NAIS:
+                https://ssbno-${{ github.head_ref }}.external.test.ssb.cloud.nais.io
+            })
