@@ -33,6 +33,12 @@
       margin: 0;
     }
 
+    .accordion-header {
+      .sub-header {
+        width: 75px;
+      }
+    }
+
     .accordion-body {
       padding-right: 0;
     }
@@ -123,6 +129,12 @@
       .icon-wrapper img {
         height: 33px;
         width: 33px;
+      }
+    }
+
+    .part-accordion {
+      .hide-show-btn {
+        margin-bottom: 2rem;
       }
     }
 

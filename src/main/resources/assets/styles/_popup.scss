@@ -43,6 +43,13 @@
     }
   }
 
+  .header-text {
+    font-family: Roboto, sans-serif !important;
+    font-size: 16px;
+    margin: 0;
+    color: white;
+  }
+
   @media (max-width: 767px) {
     right: 25px;
     transform: none;
@@ -112,13 +119,6 @@
   align-items: center;
   padding: 0 20px;
   background-color: #00824d;
-}
-
-.header-text {
-  font-family: Roboto, sans-serif !important;
-  font-size: 16px;
-  margin: 0;
-  color: white;
 }
 
 .close-icon-wrapper {
