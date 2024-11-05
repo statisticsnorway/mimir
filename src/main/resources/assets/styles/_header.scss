@@ -4,7 +4,7 @@
   .container {
     padding: 0;
 
-    @include media-breakpoint-down(md){
+    @include media-breakpoint-down(md) {
       max-width: 720px;
     }
   }
@@ -13,7 +13,7 @@
 header.ssb-header-wrapper {
   padding: 0;
 
-  @include media-breakpoint-down(lg){
+  @include media-breakpoint-down(lg) {
     padding-top: 20px;
   }
 
@@ -34,18 +34,18 @@ header.ssb-header-wrapper {
     }
 
     .skip-to-content {
-      position:absolute;
-      left:-10000px;
-      top:auto;
-      width:1px;
-      height:1px;
-      overflow:hidden;
+      position: absolute;
+      left: -10000px;
+      top: auto;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
 
       &:focus,
       &:active {
-        position:static;
-        width:auto;
-        height:auto;
+        position: static;
+        width: auto;
+        height: auto;
       }
     }
   }
@@ -53,23 +53,26 @@ header.ssb-header-wrapper {
   .plainLink {
     background: none;
     border-bottom: none;
-    @include media-breakpoint-down(lg){
-      margin: 0
+    @include media-breakpoint-down(lg) {
+      margin: 0;
     }
   }
 
   .misc {
     width: 100%;
     padding: 0;
-    @include media-breakpoint-down(lg){
+    @include media-breakpoint-down(lg) {
       padding: 0 20px 20px;
       align-items: center;
     }
+    @include media-breakpoint-down(md) {
+      padding: 0 1rem 1rem;
+    }
   }
 
-  .mobileMenuDivider{
+  .mobileMenuDivider {
     color: $ssb-dark-2;
-    @include media-breakpoint-up(lg){
+    @include media-breakpoint-up(lg) {
       display: none;
     }
   }
@@ -77,23 +80,25 @@ header.ssb-header-wrapper {
   .header-content {
     margin-top: 14px;
 
-    @include media-breakpoint-down(lg){
+    @include media-breakpoint-down(lg) {
       margin-top: 0;
       overflow: hidden;
       max-height: 0;
       transition: max-height 0.3s ease-out;
 
       &.hideOnMobile {
-        display:none;
+        display: none;
       }
 
       &.showOnMobile {
         height: auto;
         max-height: 1800px;
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
         transition: max-height 0.3s ease-in;
       }
+    }
   }
-}
 
   #header-logo {
     position: relative;
@@ -116,7 +121,7 @@ header.ssb-header-wrapper {
     .environment-logo-overlay {
       position: absolute;
       right: 0;
-      bottom: .2rem;
+      bottom: 0.2rem;
 
       font-weight: bold;
       color: $ssb-red-3;
@@ -134,7 +139,7 @@ header.ssb-header-wrapper {
     background: transparent;
     height: 24px;
     font-family: $font-roboto-plain;
-    font-size: 20px;
+    font-size: 1.25rem;
     font-weight: bold;
     font-stretch: normal;
     font-style: normal;
@@ -170,7 +175,7 @@ header.ssb-header-wrapper {
       overflow: hidden;
 
       &.hideOnMobile {
-        display:none;
+        display: none;
       }
 
       &.showOnMobile {
@@ -192,7 +197,7 @@ header.ssb-header-wrapper {
   }
 
   #mainMenu {
-    @include media-breakpoint-down(lg){
+    @include media-breakpoint-down(lg) {
       flex-direction: column;
     }
 
@@ -202,7 +207,7 @@ header.ssb-header-wrapper {
       padding: 0;
       margin-bottom: 0;
 
-      @include media-breakpoint-down(lg){
+      @include media-breakpoint-down(lg) {
         flex-direction: column;
       }
     }
@@ -229,7 +234,8 @@ header.ssb-header-wrapper {
         .icon-wrapper svg * {
           stroke: $ssb-green-4;
         }
-        &:hover, &:focus {
+        &:hover,
+        &:focus {
           svg * {
             stroke: $ssb-white;
           }
@@ -243,13 +249,13 @@ header.ssb-header-wrapper {
           &.visible {
             max-height: initial;
             max-width: none;
-            height: auto
+            height: auto;
           }
         }
       }
     }
 
-    @include media-breakpoint-down(lg){
+    @include media-breakpoint-down(lg) {
       transition: max-height 0.3s ease-in;
       display: grid;
       width: 100%;
@@ -262,7 +268,7 @@ header.ssb-header-wrapper {
         height: auto;
       }
 
-      &.activeTab{
+      &.activeTab {
         max-height: 300px;
       }
 
@@ -279,7 +285,7 @@ header.ssb-header-wrapper {
         margin-bottom: -1px;
       }
 
-      &:last-child{
+      &:last-child {
         border-bottom: $ssb-dark-2 1px solid;
       }
     }
@@ -342,10 +348,10 @@ header.ssb-header-wrapper {
       }
 
       span {
-        font-size: 16px;
+        font-size: 1rem;
         width: 100%;
         @include media-breakpoint-down(lg) {
-          font-size: 20px;
+          font-size: 1.25rem;
         }
       }
     }
@@ -395,8 +401,9 @@ header.ssb-header-wrapper {
             margin: 2px 0 0;
           }
 
-          &:hover, &:focus {
-            .link-text{
+          &:hover,
+          &:focus {
+            .link-text {
               color: white;
             }
             svg * {
@@ -418,7 +425,7 @@ header.ssb-header-wrapper {
       display: flex;
       flex-direction: column;
       align-items: flex-start;
-      margin: 20px 4px;
+      margin: 1.25rem 0;
       max-height: 0;
       transition: max-height 0.4s ease-in;
 
@@ -428,10 +435,8 @@ header.ssb-header-wrapper {
         transition: max-height 0.4s ease-out;
       }
       .ssb-link {
-        margin: 12px 20px;
+        margin: 0.5rem 0;
       }
     }
   }
 }
-
-
