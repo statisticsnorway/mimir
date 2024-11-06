@@ -29,7 +29,7 @@ function StatisticFigures(props: Readonly<StatisticFiguresProps>) {
   }
 
   return (
-    <>
+    <div className='content-wrapper'>
       <div className='title-wrapper'>
         <Title size={2}>{selectedFigures}</Title>
         <div className='icon-wrapper'>
@@ -38,7 +38,7 @@ function StatisticFigures(props: Readonly<StatisticFiguresProps>) {
       </div>
       <AttachmentTablesFigures {...props} />
       {renderStatbankBox()}
-    </>
+    </div>
   )
 }
 

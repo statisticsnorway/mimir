@@ -430,52 +430,54 @@ function NameSearch(props) {
 
   return (
     <section className='name-search container-fluid p-0' id='navnesok'>
-      <Container className='name-search-input'>
-        <Row>
-          <Col lg='12'>
-            <Title size={2}>{props.phrases.nameSearchTitle}</Title>
-          </Col>
-          {props.nameSearchDescription && (
+      <div className='name-search-content'>
+        <Container className='name-search-input'>
+          <Row>
             <Col lg='12'>
-              <div
-                dangerouslySetInnerHTML={{
-                  __html: sanitize(props.nameSearchDescription.replace(/&nbsp;/g, ' ')),
-                }}
-              ></div>
+              <Title size={2}>{props.phrases.nameSearchTitle}</Title>
             </Col>
-          )}
-        </Row>
-        <Form onSubmit={handleSubmit}>
-          <Row>
-            <Col>
-              <Input
-                className='mt-2 mb-4'
-                name='navn'
-                label={props.phrases.nameSearchInputLabel}
-                value={name.value}
-                handleChange={handleChange}
-                error={name.error}
-                errorMessage={name.errorMessage}
-                role='search'
-                ariaLabelWrapper={props.phrases.nameSearchTitle}
-              />
-            </Col>
+            {props.nameSearchDescription && (
+              <Col lg='12'>
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: sanitize(props.nameSearchDescription.replace(/&nbsp;/g, ' ')),
+                  }}
+                ></div>
+              </Col>
+            )}
           </Row>
-          <Row>
-            <Col lg md='12'>
-              <Button primary type='submit' ref={submitButton}>
-                {props.phrases.nameSearchButtonText}
-              </Button>
-            </Col>
-            <Col lg md='12' className='name-search-about-link'>
-              {props.aboutLink && props.aboutLink.url && (
-                <Link href={props.aboutLink.url}>{props.aboutLink.title}</Link>
-              )}
-            </Col>
-          </Row>
-        </Form>
-      </Container>
-      {renderResult()}
+          <Form onSubmit={handleSubmit}>
+            <Row>
+              <Col>
+                <Input
+                  className='mt-2 mb-4'
+                  name='navn'
+                  label={props.phrases.nameSearchInputLabel}
+                  value={name.value}
+                  handleChange={handleChange}
+                  error={name.error}
+                  errorMessage={name.errorMessage}
+                  role='search'
+                  ariaLabelWrapper={props.phrases.nameSearchTitle}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col lg md='12'>
+                <Button className='result-button' primary type='submit' ref={submitButton}>
+                  {props.phrases.nameSearchButtonText}
+                </Button>
+              </Col>
+              <Col lg md='12' className='name-search-about-link'>
+                {props.aboutLink && props.aboutLink.url && (
+                  <Link href={props.aboutLink.url}>{props.aboutLink.title}</Link>
+                )}
+              </Col>
+            </Row>
+          </Form>
+        </Container>
+        {renderResult()}
+      </div>
     </section>
   )
 }

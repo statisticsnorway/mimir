@@ -452,87 +452,85 @@ function SearchResult(props: SearchResultProps) {
 
   return (
     <section className='search-result container-fluid p-0'>
-      <div className='row'>
-        <div className='col-12 search-result-head'>
-          <div className='container'>
-            <Title>{props.title}</Title>
-            <Input
-              ref={inputSearchElement}
-              className='d-none d-lg-block'
-              size='lg'
-              value={searchTerm}
-              handleChange={setSearchTerm}
-              searchField
-              submitCallback={goToSearchResultPage}
-              ariaLabel={props.mainSearchPhrase}
-              ariaLabelWrapper={props.term ? props.mainSearchPhrase : undefined}
-              ariaLabelSearchButton={props.searchText}
-            />
-            <Input
-              className='d-block d-lg-none'
-              value={searchTerm}
-              handleChange={setSearchTerm}
-              searchField
-              submitCallback={goToSearchResultPage}
-              ariaLabel={props.mainSearchPhrase}
-              ariaLabelWrapper={props.term ? props.mainSearchPhrase : undefined}
-              ariaLabelSearchButton={props.searchText}
-            />
-            <div className='filter'>
-              <span className='limit-result mb-3'>{limitResultPhrase}</span>
-              <Row>
-                <Col lg='4' className='search-result-dropdown pb-1 pr-1'>
-                  <Dropdown
-                    className='DropdownMainSubject'
-                    id='mainSubject'
-                    key={`mainSubject-${reset}`}
-                    onSelect={(value: DropdownItem) => {
-                      onChange('mainSubject', value)
-                      if (!openAccordion) {
-                        setOpenAccordion(true)
-                      }
-                    }}
-                    selectedItem={selectedMainSubject}
-                    items={dropdownSubjectsItems}
-                    header={props.chooseSubjectPhrase}
-                  />
-                </Col>
-                <Col lg='4' className='search-result-dropdown pr-1'>
-                  <Dropdown
-                    className='DropdownContentType'
-                    id='contentType'
-                    key={`contentType-${reset}`}
-                    onSelect={(value: DropdownItem) => {
-                      onChange('contentType', value)
-                      if (!openAccordion) {
-                        setOpenAccordion(true)
-                      }
-                    }}
-                    selectedItem={selectedContentType}
-                    items={dropdownContentTypeItems}
-                    header={props.chooseContentTypePhrase}
-                  />
-                </Col>
-              </Row>
-              {(filter.mainSubject || filter.contentType) && (
-                <Tag onClick={removeFilter} icon={<X size={18} />}>
-                  {props.removeFilterPhrase}
-                </Tag>
-              )}
-            </div>
+      <div className='col-12 search-result-head'>
+        <div className='container'>
+          <Title>{props.title}</Title>
+          <Input
+            ref={inputSearchElement}
+            className='d-none d-lg-block'
+            size='lg'
+            value={searchTerm}
+            handleChange={setSearchTerm}
+            searchField
+            submitCallback={goToSearchResultPage}
+            ariaLabel={props.mainSearchPhrase}
+            ariaLabelWrapper={props.term ? props.mainSearchPhrase : undefined}
+            ariaLabelSearchButton={props.searchText}
+          />
+          <Input
+            className='d-block d-lg-none'
+            value={searchTerm}
+            handleChange={setSearchTerm}
+            searchField
+            submitCallback={goToSearchResultPage}
+            ariaLabel={props.mainSearchPhrase}
+            ariaLabelWrapper={props.term ? props.mainSearchPhrase : undefined}
+            ariaLabelSearchButton={props.searchText}
+          />
+          <div className='filter'>
+            <span className='limit-result mb-3'>{limitResultPhrase}</span>
+            <Row>
+              <Col lg='4' className='search-result-dropdown pb-1 pr-1'>
+                <Dropdown
+                  className='DropdownMainSubject'
+                  id='mainSubject'
+                  key={`mainSubject-${reset}`}
+                  onSelect={(value: DropdownItem) => {
+                    onChange('mainSubject', value)
+                    if (!openAccordion) {
+                      setOpenAccordion(true)
+                    }
+                  }}
+                  selectedItem={selectedMainSubject}
+                  items={dropdownSubjectsItems}
+                  header={props.chooseSubjectPhrase}
+                />
+              </Col>
+              <Col lg='4' className='search-result-dropdown pr-1'>
+                <Dropdown
+                  className='DropdownContentType'
+                  id='contentType'
+                  key={`contentType-${reset}`}
+                  onSelect={(value: DropdownItem) => {
+                    onChange('contentType', value)
+                    if (!openAccordion) {
+                      setOpenAccordion(true)
+                    }
+                  }}
+                  selectedItem={selectedContentType}
+                  items={dropdownContentTypeItems}
+                  header={props.chooseContentTypePhrase}
+                />
+              </Col>
+            </Row>
+            {(filter.mainSubject || filter.contentType) && (
+              <Tag onClick={removeFilter} icon={<X size={18} />}>
+                {props.removeFilterPhrase}
+              </Tag>
+            )}
           </div>
         </div>
-        <div className='col-12 search-result-body'>
-          <div className='container mt-5'>
-            {searchResultSRText && (
-              <div className='visually-hidden' aria-live='polite'>
-                {searchResultSRText}
-              </div>
-            )}
-            {hits.length > 0 || props.bestBetHit ? renderList() : renderNoHitMessage()}
-            {renderLoading()}
-            {renderShowMoreButton()}
-          </div>
+      </div>
+      <div className='col-12 search-result-body'>
+        <div className='container mt-5'>
+          {searchResultSRText && (
+            <div className='visually-hidden' aria-live='polite'>
+              {searchResultSRText}
+            </div>
+          )}
+          {hits.length > 0 || props.bestBetHit ? renderList() : renderNoHitMessage()}
+          {renderLoading()}
+          {renderShowMoreButton()}
         </div>
       </div>
     </section>

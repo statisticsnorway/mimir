@@ -152,7 +152,23 @@ section.part-divider + section.part-divider {
 .xp-region {
   @include media-breakpoint-down(md) {
     margin: 0 auto;
-    width: 95%;
+
+    section,
+    figure {
+      padding-left: 1rem !important;
+      padding-right: 1rem !important;
+    }
+
+    section section,
+    section figure,
+    section.part-infoGraphic {
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+    }
+
+    .row > * {
+      padding: 0;
+    }
   }
 }
 
@@ -218,4 +234,13 @@ p.bold {
   border-style: dotted;
   border-color: white;
   border-width: medium;
+}
+
+#breadcrumbs,
+.default-page-title,
+.default-page-subtitle {
+  @include media-breakpoint-down(md) {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
 }

@@ -516,10 +516,12 @@ function HusleieCalculator(props: KpiCalculatorProps) {
 
   function renderCalculator() {
     return (
-      <Container className='husleie-calculator'>
-        {renderForm()}
-        <div aria-live='polite'>{renderResult()}</div>
-      </Container>
+      <section className='husleie-calculator'>
+        <Container className='content'>
+          {renderForm()}
+          <div aria-live='polite'>{renderResult()}</div>
+        </Container>
+      </section>
     )
   }
 

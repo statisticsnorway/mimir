@@ -64,7 +64,7 @@ function StatisticDescription(props: Readonly<AboutTheStatisticsProps>) {
   }
 
   return (
-    <div className='row'>
+    <div className='content-wrapper'>
       <div className='title-wrapper'>
         <Title size={2}>{label}</Title>
         <div className='icon-wrapper'>

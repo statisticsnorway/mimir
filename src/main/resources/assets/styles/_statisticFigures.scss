@@ -1,7 +1,9 @@
 .statistic-figures {
-  background-color: white;
-  padding: 1.5rem 2.5rem 4.5rem;
-  border-radius: 32px;
+  .content-wrapper {
+    background-color: white;
+    padding: 1.5rem 2.5rem 4.5rem;
+    border-radius: 32px;
+  }
 
   .title-wrapper {
     margin-bottom: 2rem;
@@ -29,6 +31,12 @@
       list-style-type: none;
       padding: 0;
       margin: 0;
+    }
+
+    .accordion-header {
+      .sub-header {
+        width: 75px;
+      }
     }
 
     .accordion-body {
@@ -109,8 +117,11 @@
   }
 
   @include media-breakpoint-down(md) {
-    padding: 1.5rem 1.25rem;
     border-radius: 22px;
+
+    .content-wrapper {
+      padding: 1rem 1rem 2rem;
+    }
 
     .title-wrapper {
       margin-top: 1rem;
@@ -121,8 +132,14 @@
       }
     }
 
+    .part-accordion {
+      .hide-show-btn {
+        margin-bottom: 2rem;
+      }
+    }
+
     .statbank-box {
-      padding: 2.5rem 0.5rem;
+      padding: 0;
 
       .content {
         display: block;
