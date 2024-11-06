@@ -27,7 +27,6 @@ export function getFooterContent(language: Language): FooterContent | undefined 
         locale: language.code,
       }),
       facebookUrl: footerContent.data.facebookUrl,
-      twitterUrl: footerContent.data.twitterUrl,
       linkedinUrl: footerContent.data.linkedinUrl,
       instagramUrl: footerContent.data.instagramUrl,
       rssUrl: footerContent.data.rssUrl,

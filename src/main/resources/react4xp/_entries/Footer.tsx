@@ -1,6 +1,6 @@
 import React from 'react'
 import { Accordion, Button, Link } from '@statisticsnorway/ssb-component-library'
-import { ArrowRight, ArrowUp, Facebook, Twitter, Rss, Linkedin, Instagram } from 'react-feather'
+import { ArrowRight, ArrowUp, Facebook, Rss, Linkedin, Instagram } from 'react-feather'
 import { FooterContent } from '../../lib/types/footer'
 
 const Footer = (props: FooterContent) => {
@@ -11,7 +11,6 @@ const Footer = (props: FooterContent) => {
     hiddenFooterText,
     language,
     facebookUrl,
-    twitterUrl,
     linkedinUrl,
     instagramUrl,
     rssUrl,
@@ -77,9 +76,6 @@ const Footer = (props: FooterContent) => {
       <div className='social-links'>
         {facebookUrl && (
           <Link ariaLabel='Facebook' href={facebookUrl} isExternal negative icon={<Facebook size={24} />} standAlone />
-        )}
-        {twitterUrl && (
-          <Link ariaLabel='Twitter' href={twitterUrl} isExternal negative icon={<Twitter size={24} />} standAlone />
         )}
         {linkedinUrl && (
           <Link ariaLabel='Linkedin' href={linkedinUrl} isExternal negative icon={<Linkedin size={24} />} standAlone />
