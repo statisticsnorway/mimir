@@ -40,11 +40,9 @@ spec:
     enabled: false
 
   envFrom:
-    - secret: gitpull-key-private
-    - configmap: gitpull-repo
+    - secret: gitpull-config
   filesFrom:
     - secret: gitpull-key-private
-    - configmap: id-exdsa-nais
       mountPath: /enonic-xp/home/config/ssh
 
   env:
