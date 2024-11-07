@@ -34,12 +34,12 @@ function EmployeeList(props: EmployeeListProps) {
   const employeeDetails = (employee: IPreparedEmployee) => {
     return (
       <div>
-        <Link href={employee.path} linkType='header'>
+        <Link href={employee.path} linkType='header' headingSize={3}>
           {employee.surname}, {employee.name}
         </Link>
         {employee.position ? (
           <div className='position'>
-            <Text small>{employee.position}</Text>
+            <Text>{employee.position}</Text>
           </div>
         ) : null}
         <div className='contact-details'>

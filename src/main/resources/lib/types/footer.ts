@@ -6,7 +6,6 @@ export interface FooterContent {
   copyrightUrl: string
   copyrightText: string
   facebookUrl: string
-  twitterUrl: string
   linkedinUrl: string
   instagramUrl: string
   rssUrl: string

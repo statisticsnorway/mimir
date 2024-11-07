@@ -2,6 +2,14 @@ import { type Node } from '/lib/xp/node'
 import { type Facet, type PreparedSearchResult } from '/lib/types/solr'
 import { type BestBetContent } from '../bestbet'
 
+export interface NameSearchData {
+  count: string
+  gender: string
+  name: string
+  doc: string
+  type: string
+}
+
 export interface SearchResultProps {
   bestBetHit: PreparedSearchResult | undefined
   hits: Array<PreparedSearchResult>
@@ -24,7 +32,7 @@ export interface SearchResultProps {
   allContentTypesPhrase: string
   allSubjectsPhrase: string
   searchServiceUrl: string
-  nameSearchData: object | undefined
+  nameSearchData: NameSearchData | undefined
   nameSearchUrl: string
   namePhrases: {
     readMore: string
@@ -37,12 +45,7 @@ export interface SearchResultProps {
     women: string
     men: string
     types: {
-      firstgivenandfamily: string
-      middleandfamily: string
-      family: string
-      onlygiven: string
-      onlygivenandfamily: string
-      firstgiven: string
+      [key: string]: string
     }
   }
   searchPageUrl: string
