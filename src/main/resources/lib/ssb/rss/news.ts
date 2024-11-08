@@ -1,10 +1,10 @@
-import { query, Content } from '/lib/xp/content'
+import { query, type Content } from '/lib/xp/content'
 import { StatisticInListing, VariantInListing } from '/lib/ssb/dashboard/statreg/types'
 import { getTimeZoneIso } from '/lib/ssb/utils/dateUtils'
 import { subDays, isSameDay, format, parseISO } from '/lib/vendor/dateFns'
 import { fetchStatisticsWithReleaseToday } from '/lib/ssb/statreg/statistics'
-
 import { getMainSubjects } from '/lib/ssb/utils/subjectUtils'
+// @ts-ignore
 import { xmlEscape } from '/lib/text-encoding'
 import { type SubjectItem } from '/lib/types/subject'
 import { type Statistic } from '/site/mixins/statistic'
@@ -16,13 +16,14 @@ const dummyReq: Partial<XP.Request> = {
 
 export function getRssItemsNews(): string | null {
   const mainSubjects: SubjectItem[] = getMainSubjects(dummyReq as XP.Request)
-  const news: Array<News> = getNews(mainSubjects)
-  const statistics: Array<News> = getStatisticsNews(mainSubjects)
+  const articles: Array<News> = getArticles(mainSubjects)
+  const statistics: Array<News> = getStatistics(mainSubjects)
+  const news: Array<News> = articles.concat(statistics)
   const xml = `<?xml version="1.0" encoding="utf-8"?>
-    <rssitems count="${news.length + statistics.length}">
-      ${[...news, ...statistics]
-        .map(
-          (n: News) => `<rssitem>
+    <rssitems count="${news.length}">
+      ${[...news]
+      .map(
+        (n: News) => `<rssitem>
         <guid isPermalink="false">${n.guid}</guid>
         <title>${xmlEscape(n.title)}</title>
         <link>${n.link}</link>
@@ -33,13 +34,13 @@ export function getRssItemsNews(): string | null {
         <pubDate>${n.pubDate}</pubDate>
         <shortname>${n.shortname}</shortname>
       </rssitem>`
-        )
-        .join('')}
+      )
+      .join('')}
     </rssitems>`
   return xml
 }
 
-function getNews(mainSubjects: SubjectItem[]): Array<News> {
+function getArticles(mainSubjects: SubjectItem[]): Array<News> {
   const from: string = subDays(new Date(), 1).toISOString()
   const to: string = new Date().toISOString()
   const serverOffsetInMilliSeconds: number = parseInt(app.config?.['serverOffsetInMs']) || 0
@@ -88,7 +89,7 @@ function getNews(mainSubjects: SubjectItem[]): Array<News> {
   return news
 }
 
-function getStatisticsNews(mainSubjects: SubjectItem[]): Array<News> {
+function getStatistics(mainSubjects: SubjectItem[]): Array<News> {
   const statregStatistics: Array<StatisticInListing> = fetchStatisticsWithReleaseToday()
 
   const statisticsNews: Array<News> = []

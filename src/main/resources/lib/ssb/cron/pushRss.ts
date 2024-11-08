@@ -6,10 +6,8 @@ import { Events } from '/lib/ssb/repo/query'
 
 export function pushRssNews(): RssResult {
   const rssNews: string | null = getRssItemsNews()
-  log.info('rssNews: ' + rssNews)
   if (rssNews !== null) {
     const encryptedBody: string = encryptRssNews(rssNews)
-    log.info('encryptedBody: ' + encryptedBody)
     return postRssNews(encryptedBody)
   } else {
     return { message: 'Ingen nyheter å pushe til RSS' }
