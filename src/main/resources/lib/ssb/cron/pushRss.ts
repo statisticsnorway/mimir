@@ -45,12 +45,14 @@ function postRssNews(encryptedRss: string): RssResult {
         message: 'Push av RSS nyheter OK',
       }
     } else {
+      log.error(`Push av RSS nyheter til ${rssNewsBaseUrl} feilet - status: ${pushRssNewsResponse.status}  message: ${pushRssNewsResponse.message}`)
       return {
         message: 'Push av RSS nyheter feilet - ' + pushRssNewsResponse.status,
         status: Events.REQUEST_GOT_ERROR_RESPONSE,
       }
     }
   } catch (e) {
+    log.error(`Push av RSS nyheter feilet - ${e}`)
     return {
       message: 'Push av nyheter feilet - ' + e,
       status: Events.REQUEST_GOT_ERROR_RESPONSE,
@@ -77,12 +79,14 @@ function postRssStatkal(encryptedRss: string): RssResult {
     if (pushRssStatkalResponse.status === 200) {
       return { message: 'Push av RSS statkal OK' }
     } else {
+      log.error(`Push av RSS statkal til ${rssStatkalBaseUrl} feilet - status: ${pushRssStatkalResponse.status}  message: ${pushRssStatkalResponse.message}`)
       return {
         message: `Push av RSS statkal til ${rssStatkalBaseUrl} feilet - ${pushRssStatkalResponse.status}`,
         status: Events.REQUEST_GOT_ERROR_RESPONSE,
       }
     }
   } catch (e) {
+    log.error(`Push av RSS statkal feilet - ${e}`)
     return { message: 'Push av RSS statkal feilet - ' + e, status: Events.REQUEST_GOT_ERROR_RESPONSE }
   }
 }
