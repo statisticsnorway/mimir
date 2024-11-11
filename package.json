@@ -142,7 +142,7 @@
     "typescript": "~5.2.2",
     "typescript-eslint": "^7.18.0",
     "validator": "~13.12.0",
-    "webpack": "~5.95.0",
+    "webpack": "~5.96.1",
     "webpack-bundle-analyzer": "~4.10.2",
     "webpack-cli": "~5.1.4",
     "xlsx": "~0.18.5"
@@ -160,7 +160,7 @@
   },
   "dependencies": {
     "bootstrap": "~5.3.3",
-    "core-js": "~3.38.1",
+    "core-js": "~3.39.0",
     "date-fns": "~3.6.0",
     "highcharts-react-official": "~3.2.1",
     "react-bootstrap": "~2.10.5",
