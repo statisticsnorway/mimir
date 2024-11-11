@@ -21,7 +21,7 @@ export function getRssItemsNews(): string | null {
   const news: Array<News> = articles.concat(statistics)
   const xml = `<?xml version="1.0" encoding="utf-8"?>
     <rssitems count="${news.length}">
-      ${[...news]
+      ${news
       .map(
         (n: News) => `<rssitem>
         <guid isPermalink="false">${n.guid}</guid>
@@ -91,6 +91,8 @@ function getArticles(mainSubjects: SubjectItem[]): Array<News> {
 
 function getStatistics(mainSubjects: SubjectItem[]): Array<News> {
   const statregStatistics: Array<StatisticInListing> = fetchStatisticsWithReleaseToday()
+  const serverOffsetInMS: number = parseInt(app.config?.['serverOffsetInMs']) || 0
+  const timeZoneIso: string = getTimeZoneIso(serverOffsetInMS)
 
   const statisticsNews: Array<News> = []
   if (statregStatistics.length > 0) {
@@ -102,27 +104,12 @@ function getStatistics(mainSubjects: SubjectItem[]): Array<News> {
           .map((s) => `"${s.id}"`)
           .join(',')})`,
       }).hits as unknown as Array<Content<Statistics & Statistic>>
-      const serverOffsetInMS: number = parseInt(app.config?.['serverOffsetInMs']) || 0
-      const timeZoneIso: string = getTimeZoneIso(serverOffsetInMS)
       statistics.forEach((statistic) => {
         const statreg: StatisticInListing | undefined = statregStatistics.find(
           (s) => s.id.toString() === statistic.data.statistic
         )
         const variant: VariantInListing | undefined = statreg?.variants?.[0] || undefined
-        let pubDate: string | undefined
-        if (variant) {
-          const previousReleaseSameDayNow: boolean = variant.previousRelease
-            ? isSameDay(new Date(variant.previousRelease), new Date())
-            : false
-          const nextReleaseSameDayNow: boolean = variant.nextRelease
-            ? isSameDay(new Date(variant.nextRelease), new Date())
-            : false
-          if (previousReleaseSameDayNow) {
-            pubDate = variant.previousRelease ? formatPubDateStatistic(variant.previousRelease, timeZoneIso) : undefined
-          } else if (nextReleaseSameDayNow) {
-            pubDate = variant.nextRelease ? formatPubDateStatistic(variant.nextRelease, timeZoneIso) : undefined
-          }
-        }
+        const pubDate: string | undefined = variant ? getPubDate(variant, timeZoneIso) : undefined
         const link = getLinkByPath(statistic._path)
         if (pubDate) {
           statisticsNews.push({
@@ -142,6 +129,21 @@ function getStatistics(mainSubjects: SubjectItem[]): Array<News> {
   }
 
   return statisticsNews
+}
+
+function getPubDate(variant: VariantInListing, timeZoneIso: string): string | undefined {
+  const previousReleaseSameDayNow: boolean = variant.previousRelease
+    ? isSameDay(new Date(variant.previousRelease), new Date())
+    : false
+  const nextReleaseSameDayNow: boolean = variant.nextRelease
+    ? isSameDay(new Date(variant.nextRelease), new Date())
+    : false
+  if (previousReleaseSameDayNow) {
+    return variant.previousRelease ? formatPubDateStatistic(variant.previousRelease, timeZoneIso) : undefined
+  } else if (nextReleaseSameDayNow) {
+    return variant.nextRelease ? formatPubDateStatistic(variant.nextRelease, timeZoneIso) : undefined
+  }
+  return undefined
 }
 
 function formatPubDateArticle(date: string, serverOffsetInMS: number, timeZoneIso: string): string {
