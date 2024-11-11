@@ -1,0 +1,43 @@
+@media print {
+
+  body {
+    zoom: 70% !important;
+  }
+
+  .container {
+    width: 100% !important;
+    min-width: 992px !important;
+  }
+
+  .title-ingress-wrapper {
+    margin-top: 0rem !important;
+    padding-top: 0rem !important;
+  }
+
+  #breadcrumbs,
+  #popup,
+  #footer,
+  .global-links,
+  .header-content,
+  .hamburger,
+  .highcharts-exporting-group,
+  .associated-statistics,
+  .associated-article-archives,
+  .mobileMenuDivider,
+  .show-datatable {
+    display: none !important;
+  }
+
+  .highchart-wrapper {
+    margin-top: 0 !important;
+
+    .highcharts-figure {
+      margin-top: 3rem !important;
+    }
+  }
+
+  .highchart-wrapper,
+  img {
+    page-break-inside: avoid;
+  }
+}
