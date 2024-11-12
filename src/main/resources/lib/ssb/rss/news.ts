@@ -22,8 +22,8 @@ export function getRssItemsNews(): string | null {
   const xml = `<?xml version="1.0" encoding="utf-8"?>
     <rssitems count="${news.length}">
       ${news
-      .map(
-        (n: News) => `<rssitem>
+        .map(
+          (n: News) => `<rssitem>
         <guid isPermalink="false">${n.guid}</guid>
         <title>${xmlEscape(n.title)}</title>
         <link>${n.link}</link>
@@ -34,8 +34,8 @@ export function getRssItemsNews(): string | null {
         <pubDate>${n.pubDate}</pubDate>
         <shortname>${n.shortname}</shortname>
       </rssitem>`
-      )
-      .join('')}
+        )
+        .join('')}
     </rssitems>`
   return xml
 }
@@ -109,7 +109,7 @@ function getStatistics(mainSubjects: SubjectItem[]): Array<News> {
           (s) => s.id.toString() === statistic.data.statistic
         )
         const variant: VariantInListing | undefined = statreg?.variants?.[0] || undefined
-        const pubDate: string | undefined = variant ? getPubDate(variant, timeZoneIso) : undefined
+        const pubDate: string | undefined = variant ? getPubDateStatistic(variant, timeZoneIso) : undefined
         const link = getLinkByPath(statistic._path)
         if (pubDate) {
           statisticsNews.push({
@@ -131,7 +131,7 @@ function getStatistics(mainSubjects: SubjectItem[]): Array<News> {
   return statisticsNews
 }
 
-function getPubDate(variant: VariantInListing, timeZoneIso: string): string | undefined {
+function getPubDateStatistic(variant: VariantInListing, timeZoneIso: string): string | undefined {
   const previousReleaseSameDayNow: boolean = variant.previousRelease
     ? isSameDay(new Date(variant.previousRelease), new Date())
     : false
