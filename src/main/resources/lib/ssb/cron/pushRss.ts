@@ -1,19 +1,16 @@
 import { HttpRequestParams, HttpResponse, request } from '/lib/http-client'
-
-import { getRssItemsStatkal } from '../../../lib/ssb/rss/statkal'
-import { encryptRssNews, encryptRssStatkal } from '../../../lib/cipher/cipherRss'
-import { Events } from '../../../lib/ssb/repo/query'
+import { getRssItemsStatkal } from '/lib/ssb/rss/statkal'
+import { getRssItemsNews } from '/lib/ssb/rss/news'
+import { encryptRssNews, encryptRssStatkal } from '/lib/cipher/cipherRss'
+import { Events } from '/lib/ssb/repo/query'
 
 export function pushRssNews(): RssResult {
-  const newsServiceUrl: string = app.config?.['ssb.baseUrl']
-    ? app.config['ssb.baseUrl'] + '/_/service/mimir/news'
-    : 'https://www.utv.ssb.no/_/service/mimir/news'
-  const rssNews: RssItems = getRssNews(newsServiceUrl)
-  if (rssNews.body !== null) {
-    const encryptedBody: string = encryptRssNews(rssNews.body)
+  const rssNews: string | null = getRssItemsNews()
+  if (rssNews !== null) {
+    const encryptedBody: string = encryptRssNews(rssNews)
     return postRssNews(encryptedBody)
   } else {
-    return { message: rssNews.message }
+    return { message: 'Ingen nyheter å pushe til RSS' }
   }
 }
 
@@ -25,37 +22,6 @@ export function pushRssStatkal(): RssResult {
   } else {
     return { message: 'Ingen publiseringer å pushe til rss/statkal' }
   }
-}
-
-function getRssNews(url: string): RssItems {
-  const requestParams: HttpRequestParams = {
-    url,
-    method: 'GET',
-    readTimeout: 60000,
-  }
-
-  const status: RssItems = {
-    body: null,
-    message: '',
-  }
-
-  try {
-    const rssNewsResponse: HttpResponse = request(requestParams)
-    if (rssNewsResponse.status === 200) {
-      if (rssNewsResponse.body) {
-        status.body = rssNewsResponse.body
-      } else {
-        status.message = 'Ingen nyheter å pushe til RSS'
-      }
-    } else {
-      status.message = 'Henting av nyheter XP feilet - ' + rssNewsResponse.status
-      status.status = Events.REQUEST_GOT_ERROR_RESPONSE
-    }
-  } catch (e) {
-    status.message = 'Henting av nyheter XP feilet - ' + e
-    status.status = Events.REQUEST_GOT_ERROR_RESPONSE
-  }
-  return status
 }
 
 function postRssNews(encryptedRss: string): RssResult {
@@ -79,12 +45,16 @@ function postRssNews(encryptedRss: string): RssResult {
         message: 'Push av RSS nyheter OK',
       }
     } else {
+      log.error(
+        `Push av RSS nyheter til ${rssNewsBaseUrl} feilet - status: ${pushRssNewsResponse.status}  message: ${pushRssNewsResponse.message}`
+      )
       return {
         message: 'Push av RSS nyheter feilet - ' + pushRssNewsResponse.status,
         status: Events.REQUEST_GOT_ERROR_RESPONSE,
       }
     }
   } catch (e) {
+    log.error(`Push av RSS nyheter feilet - ${e}`)
     return {
       message: 'Push av nyheter feilet - ' + e,
       status: Events.REQUEST_GOT_ERROR_RESPONSE,
@@ -111,20 +81,18 @@ function postRssStatkal(encryptedRss: string): RssResult {
     if (pushRssStatkalResponse.status === 200) {
       return { message: 'Push av RSS statkal OK' }
     } else {
+      log.error(
+        `Push av RSS statkal til ${rssStatkalBaseUrl} feilet - status: ${pushRssStatkalResponse.status}  message: ${pushRssStatkalResponse.message}`
+      )
       return {
         message: `Push av RSS statkal til ${rssStatkalBaseUrl} feilet - ${pushRssStatkalResponse.status}`,
         status: Events.REQUEST_GOT_ERROR_RESPONSE,
       }
     }
   } catch (e) {
+    log.error(`Push av RSS statkal feilet - ${e}`)
     return { message: 'Push av RSS statkal feilet - ' + e, status: Events.REQUEST_GOT_ERROR_RESPONSE }
   }
-}
-
-interface RssItems {
-  body: string | null
-  message: RssResult['message']
-  status?: RssResult['status']
 }
 
 export interface RssResult {
