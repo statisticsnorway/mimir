@@ -1,4 +1,7 @@
 @media print {
+  @page {
+    margin-top: 2rem;
+  }
 
   body {
     zoom: 70% !important;
@@ -24,20 +27,52 @@
   .associated-statistics,
   .associated-article-archives,
   .mobileMenuDivider,
-  .show-datatable {
+  .show-datatable,
+  .part-related-articles,
+  .part-picture-card,
+  .part-related-external-links,
+  .part-related-statistics,
+  .download-table-container {
     display: none !important;
   }
 
   .highchart-wrapper {
     margin-top: 0 !important;
-
-    .highcharts-figure {
-      margin-top: 3rem !important;
-    }
   }
 
   .highchart-wrapper,
+  .part-static-visualization,
+  .part-table,
   img {
     page-break-inside: avoid;
+  }
+
+  .article {
+    .associated-statistics,
+    .associated-article-archives {
+      display: none !important;
+    }
+
+    .ssb-expansion-box .content {
+      max-height: none;
+      opacity: 1;
+    }
+  }
+
+  .part-static-visualization {
+    .ssb-expansion-box .content {
+      max-height: none;
+      opacity: 1;
+    }
+
+    .ssb-tabs {
+      display: none !important;
+    }
+  }
+
+  .part-picture-card + .part-divider,
+  .part-related-articles + .part-divider,
+  .part-related-statistics + .part-divider {
+    display: none !important;
   }
 }
