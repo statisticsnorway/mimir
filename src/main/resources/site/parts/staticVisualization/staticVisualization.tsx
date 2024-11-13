@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import {
   Link,
-  FactBox,
+  ExpansionBox,
   Tabs,
   Divider,
   Table as SSBTable,
@@ -169,7 +169,7 @@ function StaticVisualization(props: StaticVisualizationProps) {
               </div>
             )}
 
-            <FactBox header={props.descriptionStaticVisualization} text={renderLongDescriptionAndSources()} />
+            <ExpansionBox header={props.descriptionStaticVisualization} text={renderLongDescriptionAndSources()} />
           </figure>
         </Col>
       </Row>
