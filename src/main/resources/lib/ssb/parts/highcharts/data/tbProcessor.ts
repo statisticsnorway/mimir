@@ -73,6 +73,7 @@ function determineSeries(
         }
       })
     })
+    // extra checks if there are two headers (one for category and series)
     const filteredSeries = series.filter((serie) => serie.data.length > 0)
     if (filteredSeries.length === 1 && headers.length > 1) {
       return [
