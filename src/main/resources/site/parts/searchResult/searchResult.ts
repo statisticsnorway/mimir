@@ -2,7 +2,7 @@ import { get as getContentByKey, type Content } from '/lib/xp/content'
 import { sanitizeHtml, getContent, getComponent, pageUrl, serviceUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 import { render } from '/lib/enonic/react4xp'
-import { solrSearch } from '/lib/ssb/utils/solrUtils'
+import { solrSearch, googleSearch, vertexServiceSearch } from '/lib/ssb/utils/solrUtils'
 import { getNameSearchResult } from '/lib/ssb/utils/nameSearchUtils'
 import { type SolrResponse, type PreparedSearchResult, type SolrPrepResultAndTotal } from '/lib/types/solr'
 import { queryNodes, getNode } from '/lib/ssb/repo/common'
@@ -218,21 +218,57 @@ export function renderPart(req: XP.Request) {
   }
 
   /* query solr */
-  const solrResult: SolrPrepResultAndTotal = sanitizedTerm
-    ? solrSearch(
-        sanitizedTerm,
-        language,
-        parseInt(part.config.numberOfHits),
-        0,
-        req.params.emne,
-        req.params.innholdstype
-      )
-    : {
-        total: 0,
-        hits: [],
-        contentTypes: [],
-        subjects: [],
-      }
+  let solrResult: SolrPrepResultAndTotal
+  if (part.config.searchEngine === 'google') {
+    solrResult = sanitizedTerm
+      ? googleSearch(
+          sanitizedTerm,
+          0,
+          language,
+          parseInt(part.config.numberOfHits),
+          req.params.emne,
+          req.params.innholdstype
+        )
+      : {
+          total: 0,
+          hits: [],
+          contentTypes: [],
+          subjects: [],
+        }
+  }
+  if (part.config.searchEngine === 'vertex') {
+    solrResult = sanitizedTerm
+      ? vertexServiceSearch(
+          sanitizedTerm,
+          0,
+          language,
+          parseInt(part.config.numberOfHits),
+          req.params.emne,
+          req.params.innholdstype
+        )
+      : {
+          total: 0,
+          hits: [],
+          contentTypes: [],
+          subjects: [],
+        }
+  } else {
+    solrResult = sanitizedTerm
+      ? solrSearch(
+          sanitizedTerm,
+          language,
+          parseInt(part.config.numberOfHits),
+          0,
+          req.params.emne,
+          req.params.innholdstype
+        )
+      : {
+          total: 0,
+          hits: [],
+          contentTypes: [],
+          subjects: [],
+        }
+  }
 
   const totalHits = bestBet() ? solrResult.total + 1 : solrResult.total
   /* prepare props */
@@ -265,7 +301,7 @@ export function renderPart(req: XP.Request) {
       locale: language,
     }),
     searchServiceUrl: serviceUrl({
-      service: 'freeTextSearch',
+      service: part.config.searchEngine === 'vertex' ? 'googleVertexSearch' : 'freeTextSearch',
     }),
     nameSearchUrl: serviceUrl({
       service: 'nameSearch',

@@ -57,6 +57,7 @@ declare global {
       export type RelatedStatistics = _PartComponent<'mimir:relatedStatistics'>
       export type ReleasedStatistics = _PartComponent<'mimir:releasedStatistics'>
       export type RichText = _PartComponent<'mimir:richText'>
+      export type SearchExperiment = _PartComponent<'mimir:searchExperiment'>
       export type SearchResult = _PartComponent<'mimir:searchResult'>
       export type SimpleStatbank = _PartComponent<'mimir:simpleStatbank'>
       export type StandardCardsList = _PartComponent<'mimir:standardCardsList'>
