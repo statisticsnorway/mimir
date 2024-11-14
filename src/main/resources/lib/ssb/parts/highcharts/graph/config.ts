@@ -339,7 +339,7 @@ export const createDefaultConfig = (highchartData, displayName, language) => ({
                 },
               },
               title: {
-                text: highchartData.yAxisTitle,
+                text: null,
               },
             },
           ],
