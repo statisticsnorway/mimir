@@ -67,10 +67,22 @@ function determineSeries(
     }))
     rows.forEach((row: TableCellUniform) => {
       series.forEach((serie, index) => {
-        serie.data.push(getRowValue(util.data.forceArray(row.td)[index]))
+        const cellValue = util.data.forceArray(row.td)[index]
+        if (cellValue !== undefined && cellValue !== null) {
+          serie.data.push(getRowValue(cellValue))
+        }
       })
     })
-    return series
+    const filteredSeries = series.filter((serie) => serie.data.length > 0)
+    if (filteredSeries.length === 1 && headers.length > 1) {
+      return [
+        {
+          name: headers[1],
+          data: filteredSeries[0].data,
+        },
+      ]
+    }
+    return filteredSeries
   }
 }
 
