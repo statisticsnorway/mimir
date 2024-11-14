@@ -1,5 +1,5 @@
 import '/lib/ssb/polyfills/nashorn'
-/* eslint-disable new-cap */
+
 // @ts-ignore
 import JSONstat from 'jsonstat-toolkit/import.mjs'
 import { query, Content, ContentsResult } from '/lib/xp/content'

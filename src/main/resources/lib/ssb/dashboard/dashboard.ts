@@ -450,6 +450,7 @@ function getPublishJobParsedResult(refreshDataResult: Array<StatisticsPublishRes
             datasetType: dataSource?.data?.dataSource?._selected,
             datasetKey: dataSource ? extractKey(dataSource) : null,
           }
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (e) {
           return {
             id: ds.id,
@@ -762,8 +763,8 @@ interface QueryLogNode extends Node {
 
 interface DashboardRefreshResult {
   id: string
-  dataset: DashboardRefreshResultDataset | {}
-  logData: DashboardRefreshResultLogData | {}
+  dataset: DashboardRefreshResultDataset | object
+  logData: DashboardRefreshResultLogData | object
 }
 
 interface DashboardRefreshResultDataset {
