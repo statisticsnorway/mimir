@@ -166,6 +166,7 @@
                     <div class="col">
                       <h2
                         data-th-if="${region.hideTitle && region.title}"
+                        style="display: none"
                         class="sr-only sr-only-focusable mb-5"
                         data-th-text="${region.title}"
                       ></h2>
@@ -183,6 +184,7 @@
             <!-- Subtitle for content in border-top-green containers -->
             <h2
               data-th-if="${region.view == 'card' && region.hideTitle && region.title}"
+              style="display: none"
               class="sr-only sr-only-focusable mb-5"
               data-th-text="${region.title}"
             ></h2>
