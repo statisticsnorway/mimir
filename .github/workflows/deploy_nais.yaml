@@ -140,6 +140,6 @@ jobs:
               owner: context.repo.owner,
               issue_number: context.issue.number,
               repo: context.repo.repo,
-              body: `URL to deployed Mimir app on NAIS:
+              body: `URL to deployed Mimir app on NAIS, visit:
                 https://ssbno-${{ env.ISSUE_NUMBER }}.intern.test.ssb.no`
             })
