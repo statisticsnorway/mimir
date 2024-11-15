@@ -28,7 +28,6 @@ export function preview(req: XP.Request): XP.Response {
   return renderPart(req)
 }
 
-// eslint-disable-next-line complexity
 function renderPart(req: XP.Request): XP.Response {
   const page = getContent<Content<Statistics>>()
   if (!page) throw Error('No page found')

@@ -99,7 +99,6 @@ function getBkibolCalculatorComponent(req: XP.Request, page: Content<BkibolCalcu
 }
 
 function lastPeriod(bkibolData: Dataset | null): CalculatorPeriod {
-  // eslint-disable-next-line new-cap
   const bkiBolDataDimension: Dimension | null = bkibolData?.Dimension('Tid') as Dimension
   const dataTime: string[] = bkiBolDataDimension ? (bkiBolDataDimension.id as string[]) : []
   const lastTimeItem: string = dataTime[dataTime.length - 1]

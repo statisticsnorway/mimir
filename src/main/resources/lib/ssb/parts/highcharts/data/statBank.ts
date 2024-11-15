@@ -1,4 +1,3 @@
-/* eslint-disable new-cap */
 // @ts-nocheck
 
 import { getMunicipality } from '/lib/ssb/dataset/klass/municipalities'
