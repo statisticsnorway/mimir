@@ -1,10 +1,14 @@
 @media print {
   @page {
-    margin-top: 2rem;
+    margin-top: 2rem !important;
   }
 
   body {
     zoom: 70% !important;
+
+    .title-ingress-wrapper h1 {
+      font-size: 3rem;
+    }
   }
 
   .container {
@@ -32,6 +36,7 @@
   .part-picture-card,
   .part-related-external-links,
   .part-related-statistics,
+  .part-divider,
   .download-table-container {
     display: none !important;
   }
@@ -68,11 +73,5 @@
     .ssb-tabs {
       display: none !important;
     }
-  }
-
-  .part-picture-card + .part-divider,
-  .part-related-articles + .part-divider,
-  .part-related-statistics + .part-divider {
-    display: none !important;
   }
 }
