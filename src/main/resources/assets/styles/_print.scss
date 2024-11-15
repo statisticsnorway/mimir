@@ -5,10 +5,6 @@
 
   body {
     zoom: 70% !important;
-
-    .title-ingress-wrapper h1 {
-      font-size: 3rem;
-    }
   }
 
   .container {
@@ -19,8 +15,13 @@
   .title-ingress-wrapper {
     margin-top: 0rem !important;
     padding-top: 0rem !important;
+
+    h1 {
+      font-size: 3rem;
+    }
   }
 
+  // Hide from print
   #breadcrumbs,
   #popup,
   #footer,
@@ -28,8 +29,6 @@
   .header-content,
   .hamburger,
   .highcharts-exporting-group,
-  .associated-statistics,
-  .associated-article-archives,
   .mobileMenuDivider,
   .show-datatable,
   .part-related-articles,
@@ -45,6 +44,7 @@
     margin-top: 0 !important;
   }
 
+  // Avoid page-break
   .highchart-wrapper,
   .part-static-visualization,
   .part-table,
