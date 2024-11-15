@@ -24,7 +24,11 @@ spec:
     outbound:
       external:
         - host: market.enonic.com
+          ports:
+            - port: 443
         - host: repo.enonic.com
+          ports:
+            - port: 443
         - host: github.com
           ports:
             - port: 22
@@ -33,7 +37,21 @@ spec:
           ports:
             - port: 22
             - port: 443
-
+        - host: www.qa.ssb.no
+          ports:
+            - port: 443
+        - host: i.qa.ssb.no
+          ports:
+            - port: 443
+        - host: ext-i.qa.ssb.no
+          ports:
+            - port: 443
+        - host: data.qa.ssb.no
+          ports:
+            - port: 443
+        - host: statreg-rapport.staging.ssb.no
+          ports:
+            - port: 443
   resources:
     limits:
       memory: 2Gi
