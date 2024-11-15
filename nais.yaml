@@ -26,7 +26,13 @@ spec:
         - host: market.enonic.com
         - host: repo.enonic.com
         - host: github.com
+          ports:
+            - 22
+            - 9418
         - host: raw.githubusercontent.com
+          ports:
+            - 22
+            - 443
 
   resources:
     limits:
