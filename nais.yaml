@@ -26,7 +26,13 @@ spec:
         - host: market.enonic.com
         - host: repo.enonic.com
         - host: github.com
+          ports:
+            - 22
+            - 9418
         - host: raw.githubusercontent.com
+          ports:
+            - 22
+            - 443
 
   resources:
     limits:
@@ -39,9 +45,15 @@ spec:
   prometheus:
     enabled: false
 
+  envFrom:
+    - secret: gitpull-config
+  filesFrom:
+    - secret: gitpull-key-private
+      mountPath: /enonic-xp/home/config/ssh
+
   env:
     - name: VHOST_HOST
-      value: ssbno-{{branch}}.external.test.ssb.cloud.nais.io
+      value: ssbno-{{branch}}.intern.test.ssb.no
 
   ingresses:
-    - https://ssbno-{{branch}}.external.test.ssb.cloud.nais.io # must match vhost
+    - https://ssbno-{{branch}}.intern.test.ssb.no # must match vhost
