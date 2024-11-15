@@ -135,6 +135,7 @@ jobs:
         uses: the-wright-jamie/update-pr-info-action@v1
         with:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          head-branch-regex: 'mim-\d{2,4}'
           body-template: |
             ## Branch Deployment to NAIS!
             [🗄️ Link to branch admin interface!](https://ssbno-${{ env.ISSUE_NUMBER }}.intern.test.ssb.no/admin)
