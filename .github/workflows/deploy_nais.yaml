@@ -137,7 +137,7 @@ jobs:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
           head-branch-regex: 'mim-\d{2,4}'
           body-template: |
-            ## Branch Deployment to NAIS!
+            ### Branch Deployment to NAIS!
             [🗄️ Link to branch admin interface!](https://ssbno-${{ env.ISSUE_NUMBER }}.intern.test.ssb.no/admin)
             [📰 Front page can be found here!](https://ssbno-${{ env.ISSUE_NUMBER }}.intern.test.ssb.no/)
           body-update-action: "suffix"
