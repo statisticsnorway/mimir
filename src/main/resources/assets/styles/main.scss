@@ -89,8 +89,8 @@ $container-max-widths: (
 @import './statisticFigures';
 @import './statisticDescription';
 @import './statisticContact';
-@import "./popup";
-@import "./print";
+@import './popup';
+@import './print';
 
 body {
   -moz-osx-font-smoothing: grayscale;
@@ -104,12 +104,12 @@ section {
   width: 100%;
 }
 
-section+section,
-.xp-layout+.xp-layout {
+section + section,
+.xp-layout + .xp-layout {
   margin-top: $spacer * 3;
 }
 
-section.part-divider+section.part-divider {
+section.part-divider + section.part-divider {
   display: none;
 }
 
@@ -167,7 +167,7 @@ section.part-divider+section.part-divider {
       padding-right: 0 !important;
     }
 
-    .row>* {
+    .row > * {
       padding: 0;
     }
   }
