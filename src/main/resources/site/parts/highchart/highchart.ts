@@ -176,7 +176,6 @@ function createDataFromDataSource(
     let parsedData: JSONstatType | TbmlDataUniform | object | string | undefined =
       datasetFromRepo && datasetFromRepo.data
     if (parsedData !== undefined && type === DataSourceType.STATBANK_API) {
-      // eslint-disable-next-line new-cap
       parsedData = JSONstat(parsedData).Dataset(0)
     }
     // create config
