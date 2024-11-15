@@ -40,6 +40,7 @@ function renderPart(req: XP.Request): XP.Response {
 
   try {
     JSON.parse(highchartConfigString)
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (e) {
     return errorConfig()
   }

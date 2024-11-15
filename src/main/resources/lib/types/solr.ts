@@ -41,9 +41,8 @@ export interface SolrResult {
       groups: Array<SolrGroup>
     }
   }
-  // eslint-disable-next-line camelcase
+
   facet_counts: {
-    // eslint-disable-next-line camelcase
     facet_queries: {
       uke: number
       maned: number
@@ -51,7 +50,7 @@ export interface SolrResult {
       '5ar': number
       udatert: number
     }
-    // eslint-disable-next-line camelcase
+
     facet_fields: {
       innholdstype: Array<string | number>
       hovedemner: Array<string | number>

@@ -150,4 +150,4 @@ const Popup = () => {
   )
 }
 
-export default (props: {}) => <Popup {...props} />
+export default (props: object) => <Popup {...props} />
