@@ -132,14 +132,11 @@ jobs:
           VAR: image=${{ env.REGISTRY }}/${{env.IMAGE}}:${{ env.TAG }},branch=${{ env.ISSUE_NUMBER }}
           DEPLOY_SERVER: deploy.ssb.cloud.nais.io:443
       - name: Add comment to PR
-        uses: actions/github-script@v7
+        uses: the-wright-jamie/update-pr-info-action@v1
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            github.rest.issues.createComment({
-              owner: context.repo.owner,
-              issue_number: context.issue.number,
-              repo: context.repo.repo,
-              body: `URL to deployed Mimir app on NAIS:
-                https://ssbno-${{ env.ISSUE_NUMBER }}.intern.test.ssb.no`
-            })
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          body-template: |
+            ## Branch Deployment to NAIS!
+            [🗄️ Link to branch admin interface!](https://ssbno-${{ env.ISSUE_NUMBER }}.intern.test.ssb.no/admin)
+            [📰 Front page can be found here!](https://ssbno-${{ env.ISSUE_NUMBER }}.intern.test.ssb.no/)
+          body-update-action: "suffix"
