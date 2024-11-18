@@ -146,7 +146,7 @@
               <div class="container">
                 <div class="row">
                   <div class="col">
-                    <h2 data-th-if="${region.hideTitle && region.title}" class="sr-only sr-only-focusable mb-5"
+                    <h2 data-th-if="${region.hideTitle && region.title}" class="d-none mb-5" 
                       data-th-text="${region.title}"></h2>
                     <h2 data-th-if="${!region.hideTitle && region.title}" class="mb-5 mt-2 pt-5"
                       data-th-text="${region.title}"></h2>
@@ -158,7 +158,7 @@
 
           <!-- Subtitle for content in border-top-green containers -->
           <h2 data-th-if="${region.view == 'card' && region.hideTitle && region.title}"
-            class="sr-only sr-only-focusable mb-5" data-th-text="${region.title}"></h2>
+            class="d-none mb-5" data-th-text="${region.title}"></h2>
           <h2 data-th-if="${region.view == 'card' && !region.hideTitle && region.title}" class="mb-5"
             data-th-text="${region.title}"></h2>
 
