@@ -48,7 +48,7 @@ jobs:
       - name: Send success message to Slack
         id: slack_success
         if: success()
-        uses: slackapi/slack-github-action@v1
+        uses: slackapi/slack-github-action@v2
         with:
           # Using Github block kit (https://api.slack.com/reference/block-kit/blocks) to configure the Slack message, see https://docs.github.com/en/actions/learn-github-actions/contexts
           # for more information about context variables
@@ -91,7 +91,7 @@ jobs:
       - name: Send failure message to Slack
         id: slack_failure
         if: failure()
-        uses: slackapi/slack-github-action@v1
+        uses: slackapi/slack-github-action@v2
         with:
           payload: |
             {
