@@ -168,7 +168,6 @@ function createDataFromDataSource(
       highchart.data.dataSource.tbprocessor?.urlOrId
         ? getDataset(type, UNPUBLISHED_DATASET_BRANCH, getTbprocessorKey(highchart))
         : null
-
     // get dataset
     const datasetFromRepo: DatasetRepoNode<JSONstatType | TbmlDataUniform | object> | undefined = draftData
       ? draftData
