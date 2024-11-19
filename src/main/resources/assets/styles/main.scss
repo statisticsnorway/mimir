@@ -89,7 +89,8 @@ $container-max-widths: (
 @import './statisticFigures';
 @import './statisticDescription';
 @import './statisticContact';
-@import "./popup";
+@import './popup';
+@import './print';
 
 body {
   -moz-osx-font-smoothing: grayscale;
@@ -185,7 +186,8 @@ section.part-divider + section.part-divider {
 .truncate-2-lines {
   overflow: hidden;
   display: -webkit-box;
-  -webkit-line-clamp: 2; /* number of lines to show */
+  -webkit-line-clamp: 2;
+  /* number of lines to show */
   -webkit-box-orient: vertical;
 }
 
@@ -196,9 +198,11 @@ section.part-divider + section.part-divider {
   opacity: 0;
   transition: opacity 0.2s ease-in-out;
 }
+
 .anchor-wrapper {
   border: none;
 }
+
 .anchor-wrapper:hover .link-anchor {
   opacity: 1;
 }

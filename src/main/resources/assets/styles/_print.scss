@@ -1,0 +1,77 @@
+@media print {
+  @page {
+    margin-top: 2rem !important;
+  }
+
+  body {
+    zoom: 70% !important;
+  }
+
+  .container {
+    width: 100% !important;
+    min-width: 992px !important;
+  }
+
+  .title-ingress-wrapper {
+    margin-top: 0rem !important;
+    padding-top: 0rem !important;
+
+    h1 {
+      font-size: 3rem;
+    }
+  }
+
+  // Hide from print
+  #breadcrumbs,
+  #popup,
+  #footer,
+  .global-links,
+  .header-content,
+  .hamburger,
+  .highcharts-exporting-group,
+  .mobileMenuDivider,
+  .show-datatable,
+  .part-related-articles,
+  .part-picture-card,
+  .part-related-external-links,
+  .part-related-statistics,
+  .part-divider,
+  .download-table-container {
+    display: none !important;
+  }
+
+  .highchart-wrapper {
+    margin-top: 0 !important;
+  }
+
+  // Avoid page-break
+  .highchart-wrapper,
+  .part-static-visualization,
+  .part-table,
+  img {
+    page-break-inside: avoid;
+  }
+
+  .article {
+    .associated-statistics,
+    .associated-article-archives {
+      display: none !important;
+    }
+
+    .ssb-expansion-box .content {
+      max-height: none;
+      opacity: 1;
+    }
+  }
+
+  .part-static-visualization {
+    .ssb-expansion-box .content {
+      max-height: none;
+      opacity: 1;
+    }
+
+    .ssb-tabs {
+      display: none !important;
+    }
+  }
+}
