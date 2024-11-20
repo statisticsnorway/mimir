@@ -40,13 +40,11 @@ export function getRssItemsNews(): string | null {
   return xml
 }
 
-export function getNews(): News {
+export function getNews(): NewsItem[] {
   const mainSubjects: SubjectItem[] = getMainSubjects(dummyReq as XP.Request)
   const articles: NewsItem[] = getArticles(mainSubjects)
   const statistics: NewsItem[] = getStatistics(mainSubjects)
-  return {
-    news: articles.concat(statistics),
-  }
+  return articles.concat(statistics)
 }
 
 function getArticles(mainSubjects: SubjectItem[]): NewsItem[] {
@@ -182,8 +180,4 @@ interface NewsItem {
   language: string // language
   pubDate: string // firstPublished
   shortname: string // statreg shortname
-}
-
-interface News {
-  news: NewsItem[]
 }

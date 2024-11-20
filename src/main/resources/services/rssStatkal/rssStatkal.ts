@@ -1,4 +1,4 @@
-import { getNews, getRssItemsNews } from '/lib/ssb/rss/news'
+import { getStatkal, getRssItemsStatkal } from '/lib/ssb/rss/statkal'
 
 export function get(req: XP.Request): XP.Response {
   const format: string = req.params.format ?? 'json'
@@ -7,14 +7,14 @@ export function get(req: XP.Request): XP.Response {
 
 function getRssItemsJson(): XP.Response {
   return {
-    body: getNews(),
+    body: getStatkal(),
     contentType: 'application/json',
   }
 }
 
 function getRssItemsXml(): XP.Response {
   return {
-    body: getRssItemsNews(),
+    body: getRssItemsStatkal(),
     contentType: 'text/xml',
   }
 }

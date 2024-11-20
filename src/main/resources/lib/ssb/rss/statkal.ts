@@ -58,6 +58,14 @@ export function getRssItemsStatkal(): string | null {
   return xml
 }
 
+export function getStatkal(): RssRelease[] {
+  const statisticVariants: ContentLight<ReleaseVariant>[] = getUpcompingStatisticVariantsFromRepo()
+  const allMainSubjects: SubjectItem[] = getMainSubjects(dummyReq as XP.Request)
+  const upcomingVariants: StatkalVariant[] = getUpcomingVariants(statisticVariants, allMainSubjects)
+  const upcomingReleases: StatkalRelease[] = getUpcomingReleases(statisticVariants)
+  return getRssReleases(upcomingVariants, upcomingReleases)
+}
+
 function getUpcomingVariants(
   statisticVariants: ContentLight<ReleaseVariant>[],
   allMainSubjects: SubjectItem[]
