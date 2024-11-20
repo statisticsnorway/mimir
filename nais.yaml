@@ -54,9 +54,9 @@ spec:
             - port: 443
   resources:
     limits:
-      memory: 2Gi
+      memory: 4Gi
     requests:
-      memory: 1Gi
+      memory: 2Gi
 
   ttl: 168h
 
