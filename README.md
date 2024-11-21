@@ -93,3 +93,4 @@ Tests will run again on subsequent commits to the same branch.
 Upon merging a branch to Master, it is built and deployed to QA where *mabl* tests it again.
 
 Deploying to PROD is done manually through a Github action.
+HELLO NAIS
