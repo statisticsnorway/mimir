@@ -91,7 +91,7 @@ export function sanitizeQuery(name: string): string {
   }
   // Allowed characters, extracted from name data using this little script, ensuring we include all actually used characters:
   // https://gist.github.com/Glenruben/2e2b2a32ddbfe4216d8b0791e3667635
-  const approved = '-ABCDEFGHIJKLMNOPQRSTUVWXYZÁÄÅÆÈÉËÍÏÑÓÔÖØÜÝ '
+  const approved = `-'´\`ABCDEFGHIJKLMNOPQRSTUVWXYZÁÄÅÆÈÉËÍÏÑÓÔÖØÜÝ `
   return whitelist(name.toUpperCase(), approved)
 }
 
