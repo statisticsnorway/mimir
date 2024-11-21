@@ -15,10 +15,7 @@ const dummyReq: Partial<XP.Request> = {
 }
 
 export function getRssItemsNews(): string | null {
-  const mainSubjects: SubjectItem[] = getMainSubjects(dummyReq as XP.Request)
-  const articles: NewsItem[] = getArticles(mainSubjects)
-  const statistics: NewsItem[] = getStatistics(mainSubjects)
-  const news: NewsItem[] = articles.concat(statistics)
+  const news: NewsItem[] = getNews()
   const xml = `<?xml version="1.0" encoding="utf-8"?>
     <rssitems count="${news.length}">
       ${news
