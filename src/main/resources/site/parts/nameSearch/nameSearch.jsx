@@ -252,7 +252,7 @@ function NameSearch(props) {
   function isNameValid(nameToCheck) {
     // Regexp: Note use of 'i' flag, making the match case insensitive. Also, remember regexp ranges are based on unicode character codes.
     const invalidCharacters =
-      !!nameToCheck && nameToCheck.match(/[^a-zABCDEFGHIJKLMNOPQRSTUVWXYZÁÄÅÆÈÉËÍÏÑÓÔÖØÜÝ\-'´\s]/gim)
+      !!nameToCheck && nameToCheck.match(/[^a-zABCDEFGHIJKLMNOPQRSTUVWXYZÁÄÅÆÈÉËÍÏÑÓÔÖØÜÝ\-'´`\s]/gim)
     return !invalidCharacters
   }
 
