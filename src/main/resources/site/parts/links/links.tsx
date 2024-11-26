@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link, TableLink } from '@statisticsnorway/ssb-component-library'
 import { ArrowRight } from 'react-feather'
-import { LinksProps } from '../../../lib/types/partTypes/links'
+import { LinksProps } from '/lib/types/partTypes/links'
 
 const Links = (props: LinksProps) => {
   const { children, href, withIcon, linkType, text, description } = props

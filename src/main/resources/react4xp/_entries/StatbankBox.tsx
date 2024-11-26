@@ -1,6 +1,6 @@
 import React from 'react'
 import { ArrowRight } from 'react-feather'
-import { type StatbankBoxProps } from '../../lib/types/partTypes/statbankBox'
+import { type StatbankBoxProps } from '/lib/types/partTypes/statbankBox'
 
 const StatbankBox = (props: StatbankBoxProps) => {
   const { title, href, icon, fullWidth } = props

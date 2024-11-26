@@ -1,7 +1,7 @@
 import React from 'react'
 import { Title, Link } from '@statisticsnorway/ssb-component-library'
 import { Row, Col } from 'react-bootstrap'
-import { InfoGraphicsProps } from '../../../lib/types/partTypes/infoGraphics'
+import { InfoGraphicsProps } from '/lib/types/partTypes/infoGraphics'
 
 function InfoGraphics(props: InfoGraphicsProps) {
   return (

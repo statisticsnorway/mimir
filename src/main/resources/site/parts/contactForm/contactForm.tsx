@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Form, Container, Row, Col } from 'react-bootstrap'
 import { Input, Button, Dropdown, TextArea, Divider, Title, FormError } from '@statisticsnorway/ssb-component-library'
 import axios from 'axios'
-import { type Phrases } from '../../../lib/types/language'
+import { type Phrases } from '/lib/types/language'
 
 interface ContactFormProps {
   recaptchaSiteKey?: string

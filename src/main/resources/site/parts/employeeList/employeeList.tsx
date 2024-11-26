@@ -1,12 +1,12 @@
 import React from 'react'
 import { Link, Divider, Text } from '@statisticsnorway/ssb-component-library'
-import { sanitize } from '../../../lib/ssb/utils/htmlUtils'
+import { sanitize } from '/lib/ssb/utils/htmlUtils'
 import {
   type Area,
   type EmployeeListProps,
   type IEmployeeMap,
   type IPreparedEmployee,
-} from '../../../lib/types/partTypes/employeeList'
+} from '/lib/types/partTypes/employeeList'
 
 function EmployeeList(props: EmployeeListProps) {
   const { employees, total, pageTitle, pageDescription } = props

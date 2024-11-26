@@ -4,7 +4,7 @@ import { render } from '/lib/thymeleaf'
 import { render as r4xpRender } from '/lib/enonic/react4xp'
 import { getLanguage } from '/lib/ssb/utils/language'
 import { type Language } from '/lib/types/language'
-import { randomUnsafeString } from '../../lib/ssb/utils/utils'
+import { randomUnsafeString } from '/lib/ssb/utils/utils'
 
 const fourOFourView = resolve('./404.html')
 const mainErrorView = resolve('./error.html')

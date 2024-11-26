@@ -13,8 +13,8 @@ import {
 import { default as isEmpty } from 'ramda/es/isEmpty'
 import { NumericFormat } from 'react-number-format'
 import { Alert } from 'react-bootstrap'
-import { type TableProps } from '../../lib/types/partTypes/table'
-import { PreliminaryData, type TableCellUniform } from '../../lib/types/xmlParser'
+import { type TableProps } from '/lib/types/partTypes/table'
+import { PreliminaryData, type TableCellUniform } from '/lib/types/xmlParser'
 
 declare global {
   interface Window {

@@ -1,5 +1,5 @@
 import React from 'react'
-import { BannerProps } from '../../../lib/types/partTypes/banner'
+import { BannerProps } from '/lib/types/partTypes/banner'
 
 function Banner(props: BannerProps) {
   const {

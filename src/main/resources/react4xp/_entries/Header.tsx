@@ -1,8 +1,8 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import { Divider, Input, Link } from '@statisticsnorway/ssb-component-library'
 import { ChevronDown, ChevronRight, Menu, X } from 'react-feather'
-import { sanitize } from '../../lib/ssb/utils/htmlUtils'
-import { HeaderContent } from '../../lib/types/header'
+import { sanitize } from '/lib/ssb/utils/htmlUtils'
+import { HeaderContent } from '/lib/types/header'
 
 function Header(props: HeaderContent) {
   const [showSubMenu, setShowSubMenu] = useState(false)

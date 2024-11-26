@@ -4,9 +4,9 @@ import { Container, Row, Col } from 'react-bootstrap'
 import { ChevronDown } from 'react-feather'
 import { default as groupBy } from 'ramda/es/groupBy'
 import axios from 'axios'
-import { sanitize } from '../../lib/ssb/utils/htmlUtils'
-import { type ArticleArchiveProps, type ParsedArticleData } from '../../lib/types/partTypes/articleArchive'
-import { generateImageUrls } from '../../lib/ssb/utils/generateImageUrlUtils'
+import { sanitize } from '/lib/ssb/utils/htmlUtils'
+import { type ArticleArchiveProps, type ParsedArticleData } from '/lib/types/partTypes/articleArchive'
+import { generateImageUrls } from '/lib/ssb/utils/generateImageUrlUtils'
 
 function ArticleArchive(props: ArticleArchiveProps) {
   const {

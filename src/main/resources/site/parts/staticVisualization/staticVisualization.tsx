@@ -12,8 +12,8 @@ import {
 } from '@statisticsnorway/ssb-component-library'
 import { Row, Col } from 'react-bootstrap'
 import { NumericFormat } from 'react-number-format'
-import { type StaticVisualizationProps } from '../../../lib/types/partTypes/staticVisualization'
-import { HtmlTable, type BodyCell } from '../../../lib/types/partTypes/table'
+import { type StaticVisualizationProps } from '/lib/types/partTypes/staticVisualization'
+import { HtmlTable, type BodyCell } from '/lib/types/partTypes/table'
 
 function StaticVisualization(props: StaticVisualizationProps) {
   const [activeTab, changeTab] = useState('figure')

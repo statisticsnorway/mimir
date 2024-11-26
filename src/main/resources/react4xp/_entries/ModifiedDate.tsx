@@ -1,6 +1,6 @@
 import React from 'react'
 import { Glossary } from '@statisticsnorway/ssb-component-library'
-import { sanitize } from '../../lib/ssb/utils/htmlUtils'
+import { sanitize } from '/lib/ssb/utils/htmlUtils'
 
 interface ModifiedDateProps {
   children: string

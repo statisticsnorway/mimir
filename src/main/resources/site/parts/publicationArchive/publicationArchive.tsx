@@ -3,12 +3,12 @@ import { Button, Divider, Link, Title, Text, Dropdown } from '@statisticsnorway/
 import { NumericFormat } from 'react-number-format'
 import { ChevronDown } from 'react-feather'
 import axios from 'axios'
-import { sanitize } from '../../../lib/ssb/utils/htmlUtils'
+import { sanitize } from '/lib/ssb/utils/htmlUtils'
 import {
   type DropdownItem,
   type PublicationArchiveProps,
   type PublicationItem,
-} from '../../../lib/types/partTypes/publicationArchive'
+} from '/lib/types/partTypes/publicationArchive'
 
 function PublicationArchive(props: PublicationArchiveProps) {
   const {

@@ -15,10 +15,10 @@ import { ChevronDown, User, X } from 'react-feather'
 import axios from 'axios'
 import { NumericFormat } from 'react-number-format'
 import { Col, Row } from 'react-bootstrap'
-import { sanitize } from '../../../lib/ssb/utils/htmlUtils'
-import { NameSearchData, type SearchResultProps } from '../../../lib/types/partTypes/searchResult'
-import { type DropdownItem } from '../../../lib/types/partTypes/publicationArchive'
-import { type PreparedSearchResult } from '../../../lib/types/solr'
+import { sanitize } from '/lib/ssb/utils/htmlUtils'
+import { NameSearchData, type SearchResultProps } from '/lib/types/partTypes/searchResult'
+import { type DropdownItem } from '/lib/types/partTypes/publicationArchive'
+import { type PreparedSearchResult } from '/lib/types/solr'
 
 const ADDITIONAL_HITS_LENGTH = 15
 

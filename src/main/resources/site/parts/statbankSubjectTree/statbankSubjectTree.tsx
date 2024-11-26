@@ -4,7 +4,7 @@ import {
   type MainSubjectWithSubs,
   type PreparedSubs,
   type StatbankSubjectTreeProps,
-} from '../../../lib/types/partTypes/statbankSubjectTree'
+} from '/lib/types/partTypes/statbankSubjectTree'
 
 function StatbankSubjectTree(props: StatbankSubjectTreeProps) {
   function renderStatisticLink(statistic: PreparedSubs['statistics'][0]) {

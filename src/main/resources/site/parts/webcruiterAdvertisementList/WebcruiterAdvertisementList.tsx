@@ -7,7 +7,7 @@ import {
   type WebcruiterAdvertisementListProps,
   type AdvertisementList,
   type WebcruiterAdvertisementListRssFeedResponseErrorMessage,
-} from '../../../lib/types/partTypes/webcruiterAdvertisementList'
+} from '/lib/types/partTypes/webcruiterAdvertisementList'
 
 const WebcruiterAdvertistmentList = (props: WebcruiterAdvertisementListProps) => {
   const {
