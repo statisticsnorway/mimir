@@ -4,8 +4,8 @@ import { Input, Button, Dropdown, Divider, FormError, Link, Title } from '@stati
 import axios from 'axios'
 import { NumericFormat } from 'react-number-format'
 import { X } from 'react-feather'
-import { sanitize } from '../../lib/ssb/utils/htmlUtils'
-import { KpiCalculatorProps } from '../../lib/types/partTypes/kpiCalculator'
+import { sanitize } from '/lib/ssb/utils/htmlUtils'
+import { KpiCalculatorProps } from '/lib/types/partTypes/kpiCalculator'
 
 function KpiCalculator(props: KpiCalculatorProps) {
   const validMaxYear = props.lastUpdated.year

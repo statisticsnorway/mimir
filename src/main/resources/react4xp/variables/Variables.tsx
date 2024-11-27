@@ -1,6 +1,6 @@
 import React from 'react'
 import { Text } from '@statisticsnorway/ssb-component-library'
-import { type VariablesProps } from '../../lib/types/partTypes/variables'
+import { type VariablesProps } from '/lib/types/partTypes/variables'
 import VariableCardsList from './VariableCardsList'
 
 export const DISPLAY_TYPE_CARDS = 'CARDS'

@@ -12,8 +12,8 @@ import {
 } from '@statisticsnorway/ssb-component-library'
 import axios from 'axios'
 import { NumericFormat } from 'react-number-format'
-import { KpiCalculatorProps } from '../../../lib/types/partTypes/kpiCalculator'
-import { DropdownItem } from '../../../lib/types/partTypes/publicationArchive'
+import { KpiCalculatorProps } from '/lib/types/partTypes/kpiCalculator'
+import { DropdownItem } from '/lib/types/partTypes/publicationArchive'
 
 function HusleieCalculator(props: KpiCalculatorProps) {
   const validMaxYear = props.lastUpdated.year

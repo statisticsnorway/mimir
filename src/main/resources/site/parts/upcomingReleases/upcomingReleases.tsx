@@ -3,19 +3,19 @@ import { Button, Link } from '@statisticsnorway/ssb-component-library'
 import axios from 'axios'
 import { ChevronDown } from 'react-feather'
 import { parseISO } from 'date-fns/parseISO'
-import { sanitize } from '../../../lib/ssb/utils/htmlUtils'
+import { sanitize } from '/lib/ssb/utils/htmlUtils'
 import {
   type FlattenedUpcomingReleasesDate,
   type FlattenedUpcomingReleases,
   type UpcomingReleasesProps,
-} from '../../../lib/types/partTypes/upcomingReleases'
+} from '/lib/types/partTypes/upcomingReleases'
 import {
   type PreparedContentRelease,
   type PreparedUpcomingRelease,
   type PreparedVariant,
   type PreparedStatistics,
   type YearReleases,
-} from '../../../lib/types/variants'
+} from '/lib/types/variants'
 
 // TODO: Need the flattened and transformed data to be typed
 

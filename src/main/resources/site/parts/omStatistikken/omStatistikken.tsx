@@ -1,6 +1,6 @@
 import React from 'react'
 import Accordion from '/react4xp/accordion/Accordion'
-import { type AboutTheStatisticsProps } from '../../../lib/types/partTypes/omStatistikken'
+import { type AboutTheStatisticsProps } from '/lib/types/partTypes/omStatistikken'
 
 const OmStatistikken = (props: AboutTheStatisticsProps) => {
   const { ingress, label, lastUpdatedPhrase, lastUpdated, accordions } = props

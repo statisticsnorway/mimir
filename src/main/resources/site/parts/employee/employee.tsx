@@ -1,8 +1,8 @@
 import React from 'react'
 import { Button, Title, Link, Paragraph, Accordion } from '@statisticsnorway/ssb-component-library'
 import { Share2, Send, Smartphone, Eye, Home, Download, Image } from 'react-feather'
-import { sanitize } from '../../../lib/ssb/utils/htmlUtils'
-import { EmployeeProps } from '../../../lib/types/partTypes/employee'
+import { sanitize } from '/lib/ssb/utils/htmlUtils'
+import { EmployeeProps } from '/lib/types/partTypes/employee'
 
 const Employee = (props: EmployeeProps) => {
   const {

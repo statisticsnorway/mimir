@@ -1,6 +1,6 @@
 import React from 'react'
 import { ArrowRight } from 'react-feather'
-import { FrontPageKeyFigureData } from '../../lib/types/partTypes/frontpageKeyfigures'
+import { FrontPageKeyFigureData } from '/lib/types/partTypes/frontpageKeyfigures'
 
 interface FrontpageKeyfiguresProps {
   keyFigures: FrontPageKeyFigureData[]

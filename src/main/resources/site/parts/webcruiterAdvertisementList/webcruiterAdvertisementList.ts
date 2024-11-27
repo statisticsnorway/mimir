@@ -1,18 +1,18 @@
 import { getComponent, getContent } from '/lib/xp/portal'
 import { render } from '/lib/enonic/react4xp'
 
-import { fromPartCache } from '../../../lib/ssb/cache/partCache'
-import { formatDate } from '../../../lib/ssb/utils/dateUtils'
-import { ensureArray } from '../../../lib/ssb/utils/arrayUtils'
-import { renderError } from '../../../lib/ssb/error/error'
+import { fromPartCache } from '/lib/ssb/cache/partCache'
+import { formatDate } from '/lib/ssb/utils/dateUtils'
+import { ensureArray } from '/lib/ssb/utils/arrayUtils'
+import { renderError } from '/lib/ssb/error/error'
 import {
   type WebcruiterAdvertisementListRssFeedResponse,
   type WebcruiterAdvertisementListProps,
   type NestedItemValue,
-} from '../../../lib/types/partTypes/webcruiterAdvertisementList'
-import { getPhrases } from '../../../lib/ssb/utils/language'
+} from '/lib/types/partTypes/webcruiterAdvertisementList'
+import { getPhrases } from '/lib/ssb/utils/language'
 
-import { fetchWebcruiterAdvertisementListRSSFeed } from '../../../lib/ssb/parts/webcruiterAdvertisementList'
+import { fetchWebcruiterAdvertisementListRSSFeed } from '/lib/ssb/parts/webcruiterAdvertisementList'
 
 export function get(req: XP.Request): XP.Response {
   try {

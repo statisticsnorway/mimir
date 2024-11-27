@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { Title, Link, Button, Divider, Dropdown } from '@statisticsnorway/ssb-component-library'
 import { ChevronDown } from 'react-feather'
 import axios from 'axios'
-import { type SubjectArticleListProps } from '../../../lib/types/partTypes/subjectArticleList'
-import { type DropdownItem } from '../../../lib/types/partTypes/publicationArchive'
+import { type SubjectArticleListProps } from '/lib/types/partTypes/subjectArticleList'
+import { type DropdownItem } from '/lib/types/partTypes/publicationArchive'
 
 /* TODO:
 - Fikse sortering (?)

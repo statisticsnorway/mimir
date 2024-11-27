@@ -1,6 +1,6 @@
 import React from 'react'
 import { ArrowRight, ArrowRightCircle } from 'react-feather'
-import { type ImageUrls, type PictureCardLinksContent } from '../../lib/types/partTypes/pictureCardLinks'
+import { type ImageUrls, type PictureCardLinksContent } from '/lib/types/partTypes/pictureCardLinks'
 
 interface PictureLinkProps {
   title?: string
