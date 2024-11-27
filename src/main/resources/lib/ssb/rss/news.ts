@@ -15,15 +15,12 @@ const dummyReq: Partial<XP.Request> = {
 }
 
 export function getRssItemsNews(): string | null {
-  const mainSubjects: SubjectItem[] = getMainSubjects(dummyReq as XP.Request)
-  const articles: Array<News> = getArticles(mainSubjects)
-  const statistics: Array<News> = getStatistics(mainSubjects)
-  const news: Array<News> = articles.concat(statistics)
+  const news: NewsItem[] = getNews()
   const xml = `<?xml version="1.0" encoding="utf-8"?>
     <rssitems count="${news.length}">
       ${news
         .map(
-          (n: News) => `<rssitem>
+          (n: NewsItem) => `<rssitem>
         <guid isPermalink="false">${n.guid}</guid>
         <title>${xmlEscape(n.title)}</title>
         <link>${n.link}</link>
@@ -40,13 +37,20 @@ export function getRssItemsNews(): string | null {
   return xml
 }
 
-function getArticles(mainSubjects: SubjectItem[]): Array<News> {
+export function getNews(): NewsItem[] {
+  const mainSubjects: SubjectItem[] = getMainSubjects(dummyReq as XP.Request)
+  const articles: NewsItem[] = getArticles(mainSubjects)
+  const statistics: NewsItem[] = getStatistics(mainSubjects)
+  return articles.concat(statistics)
+}
+
+function getArticles(mainSubjects: SubjectItem[]): NewsItem[] {
   const from: string = subDays(new Date(), 1).toISOString()
   const to: string = new Date().toISOString()
   const serverOffsetInMilliSeconds: number = parseInt(app.config?.['serverOffsetInMs']) || 0
   const timeZoneIso: string = getTimeZoneIso(serverOffsetInMilliSeconds)
 
-  const news: Array<News> = []
+  const news: Array<NewsItem> = []
   mainSubjects.forEach((mainSubject) => {
     const articles: Array<Content<Article>> = query({
       start: 0,
@@ -89,12 +93,12 @@ function getArticles(mainSubjects: SubjectItem[]): Array<News> {
   return news
 }
 
-function getStatistics(mainSubjects: SubjectItem[]): Array<News> {
+function getStatistics(mainSubjects: SubjectItem[]): NewsItem[] {
   const statregStatistics: Array<StatisticInListing> = fetchStatisticsWithReleaseToday()
   const serverOffsetInMS: number = parseInt(app.config?.['serverOffsetInMs']) || 0
   const timeZoneIso: string = getTimeZoneIso(serverOffsetInMS)
 
-  const statisticsNews: Array<News> = []
+  const statisticsNews: NewsItem[] = []
   if (statregStatistics.length > 0) {
     mainSubjects.forEach((mainSubject) => {
       const statistics: Array<Content<Statistics & Statistic>> = query({
@@ -163,7 +167,7 @@ function getLinkByPath(path: string) {
   return baseUrl + path.substring(site.length)
 }
 
-interface News {
+interface NewsItem {
   guid: string // _id
   title: string // displayName
   link: string // url
