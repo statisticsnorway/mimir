@@ -4,11 +4,11 @@ import { render } from '/lib/thymeleaf'
 import { render as r4xpRender } from '/lib/enonic/react4xp'
 import { getLanguage } from '/lib/ssb/utils/language'
 import { type Language } from '/lib/types/language'
+import { randomUnsafeString } from '/lib/ssb/utils/utils'
 
 const fourOFourView = resolve('./404.html')
 const mainErrorView = resolve('./error.html')
 const genericErrorView = resolve('./generic.html')
-const { randomUnsafeString } = require('../../lib/ssb/utils/utils')
 
 type Error = {
   request: XP.Request
@@ -62,6 +62,7 @@ export function handleError(err: Error) {
       contentType: 'text/html',
       postProcess: true,
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     // fallback in case of full derp
     return {

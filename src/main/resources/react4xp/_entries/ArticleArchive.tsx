@@ -4,9 +4,9 @@ import { Container, Row, Col } from 'react-bootstrap'
 import { ChevronDown } from 'react-feather'
 import { default as groupBy } from 'ramda/es/groupBy'
 import axios from 'axios'
-import { sanitize } from '../../lib/ssb/utils/htmlUtils'
-import { type ArticleArchiveProps, type ParsedArticleData } from '../../lib/types/partTypes/articleArchive'
-import { generateImageUrls } from '../../lib/ssb/utils/generateImageUrlUtils'
+import { sanitize } from '/lib/ssb/utils/htmlUtils'
+import { type ArticleArchiveProps, type ParsedArticleData } from '/lib/types/partTypes/articleArchive'
+import { generateImageUrls } from '/lib/ssb/utils/generateImageUrlUtils'
 
 function ArticleArchive(props: ArticleArchiveProps) {
   const {
@@ -92,7 +92,7 @@ function ArticleArchive(props: ArticleArchiveProps) {
                   const srSubtitle = article.subtitle.replace(' / ', ' ')
                   return (
                     <li key={`articles-${year}-${index}`} className='article-container col-12 p-0 mb-5'>
-                      <Link linkType='header' href={article.href}>
+                      <Link linkType='header' headingSize={3} href={article.href}>
                         <span aria-hidden='true'>{article.title}</span>
                         <span className='sr-only'>{`${article.title} ${srSubtitle.replace(year, '')}`}</span>
                       </Link>
@@ -127,8 +127,8 @@ function ArticleArchive(props: ArticleArchiveProps) {
           <Col className='col-12 d-flex justify-content-center'>
             <img
               src={image}
-              srcSet={`${generateImageUrls(image).imageMobileUrl} 600w, 
-           ${generateImageUrls(image).imageTabletUrl} 992w, 
+              srcSet={`${generateImageUrls(image).imageMobileUrl} 600w,
+           ${generateImageUrls(image).imageTabletUrl} 992w,
            ${image} 1180w`}
               sizes='(max-width: 600px) 600px, (max-width: 992px) 992px, 1180px'
               alt={imageAltText}

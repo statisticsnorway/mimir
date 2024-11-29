@@ -1,6 +1,6 @@
 import React from 'react'
 import { CategoryLink } from '@statisticsnorway/ssb-component-library'
-import { type CategoryLinksProps } from '../../lib/types/partTypes/categoryLinks'
+import { type CategoryLinksProps } from '/lib/types/partTypes/categoryLinks'
 
 const CategoryLinks = (props: CategoryLinksProps) => {
   const { links, methodsAndDocumentationUrl, methodsAndDocumentationLabel } = props

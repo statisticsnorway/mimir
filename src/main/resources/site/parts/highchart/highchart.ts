@@ -168,7 +168,6 @@ function createDataFromDataSource(
       highchart.data.dataSource.tbprocessor?.urlOrId
         ? getDataset(type, UNPUBLISHED_DATASET_BRANCH, getTbprocessorKey(highchart))
         : null
-
     // get dataset
     const datasetFromRepo: DatasetRepoNode<JSONstatType | TbmlDataUniform | object> | undefined = draftData
       ? draftData
@@ -176,7 +175,6 @@ function createDataFromDataSource(
     let parsedData: JSONstatType | TbmlDataUniform | object | string | undefined =
       datasetFromRepo && datasetFromRepo.data
     if (parsedData !== undefined && type === DataSourceType.STATBANK_API) {
-      // eslint-disable-next-line new-cap
       parsedData = JSONstat(parsedData).Dataset(0)
     }
     // create config

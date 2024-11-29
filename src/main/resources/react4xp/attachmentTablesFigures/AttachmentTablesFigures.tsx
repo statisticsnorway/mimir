@@ -6,8 +6,8 @@ import { sanitize } from '/lib/ssb/utils/htmlUtils'
 import {
   type AttachmentTablesFiguresProps,
   type AttachmentTablesFiguresData,
-} from '../../lib/types/partTypes/attachmentTablesFigures'
-import { type TableProps } from '../../lib/types/partTypes/table'
+} from '/lib/types/partTypes/attachmentTablesFigures'
+import { type TableProps } from '/lib/types/partTypes/table'
 
 import Table from '../table/Table'
 

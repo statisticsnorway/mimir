@@ -1,6 +1,6 @@
 import React from 'react'
 import { Card, Text } from '@statisticsnorway/ssb-component-library'
-import { VariablesProps } from '../../lib/types/partTypes/variables'
+import { VariablesProps } from '/lib/types/partTypes/variables'
 
 interface VariableCardProps {
   variable: VariablesProps['variables'][0]

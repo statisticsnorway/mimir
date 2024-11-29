@@ -19,7 +19,7 @@ export function seriesAndCategoriesFromTbml(
   const thead: Array<TableRowUniform> = data.tbml.presentation.table.thead
   const rows: TableRowUniform['tr'] = tbody[0].tr
   const headerRows: Array<TableCellUniform> = thead[0].tr
-  const headers: TableCellUniform['th'] = headerRows[0].th
+  const headers: TableCellUniform['th'] = getHeaders(headerRows[0], tbody)
   const categories: TableCellUniform['th'] = determineCategories(graphType, headers, rows, xAxisType)
   const series: Array<Series> = determineSeries(graphType, headers, categories, rows, xAxisType)
 
@@ -28,6 +28,15 @@ export function seriesAndCategoriesFromTbml(
     series,
     title: data.tbml.metadata.title,
   }
+}
+
+function getHeaders(headerRows: TableCellUniform, body: Array<TableRowUniform>): TableCellUniform['th'] {
+  //Table without td i thead, feks table from Dapla
+  if ((!headerRows.td || headerRows.td.length == 0) && headerRows.th.length > 1) {
+    const bodyFirstRowItemCount = Object.keys(body[0].tr[0]).length
+    return headerRows.th.length == bodyFirstRowItemCount ? headerRows.th.slice(1) : headerRows.th
+  }
+  return headerRows.th
 }
 
 function determineSeries(

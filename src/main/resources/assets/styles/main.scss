@@ -89,7 +89,8 @@ $container-max-widths: (
 @import './statisticFigures';
 @import './statisticDescription';
 @import './statisticContact';
-@import "./popup";
+@import './popup';
+@import './print';
 
 body {
   -moz-osx-font-smoothing: grayscale;
@@ -152,7 +153,23 @@ section.part-divider + section.part-divider {
 .xp-region {
   @include media-breakpoint-down(md) {
     margin: 0 auto;
-    width: 95%;
+
+    section,
+    figure {
+      padding-left: 1rem !important;
+      padding-right: 1rem !important;
+    }
+
+    section section,
+    section figure,
+    section.part-infoGraphic {
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+    }
+
+    .row > * {
+      padding: 0;
+    }
   }
 }
 
@@ -169,7 +186,8 @@ section.part-divider + section.part-divider {
 .truncate-2-lines {
   overflow: hidden;
   display: -webkit-box;
-  -webkit-line-clamp: 2; /* number of lines to show */
+  -webkit-line-clamp: 2;
+  /* number of lines to show */
   -webkit-box-orient: vertical;
 }
 
@@ -180,9 +198,11 @@ section.part-divider + section.part-divider {
   opacity: 0;
   transition: opacity 0.2s ease-in-out;
 }
+
 .anchor-wrapper {
   border: none;
 }
+
 .anchor-wrapper:hover .link-anchor {
   opacity: 1;
 }
@@ -218,4 +238,13 @@ p.bold {
   border-style: dotted;
   border-color: white;
   border-width: medium;
+}
+
+#breadcrumbs,
+.default-page-title,
+.default-page-subtitle {
+  @include media-breakpoint-down(md) {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
 }

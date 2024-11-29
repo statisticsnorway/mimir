@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { Title, Link, Button, Divider, Dropdown } from '@statisticsnorway/ssb-component-library'
 import { ChevronDown } from 'react-feather'
 import axios from 'axios'
-import { type SubjectArticleListProps } from '../../../lib/types/partTypes/subjectArticleList'
-import { type DropdownItem } from '../../../lib/types/partTypes/publicationArchive'
+import { type SubjectArticleListProps } from '/lib/types/partTypes/subjectArticleList'
+import { type DropdownItem } from '/lib/types/partTypes/publicationArchive'
 
 /* TODO:
 - Fikse sortering (?)
@@ -80,7 +80,7 @@ function SubjectArticleList(props: SubjectArticleListProps) {
           return (
             <li key={i}>
               {/* deepcode ignore DOMXSS: url comes from pageUrl which escapes + Reacts own escaping */}
-              <Link href={article.url} linkType='header' standAlone>
+              <Link href={article.url} linkType='header' headingSize={3} standAlone>
                 {article.title}
               </Link>
               <p className='truncate-2-lines'>{article.preface}</p>

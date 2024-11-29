@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Form, Container, Row, Col } from 'react-bootstrap'
 import { Input, Button, Dropdown, TextArea, Divider, Title, FormError } from '@statisticsnorway/ssb-component-library'
 import axios from 'axios'
-import { type Phrases } from '../../../lib/types/language'
+import { type Phrases } from '/lib/types/language'
 
 interface ContactFormProps {
   recaptchaSiteKey?: string
@@ -110,7 +110,6 @@ function ContactForm(props: ContactFormProps) {
   }
 
   function isEmailValid(value?: string) {
-    // eslint-disable-next-line max-len
     const regEx =
       /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     const emailVal = value || email.value

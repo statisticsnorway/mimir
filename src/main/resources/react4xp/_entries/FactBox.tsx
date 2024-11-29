@@ -1,6 +1,6 @@
 import React from 'react'
 import { ExpansionBox as FactBoxComponent } from '@statisticsnorway/ssb-component-library'
-import { sanitize } from '../../lib/ssb/utils/htmlUtils'
+import { sanitize } from '/lib/ssb/utils/htmlUtils'
 
 interface FactBoxProps {
   header?: string

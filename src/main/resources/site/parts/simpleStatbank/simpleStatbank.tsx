@@ -2,8 +2,8 @@ import React, { useState, useEffect, useRef } from 'react'
 import { Row, Col, Container } from 'react-bootstrap'
 import { Dropdown, Title, Button } from '@statisticsnorway/ssb-component-library'
 import { X } from 'react-feather'
-import { sanitize } from '../../../lib/ssb/utils/htmlUtils'
-import { type DimensionData, type SimpleStatbankProps } from '../../../lib/types/partTypes/simpleStatbank'
+import { sanitize } from '/lib/ssb/utils/htmlUtils'
+import { type DimensionData, type SimpleStatbankProps } from '/lib/types/partTypes/simpleStatbank'
 
 type DropdownItem = {
   id: string

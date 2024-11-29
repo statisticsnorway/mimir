@@ -13,7 +13,7 @@ import {
 import axios from 'axios'
 import { NumericFormat } from 'react-number-format'
 import { X } from 'react-feather'
-import { BkibolCalculatorProps } from '../../lib/types/partTypes/bkibolCalculator'
+import { BkibolCalculatorProps } from '/lib/types/partTypes/bkibolCalculator'
 
 function BkibolCalculator(props: BkibolCalculatorProps) {
   const validMaxYear = props.lastUpdated.year
@@ -781,10 +781,12 @@ function BkibolCalculator(props: BkibolCalculatorProps) {
   }
 
   return (
-    <Container className='bkibol-calculator'>
-      {renderForm()}
-      <div aria-live='polite'>{renderResult()}</div>
-    </Container>
+    <section className='bkibol-calculator'>
+      <Container className='content'>
+        {renderForm()}
+        <div aria-live='polite'>{renderResult()}</div>
+      </Container>
+    </section>
   )
 }
 

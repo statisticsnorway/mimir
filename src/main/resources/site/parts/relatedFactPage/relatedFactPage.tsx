@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { PictureCard, Button } from '@statisticsnorway/ssb-component-library'
 import axios from 'axios'
-import { RelatedFactPageProps } from '../../../lib/types/partTypes/relatedFactPage'
+import { RelatedFactPageProps } from '/lib/types/partTypes/relatedFactPage'
 
 function RelatedBoxes(props: RelatedFactPageProps) {
   const {

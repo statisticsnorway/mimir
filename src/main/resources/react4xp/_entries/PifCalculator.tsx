@@ -4,7 +4,7 @@ import { Input, Button, Dropdown, Divider, FormError, Link, RadioGroup } from '@
 import axios from 'axios'
 import { NumericFormat } from 'react-number-format'
 import { X } from 'react-feather'
-import { PifCalculatorProps } from '../../lib/types/partTypes/pifCalculaor'
+import { PifCalculatorProps } from '/lib/types/partTypes/pifCalculaor'
 
 function PifCalculator(props: PifCalculatorProps) {
   const validMaxYear = props.lastUpdated.year
@@ -681,10 +681,12 @@ function PifCalculator(props: PifCalculatorProps) {
   }
 
   return (
-    <Container className='pif-calculator'>
-      {renderForm()}
-      <div aria-live='polite'>{renderResult()}</div>
-    </Container>
+    <section className='pif-calculator'>
+      <Container className='content'>
+        {renderForm()}
+        <div aria-live='polite'>{renderResult()}</div>
+      </Container>
+    </section>
   )
 }
 

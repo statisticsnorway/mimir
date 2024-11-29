@@ -1,12 +1,12 @@
 import React from 'react'
 import { Link } from '@statisticsnorway/ssb-component-library'
-import { type ReleasedStatisticsProps } from '../../lib/types/partTypes/releasedStatistics'
+import { type ReleasedStatisticsProps } from '/lib/types/partTypes/releasedStatistics'
 import {
   type MonthReleases,
   type DayReleases,
   type YearReleases,
   type PreparedStatistics,
-} from '../../lib/types/variants'
+} from '/lib/types/variants'
 
 const ReleasedStatistics = (props: ReleasedStatisticsProps) => {
   const { language, title, releases } = props
@@ -18,6 +18,7 @@ const ReleasedStatistics = (props: ReleasedStatisticsProps) => {
         <Link
           href={hrefStatistic}
           linkType='header'
+          headingSize={3}
           ariaLabel={`${release.name} - ${release.variant.period}`}
           standAlone
         >

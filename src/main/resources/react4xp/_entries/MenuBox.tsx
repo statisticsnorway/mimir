@@ -1,6 +1,6 @@
 import React from 'react'
 import { Card, Text } from '@statisticsnorway/ssb-component-library'
-import { MenuBoxProps } from '../../lib/types/partTypes/menuBox'
+import { MenuBoxProps } from '/lib/types/partTypes/menuBox'
 
 const MenuBox = ({ boxes, height }: MenuBoxProps) => {
   return (

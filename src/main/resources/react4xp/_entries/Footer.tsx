@@ -1,7 +1,7 @@
 import React from 'react'
 import { Accordion, Button, Link } from '@statisticsnorway/ssb-component-library'
 import { ArrowRight, ArrowUp, Facebook, Rss, Linkedin, Instagram } from 'react-feather'
-import { FooterContent } from '../../lib/types/footer'
+import { FooterContent } from '/lib/types/footer'
 
 const Footer = (props: FooterContent) => {
   const {

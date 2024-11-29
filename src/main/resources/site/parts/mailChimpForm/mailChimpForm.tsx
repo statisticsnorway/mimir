@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Button, Input, Paragraph } from '@statisticsnorway/ssb-component-library'
-import { MailChimpFormProps } from '../../../lib/types/partTypes/mailChimpForm'
+import { MailChimpFormProps } from '/lib/types/partTypes/mailChimpForm'
 
 function MailchimpForm(props: MailChimpFormProps) {
   const [email, setEmail] = useState({

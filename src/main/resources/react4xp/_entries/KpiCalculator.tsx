@@ -4,8 +4,8 @@ import { Input, Button, Dropdown, Divider, FormError, Link, Title } from '@stati
 import axios from 'axios'
 import { NumericFormat } from 'react-number-format'
 import { X } from 'react-feather'
-import { sanitize } from '../../lib/ssb/utils/htmlUtils'
-import { KpiCalculatorProps } from '../../lib/types/partTypes/kpiCalculator'
+import { sanitize } from '/lib/ssb/utils/htmlUtils'
+import { KpiCalculatorProps } from '/lib/types/partTypes/kpiCalculator'
 
 function KpiCalculator(props: KpiCalculatorProps) {
   const validMaxYear = props.lastUpdated.year
@@ -527,17 +527,21 @@ function KpiCalculator(props: KpiCalculatorProps) {
   function renderCalculator() {
     if (props.frontPage) {
       return (
-        <Container className='kpi-calculator frontpage'>
-          {renderFormFrontpage()}
-          {renderResult()}
-        </Container>
+        <section className='kpi-calculator frontpage'>
+          <Container className='content'>
+            {renderFormFrontpage()}
+            {renderResult()}
+          </Container>
+        </section>
       )
     } else {
       return (
-        <Container className='kpi-calculator'>
-          {renderForm()}
-          <div aria-live='polite'>{renderResult()}</div>
-        </Container>
+        <section className='kpi-calculator'>
+          <Container className='content'>
+            {renderForm()}
+            <div aria-live='polite'>{renderResult()}</div>
+          </Container>
+        </section>
       )
     }
   }

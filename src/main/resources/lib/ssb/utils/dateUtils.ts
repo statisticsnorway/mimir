@@ -38,6 +38,7 @@ export function formatDate(date: string | undefined, formatType: string, languag
     let dateFnsResult
     try {
       dateFnsResult = format(parsedDate, formatType, locale)
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
       log.error(`Error in formatDate, tried to format ${parsedDate} to ${formatType}`)
     }
@@ -55,6 +56,7 @@ export function formatDate(date: string | undefined, formatType: string, languag
         locale: language,
         timezoneId: missingTimezone ? 'GMT+0000' : 'Europe/Oslo',
       })
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
       log.error(`Error in formatDate with Lib time, tried to format ${parsedDate} to ${libTimePattern}`)
       return dateFnsResult

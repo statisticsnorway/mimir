@@ -1,5 +1,5 @@
 import React from 'react'
-import { type VariablesProps } from '../../lib/types/partTypes/variables'
+import { type VariablesProps } from '/lib/types/partTypes/variables'
 import VariableCard from './VariableCard'
 
 interface VariableCardsListProps {

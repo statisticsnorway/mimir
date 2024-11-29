@@ -25,11 +25,9 @@ function ArticleList(props: ArticleListProps) {
       {articles.map((article, i) => {
         return (
           <div key={i} className='mt-5'>
-            <Title size={3}>
-              <Link href={article.url} className='ssb-link header' standAlone>
-                {article.title}
-              </Link>
-            </Title>
+            <Link href={article.url} linkType='header' headingSize={3} standAlone>
+              {article.title}
+            </Link>
             <p className='truncate-2-lines'>{article.preface}</p>
             <time dateTime={article.publishDate}>{article.publishDateHuman}</time>
           </div>

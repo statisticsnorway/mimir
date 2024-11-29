@@ -1,7 +1,7 @@
 import React from 'react'
 import { Breadcrumb, Link } from '@statisticsnorway/ssb-component-library'
 import { Col, Container, Row } from 'react-bootstrap'
-import { StatbankFrameProps } from '../../../lib/types/partTypes/statbankFrame'
+import { StatbankFrameProps } from '/lib/types/partTypes/statbankFrame'
 
 function StatbankFrame(props: StatbankFrameProps) {
   function breadcrumb(bread: object) {

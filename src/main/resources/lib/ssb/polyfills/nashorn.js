@@ -3,7 +3,6 @@
 // String::includes
 
 if (!String.prototype.includes) {
-  // eslint-disable-next-line no-extend-native
   String.prototype.includes = function (search, start) {
     'use strict'
 
@@ -20,33 +19,31 @@ if (!String.prototype.includes) {
 // String::padStart
 
 if (!String.prototype.padStart) {
-  // eslint-disable-next-line no-extend-native
-  String.prototype.padStart = function(targetLength, padString) {
-    targetLength = Math.floor(targetLength) || 0;
-    if(targetLength < this.length) return String(this);
+  String.prototype.padStart = function (targetLength, padString) {
+    targetLength = Math.floor(targetLength) || 0
+    if (targetLength < this.length) return String(this)
 
-    padString = padString ? String(padString) : " ";
+    padString = padString ? String(padString) : ' '
 
-    var pad = "";
-    var len = targetLength - this.length;
-    var i = 0;
-    while(pad.length < len) {
-        if(!padString[i]) {
-            i = 0;
-        }
-        pad += padString[i];
-        i++;
+    var pad = ''
+    var len = targetLength - this.length
+    var i = 0
+    while (pad.length < len) {
+      if (!padString[i]) {
+        i = 0
+      }
+      pad += padString[i]
+      i++
     }
 
-    return pad + String(this).slice(0);
-  };
+    return pad + String(this).slice(0)
+  }
 }
 
 /** Array ************************************************************/
 
 // Array::find
 if (!Array.prototype.find) {
-  // eslint-disable-next-line no-extend-native
   Object.defineProperty(Array.prototype, 'find', {
     value: function (predicate) {
       // 1. Let O be ? ToObject(this value).
@@ -65,7 +62,7 @@ if (!Array.prototype.find) {
       }
 
       // 4. If thisArg was supplied, let T be thisArg; else let T be undefined.
-      // eslint-disable-next-line prefer-rest-params
+
       const thisArg = arguments[1]
 
       // 5. Let k be 0.
@@ -96,7 +93,6 @@ if (!Array.prototype.find) {
 // Array::includes
 
 if (!Array.prototype.includes) {
-  // eslint-disable-next-line no-extend-native
   Object.defineProperty(Array.prototype, 'includes', {
     value: function (searchElement, fromIndex) {
       // 1. Let O be ? ToObject(this value).
@@ -150,7 +146,6 @@ if (!Array.prototype.includes) {
 
 // https://tc39.github.io/ecma262/#sec-array.prototype.findindex
 if (!Array.prototype.findIndex) {
-  // eslint-disable-next-line no-extend-native
   Object.defineProperty(Array.prototype, 'findIndex', {
     value: function (predicate) {
       // 1. Let O be ? ToObject(this value).
@@ -169,7 +164,7 @@ if (!Array.prototype.findIndex) {
       }
 
       // 4. If thisArg was supplied, let T be thisArg; else let T be undefined.
-      // eslint-disable-next-line prefer-rest-params
+
       const thisArg = arguments[1]
 
       // 5. Let k be 0.
@@ -202,27 +197,30 @@ if (!Array.prototype.findIndex) {
 // Object::assign
 
 if (!Object.assign) {
-  Object.assign = function(target, varArgs) { // .length of function is 2
-    if (target == null) { // TypeError if undefined or null
-      throw new TypeError('Cannot convert undefined or null to object');
+  Object.assign = function (target, varArgs) {
+    // .length of function is 2
+    if (target == null) {
+      // TypeError if undefined or null
+      throw new TypeError('Cannot convert undefined or null to object')
     }
 
-    var to = Object(target);
+    var to = Object(target)
 
     for (var index = 1; index < arguments.length; index++) {
-      var nextSource = arguments[index];
+      var nextSource = arguments[index]
 
-      if (nextSource != null) { // Skip over if undefined or null
+      if (nextSource != null) {
+        // Skip over if undefined or null
         for (var nextKey in nextSource) {
           // Avoid bugs when hasOwnProperty is shadowed
           if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
-            to[nextKey] = nextSource[nextKey];
+            to[nextKey] = nextSource[nextKey]
           }
         }
       }
     }
-    return to;
-  };
+    return to
+  }
 }
 
 /** Math **************************************************************/
@@ -231,6 +229,6 @@ if (!Object.assign) {
 
 if (!Math.trunc) {
   Math.trunc = function trunc(x) {
-    return x < 0 ? Math.ceil(x) : Math.floor(x);
-  };
+    return x < 0 ? Math.ceil(x) : Math.floor(x)
+  }
 }
