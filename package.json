@@ -167,7 +167,7 @@
     "core-js": "~3.39.0",
     "date-fns": "~3.6.0",
     "highcharts-react-official": "~3.2.1",
-    "react-bootstrap": "~2.10.5",
+    "react-bootstrap": "~2.10.6",
     "react-select": "~5.8.3",
     "redux": "~5.0.1",
     "redux-logger": "~3.0.6",
