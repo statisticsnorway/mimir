@@ -92,6 +92,10 @@ $container-max-widths: (
 @import './popup';
 @import './print';
 
+html {
+  font-size: 16px;
+}
+
 body {
   -moz-osx-font-smoothing: grayscale;
   font-size: 16px;
