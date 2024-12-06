@@ -1,12 +1,7 @@
 import React from 'react'
 import { Link } from '@statisticsnorway/ssb-component-library'
 import { type ReleasedStatisticsProps } from '/lib/types/partTypes/releasedStatistics'
-import {
-  type MonthReleases,
-  type DayReleases,
-  type YearReleases,
-  type PreparedStatistics,
-} from '/lib/types/variants'
+import { type MonthReleases, type DayReleases, type YearReleases, type PreparedStatistics } from '/lib/types/variants'
 
 const ReleasedStatistics = (props: ReleasedStatisticsProps) => {
   const { language, title, releases } = props

@@ -66,7 +66,7 @@ header.ssb-header-wrapper {
       align-items: center;
     }
     @include media-breakpoint-down(md) {
-      padding: 0 1rem 1rem;
+      padding: 0 16px 16px;
     }
   }
 
@@ -93,8 +93,8 @@ header.ssb-header-wrapper {
       &.showOnMobile {
         height: auto;
         max-height: 1800px;
-        padding-left: 1rem !important;
-        padding-right: 1rem !important;
+        padding-left: 16px !important;
+        padding-right: 16px !important;
         transition: max-height 0.3s ease-in;
       }
     }
@@ -139,7 +139,7 @@ header.ssb-header-wrapper {
     background: transparent;
     height: 24px;
     font-family: $font-roboto-plain;
-    font-size: 1.25rem;
+    font-size: 20px;
     font-weight: bold;
     font-stretch: normal;
     font-style: normal;
@@ -348,10 +348,10 @@ header.ssb-header-wrapper {
       }
 
       span {
-        font-size: 1rem;
+        font-size: 16px;
         width: 100%;
         @include media-breakpoint-down(lg) {
-          font-size: 1.25rem;
+          font-size: 20px;
         }
       }
     }
@@ -425,7 +425,7 @@ header.ssb-header-wrapper {
       display: flex;
       flex-direction: column;
       align-items: flex-start;
-      margin: 1.25rem 0;
+      margin: 20px 0;
       max-height: 0;
       transition: max-height 0.4s ease-in;
 
@@ -435,7 +435,7 @@ header.ssb-header-wrapper {
         transition: max-height 0.4s ease-out;
       }
       .ssb-link {
-        margin: 0.5rem 0;
+        margin: 8px 0;
       }
     }
   }
