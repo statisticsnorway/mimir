@@ -52,6 +52,26 @@ export function getChildArticles(currentPath: string, subTopicId: string, start:
   })
 }
 
+export function getArticlesMainsubject(
+  currentPath: string,
+  subSubjectByPath: SubjectItem[],
+  subTopicId: string,
+  start: number,
+  count: number,
+  sort: string
+) {
+  const toDay: string = new Date().toISOString()
+  const subTopics: string = `(${subSubjectByPath.map((subSubject) => `"${subSubject.id}"`).join(', ')})`
+  log.info('subTopics: ' + subTopics)
+  return query<Content<Article>>({
+    start: start,
+    count: count,
+    query: `(_path LIKE "/content${currentPath}*" OR data.subtopic IN ${subTopics}) AND publish.from <= instant("${toDay}")`,
+    contentTypes: [`${app.name}:article`],
+    sort: `publish.from ${sort}`,
+  })
+}
+
 export function getAllArticles(req: XP.Request, language: string, start: 0, count: 50): ArticleResult {
   const mainSubjects: Array<SubjectItem> = getMainSubjects(req, language)
   const languageQuery: string = language !== 'en' ? 'AND language != "en"' : 'AND language = "en"'
