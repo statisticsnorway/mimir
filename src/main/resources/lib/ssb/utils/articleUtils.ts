@@ -41,12 +41,21 @@ export function setupArticleListener(): void {
   })
 }
 
-export function getChildArticles(currentPath: string, subTopicId: string, start: number, count: number, sort: string) {
+export function getChildArticles(
+  currentPath: string,
+  subTopicIds: string | string[],
+  start: number,
+  count: number,
+  sort: string
+) {
   const toDay: string = new Date().toISOString()
+  const subTopics: string = `(${ensureArray(subTopicIds)
+    .map((id) => `"${id}"`)
+    .join(', ')})`
   return query<Content<Article>>({
     start: start,
     count: count,
-    query: `(_path LIKE "/content${currentPath}*" OR data.subtopic = "${subTopicId}") AND publish.from <= instant("${toDay}")`,
+    query: `(_path LIKE "/content${currentPath}*" OR data.subtopic IN ${subTopics}) AND publish.from <= instant("${toDay}")`,
     contentTypes: [`${app.name}:article`],
     sort: `publish.from ${sort}`,
   })
