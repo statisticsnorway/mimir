@@ -48,4 +48,7 @@ export async function exportTableToExcel({ tableName, tableData }: ExportTableTy
   document.body.removeChild(a)
 }
 
-// export async function exportTableToCSV({ tableName, tableData }: ExportTableTypes) {}
+export async function exportTableToCSV({ tableName, tableData }: ExportTableTypes) {
+  console.log('tableName: ' + JSON.stringify(tableName))
+  console.log(JSON.stringify(tableData, null, 2))
+}

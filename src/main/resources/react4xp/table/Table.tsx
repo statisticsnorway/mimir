@@ -16,7 +16,7 @@ import { Alert } from 'react-bootstrap'
 import { type TableProps } from '/lib/types/partTypes/table'
 import { PreliminaryData, type TableCellUniform } from '/lib/types/xmlParser'
 
-import { exportTableToExcel } from '../../assets/js/app/tableExportUtils'
+import { exportTableToCSV, exportTableToExcel } from '../../assets/js/app/tableExportUtils'
 
 declare global {
   interface Window {
@@ -25,6 +25,8 @@ declare global {
 }
 
 function Table(props: TableProps) {
+  const { displayName, useNewTableExport } = props
+
   const [currentTable, setCurrentTable] = useState(
     props.paramShowDraft && props.draftExist ? props.tableDraft : props.table
   )
@@ -79,7 +81,7 @@ function Table(props: TableProps) {
   }
 
   function downloadTableAsCSV() {
-    if (window.downloadTableFile) {
+    if (window.downloadTableFile && !useNewTableExport) {
       window.downloadTableFile(tableWrapperRef.current, {
         type: 'csv',
         fileName: 'tabell',
@@ -88,26 +90,27 @@ function Table(props: TableProps) {
         tfootSelector: '',
       })
     }
+    exportTableToCSV({ tableName: displayName, tableData: currentTable })
   }
 
   function downloadTableAsExcel() {
-    // if (window.downloadTableFile) {
-    //   window.downloadTableFile(tableWrapperRef.current, {
-    //     type: 'xlsx',
-    //     fileName: 'tabell',
-    //     numbers: {
-    //       html: {
-    //         decimalMark: ',',
-    //         thousandsSeparator: ' ',
-    //       },
-    //       output: {
-    //         decimalMark: '.',
-    //         thousandsSeparator: '',
-    //       },
-    //     },
-    //   })
-    // }
-    exportTableToExcel({ tableName: props.displayName, tableData: currentTable })
+    if (window.downloadTableFile && !useNewTableExport) {
+      window.downloadTableFile(tableWrapperRef.current, {
+        type: 'xlsx',
+        fileName: 'tabell',
+        numbers: {
+          html: {
+            decimalMark: ',',
+            thousandsSeparator: ' ',
+          },
+          output: {
+            decimalMark: '.',
+            thousandsSeparator: '',
+          },
+        },
+      })
+    }
+    exportTableToExcel({ tableName: displayName, tableData: currentTable })
   }
 
   function addCaption() {
