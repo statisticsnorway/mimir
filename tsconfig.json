@@ -40,7 +40,8 @@
   "include": [
     "node_modules/typescript/lib/lib.es5.d.ts",
     "./.xp-codegen/**/*",
-		"src/main/resources/**/*.ts"
+		"src/main/resources/**/*.ts",
+    "src/main/resources/assets/**/*.ts",
   ],
   "exclude": [
     "./build/*",

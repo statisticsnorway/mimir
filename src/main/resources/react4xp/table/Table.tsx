@@ -16,6 +16,8 @@ import { Alert } from 'react-bootstrap'
 import { type TableProps } from '/lib/types/partTypes/table'
 import { PreliminaryData, type TableCellUniform } from '/lib/types/xmlParser'
 
+import { exportTableToExcel } from '../../assets/js/app/tableExportUtils'
+
 declare global {
   interface Window {
     downloadTableFile: (element: HTMLDivElement | null, options: unknown) => void
@@ -89,22 +91,23 @@ function Table(props: TableProps) {
   }
 
   function downloadTableAsExcel() {
-    if (window.downloadTableFile) {
-      window.downloadTableFile(tableWrapperRef.current, {
-        type: 'xlsx',
-        fileName: 'tabell',
-        numbers: {
-          html: {
-            decimalMark: ',',
-            thousandsSeparator: ' ',
-          },
-          output: {
-            decimalMark: '.',
-            thousandsSeparator: '',
-          },
-        },
-      })
-    }
+    // if (window.downloadTableFile) {
+    //   window.downloadTableFile(tableWrapperRef.current, {
+    //     type: 'xlsx',
+    //     fileName: 'tabell',
+    //     numbers: {
+    //       html: {
+    //         decimalMark: ',',
+    //         thousandsSeparator: ' ',
+    //       },
+    //       output: {
+    //         decimalMark: '.',
+    //         thousandsSeparator: '',
+    //       },
+    //     },
+    //   })
+    // }
+    exportTableToExcel({ tableName: props.displayName, tableData: currentTable })
   }
 
   function addCaption() {
