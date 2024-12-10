@@ -26,6 +26,8 @@ function renderPart(req: XP.Request) {
   const language: string = content.language ? content.language : 'nb'
   const filterAndSortEnabled: boolean = isEnabled('articlelist-sorting', false)
   const currentPath: string = content._path
+
+  // TODO change to false when crawling of articles is fixed
   const showAllArticles = true
   const start = 0
   const count: number = showAllArticles ? 100 : 10
