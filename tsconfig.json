@@ -47,7 +47,7 @@
     "./build/*",
     "src/**/*.js",
     "src/main/resources/**/*.tsx",
-    "src/main/resources/assets/**/*.*",
+    "src/main/resources/assets/**/*.{!ts}",
     "./src/main/resources/lib/ssb/polyfills/nashorn.js",
   ],
   "references": [

@@ -5,24 +5,22 @@ import { type TableRowUniform, type PreliminaryData } from '/lib/types/xmlParser
 export interface ExportTableTypes {
   tableName?: string
   tableData: Partial<TableView>
-  language: string
+  language?: string
 }
 
-function parseCellValue(cellValue: string | number, language: string) {
-  const localeString = language === 'en' ? 'en-GB' : 'nb-NO'
-  if (cellValue !== '') {
-    if (typeof cellValue === 'string') {
-      if (!isNaN(parseFloat(cellValue))) {
-        return parseFloat(cellValue)
-      }
-      return cellValue
+function parseCellValue(cellValue: string | number | PreliminaryData, language?: string) {
+  const localeString = language === 'en' ? 'en-EN' : 'nb-NO'
+  // TODO: Sometimes a cell has an empty cell only has rowspan/colspan values; this will return [object Object]
+  if (cellValue !== '' && typeof cellValue !== 'object') {
+    if (typeof cellValue === 'number' || !isNaN(Number(cellValue))) {
+      return cellValue.toLocaleString(localeString)
     }
     return cellValue.toLocaleString(localeString)
   }
   return ''
 }
 
-function getRowData(row: TableRowUniform, language: string) {
+function getRowData(row: TableRowUniform, language?: string) {
   const rowData: Array<string | number> = []
   ;(Object.keys(row) as ('th' | 'td')[]).forEach((key) => {
     row[key].forEach((cellValue: string | number | PreliminaryData) => {
@@ -41,19 +39,24 @@ export async function exportTableToExcel({ tableName, tableData, language }: Exp
   const workbook = new ExcelJS.Workbook()
   const worksheet = workbook.addWorksheet('Sheet1')
 
+  console.log(thead)
   if (thead?.length) {
     thead.forEach((thead: TableView['thead']) => {
       thead.tr.forEach((row: TableRowUniform) => {
         const worksheetRow = worksheet.addRow(getRowData(row, language))
+        console.log(getRowData(row, language))
 
-        // Merge cells if colspan or rowspan is present
         let colIndex = 1
-        row.th?.forEach((th) => {
-          if (th.colspan) {
-            const start = colIndex
-            const end = colIndex + parseInt(th.colspan) - 1
-            worksheet.mergeCells(worksheetRow.number, start, worksheetRow.number, end)
-            colIndex = end + 1
+        ;(Object.keys(row) as ('th' | 'td')[]).forEach((cellValue: TableRowUniform) => {
+          if (cellValue.colspan || cellValue.rowspan) {
+            const colspan = parseInt(cellValue.colspan || '1')
+            const rowspan = parseInt(cellValue.rowspan || '1')
+            const startCol = colIndex
+            const endCol = colIndex + colspan - 1
+
+            // Merge cells horizontally and/or vertically
+            worksheet.mergeCells(worksheetRow.number, startCol, worksheetRow.number + rowspan - 1, endCol)
+            colIndex = endCol + 1
           } else {
             colIndex++
           }
