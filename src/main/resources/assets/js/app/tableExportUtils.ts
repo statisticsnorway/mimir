@@ -5,10 +5,11 @@ import { type TableRowUniform, type PreliminaryData } from '/lib/types/xmlParser
 export interface ExportTableTypes {
   tableName?: string
   tableData: Partial<TableView>
+  language: string
 }
 
-function parseCellValue(cellValue: string | number) {
-  console.log(cellValue)
+function parseCellValue(cellValue: string | number, language: string) {
+  const localeString = language === 'en' ? 'en-GB' : 'nb-NO'
   if (cellValue !== '') {
     if (typeof cellValue === 'string') {
       if (!isNaN(parseFloat(cellValue))) {
@@ -16,22 +17,22 @@ function parseCellValue(cellValue: string | number) {
       }
       return cellValue
     }
-    return cellValue.toLocaleString('nb-NO')
+    return cellValue.toLocaleString(localeString)
   }
   return ''
 }
 
-function getRowData(row: TableRowUniform) {
+function getRowData(row: TableRowUniform, language: string) {
   const rowData: Array<string | number> = []
   ;(Object.keys(row) as ('th' | 'td')[]).forEach((key) => {
     row[key].forEach((cellValue: string | number | PreliminaryData) => {
-      rowData.push(parseCellValue(cellValue.content || cellValue || ''))
+      rowData.push(parseCellValue(cellValue.content || cellValue || '', language))
     })
   })
   return rowData
 }
 
-export async function exportTableToExcel({ tableName, tableData }: ExportTableTypes) {
+export async function exportTableToExcel({ tableName, tableData, language }: ExportTableTypes) {
   if (!tableData) {
     console.error('Missing Table Data')
   }
@@ -43,7 +44,7 @@ export async function exportTableToExcel({ tableName, tableData }: ExportTableTy
   if (thead?.length) {
     thead.forEach((thead: TableView['thead']) => {
       thead.tr.forEach((row: TableRowUniform) => {
-        const worksheetRow = worksheet.addRow(getRowData(row))
+        const worksheetRow = worksheet.addRow(getRowData(row, language))
 
         // Merge cells if colspan or rowspan is present
         let colIndex = 1
@@ -64,8 +65,7 @@ export async function exportTableToExcel({ tableName, tableData }: ExportTableTy
   if (tbody?.length) {
     tbody.forEach((tbody: TableView['tbody']) => {
       tbody.tr.forEach((row: TableRowUniform) => {
-        getRowData(getRowData)
-        worksheet.addRow(getRowData(row))
+        worksheet.addRow(getRowData(row, language))
       })
     })
   }
@@ -86,7 +86,8 @@ export async function exportTableToExcel({ tableName, tableData }: ExportTableTy
   document.body.removeChild(a)
 }
 
-export async function exportTableToCSV({ tableName, tableData }: ExportTableTypes) {
+export async function exportTableToCSV({ tableName, tableData, language }: ExportTableTypes) {
   console.log('tableName: ' + JSON.stringify(tableName))
   console.log(JSON.stringify(tableData, null, 2))
+  console.log(language)
 }

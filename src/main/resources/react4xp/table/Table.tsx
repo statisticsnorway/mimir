@@ -25,11 +25,9 @@ declare global {
 }
 
 function Table(props: TableProps) {
-  const { displayName, useNewTableExport } = props
+  const { displayName, useNewTableExport, table } = props
 
-  const [currentTable, setCurrentTable] = useState(
-    props.paramShowDraft && props.draftExist ? props.tableDraft : props.table
-  )
+  const [currentTable, setCurrentTable] = useState(props.paramShowDraft && props.draftExist ? props.tableDraft : table)
   const [fetchUnPublished, setFetchUnPublished] = useState(props.paramShowDraft)
   const showPreviewToggle =
     props.showPreviewDraft && (!props.pageTypeStatistic || (props.paramShowDraft && props.pageTypeStatistic))
@@ -40,7 +38,7 @@ function Table(props: TableProps) {
   }
 
   function formatNumber(value: string | number) {
-    const language = props.table.language
+    const language = table.language
     const decimalSeparator = language === 'en' ? '.' : ','
     value = trimValue(value)
     if (value && (typeof value === 'number' || !isNaN(Number(value)))) {
@@ -90,7 +88,7 @@ function Table(props: TableProps) {
         tfootSelector: '',
       })
     }
-    exportTableToCSV({ tableName: displayName, tableData: currentTable })
+    exportTableToCSV({ tableName: displayName, tableData: currentTable, language: table.language })
   }
 
   function downloadTableAsExcel() {
@@ -110,7 +108,7 @@ function Table(props: TableProps) {
         },
       })
     }
-    exportTableToExcel({ tableName: displayName, tableData: currentTable })
+    exportTableToExcel({ tableName: displayName, tableData: currentTable, language: table.language })
   }
 
   function addCaption() {
@@ -128,7 +126,7 @@ function Table(props: TableProps) {
   }
 
   function createTable() {
-    const { tableClass } = props.table
+    const { tableClass } = table
     return (
       <SSBTable
         className={tableClass}
@@ -356,7 +354,7 @@ function Table(props: TableProps) {
 
   function toggleDraft() {
     setFetchUnPublished(!fetchUnPublished)
-    setCurrentTable(!fetchUnPublished && props.draftExist ? props.tableDraft : props.table)
+    setCurrentTable(!fetchUnPublished && props.draftExist ? props.tableDraft : table)
   }
 
   function addPreviewInfo() {
