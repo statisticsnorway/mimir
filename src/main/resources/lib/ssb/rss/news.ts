@@ -2,7 +2,7 @@ import { query, type Content } from '/lib/xp/content'
 import { StatisticInListing, VariantInListing } from '/lib/ssb/dashboard/statreg/types'
 import { getTimeZoneIso } from '/lib/ssb/utils/dateUtils'
 import { subDays, isSameDay, format, parseISO } from '/lib/vendor/dateFns'
-import { fetchStatisticsWithReleaseToday } from '/lib/ssb/statreg/statistics'
+import { fetchStatisticsWithReleaseToday, fetchStatisticsWithPreviousRelease } from '/lib/ssb/statreg/statistics'
 import { getMainSubjects } from '/lib/ssb/utils/subjectUtils'
 // @ts-ignore
 import { xmlEscape } from '/lib/text-encoding'
@@ -14,8 +14,8 @@ const dummyReq: Partial<XP.Request> = {
   branch: 'master',
 }
 
-export function getRssItemsNews(): string | null {
-  const news: NewsItem[] = getNews()
+export function getRssItemsNews(days: number = 1): string | null {
+  const news: NewsItem[] = getNews(days)
   const xml = `<?xml version="1.0" encoding="utf-8"?>
     <rssitems count="${news.length}">
       ${news
@@ -37,15 +37,16 @@ export function getRssItemsNews(): string | null {
   return xml
 }
 
-export function getNews(): NewsItem[] {
+export function getNews(days: number = 1): NewsItem[] {
+  log.info('Get News antall dager: ' + days)
   const mainSubjects: SubjectItem[] = getMainSubjects(dummyReq as XP.Request)
-  const articles: NewsItem[] = getArticles(mainSubjects)
-  const statistics: NewsItem[] = getStatistics(mainSubjects)
+  const articles: NewsItem[] = getArticles(mainSubjects, days)
+  const statistics: NewsItem[] = getStatistics(mainSubjects, days)
   return articles.concat(statistics)
 }
 
-function getArticles(mainSubjects: SubjectItem[]): NewsItem[] {
-  const from: string = subDays(new Date(), 1).toISOString()
+function getArticles(mainSubjects: SubjectItem[], days: number): NewsItem[] {
+  const from: string = subDays(new Date(), days).toISOString()
   const to: string = new Date().toISOString()
   const serverOffsetInMilliSeconds: number = parseInt(app.config?.['serverOffsetInMs']) || 0
   const timeZoneIso: string = getTimeZoneIso(serverOffsetInMilliSeconds)
@@ -93,8 +94,11 @@ function getArticles(mainSubjects: SubjectItem[]): NewsItem[] {
   return news
 }
 
-function getStatistics(mainSubjects: SubjectItem[]): NewsItem[] {
-  const statregStatistics: Array<StatisticInListing> = fetchStatisticsWithReleaseToday()
+function getStatistics(mainSubjects: SubjectItem[], days: number): NewsItem[] {
+  const statisticReleasesToday: Array<StatisticInListing> = fetchStatisticsWithReleaseToday()
+  const previousStatisticReleases: Array<StatisticInListing> = fetchStatisticsWithPreviousRelease(days)
+  const statregStatistics: Array<StatisticInListing> =
+    days > 1 ? previousStatisticReleases.concat(statisticReleasesToday) : statisticReleasesToday
   const serverOffsetInMS: number = parseInt(app.config?.['serverOffsetInMs']) || 0
   const timeZoneIso: string = getTimeZoneIso(serverOffsetInMS)
 
@@ -146,6 +150,9 @@ function getPubDateStatistic(variant: VariantInListing, timeZoneIso: string): st
     return variant.previousRelease ? formatPubDateStatistic(variant.previousRelease, timeZoneIso) : undefined
   } else if (nextReleaseSameDayNow) {
     return variant.nextRelease ? formatPubDateStatistic(variant.nextRelease, timeZoneIso) : undefined
+  }
+  if (!previousReleaseSameDayNow && !nextReleaseSameDayNow) {
+    return variant.previousRelease ? formatPubDateStatistic(variant.previousRelease, timeZoneIso) : undefined
   }
   return undefined
 }
