@@ -1,36 +1,74 @@
 import ExcelJS from 'exceljs'
-import { TableView } from '/lib/types/partTypes/table'
+import { type TableView } from '/lib/types/partTypes/table'
+import { type TableRowUniform, type PreliminaryData } from '/lib/types/xmlParser'
 
 export interface ExportTableTypes {
   tableName?: string
   tableData: Partial<TableView>
 }
 
-function prepTableDataValues({ tableData }: ExportTableTypes) {
-  const { thead, tbody } = tableData
-
-  return {
-    thead,
-    tbody,
+function parseCellValue(cellValue: string | number) {
+  console.log(cellValue)
+  if (cellValue !== '') {
+    if (typeof cellValue === 'string') {
+      if (!isNaN(parseFloat(cellValue))) {
+        return parseFloat(cellValue)
+      }
+      return cellValue
+    }
+    return cellValue.toLocaleString('nb-NO')
   }
+  return ''
 }
 
-/* TODO:
- * Include necessary options (or implement directly) just like in the tableExport plugin?
- * Feature toggling
- */
+function getRowData(row: TableRowUniform) {
+  const rowData: Array<string | number> = []
+  ;(Object.keys(row) as ('th' | 'td')[]).forEach((key) => {
+    row[key].forEach((cellValue: string | number | PreliminaryData) => {
+      rowData.push(parseCellValue(cellValue.content || cellValue || ''))
+    })
+  })
+  return rowData
+}
+
 export async function exportTableToExcel({ tableName, tableData }: ExportTableTypes) {
   if (!tableData) {
     console.error('Missing Table Data')
   }
+  const { thead, tbody } = tableData
 
   const workbook = new ExcelJS.Workbook()
-  // const worksheet = workbook.addWorksheet(tableName ?? 'tabell')
+  const worksheet = workbook.addWorksheet('Sheet1')
 
-  const prepTableData = prepTableDataValues(tableData)
-  console.log(prepTableData)
+  if (thead?.length) {
+    thead.forEach((thead: TableView['thead']) => {
+      thead.tr.forEach((row: TableRowUniform) => {
+        const worksheetRow = worksheet.addRow(getRowData(row))
 
-  // TODO: Implement logic
+        // Merge cells if colspan or rowspan is present
+        let colIndex = 1
+        row.th?.forEach((th) => {
+          if (th.colspan) {
+            const start = colIndex
+            const end = colIndex + parseInt(th.colspan) - 1
+            worksheet.mergeCells(worksheetRow.number, start, worksheetRow.number, end)
+            colIndex = end + 1
+          } else {
+            colIndex++
+          }
+        })
+      })
+    })
+  }
+
+  if (tbody?.length) {
+    tbody.forEach((tbody: TableView['tbody']) => {
+      tbody.tr.forEach((row: TableRowUniform) => {
+        getRowData(getRowData)
+        worksheet.addRow(getRowData(row))
+      })
+    })
+  }
 
   const buffer = await workbook.xlsx.writeBuffer()
   const blob = new Blob([buffer], {
