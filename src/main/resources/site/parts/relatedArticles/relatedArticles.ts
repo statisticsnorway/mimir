@@ -218,7 +218,11 @@ function getDsArticle(
 ): RelatedArticle | undefined {
   statisticPublishDate = statisticPublishDate ? new Date(statisticPublishDate).toLocaleDateString() : ''
 
-  const queryString = `data.associatedStatistics.XP.content = "${statisticId}" AND publish.from LIKE "${statisticPublishDate}*" `
+  const queryString =
+    dsArticleType === 'lastArticle'
+      ? `data.associatedStatistics.XP.content = "${statisticId}"`
+      : `data.associatedStatistics.XP.content = "${statisticId}" AND publish.from LIKE "${statisticPublishDate}*" `
+
   const sort = dsArticleType === 'lastArticle' ? 'publish.from DESC' : 'publish.from ASC'
 
   const articleContent: Array<Content<Statistics | Article>> = query({
