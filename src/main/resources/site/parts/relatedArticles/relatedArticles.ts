@@ -191,7 +191,7 @@ function addDsArticle(
 ): RelatedArticles['relatedArticles'] {
   const statisticId: string = page._id
   const statisticData: Statistics = page.data as Statistics
-  const dsArticleType: string = statisticData.dsArticle === 'lastArticle' ? 'lastArticle' : 'default'
+  const dsArticleType: string = statisticData.dsArticle ?? 'default'
   const statistic: StatisticInListing | undefined = getStatisticByIdFromRepo(statisticData.statistic)
 
   if (statistic) {
