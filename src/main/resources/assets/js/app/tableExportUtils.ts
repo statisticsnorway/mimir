@@ -10,12 +10,18 @@ export interface ExportTableTypes {
 
 function parseCellValue(cellValue: string | number | PreliminaryData, language?: string) {
   const localeString = language === 'en' ? 'en-EN' : 'nb-NO'
-  // TODO: Sometimes a cell has an empty cell only has rowspan/colspan values; this will return [object Object]
   if (cellValue !== '' && typeof cellValue !== 'object') {
-    if (typeof cellValue === 'number' || !isNaN(Number(cellValue))) {
-      return cellValue.toLocaleString(localeString)
+    if (Array.isArray(cellValue)) {
+      return cellValue.length ? cellValue.join(' ') : ''
     }
-    return cellValue.toLocaleString(localeString)
+    const cellValueNumber = cellValue.replace(/\s/g, '')
+    if (typeof cellValue === 'number' || !isNaN(Number(cellValueNumber))) {
+      return parseFloat(cellValueNumber.toLocaleString(localeString))
+    }
+    if (typeof cellValue === 'string') {
+      return cellValue.trim()
+    }
+    return cellValue
   }
   return ''
 }
@@ -44,30 +50,36 @@ export async function exportTableToExcel({ tableName, tableData, language }: Exp
     thead.forEach((thead: TableView['thead']) => {
       thead.tr.forEach((row: TableRowUniform) => {
         const worksheetRow = worksheet.addRow(getRowData(row, language))
-        console.log(getRowData(row, language))
+        // console.log(thead)
+        // console.log(getRowData(row, language))
 
         let colIndex = 1
-        ;(Object.keys(row) as ('th' | 'td')[]).forEach((cellValue: TableRowUniform) => {
-          if (cellValue.colspan || cellValue.rowspan) {
-            const colspan = parseInt(cellValue.colspan || '1')
-            const rowspan = parseInt(cellValue.rowspan || '1')
-            const startCol = colIndex
-            const endCol = colIndex + colspan - 1
+        ;(Object.keys(row) as ('th' | 'td')[]).forEach((key) => {
+          row[key].forEach((cellValue: string | number | PreliminaryData) => {
+            if (cellValue.colspan || cellValue.rowspan) {
+              const colspan = parseInt(cellValue.colspan || '1')
+              const rowspan = parseInt(cellValue.rowspan || '1')
+              const startCol = colIndex
+              const endCol = colIndex + colspan - 1
 
-            // Merge cells horizontally and/or vertically
-            worksheet.mergeCells(worksheetRow.number, startCol, worksheetRow.number + rowspan - 1, endCol)
-            colIndex = endCol + 1
-          } else {
-            colIndex++
-          }
+              // Merge cells horizontally and/or vertically
+              worksheet.mergeCells(worksheetRow.number, startCol, worksheetRow.number + rowspan - 1, endCol)
+
+              colIndex = endCol + 1
+            } else {
+              colIndex++
+            }
+          })
         })
       })
     })
   }
 
   if (tbody?.length) {
+    console.log(tbody)
     tbody.forEach((tbody: TableView['tbody']) => {
       tbody.tr.forEach((row: TableRowUniform) => {
+        // console.log(getRowData(row, language))
         worksheet.addRow(getRowData(row, language))
       })
     })
