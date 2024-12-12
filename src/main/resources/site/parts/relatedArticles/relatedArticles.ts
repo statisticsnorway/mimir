@@ -223,7 +223,7 @@ function getDsArticle(
       ? `data.associatedStatistics.XP.content = "${statisticId}"`
       : `data.associatedStatistics.XP.content = "${statisticId}" AND publish.from LIKE "${statisticPublishDate}*" `
 
-  const sort = dsArticleType === 'lastArticle' ? 'publish.from DESC' : 'publish.from ASC'
+  const sort = 'publish.from DESC'
 
   const articleContent: Array<Content<Statistics | Article>> = query({
     count: 1,
