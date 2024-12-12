@@ -10,10 +10,10 @@ export interface ExportTableTypes {
 
 function parseCellValue(cellValue: string | number | PreliminaryData, language?: string) {
   const localeString = language === 'en' ? 'en-EN' : 'nb-NO'
+  if (typeof cellValue === 'object' && Array.isArray(cellValue)) {
+    return cellValue.join(' ')
+  }
   if (cellValue !== '' && typeof cellValue !== 'object') {
-    if (Array.isArray(cellValue)) {
-      return cellValue.length ? cellValue.join(' ') : ''
-    }
     const cellValueNumber = cellValue.replace(/\s/g, '')
     if (typeof cellValue === 'number' || !isNaN(Number(cellValueNumber))) {
       return parseFloat(cellValueNumber.toLocaleString(localeString))
@@ -28,10 +28,16 @@ function parseCellValue(cellValue: string | number | PreliminaryData, language?:
 
 function getRowData(row: TableRowUniform, language?: string) {
   const rowData: Array<string | number> = []
+  console.log(row)
   ;(Object.keys(row) as ('th' | 'td')[]).forEach((key) => {
-    row[key].forEach((cellValue: string | number | PreliminaryData) => {
-      rowData.push(parseCellValue(cellValue.content || cellValue || '', language))
-    })
+    if (row[key]) {
+      row[key].forEach((cellValue: string | number | PreliminaryData) => {
+        rowData.push(parseCellValue(cellValue.content || cellValue, language))
+      })
+    }
+    if (Array.isArray(row[key]) && row[key].length === 0) {
+      rowData.push('')
+    }
   })
   return rowData
 }
@@ -45,18 +51,14 @@ export async function exportTableToExcel({ tableName, tableData, language }: Exp
   const workbook = new ExcelJS.Workbook()
   const worksheet = workbook.addWorksheet('Sheet1')
 
-  console.log(thead)
   if (thead?.length) {
     thead.forEach((thead: TableView['thead']) => {
       thead.tr.forEach((row: TableRowUniform) => {
         const worksheetRow = worksheet.addRow(getRowData(row, language))
-        // console.log(thead)
-        // console.log(getRowData(row, language))
-
         let colIndex = 1
         ;(Object.keys(row) as ('th' | 'td')[]).forEach((key) => {
           row[key].forEach((cellValue: string | number | PreliminaryData) => {
-            if (cellValue.colspan || cellValue.rowspan) {
+            if (typeof cellValue === 'object' && (cellValue.colspan || cellValue.rowspan)) {
               const colspan = parseInt(cellValue.colspan || '1')
               const rowspan = parseInt(cellValue.rowspan || '1')
               const startCol = colIndex
@@ -70,6 +72,9 @@ export async function exportTableToExcel({ tableName, tableData, language }: Exp
               colIndex++
             }
           })
+          if (Array.isArray(row[key]) && row[key].length === 0) {
+            colIndex++
+          }
         })
       })
     })
@@ -79,7 +84,6 @@ export async function exportTableToExcel({ tableName, tableData, language }: Exp
     console.log(tbody)
     tbody.forEach((tbody: TableView['tbody']) => {
       tbody.tr.forEach((row: TableRowUniform) => {
-        // console.log(getRowData(row, language))
         worksheet.addRow(getRowData(row, language))
       })
     })
