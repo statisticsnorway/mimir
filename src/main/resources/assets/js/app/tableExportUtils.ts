@@ -35,9 +35,6 @@ function getRowData(row: TableRowUniform, language?: string) {
         rowData.push(parseCellValue(cellValue.content || cellValue, language))
       })
     }
-    if (Array.isArray(row[key]) && row[key].length === 0) {
-      rowData.push('')
-    }
   })
   return rowData
 }
@@ -58,7 +55,7 @@ export async function exportTableToExcel({ tableName, tableData, language }: Exp
         let colIndex = 1
         ;(Object.keys(row) as ('th' | 'td')[]).forEach((key) => {
           row[key].forEach((cellValue: string | number | PreliminaryData) => {
-            if (typeof cellValue === 'object' && (cellValue.colspan || cellValue.rowspan)) {
+            if (cellValue.colspan || cellValue.rowspan) {
               const colspan = parseInt(cellValue.colspan || '1')
               const rowspan = parseInt(cellValue.rowspan || '1')
               const startCol = colIndex
@@ -72,9 +69,6 @@ export async function exportTableToExcel({ tableName, tableData, language }: Exp
               colIndex++
             }
           })
-          if (Array.isArray(row[key]) && row[key].length === 0) {
-            colIndex++
-          }
         })
       })
     })
