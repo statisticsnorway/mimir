@@ -114,12 +114,10 @@ export function fetchStatisticsWithReleaseToday(): Array<StatisticInListing> {
   }, [])
 }
 
-//TODO: Se mer på denne , trenger ikke dagens
-export function fetchStatisticsWithPreviousRelease(days: number): Array<StatisticInListing> {
+export function fetchStatisticsDaysBack(days: number): Array<StatisticInListing> {
   const statistics: Array<StatisticInListing> = getAllStatisticsFromRepo()
   const today = new Date()
   const from = subDays(today, days)
-  log.info('From: ' + from)
   return statistics.reduce((statsWithRelease: Array<StatisticInListing>, stat) => {
     const variants: Array<VariantInListing> = ensureArray<VariantInListing>(stat.variants).filter(
       (variant) =>

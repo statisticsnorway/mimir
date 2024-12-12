@@ -2,7 +2,7 @@ import { query, type Content } from '/lib/xp/content'
 import { StatisticInListing, VariantInListing } from '/lib/ssb/dashboard/statreg/types'
 import { getTimeZoneIso } from '/lib/ssb/utils/dateUtils'
 import { subDays, isSameDay, format, parseISO } from '/lib/vendor/dateFns'
-import { fetchStatisticsWithReleaseToday, fetchStatisticsWithPreviousRelease } from '/lib/ssb/statreg/statistics'
+import { fetchStatisticsWithReleaseToday, fetchStatisticsDaysBack } from '/lib/ssb/statreg/statistics'
 import { getMainSubjects } from '/lib/ssb/utils/subjectUtils'
 // @ts-ignore
 import { xmlEscape } from '/lib/text-encoding'
@@ -38,7 +38,6 @@ export function getRssItemsNews(days: number = 1): string | null {
 }
 
 export function getNews(days: number = 1): NewsItem[] {
-  log.info('Get News antall dager: ' + days)
   const mainSubjects: SubjectItem[] = getMainSubjects(dummyReq as XP.Request)
   const articles: NewsItem[] = getArticles(mainSubjects, days)
   const statistics: NewsItem[] = getStatistics(mainSubjects, days)
@@ -95,10 +94,8 @@ function getArticles(mainSubjects: SubjectItem[], days: number): NewsItem[] {
 }
 
 function getStatistics(mainSubjects: SubjectItem[], days: number): NewsItem[] {
-  const statisticReleasesToday: Array<StatisticInListing> = fetchStatisticsWithReleaseToday()
-  const previousStatisticReleases: Array<StatisticInListing> = fetchStatisticsWithPreviousRelease(days)
   const statregStatistics: Array<StatisticInListing> =
-    days > 1 ? previousStatisticReleases.concat(statisticReleasesToday) : statisticReleasesToday
+    days > 1 ? fetchStatisticsDaysBack(days) : fetchStatisticsWithReleaseToday()
   const serverOffsetInMS: number = parseInt(app.config?.['serverOffsetInMs']) || 0
   const timeZoneIso: string = getTimeZoneIso(serverOffsetInMS)
 
