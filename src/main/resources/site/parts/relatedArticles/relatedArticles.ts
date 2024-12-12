@@ -192,34 +192,38 @@ function addDsArticle(
 ): RelatedArticles['relatedArticles'] {
   const statisticId: string = page._id
   const statisticData: Statistics = page.data as Statistics
+  const dsArticleType: string = statisticData.dsArticle // Fetch the dsArticleType from the content data
   const statistic: StatisticInListing | undefined = getStatisticByIdFromRepo(statisticData.statistic)
-
   if (statistic) {
     const variants: Array<VariantInListing | undefined> = util.data.forceArray(statistic.variants)
     const releaseDates: ReleaseDatesVariant = getReleaseDatesByVariants(variants as Array<VariantInListing>)
     const nextRelease: string = releaseDates.nextRelease[0]
     const previousRelease: string = releaseDates.previousRelease[0]
     const statisticPublishDate: string = showPreview && nextRelease !== '' ? nextRelease : previousRelease
-    const assosiatedArticle: RelatedArticle | undefined = getDsArticle(statisticId, statisticPublishDate)
-
+    // Pass dsArticleType to getDsArticle
+    const assosiatedArticle: RelatedArticle | undefined = getDsArticle(statisticId, statisticPublishDate, dsArticleType)
     if (assosiatedArticle && relatedArticles) {
       relatedArticles.unshift(assosiatedArticle)
     }
   }
-
   return relatedArticles
 }
 
-function getDsArticle(statisticId: string, statisticPublishDate: string): RelatedArticle | undefined {
+function getDsArticle(
+  statisticId: string,
+  statisticPublishDate: string,
+  dsArticleType: string
+): RelatedArticle | undefined {
   statisticPublishDate = statisticPublishDate ? new Date(statisticPublishDate).toLocaleDateString() : ''
-
+  const statisticQuery = `data.associatedStatistics.XP.content = "${statisticId}"`
+  const publishFromQuery = `publish.from LIKE "${statisticPublishDate}*" `
+  const queryString = dsArticleType === 'lastArticle' ? statisticQuery : `${statisticQuery} AND ${publishFromQuery}`
   const articleContent: Array<Content<Statistics | Article>> = query({
     count: 1,
     sort: 'publish.from DESC',
-    query: `data.associatedStatistics.XP.content = "${statisticId}" AND publish.from LIKE "${statisticPublishDate}*" `,
+    query: queryString,
     contentTypes: [`${app.name}:article`],
   }).hits as unknown as Array<Content<Statistics | Article>>
-
   const articleObject: RelatedArticle | undefined =
     articleContent.length > 0
       ? {
@@ -229,6 +233,5 @@ function getDsArticle(statisticId: string, statisticPublishDate: string): Relate
           },
         }
       : undefined
-
   return articleObject
 }
