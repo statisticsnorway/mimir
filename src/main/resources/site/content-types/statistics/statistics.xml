@@ -113,6 +113,8 @@
 				</input>
 			</items>
 		</field-set>
+		<mixin name="relatedStatistics" />
+		<mixin name="relatedExternalLinks" />
 		<field-set>
 			<label>Ds artikkel</label>
 			<items>
@@ -129,8 +131,6 @@
 			</items>
 		</field-set>
 		<mixin name="relatedArticles" />
-		<mixin name="relatedStatistics" />
-		<mixin name="relatedExternalLinks" />
 		<mixin name="relatedFactPage" />
 		<mixin name="contacts" />
 		<field-set>
