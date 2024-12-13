@@ -28,7 +28,6 @@ function parseCellValue(cellValue: string | number | PreliminaryData, language?:
 
 function getRowData(row: TableRowUniform, language?: string) {
   const rowData: Array<string | number> = []
-  console.log(row)
   ;(Object.keys(row) as ('th' | 'td')[]).forEach((key) => {
     if (row[key]) {
       row[key].forEach((cellValue: string | number | PreliminaryData) => {
@@ -37,6 +36,27 @@ function getRowData(row: TableRowUniform, language?: string) {
     }
   })
   return rowData
+}
+
+function mergeWorksheetCells(row: TableRowUniform, worksheet: ExcelJS.Worksheet, worksheetRow: ExcelJS.Row) {
+  let colIndex = 1
+  ;(Object.keys(row) as ('th' | 'td')[]).forEach((key) => {
+    row[key].forEach((cellValue: string | number | PreliminaryData) => {
+      if (cellValue.colspan || cellValue.rowspan) {
+        const colspan = parseInt(cellValue.colspan || '1')
+        const rowspan = parseInt(cellValue.rowspan || '1')
+        const startCol = colIndex
+        const endCol = colIndex + colspan - 1
+
+        // Merge cells horizontally and/or vertically
+        worksheet.mergeCells(worksheetRow.number, startCol, worksheetRow.number + rowspan - 1, endCol)
+
+        colIndex = endCol + 1
+      } else {
+        colIndex++
+      }
+    })
+  })
 }
 
 export async function exportTableToExcel({ tableName, tableData, language }: ExportTableTypes) {
@@ -48,28 +68,12 @@ export async function exportTableToExcel({ tableName, tableData, language }: Exp
   const workbook = new ExcelJS.Workbook()
   const worksheet = workbook.addWorksheet('Sheet1')
 
+  console.log(thead)
   if (thead?.length) {
     thead.forEach((thead: TableView['thead']) => {
       thead.tr.forEach((row: TableRowUniform) => {
         const worksheetRow = worksheet.addRow(getRowData(row, language))
-        let colIndex = 1
-        ;(Object.keys(row) as ('th' | 'td')[]).forEach((key) => {
-          row[key].forEach((cellValue: string | number | PreliminaryData) => {
-            if (cellValue.colspan || cellValue.rowspan) {
-              const colspan = parseInt(cellValue.colspan || '1')
-              const rowspan = parseInt(cellValue.rowspan || '1')
-              const startCol = colIndex
-              const endCol = colIndex + colspan - 1
-
-              // Merge cells horizontally and/or vertically
-              worksheet.mergeCells(worksheetRow.number, startCol, worksheetRow.number + rowspan - 1, endCol)
-
-              colIndex = endCol + 1
-            } else {
-              colIndex++
-            }
-          })
-        })
+        mergeWorksheetCells(row, worksheet, worksheetRow)
       })
     })
   }
@@ -78,7 +82,8 @@ export async function exportTableToExcel({ tableName, tableData, language }: Exp
     console.log(tbody)
     tbody.forEach((tbody: TableView['tbody']) => {
       tbody.tr.forEach((row: TableRowUniform) => {
-        worksheet.addRow(getRowData(row, language))
+        const worksheetRow = worksheet.addRow(getRowData(row, language))
+        mergeWorksheetCells(row, worksheet, worksheetRow)
       })
     })
   }
