@@ -1,9 +1,10 @@
 import { query, type Content } from '/lib/xp/content'
 import { StatisticInListing, VariantInListing } from '/lib/ssb/dashboard/statreg/types'
 import { getTimeZoneIso } from '/lib/ssb/utils/dateUtils'
-import { subDays, isSameDay, format, parseISO } from '/lib/vendor/dateFns'
+import { subDays, format, parseISO } from '/lib/vendor/dateFns'
 import { fetchStatisticsWithReleaseToday, fetchStatisticsDaysBack } from '/lib/ssb/statreg/statistics'
 import { getMainSubjects } from '/lib/ssb/utils/subjectUtils'
+import { nextReleasedPassed } from '/lib/ssb/utils/variantUtils'
 // @ts-ignore
 import { xmlEscape } from '/lib/text-encoding'
 import { type SubjectItem } from '/lib/types/subject'
@@ -115,6 +116,7 @@ function getStatistics(mainSubjects: SubjectItem[], days: number): NewsItem[] {
         )
         const variant: VariantInListing | undefined = statreg?.variants?.[0] || undefined
         const pubDate: string | undefined = variant ? getPubDateStatistic(variant, timeZoneIso) : undefined
+
         const link = getLinkByPath(statistic._path)
         if (pubDate) {
           statisticsNews.push({
@@ -137,21 +139,9 @@ function getStatistics(mainSubjects: SubjectItem[], days: number): NewsItem[] {
 }
 
 function getPubDateStatistic(variant: VariantInListing, timeZoneIso: string): string | undefined {
-  const previousReleaseSameDayNow: boolean = variant.previousRelease
-    ? isSameDay(new Date(variant.previousRelease), new Date())
-    : false
-  const nextReleaseSameDayNow: boolean = variant.nextRelease
-    ? isSameDay(new Date(variant.nextRelease), new Date())
-    : false
-  if (previousReleaseSameDayNow) {
-    return variant.previousRelease ? formatPubDateStatistic(variant.previousRelease, timeZoneIso) : undefined
-  } else if (nextReleaseSameDayNow) {
-    return variant.nextRelease ? formatPubDateStatistic(variant.nextRelease, timeZoneIso) : undefined
-  }
-  if (!previousReleaseSameDayNow && !nextReleaseSameDayNow) {
-    return variant.previousRelease ? formatPubDateStatistic(variant.previousRelease, timeZoneIso) : undefined
-  }
-  return undefined
+  const nextReleaseDatePassed: boolean = variant.nextRelease ? nextReleasedPassed(variant) : false
+  const pubDate: string | undefined = nextReleaseDatePassed ? variant.nextRelease : variant.previousRelease
+  return pubDate ? formatPubDateStatistic(pubDate, timeZoneIso) : undefined
 }
 
 function formatPubDateArticle(date: string, serverOffsetInMS: number, timeZoneIso: string): string {
