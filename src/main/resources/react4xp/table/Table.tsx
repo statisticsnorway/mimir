@@ -107,7 +107,7 @@ function Table(props: TableProps) {
         },
       })
     }
-    exportTableToExcel({ tableName: displayName, tableData: currentTable, language: table.language })
+    exportTableToExcel({ tableName: displayName, tableData: currentTable })
   }
 
   function addCaption() {
