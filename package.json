@@ -104,7 +104,7 @@
     "eslint-plugin-react": "~7.37.2",
     "feather-icons": "~4.29.2",
     "file-loader": "~6.2.0",
-    "glob": "~10.4.1",
+    "glob": "~11.0.0",
     "highcharts": "~10.3.3",
     "husky": "^9.1.7",
     "imagesloaded": "~5.0.0",
@@ -167,7 +167,7 @@
     "core-js": "~3.39.0",
     "date-fns": "~3.6.0",
     "highcharts-react-official": "~3.2.1",
-    "react-bootstrap": "~2.10.5",
+    "react-bootstrap": "~2.10.6",
     "react-select": "~5.8.3",
     "redux": "~5.0.1",
     "redux-logger": "~3.0.6",
@@ -184,6 +184,7 @@
     "redux-injectors": {
       "react": "$react",
       "react-dom": "$react-dom"
-    }
+    },
+    "glob": "$glob"
   }
 }
