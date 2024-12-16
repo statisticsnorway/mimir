@@ -42,9 +42,9 @@ function mergeWorksheetCells(row: TableRowUniform, worksheet: ExcelJS.Worksheet,
   let colIndex = 1
   ;(Object.keys(row) as ('th' | 'td')[]).forEach((key) => {
     row[key].forEach((cellValue: string | number | PreliminaryData) => {
-      if (cellValue.colspan || cellValue.rowspan) {
-        const colspan = parseInt(cellValue.colspan || '1')
-        const rowspan = parseInt(cellValue.rowspan || '1')
+      if (typeof cellValue === 'object' && (cellValue.colspan || cellValue.rowspan)) {
+        const colspan = parseInt(cellValue.colspan || '1', 10)
+        const rowspan = parseInt(cellValue.rowspan || '1', 10)
         const startCol = colIndex
         const endCol = colIndex + colspan - 1
 
@@ -72,6 +72,7 @@ export async function exportTableToExcel({ tableName, tableData, language }: Exp
   if (thead?.length) {
     thead.forEach((thead: TableView['thead']) => {
       thead.tr.forEach((row: TableRowUniform) => {
+        console.log(getRowData(row, language))
         const worksheetRow = worksheet.addRow(getRowData(row, language))
         mergeWorksheetCells(row, worksheet, worksheetRow)
       })
@@ -82,8 +83,8 @@ export async function exportTableToExcel({ tableName, tableData, language }: Exp
     console.log(tbody)
     tbody.forEach((tbody: TableView['tbody']) => {
       tbody.tr.forEach((row: TableRowUniform) => {
-        const worksheetRow = worksheet.addRow(getRowData(row, language))
-        mergeWorksheetCells(row, worksheet, worksheetRow)
+        worksheet.addRow(getRowData(row, language))
+        console.log(getRowData(row, language))
       })
     })
   }
