@@ -115,6 +115,21 @@
 		</field-set>
 		<mixin name="relatedStatistics" />
 		<mixin name="relatedExternalLinks" />
+		<field-set>
+			<label>Ds artikkel</label>
+			<items>
+				<input name="dsArticle" type="RadioButton">
+					<label>Hvilken artikkel skal vises som DS artikkel</label>
+					<help-text>Standard valg er å hente artikkel med lik dato som publiseringsdato for statistikken, ved å velge Siste artikkel for statistikken henter den sist publiserte artikkel som er tilknyttet statistikken</help-text>
+					<occurrences minimum="1" maximum="1"/>
+					<config>
+						<option value="default">Artikkel med lik publiseringsdato som statistikken</option>
+						<option value="lastArticle">Siste artikkel for statistikken</option>
+					</config>
+					<default>default</default>
+				</input>
+			</items>
+		</field-set>
 		<mixin name="relatedArticles" />
 		<mixin name="relatedFactPage" />
 		<mixin name="contacts" />
