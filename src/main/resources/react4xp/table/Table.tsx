@@ -15,6 +15,7 @@ import { NumericFormat } from 'react-number-format'
 import { Alert } from 'react-bootstrap'
 import { type TableProps } from '/lib/types/partTypes/table'
 import { PreliminaryData, type TableCellUniform } from '/lib/types/xmlParser'
+import { exportTableToExcel } from '/lib/ssb/utils/tableExportUtils'
 
 declare global {
   interface Window {
@@ -89,7 +90,8 @@ function Table(props: TableProps) {
   }
 
   function downloadTableAsExcel() {
-    if (window.downloadTableFile) {
+    exportTableToExcel('complex-table', 'my_complex_table.xlsx', 'DataSheet')
+    /* if (window.downloadTableFile) {
       window.downloadTableFile(tableWrapperRef.current, {
         type: 'xlsx',
         fileName: 'tabell',
@@ -104,7 +106,7 @@ function Table(props: TableProps) {
           },
         },
       })
-    }
+    } */
   }
 
   function addCaption() {
@@ -125,6 +127,7 @@ function Table(props: TableProps) {
     const { tableClass } = props.table
     return (
       <SSBTable
+        id='complex-table'
         className={tableClass}
         caption={addCaption()}
         dataNoteRefs={currentTable.caption?.noterefs}
