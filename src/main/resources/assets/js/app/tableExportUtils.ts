@@ -33,6 +33,9 @@ function getRowData(row: TableRowUniform) {
         rowData.push(parseCellValue(cellValue.content || cellValue))
       })
     }
+    if (row[key].length === 0) {
+      rowData.push('')
+    }
   })
   return rowData
 }
@@ -44,24 +47,25 @@ function mergeWorksheetCells(row: TableRowUniform, worksheet: ExcelJS.Worksheet,
       if (typeof cellValue === 'object' && (cellValue.colspan || cellValue.rowspan)) {
         const colspan = parseInt(cellValue.colspan || '1', 10)
         const rowspan = parseInt(cellValue.rowspan || '1', 10)
+        const startRow = worksheetRow.number
         const startCol = colIndex
         const endCol = colIndex + colspan - 1
+        const endRow = worksheetRow.number + rowspan - 1
 
         console.log('cell value ' + JSON.stringify(cellValue, null, 2))
         console.log('start column ' + startCol)
         console.log('end column ' + endCol)
-        console.log('end row ' + (worksheetRow.number + rowspan - 1))
-        console.log('worksheet row number ' + worksheetRow.number)
+        console.log('end row ' + endRow)
+        console.log('worksheet row number ' + startRow)
 
-        // Merge cells horizontally and/or vertically: start row, start column, end row, end column
-        worksheet.mergeCells(worksheetRow.number, startCol, worksheetRow.number + rowspan - 1, endCol)
+        // Merge cells horizontally and/or vertically
+        worksheet.mergeCells(startRow, startCol, endRow, endCol)
 
         colIndex = endCol + 1
       } else {
         colIndex++
       }
     })
-    console.log('colIndex ' + colIndex)
   })
 }
 
@@ -77,9 +81,7 @@ export async function exportTableToExcel({ tableName, tableData }: ExportTableTy
   if (theadRow.length) {
     // console.log(theadRow)
     theadRow.map((row: TableRowUniform) => {
-      console.log(getRowData(row))
-      const rowData = getRowData(row)
-      const worksheetRow = worksheet.addRow(rowData)
+      const worksheetRow = worksheet.addRow(getRowData(row))
       mergeWorksheetCells(row, worksheet, worksheetRow)
     })
   }
