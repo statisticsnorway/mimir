@@ -8,15 +8,14 @@ export interface ExportTableTypes {
   language?: string
 }
 
-function parseCellValue(cellValue: string | number | PreliminaryData, language?: string) {
-  const localeString = language === 'en' ? 'en-EN' : 'nb-NO'
+function parseCellValue(cellValue: string | number | PreliminaryData) {
   if (typeof cellValue === 'object' && Array.isArray(cellValue)) {
     return cellValue.join(' ')
   }
   if (cellValue !== '' && typeof cellValue !== 'object') {
     const cellValueNumber = cellValue.replace(/\s/g, '')
     if (typeof cellValue === 'number' || !isNaN(Number(cellValueNumber))) {
-      return parseFloat(cellValueNumber.toLocaleString(localeString))
+      return parseFloat(cellValueNumber.toLocaleString('nb-NO'))
     }
     if (typeof cellValue === 'string') {
       return cellValue.trim()
@@ -26,12 +25,12 @@ function parseCellValue(cellValue: string | number | PreliminaryData, language?:
   return ''
 }
 
-function getRowData(row: TableRowUniform, language?: string) {
+function getRowData(row: TableRowUniform) {
   const rowData: Array<string | number> = []
   ;(Object.keys(row) as ('th' | 'td')[]).flatMap((key) => {
     if (row[key]) {
       row[key].map((cellValue: string | number | PreliminaryData) => {
-        rowData.push(parseCellValue(cellValue.content || cellValue, language))
+        rowData.push(parseCellValue(cellValue.content || cellValue))
       })
     }
   })
@@ -66,7 +65,7 @@ function mergeWorksheetCells(row: TableRowUniform, worksheet: ExcelJS.Worksheet,
   })
 }
 
-export async function exportTableToExcel({ tableName, tableData, language }: ExportTableTypes) {
+export async function exportTableToExcel({ tableName, tableData }: ExportTableTypes) {
   const { thead, tbody } = tableData
 
   const workbook = new ExcelJS.Workbook()
@@ -78,8 +77,8 @@ export async function exportTableToExcel({ tableName, tableData, language }: Exp
   if (theadRow.length) {
     // console.log(theadRow)
     theadRow.map((row: TableRowUniform) => {
-      console.log(getRowData(row, language))
-      const rowData = getRowData(row, language)
+      console.log(getRowData(row))
+      const rowData = getRowData(row)
       const worksheetRow = worksheet.addRow(rowData)
       mergeWorksheetCells(row, worksheet, worksheetRow)
     })
@@ -88,8 +87,8 @@ export async function exportTableToExcel({ tableName, tableData, language }: Exp
   if (tbodyRow.length) {
     // console.log(tbodyRow)
     tbodyRow.map((row: TableRowUniform) => {
-      worksheet.addRow(getRowData(row, language))
-      // console.log(getRowData(row, language))
+      worksheet.addRow(getRowData(row))
+      // console.log(getRowData(row))
     })
   }
 
