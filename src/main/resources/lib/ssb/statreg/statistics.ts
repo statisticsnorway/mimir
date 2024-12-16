@@ -7,7 +7,7 @@ import {
   ReleaseDatesVariant,
 } from '/lib/ssb/dashboard/statreg/types'
 import { HttpResponse } from '/lib/http-client'
-import { format, isSameDay, isAfter } from '/lib/vendor/dateFns'
+import { format, isSameDay, isAfter, subDays, isBefore } from '/lib/vendor/dateFns'
 import { isDateBetween } from '/lib/ssb/utils/dateUtils'
 
 import { ensureArray } from '/lib/ssb/utils/arrayUtils'
@@ -106,6 +106,26 @@ export function fetchStatisticsWithReleaseToday(): Array<StatisticInListing> {
       (variant) =>
         isSameDay(new Date(variant.nextRelease), new Date()) || isSameDay(new Date(variant.previousRelease), new Date())
     )
+    if (variants.length > 0) {
+      stat.variants = variants
+      statsWithRelease.push(stat)
+    }
+    return statsWithRelease
+  }, [])
+}
+
+export function fetchStatisticsDaysBack(days: number): Array<StatisticInListing> {
+  const statistics: Array<StatisticInListing> = getAllStatisticsFromRepo()
+  const serverOffsetInMs: number = app.config?.['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
+  const now: Date = new Date(new Date().getTime() + serverOffsetInMs)
+  const from = subDays(new Date(), days)
+  return statistics.reduce((statsWithRelease: Array<StatisticInListing>, stat) => {
+    const variants: Array<VariantInListing> = ensureArray<VariantInListing>(stat.variants).filter(
+      (variant) =>
+        (isAfter(new Date(variant.nextRelease), from) && isBefore(new Date(variant.nextRelease), now)) ||
+        isAfter(new Date(variant.previousRelease), from)
+    )
+
     if (variants.length > 0) {
       stat.variants = variants
       statsWithRelease.push(stat)
