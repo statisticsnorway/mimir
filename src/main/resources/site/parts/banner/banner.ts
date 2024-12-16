@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import { type Content } from '/lib/xp/content'
 import { assetUrl, getContent, getComponent } from '/lib/xp/portal'
 import {
@@ -14,6 +15,7 @@ import { getPhrases } from '/lib/ssb/utils/language'
 import { type Phrases } from '/lib/types/language'
 import { type BannerProps } from '/lib/types/partTypes/banner'
 import { type Page } from '/site/content-types'
+import { type Default } from '/site/pages/default'
 
 export function get(req: XP.Request): XP.Response {
   try {
@@ -32,6 +34,15 @@ function renderPart(req: XP.Request): XP.Response {
   if (!page) throw Error('No page found')
 
   const part = getComponent<XP.PartComponent.Banner>()
+  // log.info(JSON.stringify(part, null, 2))
+  // log.info(JSON.stringify(page, null, 2))
+  const region = part?.path?.split('/')[1]
+  const myPage = page.page?.config as unknown as Default
+  const myRegion = myPage?.regions.find((r) => r.region === region)
+
+  log.info(`Region type for part with title ${myRegion?.title} is ${myRegion?.view}`)
+  log.info(`Region found in page: ${JSON.stringify(myRegion, null, 2)}`)
+
   if (!part) throw Error('No component found')
   const pageType = part.config.pageType
   const phrases = getPhrases(page) as Phrases
