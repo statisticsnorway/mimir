@@ -30,7 +30,7 @@ function getRowData(row: TableRowUniform, language?: string) {
   const rowData: Array<string | number> = []
   ;(Object.keys(row) as ('th' | 'td')[]).flatMap((key) => {
     if (row[key]) {
-      row[key].forEach((cellValue: string | number | PreliminaryData) => {
+      row[key].map((cellValue: string | number | PreliminaryData) => {
         rowData.push(parseCellValue(cellValue.content || cellValue, language))
       })
     }
@@ -41,7 +41,7 @@ function getRowData(row: TableRowUniform, language?: string) {
 function mergeWorksheetCells(row: TableRowUniform, worksheet: ExcelJS.Worksheet, worksheetRow: ExcelJS.Row) {
   let colIndex = 1
   ;(Object.keys(row) as ('th' | 'td')[]).flatMap((key) => {
-    row[key].forEach((cellValue: string | number | PreliminaryData) => {
+    row[key].map((cellValue: string | number | PreliminaryData) => {
       if (typeof cellValue === 'object' && (cellValue.colspan || cellValue.rowspan)) {
         const colspan = parseInt(cellValue.colspan || '1', 10)
         const rowspan = parseInt(cellValue.rowspan || '1', 10)
@@ -72,24 +72,24 @@ export async function exportTableToExcel({ tableName, tableData, language }: Exp
   const workbook = new ExcelJS.Workbook()
   const worksheet = workbook.addWorksheet('Sheet1')
 
-  // console.log(thead)
-  if (thead?.length) {
-    thead.forEach((thead: TableView['thead']) => {
-      thead.tr.forEach((row: TableRowUniform) => {
-        console.log(getRowData(row, language))
-        const worksheetRow = worksheet.addRow(getRowData(row, language))
-        mergeWorksheetCells(row, worksheet, worksheetRow)
-      })
+  const theadRow = thead[0].tr
+  const tbodyRow = tbody[0].tr
+
+  if (theadRow.length) {
+    // console.log(theadRow)
+    theadRow.map((row: TableRowUniform) => {
+      console.log(getRowData(row, language))
+      const rowData = getRowData(row, language)
+      const worksheetRow = worksheet.addRow(rowData)
+      mergeWorksheetCells(row, worksheet, worksheetRow)
     })
   }
 
-  if (tbody?.length) {
-    // console.log(tbody)
-    tbody.forEach((tbody: TableView['tbody']) => {
-      tbody.tr.forEach((row: TableRowUniform) => {
-        worksheet.addRow(getRowData(row, language))
-        // console.log(getRowData(row, language))
-      })
+  if (tbodyRow.length) {
+    // console.log(tbodyRow)
+    tbodyRow.map((row: TableRowUniform) => {
+      worksheet.addRow(getRowData(row, language))
+      // console.log(getRowData(row, language))
     })
   }
 
@@ -108,5 +108,3 @@ export async function exportTableToExcel({ tableName, tableData, language }: Exp
   URL.revokeObjectURL(url)
   document.body.removeChild(a)
 }
-
-// export async function exportTableToCSV({ tableName, tableData, language }: ExportTableTypes) {}
