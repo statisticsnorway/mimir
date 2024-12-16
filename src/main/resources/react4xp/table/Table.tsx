@@ -16,7 +16,7 @@ import { Alert } from 'react-bootstrap'
 import { type TableProps } from '/lib/types/partTypes/table'
 import { PreliminaryData, type TableCellUniform } from '/lib/types/xmlParser'
 
-import { exportTableToCSV, exportTableToExcel } from '../../assets/js/app/tableExportUtils'
+import { exportTableToExcel } from '../../assets/js/app/tableExportUtils'
 
 declare global {
   interface Window {
@@ -88,7 +88,6 @@ function Table(props: TableProps) {
         tfootSelector: '',
       })
     }
-    exportTableToCSV({ tableName: displayName, tableData: currentTable, language: table.language })
   }
 
   function downloadTableAsExcel() {

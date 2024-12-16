@@ -28,7 +28,7 @@ function parseCellValue(cellValue: string | number | PreliminaryData, language?:
 
 function getRowData(row: TableRowUniform, language?: string) {
   const rowData: Array<string | number> = []
-  ;(Object.keys(row) as ('th' | 'td')[]).forEach((key) => {
+  ;(Object.keys(row) as ('th' | 'td')[]).flatMap((key) => {
     if (row[key]) {
       row[key].forEach((cellValue: string | number | PreliminaryData) => {
         rowData.push(parseCellValue(cellValue.content || cellValue, language))
@@ -40,7 +40,7 @@ function getRowData(row: TableRowUniform, language?: string) {
 
 function mergeWorksheetCells(row: TableRowUniform, worksheet: ExcelJS.Worksheet, worksheetRow: ExcelJS.Row) {
   let colIndex = 1
-  ;(Object.keys(row) as ('th' | 'td')[]).forEach((key) => {
+  ;(Object.keys(row) as ('th' | 'td')[]).flatMap((key) => {
     row[key].forEach((cellValue: string | number | PreliminaryData) => {
       if (typeof cellValue === 'object' && (cellValue.colspan || cellValue.rowspan)) {
         const colspan = parseInt(cellValue.colspan || '1', 10)
@@ -48,7 +48,13 @@ function mergeWorksheetCells(row: TableRowUniform, worksheet: ExcelJS.Worksheet,
         const startCol = colIndex
         const endCol = colIndex + colspan - 1
 
-        // Merge cells horizontally and/or vertically
+        console.log('cell value ' + JSON.stringify(cellValue, null, 2))
+        console.log('start column ' + startCol)
+        console.log('end column ' + endCol)
+        console.log('end row ' + (worksheetRow.number + rowspan - 1))
+        console.log('worksheet row number ' + worksheetRow.number)
+
+        // Merge cells horizontally and/or vertically: start row, start column, end row, end column
         worksheet.mergeCells(worksheetRow.number, startCol, worksheetRow.number + rowspan - 1, endCol)
 
         colIndex = endCol + 1
@@ -56,19 +62,17 @@ function mergeWorksheetCells(row: TableRowUniform, worksheet: ExcelJS.Worksheet,
         colIndex++
       }
     })
+    console.log('colIndex ' + colIndex)
   })
 }
 
 export async function exportTableToExcel({ tableName, tableData, language }: ExportTableTypes) {
-  if (!tableData) {
-    console.error('Missing Table Data')
-  }
   const { thead, tbody } = tableData
 
   const workbook = new ExcelJS.Workbook()
   const worksheet = workbook.addWorksheet('Sheet1')
 
-  console.log(thead)
+  // console.log(thead)
   if (thead?.length) {
     thead.forEach((thead: TableView['thead']) => {
       thead.tr.forEach((row: TableRowUniform) => {
@@ -80,11 +84,11 @@ export async function exportTableToExcel({ tableName, tableData, language }: Exp
   }
 
   if (tbody?.length) {
-    console.log(tbody)
+    // console.log(tbody)
     tbody.forEach((tbody: TableView['tbody']) => {
       tbody.tr.forEach((row: TableRowUniform) => {
         worksheet.addRow(getRowData(row, language))
-        console.log(getRowData(row, language))
+        // console.log(getRowData(row, language))
       })
     })
   }
@@ -105,8 +109,4 @@ export async function exportTableToExcel({ tableName, tableData, language }: Exp
   document.body.removeChild(a)
 }
 
-export async function exportTableToCSV({ tableName, tableData, language }: ExportTableTypes) {
-  console.log('tableName: ' + JSON.stringify(tableName))
-  console.log(JSON.stringify(tableData, null, 2))
-  console.log(language)
-}
+// export async function exportTableToCSV({ tableName, tableData, language }: ExportTableTypes) {}
