@@ -5,7 +5,8 @@ interface TableExport {
   fileName?: string
 }
 
-export const exportTableToExcel = ({ tableElement, fileName = 'tabell.xlsx' }: TableExport): void => {
+export const exportTableToExcel = ({ tableElement, fileName }: TableExport): void => {
+  const sheetFileName = fileName ? `${fileName}.xlsx` : 'tabell.xlsx'
   const sheetName = 'Sheet1'
   const workbook = XLSX.utils.table_to_book(tableElement, {
     sheet: sheetName,
@@ -26,5 +27,5 @@ export const exportTableToExcel = ({ tableElement, fileName = 'tabell.xlsx' }: T
     }
   }
 
-  XLSX.writeFile(workbook, fileName)
+  XLSX.writeFile(workbook, sheetFileName)
 }
