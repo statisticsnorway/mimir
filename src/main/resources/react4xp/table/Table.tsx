@@ -92,7 +92,7 @@ function Table(props: TableProps) {
 
   function downloadTableAsExcel() {
     if (tableRef.current) {
-      exportTableToExcel(tableRef.current, 'table_export_carina.xlsx', 'DataSheet')
+      exportTableToExcel(tableRef.current, 'table_export.xlsx', 'DataSheet')
     }
     /* if (window.downloadTableFile) {
       window.downloadTableFile(tableWrapperRef.current, {
@@ -130,6 +130,7 @@ function Table(props: TableProps) {
     const { tableClass } = props.table
     return (
       <SSBTable
+        ref={tableRef}
         className={tableClass}
         caption={addCaption()}
         dataNoteRefs={currentTable.caption?.noterefs}
