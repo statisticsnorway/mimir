@@ -149,7 +149,7 @@
     "webpack": "~5.96.1",
     "webpack-bundle-analyzer": "~4.10.2",
     "webpack-cli": "~5.1.4",
-    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
+    "xlsx": "file:src/main/resources/lib/vendor/xlsx-0.20.3.tgz"
   },
   "browserslist": [
     "last 2 version",
