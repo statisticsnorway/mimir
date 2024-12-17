@@ -130,7 +130,6 @@ function Table(props: TableProps) {
     const { tableClass } = props.table
     return (
       <SSBTable
-        id='complex-table'
         className={tableClass}
         caption={addCaption()}
         dataNoteRefs={currentTable.caption?.noterefs}
