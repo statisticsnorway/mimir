@@ -71,6 +71,10 @@ try {
           feature: 'show-popup-survey',
           enabled: false,
         },
+        {
+          feature: 'new-table-export',
+          enabled: false,
+        },
       ],
     },
   ])

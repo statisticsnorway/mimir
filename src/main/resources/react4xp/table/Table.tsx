@@ -15,6 +15,7 @@ import { NumericFormat } from 'react-number-format'
 import { Alert } from 'react-bootstrap'
 import { type TableProps } from '/lib/types/partTypes/table'
 import { PreliminaryData, type TableCellUniform } from '/lib/types/xmlParser'
+import { exportTableToExcel } from '/lib/ssb/utils/tableExportUtils'
 
 declare global {
   interface Window {
@@ -23,20 +24,21 @@ declare global {
 }
 
 function Table(props: TableProps) {
-  const [currentTable, setCurrentTable] = useState(
-    props.paramShowDraft && props.draftExist ? props.tableDraft : props.table
-  )
+  const { useNewTableExport, displayName, table } = props
+
+  const [currentTable, setCurrentTable] = useState(props.paramShowDraft && props.draftExist ? props.tableDraft : table)
   const [fetchUnPublished, setFetchUnPublished] = useState(props.paramShowDraft)
   const showPreviewToggle =
     props.showPreviewDraft && (!props.pageTypeStatistic || (props.paramShowDraft && props.pageTypeStatistic))
   const tableWrapperRef = useRef<HTMLDivElement>(null)
+  const tableRef = useRef<HTMLTableElement>(null)
 
   function trimValue(value: string | number) {
     return typeof value === 'string' ? value.trim() : value
   }
 
   function formatNumber(value: string | number) {
-    const language = props.table.language
+    const language = table.language
     const decimalSeparator = language === 'en' ? '.' : ','
     value = trimValue(value)
     if (value && (typeof value === 'number' || !isNaN(Number(value)))) {
@@ -105,6 +107,9 @@ function Table(props: TableProps) {
         },
       })
     }
+    if (useNewTableExport && tableRef?.current) {
+      exportTableToExcel({ tableElement: tableRef.current, fileName: displayName })
+    }
   }
 
   function addCaption() {
@@ -122,9 +127,10 @@ function Table(props: TableProps) {
   }
 
   function createTable() {
-    const { tableClass } = props.table
+    const { tableClass } = table
     return (
       <SSBTable
+        ref={tableRef}
         className={tableClass}
         caption={addCaption()}
         dataNoteRefs={currentTable.caption?.noterefs}
@@ -350,7 +356,7 @@ function Table(props: TableProps) {
 
   function toggleDraft() {
     setFetchUnPublished(!fetchUnPublished)
-    setCurrentTable(!fetchUnPublished && props.draftExist ? props.tableDraft : props.table)
+    setCurrentTable(!fetchUnPublished && props.draftExist ? props.tableDraft : table)
   }
 
   function addPreviewInfo() {

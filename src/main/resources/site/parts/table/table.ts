@@ -22,6 +22,7 @@ import {
   type TableStandardSymbolLink,
   type TableSourceList,
 } from '/lib/types/partTypes/table'
+import { isEnabled } from '/lib/featureToggle'
 import { type Statistics, type Table } from '/site/content-types'
 
 const view = resolve('./table.html')
@@ -129,6 +130,7 @@ export function getProps(req: XP.Request, tableId?: string): TableProps {
     sourceTableLabel,
     statBankWebUrl,
     hiddenTitle: table.caption ? table.caption.content : undefined,
+    useNewTableExport: isEnabled('new-table-export', false),
   }
 }
 function renderPart(req: XP.Request, tableId?: string): XP.Response {
