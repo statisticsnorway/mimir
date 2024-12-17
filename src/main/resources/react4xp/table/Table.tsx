@@ -31,6 +31,7 @@ function Table(props: TableProps) {
   const showPreviewToggle =
     props.showPreviewDraft && (!props.pageTypeStatistic || (props.paramShowDraft && props.pageTypeStatistic))
   const tableWrapperRef = useRef<HTMLDivElement>(null)
+  const tableRef = useRef<HTMLTableElement>(null)
 
   function trimValue(value: string | number) {
     return typeof value === 'string' ? value.trim() : value
@@ -90,7 +91,9 @@ function Table(props: TableProps) {
   }
 
   function downloadTableAsExcel() {
-    exportTableToExcel('complex-table', 'my_complex_table.xlsx', 'DataSheet')
+    if (tableRef.current) {
+      exportTableToExcel(tableRef.current, 'table_export_carina.xlsx', 'DataSheet')
+    }
     /* if (window.downloadTableFile) {
       window.downloadTableFile(tableWrapperRef.current, {
         type: 'xlsx',
