@@ -81,7 +81,7 @@ function parseValue(value: string): number | string {
 function convertToCorrectGraphFormat(
   seriesAndCategories: SeriesAndCategoriesRaw,
   graphType: string,
-  xAxisType: 'category' | 'linear' | 'logarithmic' | undefined
+  xAxisType: Highchart['xAxisType']
 ): SeriesAndCategories {
   if (graphType === 'pie') {
     return {

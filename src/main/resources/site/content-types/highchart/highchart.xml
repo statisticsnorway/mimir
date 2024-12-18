@@ -137,7 +137,7 @@
           <config>
             <option value="category">Ingen (unike kategorier)</option>
             <option value="linear">Lineær</option>
-            <option value="logarithmic">Logaritmisk</option>
+            <option value="datetime">Dato</option>
           </config>
           <default>category</default>
         </input>
@@ -158,10 +158,6 @@
           <size value="12" />
           <regexp>^[0-9]*[,.]?[0-9]+$</regexp>
           <help-text>Skriv for eksempel 10 for å vise hvert 10. år ved årstall.</help-text>
-        </input>
-        <input name="xEnableLabel" type="CheckBox">
-          <label>Skjul aksemarkører</label>
-          <help-text>Kan skrus på dersom det ikke ønskes markører langs X-aksen (f.eks dersom tegnforklaringen gir tilstrekkelig info).</help-text>
         </input>
         <input name="xAxisFlip" type="CheckBox">
           <label>Reverser X-akse</label>
@@ -186,7 +182,7 @@
           <config>
             <option value="category">Ingen (unike kategorier)</option>
             <option value="linear">Lineær</option>
-            <option value="logarithmic">Logaritmisk</option>
+            <option value="datetime">Logaritmisk</option>
           </config>
           <default>linear</default>
           <help-text>Logaritmisk skala brukes kun i helt spesielle tilfeller</help-text>
@@ -232,7 +228,7 @@
             </input>
           </items>
         </item-set>
-      </items>  
+      </items>
     </field-set>
 
     <field-set>

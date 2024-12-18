@@ -26,15 +26,15 @@
                             </include>
                         </config>
                         <help-text>Lim inn (Ctrl-V) en tabell rett fra Excel. Tabeller bør være så enkle som mulig (Overskrifter i første rad/kolonne og ellers bare tall, ingen spesialformatering, manglende tall må være tomme celler)</help-text>
-                    </input>                    						
+                    </input>
                 </items>
             </option>
         </options>
     </option-set>
 
-    <item-set name="series">  
-        <label>Serier</label>  
-        <occurrences minimum="0" maximum="10"/>  
+    <item-set name="series">
+        <label>Serier</label>
+        <occurrences minimum="0" maximum="10"/>
         <items>
             <input name="graphType" type="RadioButton">
                 <label>Graftype</label>
@@ -48,19 +48,19 @@
             </input>
             <input name="yAxis" type="RadioButton">
               <label>Tilhører Y-akse</label>
-              <occurrences minimum="1" maximum="1"/>  
+              <occurrences minimum="1" maximum="1"/>
               <config>
-                <option value="1">1</option>  
+                <option value="1">1</option>
                 <option value="2">2</option>
               </config>
-              <default>1</default>  
+              <default>1</default>
             </input>
-        </items>     
+        </items>
     </item-set>
 
-    <item-set name="yAxis">  
-        <label>Y-akse</label>  
-        <occurrences minimum="0" maximum="2"/>  
+    <item-set name="yAxis">
+        <label>Y-akse</label>
+        <occurrences minimum="0" maximum="2"/>
         <items>
             <input name="yAxisTitle" type="TextLine">
                 <label>Y-akse, tittel</label>
@@ -85,12 +85,12 @@
                 </config>
                 <default>0</default>
                 <help-text>Her velger du hvor mange desimalplasser du vil vise i y-akse</help-text>
-            </input> 
+            </input>
             <input name="yAxisOffset" type="TextLine">
               <label>Plassering av y-aksetittel</label>
               <help-text>Anvendes ved lange y-aksetitler. Negative tall flytter teksten slik at selve aksen går i flukt med venstre/høyre marg. Prøv deg litt fram med ulike verdier.</help-text>
             </input>
-        </items>     
+        </items>
     </item-set>
 
     <field-set>
@@ -105,7 +105,7 @@
           <config>
             <option value="category">Ingen (unike kategorier)</option>
             <option value="linear">Lineær</option>
-            <option value="logarithmic">Logaritmisk</option>
+            <option value="datetime">Dato</option>
           </config>
           <default>category</default>
         </input>
@@ -132,7 +132,7 @@
           <help-text>Sortere visningen av søylene i motsatt rekkefølge.</help-text>
         </input>
       </items>
-    </field-set> 
+    </field-set>
 
     <field-set>
       <label>Bearbeide visningen</label>
@@ -185,7 +185,7 @@
             </input>
           </items>
         </item-set>
-      </items>  
+      </items>
     </field-set>
 
     <field-set>
