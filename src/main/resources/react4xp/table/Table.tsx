@@ -91,7 +91,7 @@ function Table(props: TableProps) {
   }
 
   function downloadTableAsExcel() {
-    if (window.downloadTableFile) {
+    if (window.downloadTableFile && !useNewTableExport) {
       window.downloadTableFile(tableWrapperRef.current, {
         type: 'xlsx',
         fileName: 'tabell',
@@ -107,7 +107,7 @@ function Table(props: TableProps) {
         },
       })
     }
-    if (useNewTableExport && tableRef?.current) {
+    if (tableRef?.current && useNewTableExport) {
       exportTableToExcel({ tableElement: tableRef.current, fileName: displayName })
     }
   }
