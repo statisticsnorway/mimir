@@ -182,10 +182,9 @@
           <config>
             <option value="category">Ingen (unike kategorier)</option>
             <option value="linear">Lineær</option>
-            <option value="datetime">Logaritmisk</option>
+            <option value="datetime">Dato</option>
           </config>
           <default>linear</default>
-          <help-text>Logaritmisk skala brukes kun i helt spesielle tilfeller</help-text>
         </input>
         <input name="yAxisMin" type="TextLine">
           <label>Y-akse, minste verdi</label>
