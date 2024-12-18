@@ -15,7 +15,7 @@ import { NumericFormat } from 'react-number-format'
 import { Alert } from 'react-bootstrap'
 import { type TableProps } from '/lib/types/partTypes/table'
 import { PreliminaryData, type TableCellUniform } from '/lib/types/xmlParser'
-import { exportTableToExcel } from '/lib/ssb/utils/tableExportUtils'
+import { exportTableToExcel, exportTableToCSV } from '/lib/ssb/utils/tableExportUtils'
 
 declare global {
   interface Window {
@@ -24,7 +24,7 @@ declare global {
 }
 
 function Table(props: TableProps) {
-  const { useNewTableExport, displayName, table } = props
+  const { useNewTableExport, table } = props
 
   const [currentTable, setCurrentTable] = useState(props.paramShowDraft && props.draftExist ? props.tableDraft : table)
   const [fetchUnPublished, setFetchUnPublished] = useState(props.paramShowDraft)
@@ -79,7 +79,7 @@ function Table(props: TableProps) {
   }
 
   function downloadTableAsCSV() {
-    if (window.downloadTableFile) {
+    if (window.downloadTableFile && !useNewTableExport) {
       window.downloadTableFile(tableWrapperRef.current, {
         type: 'csv',
         fileName: 'tabell',
@@ -87,6 +87,9 @@ function Table(props: TableProps) {
         csvEnclosure: '',
         tfootSelector: '',
       })
+    }
+    if (tableRef?.current && useNewTableExport) {
+      exportTableToCSV({ tableElement: tableRef.current, fileName: table?.caption?.content })
     }
   }
 
@@ -108,7 +111,7 @@ function Table(props: TableProps) {
       })
     }
     if (tableRef?.current && useNewTableExport) {
-      exportTableToExcel({ tableElement: tableRef.current, fileName: displayName })
+      exportTableToExcel({ tableElement: tableRef.current, fileName: table?.caption?.content })
     }
   }
 

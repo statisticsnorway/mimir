@@ -5,13 +5,18 @@ interface TableExport {
   fileName?: string
 }
 
-export const exportTableToExcel = ({ tableElement, fileName }: TableExport): void => {
-  const sheetFileName = fileName ? `${fileName}.xlsx` : 'tabell.xlsx'
-  const sheetName = 'Sheet1'
-  const workbook = XLSX.utils.table_to_book(tableElement, {
+const sheetName = 'Sheet1'
+
+const createTableWorbook = (tableElement: TableExport['tableElement']) => {
+  return XLSX.utils.table_to_book(tableElement, {
     sheet: sheetName,
     raw: true,
   })
+}
+
+export const exportTableToExcel = ({ tableElement, fileName }: TableExport): void => {
+  const sheetFileName = fileName ? `${fileName}.xlsx` : 'tabell.xlsx'
+  const workbook = createTableWorbook(tableElement)
 
   const worksheet = workbook.Sheets[sheetName]
   for (const cell in worksheet) {
@@ -28,4 +33,11 @@ export const exportTableToExcel = ({ tableElement, fileName }: TableExport): voi
   }
 
   XLSX.writeFile(workbook, sheetFileName)
+}
+
+export const exportTableToCSV = ({ tableElement, fileName }: TableExport): void => {
+  const sheetFileName = fileName ? `${fileName}.csv` : 'tabell.csv'
+  const workbook = createTableWorbook(tableElement)
+
+  XLSX.writeFile(workbook, sheetFileName, { bookType: 'csv', type: 'string' })
 }
