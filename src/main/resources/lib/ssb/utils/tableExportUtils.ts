@@ -7,7 +7,7 @@ interface TableExport {
 
 const sheetName = 'Sheet1'
 
-const createTableWorbook = (tableElement: TableExport['tableElement']) => {
+const createTableWorkbook = (tableElement: TableExport['tableElement']) => {
   return XLSX.utils.table_to_book(tableElement, {
     sheet: sheetName,
     raw: true,
@@ -16,7 +16,7 @@ const createTableWorbook = (tableElement: TableExport['tableElement']) => {
 
 export const exportTableToExcel = ({ tableElement, fileName }: TableExport): void => {
   const sheetFileName = fileName ? `${fileName}.xlsx` : 'tabell.xlsx'
-  const workbook = createTableWorbook(tableElement)
+  const workbook = createTableWorkbook(tableElement)
 
   const worksheet = workbook.Sheets[sheetName]
   Object.keys(worksheet).flatMap((cell) => {
@@ -37,7 +37,7 @@ export const exportTableToExcel = ({ tableElement, fileName }: TableExport): voi
 
 export const exportTableToCSV = ({ tableElement, fileName }: TableExport): void => {
   const sheetFileName = fileName ? `${fileName}.csv` : 'tabell.csv'
-  const workbook = createTableWorbook(tableElement)
+  const workbook = createTableWorkbook(tableElement)
 
   XLSX.writeFile(workbook, sheetFileName, { bookType: 'csv', type: 'string' })
 }
