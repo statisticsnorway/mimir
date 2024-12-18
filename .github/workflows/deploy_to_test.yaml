@@ -39,7 +39,7 @@ jobs:
       - name: Send failure message to Slack
         id: slack_failure
         if: failure()
-        uses: slackapi/slack-github-action@v1
+        uses: slackapi/slack-github-action@v2
         with:
           payload: |
             {
