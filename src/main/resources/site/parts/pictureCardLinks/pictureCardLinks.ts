@@ -49,7 +49,7 @@ function parsePictureCardLinks(
       const subTitle: string = pictureCardLink.subTitle
       const href: string = pictureCardLink.href
 
-      const imageSources = createImageUrls(pictureCardLink, i)
+      const imageSources = createImageUrls(pictureCardLink, pictureCardLinks.length, i)
 
       const pictureCardLinksContent: PictureCardLinksContent = {
         title: title,
@@ -63,7 +63,7 @@ function parsePictureCardLinks(
   }, [])
 }
 
-function createImageUrls(pictureCardLink: PictureCardLink, i: number): ImageUrls {
+function createImageUrls(pictureCardLink: PictureCardLink, listLength: number, i: number): ImageUrls {
   const imageUrls: ImageUrls = {
     portraitSrcSet: '',
     landscapeSrcSet: '',
@@ -78,7 +78,11 @@ function createImageUrls(pictureCardLink: PictureCardLink, i: number): ImageUrls
     })
 
     imageUrls.landscapeSrcSet = imageUrls.imageSrc
-    if (i > 0) imageUrls.portraitSrcSet = imageUrls.imageSrc.replace('block-580-400', 'block-280-400')
+
+    if (listLength === 4 || (listLength === 3 && i > 0)) {
+      imageUrls.portraitSrcSet = imageUrls.imageSrc.replace('block-580-400', 'block-280-400')
+    }
+
     imageUrls.imageAlt = getImageAlt(pictureCardLink.image) || ''
   } else {
     imageUrls.imageSrc = imagePlaceholder({
