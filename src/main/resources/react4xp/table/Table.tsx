@@ -24,12 +24,30 @@ declare global {
 }
 
 function Table(props: TableProps) {
-  const { useNewTableExport, table } = props
+  const {
+    downloadTableLabel,
+    downloadTableTitle,
+    downloadTableOptions,
+    table,
+    tableDraft,
+    standardSymbol,
+    sources,
+    sourceLabel,
+    showPreviewDraft,
+    paramShowDraft,
+    draftExist,
+    pageTypeStatistic,
+    sourceListTables,
+    sourceTableLabel,
+    statBankWebUrl,
+    hiddenTitle,
+    checkIsOverflowing,
+    useNewTableExport,
+  } = props
 
-  const [currentTable, setCurrentTable] = useState(props.paramShowDraft && props.draftExist ? props.tableDraft : table)
-  const [fetchUnPublished, setFetchUnPublished] = useState(props.paramShowDraft)
-  const showPreviewToggle =
-    props.showPreviewDraft && (!props.pageTypeStatistic || (props.paramShowDraft && props.pageTypeStatistic))
+  const [currentTable, setCurrentTable] = useState(paramShowDraft && draftExist ? tableDraft : table)
+  const [fetchUnPublished, setFetchUnPublished] = useState(paramShowDraft)
+  const showPreviewToggle = showPreviewDraft && (!pageTypeStatistic || (paramShowDraft && pageTypeStatistic))
   const tableWrapperRef = useRef<HTMLDivElement>(null)
   const tableRef = useRef<HTMLTableElement>(null)
 
@@ -58,7 +76,7 @@ function Table(props: TableProps) {
   }
 
   function addDownloadTableDropdown(mobile: boolean) {
-    if (props.downloadTableLabel && props.downloadTableTitle && props.downloadTableOptions) {
+    if (downloadTableLabel && downloadTableTitle && downloadTableOptions) {
       const downloadTable = (item: { id: string }) => {
         if (item.id === 'downloadTableAsCSV') downloadTableAsCSV()
         if (item.id === 'downloadTableAsXLSX') downloadTableAsExcel()
@@ -67,9 +85,9 @@ function Table(props: TableProps) {
       return (
         <div className={`download-table-container ${mobile ? 'd-flex d-lg-none' : 'd-none d-lg-flex'}`}>
           <Dropdown
-            selectedItem={props.downloadTableTitle}
-            items={props.downloadTableOptions}
-            ariaLabel={props.downloadTableLabel}
+            selectedItem={downloadTableTitle}
+            items={downloadTableOptions}
+            ariaLabel={downloadTableLabel}
             onSelect={downloadTable}
           />
         </div>
@@ -137,7 +155,7 @@ function Table(props: TableProps) {
         className={tableClass}
         caption={addCaption()}
         dataNoteRefs={currentTable.caption?.noterefs}
-        checkIsOverflowing={props.checkIsOverflowing}
+        checkIsOverflowing={checkIsOverflowing}
       >
         {currentTable.thead?.map((t, index) => (
           <React.Fragment key={index}>
@@ -336,10 +354,10 @@ function Table(props: TableProps) {
   }
 
   function addStandardSymbols() {
-    if (props.standardSymbol && props.standardSymbol.href && props.standardSymbol.text) {
+    if (standardSymbol && standardSymbol.href && standardSymbol.text) {
       return (
-        <Link href={props.standardSymbol.href} standAlone>
-          {props.standardSymbol.text}
+        <Link href={standardSymbol.href} standAlone>
+          {standardSymbol.text}
         </Link>
       )
     }
@@ -347,7 +365,7 @@ function Table(props: TableProps) {
   }
 
   function addPreviewButton() {
-    if (showPreviewToggle && !props.pageTypeStatistic) {
+    if (showPreviewToggle && !pageTypeStatistic) {
       return (
         <Button primary onClick={toggleDraft} className='mb-2'>
           {!fetchUnPublished ? 'Vis upubliserte tall' : 'Vis publiserte tall'}
@@ -359,14 +377,14 @@ function Table(props: TableProps) {
 
   function toggleDraft() {
     setFetchUnPublished(!fetchUnPublished)
-    setCurrentTable(!fetchUnPublished && props.draftExist ? props.tableDraft : table)
+    setCurrentTable(!fetchUnPublished && draftExist ? tableDraft : table)
   }
 
   function addPreviewInfo() {
-    if (props.showPreviewDraft) {
-      if (fetchUnPublished && props.draftExist) {
+    if (showPreviewDraft) {
+      if (fetchUnPublished && draftExist) {
         return <Alert variant='info'>Tallene i tabellen nedenfor er upublisert</Alert>
-      } else if (fetchUnPublished && !props.draftExist) {
+      } else if (fetchUnPublished && !draftExist) {
         return <Alert variant='warning'>Finnes ikke upubliserte tall for denne tabellen</Alert>
       }
     }
@@ -374,22 +392,22 @@ function Table(props: TableProps) {
   }
 
   function renderSources() {
-    if ((props.sourceListTables && props.sourceListTables.length > 0) || (props.sources && props.sources.length > 0)) {
+    if ((sourceListTables && sourceListTables.length > 0) || (sources && sources.length > 0)) {
       return (
         <div className='row source'>
           <div className='w-100 col-12'>
             <span className='source-title'>
-              <strong>{props.sourceLabel}</strong>
+              <strong>{sourceLabel}</strong>
             </span>
           </div>
-          {props.sourceListTables.map((tableId) => (
+          {sourceListTables.map((tableId) => (
             <div key={tableId} className='source-link col-lg-3 col-12'>
-              <Link href={`${props.statBankWebUrl}/table/${tableId}`} standAlone>
-                {`${props.sourceTableLabel} ${tableId}`}
+              <Link href={`${statBankWebUrl}/table/${tableId}`} standAlone>
+                {`${sourceTableLabel} ${tableId}`}
               </Link>
             </div>
           ))}
-          {props.sources.map((source) => (
+          {sources.map((source) => (
             <div key={source.url} className='source-link col-lg-3 col-12'>
               {source.url && source.urlText && (
                 <Link href={source.url} standAlone>
@@ -410,7 +428,7 @@ function Table(props: TableProps) {
       {!isEmpty(currentTable) ? (
         <>
           <div className='d-none searchabletext'>
-            <span>{props.hiddenTitle}</span>
+            <span>{hiddenTitle}</span>
           </div>
           <div className='container border-0'>
             {addDownloadTableDropdown(false)}

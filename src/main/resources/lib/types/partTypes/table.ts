@@ -6,7 +6,6 @@ export interface TableProps {
   downloadTableLabel: string
   downloadTableTitle: object
   downloadTableOptions: DropdownItems
-  displayName: string
   table: Partial<TableView> & {
     language: string | undefined
   }
@@ -14,7 +13,6 @@ export interface TableProps {
   standardSymbol: TableStandardSymbolLink | undefined
   sources: SourceList
   sourceLabel: string
-  iconUrl: string
   showPreviewDraft: boolean
   paramShowDraft: boolean
   draftExist: boolean | undefined
