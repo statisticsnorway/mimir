@@ -1,5 +1,5 @@
 import { get as getContentByKey, type Content } from '/lib/xp/content'
-import { getContent, getComponent, pageUrl, assetUrl } from '/lib/xp/portal'
+import { getContent, getComponent, pageUrl } from '/lib/xp/portal'
 import { render } from '/lib/thymeleaf'
 import { parseTable } from '/lib/ssb/parts/table'
 import { type SourceList, type SourcesConfig } from '/lib/types/sources'
@@ -22,6 +22,7 @@ import {
   type TableStandardSymbolLink,
   type TableSourceList,
 } from '/lib/types/partTypes/table'
+import { isEnabled } from '/lib/featureToggle'
 import { type Statistics, type Table } from '/site/content-types'
 
 const view = resolve('./table.html')
@@ -74,9 +75,6 @@ export function getProps(req: XP.Request, tableId?: string): TableProps {
   const sourceLabel: string = phrases.source
   const sourceTableLabel: string = phrases.statbankTableSource
   const sources: SourceList = getSources(sourceConfig as Array<SourcesConfig>)
-  const iconUrl: string = assetUrl({
-    path: 'swipe-icon.svg',
-  })
 
   const standardSymbol: TableStandardSymbolLink | undefined = getStandardSymbolPage(
     language.standardSymbolPage,
@@ -100,7 +98,6 @@ export function getProps(req: XP.Request, tableId?: string): TableProps {
       title: phrases.tableDownloadAs,
     },
     downloadTableOptions: getDownloadTableOptions(),
-    displayName: tableContent.displayName,
     table: {
       caption: table.caption,
       thead: table.thead,
@@ -120,7 +117,6 @@ export function getProps(req: XP.Request, tableId?: string): TableProps {
     standardSymbol: standardSymbol,
     sources,
     sourceLabel,
-    iconUrl: iconUrl,
     showPreviewDraft,
     paramShowDraft: req.params.showDraft ? true : false,
     draftExist,
@@ -129,6 +125,7 @@ export function getProps(req: XP.Request, tableId?: string): TableProps {
     sourceTableLabel,
     statBankWebUrl,
     hiddenTitle: table.caption ? table.caption.content : undefined,
+    useNewTableExport: isEnabled('new-table-export', false),
   }
 }
 function renderPart(req: XP.Request, tableId?: string): XP.Response {
