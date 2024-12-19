@@ -76,24 +76,25 @@ function Table(props: TableProps) {
   }
 
   function addDownloadTableDropdown(mobile: boolean) {
-    if (downloadTableLabel && downloadTableTitle && downloadTableOptions) {
-      const downloadTable = (item: { id: string }) => {
-        if (item.id === 'downloadTableAsCSV') downloadTableAsCSV()
-        if (item.id === 'downloadTableAsXLSX') downloadTableAsExcel()
-      }
-
-      return (
-        <div className={`download-table-container ${mobile ? 'd-flex d-lg-none' : 'd-none d-lg-flex'}`}>
-          <Dropdown
-            selectedItem={downloadTableTitle}
-            items={downloadTableOptions}
-            ariaLabel={downloadTableLabel}
-            onSelect={downloadTable}
-          />
-        </div>
-      )
+    if (!downloadTableLabel || !downloadTableTitle || !downloadTableOptions) {
+      return null
     }
-    return null
+
+    const downloadTable = (item: { id: string }) => {
+      if (item.id === 'downloadTableAsCSV') downloadTableAsCSV()
+      if (item.id === 'downloadTableAsXLSX') downloadTableAsExcel()
+    }
+
+    return (
+      <div className={`download-table-container ${mobile ? 'd-flex d-lg-none' : 'd-none d-lg-flex'}`}>
+        <Dropdown
+          selectedItem={downloadTableTitle}
+          items={downloadTableOptions}
+          ariaLabel={downloadTableLabel}
+          onSelect={downloadTable}
+        />
+      </div>
+    )
   }
 
   function downloadTableAsCSV() {
@@ -381,12 +382,12 @@ function Table(props: TableProps) {
   }
 
   function addPreviewInfo() {
-    if (showPreviewDraft) {
-      if (fetchUnPublished && draftExist) {
-        return <Alert variant='info'>Tallene i tabellen nedenfor er upublisert</Alert>
-      } else if (fetchUnPublished && !draftExist) {
-        return <Alert variant='warning'>Finnes ikke upubliserte tall for denne tabellen</Alert>
-      }
+    if (showPreviewDraft && fetchUnPublished) {
+      return draftExist ? (
+        <Alert variant='info'>Tallene i tabellen nedenfor er upublisert</Alert>
+      ) : (
+        <Alert variant='warning'>Finnes ikke upubliserte tall for denne tabellen</Alert>
+      )
     }
     return null
   }
@@ -419,7 +420,6 @@ function Table(props: TableProps) {
         </div>
       )
     }
-    return null
   }
 
   return (
