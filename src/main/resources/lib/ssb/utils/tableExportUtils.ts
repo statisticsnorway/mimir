@@ -1,8 +1,9 @@
 import * as XLSX from 'xlsx'
+import { Title } from '/lib/types/xmlParser'
 
 interface TableExport {
   tableElement: HTMLTableElement
-  fileName?: string
+  fileName?: Title | string
 }
 
 const sheetName = 'Sheet1'

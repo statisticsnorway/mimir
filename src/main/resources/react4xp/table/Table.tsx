@@ -108,7 +108,7 @@ function Table(props: TableProps) {
       })
     }
     if (tableRef?.current && useNewTableExport) {
-      exportTableToCSV({ tableElement: tableRef.current, fileName: table?.caption?.content })
+      exportTableToCSV({ tableElement: tableRef.current, fileName: table?.caption ?? table?.caption?.content })
     }
   }
 
@@ -130,7 +130,7 @@ function Table(props: TableProps) {
       })
     }
     if (tableRef?.current && useNewTableExport) {
-      exportTableToExcel({ tableElement: tableRef.current, fileName: table?.caption?.content })
+      exportTableToExcel({ tableElement: tableRef.current, fileName: table?.caption ?? table?.caption?.content })
     }
   }
 
@@ -393,7 +393,7 @@ function Table(props: TableProps) {
   }
 
   function renderSources() {
-    if ((sourceListTables && sourceListTables.length > 0) || (sources && sources.length > 0)) {
+    if (sourceListTables?.length || sources?.length) {
       return (
         <div className='row source'>
           <div className='w-100 col-12'>
@@ -420,6 +420,7 @@ function Table(props: TableProps) {
         </div>
       )
     }
+    return null
   }
 
   return (
