@@ -93,6 +93,6 @@ function determineCategories(
   if (graphType === 'pie' || ((graphType === 'area' || graphType === 'line') && xAxisType === 'linear')) {
     return headers
   } else {
-    return rows.map((row) => row.th[0])
+    return rows.map((row) => (xAxisType === 'datetime' ? new Date(row.th[0]).getTime() : row.th[0]))
   }
 }

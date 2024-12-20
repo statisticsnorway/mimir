@@ -29,6 +29,8 @@ import { type CombinedGraph, type Highchart } from '/site/content-types'
 
 const view = resolve('./highchart.html')
 
+// TODO: Create a generic function that formats datetime data to milliseconds for xAxis and yAxis
+// And consider formatting the date to a readable format afterwards?
 export function get(req: XP.Request): XP.Response {
   try {
     const part = getComponent<XP.PartComponent.Highchart>()

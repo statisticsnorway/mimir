@@ -212,7 +212,10 @@ export const createDefaultConfig = (highchartData, displayName, language) => ({
     allowDecimals: highchartData.yAxisDecimalPlaces > 0,
     labels: {
       style,
-      format: `{value:,.${highchartData.yAxisDecimalPlaces || 0}f}`,
+      format:
+        highchartData.yAxisType === 'datetime'
+          ? '{value:%e. %B %Y}'
+          : `{value:,.${highchartData.yAxisDecimalPlaces || 0}f}`,
     },
     max: highchartData.yAxisMax ? parseFloat(highchartData.yAxisMax.replace(/,/g, '.')) : null,
     min: highchartData.yAxisMin ? parseFloat(highchartData.yAxisMin.replace(/,/g, '.')) : null,
@@ -246,6 +249,7 @@ export const createDefaultConfig = (highchartData, displayName, language) => ({
     labels: {
       enabled: highchartData.showLabels,
       style,
+      format: highchartData.xAxisType === 'datetime' ? '{value:%e. %B %Y}' : undefined,
     },
     max: highchartData.xAxisMax ? highchartData.xAxisMax.replace(/,/g, '.') : null,
     min: highchartData.xAxisMin ? highchartData.xAxisMin.replace(/,/g, '.') : null,
