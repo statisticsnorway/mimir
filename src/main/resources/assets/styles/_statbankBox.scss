@@ -66,6 +66,12 @@
     .title {
       display: inline;
       border-bottom: 2px solid $ssb-green-4;
+      font-size: 1.25rem;
+      line-height: 2rem;
+      font-family: "Roboto", sans-serif !important;
+      font-stretch: normal;
+      font-weight: bold;
+      color: #162327;
     }
 
     @include media-breakpoint-down(sm) {
