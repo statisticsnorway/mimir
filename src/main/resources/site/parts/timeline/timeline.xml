@@ -1,0 +1,28 @@
+<part>
+    <display-name>Tidslinje</display-name>
+    <form>
+        <item-set name="TimelineItemSet">  
+            <label>Tidslinjeelement</label>  
+            <occurrences minimum="1" maximum="0"/>  
+            <items>
+                <input name="year" type="TextLine">
+                    <label>År</label>
+                    <occurrences minimum="1" maximum="1"/>  
+                </input>
+                <input name="title" type="TextLine">
+                    <label>Tittel</label>
+                    <occurrences minimum="1" maximum="1"/>  
+                </input>
+                <input name="article" type="ContentSelector">
+                    <label>Artikkel</label>
+                    <occurrences minimum="0" maximum="1"/>
+                    <config>
+                        <allowPath>${site}</allowPath>
+                        <allowType>page</allowType>
+                        <allowType>article</allowType>
+                    </config>
+                </input>
+            </items>
+        </item-set>
+  </form>
+</part>
