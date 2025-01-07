@@ -6,7 +6,8 @@ import { type PreliminaryData } from '/lib/types/xmlParser'
 import { formatDate, fromNow } from '/lib/ssb/utils/dateUtils'
 import { type SourceList, type SourcesConfig } from '/lib/types/sources'
 import { type RowValue } from '/lib/types/util'
-import { type Header, type ProfiledBox } from '/site/content-types'
+import { type Header } from '/site/content-types'
+import { type ProfiledBox as ProfiledBoxPartConfig } from '.'
 
 function numberWithSpaces(x: number | string): string {
   const parts: Array<string> = x.toString().split('.')
@@ -188,7 +189,7 @@ export function getProfiledCardAriaLabel(subTitle: string): string {
   return ''
 }
 
-export function getLinkTargetUrl(urlContentSelector: ProfiledBox['urlContentSelector']): string | undefined {
+export function getLinkTargetUrl(urlContentSelector: ProfiledBoxPartConfig['urlContentSelector']): string | undefined {
   if (urlContentSelector._selected == 'optionLink') {
     return urlContentSelector.optionLink.link
   }
@@ -200,7 +201,6 @@ export function getLinkTargetUrl(urlContentSelector: ProfiledBox['urlContentSele
         })
       : ''
   }
-  return ''
 }
 
 interface ContentSearchPageResult {
