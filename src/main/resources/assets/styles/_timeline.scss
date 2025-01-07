@@ -1,11 +1,22 @@
 .main-timeline {
   position: relative;
 
+  &.fullwidth {
+    &:before {
+      left: 100%;
+    }
+
+    .timeline {
+      float: none;
+      width: 100%;
+    }
+  }
+
   &:before {
     content: '';
     width: 3px;
     height: 100%;
-    background: #b28544;
+    background: #274247;
     position: absolute;
     top: 0;
     left: 50%;
@@ -25,6 +36,10 @@
     position: relative;
     z-index: 1;
 
+    &.right {
+      margin-top: 150px;
+    }
+
     .timeline-content {
       text-align: center;
       position: relative;
@@ -32,10 +47,6 @@
       width: 100%;
       cursor: pointer;
     }
-  }
-
-  .timeline:nth-child(2) {
-    margin-top: 150px;
   }
 
   .rectangle {
@@ -82,7 +93,7 @@
   .line {
     width: 100%;
     height: 2px;
-    background: #0581a1;
+    background: #274247;
     position: absolute;
     margin-top: 50px;
     left: 0;
@@ -96,8 +107,8 @@
     width: 30px;
     height: 30px;
     border-radius: 50%;
-    background: #b28544;
-    border: 6px solid #fff;
+    background: #274247;
+    border: 2px solid #fff;
     position: absolute;
     top: 36px;
     right: -16px;
@@ -128,7 +139,7 @@
   }
 
   @include media-breakpoint-up(lg) {
-    .timeline:nth-child(2) {
+    .timeline.right {
       .triangle {
         right: 0;
         margin: 27px 120px 0 0;
