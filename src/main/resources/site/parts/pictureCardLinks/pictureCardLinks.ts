@@ -48,7 +48,7 @@ function parsePictureCardLinks(
     if (pictureCardLink) {
       const title: string = pictureCardLink.title
       const subTitle: string = pictureCardLink.subTitle
-      const href: string = getLinkTargetUrl(pictureCardLinks?.urlContentSelector) ?? pictureCardLink.href
+      const href: string = getLinkTargetUrl(pictureCardLink.urlContentSelector) ?? pictureCardLink.href ?? ''
 
       const imageSources = createImageUrls(pictureCardLink, pictureCardLinks.length, i)
 
