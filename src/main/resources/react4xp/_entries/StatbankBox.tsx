@@ -19,7 +19,7 @@ const StatbankBox = (props: StatbankBoxProps) => {
               <img src={icon} alt='' loading='lazy' />
             </div>
             <div className='title-wrapper'>
-              <h3 className='title'>{title}</h3>
+              <span className='title'>{title}</span>
             </div>
             {fullWidth && <ArrowRight size={28} className='arrow-icon' aria-hidden='true' />}
           </div>
