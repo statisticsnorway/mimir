@@ -6,7 +6,7 @@ import { type PreliminaryData } from '/lib/types/xmlParser'
 import { formatDate, fromNow } from '/lib/ssb/utils/dateUtils'
 import { type SourceList, type SourcesConfig } from '/lib/types/sources'
 import { type RowValue } from '/lib/types/util'
-import { type Header } from '/site/content-types'
+import { type Header, type ProfiledBox } from '/site/content-types'
 
 function numberWithSpaces(x: number | string): string {
   const parts: Array<string> = x.toString().split('.')
@@ -184,6 +184,21 @@ export function getEnvironmentString(): string {
 export function getProfiledCardAriaLabel(subTitle: string): string {
   if (subTitle) {
     return `${subTitle.replace(' /', ',')}`
+  }
+  return ''
+}
+
+export function getLinkTargetUrl(urlContentSelector: ProfiledBox['urlContentSelector']): string | undefined {
+  if (urlContentSelector._selected == 'optionLink') {
+    return urlContentSelector.optionLink.link
+  }
+
+  if (urlContentSelector._selected == 'optionXPContent') {
+    return urlContentSelector.optionXPContent.xpContent
+      ? pageUrl({
+          id: urlContentSelector.optionXPContent.xpContent,
+        })
+      : ''
   }
   return ''
 }
