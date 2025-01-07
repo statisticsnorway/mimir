@@ -23,7 +23,7 @@ export function barNegativeConfig(highchartContent, options) {
         ...X_AXIS_TITLE_POSITION,
       },
       stackLabels: {
-        enabled: highchartContent.stacking === 'normal' && highchartContent.showStackedTotal,
+        enabled: highchartContent.stacking === 'normal',
         x: 5,
         y: 0,
       },
