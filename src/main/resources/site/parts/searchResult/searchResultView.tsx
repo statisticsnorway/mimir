@@ -21,8 +21,6 @@ import { type DropdownItem } from '/lib/types/partTypes/publicationArchive'
 import { type PreparedSearchResult } from '/lib/types/solr'
 import { useBtnKeyboardNavigationFocus } from '/lib/ssb/utils/customHooks'
 
-const ADDITIONAL_HITS_LENGTH = 15
-
 function SearchResult(props: SearchResultProps) {
   const [hits, setHits] = useState(props.hits)
   const [searchTerm, setSearchTerm] = useState(props.term)
@@ -70,6 +68,7 @@ function SearchResult(props: SearchResultProps) {
   const [openAccordion, setOpenAccordion] = useState(false)
   const inputSearchElement = useRef<HTMLDivElement>(null)
 
+  const ADDITIONAL_HITS_LENGTH = 15
   const { handleKeyboardNavigation, getCurrentElementRef, setKeyboardNavigation, disableBtn } =
     useBtnKeyboardNavigationFocus({
       onLoadMore: () => onShowMoreSearchResults(),

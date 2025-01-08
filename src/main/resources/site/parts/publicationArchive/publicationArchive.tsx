@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Divider, Link, Title, Text, Dropdown } from '@statisticsnorway/ssb-component-library'
 import { NumericFormat } from 'react-number-format'
 import { ChevronDown } from 'react-feather'
@@ -9,7 +9,7 @@ import {
   type PublicationArchiveProps,
   type PublicationItem,
 } from '/lib/types/partTypes/publicationArchive'
-import { useBtnKeyboardNavigation } from '/lib/ssb/utils/customHooks'
+import { useBtnKeyboardNavigationFocus } from '/lib/ssb/utils/customHooks'
 
 function PublicationArchive(props: PublicationArchiveProps) {
   const {
@@ -34,10 +34,16 @@ function PublicationArchive(props: PublicationArchiveProps) {
     mainSubject: '',
     articleType: '',
   })
-  const [keyboardNavigation, setKeyboardNavigation] = useState(false)
 
-  const currentElement = useRef<HTMLAnchorElement>(null)
   const ADDITIONAL_PUBLICATIONS_LENGTH = 10
+  const { handleKeyboardNavigation, getCurrentElementRef, setKeyboardNavigation, disableBtn } =
+    useBtnKeyboardNavigationFocus({
+      onLoadMore: () => fetchPublications(),
+      list: publications,
+      listItemsPerPage: ADDITIONAL_PUBLICATIONS_LENGTH,
+      totalCount: total,
+      loading,
+    })
 
   useEffect(() => {
     if (first) {
@@ -47,12 +53,6 @@ function PublicationArchive(props: PublicationArchiveProps) {
       fetchPublicationsFiltered()
     }
   }, [filter])
-
-  useEffect(() => {
-    if (keyboardNavigation) {
-      currentElement.current?.focus()
-    }
-  }, [publications])
 
   function onChange(id: string, value: DropdownItem) {
     setFilterChanged(true)
@@ -117,12 +117,7 @@ function PublicationArchive(props: PublicationArchiveProps) {
       return (
         <div key={i} className='row mb-5'>
           <div className='col'>
-            <Link
-              ref={i === publications.length - ADDITIONAL_PUBLICATIONS_LENGTH ? currentElement : null}
-              href={publication.url}
-              linkType='header'
-              headingSize={2}
-            >
+            <Link ref={getCurrentElementRef(i)} href={publication.url} linkType='header' headingSize={2}>
               {publication.title}
             </Link>
 
@@ -217,11 +212,6 @@ function PublicationArchive(props: PublicationArchiveProps) {
     )
   }
 
-  const handleKeyboardNavigation = useBtnKeyboardNavigation(() => {
-    setKeyboardNavigation(true)
-    fetchPublications()
-  })
-
   return (
     <section className='publication-archive container-fluid'>
       <div className='publication-archive-head'>
@@ -250,7 +240,7 @@ function PublicationArchive(props: PublicationArchiveProps) {
           {renderLoading()}
           <div>
             <Button
-              disabled={loading || total === publications.length}
+              disabled={disableBtn}
               className='button-more mt-5'
               onClick={() => {
                 setKeyboardNavigation(false)
