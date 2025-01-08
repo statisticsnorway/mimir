@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from '@statisticsnorway/ssb-component-library'
 import { type TimelineProps2 } from '/lib/types/partTypes/timeline'
 
 function Timeline2(props: TimelineProps2) {
@@ -8,8 +9,8 @@ function Timeline2(props: TimelineProps2) {
   return (
     <div className='main-timeline fullwidth'>
       {timelineElements?.map((timeline, index) => {
+        const event = Array.isArray(timeline.event) ? timeline.event : [timeline.event]
         return (
-          /*  <div className={`timeline ${index % 2 === 0 ? 'left' : 'right'}`} key={index}> */
           <div className={`timeline `} key={index}>
             <div className='timeline-content'>
               <div className='triangle'></div>
@@ -20,23 +21,18 @@ function Timeline2(props: TimelineProps2) {
               </div>
               <div className='line'></div>
               <div className='icon'></div>
-              {timeline.event.map((event) => {
-                return (
-                  <div className='content'>
-                    <div className='text-content'>
-                      <h2 className='description'>{event.title}</h2>
+              <div className='content'>
+                {event.map((event) => {
+                  console.log('Event: ' + JSON.stringify(event, null, 4))
+                  return (
+                    <div className='event-content mb-3'>
+                      <div className='icon'></div>
+                      <Link linkType='profiled'>{event.title}</Link>
+                      {event.category === 'statistic' && <p>statistikk</p>}
                     </div>
-                    {/* {event.article && (
-                      <a
-                        className='read-more'
-                        href='/en-gb/visualisations/timeline-125-years-of-population-censuses/1899'
-                      >
-                        Les mer om dette året
-                      </a>
-                    )} */}
-                  </div>
-                )
-              })}
+                  )
+                })}
+              </div>
             </div>
           </div>
         )

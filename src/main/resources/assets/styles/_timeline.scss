@@ -138,6 +138,26 @@
     }
   }
 
+  .event-content {
+    position: relative;
+    width: 100%;
+    .icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #274247;
+      border: 2px solid #fff;
+      position: absolute;
+      top: 6px;
+      right: -43px;
+      z-index: 2;
+      transition:
+        height 0.1s,
+        width 0.1s,
+        transform 0.1s;
+    }
+  }
+
   @include media-breakpoint-up(lg) {
     .timeline.right {
       .triangle {
