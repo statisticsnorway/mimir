@@ -118,11 +118,11 @@ export function fetchStatisticsDaysBack(days: number): Array<StatisticInListing>
   const statistics: Array<StatisticInListing> = getAllStatisticsFromRepo()
   const serverOffsetInMs: number = app.config?.['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
   const now: Date = new Date(new Date().getTime() + serverOffsetInMs)
-  const from = subDays(new Date(), days)
+  const from = subDays(new Date(), days).setHours(0, 0, 0, 0)
   return statistics.reduce((statsWithRelease: Array<StatisticInListing>, stat) => {
     const variants: Array<VariantInListing> = ensureArray<VariantInListing>(stat.variants).filter(
       (variant) =>
-        (isAfter(new Date(variant.nextRelease), from) && isBefore(new Date(variant.nextRelease), now)) ||
+        (isAfter(new Date(variant.nextRelease), new Date(from)) && isBefore(new Date(variant.nextRelease), now)) ||
         isAfter(new Date(variant.previousRelease), from)
     )
 
