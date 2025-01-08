@@ -23,10 +23,10 @@ function SubjectArticleList(props: SubjectArticleListProps) {
     id: 'DESC',
   })
 
-  const { handleKeyboardNavigation, getCurrentElementRef, setKeyboardNavigation, disableBtn } = usePagination({
-    onLoadMore: () => fetchMoreArticles(),
+  const { disableBtn, getCurrentElementRef, handleKeyboardNavigation, handleOnClick } = usePagination({
     list: articles,
     listItemsPerPage: props.count,
+    onLoadMore: () => fetchMoreArticles(),
     totalCount: props.totalArticles,
   })
 
@@ -133,10 +133,7 @@ function SubjectArticleList(props: SubjectArticleListProps) {
           <Button
             disabled={disableBtn}
             className='button-more'
-            onClick={() => {
-              fetchMoreArticles()
-              setKeyboardNavigation(false)
-            }}
+            onClick={handleOnClick}
             onKeyDown={handleKeyboardNavigation}
           >
             <ChevronDown size='18' />

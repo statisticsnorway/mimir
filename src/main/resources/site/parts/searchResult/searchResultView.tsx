@@ -69,12 +69,12 @@ function SearchResult(props: SearchResultProps) {
   const inputSearchElement = useRef<HTMLDivElement>(null)
 
   const ADDITIONAL_HITS_LENGTH = 15
-  const { handleKeyboardNavigation, getCurrentElementRef, setKeyboardNavigation, disableBtn } = usePagination({
-    onLoadMore: () => onShowMoreSearchResults(),
+  const { disableBtn, getCurrentElementRef, handleKeyboardNavigation, handleOnClick } = usePagination({
     list: hits,
     listItemsPerPage: ADDITIONAL_HITS_LENGTH,
-    totalCount: total,
     loading,
+    onLoadMore: () => onShowMoreSearchResults(),
+    totalCount: total,
   })
 
   useEffect(() => {
@@ -304,10 +304,7 @@ function SearchResult(props: SearchResultProps) {
           <Button
             disabled={disableBtn}
             className='button-more mt-5'
-            onClick={() => {
-              setKeyboardNavigation(false)
-              onShowMoreSearchResults()
-            }}
+            onClick={handleOnClick}
             onKeyDown={handleKeyboardNavigation}
           >
             <ChevronDown size='18' /> {props.buttonTitle}

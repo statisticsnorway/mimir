@@ -71,7 +71,7 @@ function RelatedArticles(props: RelatedArticlesProps) {
     setShownArticles(firstShownArticles)
   }
 
-  // TODO: Implement custom hook for button pagination keyboard navigation fully after changes has been made to support ref prop for Card component
+  // TODO: Implement custom hook for pagination after changes has been made to support ref prop for Card component
   const handleKeyboardNavigation = usePaginationKeyboardNavigation(() => toggleBox(true))
 
   function renderShowMoreButton() {

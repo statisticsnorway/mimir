@@ -36,12 +36,12 @@ function PublicationArchive(props: PublicationArchiveProps) {
   })
 
   const ADDITIONAL_PUBLICATIONS_LENGTH = 10
-  const { handleKeyboardNavigation, getCurrentElementRef, setKeyboardNavigation, disableBtn } = usePagination({
-    onLoadMore: () => fetchPublications(),
+  const { disableBtn, getCurrentElementRef, handleKeyboardNavigation, handleOnClick } = usePagination({
     list: publications,
     listItemsPerPage: ADDITIONAL_PUBLICATIONS_LENGTH,
-    totalCount: total,
     loading,
+    onLoadMore: () => fetchPublications(),
+    totalCount: total,
   })
 
   useEffect(() => {
@@ -241,10 +241,7 @@ function PublicationArchive(props: PublicationArchiveProps) {
             <Button
               disabled={disableBtn}
               className='button-more mt-5'
-              onClick={() => {
-                setKeyboardNavigation(false)
-                fetchPublications()
-              }}
+              onClick={handleOnClick}
               onKeyDown={handleKeyboardNavigation}
             >
               <ChevronDown size='18' /> {buttonTitle}

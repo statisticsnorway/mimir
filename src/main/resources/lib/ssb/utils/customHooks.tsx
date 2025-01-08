@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
 
-interface UseKeyboardNavigationFocusProps<T> {
-  onLoadMore: () => void
+interface UsePaginationProps<T> {
+  cardList?: boolean
   list: T[]
   listItemsPerPage: number
-  totalCount?: number
   loading?: boolean
-  cardList?: boolean
+  onLoadMore: () => void
+  totalCount?: number
 }
 
 export const usePaginationKeyboardNavigation = (callback: () => void) => {
@@ -20,26 +20,23 @@ export const usePaginationKeyboardNavigation = (callback: () => void) => {
 }
 
 export const usePagination = <T,>({
-  onLoadMore,
+  cardList,
   list,
   listItemsPerPage,
-  totalCount,
   loading,
-  cardList,
-}: UseKeyboardNavigationFocusProps<T>) => {
+  onLoadMore,
+  totalCount,
+}: UsePaginationProps<T>) => {
   const [keyboardNavigation, setKeyboardNavigation] = useState(false)
   const currentElement = useRef<HTMLLIElement>(null)
+
+  const disableBtn = loading || totalCount === list.length
 
   useEffect(() => {
     if (keyboardNavigation) {
       currentElement.current?.focus()
     }
   }, [list])
-
-  const handleKeyboardNavigation = usePaginationKeyboardNavigation(() => {
-    setKeyboardNavigation(true)
-    onLoadMore()
-  })
 
   const getCurrentElementRef = (index: number) => {
     if (cardList) {
@@ -48,12 +45,20 @@ export const usePagination = <T,>({
     return index === list.length - listItemsPerPage ? currentElement : null
   }
 
-  const disableBtn = loading || totalCount === list.length
+  const handleKeyboardNavigation = usePaginationKeyboardNavigation(() => {
+    setKeyboardNavigation(true)
+    onLoadMore()
+  })
+
+  const handleOnClick = () => {
+    setKeyboardNavigation(false)
+    onLoadMore()
+  }
 
   return {
-    handleKeyboardNavigation,
-    getCurrentElementRef,
-    setKeyboardNavigation,
     disableBtn,
+    getCurrentElementRef,
+    handleKeyboardNavigation,
+    handleOnClick,
   }
 }

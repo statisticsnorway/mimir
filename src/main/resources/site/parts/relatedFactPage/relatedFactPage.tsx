@@ -22,11 +22,11 @@ function RelatedBoxes(props: RelatedFactPageProps) {
   const [total, setTotal] = useState(firstRelatedContents ? firstRelatedContents.total : 0)
   const [loading, setLoading] = useState(false)
 
-  const { handleKeyboardNavigation, getCurrentElementRef, setKeyboardNavigation } = usePagination({
-    onLoadMore: () => handleButtonOnClick(),
+  const { handleKeyboardNavigation, getCurrentElementRef, handleOnClick } = usePagination({
     cardList: true,
     list: relatedFactPages,
     listItemsPerPage: 4,
+    onLoadMore: () => handleButtonOnClick(),
   })
 
   function fetchAllRelatedFactPages() {
@@ -106,10 +106,7 @@ function RelatedBoxes(props: RelatedFactPageProps) {
               <div className='col-auto'>
                 <Button
                   ariaLabel={total > relatedFactPages.length && `${showAll} - ${total} ${factpagePluralName}`}
-                  onClick={() => {
-                    setKeyboardNavigation(false)
-                    handleButtonOnClick()
-                  }}
+                  onClick={handleOnClick}
                   onKeyDown={handleKeyboardNavigation}
                 >
                   {renderButtonText()}
