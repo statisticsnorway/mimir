@@ -1,8 +1,8 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState } from 'react'
 import { PictureCard, Button } from '@statisticsnorway/ssb-component-library'
 import axios from 'axios'
 import { RelatedFactPageProps } from '/lib/types/partTypes/relatedFactPage'
-import { useBtnKeyboardNavigation } from '/lib/ssb/utils/customHooks'
+import { useBtnKeyboardNavigationFocus } from '/lib/ssb/utils/customHooks'
 
 function RelatedBoxes(props: RelatedFactPageProps) {
   const {
@@ -21,14 +21,13 @@ function RelatedBoxes(props: RelatedFactPageProps) {
   )
   const [total, setTotal] = useState(firstRelatedContents ? firstRelatedContents.total : 0)
   const [loading, setLoading] = useState(false)
-  const [wasClicked, setWasClicked] = useState(false)
-  const cards = useRef<HTMLAnchorElement[]>([])
 
-  useEffect(() => {
-    if (cards.current.length > 4 && cards.current[4] && !wasClicked) {
-      cards.current[4].focus()
-    }
-  }, [relatedFactPages])
+  const { handleKeyboardNavigation, getCurrentElementRef, setKeyboardNavigation } = useBtnKeyboardNavigationFocus({
+    onLoadMore: () => handleButtonOnClick(),
+    cardList: true,
+    list: relatedFactPages,
+    listItemsPerPage: 4,
+  })
 
   function fetchAllRelatedFactPages() {
     setLoading(true)
@@ -59,9 +58,7 @@ function RelatedBoxes(props: RelatedFactPageProps) {
     setLoading(false)
   }
 
-  function handleButtonOnClick(wasClicked: boolean) {
-    setWasClicked(wasClicked)
-
+  function handleButtonOnClick() {
     if (total > relatedFactPages.length) {
       fetchAllRelatedFactPages()
     } else {
@@ -81,8 +78,6 @@ function RelatedBoxes(props: RelatedFactPageProps) {
     }
   }
 
-  const handleKeyboardNavigation = useBtnKeyboardNavigation(() => handleButtonOnClick(false))
-
   function renderRelatedFactPages() {
     if (relatedFactPages.length) {
       return (
@@ -95,7 +90,7 @@ function RelatedBoxes(props: RelatedFactPageProps) {
               {relatedFactPages.map((relatedFactPageContent, index) => (
                 <li key={index}>
                   <PictureCard
-                    ref={(element: HTMLAnchorElement) => (cards.current[index] = element)}
+                    ref={getCurrentElementRef(index)}
                     className='mb-3'
                     imageSrc={relatedFactPageContent.image}
                     altText={relatedFactPageContent.imageAlt ?? ''}
@@ -111,7 +106,10 @@ function RelatedBoxes(props: RelatedFactPageProps) {
               <div className='col-auto'>
                 <Button
                   ariaLabel={total > relatedFactPages.length && `${showAll} - ${total} ${factpagePluralName}`}
-                  onClick={() => handleButtonOnClick(true)}
+                  onClick={() => {
+                    setKeyboardNavigation(false)
+                    handleButtonOnClick()
+                  }}
                   onKeyDown={handleKeyboardNavigation}
                 >
                   {renderButtonText()}
