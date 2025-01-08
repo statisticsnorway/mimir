@@ -1,5 +1,5 @@
 import { type Content } from '/lib/xp/content'
-import { getContent, getComponent, getSiteConfig } from '/lib/xp/portal'
+import { getContent, getComponent, getSiteConfig, processHtml, sanitizeHtml } from '/lib/xp/portal'
 import { render } from '/lib/enonic/react4xp'
 import { get as getKeyFigures, parseKeyFigure } from '/lib/ssb/parts/keyFigure'
 import { getMunicipality } from '/lib/ssb/dataset/klass/municipalities'
@@ -12,6 +12,16 @@ import { getPhrases } from '/lib/ssb/utils/language'
 import { type KeyFigureView, type KeyFigureData, type KeyFigureProps } from '/lib/types/partTypes/keyFigure'
 import { type MunicipalityWithCounty, type RequestWithCode } from '/lib/types/municipalities'
 import { type KeyFigure as KeyFigurePartConfig } from '.'
+
+function processAndSanitizeText(text: string): string {
+  let processedText = processHtml({
+    value: text,
+  })
+
+  processedText = sanitizeHtml(processedText).replace(/<(\/*)p/gm, '<$1span')
+
+  return processedText
+}
 
 export function get(req: XP.Request): XP.Response {
   try {
@@ -103,26 +113,32 @@ function renderKeyFigure(
   config?: KeyFigurePartConfig
 ): XP.Response {
   const draftExist = !!parsedKeyFiguresDraft
+  const rawDateInput = page.data.dateInput as string | undefined
+  const dateInput = rawDateInput ? processAndSanitizeText(rawDateInput) : undefined
+
+ 
+  const existingTimeValue = parsedKeyFigures.find((keyFigure) => keyFigure.time)?.time
+
+  const timeValue = existingTimeValue || dateInput || undefined
+
   if ((parsedKeyFigures && parsedKeyFigures.length > 0) || draftExist) {
     const hiddenTitle: Array<string> = parsedKeyFigures.map((keyFigureData) => {
       return keyFigureData.title
     })
 
     const props: KeyFigureProps = {
-      displayName: config && config.title,
-      keyFigures: parsedKeyFigures.map((keyFigureData) => {
-        return {
-          ...keyFigureData,
-          glossary: keyFigureData.glossaryText,
-        }
-      }),
+      displayName: config?.title,
+      keyFigures: parsedKeyFigures.map((keyFigureData) => ({
+        ...keyFigureData,
+        time: timeValue,
+        glossary: keyFigureData.glossaryText,
+      })),
       keyFiguresDraft: parsedKeyFiguresDraft
-        ? parsedKeyFiguresDraft.map((keyFigureDraftData) => {
-            return {
-              ...keyFigureDraftData,
-              glossary: keyFigureDraftData.glossaryText,
-            }
-          })
+        ? parsedKeyFiguresDraft.map((keyFigureDraftData) => ({
+            ...keyFigureDraftData,
+            time: timeValue,
+            glossary: keyFigureDraftData.glossaryText,
+          }))
         : undefined,
       sourceLabel: getPhrases(page)!.source,
       source: config?.source,
