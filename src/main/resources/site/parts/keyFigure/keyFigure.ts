@@ -13,16 +13,6 @@ import { type KeyFigureView, type KeyFigureData, type KeyFigureProps } from '/li
 import { type MunicipalityWithCounty, type RequestWithCode } from '/lib/types/municipalities'
 import { type KeyFigure as KeyFigurePartConfig } from '.'
 
-function processAndSanitizeText(text: string): string {
-  let processedText = processHtml({
-    value: text,
-  })
-
-  processedText = sanitizeHtml(processedText).replace(/<(\/*)p/gm, '<$1span')
-
-  return processedText
-}
-
 export function get(req: XP.Request): XP.Response {
   try {
     const config = getComponent<XP.PartComponent.KeyFigure>()?.config
@@ -116,7 +106,6 @@ function renderKeyFigure(
   const rawDateInput = page.data.dateInput as string | undefined
   const dateInput = rawDateInput ? processAndSanitizeText(rawDateInput) : undefined
 
- 
   const existingTimeValue = parsedKeyFigures.find((keyFigure) => keyFigure.time)?.time
 
   const timeValue = existingTimeValue || dateInput || undefined
@@ -161,4 +150,10 @@ function renderKeyFigure(
     body: '',
     contentType: 'text/html',
   }
+}
+
+function processAndSanitizeText(text: string): string {
+  let processedText = processHtml({ value: text })
+  processedText = sanitizeHtml(processedText).replace(/<(\/*)p/gm, '<$1span')
+  return processedText
 }
