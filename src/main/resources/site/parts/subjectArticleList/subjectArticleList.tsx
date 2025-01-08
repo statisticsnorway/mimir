@@ -18,17 +18,18 @@ function SubjectArticleList(props: SubjectArticleListProps) {
   const [articles, setArticles] = useState(props.articles)
   const [articleStart, setArticleStart] = useState(props.start)
   const [loadedFirst, setLoadedFirst] = useState(true)
-  const [totalCount, setTotalCount] = useState(props.articles.length)
   const [sort, setSort] = useState({
     title: 'Nyeste',
     id: 'DESC',
   })
 
-  const { handleKeyboardNavigation, getCurrentElementRef, setKeyboardNavigation } = useBtnKeyboardNavigationFocus({
-    onLoadMore: () => fetchMoreArticles(),
-    list: articles,
-    listItemsPerPage: props.count,
-  })
+  const { handleKeyboardNavigation, getCurrentElementRef, setKeyboardNavigation, disableBtn } =
+    useBtnKeyboardNavigationFocus({
+      onLoadMore: () => fetchMoreArticles(),
+      list: articles,
+      listItemsPerPage: props.count,
+      totalCount: props.totalArticles,
+    })
 
   const showCountLabel =
     props.language == 'en'
@@ -55,7 +56,6 @@ function SubjectArticleList(props: SubjectArticleListProps) {
       })
       .then((res) => {
         setArticles(articles.concat(res.data.articles))
-        setTotalCount((prevState) => prevState + res.data.articles.length)
       })
       .finally(() => {
         setArticleStart((prevState) => prevState + props.count)
@@ -76,7 +76,6 @@ function SubjectArticleList(props: SubjectArticleListProps) {
       })
       .then((res) => {
         setArticles(res.data.articles)
-        setTotalCount(res.data.totalCount)
         setLoadedFirst(true)
       })
   }
@@ -133,7 +132,7 @@ function SubjectArticleList(props: SubjectArticleListProps) {
       return (
         <div>
           <Button
-            disabled={totalCount > 0 && totalCount >= props.totalArticles}
+            disabled={disableBtn}
             className='button-more'
             onClick={() => {
               fetchMoreArticles()

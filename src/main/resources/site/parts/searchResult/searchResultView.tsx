@@ -70,11 +70,14 @@ function SearchResult(props: SearchResultProps) {
   const [openAccordion, setOpenAccordion] = useState(false)
   const inputSearchElement = useRef<HTMLDivElement>(null)
 
-  const { handleKeyboardNavigation, getCurrentElementRef, setKeyboardNavigation } = useBtnKeyboardNavigationFocus({
-    onLoadMore: () => onShowMoreSearchResults(),
-    list: hits,
-    listItemsPerPage: ADDITIONAL_HITS_LENGTH,
-  })
+  const { handleKeyboardNavigation, getCurrentElementRef, setKeyboardNavigation, disableBtn } =
+    useBtnKeyboardNavigationFocus({
+      onLoadMore: () => onShowMoreSearchResults(),
+      list: hits,
+      listItemsPerPage: ADDITIONAL_HITS_LENGTH,
+      totalCount: total,
+      loading,
+    })
 
   useEffect(() => {
     if (searchTerm && inputSearchElement.current) {
@@ -301,7 +304,7 @@ function SearchResult(props: SearchResultProps) {
       return (
         <div>
           <Button
-            disabled={loading || total === hits.length}
+            disabled={disableBtn}
             className='button-more mt-5'
             onClick={() => {
               setKeyboardNavigation(false)

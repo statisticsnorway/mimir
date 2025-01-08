@@ -4,6 +4,8 @@ interface UseKeyboardNavigationFocusProps<T> {
   onLoadMore: () => void
   list: T[]
   listItemsPerPage: number
+  totalCount: number
+  loading?: boolean
 }
 
 export const useBtnKeyboardNavigation = (callback: () => void) => {
@@ -20,6 +22,8 @@ export const useBtnKeyboardNavigationFocus = <T,>({
   onLoadMore,
   list,
   listItemsPerPage,
+  totalCount,
+  loading,
 }: UseKeyboardNavigationFocusProps<T>) => {
   const [keyboardNavigation, setKeyboardNavigation] = useState(false)
   const currentElement = useRef<HTMLLIElement>(null)
@@ -35,13 +39,14 @@ export const useBtnKeyboardNavigationFocus = <T,>({
     onLoadMore()
   })
 
-  const getCurrentElementRef = (index: number) => {
-    return index === list.length - listItemsPerPage ? currentElement : null
-  }
+  const getCurrentElementRef = (index: number) => (index === list.length - listItemsPerPage ? currentElement : null)
+
+  const disableBtn = loading || totalCount === list.length
 
   return {
     handleKeyboardNavigation,
     getCurrentElementRef,
     setKeyboardNavigation,
+    disableBtn,
   }
 }
