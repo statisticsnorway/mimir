@@ -9,7 +9,7 @@ import {
   type PublicationArchiveProps,
   type PublicationItem,
 } from '/lib/types/partTypes/publicationArchive'
-import { useKeyboardNavigation } from '/lib/ssb/utils/customHooks'
+import { useBtnKeyboardNavigation } from '/lib/ssb/utils/customHooks'
 
 function PublicationArchive(props: PublicationArchiveProps) {
   const {
@@ -217,7 +217,7 @@ function PublicationArchive(props: PublicationArchiveProps) {
     )
   }
 
-  const handleKeyboardNavigation = useKeyboardNavigation(() => {
+  const handleKeyboardNavigation = useBtnKeyboardNavigation(() => {
     setKeyboardNavigation(true)
     fetchPublications()
   })

@@ -4,7 +4,7 @@ import { ChevronDown } from 'react-feather'
 import axios from 'axios'
 import { type SubjectArticleListProps } from '/lib/types/partTypes/subjectArticleList'
 import { type DropdownItem } from '/lib/types/partTypes/publicationArchive'
-import { useKeyboardNavigationFocus } from '/lib/ssb/utils/customHooks'
+import { useBtnKeyboardNavigationFocus } from '/lib/ssb/utils/customHooks'
 
 /* TODO:
 - Fikse sortering (?)
@@ -24,7 +24,7 @@ function SubjectArticleList(props: SubjectArticleListProps) {
     id: 'DESC',
   })
 
-  const { handleKeyboardNavigation, getCurrentElementRef, setKeyboardNavigation } = useKeyboardNavigationFocus({
+  const { handleKeyboardNavigation, getCurrentElementRef, setKeyboardNavigation } = useBtnKeyboardNavigationFocus({
     onLoadMore: () => fetchMoreArticles(),
     list: articles,
     listItemsPerPage: props.count,
@@ -86,9 +86,9 @@ function SubjectArticleList(props: SubjectArticleListProps) {
       <ol className='list-unstyled'>
         {articles.map((article, i) => {
           return (
-            <li key={`${article.title}-${i}`} ref={getCurrentElementRef(i)}>
+            <li key={`${article.title}-${i}`}>
               {/* deepcode ignore DOMXSS: url comes from pageUrl which escapes + Reacts own escaping */}
-              <Link href={article.url} linkType='header' headingSize={3} standAlone>
+              <Link ref={getCurrentElementRef(i)} href={article.url} linkType='header' headingSize={3} standAlone>
                 {article.title}
               </Link>
               <p className='truncate-2-lines'>{article.preface}</p>

@@ -6,7 +6,7 @@ interface UseKeyboardNavigationFocusProps<T> {
   listItemsPerPage: number
 }
 
-export const useKeyboardNavigation = (callback: () => void) => {
+export const useBtnKeyboardNavigation = (callback: () => void) => {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault()
@@ -16,7 +16,7 @@ export const useKeyboardNavigation = (callback: () => void) => {
   return handleKeyDown
 }
 
-export const useKeyboardNavigationFocus = <T,>({
+export const useBtnKeyboardNavigationFocus = <T,>({
   onLoadMore,
   list,
   listItemsPerPage,
@@ -25,12 +25,12 @@ export const useKeyboardNavigationFocus = <T,>({
   const currentElement = useRef<HTMLLIElement>(null)
 
   useEffect(() => {
-    if (keyboardNavigation && currentElement.current) {
-      ;(currentElement.current.firstChild as HTMLInputElement)?.focus()
+    if (keyboardNavigation) {
+      currentElement.current?.focus()
     }
   }, [list])
 
-  const handleKeyboardNavigation = useKeyboardNavigation(() => {
+  const handleKeyboardNavigation = useBtnKeyboardNavigation(() => {
     setKeyboardNavigation(true)
     onLoadMore()
   })

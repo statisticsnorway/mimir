@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import { Card, Text, Button } from '@statisticsnorway/ssb-component-library'
 import { useMediaQuery } from 'react-responsive'
 import { type RelatedArticlesContent } from '/lib/types/partTypes/relatedArticles'
-import { useKeyboardNavigation } from '/lib/ssb/utils/customHooks'
+import { useBtnKeyboardNavigation } from '/lib/ssb/utils/customHooks'
 
 interface RelatedArticlesProps {
   relatedArticles: RelatedArticlesContent[]
@@ -71,7 +71,7 @@ function RelatedArticles(props: RelatedArticlesProps) {
     setShownArticles(firstShownArticles)
   }
 
-  const handleKeyboardNavigation = useKeyboardNavigation(() => toggleBox(true))
+  const handleKeyboardNavigation = useBtnKeyboardNavigation(() => toggleBox(true))
 
   function renderShowMoreButton() {
     return (
