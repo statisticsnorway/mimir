@@ -9,7 +9,7 @@ interface UseKeyboardNavigationFocusProps<T> {
   cardList?: boolean
 }
 
-export const useBtnKeyboardNavigation = (callback: () => void) => {
+export const usePaginationKeyboardNavigation = (callback: () => void) => {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault()
@@ -19,7 +19,7 @@ export const useBtnKeyboardNavigation = (callback: () => void) => {
   return handleKeyDown
 }
 
-export const useBtnKeyboardNavigationFocus = <T,>({
+export const usePagination = <T,>({
   onLoadMore,
   list,
   listItemsPerPage,
@@ -36,7 +36,7 @@ export const useBtnKeyboardNavigationFocus = <T,>({
     }
   }, [list])
 
-  const handleKeyboardNavigation = useBtnKeyboardNavigation(() => {
+  const handleKeyboardNavigation = usePaginationKeyboardNavigation(() => {
     setKeyboardNavigation(true)
     onLoadMore()
   })

@@ -9,7 +9,7 @@ import {
   type PublicationArchiveProps,
   type PublicationItem,
 } from '/lib/types/partTypes/publicationArchive'
-import { useBtnKeyboardNavigationFocus } from '/lib/ssb/utils/customHooks'
+import { usePagination } from '/lib/ssb/utils/customHooks'
 
 function PublicationArchive(props: PublicationArchiveProps) {
   const {
@@ -36,14 +36,13 @@ function PublicationArchive(props: PublicationArchiveProps) {
   })
 
   const ADDITIONAL_PUBLICATIONS_LENGTH = 10
-  const { handleKeyboardNavigation, getCurrentElementRef, setKeyboardNavigation, disableBtn } =
-    useBtnKeyboardNavigationFocus({
-      onLoadMore: () => fetchPublications(),
-      list: publications,
-      listItemsPerPage: ADDITIONAL_PUBLICATIONS_LENGTH,
-      totalCount: total,
-      loading,
-    })
+  const { handleKeyboardNavigation, getCurrentElementRef, setKeyboardNavigation, disableBtn } = usePagination({
+    onLoadMore: () => fetchPublications(),
+    list: publications,
+    listItemsPerPage: ADDITIONAL_PUBLICATIONS_LENGTH,
+    totalCount: total,
+    loading,
+  })
 
   useEffect(() => {
     if (first) {

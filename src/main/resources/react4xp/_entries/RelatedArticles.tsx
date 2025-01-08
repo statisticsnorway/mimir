@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import { Card, Text, Button } from '@statisticsnorway/ssb-component-library'
 import { useMediaQuery } from 'react-responsive'
 import { type RelatedArticlesContent } from '/lib/types/partTypes/relatedArticles'
-import { useBtnKeyboardNavigation } from '/lib/ssb/utils/customHooks'
+import { usePaginationKeyboardNavigation } from '/lib/ssb/utils/customHooks'
 
 interface RelatedArticlesProps {
   relatedArticles: RelatedArticlesContent[]
@@ -72,7 +72,7 @@ function RelatedArticles(props: RelatedArticlesProps) {
   }
 
   // TODO: Implement custom hook for button pagination keyboard navigation fully after changes has been made to support ref prop for Card component
-  const handleKeyboardNavigation = useBtnKeyboardNavigation(() => toggleBox(true))
+  const handleKeyboardNavigation = usePaginationKeyboardNavigation(() => toggleBox(true))
 
   function renderShowMoreButton() {
     return (

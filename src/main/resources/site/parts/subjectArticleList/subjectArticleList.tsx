@@ -4,7 +4,7 @@ import { ChevronDown } from 'react-feather'
 import axios from 'axios'
 import { type SubjectArticleListProps } from '/lib/types/partTypes/subjectArticleList'
 import { type DropdownItem } from '/lib/types/partTypes/publicationArchive'
-import { useBtnKeyboardNavigationFocus } from '/lib/ssb/utils/customHooks'
+import { usePagination } from '/lib/ssb/utils/customHooks'
 
 /* TODO:
 - Fikse sortering (?)
@@ -23,13 +23,12 @@ function SubjectArticleList(props: SubjectArticleListProps) {
     id: 'DESC',
   })
 
-  const { handleKeyboardNavigation, getCurrentElementRef, setKeyboardNavigation, disableBtn } =
-    useBtnKeyboardNavigationFocus({
-      onLoadMore: () => fetchMoreArticles(),
-      list: articles,
-      listItemsPerPage: props.count,
-      totalCount: props.totalArticles,
-    })
+  const { handleKeyboardNavigation, getCurrentElementRef, setKeyboardNavigation, disableBtn } = usePagination({
+    onLoadMore: () => fetchMoreArticles(),
+    list: articles,
+    listItemsPerPage: props.count,
+    totalCount: props.totalArticles,
+  })
 
   const showCountLabel =
     props.language == 'en'

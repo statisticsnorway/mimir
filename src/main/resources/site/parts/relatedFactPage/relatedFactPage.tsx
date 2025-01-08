@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { PictureCard, Button } from '@statisticsnorway/ssb-component-library'
 import axios from 'axios'
 import { RelatedFactPageProps } from '/lib/types/partTypes/relatedFactPage'
-import { useBtnKeyboardNavigationFocus } from '/lib/ssb/utils/customHooks'
+import { usePagination } from '/lib/ssb/utils/customHooks'
 
 function RelatedBoxes(props: RelatedFactPageProps) {
   const {
@@ -22,7 +22,7 @@ function RelatedBoxes(props: RelatedFactPageProps) {
   const [total, setTotal] = useState(firstRelatedContents ? firstRelatedContents.total : 0)
   const [loading, setLoading] = useState(false)
 
-  const { handleKeyboardNavigation, getCurrentElementRef, setKeyboardNavigation } = useBtnKeyboardNavigationFocus({
+  const { handleKeyboardNavigation, getCurrentElementRef, setKeyboardNavigation } = usePagination({
     onLoadMore: () => handleButtonOnClick(),
     cardList: true,
     list: relatedFactPages,

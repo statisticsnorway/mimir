@@ -19,7 +19,7 @@ import { sanitize } from '/lib/ssb/utils/htmlUtils'
 import { NameSearchData, type SearchResultProps } from '/lib/types/partTypes/searchResult'
 import { type DropdownItem } from '/lib/types/partTypes/publicationArchive'
 import { type PreparedSearchResult } from '/lib/types/solr'
-import { useBtnKeyboardNavigationFocus } from '/lib/ssb/utils/customHooks'
+import { usePagination } from '/lib/ssb/utils/customHooks'
 
 function SearchResult(props: SearchResultProps) {
   const [hits, setHits] = useState(props.hits)
@@ -69,14 +69,13 @@ function SearchResult(props: SearchResultProps) {
   const inputSearchElement = useRef<HTMLDivElement>(null)
 
   const ADDITIONAL_HITS_LENGTH = 15
-  const { handleKeyboardNavigation, getCurrentElementRef, setKeyboardNavigation, disableBtn } =
-    useBtnKeyboardNavigationFocus({
-      onLoadMore: () => onShowMoreSearchResults(),
-      list: hits,
-      listItemsPerPage: ADDITIONAL_HITS_LENGTH,
-      totalCount: total,
-      loading,
-    })
+  const { handleKeyboardNavigation, getCurrentElementRef, setKeyboardNavigation, disableBtn } = usePagination({
+    onLoadMore: () => onShowMoreSearchResults(),
+    list: hits,
+    listItemsPerPage: ADDITIONAL_HITS_LENGTH,
+    totalCount: total,
+    loading,
+  })
 
   useEffect(() => {
     if (searchTerm && inputSearchElement.current) {
