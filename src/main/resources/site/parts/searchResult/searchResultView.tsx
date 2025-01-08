@@ -19,7 +19,7 @@ import { sanitize } from '/lib/ssb/utils/htmlUtils'
 import { NameSearchData, type SearchResultProps } from '/lib/types/partTypes/searchResult'
 import { type DropdownItem } from '/lib/types/partTypes/publicationArchive'
 import { type PreparedSearchResult } from '/lib/types/solr'
-import { useKeyBoardNavigation } from '/lib/ssb/utils/customHooks'
+import { useKeyboardNavigation } from '/lib/ssb/utils/customHooks'
 
 const ADDITIONAL_HITS_LENGTH = 15
 
@@ -301,7 +301,7 @@ function SearchResult(props: SearchResultProps) {
       })
   }
 
-  const keyboardNavigationHandler = useKeyBoardNavigation(() => {
+  const handleKeyboardNavigation = useKeyboardNavigation(() => {
     setKeyboardNavigation(true)
     onShowMoreSearchResults()
   })
@@ -317,7 +317,7 @@ function SearchResult(props: SearchResultProps) {
               setKeyboardNavigation(false)
               onShowMoreSearchResults()
             }}
-            onKeyDown={keyboardNavigationHandler}
+            onKeyDown={handleKeyboardNavigation}
           >
             <ChevronDown size='18' /> {props.buttonTitle}
           </Button>

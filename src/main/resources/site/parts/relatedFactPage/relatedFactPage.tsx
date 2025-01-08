@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import { PictureCard, Button } from '@statisticsnorway/ssb-component-library'
 import axios from 'axios'
 import { RelatedFactPageProps } from '/lib/types/partTypes/relatedFactPage'
+import { useKeyboardNavigation } from '/lib/ssb/utils/customHooks'
 
 function RelatedBoxes(props: RelatedFactPageProps) {
   const {
@@ -80,6 +81,8 @@ function RelatedBoxes(props: RelatedFactPageProps) {
     }
   }
 
+  const handleKeyboardNavigation = useKeyboardNavigation(() => handleButtonOnClick(false))
+
   function renderRelatedFactPages() {
     if (relatedFactPages.length) {
       return (
@@ -109,12 +112,7 @@ function RelatedBoxes(props: RelatedFactPageProps) {
                 <Button
                   ariaLabel={total > relatedFactPages.length && `${showAll} - ${total} ${factpagePluralName}`}
                   onClick={() => handleButtonOnClick(true)}
-                  onKeyDown={(e: React.KeyboardEvent<HTMLButtonElement>) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault()
-                      handleButtonOnClick(false)
-                    }
-                  }}
+                  onKeyDown={handleKeyboardNavigation}
                 >
                   {renderButtonText()}
                 </Button>

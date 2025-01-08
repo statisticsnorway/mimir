@@ -4,6 +4,7 @@ import { ChevronDown } from 'react-feather'
 import axios from 'axios'
 import { type SubjectArticleListProps } from '/lib/types/partTypes/subjectArticleList'
 import { type DropdownItem } from '/lib/types/partTypes/publicationArchive'
+import { useKeyboardNavigation } from '/lib/ssb/utils/customHooks'
 
 /* TODO:
 - Fikse sortering (?)
@@ -120,6 +121,8 @@ function SubjectArticleList(props: SubjectArticleListProps) {
     }
   }
 
+  const handleKeyboardNavigation = useKeyboardNavigation(() => fetchMoreArticles())
+
   function renderShowMoreButton() {
     if (!props.showAllArticles) {
       return (
@@ -128,6 +131,7 @@ function SubjectArticleList(props: SubjectArticleListProps) {
             disabled={totalCount > 0 && totalCount >= props.totalArticles}
             className='button-more'
             onClick={fetchMoreArticles}
+            onKeyDown={handleKeyboardNavigation}
           >
             <ChevronDown size='18' />
             {props.buttonTitle}

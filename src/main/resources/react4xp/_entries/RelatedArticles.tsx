@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import { Card, Text, Button } from '@statisticsnorway/ssb-component-library'
 import { useMediaQuery } from 'react-responsive'
 import { type RelatedArticlesContent } from '/lib/types/partTypes/relatedArticles'
+import { useKeyboardNavigation } from '/lib/ssb/utils/customHooks'
 
 interface RelatedArticlesProps {
   relatedArticles: RelatedArticlesContent[]
@@ -70,18 +71,15 @@ function RelatedArticles(props: RelatedArticlesProps) {
     setShownArticles(firstShownArticles)
   }
 
+  const handleKeyboardNavigation = useKeyboardNavigation(() => toggleBox(true))
+
   function renderShowMoreButton() {
     return (
       <div className={`row hide-show-btn justify-content-center justify-content-lg-start`}>
         <div className='col-auto'>
           <Button
             onClick={() => toggleBox(false)}
-            onKeyDown={(e: React.KeyboardEvent<HTMLButtonElement>) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault()
-                toggleBox(true)
-              }
-            }}
+            onKeyDown={handleKeyboardNavigation}
             ariaLabel={isHidden ? `${showAllAriaLabel} - ${relatedArticles.length} ${articlePluralName}` : ''}
           >
             {shownArticles.length < relatedArticles.length ? showAll + ` (${relatedArticles.length})` : showLess}

@@ -9,6 +9,7 @@ import {
   type PublicationArchiveProps,
   type PublicationItem,
 } from '/lib/types/partTypes/publicationArchive'
+import { useKeyboardNavigation } from '/lib/ssb/utils/customHooks'
 
 function PublicationArchive(props: PublicationArchiveProps) {
   const {
@@ -216,6 +217,11 @@ function PublicationArchive(props: PublicationArchiveProps) {
     )
   }
 
+  const handleKeyboardNavigation = useKeyboardNavigation(() => {
+    setKeyboardNavigation(true)
+    fetchPublications()
+  })
+
   return (
     <section className='publication-archive container-fluid'>
       <div className='publication-archive-head'>
@@ -250,12 +256,7 @@ function PublicationArchive(props: PublicationArchiveProps) {
                 setKeyboardNavigation(false)
                 fetchPublications()
               }}
-              onKeyDown={(e: React.KeyboardEvent<HTMLButtonElement>) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  setKeyboardNavigation(true)
-                  fetchPublications()
-                }
-              }}
+              onKeyDown={handleKeyboardNavigation}
             >
               <ChevronDown size='18' /> {buttonTitle}
             </Button>
