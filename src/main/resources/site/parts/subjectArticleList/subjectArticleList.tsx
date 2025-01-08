@@ -4,7 +4,7 @@ import { ChevronDown } from 'react-feather'
 import axios from 'axios'
 import { type SubjectArticleListProps } from '/lib/types/partTypes/subjectArticleList'
 import { type DropdownItem } from '/lib/types/partTypes/publicationArchive'
-import { useKeyboardNavigation } from '/lib/ssb/utils/customHooks'
+import { useKeyboardNavigationFocus } from '/lib/ssb/utils/customHooks'
 
 /* TODO:
 - Fikse sortering (?)
@@ -23,6 +23,13 @@ function SubjectArticleList(props: SubjectArticleListProps) {
     title: 'Nyeste',
     id: 'DESC',
   })
+
+  const { handleKeyboardNavigation, getCurrentElementRef, setKeyboardNavigation } = useKeyboardNavigationFocus({
+    onLoadMore: () => fetchMoreArticles(),
+    list: articles,
+    listItemsPerPage: props.count,
+  })
+
   const showCountLabel =
     props.language == 'en'
       ? `Showing ${articles.length} of ${props.totalArticles}`
@@ -79,7 +86,7 @@ function SubjectArticleList(props: SubjectArticleListProps) {
       <ol className='list-unstyled'>
         {articles.map((article, i) => {
           return (
-            <li key={i}>
+            <li key={`${article.title}-${i}`} ref={getCurrentElementRef(i)}>
               {/* deepcode ignore DOMXSS: url comes from pageUrl which escapes + Reacts own escaping */}
               <Link href={article.url} linkType='header' headingSize={3} standAlone>
                 {article.title}
@@ -121,8 +128,6 @@ function SubjectArticleList(props: SubjectArticleListProps) {
     }
   }
 
-  const handleKeyboardNavigation = useKeyboardNavigation(() => fetchMoreArticles())
-
   function renderShowMoreButton() {
     if (!props.showAllArticles) {
       return (
@@ -130,7 +135,10 @@ function SubjectArticleList(props: SubjectArticleListProps) {
           <Button
             disabled={totalCount > 0 && totalCount >= props.totalArticles}
             className='button-more'
-            onClick={fetchMoreArticles}
+            onClick={() => {
+              fetchMoreArticles()
+              setKeyboardNavigation(false)
+            }}
             onKeyDown={handleKeyboardNavigation}
           >
             <ChevronDown size='18' />
