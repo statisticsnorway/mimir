@@ -13,7 +13,7 @@ export function lineConfig(highchartContent, options) {
     },
     yAxis: {
       stackLabels: {
-        enabled: highchartContent.stacking === 'normal',
+        enabled: highchartContent.stacking === 'false',
         x: 0,
         y: -5,
       },
