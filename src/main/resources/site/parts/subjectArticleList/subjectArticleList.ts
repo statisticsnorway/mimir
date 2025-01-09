@@ -27,9 +27,8 @@ function renderPart(req: XP.Request) {
   const filterAndSortEnabled: boolean = isEnabled('articlelist-sorting', false)
   const currentPath: string = content._path
 
-  const showAllArticles = false // TODO: setting to "true" is a workaround for the bug where all articles are not being crawled when pagination is enabled. Only the first 10 articles are crawled
   const start = 0
-  const count: number = showAllArticles ? 100 : 10
+  const count: number = 10
 
   const subTopicIds: string | string[] = getSubtopics(content, currentPath, req, language)
   const childArticles: ContentsResult<Content<Article>> = getChildArticles(currentPath, subTopicIds, start, count, sort)
@@ -60,7 +59,6 @@ function renderPart(req: XP.Request) {
     language: language,
     articles: preparedArticles,
     totalArticles: totalArticles,
-    showAllArticles: showAllArticles,
   }
 
   return render('site/parts/subjectArticleList/subjectArticleList', props, req)

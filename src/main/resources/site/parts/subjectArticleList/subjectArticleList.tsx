@@ -127,21 +127,19 @@ function SubjectArticleList(props: SubjectArticleListProps) {
   }
 
   function renderShowMoreButton() {
-    if (!props.showAllArticles) {
-      return (
-        <div>
-          <Button
-            disabled={disableBtn}
-            className='button-more'
-            onClick={handleOnClick}
-            onKeyDown={handleKeyboardNavigation}
-          >
-            <ChevronDown size='18' />
-            {props.buttonTitle}
-          </Button>
-        </div>
-      )
-    }
+    return (
+      <div>
+        <Button
+          disabled={disableBtn}
+          className='button-more'
+          onClick={handleOnClick}
+          onKeyDown={handleKeyboardNavigation}
+        >
+          <ChevronDown size='18' />
+          {props.buttonTitle}
+        </Button>
+      </div>
+    )
   }
 
   return (
