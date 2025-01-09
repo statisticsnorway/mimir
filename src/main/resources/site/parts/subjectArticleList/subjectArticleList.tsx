@@ -4,7 +4,7 @@ import { ChevronDown } from 'react-feather'
 import axios from 'axios'
 import { type SubjectArticleListProps } from '/lib/types/partTypes/subjectArticleList'
 import { type DropdownItem } from '/lib/types/partTypes/publicationArchive'
-import { usePagination } from '/lib/ssb/utils/customHooks'
+import { usePagination } from '/lib/ssb/utils/customHooks/usePagination'
 
 /* TODO:
 - Fikse sortering (?)

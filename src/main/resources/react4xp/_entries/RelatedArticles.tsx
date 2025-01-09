@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import { Card, Text, Button } from '@statisticsnorway/ssb-component-library'
 import { useMediaQuery } from 'react-responsive'
 import { type RelatedArticlesContent } from '/lib/types/partTypes/relatedArticles'
-import { usePaginationKeyboardNavigation } from '/lib/ssb/utils/customHooks'
+import { usePaginationKeyboardNavigation } from '/lib/ssb/utils/customHooks/usePagination'
 
 interface RelatedArticlesProps {
   relatedArticles: RelatedArticlesContent[]
