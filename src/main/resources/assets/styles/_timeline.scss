@@ -9,14 +9,28 @@
     .timeline {
       float: none;
       width: 100%;
+      height: auto;
+    }
+
+    .line {
+      width: 75%;
+      left: 120px;
+    }
+
+    .icon {
+      right: 58px;
+    }
+
+    &:before {
+      left: 90%;
     }
   }
 
   &:before {
     content: '';
-    width: 3px;
+    width: 10px;
     height: 100%;
-    background: #274247;
+    background: #00824d;
     position: absolute;
     top: 0;
     left: 50%;
@@ -47,6 +61,17 @@
       width: 100%;
       cursor: pointer;
     }
+
+    .timeline-event {
+      background: #fff;
+      border: 2px solid $ssb-green-4;
+      border-radius: 8px;
+      display: grid;
+      width: 100%;
+      min-height: 50px;
+      text-align: left;
+      padding: 20px;
+    }
   }
 
   .rectangle {
@@ -74,6 +99,24 @@
     }
   }
 
+  .timeline-content {
+    .year {
+      width: 120px;
+      height: 48px;
+      margin-top: 27px;
+      margin-right: 25px;
+      position: absolute;
+      z-index: 2;
+
+      span {
+        @include roboto-condenced;
+        color: #192326;
+        margin: auto;
+        font-size: 44px;
+      }
+    }
+  }
+
   .triangle {
     position: absolute;
     display: block;
@@ -92,8 +135,8 @@
 
   .line {
     width: 100%;
-    height: 2px;
-    background: #274247;
+    height: 5px;
+    background: #00824d;
     position: absolute;
     margin-top: 50px;
     left: 0;
@@ -107,7 +150,7 @@
     width: 30px;
     height: 30px;
     border-radius: 50%;
-    background: #274247;
+    background: #00824d;
     border: 2px solid #fff;
     position: absolute;
     top: 36px;

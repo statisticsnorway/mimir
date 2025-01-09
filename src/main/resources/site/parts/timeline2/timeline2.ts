@@ -18,7 +18,6 @@ function renderPart(req: XP.Request) {
   const timelineElements: Array<TimelineElement2> = part.config.TimelineItemSet
     ? forceArray(part.config.TimelineItemSet)
     : []
-  log.info('Event: ' + JSON.stringify(timelineElements, null, 4))
   const props = {
     timelineElements,
   }
