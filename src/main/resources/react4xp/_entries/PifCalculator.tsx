@@ -209,7 +209,7 @@ function PifCalculator(props: PifCalculatorProps) {
     const endMonthValue = value || endMonth.value.id
     const maxYearAverage = Number(validMaxMonth) === 12 ? validMaxYear : Number(validMaxYear) - 1
     const endMonthValid =
-      endMonthValue === ''
+      endMonthValue === '90'
         ? endYear.value <= maxYearAverage
         : !(endYear.value === validMaxYear && endMonthValue > validMaxMonth)
     if (!endMonthValid) {
