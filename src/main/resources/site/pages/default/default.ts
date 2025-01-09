@@ -321,6 +321,18 @@ export function get(req: XP.Request): XP.Response {
         pageContributions,
       } as XP.Response)
 
+
+
+
+  const structuredData = prepareStructuredData(metaInfo, page);
+    log.info(
+      '\x1b[32m%s\x1b[0m',
+      'Structured Data: ' + JSON.stringify(structuredData, null, 2)
+    );
+        
+
+
+
   return {
     body: `<!DOCTYPE html>${bodyWithAlerts.body}`,
     pageContributions: bodyWithAlerts.pageContributions,
@@ -365,8 +377,9 @@ function prepareStructuredData(metaInfo: MetaInfoData, page: DefaultPage): Artic
     additionalType: metaInfo.metaInfoSearchContentType,
     headline: metaInfo.metaInfoTitle,
     datePublished: metaInfo.metaInfoSearchPublishFrom,
-    dateModified: page.data.showModifiedDate?.dateOption?.showModifiedTime
-      ? page.data.showModifiedDate.dateOption.modifiedDate
+    dateModified: page.data.showModifiedDate?.dateOption?.modifiedDate
+      ? page.data.showModifiedDate.dateOption.modifiedDate +
+        (page.data.showModifiedDate.dateOption.showModifiedTime ? 'T' + new Date().toISOString().split('T')[1] : '')
       : undefined,
     author: page.data.authorItemSet
       ? ensureArray(page.data.authorItemSet).map((f) => {
