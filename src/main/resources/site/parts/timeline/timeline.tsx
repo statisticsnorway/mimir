@@ -1,33 +1,41 @@
 import React from 'react'
-import { type TimelineProps } from '/lib/types/partTypes/timeline'
+import { CategoryLink, Link } from '@statisticsnorway/ssb-component-library'
+import { type TimelineProps, type TimelineEvent } from '/lib/types/partTypes/timeline'
+
+function addCategoryLink(event: TimelineEvent) {
+  return (
+    <div className='event-content'>
+      <CategoryLink href='' titleText={event.title} subText={event.ingress} />
+    </div>
+  )
+}
+
+function addEventBox(event: TimelineEvent) {
+  return (
+    <div className='timeline-event'>
+      {event.article ? <Link linkType='header'>{event.title}</Link> : <span className='title'>{event.title}</span>}
+      {event.ingress && <span>{event.ingress}</span>}
+    </div>
+  )
+}
 
 function Timeline(props: TimelineProps) {
   const { timelineElements } = props
   return (
-    <div className='main-timeline'>
-      {timelineElements?.map((link, index) => {
+    <div className='ssb-timeline'>
+      {timelineElements?.map((timeline) => {
+        const event = Array.isArray(timeline.event) ? timeline.event : [timeline.event]
         return (
-          <div className={`timeline ${index % 2 === 0 ? 'left' : 'right'}`} key={index}>
-            {/* <div className={`timeline `} key={index}>  */}
-            <div className='timeline-content'>
-              <div className='triangle'></div>
-              <div className='rectangle'>
-                <span>
-                  <div className='year'>{link.year}</div>
-                </span>
-              </div>
-              <div className='line'></div>
-              <div className='icon'></div>
-              <div className='content'>
-                <div className='text-content'>
-                  <h2 className='description'>{link.title}</h2>
-                </div>
-                {link.article && (
-                  <a className='read-more' href='/en-gb/visualisations/timeline-125-years-of-population-censuses/1899'>
-                    Les mer om dette året
-                  </a>
-                )}
-              </div>
+          <div className='timeline-content' key={timeline.year}>
+            <div className='year'>
+              <span>{timeline.year}</span>
+            </div>
+            <div className='line'></div>
+            <div className='icon'></div>
+            <div className='content'>
+              {event.map((event) => {
+                return <div>{event.article ? addCategoryLink(event) : addEventBox(event)}</div>
+              })}
             </div>
           </div>
         )
