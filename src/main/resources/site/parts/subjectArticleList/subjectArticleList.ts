@@ -27,8 +27,7 @@ function renderPart(req: XP.Request) {
   const filterAndSortEnabled: boolean = isEnabled('articlelist-sorting', false)
   const currentPath: string = content._path
 
-  // TODO change to false when crawling of articles is fixed
-  const showAllArticles = false
+  const showAllArticles = false // TODO: setting to "true" is a workaround for the bug where all articles are not being crawled when pagination is enabled. Only the first 10 articles are crawled
   const start = 0
   const count: number = showAllArticles ? 100 : 10
 
