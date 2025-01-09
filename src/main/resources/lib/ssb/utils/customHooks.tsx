@@ -9,6 +9,7 @@ interface UsePaginationProps<T> {
   totalCount?: number
 }
 
+// TODO: This function may no longer need to be exported after all pagination has been updated; prefer using handleKeyboardNavigation function from usePagination in components instead
 export const usePaginationKeyboardNavigation = (callback: () => void) => {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
     if (e.key === 'Enter' || e.key === ' ') {
