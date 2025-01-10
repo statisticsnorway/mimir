@@ -97,6 +97,9 @@ function Table(props: TableProps) {
     )
   }
 
+  const tableElement = tableRef.current as HTMLTableElement
+  const fileName = table?.caption?.content ?? table?.caption
+
   function downloadTableAsCSV() {
     if (window.downloadTableFile && !useNewTableExport) {
       window.downloadTableFile(tableWrapperRef.current, {
@@ -108,7 +111,7 @@ function Table(props: TableProps) {
       })
     }
     if (tableRef?.current && useNewTableExport) {
-      exportTableToCSV({ tableElement: tableRef.current, fileName: table?.caption ?? table?.caption?.content })
+      exportTableToCSV({ tableElement, fileName })
     }
   }
 
@@ -130,7 +133,7 @@ function Table(props: TableProps) {
       })
     }
     if (tableRef?.current && useNewTableExport) {
-      exportTableToExcel({ tableElement: tableRef.current, fileName: table?.caption ?? table?.caption?.content })
+      exportTableToExcel({ tableElement, fileName })
     }
   }
 
