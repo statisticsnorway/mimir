@@ -97,7 +97,6 @@ function Table(props: TableProps) {
     )
   }
 
-  const tableElement = tableRef.current as HTMLTableElement
   const fileName = table?.caption?.content ?? table?.caption
 
   function downloadTableAsCSV() {
@@ -111,7 +110,7 @@ function Table(props: TableProps) {
       })
     }
     if (tableRef?.current && useNewTableExport) {
-      exportTableToCSV({ tableElement, fileName })
+      exportTableToCSV({ tableElement: tableRef.current, fileName })
     }
   }
 
@@ -133,7 +132,7 @@ function Table(props: TableProps) {
       })
     }
     if (tableRef?.current && useNewTableExport) {
-      exportTableToExcel({ tableElement, fileName })
+      exportTableToExcel({ tableElement: tableRef.current, fileName })
     }
   }
 
