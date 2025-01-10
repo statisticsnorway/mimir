@@ -14,6 +14,7 @@ export interface KeyFigureProps {
   hiddenTitle: string
   isInStatisticsPage: boolean
   isMacro: boolean
+  dateInput?: string | undefined
 }
 
 export interface KeyFigureData {

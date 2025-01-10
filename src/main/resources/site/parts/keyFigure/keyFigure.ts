@@ -103,26 +103,31 @@ function renderKeyFigure(
   config?: KeyFigurePartConfig
 ): XP.Response {
   const draftExist = !!parsedKeyFiguresDraft
+  const rawDateInput = page.data.dateInput as string | undefined
+  const dateInput = rawDateInput ? rawDateInput : undefined
+
+  const existingTimeValue = parsedKeyFigures.find((keyFigure) => keyFigure.time)?.time
+
+  const timeValue = existingTimeValue || dateInput || undefined
+
   if ((parsedKeyFigures && parsedKeyFigures.length > 0) || draftExist) {
     const hiddenTitle: Array<string> = parsedKeyFigures.map((keyFigureData) => {
       return keyFigureData.title
     })
 
     const props: KeyFigureProps = {
-      displayName: config && config.title,
-      keyFigures: parsedKeyFigures.map((keyFigureData) => {
-        return {
-          ...keyFigureData,
-          glossary: keyFigureData.glossaryText,
-        }
-      }),
+      displayName: config?.title,
+      keyFigures: parsedKeyFigures.map((keyFigureData) => ({
+        ...keyFigureData,
+        time: timeValue,
+        glossary: keyFigureData.glossaryText,
+      })),
       keyFiguresDraft: parsedKeyFiguresDraft
-        ? parsedKeyFiguresDraft.map((keyFigureDraftData) => {
-            return {
-              ...keyFigureDraftData,
-              glossary: keyFigureDraftData.glossaryText,
-            }
-          })
+        ? parsedKeyFiguresDraft.map((keyFigureDraftData) => ({
+            ...keyFigureDraftData,
+            time: timeValue,
+            glossary: keyFigureDraftData.glossaryText,
+          }))
         : undefined,
       sourceLabel: getPhrases(page)!.source,
       source: config?.source,
