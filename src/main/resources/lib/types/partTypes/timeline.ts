@@ -4,7 +4,7 @@ export interface TimelineProps {
 
 export interface TimelineElement {
   year: string
-  event: TimelineEvent | TimelineEvent[]
+  event?: TimelineEvent | TimelineEvent[]
 }
 
 export interface TimelineEvent {

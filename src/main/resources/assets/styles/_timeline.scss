@@ -25,6 +25,28 @@
     margin-bottom: 30px;
     width: 90%;
 
+    &.first {
+      .year {
+        width: 100%;
+        height: auto;
+        background: #274247;
+        position: absolute;
+        right: -60px;
+
+        span {
+          @include roboto-condenced;
+          color: #fff;
+          padding: 20px 40px;
+          font-size: 2rem;
+          float: right;
+        }
+      }
+
+      .content {
+        margin-top: 40px;
+      }
+    }
+
     .year {
       background: #fff;
       width: 120px;
