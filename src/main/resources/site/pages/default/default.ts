@@ -320,6 +320,7 @@ export function get(req: XP.Request): XP.Response {
         body,
         pageContributions,
       } as XP.Response)
+  
   return {
     body: `<!DOCTYPE html>${bodyWithAlerts.body}`,
     pageContributions: bodyWithAlerts.pageContributions,
