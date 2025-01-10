@@ -320,19 +320,6 @@ export function get(req: XP.Request): XP.Response {
         body,
         pageContributions,
       } as XP.Response)
-
-
-
-
-  const structuredData = prepareStructuredData(metaInfo, page);
-    log.info(
-      '\x1b[32m%s\x1b[0m',
-      'Structured Data: ' + JSON.stringify(structuredData, null, 2)
-    );
-        
-
-
-
   return {
     body: `<!DOCTYPE html>${bodyWithAlerts.body}`,
     pageContributions: bodyWithAlerts.pageContributions,
