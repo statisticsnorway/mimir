@@ -108,7 +108,7 @@ function Table(props: TableProps) {
       })
     }
     if (tableRef?.current && useNewTableExport) {
-      exportTableToCSV({ tableElement: tableRef.current, fileName: table?.caption ?? table?.caption?.content })
+      exportTableToCSV({ tableElement: tableRef.current, fileName: table?.caption?.content ?? table?.caption })
     }
   }
 
@@ -130,7 +130,7 @@ function Table(props: TableProps) {
       })
     }
     if (tableRef?.current && useNewTableExport) {
-      exportTableToExcel({ tableElement: tableRef.current, fileName: table?.caption ?? table?.caption?.content })
+      exportTableToExcel({ tableElement: tableRef.current, fileName: table?.caption?.content ?? table?.caption })
     }
   }
 
