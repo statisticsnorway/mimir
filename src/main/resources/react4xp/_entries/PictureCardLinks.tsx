@@ -15,7 +15,7 @@ interface PictureLinkProps {
 const PictureLink = ({ href, title, subTitle, id, ariaDescribedBy, className, imageSources }: PictureLinkProps) => {
   return (
     <a
-      className={`ssb-picture-card vertical ${className || ''} group`}
+      className={`ssb-picture-card vertical ${className ?? ''} group`}
       href={href}
       aria-label={title}
       aria-describedby={ariaDescribedBy ? `${id}-${ariaDescribedBy}` : undefined}
