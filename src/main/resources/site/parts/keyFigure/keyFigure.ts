@@ -104,7 +104,7 @@ function renderKeyFigure(
 ): XP.Response {
   const draftExist = !!parsedKeyFiguresDraft
   const rawDateInput = page.data.dateInput as string | undefined
-  const dateInput = rawDateInput ? processAndSanitizeText(rawDateInput) : undefined
+  const dateInput = rawDateInput ? rawDateInput : undefined
 
   const existingTimeValue = parsedKeyFigures.find((keyFigure) => keyFigure.time)?.time
 
