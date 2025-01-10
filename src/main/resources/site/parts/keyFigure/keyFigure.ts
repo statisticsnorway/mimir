@@ -1,5 +1,5 @@
 import { type Content } from '/lib/xp/content'
-import { getContent, getComponent, getSiteConfig, processHtml, sanitizeHtml } from '/lib/xp/portal'
+import { getContent, getComponent, getSiteConfig } from '/lib/xp/portal'
 import { render } from '/lib/enonic/react4xp'
 import { get as getKeyFigures, parseKeyFigure } from '/lib/ssb/parts/keyFigure'
 import { getMunicipality } from '/lib/ssb/dataset/klass/municipalities'
@@ -150,10 +150,4 @@ function renderKeyFigure(
     body: '',
     contentType: 'text/html',
   }
-}
-
-function processAndSanitizeText(text: string): string {
-  let processedText = processHtml({ value: text })
-  processedText = sanitizeHtml(processedText).replace(/<(\/*)p/gm, '<$1span')
-  return processedText
 }
