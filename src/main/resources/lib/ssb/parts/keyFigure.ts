@@ -67,6 +67,8 @@ export function parseKeyFigure(
   municipality?: MunicipalityWithCounty,
   branch: string = DATASET_BRANCH
 ): KeyFigureView {
+  log.info('\x1b[32m%s\x1b[0m', 'Initial KeyFigureView: ' + JSON.stringify(keyFigure, null, 2)) // Log initial keyFigure data
+
   const keyFigureViewData: KeyFigureView = {
     iconUrl: getIconUrl(keyFigure),
     iconAltText: keyFigure.data.icon ? getImageCaption(keyFigure.data.icon) : '',
@@ -75,13 +77,16 @@ export function parseKeyFigure(
     noNumberText: localize({
       key: 'value.notFound',
     }),
-    time: undefined,
+    time: keyFigure.data.manualDate || undefined, // Use manualDate if available
     size: keyFigure.data.size,
     title: keyFigure.displayName,
     changes: undefined,
     greenBox: keyFigure.data.greenBox,
     glossaryText: keyFigure.data.glossaryText,
   }
+
+  log.info('\x1b[32m%s\x1b[0m', 'KeyFigureView (Before Processing): ' + JSON.stringify(keyFigureViewData, null, 2)) // Log KeyFigureView before processing
+  log.info('\x1b[32m%s\x1b[0m', 'keyFigure.data ' + JSON.stringify(keyFigure.data, null, 2))
 
   let datasetRepo: DatasetRepoNode<JSONstatType | TbmlDataUniform | object> | undefined | null
   if (branch === UNPUBLISHED_DATASET_BRANCH) {
@@ -94,12 +99,14 @@ export function parseKeyFigure(
     const dataSource: DataSource['dataSource'] | undefined = keyFigure.data.dataSource
     const data: string | JSONstatType | TbmlDataUniform | object | undefined = datasetRepo.data
 
+    log.info('\x1b[32m%s\x1b[0m', 'Data Source: ' + JSON.stringify(dataSource, null, 2)) // Log data source info
+    log.info('\x1b[32m%s\x1b[0m', 'Data: ' + JSON.stringify(data, null, 2)) // Log the data received
+
     if (dataSource && dataSource._selected === DataSourceType.STATBANK_API) {
       const ds: JSONstatType | null = JSONstat(data).Dataset(0)
       const xAxisLabel: string | undefined = dataSource.statbankApi ? dataSource.statbankApi.xAxisLabel : undefined
       const yAxisLabel: string | undefined = dataSource.statbankApi ? dataSource.statbankApi.yAxisLabel : undefined
 
-      // if filter get data with filter
       if (
         dataSource.statbankApi &&
         dataSource.statbankApi.datasetFilterOptions &&
@@ -108,15 +115,16 @@ export function parseKeyFigure(
         const filterOptions: DatasetFilterOptions = dataSource.statbankApi.datasetFilterOptions
         getDataWithFilterStatbankApi(keyFigureViewData, municipality, filterOptions, ds, yAxisLabel)
       } else if (xAxisLabel && ds && !(ds instanceof Array)) {
-        // get all data without filter
+        // Get all data without filter
       }
     } else if (dataSource && dataSource._selected === DataSourceType.TBPROCESSOR) {
       const tbmlData: TbmlDataUniform = data as TbmlDataUniform
-      if (tbmlData !== null && tbmlData.tbml.presentation) getDataTbProcessor(keyFigureViewData, tbmlData, keyFigure)
+      if (tbmlData !== null && tbmlData.tbml.presentation) {
+        getDataTbProcessor(keyFigureViewData, tbmlData, keyFigure)
+      }
 
-      // Logging Mocked keyFigure
       if (dataSource?.tbprocessor?.urlOrId === '-1' && branch === 'master') {
-        log.info('MIMIR mocked Keyfigure, value:' + keyFigureViewData.number)
+        log.info('MIMIR mocked Keyfigure, value: ' + keyFigureViewData.number)
       }
     }
     return keyFigureViewData
@@ -128,6 +136,7 @@ export function parseKeyFigure(
     }
     return keyFigureViewData
   }
+
   return keyFigureViewData
 }
 
