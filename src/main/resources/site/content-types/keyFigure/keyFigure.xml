@@ -4,8 +4,8 @@
 	<allow-child-content>true</allow-child-content>
 	<form>
 		<mixin name="dataSource" />
-		<input name="dateInput" type="TextLine">
-			<label>Dato</label>
+		<input name="manualDate" type="TextLine">
+			<label>Manuell dato</label>
 			<occurrences minimum="0" maximum="1" />
 			<config/>
 		</input>
