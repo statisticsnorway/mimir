@@ -40,6 +40,8 @@ jobs:
         if: success()
         uses: slackapi/slack-github-action@v2
         with:
+          webhook: ${{ secrets.SLACK_ALERTS_QA }}
+          webhook-type: incoming-webhook
           # Using Github block kit (https://api.slack.com/reference/block-kit/blocks) to configure the Slack message, see https://docs.github.com/en/actions/learn-github-actions/contexts
           # for more information about context variables
           payload: |
@@ -75,14 +77,13 @@ jobs:
                 }
               ]
             }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_ALERTS_QA }}
-          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
       - name: Send failure message to Slack
         id: slack_failure
         if: failure()
         uses: slackapi/slack-github-action@v2
         with:
+          webhook: ${{ secrets.SLACK_MIMIR_UTV }}
+          webhook-type: incoming-webhook
           payload: |
             {
               "blocks": [
@@ -116,9 +117,6 @@ jobs:
                 }
               ]
             }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_MIMIR_UTV }}
-          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
   mabl_test:
     # Run this job after deploy is finished, and only run if deploy succeeded
     needs: deploy_to_qa
