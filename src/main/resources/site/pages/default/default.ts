@@ -363,8 +363,7 @@ function prepareStructuredData(metaInfo: MetaInfoData, page: DefaultPage): Artic
     headline: metaInfo.metaInfoTitle,
     datePublished: metaInfo.metaInfoSearchPublishFrom,
     dateModified: page.data.showModifiedDate?.dateOption?.modifiedDate
-      ? page.data.showModifiedDate.dateOption.modifiedDate +
-        (page.data.showModifiedDate.dateOption.showModifiedTime ? 'T' + new Date().toISOString().split('T')[1] : '')
+      ? new Date(page.data.showModifiedDate.dateOption.modifiedDate).toISOString()
       : undefined,
     author: page.data.authorItemSet
       ? ensureArray(page.data.authorItemSet).map((f) => {
@@ -375,14 +374,14 @@ function prepareStructuredData(metaInfo: MetaInfoData, page: DefaultPage): Artic
           }
         })
       : undefined,
-      publisher:{
-        '@type': 'Organization',
-        name: 'Statistisk sentralbyrå',
-        logo: {
-          '@type': 'ImageObject',
-          url: 'https://www.ssb.no/_/asset/mimir:0000018b60c47e20/SSB_logo_black.svg' 
-        }
+    publisher: {
+      '@type': 'Organization',
+      name: 'Statistisk sentralbyrå',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://www.ssb.no/_/asset/mimir:0000018b60c47e20/SSB_logo_black.svg',
       },
+    },
     description: metaInfo.metaInfoDescription
       ? metaInfo.metaInfoDescription
       : page.x['com-enonic-app-metafields']?.['meta-data']?.seoDescription || undefined,
