@@ -363,9 +363,7 @@ function prepareStructuredData(metaInfo: MetaInfoData, page: DefaultPage): Artic
     headline: metaInfo.metaInfoTitle,
     datePublished: metaInfo.metaInfoSearchPublishFrom,
     dateModified: page.data.showModifiedDate?.dateOption?.modifiedDate
-      ? `${page.data.showModifiedDate.dateOption.modifiedDate}${
-          page.data.showModifiedDate.dateOption.showModifiedTime ? `:00` : ''
-        }Z`
+      ? new Date(page.data.showModifiedDate.dateOption.modifiedDate).toISOString()
       : undefined,
     author: page.data.authorItemSet
       ? ensureArray(page.data.authorItemSet).map((f) => {
