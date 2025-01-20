@@ -43,7 +43,10 @@ export const usePagination = <T,>({
     if (cardList) {
       return index === listItemsPerPage ? currentElement : null
     }
-    return index === list.length - listItemsPerPage ? currentElement : null
+
+    const lastElementInCurrentPage =
+      listItemsPerPage > list.length - listItemsPerPage ? listItemsPerPage : list.length - listItemsPerPage
+    return index === lastElementInCurrentPage ? currentElement : null
   }
 
   const handleKeyboardNavigation = usePaginationKeyboardNavigation(() => {
