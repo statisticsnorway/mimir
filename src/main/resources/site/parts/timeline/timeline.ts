@@ -24,6 +24,5 @@ function renderPart(req: XP.Request) {
 
   return render('site/parts/timeline/timeline', props, req, {
     body: '<section class="xp-part timeline"></section>',
-    hydrate: false,
   })
 }
