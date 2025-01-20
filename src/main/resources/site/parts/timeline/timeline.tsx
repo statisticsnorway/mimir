@@ -6,9 +6,9 @@ function Timeline(props: TimelineProps) {
   const { timelineElements } = props
   const [selectedTag, setSelectedTag] = useState('all')
   const [filteredElements, setFilteredElements] = useState(props.timelineElements)
+  const [active, setActive] = useState(false)
 
   useEffect(() => {
-    console.log(selectedTag)
     if (selectedTag !== 'all') {
       setFilteredElements(filterElementsByCategory(timelineElements, selectedTag))
     } else {
@@ -18,6 +18,10 @@ function Timeline(props: TimelineProps) {
 
   function setFilter(filter: string) {
     setSelectedTag(filter)
+    setActive(true)
+    setTimeout(() => {
+      setActive(false)
+    }, 1000) // Tiden det tar før boksen blir helt synlig igjen
   }
 
   const filterElementsByCategory = (elements: TimelineElement[], category: string) => {
@@ -61,11 +65,7 @@ function Timeline(props: TimelineProps) {
     return (
       <div className='content'>
         {events.map((event, index) => {
-          return (
-            <div key={index} onClick={() => console.log('halla alla')}>
-              {event.article ? addCategoryLink(event) : addEventBox(event)}
-            </div>
-          )
+          return <div key={index}>{event.article ? addCategoryLink(event) : addEventBox(event)}</div>
         })}
       </div>
     )
@@ -89,19 +89,19 @@ function Timeline(props: TimelineProps) {
   function addFilter() {
     return (
       <div className='filter'>
-        <Tag className='all' onClick={() => setFilter('all')}>
+        <Tag className={!selectedTag || selectedTag === 'all' ? 'active' : ''} onClick={() => setFilter('all')}>
           Vis alt
         </Tag>
-        <Tag className='statistikk' onClick={() => setFilter('statistic')}>
+        <Tag className={selectedTag === 'statistic' ? 'active' : ''} onClick={() => setFilter('statistic')}>
           Statistiske hendelser
         </Tag>
-        <Tag className='eventSsb' onClick={() => setFilter('eventSsb')}>
+        <Tag className={selectedTag === 'eventSsb' ? 'active' : ''} onClick={() => setFilter('eventSsb')}>
           Institusjonelle hendelser
         </Tag>
-        <Tag className='direktor' onClick={() => setFilter('director')}>
+        <Tag className={selectedTag === 'director' ? 'active' : ''} onClick={() => setFilter('director')}>
           Direktører
         </Tag>
-        <Tag className='nokkeltall' onClick={() => setFilter('nokkeltall')}>
+        <Tag className={selectedTag === 'nokkeltall' ? 'active' : ''} onClick={() => setFilter('nokkeltall')}>
           Nøkkeltall
         </Tag>
       </div>
@@ -110,7 +110,7 @@ function Timeline(props: TimelineProps) {
 
   function addTimeLine() {
     return (
-      <div className='timeline'>
+      <div className={`timeline ${active ? 'active' : ''}`}>
         <div className='circle' />
         <div className='timeline-elements'>
           {filteredElements?.map((timeline) => {
