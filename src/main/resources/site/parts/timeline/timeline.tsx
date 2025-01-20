@@ -4,17 +4,40 @@ import { type TimelineProps, type TimelineElement, type TimelineEvent } from '/l
 
 function Timeline(props: TimelineProps) {
   const { timelineElements } = props
-  // const [filteredElements, setFilteredElements] = useState([])
-  //const [selectedTag, setSelectedTag] = useState('Alle')
-  const [selectedTag, setSelectedTag] = useState('Alle')
+  const [selectedTag, setSelectedTag] = useState('all')
+  const [filteredElements, setFilteredElements] = useState(props.timelineElements)
 
   useEffect(() => {
     console.log(selectedTag)
-    //setFilteredElements(props.timelineElements)
-  }, [])
+    if (selectedTag !== 'all') {
+      setFilteredElements(filterElementsByCategory(timelineElements, selectedTag))
+    } else {
+      setFilteredElements(props.timelineElements)
+    }
+  }, [selectedTag])
 
   function setFilter(filter: string) {
     setSelectedTag(filter)
+  }
+
+  const filterElementsByCategory = (elements: TimelineElement[], category: string) => {
+    if (category === 'all') {
+      return elements
+    }
+    return elements
+      .map((element) => {
+        if (element.event) {
+          const filteredEvents = Array.isArray(element.event)
+            ? element.event.filter((event) => event.category === category)
+            : element.event.category === category
+              ? element.event
+              : null
+
+          return filteredEvents ? { ...element, event: filteredEvents } : null
+        }
+        return null
+      })
+      .filter((element) => element !== null)
   }
 
   function addCategoryLink(event: TimelineEvent) {
@@ -49,6 +72,9 @@ function Timeline(props: TimelineProps) {
   }
   function addTimelineYear(timeline: TimelineElement) {
     const events = timeline.event ? (Array.isArray(timeline.event) ? timeline.event : [timeline.event]) : []
+    if (events.length === 0) {
+      return null
+    }
     return (
       <div className='timeline-content' key={timeline.year}>
         <div className='year'>
@@ -66,13 +92,13 @@ function Timeline(props: TimelineProps) {
         <Tag className='all' onClick={() => setFilter('all')}>
           Vis alt
         </Tag>
-        <Tag className='statistikk' onClick={() => setFilter('statistikk')}>
+        <Tag className='statistikk' onClick={() => setFilter('statistic')}>
           Statistiske hendelser
         </Tag>
-        <Tag className='ssb' onClick={() => setFilter('ssb')}>
+        <Tag className='eventSsb' onClick={() => setFilter('eventSsb')}>
           Institusjonelle hendelser
         </Tag>
-        <Tag className='direktor' onClick={() => setFilter('direktor')}>
+        <Tag className='direktor' onClick={() => setFilter('director')}>
           Direktører
         </Tag>
         <Tag className='nokkeltall' onClick={() => setFilter('nokkeltall')}>
@@ -82,17 +108,23 @@ function Timeline(props: TimelineProps) {
     )
   }
 
-  return (
-    <div className='ssb-timeline'>
-      {addFilter()}
+  function addTimeLine() {
+    return (
       <div className='timeline'>
         <div className='circle' />
         <div className='timeline-elements'>
-          {timelineElements?.map((timeline) => {
+          {filteredElements?.map((timeline) => {
             return <>{addTimelineYear(timeline)}</>
           })}
         </div>
       </div>
+    )
+  }
+
+  return (
+    <div className='ssb-timeline'>
+      {addFilter()}
+      {addTimeLine()}
     </div>
   )
 }
