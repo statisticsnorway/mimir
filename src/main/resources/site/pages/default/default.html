@@ -27,7 +27,10 @@
   <link rel="alternate" data-th-if="${alternateLanguageVersionUrl}" data-th-href="${alternateLanguageVersionUrl}"
     data-th-hreflang="${language.alternate}" />
   <link data-th-if="${canonicalUrl}" rel="canonical" data-th-href="${canonicalUrl}" />
-
+  <link rel="icon" type="image/png" href="/_/asset/mimir/favicon/favicon-96x96.png" sizes="96x96" />
+  <link rel="icon" type="image/svg+xml" href="/_/asset/mimir/favicon/favicon.svg" />
+  <link rel="icon" type="image/x-icon" sizes="32x32" href="/_/asset/mimir/favicon/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/_/asset/mimir/favicon/apple-touch-icon.png" />
 </head>
 
 <body class="xp-page" data-th-classappend="${bodyClasses}">
@@ -50,11 +53,6 @@
     </div>
   </div>
   <script type="application/ld+json" data-th-if="${jsonLd}" th:inline="javascript">[[${jsonLd}]]</script>
-
-  <div data-th-if="${pageMap}" data-th-remove="tag">
-    <!-- PageMap supplies structured data to search engines, for filtering and rich search -->
-    [(${pageMap})]
-  </div>
 
   <div id="popup" data-th-if="${popupBody}"></div>
 

@@ -75,7 +75,7 @@ export function parseKeyFigure(
     noNumberText: localize({
       key: 'value.notFound',
     }),
-    time: undefined,
+    time: keyFigure.data.manualDate || undefined, // Use manualDate if available
     size: keyFigure.data.size,
     title: keyFigure.displayName,
     changes: undefined,

@@ -8,6 +8,7 @@ import {
   type PictureCardLink,
   type PictureCardLinksContent,
 } from '/lib/types/partTypes/pictureCardLinks'
+import { getLinkTargetUrl } from '/lib/ssb/utils/utils'
 import { type PictureCardLinks as PictureCardLinksPartConfig } from '.'
 
 export function get(req: XP.Request): XP.Response {
@@ -45,15 +46,13 @@ function parsePictureCardLinks(
   pictureCardLinks = Array.isArray(pictureCardLinks) ? pictureCardLinks : [pictureCardLinks]
   return pictureCardLinks.reduce((acc, pictureCardLink, i) => {
     if (pictureCardLink) {
-      const title: string = pictureCardLink.title
-      const subTitle: string = pictureCardLink.subTitle
-      const href: string = pictureCardLink.href
+      const href: string = getLinkTargetUrl(pictureCardLink.urlContentSelector) ?? pictureCardLink.href ?? ''
 
       const imageSources = createImageUrls(pictureCardLink, pictureCardLinks.length, i)
 
       const pictureCardLinksContent: PictureCardLinksContent = {
-        title: title,
-        subTitle: subTitle,
+        title: pictureCardLink.title,
+        subTitle: pictureCardLink.subTitle,
         href: href,
         imageSources: imageSources,
       }
