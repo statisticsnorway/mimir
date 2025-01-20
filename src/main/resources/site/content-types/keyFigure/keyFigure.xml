@@ -4,6 +4,11 @@
 	<allow-child-content>true</allow-child-content>
 	<form>
 		<mixin name="dataSource" />
+		<input name="manualDate" type="TextLine">
+			<label>Manuell dato</label>
+			<occurrences minimum="0" maximum="1" />
+			<config/>
+		</input>
 		<input name="manualSource" type="TextLine">
 			<label>Manuell verdi</label>
 			<occurrences minimum="0" maximum="1" />
