@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { CategoryLink, Link, Tag } from '@statisticsnorway/ssb-component-library'
+import { CategoryLink, ExpansionBox, Link, Tag } from '@statisticsnorway/ssb-component-library'
 import { type TimelineProps, type TimelineElement, type TimelineEvent } from '/lib/types/partTypes/timeline'
+import { sanitize } from '/lib/ssb/utils/htmlUtils'
 
 function Timeline(props: TimelineProps) {
   const { timelineElements } = props
@@ -21,7 +22,7 @@ function Timeline(props: TimelineProps) {
     setActive(true)
     setTimeout(() => {
       setActive(false)
-    }, 1000) // Tiden det tar før boksen blir helt synlig igjen
+    }, 1000)
   }
 
   const filterElementsByCategory = (elements: TimelineElement[], category: string) => {
@@ -45,31 +46,73 @@ function Timeline(props: TimelineProps) {
   }
 
   function addCategoryLink(event: TimelineEvent) {
-    return (
-      <div className='event-content'>
-        <CategoryLink href='' titleText={event.title} subText={event.ingress} />
-      </div>
-    )
+    return <CategoryLink href='' titleText={event.title} subText={event.ingress} />
   }
 
   function addEventBox(event: TimelineEvent) {
     return (
-      <div className='timeline-event'>
+      <div className='event-box'>
         {event.article ? <Link linkType='header'>{event.title}</Link> : <span className='title'>{event.title}</span>}
         {event.ingress && <span>{event.ingress}</span>}
       </div>
     )
   }
 
+  function addEventExpansionBox(event: TimelineEvent) {
+    const text = event.eventText ? (
+      <div
+        dangerouslySetInnerHTML={{
+          __html: sanitize(event.eventText),
+        }}
+      ></div>
+    ) : (
+      ''
+    )
+
+    return <ExpansionBox header={event.title} text={text} sneakPeek />
+  }
+
   function addEvents(events: TimelineEvent[]) {
     return (
-      <div className='content'>
+      <div className='events'>
         {events.map((event, index) => {
-          return <div key={index}>{event.article ? addCategoryLink(event) : addEventBox(event)}</div>
+          return (
+            <div className='event' key={index}>
+              {addEvent(event)}
+            </div>
+          )
+          /* if (event.article) {
+            return <div key={index}>{addCategoryLink(event)}</div>
+          }
+
+          if (event.eventText) {
+            return <div key={index}>{addEventExpansionBox(event)}</div>
+          }
+
+          if (!event.eventText && !event.article) {
+            return <div key={index}>{addEventBox(event)}</div>
+          }
+          return <div key={index}>{addEventBox(event)}</div> */
         })}
       </div>
     )
   }
+
+  function addEvent(event: TimelineEvent) {
+    if (event.article) {
+      return addCategoryLink(event)
+    }
+
+    if (event.eventText) {
+      return addEventExpansionBox(event)
+    }
+
+    if (!event.eventText && !event.article) {
+      return addEventBox(event)
+    }
+    return addEventBox(event)
+  }
+
   function addTimelineYear(timeline: TimelineElement) {
     const events = timeline.event ? (Array.isArray(timeline.event) ? timeline.event : [timeline.event]) : []
     if (events.length === 0) {

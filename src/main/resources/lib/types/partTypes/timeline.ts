@@ -10,6 +10,7 @@ export interface TimelineElement {
 export interface TimelineEvent {
   title: string
   ingress?: string
+  eventText?: string
   category?: string
   article?: string
 }
