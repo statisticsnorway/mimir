@@ -34,10 +34,9 @@ function renderPart(req: XP.Request): XP.Response {
   if (!page) throw Error('No page found')
 
   const part = getComponent<XP.PartComponent.Banner>()
-  // log.info(JSON.stringify(part, null, 2))
-  // log.info(JSON.stringify(page, null, 2))
+
   const region = part?.path?.split('/')[1]
-  const myPage = page.page?.config as unknown as Default
+  const myPage = page.page?.config as Default
   const myRegion = myPage?.regions.find((r) => r.region === region)
 
   log.info(`Region type for part with title ${myRegion?.title} is ${myRegion?.view}`)
@@ -72,6 +71,7 @@ function renderPart(req: XP.Request): XP.Response {
           format: 'jpg',
         })
       : undefined,
+    regionType: myRegion?.view,
     municipalityTitle: municipality ? municipalityName + ' (' + municipality.county.name + ')' : undefined,
     pageType: page.page?.config.pageType as string,
     selectedPageType: pageType._selected,

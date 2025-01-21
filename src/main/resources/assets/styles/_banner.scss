@@ -16,6 +16,13 @@
     img {
       height: 100%;
     }
+    &.plainSection {
+      img {width: 960px;}
+    }
+
+    &.wide {
+      img {width: 1400px;}
+    }
 
     @include media-breakpoint-down(md) {
       width: 100vw;

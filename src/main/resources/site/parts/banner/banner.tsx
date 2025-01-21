@@ -8,6 +8,7 @@ function Banner(props: BannerProps) {
     sizes,
     srcset,
     pageType,
+    regionType,
     selectedPageType,
     municipalityTitle,
     pageDisplayName,
@@ -24,7 +25,7 @@ function Banner(props: BannerProps) {
   return (
     <>
       {bannerImage && (
-        <figure className='banner-image position-absolute d-flex justify-content-center'>
+        <figure className={`banner-image position-absolute d-flex justify-content-center ${regionType}`}>
           <img
             className=' d-print-none'
             sizes={sizes}
