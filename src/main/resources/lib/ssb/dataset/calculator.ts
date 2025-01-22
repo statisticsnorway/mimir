@@ -53,22 +53,35 @@ export function getKpiDatasetMonth(config: Content<CalculatorConfig>): Dataset |
   return kpiDatasetMonthRepo ? JSONstat(kpiDatasetMonthRepo.data).Dataset('dataset') : null
 }
 
-export function getPifDataset(config: Content<CalculatorConfig>): Dataset | null {
-  const pifSource: Content<GenericDataImport & DataSource> | null = config?.data.pifSource
+// TODO: We could make a generic one for calculators with multiple datasources, such as kpi and bkibol
+export function getCalculatorDatasetFromSource(config: Content<CalculatorConfig>, calculator: string): Dataset | null {
+  let dataSourceConfig = null
+
+  if (calculator === 'pifCalculator') {
+    dataSourceConfig = config?.data.pifSource
+  }
+
+  if (calculator === 'bpiCalculator') {
+    dataSourceConfig = config?.data.bpiSource
+  }
+
+  const dataSource: Content<GenericDataImport & DataSource> | null = dataSourceConfig
     ? getContent({
-        key: config.data.pifSource,
+        key: dataSourceConfig,
       })
     : null
 
-  if (pifSource === null) {
-    log.info('Data calculator - pifSource is Null, calculatorConfig: ' + JSON.stringify(config, null, 4))
+  if (dataSource === null) {
+    log.info(`Data calculator - ${calculator} source is Null, calculatorConfig: ` + JSON.stringify(config, null, 4))
   }
 
-  const pifDatasetRepo: DatasetRepoNode<JSONstatType> | null = pifSource
-    ? (datasetOrUndefined(pifSource) as DatasetRepoNode<JSONstatType> | null)
+  const datasetRepo: DatasetRepoNode<JSONstatType> | null = dataSource
+    ? (datasetOrUndefined(dataSource) as DatasetRepoNode<JSONstatType> | null)
     : null
 
-  return pifDatasetRepo ? JSONstat(pifDatasetRepo.data).Dataset('dataset') : null
+  return datasetRepo ? JSONstat(datasetRepo.data).Dataset('dataset') : null
+
+  return null
 }
 
 export function getBkibolDatasetEnebolig(config: Content<CalculatorConfig>): Dataset | null {
@@ -106,8 +119,6 @@ export function getBkibolDatasetBoligblokk(config: Content<CalculatorConfig>): D
 
   return bkibolDatasetBoligblokkRepo ? JSONstat(bkibolDatasetBoligblokkRepo.data).Dataset('dataset') : null
 }
-
-// TODO: Create a function for new calculator "Prisindeks for brukte boliger"
 
 export function getNameSearchGraphData(config: Content<CalculatorConfig>): DatasetRepoNode<JSONstatType> | null {
   const nameSearchGraphData: Content<GenericDataImport & DataSource> | null = config?.data.nameSearchGraphData

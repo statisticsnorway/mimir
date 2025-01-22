@@ -10,7 +10,7 @@ import { allMonths, monthLabel, nextPeriod } from '/lib/ssb/utils/calculatorUtil
 
 import { renderError } from '/lib/ssb/error/error'
 import { getLanguage } from '/lib/ssb/utils/language'
-import { getCalculatorConfig, getPifDataset } from '/lib/ssb/dataset/calculator'
+import { getCalculatorConfig, getCalculatorDatasetFromSource } from '/lib/ssb/dataset/calculator'
 import { fromPartCache } from '/lib/ssb/cache/partCache'
 import { type PifCalculatorProps } from '/lib/types/partTypes/pifCalculaor'
 import { type CalculatorConfig } from '/site/content-types'
@@ -51,7 +51,7 @@ function getPifCalculatorComponent(req: XP.Request, page: Content) {
   const phrases = language?.phrases as Phrases
   const months: MonthDropdownItems = allMonths(phrases)
   const config: Content<CalculatorConfig> | undefined = getCalculatorConfig()
-  const pifData: Dataset | null = config ? getPifDataset(config) : null
+  const pifData: Dataset | null = config ? getCalculatorDatasetFromSource(config, 'pifCalculator') : null
   const lastUpdated: CalculatorPeriod | undefined = lastPeriod(pifData) as CalculatorPeriod
   const nextUpdate: CalculatorPeriod = nextPeriod(lastUpdated.month as string, lastUpdated.year as string)
   const nextReleaseMonth: number = (nextUpdate.month as number) === 12 ? 1 : (nextUpdate.month as number) + 1
