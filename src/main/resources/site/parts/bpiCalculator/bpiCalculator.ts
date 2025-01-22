@@ -10,7 +10,7 @@ import { allMonths, lastPeriodKpi, monthLabel, nextPeriod } from '/lib/ssb/utils
 
 import { renderError } from '/lib/ssb/error/error'
 import { getLanguage } from '/lib/ssb/utils/language'
-import { getCalculatorConfig, getCalculatorDataset } from '/lib/ssb/dataset/calculator'
+import { getCalculatorConfig, getCalculatorDatasetFromSource } from '/lib/ssb/dataset/calculator'
 import { type CalculatorConfig } from '/site/content-types'
 
 export function get(req: XP.Request): XP.Response {
@@ -33,7 +33,9 @@ function renderPart(req: XP.Request): XP.Response {
   const language = getLanguage(page)
   const phrases = language?.phrases as Phrases
   const calculatorConfig: Content<CalculatorConfig> | undefined = getCalculatorConfig()
-  const bpiDataset: Dataset | null = calculatorConfig ? getCalculatorDataset(calculatorConfig, 'bpiCalculator') : null
+  const bpiDataset: Dataset | null = calculatorConfig
+    ? getCalculatorDatasetFromSource(calculatorConfig, 'bpiCalculator')
+    : null
   const months: MonthDropdownItems = allMonths(phrases)
   const lastUpdated: CalculatorPeriod = lastPeriodKpi(bpiDataset)
   const nextUpdate: CalculatorPeriod = nextPeriod(lastUpdated.month as string, lastUpdated.year as string)
