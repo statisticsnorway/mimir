@@ -107,6 +107,8 @@ export function getBkibolDatasetBoligblokk(config: Content<CalculatorConfig>): D
   return bkibolDatasetBoligblokkRepo ? JSONstat(bkibolDatasetBoligblokkRepo.data).Dataset('dataset') : null
 }
 
+// TODO: Create a function for new calculator "Prisindeks for brukte boliger"
+
 export function getNameSearchGraphData(config: Content<CalculatorConfig>): DatasetRepoNode<JSONstatType> | null {
   const nameSearchGraphData: Content<GenericDataImport & DataSource> | null = config?.data.nameSearchGraphData
     ? getContent({
