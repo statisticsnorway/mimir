@@ -144,9 +144,6 @@ function Timeline(props: TimelineProps) {
         <Tag className={selectedTag === 'director' ? 'active' : ''} onClick={() => setFilter('director')}>
           Direktører
         </Tag>
-        <Tag className={selectedTag === 'nokkeltall' ? 'active' : ''} onClick={() => setFilter('nokkeltall')}>
-          Nøkkeltall
-        </Tag>
       </div>
     )
   }

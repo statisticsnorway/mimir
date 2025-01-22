@@ -21,7 +21,7 @@
     transition: transform 0.9s ease-in-out;
 
     &.active {
-      transform: scale(1.1);
+      transform: scale(0.9);
     }
 
     .circle {
@@ -52,13 +52,14 @@
 
     .timeline-elements {
       padding-top: 25px;
+      padding-bottom: 50px;
     }
 
     .timeline-content {
-      left: -10px;
+      left: -20px;
       position: relative;
       margin-bottom: 30px;
-      width: 90%;
+      max-width: 740px;
 
       .year {
         width: 180px;
@@ -66,7 +67,6 @@
         background: #274247;
         border-radius: 4px;
         position: absolute;
-        //left: -10px;
         align-content: center;
 
         span {
@@ -74,7 +74,6 @@
           color: #fff;
           padding: 20px 40px;
           font-size: 28px;
-          //float: right;
         }
       }
 
@@ -113,14 +112,17 @@
       }
 
       .event-box {
-        @include roboto-condenced;
         background: #fff;
         border: 1px solid #274247;
         border-radius: 8px;
-        font-size: 20px;
         display: grid;
         padding: 20px 40px;
         width: 100%;
+        .title {
+          @include roboto-condenced;
+          font-size: 20px;
+          margin-bottom: 10px;
+        }
       }
     }
 

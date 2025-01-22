@@ -37,9 +37,10 @@
                                 <option value="eventSsb">Begivenhet ssb</option>
                                 <option value="event">Eksterne begivenheter</option>
                                 <option value="director">Direktør</option>
+                                <option value="keyfigures">Nøkkeltall</option>
                                 <option value="other">Annet</option>
                             </config>
-                            <default>other</default>
+                            <default>eventSsb</default>
                         </input>
                         <input name="article" type="ContentSelector">
                             <label>Artikkel</label>
