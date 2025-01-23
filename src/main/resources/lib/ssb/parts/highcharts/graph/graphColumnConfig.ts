@@ -13,7 +13,8 @@ export function columnConfig(highchartContent, options) {
     },
     yAxis: {
       stackLabels: {
-        enabled: 'false',
+        enabled: highchartContent.stacking === 'false',
+        // HC sets x or y := 0 by default, leaving no breathing space between the bar and the label
         x: 0,
         y: 0,
       },

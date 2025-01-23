@@ -64,10 +64,6 @@ try {
           enabled: false,
         },
         {
-          feature: 'pageMap',
-          enabled: false,
-        },
-        {
           feature: 'show-popup-survey',
           enabled: false,
         },

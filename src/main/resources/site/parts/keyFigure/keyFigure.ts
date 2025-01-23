@@ -103,6 +103,7 @@ function renderKeyFigure(
   config?: KeyFigurePartConfig
 ): XP.Response {
   const draftExist = !!parsedKeyFiguresDraft
+
   if ((parsedKeyFigures && parsedKeyFigures.length > 0) || draftExist) {
     const hiddenTitle: Array<string> = parsedKeyFigures.map((keyFigureData) => {
       return keyFigureData.title

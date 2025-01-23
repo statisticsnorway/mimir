@@ -7,6 +7,7 @@ import { formatDate, fromNow } from '/lib/ssb/utils/dateUtils'
 import { type SourceList, type SourcesConfig } from '/lib/types/sources'
 import { type RowValue } from '/lib/types/util'
 import { type Header } from '/site/content-types'
+import { type ProfiledBox as ProfiledBoxPartConfig } from '/site/parts/profiledBox'
 
 function numberWithSpaces(x: number | string): string {
   const parts: Array<string> = x.toString().split('.')
@@ -186,6 +187,20 @@ export function getProfiledCardAriaLabel(subTitle: string): string {
     return `${subTitle.replace(' /', ',')}`
   }
   return ''
+}
+
+export function getLinkTargetUrl(urlContentSelector: ProfiledBoxPartConfig['urlContentSelector']): string | undefined {
+  if (urlContentSelector?._selected == 'optionLink') {
+    return urlContentSelector.optionLink.link
+  }
+
+  if (urlContentSelector?._selected == 'optionXPContent') {
+    return urlContentSelector.optionXPContent.xpContent
+      ? pageUrl({
+          id: urlContentSelector.optionXPContent.xpContent,
+        })
+      : ''
+  }
 }
 
 interface ContentSearchPageResult {
