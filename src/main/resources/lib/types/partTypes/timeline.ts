@@ -11,6 +11,8 @@ export interface TimelineEvent {
   title: string
   ingress?: string
   eventText?: string
+  directorImage?: string
+  directorImageAltText?: string
   category?: string
   article?: string
 }

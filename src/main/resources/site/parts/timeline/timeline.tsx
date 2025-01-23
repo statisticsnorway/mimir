@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { CategoryLink, ExpansionBox, Link, Tag } from '@statisticsnorway/ssb-component-library'
+import { CategoryLink, Card, ExpansionBox, Link, Tag, Text } from '@statisticsnorway/ssb-component-library'
 import { type TimelineProps, type TimelineElement, type TimelineEvent } from '/lib/types/partTypes/timeline'
 import { sanitize } from '/lib/ssb/utils/htmlUtils'
 
@@ -49,6 +49,19 @@ function Timeline(props: TimelineProps) {
     return <CategoryLink href='' titleText={event.title} subText={event.ingress} />
   }
 
+  function addDirectorCard(event: TimelineEvent) {
+    return (
+      <Card
+        title={event.title}
+        href=' '
+        icon={<img src={event.directorImage} alt={event.directorImageAltText} loading='lazy' />}
+        profiled
+      >
+        <Text>{event.ingress}</Text>
+      </Card>
+    )
+  }
+
   function addEventBox(event: TimelineEvent) {
     return (
       <div className='event-box'>
@@ -81,24 +94,15 @@ function Timeline(props: TimelineProps) {
               {addEvent(event)}
             </div>
           )
-          /* if (event.article) {
-            return <div key={index}>{addCategoryLink(event)}</div>
-          }
-
-          if (event.eventText) {
-            return <div key={index}>{addEventExpansionBox(event)}</div>
-          }
-
-          if (!event.eventText && !event.article) {
-            return <div key={index}>{addEventBox(event)}</div>
-          }
-          return <div key={index}>{addEventBox(event)}</div> */
         })}
       </div>
     )
   }
 
   function addEvent(event: TimelineEvent) {
+    if (event.directorImage) {
+      return addDirectorCard(event)
+    }
     if (event.article) {
       return addCategoryLink(event)
     }
