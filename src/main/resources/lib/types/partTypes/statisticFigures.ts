@@ -4,7 +4,6 @@ export interface StatisticFiguresProps extends AttachmentTablesFiguresProps {
   selectedFigures: string
   statbankBoxTitle: string
   statbankBoxText: string
-  icon: string
   iconStatbankBox: string
   statbankHref: string
 }

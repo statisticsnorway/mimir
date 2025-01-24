@@ -6,7 +6,7 @@ import { type AccordionData, AccordionItems } from '/lib/types/partTypes/accordi
 import { type AboutTheStatisticsProps } from '/lib/types/partTypes/omStatistikken'
 
 function StatisticDescription(props: Readonly<AboutTheStatisticsProps>) {
-  const { icon, ingress, label, lastUpdatedPhrase, lastUpdated, accordions } = props
+  const { ingress, label, lastUpdatedPhrase, lastUpdated, accordions } = props
   const [selectedTag, setSelectedTag] = useState<string | undefined>(undefined)
   const [selectedCategory, setSelectedCategory] = useState<AccordionData | undefined>(
     accordions.find((item) => item.id === 'om-statistikken-definisjoner')
@@ -67,9 +67,6 @@ function StatisticDescription(props: Readonly<AboutTheStatisticsProps>) {
     <div className='content-wrapper'>
       <div className='title-wrapper'>
         <Title size={2}>{label}</Title>
-        <div className='icon-wrapper'>
-          <img src={icon} alt='' />
-        </div>
       </div>
       {renderIngress()}
       {lastUpdated && (
