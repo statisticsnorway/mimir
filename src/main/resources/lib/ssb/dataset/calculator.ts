@@ -80,8 +80,6 @@ export function getCalculatorDatasetFromSource(config: Content<CalculatorConfig>
     : null
 
   return datasetRepo ? JSONstat(datasetRepo.data).Dataset('dataset') : null
-
-  return null
 }
 
 export function getBkibolDatasetEnebolig(config: Content<CalculatorConfig>): Dataset | null {

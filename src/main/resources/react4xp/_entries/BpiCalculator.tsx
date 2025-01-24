@@ -5,7 +5,7 @@ import { Container, Row, Col, Form } from 'react-bootstrap'
 import { BpiCalculatorProps } from '/lib/types/partTypes/bpiCalculator'
 
 function BpiCalculator(props: BpiCalculatorProps) {
-  const { phrases, nextPublishText } = props
+  const { phrases, nextPublishText, dwellingTypeList, regionList, quarterPeriodList } = props
 
   function addDropdownChooseQuarter(id: 'start-quarter' | 'end-quarter') {
     return (
@@ -17,7 +17,7 @@ function BpiCalculator(props: BpiCalculatorProps) {
         error={''}
         errorMessage={''}
         selectedItem={{ id: `bpi-${id}`, title: phrases.bpiChooseQuarterPeriod }}
-        items={[]}
+        items={quarterPeriodList}
       />
     )
   }
@@ -40,12 +40,12 @@ function BpiCalculator(props: BpiCalculatorProps) {
           <Container>
             <Row className='mt-5'>
               <Col className='col-12 col-lg-4'>
-                <Title size={3}>{phrases.bpiChooseResidentialType}</Title>
-                <RadioGroup onChange={() => {}} selectedValue='1' orientation='column' items={[]} />
+                <Title size={3}>{phrases.bpiChooseDwellingType}</Title>
+                <RadioGroup onChange={() => {}} selectedValue='1' orientation='column' items={dwellingTypeList} />
               </Col>
               <Col className='col-12 col-lg-8'>
                 <Title size={3}>{phrases.bpiChooseRegion}</Title>
-                <Dropdown selectedItem={{ id: 'chooseRegion', title: phrases.bpiChooseRegion }} items={[]} />
+                <Dropdown selectedItem={{ id: 'chooseRegion', title: phrases.bpiChooseRegion }} items={regionList} />
               </Col>
             </Row>
             <Divider className='my-5' />
