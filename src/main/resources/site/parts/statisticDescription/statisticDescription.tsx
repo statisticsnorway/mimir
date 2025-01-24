@@ -6,7 +6,7 @@ import { type AccordionData, AccordionItems } from '/lib/types/partTypes/accordi
 import { type AboutTheStatisticsProps } from '/lib/types/partTypes/omStatistikken'
 
 function StatisticDescription(props: Readonly<AboutTheStatisticsProps>) {
-  const { ingress, label, lastUpdatedPhrase, lastUpdated, accordions } = props
+  const { label, lastUpdatedPhrase, lastUpdated, accordions } = props
   const [selectedTag, setSelectedTag] = useState<string | undefined>(undefined)
   const [selectedCategory, setSelectedCategory] = useState<AccordionData | undefined>(
     accordions.find((item) => item.id === 'om-statistikken-definisjoner')
@@ -15,13 +15,6 @@ function StatisticDescription(props: Readonly<AboutTheStatisticsProps>) {
   function setCategory(category: string) {
     setSelectedTag(category)
     setSelectedCategory(accordions.find((item) => item.id === category))
-  }
-
-  function renderIngress() {
-    if (ingress) {
-      return <p className='ingress-wrapper searchabletext col-lg-8'>{ingress}</p>
-    }
-    return null
   }
 
   function renderNestedAccordions(category: AccordionData) {
@@ -68,7 +61,6 @@ function StatisticDescription(props: Readonly<AboutTheStatisticsProps>) {
       <div className='title-wrapper'>
         <Title size={2}>{label}</Title>
       </div>
-      {renderIngress()}
       {lastUpdated && (
         <p>
           <i>{`${lastUpdatedPhrase} ${lastUpdated}.`}</i>
