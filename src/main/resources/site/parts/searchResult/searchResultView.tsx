@@ -19,7 +19,7 @@ import { sanitize } from '/lib/ssb/utils/htmlUtils'
 import { NameSearchData, type SearchResultProps } from '/lib/types/partTypes/searchResult'
 import { type DropdownItem } from '/lib/types/partTypes/publicationArchive'
 import { type PreparedSearchResult } from '/lib/types/solr'
-import { usePagination } from '/lib/ssb/utils/customHooks/usePagination'
+import { usePagination } from '/lib/ssb/utils/customHooks/paginationHooks'
 
 function SearchResult(props: SearchResultProps) {
   const [hits, setHits] = useState(props.hits)

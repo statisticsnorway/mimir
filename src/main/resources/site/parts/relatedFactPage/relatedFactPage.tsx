@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { PictureCard, Button } from '@statisticsnorway/ssb-component-library'
 import axios from 'axios'
 import { RelatedFactPageProps } from '/lib/types/partTypes/relatedFactPage'
-import { usePagination } from '/lib/ssb/utils/customHooks/usePagination'
+import { usePagination } from '/lib/ssb/utils/customHooks/paginationHooks'
 
 function RelatedBoxes(props: RelatedFactPageProps) {
   const {

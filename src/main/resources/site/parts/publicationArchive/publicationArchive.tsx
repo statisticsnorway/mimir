@@ -9,7 +9,7 @@ import {
   type PublicationArchiveProps,
   type PublicationItem,
 } from '/lib/types/partTypes/publicationArchive'
-import { usePagination } from '/lib/ssb/utils/customHooks/usePagination'
+import { usePagination } from '/lib/ssb/utils/customHooks/paginationHooks'
 
 function PublicationArchive(props: PublicationArchiveProps) {
   const {
