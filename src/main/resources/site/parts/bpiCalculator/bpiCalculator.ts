@@ -1,4 +1,3 @@
-import { quartersToMonths } from 'date-fns'
 import { type Content } from '/lib/xp/content'
 import { getContent, getComponent } from '/lib/xp/portal'
 import { type Dataset, Category, Dimension } from '/lib/types/jsonstat-toolkit'
@@ -6,7 +5,7 @@ import { type CalculatorPeriod } from '/lib/types/calculator'
 import { type Phrases } from '/lib/types/language'
 import { render } from '/lib/enonic/react4xp'
 import { type DropdownItems, type RadioGroupItems } from '/lib/types/components'
-import { allMonths, getLastNumberText, getNextPublishText } from '/lib/ssb/utils/calculatorUtils'
+import { allMonths, allQuarterPeriods, getLastNumberText, getNextPublishText, lastQuartalPeriod, nextQuartalPeriod } from '/lib/ssb/utils/calculatorUtils'
 
 import { renderError } from '/lib/ssb/error/error'
 import { getLanguage } from '/lib/ssb/utils/language'
@@ -66,38 +65,13 @@ function renderPart(req: XP.Request): XP.Response {
       lastNumberText,
       dwellingTypeList: listAllCategoryOptions(bpiDataset, 'Boligtype', 'RadioGroup'),
       regionList: listAllCategoryOptions(bpiDataset, 'Region'),
-      quarterPeriodList: listAllQuarterPeriods(phrases.quarter),
+      quarterPeriodList: allQuarterPeriods(phrases.quarter),
     },
     req,
     {
       body: '<section class="xp-part bpi-calculator container"></section>',
     }
   )
-}
-
-function lastQuartalPeriod(bpiData: Dataset | null): CalculatorPeriod | undefined {
-  const bpiDataDimension: Dimension | null = bpiData?.Dimension('Tid') as Dimension
-  const dataTime: string | undefined = bpiDataDimension?.id as string
-
-  if (dataTime) {
-    const lastTimeItem: string = dataTime[dataTime.length - 1]
-    const [year, quarters]: Array<string> = lastTimeItem.split('K')
-
-    return {
-      month: quartersToMonths(Number(quarters)) - 3 + 1, // Get the beginning month instead of the last month of the quarter
-      year,
-    }
-  }
-}
-
-function nextQuartalPeriod({ month, year }: CalculatorPeriod) {
-  const nextQuartalMonth = Math.ceil(Number(month) + 3)
-  const validNextQuartalMonth = nextQuartalMonth < 12 ? nextQuartalMonth : 1 // Ensures that january of next month is displayed correctly after calculation
-
-  return {
-    month: validNextQuartalMonth,
-    year: nextQuartalMonth === 1 ? Number(year) + 1 : year, // January of next year
-  }
 }
 
 function listAllCategoryOptions(bpiData: Dataset | null, category: string, component?: string) {
@@ -119,15 +93,4 @@ function listAllCategoryOptions(bpiData: Dataset | null, category: string, compo
     }
   })
   return categoriesList
-}
-
-function listAllQuarterPeriods(quarterPhrase: string) {
-  const quarterPeriodList = []
-  for (let i = 1; i <= 4; i++) {
-    quarterPeriodList.push({
-      id: `K${i}`,
-      title: `${quarterPhrase} ${i}`,
-    })
-  }
-  return quarterPeriodList
 }

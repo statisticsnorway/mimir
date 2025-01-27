@@ -1,3 +1,4 @@
+import { quartersToMonths } from 'date-fns'
 import { localize } from '/lib/xp/i18n'
 import { type DropdownItem as MonthDropdownItem, type DropdownItems as MonthDropdownItems } from '/lib/types/components'
 import { type CalculatorPeriod } from '/lib/types/calculator'
@@ -30,6 +31,44 @@ export function nextPeriod(month: string, year: string): CalculatorPeriod {
     month: nextPeriodMonth,
     year: nextPeriodYear,
   }
+}
+
+export function nextQuartalPeriod({ month, year }: CalculatorPeriod) {
+  const nextQuartalMonth = Math.ceil(Number(month) + 3)
+  const validNextQuartalMonth = nextQuartalMonth < 12 ? nextQuartalMonth : 1 // Ensures that january of next month is displayed correctly after calculation
+
+  return {
+    month: validNextQuartalMonth,
+    year: nextQuartalMonth === 1 ? Number(year) + 1 : year, // January of next year
+  }
+}
+
+export function lastQuartalPeriod(calculatorData: Dataset | null): CalculatorPeriod | undefined {
+  const calculatorDataDimension: Dimension | null = calculatorData?.Dimension('Tid') as Dimension
+  const dataTime: string | undefined = calculatorDataDimension?.id as string
+
+  if (dataTime) {
+    const lastTimeItem: string = dataTime[dataTime.length - 1]
+    const [year, quarters]: Array<string> = lastTimeItem.split('K')
+
+    return {
+      month: quartersToMonths(Number(quarters)) - 3 + 1, // Get the beginning month instead of the last month of the quarter
+      year,
+    }
+  }
+}
+
+export function allQuarterPeriods(quarterPhrase: string) {
+  const quarterPeriodList = []
+  let count = 1
+  while (count <= 4) {
+    quarterPeriodList.push({
+      id: `K${count}`,
+      title: `${quarterPhrase} ${count}`,
+    })
+    count++
+  }
+  return quarterPeriodList
 }
 
 export function allMonths(phrases: Phrases, frontPage?: boolean, type?: string): MonthDropdownItems {
