@@ -37,6 +37,7 @@ const RelatedStatistics = (props: RelatedStatisticsProps) => {
     return ' d-none' // always hide if there is less than 3
   }
 
+  // TODO: Implement custom hook for pagination after changes has been made to support ref prop for Card component
   function renderShowMoreButton() {
     return (
       <Row className={`justify-content-center justify-content-lg-start p-0 p-lg-auto${getButtonBreakpoints()}`}>
