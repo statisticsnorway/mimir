@@ -107,9 +107,6 @@ function getStatisticFiguresProps(
     statbankBoxText: phrases.statisticStatbankBoxText,
     appName: app.name,
     title,
-    icon: assetUrl({
-      path: 'SSB_ikon_statisticFigures.svg',
-    }),
     iconStatbankBox: assetUrl({
       path: 'SSB_ikon_statbank.svg',
     }),

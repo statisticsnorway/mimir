@@ -1,5 +1,5 @@
 import { type Content } from '/lib/xp/content'
-import { getContent, assetUrl } from '/lib/xp/portal'
+import { getContent } from '/lib/xp/portal'
 import { getAboutTheStatisticsProps } from '/lib/ssb/parts/statisticDescription'
 import { render } from '/lib/enonic/react4xp'
 import { renderError } from '/lib/ssb/error/error'
@@ -43,18 +43,8 @@ function renderPart(req: XP.Request, aboutTheStatisticsId: string | undefined): 
 function getOmStatistikken(req: XP.Request, page: Content<any>, aboutTheStatisticsId: string | undefined): XP.Response {
   const props: AboutTheStatisticsProps = getAboutTheStatisticsProps(req, page, aboutTheStatisticsId)
 
-  return render(
-    'site/parts/statisticDescription/statisticDescription',
-    {
-      ...props,
-      icon: assetUrl({
-        path: 'SSB_ikon_statisticDescription.svg',
-      }),
-    },
-    req,
-    {
-      body: `<section id="om-statistikken" class="xp-part statistic-description container-fluid"></section>`,
-      id: 'statistic-description',
-    }
-  )
+  return render('site/parts/statisticDescription/statisticDescription', props, req, {
+    body: `<section id="om-statistikken" class="xp-part statistic-description container-fluid"></section>`,
+    id: 'statistic-description',
+  })
 }
