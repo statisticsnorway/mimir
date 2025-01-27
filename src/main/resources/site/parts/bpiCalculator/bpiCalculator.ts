@@ -1,13 +1,12 @@
 import { quartersToMonths } from 'date-fns'
 import { type Content } from '/lib/xp/content'
 import { getContent, getComponent } from '/lib/xp/portal'
-import { localize } from '/lib/xp/i18n'
 import { type Dataset, Category, Dimension } from '/lib/types/jsonstat-toolkit'
 import { type CalculatorPeriod } from '/lib/types/calculator'
 import { type Phrases } from '/lib/types/language'
 import { render } from '/lib/enonic/react4xp'
 import { type DropdownItems, type RadioGroupItems } from '/lib/types/components'
-import { allMonths, monthLabel } from '/lib/ssb/utils/calculatorUtils'
+import { allMonths, getLastNumberText, getNextPublishText } from '/lib/ssb/utils/calculatorUtils'
 
 import { renderError } from '/lib/ssb/error/error'
 import { getLanguage } from '/lib/ssb/utils/language'
@@ -44,20 +43,19 @@ function renderPart(req: XP.Request): XP.Response {
     month: lastUpdated?.month as string,
     year: lastUpdated?.year as string,
   })
-  const nextPublishText: string = localize({
-    key: 'calculatorNextPublishText',
-    locale: language?.code,
-    values: [
-      monthLabel(months, language?.code, lastUpdated?.month as string),
-      lastUpdated?.year as string,
-      phrases.bpiNextQuarterPeriod,
-      monthLabel(months, language?.code, nextUpdate?.month),
-    ],
+  const nextPublishText: string = getNextPublishText({
+    language: language?.code,
+    months,
+    lastUpdatedMonth: lastUpdated?.month as string,
+    lastUpdatedYear: lastUpdated?.year as string,
+    nextPeriodText: phrases.bpiNextQuarterPeriod,
+    nextReleaseMonth: nextUpdate?.month as string,
   })
-  const lastNumberText: string = localize({
-    key: 'calculatorLastNumber',
-    locale: language?.code,
-    values: [monthLabel(months, language?.code, lastUpdated?.month as string), lastUpdated?.year as string],
+  const lastNumberText: string = getLastNumberText({
+    language: language?.code,
+    months,
+    lastUpdatedMonth: lastUpdated?.month as string,
+    lastUpdatedYear: lastUpdated?.year as string,
   })
 
   return render(

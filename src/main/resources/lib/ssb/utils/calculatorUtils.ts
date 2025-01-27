@@ -4,6 +4,19 @@ import { type CalculatorPeriod } from '/lib/types/calculator'
 import { type Phrases } from '/lib/types/language'
 import { type Data, type Dataset, type Dimension } from '/lib/types/jsonstat-toolkit'
 
+interface CalculatorLastNumberText {
+  language: string | undefined
+  months: MonthDropdownItems
+  lastUpdatedMonth: string
+  lastUpdatedYear: string
+}
+
+interface CalculatorNextPublishText extends CalculatorLastNumberText {
+  nextUpdateMonth?: string
+  nextPeriodText?: string
+  nextReleaseMonth: string
+}
+
 export function nextPeriod(month: string, year: string): CalculatorPeriod {
   let nextPeriodMonth: number = parseInt(month) + 1
   let nextPeriodYear: number = parseInt(year)
@@ -134,4 +147,38 @@ export function serieLocalization(language: string, series: SeriesKey): string {
     locale: language,
     values: [],
   }) as string
+}
+
+export function getNextPublishText({
+  language = 'nb',
+  months,
+  lastUpdatedMonth,
+  lastUpdatedYear,
+  nextUpdateMonth,
+  nextPeriodText,
+  nextReleaseMonth,
+}: CalculatorNextPublishText) {
+  return localize({
+    key: 'calculatorNextPublishText',
+    locale: language,
+    values: [
+      monthLabel(months, language, lastUpdatedMonth),
+      lastUpdatedYear,
+      nextPeriodText ?? monthLabel(months, language, nextUpdateMonth as string),
+      monthLabel(months, language, nextReleaseMonth),
+    ],
+  })
+}
+
+export function getLastNumberText({
+  language = 'nb',
+  months,
+  lastUpdatedMonth,
+  lastUpdatedYear,
+}: CalculatorLastNumberText) {
+  return localize({
+    key: 'calculatorLastNumber',
+    locale: language,
+    values: [monthLabel(months, language, lastUpdatedMonth), lastUpdatedYear],
+  })
 }
