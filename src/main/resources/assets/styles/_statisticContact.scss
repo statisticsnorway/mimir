@@ -12,15 +12,10 @@
     margin-bottom: 2rem;
     margin-top: 1.5rem;
     align-items: center;
-    display: flex;
 
     h2 {
       margin-bottom: 0;
       margin-right: 0.5rem;
-    }
-
-    .icon-wrapper {
-      margin-left: auto;
     }
   }
 
@@ -54,11 +49,6 @@
 
     .title-wrapper {
       margin-top: 1rem;
-
-      .icon-wrapper img {
-        height: 33px;
-        width: 33px;
-      }
     }
 
     .contact-wrapper {
