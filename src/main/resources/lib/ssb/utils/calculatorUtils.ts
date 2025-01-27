@@ -1,13 +1,13 @@
 import { quartersToMonths } from 'date-fns'
 import { localize } from '/lib/xp/i18n'
-import { type DropdownItem as MonthDropdownItem, type DropdownItems as MonthDropdownItems } from '/lib/types/components'
+import { type DropdownItems, type DropdownItem, type RadioGroupItems } from '/lib/types/components'
 import { type CalculatorPeriod } from '/lib/types/calculator'
 import { type Phrases } from '/lib/types/language'
 import { type Data, type Dataset, type Dimension } from '/lib/types/jsonstat-toolkit'
 
 interface CalculatorLastNumberText {
   language: string | undefined
-  months: MonthDropdownItems
+  months: DropdownItems
   lastUpdatedMonth: string
   lastUpdatedYear: string
 }
@@ -71,8 +71,8 @@ export function allQuarterPeriods(quarterPhrase: string) {
   return quarterPeriodList
 }
 
-export function allMonths(phrases: Phrases, frontPage?: boolean, type?: string): MonthDropdownItems {
-  const months: MonthDropdownItems = [
+export function allMonths(phrases: Phrases, frontPage?: boolean, type?: string): DropdownItems {
+  const months: DropdownItems = [
     {
       id: '01',
       title: phrases.january,
@@ -124,7 +124,7 @@ export function allMonths(phrases: Phrases, frontPage?: boolean, type?: string):
   ]
 
   if (type !== 'husleie' && type !== 'bkibol') {
-    const placeholderItem: MonthDropdownItem = {
+    const placeholderItem: DropdownItem = {
       id: '90',
       title: frontPage ? phrases.calculatorMonthAverageFrontpage : phrases.calculatorMonthAverage,
     }
@@ -134,8 +134,8 @@ export function allMonths(phrases: Phrases, frontPage?: boolean, type?: string):
   return months
 }
 
-export function monthLabel(months: MonthDropdownItems, language: string | undefined, month: number | string): string {
-  const monthLabel: MonthDropdownItem | undefined = months.find((m) => parseInt(m.id) === parseInt(month as string))
+export function monthLabel(months: DropdownItems, language: string | undefined, month: number | string): string {
+  const monthLabel: DropdownItem | undefined = months.find((m) => parseInt(m.id) === parseInt(month as string))
   if (monthLabel) {
     return language === 'en' ? monthLabel.title : monthLabel.title.toLowerCase()
   }
@@ -186,6 +186,33 @@ export function serieLocalization(language: string, series: SeriesKey): string {
     locale: language,
     values: [],
   }) as string
+}
+
+export function allCategoryOptions(
+  calculatorData: Dataset | null,
+  category: string,
+  phrases: Phrases,
+  phrasesLabel: string,
+  component: 'RadioGroup' | 'Dropdown'
+) {
+  const categoriesList: DropdownItems | RadioGroupItems = []
+  const calculatorDataset = calculatorData?.Dimension(category) as Dimension
+  const categoryIds = calculatorDataset?.id as Array<string>
+  categoryIds?.map((categoryId) => {
+    if (component === 'RadioGroup') {
+      ;(categoriesList as RadioGroupItems).push({
+        value: categoryId,
+        label: phrases[`${phrasesLabel}.${category}.${categoryId}`],
+      })
+    }
+    if (component === 'Dropdown') {
+      ;(categoriesList as DropdownItems).push({
+        id: categoryId,
+        title: phrases[`${phrasesLabel}.${category}.${categoryId}`],
+      })
+    }
+  })
+  return categoriesList
 }
 
 export function getNextPublishText({

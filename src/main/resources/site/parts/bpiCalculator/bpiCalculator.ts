@@ -1,11 +1,19 @@
 import { type Content } from '/lib/xp/content'
 import { getContent, getComponent } from '/lib/xp/portal'
-import { type Dataset, Category, Dimension } from '/lib/types/jsonstat-toolkit'
+import { type Dataset } from '/lib/types/jsonstat-toolkit'
 import { type CalculatorPeriod } from '/lib/types/calculator'
 import { type Phrases } from '/lib/types/language'
 import { render } from '/lib/enonic/react4xp'
-import { type DropdownItems, type RadioGroupItems } from '/lib/types/components'
-import { allMonths, allQuarterPeriods, getLastNumberText, getNextPublishText, lastQuartalPeriod, nextQuartalPeriod } from '/lib/ssb/utils/calculatorUtils'
+import { type DropdownItems } from '/lib/types/components'
+import {
+  allMonths,
+  allQuarterPeriods,
+  getLastNumberText,
+  getNextPublishText,
+  lastQuartalPeriod,
+  allCategoryOptions,
+  nextQuartalPeriod,
+} from '/lib/ssb/utils/calculatorUtils'
 
 import { renderError } from '/lib/ssb/error/error'
 import { getLanguage } from '/lib/ssb/utils/language'
@@ -63,8 +71,8 @@ function renderPart(req: XP.Request): XP.Response {
       phrases,
       nextPublishText,
       lastNumberText,
-      dwellingTypeList: listAllCategoryOptions(bpiDataset, 'Boligtype', 'RadioGroup'),
-      regionList: listAllCategoryOptions(bpiDataset, 'Region'),
+      dwellingTypeList: allCategoryOptions(bpiDataset, 'Boligtype', phrases, 'bpiChooseDwellingType', 'RadioGroup'),
+      regionList: allCategoryOptions(bpiDataset, 'Region', phrases, 'bpiChooseRegion', 'Dropdown'),
       quarterPeriodList: allQuarterPeriods(phrases.quarter),
     },
     req,
@@ -72,25 +80,4 @@ function renderPart(req: XP.Request): XP.Response {
       body: '<section class="xp-part bpi-calculator container"></section>',
     }
   )
-}
-
-function listAllCategoryOptions(bpiData: Dataset | null, category: string, component?: string) {
-  const categoriesList: DropdownItems | RadioGroupItems = []
-  const bpiDataset = bpiData?.Dimension(category) as Dimension
-  const categoryIds = bpiDataset?.id as Array<string>
-  categoryIds?.map((categoryId) => {
-    const categoryLabel = (bpiDataset?.Category(categoryId) as Category).label
-    if (component === 'RadioGroup') {
-      categoriesList.push({
-        value: categoryId,
-        label: categoryLabel,
-      })
-    } else {
-      categoriesList.push({
-        id: categoryId,
-        title: categoryLabel,
-      })
-    }
-  })
-  return categoriesList
 }
