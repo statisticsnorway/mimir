@@ -43,16 +43,21 @@ export function nextQuartalPeriod({ month, year }: CalculatorPeriod) {
   }
 }
 
+// The quartersToMonths date-fns function picks the last month of the quarter so we have to do calculations to get the first month
+function getFirstMonthofQuarterPeriod(quarter: string) {
+  return quartersToMonths(Number(quarter)) - 3 + 1
+}
+
 export function lastQuartalPeriod(calculatorData: Dataset | null): CalculatorPeriod | undefined {
   const calculatorDataDimension: Dimension | null = calculatorData?.Dimension('Tid') as Dimension
   const dataTime: string | undefined = calculatorDataDimension?.id as string
 
   if (dataTime) {
     const lastTimeItem: string = dataTime[dataTime.length - 1]
-    const [year, quarters]: Array<string> = lastTimeItem.split('K')
+    const [year, quarter]: Array<string> = lastTimeItem.split('K')
 
     return {
-      month: quartersToMonths(Number(quarters)) - 3 + 1, // Get the beginning month instead of the last month of the quarter
+      month: getFirstMonthofQuarterPeriod(quarter),
       year,
     }
   }

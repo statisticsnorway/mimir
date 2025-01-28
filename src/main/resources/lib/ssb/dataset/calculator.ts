@@ -207,3 +207,7 @@ export function getChangeValue(startIndex: number, endIndex: number, chronologic
     return (startIndex - endIndex) / endIndex
   }
 }
+
+export function getIndexTime(calculatorData: Dataset | null, categories: object): number | null {
+  return calculatorData?.Data(categories)?.value as unknown as number
+}
