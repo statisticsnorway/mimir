@@ -54,7 +54,7 @@ function renderPart(req: XP.Request): XP.Response {
   const municipality = pageType._selected === 'kommunefakta' ? getMunicipality(req as RequestWithCode) : undefined
   const municipalityName = municipality ? removeCountyFromMunicipalityName(municipality.displayName) : undefined
   const isLandingPage = 'general' in pageType && pageType.general.landingPage
-  const imgSrcSet = part.config.image ? imageSrcSet(part.config.image, isLandingPage) : undefined
+  const imgSrcSet = part.config.image ? imageSrcSet(part.config.image, isLandingPage, myRegion?.view) : undefined
 
   // Remove uppercase for page title when accompanied by "Fakta om"
   const factPageTitle = `${subTitleFactPage} ${page.displayName}`.toLowerCase()
@@ -97,9 +97,29 @@ function renderPart(req: XP.Request): XP.Response {
 }
 
 // Inefficient, should only do one imageUrl call and then string replace the width
-function imageSrcSet(imageId: string, isLandingPage: boolean) {
-  const widths = [3840, 2560, 2000, 1500, 1260, 800, 650]
+function imageSrcSet(imageId: string, isLandingPage: boolean, sectionType: string | undefined) {
+  let widths: Array<number> = []
+
+  switch (sectionType) {
+    case 'full':
+      widths = [3840, 2560, 2000, 1500, 1260, 800, 650]
+      break
+    case 'wide':
+      widths = [1400, 800, 650]
+      break
+    case 'plainSection':
+      widths = [1260, 800, 650]
+      break
+    case 'card':
+      widths = [800, 650]
+      break
+    default:
+      widths = [3840, 2560, 2000, 1500, 1260, 800, 650]
+  }
+  // full card wide plainSection
+
   const srcset = widths
+
     .map(
       (width: number) =>
         `${imageUrl({
@@ -108,12 +128,34 @@ function imageSrcSet(imageId: string, isLandingPage: boolean) {
         })} ${width}w`
     )
     .join(', ')
-  const sizes = `(min-width: 2561px) 3840px,
-                 (min-width: 2001px) and (max-width: 2560px) 2560px,
-                 (min-width: 1501px) and (max-width: 2000px) 2000px,
-                 ((min-width: 1261px) and (max-width: 1500px)) 1500px,
-                 ((min-width: 801px) and (max-width: 1261px)) 1260px,
-                 ((min-width: 651px) and (max-width: 800px)) 800px, 650px`
+
+  let sizes: string
+  switch (sectionType) {
+    case 'full':
+      sizes = `(min-width: 2561px) 3840px,
+        (min-width: 2001px) and (max-width: 2560px) 2560px,
+        (min-width: 1501px) and (max-width: 2000px) 2000px,
+        ((min-width: 1261px) and (max-width: 1500px)) 1500px,
+        ((min-width: 801px) and (max-width: 1261px)) 1260px,
+        ((min-width: 651px) and (max-width: 800px)) 800px, 650px`
+      break
+    case 'wide':
+      sizes = `(min-width: 801px) 1400px, 800px, 650px`
+      break
+    case 'plainSection':
+      sizes = `(min-width: 801px) 1260px, 800px, 650px`
+      break
+    case 'card':
+      sizes = `(min-width: 801px) 800px, 650px`
+      break
+    default:
+      sizes = `(min-width: 2561px) 3840px,
+        (min-width: 2001px) and (max-width: 2560px) 2560px,
+        (min-width: 1501px) and (max-width: 2000px) 2000px,
+        ((min-width: 1261px) and (max-width: 1500px)) 1500px,
+        ((min-width: 801px) and (max-width: 1261px)) 1260px,
+        ((min-width: 651px) and (max-width: 800px)) 800px, 650px`
+  }
 
   return {
     sizes,
