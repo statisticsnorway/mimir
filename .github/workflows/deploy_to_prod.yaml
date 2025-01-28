@@ -19,22 +19,6 @@ jobs:
         uses: enonic/release-tools/build-and-publish@master
         with:
           skipPublishing: true
-      - id: deploy_app_to_XP
-        uses: 'enonic/action-app-deploy@main'
-        with:
-          url: ${{ secrets.ENONIC_PROD_URL }}
-          username: ${{ secrets.ENONIC_USER }}
-          password: ${{ secrets.ENONIC_PROD_PASS }}
-          client_cert: ${{ secrets.ENONIC_CERT }}
-          client_key: ${{ secrets.ENONIC_KEY }}
-          app_jar: "./build/libs/*.jar"
-      - name: Upload artifacts
-        id: upload_artifacts
-        if: success()
-        uses: actions/upload-artifact@v4
-        with:
-          name: mimir-prod-${{ github.run_number }}
-          path: "./build/libs/*.jar"
       - name: Get Version Number
         id: get_version_number
         run: |
@@ -45,6 +29,22 @@ jobs:
         run: gh release create $VERSION --generate-notes
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload artifacts
+        id: upload_artifacts
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mimir-prod-${{ github.run_number }}
+          path: "./build/libs/*.jar"
+      - id: deploy_app_to_XP
+        uses: 'enonic/action-app-deploy@main'
+        with:
+          url: ${{ secrets.ENONIC_PROD_URL }}
+          username: ${{ secrets.ENONIC_USER }}
+          password: ${{ secrets.ENONIC_PROD_PASS }}
+          client_cert: ${{ secrets.ENONIC_CERT }}
+          client_key: ${{ secrets.ENONIC_KEY }}
+          app_jar: "./build/libs/*.jar"
       - name: Send success message to Slack
         id: slack_success
         if: success()
