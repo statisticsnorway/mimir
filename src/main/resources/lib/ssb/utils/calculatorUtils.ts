@@ -44,7 +44,7 @@ export function nextQuartalPeriod({ month, year }: CalculatorPeriod) {
 }
 
 // The quartersToMonths date-fns function picks the last month of the quarter so we have to do calculations to get the first month
-function getFirstMonthofQuarterPeriod(quarter: string) {
+export function getFirstMonthofQuartalPeriod(quarter: string) {
   return quartersToMonths(Number(quarter)) - 3 + 1
 }
 
@@ -57,13 +57,13 @@ export function lastQuartalPeriod(calculatorData: Dataset | null): CalculatorPer
     const [year, quarter]: Array<string> = lastTimeItem.split('K')
 
     return {
-      month: getFirstMonthofQuarterPeriod(quarter),
+      month: getFirstMonthofQuartalPeriod(quarter),
       year,
     }
   }
 }
 
-export function allQuarterPeriods(quarterPhrase: string) {
+export function allQuartalPeriods(quarterPhrase: string) {
   const quarterPeriodList = []
   let count = 1
   while (count <= 4) {
@@ -74,6 +74,11 @@ export function allQuarterPeriods(quarterPhrase: string) {
     count++
   }
   return quarterPeriodList
+}
+
+// Extract number from e.g. "K1" for quartal periods
+export function getQuartalNumber(quartalPeriod: string) {
+  return quartalPeriod.substring(1)
 }
 
 export function allMonths(phrases: Phrases, frontPage?: boolean, type?: string): DropdownItems {

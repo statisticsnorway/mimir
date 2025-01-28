@@ -7,7 +7,7 @@ import { render } from '/lib/enonic/react4xp'
 import { type DropdownItems } from '/lib/types/components'
 import {
   allMonths,
-  allQuarterPeriods,
+  allQuartalPeriods,
   getLastNumberText,
   getNextPublishText,
   lastQuartalPeriod,
@@ -55,7 +55,7 @@ function renderPart(req: XP.Request): XP.Response {
     months,
     lastUpdatedMonth: lastUpdated?.month as string,
     lastUpdatedYear: lastUpdated?.year as string,
-    nextPeriodText: phrases.bpiNextQuarterPeriod,
+    nextPeriodText: phrases.bpiNextQuartalPeriod,
     nextReleaseMonth: nextUpdate?.month as string,
   })
   const lastNumberText: string = getLastNumberText({
@@ -73,7 +73,7 @@ function renderPart(req: XP.Request): XP.Response {
       lastNumberText,
       dwellingTypeList: allCategoryOptions(bpiDataset, 'Boligtype', phrases, 'bpiChooseDwellingType', 'RadioGroup'),
       regionList: allCategoryOptions(bpiDataset, 'Region', phrases, 'bpiChooseRegion', 'Dropdown'),
-      quarterPeriodList: allQuarterPeriods(phrases.quarter),
+      quarterPeriodList: allQuartalPeriods(phrases.quarter),
     },
     req,
     {

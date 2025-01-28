@@ -211,3 +211,7 @@ export function getChangeValue(startIndex: number, endIndex: number, chronologic
 export function getIndexTime(calculatorData: Dataset | null, categories: object): number | null {
   return calculatorData?.Data(categories)?.value as unknown as number
 }
+
+export function getPercentageFromChangeValue(changeValue: number) {
+  return (changeValue * 100).toFixed(1)
+}

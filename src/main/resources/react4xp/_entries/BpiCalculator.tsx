@@ -12,11 +12,11 @@ function BpiCalculator(props: BpiCalculatorProps) {
       <Dropdown
         className='quarter'
         id={id}
-        header={phrases.bpiChooseQuarterPeriod}
+        header={phrases.bpiChooseQuartalPeriod}
         onSelect={() => {}}
         error={''}
         errorMessage={''}
-        selectedItem={{ id: `bpi-${id}`, title: phrases.bpiChooseQuarterPeriod }}
+        selectedItem={{ id: `bpi-${id}`, title: phrases.bpiChooseQuartalPeriod }}
         items={quarterPeriodList}
       />
     )
