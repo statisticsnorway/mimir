@@ -66,11 +66,11 @@ function get(req: HttpRequestParams): XP.Response {
         contentType: 'application/json',
       }
     } else {
-      const bpiServiceValidateStartMonth = localize({
+      const bpiServiceValidateStartQuartalPeriod = localize({
         key: 'kpiServiceValidateStartMonth',
         locale: language,
       })
-      const bpiServiceValidateEndMonth = localize({
+      const bpiServiceValidateEndQuartalPeriod = localize({
         key: 'kpiServiceValidateStartMonth',
         locale: language,
       })
@@ -78,7 +78,8 @@ function get(req: HttpRequestParams): XP.Response {
       return {
         status: 500,
         body: {
-          error: indexResult.startIndex === null ? bpiServiceValidateStartMonth : bpiServiceValidateEndMonth,
+          error:
+            indexResult.startIndex === null ? bpiServiceValidateStartQuartalPeriod : bpiServiceValidateEndQuartalPeriod,
         },
         contentType: 'application/json',
       }

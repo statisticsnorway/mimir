@@ -78,9 +78,11 @@ function BpiCalculator(props: BpiCalculatorProps) {
     switch (id) {
       case 'dwellingType': {
         setDwellingType({ ...dwellingType, value: value as string })
+        break
       }
       case 'region': {
         setRegion({ ...region, value: value as DropdownItem })
+        break
       }
       default: {
         break
@@ -94,19 +96,6 @@ function BpiCalculator(props: BpiCalculatorProps) {
 
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-
-    const params = {
-      dwellingType: dwellingType.value,
-      region: region.value.id,
-      startYear: startYear.value,
-      startQuartalPeriod: startMonth?.value.id,
-      endYear: endYear.value,
-      endQuartalPeriod: endMonth?.value.id,
-      language: language,
-    }
-
-    console.log(params)
-
     if (loading) return
     setChange(null)
     if (!isFormValid()) {
@@ -204,7 +193,7 @@ function BpiCalculator(props: BpiCalculatorProps) {
               <Col className='col-12 col-lg-4'>
                 <Title size={3}>{phrases.bpiChooseDwellingType}</Title>
                 <RadioGroup
-                  selectedValue='1'
+                  selectedValue={dwellingTypeList[0].value}
                   orientation='column'
                   items={dwellingTypeList}
                   onChange={(value: string) => onCategoryChange('dwellingType', value)}
