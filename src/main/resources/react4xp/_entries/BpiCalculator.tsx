@@ -31,7 +31,7 @@ function BpiCalculator(props: BpiCalculatorProps) {
   })
   const [region, setRegion] = useState({
     error: false,
-    errorMsg: '',
+    errorMsg: phrases.bpiValidateRegion,
     value: defaultRegion,
   })
 
@@ -81,7 +81,11 @@ function BpiCalculator(props: BpiCalculatorProps) {
         break
       }
       case 'region': {
-        setRegion({ ...region, value: value as DropdownItem })
+        setRegion({
+          ...region,
+          value: value as DropdownItem,
+          error: region.error ? !isRegionValid((value as DropdownItem).id) : region.error,
+        })
         break
       }
       default: {
@@ -90,8 +94,20 @@ function BpiCalculator(props: BpiCalculatorProps) {
     }
   }
 
+  function isRegionValid(value?: string) {
+    const regionValue = value || region.value.id
+    const regionValid = regionValue !== ''
+    if (!regionValid) {
+      setRegion({
+        ...region,
+        error: true,
+      })
+    }
+    return regionValid
+  }
+
   function isFormValid() {
-    return isStartYearValid() && isEndYearValid()
+    return isRegionValid() && isStartYearValid() && isEndYearValid()
   }
 
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -204,7 +220,10 @@ function BpiCalculator(props: BpiCalculatorProps) {
                 <Dropdown
                   selectedItem={region.value}
                   items={regionList}
-                  onChange={(value: DropdownItem) => onCategoryChange('region', value)}
+                  onSelect={(value: DropdownItem) => onCategoryChange('region', value)}
+                  error={region.error}
+                  errorMessage={region.errorMsg}
+                  ariaLabel={phrases.bpiChooseRegion}
                 />
               </Col>
             </Row>
