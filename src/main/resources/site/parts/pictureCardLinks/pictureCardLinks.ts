@@ -8,6 +8,7 @@ import {
   type PictureCardLink,
   type PictureCardLinksContent,
 } from '/lib/types/partTypes/pictureCardLinks'
+import { getLinkTargetUrl } from '/lib/ssb/utils/utils'
 import { type PictureCardLinks as PictureCardLinksPartConfig } from '.'
 
 export function get(req: XP.Request): XP.Response {
@@ -45,15 +46,13 @@ function parsePictureCardLinks(
   pictureCardLinks = Array.isArray(pictureCardLinks) ? pictureCardLinks : [pictureCardLinks]
   return pictureCardLinks.reduce((acc, pictureCardLink, i) => {
     if (pictureCardLink) {
-      const title: string = pictureCardLink.title
-      const subTitle: string = pictureCardLink.subTitle
-      const href: string = pictureCardLink.href
+      const href: string = getLinkTargetUrl(pictureCardLink.urlContentSelector) ?? pictureCardLink.href ?? ''
 
-      const imageSources = createImageUrls(pictureCardLink, i)
+      const imageSources = createImageUrls(pictureCardLink, pictureCardLinks.length, i)
 
       const pictureCardLinksContent: PictureCardLinksContent = {
-        title: title,
-        subTitle: subTitle,
+        title: pictureCardLink.title,
+        subTitle: pictureCardLink.subTitle,
         href: href,
         imageSources: imageSources,
       }
@@ -63,7 +62,7 @@ function parsePictureCardLinks(
   }, [])
 }
 
-function createImageUrls(pictureCardLink: PictureCardLink, i: number): ImageUrls {
+function createImageUrls(pictureCardLink: PictureCardLink, listLength: number, i: number): ImageUrls {
   const imageUrls: ImageUrls = {
     portraitSrcSet: '',
     landscapeSrcSet: '',
@@ -78,7 +77,11 @@ function createImageUrls(pictureCardLink: PictureCardLink, i: number): ImageUrls
     })
 
     imageUrls.landscapeSrcSet = imageUrls.imageSrc
-    if (i > 0) imageUrls.portraitSrcSet = imageUrls.imageSrc.replace('block-580-400', 'block-280-400')
+
+    if (listLength === 4 || (listLength === 3 && i > 0)) {
+      imageUrls.portraitSrcSet = imageUrls.imageSrc.replace('block-580-400', 'block-280-400')
+    }
+
     imageUrls.imageAlt = getImageAlt(pictureCardLink.image) || ''
   } else {
     imageUrls.imageSrc = imagePlaceholder({

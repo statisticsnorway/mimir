@@ -1,7 +1,7 @@
 export interface PictureCardLink {
   title: string
   subTitle: string
-  href: string
+  href?: string
   image?: string
 }
 

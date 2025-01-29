@@ -64,11 +64,11 @@ try {
           enabled: false,
         },
         {
-          feature: 'pageMap',
+          feature: 'show-popup-survey',
           enabled: false,
         },
         {
-          feature: 'show-popup-survey',
+          feature: 'new-table-export',
           enabled: false,
         },
       ],

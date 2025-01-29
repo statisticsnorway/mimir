@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import { Card, Text, Button } from '@statisticsnorway/ssb-component-library'
 import { useMediaQuery } from 'react-responsive'
 import { type RelatedArticlesContent } from '/lib/types/partTypes/relatedArticles'
+import { usePaginationKeyboardNavigation } from '/lib/ssb/utils/customHooks/paginationHooks'
 
 interface RelatedArticlesProps {
   relatedArticles: RelatedArticlesContent[]
@@ -70,18 +71,16 @@ function RelatedArticles(props: RelatedArticlesProps) {
     setShownArticles(firstShownArticles)
   }
 
+  // TODO: Implement custom hook for pagination after changes has been made to support ref prop for Card component
+  const handleKeyboardNavigation = usePaginationKeyboardNavigation(() => toggleBox(true))
+
   function renderShowMoreButton() {
     return (
       <div className={`row hide-show-btn justify-content-center justify-content-lg-start`}>
         <div className='col-auto'>
           <Button
             onClick={() => toggleBox(false)}
-            onKeyDown={(e: React.KeyboardEvent<HTMLButtonElement>) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault()
-                toggleBox(true)
-              }
-            }}
+            onKeyDown={handleKeyboardNavigation}
             ariaLabel={isHidden ? `${showAllAriaLabel} - ${relatedArticles.length} ${articlePluralName}` : ''}
           >
             {shownArticles.length < relatedArticles.length ? showAll + ` (${relatedArticles.length})` : showLess}

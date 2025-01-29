@@ -1,5 +1,5 @@
 import { type Content } from '/lib/xp/content'
-import { getContent, getComponent, assetUrl } from '/lib/xp/portal'
+import { getContent, getComponent } from '/lib/xp/portal'
 import { type Phrases } from '/lib/types/language'
 import { type Contact as StatRegContacts } from '/lib/ssb/dashboard/statreg/types'
 import { render } from '/lib/enonic/react4xp'
@@ -43,9 +43,6 @@ function renderPart(req: XP.Request): XP.Response {
   const selectedContacts = getSelectedContacts(contactIds, statRegContacts, pageLanguage)
 
   const props: StatisticContactProps = {
-    icon: assetUrl({
-      path: 'SSB_ikon_statisticContacts.svg',
-    }),
     label: phrases.contact,
     contacts: ensureArray(selectedContacts),
   }

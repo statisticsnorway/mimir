@@ -1,6 +1,6 @@
-import { getContent, getComponent, pageUrl } from '/lib/xp/portal'
+import { getContent, getComponent } from '/lib/xp/portal'
 import { render } from '/lib/thymeleaf'
-import { getProfiledCardAriaLabel, randomUnsafeString } from '/lib/ssb/utils/utils'
+import { getLinkTargetUrl, getProfiledCardAriaLabel, randomUnsafeString } from '/lib/ssb/utils/utils'
 import { render as r4xpRender } from '/lib/enonic/react4xp'
 import { formatDate } from '/lib/ssb/utils/dateUtils'
 import { imageUrl, getImageAlt } from '/lib/ssb/utils/imageUtils'
@@ -47,7 +47,7 @@ function renderPart(req: XP.Request): XP.Response {
     }),
     imageAltText: getImageAlt(config.image) ?? ' ',
     imagePlacement: config.cardOrientation == 'horizontal' ? 'left' : 'top',
-    href: getLink(urlContentSelector),
+    href: getLinkTargetUrl(urlContentSelector),
     subTitle,
     title,
     preambleText: config.preamble,
@@ -60,21 +60,6 @@ function renderPart(req: XP.Request): XP.Response {
     body: body,
     hydrate: false,
   })
-}
-
-function getLink(urlContentSelector: ProfiledBoxPartConfig['urlContentSelector']): string | undefined {
-  if (urlContentSelector._selected == 'optionLink') {
-    return urlContentSelector.optionLink.link
-  }
-
-  if (urlContentSelector._selected == 'optionXPContent') {
-    return urlContentSelector.optionXPContent.xpContent
-      ? pageUrl({
-          id: urlContentSelector.optionXPContent.xpContent,
-        })
-      : ''
-  }
-  return ''
 }
 
 function getSubtitle(content: string | undefined, date: string | undefined, language: string): string {

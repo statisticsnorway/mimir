@@ -4,6 +4,7 @@ import { ChevronDown } from 'react-feather'
 import axios from 'axios'
 import { type SubjectArticleListProps } from '/lib/types/partTypes/subjectArticleList'
 import { type DropdownItem } from '/lib/types/partTypes/publicationArchive'
+import { usePagination } from '/lib/ssb/utils/customHooks/paginationHooks'
 
 /* TODO:
 - Fikse sortering (?)
@@ -17,11 +18,18 @@ function SubjectArticleList(props: SubjectArticleListProps) {
   const [articles, setArticles] = useState(props.articles)
   const [articleStart, setArticleStart] = useState(props.start)
   const [loadedFirst, setLoadedFirst] = useState(true)
-  const [totalCount, setTotalCount] = useState(props.articles.length)
   const [sort, setSort] = useState({
     title: 'Nyeste',
     id: 'DESC',
   })
+
+  const { disableBtn, getCurrentElementRef, handleKeyboardNavigation, handleOnClick } = usePagination({
+    list: articles,
+    listItemsPerPage: props.count,
+    onLoadMore: () => fetchMoreArticles(),
+    totalCount: props.totalArticles,
+  })
+
   const showCountLabel =
     props.language == 'en'
       ? `Showing ${articles.length} of ${props.totalArticles}`
@@ -47,7 +55,6 @@ function SubjectArticleList(props: SubjectArticleListProps) {
       })
       .then((res) => {
         setArticles(articles.concat(res.data.articles))
-        setTotalCount((prevState) => prevState + res.data.articles.length)
       })
       .finally(() => {
         setArticleStart((prevState) => prevState + props.count)
@@ -68,7 +75,6 @@ function SubjectArticleList(props: SubjectArticleListProps) {
       })
       .then((res) => {
         setArticles(res.data.articles)
-        setTotalCount(res.data.totalCount)
         setLoadedFirst(true)
       })
   }
@@ -78,9 +84,9 @@ function SubjectArticleList(props: SubjectArticleListProps) {
       <ol className='list-unstyled'>
         {articles.map((article, i) => {
           return (
-            <li key={i}>
+            <li key={`${article.title}-${i}`}>
               {/* deepcode ignore DOMXSS: url comes from pageUrl which escapes + Reacts own escaping */}
-              <Link href={article.url} linkType='header' headingSize={3} standAlone>
+              <Link ref={getCurrentElementRef(i)} href={article.url} linkType='header' headingSize={3} standAlone>
                 {article.title}
               </Link>
               <p className='truncate-2-lines'>{article.preface}</p>
@@ -121,20 +127,19 @@ function SubjectArticleList(props: SubjectArticleListProps) {
   }
 
   function renderShowMoreButton() {
-    if (!props.showAllArticles) {
-      return (
-        <div>
-          <Button
-            disabled={totalCount > 0 && totalCount >= props.totalArticles}
-            className='button-more'
-            onClick={fetchMoreArticles}
-          >
-            <ChevronDown size='18' />
-            {props.buttonTitle}
-          </Button>
-        </div>
-      )
-    }
+    return (
+      <div>
+        <Button
+          disabled={disableBtn}
+          className='button-more'
+          onClick={handleOnClick}
+          onKeyDown={handleKeyboardNavigation}
+        >
+          <ChevronDown size='18' />
+          {props.buttonTitle}
+        </Button>
+      </div>
+    )
   }
 
   return (

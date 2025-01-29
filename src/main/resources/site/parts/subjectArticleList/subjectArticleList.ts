@@ -27,10 +27,8 @@ function renderPart(req: XP.Request) {
   const filterAndSortEnabled: boolean = isEnabled('articlelist-sorting', false)
   const currentPath: string = content._path
 
-  // TODO change to false when crawling of articles is fixed
-  const showAllArticles = true
   const start = 0
-  const count: number = showAllArticles ? 100 : 10
+  const count: number = 10
 
   const subTopicIds: string | string[] = getSubtopics(content, currentPath, req, language)
   const childArticles: ContentsResult<Content<Article>> = getChildArticles(currentPath, subTopicIds, start, count, sort)
@@ -61,7 +59,6 @@ function renderPart(req: XP.Request) {
     language: language,
     articles: preparedArticles,
     totalArticles: totalArticles,
-    showAllArticles: showAllArticles,
   }
 
   return render('site/parts/subjectArticleList/subjectArticleList', props, req)

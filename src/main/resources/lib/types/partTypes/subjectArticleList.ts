@@ -11,5 +11,4 @@ export interface SubjectArticleListProps {
   language: string
   articles: Array<PreparedArticles>
   totalArticles: number
-  showAllArticles: boolean
 }
