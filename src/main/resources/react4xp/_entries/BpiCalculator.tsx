@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState } from 'react'
 import { Title, Divider, RadioGroup, Dropdown, Input, Button, FormError } from '@statisticsnorway/ssb-component-library'
 import { Container, Row, Col, Form } from 'react-bootstrap'
 
@@ -60,11 +60,14 @@ function BpiCalculator(props: BpiCalculatorProps) {
       setEndPeriod,
       onChange,
     },
-    validation: { onBlur, isStartYearValid, isEndYearValid },
+    validation: { onBlur, isStartYearValid, isEndYearValid, isStartMonthValid, isEndMonthValid },
     scrollAnchor,
+    onSubmitBtnElement,
     getQuartalPeriod,
+    closeResult,
   } = useSetupCalculator({
     defaultMonthValue: defaultQuartalValue,
+    defaultMonthErrorMsg: phrases.bpiValidateQuartal,
     lastNumberText,
     // TODO: Hard-coded
     validYearErrorMsg: `${phrases.pifValidateYear.replaceAll('{0}', '1992')} 2024`,
@@ -107,7 +110,7 @@ function BpiCalculator(props: BpiCalculatorProps) {
   }
 
   function isFormValid() {
-    return isRegionValid() && isStartYearValid() && isEndYearValid()
+    return isRegionValid() && isStartYearValid() && isStartMonthValid() && isEndYearValid() && isEndMonthValid()
   }
 
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -134,8 +137,8 @@ function BpiCalculator(props: BpiCalculatorProps) {
         },
       })
       .then((res) => {
-        const startPeriod = getQuartalPeriod(startYear.value, startMonth.value.title)
-        const endPeriod = getQuartalPeriod(endYear.value, endMonth.value.title)
+        const startPeriod = getQuartalPeriod(startYear.value as string, (startMonth.value as DropdownItem).title)
+        const endPeriod = getQuartalPeriod(endYear.value as string, (endMonth.value as DropdownItem).title)
         setChange(res.data.change)
         setStartPeriod(startPeriod)
         setEndPeriod(endPeriod)
@@ -152,11 +155,6 @@ function BpiCalculator(props: BpiCalculatorProps) {
       .finally(() => {
         setLoading(false)
       })
-  }
-
-  const onSubmitBtnElement = useRef(null)
-  function closeResult() {
-    if (onSubmitBtnElement.current) onSubmitBtnElement.current.focus()
   }
 
   // TODO: Revise; consider making new functions for quarter

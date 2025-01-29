@@ -62,6 +62,7 @@ export const useSetupCalculator = ({
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [change, setChange] = useState<string | null>(null)
+  const [endValue, setEndValue] = useState<null | number>(null)
   const [startPeriod, setStartPeriod] = useState<string | null>(null)
   const [endPeriod, setEndPeriod] = useState<string | null>(null)
   const [startValueResult, setStartValueResult] = useState<string | null>(null)
@@ -69,6 +70,7 @@ export const useSetupCalculator = ({
   const [endIndex, setEndIndex] = useState<number | null>(null)
 
   const scrollAnchor = useRef<HTMLDivElement>(null)
+  const onSubmitBtnElement = useRef<HTMLButtonElement>(null)
 
   const yearRegexp = /^[1-9]\d{3}$/g
 
@@ -225,6 +227,12 @@ export const useSetupCalculator = ({
     }
   }
 
+  function closeResult() {
+    setEndValue(null)
+    setChange(null)
+    if (onSubmitBtnElement.current) onSubmitBtnElement.current.focus()
+  }
+
   useEffect(() => {
     if (!loading && scrollAnchor.current) {
       scrollAnchor.current.scrollIntoView({
@@ -270,6 +278,7 @@ export const useSetupCalculator = ({
       errorMessage,
       loading,
       change,
+      endValue,
       startPeriod,
       endPeriod,
       startValueResult,
@@ -285,6 +294,7 @@ export const useSetupCalculator = ({
       setErrorMessage,
       setLoading,
       setChange,
+      setEndValue,
       setStartPeriod,
       setEndPeriod,
       setStartValueResult,
@@ -300,7 +310,9 @@ export const useSetupCalculator = ({
       onBlur,
     },
     scrollAnchor,
+    onSubmitBtnElement,
     getPeriod,
     getQuartalPeriod,
+    closeResult,
   }
 }
