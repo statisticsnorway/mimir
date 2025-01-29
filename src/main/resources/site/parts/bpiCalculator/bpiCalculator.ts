@@ -1,5 +1,5 @@
 import { type Content } from '/lib/xp/content'
-import { getContent, getComponent } from '/lib/xp/portal'
+import { getContent, getComponent, serviceUrl } from '/lib/xp/portal'
 import { type Dataset } from '/lib/types/jsonstat-toolkit'
 import { type CalculatorPeriod } from '/lib/types/calculator'
 import { type Phrases } from '/lib/types/language'
@@ -14,7 +14,6 @@ import {
   allCategoryOptions,
   nextQuartalPeriod,
 } from '/lib/ssb/utils/calculatorUtils'
-
 import { renderError } from '/lib/ssb/error/error'
 import { getLanguage } from '/lib/ssb/utils/language'
 import { getCalculatorConfig, getCalculatorDatasetFromSource } from '/lib/ssb/dataset/calculator'
@@ -68,7 +67,12 @@ function renderPart(req: XP.Request): XP.Response {
   return render(
     'BpiCalculator',
     {
+      bpiCalculatorServiceUrl: serviceUrl({
+        service: 'bpiCalculator',
+      }),
+      language,
       phrases,
+      months,
       nextPublishText,
       lastNumberText,
       dwellingTypeList: allCategoryOptions(bpiDataset, 'Boligtype', phrases, 'bpiChooseDwellingType', 'RadioGroup'),
