@@ -18,7 +18,7 @@
       height: auto;
       width: auto;
     }
-    &.plainSection {
+    /* &.plainSection {
       width: 1180px;
       img {max-width: 1180px;}
     }
@@ -33,7 +33,7 @@
 
     &.wide {
       img {width: 1400px;}
-    }
+    } */
 
     @include media-breakpoint-down(md) {
       width: 100vw;

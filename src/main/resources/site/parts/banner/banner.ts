@@ -14,6 +14,7 @@ import { render as r4XpRender } from '/lib/enonic/react4xp'
 import { getPhrases } from '/lib/ssb/utils/language'
 import { type Phrases } from '/lib/types/language'
 import { type BannerProps } from '/lib/types/partTypes/banner'
+import { forceArray } from '/lib/ssb/utils/arrayUtils'
 import { type Page } from '/site/content-types'
 import { type Default } from '/site/pages/default'
 
@@ -37,7 +38,8 @@ function renderPart(req: XP.Request): XP.Response {
 
   const region = part?.path?.split('/')[1]
   const myPage = page.page?.config as Default
-  const myRegion = myPage?.regions.find((r) => r.region === region)
+  const myRegions = myPage?.regions ? forceArray(myPage.regions) : []
+  const myRegion = myRegions.find((r) => r.region === region)
 
   log.info(`Region type for part with title ${myRegion?.title} is ${myRegion?.view}`)
   log.info(`Region found in page: ${JSON.stringify(myRegion, null, 2)}`)
@@ -143,7 +145,8 @@ function imageSrcSet(imageId: string, isLandingPage: boolean, sectionType: strin
       sizes = `(min-width: 801px) 1400px, 800px, 650px`
       break
     case 'plainSection':
-      sizes = `(min-width: 801px) 1260px, 800px, 650px`
+      sizes = `(min-width: 801px) 1260px,
+        ((min-width: 651px) and (max-width: 800px)) 800px, 650px`
       break
     case 'card':
       sizes = `(min-width: 801px) 800px, 650px`
