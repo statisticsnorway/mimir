@@ -218,7 +218,7 @@ function BpiCalculator(props: BpiCalculatorProps) {
         <Form onSubmit={onSubmit}>
           <Container>
             <Row className='mt-5'>
-              <Col className='col-12 col-lg-4'>
+              <Col className='col-12 col-md-6 col-xl-4 mb-3 mb-md-0'>
                 <Title size={3}>{phrases.bpiChooseDwellingType}</Title>
                 <RadioGroup
                   selectedValue={dwellingTypeList[0].value}
@@ -227,9 +227,10 @@ function BpiCalculator(props: BpiCalculatorProps) {
                   onChange={(value: string) => onCategoryChange('dwellingType', value)}
                 />
               </Col>
-              <Col className='col-12 col-lg-8'>
+              <Col className='col-12 col-md-6 col-xl-6'>
                 <Title size={3}>{phrases.bpiChooseRegion}</Title>
                 <Dropdown
+                  className='select-region'
                   selectedItem={region.value}
                   items={regionList}
                   onSelect={(value: DropdownItem) => onCategoryChange('region', value)}
@@ -241,7 +242,7 @@ function BpiCalculator(props: BpiCalculatorProps) {
             </Row>
             <Divider className='my-5' />
             <Row className='d-flex justify-content-end'>
-              <Col className='input-amount col-12 col-md-6 col-xl-8 pt-0'>
+              <Col className='input-amount col-12 col-md-6 col-xl-8'>
                 <h3 id='amount'>{props.phrases.bkibolAmount}</h3>
                 <Input
                   className='start-value'
