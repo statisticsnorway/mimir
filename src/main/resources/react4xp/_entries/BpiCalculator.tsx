@@ -16,6 +16,7 @@ function BpiCalculator(props: BpiCalculatorProps) {
     language,
     months,
     phrases,
+    lastUpdated,
     nextPublishText,
     lastNumberText,
     dwellingTypeList,
@@ -36,6 +37,8 @@ function BpiCalculator(props: BpiCalculatorProps) {
   })
 
   const defaultQuartalValue = { id: '', title: phrases.bpiChooseQuartalPeriod }
+  const validMinYear = 1992
+  const validMaxYear = lastUpdated.year
   const {
     states: {
       loading,
@@ -69,11 +72,10 @@ function BpiCalculator(props: BpiCalculatorProps) {
     defaultMonthValue: defaultQuartalValue,
     defaultMonthErrorMsg: phrases.bpiValidateQuartal,
     lastNumberText,
-    // TODO: Hard-coded
-    validYearErrorMsg: `${phrases.pifValidateYear.replaceAll('{0}', '1992')} 2024`,
-    validMaxYear: 2024,
-    validMaxMonth: 'K1',
-    validMinYear: 1992,
+    validYearErrorMsg: `${phrases.pifValidateYear.replaceAll('{0}', validMinYear.toString())} ${validMaxYear}`,
+    validMaxYear,
+    validMaxMonth: lastUpdated.month,
+    validMinYear,
     months,
   })
 
@@ -119,7 +121,9 @@ function BpiCalculator(props: BpiCalculatorProps) {
     setChange(null)
     if (!isFormValid()) {
       onBlur('start-year')
+      onBlur('start-month')
       onBlur('end-year')
+      onBlur('end-month')
       return
     }
     setErrorMessage(null)

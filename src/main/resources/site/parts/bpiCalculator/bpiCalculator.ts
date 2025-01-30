@@ -73,6 +73,7 @@ function renderPart(req: XP.Request): XP.Response {
       language,
       phrases,
       months,
+      lastUpdated,
       nextPublishText,
       lastNumberText,
       dwellingTypeList: allCategoryOptions(bpiDataset, 'Boligtype', phrases, 'bpiChooseDwellingType', 'RadioGroup'),
