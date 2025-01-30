@@ -56,6 +56,12 @@ function StatisticDescription(props: Readonly<AboutTheStatisticsProps>) {
     return null
   }
 
+  const isTagActive = (index: number, accordionId?: string): boolean => {
+    const isFirstItem = index === 0 && !selectedTag
+    const isSelectedItem = selectedTag === accordionId
+    return isFirstItem || isSelectedItem
+  }
+
   return (
     <div className='content-wrapper'>
       <div className='title-wrapper'>
@@ -69,7 +75,7 @@ function StatisticDescription(props: Readonly<AboutTheStatisticsProps>) {
       <div className='om-statistikken-tags'>
         {accordions.map((accordion, index) => (
           <Tag
-            className={index === 0 && !selectedTag ? 'active' : undefined}
+            className={isTagActive(index, accordion.id) ? 'active' : undefined}
             key={accordion.id}
             onClick={() => setCategory(accordion.id as string)}
           >
