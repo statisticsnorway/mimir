@@ -5,15 +5,16 @@ import { HttpRequestParams } from '/lib/http-client'
 import { type Dataset } from '/lib/types/jsonstat-toolkit'
 import { type Language, type Phrases } from '/lib/types/language'
 import { type DropdownItems } from '/lib/types/components'
-import { allMonths, monthLabel, serieLocalization, SeriesKey } from '/lib/ssb/utils/calculatorUtils'
-import { getLanguage } from '/lib/ssb/utils/language'
 import {
-  getCalculatorConfig,
-  getBkibolDatasetEnebolig,
-  getBkibolDatasetBoligblokk,
+  allMonths,
+  monthLabel,
+  serieLocalization,
+  SeriesKey,
   isChronological,
   getChangeValue,
-} from '/lib/ssb/dataset/calculator'
+} from '/lib/ssb/utils/calculatorUtils'
+import { getLanguage } from '/lib/ssb/utils/language'
+import { getCalculatorConfig, getBkibolDatasetEnebolig, getBkibolDatasetBoligblokk } from '/lib/ssb/dataset/calculator'
 import { type CalculatorConfig } from '/site/content-types'
 
 // eslint-disable-next-line complexity

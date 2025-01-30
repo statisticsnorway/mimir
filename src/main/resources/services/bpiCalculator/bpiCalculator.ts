@@ -1,16 +1,18 @@
 import { type Content } from '/lib/xp/content'
 import { localize } from '/lib/xp/i18n'
 import { type Dataset } from '/lib/types/jsonstat-toolkit'
+import { getCalculatorConfig, getCalculatorDatasetFromSource } from '/lib/ssb/dataset/calculator'
 import {
-  getCalculatorConfig,
-  getCalculatorDatasetFromSource,
   getChangeValue,
   isChronological,
   getIndexTime,
   getPercentageFromChangeValue,
-} from '/lib/ssb/dataset/calculator'
+  getQuartalNumber,
+  getFirstMonthofQuartalPeriod,
+  getEndValue,
+} from '/lib/ssb/utils/calculatorUtils'
 import { HttpRequestParams } from '/lib/http-client'
-import { getQuartalNumber, getFirstMonthofQuartalPeriod } from '/lib/ssb/utils/calculatorUtils'
+import { IndexResult } from '/lib/types/calculator'
 import { type CalculatorConfig } from '/site/content-types'
 
 interface BpiIndexes {
@@ -25,27 +27,26 @@ interface BpiIndexes {
 }
 
 interface FetchBpiResults {
+  startValue: string | undefined
   startQuartalPeriod: BpiIndexes['startQuartalPeriod']
   startYear: BpiIndexes['startYear']
   endQuartalPeriod: BpiIndexes['endQuartalPeriod']
   endYear: BpiIndexes['endYear']
   language: string
-  indexResult: {
-    startIndex: number | null
-    endIndex: number | null
-  }
+  indexResult: IndexResult
 }
 
 function get(req: HttpRequestParams): XP.Response {
   const dwellingType: string | undefined = req.params?.dwellingType ?? '00'
   const region: string | undefined = req.params?.region ?? 'TOTAL'
+  const startValue: string | undefined = req.params?.startValue
   const startQuartalPeriod: string | undefined = req.params?.startQuartalPeriod
   const startYear: string | undefined = req.params?.startYear
   const endQuartalPeriod: string | undefined = req.params?.endQuartalPeriod
   const endYear: string | undefined = req.params?.endYear
   const language: string | undefined = req.params?.language ? req.params.language : 'nb'
 
-  if (!startQuartalPeriod || !endQuartalPeriod || !startYear || !endYear) {
+  if (!startValue || !startQuartalPeriod || !endQuartalPeriod || !startYear || !endYear) {
     return {
       status: 400,
       body: {
@@ -70,6 +71,7 @@ function get(req: HttpRequestParams): XP.Response {
       region,
     })
     return fetchBpiResults({
+      startValue,
       startQuartalPeriod,
       startYear,
       endQuartalPeriod,
@@ -115,6 +117,7 @@ function getIndexes({
 }
 
 function fetchBpiResults({
+  startValue,
   startQuartalPeriod,
   startYear,
   endQuartalPeriod,
@@ -136,6 +139,7 @@ function fetchBpiResults({
         startIndex: indexResult.startIndex,
         endIndex: indexResult.endIndex,
         change: getPercentageFromChangeValue(changeValue),
+        endValue: getEndValue(startValue as string, indexResult),
       },
       contentType: 'application/json',
     }

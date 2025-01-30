@@ -1,7 +1,7 @@
 import { quartersToMonths } from 'date-fns'
 import { localize } from '/lib/xp/i18n'
 import { type DropdownItems, type DropdownItem, type RadioGroupItems } from '/lib/types/components'
-import { type CalculatorPeriod } from '/lib/types/calculator'
+import { IndexResult, type CalculatorPeriod } from '/lib/types/calculator'
 import { type Phrases } from '/lib/types/language'
 import { type Data, type Dataset, type Dimension } from '/lib/types/jsonstat-toolkit'
 
@@ -257,4 +257,35 @@ export function getLastNumberText({
     locale: language,
     values: [monthLabel(months, language, lastUpdatedMonth), lastUpdatedYear],
   })
+}
+
+export function isChronological(startYear: string, startMonth: string, endYear: string, endMonth: string): boolean {
+  if (parseInt(startYear) < parseInt(endYear)) return true
+  if (parseInt(endYear) < parseInt(startYear)) return false
+
+  if (startMonth != '90' && startMonth != '' && endMonth != '' && endMonth != '90') {
+    if (parseInt(startMonth) < parseInt(endMonth)) return true
+    if (parseInt(startMonth) > parseInt(endMonth)) return false
+  }
+  return true
+}
+
+export function getChangeValue(startIndex: number, endIndex: number, chronological: boolean): number {
+  if (chronological) {
+    return (endIndex - startIndex) / startIndex
+  } else {
+    return (startIndex - endIndex) / endIndex
+  }
+}
+
+export function getIndexTime(calculatorData: Dataset | null, categories: object): number | null {
+  return calculatorData?.Data(categories)?.value as unknown as number
+}
+
+export function getPercentageFromChangeValue(changeValue: number) {
+  return (changeValue * 100).toFixed(1)
+}
+
+export function getEndValue(startValue: string, indexResult: IndexResult) {
+  return parseFloat(startValue) * ((indexResult.endIndex as number) / (indexResult.startIndex as number))
 }

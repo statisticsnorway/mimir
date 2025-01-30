@@ -188,30 +188,3 @@ export function getNameSearchGraphDatasetId(): string | undefined {
   const config: Content<CalculatorConfig> | undefined = getCalculatorConfig()
   return config?.data.nameSearchGraphData ?? undefined
 }
-
-export function isChronological(startYear: string, startMonth: string, endYear: string, endMonth: string): boolean {
-  if (parseInt(startYear) < parseInt(endYear)) return true
-  if (parseInt(endYear) < parseInt(startYear)) return false
-
-  if (startMonth != '90' && startMonth != '' && endMonth != '' && endMonth != '90') {
-    if (parseInt(startMonth) < parseInt(endMonth)) return true
-    if (parseInt(startMonth) > parseInt(endMonth)) return false
-  }
-  return true
-}
-
-export function getChangeValue(startIndex: number, endIndex: number, chronological: boolean): number {
-  if (chronological) {
-    return (endIndex - startIndex) / startIndex
-  } else {
-    return (startIndex - endIndex) / endIndex
-  }
-}
-
-export function getIndexTime(calculatorData: Dataset | null, categories: object): number | null {
-  return calculatorData?.Data(categories)?.value as unknown as number
-}
-
-export function getPercentageFromChangeValue(changeValue: number) {
-  return (changeValue * 100).toFixed(1)
-}

@@ -42,6 +42,8 @@ function BpiCalculator(props: BpiCalculatorProps) {
   const {
     states: {
       loading,
+      startValue,
+      endValue,
       startYear,
       endYear,
       startMonth,
@@ -49,11 +51,14 @@ function BpiCalculator(props: BpiCalculatorProps) {
       startPeriod,
       endPeriod,
       change,
+      startValueResult,
       errorMessage,
       startIndex,
       endIndex,
     },
     setters: {
+      setStartValueResult,
+      setEndValue,
       setChange,
       setLoading,
       setErrorMessage,
@@ -69,6 +74,7 @@ function BpiCalculator(props: BpiCalculatorProps) {
     getQuartalPeriod,
     closeResult,
   } = useSetupCalculator({
+    calculatorValidateAmountNumber: phrases.calculatorValidateAmountNumber,
     defaultMonthValue: defaultQuartalValue,
     defaultMonthErrorMsg: phrases.bpiValidateQuartal,
     lastNumberText,
@@ -120,6 +126,7 @@ function BpiCalculator(props: BpiCalculatorProps) {
     if (loading) return
     setChange(null)
     if (!isFormValid()) {
+      onBlur('start-value')
       onBlur('start-year')
       onBlur('start-month')
       onBlur('end-year')
@@ -133,6 +140,7 @@ function BpiCalculator(props: BpiCalculatorProps) {
         params: {
           dwellingType: dwellingType.value,
           region: region.value.id,
+          startValue: startValue.value,
           startYear: startYear.value,
           startQuartalPeriod: startMonth?.value.id,
           endYear: endYear.value,
@@ -144,10 +152,12 @@ function BpiCalculator(props: BpiCalculatorProps) {
         const startPeriod = getQuartalPeriod(startYear.value as string, (startMonth.value as DropdownItem).title)
         const endPeriod = getQuartalPeriod(endYear.value as string, (endMonth.value as DropdownItem).title)
         setChange(res.data.change)
+        setEndValue(res.data.endValue)
         setStartPeriod(startPeriod)
         setEndPeriod(endPeriod)
         setStartIndex(res.data.startIndex.toFixed(1))
         setEndIndex(res.data.endIndex.toFixed(1))
+        setStartValueResult(startValue.value)
       })
       .catch((err) => {
         if (err && err.response && err.response.data && err.response.data.error) {
@@ -230,6 +240,20 @@ function BpiCalculator(props: BpiCalculatorProps) {
               </Col>
             </Row>
             <Divider className='my-5' />
+            <Row className='d-flex justify-content-end'>
+              <Col className='input-amount col-12 col-md-6 col-xl-8 pt-0'>
+                <h3 id='amount'>{props.phrases.bkibolAmount}</h3>
+                <Input
+                  className='start-value'
+                  handleChange={(value: string) => onChange('start-value', value)}
+                  error={startValue.error}
+                  errorMessage={startValue.errorMsg}
+                  onBlur={() => onBlur('start-value')}
+                  ariaLabelledBy='amount'
+                />
+              </Col>
+            </Row>
+            <Divider className='my-5' />
             {/* TODO: This part of the field is almost, if not, the same for all calculators */}
             <Row>
               <Col className='calculate-from col-12 col-lg-6'>
@@ -284,8 +308,28 @@ function BpiCalculator(props: BpiCalculatorProps) {
     )
   }
 
+  function renderNumberValute(value: string | number) {
+    if (endValue && change) {
+      const valute = language === 'en' ? 'NOK' : 'kr'
+      const decimalSeparator = language === 'en' ? '.' : ','
+      return (
+        <React.Fragment>
+          <NumericFormat
+            value={Number(value)}
+            displayType='text'
+            thousandSeparator=' '
+            decimalSeparator={decimalSeparator}
+            decimalScale={2}
+            fixedDecimalScale
+          />{' '}
+          {valute}
+        </React.Fragment>
+      )
+    }
+  }
+
   function renderNumberChangeValue(changeValue: string | number) {
-    if (change) {
+    if (endValue && change) {
       const decimalSeparator = language === 'en' ? '.' : ','
       return (
         <React.Fragment>
@@ -304,7 +348,7 @@ function BpiCalculator(props: BpiCalculatorProps) {
   }
 
   function renderNumber(value: string | number) {
-    if (change) {
+    if (endValue && change) {
       const decimalSeparator = language === 'en' ? '.' : ','
       return (
         <React.Fragment>
@@ -324,9 +368,11 @@ function BpiCalculator(props: BpiCalculatorProps) {
   function calculatorResult() {
     const priceChangeLabel = change?.charAt(0) === '-' ? phrases.priceDecrease : phrases.priceIncrease
     const changeValue = change?.charAt(0) === '-' ? change.replace('-', '') : (change ?? '')
+    const endValueText = endValue?.toString() ?? ''
     const startIndexText = startIndex?.toString() ?? ''
     const endIndexText = endIndex?.toString() ?? ''
-    const bpiResultForScreenreader = phrases.bpiResultForScreenreader
+    const bpiResultForScreenreader = phrases.pifResultForScreenreader
+      .replace('{0}', language === 'en' ? endValueText : endValueText.replace('.', ','))
       .replace('{1}', priceChangeLabel)
       .replace('{2}', language === 'en' ? changeValue : changeValue.replace('.', ','))
       .replaceAll('{3}', startPeriod ?? '')
@@ -341,7 +387,10 @@ function BpiCalculator(props: BpiCalculatorProps) {
         </div>
         <Row className='mb-5' aria-hidden='true'>
           <Col className='amount-equal col-12 col-md-4'>
-            <h3>{phrases.amountEqualled}</h3>
+            <h3>{props.phrases.amountEqualled}</h3>
+          </Col>
+          <Col className='end-value col-12 col-md-8'>
+            <span className='float-start float-md-end'>{renderNumberValute(endValue!)}</span>
           </Col>
           <Col className='col-12'>
             <Divider dark />
@@ -355,14 +404,31 @@ function BpiCalculator(props: BpiCalculatorProps) {
           </Col>
           <Col className='start-value col-12 col-lg-4'>
             <span>
-              {phrases.pifIndex} {startPeriod}
+              {props.phrases.amount} {startPeriod}
+            </span>
+            <span className='float-end'>{renderNumberValute(startValueResult!)}</span>
+            <Divider dark />
+          </Col>
+          <Col className='col-12 col-lg-4'>
+            <span>
+              {props.phrases.amount} {endPeriod}
+            </span>
+            <span className='float-end'>{renderNumberValute(endValue!)}</span>
+            <Divider dark />
+          </Col>
+        </Row>
+        <Row className='mb-5' aria-hidden='true'>
+          <Col className='col-12 col-lg-4'></Col>
+          <Col className='start-value col-12 col-lg-4'>
+            <span>
+              {props.phrases.pifIndex} {startPeriod}
             </span>
             <span className='float-end'>{renderNumber(startIndex!)}</span>
             <Divider dark />
           </Col>
           <Col className='col-12 col-lg-4'>
             <span>
-              {phrases.pifIndex} {endPeriod}
+              {props.phrases.pifIndex} {endPeriod}
             </span>
             <span className='float-end'>{renderNumber(endIndex!)}</span>
             <Divider dark />
@@ -373,7 +439,7 @@ function BpiCalculator(props: BpiCalculatorProps) {
             <button className='ssb-btn close-button' onClick={() => closeResult()} autoFocus>
               {' '}
               <X size='18' />
-              {phrases.close}
+              {props.phrases.close}
             </button>
           </Col>
         </Row>
@@ -403,7 +469,7 @@ function BpiCalculator(props: BpiCalculatorProps) {
         </Container>
       )
     }
-    if (change) {
+    if (endValue && change) {
       return calculatorResult()
     }
   }

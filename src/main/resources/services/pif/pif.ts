@@ -2,12 +2,8 @@ import { Content } from '/lib/xp/content'
 import { localize } from '/lib/xp/i18n'
 import { HttpRequestParams } from '/lib/http-client'
 import { type Dataset } from '/lib/types/jsonstat-toolkit'
-import {
-  getCalculatorConfig,
-  getCalculatorDatasetFromSource,
-  isChronological,
-  getChangeValue,
-} from '/lib/ssb/dataset/calculator'
+import { getCalculatorConfig, getCalculatorDatasetFromSource } from '/lib/ssb/dataset/calculator'
+import { isChronological, getChangeValue } from '/lib/ssb/utils/calculatorUtils'
 import { type CalculatorConfig } from '/site/content-types'
 
 function get(req: HttpRequestParams): XP.Response {

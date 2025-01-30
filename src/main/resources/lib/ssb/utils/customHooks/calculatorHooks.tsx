@@ -175,6 +175,15 @@ export const useSetupCalculator = ({
 
   function onChange(id: string, value: CalculatorState['value']) {
     switch (id) {
+      case 'start-value': {
+        value = (value as string).replace(/,/g, '.')
+        setStartValue({
+          ...startValue,
+          value,
+          error: startValue.error ? !isStartValueValid(value) : startValue.error,
+        })
+        break
+      }
       case 'start-month': {
         setStartMonth({
           ...startMonth,

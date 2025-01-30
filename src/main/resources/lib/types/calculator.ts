@@ -15,3 +15,8 @@ export type CommonCalculatorProps = {
   lastNumberText: string
   lastUpdated: CalculatorPeriod
 }
+
+export interface IndexResult {
+  startIndex: number | null
+  endIndex: number | null
+}
