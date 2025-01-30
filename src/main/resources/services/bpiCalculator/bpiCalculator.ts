@@ -13,6 +13,29 @@ import { HttpRequestParams } from '/lib/http-client'
 import { getQuartalNumber, getFirstMonthofQuartalPeriod } from '/lib/ssb/utils/calculatorUtils'
 import { type CalculatorConfig } from '/site/content-types'
 
+interface BpiIndexes {
+  calculatorData: Dataset | null
+  startQuartalPeriod: string
+  startYear: string
+  endQuartalPeriod: string
+  endYear: string
+  dwellingType: string
+  region: string
+  language?: string
+}
+
+interface FetchBpiResults {
+  startQuartalPeriod: BpiIndexes['startQuartalPeriod']
+  startYear: BpiIndexes['startYear']
+  endQuartalPeriod: BpiIndexes['endQuartalPeriod']
+  endYear: BpiIndexes['endYear']
+  language: string
+  indexResult: {
+    startIndex: number | null
+    endIndex: number | null
+  }
+}
+
 function get(req: HttpRequestParams): XP.Response {
   const dwellingType: string | undefined = req.params?.dwellingType ?? '00'
   const region: string | undefined = req.params?.region ?? 'TOTAL'
@@ -37,53 +60,23 @@ function get(req: HttpRequestParams): XP.Response {
     const bpiDataset: Dataset | null = calculatorConfig
       ? getCalculatorDatasetFromSource(calculatorConfig, 'bpiCalculator')
       : null
-
-    const indexResult = getIndexes(
-      bpiDataset,
+    const indexResult = getIndexes({
+      calculatorData: bpiDataset,
       startQuartalPeriod,
       startYear,
       endQuartalPeriod,
       endYear,
       dwellingType,
-      region
-    )
-
-    const chronological: boolean = isChronological(
+      region,
+    })
+    return fetchBpiResults({
+      startQuartalPeriod,
       startYear,
-      getFirstMonthofQuartalPeriod(getQuartalNumber(startQuartalPeriod)).toString(),
+      endQuartalPeriod,
       endYear,
-      getFirstMonthofQuartalPeriod(getQuartalNumber(endQuartalPeriod)).toString()
-    )
-
-    if (indexResult.startIndex != null && indexResult.endIndex != null) {
-      const changeValue: number = getChangeValue(indexResult.startIndex, indexResult.endIndex, chronological)
-      return {
-        body: {
-          startIndex: indexResult.startIndex,
-          endIndex: indexResult.endIndex,
-          change: getPercentageFromChangeValue(changeValue),
-        },
-        contentType: 'application/json',
-      }
-    } else {
-      const bpiServiceValidateStartQuartalPeriod = localize({
-        key: 'kpiServiceValidateStartMonth',
-        locale: language,
-      })
-      const bpiServiceValidateEndQuartalPeriod = localize({
-        key: 'kpiServiceValidateStartMonth',
-        locale: language,
-      })
-
-      return {
-        status: 500,
-        body: {
-          error:
-            indexResult.startIndex === null ? bpiServiceValidateStartQuartalPeriod : bpiServiceValidateEndQuartalPeriod,
-        },
-        contentType: 'application/json',
-      }
-    }
+      language,
+      indexResult,
+    })
   }
 
   return {
@@ -95,15 +88,15 @@ function get(req: HttpRequestParams): XP.Response {
   }
 }
 
-function getIndexes(
-  calculatorData: Dataset | null,
-  startQuartalPeriod: string,
-  startYear: string,
-  endQuartalPeriod: string,
-  endYear: string,
-  dwellingType: string,
-  region: string
-) {
+function getIndexes({
+  calculatorData,
+  startQuartalPeriod,
+  startYear,
+  endQuartalPeriod,
+  endYear,
+  dwellingType,
+  region,
+}: BpiIndexes) {
   const startPeriod: string | undefined = startYear + startQuartalPeriod
   const endPeriod: string | undefined = endYear + endQuartalPeriod
 
@@ -118,6 +111,52 @@ function getIndexes(
   return {
     startIndex,
     endIndex,
+  }
+}
+
+function fetchBpiResults({
+  startQuartalPeriod,
+  startYear,
+  endQuartalPeriod,
+  endYear,
+  language,
+  indexResult,
+}: FetchBpiResults) {
+  const chronological: boolean = isChronological(
+    startYear,
+    getFirstMonthofQuartalPeriod(getQuartalNumber(startQuartalPeriod)).toString(),
+    endYear,
+    getFirstMonthofQuartalPeriod(getQuartalNumber(endQuartalPeriod)).toString()
+  )
+
+  if (indexResult.startIndex != null && indexResult.endIndex != null) {
+    const changeValue: number = getChangeValue(indexResult.startIndex, indexResult.endIndex, chronological)
+    return {
+      body: {
+        startIndex: indexResult.startIndex,
+        endIndex: indexResult.endIndex,
+        change: getPercentageFromChangeValue(changeValue),
+      },
+      contentType: 'application/json',
+    }
+  } else {
+    const bpiServiceValidateStartQuartalPeriod = localize({
+      key: 'bpiServiceValidateStartQuartalPeriod',
+      locale: language,
+    })
+    const bpiServiceValidateEndQuartalPeriod = localize({
+      key: 'bpiServiceValidateEndQuartalPeriod',
+      locale: language,
+    })
+
+    return {
+      status: 500,
+      body: {
+        error:
+          indexResult.startIndex === null ? bpiServiceValidateStartQuartalPeriod : bpiServiceValidateEndQuartalPeriod,
+      },
+      contentType: 'application/json',
+    }
   }
 }
 
