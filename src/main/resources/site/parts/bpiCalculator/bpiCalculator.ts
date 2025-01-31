@@ -53,7 +53,7 @@ function renderPart(req: XP.Request): XP.Response {
     months,
     lastUpdatedMonth: lastUpdated?.month as string,
     lastUpdatedYear: lastUpdated?.year as string,
-    nextPeriodText: phrases.bpiNextQuartalPeriod,
+    nextPeriodText: phrases.calculatorNextQuartalPeriod,
     nextReleaseMonth: nextUpdate?.month as string,
   })
   const lastNumberText: string = getLastNumberText({

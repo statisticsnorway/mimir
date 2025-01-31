@@ -326,6 +326,7 @@ export const useSetupCalculator = ({
       onChange,
     },
     validation: {
+      isStartValueValid,
       isStartYearValid,
       isEndYearValid,
       isStartMonthValid,

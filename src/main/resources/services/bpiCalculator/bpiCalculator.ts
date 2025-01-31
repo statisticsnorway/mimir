@@ -144,12 +144,12 @@ function fetchBpiResults({
       contentType: 'application/json',
     }
   } else {
-    const bpiServiceValidateStartQuartalPeriod = localize({
-      key: 'bpiServiceValidateStartQuartalPeriod',
+    const calculatorServiceValidateStartQuartalPeriod = localize({
+      key: 'calculatorServiceValidateStartQuartalPeriod',
       locale: language,
     })
-    const bpiServiceValidateEndQuartalPeriod = localize({
-      key: 'bpiServiceValidateEndQuartalPeriod',
+    const calculatorServiceValidateEndQuartalPeriod = localize({
+      key: 'calculatorServiceValidateEndQuartalPeriod',
       locale: language,
     })
 
@@ -157,7 +157,9 @@ function fetchBpiResults({
       status: 500,
       body: {
         error:
-          indexResult.startIndex === null ? bpiServiceValidateStartQuartalPeriod : bpiServiceValidateEndQuartalPeriod,
+          indexResult.startIndex === null
+            ? calculatorServiceValidateStartQuartalPeriod
+            : calculatorServiceValidateEndQuartalPeriod,
       },
       contentType: 'application/json',
     }
