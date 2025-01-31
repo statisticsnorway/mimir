@@ -48,7 +48,7 @@ function StatisticDescription(props: Readonly<AboutTheStatisticsProps>) {
   function renderCategory() {
     if (selectedCategory) {
       return (
-        <div className='selected-category col-lg-12'>
+        <div className='selected-category col-lg-12' aria-live='polite'>
           <ExpansionBox header={selectedCategory.open} text={renderNestedAccordions(selectedCategory)} sneakPeek />
         </div>
       )
