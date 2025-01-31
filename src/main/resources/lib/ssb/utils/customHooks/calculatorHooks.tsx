@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { type DropdownItem, type DropdownItems } from '/lib/types/components'
+import { getQuartalNumber, getFirstMonthofQuartalPeriod } from '/lib/ssb/utils/calculatorUtils'
 
 interface UseSetupCalculatorProps {
   calculatorValidateAmountNumber?: string
@@ -104,30 +105,41 @@ export const useSetupCalculator = ({
 
   function isStartMonthValid(value?: string) {
     const startMonthValue = value || (startMonth.value as DropdownItem).id
-    const startMonthValid = !(startYear.value === validMaxYear && startMonthValue > validMaxMonth)
+    const isQuartalPeriod = startMonthValue !== '' && isNaN(Number(startMonthValue))
+    const startMonthOrQuartalPeriodMonthValue = isQuartalPeriod
+      ? getFirstMonthofQuartalPeriod(getQuartalNumber(startMonthValue))
+      : startMonthValue
+
+    const startMonthValid = !(startYear.value === validMaxYear && startMonthOrQuartalPeriodMonthValue > validMaxMonth)
     if (!startMonthValid) {
       setStartMonth({
         ...startMonth,
         error: true,
       })
     }
-    return startMonthValid
+    return startMonthValue === '' ? false : startMonthValid
   }
 
   function isEndMonthValid(value?: string) {
     const endMonthValue = value || (endMonth.value as DropdownItem).id
+    const isQuartalPeriod = endMonthValue !== '' && isNaN(Number(endMonthValue))
+    const endMonthOrQuartalPeriodMonthValue = isQuartalPeriod
+      ? getFirstMonthofQuartalPeriod(getQuartalNumber(endMonthValue))
+      : endMonthValue
+
     const maxYearAverage = Number(validMaxMonth) === 12 ? validMaxYear : Number(validMaxYear) - 1
     const endMonthValid =
       endMonthValue === '90'
         ? (endYear.value as string) <= maxYearAverage
-        : !(endYear.value === validMaxYear && endMonthValue > validMaxMonth)
+        : !(endYear.value === validMaxYear && endMonthOrQuartalPeriodMonthValue > validMaxMonth)
+
     if (!endMonthValid) {
       setEndMonth({
         ...endMonth,
         error: true,
       })
     }
-    return endMonthValid
+    return endMonthValue === '' ? false : endMonthValid
   }
 
   function onBlur(id: string) {
@@ -157,6 +169,7 @@ export const useSetupCalculator = ({
         setStartMonth({
           ...startMonth,
           error: !isStartMonthValid(),
+          errorMsg: (startMonth.value as DropdownItem)?.id !== '' ? lastNumberText : defaultMonthErrorMsg,
         })
         break
       }
@@ -164,6 +177,7 @@ export const useSetupCalculator = ({
         setEndMonth({
           ...endMonth,
           error: !isEndMonthValid(),
+          errorMsg: (endMonth.value as DropdownItem)?.id !== '' ? lastNumberText : defaultMonthErrorMsg,
         })
         break
       }

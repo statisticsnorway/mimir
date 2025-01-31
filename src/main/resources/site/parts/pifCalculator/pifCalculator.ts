@@ -6,13 +6,14 @@ import { type DropdownItems as MonthDropdownItems } from '/lib/types/components'
 import { type Dataset, type Dimension } from '/lib/types/jsonstat-toolkit'
 import { type Phrases } from '/lib/types/language'
 import { render } from '/lib/enonic/react4xp'
-import { allMonths, monthLabel, nextPeriod } from '/lib/ssb/utils/calculatorUtils'
+import { nextPeriod } from '/lib/ssb/utils/calculatorUtils'
 
 import { renderError } from '/lib/ssb/error/error'
 import { getLanguage } from '/lib/ssb/utils/language'
 import { getCalculatorConfig, getCalculatorDatasetFromSource } from '/lib/ssb/dataset/calculator'
 import { fromPartCache } from '/lib/ssb/cache/partCache'
 import { type PifCalculatorProps } from '/lib/types/partTypes/pifCalculaor'
+import { allMonths, monthLabel } from '/lib/ssb/utils/calculatorLocalizationUtils'
 import { type CalculatorConfig } from '/site/content-types'
 
 export function get(req: XP.Request): XP.Response {

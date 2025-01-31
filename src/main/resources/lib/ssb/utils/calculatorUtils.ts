@@ -1,22 +1,6 @@
 import { quartersToMonths } from 'date-fns'
-import { localize } from '/lib/xp/i18n'
-import { type DropdownItems, type DropdownItem, type RadioGroupItems } from '/lib/types/components'
 import { IndexResult, type CalculatorPeriod } from '/lib/types/calculator'
-import { type Phrases } from '/lib/types/language'
 import { type Data, type Dataset, type Dimension } from '/lib/types/jsonstat-toolkit'
-
-interface CalculatorLastNumberText {
-  language: string | undefined
-  months: DropdownItems
-  lastUpdatedMonth: string
-  lastUpdatedYear: string
-}
-
-interface CalculatorNextPublishText extends CalculatorLastNumberText {
-  nextUpdateMonth?: string
-  nextPeriodText?: string
-  nextReleaseMonth: string
-}
 
 export function nextPeriod(month: string, year: string): CalculatorPeriod {
   let nextPeriodMonth: number = parseInt(month) + 1
@@ -63,93 +47,9 @@ export function lastQuartalPeriod(calculatorData: Dataset | null): CalculatorPer
   }
 }
 
-export function allQuartalPeriods(quarterPhrase: string) {
-  const quarterPeriodList = []
-  let count = 1
-  while (count <= 4) {
-    quarterPeriodList.push({
-      id: `K${count}`,
-      title: `${quarterPhrase} ${count}`,
-    })
-    count++
-  }
-  return quarterPeriodList
-}
-
 // Extract number from e.g. "K1" for quartal periods
 export function getQuartalNumber(quartalPeriod: string) {
   return quartalPeriod.substring(1)
-}
-
-export function allMonths(phrases: Phrases, frontPage?: boolean, type?: string): DropdownItems {
-  const months: DropdownItems = [
-    {
-      id: '01',
-      title: phrases.january,
-    },
-    {
-      id: '02',
-      title: phrases.february,
-    },
-    {
-      id: '03',
-      title: phrases.march,
-    },
-    {
-      id: '04',
-      title: phrases.april,
-    },
-    {
-      id: '05',
-      title: phrases.may,
-    },
-    {
-      id: '06',
-      title: phrases.june,
-    },
-    {
-      id: '07',
-      title: phrases.july,
-    },
-    {
-      id: '08',
-      title: phrases.august,
-    },
-    {
-      id: '09',
-      title: phrases.september,
-    },
-    {
-      id: '10',
-      title: phrases.october,
-    },
-    {
-      id: '11',
-      title: phrases.november,
-    },
-    {
-      id: '12',
-      title: phrases.december,
-    },
-  ]
-
-  if (type !== 'husleie' && type !== 'bkibol') {
-    const placeholderItem: DropdownItem = {
-      id: '90',
-      title: frontPage ? phrases.calculatorMonthAverageFrontpage : phrases.calculatorMonthAverage,
-    }
-
-    return [placeholderItem, ...months]
-  }
-  return months
-}
-
-export function monthLabel(months: DropdownItems, language: string | undefined, month: number | string): string {
-  const monthLabel: DropdownItem | undefined = months.find((m) => parseInt(m.id) === parseInt(month as string))
-  if (monthLabel) {
-    return language === 'en' ? monthLabel.title : monthLabel.title.toLowerCase()
-  }
-  return ''
 }
 
 export function lastPeriodKpi(kpiDataMonth: Dataset | null): CalculatorPeriod {
@@ -176,87 +76,6 @@ export function lastPeriodKpi(kpiDataMonth: Dataset | null): CalculatorPeriod {
     month: lastMonth,
     year: lastYear,
   }
-}
-
-const seriesLocalizationMap = {
-  ALT: 'bkibolWorkTypeAll',
-  STEIN: 'bkibolWorkTypeStone',
-  GRUNNARBEID: 'bkibolWorkTypeGroundwork',
-  BYGGEARBEIDER: 'bkibolWorkTypeWithoutStone',
-  TOMRING: 'bkibolWorkTypeCarpentry',
-  MALING: 'bkibolWorkTypePainting',
-  RORLEGGERARBEID: 'bkibolWorkTypePlumbing',
-} as const
-
-export type SeriesKey = keyof typeof seriesLocalizationMap
-
-export function serieLocalization(language: string, series: SeriesKey): string {
-  return localize({
-    key: seriesLocalizationMap[series],
-    locale: language,
-    values: [],
-  }) as string
-}
-
-export function allCategoryOptions(
-  calculatorData: Dataset | null,
-  category: string,
-  phrases: Phrases,
-  phrasesLabel: string,
-  component: 'RadioGroup' | 'Dropdown'
-) {
-  const categoriesList: DropdownItems | RadioGroupItems = []
-  const calculatorDataset = calculatorData?.Dimension(category) as Dimension
-  const categoryIds = calculatorDataset?.id as Array<string>
-  categoryIds?.map((categoryId) => {
-    if (component === 'RadioGroup') {
-      ;(categoriesList as RadioGroupItems).push({
-        value: categoryId,
-        label: phrases[`${phrasesLabel}.${category}.${categoryId}`],
-      })
-    }
-    if (component === 'Dropdown') {
-      ;(categoriesList as DropdownItems).push({
-        id: categoryId,
-        title: phrases[`${phrasesLabel}.${category}.${categoryId}`],
-      })
-    }
-  })
-  return categoriesList
-}
-
-export function getNextPublishText({
-  language = 'nb',
-  months,
-  lastUpdatedMonth,
-  lastUpdatedYear,
-  nextUpdateMonth,
-  nextPeriodText,
-  nextReleaseMonth,
-}: CalculatorNextPublishText) {
-  return localize({
-    key: 'calculatorNextPublishText',
-    locale: language,
-    values: [
-      monthLabel(months, language, lastUpdatedMonth),
-      lastUpdatedYear,
-      nextPeriodText ?? monthLabel(months, language, nextUpdateMonth as string),
-      monthLabel(months, language, nextReleaseMonth),
-    ],
-  })
-}
-
-export function getLastNumberText({
-  language = 'nb',
-  months,
-  lastUpdatedMonth,
-  lastUpdatedYear,
-}: CalculatorLastNumberText) {
-  return localize({
-    key: 'calculatorLastNumber',
-    locale: language,
-    values: [monthLabel(months, language, lastUpdatedMonth), lastUpdatedYear],
-  })
 }
 
 export function isChronological(startYear: string, startMonth: string, endYear: string, endMonth: string): boolean {

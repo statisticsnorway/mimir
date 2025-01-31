@@ -125,6 +125,7 @@ function BpiCalculator(props: BpiCalculatorProps) {
     e.preventDefault()
     if (loading) return
     setChange(null)
+    setEndValue(null)
     if (!isFormValid()) {
       onBlur('start-value')
       onBlur('start-year')
@@ -142,9 +143,9 @@ function BpiCalculator(props: BpiCalculatorProps) {
           region: region.value.id,
           startValue: startValue.value,
           startYear: startYear.value,
-          startQuartalPeriod: startMonth?.value.id,
+          startQuartalPeriod: (startMonth.value as DropdownItem).id,
           endYear: endYear.value,
-          endQuartalPeriod: endMonth?.value.id,
+          endQuartalPeriod: (endMonth.value as DropdownItem).id,
           language: language,
         },
       })
@@ -171,7 +172,6 @@ function BpiCalculator(props: BpiCalculatorProps) {
       })
   }
 
-  // TODO: Revise; consider making new functions for quarter
   function addDropdownChooseStartQuarter(id: string) {
     return (
       <Dropdown
@@ -186,6 +186,7 @@ function BpiCalculator(props: BpiCalculatorProps) {
       />
     )
   }
+
   function addDropdownChooseEndQuarter(id: string) {
     return (
       <Dropdown

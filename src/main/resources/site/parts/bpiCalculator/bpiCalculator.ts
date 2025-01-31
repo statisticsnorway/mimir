@@ -5,18 +5,17 @@ import { type CalculatorPeriod } from '/lib/types/calculator'
 import { type Phrases } from '/lib/types/language'
 import { render } from '/lib/enonic/react4xp'
 import { type DropdownItems } from '/lib/types/components'
-import {
-  allMonths,
-  allQuartalPeriods,
-  getLastNumberText,
-  getNextPublishText,
-  lastQuartalPeriod,
-  allCategoryOptions,
-  nextQuartalPeriod,
-} from '/lib/ssb/utils/calculatorUtils'
+import { lastQuartalPeriod, nextQuartalPeriod } from '/lib/ssb/utils/calculatorUtils'
 import { renderError } from '/lib/ssb/error/error'
 import { getLanguage } from '/lib/ssb/utils/language'
 import { getCalculatorConfig, getCalculatorDatasetFromSource } from '/lib/ssb/dataset/calculator'
+import {
+  getNextPublishText,
+  getLastNumberText,
+  allMonths,
+  allQuartalPeriods,
+  allCategoryOptions,
+} from '/lib/ssb/utils/calculatorLocalizationUtils'
 import { type CalculatorConfig } from '/site/content-types'
 
 export function get(req: XP.Request): XP.Response {

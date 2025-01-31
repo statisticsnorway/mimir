@@ -6,12 +6,13 @@ import { type DropdownItems as MonthDropdownItems } from '/lib/types/components'
 import { type Dataset } from '/lib/types/jsonstat-toolkit'
 import { type Phrases } from '/lib/types/language'
 import { render } from '/lib/enonic/react4xp'
-import { allMonths, lastPeriodKpi, monthLabel, nextPeriod } from '/lib/ssb/utils/calculatorUtils'
+import { lastPeriodKpi, nextPeriod } from '/lib/ssb/utils/calculatorUtils'
 
 import { renderError } from '/lib/ssb/error/error'
 import { getLanguage } from '/lib/ssb/utils/language'
 import { getCalculatorConfig, getKpiDatasetMonth } from '/lib/ssb/dataset/calculator'
 import { fromPartCache } from '/lib/ssb/cache/partCache'
+import { allMonths, monthLabel } from '/lib/ssb/utils/calculatorLocalizationUtils'
 
 export function get(req: XP.Request): XP.Response {
   try {
