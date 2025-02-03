@@ -16,6 +16,7 @@ import {
   allQuartalPeriods,
   allCategoryOptions,
 } from '/lib/ssb/utils/calculatorLocalizationUtils'
+import { fromPartCache } from '/lib/ssb/cache/partCache'
 import { type CalculatorConfig } from '/site/content-types'
 
 export function get(req: XP.Request): XP.Response {
@@ -30,9 +31,22 @@ export function preview(req: XP.Request) {
   return renderPart(req)
 }
 
-// TODO: Add to part cache
 function renderPart(req: XP.Request): XP.Response {
-  const page = getContent<Content<CalculatorConfig>>()
+  const page = getContent()
+  if (!page) throw Error('No page found')
+
+  let bpiCalculator: XP.Response
+  if (req.mode === 'edit' || req.mode === 'inline') {
+    bpiCalculator = getBpiCalculatorComponent(req, page)
+  } else {
+    bpiCalculator = fromPartCache(req, `${page._id}-bpiCalculator`, () => {
+      return getBpiCalculatorComponent(req, page)
+    })
+  }
+  return bpiCalculator
+}
+
+function getBpiCalculatorComponent(req: XP.Request, page: Content<CalculatorConfig>): XP.Response {
   const config = getComponent<XP.PartComponent.BpiCalculator>()?.config
   if (!config) throw Error('No part found')
 
