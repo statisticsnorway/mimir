@@ -194,107 +194,95 @@ function BpiCalculator(props: BpiCalculatorProps) {
 
   function renderForm() {
     return (
-      <div className='calculator-form'>
-        <Row>
-          <Col>
-            <Title size={2}>{phrases.bpiCalculatorTitle}</Title>
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <p className='publish-text'>{nextPublishText}</p>
-          </Col>
-        </Row>
-        <Form onSubmit={onSubmit}>
-          <Container>
-            <Row className='mt-5'>
-              <Col className='col-12 col-md-6 col-xl-4 mb-3 mb-md-0'>
-                <Title size={3}>{phrases.bpiChooseDwellingType}</Title>
-                <RadioGroup
-                  selectedValue={dwellingTypeList[0].value}
-                  orientation='column'
-                  items={dwellingTypeList}
-                  onChange={(value: string) => onCategoryChange('dwellingType', value)}
-                />
-              </Col>
-              <Col className='col-12 col-md-6 col-xl-6'>
-                <Title size={3}>{phrases.bpiChooseRegion}</Title>
-                <Dropdown
-                  className='select-region'
-                  selectedItem={region.value}
-                  items={regionList}
-                  onSelect={(value: DropdownItem) => onCategoryChange('region', value)}
-                  error={region.error}
-                  errorMessage={region.errorMsg}
-                  ariaLabel={phrases.bpiChooseRegion}
-                />
-              </Col>
-            </Row>
-            <Divider className='my-5' />
-            <Row className='d-flex justify-content-end'>
-              <Col className='input-amount col-12 col-md-6 col-xl-8'>
-                <h3 id='amount'>{phrases.amount}</h3>
-                <Input
-                  className='start-value'
-                  handleChange={(value: string) => onChange('start-value', value)}
-                  error={startValue.error}
-                  errorMessage={startValue.errorMsg}
-                  onBlur={() => onBlur('start-value')}
-                  ariaLabelledBy='amount'
-                />
-              </Col>
-            </Row>
-            <Divider className='my-5' />
-            <Row>
-              <Col className='calculate-from col-12 col-lg-6'>
-                <Title size={3}>{phrases.calculatePriceChangeFrom}</Title>
-                <Container>
-                  <Row>
-                    <Col className='select-year col-sm-5'>
-                      <Input
-                        className='input-year'
-                        label={phrases.fromYear}
-                        ariaLabel={phrases.fromYearScreenReader}
-                        handleChange={(value: string) => onChange('start-year', value)}
-                        error={startYear.error}
-                        errorMessage={startYear.errorMsg}
-                        onBlur={() => onBlur('start-year')}
-                      />
-                    </Col>
-                    <Col className='select-month col-12 col-sm-7'>{addDropdownChooseQuarter('start-month')}</Col>
-                  </Row>
-                </Container>
-              </Col>
-              <Col className='calculate-to col-12 col-lg-6'>
-                <Title size={3}>{phrases.calculatePriceChangeTo}</Title>
-                <Container>
-                  <Row>
-                    <Col className='select-year col-sm-5'>
-                      <Input
-                        className='input-year'
-                        label={phrases.toYear}
-                        ariaLabel={phrases.toYearScreenReader}
-                        handleChange={(value: string) => onChange('end-year', value)}
-                        error={endYear.error}
-                        errorMessage={endYear.errorMsg}
-                        onBlur={() => onBlur('end-year')}
-                      />
-                    </Col>
-                    <Col className='select-month col-12 col-sm-7'>{addDropdownChooseQuarter('end-month')}</Col>
-                  </Row>
-                </Container>
-              </Col>
-            </Row>
-          </Container>
-          <Row className='submit'>
-            <Col>
-              <Button ref={onSubmitBtnElement} className='submit-button' primary type='submit' disabled={loading}>
-                {phrases.seePriceChange}
-              </Button>
+      <Form onSubmit={onSubmit}>
+        <Container>
+          <Row className='mt-5'>
+            <Col className='col-12 col-md-6 col-xl-4 mb-3 mb-md-0'>
+              <Title size={3}>{phrases.bpiChooseDwellingType}</Title>
+              <RadioGroup
+                selectedValue={dwellingTypeList[0].value}
+                orientation='column'
+                items={dwellingTypeList}
+                onChange={(value: string) => onCategoryChange('dwellingType', value)}
+              />
+            </Col>
+            <Col className='col-12 col-md-6 col-xl-6'>
+              <Title size={3}>{phrases.bpiChooseRegion}</Title>
+              <Dropdown
+                className='select-region'
+                selectedItem={region.value}
+                items={regionList}
+                onSelect={(value: DropdownItem) => onCategoryChange('region', value)}
+                error={region.error}
+                errorMessage={region.errorMsg}
+                ariaLabel={phrases.bpiChooseRegion}
+              />
             </Col>
           </Row>
-        </Form>
-      </div>
+          <Divider className='my-5' />
+          <Row className='d-flex justify-content-end'>
+            <Col className='input-amount col-12 col-md-6 col-xl-8'>
+              <h3 id='amount'>{phrases.amount}</h3>
+              <Input
+                className='start-value'
+                handleChange={(value: string) => onChange('start-value', value)}
+                error={startValue.error}
+                errorMessage={startValue.errorMsg}
+                onBlur={() => onBlur('start-value')}
+                ariaLabelledBy='amount'
+              />
+            </Col>
+          </Row>
+          <Divider className='my-5' />
+          <Row>
+            <Col className='calculate-from col-12 col-lg-6'>
+              <Title size={3}>{phrases.calculatePriceChangeFrom}</Title>
+              <Container>
+                <Row>
+                  <Col className='select-year col-sm-5'>
+                    <Input
+                      className='input-year'
+                      label={phrases.fromYear}
+                      ariaLabel={phrases.fromYearScreenReader}
+                      handleChange={(value: string) => onChange('start-year', value)}
+                      error={startYear.error}
+                      errorMessage={startYear.errorMsg}
+                      onBlur={() => onBlur('start-year')}
+                    />
+                  </Col>
+                  <Col className='select-month col-12 col-sm-7'>{addDropdownChooseQuarter('start-month')}</Col>
+                </Row>
+              </Container>
+            </Col>
+            <Col className='calculate-to col-12 col-lg-6'>
+              <Title size={3}>{phrases.calculatePriceChangeTo}</Title>
+              <Container>
+                <Row>
+                  <Col className='select-year col-sm-5'>
+                    <Input
+                      className='input-year'
+                      label={phrases.toYear}
+                      ariaLabel={phrases.toYearScreenReader}
+                      handleChange={(value: string) => onChange('end-year', value)}
+                      error={endYear.error}
+                      errorMessage={endYear.errorMsg}
+                      onBlur={() => onBlur('end-year')}
+                    />
+                  </Col>
+                  <Col className='select-month col-12 col-sm-7'>{addDropdownChooseQuarter('end-month')}</Col>
+                </Row>
+              </Container>
+            </Col>
+          </Row>
+        </Container>
+        <Row className='submit'>
+          <Col>
+            <Button ref={onSubmitBtnElement} className='submit-button' primary type='submit' disabled={loading}>
+              {phrases.seePriceChange}
+            </Button>
+          </Col>
+        </Row>
+      </Form>
     )
   }
 
@@ -305,7 +293,7 @@ function BpiCalculator(props: BpiCalculatorProps) {
         const valute = language === 'en' ? 'NOK' : 'kr'
         const decimalScale = type === 'valute' ? 2 : 1
         return (
-          <React.Fragment>
+          <>
             <NumericFormat
               value={Number(value)}
               displayType='text'
@@ -315,7 +303,7 @@ function BpiCalculator(props: BpiCalculatorProps) {
               fixedDecimalScale
             />
             {type === 'valute' ? valute : '%'}
-          </React.Fragment>
+          </>
         )
       } else {
         return (
@@ -333,85 +321,85 @@ function BpiCalculator(props: BpiCalculatorProps) {
   }
 
   function calculatorResult() {
-    const priceChangeLabel = change?.charAt(0) === '-' ? phrases.priceDecrease : phrases.priceIncrease
-    const changeValue = change?.charAt(0) === '-' ? change.replace('-', '') : (change ?? '')
-    const endValueText = endValue?.toString() ?? ''
-    const startIndexText = startIndex?.toString() ?? ''
-    const endIndexText = endIndex?.toString() ?? ''
-    const bpiResultForScreenreader = phrases.calculatorResultScreenReader
-      .replace('{0}', language === 'en' ? endValueText : endValueText.replace('.', ','))
-      .replace('{1}', priceChangeLabel)
-      .replace('{2}', language === 'en' ? changeValue : changeValue.replace('.', ','))
-      .replaceAll('{3}', startPeriod ?? '')
-      .replaceAll('{4}', endPeriod ?? '')
-      .replace('{5}', language === 'en' ? startIndexText : startIndexText.replace('.', ','))
-      .replace('{6}', language === 'en' ? endIndexText : endIndexText.replace('.', ','))
+    if (endValue && change) {
+      const priceChangeLabel = change?.charAt(0) === '-' ? phrases.priceDecrease : phrases.priceIncrease
+      const changeValue = change?.charAt(0) === '-' ? change.replace('-', '') : (change ?? '')
+      const endValueText = endValue?.toString() ?? ''
+      const startIndexText = startIndex?.toString() ?? ''
+      const endIndexText = endIndex?.toString() ?? ''
+      const bpiResultForScreenreader = phrases.calculatorResultScreenReader
+        .replace('{0}', language === 'en' ? endValueText : endValueText.replace('.', ','))
+        .replace('{1}', priceChangeLabel)
+        .replace('{2}', language === 'en' ? changeValue : changeValue.replace('.', ','))
+        .replaceAll('{3}', startPeriod ?? '')
+        .replaceAll('{4}', endPeriod ?? '')
+        .replace('{5}', language === 'en' ? startIndexText : startIndexText.replace('.', ','))
+        .replace('{6}', language === 'en' ? endIndexText : endIndexText.replace('.', ','))
 
-    return (
-      <Container className='calculator-result' ref={scrollAnchor} tabIndex={0}>
-        <div aria-atomic='true'>
-          <span className='sr-only'>{bpiResultForScreenreader}</span>
-        </div>
-        <Row className='mb-5' aria-hidden='true'>
-          <Col className='amount-equal col-12 col-md-4'>
-            <h3>{phrases.amountEqualled}</h3>
-          </Col>
-          <Col className='end-value col-12 col-md-8'>
-            <span className='float-start float-md-end'>{renderNumber(endValue!, 'valute')}</span>
-          </Col>
-          <Col className='col-12'>
-            <Divider dark />
-          </Col>
-        </Row>
-        <Row className='mb-5' aria-hidden='true'>
-          <Col className='col-12 col-lg-4'>
-            <span>{priceChangeLabel}</span>
-            <span className='float-end'>{renderNumber(changeValue!, 'change')}</span>
-            <Divider dark />
-          </Col>
-          <Col className='start-value col-12 col-lg-4'>
-            <span>
-              {phrases.amount} {startPeriod}
-            </span>
-            <span className='float-end'>{renderNumber(startValueResult!, 'valute')}</span>
-            <Divider dark />
-          </Col>
-          <Col className='col-12 col-lg-4'>
-            <span>
-              {phrases.amount} {endPeriod}
-            </span>
-            <span className='float-end'>{renderNumber(endValue!, 'valute')}</span>
-            <Divider dark />
-          </Col>
-        </Row>
-        <Row className='mb-5' aria-hidden='true'>
-          <Col className='col-12 col-lg-4'></Col>
-          <Col className='start-value col-12 col-lg-4'>
-            <span>
-              {phrases.index} {startPeriod}
-            </span>
-            <span className='float-end'>{renderNumber(startIndex!)}</span>
-            <Divider dark />
-          </Col>
-          <Col className='col-12 col-lg-4'>
-            <span>
-              {phrases.index} {endPeriod}
-            </span>
-            <span className='float-end'>{renderNumber(endIndex!)}</span>
-            <Divider dark />
-          </Col>
-        </Row>
-        <Row aria-live='off'>
-          <Col className='md-6'>
-            <button className='ssb-btn close-button' onClick={() => closeResult()} autoFocus>
-              {' '}
-              <X size='18' />
-              {phrases.close}
-            </button>
-          </Col>
-        </Row>
-      </Container>
-    )
+      return (
+        <Container className='calculator-result' ref={scrollAnchor} tabIndex={0}>
+          <div aria-atomic='true'>
+            <span className='sr-only'>{bpiResultForScreenreader}</span>
+          </div>
+          <Row className='mb-5' aria-hidden='true'>
+            <Col className='amount-equal col-12 col-md-4'>
+              <h3>{phrases.amountEqualled}</h3>
+            </Col>
+            <Col className='end-value col-12 col-md-8'>
+              <span className='float-start float-md-end'>{renderNumber(endValue!, 'valute')}</span>
+            </Col>
+            <Col className='col-12'>
+              <Divider dark />
+            </Col>
+          </Row>
+          <Row className='mb-5' aria-hidden='true'>
+            <Col className='col-12 col-lg-4'>
+              <span>{priceChangeLabel}</span>
+              <span className='float-end'>{renderNumber(changeValue!, 'change')}</span>
+              <Divider dark />
+            </Col>
+            <Col className='start-value col-12 col-lg-4'>
+              <span>
+                {phrases.amount} {startPeriod}
+              </span>
+              <span className='float-end'>{renderNumber(startValueResult!, 'valute')}</span>
+              <Divider dark />
+            </Col>
+            <Col className='col-12 col-lg-4'>
+              <span>
+                {phrases.amount} {endPeriod}
+              </span>
+              <span className='float-end'>{renderNumber(endValue!, 'valute')}</span>
+              <Divider dark />
+            </Col>
+          </Row>
+          <Row className='mb-5 d-flex justify-content-end' aria-hidden='true'>
+            <Col className='start-value col-12 col-lg-4'>
+              <span>
+                {phrases.index} {startPeriod}
+              </span>
+              <span className='float-end'>{renderNumber(startIndex!)}</span>
+              <Divider dark />
+            </Col>
+            <Col className='col-12 col-lg-4'>
+              <span>
+                {phrases.index} {endPeriod}
+              </span>
+              <span className='float-end'>{renderNumber(endIndex!)}</span>
+              <Divider dark />
+            </Col>
+          </Row>
+          <Row aria-live='off'>
+            <Col className='md-6'>
+              <button className='ssb-btn close-button' onClick={() => closeResult()} autoFocus>
+                <X size='18' />
+                {phrases.close}
+              </button>
+            </Col>
+          </Row>
+        </Container>
+      )
+    }
   }
 
   function renderResult() {
@@ -436,14 +424,24 @@ function BpiCalculator(props: BpiCalculatorProps) {
         </Container>
       )
     }
-    if (endValue && change) {
-      return calculatorResult()
-    }
+    return calculatorResult()
   }
 
   return (
     <Container className='content'>
-      {renderForm()}
+      <div className='calculator-form'>
+        <Row>
+          <Col>
+            <Title size={2}>{phrases.bpiCalculatorTitle}</Title>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <p className='publish-text'>{nextPublishText}</p>
+          </Col>
+        </Row>
+        {renderForm()}
+      </div>
       <div aria-live='polite'>{renderResult()}</div>
     </Container>
   )
