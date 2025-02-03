@@ -37,11 +37,10 @@ function BpiCalculator(props: BpiCalculatorProps) {
   })
 
   const defaultQuartalValue = { id: '', title: phrases.calculatorChooseQuartalPeriod }
-  const validMinYear = 1992
-  const validMaxYear = lastUpdated.year
   const {
     states: {
       loading,
+      errorMessage,
       startValue,
       endValue,
       startYear,
@@ -52,20 +51,19 @@ function BpiCalculator(props: BpiCalculatorProps) {
       endPeriod,
       change,
       startValueResult,
-      errorMessage,
       startIndex,
       endIndex,
     },
     setters: {
-      setStartValueResult,
-      setEndValue,
-      setChange,
       setLoading,
       setErrorMessage,
-      setStartIndex,
-      setEndIndex,
+      setChange,
+      setEndValue,
       setStartPeriod,
       setEndPeriod,
+      setStartValueResult,
+      setStartIndex,
+      setEndIndex,
       onChange,
     },
     validation: { onBlur, isStartValueValid, isStartYearValid, isEndYearValid, isStartMonthValid, isEndMonthValid },
@@ -78,10 +76,10 @@ function BpiCalculator(props: BpiCalculatorProps) {
     defaultMonthValue: defaultQuartalValue,
     defaultMonthErrorMsg: phrases.calculatorValidateQuartal,
     lastNumberText,
-    validYearErrorMsg: `${phrases.calculatorValidateYear.replaceAll('{0}', validMinYear.toString())} ${validMaxYear}`, // TODO: Make note of this/these phrase(s) redundancy for many calculators, use generic one instead
-    validMaxYear,
+    calculatorValidateYear: phrases.calculatorValidateYear,
+    validMaxYear: lastUpdated.year,
     validMaxMonth: lastUpdated.month,
-    validMinYear,
+    validMinYear: 1992,
     months,
   })
 
@@ -179,37 +177,21 @@ function BpiCalculator(props: BpiCalculatorProps) {
       })
   }
 
-  function addDropdownChooseStartQuarter(id: string) {
+  function addDropdownChooseQuarter(id: 'start-month' | 'end-month') {
     return (
       <Dropdown
         className='month'
         id={id}
         header={phrases.calculatorChooseQuartalPeriod}
         onSelect={(value: DropdownItem) => onChange(id, value)}
-        error={startMonth.error}
-        errorMessage={startMonth.errorMsg}
-        selectedItem={startMonth.value}
+        error={id === 'start-month' ? startMonth.error : endMonth.error}
+        errorMessage={id === 'start-month' ? startMonth.errorMsg : endMonth.errorMsg}
+        selectedItem={id === 'start-month' ? startMonth.value : endMonth.value}
         items={quarterPeriodList}
       />
     )
   }
 
-  function addDropdownChooseEndQuarter(id: string) {
-    return (
-      <Dropdown
-        className='month'
-        id={id}
-        header={phrases.calculatorChooseQuartalPeriod}
-        onSelect={(value: DropdownItem) => onChange(id, value)}
-        error={endMonth.error}
-        errorMessage={endMonth.errorMsg}
-        selectedItem={endMonth.value}
-        items={quarterPeriodList}
-      />
-    )
-  }
-
-  // TODO: Check if it's possible to make this into a React template component that can be used by all calculators
   function renderForm() {
     return (
       <div className='calculator-form'>
@@ -263,7 +245,6 @@ function BpiCalculator(props: BpiCalculatorProps) {
               </Col>
             </Row>
             <Divider className='my-5' />
-            {/* TODO: This part of the field is almost, if not, the same for all calculators */}
             <Row>
               <Col className='calculate-from col-12 col-lg-6'>
                 <Title size={3}>{phrases.calculatePriceChangeFrom}</Title>
@@ -280,7 +261,7 @@ function BpiCalculator(props: BpiCalculatorProps) {
                         onBlur={() => onBlur('start-year')}
                       />
                     </Col>
-                    <Col className='select-month col-12 col-sm-7'>{addDropdownChooseStartQuarter('start-month')}</Col>
+                    <Col className='select-month col-12 col-sm-7'>{addDropdownChooseQuarter('start-month')}</Col>
                   </Row>
                 </Container>
               </Col>
@@ -299,7 +280,7 @@ function BpiCalculator(props: BpiCalculatorProps) {
                         onBlur={() => onBlur('end-year')}
                       />
                     </Col>
-                    <Col className='select-month col-12 col-sm-7'>{addDropdownChooseEndQuarter('end-month')}</Col>
+                    <Col className='select-month col-12 col-sm-7'>{addDropdownChooseQuarter('end-month')}</Col>
                   </Row>
                 </Container>
               </Col>
@@ -317,58 +298,37 @@ function BpiCalculator(props: BpiCalculatorProps) {
     )
   }
 
-  function renderNumberValute(value: string | number) {
+  function renderNumber(value: string | number, type?: string) {
     if (endValue && change) {
-      const valute = language === 'en' ? 'NOK' : 'kr'
       const decimalSeparator = language === 'en' ? '.' : ','
-      return (
-        <React.Fragment>
+      if (type === 'valute' || type === 'change') {
+        const valute = language === 'en' ? 'NOK' : 'kr'
+        const decimalScale = type === 'valute' ? 2 : 1
+        return (
+          <React.Fragment>
+            <NumericFormat
+              value={Number(value)}
+              displayType='text'
+              thousandSeparator=' '
+              decimalSeparator={decimalSeparator}
+              decimalScale={decimalScale}
+              fixedDecimalScale
+            />
+            {type === 'valute' ? valute : '%'}
+          </React.Fragment>
+        )
+      } else {
+        return (
           <NumericFormat
             value={Number(value)}
             displayType='text'
             thousandSeparator=' '
             decimalSeparator={decimalSeparator}
-            decimalScale={2}
-            fixedDecimalScale
-          />{' '}
-          {valute}
-        </React.Fragment>
-      )
-    }
-  }
-
-  function renderNumberChangeValue(changeValue: string | number) {
-    if (endValue && change) {
-      const decimalSeparator = language === 'en' ? '.' : ','
-      return (
-        <React.Fragment>
-          <NumericFormat
-            value={Number(changeValue)}
-            displayType='text'
-            thousandSeparator=' '
-            decimalSeparator={decimalSeparator}
             decimalScale={1}
             fixedDecimalScale
-          />{' '}
-          %
-        </React.Fragment>
-      )
-    }
-  }
-
-  function renderNumber(value: string | number) {
-    if (endValue && change) {
-      const decimalSeparator = language === 'en' ? '.' : ','
-      return (
-        <NumericFormat
-          value={Number(value)}
-          displayType='text'
-          thousandSeparator=' '
-          decimalSeparator={decimalSeparator}
-          decimalScale={1}
-          fixedDecimalScale
-        />
-      )
+          />
+        )
+      }
     }
   }
 
@@ -397,7 +357,7 @@ function BpiCalculator(props: BpiCalculatorProps) {
             <h3>{phrases.amountEqualled}</h3>
           </Col>
           <Col className='end-value col-12 col-md-8'>
-            <span className='float-start float-md-end'>{renderNumberValute(endValue!)}</span>
+            <span className='float-start float-md-end'>{renderNumber(endValue!, 'valute')}</span>
           </Col>
           <Col className='col-12'>
             <Divider dark />
@@ -406,21 +366,21 @@ function BpiCalculator(props: BpiCalculatorProps) {
         <Row className='mb-5' aria-hidden='true'>
           <Col className='col-12 col-lg-4'>
             <span>{priceChangeLabel}</span>
-            <span className='float-end'>{renderNumberChangeValue(changeValue!)}</span>
+            <span className='float-end'>{renderNumber(changeValue!, 'change')}</span>
             <Divider dark />
           </Col>
           <Col className='start-value col-12 col-lg-4'>
             <span>
               {phrases.amount} {startPeriod}
             </span>
-            <span className='float-end'>{renderNumberValute(startValueResult!)}</span>
+            <span className='float-end'>{renderNumber(startValueResult!, 'change')}</span>
             <Divider dark />
           </Col>
           <Col className='col-12 col-lg-4'>
             <span>
               {phrases.amount} {endPeriod}
             </span>
-            <span className='float-end'>{renderNumberValute(endValue!)}</span>
+            <span className='float-end'>{renderNumber(endValue!, 'change')}</span>
             <Divider dark />
           </Col>
         </Row>
@@ -463,7 +423,6 @@ function BpiCalculator(props: BpiCalculatorProps) {
       )
     }
     if (errorMessage !== null) {
-      // TODO: Make note of this/these phrase(s) redundancy for many calculators, use generic one instead
       return (
         <Container className='calculator-error'>
           <Row>

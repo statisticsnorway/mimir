@@ -7,7 +7,7 @@ interface UseSetupCalculatorProps {
   defaultMonthValue?: DropdownItem
   defaultMonthErrorMsg?: string
   lastNumberText: string
-  validYearErrorMsg: string
+  calculatorValidateYear?: string
   validMaxYear: string | number
   validMaxMonth: string | number
   validMinYear: number
@@ -25,12 +25,15 @@ export const useSetupCalculator = ({
   defaultMonthValue,
   defaultMonthErrorMsg = '',
   lastNumberText,
-  validYearErrorMsg,
+  calculatorValidateYear,
   validMaxYear,
   validMaxMonth,
   validMinYear,
   months,
 }: UseSetupCalculatorProps) => {
+  const validYearErrorMsg = calculatorValidateYear
+    ? `${calculatorValidateYear.replaceAll('{0}', validMinYear.toString())} ${validMaxYear}`
+    : ''
   const [startValue, setStartValue] = useState({
     error: false,
     errorMsg: calculatorValidateAmountNumber,
@@ -293,13 +296,13 @@ export const useSetupCalculator = ({
 
   return {
     states: {
-      startValue,
+      loading,
+      errorMessage,
       startMonth,
       startYear,
       endMonth,
       endYear,
-      errorMessage,
-      loading,
+      startValue,
       change,
       endValue,
       startPeriod,
@@ -309,13 +312,8 @@ export const useSetupCalculator = ({
       endIndex,
     },
     setters: {
-      setStartValue,
-      setStartMonth,
-      setStartYear,
-      setEndMonth,
-      setEndYear,
-      setErrorMessage,
       setLoading,
+      setErrorMessage,
       setChange,
       setEndValue,
       setStartPeriod,
@@ -326,12 +324,12 @@ export const useSetupCalculator = ({
       onChange,
     },
     validation: {
+      onBlur,
       isStartValueValid,
       isStartYearValid,
       isEndYearValid,
       isStartMonthValid,
       isEndMonthValid,
-      onBlur,
     },
     scrollAnchor,
     onSubmitBtnElement,
