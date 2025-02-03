@@ -86,15 +86,15 @@ function BpiCalculator(props: BpiCalculatorProps) {
   function onCategoryChange(id: string, value: CalculatorState['value']) {
     switch (id) {
       case 'dwellingType': {
-        setDwellingType({ ...dwellingType, value: value as string })
+        setDwellingType((prevState) => ({ ...prevState, value: value as string }))
         break
       }
       case 'region': {
-        setRegion({
-          ...region,
+        setRegion((prevState) => ({
+          ...prevState,
           value: value as DropdownItem,
-          error: region.error ? !isRegionValid((value as DropdownItem).id) : region.error,
-        })
+          error: prevState.error ? !isRegionValid((value as DropdownItem).id) : prevState.error,
+        }))
         break
       }
       default: {
@@ -107,10 +107,10 @@ function BpiCalculator(props: BpiCalculatorProps) {
     const regionValue = value || region.value.id
     const regionValid = regionValue !== ''
     if (!regionValid) {
-      setRegion({
-        ...region,
+      setRegion((prevState) => ({
+        ...prevState,
         error: true,
-      })
+      }))
     }
     return regionValid
   }
@@ -155,8 +155,8 @@ function BpiCalculator(props: BpiCalculatorProps) {
         },
       })
       .then((res) => {
-        const startPeriod = getQuartalPeriod(startYear.value as string, (startMonth.value as DropdownItem).title)
-        const endPeriod = getQuartalPeriod(endYear.value as string, (endMonth.value as DropdownItem).title)
+        const startPeriod = getQuartalPeriod((startMonth.value as DropdownItem).title, startYear.value as string)
+        const endPeriod = getQuartalPeriod((endMonth.value as DropdownItem).title, endYear.value as string)
         setChange(res.data.change)
         setEndValue(res.data.endValue)
         setStartPeriod(startPeriod)
@@ -373,14 +373,14 @@ function BpiCalculator(props: BpiCalculatorProps) {
             <span>
               {phrases.amount} {startPeriod}
             </span>
-            <span className='float-end'>{renderNumber(startValueResult!, 'change')}</span>
+            <span className='float-end'>{renderNumber(startValueResult!, 'valute')}</span>
             <Divider dark />
           </Col>
           <Col className='col-12 col-lg-4'>
             <span>
               {phrases.amount} {endPeriod}
             </span>
-            <span className='float-end'>{renderNumber(endValue!, 'change')}</span>
+            <span className='float-end'>{renderNumber(endValue!, 'valute')}</span>
             <Divider dark />
           </Col>
         </Row>

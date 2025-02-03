@@ -115,10 +115,10 @@ export const useSetupCalculator = ({
 
     const startMonthValid = !(startYear.value === validMaxYear && startMonthOrQuartalPeriodMonthValue > validMaxMonth)
     if (!startMonthValid) {
-      setStartMonth({
-        ...startMonth,
+      setStartMonth((prevState) => ({
+        ...prevState,
         error: true,
-      })
+      }))
     }
     return startMonthValue === '' ? false : startMonthValid
   }
@@ -137,10 +137,10 @@ export const useSetupCalculator = ({
         : !(endYear.value === validMaxYear && endMonthOrQuartalPeriodMonthValue > validMaxMonth)
 
     if (!endMonthValid) {
-      setEndMonth({
-        ...endMonth,
+      setEndMonth((prevState) => ({
+        ...prevState,
         error: true,
-      })
+      }))
     }
     return endMonthValue === '' ? false : endMonthValid
   }
@@ -148,40 +148,40 @@ export const useSetupCalculator = ({
   function onBlur(id: string) {
     switch (id) {
       case 'start-value': {
-        setStartValue({
-          ...startValue,
+        setStartValue((prevState) => ({
+          ...prevState,
           error: !isStartValueValid(),
-        })
+        }))
         break
       }
       case 'start-year': {
-        setStartYear({
-          ...startYear,
+        setStartYear((prevState) => ({
+          ...prevState,
           error: !isStartYearValid(),
-        })
+        }))
         break
       }
       case 'end-year': {
-        setEndYear({
-          ...endYear,
+        setEndYear((prevState) => ({
+          ...prevState,
           error: !isEndYearValid(),
-        })
+        }))
         break
       }
       case 'start-month': {
-        setStartMonth({
-          ...startMonth,
+        setStartMonth((prevState) => ({
+          ...prevState,
           error: !isStartMonthValid(),
-          errorMsg: (startMonth.value as DropdownItem)?.id !== '' ? lastNumberText : defaultMonthErrorMsg,
-        })
+          errorMsg: (prevState.value as DropdownItem)?.id !== '' ? lastNumberText : defaultMonthErrorMsg,
+        }))
         break
       }
       case 'end-month': {
-        setEndMonth({
-          ...endMonth,
+        setEndMonth((prevState) => ({
+          ...prevState,
           error: !isEndMonthValid(),
-          errorMsg: (endMonth.value as DropdownItem)?.id !== '' ? lastNumberText : defaultMonthErrorMsg,
-        })
+          errorMsg: (prevState.value as DropdownItem)?.id !== '' ? lastNumberText : defaultMonthErrorMsg,
+        }))
         break
       }
       default: {
@@ -194,57 +194,57 @@ export const useSetupCalculator = ({
     switch (id) {
       case 'start-value': {
         value = (value as string).replace(/,/g, '.')
-        setStartValue({
-          ...startValue,
-          value,
-          error: startValue.error ? !isStartValueValid(value) : startValue.error,
-        })
+        setStartValue((prevState) => ({
+          ...prevState,
+          value: value as string,
+          error: prevState.error ? !isStartValueValid(value as string) : prevState.error,
+        }))
         break
       }
       case 'start-month': {
-        setStartMonth({
-          ...startMonth,
+        setStartMonth((prevState) => ({
+          ...prevState,
           value,
-          error: startMonth.error ? !isStartMonthValid((value as DropdownItem)?.id as string) : startMonth.error,
+          error: prevState.error ? !isStartMonthValid((value as DropdownItem)?.id as string) : prevState.error,
           errorMsg: (value as DropdownItem)?.id !== '' ? lastNumberText : defaultMonthErrorMsg,
-        })
+        }))
         break
       }
       case 'start-year': {
         if (startMonth.error) {
-          setStartMonth({
-            ...startMonth,
+          setStartMonth((prevState) => ({
+            ...prevState,
             error: false,
-          })
+          }))
         }
-        setStartYear({
-          ...startYear,
+        setStartYear((prevState) => ({
+          ...prevState,
           value,
-          error: startYear.error ? !isStartYearValid(value as string) : startYear.error,
-        })
+          error: prevState.error ? !isStartYearValid(value as string) : prevState.error,
+        }))
         break
       }
       case 'end-month': {
-        setEndMonth({
-          ...endMonth,
+        setEndMonth((prevState) => ({
+          ...prevState,
           value,
-          error: endMonth.error ? !isEndMonthValid((value as DropdownItem)?.id) : endMonth.error,
+          error: prevState.error ? !isEndMonthValid((value as DropdownItem)?.id) : prevState.error,
           errorMsg: (value as DropdownItem)?.id !== '' ? lastNumberText : defaultMonthErrorMsg,
-        })
+        }))
         break
       }
       case 'end-year': {
         if (endMonth.error) {
-          setEndMonth({
-            ...endMonth,
+          setEndMonth((prevState) => ({
+            ...prevState,
             error: false,
-          })
+          }))
         }
-        setEndYear({
-          ...endYear,
+        setEndYear((prevState) => ({
+          ...prevState,
           value,
-          error: endYear.error ? !isEndYearValid(value as string) : endYear.error,
-        })
+          error: prevState.error ? !isEndYearValid(value as string) : prevState.error,
+        }))
         break
       }
       default: {
@@ -290,8 +290,8 @@ export const useSetupCalculator = ({
     return month === (defaultMonthValue ?? '') ? year : `${getMonthLabel(month)} ${year}`
   }
 
-  function getQuartalPeriod(year: string, quartal: string) {
-    return `${year} ${quartal}`
+  function getQuartalPeriod(quartal: string, year: string) {
+    return `${quartal} ${year}`
   }
 
   return {
