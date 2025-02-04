@@ -2,7 +2,7 @@ import { Content } from '/lib/xp/content'
 import { localize } from '/lib/xp/i18n'
 import { HttpRequestParams } from '/lib/http-client'
 import { type Dataset } from '/lib/types/jsonstat-toolkit'
-import { getCalculatorConfig, getCalculatorDatasetFromSource } from '/lib/ssb/dataset/calculator'
+import { getCalculatorConfig, getCalculatorDatasetFromSource, PIF_CALCULATOR } from '/lib/ssb/dataset/calculator'
 import { isChronological, getChangeValue } from '/lib/ssb/utils/calculatorUtils'
 import { type CalculatorConfig } from '/site/content-types'
 
@@ -38,7 +38,7 @@ function get(req: HttpRequestParams): XP.Response {
   const config: Content<CalculatorConfig> | undefined = getCalculatorConfig()
 
   if (config && config.data.pifSource) {
-    const pifDataset: Dataset | null = getCalculatorDatasetFromSource(config, 'pifCalculator')
+    const pifDataset: Dataset | null = getCalculatorDatasetFromSource(config, PIF_CALCULATOR)
     const indexResult: IndexResult = getIndexes(
       scopeCode,
       productGroup,

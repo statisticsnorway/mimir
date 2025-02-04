@@ -1,7 +1,7 @@
 import { type Content } from '/lib/xp/content'
 import { localize } from '/lib/xp/i18n'
 import { type Dataset } from '/lib/types/jsonstat-toolkit'
-import { getCalculatorConfig, getCalculatorDatasetFromSource } from '/lib/ssb/dataset/calculator'
+import { BPI_CALCULATOR, getCalculatorConfig, getCalculatorDatasetFromSource } from '/lib/ssb/dataset/calculator'
 import {
   getChangeValue,
   isChronological,
@@ -59,7 +59,7 @@ function get(req: HttpRequestParams): XP.Response {
   const calculatorConfig: Content<CalculatorConfig> | undefined = getCalculatorConfig()
   if (calculatorConfig?.data?.bpiSource) {
     const bpiDataset: Dataset | null = calculatorConfig
-      ? getCalculatorDatasetFromSource(calculatorConfig, 'bpiCalculator')
+      ? getCalculatorDatasetFromSource(calculatorConfig, BPI_CALCULATOR)
       : null
     const indexResult = getIndexes({
       calculatorData: bpiDataset,
