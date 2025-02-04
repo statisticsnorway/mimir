@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react'
+import React, { isValidElement, ReactNode } from 'react'
 import { Container, Row, Col } from 'react-bootstrap'
 import { NumericFormat } from 'react-number-format'
 import { X } from 'react-feather'
@@ -8,7 +8,6 @@ interface ResultRowProps {
   label: string
   value: string | number
   type?: string
-  fullWidth?: boolean
 }
 
 interface CalculatorResultProps {
@@ -29,7 +28,7 @@ interface CalculatorLayoutProps {
   calculatorUknownError?: string
   calculatorErrorCalculationFailed?: string
   renderForm: () => ReactNode
-  renderResult: () => CalculatorResultProps | undefined
+  renderResult: () => CalculatorResultProps | ReactNode | undefined
 }
 
 function CalculatorLayout({
@@ -43,76 +42,41 @@ function CalculatorLayout({
   renderForm,
   renderResult,
 }: CalculatorLayoutProps) {
-  function renderResultWrapper() {
-    if (loading) {
+  function renderNumber(value: string | number, type?: string) {
+    const decimalSeparator = language === 'en' ? '.' : ','
+    if (type === 'valute' || type === 'change') {
+      const valute = language === 'en' ? 'NOK' : 'kr'
+      const decimalScale = type === 'valute' ? 2 : 1
       return (
-        <Container>
-          <span className='spinner-border spinner-border' />
-        </Container>
-      )
-    }
-    if (errorMessage !== null && errorMessage !== undefined) {
-      return (
-        <Container className='calculator-error'>
-          <Row>
-            <Col>
-              <FormError
-                errorMessages={[errorMessage || calculatorUknownError]}
-                title={calculatorErrorCalculationFailed}
-              />
-            </Col>
-          </Row>
-        </Container>
-      )
-    }
-
-    const result = renderResult()
-    if (!result) return null
-
-    const { scrollAnchor, screenReaderResultText, resultHeader, resultRows, closeButtonText, onClose } = result
-
-    function renderNumber(value: string | number, type?: string) {
-      const decimalSeparator = language === 'en' ? '.' : ','
-      if (type === 'valute' || type === 'change') {
-        const valute = language === 'en' ? 'NOK' : 'kr'
-        const decimalScale = type === 'valute' ? 2 : 1
-        return (
-          <>
-            <NumericFormat
-              value={Number(value)}
-              displayType='text'
-              thousandSeparator=' '
-              decimalSeparator={decimalSeparator}
-              decimalScale={decimalScale}
-              fixedDecimalScale
-            />
-            {type === 'valute' ? valute : '%'}
-          </>
-        )
-      } else {
-        return (
+        <>
           <NumericFormat
             value={Number(value)}
             displayType='text'
             thousandSeparator=' '
             decimalSeparator={decimalSeparator}
-            decimalScale={1}
+            decimalScale={decimalScale}
             fixedDecimalScale
           />
-        )
-      }
-    }
-
-    const ResultRow = ({ label, value, type, fullWidth = false }: ResultRowProps) => {
-      const colClass = fullWidth ? 'col-12' : 'col-12 col-lg-4'
+          {type === 'valute' ? valute : '%'}
+        </>
+      )
+    } else {
       return (
-        <Col className={colClass}>
-          <span>{label}</span>
-          <span className='float-end'>{renderNumber(value, type)}</span>
-          <Divider dark />
-        </Col>
+        <NumericFormat
+          value={Number(value)}
+          displayType='text'
+          thousandSeparator=' '
+          decimalSeparator={decimalSeparator}
+          decimalScale={1}
+          fixedDecimalScale
+        />
       )
     }
+  }
+
+  function renderCalculatorResult() {
+    const resultProps = renderResult() as CalculatorResultProps
+    const { scrollAnchor, screenReaderResultText, resultHeader, resultRows, closeButtonText, onClose } = resultProps
 
     return (
       <Container className='calculator-result' ref={scrollAnchor} tabIndex={0}>
@@ -142,8 +106,12 @@ function CalculatorLayout({
             className={`d-flex justify-content-end${groupIndex === resultRows.length - 1 ? '' : ' mb-5'}`}
             aria-hidden='true'
           >
-            {rowGroup.map((row, rowIndex) => (
-              <ResultRow key={rowIndex} {...row} />
+            {rowGroup.map(({ label, value, type }) => (
+              <Col key={label} className='col-12 col-lg-4'>
+                <span>{label}</span>
+                <span className='float-end'>{renderNumber(value, type)}</span>
+                <Divider dark />
+              </Col>
             ))}
           </Row>
         ))}
@@ -158,6 +126,39 @@ function CalculatorLayout({
         </Row>
       </Container>
     )
+  }
+
+  function renderResultWrapper() {
+    if (loading) {
+      return (
+        <Container>
+          <span className='spinner-border spinner-border' />
+        </Container>
+      )
+    }
+    if (errorMessage !== null && errorMessage !== undefined) {
+      return (
+        <Container className='calculator-error'>
+          <Row>
+            <Col>
+              <FormError
+                errorMessages={[errorMessage || calculatorUknownError]}
+                title={calculatorErrorCalculationFailed}
+              />
+            </Col>
+          </Row>
+        </Container>
+      )
+    }
+
+    const result = renderResult()
+    if (!result) return null
+
+    // Some calculators don't use the same result layout, so renderResult should support ReactNode types as well
+    if (isValidElement(result)) {
+      return result
+    }
+    return renderCalculatorResult()
   }
 
   return (
