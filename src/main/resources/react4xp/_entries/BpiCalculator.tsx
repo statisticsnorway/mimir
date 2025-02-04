@@ -3,8 +3,6 @@ import { Title, Divider, RadioGroup, Dropdown, Input, Button } from '@statistics
 import { Container, Row, Col, Form } from 'react-bootstrap'
 
 import axios from 'axios'
-import { NumericFormat } from 'react-number-format'
-import { X } from 'react-feather'
 
 import { BpiCalculatorProps } from '/lib/types/partTypes/bpiCalculator'
 import { CalculatorState, useSetupCalculator } from '/lib/ssb/utils/customHooks/calculatorHooks'
@@ -287,40 +285,6 @@ function BpiCalculator(props: BpiCalculatorProps) {
     )
   }
 
-  function renderNumber(value: string | number, type?: string) {
-    if (endValue && change) {
-      const decimalSeparator = language === 'en' ? '.' : ','
-      if (type === 'valute' || type === 'change') {
-        const valute = language === 'en' ? 'NOK' : 'kr'
-        const decimalScale = type === 'valute' ? 2 : 1
-        return (
-          <>
-            <NumericFormat
-              value={Number(value)}
-              displayType='text'
-              thousandSeparator=' '
-              decimalSeparator={decimalSeparator}
-              decimalScale={decimalScale}
-              fixedDecimalScale
-            />
-            {type === 'valute' ? valute : '%'}
-          </>
-        )
-      } else {
-        return (
-          <NumericFormat
-            value={Number(value)}
-            displayType='text'
-            thousandSeparator=' '
-            decimalSeparator={decimalSeparator}
-            decimalScale={1}
-            fixedDecimalScale
-          />
-        )
-      }
-    }
-  }
-
   function calculatorResult() {
     if (endValue && change) {
       const priceChangeLabel = change?.charAt(0) === '-' ? phrases.priceDecrease : phrases.priceIncrease
@@ -337,69 +301,46 @@ function BpiCalculator(props: BpiCalculatorProps) {
         .replace('{5}', language === 'en' ? startIndexText : startIndexText.replace('.', ','))
         .replace('{6}', language === 'en' ? endIndexText : endIndexText.replace('.', ','))
 
-      return (
-        <Container className='calculator-result' ref={scrollAnchor} tabIndex={0}>
-          <div aria-atomic='true'>
-            <span className='sr-only'>{bpiResultForScreenreader}</span>
-          </div>
-          <Row className='mb-5' aria-hidden='true'>
-            <Col className='amount-equal col-12 col-md-4'>
-              <h3>{phrases.amountEqualled}</h3>
-            </Col>
-            <Col className='end-value col-12 col-md-8'>
-              <span className='float-start float-md-end'>{renderNumber(endValue!, 'valute')}</span>
-            </Col>
-            <Col className='col-12'>
-              <Divider dark />
-            </Col>
-          </Row>
-          <Row className='mb-5' aria-hidden='true'>
-            <Col className='col-12 col-lg-4'>
-              <span>{priceChangeLabel}</span>
-              <span className='float-end'>{renderNumber(changeValue!, 'change')}</span>
-              <Divider dark />
-            </Col>
-            <Col className='start-value col-12 col-lg-4'>
-              <span>
-                {phrases.amount} {startPeriod}
-              </span>
-              <span className='float-end'>{renderNumber(startValueResult!, 'valute')}</span>
-              <Divider dark />
-            </Col>
-            <Col className='col-12 col-lg-4'>
-              <span>
-                {phrases.amount} {endPeriod}
-              </span>
-              <span className='float-end'>{renderNumber(endValue!, 'valute')}</span>
-              <Divider dark />
-            </Col>
-          </Row>
-          <Row className='mb-5 d-flex justify-content-end' aria-hidden='true'>
-            <Col className='start-value col-12 col-lg-4'>
-              <span>
-                {phrases.index} {startPeriod}
-              </span>
-              <span className='float-end'>{renderNumber(startIndex!)}</span>
-              <Divider dark />
-            </Col>
-            <Col className='col-12 col-lg-4'>
-              <span>
-                {phrases.index} {endPeriod}
-              </span>
-              <span className='float-end'>{renderNumber(endIndex!)}</span>
-              <Divider dark />
-            </Col>
-          </Row>
-          <Row aria-live='off'>
-            <Col className='md-6'>
-              <button className='ssb-btn close-button' onClick={() => closeResult()} autoFocus>
-                <X size='18' />
-                {phrases.close}
-              </button>
-            </Col>
-          </Row>
-        </Container>
-      )
+      return {
+        resultHeader: {
+          label: phrases.amountEqualled,
+          value: endValue!,
+          type: 'valute',
+        },
+        resultRows: [
+          [
+            {
+              label: priceChangeLabel,
+              value: changeValue!,
+              type: 'change',
+            },
+            {
+              label: `${phrases.amount} ${startPeriod}`,
+              value: startValueResult!,
+              type: 'valute',
+            },
+            {
+              label: `${phrases.amount} ${endPeriod}`,
+              value: endValue!,
+              type: 'valute',
+            },
+          ],
+          [
+            {
+              label: `${phrases.index} ${startPeriod}`,
+              value: startIndex!,
+            },
+            {
+              label: `${phrases.index} ${endPeriod}`,
+              value: endIndex!,
+            },
+          ],
+        ],
+        onClose: closeResult,
+        closeButtonText: phrases.close,
+        screenReaderResultText: bpiResultForScreenreader,
+        scrollAnchor,
+      }
     }
   }
 
@@ -407,12 +348,13 @@ function BpiCalculator(props: BpiCalculatorProps) {
     <CalculatorLayout
       calculatorTitle={phrases.bpiCalculatorTitle}
       nextPublishText={nextPublishText}
-      renderForm={renderForm}
-      renderResult={calculatorResult}
+      language={language}
       loading={loading}
       errorMessage={errorMessage}
       calculatorUknownError={phrases.calculatorUknownError}
       calculatorErrorCalculationFailed={phrases.calculatorErrorCalculationFailed}
+      renderResult={calculatorResult}
+      renderForm={renderForm}
     />
   )
 }

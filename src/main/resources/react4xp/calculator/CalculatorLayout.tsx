@@ -1,21 +1,41 @@
 import React, { ReactNode } from 'react'
 import { Container, Row, Col } from 'react-bootstrap'
-import { Title, FormError } from '@statisticsnorway/ssb-component-library'
+import { NumericFormat } from 'react-number-format'
+import { X } from 'react-feather'
+import { Title, FormError, Divider } from '@statisticsnorway/ssb-component-library'
+
+interface ResultRowProps {
+  label: string
+  value: string | number
+  type?: string
+  fullWidth?: boolean
+}
+
+interface CalculatorResultProps {
+  scrollAnchor?: React.RefObject<HTMLDivElement>
+  screenReaderResultText?: string
+  resultHeader?: ResultRowProps
+  resultRows?: ResultRowProps[][]
+  closeButtonText: string
+  onClose: () => void
+}
 
 interface CalculatorLayoutProps {
   calculatorTitle: string
   nextPublishText: string
+  language: string
   loading?: boolean
   errorMessage?: string | null
   calculatorUknownError?: string
   calculatorErrorCalculationFailed?: string
   renderForm: () => ReactNode
-  renderResult: () => ReactNode
+  renderResult: () => CalculatorResultProps | undefined
 }
 
 function CalculatorLayout({
   calculatorTitle,
   nextPublishText,
+  language,
   loading,
   errorMessage,
   calculatorUknownError,
@@ -45,7 +65,99 @@ function CalculatorLayout({
         </Container>
       )
     }
-    return renderResult()
+
+    const result = renderResult()
+    if (!result) return null
+
+    const { scrollAnchor, screenReaderResultText, resultHeader, resultRows, closeButtonText, onClose } = result
+
+    function renderNumber(value: string | number, type?: string) {
+      const decimalSeparator = language === 'en' ? '.' : ','
+      if (type === 'valute' || type === 'change') {
+        const valute = language === 'en' ? 'NOK' : 'kr'
+        const decimalScale = type === 'valute' ? 2 : 1
+        return (
+          <>
+            <NumericFormat
+              value={Number(value)}
+              displayType='text'
+              thousandSeparator=' '
+              decimalSeparator={decimalSeparator}
+              decimalScale={decimalScale}
+              fixedDecimalScale
+            />
+            {type === 'valute' ? valute : '%'}
+          </>
+        )
+      } else {
+        return (
+          <NumericFormat
+            value={Number(value)}
+            displayType='text'
+            thousandSeparator=' '
+            decimalSeparator={decimalSeparator}
+            decimalScale={1}
+            fixedDecimalScale
+          />
+        )
+      }
+    }
+
+    const ResultRow = ({ label, value, type, fullWidth = false }: ResultRowProps) => {
+      const colClass = fullWidth ? 'col-12' : 'col-12 col-lg-4'
+      return (
+        <Col className={colClass}>
+          <span>{label}</span>
+          <span className='float-end'>{renderNumber(value, type)}</span>
+          <Divider dark />
+        </Col>
+      )
+    }
+
+    return (
+      <Container className='calculator-result' ref={scrollAnchor} tabIndex={0}>
+        {screenReaderResultText && (
+          <div aria-atomic='true'>
+            <span className='sr-only'>{screenReaderResultText}</span>
+          </div>
+        )}
+
+        {resultHeader && (
+          <Row className='mb-5' aria-hidden='true'>
+            <Col className='amount-equal col-12 col-md-4'>
+              <h3>{resultHeader.label}</h3>
+            </Col>
+            <Col className='end-value col-12 col-md-8'>
+              <span className='float-start float-md-end'>{renderNumber(resultHeader.value, resultHeader.type)}</span>
+            </Col>
+            <Col className='col-12'>
+              <Divider dark />
+            </Col>
+          </Row>
+        )}
+
+        {resultRows?.map((rowGroup, groupIndex) => (
+          <Row
+            key={`${rowGroup[groupIndex].label}-${groupIndex}`}
+            className={`d-flex justify-content-end${groupIndex === resultRows.length - 1 ? '' : ' mb-5'}`}
+            aria-hidden='true'
+          >
+            {rowGroup.map((row, rowIndex) => (
+              <ResultRow key={rowIndex} {...row} />
+            ))}
+          </Row>
+        ))}
+
+        <Row aria-live='off'>
+          <Col className='md-6'>
+            <button className='ssb-btn close-button' onClick={onClose} autoFocus>
+              <X size='18' />
+              {closeButtonText}
+            </button>
+          </Col>
+        </Row>
+      </Container>
+    )
   }
 
   return (
