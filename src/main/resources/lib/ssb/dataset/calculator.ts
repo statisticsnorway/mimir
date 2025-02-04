@@ -53,15 +53,20 @@ export function getKpiDatasetMonth(config: Content<CalculatorConfig>): Dataset |
   return kpiDatasetMonthRepo ? JSONstat(kpiDatasetMonthRepo.data).Dataset('dataset') : null
 }
 
+export const PIF_CALCULATOR = 'pifCalculator'
+export const BPI_CALCULATOR = 'bpiCalculator'
 // TODO: We could make a generic one for calculators with multiple datasources, such as kpi and bkibol
-export function getCalculatorDatasetFromSource(config: Content<CalculatorConfig>, calculator: string): Dataset | null {
+export function getCalculatorDatasetFromSource(
+  config: Content<CalculatorConfig>,
+  calculator: typeof PIF_CALCULATOR | typeof BPI_CALCULATOR
+): Dataset | null {
   let dataSourceConfig = null
 
-  if (calculator === 'pifCalculator') {
+  if (calculator === PIF_CALCULATOR) {
     dataSourceConfig = config?.data.pifSource
   }
 
-  if (calculator === 'bpiCalculator') {
+  if (calculator === BPI_CALCULATOR) {
     dataSourceConfig = config?.data.bpiSource
   }
 

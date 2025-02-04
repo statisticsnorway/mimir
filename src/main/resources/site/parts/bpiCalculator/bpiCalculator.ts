@@ -8,7 +8,7 @@ import { type DropdownItems } from '/lib/types/components'
 import { lastQuartalPeriod, nextQuartalPeriod } from '/lib/ssb/utils/calculatorUtils'
 import { renderError } from '/lib/ssb/error/error'
 import { getLanguage } from '/lib/ssb/utils/language'
-import { getCalculatorConfig, getCalculatorDatasetFromSource } from '/lib/ssb/dataset/calculator'
+import { BPI_CALCULATOR, getCalculatorConfig, getCalculatorDatasetFromSource } from '/lib/ssb/dataset/calculator'
 import {
   getNextPublishText,
   getLastNumberText,
@@ -54,7 +54,7 @@ function getBpiCalculatorComponent(req: XP.Request, page: Content<CalculatorConf
   const phrases = language?.phrases as Phrases
   const calculatorConfig: Content<CalculatorConfig> | undefined = getCalculatorConfig()
   const bpiDataset: Dataset | null = calculatorConfig
-    ? getCalculatorDatasetFromSource(calculatorConfig, 'bpiCalculator')
+    ? getCalculatorDatasetFromSource(calculatorConfig, BPI_CALCULATOR)
     : null
   const months: DropdownItems = allMonths(phrases)
   const lastUpdated: CalculatorPeriod | undefined = lastQuartalPeriod(bpiDataset)
