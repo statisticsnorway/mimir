@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Title, Divider, RadioGroup, Dropdown, Input, Button, FormError } from '@statisticsnorway/ssb-component-library'
+import { Title, Divider, RadioGroup, Dropdown, Input, Button } from '@statisticsnorway/ssb-component-library'
 import { Container, Row, Col, Form } from 'react-bootstrap'
 
 import axios from 'axios'
@@ -9,6 +9,7 @@ import { X } from 'react-feather'
 import { BpiCalculatorProps } from '/lib/types/partTypes/bpiCalculator'
 import { CalculatorState, useSetupCalculator } from '/lib/ssb/utils/customHooks/calculatorHooks'
 import { DropdownItem } from '/lib/types/components'
+import CalculatorLayout from '../calculator/CalculatorLayout'
 
 function BpiCalculator(props: BpiCalculatorProps) {
   const {
@@ -402,48 +403,17 @@ function BpiCalculator(props: BpiCalculatorProps) {
     }
   }
 
-  function renderResult() {
-    if (loading) {
-      return (
-        <Container>
-          <span className='spinner-border spinner-border' />
-        </Container>
-      )
-    }
-    if (errorMessage !== null) {
-      return (
-        <Container className='calculator-error'>
-          <Row>
-            <Col>
-              <FormError
-                errorMessages={[errorMessage || phrases.calculatorUknownError]}
-                title={phrases.calculatorErrorCalculationFailed}
-              />
-            </Col>
-          </Row>
-        </Container>
-      )
-    }
-    return calculatorResult()
-  }
-
   return (
-    <Container className='content'>
-      <div className='calculator-form'>
-        <Row>
-          <Col>
-            <Title size={2}>{phrases.bpiCalculatorTitle}</Title>
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <p className='publish-text'>{nextPublishText}</p>
-          </Col>
-        </Row>
-        {renderForm()}
-      </div>
-      <div aria-live='polite'>{renderResult()}</div>
-    </Container>
+    <CalculatorLayout
+      calculatorTitle={phrases.bpiCalculatorTitle}
+      nextPublishText={nextPublishText}
+      renderForm={renderForm}
+      renderResult={calculatorResult}
+      loading={loading}
+      errorMessage={errorMessage}
+      calculatorUknownError={phrases.calculatorUknownError}
+      calculatorErrorCalculationFailed={phrases.calculatorErrorCalculationFailed}
+    />
   )
 }
 
