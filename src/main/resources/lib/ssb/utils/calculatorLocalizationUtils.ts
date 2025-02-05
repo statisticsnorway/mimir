@@ -6,7 +6,7 @@ import { type Dataset, type Dimension } from '/lib/types/jsonstat-toolkit'
 interface CalculatorLastNumberText {
   language: string | undefined
   months: DropdownItems
-  lastUpdatedPeriod: string
+  lastUpdatedPeriod?: string
   lastUpdatedMonth?: string
   lastUpdatedYear: string
 }
@@ -15,10 +15,10 @@ interface CalculatorNextPublishText extends CalculatorLastNumberText {
   nextUpdateMonth?: string
   nextPeriodText?: string
   lastUpdatedYear: string
-  nextUpdatedQuartal: string
-  nextUpdatedYear: string
-  date: string
-  nextReleaseMonth: string
+  nextUpdatedQuartal?: string
+  nextUpdatedYear?: string
+  date?: string
+  nextReleaseMonth: string | number
 }
 
 const seriesLocalizationMap = {
@@ -55,7 +55,7 @@ export function getNextPublishText({
   lastUpdatedMonth,
   lastUpdatedYear,
   nextUpdateMonth,
-  date,
+  date = '10',
   nextReleaseMonth,
 }: CalculatorNextPublishText) {
   return localize({
@@ -85,11 +85,11 @@ export function getNextQuartalPublishText({
     key: 'calculatorNextQuartalPublishText',
     locale: language,
     values: [
-      lastUpdatedPeriod,
+      lastUpdatedPeriod as string,
       lastUpdatedYear,
-      nextUpdatedQuartal,
-      nextUpdatedYear,
-      date,
+      nextUpdatedQuartal as string,
+      nextUpdatedYear as string,
+      date as string,
       monthLabel(months, language, nextReleaseMonth),
     ],
   })

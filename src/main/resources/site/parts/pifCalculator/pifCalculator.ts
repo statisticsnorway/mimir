@@ -13,7 +13,7 @@ import { getLanguage } from '/lib/ssb/utils/language'
 import { getCalculatorConfig, getCalculatorDatasetFromSource, PIF_CALCULATOR } from '/lib/ssb/dataset/calculator'
 import { fromPartCache } from '/lib/ssb/cache/partCache'
 import { type PifCalculatorProps } from '/lib/types/partTypes/pifCalculaor'
-import { allMonths, monthLabel } from '/lib/ssb/utils/calculatorLocalizationUtils'
+import { allMonths, getNextPublishText, monthLabel } from '/lib/ssb/utils/calculatorLocalizationUtils'
 import { type CalculatorConfig } from '/site/content-types'
 
 export function get(req: XP.Request): XP.Response {
@@ -56,15 +56,13 @@ function getPifCalculatorComponent(req: XP.Request, page: Content) {
   const lastUpdated: CalculatorPeriod | undefined = lastPeriod(pifData) as CalculatorPeriod
   const nextUpdate: CalculatorPeriod = nextPeriod(lastUpdated.month as string, lastUpdated.year as string)
   const nextReleaseMonth: number = (nextUpdate.month as number) === 12 ? 1 : (nextUpdate.month as number) + 1
-  const nextPublishText: string = localize({
-    key: 'calculatorNextPublishText',
-    locale: language?.code,
-    values: [
-      monthLabel(months, language?.code, lastUpdated.month),
-      lastUpdated.year as string,
-      monthLabel(months, language?.code, nextUpdate.month),
-      monthLabel(months, language?.code, nextReleaseMonth),
-    ],
+  const nextPublishText = getNextPublishText({
+    language: language?.code,
+    months,
+    lastUpdatedMonth: lastUpdated?.month as string,
+    lastUpdatedYear: lastUpdated?.year as string,
+    nextUpdateMonth: nextUpdate.month as string,
+    nextReleaseMonth,
   })
   const lastNumberText: string = localize({
     key: 'calculatorLastNumber',
