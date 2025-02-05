@@ -533,7 +533,7 @@ function BkibolCalculator(props: BkibolCalculatorProps) {
     const endValueText = endValue?.toString() ?? ''
     const startIndexText = startIndex?.toString() ?? ''
     const endIndexText = endIndex?.toString() ?? ''
-    const resultScreenReaderText = props.phrases.bkibolResultScreenReader
+    const resultScreenReaderText = props.phrases.calculatorResultScreenReader
       .replaceAll('{0}', language === 'en' ? endValueText : endValueText.replaceAll('.', ','))
       .replaceAll('{1}', priceChangeLabel)
       .replaceAll('{2}', language === 'en' ? changeValue : changeValue.replaceAll('.', ','))
@@ -622,8 +622,8 @@ function BkibolCalculator(props: BkibolCalculatorProps) {
           <Row>
             <Col>
               <FormError
-                errorMessages={[errorMessage || props.phrases.pifErrorUnknownError]}
-                title={props.phrases.pifErrorCalculationFailed}
+                errorMessages={[errorMessage || props.phrases.calculatorUknownError]}
+                title={props.phrases.calculatorErrorCalculationFailed}
               />
             </Col>
           </Row>

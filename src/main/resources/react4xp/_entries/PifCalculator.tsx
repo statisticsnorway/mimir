@@ -16,7 +16,7 @@ function PifCalculator(props: PifCalculatorProps) {
     title: props.phrases.calculatorMonthAverage,
     id: '90',
   }
-  const { calculatorValidateAmountNumber, pifValidateYear } = props.phrases
+  const { calculatorValidateAmountNumber, calculatorValidateYear } = props.phrases
   const [scopeCode, setScopeCode] = useState({
     error: false,
     errorMsg: '',
@@ -39,7 +39,7 @@ function PifCalculator(props: PifCalculatorProps) {
     value: defaultMonthValue,
   })
   const validMinYear = getStartYearRelevantDataset()
-  const validMinYearPhrase = pifValidateYear.replaceAll('{0}', validMinYear.toString())
+  const validMinYearPhrase = calculatorValidateYear.replaceAll('{0}', validMinYear.toString())
   const validYearErrorMsg = `${validMinYearPhrase} ${validMaxYear}`
   const [startYear, setStartYear] = useState({
     error: false,
@@ -453,7 +453,7 @@ function PifCalculator(props: PifCalculatorProps) {
     const endValueText = endValue?.toString() ?? ''
     const startIndexText = startIndex?.toString() ?? ''
     const endIndexText = endIndex?.toString() ?? ''
-    const pifResultForScreenreader = props.phrases.pifResultForScreenreader
+    const calculatorResultScreenReader = props.phrases.calculatorResultScreenReader
       .replace('{0}', language === 'en' ? endValueText : endValueText.replace('.', ','))
       .replace('{1}', priceChangeLabel)
       .replace('{2}', language === 'en' ? changeValue : changeValue.replace('.', ','))
@@ -465,7 +465,7 @@ function PifCalculator(props: PifCalculatorProps) {
     return (
       <Container className='calculator-result' ref={scrollAnchor} tabIndex={0}>
         <div aria-atomic='true'>
-          <span className='sr-only'>{pifResultForScreenreader}</span>
+          <span className='sr-only'>{calculatorResultScreenReader}</span>
         </div>
         <Row className='mb-5' aria-hidden='true'>
           <Col className='amount-equal col-12 col-md-4'>
@@ -543,8 +543,8 @@ function PifCalculator(props: PifCalculatorProps) {
           <Row>
             <Col>
               <FormError
-                errorMessages={[errorMessage || props.phrases.pifErrorUnknownError]}
-                title={props.phrases.pifErrorCalculationFailed}
+                errorMessages={[errorMessage || props.phrases.calculatorUknownError]}
+                title={props.phrases.calculatorErrorCalculationFailed}
               />
             </Col>
           </Row>

@@ -453,8 +453,8 @@ function HusleieCalculator(props: KpiCalculatorProps) {
           <Row>
             <Col>
               <FormError
-                errorMessages={[errorMessage || props.phrases.kpiErrorUnknownError]}
-                title={props.phrases.kpiErrorCalculationFailed}
+                errorMessages={[errorMessage || props.phrases.calculatorUknownError]}
+                title={props.phrases.calculatorErrorCalculationFailed}
               />
             </Col>
           </Row>
