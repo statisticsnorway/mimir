@@ -53,21 +53,48 @@ export function getKpiDatasetMonth(config: Content<CalculatorConfig>): Dataset |
   return kpiDatasetMonthRepo ? JSONstat(kpiDatasetMonthRepo.data).Dataset('dataset') : null
 }
 
+export const KPI_CALCULATOR_SOURCE_YEAR = 'kpiSourceYear'
+export const KPI_CALCULATOR_SOURCE_MONTH = 'kpiSourceMonth'
+export const BKIBOL_CALCULATOR_SOURCE_ENEBOLIG = 'bkibolSourceEnebolig'
+export const BKIBOL_CALCULATOR_SOURCE_BLOKK = 'bkibolSourceBoligblokk'
+export const PIF_CALCULATOR_SOURCE = 'pifSource'
+export const BPI_CALCULATOR_SOURCE = 'bpiSource'
 export const PIF_CALCULATOR = 'pifCalculator'
 export const BPI_CALCULATOR = 'bpiCalculator'
-// TODO: We could make a generic one for calculators with multiple datasources, such as kpi and bkibol
+// TODO: Use this function to fetch calculator dataset when refactoring remaining calculators. Remember to delete old functions
 export function getCalculatorDatasetFromSource(
   config: Content<CalculatorConfig>,
-  calculator: typeof PIF_CALCULATOR | typeof BPI_CALCULATOR
+  calculator:
+    | typeof KPI_CALCULATOR_SOURCE_YEAR
+    | typeof KPI_CALCULATOR_SOURCE_MONTH
+    | typeof BKIBOL_CALCULATOR_SOURCE_ENEBOLIG
+    | typeof BKIBOL_CALCULATOR_SOURCE_BLOKK
+    | typeof PIF_CALCULATOR
+    | typeof BPI_CALCULATOR
 ): Dataset | null {
   let dataSourceConfig = null
 
-  if (calculator === PIF_CALCULATOR) {
-    dataSourceConfig = config?.data.pifSource
-  }
-
-  if (calculator === BPI_CALCULATOR) {
-    dataSourceConfig = config?.data.bpiSource
+  switch (calculator) {
+    case KPI_CALCULATOR_SOURCE_YEAR:
+      dataSourceConfig = config.data.kpiSourceYear
+      break
+    case KPI_CALCULATOR_SOURCE_MONTH:
+      dataSourceConfig = config.data.kpiSourceMonth
+      break
+    case BKIBOL_CALCULATOR_SOURCE_ENEBOLIG:
+      dataSourceConfig = config.data.bkibolSourceEnebolig
+      break
+    case BKIBOL_CALCULATOR_SOURCE_BLOKK:
+      dataSourceConfig = config.data.bkibolSourceBoligblokk
+      break
+    case PIF_CALCULATOR:
+      dataSourceConfig = config.data.pifSource
+      break
+    case BPI_CALCULATOR:
+      dataSourceConfig = config.data.bpiSource
+      break
+    default:
+      log.error(`Unknown calculator: ${calculator}`)
   }
 
   const dataSource: Content<GenericDataImport & DataSource> | null = dataSourceConfig
