@@ -172,6 +172,7 @@ export function getAllCalculatorDataset(): Array<Content<GenericDataImport>> {
     calculatorDatasetKeys.push(calculatorConfig.data.pifSource)
     calculatorDatasetKeys.push(calculatorConfig.data.bkibolSourceEnebolig)
     calculatorDatasetKeys.push(calculatorConfig.data.bkibolSourceBoligblokk)
+    calculatorDatasetKeys.push(calculatorConfig.data.bpiSource)
   }
 
   calculatorDatasetKeys = calculatorDatasetKeys.filter((dataset) => dataset !== undefined)
