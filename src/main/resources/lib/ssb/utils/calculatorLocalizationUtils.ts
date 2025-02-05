@@ -49,7 +49,27 @@ export function getQuartalPeriodText(language = 'nb', quarter: number): string {
   })
 }
 
-// TODO: Create a getNextPublishText for the other calculators
+export function getNextPublishText({
+  language = 'nb',
+  months,
+  lastUpdatedMonth,
+  lastUpdatedYear,
+  nextUpdateMonth,
+  date,
+  nextReleaseMonth,
+}: CalculatorNextPublishText) {
+  return localize({
+    key: 'calculatorNextPublishText',
+    locale: language,
+    values: [
+      monthLabel(months, language, lastUpdatedMonth as string),
+      lastUpdatedYear,
+      monthLabel(months, language, nextUpdateMonth as string),
+      date,
+      monthLabel(months, language, nextReleaseMonth),
+    ],
+  })
+}
 
 export function getNextQuartalPublishText({
   language = 'nb',
