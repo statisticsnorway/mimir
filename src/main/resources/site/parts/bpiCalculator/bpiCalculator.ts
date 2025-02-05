@@ -10,11 +10,12 @@ import { renderError } from '/lib/ssb/error/error'
 import { getLanguage } from '/lib/ssb/utils/language'
 import { BPI_CALCULATOR, getCalculatorConfig, getCalculatorDatasetFromSource } from '/lib/ssb/dataset/calculator'
 import {
-  getNextPublishText,
+  getNextQuartalPublishText,
   getLastNumberText,
   allMonths,
   allQuartalPeriods,
   allCategoryOptions,
+  getQuartalPeriodText,
 } from '/lib/ssb/utils/calculatorLocalizationUtils'
 import { fromPartCache } from '/lib/ssb/cache/partCache'
 import { type CalculatorConfig } from '/site/content-types'
@@ -51,6 +52,7 @@ function getBpiCalculatorComponent(req: XP.Request, page: Content<CalculatorConf
   if (!config) throw Error('No part found')
 
   const language = getLanguage(page as Content)
+  const languageCode = language?.code
   const phrases = language?.phrases as Phrases
   const calculatorConfig: Content<CalculatorConfig> | undefined = getCalculatorConfig()
   const bpiDataset: Dataset | null = calculatorConfig
@@ -59,22 +61,9 @@ function getBpiCalculatorComponent(req: XP.Request, page: Content<CalculatorConf
   const months: DropdownItems = allMonths(phrases)
   const lastUpdated: CalculatorPeriod | undefined = lastQuartalPeriod(bpiDataset)
   const nextUpdate: CalculatorPeriod = nextQuartalPeriod({
+    quarter: lastUpdated?.quarter,
     month: lastUpdated?.month as string,
     year: lastUpdated?.year as string,
-  })
-  const nextPublishText: string = getNextPublishText({
-    language: language?.code,
-    months,
-    lastUpdatedMonth: lastUpdated?.month as string,
-    lastUpdatedYear: lastUpdated?.year as string,
-    nextPeriodText: phrases.calculatorNextQuartalPeriod,
-    nextReleaseMonth: nextUpdate?.month as string,
-  })
-  const lastNumberText: string = getLastNumberText({
-    language: language?.code,
-    months,
-    lastUpdatedMonth: lastUpdated?.month as string,
-    lastUpdatedYear: lastUpdated?.year as string,
   })
 
   return render(
@@ -83,12 +72,26 @@ function getBpiCalculatorComponent(req: XP.Request, page: Content<CalculatorConf
       bpiCalculatorServiceUrl: serviceUrl({
         service: 'bpiCalculator',
       }),
-      language: language?.code,
+      language: languageCode,
       phrases,
       months,
       lastUpdated,
-      nextPublishText,
-      lastNumberText,
+      nextPublishText: getNextQuartalPublishText({
+        language: languageCode,
+        months,
+        lastUpdatedPeriod: getQuartalPeriodText(languageCode, lastUpdated?.quarter as number),
+        lastUpdatedYear: lastUpdated?.year as string,
+        nextUpdatedQuartal: getQuartalPeriodText(languageCode, nextUpdate?.quarter as number),
+        nextUpdatedYear: nextUpdate?.year as string,
+        date: '13',
+        nextReleaseMonth: nextUpdate?.month as string,
+      }),
+      lastNumberText: getLastNumberText({
+        language: languageCode,
+        months,
+        lastUpdatedPeriod: lastUpdated?.quarter?.toString() as string,
+        lastUpdatedYear: lastUpdated?.year as string,
+      }),
       dwellingTypeList: allCategoryOptions(bpiDataset, 'Boligtype', phrases, 'bpiChooseDwellingType', 'RadioGroup'),
       regionList: allCategoryOptions(bpiDataset, 'Region', phrases, 'bpiChooseRegion', 'Dropdown'),
       quarterPeriodList: allQuartalPeriods(phrases.quarter),

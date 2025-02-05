@@ -1,4 +1,3 @@
-import { quartersToMonths } from 'date-fns'
 import { IndexResult, type CalculatorPeriod } from '/lib/types/calculator'
 import { type Data, type Dataset, type Dimension } from '/lib/types/jsonstat-toolkit'
 
@@ -17,19 +16,28 @@ export function nextPeriod(month: string, year: string): CalculatorPeriod {
   }
 }
 
-export function nextQuartalPeriod({ month, year }: CalculatorPeriod) {
-  const nextQuartalMonth = Math.ceil(Number(month) + 3)
-  const validNextQuartalMonth = nextQuartalMonth < 12 ? nextQuartalMonth : 1 // Ensures that january of next month is displayed correctly after calculation
-
-  return {
-    month: validNextQuartalMonth,
-    year: nextQuartalMonth === 1 ? Number(year) + 1 : year, // January of next year
+export function getQuartalMonth(quarter: number | string) {
+  switch (Number(quarter)) {
+    case 1:
+      return 4 // april
+    case 2:
+      return 7 // july
+    case 3:
+      return 10 // october
+    case 4:
+      return 1 // january
+    default:
+      break
   }
 }
 
-// The quartersToMonths date-fns function picks the last month of the quarter so we have to do calculations to get the first month
-export function getFirstMonthofQuartalPeriod(quarter: string) {
-  return quartersToMonths(Number(quarter)) - 3 + 1
+export function nextQuartalPeriod({ quarter, year }: CalculatorPeriod) {
+  const nextQuarter = (quarter as number) < 4 ? (quarter as number) + 1 : 1
+  return {
+    quarter: nextQuarter,
+    month: getQuartalMonth(nextQuarter),
+    year: (quarter as number) === 4 ? (Number(year) + 1).toString() : year, // January of next year
+  }
 }
 
 export function lastQuartalPeriod(calculatorData: Dataset | null): CalculatorPeriod | undefined {
@@ -41,7 +49,8 @@ export function lastQuartalPeriod(calculatorData: Dataset | null): CalculatorPer
     const [year, quarter]: Array<string> = lastTimeItem.split('K')
 
     return {
-      month: getFirstMonthofQuartalPeriod(quarter),
+      quarter: Number(quarter),
+      month: getQuartalMonth(Number(quarter)),
       year,
     }
   }

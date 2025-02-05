@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import { type Content } from '/lib/xp/content'
 import { localize } from '/lib/xp/i18n'
 import { type Dataset } from '/lib/types/jsonstat-toolkit'
@@ -8,7 +9,7 @@ import {
   getIndexTime,
   getPercentageFromChangeValue,
   getQuartalNumber,
-  getFirstMonthofQuartalPeriod,
+  getQuartalMonth,
   getEndValue,
 } from '/lib/ssb/utils/calculatorUtils'
 import { HttpRequestParams } from '/lib/http-client'
@@ -127,9 +128,9 @@ function fetchBpiResults({
 }: FetchBpiResults) {
   const chronological: boolean = isChronological(
     startYear,
-    getFirstMonthofQuartalPeriod(getQuartalNumber(startQuartalPeriod)).toString(),
+    (getQuartalMonth(getQuartalNumber(startQuartalPeriod)) as number).toString(),
     endYear,
-    getFirstMonthofQuartalPeriod(getQuartalNumber(endQuartalPeriod)).toString()
+    (getQuartalMonth(getQuartalNumber(endQuartalPeriod)) as number).toString()
   )
 
   if (indexResult.startIndex != null && indexResult.endIndex != null) {

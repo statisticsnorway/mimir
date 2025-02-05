@@ -2,7 +2,8 @@ import { DropdownItems } from './components'
 import { Phrases } from './language'
 
 export interface CalculatorPeriod {
-  month: number | string
+  quarter?: number
+  month?: number | string
   year: number | string
 }
 

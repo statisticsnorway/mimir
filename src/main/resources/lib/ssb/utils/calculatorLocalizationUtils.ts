@@ -6,13 +6,18 @@ import { type Dataset, type Dimension } from '/lib/types/jsonstat-toolkit'
 interface CalculatorLastNumberText {
   language: string | undefined
   months: DropdownItems
-  lastUpdatedMonth: string
+  lastUpdatedPeriod: string
+  lastUpdatedMonth?: string
   lastUpdatedYear: string
 }
 
 interface CalculatorNextPublishText extends CalculatorLastNumberText {
   nextUpdateMonth?: string
   nextPeriodText?: string
+  lastUpdatedYear: string
+  nextUpdatedQuartal: string
+  nextUpdatedYear: string
+  date: string
   nextReleaseMonth: string
 }
 
@@ -36,22 +41,35 @@ export function serieLocalization(language: string, series: SeriesKey): string {
   }) as string
 }
 
-export function getNextPublishText({
+export function getQuartalPeriodText(language = 'nb', quarter: number): string {
+  return localize({
+    key: 'calculatorNextQuartalPeriod',
+    locale: language,
+    values: [quarter?.toString() as string],
+  })
+}
+
+// TODO: Create a getNextPublishText for the other calculators
+
+export function getNextQuartalPublishText({
   language = 'nb',
   months,
-  lastUpdatedMonth,
+  lastUpdatedPeriod,
   lastUpdatedYear,
-  nextUpdateMonth,
-  nextPeriodText,
+  nextUpdatedQuartal,
+  nextUpdatedYear,
+  date,
   nextReleaseMonth,
 }: CalculatorNextPublishText) {
   return localize({
-    key: 'calculatorNextPublishText',
+    key: 'calculatorNextQuartalPublishText',
     locale: language,
     values: [
-      monthLabel(months, language, lastUpdatedMonth),
+      lastUpdatedPeriod,
       lastUpdatedYear,
-      nextPeriodText ?? monthLabel(months, language, nextUpdateMonth as string),
+      nextUpdatedQuartal,
+      nextUpdatedYear,
+      date,
       monthLabel(months, language, nextReleaseMonth),
     ],
   })
@@ -66,7 +84,7 @@ export function getLastNumberText({
   return localize({
     key: 'calculatorLastNumber',
     locale: language,
-    values: [monthLabel(months, language, lastUpdatedMonth), lastUpdatedYear],
+    values: [monthLabel(months, language, lastUpdatedMonth as string), lastUpdatedYear],
   })
 }
 

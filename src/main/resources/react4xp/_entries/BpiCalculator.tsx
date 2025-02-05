@@ -77,7 +77,7 @@ function BpiCalculator(props: BpiCalculatorProps) {
     lastNumberText,
     calculatorValidateYear: phrases.calculatorValidateYear,
     validMaxYear: lastUpdated.year,
-    validMaxMonth: lastUpdated.month,
+    validMaxMonth: lastUpdated.month as string,
     validMinYear: 1992,
     months,
   })
