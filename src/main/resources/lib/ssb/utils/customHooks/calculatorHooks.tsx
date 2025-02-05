@@ -12,6 +12,7 @@ interface UseSetupCalculatorProps {
   validMaxMonth: string | number
   validMinYear: number
   months: DropdownItems
+  calculatorNextQuartalPeriodText?: string
 }
 
 export interface CalculatorState {
@@ -30,6 +31,7 @@ export const useSetupCalculator = ({
   validMaxMonth,
   validMinYear,
   months,
+  calculatorNextQuartalPeriodText = '',
 }: UseSetupCalculatorProps) => {
   const validYearErrorMsg = calculatorValidateYear
     ? `${calculatorValidateYear.replaceAll('{0}', validMinYear.toString())} ${validMaxYear}`
@@ -291,7 +293,7 @@ export const useSetupCalculator = ({
   }
 
   function getQuartalPeriod(quartal: string, year: string) {
-    return `${quartal} ${year}`
+    return `${calculatorNextQuartalPeriodText.replaceAll('{0}', getQuartalNumber(quartal))} ${year}`
   }
 
   return {

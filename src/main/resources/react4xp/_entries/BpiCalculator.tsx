@@ -80,6 +80,7 @@ function BpiCalculator(props: BpiCalculatorProps) {
     validMaxMonth: lastUpdated.month as string,
     validMinYear: 1992,
     months,
+    calculatorNextQuartalPeriodText: phrases.calculatorNextQuartalPeriod,
   })
 
   function onCategoryChange(id: string, value: CalculatorState['value']) {
@@ -154,8 +155,8 @@ function BpiCalculator(props: BpiCalculatorProps) {
         },
       })
       .then((res) => {
-        const startPeriod = getQuartalPeriod((startMonth.value as DropdownItem).title, startYear.value as string)
-        const endPeriod = getQuartalPeriod((endMonth.value as DropdownItem).title, endYear.value as string)
+        const startPeriod = getQuartalPeriod((startMonth.value as DropdownItem).id, startYear.value as string)
+        const endPeriod = getQuartalPeriod((endMonth.value as DropdownItem).id, endYear.value as string)
         setChange(res.data.change)
         setEndValue(res.data.endValue)
         setStartPeriod(startPeriod)
