@@ -285,7 +285,7 @@ function BpiCalculator(props: BpiCalculatorProps) {
     )
   }
 
-  function prepCalculatorResults() {
+  function prepCalculatorResult() {
     if (endValue && change) {
       const priceChangeLabel = change?.charAt(0) === '-' ? phrases.priceDecrease : phrases.priceIncrease
       const changeValue = change?.charAt(0) === '-' ? change.replace('-', '') : (change ?? '')
@@ -353,7 +353,7 @@ function BpiCalculator(props: BpiCalculatorProps) {
       errorMessage={errorMessage}
       calculatorUknownError={phrases.calculatorUknownError}
       calculatorErrorCalculationFailed={phrases.calculatorErrorCalculationFailed}
-      renderResult={prepCalculatorResults}
+      renderResult={prepCalculatorResult}
       renderForm={renderForm}
     />
   )

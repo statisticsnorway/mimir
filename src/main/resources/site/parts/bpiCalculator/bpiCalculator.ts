@@ -83,7 +83,7 @@ function getBpiCalculatorComponent(req: XP.Request, page: Content<CalculatorConf
       bpiCalculatorServiceUrl: serviceUrl({
         service: 'bpiCalculator',
       }),
-      language,
+      language: language?.code,
       phrases,
       months,
       lastUpdated,
