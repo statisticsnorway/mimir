@@ -217,12 +217,9 @@ function BpiCalculator(props: BpiCalculatorProps) {
                 errorMessage={region.errorMsg}
                 ariaLabel={phrases.bpiChooseRegion}
               />
-            </Col>
-          </Row>
-          <Divider className='my-5' />
-          <Row className='d-flex justify-content-end'>
-            <Col className='input-amount col-12 col-md-6 col-xl-8'>
-              <h3 id='amount'>{phrases.amount}</h3>
+              <h3 id='amount' className='mt-3'>
+                {phrases.amount}
+              </h3>
               <Input
                 className='start-value'
                 handleChange={(value: string) => onChange('start-value', value)}
