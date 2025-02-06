@@ -51,7 +51,7 @@ export function lastQuartalPeriod(calculatorData: Dataset | null): CalculatorPer
     return {
       quarter: Number(quarter),
       month: getQuartalMonth(Number(quarter)),
-      year,
+      year: Number(quarter) === 4 ? (Number(year) + 1).toString() : year,
     }
   }
 }
