@@ -41,7 +41,7 @@ export const useSetupCalculator = ({
     errorMsg: calculatorValidateAmountNumber,
     value: '',
   })
-  const [startMonth, setStartMonth] = useState<CalculatorState>({
+  const [startPeriod, setStartPeriod] = useState<CalculatorState>({
     error: false,
     errorMsg: lastNumberText,
     value: defaultMonthValue,
@@ -53,7 +53,7 @@ export const useSetupCalculator = ({
     value: '',
   })
 
-  const [endMonth, setEndMonth] = useState<CalculatorState>({
+  const [endPeriod, setEndPeriod] = useState<CalculatorState>({
     error: false,
     errorMsg: lastNumberText,
     value: defaultMonthValue,
@@ -69,8 +69,8 @@ export const useSetupCalculator = ({
   const [loading, setLoading] = useState(false)
   const [change, setChange] = useState<string | null>(null)
   const [endValue, setEndValue] = useState<null | number>(null)
-  const [startPeriod, setStartPeriod] = useState<string | null>(null)
-  const [endPeriod, setEndPeriod] = useState<string | null>(null)
+  const [startResultPeriod, setStartResultPeriod] = useState<string | null>(null)
+  const [endResultPeriod, setEndResultPeriod] = useState<string | null>(null)
   const [startValueResult, setStartValueResult] = useState<string | null>(null)
   const [startIndex, setStartIndex] = useState<number | null>(null)
   const [endIndex, setEndIndex] = useState<number | null>(null)
@@ -108,43 +108,43 @@ export const useSetupCalculator = ({
     return !(!isEndYearValid || isNaN(intEndYear) || intEndYear < validMinYear || intEndYear > Number(validMaxYear))
   }
 
-  function isStartMonthValid(value?: string) {
-    const startMonthValue = value || (startMonth.value as DropdownItem).id
-    const isQuartalPeriod = startMonthValue !== '' && isNaN(Number(startMonthValue))
-    const startMonthOrQuartalPeriodMonthValue = isQuartalPeriod
-      ? (getMonthByQuartal(getQuartalNumber(startMonthValue)) as number)
-      : startMonthValue
-
-    const startMonthValid = !(startYear.value === validMaxYear && startMonthOrQuartalPeriodMonthValue > validMaxMonth)
-    if (!startMonthValid) {
-      setStartMonth((prevState) => ({
-        ...prevState,
-        error: true,
-      }))
-    }
-    return startMonthValue === '' ? false : startMonthValid
+  // We use months for validation calculations so quarter values e.g. K1 gets converted to month
+  function getPeriodOrQuartalPeriodMonthValue(periodValue: string) {
+    const isQuartalPeriod = periodValue !== '' && isNaN(Number(periodValue))
+    return isQuartalPeriod ? (getMonthByQuartal(getQuartalNumber(periodValue)) as number) : periodValue
   }
 
-  function isEndMonthValid(value?: string) {
-    const endMonthValue = value || (endMonth.value as DropdownItem).id
-    const isQuartalPeriod = endMonthValue !== '' && isNaN(Number(endMonthValue))
-    const endMonthOrQuartalPeriodMonthValue = isQuartalPeriod
-      ? (getMonthByQuartal(getQuartalNumber(endMonthValue)) as number)
-      : endMonthValue
+  function isStartPeriodValid(value?: string) {
+    const startPeriodValue = value || (startPeriod.value as DropdownItem).id
+    const startPeriodOrQuartalPeriodMonthValue = getPeriodOrQuartalPeriodMonthValue(startPeriodValue)
 
-    const maxYearAverage = Number(validMaxMonth) === 12 ? validMaxYear : Number(validMaxYear) - 1
-    const endMonthValid =
-      endMonthValue === '90'
-        ? (endYear.value as string) <= maxYearAverage
-        : !(endYear.value === validMaxYear && endMonthOrQuartalPeriodMonthValue > validMaxMonth)
-
-    if (!endMonthValid) {
-      setEndMonth((prevState) => ({
+    const startPeriodValid = !(startYear.value === validMaxYear && startPeriodOrQuartalPeriodMonthValue > validMaxMonth)
+    if (!startPeriodValid) {
+      setStartPeriod((prevState) => ({
         ...prevState,
         error: true,
       }))
     }
-    return endMonthValue === '' ? false : endMonthValid
+    return startPeriodValue === '' ? false : startPeriodValid
+  }
+
+  function isEndPeriodValid(value?: string) {
+    const endPeriodValue = value || (endPeriod.value as DropdownItem).id
+    const endPeriodOrQuartalPeriodMonthValue = getPeriodOrQuartalPeriodMonthValue(endPeriodValue)
+
+    const maxYearAverage = Number(validMaxMonth) === 12 ? validMaxYear : Number(validMaxYear) - 1
+    const endPeriodValid =
+      endPeriodValue === '90'
+        ? (endYear.value as string) <= maxYearAverage
+        : !(endYear.value === validMaxYear && endPeriodOrQuartalPeriodMonthValue > validMaxMonth)
+
+    if (!endPeriodValid) {
+      setEndPeriod((prevState) => ({
+        ...prevState,
+        error: true,
+      }))
+    }
+    return endPeriodValue === '' ? false : endPeriodValid
   }
 
   function onBlur(id: string) {
@@ -170,18 +170,18 @@ export const useSetupCalculator = ({
         }))
         break
       }
-      case 'start-month': {
-        setStartMonth((prevState) => ({
+      case 'start-period': {
+        setStartPeriod((prevState) => ({
           ...prevState,
-          error: !isStartMonthValid(),
+          error: !isStartPeriodValid(),
           errorMsg: (prevState.value as DropdownItem)?.id !== '' ? lastNumberText : defaultMonthErrorMsg,
         }))
         break
       }
-      case 'end-month': {
-        setEndMonth((prevState) => ({
+      case 'end-period': {
+        setEndPeriod((prevState) => ({
           ...prevState,
-          error: !isEndMonthValid(),
+          error: !isEndPeriodValid(),
           errorMsg: (prevState.value as DropdownItem)?.id !== '' ? lastNumberText : defaultMonthErrorMsg,
         }))
         break
@@ -203,18 +203,18 @@ export const useSetupCalculator = ({
         }))
         break
       }
-      case 'start-month': {
-        setStartMonth((prevState) => ({
+      case 'start-period': {
+        setStartPeriod((prevState) => ({
           ...prevState,
           value,
-          error: prevState.error ? !isStartMonthValid((value as DropdownItem)?.id as string) : prevState.error,
+          error: prevState.error ? !isStartPeriodValid((value as DropdownItem)?.id as string) : prevState.error,
           errorMsg: (value as DropdownItem)?.id !== '' ? lastNumberText : defaultMonthErrorMsg,
         }))
         break
       }
       case 'start-year': {
-        if (startMonth.error) {
-          setStartMonth((prevState) => ({
+        if (startPeriod.error) {
+          setStartPeriod((prevState) => ({
             ...prevState,
             error: false,
           }))
@@ -226,18 +226,18 @@ export const useSetupCalculator = ({
         }))
         break
       }
-      case 'end-month': {
-        setEndMonth((prevState) => ({
+      case 'end-period': {
+        setEndPeriod((prevState) => ({
           ...prevState,
           value,
-          error: prevState.error ? !isEndMonthValid((value as DropdownItem)?.id) : prevState.error,
+          error: prevState.error ? !isEndPeriodValid((value as DropdownItem)?.id) : prevState.error,
           errorMsg: (value as DropdownItem)?.id !== '' ? lastNumberText : defaultMonthErrorMsg,
         }))
         break
       }
       case 'end-year': {
-        if (endMonth.error) {
-          setEndMonth((prevState) => ({
+        if (endPeriod.error) {
+          setEndPeriod((prevState) => ({
             ...prevState,
             error: false,
           }))
@@ -288,11 +288,11 @@ export const useSetupCalculator = ({
   }
 
   // Some calculators have defaultMonthValue = '90' for yearly average
-  function getPeriod(year: string, month: string, defaultMonthValue?: string) {
+  function getResultPeriod(year: string, month: string, defaultMonthValue?: string) {
     return month === (defaultMonthValue ?? '') ? year : `${getMonthLabel(month)} ${year}`
   }
 
-  function getQuartalPeriod(quartal: string, year: string) {
+  function getResultQuartalPeriod(quartal: string, year: string) {
     return `${calculatorNextQuartalPeriodText.replaceAll('{0}', getQuartalNumber(quartal))} ${year}`
   }
 
@@ -300,15 +300,15 @@ export const useSetupCalculator = ({
     states: {
       loading,
       errorMessage,
-      startMonth,
+      startPeriod,
       startYear,
-      endMonth,
+      endPeriod,
       endYear,
       startValue,
       change,
       endValue,
-      startPeriod,
-      endPeriod,
+      startResultPeriod,
+      endResultPeriod,
       startValueResult,
       startIndex,
       endIndex,
@@ -318,8 +318,8 @@ export const useSetupCalculator = ({
       setErrorMessage,
       setChange,
       setEndValue,
-      setStartPeriod,
-      setEndPeriod,
+      setStartResultPeriod,
+      setEndResultPeriod,
       setStartValueResult,
       setStartIndex,
       setEndIndex,
@@ -330,13 +330,13 @@ export const useSetupCalculator = ({
       isStartValueValid,
       isStartYearValid,
       isEndYearValid,
-      isStartMonthValid,
-      isEndMonthValid,
+      isStartPeriodValid,
+      isEndPeriodValid,
     },
     scrollAnchor,
     onSubmitBtnElement,
-    getPeriod,
-    getQuartalPeriod,
+    getResultPeriod,
+    getResultQuartalPeriod,
     closeResult,
   }
 }

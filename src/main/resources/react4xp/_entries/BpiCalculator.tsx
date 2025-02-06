@@ -44,10 +44,10 @@ function BpiCalculator(props: BpiCalculatorProps) {
       endValue,
       startYear,
       endYear,
-      startMonth,
-      endMonth,
       startPeriod,
       endPeriod,
+      startResultPeriod,
+      endResultPeriod,
       change,
       startValueResult,
       startIndex,
@@ -58,17 +58,17 @@ function BpiCalculator(props: BpiCalculatorProps) {
       setErrorMessage,
       setChange,
       setEndValue,
-      setStartPeriod,
-      setEndPeriod,
+      setStartResultPeriod,
+      setEndResultPeriod,
       setStartValueResult,
       setStartIndex,
       setEndIndex,
       onChange,
     },
-    validation: { onBlur, isStartValueValid, isStartYearValid, isEndYearValid, isStartMonthValid, isEndMonthValid },
+    validation: { onBlur, isStartValueValid, isStartYearValid, isEndYearValid, isStartPeriodValid, isEndPeriodValid },
     scrollAnchor,
     onSubmitBtnElement,
-    getQuartalPeriod,
+    getResultQuartalPeriod,
     closeResult,
   } = useSetupCalculator({
     calculatorValidateAmountNumber: phrases.calculatorValidateAmountNumber,
@@ -120,9 +120,9 @@ function BpiCalculator(props: BpiCalculatorProps) {
       isRegionValid() &&
       isStartValueValid() &&
       isStartYearValid() &&
-      isStartMonthValid() &&
+      isStartPeriodValid() &&
       isEndYearValid() &&
-      isEndMonthValid()
+      isEndPeriodValid()
     )
   }
 
@@ -134,9 +134,9 @@ function BpiCalculator(props: BpiCalculatorProps) {
     if (!isFormValid()) {
       onBlur('start-value')
       onBlur('start-year')
-      onBlur('start-month')
+      onBlur('start-period')
       onBlur('end-year')
-      onBlur('end-month')
+      onBlur('end-period')
       return
     }
     setErrorMessage(null)
@@ -148,19 +148,22 @@ function BpiCalculator(props: BpiCalculatorProps) {
           region: region.value.id,
           startValue: startValue.value,
           startYear: startYear.value,
-          startQuartalPeriod: (startMonth.value as DropdownItem).id,
+          startQuartalPeriod: (startPeriod.value as DropdownItem).id,
           endYear: endYear.value,
-          endQuartalPeriod: (endMonth.value as DropdownItem).id,
+          endQuartalPeriod: (endPeriod.value as DropdownItem).id,
           language: language,
         },
       })
       .then((res) => {
-        const startPeriod = getQuartalPeriod((startMonth.value as DropdownItem).id, startYear.value as string)
-        const endPeriod = getQuartalPeriod((endMonth.value as DropdownItem).id, endYear.value as string)
+        const startResultPeriod = getResultQuartalPeriod(
+          (startPeriod.value as DropdownItem).id,
+          startYear.value as string
+        )
+        const endResultPeriod = getResultQuartalPeriod((endPeriod.value as DropdownItem).id, endYear.value as string)
         setChange(res.data.change)
         setEndValue(res.data.endValue)
-        setStartPeriod(startPeriod)
-        setEndPeriod(endPeriod)
+        setStartResultPeriod(startResultPeriod)
+        setEndResultPeriod(endResultPeriod)
         setStartIndex(res.data.startIndex.toFixed(1))
         setEndIndex(res.data.endIndex.toFixed(1))
         setStartValueResult(startValue.value)
@@ -177,16 +180,16 @@ function BpiCalculator(props: BpiCalculatorProps) {
       })
   }
 
-  function addDropdownChooseQuarter(id: 'start-month' | 'end-month') {
+  function addDropdownChooseQuarter(id: 'start-period' | 'end-period') {
     return (
       <Dropdown
         className='month'
         id={id}
         header={phrases.calculatorChooseQuartalPeriod}
         onSelect={(value: DropdownItem) => onChange(id, value)}
-        error={id === 'start-month' ? startMonth.error : endMonth.error}
-        errorMessage={id === 'start-month' ? startMonth.errorMsg : endMonth.errorMsg}
-        selectedItem={id === 'start-month' ? startMonth.value : endMonth.value}
+        error={id === 'start-period' ? startPeriod.error : endPeriod.error}
+        errorMessage={id === 'start-period' ? startPeriod.errorMsg : endPeriod.errorMsg}
+        selectedItem={id === 'start-period' ? startPeriod.value : endPeriod.value}
         items={quarterPeriodList}
       />
     )
@@ -247,7 +250,7 @@ function BpiCalculator(props: BpiCalculatorProps) {
                       onBlur={() => onBlur('start-year')}
                     />
                   </Col>
-                  <Col className='select-month col-12 col-sm-7'>{addDropdownChooseQuarter('start-month')}</Col>
+                  <Col className='select-month col-12 col-sm-7'>{addDropdownChooseQuarter('start-period')}</Col>
                 </Row>
               </Container>
             </Col>
@@ -266,7 +269,7 @@ function BpiCalculator(props: BpiCalculatorProps) {
                       onBlur={() => onBlur('end-year')}
                     />
                   </Col>
-                  <Col className='select-month col-12 col-sm-7'>{addDropdownChooseQuarter('end-month')}</Col>
+                  <Col className='select-month col-12 col-sm-7'>{addDropdownChooseQuarter('end-period')}</Col>
                 </Row>
               </Container>
             </Col>
@@ -294,8 +297,8 @@ function BpiCalculator(props: BpiCalculatorProps) {
         .replace('{0}', language === 'en' ? endValueText : endValueText.replace('.', ','))
         .replace('{1}', priceChangeLabel)
         .replace('{2}', language === 'en' ? changeValue : changeValue.replace('.', ','))
-        .replaceAll('{3}', startPeriod ?? '')
-        .replaceAll('{4}', endPeriod ?? '')
+        .replaceAll('{3}', startResultPeriod ?? '')
+        .replaceAll('{4}', endResultPeriod ?? '')
         .replace('{5}', language === 'en' ? startIndexText : startIndexText.replace('.', ','))
         .replace('{6}', language === 'en' ? endIndexText : endIndexText.replace('.', ','))
 
@@ -313,23 +316,23 @@ function BpiCalculator(props: BpiCalculatorProps) {
               type: 'change',
             },
             {
-              label: `${phrases.amount} ${startPeriod}`,
+              label: `${phrases.amount} ${startResultPeriod}`,
               value: startValueResult!,
               type: 'valute',
             },
             {
-              label: `${phrases.amount} ${endPeriod}`,
+              label: `${phrases.amount} ${endResultPeriod}`,
               value: endValue!,
               type: 'valute',
             },
           ],
           [
             {
-              label: `${phrases.index} ${startPeriod}`,
+              label: `${phrases.index} ${startResultPeriod}`,
               value: startIndex!,
             },
             {
-              label: `${phrases.index} ${endPeriod}`,
+              label: `${phrases.index} ${endResultPeriod}`,
               value: endIndex!,
             },
           ],
