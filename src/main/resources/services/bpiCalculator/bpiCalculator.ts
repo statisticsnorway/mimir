@@ -8,8 +8,8 @@ import {
   isChronological,
   getIndexTime,
   getPercentageFromChangeValue,
-  getQuartalNumber,
-  getPublishMonthByQuartal,
+  getQuarterNumber,
+  getPublishMonthByQuarter,
   getEndValue,
 } from '/lib/ssb/utils/calculatorUtils'
 import { HttpRequestParams } from '/lib/http-client'
@@ -18,9 +18,9 @@ import { type CalculatorConfig } from '/site/content-types'
 
 interface BpiIndexes {
   calculatorData: Dataset | null
-  startQuartalPeriod: string
+  startQuarterPeriod: string
   startYear: string
-  endQuartalPeriod: string
+  endQuarterPeriod: string
   endYear: string
   dwellingType: string
   region: string
@@ -29,9 +29,9 @@ interface BpiIndexes {
 
 interface FetchBpiResults {
   startValue: string | undefined
-  startQuartalPeriod: BpiIndexes['startQuartalPeriod']
+  startQuarterPeriod: BpiIndexes['startQuarterPeriod']
   startYear: BpiIndexes['startYear']
-  endQuartalPeriod: BpiIndexes['endQuartalPeriod']
+  endQuarterPeriod: BpiIndexes['endQuarterPeriod']
   endYear: BpiIndexes['endYear']
   language: string
   indexResult: IndexResult
@@ -41,13 +41,13 @@ function get(req: HttpRequestParams): XP.Response {
   const dwellingType: string | undefined = req.params?.dwellingType ?? '00'
   const region: string | undefined = req.params?.region ?? 'TOTAL'
   const startValue: string | undefined = req.params?.startValue
-  const startQuartalPeriod: string | undefined = req.params?.startQuartalPeriod
+  const startQuarterPeriod: string | undefined = req.params?.startQuarterPeriod
   const startYear: string | undefined = req.params?.startYear
-  const endQuartalPeriod: string | undefined = req.params?.endQuartalPeriod
+  const endQuarterPeriod: string | undefined = req.params?.endQuarterPeriod
   const endYear: string | undefined = req.params?.endYear
   const language: string | undefined = req.params?.language ? req.params.language : 'nb'
 
-  if (!startValue || !startQuartalPeriod || !endQuartalPeriod || !startYear || !endYear) {
+  if (!startValue || !startQuarterPeriod || !endQuarterPeriod || !startYear || !endYear) {
     return {
       status: 400,
       body: {
@@ -64,18 +64,18 @@ function get(req: HttpRequestParams): XP.Response {
       : null
     const indexResult = getIndexes({
       calculatorData: bpiDataset,
-      startQuartalPeriod,
+      startQuarterPeriod,
       startYear,
-      endQuartalPeriod,
+      endQuarterPeriod,
       endYear,
       dwellingType,
       region,
     })
     return fetchBpiResults({
       startValue,
-      startQuartalPeriod,
+      startQuarterPeriod,
       startYear,
-      endQuartalPeriod,
+      endQuarterPeriod,
       endYear,
       language,
       indexResult,
@@ -93,15 +93,15 @@ function get(req: HttpRequestParams): XP.Response {
 
 function getIndexes({
   calculatorData,
-  startQuartalPeriod,
+  startQuarterPeriod,
   startYear,
-  endQuartalPeriod,
+  endQuarterPeriod,
   endYear,
   dwellingType,
   region,
 }: BpiIndexes) {
-  const startPeriod: string | undefined = startYear + startQuartalPeriod
-  const endPeriod: string | undefined = endYear + endQuartalPeriod
+  const startPeriod: string | undefined = startYear + startQuarterPeriod
+  const endPeriod: string | undefined = endYear + endQuarterPeriod
 
   const parsedData = {
     Boligtype: dwellingType,
@@ -119,18 +119,18 @@ function getIndexes({
 
 function fetchBpiResults({
   startValue,
-  startQuartalPeriod,
+  startQuarterPeriod,
   startYear,
-  endQuartalPeriod,
+  endQuarterPeriod,
   endYear,
   language,
   indexResult,
 }: FetchBpiResults) {
   const chronological: boolean = isChronological(
     startYear,
-    (getPublishMonthByQuartal(getQuartalNumber(startQuartalPeriod)) as number).toString(),
+    (getPublishMonthByQuarter(getQuarterNumber(startQuarterPeriod)) as number).toString(),
     endYear,
-    (getPublishMonthByQuartal(getQuartalNumber(endQuartalPeriod)) as number).toString()
+    (getPublishMonthByQuarter(getQuarterNumber(endQuarterPeriod)) as number).toString()
   )
 
   if (indexResult.startIndex != null && indexResult.endIndex != null) {
@@ -145,12 +145,12 @@ function fetchBpiResults({
       contentType: 'application/json',
     }
   } else {
-    const calculatorServiceValidateStartQuartalPeriod = localize({
-      key: 'calculatorServiceValidateStartQuartalPeriod',
+    const calculatorServiceValidateStartQuarterPeriod = localize({
+      key: 'calculatorServiceValidateStartQuarterPeriod',
       locale: language,
     })
-    const calculatorServiceValidateEndQuartalPeriod = localize({
-      key: 'calculatorServiceValidateEndQuartalPeriod',
+    const calculatorServiceValidateEndQuarterPeriod = localize({
+      key: 'calculatorServiceValidateEndQuarterPeriod',
       locale: language,
     })
 
@@ -159,8 +159,8 @@ function fetchBpiResults({
       body: {
         error:
           indexResult.startIndex === null
-            ? calculatorServiceValidateStartQuartalPeriod
-            : calculatorServiceValidateEndQuartalPeriod,
+            ? calculatorServiceValidateStartQuarterPeriod
+            : calculatorServiceValidateEndQuarterPeriod,
       },
       contentType: 'application/json',
     }

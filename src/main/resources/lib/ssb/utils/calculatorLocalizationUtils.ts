@@ -15,7 +15,7 @@ interface CalculatorNextPublishText extends CalculatorLastNumberText {
   nextUpdateMonth?: string
   nextPeriodText?: string
   lastUpdatedYear: string
-  nextUpdatedQuartal?: string
+  nextUpdatedQuarter?: string
   nextUpdatedYear?: string
   date?: string
   nextReleaseMonth: string | number
@@ -41,9 +41,9 @@ export function serieLocalization(language: string, series: SeriesKey): string {
   }) as string
 }
 
-export function getQuartalPeriodText(language = 'nb', quarter: number): string {
+export function getQuarterPeriodText(language = 'nb', quarter: number): string {
   return localize({
-    key: 'calculatorNextQuartalPeriod',
+    key: 'calculatorNextQuarterPeriod',
     locale: language,
     values: [quarter?.toString() as string],
   })
@@ -85,23 +85,23 @@ export function getLastNumberText({
   })
 }
 
-export function getNextQuartalPublishText({
+export function getNextQuarterPublishText({
   language = 'nb',
   months,
   lastUpdatedPeriod,
   lastUpdatedYear,
-  nextUpdatedQuartal,
+  nextUpdatedQuarter,
   nextUpdatedYear,
   date,
   nextReleaseMonth,
 }: CalculatorNextPublishText) {
   return localize({
-    key: 'calculatorNextQuartalPublishText',
+    key: 'calculatorNextQuarterPublishText',
     locale: language,
     values: [
       lastUpdatedPeriod as string,
       lastUpdatedYear,
-      nextUpdatedQuartal as string,
+      nextUpdatedQuarter as string,
       nextUpdatedYear as string,
       date as string,
       monthLabel(months, language, nextReleaseMonth),
@@ -180,7 +180,7 @@ export function monthLabel(months: DropdownItems, language: string | undefined, 
   return ''
 }
 
-export function allQuartalPeriods(quarterPhrase: string) {
+export function allQuarterPeriods(quarterPhrase: string) {
   const quarterPeriodList = []
   let count = 1
   while (count <= 4) {

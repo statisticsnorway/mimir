@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { type DropdownItem, type DropdownItems } from '/lib/types/components'
-import { getQuartalNumber, getMonthByQuartal } from '/lib/ssb/utils/calculatorUtils'
+import { getQuarterNumber, getMonthByQuarter } from '/lib/ssb/utils/calculatorUtils'
 
 interface UseSetupCalculatorProps {
   calculatorValidateAmountNumber?: string
@@ -12,7 +12,7 @@ interface UseSetupCalculatorProps {
   validMaxMonth: string | number
   validMinYear: number
   months: DropdownItems
-  calculatorNextQuartalPeriodText?: string
+  calculatorNextQuarterPeriodText?: string
 }
 
 export interface CalculatorState {
@@ -31,7 +31,7 @@ export const useSetupCalculator = ({
   validMaxMonth,
   validMinYear,
   months,
-  calculatorNextQuartalPeriodText = '',
+  calculatorNextQuarterPeriodText = '',
 }: UseSetupCalculatorProps) => {
   const validYearErrorMsg = calculatorValidateYear
     ? `${calculatorValidateYear.replaceAll('{0}', validMinYear.toString())} ${validMaxYear}`
@@ -109,16 +109,16 @@ export const useSetupCalculator = ({
   }
 
   // We use months for validation calculations so quarter values e.g. K1 gets converted to month
-  function getPeriodOrQuartalPeriodMonthValue(periodValue: string) {
-    const isQuartalPeriod = periodValue !== '' && isNaN(Number(periodValue))
-    return isQuartalPeriod ? (getMonthByQuartal(getQuartalNumber(periodValue)) as number) : periodValue
+  function getPeriodOrQuarterPeriodMonthValue(periodValue: string) {
+    const isQuarterPeriod = periodValue !== '' && isNaN(Number(periodValue))
+    return isQuarterPeriod ? (getMonthByQuarter(getQuarterNumber(periodValue)) as number) : periodValue
   }
 
   function isStartPeriodValid(value?: string) {
     const startPeriodValue = value || (startPeriod.value as DropdownItem).id
-    const startPeriodOrQuartalPeriodMonthValue = getPeriodOrQuartalPeriodMonthValue(startPeriodValue)
+    const startPeriodOrQuarterPeriodMonthValue = getPeriodOrQuarterPeriodMonthValue(startPeriodValue)
 
-    const startPeriodValid = !(startYear.value === validMaxYear && startPeriodOrQuartalPeriodMonthValue > validMaxMonth)
+    const startPeriodValid = !(startYear.value === validMaxYear && startPeriodOrQuarterPeriodMonthValue > validMaxMonth)
     if (!startPeriodValid) {
       setStartPeriod((prevState) => ({
         ...prevState,
@@ -130,13 +130,13 @@ export const useSetupCalculator = ({
 
   function isEndPeriodValid(value?: string) {
     const endPeriodValue = value || (endPeriod.value as DropdownItem).id
-    const endPeriodOrQuartalPeriodMonthValue = getPeriodOrQuartalPeriodMonthValue(endPeriodValue)
+    const endPeriodOrQuarterPeriodMonthValue = getPeriodOrQuarterPeriodMonthValue(endPeriodValue)
 
     const maxYearAverage = Number(validMaxMonth) === 12 ? validMaxYear : Number(validMaxYear) - 1
     const endPeriodValid =
       endPeriodValue === '90'
         ? (endYear.value as string) <= maxYearAverage
-        : !(endYear.value === validMaxYear && endPeriodOrQuartalPeriodMonthValue > validMaxMonth)
+        : !(endYear.value === validMaxYear && endPeriodOrQuarterPeriodMonthValue > validMaxMonth)
 
     if (!endPeriodValid) {
       setEndPeriod((prevState) => ({
@@ -292,8 +292,8 @@ export const useSetupCalculator = ({
     return month === (defaultMonthValue ?? '') ? year : `${getMonthLabel(month)} ${year}`
   }
 
-  function getResultQuartalPeriod(quartal: string, year: string) {
-    return `${calculatorNextQuartalPeriodText.replaceAll('{0}', getQuartalNumber(quartal))} ${year}`
+  function getResultQuarterPeriod(quarter: string, year: string) {
+    return `${calculatorNextQuarterPeriodText.replaceAll('{0}', getQuarterNumber(quarter))} ${year}`
   }
 
   return {
@@ -336,7 +336,7 @@ export const useSetupCalculator = ({
     scrollAnchor,
     onSubmitBtnElement,
     getResultPeriod,
-    getResultQuartalPeriod,
+    getResultQuarterPeriod,
     closeResult,
   }
 }

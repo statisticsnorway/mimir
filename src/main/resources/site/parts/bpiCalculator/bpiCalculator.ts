@@ -5,17 +5,17 @@ import { type CalculatorPeriod } from '/lib/types/calculator'
 import { type Phrases } from '/lib/types/language'
 import { render } from '/lib/enonic/react4xp'
 import { type DropdownItems } from '/lib/types/components'
-import { lastQuartalPeriod, nextQuartalPeriod } from '/lib/ssb/utils/calculatorUtils'
+import { lastQuarterPeriod, nextQuarterPeriod } from '/lib/ssb/utils/calculatorUtils'
 import { renderError } from '/lib/ssb/error/error'
 import { getLanguage } from '/lib/ssb/utils/language'
 import { BPI_CALCULATOR, getCalculatorConfig, getCalculatorDatasetFromSource } from '/lib/ssb/dataset/calculator'
 import {
-  getNextQuartalPublishText,
+  getNextQuarterPublishText,
   getLastNumberText,
   allMonths,
-  allQuartalPeriods,
+  allQuarterPeriods,
   allCategoryOptions,
-  getQuartalPeriodText,
+  getQuarterPeriodText,
 } from '/lib/ssb/utils/calculatorLocalizationUtils'
 import { fromPartCache } from '/lib/ssb/cache/partCache'
 import { type CalculatorConfig } from '/site/content-types'
@@ -59,8 +59,8 @@ function getBpiCalculatorComponent(req: XP.Request, page: Content<CalculatorConf
     ? getCalculatorDatasetFromSource(calculatorConfig, BPI_CALCULATOR)
     : null
   const months: DropdownItems = allMonths(phrases)
-  const lastUpdated: CalculatorPeriod | undefined = lastQuartalPeriod(bpiDataset)
-  const nextUpdate: CalculatorPeriod = nextQuartalPeriod({
+  const lastUpdated: CalculatorPeriod | undefined = lastQuarterPeriod(bpiDataset)
+  const nextUpdate: CalculatorPeriod = nextQuarterPeriod({
     quarter: lastUpdated?.quarter,
     month: lastUpdated?.month as string,
     year: lastUpdated?.year as string,
@@ -76,12 +76,12 @@ function getBpiCalculatorComponent(req: XP.Request, page: Content<CalculatorConf
       phrases,
       months,
       lastUpdated,
-      nextPublishText: getNextQuartalPublishText({
+      nextPublishText: getNextQuarterPublishText({
         language: languageCode,
         months,
-        lastUpdatedPeriod: getQuartalPeriodText(languageCode, lastUpdated?.quarter as number),
+        lastUpdatedPeriod: getQuarterPeriodText(languageCode, lastUpdated?.quarter as number),
         lastUpdatedYear: lastUpdated?.year as string,
-        nextUpdatedQuartal: getQuartalPeriodText(languageCode, nextUpdate?.quarter as number),
+        nextUpdatedQuarter: getQuarterPeriodText(languageCode, nextUpdate?.quarter as number),
         nextUpdatedYear: nextUpdate?.year as string,
         date: '13',
         nextReleaseMonth: nextUpdate?.month as string,
@@ -89,12 +89,12 @@ function getBpiCalculatorComponent(req: XP.Request, page: Content<CalculatorConf
       lastNumberText: getLastNumberText({
         language: languageCode,
         months,
-        lastUpdatedPeriod: getQuartalPeriodText(languageCode, lastUpdated?.quarter as number),
+        lastUpdatedPeriod: getQuarterPeriodText(languageCode, lastUpdated?.quarter as number),
         lastUpdatedYear: lastUpdated?.year as string,
       }),
       dwellingTypeList: allCategoryOptions(bpiDataset, 'Boligtype', phrases, 'bpiChooseDwellingType', 'RadioGroup'),
       regionList: allCategoryOptions(bpiDataset, 'Region', phrases, 'bpiChooseRegion', 'Dropdown'),
-      quarterPeriodList: allQuartalPeriods(phrases.quarter),
+      quarterPeriodList: allQuarterPeriods(phrases.quarter),
     },
     req,
     {

@@ -16,7 +16,7 @@ export function nextPeriod(month: string, year: string): CalculatorPeriod {
   }
 }
 
-export function getMonthByQuartal(quarter: number | string) {
+export function getMonthByQuarter(quarter: number | string) {
   switch (Number(quarter)) {
     case 1:
       return 1 // january
@@ -30,7 +30,7 @@ export function getMonthByQuartal(quarter: number | string) {
       break
   }
 }
-export function getPublishMonthByQuartal(quarter: number | string) {
+export function getPublishMonthByQuarter(quarter: number | string) {
   switch (Number(quarter)) {
     case 1:
       return 4 // april
@@ -45,16 +45,16 @@ export function getPublishMonthByQuartal(quarter: number | string) {
   }
 }
 
-export function nextQuartalPeriod({ quarter, year }: CalculatorPeriod) {
+export function nextQuarterPeriod({ quarter, year }: CalculatorPeriod) {
   const nextQuarter = (quarter as number) < 4 ? (quarter as number) + 1 : 1
   return {
     quarter: nextQuarter,
-    month: getPublishMonthByQuartal(nextQuarter),
+    month: getPublishMonthByQuarter(nextQuarter),
     year: (quarter as number) === 4 ? (Number(year) + 1).toString() : year, // January of next year
   }
 }
 
-export function lastQuartalPeriod(calculatorData: Dataset | null): CalculatorPeriod | undefined {
+export function lastQuarterPeriod(calculatorData: Dataset | null): CalculatorPeriod | undefined {
   const calculatorDataDimension: Dimension | null = calculatorData?.Dimension('Tid') as Dimension
   const dataTime: string | undefined = calculatorDataDimension?.id as string
 
@@ -64,15 +64,15 @@ export function lastQuartalPeriod(calculatorData: Dataset | null): CalculatorPer
 
     return {
       quarter: Number(quarter),
-      month: getMonthByQuartal(Number(quarter)),
+      month: getMonthByQuarter(Number(quarter)),
       year,
     }
   }
 }
 
-// Extract number from e.g. "K1" for quartal periods
-export function getQuartalNumber(quartalPeriod: string) {
-  return quartalPeriod.substring(1)
+// Extract number from e.g. "K1" for quarter periods
+export function getQuarterNumber(quarterPeriod: string) {
+  return quarterPeriod.substring(1)
 }
 
 export function lastPeriodKpi(kpiDataMonth: Dataset | null): CalculatorPeriod {

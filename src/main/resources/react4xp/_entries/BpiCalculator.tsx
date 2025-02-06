@@ -35,7 +35,7 @@ function BpiCalculator(props: BpiCalculatorProps) {
     value: defaultRegion,
   })
 
-  const defaultQuartalValue = { id: '', title: phrases.calculatorChooseQuartalPeriod }
+  const defaultQuarterValue = { id: '', title: phrases.calculatorChooseQuarterPeriod }
   const {
     states: {
       loading,
@@ -68,19 +68,19 @@ function BpiCalculator(props: BpiCalculatorProps) {
     validation: { onBlur, isStartValueValid, isStartYearValid, isEndYearValid, isStartPeriodValid, isEndPeriodValid },
     scrollAnchor,
     onSubmitBtnElement,
-    getResultQuartalPeriod,
+    getResultQuarterPeriod,
     closeResult,
   } = useSetupCalculator({
     calculatorValidateAmountNumber: phrases.calculatorValidateAmountNumber,
-    defaultMonthValue: defaultQuartalValue,
-    defaultMonthErrorMsg: phrases.calculatorValidateQuartal,
+    defaultMonthValue: defaultQuarterValue,
+    defaultMonthErrorMsg: phrases.calculatorValidateQuarter,
     lastNumberText,
     calculatorValidateYear: phrases.calculatorValidateYear,
     validMaxYear: lastUpdated.year,
     validMaxMonth: lastUpdated.month as string,
     validMinYear: 1992,
     months,
-    calculatorNextQuartalPeriodText: phrases.calculatorNextQuartalPeriod,
+    calculatorNextQuarterPeriodText: phrases.calculatorNextQuarterPeriod,
   })
 
   function onCategoryChange(id: string, value: CalculatorState['value']) {
@@ -148,18 +148,18 @@ function BpiCalculator(props: BpiCalculatorProps) {
           region: region.value.id,
           startValue: startValue.value,
           startYear: startYear.value,
-          startQuartalPeriod: (startPeriod.value as DropdownItem).id,
+          startQuarterPeriod: (startPeriod.value as DropdownItem).id,
           endYear: endYear.value,
-          endQuartalPeriod: (endPeriod.value as DropdownItem).id,
+          endQuarterPeriod: (endPeriod.value as DropdownItem).id,
           language: language,
         },
       })
       .then((res) => {
-        const startResultPeriod = getResultQuartalPeriod(
+        const startResultPeriod = getResultQuarterPeriod(
           (startPeriod.value as DropdownItem).id,
           startYear.value as string
         )
-        const endResultPeriod = getResultQuartalPeriod((endPeriod.value as DropdownItem).id, endYear.value as string)
+        const endResultPeriod = getResultQuarterPeriod((endPeriod.value as DropdownItem).id, endYear.value as string)
         setChange(res.data.change)
         setEndValue(res.data.endValue)
         setStartResultPeriod(startResultPeriod)
@@ -185,7 +185,7 @@ function BpiCalculator(props: BpiCalculatorProps) {
       <Dropdown
         className='month'
         id={id}
-        header={phrases.calculatorChooseQuartalPeriod}
+        header={phrases.calculatorChooseQuarterPeriod}
         onSelect={(value: DropdownItem) => onChange(id, value)}
         error={id === 'start-period' ? startPeriod.error : endPeriod.error}
         errorMessage={id === 'start-period' ? startPeriod.errorMsg : endPeriod.errorMsg}
