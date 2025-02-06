@@ -334,7 +334,7 @@ function PifCalculator(props: PifCalculatorProps) {
   function addDropdownMonth(id: string | number) {
     return (
       <Dropdown
-        className='month'
+        className='period'
         id={id}
         header={props.phrases.chooseMonth}
         onSelect={(value: object) => {
@@ -351,7 +351,7 @@ function PifCalculator(props: PifCalculatorProps) {
   function addDropdownEndMonth(id: string | number) {
     return (
       <Dropdown
-        className='month'
+        className='period'
         id={id}
         header={props.phrases.chooseMonth}
         onSelect={(value: object) => {
@@ -643,7 +643,7 @@ function PifCalculator(props: PifCalculatorProps) {
                         onBlur={() => onBlur('start-year')}
                       />
                     </Col>
-                    <Col className='select-month col-12 col-sm-7'>{addDropdownMonth('start-month')}</Col>
+                    <Col className='select-period col-12 col-sm-7'>{addDropdownMonth('start-month')}</Col>
                   </Row>
                 </Container>
               </Col>
@@ -662,7 +662,7 @@ function PifCalculator(props: PifCalculatorProps) {
                         onBlur={() => onBlur('end-year')}
                       />
                     </Col>
-                    <Col className='select-month col-12 col-sm-7'>{addDropdownEndMonth('end-month')}</Col>
+                    <Col className='select-period col-12 col-sm-7'>{addDropdownEndMonth('end-month')}</Col>
                   </Row>
                 </Container>
               </Col>

@@ -69,8 +69,8 @@ export const useSetupCalculator = ({
   const [loading, setLoading] = useState(false)
   const [change, setChange] = useState<string | null>(null)
   const [endValue, setEndValue] = useState<null | number>(null)
-  const [startResultPeriod, setStartResultPeriod] = useState<string | null>(null)
-  const [endResultPeriod, setEndResultPeriod] = useState<string | null>(null)
+  const [startPeriodLabel, setStartPeriodLabel] = useState<string | null>(null)
+  const [endPeriodLabel, setEndPeriodLabel] = useState<string | null>(null)
   const [startValueResult, setStartValueResult] = useState<string | null>(null)
   const [startIndex, setStartIndex] = useState<number | null>(null)
   const [endIndex, setEndIndex] = useState<number | null>(null)
@@ -307,8 +307,8 @@ export const useSetupCalculator = ({
       startValue,
       change,
       endValue,
-      startResultPeriod,
-      endResultPeriod,
+      startPeriodLabel,
+      endPeriodLabel,
       startValueResult,
       startIndex,
       endIndex,
@@ -318,8 +318,8 @@ export const useSetupCalculator = ({
       setErrorMessage,
       setChange,
       setEndValue,
-      setStartResultPeriod,
-      setEndResultPeriod,
+      setStartPeriodLabel,
+      setEndPeriodLabel,
       setStartValueResult,
       setStartIndex,
       setEndIndex,

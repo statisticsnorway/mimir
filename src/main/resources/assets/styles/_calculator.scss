@@ -101,7 +101,7 @@
       padding-right: 4px;
     }
 
-    .select-month {
+    .select-period {
       padding-left: 0;
     }
 
@@ -111,8 +111,8 @@
       }
     }
 
-    .select-month,
-    .ssb-dropdown.month,
+    .select-period,
+    .ssb-dropdown.period,
     .list-of-options {
       min-width: 100px;
     }
@@ -198,7 +198,7 @@
         min-width: 105px;
       }
 
-      .select-month {
+      .select-period {
         padding-left: 0;
       }
 
@@ -272,13 +272,13 @@
         min-width: 105px;
       }
 
-      .select-month {
+      .select-period {
         padding-right: 0;
         margin-top: 1.25rem;
       }
 
-      .select-month,
-      .ssb-dropdown.month,
+      .select-period,
+      .ssb-dropdown.period,
       .list-of-options {
         min-width: 95px;
         padding-left: 0;
@@ -388,7 +388,7 @@
         max-width: none;
       }
 
-      .select-month {
+      .select-period {
         padding-right: 0.5rem;
         padding-left: 0;
       }
@@ -405,13 +405,13 @@
         width: 100%;
       }
 
-      .select-month {
+      .select-period {
         padding-right: 0;
         margin-bottom: 1.25rem;
       }
 
-      .select-month,
-      .ssb-dropdown.month,
+      .select-period,
+      .ssb-dropdown.period,
       .list-of-options {
         margin-top: 0;
       }

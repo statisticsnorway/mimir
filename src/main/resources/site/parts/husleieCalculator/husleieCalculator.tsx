@@ -560,9 +560,9 @@ function HusleieCalculator(props: KpiCalculatorProps) {
                 <Title size={3}>{props.phrases.husleieLastAdjust}</Title>
                 <Container>
                   <Row>
-                    <Col className='select-month col-12 col-sm-8'>
+                    <Col className='select-period col-12 col-sm-8'>
                       <Dropdown
-                        className='month'
+                        className='period'
                         id='start-month'
                         header={props.phrases.chooseMonth}
                         onSelect={(value: DropdownItem) => {
