@@ -16,7 +16,7 @@ export function nextPeriod(month: string, year: string): CalculatorPeriod {
   }
 }
 
-export function getMonthByQuarter(quarter: number | string) {
+export function getStartMonthOfQuarter(quarter: number | string) {
   switch (Number(quarter)) {
     case 1:
       return 1 // january
@@ -64,7 +64,7 @@ export function lastQuarterPeriod(calculatorData: Dataset | null): CalculatorPer
 
     return {
       quarter: Number(quarter),
-      month: getMonthByQuarter(Number(quarter)),
+      month: getStartMonthOfQuarter(Number(quarter)),
       year,
     }
   }

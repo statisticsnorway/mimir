@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { type DropdownItem, type DropdownItems } from '/lib/types/components'
-import { getQuarterNumber, getMonthByQuarter } from '/lib/ssb/utils/calculatorUtils'
+import { getQuarterNumber, getStartMonthOfQuarter } from '/lib/ssb/utils/calculatorUtils'
 
 interface UseSetupCalculatorProps {
   calculatorValidateAmountNumber?: string
@@ -111,7 +111,7 @@ export const useSetupCalculator = ({
   // We use months for validation calculations so quarter values e.g. K1 gets converted to month
   function getPeriodOrQuarterPeriodMonthValue(periodValue: string) {
     const isQuarterPeriod = periodValue !== '' && isNaN(Number(periodValue))
-    return isQuarterPeriod ? (getMonthByQuarter(getQuarterNumber(periodValue)) as number) : periodValue
+    return isQuarterPeriod ? (getStartMonthOfQuarter(getQuarterNumber(periodValue)) as number) : periodValue
   }
 
   function isStartPeriodValid(value?: string) {
