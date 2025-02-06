@@ -71,6 +71,20 @@ export function getNextPublishText({
   })
 }
 
+export function getLastNumberText({
+  language = 'nb',
+  months,
+  lastUpdatedPeriod,
+  lastUpdatedMonth,
+  lastUpdatedYear,
+}: CalculatorLastNumberText) {
+  return localize({
+    key: 'calculatorLastNumber',
+    locale: language,
+    values: [lastUpdatedPeriod ?? monthLabel(months, language, lastUpdatedMonth as string), lastUpdatedYear],
+  })
+}
+
 export function getNextQuartalPublishText({
   language = 'nb',
   months,
@@ -92,19 +106,6 @@ export function getNextQuartalPublishText({
       date as string,
       monthLabel(months, language, nextReleaseMonth),
     ],
-  })
-}
-
-export function getLastNumberText({
-  language = 'nb',
-  months,
-  lastUpdatedMonth,
-  lastUpdatedYear,
-}: CalculatorLastNumberText) {
-  return localize({
-    key: 'calculatorLastNumber',
-    locale: language,
-    values: [monthLabel(months, language, lastUpdatedMonth as string), lastUpdatedYear],
   })
 }
 

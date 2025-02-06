@@ -89,7 +89,7 @@ function getBpiCalculatorComponent(req: XP.Request, page: Content<CalculatorConf
       lastNumberText: getLastNumberText({
         language: languageCode,
         months,
-        lastUpdatedPeriod: lastUpdated?.quarter?.toString() as string,
+        lastUpdatedPeriod: getQuartalPeriodText(languageCode, lastUpdated?.quarter as number),
         lastUpdatedYear: lastUpdated?.year as string,
       }),
       dwellingTypeList: allCategoryOptions(bpiDataset, 'Boligtype', phrases, 'bpiChooseDwellingType', 'RadioGroup'),
