@@ -16,7 +16,21 @@ export function nextPeriod(month: string, year: string): CalculatorPeriod {
   }
 }
 
-export function getQuartalMonth(quarter: number | string) {
+export function getMonthByQuartal(quarter: number | string) {
+  switch (Number(quarter)) {
+    case 1:
+      return 1 // january
+    case 2:
+      return 4 // april
+    case 3:
+      return 7 // july
+    case 4:
+      return 10 // october
+    default:
+      break
+  }
+}
+export function getPublishMonthByQuartal(quarter: number | string) {
   switch (Number(quarter)) {
     case 1:
       return 4 // april
@@ -35,7 +49,7 @@ export function nextQuartalPeriod({ quarter, year }: CalculatorPeriod) {
   const nextQuarter = (quarter as number) < 4 ? (quarter as number) + 1 : 1
   return {
     quarter: nextQuarter,
-    month: getQuartalMonth(nextQuarter),
+    month: getPublishMonthByQuartal(nextQuarter),
     year: (quarter as number) === 4 ? (Number(year) + 1).toString() : year, // January of next year
   }
 }
@@ -50,8 +64,8 @@ export function lastQuartalPeriod(calculatorData: Dataset | null): CalculatorPer
 
     return {
       quarter: Number(quarter),
-      month: getQuartalMonth(Number(quarter)),
-      year: Number(quarter) === 4 ? (Number(year) + 1).toString() : year,
+      month: getMonthByQuartal(Number(quarter)),
+      year,
     }
   }
 }

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { type DropdownItem, type DropdownItems } from '/lib/types/components'
-import { getQuartalNumber, getQuartalMonth } from '/lib/ssb/utils/calculatorUtils'
+import { getQuartalNumber, getMonthByQuartal } from '/lib/ssb/utils/calculatorUtils'
 
 interface UseSetupCalculatorProps {
   calculatorValidateAmountNumber?: string
@@ -112,7 +112,7 @@ export const useSetupCalculator = ({
     const startMonthValue = value || (startMonth.value as DropdownItem).id
     const isQuartalPeriod = startMonthValue !== '' && isNaN(Number(startMonthValue))
     const startMonthOrQuartalPeriodMonthValue = isQuartalPeriod
-      ? (getQuartalMonth(getQuartalNumber(startMonthValue)) as number)
+      ? (getMonthByQuartal(getQuartalNumber(startMonthValue)) as number)
       : startMonthValue
 
     const startMonthValid = !(startYear.value === validMaxYear && startMonthOrQuartalPeriodMonthValue > validMaxMonth)
@@ -129,7 +129,7 @@ export const useSetupCalculator = ({
     const endMonthValue = value || (endMonth.value as DropdownItem).id
     const isQuartalPeriod = endMonthValue !== '' && isNaN(Number(endMonthValue))
     const endMonthOrQuartalPeriodMonthValue = isQuartalPeriod
-      ? (getQuartalMonth(getQuartalNumber(endMonthValue)) as number)
+      ? (getMonthByQuartal(getQuartalNumber(endMonthValue)) as number)
       : endMonthValue
 
     const maxYearAverage = Number(validMaxMonth) === 12 ? validMaxYear : Number(validMaxYear) - 1

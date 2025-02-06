@@ -9,7 +9,7 @@ import {
   getIndexTime,
   getPercentageFromChangeValue,
   getQuartalNumber,
-  getQuartalMonth,
+  getPublishMonthByQuartal,
   getEndValue,
 } from '/lib/ssb/utils/calculatorUtils'
 import { HttpRequestParams } from '/lib/http-client'
@@ -128,9 +128,9 @@ function fetchBpiResults({
 }: FetchBpiResults) {
   const chronological: boolean = isChronological(
     startYear,
-    (getQuartalMonth(getQuartalNumber(startQuartalPeriod)) as number).toString(),
+    (getPublishMonthByQuartal(getQuartalNumber(startQuartalPeriod)) as number).toString(),
     endYear,
-    (getQuartalMonth(getQuartalNumber(endQuartalPeriod)) as number).toString()
+    (getPublishMonthByQuartal(getQuartalNumber(endQuartalPeriod)) as number).toString()
   )
 
   if (indexResult.startIndex != null && indexResult.endIndex != null) {
