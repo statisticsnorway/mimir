@@ -101,6 +101,14 @@ export function lastPeriodKpi(kpiDataMonth: Dataset | null): CalculatorPeriod {
   }
 }
 
+export function isStartIndexValid(startIndex: number | null) {
+  return startIndex !== null && startIndex !== 0
+}
+
+export function isEndIndexValid(endIndex: number | null) {
+  return endIndex !== null && endIndex !== 0
+}
+
 export function isChronological(startYear: string, startMonth: string, endYear: string, endMonth: string): boolean {
   if (parseInt(startYear) < parseInt(endYear)) return true
   if (parseInt(endYear) < parseInt(startYear)) return false
