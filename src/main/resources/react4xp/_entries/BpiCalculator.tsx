@@ -185,7 +185,6 @@ function BpiCalculator(props: BpiCalculatorProps) {
         } else {
           setErrorMessage(err.toString())
         }
-        console.log(errorMessage)
       })
       .finally(() => {
         setLoading(false)
