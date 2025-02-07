@@ -1,7 +1,4 @@
-import { localize } from '/lib/xp/i18n'
-import { type DropdownItem as MonthDropdownItem, type DropdownItems as MonthDropdownItems } from '/lib/types/components'
-import { type CalculatorPeriod } from '/lib/types/calculator'
-import { type Phrases } from '/lib/types/language'
+import { IndexResult, type CalculatorPeriod } from '/lib/types/calculator'
 import { type Data, type Dataset, type Dimension } from '/lib/types/jsonstat-toolkit'
 
 export function nextPeriod(month: string, year: string): CalculatorPeriod {
@@ -19,75 +16,63 @@ export function nextPeriod(month: string, year: string): CalculatorPeriod {
   }
 }
 
-export function allMonths(phrases: Phrases, frontPage?: boolean, type?: string): MonthDropdownItems {
-  const months: MonthDropdownItems = [
-    {
-      id: '01',
-      title: phrases.january,
-    },
-    {
-      id: '02',
-      title: phrases.february,
-    },
-    {
-      id: '03',
-      title: phrases.march,
-    },
-    {
-      id: '04',
-      title: phrases.april,
-    },
-    {
-      id: '05',
-      title: phrases.may,
-    },
-    {
-      id: '06',
-      title: phrases.june,
-    },
-    {
-      id: '07',
-      title: phrases.july,
-    },
-    {
-      id: '08',
-      title: phrases.august,
-    },
-    {
-      id: '09',
-      title: phrases.september,
-    },
-    {
-      id: '10',
-      title: phrases.october,
-    },
-    {
-      id: '11',
-      title: phrases.november,
-    },
-    {
-      id: '12',
-      title: phrases.december,
-    },
-  ]
-
-  if (type !== 'husleie' && type !== 'bkibol') {
-    const placeholderItem: MonthDropdownItem = {
-      id: '90',
-      title: frontPage ? phrases.calculatorMonthAverageFrontpage : phrases.calculatorMonthAverage,
-    }
-
-    return [placeholderItem, ...months]
+export function getStartMonthOfQuarter(quarter: number | string) {
+  switch (Number(quarter)) {
+    case 1:
+      return 1 // january
+    case 2:
+      return 4 // april
+    case 3:
+      return 7 // july
+    case 4:
+      return 10 // october
+    default:
+      break
   }
-  return months
+}
+export function getPublishMonthByQuarter(quarter: number | string) {
+  switch (Number(quarter)) {
+    case 1:
+      return 4 // april
+    case 2:
+      return 7 // july
+    case 3:
+      return 10 // october
+    case 4:
+      return 1 // january
+    default:
+      break
+  }
 }
 
-export function monthLabel(months: MonthDropdownItems, language: string | undefined, month: number | string): string {
-  const monthLabel: MonthDropdownItem | undefined = months.find((m) => parseInt(m.id) === parseInt(month as string))
-  if (monthLabel) {
-    return language === 'en' ? monthLabel.title : monthLabel.title.toLowerCase()
+export function nextQuarterPeriod({ quarter, year }: CalculatorPeriod) {
+  const nextQuarter = (quarter as number) < 4 ? (quarter as number) + 1 : 1
+  return {
+    quarter: nextQuarter,
+    month: getPublishMonthByQuarter(nextQuarter),
+    year: (quarter as number) === 4 ? (Number(year) + 1).toString() : year, // January of next year
   }
-  return ''
+}
+
+export function lastQuarterPeriod(calculatorData: Dataset | null): CalculatorPeriod | undefined {
+  const calculatorDataDimension: Dimension | null = calculatorData?.Dimension('Tid') as Dimension
+  const dataTime: string | undefined = calculatorDataDimension?.id as string
+
+  if (dataTime) {
+    const lastTimeItem: string = dataTime[dataTime.length - 1]
+    const [year, quarter]: Array<string> = lastTimeItem.split('K')
+
+    return {
+      quarter: Number(quarter),
+      month: getStartMonthOfQuarter(Number(quarter)),
+      year,
+    }
+  }
+}
+
+// Extract number from e.g. "K1" for quarter periods
+export function getQuarterNumber(quarterPeriod: string) {
+  return quarterPeriod.substring(1)
 }
 
 export function lastPeriodKpi(kpiDataMonth: Dataset | null): CalculatorPeriod {
@@ -116,22 +101,33 @@ export function lastPeriodKpi(kpiDataMonth: Dataset | null): CalculatorPeriod {
   }
 }
 
-const seriesLocalizationMap = {
-  ALT: 'bkibolWorkTypeAll',
-  STEIN: 'bkibolWorkTypeStone',
-  GRUNNARBEID: 'bkibolWorkTypeGroundwork',
-  BYGGEARBEIDER: 'bkibolWorkTypeWithoutStone',
-  TOMRING: 'bkibolWorkTypeCarpentry',
-  MALING: 'bkibolWorkTypePainting',
-  RORLEGGERARBEID: 'bkibolWorkTypePlumbing',
-} as const
+export function isChronological(startYear: string, startMonth: string, endYear: string, endMonth: string): boolean {
+  if (parseInt(startYear) < parseInt(endYear)) return true
+  if (parseInt(endYear) < parseInt(startYear)) return false
 
-export type SeriesKey = keyof typeof seriesLocalizationMap
+  if (startMonth != '90' && startMonth != '' && endMonth != '' && endMonth != '90') {
+    if (parseInt(startMonth) < parseInt(endMonth)) return true
+    if (parseInt(startMonth) > parseInt(endMonth)) return false
+  }
+  return true
+}
 
-export function serieLocalization(language: string, series: SeriesKey): string {
-  return localize({
-    key: seriesLocalizationMap[series],
-    locale: language,
-    values: [],
-  }) as string
+export function getChangeValue(startIndex: number, endIndex: number, chronological: boolean): number {
+  if (chronological) {
+    return (endIndex - startIndex) / startIndex
+  } else {
+    return (startIndex - endIndex) / endIndex
+  }
+}
+
+export function getIndexTime(calculatorData: Dataset | null, categories: object): number | null {
+  return calculatorData?.Data(categories)?.value as unknown as number
+}
+
+export function getPercentageFromChangeValue(changeValue: number) {
+  return (changeValue * 100).toFixed(1)
+}
+
+export function getEndValue(startValue: string, indexResult: IndexResult) {
+  return parseFloat(startValue) * ((indexResult.endIndex as number) / (indexResult.startIndex as number))
 }
