@@ -133,8 +133,17 @@ function fetchBpiResults({
     (getPublishMonthByQuarter(getQuarterNumber(endQuarterPeriod)) as number).toString()
   )
 
-  if (indexResult.startIndex != null && indexResult.endIndex != null) {
-    const changeValue: number = getChangeValue(indexResult.startIndex, indexResult.endIndex, chronological)
+  if (
+    indexResult.startIndex !== null &&
+    indexResult.startIndex !== 0 &&
+    indexResult.endIndex !== null &&
+    indexResult.endIndex !== 0
+  ) {
+    const changeValue: number = getChangeValue(
+      indexResult.startIndex as number,
+      indexResult.endIndex as number,
+      chronological
+    )
     return {
       body: {
         startIndex: indexResult.startIndex,
@@ -158,7 +167,7 @@ function fetchBpiResults({
       status: 500,
       body: {
         error:
-          indexResult.startIndex === null
+          indexResult.startIndex === null || indexResult.startIndex === 0
             ? calculatorServiceValidateStartQuarterPeriod
             : calculatorServiceValidateEndQuarterPeriod,
       },
