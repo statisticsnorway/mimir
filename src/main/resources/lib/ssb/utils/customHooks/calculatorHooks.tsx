@@ -272,14 +272,16 @@ export const useSetupCalculator = ({
   }, [loading])
 
   useEffect(() => {
-    setStartYear({
+    setStartYear((prevState) => ({
       ...startYear,
+      error: prevState.error ? !isStartYearValid(prevState.value as string) : prevState.error,
       errorMsg: validYearErrorMsg,
-    })
-    setEndYear({
+    }))
+    setEndYear((prevState) => ({
       ...endYear,
+      error: prevState.error ? !isEndYearValid(prevState.value as string) : prevState.error,
       errorMsg: validYearErrorMsg,
-    })
+    }))
   }, [validMinYear])
 
   function getMonthLabel(month: string) {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Title, Divider, RadioGroup, Dropdown, Input, Button } from '@statisticsnorway/ssb-component-library'
 import { Container, Row, Col, Form } from 'react-bootstrap'
 
@@ -34,6 +34,8 @@ function BpiCalculator(props: BpiCalculatorProps) {
     errorMsg: phrases.bpiValidateRegion,
     value: defaultRegion,
   })
+  const defaultValidMinYear = 2005
+  const [validMinYear, setValidMinYear] = useState(defaultValidMinYear)
 
   const defaultQuarterValue = { id: '', title: phrases.calculatorChooseQuarterPeriod }
   const {
@@ -78,10 +80,19 @@ function BpiCalculator(props: BpiCalculatorProps) {
     calculatorValidateYear: phrases.calculatorValidateYear,
     validMaxYear: lastUpdated.year,
     validMaxMonth: lastUpdated.month as string,
-    validMinYear: 1992,
+    validMinYear,
     months,
     calculatorNextQuarterPeriodText: phrases.calculatorNextQuarterPeriod,
   })
+
+  useEffect(() => {
+    // Only options "TOTAL = The whole country" and "001 = Oslo including Bærum" has data dating back to 1992
+    if (region.value.id === 'TOTAL' || region.value.id === '001') {
+      setValidMinYear(1992)
+    } else {
+      setValidMinYear(defaultValidMinYear)
+    }
+  }, [region])
 
   function onCategoryChange(id: string, value: CalculatorState['value']) {
     switch (id) {
