@@ -11,6 +11,8 @@ import {
   getQuarterNumber,
   getPublishMonthByQuarter,
   getEndValue,
+  isStartIndexValid,
+  isEndIndexValid,
 } from '/lib/ssb/utils/calculatorUtils'
 import { HttpRequestParams } from '/lib/http-client'
 import { IndexResult } from '/lib/types/calculator'
@@ -133,12 +135,13 @@ function fetchBpiResults({
     (getPublishMonthByQuarter(getQuarterNumber(endQuarterPeriod)) as number).toString()
   )
 
-  if (indexResult.startIndex != null && indexResult.endIndex != null) {
-    const changeValue: number = getChangeValue(indexResult.startIndex, indexResult.endIndex, chronological)
+  const { startIndex, endIndex } = indexResult
+  if (isStartIndexValid(startIndex) && isEndIndexValid(endIndex)) {
+    const changeValue: number = getChangeValue(startIndex as number, endIndex as number, chronological)
     return {
       body: {
-        startIndex: indexResult.startIndex,
-        endIndex: indexResult.endIndex,
+        startIndex,
+        endIndex,
         change: getPercentageFromChangeValue(changeValue),
         endValue: getEndValue(startValue as string, indexResult),
       },
@@ -157,10 +160,9 @@ function fetchBpiResults({
     return {
       status: 500,
       body: {
-        error:
-          indexResult.startIndex === null
-            ? calculatorServiceValidateStartQuarterPeriod
-            : calculatorServiceValidateEndQuarterPeriod,
+        error: !isStartIndexValid(startIndex)
+          ? calculatorServiceValidateStartQuarterPeriod
+          : calculatorServiceValidateEndQuarterPeriod,
       },
       contentType: 'application/json',
     }

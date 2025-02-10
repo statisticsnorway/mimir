@@ -45,7 +45,7 @@ function CalculatorLayout({
   function renderNumber(value: string | number, type?: string) {
     const decimalSeparator = language === 'en' ? '.' : ','
     if (type === 'valute' || type === 'change') {
-      const valute = language === 'en' ? 'NOK' : 'kr'
+      const valute = language === 'en' ? ' NOK' : ' kr'
       const decimalScale = type === 'valute' ? 2 : 1
       return (
         <>
