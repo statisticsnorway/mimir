@@ -86,8 +86,8 @@ function BpiCalculator(props: BpiCalculatorProps) {
   })
 
   useEffect(() => {
-    // Only options "TOTAL = The whole country" and "001 = Oslo including Bærum" has data dating back to 1992
-    if (region.value.id === 'TOTAL' || region.value.id === '001') {
+    // Only options "TOTAL = The whole country", "001 = Oslo including Bærum", and '005 = Akershus excluding Bærum' has data dating back to 1992
+    if (region.value.id === 'TOTAL' || region.value.id === '001' || region.value.id === '005') {
       setValidMinYear(1992)
     } else {
       setValidMinYear(defaultValidMinYear)
