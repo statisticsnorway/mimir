@@ -40,5 +40,16 @@ export const exportTableToCSV = ({ tableElement, fileName }: TableExport): void 
   const sheetFileName = fileName ? `${fileName}.csv` : 'tabell.csv'
   const workbook = createTableWorkbook(tableElement)
 
-  XLSX.writeFile(workbook, sheetFileName, { bookType: 'csv', type: 'string' })
+  const csvSheet = XLSX.utils.sheet_to_csv(workbook.Sheets[sheetName], { FS: ';' })
+
+  const blob = new Blob([csvSheet], { type: 'text/csv;charset=utf-8;' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  document.body.appendChild(a)
+  a.href = url
+  a.download = sheetFileName
+  a.click()
+
+  URL.revokeObjectURL(url)
+  document.body.removeChild(a)
 }
