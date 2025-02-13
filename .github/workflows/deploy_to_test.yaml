@@ -26,8 +26,8 @@ jobs:
           url: ${{ secrets.ENONIC_TEST_URL }}
           username: ${{ secrets.ENONIC_USER }}
           password: ${{ secrets.ENONIC_TEST_PASS }}
-          client_cert: ${{ secrets.ENONIC_CERT }}
-          client_key: ${{ secrets.ENONIC_KEY }}
+          client_cert: ${{ secrets.ENONIC_DEPLOY_CERT }}
+          client_key: ${{ secrets.ENONIC_DEPLOY_KEY }}
           app_jar: "./build/libs/*.jar"
       - name: Upload artifacts
         id: upload_artifacts
