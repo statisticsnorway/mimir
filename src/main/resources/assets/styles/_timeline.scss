@@ -1,0 +1,133 @@
+.ssb-timeline {
+  .filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+    margin-bottom: 8rem;
+
+    .ssb-tag {
+      &.active {
+        background: $ssb-dark-5;
+        border: 2px solid $ssb-dark-5;
+        color: $ssb-white;
+      }
+    }
+  }
+  .timeline {
+    position: relative;
+    margin-right: 40px;
+    padding-left: 200px;
+
+    .circle {
+      width: 16px;
+      height: 16px;
+      background-color: #274247;
+      border-radius: 50%;
+      position: absolute;
+      top: -10px;
+      transform: translateX(-40%);
+    }
+
+    &:before {
+      content: '';
+      width: 4px;
+      height: 100%;
+      background: #274247;
+      position: absolute;
+      top: 0;
+    }
+
+    &:after {
+      content: '';
+      display: block;
+      width: 100%;
+      clear: both;
+    }
+
+    .timeline-elements {
+      padding-top: 25px;
+      padding-bottom: 50px;
+    }
+
+    .timeline-content {
+      left: -20px;
+      position: relative;
+      margin-bottom: 30px;
+      max-width: 740px;
+
+      .year {
+        width: 180px;
+        height: 80px;
+        background: #274247;
+        border-radius: 4px;
+        position: absolute;
+        align-content: center;
+
+        span {
+          @include roboto-condenced;
+          color: #fff;
+          padding: 20px 40px;
+          font-size: 28px;
+        }
+      }
+
+      .triangle {
+        position: absolute;
+        width: 0;
+        height: 0;
+        border-top: 40px solid transparent;
+        border-bottom: 40px solid transparent;
+        border-right: 20px solid #f0f8f9;
+        border-radius: 4px;
+        left: 160px;
+      }
+
+      .events {
+        padding-top: 90px;
+        width: 100%;
+        min-width: 400px;
+        position: relative;
+
+        .event {
+          margin-bottom: 20px;
+
+          &:first-child {
+            margin-top: 20px;
+          }
+
+          &:last-child {
+            margin-bottom: 80px;
+          }
+
+          .ssb-card {
+            max-width: 400px;
+          }
+        }
+      }
+
+      .event-box {
+        background: #fff;
+        border: 1px solid #274247;
+        border-radius: 8px;
+        display: grid;
+        padding: 20px 40px;
+        width: 100%;
+        .title {
+          @include roboto-condenced;
+          font-size: 20px;
+          margin-bottom: 10px;
+        }
+      }
+    }
+
+    @include media-breakpoint-down(lg) {
+      padding-left: 20px;
+      margin-right: 0;
+
+      .timeline-content {
+        width: 100%;
+      }
+    }
+  }
+}
