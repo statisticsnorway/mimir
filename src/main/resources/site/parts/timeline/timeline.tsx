@@ -46,14 +46,14 @@ function Timeline(props: TimelineProps) {
   }
 
   function addCategoryLink(event: TimelineEvent) {
-    return <CategoryLink href='' titleText={event.title} subText={event.ingress} />
+    return <CategoryLink href={event.targetUrl} titleText={event.title} subText={event.ingress} />
   }
 
   function addDirectorCard(event: TimelineEvent) {
     return (
       <Card
         title={event.title}
-        href=' '
+        href={event.targetUrl}
         icon={<img src={event.directorImage} alt={event.directorImageAltText} loading='lazy' />}
         profiled
       >
@@ -65,7 +65,13 @@ function Timeline(props: TimelineProps) {
   function addEventBox(event: TimelineEvent) {
     return (
       <div className='event-box'>
-        {event.article ? <Link linkType='header'>{event.title}</Link> : <span className='title'>{event.title}</span>}
+        {event.targetUrl ? (
+          <Link linkType='header' href={event.targetUrl}>
+            {event.title}
+          </Link>
+        ) : (
+          <span className='title'>{event.title}</span>
+        )}
         {event.ingress && <span>{event.ingress}</span>}
       </div>
     )

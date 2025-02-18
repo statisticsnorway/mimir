@@ -44,15 +44,35 @@
                             </config>
                             <default>eventSsb</default>
                         </input>
-                        <input name="article" type="ContentSelector">
+                        <option-set name="urlArticle">
                             <label>Artikkel</label>
+                            <expanded>false</expanded>
                             <occurrences minimum="0" maximum="1"/>
-                            <config>
-                                <allowPath>${site}</allowPath>
-                                <allowType>page</allowType>
-                                <allowType>article</allowType>
-                            </config>
-                        </input>
+                            <help-text>Velge enten url eller innhold </help-text>
+                            <options minimum="0" maximum="1">
+                                <option name="optionLink">
+                                    <label>URL</label>
+                                    <items>
+                                        <input name="link" type="TextLine">
+                                            <label>Lenke</label>
+                                            <occurrences minimum="0" maximum="1"/>
+                                        </input>
+                                    </items>
+                                </option>
+                                <option name="optionXPContent">
+                                    <label>XP-innhold</label>
+                                    <items>
+                                    <input name="xpContent" type="ContentSelector">
+                                        <label>Innhold i XP</label>
+                                        <occurrences minimum="0" maximum="1"/>
+                                        <config>
+                                            <allowPath>${site}</allowPath>
+                                        </config>
+                                    </input>
+                                    </items>
+                                </option>
+                            </options>
+                        </option-set>
                     </items>
                 </item-set>
             </items>

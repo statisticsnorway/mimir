@@ -15,4 +15,20 @@ export interface TimelineEvent {
   directorImageAltText?: string
   category?: string
   article?: string
+  urlArticle?: hrefManual | hrefContent
+  targetUrl?: string
+}
+
+interface hrefManual {
+  _selected: 'optionLink'
+  optionLink: {
+    link?: string
+  }
+}
+
+interface hrefContent {
+  _selected: 'optionXPContent'
+  optionXPContent: {
+    xpContent?: string
+  }
 }

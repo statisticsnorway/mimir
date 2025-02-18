@@ -1,9 +1,10 @@
-import { getComponent } from '/lib/xp/portal'
+import { getComponent, pageUrl } from '/lib/xp/portal'
 import { render } from '/lib/enonic/react4xp'
 import { renderError } from '/lib/ssb/error/error'
 import { imageUrl, getImageAlt } from '/lib/ssb/utils/imageUtils'
 import { type TimelineElement, type TimelineEvent } from '/lib/types/partTypes/timeline'
 import { forceArray } from '/lib/ssb/utils/arrayUtils'
+import { type Timeline as TimelinePartConfig } from '/site/parts/timeline'
 
 export function get(req: XP.Request): XP.Response {
   try {
@@ -17,8 +18,9 @@ function renderPart(req: XP.Request) {
   const part = getComponent<XP.PartComponent.Timeline>()
   if (!part) throw new Error('No part')
 
-  const timelineElements: TimelineElement[] = part.config.TimelineItemSet ? forceArray(part.config.TimelineItemSet) : []
-  const timelineProps: TimelineElement[] = timelineElements.map((element) => {
+  const timelineConfig: TimelinePartConfig = part.config
+  const timelineItems: TimelinePartConfig['TimelineItemSet'] = forceArray(timelineConfig.TimelineItemSet)
+  const timelineProps: TimelineElement[] = timelineItems.map((element) => {
     return {
       year: element.year,
       event: element.event ? parseEvent(forceArray(element.event)) : [],
@@ -49,8 +51,24 @@ function parseEvent(events: TimelineEvent[]): TimelineEvent[] {
       ...event,
       directorImage: image,
       directorImageAltText: imageAltText ?? '',
+      targetUrl: getLinkTargetUrl(event),
     }
   })
 
   return parsedElements
+}
+
+function getLinkTargetUrl(event: TimelineEvent): string {
+  if (event.urlArticle?._selected == 'optionLink') {
+    return event.urlArticle.optionLink.link ?? ''
+  }
+
+  if (event.urlArticle?._selected == 'optionXPContent') {
+    return event.urlArticle.optionXPContent.xpContent
+      ? pageUrl({
+          id: event.urlArticle.optionXPContent.xpContent,
+        })
+      : ''
+  }
+  return ''
 }
