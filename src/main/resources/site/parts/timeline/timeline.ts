@@ -1,4 +1,5 @@
-import { getComponent, pageUrl } from '/lib/xp/portal'
+import { getComponent, getContent, pageUrl } from '/lib/xp/portal'
+import { localize } from '/lib/xp/i18n'
 import { render } from '/lib/enonic/react4xp'
 import { renderError } from '/lib/ssb/error/error'
 import { imageUrl, getImageAlt } from '/lib/ssb/utils/imageUtils'
@@ -16,7 +17,10 @@ export function get(req: XP.Request): XP.Response {
 
 function renderPart(req: XP.Request) {
   const part = getComponent<XP.PartComponent.Timeline>()
-  if (!part) throw new Error('No part')
+  const page = getContent()
+  if (!part || !page) throw new Error('No page or part')
+
+  const language: string = page.language ? page.language : 'nb'
 
   const timelineConfig: TimelinePartConfig = part.config
   const timelineItems: TimelinePartConfig['TimelineItemSet'] = forceArray(timelineConfig.TimelineItemSet)
@@ -27,8 +31,14 @@ function renderPart(req: XP.Request) {
     }
   })
 
+  const showMoreText: string = localize({
+    key: 'button.showMoreYears',
+    locale: language === 'nb' ? 'no' : language,
+  })
+
   const props = {
     timelineElements: timelineProps,
+    showMoreButtonText: showMoreText ?? 'Vis flere år',
     countYear: 5,
   }
 

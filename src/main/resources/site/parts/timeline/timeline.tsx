@@ -3,15 +3,17 @@ import { Button, CategoryLink, Card, ExpansionBox, Link, Tag, Text } from '@stat
 import { ChevronDown } from 'react-feather'
 import { type TimelineProps, type TimelineElement, type TimelineEvent } from '/lib/types/partTypes/timeline'
 import { sanitize } from '/lib/ssb/utils/htmlUtils'
+import { usePaginationKeyboardNavigation } from '/lib/ssb/utils/customHooks/paginationHooks'
 
 function Timeline(props: TimelineProps) {
-  const { timelineElements, countYear } = props
+  const { timelineElements, countYear, showMoreButtonText } = props
   const [selectedTag, setSelectedTag] = useState('all')
   const [filteredElements, setFilteredElements] = useState(timelineElements)
   const [active, setActive] = useState(false)
   const [timelineCount, setTimeLineCount] = useState(countYear)
+  const [keyboardNavigation, setKeyboardNavigation] = useState(false)
 
-  const firstNewItemRef = useRef<HTMLDivElement>(null)
+  const firstNewTimelineRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (selectedTag !== 'all') {
@@ -22,8 +24,8 @@ function Timeline(props: TimelineProps) {
   }, [selectedTag])
 
   useEffect(() => {
-    if (timelineCount > countYear && firstNewItemRef.current) {
-      const firstEvent = firstNewItemRef.current.querySelector('.event')
+    if (keyboardNavigation && firstNewTimelineRef.current) {
+      const firstEvent = firstNewTimelineRef.current.querySelector('.event')
       if (firstEvent) {
         const firstFocusable = firstEvent.querySelector('a, button, input, [tabindex]:not([tabindex="-1"])')
         if (firstFocusable) {
@@ -65,11 +67,27 @@ function Timeline(props: TimelineProps) {
       .filter((element) => element !== null)
   }
 
+  const handleOnClick = () => {
+    setKeyboardNavigation(false)
+    fetchMoreYear()
+  }
+
+  const handleKeyboardNavigation = usePaginationKeyboardNavigation(() => {
+    setKeyboardNavigation(true)
+    fetchMoreYear()
+  })
+
   function renderShowMoreButton() {
     return (
-      <Button primary className='button-more' onClick={fetchMoreYear}>
+      <Button
+        primary
+        className='button-more'
+        disabled={timelineCount === timelineElements.length}
+        onClick={handleOnClick}
+        onKeyDown={handleKeyboardNavigation}
+      >
         <ChevronDown size='18' />
-        Vis flere år
+        {showMoreButtonText}
       </Button>
     )
   }
@@ -161,7 +179,7 @@ function Timeline(props: TimelineProps) {
       <div
         className='timeline-content'
         key={timeline.year}
-        ref={i === timelineCount - countYear ? firstNewItemRef : null}
+        ref={i === timelineCount - countYear ? firstNewTimelineRef : null}
       >
         <div className='year'>
           <span>{timeline.year}</span>

@@ -1,5 +1,6 @@
 export interface TimelineProps {
   timelineElements: TimelineElement[]
+  showMoreButtonText: string
   countYear: number
 }
 
