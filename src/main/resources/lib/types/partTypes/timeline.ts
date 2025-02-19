@@ -1,5 +1,6 @@
 export interface TimelineProps {
   timelineElements: TimelineElement[]
+  countYear: number
 }
 
 export interface TimelineElement {

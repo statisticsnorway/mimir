@@ -29,6 +29,7 @@ function renderPart(req: XP.Request) {
 
   const props = {
     timelineElements: timelineProps,
+    countYear: 5,
   }
 
   return render('site/parts/timeline/timeline', props, req, {

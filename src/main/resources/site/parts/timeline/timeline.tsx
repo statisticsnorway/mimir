@@ -1,13 +1,17 @@
-import React, { useEffect, useState } from 'react'
-import { CategoryLink, Card, ExpansionBox, Link, Tag, Text } from '@statisticsnorway/ssb-component-library'
+import React, { useEffect, useState, useRef } from 'react'
+import { Button, CategoryLink, Card, ExpansionBox, Link, Tag, Text } from '@statisticsnorway/ssb-component-library'
+import { ChevronDown } from 'react-feather'
 import { type TimelineProps, type TimelineElement, type TimelineEvent } from '/lib/types/partTypes/timeline'
 import { sanitize } from '/lib/ssb/utils/htmlUtils'
 
 function Timeline(props: TimelineProps) {
-  const { timelineElements } = props
+  const { timelineElements, countYear } = props
   const [selectedTag, setSelectedTag] = useState('all')
-  const [filteredElements, setFilteredElements] = useState(props.timelineElements)
+  const [filteredElements, setFilteredElements] = useState(timelineElements)
   const [active, setActive] = useState(false)
+  const [timelineCount, setTimeLineCount] = useState(countYear)
+
+  const firstNewItemRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (selectedTag !== 'all') {
@@ -16,6 +20,22 @@ function Timeline(props: TimelineProps) {
       setFilteredElements(props.timelineElements)
     }
   }, [selectedTag])
+
+  useEffect(() => {
+    if (timelineCount > countYear && firstNewItemRef.current) {
+      const firstEvent = firstNewItemRef.current.querySelector('.event')
+      if (firstEvent) {
+        const firstFocusable = firstEvent.querySelector('a, button, input, [tabindex]:not([tabindex="-1"])')
+        if (firstFocusable) {
+          ;(firstFocusable as HTMLElement).focus()
+        }
+      }
+    }
+  }, [timelineCount])
+
+  const fetchMoreYear = () => {
+    setTimeLineCount((prevCount) => prevCount + countYear)
+  }
 
   function setFilter(filter: string) {
     setSelectedTag(filter)
@@ -43,6 +63,15 @@ function Timeline(props: TimelineProps) {
         return null
       })
       .filter((element) => element !== null)
+  }
+
+  function renderShowMoreButton() {
+    return (
+      <Button primary className='button-more' onClick={fetchMoreYear}>
+        <ChevronDown size='18' />
+        Vis flere år
+      </Button>
+    )
   }
 
   function addCategoryLink(event: TimelineEvent) {
@@ -123,13 +152,17 @@ function Timeline(props: TimelineProps) {
     return addEventBox(event)
   }
 
-  function addTimelineYear(timeline: TimelineElement) {
+  function addTimelineYear(timeline: TimelineElement, i: number) {
     const events = timeline.event ? (Array.isArray(timeline.event) ? timeline.event : [timeline.event]) : []
     if (events.length === 0) {
       return null
     }
     return (
-      <div className='timeline-content' key={timeline.year}>
+      <div
+        className='timeline-content'
+        key={timeline.year}
+        ref={i === timelineCount - countYear ? firstNewItemRef : null}
+      >
         <div className='year'>
           <span>{timeline.year}</span>
         </div>
@@ -163,10 +196,11 @@ function Timeline(props: TimelineProps) {
       <div className={`timeline ${active ? 'active' : ''}`}>
         <div className='circle' />
         <div className='timeline-elements'>
-          {filteredElements?.map((timeline) => {
-            return <>{addTimelineYear(timeline)}</>
+          {filteredElements?.slice(0, timelineCount).map((timeline, i) => {
+            return <>{addTimelineYear(timeline, i)}</>
           })}
         </div>
+        {renderShowMoreButton()}
       </div>
     )
   }

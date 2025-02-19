@@ -47,7 +47,9 @@
 
     .timeline-elements {
       padding-top: 25px;
+      padding-left: 0;
       padding-bottom: 50px;
+      list-style: none;
     }
 
     .timeline-content {
@@ -129,5 +131,10 @@
         width: 100%;
       }
     }
+  }
+  .button-more {
+    left: -20px;
+    top: -30px;
+    position: relative;
   }
 }
