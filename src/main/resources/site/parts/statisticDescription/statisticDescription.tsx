@@ -6,7 +6,7 @@ import { type AccordionData, AccordionItems } from '/lib/types/partTypes/accordi
 import { type AboutTheStatisticsProps } from '/lib/types/partTypes/omStatistikken'
 
 function StatisticDescription(props: Readonly<AboutTheStatisticsProps>) {
-  const { icon, ingress, label, lastUpdatedPhrase, lastUpdated, accordions } = props
+  const { label, lastUpdatedPhrase, lastUpdated, accordions } = props
   const [selectedTag, setSelectedTag] = useState<string | undefined>(undefined)
   const [selectedCategory, setSelectedCategory] = useState<AccordionData | undefined>(
     accordions.find((item) => item.id === 'om-statistikken-definisjoner')
@@ -15,13 +15,6 @@ function StatisticDescription(props: Readonly<AboutTheStatisticsProps>) {
   function setCategory(category: string) {
     setSelectedTag(category)
     setSelectedCategory(accordions.find((item) => item.id === category))
-  }
-
-  function renderIngress() {
-    if (ingress) {
-      return <p className='ingress-wrapper searchabletext col-lg-8'>{ingress}</p>
-    }
-    return null
   }
 
   function renderNestedAccordions(category: AccordionData) {
@@ -55,7 +48,7 @@ function StatisticDescription(props: Readonly<AboutTheStatisticsProps>) {
   function renderCategory() {
     if (selectedCategory) {
       return (
-        <div className='selected-category col-lg-12'>
+        <div className='selected-category col-lg-12' aria-live='polite'>
           <ExpansionBox header={selectedCategory.open} text={renderNestedAccordions(selectedCategory)} sneakPeek />
         </div>
       )
@@ -63,15 +56,17 @@ function StatisticDescription(props: Readonly<AboutTheStatisticsProps>) {
     return null
   }
 
+  const isTagActive = (index: number, accordionId?: string): boolean => {
+    const isFirstItem = index === 0 && !selectedTag
+    const isSelectedItem = selectedTag === accordionId
+    return isFirstItem || isSelectedItem
+  }
+
   return (
     <div className='content-wrapper'>
       <div className='title-wrapper'>
         <Title size={2}>{label}</Title>
-        <div className='icon-wrapper'>
-          <img src={icon} alt='' />
-        </div>
       </div>
-      {renderIngress()}
       {lastUpdated && (
         <p>
           <i>{`${lastUpdatedPhrase} ${lastUpdated}.`}</i>
@@ -80,7 +75,7 @@ function StatisticDescription(props: Readonly<AboutTheStatisticsProps>) {
       <div className='om-statistikken-tags'>
         {accordions.map((accordion, index) => (
           <Tag
-            className={index === 0 && !selectedTag ? 'active' : undefined}
+            className={isTagActive(index, accordion.id) ? 'active' : undefined}
             key={accordion.id}
             onClick={() => setCategory(accordion.id as string)}
           >

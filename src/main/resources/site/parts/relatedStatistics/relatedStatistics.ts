@@ -31,7 +31,7 @@ function renderPart(req: XP.Request): XP.Response {
   const relatedStatistics: Statistics['relatedStatisticsOptions'] = page.data.relatedStatisticsOptions
   const phrases = getPhrases(page) as Phrases
 
-  const statisticsTitle: string = phrases.menuStatistics
+  const statisticsTitle: string = phrases.relatedStatistics
   if (!relatedStatistics || relatedStatistics.length === 0) {
     if (req.mode === 'edit' && page.type !== `${app.name}:statistics` && page.type !== `${app.name}:article`) {
       return {

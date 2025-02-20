@@ -11,6 +11,7 @@ declare global {
       export type AttachmentTablesFigures = _PartComponent<'mimir:attachmentTablesFigures'>
       export type Banner = _PartComponent<'mimir:banner'>
       export type BkibolCalculator = _PartComponent<'mimir:bkibolCalculator'>
+      export type BpiCalculator = _PartComponent<'mimir:bpiCalculator'>
       export type CategoryLinks = _PartComponent<'mimir:categoryLinks'>
       export type CombinedGraph = _PartComponent<'mimir:combinedGraph'>
       export type Contact = _PartComponent<'mimir:contact'>

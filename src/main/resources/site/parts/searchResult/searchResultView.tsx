@@ -19,12 +19,10 @@ import { sanitize } from '/lib/ssb/utils/htmlUtils'
 import { NameSearchData, type SearchResultProps } from '/lib/types/partTypes/searchResult'
 import { type DropdownItem } from '/lib/types/partTypes/publicationArchive'
 import { type PreparedSearchResult } from '/lib/types/solr'
-
-const ADDITIONAL_HITS_LENGTH = 15
+import { usePagination } from '/lib/ssb/utils/customHooks/paginationHooks'
 
 function SearchResult(props: SearchResultProps) {
   const [hits, setHits] = useState(props.hits)
-  const [keyboardNavigation, setKeyboardNavigation] = useState(false)
   const [searchTerm, setSearchTerm] = useState(props.term)
   const [loading, setLoading] = useState(false)
   const [total, setTotal] = useState(props.total)
@@ -68,8 +66,16 @@ function SearchResult(props: SearchResultProps) {
   const [selectedMainSubject, setSelectedMainSubject] = useState(preselectedSubjectDropdownItem)
   const [numberChanged, setNumberChanged] = useState(0)
   const [openAccordion, setOpenAccordion] = useState(false)
-  const currentElement = useRef<HTMLAnchorElement>(null)
   const inputSearchElement = useRef<HTMLDivElement>(null)
+
+  const ADDITIONAL_HITS_LENGTH = 15
+  const { disableBtn, getCurrentElementRef, handleKeyboardNavigation, handleOnClick } = usePagination({
+    list: hits,
+    listItemsPerPage: ADDITIONAL_HITS_LENGTH,
+    loading,
+    onLoadMore: () => onShowMoreSearchResults(),
+    totalCount: total,
+  })
 
   useEffect(() => {
     if (searchTerm && inputSearchElement.current) {
@@ -93,12 +99,6 @@ function SearchResult(props: SearchResultProps) {
       fetchFilteredSearchResult()
     }
   }, [filter, sortList])
-
-  useEffect(() => {
-    if (keyboardNavigation) {
-      currentElement.current?.focus()
-    }
-  }, [hits])
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function onChange(id: string, value: any) {
@@ -145,12 +145,12 @@ function SearchResult(props: SearchResultProps) {
     setFilterChanged(true) // we want the useEffect to trigger fetching of results, and new filters
   }
 
-  function renderListItem(hit: PreparedSearchResult, i?: number, focus?: boolean) {
+  function renderListItem(hit: PreparedSearchResult, i?: number) {
     if (hit) {
       return (
         <li key={hit.id ?? i ?? undefined} className='mb-4'>
           <Link
-            ref={focus ? currentElement : null}
+            ref={getCurrentElementRef(i as number)}
             // deepcode ignore DOMXSS: url comes from pageUrl which escapes  + Reacts own escaping
             href={hit.url}
             linkType='header'
@@ -221,9 +221,6 @@ function SearchResult(props: SearchResultProps) {
         <ol className='list-unstyled '>
           {renderListItem(bestBetHit!)}
           {hits.map((hit, i) => {
-            if (i === hits.length - ADDITIONAL_HITS_LENGTH) {
-              return renderListItem(hit, i, true)
-            }
             return renderListItem(hit, i)
           })}
         </ol>
@@ -305,18 +302,10 @@ function SearchResult(props: SearchResultProps) {
       return (
         <div>
           <Button
-            disabled={loading || total === hits.length}
+            disabled={disableBtn}
             className='button-more mt-5'
-            onClick={() => {
-              setKeyboardNavigation(false)
-              onShowMoreSearchResults()
-            }}
-            onKeyDown={(e: React.KeyboardEvent<HTMLButtonElement>) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                setKeyboardNavigation(true)
-                onShowMoreSearchResults()
-              }
-            }}
+            onClick={handleOnClick}
+            onKeyDown={handleKeyboardNavigation}
           >
             <ChevronDown size='18' /> {props.buttonTitle}
           </Button>

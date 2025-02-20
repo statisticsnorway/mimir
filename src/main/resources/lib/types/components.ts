@@ -5,6 +5,13 @@ export interface DropdownItem {
 
 export type DropdownItems = Array<DropdownItem>
 
+export interface RadioGroupItem {
+  value: string
+  label: string
+}
+
+export type RadioGroupItems = Array<RadioGroupItem>
+
 export interface Accordion {
   id: string
   body: string | undefined

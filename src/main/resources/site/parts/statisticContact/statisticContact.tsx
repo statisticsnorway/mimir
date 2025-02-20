@@ -3,7 +3,7 @@ import { Link, Title } from '@statisticsnorway/ssb-component-library'
 import { type StatisticContactProps, type Contact } from '/lib/types/partTypes/statisticContact'
 
 function StatisticContact(props: Readonly<StatisticContactProps>) {
-  const { icon, label, contacts } = props
+  const { label, contacts } = props
 
   function renderContact(contact: Contact) {
     return (
@@ -36,9 +36,6 @@ function StatisticContact(props: Readonly<StatisticContactProps>) {
     <div className='content-wrapper'>
       <div className='title-wrapper'>
         <Title size={2}>{label}</Title>
-        <div className='icon-wrapper'>
-          <img src={icon} alt='' />
-        </div>
       </div>
       {contacts.length > 0 && <div className='contact-list'>{renderContactsInfo()}</div>}
     </div>

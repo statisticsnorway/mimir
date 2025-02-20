@@ -7,7 +7,7 @@ import { type StatisticFiguresProps } from '/lib/types/partTypes/statisticFigure
 import AttachmentTablesFigures from '../attachmentTablesFigures/AttachmentTablesFigures'
 
 function StatisticFigures(props: Readonly<StatisticFiguresProps>) {
-  const { selectedFigures, statbankBoxTitle, statbankBoxText, icon, iconStatbankBox, statbankHref } = props
+  const { selectedFigures, statbankBoxTitle, statbankBoxText, iconStatbankBox, statbankHref } = props
 
   function renderStatbankBox() {
     return (
@@ -32,9 +32,6 @@ function StatisticFigures(props: Readonly<StatisticFiguresProps>) {
     <div className='content-wrapper'>
       <div className='title-wrapper'>
         <Title size={2}>{selectedFigures}</Title>
-        <div className='icon-wrapper'>
-          <img src={icon} alt='' />
-        </div>
       </div>
       <AttachmentTablesFigures {...props} />
       {renderStatbankBox()}
