@@ -1,5 +1,5 @@
 import { QueryNodeParams, Node } from '/lib/xp/node'
-import { findUsers, getUser, User } from '/lib/xp/auth'
+import { getUser, User } from '/lib/xp/auth'
 import { EditorCallback, EVENT_LOG_REPO, EVENT_LOG_BRANCH, createEventLog } from '/lib/ssb/repo/eventLog'
 import { DataSourceInfo, RSSFilterLogData } from '/lib/ssb/cron/rss'
 import { modifyNode, getNode, queryNodes } from '/lib/ssb/repo/common'
@@ -83,12 +83,7 @@ export interface JobEvent {
 }
 
 export function startJobLog(task?: string): JobEventNode {
-  const user: User | null =
-    getUser() ??
-    findUsers({
-      count: 1,
-      query: `login LIKE "cronjob"`,
-    }).hits[0]
+  const user: User | null = getUser()
   const now: Date = new Date()
   return createEventLog({
     _parentPath: '/jobs',
