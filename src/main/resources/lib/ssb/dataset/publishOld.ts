@@ -4,6 +4,7 @@ import { NodeQueryResultHit } from '/lib/xp/node'
 import { send } from '/lib/xp/event'
 import { executeFunction, sleep } from '/lib/xp/task'
 import { run, type ContextParams } from '/lib/xp/context'
+import { findUsers } from '/lib/xp/auth'
 import { isSameOrBefore } from '/lib/ssb/utils/dateUtils'
 import { isSameDay } from '/lib/vendor/dateFns'
 
@@ -87,6 +88,17 @@ export function currentlyWaitingForPublish(statistic: Content<Statistics>): bool
     }
   }
   return false
+}
+
+/* TODO:
+ * This is a workaround to fetch the cronjob user since the Publish statistics job log wasn't showing up in the Dashboard after the lib-cron 1.1.3 update
+ * We use the "user:system:cronjob" key from the user object as an identifier for the getJobs query to filter other irrelevant job logs (See /lib/ssb/dashboard/dashboard.ts)
+ */
+function getCronUser() {
+  return findUsers({
+    count: 1,
+    query: `login LIKE "cronjob"`,
+  }).hits[0]
 }
 
 export function publishDataset(): void {
@@ -178,6 +190,7 @@ export function publishDataset(): void {
   jobs[jobLogNode._id] = updateJobLog(jobLogNode._id, (node: JobInfoNode) => {
     node.data = {
       ...node.data,
+      user: node.data.user ? node.data.user : getCronUser(),
       queryIds: jobResult.map((q) => q.statistic),
       refreshDataResult: jobResult,
     }
@@ -335,6 +348,7 @@ function createTask(
               updateJobLog(jobId, (node: JobInfoNode) => {
                 node.data = {
                   ...node.data,
+                  user: node.data.user ? node.data.user : getCronUser(),
                   refreshDataResult: jobRefreshResult,
                 }
                 return node
