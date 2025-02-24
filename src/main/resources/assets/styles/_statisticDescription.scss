@@ -25,9 +25,10 @@
     margin-top: 1.5rem;
     margin-bottom: 3rem;
 
-    .ssb-tag.active {
-      background: $ssb-green-4;
-      color: $ssb-white;
+    .ssb-tag {
+      &:active {
+        border-width: 1px;
+      }
     }
   }
 
