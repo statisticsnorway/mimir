@@ -77,6 +77,10 @@ function Timeline(props: TimelineProps) {
     fetchMoreYear()
   })
 
+  function isExternalUrl(url?: string): boolean {
+    return !!url && !url.startsWith('/') && !url.includes('ssb.no')
+  }
+
   function renderShowMoreButton() {
     return (
       <Button
@@ -93,7 +97,14 @@ function Timeline(props: TimelineProps) {
   }
 
   function addCategoryLink(event: TimelineEvent) {
-    return <CategoryLink href={event.targetUrl} titleText={event.title} subText={event.ingress} />
+    return (
+      <CategoryLink
+        external={isExternalUrl(event.targetUrl)}
+        href={event.targetUrl}
+        titleText={event.title}
+        subText={event.ingress}
+      />
+    )
   }
 
   function addDirectorCard(event: TimelineEvent) {
