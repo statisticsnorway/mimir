@@ -26,8 +26,10 @@
     margin-bottom: 3rem;
 
     .ssb-tag {
+      margin-right: 2px;
+
       &:active {
-        border-width: 1px;
+        margin-right: 0;
       }
     }
   }
