@@ -24,6 +24,9 @@ updates:
       # enonic types should update only when updating enonic version on server
       - dependency-name: "@enonic-types/*"
   - package-ecosystem: "gradle"
+    ignore:
+      - dependency-name: "com.enonic.lib:lib-cron"
+        update-types: ["version-update:semver-patch"]
     directory: "/"
     schedule:
       interval: "weekly"
