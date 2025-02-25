@@ -44,7 +44,7 @@ function getOmStatistikken(req: XP.Request, page: Content<any>, aboutTheStatisti
   const props: AboutTheStatisticsProps = getAboutTheStatisticsProps(req, page, aboutTheStatisticsId)
 
   return render('site/parts/statisticDescription/statisticDescription', props, req, {
-    body: `<section id="om-statistikken" class="xp-part statistic-description container-fluid p-0"></section>`,
+    body: `<section id="om-statistikken" class="xp-part statistic-description container"></section>`,
     id: 'statistic-description',
   })
 }
