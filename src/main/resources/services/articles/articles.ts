@@ -1,5 +1,5 @@
 import { getContent } from '/lib/xp/portal'
-import { getChildArticles, prepareArticles } from '/lib/ssb/utils/articleUtils'
+import { getChildArticles, getSubtopics, prepareArticles } from '/lib/ssb/utils/articleUtils'
 import { type PreparedArticles } from '/lib/types/article'
 
 let totalCount = 0
@@ -16,9 +16,8 @@ export const get = (req: XP.Request): XP.Response => {
       status: 404,
     }
   }
-  const subTopicId: string = content._id
-
-  const childArticles = getChildArticles(currentPath, subTopicId, start, count, sort)
+  const subTopicIds: string | string[] = getSubtopics(content, currentPath, req, language)
+  const childArticles = getChildArticles(currentPath, subTopicIds, start, count, sort)
   const preparedArticles: Array<PreparedArticles> = prepareArticles(childArticles, language)
   totalCount = childArticles.total
 
