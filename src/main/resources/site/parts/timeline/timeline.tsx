@@ -167,7 +167,7 @@ function Timeline(props: TimelineProps) {
     if (event.directorImage) {
       return addDirectorCard(event)
     }
-    if (event.article) {
+    if (event.urlArticle) {
       return addCategoryLink(event)
     }
 
