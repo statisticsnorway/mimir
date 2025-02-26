@@ -12,14 +12,15 @@ $grid-breakpoints: (
   // Extra large screen / wide desktop
         xl: 1260px,
   // Extra Extra large / 1440p and up
-        xxl: 2000px
+        xxl: 1400px
 );
 
 $container-max-widths: (
   sm: 540px,
   md: 720px,
   lg: 960px,
-  xl: 1180px
+  xl: 1180px,
+  xxl: 1400px
 );
 
 @import "bootstrap";

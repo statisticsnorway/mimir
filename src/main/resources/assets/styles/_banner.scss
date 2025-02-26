@@ -18,7 +18,9 @@
       height: auto;
       width: auto;
     }
-    /* &.plainSection {
+
+    // Experimental >:D
+   &.plainSection {
       width: 1180px;
       img {max-width: 1180px;}
     }
@@ -27,13 +29,7 @@
       width: 1400px;
       img {max-width: 1400px;}
     }
-    &.plainSection {
-      img {width: 960px;}
-    }
-
-    &.wide {
-      img {width: 1400px;}
-    } */
+    // Experiment done!
 
     @include media-breakpoint-down(md) {
       width: 100vw;
