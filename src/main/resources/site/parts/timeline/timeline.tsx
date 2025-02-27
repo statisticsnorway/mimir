@@ -208,10 +208,10 @@ function Timeline(props: TimelineProps) {
           Vis alt
         </Tag>
         <Tag className={selectedTag === 'statistic' ? 'active' : ''} onClick={() => setFilter('statistic')}>
-          Statistiske hendelser
+          Statistikk
         </Tag>
-        <Tag className={selectedTag === 'eventSsb' ? 'active' : ''} onClick={() => setFilter('eventSsb')}>
-          Institusjonelle hendelser
+        <Tag className={selectedTag === 'aboutSsb' ? 'active' : ''} onClick={() => setFilter('aboutSsb')}>
+          Om SSB
         </Tag>
         <Tag className={selectedTag === 'director' ? 'active' : ''} onClick={() => setFilter('director')}>
           Direktører

@@ -37,11 +37,11 @@
                             <label>Hendelsestype</label>
                             <occurrences minimum="1" maximum="1"/>
                             <config>
-                                <option value="statistic">Statistisk hendelse</option>
-                                <option value="eventSsb">Institusjonelle hendelser</option>
+                                <option value="statistic">Statistikk</option>
+                                <option value="aboutSsb">Om SSB</option>
                                 <option value="director">Direktør</option>
                             </config>
-                            <default>eventSsb</default>
+                            <default>aboutSsb</default>
                         </input>
                         <option-set name="urlArticle">
                             <label>Artikkel</label>
