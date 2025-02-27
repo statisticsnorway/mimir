@@ -1,30 +1,28 @@
-import { NodeQueryResponse, RepoConnection, RepoNode } from 'enonic-types/node'
-
 const MARKDOWN_REPO: string = 'no.ssb.pubmd'
 const MARKDOWN_BRANCH: string = 'master'
 
-const {
-  connect
-} = __non_webpack_require__('/lib/xp/node')
-const {
-  getNode
-} = __non_webpack_require__('/lib/ssb/repo/common')
+import { connect, RepoConnection } from '/lib/xp/node'
+import { getNode } from '/lib/ssb/repo/common'
 
 export function connectMarkdownRepo(): RepoConnection {
   return connect({
     repoId: MARKDOWN_REPO,
     branch: MARKDOWN_BRANCH,
-    principals: ['role:system.admin']
+    principals: ['role:system.admin'],
   })
 }
 
-export function getMarkdownRepo(): NodeQueryResponse<never> {
+export function getMarkdownRepo() {
   return connectMarkdownRepo().findChildren({
     parentKey: '/',
-    count: 1000
+    count: 1000,
   })
 }
 
-export function getMarkdownNode(id: string): ReadonlyArray<RepoNode> | RepoNode | null {
+export function getMarkdownNode(id: string) {
   return getNode(MARKDOWN_REPO, MARKDOWN_BRANCH, id)
+}
+
+export interface MarkdownRepoNode extends Node {
+  markdown?: string
 }

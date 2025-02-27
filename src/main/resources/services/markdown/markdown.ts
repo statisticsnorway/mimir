@@ -1,28 +1,22 @@
-import { Content } from 'enonic-types/content'
-import { Response } from 'enonic-types/controller'
+import { type Node } from '/lib/xp/node'
+import { getMarkdownRepo, getMarkdownNode } from '/lib/ssb/utils/markdownUtils'
 
-const {
-  getMarkdownRepo, getMarkdownNode
-} = __non_webpack_require__('/lib/ssb/utils/markdownUtils')
-
-exports.get = (): Response => {
-  const markdownFileIds: Array<string> = getMarkdownRepo().hits.map((node: {id: string}) => `${node.id}`)
-  const markdownContent: Array<Content> = markdownFileIds.map((id: string) => getMarkdownNode(id))
+exports.get = (): XP.Response => {
+  const markdownFileIds = getMarkdownRepo().hits.map((node: { id: string }) => `${node.id}`)
+  const markdownContent = markdownFileIds.map((id: string) => getMarkdownNode(id))
   const total: number = markdownContent.length
 
   return {
     body: {
       count: total,
       total: total,
-      hits: markdownContent.map(({
-        _id, _name
-      }) => {
+      hits: markdownContent.map(({ _id, _name }: Node) => {
         return {
           id: _id,
-          displayName: _name
+          displayName: _name,
         }
-      })
+      }),
     },
-    contentType: 'application/json'
+    contentType: 'application/json',
   }
 }

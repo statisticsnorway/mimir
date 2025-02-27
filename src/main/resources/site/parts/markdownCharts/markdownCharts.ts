@@ -1,11 +1,8 @@
-import { Request, Response } from 'enonic-types/controller'
-import { RepoNode } from 'enonic-types/node'
-import { renderError } from '../../../lib/ssb/error/error'
-import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
+import { render as React4xpRender } from '/lib/xp/react4xp'
+import { renderError } from '/lib/ssb/error/error'
+import { MarkdownRepoNode } from '/lib/ssb/utils/markdownUtils'
 
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
-
-exports.get = (req: Request): React4xpResponse | Response => {
+exports.get = (req: XP.Request): XP.Response => {
   try {
     return renderPart(req)
   } catch (e) {
@@ -13,7 +10,7 @@ exports.get = (req: Request): React4xpResponse | Response => {
   }
 }
 
-exports.preview = (req: Request, content: MarkdownRepoNode): React4xpResponse | Response => {
+exports.preview = (req: XP.Request, content: MarkdownRepoNode): XP.Response => {
   try {
     return renderPart(req, content)
   } catch (e) {
@@ -21,20 +18,16 @@ exports.preview = (req: Request, content: MarkdownRepoNode): React4xpResponse | 
   }
 }
 
-function renderPart(req: Request, content?: MarkdownRepoNode): React4xpResponse {
+function renderPart(req: XP.Request, content?: MarkdownRepoNode): XP.Response {
   const options: object = content && content.markdown ? JSON.parse(content.markdown) : {}
 
   const props: PartProperties = {
-    options
+    options,
   }
 
-  return React4xp.render('site/parts/markdownCharts/markdownCharts', props, req)
-}
-
-interface MarkdownRepoNode extends RepoNode {
-  markdown?: string;
+  return React4xpRender('site/parts/markdownCharts/markdownCharts', props, req)
 }
 
 interface PartProperties {
-    options: object;
+  options: object
 }

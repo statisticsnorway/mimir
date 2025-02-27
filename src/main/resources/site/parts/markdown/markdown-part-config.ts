@@ -3,10 +3,10 @@ export interface MarkdownPartConfig {
   /**
    * Markdown
    */
-  markdownText?: string;
+  markdownText?: string
 
   /**
    * Markdown file
    */
-  markdownFile?: string;
+  markdownFile?: string
 }

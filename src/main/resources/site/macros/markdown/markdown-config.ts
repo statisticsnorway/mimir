@@ -3,5 +3,5 @@ export interface MarkdownConfig {
   /**
    * File path
    */
-  jsconfig: string;
+  jsconfig: string
 }

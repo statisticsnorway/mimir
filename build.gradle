@@ -55,7 +55,7 @@ repositories {
     xp.enonicRepo()
     maven {
         url "https://repo1.maven.org/maven2/"
-        url "http://repo.enonic.com/public"
+        url "https://repo.enonic.com/public"
     }
     maven {
         url 'https://jitpack.io'
