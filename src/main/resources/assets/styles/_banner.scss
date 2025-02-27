@@ -14,22 +14,8 @@
     height: 100%;
     width: 100%;
     img {
-      display: block;
-      height: auto;
-      width: auto;
+      height: 100%;
     }
-
-    // Experimental >:D
-   &.plainSection {
-      width: 1180px;
-      img {max-width: 1180px;}
-    }
-
-    &.wide {
-      width: 1400px;
-      img {max-width: 1400px;}
-    }
-    // Experiment done!
 
     @include media-breakpoint-down(md) {
       width: 100vw;
