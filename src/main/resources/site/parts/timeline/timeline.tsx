@@ -229,7 +229,7 @@ function Timeline(props: TimelineProps) {
             return <>{addTimelineYear(timeline, i)}</>
           })}
         </div>
-        {renderShowMoreButton()}
+        {timelineElements.length > countYear && renderShowMoreButton()}
       </div>
     )
   }

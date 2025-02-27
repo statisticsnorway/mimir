@@ -37,9 +37,8 @@
                             <label>Hendelsestype</label>
                             <occurrences minimum="1" maximum="1"/>
                             <config>
-                                <option value="statistic">Statistikk</option>
-                                <option value="eventSsb">Begivenhet ssb</option>
-                                <option value="event">Eksterne begivenheter</option>
+                                <option value="statistic">Statistisk hendelse</option>
+                                <option value="eventSsb">Institusjonelle hendelser</option>
                                 <option value="director">Direktør</option>
                             </config>
                             <default>eventSsb</default>
