@@ -1,0 +1,47 @@
+.part-static-visualization {
+  .footnote {
+    list-style-type: none;
+    margin-top: 2.5rem;
+    padding-left: 0;
+
+    li {
+      margin-top: 0.3rem;
+    }
+  }
+  .ssb-expansion-box {
+    margin-top: 2.5rem;
+  }
+  .sources {
+    margin-top: 0;
+  }
+  img {
+    width: 100%;
+  }
+  .static-visualization-data {
+    overflow-x: auto;
+    margin-top: 2.5rem;
+
+    thead th:first-child {
+      text-align: left;
+    }
+  }
+
+  .navigation-item {
+    &:focus {
+      outline: $ssb-purple-3 solid 2px;
+      outline-offset: 1px;
+    }
+  }
+
+  .static-visualization-chart {
+    margin-top: 2.5rem;
+  }
+
+  figcaption {
+    @include roboto;
+    font-weight: bold;
+    font-size: 1.25rem;
+    line-height: 2rem;
+    margin-bottom: $spacer * 0.5;
+  }
+}

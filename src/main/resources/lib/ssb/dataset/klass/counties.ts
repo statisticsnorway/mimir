@@ -1,20 +1,10 @@
-import { SiteConfig } from '../../../../site/site-config'
-import { Content } from 'enonic-types/content'
-import { DatasetRepoNode } from '../../repo/dataset'
-import { DataSource } from '../../../../site/mixins/dataSource/dataSource'
-const {
-  getSiteConfig
-} = __non_webpack_require__('/lib/xp/portal')
-const {
-  get: getContent
-} = __non_webpack_require__('/lib/xp/content')
-const {
-  getDataset,
-  extractKey
-} = __non_webpack_require__('/lib/ssb/dataset/dataset')
-const {
-  fromDatasetRepoCache
-} = __non_webpack_require__('/lib/ssb/cache/cache')
+import { get as getContent, Content } from '/lib/xp/content'
+
+import { getSiteConfig } from '/lib/xp/portal'
+import { DatasetRepoNode } from '/lib/ssb/repo/dataset'
+import { getDataset, extractKey } from '/lib/ssb/dataset/dataset'
+import { fromDatasetRepoCache } from '/lib/ssb/cache/cache'
+import { type DataSource } from '/site/mixins/dataSource'
 
 /**
  *
@@ -22,20 +12,24 @@ const {
  */
 export const list: () => Array<County> = () => getCountiesFromContent()
 
-
 function getCountiesFromContent(): Array<County> {
-  const siteConfig: SiteConfig = getSiteConfig()
+  const siteConfig: XP.SiteConfig | null = getSiteConfig()
+  if (!siteConfig) return []
+
   const key: string | undefined = siteConfig.countyDataContentId
   if (key) {
     const dataSource: Content<DataSource> | null = getContent({
-      key
+      key,
     })
     if (dataSource) {
-      const dataset: DatasetRepoNode<object> | undefined = fromDatasetRepoCache(`${dataSource.data.dataSource?._selected}/${extractKey(dataSource)}`, () => {
-        return getDataset(dataSource)
-      })
+      const dataset: DatasetRepoNode<object> | undefined = fromDatasetRepoCache(
+        `${dataSource.data.dataSource?._selected}/${extractKey(dataSource)}`,
+        () => {
+          return getDataset(dataSource)
+        }
+      )
       if (dataset && dataset.data) {
-        const data: {codes: Array<County>} = dataset.data as {codes: Array<County>}
+        const data: { codes: Array<County> } = dataset.data as { codes: Array<County> }
         return data.codes
       }
     }
@@ -43,15 +37,11 @@ function getCountiesFromContent(): Array<County> {
   return []
 }
 
-export interface CountiesLib {
-  list: () => Array<County>;
-}
-
 export interface County {
-  code: string;
-  parentCode?: string;
-  level: string;
-  name: string;
-  shortName: string;
-  presentationName: string;
+  code: string
+  parentCode?: string
+  level: string
+  name: string
+  shortName: string
+  presentationName: string
 }

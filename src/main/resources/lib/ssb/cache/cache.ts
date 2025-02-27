@@ -1,96 +1,67 @@
-__non_webpack_require__('/lib/ssb/polyfills/nashorn')
-import { Request, Response } from 'enonic-types/controller'
-import { EnonicEvent, EnonicEventData } from 'enonic-types/event'
-import { QueryResponse, Content } from 'enonic-types/content'
-import { JSONstat } from '../../types/jsonstat-toolkit'
-import { TbmlDataUniform } from '../../types/xmlParser'
-import { DATASET_REPO, DatasetRepoNode } from '../repo/dataset'
-import { Socket } from '../../types/socket'
-import { MunicipalityWithCounty } from '../dataset/klass/municipalities'
-import { Cache } from 'enonic-types/cache'
-import { DataSource } from '../../../site/mixins/dataSource/dataSource'
-
-const {
-  newCache
-} = __non_webpack_require__('/lib/cache')
-const {
-  listener,
-  send
-} = __non_webpack_require__('/lib/xp/event')
-const {
-  run
-} = __non_webpack_require__('/lib/xp/context')
-const {
-  executeFunction, sleep
-} = __non_webpack_require__('/lib/xp/task')
-const {
-  query,
-  get
-} = __non_webpack_require__('/lib/xp/content')
-const {
-  getDataset,
-  extractKey
-} = __non_webpack_require__('/lib/ssb/dataset/dataset')
-const {
-  cacheLog
-} = __non_webpack_require__('/lib/ssb/utils/serverLog')
-const {
-  completelyClearSubjectCache,
-  clearSubjectCache
-} = __non_webpack_require__('/lib/ssb/cache/subjectCache')
-const {
-  completelyClearPartCache,
-  clearPartCache
-} = __non_webpack_require__('/lib/ssb/cache/partCache')
-const {
-  ENONIC_CMS_DEFAULT_REPO
-} = __non_webpack_require__('/lib/ssb/repo/common')
+import '/lib/ssb/polyfills/nashorn'
+import { listener, send, EnonicEvent, EnonicEventData } from '/lib/xp/event'
+import { query, get, Content } from '/lib/xp/content'
+import { run } from '/lib/xp/context'
+import { executeFunction, sleep, submitTask } from '/lib/xp/task'
+import { JSONstat } from '/lib/types/jsonstat-toolkit'
+import { TbmlDataUniform } from '/lib/types/xmlParser'
+import { type Socket } from '/lib/wsUtil'
+import { newCache, Cache } from '/lib/cache'
+import { request, HttpResponse } from '/lib/http-client'
+import { DATASET_REPO, DatasetRepoNode } from '/lib/ssb/repo/dataset'
+import { getDataset, extractKey } from '/lib/ssb/dataset/dataset'
+import { cacheLog } from '/lib/ssb/utils/serverLog'
+import { completelyClearSubjectCache, clearSubjectCache } from '/lib/ssb/cache/subjectCache'
+import { completelyClearPartCache, clearPartCache } from '/lib/ssb/cache/partCache'
+import { ENONIC_CMS_DEFAULT_REPO } from '/lib/ssb/repo/common'
+import { type MunicipalityWithCounty } from '/lib/types/municipalities'
+import { type DataSource } from '/site/mixins/dataSource'
 
 const masterFilterCaches: Map<string, Cache> = new Map()
 const draftFilterCaches: Map<string, Cache> = new Map()
 const masterMenuCache: Cache = newCache({
   expire: 3600,
-  size: 10
+  size: 10,
 })
 const draftMenuCache: Cache = newCache({
   expire: 3600,
-  size: 10
+  size: 10,
 })
 const draftRelatedArticlesCache: Cache = newCache({
   expire: 3600,
-  size: 200
+  size: 200,
 })
 const masterRelatedArticlesCache: Cache = newCache({
   expire: 3600,
-  size: 200
+  size: 200,
 })
 const draftRelatedFactPageCache: Cache = newCache({
   expire: 3600,
-  size: 200
+  size: 200,
 })
 const masterRelatedFactPageCache: Cache = newCache({
   expire: 3600,
-  size: 200
+  size: 200,
 })
 const datasetRepoCache: Cache = newCache({
   expire: 3600,
-  size: 1500
+  size: 1500,
 })
 const parsedMunicipalityCache: Cache = newCache({
   expire: 3600,
-  size: 1000
+  size: 1000,
 })
 const municipalityWithCodeCache: Cache = newCache({
   expire: 3600,
-  size: 1000
+  size: 1000,
 })
 const municipalityWithNameCache: Cache = newCache({
   expire: 3600,
-  size: 1000
+  size: 1000,
 })
 const parentTypeCache: Cache = newCache({
   expire: 3600,
-  size: 2000
+  size: 2000,
 })
 
 let changeQueue: EnonicEventData['nodes'] = []
@@ -101,26 +72,79 @@ export function setup(): void {
   listener({
     type: 'node.*',
     localOnly: false,
-    callback: addToChangeQueue
+    callback: addToChangeQueue,
+  })
+
+  listener({
+    type: 'node.pushed',
+    localOnly: false,
+    callback: (e) => {
+      removePageFromVarnish(e)
+      alertsClearVarnishCache(e)
+    },
+  })
+
+  listener({
+    type: 'node.deleted',
+    localOnly: false,
+    callback: alertsClearVarnishCache,
   })
 
   listener({
     type: 'custom.clearCache',
-    callback: (e: EnonicEvent<CompletelyClearCacheOptions>) => completelyClearCache(e.data)
+    callback: (e: EnonicEvent<CompletelyClearCacheOptions>) => completelyClearCache(e.data),
   })
 
   listener({
     type: 'custom.clearDatasetCache',
-    callback: (e: EnonicEvent<{path: string}>) => {
+    callback: (e: EnonicEvent<{ path: string }>) => {
       clearCacheRepo(e.data.path)
+    },
+  })
+}
+
+function alertsClearVarnishCache(event: EnonicEvent<EnonicEventData>): void {
+  event.data.nodes.forEach((n) => {
+    // Clear varnish cache for operation alerts
+    if (n.repo == 'com.enonic.cms.default' && n.branch == 'master' && n.path.includes('/driftsvarsler/')) {
+      const resultOfPurge = purgeVarnishCache()
+      log.info(
+        `Cleared Varnish for alerts. Result code: ${resultOfPurge.status} - and message: ${resultOfPurge.message}`
+      )
     }
   })
+}
+
+function removePageFromVarnish(event: EnonicEvent<EnonicEventData>): void {
+  const pageIds: string[] = event.data.nodes
+    .filter(
+      (n) =>
+        n.repo == 'com.enonic.cms.default' &&
+        n.branch == 'master' &&
+        n.path.startsWith('/content/') &&
+        !n.path.includes('/driftsvarsler/')
+    )
+    .map((n) => n.id)
+
+  if (pageIds.length > 0) {
+    const taskConfig = {
+      pageIds,
+    }
+
+    const taskId: string = submitTask({
+      descriptor: `banVarnishPageCache`,
+      config: taskConfig,
+    })
+    log.debug(`Page submitted for Varnish ban. Task id: ${taskId}`)
+  }
 }
 
 const validRepos: Array<string> = [ENONIC_CMS_DEFAULT_REPO, DATASET_REPO]
 function addToChangeQueue(event: EnonicEvent<EnonicEventData>): void {
   cacheLog(`cacheEvent :: ${JSON.stringify(event, null, 2)}`)
-  const validNodes: EnonicEventData['nodes'] = event.data.nodes.filter((n) => validRepos.includes(n.repo) && !n.path.includes('/issues/'))
+  const validNodes: EnonicEventData['nodes'] = event.data.nodes.filter(
+    (n) => validRepos.includes(n.repo) && !n.path.includes('/issues/')
+  )
   if (validNodes.length > 0) {
     cacheLog(`cacheValidNodes :: ${JSON.stringify(validNodes, null, 2)}`)
     changeQueue = changeQueue.concat(validNodes)
@@ -144,7 +168,9 @@ function addClearTask(): void {
           cacheLog(`cache :: clear queue ${changeQueue.length}`)
           const changedNodes: EnonicEventData['nodes'] = changeQueue
           changeQueue = [] // reset queue
-          if (changeQueueLength >= 200) { // just clear everything if there is too many changes
+          if (changeQueueLength >= 200) {
+            // just clear everything if there is too many changes
+            log.info('Cache - changeQueueLength >= 200, clear everything')
             completelyClearCache({
               clearFilterCache: true,
               clearMenuCache: true,
@@ -156,7 +182,7 @@ function addClearTask(): void {
               clearMunicipalityWithNameCache: true,
               clearParentTypeCache: true,
               clearSubjectCache: true,
-              clearPartCache: true
+              clearPartCache: true,
             })
           } else {
             onNodeChange(changedNodes)
@@ -172,7 +198,7 @@ function addClearTask(): void {
         clearTaskId = undefined
         addClearTask()
       }
-    }
+    },
   })
 }
 
@@ -190,58 +216,64 @@ function onNodeChange(validNodes: EnonicEventData['nodes']): void {
 
 function clearForBranch(nodes: EnonicEventData['nodes'], branch: string): void {
   // need to run in correct context for getReferences to work
-  run({
-    repository: ENONIC_CMS_DEFAULT_REPO,
-    branch: branch,
-    user: {
-      login: 'su',
-      idProvider: 'system'
+  run(
+    {
+      repository: ENONIC_CMS_DEFAULT_REPO,
+      branch: branch,
+      user: {
+        login: 'su',
+        idProvider: 'system',
+      },
+      principals: ['role:system.admin'],
     },
-    principals: ['role:system.admin']
-  },
-  () => {
-    const cleared: Array<string> = []
-    cacheLog(`cache :: nodes to clear for branch ${branch} :: ${JSON.stringify(nodes, null, 2)}`)
-    nodes.forEach((n) => {
-      if (n.repo === ENONIC_CMS_DEFAULT_REPO) {
-        // clear id and all references to id from cache
-        cacheLog(`try to clear ${n.id}(${branch})`)
-        const content: Content | null = get({
-          key: n.id
-        })
-        if (content) {
-          clearCache(content, branch, cleared)
-        } else {
-          // the element is deleted, so lets try to clear it only based on id, and its parent
-          clearCache({
-            _id: n.id
-          } as Content, branch, cleared )
-          // the path on these nodes are not site, but repo relative, so we need to strip out the /content at the start
-          const parentPath: string = n.path.substring('/content'.length, n.path.lastIndexOf('/'))
-          const parent: Content | null = get({
-            key: parentPath
+    () => {
+      const cleared: Array<string> = []
+      cacheLog(`cache :: nodes to clear for branch ${branch} :: ${JSON.stringify(nodes, null, 2)}`)
+      nodes.forEach((n) => {
+        if (n.repo === ENONIC_CMS_DEFAULT_REPO) {
+          // clear id and all references to id from cache
+          cacheLog(`try to clear ${n.id}(${branch})`)
+          const content: Content | null = get({
+            key: n.id,
           })
-          if (parent) {
-            clearCache(parent, branch, cleared)
+          if (content) {
+            clearCache(content, branch, cleared)
+          } else {
+            // the element is deleted, so lets try to clear it only based on id, and its parent
+            clearCache(
+              {
+                _id: n.id,
+              } as Content,
+              branch,
+              cleared
+            )
+            // the path on these nodes are not site, but repo relative, so we need to strip out the /content at the start
+            const parentPath: string = n.path.substring('/content'.length, n.path.lastIndexOf('/'))
+            const parent: Content | null = get({
+              key: parentPath,
+            })
+            if (parent) {
+              clearCache(parent, branch, cleared)
+            }
           }
+        } else if (n.repo === DATASET_REPO) {
+          cacheLog(`cache :: try to clear in dataset repo :: ${JSON.stringify(n, null, 2)}`)
+          clearCacheRepo(n.path)
         }
-      } else if (n.repo === DATASET_REPO) {
-        cacheLog(`cache :: try to clear in dataset repo :: ${JSON.stringify(n, null, 2)}`)
-        clearCacheRepo(n.path)
-      }
-    })
-  })
+      })
+    }
+  )
 }
 
 function getReferences(id: string): Array<Content> {
-  let start: number = 0
-  let count: number = 10
+  let start = 0
+  let count = 10
   let hits: Array<Content> = []
   while (count === 10) {
-    const result: QueryResponse<Content> = query({
+    const result = query({
       start,
       count,
-      query: `_references LIKE "${id}"`
+      query: `_references LIKE "${id}"`,
     })
     count = result.count
     start += count
@@ -251,7 +283,8 @@ function getReferences(id: string): Array<Content> {
 }
 
 function clearCache(content: Content, branch: string, cleared: Array<string>): Array<string> {
-  if (cleared.filter((c) => content._id === c).length > 0) { // already cleared
+  if (cleared.filter((c) => content._id === c).length > 0) {
+    // already cleared
     cacheLog(`already cleared ${content._id}(${branch})`)
     return cleared
   }
@@ -307,14 +340,19 @@ function getFilterCache(branch: string, filterKey: string): Cache {
   if (!filterCache) {
     filterCache = newCache({
       size: 1000,
-      expire: 3600
+      expire: 3600,
     })
     cacheMap.set(filterKey, filterCache)
   }
   return filterCache
 }
 
-export function fromFilterCache(req: Request, filterKey: string, key: string, fallback: () => Response): Response {
+export function fromFilterCache(
+  req: XP.Request,
+  filterKey: string,
+  key: string,
+  fallback: () => XP.Response
+): XP.Response {
   if (req.mode === 'live' || req.mode === 'preview') {
     const branch: string = req.mode === 'live' ? 'master' : 'draft'
     const filterCache: Cache = getFilterCache(branch, filterKey)
@@ -326,8 +364,8 @@ export function fromFilterCache(req: Request, filterKey: string, key: string, fa
   return fallback()
 }
 
-export function fromMenuCache(req: Request, key: string, fallback: () => unknown): unknown {
-  if (req.mode === 'live' || req.mode === 'preview') {
+export function fromMenuCache(req: XP.Request, key: string, fallback: () => unknown): unknown {
+  if (req.mode === 'live') {
     const branch: string = req.mode === 'live' ? 'master' : 'draft'
     const menuCache: Cache = branch === 'master' ? masterMenuCache : draftMenuCache
     return menuCache.get(key, () => {
@@ -338,8 +376,8 @@ export function fromMenuCache(req: Request, key: string, fallback: () => unknown
   return fallback()
 }
 
-export function fromRelatedArticlesCache(req: Request, key: string, fallback: () => unknown): unknown {
-  if (req.mode === 'live' || req.mode === 'preview') {
+export function fromRelatedArticlesCache(req: XP.Request, key: string, fallback: () => unknown): unknown {
+  if (req.mode === 'live') {
     const branch: string = req.mode === 'live' ? 'master' : 'draft'
     const relatedArticlesCache: Cache = branch === 'master' ? masterRelatedArticlesCache : draftRelatedArticlesCache
     return relatedArticlesCache.get(key, () => {
@@ -350,21 +388,10 @@ export function fromRelatedArticlesCache(req: Request, key: string, fallback: ()
   return fallback()
 }
 
-export function fromRelatedFactPageCache(req: Request, key: string, fallback: () => unknown): unknown {
-  if (req.mode === 'live' || req.mode === 'preview') {
-    const branch: string = req.mode === 'live' ? 'master' : 'draft'
-    const relatedFactPageCache: Cache = branch === 'master' ? masterRelatedFactPageCache : draftRelatedFactPageCache
-    return relatedFactPageCache.get(key, () => {
-      cacheLog(`added ${key} to related fact page cache (${branch})`)
-      return fallback()
-    })
-  }
-  return fallback()
-}
-
 export function fromDatasetRepoCache(
   key: string,
-  fallback: () => DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null): DatasetRepoNode<JSONstat | TbmlDataUniform | object> | undefined {
+  fallback: () => DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null
+): DatasetRepoNode<JSONstat | TbmlDataUniform | object> | undefined {
   return datasetRepoCache.get(key, () => {
     cacheLog(`added ${key} to dataset repo cache`)
     const res: DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null = fallback()
@@ -373,37 +400,45 @@ export function fromDatasetRepoCache(
   })
 }
 
-export function datasetOrUndefined(content: Content<DataSource>): DatasetRepoNode<JSONstat | TbmlDataUniform | object> | undefined {
-  return content.data.dataSource && content.data.dataSource._selected ?
-    fromDatasetRepoCache(`/${content.data.dataSource._selected}/${extractKey(content)}`,
-      () => getDataset(content)) :
-    undefined
+export function datasetOrUndefined(
+  content: Content<DataSource>
+): DatasetRepoNode<JSONstat | TbmlDataUniform | object> | undefined {
+  return content.data.dataSource && content.data.dataSource._selected
+    ? fromDatasetRepoCache(`/${content.data.dataSource._selected}/${extractKey(content)}`, () => getDataset(content))
+    : undefined
 }
 
-export function fromParsedMunicipalityCache(key: string, fallback: () => Array<MunicipalityWithCounty>): Array<MunicipalityWithCounty> {
+export function fromParsedMunicipalityCache(
+  key: string,
+  fallback: () => Array<MunicipalityWithCounty>
+): Array<MunicipalityWithCounty> {
   return parsedMunicipalityCache.get(key, () => {
     cacheLog(`added ${key} to parsed municipality cache`)
     return fallback()
   })
 }
 
-export function fromMunicipalityWithCodeCache(key: string, fallback: () => MunicipalityWithCounty | undefined): MunicipalityWithCounty | undefined {
+export function fromMunicipalityWithCodeCache(
+  key: string,
+  fallback: () => MunicipalityWithCounty | undefined
+): MunicipalityWithCounty | undefined {
   return municipalityWithCodeCache.get(key, () => {
     cacheLog(`added ${key} to municipality with code cache`)
     return fallback()
   })
 }
 
-export function fromMunicipalityWithNameCache(key: string, fallback: () => MunicipalityWithCounty | undefined): MunicipalityWithCounty | undefined {
+export function fromMunicipalityWithNameCache(
+  key: string,
+  fallback: () => MunicipalityWithCounty | undefined
+): MunicipalityWithCounty | undefined {
   return municipalityWithNameCache.get(key, () => {
     cacheLog(`added ${key} to municipality with name cache`)
     return fallback()
   })
 }
 
-export function fromParentTypeCache(
-  key: string,
-  fallback: () => string | undefined): string | undefined {
+export function fromParentTypeCache(key: string, fallback: () => string | undefined): string | undefined {
   return parentTypeCache.get(key, () => {
     return fallback()
   })
@@ -515,6 +550,7 @@ function completelyClearCache(options: CompletelyClearCacheOptions): void {
 
 export function setupHandlers(socket: Socket): void {
   socket.on('clear-cache', () => {
+    log.info(`Clear XP Cache Dashboard`)
     send({
       type: 'clearCache',
       distributed: true,
@@ -528,41 +564,51 @@ export function setupHandlers(socket: Socket): void {
         clearMunicipalityWithCodeCache: true,
         clearMunicipalityWithNameCache: true,
         clearSubjectCache: true,
-        clearPartCache: true
-      }
+        clearPartCache: true,
+      },
     })
 
     socket.emit('clear-cache-finished', {})
   })
+
+  socket.on('purge-varnish', () => {
+    const resultOfPurge: HttpResponse = purgeVarnishCache()
+
+    // Keeping log line, we want to be able to track use of this button
+    log.info(`Cleared Varnish. Result code: ${resultOfPurge.status} - and message: ${resultOfPurge.message}`)
+    const statusMessage: string =
+      resultOfPurge.status === 200 ? 'Status: OK' : `Status: Feilet ${resultOfPurge.status}: ${resultOfPurge.message}`
+
+    socket.emit('purge-varnish-finished', {
+      status: statusMessage,
+    })
+  })
+}
+
+function purgeVarnishCache(): HttpResponse {
+  const baseUrl: string =
+    app.config && app.config['ssb.internal.serverside.baseUrl']
+      ? app.config['ssb.internal.serverside.baseUrl']
+      : 'https://ext-i.ssb.no'
+  const response: HttpResponse = request({
+    url: `${baseUrl}/xp_clear`,
+    method: 'PURGE',
+    connectionTimeout: 5000,
+    readTimeout: 5000,
+  })
+  return response
 }
 
 export interface CompletelyClearCacheOptions {
-  clearFilterCache: boolean;
-  clearMenuCache: boolean;
-  clearRelatedArticlesCache: boolean;
-  clearRelatedFactPageCache: boolean;
-  clearDatasetRepoCache: boolean;
-  clearParsedMunicipalityCache: boolean;
-  clearMunicipalityWithCodeCache: boolean;
-  clearMunicipalityWithNameCache: boolean;
-  clearParentTypeCache: boolean;
-  clearSubjectCache: boolean;
-  clearPartCache: boolean;
-}
-
-export interface SSBCacheLibrary {
-  setup: () => void;
-  fromFilterCache: (req: Request, filterKey: string, key: string, fallback: () => Response) => Response;
-  fromMenuCache: (req: Request, key: string, fallback: () => unknown) => unknown;
-  fromRelatedArticlesCache: (req: Request, key: string, fallback: () => unknown) => unknown;
-  fromRelatedFactPageCache: (req: Request, key: string, fallback: () => unknown) => unknown;
-  fromDatasetRepoCache:
-    (key: string, fallback: () => DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null)
-      => DatasetRepoNode<JSONstat | TbmlDataUniform | object> | undefined;
-  fromParsedMunicipalityCache: (key: string, fallback: () => Array<MunicipalityWithCounty>) => Array<MunicipalityWithCounty>;
-  fromMunicipalityWithCodeCache: (key: string, fallback: () => MunicipalityWithCounty | undefined) => MunicipalityWithCounty | undefined;
-  fromMunicipalityWithNameCache: (key: string, fallback: () => MunicipalityWithCounty | undefined) => MunicipalityWithCounty | undefined;
-  fromParentTypeCache: (path: string, fallback: () => string | undefined) => string | undefined;
-  datasetOrUndefined: (content: Content<DataSource>) => DatasetRepoNode<JSONstat | TbmlDataUniform | object> | undefined;
-  setupHandlers: (socket: Socket) => void;
+  clearFilterCache: boolean
+  clearMenuCache: boolean
+  clearRelatedArticlesCache: boolean
+  clearRelatedFactPageCache: boolean
+  clearDatasetRepoCache: boolean
+  clearParsedMunicipalityCache: boolean
+  clearMunicipalityWithCodeCache: boolean
+  clearMunicipalityWithNameCache: boolean
+  clearParentTypeCache: boolean
+  clearSubjectCache: boolean
+  clearPartCache: boolean
 }

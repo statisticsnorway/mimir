@@ -1,30 +1,22 @@
-import { Content, QueryResponse } from 'enonic-types/content'
-import { Statistics } from '../../../site/content-types/statistics/statistics'
-import { DataSource } from '../../../site/mixins/dataSource/dataSource'
-import { UNPUBLISHED_DATASET_BRANCH } from '../repo/dataset'
+import { query, get as getContent, Content, ContentsResult } from '/lib/xp/content'
+import { UNPUBLISHED_DATASET_BRANCH } from '/lib/ssb/repo/dataset'
 
-const {
-  query,
-  get: getContent
-} = __non_webpack_require__('/lib/xp/content')
-const {
-  getDataSourceIdsFromStatistics
-} = __non_webpack_require__('/lib/ssb/dashboard/statistic')
-const {
-  refreshDataset
-} = __non_webpack_require__('/lib/ssb/dataset/dataset')
+import { getDataSourceIdsFromStatistics } from '/lib/ssb/dashboard/statistic'
+import { refreshDataset } from '/lib/ssb/dataset/dataset'
+import { type DataSource } from '/site/mixins/dataSource'
+import { type Statistics } from '/site/content-types'
 
 export function updateUnpublishedMockTbml(): void {
-  const res: QueryResponse<Statistics> = query({
+  const res: ContentsResult<Content<Statistics>> = query({
     query: `data.statistic = "0"`,
-    count: 1
+    count: 1,
   })
   const stat: Content<Statistics> | null = res.hits[0]
   if (stat) {
     const dataSourceIds: Array<string> = getDataSourceIdsFromStatistics(stat)
     dataSourceIds.forEach((id) => {
       const dataSource: Content<DataSource> | null = getContent({
-        key: id
+        key: id,
       })
       if (dataSource) {
         refreshDataset(dataSource, UNPUBLISHED_DATASET_BRANCH, undefined)
@@ -32,8 +24,4 @@ export function updateUnpublishedMockTbml(): void {
     })
   }
   return
-}
-
-export interface MockUnpublishedLib {
- updateUnpublishedMockTbml: () => void;
 }

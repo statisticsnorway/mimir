@@ -1,37 +1,35 @@
-import { Request } from 'enonic-types/controller'
-import { Highchart } from '../../../../site/content-types/highchart/highchart'
-import { Content } from 'enonic-types/content'
-import { JSONstat } from '../../../types/jsonstat-toolkit'
-import { TbmlDataUniform } from '../../../types/xmlParser'
-import { DataSource } from '../../../../site/mixins/dataSource/dataSource'
-import { HighchartsGraphConfig } from '../../../types/highcharts'
-import { SeriesAndCategories } from './highchartsData'
+import { Content } from '/lib/xp/content'
+import { type JSONstat } from '/lib/types/jsonstat-toolkit'
+import { type TbmlDataUniform } from '/lib/types/xmlParser'
+import { type HighchartsGraphConfig } from '/lib/types/highcharts'
+import { SeriesAndCategories, prepareHighchartsData } from '/lib/ssb/parts/highcharts/highchartsData'
+import { mergeDeepRight } from '/lib/vendor/ramda'
 
-const {
-  prepareHighchartsGraphConfig
-} = __non_webpack_require__('/lib/ssb/parts/highcharts/highchartsGraphConfig')
-const {
-  mergeDeepRight
-} = __non_webpack_require__('/lib/vendor/ramda')
-const {
-  prepareHighchartsData
-} = __non_webpack_require__('/lib/ssb/parts/highcharts/highchartsData')
-
+import {
+  prepareHighchartsGraphConfig,
+  prepareCombinedGraphConfig,
+} from '/lib/ssb/parts/highcharts/highchartsGraphConfig'
+import { type DataSource } from '/site/mixins/dataSource'
+import { type CombinedGraph, type Highchart } from '/site/content-types'
 
 export function createHighchartObject(
-  req: Request,
-  highchart: Content<Highchart>,
+  req: XP.Request,
+  highchart: Content<Highchart | CombinedGraph>,
   data: JSONstat | TbmlDataUniform | object | string | undefined,
-  dataSource: DataSource['dataSource']): HighchartsGraphConfig {
+  dataSource: DataSource['dataSource']
+): HighchartsGraphConfig {
   const highchartsData: SeriesAndCategories | undefined = prepareHighchartsData(req, highchart, data, dataSource)
-  const highchartsGraphConfig: HighchartsGraphConfig = prepareHighchartsGraphConfig(highchart, dataSource, highchartsData && highchartsData.categories)
+  const highchartsGraphConfig: HighchartsGraphConfig =
+    highchart.type === `${app.name}:combinedGraph`
+      ? prepareCombinedGraphConfig(
+          highchart as Content<CombinedGraph>,
+          highchartsData?.categories,
+          highchartsData?.series
+        )
+      : prepareHighchartsGraphConfig(
+          highchart as Content<Highchart>,
+          dataSource,
+          highchartsData && highchartsData.categories
+        )
   return mergeDeepRight(highchartsData || {}, highchartsGraphConfig) as unknown as HighchartsGraphConfig
-}
-
-export interface HighchartsUtilsLib {
-  createHighchartObject: (
-    req: Request,
-    highchart: Content<Highchart>,
-    data: JSONstat | TbmlDataUniform | object | string | undefined,
-    dataSource: DataSource['dataSource']) => HighchartsGraphConfig;
 }

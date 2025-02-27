@@ -1,0 +1,17 @@
+<part>
+    <display-name>Ansattopplisting</display-name>
+    <form>
+        <field-set>
+            <label>Ansattopplisting</label>
+            <items>
+                <input name="ingress" type="HtmlArea">
+                    <label>Ingress</label>
+                    <occurrences minimum="0" maximum="1" />
+                    <config>
+                        <include>Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote</include>
+                    </config>
+                </input>
+            </items>
+        </field-set>
+    </form>
+</part>

@@ -7,6 +7,9 @@
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Open+Sans|Open+Sans:700|Roboto:700|Roboto+Condensed:700"></link>
     <link rel="stylesheet" data-th-href="${stylesUrl}"></link>
+    <span data-th-each="scr : ${pageContributions.headEnd}" data-th-remove="tag">
+      <span data-th-utext="${scr}" data-th-remove="tag"></span>
+    </span>
   </head>
   <body class="xp-page page-dashboard">
     <div class="container-fluid">
@@ -16,11 +19,14 @@
             <nav class="y-2">
               <span data-th-text="${username}"></span> |
               <a href="mailto:desken@ssb.no">desken@ssb.no</a> |
-              <a href="">Veiledning</a>
+              <a th:href="${linkToGuide}">Veiledning</a>
             </nav>
             <div class="misc">
-              <img data-th-src="${logoUrl}" class="logo" alt=""></img>
-              <h1 class="ml-3 pl-2">Dashboard</h1>
+              <div class="logo-container">
+                <img data-th-src="${logoUrl}" class="logo" alt="" loading='lazy'/>
+                <span data-th-if="${environmentText}" data-th-utext="${environmentText}" class="environment-logo-overlay" />
+              </div>
+              <h1>Dashboard</h1>
             </div>
           </header>
           <div id="dashboard"></div>

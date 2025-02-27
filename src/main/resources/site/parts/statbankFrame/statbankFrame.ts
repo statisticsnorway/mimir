@@ -1,65 +1,56 @@
-import { Request } from 'enonic-types/controller'
-import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
-import { Content } from 'enonic-types/content'
+import { getContent, getSiteConfig } from '/lib/xp/portal'
+import { localize } from '/lib/xp/i18n'
+import { render } from '/lib/enonic/react4xp'
+import { type StatbankFrameProps } from '/lib/types/partTypes/statbankFrame'
 
-const {
-  getContent,
-  getSiteConfig
-} = __non_webpack_require__('/lib/xp/portal')
-const {
-  localize
-} = __non_webpack_require__('/lib/xp/i18n')
-
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
-
-exports.get = (req: Request): React4xpResponse => {
+export function get(req: XP.Request) {
   return renderPart(req)
 }
 
-exports.preview = (req: Request): React4xpResponse => renderPart(req)
+export function preview(req: XP.Request) {
+  return renderPart(req)
+}
 
-function renderPart(req: Request): React4xpResponse {
-  const page: Content = getContent()
+function renderPart(req: XP.Request) {
+  const page = getContent()
+  if (!page) throw Error('No page found')
 
   const pageLanguage: string = page.language ? page.language : 'nb'
 
-  // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-  // @ts-ignore
-  const statbankHelpLink: string = getSiteConfig().statbankHelpLink
+  const siteConfig = getSiteConfig<XP.SiteConfig>()
+  if (!siteConfig) throw Error('No site config found')
+
+  const statbankHelpLink: string = siteConfig.statbankHelpLink
 
   const statbankHelpText: string = localize({
     key: 'statbankHelpText',
-    locale: pageLanguage === 'nb' ? 'no' : pageLanguage
+    locale: pageLanguage === 'nb' ? 'no' : pageLanguage,
   })
   const statbankFrontPage: string = localize({
     key: 'statbankFrontPage',
-    locale: pageLanguage === 'nb' ? 'no' : pageLanguage
+    locale: pageLanguage === 'nb' ? 'no' : pageLanguage,
   })
 
+  const testCrumbs: Array<object> = [
+    {
+      text: 'Forsiden',
+      link: '/',
+    },
+    {
+      text: 'Statistikkbanken',
+      link: '/statbank',
+    },
+  ]
 
-  const testCrumbs: Array<object> = [{
-    text: 'Forsiden',
-    link: '/'
-  }, {
-    text: 'Statistikkbanken',
-    link: '/statbank'
-  }]
-
-  const props: PartProperties = {
+  const props: StatbankFrameProps = {
     title: 'Statistikkbanken',
     breadcrumb: testCrumbs,
     statbankHelpText,
     statbankFrontPage,
-    statbankHelpLink
+    statbankHelpLink,
   }
 
-  return React4xp.render('site/parts/statbankFrame/statbankFrame', props, req)
-}
-
-interface PartProperties {
-    title: string;
-    breadcrumb: Array<object>;
-    statbankHelpText: string;
-    statbankFrontPage: string;
-    statbankHelpLink: string;
+  return render('site/parts/statbankFrame/statbankFrame', props, req, {
+    hydrate: false,
+  })
 }

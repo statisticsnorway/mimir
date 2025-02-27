@@ -1,33 +1,22 @@
-__non_webpack_require__('/lib/ssb/polyfills/nashorn')
-import { StatRegNode } from '../repo/statreg'
-import { StatisticInListing, VariantInListing, ReleasesInListing, ReleaseDatesVariant } from '../dashboard/statreg/types'
-import { HttpResponse } from 'enonic-types/http'
+import '/lib/ssb/polyfills/nashorn'
+import { StatRegNode } from '/lib/ssb/repo/statreg'
+import {
+  StatisticInListing,
+  VariantInListing,
+  ReleasesInListing,
+  ReleaseDatesVariant,
+} from '/lib/ssb/dashboard/statreg/types'
+import { HttpResponse } from '/lib/http-client'
+import { format, isSameDay, isAfter, subDays, isBefore } from '/lib/vendor/dateFns'
+import { isDateBetween } from '/lib/ssb/utils/dateUtils'
 
-const {
-  moment
-} = __non_webpack_require__('/lib/vendor/moment')
-const {
-  ensureArray
-} = __non_webpack_require__('/lib/ssb/utils/arrayUtils')
-const {
-  fetchStatRegData
-} = __non_webpack_require__('/lib/ssb/dashboard/statreg/common')
-const {
-  getStatRegBaseUrl,
-  STATISTICS_URL,
-  STATREG_BRANCH,
-  STATREG_REPO
-} = __non_webpack_require__('/lib/ssb/dashboard/statreg/config')
-const {
-  getNode
-} = __non_webpack_require__('/lib/ssb/repo/common')
-const {
-  Events,
-  logUserDataQuery
-} = __non_webpack_require__('/lib/ssb/repo/query')
+import { ensureArray } from '/lib/ssb/utils/arrayUtils'
+import { fetchStatRegData } from '/lib/ssb/dashboard/statreg/common'
+import { getStatRegBaseUrl, STATISTICS_URL, STATREG_BRANCH, STATREG_REPO } from '/lib/ssb/dashboard/statreg/config'
+import { getNode } from '/lib/ssb/repo/common'
+import { Events, logUserDataQuery } from '/lib/ssb/repo/query'
 
-
-export const STATREG_REPO_STATISTICS_KEY: string = 'statistics'
+export const STATREG_REPO_STATISTICS_KEY = 'statistics'
 
 export function fetchStatistics(): Array<StatisticInListing> | null {
   try {
@@ -35,87 +24,75 @@ export function fetchStatistics(): Array<StatisticInListing> | null {
     if (response.status === 200 && response.body) {
       const statistics: Array<StatisticInListing> = extractStatistics(response.body)
       if (app.config && app.config['ssb.mock.enable'] === 'true') {
-        // use todays date for next release if its before 0800 in the morning
-        const serverOffsetInMs: number = app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
-        const midnight: moment.Moment = moment()
-          .hour(0)
-          .minute(0)
-          .second(0)
-          .millisecond(0)
-        const eight: moment.Moment = moment()
-          .hour(8)
-          .minute(0)
-          .second(0)
-          .millisecond(0)
-        const isBeforeEight: boolean = moment()
-          .add(serverOffsetInMs, 'milliseconds')
-          .isBetween(midnight, eight, 'hour', '[)')
-
-        const previousRelease: moment.Moment = moment()
-          .hour(8)
-          .minute(0)
-          .second(0)
-          .millisecond(0)
-          .subtract(isBeforeEight ? 1 : 0, 'days')
-        const nextRelease: moment.Moment = moment()
-          .hour(8)
-          .minute(0)
-          .second(0)
-          .millisecond(0)
-          .add(isBeforeEight ? 0 : 1, 'days')
-
-        statistics.push({
-          id: 0,
-          shortName: 'mimir',
-          name: 'Mimir',
-          nameEN: 'Mimir',
-          status: '',
-          modifiedTime: '2020-04-16 11:14:19.121',
-          variants: [{
-            id: '0',
-            frekvens: 'Dag',
-            previousRelease: previousRelease.format('YYYY-MM-DD HH:mm:ss.S'),
-            previousFrom: previousRelease.format('YYYY-MM-DD HH:mm:ss.S'),
-            previousTo: previousRelease.format('YYYY-MM-DD HH:mm:ss.S'),
-            nextRelease: nextRelease.format('YYYY-MM-DD HH:mm:ss.S'),
-            nextReleaseId: '0',
-            upcomingReleases: [
-              {
-                id: '0',
-                publishTime: nextRelease.format('YYYY-MM-DD HH:mm:ss.S'),
-                periodFrom: nextRelease.format('YYYY-MM-DD HH:mm:ss.S'),
-                periodTo: nextRelease.format('YYYY-MM-DD HH:mm:ss.S')
-              }
-            ]
-          }]
-        })
+        statistics.push(createMimirMockReleaseStatreg())
       }
 
       return statistics
     }
   } catch (error) {
-    const message: string = `Failed to fetch data from statreg: Statistics (${error})`
+    const message = `Failed to fetch data from statreg: Statistics (${error})`
+    log.error(message)
     logUserDataQuery('Statistics', {
       file: '/lib/ssb/statreg/statistics.ts',
       function: 'fetchStatistics',
       message: Events.REQUEST_COULD_NOT_CONNECT,
       info: message,
-      status: error
+      status: error,
     })
   }
   return null
 }
 
+export function createMimirMockReleaseStatreg(): StatisticInListing {
+  // use todays date for next release if its before 0800 in the morning
+  const serverOffsetInMs: number = app.config?.['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
+  const midnight: number = new Date().setHours(0, 0, 0, 0)
+  const eight: number = new Date().setHours(8, 0, 0, 0)
+  const withServerOffset = new Date(new Date().getTime() + serverOffsetInMs).getTime()
+  const isBeforeEight: boolean = withServerOffset >= midnight && withServerOffset <= eight
+  const previousRelease = isBeforeEight ? new Date(eight).getTime() - 86400000 : eight
+  const nextRelease = isBeforeEight ? eight : new Date(eight).getTime() + 86400000
+
+  return {
+    id: 0,
+    shortName: 'mimir',
+    name: 'Mimir',
+    nameEN: 'Mimir',
+    status: '',
+    modifiedTime: format(new Date(), 'yyyy-MM-dd HH:mm:ss.S'),
+    variants: [
+      {
+        id: '0',
+        frekvens: 'Dag',
+        previousRelease: format(previousRelease, 'yyyy-MM-dd HH:mm:ss.S'),
+        previousFrom: format(previousRelease, 'yyyy-MM-dd HH:mm:ss.S'),
+        previousTo: format(previousRelease, 'yyyy-MM-dd HH:mm:ss.S'),
+        nextRelease: format(nextRelease, 'yyyy-MM-dd HH:mm:ss.S'),
+        nextReleaseId: '0',
+        upcomingReleases: [
+          {
+            id: '0',
+            publishTime: format(nextRelease, 'yyyy-MM-dd HH:mm:ss.S'),
+            periodFrom: format(nextRelease, 'yyyy-MM-dd HH:mm:ss.S'),
+            periodTo: format(nextRelease, 'yyyy-MM-dd HH:mm:ss.S'),
+          },
+        ],
+      },
+    ],
+  }
+}
+
 export function fetchStatisticsWithRelease(before: Date): Array<StatisticInListing> {
   const statistics: Array<StatisticInListing> = getAllStatisticsFromRepo()
   return statistics.reduce((statsWithRelease: Array<StatisticInListing>, stat) => {
-    const variants: Array<VariantInListing> = stat.variants ? ensureArray(stat.variants)
-      .sort((a: VariantInListing, b: VariantInListing) => {
-        const aDate: Date = a.nextRelease ? new Date(a.nextRelease) : new Date('01.01.3000')
-        const bDate: Date = b.nextRelease ? new Date(b.nextRelease) : new Date('01.01.3000')
-        return aDate.getTime() - bDate.getTime()
-      }) : []
-    if (variants[0] && moment(variants[0].nextRelease).isBetween(new Date(), before, 'day', '[]')) {
+    const variants: Array<VariantInListing> = stat.variants
+      ? ensureArray(stat.variants).sort((a: VariantInListing, b: VariantInListing) => {
+          const aDate: Date = a.nextRelease ? new Date(a.nextRelease) : new Date('01.01.3000')
+          const bDate: Date = b.nextRelease ? new Date(b.nextRelease) : new Date('01.01.3000')
+          return aDate.getTime() - bDate.getTime()
+        })
+      : []
+    if (variants[0] && isDateBetween(variants[0].nextRelease, new Date().toDateString(), before.toDateString())) {
       statsWithRelease.push(stat)
     }
     return statsWithRelease
@@ -125,8 +102,10 @@ export function fetchStatisticsWithRelease(before: Date): Array<StatisticInListi
 export function fetchStatisticsWithReleaseToday(): Array<StatisticInListing> {
   const statistics: Array<StatisticInListing> = getAllStatisticsFromRepo()
   return statistics.reduce((statsWithRelease: Array<StatisticInListing>, stat) => {
-    const variants: Array<VariantInListing> = ensureArray<VariantInListing>(stat.variants).filter((variant) =>
-      moment(variant.nextRelease).isSame(new Date(), 'day') || moment(variant.previousRelease).isSame(new Date(), 'day'))
+    const variants: Array<VariantInListing> = ensureArray<VariantInListing>(stat.variants).filter(
+      (variant) =>
+        isSameDay(new Date(variant.nextRelease), new Date()) || isSameDay(new Date(variant.previousRelease), new Date())
+    )
     if (variants.length > 0) {
       stat.variants = variants
       statsWithRelease.push(stat)
@@ -135,16 +114,38 @@ export function fetchStatisticsWithReleaseToday(): Array<StatisticInListing> {
   }, [])
 }
 
+export function fetchStatisticsDaysBack(days: number): Array<StatisticInListing> {
+  const statistics: Array<StatisticInListing> = getAllStatisticsFromRepo()
+  const serverOffsetInMs: number = app.config?.['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
+  const now: Date = new Date(new Date().getTime() + serverOffsetInMs)
+  const from = subDays(new Date(), days).setHours(0, 0, 0, 0)
+  return statistics.reduce((statsWithRelease: Array<StatisticInListing>, stat) => {
+    const variants: Array<VariantInListing> = ensureArray<VariantInListing>(stat.variants).filter(
+      (variant) =>
+        (isAfter(new Date(variant.nextRelease), new Date(from)) && isBefore(new Date(variant.nextRelease), now)) ||
+        isAfter(new Date(variant.previousRelease), from)
+    )
+
+    if (variants.length > 0) {
+      stat.variants = variants
+      statsWithRelease.push(stat)
+    }
+    return statsWithRelease
+  }, [])
+}
+
+//TODO: Remove possibly unused code
 export function fetchStatisticsWithPreviousReleaseBetween(from: Date, to: Date): Array<StatisticInListing> {
   const statistics: Array<StatisticInListing> = getAllStatisticsFromRepo()
   return statistics.reduce((statsWithRelease: Array<StatisticInListing>, stat) => {
-    const variants: Array<VariantInListing> = ensureArray<VariantInListing>(stat.variants)
-      .sort((a: VariantInListing, b: VariantInListing) => {
+    const variants: Array<VariantInListing> = ensureArray<VariantInListing>(stat.variants).sort(
+      (a: VariantInListing, b: VariantInListing) => {
         const aDate: Date = a.previousRelease ? new Date(a.previousRelease) : new Date('01.01.1970')
         const bDate: Date = b.previousRelease ? new Date(b.previousRelease) : new Date('01.01.1970')
         return bDate.getTime() - aDate.getTime()
-      })
-    if (variants[0] && moment(variants[0].previousRelease).isBetween(from, to, undefined, '[]')) {
+      }
+    )
+    if (variants[0] && isDateBetween(variants[0].previousRelease, from.toDateString(), to.toDateString())) {
       stat.variants = variants
       statsWithRelease.push(stat)
     }
@@ -159,9 +160,7 @@ function extractStatistics(payload: string): Array<StatisticInListing> {
 export function getAllStatisticsFromRepo(): Array<StatisticInListing> {
   const node: StatRegNode[] = getNode(STATREG_REPO, STATREG_BRANCH, `/${STATREG_REPO_STATISTICS_KEY}`) as StatRegNode[]
   const statisticsNode: StatRegNode = Array.isArray(node) ? node[0] : node
-  const {
-    data
-  } = statisticsNode
+  const { data } = statisticsNode
   return statisticsNode ? (data as Array<StatisticInListing>) : []
 }
 
@@ -169,6 +168,7 @@ export function getStatisticByIdFromRepo(statId: string | undefined): StatisticI
   if (!statId) {
     return undefined
   }
+  // TODO: This is really inneficient when getStatisticByIdFromRepo is used in a map
   const allStats: Array<StatisticInListing> = ensureArray(getAllStatisticsFromRepo())
   return allStats.find((s) => statId === `${s.id}`)
 }
@@ -184,13 +184,15 @@ export function getStatisticByShortNameFromRepo(shortName: string | undefined): 
 export function getReleaseDatesByVariants(variants: Array<VariantInListing>): ReleaseDatesVariant {
   const releaseDatesStatistic: ReleaseDatesVariant = {
     nextRelease: [],
-    previousRelease: []
+    previousRelease: [],
   }
   const nextReleases: Array<string> = []
   const previousReleases: Array<string> = []
   variants.forEach((variant) => {
-    const upcomingReleases: Array<ReleasesInListing> = variant.upcomingReleases ? ensureArray(variant.upcomingReleases) : []
-    upcomingReleases.map((release) => nextReleases.push(release.publishTime))
+    const upcomingReleases: Array<ReleasesInListing> = variant.upcomingReleases
+      ? ensureArray(variant.upcomingReleases)
+      : []
+    upcomingReleases.forEach((release) => nextReleases.push(release.publishTime))
     if (variant.previousRelease !== '') {
       previousReleases.push(variant.previousRelease)
     }
@@ -198,10 +200,14 @@ export function getReleaseDatesByVariants(variants: Array<VariantInListing>): Re
     if (upcomingReleases.length === 0 && variant.nextRelease !== '') nextReleases.push(variant.nextRelease)
   })
 
-  const nextReleasesSorted: Array<string> = nextReleases.sort( (a: string, b: string) => new Date(a).getTime() - new Date(b).getTime())
-  const serverOffsetInMs: number = app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
+  const nextReleasesSorted: Array<string> = nextReleases.sort(
+    (a: string, b: string) => new Date(a).getTime() - new Date(b).getTime()
+  )
+  const serverOffsetInMs: number = app.config?.['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
   const serverTime: Date = new Date(new Date().getTime() + serverOffsetInMs)
-  const nextReleaseFiltered: Array<string> = nextReleasesSorted.filter((release) => moment(release).isAfter(serverTime, 'minute'))
+  const nextReleaseFiltered: Array<string> = nextReleasesSorted.filter((release) =>
+    isAfter(new Date(release), serverTime)
+  )
   const nextReleaseIndex: number = nextReleasesSorted.indexOf(nextReleaseFiltered[0])
 
   // If Statregdata is old, get date before nextRelease as previous date
@@ -211,24 +217,10 @@ export function getReleaseDatesByVariants(variants: Array<VariantInListing>): Re
   if (nextReleasesSorted.length === 1 && nextReleaseFiltered.length === 0) {
     previousReleases.push(nextReleasesSorted[0])
   }
-  previousReleases.sort( (a: string, b: string) => new Date(a).getTime() - new Date(b).getTime()).reverse()
+  previousReleases.sort((a: string, b: string) => new Date(a).getTime() - new Date(b).getTime()).reverse()
 
   releaseDatesStatistic.nextRelease = nextReleaseFiltered
   releaseDatesStatistic.previousRelease = previousReleases
 
   return releaseDatesStatistic
-}
-
-
-export interface StatRegStatisticsLib {
-  STATREG_REPO_STATISTICS_KEY: string;
-  fetchStatistics: () => Array<StatisticInListing> | null;
-  fetchStatisticsWithRelease: (before: Date) => Array<StatisticInListing>;
-  fetchStatisticsWithReleaseToday: () => Array<StatisticInListing>;
-  fetchStatisticsWithPreviousReleaseBetween: (from: Date, to: Date) => Array<StatisticInListing>;
-  getAllStatisticsFromRepo: () => Array<StatisticInListing>;
-  getStatisticByIdFromRepo: (statId: string | undefined) => StatisticInListing | undefined;
-  getStatisticByShortNameFromRepo: (shortName: string | undefined) => StatisticInListing | undefined;
-  getReleaseDatesByVariants: (variants: Array<VariantInListing>) => ReleaseDatesVariant;
-
 }

@@ -8,9 +8,7 @@
                     <label>Ingress</label>
                     <occurrences minimum="0" maximum="1" />
                     <config>
-                        <include>
-                            Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote
-                        </include>
+                        <include>Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote</include>
                     </config>
                 </input>
             </items>

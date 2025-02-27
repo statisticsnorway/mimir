@@ -1,19 +1,14 @@
 <part>
     <display-name>PIF kalkulator</display-name>
     <form>
-
         <field-set>
             <label>PIF kalkulator</label>
             <items>
                 <input name="pifCalculatorArticle" type="ContentSelector">
-                    <label>
-                        Artikkel PIF kalkulator
-                    </label>
+                    <label>Artikkel PIF kalkulator</label>
                     <occurrences minimum="0" maximum="1" />
                     <config>
-                        <allowContentType>
-                            article
-                        </allowContentType>
+                        <allowContentType>article</allowContentType>
                     </config>
                 </input>
             </items>

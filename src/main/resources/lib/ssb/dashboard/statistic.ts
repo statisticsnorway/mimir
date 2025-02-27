@@ -1,97 +1,61 @@
-__non_webpack_require__('/lib/ssb/polyfills/nashorn')
-import { EventInfo } from '../repo/query'
-import { Socket, SocketEmitter } from '../../types/socket'
-import { Content, QueryResponse } from 'enonic-types/content'
-import { StatisticInListing, VariantInListing } from './statreg/types'
-import { Statistics } from '../../../site/content-types/statistics/statistics'
-import { ProcessXml, RefreshDatasetResult, DashboardJobInfo } from './dashboard'
-import { RunContext } from 'enonic-types/context'
-import { DatasetRepoNode } from '../repo/dataset'
-import { Highchart } from '../../../site/content-types/highchart/highchart'
-import { Table } from '../../../site/content-types/table/table'
-import { KeyFigure } from '../../../site/content-types/keyFigure/keyFigure'
-import { DataSource } from '../../../site/mixins/dataSource/dataSource'
-import { Source, TbmlDataUniform } from '../../types/xmlParser'
-import { JobEventNode, JobInfoNode, JobNames, JobStatus } from '../repo/job'
-import { NodeQueryResponse } from 'enonic-types/node'
-import { User } from 'enonic-types/auth'
-import { Statistic } from '../../../site/mixins/statistic/statistic'
+import '/lib/ssb/polyfills/nashorn'
 
-const {
-  hasWritePermissions
-} = __non_webpack_require__('/lib/ssb/parts/permissions')
-const {
-  query,
-  get: getContent
-} = __non_webpack_require__('/lib/xp/content')
-const {
+import { query, get as getContent, Content, ContentsResult } from '/lib/xp/content'
+import { run, type ContextParams } from '/lib/xp/context'
+import { sanitize } from '/lib/xp/common'
+import { hasRole, User } from '/lib/xp/auth'
+
+import { localize } from '/lib/xp/i18n'
+import { executeFunction } from '/lib/xp/task'
+import { encrypt } from '/lib/cipher/cipher'
+import * as util from '/lib/util'
+import { type Source, type TbmlDataUniform } from '/lib/types/xmlParser'
+import { type Socket, type SocketEmitter } from '/lib/wsUtil'
+import { EVENT_LOG_BRANCH, EVENT_LOG_REPO } from '/lib/ssb/repo/eventLog'
+import { withConnection, ENONIC_CMS_DEFAULT_REPO, getNode, queryNodes } from '/lib/ssb/repo/common'
+import { getTbprocessor, getTbprocessorKey } from '/lib/ssb/dataset/tbprocessor/tbprocessor'
+import { users } from '/lib/ssb/dashboard/dashboardUtils'
+import {
   fetchStatisticsWithRelease,
   getAllStatisticsFromRepo,
-  getStatisticByIdFromRepo
-} = __non_webpack_require__('/lib/ssb/statreg/statistics')
-const {
-  data: {
-    forceArray
-  }
-} = __non_webpack_require__('/lib/util')
-const {
-  refreshDatasetHandler
-} = __non_webpack_require__('/lib/ssb/dashboard/dashboard')
-const {
-  users
-} = __non_webpack_require__('/lib/ssb/dashboard/dashboardUtils')
-const {
-  run
-} = __non_webpack_require__('/lib/xp/context')
-const {
-  getTbprocessor,
-  getTbprocessorKey
-} = __non_webpack_require__('/lib/ssb/dataset/tbprocessor/tbprocessor')
-const {
-  encrypt
-} = __non_webpack_require__('/lib/cipher/cipher')
-const {
+  getStatisticByIdFromRepo,
+} from '/lib/ssb/statreg/statistics'
+import { hasWritePermissions } from '/lib/ssb/parts/permissions'
+import {
+  JobEventNode,
+  JobInfoNode,
+  JobNames,
+  JobStatus,
   completeJobLog,
   updateJobLog,
-  startJobLog
-} = __non_webpack_require__('/lib/ssb/repo/job')
-const {
-  withConnection,
-  ENONIC_CMS_DEFAULT_REPO,
-  getNode,
-  queryNodes
-} = __non_webpack_require__('/lib/ssb/repo/common')
-const {
-  EVENT_LOG_BRANCH,
-  EVENT_LOG_REPO
-} = __non_webpack_require__('/lib/ssb/repo/eventLog')
-const {
-  localize
-} = __non_webpack_require__('/lib/xp/i18n')
-const {
-  executeFunction
-} = __non_webpack_require__('/lib/xp/task')
-const {
-  hasRole
-} = __non_webpack_require__('/lib/xp/auth')
+  startJobLog,
+} from '/lib/ssb/repo/job'
+import { DatasetRepoNode } from '/lib/ssb/repo/dataset'
+import { ProcessXml, RefreshDatasetResult, DashboardJobInfo, refreshDatasetHandler } from '/lib/ssb/dashboard/dashboard'
+import { StatisticInListing, VariantInListing } from '/lib/ssb/dashboard/statreg/types'
+import { EventInfo } from '/lib/ssb/repo/query'
+import { type Default as DefaultPageConfig } from '/site/pages/default'
+import { type Statistic } from '/site/mixins/statistic'
+import { type DataSource } from '/site/mixins/dataSource'
+import { type Statistics, type Highchart, type Table, type KeyFigure } from '/site/content-types'
 
 export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): void {
   socket.on('get-statistics', () => {
     executeFunction({
       description: 'get-statistics',
       func: () => {
-        const context: RunContext = {
+        const context: ContextParams = {
           branch: 'master',
           repository: ENONIC_CMS_DEFAULT_REPO,
           // principals: ['role:system.admin'],
           user: {
             login: users[parseInt(socket.id)].login,
-            idProvider: users[parseInt(socket.id)].idProvider ? users[parseInt(socket.id)].idProvider : 'system'
-          }
+            idProvider: users[parseInt(socket.id)].idProvider ? users[parseInt(socket.id)].idProvider : 'system',
+          },
         }
         const statisticData: Array<StatisticDashboard> = run(context, () => getStatistics())
         socket.emit('statistics-result', statisticData)
-      }
+      },
     })
   })
 
@@ -101,7 +65,7 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
       func: () => {
         const statisticsSearchData: Array<StatisticSearch> = getStatisticsSearchList()
         socket.emit('statistics-search-list-result', statisticsSearchData)
-      }
+      },
     })
   })
 
@@ -112,9 +76,9 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
         const ownersWithSources: Array<OwnerWithSources> = getOwnersWithSources(options.dataSourceIds)
         socket.emit('statistics-owners-with-sources-result', {
           id: options.id,
-          ownersWithSources
+          ownersWithSources,
         })
-      }
+      },
     })
   })
 
@@ -125,26 +89,28 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
         const jobLogs: Array<object> = getStatisticsJobLogInfo(options.id, 10)
         socket.emit('get-statistics-job-log-result', {
           id: options.id,
-          jobLogs
+          jobLogs,
         })
-      }
+      },
     })
   })
 
-  socket.on('get-statistic-job-log-details', (options: {id: string; statisticId: string}) => {
+  socket.on('get-statistic-job-log-details', (options: { id: string; statisticId: string }) => {
     executeFunction({
       description: 'get-statistic-job-log-details',
       func: () => {
-        const logDetails: {user: User; dataset: Array<object>} | undefined = getEventLogsFromStatisticsJobLog(options.id)
+        const logDetails: { user: User; dataset: Array<object> } | undefined = getEventLogsFromStatisticsJobLog(
+          options.id
+        )
         socket.emit('get-statistic-job-log-details-result', {
           id: options.statisticId,
           user: logDetails && logDetails.user ? logDetails.user : '',
           logs: {
             jobId: options.id,
-            logDetails: logDetails && logDetails.dataset ? logDetails.dataset : []
-          }
+            logDetails: logDetails && logDetails.dataset ? logDetails.dataset : [],
+          },
         })
-      }
+      },
     })
   })
 
@@ -153,7 +119,7 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
       description: 'get-statistics-related-tables-and-owners-with-sources',
       func: () => {
         const statistic: Content<Statistics> | null = getContent({
-          key: options.id
+          key: options.id,
         })
         let relatedTables: Array<RelatedTbml> = []
         if (statistic) {
@@ -163,9 +129,9 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
         socket.emit('statistics-related-tables-and-owners-with-sources-result', {
           id: options.id,
           relatedTables,
-          ownersWithSources
+          ownersWithSources,
         })
-      }
+      },
     })
   })
 
@@ -174,24 +140,24 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
       description: 'refresh-statistic',
       func: () => {
         socketEmitter.broadcast('statistics-activity-refresh-started', {
-          id: data.id
+          id: data.id,
         })
         const statistic: Content<Statistics> | null = getContent({
-          key: data.id
+          key: data.id,
         })
 
         if (statistic) {
           const datasetIdsToUpdate: Array<string> = getDataSourceIdsFromStatistics(statistic)
           const processXmls: Array<ProcessXml> | undefined = data.owners ? processXmlFromOwners(data.owners) : undefined
           if (datasetIdsToUpdate.length > 0) {
-            const context: RunContext = {
+            const context: ContextParams = {
               branch: 'master',
               repository: ENONIC_CMS_DEFAULT_REPO,
               principals: ['role:system.admin'],
               user: {
                 login: users[parseInt(socket.id)].login,
-                idProvider: users[parseInt(socket.id)].idProvider ? users[parseInt(socket.id)].idProvider : 'system'
-              }
+                idProvider: users[parseInt(socket.id)].idProvider ? users[parseInt(socket.id)].idProvider : 'system',
+              },
             }
             run(context, () => {
               const jobLogNode: JobEventNode = startJobLog(JobNames.STATISTICS_REFRESH_JOB)
@@ -199,7 +165,7 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
                 node.data.queryIds = [data.id]
                 return node
               })
-              const feedbackEventName: string = 'statistics-activity-refresh-feedback'
+              const feedbackEventName = 'statistics-activity-refresh-feedback'
               const relatedStatisticsId: string = data.id
               const refreshDataResult: Array<RefreshDatasetResult> = refreshDatasetHandler(
                 datasetIdsToUpdate,
@@ -211,19 +177,19 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
               const finishedJobLog: JobInfoNode = completeJobLog(jobLogNode._id, JobStatus.COMPLETE, refreshDataResult)
               socketEmitter.broadcast('statistics-refresh-result-log', {
                 id: data.id,
-                log: prepStatisticsJobLogInfo(finishedJobLog)
+                log: prepStatisticsJobLogInfo(finishedJobLog),
               })
             })
           }
           socketEmitter.broadcast('statistics-refresh-result', {
-            id: data.id
+            id: data.id,
           })
         }
         socketEmitter.broadcast('statistics-activity-refresh-complete', {
           id: data.id,
-          status: 'complete'
+          status: 'complete',
         })
-      }
+      },
     })
   })
 }
@@ -232,49 +198,61 @@ function processXmlFromOwners(owners: Array<OwnerObject>): Array<ProcessXml> {
   const preRender: Array<SourceNodeRender> = owners.reduce((acc: Array<SourceNodeRender>, ownerObj: OwnerObject) => {
     // if the fetchPublished is set to on, do not create process xml
     // Only requests with xml will try to fetch unpublished data
-    !ownerObj.fetchPublished && ownerObj.tbmlList && ownerObj.tbmlList.forEach( (tbmlIdObj: Tbml) => {
-      const tbmlProcess: SourceNodeRender | undefined = acc.find((process: SourceNodeRender) => process.tbmlId.toString() === tbmlIdObj.tbmlId.toString())
-      if (tbmlProcess) {
-        tbmlIdObj.sourceTableIds.forEach((sourceTable) => {
-          tbmlProcess.sourceNodeStrings.push(`<source user="${ownerObj.username}" password="${encrypt(ownerObj.password)}" id="${sourceTable}"/>`)
-        })
-      } else {
-        acc.push({
-          tbmlId: tbmlIdObj.tbmlId.toString(),
-          sourceNodeStrings: tbmlIdObj.sourceTableIds.map( (sourceTable) => {
-            return `<source user="${ownerObj.username}" password="${encrypt(ownerObj.password)}" id="${sourceTable}"/>`
+    !ownerObj.fetchPublished &&
+      ownerObj.tbmlList &&
+      ownerObj.tbmlList.forEach((tbmlIdObj: Tbml) => {
+        const tbmlProcess: SourceNodeRender | undefined = acc.find(
+          (process: SourceNodeRender) => process.tbmlId.toString() === tbmlIdObj.tbmlId.toString()
+        )
+        if (tbmlProcess) {
+          tbmlIdObj.sourceTableIds.forEach((sourceTable) => {
+            tbmlProcess.sourceNodeStrings.push(
+              `<source user="${ownerObj.username}" password="${encrypt(ownerObj.password)}" id="${sourceTable}"/>`
+            )
           })
-        })
-      }
-    })
+        } else {
+          acc.push({
+            tbmlId: tbmlIdObj.tbmlId.toString(),
+            sourceNodeStrings: tbmlIdObj.sourceTableIds.map((sourceTable) => {
+              return `<source user="${ownerObj.username}" password="${encrypt(
+                ownerObj.password
+              )}" id="${sourceTable}"/>`
+            }),
+          })
+        }
+      })
     return acc
   }, [])
 
   return preRender.map((sourceNode) => ({
     tbmlId: sourceNode.tbmlId.toString(),
-    processXml: `<process>${sourceNode.sourceNodeStrings.join('')}</process>`
+    processXml: `<process>${sourceNode.sourceNodeStrings.join('')}</process>`,
   }))
 }
 
 export function getDataSourceIdsFromStatistics(statistic: Content<Statistics>): Array<string> {
   const mainTableId: Array<string> = statistic.data.mainTable ? [statistic.data.mainTable] : []
-  const statisticsKeyFigureId: Array<string> = statistic.data.statisticsKeyFigure ? [statistic.data.statisticsKeyFigure] : []
-  const attachmentTablesFiguresIds: Array<string> = statistic.data.attachmentTablesFigures ? forceArray(statistic.data.attachmentTablesFigures) : []
+  const statisticsKeyFigureId: Array<string> = statistic.data.statisticsKeyFigure
+    ? [statistic.data.statisticsKeyFigure]
+    : []
+  const attachmentTablesFiguresIds: Array<string> = statistic.data.attachmentTablesFigures
+    ? util.data.forceArray(statistic.data.attachmentTablesFigures)
+    : []
   return [...mainTableId, ...statisticsKeyFigureId, ...attachmentTablesFiguresIds]
 }
 
 function getSourcesForUserFromStatistic(sources: Array<SourceList>): Array<OwnerWithSources> {
   return sources.reduce((acc: Array<OwnerWithSources>, source: SourceList) => {
-    const {
-      dataset
-    } = source
+    const { dataset } = source
 
-    if (dataset.data &&
-      typeof(dataset.data) !== 'string' &&
+    if (
+      dataset.data &&
+      typeof dataset.data !== 'string' &&
       dataset.data.tbml.metadata &&
-      dataset.data.tbml.metadata.sourceList) {
+      dataset.data.tbml.metadata.sourceList
+    ) {
       const tbmlId: string = dataset.data.tbml.metadata.instance.definitionId.toString()
-      forceArray(dataset.data.tbml.metadata.sourceList).forEach((source: Source) => {
+      util.data.forceArray(dataset.data.tbml.metadata.sourceList).forEach((source: Source) => {
         const userIndex: number = acc.findIndex((it) => it.ownerId == source.owner)
         if (userIndex != -1) {
           const tbmlIndex: number = acc[userIndex].tbmlList.findIndex((it) => it.tbmlId == tbmlId)
@@ -282,7 +260,7 @@ function getSourcesForUserFromStatistic(sources: Array<SourceList>): Array<Owner
             acc[userIndex].tbmlList.push({
               tbmlId: tbmlId,
               sourceTableIds: [source.id.toString()],
-              statbankTableIds: [source.tableId.toString()]
+              statbankTableIds: [source.tableId.toString()],
             })
           } else {
             acc[userIndex].tbmlList[tbmlIndex].sourceTableIds.push(source.id.toString())
@@ -291,12 +269,13 @@ function getSourcesForUserFromStatistic(sources: Array<SourceList>): Array<Owner
         } else {
           acc.push({
             ownerId: source.owner.toString(),
-            tbmlList: [{
-              tbmlId: tbmlId,
-              sourceTableIds: [source.id.toString()],
-              statbankTableIds: [source.tableId.toString()]
-            }]
-
+            tbmlList: [
+              {
+                tbmlId: tbmlId,
+                sourceTableIds: [source.id.toString()],
+                statbankTableIds: [source.tableId.toString()],
+              },
+            ],
           })
         }
       })
@@ -306,26 +285,27 @@ function getSourcesForUserFromStatistic(sources: Array<SourceList>): Array<Owner
 }
 
 function getDatasetFromContentId(contentId: string): DatasetRepoNode<TbmlDataUniform> | null {
-  const queryResult: QueryResponse<DataSource> = query({
+  const queryResult: ContentsResult<Content<DataSource>> = query({
     query: `_id = '${contentId}'`,
     count: 1,
     filters: {
       exists: {
-        field: 'data.dataSource.tbprocessor.urlOrId'
-      }
-    }
+        field: 'data.dataSource.tbprocessor.urlOrId',
+      },
+    },
   })
-  const content: Content<DataSource> | undefined = queryResult.count === 1 ? queryResult.hits[0] : undefined
+
+  const content = queryResult.count === 1 ? queryResult.hits[0] : undefined
   return content ? getTbprocessor(content, 'master') : null
 }
 
-function getOwnersWithSources(dataSourceIds: Array<string> ): Array<OwnerWithSources> {
+function getOwnersWithSources(dataSourceIds: Array<string>): Array<OwnerWithSources> {
   const datasets: Array<SourceList> = dataSourceIds.reduce((acc: Array<SourceList>, contentId: string) => {
     const dataset: DatasetRepoNode<TbmlDataUniform> | null = getDatasetFromContentId(contentId)
     if (dataset) {
       acc.push({
         dataset,
-        queryId: contentId
+        queryId: contentId,
       })
     }
     return acc
@@ -333,15 +313,19 @@ function getOwnersWithSources(dataSourceIds: Array<string> ): Array<OwnerWithSou
   return getSourcesForUserFromStatistic(datasets)
 }
 
-function getStatisticsJobLogInfo(id: string, count: number = 1): Array<DashboardJobInfo> {
+function getStatisticsJobLogInfo(id: string, count = 1): Array<DashboardJobInfo> {
   return withConnection(EVENT_LOG_REPO, EVENT_LOG_BRANCH, (connection) => {
-    const statisticsJobLog: NodeQueryResponse = connection.query({
-      query: `_path LIKE "/jobs/*" AND data.task = "${JobNames.STATISTICS_REFRESH_JOB}" AND data.queryIds = "${id}"`,
+    // deepcode ignore Sqli: NoQL. query is an xp function that queries one or across repositories in xp
+    const statisticsJobLog = connection.query({
+      query: `_path LIKE "/jobs/*" AND data.task = "${JobNames.STATISTICS_REFRESH_JOB}" AND data.queryIds = "${sanitize(
+        id
+      )}"`,
       count,
-      sort: '_ts DESC'
+      sort: '_ts DESC',
     })
     return statisticsJobLog.hits.reduce((res: Array<DashboardJobInfo>, jobRes) => {
-      const jobNode: JobInfoNode | null = connection.get(jobRes.id)
+      // deepcode ignore Sqli: NoQL. get is an xp function that fetches content from the repositories in xp
+      const jobNode: JobInfoNode | null = connection.get(sanitize(jobRes.id))
       if (jobNode) {
         res.push(prepStatisticsJobLogInfo(jobNode))
       }
@@ -351,10 +335,12 @@ function getStatisticsJobLogInfo(id: string, count: number = 1): Array<Dashboard
 }
 
 function prepStatisticsJobLogInfo(jobNode: JobInfoNode): DashboardJobInfo {
-  const jobResult: Array<RefreshDatasetResult> = forceArray(jobNode.data.refreshDataResult || []) as Array<RefreshDatasetResult>
+  const jobResult: Array<RefreshDatasetResult> = util.data.forceArray(
+    jobNode.data.refreshDataResult || []
+  ) as Array<RefreshDatasetResult>
   jobResult.forEach((datasetResult: RefreshDatasetResult) => {
     datasetResult.status = localize({
-      key: datasetResult.status
+      key: datasetResult.status,
     })
   })
   return {
@@ -366,12 +352,12 @@ function prepStatisticsJobLogInfo(jobNode: JobInfoNode): DashboardJobInfo {
     task: jobNode.data.task,
     message: jobNode.data.message ? jobNode.data.message : '',
     result: jobResult,
-    user: jobNode.data.user
+    user: jobNode.data.user,
   }
 }
 
 // NOTE example code to fetch event logs connected to datasources on statistics job log
-function getEventLogsFromStatisticsJobLog(jobLogId: string): {user: User; dataset: Array<object>} | undefined {
+function getEventLogsFromStatisticsJobLog(jobLogId: string): { user: User; dataset: Array<object> } | undefined {
   const jobInfoNode: JobInfoNode | null = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/jobs/${jobLogId}`) as JobInfoNode
   if (!jobInfoNode) {
     return undefined
@@ -379,41 +365,44 @@ function getEventLogsFromStatisticsJobLog(jobLogId: string): {user: User; datase
   if (!jobInfoNode.data.refreshDataResult) {
     return {
       user: jobInfoNode.data.user,
-      dataset: []
+      dataset: [],
     }
   }
   const userLogin: string | undefined = jobInfoNode.data.user?.login
   const from: string = jobInfoNode.data.jobStarted
   const to: string = jobInfoNode.data.completionTime
-  const datasets: Array<RefreshDatasetResult> = forceArray(jobInfoNode.data.refreshDataResult) as Array<RefreshDatasetResult> || []
+  const datasets: Array<RefreshDatasetResult> =
+    (util.data.forceArray(jobInfoNode.data.refreshDataResult) as Array<RefreshDatasetResult>) || []
   return {
     user: jobInfoNode.data.user,
     dataset: datasets.map((dataset) => {
       const datasetContent: Content<Highchart | Table | KeyFigure> | null = getContent({
-        key: dataset.id
+        key: dataset.id,
       })
-      const eventLogResult: NodeQueryResponse = queryNodes(EVENT_LOG_REPO, EVENT_LOG_BRANCH, {
+      const eventLogResult = queryNodes(EVENT_LOG_REPO, EVENT_LOG_BRANCH, {
         query: `_path LIKE "/queries/${dataset.id}/*" AND data.by.login = "${userLogin}" AND range("_ts", instant("${from}"), instant("${to}"))`,
         count: 10,
-        sort: '_ts DESC'
+        sort: '_ts DESC',
       })
       return {
         displayName: datasetContent?.displayName,
-        branch: dataset.branch === 'master' ? 'publisert' : 'ubpulisert',
+        branch: dataset.branch === 'master' ? 'publisert' : 'upublisert',
         eventLogResult: eventLogResult.hits.map((hit) => {
-          const node: EventInfo | null = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/queries/${dataset.id}/${hit.id}`) as EventInfo
+          const node = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/queries/${dataset.id}/${hit.id}`) as EventInfo | null
+          if (!node) return {}
+
           const resultMessage: string = localize({
             key: node.data.status.message,
-            values: node.data.status.status ? [`(${node.data.status.status})`] : ['']
+            values: node.data.status.status ? [`(${node.data.status.status})`] : [''],
           })
           return {
             result: resultMessage !== 'NOT_TRANSLATED' ? resultMessage : node.data.status.message,
             modifiedTs: node.data.ts,
-            by: node.data.by && node.data.by.displayName ? node.data.by.displayName : ''
+            by: node.data.by && node.data.by.displayName ? node.data.by.displayName : '',
           }
-        })
+        }),
       }
-    })
+    }),
   }
 }
 
@@ -421,7 +410,7 @@ function checkIfUserIsAdmin(): boolean {
   return hasRole('system.admin')
 }
 
-const TWO_WEEKS: number = 14 // TODO: put in config?
+const ONE_MONTH = 31 // TODO: put in config?
 function getStatistics(): Array<StatisticDashboard> {
   const userIsAdmin: boolean = checkIfUserIsAdmin()
   const statistic: Array<StatisticDashboard> = userIsAdmin ? getAdminStatistics() : getUserStatistics()
@@ -432,34 +421,41 @@ function getStatistics(): Array<StatisticDashboard> {
 
 function getAdminStatistics(): Array<StatisticDashboard> {
   const statsBeforeDate: Date = new Date()
-  statsBeforeDate.setDate(statsBeforeDate.getDate() + TWO_WEEKS)
+  statsBeforeDate.setDate(statsBeforeDate.getDate() + ONE_MONTH)
   const statregStatistics: Array<StatisticInListing> = fetchStatisticsWithRelease(statsBeforeDate)
   const statisticsContent: Array<Content<Statistics>> = query({
     query: `data.statistic IN(${statregStatistics.map((s) => `"${s.id}"`).join(',')})`,
-    count: 1000
+    count: 1000,
   }).hits as unknown as Array<Content<Statistics>>
-  return statisticsContent.map( (statisticContent) => prepDashboardStatistics(statisticContent, statregStatistics))
+  return statisticsContent.map((statisticContent) => prepDashboardStatistics(statisticContent, statregStatistics))
 }
 
 function getUserStatistics(): Array<StatisticDashboard> {
-  const userStatisticsResult: QueryResponse<Statistics> = query({
+  const userStatisticsResult: ContentsResult<Content<Statistics & DefaultPageConfig>> = query({
     query: `data.statistic LIKE '*'`,
     contentTypes: [`${app.name}:statistics`],
-    count: 1000
+    count: 1000,
   })
   const userStatisticContent: Array<Content<Statistics & Statistic>> = userStatisticsResult.hits.filter(
-    (statistic: Content<Statistics>) => hasWritePermissions(statistic._id))
-  const userStatistic: Array<StatisticInListing> = userStatisticContent.reduce((acc: Array<StatisticInListing>, statistic) => {
-    if (statistic.data.statistic) {
-      const resultFromRepo: StatisticInListing | undefined = getStatisticByIdFromRepo(statistic.data.statistic)
-      if (resultFromRepo) acc.push(resultFromRepo)
-    }
-    return acc
-  }, [])
-  return userStatisticContent.map( (statisticContent) => prepDashboardStatistics(statisticContent, userStatistic))
+    (statistic: Content<Statistics>) => hasWritePermissions(statistic._id)
+  )
+  const userStatistic: Array<StatisticInListing> = userStatisticContent.reduce(
+    (acc: Array<StatisticInListing>, statistic) => {
+      if (statistic.data.statistic) {
+        const resultFromRepo: StatisticInListing | undefined = getStatisticByIdFromRepo(statistic.data.statistic)
+        if (resultFromRepo) acc.push(resultFromRepo)
+      }
+      return acc
+    },
+    []
+  )
+  return userStatisticContent.map((statisticContent) => prepDashboardStatistics(statisticContent, userStatistic))
 }
 
-function prepDashboardStatistics(statisticContent: Content<Statistics & Statistic>, statregStatistics: Array<StatisticInListing>): StatisticDashboard {
+function prepDashboardStatistics(
+  statisticContent: Content<Statistics & Statistic>,
+  statregStatistics: Array<StatisticInListing>
+): StatisticDashboard {
   const prefix: string = app.config && app.config['admin-prefix'] ? app.config['admin-prefix'] : '/xp/admin'
   const statregStat: StatisticInListing | undefined = statregStatistics.find((statregStat) => {
     return `${statregStat.id}` === statisticContent.data.statistic
@@ -482,7 +478,7 @@ function prepDashboardStatistics(statisticContent: Content<Statistics & Statisti
     relatedTables: relatedTables,
     aboutTheStatistics: statisticContent.data.aboutTheStatistics,
     logData: getStatisticsJobLogInfo(statisticContent._id),
-    previewUrl: statisticContent._path ? `${prefix}/site/preview/default/draft${statisticContent._path}` : ''
+    previewUrl: statisticContent._path ? `${prefix}/site/preview/default/draft${statisticContent._path}` : '',
   }
 }
 
@@ -493,14 +489,14 @@ function getRelatedTables(statistic: Content<Statistics>): Array<RelatedTbml> {
     query: 'data.dataSource._selected = "tbprocessor" AND data.dataSource.tbprocessor.urlOrId LIKE "*"',
     filters: {
       ids: {
-        values: dataSourceIds
-      }
-    }
+        values: dataSourceIds,
+      },
+    },
   }).hits as unknown as Array<Content<DataSource>>
   const relatedTables: Array<RelatedTbml> = dataSources.map((dataSource) => {
     return {
       queryId: dataSource._id,
-      tbmlId: getTbprocessorKey(dataSource)
+      tbmlId: getTbprocessorKey(dataSource),
     }
   })
 
@@ -517,15 +513,16 @@ function getStatregInfo(statisticStatreg: StatisticInListing | undefined): Statr
       nextRelease: '',
       nextReleaseId: '',
       variantId: '',
-      activeVariants: -1
+      activeVariants: -1,
     }
   }
-  const variants: Array<VariantInListing> = statisticStatreg.variants ? forceArray(statisticStatreg.variants)
-    .sort((a: VariantInListing, b: VariantInListing) => {
-      const aDate: Date = a.nextRelease ? new Date(a.nextRelease) : new Date('01.01.3000')
-      const bDate: Date = b.nextRelease ? new Date(b.nextRelease) : new Date('01.01.3000')
-      return aDate.getTime() - bDate.getTime()
-    }) : []
+  const variants: Array<VariantInListing> = statisticStatreg.variants
+    ? util.data.forceArray(statisticStatreg.variants).sort((a: VariantInListing, b: VariantInListing) => {
+        const aDate: Date = a.nextRelease ? new Date(a.nextRelease) : new Date('01.01.3000')
+        const bDate: Date = b.nextRelease ? new Date(b.nextRelease) : new Date('01.01.3000')
+        return aDate.getTime() - bDate.getTime()
+      })
+    : []
   const variant: VariantInListing = variants[0]
   const result: StatregData = {
     statisticId: statisticStatreg.id,
@@ -535,7 +532,7 @@ function getStatregInfo(statisticStatreg: StatisticInListing | undefined): Statr
     nextRelease: variant && variant.nextRelease ? variant.nextRelease : '',
     nextReleaseId: variant && variant.nextReleaseId ? variant.nextReleaseId : '',
     variantId: variant ? variant.id : '',
-    activeVariants: variants.length
+    activeVariants: variants.length,
   }
   return result
 }
@@ -550,114 +547,113 @@ function getStatisticsSearchList(): Array<StatisticSearch> {
     return {
       id: statistics._id,
       name: statistics.displayName,
-      shortName: statregData?.shortName || ''
+      shortName: statregData?.shortName || '',
     }
   })
 }
 
 export function getStatisticsContent(): Array<Content<Statistics>> {
   let hits: Array<Content<Statistics>> = []
-  const result: QueryResponse<Statistics> = query({
+  const result: ContentsResult<Content<Statistics & DefaultPageConfig>> = query({
     contentTypes: [`${app.name}:statistics`],
     query: `data.statistic LIKE "*"`,
-    count: 1000
+    count: 1000,
   })
   hits = hits.concat(result.hits)
   return hits
 }
 
 interface SourceNodeRender {
-  tbmlId: string;
-  sourceNodeStrings: Array<string>;
+  tbmlId: string
+  sourceNodeStrings: Array<string>
 }
 
 interface SourceList {
-  queryId: string;
-  dataset: DatasetRepoNode<TbmlDataUniform>;
+  queryId: string
+  dataset: DatasetRepoNode<TbmlDataUniform>
 }
 
 interface RefreshInfo {
-  id: string;
-  owners?: Array<OwnerObject>;
+  id: string
+  owners?: Array<OwnerObject>
 }
 
 interface GetSourceListOwnersOptions {
-  id: string;
-  dataSourceIds: Array<string>;
+  id: string
+  dataSourceIds: Array<string>
 }
 
 interface GetRelatedTablesOptions {
-  id: string;
+  id: string
 }
 
 interface GenericIdParam {
-  id: string;
+  id: string
 }
 
 interface OwnerObject {
-  username: string;
-  password: string;
-  tbmlList?: Array<Tbml>;
-  ownerId: string;
-  tbmlId: string;
-  fetchPublished: true | undefined;
-};
+  username: string
+  password: string
+  tbmlList?: Array<Tbml>
+  ownerId: string
+  tbmlId: string
+  fetchPublished: true | undefined
+}
 
 interface StatisticDashboard {
-  id: string;
-  previewUrl?: string;
-  language?: string;
-  name?: string;
-  statisticId: number;
-  shortName: string;
-  frequency: string;
-  status: string;
-  variantId: string;
-  nextRelease: string;
-  nextReleaseId: string;
-  activeVariants: number;
-  relatedTables?: Array<RelatedTbml>;
-  ownersWithSources?: Array<OwnerWithSources>;
-  aboutTheStatistics?: string;
-  logData: Array<DashboardJobInfo>;
+  id: string
+  previewUrl?: string
+  language?: string
+  name?: string
+  statisticId: number
+  shortName: string
+  frequency: string
+  status: string
+  variantId: string
+  nextRelease: string
+  nextReleaseId: string
+  activeVariants: number
+  relatedTables?: Array<RelatedTbml>
+  ownersWithSources?: Array<OwnerWithSources>
+  aboutTheStatistics?: string
+  logData: Array<DashboardJobInfo>
 }
 
 interface StatisticSearch {
-  id: string;
-  shortName: string;
-  name: string;
+  id: string
+  shortName: string
+  name: string
 }
 
 interface StatregData {
-  statisticId: number;
-  shortName: string;
-  status: string;
-  frequency: string;
-  nextRelease: string;
-  nextReleaseId: string;
-  variantId: string;
-  activeVariants: number;
+  statisticId: number
+  shortName: string
+  status: string
+  frequency: string
+  nextRelease: string
+  nextReleaseId: string
+  variantId: string
+  activeVariants: number
 }
 
 interface RelatedTbml {
-  queryId: string;
-  tbmlId: string;
+  queryId: string
+  tbmlId: string
 }
 
 interface OwnerWithSources {
-  ownerId: string;
-  tbmlList: Array<Tbml>;
+  ownerId: string
+  tbmlList: Array<Tbml>
 }
 
 interface Tbml {
-  tbmlId: string;
-  sourceTableIds: Array<string>;
-  statbankTableIds: Array<string>;
+  tbmlId: string
+  sourceTableIds: Array<string>
+  statbankTableIds: Array<string>
 }
 
 export interface StatisticLib {
-  setupHandlers: (socket: Socket, socketEmitter: SocketEmitter) => void;
-  getDataSourceIdsFromStatistics: (statistic: Content<Statistics>) => Array<string>;
-  getStatisticsContent: () => Array<Content<Statistics>>;
+  setupHandlers: (socket: Socket, socketEmitter: SocketEmitter) => void
+  getDataSourceIdsFromStatistics: (statistic: Content<Statistics>) => Array<string>
+  getStatisticsContent: () => Array<Content<Statistics>>
 }
-

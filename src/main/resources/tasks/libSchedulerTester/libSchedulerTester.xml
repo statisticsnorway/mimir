@@ -1,0 +1,21 @@
+<task>
+  <description>Test lib scheduler timing</description>
+  <form>
+    <input name="name" type="TextLine">
+      <label>Name</label>
+      <occurrences minimum="0" maximum="1"/>
+    </input>
+    <input name="cron" type="TextLine">
+      <label>Cron</label>
+      <occurrences minimum="0" maximum="1"/>
+    </input>
+    <input name="timeZone" type="TextLine">
+      <label>TimeZone</label>
+      <occurrences minimum="0" maximum="1"/>
+    </input>
+     <input name="cronLibCron" type="TextLine">
+      <label>cronLibCron</label>
+      <occurrences minimum="0" maximum="1"/>
+    </input>
+  </form>
+</task> 

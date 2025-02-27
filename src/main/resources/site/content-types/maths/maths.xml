@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<content-type>
+  <display-name>Matematisk formel</display-name>
+  <description>Fyll inn LaTeX formel.</description>
+  <super-type>base:structured</super-type>
+  <form>
+    <input name="mathsFormula" type="TextLine">
+      <label>Formel</label>
+      <occurrences minimum="1" maximum="1"/>
+    </input>
+  </form>
+</content-type>

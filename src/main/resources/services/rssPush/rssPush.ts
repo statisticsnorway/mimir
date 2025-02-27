@@ -1,13 +1,9 @@
-import { Response } from 'enonic-types/controller'
+import { pushRssNews } from '/lib/ssb/cron/pushRss'
 
-const {
-  pushRssNews
-} = __non_webpack_require__('/lib/ssb/cron/pushRss')
-
-exports.get = function(): Response {
+export function get(): XP.Response {
   return {
     body: pushRssNews(),
     contentType: 'text/html',
-    status: 200
+    status: 200,
   }
 }

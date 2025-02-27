@@ -19,65 +19,78 @@ $container-max-widths: (
   sm: 540px,
   md: 720px,
   lg: 960px,
-  xl: 1180px
+  xl: 1180px,
 );
 
-@import "bootstrap";
-@import "@statisticsnorway/ssb-component-library/src/main.scss";
+@import 'bootstrap';
+@import '@statisticsnorway/ssb-component-library/src/main.scss';
 
-@import "./map";
-@import "./color";
-@import "./font";
-@import "./header";
-@import "./footer";
-@import "./menuBox";
-@import "./dashboard";
-@import "./button";
-@import "./variableCardsList";
-@import "./layout";
-@import "./banner";
-@import "./popper";
-@import "./dropdown"; // TODO: remove when implemented correctly from design system
-@import "./highchart";
-@import "./keyFigures";
-@import "./menuDropdown";
-@import "./menu";
-@import "./preface";
-@import "./globalStyles";
-@import "./infoGraphic";
-@import "./profiledBox";
-@import "./article";
-@import "./contacts";
-@import "./relatedContentBox";
-@import "./profiledLinkIcon";
-@import "./downloadLink";
-@import "./relatedArticles";
-@import "./relatedExternalLinks";
-@import "./relatedFactPage";
-@import "./statistics";
-@import "./relatedStatistics";
-@import "./statbankBox";
-@import "./articleArchive";
-@import "./table";
-@import "./statbankLinkList";
-@import "./attachmentTablesFigures";
-@import "./omStatistikken";
-@import "./404";
-@import "./externalCard";
-@import "./endedStatistics";
-@import "./frontPageBanner";
-@import "./frontpage";
-@import "./entryLinks";
-@import "./upcomingReleases";
-@import "./articleList";
-@import "./calculator";
-@import "./categoryLinks";
-@import "./nameSearch";
-@import "./publicationArchive";
-@import "./statbankSubjectTree";
-@import "./contactForm";
-@import "./searchResult";
-@import "./localSearch";
+@import './map';
+@import './color';
+@import './font';
+@import './header';
+@import './footer';
+@import './menuBox';
+@import './dashboard';
+@import './variableCardsList';
+@import './layout';
+@import './banner';
+@import './dropdown'; // TODO: remove when implemented correctly from design system
+@import './highchart';
+@import './keyFigures';
+@import './menuDropdown';
+@import './menu';
+@import './preface';
+@import './globalStyles';
+@import './infoGraphic';
+@import './profiledBox';
+@import './article';
+@import './contacts';
+@import './relatedContentBox';
+@import './profiledLinkIcon';
+@import './downloadLink';
+@import './relatedArticles';
+@import './relatedExternalLinks';
+@import './relatedFactPage';
+@import './statistics';
+@import './relatedStatistics';
+@import './statbankBox';
+@import './articleArchive';
+@import './table';
+@import './statbankLinkList';
+@import './attachmentTablesFigures';
+@import './omStatistikken';
+@import './404';
+@import './externalCard';
+@import './endedStatistics';
+@import './frontPageBanner';
+@import './frontpage';
+@import './entryLinks';
+@import './upcomingReleases';
+@import './articleList';
+@import './calculator';
+@import './categoryLinks';
+@import './nameSearch';
+@import './publicationArchive';
+@import './statbankSubjectTree';
+@import './contactForm';
+@import './searchResult';
+@import './localSearch';
+@import './bestbet';
+@import './staticVisualization';
+@import './employee';
+@import './employeeList';
+@import './project';
+@import './richText';
+@import './videoEmbed';
+@import './simpleStatbank';
+@import './subjectArticleList';
+@import './statisticHeader';
+@import './statisticFigures';
+@import './statisticDescription';
+@import './statisticContact';
+@import './popup';
+@import './print';
 
 body {
   -moz-osx-font-smoothing: grayscale;
@@ -91,7 +104,8 @@ section {
   width: 100%;
 }
 
-section + section, .xp-layout + .xp-layout {
+section + section,
+.xp-layout + .xp-layout {
   margin-top: $spacer * 3;
 }
 
@@ -113,6 +127,17 @@ section.part-divider + section.part-divider {
   padding-bottom: 20px;
 }
 
+.region-dark-grey {
+  background-color: $ssb-dark-5;
+  padding-top: 20px;
+  padding-bottom: 20px;
+
+  /* Set text color to white for all child elements */
+  & * {
+    color: $ssb-white;
+  }
+}
+
 .premain {
   max-width: 100%;
   background: white;
@@ -128,6 +153,98 @@ section.part-divider + section.part-divider {
 .xp-region {
   @include media-breakpoint-down(md) {
     margin: 0 auto;
-    width: 95%;
+
+    section,
+    figure {
+      padding-left: 1rem !important;
+      padding-right: 1rem !important;
+    }
+
+    section section,
+    section figure,
+    section.part-infoGraphic {
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+    }
+
+    .row > * {
+      padding: 0;
+    }
+  }
+}
+
+.part-config-error {
+  background: $ssb-red-1;
+  padding: 1rem;
+
+  h2 {
+    color: $ssb-red-3;
+  }
+}
+
+// Looks weird, but is supported by all major browsers https://caniuse.com/?search=-webkit-line-clamp
+.truncate-2-lines {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  /* number of lines to show */
+  -webkit-box-orient: vertical;
+}
+
+.link-anchor {
+  position: relative;
+  width: 0;
+  font-size: 0.8em;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.anchor-wrapper {
+  border: none;
+}
+
+.anchor-wrapper:hover .link-anchor {
+  opacity: 1;
+}
+
+section h1[id]:focus,
+section h2[id]:focus,
+section h3[id]:focus,
+section h4[id]:focus,
+section h5[id]:focus {
+  outline: 0;
+}
+
+p.thin {
+  font-weight: 100;
+  margin: 0;
+  line-height: 1.2em;
+  color: #fff;
+}
+
+p.bold {
+  font-weight: 900;
+  margin: 0;
+  margin-top: -5px;
+  color: #fff;
+}
+
+.rel {
+  width: 30%;
+  margin: 0 auto;
+  position: relative;
+  text-align: center;
+  padding: 20px;
+  border-style: dotted;
+  border-color: white;
+  border-width: medium;
+}
+
+#breadcrumbs,
+.default-page-title,
+.default-page-subtitle {
+  @include media-breakpoint-down(md) {
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
 }

@@ -13,13 +13,10 @@
         <input name="freeText" type="HtmlArea">
             <label>Fritekst</label>
             <config>
-                <include>
-                    Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote
-                </include>
+                <include>Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote</include>
             </config>
             <occurrences minimum="0" maximum="1" />
         </input>
-
         <input name="issnNumber" type="TextLine">
             <label>ISSN-nummer</label>
             <occurrences minimum="0" maximum="1" />

@@ -1,18 +1,38 @@
 # To get started with Dependabot version updates, you'll need to specify which
 # package ecosystems to update and where the package manifests are located.
 # Please see the documentation for all configuration options:
-# https://help.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
+# https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
 # Basic dependabot.yml file with
 # minimum configuration for two package managers
 
 version: 2
 updates:
-  # Enable version updates for npm
   - package-ecosystem: "npm"
-    # Look for `package.json` and `lock` files in the `root` directory
     directory: "/"
-    # Check the npm registry for updates every day (weekdays)
     schedule:
       interval: "weekly"
-    # Config for amount of open pull requests by dependabot
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 10
+    # Grouping patch updates and minor updates into two pull requests for all packages
+    groups:
+      dependencies-patch-updates:
+        update-types:
+          - "patch"
+      dependencies-minor-updates:
+        update-types:
+          - "minor"
+    ignore:
+      # enonic types should update only when updating enonic version on server
+      - dependency-name: "@enonic-types/*"
+  - package-ecosystem: "gradle"
+    ignore:
+      - dependency-name: "com.enonic.lib:lib-cron"
+        update-types: ["version-update:semver-patch"]
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10

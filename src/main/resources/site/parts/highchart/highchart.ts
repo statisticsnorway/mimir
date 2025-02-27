@@ -1,66 +1,47 @@
-/* eslint-disable new-cap */
-// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import JSONstat from 'jsonstat-toolkit/import.mjs'
-import { Component } from 'enonic-types/portal'
-import { HighchartPartConfig } from './highchart-part-config'
-import { Content } from 'enonic-types/content'
-import { Request, Response } from 'enonic-types/controller'
-import { Highchart } from '../../content-types/highchart/highchart'
-import { DatasetRepoNode } from '../../../lib/ssb/repo/dataset'
-import { JSONstat as JSONstatType } from '../../../lib/types/jsonstat-toolkit'
-import { TbmlDataUniform } from '../../../lib/types/xmlParser'
-import { HighchartsGraphConfig } from '../../../lib/types/highcharts'
-import { ResourceKey } from 'enonic-types/thymeleaf'
-import { DataSource } from '../../mixins/dataSource/dataSource'
-const {
-  DataSource: DataSourceType,
+import { get as getContentByKey, type Content } from '/lib/xp/content'
+import { getComponent, getContent } from '/lib/xp/portal'
+import { localize } from '/lib/xp/i18n'
+import { JSONstat as JSONstatType } from '/lib/types/jsonstat-toolkit'
+import { type TbmlDataUniform } from '/lib/types/xmlParser'
+import { render } from '/lib/thymeleaf'
+import { render as r4XpRender } from '/lib/enonic/react4xp'
+import {
+  type DatasetRepoNode,
+  DataSource as DataSourceType,
   getDataset,
-  UNPUBLISHED_DATASET_BRANCH
-} = __non_webpack_require__('/lib/ssb/repo/dataset')
-const {
-  data: {
-    forceArray
-  }
-} = __non_webpack_require__('/lib/util')
-const {
-  getComponent,
-  getContent
-} = __non_webpack_require__('/lib/xp/portal')
-const {
-  localize
-} = __non_webpack_require__('/lib/xp/i18n')
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
-const {
-  createHighchartObject
-} = __non_webpack_require__('/lib/ssb/parts/highcharts/highchartsUtils')
-const {
-  renderError
-} = __non_webpack_require__('/lib/ssb/error/error')
-const {
-  datasetOrUndefined
-} = __non_webpack_require__('/lib/ssb/cache/cache')
-const {
-  hasWritePermissionsAndPreview
-} = __non_webpack_require__('/lib/ssb/parts/permissions')
-const {
-  get
-} = __non_webpack_require__('/lib/xp/content')
-const view: ResourceKey = resolve('./highchart.html')
+  UNPUBLISHED_DATASET_BRANCH,
+} from '/lib/ssb/repo/dataset'
+import { scriptAsset } from '/lib/ssb/utils/utils'
 
-exports.get = function(req: Request): Response {
+import * as util from '/lib/util'
+import { createHighchartObject } from '/lib/ssb/parts/highcharts/highchartsUtils'
+import { renderError } from '/lib/ssb/error/error'
+import { datasetOrUndefined } from '/lib/ssb/cache/cache'
+import { hasWritePermissionsAndPreview } from '/lib/ssb/parts/permissions'
+import { isEnabled } from '/lib/featureToggle'
+import { getPhrases } from '/lib/ssb/utils/language'
+import { getTbprocessorKey } from '/lib/ssb/dataset/tbprocessor/tbprocessor'
+import { type HighchartsExtendedProps, type HighchartsReactProps } from '/lib/types/partTypes/highchartsReact'
+import { type DataSource } from '/site/mixins/dataSource'
+import { type CombinedGraph, type Highchart } from '/site/content-types'
+
+const view = resolve('./highchart.html')
+
+export function get(req: XP.Request): XP.Response {
   try {
-    const part: Component<HighchartPartConfig> = getComponent()
-    const highchartIds: Array<string> = part.config.highchart ? forceArray(part.config.highchart) : []
+    const part = getComponent<XP.PartComponent.Highchart>()
+    if (!part) throw Error('No part found')
+
+    const highchartIds: Array<string> = part.config.highchart ? util.data.forceArray(part.config.highchart) : []
     return renderPart(req, highchartIds)
   } catch (e) {
     return renderError(req, 'Error in part', e)
   }
 }
 
-exports.preview = (req: Request, id: string): Response => {
+export function preview(req: XP.Request, id: string): XP.Response {
   try {
     return renderPart(req, [id])
   } catch (e) {
@@ -68,87 +49,138 @@ exports.preview = (req: Request, id: string): Response => {
   }
 }
 
+function renderPart(req: XP.Request, highchartIds: Array<string>): XP.Response {
+  const page = getContent()
+  if (!page) throw Error('No page found')
 
-function renderPart(req: Request, highchartIds: Array<string>): Response {
-  const page: Content = getContent()
   const language: string = page.language ? page.language : 'nb'
 
   //  Must be set to nb instead of no for localization
   const sourceText: string = localize({
     key: 'highcharts.source',
-    locale: language === 'nb' ? 'no' : language
+    locale: language === 'nb' ? 'no' : language,
   })
   const downloadText: string = localize({
     key: 'highcharts.download',
-    locale: language === 'nb' ? 'no' : language
+    locale: language === 'nb' ? 'no' : language,
   })
 
-  const highcharts: Array<HighchartsReactProps> = highchartIds.map((key) => {
-    const highchart: Content<Highchart> | null = get({
-      key
+  const showAsGraphText: string = localize({
+    key: 'highcharts.showAsChart',
+    locale: language === 'nb' ? 'no' : language,
+  })
+
+  const showAsTableText: string = localize({
+    key: 'highcharts.showAsTable',
+    locale: language === 'nb' ? 'no' : language,
+  })
+
+  const highcharts: Array<HighchartsReactProps> = highchartIds
+    .map((key) => {
+      const highchart: Content<Highchart & DataSource> | Content<CombinedGraph> | null = getContentByKey({
+        key,
+      })
+      const isCombinedGraph: boolean = highchart?.type === `${app.name}:combinedGraph`
+      const config: HighchartsExtendedProps | undefined = determinConfigType(req, highchart, isCombinedGraph)
+      return highchart && config ? createHighchartsReactProps(highchart as Content<Highchart>, config) : {}
     })
-    const config: HighchartsExtendedProps | undefined = highchart ? determinConfigType(req, highchart) : undefined
-    return highchart && config ? createHighchartsReactProps(highchart, config) : {}
-  }).filter((key) => !!key)
+    .filter((key) => !!key)
 
-  const inlineScript: Array<string> = highcharts.map((highchart) => `<script inline="javascript">
+  const inlineScript: Array<string> = highcharts.map(
+    (highchart) => `<script type="text/javascript">
    window['highchart' + '${highchart.contentKey}'] = ${JSON.stringify(highchart.config)}
-   </script>`)
+   </script>`
+  )
 
-  return {
-    body: render(view, {
-      highcharts,
-      downloadText,
-      sourceText
-    }),
-    pageContributions: {
-      bodyEnd: inlineScript
-    },
-    contentType: 'text/html'
+  const HighchartProps: object = {
+    highcharts: highcharts,
+    phrases: getPhrases(page),
+    appName: app.name,
+    pageType: page.type,
+  }
+
+  if (isEnabled('highchart-react', true, 'ssb')) {
+    // R4xp disables hydration in edit mode, but highcharts need hydration to show
+    // we sneaky swap mode since we want a render of higchart in edit mode
+    // Works good for highchart macro, not so much when part
+    const _req = req
+    if (req.mode === 'edit') _req.mode = 'preview'
+
+    return r4XpRender('site/parts/highchart/Highchart', HighchartProps, _req, {
+      body: '<section class="xp-part highchart-wrapper"></section>',
+    })
+  } else {
+    return {
+      body: render(view, {
+        highcharts,
+        downloadText,
+        sourceText,
+        showAsGraphText,
+        showAsTableText,
+      }),
+      pageContributions: {
+        bodyEnd: [...inlineScript, scriptAsset('js/highchart.js')],
+      },
+      contentType: 'text/html',
+    }
   }
 }
 
-
-function determinConfigType(req: Request, highchart: Content<Highchart & DataSource>): HighchartsExtendedProps | undefined {
+function determinConfigType(
+  req: XP.Request,
+  highchart: Content<Highchart & DataSource> | Content<CombinedGraph> | null,
+  isCombinedGraph: boolean
+): HighchartsExtendedProps | undefined {
+  if (isCombinedGraph) {
+    return createDataFromHtmlTable(req, highchart as Content<CombinedGraph>)
+  }
   if (highchart && highchart.data.dataSource) {
-    return createDataFromDataSource(req, highchart)
-  } else if (highchart && highchart.data.htmlTable) {
-    return createDataFromHtmlTable(req, highchart)
+    return createDataFromDataSource(req, highchart as Content<Highchart & DataSource>)
+  } else if ((highchart as Content<Highchart>)?.data.htmlTable) {
+    return createDataFromHtmlTable(req, highchart as Content<Highchart>)
   }
   return undefined
 }
 
-
-function createDataFromHtmlTable(req: Request, highchart: Content<Highchart & DataSource>): HighchartsExtendedProps {
+function createDataFromHtmlTable(
+  req: XP.Request,
+  highchart: Content<Highchart & DataSource> | Content<CombinedGraph>
+): HighchartsExtendedProps {
   return {
-    ...createHighchartObject(req, highchart, highchart.data, undefined)
+    ...createHighchartObject(req, highchart, highchart.data, undefined),
   }
 }
 
-
-function createDataFromDataSource(req: Request, highchart: Content<Highchart & DataSource>): HighchartsExtendedProps | undefined {
-  if ( highchart && highchart.data && highchart.data.dataSource) {
+function createDataFromDataSource(
+  req: XP.Request,
+  highchart: Content<Highchart & DataSource>
+): HighchartsExtendedProps | undefined {
+  if (highchart && highchart.data && highchart.data.dataSource) {
     const type: string = highchart.data.dataSource._selected
 
     // get draft
     const paramShowDraft: boolean = req.params.showDraft !== undefined && req.params.showDraft === 'true'
-    const showPreviewDraft: boolean = hasWritePermissionsAndPreview(req, highchart._id) && type === 'tbprocessor' && paramShowDraft
+    const showPreviewDraft: boolean =
+      hasWritePermissionsAndPreview(req, highchart._id) && type === 'tbprocessor' && paramShowDraft
     const draftData: DatasetRepoNode<TbmlDataUniform> | null =
       showPreviewDraft &&
       highchart.data.dataSource._selected === DataSourceType.TBPROCESSOR &&
-      highchart.data.dataSource.tbprocessor?.urlOrId ?
-        getDataset(type, UNPUBLISHED_DATASET_BRANCH, highchart.data.dataSource.tbprocessor.urlOrId) : null
-
+      highchart.data.dataSource.tbprocessor?.urlOrId
+        ? getDataset(type, UNPUBLISHED_DATASET_BRANCH, getTbprocessorKey(highchart))
+        : null
     // get dataset
-    const datasetFromRepo: DatasetRepoNode<JSONstatType | TbmlDataUniform | object> | undefined = draftData ? draftData : datasetOrUndefined(highchart)
-    let parsedData: JSONstatType | TbmlDataUniform | object | string | undefined = datasetFromRepo && datasetFromRepo.data
+    const datasetFromRepo: DatasetRepoNode<JSONstatType | TbmlDataUniform | object> | undefined = draftData
+      ? draftData
+      : datasetOrUndefined(highchart)
+    let parsedData: JSONstatType | TbmlDataUniform | object | string | undefined =
+      datasetFromRepo && datasetFromRepo.data
     if (parsedData !== undefined && type === DataSourceType.STATBANK_API) {
-      // eslint-disable-next-line new-cap
       parsedData = JSONstat(parsedData).Dataset(0)
     }
     // create config
     const config: HighchartsExtendedProps =
-      parsedData && createHighchartObject(req, highchart, parsedData, highchart.data.dataSource) || ({} as HighchartsExtendedProps)
+      (parsedData && createHighchartObject(req, highchart, parsedData, highchart.data.dataSource)) ||
+      ({} as HighchartsExtendedProps)
     config.draft = !!draftData
     config.noDraftAvailable = showPreviewDraft && !draftData
     return config
@@ -157,33 +189,17 @@ function createDataFromDataSource(req: Request, highchart: Content<Highchart & D
   }
 }
 
-
-function createHighchartsReactProps(highchart: Content<Highchart>, config: HighchartsExtendedProps): HighchartsReactProps {
+function createHighchartsReactProps(
+  highchart: Content<Highchart>,
+  config: HighchartsExtendedProps
+): HighchartsReactProps {
   return {
     config: config,
-    type: highchart.data.graphType,
+    type: highchart.type === 'mimir:combinedGraph' ? 'combined' : highchart.data.graphType,
     contentKey: highchart._id,
-    footnoteText: highchart.data.footnoteText,
-    creditsEnabled: (highchart.data.creditsHref || highchart.data.creditsText) ? true : false,
-    creditsHref: highchart.data.creditsHref,
-    creditsText: highchart.data.creditsText,
-    hideTitle: highchart.data.hideTitle
+    footnoteText: highchart.data.footnoteText ? util.data.forceArray(highchart.data.footnoteText) : undefined,
+    creditsEnabled: highchart.data.sourceList ? true : false,
+    sourceList: highchart.data.sourceList ? util.data.forceArray(highchart.data.sourceList) : undefined,
+    hideTitle: highchart.data.hideTitle,
   }
-}
-type HighchartsExtendedProps = HighchartsGraphConfig & HighchartsReactExtraProps
-
-interface HighchartsReactProps {
-  config?: HighchartsExtendedProps;
-  type?: string;
-  contentKey?: string;
-  footnoteText?: string;
-  creditsEnabled?: boolean;
-  creditsHref?: string;
-  creditsText?: string;
-  hideTitle?: boolean;
-}
-
-interface HighchartsReactExtraProps {
-  draft?: boolean;
-  noDraftAvailable?: boolean;
 }

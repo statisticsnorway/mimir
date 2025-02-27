@@ -1,11 +1,10 @@
 <macro>
-    <display-name>Faktaboks</display-name>
+    <display-name>Faktaboks (ExpansionBox)</display-name>
     <description></description>
     <form>
         <input name="factBox" type="ContentSelector">
-            <label>Faktaboks</label>
-            <occurrences minimum="0" maximum="1"/>
-            <help-text>NB! Hvis både Text og Relatert innhold er fylt ut blir relatert innhold valgt</help-text>
+            <label>Ekspansjonsboks</label>
+            <occurrences minimum="1" maximum="1"/>
             <config>
                 <allowPath>${site}</allowPath>
                 <allowType>factBox</allowType>

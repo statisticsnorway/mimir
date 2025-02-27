@@ -30,6 +30,6 @@ municipal profile of that municipality.
 
 ### Code
 The part map 
-The code that loads the map is in the file https://github.com/statisticsnorway/mimir/blob/master/src/main/resources/assets/js/app/map.es6.
+The code that loads the map is in the file https://github.com/statisticsnorway/mimir/blob/master/src/main/resources/assets/js/app/map.ts.
 
 

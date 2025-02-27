@@ -1,73 +1,52 @@
-import { Content, Page } from 'enonic-types/content'
-import { PageContributions, Request, Response } from 'enonic-types/controller'
-import { ResourceKey } from 'enonic-types/thymeleaf'
-import { ReleaseDatesVariant, StatisticInListing, VariantInListing } from '../../../lib/ssb/dashboard/statreg/types'
-import { MunicipalityWithCounty } from '../../../lib/ssb/dataset/klass/municipalities'
-import { FooterContent } from '../../../lib/ssb/parts/footer'
-import { AlertType, InformationAlertOptions, MunicipalityOptions } from '../../../lib/ssb/utils/alertUtils'
-import { Breadcrumbs } from '../../../lib/ssb/utils/breadcrumbsUtils'
-import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
-import { Language } from '../../../lib/types/language'
-import { React4xp, React4xpObject, React4xpPageContributionOptions } from '../../../lib/types/react4xp'
-import { SEO } from '../../../services/news/news'
-import { Statistics } from '../../content-types/statistics/statistics'
-import { SiteConfig } from '../../site-config'
-import { DefaultPageConfig } from './default-page-config'
+/* eslint-disable complexity */
+import { Article } from 'schema-dts'
+import { type Content, query } from '/lib/xp/content'
+import { assetUrl, type Component, getContent, getSiteConfig, pageUrl, processHtml } from '/lib/xp/portal'
+import { localize } from '/lib/xp/i18n'
+import { render } from '/lib/thymeleaf'
+import {
+  type ReleaseDatesVariant,
+  type StatisticInListing,
+  type VariantInListing,
+} from '/lib/ssb/dashboard/statreg/types'
+import { getMunicipality } from '/lib/ssb/dataset/klass/municipalities'
+import { getFooterContent } from '/lib/ssb/parts/footer'
+import { type FooterContent } from '/lib/types/footer'
+import {
+  type AlertType,
+  type InformationAlertOptions,
+  type MunicipalityOptions,
+  alertsForContext,
+} from '/lib/ssb/utils/alertUtils'
+import { type Breadcrumbs, getBreadcrumbs } from '/lib/ssb/utils/breadcrumbsUtils'
+import { getMainSubjects, getSubSubjects, getMainSubjectBySubSubject } from '/lib/ssb/utils/subjectUtils'
+import { type Language } from '/lib/types/language'
+import { render as r4xpRender } from '/lib/enonic/react4xp'
 
-const {
-  data: {
-    forceArray
-  }
-} = __non_webpack_require__('/lib/util')
-const {
-  query
-} = __non_webpack_require__('/lib/xp/content')
-const {
-  getContent,
-  processHtml,
-  assetUrl,
-  getSiteConfig
-} = __non_webpack_require__('/lib/xp/portal')
-const {
-  getLanguage
-} = __non_webpack_require__('/lib/ssb/utils/language')
-const {
-  localize
-} = __non_webpack_require__('/lib/xp/i18n')
-const {
-  alertsForContext
-} = __non_webpack_require__('/lib/ssb/utils/alertUtils')
-const {
-  getBreadcrumbs
-} = __non_webpack_require__('/lib/ssb/utils/breadcrumbsUtils')
-const {
-  getMainSubjects
-} = __non_webpack_require__( '/lib/ssb/utils/subjectUtils')
-const {
-  getReleaseDatesByVariants, getStatisticByIdFromRepo, getStatisticByShortNameFromRepo
-} = __non_webpack_require__('/lib/ssb/statreg/statistics')
-const {
-  getMunicipality
-} = __non_webpack_require__('/lib/ssb/dataset/klass/municipalities')
-const {
-  getHeaderContent
-} = __non_webpack_require__('/lib/ssb/parts/header')
-const {
-  getFooterContent
-} = __non_webpack_require__('/lib/ssb/parts/footer')
-const {
-  fromMenuCache
-} = __non_webpack_require__('/lib/ssb/cache/cache')
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
+import * as util from '/lib/util'
+import { getLanguage } from '/lib/ssb/utils/language'
+import {
+  getReleaseDatesByVariants,
+  getStatisticByIdFromRepo,
+  getStatisticByShortNameFromRepo,
+} from '/lib/ssb/statreg/statistics'
+import { getHeaderContent } from '/lib/ssb/parts/header'
+import { fromMenuCache } from '/lib/ssb/cache/cache'
 
-const partsWithPreview: Array<string> = [ // Parts that has preview
+import { isEnabled } from '/lib/featureToggle'
+import { ensureArray } from '/lib/ssb/utils/arrayUtils'
+import { type SubjectItem } from '/lib/types/subject'
+import { type MunicipalityWithCounty, type RequestWithCode } from '/lib/types/municipalities'
+import { type Default as DefaultPageConfig } from '/site/pages/default'
+import { type Page, type Statistics } from '/site/content-types'
+
+const partsWithPreview: Array<string> = [
+  // Parts that has preview
   `${app.name}:map`,
-  `${app.name}:button`,
   `${app.name}:menuBox`,
   `${app.name}:accordion`,
   `${app.name}:highchart`,
+  `${app.name}:highmap`,
   `${app.name}:keyFigure`,
   `${app.name}:menuDropdown`,
   `${app.name}:statistikkbanken`,
@@ -75,37 +54,51 @@ const partsWithPreview: Array<string> = [ // Parts that has preview
   `${app.name}:factBox`,
   `${app.name}:contentList`,
   `${app.name}:omStatistikken`,
-  `${app.name}:table`
+  `${app.name}:table`,
+  `${app.name}:staticVisualization`,
+  `${app.name}:employee`,
+  `${app.name}:project`,
+  `${app.name}:combinedGraph`,
+  `${app.name}:simpleStatbank`,
+  `${app.name}:maths`,
 ]
 
 const previewOverride: object = {
-  'contentList': 'relatedFactPage'
+  contentList: 'relatedFactPage',
 }
 
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
-const view: ResourceKey = resolve('default.html')
+export const GTM_TRACKING_ID: string | null = app.config?.GTM_TRACKING_ID || null
+export const GTM_AUTH: string | null = app.config?.GTM_AUTH || null
 
-exports.get = function(req: Request): Response {
-  const page: DefaultPage = getContent()
-  const pageConfig: DefaultPageConfig = page.page.config
+const view = resolve('default.html')
 
-  const ingress: string | undefined = page.data.ingress ? processHtml({
-    value: page.data.ingress.replace(/&nbsp;/g, ' ')
-  }) : undefined
+export function get(req: XP.Request): XP.Response {
+  const page = getContent<Content<Page> & DefaultPage>()
+  if (!page) return { status: 404 }
+
+  const pageConfig: DefaultPageConfig = page.page?.config
+
+  const ingress: string | undefined = page.data.ingress
+    ? processHtml({
+        value: page.data.ingress.replace(/&nbsp;/g, ' '),
+      })
+    : undefined
   const showIngress: string | boolean | undefined = ingress && page.type === 'mimir:page'
 
   // Create preview if available
-  let preview: Response | undefined
+  let preview: XP.Response | undefined
   if (partsWithPreview.includes(page.type)) {
     let name: string = page.type.replace(/^.*:/, '')
-    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
     // @ts-ignore
     if (previewOverride[name]) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-    // @ts-ignore
+      // @ts-ignore
       name = previewOverride[name]
     }
-    const controller: Controller = __non_webpack_require__(`../../parts/${name}/${name}`)
+
+    // Our build system can't handle a wildcard require directly. All builders assume you are node or browser, since we are not we need to circumvent this.
+    // If we use a require directly it gets swapped out with a errounous function. Bybass by proxying through a variable
+    const _require = require
+    const controller: Controller = _require(`../../parts/${name}/${name}`)
     if (controller.preview) {
       preview = controller.preview(req, page._id)
     }
@@ -126,78 +119,91 @@ exports.get = function(req: Request): Response {
   }
 
   const stylesUrl: string = assetUrl({
-    path: 'styles/bundle.css'
+    path: 'styles/bundle.css',
   })
 
   const jsLibsUrl: string = assetUrl({
-    path: 'js/bundle.js'
+    path: 'js/bundle.js',
   })
 
   const ieUrl: string = assetUrl({
-    path: '/js/ie.js'
+    path: '/js/ie.js',
   })
 
-  let pageContributions: React4xpPageContributionOptions | PageContributions | string | undefined
+  let pageContributions: XP.PageContributions | undefined
   if (preview && preview.pageContributions) {
     pageContributions = preview.pageContributions
   }
-
-  const language: Language | {code: string} = getLanguage(page)
+  const language: Language = getLanguage(page) as Language
   const menuCacheLanguage: string = language.code === 'en' ? 'en' : 'nb'
-  const headerContent: MenuContent | unknown = fromMenuCache(req, `header_${menuCacheLanguage}`, () => {
-    return getHeaderContent(language as Language)
-  })
-  const headerComponent: React4xpObject = new React4xp('Header')
-    .setProps({
-      ...headerContent as object,
-      language: language
+  const hideHeader = isEnabled('hide-header-in-qa', false, 'ssb') ? pageConfig?.hideHeader : false
+  let header
+  if (!hideHeader) {
+    const headerContent: MenuContent | unknown = fromMenuCache(req, `header_${menuCacheLanguage}`, () => {
+      return getHeaderContent(language)
     })
-    .setId('header')
-
-  const header: MenuContent = {
-    body: headerComponent.renderBody({
-      body: '<div id="header"></div>'
-    }),
-    component: headerComponent
-  }
-
-  if (header && header.component) {
-    pageContributions = header.component.renderPageContributions({
-      pageContributions: pageContributions as React4xpPageContributionOptions
-
-    })
-  }
-
-  const footer: MenuContent | unknown = fromMenuCache(req, `footer_${menuCacheLanguage}`, () => {
-    const footerContent: FooterContent | undefined = getFooterContent(language as Language)
-    if (footerContent) {
-      const footerComponent: React4xpObject = new React4xp('Footer')
-        .setProps({
-          ...footerContent
-        })
-        .setId('footer')
-      return {
-        body: footerComponent.renderBody({
-          body: '<footer id="footer"></footer>'
-        }),
-        component: footerComponent
+    header = r4xpRender(
+      'Header',
+      {
+        ...(headerContent as object),
+        language: language,
+        searchResult: req.params.sok,
+      },
+      req,
+      {
+        id: 'header',
+        body: '<div id="header"></div>',
+        pageContributions,
       }
-    }
-    return undefined
-  })
+    )
 
-  if (footer && (footer as MenuContent).component) {
-    pageContributions = (footer as MenuContent).component.renderPageContributions({
-      pageContributions: pageContributions as React4xpPageContributionOptions
-    })
+    if (header) {
+      pageContributions = header.pageContributions
+    }
+  }
+
+  const footerContent: FooterContent | unknown = fromMenuCache(req, `footer_${menuCacheLanguage}`, () => {
+    return getFooterContent(language)
+  })
+  const footer = r4xpRender(
+    'Footer',
+    {
+      ...(footerContent as object),
+      language: language,
+    },
+    req,
+    {
+      id: 'footer',
+      body: '<footer id="footer"></footer>',
+      pageContributions,
+    }
+  )
+
+  if (footer) {
+    pageContributions = footer.pageContributions
+  }
+
+  const isPopupEnabled = isEnabled('show-popup-survey', false, 'ssb')
+
+  const popupComponent = isPopupEnabled
+    ? r4xpRender('Popup', {}, req, { id: 'popup', body: '<div id="popup"></div>', pageContributions })
+    : undefined
+
+  if (popupComponent) {
+    pageContributions = popupComponent.pageContributions
   }
 
   let municipality: MunicipalityWithCounty | undefined
   if (req.params.selfRequest) {
-    municipality = getMunicipality(req)
+    municipality = getMunicipality(req as RequestWithCode)
   }
 
-  const pageType: string = pageConfig.pageType ? pageConfig.pageType : 'default'
+  const pageType: string = pageConfig?.pageType || 'default'
+  const baseUrl: string =
+    app.config && app.config['ssb.baseUrl'] ? (app.config['ssb.baseUrl'] as string) : 'https://www.ssb.no'
+  let canonicalUrl: string | undefined = `${baseUrl}${pageUrl({
+    path: page._path,
+  })}`
   let municipalPageType: string | undefined
   if (pageType === 'municipality') {
     if (page._path.includes('/kommunefakta/')) {
@@ -209,27 +215,42 @@ exports.get = function(req: Request): Response {
     if (page._path.includes('/barn-og-unge/')) {
       municipalPageType = 'barn-og-unge'
     }
+    if (page._path.includes('/jakt-i-din-kommune/')) {
+      municipalPageType = 'jakt-i-din-kommune'
+    }
+  }
+
+  if (pageType === 'municipality' && municipality) {
+    canonicalUrl = `${baseUrl}/${municipalPageType}${municipality.path}`
   }
 
   const metaInfo: MetaInfoData = parseMetaInfoData(municipality, pageType, page, language, req)
 
-  const statbankFane: boolean = (req.params.xpframe === 'statbank')
+  //Teste strukturerte data
+  const jsonLd: Article | undefined =
+    metaInfo.addMetaInfoSearch && isEnabled('structured-data', false, 'ssb')
+      ? prepareStructuredData(metaInfo, page)
+      : undefined
+
+  const statbankFane: boolean = req.params.xpframe === 'statbank'
   const statBankContent: StatbankFrameData = parseStatbankFrameContent(statbankFane, req, page)
+  if (statbankFane) {
+    canonicalUrl = undefined
+  }
 
-  const breadcrumbs: Breadcrumbs = getBreadcrumbs(page, municipality, statbankFane ? statBankContent : undefined)
-
-  const breadcrumbComponent: React4xpObject = new React4xp('Breadcrumb')
-  breadcrumbComponent.setProps({
-    items: breadcrumbs
-  })
-    .setId('breadcrumbs')
-    .uniqueId()
-
-  const hideBreadcrumb: boolean = !!(pageConfig).hide_breadcrumb
+  const breadcrumbs: Breadcrumbs = getBreadcrumbs(
+    page as unknown as Content,
+    municipality,
+    statbankFane ? statBankContent : undefined
+  )
+  const breadcrumbId = 'breadcrumbs'
+  const hideBreadcrumb = !!pageConfig?.hide_breadcrumb
 
   const model: DefaultModel = {
+    isFragment,
     pageTitle: 'SSB', // not really used on normal pages because of SEO app (404 still uses this)
-    page,
+    canonicalUrl,
+    page: page as unknown as Content,
     ...regions,
     ingress,
     showIngress,
@@ -241,48 +262,69 @@ exports.get = function(req: Request): Response {
     language,
     statbankWeb: statbankFane,
     ...statBankContent,
-    GA_TRACKING_ID: app.config && app.config.GA_TRACKING_ID ? app.config.GA_TRACKING_ID : null,
-    headerBody: header ? header.body : undefined,
-    footerBody: footer ? (footer as MenuContent).body : undefined,
+    GTM_TRACKING_ID,
+    GTM_AUTH,
+    headerBody: header?.body,
+    footerBody: footer?.body,
     ...metaInfo,
-    breadcrumbsReactId: breadcrumbComponent.react4xpId,
-    hideBreadcrumb
+    metaInfoMainSubjects: metaInfo.metaInfoMainSubjects?.join(';'),
+    jsonLd,
+    breadcrumbsReactId: breadcrumbId,
+    hideHeader,
+    hideBreadcrumb,
+    tableView: page.type === 'mimir:table',
+    popupBody: popupComponent?.body,
   }
 
-  const thymeleafRenderBody: Response['body'] = render(view, model)
+  const thymeleafRenderBody = render(view, model)
 
-  const bodyWithBreadCrumbs: string | boolean = !hideBreadcrumb && breadcrumbComponent.renderBody({
-    body: thymeleafRenderBody
-  })
+  const breadcrumbComponent = r4xpRender(
+    'Breadcrumb',
+    {
+      items: breadcrumbs,
+    },
+    req,
+    {
+      id: breadcrumbId,
+      body: thymeleafRenderBody,
+      pageContributions,
+    }
+  )
+
+  const bodyWithBreadCrumbs: string | boolean = !hideBreadcrumb && breadcrumbComponent.body
 
   if (!hideBreadcrumb) {
-    pageContributions = breadcrumbComponent.renderPageContributions({
-      pageContributions: pageContributions as React4xpPageContributionOptions
-    })
+    pageContributions = breadcrumbComponent.pageContributions
   }
 
-  const alertOptions: MunicipalityOptions | InformationAlertOptions = pageConfig && (pageConfig).pageType === 'municipality' ? {
-    municipality,
-    municipalPageType
-  } as MunicipalityOptions : {
-    pageType: page.type,
-    pageTypeId: page._id,
-    statbankWeb: statbankFane || page._path === '/ssb/statbank'
-  } as InformationAlertOptions
+  const alertOptions: MunicipalityOptions | InformationAlertOptions =
+    pageConfig && pageConfig.pageType === 'municipality'
+      ? ({
+          municipality,
+          municipalPageType,
+        } as MunicipalityOptions)
+      : ({
+          pageType: page.type,
+          pageTypeId: page._id,
+          statbankWeb: statbankFane || page._path === '/ssb/statbank',
+        } as InformationAlertOptions)
 
   const alerts: AlertType = alertsForContext(pageConfig, alertOptions)
-  const body: string = bodyWithBreadCrumbs ? bodyWithBreadCrumbs : thymeleafRenderBody
-  const bodyWithAlerts: Response = alerts.length ?
-    addAlerts(alerts, body, pageContributions as React4xpPageContributionOptions) :
-    {
-      body,
-      pageContributions
-    } as Response
+  const body: string = bodyWithBreadCrumbs ? breadcrumbComponent.body : thymeleafRenderBody
+  const bodyWithAlerts: XP.Response = alerts.length
+    ? addAlerts(alerts, body, pageContributions, req)
+    : ({
+        body,
+        pageContributions,
+      } as XP.Response)
 
   return {
     body: `<!DOCTYPE html>${bodyWithAlerts.body}`,
-    pageContributions: bodyWithAlerts.pageContributions
-  } as Response
+    pageContributions: bodyWithAlerts.pageContributions,
+    headers: {
+      'x-content-key': page._id,
+    },
+  } as XP.Response
 }
 
 function prepareRegions(isFragment: boolean, page: DefaultPage): RegionsContent {
@@ -294,20 +336,57 @@ function prepareRegions(isFragment: boolean, page: DefaultPage): RegionsContent 
     const pageData: ExtendedPage = page.page
     if (pageData) {
       regions = pageData.regions ? pageData.regions : {}
-      configRegions = pageData.config && pageData.config.regions ? forceArray(pageData.config.regions) : []
+      configRegions = pageData.config && pageData.config.regions ? util.data.forceArray(pageData.config.regions) : []
     }
   }
   configRegions.forEach((configRegion) => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
     // @ts-ignore
-    configRegion.components = regions[configRegion.region] ? forceArray(regions[configRegion.region].components) : []
+    configRegion.components = regions[configRegion.region]
+      ? util.data.forceArray(regions[configRegion.region].components)
+      : []
   })
 
-  const mainRegionData: Regions['components'] | undefined = regions && regions.main && regions.main.components.length > 0 ? regions.main.components : undefined
+  const mainRegionData: Regions['components'] | undefined =
+    regions && regions.main && regions.main.components.length > 0 ? regions.main.components : undefined
 
   return {
     mainRegionData,
-    configRegions
+    configRegions,
+  }
+}
+
+function prepareStructuredData(metaInfo: MetaInfoData, page: DefaultPage): Article {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    additionalType: metaInfo.metaInfoSearchContentType,
+    headline: metaInfo.metaInfoTitle,
+    datePublished: metaInfo.metaInfoSearchPublishFrom,
+    dateModified: page.data.showModifiedDate?.dateOption?.modifiedDate
+      ? new Date(page.data.showModifiedDate.dateOption.modifiedDate).toISOString()
+      : undefined,
+    author: page.data.authorItemSet
+      ? ensureArray(page.data.authorItemSet).map((f) => {
+          return {
+            '@type': 'Person',
+            name: f.name,
+            email: f.email,
+          }
+        })
+      : undefined,
+    publisher: {
+      '@type': 'Organization',
+      name: 'Statistisk sentralbyrå',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://www.ssb.no/_/asset/mimir:0000018b60c47e20/SSB_logo_black.svg',
+      },
+    },
+    description: metaInfo.metaInfoDescription
+      ? metaInfo.metaInfoDescription
+      : page.x['com-enonic-app-metafields']?.['meta-data']?.seoDescription || undefined,
+    articleSection: metaInfo.metaInfoMainSubjects?.toString(),
+    keywords: metaInfo.metaInfoSearchKeywords,
   }
 }
 
@@ -315,21 +394,28 @@ function parseMetaInfoData(
   municipality: MunicipalityWithCounty | undefined,
   pageType: string,
   page: DefaultPage,
-  language: Language | {code: string},
-  req: Request): MetaInfoData {
-  let addMetaInfoSearch: boolean = true
+  language: Language,
+  req: XP.Request
+): MetaInfoData {
+  let addMetaInfoSearch = true
   let metaInfoSearchId: string | undefined = page._id
-  let metaInfoSearchContentType: string | undefined = page._name
+  let metaInfoSearchContentType: string | undefined
   let metaInfoSearchGroup: string | undefined = page._id
   let metaInfoSearchKeywords: string | undefined
   let metaInfoDescription: string | undefined
   let metaInfoSearchPublishFrom: string | undefined = page.publish && page.publish.from
-  let metaInfoMainSubject: string | undefined
+  let metaInfoMainSubjects: string[] | undefined
+  let metaInfoTitle: string | undefined =
+    page.x['com-enonic-app-metafields']?.['meta-data']?.seoTitle || page.displayName
 
   if (pageType === 'municipality') {
     metaInfoSearchContentType = 'kommunefakta'
-    metaInfoSearchKeywords = 'kommune, kommuneprofil',
-    metaInfoDescription = (getContent() as Content<Content, object, SEO>).x['com-enonic-app-metafields']['meta-data'].seoDescription
+    metaInfoSearchKeywords = 'kommune, kommuneprofil'
+    metaInfoDescription = page.x['com-enonic-app-metafields']?.['meta-data']?.seoDescription
+  }
+
+  if (pageType === 'municipality' && page._name === 'kommune' && !municipality) {
+    addMetaInfoSearch = false
   }
 
   if (pageType === 'municipality' && municipality) {
@@ -337,34 +423,32 @@ function parseMetaInfoData(
     metaInfoSearchId = metaInfoSearchId + '_' + municipality.code
     metaInfoSearchGroup = metaInfoSearchGroup + '_' + municipality.code
     metaInfoSearchKeywords = municipality.displayName + ' kommune'
+    metaInfoTitle = metaInfoTitle + ' - ' + municipality.displayName
   }
 
   if (pageType === 'factPage') {
     metaInfoSearchContentType = 'faktaside'
   }
 
+  if (page.type === `${app.name}:article` || page.type === `${app.name}:statistics`) {
+    metaInfoMainSubjects = getSubjectsPage(page, req, language.code as string)
+  }
+
   if (page.type === `${app.name}:statistics`) {
     const statistic: StatisticInListing | undefined = getStatisticByIdFromRepo(page.data.statistic)
     if (statistic) {
-      const variants: Array<VariantInListing | undefined> = forceArray(statistic.variants)
+      const variants: Array<VariantInListing | undefined> = util.data.forceArray(statistic.variants)
       const releaseDates: ReleaseDatesVariant = getReleaseDatesByVariants(variants as Array<VariantInListing>)
       const previousRelease: string = releaseDates.previousRelease[0]
       metaInfoSearchPublishFrom = previousRelease ? new Date(previousRelease).toISOString() : new Date().toISOString()
     }
     metaInfoSearchContentType = 'statistikk'
-    metaInfoDescription = (getContent() as Content<Content, object, SEO>).x['com-enonic-app-metafields']['meta-data'].seoDescription || ''
+    metaInfoDescription = page.x['com-enonic-app-metafields']?.['meta-data']?.seoDescription || ''
     metaInfoSearchKeywords = page.data.keywords ? page.data.keywords : ''
   }
 
   if (page.type === `${app.name}:article`) {
-    const allMainSubjects: Array<SubjectItem> = getMainSubjects(req, language.code === 'en' ? 'en' : 'nb' )
-
-    allMainSubjects.forEach((mainSubject) => {
-      if (page._path.startsWith(mainSubject.path)) {
-        metaInfoMainSubject = mainSubject.title
-      }
-    })
-    metaInfoSearchContentType = 'artikkel'
+    metaInfoSearchContentType = page.data.articleType ? page.data.articleType : 'artikkel'
   }
 
   return {
@@ -375,32 +459,82 @@ function parseMetaInfoData(
     metaInfoSearchKeywords,
     metaInfoDescription,
     metaInfoSearchPublishFrom,
-    metaInfoMainSubject
+    metaInfoMainSubjects,
+    metaInfoTitle,
   }
 }
 
-function parseStatbankFrameContent(statbankFane: boolean, req: Request, page: DefaultPage): StatbankFrameData {
+function getSubjectsPage(page: DefaultPage, req: XP.Request, language: string): Array<string> {
+  const allMainSubjects: Array<SubjectItem> = getMainSubjects(req, language === 'en' ? 'en' : 'nb')
+  const allSubSubjects: Array<SubjectItem> = getSubSubjects(req, language === 'en' ? 'en' : 'nb')
+  const subjects: Array<string> = []
+  const subTopics: Array<string> = page.data.subtopic ? util.data.forceArray(page.data.subtopic) : []
+  const mainSubject: SubjectItem | undefined = allMainSubjects.find((mainSubject) => {
+    return page._path.startsWith(mainSubject.path)
+  })
+
+  if (mainSubject) {
+    subjects.push(mainSubject.title)
+  }
+
+  const secondaryMainSubjects: Array<string> = subTopics
+    ? getSecondaryMainSubject(subTopics, allMainSubjects, allSubSubjects)
+    : []
+  secondaryMainSubjects.forEach((subject) => {
+    if (!subjects.includes(subject)) {
+      subjects.push(subject)
+    }
+  })
+
+  return subjects
+}
+
+function getSecondaryMainSubject(
+  subtopicsContent: Array<string>,
+  mainSubjects: Array<SubjectItem>,
+  subSubjects: Array<SubjectItem>
+): Array<string> {
+  const secondaryMainSubjects: Array<string> = subtopicsContent.reduce((acc: Array<string>, topic: string) => {
+    const subSubject: SubjectItem = subSubjects.filter((subSubject) => subSubject.id === topic)[0]
+    if (subSubject) {
+      const mainSubject: SubjectItem | undefined = getMainSubjectBySubSubject(subSubject, mainSubjects)
+      if (mainSubject && !acc.includes(mainSubject.title)) {
+        acc.push(mainSubject.title)
+      }
+    }
+    return acc
+  }, [])
+  return secondaryMainSubjects
+}
+
+function parseStatbankFrameContent(statbankFane: boolean, req: XP.Request, page: DefaultPage): StatbankFrameData {
   const baseUrl: string = app.config && app.config['ssb.baseUrl'] ? app.config['ssb.baseUrl'] : 'https://www.ssb.no'
   let pageLanguage: string | undefined = page.language ? page.language : 'nb'
 
   let filteredStatistics: StatisticInListing | undefined = undefined
   // If req.params.shortname exists, the xp frame fallback (system/xpramme) is in use
   // Since the fallback will only either be in bokmål or english, we will have to run two queries
-  const statisticInXP: Content<Statistics> | undefined = req.params.shortname ? query({
-    count: 1,
-    query: `_path LIKE "*/${req.params.shortname}" AND language = "${pageLanguage}"`,
-    contentTypes: [`${app.name}:statistics`]
-  }).hits[0] as Content<Statistics> : undefined
+  const statisticInXP: Content<Statistics> | undefined = req.params.shortname
+    ? query<Content<Statistics>>({
+        count: 1,
+        query: `_path LIKE "*/${req.params.shortname}" AND language = "${pageLanguage}"`,
+        contentTypes: [`${app.name}:statistics`],
+      }).hits[0]
+    : undefined
 
-  const nynorskStatisticInXP: Content<Statistics> | undefined = req.params.shortname ? query({
-    count: 1,
-    query: `_path LIKE "*/${req.params.shortname}" AND language = "nn"`,
-    contentTypes: [`${app.name}:statistics`]
-  }).hits[0] as Content<Statistics> : undefined
+  const nynorskStatisticInXP: Content<Statistics> | undefined = req.params.shortname
+    ? query<Content<Statistics>>({
+        count: 1,
+        query: `_path LIKE "*/${req.params.shortname}" AND language = "nn"`,
+        contentTypes: [`${app.name}:statistics`],
+      }).hits[0]
+    : undefined
 
   if (statbankFane) {
     if (statisticInXP || nynorskStatisticInXP) {
-      filteredStatistics = getStatisticByIdFromRepo(statisticInXP ? statisticInXP.data.statistic : nynorskStatisticInXP?.data.statistic)
+      filteredStatistics = getStatisticByIdFromRepo(
+        statisticInXP ? statisticInXP.data.statistic : nynorskStatisticInXP?.data.statistic
+      )
       // In order to get the correct phrases for the localized strings, we need to get the language from the content itself
       // rather than the language from the xp frame fallback page
       pageLanguage = statisticInXP ? statisticInXP.language : nynorskStatisticInXP?.language
@@ -421,20 +555,23 @@ function parseStatbankFrameContent(statbankFane: boolean, req: Request, page: De
     }
   }
 
-  const siteConfig: SiteConfig = getSiteConfig()
-  const statbankHelpLink: string = siteConfig.statbankHelpLink
+  const siteConfig = getSiteConfig<XP.SiteConfig>() as XP.SiteConfig
 
+  let statbankHelpLink: string = siteConfig.statbankHelpLink
+  if (pageLanguage === 'en') {
+    statbankHelpLink = '/en' + siteConfig.statbankHelpLink
+  }
   const statbankHelpText: string = localize({
     key: 'statbankHelpText',
-    locale: pageLanguage === 'nb' ? 'no' : pageLanguage
+    locale: pageLanguage === 'nb' ? 'no' : pageLanguage,
   })
   const statbankMainFigures: string = localize({
     key: 'statbankMainFigures',
-    locale: pageLanguage === 'nb' ? 'no' : pageLanguage
+    locale: pageLanguage === 'nb' ? 'no' : pageLanguage,
   })
   const statbankFrontPage: string = localize({
     key: 'statbankFrontPage',
-    locale: pageLanguage === 'nb' ? 'no' : pageLanguage
+    locale: pageLanguage === 'nb' ? 'no' : pageLanguage,
   })
 
   return {
@@ -444,105 +581,134 @@ function parseStatbankFrameContent(statbankFane: boolean, req: Request, page: De
     statbankMainFigures,
     statbankStatisticsUrl,
     statbankStatisticsTitle,
-    statisticsPageContent: statisticInXP ? statisticInXP : nynorskStatisticInXP
+    statisticsPageContent: statisticInXP ? statisticInXP : nynorskStatisticInXP,
   }
 }
 
-function addAlerts(alerts: AlertType, body: string, pageContributions: React4xpPageContributionOptions | undefined): Response {
-  const alertComponent: React4xpObject = new React4xp('Alerts')
-    .setProps({
-      alerts
-    })
-    .setId('alerts')
-  return {
-    body: alertComponent.renderBody({
-      body
-    }),
-    pageContributions: alertComponent.renderPageContributions({
-      pageContributions
-    }) as PageContributions | undefined
-  }
+function addAlerts(
+  alerts: AlertType,
+  body: string,
+  pageContributions: XP.PageContributions | undefined,
+  req: XP.Request
+): XP.Response {
+  return r4xpRender(
+    'Alerts',
+    {
+      alerts,
+    },
+    req,
+    {
+      id: 'alerts',
+      body: body,
+      pageContributions: pageContributions,
+    }
+  )
 }
 
 interface DefaultPage extends Content {
   fragment?: {
-    regions: Regions;
-    config: DefaultPageConfig;
-  };
+    regions: Regions
+    config: DefaultPageConfig
+  }
   data: {
-    ingress: string;
-    keywords: string;
-    statistic: string;
-  };
-  page: ExtendedPage;
+    ingress: string
+    keywords: string
+    statistic: string
+    subtopic: Array<string>
+    articleType: string
+    showModifiedDate: {
+      dateOption: {
+        showModifiedTime: boolean
+        modifiedDate: string
+      }
+    }
+    authorItemSet: [
+      {
+        name: string
+        email: string
+      },
+    ]
+  }
+  page: ExtendedPage
 }
 
-interface ExtendedPage extends Page<object>{
-  config: DefaultPageConfig;
+interface ExtendedPage extends Component<object> {
+  config: DefaultPageConfig
 }
 
 interface Regions {
-  components?: object;
-  region?: RegionData;
+  components?: object
+  region?: RegionData
   main?: {
-    components: Array<RegionData>;
-  };
+    components: Array<RegionData>
+  }
 }
+
 interface RegionData {
-  path: string;
-  type: string;
-  descriptor: string;
+  path: string
+  type: string
+  descriptor: string
 }
+
 interface Controller {
-  preview: (req: Request, id: string) => Response;
+  preview: (req: XP.Request, id: string) => XP.Response
 }
 
 interface MenuContent {
-  body: string;
-  component: React4xpObject;
+  body: string
+  component: XP.Response
 }
 
 interface RegionsContent {
-  mainRegionData: Regions | undefined;
-  configRegions: ExtendedPage['config']['regions'];
+  mainRegionData: Regions | undefined
+  configRegions: ExtendedPage['config']['regions']
 }
 
 interface MetaInfoData {
-  addMetaInfoSearch: boolean;
-  metaInfoSearchId: string | undefined;
-  metaInfoSearchGroup: string | undefined;
-  metaInfoSearchContentType: string | undefined;
-  metaInfoSearchKeywords: string | undefined;
-  metaInfoDescription: string | undefined;
-  metaInfoSearchPublishFrom: string | undefined;
-  metaInfoMainSubject: string | undefined;
+  addMetaInfoSearch: boolean
+  metaInfoSearchId: string | undefined
+  metaInfoSearchGroup: string | undefined
+  metaInfoSearchContentType: string | undefined
+  metaInfoSearchKeywords: string | undefined
+  metaInfoDescription: string | undefined
+  metaInfoSearchPublishFrom: string | undefined
+  metaInfoMainSubjects: string[] | undefined
+  metaInfoTitle: string | undefined
 }
 
 export interface StatbankFrameData {
-  statbankHelpText: string;
-  statbankHelpLink: string;
-  statbankFrontPage: string;
-  statbankMainFigures: string;
-  statbankStatisticsUrl: string;
-  statbankStatisticsTitle: string;
-  statisticsPageContent: Content<Statistics> | undefined;
+  statbankHelpText: string
+  statbankHelpLink: string
+  statbankFrontPage: string
+  statbankMainFigures: string
+  statbankStatisticsUrl: string
+  statbankStatisticsTitle: string
+  statisticsPageContent: Content<Statistics> | undefined
 }
 
 interface DefaultModel {
-  pageTitle: string;
-  page: Content;
-  ingress: string | undefined;
-  showIngress: string | boolean | undefined;
-  preview: Response | undefined;
-  bodyClasses: string;
-  stylesUrl: string;
-  jsLibsUrl: string;
-  ieUrl: string;
-  language: Language | {code: string};
-  statbankWeb: boolean;
-  GA_TRACKING_ID: string | null;
-  headerBody: string | undefined;
-  footerBody: string| undefined;
-  breadcrumbsReactId: string | undefined;
-  hideBreadcrumb: boolean;
+  isFragment: boolean
+  pageTitle: string
+  canonicalUrl: string | undefined
+  page: Content
+  ingress: string | undefined
+  showIngress: string | boolean | undefined
+  preview: XP.Response | undefined
+  bodyClasses: string
+  stylesUrl: string
+  jsLibsUrl: string
+  ieUrl: string
+  language: Language
+  statbankWeb: boolean
+  GTM_TRACKING_ID: string | null
+  GTM_AUTH: string | null
+  jsonLd: Article | undefined
+  headerBody: string | undefined
+  footerBody: string | undefined
+  metaInfoMainSubjects: string | undefined
+  breadcrumbsReactId: string | undefined
+  hideHeader: boolean
+  hideBreadcrumb: boolean
+  tableView: boolean
+  popupBody: string | undefined // Added for Popup component
 }

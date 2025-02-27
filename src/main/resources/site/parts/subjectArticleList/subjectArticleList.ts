@@ -1,65 +1,63 @@
-import { Request } from 'enonic-types/controller'
-import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
-import { Content } from 'enonic-types/content'
+import { type Content, type ContentsResult } from '/lib/xp/content'
+import { getContent, serviceUrl } from '/lib/xp/portal'
+import { localize } from '/lib/xp/i18n'
+import { getChildArticles, getSubtopics, prepareArticles } from '/lib/ssb/utils/articleUtils'
+import { render } from '/lib/enonic/react4xp'
+import { isEnabled } from '/lib/featureToggle'
+import { type SubjectArticleListProps } from '/lib/types/partTypes/subjectArticleList'
+import { type PreparedArticles } from '/lib/types/article'
+import { type Article, type Page } from '/site/content-types'
 
-const {
-  localize
-} = __non_webpack_require__('/lib/xp/i18n')
-const {
-  getContent, serviceUrl
-} = __non_webpack_require__('/lib/xp/portal')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
-const {
-  isEnabled
-} = __non_webpack_require__('/lib/featureToggle')
-
-exports.get = (req: Request): React4xpResponse => {
+export function get(req: XP.Request) {
   return renderPart(req)
 }
 
-exports.preview = (req: Request): React4xpResponse => renderPart(req)
+export function preview(req: XP.Request) {
+  return renderPart(req)
+}
 
-function renderPart(req: Request): React4xpResponse {
-  const content: Content = getContent()
+function renderPart(req: XP.Request) {
+  const content = getContent<Content<Page>>()
+  if (!content) throw Error('No page found')
+
+  const sort: string = req.params.sort ? req.params.sort : 'DESC'
   const language: string = content.language ? content.language : 'nb'
   const filterAndSortEnabled: boolean = isEnabled('articlelist-sorting', false)
-
   const currentPath: string = content._path
 
+  const start = 0
+  const count: number = 10
+
+  const subTopicIds: string | string[] = getSubtopics(content, currentPath, req, language)
+  const childArticles: ContentsResult<Content<Article>> = getChildArticles(currentPath, subTopicIds, start, count, sort)
+  const preparedArticles: Array<PreparedArticles> = prepareArticles(childArticles, language)
+  const totalArticles: number = childArticles.total
+
   const articleServiceUrl: string = serviceUrl({
-    service: 'articles'
+    service: 'articles',
   })
 
   const headerText: string = localize({
     key: 'relatedArticlesHeading',
-    locale: language === 'nb' ? 'no' : language
+    locale: language === 'nb' ? 'no' : language,
   })
   const buttonText: string = localize({
     key: 'button.showMore',
-    locale: language === 'nb' ? 'no' : language
+    locale: language === 'nb' ? 'no' : language,
   })
 
-  const props: PartProperties = {
+  const props: SubjectArticleListProps = {
     title: headerText,
     buttonTitle: buttonText,
     articleServiceUrl: articleServiceUrl,
     currentPath: currentPath,
     start: 0,
-    count: 10,
+    count: count,
     showSortAndFilter: filterAndSortEnabled,
-    language: language
+    language: language,
+    articles: preparedArticles,
+    totalArticles: totalArticles,
   }
 
-  return React4xp.render('site/parts/subjectArticleList/subjectArticleList', props, req)
-}
-
-interface PartProperties {
-    title: string;
-    buttonTitle: string;
-    articleServiceUrl: string;
-    currentPath: string;
-    start: number;
-    count: number;
-    showSortAndFilter: boolean;
-    language: string;
+  return render('site/parts/subjectArticleList/subjectArticleList', props, req)
 }

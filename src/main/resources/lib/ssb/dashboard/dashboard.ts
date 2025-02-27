@@ -1,88 +1,47 @@
-__non_webpack_require__('/lib/ssb/polyfills/nashorn')
-import { CreateOrUpdateStatus } from '../dataset/dataset'
-import { Content } from 'enonic-types/content'
-import { DataSource } from '../../../site/mixins/dataSource/dataSource'
-import { Events, QueryInfoNode } from '../repo/query'
-import { EVENT_LOG_REPO, EVENT_LOG_BRANCH, LogSummary } from '../repo/eventLog'
-import { NodeQueryHit, RepoNode } from 'enonic-types/node'
-import { RunContext } from 'enonic-types/context'
-import { Socket, SocketEmitter } from '../../types/socket'
-import { JSONstat } from '../../types/jsonstat-toolkit'
-import { TbmlDataUniform } from '../../types/xmlParser'
-import { DatasetRepoNode } from '../repo/dataset'
-import { withConnection } from '../repo/common'
-import { User } from 'enonic-types/auth'
-import { DatasetRefreshResult, JobInfoNode, JOB_STATUS_COMPLETE, JOB_STATUS_STARTED, StatisticsPublishResult } from '../repo/job'
-import { StatisticInListing } from './statreg/types'
-import { StatRegRefreshResult } from '../repo/statreg'
-import { StatRegJobInfo } from './statreg'
-import { DefaultPageConfig } from '../../../site/pages/default/default-page-config'
-import { Page } from '../../../site/content-types/page/page'
-import { Statistics } from '../../../site/content-types/statistics/statistics'
-const {
-  users,
-  showWarningIcon,
-  WARNING_ICON_EVENTS,
-  isPublished
-} = __non_webpack_require__('/lib/ssb/dashboard/dashboardUtils')
-const {
-  dateToFormat,
-  dateToReadable
-} = __non_webpack_require__('/lib/ssb/utils/utils')
-const {
-  logUserDataQuery
-} = __non_webpack_require__('/lib/ssb/repo/query')
-const {
-  getNode,
-  ENONIC_CMS_DEFAULT_REPO
-} = __non_webpack_require__('/lib/ssb/repo/common')
-const {
-  refreshDataset,
-  extractKey,
-  getDataset
-} = __non_webpack_require__('/lib/ssb/dataset/dataset')
-const {
-  DATASET_BRANCH,
-  UNPUBLISHED_DATASET_BRANCH
-} = __non_webpack_require__('/lib/ssb/repo/dataset')
-const {
-  get: getContent,
-  query
-} = __non_webpack_require__('/lib/xp/content')
-const {
-  getParentType
-} = __non_webpack_require__('/lib/ssb/utils/parentUtils')
-const {
-  localize
-} = __non_webpack_require__('/lib/xp/i18n')
-const {
-  run
-} = __non_webpack_require__('/lib/xp/context')
-const {
-  fromDatasetRepoCache
-} = __non_webpack_require__('/lib/ssb/cache/cache')
-const {
-  getQueryChildNodesStatus
-} = __non_webpack_require__('/lib/ssb/repo/eventLog')
-const {
-  executeFunction
-} = __non_webpack_require__('/lib/xp/task')
-const {
+import '/lib/ssb/polyfills/nashorn'
+import { get as getContent, query, Content } from '/lib/xp/content'
+import { Node, NodeQueryResultHit } from '/lib/xp/node'
+import { run, type ContextParams } from '/lib/xp/context'
+import { User } from '/lib/xp/auth'
+import { sanitize } from '/lib/xp/common'
+import { localize } from '/lib/xp/i18n'
+import { executeFunction } from '/lib/xp/task'
+import { Events, QueryInfoNode, logUserDataQuery } from '/lib/ssb/repo/query'
+import { EVENT_LOG_REPO, EVENT_LOG_BRANCH, LogSummary, getQueryChildNodesStatus } from '/lib/ssb/repo/eventLog'
+import { type Socket, type SocketEmitter } from '/lib/wsUtil'
+import { JSONstat } from '/lib/types/jsonstat-toolkit'
+import { TbmlDataUniform } from '/lib/types/xmlParser'
+import { DatasetRepoNode, DATASET_BRANCH, UNPUBLISHED_DATASET_BRANCH } from '/lib/ssb/repo/dataset'
+import { withConnection, getNode, ENONIC_CMS_DEFAULT_REPO } from '/lib/ssb/repo/common'
+import {
+  CalculatorRefreshResult,
+  DatasetRefreshResult,
+  JobInfoNode,
+  JOB_STATUS_COMPLETE,
+  JOB_STATUS_STARTED,
+  StatisticsPublishResult,
   queryJobLogs,
   getJobLog,
-  JobNames
-} = __non_webpack_require__('/lib/ssb/repo/job')
-const {
-  data: {
-    forceArray
-  }
-} = __non_webpack_require__('/lib/util')
-const {
-  getStatisticByIdFromRepo
-} = __non_webpack_require__('/lib/ssb/statreg/statistics')
-const {
-  parseStatRegJobInfo
-} = __non_webpack_require__('/lib/ssb/dashboard/statreg')
+  JobNames,
+  PushRSSResult,
+} from '/lib/ssb/repo/job'
+import { StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
+import { StatRegRefreshResult } from '/lib/ssb/repo/statreg'
+import { StatRegJobInfo, parseStatRegJobInfo } from '/lib/ssb/dashboard/statreg'
+import { users, showWarningIcon, WARNING_ICON_EVENTS, isPublished } from '/lib/ssb/dashboard/dashboardUtils'
+import { dateToFormat, dateToReadable } from '/lib/ssb/utils/utils'
+import { getParentType } from '/lib/ssb/utils/parentUtils'
+
+import { fromDatasetRepoCache } from '/lib/ssb/cache/cache'
+import { CreateOrUpdateStatus, refreshDataset, extractKey, getDataset } from '/lib/ssb/dataset/dataset'
+import * as util from '/lib/util'
+import { getStatisticByIdFromRepo } from '/lib/ssb/statreg/statistics'
+import { createOrUpdateNameGraphRepo } from '/lib/ssb/repo/nameGraph'
+import { getNameSearchGraphDatasetId } from '/lib/ssb/dataset/calculator'
+import { type Page, type Statistics } from '/site/content-types'
+import { type Default as DefaultPageConfig } from '/site/pages/default'
+import { type DataSource } from '/site/mixins/dataSource'
+import { RssResult } from '../cron/pushRss'
 
 export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): void {
   socket.on('get-error-data-sources', () => {
@@ -91,7 +50,7 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
       func: () => {
         const contentWithDataSource: Array<DashboardDataSource> = getDataSourcesWithError()
         socket.emit('error-data-sources-result', contentWithDataSource)
-      }
+      },
     })
   })
 
@@ -101,7 +60,7 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
       func: () => {
         const factpages: Array<DashboardDataSourceGroups> = getFactPageGroups()
         socket.emit('fact-page-groups-result', factpages)
-      }
+      },
     })
   })
 
@@ -109,12 +68,12 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
     executeFunction({
       description: 'get-fact-page-data-sources',
       func: () => {
-        const dataSources: Array<DashboardDataSource> = getFactPageDataSources(id)
+        const dataSources: Array<DashboardDataSource> = prepDataSources(getFactPageDataSources(id))
         socket.emit('fact-page-data-sources-result', {
           id,
-          dataSources
+          dataSources,
         })
-      }
+      },
     })
   })
 
@@ -124,7 +83,7 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
       func: () => {
         const statistics: Array<DashboardDataSourceGroups> = getStatisticsGroups()
         socket.emit('statistics-groups-result', statistics)
-      }
+      },
     })
   })
 
@@ -132,12 +91,12 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
     executeFunction({
       description: 'get-statistics-data-sources',
       func: () => {
-        const dataSources: Array<DashboardDataSource> = getStatisticsDataSources(id)
+        const dataSources: Array<DashboardDataSource> = prepDataSources(getStatisticsDataSources(id))
         socket.emit('statistics-data-sources-result', {
           id,
-          dataSources
+          dataSources,
         })
-      }
+      },
     })
   })
 
@@ -147,7 +106,7 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
       func: () => {
         const municipals: Array<DashboardDataSourceGroups> = getMunicipalGroups()
         socket.emit('municipal-groups-result', municipals)
-      }
+      },
     })
   })
 
@@ -155,12 +114,12 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
     executeFunction({
       description: 'get-municipal-data-sources',
       func: () => {
-        const dataSources: Array<DashboardDataSource> = getMunicipalDataSources(id)
+        const dataSources: Array<DashboardDataSource> = prepDataSources(getMunicipalDataSources(id))
         socket.emit('municipal-data-sources-result', {
           id,
-          dataSources
+          dataSources,
         })
-      }
+      },
     })
   })
 
@@ -170,18 +129,20 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
       func: () => {
         const dataSources: Array<DashboardDataSource> = getDefaultDataSources()
         socket.emit('default-data-sources-result', dataSources)
-      }
+      },
     })
   })
 
-  socket.on('get-eventlog-node', (dataQueryId)=> {
-    let status: Array<LogSummary> | undefined = getQueryChildNodesStatus(`/queries/${dataQueryId}`) as Array<LogSummary> | undefined
+  socket.on('get-eventlog-node', (dataQueryId) => {
+    let status: Array<LogSummary> | undefined = getQueryChildNodesStatus(`/queries/${dataQueryId}`) as
+      | Array<LogSummary>
+      | undefined
     if (!status) {
       status = []
     }
     socket.emit('eventlog-node-result', {
       logs: status,
-      id: dataQueryId
+      id: dataQueryId,
     })
   })
 
@@ -192,14 +153,14 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
   })
 
   socket.on('dashboard-refresh-dataset', (options: RefreshDatasetOptions) => {
-    const context: RunContext = {
+    const context: ContextParams = {
       branch: 'master',
       repository: ENONIC_CMS_DEFAULT_REPO,
       principals: ['role:system.admin'],
       user: {
         login: users[parseInt(socket.id)].login,
-        idProvider: users[parseInt(socket.id)].idProvider ? users[parseInt(socket.id)].idProvider : 'system'
-      }
+        idProvider: users[parseInt(socket.id)].idProvider ? users[parseInt(socket.id)].idProvider : 'system',
+      },
     }
     run(context, () => refreshDatasetHandler(options.ids, socketEmitter))
   })
@@ -209,23 +170,55 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
       description: 'dashboard-jobs',
       func: () => {
         socket.emit('dashboard-jobs-result', getJobs())
-      }
+      },
     })
   })
 
   socket.on('dashboard-server-time', () => {
     socket.emit('dashboard-server-time-result', new Date().toISOString())
   })
+
+  socket.on('dashboard-refresh-namegraph', () => {
+    const datasetId: string | undefined = getNameSearchGraphDatasetId()
+    let status: string
+    if (datasetId) {
+      const context: ContextParams = {
+        branch: 'master',
+        repository: ENONIC_CMS_DEFAULT_REPO,
+        principals: ['role:system.admin'],
+        user: {
+          login: users[parseInt(socket.id)].login,
+          idProvider: users[parseInt(socket.id)].idProvider ? users[parseInt(socket.id)].idProvider : 'system',
+        },
+      }
+      const apiData: RefreshDatasetResult[] = run(context, () => refreshDatasetHandler([datasetId], socketEmitter))
+      const statusApi: string = localize({
+        key: apiData[0].status,
+      })
+
+      createOrUpdateNameGraphRepo()
+      status = `Data statbankApi: ${statusApi}, Repo nameGraph er oppdatert`
+    } else {
+      status = 'Henting av data fra StatbankApi feilet pga manglende datasetId'
+    }
+
+    socket.emit('refresh-namegraph-finished', {
+      status: status,
+    })
+  })
 }
 
 function getDataSourcesWithError(): Array<DashboardDataSource> {
   const errorLogNodes: Array<QueryInfoNode> = withConnection(EVENT_LOG_REPO, EVENT_LOG_BRANCH, (connection) => {
-    const errorLogResult: ReadonlyArray<NodeQueryHit> = connection.query({
-      query: `_path LIKE "/queries/*" AND data.modifiedResult IN(${WARNING_ICON_EVENTS.map((e) => `"${e}"`).join(',')})`,
-      count: 1000
+    const errorLogResult = connection.query({
+      query: `_path LIKE "/queries/*" AND data.modifiedResult IN(${WARNING_ICON_EVENTS.map((e) => `"${e}"`).join(
+        ','
+      )})`,
+      count: 1000,
     }).hits
     return errorLogResult.reduce((errorLogNodes: Array<QueryInfoNode>, errorLog) => {
-      const errorLogNode: QueryInfoNode | null = connection.get(errorLog.id)
+      // deepcode ignore Sqli: NoQL. get is an xp function that fetches content from the repositories in xp
+      const errorLogNode: QueryInfoNode | null = connection.get(sanitize(errorLog.id))
       if (errorLogNode) {
         errorLogNodes.push(errorLogNode)
       }
@@ -236,20 +229,26 @@ function getDataSourcesWithError(): Array<DashboardDataSource> {
     return []
   }
   const dataSourcesWithError: Array<Content<DataSource>> = query({
-    query: `_id IN(${errorLogNodes.map((s) => `"${s._name}"`).join(',')}) AND data.dataSource._selected LIKE "*"`,
-    count: errorLogNodes.length
+    query: `_id IN(${errorLogNodes
+      .map((s) => `"${s._name}"`)
+      .join(',')}) AND data.dataSource._selected LIKE "*" AND data.dataSource._selected NOT LIKE "htmlTable"`,
+    count: errorLogNodes.length,
   }).hits as unknown as Array<Content<DataSource>>
-  return dataSourcesWithError.map((dataSource: Content<DataSource>) => {
-    const queryLogNode: QueryInfoNode | undefined = errorLogNodes.find((errorLog) => errorLog._name === dataSource._id)
-    return buildDashboardDataSource(dataSource, queryLogNode)
-  }).filter((ds) => !!ds) as Array<DashboardDataSource>
+  return dataSourcesWithError
+    .map((dataSource: Content<DataSource>) => {
+      const queryLogNode: QueryInfoNode | undefined = errorLogNodes.find(
+        (errorLog) => errorLog._name === dataSource._id
+      )
+      return buildDashboardDataSource(dataSource, queryLogNode)
+    })
+    .filter((ds) => !!ds) as Array<DashboardDataSource>
 }
 
 function getFactPageGroups(): Array<DashboardDataSourceGroups> {
-  const factPages: Array<Content<Page, DefaultPageConfig>> = query({
+  const factPages: Array<Content<Page & DefaultPageConfig>> = query({
     query: `components.page.config.mimir.default.pageType LIKE "factPage"`,
-    count: 1000
-  }).hits as unknown as Array<Content<Page, DefaultPageConfig>>
+    count: 1000,
+  }).hits as unknown as Array<Content<Page & DefaultPageConfig>>
 
   return factPages.map((factPage) => {
     return {
@@ -257,21 +256,21 @@ function getFactPageGroups(): Array<DashboardDataSourceGroups> {
       displayName: factPage.displayName,
       path: factPage._path,
       loading: false,
-      dataSources: undefined
+      dataSources: undefined,
     }
   })
 }
 
-function getFactPageDataSources(factPageId: string): Array<DashboardDataSource> {
+function getFactPageDataSources(factPageId: string): Array<Content<DataSource>> {
   const factPage: Content<Page> | null = getContent({
-    key: factPageId
+    key: factPageId,
   })
   if (factPage) {
     const hits: Array<Content<DataSource>> = query({
-      query: `_path LIKE "/content${factPage._path}/*" AND data.dataSource._selected LIKE "*"`,
-      count: 1000
+      query: `_path LIKE "/content${factPage._path}/*" AND data.dataSource._selected LIKE "*" AND data.dataSource._selected NOT LIKE "htmlTable"`,
+      count: 1000,
     }).hits as unknown as Array<Content<DataSource>>
-    return prepDataSources(hits)
+    return hits
   }
   return []
 }
@@ -280,39 +279,38 @@ function getStatisticsGroups(): Array<DashboardDataSourceGroups> {
   const statistics: Array<Content<Statistics>> = query({
     contentTypes: [`${app.name}:statistics`],
     query: `data.statistic LIKE "*"`,
-    count: 1000
+    count: 1000,
   }).hits as unknown as Array<Content<Statistics>>
-
   return statistics.map((statistic) => {
     return {
       id: statistic._id,
       displayName: statistic.displayName,
       path: statistic._path,
       loading: false,
-      dataSources: undefined
+      dataSources: undefined,
     }
   })
 }
 
-function getStatisticsDataSources(statisticId: string): Array<DashboardDataSource> {
+function getStatisticsDataSources(statisticId: string): Array<Content<DataSource>> {
   const statistic: Content<Page> | null = getContent({
-    key: statisticId
+    key: statisticId,
   })
   if (statistic) {
     const hits: Array<Content<DataSource>> = query({
-      query: `_path LIKE "/content${statistic._path}/*" AND data.dataSource._selected LIKE "*"`,
-      count: 100
+      query: `_path LIKE "/content${statistic._path}/*" AND data.dataSource._selected LIKE "*" AND data.dataSource._selected NOT LIKE "htmlTable"`,
+      count: 100,
     }).hits as unknown as Array<Content<DataSource>>
-    return prepDataSources(hits)
+    return hits
   }
   return []
 }
 
 function getMunicipalGroups(): Array<DashboardDataSourceGroups> {
-  const municipals: Array<Content<Page, DefaultPageConfig>> = query({
+  const municipals: Array<Content<Page & DefaultPageConfig>> = query({
     query: `components.page.config.mimir.default.pageType LIKE "municipality" AND _parentPath LIKE "/content/ssb"`,
-    count: 5
-  }).hits as unknown as Array<Content<Page, DefaultPageConfig>>
+    count: 5,
+  }).hits as unknown as Array<Content<Page & DefaultPageConfig>>
 
   return municipals.map((municipal) => {
     return {
@@ -320,34 +318,56 @@ function getMunicipalGroups(): Array<DashboardDataSourceGroups> {
       displayName: municipal.displayName,
       path: municipal._path,
       loading: false,
-      dataSources: undefined
+      dataSources: undefined,
     }
   })
 }
 
-function getMunicipalDataSources(municipalId: string): Array<DashboardDataSource> {
+function getMunicipalDataSources(municipalId: string): Array<Content<DataSource>> {
   const municipal: Content<Page> | null = getContent({
-    key: municipalId
+    key: municipalId,
   })
   if (municipal) {
     const hits: Array<Content<DataSource>> = query({
-      query: `_path LIKE "/content${municipal._path}/*" AND data.dataSource._selected LIKE "*"`,
-      count: 100
+      query: `_path LIKE "/content${municipal._path}/*" AND data.dataSource._selected LIKE "*" AND data.dataSource._selected NOT LIKE "htmlTable"`,
+      count: 100,
     }).hits as unknown as Array<Content<DataSource>>
-    return prepDataSources(hits)
+    return hits
   }
   return []
 }
 
 function getDefaultDataSources(): Array<DashboardDataSource> {
-  const factPageGroupPaths: Array<string> = getFactPageGroups().map((g) => g.path)
-  const municipalGroupPaths: Array<string> = getMunicipalGroups().map((g) => g.path)
-  const statisticsGroupPaths: Array<string> = getStatisticsGroups().map((g) => g.path)
-  const paths: Array<string> = Array<string>().concat(factPageGroupPaths, municipalGroupPaths, statisticsGroupPaths)
+  // We want all the data sources that are not in the groups below
+  const factPageDataSourceIds: string[][] = getFactPageGroups().map((g) =>
+    getFactPageDataSources(g.id).map((ds) => ds._id)
+  )
+  const municipalDataSourceIds: string[][] = getMunicipalGroups().map((g) =>
+    getMunicipalDataSources(g.id).map((ds) => ds._id)
+  )
+  const statisticsDataSourceIds: string[][] = getStatisticsGroups().map((g) =>
+    getStatisticsDataSources(g.id).map((ds) => ds._id)
+  )
+
+  const dataSourceIds = [
+    ...factPageDataSourceIds.reduce((acc, g) => [...acc, ...g], []),
+    ...municipalDataSourceIds.reduce((acc, g) => [...acc, ...g], []),
+    ...statisticsDataSourceIds.reduce((acc, g) => [...acc, ...g], []),
+  ]
   const hits: Array<Content<DataSource>> = query({
-    query: `${paths.map((p) => `_path NOT LIKE "/content${p}/*"`).join(' AND ')} AND data.dataSource._selected LIKE "*"`,
-    count: 1000
+    query: `data.dataSource._selected LIKE "*" AND data.dataSource._selected NOT LIKE "htmlTable"`,
+    filters: {
+      boolean: {
+        mustNot: {
+          ids: {
+            values: dataSourceIds,
+          },
+        },
+      },
+    },
+    count: 10000,
   }).hits as unknown as Array<Content<DataSource>>
+
   return prepDataSources(hits)
 }
 
@@ -356,9 +376,9 @@ function getJobs(): Array<DashboardJobInfo> {
     start: 0,
     count: 20,
     query: 'data.user.key = "user:system:cronjob" AND _path LIKE "/jobs/*"',
-    sort: '_ts DESC'
-  }).hits.reduce((result: Array<DashboardJobInfo>, j) => {
-    const res: JobInfoNode | ReadonlyArray<JobInfoNode> | null = getJobLog(j.id)
+    sort: '_ts DESC',
+  }).hits.reduce((result: Array<DashboardJobInfo>, j: NodeQueryResultHit) => {
+    const res = getJobLog(j.id)
     if (res) {
       const jobLog: JobInfoNode = Array.isArray(res) ? res[0] : res
       result.push({
@@ -369,106 +389,161 @@ function getJobs(): Array<DashboardJobInfo> {
         completionTime: jobLog.data.completionTime ? jobLog.data.completionTime : undefined,
         message: jobLog.data.message ? jobLog.data.message : '',
         result: parseResult(jobLog),
-        details: []
+        details: [],
       })
     }
     return result
   }, [])
 }
 
-function parseResult(jobLog: JobInfoNode): Array<DashboardPublishJobResult> | Array<StatRegJobInfo> | DatasetRefreshResult {
+function parseResult(
+  jobLog: JobInfoNode
+):
+  | Array<DashboardPublishJobResult>
+  | Array<StatRegJobInfo>
+  | DatasetRefreshResult
+  | CalculatorRefreshResult
+  | PushRSSResult {
   if (jobLog.data.task === JobNames.PUBLISH_JOB) {
-    const refreshDataResult: Array<StatisticsPublishResult> = forceArray(jobLog.data.refreshDataResult || []) as Array<StatisticsPublishResult>
-    return refreshDataResult.map((statResult) => {
-      const statregData: StatisticInListing | undefined = getStatisticByIdFromRepo(statResult.shortNameId)
-      const statId: string = statResult.statistic
-      const shortName: string = statregData ? statregData.shortName : statResult.shortNameId // get name from shortNameId
-      const dataSources: DashboardPublishJobResult['dataSources'] = forceArray(statResult.dataSources || []).map((ds) => {
-        const dataSource: Content<DataSource> | null = getContent({
-          key: ds.id
-        })
-        return {
-          id: ds.id,
-          displayName: dataSource ? dataSource.displayName : ds.id,
-          status: ds.status,
-          type: dataSource?.type,
-          datasetType: dataSource?.data?.dataSource?._selected,
-          datasetKey: dataSource ? extractKey(dataSource) : undefined
-        }
-      })
-      return {
-        id: statId,
-        shortName,
-        status: statResult.status,
-        dataSources
-      }
-    })
+    const refreshDataResult = util.data.forceArray(
+      jobLog.data.refreshDataResult || []
+    ) as Array<StatisticsPublishResult>
+    return getPublishJobParsedResult(refreshDataResult)
   } else if (jobLog.data.task === JobNames.STATREG_JOB) {
-    const refreshDataResult: Array<StatRegRefreshResult> = forceArray(jobLog.data.refreshDataResult || []) as Array<StatRegRefreshResult>
+    const refreshDataResult: Array<StatRegRefreshResult> = util.data.forceArray(
+      jobLog.data.refreshDataResult || []
+    ) as Array<StatRegRefreshResult>
     return parseStatRegJobInfo(refreshDataResult)
   } else if (jobLog.data.task === JobNames.REFRESH_DATASET_JOB) {
-    let result: DatasetRefreshResult | undefined = jobLog.data.refreshDataResult as DatasetRefreshResult | undefined
-    if (!result || !result.filterInfo) {
-      result = {
-        filterInfo: {
-          start: [],
-          end: [],
-          inRSSOrNoKey: [],
-          noData: [],
-          otherDataType: [],
-          statistics: [],
-          skipped: []
-        },
-        result: []
-      }
-    }
-    result.filterInfo.start = forceArray(result.filterInfo.inRSSOrNoKey || [])
-    result.filterInfo.inRSSOrNoKey = forceArray(result.filterInfo.inRSSOrNoKey || [])
-    result.filterInfo.noData = forceArray(result.filterInfo.noData || [])
-    result.filterInfo.otherDataType = forceArray(result.filterInfo.otherDataType) || []
-    result.filterInfo.skipped = forceArray(result.filterInfo.skipped || [])
-    result.filterInfo.end = forceArray(result.filterInfo.end || [])
-    result.filterInfo.statistics = forceArray(result.filterInfo.statistics || [])
-    result.result = forceArray(result.result || []).map((ds) => {
-      ds.hasError = showWarningIcon(ds.status as Events)
-      ds.status = localize({
-        key: ds.status
-      })
-      return ds
-    })
-    return result
+    const result = jobLog.data.refreshDataResult as DatasetRefreshResult | undefined
+    return getRefreshDatasetJobParsedResult(result)
+  } else if (
+    jobLog.data.task === JobNames.REFRESH_DATASET_CALCULATOR_JOB ||
+    jobLog.data.task === JobNames.REFRESH_DATASET_SDDS_TABLES_JOB
+  ) {
+    const result = jobLog.data.refreshDataResult as CalculatorRefreshResult | undefined
+    return getCalculatorAndSDDSTablesJobParsedResult(result)
+  } else if (jobLog.data.task === JobNames.PUSH_RSS_NEWS || jobLog.data.task === JobNames.PUSH_RSS_STATKAL) {
+    const result = jobLog.data.refreshDataResult as RssResult
+    return getRSSJobsParsedResult(result)
   }
   return []
 }
 
-interface DashboardPublishJobResult {
-  id: string;
-  shortName: string;
-  status: string;
-  dataSources: Array<{
-    id: string;
-    displayName: string;
-    status: string;
-    type?: string;
-    datasetType?: string;
-    datasetKey?: string;
-  }>;
+function getPublishJobParsedResult(refreshDataResult: Array<StatisticsPublishResult>) {
+  return refreshDataResult.map((statResult) => {
+    const statregData: StatisticInListing | undefined = getStatisticByIdFromRepo(statResult.shortNameId)
+    const statId: string = statResult.statistic
+    const shortName: string = statregData ? statregData.shortName : statResult.shortNameId // get name from shortNameId
+    const dataSources: DashboardPublishJobResult['dataSources'] = util.data
+      .forceArray(statResult.dataSources || [])
+      .map((ds) => {
+        try {
+          const dataSource: Content<DataSource> | null = getContent({
+            key: ds.id,
+          })
+          return {
+            id: ds.id,
+            displayName: dataSource ? dataSource.displayName : ds.id,
+            status: ds.status,
+            type: dataSource?.type,
+            datasetType: dataSource?.data?.dataSource?._selected,
+            datasetKey: dataSource ? extractKey(dataSource) : null,
+          }
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        } catch (e) {
+          return {
+            id: ds.id,
+            displayName: ds.id,
+            status: ds.status,
+            type: `Datakilde finnes ikke lengre`,
+            datasetType: '',
+            datasetKey: 'innhold arkivert!!',
+          }
+        }
+      })
+    return {
+      id: statId,
+      shortName,
+      status: statResult.status,
+      dataSources,
+    }
+  })
 }
-export interface DashboardJobInfo {
-  id: string;
-  task: string;
-  status: typeof JOB_STATUS_STARTED | typeof JOB_STATUS_COMPLETE;
-  startTime: string;
-  completionTime?: string;
-  message: string;
-  result: Array<unknown> | object;
-  user?: User;
-  details: Array<object>;
+
+function getRefreshDatasetJobParsedResult(result: DatasetRefreshResult | undefined) {
+  if (!result || !result.filterInfo) {
+    return {
+      filterInfo: {
+        start: [],
+        end: [],
+        inRSSOrNoKey: [],
+        noData: [],
+        otherDataType: [],
+        statistics: [],
+        skipped: [],
+      },
+      result: [],
+    }
+  }
+
+  return {
+    filterInfo: {
+      start: util.data.forceArray(result.filterInfo.inRSSOrNoKey || []),
+      end: util.data.forceArray(result.filterInfo.end || []),
+      inRSSOrNoKey: util.data.forceArray(result.filterInfo.inRSSOrNoKey || []),
+      noData: util.data.forceArray(result.filterInfo.noData || []),
+      otherDataType: util.data.forceArray(result.filterInfo.otherDataType) || [],
+      statistics: util.data.forceArray(result.filterInfo.statistics || []),
+      skipped: util.data.forceArray(result.filterInfo.skipped || []),
+    },
+    result: util.data.forceArray(result.result || []).map((ds) => {
+      ds.hasError = showWarningIcon(ds.status as Events)
+      ds.status = localize({
+        key: ds.status,
+      })
+      return ds
+    }),
+  }
+}
+
+function getCalculatorAndSDDSTablesJobParsedResult(result: CalculatorRefreshResult | undefined) {
+  if (!result) {
+    result = {
+      result: [],
+    }
+  }
+  result.result = util.data.forceArray(result.result || []).map((ds) => {
+    ds.hasError = showWarningIcon(ds.status as Events)
+    ds.status = localize({
+      key: ds.status,
+    })
+    return ds
+  })
+  return result
+}
+
+function getRSSJobsParsedResult(result: RssResult): PushRSSResult {
+  if (!result) {
+    return {
+      result: [],
+    }
+  }
+  return {
+    result: util.data.forceArray({
+      ...result,
+      hasError: showWarningIcon(result?.status as Events),
+    }),
+  }
 }
 
 function prepDataSources(dataSources: Array<Content<DataSource>>): Array<DashboardDataSource> {
   return dataSources.reduce((dashboardDataSources: Array<DashboardDataSource>, dataSource) => {
-    const queryLogNode: QueryInfoNode | null = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/queries/${dataSource._id}`) as QueryInfoNode
+    const queryLogNode: QueryInfoNode | null = getNode(
+      EVENT_LOG_REPO,
+      EVENT_LOG_BRANCH,
+      `/queries/${dataSource._id}`
+    ) as QueryInfoNode
     const dashboardDataSource: DashboardDataSource | null = buildDashboardDataSource(dataSource, queryLogNode)
     if (dashboardDataSource) {
       dashboardDataSources.push(dashboardDataSource)
@@ -477,11 +552,16 @@ function prepDataSources(dataSources: Array<Content<DataSource>>): Array<Dashboa
   }, [])
 }
 
-function buildDashboardDataSource(dataSource: Content<DataSource>, queryLogNode: QueryInfoNode | undefined): DashboardDataSource | null {
+function buildDashboardDataSource(
+  dataSource: Content<DataSource>,
+  queryLogNode: QueryInfoNode | undefined
+): DashboardDataSource | null {
   if (dataSource.data.dataSource?._selected) {
-    const dataset: DatasetRepoNode<object | JSONstat | TbmlDataUniform> | undefined =
-    fromDatasetRepoCache(`/${dataSource.data.dataSource._selected}/${extractKey(dataSource)}`, () => getDataset(dataSource))
-    const hasData: boolean = !!dataset
+    const dataset: DatasetRepoNode<object | JSONstat | TbmlDataUniform> | undefined = fromDatasetRepoCache(
+      `/${dataSource.data.dataSource._selected}/${extractKey(dataSource)}`,
+      () => getDataset(dataSource)
+    )
+    const hasData = !!dataset
     return {
       id: dataSource._id,
       displayName: dataSource.displayName,
@@ -491,19 +571,21 @@ function buildDashboardDataSource(dataSource: Content<DataSource>, queryLogNode:
       format: dataSource.data.dataSource._selected,
       dataset: {
         modified: dataset ? dateToFormat(dataset._ts) : undefined,
-        modifiedReadable: dataset ? dateToReadable(dataset._ts) : undefined
+        modifiedReadable: dataset ? dateToReadable(dataset._ts) : undefined,
       },
       hasData,
       isPublished: isPublished(dataSource),
-      logData: queryLogNode ? {
-        ...queryLogNode.data,
-        showWarningIcon: showWarningIcon(queryLogNode.data.modifiedResult as Events),
-        message: localize({
-          key: queryLogNode.data.modifiedResult
-        }),
-        modified: queryLogNode.data.modified,
-        modifiedReadable: dateToReadable(queryLogNode.data.modifiedTs)
-      } : undefined
+      logData: queryLogNode
+        ? {
+            ...queryLogNode.data,
+            showWarningIcon: showWarningIcon(queryLogNode.data.modifiedResult as Events),
+            message: localize({
+              key: queryLogNode.data.modifiedResult,
+            }),
+            modified: queryLogNode.data.modified,
+            modifiedReadable: dateToReadable(queryLogNode.data.modifiedTs),
+          }
+        : undefined,
     }
   }
   return null
@@ -514,111 +596,119 @@ export function refreshDatasetHandler(
   socketEmitter: SocketEmitter,
   processXmls?: Array<ProcessXml>,
   feedbackEventName?: string,
-  relatedStatisticsId?: string,
+  relatedStatisticsId?: string
 ): Array<RefreshDatasetResult> {
   // tell all dashboard instances that these are going to be loaded
 
   ids.forEach((id) => {
     socketEmitter.broadcast('dashboard-activity-refreshDataset', {
-      id
+      id,
     })
   })
   // start loading each datasource
   return ids.map((id: string, index: number) => {
     const dataSource: Content<DataSource> | null = getContent({
-      key: id
+      key: id,
     })
     if (dataSource) {
-      const dataSourceKey: number = parseInt(extractKey(dataSource))
+      const dataSourceKey: number = parseInt(extractKey(dataSource) as string)
 
-      feedbackEventName && socketEmitter.broadcast(feedbackEventName, {
-        name: dataSource.displayName,
-        datasourceKey: dataSourceKey,
-        status: `Henter data for ${dataSource.displayName}`,
-        step: 1,
-        tableIndex: index,
-        relatedStatisticsId: relatedStatisticsId ? relatedStatisticsId : undefined
-      })
+      feedbackEventName &&
+        socketEmitter.broadcast(feedbackEventName, {
+          name: dataSource.displayName,
+          datasourceKey: dataSourceKey,
+          status: `Henter data for ${dataSource.displayName}`,
+          step: 1,
+          tableIndex: index,
+          relatedStatisticsId: relatedStatisticsId ? relatedStatisticsId : undefined,
+        })
 
       // only get credentials for this datasourceKey (in this case a tbml id)
-      const ownerCredentialsForTbml: ProcessXml | undefined = processXmls ?
-        processXmls.find((processXml: ProcessXml) => {
-          return processXml.tbmlId.toString() === dataSourceKey.toString()
-        }) : undefined
+      const ownerCredentialsForTbml: ProcessXml | undefined = processXmls
+        ? processXmls.find((processXml: ProcessXml) => {
+            return processXml.tbmlId.toString() === dataSourceKey.toString()
+          })
+        : undefined
       // refresh data in draft only if there is owner credentials exists and fetchpublished is false
       const refreshDatasetResult: CreateOrUpdateStatus = refreshDataset(
         dataSource,
         ownerCredentialsForTbml ? UNPUBLISHED_DATASET_BRANCH : DATASET_BRANCH,
-        ownerCredentialsForTbml ? ownerCredentialsForTbml.processXml : undefined)
+        ownerCredentialsForTbml ? ownerCredentialsForTbml.processXml : undefined
+      )
 
-      refreshDatasetResult.sourceListStatus && logUserDataQuery(dataSource._id, {
-        file: '/lib/ssb/dataset/dashboard.ts',
-        function: 'refreshDatasetHandler',
-        message: refreshDatasetResult.sourceListStatus,
-        branch: ownerCredentialsForTbml ? UNPUBLISHED_DATASET_BRANCH : DATASET_BRANCH
-      })
+      refreshDatasetResult.sourceListStatus &&
+        logUserDataQuery(dataSource._id, {
+          file: '/lib/ssb/dataset/dashboard.ts',
+          function: 'refreshDatasetHandler',
+          message: refreshDatasetResult.sourceListStatus,
+          branch: ownerCredentialsForTbml ? UNPUBLISHED_DATASET_BRANCH : DATASET_BRANCH,
+        })
 
       logUserDataQuery(dataSource._id, {
         file: '/lib/ssb/dataset/dashboard.ts',
         function: 'refreshDatasetHandler',
         message: refreshDatasetResult.status,
-        branch: ownerCredentialsForTbml ? UNPUBLISHED_DATASET_BRANCH : DATASET_BRANCH
+        branch: ownerCredentialsForTbml ? UNPUBLISHED_DATASET_BRANCH : DATASET_BRANCH,
       })
 
-      feedbackEventName && socketEmitter.broadcast(feedbackEventName, {
-        name: dataSource.displayName,
-        datasourceKey: dataSourceKey,
-        status: localize({
-          key: refreshDatasetResult.status
-        }),
-        step: 2,
-        tableIndex: index,
-        relatedStatisticsId: relatedStatisticsId ? relatedStatisticsId : undefined
-      })
+      feedbackEventName &&
+        socketEmitter.broadcast(feedbackEventName, {
+          name: dataSource.displayName,
+          datasourceKey: dataSourceKey,
+          status: localize({
+            key: refreshDatasetResult.status,
+          }),
+          step: 2,
+          tableIndex: index,
+          relatedStatisticsId: relatedStatisticsId ? relatedStatisticsId : undefined,
+        })
 
-      feedbackEventName && refreshDatasetResult.sourceListStatus && socketEmitter.broadcast(feedbackEventName, {
-        name: dataSource.displayName,
-        datasourceKey: dataSourceKey,
-        status: localize({
-          key: refreshDatasetResult.sourceListStatus
-        }),
-        step: 2,
-        tableIndex: index,
-        relatedStatisticsId: relatedStatisticsId ? relatedStatisticsId : undefined
-      })
+      feedbackEventName &&
+        refreshDatasetResult.sourceListStatus &&
+        socketEmitter.broadcast(feedbackEventName, {
+          name: dataSource.displayName,
+          datasourceKey: dataSourceKey,
+          status: localize({
+            key: refreshDatasetResult.sourceListStatus,
+          }),
+          step: 2,
+          tableIndex: index,
+          relatedStatisticsId: relatedStatisticsId ? relatedStatisticsId : undefined,
+        })
 
       socketEmitter.broadcast('dashboard-activity-refreshDataset-result', transfromQueryResult(refreshDatasetResult))
       return {
         id,
         status: refreshDatasetResult.status,
-        branch: ownerCredentialsForTbml ? UNPUBLISHED_DATASET_BRANCH : DATASET_BRANCH
+        branch: ownerCredentialsForTbml ? UNPUBLISHED_DATASET_BRANCH : DATASET_BRANCH,
       }
     } else {
-      feedbackEventName && socketEmitter.broadcast(feedbackEventName, {
-        status: `Fant ingen innhold med id ${id}`,
-        step: 1,
-        tableIndex: index,
-        relatedStatisticsId: relatedStatisticsId ? relatedStatisticsId : undefined
-      })
+      feedbackEventName &&
+        socketEmitter.broadcast(feedbackEventName, {
+          status: `Fant ingen innhold med id ${id}`,
+          step: 1,
+          tableIndex: index,
+          relatedStatisticsId: relatedStatisticsId ? relatedStatisticsId : undefined,
+        })
 
       socketEmitter.broadcast('dashboard-activity-refreshDataset-result', {
         id: id,
         message: localize({
-          key: Events.FAILED_TO_FIND_DATAQUERY
+          key: Events.FAILED_TO_FIND_DATAQUERY,
         }),
-        status: Events.FAILED_TO_FIND_DATAQUERY
+        status: Events.FAILED_TO_FIND_DATAQUERY,
       })
       return {
         id,
         status: Events.FAILED_TO_FIND_DATAQUERY,
-        branch: DATASET_BRANCH
+        branch: DATASET_BRANCH,
       }
     }
   })
 }
 
 function transfromQueryResult(result: CreateOrUpdateStatus): DashboardRefreshResult {
-  const nodes: QueryLogNode | readonly QueryLogNode[] | null = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/queries/${result.dataquery._id}`)
+  const nodes = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/queries/${result.dataquery._id}`) as QueryLogNode | null
   let queryLogNode: QueryLogNode | null = null
   if (nodes) {
     if (Array.isArray(nodes)) {
@@ -627,117 +717,134 @@ function transfromQueryResult(result: CreateOrUpdateStatus): DashboardRefreshRes
       queryLogNode = nodes as QueryLogNode
     }
   }
-  const queryLogMessage: string | null = queryLogNode && localize({
-    key: queryLogNode.data.modifiedResult
-  })
+  const queryLogMessage: string | null =
+    queryLogNode &&
+    localize({
+      key: queryLogNode.data.modifiedResult,
+    })
   return {
     id: result.dataquery._id,
-    dataset: result.dataset ? {
-      newDatasetData: result.hasNewData ? result.hasNewData : false,
-      modified: dateToFormat(result.dataset._ts),
-      modifiedReadable: dateToReadable(result.dataset._ts)
-    } : {},
-    logData: queryLogNode ? {
-      ...queryLogNode.data,
-      showWarningIcon: showWarningIcon(queryLogNode.data.modifiedResult as Events),
-      message: queryLogMessage !== 'NOT_TRANSLATED' ? queryLogMessage : queryLogNode.data.modifiedResult,
-      modified: queryLogNode.data.modified,
-      modifiedReadable: dateToReadable(queryLogNode.data.modifiedTs)
-    } : {}
+    dataset: result.dataset
+      ? {
+          newDatasetData: result.hasNewData ? result.hasNewData : false,
+          modified: dateToFormat(result.dataset._ts),
+          modifiedReadable: dateToReadable(result.dataset._ts),
+        }
+      : {},
+    logData: queryLogNode
+      ? {
+          ...queryLogNode.data,
+          showWarningIcon: showWarningIcon(queryLogNode.data.modifiedResult as Events),
+          message: queryLogMessage !== 'NOT_TRANSLATED' ? queryLogMessage : queryLogNode.data.modifiedResult,
+          modified: queryLogNode.data.modified,
+          modifiedReadable: dateToReadable(queryLogNode.data.modifiedTs),
+        }
+      : {},
   }
 }
 
-interface QueryLogNode extends RepoNode {
+interface QueryLogNode extends Node {
   data: {
-    queryId: string;
-    modified: string;
-    modifiedResult: string;
-    modifiedTs: string;
+    queryId: string
+    modified: string
+    modifiedResult: string
+    modifiedTs: string
     by: {
-      type: string;
-      key: string;
-      displayName: string;
-      disabled: boolean;
-      email: string;
-      login: string;
-      idProvider: string;
-    };
-  };
+      type: string
+      key: string
+      displayName: string
+      disabled: boolean
+      email: string
+      login: string
+      idProvider: string
+    }
+  }
 }
 
-
 interface DashboardRefreshResult {
-  id: string;
-  dataset: DashboardRefreshResultDataset | {};
-  logData: DashboardRefreshResultLogData | {};
+  id: string
+  dataset: DashboardRefreshResultDataset | object
+  logData: DashboardRefreshResultLogData | object
 }
 
 interface DashboardRefreshResultDataset {
-  newDatasetData: boolean;
-  modified: string;
-  modifiedReadable: string;
+  newDatasetData: boolean
+  modified: string
+  modifiedReadable: string
+}
+
+interface DashboardPublishJobResult {
+  id: string
+  shortName: string
+  status: string
+  dataSources: Array<{
+    id: string
+    displayName: string
+    status: string
+    type?: string
+    datasetType?: string
+    datasetKey: string | null
+  }>
+}
+export interface DashboardJobInfo {
+  id: string
+  task: string
+  status: typeof JOB_STATUS_STARTED | typeof JOB_STATUS_COMPLETE
+  startTime: string
+  completionTime?: string
+  message: string
+  result: Array<unknown> | object
+  user?: User
+  details: Array<object>
 }
 
 export interface RefreshDatasetResult {
-  id: string;
-  status: string;
-  branch: string;
+  id: string
+  status: string
+  branch: string
 }
 
 export interface DashboardRefreshResultLogData {
-  message: string;
-  modified: string;
-  modifiedReadable: string;
-  showWarningIcon: boolean;
+  message: string
+  modified: string
+  modifiedReadable: string
+  showWarningIcon: boolean
 }
 
 export interface RefreshDatasetOptions {
-  ids: Array<string>;
-}
-
-export interface DashboardDatasetLib {
-  users: Array<User>;
-  setupHandlers: (socket: Socket, socketEmitter: SocketEmitter) => void;
-  showWarningIcon: (result: Events) => boolean;
-  refreshDatasetHandler: (
-    ids: Array<string>,
-    socketEmitter: SocketEmitter,
-    processXml?: Array<ProcessXml>,
-    feedbackEventName?: string,
-    relatedStatisticsId?: string,
-  ) => Array<RefreshDatasetResult>;
+  ids: Array<string>
 }
 
 export interface ProcessXml {
-  tbmlId: string;
-  processXml: string;
+  tbmlId: string
+  processXml: string
 }
 
 export interface DashboardDataSource {
-  id: string;
-  displayName: string;
-  path: string;
-  parentType?: string;
-  type: string;
-  format: string;
+  id: string
+  displayName: string
+  path: string
+  parentType?: string
+  type: string
+  format: string
   dataset: {
-    modified?: string;
-    modifiedReadable?: string;
-  };
-  hasData: boolean;
-  isPublished: boolean;
+    modified?: string
+    modifiedReadable?: string
+  }
+  hasData: boolean
+  isPublished: boolean
   logData?: QueryInfoNode['data'] & {
-    showWarningIcon: boolean;
-    message: string;
-    modified: string;
-    modifiedReadable: string;
-  };
+    showWarningIcon: boolean
+    message: string
+    modified: string
+    modifiedReadable: string
+  }
 }
 
 export interface DashboardDataSourceGroups {
-  id: string;
-  displayName: string;
-  path: string;
-  loading: boolean;
-  dataSources?: Array<string>;
+  id: string
+  displayName: string
+  path: string
+  loading: boolean
+  dataSources?: Array<string>
 }

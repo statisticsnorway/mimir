@@ -10,14 +10,14 @@
     "quotes": ["error", "single", {
         "avoidEscape": true,
         "allowTemplateLiterals": true
-      } 
+      }
     ],
-    "max-len": ["error", 160],
+    "max-len": ["error", 120],
     "linebreak-style": "off",
     "brace-style": ["error", "1tbs"],
     "camelcase": "warn",
     "no-var": "error",
-    "require-jsdoc": "off",
+    "jsdoc/require-jsdoc": "off",
     "block-spacing": ["warn", "always"],
     "space-before-function-paren": [ "warn", "never"],
     "eol-last": ["warn", "always"],

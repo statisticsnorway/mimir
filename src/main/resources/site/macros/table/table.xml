@@ -1,0 +1,14 @@
+<macro>
+    <display-name>Tabell</display-name>
+    <description></description>
+    <form>
+        <input name="table" type="ContentSelector">
+            <label>Tabell</label>
+            <occurrences minimum="1" maximum="1"/>
+            <config>
+                <allowPath>${site}</allowPath>
+                <allowType>table</allowType>
+            </config>
+        </input>
+    </form>
+</macro>

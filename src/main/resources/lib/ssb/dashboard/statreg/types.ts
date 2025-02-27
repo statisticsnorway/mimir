@@ -1,42 +1,42 @@
 // XML response types (Common)
 export interface ListMeta {
-    antall: number;
-    dato: string;
+  antall: number
+  dato: string
 }
 
 // XML response types for Contacts from StatReg ----------------------------------
 
 export interface KontaktNavn {
-    'xml:lang': string;
-    content: string;
+  'xml:lang': string
+  content: string
 }
 
 export interface Kontakt {
-    id: number | string;
-    epost: string;
-    telefon: number | string;
-    mobil: number | string;
-    navn: Array<KontaktNavn>;
+  id: number | string
+  epost: string
+  telefon: number | string
+  mobil: number | string
+  navn: Array<KontaktNavn>
 }
 
 export interface KontaktListe extends ListMeta {
-    kontakt: Array<Kontakt>;
+  kontakt: Array<Kontakt>
 }
 
 export interface KontaktXML {
-    kontakter: KontaktListe;
+  kontakter: KontaktListe
 }
 
 export interface Contact extends StatRegBase {
-    telephone: number | string;
-    mobile: number | string;
-    email: string;
-    name: string;
+  telephone: number | string
+  mobile: number | string
+  email: string
+  name: string
 }
 
 // -------------------------------------------------------------------------------
 
-export type KontaktNavnType = KontaktNavn | '' | undefined;
+export type KontaktNavnType = KontaktNavn | '' | undefined
 
 // XML response types for Statistics from StatReg ----------------------------------
 
@@ -49,67 +49,67 @@ export type KontaktNavnType = KontaktNavn | '' | undefined;
  */
 
 export interface ReleasesInListing {
-    id: string;
-    publishTime: string;
-    periodFrom: string;
-    periodTo: string;
+  id: string
+  publishTime: string
+  periodFrom: string
+  periodTo: string
 }
 
 export interface ReleaseDatesVariant {
-    nextRelease: Array<string>;
-    previousRelease: Array<string>;
+  nextRelease: Array<string>
+  previousRelease: Array<string>
 }
 
 export interface VariantInListing {
-    id: string;
-    frekvens: string;
-    previousRelease: string;
-    previousFrom: string;
-    previousTo: string;
-    nextRelease: string;
-    nextReleaseId: string;
-    upcomingReleases?: Array<ReleasesInListing>;
+  id: string
+  frekvens: string
+  previousRelease: string
+  previousFrom: string
+  previousTo: string
+  nextRelease: string
+  nextReleaseId: string
+  upcomingReleases?: Array<ReleasesInListing>
 }
 
 export interface StatisticInListing extends StatRegBase {
-    id: number;
-    shortName: string;
-    name: string;
-    nameEN: string;
-    status: string;
-    modifiedTime: string;
-    variants?: Array<VariantInListing>;
+  id: number
+  shortName: string
+  name: string
+  nameEN: string
+  status: string
+  modifiedTime: string
+  variants?: Array<VariantInListing>
 }
 
 export interface Statistics {
-    statistics: Array<StatisticInListing>;
+  statistics: Array<StatisticInListing>
 }
 
 // XML response types from StatReg for Publications --------------------------------
 
 export interface Publisering {
-    id: number;
-    variant: string;
-    deskFlyt: string;
-    endret: string;
-    statistikkKortnavn: string;
+  id: number
+  variant: string
+  deskFlyt: string
+  endret: string
+  statistikkKortnavn: string
 }
 
 export interface PubliseringsListe extends ListMeta {
-    publisering: Array<Publisering>;
+  publisering: Array<Publisering>
 }
 
 export interface PubliseringXML {
-    publiseringer: PubliseringsListe;
+  publiseringer: PubliseringsListe
 }
 
 export interface Publication extends StatRegBase {
-    variant: string;
-    statisticsKey: string;
-    status: string;
-    modifiedTime: string;
+  variant: string
+  statisticsKey: string
+  status: string
+  modifiedTime: string
 }
 
 export interface StatRegBase {
-    id: number;
+  id: number
 }

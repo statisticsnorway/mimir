@@ -1,5 +1,5 @@
 .part-related-statistics {
-  .ssb-card {
+  .col, .ssb-card {
     @include media-breakpoint-down(md) {
       padding: 0;
     }

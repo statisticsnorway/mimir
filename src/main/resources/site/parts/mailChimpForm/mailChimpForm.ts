@@ -1,78 +1,25 @@
-import { Request } from 'enonic-types/controller'
-import { React4xp, React4xpObject, React4xpResponse } from '../../../lib/types/react4xp'
-import { ResourceKey, ThymeleafLibrary } from 'enonic-types/thymeleaf'
-import { Component, PortalLibrary } from 'enonic-types/portal'
-import { MailChimpFormPartConfig } from './mailChimpForm-part-config'
-import { Content } from 'enonic-types/content'
-import { I18nLibrary } from 'enonic-types/i18n'
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
-const {
-  render
-}: ThymeleafLibrary = __non_webpack_require__('/lib/thymeleaf')
-const {
-  getComponent,
-  getContent
-}: PortalLibrary = __non_webpack_require__('/lib/xp/portal')
-const {
-  localize
-}: I18nLibrary = __non_webpack_require__('/lib/xp/i18n')
+import { Content, getComponent, getContent } from '/lib/xp/portal'
+import { render as r4XpRender } from '/lib/enonic/react4xp'
+import { type Phrases } from '/lib/types/language'
 
-const view: ResourceKey = resolve('./mailChimpForm.html')
+import { getPhrases } from '/lib/ssb/utils/language'
+import { type MailChimpFormProps } from '/lib/types/partTypes/mailChimpForm'
 
-exports.get = function(req: Request): React4xpResponse {
-  const component: Component<MailChimpFormPartConfig> = getComponent()
-  const content: Content = getContent()
+export function get(req: XP.Request) {
+  const config = getComponent<XP.PartComponent.MailChimpForm>()?.config
+  if (!config) throw Error('No part found')
 
-  const reactProps: ReactProps = {
-    endpoint: component.config.mailchimpEndpoint ? component.config.mailchimpEndpoint : '',
-    id: component.config.mailchimpId ? component.config.mailchimpId : '',
-    validateEmailMsg: localize({
-      key: 'newsletter.emailVerificationError',
-      locale: content.language ? content.language : 'nb'
-    }),
-    emailLabel: localize({
-      key: 'newsletter.emailLabel',
-      locale: content.language ? content.language : 'nb'
-    }),
-    buttonTitle: localize({
-      key: 'newsletter.buttonTitle',
-      locale: content.language ? content.language : 'nb'
-    })
+  const currentContent = getContent() ?? ({} as Content)
+  const phrases = getPhrases(currentContent) as Phrases
+
+  const props: MailChimpFormProps = {
+    text: config.text ?? '',
+    endpoint: config.mailchimpEndpoint ?? '',
+    id: config.mailchimpId,
+    validateEmailMsg: phrases['newsletter.emailVerificationError'],
+    emailLabel: phrases['newsletter.emailLabel'],
+    buttonTitle: phrases['newsletter.buttonTitle'],
   }
 
-  const mailChimpFormComponent: React4xpObject = new React4xp('site/parts/mailChimpForm/mailChimpForm')
-    .setProps(reactProps)
-    .setId('newsletterForm')
-    .uniqueId()
-
-  const thProps: ThymeleafProps = {
-    title: component.config.title ? component.config.title : '',
-    text: component.config.text ? component.config.text : '',
-    reactId: mailChimpFormComponent.react4xpId
-  }
-
-  const thRender: string = render(view, thProps)
-  return {
-    body: mailChimpFormComponent.renderBody({
-      body: thRender,
-      clientRender: req.mode !== 'edit'
-    }),
-    pageContributions: mailChimpFormComponent.renderPageContributions({
-      clientRender: req.mode !== 'edit'
-    })
-  }
-}
-
-interface ReactProps {
-  endpoint: string;
-  id: string;
-  validateEmailMsg: string;
-  emailLabel: string;
-  buttonTitle: string;
-}
-
-interface ThymeleafProps {
-  title: string;
-  text: string;
-  reactId: string;
+  return r4XpRender('site/parts/mailChimpForm/mailChimpForm', props, req)
 }

@@ -10,5 +10,14 @@
         <allowType>menuBox</allowType>
       </config>
     </input>
+    <input name="height" type="RadioButton">
+      <label>Høyde på bokser</label>
+      <occurrences minimum="1" maximum="1"/>
+      <config>
+        <option value="default">Dynamisk</option>
+        <option value="fixed">Fast (370px)</option>
+      </config>
+      <default>default</default>
+    </input>
   </form>
 </part>

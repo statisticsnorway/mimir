@@ -1,61 +1,44 @@
-import { StatisticInListing } from '../dashboard/statreg/types'
-__non_webpack_require__('/lib/ssb/polyfills/nashorn')
-import { Content } from 'enonic-types/content'
-import { HttpResponse } from 'enonic-types/http'
-import { DataSource } from '../../../site/mixins/dataSource/dataSource'
-import { TbmlDataUniform, XmlParser } from '../../types/xmlParser'
-import { DatasetRepoNode, DataSource as DataSourceType } from '../repo/dataset'
-import { JSONstat } from '../../types/jsonstat-toolkit'
-import { JobStatus } from '../repo/job'
-import { DefaultPageConfig } from '../../../site/pages/default/default-page-config'
-import { Statistics } from '../../../site/content-types/statistics/statistics'
-import { Statistic } from '../../../site/mixins/statistic/statistic'
+import '/lib/ssb/polyfills/nashorn'
+import { Content } from '/lib/xp/content'
+import { StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
+import { request, HttpResponse } from '/lib/http-client'
+import { type TbmlDataUniform, type XmlParser } from '/lib/types/xmlParser'
+import { DataSource as DataSourceType, DatasetRepoNode } from '/lib/ssb/repo/dataset'
+import { type JSONstat } from '/lib/types/jsonstat-toolkit'
+import { subDays, isWithinInterval } from '/lib/vendor/dateFns'
 
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
-const {
-  moment
-} = __non_webpack_require__('/lib/vendor/moment')
-const {
-  request
-} = __non_webpack_require__('/lib/http-client')
-const {
-  getTableIdFromTbprocessor
-} = __non_webpack_require__('/lib/ssb/dataset/tbprocessor/tbprocessor')
-const {
-  getTableIdFromStatbankApi
-} = __non_webpack_require__('/lib/ssb/dataset/statbankApi/statbankApi')
-const {
-  getDataset
-} = __non_webpack_require__('/lib/ssb/dataset/dataset')
-const {
-  cronJobLog
-} = __non_webpack_require__('/lib/ssb/utils/serverLog')
-const {
-  getParentType, getParentContent
-} = __non_webpack_require__('/lib/ssb/utils/parentUtils')
+import { getTableIdFromTbprocessor } from '/lib/ssb/dataset/tbprocessor/tbprocessor'
+import { getTableIdFromStatbankApi } from '/lib/ssb/dataset/statbankApi/statbankApi'
+import { getDataset } from '/lib/ssb/dataset/dataset'
+import { cronJobLog } from '/lib/ssb/utils/serverLog'
+import { getParentType, getParentContent } from '/lib/ssb/utils/parentUtils'
 
-const {
-  fetchStatisticsWithReleaseToday
-} = __non_webpack_require__('/lib/ssb/statreg/statistics')
+import { fetchStatisticsWithReleaseToday } from '/lib/ssb/statreg/statistics'
+import { type Statistic } from '/site/mixins/statistic'
+import { type Statistics } from '/site/content-types'
+import { type DataSource } from '/site/mixins/dataSource'
 
 function fetchRSS(): Array<RSSItem> {
-  const statbankRssUrl: string | undefined = app.config && app.config['ssb.rss.statbank'] ? app.config['ssb.rss.statbank'] : 'https://www.ssb.no/rss/statbank'
+  const statbankRssUrl: string | undefined = app.config?.['ssb.rss.statbank'] || 'https://www.ssb.no/rss/statbank'
   if (statbankRssUrl) {
     const response: HttpResponse = request({
-      url: statbankRssUrl
+      url: statbankRssUrl,
     })
-    if (response && response.body) {
+    if (response?.body) {
       cronJobLog(`STATBANK RSS :: ${response.body}`)
       const data: string = xmlParser.parse(response.body)
       const rss: RSS = JSON.parse(data)
       return rss.rss.channel.item
+    } else {
+      cronJobLog(`STATBANK RSS failed :: ${response.status} - ${response.message}`)
     }
   }
   return []
 }
 
 function isValidType(dataSource: Content<DataSource>): boolean {
-  if (dataSource.data.dataSource && dataSource.data.dataSource._selected) {
+  if (dataSource?.data?.dataSource?._selected) {
     const dataSourceType: string = dataSource.data.dataSource._selected
     if (dataSourceType === DataSourceType.STATBANK_API || dataSourceType === DataSourceType.TBPROCESSOR) {
       return true
@@ -68,153 +51,188 @@ function isValidType(dataSource: Content<DataSource>): boolean {
 function isSavedQuerysStatistic(statisticsWithReleaseToday: Array<string>, dataSource: Content<DataSource>): boolean {
   const isSavedQuery: boolean = dataSource.data.dataSource?._selected === 'statbankSaved'
   if (isSavedQuery) {
-    const parentContent: Content<object, DefaultPageConfig | Statistics> | null = getParentContent(dataSource._path)
+    const parentContent = getParentContent(dataSource._path)
     if (parentContent && parentContent.type === `${app.name}:statistics`) {
       const statisticContent: Content<Statistics & Statistic> = parentContent as Content<Statistics>
-      if (statisticContent.data.statistic && statisticsWithReleaseToday.includes(statisticContent.data.statistic.toString())) {
+      if (
+        statisticContent.data.statistic &&
+        statisticsWithReleaseToday.includes(statisticContent.data.statistic.toString())
+      ) {
         return true
       }
     }
   }
 
-
   return false
 }
 
-function inRSSItems(dataSource: Content<DataSource>, dataset: DatasetRepoNode<JSONstat | TbmlDataUniform | object>, RSSItems: Array<RSSItem>): boolean {
+function inRSSItems(
+  dataSource: Content<DataSource>,
+  dataset: DatasetRepoNode<JSONstat | TbmlDataUniform | object>,
+  RSSItems: Array<RSSItem>
+): boolean {
   let keys: Array<string> = []
   if (dataSource.data.dataSource) {
-    if (dataSource.data.dataSource._selected === DataSourceType.TBPROCESSOR && dataSource.data.dataSource.tbprocessor.urlOrId) {
+    if (
+      dataSource.data.dataSource._selected === DataSourceType.TBPROCESSOR &&
+      dataSource.data.dataSource.tbprocessor.urlOrId
+    ) {
       keys = keys.concat(getTableIdFromTbprocessor(dataset.data as TbmlDataUniform))
     }
-    if (dataSource.data.dataSource._selected === DataSourceType.STATBANK_API && dataSource.data.dataSource?.statbankApi?.urlOrId) {
+    if (
+      dataSource.data.dataSource._selected === DataSourceType.STATBANK_API &&
+      dataSource.data.dataSource?.statbankApi?.urlOrId
+    ) {
       const statbankApiTableId: string | undefined = getTableIdFromStatbankApi(dataSource)
       if (statbankApiTableId) {
         keys.push(statbankApiTableId)
       }
     }
   }
-  return RSSItems.filter((item) => {
-    const tableId: string = item['ssbrss:tableid'].toString()
-    const tableIdAsNumber: number = parseInt(tableId) // remove "0" from start of tableId
-    if (keys.includes(tableId) || keys.includes(tableIdAsNumber.toString()) || keys.length === 0) { // check for 04859 and 4859
-      return true
-    }
-    return false
-  }).length > 0
+
+  return (
+    RSSItems.filter((item) => {
+      const tableId: string = item['ssbrss:tableid'].toString()
+      const tableIdAsNumber: number = parseInt(tableId) // remove "0" from start of tableId
+      if (keys.includes(tableId) || keys.includes(tableIdAsNumber.toString()) || keys.length === 0) {
+        // check for 04859 and 4859
+        return true
+      }
+      return false
+    }).length > 0
+  )
 }
 
 export function dataSourceRSSFilter(dataSources: Array<Content<DataSource>>): RSSFilter {
   const logData: RSSFilterLogData = {
-    start: dataSources.map((ds) => ds._id),
+    rssTableIds: [],
     noData: [],
     otherDataType: [],
     inRSSOrNoKey: [],
     skipped: [],
-    statistics: [],
-    end: []
+    savedQueryStatistics: [],
+    end: [],
   }
 
-  const RSSItems: Array<RSSItem> = fetchRSS()
-    .filter((item) => moment(item.pubDate).isBetween(moment().subtract(1, 'day'), moment(), 'day', '[]')) // only keep those with updates for the last 2 days
-  const statisticsWithReleaseToday: Array<string> = fetchStatisticsWithReleaseToday().map((s: StatisticInListing) => s.id.toString())
-
-  const filteredDatasourcesRSS: Array<Content<DataSource>> = dataSources.reduce((t: Array<Content<DataSource>>, dataSource) => {
-    const parentType: string | undefined = getParentType(dataSource._path)
-    if (parentType === `${app.name}:statistics`) { // only keep datasources from statistics if they are saved queries with release today
-      logData.statistics.push(dataSource._id)
-      if (isSavedQuerysStatistic(statisticsWithReleaseToday, dataSource)) {
-        t.push(dataSource)
-      }
-    } else if (isValidType(dataSource)) {
-      const dataset: DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null = getDataset(dataSource)
-      if (!dataset) {
-        logData.noData.push(dataSource._id)
-        t.push(dataSource)
-      } else if (inRSSItems(dataSource, dataset, RSSItems)) {
-        logData.inRSSOrNoKey.push(dataSource._id)
-        t.push(dataSource)
-      } else {
-        logData.skipped.push({
-          id: dataSource._id,
-          displayName: dataSource.displayName,
-          contentType: dataSource.type,
-          dataSourceType: dataSource.data.dataSource?._selected,
-          status: JobStatus.SKIPPED
+  const allRSSItems: Array<RSSItem> = fetchRSS()
+  // only keep those with updates for the last 2 days, to the end of today
+  const RSSItems: Array<RSSItem> = allRSSItems
+    ? allRSSItems.filter((item) =>
+        isWithinInterval(new Date(item.pubDate), {
+          start: subDays(new Date().setHours(6, 0, 0, 0), 1),
+          end: new Date().setHours(23, 59, 59, 999),
         })
+      )
+    : []
+
+  RSSItems.forEach((item) => {
+    logData.rssTableIds.push({
+      tableId: item['ssbrss:tableid'].toString(),
+      pubDate: item.pubDate,
+    })
+  })
+
+  const statisticsWithReleaseToday: Array<string> = fetchStatisticsWithReleaseToday().map((s: StatisticInListing) =>
+    s.id.toString()
+  )
+
+  const filteredDatasourcesRSS: Array<Content<DataSource>> = dataSources.reduce(
+    (t: Array<Content<DataSource>>, dataSource) => {
+      const parentType: string | undefined = getParentType(dataSource._path)
+      if (parentType === `${app.name}:statistics`) {
+        // only keep datasources from statistics if they are saved queries with release today
+        if (isSavedQuerysStatistic(statisticsWithReleaseToday, dataSource)) {
+          logData.savedQueryStatistics.push(dataSource._id)
+          t.push(dataSource)
+        }
+      } else if (isValidType(dataSource)) {
+        const dataset: DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null = getDataset(dataSource)
+        if (!dataset) {
+          logData.noData.push(dataSource._id)
+          t.push(dataSource)
+        } else if (inRSSItems(dataSource, dataset, RSSItems)) {
+          logData.inRSSOrNoKey.push(dataSource._id)
+          t.push(dataSource)
+        } else {
+          logData.skipped.push(dataSource._id)
+        }
+      } else {
+        logData.otherDataType.push(dataSource._id)
+        t.push(dataSource)
       }
-    } else {
-      logData.otherDataType.push(dataSource._id)
-      t.push(dataSource)
-    }
-    return t
-  }, [])
+      return t
+    },
+    []
+  )
 
   logData.end = filteredDatasourcesRSS.map((ds) => ds._id)
-  cronJobLog(JSON.stringify(logData, null, 2))
+  cronJobLog('logData Dataquery Rss: ' + JSON.stringify(logData, null, 2))
 
   return {
     logData,
-    filteredDataSources: filteredDatasourcesRSS
+    filteredDataSources: filteredDatasourcesRSS,
   }
 }
 
 export interface RSSFilterLogData {
-  start: Array<string>;
-  noData: Array<string>;
-  otherDataType: Array<string>;
-  inRSSOrNoKey: Array<string>;
-  statistics: Array<string>;
-  skipped: Array<DataSourceInfo>;
-  end: Array<string>;
+  rssTableIds: Array<RSSTableItem>
+  noData: Array<string>
+  otherDataType: Array<string>
+  inRSSOrNoKey: Array<string>
+  savedQueryStatistics: Array<string>
+  start?: Array<string>
+  skipped: Array<string>
+  end: Array<string>
+  statistics?: Array<string>
 }
 
 export interface DataSourceInfo {
-  id: string;
-  displayName: string;
-  contentType: string;
-  dataSourceType?: string;
-  status: string;
-  hasError?: boolean;
+  id: string
+  displayName: string
+  contentType: string
+  dataSourceType?: string
+  status: string
+  hasError?: boolean
 }
 
 export interface RSSFilter {
-  logData: RSSFilterLogData;
-  filteredDataSources: Array<Content<DataSource>>;
+  logData: RSSFilterLogData
+  filteredDataSources: Array<Content<DataSource>>
 }
 
 interface RSS {
   rss: {
-    'xmlns:ssbrss': string;
+    'xmlns:ssbrss': string
     channel: {
-      item: Array<RSSItem>;
-    };
-  };
+      item: Array<RSSItem>
+    }
+  }
 }
 
 interface RSSItem {
-  'ssbrss:shortname': string;
-  'ssbrss:date': string;
-  'ssbrss:tablename': string;
-  link: string;
-  description: string;
+  'ssbrss:shortname': string
+  'ssbrss:date': string
+  'ssbrss:tablename': string
+  link: string
+  description: string
   guid: {
-    idPermaLink: boolean;
-    content: string;
-  };
-  'ssbrss:tableid': string | number;
-  'ssbrss:contact': Array<RSSContact> | RSSContact;
-  title: string;
-  category: string;
-  pubDate: string;
+    idPermaLink: boolean
+    content: string
+  }
+  'ssbrss:tableid': string | number
+  'ssbrss:contact': Array<RSSContact> | RSSContact
+  title: string
+  category: string
+  pubDate: string
 }
 
 interface RSSContact {
-  'ssbrss:person': string;
-  'ssbrss:phone': number | string;
-  'ssbrss:email': string;
+  'ssbrss:person': string
+  'ssbrss:phone': number | string
+  'ssbrss:email': string
 }
 
-export interface DatasetRSSLib {
-  dataSourceRSSFilter: (dataSources: Array<Content<DataSource>>) => RSSFilter;
+interface RSSTableItem {
+  tableId: string
+  pubDate: string
 }

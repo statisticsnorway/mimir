@@ -13,6 +13,7 @@
     min-height: 86px;
     min-width: 86px;
   }
+  
   @include media-breakpoint-down (sm) {
     h1 {
       font-family: $font-roboto-bold !important;

@@ -1,4 +1,4 @@
-import { createSlice } from '../../utils/@reduxjs/toolkit'
+import { createSlice } from '/react4xp/dashboard/utils/@reduxjs/toolkit'
 
 export const initialState = {
   dataSources: [],
@@ -9,7 +9,7 @@ export const initialState = {
   loadingFactPageGroups: true,
   loadingStatisticsGroups: true,
   loadingMunicipalGroups: true,
-  loadingDefault: true
+  loadingDefault: true,
 }
 
 const dataSourcesSlice = createSlice({
@@ -156,10 +156,8 @@ const dataSourcesSlice = createSlice({
         dataSource.loadingLogs = false
         dataSource.eventLogNodes = action.logs
       }
-    }
-  }
+    },
+  },
 })
 
-export const {
-  actions, reducer, name: sliceKey
-} = dataSourcesSlice
+export const { actions, reducer, name: sliceKey } = dataSourcesSlice

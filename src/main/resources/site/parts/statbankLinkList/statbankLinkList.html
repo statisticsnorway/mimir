@@ -5,7 +5,7 @@
         </div>
         <ul class="statbank-link-list" id="statbankLinkList">
             <li data-th-each="statbankLink : ${statbankLinks}">
-                <a class="statbank-list-link" data-th-href="${statbankLink.url}">
+                <a class="statbank-list-link ssb-link stand-alone" data-th-href="${statbankLink.url}">
                     <span data-th-text="${statbankLink.urlText}"></span>
                 </a>
             </li>

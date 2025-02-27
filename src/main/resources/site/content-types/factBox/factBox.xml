@@ -1,16 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <content-type>
-    <display-name>Faktaboks</display-name>
+    <display-name>Faktaboks (ExpansionBox)</display-name>
     <super-type>base:structured</super-type>
     <description></description>
     <form>
-        <input type="HtmlArea" name="text">
-            <label>Tekst</label>
-            <occurrences minimum="1" maximum="1"/>
-            <config>
-                <exclude>*</exclude>
-                <include>Bold | Italic | Link | Unlink | Subscript | Superscript</include>
-            </config>
-        </input>
+        <field-set>
+         <label>Tekst</label>
+         <items>
+            <input type="HtmlArea" name="text">
+                <label>Tekst</label>
+                <occurrences minimum="1" maximum="1"/>
+                <config>
+                    <exclude>*</exclude>
+                    <include> 
+                        Format | 
+                        Bold Italic Underline | 
+                        JustifyBlock JustifyLeft JustifyCenter JustifyRight | 
+                        BulletedList NumberedList Outdent Indent | 
+                        Link Unlink | 
+                        PasteModeSwitcher | 
+                        Strike Subscript Superscript
+                    </include>
+                    <allowHeadings>h3 h4 h5</allowHeadings>
+                </config>
+            </input>
+         </items>
+      </field-set>
+      <field-set>
+         <label>Visning</label>
+         <items>
+            <input name="expansionBoxType" type="RadioButton">
+                <label>Velg visning av faktaboksen</label>
+                <occurrences minimum="1" maximum="1"/>
+                <config>
+                    <option value="default">Bare tittel (standard)</option>
+                    <option value="sneakPeek">Tittel og litt av forklaringsteksten</option>
+                    <option value="aiIcon">Tittel og litt av forklaringsteksten + KI-ikon</option>
+                </config>
+                <default>default</default>
+            </input>
+         </items>
+      </field-set>
     </form>
 </content-type>

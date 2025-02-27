@@ -1,4 +1,4 @@
-import { createSlice } from '../../utils/@reduxjs/toolkit'
+import { createSlice } from '/react4xp/dashboard/utils/@reduxjs/toolkit'
 
 export const initialState = {
   statistics: [],
@@ -7,7 +7,7 @@ export const initialState = {
   loadingSearchList: true,
   openStatistic: null,
   openModal: false,
-  modals: []
+  modals: [],
 }
 
 const statisticsSlice = createSlice({
@@ -26,7 +26,7 @@ const statisticsSlice = createSlice({
       const stat = state.statistics.find((s) => s.id === action.id)
       const modal = state.modals.find((s) => s.statisticId === action.id)
       stat.loading = true
-      modal.modalDisplay = 'loading'
+      if (modal && modal.modalDisplay) modal.modalDisplay = 'loading'
     },
     resultRefreshStatistic(state, action) {
       const stat = state.statistics.find((s) => s.id === action.statistic.id)
@@ -172,10 +172,8 @@ const statisticsSlice = createSlice({
           }
         }
       }
-    }
-  }
+    },
+  },
 })
 
-export const {
-  actions, reducer, name: sliceKey
-} = statisticsSlice
+export const { actions, reducer, name: sliceKey } = statisticsSlice

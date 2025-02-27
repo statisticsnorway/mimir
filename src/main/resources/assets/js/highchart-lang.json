@@ -1,0 +1,99 @@
+{
+  "lang": {
+    "accessibility": {
+      "chartContainerLabel": "{title} Interaktiv graf",
+      "defaultChartTitle": "Graf",
+      "exporting": {
+        "chartMenuLabel": "Last ned graf",
+        "menuButtonLabel": "Velg format for å laste ned {chartTitle}"
+      },
+      "screenReaderSection": {
+        "beforeRegionLabel": "Diagram skjermleser-informasjon for {chartTitle}.",
+        "endOfChartMarker": ""
+      },
+      "legend": {
+        "legendItem": "Vis {itemName}",
+        "legendLabel": "Forklaring av diagram: {legendTitle}",
+        "legendLabelNoTitle": "Bytt synlighet på serie, {chartTitle}"
+      },
+      "svgContainerLabel": "Interaktiv graf",
+      "chartTypes": {
+        "barMultiple": "Søylediagram med {numSeries} serier.",
+        "barSingle": "Søylediagram med {numPoints} {#plural(numPoints, søyler, søyle)}.",
+        "columnMultiple": "Liggende søylediagram med {numSeries} linjer.",
+        "columnSingle": "Søylediagram med {numPoints} {#plural(numPoints, søyler, søyle)}.",
+        "combinationChart": "Kombinasjonsdiagram med {numSeries} dataserier.",
+        "defaultMultiple": "Diagram med {numSeries} dataserier.",
+        "defaultSingle": "Diagram med {numPoints} datapunkter {#plural(numPoints, punkter, punkt)}.",
+        "emptyChart": "Tom datavisualisering",
+        "lineMultiple": "Linjediagram med {numSeries} linjer.",
+        "lineSingle": "Linjediagram med {numPoints} datapunkter {#plural(numPoints, punkter, punkt)}.",
+        "mapTypeDescription": "Kart over {mapTitle} med {numSeries} dataserier.",
+        "pieMultiple": "Sektordiagram med {numSeries} sektorer.",
+        "pieSingle": "Sektordiagram med {numPoints} {#plural(numPoints, sektorer, sektor)}.",
+        "scatterMultiple": "Spredningsplott diagram med {numSeries} dataserier.",
+        "scatterSingle": "Spredningsplott diagram med {numPoints} {#plural(numPoints, punkter, punkt)}.",
+        "splineMultiple": "Linjediagram med {numSeries} linjer.",
+        "splineSingle": "Linjediagram med {numPoints} datapunkter {#plural(numPoints, punkter, punkt)}.",
+        "unknownMap": "Kart med {numSeries} dataserier."
+      },
+      "axis": {
+        "rangeFromTo": "Dataene varierer fra {rangeFrom} til {rangeTo}.",
+        "xAxisDescriptionPlural": "Figuren har {numAxes} X akse som viser {#each(names, -1), }og {names[-1]}.",
+        "xAxisDescriptionSingular": "Figuren har 1 X akse som viser {names[0]}. {ranges[0]}",
+        "yAxisDescriptionPlural": "Figuren har {numAxes} Y akse som viser {#each(names, -1), }og {names[-1]}.",
+        "yAxisDescriptionSingular": "Figuren har 1 Y akse som viser {names[0]}. {ranges[0]}"
+      },
+      "series": {
+        "xAxisDescription": "X-akse, {name}",
+        "yAxisDescription": "Y-akse , {name}",
+        "summary": {
+          "bar": "{series.name}, søylediagram {seriesNumber} av {chart.series.length} med {series.points.length} {#plural(series.points.length, søyler, søyle)}.",
+          "barCombination": "{series.name}, serie {seriesNumber} av {chart.series.length}. Stolpediagram med {series.points.length} {#plural(series.points.length, søyler, søyle)}.",
+          "boxplot": "{series.name}, boksdiagram {seriesNumber} av {chart.series.length} med {series.points.length} {#plural(series.points.length, bokser, boks)}.",
+          "boxplotCombination": "{series.name}, serie {seriesNumber} av {chart.series.length}. Boksdiagram med {series.points.length} {#plural(series.points.length, bokser, boks)}.",
+          "bubble": "{series.name}, boblediagram {seriesNumber} av {chart.series.length} med {series.points.length} {#plural(series.points.length, bobler, boble)}.",
+          "bubbleCombination": "{series.name}, serie {seriesNumber} av {chart.series.length}. Boblediagram serie med {series.points.length} {#plural(series.points.length, bobler, boble)}.",
+          "column": "{series.name}, stolpediagram {seriesNumber} av {chart.series.length} med {series.points.length} {#plural(series.points.length, søyler, søyle)}.",
+          "columnCombination": "{series.name}, serie {seriesNumber} av {chart.series.length}. Stolpediagram med {series.points.length} {#plural(series.points.length, søyler, søyle)}.",
+          "default": "{series.name}, serie {seriesNumber} av {chart.series.length} med {series.points.length} data {#plural(series.points.length, punkter, punkt)}.",
+          "defaultCombination": "{series.name}, serie {seriesNumber} av {chart.series.length} med {series.points.length} data {#plural(series.points.length, punkter, punkt)}.",
+          "line": "{series.name}, linje {seriesNumber} av {chart.series.length} med {series.points.length} data {#plural(series.points.length, punkter, punkt)}.",
+          "lineCombination": "{series.name}, serie {seriesNumber} av {chart.series.length}. Linje med {series.points.length} data {#plural(series.points.length, punkter, punkt)}.",
+          "map": "{series.name}, kart {seriesNumber} av {seriesNumber} med {chart.series.length}. {#plural(series.points.length, areas, area)}.",
+          "mapbubble": "{series.name}, Boblediagram {seriesNumber} av {chart.series.length} med {series.points.length} {#plural(series.points.length, bobler, boble)}.",
+          "mapbubbleCombination": "{series.name}, serie {seriesNumber} av {chart.series.length}. Boblediagram serie med {series.points.length} {#plural(series.points.length, bobler, boble)}.",
+          "mapCombination": "{series.name}, serie {seriesNumber} av {chart.series.length}. Kart med {series.points.length} {#plural(series.points.length, areas, area)}.",
+          "mapline": "{series.name}, linje {seriesNumber} av {chart.series.length} med {series.points.length} data {#plural(series.points.length, punkter, punkt)}.",
+          "maplineCombination": "{series.name}, serie {seriesNumber} av {chart.series.length}. Linje med {series.points.length} data {#plural(series.points.length, punkter, punkt)}.",
+          "pie": "{series.name}, Kake {seriesNumber} av {chart.series.length} med {series.points.length} {#plural(series.points.length, slices, slice)}.",
+          "pieCombination": "{series.name}, serie {seriesNumber} av {chart.series.length}. Kake med {series.points.length} {#plural(series.points.length, slices, slice)}.",
+          "scatter": "{series.name}, spredningsplott {seriesNumber} av {chart.series.length} med {series.points.length} {#plural(series.points.length, punkter, punkt)}.",
+          "scatterCombination": "{series.name}, serie {seriesNumber} av {chart.series.length}, spredningsplott med {series.points.length} {#plural(series.points.length, punkter, punkt)}.",
+          "spline": "{series.name}, linje {seriesNumber} av {chart.series.length} med {series.points.length} data {#plural(series.points.length, punkter, punkt)}.",
+          "splineCombination": "{series.name}, serie {seriesNumber} av {chart.series.length}. Linje med {series.points.length} data {#plural(series.points.length, punkter, punkt)}."
+        }
+      }
+    },
+    "contextButtonTitle": "Last ned/skriv ut",
+    "decimalPoint": ",",
+    "downloadJPEG": "Last ned som JPEG",
+    "downloadPDF": "Last ned som PDF",
+    "downloadPNG": "Last ned som PNG",
+    "downloadSVG": "Last ned som SVG",
+    "downloadCSV": "Last ned tallene som CSV",
+    "downloadXLS": "Last ned tallene som XLS",
+    "drillUpText": "Tilbake til {series.name}",
+    "loading": "Tegner graf...",
+    "noData": "Tall ikke tilgjengelig",
+    "numericSymbols": [
+      null,
+      " mill.",
+      " mrd."
+    ],
+    "printChart": "Skriv ut graf",
+    "resetZoom": "Nullstill zoom",
+    "resetZoomTitle": "Nullstill zoom",
+    "thousandsSep": " "
+  }
+}

@@ -1,0 +1,14 @@
+<part>
+  <display-name>Highchart ekspert (TIL TESTING)</display-name>
+  <form>
+    <input name="config" type="TextArea">
+      <label>JSON Konfigurasjon</label>
+      <help-text>
+        Sjekk validitet av JSON på https://jsonlint.com/.
+        Hvis du har kopiert fra en kodesnutt på nettet, kan du prøve å konvertere den til JSON på https://www.convertsimple.com/convert-javascript-to-json/.
+        Det må begynne med { og slutte med }
+     </help-text>
+      <occurrences minimum="1" maximum="1"/>
+    </input>
+  </form>
+</part>

@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<content-type>
+    <display-name>Highmap</display-name>
+    <super-type>base:structured</super-type>
+
+    <form>
+        <field-set>
+            <label>Beskrivelse</label>
+            <items>
+                <input name="subtitle" type="TextLine">
+                    <label>Undertittel</label>
+                </input>
+                <input name="description" type="TextArea">
+                    <occurrences minimum="0" maximum="1" />
+                    <label>Forklaring datagrunnlag for skjermlesere</label>
+                </input>
+            </items>
+        </field-set>
+
+        <option-set name="dataSource">
+            <label>Datakilde</label>
+            <expanded>true</expanded>
+            <occurrences minimum="0" maximum="1" />
+            <options minimum="1" maximum="1">
+                <option name="htmlTable">
+                    <label>Excel</label>
+                    <items>
+                        <input name="html" type="HtmlArea">
+                            <label>Kildetabell limt inn fra Excel</label>
+                            <occurrences minimum="0" maximum="1"/>
+                            <config>
+                                <include>
+                                    Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote
+                                </include>
+                            </config>
+                            <help-text>Lim inn (Ctrl-V) en tabell rett fra Excel. Hvis denne er fylt ut vil den gjelde istedenfor eget felt lengre ned</help-text>
+                        </input>
+                    </items>
+                </option>
+                <option name="tbprocessor">
+                <label>Tall fra tabellbygger</label>
+                    <items>
+                        <input name="urlOrId" type="TextLine">
+                            <label>URL eller TBML-id</label>
+                            <occurrences minimum="0" maximum="1" />
+                        </input>
+                    </items>
+                </option>
+            </options>
+        </option-set>
+
+        <field-set>
+            <label>Kartgrunnlag</label>
+            <items>
+                <input name="mapFile" type="MediaSelector">
+                    <label>Kart fil (json format)</label>
+                    <config>
+                        <allowContentType>media:code</allowContentType>
+                    </config>
+                    <help-text>Velg kartet som skal brukes</help-text>
+                </input>
+                <input name="mapDataSecondColumn" type="Checkbox">
+                    <label>Andre kolonne i tabell inneholder kartdata (kommunenavn, fylkenavn, osv)</label>
+                </input>
+            </items>
+        </field-set>
+
+        <field-set>
+            <label>Terskelverdier</label>
+            <items>
+                <input name="thresholdValues" type="TextLine">
+                    <label>Terskelverdi</label>
+                    <occurrences minimum="0" maximum="4"/>
+                </input>
+            </items>
+        </field-set>
+
+        <field-set>
+            <label>Bearbeide visning</label>
+            <items>
+                <input name="hideTitle" type="CheckBox">
+                    <label>Skjul navn i kart</label>
+                    <help-text>Huk av denne dersom du vil skjule navn på kartet.</help-text>
+                </input>
+                 <input name="removePartOfName" type="CheckBox">
+                    <label>Fjene siste del av navn (samiske navn) fra dynamisk datakilde</label>
+                    <help-text>Hvis navn i datakilde inneholder " - " hent kun første del. Gjelder kun hvis TBML som kilde</help-text>
+                </input>
+                <option-set name="color">
+                    <label>Farger</label>
+                    <occurrences minimum="1" maximum="1" />
+					<options minimum="1" maximum="1">
+                        <option name="green">
+                            <label>Grønnpalett</label>
+                            <default>true</default>
+                        </option>
+                        <option name="gradient">
+                            <label>Gradient (bare for kontinuerlige variabler)</label>
+                            <items>
+                                <input name="startColor" type="CustomSelector">
+                                    <label>Start-farge</label>
+                                    <occurrences minimum="1" maximum="1"/>
+                                    <config>
+                                        <service>colorPreview</service>
+                                    </config>
+                                    <help-text>Angi hex for farge på formen #000000 og velg forhåndsvisningen som dukker opp</help-text>
+                                </input>
+                                <item-set name="stops">
+                                    <label>Mellom-farge (ikke kompatibel med terskelverdier)</label>
+                                    <occurrences minimum="0" maximum="0"/>
+                                    <items>
+                                        <input name="value" type="TextLine">
+                                            <label>Verdi (mellom 0 og 1)</label>
+                                            <occurrences minimum="1" maximum="1"/>
+                                            <help-text>Verdien angir hvor mellomfargen skal slå inn på en skala der startfargen er 0 og sluttfargen er 1. Hvis tallene i tabellen går fra 0 til 1000, vil en verdi på 0,25 bety at tall fra 0 til 250 fordeler seg mellom startfargen og mellomfargen, mens tall fra 250 til 1000 fordeler seg mellom mellomfargen og sluttfargen.</help-text>
+                                        </input>
+                                        <input name="color" type="CustomSelector">
+                                            <label>Farge</label>
+                                            <occurrences minimum="1" maximum="1"/>
+                                            <config>
+                                                <service>colorPreview</service>
+                                            </config>
+                                            <help-text>Angi hex for farge på formen #000000 og velg forhåndsvisningen som dukker opp</help-text>
+                                        </input>
+                                    </items>
+                                </item-set>
+                                <input name="endColor" type="CustomSelector">
+                                    <label>Slutt-farge</label>
+                                    <occurrences minimum="1" maximum="1"/>
+                                    <config>
+                                        <service>colorPreview</service>
+                                    </config>
+                                    <help-text>Angi hex for farge på formen #000000 og velg forhåndsvisningen som dukker opp</help-text>
+                                </input>
+                            </items>
+                        </option>
+                        <option name="defined">
+                            <label>Velg selv (ikke kompatibel med terskelverdier)</label>
+                            <items>
+                                <item-set name="colorSerie">
+                                    <label>Seriefarge</label>
+                                    <occurrences minimum="1" maximum="0"/>
+                                    <items>
+                                        <input name="serie" type="TextLine">
+                                            <label>Navn (likt med data i første kolonne)</label>
+                                            <occurrences minimum="1" maximum="1"/>
+                                        </input>
+                                        <input name="color" type="CustomSelector">
+                                            <label>Farge</label>
+                                            <occurrences minimum="1" maximum="1"/>
+                                            <config>
+                                                <service>colorPreview</service>
+                                            </config>
+                                        </input>
+                                    </items>
+                                </item-set>
+                            </items>
+                        </option>
+
+                    </options>
+                </option-set>
+                <input name="numberDecimals" type="TextLine">
+                    <label>Antall desimalplasser som vises</label>
+                    <config>
+                        <max-length>1</max-length>
+                        <regexp>[0-3]</regexp>
+                    </config>
+                </input>
+                <input name="heightAspectRatio" type="TextLine">
+                    <label>Høyde i prosent av bredde</label>
+                    <config>
+                        <max-length>3</max-length>
+                    </config>
+                    <help-text>Et heltall større enn 0. Anbefalt er 133. 100 er kvadrat (1:1), 162 er det gylne snitt stående.</help-text>
+                </input>
+                <input name="seriesTitle" type="TextLine">
+                    <label>Serietittel</label>
+                    <help-text>Her skal det skrives inn tittel for serie som vises over verdier ved hover</help-text>
+                </input>
+            </items>
+        </field-set>
+
+        <field-set>
+            <label>Tegnforklaring</label>
+            <items>
+                <input name="legendTitle" type="TextLine">
+                    <label>Tegnforklaring tittel</label>
+                </input>
+                <input name="legendAlign" type="RadioButton">
+                    <label>Plassering av tegnforklaring</label>
+                    <occurrences minimum="1" maximum="1"/>
+                    <config>
+                        <option value="topLeft">Venstrestilt topp</option>
+                        <option value="topRight">Høyrestilt topp</option>
+                        <option value="bottomLeft">Venstrestilt bunn</option>
+                        <option value="bottomRight">Høyrestilt bunn</option>
+                    </config>
+                    <default>topLeft</default>
+                </input>
+            </items>
+        </field-set>
+
+        <field-set>
+            <label>Kilder</label>
+            <items>
+              <item-set name="sourceList">
+                <occurrences minimum="0" maximum="0"/>
+                <items>
+                  <input name="sourceText" type="TextArea">
+                    <label>Kildetekst</label>
+                    <default>Statistisk sentralbyrå</default>
+                  </input>
+                  <input name="sourceHref" type="TextLine">
+                    <label>Kilde-URL</label>
+                    <default>https://www.ssb.no</default>
+                  </input>
+                </items>
+              </item-set>
+            </items>
+          </field-set>
+
+        <field-set>
+            <label>Fotnoter</label>
+            <items>
+                <input name="footnoteText" type="TextArea">
+                    <label>Fotnote-tekst</label>
+                    <occurrences minimum="0" maximum="3"/>
+                    <help-text>Inntil 3 fotnoter. For å få opphøyd fotnotetall: 1=ALT+251, 2=ALT+253, 3=ALT+252.</help-text>
+                </input>
+            </items>
+        </field-set>
+
+    </form>
+</content-type>

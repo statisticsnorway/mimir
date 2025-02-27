@@ -1,25 +1,18 @@
-__non_webpack_require__('/lib/ssb/polyfills/nashorn')
-import { Content } from 'enonic-types/content'
-import { Cache } from 'enonic-types/cache'
-import { Request } from 'enonic-types/controller'
-
-const {
-  newCache
-} = __non_webpack_require__('/lib/cache')
-const {
-  cacheLog
-} = __non_webpack_require__('/lib/ssb/utils/serverLog')
+import '/lib/ssb/polyfills/nashorn'
+import { Content } from '/lib/xp/content'
+import { newCache, Cache } from '/lib/cache'
+import { cacheLog } from '/lib/ssb/utils/serverLog'
 
 const masterSubjectCache: Cache = newCache({
   expire: 3600,
-  size: 25
+  size: 25,
 })
 const draftSubjectCache: Cache = newCache({
   expire: 3600,
-  size: 25
+  size: 25,
 })
 
-export function fromSubjectCache<T>(req: Request, key: string, fallback: () => Array<T>): Array<T> {
+export function fromSubjectCache<T>(req: XP.Request, key: string, fallback: () => Array<T>): Array<T> {
   const subjectCache: Cache = req.branch === 'master' ? masterSubjectCache : draftSubjectCache
   return subjectCache.get(key, () => {
     cacheLog(`added ${key} to subject cache (${req.branch})`)
@@ -38,10 +31,4 @@ export function completelyClearSubjectCache(branch: string): void {
   cacheLog(`clear subject cache (${branch})`)
   const subjectCache: Cache = branch === 'master' ? masterSubjectCache : draftSubjectCache
   subjectCache.clear()
-}
-
-export interface SSBSubjectCacheLibrary {
-  fromSubjectCache: <T>(req: Request, key: string, fallback: () => Array<T>) => Array<T>;
-  clearSubjectCache: (content: Content, branch: string) => void;
-  completelyClearSubjectCache: (branch: string) => void;
 }

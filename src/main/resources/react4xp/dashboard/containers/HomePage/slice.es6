@@ -1,16 +1,21 @@
-import { createSlice } from '../../utils/@reduxjs/toolkit'
+import { createSlice } from '/react4xp/dashboard/utils/@reduxjs/toolkit'
 
 export const initialState = {
-  isConnected: false,
+  isConnected: undefined,
   loadingClearCache: false,
+  loadingPurgeVarnish: false,
+  loadingRefreshNameGraph: false,
+  varnishPurgeResult: '',
+  refreshNameGraphResult: '',
   user: undefined,
   dashboardOptions: {},
   contentStudioBaseUrl: '',
   dataToolBoxBaseUrl: '',
   internalBaseUrl: '',
   internalStatbankUrl: '',
+  statregRapportUrl: '',
   serverTime: undefined,
-  serverTimeReceived: undefined
+  serverTimeReceived: undefined,
 }
 
 const commonSlice = createSlice({
@@ -28,6 +33,9 @@ const commonSlice = createSlice({
     },
     setInternalStatbankUrl(state, action) {
       state.internalStatbankUrl = action.internalStatbankUrl
+    },
+    setStatregRapportUrl(state, action) {
+      state.statregRapportUrl = action.statregRapportUrl
     },
     setUser(state, action) {
       state.user = action.user
@@ -47,13 +55,25 @@ const commonSlice = createSlice({
     stopLoadingClearCache(state) {
       state.loadingClearCache = false
     },
+    startLoadingPurgeVarnishCache(state) {
+      state.loadingPurgeVarnish = true
+    },
+    stopLoadingPurgeVarnishCache(state, action) {
+      state.loadingPurgeVarnish = false
+      state.varnishPurgeResult = action.status
+    },
+    startLoadingRefreshNameGraph(state) {
+      state.loadingRefreshNameGraph = true
+    },
+    stopLoadingRefreshNameGraph(state, action) {
+      state.loadingRefreshNameGraph = false
+      state.refreshNameGraphResult = action.status
+    },
     serverTimeLoaded(state, action) {
       state.serverTime = action.serverTime
       state.serverTimeReceived = Date.now()
-    }
-  }
+    },
+  },
 })
 
-export const {
-  actions, reducer, name: sliceKey
-} = commonSlice
+export const { actions, reducer, name: sliceKey } = commonSlice

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
+  <x-data name="subjectTag" allowContentTypes="article"/>
   <form>
     <field-set>
       <label>Kommunefakta</label>
@@ -43,7 +44,7 @@
           </config>
         </input>
         <item-set name="kommunefakta">
-          <label>Kommunefakta instillinger</label>
+          <label>Kommunefakta innstillinger</label>
           <occurrences minimum="0" maximum="1"/>
           <items>
             <input type="TextLine" name="mapfolder">
@@ -61,14 +62,14 @@
       <default>/informasjon/om-statistikkbanken/hvordan-bruke-statistikkbanken</default>
     </input>
     <item-set name="language">
-      <label>Språk instillinger</label>
+      <label>Språk innstillinger</label>
       <expanded>false</expanded>
       <occurrences minimum="1" maximum="2"/>
       <items>
         <input name="label" type="TextLine">
           <label>Språktittel (brukt til lenke i header)</label>
           <occurrences minimum="1" maximum="1"/>
-          <default>Norsk (Bokmål)</default>
+          <default>Norsk</default>
         </input>
         <input name="code" type="TextLine">
           <label>Språkkode (f.eks. "en", "no")</label>
@@ -131,14 +132,22 @@
   </form>
   <mappings>
     <mapping filter="/site/filters/router.js" order="10">
-      <pattern>/(kommuneareal|kommunefakta|barn-og-unge)/?[^/]+$</pattern>
+      <pattern>/(kommuneareal|kommunefakta|barn-og-unge|jakt-i-din-kommune)/?[^/]+$</pattern>
     </mapping>
     <mapping controller="/site/pages/default/default.js">
       <match>type:'portal:fragment'</match>
+    </mapping>
+    <mapping controller="/services/securitytxt/securitytxt.js" order="10">
+      <pattern>/security.txt</pattern>
+    </mapping>
+    <mapping controller="/services/securitytxt/securitytxt.js" order="10">
+      <pattern>/.well-known/security.txt</pattern>
     </mapping>
   </mappings>
   <processors>
     <response-processor name="searchableText" order="10"/>
     <response-processor name="react4xpAssetSource" order="11"/>
+    <response-processor name="browserSync" order="12"/>
+    <response-processor name="prependEnvironment" order="13"/>
   </processors>
 </site>

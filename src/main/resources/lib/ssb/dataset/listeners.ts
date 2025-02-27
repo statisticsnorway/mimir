@@ -1,35 +1,14 @@
-import { Content, QueryResponse } from 'enonic-types/content'
-import { EnonicEvent, EnonicEventData } from 'enonic-types/event'
-import { DataSource } from '../../../site/mixins/dataSource/dataSource'
+import { query, Content, ContentsResult } from '/lib/xp/content'
+import { listener, EnonicEvent, EnonicEventData } from '/lib/xp/event'
+import { run } from '/lib/xp/context'
 
-const {
-  listener
-} = __non_webpack_require__('/lib/xp/event')
-const {
-  query
-} = __non_webpack_require__('/lib/xp/content')
-const {
-  run
-} = __non_webpack_require__('/lib/xp/context')
-const {
-  refreshDataset
-} = __non_webpack_require__('/lib/ssb/dataset/dataset')
-const {
-  runOnMasterOnly,
-  cronContext
-} = __non_webpack_require__('/lib/ssb/cron/cron')
-const {
-  DataSource: DataSourceType
-} = __non_webpack_require__('/lib/ssb/repo/dataset')
-const {
-  ENONIC_CMS_DEFAULT_REPO
-} = __non_webpack_require__('/lib/ssb/repo/common')
-const {
-  executeFunction, sleep, isRunning
-} = __non_webpack_require__('/lib/xp/task')
-const {
-  autoRefreshLog
-} = __non_webpack_require__('/lib/ssb/utils/serverLog')
+import { executeFunction, sleep, isRunning } from '/lib/xp/task'
+import { refreshDataset } from '/lib/ssb/dataset/dataset'
+import { runOnMasterOnly, cronContext } from '/lib/ssb/cron/cron'
+import { DataSource as DataSourceType } from '/lib/ssb/repo/dataset'
+import { ENONIC_CMS_DEFAULT_REPO } from '/lib/ssb/repo/common'
+import { autoRefreshLog } from '/lib/ssb/utils/serverLog'
+import { type DataSource } from '/site/mixins/dataSource'
 
 let refreshQueue: Array<Content<DataSource>> = []
 let refreshTask: string | null = null
@@ -37,30 +16,31 @@ let refreshTask: string | null = null
 export function setupFetchDataOnCreateListener(): void {
   listener({
     type: 'node.updated',
-    callback: function(event: EnonicEvent) {
+    callback: function (event: EnonicEvent) {
       runOnMasterOnly(() => {
-        const nodes: EnonicEventData['nodes'] = event.data.nodes.filter((n) => n.repo === ENONIC_CMS_DEFAULT_REPO )
+        const nodes: EnonicEventData['nodes'] = event.data.nodes.filter((n) => n.repo === ENONIC_CMS_DEFAULT_REPO)
         if (nodes.length > 0) {
-          const contentWithDataSource: QueryResponse<DataSource> = query({
+          const contentWithDataSource: ContentsResult<Content<DataSource>> = query({
             count: nodes.length,
-            query: `_id IN(${nodes.map((n) => `'${n.id}'`).join(',')}) AND 
+            query: `_id IN(${nodes.map((n) => `'${n.id}'`).join(',')}) AND
                 (
-                  data.dataSource._selected = '${DataSourceType.STATBANK_API}' OR 
-                  data.dataSource._selected = '${DataSourceType.TBPROCESSOR}' OR 
-                  data.dataSource._selected = '${DataSourceType.STATBANK_SAVED}' OR 
+                  data.dataSource._selected = '${DataSourceType.STATBANK_API}' OR
+                  data.dataSource._selected = '${DataSourceType.TBPROCESSOR}' OR
+                  data.dataSource._selected = '${DataSourceType.STATBANK_SAVED}' OR
                   data.dataSource._selected = '${DataSourceType.KLASS}'
                 )`,
             contentTypes: [
               `${app.name}:highchart`,
+              `${app.name}:highmap`,
               `${app.name}:keyFigure`,
               `${app.name}:table`,
-              `${app.name}:genericDataImport`
+              `${app.name}:genericDataImport`,
             ],
             filters: {
               exists: {
-                field: `data.dataSource.*.urlOrId`
-              }
-            }
+                field: `data.dataSource.*.urlOrId`,
+              },
+            },
           })
           if (contentWithDataSource.hits.length > 0) {
             contentWithDataSource.hits.forEach((dataSource) => {
@@ -75,7 +55,7 @@ export function setupFetchDataOnCreateListener(): void {
           }
         }
       })
-    }
+    },
   })
 }
 
@@ -88,7 +68,10 @@ function startRefreshTask(): void {
       description: 'refresh dataset task',
       func: () => {
         try {
-          const debounce: number = app.config && app.config['ssb.dataset.autoRefreshDebounce'] ? parseInt(app.config['ssb.dataset.autoRefreshDebounce']) : 10000
+          const debounce: number =
+            app.config && app.config['ssb.dataset.autoRefreshDebounce']
+              ? parseInt(app.config['ssb.dataset.autoRefreshDebounce'])
+              : 10000
           sleep(debounce)
           if (refreshQueueLength === refreshQueue.length) {
             autoRefreshLog(`clear queue : ${refreshQueue.map((c) => c._id).join(', ')}`)
@@ -105,14 +88,10 @@ function startRefreshTask(): void {
         } catch (error) {
           log.info(`autoRefreshError :: ${error.toString()} :: ${error.printStackTrace()}`)
         }
-      }
+      },
     })
   } else {
     autoRefreshLog('task already running')
     // do nothing
   }
-}
-
-export interface DatasetListenersLib {
-  setupFetchDataOnCreateListener: () => void;
 }

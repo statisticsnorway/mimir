@@ -1,36 +1,30 @@
-import { MacroContext } from 'enonic-types/controller'
-import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
-import { LinksConfig } from './links-config'
-import { Content } from 'enonic-types/content'
-import { LinksProps, prepareText } from '../../parts/links/links'
-import { TableLink } from '../../mixins/tableLink/tableLink'
-import { HeaderLink } from '../../mixins/headerLink/headerLink'
-import { ProfiledLink } from '../../mixins/profiledLink/profiledLink'
+import { get, Content } from '/lib/xp/content'
+import { attachmentUrl, pageUrl } from '/lib/xp/portal'
+import { render } from '/lib/enonic/react4xp'
+import { type LinksProps } from '/lib/types/partTypes/links'
+import { prepareText } from '/site/parts/links/links'
+import { type TableLink } from '/site/mixins/tableLink'
+import { type HeaderLink } from '/site/mixins/headerLink'
+import { type ProfiledLink } from '/site/mixins/profiledLink'
+import { type Links as LinksConfig } from '.'
 
-const {
-  get
-} = __non_webpack_require__('/lib/xp/content')
-const {
-  attachmentUrl,
-  pageUrl
-} = __non_webpack_require__('/lib/xp/portal')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
-
-exports.macro = function(context: MacroContext): React4xpResponse {
-  const config: LinksConfig & TableLink & HeaderLink & ProfiledLink = context.params
+export function macro(context: XP.MacroContext<LinksConfig>) {
+  const config = context.params as unknown as LinksConfig & TableLink & HeaderLink & ProfiledLink
   const linkType: string | undefined = config.linkTypes
 
-  let props: LinksProps | {} = {}
+  let props: LinksProps | object = {}
   if (linkType) {
     if (linkType === 'tableLink') {
-      const href: string | undefined = config.relatedContent ? pageUrl({
-        id: config.relatedContent
-      }) : config.url
+      const href: string | undefined = config.relatedContent
+        ? pageUrl({
+            id: config.relatedContent,
+          })
+        : config.url
 
       props = {
         href,
         description: config.description,
-        text: config.title
+        text: config.title,
       }
     }
 
@@ -38,39 +32,53 @@ exports.macro = function(context: MacroContext): React4xpResponse {
       const linkedContent: string | undefined = config.linkedContent
       const linkText: string | undefined = config.linkText
 
-      const content: Content | null = linkedContent ? get({
-        key: linkedContent
-      }) : null
+      const content: Content | null = linkedContent
+        ? get({
+            key: linkedContent,
+          })
+        : null
 
       let contentUrl: string | undefined
+      let isPDFAttachment = false
+      let attachmentTitle: string | undefined
       if (content && Object.keys(content.attachments).length > 0) {
-        contentUrl = linkedContent && attachmentUrl({
-          id: linkedContent
-        })
+        contentUrl =
+          linkedContent &&
+          attachmentUrl({
+            id: linkedContent,
+          })
+        isPDFAttachment = /.+?\.pdf/.test(content._name)
+        attachmentTitle = content.displayName
       } else {
-        contentUrl = linkedContent && pageUrl({
-          id: linkedContent
-        })
+        contentUrl = linkedContent
+          ? pageUrl({
+              id: linkedContent,
+            })
+          : config.headerLinkHref
       }
 
       props = {
-        children: content ? prepareText(content, linkText) : '',
+        children: content ? prepareText(content, linkText) : linkText,
         href: contentUrl,
-        linkType: 'header'
+        linkType: 'header',
+        isPDFAttachment,
+        attachmentTitle,
       }
     }
 
     if (linkType === 'profiledLink') {
       props = {
         children: config.text,
-        href: config.contentUrl && pageUrl({
-          id: config.contentUrl
-        }),
+        href: config.contentUrl
+          ? pageUrl({
+              id: config.contentUrl,
+            })
+          : config.profiledLinkHref,
         withIcon: config.withIcon,
-        linkType: 'profiled'
+        linkType: 'profiled',
       }
     }
   }
 
-  return React4xp.render('site/parts/links/links', props)
+  return render('site/parts/links/links', props, context.request)
 }

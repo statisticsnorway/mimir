@@ -1,70 +1,51 @@
-import { Request, Response } from 'enonic-types/controller'
-import { Component } from 'enonic-types/portal'
-import { ResourceKey } from 'enonic-types/thymeleaf'
-import { React4xp, React4xpObject } from '../../../lib/types/react4xp'
-import { DividerPartConfig } from './divider-part-config'
+import { getComponent } from '/lib/xp/portal'
+import { render } from '/lib/enonic/react4xp'
+import { scriptAsset } from '/lib/ssb/utils/utils'
 
-const {
-  getComponent
-} = __non_webpack_require__('/lib/xp/portal')
-const {
-  render
-} = __non_webpack_require__('/lib/thymeleaf')
-const {
-  renderError
-} = __non_webpack_require__('/lib/ssb/error/error')
-const {
-  fromPartCache
-} = __non_webpack_require__('/lib/ssb/cache/partCache')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+import { renderError } from '/lib/ssb/error/error'
+import { fromPartCache } from '/lib/ssb/cache/partCache'
+import { type Divider as DividerPartConfig } from '.'
 
-const view: ResourceKey = resolve('./divider.html')
-
-exports.get = function(req: Request): Response {
+export function get(req: XP.Request): XP.Response {
   try {
-    const component: Component<DividerPartConfig> = getComponent()
+    const component = getComponent<XP.PartComponent.Divider>()
+    if (!component) throw Error('No component found')
+
     return renderPart(req, component.config)
   } catch (e) {
     return renderError(req, 'Error in part', e)
   }
 }
 
-exports.preview = function(req: Request): Response {
-  return renderPart(req, {})
+export function preview(req: XP.Request, config = {}): XP.Response {
+  return renderPart(req, config)
 }
 
-function renderPart(req: Request, config: DividerPartConfig): Response {
-  const dividerColor: string = config.dividerColor || 'light'
+function renderPart(req: XP.Request, config: DividerPartConfig): XP.Response {
+  const dividerColor: string = config.dividerColor ?? 'light'
 
   return fromPartCache(req, `divider${dividerColor}`, () => {
-    const divider: React4xpObject = new React4xp('Divider')
-      .setProps(
-        setColor(dividerColor)
-      )
-      .setId('dividerId')
+    const result = render('Divider', setColor(dividerColor), req, {
+      body: '<section class="xp-part part-divider"></section>',
+      hydrate: false,
+      pageContributions: {
+        bodyEnd: [scriptAsset('js/divider.js')],
+      },
+    })
 
-    const body: string = divider.renderBody({
-      body: render(view, {
-        dividerId: divider.react4xpId
-      }),
-      clientRender: false
-    }).replace(/id="dividerId"/, '') // remove id since we don't need it, and don't want warnings from multiple elements with same id
-
-    return {
-      body
-    }
+    result.body = result.body.replace(/ id=".*?"/i, '')
+    return result
   })
 }
 
 function setColor(dividerColor: string): object {
   if (dividerColor === 'dark') {
     return {
-      dark: true
+      dark: true,
     }
   } else {
     return {
-      light: true
+      light: true,
     }
   }
 }
-

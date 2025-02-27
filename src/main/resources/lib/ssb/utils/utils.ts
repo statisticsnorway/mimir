@@ -1,21 +1,13 @@
-import { ByteSource, Content } from 'enonic-types/content'
-import { Request } from 'enonic-types/controller'
-import { Header } from '../../../site/content-types/header/header'
-import { PreliminaryData } from '../../types/xmlParser'
+import { get, getAttachmentStream, ByteSource, Content } from '/lib/xp/content'
 
-const {
-  get,
-  getAttachmentStream
-} = __non_webpack_require__('/lib/xp/content')
-const {
-  getContent, pageUrl
-} = __non_webpack_require__('/lib/xp/portal')
-const {
-  moment
-} = __non_webpack_require__('/lib/vendor/moment')
-const {
-  readLines
-} = __non_webpack_require__('/lib/xp/io')
+import { getContent, pageUrl, assetUrl } from '/lib/xp/portal'
+import { readLines } from '/lib/xp/io'
+import { type PreliminaryData } from '/lib/types/xmlParser'
+import { formatDate, fromNow } from '/lib/ssb/utils/dateUtils'
+import { type SourceList, type SourcesConfig } from '/lib/types/sources'
+import { type RowValue } from '/lib/types/util'
+import { type Header } from '/site/content-types'
+import { type ProfiledBox as ProfiledBoxPartConfig } from '/site/parts/profiledBox'
 
 function numberWithSpaces(x: number | string): string {
   const parts: Array<string> = x.toString().split('.')
@@ -24,18 +16,20 @@ function numberWithSpaces(x: number | string): string {
 }
 
 export function createHumanReadableFormat(value: number | string | null): string {
-  if (getContent().language != 'en' && value) {
-    return value > 999 || value < -999 ? numberWithSpaces(value).toString().replace(/\./, ',') : value.toString().replace(/\./, ',')
+  if (getContent()?.language != 'en' && value) {
+    return +value > 999 || +value < -999
+      ? numberWithSpaces(value).toString().replace(/\./, ',')
+      : value.toString().replace(/\./, ',')
   }
-  return value ? value > 999 || value < -999 ? numberWithSpaces(value) : value.toString() : ''
+  return value ? (+value > 999 || +value < -999 ? numberWithSpaces(value) : value.toString()) : ''
 }
 
 export function dateToFormat(dateString: string | undefined): string {
-  if (dateString) return moment(dateString).locale('nb').format('DD.MM.YYYY HH:mm')
-  return ''
+  const dateFormatted: string | undefined = dateString ? formatDate(dateString, 'dd.MM.yyyy HH:mm', 'nb') : ''
+  return dateFormatted ?? ''
 }
 export function dateToReadable(dateString: string | undefined): string {
-  if (dateString) return moment(dateString).locale('nb').fromNow()
+  if (dateString) return fromNow(dateString, 'nb')
   return ''
 }
 
@@ -45,11 +39,17 @@ export function isUrl(urlOrId: string | undefined): boolean | undefined {
 }
 
 export function isNumber(str: number | string | undefined): boolean {
-  return ((str != null) && (str !== '') && !isNaN(str as number))
+  return str != null && str !== '' && !isNaN(str as number)
 }
 
-export function getRowValue(value: number | string | PreliminaryData| Array<number | string | PreliminaryData>): RowValue {
-  if (typeof value === 'string' && isNumber(value)) {
+function isNonBreakingSpace(str: string): boolean {
+  return str.charCodeAt(0) == 160 && str.length === 1
+}
+
+export function getRowValue(
+  value: number | string | PreliminaryData | Array<number | string | PreliminaryData>
+): RowValue {
+  if (typeof value === 'string' && isNumber(value) && !isNonBreakingSpace(value)) {
     return Number(value)
   }
   if (typeof value === 'object') {
@@ -62,10 +62,8 @@ export function getRowValue(value: number | string | PreliminaryData| Array<numb
   return value as RowValue
 }
 
-export type RowValue = number | string
-
 // Returns page mode for Kommunefakta page based on request mode or request path
-export function pageMode(req: Request): string {
+export function pageMode(req: XP.Request): string {
   return req.params.municipality ? 'municipality' : 'map'
 }
 
@@ -73,9 +71,11 @@ export function pathFromStringOrContent(urlSrc: Header['searchResultPage']): str
   if (urlSrc !== undefined) {
     if (urlSrc._selected === 'content') {
       const selected: ContentSearchPageResult | undefined = urlSrc[urlSrc._selected]
-      return selected && selected.contentId ? pageUrl({
-        id: selected.contentId
-      }) : undefined
+      return selected && selected.contentId
+        ? pageUrl({
+            id: selected.contentId,
+          })
+        : undefined
     }
 
     if (urlSrc._selected === 'manual') {
@@ -92,10 +92,10 @@ export function pathFromStringOrContent(urlSrc: Header['searchResultPage']): str
  * @param {Object} sourceConfig
  * @return {array} a list of sources, text and url
  */
-export function getSources(sourceConfig: Array<SourcesConfig>): Array<Sources> {
+export function getSources(sourceConfig: Array<SourcesConfig>): SourceList {
   return sourceConfig.map((selectedSource) => {
-    let sourceText: string = ''
-    let sourceUrl: string = ''
+    let sourceText = ''
+    let sourceUrl = ''
 
     if (selectedSource._selected == 'urlSource') {
       sourceText = selectedSource.urlSource.urlText
@@ -105,12 +105,12 @@ export function getSources(sourceConfig: Array<SourcesConfig>): Array<Sources> {
     if (selectedSource._selected == 'relatedSource') {
       sourceText = selectedSource.relatedSource.urlText
       sourceUrl = pageUrl({
-        id: selectedSource.relatedSource.sourceSelector
+        id: selectedSource.relatedSource.sourceSelector,
       })
     }
     return {
       urlText: sourceText,
-      url: sourceUrl
+      url: sourceUrl,
     }
   })
 }
@@ -118,7 +118,7 @@ export function getSources(sourceConfig: Array<SourcesConfig>): Array<Sources> {
 export function getAttachmentContent(contentId: string | undefined): string | undefined {
   if (!contentId) return undefined
   const attachmentContent: Content | null = get({
-    key: contentId
+    key: contentId,
   })
 
   return getAttachment(attachmentContent)
@@ -128,7 +128,7 @@ export function getAttachment(attachmentContent: Content | null): string | undef
   if (!attachmentContent) return undefined
   const stream: ByteSource | null = getAttachmentStream({
     key: attachmentContent._id,
-    name: attachmentContent._name
+    name: attachmentContent._name,
   })
 
   if (!stream) return undefined
@@ -136,39 +136,77 @@ export function getAttachment(attachmentContent: Content | null): string | undef
   return lines[0]
 }
 
-interface SourcesConfig {
-  _selected: string;
-  urlSource: {
-    urlText: string;
-    url: string;
-  };
-  relatedSource: {
-    urlText: string;
-    sourceSelector: string;
-  };
+// For admin tool applications
+export function parseContributions(contributions: XP.PageContributions): XP.PageContributions {
+  if (!contributions) return contributions
+
+  contributions.headEnd =
+    contributions.headEnd &&
+    (contributions.headEnd as Array<string>).map((script: string) => script.replace(' defer ', ' defer="" '))
+  contributions.bodyEnd =
+    contributions.bodyEnd &&
+    (contributions.bodyEnd as Array<string>).map((script: string) => script.replace(' defer ', ' defer="" '))
+  return contributions
 }
 
-interface Sources {
-  urlText: string;
-  url: string;
+// Generates 10 character random string, useful for unique ID's for elements etc.
+// Cryptographically UNSAFE due to math.random, do NOT use for encryption or security.
+export function randomUnsafeString(): string {
+  return Math.random().toString(36).substring(2)
 }
+
+/**
+ * Generated a script tag for a js file in /assets folder to be used in pageContributions
+ * @param path Path to js file in /assets folder
+ * @returns HTML script tag <script>
+ */
+export function scriptAsset(path: string): string {
+  const url = assetUrl({ path })
+
+  return `
+  <script defer src="${url}" type="module"></script>
+  <script defer src="${url.replace('.js', '.legacy.js')}" nomodule type="text/javascript"></script>
+  `
+}
+// @ts-ignore
+export const XP_RUN_MODE = ''.concat(Java.type('com.enonic.xp.server.RunMode').get())
+// ^ check for DEV mode
+
+export function getEnvironmentString(): string {
+  let environment = ''
+  if (XP_RUN_MODE === 'DEV') {
+    environment = XP_RUN_MODE
+  } else {
+    environment = app.config?.['ssb.env'] ? app.config['ssb.env'].toUpperCase() : ''
+  }
+  return environment
+}
+
+export function getProfiledCardAriaLabel(subTitle: string): string {
+  if (subTitle) {
+    return `${subTitle.replace(' /', ',')}`
+  }
+  return ''
+}
+
+export function getLinkTargetUrl(urlContentSelector: ProfiledBoxPartConfig['urlContentSelector']): string | undefined {
+  if (urlContentSelector?._selected == 'optionLink') {
+    return urlContentSelector.optionLink.link
+  }
+
+  if (urlContentSelector?._selected == 'optionXPContent') {
+    return urlContentSelector.optionXPContent.xpContent
+      ? pageUrl({
+          id: urlContentSelector.optionXPContent.xpContent,
+        })
+      : ''
+  }
+}
+
 interface ContentSearchPageResult {
-  contentId?: string;
+  contentId?: string
 }
 
 interface ManualSearchPageResult {
-  url?: string;
-}
-export interface UtilsLib {
-  createHumanReadableFormat: (value: number | string | null) => string;
-  dateToFormat: (dateString: string | undefined) => string;
-  dateToReadable: (dateString: string | undefined) => string;
-  isUrl: (urlOrId: string | undefined) => boolean | undefined;
-  isNumber: (str: number | string | undefined) => boolean;
-  getRowValue: (value: number | string | PreliminaryData | Array<number | string | PreliminaryData>) => RowValue;
-  pageMode: (req: Request) => string;
-  pathFromStringOrContent: (urlSrc: Header['searchResultPage']) => string | undefined;
-  getSources: (sourceConfig: Array<SourcesConfig>) => Array<Sources>;
-  getAttachmentContent: (contentId: string | undefined) => string | undefined;
-  getAttachment: (attachmentContent: Content | null) => string | undefined;
+  url?: string
 }

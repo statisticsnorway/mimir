@@ -1,35 +1,42 @@
-import { Request, Response } from 'enonic-types/controller'
-import { StatisticInListing } from '../../lib/ssb/dashboard/statreg/types'
-import { GroupedBy, PreparedStatistics, YearReleases, Release } from '../../lib/ssb/utils/variantUtils'
-
-const {
+import { StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
+import {
   addMonthNames,
   groupStatisticsByYearMonthAndDay,
   prepareRelease,
-  filterOnComingReleases,
   getAllReleases,
-  getUpcomingReleases
-} = __non_webpack_require__( '/lib/ssb/utils/variantUtils')
-const {
-  getAllStatisticsFromRepo
-} = __non_webpack_require__( '../../lib/ssb/statreg/statistics')
+} from '/lib/ssb/utils/variantUtils'
+import { filterOnComingReleases } from '/lib/ssb/utils/filterReleasesUtils'
 
-exports.get = (req: Request): Response => {
+import { getAllStatisticsFromRepo } from '/lib/ssb/statreg/statistics'
+import { type GroupedBy, type PreparedStatistics, type Release, type YearReleases } from '/lib/types/variants'
+
+export const get = (req: XP.Request): XP.Response => {
   // Get statistics
-  const releases: Array<StatisticInListing> = getAllStatisticsFromRepo()
-  const allReleases: Array<Release> = getAllReleases(releases)
-  const upComingReleases: Array<Release> = getUpcomingReleases(allReleases)
+  const statistics: Array<StatisticInListing> = getAllStatisticsFromRepo()
+  const allReleases: Array<Release> = getAllReleases(statistics)
   const count: number = req.params.count ? parseInt(req.params.count) : 2
+  const showAll = !!(req.params.showAll && req.params.showAll === 'true')
 
-  const language: string = req.params.language ? req.params.language : 'nb'
-  // All statistics published today, and fill up with previous releases.
-  const releasesFiltered: Array<Release> = filterOnComingReleases(upComingReleases, count, req.params.start)
+  const language = req.params.language ? req.params.language : 'nb'
+  const numberOfDays = showAll ? undefined : count
+  const serverOffsetInMs: number =
+    app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
+  // All statistics from today and a number of days
+  const releasesFiltered: Array<Release> = filterOnComingReleases(
+    allReleases,
+    serverOffsetInMs,
+    numberOfDays,
+    req.params.start
+  )
 
   // Choose the right variant and prepare the date in a way it works with the groupBy function
-  const releasesPrepped: Array<PreparedStatistics> = releasesFiltered.map((release: Release) => prepareRelease(release, language))
+  const releasesPrepped: Array<PreparedStatistics | null> = releasesFiltered.map((release: Release) =>
+    prepareRelease(release, language)
+  )
 
   // group by year, then month, then day
-  const groupedByYearMonthAndDay: GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>> = groupStatisticsByYearMonthAndDay(releasesPrepped)
+  const groupedByYearMonthAndDay: GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>> =
+    groupStatisticsByYearMonthAndDay(releasesPrepped as Array<PreparedStatistics>)
 
   // iterate and format month names
   const groupedWithMonthNames: Array<YearReleases> = addMonthNames(groupedByYearMonthAndDay, language)
@@ -39,8 +46,7 @@ exports.get = (req: Request): Response => {
     contentType: 'application/json',
     body: {
       releases: groupedWithMonthNames,
-      count
-    }
+      count,
+    },
   }
 }
-

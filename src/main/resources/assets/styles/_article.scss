@@ -2,41 +2,41 @@
   .title-ingress-wrapper {
     display: block;
     margin-bottom: $spacer * 1;
-    margin-top: 50px;
+    margin-top: 3rem;
 
     @include media-breakpoint-down(md) {
       padding: 0;
     }
 
     h1 {
-      margin-bottom: 20px;
+      margin-bottom: 1.25rem;
       padding: 0;
     }
 
     .ingress {
-      font-size: 20px;
+      font-size: 1.25rem;
       padding-left: 0;
     }
 
     .introTitle {
       @include roboto;
-      font-size: 20px;
+      font-size: 1.25rem;
       line-height: 1.6;
-      margin-bottom: 4px;
+      margin-bottom: 0.25rem;
     }
   }
 
   .snr-dates-wrapper {
-    margin-bottom: 8px;
+    margin-bottom: 0.5rem;
 
     p {
       margin-bottom: 0;
-      margin-right: 20px;
+      margin-right: 1.25rem;
     }
 
     @include media-breakpoint-down(md) {
       p {
-        margin-bottom: $spacer * .5;
+        margin-bottom: $spacer * 0.5;
       }
     }
 
@@ -56,27 +56,31 @@
 
   .part-fact-box {
     padding: 0;
+    margin: 1rem 0;
   }
 
   .article-body {
-    & > * + section.part-divider, section.part-divider + * {
+    & > * + section.part-divider,
+    section.part-divider + * {
       margin-top: $spacer * 3;
     }
 
-    ul, ol {
-      padding-left: 1em;
+    ul,
+    ol {
+      padding-left: 1rem;
     }
 
     & > * {
       margin-bottom: $spacer * 1.5;
     }
 
-    h1, h2, h3, h4, h5, h6 {
-      margin-bottom: $spacer * .5;
-    }
-
-    .part-fact-box .accordion-header {
-      padding: 0;
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      margin-bottom: $spacer * 0.5;
     }
 
     @include media-breakpoint-down(md) {
@@ -88,27 +92,28 @@
     }
   }
 
-  blockquote  {
-    padding-left: 40px !important;
+  blockquote {
+    padding-left: 2.5rem !important;
 
     @include media-breakpoint-down(md) {
       padding-left: 0 !important;
     }
   }
 
-  .associated-statistics, .associated-article-archives {
+  .associated-statistics,
+  .associated-article-archives {
     margin-top: $spacer * 2.5;
     padding: 0;
 
     & > * {
-    div {
-      margin-top: $spacer * 0.5;
+      div {
+        margin-top: $spacer * 0.5;
 
-      & > * {
-        margin-bottom: $spacer * 1;
+        & > * {
+          margin-bottom: $spacer * 1;
+        }
       }
     }
-  }
 
     @include media-breakpoint-up(lg) {
       border-left: 1px solid $ssb-dark-2;
@@ -117,7 +122,7 @@
       .mt-lg-0 {
         margin-top: 0;
       }
-    }  
+    }
   }
 
   .article-isbn {

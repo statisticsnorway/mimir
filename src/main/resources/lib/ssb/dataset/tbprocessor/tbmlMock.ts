@@ -1,11 +1,7 @@
-
-import { ByteSource } from 'enonic-types/content'
-import { HttpResponse } from 'enonic-types/http'
-
-__non_webpack_require__('/lib/ssb/polyfills/nashorn')
-const {
-  moment
-} = __non_webpack_require__('/lib/vendor/moment')
+import '/lib/ssb/polyfills/nashorn'
+import { ByteSource } from '/lib/xp/content'
+import { HttpResponse } from '/lib/http-client'
+import { format } from '/lib/vendor/dateFns'
 
 export function getTbmlMock(url: string): HttpResponse | null {
   if (app.config && app.config['ssb.mock.enable'] === 'true') {
@@ -52,7 +48,7 @@ function getTbmlMock1(): HttpResponse {
                 </thead>
                 <tbody>
                     <tr>
-                        <td>${moment().format('LL')}</td>
+                        <td>${format(new Date(), 'MMMM d, yyyy')}</td>
                     </tr>
                 </tbody>
             </table>
@@ -60,7 +56,7 @@ function getTbmlMock1(): HttpResponse {
     </tbml>`,
     contentType: 'text/xml; charset=utf-8',
     headers: {},
-    bodyStream: {} as unknown as ByteSource
+    bodyStream: {} as unknown as ByteSource,
   }
 }
 
@@ -76,7 +72,7 @@ function getSourceListMock1(): HttpResponse {
     </sourceList>`,
     contentType: 'text/xml; charset=utf-8',
     headers: {},
-    bodyStream: {} as unknown as ByteSource
+    bodyStream: {} as unknown as ByteSource,
   }
 }
 
@@ -267,7 +263,7 @@ function getTbmlMock2(): HttpResponse {
     </tbml>`,
     contentType: 'text/xml; charset=utf-8',
     headers: {},
-    bodyStream: {} as unknown as ByteSource
+    bodyStream: {} as unknown as ByteSource,
   }
 }
 
@@ -283,10 +279,9 @@ function getSourceListMock2(): HttpResponse {
     </sourceList>`,
     contentType: 'text/xml; charset=utf-8',
     headers: {},
-    bodyStream: {} as unknown as ByteSource
+    bodyStream: {} as unknown as ByteSource,
   }
 }
-
 
 function getTbmlMock3(): HttpResponse {
   return {
@@ -375,7 +370,7 @@ function getTbmlMock3(): HttpResponse {
     </tbml>`,
     contentType: 'text/xml; charset=utf-8',
     headers: {},
-    bodyStream: {} as unknown as ByteSource
+    bodyStream: {} as unknown as ByteSource,
   }
 }
 
@@ -394,10 +389,6 @@ function getSourceListMock3(): HttpResponse {
     </sourceList>`,
     contentType: 'text/xml; charset=utf-8',
     headers: {},
-    bodyStream: {} as unknown as ByteSource
+    bodyStream: {} as unknown as ByteSource,
   }
-}
-
-export interface TbmlMockLib {
-    getTbmlMock: (url: string) => HttpResponse | null;
 }

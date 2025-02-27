@@ -1,20 +1,16 @@
-import { Content } from 'enonic-types/content'
-import { Response } from 'enonic-types/controller'
-import { RewriteVarnish } from '../../site/content-types/rewriteVarnish/rewriteVarnish'
-const {
-  query
-} = __non_webpack_require__('/lib/xp/content')
+import { query, Content } from '/lib/xp/content'
+import { type RewriteVarnish } from '/site/content-types'
 
-function get(): Response {
+function get(): XP.Response {
   const varnishContent: Content<RewriteVarnish> = query({
     contentTypes: [`${app.name}:rewriteVarnish`],
     count: 1,
     start: 0,
-    query: ''
+    query: '',
   }).hits[0]
   return {
     body: parseRules(varnishContent),
-    contentType: 'text/plain'
+    contentType: 'text/plain;charset=utf-8',
   }
 }
 
@@ -22,10 +18,14 @@ exports.get = get
 
 function parseRules(varnish: Content<RewriteVarnish>): string {
   if (varnish && varnish.data && varnish.data.requests) {
-    const requests: RewriteVarnish['requests'] = Array.isArray(varnish.data.requests) ? varnish.data.requests : [varnish.data.requests]
+    const requests: RewriteVarnish['requests'] = Array.isArray(varnish.data.requests)
+      ? varnish.data.requests
+      : [varnish.data.requests]
     return requests.reduce((list: string, request) => {
       if (request.enableRule && request.requestUrl) {
-        const requestUrl: string = request.requestUrl.startsWith('/') ? request.requestUrl.replace('/', '') : request.requestUrl
+        const requestUrl: string = request.requestUrl.startsWith('/')
+          ? request.requestUrl.replace('/', '')
+          : request.requestUrl
         list = list + requestUrl + '\t 1' + '\n'
       }
       return list
@@ -33,5 +33,3 @@ function parseRules(varnish: Content<RewriteVarnish>): string {
   }
   return ''
 }
-
-

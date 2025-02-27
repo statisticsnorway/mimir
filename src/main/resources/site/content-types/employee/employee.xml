@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<content-type>
+    <display-name>Ansatt</display-name>
+    <super-type>base:structured</super-type>
+    <description>Ansatt eller forsker</description>
+    <form>
+        <field-set>
+            <label>Generell informasjon</label>
+            <items>
+                <input  name="isResearcher" type="CheckBox">
+                    <label>Er forsker</label>
+                    <default>checked</default>
+                    <config>
+                        <alignment>right</alignment>
+                    </config>
+                </input>
+                <input type="TextLine" name="name">
+                    <label>Fornavn</label>
+                    <occurrences minimum="1" maximum="1"/>
+                </input>
+                <input type="TextLine" name="surname">
+                    <label>Etternavn</label>
+                    <occurrences minimum="1" maximum="1"/>
+                </input>
+                <input type="TextLine" name="position">
+                    <label>Stilling</label>
+                    <occurrences minimum="0" maximum="1"/>
+                </input>
+                <input type="TextLine" name="email">
+                    <label>E-post</label>
+                    <occurrences minimum="0" maximum="1"/>
+                </input>
+                <input type="TextLine" name="phone">
+                    <label>Telefon</label>
+                    <occurrences minimum="0" maximum="1"/>
+                </input>
+                <input name="area" type="ContentSelector">
+                    <label>Forskningsområde eller avdeling</label>
+                    <help-text>Som forsker velger du forskningsområde, som ansatt velger du avdeling</help-text>
+                    <occurrences minimum="0" maximum="1"/>
+                    <config>
+                        <allowPath>${site}/forskning/</allowPath>
+                        <allowPath>${site}/omssb/ssbs-virksomhet/organisasjon/</allowPath>
+                        <allowPath>${site}/en/forskning/</allowPath>
+                        <allowPath>${site}/en/omssb/ssbs-virksomhet/organisasjon/</allowPath>
+                        <treeMode>true</treeMode>
+                    </config>
+                </input>
+                <input name="description" type="HtmlArea">
+                    <label>Kort om</label>
+                </input>
+                <input name="profileImages" type="ImageSelector">
+                    <label>Pressebilder</label>
+                    <help-text>Det første bildet vil bli brukt som profilbilde. Flytt bilder for å justere profilbildet.</help-text>
+                    <occurrences minimum="0" maximum="4"/>
+                </input>
+            </items>
+        </field-set>
+        <field-set>
+            <label>Fylles ut for forsker</label>
+            <items>
+                <input type="TextLine" name="cristinId">
+                    <label>Ansatt id Cristin</label>
+                    <occurrences minimum="0" maximum="1"/>
+                </input>
+                <input name="myCV" type="AttachmentUploader">
+                    <label>Min CV</label>
+                    <occurrences minimum="0" maximum="1"/>
+                </input>
+                <input name="projects" type="ContentSelector">
+                    <label>Prosjekter</label>
+                    <occurrences minimum="0" maximum="0"/>
+                    <config>
+                        <treeMode>true</treeMode>
+                    </config>
+                </input>
+            </items>
+        </field-set>
+    </form>
+</content-type>

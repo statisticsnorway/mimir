@@ -1,6 +1,9 @@
-bin
+bin/
 dist
 build
+build_webpack
+build_tsup_jsx
+.xp-codegen
 *.swp
 .gradle
 .vscode
@@ -12,3 +15,4 @@ nashorn_code_cache
 .enonic
 .DS_Store
 .project
+.dccache

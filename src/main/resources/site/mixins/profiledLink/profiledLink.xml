@@ -1,13 +1,6 @@
 <mixin>
     <display-name>Profilert lenke</display-name>
     <form>
-        <input name="contentUrl" type="ContentSelector">
-            <label>Innhold</label>
-            <occurrences minimum="0" maximum="1"/>
-            <config>
-                <allowPath>${site}</allowPath>
-            </config>
-        </input>
         <input name="text" type="TextLine">
             <label>Lenketekst</label>
             <occurrences minimum="0" maximum="1"/>
@@ -15,5 +8,22 @@
         <input name="withIcon" type="CheckBox">
             <label>Med ikon</label>
         </input>
+        <field-set>
+            <label>Velg url eller innhold som mål</label>
+            <items>
+                <input name="profiledLinkHref" type="TextLine">
+                    <label>URL</label>
+                    <occurrences minimum="0" maximum="1" />
+                </input>
+                <input name="contentUrl" type="ContentSelector">
+                    <label>Innhold</label>
+                    <help-text>NB! Hvis både Url og innhold er fylt ut blir innhold valgt</help-text>
+                    <occurrences minimum="0" maximum="1"/>
+                    <config>
+                        <allowPath>${site}</allowPath>
+                    </config>
+                </input>
+            </items>
+        </field-set>
     </form>
 </mixin>

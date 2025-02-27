@@ -1,44 +1,25 @@
-__non_webpack_require__('/lib/ssb/polyfills/nashorn')
+import '/lib/ssb/polyfills/nashorn'
 
-import { Content } from 'enonic-types/content'
-import { Request, Response } from 'enonic-types/controller'
-import { StatisticInListing } from '../../../lib/ssb/dashboard/statreg/types'
-import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
-import { Component } from 'enonic-types/portal'
-import { ReleasedStatisticsPartConfig } from './releasedStatistics-part-config'
-import { YearReleases } from '../../../lib/ssb/utils/variantUtils'
+import { type QueryDsl } from '/lib/xp/content'
+import { getComponent, getContent } from '/lib/xp/portal'
+import { localize } from '/lib/xp/i18n'
+import { addMonthNames, groupStatisticsByYearMonthAndDay } from '/lib/ssb/utils/variantUtils'
+import { render } from '/lib/enonic/react4xp'
+import {
+  type ContentLight,
+  type Release as ReleaseVariant,
+  getStatisticVariantsFromRepo,
+} from '/lib/ssb/repo/statisticVariant'
+import { stringToServerTime } from '/lib/ssb/utils/dateUtils'
+import { parseISO } from '/lib/vendor/dateFns'
+import { fromPartCache } from '/lib/ssb/cache/partCache'
+import { renderError } from '/lib/ssb/error/error'
+import { isEnabled } from '/lib/featureToggle'
+import { type PreparedStatistics, type YearReleases } from '/lib/types/variants'
+import { type GroupedBy, type ReleasedStatisticsProps } from '/lib/types/partTypes/releasedStatistics'
+import { type ReleasedStatistics as ReleasedStatisticsPartConfig } from '.'
 
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
-
-const {
-  localize
-} = __non_webpack_require__('/lib/xp/i18n')
-const {
-  fromPartCache
-} = __non_webpack_require__('/lib/ssb/cache/partCache')
-const {
-  getAllStatisticsFromRepo
-} = __non_webpack_require__('/lib/ssb/statreg/statistics')
-const {
-  renderError
-} = __non_webpack_require__('/lib/ssb/error/error')
-const {
-  getComponent,
-  getContent
-} = __non_webpack_require__('/lib/xp/portal')
-
-const {
-  checkLimitAndTrim
-} = __non_webpack_require__('/lib/ssb/utils/arrayUtils')
-
-const {
-  addMonthNames,
-  getReleasesForDay,
-  groupStatisticsByYearMonthAndDay,
-  prepareStatisticRelease
-} = __non_webpack_require__('/lib/ssb/utils/variantUtils')
-
-exports.get = function(req: Request): React4xpResponse | Response {
+export function get(req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -46,82 +27,101 @@ exports.get = function(req: Request): React4xpResponse | Response {
   }
 }
 
-exports.preview = (req: Request): React4xpResponse => renderPart(req)
+export function preview(req: XP.Request) {
+  return renderPart(req)
+}
 
-export function renderPart(req: Request): React4xpResponse {
-  const content: Content = getContent()
+export function renderPart(req: XP.Request) {
+  const content = getContent()
+  if (!content) throw Error('No page found')
+
   const currentLanguage: string = content.language ? content.language : 'nb'
-  const part: Component<ReleasedStatisticsPartConfig> = getComponent()
+  const config = getComponent<XP.PartComponent.ReleasedStatistics>()?.config
+  if (!config) throw Error('No part found')
 
-  const groupedWithMonthNames: Array<YearReleases> = fromPartCache(req, `${content._id}-releasedStatistics`, () => {
-    // iterate and format month names
-    const numberOfReleases: number = part.config.numberOfStatistics ? parseInt(part.config.numberOfStatistics) : 8
+  const deactivatePartCacheEnabled: boolean = isEnabled('deactivate-partcache-released-statistics', true, 'ssb')
+  const groupedWithMonthNames: Array<YearReleases> = !deactivatePartCacheEnabled
+    ? fromPartCache(req, `${content._id}-releasedStatistics`, () => {
+        return getGroupedWithMonthNames(config, currentLanguage)
+      })
+    : getGroupedWithMonthNames(config, currentLanguage)
 
-    // Get statistics
-    const releases: Array<StatisticInListing> = getAllStatisticsFromRepo()
-
-    // All statistics published today, and fill up with previous releases.
-    const releasesFiltered: Array<StatisticInListing> = filterOnPreviousReleases(releases, numberOfReleases)
-
-    // Choose the right variant and prepare the date in a way it works with the groupBy function
-    const releasesPrepped: Array<PreparedStatistics> = releasesFiltered.map((release: StatisticInListing) => prepareStatisticRelease(release, currentLanguage))
-
-    // group by year, then month, then day
-    const groupedByYearMonthAndDay: GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>> = groupStatisticsByYearMonthAndDay(releasesPrepped)
-    return addMonthNames(groupedByYearMonthAndDay, currentLanguage)
-  })
-
-  const props: PartProps = {
+  const props: ReleasedStatisticsProps = {
     releases: groupedWithMonthNames,
     title: localize({
       key: 'newStatistics',
-      locale: currentLanguage
+      locale: currentLanguage,
     }),
-    language: currentLanguage
+    language: currentLanguage,
   }
-  return React4xp.render('ReleasedStatistics', props, req)
+  return render('ReleasedStatistics', props, req, {
+    hydrate: false,
+  })
 }
 
-export function filterOnPreviousReleases(stats: Array<StatisticInListing>, numberOfReleases: number): Array<StatisticInListing> {
-  const releases: Array<StatisticInListing> = []
-  for (let i: number = 0; releases.length < numberOfReleases; i++) {
-    const day: Date = new Date()
-    day.setDate(day.getDate() - i)
-    const releasesOnThisDay: Array<StatisticInListing> = getReleasesForDay(stats, day)
-    const trimmed: Array<StatisticInListing> = checkLimitAndTrim(releases, releasesOnThisDay, numberOfReleases)
-    releases.push(...trimmed)
+function getGroupedWithMonthNames(config: ReleasedStatisticsPartConfig, currentLanguage: string): Array<YearReleases> {
+  const numberOfReleases: number = config.numberOfStatistics ? parseInt(config.numberOfStatistics) : 8
+
+  //To get releases 08.00 before data from statreg is updated
+  const nextReleaseToday: ContentLight<ReleaseVariant>[] = getStatisticVariantsFromRepo(
+    currentLanguage,
+    {
+      range: {
+        field: 'data.nextRelease',
+        from: 'dateTime',
+        lte: stringToServerTime(),
+      },
+    } as QueryDsl,
+    numberOfReleases
+  )
+
+  const numberPreviousReleases: number =
+    nextReleaseToday.length !== 0 ? numberOfReleases - nextReleaseToday.length : numberOfReleases
+
+  const allPreviousStatisticVariantsFromRepo: ContentLight<ReleaseVariant>[] =
+    numberPreviousReleases > 0
+      ? getStatisticVariantsFromRepo(
+          currentLanguage,
+          {
+            range: {
+              field: 'publish.from',
+              type: 'dateTime',
+              lte: new Date().toISOString(),
+            },
+          },
+          numberPreviousReleases
+        )
+      : []
+
+  const releasesPreppedNextReleaseToday: PreparedStatistics[] = nextReleaseToday.map((variant) => {
+    return prepReleases(variant, parseISO(variant.data.nextRelease), variant.data.nextPeriod)
+  })
+
+  const releasesPreppedPreviousRelease: PreparedStatistics[] = allPreviousStatisticVariantsFromRepo.map((variant) => {
+    return prepReleases(variant, parseISO(variant.data.previousRelease), variant.data.period)
+  })
+
+  const releasedStatistics: PreparedStatistics[] =
+    releasesPreppedNextReleaseToday.concat(releasesPreppedPreviousRelease)
+
+  // group by year, then month, then day
+  const groupedByYearMonthAndDay: GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>> =
+    groupStatisticsByYearMonthAndDay(releasedStatistics)
+  return addMonthNames(groupedByYearMonthAndDay, currentLanguage)
+}
+
+function prepReleases(variant: ContentLight<ReleaseVariant>, date: Date, periodRelease: string): PreparedStatistics {
+  return {
+    id: Number(variant.data.statisticId),
+    name: variant.data.name,
+    shortName: variant.data.shortName,
+    variant: {
+      id: variant.data.variantId,
+      day: date.getDate(),
+      monthNumber: date.getMonth(),
+      year: date.getFullYear(),
+      frequency: variant.data.frequency,
+      period: periodRelease,
+    },
   }
-  return releases
 }
-
-/*
-*  Interfaces
-*/
-
-interface PartProps {
-  releases: Array<YearReleases>;
-  title: string;
-  language: string;
-}
-
-interface PreparedStatistics {
-  id: number;
-  name: string;
-  shortName: string;
-  variant: PreparedVariant;
-}
-
-interface PreparedVariant {
-  id: string;
-  day: number;
-  monthNumber: number;
-  year: number;
-  frequency: string;
-  period: string;
-}
-
-interface GroupedBy<T> {
-  [key: string]: Array<T> | T;
-}
-
-

@@ -2,7 +2,7 @@
   h3 {
     @include roboto-condenced;
     font-weight: bold;
-    font-size: 28px;
+    font-size: 28px !important;
   }
 
   & .divider:not(:last-child) {
@@ -15,4 +15,10 @@
       margin-right: auto;
     }
   }
+}
+
+.macro-keyfigure{
+	.green-box {
+		margin-bottom: 15px;
+	}
 }

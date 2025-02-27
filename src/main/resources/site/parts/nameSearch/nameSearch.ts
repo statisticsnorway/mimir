@@ -1,30 +1,11 @@
-import { Response, Request } from 'enonic-types/controller'
-import { Component } from 'enonic-types/portal'
-import { renderError } from '../../../lib/ssb/error/error'
-import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
-import { NameSearchPartConfig } from './nameSearch-part-config'
-import { SiteConfig } from '../../../site/site-config'
+import { getContent, getComponent, pageUrl, serviceUrl } from '/lib/xp/portal'
+import { localize } from '/lib/xp/i18n'
+import { renderError } from '/lib/ssb/error/error'
+import { render } from '/lib/enonic/react4xp'
+import { type NameSearchProps } from '/lib/types/partTypes/nameSearch'
+import { type NameSearch as NameSearchPartConfig } from '.'
 
-const {
-  getSiteConfig
-} = __non_webpack_require__('/lib/xp/portal')
-
-const {
-  getComponent,
-  getContent,
-  pageUrl,
-  serviceUrl
-} = __non_webpack_require__('/lib/xp/portal')
-const {
-  getLanguageShortName
-} = __non_webpack_require__('/lib/ssb/utils/language')
-const {
-  localize
-} = __non_webpack_require__('/lib/xp/i18n')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
-
-
-exports.get = (req: Request): React4xpResponse | Response => {
+export const get = (req: XP.Request): XP.Response => {
   try {
     return renderPart(req)
   } catch (e) {
@@ -32,163 +13,211 @@ exports.get = (req: Request): React4xpResponse | Response => {
   }
 }
 
-exports.preview = (req: Request): React4xpResponse => renderPart(req)
+export function preview(req: XP.Request) {
+  return renderPart(req)
+}
 
-function renderPart(req: Request): React4xpResponse {
-  const component: Component<NameSearchPartConfig> = getComponent()
-  const locale: string = getLanguageShortName(getContent())
-  const isNotInEditMode: boolean = req.mode !== 'edit'
-
+function renderPart(req: XP.Request) {
+  const component = getComponent<XP.PartComponent.NameSearch>()
+  if (!component) throw Error('No part found')
 
   const urlToService: string = serviceUrl({
-    service: 'nameSearch'
+    service: 'nameSearch',
   })
 
-  const props: PartProperties = {
+  const currentContent = getContent()
+
+  const props: NameSearchProps = {
     urlToService: urlToService,
     aboutLink: aboutLinkResources(component.config),
     nameSearchDescription: component.config.nameSearchDescription,
-    phrases: partsPhrases(locale)
+    frontPage: component.config.frontPage,
+    phrases: partsPhrases(currentContent?.language || 'nb'),
+    language: currentContent?.language || 'nb',
   }
 
-  return React4xp.render('site/parts/nameSearch/nameSearch', props, req, {
-    clientRender: isNotInEditMode
-  })
+  return render('site/parts/nameSearch/nameSearch', props, req)
 }
 
-function aboutLinkResources(config: Component<NameSearchPartConfig>['config']): PartProperties['aboutLink'] | undefined {
+function aboutLinkResources(config: NameSearchPartConfig): NameSearchProps['aboutLink'] | undefined {
   if (config.aboutLinkTitle && config.aboutLinkTarget) {
     return {
       title: config.aboutLinkTitle,
       url: pageUrl({
-        id: config.aboutLinkTarget
-      })
+        id: config.aboutLinkTarget,
+      }),
     }
   }
   return undefined
 }
 
-function partsPhrases(locale: string): PartProperties['phrases'] {
+function partsPhrases(locale: string): NameSearchProps['phrases'] {
   return {
     nameSearchTitle: localize({
       key: 'nameSearch.title',
-      locale
+      locale,
     }),
     nameSearchInputLabel: localize({
       key: 'nameSearch.inputLabel',
-      locale
+      locale,
     }),
     nameSearchButtonText: localize({
       key: 'nameSearch.buttonText',
-      locale
+      locale,
     }),
     interestingFacts: localize({
       key: 'nameSearch.interestingFacts',
-      locale
+      locale,
     }),
     nameSearchResultTitle: localize({
       key: 'nameSearch.resultTitle',
-      locale
+      locale,
     }),
     thereAre: localize({
       key: 'nameSearch.thereAre',
-      locale
+      locale,
     }),
     with: localize({
       key: 'nameSearch.with',
-      locale
+      locale,
+    }),
+    have: localize({
+      key: 'nameSearch.have',
+      locale,
     }),
     asTheir: localize({
       key: 'nameSearch.asTheir',
-      locale
+      locale,
     }),
     errorMessage: localize({
       key: 'nameSearch.errorMessage',
-      locale
+      locale,
     }),
     networkErrorMessage: localize({
       key: 'nameSearch.networkError',
-      locale
+      locale,
     }),
     threeOrLessText: localize({
       key: 'nameSearch.threeOrLessText',
-      locale
+      locale,
     }),
-    xAxis: localize({
-      key: 'nameSearch.graph.xaxis',
-      locale
+    yAxis: localize({
+      key: 'nameSearch.graph.yaxis',
+      locale,
     }),
     graphHeader: localize({
       key: 'nameSearch.graph.header',
-      locale
+      locale,
+    }),
+    loadingGraph: localize({
+      key: 'nameSearch.graph.loading',
+      locale,
+    }),
+    threeOrLessTextGraph: localize({
+      key: 'nameSearch.graph.threeOrLessText',
+      locale,
+    }),
+    historicalTrend: localize({
+      key: 'nameSearch.historicalTrend',
+      locale,
+    }),
+    chart: localize({
+      key: 'nameSearch.chart',
+      locale,
     }),
     women: localize({
       key: 'women',
-      locale
+      locale,
     }),
     men: localize({
       key: 'men',
-      locale
+      locale,
     }),
     types: {
       firstgivenandfamily: localize({
         key: 'nameSearch.types.firstgivenandfamily',
-        locale
+        locale,
       }),
       middleandfamily: localize({
         key: 'nameSearch.types.middleandfamily',
-        locale
+        locale,
       }),
       family: localize({
         key: 'nameSearch.types.family',
-        locale
+        locale,
       }),
       onlygiven: localize({
         key: 'nameSearch.types.onlygiven',
-        locale
+        locale,
       }),
       onlygivenandfamily: localize({
         key: 'nameSearch.types.onlygivenandfamily',
-        locale
+        locale,
       }),
       firstgiven: localize({
         key: 'nameSearch.types.firstgiven',
-        locale
-      })
-    }
+        locale,
+      }),
+    },
+    printChart: localize({
+      key: 'highcharts.printChart',
+      locale,
+    }),
+    downloadPNG: localize({
+      key: 'highcharts.downloadPNG',
+      locale,
+    }),
+    downloadJPEG: localize({
+      key: 'highcharts.downloadJPEG',
+      locale,
+    }),
+    downloadPDF: localize({
+      key: 'highcharts.downloadPDF',
+      locale,
+    }),
+    downloadSVG: localize({
+      key: 'highcharts.downloadSVG',
+      locale,
+    }),
+    downloadCSV: localize({
+      key: 'highcharts.downloadCSV',
+      locale,
+    }),
+    downloadXLS: localize({
+      key: 'highcharts.downloadXLS',
+      locale,
+    }),
+    chartContainerLabel: localize({
+      key: 'highcharts.chartContainerLabel',
+      locale,
+    }),
+    chartMenuLabel: localize({
+      key: 'highcharts.chartMenuLabel',
+      locale,
+    }),
+    menuButtonLabel: localize({
+      key: 'highcharts.menuButtonLabel',
+      locale,
+    }),
+    beforeRegionLabel: localize({
+      key: 'highcharts.beforeRegionLabel',
+      locale,
+    }),
+    legendItem: localize({
+      key: 'highcharts.legendItem',
+      locale,
+    }),
+    legendLabel: localize({
+      key: 'highcharts.legendLabel',
+      locale,
+    }),
+    legendLabelNoTitle: localize({
+      key: 'highcharts.legendLabelNoTitle',
+      locale,
+    }),
+    close: localize({
+      key: 'close',
+      locale,
+    }),
   }
-}
-
-interface PartProperties {
-  urlToService: string;
-  aboutLink?: {
-    title: string;
-    url: string;
-  };
-  nameSearchDescription?: string;
-  phrases: {
-    nameSearchTitle: string;
-    nameSearchInputLabel: string;
-    nameSearchButtonText: string;
-    interestingFacts: string;
-    nameSearchResultTitle: string;
-    thereAre: string;
-    with: string;
-    asTheir: string;
-    errorMessage: string;
-    networkErrorMessage: string;
-    threeOrLessText: string;
-    xAxis: string;
-    graphHeader: string;
-    women: string;
-    men: string;
-    types: {
-      firstgivenandfamily: string;
-      middleandfamily: string;
-      family: string;
-      onlygiven: string;
-      onlygivenandfamily: string;
-      firstgiven: string;
-    };
-  };
 }

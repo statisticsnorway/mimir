@@ -1,80 +1,76 @@
-import { Content } from 'enonic-types/content'
-import { Request, Response } from 'enonic-types/controller'
-import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
-import { Accordion } from '../../content-types/accordion/accordion'
-import { AccordionConfig } from '../../macros/accordion/accordion-config'
+import { get as getContentByKey, type Content } from '/lib/xp/content'
+import { getComponent, getContent, processHtml } from '/lib/xp/portal'
+import { sanitize } from '/lib/xp/common'
+import { render } from '/lib/enonic/react4xp'
 
-const {
-  data: {
-    forceArray
-  }
-} = __non_webpack_require__('/lib/util')
-const {
-  get
-} = __non_webpack_require__('/lib/xp/content')
-const {
-  getComponent,
-  getContent,
-  processHtml
-} = __non_webpack_require__('/lib/xp/portal')
-const {
-  sanitize
-} = __non_webpack_require__('/lib/xp/common')
-const {
-  renderError
-} = __non_webpack_require__('/lib/ssb/error/error')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+import * as util from '/lib/util'
+import { renderError } from '/lib/ssb/error/error'
+import { type AccordionData, type AccordionProps } from '/lib/types/partTypes/accordion'
+import { type Accordion } from '/site/content-types'
 
-exports.get = function(req: Request): React4xpResponse | Response {
+export function get(req: XP.Request): XP.Response {
   try {
-    const config: AccordionConfig = getComponent().config
-    const accordionIds: Array<string> = config ? forceArray(config.accordion) : []
+    const config = getComponent<XP.PartComponent.Accordion>()?.config
+
+    const accordionIds: Array<string> = config ? util.data.forceArray(config.accordion) : []
     return renderPart(req, accordionIds)
   } catch (e) {
     return renderError(req, 'Error in part', e)
   }
 }
 
-exports.preview = function(req: Request, accordionIds: Array<string> | string): React4xpResponse | Response {
+export function preview(req: XP.Request, accordionIds: Array<string> | string): XP.Response {
   try {
-    const page: Content<Accordion> = getContent()
-    return page.type === `${app.name}:accordion` ? renderPart(req, [accordionIds as string]) : renderPart(req, accordionIds as Array<string>)
+    const page = getContent<Content<Accordion>>()
+    if (!page) throw Error('No page found')
+
+    return page.type === `${app.name}:accordion`
+      ? renderPart(req, [accordionIds as string])
+      : renderPart(req, accordionIds as Array<string>)
   } catch (e) {
     return renderError(req, 'Error in part', e)
   }
 }
 
-function renderPart(req: Request, accordionIds: Array<string>): React4xpResponse {
+function renderPart(req: XP.Request, accordionIds: Array<string>) {
   const accordions: Array<AccordionData> = []
 
-  accordionIds.map((key) => {
-    const accordion: Content<Accordion> | null = key ? get({
-      key
-    }) : null
+  accordionIds.forEach((key) => {
+    const accordion: Content<Accordion> | null = key
+      ? getContentByKey({
+          key,
+        })
+      : null
 
     if (accordion) {
-      const accordionContents: Accordion['accordions'] = accordion.data.accordions ? forceArray(accordion.data.accordions) : []
-      accordionContents
-        .filter((accordion) => !!accordion)
-        .map((accordion) => {
-          const items: Accordion['accordions'] = accordion.items ? forceArray(accordion.items) : []
+      const accordionContents: Accordion['accordions'] = accordion.data.accordions
+        ? util.data.forceArray(accordion.data.accordions).filter((accordion) => !!accordion)
+        : []
+      accordionContents.forEach((accordion) => {
+        const items: Accordion['accordions'] = accordion.items ? util.data.forceArray(accordion.items) : []
 
-          accordions.push({
-            id: accordion.open && sanitize(accordion.open),
-            body: accordion.body && processHtml({
-              value: accordion.body
+        accordions.push({
+          id: accordion.open && sanitize(accordion.open),
+          body:
+            accordion.body &&
+            processHtml({
+              value: accordion.body,
             }),
-            open: accordion.open,
-            items: items.length ? items.map((item) => {
-              return {
-                ...item,
-                body: item.body && processHtml({
-                  value: item.body
-                })
-              }
-            }) : []
-          })
+          open: accordion.open,
+          items: items.length
+            ? items.map((item) => {
+                return {
+                  ...item,
+                  body:
+                    item.body &&
+                    processHtml({
+                      value: item.body,
+                    }),
+                }
+              })
+            : [],
         })
+      })
     }
   })
 
@@ -82,24 +78,13 @@ function renderPart(req: Request, accordionIds: Array<string>): React4xpResponse
     accordions.push({
       body: 'Feil i lasting av innhold, innhold mangler eller kunne ikke hentes.',
       open: 'Sett inn innhold!',
-      items: []
+      items: [],
     })
   }
 
-  const props: AccordionProp = {
-    accordions
+  const props: AccordionProps = {
+    accordions,
   }
 
-  return React4xp.render('Accordion', props, req)
-}
-
-export interface AccordionData {
-  id?: string;
-  body?: string | undefined;
-  open?: string | undefined;
-  items?: Accordion['accordions'];
-}
-
-interface AccordionProp {
-  accordions: Array<AccordionData>;
+  return render('Accordion', props, req)
 }

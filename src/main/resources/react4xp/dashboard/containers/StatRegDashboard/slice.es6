@@ -1,8 +1,8 @@
-import { createSlice } from '../../utils/@reduxjs/toolkit'
+import { createSlice } from '/react4xp/dashboard/utils/@reduxjs/toolkit'
 
 export const initialState = {
   statuses: [],
-  loading: true
+  loading: true,
 }
 
 const statRegSlice = createSlice({
@@ -17,7 +17,7 @@ const statRegSlice = createSlice({
       state.statuses = action.statuses
       state.loading = false
     },
-    fetchStatusesError(state, action) {
+    fetchStatusesError(state) {
       state.loading = false
     },
     startRefreshStatus(state, action) {
@@ -48,10 +48,8 @@ const statRegSlice = createSlice({
         statReg.loadingLogs = false
         statReg.eventLogNodes = action.logs
       }
-    }
-  }
+    },
+  },
 })
 
-export const {
-  actions, reducer, name: sliceKey
-} = statRegSlice
+export const { actions, reducer, name: sliceKey } = statRegSlice

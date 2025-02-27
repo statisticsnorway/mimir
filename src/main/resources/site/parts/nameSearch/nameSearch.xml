@@ -1,5 +1,5 @@
 <part>
-  <display-name>Navnesøk forside</display-name>
+  <display-name>Navnesøk</display-name>
   <form>
     <field-set>
       <label>Navnesøk</label>
@@ -20,6 +20,9 @@
             <allowType>page</allowType>
             <allowType>article</allowType>
           </config>
+        </input>
+        <input name="frontPage" type="CheckBox">
+            <label>Bruk på Forside</label>
         </input>
       </items>
     </field-set>

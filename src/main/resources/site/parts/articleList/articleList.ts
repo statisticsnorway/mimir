@@ -1,135 +1,118 @@
-import { Request } from 'enonic-types/controller'
-import { Article } from '../../content-types/article/article'
-import { Component } from 'enonic-types/portal'
-import { ArticleListPartConfig } from './articleList-part-config'
-import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
-import { AggregationsResponseEntry, Content } from 'enonic-types/content'
-import { SubjectItem } from '../../../lib/ssb/utils/subjectUtils'
+import { pageUrl, getContent, getComponent } from '/lib/xp/portal'
+import { query, type Content } from '/lib/xp/content'
+import { localize } from '/lib/xp/i18n'
+import { render } from '/lib/enonic/react4xp'
+import { getSubSubjects } from '/lib/ssb/utils/subjectUtils'
+import { formatDate } from '/lib/ssb/utils/dateUtils'
 
-const {
-  localize
-} = __non_webpack_require__('/lib/xp/i18n')
-const {
-  query
-} = __non_webpack_require__('/lib/xp/content')
-const {
-  pageUrl, getContent, getComponent
-} = __non_webpack_require__('/lib/xp/portal')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
-const {
-  moment
-} = __non_webpack_require__('/lib/vendor/moment')
-const {
-  getSubSubjects
-} = __non_webpack_require__('/lib/ssb/utils/subjectUtils')
+import { renderError } from '/lib/ssb/error/error'
+import { fromPartCache } from '/lib/ssb/cache/partCache'
+import { isEnabled } from '/lib/featureToggle'
+import { type Article } from '/site/content-types'
 
-exports.get = (req: Request): React4xpResponse => {
+export function get(req: XP.Request): XP.Response {
+  try {
+    return renderPart(req)
+  } catch (e) {
+    return renderError(req, 'Error in part', e)
+  }
+}
+
+export function preview(req: XP.Request) {
   return renderPart(req)
 }
 
-exports.preview = (req: Request): React4xpResponse => renderPart(req)
+function renderPart(req: XP.Request) {
+  const content = getContent()
+  if (!content) throw Error('No page found')
 
-function renderPart(req: Request): React4xpResponse {
-  const content: Content = getContent()
-  const component: Component<ArticleListPartConfig> = getComponent()
-  const language: string = content.language ? content.language : 'nb'
-  const articles: Array<Content<Article>> = getArticles(req, language)
-  const preparedArticles: Array<PreparedArticles> = prepareArticles(articles, language)
+  const articleListCacheDisabled = isEnabled('deactivate-part-cache-article-list', true, 'ssb')
+  if (req.mode === 'edit' || req.mode === 'inline' || articleListCacheDisabled) {
+    return getArticleList(req, content)
+  } else {
+    return fromPartCache(req, `${content._id}-articleList`, () => getArticleList(req, content))
+  }
+}
 
-  const archiveLinkText: string = localize({
+function getArticleList(req: XP.Request, content: Content) {
+  const component = getComponent<XP.PartComponent.ArticleList>()
+  if (!component) throw Error('No component found')
+
+  const language = content.language ? content.language : 'nb'
+  const articles = getArticles(req, language)
+  const preparedArticles = prepareArticles(articles, language)
+
+  const archiveLinkText = localize({
     key: 'publicationLinkText',
-    locale: language
+    locale: language,
   })
-  const headerText: string = localize( {
+  const headerText = localize({
     key: 'articleList.heading',
-    locale: language
+    locale: language,
   })
 
-  const props: PartProperties = {
+  const props = {
     title: headerText,
     articles: preparedArticles,
     archiveLinkText: archiveLinkText,
-    archiveLinkUrl: component.config.pubArchiveUrl ? component.config.pubArchiveUrl : '#'
+    archiveLinkUrl: component.config.pubArchiveUrl ? component.config.pubArchiveUrl : '#',
   }
-
-  return React4xp.render('site/parts/articleList/articleList', props, req)
+  return render('site/parts/articleList/articleList', props, req, { hydrate: false })
 }
 
-function getArticles(req: Request, language: string): Array<Content<Article>> {
-  const subjectItems: Array<SubjectItem> = getSubSubjects(req, language)
-  const pagePaths: Array<string> = subjectItems.map((sub) => `_parentPath LIKE "/content${sub.path}/*"`)
-  const languageQuery: string = language !== 'en' ? 'AND language != "en"' : 'AND language = "en"'
-  const byDay: AggregationsResponseEntry = query({
-    count: 0,
-    query: `(${pagePaths.join(' OR ')}) ${languageQuery}`,
+function getArticles(req: XP.Request, language: string) {
+  const subjectItems = getSubSubjects(req, language)
+  const pagePaths = subjectItems.map((sub) => `_parentPath LIKE "/content${sub.path}/*"`)
+
+  const sort = [
+    {
+      field: 'publish.from',
+      direction: 'DESC',
+    },
+    {
+      field: 'data.frontPagePriority',
+      direction: 'DESC',
+    },
+  ]
+  const articles = query({
+    count: 4,
+    query: `(${pagePaths.join(' OR ')})`,
     contentTypes: [`${app.name}:article`],
-    aggregations: {
-      'by_day': {
-        dateHistogram: {
-          field: 'publish.from',
-          interval: '1d',
-          minDocCount: 1,
-          format: 'yyyy-MM-dd'
-        }
-      }
-    }
-  }).aggregations.by_day
-  byDay.buckets.sort((a, b) => {
-    return new Date(b.key).getTime() - new Date(a.key).getTime()
-  })
-  let start: moment.Moment = moment()
-  let end: moment.Moment = moment()
-  const count: number = byDay.buckets.reduce((count, day, index) => {
-    if (index === 0) start = moment(`${day.key}T23:59:59.000Z`)
-    if (count <= 4) {
-      end = moment(`${day.key}T00:00:00.000Z`)
-    }
-    return count += day.docCount
-  }, 0)
-  const articles: Array<Content<Article>> = query({
-    count: count,
-    query: `(${pagePaths.join(' OR ')}) ${languageQuery} AND range("publish.from", instant("${end.toISOString()}"), instant("${start.toISOString()}"))`,
-    contentTypes: [`${app.name}:article`],
-    sort: `publish.from DESC`
+    sort: sort as unknown as string,
+    filters: {
+      boolean: {
+        must: [
+          {
+            hasValue: {
+              field: 'language',
+              values: language === 'en' ? ['en'] : ['no', 'nb', 'nn'],
+            },
+          },
+        ],
+        mustNot: {
+          hasValue: {
+            field: 'data.frontPagePriority',
+            values: ['hideArticle'],
+          },
+        },
+      },
+    },
   }).hits as unknown as Array<Content<Article>>
-  return articles.sort((a, b) => {
-    if (moment(a.publish?.from).isSame(moment(b.publish?.from), 'day')) {
-      if (a.data.frontPagePriority === '1' && b.data.frontPagePriority === '0') {
-        return -1
-      } else if (a.data.frontPagePriority === '0' && b.data.frontPagePriority === '1') {
-        return 1
-      }
-    }
-    return 0
-  }).slice(0, 4)
+  return articles
 }
 
-function prepareArticles(articles: Array<Content<Article>>, language: string): Array<PreparedArticles> {
-  const momentLanguage: string = language === 'en' ? 'en-gb' : 'nb'
+function prepareArticles(articles: Array<Content<Article>>, language: string) {
   return articles.map((article: Content<Article>) => {
     return {
       title: article.displayName,
       preface: article.data.ingress ? article.data.ingress : '',
       url: pageUrl({
-        id: article._id
+        id: article._id,
       }),
       publishDate: article.publish && article.publish.from ? article.publish.from : '',
-      publishDateHuman: article.publish && article.publish.from ? moment(article.publish.from).locale(momentLanguage).format('LL') : '',
-      frontPagePriority: article.data.frontPagePriority
+      publishDateHuman:
+        article.publish && article.publish.from ? formatDate(article.publish.from, 'PPP', language) : '',
+      frontPagePriority: article.data.frontPagePriority,
     }
   })
-}
-
-interface PreparedArticles {
-  title: string;
-  preface: string;
-  url: string;
-  publishDate: string;
-}
-
-interface PartProperties {
-  title: string;
-  articles: Array<PreparedArticles>;
-  archiveLinkText: string;
-  archiveLinkUrl: string;
 }

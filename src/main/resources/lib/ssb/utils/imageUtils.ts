@@ -1,24 +1,31 @@
-import { Content, MediaImage } from 'enonic-types/content'
-
-const {
-  get
-} = __non_webpack_require__('/lib/xp/content')
+import { get, Content } from '/lib/xp/content'
+import { imageUrl as xpImageUrl, type ImageUrlParams } from '/lib/xp/portal'
 
 export function getImageCaption(imageId: string): string | undefined {
   const imageContent: Content<MediaImage> | null = get({
-    key: imageId
+    key: imageId,
   })
-  return imageContent && imageContent !== undefined ? imageContent.data.caption : ' '
+  return imageContent && imageContent !== undefined ? imageContent.data.caption : ''
 }
 
 export function getImageAlt(imageId: string): string | undefined {
   const imageContent: Content<MediaImage> | null = get({
-    key: imageId
+    key: imageId,
   })
-  return imageContent && imageContent !== undefined ? imageContent.data.altText : ' '
+  return imageContent && imageContent !== undefined ? imageContent.data.altText : ''
 }
 
-export interface ImageUtilsLib {
-    getImageCaption: (imageId: string) => string | undefined;
-    getImageAlt: (imageId: string) => string | undefined;
+export function imageUrl(params: ImageUrlParams) {
+  if (!(params.path || params.id)) return ''
+
+  const image = get<Content<MediaImage>>({ key: (params.path as string) || (params.id as string) })
+  if (!image) return ''
+
+  if (image.type !== 'media:vector') {
+    params.format = params.format || 'jpg'
+  } else {
+    delete params.format
+  }
+
+  return xpImageUrl(params)
 }

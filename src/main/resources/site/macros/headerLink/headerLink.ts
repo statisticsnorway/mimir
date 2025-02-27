@@ -1,73 +1,38 @@
-import { MacroContext } from 'enonic-types/controller'
-import { HeaderLinkConfig } from './headerLink-config'
-import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
-import { Content } from 'enonic-types/content'
+import { get, Content } from '/lib/xp/content'
 
-const {
-  attachmentUrl, pageUrl
-} = __non_webpack_require__('/lib/xp/portal')
-const {
-  get
-} = __non_webpack_require__('/lib/xp/content')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
+import { attachmentUrl, pageUrl } from '/lib/xp/portal'
+import { render } from '/lib/enonic/react4xp'
+import { prepareText } from '/site/parts/links/links'
+import { type HeaderLink as HeaderLinkConfig } from '/site/macros/headerLink'
 
-exports.macro = (context: MacroContext): React4xpResponse => {
+export const macro = (context: XP.MacroContext<HeaderLinkConfig>) => {
   return renderPart(context)
 }
 
-exports.preview = (context: MacroContext): React4xpResponse => renderPart(context)
+export const preview = (context: XP.MacroContext<HeaderLinkConfig>) => renderPart(context)
 
-function renderPart(context: MacroContext): React4xpResponse {
-  const {
-    linkedContent, linkText
-  } = context.params
+function renderPart(context: XP.MacroContext<HeaderLinkConfig>) {
+  const { linkedContent, linkText } = context.params
 
   const content: Content | null = get({
-    key: linkedContent
+    key: linkedContent,
   })
 
   let contentUrl: string
   if (content && Object.keys(content.attachments).length > 0) {
     contentUrl = attachmentUrl({
-      id: linkedContent
+      id: linkedContent,
     })
   } else {
     contentUrl = pageUrl({
-      id: linkedContent
+      id: linkedContent,
     })
   }
 
   const props: HeaderLinkConfig = {
-    linkText: content ? prepareText(content, linkText) : '',
-    linkedContent: contentUrl
+    linkText: content ? (prepareText(content, linkText) as string) : '',
+    linkedContent: contentUrl,
   }
 
-  return React4xp.render('site/macros/headerLink/headerLink', props)
-}
-
-function prepareText(content: Content, linkText: string): string {
-  // This kludge has to happen because Enonic uses the name of the attachment as a key. Sorry.
-  const attachmentName: string = Object.keys(content.attachments)[0]
-  const attachmentSize: number = content.attachments[attachmentName] && content.attachments[attachmentName].size
-
-  let notation: string
-  let finalText: string
-
-  if (attachmentSize) {
-    if (attachmentSize > 1.049e+6) {
-      notation = 'MB'
-      finalText = (attachmentSize / 1.049e+6).toFixed(1)
-    } else {
-      notation = 'KB'
-      finalText = (attachmentSize / 1024 ).toFixed(1)
-    }
-    return `${linkText} (${finalText } ${notation})`
-  }
-
-  return linkText
-}
-
-interface PartProperties {
-    linkText: string;
-    linkedContent: string;
+  return render('site/macros/headerLink/headerLink', props, context.request)
 }

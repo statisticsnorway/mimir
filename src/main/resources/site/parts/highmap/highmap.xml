@@ -1,0 +1,11 @@
+<part>
+    <display-name>Highmap</display-name>
+    <form>
+        <input name="highmapId" type="ContentSelector">
+            <label>Highmap</label>
+            <config>
+                <allowContentType>highmap</allowContentType>
+            </config>
+        </input>
+    </form>
+</part>

@@ -1,23 +1,15 @@
-import { Content } from 'enonic-types/content'
-import { Component } from 'enonic-types/portal'
-import { LinksPartConfig } from './links-part-config'
-import { Request, Response } from 'enonic-types/controller'
-import { React4xp, React4xpResponse } from '../../../lib/types/react4xp'
-import { renderError } from '../../../lib/ssb/error/error'
+import { get as getContentByKey, type Content } from '/lib/xp/content'
+import { getComponent, attachmentUrl, pageUrl } from '/lib/xp/portal'
+import { render } from '/lib/enonic/react4xp'
+import { renderError } from '/lib/ssb/error/error'
+import { type LinksProps } from '/lib/types/partTypes/links'
+import { type Links as LinksPartConfig } from '.'
 
-const {
-  get
-} = __non_webpack_require__('/lib/xp/content')
-const {
-  getComponent,
-  attachmentUrl,
-  pageUrl
-} = __non_webpack_require__('/lib/xp/portal')
-const React4xp: React4xp = __non_webpack_require__('/lib/enonic/react4xp')
-
-exports.get = (req: Request): React4xpResponse | Response => {
+export function get(req: XP.Request): XP.Response {
   try {
-    const part: Component<LinksPartConfig> = getComponent()
+    const part = getComponent<XP.PartComponent.Links>()
+    if (!part) throw Error('No part found')
+
     const config: LinksPartConfig = part.config
     return renderPart(req, config)
   } catch (e) {
@@ -25,72 +17,85 @@ exports.get = (req: Request): React4xpResponse | Response => {
   }
 }
 
-exports.preview = (req: Request, config: LinksPartConfig): React4xpResponse | Response => {
+export function preview(req: XP.Request, config: LinksPartConfig): XP.Response {
   try {
     return renderPart(req, config)
   } catch (e) {
     return renderError(req, 'Error in part', e)
   }
 }
-function renderPart(req: Request, config: LinksPartConfig): React4xpResponse {
+function renderPart(req: XP.Request, config: LinksPartConfig) {
   const linkTypes: LinksPartConfig['linkTypes'] = config.linkTypes
-  const isNotInEditMode: boolean = req.mode !== 'edit'
 
-  let props: LinksProps | {} = {}
+  let props: LinksProps | object = {}
   if (linkTypes) {
     if (linkTypes._selected === 'tableLink') {
-      const href: string | undefined = linkTypes.tableLink.relatedContent ? pageUrl({
-        id: linkTypes.tableLink.relatedContent as string
-      }) : linkTypes.tableLink.url as string | undefined
+      const href: string | undefined = linkTypes.tableLink.relatedContent
+        ? pageUrl({
+            id: linkTypes.tableLink.relatedContent,
+          })
+        : linkTypes.tableLink.url
 
       props = {
         href,
         description: linkTypes.tableLink.description,
-        text: linkTypes.tableLink.title
+        text: linkTypes.tableLink.title,
       }
     }
 
     if (linkTypes._selected === 'headerLink') {
-      const linkedContent: string | undefined = linkTypes.headerLink.linkedContent as string | undefined
-      const linkText: string | undefined = linkTypes.headerLink.linkText as string | undefined
+      const linkedContent: string | undefined = linkTypes.headerLink.linkedContent
+      const linkText: string | undefined = linkTypes.headerLink.linkText
 
-      const content: Content | null = linkedContent ? get({
-        key: linkedContent
-      }) : null
+      const content: Content | null = linkedContent
+        ? getContentByKey({
+            key: linkedContent,
+          })
+        : null
 
       let contentUrl: string | undefined
+      let isPDFAttachment = false
+      let attachmentTitle: string | undefined
       if (content && Object.keys(content.attachments).length > 0) {
-        contentUrl = linkedContent && attachmentUrl({
-          id: linkedContent
-        })
+        contentUrl =
+          linkedContent &&
+          attachmentUrl({
+            id: linkedContent,
+          })
+        isPDFAttachment = /.+?\.pdf/.test(content._name)
+        attachmentTitle = content.displayName
       } else {
-        contentUrl = linkedContent && pageUrl({
-          id: linkedContent
-        })
+        contentUrl = linkedContent
+          ? pageUrl({
+              id: linkedContent,
+            })
+          : linkTypes.headerLink.headerLinkHref
       }
 
       props = {
-        children: content ? prepareText(content, linkText) : '',
+        children: content ? prepareText(content, linkText) : linkText,
         href: contentUrl,
-        linkType: 'header'
+        linkType: 'header',
+        isPDFAttachment,
+        attachmentTitle,
       }
     }
 
     if (linkTypes._selected === 'profiledLink') {
       props = {
         children: linkTypes.profiledLink.text,
-        href: linkTypes.profiledLink.contentUrl && pageUrl({
-          id: linkTypes.profiledLink.contentUrl as string
-        }),
+        href: linkTypes.profiledLink.contentUrl
+          ? pageUrl({
+              id: linkTypes.profiledLink.contentUrl,
+            })
+          : linkTypes.profiledLink.profiledLinkHref,
         withIcon: !!linkTypes.profiledLink.withIcon,
-        linkType: 'profiled'
+        linkType: 'profiled',
       }
     }
   }
 
-  return React4xp.render('site/parts/links/links', props, req, {
-    clientRender: isNotInEditMode
-  })
+  return render('site/parts/links/links', props, req)
 }
 
 export function prepareText(content: Content, linkText: string | undefined): string | undefined {
@@ -102,24 +107,15 @@ export function prepareText(content: Content, linkText: string | undefined): str
   let finalText: string
 
   if (attachmentSize) {
-    if (attachmentSize > 1.049e+6) {
+    if (attachmentSize > 1.049e6) {
       notation = 'MB'
-      finalText = (attachmentSize / 1.049e+6).toFixed(1)
+      finalText = (attachmentSize / 1.049e6).toFixed(1)
     } else {
       notation = 'KB'
-      finalText = (attachmentSize / 1024 ).toFixed(1)
+      finalText = (attachmentSize / 1024).toFixed(1)
     }
-    return `${linkText} (${finalText } ${notation})`
+    return `${linkText} (${finalText} ${notation})`
   }
 
-  return linkText && linkText
-}
-
-export interface LinksProps {
-  children: string;
-  href: string;
-  withIcon: boolean | string;
-  linkType: string;
-  description: string;
-  title: string;
+  return linkText
 }

@@ -1,25 +1,18 @@
 <part>
     <display-name>Kpi kalkulator</display-name>
     <form>
-
         <field-set>
             <label>KPI kalkulator</label>
             <items>
                 <input name="kpiCalculatorArticle" type="ContentSelector">
-                    <label>
-                        Artikkel Kpi kalkulator
-                    </label>
+                    <label>Artikkel Kpi kalkulator</label>
                     <occurrences minimum="0" maximum="1" />
                     <config>
-                        <allowContentType>
-                            article
-                        </allowContentType>
+                        <allowContentType>article</allowContentType>
                     </config>
                 </input>
                 <input name="frontPage" type="CheckBox">
-                    <label>
-                        Bruk på Forside
-                    </label>
+                    <label>Bruk på Forside</label>
                 </input>
                 <input type="HtmlArea" name="ingressFrontpage">
                     <label>Ingress kalkulator Forside</label>

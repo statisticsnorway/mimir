@@ -12,22 +12,4 @@
       }
     }
   }
-  .key-figures {
-    .col-12 {
-      @include media-breakpoint-up(lg) {
-        .ssb-key-figures.green-box {
-          margin-bottom: $spacer * 3.5;
-        }
-      }
-
-      @include media-breakpoint-down(md) {
-        padding: 0;
-
-        .ssb-key-figures.green-box {
-          margin-bottom: 60px;
-          margin-top: 20px;
-        }
-      }
-    }
-  }
 }

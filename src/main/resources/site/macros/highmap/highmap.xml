@@ -1,0 +1,14 @@
+<macro>
+    <display-name>Highmap</display-name>
+    <description></description>
+    <form>
+        <input name="highmap" type="ContentSelector">
+            <label>Highmap</label>
+            <occurrences minimum="1" maximum="1"/>
+            <config>
+                <allowPath>${site}</allowPath>
+                <allowType>highmap</allowType>
+            </config>
+        </input>
+    </form>
+</macro>

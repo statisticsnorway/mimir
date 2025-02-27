@@ -1,29 +1,49 @@
 <html data-th-lang="${language.code}">
+
 <head>
-  <!-- UA GA tracking script with added GA4 gtag config -->
-  <script async="true" data-th-if="${GA_TRACKING_ID}" data-th-src="|https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}|"></script>
-  <script th:inline="javascript" data-th-if="${GA_TRACKING_ID}">
+  <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', /*[[${GA_TRACKING_ID}]]*/);
-    gtag('config', 'G-RWG24LNZ9T');
   </script>
-  <script data-th-src="${jsLibsUrl}" defer="true"></script>
+  <!-- Google Tag Manager -->
+  <script th:inline="javascript" data-th-if="${GTM_TRACKING_ID}">
+    (function (w, d, s, l, i) {
+      w[l] = w[l] || []; w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+      var f = d.getElementsByTagName(s)[0],
+        j = d.createElement(s),
+        dl = l != 'dataLayer' ? '&l=' + l : '';
+      j.defer = true;
+      j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl[(${ GTM_AUTH } ?'+"&gtm_auth=' + ${ GTM_AUTH } +'&gtm_preview=env-3&gtm_cookies_win=x"' : '')];
+      f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', [[${ GTM_TRACKING_ID }]]);
+  </script>
+  <!-- End Google Tag Manager -->
 
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <meta data-th-if="${page.data.metaDescription}" name="description" data-th-content="${page.data.metaDescription}"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta data-th-if="${page.data.metaDescription}" name="description" data-th-content="${page.data.metaDescription}" />
   <title data-th-text="${pageTitle}"></title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans%7COpen+Sans:700%7CRoboto:700%7CRoboto+Condensed:700"/>
-  <link rel="stylesheet" data-th-href="${stylesUrl}"/>
-  <link rel="alternate" data-th-if="${alternateLanguageVersionUrl}" data-th-href="${alternateLanguageVersionUrl}" data-th-hreflang="${language.alternate}"/>
-  <link data-th-unless="${statbankWeb}" rel="canonical" data-th-href="${pageUrl}" />
-
+  <link rel="preload" data-th-href="${stylesUrl}" as="style" />
+  <link rel="stylesheet" data-th-href="${stylesUrl}" />
+  <link rel="alternate" data-th-if="${alternateLanguageVersionUrl}" data-th-href="${alternateLanguageVersionUrl}"
+    data-th-hreflang="${language.alternate}" />
+  <link data-th-if="${canonicalUrl}" rel="canonical" data-th-href="${canonicalUrl}" />
+  <link rel="icon" type="image/png" href="/_/asset/mimir/favicon/favicon-96x96.png" sizes="96x96" />
+  <link rel="icon" type="image/svg+xml" href="/_/asset/mimir/favicon/favicon.svg" />
+  <link rel="icon" type="image/x-icon" sizes="32x32" href="/_/asset/mimir/favicon/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/_/asset/mimir/favicon/apple-touch-icon.png" />
 </head>
+
 <body class="xp-page" data-th-classappend="${bodyClasses}">
+  <!-- Google Tag Manager (noscript) -->
+  <noscript data-th-if="${GTM_TRACKING_ID}">
+    <iframe title="GTM tag"
+      data-th-src="'https://www.googletagmanager.com/ns.html?id=' + ${GTM_TRACKING_ID} + (${GTM_AUTH} ? '&gtm_auth='+${GTM_AUTH}+'&gtm_preview=env-3&gtm_cookies_win=x' : '')"
+      height="0" width="0" style="display:none;visibility:hidden"></iframe>
+  </noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
   <!-- HEADER -->
-  <div class="header-wrapper">
+  <div class="header-wrapper" data-th-unless="${hideHeader}">
     <div class="container">
       <div class="row">
         <div class="col">
@@ -32,9 +52,13 @@
       </div>
     </div>
   </div>
+  <script type="application/ld+json" data-th-if="${jsonLd}" th:inline="javascript">[[${jsonLd}]]</script>
+
+  <div id="popup" data-th-if="${popupBody}"></div>
 
   <!-- Metainfo to make the page searchable -->
-  <div id="metainfo-container" data-th-if="${addMetaInfoSearch}" data-th-include="mimir:/site/includes/metainfoSearch.html" data-th-remove="tag"></div>
+  <div id="metainfo-container" data-th-if="${addMetaInfoSearch}"
+    data-th-insert="~{mimir:/site/includes/metainfoSearch.html}" data-th-remove="tag"></div>
 
   <!-- MAIN -->
   <main class="xp-region" id="content" data-th-if="${!isFragment}">
@@ -54,7 +78,7 @@
               <div class="col-md-4">
                 <span class="h2 statbank-title roboto-bold">Statistikkbanken</span>
               </div>
-              <div class="col-md-8 text-right">
+              <div class="col-md-8 text-end">
                 <div class="col-md-12">
                   <a data-th-href="${statbankHelpLink}" class="ssb-link mb-0 roboto-bold">
                     <span class="link-text" data-th-text="${statbankHelpText}">tom boks statbank-hjelp</span>
@@ -66,7 +90,8 @@
                   </a>
                 </div>
                 <div class="col-md-12">
-                  <a href="/statbank" class="ssb-link roboto-plain">
+                  <a data-th-href="${language.code == 'en'} ? '/en/statbank' : '/statbank'"
+                    class="ssb-link roboto-plain">
                     <span class="link-text" data-th-text="${statbankFrontPage}">tom boks statbank-forside</span>
                   </a>
                 </div>
@@ -83,10 +108,19 @@
             <div id="statbank-placeholder"></div>
           </div>
           <!-- Page Title -->
-          <div data-th-if="${page.data.title}" data-th-unless="${statbankWeb}" class="container mb-5">
+          <div data-th-if="${page.data.title}" data-th-unless="${statbankWeb}"
+            class="default-page-title container mb-5">
             <div class="row">
               <div class="col">
                 <h1 data-th-text="${page.data.title}"></h1>
+              </div>
+            </div>
+          </div>
+          <!-- Page Title Tables in full view -->
+          <div data-th-if="${tableView}" class="default-page-title container mb-5">
+            <div class="row">
+              <div class="col">
+                <h1 data-th-text="${page.displayName}"></h1>
               </div>
             </div>
           </div>
@@ -95,27 +129,25 @@
     </div>
 
     <!-- preview -->
-    <div class="container pt-5" data-th-if="${preview}" data-th-utext="${preview.body}">
+    <div class="container pt-2" data-th-if="${preview}" data-th-utext="${preview.body}">
     </div>
 
-    <div
-      data-th-each="region : ${configRegions}"
-      data-th-remove="tag"
-      data-th-unless="${statbankWeb}"
-    >
+    <div data-th-each="region : ${configRegions}" data-th-remove="tag" data-th-unless="${statbankWeb}">
       <div data-th-if="${region.showGreyTriangle}" class="grey-triangle"></div>
-      <div data-th-classappend="${region.showGreyBackground ? 'region-grey' : (region.topBorder ? 'border-columns' : '')}">
+      <div
+        data-th-classappend="${region.showDarkGreyBackground ? 'region-dark-grey' : (region.showGreyBackground ? 'region-grey' : (region.topBorder ? 'border-columns' : ''))}">
         <div
-          data-th-classappend="${region.view == 'full' ? 'container-fluid p-0' : region.view == 'card' ? 'border-top-green container' : 'container'}"
-        >
+          data-th-classappend="${region.view == 'full' ? 'container-fluid full-width' : region.view == 'card' ? 'border-top-green container' : 'container'}">
           <!-- Subtitle for content in default pages -->
-          <div data-th-if="${region.view != 'card'}" class="row">
+          <div data-th-if="${region.view != 'card'}" class="default-page-subtitle row">
             <div class="col">
               <div class="container">
                 <div class="row">
                   <div class="col">
-                    <h2 data-th-if="${region.hideTitle && region.title}" class="sr-only sr-only-focusable mb-5" data-th-text="${region.title}"></h2>
-                    <h2 data-th-if="${!region.hideTitle && region.title}" class="mb-5 mt-2 pt-5" data-th-text="${region.title}"></h2>
+                    <h2 data-th-if="${region.hideTitle && region.title}" class="d-none mb-5" 
+                      data-th-text="${region.title}"></h2>
+                    <h2 data-th-if="${!region.hideTitle && region.title}" class="mb-5 mt-2 pt-5"
+                      data-th-text="${region.title}"></h2>
                   </div>
                 </div>
               </div>
@@ -123,15 +155,14 @@
           </div>
 
           <!-- Subtitle for content in border-top-green containers -->
-          <h2 data-th-if="${region.view == 'card' && region.hideTitle && region.title}" class="sr-only sr-only-focusable mb-5" data-th-text="${region.title}"></h2>
-          <h2 data-th-if="${region.view == 'card' && !region.hideTitle && region.title}" class="mb-5" data-th-text="${region.title}"></h2>
+          <h2 data-th-if="${region.view == 'card' && region.hideTitle && region.title}"
+            class="d-none mb-5" data-th-text="${region.title}"></h2>
+          <h2 data-th-if="${region.view == 'card' && !region.hideTitle && region.title}" class="mb-5"
+            data-th-text="${region.title}"></h2>
 
-          <div
-            class="row row-cols-1"
-            data-th-data-portal-region="${region.region}"
-          >
+          <div class="row row-cols-1" data-th-data-portal-region="${region.region}">
             <div data-th-each="component : ${region.components}" data-th-remove="tag">
-              <div data-portal-component="${component.path}" data-th-remove="tag"/>
+              <div data-portal-component="${component.path}" data-th-remove="tag" />
             </div>
           </div>
         </div>
@@ -139,25 +170,20 @@
     </div>
     <div data-th-if="${mainRegionComponents}" data-portal-region="main" data-th-unless="${statbankWeb}">
       <div data-th-each="component : ${mainRegionComponents}" data-th-remove="tag">
-        <div data-portal-component="${component.path}" data-th-remove="tag" ></div>
+        <div data-portal-component="${component.path}" data-th-remove="tag"></div>
       </div>
     </div>
+  </main>
+
+  <main class="xp-region" id="content" data-th-if="${isFragment}">
+    <div data-portal-component="fragment" data-th-remove="tag"></div>
   </main>
 
   <!-- FOOTER -->
   <footer data-th-if="${footerBody}" id="footer" data-th-utext="${footerBody}" data-th-remove="tag">
   </footer>
 
-  <script data-th-src="${ieUrl}"></script>
-  <!-- siteimprove tracking script -->
-  <script type="text/javascript">
-    /*<![CDATA[*/
-    (function() {
-      var sz = document.createElement('script'); sz.type = 'text/javascript'; sz.async = true;
-      sz.src = '//siteimproveanalytics.com/js/siteanalyze_6003075.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(sz, s);
-    })();
-    /*]]>*/
-  </script>
+  <script data-th-src="${ieUrl}" defer></script>
 </body>
+
 </html>
