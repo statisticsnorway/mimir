@@ -15,7 +15,7 @@ jobs:
     environment: 'QA_mimir'
     steps:
       - name: Download workflow artifact
-        uses: dawidd6/action-download-artifact@v6
+        uses: dawidd6/action-download-artifact@v9
         with:
           workflow: deploy_to_qa.yaml
           branch: develop
