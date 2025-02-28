@@ -10,24 +10,5 @@
         <allowType>factBox</allowType>
       </config>
     </input>
-    <field-set>
-			<label>
-				Faktaboks fritekst
-			</label>
-			<items>
-				<input name="factBoxTitle" type="TextLine">
-          <occurrences minimum="0" maximum="1" />
-          <label>
-            Tittel
-          </label>
-        </input>
-        <input name="factBoxText" type="TextArea">
-          <occurrences minimum="0" maximum="1" />
-          <label>
-            Tekst
-          </label>
-        </input>
-			</items>
-		</field-set>
   </form>
 </part>
