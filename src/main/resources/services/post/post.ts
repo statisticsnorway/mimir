@@ -1,4 +1,4 @@
-import { type RepoConnection } from '/lib/xp/node'
+import { type RepoConnection, type Node } from '/lib/xp/node'
 import { connectMarkdownRepo, MarkdownRepoNode } from '/lib/ssb/utils/markdownUtils'
 
 export function post(req: XP.Request): void {
@@ -9,7 +9,7 @@ export function post(req: XP.Request): void {
   if (nodeExists) {
     repo.modify({
       key: nodeKey,
-      editor: (node: MarkdownRepoNode) => {
+      editor: (node: Node<MarkdownRepoNode>) => {
         node.markdown = req.body
         return node
       },
