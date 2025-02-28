@@ -1,7 +1,7 @@
 import { type Node } from '/lib/xp/node'
 import { getMarkdownRepo, getMarkdownNode } from '/lib/ssb/utils/markdownUtils'
 
-exports.get = (): XP.Response => {
+export function get(): XP.Response {
   const markdownFileIds = getMarkdownRepo().hits.map((node: { id: string }) => `${node.id}`)
   const markdownContent = markdownFileIds.map((id: string) => getMarkdownNode(id))
   const total: number = markdownContent.length
