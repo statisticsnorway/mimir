@@ -1,9 +1,14 @@
 import { connect } from '/lib/xp/node'
-import { preview } from '../../parts/markdownCharts/markdownCharts'
+import { type MarkdownRepoNode } from '/lib/ssb/utils/markdownUtils'
+import { preview as markdownChartsPreview } from '../../parts/markdownCharts/markdownCharts'
 
-exports.macro = (context: XP.MacroContext): XP.Response => renderPart(context)
+export function macro(context: XP.MacroContext): XP.Response {
+  return renderPart(context)
+}
 
-exports.preview = (context: XP.MacroContext): XP.Response => renderPart(context)
+export function preview(context: XP.MacroContext): XP.Response {
+  return renderPart(context)
+}
 
 function renderPart(context: XP.MacroContext): XP.Response {
   const { jsconfig } = context.params
@@ -15,5 +20,5 @@ function renderPart(context: XP.MacroContext): XP.Response {
   })
   const content = repo.get(jsconfig)
 
-  return preview(context as unknown as Request, content)
+  return markdownChartsPreview(context as unknown as XP.Request, content as MarkdownRepoNode)
 }

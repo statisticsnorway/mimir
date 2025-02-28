@@ -1,8 +1,8 @@
 import { render as React4xpRender } from '/lib/xp/react4xp'
 import { renderError } from '/lib/ssb/error/error'
-import { MarkdownRepoNode } from '/lib/ssb/utils/markdownUtils'
+import { type MarkdownRepoNode } from '/lib/ssb/utils/markdownUtils'
 
-exports.get = (req: XP.Request): XP.Response => {
+export function get(req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -10,7 +10,7 @@ exports.get = (req: XP.Request): XP.Response => {
   }
 }
 
-exports.preview = (req: XP.Request, content: MarkdownRepoNode): XP.Response => {
+export function preview(req: XP.Request, content: MarkdownRepoNode): XP.Response {
   try {
     return renderPart(req, content)
   } catch (e) {
