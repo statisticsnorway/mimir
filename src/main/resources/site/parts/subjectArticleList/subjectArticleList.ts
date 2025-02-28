@@ -1,13 +1,11 @@
 import { type Content, type ContentsResult } from '/lib/xp/content'
 import { getContent, serviceUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
-import { getChildArticles, prepareArticles } from '/lib/ssb/utils/articleUtils'
-import { getSubSubjects, getSubSubjectsByPath } from '/lib/ssb/utils/subjectUtils'
+import { getChildArticles, getSubtopics, prepareArticles } from '/lib/ssb/utils/articleUtils'
 import { render } from '/lib/enonic/react4xp'
 import { isEnabled } from '/lib/featureToggle'
 import { type SubjectArticleListProps } from '/lib/types/partTypes/subjectArticleList'
 import { type PreparedArticles } from '/lib/types/article'
-import { type SubjectItem } from '/lib/types/subject'
 import { type Article, type Page } from '/site/content-types'
 
 export function get(req: XP.Request) {
@@ -62,20 +60,4 @@ function renderPart(req: XP.Request) {
   }
 
   return render('site/parts/subjectArticleList/subjectArticleList', props, req)
-}
-
-function getSubtopics(
-  content: Content<Page>,
-  currentPath: string,
-  req: XP.Request,
-  language: string
-): string | string[] {
-  const isMainSubject: boolean = content.page?.config?.subjectType === 'mainSubject'
-  if (isMainSubject) {
-    const allSubSubjects: SubjectItem[] = getSubSubjects(req, language)
-    const subSubjectByPath = getSubSubjectsByPath(allSubSubjects, currentPath)
-    return subSubjectByPath.map((subSubject) => subSubject.id)
-  }
-
-  return content._id
 }
