@@ -1,0 +1,74 @@
+<part>
+    <display-name>Tidslinje Ny</display-name>
+    <form>
+        <item-set name="TimelineItemSet">  
+            <label>Tidslinjeelement</label>  
+            <occurrences minimum="1" maximum="0"/>  
+            <items>
+                <input name="year" type="TextLine">
+                    <label>År</label>
+                    <occurrences minimum="1" maximum="1"/>  
+                </input>
+                <option-set name="event">
+                    <label>Hendelse</label>
+                    <expanded>false</expanded>
+                    <occurrences minimum="0" maximum="0"/>
+                    <help-text>Velg type hendelse</help-text>
+                    <options minimum="0" maximum="1">
+                        <option name="simpleBox">
+                            <label>Enkel tekstboks med eller uten lenke</label>
+                            <help-text>Brukes hvis man kun har en tittel og eventuelt litt tekst</help-text>
+                            <items>
+                                <input name="title" type="TextLine">
+                                    <label>Tittel</label>
+                                    <occurrences minimum="1" maximum="1"/>
+                                </input>
+                                <input name="text" type="TextLine">
+                                    <label>Tekst</label>
+                                    <occurrences minimum="0" maximum="1"/>  
+                                </input>
+                                <mixin name="linkUrlOrContent" />
+                                <mixin name="timelineCategory" />
+                            </items>
+                        </option>
+                        <option name="expansionBox">
+                            <label>Utvidbar box (ExpansionBox)</label>
+                            <help-text>Brukes hvis man ønsker å ha en lengre tekst som ikke lenker til artikkel</help-text>
+                            <items>
+                                <input name="title" type="TextLine">
+                                    <label>Tittel</label>
+                                    <occurrences minimum="1" maximum="1"/>
+                                </input>
+                                <input name="text" type="HtmlArea">
+                                    <label>Tekst</label>
+                                    <config>
+                                        <include>Bold Italic Underline Strike Subscript Superscript Cut Copy Blockquote</include>
+                                        <allowHeadings>h2 h3 h4 h5</allowHeadings>
+                                    </config>
+                                </input>
+                                <mixin name="timelineCategory" />
+                            </items>
+                        </option>
+                        <option name="directorBox">
+                            <label>Direktør</label>
+                            <items>
+                                <input name="title" type="TextLine">
+                                    <label>Navn</label>
+                                    <occurrences minimum="1" maximum="1"/>
+                                </input>
+                                <input name="text" type="TextLine">
+                                    <label>Tekst</label>
+                                    <occurrences minimum="0" maximum="1"/>  
+                                </input>
+                                <input name="directorImage" type="ImageSelector">
+                                    <label>Direktørbilde</label>
+                                    <occurrences minimum="0" maximum="1"/>
+                                </input>
+                            </items>
+                        </option>
+                    </options>
+                </option-set>
+            </items>
+        </item-set>
+  </form>
+</part>

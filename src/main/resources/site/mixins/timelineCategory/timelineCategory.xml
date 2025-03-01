@@ -1,0 +1,15 @@
+<mixin>
+    <display-name>Hendelsestype Tidslinje</display-name>
+    <form>
+        <input name="timelineCategory" type="RadioButton">
+            <label>Hendelsestype</label>
+            <occurrences minimum="1" maximum="1"/>
+            <config>
+                <option value="statistic">Statistikk</option>
+                <option value="aboutSsb">Om SSB</option>
+                <option value="director">Direktør</option>
+            </config>
+            <default>aboutSsb</default>
+        </input>
+    </form>
+</mixin>
