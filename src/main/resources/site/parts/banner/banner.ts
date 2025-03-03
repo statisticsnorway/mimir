@@ -33,11 +33,7 @@ function renderPart(req: XP.Request): XP.Response {
   const part = getComponent<XP.PartComponent.Banner>()
   if (!part) throw Error('No component found')
 
-  const region = part.path?.split('/')[1]
-  const myPage = page.page?.config as Default
-  const myRegions = myPage?.regions ? forceArray(myPage.regions) : []
-  const myRegion = myRegions.find((r) => r.region === region)
-
+  const myRegion = getCurrentRegion(part, page)
   const pageType = part.config.pageType
   const phrases = getPhrases(page) as Phrases
 
@@ -46,8 +42,7 @@ function renderPart(req: XP.Request): XP.Response {
   if ('faktaside' in pageType) {
     subTitleFactPage = pageType.faktaside.subTitle ? pageType.faktaside.subTitle : factsAbout
   }
-  const municipality = pageType._selected === 'kommunefakta' ? getMunicipality(req as RequestWithCode) : undefined
-  const municipalityName = municipality ? removeCountyFromMunicipalityName(municipality.displayName) : undefined
+
   const isLandingPage = 'general' in pageType && pageType.general.landingPage
   const imgSrcSet = part.config.image ? imageSrcSet(part.config.image, isLandingPage, myRegion?.view) : undefined
 
@@ -66,8 +61,7 @@ function renderPart(req: XP.Request): XP.Response {
           format: 'jpg',
         })
       : undefined,
-    regionType: myRegion?.view,
-    municipalityTitle: municipality ? municipalityName + ' (' + municipality.county.name + ')' : undefined,
+    municipalityTitle: getMunicipalityTitle(pageType, req),
     pageType: page.page?.config.pageType as string,
     selectedPageType: pageType._selected,
     subTitleFactPage,
@@ -89,6 +83,20 @@ function renderPart(req: XP.Request): XP.Response {
     }${isLandingPage ? ' landing-page-banner' : ''}"></section>`,
     hydrate: false,
   })
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function getMunicipalityTitle(pageType: any, req: XP.Request) {
+  const municipality = pageType._selected === 'kommunefakta' ? getMunicipality(req as RequestWithCode) : undefined
+  const municipalityName = municipality ? removeCountyFromMunicipalityName(municipality.displayName) : undefined
+  return municipality ? municipalityName + ' (' + municipality.county.name + ')' : undefined
+}
+
+function getCurrentRegion(part: XP.PartComponent.Banner, page: Content<Page>) {
+  const region = part.path?.split('/')[1]
+  const myPage = page.page?.config as Default
+  const myRegions = myPage?.regions ? forceArray(myPage.regions) : []
+  return myRegions.find((r) => r.region === region)
 }
 
 // Inefficient, should only do one imageUrl call and then string replace the width
