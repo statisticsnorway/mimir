@@ -1,6 +1,7 @@
 import { render as React4xpRender } from '/lib/enonic/react4xp'
 import { renderError } from '/lib/ssb/error/error'
 import { type MarkdownRepoNode } from '/lib/ssb/utils/markdownUtils'
+import { type MarkdownChartsProps } from '/lib/types/partTypes/markdown'
 
 export function get(req: XP.Request): XP.Response {
   try {
@@ -19,15 +20,11 @@ export function preview(req: XP.Request, content: MarkdownRepoNode): XP.Response
 }
 
 function renderPart(req: XP.Request, content?: MarkdownRepoNode): XP.Response {
-  const options: object = content && content.markdown ? JSON.parse(content.markdown) : {}
+  const options = content?.markdown ? JSON.parse(content.markdown) : {}
 
-  const props: PartProperties = {
+  const props: MarkdownChartsProps = {
     options,
   }
 
   return React4xpRender('site/parts/markdownCharts/markdownCharts', props, req)
-}
-
-interface PartProperties {
-  options: object
 }
