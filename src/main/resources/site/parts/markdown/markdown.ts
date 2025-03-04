@@ -1,11 +1,12 @@
-import { type Component, getComponent, processHtml } from '/lib/xp/portal'
+import { getComponent, processHtml } from '/lib/xp/portal'
 import { render as React4xpRender } from '/lib/xp/react4xp'
+import { type Node } from '/lib/xp/node'
 import { render } from '/lib/markdown'
-import { getMarkdownNode } from '/lib/ssb/utils/markdownUtils'
+import { getMarkdownNode, type MarkdownRepoNode } from '/lib/ssb/utils/markdownUtils'
 import { renderError } from '/lib/ssb/error/error'
-import { type MarkdownPartConfig } from './markdown-part-config'
+import { type MarkdownProps } from '/lib/types/partTypes/markdown'
 
-exports.get = (req: XP.Request): XP.Response => {
+export function get(req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -13,7 +14,7 @@ exports.get = (req: XP.Request): XP.Response => {
   }
 }
 
-exports.preview = (req: XP.Request): XP.Response => {
+export function preview(req: XP.Request): XP.Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -22,20 +23,20 @@ exports.preview = (req: XP.Request): XP.Response => {
 }
 
 function renderPart(req: XP.Request): XP.Response {
-  const component: Component<MarkdownPartConfig> = getComponent()
+  const component = getComponent<XP.PartComponent.Markdown>()
   const markdownTextProcessed: string = processHtml({
-    value: component.config.markdownText ? component.config.markdownText : '',
+    value: component?.config.markdownText ? component.config.markdownText : '',
   })
   const markdownTextRendered: string = render(markdownTextProcessed)
 
-  const markdownFileContent: MarkdownContent | null = component.config.markdownFile
-    ? getMarkdownNode(component.config.markdownFile)
+  const markdownFileContent: Node<MarkdownRepoNode> | null = component?.config.markdownFile
+    ? (getMarkdownNode(component?.config.markdownFile as string) as Node<MarkdownRepoNode>)
     : null
   const markdownFileProcessed: string = processHtml({
     value: markdownFileContent?.markdown ? markdownFileContent.markdown : '',
   })
 
-  const props: PartProperties = {
+  const props: MarkdownProps = {
     markdownText:
       markdownFileContent && markdownFileContent.markdown
         ? markdownTextRendered.concat(render(markdownFileProcessed))
@@ -43,12 +44,4 @@ function renderPart(req: XP.Request): XP.Response {
   }
 
   return React4xpRender('site/parts/markdown/markdown', props, req)
-}
-
-interface MarkdownContent extends Content {
-  markdown?: string
-}
-
-interface PartProperties {
-  markdownText: string
 }
