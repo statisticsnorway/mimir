@@ -1,4 +1,4 @@
-import { render as React4xpRender } from '/lib/xp/react4xp'
+import { render as React4xpRender } from '/lib/enonic/react4xp'
 import { renderError } from '/lib/ssb/error/error'
 import { type MarkdownRepoNode } from '/lib/ssb/utils/markdownUtils'
 

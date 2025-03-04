@@ -1,6 +1,6 @@
 import { getComponent, processHtml } from '/lib/xp/portal'
-import { render as React4xpRender } from '/lib/xp/react4xp'
 import { type Node } from '/lib/xp/node'
+import { render as React4xpRender } from '/lib/enonic/react4xp'
 import { render } from '/lib/markdown'
 import { getMarkdownNode, type MarkdownRepoNode } from '/lib/ssb/utils/markdownUtils'
 import { renderError } from '/lib/ssb/error/error'
