@@ -392,7 +392,7 @@ function BkibolCalculator(props: BkibolCalculatorProps) {
   function addDropdownStartMonth(id: string) {
     return (
       <Dropdown
-        className='month'
+        className='period'
         id={id}
         header={props.phrases.chooseMonth}
         onSelect={(value: object) => {
@@ -409,7 +409,7 @@ function BkibolCalculator(props: BkibolCalculatorProps) {
   function addDropdownEndMonth(id: string) {
     return (
       <Dropdown
-        className='month'
+        className='period'
         id={id}
         header={props.phrases.chooseMonth}
         onSelect={(value: object) => {
@@ -533,7 +533,7 @@ function BkibolCalculator(props: BkibolCalculatorProps) {
     const endValueText = endValue?.toString() ?? ''
     const startIndexText = startIndex?.toString() ?? ''
     const endIndexText = endIndex?.toString() ?? ''
-    const resultScreenReaderText = props.phrases.bkibolResultScreenReader
+    const resultScreenReaderText = props.phrases.calculatorResultScreenReader
       .replaceAll('{0}', language === 'en' ? endValueText : endValueText.replaceAll('.', ','))
       .replaceAll('{1}', priceChangeLabel)
       .replaceAll('{2}', language === 'en' ? changeValue : changeValue.replaceAll('.', ','))
@@ -622,8 +622,8 @@ function BkibolCalculator(props: BkibolCalculatorProps) {
           <Row>
             <Col>
               <FormError
-                errorMessages={[errorMessage || props.phrases.pifErrorUnknownError]}
-                title={props.phrases.pifErrorCalculationFailed}
+                errorMessages={[errorMessage || props.phrases.calculatorUknownError]}
+                title={props.phrases.calculatorErrorCalculationFailed}
               />
             </Col>
           </Row>
@@ -743,7 +743,7 @@ function BkibolCalculator(props: BkibolCalculatorProps) {
                         onBlur={() => onBlur('start-year')}
                       />
                     </Col>
-                    <Col className='select-month col-12 col-sm-7'>{addDropdownStartMonth('start-month')}</Col>
+                    <Col className='select-period col-12 col-sm-7'>{addDropdownStartMonth('start-month')}</Col>
                   </Row>
                 </Container>
               </Col>
@@ -762,7 +762,7 @@ function BkibolCalculator(props: BkibolCalculatorProps) {
                         onBlur={() => onBlur('end-year')}
                       />
                     </Col>
-                    <Col className='select-month col-12 col-sm-7'>{addDropdownEndMonth('end-month')}</Col>
+                    <Col className='select-period col-12 col-sm-7'>{addDropdownEndMonth('end-month')}</Col>
                   </Row>
                 </Container>
               </Col>

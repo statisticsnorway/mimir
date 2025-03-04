@@ -6,6 +6,7 @@ import {
   getAllSubSubjectByContent,
   getMainSubjects,
   getSubSubjects,
+  getSubSubjectsByPath,
 } from '/lib/ssb/utils/subjectUtils'
 import { formatDate } from '/lib/ssb/utils/dateUtils'
 import { notNullOrUndefined } from '/lib/ssb/utils/coreUtils'
@@ -13,7 +14,7 @@ import { ENONIC_CMS_DEFAULT_REPO, withSuperUserContext } from '/lib/ssb/repo/com
 import { arraysEqual, ensureArray } from '/lib/ssb/utils/arrayUtils'
 import { type ArticleResult, type AssociatedLink, type CMS, type PreparedArticles } from '/lib/types/article'
 import { type SubjectItem } from '/lib/types/subject'
-import { type Article } from '/site/content-types'
+import { Page, type Article } from '/site/content-types'
 
 const dummyReq: Partial<XP.Request> = {
   branch: 'master',
@@ -224,4 +225,19 @@ export function getAssociatedArticleArchiveLinks(
       .filter((articleArchive) => !!articleArchive) as Array<AssociatedLink>
   }
   return []
+}
+
+export function getSubtopics(
+  content: Content<Page>,
+  currentPath: string,
+  req: XP.Request,
+  language: string
+): string | string[] {
+  const isMainSubject: boolean = content.page?.config?.subjectType === 'mainSubject'
+  if (isMainSubject) {
+    const allSubSubjects: SubjectItem[] = getSubSubjects(req, language)
+    const subSubjectByPath = getSubSubjectsByPath(allSubSubjects, currentPath)
+    return subSubjectByPath.map((subSubject) => subSubject.id)
+  }
+  return content._id
 }

@@ -6,4 +6,5 @@ export function run(): void {
   clearPartFromPartCache('pifCalculator')
   clearPartFromPartCache('bkibolCalculator')
   clearPartFromPartCache('husleieCalculator')
+  clearPartFromPartCache('bpiCalculator')
 }
