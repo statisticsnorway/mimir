@@ -3,7 +3,7 @@ import { render as React4xpRender } from '/lib/xp/react4xp'
 import { render } from '/lib/markdown'
 import { getMarkdownNode } from '/lib/ssb/utils/markdownUtils'
 import { renderError } from '/lib/ssb/error/error'
-import { MarkdownPartConfig } from './markdown-part-config'
+import { type MarkdownPartConfig } from './markdown-part-config'
 
 exports.get = (req: XP.Request): XP.Response => {
   try {

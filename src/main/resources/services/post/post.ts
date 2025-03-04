@@ -1,5 +1,5 @@
 import { type RepoConnection, type Node } from '/lib/xp/node'
-import { connectMarkdownRepo, MarkdownRepoNode } from '/lib/ssb/utils/markdownUtils'
+import { connectMarkdownRepo, type MarkdownRepoNode } from '/lib/ssb/utils/markdownUtils'
 
 export function post(req: XP.Request): void {
   const repo: RepoConnection = connectMarkdownRepo()

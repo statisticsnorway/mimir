@@ -1,7 +1,7 @@
 const MARKDOWN_REPO: string = 'no.ssb.pubmd'
 const MARKDOWN_BRANCH: string = 'master'
 
-import { connect, RepoConnection } from '/lib/xp/node'
+import { connect, type RepoConnection } from '/lib/xp/node'
 import { getNode } from '/lib/ssb/repo/common'
 
 export function connectMarkdownRepo(): RepoConnection {
