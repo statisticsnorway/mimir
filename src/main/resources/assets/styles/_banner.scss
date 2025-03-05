@@ -14,7 +14,9 @@
     height: 100%;
     width: 100%;
     img {
-      height: 100%;
+      display: block;
+      height: auto;
+      width: auto;
     }
 
     @include media-breakpoint-down(md) {

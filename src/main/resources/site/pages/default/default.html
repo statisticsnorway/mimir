@@ -136,15 +136,17 @@
       <div data-th-if="${region.showGreyTriangle}" class="grey-triangle"></div>
       <div
         data-th-classappend="${region.showDarkGreyBackground ? 'region-dark-grey' : (region.showGreyBackground ? 'region-grey' : (region.topBorder ? 'border-columns' : ''))}">
-        <div
-          data-th-classappend="${region.view == 'full' ? 'container-fluid full-width' : region.view == 'card' ? 'border-top-green container' : 'container'}">
+        <div data-th-classappend="${
+            region.view == 'full' ? 'container-fluid full-width'
+            : region.view == 'card' ? 'border-top-green container'
+            : 'container'}">
           <!-- Subtitle for content in default pages -->
           <div data-th-if="${region.view != 'card'}" class="default-page-subtitle row">
             <div class="col">
               <div class="container">
                 <div class="row">
                   <div class="col">
-                    <h2 data-th-if="${region.hideTitle && region.title}" class="d-none mb-5" 
+                    <h2 data-th-if="${region.hideTitle && region.title}" class="d-none mb-5"
                       data-th-text="${region.title}"></h2>
                     <h2 data-th-if="${!region.hideTitle && region.title}" class="mb-5 mt-2 pt-5"
                       data-th-text="${region.title}"></h2>
@@ -155,8 +157,8 @@
           </div>
 
           <!-- Subtitle for content in border-top-green containers -->
-          <h2 data-th-if="${region.view == 'card' && region.hideTitle && region.title}"
-            class="d-none mb-5" data-th-text="${region.title}"></h2>
+          <h2 data-th-if="${region.view == 'card' && region.hideTitle && region.title}" class="d-none mb-5"
+            data-th-text="${region.title}"></h2>
           <h2 data-th-if="${region.view == 'card' && !region.hideTitle && region.title}" class="mb-5"
             data-th-text="${region.title}"></h2>
 
