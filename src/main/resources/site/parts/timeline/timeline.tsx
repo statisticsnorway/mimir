@@ -54,12 +54,7 @@ function Timeline(props: TimelineProps) {
     return elements
       .map((element) => {
         if (element.event) {
-          const filteredEvents = Array.isArray(element.event)
-            ? element.event.filter((event) => event.category === category)
-            : element.event.category === category
-              ? element.event
-              : null
-
+          const filteredEvents = element.event.filter((event) => event.timelineCategory === category)
           return filteredEvents ? { ...element, event: filteredEvents } : null
         }
         return null
@@ -102,7 +97,7 @@ function Timeline(props: TimelineProps) {
         external={isExternalUrl(event.targetUrl)}
         href={event.targetUrl}
         titleText={event.title}
-        subText={event.ingress}
+        subText={event.text}
       />
     )
   }
@@ -115,7 +110,7 @@ function Timeline(props: TimelineProps) {
         icon={<img src={event.directorImage} alt={event.directorImageAltText} loading='lazy' />}
         profiled
       >
-        <Text>{event.ingress}</Text>
+        <Text>{event.text}</Text>
       </Card>
     )
   }
@@ -130,16 +125,16 @@ function Timeline(props: TimelineProps) {
         ) : (
           <span className='title'>{event.title}</span>
         )}
-        {event.ingress && <span>{event.ingress}</span>}
+        {event.text && <span className='text'>{event.text}</span>}
       </div>
     )
   }
 
   function addEventExpansionBox(event: TimelineEvent) {
-    const text = event.eventText ? (
+    const text = event.text ? (
       <div
         dangerouslySetInnerHTML={{
-          __html: sanitize(event.eventText),
+          __html: sanitize(event.text),
         }}
       ></div>
     ) : (
@@ -164,19 +159,19 @@ function Timeline(props: TimelineProps) {
   }
 
   function addEvent(event: TimelineEvent) {
-    if (event.directorImage) {
+    if (event.eventType === 'directorBox') {
       return addDirectorCard(event)
     }
-    if (event.urlArticle) {
+    if (event.eventType === 'simpleBox' && event.targetUrl) {
       return addCategoryLink(event)
     }
 
-    if (event.eventText) {
-      return addEventExpansionBox(event)
+    if (event.eventType === 'simpleBox' && !event.targetUrl) {
+      return addEventBox(event)
     }
 
-    if (!event.eventText && !event.article) {
-      return addEventBox(event)
+    if (event.eventType === 'expansionBox') {
+      return addEventExpansionBox(event)
     }
     return addEventBox(event)
   }

@@ -72,7 +72,6 @@ declare global {
       export type SubjectArticleList = _PartComponent<'mimir:subjectArticleList'>
       export type Table = _PartComponent<'mimir:table'>
       export type Timeline = _PartComponent<'mimir:timeline'>
-      export type TimelineNew = _PartComponent<'mimir:timelineNew'>
       export type UpcomingReleases = _PartComponent<'mimir:upcomingReleases'>
       export type Variables = _PartComponent<'mimir:variables'>
       export type VideoEmbed = _PartComponent<'mimir:videoEmbed'>

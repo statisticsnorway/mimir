@@ -118,7 +118,9 @@
         .title {
           @include roboto-condenced;
           font-size: 20px;
-          margin-bottom: 10px;
+        }
+        .text {
+          margin-top: 10px;
         }
       }
     }
