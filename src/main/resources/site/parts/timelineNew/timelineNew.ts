@@ -52,7 +52,7 @@ function renderPart(req: XP.Request) {
     countYear: 5,
   }
 
-  return render('site/parts/timeline/timeline', props, req, {
+  return render('site/parts/timelineNew/timelineNew', props, req, {
     body: '<section class="xp-part timeline"></section>',
   })
 }
