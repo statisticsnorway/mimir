@@ -1,4 +1,6 @@
 export interface TimelineProps {
+  title: string
+  ingress: string
   timelineElements: TimelineElement[]
   showMoreButtonText: string
   countYear: number

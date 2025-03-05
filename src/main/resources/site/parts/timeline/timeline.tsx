@@ -1,12 +1,21 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { Button, CategoryLink, Card, ExpansionBox, Link, Tag, Text } from '@statisticsnorway/ssb-component-library'
+import {
+  Button,
+  CategoryLink,
+  Card,
+  ExpansionBox,
+  Link,
+  Tag,
+  Text,
+  Title,
+} from '@statisticsnorway/ssb-component-library'
 import { ChevronDown } from 'react-feather'
 import { type TimelineProps, type TimelineElement, type TimelineEvent } from '/lib/types/partTypes/timeline'
 import { sanitize } from '/lib/ssb/utils/htmlUtils'
 import { usePaginationKeyboardNavigation } from '/lib/ssb/utils/customHooks/paginationHooks'
 
 function Timeline(props: TimelineProps) {
-  const { timelineElements, countYear, showMoreButtonText } = props
+  const { timelineElements, countYear, showMoreButtonText, title, ingress } = props
   const [selectedTag, setSelectedTag] = useState('all')
   const [filteredElements, setFilteredElements] = useState(timelineElements)
   const [timelineCount, setTimeLineCount] = useState(countYear)
@@ -210,6 +219,15 @@ function Timeline(props: TimelineProps) {
     )
   }
 
+  function addTitle() {
+    return (
+      <div className='title-ingress-wrapper col-12 col-lg-8 p-0'>
+        <Title size={1}>{title}</Title>
+        <p className='ingress'>{ingress}</p>
+      </div>
+    )
+  }
+
   function addTimeLine() {
     return (
       <div className='timeline-container'>
@@ -228,6 +246,7 @@ function Timeline(props: TimelineProps) {
 
   return (
     <div className='ssb-timeline'>
+      {title && addTitle()}
       {addFilter()}
       {addTimeLine()}
     </div>

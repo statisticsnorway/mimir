@@ -47,6 +47,8 @@ function renderPart(req: XP.Request) {
   })
 
   const props = {
+    title: timelineConfig.title,
+    ingress: timelineConfig.ingress,
     timelineElements: timelineProps,
     showMoreButtonText: showMoreText ?? 'Vis flere år',
     countYear: timelineConfig.numberOfYear ?? 10,

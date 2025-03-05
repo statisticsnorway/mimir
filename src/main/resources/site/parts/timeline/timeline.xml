@@ -1,8 +1,27 @@
 <part>
     <display-name>Tidslinje</display-name>
     <form>
+        <field-set>
+            <label>Tidslinje informasjon</label>
+            <items>
+                <input name="title" type="TextLine">
+                    <label>Tittel for tidslinje</label>
+                    <occurrences minimum="0" maximum="1" />
+                </input>
+                <input name="ingress" type="TextLine">
+                    <label>Ingress</label>
+                    <occurrences minimum="0" maximum="1"/>  
+                </input>
+                <input type="TextLine" name="numberOfYear">
+                    <label>Antall år per side</label>
+                    <help-text>Hvor mange år skal vises før man må trykke Vis flere år</help-text>
+                    <default>10</default>
+                    <occurrences minimum="1" maximum="1" />
+                </input>
+            </items>
+        </field-set>
         <item-set name="TimelineItemSet">  
-            <label>Tidslinjeelement</label>  
+            <label>Tidslinjeelementer</label>  
             <occurrences minimum="1" maximum="0"/>  
             <items>
                 <input name="year" type="TextLine">
@@ -71,11 +90,5 @@
                 </option-set>
             </items>
         </item-set>
-        <input type="TextLine" name="numberOfYear">
-            <label>Antall år per side</label>
-            <help-text>Hvor mange år skal vises før man må trykke Vis flere år</help-text>
-            <default>10</default>
-            <occurrences minimum="1" maximum="1" />
-        </input>
   </form>
 </part>

@@ -1,4 +1,11 @@
 .ssb-timeline {
+  .title-ingress-wrapper {
+    margin-bottom: 30px;
+    .ingress {
+      font-size: 1.25rem;
+    }
+  }
+
   .timeline-container {
     display: flex;
     justify-content: center;
@@ -9,7 +16,7 @@
     flex-wrap: wrap;
     gap: 0.75rem;
     margin-top: 1.5rem;
-    margin-bottom: 8rem;
+    margin-bottom: 6rem;
 
     .ssb-tag {
       &.active {
@@ -137,6 +144,10 @@
   }
 
   @include media-breakpoint-down(lg) {
+    .filter {
+      margin-bottom: 4rem;
+    }
+
     .timeline-container {
       justify-content: start;
     }
