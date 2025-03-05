@@ -49,6 +49,7 @@ export interface DirectorBox {
   title: string
   text: string
   directorImage: string
+  urlContentSelector?: hrefManual | hrefContent
 }
 
 export interface Event {

@@ -64,6 +64,7 @@
                                     <label>Direktørbilde</label>
                                     <occurrences minimum="0" maximum="1"/>
                                 </input>
+                                <mixin name="linkUrlOrContent" />
                             </items>
                         </option>
                     </options>

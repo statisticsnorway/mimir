@@ -124,11 +124,11 @@ function parseDirector(event: DirectorBox): TimelineEvent {
       : undefined,
     directorImageAltText: event.directorImage ? getImageAlt(event.directorImage) : '',
     timelineCategory: 'director',
-    targetUrl: '',
+    targetUrl: event.urlContentSelector ? getLinkTargetUrl(event) : '',
   }
 }
 
-function getLinkTargetUrl(event: SimpleBox): string {
+function getLinkTargetUrl(event: SimpleBox | DirectorBox): string {
   if (event.urlContentSelector?._selected == 'optionLink') {
     return event.urlContentSelector.optionLink.link ?? ''
   }
