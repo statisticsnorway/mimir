@@ -49,7 +49,7 @@ function renderPart(req: XP.Request) {
   const props = {
     timelineElements: timelineProps,
     showMoreButtonText: showMoreText ?? 'Vis flere år',
-    countYear: 5,
+    countYear: timelineConfig.numberOfYear ?? 10,
   }
 
   return render('site/parts/timeline/timeline', props, req, {

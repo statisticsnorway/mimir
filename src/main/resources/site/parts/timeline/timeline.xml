@@ -71,5 +71,11 @@
                 </option-set>
             </items>
         </item-set>
+        <input type="TextLine" name="numberOfYear">
+            <label>Antall år per side</label>
+            <help-text>Hvor mange år skal vises før man må trykke Vis flere år</help-text>
+            <default>10</default>
+            <occurrences minimum="1" maximum="1" />
+        </input>
   </form>
 </part>

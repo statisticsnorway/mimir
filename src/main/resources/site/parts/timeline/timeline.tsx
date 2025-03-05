@@ -9,7 +9,6 @@ function Timeline(props: TimelineProps) {
   const { timelineElements, countYear, showMoreButtonText } = props
   const [selectedTag, setSelectedTag] = useState('all')
   const [filteredElements, setFilteredElements] = useState(timelineElements)
-  const [active, setActive] = useState(false)
   const [timelineCount, setTimeLineCount] = useState(countYear)
   const [keyboardNavigation, setKeyboardNavigation] = useState(false)
 
@@ -36,15 +35,11 @@ function Timeline(props: TimelineProps) {
   }, [timelineCount])
 
   const fetchMoreYear = () => {
-    setTimeLineCount((prevCount) => prevCount + countYear)
+    setTimeLineCount((prevCount) => Number(prevCount) + Number(countYear))
   }
 
   function setFilter(filter: string) {
     setSelectedTag(filter)
-    setActive(true)
-    setTimeout(() => {
-      setActive(false)
-    }, 1000)
   }
 
   const filterElementsByCategory = (elements: TimelineElement[], category: string) => {
@@ -217,14 +212,14 @@ function Timeline(props: TimelineProps) {
 
   function addTimeLine() {
     return (
-      <div className={`timeline ${active ? 'active' : ''}`}>
+      <div className='timeline'>
         <div className='circle' />
         <div className='timeline-elements'>
           {filteredElements?.slice(0, timelineCount).map((timeline, i) => {
             return <>{addTimelineYear(timeline, i)}</>
           })}
         </div>
-        {timelineElements.length > countYear && renderShowMoreButton()}
+        {timelineElements.length > countYear && timelineElements.length > timelineCount && renderShowMoreButton()}
       </div>
     )
   }
