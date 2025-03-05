@@ -212,14 +212,16 @@ function Timeline(props: TimelineProps) {
 
   function addTimeLine() {
     return (
-      <div className='timeline'>
-        <div className='circle' />
-        <div className='timeline-elements'>
-          {filteredElements?.slice(0, timelineCount).map((timeline, i) => {
-            return <>{addTimelineYear(timeline, i)}</>
-          })}
+      <div className='timeline-container'>
+        <div className='timeline'>
+          <div className='circle' />
+          <div className='timeline-elements'>
+            {filteredElements?.slice(0, timelineCount).map((timeline, i) => {
+              return <>{addTimelineYear(timeline, i)}</>
+            })}
+          </div>
+          {timelineElements.length > countYear && timelineElements.length > timelineCount && renderShowMoreButton()}
         </div>
-        {timelineElements.length > countYear && timelineElements.length > timelineCount && renderShowMoreButton()}
       </div>
     )
   }

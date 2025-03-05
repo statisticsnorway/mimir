@@ -1,4 +1,9 @@
 .ssb-timeline {
+  .timeline-container {
+    display: flex;
+    justify-content: center;
+  }
+
   .filter {
     display: flex;
     flex-wrap: wrap;
@@ -14,10 +19,11 @@
       }
     }
   }
+
   .timeline {
     position: relative;
-    margin-right: 40px;
-    padding-left: 200px;
+    padding-left: 20px;
+    width: 740px;
 
     .circle {
       width: 16px;
@@ -46,9 +52,7 @@
     }
 
     .timeline-elements {
-      padding-top: 25px;
-      padding-left: 0;
-      padding-bottom: 50px;
+      padding: 25px 0;
       list-style: none;
     }
 
@@ -124,19 +128,33 @@
         }
       }
     }
-
-    @include media-breakpoint-down(lg) {
-      padding-left: 20px;
-      margin-right: 0;
-
-      .timeline-content {
-        width: 100%;
-      }
-    }
   }
+
   .button-more {
     left: -20px;
     top: -30px;
     position: relative;
+  }
+
+  @include media-breakpoint-down(lg) {
+    .timeline-container {
+      justify-content: start;
+    }
+
+    .timeline {
+      padding-left: 20px;
+      margin-right: 0;
+      width: 100%;
+
+      .timeline-content {
+        width: 100%;
+        left: -10px;
+
+        .events {
+          width: 100%;
+          min-width: 0;
+        }
+      }
+    }
   }
 }
