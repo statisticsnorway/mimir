@@ -183,16 +183,14 @@
     }
 
     .timeline {
-      padding-left: 20px;
-      margin-right: 0;
+      padding-left: 10px;
       width: 100%;
 
       .timeline-content {
-        width: 100%;
+        width: calc(100% + 10px);
         left: -10px;
 
         .events {
-          width: 100%;
           min-width: 0;
         }
       }
