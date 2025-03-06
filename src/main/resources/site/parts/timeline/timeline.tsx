@@ -25,7 +25,8 @@ function Timeline(props: TimelineProps) {
 
   useEffect(() => {
     if (selectedTag !== 'all') {
-      setFilteredElements(filterElementsByCategory(timelineElements, selectedTag))
+      const filteredElementsResult = filterElementsByCategory(timelineElements, selectedTag)
+      setFilteredElements(filteredElementsResult)
     } else {
       setFilteredElements(props.timelineElements)
     }
@@ -55,15 +56,16 @@ function Timeline(props: TimelineProps) {
     if (category === 'all') {
       return elements
     }
-    return elements
-      .map((element) => {
-        if (element.event) {
-          const filteredEvents = element.event.filter((event) => event.timelineCategory === category)
-          return filteredEvents ? { ...element, event: filteredEvents } : null
+    const filteredElements: TimelineElement[] = []
+    elements.forEach((element) => {
+      if (element.event) {
+        const filteredEvents = element.event.filter((event) => event.timelineCategory === category)
+        if (filteredEvents.length > 0) {
+          filteredElements.push({ ...element, event: filteredEvents })
         }
-        return null
-      })
-      .filter((element) => element !== null)
+      }
+    })
+    return filteredElements
   }
 
   const handleOnClick = () => {
@@ -243,7 +245,7 @@ function Timeline(props: TimelineProps) {
               return <>{addTimelineYear(timeline, i)}</>
             })}
           </div>
-          {timelineElements.length > countYear && timelineElements.length > timelineCount && renderShowMoreButton()}
+          {filteredElements.length > countYear && filteredElements.length > timelineCount && renderShowMoreButton()}
         </div>
       </div>
     )
