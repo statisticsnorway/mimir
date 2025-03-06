@@ -202,30 +202,34 @@ function Timeline(props: TimelineProps) {
 
   function addFilter() {
     return (
-      <div className='filter'>
-        <Tag className={!selectedTag || selectedTag === 'all' ? 'active' : ''} onClick={() => setFilter('all')}>
-          Vis alt
-        </Tag>
-        <Tag className={selectedTag === 'statistic' ? 'active' : ''} onClick={() => setFilter('statistic')}>
-          Statistikk
-        </Tag>
-        <Tag className={selectedTag === 'aboutSsb' ? 'active' : ''} onClick={() => setFilter('aboutSsb')}>
-          Om SSB
-        </Tag>
-        <Tag className={selectedTag === 'director' ? 'active' : ''} onClick={() => setFilter('director')}>
-          Direktører
-        </Tag>
+      <div className='filter-container'>
+        <div className='filter'>
+          <Tag className={!selectedTag || selectedTag === 'all' ? 'active' : ''} onClick={() => setFilter('all')}>
+            Vis alt
+          </Tag>
+          <Tag className={selectedTag === 'statistic' ? 'active' : ''} onClick={() => setFilter('statistic')}>
+            Statistikk
+          </Tag>
+          <Tag className={selectedTag === 'aboutSsb' ? 'active' : ''} onClick={() => setFilter('aboutSsb')}>
+            Om SSB
+          </Tag>
+          <Tag className={selectedTag === 'director' ? 'active' : ''} onClick={() => setFilter('director')}>
+            Direktører
+          </Tag>
+        </div>
       </div>
     )
   }
 
   function addTitle() {
     return (
-      <div className='title-ingress-wrapper'>
-        <Title className='title' size={1}>
-          {title}
-        </Title>
-        <p className='ingress'>{ingress}</p>
+      <div className='title-container'>
+        <div className='title-ingress-wrapper'>
+          <Title className='title' size={1}>
+            {title}
+          </Title>
+          <p className='ingress'>{ingress}</p>
+        </div>
       </div>
     )
   }
@@ -248,10 +252,8 @@ function Timeline(props: TimelineProps) {
 
   return (
     <div className='ssb-timeline'>
-      <div className='title-filter-container'>
-        {title && addTitle()}
-        {addFilter()}
-      </div>
+      {title && addTitle()}
+      {addFilter()}
       {addTimeLine()}
     </div>
   )

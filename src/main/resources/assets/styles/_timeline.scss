@@ -1,37 +1,43 @@
 .ssb-timeline {
-  .title-filter-container {
+  .title-container {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
     margin-top: 4rem;
+
+    .title-ingress-wrapper {
+      grid-column: 2 / span 10;
+
+      .title {
+        display: block;
+        margin: 0 auto;
+      }
+      .ingress {
+        display: block;
+        margin: 0 auto;
+        font-size: 1.25rem;
+      }
+    }
   }
 
-  .title-ingress-wrapper {
-    grid-column: 2 / span 10;
-
-    .title {
-      display: block;
-      margin: 0 auto;
-    }
-    .ingress {
-      display: block;
-      margin: 0 auto;
-      font-size: 1.25rem;
-    }
-  }
-
-  .filter {
+  .filter-container {
     display: flex;
-    grid-column: 3 / span 8;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-    margin-top: 5rem;
-    margin-bottom: 4rem;
+    justify-content: center;
 
-    .ssb-tag {
-      &.active {
-        background: $ssb-dark-5;
-        border: 2px solid $ssb-dark-5;
-        color: $ssb-white;
+    .filter {
+      display: flex;
+      grid-column: 3 / span 8;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 5rem;
+      margin-bottom: 4rem;
+      width: 740px;
+
+      .ssb-tag {
+        &.active {
+          background: $ssb-dark-5;
+          border: 2px solid $ssb-dark-5;
+          color: $ssb-white;
+        }
       }
     }
   }
@@ -81,7 +87,7 @@
       left: -20px;
       position: relative;
       margin-bottom: 30px;
-      max-width: 740px;
+      //max-width: 740px;
 
       .year {
         width: 180px;
@@ -158,8 +164,16 @@
   }
 
   @include media-breakpoint-down(lg) {
-    .filter {
-      margin-bottom: 4rem;
+    .title-container {
+      display: block;
+      margin-top: 2rem;
+    }
+
+    .filter-container {
+      .filter {
+        margin-top: 3rem;
+        margin-bottom: 4rem;
+      }
     }
 
     .timeline-container {
