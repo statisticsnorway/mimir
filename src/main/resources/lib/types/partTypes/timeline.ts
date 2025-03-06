@@ -21,36 +21,23 @@ export interface TimelineEvent {
   timelineCategory?: string
   targetUrl?: string
 }
-
-/* export interface TimelineEventOld {
-
-  title: string
-  ingress?: string
-  eventText?: string
-  directorImage?: string
-  directorImageAltText?: string
-  category?: string
-  article?: string
-  urlArticle?: hrefManual | hrefContent
-  targetUrl?: string
-} */
 export interface SimpleBox {
   title: string
-  text: string
+  text?: string
   timelineCategory: string
   urlContentSelector?: hrefManual | hrefContent
 }
 
 export interface ExpansionBox {
   title: string
-  text: string
+  text?: string
   timelineCategory: string
 }
 
 export interface DirectorBox {
   title: string
-  text: string
-  directorImage: string
+  text?: string
+  directorImage?: string
   urlContentSelector?: hrefManual | hrefContent
 }
 
