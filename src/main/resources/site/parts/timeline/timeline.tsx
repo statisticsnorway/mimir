@@ -194,7 +194,6 @@ function Timeline(props: TimelineProps) {
         <div className='year'>
           <span>{timeline.year}</span>
         </div>
-        <div className='triangle' />
         {events?.length && addEvents(events)}
       </div>
     )

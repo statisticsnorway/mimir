@@ -87,7 +87,6 @@
       left: -20px;
       position: relative;
       margin-bottom: 30px;
-      //max-width: 740px;
 
       .year {
         width: 180px;
@@ -97,23 +96,25 @@
         position: absolute;
         align-content: center;
 
+        &:after {
+          content: '';
+          position: absolute;
+          top: 0;
+          right: -1px;
+          width: 0;
+          height: 0;
+          border-top: 40px solid transparent;
+          border-bottom: 40px solid transparent;
+          border-right: 20px solid #f0f8f9;
+          border-radius: 4px;
+        }
+
         span {
           @include roboto-condenced;
           color: #fff;
           padding: 20px 40px;
           font-size: 28px;
         }
-      }
-
-      .triangle {
-        position: absolute;
-        width: 0;
-        height: 0;
-        border-top: 40px solid transparent;
-        border-bottom: 40px solid transparent;
-        border-right: 20px solid #f0f8f9;
-        border-radius: 4px;
-        left: 160px;
       }
 
       .events {
@@ -147,7 +148,8 @@
         padding: 20px 40px;
         width: 100%;
         .title {
-          @include roboto-condenced;
+          @include roboto;
+          font-weight: bold;
           font-size: 20px;
         }
         .text {
@@ -194,6 +196,10 @@
           min-width: 0;
         }
       }
+    }
+
+    .button-more {
+      left: -10px;
     }
   }
 }
