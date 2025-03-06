@@ -221,8 +221,10 @@ function Timeline(props: TimelineProps) {
 
   function addTitle() {
     return (
-      <div className='title-ingress-wrapper col-12 col-lg-8 p-0'>
-        <Title size={1}>{title}</Title>
+      <div className='title-ingress-wrapper'>
+        <Title className='title' size={1}>
+          {title}
+        </Title>
         <p className='ingress'>{ingress}</p>
       </div>
     )
@@ -246,8 +248,10 @@ function Timeline(props: TimelineProps) {
 
   return (
     <div className='ssb-timeline'>
-      {title && addTitle()}
-      {addFilter()}
+      <div className='title-filter-container'>
+        {title && addTitle()}
+        {addFilter()}
+      </div>
       {addTimeLine()}
     </div>
   )
