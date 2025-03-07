@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useRef, useMemo } from 'react'
 import {
   Button,
   CategoryLink,
@@ -17,20 +17,33 @@ import { usePaginationKeyboardNavigation } from '/lib/ssb/utils/customHooks/pagi
 function Timeline(props: TimelineProps) {
   const { timelineElements, countYear, showMoreButtonText, title, ingress } = props
   const [selectedTag, setSelectedTag] = useState('all')
-  const [filteredElements, setFilteredElements] = useState(timelineElements)
   const [timelineCount, setTimeLineCount] = useState(countYear)
   const [keyboardNavigation, setKeyboardNavigation] = useState(false)
 
   const firstNewTimelineRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    if (selectedTag !== 'all') {
-      const filteredElementsResult = filterElementsByCategory(timelineElements, selectedTag)
-      setFilteredElements(filteredElementsResult)
-    } else {
-      setFilteredElements(props.timelineElements)
+  const filterElementsByCategory = (elements: TimelineElement[], category: string) => {
+    if (category === 'all') {
+      return elements
     }
-  }, [selectedTag])
+    const filteredElements: TimelineElement[] = []
+    elements.forEach((element) => {
+      if (element.event) {
+        const filteredEvents = element.event.filter((event) => event.timelineCategory === category)
+        if (filteredEvents.length > 0) {
+          filteredElements.push({ ...element, event: filteredEvents })
+        }
+      }
+    })
+    return filteredElements
+  }
+
+  const filteredElements = useMemo(() => {
+    if (selectedTag !== 'all') {
+      return filterElementsByCategory(timelineElements, selectedTag)
+    }
+    return timelineElements
+  }, [selectedTag, timelineElements])
 
   useEffect(() => {
     if (keyboardNavigation && firstNewTimelineRef.current) {
@@ -50,22 +63,6 @@ function Timeline(props: TimelineProps) {
 
   function setFilter(filter: string) {
     setSelectedTag(filter)
-  }
-
-  const filterElementsByCategory = (elements: TimelineElement[], category: string) => {
-    if (category === 'all') {
-      return elements
-    }
-    const filteredElements: TimelineElement[] = []
-    elements.forEach((element) => {
-      if (element.event) {
-        const filteredEvents = element.event.filter((event) => event.timelineCategory === category)
-        if (filteredEvents.length > 0) {
-          filteredElements.push({ ...element, event: filteredEvents })
-        }
-      }
-    })
-    return filteredElements
   }
 
   const handleOnClick = () => {

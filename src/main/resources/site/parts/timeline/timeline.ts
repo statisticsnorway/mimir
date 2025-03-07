@@ -32,7 +32,7 @@ function renderPart(req: XP.Request) {
   const timelineConfig: TimelinePartConfig = part.config
   const timelineItems: TimelinePartConfig['TimelineItemSet'] = forceArray(timelineConfig.TimelineItemSet)
 
-  const timelineProps: TimelineElement[] = timelineItems.map((element) => {
+  const timelineElements: TimelineElement[] = timelineItems.map((element) => {
     const events: Event[] = element.event ? forceArray(element.event) : []
     const parsedEvents: TimelineEvent[] = parseEvents(events)
     return {
@@ -49,7 +49,7 @@ function renderPart(req: XP.Request) {
   const props = {
     title: timelineConfig.title,
     ingress: timelineConfig.ingress,
-    timelineElements: timelineProps,
+    timelineElements,
     showMoreButtonText: showMoreText ?? 'Vis flere år',
     countYear: timelineConfig.numberOfYear ?? 10,
   }
