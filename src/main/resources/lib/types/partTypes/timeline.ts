@@ -2,6 +2,7 @@ export interface TimelineProps {
   title: string
   ingress: string
   timelineElements: TimelineElement[]
+  showFilter: boolean
   showMoreButtonText: string
   countYear: number
 }

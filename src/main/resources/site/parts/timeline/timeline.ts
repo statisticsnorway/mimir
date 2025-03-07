@@ -50,6 +50,7 @@ function renderPart(req: XP.Request) {
     title: timelineConfig.title,
     ingress: timelineConfig.ingress,
     timelineElements,
+    showFilter: timelineConfig.showFilter,
     showMoreButtonText: showMoreText ?? 'Vis flere år',
     countYear: timelineConfig.numberOfYear ?? 10,
   }

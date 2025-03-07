@@ -15,7 +15,7 @@ import { sanitize } from '/lib/ssb/utils/htmlUtils'
 import { usePaginationKeyboardNavigation } from '/lib/ssb/utils/customHooks/paginationHooks'
 
 function Timeline(props: TimelineProps) {
-  const { timelineElements, countYear, showMoreButtonText, title, ingress } = props
+  const { timelineElements, countYear, showMoreButtonText, title, ingress, showFilter } = props
   const [selectedTag, setSelectedTag] = useState('all')
   const [timelineCount, setTimeLineCount] = useState(countYear)
   const [keyboardNavigation, setKeyboardNavigation] = useState(false)
@@ -251,7 +251,7 @@ function Timeline(props: TimelineProps) {
   return (
     <div className='ssb-timeline'>
       {title && addTitle()}
-      {addFilter()}
+      {showFilter && addFilter()}
       {addTimeLine()}
     </div>
   )
