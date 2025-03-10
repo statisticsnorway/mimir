@@ -1,5 +1,8 @@
+import { type Default } from '/site/pages/default'
+
 export type BannerProps = {
   bannerImage?: string
+  regionType?: Default['regions'][number]['view']
   bannerImageAltText?: string
   sizes?: string
   srcset?: string

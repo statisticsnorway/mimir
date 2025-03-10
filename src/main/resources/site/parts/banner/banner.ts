@@ -1,10 +1,6 @@
 import { type Content } from '/lib/xp/content'
 import { assetUrl, getContent, getComponent } from '/lib/xp/portal'
-import {
-  RequestWithCode,
-  getMunicipality,
-  removeCountyFromMunicipalityName,
-} from '/lib/ssb/dataset/klass/municipalities'
+import { getMunicipality, removeCountyFromMunicipalityName } from '/lib/ssb/dataset/klass/municipalities'
 import { imageUrl, getImageAlt } from '/lib/ssb/utils/imageUtils'
 
 import { renderError } from '/lib/ssb/error/error'
@@ -13,7 +9,10 @@ import { render as r4XpRender } from '/lib/enonic/react4xp'
 import { getPhrases } from '/lib/ssb/utils/language'
 import { type Phrases } from '/lib/types/language'
 import { type BannerProps } from '/lib/types/partTypes/banner'
+import { forceArray } from '/lib/ssb/utils/arrayUtils'
+import { type RequestWithCode } from '/lib/types/municipalities'
 import { type Page } from '/site/content-types'
+import { type Default } from '/site/pages/default'
 
 export function get(req: XP.Request): XP.Response {
   try {
@@ -33,6 +32,8 @@ function renderPart(req: XP.Request): XP.Response {
 
   const part = getComponent<XP.PartComponent.Banner>()
   if (!part) throw Error('No component found')
+
+  const myRegion = getCurrentRegion(part, page)
   const pageType = part.config.pageType
   const phrases = getPhrases(page) as Phrases
 
@@ -41,10 +42,9 @@ function renderPart(req: XP.Request): XP.Response {
   if ('faktaside' in pageType) {
     subTitleFactPage = pageType.faktaside.subTitle ? pageType.faktaside.subTitle : factsAbout
   }
-  const municipality = pageType._selected === 'kommunefakta' ? getMunicipality(req as RequestWithCode) : undefined
-  const municipalityName = municipality ? removeCountyFromMunicipalityName(municipality.displayName) : undefined
+
   const isLandingPage = 'general' in pageType && pageType.general.landingPage
-  const imgSrcSet = part.config.image ? imageSrcSet(part.config.image, isLandingPage) : undefined
+  const imgSrcSet = part.config.image ? imageSrcSet(part.config.image, isLandingPage, myRegion?.view) : undefined
 
   // Remove uppercase for page title when accompanied by "Fakta om"
   const factPageTitle = `${subTitleFactPage} ${page.displayName}`.toLowerCase()
@@ -61,7 +61,7 @@ function renderPart(req: XP.Request): XP.Response {
           format: 'jpg',
         })
       : undefined,
-    municipalityTitle: municipality ? municipalityName + ' (' + municipality.county.name + ')' : undefined,
+    municipalityTitle: getMunicipalityTitle(pageType, req),
     pageType: page.page?.config.pageType as string,
     selectedPageType: pageType._selected,
     subTitleFactPage,
@@ -85,10 +85,38 @@ function renderPart(req: XP.Request): XP.Response {
   })
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function getMunicipalityTitle(pageType: any, req: XP.Request) {
+  const municipality = pageType._selected === 'kommunefakta' ? getMunicipality(req as RequestWithCode) : undefined
+  const municipalityName = municipality ? removeCountyFromMunicipalityName(municipality.displayName) : undefined
+  return municipality ? municipalityName + ' (' + municipality.county.name + ')' : undefined
+}
+
+function getCurrentRegion(part: XP.PartComponent.Banner, page: Content<Page>) {
+  const region = part.path?.split('/')[1]
+  const myPage = page.page?.config as Default
+  const myRegions = myPage?.regions ? forceArray(myPage.regions) : []
+  return myRegions.find((r) => r.region === region)
+}
+
 // Inefficient, should only do one imageUrl call and then string replace the width
-function imageSrcSet(imageId: string, isLandingPage: boolean) {
-  const widths = [3840, 2560, 2000, 1500, 1260, 800, 650]
+function imageSrcSet(imageId: string, isLandingPage: boolean, sectionType: string | undefined) {
+  let widths: Array<number> = []
+
+  switch (sectionType) {
+    case 'plainSection':
+      widths = [1260, 800, 650]
+      break
+    case 'card':
+      widths = [800, 650]
+      break
+    case 'full':
+    default:
+      widths = [3840, 2560, 2000, 1500, 1260, 800, 650]
+  }
+
   const srcset = widths
+
     .map(
       (width: number) =>
         `${imageUrl({
@@ -97,12 +125,25 @@ function imageSrcSet(imageId: string, isLandingPage: boolean) {
         })} ${width}w`
     )
     .join(', ')
-  const sizes = `(min-width: 2561px) 3840px,
-                 (min-width: 2001px) and (max-width: 2560px) 2560px,
-                 (min-width: 1501px) and (max-width: 2000px) 2000px,
-                 ((min-width: 1261px) and (max-width: 1500px)) 1500px,
-                 ((min-width: 801px) and (max-width: 1261px)) 1260px,
-                 ((min-width: 651px) and (max-width: 800px)) 800px, 650px`
+
+  let sizes: string
+  switch (sectionType) {
+    case 'plainSection':
+      sizes = `(min-width: 801px) 1260px,
+        ((min-width: 651px) and (max-width: 800px)) 800px, 650px`
+      break
+    case 'card':
+      sizes = `(min-width: 801px) 800px, 650px`
+      break
+    case 'full':
+    default:
+      sizes = `(min-width: 2561px) 3840px,
+        (min-width: 2001px) and (max-width: 2560px) 2560px,
+        (min-width: 1501px) and (max-width: 2000px) 2000px,
+        ((min-width: 1261px) and (max-width: 1500px)) 1500px,
+        ((min-width: 801px) and (max-width: 1261px)) 1260px,
+        ((min-width: 651px) and (max-width: 800px)) 800px, 650px`
+  }
 
   return {
     sizes,
