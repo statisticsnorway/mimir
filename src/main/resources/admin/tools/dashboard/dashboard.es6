@@ -15,7 +15,7 @@ const INTERNAL_BASE_URL =
 const STATREG_RAPPORT_URL =
   app.config && app.config['ssb.statregRapport.url']
     ? app.config['ssb.statregRapport.url']
-    : 'https://statreg-rapport.ssb.no/'
+    : 'https://statreg-rapport.intern.ssb.no/'
 const INTERNAL_STATBANK_URL =
   app.config && app.config['ssb.statbankintern.baseUrl']
     ? app.config['ssb.statbankintern.baseUrl']
