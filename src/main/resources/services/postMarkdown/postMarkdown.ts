@@ -1,10 +1,9 @@
 import { connect } from '/lib/xp/node'
 
 export const post = (req: XP.Request): XP.Response => {
-  const setFields = (obj) => {
-    obj.displayName = req.params.displayName
-    obj.markdown = req.params.markdown
-    return obj
+  const params = {
+    displayName: req.params.displayName,
+    markdown: req.params.markdown,
   }
 
   const conn = connect({
@@ -20,10 +19,12 @@ export const post = (req: XP.Request): XP.Response => {
   if (nodeExists) {
     result = conn.modify({
       key: nodeId,
-      editor: setFields,
+      editor: (node) => ({
+        ...node,
+        ...params,
+      }),
     })
   } else {
-    const params = setFields({})
     result = conn.create(params)
   }
 
