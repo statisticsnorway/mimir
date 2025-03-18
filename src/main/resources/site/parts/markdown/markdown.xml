@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<part>
+  <display-name>Markdown</display-name>
+  <description></description>
+  <form>
+    <input name="markdownNode" type="CustomSelector">
+      <label>Markdown-node</label>
+      <occurrences minimum="0" maximum="1"/>
+      <config>
+        <service>getMarkdownNodes</service>
+      </config>
+    </input>
+  </form>
+
+</part>

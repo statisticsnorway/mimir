@@ -58,8 +58,6 @@ spec:
     requests:
       memory: 2Gi
 
-  ttl: 168h
-
   prometheus:
     enabled: false
 
