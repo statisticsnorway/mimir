@@ -1,4 +1,4 @@
-import { connect } from '/lib/xp/node'
+import { connectMarkdownRepo } from '/lib/ssb/utils/markdownUtils'
 
 export const post = (req: XP.Request): XP.Response => {
   const params = {
@@ -6,11 +6,7 @@ export const post = (req: XP.Request): XP.Response => {
     markdown: req.params.markdown,
   }
 
-  const conn = connect({
-    repoId: 'no.ssb.pubmd',
-    branch: 'master',
-    principals: ['role:system.admin'],
-  })
+  const conn = connectMarkdownRepo()
 
   const nodeId = typeof req.params._id === 'string' ? req.params._id : ''
   const nodeExists = nodeId ? conn.exists(nodeId) : false
