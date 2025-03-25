@@ -10,10 +10,9 @@ export function get(req: XP.Request): XP.Response {
 
   const nodeId = component.config.markdownNode
   const node = conn.get(nodeId)
-  const markdownText = node.markdown
 
   const props = {
-    markdownRendered: renderMarkdown(markdownText),
+    markdownRendered: renderMarkdown(node.markdown),
   }
 
   return render(component, props, req)
