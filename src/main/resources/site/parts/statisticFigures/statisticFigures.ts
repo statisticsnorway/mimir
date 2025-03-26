@@ -110,7 +110,15 @@ function getStatisticFiguresProps(
     iconStatbankBox: assetUrl({
       path: 'SSB_ikon_statbank.svg',
     }),
-    statbankHref: `${STATBANKWEB_URL}/list/${shortName}`,
+    statbankHref: getStatbankUriByLanguage(shortName, page.language),
     firstItemOpen: true,
   }
+}
+
+function getStatbankUriByLanguage(shortName = '', language = 'no') {
+  let baseUrl = STATBANKWEB_URL
+  if (language === 'en') {
+    baseUrl = baseUrl.replace('/statbank', '/en/statbank')
+  }
+  return `${baseUrl}/list/${shortName}`
 }
