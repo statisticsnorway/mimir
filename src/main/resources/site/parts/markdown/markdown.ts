@@ -13,5 +13,7 @@ export function get(req: XP.Request): XP.Response {
     markdownRendered: renderMarkdown(node.markdown),
   }
 
-  return render(component, props, req)
+  return render(component, props, req, {
+    body: '<section class="xp-part"></section>',
+  })
 }
