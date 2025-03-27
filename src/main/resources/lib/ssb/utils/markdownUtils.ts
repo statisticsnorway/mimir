@@ -7,3 +7,10 @@ export function connectMarkdownRepo(): RepoConnection {
     principals: ['role:system.admin'],
   })
 }
+
+export function getMarkdownNode(nodeId: string, conn?: RepoConnection) {
+  if (!conn) {
+    conn = connectMarkdownRepo()
+  }
+  return conn.get(nodeId)
+}

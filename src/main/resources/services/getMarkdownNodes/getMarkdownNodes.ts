@@ -1,4 +1,4 @@
-import { connectMarkdownRepo } from '/lib/ssb/utils/markdownUtils'
+import { connectMarkdownRepo, getMarkdownNode } from '/lib/ssb/utils/markdownUtils'
 
 export const get = (): XP.Response => {
   const conn = connectMarkdownRepo()
@@ -9,7 +9,7 @@ export const get = (): XP.Response => {
   })
 
   const markdownNodes = result.hits.map((hit) => {
-    const node = conn.get(hit.id)
+    const node = getMarkdownNode(hit.id, conn)
     return {
       id: hit.id,
       displayName: node.displayName,
