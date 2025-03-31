@@ -93,7 +93,7 @@ export function setupCronJobs(): void {
   run(createUserContext, setupCronJobUser)
 
   const datasetPublishCron: string =
-    app.config && app.config['ssb.cron.publishDataset'] ? app.config['ssb.cron.publishDataset'] : '50 05 * * *'
+    app.config && app.config['ssb.cron.publishDataset'] ? app.config['ssb.cron.publishDataset'] : '50 06 * * *'
 
   log.info('Run old datasetPublishCron cron-library')
   // publish dataset cron job
