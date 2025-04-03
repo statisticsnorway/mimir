@@ -4,7 +4,7 @@ export function connectMarkdownRepo(): RepoConnection {
   return connect({
     repoId: 'no.ssb.pubmd',
     branch: 'master',
-    principals: ['role:system.admin'],
+    principals: ['role:system.authenticated'],
   })
 }
 
