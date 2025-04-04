@@ -29,8 +29,8 @@ jobs:
           url: ${{ secrets.ENONIC_PROD_URL }}
           username: ${{ secrets.ENONIC_USER }}
           password: ${{ secrets.ENONIC_PROD_PASS }}
-          client_cert: ${{ secrets.ENONIC_CERT }}
-          client_key: ${{ secrets.ENONIC_KEY }}
+          client_cert: ${{ secrets.ENONIC_DEPLOY_CERT }}
+          client_key: ${{ secrets.ENONIC_DEPLOY_KEY }}
           app_jar: "*.jar"
       - name: Get Version Number
         id: get_version_number
