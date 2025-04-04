@@ -100,7 +100,7 @@
     "eslint-plugin-import": "~2.31.0",
     "eslint-plugin-jsdoc": "^50.6.9",
     "eslint-plugin-prettier": "~5.2.6",
-    "eslint-plugin-react": "~7.37.4",
+    "eslint-plugin-react": "~7.37.5",
     "feather-icons": "~4.29.2",
     "file-loader": "~6.2.0",
     "glob": "~11.0.1",
@@ -138,7 +138,7 @@
     "redux-injectors": "~1.3.0",
     "redux-saga": "~1.3.0",
     "regenerator-runtime": "~0.14.1",
-    "sass": "~1.86.2",
+    "sass": "~1.86.3",
     "swc-loader": "~0.2.6",
     "ts-loader": "~9.5.2",
     "tsup": "^8.4.0",
@@ -162,7 +162,7 @@
     ]
   },
   "dependencies": {
-    "bootstrap": "~5.3.3",
+    "bootstrap": "~5.3.4",
     "date-fns": "~3.6.0",
     "highcharts-react-official": "~3.2.1",
     "react-bootstrap": "~2.10.9",
