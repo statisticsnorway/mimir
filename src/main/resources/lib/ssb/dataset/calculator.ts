@@ -1,3 +1,4 @@
+import '/lib/ssb/polyfills/nashorn'
 // @ts-ignore
 import JSONstat from 'jsonstat-toolkit/import.mjs'
 import { query, get as getContent, Content } from '/lib/xp/content'

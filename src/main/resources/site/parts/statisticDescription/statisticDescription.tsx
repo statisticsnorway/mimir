@@ -7,15 +7,7 @@ import { type AboutTheStatisticsProps } from '/lib/types/partTypes/omStatistikke
 
 function StatisticDescription(props: Readonly<AboutTheStatisticsProps>) {
   const { label, lastUpdatedPhrase, lastUpdated, accordions } = props
-  const [selectedTag, setSelectedTag] = useState<string | undefined>(undefined)
-  const [selectedCategory, setSelectedCategory] = useState<AccordionData | undefined>(
-    accordions.find((item) => item.id === 'om-statistikken-definisjoner')
-  )
-
-  function setCategory(category: string) {
-    setSelectedTag(category)
-    setSelectedCategory(accordions.find((item) => item.id === category))
-  }
+  const [selectedTag, setSelectedTag] = useState<string | undefined>(accordions[0].id)
 
   function renderNestedAccordions(category: AccordionData) {
     const items: AccordionItems[] = Array.isArray(category.items) ? category.items : []
@@ -45,21 +37,21 @@ function StatisticDescription(props: Readonly<AboutTheStatisticsProps>) {
     )
   }
 
-  function renderCategory() {
-    if (selectedCategory) {
-      return (
-        <div className='selected-category col-lg-12' aria-live='polite'>
-          <ExpansionBox header={selectedCategory.open} text={renderNestedAccordions(selectedCategory)} sneakPeek />
-        </div>
-      )
-    }
-    return null
-  }
-
-  const isTagActive = (index: number, accordionId?: string): boolean => {
-    const isFirstItem = index === 0 && !selectedTag
-    const isSelectedItem = selectedTag === accordionId
-    return isFirstItem || isSelectedItem
+  // Because macros in htmlArea can't be rendered clientside we have to render all accordions and hide those that aren't selected
+  function renderCategories(accordions: AccordionData[]) {
+    return (
+      <>
+        {accordions.map((accordion) => (
+          <div
+            className={accordion.id === selectedTag ? 'selected-category col-lg-12' : 'col-lg-12'}
+            aria-live='polite'
+            hidden={accordion.id !== selectedTag}
+          >
+            <ExpansionBox header={accordion.open} text={renderNestedAccordions(accordion)} sneakPeek />
+          </div>
+        ))}
+      </>
+    )
   }
 
   return (
@@ -73,18 +65,18 @@ function StatisticDescription(props: Readonly<AboutTheStatisticsProps>) {
         </p>
       )}
       <div className='om-statistikken-tags'>
-        {accordions.map((accordion, index) => (
+        {accordions.map((accordion) => (
           <Tag
-            className={isTagActive(index, accordion.id) ? 'active' : undefined}
+            className={accordion.id === selectedTag ? 'active' : undefined}
             key={accordion.id}
-            onClick={() => setCategory(accordion.id as string)}
+            onClick={() => setSelectedTag(accordion.id as string)}
           >
             {accordion.open}
           </Tag>
         ))}
       </div>
 
-      {renderCategory()}
+      {renderCategories(accordions)}
     </div>
   )
 }
