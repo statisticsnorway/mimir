@@ -323,6 +323,7 @@ function createTask(
               log.info('finished publish job')
               sleep(100)
               completeJobLog(jobId, `Successfully updated ${jobRefreshResult.length} statistics`, jobRefreshResult)
+              log.info('complete status set for publish job')
               delete jobs[jobId]
               send({
                 type: 'clearCache',

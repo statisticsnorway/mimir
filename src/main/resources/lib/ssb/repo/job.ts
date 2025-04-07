@@ -109,6 +109,7 @@ export function getJobLog(id: string) {
 }
 
 export function completeJobLog(jobLogId: string, message: string, refreshDataResult: object): JobInfoNode {
+  log.info(`Set complete status for job: ${jobLogId}`)
   const now: Date = new Date()
   return updateJobLog(jobLogId, function (node: JobInfoNode): JobInfoNode {
     node.data = {
