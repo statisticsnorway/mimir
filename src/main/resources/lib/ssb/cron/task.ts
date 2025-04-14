@@ -42,8 +42,11 @@ export function refreshQueriesAsync(
             message: result.status,
           })
           jobLogResult.push(result)
+          log.info(
+            `refreshQueriesAsync job progress: ${jobLogResult.length} of ${httpQueries.length} datasets refreshed. dataset id: ${jobLogResult[index].dataquery._id}, status: ${jobLogResult[index].status}`
+          )
           if (jobLogResult.length === httpQueries.length) {
-            log.info(`refreshQueriesAsync job complete`)
+            log.info(`refreshQueriesAsync job complete`) // TODO: This line doesn't log when the task is stuck on "STARTED"
             completeJobLog(jobLogId, JOB_STATUS_COMPLETE, {
               filterInfo,
               result: jobLogResult.map((r) => ({
