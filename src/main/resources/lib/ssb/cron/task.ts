@@ -15,47 +15,85 @@ export function refreshQueriesAsync(
   filterInfo: RSSFilterLogData,
   batchSize = 4
 ): Array<string> {
-  const httpQueriesBatches: Array<Array<Content<DataSource>>> = splitEvery(httpQueries.length / batchSize, httpQueries)
+  // Calculate number of batches and items per batch
+  const totalQueries = httpQueries.length
+  const numberOfBatches = Math.min(batchSize, totalQueries)
+  const itemsPerBatch = Math.ceil(totalQueries / numberOfBatches)
+
+  const httpQueriesBatches: Array<Array<Content<DataSource>>> = splitEvery(itemsPerBatch, httpQueries)
   const jobLogResult: Array<CreateOrUpdateStatus> = []
-  let a = 0
+  let batchNumber = 0
+  let completedBatches = 0
+  log.info(
+    `Starting refreshQueriesAsync with ${totalQueries} queries split into ${numberOfBatches} batches of approximately ${itemsPerBatch} items each`
+  )
   return httpQueriesBatches.map((httpQueriesbatch: Array<Content<DataSource>>) => {
-    a++
+    batchNumber++
     return executeFunction({
-      description: `RefreshRows_${a}`,
+      description: `RefreshRows_Batch_${batchNumber}_of_${numberOfBatches}`,
       func: function () {
         progress({
           current: 0,
           total: httpQueriesbatch.length,
-          info: `Start task for datasets ${httpQueriesbatch.map((httpQuery) => httpQuery._id)}`,
+          info: `Start batch ${batchNumber}/${numberOfBatches} for datasets ${httpQueriesbatch.map((httpQuery) => httpQuery._id)}`,
         })
+
         httpQueriesbatch.forEach((httpQuery: Content<DataSource>, index) => {
           progress({
             current: index,
             total: httpQueriesbatch.length,
             info: `Refresh dataset ${httpQuery._id}`,
           })
+
           logUserDataQuery(httpQuery._id, {
             message: Events.GET_DATA_STARTED,
           })
+
           const result: CreateOrUpdateStatus = refreshDataset(httpQuery, DATASET_BRANCH)
           logUserDataQuery(httpQuery._id, {
             message: result.status,
           })
+
           jobLogResult.push(result)
-          log.info(
-            `refreshQueriesAsync job progress: ${jobLogResult.length} of ${httpQueries.length} datasets refreshed. dataset id: ${jobLogResult[index].dataquery._id}, status: ${jobLogResult[index].status}`
-          )
-          if (jobLogResult.length === httpQueries.length) {
-            log.info(`refreshQueriesAsync job complete`) // TODO: This line doesn't log when the task is stuck on "STARTED"
-            completeJobLog(jobLogId, JOB_STATUS_COMPLETE, {
-              filterInfo,
-              result: jobLogResult.map((r) => ({
-                id: r.dataquery._id,
-                displayName: r.dataquery.displayName,
-                contentType: r.dataquery.type,
-                dataSourceType: r.dataquery.data.dataSource?._selected,
-                status: r.status,
-              })),
+
+          if (index === httpQueriesbatch.length - 1) {
+            completedBatches++
+            const totalProgressLog = `Total progress: ${jobLogResult.length} of ${totalQueries} refreshed`
+            if (completedBatches === numberOfBatches) {
+              log.info(totalProgressLog)
+              if (jobLogResult.length === totalQueries) {
+                completeJobLog(jobLogId, JOB_STATUS_COMPLETE, {
+                  filterInfo,
+                  result: jobLogResult.map((r) => ({
+                    id: r.dataquery._id,
+                    displayName: r.dataquery.displayName,
+                    contentType: r.dataquery.type,
+                    dataSourceType: r.dataquery.data.dataSource?._selected,
+                    status: r.status,
+                  })),
+                })
+              } else {
+                const failedDatasets = httpQueries.filter(
+                  (query) => !jobLogResult.some((result) => result.dataquery._id === query._id)
+                )
+                log.info(
+                  `${failedDatasets.length} dataset(s) failed to refresh. Failed dataset id(s): ${failedDatasets.map((ds) => ds._id).join(', ')}`
+                )
+                completeJobLog(jobLogId, JOB_STATUS_COMPLETE, {
+                  filterInfo,
+                  result: jobLogResult.map((r) => ({
+                    id: r.dataquery._id,
+                    displayName: r.dataquery.displayName,
+                    contentType: r.dataquery.type,
+                    dataSourceType: r.dataquery.data.dataSource?._selected,
+                    status: r.status,
+                  })),
+                })
+              }
+            }
+
+            progress({
+              info: totalProgressLog,
             })
           }
         })
