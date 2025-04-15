@@ -78,6 +78,44 @@ function fetchData(
   }
 }
 
+function refreshTbprocessorData(
+  newDataset: TbprocessorParsedResponse<TbmlDataUniform>,
+  oldDataset: DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null,
+  key: string,
+  content: Content<DataSource | GenericDataImport>,
+  branch: string,
+  user: User | null
+): CreateOrUpdateStatus {
+  const { status, body, parsedBody } = newDataset
+  if (status && status === 500) {
+    return {
+      dataquery: content,
+      status: body ?? '',
+      sourceListStatus: Events.FAILED_TO_GET_SOURCE_LIST,
+      dataset: null,
+      hasNewData: false,
+      newDataset,
+      branch,
+      user,
+    }
+  } else {
+    const hasNewData: boolean = parsedBody ? isDataNew(parsedBody, oldDataset) : false
+    if ((!oldDataset || hasNewData) && parsedBody) {
+      oldDataset = createOrUpdateDataset(content.data.dataSource?._selected as string, branch, key, parsedBody)
+    }
+    return {
+      dataquery: content,
+      status: hasNewData ? Events.GET_DATA_COMPLETE : Events.NO_NEW_DATA,
+      sourceListStatus: getSourceListStatus(newDataset),
+      hasNewData: hasNewData,
+      dataset: oldDataset,
+      newDataset,
+      branch,
+      user,
+    }
+  }
+}
+
 export function refreshDataset(
   content: Content<DataSource | GenericDataImport>,
   branch: string = DATASET_BRANCH,
@@ -92,40 +130,12 @@ export function refreshDataset(
 
   if (newDataset && content.data.dataSource && content.data.dataSource._selected && key) {
     let oldDataset: DatasetRepoNode<JSONstat | TbmlDataUniform | object> | null = getDataset(content, branch)
-
-    // Check if data is of type TbprocessorParsedResponse
     if (
       determineIfTbprocessorParsedResponse(newDataset) &&
       content.data.dataSource._selected === DataSourceType.TBPROCESSOR
     ) {
-      // pass error msg from tbprocessor: e.g: bad username/password combo, wrong tbml id.
-      if (newDataset.status && newDataset.status === 500) {
-        return {
-          dataquery: content,
-          status: newDataset.body ? newDataset.body : '',
-          sourceListStatus: Events.FAILED_TO_GET_SOURCE_LIST,
-          dataset: null,
-          hasNewData: false,
-          newDataset,
-          branch,
-          user,
-        }
-      } else {
-        const hasNewData: boolean = newDataset.parsedBody ? isDataNew(newDataset.parsedBody, oldDataset) : false
-        if ((!oldDataset || hasNewData) && newDataset.parsedBody) {
-          oldDataset = createOrUpdateDataset(content.data.dataSource?._selected, branch, key, newDataset.parsedBody)
-        }
-        return {
-          dataquery: content,
-          status: hasNewData ? Events.GET_DATA_COMPLETE : Events.NO_NEW_DATA,
-          sourceListStatus: getSourceListStatus(newDataset),
-          hasNewData: hasNewData,
-          dataset: oldDataset,
-          newDataset,
-          branch,
-          user,
-        }
-      }
+      // Pass error msg from tbprocessor: e.g: bad username/password combo, wrong tbml id.
+      return refreshTbprocessorData(newDataset, oldDataset, key, content, branch, user)
     } else {
       const hasNewData: boolean = isDataNew(newDataset, oldDataset)
       if (!oldDataset || hasNewData) {
