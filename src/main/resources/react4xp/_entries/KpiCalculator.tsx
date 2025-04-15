@@ -537,7 +537,7 @@ function KpiCalculator(props: KpiCalculatorProps) {
     } else {
       return (
         <section className='kpi-calculator'>
-          <Container className='content'>
+          <Container className='calculator-content'>
             {renderForm()}
             <div aria-live='polite'>{renderResult()}</div>
           </Container>
