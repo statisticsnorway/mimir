@@ -58,9 +58,8 @@ export function refreshQueriesAsync(
 
           if (index === httpQueriesbatch.length - 1) {
             completedBatches++
-            const totalProgressLog = `Total progress: ${jobLogResult.length} of ${totalQueries} refreshed`
             if (completedBatches === numberOfBatches) {
-              log.info(totalProgressLog)
+              log.info(`Total progress: ${jobLogResult.length} of ${totalQueries} refreshed`)
               if (jobLogResult.length === totalQueries) {
                 completeJobLog(jobLogId, JOB_STATUS_COMPLETE, {
                   filterInfo,
@@ -77,8 +76,16 @@ export function refreshQueriesAsync(
                   (query) => !jobLogResult.some((result) => result.dataquery._id === query._id)
                 )
                 log.info(
-                  `${failedDatasets.length} dataset(s) failed to refresh. Failed dataset id(s): ${failedDatasets.map((ds) => ds._id).join(', ')}`
+                  `${failedDatasets.length} dataset(s) failed to refresh. Failed dataset id(s): ${failedDatasets.map((ds) => ds._id).join(', ')}. Retrying...`
                 )
+                const retryResult: CreateOrUpdateStatus[] = failedDatasets.map((dataset) =>
+                  refreshDataset(dataset, DATASET_BRANCH)
+                )
+
+                jobLogResult.push(...retryResult)
+
+                log.info(`Total progress: ${jobLogResult.length} of ${totalQueries} refreshed`)
+
                 completeJobLog(jobLogId, JOB_STATUS_COMPLETE, {
                   filterInfo,
                   result: jobLogResult.map((r) => ({
@@ -90,11 +97,10 @@ export function refreshQueriesAsync(
                   })),
                 })
               }
+              progress({
+                info: `Total progress: ${jobLogResult.length} of ${totalQueries} refreshed`,
+              })
             }
-
-            progress({
-              info: totalProgressLog,
-            })
           }
         })
       },
