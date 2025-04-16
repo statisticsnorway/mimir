@@ -27,21 +27,21 @@ export function refreshQueriesAsync(
   log.info(
     `Starting refreshQueriesAsync with ${totalQueries} queries split into ${numberOfBatches} batches of approximately ${itemsPerBatch} items each`
   )
-  return httpQueriesBatches.map((httpQueriesbatch: Array<Content<DataSource>>) => {
+  return httpQueriesBatches.map((httpQueriesBatch: Array<Content<DataSource>>) => {
     batchNumber++
     return executeFunction({
       description: `RefreshRows_Batch_${batchNumber}_of_${numberOfBatches}`,
       func: function () {
         progress({
           current: 0,
-          total: httpQueriesbatch.length,
-          info: `Start batch ${batchNumber}/${numberOfBatches} for datasets ${httpQueriesbatch.map((httpQuery) => httpQuery._id)}`,
+          total: httpQueriesBatch.length,
+          info: `Start batch ${batchNumber}/${numberOfBatches} for datasets ${httpQueriesBatch.map((httpQuery) => httpQuery._id)}`,
         })
 
-        httpQueriesbatch.forEach((httpQuery: Content<DataSource>, index) => {
+        httpQueriesBatch.forEach((httpQuery: Content<DataSource>, httpQueryIndex) => {
           progress({
-            current: index,
-            total: httpQueriesbatch.length,
+            current: httpQueryIndex,
+            total: httpQueriesBatch.length,
             info: `Refresh dataset ${httpQuery._id}`,
           })
 
@@ -56,7 +56,9 @@ export function refreshQueriesAsync(
 
           jobLogResult.push(result)
 
-          if (index === httpQueriesbatch.length - 1) {
+          if (httpQueryIndex === httpQueriesBatch.length - 1) {
+            // Since this task runs asynchronously, we need to have an additional batch number counter and check to see if all the batches have been completed
+            // before logging and updating the job logs. That is to prevent logging and updating the job log multiple times for each batch.
             completedBatches++
             if (completedBatches === numberOfBatches) {
               log.info(`Total progress: ${jobLogResult.length} of ${totalQueries} refreshed`)
