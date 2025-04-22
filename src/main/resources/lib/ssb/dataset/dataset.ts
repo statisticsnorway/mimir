@@ -87,7 +87,7 @@ function refreshTbprocessorData(
   user: User | null
 ): CreateOrUpdateStatus {
   const { status, body, parsedBody } = newDataset
-  if (status && status === 500) {
+  if (status === 500) {
     return {
       dataquery: content,
       status: body ?? '',
