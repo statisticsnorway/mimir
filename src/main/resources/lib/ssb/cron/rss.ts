@@ -13,6 +13,7 @@ import { getTableIdFromStatbankApi } from '/lib/ssb/dataset/statbankApi/statbank
 import { getDataset } from '/lib/ssb/dataset/dataset'
 import { cronJobLog } from '/lib/ssb/utils/serverLog'
 import { getParentType, getParentContent } from '/lib/ssb/utils/parentUtils'
+import { ensureArray } from '/lib/ssb/utils/arrayUtils'
 
 import { fetchStatisticsWithReleaseToday } from '/lib/ssb/statreg/statistics'
 import { type Statistic } from '/site/mixins/statistic'
@@ -117,7 +118,7 @@ export function dataSourceRSSFilter(dataSources: Array<Content<DataSource>>): RS
   const allRSSItems: Array<RSSItem> = fetchRSS()
   // only keep those with updates for the last 2 days, to the end of today
   const RSSItems: Array<RSSItem> = allRSSItems
-    ? allRSSItems.filter((item) =>
+    ? ensureArray(allRSSItems).filter((item) =>
         isWithinInterval(new Date(item.pubDate), {
           start: subDays(new Date().setHours(6, 0, 0, 0), 1),
           end: new Date().setHours(23, 59, 59, 999),
