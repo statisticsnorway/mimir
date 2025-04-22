@@ -782,7 +782,7 @@ function BkibolCalculator(props: BkibolCalculatorProps) {
 
   return (
     <section className='bkibol-calculator'>
-      <Container className='content'>
+      <Container className='calculator-content'>
         {renderForm()}
         <div aria-live='polite'>{renderResult()}</div>
       </Container>
