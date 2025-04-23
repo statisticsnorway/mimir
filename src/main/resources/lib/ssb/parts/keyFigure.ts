@@ -84,6 +84,16 @@ export function parseKeyFigure(
     glossaryText: keyFigure.data.glossaryText,
   }
 
+  // 👇 Log the localized value immediately to verify what we get for `keyFigure.noChange`
+  log.info(
+    'LANG CHECK | language="%s" => keyFigure.noChange = "%s"',
+    language,
+    localize({
+      key: 'keyFigure.noChange',
+      locale: language,
+    })
+  )
+
   let datasetRepo: DatasetRepoNode<JSONstatType | TbmlDataUniform | object> | undefined | null
   if (branch === UNPUBLISHED_DATASET_BRANCH) {
     datasetRepo = getDataset(keyFigure, UNPUBLISHED_DATASET_BRANCH)
@@ -192,7 +202,7 @@ function getDataTbProcessor(
         locale: language,
       })
 
-      log.warning(`NO CHANGE LOCALIZE => "${changeText}" for language: ${language}`)
+      log.warning('NO CHANGE LOCALIZE => "%s" for language: %s', changeText, language)
 
     }
 
