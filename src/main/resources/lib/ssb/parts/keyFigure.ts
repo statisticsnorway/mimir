@@ -176,20 +176,20 @@ function getDataTbProcessor(
       changeDirection = 'up'
       const changeDirectionText = localize({
         key: 'keyFigure.increase',
-        locale: language
+        locale: language,
       })
       srChangeText = `${changeDirectionText} ${changeText} ${changePeriod}`
     } else if (+change < 0) {
       changeDirection = 'down'
       const changeDirectionText = localize({
         key: 'keyFigure.decrease',
-        locale: language
+        locale: language,
       })
       srChangeText = `${changeDirectionText} ${changeText} ${changePeriod}`
     } else {
       changeText = localize({
         key: 'keyFigure.noChange',
-        locale: language
+        locale: language,
       })
     }
 
