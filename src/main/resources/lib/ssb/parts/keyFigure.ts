@@ -66,6 +66,7 @@ export function parseKeyFigure(
   keyFigure: Content<KeyFigure & DataSource>,
   municipality?: MunicipalityWithCounty,
   branch: string = DATASET_BRANCH,
+  language?: string
 ): KeyFigureView {
   const keyFigureViewData: KeyFigureView = {
     iconUrl: getIconUrl(keyFigure),
@@ -113,7 +114,7 @@ export function parseKeyFigure(
     } else if (dataSource && dataSource._selected === DataSourceType.TBPROCESSOR) {
       const tbmlData: TbmlDataUniform = data as TbmlDataUniform
       if (tbmlData !== null && tbmlData.tbml.presentation)
-        getDataTbProcessor(keyFigureViewData, tbmlData, keyFigure)
+        getDataTbProcessor(keyFigureViewData, tbmlData, keyFigure, language)
 
       // Logging Mocked keyFigure
       if (dataSource?.tbprocessor?.urlOrId === '-1' && branch === 'master') {
@@ -136,6 +137,7 @@ function getDataTbProcessor(
   keyFigureViewData: KeyFigureView,
   tbmlData: TbmlDataUniform,
   keyFigure: Content<KeyFigure>,
+  language?: string
 ): KeyFigureView {
   const bodyRows: Array<TableRowUniform> = tbmlData.tbml.presentation.table.tbody
   const head: Array<TableRowUniform> = tbmlData.tbml.presentation.table.thead
@@ -174,17 +176,20 @@ function getDataTbProcessor(
       changeDirection = 'up'
       const changeDirectionText = localize({
         key: 'keyFigure.increase',
+        locale: language,
       })
       srChangeText = `${changeDirectionText} ${changeText} ${changePeriod}`
     } else if (+change < 0) {
       changeDirection = 'down'
       const changeDirectionText = localize({
         key: 'keyFigure.decrease',
+        locale: language,
       })
       srChangeText = `${changeDirectionText} ${changeText} ${changePeriod}`
     } else {
       changeText = localize({
         key: 'keyFigure.noChange',
+        locale: language,
       })
     }
 
