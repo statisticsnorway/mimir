@@ -31,7 +31,6 @@ export interface KeyFigureData {
   glossaryText?: KeyFigureView['glossaryText']
   glossary?: string
   source: KeyFigure['source'] | undefined
-  locale?: string
 }
 
 export interface MunicipalData {
