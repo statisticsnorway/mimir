@@ -65,7 +65,7 @@ interface DatasetFilterOptions {
 export function parseKeyFigure(
   keyFigure: Content<KeyFigure & DataSource>,
   municipality?: MunicipalityWithCounty,
-  branch: string = DATASET_BRANCH
+  branch: string = DATASET_BRANCH,
 ): KeyFigureView {
   const keyFigureViewData: KeyFigureView = {
     iconUrl: getIconUrl(keyFigure),
@@ -112,7 +112,8 @@ export function parseKeyFigure(
       }
     } else if (dataSource && dataSource._selected === DataSourceType.TBPROCESSOR) {
       const tbmlData: TbmlDataUniform = data as TbmlDataUniform
-      if (tbmlData !== null && tbmlData.tbml.presentation) getDataTbProcessor(keyFigureViewData, tbmlData, keyFigure)
+      if (tbmlData !== null && tbmlData.tbml.presentation)
+        getDataTbProcessor(keyFigureViewData, tbmlData, keyFigure)
 
       // Logging Mocked keyFigure
       if (dataSource?.tbprocessor?.urlOrId === '-1' && branch === 'master') {
@@ -134,7 +135,7 @@ export function parseKeyFigure(
 function getDataTbProcessor(
   keyFigureViewData: KeyFigureView,
   tbmlData: TbmlDataUniform,
-  keyFigure: Content<KeyFigure>
+  keyFigure: Content<KeyFigure>,
 ): KeyFigureView {
   const bodyRows: Array<TableRowUniform> = tbmlData.tbml.presentation.table.tbody
   const head: Array<TableRowUniform> = tbmlData.tbml.presentation.table.thead
