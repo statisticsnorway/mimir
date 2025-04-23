@@ -191,6 +191,9 @@ function getDataTbProcessor(
         key: 'keyFigure.noChange',
         locale: language,
       })
+
+      log.warning(`NO CHANGE LOCALIZE => "${changeText}" for language: ${language}`)
+
     }
 
     keyFigureViewData.changes = {
