@@ -43,6 +43,7 @@ export function refreshQueriesAsync(
           })
           jobLogResult.push(result)
           if (jobLogResult.length === httpQueries.length) {
+            log.info(`refreshQueriesAsync job complete`)
             completeJobLog(jobLogId, JOB_STATUS_COMPLETE, {
               filterInfo,
               result: jobLogResult.map((r) => ({

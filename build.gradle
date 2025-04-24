@@ -2,8 +2,8 @@ import org.apache.tools.ant.taskdefs.condition.Os
 
 plugins {
     id("com.github.node-gradle.node") version "7.1.0"
-    id 'com.enonic.xp.app' version '3.5.2'
-    id 'no.item.xp.codegen' version '2.3.0'
+    id 'com.enonic.xp.app' version '3.6.1'
+    id 'no.item.xp.codegen' version '2.7.0'
 }
 
 app {
@@ -37,7 +37,7 @@ dependencies {
     include "com.enonic.xp:lib-cluster:${xpVersion}"
     include "com.enonic.xp:lib-mail:${xpVersion}"
     include "com.enonic.xp:lib-scheduler:${xpVersion}"
-    implementation 'commons-codec:commons-codec:1.17.2'
+    implementation 'commons-codec:commons-codec:1.18.0'
     include "no.item:wsutil-server:2.0.0"
     include "com.gravitondigital:featuretogglelib:0.3.0"
     include 'org.json:json:20250107'

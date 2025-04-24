@@ -162,7 +162,7 @@ function CalculatorLayout({
   }
 
   return (
-    <Container className='content'>
+    <Container className='calculator-content'>
       <div className='calculator-form'>
         <Row>
           <Col>
