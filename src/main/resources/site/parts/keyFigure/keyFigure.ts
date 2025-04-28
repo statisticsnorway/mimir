@@ -64,13 +64,14 @@ function renderPart(
   const page = getContent()
   if (!page) throw Error('No page found')
 
+  const language: string = page.language ? page.language : 'nb'
   const config = getComponent<XP.PartComponent.KeyFigure>()?.config
 
   const showPreviewDraft: boolean = hasWritePermissionsAndPreview(req, page._id)
 
   // get all keyFigures and filter out non-existing keyFigures
   const keyFigures: Array<KeyFigureData> = getKeyFigures(keyFigureIds).map((keyFigure) => {
-    const keyFigureData: KeyFigureView = parseKeyFigure(keyFigure, municipality, DATASET_BRANCH)
+    const keyFigureData: KeyFigureView = parseKeyFigure(keyFigure, municipality, DATASET_BRANCH, language)
     return {
       id: keyFigure._id,
       ...keyFigureData,
@@ -81,7 +82,7 @@ function renderPart(
   let keyFiguresDraft: Array<KeyFigureData> | null = null
   if (showPreviewDraft) {
     keyFiguresDraft = getKeyFigures(keyFigureIds).map((keyFigure) => {
-      const keyFigureData: KeyFigureView = parseKeyFigure(keyFigure, municipality, UNPUBLISHED_DATASET_BRANCH)
+      const keyFigureData: KeyFigureView = parseKeyFigure(keyFigure, municipality, UNPUBLISHED_DATASET_BRANCH, language)
       return {
         id: keyFigure._id,
         ...keyFigureData,
