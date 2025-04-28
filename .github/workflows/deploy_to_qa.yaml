@@ -19,6 +19,13 @@ jobs:
         uses: enonic/release-tools/build-and-publish@master
         with:
           skipPublishing: true
+      - name: Upload artifacts
+        id: upload_artifacts
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mimir-qa-${{ github.run_number }}
+          path: './build/libs/*.jar'
       - id: deploy_app_to_XP
         uses: 'enonic/action-app-deploy@main'
         with:
@@ -28,16 +35,9 @@ jobs:
           client_cert: ${{ secrets.ENONIC_DEPLOY_CERT }}
           client_key: ${{ secrets.ENONIC_DEPLOY_KEY }}
           app_jar: './build/libs/*.jar'
-      - name: Upload artifacts
-        id: upload_artifacts
-        if: success()
-        uses: actions/upload-artifact@v4
-        with:
-          name: mimir-qa-${{ github.run_number }}
-          path: './build/libs/*.jar'
       - name: Send success message to Slack
         id: slack_success
-        if: success()
+        if: steps.deploy_app_to_XP.outcome == 'success'
         uses: slackapi/slack-github-action@v2
         with:
           webhook: ${{ secrets.SLACK_ALERTS_QA }}
@@ -79,7 +79,7 @@ jobs:
             }
       - name: Send failure message to Slack
         id: slack_failure
-        if: failure()
+        if: steps.deploy_app_to_XP.outcome == 'failure'
         uses: slackapi/slack-github-action@v2
         with:
           webhook: ${{ secrets.SLACK_MIMIR_UTV }}
