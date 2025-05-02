@@ -35,14 +35,6 @@ jobs:
           client_cert: ${{ secrets.ENONIC_DEPLOY_CERT }}
           client_key: ${{ secrets.ENONIC_DEPLOY_KEY }}
           app_jar: './build/libs/*.jar'
-      - name: Upload artifacts
-        id: upload_artifacts
-        if: success()
-        uses: actions/upload-artifact@v4
-        with:
-          name: mimir-qa-${{ github.run_number }}
-          path: './build/libs/*.jar'
-
       - name: Send failure message to Slack
         id: slack_failure
         if: steps.deploy_app_to_XP.outcome == 'failure'
