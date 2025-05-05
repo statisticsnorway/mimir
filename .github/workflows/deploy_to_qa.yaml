@@ -12,6 +12,8 @@ concurrency:
 jobs:
   deploy_to_qa:
     name: 'Deploy to QA'
+    permissions:
+      contents: write
     runs-on: 'ubuntu-latest'
     environment: 'QA_mimir'
     steps:
@@ -79,6 +81,8 @@ jobs:
     # Run this job after deploy is finished, and only run if deploy succeeded
     needs: deploy_to_qa
     if: ${{ always() && contains(join(needs.*.result, ','), 'success') }}
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
     container: node:lts
     steps:
