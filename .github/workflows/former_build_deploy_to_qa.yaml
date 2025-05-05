@@ -15,7 +15,7 @@ jobs:
     environment: 'QA_mimir'
     steps:
       - name: Download workflow artifact
-        uses: dawidd6/action-download-artifact@v6
+        uses: dawidd6/action-download-artifact@v9
         with:
           workflow: deploy_to_qa.yaml
           branch: develop
@@ -34,7 +34,7 @@ jobs:
           app_jar: "*.jar"
       - name: Send success message to Slack
         id: slack_success
-        if: success()
+        if: steps.deploy_app_to_XP.outcome == 'success'
         uses: slackapi/slack-github-action@v2
         with:
           webhook: ${{ secrets.SLACK_ALERTS_QA }}
@@ -76,7 +76,7 @@ jobs:
             }
       - name: Send failure message to Slack
         id: slack_failure
-        if: failure()
+        if: steps.deploy_app_to_XP.outcome == 'failure'
         uses: slackapi/slack-github-action@v2
         with:
           webhook: ${{ secrets.SLACK_MIMIR_UTV }}
