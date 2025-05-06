@@ -1,6 +1,6 @@
 # Dataquery
 ### Task
-We have a task scheduled to run a `dataquery` job at 08:03 for `/lib/tasks/dataquery/dataquery.ts` every day, which ensures that the datasets for parts Table, Highchart, Highmap, and Keyfigure from any data source (PXWebApi, Klass, and TBProcessor) gets updated:
+We have a task scheduled to run a `dataquery` job at 08:03 for `/lib/tasks/dataquery/dataquery.ts` every day, which ensures that the datasets for the parts in a Statistics page gets updated. This applies to the parts Table, Highchart, Highmap, and Keyfigure from any data source (PXWebApi, Klass, and TBProcessor):
 
 ```javascript
   scheduleJob({
@@ -12,7 +12,7 @@ We have a task scheduled to run a `dataquery` job at 08:03 for `/lib/tasks/dataq
   })
 ```
 
-The datasets are refreshed asynchronously with retry functionality, and the process is thoroughly logged in the XP logs. Additionally, we create and update job logs nodes for `dataquery` which are stored in Data Toolbox (`no.ssb.eventlog/master/root/jobs`). 
+We utilize our RSS application results to check which Statistics page are scheduled to release per day to filter which datasets should be updated, and the datasets are updated asynchronously with retry functionality. The process is thoroughly logged in the XP logs. Additionally, we create and update job logs nodes for `dataquery` which are stored in Data Toolbox (`no.ssb.eventlog/master/root/jobs`).
 The purpose of the `dataquery` job logs are to display the task status (Started, Failed, and Completed) and the results for updated, failed, and ignored data queries in our Dashboard application.
 
 ### Dashboard
