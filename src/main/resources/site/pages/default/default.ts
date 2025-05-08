@@ -573,8 +573,13 @@ function parseStatbankFrameContent(statbankFane: boolean, req: XP.Request, page:
     key: 'statbankFrontPage',
     locale: pageLanguage === 'nb' ? 'no' : pageLanguage,
   })
+  const statbankTitle: string = localize({
+    key: 'statbankTitle.title',
+    locale: pageLanguage === 'nb' ? 'no' : pageLanguage,
+  })
 
   return {
+    statbankTitle,
     statbankHelpText,
     statbankHelpLink,
     statbankFrontPage,
@@ -677,6 +682,7 @@ interface MetaInfoData {
 }
 
 export interface StatbankFrameData {
+  statbankTitle: string
   statbankHelpText: string
   statbankHelpLink: string
   statbankFrontPage: string
