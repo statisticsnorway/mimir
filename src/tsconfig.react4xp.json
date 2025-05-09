@@ -45,7 +45,8 @@
     "main/resources/react4xp/**/*.es6",
   	"main/resources/**/*.tsx",
     "main/resources/lib/types/**/*",
-    "main/resources/lib/ssb/utils/*.ts",
+    "main/resources/lib/ssb/utils/htmlUtils.ts",
+    "main/resources/lib/ssb/utils/generateImageUrlUtils.ts",
     "main/**/*.d.ts", "main/resources/site/parts/highchartExpert/HighchartExpert.jsx", "main/resources/site/parts/highchart/Highchart.jsx", "main/resources/site/parts/highmap/Highmap.jsx", "main/resources/site/parts/nameSearch/nameSearch.jsx",
   ],
   "exclude": [

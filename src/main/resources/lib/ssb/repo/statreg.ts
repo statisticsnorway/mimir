@@ -99,7 +99,8 @@ function setupStatRegFetcher(statRegFetcher: StatRegNodeConfig): StatRegRefreshR
       }
     }
   } catch (err) {
-    log.error(`Could not fetch ${statRegFetcher.key}... ${JSON.stringify(err)}`)
+    const error = JSON.stringify(err) ?? err
+    log.error(`Could not fetch ${statRegFetcher.key}... ${error}`)
     logUserDataQuery(statRegFetcher.key, {
       file: '/lib/repo/statreg.ts',
       function: 'setupStatRegFetcher',
