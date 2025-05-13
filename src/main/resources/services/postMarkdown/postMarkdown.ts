@@ -1,7 +1,13 @@
 import { connectMarkdownRepo } from '/lib/ssb/utils/markdownUtils'
 
 export const post = (req: XP.Request): XP.Response => {
-  const data = JSON.parse(req.body)
+  const json = JSON.parse(req.body)
+
+  const data = {
+    _id: json._id,
+    markdown: json.markdown,
+    displayName: json.displayName,
+  }
 
   const conn = connectMarkdownRepo()
 
