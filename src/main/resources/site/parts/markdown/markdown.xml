@@ -3,10 +3,14 @@
     <form>
         <input name="markdownNode" type="CustomSelector">
             <label>Markdown article</label>
-            <occurrences minimum="0" maximum="1"/>
+            <occurrences minimum="0" maximum="1" />
             <config>
                 <service>getMarkdownNodes</service>
             </config>
+        </input>
+        <input name="rawMarkdownText" type="TextArea">
+            <label>Raw Markdown text</label>
+            <occurrences minimum="0" maximum="1" />
         </input>
     </form>
 </part>
