@@ -7,10 +7,15 @@ export function get(req: XP.Request): XP.Response {
   const component = getComponent<XP.PartComponent.Markdown>()
 
   const nodeId = component.config.markdownNode
-  const node = getMarkdownNode(nodeId)
+  const node = nodeId ? getMarkdownNode(nodeId) : null
+
+  const markdownFromNode = node ? node.markdown : null
+  const markdownFromTextArea = component.config.markdownTextArea
+
+  const markdown = markdownFromNode ? markdownFromNode : markdownFromTextArea
 
   const props = {
-    markdownRendered: renderMarkdown(node.markdown),
+    markdownRendered: renderMarkdown(markdown),
   }
 
   return render(component, props, req, {
