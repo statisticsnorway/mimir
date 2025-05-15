@@ -104,7 +104,7 @@
     "feather-icons": "~4.29.2",
     "file-loader": "~6.2.0",
     "glob": "~11.0.2",
-    "highcharts": "~10.3.3",
+    "highcharts": "~12.2.0",
     "husky": "^9.1.7",
     "imagesloaded": "~5.0.0",
     "jest": "~29.7.0",
