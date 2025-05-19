@@ -20,7 +20,6 @@ const CookieBanner = () => {
     setVisible(!cookieConsentPresent)
   }, [])
 
-
   const acceptAllCookies = () => {
     document.cookie = 'cookie-consent=all; path=/; max-age=31536000; SameSite=Lax'
     setVisible(false)
@@ -39,18 +38,15 @@ const CookieBanner = () => {
       .forEach((cookie) => {
         const name = cookie.split('=')[0]
 
-        const isCookieToPurge = [
-          '_ga',
-          'nmstat',
-          'app.browse.RecentItemsList',
-        ].some((prefix) => name.startsWith(prefix))
+        const isCookieToPurge = ['_ga', 'nmstat', 'app.browse.RecentItemsList'].some((prefix) =>
+          name.startsWith(prefix)
+        )
 
         if (isCookieToPurge) {
           document.cookie = `${name}=; Max-Age=0; path=/; SameSite=Lax`
         }
       })
   }
-
 
   if (!visible) return null
 

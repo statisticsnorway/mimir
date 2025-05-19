@@ -186,7 +186,6 @@ export function get(req: XP.Request): XP.Response {
     pageContributions = footer.pageContributions
   }
 
-  
   const isPopupEnabled = isEnabled('show-popup-survey', false, 'ssb')
 
   const popupComponent = isPopupEnabled
