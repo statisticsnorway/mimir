@@ -78,6 +78,9 @@ export function get(req: XP.Request): XP.Response {
 
   const pageConfig: DefaultPageConfig = page.page?.config
 
+  const cookieConsent = req.cookies?.['cookie-consent']
+  const showCookieScript = cookieConsent === 'all'
+
   const ingress: string | undefined = page.data.ingress
     ? processHtml({
         value: page.data.ingress.replace(/&nbsp;/g, ' '),
@@ -183,6 +186,7 @@ export function get(req: XP.Request): XP.Response {
     pageContributions = footer.pageContributions
   }
 
+  
   const isPopupEnabled = isEnabled('show-popup-survey', false, 'ssb')
 
   const popupComponent = isPopupEnabled
@@ -279,6 +283,7 @@ export function get(req: XP.Request): XP.Response {
     ...statBankContent,
     GTM_TRACKING_ID,
     GTM_AUTH,
+    showCookieScript,
     headerBody: header?.body,
     footerBody: footer?.body,
     ...metaInfo,
@@ -724,6 +729,7 @@ interface DefaultModel {
   statbankWeb: boolean
   GTM_TRACKING_ID: string | null
   GTM_AUTH: string | null
+  showCookieScript: boolean
   jsonLd: Article | undefined
   headerBody: string | undefined
   footerBody: string | undefined
