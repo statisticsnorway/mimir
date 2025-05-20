@@ -4,8 +4,8 @@ export const post = (req: XP.Request): XP.Response => {
   const json = req?.body ? JSON.parse(req.body) : {}
 
   const data = {
-    markdown: json.markdown,
-    displayName: json.displayName,
+    markdown: json.markdown ?? '',
+    displayName: json.displayName ?? '',
   }
 
   const conn = connectMarkdownRepo()
