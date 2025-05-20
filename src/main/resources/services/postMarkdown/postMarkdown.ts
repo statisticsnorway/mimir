@@ -4,14 +4,13 @@ export const post = (req: XP.Request): XP.Response => {
   const json = req?.body ? JSON.parse(req.body) : {}
 
   const data = {
-    _id: json._id,
     markdown: json.markdown,
     displayName: json.displayName,
   }
 
   const conn = connectMarkdownRepo()
 
-  const nodeId = typeof data._id === 'string' ? data._id : ''
+  const nodeId = typeof json._id === 'string' ? json._id : ''
   const nodeExists = nodeId ? conn.exists(nodeId) : false
 
   let result
