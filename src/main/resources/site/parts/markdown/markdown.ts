@@ -6,13 +6,13 @@ import { render as renderMarkdown } from '/lib/markdown'
 export function get(req: XP.Request): XP.Response {
   const component = getComponent<XP.PartComponent.Markdown>()
 
-  const nodeId = component.config.markdownNode
+  const nodeId = component?.config.markdownNode
   const node = nodeId ? getMarkdownNode(nodeId) : null
 
-  const markdownFromNode = node ? node.markdown : null
-  const markdownFromTextArea = component.config.markdownTextArea
+  const markdownFromNode = node?.markdown
+  const markdownFromTextArea = component?.config.markdownTextArea
 
-  const markdown = markdownFromNode ? markdownFromNode : markdownFromTextArea
+  const markdown = markdownFromNode ?? markdownFromTextArea
 
   const props = {
     markdownRendered: renderMarkdown(markdown),
