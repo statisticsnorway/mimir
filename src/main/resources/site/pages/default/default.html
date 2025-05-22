@@ -35,7 +35,7 @@
 
 <body class="xp-page" data-th-classappend="${bodyClasses}">
   <!-- Google Tag Manager (noscript) -->
-  <noscript data-th-if="${GTM_TRACKING_ID}">
+  <noscript data-th-if="${cookieConsent}">
     <iframe title="GTM tag"
       data-th-src="'https://www.googletagmanager.com/ns.html?id=' + ${GTM_TRACKING_ID} + (${GTM_AUTH} ? '&gtm_auth='+${GTM_AUTH}+'&gtm_preview=env-3&gtm_cookies_win=x' : '')"
       height="0" width="0" style="display:none;visibility:hidden"></iframe>

@@ -78,8 +78,7 @@ export function get(req: XP.Request): XP.Response {
 
   const pageConfig: DefaultPageConfig = page.page?.config
 
-  const cookieConsentPart = req.cookies?.['cookie-consent']
-  const cookieConsent = cookieConsentPart === 'all'
+  const cookieConsent = req.cookies?.['cookie-consent'] === 'all'
 
   const ingress: string | undefined = page.data.ingress
     ? processHtml({

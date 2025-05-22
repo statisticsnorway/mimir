@@ -1,51 +1,28 @@
 import React, { useEffect, useState } from 'react'
 import { Button } from '@statisticsnorway/ssb-component-library'
+import { blockOptionalCookies } from '../utils/cookieBannerUtils'
 
-const CookieBanner = () => {
+const MAX_AGE = 7776000
+
+function CookieBanner() {
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
-    const cookieConsentPresent = document.cookie.includes('cookie-consent=')
-    const storedState = localStorage.getItem('seenCookieConsent')
-
-    if (!cookieConsentPresent && storedState === 'yes') {
+    const hasConsent = document.cookie.includes('cookie-consent=')
+    if (!hasConsent) {
       blockOptionalCookies()
-      localStorage.setItem('seenCookieConsent', 'cleared')
+      setVisible(true)
     }
-
-    if (cookieConsentPresent && storedState !== 'yes') {
-      localStorage.setItem('seenCookieConsent', 'yes')
-    }
-
-    setVisible(!cookieConsentPresent)
   }, [])
 
-  const acceptAllCookies = () => {
-    document.cookie = 'cookie-consent=all; path=/; max-age=31536000; SameSite=Lax'
+  const setConsent = (type: 'all' | 'necessary') => {
+    if (type === 'necessary') {
+      blockOptionalCookies()
+    }
+
+    document.cookie = `cookie-consent=${type}; path=/; max-age=${MAX_AGE}; SameSite=Lax`
+
     setVisible(false)
-  }
-
-  const acceptOnlyNecessaryCookies = () => {
-    document.cookie = 'cookie-consent=necessary; path=/; max-age=31536000; SameSite=Lax'
-    blockOptionalCookies()
-    setVisible(false)
-  }
-
-  function blockOptionalCookies() {
-    document.cookie
-      .split(';')
-      .map((c) => c.trim())
-      .forEach((cookie) => {
-        const name = cookie.split('=')[0]
-
-        const isCookieToPurge = ['_ga', 'nmstat', 'app.browse.RecentItemsList'].some((prefix) =>
-          name.startsWith(prefix)
-        )
-
-        if (isCookieToPurge) {
-          document.cookie = `${name}=; Max-Age=0; path=/; SameSite=Lax`
-        }
-      })
   }
 
   if (!visible) return null
@@ -63,10 +40,10 @@ const CookieBanner = () => {
           Les mer om informasjonskapsler
         </a>
         <div className='cookie-banner-buttons'>
-          <Button className='cookie-button-accept' onClick={acceptAllCookies}>
+          <Button className='cookie-button-accept' onClick={() => setConsent('all')}>
             Godta alle
           </Button>
-          <Button className='cookie-button-decline' onClick={acceptOnlyNecessaryCookies}>
+          <Button className='cookie-button-decline' onClick={() => setConsent('necessary')}>
             Kun nødvendige
           </Button>
         </div>
