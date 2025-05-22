@@ -1,14 +1,16 @@
 import { connectMarkdownRepo } from '/lib/ssb/utils/markdownUtils'
 
 export const post = (req: XP.Request): XP.Response => {
-  const params = {
-    displayName: req.params.displayName,
-    markdown: req.params.markdown,
+  const json = req?.body ? JSON.parse(req.body) : {}
+
+  const data = {
+    markdown: json.markdown ?? '',
+    displayName: json.displayName ?? '',
   }
 
   const conn = connectMarkdownRepo()
 
-  const nodeId = typeof req.params._id === 'string' ? req.params._id : ''
+  const nodeId = typeof json._id === 'string' ? json._id : ''
   const nodeExists = nodeId ? conn.exists(nodeId) : false
 
   let result
@@ -17,11 +19,11 @@ export const post = (req: XP.Request): XP.Response => {
       key: nodeId,
       editor: (node) => ({
         ...node,
-        ...params,
+        ...data,
       }),
     })
   } else {
-    result = conn.create(params)
+    result = conn.create(data)
   }
 
   return {
