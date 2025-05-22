@@ -7,7 +7,7 @@
             <occurrences minimum="1" maximum="1" />
             <help-text>Velg en av måtene å legge til Markdown-innhold.</help-text>
             <options minimum="1" maximum="1">
-                <option name="fromNodeOption">
+                <option name="fromNode">
                     <label>Artikkel fra databasen</label>
                     <help-text>Velg en Markdown-artikkel fra databasen</help-text>
                     <items>
@@ -20,7 +20,7 @@
                         </input>
                     </items>
                 </option>
-                <option name="fromTextOption">
+                <option name="fromText">
                     <label>Rå tekst</label>
                     <help-text>Lim inn rå Markdown-tekst</help-text>
                     <items>
