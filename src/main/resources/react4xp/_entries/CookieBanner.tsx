@@ -36,7 +36,7 @@ function CookieBanner() {
           tre valgfrie informasjonskapsler som lar oss se hvor brukerne våre klikker og beveger seg på nettsiden.
           Informasjonen er anonym, deles aldri med andre og brukes til å forbedre ssb.no.
         </p>
-        <a href='/om-ssb/informasjonskapsler' className='cookie-banner-link'>
+        <a href='https://www.ssb.no/diverse/cookies-og-analyseverktoy-for-webstatistikk' className='cookie-banner-link'>
           Les mer om informasjonskapsler
         </a>
         <div className='cookie-banner-buttons'>
