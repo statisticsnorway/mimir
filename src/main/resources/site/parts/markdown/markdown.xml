@@ -1,12 +1,36 @@
 <part>
     <display-name>Markdown</display-name>
     <form>
-        <input name="markdownNode" type="CustomSelector">
-            <label>Markdown article</label>
-            <occurrences minimum="0" maximum="1"/>
-            <config>
-                <service>getMarkdownNodes</service>
-            </config>
-        </input>
+        <option-set name="markdownContent">
+            <label>Innhold</label>
+            <expanded>true</expanded>
+            <occurrences minimum="1" maximum="1" />
+            <help-text>Velg en av måtene å legge til Markdown-innhold.</help-text>
+            <options minimum="1" maximum="1">
+                <option name="fromNode">
+                    <label>Artikkel fra databasen</label>
+                    <help-text>Velg en Markdown-artikkel fra databasen</help-text>
+                    <items>
+                        <input name="nodeId" type="CustomSelector">
+                            <label>Markdown-artikkel</label>
+                            <occurrences minimum="0" maximum="1" />
+                            <config>
+                                <service>getMarkdownNodes</service>
+                            </config>
+                        </input>
+                    </items>
+                </option>
+                <option name="fromText">
+                    <label>Rå tekst</label>
+                    <help-text>Lim inn rå Markdown-tekst</help-text>
+                    <items>
+                        <input name="text" type="TextArea">
+                            <label>Rå Markdown-tekst</label>
+                            <occurrences minimum="0" maximum="1" />
+                        </input>
+                    </items>
+                </option>
+            </options>
+        </option-set>
     </form>
 </part>
