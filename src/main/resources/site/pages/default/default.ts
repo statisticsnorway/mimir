@@ -161,7 +161,6 @@ export function get(req: XP.Request): XP.Response {
     }
   }
 
-
   //popup-component
   const isPopupEnabled = isEnabled('show-popup-survey', false, 'ssb') //
   const popupComponent = isPopupEnabled
@@ -194,7 +193,6 @@ export function get(req: XP.Request): XP.Response {
         },
       }
     : {}
-
 
   const footerContent: FooterContent | unknown = fromMenuCache(req, `footer_${menuCacheLanguage}`, () => {
     return getFooterContent(language)
