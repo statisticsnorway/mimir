@@ -1,0 +1,124 @@
+.cookie-banner {
+  position: fixed;
+  bottom: 30px;
+  left: 30px;
+  width: 664px;
+  height: 332px;
+  padding: 28px;
+  background: $ssb-green-4;
+  border-radius: 8px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  z-index: 2147483647;
+
+  &-content {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &-title,
+  &-text,
+  &-link {
+    font-size: 16px;
+    color: $ssb-white;
+    margin-bottom: 16px;
+  }
+
+  &-title {
+    font-family: Roboto, sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    width: 608px;
+    height: 32px;
+    margin: 0 0 16px;
+  }
+
+  &-text,
+  &-link {
+    font-family: "Open Sans", sans-serif;
+    font-weight: 400;
+  }
+
+  &-text {
+    width: 608px;
+    height: 112px;
+  }
+
+  &-link {
+    width: 569px;
+    height: 28px;
+    text-decoration: underline solid 0;
+    text-underline-offset: 0;
+    display: inline-block;
+
+    &:hover,
+    &:focus {
+      text-decoration: none;
+    }
+  }
+
+  &-buttons {
+    display: flex;
+    gap: 16px;
+
+    .cookie-button-accept,
+    .cookie-button-decline {
+      height: 44px;
+      padding: 8px 20px !important;
+      border-radius: 2px !important;
+      font: 700 16px Roboto, sans-serif;
+      background: $ssb-white !important;
+      color: $ssb-green-4 !important;
+    }
+
+    .cookie-button-accept {
+      border: none !important;
+      width: 113px;
+    }
+
+    .cookie-button-decline {
+      border: 2px solid $ssb-white !important;
+      width: 156px;
+    }
+  }
+
+  @media (max-width: 723px) {
+    left: 50%;
+    transform: translateX(-50%);
+    width: 325px;
+    height: 524px;
+    padding: 28px 20px;
+    justify-content: flex-start;
+
+    &-title,
+    &-text,
+    &-link {
+      width: 285px;
+    }
+
+    &-text {
+      height: 252px;
+    }
+
+    &-link {
+      margin-bottom: 28px;
+    }
+
+    &-buttons {
+      flex-direction: column;
+      gap: 12px;
+
+      .cookie-button-accept,
+      .cookie-button-decline {
+        width: 285px;
+        line-height: 28px;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+  }
+}
