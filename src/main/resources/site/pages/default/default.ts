@@ -77,9 +77,6 @@ export function get(req: XP.Request): XP.Response {
   if (!page) return { status: 404 }
 
   const pageConfig: DefaultPageConfig = page.page?.config
-
-  const cookieConsent = req.cookies?.['cookie-consent'] === 'all'
-
   const ingress: string | undefined = page.data.ingress
     ? processHtml({
         value: page.data.ingress.replace(/&nbsp;/g, ' '),
@@ -164,6 +161,41 @@ export function get(req: XP.Request): XP.Response {
     }
   }
 
+
+  //popup-component
+  const isPopupEnabled = isEnabled('show-popup-survey', false, 'ssb') //
+  const popupComponent = isPopupEnabled
+    ? r4xpRender('Popup', {}, req, { id: 'popup', body: '<div id="popup"></div>', pageContributions })
+    : undefined
+  if (popupComponent) {
+    pageContributions = popupComponent.pageContributions
+  }
+
+  //cookieBanner
+  const isCookieBannerEnabled = isEnabled('show-cookie-banner', false, 'ssb')
+  const cookieBannerComponent = isCookieBannerEnabled
+    ? r4xpRender('CookieBanner', {}, req, {
+        id: 'cookieBanner',
+        body: '<div id="cookieBanner"></div>',
+        pageContributions,
+      })
+    : undefined
+  if (cookieBannerComponent?.pageContributions) {
+    pageContributions = cookieBannerComponent.pageContributions
+  }
+  const cookies = !isCookieBannerEnabled
+    ? {
+        'cookie-consent': {
+          value: 'unidentified',
+          path: '/',
+          maxAge: 7776000,
+          sameSite: 'lax',
+          secure: false,
+        },
+      }
+    : {}
+
+
   const footerContent: FooterContent | unknown = fromMenuCache(req, `footer_${menuCacheLanguage}`, () => {
     return getFooterContent(language)
   })
@@ -183,30 +215,6 @@ export function get(req: XP.Request): XP.Response {
 
   if (footer) {
     pageContributions = footer.pageContributions
-  }
-
-  const isPopupEnabled = isEnabled('show-popup-survey', false, 'ssb')
-
-  const popupComponent = isPopupEnabled
-    ? r4xpRender('Popup', {}, req, { id: 'popup', body: '<div id="popup"></div>', pageContributions })
-    : undefined
-
-  if (popupComponent) {
-    pageContributions = popupComponent.pageContributions
-  }
-
-  const isCookieBannerEnabled = isEnabled('show-cookie-banner', false, 'ssb')
-
-  let cookieBannerComponent
-  if (isCookieBannerEnabled) {
-    cookieBannerComponent = r4xpRender('CookieBanner', {}, req, {
-      id: 'cookieBanner',
-      pageContributions,
-    })
-
-    if (cookieBannerComponent.pageContributions) {
-      pageContributions = cookieBannerComponent.pageContributions
-    }
   }
 
   let municipality: MunicipalityWithCounty | undefined
@@ -280,7 +288,6 @@ export function get(req: XP.Request): XP.Response {
     ...statBankContent,
     GTM_TRACKING_ID,
     GTM_AUTH,
-    cookieConsent,
     headerBody: header?.body,
     footerBody: footer?.body,
     ...metaInfo,
@@ -291,7 +298,6 @@ export function get(req: XP.Request): XP.Response {
     hideBreadcrumb,
     tableView: page.type === 'mimir:table',
     popupBody: popupComponent?.body,
-    cookieBannerBody: cookieBannerComponent?.body,
   }
 
   const thymeleafRenderBody = render(view, model)
@@ -342,6 +348,7 @@ export function get(req: XP.Request): XP.Response {
     headers: {
       'x-content-key': page._id,
     },
+    cookies
   } as XP.Response
 }
 
@@ -726,7 +733,6 @@ interface DefaultModel {
   statbankWeb: boolean
   GTM_TRACKING_ID: string | null
   GTM_AUTH: string | null
-  cookieConsent: boolean
   jsonLd: Article | undefined
   headerBody: string | undefined
   footerBody: string | undefined
@@ -736,5 +742,4 @@ interface DefaultModel {
   hideBreadcrumb: boolean
   tableView: boolean
   popupBody: string | undefined
-  cookieBannerBody: string | undefined
 }

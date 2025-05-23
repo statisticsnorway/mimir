@@ -1,15 +1,3 @@
-$font-roboto: Roboto, sans-serif;
-$font-opensans: "Open Sans", sans-serif;
-$font-base: 16px;
-$font-bold: 700;
-$font-normal: 400;
-$color-white: $ssb-white;
-$color-bg: $ssb-green-4;
-$button-height: 44px;
-$button-padding: 8px 20px;
-$button-radius: 2px;
-$content-width: 608px;
-
 .cookie-banner {
   position: fixed;
   bottom: 30px;
@@ -17,7 +5,7 @@ $content-width: 608px;
   width: 664px;
   height: 332px;
   padding: 28px;
-  background: $color-bg;
+  background: $ssb-green-4;
   border-radius: 8px;
   box-sizing: border-box;
   display: flex;
@@ -33,28 +21,28 @@ $content-width: 608px;
   &-title,
   &-text,
   &-link {
-    font-size: $font-base;
-    color: $color-white;
+    font-size: 16px;
+    color: $ssb-white;
     margin-bottom: 16px;
   }
 
   &-title {
-    font-family: $font-roboto;
+    font-family: Roboto, sans-serif;
     font-size: 20px;
-    font-weight: $font-bold;
-    width: $content-width;
+    font-weight: 700;
+    width: 608px;
     height: 32px;
     margin: 0 0 16px;
   }
 
   &-text,
   &-link {
-    font-family: $font-opensans;
-    font-weight: $font-normal;
+    font-family: "Open Sans", sans-serif;
+    font-weight: 400;
   }
 
   &-text {
-    width: $content-width;
+    width: 608px;
     height: 112px;
   }
 
@@ -77,12 +65,12 @@ $content-width: 608px;
 
     .cookie-button-accept,
     .cookie-button-decline {
-      height: $button-height;
-      padding: $button-padding !important;
-      border-radius: $button-radius !important;
-      font: $font-bold $font-base $font-roboto;
-      background: $color-white !important;
-      color: $color-bg !important;
+      height: 44px;
+      padding: 8px 20px !important;
+      border-radius: 2px !important;
+      font: 700 16px Roboto, sans-serif;
+      background: $ssb-white !important;
+      color: $ssb-green-4 !important;
     }
 
     .cookie-button-accept {
@@ -91,14 +79,12 @@ $content-width: 608px;
     }
 
     .cookie-button-decline {
-      border: 2px solid $color-white !important;
+      border: 2px solid $ssb-white !important;
       width: 156px;
     }
   }
-}
 
-@media (max-width: 723px) {
-  .cookie-banner {
+  @media (max-width: 723px) {
     left: 50%;
     transform: translateX(-50%);
     width: 325px;

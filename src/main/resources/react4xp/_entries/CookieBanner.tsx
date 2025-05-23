@@ -1,27 +1,33 @@
 import React, { useEffect, useState } from 'react'
 import { Button } from '@statisticsnorway/ssb-component-library'
-import { blockOptionalCookies } from '../utils/cookieBannerUtils'
 
-const MAX_AGE = 7776000
+const MAX_AGE = 7776000 // 90days
+const COOKIE_NAME = 'cookie-consent'
 
-function CookieBanner() {
+function getCookie(): string | null {
+  const match = document.cookie.match(new RegExp(`(^|;\\s*)${COOKIE_NAME}=([^;]*)`))
+  return match ? match[2] : null
+}
+
+function setCookie(value: string): void {
+  document.cookie = `${COOKIE_NAME}=${value}; path=/; max-age=${MAX_AGE}; SameSite=Lax`
+}
+
+function CookieBanner(): JSX.Element | null {
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
-    const hasConsent = document.cookie.includes('cookie-consent=')
-    if (!hasConsent) {
-      blockOptionalCookies()
+    const cookie = getCookie()
+    if (!cookie) {
+      setCookie('unidentified')
+      setVisible(true)
+    } else if (cookie === 'unidentified') {
       setVisible(true)
     }
   }, [])
 
-  const setConsent = (type: 'all' | 'necessary') => {
-    if (type === 'necessary') {
-      blockOptionalCookies()
-    }
-
-    document.cookie = `cookie-consent=${type}; path=/; max-age=${MAX_AGE}; SameSite=Lax`
-
+  function handleConsent(value: 'all' | 'necessary') {
+    setCookie(value)
     setVisible(false)
   }
 
@@ -40,10 +46,10 @@ function CookieBanner() {
           Les mer om informasjonskapsler
         </a>
         <div className='cookie-banner-buttons'>
-          <Button className='cookie-button-accept' onClick={() => setConsent('all')}>
+          <Button className='cookie-button-accept' onClick={() => handleConsent('all')}>
             Godta alle
           </Button>
-          <Button className='cookie-button-decline' onClick={() => setConsent('necessary')}>
+          <Button className='cookie-button-decline' onClick={() => handleConsent('necessary')}>
             Kun nødvendige
           </Button>
         </div>

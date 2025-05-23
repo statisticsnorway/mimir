@@ -5,7 +5,7 @@
     window.dataLayer = window.dataLayer || [];
   </script>
   <!-- Google Tag Manager -->
-  <script th:inline="javascript" data-th-if="${cookieConsent}">
+  <script th:inline="javascript" data-th-if="${GTM_TRACKING_ID}">
     (function (w, d, s, l, i) {
       w[l] = w[l] || []; w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
       var f = d.getElementsByTagName(s)[0],
@@ -35,7 +35,7 @@
 
 <body class="xp-page" data-th-classappend="${bodyClasses}">
   <!-- Google Tag Manager (noscript) -->
-  <noscript data-th-if="${cookieConsent}">
+  <noscript data-th-if="${GTM_TRACKING_ID}">
     <iframe title="GTM tag"
       data-th-src="'https://www.googletagmanager.com/ns.html?id=' + ${GTM_TRACKING_ID} + (${GTM_AUTH} ? '&gtm_auth='+${GTM_AUTH}+'&gtm_preview=env-3&gtm_cookies_win=x' : '')"
       height="0" width="0" style="display:none;visibility:hidden"></iframe>
@@ -54,7 +54,7 @@
   </div>
   <script type="application/ld+json" data-th-if="${jsonLd}" th:inline="javascript">[[${jsonLd}]]</script>
 
-  <div id="cookieBanner" data-th-if="${cookieBannerBody}"></div>
+  <div id="cookieBanner"></div>
   <div id="popup" data-th-if="${popupBody}"></div>
 
   <!-- Metainfo to make the page searchable -->
