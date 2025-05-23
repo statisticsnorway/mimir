@@ -78,6 +78,8 @@ export function get(req: XP.Request): XP.Response {
 
   const pageConfig: DefaultPageConfig = page.page?.config
 
+  const cookieConsent = req.cookies?.['cookie-consent'] === 'all'
+
   const ingress: string | undefined = page.data.ingress
     ? processHtml({
         value: page.data.ingress.replace(/&nbsp;/g, ' '),
@@ -193,6 +195,21 @@ export function get(req: XP.Request): XP.Response {
     pageContributions = popupComponent.pageContributions
   }
 
+  const isCookieBannerEnabled = isEnabled('show-cookie-banner', false, 'ssb')
+
+  let cookieBannerComponent
+  if (isCookieBannerEnabled) {
+    cookieBannerComponent = r4xpRender('CookieBanner', {}, req, {
+      id: 'cookieBanner',
+      body: '<div id="cookieBanner"></div>',
+      pageContributions,
+    })
+
+    if (cookieBannerComponent.pageContributions) {
+      pageContributions = cookieBannerComponent.pageContributions
+    }
+  }
+
   let municipality: MunicipalityWithCounty | undefined
   if (req.params.selfRequest) {
     municipality = getMunicipality(req as RequestWithCode)
@@ -264,6 +281,7 @@ export function get(req: XP.Request): XP.Response {
     ...statBankContent,
     GTM_TRACKING_ID,
     GTM_AUTH,
+    cookieConsent,
     headerBody: header?.body,
     footerBody: footer?.body,
     ...metaInfo,
@@ -274,6 +292,7 @@ export function get(req: XP.Request): XP.Response {
     hideBreadcrumb,
     tableView: page.type === 'mimir:table',
     popupBody: popupComponent?.body,
+    cookieBannerBody: cookieBannerComponent?.body,
   }
 
   const thymeleafRenderBody = render(view, model)
@@ -708,6 +727,7 @@ interface DefaultModel {
   statbankWeb: boolean
   GTM_TRACKING_ID: string | null
   GTM_AUTH: string | null
+  cookieConsent: boolean
   jsonLd: Article | undefined
   headerBody: string | undefined
   footerBody: string | undefined
@@ -716,5 +736,6 @@ interface DefaultModel {
   hideHeader: boolean
   hideBreadcrumb: boolean
   tableView: boolean
-  popupBody: string | undefined // Added for Popup component
+  popupBody: string | undefined
+  cookieBannerBody: string | undefined
 }
