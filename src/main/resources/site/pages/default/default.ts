@@ -348,7 +348,7 @@ export function get(req: XP.Request): XP.Response {
     headers: {
       'x-content-key': page._id,
     },
-    cookies
+    cookies,
   } as XP.Response
 }
 
