@@ -37,6 +37,7 @@ declare global {
       export type LocalSearch = _PartComponent<'mimir:localSearch'>
       export type MailChimpForm = _PartComponent<'mimir:mailChimpForm'>
       export type Map = _PartComponent<'mimir:map'>
+      export type Markdown = _PartComponent<'mimir:markdown'>
       export type Maths = _PartComponent<'mimir:maths'>
       export type MenuBox = _PartComponent<'mimir:menuBox'>
       export type MenuDropdown = _PartComponent<'mimir:menuDropdown'>
