@@ -1,16 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import { Button } from '@statisticsnorway/ssb-component-library'
 
-const MAX_AGE = 7776000 // 90days
 const COOKIE_NAME = 'cookie-consent'
+const SERVICE_URL = '/_/service/mimir/setCookieConsent'
 
 function getCookie(): string | null {
   const match = document.cookie.match(new RegExp(`(^|;\\s*)${COOKIE_NAME}=([^;]*)`))
   return match ? match[2] : null
 }
 
-function setCookie(value: string): void {
-  document.cookie = `${COOKIE_NAME}=${value}; path=/; max-age=${MAX_AGE}; SameSite=Lax`
+async function setCookieViaService(value: 'all' | 'necessary' | 'unidentified') {
+  try {
+    await fetch(`${SERVICE_URL}?value=${value}`, { credentials: 'include' })
+  } catch (e) {
+    console.error(`Failed to set cookie "${value}" via XP service`, e)
+  }
 }
 
 function CookieBanner(): JSX.Element | null {
@@ -19,7 +23,7 @@ function CookieBanner(): JSX.Element | null {
   useEffect(() => {
     const cookie = getCookie()
     if (!cookie) {
-      setCookie('unidentified')
+      setCookieViaService('unidentified')
       setVisible(true)
     } else if (cookie === 'unidentified') {
       setVisible(true)
@@ -27,7 +31,7 @@ function CookieBanner(): JSX.Element | null {
   }, [])
 
   function handleConsent(value: 'all' | 'necessary') {
-    setCookie(value)
+    setCookieViaService(value)
     setVisible(false)
   }
 

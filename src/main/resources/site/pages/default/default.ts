@@ -184,9 +184,9 @@ export function get(req: XP.Request): XP.Response {
   const cookies = !isCookieBannerEnabled
     ? {
         'cookie-consent': {
-          value: 'unidentified',
+          value: '',
           path: '/',
-          maxAge: 7776000,
+          maxAge: 0,
           sameSite: 'lax',
           secure: false,
         },

@@ -1,9 +1,19 @@
 import React from 'react'
 import { Button } from '@statisticsnorway/ssb-component-library'
 
+const SERVICE_URL = '/_/service/mimir/setCookieConsent'
+
+async function resetCookieConsent() {
+  try {
+    await fetch(`${SERVICE_URL}?value=unidentified`, { credentials: 'include' })
+  } catch (e) {
+    console.error('Failed to reset cookie-consent via service', e)
+  }
+}
+
 function CookieBannerResetButton() {
   function handleClick(e: React.MouseEvent<HTMLButtonElement>) {
-    document.cookie = 'cookie-consent=unidentified; path=/; max-age=7776000; SameSite=Lax'
+    resetCookieConsent()
     e.currentTarget.blur()
   }
 
