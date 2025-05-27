@@ -77,7 +77,6 @@ export function get(req: XP.Request): XP.Response {
   if (!page) return { status: 404 }
 
   const pageConfig: DefaultPageConfig = page.page?.config
-
   const ingress: string | undefined = page.data.ingress
     ? processHtml({
         value: page.data.ingress.replace(/&nbsp;/g, ' '),
@@ -162,6 +161,38 @@ export function get(req: XP.Request): XP.Response {
     }
   }
 
+  //popup-component
+  const isPopupEnabled = isEnabled('show-popup-survey', false, 'ssb') //
+  const popupComponent = isPopupEnabled
+    ? r4xpRender('Popup', {}, req, { id: 'popup', body: '<div id="popup"></div>', pageContributions })
+    : undefined
+  if (popupComponent) {
+    pageContributions = popupComponent.pageContributions
+  }
+
+  //cookieBanner
+  const isCookieBannerEnabled = isEnabled('show-cookie-banner', false, 'ssb')
+  const cookieBannerComponent = isCookieBannerEnabled
+    ? r4xpRender('CookieBanner', {}, req, {
+        id: 'cookieBanner',
+        pageContributions,
+      })
+    : undefined
+  if (cookieBannerComponent?.pageContributions) {
+    pageContributions = cookieBannerComponent.pageContributions
+  }
+  const cookies = !isCookieBannerEnabled
+    ? {
+        'cookie-consent': {
+          value: '',
+          path: '/',
+          maxAge: 0,
+          sameSite: 'lax',
+          secure: false,
+        },
+      }
+    : {}
+
   const footerContent: FooterContent | unknown = fromMenuCache(req, `footer_${menuCacheLanguage}`, () => {
     return getFooterContent(language)
   })
@@ -181,16 +212,6 @@ export function get(req: XP.Request): XP.Response {
 
   if (footer) {
     pageContributions = footer.pageContributions
-  }
-
-  const isPopupEnabled = isEnabled('show-popup-survey', false, 'ssb')
-
-  const popupComponent = isPopupEnabled
-    ? r4xpRender('Popup', {}, req, { id: 'popup', body: '<div id="popup"></div>', pageContributions })
-    : undefined
-
-  if (popupComponent) {
-    pageContributions = popupComponent.pageContributions
   }
 
   let municipality: MunicipalityWithCounty | undefined
@@ -324,6 +345,7 @@ export function get(req: XP.Request): XP.Response {
     headers: {
       'x-content-key': page._id,
     },
+    cookies,
   } as XP.Response
 }
 
@@ -716,5 +738,5 @@ interface DefaultModel {
   hideHeader: boolean
   hideBreadcrumb: boolean
   tableView: boolean
-  popupBody: string | undefined // Added for Popup component
+  popupBody: string | undefined
 }

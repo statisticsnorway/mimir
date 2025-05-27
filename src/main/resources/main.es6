@@ -71,6 +71,10 @@ try {
           feature: 'new-table-export',
           enabled: false,
         },
+        {
+          feature: 'show-cookie-banner',
+          enabled: false,
+        },
       ],
     },
   ])
