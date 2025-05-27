@@ -16,7 +16,7 @@ export function get(req: XP.Request): XP.Response {
       'cookie-consent': {
         value,
         path: '/',
-        maxAge: 7776000, // 90 dager 
+        maxAge: 7776000, // 90 dager
         sameSite: 'Lax',
         secure: req.scheme === 'https',
       },
