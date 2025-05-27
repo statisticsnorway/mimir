@@ -236,7 +236,7 @@ export function setupCronJobs(): void {
       cronValue:
         app.config && app.config['ssb.task.updateFrontpageKeyfigures']
           ? app.config['ssb.task.updateFrontpageKeyfigures']
-          : '01 09 * * *',
+          : '0 08 * * *',
       timeZone: timezone,
     })
 
