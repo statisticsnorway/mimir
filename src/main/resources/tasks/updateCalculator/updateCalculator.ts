@@ -11,7 +11,7 @@ export function run(): void {
 }
 
 function clearCalculatorPartsCache(jobLogResult: Array<CreateOrUpdateStatus>): void {
-  const updatedDataquery: number = jobLogResult?.filter((job) => job.status === 'GET_DATA_COMPLETE').length
+  const updatedDataquery: number = jobLogResult.filter((job) => job.status === 'GET_DATA_COMPLETE').length
 
   if (updatedDataquery > 0) {
     log.info(`Clearing part cache for ${updatedDataquery} updated calculators`)

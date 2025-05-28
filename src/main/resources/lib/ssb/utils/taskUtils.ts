@@ -15,7 +15,7 @@ import { DataSource } from '/site/mixins'
 export function refreshDatasetsForTask(
   jobName: string,
   datasets: Array<Content<DataSource>>,
-  clearPartCache?: (jobLogResult?: Array<CreateOrUpdateStatus>) => void
+  clearPartCache?: (jobLogResult: Array<CreateOrUpdateStatus>) => void
 ): void {
   cronJobLog(`Start ${jobName} job`)
   const jobLogNode: JobEventNode = startJobLog(jobName)
