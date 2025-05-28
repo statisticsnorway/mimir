@@ -1,11 +1,11 @@
 import { getChildren, Content } from '/lib/xp/content'
 import { JobNames } from '/lib/ssb/repo/job'
-import { refreshDatasetsAndUpdateJobLog } from '/lib/ssb/utils/taskUtils'
+import { refreshDatasetsForTask } from '/lib/ssb/utils/taskUtils'
 import { DataSource } from '/site/mixins'
 
 export function run(): void {
   log.info(`Run Task: updateFrontpageKeyfigures ${new Date()}`)
-  refreshDatasetsAndUpdateJobLog(JobNames.REFRESH_DATASET_FRONTPAGE_KEYFIGURES_JOB, getFrontpageKeyfiguresDataSource())
+  refreshDatasetsForTask(JobNames.REFRESH_DATASET_FRONTPAGE_KEYFIGURES_JOB, getFrontpageKeyfiguresDataSource())
 }
 
 function getFrontpageKeyfiguresDataSource(): Array<Content<DataSource>> {

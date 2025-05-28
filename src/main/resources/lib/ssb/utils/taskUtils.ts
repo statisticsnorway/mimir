@@ -12,7 +12,11 @@ import { DATASET_BRANCH } from '/lib/ssb/repo/dataset'
 import { cronJobLog } from '/lib/ssb/utils/serverLog'
 import { DataSource } from '/site/mixins'
 
-export function refreshDatasetsAndUpdateJobLog(jobName: string, datasets: Array<Content<DataSource>>): void {
+export function refreshDatasetsForTask(
+  jobName: string,
+  datasets: Array<Content<DataSource>>,
+  clearPartCache?: (jobLogResult?: Array<CreateOrUpdateStatus>) => void
+): void {
   cronJobLog(`Start ${jobName} job`)
   const jobLogNode: JobEventNode = startJobLog(jobName)
 
@@ -42,6 +46,10 @@ export function refreshDatasetsAndUpdateJobLog(jobName: string, datasets: Array<
           }
         }),
       })
+    }
+
+    if (clearPartCache) {
+      clearPartCache(jobLogResult)
     }
   } else {
     completeJobLog(jobLogNode._id, JOB_STATUS_COMPLETE, { result: [] })
