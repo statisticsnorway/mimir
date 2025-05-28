@@ -4,13 +4,6 @@ import { Button } from '@statisticsnorway/ssb-component-library'
 const COOKIE_NAME = 'cookie-consent'
 const SERVICE_URL = '/_/service/mimir/setCookieConsent'
 
-declare global {
-  interface Window {
-    dataLayer: any[]
-    gtag?: (...args: any[]) => void
-  }
-}
-
 window.dataLayer = window.dataLayer || []
 window.gtag = window.gtag || function () {}
 
