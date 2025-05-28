@@ -4,28 +4,28 @@ import { refreshDatasetsForTask } from '/lib/ssb/utils/taskUtils'
 import { DataSource } from '/site/mixins'
 
 export function run(): void {
-  log.info(`Run Task: updateSDDSTables ${new Date()}`)
-  refreshDatasetsForTask(JobNames.REFRESH_DATASET_SDDS_TABLES_JOB, getSDDSTableDataset())
+  log.info(`Run Task: updateFrontpageKeyfigures ${new Date()}`)
+  refreshDatasetsForTask(JobNames.REFRESH_DATASET_FRONTPAGE_KEYFIGURES_JOB, getFrontpageKeyfiguresDataSource())
 }
 
-function getSDDSTableDataset(): Array<Content<DataSource>> {
+function getFrontpageKeyfiguresDataSource(): Array<Content<DataSource>> {
   return query({
     start: 0,
-    count: 99,
-    query: `fulltext('displayName',  'SDDS')`,
+    count: 20,
+    query: `fulltext('displayName',  'forside')`,
     filters: {
       boolean: {
         must: [
           {
             hasValue: {
               field: 'language',
-              values: ['en'],
+              values: ['en', 'nb'],
             },
           },
           {
             hasValue: {
               field: 'type',
-              values: [`${app.name}:table`],
+              values: [`${app.name}:keyFigure`],
             },
           },
         ],
