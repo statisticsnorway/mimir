@@ -4,6 +4,16 @@ import { Button } from '@statisticsnorway/ssb-component-library'
 const COOKIE_NAME = 'cookie-consent'
 const SERVICE_URL = '/_/service/mimir/setCookieConsent'
 
+declare global {
+  interface Window {
+    dataLayer: any[]
+    gtag?: (...args: any[]) => void
+  }
+}
+
+window.dataLayer = window.dataLayer || []
+window.gtag = window.gtag || function () {}
+
 function getCookie(): string | null {
   const match = document.cookie.match(new RegExp(`(^|;\\s*)${COOKIE_NAME}=([^;]*)`))
   return match ? match[2] : null
@@ -33,6 +43,23 @@ function CookieBanner(): JSX.Element | null {
   function handleConsent(value: 'all' | 'necessary') {
     setCookieViaService(value)
     setVisible(false)
+
+    window.dataLayer.push({
+      event: 'consent_update',
+      consent: value,
+      ad_storage: value === 'all' ? 'granted' : 'denied',
+      analytics_storage: value === 'all' ? 'granted' : 'denied',
+      ad_personalization: value === 'all' ? 'granted' : 'denied',
+      functionality_storage: value === 'all' ? 'granted' : 'denied',
+      security_storage: 'granted',
+    })
+
+    if (typeof window.gtag === 'function') {
+      window.gtag('consent', 'update', {
+        ad_storage: value === 'all' ? 'granted' : 'denied',
+        analytics_storage: value === 'all' ? 'granted' : 'denied',
+      })
+    }
   }
 
   if (!visible) return null
