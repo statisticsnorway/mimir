@@ -1,4 +1,4 @@
-import { getChildren, Content } from '/lib/xp/content'
+import { query, Content } from '/lib/xp/content'
 import { JobNames } from '/lib/ssb/repo/job'
 import { refreshDatasetsForTask } from '/lib/ssb/utils/taskUtils'
 import { DataSource } from '/site/mixins'
@@ -9,17 +9,27 @@ export function run(): void {
 }
 
 function getFrontpageKeyfiguresDataSource(): Array<Content<DataSource>> {
-  const frontpageKeyfiguresNo = getChildren({
-    key: '/ssb/nokkeltall-forside',
+  return query({
     start: 0,
-    count: 10,
-  }).hits
-
-  const frontpageKeyfiguresEn = getChildren({
-    key: '/ssb/en/nokkeltall-forside-en',
-    start: 0,
-    count: 10,
-  }).hits
-
-  return [...frontpageKeyfiguresNo, ...frontpageKeyfiguresEn]
+    count: 20,
+    query: `fulltext('displayName',  'forside')`,
+    filters: {
+      boolean: {
+        must: [
+          {
+            hasValue: {
+              field: 'language',
+              values: ['en', 'nb'],
+            },
+          },
+          {
+            hasValue: {
+              field: 'type',
+              values: [`${app.name}:keyFigure`],
+            },
+          },
+        ],
+      },
+    },
+  }).hits as unknown as Array<Content<DataSource>>
 }
