@@ -1,8 +1,18 @@
 <html data-th-lang="${language.code}">
 
 <head>
-  <script>
+    <script>
     window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      event: 'default_consent',
+      'gtm.allowlist': ['consent'],
+      'consent': 'default',
+      ad_storage: 'denied',
+      analytics_storage: 'denied',
+      ad_personalization: 'denied',
+      functionality_storage: 'denied',
+      security_storage: 'granted'
+    });
   </script>
   <!-- Google Tag Manager -->
   <script th:inline="javascript" data-th-if="${GTM_TRACKING_ID}">

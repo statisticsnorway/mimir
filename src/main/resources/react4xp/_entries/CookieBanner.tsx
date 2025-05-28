@@ -4,32 +4,14 @@ import { Button } from '@statisticsnorway/ssb-component-library'
 const COOKIE_NAME = 'cookie-consent'
 const SERVICE_URL = '/_/service/mimir/setCookieConsent'
 
-declare global {
-  interface Window {
-    gtag?: (...args: [string, string, Record<string, string>]) => void
-  }
-}
-
 function getCookie(): string | null {
   const match = document.cookie.match(new RegExp(`(^|;\\s*)${COOKIE_NAME}=([^;]*)`))
   return match ? match[2] : null
 }
 
-function updateGtagConsent(value: 'all' | 'necessary' | 'unidentified') {
-  const granted = value === 'all'
-  if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
-    window.gtag('consent', 'update', {
-      analytics_storage: granted ? 'granted' : 'denied',
-      ad_storage: granted ? 'granted' : 'denied',
-      ad_personalization: granted ? 'granted' : 'denied',
-    })
-  }
-}
-
 async function setCookieViaService(value: 'all' | 'necessary' | 'unidentified') {
   try {
     await fetch(`${SERVICE_URL}?value=${value}`, { credentials: 'include' })
-    updateGtagConsent(value)
   } catch (e) {
     console.error(`Failed to set cookie "${value}" via XP service`, e)
   }
@@ -44,7 +26,6 @@ function CookieBanner(): JSX.Element | null {
       setCookieViaService('unidentified')
       setVisible(true)
     } else if (cookie === 'unidentified') {
-      updateGtagConsent('unidentified')
       setVisible(true)
     }
   }, [])
