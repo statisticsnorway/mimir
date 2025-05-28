@@ -86,3 +86,19 @@ declare global {
     }
   }
 }
+
+declare global {
+  interface Window {
+    dataLayer: Array<{
+      event: string
+      consent?: 'all' | 'necessary' | 'unidentified'
+      ad_storage?: 'granted' | 'denied'
+      analytics_storage?: 'granted' | 'denied'
+      ad_personalization?: 'granted' | 'denied'
+      functionality_storage?: 'granted' | 'denied'
+      security_storage?: 'granted' | 'denied'
+      [key: string]: unknown
+    }>
+    gtag?: (...args: [string, string, Record<string, string>]) => void
+  }
+}
