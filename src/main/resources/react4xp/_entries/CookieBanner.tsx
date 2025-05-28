@@ -58,7 +58,7 @@ function CookieBanner(): JSX.Element | null {
   if (!visible) return null
 
   return (
-    <div className='cookie-banner'>
+    <section className='cookie-banner' aria-label='Informasjonskapselvalg'>
       <div className='cookie-banner-content'>
         <h3 className='cookie-banner-title'>Vi bruker informasjonskapsler</h3>
         <p className='cookie-banner-text'>
@@ -78,7 +78,7 @@ function CookieBanner(): JSX.Element | null {
           </Button>
         </div>
       </div>
-    </div>
+    </section>
   )
 }
 
