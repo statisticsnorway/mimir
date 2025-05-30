@@ -150,20 +150,6 @@ export function Jobs() {
       const updated = job.result.result.filter((ds) => ds.status === 'Dataset hentet og oppdatert').length
       const errorCount = job.result.result.filter((ds) => ds.hasError).length
       return renderRefreshDatasetJobTaskMessage(job, updated, errorCount, skipped)
-    } else if (job.task === 'Push RSS news' || job.task === 'Push RSS statkal') {
-      const errorCount = job.result.result.filter((ds) => ds.hasError).length
-      return (
-        <span>
-          {job.status} - {job.message}
-          {errorCount > 0 ? (
-            <span className='warningIcon'>
-              <AlertTriangle size='12' color='#FF4500' />
-            </span>
-          ) : (
-            ''
-          )}
-        </span>
-      )
     }
     return (
       <span>
