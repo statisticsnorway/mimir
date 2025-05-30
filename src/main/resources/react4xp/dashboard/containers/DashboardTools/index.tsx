@@ -16,7 +16,7 @@ import {
   requestPurgeVarnishCache,
   requestRefreshNameGraph,
 } from '/react4xp/dashboard/containers/HomePage/actions'
-import { RefreshCw, Rss, Trash } from 'react-feather'
+import { RefreshCw, Trash } from 'react-feather'
 import { Col, Container, Row, Alert } from 'react-bootstrap'
 import { Button, Dropdown, Input } from '@statisticsnorway/ssb-component-library'
 import {
@@ -29,7 +29,6 @@ import { setOpenStatistic, setOpenModal } from '/react4xp/dashboard/containers/S
 import { startRefresh } from '/react4xp/dashboard/containers/StatRegDashboard/actions'
 import { selectStatuses } from '/react4xp/dashboard/containers/StatRegDashboard/selectors'
 import { RefreshStatRegModal } from '/react4xp/dashboard/containers/DashboardTools/RefreshStatRegModal'
-import axios from 'axios'
 
 export function DashboardTools() {
   const loadingCache = useSelector(selectLoadingClearCache)
@@ -37,9 +36,6 @@ export function DashboardTools() {
   const varnishPurgeResult = useSelector(selectVarnishPurgeResult)
   const loadingRefreshNameGraph = useSelector(selectLoadingRefreshNameGraph)
   const refreshNameGraphResult = useSelector(selectRefreshNameGraphResult)
-  const [pushingRss, setPushingRss] = useState(false)
-  const [pushRssResult, setPushRssResult] = useState('')
-  const [rssStatus, setRssStatus] = useState('success')
   const statisticsSearchList = useSelector(selectSearchList)
   const statistics = useSelector(selectStatistics)
   const loadingStatisticsSearchList = useSelector(selectLoadingSearchList)
@@ -89,23 +85,6 @@ export function DashboardTools() {
 
   function refreshNameGraph() {
     requestRefreshNameGraph(dispatch, io)
-  }
-
-  function pushRss() {
-    setPushingRss(true)
-    axios
-      .get('/xp/admin/_/service/mimir/rssPush')
-      .then((response) => {
-        setRssStatus('success')
-        setPushRssResult(response.data.message)
-      })
-      .catch((error) => {
-        setRssStatus('danger')
-        setPushRssResult(error.message)
-      })
-      .finally(() => {
-        setPushingRss(false)
-      })
   }
 
   function renderIcon(loading: boolean) {
@@ -296,27 +275,6 @@ export function DashboardTools() {
                   {renderIcon(loadingCache)} <span>Tøm XP cache</span>
                 </div>
               </Button>
-            </Col>
-          </Row>
-          <Row className='mb-1'>
-            <Col>
-              <Button
-                primary
-                className='w-100 d-flex justify-content-center'
-                onClick={() => pushRss()}
-                disabled={pushingRss}
-              >
-                <div>
-                  <Rss /> <span>Push RSS</span>
-                </div>
-              </Button>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <Alert variant={rssStatus} show={!!pushRssResult}>
-                {pushRssResult}
-              </Alert>
             </Col>
           </Row>
           <Row className='mb-1'>
