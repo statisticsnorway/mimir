@@ -15,7 +15,7 @@ import { DataSource } from '/site/mixins'
 export function refreshDatasetsForTask(
   jobName: string,
   datasets: Array<Content<DataSource>>,
-  clearPartCache?: (jobLogResult: Array<CreateOrUpdateStatus>) => void
+  clearCache?: (totalUpdatedDataqueries: number) => void
 ): void {
   cronJobLog(`Start ${jobName} job`)
   const jobLogNode: JobEventNode = startJobLog(jobName)
@@ -48,8 +48,11 @@ export function refreshDatasetsForTask(
       })
     }
 
-    if (clearPartCache) {
-      clearPartCache(jobLogResult)
+    if (clearCache) {
+      const totalUpdatedDataqueries: number = jobLogResult.filter((job) => job.status === 'GET_DATA_COMPLETE').length
+      if (totalUpdatedDataqueries > 0) {
+        clearCache(totalUpdatedDataqueries)
+      }
     }
   } else {
     completeJobLog(jobLogNode._id, JOB_STATUS_COMPLETE, { result: [] })
