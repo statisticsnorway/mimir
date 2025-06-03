@@ -12,6 +12,8 @@ concurrency:
 jobs:
   deploy_to_qa:
     name: 'Deploy to QA'
+    permissions:
+      contents: write
     runs-on: 'ubuntu-latest'
     environment: 'QA_mimir'
     steps:
@@ -35,48 +37,6 @@ jobs:
           client_cert: ${{ secrets.ENONIC_DEPLOY_CERT }}
           client_key: ${{ secrets.ENONIC_DEPLOY_KEY }}
           app_jar: './build/libs/*.jar'
-      - name: Send success message to Slack
-        id: slack_success
-        if: steps.deploy_app_to_XP.outcome == 'success'
-        uses: slackapi/slack-github-action@v2
-        with:
-          webhook: ${{ secrets.SLACK_ALERTS_QA }}
-          webhook-type: incoming-webhook
-          # Using Github block kit (https://api.slack.com/reference/block-kit/blocks) to configure the Slack message, see https://docs.github.com/en/actions/learn-github-actions/contexts
-          # for more information about context variables
-          payload: |
-            {
-              "blocks": [
-                {
-                  "type": "header",
-                  "text": {
-                    "type": "plain_text",
-                    "text": "${{ github.workflow }} in ${{ github.repository }}"
-                  }
-                },
-                {
-                  "type": "context",
-                  "elements": [
-                    {
-                      "type": "image",
-                      "image_url": "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
-                      "alt_text" : "Github logo"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "Run by: *${{ github.actor }}* on: *${{ github.ref_name }}*"
-                    }
-                  ]
-                },
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "🛠 Build ${{ github.run_number }} is a *${{ job.status }}*, well done!\n<${{ github.event.pull_request.html_url || github.event.head_commit.url }}|Commit or PR>"
-                  }
-                }
-              ]
-            }
       - name: Send failure message to Slack
         id: slack_failure
         if: steps.deploy_app_to_XP.outcome == 'failure'
@@ -112,7 +72,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "💣 Build ${{ github.run_number }} is a *${{ job.status }}*, and that's cool!\nIf you want to fix it, start by looking at the <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|workflow output>"
+                    "text": "💣 Build ${{ github.run_number }} is a *${{ job.status }}*, and that's cool!\nCommit message: *${{ github.event.head_commit.message }}*\nIf you want to fix it, start by looking at the <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|workflow output>"
                   }
                 }
               ]
@@ -121,6 +81,8 @@ jobs:
     # Run this job after deploy is finished, and only run if deploy succeeded
     needs: deploy_to_qa
     if: ${{ always() && contains(join(needs.*.result, ','), 'success') }}
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
     container: node:lts
     steps:
@@ -134,3 +96,42 @@ jobs:
         run: npm install -g @mablhq/mabl-cli
       - name: mabl end-to-end test - TEST
         run: mabl deployments create --api-key ${{ secrets.MABLAPIKEY }} --application-id ${{ secrets.MABLAPPID }} --environment-id ${{ secrets.MABLENVQA }} --labels MIMIR --await-completion
+      - name: Send mabl test failure message to Slack
+        if: failure()
+        uses: slackapi/slack-github-action@v2
+        with:
+          webhook: ${{ secrets.SLACK_MIMIR_MABL }}
+          webhook-type: incoming-webhook
+          payload: |
+            {
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "Mabl Tests Failed in QA ${{ github.repository }}"
+                  }
+                },
+                {
+                  "type": "context",
+                  "elements": [
+                    {
+                      "type": "image",
+                      "image_url": "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
+                      "alt_text" : "Github logo"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "Run by: *${{ github.actor }}* on: *${{ github.ref_name }}*"
+                    }
+                  ]
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "❌ Mabl tests failed for build ${{ github.run_number }}\nCommit message: *${{ github.event.head_commit.message }}*\nPlease check the <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|workflow output> for details"
+                  }
+                }
+              ]
+            }

@@ -76,6 +76,7 @@ declare global {
       export type Variables = _PartComponent<'mimir:variables'>
       export type VideoEmbed = _PartComponent<'mimir:videoEmbed'>
       export type WebcruiterAdvertisementList = _PartComponent<'mimir:webcruiterAdvertisementList'>
+      export type CookieBannerResetButton = _PartComponent<'mimir:cookieBannerResetButton'>
     }
 
     namespace LayoutComponent {
@@ -83,5 +84,21 @@ declare global {
       export type Topic = _LayoutComponent<'mimir:topic', XpLayoutMap['mimir:topic']>
       export type Columns = _LayoutComponent<'mimir:columns', XpLayoutMap['mimir:columns']>
     }
+  }
+}
+
+declare global {
+  interface Window {
+    dataLayer: Array<{
+      event: string
+      consent?: 'all' | 'necessary' | 'unidentified'
+      ad_storage?: 'granted' | 'denied'
+      analytics_storage?: 'granted' | 'denied'
+      ad_personalization?: 'granted' | 'denied'
+      functionality_storage?: 'granted' | 'denied'
+      security_storage?: 'granted' | 'denied'
+      [key: string]: unknown
+    }>
+    gtag?: (...args: [string, string, Record<string, string>]) => void
   }
 }
