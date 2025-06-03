@@ -137,16 +137,6 @@ export function setupCronJobs(): void {
       })
     }
 
-    // // Push RSS Statkal
-    // scheduleJob({
-    //   name: 'pushRssStatkal',
-    //   description: 'Push kommende publiseringer til rss/statkal',
-    //   descriptor: 'pushRssStatkal',
-    //   cronValue:
-    //     app.config && app.config['ssb.task.pushRssStatkal'] ? app.config['ssb.task.pushRssStatkal'] : '10 08 * * *',
-    //   timeZone: timezone,
-    // })
-
     // Delete expired event logs for queries
     scheduleJob({
       name: 'deleteExpiredEventLog',
@@ -199,15 +189,6 @@ export function setupCronJobs(): void {
         timeZone: timezone,
       })
     }
-
-    // // push news to rss feed
-    // scheduleJob({
-    //   name: 'pushRssNews',
-    //   description: 'Push RSS news',
-    //   descriptor: 'pushRssNews',
-    //   cronValue: app.config && app.config['ssb.task.pushRssNews'] ? app.config['ssb.task.pushRssNews'] : '01 08 * * *',
-    //   timeZone: timezone,
-    // })
 
     // clear specific cache once an hour
     scheduleJob({
