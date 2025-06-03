@@ -209,6 +209,18 @@ export function setupCronJobs(): void {
       timeZone: timezone,
     })
 
+    // Update frontpage keyfigures
+    scheduleJob({
+      name: 'updateFrontpageKeyfigures',
+      description: 'Update Frontpage Keyfigures',
+      descriptor: 'updateFrontpageKeyfigures',
+      cronValue:
+        app.config && app.config['ssb.task.updateFrontpageKeyfigures']
+          ? app.config['ssb.task.updateFrontpageKeyfigures']
+          : '0 8 * * *',
+      timeZone: timezone,
+    })
+
     // Update statistic Repo
     scheduleJob({
       name: 'updateStatisticRepo',

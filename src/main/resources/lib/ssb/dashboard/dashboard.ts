@@ -412,7 +412,8 @@ function parseResult(
     return getRefreshDatasetJobParsedResult(result)
   } else if (
     jobLog.data.task === JobNames.REFRESH_DATASET_CALCULATOR_JOB ||
-    jobLog.data.task === JobNames.REFRESH_DATASET_SDDS_TABLES_JOB
+    jobLog.data.task === JobNames.REFRESH_DATASET_SDDS_TABLES_JOB ||
+    jobLog.data.task === JobNames.REFRESH_DATASET_FRONTPAGE_KEYFIGURES_JOB
   ) {
     const result = jobLog.data.refreshDataResult as CalculatorRefreshResult | undefined
     return getCalculatorAndSDDSTablesJobParsedResult(result)
