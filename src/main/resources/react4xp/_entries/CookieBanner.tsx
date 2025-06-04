@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Button } from '@statisticsnorway/ssb-component-library'
-import { Language, Phrases } from '/lib/types/language'
+import { type Language, type Phrases } from '/lib/types/language'
 
 const COOKIE_NAME = 'cookie-consent'
 const SERVICE_URL = '/_/service/mimir/setCookieConsent'
