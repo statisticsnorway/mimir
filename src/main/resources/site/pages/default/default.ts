@@ -77,6 +77,12 @@ export function get(req: XP.Request): XP.Response {
   if (!page) return { status: 404 }
 
   const pageConfig: DefaultPageConfig = page.page?.config
+  const pageType: string = pageConfig?.pageType || 'default'
+  const baseUrl: string =
+    app.config && app.config['ssb.baseUrl'] ? (app.config['ssb.baseUrl'] as string) : 'https://www.ssb.no'
+  let canonicalUrl: string | undefined = `${baseUrl}${pageUrl({
+    path: page._path,
+  })}`
   const ingress: string | undefined = page.data.ingress
     ? processHtml({
         value: page.data.ingress.replace(/&nbsp;/g, ' '),
@@ -173,7 +179,7 @@ export function get(req: XP.Request): XP.Response {
   //cookieBanner
   const isCookieBannerEnabled = isEnabled('show-cookie-banner', false, 'ssb')
   const cookieBannerComponent = isCookieBannerEnabled
-    ? r4xpRender('CookieBanner', {}, req, {
+    ? r4xpRender('CookieBanner', { language: language.code, phrases: language.phrases, baseUrl }, req, {
         id: 'cookieBanner',
         pageContributions,
       })
@@ -219,12 +225,6 @@ export function get(req: XP.Request): XP.Response {
     municipality = getMunicipality(req as RequestWithCode)
   }
 
-  const pageType: string = pageConfig?.pageType || 'default'
-  const baseUrl: string =
-    app.config && app.config['ssb.baseUrl'] ? (app.config['ssb.baseUrl'] as string) : 'https://www.ssb.no'
-  let canonicalUrl: string | undefined = `${baseUrl}${pageUrl({
-    path: page._path,
-  })}`
   let municipalPageType: string | undefined
   if (pageType === 'municipality') {
     if (page._path.includes('/kommunefakta/')) {
