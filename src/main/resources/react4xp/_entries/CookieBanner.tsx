@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Button } from '@statisticsnorway/ssb-component-library'
+import { Language, Phrases } from '/lib/types/language'
 
 const COOKIE_NAME = 'cookie-consent'
 const SERVICE_URL = '/_/service/mimir/setCookieConsent'
@@ -20,7 +21,9 @@ async function setCookieViaService(value: 'all' | 'necessary' | 'unidentified') 
   }
 }
 
-function CookieBanner(): JSX.Element | null {
+function CookieBanner(props: { language: Language }): JSX.Element | null {
+  const { language } = props
+  const phrases = language.phrases as Phrases
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
@@ -57,24 +60,23 @@ function CookieBanner(): JSX.Element | null {
 
   if (!visible) return null
 
+  const cookieLink =
+    language.code == 'en' ? 'https://www.ssb.no/en/omssb/personvern' : 'https://www.ssb.no/omssb/personvern'
+
   return (
     <section className='cookie-banner' aria-label='Informasjonskapselvalg'>
       <div className='cookie-banner-content'>
-        <h3 className='cookie-banner-title'>Vi bruker informasjonskapsler</h3>
-        <p className='cookie-banner-text'>
-          Nødvendige informasjonskapsler gjør at ssb.no fungerer og er sikkert, og kan derfor ikke velges bort. Vi har
-          tre valgfrie informasjonskapsler som lar oss se hvor brukerne våre klikker og beveger seg på nettsiden.
-          Informasjonen er anonym, deles aldri med andre og brukes til å forbedre ssb.no.
-        </p>
-        <a href='https://www.ssb.no/diverse/cookies-og-analyseverktoy-for-webstatistikk' className='cookie-banner-link'>
-          Les mer om informasjonskapsler
+        <h3 className='cookie-banner-title'>{phrases.cookieBannerTitle}</h3>
+        <p className='cookie-banner-text'>{phrases.cookieBannerText}</p>
+        <a href={cookieLink} className='cookie-banner-link'>
+          {phrases.cookieBannerLinkText}
         </a>
         <div className='cookie-banner-buttons'>
           <Button className='cookie-button-accept' onClick={() => handleConsent('all')}>
-            Godta alle
+            {phrases.cookieBannerAcceptButton}
           </Button>
           <Button className='cookie-button-decline' onClick={() => handleConsent('necessary')}>
-            Kun nødvendige
+            {phrases.cookieBannerNecessaryButton}
           </Button>
         </div>
       </div>
@@ -82,4 +84,4 @@ function CookieBanner(): JSX.Element | null {
   )
 }
 
-export default (props: object) => <CookieBanner {...props} />
+export default (props: { language: Language }) => <CookieBanner {...props} />

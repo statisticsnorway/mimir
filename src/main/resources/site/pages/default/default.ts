@@ -173,7 +173,7 @@ export function get(req: XP.Request): XP.Response {
   //cookieBanner
   const isCookieBannerEnabled = isEnabled('show-cookie-banner', false, 'ssb')
   const cookieBannerComponent = isCookieBannerEnabled
-    ? r4xpRender('CookieBanner', {}, req, {
+    ? r4xpRender('CookieBanner', { language }, req, {
         id: 'cookieBanner',
         pageContributions,
       })
