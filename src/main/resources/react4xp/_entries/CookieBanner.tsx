@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Button } from '@statisticsnorway/ssb-component-library'
-import { type Language, type Phrases } from '/lib/types/language'
+import { type CookieBannerProps } from '/lib/types/cookieBanner'
 
 const COOKIE_NAME = 'cookie-consent'
 const SERVICE_URL = '/_/service/mimir/setCookieConsent'
@@ -21,9 +21,8 @@ async function setCookieViaService(value: 'all' | 'necessary' | 'unidentified') 
   }
 }
 
-function CookieBanner(props: { language: Language }): JSX.Element | null {
-  const { language } = props
-  const phrases = language.phrases as Phrases
+function CookieBanner(props: CookieBannerProps): JSX.Element | null {
+  const { language, phrases, baseUrl } = props
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
@@ -60,8 +59,7 @@ function CookieBanner(props: { language: Language }): JSX.Element | null {
 
   if (!visible) return null
 
-  const cookieLink =
-    language.code == 'en' ? 'https://www.ssb.no/en/omssb/personvern' : 'https://www.ssb.no/omssb/personvern'
+  const cookieLink = `${baseUrl}${language == 'en' ? '/en' : ''}/omssb/personvern`
 
   return (
     <section className='cookie-banner' aria-label='Informasjonskapselvalg'>
@@ -84,4 +82,4 @@ function CookieBanner(props: { language: Language }): JSX.Element | null {
   )
 }
 
-export default (props: { language: Language }) => <CookieBanner {...props} />
+export default (props: CookieBannerProps) => <CookieBanner {...props} />
