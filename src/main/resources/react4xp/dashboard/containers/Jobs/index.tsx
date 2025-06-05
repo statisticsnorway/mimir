@@ -79,6 +79,8 @@ export function Jobs() {
         return 'Import Statreg'
       case 'Refresh dataset for SDDS tables':
         return 'Oppdatere SDDS tabeller'
+      case 'Refresh dataset for frontpage keyfigures':
+        return 'Oppdatere forside nøkkeltall'
       default:
         return task
     }
@@ -145,25 +147,16 @@ export function Jobs() {
       const errorCount = job.result.result.filter((ds) => ds.hasError).length
       const ignoreCount = job.result.filterInfo && job.result.filterInfo.skipped && job.result.filterInfo.skipped.length
       return renderRefreshDatasetJobTaskMessage(job, count - errorCount, errorCount, ignoreCount)
-    } else if (job.task === 'Refresh dataset calculators' || job.task === 'Refresh dataset for SDDS tables') {
+    } else if (
+      job.task === 'Refresh dataset calculators' ||
+      job.task === 'Refresh dataset for SDDS tables' ||
+      job.task === 'Refresh dataset for frontpage keyfigures'
+    ) {
+      console.log(`Job result for ${job.task}:`, job.result)
       const skipped = job.result.result.filter((ds) => ds.status === 'Ingen nye data').length
       const updated = job.result.result.filter((ds) => ds.status === 'Dataset hentet og oppdatert').length
       const errorCount = job.result.result.filter((ds) => ds.hasError).length
       return renderRefreshDatasetJobTaskMessage(job, updated, errorCount, skipped)
-    } else if (job.task === 'Push RSS news' || job.task === 'Push RSS statkal') {
-      const errorCount = job.result.result.filter((ds) => ds.hasError).length
-      return (
-        <span>
-          {job.status} - {job.message}
-          {errorCount > 0 ? (
-            <span className='warningIcon'>
-              <AlertTriangle size='12' color='#FF4500' />
-            </span>
-          ) : (
-            ''
-          )}
-        </span>
-      )
     }
     return (
       <span>
@@ -219,7 +212,8 @@ export function Jobs() {
     } else if (
       currentModalJob.task === 'Refresh dataset' ||
       currentModalJob.task === 'Refresh dataset calculators' ||
-      currentModalJob.task === 'Refresh dataset for SDDS tables'
+      currentModalJob.task === 'Refresh dataset for SDDS tables' ||
+      currentModalJob.task === 'Refresh dataset for frontpage keyfigures'
     ) {
       return currentModalJob.result.result.map((dataSource) => {
         return (
