@@ -239,4 +239,19 @@ footer {
       margin-top: 10px;
     }
   }
+
+  .cookie-links{
+    
+      justify-content: center;
+
+    .cookie-reset{
+      border: none;
+      text-decoration: underline;
+      font-weight: normal;    
+    }
+
+    .cookie-link{
+      padding-left: 20px;
+    }
+  }
 }

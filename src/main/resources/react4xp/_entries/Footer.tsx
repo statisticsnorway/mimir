@@ -19,6 +19,7 @@ const Footer = (props: FooterContent) => {
     copyrightText,
   } = props
   const footerNavigationLabel = language?.code === 'en' ? 'footer links' : 'bunnmeny lenker'
+  const COOKIE_SERVICE_URL = '/_/service/mimir/setCookieConsent'
 
   function renderFooterMenuDesktop() {
     return footerNavigation?.map((topMenuItem, index) => {
@@ -135,6 +136,19 @@ const Footer = (props: FooterContent) => {
     })
   }
 
+  async function resetCookieConsent() {
+    try {
+      await fetch(`${COOKIE_SERVICE_URL}?value=unidentified`, { credentials: 'include' })
+    } catch (e) {
+      console.error('Failed to reset cookie-consent via service', e)
+    }
+  }
+
+  function handleCookieResetClick(e: React.MouseEvent<HTMLButtonElement>) {
+    resetCookieConsent()
+    e.currentTarget.blur()
+  }
+
   if (logoUrl && footerNavigation && topButtonText) {
     return (
       <div className='ssb-footer-wrapper'>
@@ -152,6 +166,21 @@ const Footer = (props: FooterContent) => {
               <div className='footer-menu'>{renderFooterMenuDesktop()}</div>
               <div className='showOnMobile footer-menu'>{renderFooterMenuMobile()}</div>
             </nav>
+          </div>
+          <div className='showOnMobile cookie-links'>
+            <div>
+              {/* TODO MIM-2302: styling + engelsk oversettelse */}
+              <Button onClick={handleCookieResetClick} negative className='cookie-reset'>
+                Endre samtykke for informasjonskapsler{' '}
+                {/* TODO Bør teksten vær "tilbakestill" siden det er det vi faktisk gjør? */}
+              </Button>
+              {/* TODO MIM-2302: lage link relativ + engelsk oversettelse */}
+              <div className='cookie-link'>
+                <Link href='ssb.no' negative>
+                  Personvern og informasjonskapsler
+                </Link>
+              </div>{' '}
+            </div>
           </div>
           <div className='footer-bottom-row'>
             <div className='links-left'>
