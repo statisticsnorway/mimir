@@ -137,16 +137,6 @@ export function setupCronJobs(): void {
       })
     }
 
-    // Push RSS Statkal
-    scheduleJob({
-      name: 'pushRssStatkal',
-      description: 'Push kommende publiseringer til rss/statkal',
-      descriptor: 'pushRssStatkal',
-      cronValue:
-        app.config && app.config['ssb.task.pushRssStatkal'] ? app.config['ssb.task.pushRssStatkal'] : '10 08 * * *',
-      timeZone: timezone,
-    })
-
     // Delete expired event logs for queries
     scheduleJob({
       name: 'deleteExpiredEventLog',
@@ -200,15 +190,6 @@ export function setupCronJobs(): void {
       })
     }
 
-    // push news to rss feed
-    scheduleJob({
-      name: 'pushRssNews',
-      description: 'Push RSS news',
-      descriptor: 'pushRssNews',
-      cronValue: app.config && app.config['ssb.task.pushRssNews'] ? app.config['ssb.task.pushRssNews'] : '01 08 * * *',
-      timeZone: timezone,
-    })
-
     // clear specific cache once an hour
     scheduleJob({
       name: 'clearCache',
@@ -225,6 +206,18 @@ export function setupCronJobs(): void {
       descriptor: 'updateSDDSTables',
       cronValue:
         app.config && app.config['ssb.task.updateSDDSTables'] ? app.config['ssb.task.updateSDDSTables'] : '01 09 * * *',
+      timeZone: timezone,
+    })
+
+    // Update frontpage keyfigures
+    scheduleJob({
+      name: 'updateFrontpageKeyfigures',
+      description: 'Update Frontpage Keyfigures',
+      descriptor: 'updateFrontpageKeyfigures',
+      cronValue:
+        app.config && app.config['ssb.task.updateFrontpageKeyfigures']
+          ? app.config['ssb.task.updateFrontpageKeyfigures']
+          : '0 8 * * *',
       timeZone: timezone,
     })
 
