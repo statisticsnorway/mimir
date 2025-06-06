@@ -93,7 +93,7 @@ export function sanitizeQuery(name: string): string {
   // https://gist.github.com/Glenruben/2e2b2a32ddbfe4216d8b0791e3667635
   // We also replace forwards tick with apostrophe, because it is used in names but does not appear in our data.
   const approved = `-'ABCDEFGHIJKLMNOPQRSTUVWXYZÁÄÅÆÈÉËÍÏÑÓÔÖØÜÝ `
-  return whitelist(name.replace(/[´`]/g, "'").toUpperCase(), approved)
+  return whitelist(name.replace(/[´`’]/g, "'").toUpperCase(), approved)
 }
 
 //Uses when repo dont exist
