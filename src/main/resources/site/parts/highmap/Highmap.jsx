@@ -127,7 +127,16 @@ const chart = (desktop, heightAspectRatio, mapFile) => {
   }
 }
 
-const legend = (y, legendTitle, legendAlign, numberDecimals) => {
+const legend = (desktop, legendTitle, legendAlign, numberDecimals) => {
+  let y = 0
+  if (legendAlign === 'topLeft') {
+    y = desktop ? 120 : 165
+  }
+
+  if (legendAlign === 'topRight') {
+    y = desktop ? 40 : 95
+  }
+
   return {
     title: {
       text: legendTitle,
@@ -269,15 +278,6 @@ function Highmap(props) {
     minWidth: 992,
   })
 
-  let y = 0
-  if (legendAlign === 'topLeft') {
-    y = desktop ? 120 : 165
-  }
-
-  if (legendAlign === 'topRight') {
-    y = desktop ? 40 : 95
-  }
-
   const hasThreshhold = thresholdValues.length > 0
   const series = generateSeries(tableData, mapDataSecondColumn, color)
 
@@ -300,7 +300,7 @@ function Highmap(props) {
       enabled: true,
     },
     ...generateColors(color, thresholdValues),
-    legend: legend(y, legendTitle, legendAlign, numberDecimals),
+    legend: legend(desktop, legendTitle, legendAlign, numberDecimals),
     plotOptions: plotOptions(hasThreshhold, hideTitle, language, legendTitle, numberDecimals),
     series,
     credits: {
