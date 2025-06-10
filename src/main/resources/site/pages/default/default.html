@@ -15,16 +15,29 @@
     const consentValue = getConsentState();
 
     // Push initial consent state to dataLayer
-    window.dataLayer.push({
-      event: 'default_consent',
-      'gtm.allowlist': ['consent'],
-      consent: consentValue,
-      ad_storage: consentValue === 'all' ? 'granted' : 'denied',
-      analytics_storage: consentValue === 'all' ? 'granted' : 'denied',
-      ad_personalization: consentValue === 'all' ? 'granted' : 'denied',
-      functionality_storage: consentValue === 'all' ? 'granted' : 'denied',
-      security_storage: 'granted'
-    });
+    const cookieBannerEnabled = `${isCookieBannerEnabled}`
+    if(cookieBannerEnabled){
+      window.dataLayer.push({
+        event: 'default_consent',
+        'gtm.allowlist': ['consent'],
+        consent: consentValue,
+        ad_storage: consentValue === 'all' ? 'granted' : 'denied',
+        analytics_storage: consentValue === 'all' ? 'granted' : 'denied',
+        ad_personalization: consentValue === 'all' ? 'granted' : 'denied',
+        functionality_storage: consentValue === 'all' ? 'granted' : 'denied',
+        security_storage: 'granted'
+      });
+    }else{
+      window.dataLayer.push({
+        event: 'default_consent',
+        'gtm.allowlist': ['consent'],
+        ad_storage: 'granted' ,
+        analytics_storage: 'granted' ,
+        ad_personalization: 'granted' ,
+        functionality_storage: 'granted' ,
+        security_storage: 'granted'
+      });
+    }
 
     // Ensure window.gtag is initialized
     if (!window.gtag) {
