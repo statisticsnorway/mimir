@@ -7,6 +7,7 @@ import { Link, Text } from '@statisticsnorway/ssb-component-library'
 import { Col, Row } from 'react-bootstrap'
 import { useMediaQuery } from 'react-responsive'
 
+import zipcelx from 'zipcelx/lib/legacy'
 import accessibilityLang from './../../../assets/js/highchart-lang.json'
 
 if (typeof Highcharts === 'object') {
@@ -146,7 +147,26 @@ const legend = (y, legendTitle, legendAlign, numberDecimals) => {
   }
 }
 
-const exporting = (sourceList, phrases) => {
+const downloadAsXLSX = (title) =>
+  function () {
+    const rows = this.getDataRows(true)
+    const xlsxRows = rows.slice(1).map((row) => {
+      return row.map((column) => {
+        return {
+          type: typeof column === 'number' ? 'number' : 'string',
+          value: column,
+        }
+      })
+    })
+    zipcelx({
+      filename: title ?? 'graf.xslt',
+      sheet: {
+        data: xlsxRows,
+      },
+    })
+  }
+
+const exporting = (sourceList, phrases, title) => {
   return {
     chartOptions: {
       chart: {
@@ -210,6 +230,7 @@ const exporting = (sourceList, phrases) => {
       },
       downloadXLS: {
         text: phrases['highcharts.downloadXLS'],
+        onclick: downloadAsXLSX(title),
       },
     },
   }
@@ -294,7 +315,7 @@ function Highmap(props) {
     credits: {
       enabled: false,
     },
-    exporting: exporting(sourceList, phrases),
+    exporting: exporting(sourceList, phrases, title),
     csv: {
       itemDelimiter: ';',
     },
