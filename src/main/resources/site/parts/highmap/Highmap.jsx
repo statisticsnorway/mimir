@@ -7,7 +7,7 @@ import { Link, Text } from '@statisticsnorway/ssb-component-library'
 import { Col, Row } from 'react-bootstrap'
 import { useMediaQuery } from 'react-responsive'
 
-import * as XLSX from 'xlsx'
+import { exportHighchartsToExcel } from '/lib/ssb/utils/tableExportUtils'
 import accessibilityLang from './../../../assets/js/highchart-lang.json'
 
 if (typeof Highcharts === 'object') {
@@ -151,12 +151,10 @@ const downloadAsXLSX = (title) =>
   function () {
     const rows = this.getDataRows(true)
     const xlsxRows = rows.slice(1)
-
-    const worksheet = XLSX.utils.aoa_to_sheet(xlsxRows)
-    const workbook = XLSX.utils.book_new()
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1')
-    const fileName = title ? `${title}.xlsx` : 'graf.xlsx'
-    XLSX.writeFile(workbook, fileName)
+    exportHighchartsToExcel({
+      rows: xlsxRows,
+      fileName: title ? `${title}.xlsx` : 'graf.xlsx',
+    })
   }
 
 const exporting = (sourceList, phrases, title) => {
