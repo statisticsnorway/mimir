@@ -26,16 +26,6 @@
         functionality_storage: consentValue === 'all' ? 'granted' : 'denied',
         security_storage: 'granted'
       });
-    }else{
-      window.dataLayer.push({
-        event: 'default_consent',
-        'gtm.allowlist': ['consent'],
-        ad_storage: 'granted' ,
-        analytics_storage: 'granted' ,
-        ad_personalization: 'granted' ,
-        functionality_storage: 'granted' ,
-        security_storage: 'granted'
-      });
     }
 
     // Ensure window.gtag is initialized
@@ -46,10 +36,11 @@
     }
 
     // Update Google Tag consent settings
+    if([[${isCookieBannerEnabled}]]){
     window.gtag('consent', 'default', {
       ad_storage: consentValue === 'all' ? 'granted' : 'denied',
       analytics_storage: consentValue === 'all' ? 'granted' : 'denied'
-    });
+    });}
   </script>
 
   <!-- Google Tag Manager -->
