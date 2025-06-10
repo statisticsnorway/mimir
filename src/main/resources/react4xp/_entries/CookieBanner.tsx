@@ -8,6 +8,9 @@ const SERVICE_URL = '/_/service/mimir/setCookieConsent'
 window.dataLayer = window.dataLayer || []
 window.gtag = window.gtag || function () {}
 
+// List of exact GA cookie names and prefixes to remove
+const GA_COOKIE_NAMES = ['_ga', '_gid', '_gat', '_ga_RWG24LNZ9T']
+
 function getCookie(): string | null {
   const match = document.cookie.match(new RegExp(`(^|;\\s*)${COOKIE_NAME}=([^;]*)`))
   return match ? match[2] : null
@@ -21,12 +24,31 @@ async function setCookieViaService(value: 'all' | 'necessary' | 'unidentified') 
   }
 }
 
+function removeAllGACookies() {
+  document.cookie.split(';').forEach((cookie) => {
+    const name = cookie.split('=')[0].trim()
+    if (GA_COOKIE_NAMES.includes(name)) {
+      deleteCookie(name)
+    }
+  })
+}
+
+function deleteCookie(name: string) {
+  // Remove for root path, with and without SameSite
+  document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; SameSite=Lax`
+  document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`
+}
+
 function CookieBanner(props: CookieBannerProps): JSX.Element | null {
   const { language, phrases, baseUrl } = props
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
     const cookie = getCookie()
+    // Only remove GA cookies if consent is not "all"
+    if (!cookie || cookie === 'unidentified' || cookie === 'necessary') {
+      removeAllGACookies()
+    }
     if (!cookie) {
       setCookieViaService('unidentified')
       setVisible(true)
@@ -35,7 +57,12 @@ function CookieBanner(props: CookieBannerProps): JSX.Element | null {
     }
   }, [])
 
-  function handleConsent(value: 'all' | 'necessary') {
+  function handleConsent(value: 'all' | 'necessary' | 'unidentified') {
+    // Remove GA cookies only if user selects "necessary" or "unidentified"
+    if (value === 'necessary' || value === 'unidentified') {
+      removeAllGACookies()
+    }
+
     setCookieViaService(value)
     setVisible(false)
 
