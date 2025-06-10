@@ -113,58 +113,56 @@ const getPointFormatter = (language, hasThreshhold, legendTitle) =>
     return `${legendTitle ? legendTitle + ': ' : ''}${value}`
   }
 
-const chart = (desktop, props) => {
+const chart = (desktop, heightAspectRatio, mapFile) => {
   return {
-    height: desktop && props.heightAspectRatio && `${props.heightAspectRatio}%`,
+    height: desktop && heightAspectRatio && `${heightAspectRatio}%`,
     style: {
       color: '#21383a',
       fontSize: '14px',
       fontWeight: 'normal',
       fontFamily: '"Open Sans Regular", "Arial", "DejaVu Sans", sans-serif',
     },
-    map: props.mapFile,
+    map: mapFile,
   }
 }
 
-const legend = (props, y) => {
+const legend = (y, legendTitle, legendAlign, numberDecimals) => {
   return {
     title: {
-      text: props.legendTitle,
+      text: legendTitle,
       style: {
         color: Highcharts.theme?.textColor || 'black',
       },
     },
-    align: props.legendAlign === 'topLeft' || props.legendAlign === 'bottomLeft' ? 'left' : 'right',
-    verticalAlign: props.legendAlign === 'topLeft' || props.legendAlign === 'topRight' ? 'top' : 'bottom',
+    align: legendAlign === 'topLeft' || legendAlign === 'bottomLeft' ? 'left' : 'right',
+    verticalAlign: legendAlign === 'topLeft' || legendAlign === 'topRight' ? 'top' : 'bottom',
     floating: true,
     layout: 'vertical',
     x: 0,
     y,
-    valueDecimals: props.numberDecimals,
+    valueDecimals: numberDecimals,
     backgroundColor: Highcharts.theme?.legendBackgroundColor || 'rgba(255, 255, 255, 0.85)',
     symbolRadius: 0,
   }
 }
 
-const exporting = (props) => {
+const exporting = (sourceList, phrases) => {
   return {
     chartOptions: {
       chart: {
-        spacingBottom: 30 + (props.sourceList ? props.sourceList.length * 30 : 0),
+        spacingBottom: 30 + (sourceList ? sourceList.length * 30 : 0),
       },
       credits: {
-        enabled: !!props.sourceList,
+        enabled: !!sourceList,
         text:
-          props.sourceList &&
-          props.sourceList.reduce((combinedSources, currentSource) => {
-            return (
-              combinedSources + `<b style="color:#274247">${props.phrases.source}: </b>${currentSource.sourceText}</br>`
-            )
+          sourceList &&
+          sourceList.reduce((combinedSources, currentSource) => {
+            return combinedSources + `<b style="color:#274247">${phrases.source}: </b>${currentSource.sourceText}</br>`
           }, ''),
         position: {
           align: 'left',
           x: 10,
-          y: -20 - (props.sourceList ? props.sourceList.length * 20 : 0),
+          y: -20 - (sourceList ? sourceList.length * 20 : 0),
         },
         style: {
           color: '#00824d',
@@ -176,7 +174,7 @@ const exporting = (props) => {
       contextButton: {
         symbol: 'menu',
         symbolStroke: '#00824D', // ssb-green-4
-        text: props.phrases['highcharts.download'],
+        text: phrases['highcharts.download'],
         menuItems: [
           'printChart',
           'separator',
@@ -193,90 +191,110 @@ const exporting = (props) => {
     enabled: true,
     menuItemDefinitions: {
       printChart: {
-        text: props.phrases['highcharts.printChart'],
+        text: phrases['highcharts.printChart'],
       },
       downloadPNG: {
-        text: props.phrases['highcharts.downloadPNG'],
+        text: phrases['highcharts.downloadPNG'],
       },
       downloadJPEG: {
-        text: props.phrases['highcharts.downloadJPEG'],
+        text: phrases['highcharts.downloadJPEG'],
       },
       downloadPDF: {
-        text: props.phrases['highcharts.downloadPDF'],
+        text: phrases['highcharts.downloadPDF'],
       },
       downloadSVG: {
-        text: props.phrases['highcharts.downloadSVG'],
+        text: phrases['highcharts.downloadSVG'],
       },
       downloadCSV: {
-        text: props.phrases['highcharts.downloadCSV'],
+        text: phrases['highcharts.downloadCSV'],
       },
       downloadXLS: {
-        text: props.phrases['highcharts.downloadXLS'],
+        text: phrases['highcharts.downloadXLS'],
       },
     },
   }
 }
 
-const plotOptions = (hasThreshhold, props) => {
+const plotOptions = (hasThreshhold, hideTitle, language, legendTitle, numberDecimals) => {
   return {
     map: {
       allAreas: false,
       joinBy: 'capitalName',
       dataLabels: {
-        enabled: !props.hideTitle,
+        enabled: !hideTitle,
         format: '{point.properties.name}',
       },
       tooltip: {
-        pointFormatter: getPointFormatter(props.language, hasThreshhold, props.legendTitle),
-        valueDecimals: props.numberDecimals,
+        pointFormatter: getPointFormatter(language, hasThreshhold, legendTitle),
+        valueDecimals: numberDecimals,
       },
     },
   }
 }
 
 function Highmap(props) {
+  const {
+    heightAspectRatio,
+    mapFile,
+    legendAlign,
+    thresholdValues,
+    tableData,
+    mapDataSecondColumn,
+    color,
+    description,
+    title,
+    subtitle,
+    hideTitle,
+    language,
+    legendTitle,
+    numberDecimals,
+    sourceList,
+    phrases,
+    footnoteText,
+  } = props
+
   const desktop = useMediaQuery({
     minWidth: 992,
   })
 
   let y = 0
-  if (props.legendAlign === 'topLeft') {
+  if (legendAlign === 'topLeft') {
     y = desktop ? 120 : 165
   }
 
-  if (props.legendAlign === 'topRight') {
+  if (legendAlign === 'topRight') {
     y = desktop ? 40 : 95
   }
 
-  const hasThreshhold = props.thresholdValues.length > 0
-  const series = generateSeries(props.tableData, props.mapDataSecondColumn, props.color)
+  const hasThreshhold = thresholdValues.length > 0
+  const series = generateSeries(tableData, mapDataSecondColumn, color)
 
   const mapOptions = {
-    chart: chart(desktop, props),
+    chart: chart(desktop, heightAspectRatio, mapFile),
     accessibility: {
       enabled: true,
-      description: props.description,
+      description,
     },
     ...accessibilityLang,
     title: {
-      text: props.title,
+      text: title,
       align: 'left',
     },
     subtitle: {
-      text: props.subtitle,
+      text: subtitle,
       align: 'left',
     },
     mapNavigation: {
       enabled: true,
     },
-    ...generateColors(props.color, props.thresholdValues),
-    legend: legend(props, y),
-    plotOptions: plotOptions(hasThreshhold, props),
+    ...generateColors(color, thresholdValues),
+    legend: legend(y, legendTitle, legendAlign, numberDecimals),
+    plotOptions: plotOptions(hasThreshhold, hideTitle, language, legendTitle, numberDecimals),
     series,
     credits: {
       enabled: false,
     },
-    exporting: exporting(props),
+    exporting: exporting(sourceList, phrases),
     csv: {
       itemDelimiter: ';',
     },
@@ -286,7 +304,7 @@ function Highmap(props) {
     return (
       <div key={index} className='mt-3'>
         <Link className='ssb-link stand-alone' href={sourceLink.sourceHref}>
-          {props.phrases.source}: {sourceLink.sourceText}
+          {phrases.source}: {sourceLink.sourceText}
         </Link>
       </div>
     )
@@ -300,13 +318,13 @@ function Highmap(props) {
           {mapOptions.subtitle?.text && <p className='figure-subtitle'>{mapOptions.subtitle.text}</p>}
           <HighchartsReact highcharts={Highcharts} constructorType={'mapChart'} options={mapOptions} />
         </figure>
-        {props.footnoteText &&
-          props.footnoteText.map((footnote) => (
+        {footnoteText &&
+          footnoteText.map((footnote) => (
             <Col className='footnote col-12' key={`footnote-${footnote}`}>
               {footnote && <Text>{footnote}</Text>}
             </Col>
           ))}
-        {props.sourceList && props.sourceList.map(renderHighchartsSource)}
+        {sourceList && sourceList.map(renderHighchartsSource)}
       </Col>
     </Row>
   )
