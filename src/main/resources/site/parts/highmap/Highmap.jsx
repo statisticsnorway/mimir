@@ -7,7 +7,7 @@ import { Link, Text } from '@statisticsnorway/ssb-component-library'
 import { Col, Row } from 'react-bootstrap'
 import { useMediaQuery } from 'react-responsive'
 
-import zipcelx from 'zipcelx/lib/legacy'
+import * as XLSX from 'xlsx'
 import accessibilityLang from './../../../assets/js/highchart-lang.json'
 
 if (typeof Highcharts === 'object') {
@@ -150,20 +150,13 @@ const legend = (y, legendTitle, legendAlign, numberDecimals) => {
 const downloadAsXLSX = (title) =>
   function () {
     const rows = this.getDataRows(true)
-    const xlsxRows = rows.slice(1).map((row) => {
-      return row.map((column) => {
-        return {
-          type: typeof column === 'number' ? 'number' : 'string',
-          value: column,
-        }
-      })
-    })
-    zipcelx({
-      filename: title ?? 'graf.xslt',
-      sheet: {
-        data: xlsxRows,
-      },
-    })
+    const xlsxRows = rows.slice(1)
+
+    const worksheet = XLSX.utils.aoa_to_sheet(xlsxRows)
+    const workbook = XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1')
+    const fileName = title ? `${title}.xlsx` : 'graf.xlsx'
+    XLSX.writeFile(workbook, fileName)
   }
 
 const exporting = (sourceList, phrases, title) => {
