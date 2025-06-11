@@ -159,9 +159,8 @@ const legend = (desktop, legendTitle, legendAlign, numberDecimals) => {
 const downloadAsXLSX = (title) =>
   function () {
     const rows = this.getDataRows(true)
-    const xlsxRows = rows.slice(1)
     exportHighchartsToExcel({
-      rows: xlsxRows,
+      rows: rows.slice(1),
       fileName: title ? `${title}.xlsx` : 'graf.xlsx',
     })
   }
