@@ -285,7 +285,6 @@ export function get(req: XP.Request): XP.Response {
     ...statBankContent,
     GTM_TRACKING_ID,
     GTM_AUTH,
-    isCookieBannerEnabled,
     headerBody: header?.body,
     footerBody: footer?.body,
     ...metaInfo,
@@ -731,7 +730,6 @@ interface DefaultModel {
   statbankWeb: boolean
   GTM_TRACKING_ID: string | null
   GTM_AUTH: string | null
-  isCookieBannerEnabled: boolean
   jsonLd: Article | undefined
   headerBody: string | undefined
   footerBody: string | undefined
