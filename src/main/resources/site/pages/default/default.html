@@ -11,22 +11,22 @@
       return match ? match[2] : 'unidentified';
     }
 
-    // Get initial consent state from cookies
-    const consentValue = getConsentState();
+    // // Get initial consent state from cookies
+    // const consentValue = getConsentState();
 
-    // Push initial consent state to dataLayer
-    if([[${isCookieBannerEnabled}]]){
-      window.dataLayer.push({
-        event: 'default_consent',
-        'gtm.allowlist': ['consent'],
-        consent: consentValue,
-        ad_storage: consentValue === 'all' ? 'granted' : 'denied',
-        analytics_storage: consentValue === 'all' ? 'granted' : 'denied',
-        ad_personalization: consentValue === 'all' ? 'granted' : 'denied',
-        functionality_storage: consentValue === 'all' ? 'granted' : 'denied',
-        security_storage: 'granted'
-      });
-    }
+    // // Push initial consent state to dataLayer
+    // if([[${isCookieBannerEnabled}]]){
+    //   window.dataLayer.push({
+    //     event: 'default_consent',
+    //     'gtm.allowlist': ['consent'],
+    //     consent: consentValue,
+    //     ad_storage: consentValue === 'all' ? 'granted' : 'denied',
+    //     analytics_storage: consentValue === 'all' ? 'granted' : 'denied',
+    //     ad_personalization: consentValue === 'all' ? 'granted' : 'denied',
+    //     functionality_storage: consentValue === 'all' ? 'granted' : 'denied',
+    //     security_storage: 'granted'
+    //   });
+    // }
 
     // Ensure window.gtag is initialized
     if (!window.gtag) {
@@ -35,12 +35,12 @@
       };
     }
 
-    // Update Google Tag consent settings
-    if([[${isCookieBannerEnabled}]]){
-    window.gtag('consent', 'default', {
-      ad_storage: consentValue === 'all' ? 'granted' : 'denied',
-      analytics_storage: consentValue === 'all' ? 'granted' : 'denied'
-    });}
+    // // Update Google Tag consent settings
+    // if([[${isCookieBannerEnabled}]]){
+    // window.gtag('consent', 'default', {
+    //   ad_storage: consentValue === 'all' ? 'granted' : 'denied',
+    //   analytics_storage: consentValue === 'all' ? 'granted' : 'denied'
+    // });}
   </script>
 
   <!-- Google Tag Manager -->
