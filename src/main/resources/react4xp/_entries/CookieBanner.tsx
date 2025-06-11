@@ -33,9 +33,18 @@ function removeAllGACookies() {
 }
 
 function deleteCookie(name: string) {
-  const cookieRemoval = `${name}=; Max-Age=0; path=/`
-  document.cookie = `${cookieRemoval}; SameSite=Lax`
-  document.cookie = cookieRemoval
+  // Remove for current domain
+  const removal = `${name}=; Max-Age=0; path=/`
+  document.cookie = `${removal}; SameSite=Lax`
+  document.cookie = removal
+
+  // Remove for parent domain (e.g., .ssb.no)
+  const hostParts = window.location.hostname.split('.')
+  if (hostParts.length > 2) {
+    const parentDomain = '.' + hostParts.slice(-2).join('.')
+    document.cookie = `${removal}; domain=${parentDomain}; SameSite=Lax`
+    document.cookie = `${removal}; domain=${parentDomain}`
+  }
 }
 
 function CookieBanner(props: CookieBannerProps): JSX.Element | null {
