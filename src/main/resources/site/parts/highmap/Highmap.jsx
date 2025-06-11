@@ -173,11 +173,9 @@ const exporting = (sourceList, phrases, title) => {
       },
       credits: {
         enabled: !!sourceList,
-        text:
-          sourceList &&
-          sourceList.reduce((combinedSources, currentSource) => {
-            return combinedSources + `<b style="color:#274247">${phrases.source}: </b>${currentSource.sourceText}</br>`
-          }, ''),
+        text: sourceList?.reduce((combinedSources, currentSource) => {
+          return combinedSources + `<b style="color:#274247">${phrases.source}: </b>${currentSource.sourceText}</br>`
+        }, ''),
         position: {
           align: 'left',
           x: 10,
@@ -329,13 +327,12 @@ function Highmap(props) {
           {mapOptions.subtitle?.text && <p className='figure-subtitle'>{mapOptions.subtitle.text}</p>}
           <HighchartsReact highcharts={Highcharts} constructorType={'mapChart'} options={mapOptions} />
         </figure>
-        {footnoteText &&
-          footnoteText.map((footnote) => (
-            <Col className='footnote col-12' key={`footnote-${footnote}`}>
-              {footnote && <Text>{footnote}</Text>}
-            </Col>
-          ))}
-        {sourceList && sourceList.map(renderHighchartsSource)}
+        {footnoteText?.map((footnote) => (
+          <Col className='footnote col-12' key={`footnote-${footnote}`}>
+            {footnote && <Text>{footnote}</Text>}
+          </Col>
+        ))}
+        {sourceList?.map(renderHighchartsSource)}
       </Col>
     </Row>
   )
