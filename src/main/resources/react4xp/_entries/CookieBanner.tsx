@@ -23,26 +23,26 @@ async function setCookieViaService(value: 'all' | 'necessary' | 'unidentified') 
   }
 }
 
-function removeAllGACookies() {
-  document.cookie.split(';').forEach((cookie) => {
-    const name = cookie.split('=')[0].trim()
-    if (GA_COOKIES_TO_REMOVE.includes(name)) {
-      deleteCookie(name)
-    }
-  })
-}
+// function removeAllGACookies() {
+//   document.cookie.split(';').forEach((cookie) => {
+//     const name = cookie.split('=')[0].trim()
+//     if (GA_COOKIES_TO_REMOVE.includes(name)) {
+//       deleteCookie(name)
+//     }
+//   })
+// }
 
-function deleteCookie(name: string) {
-  const removal = `${name}=; Max-Age=0; path=/`
+// function deleteCookie(name: string) {
+//   const removal = `${name}=; Max-Age=0; path=/`
 
-  // Remove for current domain (no domain attribute)
-  document.cookie = `${removal}; SameSite=Lax`
-  document.cookie = removal
+//   // Remove for current domain (no domain attribute)
+//   document.cookie = `${removal}; SameSite=Lax`
+//   document.cookie = removal
 
-  // Remove for .ssb.no (with and without SameSite)
-  document.cookie = `${removal}; domain=.ssb.no; SameSite=Lax`
-  document.cookie = `${removal}; domain=.ssb.no`
-}
+//   // Remove for .ssb.no (with and without SameSite)
+//   document.cookie = `${removal}; domain=.ssb.no; SameSite=Lax`
+//   document.cookie = `${removal}; domain=.ssb.no`
+// }
 
 function CookieBanner(props: CookieBannerProps): JSX.Element | null {
   const { language, phrases, baseUrl } = props
@@ -51,7 +51,7 @@ function CookieBanner(props: CookieBannerProps): JSX.Element | null {
   useEffect(() => {
     const cookie = getCookie()
     if (cookie !== 'all') {
-      removeAllGACookies()
+      // removeAllGACookies()
     }
     if (!cookie) {
       setCookieViaService('unidentified')
@@ -63,7 +63,7 @@ function CookieBanner(props: CookieBannerProps): JSX.Element | null {
 
   function handleConsent(value: 'all' | 'necessary' | 'unidentified') {
     if (value !== 'all') {
-      removeAllGACookies()
+      // removeAllGACookies()
     }
 
     setCookieViaService(value)
