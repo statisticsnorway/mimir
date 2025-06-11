@@ -8,7 +8,7 @@ const SERVICE_URL = '/_/service/mimir/setCookieConsent'
 window.dataLayer = window.dataLayer || []
 window.gtag = window.gtag || function () {}
 
-const GA_COOKIES_TO_REMOVE = ['_ga', '_gid', '_gat', '_ga_RWG24LNZ9T']
+//const GA_COOKIES_TO_REMOVE = ['_ga', '_gid', '_gat', '_ga_RWG24LNZ9T']
 
 function getCookie(): string | null {
   const match = document.cookie.match(new RegExp(`(^|;\\s*)${COOKIE_NAME}=([^;]*)`))
