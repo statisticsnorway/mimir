@@ -156,7 +156,7 @@ const legend = (desktop, legendTitle, legendAlign, numberDecimals) => {
   }
 }
 
-const downloadAsXLSX = (title) =>
+export const downloadAsXLSX = (title) =>
   function () {
     const rows = this.getDataRows(true)
     exportHighchartsToExcel({
