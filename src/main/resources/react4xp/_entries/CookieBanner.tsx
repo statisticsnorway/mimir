@@ -8,8 +8,7 @@ const SERVICE_URL = '/_/service/mimir/setCookieConsent'
 window.dataLayer = window.dataLayer || []
 window.gtag = window.gtag || function () {}
 
-// List of exact GA cookie names and prefixes to remove
-const GA_COOKIE_NAMES = ['_ga', '_gid', '_gat', '_ga_RWG24LNZ9T']
+const GA_COOKIES_TO_REMOVE = ['_ga', '_gid', '_gat', '_ga_RWG24LNZ9T']
 
 function getCookie(): string | null {
   const match = document.cookie.match(new RegExp(`(^|;\\s*)${COOKIE_NAME}=([^;]*)`))
@@ -27,16 +26,16 @@ async function setCookieViaService(value: 'all' | 'necessary' | 'unidentified') 
 function removeAllGACookies() {
   document.cookie.split(';').forEach((cookie) => {
     const name = cookie.split('=')[0].trim()
-    if (GA_COOKIE_NAMES.includes(name)) {
+    if (GA_COOKIES_TO_REMOVE.includes(name)) {
       deleteCookie(name)
     }
   })
 }
 
 function deleteCookie(name: string) {
-  // Remove for root path, with and without SameSite
-  document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; SameSite=Lax`
-  document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`
+  const cookieRemoval = `${name}=; Max-Age=0; path=/`
+  document.cookie = `${cookieRemoval}; SameSite=Lax`
+  document.cookie = cookieRemoval
 }
 
 function CookieBanner(props: CookieBannerProps): JSX.Element | null {
@@ -45,8 +44,7 @@ function CookieBanner(props: CookieBannerProps): JSX.Element | null {
 
   useEffect(() => {
     const cookie = getCookie()
-    // Only remove GA cookies if consent is not "all"
-    if (!cookie || cookie === 'unidentified' || cookie === 'necessary') {
+    if (cookie !== 'all') {
       removeAllGACookies()
     }
     if (!cookie) {
@@ -58,8 +56,7 @@ function CookieBanner(props: CookieBannerProps): JSX.Element | null {
   }, [])
 
   function handleConsent(value: 'all' | 'necessary' | 'unidentified') {
-    // Remove GA cookies only if user selects "necessary" or "unidentified"
-    if (value === 'necessary' || value === 'unidentified') {
+    if (value !== 'all') {
       removeAllGACookies()
     }
 
