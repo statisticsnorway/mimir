@@ -6,6 +6,11 @@ interface TableExport {
   fileName?: Title | string
 }
 
+interface HighchartsExport {
+  rows: string[][]
+  fileName: string
+}
+
 const sheetName = 'Sheet1'
 
 const createTableWorkbook = (tableElement: TableExport['tableElement']) => {
@@ -52,4 +57,11 @@ export const exportTableToCSV = ({ tableElement, fileName }: TableExport): void 
 
   URL.revokeObjectURL(url)
   document.body.removeChild(a)
+}
+
+export const exportHighchartsToExcel = ({ rows, fileName }: HighchartsExport): void => {
+  const worksheet = XLSX.utils.aoa_to_sheet(rows)
+  const workbook = XLSX.utils.book_new()
+  XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1')
+  XLSX.writeFile(workbook, fileName)
 }
