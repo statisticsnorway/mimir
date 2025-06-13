@@ -42,11 +42,7 @@ function CookieBanner(props: CookieBannerProps): JSX.Element | null {
     window.dataLayer.push({
       event: 'consent_update',
       consent: value,
-      ad_storage: value === 'all' ? 'granted' : 'denied',
       analytics_storage: value === 'all' ? 'granted' : 'denied',
-      ad_personalization: value === 'all' ? 'granted' : 'denied',
-      functionality_storage: value === 'all' ? 'granted' : 'denied',
-      security_storage: 'granted',
     })
 
     if (typeof window.gtag === 'function') {
