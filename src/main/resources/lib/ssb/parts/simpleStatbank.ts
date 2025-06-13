@@ -20,25 +20,23 @@ export function getStatbankApiData(
   const timeDimensions = ensureArray(filterDimensionTime?.id)
 
   try {
-    const result: DimensionData[] = dataDimensions?.length
-      ? dataDimensions.map(function (dataDimension: string) {
-          const data: Data | null = dataset?.Data({
-            [dimensionCode]: dataDimension,
-          }) as Data
+    const result: DimensionData[] = dataDimensions.map(function (dataDimension: string) {
+      const data: Data | null = dataset?.Data({
+        [dimensionCode]: dataDimension,
+      }) as Data
 
-          const filterCategory: Category | null = (filterDimensionCode as Dimension)?.Category(
-            dataDimension
-          ) as Category | null
-          const value: number | string | null = data.value && !(data.value instanceof Array) ? data.value : null
+      const filterCategory: Category | null = (filterDimensionCode as Dimension)?.Category(
+        dataDimension
+      ) as Category | null
+      const value: number | string | null = data.value && !(data.value instanceof Array) ? data.value : null
 
-          return {
-            displayName: filterCategory?.label ?? '',
-            dataCode: dataDimension,
-            value: value ? createHumanReadableFormat(value) : undefined,
-            time: dimensionCode === 'Tid' ? dataDimension : localizeTimePeriod(timeDimensions[0]),
-          }
-        })
-      : []
+      return {
+        displayName: filterCategory?.label ?? '',
+        dataCode: dataDimension,
+        value: value ? createHumanReadableFormat(value) : undefined,
+        time: dimensionCode === 'Tid' ? dataDimension : localizeTimePeriod(timeDimensions[0]),
+      }
+    })
 
     return {
       data: result,
