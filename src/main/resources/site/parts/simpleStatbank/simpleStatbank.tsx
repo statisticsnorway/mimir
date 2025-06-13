@@ -146,7 +146,7 @@ function SimpleStatbank(props: SimpleStatbankProps) {
           value: element.value,
           time: element.time,
         }))
-      : [{ id: 'no-data', title: dataFetchFailedError, value: '', time: '' }]
+      : []
 
     return (
       <Dropdown
@@ -155,6 +155,8 @@ function SimpleStatbank(props: SimpleStatbankProps) {
         items={items}
         onSelect={handleChange}
         placeholder={placeholderDropdown ?? ''}
+        error={!statbankApiData?.data.length}
+        errorMessage={dataFetchFailedError}
       />
     )
   }
