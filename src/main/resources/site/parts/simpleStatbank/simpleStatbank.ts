@@ -6,6 +6,7 @@ import { render } from '/lib/enonic/react4xp'
 import { imageUrl, getImageAlt } from '/lib/ssb/utils/imageUtils'
 import { getStatbankApiData } from '/lib/ssb/parts/simpleStatbank'
 import { SimpleStatbankProps, type SimpleStatbankResult } from '/lib/types/partTypes/simpleStatbank'
+import { fromPartCache } from '/lib/ssb/cache/partCache'
 import { type SimpleStatbank } from '/site/content-types'
 
 export function get(req: XP.Request): XP.Response {
@@ -59,6 +60,16 @@ function renderPart(req: XP.Request, simpleStatbankId?: string): XP.Response {
 
   if (!simpleStatbank) throw Error('No content found')
 
+  if (req.mode === 'edit' || req.mode === 'inline') {
+    return renderSimpleStatbank(req, simpleStatbank)
+  } else {
+    return fromPartCache(req, `${simpleStatbank._id}-simpleStatbank`, () => {
+      return renderSimpleStatbank(req, simpleStatbank)
+    })
+  }
+}
+
+function renderSimpleStatbank(req: XP.Request, simpleStatbank: Content<SimpleStatbank>): XP.Response {
   const statbankApiData: SimpleStatbankResult | undefined = getStatbankApiData(
     simpleStatbank.data.code,
     simpleStatbank.data.urlOrId,
