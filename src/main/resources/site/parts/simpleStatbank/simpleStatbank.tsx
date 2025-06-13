@@ -138,7 +138,7 @@ function SimpleStatbank(props: SimpleStatbankProps) {
   }
 
   function addDropdown() {
-    const items = statbankApiData?.data.length
+    const items = statbankApiData?.data
       ? statbankApiData.data.map((element) => ({
           id: `code_${element.dataCode}`,
           title: displayDropdown == 'text' ? element.displayName : `${element.dataCode}: ${element.displayName}`,
