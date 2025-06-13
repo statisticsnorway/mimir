@@ -1,4 +1,4 @@
-import { getComponent, getContent, pageUrl } from '/lib/xp/portal'
+import { getComponent, getContent, pageUrl, processHtml } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 import { render } from '/lib/enonic/react4xp'
 import { renderError } from '/lib/ssb/error/error'
@@ -105,7 +105,7 @@ function parseExpansionBox(event: ExpansionBox): TimelineEvent {
   return {
     eventType: 'expansionBox',
     title: event.title,
-    text: event.text,
+    text: event.text ? processHtml({ value: event.text }) : '',
     directorImage: undefined,
     directorImageAltText: '',
     timelineCategory: event.timelineCategory,
