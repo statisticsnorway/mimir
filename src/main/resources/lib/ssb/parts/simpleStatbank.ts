@@ -31,7 +31,7 @@ export function getStatbankApiData(
           const value: number | string | null = data.value && !(data.value instanceof Array) ? data.value : null
 
           return {
-            displayName: filterCategory ? filterCategory.label : '',
+            displayName: filterCategory?.label ?? '',
             dataCode: dataDimension,
             value: value ? createHumanReadableFormat(value) : undefined,
             time: dimensionCode === 'Tid' ? dataDimension : localizeTimePeriod(timeDimensions[0]),
