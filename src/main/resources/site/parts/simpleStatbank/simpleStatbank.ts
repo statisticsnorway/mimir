@@ -84,9 +84,6 @@ function renderPart(req: XP.Request, simpleStatbankId?: string): XP.Response {
     closeText: localize({
       key: 'close',
     }),
-    dataFetchFailedError: localize({
-      key: 'dataFetchFailedError',
-    }),
     statbankApiData,
   }
 

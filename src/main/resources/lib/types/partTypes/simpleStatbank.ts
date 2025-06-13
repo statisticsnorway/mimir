@@ -23,6 +23,5 @@ export interface SimpleStatbankProps {
   resultFooter: string
   noNumberText: string
   closeText: string
-  dataFetchFailedError: string
   statbankApiData: SimpleStatbankResult | undefined
 }

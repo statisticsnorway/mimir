@@ -29,7 +29,6 @@ function SimpleStatbank(props: SimpleStatbankProps) {
     placeholderDropdown,
     noNumberText,
     closeText,
-    dataFetchFailedError,
   } = props
 
   const [selectedValue, setSelectedValue] = useState<DropdownItem | null>(null)
@@ -146,7 +145,7 @@ function SimpleStatbank(props: SimpleStatbankProps) {
           value: element.value,
           time: element.time,
         }))
-      : [{ id: 'no-data', title: dataFetchFailedError, value: '', time: '' }]
+      : []
 
     return (
       <Dropdown
