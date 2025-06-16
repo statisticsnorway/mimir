@@ -10,12 +10,11 @@ import { type SimpleStatbankProps, type SimpleStatbankResult } from '/lib/types/
 import { type SimpleStatbank } from '/site/content-types'
 
 export function get(req: XP.Request): XP.Response {
-  const config = getComponent<XP.PartComponent.SimpleStatbank>()?.config
-  if (!config) throw Error('No part found')
-
-  const simpleStatbankId: string | undefined = config?.simpleStatbank
-
   try {
+    const config = getComponent<XP.PartComponent.SimpleStatbank>()?.config
+    if (!config) throw Error('No part found')
+
+    const simpleStatbankId: string | undefined = config?.simpleStatbank
     return renderPart(req, simpleStatbankId)
   } catch (e) {
     return renderError(req, 'Error in part', e)
@@ -38,28 +37,27 @@ function renderPart(req: XP.Request, simpleStatbankId: string | undefined): XP.R
   const page = getContent<Content<SimpleStatbank>>()
   if (!page) throw Error('No page found')
 
-  let simpleStatbank
+  let simpleStatbankData
   if (page.type === `${app.name}:simpleStatbank`) {
-    simpleStatbank = page // Fetch page.data config instead when rendering part preview for content type
+    simpleStatbankData = page // Fetch page.data config instead when rendering part preview for content type
   } else {
     if (!simpleStatbankId) {
       return {
         body: missingConfig('Mangler innhold! Velg Spørring Statistikkbanken'),
       }
     }
-
-    simpleStatbank = getContentByKey({
+    simpleStatbankData = getContentByKey({
       key: simpleStatbankId as string,
     }) as Content<SimpleStatbank>
   }
 
-  if (!simpleStatbank) throw Error('No content found')
+  if (!simpleStatbankData) throw Error('No content found')
 
   if (req.mode === 'edit' || req.mode === 'inline') {
-    return renderSimpleStatbankComponent(req, simpleStatbank)
+    return renderSimpleStatbankComponent(req, simpleStatbankData)
   } else {
     return fromPartCache(req, `${page._id}-simpleStatbank`, () => {
-      return renderSimpleStatbankComponent(req, simpleStatbank)
+      return renderSimpleStatbankComponent(req, simpleStatbankData)
     })
   }
 }
@@ -78,26 +76,26 @@ function getImageAltText(icon?: string) {
   return icon ? getImageAlt(icon) : 'No description found'
 }
 
-function renderSimpleStatbankComponent(req: XP.Request, simpleStatbank: Content<SimpleStatbank>): XP.Response {
+function renderSimpleStatbankComponent(req: XP.Request, simpleStatbankData: Content<SimpleStatbank>): XP.Response {
   const statbankApiData: SimpleStatbankResult | undefined = getStatbankApiData(
-    simpleStatbank.data.code,
-    simpleStatbank.data.urlOrId,
-    simpleStatbank.data.json
+    simpleStatbankData.data.code,
+    simpleStatbankData.data.urlOrId,
+    simpleStatbankData.data.json
   )
 
   const props: SimpleStatbankProps = {
-    icon: getImageUrl(simpleStatbank.data.icon),
-    altText: getImageAltText(simpleStatbank.data.icon),
-    title: simpleStatbank.data.simpleStatbankTitle,
-    ingress: simpleStatbank.data.ingress ?? '',
-    labelDropdown: simpleStatbank.data.labelDropdown,
-    placeholderDropdown: simpleStatbank.data.placeholderDropdown ?? '',
-    displayDropdown: simpleStatbank.data.displayDropdown ?? '',
-    resultText: simpleStatbank.data.resultText,
-    lowerCaseVariableFirstLetter: simpleStatbank.data.lowerCaseVariableFirstLetter,
-    unit: simpleStatbank.data.unit ?? '',
-    timeLabel: simpleStatbank.data.timeLabel,
-    resultFooter: simpleStatbank.data.resultFooter ?? '',
+    icon: getImageUrl(simpleStatbankData.data.icon),
+    altText: getImageAltText(simpleStatbankData.data.icon),
+    title: simpleStatbankData.data.simpleStatbankTitle,
+    ingress: simpleStatbankData.data.ingress ?? '',
+    labelDropdown: simpleStatbankData.data.labelDropdown,
+    placeholderDropdown: simpleStatbankData.data.placeholderDropdown ?? '',
+    displayDropdown: simpleStatbankData.data.displayDropdown ?? '',
+    resultText: simpleStatbankData.data.resultText,
+    lowerCaseVariableFirstLetter: simpleStatbankData.data.lowerCaseVariableFirstLetter,
+    unit: simpleStatbankData.data.unit ?? '',
+    timeLabel: simpleStatbankData.data.timeLabel,
+    resultFooter: simpleStatbankData.data.resultFooter ?? '',
     noNumberText: localize({
       key: 'value.notFound',
     }),
