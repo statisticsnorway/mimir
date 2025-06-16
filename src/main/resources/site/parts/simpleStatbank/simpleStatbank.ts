@@ -13,7 +13,7 @@ export function get(req: XP.Request): XP.Response {
     const config = getComponent<XP.PartComponent.SimpleStatbank>()?.config
     if (!config) throw Error('No part found')
 
-    const simpleStatbankId: string | undefined = config.simpleStatbank ? config.simpleStatbank : undefined
+    const simpleStatbankId: string | undefined = config?.simpleStatbank
     return renderPart(req, simpleStatbankId)
   } catch (e) {
     return renderError(req, 'Error in part', e)
@@ -83,6 +83,9 @@ function renderPart(req: XP.Request, simpleStatbankId?: string): XP.Response {
     }),
     closeText: localize({
       key: 'close',
+    }),
+    dataFetchFailedError: localize({
+      key: 'dataFetchFailedError',
     }),
     statbankApiData,
   }
