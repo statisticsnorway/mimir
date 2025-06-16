@@ -2,6 +2,7 @@ import React from 'react'
 import { Accordion, Button, Link } from '@statisticsnorway/ssb-component-library'
 import { ArrowRight, ArrowUp, Facebook, Rss, Linkedin, Instagram } from 'react-feather'
 import { FooterContent } from '/lib/types/footer'
+import { Phrases } from '/lib/types/language'
 
 const Footer = (props: FooterContent) => {
   const {
@@ -17,6 +18,7 @@ const Footer = (props: FooterContent) => {
     globalLinks,
     copyrightUrl,
     copyrightText,
+    isCookiebannerEnabled,
   } = props
   const footerNavigationLabel = language?.code === 'en' ? 'footer links' : 'bunnmeny lenker'
   const COOKIE_SERVICE_URL = '/_/service/mimir/setCookieConsent'
@@ -126,6 +128,26 @@ const Footer = (props: FooterContent) => {
     }
   }
 
+  function renderCookieLinks() {
+    const phrases = language?.phrases as Phrases
+    if (isCookiebannerEnabled) {
+      return (
+        <>
+          {/* TODO MIM-2302: styling +*/}
+          <Button onClick={handleCookieResetClick} negative className='cookie-reset'>
+            {phrases.cookieResetLink}
+          </Button>
+          {/* TODO MIM-2302: lage link relativ  */}
+          <div className='cookie-link'>
+            <Link href='ssb.no' negative>
+              {phrases.cookiePrivacyLink}
+            </Link>
+          </div>{' '}
+        </>
+      )
+    }
+  }
+
   function goToTop() {
     window.scroll({
       top: 0,
@@ -167,20 +189,7 @@ const Footer = (props: FooterContent) => {
               <div className='showOnMobile footer-menu'>{renderFooterMenuMobile()}</div>
             </nav>
           </div>
-          <div className='showOnMobile cookie-links'>
-            <div>
-              {/* TODO MIM-2302: styling + engelsk oversettelse + featuretoggle*/}
-              <Button onClick={handleCookieResetClick} negative className='cookie-reset'>
-                Endre samtykke for informasjonskapsler
-              </Button>
-              {/* TODO MIM-2302: lage link relativ + engelsk oversettelse  + featuretoggle */}
-              <div className='cookie-link'>
-                <Link href='ssb.no' negative>
-                  Personvern og informasjonskapsler
-                </Link>
-              </div>{' '}
-            </div>
-          </div>
+          <div className='showOnMobile cookie-links'>{renderCookieLinks()}</div>
           <div className='footer-bottom-row'>
             <div className='links-left'>
               {renderCopyRight()}
