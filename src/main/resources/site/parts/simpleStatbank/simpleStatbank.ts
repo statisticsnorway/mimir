@@ -25,37 +25,21 @@ export function preview(req: XP.Request): XP.Response {
   }
 }
 
-function missingConfig(message: string) {
-  return `<div class="simple-statbank"><div class='content'>${message}</div></div>`
-}
-
 function renderPart(req: XP.Request): XP.Response {
-  const config = getComponent<XP.PartComponent.SimpleStatbank>()?.config
-  if (!config) throw Error('No part found')
-
-  const simpleStatbankId: string | undefined = config?.simpleStatbank
-
-  if (!simpleStatbankId) {
-    return {
-      body: missingConfig('Mangler innhold! Velg Spørring Statistikkbanken'),
-    }
-  }
-
-  const simpleStatbank: Content<SimpleStatbank> | null = getContentByKey({
-    key: simpleStatbankId as string,
-  }) as Content<SimpleStatbank>
-
-  if (!simpleStatbank) throw Error('No content found')
+  const page = getContent<Content<SimpleStatbank>>()
+  if (!page) throw Error('No page found')
 
   if (req.mode === 'edit' || req.mode === 'inline') {
-    return renderSimpleStatbankComponent(req, simpleStatbank)
+    return renderSimpleStatbankComponent(req, page)
   } else {
-    const page = getContent()
-    if (!page) throw Error('No page found')
     return fromPartCache(req, `${page._id}-simpleStatbank`, () => {
-      return renderSimpleStatbankComponent(req, simpleStatbank)
+      return renderSimpleStatbankComponent(req, page)
     })
   }
+}
+
+function missingConfig(message: string) {
+  return `<div class="simple-statbank"><div class='content'>${message}</div></div>`
 }
 
 function getImageUrl(icon?: string) {
@@ -72,7 +56,29 @@ function getImageAltText(icon?: string) {
   return icon ? getImageAlt(icon) : 'No description found'
 }
 
-function renderSimpleStatbankComponent(req: XP.Request, simpleStatbank: Content<SimpleStatbank>): XP.Response {
+function renderSimpleStatbankComponent(req: XP.Request, content: Content<SimpleStatbank> | null): XP.Response {
+  let simpleStatbank
+  if (content?.type === `${app.name}:simpleStatbank`) {
+    simpleStatbank = content // Use page.data config instead when rendering part preview for content type
+  } else {
+    const config = getComponent<XP.PartComponent.SimpleStatbank>()?.config
+    if (!config) throw Error('No part found')
+
+    const simpleStatbankId: string | undefined = config?.simpleStatbank
+
+    if (!simpleStatbankId) {
+      return {
+        body: missingConfig('Mangler innhold! Velg Spørring Statistikkbanken'),
+      }
+    }
+
+    simpleStatbank = getContentByKey({
+      key: simpleStatbankId as string,
+    }) as Content<SimpleStatbank>
+
+    if (!simpleStatbank) throw Error('No content found')
+  }
+
   const statbankApiData: SimpleStatbankResult | undefined = getStatbankApiData(
     simpleStatbank.data.code,
     simpleStatbank.data.urlOrId,
