@@ -63,7 +63,7 @@ function renderPart(req: XP.Request, simpleStatbankId?: string): XP.Response {
   if (req.mode === 'edit' || req.mode === 'inline') {
     return renderSimpleStatbankComponent(req, simpleStatbank)
   } else {
-    fromPartCache(req, `${simpleStatbank._id}-simpleStatbank`, () => {
+    return fromPartCache(req, `${simpleStatbank._id}-simpleStatbank`, () => {
       return renderSimpleStatbankComponent(req, simpleStatbank)
     })
   }
