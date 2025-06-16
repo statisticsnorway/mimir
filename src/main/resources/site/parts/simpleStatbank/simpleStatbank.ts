@@ -1,4 +1,4 @@
-import { getComponent } from '/lib/xp/portal'
+import { getContent, getComponent } from '/lib/xp/portal'
 import { get as getContentByKey, type Content } from '/lib/xp/content'
 import { localize } from '/lib/xp/i18n'
 import { renderError } from '/lib/ssb/error/error'
@@ -11,43 +11,30 @@ import { type SimpleStatbank } from '/site/content-types'
 
 export function get(req: XP.Request): XP.Response {
   try {
-    const config = getComponent<XP.PartComponent.SimpleStatbank>()?.config
-    if (!config) throw Error('No part found')
-
-    const simpleStatbankId: string | undefined = config?.simpleStatbank
-    return renderPart(req, simpleStatbankId)
+    return renderPart(req)
   } catch (e) {
     return renderError(req, 'Error in part', e)
   }
 }
 
-export function preview(req: XP.Request, id: string): XP.Response {
+export function preview(req: XP.Request): XP.Response {
   try {
-    return renderPart(req, id)
+    return renderPart(req)
   } catch (e) {
     return renderError(req, 'Error in part', e)
   }
-}
-
-function getImageUrl(icon?: string) {
-  return icon
-    ? imageUrl({
-        id: icon,
-        scale: 'block(100,100)',
-        format: 'jpg',
-      })
-    : ''
-}
-
-function getImageAltText(icon?: string) {
-  return icon ? getImageAlt(icon) : 'No description found'
 }
 
 function missingConfig(message: string) {
   return `<div class="simple-statbank"><div class='content'>${message}</div></div>`
 }
 
-function renderPart(req: XP.Request, simpleStatbankId?: string): XP.Response {
+function renderPart(req: XP.Request): XP.Response {
+  const config = getComponent<XP.PartComponent.SimpleStatbank>()?.config
+  if (!config) throw Error('No part found')
+
+  const simpleStatbankId: string | undefined = config?.simpleStatbank
+
   if (!simpleStatbankId) {
     return {
       body: missingConfig('Mangler innhold! Velg Spørring Statistikkbanken'),
@@ -63,10 +50,26 @@ function renderPart(req: XP.Request, simpleStatbankId?: string): XP.Response {
   if (req.mode === 'edit' || req.mode === 'inline') {
     return renderSimpleStatbankComponent(req, simpleStatbank)
   } else {
-    return fromPartCache(req, `${simpleStatbank._id}-simpleStatbank`, () => {
+    const page = getContent()
+    if (!page) throw Error('No page found')
+    return fromPartCache(req, `${page._id}-simpleStatbank`, () => {
       return renderSimpleStatbankComponent(req, simpleStatbank)
     })
   }
+}
+
+function getImageUrl(icon?: string) {
+  return icon
+    ? imageUrl({
+        id: icon,
+        scale: 'block(100,100)',
+        format: 'jpg',
+      })
+    : ''
+}
+
+function getImageAltText(icon?: string) {
+  return icon ? getImageAlt(icon) : 'No description found'
 }
 
 function renderSimpleStatbankComponent(req: XP.Request, simpleStatbank: Content<SimpleStatbank>): XP.Response {
