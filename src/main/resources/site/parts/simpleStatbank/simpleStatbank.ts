@@ -10,36 +10,58 @@ import { type SimpleStatbankProps, type SimpleStatbankResult } from '/lib/types/
 import { type SimpleStatbank } from '/site/content-types'
 
 export function get(req: XP.Request): XP.Response {
+  const config = getComponent<XP.PartComponent.SimpleStatbank>()?.config
+  if (!config) throw Error('No part found')
+
+  const simpleStatbankId: string | undefined = config?.simpleStatbank
+
   try {
-    return renderPart(req)
+    return renderPart(req, simpleStatbankId)
   } catch (e) {
     return renderError(req, 'Error in part', e)
   }
 }
 
-export function preview(req: XP.Request): XP.Response {
+export function preview(req: XP.Request, simpleStatbankId: string | undefined): XP.Response {
   try {
-    return renderPart(req)
+    return renderPart(req, simpleStatbankId)
   } catch (e) {
     return renderError(req, 'Error in part', e)
-  }
-}
-
-function renderPart(req: XP.Request): XP.Response {
-  const page = getContent<Content<SimpleStatbank>>()
-  if (!page) throw Error('No page found')
-
-  if (req.mode === 'edit' || req.mode === 'inline') {
-    return renderSimpleStatbankComponent(req, page)
-  } else {
-    return fromPartCache(req, `${page._id}-simpleStatbank`, () => {
-      return renderSimpleStatbankComponent(req, page)
-    })
   }
 }
 
 function missingConfig(message: string) {
   return `<div class="simple-statbank"><div class='content'>${message}</div></div>`
+}
+
+function renderPart(req: XP.Request, simpleStatbankId: string | undefined): XP.Response {
+  const page = getContent<Content<SimpleStatbank>>()
+  if (!page) throw Error('No page found')
+
+  let simpleStatbank
+  if (page.type === `${app.name}:simpleStatbank`) {
+    simpleStatbank = page // Fetch page.data config instead when rendering part preview for content type
+  } else {
+    if (!simpleStatbankId) {
+      return {
+        body: missingConfig('Mangler innhold! Velg Spørring Statistikkbanken'),
+      }
+    }
+
+    simpleStatbank = getContentByKey({
+      key: simpleStatbankId as string,
+    }) as Content<SimpleStatbank>
+  }
+
+  if (!simpleStatbank) throw Error('No content found')
+
+  if (req.mode === 'edit' || req.mode === 'inline') {
+    return renderSimpleStatbankComponent(req, simpleStatbank)
+  } else {
+    return fromPartCache(req, `${page._id}-simpleStatbank`, () => {
+      return renderSimpleStatbankComponent(req, simpleStatbank)
+    })
+  }
 }
 
 function getImageUrl(icon?: string) {
@@ -56,29 +78,7 @@ function getImageAltText(icon?: string) {
   return icon ? getImageAlt(icon) : 'No description found'
 }
 
-function renderSimpleStatbankComponent(req: XP.Request, content: Content<SimpleStatbank> | null): XP.Response {
-  let simpleStatbank
-  if (content?.type === `${app.name}:simpleStatbank`) {
-    simpleStatbank = content // Use page.data config instead when rendering part preview for content type
-  } else {
-    const config = getComponent<XP.PartComponent.SimpleStatbank>()?.config
-    if (!config) throw Error('No part found')
-
-    const simpleStatbankId: string | undefined = config?.simpleStatbank
-
-    if (!simpleStatbankId) {
-      return {
-        body: missingConfig('Mangler innhold! Velg Spørring Statistikkbanken'),
-      }
-    }
-
-    simpleStatbank = getContentByKey({
-      key: simpleStatbankId as string,
-    }) as Content<SimpleStatbank>
-
-    if (!simpleStatbank) throw Error('No content found')
-  }
-
+function renderSimpleStatbankComponent(req: XP.Request, simpleStatbank: Content<SimpleStatbank>): XP.Response {
   const statbankApiData: SimpleStatbankResult | undefined = getStatbankApiData(
     simpleStatbank.data.code,
     simpleStatbank.data.urlOrId,
