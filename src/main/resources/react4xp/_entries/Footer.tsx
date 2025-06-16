@@ -169,12 +169,11 @@ const Footer = (props: FooterContent) => {
           </div>
           <div className='showOnMobile cookie-links'>
             <div>
-              {/* TODO MIM-2302: styling + engelsk oversettelse */}
+              {/* TODO MIM-2302: styling + engelsk oversettelse + featuretoggle*/}
               <Button onClick={handleCookieResetClick} negative className='cookie-reset'>
-                Endre samtykke for informasjonskapsler{' '}
-                {/* TODO Bør teksten vær "tilbakestill" siden det er det vi faktisk gjør? */}
+                Endre samtykke for informasjonskapsler
               </Button>
-              {/* TODO MIM-2302: lage link relativ + engelsk oversettelse */}
+              {/* TODO MIM-2302: lage link relativ + engelsk oversettelse  + featuretoggle */}
               <div className='cookie-link'>
                 <Link href='ssb.no' negative>
                   Personvern og informasjonskapsler
