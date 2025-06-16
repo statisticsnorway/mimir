@@ -27,6 +27,7 @@
 
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta data-th-if="${dateModifiedMeta}" name="dateModified" data-th-content="${dateModifiedMeta}" />
   <meta data-th-if="${page.data.metaDescription}" name="description" data-th-content="${page.data.metaDescription}" />
   <title data-th-text="${pageTitle}"></title>
   <link rel="preload" data-th-href="${stylesUrl}" as="style" />
