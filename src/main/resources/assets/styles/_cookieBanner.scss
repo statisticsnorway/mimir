@@ -1,7 +1,7 @@
 .cookie-banner {
   position: fixed;
-  bottom: 30px;
-  left: 30px;
+  bottom: 25px;
+  left: 25px;
   width: 664px;
   height: 332px;
   padding: 28px;
@@ -47,7 +47,7 @@
   }
 
   &-link {
-    width: 569px;
+    width: fit-content;
     height: 28px;
     text-decoration: underline solid 0;
     text-underline-offset: 0;
@@ -95,7 +95,7 @@
     &-title,
     &-text,
     &-link {
-      width: 285px;
+      width: fit-content;
     }
 
     &-text {
@@ -135,4 +135,10 @@
   outline: 2px solid #9272fc;
   outline-offset: 2px;
   border-radius: 2px;
+}
+
+@media (min-width: 724px) {
+  .cookie-banner-actions {
+    margin-top: 10px;
+  }
 }
