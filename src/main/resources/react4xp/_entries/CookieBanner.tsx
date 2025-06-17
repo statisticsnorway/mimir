@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Button } from '@statisticsnorway/ssb-component-library'
 import { type CookieBannerProps } from '/lib/types/cookieBanner'
 
@@ -24,6 +24,7 @@ async function setCookieViaService(value: 'all' | 'necessary' | 'unidentified') 
 function CookieBanner(props: CookieBannerProps): JSX.Element | null {
   const { language, phrases, baseUrl } = props
   const [visible, setVisible] = useState(false)
+  const sectionRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
     const cookie = getCookie()
@@ -34,6 +35,12 @@ function CookieBanner(props: CookieBannerProps): JSX.Element | null {
       setVisible(true)
     }
   }, [])
+
+  useEffect(() => {
+    if (visible && sectionRef.current) {
+      sectionRef.current.focus()
+    }
+  }, [visible])
 
   function handleConsent(value: 'all' | 'necessary') {
     setCookieViaService(value)
@@ -58,10 +65,21 @@ function CookieBanner(props: CookieBannerProps): JSX.Element | null {
   const cookieLink = `${baseUrl}${language == 'en' ? '/en' : ''}/omssb/personvern`
 
   return (
-    <section className='cookie-banner' aria-label='Informasjonskapselvalg'>
+    <section
+      ref={sectionRef}
+      className='cookie-banner'
+      role='dialog'
+      aria-labelledby='cookie-banner-title'
+      aria-describedby='cookie-banner-text'
+      tabIndex={0}
+    >
       <div className='cookie-banner-content'>
-        <h3 className='cookie-banner-title'>{phrases.cookieBannerTitle}</h3>
-        <p className='cookie-banner-text'>{phrases.cookieBannerText}</p>
+        <h3 className='cookie-banner-title' id='cookie-banner-title'>
+          {phrases.cookieBannerTitle}
+        </h3>
+        <p className='cookie-banner-text' id='cookie-banner-text'>
+          {phrases.cookieBannerText}
+        </p>
         <a href={cookieLink} className='cookie-banner-link'>
           {phrases.cookieBannerLinkText}
         </a>
