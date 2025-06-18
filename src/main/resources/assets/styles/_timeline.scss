@@ -139,6 +139,10 @@
           h3 {
             margin-bottom: 0;
           }
+
+          .content {
+            line-height: 1.75rem;
+          }
         }
       }
 
@@ -152,6 +156,7 @@
 
         .text {
           margin-top: 10px;
+          line-height: 1.75rem;
         }
       }
     }
@@ -193,11 +198,7 @@
         }
 
         .event-box {
-          padding: 20px 40px;
-
-          .text {
-            line-height: 1.75rem;
-          }
+          padding: 20px;
         }
       }
     }
