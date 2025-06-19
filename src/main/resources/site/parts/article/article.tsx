@@ -35,7 +35,7 @@ function Article(props: ArticleProps) {
         {modifiedDate && (
           <p>
             <span className='fw-bold'>{phrases.modified}:</span>
-            {` ${modifiedDate}`}
+            <time dateTime={modifiedDate}>{` ${modifiedDate}`}</time>
           </p>
         )}
       </div>
