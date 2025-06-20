@@ -147,7 +147,7 @@
     "validator": "~13.15.15",
     "webpack": "~5.99.9",
     "webpack-bundle-analyzer": "~4.10.2",
-    "webpack-cli": "~5.1.4",
+    "webpack-cli": "~6.0.1",
     "xlsx": "file:src/main/resources/lib/vendor/xlsx-0.20.3.tgz"
   },
   "browserslist": [
