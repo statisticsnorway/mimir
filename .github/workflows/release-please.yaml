@@ -27,4 +27,3 @@ jobs:
           include-component-in-tag: false
           # Don't create GitHub releases
           include-v-in-tag: false
-          changelog-types: '[{"type":"feat","section":"Features","hidden":false},{"type":"fix","section":"Bug Fixes","hidden":false},{"type":"chore","section":"Miscellaneous","hidden":false}]' 
