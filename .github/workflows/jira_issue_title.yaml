@@ -16,7 +16,8 @@ jobs:
         with:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
           head-branch-regex: 'mim-\d{2,4}'
-          title-template: "[%headbranch%]"
+          title-template: " (%headbranch%)"
+          title-update-action: "suffix"
           body-template: |
             ### Jira Issues!
             [Link to ticket: %headbranch%](https://statistics-norway.atlassian.net/browse/%headbranch%)
