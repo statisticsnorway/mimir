@@ -79,6 +79,8 @@ function Timeline(props: TimelineProps) {
     return !!url && !url.startsWith('/') && !url.includes('ssb.no')
   }
 
+  const renderEventTitle = (title: string) => <Title size={3}>{title}</Title>
+
   function renderShowMoreButton() {
     return (
       <Button
@@ -99,7 +101,7 @@ function Timeline(props: TimelineProps) {
       <CategoryLink
         external={isExternalUrl(event.targetUrl)}
         href={event.targetUrl}
-        titleText={event.title}
+        titleText={renderEventTitle(event.title)}
         subText={event.text}
       />
     )
@@ -108,7 +110,7 @@ function Timeline(props: TimelineProps) {
   function addDirectorCard(event: TimelineEvent) {
     return (
       <Card
-        title={event.title}
+        title={renderEventTitle(event.title)}
         href={event.targetUrl}
         icon={<img src={event.directorImage} alt={event.directorImageAltText} loading='lazy' />}
         profiled
@@ -123,10 +125,10 @@ function Timeline(props: TimelineProps) {
       <div className='event-box'>
         {event.targetUrl ? (
           <Link linkType='header' href={event.targetUrl}>
-            {event.title}
+            {renderEventTitle(event.title)}
           </Link>
         ) : (
-          <span className='title'>{event.title}</span>
+          <span className='title'>{renderEventTitle(event.title)}</span>
         )}
         {event.text && <span className='text'>{event.text}</span>}
       </div>
@@ -144,7 +146,7 @@ function Timeline(props: TimelineProps) {
       ''
     )
 
-    return <ExpansionBox header={event.title} text={text} sneakPeek />
+    return <ExpansionBox header={renderEventTitle(event.title)} text={text} sneakPeek />
   }
 
   function addEvents(events: TimelineEvent[]) {
@@ -191,7 +193,7 @@ function Timeline(props: TimelineProps) {
         ref={i === timelineCount - countYear ? firstNewTimelineRef : null}
       >
         <div className='year'>
-          <span>{timeline.year}</span>
+          <Title size={2}>{timeline.year}</Title>
         </div>
         {events?.length && addEvents(events)}
       </div>
