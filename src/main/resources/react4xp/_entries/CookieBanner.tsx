@@ -83,7 +83,10 @@ function CookieBanner({ language, phrases, baseUrl }: CookieBannerProps): JSX.El
     requestAnimationFrame(() => {
       if (triggeredByKeyboard.current) {
         triggeredByKeyboard.current = false
-        const el = document.querySelector<HTMLElement>('#header-logo')
+        const el =
+          window.innerWidth < 992
+            ? document.querySelector<HTMLElement>('#header-logo')
+            : document.querySelector<HTMLElement>('header nav a')
         el?.focus()
       }
     })
