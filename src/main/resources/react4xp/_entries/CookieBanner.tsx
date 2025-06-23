@@ -12,6 +12,7 @@ function CookieBanner({ language, phrases, baseUrl }: CookieBannerProps): JSX.El
   const [visible, setVisible] = useState(false)
   const sectionRef = useRef<HTMLElement>(null)
   const lastCookieRef = useRef<string | null>(null)
+  const triggeredByKeyboard = useRef(false)
 
   const getCookie = (): string | null => {
     const match = document.cookie.match(new RegExp(`(^|;\\s*)${COOKIE_NAME}=([^;]*)`))
@@ -56,6 +57,14 @@ function CookieBanner({ language, phrases, baseUrl }: CookieBannerProps): JSX.El
     }
   }, [visible])
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Enter' || e.key === ' ') triggeredByKeyboard.current = true
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [])
+
   const handleConsent = (value: 'all' | 'necessary') => {
     setCookieViaService(value)
     setVisible(false)
@@ -70,6 +79,14 @@ function CookieBanner({ language, phrases, baseUrl }: CookieBannerProps): JSX.El
     window.gtag?.('consent', 'update', {
       ad_storage: consentGranted ? 'granted' : 'denied',
     })
+
+    setTimeout(() => {
+      if (triggeredByKeyboard.current) {
+        triggeredByKeyboard.current = false
+        const el = document.querySelector<HTMLElement>('header nav a')
+        el?.focus()
+      }
+    }, 0)
   }
 
   if (!visible) return null
