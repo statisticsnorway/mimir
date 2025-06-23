@@ -65,12 +65,10 @@ function CookieBanner({ language, phrases, baseUrl }: CookieBannerProps): JSX.El
     window.dataLayer.push({
       event: 'consent_update',
       consent: value,
-      analytics_storage: consentGranted ? 'granted' : 'denied',
     })
 
     window.gtag?.('consent', 'update', {
       ad_storage: consentGranted ? 'granted' : 'denied',
-      analytics_storage: consentGranted ? 'granted' : 'denied',
     })
   }
 
