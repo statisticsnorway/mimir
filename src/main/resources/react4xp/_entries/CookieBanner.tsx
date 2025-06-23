@@ -80,13 +80,13 @@ function CookieBanner({ language, phrases, baseUrl }: CookieBannerProps): JSX.El
       ad_storage: consentGranted ? 'granted' : 'denied',
     })
 
-    setTimeout(() => {
+    requestAnimationFrame(() => {
       if (triggeredByKeyboard.current) {
         triggeredByKeyboard.current = false
-        const el = document.querySelector<HTMLElement>('header nav a')
+        const el = document.querySelector<HTMLElement>('#header-logo')
         el?.focus()
       }
-    }, 0)
+    })
   }
 
   if (!visible) return null

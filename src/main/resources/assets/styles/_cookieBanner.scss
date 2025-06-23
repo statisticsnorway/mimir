@@ -1,11 +1,11 @@
 .cookie-banner {
   position: fixed;
-  bottom: 25px;
-  left: 25px;
-  width: 664px;
-  padding: 28px;
+  bottom: 1.5625rem;
+  left: 1.5625rem;
+  width: 41.5rem;
+  padding: 1.75rem;
   background: $ssb-green-4;
-  border-radius: 8px;
+  border-radius: 0.5rem;
   z-index: 2147483647;
 
   &-title,
@@ -14,18 +14,18 @@
   }
 
   &-title {
-    font-size: 20px;
+    font-size: 1.25rem;
   }
 
   &-text {
-    font-size: 16px;
-    margin-bottom: 10px;
+    font-size: 1rem;
+    margin-bottom: 0.625rem;
   }
 
   &-buttons {
     display: flex;
-    gap: 16px;
-    margin-top: 20px;
+    gap: 1rem;
+    margin-top: 1.25rem;
 
     .cookie-button-accept,
     .cookie-button-decline {
@@ -35,15 +35,15 @@
   }
 
   &:focus-visible {
-    outline: 2px solid $ssb-purple-3;
-    outline-offset: 2px;
+    outline: 0.125rem solid $ssb-purple-3;
+    outline-offset: 0.125rem;
   }
 
-  @media (max-width: 723px) {
+  @media (max-width: 45.1875rem) {
     left: 50%;
     transform: translateX(-50%);
-    width: 325px;
-    padding: 28px 20px;
+    width: 20.3125rem;
+    padding: 1.75rem 1.25rem;
     flex-direction: column;
 
     &-title,
@@ -53,21 +53,21 @@
     }
 
     &-text {
-      margin-bottom: 20px;
+      margin-bottom: 1.25rem;
     }
 
     &-link {
-      margin-bottom: 28px;
+      margin-bottom: 1.75rem;
     }
 
     &-buttons {
       flex-direction: column;
-      gap: 12px;
+      gap: 0.75rem;
 
       .cookie-button-accept,
       .cookie-button-decline {
-        width: 285px;
-        line-height: 28px;
+        width: 17.8125rem;
+        line-height: 1.75rem;
         display: flex;
         align-items: center;
         justify-content: center;
