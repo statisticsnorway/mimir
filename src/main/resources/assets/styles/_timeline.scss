@@ -143,6 +143,14 @@
           .content {
             line-height: 1.75rem;
           }
+
+          .ssb-category-link {
+            &:hover, &:focus {
+              h3 {
+                color: inherit;
+              }
+            }
+          }
         }
       }
 
