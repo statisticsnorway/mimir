@@ -133,16 +133,16 @@ const Footer = (props: FooterContent) => {
     if (isCookiebannerEnabled) {
       return (
         <>
-          {/* TODO MIM-2302: styling +*/}
-          <Button onClick={handleCookieResetClick} negative className='cookie-reset'>
-            {phrases.cookieResetLink}
-          </Button>
           {/* TODO MIM-2302: lage link relativ  */}
           <div className='cookie-link'>
             <Link href='ssb.no' negative>
               {phrases.cookiePrivacyLink}
             </Link>
-          </div>{' '}
+          </div>
+          {/* TODO MIM-2302: styling +*/}
+          <Button onClick={handleCookieResetClick} negative className='cookie-reset'>
+            {phrases.cookieResetLink}
+          </Button>
         </>
       )
     }
