@@ -1,7 +1,7 @@
 .cookie-banner {
   position: fixed;
-  bottom: 1.5625rem;
-  left: 1.5625rem;
+  bottom: 1.56rem;
+  left: 1.56rem;
   width: 41.5rem;
   padding: 1.75rem;
   background: $ssb-green-4;
@@ -19,7 +19,7 @@
 
   &-text {
     font-size: 1rem;
-    margin-bottom: 0.625rem;
+    margin-bottom: 0.63rem;
   }
 
   &-buttons {
@@ -35,14 +35,14 @@
   }
 
   &:focus-visible {
-    outline: 0.125rem solid $ssb-purple-3;
-    outline-offset: 0.125rem;
+    outline: 0.13rem solid $ssb-purple-3;
+    outline-offset: 0.13rem;
   }
 
-  @media (max-width: 45.1875rem) {
+  @media (max-width: 723px) {
     left: 50%;
     transform: translateX(-50%);
-    width: 20.3125rem;
+    width: 20.31rem;
     padding: 1.75rem 1.25rem;
     flex-direction: column;
 
@@ -66,8 +66,6 @@
 
       .cookie-button-accept,
       .cookie-button-decline {
-        width: 17.8125rem;
-        line-height: 1.75rem;
         display: flex;
         align-items: center;
         justify-content: center;
