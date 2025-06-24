@@ -35,6 +35,22 @@
     }
   }
 
+  .ssb-link.negative {
+    color: $ssb-white !important;
+    border-bottom-color: $ssb-white !important;
+    background-image: linear-gradient(120deg, $ssb-green-3 0%, $ssb-green-3 100%) !important;
+    
+    .link-text {
+      color: $ssb-white !important;
+    }
+
+    &:hover,
+    &:focus {
+      color: $ssb-dark-4 !important;
+      border-bottom-color: transparent;
+    }
+  }
+
   &:focus-visible {
     outline: 0.13rem solid $ssb-purple-3;
     outline-offset: 0.13rem;
@@ -42,10 +58,10 @@
 
   @include media-breakpoint-down(md) {
     left: 50%;
+    bottom:1rem;
     transform: translateX(-50%);
     width: 20.31rem;
     max-height: calc(100vh - 2rem);
-    padding: 1.75rem 1.25rem;
     flex-direction: column;
     overflow-y: auto;
 
@@ -74,22 +90,6 @@
         justify-content: center;
         text-align: center;
       }
-    }
-  }
-
-  .ssb-link.negative {
-    color: $ssb-white !important;
-    border-bottom-color: $ssb-white !important;
-    background-image: linear-gradient(120deg, $ssb-green-3 0%, $ssb-green-3 100%) !important;
-    
-    .link-text {
-      color: $ssb-white !important;
-    }
-
-    &:hover,
-    &:focus {
-      color: $ssb-dark-4 !important;
-      border-bottom-color: transparent;
     }
   }
 }
