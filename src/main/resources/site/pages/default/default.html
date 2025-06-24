@@ -49,6 +49,9 @@
   </noscript>
   <!-- End Google Tag Manager (noscript) -->
 
+  <div id="cookieBanner"></div>
+  <div id="popup" data-th-if="${popupBody}"></div>
+
   <!-- HEADER -->
   <div class="header-wrapper" data-th-unless="${hideHeader}">
     <div class="container">
@@ -60,9 +63,6 @@
     </div>
   </div>
   <script type="application/ld+json" data-th-if="${jsonLd}" th:inline="javascript">[[${jsonLd}]]</script>
-
-  <div id="cookieBanner"></div>
-  <div id="popup" data-th-if="${popupBody}"></div>
 
   <!-- Metainfo to make the page searchable -->
   <div id="metainfo-container" data-th-if="${addMetaInfoSearch}"
