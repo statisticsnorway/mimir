@@ -40,7 +40,7 @@
     outline-offset: 0.13rem;
   }
 
-  @media (max-width: 723px) {
+  @include media-breakpoint-down(md) {
     left: 50%;
     transform: translateX(-50%);
     width: 20.31rem;
