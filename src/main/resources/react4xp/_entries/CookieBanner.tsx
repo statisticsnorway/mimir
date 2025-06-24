@@ -77,7 +77,7 @@ function CookieBanner({ language, phrases, baseUrl }: CookieBannerProps): JSX.El
     })
 
     window.gtag?.('consent', 'update', {
-      ad_storage: consentGranted ? 'granted' : 'denied',
+      analytics_storage: consentGranted ? 'granted' : 'denied',
     })
 
     requestAnimationFrame(() => {
