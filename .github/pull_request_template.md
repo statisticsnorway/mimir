@@ -1,7 +1,7 @@
 # Pull Request
 
 ## Description
-_Describe what this PR does and why._
+_Describe what this PR does_
 
 ---
 
@@ -22,4 +22,4 @@ Example: `feat: add new user login flow`
 ---
 
 ## Notes
-- If your branch name matches the Jira pattern (e.g., `mim-123`), the PR title and a Jira link will be set automatically by automation. 
+- If your branch name matches the Jira pattern (e.g., `mim-123`), the PR title will be updated with JIRA-issue. Anywhere in title, description or comment a JIRA issue is mentioned automation will create a link to JIRA. 
