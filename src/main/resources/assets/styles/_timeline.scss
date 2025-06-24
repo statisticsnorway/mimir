@@ -146,7 +146,7 @@
 
           .ssb-category-link {
             &:hover, &:focus {
-              h3 {
+              .ssb-title {
                 color: $ssb-white !important;
               }
             }
