@@ -3,6 +3,7 @@
   bottom: 1.56rem;
   left: 1.56rem;
   width: 41.5rem;
+  max-width: calc(100vw - 3.2rem);
   padding: 1.75rem;
   background: $ssb-green-4;
   border-radius: 0.5rem;
@@ -43,8 +44,10 @@
     left: 50%;
     transform: translateX(-50%);
     width: 20.31rem;
+    max-height: calc(100vh - 2rem);
     padding: 1.75rem 1.25rem;
     flex-direction: column;
+    overflow-y: auto;
 
     &-title,
     &-text,
@@ -75,7 +78,6 @@
   }
 }
 
-// custom Link 
 .cookie-banner .ssb-link.negative {
   color: $ssb-white !important;
   border-bottom-color: $ssb-white !important;
@@ -101,4 +103,3 @@
     }
   }
 }
-
