@@ -140,14 +140,14 @@
             margin-bottom: 0;
           }
 
-          .content {
+          .content, .text {
             line-height: 1.75rem;
           }
 
           .ssb-category-link {
             &:hover, &:focus {
               h3 {
-                color: inherit;
+                color: $ssb-white !important;
               }
             }
           }
@@ -164,7 +164,6 @@
 
         .text {
           margin-top: 10px;
-          line-height: 1.75rem;
         }
       }
     }
