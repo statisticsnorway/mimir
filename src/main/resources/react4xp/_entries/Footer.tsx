@@ -19,6 +19,7 @@ const Footer = (props: FooterContent) => {
     copyrightUrl,
     copyrightText,
     isCookiebannerEnabled,
+    baseUrl,
   } = props
   const footerNavigationLabel = language?.code === 'en' ? 'footer links' : 'bunnmeny lenker'
   const COOKIE_SERVICE_URL = '/_/service/mimir/setCookieConsent'
@@ -130,24 +131,24 @@ const Footer = (props: FooterContent) => {
 
   function renderCookieLinks() {
     const phrases = language?.phrases as Phrases
+    const link = `${baseUrl}${language?.code === 'en' ? '/en' : ''}/omssb/personvern`
     if (isCookiebannerEnabled) {
       return (
-        <>
-          {/* TODO MIM-2302: lage link relativ  */}
+        <div className='cookie-links'>
           <div className='cookie-link'>
-            <Link href='ssb.no' negative>
+            <Link href={link} negative>
               {phrases.cookiePrivacyLink}
             </Link>
           </div>
-          {/* TODO MIM-2302: styling +*/}
           <div className='cookie-reset'>
             <button onClick={handleCookieResetClick} className='ssb-link negative stand-alone'>
               <span className='link-text'>{phrases.cookieResetLink}</span>
             </button>
           </div>
-        </>
+        </div>
       )
     }
+    return <></>
   }
 
   function goToTop() {
@@ -191,7 +192,7 @@ const Footer = (props: FooterContent) => {
               <div className='showOnMobile footer-menu'>{renderFooterMenuMobile()}</div>
             </nav>
           </div>
-          <div className='cookie-links'>{renderCookieLinks()}</div>
+          {renderCookieLinks()}
           <div className='footer-bottom-row'>
             <div className='links-left'>
               {renderCopyRight()}

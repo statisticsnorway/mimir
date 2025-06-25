@@ -74,7 +74,7 @@ function CookieBanner({ language, phrases, baseUrl }: CookieBannerProps): JSX.El
 
   if (!visible) return null
 
-  const cookieLink = `${baseUrl}${language === 'en' ? '/en' : ''}/omssb/personvern`
+  const cookieLink = `${baseUrl}${language === 'en' ? '/en' : ''}/diverse/cookies-og-analyseverktoy-for-webstatistikk`
 
   return (
     <section

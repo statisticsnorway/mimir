@@ -15,4 +15,5 @@ export interface FooterContent {
   hiddenFooterText?: string
   language?: Language
   isCookiebannerEnabled: boolean
+  baseUrl: string
 }
