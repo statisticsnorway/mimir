@@ -140,10 +140,10 @@ const Footer = (props: FooterContent) => {
             </Link>
           </div>
           {/* TODO MIM-2302: styling +*/}
-          <div>
-            <Button onClick={handleCookieResetClick} negative className='cookie-reset'>
-              {phrases.cookieResetLink}
-            </Button>
+          <div className='cookie-reset'>
+            <button onClick={handleCookieResetClick} className='ssb-link negative stand-alone'>
+              <span className='link-text'>{phrases.cookieResetLink}</span>
+            </button>
           </div>
         </>
       )
