@@ -34,6 +34,9 @@ export const usePagination = <T,>({
   const currentElement = useRef<HTMLLIElement>(null)
 
   const showLess = totalCount === list.length
+  const hideBtn = (totalCount as number) < listItemsPerPage
+
+  // TODO: Will no longer be needed once it's been replaced by show less button in all components
   const disableBtn = loading || showLess
 
   useEffect(() => {
@@ -74,6 +77,7 @@ export const usePagination = <T,>({
 
   return {
     disableBtn,
+    hideBtn,
     showLess,
     getCurrentElementRef,
     handleKeyboardNavigation,

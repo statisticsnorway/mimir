@@ -23,7 +23,7 @@ function SubjectArticleList(props: SubjectArticleListProps) {
     id: 'DESC',
   })
 
-  const { getCurrentElementRef, handleKeyboardNavigation, handleOnClick, showLess } = usePagination({
+  const { getCurrentElementRef, handleKeyboardNavigation, handleOnClick, showLess, hideBtn } = usePagination({
     list: articles,
     listItemsPerPage: props.count,
     onLoadMore: () => fetchMoreArticles(),
@@ -128,21 +128,23 @@ function SubjectArticleList(props: SubjectArticleListProps) {
   }
 
   function renderShowMoreButton() {
-    return (
-      <div>
-        <Button className='button-more' onClick={handleOnClick} onKeyDown={handleKeyboardNavigation}>
-          {!showLess ? (
-            <>
-              <ChevronDown size='18' /> {props.showMore}
-            </>
-          ) : (
-            <>
-              <ChevronUp size='18' /> {props.showLess}
-            </>
-          )}
-        </Button>
-      </div>
-    )
+    if (!hideBtn) {
+      return (
+        <div>
+          <Button className='button-more' onClick={handleOnClick} onKeyDown={handleKeyboardNavigation}>
+            {!showLess ? (
+              <>
+                <ChevronDown size='18' /> {props.showMore}
+              </>
+            ) : (
+              <>
+                <ChevronUp size='18' /> {props.showLess}
+              </>
+            )}
+          </Button>
+        </div>
+      )
+    }
   }
 
   return (
