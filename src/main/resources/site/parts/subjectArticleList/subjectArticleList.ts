@@ -41,14 +41,19 @@ function renderPart(req: XP.Request) {
     key: 'relatedArticlesHeading',
     locale: language === 'nb' ? 'no' : language,
   })
-  const buttonText: string = localize({
+  const showMore: string = localize({
     key: 'button.showMore',
+    locale: language === 'nb' ? 'no' : language,
+  })
+  const showLess: string = localize({
+    key: 'showLess',
     locale: language === 'nb' ? 'no' : language,
   })
 
   const props: SubjectArticleListProps = {
     title: headerText,
-    buttonTitle: buttonText,
+    showMore,
+    showLess,
     articleServiceUrl: articleServiceUrl,
     currentPath: currentPath,
     start: 0,
