@@ -76,7 +76,6 @@ declare global {
       export type Variables = _PartComponent<'mimir:variables'>
       export type VideoEmbed = _PartComponent<'mimir:videoEmbed'>
       export type WebcruiterAdvertisementList = _PartComponent<'mimir:webcruiterAdvertisementList'>
-      export type CookieBannerResetButton = _PartComponent<'mimir:cookieBannerResetButton'>
     }
 
     namespace LayoutComponent {
