@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 interface UsePaginationProps<T> {
   list: T[]
@@ -45,12 +45,9 @@ export const usePagination = <T,>({
     prevListLength.current = list.length
   }, [list, keyboardNavigation])
 
-  const getCurrentElementRef = useCallback(
-    (index: number) => {
-      return index === prevListLength.current ? currentElement : null
-    },
-    [keyboardNavigation, list.length]
-  )
+  const getCurrentElementRef = (index: number) => {
+    return index === prevListLength.current ? currentElement : null
+  }
 
   const handleKeyboardNavigation = usePaginationKeyboardNavigation(() => {
     setKeyboardNavigation(true)
