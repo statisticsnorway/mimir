@@ -1,8 +1,8 @@
 import React from 'react'
 import { Accordion, Button, Link } from '@statisticsnorway/ssb-component-library'
 import { ArrowRight, ArrowUp, Facebook, Rss, Linkedin, Instagram } from 'react-feather'
-import { FooterContent } from '/lib/types/footer'
-import { Phrases } from '/lib/types/language'
+import { type FooterContent } from '/lib/types/footer'
+import { type Phrases } from '/lib/types/language'
 
 const Footer = (props: FooterContent) => {
   const {
@@ -140,9 +140,11 @@ const Footer = (props: FooterContent) => {
             </Link>
           </div>
           {/* TODO MIM-2302: styling +*/}
-          <Button onClick={handleCookieResetClick} negative className='cookie-reset'>
-            {phrases.cookieResetLink}
-          </Button>
+          <div>
+            <Button onClick={handleCookieResetClick} negative className='cookie-reset'>
+              {phrases.cookieResetLink}
+            </Button>
+          </div>
         </>
       )
     }
