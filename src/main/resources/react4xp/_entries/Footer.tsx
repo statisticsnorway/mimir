@@ -189,7 +189,7 @@ const Footer = (props: FooterContent) => {
               <div className='showOnMobile footer-menu'>{renderFooterMenuMobile()}</div>
             </nav>
           </div>
-          <div className='showOnMobile cookie-links'>{renderCookieLinks()}</div>
+          <div className='cookie-links'>{renderCookieLinks()}</div>
           <div className='footer-bottom-row'>
             <div className='links-left'>
               {renderCopyRight()}

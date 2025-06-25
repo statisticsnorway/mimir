@@ -242,18 +242,29 @@ footer {
 
   .cookie-links{
     margin-top: 40px;
-    justify-content: center;
+
+    .cookie-link{
+  height: fit-content;
+      .ssb-link {
+        padding: 11px 4px 11px 2px;
+        border: none;
+        
+        .link-text {
+          border-bottom: 1px solid $ssb-green-2;
+          padding-bottom: 2px;
+        }
+        }
+      }
 
     .cookie-reset{
-      margin-top: 1.5rem;
       border: 0;
-      border-bottom: 1px solid;
       font-weight: normal;   
-      padding: 0 1px 2px;
-      min-height: 0;
+      padding-left: 0;
+      margin-top:3px;
+      text-decoration: underline;
       border-radius: 0;
       font-family: $font-open-sans !important;
-      background-image: linear-gradient(120deg, $green2 0%, $green2 100%);
+      background-image: linear-gradient(120deg,  $ssb-green-2 0%,  $ssb-green-2 100%);
       background-position: 0 100%;
       background-size: 100% 0;
       transition: 
@@ -263,14 +274,16 @@ footer {
       &:hover{
         text-decoration: none;
         background-size: 100% 100%;
-        color: $dark5
+        color: $ssb-dark-5
       }
 
-      @include media-breakpoint-down(md) {
-        display: grid;
-        justify-content: center;
-        text-align: center;
-      }
+    }
+    
+    @include media-breakpoint-down(lg) {
+      display: grid;
+      justify-content: center;
+      text-align: center;
+      margin-bottom: 40px;
     }
   }
 }
