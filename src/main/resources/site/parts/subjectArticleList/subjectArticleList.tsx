@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Title, Link, Button, Divider, Dropdown } from '@statisticsnorway/ssb-component-library'
-import { ChevronDown } from 'react-feather'
+import { ChevronDown, ChevronUp } from 'react-feather'
 import axios from 'axios'
 import { type SubjectArticleListProps } from '/lib/types/partTypes/subjectArticleList'
 import { type DropdownItem } from '/lib/types/partTypes/publicationArchive'
@@ -23,10 +23,11 @@ function SubjectArticleList(props: SubjectArticleListProps) {
     id: 'DESC',
   })
 
-  const { disableBtn, getCurrentElementRef, handleKeyboardNavigation, handleOnClick } = usePagination({
+  const { getCurrentElementRef, handleKeyboardNavigation, handleOnClick, showLess } = usePagination({
     list: articles,
     listItemsPerPage: props.count,
     onLoadMore: () => fetchMoreArticles(),
+    onLoadFirst: () => fetchArticlesStartOver(sort.id),
     totalCount: props.totalArticles,
   })
 
@@ -129,14 +130,16 @@ function SubjectArticleList(props: SubjectArticleListProps) {
   function renderShowMoreButton() {
     return (
       <div>
-        <Button
-          disabled={disableBtn}
-          className='button-more'
-          onClick={handleOnClick}
-          onKeyDown={handleKeyboardNavigation}
-        >
-          <ChevronDown size='18' />
-          {props.buttonTitle}
+        <Button className='button-more' onClick={handleOnClick} onKeyDown={handleKeyboardNavigation}>
+          {!showLess ? (
+            <>
+              <ChevronDown size='18' /> {props.showMore}
+            </>
+          ) : (
+            <>
+              <ChevronUp size='18' /> {props.showLess}
+            </>
+          )}
         </Button>
       </div>
     )
