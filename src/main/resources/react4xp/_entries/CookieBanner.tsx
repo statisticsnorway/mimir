@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { Button } from '@statisticsnorway/ssb-component-library'
+import React, { useEffect, useRef, useState } from 'react'
+import { Button, Link } from '@statisticsnorway/ssb-component-library'
 import { type CookieBannerProps } from '/lib/types/cookieBanner'
 
 const COOKIE_NAME = 'cookie-consent'
@@ -8,67 +8,95 @@ const SERVICE_URL = '/_/service/mimir/setCookieConsent'
 window.dataLayer = window.dataLayer || []
 window.gtag = window.gtag || function () {}
 
-function getCookie(): string | null {
-  const match = document.cookie.match(new RegExp(`(^|;\\s*)${COOKIE_NAME}=([^;]*)`))
-  return match ? match[2] : null
-}
-
-async function setCookieViaService(value: 'all' | 'necessary' | 'unidentified') {
-  try {
-    await fetch(`${SERVICE_URL}?value=${value}`, { credentials: 'include' })
-  } catch (e) {
-    console.error(`Failed to set cookie "${value}" via XP service`, e)
-  }
-}
-
-function CookieBanner(props: CookieBannerProps): JSX.Element | null {
-  const { language, phrases, baseUrl } = props
+function CookieBanner({ language, phrases, baseUrl }: CookieBannerProps): JSX.Element | null {
   const [visible, setVisible] = useState(false)
+  const sectionRef = useRef<HTMLElement>(null)
+  const lastCookieRef = useRef<string | null>(null)
 
-  useEffect(() => {
-    const cookie = getCookie()
+  const getCookie = (): string | null => {
+    const match = document.cookie.match(new RegExp(`(^|;\\s*)${COOKIE_NAME}=([^;]*)`))
+    return match ? match[2] : null
+  }
+
+  const setCookieViaService = async (value: 'all' | 'necessary' | 'unidentified') => {
+    try {
+      await fetch(`${SERVICE_URL}?value=${value}`, { credentials: 'include' })
+    } catch (e) {
+      console.error(`Failed to set cookie "${value}" via XP service`, e)
+    }
+  }
+
+  const updateVisibilityFromCookie = (cookie: string | null) => {
     if (!cookie) {
       setCookieViaService('unidentified')
       setVisible(true)
-    } else if (cookie === 'unidentified') {
-      setVisible(true)
+      lastCookieRef.current = 'unidentified'
+    } else {
+      setVisible(cookie === 'unidentified')
+      lastCookieRef.current = cookie
     }
+  }
+
+  useEffect(() => {
+    updateVisibilityFromCookie(getCookie())
+
+    const interval = setInterval(() => {
+      const current = getCookie()
+      if (current !== lastCookieRef.current) {
+        updateVisibilityFromCookie(current)
+      }
+    }, 500)
+
+    return () => clearInterval(interval)
   }, [])
 
-  function handleConsent(value: 'all' | 'necessary') {
+  useEffect(() => {
+    if (visible && sectionRef.current) {
+      sectionRef.current.focus()
+    }
+  }, [visible])
+
+  const handleConsent = (value: 'all' | 'necessary') => {
     setCookieViaService(value)
     setVisible(false)
+
+    const consentGranted = value === 'all'
 
     window.dataLayer.push({
       event: 'consent_update',
       consent: value,
-      ad_storage: value === 'all' ? 'granted' : 'denied',
-      analytics_storage: value === 'all' ? 'granted' : 'denied',
-      ad_personalization: value === 'all' ? 'granted' : 'denied',
-      functionality_storage: value === 'all' ? 'granted' : 'denied',
-      security_storage: 'granted',
     })
 
-    if (typeof window.gtag === 'function') {
-      window.gtag('consent', 'update', {
-        ad_storage: value === 'all' ? 'granted' : 'denied',
-        analytics_storage: value === 'all' ? 'granted' : 'denied',
-      })
-    }
+    window.gtag?.('consent', 'update', {
+      analytics_storage: consentGranted ? 'granted' : 'denied',
+    })
   }
 
   if (!visible) return null
 
-  const cookieLink = `${baseUrl}${language == 'en' ? '/en' : ''}/omssb/personvern`
+  const cookieLink = `${baseUrl}${language === 'en' ? '/en' : ''}/omssb/personvern`
 
   return (
-    <section className='cookie-banner' aria-label='Informasjonskapselvalg'>
+    <section
+      ref={sectionRef}
+      className='cookie-banner'
+      role='dialog'
+      aria-labelledby='cookie-banner-title'
+      aria-describedby='cookie-banner-text'
+      tabIndex={0}
+    >
       <div className='cookie-banner-content'>
-        <h3 className='cookie-banner-title'>{phrases.cookieBannerTitle}</h3>
-        <p className='cookie-banner-text'>{phrases.cookieBannerText}</p>
-        <a href={cookieLink} className='cookie-banner-link'>
+        <h3 className='cookie-banner-title' id='cookie-banner-title'>
+          {phrases.cookieBannerTitle}
+        </h3>
+        <p className='cookie-banner-text' id='cookie-banner-text'>
+          {phrases.cookieBannerText}
+        </p>
+
+        <Link href={cookieLink} className='cookie-banner-link' negative>
           {phrases.cookieBannerLinkText}
-        </a>
+        </Link>
+
         <div className='cookie-banner-buttons'>
           <Button className='cookie-button-accept' onClick={() => handleConsent('all')}>
             {phrases.cookieBannerAcceptButton}

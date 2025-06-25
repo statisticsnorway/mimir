@@ -1,43 +1,14 @@
 <html data-th-lang="${language.code}">
 
 <head>
-  <script>
-    // Ensure window.dataLayer exists
+  <script th:inline="javascript">
     window.dataLayer = window.dataLayer || [];
 
-    // Define a function to retrieve stored consent state from cookies
-    function getConsentState() {
-      const match = document.cookie.match(/(^|;\s*)cookie-consent=([^;]*)/);
-      return match ? match[2] : 'unidentified';
-    }
-
-    // Get initial consent state from cookies
-    const consentValue = getConsentState();
-
-    // Push initial consent state to dataLayer
-    window.dataLayer.push({
-      event: 'default_consent',
-      'gtm.allowlist': ['consent'],
-      consent: consentValue,
-      ad_storage: consentValue === 'all' ? 'granted' : 'denied',
-      analytics_storage: consentValue === 'all' ? 'granted' : 'denied',
-      ad_personalization: consentValue === 'all' ? 'granted' : 'denied',
-      functionality_storage: consentValue === 'all' ? 'granted' : 'denied',
-      security_storage: 'granted'
-    });
-
-    // Ensure window.gtag is initialized
     if (!window.gtag) {
       window.gtag = function () {
         window.dataLayer.push(arguments);
       };
     }
-
-    // Update Google Tag consent settings
-    window.gtag('consent', 'default', {
-      ad_storage: consentValue === 'all' ? 'granted' : 'denied',
-      analytics_storage: consentValue === 'all' ? 'granted' : 'denied'
-    });
   </script>
 
   <!-- Google Tag Manager -->
@@ -56,6 +27,7 @@
 
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta data-th-if="${dateModifiedMeta}" name="dateModified" data-th-content="${dateModifiedMeta}" />
   <meta data-th-if="${page.data.metaDescription}" name="description" data-th-content="${page.data.metaDescription}" />
   <title data-th-text="${pageTitle}"></title>
   <link rel="preload" data-th-href="${stylesUrl}" as="style" />
@@ -78,6 +50,9 @@
   </noscript>
   <!-- End Google Tag Manager (noscript) -->
 
+  <div id="cookieBanner"></div>
+  <div id="popup" data-th-if="${popupBody}"></div>
+
   <!-- HEADER -->
   <div class="header-wrapper" data-th-unless="${hideHeader}">
     <div class="container">
@@ -89,9 +64,6 @@
     </div>
   </div>
   <script type="application/ld+json" data-th-if="${jsonLd}" th:inline="javascript">[[${jsonLd}]]</script>
-
-  <div id="cookieBanner"></div>
-  <div id="popup" data-th-if="${popupBody}"></div>
 
   <!-- Metainfo to make the page searchable -->
   <div id="metainfo-container" data-th-if="${addMetaInfoSearch}"

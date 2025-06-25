@@ -29,6 +29,7 @@ function SimpleStatbank(props: SimpleStatbankProps) {
     placeholderDropdown,
     noNumberText,
     closeText,
+    dataFetchFailedError,
   } = props
 
   const [selectedValue, setSelectedValue] = useState<DropdownItem | null>(null)
@@ -138,7 +139,7 @@ function SimpleStatbank(props: SimpleStatbankProps) {
   }
 
   function addDropdown() {
-    const items = statbankApiData
+    const items = statbankApiData?.data
       ? statbankApiData.data.map((element) => ({
           id: `code_${element.dataCode}`,
           title: displayDropdown == 'text' ? element.displayName : `${element.dataCode}: ${element.displayName}`,
@@ -146,6 +147,7 @@ function SimpleStatbank(props: SimpleStatbankProps) {
           time: element.time,
         }))
       : []
+
     return (
       <Dropdown
         header={labelDropdown}
@@ -153,6 +155,8 @@ function SimpleStatbank(props: SimpleStatbankProps) {
         items={items}
         onSelect={handleChange}
         placeholder={placeholderDropdown ?? ''}
+        error={!statbankApiData?.data.length}
+        errorMessage={dataFetchFailedError}
       />
     )
   }
