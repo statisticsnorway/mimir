@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Title, Link, Button, Divider, Dropdown } from '@statisticsnorway/ssb-component-library'
 import { ChevronDown, ChevronUp } from 'react-feather'
 import axios from 'axios'
@@ -16,8 +16,6 @@ import { usePagination } from '/lib/ssb/utils/customHooks/paginationHooks'
 
 function SubjectArticleList(props: SubjectArticleListProps) {
   const [articles, setArticles] = useState(props.articles)
-  const [articleStart, setArticleStart] = useState(props.start)
-  const [loadedFirst, setLoadedFirst] = useState(true)
   const [sort, setSort] = useState({
     title: 'Nyeste',
     id: 'DESC',
@@ -36,19 +34,12 @@ function SubjectArticleList(props: SubjectArticleListProps) {
       ? `Showing ${articles.length} of ${props.totalArticles}`
       : `Viser ${articles.length} av ${props.totalArticles}`
 
-  useEffect(() => {
-    if (loadedFirst) {
-      setLoadedFirst(false)
-      setArticleStart(articleStart + props.count)
-    }
-  }, [])
-
   function fetchMoreArticles() {
     axios
       .get(props.articleServiceUrl, {
         params: {
           currentPath: props.currentPath,
-          start: articleStart,
+          start: articles.length,
           count: props.count,
           sort: sort.id,
           language: props.language,
@@ -57,13 +48,9 @@ function SubjectArticleList(props: SubjectArticleListProps) {
       .then((res) => {
         setArticles(articles.concat(res.data.articles))
       })
-      .finally(() => {
-        setArticleStart((prevState) => prevState + props.count)
-      })
   }
 
   function fetchArticlesStartOver(order: string) {
-    setArticleStart(props.start)
     axios
       .get(props.articleServiceUrl, {
         params: {
@@ -76,7 +63,6 @@ function SubjectArticleList(props: SubjectArticleListProps) {
       })
       .then((res) => {
         setArticles(res.data.articles)
-        setLoadedFirst(true)
       })
   }
 
