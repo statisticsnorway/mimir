@@ -38,15 +38,18 @@
   .ssb-link.negative {
     color: $ssb-white !important;
     border-bottom-color: $ssb-white !important;
-    background-image: linear-gradient(120deg, $ssb-green-3 0%, $ssb-green-3 100%) !important;
+    background-image: linear-gradient(120deg, $ssb-white 0%, $ssb-white 100%) !important;
     
     .link-text {
       color: $ssb-white !important;
+      &:hover,
+      &:focus {
+        color: $ssb-green-4 !important;
+      }
     }
 
     &:hover,
     &:focus {
-      color: $ssb-dark-4 !important;
       border-bottom-color: transparent;
     }
   }

@@ -200,7 +200,7 @@ export function get(req: XP.Request): XP.Response {
     : {}
 
   const footerContent: FooterContent | unknown = fromMenuCache(req, `footer_${menuCacheLanguage}`, () => {
-    return getFooterContent(language)
+    return getFooterContent(language, baseUrl)
   })
   const footer = r4xpRender(
     'Footer',
