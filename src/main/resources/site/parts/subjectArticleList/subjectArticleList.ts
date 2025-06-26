@@ -62,7 +62,7 @@ function renderPart(req: XP.Request) {
     articleServiceUrl: articleServiceUrl,
     currentPath: currentPath,
     start: 0,
-    count: count,
+    count,
     showSortAndFilter: filterAndSortEnabled,
     language: language,
     articles: preparedArticles,
