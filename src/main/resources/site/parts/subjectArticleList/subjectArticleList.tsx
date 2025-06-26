@@ -15,69 +15,89 @@ import { usePagination } from '/lib/ssb/utils/customHooks/paginationHooks'
 */
 
 function SubjectArticleList(props: SubjectArticleListProps) {
-  const [articles, setArticles] = useState(props.articles)
+  const {
+    articles,
+    count,
+    totalArticles,
+    currentPath,
+    language,
+    articleServiceUrl,
+    start,
+    showMore,
+    showLess,
+    title,
+    showSortAndFilter,
+  } = props
+
+  const [articleList, setArticleList] = useState(articles)
   const [sort, setSort] = useState({
     title: 'Nyeste',
     id: 'DESC',
   })
 
-  const { getCurrentElementRef, handleKeyboardNavigation, handleOnClick, showLess, hideBtn } = usePagination({
-    list: articles,
-    listItemsPerPage: props.count,
+  const {
+    getCurrentElementRef,
+    handleKeyboardNavigation,
+    handleOnClick,
+    showLess: showLessBtn,
+    hideBtn,
+  } = usePagination({
+    list: articleList,
+    listItemsPerPage: count,
     onLoadMore: () => fetchMoreArticles(),
     onLoadFirst: () => fetchArticlesStartOver(sort.id),
-    totalCount: props.totalArticles,
+    totalCount: totalArticles,
   })
 
   const showCountLabel =
-    props.language == 'en'
-      ? `Showing ${articles.length} of ${props.totalArticles}`
-      : `Viser ${articles.length} av ${props.totalArticles}`
+    language == 'en'
+      ? `Showing ${articleList.length} of ${totalArticles}`
+      : `Viser ${articleList.length} av ${totalArticles}`
 
   function fetchMoreArticles() {
     axios
-      .get(props.articleServiceUrl, {
+      .get(articleServiceUrl, {
         params: {
-          currentPath: props.currentPath,
-          start: articles.length,
-          count: props.count,
+          currentPath: currentPath,
+          start: articleList.length,
+          count,
           sort: sort.id,
-          language: props.language,
+          language,
         },
       })
       .then((res) => {
-        setArticles(articles.concat(res.data.articles))
+        setArticleList(articleList.concat(res.data.articles))
       })
   }
 
   function fetchArticlesStartOver(order: string) {
     axios
-      .get(props.articleServiceUrl, {
+      .get(articleServiceUrl, {
         params: {
-          currentPath: props.currentPath,
-          start: props.start,
-          count: props.count,
+          currentPath,
+          start,
+          count,
           sort: order,
-          language: props.language,
+          language,
         },
       })
       .then((res) => {
-        setArticles(res.data.articles)
+        setArticleList(res.data.articles)
       })
   }
 
   function renderArticles() {
     return (
       <ol className='list-unstyled'>
-        {articles.map((article, i) => {
+        {articleList.map(({ title, url, preface, publishDate, publishDateHuman }, i) => {
           return (
-            <li key={`${article.title}-${i}`}>
+            <li key={`${title}-${i}`}>
               {/* deepcode ignore DOMXSS: url comes from pageUrl which escapes + Reacts own escaping */}
-              <Link ref={getCurrentElementRef(i)} href={article.url} linkType='header' headingSize={3} standAlone>
-                {article.title}
+              <Link ref={getCurrentElementRef(i)} href={url} linkType='header' headingSize={3} standAlone>
+                {title}
               </Link>
-              <p className='truncate-2-lines'>{article.preface}</p>
-              <time dateTime={article.publishDate}>{article.publishDateHuman}</time>
+              <p className='truncate-2-lines'>{preface}</p>
+              <time dateTime={publishDate}>{publishDateHuman}</time>
             </li>
           )
         })}
@@ -86,7 +106,7 @@ function SubjectArticleList(props: SubjectArticleListProps) {
   }
 
   function renderSortAndFilter() {
-    if (props.showSortAndFilter) {
+    if (showSortAndFilter) {
       return (
         <div className='col-md-6 col-12'>
           <span className='mb-3'>Sorter innholdet</span>
@@ -118,13 +138,13 @@ function SubjectArticleList(props: SubjectArticleListProps) {
       return (
         <div>
           <Button className='button-more' onClick={handleOnClick} onKeyDown={handleKeyboardNavigation}>
-            {!showLess ? (
+            {!showLessBtn ? (
               <>
-                <ChevronDown size='18' /> {props.showMore}
+                <ChevronDown size='18' /> {showMore}
               </>
             ) : (
               <>
-                <ChevronUp size='18' /> {props.showLess}
+                <ChevronUp size='18' /> {showLess}
               </>
             )}
           </Button>
@@ -137,7 +157,7 @@ function SubjectArticleList(props: SubjectArticleListProps) {
     <section className='subject-article-list container-fluid'>
       <div className='container'>
         <div className='row'>
-          <Title size={2}>{props.title}</Title>
+          <Title size={2}>{title}</Title>
         </div>
         <div className='row justify-content-md-center'>
           {renderSortAndFilter()}
