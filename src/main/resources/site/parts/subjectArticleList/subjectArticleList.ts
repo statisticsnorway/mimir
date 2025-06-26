@@ -49,11 +49,16 @@ function renderPart(req: XP.Request) {
     key: 'showLess',
     locale: language === 'nb' ? 'no' : language,
   })
+  const showCount: string = localize({
+    key: 'publicationArchive.showing',
+    locale: language === 'nb' ? 'no' : language,
+  })
 
   const props: SubjectArticleListProps = {
     title: headerText,
     showMore,
     showLess,
+    showCount,
     articleServiceUrl: articleServiceUrl,
     currentPath: currentPath,
     start: 0,
@@ -61,7 +66,7 @@ function renderPart(req: XP.Request) {
     showSortAndFilter: filterAndSortEnabled,
     language: language,
     articles: preparedArticles,
-    totalArticles: totalArticles,
+    totalArticles,
   }
 
   return render('site/parts/subjectArticleList/subjectArticleList', props, req)

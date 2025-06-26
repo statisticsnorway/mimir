@@ -25,6 +25,7 @@ function SubjectArticleList(props: SubjectArticleListProps) {
     start,
     showMore,
     showLess,
+    showCount,
     title,
     showSortAndFilter,
   } = props
@@ -49,10 +50,7 @@ function SubjectArticleList(props: SubjectArticleListProps) {
     totalCount: totalArticles,
   })
 
-  const showCountLabel =
-    language == 'en'
-      ? `Showing ${articleList.length} of ${totalArticles}`
-      : `Viser ${articleList.length} av ${totalArticles}`
+  const showCountLabel = `${showCount.replaceAll('{0}', articleList.length.toString())} ${totalArticles}`
 
   function fetchMoreArticles() {
     axios

@@ -4,6 +4,7 @@ export interface SubjectArticleListProps {
   title: string
   showMore: string
   showLess: string
+  showCount: string
   articleServiceUrl: string
   currentPath: string
   start: number
