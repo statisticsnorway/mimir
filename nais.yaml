@@ -24,24 +24,54 @@ spec:
     outbound:
       external:
         - host: market.enonic.com
+          ports:
+            - port: 443
         - host: repo.enonic.com
+          ports:
+            - port: 443
         - host: github.com
+          ports:
+            - port: 22
+            - port: 9418
         - host: raw.githubusercontent.com
-
+          ports:
+            - port: 22
+            - port: 443
+        - host: www.qa.ssb.no
+          ports:
+            - port: 443
+        - host: i.qa.ssb.no
+          ports:
+            - port: 443
+        - host: ext-i.qa.ssb.no
+          ports:
+            - port: 443
+        - host: data.qa.ssb.no
+          ports:
+            - port: 443
+        - host: statreg-rapport.staging.ssb.no
+          ports:
+            - port: 443
   resources:
     limits:
-      memory: 2Gi
+      memory: 4Gi
     requests:
-      memory: 1Gi
+      memory: 2Gi
 
-  ttl: 1h
+  ttl: 168h
 
   prometheus:
     enabled: false
 
+  envFrom:
+    - secret: gitpull-config
+  filesFrom:
+    - secret: gitpull-key-private
+      mountPath: /enonic-xp/home/config/ssh
+
   env:
     - name: VHOST_HOST
-      value: ssbno-{{branch}}.external.test.ssb.cloud.nais.io
+      value: ssbno-{{branch}}.intern.test.ssb.no
 
   ingresses:
-    - https://ssbno-{{branch}}.external.test.ssb.cloud.nais.io # must match vhost
+    - https://ssbno-{{branch}}.intern.test.ssb.no # must match vhost

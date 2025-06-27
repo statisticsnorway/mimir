@@ -1,8 +1,8 @@
 import React from 'react'
 import { Link } from '@statisticsnorway/ssb-component-library'
 import { ArrowRight } from 'react-feather'
-import { sanitize } from '../../../lib/ssb/utils/htmlUtils'
-import { RelatedKostraProps } from '../../../lib/types/partTypes/relatedKostra'
+import { sanitize } from '/lib/ssb/utils/htmlUtils'
+import { RelatedKostraProps } from '/lib/types/partTypes/relatedKostra'
 
 const RelatedKostra = (props: RelatedKostraProps) => {
   const { title, description, href, children, linkType } = props

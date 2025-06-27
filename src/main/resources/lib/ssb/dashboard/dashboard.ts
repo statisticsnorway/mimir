@@ -23,7 +23,6 @@ import {
   queryJobLogs,
   getJobLog,
   JobNames,
-  PushRSSResult,
 } from '/lib/ssb/repo/job'
 import { StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
 import { StatRegRefreshResult } from '/lib/ssb/repo/statreg'
@@ -41,7 +40,6 @@ import { getNameSearchGraphDatasetId } from '/lib/ssb/dataset/calculator'
 import { type Page, type Statistics } from '/site/content-types'
 import { type Default as DefaultPageConfig } from '/site/pages/default'
 import { type DataSource } from '/site/mixins/dataSource'
-import { RssResult } from '../cron/pushRss'
 
 export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): void {
   socket.on('get-error-data-sources', () => {
@@ -398,12 +396,7 @@ function getJobs(): Array<DashboardJobInfo> {
 
 function parseResult(
   jobLog: JobInfoNode
-):
-  | Array<DashboardPublishJobResult>
-  | Array<StatRegJobInfo>
-  | DatasetRefreshResult
-  | CalculatorRefreshResult
-  | PushRSSResult {
+): Array<DashboardPublishJobResult> | Array<StatRegJobInfo> | DatasetRefreshResult | CalculatorRefreshResult {
   if (jobLog.data.task === JobNames.PUBLISH_JOB) {
     const refreshDataResult = util.data.forceArray(
       jobLog.data.refreshDataResult || []
@@ -419,13 +412,11 @@ function parseResult(
     return getRefreshDatasetJobParsedResult(result)
   } else if (
     jobLog.data.task === JobNames.REFRESH_DATASET_CALCULATOR_JOB ||
-    jobLog.data.task === JobNames.REFRESH_DATASET_SDDS_TABLES_JOB
+    jobLog.data.task === JobNames.REFRESH_DATASET_SDDS_TABLES_JOB ||
+    jobLog.data.task === JobNames.REFRESH_DATASET_FRONTPAGE_KEYFIGURES_JOB
   ) {
     const result = jobLog.data.refreshDataResult as CalculatorRefreshResult | undefined
     return getCalculatorAndSDDSTablesJobParsedResult(result)
-  } else if (jobLog.data.task === JobNames.PUSH_RSS_NEWS || jobLog.data.task === JobNames.PUSH_RSS_STATKAL) {
-    const result = jobLog.data.refreshDataResult as RssResult
-    return getRSSJobsParsedResult(result)
   }
   return []
 }
@@ -450,6 +441,7 @@ function getPublishJobParsedResult(refreshDataResult: Array<StatisticsPublishRes
             datasetType: dataSource?.data?.dataSource?._selected,
             datasetKey: dataSource ? extractKey(dataSource) : null,
           }
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (e) {
           return {
             id: ds.id,
@@ -520,20 +512,6 @@ function getCalculatorAndSDDSTablesJobParsedResult(result: CalculatorRefreshResu
     return ds
   })
   return result
-}
-
-function getRSSJobsParsedResult(result: RssResult): PushRSSResult {
-  if (!result) {
-    return {
-      result: [],
-    }
-  }
-  return {
-    result: util.data.forceArray({
-      ...result,
-      hasError: showWarningIcon(result?.status as Events),
-    }),
-  }
 }
 
 function prepDataSources(dataSources: Array<Content<DataSource>>): Array<DashboardDataSource> {
@@ -762,8 +740,8 @@ interface QueryLogNode extends Node {
 
 interface DashboardRefreshResult {
   id: string
-  dataset: DashboardRefreshResultDataset | {}
-  logData: DashboardRefreshResultLogData | {}
+  dataset: DashboardRefreshResultDataset | object
+  logData: DashboardRefreshResultLogData | object
 }
 
 interface DashboardRefreshResultDataset {

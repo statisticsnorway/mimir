@@ -69,11 +69,6 @@
                     <occurrences minimum="1" maximum="1"/>
                     <default>https://www.facebook.com/statistisksentralbyra/</default>
                 </input>
-                <input name="twitterUrl" type="TextLine" >
-                    <label>Lenke Twitter</label>
-                    <occurrences minimum="1" maximum="1"/>
-                    <default>https://twitter.com/ssbnytt</default>
-                </input>
                 <input name="linkedinUrl" type="TextLine" >
                     <label>Lenke Linkedin</label>
                     <occurrences minimum="1" maximum="1"/>

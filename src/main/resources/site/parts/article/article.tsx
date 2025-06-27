@@ -1,7 +1,7 @@
 import React from 'react'
 import { Title, Link, Divider } from '@statisticsnorway/ssb-component-library'
-import { sanitize } from '../../../lib/ssb/utils/htmlUtils'
-import { type ArticleProps } from '../../../lib/types/partTypes/article'
+import { sanitize } from '/lib/ssb/utils/htmlUtils'
+import { type ArticleProps } from '/lib/types/partTypes/article'
 
 function Article(props: ArticleProps) {
   const phrases = props.phrases
@@ -21,7 +21,7 @@ function Article(props: ArticleProps) {
   }
 
   function renderSNRDates() {
-    const { serialNumber, showPubDate, pubDate, modifiedDate } = props
+    const { serialNumber, showPubDate, pubDate, modifiedDate, modifiedDateIso } = props
 
     return (
       <div className='snr-dates-wrapper col-12 col-lg-8 p-0 searchabletext'>
@@ -35,7 +35,7 @@ function Article(props: ArticleProps) {
         {modifiedDate && (
           <p>
             <span className='fw-bold'>{phrases.modified}:</span>
-            {` ${modifiedDate}`}
+            <time dateTime={modifiedDateIso}>{` ${modifiedDate}`}</time>
           </p>
         )}
       </div>

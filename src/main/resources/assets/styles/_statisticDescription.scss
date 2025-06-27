@@ -1,0 +1,51 @@
+.statistic-description {
+  margin-top: 4.5rem;
+
+  .content-wrapper {
+    background-color: white;
+    padding: 1.5rem 2.5rem 4.5rem;
+    border-radius: 32px;
+  }
+
+  .title-wrapper {
+    margin-bottom: 2rem;
+    margin-top: 1.5rem;
+    align-items: center;
+
+    h2 {
+      margin-bottom: 0;
+      margin-right: 0.5rem;
+    }
+  }
+
+  .om-statistikken-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .selected-category {
+    .ssb-expansion-box.sneak-peek .content.closed {
+      max-height: 8rem;
+    }
+
+    .ssb-nested-accordion {
+      min-width: auto;
+    }
+  }
+
+  @include media-breakpoint-down(md) {
+    margin-top: 3rem;
+    border-radius: 22px;
+
+    .content-wrapper {
+      padding: 1rem 1rem 2rem;
+    }
+
+    .title-wrapper {
+      margin-top: 1rem;
+    }
+  }
+}

@@ -1,0 +1,143 @@
+.statistic-figures {
+  .content-wrapper {
+    background-color: white;
+    padding: 1.5rem 2.5rem 4.5rem;
+    border-radius: 32px;
+  }
+
+  .title-wrapper {
+    margin-bottom: 2rem;
+    margin-top: 1.5rem;
+    align-items: center;
+
+    h2 {
+      margin-bottom: 0;
+      margin-right: 0.5rem;
+    }
+  }
+
+  .part-accordion {
+    .row {
+      margin-right: 0;
+      margin-left: 0;
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .accordion-header {
+      .sub-header {
+        width: 75px;
+      }
+    }
+
+    .accordion-body {
+      padding-right: 0;
+    }
+
+    .part-table {
+      width: 100%;
+
+      .ssb-link {
+        margin-top: 1rem;
+      }
+
+      .source {
+        & > * {
+          padding-left: 0;
+        }
+
+        .ssb-link {
+          margin-top: 0;
+        }
+      }
+    }
+  }
+
+  .statbank-box {
+    padding: 3rem 2rem 0 2rem;
+
+    .content {
+      align-items: center;
+      background: $ssb-white;
+      border: 1px solid $ssb-dark-2;
+      border-top: 5px solid $ssb-green-3;
+      display: flex;
+      padding: 1.5rem;
+      width: 100%;
+
+      .icon-wrapper {
+        img {
+          width: 80px;
+          height: 110px;
+        }
+
+        @include media-breakpoint-down(md) {
+          text-align: center;
+          margin-bottom: 0.5rem;
+        }
+      }
+
+      .title-text-wrapper {
+        margin-left: 2.5rem;
+
+        .title {
+          color: $ssb-dark-6;
+          display: block;
+          font-family: 'Roboto', sans-serif;
+          font-weight: bold;
+          font-size: 1.25rem;
+          margin-bottom: 0.5rem;
+        }
+      }
+
+      &:focus,
+      &:hover {
+        outline: $ssb-purple-3 solid 2px;
+        outline-offset: 1px;
+      }
+
+      .arrow-icon {
+        color: $ssb-green-3;
+        margin-left: auto;
+
+        @include media-breakpoint-down(md) {
+          display: none;
+        }
+      }
+    }
+  }
+
+  @include media-breakpoint-down(md) {
+    border-radius: 22px;
+
+    .content-wrapper {
+      padding: 1rem 1rem 2rem;
+    }
+
+    .title-wrapper {
+      margin-top: 1rem;
+    }
+
+    .part-accordion {
+      .hide-show-btn {
+        margin-bottom: 2rem;
+      }
+    }
+
+    .statbank-box {
+      padding: 2rem 0 1rem 0;
+
+      .content {
+        display: block;
+
+        .title-text-wrapper {
+          margin-left: 0;
+        }
+      }
+    }
+  }
+}

@@ -1,14 +1,15 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Divider, Link, Title, Text, Dropdown } from '@statisticsnorway/ssb-component-library'
 import { NumericFormat } from 'react-number-format'
 import { ChevronDown } from 'react-feather'
 import axios from 'axios'
-import { sanitize } from '../../../lib/ssb/utils/htmlUtils'
+import { sanitize } from '/lib/ssb/utils/htmlUtils'
 import {
   type DropdownItem,
   type PublicationArchiveProps,
   type PublicationItem,
-} from '../../../lib/types/partTypes/publicationArchive'
+} from '/lib/types/partTypes/publicationArchive'
+import { usePagination } from '/lib/ssb/utils/customHooks/paginationHooks'
 
 function PublicationArchive(props: PublicationArchiveProps) {
   const {
@@ -33,10 +34,15 @@ function PublicationArchive(props: PublicationArchiveProps) {
     mainSubject: '',
     articleType: '',
   })
-  const [keyboardNavigation, setKeyboardNavigation] = useState(false)
 
-  const currentElement = useRef<HTMLAnchorElement>(null)
   const ADDITIONAL_PUBLICATIONS_LENGTH = 10
+  const { disableBtn, getCurrentElementRef, handleKeyboardNavigation, handleOnClick } = usePagination({
+    list: publications,
+    listItemsPerPage: ADDITIONAL_PUBLICATIONS_LENGTH,
+    loading,
+    onLoadMore: () => fetchPublications(),
+    totalCount: total,
+  })
 
   useEffect(() => {
     if (first) {
@@ -46,12 +52,6 @@ function PublicationArchive(props: PublicationArchiveProps) {
       fetchPublicationsFiltered()
     }
   }, [filter])
-
-  useEffect(() => {
-    if (keyboardNavigation) {
-      currentElement.current?.focus()
-    }
-  }, [publications])
 
   function onChange(id: string, value: DropdownItem) {
     setFilterChanged(true)
@@ -116,11 +116,7 @@ function PublicationArchive(props: PublicationArchiveProps) {
       return (
         <div key={i} className='row mb-5'>
           <div className='col'>
-            <Link
-              ref={i === publications.length - ADDITIONAL_PUBLICATIONS_LENGTH ? currentElement : null}
-              href={publication.url}
-              className='ssb-link header'
-            >
+            <Link ref={getCurrentElementRef(i)} href={publication.url} linkType='header' headingSize={2}>
               {publication.title}
             </Link>
 
@@ -217,52 +213,39 @@ function PublicationArchive(props: PublicationArchiveProps) {
 
   return (
     <section className='publication-archive container-fluid'>
-      <div className='row'>
-        <div className='col-12 publication-archive-head py-5 px-2'>
-          <div className='container'>
-            <div className='row'>
-              <div className='col-12'>
-                <Title>{title}</Title>
-                <div
-                  className='publication-archive-ingress'
-                  dangerouslySetInnerHTML={{
-                    __html: sanitize(ingress.replace(/&nbsp;/g, ' ')),
-                  }}
-                ></div>
-                {renderFilter()}
-              </div>
+      <div className='publication-archive-head'>
+        <div className='container py-5'>
+          <Title>{title}</Title>
+          <div
+            className='publication-archive-ingress'
+            dangerouslySetInnerHTML={{
+              __html: sanitize(ingress.replace(/&nbsp;/g, ' ')),
+            }}
+          ></div>
+          {renderFilter()}
+        </div>
+      </div>
+
+      <div className='col-12 publication-archive-body mt-5'>
+        <div className='container mb-5'>
+          <div className='row'>
+            <div className='col'>
+              {showingPhrase.replace('{0}', publications.length.toString())}&nbsp;
+              <NumericFormat value={Number(total)} displayType='text' thousandSeparator=' ' />
+              <Divider className='mb-4' dark></Divider>
             </div>
           </div>
-        </div>
-        <div className='col-12 publication-archive-body mt-5'>
-          <div className='container mb-5'>
-            <div className='row'>
-              <div className='col'>
-                {showingPhrase.replace('{0}', publications.length.toString())}&nbsp;
-                <NumericFormat value={Number(total)} displayType='text' thousandSeparator=' ' />
-                <Divider className='mb-4' dark></Divider>
-              </div>
-            </div>
-            {renderPublications()}
-            {renderLoading()}
-            <div>
-              <Button
-                disabled={loading || total === publications.length}
-                className='button-more mt-5'
-                onClick={() => {
-                  setKeyboardNavigation(false)
-                  fetchPublications()
-                }}
-                onKeyDown={(e: React.KeyboardEvent<HTMLButtonElement>) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    setKeyboardNavigation(true)
-                    fetchPublications()
-                  }
-                }}
-              >
-                <ChevronDown size='18' /> {buttonTitle}
-              </Button>
-            </div>
+          {renderPublications()}
+          {renderLoading()}
+          <div>
+            <Button
+              disabled={disableBtn}
+              className='button-more mt-5'
+              onClick={handleOnClick}
+              onKeyDown={handleKeyboardNavigation}
+            >
+              <ChevronDown size='18' /> {buttonTitle}
+            </Button>
           </div>
         </div>
       </div>

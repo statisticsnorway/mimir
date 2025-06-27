@@ -77,7 +77,12 @@ export function get(req: XP.Request): XP.Response {
   if (!page) return { status: 404 }
 
   const pageConfig: DefaultPageConfig = page.page?.config
-
+  const pageType: string = pageConfig?.pageType || 'default'
+  const baseUrl: string =
+    app.config && app.config['ssb.baseUrl'] ? (app.config['ssb.baseUrl'] as string) : 'https://www.ssb.no'
+  let canonicalUrl: string | undefined = `${baseUrl}${pageUrl({
+    path: page._path,
+  })}`
   const ingress: string | undefined = page.data.ingress
     ? processHtml({
         value: page.data.ingress.replace(/&nbsp;/g, ' '),
@@ -162,8 +167,40 @@ export function get(req: XP.Request): XP.Response {
     }
   }
 
+  //popup-component
+  const isPopupEnabled = isEnabled('show-popup-survey', false, 'ssb') //
+  const popupComponent = isPopupEnabled
+    ? r4xpRender('Popup', {}, req, { id: 'popup', body: '<div id="popup"></div>', pageContributions })
+    : undefined
+  if (popupComponent) {
+    pageContributions = popupComponent.pageContributions
+  }
+
+  //cookieBanner
+  const isCookieBannerEnabled = isEnabled('show-cookie-banner', false, 'ssb')
+  const cookieBannerComponent = isCookieBannerEnabled
+    ? r4xpRender('CookieBanner', { language: language.code, phrases: language.phrases, baseUrl }, req, {
+        id: 'cookieBanner',
+        pageContributions,
+      })
+    : undefined
+  if (cookieBannerComponent?.pageContributions) {
+    pageContributions = cookieBannerComponent.pageContributions
+  }
+  const cookies = !isCookieBannerEnabled
+    ? {
+        'cookie-consent': {
+          value: '',
+          path: '/',
+          maxAge: 0,
+          sameSite: 'lax',
+          secure: false,
+        },
+      }
+    : {}
+
   const footerContent: FooterContent | unknown = fromMenuCache(req, `footer_${menuCacheLanguage}`, () => {
-    return getFooterContent(language)
+    return getFooterContent(language, baseUrl)
   })
   const footer = r4xpRender(
     'Footer',
@@ -188,12 +225,6 @@ export function get(req: XP.Request): XP.Response {
     municipality = getMunicipality(req as RequestWithCode)
   }
 
-  const pageType: string = pageConfig?.pageType || 'default'
-  const baseUrl: string =
-    app.config && app.config['ssb.baseUrl'] ? (app.config['ssb.baseUrl'] as string) : 'https://www.ssb.no'
-  let canonicalUrl: string | undefined = `${baseUrl}${pageUrl({
-    path: page._path,
-  })}`
   let municipalPageType: string | undefined
   if (pageType === 'municipality') {
     if (page._path.includes('/kommunefakta/')) {
@@ -221,8 +252,6 @@ export function get(req: XP.Request): XP.Response {
     metaInfo.addMetaInfoSearch && isEnabled('structured-data', false, 'ssb')
       ? prepareStructuredData(metaInfo, page)
       : undefined
-  const pageMap: string | undefined =
-    metaInfo.addMetaInfoSearch && isEnabled('pageMap', false, 'ssb') ? preparePageMap(metaInfo, page) : undefined
 
   const statbankFane: boolean = req.params.xpframe === 'statbank'
   const statBankContent: StatbankFrameData = parseStatbankFrameContent(statbankFane, req, page)
@@ -261,11 +290,14 @@ export function get(req: XP.Request): XP.Response {
     ...metaInfo,
     metaInfoMainSubjects: metaInfo.metaInfoMainSubjects?.join(';'),
     jsonLd,
-    pageMap,
     breadcrumbsReactId: breadcrumbId,
     hideHeader,
     hideBreadcrumb,
     tableView: page.type === 'mimir:table',
+    popupBody: popupComponent?.body,
+    dateModifiedMeta: page.data.showModifiedDate?.dateOption?.modifiedDate
+      ? new Date(page.data.showModifiedDate.dateOption.modifiedDate).toISOString()
+      : undefined,
   }
 
   const thymeleafRenderBody = render(view, model)
@@ -316,6 +348,7 @@ export function get(req: XP.Request): XP.Response {
     headers: {
       'x-content-key': page._id,
     },
+    cookies,
   } as XP.Response
 }
 
@@ -354,8 +387,8 @@ function prepareStructuredData(metaInfo: MetaInfoData, page: DefaultPage): Artic
     additionalType: metaInfo.metaInfoSearchContentType,
     headline: metaInfo.metaInfoTitle,
     datePublished: metaInfo.metaInfoSearchPublishFrom,
-    dateModified: page.data.showModifiedDate?.dateOption?.showModifiedTime
-      ? page.data.showModifiedDate.dateOption.modifiedDate
+    dateModified: page.data.showModifiedDate?.dateOption?.modifiedDate
+      ? new Date(page.data.showModifiedDate.dateOption.modifiedDate).toISOString()
       : undefined,
     author: page.data.authorItemSet
       ? ensureArray(page.data.authorItemSet).map((f) => {
@@ -366,50 +399,20 @@ function prepareStructuredData(metaInfo: MetaInfoData, page: DefaultPage): Artic
           }
         })
       : undefined,
+    publisher: {
+      '@type': 'Organization',
+      name: 'Statistisk sentralbyrå',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://www.ssb.no/_/asset/mimir:0000018b60c47e20/SSB_logo_black.svg',
+      },
+    },
     description: metaInfo.metaInfoDescription
       ? metaInfo.metaInfoDescription
       : page.x['com-enonic-app-metafields']?.['meta-data']?.seoDescription || undefined,
     articleSection: metaInfo.metaInfoMainSubjects?.toString(),
     keywords: metaInfo.metaInfoSearchKeywords,
   }
-}
-
-function preparePageMap(metainfo: MetaInfoData, page: DefaultPage): string {
-  const keywords = metainfo.metaInfoSearchKeywords
-    ? `<Attribute name="keywords" value="${metainfo.metaInfoSearchKeywords}"/>`
-    : ''
-  const author = page.data.authorItemSet
-    ? `<Attribute name="author" value="${ensureArray(page.data.authorItemSet)[0].name}"/>`
-    : ''
-  const category = metainfo.metaInfoMainSubjects
-    ? metainfo.metaInfoMainSubjects
-        .map((subject) => {
-          return `<Attribute name="category" value="${subject}"/>`
-        })
-        .join('\n')
-    : ''
-  const contentType = metainfo.metaInfoSearchContentType
-    ? `<Attribute name="contenttype" value="${metainfo.metaInfoSearchContentType}"/>`
-    : ''
-  const description = metainfo.metaInfoDescription
-    ? metainfo.metaInfoDescription
-    : page.x['com-enonic-app-metafields']?.['meta-data']?.seoDescription || ''
-  return `<!--
-    <PageMap>
-      <DataObject type="publication">
-        <Attribute name="description">${description}</Attribute>
-        ${author}
-        <Attribute name="date" value="${
-          page.data.showModifiedDate?.dateOption?.showModifiedTime
-            ? page.data.showModifiedDate.dateOption.modifiedDate
-            : metainfo.metaInfoSearchPublishFrom
-        }"/>
-        ${category}
-        ${contentType}
-        ${keywords}
-      </DataObject>
-    </PageMap>
-  -->`
 }
 
 function parseMetaInfoData(
@@ -595,8 +598,13 @@ function parseStatbankFrameContent(statbankFane: boolean, req: XP.Request, page:
     key: 'statbankFrontPage',
     locale: pageLanguage === 'nb' ? 'no' : pageLanguage,
   })
+  const statbankTitle: string = localize({
+    key: 'statbankTitle.title',
+    locale: pageLanguage === 'nb' ? 'no' : pageLanguage,
+  })
 
   return {
+    statbankTitle,
     statbankHelpText,
     statbankHelpLink,
     statbankFrontPage,
@@ -699,6 +707,7 @@ interface MetaInfoData {
 }
 
 export interface StatbankFrameData {
+  statbankTitle: string
   statbankHelpText: string
   statbankHelpLink: string
   statbankFrontPage: string
@@ -725,7 +734,6 @@ interface DefaultModel {
   GTM_TRACKING_ID: string | null
   GTM_AUTH: string | null
   jsonLd: Article | undefined
-  pageMap: string | undefined
   headerBody: string | undefined
   footerBody: string | undefined
   metaInfoMainSubjects: string | undefined
@@ -733,4 +741,6 @@ interface DefaultModel {
   hideHeader: boolean
   hideBreadcrumb: boolean
   tableView: boolean
+  popupBody: string | undefined
+  dateModifiedMeta?: string
 }

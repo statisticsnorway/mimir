@@ -2,7 +2,7 @@ import { getComponent, getContent, serviceUrl, pageUrl } from '/lib/xp/portal'
 import { type Content } from '/lib/xp/content'
 import { localize } from '/lib/xp/i18n'
 import { type Language, type Phrases } from '/lib/types/language'
-import { allMonths, monthLabel, nextPeriod } from '/lib/ssb/utils/calculatorUtils'
+import { nextPeriod } from '/lib/ssb/utils/calculatorUtils'
 import { type CalculatorPeriod } from '/lib/types/calculator'
 import { type DropdownItems } from '/lib/types/components'
 import { type Dataset, type Dimension } from '/lib/types/jsonstat-toolkit'
@@ -13,6 +13,7 @@ import { getLanguage } from '/lib/ssb/utils/language'
 import { getCalculatorConfig, getBkibolDatasetEnebolig } from '/lib/ssb/dataset/calculator'
 import { fromPartCache } from '/lib/ssb/cache/partCache'
 import { type BkibolCalculatorProps } from '/lib/types/partTypes/bkibolCalculator'
+import { allMonths, monthLabel } from '/lib/ssb/utils/calculatorLocalizationUtils'
 import { type CalculatorConfig } from '/site/content-types'
 import { type BkibolCalculator as BkibolCalculatorPartConfig } from '.'
 
@@ -99,7 +100,6 @@ function getBkibolCalculatorComponent(req: XP.Request, page: Content<BkibolCalcu
 }
 
 function lastPeriod(bkibolData: Dataset | null): CalculatorPeriod {
-  // eslint-disable-next-line new-cap
   const bkiBolDataDimension: Dimension | null = bkibolData?.Dimension('Tid') as Dimension
   const dataTime: string[] = bkiBolDataDimension ? (bkiBolDataDimension.id as string[]) : []
   const lastTimeItem: string = dataTime[dataTime.length - 1]

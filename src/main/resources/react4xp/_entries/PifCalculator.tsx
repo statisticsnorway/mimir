@@ -4,7 +4,7 @@ import { Input, Button, Dropdown, Divider, FormError, Link, RadioGroup } from '@
 import axios from 'axios'
 import { NumericFormat } from 'react-number-format'
 import { X } from 'react-feather'
-import { PifCalculatorProps } from '../../lib/types/partTypes/pifCalculaor'
+import { PifCalculatorProps } from '/lib/types/partTypes/pifCalculaor'
 
 function PifCalculator(props: PifCalculatorProps) {
   const validMaxYear = props.lastUpdated.year
@@ -16,7 +16,7 @@ function PifCalculator(props: PifCalculatorProps) {
     title: props.phrases.calculatorMonthAverage,
     id: '90',
   }
-  const { calculatorValidateAmountNumber, pifValidateYear } = props.phrases
+  const { calculatorValidateAmountNumber, calculatorValidateYear } = props.phrases
   const [scopeCode, setScopeCode] = useState({
     error: false,
     errorMsg: '',
@@ -39,7 +39,7 @@ function PifCalculator(props: PifCalculatorProps) {
     value: defaultMonthValue,
   })
   const validMinYear = getStartYearRelevantDataset()
-  const validMinYearPhrase = pifValidateYear.replaceAll('{0}', validMinYear.toString())
+  const validMinYearPhrase = calculatorValidateYear.replaceAll('{0}', validMinYear.toString())
   const validYearErrorMsg = `${validMinYearPhrase} ${validMaxYear}`
   const [startYear, setStartYear] = useState({
     error: false,
@@ -209,7 +209,7 @@ function PifCalculator(props: PifCalculatorProps) {
     const endMonthValue = value || endMonth.value.id
     const maxYearAverage = Number(validMaxMonth) === 12 ? validMaxYear : Number(validMaxYear) - 1
     const endMonthValid =
-      endMonthValue === ''
+      endMonthValue === '90'
         ? endYear.value <= maxYearAverage
         : !(endYear.value === validMaxYear && endMonthValue > validMaxMonth)
     if (!endMonthValid) {
@@ -334,7 +334,7 @@ function PifCalculator(props: PifCalculatorProps) {
   function addDropdownMonth(id: string | number) {
     return (
       <Dropdown
-        className='month'
+        className='period'
         id={id}
         header={props.phrases.chooseMonth}
         onSelect={(value: object) => {
@@ -351,7 +351,7 @@ function PifCalculator(props: PifCalculatorProps) {
   function addDropdownEndMonth(id: string | number) {
     return (
       <Dropdown
-        className='month'
+        className='period'
         id={id}
         header={props.phrases.chooseMonth}
         onSelect={(value: object) => {
@@ -453,7 +453,7 @@ function PifCalculator(props: PifCalculatorProps) {
     const endValueText = endValue?.toString() ?? ''
     const startIndexText = startIndex?.toString() ?? ''
     const endIndexText = endIndex?.toString() ?? ''
-    const pifResultForScreenreader = props.phrases.pifResultForScreenreader
+    const calculatorResultScreenReader = props.phrases.calculatorResultScreenReader
       .replace('{0}', language === 'en' ? endValueText : endValueText.replace('.', ','))
       .replace('{1}', priceChangeLabel)
       .replace('{2}', language === 'en' ? changeValue : changeValue.replace('.', ','))
@@ -465,7 +465,7 @@ function PifCalculator(props: PifCalculatorProps) {
     return (
       <Container className='calculator-result' ref={scrollAnchor} tabIndex={0}>
         <div aria-atomic='true'>
-          <span className='sr-only'>{pifResultForScreenreader}</span>
+          <span className='sr-only'>{calculatorResultScreenReader}</span>
         </div>
         <Row className='mb-5' aria-hidden='true'>
           <Col className='amount-equal col-12 col-md-4'>
@@ -543,8 +543,8 @@ function PifCalculator(props: PifCalculatorProps) {
           <Row>
             <Col>
               <FormError
-                errorMessages={[errorMessage || props.phrases.pifErrorUnknownError]}
-                title={props.phrases.pifErrorCalculationFailed}
+                errorMessages={[errorMessage || props.phrases.calculatorUknownError]}
+                title={props.phrases.calculatorErrorCalculationFailed}
               />
             </Col>
           </Row>
@@ -643,7 +643,7 @@ function PifCalculator(props: PifCalculatorProps) {
                         onBlur={() => onBlur('start-year')}
                       />
                     </Col>
-                    <Col className='select-month col-12 col-sm-7'>{addDropdownMonth('start-month')}</Col>
+                    <Col className='select-period col-12 col-sm-7'>{addDropdownMonth('start-month')}</Col>
                   </Row>
                 </Container>
               </Col>
@@ -662,7 +662,7 @@ function PifCalculator(props: PifCalculatorProps) {
                         onBlur={() => onBlur('end-year')}
                       />
                     </Col>
-                    <Col className='select-month col-12 col-sm-7'>{addDropdownEndMonth('end-month')}</Col>
+                    <Col className='select-period col-12 col-sm-7'>{addDropdownEndMonth('end-month')}</Col>
                   </Row>
                 </Container>
               </Col>
@@ -681,10 +681,12 @@ function PifCalculator(props: PifCalculatorProps) {
   }
 
   return (
-    <Container className='pif-calculator'>
-      {renderForm()}
-      <div aria-live='polite'>{renderResult()}</div>
-    </Container>
+    <section className='pif-calculator'>
+      <Container className='calculator-content'>
+        {renderForm()}
+        <div aria-live='polite'>{renderResult()}</div>
+      </Container>
+    </section>
   )
 }
 

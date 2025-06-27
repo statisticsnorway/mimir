@@ -1,5 +1,3 @@
-/* eslint-disable prettier/prettier */
-
 import { PartComponent as _PartComponent, LayoutComponent as _LayoutComponent } from '@enonic-types/core'
 
 declare global {
@@ -13,6 +11,7 @@ declare global {
       export type AttachmentTablesFigures = _PartComponent<'mimir:attachmentTablesFigures'>
       export type Banner = _PartComponent<'mimir:banner'>
       export type BkibolCalculator = _PartComponent<'mimir:bkibolCalculator'>
+      export type BpiCalculator = _PartComponent<'mimir:bpiCalculator'>
       export type CategoryLinks = _PartComponent<'mimir:categoryLinks'>
       export type CombinedGraph = _PartComponent<'mimir:combinedGraph'>
       export type Contact = _PartComponent<'mimir:contact'>
@@ -66,8 +65,13 @@ declare global {
       export type StatbankSubjectTree = _PartComponent<'mimir:statbankSubjectTree'>
       export type StaticVisualization = _PartComponent<'mimir:staticVisualization'>
       export type Statistics = _PartComponent<'mimir:statistics'>
+      export type StatisticContact = _PartComponent<'mimir:statisticContact'>
+      export type StatisticHeader = _PartComponent<'mimir:statisticHeader'>
+      export type StatisticFigures = _PartComponent<'mimir:statisticFigures'>
+      export type StatisticDescription = _PartComponent<'mimir:statisticDescription'>
       export type SubjectArticleList = _PartComponent<'mimir:subjectArticleList'>
       export type Table = _PartComponent<'mimir:table'>
+      export type Timeline = _PartComponent<'mimir:timeline'>
       export type UpcomingReleases = _PartComponent<'mimir:upcomingReleases'>
       export type Variables = _PartComponent<'mimir:variables'>
       export type VideoEmbed = _PartComponent<'mimir:videoEmbed'>
@@ -79,5 +83,21 @@ declare global {
       export type Topic = _LayoutComponent<'mimir:topic', XpLayoutMap['mimir:topic']>
       export type Columns = _LayoutComponent<'mimir:columns', XpLayoutMap['mimir:columns']>
     }
+  }
+}
+
+declare global {
+  interface Window {
+    dataLayer: Array<{
+      event: string
+      consent?: 'all' | 'necessary' | 'unidentified'
+      ad_storage?: 'granted' | 'denied'
+      analytics_storage?: 'granted' | 'denied'
+      ad_personalization?: 'granted' | 'denied'
+      functionality_storage?: 'granted' | 'denied'
+      security_storage?: 'granted' | 'denied'
+      [key: string]: unknown
+    }>
+    gtag?: (...args: [string, string, Record<string, string>]) => void
   }
 }

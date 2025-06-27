@@ -37,6 +37,8 @@ export function preview(req: XP.Request): XP.Response {
   return renderPart(req)
 }
 
+//TODO Use statisticsUtils.ts like statisticHeader
+
 // eslint-disable-next-line complexity
 function renderPart(req: XP.Request): XP.Response {
   const page = getContent<Content<Statistics>>()

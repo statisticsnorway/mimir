@@ -1,8 +1,8 @@
 import React from 'react'
 import { Title, Accordion, Link } from '@statisticsnorway/ssb-component-library'
 import { User, Calendar, Settings } from 'react-feather'
-import { sanitize } from '../../../lib/ssb/utils/htmlUtils'
-import { ProjectProps } from '../../../lib/types/partTypes/project'
+import { sanitize } from '/lib/ssb/utils/htmlUtils'
+import { ProjectProps } from '/lib/types/partTypes/project'
 
 const Project = (props: ProjectProps) => {
   const {

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Dialog } from '@statisticsnorway/ssb-component-library'
 import { Container } from 'react-bootstrap'
-import { sanitize } from '../../lib/ssb/utils/htmlUtils'
+import { sanitize } from '/lib/ssb/utils/htmlUtils'
 
 interface AlertsProps {
   alerts: {

@@ -4,8 +4,8 @@ import { Input, Button, Dropdown, Divider, FormError, Link, Title } from '@stati
 import axios from 'axios'
 import { NumericFormat } from 'react-number-format'
 import { X } from 'react-feather'
-import { sanitize } from '../../lib/ssb/utils/htmlUtils'
-import { KpiCalculatorProps } from '../../lib/types/partTypes/kpiCalculator'
+import { sanitize } from '/lib/ssb/utils/htmlUtils'
+import { KpiCalculatorProps } from '/lib/types/partTypes/kpiCalculator'
 
 function KpiCalculator(props: KpiCalculatorProps) {
   const validMaxYear = props.lastUpdated.year
@@ -271,7 +271,7 @@ function KpiCalculator(props: KpiCalculatorProps) {
   function addDropdownMonth(id: string | number) {
     return (
       <Dropdown
-        className='month'
+        className='period'
         id={id}
         header={props.phrases.chooseMonth}
         onSelect={(value: object) => {
@@ -288,7 +288,7 @@ function KpiCalculator(props: KpiCalculatorProps) {
   function addDropdownEndMonth(id: string | number) {
     return (
       <Dropdown
-        className='month'
+        className='period'
         id={id}
         header={props.phrases.chooseMonth}
         onSelect={(value: object) => {
@@ -474,8 +474,8 @@ function KpiCalculator(props: KpiCalculatorProps) {
           <Row>
             <Col>
               <FormError
-                errorMessages={[errorMessage || props.phrases.kpiErrorUnknownError]}
-                title={props.phrases.kpiErrorCalculationFailed}
+                errorMessages={[errorMessage || props.phrases.calculatorUknownError]}
+                title={props.phrases.calculatorErrorCalculationFailed}
               />
             </Col>
           </Row>
@@ -527,17 +527,21 @@ function KpiCalculator(props: KpiCalculatorProps) {
   function renderCalculator() {
     if (props.frontPage) {
       return (
-        <Container className='kpi-calculator frontpage'>
-          {renderFormFrontpage()}
-          {renderResult()}
-        </Container>
+        <section className='kpi-calculator frontpage'>
+          <Container className='calculator-content'>
+            {renderFormFrontpage()}
+            {renderResult()}
+          </Container>
+        </section>
       )
     } else {
       return (
-        <Container className='kpi-calculator'>
-          {renderForm()}
-          <div aria-live='polite'>{renderResult()}</div>
-        </Container>
+        <section className='kpi-calculator'>
+          <Container className='calculator-content'>
+            {renderForm()}
+            <div aria-live='polite'>{renderResult()}</div>
+          </Container>
+        </section>
       )
     }
   }
@@ -587,7 +591,7 @@ function KpiCalculator(props: KpiCalculatorProps) {
                         onBlur={() => onBlur('start-year')}
                       />
                     </Col>
-                    <Col className='select-month col-12 col-sm-7'>{addDropdownMonth('start-month')}</Col>
+                    <Col className='select-period col-12 col-sm-7'>{addDropdownMonth('start-month')}</Col>
                   </Row>
                 </Container>
               </Col>
@@ -606,7 +610,7 @@ function KpiCalculator(props: KpiCalculatorProps) {
                         onBlur={() => onBlur('end-year')}
                       />
                     </Col>
-                    <Col className='select-month col-12 col-sm-7'>{addDropdownEndMonth('end-month')}</Col>
+                    <Col className='select-period col-12 col-sm-7'>{addDropdownEndMonth('end-month')}</Col>
                   </Row>
                 </Container>
               </Col>
@@ -659,7 +663,7 @@ function KpiCalculator(props: KpiCalculatorProps) {
                     onBlur={() => onBlur('start-year')}
                   />
                 </Col>
-                <Col className='select-month'>{addDropdownMonth('start-month')}</Col>
+                <Col className='select-period'>{addDropdownMonth('start-month')}</Col>
               </Row>
             </Col>
             <Col className='calculate-to col-12 col-lg-4'>
@@ -674,7 +678,7 @@ function KpiCalculator(props: KpiCalculatorProps) {
                     onBlur={() => onBlur('end-year')}
                   />
                 </Col>
-                <Col className='select-month'>{addDropdownEndMonth('end-month')}</Col>
+                <Col className='select-period'>{addDropdownEndMonth('end-month')}</Col>
               </Row>
             </Col>
           </Row>

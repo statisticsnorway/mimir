@@ -15,16 +15,14 @@ import { ChevronDown, User, X } from 'react-feather'
 import axios from 'axios'
 import { NumericFormat } from 'react-number-format'
 import { Col, Row } from 'react-bootstrap'
-import { sanitize } from '../../../lib/ssb/utils/htmlUtils'
-import { type SearchResultProps } from '../../../lib/types/partTypes/searchResult'
-import { type DropdownItem } from '../../../lib/types/partTypes/publicationArchive'
-import { type PreparedSearchResult } from '../../../lib/types/solr'
-
-const ADDITIONAL_HITS_LENGTH = 15
+import { sanitize } from '/lib/ssb/utils/htmlUtils'
+import { NameSearchData, type SearchResultProps } from '/lib/types/partTypes/searchResult'
+import { type DropdownItem } from '/lib/types/partTypes/publicationArchive'
+import { type PreparedSearchResult } from '/lib/types/solr'
+import { usePagination } from '/lib/ssb/utils/customHooks/paginationHooks'
 
 function SearchResult(props: SearchResultProps) {
   const [hits, setHits] = useState(props.hits)
-  const [keyboardNavigation, setKeyboardNavigation] = useState(false)
   const [searchTerm, setSearchTerm] = useState(props.term)
   const [loading, setLoading] = useState(false)
   const [total, setTotal] = useState(props.total)
@@ -34,8 +32,8 @@ function SearchResult(props: SearchResultProps) {
   const [sortChanged, setSortChanged] = useState(false)
   const [sortList, setSortList] = useState<string | undefined>(undefined)
   const [filter, setFilter] = useState({
-    mainSubject: props.subjectUrlParam || '',
-    contentType: props.contentTypeUrlParam || '',
+    mainSubject: props.subjectUrlParam ?? '',
+    contentType: props.contentTypeUrlParam ?? '',
   })
   const [reset, setReset] = useState(0)
   const [searchResultSRText, setSearchResultSRText] = useState<null | string>(null)
@@ -68,8 +66,16 @@ function SearchResult(props: SearchResultProps) {
   const [selectedMainSubject, setSelectedMainSubject] = useState(preselectedSubjectDropdownItem)
   const [numberChanged, setNumberChanged] = useState(0)
   const [openAccordion, setOpenAccordion] = useState(false)
-  const currentElement = useRef<HTMLAnchorElement>(null)
   const inputSearchElement = useRef<HTMLDivElement>(null)
+
+  const ADDITIONAL_HITS_LENGTH = 15
+  const { disableBtn, getCurrentElementRef, handleKeyboardNavigation, handleOnClick } = usePagination({
+    list: hits,
+    listItemsPerPage: ADDITIONAL_HITS_LENGTH,
+    loading,
+    onLoadMore: () => onShowMoreSearchResults(),
+    totalCount: total,
+  })
 
   useEffect(() => {
     if (searchTerm && inputSearchElement.current) {
@@ -93,12 +99,6 @@ function SearchResult(props: SearchResultProps) {
       fetchFilteredSearchResult()
     }
   }, [filter, sortList])
-
-  useEffect(() => {
-    if (keyboardNavigation) {
-      currentElement.current?.focus()
-    }
-  }, [hits])
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function onChange(id: string, value: any) {
@@ -145,22 +145,23 @@ function SearchResult(props: SearchResultProps) {
     setFilterChanged(true) // we want the useEffect to trigger fetching of results, and new filters
   }
 
-  function renderListItem(hit: PreparedSearchResult, i?: number, focus?: boolean) {
+  function renderListItem(hit: PreparedSearchResult, i?: number) {
     if (hit) {
       return (
-        <li key={hit.id || i || undefined} className='mb-4'>
-          <a
-            ref={focus ? currentElement : null}
-            className='ssb-link header'
+        <li key={hit.id ?? i ?? undefined} className='mb-4'>
+          <Link
+            ref={getCurrentElementRef(i as number)}
             // deepcode ignore DOMXSS: url comes from pageUrl which escapes  + Reacts own escaping
             href={hit.url}
+            linkType='header'
+            headingSize={2}
           >
             <span
               dangerouslySetInnerHTML={{
                 __html: sanitize(hit.title.replace(/&nbsp;/g, ' ')),
               }}
             ></span>
-          </a>
+          </Link>
           <Paragraph className='search-result-ingress my-1'>
             <span
               dangerouslySetInnerHTML={{
@@ -220,9 +221,6 @@ function SearchResult(props: SearchResultProps) {
         <ol className='list-unstyled '>
           {renderListItem(bestBetHit!)}
           {hits.map((hit, i) => {
-            if (i === hits.length - ADDITIONAL_HITS_LENGTH) {
-              return renderListItem(hit, i, true)
-            }
             return renderListItem(hit, i)
           })}
         </ol>
@@ -304,18 +302,10 @@ function SearchResult(props: SearchResultProps) {
       return (
         <div>
           <Button
-            disabled={loading || total === hits.length}
+            disabled={disableBtn}
             className='button-more mt-5'
-            onClick={() => {
-              setKeyboardNavigation(false)
-              onShowMoreSearchResults()
-            }}
-            onKeyDown={(e: React.KeyboardEvent<HTMLButtonElement>) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                setKeyboardNavigation(true)
-                onShowMoreSearchResults()
-              }
-            }}
+            onClick={handleOnClick}
+            onKeyDown={handleKeyboardNavigation}
           >
             <ChevronDown size='18' /> {props.buttonTitle}
           </Button>
@@ -377,7 +367,7 @@ function SearchResult(props: SearchResultProps) {
     return capitalizedTokens.join(' ')
   }
 
-  const parseResultText = (doc) => {
+  const parseResultText = (doc: NameSearchData) => {
     return `${doc.count}
       ${formatGender(doc.gender)} ${props.namePhrases.have}
       ${capitalizeNames(doc.name)}
@@ -394,12 +384,12 @@ function SearchResult(props: SearchResultProps) {
     }
   }
   function translateName(nameCode: string) {
-    return props.namePhrases!.types![nameCode]
+    return props.namePhrases.types[nameCode]
   }
 
   function renderNameResult() {
     const mainNameResult = props.nameSearchData
-    if (mainNameResult && mainNameResult.count && !filterChanged && numberChanged === 0) {
+    if (mainNameResult?.count && !filterChanged && numberChanged === 0) {
       return (
         //  TODO: Legge til en bedre url til navnestatistikken
         <Card
@@ -425,7 +415,7 @@ function SearchResult(props: SearchResultProps) {
         const phrase = props.contentTypePhrases.find((phrase) => phrase.id === type.title)
         return {
           id: type.title,
-          title: `${phrase.title} (${type.count})`,
+          title: `${phrase?.title} (${type.count})`,
         }
       })
     )
@@ -451,87 +441,85 @@ function SearchResult(props: SearchResultProps) {
 
   return (
     <section className='search-result container-fluid p-0'>
-      <div className='row'>
-        <div className='col-12 search-result-head'>
-          <div className='container'>
-            <Title>{props.title}</Title>
-            <Input
-              ref={inputSearchElement}
-              className='d-none d-lg-block'
-              size='lg'
-              value={searchTerm}
-              handleChange={setSearchTerm}
-              searchField
-              submitCallback={goToSearchResultPage}
-              ariaLabel={props.mainSearchPhrase}
-              ariaLabelWrapper={props.term ? props.mainSearchPhrase : undefined}
-              ariaLabelSearchButton={props.searchText}
-            />
-            <Input
-              className='d-block d-lg-none'
-              value={searchTerm}
-              handleChange={setSearchTerm}
-              searchField
-              submitCallback={goToSearchResultPage}
-              ariaLabel={props.mainSearchPhrase}
-              ariaLabelWrapper={props.term ? props.mainSearchPhrase : undefined}
-              ariaLabelSearchButton={props.searchText}
-            />
-            <div className='filter'>
-              <span className='limit-result mb-3'>{limitResultPhrase}</span>
-              <Row>
-                <Col lg='4' className='search-result-dropdown pb-1 pr-1'>
-                  <Dropdown
-                    className='DropdownMainSubject'
-                    id='mainSubject'
-                    key={`mainSubject-${reset}`}
-                    onSelect={(value: DropdownItem) => {
-                      onChange('mainSubject', value)
-                      if (!openAccordion) {
-                        setOpenAccordion(true)
-                      }
-                    }}
-                    selectedItem={selectedMainSubject}
-                    items={dropdownSubjectsItems}
-                    header={props.chooseSubjectPhrase}
-                  />
-                </Col>
-                <Col lg='4' className='search-result-dropdown pr-1'>
-                  <Dropdown
-                    className='DropdownContentType'
-                    id='contentType'
-                    key={`contentType-${reset}`}
-                    onSelect={(value: DropdownItem) => {
-                      onChange('contentType', value)
-                      if (!openAccordion) {
-                        setOpenAccordion(true)
-                      }
-                    }}
-                    selectedItem={selectedContentType}
-                    items={dropdownContentTypeItems}
-                    header={props.chooseContentTypePhrase}
-                  />
-                </Col>
-              </Row>
-              {(filter.mainSubject || filter.contentType) && (
-                <Tag onClick={removeFilter} icon={<X size={18} />}>
-                  {props.removeFilterPhrase}
-                </Tag>
-              )}
-            </div>
+      <div className='col-12 search-result-head'>
+        <div className='container'>
+          <Title>{props.title}</Title>
+          <Input
+            ref={inputSearchElement}
+            className='d-none d-lg-block'
+            size='lg'
+            value={searchTerm}
+            handleChange={setSearchTerm}
+            searchField
+            submitCallback={goToSearchResultPage}
+            ariaLabel={props.mainSearchPhrase}
+            ariaLabelWrapper={props.term ? props.mainSearchPhrase : undefined}
+            ariaLabelSearchButton={props.searchText}
+          />
+          <Input
+            className='d-block d-lg-none'
+            value={searchTerm}
+            handleChange={setSearchTerm}
+            searchField
+            submitCallback={goToSearchResultPage}
+            ariaLabel={props.mainSearchPhrase}
+            ariaLabelWrapper={props.term ? props.mainSearchPhrase : undefined}
+            ariaLabelSearchButton={props.searchText}
+          />
+          <div className='filter'>
+            <span className='limit-result mb-3'>{limitResultPhrase}</span>
+            <Row>
+              <Col lg='4' className='search-result-dropdown pb-1 pr-1'>
+                <Dropdown
+                  className='DropdownMainSubject'
+                  id='mainSubject'
+                  key={`mainSubject-${reset}`}
+                  onSelect={(value: DropdownItem) => {
+                    onChange('mainSubject', value)
+                    if (!openAccordion) {
+                      setOpenAccordion(true)
+                    }
+                  }}
+                  selectedItem={selectedMainSubject}
+                  items={dropdownSubjectsItems}
+                  header={props.chooseSubjectPhrase}
+                />
+              </Col>
+              <Col lg='4' className='search-result-dropdown pr-1'>
+                <Dropdown
+                  className='DropdownContentType'
+                  id='contentType'
+                  key={`contentType-${reset}`}
+                  onSelect={(value: DropdownItem) => {
+                    onChange('contentType', value)
+                    if (!openAccordion) {
+                      setOpenAccordion(true)
+                    }
+                  }}
+                  selectedItem={selectedContentType}
+                  items={dropdownContentTypeItems}
+                  header={props.chooseContentTypePhrase}
+                />
+              </Col>
+            </Row>
+            {(filter.mainSubject || filter.contentType) && (
+              <Tag onClick={removeFilter} icon={<X size={18} />}>
+                {props.removeFilterPhrase}
+              </Tag>
+            )}
           </div>
         </div>
-        <div className='col-12 search-result-body'>
-          <div className='container mt-5'>
-            {searchResultSRText && (
-              <div className='visually-hidden' aria-live='polite'>
-                {searchResultSRText}
-              </div>
-            )}
-            {hits.length > 0 || props.bestBetHit ? renderList() : renderNoHitMessage()}
-            {renderLoading()}
-            {renderShowMoreButton()}
-          </div>
+      </div>
+      <div className='col-12 search-result-body'>
+        <div className='container mt-5'>
+          {searchResultSRText && (
+            <div className='visually-hidden' aria-live='polite'>
+              {searchResultSRText}
+            </div>
+          )}
+          {hits.length > 0 || props.bestBetHit ? renderList() : renderNoHitMessage()}
+          {renderLoading()}
+          {renderShowMoreButton()}
         </div>
       </div>
     </section>

@@ -36,6 +36,8 @@ export function clearPartCache(content: Content, branch: string): void {
     partCache.removePattern(`${content._id}-bkibolCalculator.*`)
     cacheLog(`try to clear ${content._id}-husleieCalculator from part cache (${branch})`)
     partCache.removePattern(`${content._id}-husleieCalculator.*`)
+    cacheLog(`try to clear ${content._id}-bpiCalculator from part cache (${branch})`)
+    partCache.removePattern(`${content._id}-bpiCalculator.*`)
     cacheLog(`try to clear ${content._id}-releasedStatistics from part cache (${branch})`)
     partCache.removePattern(`${content._id}-releasedStatistics.*`)
     cacheLog(`try to clear ${content._id}-omStatistikken from part cache (${branch})`)
@@ -48,6 +50,8 @@ export function clearPartCache(content: Content, branch: string): void {
     partCache.removePattern(`${content._id}-relatedFactPage.*`)
     cacheLog(`try to clear ${content._id}-webcruiterAdvertisementList from part cache (${branch})`)
     partCache.removePattern(`${content._id}-webcruiterAdvertisementList.*`)
+    cacheLog(`try to clear ${content._id}-simpleStatbank from part cache (${branch})`)
+    partCache.removePattern(`${content._id}-simpleStatbank.*`)
   }
 
   if (content.type === `${app.name}:article`) {

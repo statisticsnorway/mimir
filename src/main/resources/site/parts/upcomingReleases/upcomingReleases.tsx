@@ -3,19 +3,19 @@ import { Button, Link } from '@statisticsnorway/ssb-component-library'
 import axios from 'axios'
 import { ChevronDown } from 'react-feather'
 import { parseISO } from 'date-fns/parseISO'
-import { sanitize } from '../../../lib/ssb/utils/htmlUtils'
+import { sanitize } from '/lib/ssb/utils/htmlUtils'
 import {
   type FlattenedUpcomingReleasesDate,
   type FlattenedUpcomingReleases,
   type UpcomingReleasesProps,
-} from '../../../lib/types/partTypes/upcomingReleases'
+} from '/lib/types/partTypes/upcomingReleases'
 import {
   type PreparedContentRelease,
   type PreparedUpcomingRelease,
   type PreparedVariant,
   type PreparedStatistics,
   type YearReleases,
-} from '../../../lib/types/variants'
+} from '/lib/types/variants'
 
 // TODO: Need the flattened and transformed data to be typed
 
@@ -61,6 +61,17 @@ export const mergeAndSortReleases = (
   return sortedArray
 }
 
+const parseReleases = (releases: PreparedStatistics[]) => {
+  return releases.map(({ id, name, type, mainSubject, statisticsPageUrl, variant }) => ({
+    id,
+    name,
+    type,
+    mainSubject,
+    url: statisticsPageUrl ?? '',
+    variant,
+  }))
+}
+
 export const flattenReleases = (data: YearReleases[]) => {
   const flattenedReleases: FlattenedUpcomingReleases[] = data.flatMap((yearItem) =>
     yearItem.releases.flatMap((monthItem) =>
@@ -71,19 +82,9 @@ export const flattenReleases = (data: YearReleases[]) => {
         month = month >= 10 ? month : '0' + month // Add 0-padding
         const fullDate = `${yearItem.year}-${month}-${day}`
 
-        // eslint-disable-next-line max-nested-callbacks
-        const releases = dayItem.releases.map((release: PreparedStatistics) => ({
-          id: release.id,
-          name: release.name,
-          type: release.type,
-          mainSubject: release.mainSubject,
-          url: release.statisticsPageUrl ?? '',
-          variant: release.variant,
-        }))
-
         return {
           date: fullDate,
-          releases,
+          releases: parseReleases(dayItem.releases),
         }
       })
     )
@@ -141,13 +142,13 @@ function renderRelease(release: PreparedUpcomingRelease, index: number, date: Fl
 
         {upcomingReleaseLink || url ? (
           // deepcode ignore DOMXSS: URL is sanitized in the backend
-          <Link href={upcomingReleaseLink ?? url} linkType='header'>
+          <Link href={upcomingReleaseLink ?? url} linkType='header' headingSize={2}>
             {name}
           </Link>
         ) : (
-          <h3 className='mb-0' aria-hidden='true'>
+          <h2 className='mb-0 h3' aria-hidden='true'>
             {name}
-          </h3>
+          </h2>
         )}
 
         {showPeriod && (
@@ -293,25 +294,23 @@ function UpcomingReleases(props: UpcomingReleasesProps) {
 
   return (
     <section className='nextStatisticsReleases container-fluid p-0'>
-      <div className='row extended-banner'>
-        <div className='col-12 upcoming-releases-head px-4'>
-          <div className='container py-5'>
-            <h1 id='heading-upcoming-releases'>{props.title ? props.title : undefined}</h1>
-            <div
-              className='upcoming-releases-ingress'
-              dangerouslySetInnerHTML={{
-                __html: sanitize(props.preface!.replace(/&nbsp;/g, ' ')),
-              }}
-            ></div>
-          </div>
+      <div className='col-12 upcoming-releases-head'>
+        <div className='container py-5'>
+          <h1 id='heading-upcoming-releases'>{props.title ? props.title : undefined}</h1>
+          <div
+            className='upcoming-releases-ingress'
+            dangerouslySetInnerHTML={{
+              __html: sanitize(props.preface!.replace(/&nbsp;/g, ' ')),
+            }}
+          ></div>
         </div>
-        <div className='col-12 release-list px-4'>
-          <div className='container mt-5'>
-            <div className='row d-flex justify-content-center'>
-              <div className='col-12 p-0'>
-                {renderList(releases)}
-                {renderButton()}
-              </div>
+      </div>
+      <div className='col-12 release-list'>
+        <div className='container mt-5'>
+          <div className='row d-flex justify-content-center'>
+            <div className='col-12 p-0'>
+              {renderList(releases)}
+              {renderButton()}
             </div>
           </div>
         </div>

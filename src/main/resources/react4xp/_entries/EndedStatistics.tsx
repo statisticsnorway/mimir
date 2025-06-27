@@ -1,7 +1,7 @@
 import React from 'react'
 import { Card, Text, ButtonTertiary } from '@statisticsnorway/ssb-component-library'
 import { Col, Container, Row } from 'react-bootstrap'
-import { EndedStatistic } from '../../lib/types/partTypes/endedStatistics'
+import { EndedStatistic } from '/lib/types/partTypes/endedStatistics'
 
 interface EndedStatisticsProps {
   endedStatistics: EndedStatistic[]

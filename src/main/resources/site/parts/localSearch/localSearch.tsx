@@ -1,6 +1,6 @@
 import React from 'react'
 import { Title, Dropdown } from '@statisticsnorway/ssb-component-library'
-import { type SearchItem } from '../../../lib/types/partTypes/localSearch'
+import { type SearchItem } from '/lib/types/partTypes/localSearch'
 
 interface LocalSearchProps {
   title?: string

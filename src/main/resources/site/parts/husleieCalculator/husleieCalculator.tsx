@@ -12,8 +12,8 @@ import {
 } from '@statisticsnorway/ssb-component-library'
 import axios from 'axios'
 import { NumericFormat } from 'react-number-format'
-import { KpiCalculatorProps } from '../../../lib/types/partTypes/kpiCalculator'
-import { DropdownItem } from '../../../lib/types/partTypes/publicationArchive'
+import { KpiCalculatorProps } from '/lib/types/partTypes/kpiCalculator'
+import { DropdownItem } from '/lib/types/partTypes/publicationArchive'
 
 function HusleieCalculator(props: KpiCalculatorProps) {
   const validMaxYear = props.lastUpdated.year
@@ -453,8 +453,8 @@ function HusleieCalculator(props: KpiCalculatorProps) {
           <Row>
             <Col>
               <FormError
-                errorMessages={[errorMessage || props.phrases.kpiErrorUnknownError]}
-                title={props.phrases.kpiErrorCalculationFailed}
+                errorMessages={[errorMessage || props.phrases.calculatorUknownError]}
+                title={props.phrases.calculatorErrorCalculationFailed}
               />
             </Col>
           </Row>
@@ -516,10 +516,12 @@ function HusleieCalculator(props: KpiCalculatorProps) {
 
   function renderCalculator() {
     return (
-      <Container className='husleie-calculator'>
-        {renderForm()}
-        <div aria-live='polite'>{renderResult()}</div>
-      </Container>
+      <section className='husleie-calculator'>
+        <Container className='calculator-content'>
+          {renderForm()}
+          <div aria-live='polite'>{renderResult()}</div>
+        </Container>
+      </section>
     )
   }
 
@@ -558,9 +560,9 @@ function HusleieCalculator(props: KpiCalculatorProps) {
                 <Title size={3}>{props.phrases.husleieLastAdjust}</Title>
                 <Container>
                   <Row>
-                    <Col className='select-month col-12 col-sm-8'>
+                    <Col className='select-period col-12 col-sm-8'>
                       <Dropdown
-                        className='month'
+                        className='period'
                         id='start-month'
                         header={props.phrases.chooseMonth}
                         onSelect={(value: DropdownItem) => {

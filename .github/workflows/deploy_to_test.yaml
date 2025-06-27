@@ -1,9 +1,6 @@
 name: 'Deploy to Test'
 on:
   pull_request:
-  push:
-    branches:
-      - 'MIMIR-1227_updates-and-manual-deploy'
   workflow_dispatch:  # Allows the workflow to be manually triggered.
 
 concurrency:
@@ -19,16 +16,6 @@ jobs:
         uses: enonic/release-tools/build-and-publish@master
         with:
           skipPublishing: true
-      - id: deploy_app_to_XP
-        uses: 'enonic/action-app-deploy@main'
-        with:
-          # Secrets from Github repository
-          url: ${{ secrets.ENONIC_TEST_URL }}
-          username: ${{ secrets.ENONIC_USER }}
-          password: ${{ secrets.ENONIC_TEST_PASS }}
-          client_cert: ${{ secrets.ENONIC_CERT }}
-          client_key: ${{ secrets.ENONIC_KEY }}
-          app_jar: "./build/libs/*.jar"
       - name: Upload artifacts
         id: upload_artifacts
         if: success()
@@ -36,11 +23,23 @@ jobs:
         with:
           name: mimir-test-${{ github.run_number }}
           path: "./build/libs/*.jar"
+      - id: deploy_app_to_XP
+        uses: 'enonic/action-app-deploy@main'
+        with:
+          # Secrets from Github repository
+          url: ${{ secrets.ENONIC_TEST_URL }}
+          username: ${{ secrets.ENONIC_USER }}
+          password: ${{ secrets.ENONIC_TEST_PASS }}
+          client_cert: ${{ secrets.ENONIC_DEPLOY_CERT }}
+          client_key: ${{ secrets.ENONIC_DEPLOY_KEY }}
+          app_jar: "./build/libs/*.jar"
       - name: Send failure message to Slack
         id: slack_failure
-        if: failure()
-        uses: slackapi/slack-github-action@v1
+        if: steps.deploy_app_to_XP.outcome == 'failure'
+        uses: slackapi/slack-github-action@v2
         with:
+          webhook: ${{ secrets.SLACK_MIMIR_UTV }}
+          webhook-type: incoming-webhook
           payload: |
             {
               "blocks": [
@@ -74,9 +73,6 @@ jobs:
                 }
               ]
             }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_MIMIR_UTV }}
-          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
   mabl_test:
     # Run this job after deploy is finished, and only run if deploy succeeded
     needs: deploy_to_test

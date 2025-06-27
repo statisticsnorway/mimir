@@ -7,7 +7,7 @@ import {
   Divider,
 } from '@statisticsnorway/ssb-component-library'
 import { Alert, Row, Col } from 'react-bootstrap'
-import { type KeyFigureData, type KeyFigureProps } from '../../lib/types/partTypes/keyFigure'
+import { type KeyFigureData, type KeyFigureProps } from '/lib/types/partTypes/keyFigure'
 
 const KeyFigures = (props: KeyFigureProps) => {
   const {

@@ -1,7 +1,8 @@
 import React from 'react'
 import { Accordion, Button, Link } from '@statisticsnorway/ssb-component-library'
-import { ArrowRight, ArrowUp, Facebook, Twitter, Rss, Linkedin, Instagram } from 'react-feather'
-import { FooterContent } from '../../lib/types/footer'
+import { ArrowRight, ArrowUp, Facebook, Rss, Linkedin, Instagram } from 'react-feather'
+import { type FooterContent } from '/lib/types/footer'
+import { type Phrases } from '/lib/types/language'
 
 const Footer = (props: FooterContent) => {
   const {
@@ -11,15 +12,17 @@ const Footer = (props: FooterContent) => {
     hiddenFooterText,
     language,
     facebookUrl,
-    twitterUrl,
     linkedinUrl,
     instagramUrl,
     rssUrl,
     globalLinks,
     copyrightUrl,
     copyrightText,
+    isCookiebannerEnabled,
+    baseUrl,
   } = props
   const footerNavigationLabel = language?.code === 'en' ? 'footer links' : 'bunnmeny lenker'
+  const COOKIE_SERVICE_URL = '/_/service/mimir/setCookieConsent'
 
   function renderFooterMenuDesktop() {
     return footerNavigation?.map((topMenuItem, index) => {
@@ -78,9 +81,6 @@ const Footer = (props: FooterContent) => {
         {facebookUrl && (
           <Link ariaLabel='Facebook' href={facebookUrl} isExternal negative icon={<Facebook size={24} />} standAlone />
         )}
-        {twitterUrl && (
-          <Link ariaLabel='Twitter' href={twitterUrl} isExternal negative icon={<Twitter size={24} />} standAlone />
-        )}
         {linkedinUrl && (
           <Link ariaLabel='Linkedin' href={linkedinUrl} isExternal negative icon={<Linkedin size={24} />} standAlone />
         )}
@@ -129,6 +129,28 @@ const Footer = (props: FooterContent) => {
     }
   }
 
+  function renderCookieLinks() {
+    const phrases = language?.phrases as Phrases
+    const link = `${baseUrl}${language?.code === 'en' ? '/en' : ''}/omssb/personvern`
+    if (isCookiebannerEnabled) {
+      return (
+        <div className='cookie-links'>
+          <div className='cookie-link'>
+            <Link href={link} negative>
+              {phrases.cookiePrivacyLink}
+            </Link>
+          </div>
+          <div className='cookie-reset'>
+            <button onClick={handleCookieResetClick} className='ssb-link negative stand-alone'>
+              <span className='link-text'>{phrases.cookieResetLink}</span>
+            </button>
+          </div>
+        </div>
+      )
+    }
+    return <></>
+  }
+
   function goToTop() {
     window.scroll({
       top: 0,
@@ -137,6 +159,19 @@ const Footer = (props: FooterContent) => {
     document.getElementById('header-logo')!.focus({
       preventScroll: true,
     })
+  }
+
+  async function resetCookieConsent() {
+    try {
+      await fetch(`${COOKIE_SERVICE_URL}?value=unidentified`, { credentials: 'include' })
+    } catch (e) {
+      console.error('Failed to reset cookie-consent via service', e)
+    }
+  }
+
+  function handleCookieResetClick(e: React.MouseEvent<HTMLButtonElement>) {
+    resetCookieConsent()
+    e.currentTarget.blur()
   }
 
   if (logoUrl && footerNavigation && topButtonText) {
@@ -157,6 +192,7 @@ const Footer = (props: FooterContent) => {
               <div className='showOnMobile footer-menu'>{renderFooterMenuMobile()}</div>
             </nav>
           </div>
+          {renderCookieLinks()}
           <div className='footer-bottom-row'>
             <div className='links-left'>
               {renderCopyRight()}

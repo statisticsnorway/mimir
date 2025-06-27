@@ -15,7 +15,7 @@ jobs:
     environment: 'QA_mimir'
     steps:
       - name: Download workflow artifact
-        uses: dawidd6/action-download-artifact@v6
+        uses: dawidd6/action-download-artifact@v11
         with:
           workflow: deploy_to_qa.yaml
           branch: develop
@@ -29,14 +29,16 @@ jobs:
           url: ${{ secrets.ENONIC_QA_URL }}
           username: ${{ secrets.ENONIC_USER }}
           password: ${{ secrets.ENONIC_QA_PASS }}
-          client_cert: ${{ secrets.ENONIC_CERT }}
-          client_key: ${{ secrets.ENONIC_KEY }}
+          client_cert: ${{ secrets.ENONIC_DEPLOY_CERT }}
+          client_key: ${{ secrets.ENONIC_DEPLOY_KEY }}
           app_jar: "*.jar"
       - name: Send success message to Slack
         id: slack_success
-        if: success()
-        uses: slackapi/slack-github-action@v1
+        if: steps.deploy_app_to_XP.outcome == 'success'
+        uses: slackapi/slack-github-action@v2
         with:
+          webhook: ${{ secrets.SLACK_ALERTS_QA }}
+          webhook-type: incoming-webhook
           # Using Github block kit (https://api.slack.com/reference/block-kit/blocks) to configure the Slack message, see https://docs.github.com/en/actions/learn-github-actions/contexts
           # for more information about context variables
           payload: |
@@ -72,14 +74,13 @@ jobs:
                 }
               ]
             }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_ALERTS_QA }}
-          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
       - name: Send failure message to Slack
         id: slack_failure
-        if: failure()
-        uses: slackapi/slack-github-action@v1
+        if: steps.deploy_app_to_XP.outcome == 'failure'
+        uses: slackapi/slack-github-action@v2
         with:
+          webhook: ${{ secrets.SLACK_MIMIR_UTV }}
+          webhook-type: incoming-webhook
           payload: |
             {
               "blocks": [
@@ -113,9 +114,6 @@ jobs:
                 }
               ]
             }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_MIMIR_UTV }}
-          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
   mabl_test:
     # Run this job after deploy is finished, and only run if deploy succeeded
     needs: deploy-artifact

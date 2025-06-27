@@ -8,6 +8,7 @@ export type AttachmentTablesFiguresProps = {
   showLess: string
   appName: string
   title: string
+  firstItemOpen?: boolean
 }
 
 export interface AttachmentTablesFiguresData extends AccordionData {

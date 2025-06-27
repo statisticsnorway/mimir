@@ -163,7 +163,7 @@ export interface StatRegStatus {
   displayName: string
   modified: string | undefined
   modifiedReadable: string | undefined
-  logData: DashboardRefreshResultLogData | {}
+  logData: DashboardRefreshResultLogData | object
   eventLogNodes: Array<LogSummary>
 }
 

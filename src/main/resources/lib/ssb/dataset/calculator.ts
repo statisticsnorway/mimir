@@ -1,3 +1,4 @@
+import '/lib/ssb/polyfills/nashorn'
 // @ts-ignore
 import JSONstat from 'jsonstat-toolkit/import.mjs'
 import { query, get as getContent, Content } from '/lib/xp/content'
@@ -53,22 +54,65 @@ export function getKpiDatasetMonth(config: Content<CalculatorConfig>): Dataset |
   return kpiDatasetMonthRepo ? JSONstat(kpiDatasetMonthRepo.data).Dataset('dataset') : null
 }
 
-export function getPifDataset(config: Content<CalculatorConfig>): Dataset | null {
-  const pifSource: Content<GenericDataImport & DataSource> | null = config?.data.pifSource
+export const KPI_CALCULATOR_SOURCE_YEAR = 'kpiSourceYear'
+export const KPI_CALCULATOR_SOURCE_MONTH = 'kpiSourceMonth'
+export const BKIBOL_CALCULATOR_SOURCE_ENEBOLIG = 'bkibolSourceEnebolig'
+export const BKIBOL_CALCULATOR_SOURCE_BLOKK = 'bkibolSourceBoligblokk'
+export const PIF_CALCULATOR_SOURCE = 'pifSource'
+export const BPI_CALCULATOR_SOURCE = 'bpiSource'
+export const PIF_CALCULATOR = 'pifCalculator'
+export const BPI_CALCULATOR = 'bpiCalculator'
+// TODO: Use this function to fetch calculator dataset when refactoring remaining calculators. Remember to delete old functions
+export function getCalculatorDatasetFromSource(
+  config: Content<CalculatorConfig>,
+  calculator:
+    | typeof KPI_CALCULATOR_SOURCE_YEAR
+    | typeof KPI_CALCULATOR_SOURCE_MONTH
+    | typeof BKIBOL_CALCULATOR_SOURCE_ENEBOLIG
+    | typeof BKIBOL_CALCULATOR_SOURCE_BLOKK
+    | typeof PIF_CALCULATOR
+    | typeof BPI_CALCULATOR
+): Dataset | null {
+  let dataSourceConfig = null
+
+  switch (calculator) {
+    case KPI_CALCULATOR_SOURCE_YEAR:
+      dataSourceConfig = config.data.kpiSourceYear
+      break
+    case KPI_CALCULATOR_SOURCE_MONTH:
+      dataSourceConfig = config.data.kpiSourceMonth
+      break
+    case BKIBOL_CALCULATOR_SOURCE_ENEBOLIG:
+      dataSourceConfig = config.data.bkibolSourceEnebolig
+      break
+    case BKIBOL_CALCULATOR_SOURCE_BLOKK:
+      dataSourceConfig = config.data.bkibolSourceBoligblokk
+      break
+    case PIF_CALCULATOR:
+      dataSourceConfig = config.data.pifSource
+      break
+    case BPI_CALCULATOR:
+      dataSourceConfig = config.data.bpiSource
+      break
+    default:
+      log.error(`Unknown calculator: ${calculator}`)
+  }
+
+  const dataSource: Content<GenericDataImport & DataSource> | null = dataSourceConfig
     ? getContent({
-        key: config.data.pifSource,
+        key: dataSourceConfig,
       })
     : null
 
-  if (pifSource === null) {
-    log.info('Data calculator - pifSource is Null, calculatorConfig: ' + JSON.stringify(config, null, 4))
+  if (dataSource === null) {
+    log.info(`Data calculator - ${calculator} source is Null, calculatorConfig: ` + JSON.stringify(config, null, 4))
   }
 
-  const pifDatasetRepo: DatasetRepoNode<JSONstatType> | null = pifSource
-    ? (datasetOrUndefined(pifSource) as DatasetRepoNode<JSONstatType> | null)
+  const datasetRepo: DatasetRepoNode<JSONstatType> | null = dataSource
+    ? (datasetOrUndefined(dataSource) as DatasetRepoNode<JSONstatType> | null)
     : null
 
-  return pifDatasetRepo ? JSONstat(pifDatasetRepo.data).Dataset('dataset') : null
+  return datasetRepo ? JSONstat(datasetRepo.data).Dataset('dataset') : null
 }
 
 export function getBkibolDatasetEnebolig(config: Content<CalculatorConfig>): Dataset | null {
@@ -156,6 +200,7 @@ export function getAllCalculatorDataset(): Array<Content<GenericDataImport>> {
     calculatorDatasetKeys.push(calculatorConfig.data.pifSource)
     calculatorDatasetKeys.push(calculatorConfig.data.bkibolSourceEnebolig)
     calculatorDatasetKeys.push(calculatorConfig.data.bkibolSourceBoligblokk)
+    calculatorDatasetKeys.push(calculatorConfig.data.bpiSource)
   }
 
   calculatorDatasetKeys = calculatorDatasetKeys.filter((dataset) => dataset !== undefined)
@@ -176,23 +221,4 @@ export function getAllCalculatorDataset(): Array<Content<GenericDataImport>> {
 export function getNameSearchGraphDatasetId(): string | undefined {
   const config: Content<CalculatorConfig> | undefined = getCalculatorConfig()
   return config?.data.nameSearchGraphData ?? undefined
-}
-
-export function isChronological(startYear: string, startMonth: string, endYear: string, endMonth: string): boolean {
-  if (parseInt(startYear) < parseInt(endYear)) return true
-  if (parseInt(endYear) < parseInt(startYear)) return false
-
-  if (startMonth != '90' && startMonth != '' && endMonth != '' && endMonth != '90') {
-    if (parseInt(startMonth) < parseInt(endMonth)) return true
-    if (parseInt(startMonth) > parseInt(endMonth)) return false
-  }
-  return true
-}
-
-export function getChangeValue(startIndex: number, endIndex: number, chronological: boolean): number {
-  if (chronological) {
-    return (endIndex - startIndex) / startIndex
-  } else {
-    return (startIndex - endIndex) / endIndex
-  }
 }

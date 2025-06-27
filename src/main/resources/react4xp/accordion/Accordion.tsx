@@ -1,8 +1,8 @@
 import React from 'react'
 import { Accordion as AccordionComponent, NestedAccordion } from '@statisticsnorway/ssb-component-library'
 
-import { type AccordionData, type AccordionItems, type AccordionProps } from '../../lib/types/partTypes/accordion'
-import { sanitize } from '../../lib/ssb/utils/htmlUtils'
+import { type AccordionData, type AccordionItems, type AccordionProps } from '/lib/types/partTypes/accordion'
+import { sanitize } from '/lib/ssb/utils/htmlUtils'
 
 const Accordion = (props: AccordionProps) => {
   const { accordions } = props

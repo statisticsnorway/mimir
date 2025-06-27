@@ -2,7 +2,8 @@ import { DropdownItems } from './components'
 import { Phrases } from './language'
 
 export interface CalculatorPeriod {
-  month: number | string
+  quarter?: number
+  month?: number | string
   year: number | string
 }
 
@@ -14,4 +15,9 @@ export type CommonCalculatorProps = {
   nextPublishText: string
   lastNumberText: string
   lastUpdated: CalculatorPeriod
+}
+
+export interface IndexResult {
+  startIndex: number | null
+  endIndex: number | null
 }

@@ -115,6 +115,21 @@
 		</field-set>
 		<mixin name="relatedStatistics" />
 		<mixin name="relatedExternalLinks" />
+		<field-set>
+			<label>Nyhetsartikkel (administreres av Desken)</label>
+			<items>
+				<input name="dsArticle" type="RadioButton">
+					<label>Hvilken artikkel skal vises som nyhetsartikkel?</label>
+					<help-text>Standard valg er å automatisk hente artikkel med lik publiseringsdato som statistikken. Valget “Siste artikkel for statistikken” henter den sist publiserte artikkelen som har statistikken som tilhørende statistikk.</help-text>
+					<occurrences minimum="1" maximum="1"/>
+					<config>
+						<option value="default">Artikkel med lik publiseringsdato som statistikken (standard)</option>
+						<option value="lastArticle">Siste artikkel for statistikken (brukes for de som ikke har nyhetsartikkel til hver publisering)</option>
+					</config>
+					<default>default</default>
+				</input>
+			</items>
+		</field-set>
 		<mixin name="relatedArticles" />
 		<mixin name="relatedFactPage" />
 		<mixin name="contacts" />

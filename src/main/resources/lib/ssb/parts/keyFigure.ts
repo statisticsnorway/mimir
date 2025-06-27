@@ -1,5 +1,5 @@
 import '/lib/ssb/polyfills/nashorn'
-/* eslint-disable new-cap */
+
 // @ts-ignore
 import JSONstat from 'jsonstat-toolkit/import.mjs'
 import { query, Content, ContentsResult } from '/lib/xp/content'
@@ -65,7 +65,8 @@ interface DatasetFilterOptions {
 export function parseKeyFigure(
   keyFigure: Content<KeyFigure & DataSource>,
   municipality?: MunicipalityWithCounty,
-  branch: string = DATASET_BRANCH
+  branch: string = DATASET_BRANCH,
+  language?: string
 ): KeyFigureView {
   const keyFigureViewData: KeyFigureView = {
     iconUrl: getIconUrl(keyFigure),
@@ -75,7 +76,7 @@ export function parseKeyFigure(
     noNumberText: localize({
       key: 'value.notFound',
     }),
-    time: undefined,
+    time: keyFigure.data.manualDate || undefined, // Use manualDate if available
     size: keyFigure.data.size,
     title: keyFigure.displayName,
     changes: undefined,
@@ -112,7 +113,8 @@ export function parseKeyFigure(
       }
     } else if (dataSource && dataSource._selected === DataSourceType.TBPROCESSOR) {
       const tbmlData: TbmlDataUniform = data as TbmlDataUniform
-      if (tbmlData !== null && tbmlData.tbml.presentation) getDataTbProcessor(keyFigureViewData, tbmlData, keyFigure)
+      if (tbmlData !== null && tbmlData.tbml.presentation)
+        getDataTbProcessor(keyFigureViewData, tbmlData, keyFigure, language)
 
       // Logging Mocked keyFigure
       if (dataSource?.tbprocessor?.urlOrId === '-1' && branch === 'master') {
@@ -134,7 +136,8 @@ export function parseKeyFigure(
 function getDataTbProcessor(
   keyFigureViewData: KeyFigureView,
   tbmlData: TbmlDataUniform,
-  keyFigure: Content<KeyFigure>
+  keyFigure: Content<KeyFigure>,
+  language?: string
 ): KeyFigureView {
   const bodyRows: Array<TableRowUniform> = tbmlData.tbml.presentation.table.tbody
   const head: Array<TableRowUniform> = tbmlData.tbml.presentation.table.thead
@@ -173,17 +176,20 @@ function getDataTbProcessor(
       changeDirection = 'up'
       const changeDirectionText = localize({
         key: 'keyFigure.increase',
+        locale: language,
       })
       srChangeText = `${changeDirectionText} ${changeText} ${changePeriod}`
     } else if (+change < 0) {
       changeDirection = 'down'
       const changeDirectionText = localize({
         key: 'keyFigure.decrease',
+        locale: language,
       })
       srChangeText = `${changeDirectionText} ${changeText} ${changePeriod}`
     } else {
       changeText = localize({
         key: 'keyFigure.noChange',
+        locale: language,
       })
     }
 

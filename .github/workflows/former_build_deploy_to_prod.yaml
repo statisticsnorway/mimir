@@ -15,7 +15,7 @@ jobs:
     environment: 'production'
     steps:
       - name: Download workflow artifact
-        uses: dawidd6/action-download-artifact@v6
+        uses: dawidd6/action-download-artifact@v11
         with:
           workflow: deploy_to_prod.yaml
           branch: master
@@ -29,8 +29,8 @@ jobs:
           url: ${{ secrets.ENONIC_PROD_URL }}
           username: ${{ secrets.ENONIC_USER }}
           password: ${{ secrets.ENONIC_PROD_PASS }}
-          client_cert: ${{ secrets.ENONIC_CERT }}
-          client_key: ${{ secrets.ENONIC_KEY }}
+          client_cert: ${{ secrets.ENONIC_DEPLOY_CERT }}
+          client_key: ${{ secrets.ENONIC_DEPLOY_KEY }}
           app_jar: "*.jar"
       - name: Get Version Number
         id: get_version_number
@@ -39,14 +39,17 @@ jobs:
           echo "VERSION=${VERSION}" >> $GITHUB_ENV
       - name: Create tag and release
         id: tag_and_release
+        if: steps.deploy_app_to_XP.outcome == 'success'
         run: gh release create $VERSION --generate-notes
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Send success message to Slack
         id: slack_success
-        if: success()
-        uses: slackapi/slack-github-action@v1
+        if: steps.deploy_app_to_XP.outcome == 'success'
+        uses: slackapi/slack-github-action@v2
         with:
+          webhook: ${{ secrets.SLACK_ALERTS_PROD }}
+          webhook-type: incoming-webhook
           # Using Github block kit (https://api.slack.com/reference/block-kit/blocks) to configure the Slack message, see https://docs.github.com/en/actions/learn-github-actions/contexts
           # for more information about context variables
           payload: |
@@ -82,14 +85,13 @@ jobs:
                 }
               ]
             }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_ALERTS_PROD }}
-          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
       - name: Send failure message to Slack
         id: slack_failure
-        if: failure()
-        uses: slackapi/slack-github-action@v1
+        if: steps.deploy_app_to_XP.outcome == 'failure'
+        uses: slackapi/slack-github-action@v2
         with:
+          webhook: ${{ secrets.SLACK_MIMIR_UTV }}
+          webhook-type: incoming-webhook
           payload: |
             {
               "blocks": [
@@ -123,6 +125,3 @@ jobs:
                 }
               ]
             }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_MIMIR_UTV }}
-          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK

@@ -20,11 +20,7 @@ const dummyReq: Partial<XP.Request> = {
 }
 
 export function getRssItemsStatkal(): string | null {
-  const statisticVariants: ContentLight<ReleaseVariant>[] = getUpcompingStatisticVariantsFromRepo()
-  const allMainSubjects: SubjectItem[] = getMainSubjects(dummyReq as XP.Request)
-  const upcomingVariants: StatkalVariant[] = getUpcomingVariants(statisticVariants, allMainSubjects)
-  const upcomingReleases: StatkalRelease[] = getUpcomingReleases(statisticVariants)
-  const rssReleases: RssRelease[] = getRssReleases(upcomingVariants, upcomingReleases)
+  const rssReleases: RssRelease[] = getRssReleasesStatkal()
 
   const xml = rssReleases
     ? `<?xml version="1.0" encoding="utf-8"?>
@@ -56,6 +52,14 @@ export function getRssItemsStatkal(): string | null {
 	</rssitems>`
     : null
   return xml
+}
+
+export function getRssReleasesStatkal(): RssRelease[] {
+  const statisticVariants: ContentLight<ReleaseVariant>[] = getUpcompingStatisticVariantsFromRepo()
+  const allMainSubjects: SubjectItem[] = getMainSubjects(dummyReq as XP.Request)
+  const upcomingVariants: StatkalVariant[] = getUpcomingVariants(statisticVariants, allMainSubjects)
+  const upcomingReleases: StatkalRelease[] = getUpcomingReleases(statisticVariants)
+  return getRssReleases(upcomingVariants, upcomingReleases)
 }
 
 function getUpcomingVariants(

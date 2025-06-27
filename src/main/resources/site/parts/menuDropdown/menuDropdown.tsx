@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Dropdown } from '@statisticsnorway/ssb-component-library'
 import { ChevronDown, ChevronUp } from 'react-feather'
-import { type MenuDropdownProps, type Municipality } from '../../../lib/types/partTypes/menuDropdown'
+import { type MenuDropdownProps, type Municipality } from '/lib/types/partTypes/menuDropdown'
 
 function MenuDropdown(props: MenuDropdownProps) {
   const {

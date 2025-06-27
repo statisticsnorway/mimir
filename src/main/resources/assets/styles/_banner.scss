@@ -14,18 +14,26 @@
     height: 100%;
     width: 100%;
     img {
-      height: 100%;
+      display: block;
+      height: auto;
+      width: auto;
+    }
+
+    @include media-breakpoint-down(md) {
+      width: 100vw;
+      left: 50%;
+      margin-left: -50vw;
     }
   }
 
   .subtitle {
-    text-shadow: 0 0 4px rgba(0,0,0,0.4);
+    text-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
     font-size: $header-font-size;
   }
 
   h1 {
-    line-height: 1.0;
-    text-shadow: 0 0 4px rgba(0,0,0,0.4);
+    line-height: 1;
+    text-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
   }
 
   &.opacity-0 {
@@ -34,7 +42,7 @@
 
   &.opacity-1 {
     opacity: 1;
-    transition: all .2s;
+    transition: all 0.2s;
   }
 
   &.fact-page-banner {
@@ -91,7 +99,6 @@
       }
     }
   }
-
 
   @media print {
     min-height: 80px;

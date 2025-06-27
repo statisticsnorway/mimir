@@ -99,7 +99,6 @@ function renderPart(req: XP.Request, relatedArticles: RelatedArticles['relatedAr
                   height: 180,
                 })
               } else {
-                // use placeholder if there is no seo image on the article
                 const image: string = articleContent.x['com-enonic-app-metafields']?.['meta-data']?.seoImage
                 imageSrc = imageUrl({
                   id: image,
@@ -192,6 +191,7 @@ function addDsArticle(
 ): RelatedArticles['relatedArticles'] {
   const statisticId: string = page._id
   const statisticData: Statistics = page.data as Statistics
+  const dsArticleType: string = statisticData.dsArticle ?? 'default'
   const statistic: StatisticInListing | undefined = getStatisticByIdFromRepo(statisticData.statistic)
 
   if (statistic) {
@@ -200,23 +200,35 @@ function addDsArticle(
     const nextRelease: string = releaseDates.nextRelease[0]
     const previousRelease: string = releaseDates.previousRelease[0]
     const statisticPublishDate: string = showPreview && nextRelease !== '' ? nextRelease : previousRelease
-    const assosiatedArticle: RelatedArticle | undefined = getDsArticle(statisticId, statisticPublishDate)
 
-    if (assosiatedArticle && relatedArticles) {
-      relatedArticles.unshift(assosiatedArticle)
+    const associatedArticle: RelatedArticle | undefined = getDsArticle(statisticId, statisticPublishDate, dsArticleType)
+
+    if (associatedArticle && relatedArticles) {
+      relatedArticles.unshift(associatedArticle)
     }
   }
 
   return relatedArticles
 }
 
-function getDsArticle(statisticId: string, statisticPublishDate: string): RelatedArticle | undefined {
+function getDsArticle(
+  statisticId: string,
+  statisticPublishDate: string,
+  dsArticleType: string
+): RelatedArticle | undefined {
   statisticPublishDate = statisticPublishDate ? new Date(statisticPublishDate).toLocaleDateString() : ''
+
+  const queryString =
+    dsArticleType === 'lastArticle'
+      ? `data.associatedStatistics.XP.content = "${statisticId}"`
+      : `data.associatedStatistics.XP.content = "${statisticId}" AND publish.from LIKE "${statisticPublishDate}*" `
+
+  const sort = 'publish.from DESC'
 
   const articleContent: Array<Content<Statistics | Article>> = query({
     count: 1,
-    sort: 'publish.from DESC',
-    query: `data.associatedStatistics.XP.content = "${statisticId}" AND publish.from LIKE "${statisticPublishDate}*" `,
+    sort,
+    query: queryString,
     contentTypes: [`${app.name}:article`],
   }).hits as unknown as Array<Content<Statistics | Article>>
 
