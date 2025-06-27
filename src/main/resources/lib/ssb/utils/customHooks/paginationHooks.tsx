@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
 
 interface UsePaginationProps<T> {
-  cardList?: boolean
   list: T[]
   listItemsPerPage: number
   loading?: boolean
   onLoadMore: () => void
+  onLoadFirst?: () => void
   totalCount?: number
 }
 
@@ -21,46 +21,56 @@ export const usePaginationKeyboardNavigation = (callback: () => void) => {
 }
 
 export const usePagination = <T,>({
-  cardList,
   list,
   listItemsPerPage,
   loading,
   onLoadMore,
+  onLoadFirst,
   totalCount,
 }: UsePaginationProps<T>) => {
   const [keyboardNavigation, setKeyboardNavigation] = useState(false)
   const currentElement = useRef<HTMLLIElement>(null)
+  const prevListLength = useRef(0)
 
-  const disableBtn = loading || totalCount === list.length
+  const showLess = totalCount === list.length
+  const hideBtn = (totalCount as number) < listItemsPerPage
+
+  // TODO: Will no longer be needed once it's been replaced by show less button in all components
+  const disableBtn = loading || showLess
 
   useEffect(() => {
-    if (keyboardNavigation) {
+    if (keyboardNavigation && list.length > prevListLength.current) {
       currentElement.current?.focus()
     }
-  }, [list])
+    prevListLength.current = list.length
+  }, [list, keyboardNavigation])
 
   const getCurrentElementRef = (index: number) => {
-    if (cardList) {
-      return index === listItemsPerPage ? currentElement : null
-    }
-
-    const lastElementInCurrentPage =
-      listItemsPerPage > list.length - listItemsPerPage ? listItemsPerPage : list.length - listItemsPerPage
-    return index === lastElementInCurrentPage ? currentElement : null
+    return index === prevListLength.current ? currentElement : null
   }
 
   const handleKeyboardNavigation = usePaginationKeyboardNavigation(() => {
     setKeyboardNavigation(true)
-    onLoadMore()
+    if (showLess && onLoadFirst) {
+      onLoadFirst()
+    } else {
+      onLoadMore()
+    }
   })
 
   const handleOnClick = () => {
     setKeyboardNavigation(false)
-    onLoadMore()
+    if (showLess && onLoadFirst) {
+      onLoadFirst()
+    } else {
+      onLoadMore()
+    }
   }
 
   return {
     disableBtn,
+    hideBtn,
+    showLess,
     getCurrentElementRef,
     handleKeyboardNavigation,
     handleOnClick,
