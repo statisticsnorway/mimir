@@ -34,12 +34,12 @@ function renderPart(req: XP.Request) {
 
   const pubDate: string | undefined = formatDate(page.publish?.from, 'PPP', language)
   const showModifiedDate: Article['showModifiedDate'] = page.data.showModifiedDate
-  let modifiedDate: string | undefined = undefined
-  if (showModifiedDate) {
-    modifiedDate = formatDate(showModifiedDate.dateOption?.modifiedDate, 'PPP', language)
-    if (showModifiedDate.dateOption?.showModifiedTime) {
-      modifiedDate = formatDate(page.data.showModifiedDate?.dateOption?.modifiedDate, 'PPp', language)
-    }
+  let modifiedDate: string | undefined
+  let modifiedDateIso: string | undefined
+  if (showModifiedDate?.dateOption?.modifiedDate) {
+    const dateFormat = showModifiedDate.dateOption?.showModifiedTime ? 'PPp' : 'PPP'
+    modifiedDate = formatDate(showModifiedDate.dateOption?.modifiedDate, dateFormat, language)
+    modifiedDateIso = new Date(showModifiedDate.dateOption.modifiedDate).toISOString()
   }
 
   const authorConfig: Article['authorItemSet'] = page.data.authorItemSet
@@ -71,6 +71,7 @@ function renderPart(req: XP.Request) {
     showPubDate: page.data.showPublishDate,
     pubDate,
     modifiedDate,
+    modifiedDateIso,
     authors,
     serialNumber: page.data.serialNumber,
     associatedStatistics: getAssociatedStatisticsLinks(associatedStatisticsConfig),
