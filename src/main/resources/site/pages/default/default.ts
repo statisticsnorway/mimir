@@ -200,7 +200,7 @@ export function get(req: XP.Request): XP.Response {
     : {}
 
   const footerContent: FooterContent | unknown = fromMenuCache(req, `footer_${menuCacheLanguage}`, () => {
-    return getFooterContent(language)
+    return getFooterContent(language, baseUrl)
   })
   const footer = r4xpRender(
     'Footer',
@@ -295,6 +295,9 @@ export function get(req: XP.Request): XP.Response {
     hideBreadcrumb,
     tableView: page.type === 'mimir:table',
     popupBody: popupComponent?.body,
+    dateModifiedMeta: page.data.showModifiedDate?.dateOption?.modifiedDate
+      ? new Date(page.data.showModifiedDate.dateOption.modifiedDate).toISOString()
+      : undefined,
   }
 
   const thymeleafRenderBody = render(view, model)
@@ -739,4 +742,5 @@ interface DefaultModel {
   hideBreadcrumb: boolean
   tableView: boolean
   popupBody: string | undefined
+  dateModifiedMeta?: string
 }
