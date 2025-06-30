@@ -36,6 +36,8 @@
     .cookie-button-decline {
       background: $ssb-white;
       color: $ssb-green-4;
+      margin: .12rem 0;
+      border: none;
 
       &:hover, &:focus {
         outline-color: $ssb-white;
