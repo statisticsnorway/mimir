@@ -62,10 +62,10 @@
   }
 
   @include media-breakpoint-down(md) {
-    left: 1rem;
     right: 1rem;
+    left: 1rem;
     bottom: 1rem;
-    width: 100%;
+    min-width: calc(100vw - 2rem);
     max-height: calc(100vh - 2rem);
     flex-direction: column;
     overflow-y: auto;
