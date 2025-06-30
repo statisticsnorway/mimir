@@ -11,6 +11,7 @@ export interface ArticleProps {
   showPubDate: boolean
   pubDate: string | undefined
   modifiedDate: string | undefined
+  modifiedDateIso?: string
   authors: Article['authorItemSet'] | undefined
   serialNumber: string | undefined
   associatedStatistics: Array<AssociatedLink> | []
