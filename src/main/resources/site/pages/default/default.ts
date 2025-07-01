@@ -24,7 +24,7 @@ import { type Language } from '/lib/types/language'
 import { render as r4xpRender } from '/lib/enonic/react4xp'
 
 import * as util from '/lib/util'
-import { getLanguage } from '/lib/ssb/utils/language'
+import { getLanguage, getPhrases } from '/lib/ssb/utils/language'
 import {
   getReleaseDatesByVariants,
   getStatisticByIdFromRepo,
@@ -179,10 +179,21 @@ export function get(req: XP.Request): XP.Response {
   //cookieBanner
   const isCookieBannerEnabled = isEnabled('show-cookie-banner', false, 'ssb')
   const cookieBannerComponent = isCookieBannerEnabled
-    ? r4xpRender('CookieBanner', { language: language.code, phrases: language.phrases, baseUrl }, req, {
-        id: 'cookieBanner',
-        pageContributions,
-      })
+    ? r4xpRender(
+        'CookieBanner',
+        {
+          language: language.code,
+          phrases: language.phrases,
+          baseUrl,
+          // Use processHtml for the Cookie Banner title for soft hyphen (&shy;) HTML entity, so there will be a line break with hypen when the text is too long for the container
+          cookieBannerTitle: processHtml({ value: getPhrases(page)?.cookieBannerTitle as string }),
+        },
+        req,
+        {
+          id: 'cookieBanner',
+          pageContributions,
+        }
+      )
     : undefined
   if (cookieBannerComponent?.pageContributions) {
     pageContributions = cookieBannerComponent.pageContributions

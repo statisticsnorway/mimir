@@ -8,7 +8,7 @@ const SERVICE_URL = '/_/service/mimir/setCookieConsent'
 window.dataLayer = window.dataLayer || []
 window.gtag = window.gtag || function () {}
 
-function CookieBanner({ language, phrases, baseUrl }: CookieBannerProps): JSX.Element | null {
+function CookieBanner({ language, phrases, baseUrl, cookieBannerTitle }: CookieBannerProps): JSX.Element | null {
   const [visible, setVisible] = useState(false)
   const sectionRef = useRef<HTMLElement>(null)
   const lastCookieRef = useRef<string | null>(null)
@@ -87,7 +87,7 @@ function CookieBanner({ language, phrases, baseUrl }: CookieBannerProps): JSX.El
     >
       <div className='cookie-banner-content'>
         <h3 className='cookie-banner-title' id='cookie-banner-title'>
-          {phrases.cookieBannerTitle}
+          {cookieBannerTitle}
         </h3>
         <p className='cookie-banner-text' id='cookie-banner-text'>
           {phrases.cookieBannerText}
