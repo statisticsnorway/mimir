@@ -86,9 +86,9 @@ function CookieBanner({ language, phrases, baseUrl, cookieBannerTitle }: CookieB
       tabIndex={0}
     >
       <div className='cookie-banner-content'>
-        <h3 className='cookie-banner-title' id='cookie-banner-title'>
+        <h2 className='cookie-banner-title h3' id='cookie-banner-title'>
           {cookieBannerTitle}
-        </h3>
+        </h2>
         <p className='cookie-banner-text' id='cookie-banner-text'>
           {phrases.cookieBannerText}
         </p>
