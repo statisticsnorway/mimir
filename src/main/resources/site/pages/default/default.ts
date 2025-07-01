@@ -178,6 +178,7 @@ export function get(req: XP.Request): XP.Response {
 
   //cookieBanner
   const isCookieBannerEnabled = isEnabled('show-cookie-banner', false, 'ssb')
+  const phrases = getPhrases(page)
   const cookieBannerComponent = isCookieBannerEnabled
     ? r4xpRender(
         'CookieBanner',
@@ -185,8 +186,10 @@ export function get(req: XP.Request): XP.Response {
           language: language.code,
           phrases: language.phrases,
           baseUrl,
-          // Use processHtml for the Cookie Banner title for soft hyphen (&shy;) HTML entity, so there will be a line break with hypen when the text is too long for the container
-          cookieBannerTitle: processHtml({ value: getPhrases(page)?.cookieBannerTitle as string }),
+          // Use processHtml for soft hyphen (&shy;) HTML entity, so there will be a line break with hypen when the text is too long for the container
+          cookieBannerTitle: processHtml({ value: phrases?.cookieBannerTitle as string }),
+          cookieBannerText: processHtml({ value: phrases?.cookieBannerText as string }),
+          cookieBannerLinkText: processHtml({ value: phrases?.cookieBannerLinkText as string }),
         },
         req,
         {

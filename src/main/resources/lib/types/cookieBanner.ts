@@ -5,4 +5,6 @@ export interface CookieBannerProps {
   phrases: Phrases
   baseUrl: string
   cookieBannerTitle: string
+  cookieBannerText: string
+  cookieBannerLinkText: string
 }
