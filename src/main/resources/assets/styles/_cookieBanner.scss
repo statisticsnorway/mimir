@@ -39,6 +39,7 @@
       margin: .12rem .12rem .12rem 0;
       border: none;
       font-size: 1rem;
+      min-height: 2.5rem;
 
       &:hover, &:focus {
         outline-color: $ssb-white;
