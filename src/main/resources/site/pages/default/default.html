@@ -1,9 +1,16 @@
 <html data-th-lang="${language.code}">
 
 <head>
-  <script>
+  <script th:inline="javascript">
     window.dataLayer = window.dataLayer || [];
+
+    if (!window.gtag) {
+      window.gtag = function () {
+        window.dataLayer.push(arguments);
+      };
+    }
   </script>
+
   <!-- Google Tag Manager -->
   <script th:inline="javascript" data-th-if="${GTM_TRACKING_ID}">
     (function (w, d, s, l, i) {
@@ -20,6 +27,7 @@
 
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta data-th-if="${dateModifiedMeta}" name="dateModified" data-th-content="${dateModifiedMeta}" />
   <meta data-th-if="${page.data.metaDescription}" name="description" data-th-content="${page.data.metaDescription}" />
   <title data-th-text="${pageTitle}"></title>
   <link rel="preload" data-th-href="${stylesUrl}" as="style" />
@@ -42,6 +50,9 @@
   </noscript>
   <!-- End Google Tag Manager (noscript) -->
 
+  <div id="cookieBanner"></div>
+  <div id="popup" data-th-if="${popupBody}"></div>
+
   <!-- HEADER -->
   <div class="header-wrapper" data-th-unless="${hideHeader}">
     <div class="container">
@@ -53,8 +64,6 @@
     </div>
   </div>
   <script type="application/ld+json" data-th-if="${jsonLd}" th:inline="javascript">[[${jsonLd}]]</script>
-
-  <div id="popup" data-th-if="${popupBody}"></div>
 
   <!-- Metainfo to make the page searchable -->
   <div id="metainfo-container" data-th-if="${addMetaInfoSearch}"

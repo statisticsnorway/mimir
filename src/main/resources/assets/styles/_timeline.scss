@@ -109,11 +109,9 @@
           border-radius: 4px;
         }
 
-        span {
-          @include roboto-condenced;
+        h2 {
           color: #fff;
           padding: 20px 40px;
-          font-size: 28px;
         }
       }
 
@@ -137,6 +135,22 @@
           .ssb-card {
             max-width: 400px;
           }
+
+          h3 {
+            margin-bottom: 0;
+          }
+
+          .content, .text {
+            line-height: 1.75rem;
+          }
+
+          .ssb-category-link {
+            &:hover, &:focus {
+              .ssb-title {
+                color: $ssb-white !important;
+              }
+            }
+          }
         }
       }
 
@@ -147,11 +161,7 @@
         display: grid;
         padding: 20px 40px;
         width: 100%;
-        .title {
-          @include roboto;
-          font-weight: bold;
-          font-size: 20px;
-        }
+
         .text {
           margin-top: 10px;
         }

@@ -24,7 +24,7 @@ import { type Language } from '/lib/types/language'
 import { render as r4xpRender } from '/lib/enonic/react4xp'
 
 import * as util from '/lib/util'
-import { getLanguage } from '/lib/ssb/utils/language'
+import { getLanguage, getPhrases } from '/lib/ssb/utils/language'
 import {
   getReleaseDatesByVariants,
   getStatisticByIdFromRepo,
@@ -77,7 +77,12 @@ export function get(req: XP.Request): XP.Response {
   if (!page) return { status: 404 }
 
   const pageConfig: DefaultPageConfig = page.page?.config
-
+  const pageType: string = pageConfig?.pageType || 'default'
+  const baseUrl: string =
+    app.config && app.config['ssb.baseUrl'] ? (app.config['ssb.baseUrl'] as string) : 'https://www.ssb.no'
+  let canonicalUrl: string | undefined = `${baseUrl}${pageUrl({
+    path: page._path,
+  })}`
   const ingress: string | undefined = page.data.ingress
     ? processHtml({
         value: page.data.ingress.replace(/&nbsp;/g, ' '),
@@ -162,8 +167,54 @@ export function get(req: XP.Request): XP.Response {
     }
   }
 
+  //popup-component
+  const isPopupEnabled = isEnabled('show-popup-survey', false, 'ssb') //
+  const popupComponent = isPopupEnabled
+    ? r4xpRender('Popup', {}, req, { id: 'popup', body: '<div id="popup"></div>', pageContributions })
+    : undefined
+  if (popupComponent) {
+    pageContributions = popupComponent.pageContributions
+  }
+
+  //cookieBanner
+  const isCookieBannerEnabled = isEnabled('show-cookie-banner', false, 'ssb')
+  const phrases = getPhrases(page)
+  const cookieBannerComponent = isCookieBannerEnabled
+    ? r4xpRender(
+        'CookieBanner',
+        {
+          language: language.code,
+          phrases: language.phrases,
+          baseUrl,
+          // Use processHtml for soft hyphen (&shy;) HTML entity, so there will be a line break with hypen when the text is too long for the container
+          cookieBannerTitle: processHtml({ value: phrases?.cookieBannerTitle as string }),
+          cookieBannerText: processHtml({ value: phrases?.cookieBannerText as string }),
+          cookieBannerLinkText: processHtml({ value: phrases?.cookieBannerLinkText as string }),
+        },
+        req,
+        {
+          id: 'cookieBanner',
+          pageContributions,
+        }
+      )
+    : undefined
+  if (cookieBannerComponent?.pageContributions) {
+    pageContributions = cookieBannerComponent.pageContributions
+  }
+  const cookies = !isCookieBannerEnabled
+    ? {
+        'cookie-consent': {
+          value: '',
+          path: '/',
+          maxAge: 0,
+          sameSite: 'lax',
+          secure: false,
+        },
+      }
+    : {}
+
   const footerContent: FooterContent | unknown = fromMenuCache(req, `footer_${menuCacheLanguage}`, () => {
-    return getFooterContent(language)
+    return getFooterContent(language, baseUrl)
   })
   const footer = r4xpRender(
     'Footer',
@@ -183,27 +234,11 @@ export function get(req: XP.Request): XP.Response {
     pageContributions = footer.pageContributions
   }
 
-  const isPopupEnabled = isEnabled('show-popup-survey', false, 'ssb')
-
-  const popupComponent = isPopupEnabled
-    ? r4xpRender('Popup', {}, req, { id: 'popup', body: '<div id="popup"></div>', pageContributions })
-    : undefined
-
-  if (popupComponent) {
-    pageContributions = popupComponent.pageContributions
-  }
-
   let municipality: MunicipalityWithCounty | undefined
   if (req.params.selfRequest) {
     municipality = getMunicipality(req as RequestWithCode)
   }
 
-  const pageType: string = pageConfig?.pageType || 'default'
-  const baseUrl: string =
-    app.config && app.config['ssb.baseUrl'] ? (app.config['ssb.baseUrl'] as string) : 'https://www.ssb.no'
-  let canonicalUrl: string | undefined = `${baseUrl}${pageUrl({
-    path: page._path,
-  })}`
   let municipalPageType: string | undefined
   if (pageType === 'municipality') {
     if (page._path.includes('/kommunefakta/')) {
@@ -274,6 +309,9 @@ export function get(req: XP.Request): XP.Response {
     hideBreadcrumb,
     tableView: page.type === 'mimir:table',
     popupBody: popupComponent?.body,
+    dateModifiedMeta: page.data.showModifiedDate?.dateOption?.modifiedDate
+      ? new Date(page.data.showModifiedDate.dateOption.modifiedDate).toISOString()
+      : undefined,
   }
 
   const thymeleafRenderBody = render(view, model)
@@ -324,6 +362,7 @@ export function get(req: XP.Request): XP.Response {
     headers: {
       'x-content-key': page._id,
     },
+    cookies,
   } as XP.Response
 }
 
@@ -716,5 +755,6 @@ interface DefaultModel {
   hideHeader: boolean
   hideBreadcrumb: boolean
   tableView: boolean
-  popupBody: string | undefined // Added for Popup component
+  popupBody: string | undefined
+  dateModifiedMeta?: string
 }

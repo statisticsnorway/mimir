@@ -14,4 +14,6 @@ export interface FooterContent {
   topButtonText?: string
   hiddenFooterText?: string
   language?: Language
+  isCookiebannerEnabled: boolean
+  baseUrl: string
 }

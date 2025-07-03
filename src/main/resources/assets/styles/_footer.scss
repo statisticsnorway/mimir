@@ -140,7 +140,7 @@ footer {
   .footer-bottom-row {
     display: flex;
     justify-content: space-between;
-    margin-top: 40px;
+    margin-top: 0.75rem;
 
     &.showOnMobile {
       display: grid;
@@ -237,6 +237,45 @@ footer {
 
     @include media-breakpoint-down(md) {
       margin-top: 10px;
+    }
+  }
+
+  .cookie-links {
+    margin-top: 40px;
+
+    .cookie-link {
+      height: fit-content;
+
+      .ssb-link {
+        padding: 11px 4px 11px 2px;
+        border: none;
+
+        .link-text {
+          border-bottom: 1px solid $ssb-green-2;
+          padding-bottom: 2px;
+        }
+      }
+    }
+
+    .cookie-reset {
+      margin-top: 1rem;
+
+      button {
+        @include reset-button;
+        text-decoration: none;
+
+        .link-text {
+          line-height: 1.7;
+          border-bottom: 1px solid $ssb-green-2;
+        }
+      }
+    }
+
+    @include media-breakpoint-down(lg) {
+      display: grid;
+      justify-content: center;
+      text-align: center;
+      margin-bottom: 40px;
     }
   }
 }
