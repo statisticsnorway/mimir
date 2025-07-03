@@ -48,7 +48,7 @@ jobs:
       - name: Checkout docker
         uses: actions/checkout@v4
         with:
-          ref: 'master'
+          ref: 'main'
           path: 'ssbno-xp-docker'
           repository: 'statisticsnorway/ssbno-xp-docker'
       - name: Download artifacts
