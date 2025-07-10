@@ -1,6 +1,5 @@
 import '/lib/ssb/polyfills/nashorn'
 import { Content } from '/lib/xp/content'
-import { sleep } from '/lib/xp/task'
 import { DatasetRepoNode, DataSource as dataSourceType, getDataset, DATASET_BRANCH } from '/lib/ssb/repo/dataset'
 import { type TbmlDataUniform, type TbmlSourceListUniform } from '/lib/types/xmlParser'
 import { TbprocessorParsedResponse, getTbmlData, TbProcessorTypes } from '/lib/ssb/dataset/tbprocessor/tbml'
@@ -41,42 +40,25 @@ function tryRequestTbmlData<T extends TbmlDataUniform | TbmlSourceListUniform>(
   processXml?: string,
   type?: string
 ): TbprocessorParsedResponse<T> | null {
-  let attempt = 0
-  let lastError = ''
+  try {
+    return getTbmlData(url, contentId, processXml, type) as TbprocessorParsedResponse<T>
+  } catch (e) {
+    const message = `Failed to fetch ${
+      type ? formatTbProcessorType(type) : 'data'
+    } from tbprocessor${url ? ` (${url})` : ''}: ${contentId}. (${e === 'java.io.EOFException' ? 'java.io.EOFException: Connection closed prematurely' : e})`
 
-  const maxRetries = 3
-  const delayMs = 1000 // 1 second delay between retries
-  while (attempt < maxRetries) {
-    try {
-      return getTbmlData(url, contentId, processXml, type) as TbprocessorParsedResponse<T>
-    } catch (e) {
-      lastError = e
-      attempt++
-
-      if (attempt < maxRetries) {
-        log.warning(
-          `Attempt ${attempt} failed for ${type ? formatTbProcessorType(type) : 'data'} from tbprocessor${url ? ` (${url})` : ''}: ${contentId}. Retrying...`
-        )
-        sleep(delayMs)
-      }
+    if (contentId) {
+      logUserDataQuery(contentId, {
+        file: '/lib/ssb/dataset/tbprocessor/tbprocessor.ts',
+        function: 'tryRequestTbmlData',
+        message: Events.REQUEST_COULD_NOT_CONNECT,
+        info: message,
+        status: e,
+      })
     }
+    log.error(message)
+    return null
   }
-
-  const message = `Failed to fetch ${
-    type ? formatTbProcessorType(type) : 'data'
-  } from tbprocessor${url ? ` (${url})` : ''}: ${contentId} after ${maxRetries} attempts. (${lastError === 'java.io.EOFException' ? 'java.io.EOFException: Connection closed prematurely' : lastError})`
-
-  if (contentId) {
-    logUserDataQuery(contentId, {
-      file: '/lib/ssb/dataset/tbprocessor/tbprocessor.ts',
-      function: 'tryRequestTbmlData',
-      message: Events.REQUEST_COULD_NOT_CONNECT,
-      info: message,
-      status: lastError,
-    })
-  }
-  log.error(message)
-  return null
 }
 
 function formatTbProcessorType(type: string): string {
