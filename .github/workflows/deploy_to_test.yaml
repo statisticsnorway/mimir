@@ -1,7 +1,4 @@
 name: 'Deploy to Test'
-permissions:
-  contents: read
-  actions: write
 on:
   pull_request:
   workflow_dispatch:  # Allows the workflow to be manually triggered.
@@ -9,6 +6,10 @@ on:
 concurrency:
   group: mimir-test
   cancel-in-progress: false
+
+permissions:
+  contents: read
+  actions: write
 
 jobs:
   deploy_to_test:
