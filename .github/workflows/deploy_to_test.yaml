@@ -1,3 +1,7 @@
+permissions:
+  contents: read
+  actions: write
+  secrets: read
 name: 'Deploy to Test'
 on:
   pull_request:
