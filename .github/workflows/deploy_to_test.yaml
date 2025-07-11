@@ -1,8 +1,7 @@
+name: 'Deploy to Test'
 permissions:
   contents: read
   actions: write
-
-name: 'Deploy to Test'
 on:
   pull_request:
   workflow_dispatch:  # Allows the workflow to be manually triggered.
