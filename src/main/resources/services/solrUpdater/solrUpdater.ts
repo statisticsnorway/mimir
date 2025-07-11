@@ -1,18 +1,18 @@
 import { Content, query } from '/lib/xp/content'
 import { pageUrl } from '/lib/xp/portal'
 import { render } from '/lib/thymeleaf'
-import { subDays, format } from '/lib/vendor/dateFns'
+import { subDays } from '/lib/vendor/dateFns'
 import { Article, Page, Statistics } from '/site/content-types'
 
 export const get = (): XP.Response => {
-  const yesterday: string = format(subDays(new Date(), 1), 'yyyy-MM-dd')
+  const yesterday: string = subDays(new Date(), 1).toISOString()
   const baseUrl: string = app.config && app.config['ssb.baseUrl'] ? app.config['ssb.baseUrl'] : 'https://www.ssb.no'
 
   const changedContent = query<Content<Statistics | Article | Page>>({
     start: 0,
-    count: 100,
+    count: 500,
     sort: 'modifiedTime DESC',
-    query: `modifiedTime >= date('${yesterday}') OR publish.from >= date('${yesterday}')`,
+    query: `modifiedTime >= dateTime('${yesterday}') OR publish.from >= dateTime('${yesterday}')`,
     contentTypes: [`${app.name}:statistics`, `${app.name}:article`, `${app.name}:page`],
   })
 
