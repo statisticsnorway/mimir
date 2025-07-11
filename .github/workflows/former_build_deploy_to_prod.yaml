@@ -8,6 +8,10 @@ on:
         description: 'The Github Action run number to deploy'
         required: true
 
+permissions:
+  contents: read
+  pull-requests: write
+
 jobs:
   deploy-artifact:
     name: 'Deploy artifact'

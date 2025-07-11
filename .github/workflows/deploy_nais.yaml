@@ -9,6 +9,9 @@ env:
   IMAGE: mimir
   TAG: ${{ github.head_ref }}-${{ github.sha }}
 
+permissions:
+  contents: read
+
 jobs:
   build_xp:
     name: 'Build XP jar'
