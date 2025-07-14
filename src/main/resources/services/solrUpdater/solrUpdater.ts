@@ -1,22 +1,28 @@
 import { Content, query } from '/lib/xp/content'
+import { pageUrl } from '/lib/xp/portal'
 import { render } from '/lib/thymeleaf'
 import { subDays, format } from '/lib/vendor/dateFns'
 import { Article, Page, Statistics } from '/site/content-types'
 
-const yesterday: string = format(subDays(new Date(), 1), 'yyyy-MM-dd')
-const baseUrl: string = app.config && app.config['ssb.baseUrl'] ? app.config['ssb.baseUrl'] : 'https://www.ssb.no'
-
 export const get = (): XP.Response => {
+  const yesterday: string = subDays(new Date(), 1).toISOString()
   const changedContent = query<Content<Statistics | Article | Page>>({
     start: 0,
-    count: 100,
+    count: 500,
     sort: 'modifiedTime DESC',
-    query: `modifiedtime >= date('${yesterday}') OR publish.from >= date('${yesterday}')`,
+    query: `modifiedTime >= dateTime('${yesterday}') OR publish.from >= dateTime('${yesterday}')`,
     contentTypes: [`${app.name}:statistics`, `${app.name}:article`, `${app.name}:page`],
   })
 
+  log.info(
+    `Found ${changedContent.hits.length} changed content items for the solrUpdater service since yesterday: ${format(yesterday, 'yyyy-MM-dd HH:mm')} (${yesterday}).`
+  )
+
   const urls: string[] = changedContent.hits.map((content) => {
-    return baseUrl + content._path.slice(4) // trim off leading '/ssb' from path
+    return pageUrl({
+      path: content._path,
+      type: 'absolute',
+    })
   })
 
   const template = resolve('./solrUpdater.html')
