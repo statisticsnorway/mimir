@@ -45,14 +45,14 @@ function tryRequestTbmlData<T extends TbmlDataUniform | TbmlSourceListUniform>(
   let lastErrorMsg = ''
 
   const maxRetries = 3
-  while (attempt < maxRetries) {
+  while (attempt <= maxRetries) {
     try {
       return getTbmlData(url, contentId, processXml, type) as TbprocessorParsedResponse<T>
     } catch (e) {
       attempt++
       lastErrorMsg = e
 
-      if (attempt < maxRetries) {
+      if (attempt <= maxRetries) {
         log.warning(
           `Attempt ${attempt} failed for ${type ? formatTbProcessorType(type) : 'data'} from tbprocessor${url ? ` (${url})` : ''}: ${contentId}. Retrying...`
         )
