@@ -6,8 +6,6 @@ import { Article, Page, Statistics } from '/site/content-types'
 
 export const get = (): XP.Response => {
   const yesterday: string = subDays(new Date(), 1).toISOString()
-  const baseUrl: string = app.config && app.config['ssb.baseUrl'] ? app.config['ssb.baseUrl'] : 'https://www.ssb.no'
-
   const changedContent = query<Content<Statistics | Article | Page>>({
     start: 0,
     count: 500,
@@ -21,12 +19,10 @@ export const get = (): XP.Response => {
   )
 
   const urls: string[] = changedContent.hits.map((content) => {
-    return (
-      baseUrl +
-      pageUrl({
-        path: content._path,
-      })
-    )
+    return pageUrl({
+      path: content._path,
+      type: 'absolute',
+    })
   })
 
   const template = resolve('./solrUpdater.html')
