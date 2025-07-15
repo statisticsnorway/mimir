@@ -1,0 +1,13 @@
+<macro>
+  <display-name>Nøkkeltall i løpende tekst</display-name>
+  <form>
+    <input name="keyFigure" type="ContentSelector">
+      <label>Nøkkeltall</label>
+      <occurrences minimum="0" maximum="0" />
+      <config>
+        <allowPath>${site}</allowPath>
+        <allowContentType>keyFigure</allowContentType>
+      </config>
+    </input>
+  </form>
+</macro>
