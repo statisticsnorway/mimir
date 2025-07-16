@@ -37,7 +37,7 @@ function renderKeyFigureTextMacro(context: XP.MacroContext) {
         .replace(/\[tid\]/g, time ?? 'Mangler tid.')
         .replace(/\[tall\]/g, number ?? 'Mangler tall.')
         .replace(/\[benevning\]/g, numberDescription ?? 'Mangler benevning.')
-        .replace(/\[endring\]/g, changeText ?? 'Mangler endringstall.')
+        .replace(/\[endringstekst\]/g, changeText ?? 'Mangler endringstekst.')
     : undefined
   const defaultText = [title, time, number, numberDescription, changeText].join(' ')
 
