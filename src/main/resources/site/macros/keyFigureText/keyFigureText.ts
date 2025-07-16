@@ -26,11 +26,24 @@ function renderKeyFigureTextMacro(context: XP.MacroContext) {
   const municipality = getMunicipality({ code: keyFigure?.data.default } as RequestWithCode)
   const language: string = page.language ? page.language : 'nb'
   const keyFigureData = parseKeyFigure(keyFigure as Content<KeyFigure>, municipality, DATASET_BRANCH, language)
-  const { number, numberDescription, title } = keyFigureData
+
+  const { title, time, number, numberDescription, changes } = keyFigureData
+  const changeText = changes?.srChangeText
+
+  // These should be resolved in Content Studio so we might not need to translate these
+  const manualText = context?.params?.text
+    ? context.params.text
+        .replace(/\[tittel\]/g, title ?? 'Mangler tittel.')
+        .replace(/\[tid\]/g, time ?? 'Mangler tid.')
+        .replace(/\[tall\]/g, number ?? 'Mangler tall.')
+        .replace(/\[benevning\]/g, numberDescription ?? 'Mangler benevning.')
+        .replace(/\[endring\]/g, changeText ?? 'Mangler endringstall.')
+    : undefined
+  const defaultText = [title, time, number, numberDescription, changeText].join(' ')
 
   const keyFigureText = new React4xp('site/macros/keyFigureText/keyFigureText')
     .setProps({
-      text: `${title} ${number} ${numberDescription}`,
+      text: manualText ?? defaultText,
     })
     .uniqueId()
 

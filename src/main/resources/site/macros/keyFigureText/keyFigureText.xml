@@ -3,11 +3,16 @@
   <form>
     <input name="keyFigure" type="ContentSelector">
       <label>Nøkkeltall</label>
-      <occurrences minimum="0" maximum="0" />
+      <occurrences minimum="0" maximum="1" />
       <config>
         <allowPath>${site}</allowPath>
         <allowContentType>keyFigure</allowContentType>
       </config>
+    </input>
+    <input name="text" type="TextLine">
+      <label>Tekst</label>
+      <help-text>Her kan man bruke variabler for å vise dynamisk data (f.eks. [tall]).</help-text>
+      <occurrences minimum="0" maximum="1" />
     </input>
   </form>
 </macro>
