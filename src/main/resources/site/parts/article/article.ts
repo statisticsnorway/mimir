@@ -66,7 +66,7 @@ function renderPart(req: XP.Request) {
     phrases,
     introTitle: page.data.introTitle,
     title: page.displayName,
-    preface: page.data.ingress,
+    preface: page.data.ingress ? processHtml({ value: page.data.ingress }) : undefined,
     bodyText,
     showPubDate: page.data.showPublishDate,
     pubDate,

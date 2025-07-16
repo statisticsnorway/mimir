@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import { getContent } from '/lib/xp/portal'
 import { get, type Content } from '/lib/xp/content'
 import { React4xp } from '/lib/enonic/react4xp'
@@ -28,7 +29,7 @@ function renderKeyFigureTextMacro(context: XP.MacroContext) {
   const keyFigureData = parseKeyFigure(keyFigure as Content<KeyFigure>, municipality, DATASET_BRANCH, language)
 
   const { title, time, number, numberDescription, changes } = keyFigureData
-  const changeText = changes?.srChangeText
+  const changeText = changes?.srChangeText ?? changes?.changeText
 
   // These should be resolved in Content Studio so we might not need to translate these
   const manualText = context?.params?.text
