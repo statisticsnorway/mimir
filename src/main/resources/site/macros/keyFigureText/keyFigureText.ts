@@ -89,7 +89,7 @@ function parseText(keyFigureData: KeyFigureView, context: XP.MacroContext, langu
         .replace(/\[benevning\]/g, numberDescription ?? '<mangler benevning>')
         .replace(/\[endringstekst\]/g, changeDirection ?? '<mangler endringstekst>')
         .replace(/\[endringstall\]/g, changeText ?? '<mangler endringstall>')
-        .replace(/\[endringsdato\]/g, changePeriod ?? '<mangler endringsdato>')
+        .replace(/\[endringsperiode\]/g, changePeriod ?? '<mangler endringsperiod>')
     : undefined
   const defaultText = [title, time, number, numberDescription, changeDirection, changeText, changePeriod].join(' ')
 
