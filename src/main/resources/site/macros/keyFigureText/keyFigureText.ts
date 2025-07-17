@@ -78,7 +78,8 @@ function parseText(keyFigureData: KeyFigureView, context: XP.MacroContext, langu
     ? getLocalizedChangeDirection(changes.changeDirection, language)
     : undefined
   const changeText = changes?.changeText
-  const changePeriod = changes?.changePeriod
+  // We have to manually strip away 'endring' for change periods that have that word
+  const changePeriod = changes?.changePeriod ? changes.changePeriod.toLowerCase().replace('endring ', '') : undefined
 
   // These should be resolved in Content Studio so we might not need to translate these
   const manualText = context?.params?.text
