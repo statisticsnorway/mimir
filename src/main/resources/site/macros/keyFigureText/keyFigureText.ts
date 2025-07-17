@@ -1,6 +1,6 @@
-/* eslint-disable complexity */
 import { getContent } from '/lib/xp/portal'
 import { get, type Content } from '/lib/xp/content'
+import { localize } from '/lib/xp/i18n'
 import { React4xp } from '/lib/enonic/react4xp'
 
 import { parseKeyFigure } from '/lib/ssb/parts/keyFigure'
@@ -8,6 +8,7 @@ import { renderError } from '/lib/ssb/error/error'
 import { getMunicipality } from '/lib/ssb/dataset/klass/municipalities'
 import { RequestWithCode } from '/lib/types/municipalities'
 import { DATASET_BRANCH } from '/lib/ssb/repo/dataset'
+import { type KeyFigureChanges, type KeyFigureView } from '/lib/types/partTypes/keyFigure'
 import { KeyFigure } from '/site/content-types'
 
 export function macro(context: XP.MacroContext) {
@@ -28,23 +29,9 @@ function renderKeyFigureTextMacro(context: XP.MacroContext) {
   const language: string = page.language ? page.language : 'nb'
   const keyFigureData = parseKeyFigure(keyFigure as Content<KeyFigure>, municipality, DATASET_BRANCH, language)
 
-  const { title, time, number, numberDescription, changes } = keyFigureData
-  const changeText = changes?.srChangeText ?? changes?.changeText
-
-  // These should be resolved in Content Studio so we might not need to translate these
-  const manualText = context?.params?.text
-    ? context.params.text
-        .replace(/\[tittel\]/g, title ?? 'Mangler tittel.')
-        .replace(/\[tid\]/g, time ?? 'Mangler tid.')
-        .replace(/\[tall\]/g, number ?? 'Mangler tall.')
-        .replace(/\[benevning\]/g, numberDescription ?? 'Mangler benevning.')
-        .replace(/\[endringstekst\]/g, changeText ?? 'Mangler endringstekst.')
-    : undefined
-  const defaultText = [title, time, number, numberDescription, changeText].join(' ')
-
   const keyFigureText = new React4xp('site/macros/keyFigureText/keyFigureText')
     .setProps({
-      text: manualText ?? defaultText,
+      text: parseText(keyFigureData, context, language),
     })
     .uniqueId()
 
@@ -54,4 +41,57 @@ function renderKeyFigureTextMacro(context: XP.MacroContext) {
       request: context.request,
     }),
   }
+}
+
+function getLocalizedChangeDirection(
+  changeDirection: KeyFigureChanges['changeDirection'] | undefined,
+  language: string
+) {
+  if (changeDirection === 'up') {
+    return localize({
+      key: 'keyFigure.increase',
+      locale: language,
+    }).toLowerCase()
+  }
+
+  if (changeDirection === 'down') {
+    return localize({
+      key: 'keyFigure.decrease',
+      locale: language,
+    }).toLowerCase()
+  }
+
+  if (changeDirection === 'same') {
+    return localize({
+      key: 'keyFigure.noChange',
+      locale: language,
+    }).toLowerCase()
+  }
+
+  return changeDirection
+}
+
+function parseText(keyFigureData: KeyFigureView, context: XP.MacroContext, language: string) {
+  const { title, time, number, numberDescription, changes } = keyFigureData
+
+  const changeDirection = changes?.changeDirection
+    ? getLocalizedChangeDirection(changes.changeDirection, language)
+    : undefined
+  const changeText = changes?.changeText
+  const changePeriod = changes?.changePeriod
+
+  // These should be resolved in Content Studio so we might not need to translate these
+  const manualText = context?.params?.text
+    ? context.params.text
+        .replace(/\[tittel\]/g, title ?? 'Mangler tittel.')
+        .replace(/\[tid\]/g, time ?? 'Mangler tid.')
+        .replace(/\[tall\]/g, number ?? 'Mangler tall.')
+        .replace(/\[benevning\]/g, numberDescription ?? 'Mangler benevning.')
+        .replace(/\[endringstekst\]/g, changeDirection ?? 'Mangler endringstekst.')
+        .replace(/\[endringstall\]/g, changeText ?? 'Mangler endringstall.')
+        .replace(/\[endringsdato\]/g, changePeriod ?? 'Mangler endringsdato.')
+    : undefined
+  const defaultText = [title, time, number, numberDescription, changeDirection, changeText, changePeriod].join(' ')
+
+  return manualText ?? defaultText
 }
