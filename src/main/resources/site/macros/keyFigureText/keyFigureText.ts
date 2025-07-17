@@ -83,13 +83,13 @@ function parseText(keyFigureData: KeyFigureView, context: XP.MacroContext, langu
   // These should be resolved in Content Studio so we might not need to translate these
   const manualText = context?.params?.text
     ? context.params.text
-        .replace(/\[tittel\]/g, title ?? 'Mangler tittel.')
-        .replace(/\[tid\]/g, time ?? 'Mangler tid.')
-        .replace(/\[tall\]/g, number ?? 'Mangler tall.')
-        .replace(/\[benevning\]/g, numberDescription ?? 'Mangler benevning.')
-        .replace(/\[endringstekst\]/g, changeDirection ?? 'Mangler endringstekst.')
-        .replace(/\[endringstall\]/g, changeText ?? 'Mangler endringstall.')
-        .replace(/\[endringsdato\]/g, changePeriod ?? 'Mangler endringsdato.')
+        .replace(/\[tittel\]/g, title ?? '<mangler tittel>')
+        .replace(/\[tid\]/g, time ?? '<mangler tid>')
+        .replace(/\[tall\]/g, number ?? '<mangler tall>')
+        .replace(/\[benevning\]/g, numberDescription ?? '<mangler benevning>')
+        .replace(/\[endringstekst\]/g, changeDirection ?? '<mangler endringstekst>')
+        .replace(/\[endringstall\]/g, changeText ?? '<mangler endringstall>')
+        .replace(/\[endringsdato\]/g, changePeriod ?? '<mangler endringsdato>')
     : undefined
   const defaultText = [title, time, number, numberDescription, changeDirection, changeText, changePeriod].join(' ')
 
