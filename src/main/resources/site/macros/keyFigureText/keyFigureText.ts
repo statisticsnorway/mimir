@@ -77,7 +77,7 @@ function parseText(keyFigureData: KeyFigureView, context: XP.MacroContext, langu
   const changeDirection = changes?.changeDirection
     ? getLocalizedChangeDirection(changes.changeDirection, language)
     : undefined
-  const changeText = changes?.changeText
+  const changeText = changes?.changeDirection !== 'same' ? changes?.changeText : ''
   // We have to manually strip away 'endring' for change periods to be able to piece these words together in a sentence
   const changePeriod = changes?.changePeriod ? changes.changePeriod.toLowerCase().replace('endring ', '') : undefined
 
@@ -90,7 +90,7 @@ function parseText(keyFigureData: KeyFigureView, context: XP.MacroContext, langu
         .replace(/\$benevning/g, numberDescription ?? '<mangler benevning>')
         .replace(/\$endringstekst/g, changeDirection ?? '<mangler endringstekst>')
         .replace(/\$endringstall/g, changeText ?? '<mangler endringstall>')
-        .replace(/\$endringsperiode/g, changePeriod ?? '<mangler endringsperiod>')
+        .replace(/\$endringsperiode/g, changePeriod ?? '<mangler endringsperiode>')
     : undefined
   const defaultText = [title, time, number, numberDescription, changeDirection, changeText, changePeriod].join(' ')
 
