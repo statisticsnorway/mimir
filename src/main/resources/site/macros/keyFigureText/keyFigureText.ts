@@ -9,6 +9,7 @@ import { getMunicipality } from '/lib/ssb/dataset/klass/municipalities'
 import { RequestWithCode } from '/lib/types/municipalities'
 import { DATASET_BRANCH } from '/lib/ssb/repo/dataset'
 import { type KeyFigureChanges, type KeyFigureView } from '/lib/types/partTypes/keyFigure'
+import { forceArray } from '/lib/ssb/utils/arrayUtils'
 import { KeyFigure } from '/site/content-types'
 
 export function macro(context: XP.MacroContext) {
@@ -28,10 +29,15 @@ function renderKeyFigureTextMacro(context: XP.MacroContext) {
   const municipality = getMunicipality({ code: keyFigure?.data.default } as RequestWithCode)
   const language: string = page.language ? page.language : 'nb'
   const keyFigureData = parseKeyFigure(keyFigure as Content<KeyFigure>, municipality, DATASET_BRANCH, language)
+  const sourceList = forceArray(keyFigure?.data.source).length
+    ? forceArray(keyFigure?.data.source)
+        .map(({ title }) => title)
+        .join('. ')
+    : undefined
 
   const keyFigureText = new React4xp('site/macros/keyFigureText/keyFigureText')
     .setProps({
-      text: parseText(keyFigureData, context, language),
+      text: parseText(keyFigureData, context, sourceList, language),
     })
     .uniqueId()
 
@@ -71,7 +77,12 @@ function getLocalizedChangeDirection(
   return changeDirection
 }
 
-function parseText(keyFigureData: KeyFigureView, context: XP.MacroContext, language: string) {
+function parseText(
+  keyFigureData: KeyFigureView,
+  context: XP.MacroContext,
+  sourceList: string | undefined,
+  language: string
+) {
   const { title, time, number, numberDescription, changes } = keyFigureData
 
   const changeDirection = changes?.changeDirection
@@ -91,6 +102,7 @@ function parseText(keyFigureData: KeyFigureView, context: XP.MacroContext, langu
         .replace(/\$endringstekst/g, changeDirection ?? '<mangler endringstekst>')
         .replace(/\$endringstall/g, changeText ?? '<mangler endringstall>')
         .replace(/\$endringsperiode/g, changePeriod ?? '<mangler endringsperiode>')
+        .replace(/\$kilde/g, sourceList ?? '<mangler kilde>')
     : undefined
   const defaultText = [title, time, number, numberDescription, changeDirection, changeText, changePeriod].join(' ')
 
