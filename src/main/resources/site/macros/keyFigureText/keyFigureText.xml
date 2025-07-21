@@ -11,7 +11,7 @@
     </input>
     <input name="text" type="TextLine">
       <label>Tekst</label>
-      <help-text>Her kan man bruke variabler for å vise dynamisk data. De tilgjengelige variablene er $tittel, $tid, $tall, $benevning, $endringstekst, $endringstall, $endringsperiode og $kilde.</help-text>
+      <help-text>Her kan man bruke variabler for å vise dynamisk data. De tilgjengelige variablene er $tittel, $tid, $tall, $benevning, $endringstekst, $endringstall, $endringsperiode og $kildetekst.</help-text>
       <occurrences minimum="0" maximum="1" />
     </input>
   </form>

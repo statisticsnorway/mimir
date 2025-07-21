@@ -29,15 +29,13 @@ function renderKeyFigureTextMacro(context: XP.MacroContext) {
   const municipality = getMunicipality({ code: keyFigure?.data.default } as RequestWithCode)
   const language: string = page.language ? page.language : 'nb'
   const keyFigureData = parseKeyFigure(keyFigure as Content<KeyFigure>, municipality, DATASET_BRANCH, language)
-  const sourceList = forceArray(keyFigure?.data.source).length
-    ? forceArray(keyFigure?.data.source)
-        .map(({ title }) => title)
-        .join('. ')
+  const sourceText = forceArray(keyFigure?.data.source).length
+    ? forceArray(keyFigure?.data.source).map(({ title }) => title)[0]
     : undefined
 
   const keyFigureText = new React4xp('site/macros/keyFigureText/keyFigureText')
     .setProps({
-      text: parseText(keyFigureData, context, sourceList, language),
+      text: parseText(keyFigureData, context, sourceText, language),
     })
     .uniqueId()
 
@@ -80,7 +78,7 @@ function getLocalizedChangeDirection(
 function parseText(
   keyFigureData: KeyFigureView,
   context: XP.MacroContext,
-  sourceList: string | undefined,
+  sourceText: string | undefined,
   language: string
 ) {
   const { title, time, number, numberDescription, changes } = keyFigureData
@@ -102,7 +100,7 @@ function parseText(
         .replace(/\$endringstekst/g, changeDirection ?? '<mangler endringstekst>')
         .replace(/\$endringstall/g, changeText ?? '<mangler endringstall>')
         .replace(/\$endringsperiode/g, changePeriod ?? '<mangler endringsperiode>')
-        .replace(/\$kilde/g, sourceList ?? '<mangler kilde>')
+        .replace(/\$kildetekst/g, sourceText ?? '<mangler kildetekst>')
     : undefined
   const defaultText = [title, time, number, numberDescription, changeDirection, changeText, changePeriod].join(' ')
 
