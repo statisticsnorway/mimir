@@ -67,7 +67,7 @@ spec:
     - secret: gitpull-config
   filesFrom:
     - secret: gitpull-key-private
-      mountPath: /ssh
+      mountPath: /enonic-xp/home/config/ssh
 
   env:
     - name: VHOST_HOST
