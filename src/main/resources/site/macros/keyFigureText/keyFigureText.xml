@@ -9,7 +9,7 @@
         <allowContentType>keyFigure</allowContentType>
       </config>
     </input>
-    <input name="text" type="TextLine">
+    <input name="text" type="TextArea">
       <label>Tekst</label>
       <help-text>Her kan man bruke variabler for å vise dynamisk data. De tilgjengelige variablene er $tittel, $tid, $tall, $benevning, $endringstekst, $endringstall, $endringsperiode og $kildetekst.</help-text>
       <occurrences minimum="0" maximum="1" />
