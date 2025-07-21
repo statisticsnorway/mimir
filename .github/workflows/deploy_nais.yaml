@@ -105,7 +105,8 @@ jobs:
           file: './ssbno-xp-docker/Dockerfile'
           push: true
           tags: ${{ steps.metadata.outputs.tags }}
-          #         tags: ${{ github.ref_name }}-${{ github.sha }}
+          build-args: |
+            BRANCH_NAME=${{ github.head_ref }}
           labels: ${{ steps.metadata.outputs.labels }}
 
   deploy:
