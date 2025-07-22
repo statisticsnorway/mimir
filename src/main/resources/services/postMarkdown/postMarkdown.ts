@@ -13,9 +13,9 @@ export const post = (req: XP.Request): XP.Response => {
   const nodeId = typeof json._id === 'string' ? json._id : ''
   const nodeExists = nodeId ? conn.exists(nodeId) : false
 
-  let result
+  let node
   if (nodeExists) {
-    result = conn.modify({
+    node = conn.modify({
       key: nodeId,
       editor: (node) => ({
         ...node,
@@ -23,12 +23,16 @@ export const post = (req: XP.Request): XP.Response => {
       }),
     })
   } else {
-    result = conn.create(data)
+    node = conn.create(data)
+  }
+
+  const body = {
+    _id: node._id,
   }
 
   return {
     status: 200,
-    body: result,
+    body: body,
     contentType: 'application/json',
   }
 }
