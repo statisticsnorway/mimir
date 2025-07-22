@@ -1,3 +1,4 @@
+import { exists as existsContent } from '/lib/xp/content'
 import { connectMarkdownRepo } from '/lib/ssb/utils/markdownUtils'
 
 export const post = (req: XP.Request): XP.Response => {
@@ -25,6 +26,15 @@ export const post = (req: XP.Request): XP.Response => {
   } else {
     node = conn.create(data)
   }
+
+  const previewId = typeof node.previewId === 'string' ? node.previewId : ''
+  const previewExists = previewId
+    ? existsContent({
+        key: previewId,
+      })
+    : false
+
+  log.info(previewExists)
 
   const body = {
     _id: node._id,
