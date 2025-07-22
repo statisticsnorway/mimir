@@ -1,4 +1,4 @@
-import { exists as existsContent } from '/lib/xp/content'
+import { exists as existsContent, get as getContent } from '/lib/xp/content'
 import { connectMarkdownRepo } from '/lib/ssb/utils/markdownUtils'
 
 export const post = (req: XP.Request): XP.Response => {
@@ -34,10 +34,16 @@ export const post = (req: XP.Request): XP.Response => {
       })
     : false
 
-  log.info(previewExists)
+  let previewPath: string
+  if (previewExists) {
+    previewPath = getPreviewPath(previewId)
+  } else {
+    previewPath = ''
+  }
 
   const body = {
     _id: node._id,
+    previewPath: previewPath,
   }
 
   return {
@@ -45,4 +51,12 @@ export const post = (req: XP.Request): XP.Response => {
     body: body,
     contentType: 'application/json',
   }
+}
+
+function getPreviewPath(previewId: string): string {
+  const content = getContent({
+    key: previewId,
+  })
+  const contentPath = content?._path ?? ''
+  return '/admin/site/preview/default/draft' + contentPath
 }
