@@ -11,7 +11,7 @@ import {
   type VariantInListing,
 } from '/lib/ssb/dashboard/statreg/types'
 import { imageUrl, getImageAlt } from '/lib/ssb/utils/imageUtils'
-import { getProfiledCardAriaLabel } from '/lib/ssb/utils/utils'
+import { getProfiledCardAriaLabel, getSubTitle } from '/lib/ssb/utils/utils'
 
 import { renderError } from '/lib/ssb/error/error'
 import * as util from '/lib/util'
@@ -108,7 +108,7 @@ function renderPart(req: XP.Request, relatedArticles: RelatedArticles['relatedAr
                 imageAlt = getImageAlt(image) ? getImageAlt(image) : ''
               }
 
-              const subTitle = getSubTitle(articleContent, phrases, language) ?? ''
+              const subTitle = getSubTitle(articleContent, language) ?? ''
               return {
                 title: articleContent.displayName,
                 subTitle,
@@ -163,25 +163,6 @@ function renderPart(req: XP.Request, relatedArticles: RelatedArticles['relatedAr
       body: body,
     }
   )
-}
-
-function getSubTitle(articleContent: Content<Article> | null, phrases: Phrases, language: string): string | undefined {
-  if (articleContent) {
-    let type = ''
-    if (articleContent.type === `${app.name}:article`) {
-      type = phrases.articleName
-    }
-    let prettyDate: string | undefined = ''
-    if (articleContent.data?.showModifiedDate?.dateOption?.modifiedDate) {
-      prettyDate = formatDate(articleContent.data.showModifiedDate.dateOption.modifiedDate, 'PPP', language)
-    } else if (articleContent.publish?.from) {
-      prettyDate = formatDate(articleContent.publish.from, 'PPP', language)
-    } else {
-      prettyDate = formatDate(articleContent.createdTime, 'PPP', language)
-    }
-    return `${type ? `${type} / ` : ''}${prettyDate as string}`
-  }
-  return
 }
 
 function addDsArticle(
