@@ -229,7 +229,7 @@ export function getSubTitle(XPContent: Content<Article> | Content<Statistics>, l
 
   if (XPContent.type === `${app.name}:statistics`) {
     type = localize({
-      key: 'contentType.search.statistics',
+      key: 'contentType.search.statistikk',
       locale: language,
     })
   }
