@@ -1,5 +1,6 @@
-import { exists as existsContent, get as getContent } from '/lib/xp/content'
+import { create as createContent, exists as existsContent, get as getContent } from '/lib/xp/content'
 import { get as getContext, run as runWithContext } from '/lib/xp/context'
+import { type RepoConnection } from '/lib/xp/node'
 import { type ContextCallback } from '/lib/ssb/repo/common'
 import { connectMarkdownRepo } from '/lib/ssb/utils/markdownUtils'
 
@@ -29,7 +30,7 @@ export const post = (req: XP.Request): XP.Response => {
     node = conn.create(data)
   }
 
-  const previewId = typeof node.previewId === 'string' ? node.previewId : ''
+  let previewId = typeof node.previewId === 'string' ? node.previewId : ''
   const previewExists = previewId
     ? withDraftContext(() =>
         existsContent({
@@ -37,17 +38,13 @@ export const post = (req: XP.Request): XP.Response => {
         })
       )
     : false
-
-  let previewPath: string
-  if (previewExists) {
-    previewPath = getPreviewPath(previewId)
-  } else {
-    previewPath = ''
+  if (!previewExists) {
+    previewId = createPreview(conn, node._id, node.displayName)
   }
 
   const body = {
     _id: node._id,
-    previewPath: previewPath,
+    previewPath: getPreviewPath(previewId),
   }
 
   return {
@@ -65,6 +62,32 @@ function getPreviewPath(previewId: string): string {
   )
   const contentPath = content?._path ?? ''
   return '/admin/site/preview/default/draft' + contentPath
+}
+
+function createPreview(conn: RepoConnection, nodeId: string, displayName: string): string {
+  const page = withDraftContext(() =>
+    createContent({
+      displayName: displayName,
+      parentPath: '/ssb/pubmd',
+      contentType: 'mimir:markdown',
+      workflow: {
+        state: 'IN_PROGRESS',
+      },
+      data: {
+        nodeId: nodeId,
+      },
+    })
+  )
+
+  conn.modify({
+    key: nodeId,
+    editor: (node) => ({
+      ...node,
+      previewId: page._id,
+    }),
+  })
+
+  return page._id
 }
 
 function withDraftContext<T>(callback: ContextCallback<T>): T {
