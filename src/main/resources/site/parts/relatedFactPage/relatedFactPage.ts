@@ -176,11 +176,13 @@ export function parseRelatedFactPageData(
 }
 
 function parseRelatedContent(relatedContent: RelatedFactPage): RelatedFactPageContent {
+  const imageWidth = 380
+  const imageHeight = 400
   const { imageSrc: image, imageAlt } = getXPContentImage(relatedContent, {
-    scale: 'block(380, 400)' as ImageUrlParams['scale'],
+    scale: `block(${imageWidth}, ${imageHeight})` as ImageUrlParams['scale'],
     format: 'jpg',
-    placeholderWidth: 380,
-    placeholderHeight: 400,
+    placeholderWidth: imageWidth,
+    placeholderHeight: imageHeight,
   })
 
   return {

@@ -90,13 +90,16 @@ function renderPart(req: XP.Request, relatedArticles: RelatedArticles['relatedAr
                 return undefined
               }
 
+              const imageWidth = 320
+              const imageHeight = 180
               const imageDimensions = {
-                scale: 'block(320, 180)' as ImageUrlParams['scale'], // 16:9
+                scale: `block(${imageWidth}, ${imageHeight})` as ImageUrlParams['scale'], // 16:9
                 format: 'jpg',
-                placeholderWidth: 320,
-                placeholderHeight: 180,
+                placeholderWidth: imageWidth,
+                placeholderHeight: imageHeight,
               }
               const { imageSrc, imageAlt } = getXPContentImage(articleContent, imageDimensions)
+
               const subTitle = getSubTitle(articleContent, language) ?? ''
               return {
                 title: articleContent.displayName,

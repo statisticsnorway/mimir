@@ -81,13 +81,17 @@ function parseProfiledBoxProps(config: ProfiledBoxPartConfig, language: string):
     config.content && config.date
       ? getSubtitleFromConfig(config.content, config.date, language)
       : (getSubTitle(linkTargetXPContent as Content<Article>, language) ?? '')
+
+  const imageWidth = 315
+  const imageHeight = 215
   const imageDimensions = {
-    scale: 'block(315, 215)' as ImageUrlParams['scale'],
+    scale: `block(${imageWidth}, ${imageHeight})` as ImageUrlParams['scale'],
     format: 'jpg',
-    placeholderWidth: 315,
-    placeholderHeight: 215,
+    placeholderWidth: imageWidth,
+    placeholderHeight: imageHeight,
   }
   const { imageSrc, imageAlt } = getXPContentImage(linkTargetXPContent as Content<Article>, imageDimensions)
+
   return {
     imgUrl: config.image
       ? imageUrl({
