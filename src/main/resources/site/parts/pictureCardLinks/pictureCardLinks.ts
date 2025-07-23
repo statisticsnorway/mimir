@@ -8,7 +8,6 @@ import {
   type PictureCardLink,
   type PictureCardLinksContent,
 } from '/lib/types/partTypes/pictureCardLinks'
-import { getLinkTargetUrl } from '/lib/ssb/utils/utils'
 import { type PictureCardLinks as PictureCardLinksPartConfig } from '.'
 
 export function get(req: XP.Request): XP.Response {
