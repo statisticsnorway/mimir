@@ -5,18 +5,16 @@ import { type ImageUrls, type PictureCardLinksContent } from '/lib/types/partTyp
 interface PictureLinkProps {
   title?: string
   subTitle?: string
-  href?: string
   imageSources: ImageUrls
   className?: string
   id?: string
   ariaDescribedBy?: string
 }
 
-const PictureLink = ({ href, title, subTitle, id, ariaDescribedBy, className, imageSources }: PictureLinkProps) => {
+const PictureLink = ({ title, subTitle, id, ariaDescribedBy, className, imageSources }: PictureLinkProps) => {
   return (
     <a
       className={`ssb-picture-card vertical ${className ?? ''} group`}
-      href={href}
       aria-label={title}
       aria-describedby={ariaDescribedBy ? `${id}-${ariaDescribedBy}` : undefined}
     >
@@ -62,7 +60,6 @@ const PictureCardLinks = ({ pictureCardLinks }: PictureCardLinksProps) => {
               className='w-100'
               title={pictureCard.title}
               subTitle={pictureCard.subTitle}
-              href={pictureCard.href}
               imageSources={pictureCard.imageSources}
               id={index.toString()}
               ariaDescribedBy='text'

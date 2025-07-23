@@ -46,14 +46,11 @@ function parsePictureCardLinks(
   pictureCardLinks = Array.isArray(pictureCardLinks) ? pictureCardLinks : [pictureCardLinks]
   return pictureCardLinks.reduce((acc, pictureCardLink, i) => {
     if (pictureCardLink) {
-      const href: string = getLinkTargetUrl(pictureCardLink.urlContentSelector) ?? pictureCardLink.href ?? ''
-
       const imageSources = createImageUrls(pictureCardLink, pictureCardLinks.length, i)
 
       const pictureCardLinksContent: PictureCardLinksContent = {
         title: pictureCardLink.title,
         subTitle: pictureCardLink.subTitle,
-        href: href,
         imageSources: imageSources,
       }
       acc.push(pictureCardLinksContent as never)

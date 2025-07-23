@@ -1,7 +1,6 @@
 export interface PictureCardLink {
   title: string
   subTitle: string
-  href?: string
   image?: string
 }
 
@@ -15,6 +14,5 @@ export interface ImageUrls {
 export interface PictureCardLinksContent {
   title: string
   subTitle: string
-  href: string
   imageSources: ImageUrls
 }
