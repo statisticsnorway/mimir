@@ -215,22 +215,22 @@ export function getLinkTargetXPContent(
 }
 
 export function getSubTitle(XPContent: Content<Article>, language: string): string {
-  const articleType = XPContent.data.articleType ? `contentType.search.${XPContent.data.articleType}` : 'articleName'
+  const articleType = XPContent?.data.articleType ? `contentType.search.${XPContent.data.articleType}` : 'articleName'
   const articleNamePhrase: string = localize({
     key: articleType,
     locale: language,
   })
 
   let type = ''
-  if (XPContent.type === `${app.name}:article`) {
+  if (XPContent?.type === `${app.name}:article`) {
     type = articleNamePhrase
   }
 
   let prettyDate: string | undefined = ''
-  if (XPContent.publish && XPContent.publish.from) {
+  if (XPContent?.publish && XPContent?.publish.from) {
     prettyDate = formatDate(XPContent.publish.from, 'PPP', language)
   } else {
-    prettyDate = formatDate(XPContent.createdTime, 'PPP', language)
+    prettyDate = formatDate(XPContent?.createdTime, 'PPP', language)
   }
 
   return `${type ? `${type} / ` : ''}${prettyDate ? prettyDate : ''}`
