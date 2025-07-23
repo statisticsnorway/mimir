@@ -1,5 +1,5 @@
 import { type Content, get as getContentByKey, query } from '/lib/xp/content'
-import { getContent, pageUrl, imagePlaceholder } from '/lib/xp/portal'
+import { getContent, type ImageUrlParams, pageUrl } from '/lib/xp/portal'
 import { render } from '/lib/thymeleaf'
 import { type Phrases } from '/lib/types/language'
 import { render as r4xpRender } from '/lib/enonic/react4xp'
@@ -11,7 +11,7 @@ import {
   type VariantInListing,
 } from '/lib/ssb/dashboard/statreg/types'
 import { imageUrl, getImageAlt } from '/lib/ssb/utils/imageUtils'
-import { getProfiledCardAriaLabel, getSubTitle } from '/lib/ssb/utils/utils'
+import { getProfiledCardAriaLabel, getSubTitle, getXPContentImage } from '/lib/ssb/utils/utils'
 
 import { renderError } from '/lib/ssb/error/error'
 import * as util from '/lib/util'
@@ -90,24 +90,13 @@ function renderPart(req: XP.Request, relatedArticles: RelatedArticles['relatedAr
                 return undefined
               }
 
-              let imageSrc: string | undefined
-              let imageAlt: string | undefined = ''
-
-              if (!articleContent.x['com-enonic-app-metafields']?.['meta-data']?.seoImage) {
-                imageSrc = imagePlaceholder({
-                  width: 320,
-                  height: 180,
-                })
-              } else {
-                const image: string = articleContent.x['com-enonic-app-metafields']?.['meta-data']?.seoImage
-                imageSrc = imageUrl({
-                  id: image,
-                  scale: 'block(320, 180)', // 16:9
-                  format: 'jpg',
-                })
-                imageAlt = getImageAlt(image) ? getImageAlt(image) : ''
+              const imageDimensions = {
+                scale: 'block(320, 180)' as ImageUrlParams['scale'], // 16:9
+                format: 'jpg',
+                placeholderWidth: 320,
+                placeholderHeight: 180,
               }
-
+              const { imageSrc, imageAlt } = getXPContentImage(articleContent, imageDimensions)
               const subTitle = getSubTitle(articleContent, language) ?? ''
               return {
                 title: articleContent.displayName,
