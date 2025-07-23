@@ -78,8 +78,8 @@ function parseProfiledBoxProps(config: ProfiledBoxPartConfig, language: string):
 
   const title = config.title ?? linkTargetXPContent?.displayName ?? ''
   const subTitle =
-    config.content || config.date
-      ? getSubtitleFromConfig(config.content, config.date, language) // TODO: If either config.content or config.date is empty, what should be returned?
+    config.content && config.date
+      ? getSubtitleFromConfig(config.content, config.date, language)
       : (getSubTitle(linkTargetXPContent as Content<Article>, language) ?? '')
   const imageDimensions = {
     scale: 'block(315, 215)' as ImageUrlParams['scale'],
