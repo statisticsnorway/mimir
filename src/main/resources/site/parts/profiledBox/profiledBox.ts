@@ -1,5 +1,4 @@
 import { getContent, getComponent, Content, type ImageUrlParams } from '/lib/xp/portal'
-import { render } from '/lib/thymeleaf'
 import {
   getLinkTargetUrl,
   getLinkTargetXPContent,
@@ -16,8 +15,6 @@ import { renderError } from '/lib/ssb/error/error'
 import { type ProfiledBoxProps } from '/lib/types/partTypes/profiledBox'
 import { type Article } from '/site/content-types'
 import { type ProfiledBox as ProfiledBoxPartConfig } from '.'
-
-const view = resolve('profiledBox.html')
 
 export function get(req: XP.Request): XP.Response {
   try {
@@ -40,13 +37,10 @@ function renderPart(req: XP.Request): XP.Response {
 
   const language: string = page.language === 'en' || page.language === 'nn' ? page.language : 'nb'
   const id: string = 'profiled-box-' + randomUnsafeString()
-  const body: string = render(view, {
-    profiledBoxId: id,
-  })
 
   return r4xpRender('site/parts/profiledBox/profiledBox', parseProfiledBoxProps(config, language), req, {
-    id: id,
-    body: body,
+    id,
+    body: `<section class="xp-part part-profiled-box container" id="${id}"></section>`,
     hydrate: false,
   })
 }
