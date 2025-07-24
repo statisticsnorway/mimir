@@ -213,7 +213,7 @@ export function getLinkTargetXPContent(
   return null
 }
 
-export function getSubTitle(XPContent: Content<Article>, language: string): string {
+export function getSubtitleForContent(XPContent: Content<Article>, language: string): string {
   const articleType = XPContent?.data.articleType ? `contentType.search.${XPContent.data.articleType}` : 'articleName'
   const articleNamePhrase: string = localize({
     key: articleType,

@@ -11,7 +11,7 @@ import {
   type VariantInListing,
 } from '/lib/ssb/dashboard/statreg/types'
 import { imageUrl, getImageAlt, getXPContentImage } from '/lib/ssb/utils/imageUtils'
-import { getProfiledCardAriaLabel, getSubTitle } from '/lib/ssb/utils/utils'
+import { getProfiledCardAriaLabel, getSubtitleForContent } from '/lib/ssb/utils/utils'
 
 import { renderError } from '/lib/ssb/error/error'
 import * as util from '/lib/util'
@@ -100,7 +100,7 @@ function renderPart(req: XP.Request, relatedArticles: RelatedArticles['relatedAr
               }
               const { imageSrc, imageAlt } = getXPContentImage(articleContent, imageDimensions)
 
-              const subTitle = getSubTitle(articleContent, language) ?? ''
+              const subTitle = getSubtitleForContent(articleContent, language) ?? ''
               return {
                 title: articleContent.displayName,
                 subTitle,

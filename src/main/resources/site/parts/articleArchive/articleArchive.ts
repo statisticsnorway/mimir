@@ -11,7 +11,7 @@ import {
   type ParsedArticles,
   type ParsedArticleData,
 } from '/lib/types/partTypes/articleArchive'
-import { getSubTitle } from '/lib/ssb/utils/utils'
+import { getSubtitleForContent } from '/lib/ssb/utils/utils'
 import { type Article, type ArticleArchive } from '/site/content-types'
 
 export function get(req: XP.Request): XP.Response {
@@ -126,7 +126,7 @@ export function parseArticleData(pageId: string, start: number, count: number, l
         JSON.stringify(articleContent.publish) != '{}' && articleContent.createdTime
           ? formatDate(articleContent.publish?.from, 'yyyy', language)
           : formatDate(articleContent.createdTime, 'yyyy', language),
-      subtitle: getSubTitle(articleContent, language),
+      subtitle: getSubtitleForContent(articleContent, language),
       href: pageUrl({
         id: articleContent._id,
       }),

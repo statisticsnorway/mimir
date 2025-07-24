@@ -3,7 +3,7 @@ import {
   getLinkTargetUrl,
   getLinkTargetXPContent,
   getProfiledCardAriaLabel,
-  getSubTitle,
+  getSubtitleForContent,
   randomUnsafeString,
 } from '/lib/ssb/utils/utils'
 import { render as r4xpRender } from '/lib/enonic/react4xp'
@@ -79,7 +79,7 @@ function parseProfiledBoxProps(config: ProfiledBoxPartConfig, language: string):
   const subTitle =
     config.content && config.date
       ? getSubtitleFromConfig(config.content, config.date, language)
-      : (getSubTitle(linkTargetXPContent as Content<Article>, language) ?? '')
+      : (getSubtitleForContent(linkTargetXPContent as Content<Article>, language) ?? '')
 
   const imageWidth = 315
   const imageHeight = 215
