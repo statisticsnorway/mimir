@@ -1,5 +1,5 @@
 import { type Content, get, query, QueryDsl, ContentsResult } from '/lib/xp/content'
-import { pageUrl } from '/lib/xp/portal'
+import { pageUrl, processHtml } from '/lib/xp/portal'
 import { type StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
 import { getAllStatisticsFromRepo } from '/lib/ssb/statreg/statistics'
 import { calculatePeriodRelease, getPreviousReleases } from '/lib/ssb/utils/variantUtils'
@@ -170,7 +170,7 @@ function prepareArticle(
     article.publish && article.publish.from ? formatDate(article.publish.from, 'yyyy-MM-dd HH:mm', 'nb') : undefined
   return {
     title: article.displayName,
-    preface: article.data.ingress ? article.data.ingress : '',
+    preface: article.data.ingress ? processHtml({ value: article.data.ingress }) : '',
     url: pageUrl({
       id: article._id,
     }),
