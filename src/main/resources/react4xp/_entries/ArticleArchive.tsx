@@ -96,7 +96,9 @@ function ArticleArchive(props: ArticleArchiveProps) {
                         <span aria-hidden='true'>{article.title}</span>
                         <span className='sr-only'>{`${article.title} ${srSubtitle.replace(year, '')}`}</span>
                       </Link>
-                      <Paragraph className='mt-2 mb-1'>{article.preamble}</Paragraph>
+                      <Paragraph className='mt-2 mb-1'>
+                        <span dangerouslySetInnerHTML={{ __html: sanitize(article?.preamble ?? '') }} />
+                      </Paragraph>
                       <span className='ssb-text-wrapper small-text' aria-hidden='true'>
                         {article.subtitle}
                       </span>
