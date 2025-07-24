@@ -1,4 +1,5 @@
 import { query, type Content } from '/lib/xp/content'
+import { processHtml } from '/lib/xp/portal'
 import { StatisticInListing, VariantInListing } from '/lib/ssb/dashboard/statreg/types'
 import { getTimeZoneIso } from '/lib/ssb/utils/dateUtils'
 import { subDays, format, parseISO } from '/lib/vendor/dateFns'
@@ -8,6 +9,7 @@ import { nextReleasedPassed } from '/lib/ssb/utils/variantUtils'
 // @ts-ignore
 import { xmlEscape } from '/lib/text-encoding'
 import { type SubjectItem } from '/lib/types/subject'
+import { stripHtmlFromText } from '/lib/ssb/utils/textUtils'
 import { type Statistic } from '/site/mixins/statistic'
 import { type Article, type Statistics } from '/site/content-types'
 
@@ -75,12 +77,15 @@ function getArticles(mainSubjects: SubjectItem[], days: number): NewsItem[] {
         : undefined
       if (pubDate) {
         const link = getLinkByPath(article._path)
+        const ingress = processHtml({ value: article?.data.ingress ?? '' })
         news.push({
           guid: article._id,
           title: article.displayName,
           link,
           description:
-            article.data.ingress || article.x['com-enonic-app-metafields']?.['meta-data']?.seoDescription || '',
+            article.x['com-enonic-app-metafields']?.['meta-data']?.seoDescription ||
+            stripHtmlFromText(ingress) || // Strip away macro html insertion tags from ingress
+            '',
           category: mainSubject.title,
           subject: mainSubject.name,
           language: article.language === 'en' ? 'en' : 'no',
