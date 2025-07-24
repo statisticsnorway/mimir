@@ -1,5 +1,5 @@
 import { type Content, get as getContentByKey, query } from '/lib/xp/content'
-import { getContent, pageUrl, imagePlaceholder } from '/lib/xp/portal'
+import { getContent, pageUrl, imagePlaceholder, processHtml } from '/lib/xp/portal'
 import { render } from '/lib/thymeleaf'
 import { type Phrases } from '/lib/types/language'
 import { render as r4xpRender } from '/lib/enonic/react4xp'
@@ -112,7 +112,7 @@ function renderPart(req: XP.Request, relatedArticles: RelatedArticles['relatedAr
               return {
                 title: articleContent.displayName,
                 subTitle,
-                preface: articleContent.data.ingress,
+                preface: processHtml({ value: articleContent?.data.ingress ?? '' }),
                 href: pageUrl({
                   id: articleContent._id,
                 }),
