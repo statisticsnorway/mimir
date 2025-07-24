@@ -180,7 +180,6 @@ function parseRelatedContent(relatedContent: RelatedFactPage): RelatedFactPageCo
   const imageHeight = 400
   const { imageSrc: image, imageAlt } = getImageFromContent(relatedContent, {
     scale: `block(${imageWidth}, ${imageHeight})` as ImageUrlParams['scale'],
-    format: 'jpg',
     placeholderWidth: imageWidth,
     placeholderHeight: imageHeight,
   })

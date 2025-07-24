@@ -94,7 +94,6 @@ function renderPart(req: XP.Request, relatedArticles: RelatedArticles['relatedAr
               const imageHeight = 180
               const imageDimensions = {
                 scale: `block(${imageWidth}, ${imageHeight})` as ImageUrlParams['scale'], // 16:9
-                format: 'jpg',
                 placeholderWidth: imageWidth,
                 placeholderHeight: imageHeight,
               }

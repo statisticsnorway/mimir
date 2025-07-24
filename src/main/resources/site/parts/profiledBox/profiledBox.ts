@@ -85,7 +85,6 @@ function parseProfiledBoxProps(config: ProfiledBoxPartConfig, language: string):
   const imageHeight = 215
   const imageDimensions = {
     scale: `block(${imageWidth}, ${imageHeight})` as ImageUrlParams['scale'],
-    format: 'jpg',
     placeholderWidth: imageWidth,
     placeholderHeight: imageHeight,
   }
@@ -96,7 +95,7 @@ function parseProfiledBoxProps(config: ProfiledBoxPartConfig, language: string):
       ? imageUrl({
           id: config.image,
           scale: imageDimensions.scale,
-          format: imageDimensions.format,
+          format: 'jpg',
         })
       : (imageSrc ?? ''),
     imageAltText: config.image ? getImageAlt(config.image) : (imageAlt ?? ''),

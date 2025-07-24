@@ -34,7 +34,7 @@ export function getImageFromContent(XPContent: Content, imageDimensions: ImageDi
   let imageSrc: string | undefined
   let imageAlt: string | undefined = ''
 
-  const { scale, format, placeholderWidth, placeholderHeight } = imageDimensions
+  const { scale, placeholderWidth, placeholderHeight } = imageDimensions
   if (!XPContent?.x['com-enonic-app-metafields']?.['meta-data']?.seoImage) {
     imageSrc = imagePlaceholder({
       width: placeholderWidth,
@@ -45,7 +45,7 @@ export function getImageFromContent(XPContent: Content, imageDimensions: ImageDi
     imageSrc = imageUrl({
       id: image,
       scale,
-      format,
+      format: 'jpg',
     })
     imageAlt = getImageAlt(image) ? getImageAlt(image) : ''
   }
@@ -55,7 +55,6 @@ export function getImageFromContent(XPContent: Content, imageDimensions: ImageDi
 
 interface ImageDimensions {
   scale: ImageUrlParams['scale']
-  format: string
   placeholderWidth: number
   placeholderHeight: number
 }
