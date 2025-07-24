@@ -4,12 +4,11 @@ import {
   getLinkTargetXPContent,
   getProfiledCardAriaLabel,
   getSubTitle,
-  getXPContentImage,
   randomUnsafeString,
 } from '/lib/ssb/utils/utils'
 import { render as r4xpRender } from '/lib/enonic/react4xp'
 import { formatDate } from '/lib/ssb/utils/dateUtils'
-import { imageUrl, getImageAlt } from '/lib/ssb/utils/imageUtils'
+import { imageUrl, getImageAlt, getXPContentImage } from '/lib/ssb/utils/imageUtils'
 
 import { renderError } from '/lib/ssb/error/error'
 import { type ProfiledBoxProps } from '/lib/types/partTypes/profiledBox'

@@ -13,7 +13,7 @@ import {
   type RelatedFactPageProps,
   type RelatedFactPages,
 } from '/lib/types/partTypes/relatedFactPage'
-import { getXPContentImage } from '/lib/ssb/utils/utils'
+import { getXPContentImage } from '/lib/ssb/utils/imageUtils'
 import { type Article, type ContentList } from '/site/content-types'
 
 export function get(req: XP.Request): XP.Response {

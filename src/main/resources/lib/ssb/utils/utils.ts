@@ -1,7 +1,7 @@
 import { localize } from '/lib/xp/i18n'
 import { get, getAttachmentStream, ByteSource, Content } from '/lib/xp/content'
 
-import { getContent, pageUrl, assetUrl, imagePlaceholder, ImageUrlParams } from '/lib/xp/portal'
+import { getContent, pageUrl, assetUrl } from '/lib/xp/portal'
 import { readLines } from '/lib/xp/io'
 import { type PreliminaryData } from '/lib/types/xmlParser'
 import { formatDate, fromNow } from '/lib/ssb/utils/dateUtils'
@@ -9,7 +9,6 @@ import { type SourceList, type SourcesConfig } from '/lib/types/sources'
 import { type RowValue } from '/lib/types/util'
 import { type Article, type Header } from '/site/content-types'
 import { type ProfiledBox as ProfiledBoxPartConfig } from '/site/parts/profiledBox'
-import { imageUrl, getImageAlt } from './imageUtils'
 
 function numberWithSpaces(x: number | string): string {
   const parts: Array<string> = x.toString().split('.')
@@ -236,40 +235,10 @@ export function getSubTitle(XPContent: Content<Article>, language: string): stri
   return `${type ? `${type} / ` : ''}${prettyDate ? prettyDate : ''}`
 }
 
-export function getXPContentImage(XPContent: Content, imageDimensions: ImageDimensions) {
-  let imageSrc: string | undefined
-  let imageAlt: string | undefined = ''
-
-  const { scale, format, placeholderWidth, placeholderHeight } = imageDimensions
-  if (!XPContent?.x['com-enonic-app-metafields']?.['meta-data']?.seoImage) {
-    imageSrc = imagePlaceholder({
-      width: placeholderWidth,
-      height: placeholderHeight,
-    })
-  } else {
-    const image: string = XPContent?.x['com-enonic-app-metafields']?.['meta-data']?.seoImage
-    imageSrc = imageUrl({
-      id: image,
-      scale,
-      format,
-    })
-    imageAlt = getImageAlt(image) ? getImageAlt(image) : ''
-  }
-
-  return { imageSrc, imageAlt }
-}
-
 interface ContentSearchPageResult {
   contentId?: string
 }
 
 interface ManualSearchPageResult {
   url?: string
-}
-
-interface ImageDimensions {
-  scale: ImageUrlParams['scale']
-  format: string
-  placeholderWidth: number
-  placeholderHeight: number
 }

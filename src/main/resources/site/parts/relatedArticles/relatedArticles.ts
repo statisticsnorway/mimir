@@ -10,8 +10,8 @@ import {
   type StatisticInListing,
   type VariantInListing,
 } from '/lib/ssb/dashboard/statreg/types'
-import { imageUrl, getImageAlt } from '/lib/ssb/utils/imageUtils'
-import { getProfiledCardAriaLabel, getSubTitle, getXPContentImage } from '/lib/ssb/utils/utils'
+import { imageUrl, getImageAlt, getXPContentImage } from '/lib/ssb/utils/imageUtils'
+import { getProfiledCardAriaLabel, getSubTitle } from '/lib/ssb/utils/utils'
 
 import { renderError } from '/lib/ssb/error/error'
 import * as util from '/lib/util'
