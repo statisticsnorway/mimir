@@ -1,13 +1,13 @@
-import { pageUrl, getContent, getComponent, processHtml } from '/lib/xp/portal'
+import { getContent, getComponent } from '/lib/xp/portal'
 import { query, type Content } from '/lib/xp/content'
 import { localize } from '/lib/xp/i18n'
 import { render } from '/lib/enonic/react4xp'
 import { getSubSubjects } from '/lib/ssb/utils/subjectUtils'
-import { formatDate } from '/lib/ssb/utils/dateUtils'
 
 import { renderError } from '/lib/ssb/error/error'
 import { fromPartCache } from '/lib/ssb/cache/partCache'
 import { isEnabled } from '/lib/featureToggle'
+import { prepareArticles } from '/lib/ssb/utils/articleUtils'
 import { type Article } from '/site/content-types'
 
 export function get(req: XP.Request): XP.Response {
@@ -99,20 +99,4 @@ function getArticles(req: XP.Request, language: string) {
     },
   }).hits as unknown as Array<Content<Article>>
   return articles
-}
-
-function prepareArticles(articles: Array<Content<Article>>, language: string) {
-  return articles.map((article: Content<Article>) => {
-    return {
-      title: article.displayName,
-      preface: article.data.ingress ? processHtml({ value: article.data.ingress }) : '',
-      url: pageUrl({
-        id: article._id,
-      }),
-      publishDate: article.publish && article.publish.from ? article.publish.from : '',
-      publishDateHuman:
-        article.publish && article.publish.from ? formatDate(article.publish.from, 'PPP', language) : '',
-      frontPagePriority: article.data.frontPagePriority,
-    }
-  })
 }
