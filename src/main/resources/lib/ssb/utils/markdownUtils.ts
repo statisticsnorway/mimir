@@ -14,3 +14,9 @@ export function getMarkdownNode(nodeId: string, conn?: RepoConnection) {
   }
   return conn.get(nodeId)
 }
+
+export function getMarkdownText(nodeId: string): string {
+  const node = nodeId ? getMarkdownNode(nodeId) : null
+  const markdownText = node?.markdown
+  return typeof markdownText == 'string' ? markdownText : ''
+}
