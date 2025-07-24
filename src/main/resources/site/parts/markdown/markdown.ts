@@ -18,11 +18,11 @@ export function get(req: XP.Request): XP.Response {
 }
 
 function getMarkdownTextFromComponent(component: XP.PartComponent.Markdown): string {
-  const optionSet = component?.config.markdownContent
-  if (optionSet?._selected == 'fromNode') {
-    const nodeId = optionSet?.fromNode.nodeId ?? ''
-    return getMarkdownText(nodeId)
+  const optionSet = component.config.markdownContent
+  if (optionSet._selected == 'fromNode') {
+    const nodeId = optionSet.fromNode.nodeId ?? ''
+    return nodeId ? getMarkdownText(nodeId) : ''
   } else {
-    return optionSet?.fromText.text ?? ''
+    return optionSet.fromText.text ?? ''
   }
 }
