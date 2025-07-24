@@ -10,7 +10,7 @@ import {
   type StatisticInListing,
   type VariantInListing,
 } from '/lib/ssb/dashboard/statreg/types'
-import { imageUrl, getImageAlt, getXPContentImage } from '/lib/ssb/utils/imageUtils'
+import { imageUrl, getImageAlt, getImageFromContent } from '/lib/ssb/utils/imageUtils'
 import { getProfiledCardAriaLabel, getSubtitleForContent } from '/lib/ssb/utils/utils'
 
 import { renderError } from '/lib/ssb/error/error'
@@ -98,7 +98,7 @@ function renderPart(req: XP.Request, relatedArticles: RelatedArticles['relatedAr
                 placeholderWidth: imageWidth,
                 placeholderHeight: imageHeight,
               }
-              const { imageSrc, imageAlt } = getXPContentImage(articleContent, imageDimensions)
+              const { imageSrc, imageAlt } = getImageFromContent(articleContent, imageDimensions)
 
               const subTitle = getSubtitleForContent(articleContent, language) ?? ''
               return {

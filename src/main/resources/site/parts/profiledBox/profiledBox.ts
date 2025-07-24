@@ -8,7 +8,7 @@ import {
 } from '/lib/ssb/utils/utils'
 import { render as r4xpRender } from '/lib/enonic/react4xp'
 import { formatDate } from '/lib/ssb/utils/dateUtils'
-import { imageUrl, getImageAlt, getXPContentImage } from '/lib/ssb/utils/imageUtils'
+import { imageUrl, getImageAlt, getImageFromContent } from '/lib/ssb/utils/imageUtils'
 
 import { renderError } from '/lib/ssb/error/error'
 import { type ProfiledBoxProps } from '/lib/types/partTypes/profiledBox'
@@ -89,7 +89,7 @@ function parseProfiledBoxProps(config: ProfiledBoxPartConfig, language: string):
     placeholderWidth: imageWidth,
     placeholderHeight: imageHeight,
   }
-  const { imageSrc, imageAlt } = getXPContentImage(linkTargetXPContent as Content<Article>, imageDimensions)
+  const { imageSrc, imageAlt } = getImageFromContent(linkTargetXPContent as Content<Article>, imageDimensions)
 
   return {
     imgUrl: config.image

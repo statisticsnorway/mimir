@@ -13,7 +13,7 @@ import {
   type RelatedFactPageProps,
   type RelatedFactPages,
 } from '/lib/types/partTypes/relatedFactPage'
-import { getXPContentImage } from '/lib/ssb/utils/imageUtils'
+import { getImageFromContent } from '/lib/ssb/utils/imageUtils'
 import { type Article, type ContentList } from '/site/content-types'
 
 export function get(req: XP.Request): XP.Response {
@@ -178,7 +178,7 @@ export function parseRelatedFactPageData(
 function parseRelatedContent(relatedContent: RelatedFactPage): RelatedFactPageContent {
   const imageWidth = 380
   const imageHeight = 400
-  const { imageSrc: image, imageAlt } = getXPContentImage(relatedContent, {
+  const { imageSrc: image, imageAlt } = getImageFromContent(relatedContent, {
     scale: `block(${imageWidth}, ${imageHeight})` as ImageUrlParams['scale'],
     format: 'jpg',
     placeholderWidth: imageWidth,

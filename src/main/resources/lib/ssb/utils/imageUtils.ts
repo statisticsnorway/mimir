@@ -30,7 +30,7 @@ export function imageUrl(params: ImageUrlParams) {
   return xpImageUrl(params)
 }
 
-export function getXPContentImage(XPContent: Content, imageDimensions: ImageDimensions) {
+export function getImageFromContent(XPContent: Content, imageDimensions: ImageDimensions) {
   let imageSrc: string | undefined
   let imageAlt: string | undefined = ''
 
