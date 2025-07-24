@@ -1,7 +1,7 @@
 import { getContent, getComponent, Content, type ImageUrlParams } from '/lib/xp/portal'
 import {
   getLinkTargetUrl,
-  getLinkTargetXPContent,
+  getLinkTargetContent,
   getProfiledCardAriaLabel,
   getSubtitleForContent,
   randomUnsafeString,
@@ -73,13 +73,13 @@ function getTitleSize(title: string): string {
 
 function parseProfiledBoxProps(config: ProfiledBoxPartConfig, language: string): ProfiledBoxProps {
   const urlContentSelector: ProfiledBoxPartConfig['urlContentSelector'] = config.urlContentSelector
-  const linkTargetXPContent = getLinkTargetXPContent(config.urlContentSelector)
+  const linkTargetContent = getLinkTargetContent(config.urlContentSelector)
 
-  const title = config.title ?? linkTargetXPContent?.displayName ?? ''
+  const title = config.title ?? linkTargetContent?.displayName ?? ''
   const subTitle =
     config.content && config.date
       ? getSubtitleFromConfig(config.content, config.date, language)
-      : (getSubtitleForContent(linkTargetXPContent as Content<Article>, language) ?? '')
+      : (getSubtitleForContent(linkTargetContent as Content<Article>, language) ?? '')
 
   const imageWidth = 315
   const imageHeight = 215
@@ -89,7 +89,7 @@ function parseProfiledBoxProps(config: ProfiledBoxPartConfig, language: string):
     placeholderWidth: imageWidth,
     placeholderHeight: imageHeight,
   }
-  const { imageSrc, imageAlt } = getImageFromContent(linkTargetXPContent as Content<Article>, imageDimensions)
+  const { imageSrc, imageAlt } = getImageFromContent(linkTargetContent as Content<Article>, imageDimensions)
 
   return {
     imgUrl: config.image
@@ -104,7 +104,7 @@ function parseProfiledBoxProps(config: ProfiledBoxPartConfig, language: string):
     href: getLinkTargetUrl(urlContentSelector),
     subTitle,
     title,
-    preambleText: config.preamble ?? (linkTargetXPContent?.data?.ingress as string) ?? '',
+    preambleText: config.preamble ?? (linkTargetContent?.data?.ingress as string) ?? '',
     titleSize: getTitleSize(title),
     ariaLabel: getProfiledCardAriaLabel(subTitle),
   }

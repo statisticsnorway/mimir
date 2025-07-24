@@ -204,7 +204,7 @@ export function getLinkTargetUrl(urlContentSelector: ProfiledBoxPartConfig['urlC
   }
 }
 
-export function getLinkTargetXPContent(
+export function getLinkTargetContent(
   urlContentSelector: ProfiledBoxPartConfig['urlContentSelector']
 ): Content<Article> | null {
   if (urlContentSelector?._selected == 'optionXPContent') {
