@@ -5,15 +5,8 @@ import { render as renderMarkdown } from '/lib/markdown'
 
 export function get(req: XP.Request): XP.Response {
   const component = getComponent<XP.PartComponent.Markdown>()
-  const markdownContent = component?.config.markdownContent
 
-  let markdownText
-  if (markdownContent?._selected == 'fromNode') {
-    const nodeId = markdownContent?.fromNode.nodeId ?? ''
-    markdownText = getMarkdownText(nodeId)
-  } else {
-    markdownText = markdownContent?.fromText.text
-  }
+  const markdownText = component ? getMarkdownTextFromComponent(component) : ''
 
   const props = {
     markdownRendered: renderMarkdown(markdownText),
@@ -22,4 +15,14 @@ export function get(req: XP.Request): XP.Response {
   return render(component, props, req, {
     body: '<section class="xp-part"></section>',
   })
+}
+
+function getMarkdownTextFromComponent(component: XP.PartComponent.Markdown): string {
+  const optionSet = component?.config.markdownContent
+  if (optionSet?._selected == 'fromNode') {
+    const nodeId = optionSet?.fromNode.nodeId ?? ''
+    return getMarkdownText(nodeId)
+  } else {
+    return optionSet?.fromText.text ?? ''
+  }
 }
