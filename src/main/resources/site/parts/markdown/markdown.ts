@@ -1,12 +1,20 @@
-import { getComponent } from '/lib/xp/portal'
+import { getComponent, getContent } from '/lib/xp/portal'
+import { type Content } from '/lib/xp/content'
 import { getMarkdownText } from '/lib/ssb/utils/markdownUtils'
 import { render } from '/lib/enonic/react4xp'
 import { render as renderMarkdown } from '/lib/markdown'
+import { type Markdown } from '/site/content-types'
 
 export function get(req: XP.Request): XP.Response {
+  const content = getContent<Content<Markdown>>()
   const component = getComponent<XP.PartComponent.Markdown>()
 
-  const markdownText = component ? getMarkdownTextFromComponent(component) : ''
+  let markdownText: string = ''
+  if (content?.type == 'mimir:markdown') {
+    markdownText = getMarkdownTextFromContent(content)
+  } else if (component) {
+    markdownText = getMarkdownTextFromComponent(component)
+  }
 
   const props = {
     markdownRendered: renderMarkdown(markdownText),
@@ -25,4 +33,9 @@ function getMarkdownTextFromComponent(component: XP.PartComponent.Markdown): str
   } else {
     return optionSet.fromText.text ?? ''
   }
+}
+
+function getMarkdownTextFromContent(content: Content<Markdown>): string {
+  const nodeId = content.data.nodeId ?? ''
+  return nodeId ? getMarkdownText(nodeId) : ''
 }
