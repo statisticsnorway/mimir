@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link, Title } from '@statisticsnorway/ssb-component-library'
 import { ArrowRight } from 'react-feather'
+import { sanitize } from '/lib/ssb/utils/htmlUtils'
 
 interface ArticleListProps {
   title?: string
@@ -28,7 +29,7 @@ function ArticleList(props: ArticleListProps) {
             <Link href={article.url} linkType='header' headingSize={3} standAlone>
               {article.title}
             </Link>
-            <p className='truncate-2-lines'>{article.preface}</p>
+            <p className='truncate-2-lines' dangerouslySetInnerHTML={{ __html: sanitize(article?.preface ?? '') }} />
             <time dateTime={article.publishDate}>{article.publishDateHuman}</time>
           </div>
         )

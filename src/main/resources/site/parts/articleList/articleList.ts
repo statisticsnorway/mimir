@@ -1,4 +1,4 @@
-import { pageUrl, getContent, getComponent } from '/lib/xp/portal'
+import { pageUrl, getContent, getComponent, processHtml } from '/lib/xp/portal'
 import { query, type Content } from '/lib/xp/content'
 import { localize } from '/lib/xp/i18n'
 import { render } from '/lib/enonic/react4xp'
@@ -105,7 +105,7 @@ function prepareArticles(articles: Array<Content<Article>>, language: string) {
   return articles.map((article: Content<Article>) => {
     return {
       title: article.displayName,
-      preface: article.data.ingress ? article.data.ingress : '',
+      preface: article.data.ingress ? processHtml({ value: article.data.ingress }) : '',
       url: pageUrl({
         id: article._id,
       }),
