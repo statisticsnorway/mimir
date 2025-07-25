@@ -5,11 +5,11 @@ on:
     branches:
       - 'master'
 
-permissions:
-  contents: write
-
 jobs:
   update_pr:
+    permissions:
+      contents: write
+      pull-requests: write
     runs-on: ubuntu-latest
     if: >-
       contains(fromJSON('["patch-release", "major-release", "minor-release"]'), github.event.label.name) && contains(fromJSON('["annesiri", "ssb-cgn", "Glenruben", "johnnadeluy", "Carl-OW"]'), github.actor)
