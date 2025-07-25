@@ -14,10 +14,6 @@
                     <label>Ingress</label>
                     <occurrences minimum="1" maximum="1"/>
                 </input>
-                <input name="href" type="TextLine">
-                    <label>Lenke (IKKE BRUK)</label>
-                    <occurrences minimum="0" maximum="1"/>
-                </input>
                 <mixin name="linkTarget" />
                 <input name="image" type="ContentSelector">
                     <label>Bilde</label>
