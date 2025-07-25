@@ -9,17 +9,11 @@ concurrency:
   group: mimir-prod
   cancel-in-progress: true
 
-permissions:
-  contents: read
-  packages: write
-  actions: read
-  statuses: write
-  deployments: write
-  pull-requests: write
-
 jobs:
   deploy_to_prod:
     name: 'Deploy to PROD'
+    permissions:
+      contents: write
     runs-on: 'ubuntu-latest'
     environment: 'production'
     steps:
