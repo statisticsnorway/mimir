@@ -8,13 +8,11 @@ on:
         description: 'The Github Action run number to deploy'
         required: true
 
-permissions:
-  contents: read
-  pull-requests: write
-
 jobs:
   deploy-artifact:
     name: 'Deploy artifact'
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     environment: 'production'
     steps:
