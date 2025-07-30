@@ -1,7 +1,7 @@
 // File: src/main/resources/services/solrArchive/solrArchive.ts
 
-import { render } from '/lib/thymeleaf'
 import { pageUrl } from '/lib/xp/portal'
+import { render } from '/lib/thymeleaf'
 import { getPublications } from '/lib/ssb/parts/publicationArchive'
 import { type PublicationItem } from '/lib/types/partTypes/publicationArchive'
 
