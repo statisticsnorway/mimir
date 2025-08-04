@@ -7,6 +7,7 @@ export function get(req: XP.Request): XP.Response {
   const baseUrl = `${req.scheme}://${host}`
   const urls: string[] = []
 
+  //call
   for (let start = 0, batch; ; start += 200) {
     batch = getPublications(req, start, 200, 'nb')
     urls.push(...(batch.publications as PublicationItem[]).map((pub) => `${baseUrl}${pub.url}`))
