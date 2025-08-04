@@ -9,6 +9,9 @@ env:
   IMAGE: mimir
   TAG: ${{ github.head_ref }}-${{ github.sha }}
 
+permissions:
+  contents: read
+
 jobs:
   build_xp:
     name: 'Build XP jar'
@@ -30,8 +33,7 @@ jobs:
   build_image_and_push:
     needs: build_xp
     permissions:
-      contents: 'read'
-      id-token: 'write'
+      id-token: write
     runs-on: ubuntu-latest
     steps:
       - name: Calculate sha
@@ -112,6 +114,8 @@ jobs:
   deploy:
     name: Deploy to NAIS
     needs: build_image_and_push
+    permissions:
+      pull-requests: write
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
