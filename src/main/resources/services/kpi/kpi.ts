@@ -6,6 +6,7 @@ import { getCalculatorConfig, getKpiDatasetYear, getKpiDatasetMonth } from '/lib
 import { isChronological, getChangeValue } from '/lib/ssb/utils/calculatorUtils'
 import { type CalculatorConfig } from '/site/content-types'
 
+// eslint-disable-next-line complexity
 function get(req: HttpRequestParams): XP.Response {
   const startValue: string | undefined = req.params?.startValue
   const startMonth: string | undefined = req.params?.startMonth || '90'
