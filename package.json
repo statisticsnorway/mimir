@@ -107,7 +107,7 @@
     "highcharts": "~10.3.3",
     "husky": "^9.1.7",
     "imagesloaded": "~5.0.0",
-    "jest": "~30.0.4",
+    "jest": "~30.0.5",
     "jquery": "~3.7.1",
     "jquery-bridget": "~3.0.1",
     "jquery-ui-dist": "~1.13.3",
