@@ -11,11 +11,13 @@ on:
 jobs:
   deploy-artifact:
     name: 'Deploy artifact'
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     environment: 'QA_mimir'
     steps:
       - name: Download workflow artifact
-        uses: dawidd6/action-download-artifact@v10
+        uses: dawidd6/action-download-artifact@v11
         with:
           workflow: deploy_to_qa.yaml
           branch: develop
@@ -117,6 +119,8 @@ jobs:
   mabl_test:
     # Run this job after deploy is finished, and only run if deploy succeeded
     needs: deploy-artifact
+    permissions:
+      contents: read
     if: ${{ always() && contains(join(needs.*.result, ','), 'success') }}
     runs-on: ubuntu-latest
     container: node:lts

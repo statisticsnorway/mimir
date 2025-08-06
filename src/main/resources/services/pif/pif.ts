@@ -6,6 +6,7 @@ import { getCalculatorConfig, getCalculatorDatasetFromSource, PIF_CALCULATOR } f
 import { isChronological, getChangeValue } from '/lib/ssb/utils/calculatorUtils'
 import { type CalculatorConfig } from '/site/content-types'
 
+// eslint-disable-next-line complexity
 function get(req: HttpRequestParams): XP.Response {
   // Scope code for radio button group option pif-choose-home-import, which is set as default in frontend.
   const scopeCode: string | undefined = req.params?.scopeCode ?? '3'

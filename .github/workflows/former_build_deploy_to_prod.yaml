@@ -11,11 +11,13 @@ on:
 jobs:
   deploy-artifact:
     name: 'Deploy artifact'
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     environment: 'production'
     steps:
       - name: Download workflow artifact
-        uses: dawidd6/action-download-artifact@v10
+        uses: dawidd6/action-download-artifact@v11
         with:
           workflow: deploy_to_prod.yaml
           branch: master

@@ -10,6 +10,8 @@ concurrency:
 jobs:
   deploy_to_test:
     name: 'Deploy to Test'
+    permissions:
+      contents: write
     runs-on: 'ubuntu-latest'
     steps:
       - id: build_app
@@ -76,6 +78,8 @@ jobs:
   mabl_test:
     # Run this job after deploy is finished, and only run if deploy succeeded
     needs: deploy_to_test
+    permissions:
+      contents: read
     if: ${{ always() && contains(join(needs.*.result, ','), 'success') }}
     runs-on: ubuntu-latest
     container: node:lts

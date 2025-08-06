@@ -4,11 +4,21 @@ import { type CookieBannerProps } from '/lib/types/cookieBanner'
 
 const COOKIE_NAME = 'cookie-consent'
 const SERVICE_URL = '/_/service/mimir/setCookieConsent'
+const MAX_FETCH_FAILURES = 3
+let failureCount = 0
+let pollingInterval: number
 
 window.dataLayer = window.dataLayer || []
 window.gtag = window.gtag || function () {}
 
-function CookieBanner({ language, phrases, baseUrl }: CookieBannerProps): JSX.Element | null {
+function CookieBanner({
+  language,
+  phrases,
+  baseUrl,
+  cookieBannerTitle,
+  cookieBannerText,
+  cookieBannerLinkText,
+}: CookieBannerProps): JSX.Element | null {
   const [visible, setVisible] = useState(false)
   const sectionRef = useRef<HTMLElement>(null)
   const lastCookieRef = useRef<string | null>(null)
@@ -19,10 +29,20 @@ function CookieBanner({ language, phrases, baseUrl }: CookieBannerProps): JSX.El
   }
 
   const setCookieViaService = async (value: 'all' | 'necessary' | 'unidentified') => {
+    if (failureCount >= MAX_FETCH_FAILURES) return
     try {
-      await fetch(`${SERVICE_URL}?value=${value}`, { credentials: 'include' })
-    } catch (e) {
-      console.error(`Failed to set cookie "${value}" via XP service`, e)
+      const res = await fetch(`${SERVICE_URL}?value=${value}`, { credentials: 'include' })
+      if (!res.ok) {
+        failureCount++
+        console.error('Failed to set cookie via service')
+        if (failureCount >= MAX_FETCH_FAILURES) clearInterval(pollingInterval)
+        return
+      }
+      failureCount = 0
+    } catch {
+      failureCount++
+      console.error('Failed to set cookie via service')
+      if (failureCount >= MAX_FETCH_FAILURES) clearInterval(pollingInterval)
     }
   }
 
@@ -39,15 +59,13 @@ function CookieBanner({ language, phrases, baseUrl }: CookieBannerProps): JSX.El
 
   useEffect(() => {
     updateVisibilityFromCookie(getCookie())
-
-    const interval = setInterval(() => {
+    pollingInterval = setInterval(() => {
       const current = getCookie()
       if (current !== lastCookieRef.current) {
         updateVisibilityFromCookie(current)
       }
     }, 500)
-
-    return () => clearInterval(interval)
+    return () => clearInterval(pollingInterval)
   }, [])
 
   useEffect(() => {
@@ -86,17 +104,15 @@ function CookieBanner({ language, phrases, baseUrl }: CookieBannerProps): JSX.El
       tabIndex={0}
     >
       <div className='cookie-banner-content'>
-        <h3 className='cookie-banner-title' id='cookie-banner-title'>
-          {phrases.cookieBannerTitle}
-        </h3>
+        <h2 className='cookie-banner-title h3' id='cookie-banner-title'>
+          {cookieBannerTitle}
+        </h2>
         <p className='cookie-banner-text' id='cookie-banner-text'>
-          {phrases.cookieBannerText}
+          {cookieBannerText}
         </p>
-
         <Link href={cookieLink} className='cookie-banner-link' negative>
-          {phrases.cookieBannerLinkText}
+          {cookieBannerLinkText}
         </Link>
-
         <div className='cookie-banner-buttons'>
           <Button className='cookie-button-accept' onClick={() => handleConsent('all')}>
             {phrases.cookieBannerAcceptButton}

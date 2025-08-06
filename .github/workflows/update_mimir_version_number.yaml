@@ -7,6 +7,9 @@ on:
 
 jobs:
   update_pr:
+    permissions:
+      contents: write
+      pull-requests: write
     runs-on: ubuntu-latest
     if: >-
       contains(fromJSON('["patch-release", "major-release", "minor-release"]'), github.event.label.name) && contains(fromJSON('["annesiri", "ssb-cgn", "Glenruben", "johnnadeluy", "Carl-OW"]'), github.actor)
@@ -28,11 +31,11 @@ jobs:
       - name: Get new version number
         run: |
           if [[ $TYPE == "major-release" ]]; then
-            NEW_VERSION=$(echo $VERSION | awk -F'.' '{print $1+1".0.0"}') 
+            NEW_VERSION=$(echo $VERSION | awk -F'.' '{print $1+1".0.0"}')
           elif [[ $TYPE == "minor-release" ]]; then
-            NEW_VERSION=$(echo $VERSION | awk -F'.' '{print $1"."$2+1".0"}') 
+            NEW_VERSION=$(echo $VERSION | awk -F'.' '{print $1"."$2+1".0"}')
           elif [[ $TYPE == "patch-release" ]]; then
-            NEW_VERSION=$(echo $VERSION | awk -F'.' '{print $1"."$2"."$3+1}') 
+            NEW_VERSION=$(echo $VERSION | awk -F'.' '{print $1"."$2"."$3+1}')
           fi
           echo "NEW_VERSION=${NEW_VERSION}" >> $GITHUB_ENV
       - name: Set Version Number
