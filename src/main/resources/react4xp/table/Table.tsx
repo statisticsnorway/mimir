@@ -17,12 +17,6 @@ import { type TableProps } from '/lib/types/partTypes/table'
 import { PreliminaryData, type TableCellUniform } from '/lib/types/xmlParser'
 import { exportTableToExcel, exportTableToCSV } from '/lib/ssb/utils/tableExportUtils'
 
-declare global {
-  interface Window {
-    downloadTableFile: (element: HTMLDivElement | null, options: unknown) => void
-  }
-}
-
 function Table(props: TableProps) {
   const {
     downloadTableLabel,
