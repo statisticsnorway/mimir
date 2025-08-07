@@ -1,3 +1,4 @@
+import { sleep } from '/lib/xp/task'
 import { request, HttpRequestParams, HttpResponse } from '/lib/http-client'
 import {
   type TbmlDataRaw,
@@ -59,34 +60,51 @@ export function fetch(url: string, queryId?: string, processXml?: string, type?:
     connectionTimeout: 60000,
     readTimeout: 40000,
   }
-  const response: HttpResponse = mock ? mock : request(requestParams)
+  let attempt = 0
+  const maxRetries = 3
+  while (attempt <= maxRetries) {
+    try {
+      const response = mock ? mock : request(requestParams)
 
-  if (queryId) {
-    logUserDataQuery(queryId, {
-      file: '/lib/tbml/tbml.ts',
-      function: 'fetch',
-      message: type ? getRequestType(type) : Events.REQUEST_DATA,
-      status: `${response.status}`,
-      request: requestParams,
-      response,
-    })
-  }
+      if (queryId) {
+        logUserDataQuery(queryId, {
+          file: '/lib/tbml/tbml.ts',
+          function: 'fetch',
+          message: type ? getRequestType(type) : Events.REQUEST_DATA,
+          status: `${response.status}`,
+          request: requestParams,
+          response,
+        })
+      }
 
-  if (response.status !== 200 && response.body) {
-    if (queryId) {
-      logUserDataQuery(queryId, {
-        file: '/lib/tbml/tbml.ts',
-        function: 'fetch',
-        message: Events.REQUEST_GOT_ERROR_RESPONSE,
-        status: `${response.status}`,
-        response,
-      })
+      if (response.status !== 200 && response.body) {
+        if (queryId) {
+          logUserDataQuery(queryId, {
+            file: '/lib/tbml/tbml.ts',
+            function: 'fetch',
+            message: Events.REQUEST_GOT_ERROR_RESPONSE,
+            status: `${response.status}`,
+            response,
+          })
+        }
+        const message = `Failed with status ${response.status} while fetching tbml data from ${url}`
+        log.error(message)
+      }
+
+      return response
+    } catch (e) {
+      if (attempt <= maxRetries) {
+        attempt++
+        log.warning(
+          `Attempt ${attempt} failed from tbprocessor${url ? ` (${url})` : ''}: queryId ${queryId}. Retrying...`
+        )
+        sleep(250)
+      } else {
+        log.error(e)
+        throw e
+      }
     }
-    const message = `Failed with status ${response.status} while fetching tbml data from ${url}`
-    log.error(message)
   }
-
-  return response
 }
 
 function getRequestType(type: string): string {
