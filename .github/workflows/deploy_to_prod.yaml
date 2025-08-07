@@ -12,6 +12,8 @@ concurrency:
 jobs:
   deploy_to_prod:
     name: 'Deploy to PROD'
+    permissions:
+      contents: write
     runs-on: 'ubuntu-latest'
     environment: 'production'
     steps:

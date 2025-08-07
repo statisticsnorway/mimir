@@ -4,6 +4,9 @@ import { type CookieBannerProps } from '/lib/types/cookieBanner'
 
 const COOKIE_NAME = 'cookie-consent'
 const SERVICE_URL = '/_/service/mimir/setCookieConsent'
+const MAX_FETCH_FAILURES = 3
+let failureCount = 0
+let pollingInterval: number
 
 window.dataLayer = window.dataLayer || []
 window.gtag = window.gtag || function () {}
@@ -26,10 +29,20 @@ function CookieBanner({
   }
 
   const setCookieViaService = async (value: 'all' | 'necessary' | 'unidentified') => {
+    if (failureCount >= MAX_FETCH_FAILURES) return
     try {
-      await fetch(`${SERVICE_URL}?value=${value}`, { credentials: 'include' })
-    } catch (e) {
-      console.error(`Failed to set cookie "${value}" via XP service`, e)
+      const res = await fetch(`${SERVICE_URL}?value=${value}`, { credentials: 'include' })
+      if (!res.ok) {
+        failureCount++
+        console.error('Failed to set cookie via service')
+        if (failureCount >= MAX_FETCH_FAILURES) clearInterval(pollingInterval)
+        return
+      }
+      failureCount = 0
+    } catch {
+      failureCount++
+      console.error('Failed to set cookie via service')
+      if (failureCount >= MAX_FETCH_FAILURES) clearInterval(pollingInterval)
     }
   }
 
@@ -46,15 +59,13 @@ function CookieBanner({
 
   useEffect(() => {
     updateVisibilityFromCookie(getCookie())
-
-    const interval = setInterval(() => {
+    pollingInterval = setInterval(() => {
       const current = getCookie()
       if (current !== lastCookieRef.current) {
         updateVisibilityFromCookie(current)
       }
     }, 500)
-
-    return () => clearInterval(interval)
+    return () => clearInterval(pollingInterval)
   }, [])
 
   useEffect(() => {
@@ -99,11 +110,9 @@ function CookieBanner({
         <p className='cookie-banner-text' id='cookie-banner-text'>
           {cookieBannerText}
         </p>
-
         <Link href={cookieLink} className='cookie-banner-link' negative>
           {cookieBannerLinkText}
         </Link>
-
         <div className='cookie-banner-buttons'>
           <Button className='cookie-button-accept' onClick={() => handleConsent('all')}>
             {phrases.cookieBannerAcceptButton}
