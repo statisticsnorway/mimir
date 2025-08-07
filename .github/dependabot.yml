@@ -20,6 +20,8 @@ updates:
     dependencies-minor-updates:
       update-types:
       - "minor"
+  commit-message: 
+    prefix: "build: "
   ignore:
   # enonic types should update only when updating enonic version on server
   - dependency-name: "@enonic-types/*"
