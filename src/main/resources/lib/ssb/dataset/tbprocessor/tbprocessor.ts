@@ -8,7 +8,6 @@ import { mergeDeepLeft } from '/lib/vendor/ramda'
 
 import { logUserDataQuery, Events } from '/lib/ssb/repo/query'
 import { isUrl } from '/lib/ssb/utils/utils'
-// @ts-ignore-next-line
 import { type DataSource } from '/site/mixins/dataSource'
 
 export function getTbprocessor(content: Content<DataSource>, branch: string): DatasetRepoNode<TbmlDataUniform> | null {
