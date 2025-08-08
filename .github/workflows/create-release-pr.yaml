@@ -18,6 +18,11 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
+      - name: Debug - Check outputs
+        run: |
+          echo "Version output: '${{ steps.release.outputs.version }}'"
+          echo "Release created: '${{ steps.release.outputs.release_created }}'"
+          echo "PR created: '${{ steps.release.outputs.pr }}'"
 
   create-develop-to-master-pr:
     needs: release-please
