@@ -22,7 +22,7 @@ jobs:
   create-develop-to-master-pr:
     needs: release-please
     runs-on: ubuntu-latest
-    if: ${{ needs.release-please.outputs.release_version != '' }}
+    if: ${{ needs.release-please.outputs.version != '' }}
     steps:
       - name: Checkout develop branch
         uses: actions/checkout@v4
@@ -32,7 +32,7 @@ jobs:
       - name: Create PR from develop to master with version in title
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NEW_VERSION: ${{ needs.release-please.outputs.release_version }}
+          NEW_VERSION: ${{ needs.release-please.outputs.version }}
         run:
           gh pr create \
             --title "Prod release v$NEW_VERSION" \
