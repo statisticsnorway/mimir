@@ -90,7 +90,7 @@
     "babel-loader": "~10.0.0",
     "babel-preset-env": "~1.7.0",
     "browser-sync": "^3.0.4",
-    "cross-env": "~7.0.3",
+    "cross-env": "~10.0.0",
     "cssnano": "~7.1.0",
     "esbuild-plugin-replace": "^1.4.0",
     "esbuild-sass-plugin": "^2.16.1",
