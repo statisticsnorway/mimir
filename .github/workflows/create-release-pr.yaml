@@ -18,11 +18,14 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
-      - name: Debug - Check outputs
+      - name: Extract version from PR title
+        if: ${{ steps.release.outputs.pr != '' }}
         run: |
-          echo "Version output: '${{ steps.release.outputs.version }}'"
-          echo "Release created: '${{ steps.release.outputs.release_created }}'"
-          echo "PR created: '${{ steps.release.outputs.pr }}'"
+          PR='${{ steps.release.outputs.pr }}'
+          TITLE=$(echo "$PR" | awk -F'"title":"' '{print $2}' | awk -F'","' '{print $1}')
+          VERSION=$(echo "$TITLE" | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+' )
+          echo "Extracted version: ${VERSION}"
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
 
   create-develop-to-master-pr:
     needs: release-please
