@@ -1,8 +1,7 @@
 import { get as getContentByKey, query, type Content } from '/lib/xp/content'
-import { imagePlaceholder, getComponent, getContent, pageUrl, serviceUrl } from '/lib/xp/portal'
+import { getComponent, getContent, pageUrl, serviceUrl, type ImageUrlParams } from '/lib/xp/portal'
 import { render } from '/lib/enonic/react4xp'
 import { type Phrases } from '/lib/types/language'
-import { imageUrl, getImageAlt } from '/lib/ssb/utils/imageUtils'
 
 import { renderError } from '/lib/ssb/error/error'
 import { getPhrases } from '/lib/ssb/utils/language'
@@ -14,6 +13,7 @@ import {
   type RelatedFactPageProps,
   type RelatedFactPages,
 } from '/lib/types/partTypes/relatedFactPage'
+import { getImageFromContent } from '/lib/ssb/utils/imageUtils'
 import { type Article, type ContentList } from '/site/content-types'
 
 export function get(req: XP.Request): XP.Response {
@@ -176,30 +176,20 @@ export function parseRelatedFactPageData(
 }
 
 function parseRelatedContent(relatedContent: RelatedFactPage): RelatedFactPageContent {
-  let imageId: string | undefined
-  let image: string | undefined
-  let imageAlt = ''
-  if (relatedContent.x['com-enonic-app-metafields']?.['meta-data']?.seoImage) {
-    imageId = relatedContent.x['com-enonic-app-metafields']?.['meta-data']?.seoImage
-    imageAlt = getImageAlt(imageId) ?? ''
-    image = imageUrl({
-      id: imageId,
-      scale: 'block(380, 400)',
-      format: 'jpg',
-    })
-  } else {
-    image = imagePlaceholder({
-      width: 380,
-      height: 400,
-    })
-  }
+  const imageWidth = 380
+  const imageHeight = 400
+  const { imageSrc: image, imageAlt } = getImageFromContent(relatedContent, {
+    scale: `block(${imageWidth}, ${imageHeight})` as ImageUrlParams['scale'],
+    placeholderWidth: imageWidth,
+    placeholderHeight: imageHeight,
+  })
 
   return {
     link: pageUrl({
       id: relatedContent._id,
     }),
     image,
-    imageAlt,
+    imageAlt: imageAlt as string,
     title: relatedContent.displayName,
   }
 }
