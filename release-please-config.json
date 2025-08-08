@@ -4,7 +4,7 @@
   "skip-github-release": true,
   "draft": true,
   "always-update": true,
-  "last-release-sha": "956c29c6e4f1db35c889548289e75f0bb79fd4e7", 
+  "last-release-sha": "ad1ccfea77f852e45d201e7497fba7d0981faa0b", 
   "packages": {
     ".": {
       "package-name": "mimir",

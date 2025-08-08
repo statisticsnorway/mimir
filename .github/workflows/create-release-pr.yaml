@@ -1,0 +1,50 @@
+name: Create release PRs
+
+on:
+  workflow_dispatch:  # Only manual trigger
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write # needs for labeling for some reason
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: googleapis/release-please-action@v4
+        id: release
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+      - name: Extract version from PR title
+        if: ${{ steps.release.outputs.pr != '' }}
+        run: |
+          PR='${{ steps.release.outputs.pr }}'
+          TITLE=$(echo "$PR" | awk -F'"title":"' '{print $2}' | awk -F'","' '{print $1}')
+          VERSION=$(echo "$TITLE" | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+' )
+          echo "Extracted version: ${VERSION}"
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+
+  create-develop-to-master-pr:
+    needs: release-please
+    runs-on: ubuntu-latest
+    if: ${{ needs.release-please.outputs.version != '' }}
+    steps:
+      - name: Checkout develop branch
+        uses: actions/checkout@v4
+        with:
+          ref: develop
+          token: '${{ secrets.GITHUB_TOKEN }}'
+      - name: Create PR from develop to master with version in title
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NEW_VERSION: ${{ needs.release-please.outputs.version }}
+        run:
+          gh pr create \
+            --title "Prod release v$NEW_VERSION" \
+            --body "PR to merge develop into master to initiate prod release v$NEW_VERSION" \
+            --base master \
+            --head develop \
+            --fill
