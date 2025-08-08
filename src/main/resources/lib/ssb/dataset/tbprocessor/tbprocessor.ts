@@ -40,11 +40,11 @@ function tryRequestTbmlData<T extends TbmlDataUniform | TbmlSourceListUniform>(
   type?: string
 ): TbprocessorParsedResponse<T> | null {
   try {
-    return getTbmlData(url, contentId, processXml, type)
+    return getTbmlData(url, contentId, processXml, type) as TbprocessorParsedResponse<T>
   } catch (e) {
     const message = `Failed to fetch ${
       type ? formatTbProcessorType(type) : 'data'
-    } from tbprocessor: ${contentId} (${e})`
+    } from tbprocessor${url ? ` (${url})` : ''}: ${contentId}. (${e === 'java.io.EOFException' ? 'java.io.EOFException: Connection closed prematurely' : e})`
     if (contentId) {
       logUserDataQuery(contentId, {
         file: '/lib/ssb/dataset/tbprocessor/tbprocessor.ts',
@@ -55,8 +55,8 @@ function tryRequestTbmlData<T extends TbmlDataUniform | TbmlSourceListUniform>(
       })
     }
     log.error(message)
+    return null
   }
-  return null
 }
 
 function formatTbProcessorType(type: string): string {
