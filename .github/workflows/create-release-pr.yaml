@@ -45,9 +45,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NEW_VERSION: ${{ needs.release-please.outputs.new_version }}
         run:
-          gh pr create \
-            --title "Prod release v$NEW_VERSION" \
-            --body "PR to merge develop into master to initiate prod release v$NEW_VERSION" \
-            --base master \
-            --head develop \
-            --fill
+          gh pr create --title "Prod release v$NEW_VERSION" --body "PR to merge develop into master to initiate prod release v$NEW_VERSION" --base master --head develop
