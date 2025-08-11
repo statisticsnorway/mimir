@@ -4,7 +4,6 @@ declare global {
   namespace XP {
     namespace PartComponent {
       export type Accordion = _PartComponent<'mimir:accordion'>
-      export type ActiveStatistics = _PartComponent<'mimir:activeStatistics'>
       export type Article = _PartComponent<'mimir:article'>
       export type ArticleArchive = _PartComponent<'mimir:articleArchive'>
       export type ArticleList = _PartComponent<'mimir:articleList'>
