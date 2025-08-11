@@ -11,26 +11,29 @@ permissions:
 jobs:
   release-please:
     runs-on: ubuntu-latest
+    outputs:
+      new_version: ${{ steps.retrieve_new_version.outputs.version }}
     steps:
       - uses: googleapis/release-please-action@v4
-        id: release
+        id: run_release_please
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
       - name: Extract version from PR title
+        id: retrieve_new_version
         if: ${{ steps.release.outputs.pr != '' }}
         run: |
           PR='${{ steps.release.outputs.pr }}'
           TITLE=$(echo "$PR" | awk -F'"title":"' '{print $2}' | awk -F'","' '{print $1}')
           VERSION=$(echo "$TITLE" | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+' )
           echo "Extracted version: ${VERSION}"
-          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
 
   create-develop-to-master-pr:
     needs: release-please
     runs-on: ubuntu-latest
-    if: ${{ needs.release-please.outputs.version != '' }}
+    if: ${{ needs.release-please.outputs.new_version != '' }}
     steps:
       - name: Checkout develop branch
         uses: actions/checkout@v4
@@ -40,7 +43,7 @@ jobs:
       - name: Create PR from develop to master with version in title
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NEW_VERSION: ${{ needs.release-please.outputs.version }}
+          NEW_VERSION: ${{ needs.release-please.outputs.new_version }}
         run:
           gh pr create \
             --title "Prod release v$NEW_VERSION" \
