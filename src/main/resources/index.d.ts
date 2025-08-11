@@ -43,7 +43,6 @@ declare global {
       export type PictureCardLinks = _PartComponent<'mimir:pictureCardLinks'>
       export type PifCalculator = _PartComponent<'mimir:pifCalculator'>
       export type ProfiledBox = _PartComponent<'mimir:profiledBox'>
-      export type ProfiledLinkIcon = _PartComponent<'mimir:profiledLinkIcon'>
       export type Project = _PartComponent<'mimir:project'>
       export type PubArchiveCalendarLinks = _PartComponent<'mimir:pubArchiveCalendarLinks'>
       export type PublicationArchive = _PartComponent<'mimir:publicationArchive'>
