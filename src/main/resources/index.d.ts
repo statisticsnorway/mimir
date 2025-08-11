@@ -29,7 +29,6 @@ declare global {
       export type HighchartExpert = _PartComponent<'mimir:highchartExpert'>
       export type Highmap = _PartComponent<'mimir:highmap'>
       export type HusleieCalculator = _PartComponent<'mimir:husleieCalculator'>
-      export type InfoGraphics = _PartComponent<'mimir:infoGraphics'>
       export type KeyFigure = _PartComponent<'mimir:keyFigure'>
       export type KpiCalculator = _PartComponent<'mimir:kpiCalculator'>
       export type Links = _PartComponent<'mimir:links'>
