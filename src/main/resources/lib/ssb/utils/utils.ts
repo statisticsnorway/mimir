@@ -1,3 +1,4 @@
+import { localize } from '/lib/xp/i18n'
 import { get, getAttachmentStream, ByteSource, Content } from '/lib/xp/content'
 
 import { getContent, pageUrl, assetUrl } from '/lib/xp/portal'
@@ -6,7 +7,7 @@ import { type PreliminaryData } from '/lib/types/xmlParser'
 import { formatDate, fromNow } from '/lib/ssb/utils/dateUtils'
 import { type SourceList, type SourcesConfig } from '/lib/types/sources'
 import { type RowValue } from '/lib/types/util'
-import { type Header } from '/site/content-types'
+import { type Article, type Header } from '/site/content-types'
 import { type ProfiledBox as ProfiledBoxPartConfig } from '/site/parts/profiledBox'
 
 function numberWithSpaces(x: number | string): string {
@@ -201,6 +202,37 @@ export function getLinkTargetUrl(urlContentSelector: ProfiledBoxPartConfig['urlC
         })
       : ''
   }
+}
+
+export function getLinkTargetContent(
+  urlContentSelector: ProfiledBoxPartConfig['urlContentSelector']
+): Content<Article> | null {
+  if (urlContentSelector?._selected == 'optionXPContent') {
+    return get({ key: urlContentSelector.optionXPContent.xpContent as string })
+  }
+  return null
+}
+
+export function getSubtitleForContent(XPContent: Content<Article>, language: string): string {
+  const articleType = XPContent?.data.articleType ? `contentType.search.${XPContent.data.articleType}` : 'articleName'
+  const articleNamePhrase: string = localize({
+    key: articleType,
+    locale: language,
+  })
+
+  let type = ''
+  if (XPContent?.type === `${app.name}:article`) {
+    type = articleNamePhrase
+  }
+
+  let prettyDate: string | undefined = ''
+  if (XPContent?.publish && XPContent?.publish.from) {
+    prettyDate = formatDate(XPContent.publish.from, 'PPP', language)
+  } else {
+    prettyDate = formatDate(XPContent?.createdTime, 'PPP', language)
+  }
+
+  return `${type ? `${type} / ` : ''}${prettyDate ? prettyDate : ''}`
 }
 
 interface ContentSearchPageResult {

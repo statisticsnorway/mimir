@@ -13,7 +13,7 @@
         </input>
         <input name="image" type="ImageSelector">
             <label>Bilde</label>
-            <occurrences minimum="1" maximum="1"/>
+            <occurrences minimum="0" maximum="1"/>
             <config>
                 <allowPath>${site}</allowPath>
             </config>
@@ -21,22 +21,18 @@
         <input name="content" type="TextLine">
             <label>Innhold</label>
             <occurrences minimum="0" maximum="1"/>
-            <default>Artikkel</default>
         </input>
         <input name="date" type="Date">
             <label>Dato</label>
             <occurrences minimum="0" maximum="1"/>
-            <default>now</default>
         </input>
         <input name="title" type="TextLine">
             <label>Tittel</label>
-            <occurrences minimum="1" maximum="1"/>
-            <default>Her kommer tittelen</default>
+            <occurrences minimum="0" maximum="1"/>
         </input>
         <input name="preamble" type="TextArea">
             <label>Ingress</label>
-            <occurrences minimum="1" maximum="1"/>
-            <default>Her kommer ingress</default>
+            <occurrences minimum="0" maximum="1"/>
         </input>
         <mixin name="linkTarget" />
     </form>
