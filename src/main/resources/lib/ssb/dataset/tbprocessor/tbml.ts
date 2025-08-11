@@ -93,10 +93,10 @@ export function fetch(url: string, queryId?: string, processXml?: string, type?:
 
       return response
     } catch (e) {
-      if (attempt <= maxRetries) {
+      if (attempt < maxRetries) {
         attempt++
         log.warning(
-          `Attempt ${attempt} failed from tbprocessor${url ? ` (${url})` : ''}: queryId ${queryId}. Retrying...`
+          `Attempt ${attempt} failed from tbprocessor${url ? ` (${url})` : ''} with queryId: ${queryId}. Retrying...`
         )
         sleep(250)
       } else {
