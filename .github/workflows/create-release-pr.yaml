@@ -22,7 +22,7 @@ jobs:
           manifest-file: .release-please-manifest.json
       - name: Extract version from PR title
         id: retrieve_new_version
-        if: ${{ steps.release.outputs.pr != '' }}
+        if: ${{ steps.run_release_please.outputs.pr != '' }}
         run: |
           PR='${{ steps.run_release_please.outputs.pr }}'
           TITLE=$(echo "$PR" | awk -F'"title":"' '{print $2}' | awk -F'","' '{print $1}')
