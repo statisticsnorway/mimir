@@ -49,7 +49,6 @@ declare global {
       export type RelatedArticles = _PartComponent<'mimir:relatedArticles'>
       export type RelatedExternalLinks = _PartComponent<'mimir:relatedExternalLinks'>
       export type RelatedFactPage = _PartComponent<'mimir:relatedFactPage'>
-      export type RelatedKostra = _PartComponent<'mimir:relatedKostra'>
       export type RelatedStatistics = _PartComponent<'mimir:relatedStatistics'>
       export type ReleasedStatistics = _PartComponent<'mimir:releasedStatistics'>
       export type RichText = _PartComponent<'mimir:richText'>
