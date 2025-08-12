@@ -14,7 +14,7 @@
     "lib": [],
     "types": [
       "node",
-      "@item-enonic-types/global",
+      "@enonic-types/core",
     ],
     "rootDirs": [
       "./src/main/resources",

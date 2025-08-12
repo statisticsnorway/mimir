@@ -1,5 +1,5 @@
 import { get, Content } from '/lib/xp/content'
-import { imageUrl as xpImageUrl, type ImageUrlParams } from '/lib/xp/portal'
+import { imageUrl as xpImageUrl, type ImageUrlParams, imagePlaceholder } from '/lib/xp/portal'
 
 export function getImageCaption(imageId: string): string | undefined {
   const imageContent: Content<MediaImage> | null = get({
@@ -28,4 +28,33 @@ export function imageUrl(params: ImageUrlParams) {
   }
 
   return xpImageUrl(params)
+}
+
+export function getImageFromContent(XPContent: Content, imageDimensions: ImageDimensions) {
+  let imageSrc: string | undefined
+  let imageAlt: string | undefined = ''
+
+  const { scale, placeholderWidth, placeholderHeight } = imageDimensions
+  if (!XPContent?.x['com-enonic-app-metafields']?.['meta-data']?.seoImage) {
+    imageSrc = imagePlaceholder({
+      width: placeholderWidth,
+      height: placeholderHeight,
+    })
+  } else {
+    const image: string = XPContent?.x['com-enonic-app-metafields']?.['meta-data']?.seoImage
+    imageSrc = imageUrl({
+      id: image,
+      scale,
+      format: 'jpg',
+    })
+    imageAlt = getImageAlt(image) ? getImageAlt(image) : ''
+  }
+
+  return { imageSrc, imageAlt }
+}
+
+interface ImageDimensions {
+  scale: ImageUrlParams['scale']
+  placeholderWidth: number
+  placeholderHeight: number
 }
