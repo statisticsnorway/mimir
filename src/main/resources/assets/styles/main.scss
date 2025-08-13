@@ -42,12 +42,10 @@ $container-max-widths: (
 @import './menu';
 @import './preface';
 @import './globalStyles';
-@import './infoGraphic';
 @import './profiledBox';
 @import './article';
 @import './contacts';
 @import './relatedContentBox';
-@import './profiledLinkIcon';
 @import './downloadLink';
 @import './relatedArticles';
 @import './relatedExternalLinks';
@@ -163,8 +161,7 @@ section.part-divider + section.part-divider {
     }
 
     section section,
-    section figure,
-    section.part-infoGraphic {
+    section figure {
       padding-left: 0 !important;
       padding-right: 0 !important;
     }

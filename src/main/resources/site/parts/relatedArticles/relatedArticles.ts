@@ -1,5 +1,5 @@
 import { type Content, get as getContentByKey, query } from '/lib/xp/content'
-import { getContent, pageUrl, imagePlaceholder } from '/lib/xp/portal'
+import { getContent, type ImageUrlParams, pageUrl } from '/lib/xp/portal'
 import { render } from '/lib/thymeleaf'
 import { type Phrases } from '/lib/types/language'
 import { render as r4xpRender } from '/lib/enonic/react4xp'
@@ -10,8 +10,8 @@ import {
   type StatisticInListing,
   type VariantInListing,
 } from '/lib/ssb/dashboard/statreg/types'
-import { imageUrl, getImageAlt } from '/lib/ssb/utils/imageUtils'
-import { getProfiledCardAriaLabel } from '/lib/ssb/utils/utils'
+import { imageUrl, getImageAlt, getImageFromContent } from '/lib/ssb/utils/imageUtils'
+import { getProfiledCardAriaLabel, getSubtitleForContent } from '/lib/ssb/utils/utils'
 
 import { renderError } from '/lib/ssb/error/error'
 import * as util from '/lib/util'
@@ -90,25 +90,16 @@ function renderPart(req: XP.Request, relatedArticles: RelatedArticles['relatedAr
                 return undefined
               }
 
-              let imageSrc: string | undefined
-              let imageAlt: string | undefined = ''
-
-              if (!articleContent.x['com-enonic-app-metafields']?.['meta-data']?.seoImage) {
-                imageSrc = imagePlaceholder({
-                  width: 320,
-                  height: 180,
-                })
-              } else {
-                const image: string = articleContent.x['com-enonic-app-metafields']?.['meta-data']?.seoImage
-                imageSrc = imageUrl({
-                  id: image,
-                  scale: 'block(320, 180)', // 16:9
-                  format: 'jpg',
-                })
-                imageAlt = getImageAlt(image) ? getImageAlt(image) : ''
+              const imageWidth = 320
+              const imageHeight = 180
+              const imageDimensions = {
+                scale: `block(${imageWidth}, ${imageHeight})` as ImageUrlParams['scale'], // 16:9
+                placeholderWidth: imageWidth,
+                placeholderHeight: imageHeight,
               }
+              const { imageSrc, imageAlt } = getImageFromContent(articleContent, imageDimensions)
 
-              const subTitle = getSubTitle(articleContent, phrases, language) ?? ''
+              const subTitle = getSubtitleForContent(articleContent, language) ?? ''
               return {
                 title: articleContent.displayName,
                 subTitle,
@@ -163,25 +154,6 @@ function renderPart(req: XP.Request, relatedArticles: RelatedArticles['relatedAr
       body: body,
     }
   )
-}
-
-function getSubTitle(articleContent: Content<Article> | null, phrases: Phrases, language: string): string | undefined {
-  if (articleContent) {
-    let type = ''
-    if (articleContent.type === `${app.name}:article`) {
-      type = phrases.articleName
-    }
-    let prettyDate: string | undefined = ''
-    if (articleContent.data?.showModifiedDate?.dateOption?.modifiedDate) {
-      prettyDate = formatDate(articleContent.data.showModifiedDate.dateOption.modifiedDate, 'PPP', language)
-    } else if (articleContent.publish?.from) {
-      prettyDate = formatDate(articleContent.publish.from, 'PPP', language)
-    } else {
-      prettyDate = formatDate(articleContent.createdTime, 'PPP', language)
-    }
-    return `${type ? `${type} / ` : ''}${prettyDate as string}`
-  }
-  return
 }
 
 function addDsArticle(

@@ -1,12 +1,28 @@
 {
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "release-type": "node",
+  "skip-github-release": true,
+  "draft": true,
+  "always-update": true,
+  "last-release-sha": "ad1ccfea77f852e45d201e7497fba7d0981faa0b", 
   "packages": {
     ".": {
-      "release-type": "java",
       "package-name": "mimir",
-      "changelog-path": "CHANGELOG.md",
-      "draft": false,
-      "prerelease": false
+      "changelog-sections": [
+        { "type": "feat", "section": "Features" },
+        { "type": "fix", "section": "Bug Fixes" },
+        { "type": "perf", "section": "Performance Improvements" },
+        { "type": "revert", "section": "Reverts" },
+        { "type": "docs", "section": "Documentation", "hidden": true },
+        { "type": "style", "section": "Styles", "hidden": true },
+        { "type": "refactor", "section": "Code Refactoring", "hidden": true },
+        { "type": "test", "section": "Tests", "hidden": true },
+        { "type": "build", "section": "Build System and dependencies" },
+        { "type": "ci", "section": "Build System and dependencies" }
+      ],
+      "extra-files": [
+        "gradle.properties"
+      ]
     }
-  },
-  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json"
+  }
 } 
