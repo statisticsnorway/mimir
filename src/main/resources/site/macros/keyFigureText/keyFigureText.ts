@@ -69,10 +69,36 @@ function getLocalizedChangeDirection(
     return localize({
       key: 'keyFigureText.noChange',
       locale: language,
-    })
+    }).toLowerCase()
   }
 
   return changeDirection
+}
+
+function handleTextVariables(
+  keyFigureData: KeyFigureView,
+  changeDirection: string | undefined,
+  changePeriod: string | undefined,
+  changeText: string | undefined,
+  ingress: string,
+  language: string,
+  sourceText: string | undefined
+) {
+  const { title, time, number, numberDescription, changes } = keyFigureData
+  const numberDescriptionText = changes?.changeDirection === 'same' ? '' : numberDescription
+
+  return ingress
+    .replace(/\$tittel/g, title ?? '<mangler tittel>')
+    .replace(/\$tid/g, time ?? '<mangler tid>')
+    .replace(/\$tall/g, number ?? '<mangler tall>')
+    .replace(/\$benevning/g, numberDescriptionText ?? '<mangler benevning>')
+    .replace(/\$endringstekst/g, changeDirection ?? '<mangler endringstekst>')
+    .replace(/\$endringstall/g, changeText ?? '<mangler endringstall>')
+    .replace(
+      /\$endringsperiode/g,
+      language !== 'en' && changePeriod ? changePeriod?.toLowerCase() : (changePeriod ?? '<mangler endringsperiode>')
+    )
+    .replace(/\$kildetekst/g, sourceText ?? '<mangler kildetekst>')
 }
 
 function parseText(
@@ -83,24 +109,22 @@ function parseText(
 ) {
   const { title, time, number, numberDescription, changes } = keyFigureData
 
-  const changeDirection = changes?.changeDirection
-    ? getLocalizedChangeDirection(changes.changeDirection, language)
-    : undefined
-  const changeText = changes?.changeDirection !== 'same' ? changes?.changeText : ''
+  const changeDirection = getLocalizedChangeDirection(changes?.changeDirection, language)
+  const changeText = changes?.changeDirection !== 'same' ? changes?.changeText : undefined
   // We have to manually strip away 'endring' for change periods to be able to piece these words together in a sentence
   const changePeriod = changes?.changePeriod ? changes.changePeriod.toLowerCase().replace('endring ', '') : undefined
 
   // These should be resolved in Content Studio so we might not need to translate these
   const manualText = context?.params?.text
-    ? context.params.text
-        .replace(/\$tittel/g, title ?? '<mangler tittel>')
-        .replace(/\$tid/g, time ?? '<mangler tid>')
-        .replace(/\$tall/g, number ?? '<mangler tall>')
-        .replace(/\$benevning/g, numberDescription ?? '<mangler benevning>')
-        .replace(/\$endringstekst/g, changeDirection ?? '<mangler endringstekst>')
-        .replace(/\$endringstall/g, changeText ?? '<mangler endringstall>')
-        .replace(/\$endringsperiode/g, changePeriod ?? '<mangler endringsperiode>')
-        .replace(/\$kildetekst/g, sourceText ?? '<mangler kildetekst>')
+    ? handleTextVariables(
+        keyFigureData,
+        changeDirection,
+        changePeriod,
+        changeText,
+        context.params.text,
+        language,
+        sourceText
+      )
     : undefined
   const defaultText = [title, time, number, numberDescription, changeDirection, changeText, changePeriod].join(' ')
 
