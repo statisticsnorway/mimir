@@ -80,7 +80,7 @@ function getArticles(mainSubjects: SubjectItem[], days: number): NewsItem[] {
           title: article.displayName,
           link,
           description:
-            article?.data.ingress || article.x['com-enonic-app-metafields']?.['meta-data']?.seoDescription || '',
+            article?.x['com-enonic-app-metafields']?.['meta-data']?.seoDescription || article?.data.ingress || '',
           category: mainSubject.title,
           subject: mainSubject.name,
           language: article.language === 'en' ? 'en' : 'no',
