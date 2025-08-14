@@ -3,7 +3,6 @@ import { Card, Text, Button } from '@statisticsnorway/ssb-component-library'
 import { useMediaQuery } from 'react-responsive'
 import { type RelatedArticlesContent } from '/lib/types/partTypes/relatedArticles'
 import { usePaginationKeyboardNavigation } from '/lib/ssb/utils/customHooks/paginationHooks'
-import { sanitize } from '/lib/ssb/utils/htmlUtils'
 
 interface RelatedArticlesProps {
   relatedArticles: RelatedArticlesContent[]
@@ -115,7 +114,7 @@ function RelatedArticles(props: RelatedArticlesProps) {
                 ariaLabel={ariaLabel}
               >
                 <Text>
-                  <span dangerouslySetInnerHTML={{ __html: sanitize(preface) }} />
+                  <span dangerouslySetInnerHTML={{ __html: preface }} />
                 </Text>
               </Card>
             </li>

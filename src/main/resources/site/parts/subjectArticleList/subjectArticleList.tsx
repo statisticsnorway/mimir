@@ -5,7 +5,6 @@ import axios from 'axios'
 import { type SubjectArticleListProps } from '/lib/types/partTypes/subjectArticleList'
 import { type DropdownItem } from '/lib/types/partTypes/publicationArchive'
 import { usePagination } from '/lib/ssb/utils/customHooks/paginationHooks'
-import { sanitize } from '/lib/ssb/utils/htmlUtils'
 
 /* TODO:
 - Fikse sortering (?)
@@ -90,7 +89,7 @@ function SubjectArticleList(props: SubjectArticleListProps) {
               <Link ref={getCurrentElementRef(i)} href={article.url} linkType='header' headingSize={3} standAlone>
                 {article.title}
               </Link>
-              <p className='truncate-2-lines' dangerouslySetInnerHTML={{ __html: sanitize(article.preface) }} />
+              <p className='truncate-2-lines' dangerouslySetInnerHTML={{ __html: article.preface }} />
               <time dateTime={article.publishDate}>{article.publishDateHuman}</time>
             </li>
           )

@@ -15,7 +15,7 @@ function Article(props: ArticleProps) {
         <Title size={1} className='searchabletext'>
           {title}
         </Title>
-        {preface && <p className='ingress searchabletext' dangerouslySetInnerHTML={{ __html: sanitize(preface) }} />}
+        {preface && <p className='ingress searchabletext' dangerouslySetInnerHTML={{ __html: preface }} />}
       </div>
     )
   }
