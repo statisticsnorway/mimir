@@ -110,7 +110,8 @@ function parseText(
   const { title, time, number, numberDescription, changes } = keyFigureData
 
   const changeDirection = getLocalizedChangeDirection(changes?.changeDirection, language)
-  const changeText = changes?.changeDirection !== 'same' ? changes?.changeText : undefined
+  const changeText =
+    changes?.changeText && changes.changeDirection !== 'same' ? changes.changeText.replace('-', '') : undefined
   // We have to manually strip away 'endring' for change periods to be able to piece these words together in a sentence
   const changePeriod = changes?.changePeriod ? changes.changePeriod.toLowerCase().replace('endring ', '') : undefined
 
