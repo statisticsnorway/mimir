@@ -53,23 +53,23 @@ function getLocalizedChangeDirection(
 ) {
   if (changeDirection === 'up') {
     return localize({
-      key: 'keyFigure.increase',
+      key: 'keyFigureText.increase',
       locale: language,
-    }).toLowerCase()
+    })
   }
 
   if (changeDirection === 'down') {
     return localize({
-      key: 'keyFigure.decrease',
+      key: 'keyFigureText.decrease',
       locale: language,
-    }).toLowerCase()
+    })
   }
 
   if (changeDirection === 'same') {
     return localize({
-      key: 'keyFigure.noChange',
+      key: 'keyFigureText.noChange',
       locale: language,
-    }).toLowerCase()
+    })
   }
 
   return changeDirection
