@@ -166,3 +166,33 @@ function createFacetsArray(solrResults: Array<string | number>): Array<Facet> {
   })
   return facets
 }
+
+// Helper to paginate and collect URLs
+export function collectUrls<T>(
+  fetchFn: (start: number) => { total?: number; items: T[] },
+  extractUrl: (item: T) => string | undefined,
+  seen: Record<string, 1>,
+  urls: string[],
+  pageSize: number
+): { total: number; collected: number } {
+  let total = 0
+  let collected = 0
+
+  for (let start = 0; ; start += pageSize) {
+    const { total: totalItems = 0, items } = fetchFn(start)
+    if (start === 0) total = totalItems
+
+    for (const item of items) {
+      const url = extractUrl(item)
+      if (url && !seen[url]) {
+        seen[url] = 1
+        urls.push(url)
+      }
+    }
+
+    collected += items.length
+    if (start + pageSize >= total) break
+  }
+
+  return { total, collected }
+}

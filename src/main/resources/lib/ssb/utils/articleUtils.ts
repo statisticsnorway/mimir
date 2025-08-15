@@ -62,7 +62,7 @@ export function getChildArticles(
   })
 }
 
-export function getAllArticles(req: XP.Request, language: string, start: 0, count: 50): ArticleResult {
+export function getAllArticles(req: XP.Request, language: string, start: number, count: number): ArticleResult {
   const mainSubjects: Array<SubjectItem> = getMainSubjects(req, language)
   const languageQuery: string = language !== 'en' ? 'AND language != "en"' : 'AND language = "en"'
   const now: string = new Date().toISOString()
