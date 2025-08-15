@@ -19,28 +19,28 @@ export const get = (req: XP.Request): XP.Response => {
   }
 
   // Articles
-  var totalArticles = 0,
+  let totalArticles = 0,
     collectedArticles = 0,
     startA = 0
   while (true) {
     const res: ArticleResult = getAllArticles(req, articleLanguage, startA as any, pageSize)
     if (startA === 0) totalArticles = res.total || 0
     const hits = (res.articles as PreparedArticles[]) || []
-    for (var i = 0; i < hits.length; i++) add(hits[i].url)
+    for (let i = 0; i < hits.length; i++) add(hits[i].url)
     collectedArticles += hits.length
     if (startA + pageSize >= totalArticles) break
     startA += pageSize
   }
 
   // Statistics-only publications
-  var totalPubs = 0,
+  let totalPubs = 0,
     collectedPubs = 0,
     startP = 0
   while (true) {
     const resP = getPublications(req, startP, pageSize, publicationLanguage, 'statistics')
     if (startP === 0) totalPubs = resP.total || 0
     const pubs = (resP.publications as PublicationItem[]) || []
-    for (var j = 0; j < pubs.length; j++) add(pubs[j].url)
+    for (let j = 0; j < pubs.length; j++) add(pubs[j].url)
     collectedPubs += pubs.length
     if (startP + pageSize >= totalPubs) break
     startP += pageSize
