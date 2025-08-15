@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<content-type>
+	<display-name>Markdown</display-name>
+	<super-type>base:structured</super-type>
+	<form>
+		<input name="nodeId" type="CustomSelector">
+			<label>Markdown-artikkel</label>
+			<occurrences minimum="1" maximum="1" />
+			<config>
+				<service>getMarkdownNodes</service>
+			</config>
+		</input>
+	</form>
+</content-type>
