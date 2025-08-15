@@ -18,7 +18,7 @@ export const get = (req: XP.Request): XP.Response => {
   }
   const subTopicIds: string | string[] = getSubtopics(content, currentPath, req, language)
   const childArticles = getChildArticles(currentPath, subTopicIds, start, count, sort)
-  const preparedArticles: Array<PreparedArticles> = prepareArticles(childArticles, language)
+  const preparedArticles: Array<PreparedArticles> = prepareArticles(childArticles.hits, language)
   totalCount = childArticles.total
 
   return {

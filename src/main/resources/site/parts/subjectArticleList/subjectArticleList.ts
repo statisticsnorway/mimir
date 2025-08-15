@@ -30,7 +30,7 @@ function renderPart(req: XP.Request) {
 
   const subTopicIds: string | string[] = getSubtopics(content, currentPath, req, language)
   const childArticles: ContentsResult<Content<Article>> = getChildArticles(currentPath, subTopicIds, start, count, sort)
-  const preparedArticles: Array<PreparedArticles> = prepareArticles(childArticles, language)
+  const preparedArticles: Array<PreparedArticles> = prepareArticles(childArticles.hits, language)
   const totalArticles: number = childArticles.total
 
   const articleServiceUrl: string = serviceUrl({

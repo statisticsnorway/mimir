@@ -131,7 +131,7 @@ export function parseArticleData(pageId: string, start: number, count: number, l
         id: articleContent._id,
       }),
       title: articleContent.displayName,
-      preamble: articleContent.data.ingress,
+      preamble: processHtml({ value: articleContent?.data.ingress ?? '' }),
       date: articleContent.publish && articleContent.publish.from ? articleContent.publish.from : '',
     }
   })

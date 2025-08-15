@@ -89,7 +89,7 @@ function SubjectArticleList(props: SubjectArticleListProps) {
               <Link ref={getCurrentElementRef(i)} href={article.url} linkType='header' headingSize={3} standAlone>
                 {article.title}
               </Link>
-              <p className='truncate-2-lines'>{article.preface}</p>
+              <p className='truncate-2-lines' dangerouslySetInnerHTML={{ __html: article.preface }} />
               <time dateTime={article.publishDate}>{article.publishDateHuman}</time>
             </li>
           )

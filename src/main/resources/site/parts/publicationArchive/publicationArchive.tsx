@@ -121,7 +121,7 @@ function PublicationArchive(props: PublicationArchiveProps) {
             </Link>
 
             {publication.period && <p className='mt-1 mb-0'>{publication.period}</p>}
-            <p className='my-1 truncate-2-lines'>{publication.preface}</p>
+            <p className='my-1 truncate-2-lines' dangerouslySetInnerHTML={{ __html: publication.preface }} />
             <Text small>
               {getArticleType(publication)} /&nbsp;
               <time dateTime={publication.publishDate}>{publication.publishDateHuman}</time>
