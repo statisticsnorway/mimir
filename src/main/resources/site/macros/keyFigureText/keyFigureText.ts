@@ -130,7 +130,7 @@ function parseText(
     overwriteNoChange
   )
   const changeText =
-    changes?.changeText && changes.changeDirection !== 'same' ? changes.changeText.replace('-', '') : undefined
+    changes?.changeText && changes.changeDirection !== 'same' ? changes.changeText.replace('-', '') : ''
   // We have to manually strip away 'endring' for change periods to be able to piece these words together in a sentence
   const changePeriod = changes?.changePeriod ? changes.changePeriod.toLowerCase().replace('endring ', '') : undefined
 
