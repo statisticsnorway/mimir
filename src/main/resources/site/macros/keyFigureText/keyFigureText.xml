@@ -14,5 +14,22 @@
       <help-text>Her kan man bruke variabler for å vise dynamisk data. De tilgjengelige variablene er $tittel, $tid, $tall, $benevning, $endringstekst, $endringstall, $endringsperiode og $kildetekst.</help-text>
       <occurrences minimum="0" maximum="1" />
     </input>
+    <field-set>
+      <label>Tekstvariasjoner</label>
+      <items>
+        <input name="overwriteIncrease" type="TextLine">
+          <label>Increase</label>
+          <occurrences minimum="0" maximum="1" />
+        </input>
+        <input name="overwriteDecrease" type="TextLine">
+          <label>Decrease</label>
+          <occurrences minimum="0" maximum="1" />
+        </input>
+        <input name="overwriteNoChanges" type="TextLine">
+          <label>Ingen endring</label>
+          <occurrences minimum="0" maximum="1" />
+        </input>
+      </items>
+    </field-set>
   </form>
 </macro>

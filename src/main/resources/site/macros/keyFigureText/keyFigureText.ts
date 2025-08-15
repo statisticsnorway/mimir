@@ -49,27 +49,39 @@ function renderKeyFigureTextMacro(context: XP.MacroContext) {
 
 function getLocalizedChangeDirection(
   changeDirection: KeyFigureChanges['changeDirection'] | undefined,
-  language: string
+  language: string,
+  overwriteIncrease: string | undefined,
+  overwriteDecrease: string | undefined,
+  overwriteNoChange: string | undefined
 ) {
   if (changeDirection === 'up') {
-    return localize({
-      key: 'keyFigureText.increase',
-      locale: language,
-    })
+    return (
+      overwriteIncrease ??
+      localize({
+        key: 'keyFigureText.increase',
+        locale: language,
+      })
+    )
   }
 
   if (changeDirection === 'down') {
-    return localize({
-      key: 'keyFigureText.decrease',
-      locale: language,
-    })
+    return (
+      overwriteDecrease ??
+      localize({
+        key: 'keyFigureText.decrease',
+        locale: language,
+      })
+    )
   }
 
   if (changeDirection === 'same') {
-    return localize({
-      key: 'keyFigureText.noChange',
-      locale: language,
-    }).toLowerCase()
+    return (
+      overwriteNoChange ??
+      localize({
+        key: 'keyFigure.noChange',
+        locale: language,
+      }).toLowerCase()
+    )
   }
 
   return changeDirection
@@ -109,7 +121,15 @@ function parseText(
 ) {
   const { title, time, number, numberDescription, changes } = keyFigureData
 
-  const changeDirection = getLocalizedChangeDirection(changes?.changeDirection, language)
+  const { text, overwriteIncrease, overwriteDecrease, overwriteNoChange } = context?.params ?? {}
+
+  const changeDirection = getLocalizedChangeDirection(
+    changes?.changeDirection,
+    language,
+    overwriteIncrease,
+    overwriteDecrease,
+    overwriteNoChange
+  )
   const changeText =
     changes?.changeText && changes.changeDirection !== 'same' ? changes.changeText.replace('-', '') : undefined
   // We have to manually strip away 'endring' for change periods to be able to piece these words together in a sentence
@@ -117,15 +137,7 @@ function parseText(
 
   // These should be resolved in Content Studio so we might not need to translate these
   const manualText = context?.params?.text
-    ? handleTextVariables(
-        keyFigureData,
-        changeDirection,
-        changePeriod,
-        changeText,
-        context.params.text,
-        language,
-        sourceText
-      )
+    ? handleTextVariables(keyFigureData, changeDirection, changePeriod, changeText, text, language, sourceText)
     : undefined
   const defaultText = [title, time, number, numberDescription, changeDirection, changeText, changePeriod].join(' ')
 
