@@ -163,7 +163,7 @@
   },
   "dependencies": {
     "bootstrap": "~5.3.4",
-    "date-fns": "~3.6.0",
+    "date-fns": "~4.1.0",
     "highcharts-react-official": "~3.2.2",
     "react-bootstrap": "~2.10.10",
     "react-select": "~5.10.2",
