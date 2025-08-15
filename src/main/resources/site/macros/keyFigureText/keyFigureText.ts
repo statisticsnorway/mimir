@@ -96,14 +96,13 @@ function handleTextVariables(
   language: string,
   sourceText: string | undefined
 ) {
-  const { title, time, number, numberDescription, changes } = keyFigureData
-  const numberDescriptionText = changes?.changeDirection === 'same' ? '' : numberDescription
+  const { title, time, number, numberDescription } = keyFigureData
 
   return ingress
     .replace(/\$tittel/g, title ?? '<mangler tittel>')
     .replace(/\$tid/g, time ?? '<mangler tid>')
     .replace(/\$tall/g, number ?? '<mangler tall>')
-    .replace(/\$benevning/g, numberDescriptionText ?? '<mangler benevning>')
+    .replace(/\$benevning/g, numberDescription ?? '<mangler benevning>')
     .replace(/\$endringstekst/g, changeDirection ?? '<mangler endringstekst>')
     .replace(/\$endringstall/g, changeText ?? '<mangler endringstall>')
     .replace(
