@@ -2,7 +2,9 @@ import { type PreparedArticles } from '/lib/types/article'
 
 export interface SubjectArticleListProps {
   title: string
-  buttonTitle: string
+  showMore: string
+  showLess: string
+  showCount: string
   articleServiceUrl: string
   currentPath: string
   start: number
