@@ -135,16 +135,15 @@ function SubjectArticleList(props: SubjectArticleListProps) {
     if (!hideBtn) {
       return (
         <div>
-          <Button className='button-more' onClick={handleOnClick} onKeyDown={handleKeyboardNavigation}>
-            {!showLessBtn ? (
-              <>
-                <ChevronDown size='18' /> {showMore}
-              </>
-            ) : (
-              <>
-                <ChevronUp size='18' /> {showLess}
-              </>
-            )}
+          <Button
+            className='button-more'
+            onClick={handleOnClick}
+            onKeyDown={handleKeyboardNavigation}
+            icon={!showLessBtn ? <ChevronDown size='18' /> : <ChevronUp size='18' />}
+            ariaLabel={showLessBtn ? showLess : showMore}
+            primary
+          >
+            {!showLessBtn ? showMore : showLess}
           </Button>
         </div>
       )
