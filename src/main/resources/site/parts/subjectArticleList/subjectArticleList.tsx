@@ -141,7 +141,6 @@ function SubjectArticleList(props: SubjectArticleListProps) {
             onKeyDown={handleKeyboardNavigation}
             icon={!showLessBtn ? <ChevronDown size='18' /> : <ChevronUp size='18' />}
             ariaLabel={showLessBtn ? showLess : showMore}
-            primary
           >
             {!showLessBtn ? showMore : showLess}
           </Button>
