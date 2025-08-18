@@ -9,67 +9,36 @@ export const get = (req: XP.Request): XP.Response => {
   const publicationLanguage: 'en' | 'nb' = articleLanguage === 'en' ? 'en' : 'nb'
   const pageSize = 1000
 
-  const seen: Record<string, 1> = {}
-  const urls: string[] = []
-
   // Articles
   const articlesStats = collectUrls<PreparedArticles>(
-    (start) => {
+    (start, pageSize) => {
       const res: ArticleResult = getAllArticles(req, articleLanguage, start, pageSize)
       return { total: res.total, items: (res.articles as PreparedArticles[]) || [] }
     },
     (article) => article.url,
-    seen,
-    urls,
     pageSize
   )
 
   // Publications
   const publicationsStats = collectUrls<PublicationItem>(
-    (start) => {
+    (start, pageSize) => {
       const res = getPublications(req, start, pageSize, publicationLanguage, 'statistics')
       return { total: res.total, items: (res.publications as PublicationItem[]) || [] }
     },
     (pub) => pub.url,
-    seen,
-    urls,
     pageSize
   )
 
-  // HTML output only
+  // merge
+  const urls: string[] = [...articlesStats.urls, ...publicationsStats.urls]
+
+  // HTML output
   const body = `<!DOCTYPE html>
   <html lang="${articleLanguage}">
   <head>
     <meta charset="UTF-8" />
     <meta name="robots" content="noindex" />
     <title>Solr URLs</title>
-    <style>
-      html, body {
-        background: #000;
-        color: #fff;
-        margin: 0;
-        padding: 0;
-        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-        line-height: 1.5;
-      }
-      main {
-        padding: 20px;
-      }
-      .meta {
-        margin: 0 0 12px 0;
-      }
-      .url {
-        margin: 2px 0;
-        word-break: break-all;
-      }
-      a {
-        color: #fff;
-        text-decoration: none;
-      }
-      a:hover {
-        text-decoration: underline;
-      }
-    </style>
   </head>
   <body>
     <main>
@@ -81,7 +50,7 @@ export const get = (req: XP.Request): XP.Response => {
         </p>
       </div>
       <div>
-        ${urls.map((u) => `<div class="url"><a href="${u}">${u}</a></div>`).join('')}
+        ${urls.map((u, i) => `<div class="url">${i + 1}. <a href="${u}">${u}</a></div>`).join('')}
       </div>
     </main>
   </body>
