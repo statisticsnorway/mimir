@@ -104,7 +104,7 @@ function parseProfiledBoxProps(config: ProfiledBoxPartConfig, language: string):
     href: getLinkTargetUrl(urlContentSelector),
     subTitle,
     title,
-    preambleText: config.preamble ?? contentIngress ?? '',
+    preambleText: config.preamble ?? contentIngress,
     titleSize: getTitleSize(title),
     ariaLabel: getProfiledCardAriaLabel(subTitle),
   }
