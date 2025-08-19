@@ -15,7 +15,7 @@ const ProfiledBox = (props: ProfiledBoxProps) => {
       ariaLabel={ariaLabel}
     >
       <Paragraph className={`preambleText${titleSize ? ` title-size-${titleSize}` : ''}`} aria-hidden='true'>
-        {preambleText}
+        <span dangerouslySetInnerHTML={{ __html: preambleText }} />
       </Paragraph>
     </Card>
   )

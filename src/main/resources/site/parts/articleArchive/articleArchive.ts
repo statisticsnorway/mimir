@@ -11,6 +11,7 @@ import {
   type ParsedArticles,
   type ParsedArticleData,
 } from '/lib/types/partTypes/articleArchive'
+import { getSubtitleForContent } from '/lib/ssb/utils/utils'
 import { type Article, type ArticleArchive } from '/site/content-types'
 
 export function get(req: XP.Request): XP.Response {
@@ -87,22 +88,6 @@ function renderPart(req: XP.Request) {
   })
 }
 
-function getSubTitle(articleContent: Content<Article>, articleNamePhrase: string, language: string): string {
-  let type = ''
-  if (articleContent.type === `${app.name}:article`) {
-    type = articleNamePhrase
-  }
-
-  let prettyDate: string | undefined = ''
-  if (articleContent.publish && articleContent.publish.from) {
-    prettyDate = formatDate(articleContent.publish.from, 'PPP', language)
-  } else {
-    prettyDate = formatDate(articleContent.createdTime, 'PPP', language)
-  }
-
-  return `${type ? `${type} / ` : ''}${prettyDate ? prettyDate : ''}`
-}
-
 export function parseArticleData(pageId: string, start: number, count: number, language: string): ParsedArticles {
   const articles = query<Content<Article>>({
     start,
@@ -135,25 +120,18 @@ export function parseArticleData(pageId: string, start: number, count: number, l
   })
 
   const parsedArticles: Array<ParsedArticleData> = articles.hits.map((articleContent) => {
-    const articleType = articleContent.data.articleType
-      ? `contentType.search.${articleContent.data.articleType}`
-      : 'articleName'
-    const articleNamePhrase: string = localize({
-      key: articleType,
-      locale: language,
-    })
     return {
       year:
         // checking against an empty articleContent.publish object to throw a false
         JSON.stringify(articleContent.publish) != '{}' && articleContent.createdTime
           ? formatDate(articleContent.publish?.from, 'yyyy', language)
           : formatDate(articleContent.createdTime, 'yyyy', language),
-      subtitle: getSubTitle(articleContent, articleNamePhrase, language),
+      subtitle: getSubtitleForContent(articleContent, language),
       href: pageUrl({
         id: articleContent._id,
       }),
       title: articleContent.displayName,
-      preamble: articleContent.data.ingress,
+      preamble: processHtml({ value: articleContent?.data.ingress ?? '' }),
       date: articleContent.publish && articleContent.publish.from ? articleContent.publish.from : '',
     }
   })

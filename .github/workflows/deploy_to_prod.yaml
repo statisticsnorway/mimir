@@ -45,7 +45,7 @@ jobs:
       - name: Create tag and release
         id: tag_and_release
         if: steps.deploy_app_to_XP.outcome == 'success'
-        run: gh release create $VERSION --generate-notes
+        run: gh release create v$VERSION -F CHANGELOG.md
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Send success message to Slack

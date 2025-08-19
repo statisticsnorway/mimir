@@ -1,3 +1,4 @@
+# Workflow will be replaced by create-release-pr.yaml
 name: 'Update MIMIR version number'
 on:
   pull_request:

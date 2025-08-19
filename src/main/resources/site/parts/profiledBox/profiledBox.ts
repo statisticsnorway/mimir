@@ -1,15 +1,19 @@
-import { getContent, getComponent } from '/lib/xp/portal'
-import { render } from '/lib/thymeleaf'
-import { getLinkTargetUrl, getProfiledCardAriaLabel, randomUnsafeString } from '/lib/ssb/utils/utils'
+import { getContent, getComponent, Content, type ImageUrlParams, processHtml } from '/lib/xp/portal'
+import {
+  getLinkTargetUrl,
+  getLinkTargetContent,
+  getProfiledCardAriaLabel,
+  getSubtitleForContent,
+  randomUnsafeString,
+} from '/lib/ssb/utils/utils'
 import { render as r4xpRender } from '/lib/enonic/react4xp'
 import { formatDate } from '/lib/ssb/utils/dateUtils'
-import { imageUrl, getImageAlt } from '/lib/ssb/utils/imageUtils'
+import { imageUrl, getImageAlt, getImageFromContent } from '/lib/ssb/utils/imageUtils'
 
 import { renderError } from '/lib/ssb/error/error'
 import { type ProfiledBoxProps } from '/lib/types/partTypes/profiledBox'
+import { type Article } from '/site/content-types'
 import { type ProfiledBox as ProfiledBoxPartConfig } from '.'
-
-const view = resolve('profiledBox.html')
 
 export function get(req: XP.Request): XP.Response {
   try {
@@ -31,38 +35,16 @@ function renderPart(req: XP.Request): XP.Response {
   if (!config) throw Error('No part found')
 
   const language: string = page.language === 'en' || page.language === 'nn' ? page.language : 'nb'
-  const urlContentSelector: ProfiledBoxPartConfig['urlContentSelector'] = config.urlContentSelector
   const id: string = 'profiled-box-' + randomUnsafeString()
-  const body: string = render(view, {
-    profiledBoxId: id,
-  })
 
-  const title = config.title
-  const subTitle = getSubtitle(config.content, config.date, language)
-  const props: ProfiledBoxProps = {
-    imgUrl: imageUrl({
-      id: config.image,
-      scale: 'block(315, 215)',
-      format: 'jpg',
-    }),
-    imageAltText: getImageAlt(config.image) ?? ' ',
-    imagePlacement: config.cardOrientation == 'horizontal' ? 'left' : 'top',
-    href: getLinkTargetUrl(urlContentSelector),
-    subTitle,
-    title,
-    preambleText: config.preamble,
-    titleSize: getTitleSize(title),
-    ariaLabel: getProfiledCardAriaLabel(subTitle),
-  }
-
-  return r4xpRender('site/parts/profiledBox/profiledBox', props, req, {
-    id: id,
-    body: body,
+  return r4xpRender('site/parts/profiledBox/profiledBox', parseProfiledBoxProps(config, language), req, {
+    id,
+    body: `<section class="xp-part part-profiled-box container" id="${id}"></section>`,
     hydrate: false,
   })
 }
 
-function getSubtitle(content: string | undefined, date: string | undefined, language: string): string {
+function getSubtitleFromConfig(content: string | undefined, date: string | undefined, language: string): string {
   if (content && date) {
     return content + ' / ' + (formatDate(date, 'PPP', language) as string).toLowerCase()
   } else if (content) {
@@ -87,4 +69,44 @@ function getTitleSize(title: string): string {
     titleSize = 'xl'
   }
   return titleSize
+}
+
+function parseProfiledBoxProps(config: ProfiledBoxPartConfig, language: string): ProfiledBoxProps {
+  const urlContentSelector: ProfiledBoxPartConfig['urlContentSelector'] = config.urlContentSelector
+  const linkTargetContent = getLinkTargetContent(config.urlContentSelector)
+
+  const title = config.title ?? linkTargetContent?.displayName ?? ''
+  const subTitle =
+    config.content && config.date
+      ? getSubtitleFromConfig(config.content, config.date, language)
+      : (getSubtitleForContent(linkTargetContent as Content<Article>, language) ?? '')
+
+  const imageWidth = 315
+  const imageHeight = 215
+  const imageDimensions = {
+    scale: `block(${imageWidth}, ${imageHeight})` as ImageUrlParams['scale'],
+    placeholderWidth: imageWidth,
+    placeholderHeight: imageHeight,
+  }
+  const { imageSrc, imageAlt } = getImageFromContent(linkTargetContent as Content<Article>, imageDimensions)
+
+  const contentIngress = linkTargetContent?.data.ingress ? processHtml({ value: linkTargetContent.data.ingress }) : ''
+
+  return {
+    imgUrl: config.image
+      ? imageUrl({
+          id: config.image,
+          scale: imageDimensions.scale,
+          format: 'jpg',
+        })
+      : (imageSrc ?? ''),
+    imageAltText: config.image ? getImageAlt(config.image) : (imageAlt ?? ''),
+    imagePlacement: config.cardOrientation == 'horizontal' ? 'left' : 'top',
+    href: getLinkTargetUrl(urlContentSelector),
+    subTitle,
+    title,
+    preambleText: config.preamble ?? contentIngress,
+    titleSize: getTitleSize(title),
+    ariaLabel: getProfiledCardAriaLabel(subTitle),
+  }
 }

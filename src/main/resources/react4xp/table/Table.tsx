@@ -17,12 +17,6 @@ import { type TableProps } from '/lib/types/partTypes/table'
 import { PreliminaryData, type TableCellUniform } from '/lib/types/xmlParser'
 import { exportTableToExcel, exportTableToCSV } from '/lib/ssb/utils/tableExportUtils'
 
-declare global {
-  interface Window {
-    downloadTableFile: (element: HTMLDivElement | null, options: unknown) => void
-  }
-}
-
 function Table(props: TableProps) {
   const {
     downloadTableLabel,
@@ -42,7 +36,6 @@ function Table(props: TableProps) {
     statBankWebUrl,
     hiddenTitle,
     checkIsOverflowing,
-    useNewTableExport,
   } = props
 
   const [currentTable, setCurrentTable] = useState(paramShowDraft && draftExist ? tableDraft : table)
@@ -100,38 +93,13 @@ function Table(props: TableProps) {
   const fileName = table?.caption?.content ?? table?.caption
 
   function downloadTableAsCSV() {
-    if (window.downloadTableFile && !useNewTableExport) {
-      window.downloadTableFile(tableWrapperRef.current, {
-        type: 'csv',
-        fileName: 'tabell',
-        csvSeparator: ';',
-        csvEnclosure: '',
-        tfootSelector: '',
-      })
-    }
-    if (tableRef?.current && useNewTableExport) {
+    if (tableRef?.current) {
       exportTableToCSV({ tableElement: tableRef.current, fileName })
     }
   }
 
   function downloadTableAsExcel() {
-    if (window.downloadTableFile && !useNewTableExport) {
-      window.downloadTableFile(tableWrapperRef.current, {
-        type: 'xlsx',
-        fileName: 'tabell',
-        numbers: {
-          html: {
-            decimalMark: ',',
-            thousandsSeparator: ' ',
-          },
-          output: {
-            decimalMark: '.',
-            thousandsSeparator: '',
-          },
-        },
-      })
-    }
-    if (tableRef?.current && useNewTableExport) {
+    if (tableRef?.current) {
       exportTableToExcel({ tableElement: tableRef.current, fileName })
     }
   }

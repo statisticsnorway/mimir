@@ -4,7 +4,6 @@ declare global {
   namespace XP {
     namespace PartComponent {
       export type Accordion = _PartComponent<'mimir:accordion'>
-      export type ActiveStatistics = _PartComponent<'mimir:activeStatistics'>
       export type Article = _PartComponent<'mimir:article'>
       export type ArticleArchive = _PartComponent<'mimir:articleArchive'>
       export type ArticleList = _PartComponent<'mimir:articleList'>
@@ -30,7 +29,6 @@ declare global {
       export type HighchartExpert = _PartComponent<'mimir:highchartExpert'>
       export type Highmap = _PartComponent<'mimir:highmap'>
       export type HusleieCalculator = _PartComponent<'mimir:husleieCalculator'>
-      export type InfoGraphics = _PartComponent<'mimir:infoGraphics'>
       export type KeyFigure = _PartComponent<'mimir:keyFigure'>
       export type KpiCalculator = _PartComponent<'mimir:kpiCalculator'>
       export type Links = _PartComponent<'mimir:links'>
@@ -45,14 +43,12 @@ declare global {
       export type PictureCardLinks = _PartComponent<'mimir:pictureCardLinks'>
       export type PifCalculator = _PartComponent<'mimir:pifCalculator'>
       export type ProfiledBox = _PartComponent<'mimir:profiledBox'>
-      export type ProfiledLinkIcon = _PartComponent<'mimir:profiledLinkIcon'>
       export type Project = _PartComponent<'mimir:project'>
       export type PubArchiveCalendarLinks = _PartComponent<'mimir:pubArchiveCalendarLinks'>
       export type PublicationArchive = _PartComponent<'mimir:publicationArchive'>
       export type RelatedArticles = _PartComponent<'mimir:relatedArticles'>
       export type RelatedExternalLinks = _PartComponent<'mimir:relatedExternalLinks'>
       export type RelatedFactPage = _PartComponent<'mimir:relatedFactPage'>
-      export type RelatedKostra = _PartComponent<'mimir:relatedKostra'>
       export type RelatedStatistics = _PartComponent<'mimir:relatedStatistics'>
       export type ReleasedStatistics = _PartComponent<'mimir:releasedStatistics'>
       export type RichText = _PartComponent<'mimir:richText'>
