@@ -30,7 +30,7 @@ export const get = (req: XP.Request): XP.Response => {
   )
 
   // merge
-  const urls: string[] = [...articlesStats.urls, ...publicationsStats.urls]
+  const urls = [...articlesStats.urls, ...publicationsStats.urls]
 
   // HTML output
   const body = `<!DOCTYPE html>
