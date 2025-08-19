@@ -5,6 +5,7 @@
   "draft": true,
   "always-update": true,
   "last-release-sha": "ad1ccfea77f852e45d201e7497fba7d0981faa0b", 
+  "pull-request-title-pattern": "chore: bump version and create changelog for v${version}",
   "packages": {
     ".": {
       "package-name": "mimir",
