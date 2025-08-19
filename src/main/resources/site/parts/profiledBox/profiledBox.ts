@@ -91,6 +91,7 @@ function parseProfiledBoxProps(config: ProfiledBoxPartConfig, language: string):
   const { imageSrc, imageAlt } = getImageFromContent(linkTargetContent as Content<Article>, imageDimensions)
 
   const contentIngress = linkTargetContent?.data.ingress ? processHtml({ value: linkTargetContent.data.ingress }) : ''
+
   return {
     imgUrl: config.image
       ? imageUrl({
