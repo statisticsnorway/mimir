@@ -1,42 +1,64 @@
 import { getAllArticles } from '/lib/ssb/utils/articleUtils'
+import { getPublications } from '/lib/ssb/parts/publicationArchive'
 import { type ArticleResult, type PreparedArticles } from '/lib/types/article'
+import { type PublicationItem } from '/lib/types/partTypes/publicationArchive'
+import { collectUrls } from '/lib/ssb/utils/solrUtils'
 
 export const get = (req: XP.Request): XP.Response => {
-  const start: number = Number(req.params.start) ? Number(req.params.start) : 0
-  const count: number = Number(req.params.count) ? Number(req.params.count) : 50
-  const language: string = req.params.language && req.params.language === 'en' ? 'en' : 'no'
-  const allArticles: ArticleResult = getAllArticles(req, language, start, count)
-  const articleStart: number = start + 1
-  const articleEnd: number = start + allArticles.articles.length
-  const moreArticlesUrl = `/_/service/mimir/solrArticleList?language=${language}&start=${start + count}&count=${count}`
+  const articleLanguage: 'en' | 'no' = req.params.language === 'en' ? 'en' : 'no'
+  const publicationLanguage: 'en' | 'nb' = articleLanguage === 'en' ? 'en' : 'nb'
+  const pageSize = 1000
 
-  const articleListHtml = `<!DOCTYPE html>
-    <html lang="${language}">
-        <head>
-            <meta charset="UTF-8"/>
-            <meta name="robots" content="noindex" />
-        </head>
-        <body>
-          <div>
-              <p>Artikkel ${articleStart} til ${articleEnd} (Totalt antall artikler ${allArticles.total})</p>
-              <div>
-                  ${allArticles.articles
-                    .map((article: PreparedArticles) => `<a href="${article.url}">${article.title}</a>`)
-                    .join('</br>')}
-              </div>
-              ${
-                allArticles.total > start + count
-                  ? `<p>
-              <a href="${moreArticlesUrl}">Neste ${count} artikler</a>
-          </p>`
-                  : ''
-              }
-            </div>
-        </body>
-    </html>`
+  // Articles
+  const articlesStats = collectUrls<PreparedArticles>(
+    (start, pageSize) => {
+      const res: ArticleResult = getAllArticles(req, articleLanguage, start, pageSize)
+      return { total: res.total, items: (res.articles as PreparedArticles[]) || [] }
+    },
+    (article) => article.url,
+    pageSize
+  )
+
+  // Publications
+  const publicationsStats = collectUrls<PublicationItem>(
+    (start, pageSize) => {
+      const res = getPublications(req, start, pageSize, publicationLanguage, 'statistics')
+      return { total: res.total, items: (res.publications as PublicationItem[]) || [] }
+    },
+    (pub) => pub.url,
+    pageSize
+  )
+
+  // merge
+  const urls = [...articlesStats.urls, ...publicationsStats.urls]
+
+  // HTML output
+  const body = `<!DOCTYPE html>
+  <html lang="${articleLanguage}">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="robots" content="noindex" />
+    <title>Solr URLs</title>
+  </head>
+  <body>
+    <main>
+      <div class="meta">
+        <p><strong>Total URLs:</strong> ${urls.length}</p>
+        <p>
+          Articles ${articlesStats.collected}/${articlesStats.total} •
+          Statistics ${publicationsStats.collected}/${publicationsStats.total}
+        </p>
+      </div>
+      <div>
+        ${urls.map((u, i) => `<div class="url">${i + 1}. <a href="${u}">${u}</a></div>`).join('')}
+      </div>
+    </main>
+  </body>
+  </html>`
 
   return {
-    body: articleListHtml,
-    contentType: 'text/html',
+    body,
+    contentType: 'text/html; charset=UTF-8',
+    headers: { 'X-Robots-Tag': 'noindex' },
   }
 }
