@@ -62,22 +62,22 @@ export const usePagination = <T,>({
     return index === prevListLength.current ? currentElement : null
   }
 
-  const handleKeyboardNavigation = usePaginationKeyboardNavigation(() => {
-    setKeyboardNavigation(true)
+  const fetchListItems = () => {
     if (showLess && onLoadFirst) {
       onLoadFirst()
     } else {
       onLoadMore()
     }
+  }
+
+  const handleKeyboardNavigation = usePaginationKeyboardNavigation(() => {
+    setKeyboardNavigation(true)
+    fetchListItems()
   })
 
   const handleOnClick = () => {
     setKeyboardNavigation(false)
-    if (showLess && onLoadFirst) {
-      onLoadFirst()
-    } else {
-      onLoadMore()
-    }
+    fetchListItems()
   }
 
   return {
