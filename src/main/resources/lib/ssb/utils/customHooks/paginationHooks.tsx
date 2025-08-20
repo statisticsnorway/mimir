@@ -53,7 +53,6 @@ export const usePagination = <T,>({
       scrollAnchor.current.scrollIntoView({
         behavior: 'smooth',
         block: 'end',
-        inline: 'nearest',
       })
     }
   }, [scrollIntoView])
