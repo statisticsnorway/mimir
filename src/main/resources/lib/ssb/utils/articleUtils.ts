@@ -1,5 +1,5 @@
 import { get, modify, query, type Content, ContentsResult } from '/lib/xp/content'
-import { pageUrl } from '/lib/xp/portal'
+import { pageUrl, processHtml } from '/lib/xp/portal'
 import { listener, EnonicEvent } from '/lib/xp/event'
 import {
   getAllMainSubjectByContent,
@@ -62,7 +62,7 @@ export function getChildArticles(
   })
 }
 
-export function getAllArticles(req: XP.Request, language: string, start: 0, count: 50): ArticleResult {
+export function getAllArticles(req: XP.Request, language: string, start: number, count: number): ArticleResult {
   const mainSubjects: Array<SubjectItem> = getMainSubjects(req, language)
   const languageQuery: string = language !== 'en' ? 'AND language != "en"' : 'AND language = "en"'
   const now: string = new Date().toISOString()
@@ -83,22 +83,23 @@ export function getAllArticles(req: XP.Request, language: string, start: 0, coun
   })
 
   return {
-    articles: prepareArticles(articlesContent, language),
+    articles: prepareArticles(articlesContent.hits, language),
     total: articlesContent.total,
   }
 }
 
-export function prepareArticles(articles: ContentsResult<Content<Article>>, language: string): Array<PreparedArticles> {
-  return articles.hits.map((article: Content<Article>) => {
+export function prepareArticles(articles: Array<Content<Article>>, language: string): Array<PreparedArticles> {
+  return articles.map((article: Content<Article>) => {
     return {
       title: article.displayName,
-      preface: article.data.ingress ? article.data.ingress : '',
+      preface: article.data.ingress ? processHtml({ value: article.data.ingress }) : '',
       url: pageUrl({
         id: article._id,
       }),
       publishDate: article.publish && article.publish.from ? article.publish.from : '',
       publishDateHuman:
         article.publish && article.publish.from ? formatDate(article.publish.from, 'PPP', language) : '',
+      frontPagePriority: article.data.frontPagePriority,
     }
   })
 }

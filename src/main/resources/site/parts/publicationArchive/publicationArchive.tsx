@@ -121,7 +121,7 @@ function PublicationArchive(props: PublicationArchiveProps) {
             </Link>
 
             {publication.period && <p className='mt-1 mb-0'>{publication.period}</p>}
-            <p className='my-1 truncate-2-lines'>{publication.preface}</p>
+            <p className='my-1 truncate-2-lines' dangerouslySetInnerHTML={{ __html: publication.preface }} />
             <Text small>
               {getArticleType(publication)} /&nbsp;
               <time dateTime={publication.publishDate}>{publication.publishDateHuman}</time>
@@ -195,22 +195,6 @@ function PublicationArchive(props: PublicationArchiveProps) {
     )
   }
 
-  function addHiddenLinkSolrArticleList() {
-    const language = props.language === 'en' ? 'en' : 'no'
-    const solrArticleListUrl = `/_/service/mimir/solrArticleList?language=${language}`
-    return (
-      <div
-        style={{
-          display: 'none',
-        }}
-      >
-        <Link tabIndex='-1' href={solrArticleListUrl}>
-          Alle artikler
-        </Link>
-      </div>
-    )
-  }
-
   return (
     <section className='publication-archive container-fluid'>
       <div className='publication-archive-head'>
@@ -249,7 +233,6 @@ function PublicationArchive(props: PublicationArchiveProps) {
           </div>
         </div>
       </div>
-      {addHiddenLinkSolrArticleList()}
     </section>
   )
 }

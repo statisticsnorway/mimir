@@ -113,7 +113,9 @@ function RelatedArticles(props: RelatedArticlesProps) {
                 subTitle={subTitle}
                 ariaLabel={ariaLabel}
               >
-                <Text>{preface}</Text>
+                <Text>
+                  <span dangerouslySetInnerHTML={{ __html: preface }} />
+                </Text>
               </Card>
             </li>
           )

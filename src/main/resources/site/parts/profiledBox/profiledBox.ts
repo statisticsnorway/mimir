@@ -1,4 +1,4 @@
-import { getContent, getComponent, Content, type ImageUrlParams } from '/lib/xp/portal'
+import { getContent, getComponent, Content, type ImageUrlParams, processHtml } from '/lib/xp/portal'
 import {
   getLinkTargetUrl,
   getLinkTargetContent,
@@ -90,6 +90,8 @@ function parseProfiledBoxProps(config: ProfiledBoxPartConfig, language: string):
   }
   const { imageSrc, imageAlt } = getImageFromContent(linkTargetContent as Content<Article>, imageDimensions)
 
+  const contentIngress = linkTargetContent?.data.ingress ? processHtml({ value: linkTargetContent.data.ingress }) : ''
+
   return {
     imgUrl: config.image
       ? imageUrl({
@@ -103,7 +105,7 @@ function parseProfiledBoxProps(config: ProfiledBoxPartConfig, language: string):
     href: getLinkTargetUrl(urlContentSelector),
     subTitle,
     title,
-    preambleText: config.preamble ?? (linkTargetContent?.data?.ingress as string) ?? '',
+    preambleText: config.preamble ?? contentIngress,
     titleSize: getTitleSize(title),
     ariaLabel: getProfiledCardAriaLabel(subTitle),
   }
