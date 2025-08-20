@@ -52,10 +52,6 @@ try {
           enabled: false,
         },
         {
-          feature: 'gpt-service',
-          enabled: false,
-        },
-        {
           feature: 'hide-header-in-qa',
           enabled: false,
         },
