@@ -7,6 +7,7 @@ interface UsePaginationProps<T> {
   onLoadMore: () => void
   onLoadFirst?: () => void
   totalCount?: number
+  scrollIntoView?: boolean
 }
 
 // TODO: This function may no longer need to be exported after all pagination has been updated; prefer using handleKeyboardNavigation function from usePagination in components instead
@@ -27,10 +28,12 @@ export const usePagination = <T,>({
   onLoadMore,
   onLoadFirst,
   totalCount,
+  scrollIntoView,
 }: UsePaginationProps<T>) => {
   const [keyboardNavigation, setKeyboardNavigation] = useState(false)
   const currentElement = useRef<HTMLLIElement>(null)
   const prevListLength = useRef(0)
+  const scrollAnchor = React.useRef<HTMLDivElement>(null)
 
   const showLess = totalCount === list.length
   const hideBtn = (totalCount as number) < listItemsPerPage
@@ -44,6 +47,16 @@ export const usePagination = <T,>({
     }
     prevListLength.current = list.length
   }, [list, keyboardNavigation])
+
+  useEffect(() => {
+    if (scrollIntoView && scrollAnchor.current) {
+      scrollAnchor.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'end',
+        inline: 'nearest',
+      })
+    }
+  }, [scrollIntoView])
 
   const getCurrentElementRef = (index: number) => {
     return index === prevListLength.current ? currentElement : null
@@ -71,6 +84,7 @@ export const usePagination = <T,>({
     disableBtn,
     hideBtn,
     showLess,
+    scrollAnchor,
     getCurrentElementRef,
     handleKeyboardNavigation,
     handleOnClick,

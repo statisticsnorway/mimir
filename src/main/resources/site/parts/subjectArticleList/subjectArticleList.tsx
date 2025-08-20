@@ -35,6 +35,7 @@ function SubjectArticleList(props: SubjectArticleListProps) {
     title: 'Nyeste',
     id: 'DESC',
   })
+  const [scrollIntoView, setScrollIntoView] = useState(false)
 
   const {
     getCurrentElementRef,
@@ -42,12 +43,14 @@ function SubjectArticleList(props: SubjectArticleListProps) {
     handleOnClick,
     showLess: showLessBtn,
     hideBtn,
+    scrollAnchor,
   } = usePagination({
     list: articleList,
     listItemsPerPage: count,
     onLoadMore: () => fetchMoreArticles(),
     onLoadFirst: () => fetchArticlesStartOver(sort.id),
     totalCount: totalArticles,
+    scrollIntoView,
   })
 
   const showCountLabel = `${showCount.replaceAll('{0}', articleList.length.toString())} ${totalArticles}`
@@ -66,6 +69,9 @@ function SubjectArticleList(props: SubjectArticleListProps) {
       .then((res) => {
         setArticleList(articleList.concat(res.data.articles))
       })
+      .finally(() => {
+        setScrollIntoView(false)
+      })
   }
 
   function fetchArticlesStartOver(order: string) {
@@ -81,6 +87,9 @@ function SubjectArticleList(props: SubjectArticleListProps) {
       })
       .then((res) => {
         setArticleList(res.data.articles)
+      })
+      .finally(() => {
+        setScrollIntoView(true)
       })
   }
 
@@ -150,7 +159,7 @@ function SubjectArticleList(props: SubjectArticleListProps) {
   }
 
   return (
-    <section className='subject-article-list container-fluid'>
+    <section className='subject-article-list container-fluid' ref={scrollAnchor}>
       <div className='container'>
         <div className='row'>
           <Title size={2}>{title}</Title>
