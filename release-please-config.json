@@ -4,6 +4,8 @@
   "skip-github-release": true,
   "draft": true,
   "always-update": true,
+  "include-component-in-tag": false,
+  "label": "mimir-release",
   "pull-request-title-pattern": "chore: bump version and create changelog for v${version}",
   "packages": {
     ".": {
