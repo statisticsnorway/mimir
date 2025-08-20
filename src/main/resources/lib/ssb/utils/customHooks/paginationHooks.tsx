@@ -75,7 +75,8 @@ export const usePagination = <T,>({
     fetchListItems()
   })
 
-  const handleOnClick = () => {
+  const handleOnClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.currentTarget.blur() // Remove focus from the button
     setKeyboardNavigation(false)
     fetchListItems()
   }
