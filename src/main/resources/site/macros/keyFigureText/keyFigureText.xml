@@ -25,7 +25,7 @@
           <label>Nedgang</label>
           <occurrences minimum="0" maximum="1" />
         </input>
-        <input name="overwriteNoChanges" type="TextLine">
+        <input name="overwriteNoChange" type="TextLine">
           <label>Ingen endring</label>
           <occurrences minimum="0" maximum="1" />
         </input>
