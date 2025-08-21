@@ -15,14 +15,14 @@
       <occurrences minimum="0" maximum="1" />
     </input>
     <field-set>
-      <label>Tekstvariasjoner</label>
+      <label>Tekstvariasjoner for endringstekst</label>
       <items>
         <input name="overwriteIncrease" type="TextLine">
-          <label>Increase</label>
+          <label>Oppgang</label>
           <occurrences minimum="0" maximum="1" />
         </input>
         <input name="overwriteDecrease" type="TextLine">
-          <label>Decrease</label>
+          <label>Nedgang</label>
           <occurrences minimum="0" maximum="1" />
         </input>
         <input name="overwriteNoChanges" type="TextLine">
