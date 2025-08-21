@@ -92,16 +92,17 @@ function getLocalizedChangeDirection(
   return changeDirection
 }
 
-function getChangeText(changes: KeyFigureChanges | undefined): string | undefined {
-  let changeText
+function getChangeValue(changes: KeyFigureChanges | undefined): string | undefined {
+  let changeValue
   if (changes?.changeText) {
+    // When there are no changes, the change period for 'same' is displayed (e.g. "Ingen endring") as the change value. It should be displayed as empty string instead
     if (changes?.changeDirection === 'same') {
-      changeText = ''
+      changeValue = ''
     } else {
-      changeText = changes.changeText.replace('-', '')
+      changeValue = changes.changeText.replace('-', '') // Remove '-' for negative numbers as it's covered by the change direction
     }
   }
-  return changeText
+  return changeValue
 }
 
 // We have to manually strip away 'endring' for some change periods; sometimes a change period is prefixed with 'endring' e.g. 'endring fra året før'
@@ -124,7 +125,7 @@ function parseKeyFigureText(
     overwriteDecrease,
     overwriteNoChange
   )
-  const changeText = getChangeText(changes)
+  const changeValue = getChangeValue(changes)
   const changePeriod = getChangePeriod(changes)
   const localizedChangePeriod = language !== 'en' && changePeriod ? changePeriod?.toLowerCase() : changePeriod
 
@@ -135,8 +136,10 @@ function parseKeyFigureText(
         .replace(/\$tall/g, number ?? '<mangler tall>')
         .replace(/\$benevning/g, numberDescription ?? '<mangler benevning>')
         .replace(/\$endringstekst/g, changeDirection ?? '<mangler endringstekst>')
-        .replace(/\$endringstall/g, changeText ?? '<mangler endringstall>')
+        .replace(/\$endringstall/g, changeValue ?? '<mangler endringstall>')
         .replace(/\$endringsperiode/g, localizedChangePeriod ?? '<mangler endringsperiode>')
         .replace(/\$kildetekst/g, sourceText ?? '<mangler kildetekst>')
-    : [title, time, number, numberDescription, changeDirection, changeText, localizedChangePeriod, sourceText].join(' ')
+    : [title, time, number, numberDescription, changeDirection, changeValue, localizedChangePeriod, sourceText].join(
+        ' '
+      )
 }
