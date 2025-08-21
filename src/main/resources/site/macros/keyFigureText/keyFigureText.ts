@@ -20,6 +20,12 @@ export function macro(context: XP.MacroContext) {
   }
 }
 
+const getKeyFigureSourceText = (keyFigure: Content<KeyFigure> | undefined): string | undefined => {
+  return forceArray(keyFigure?.data.source).length
+    ? forceArray(keyFigure?.data.source).map(({ title }) => title)[0]
+    : undefined
+}
+
 function renderKeyFigureTextMacro(context: XP.MacroContext) {
   const page = getContent()
   if (!page) throw Error('No page found')
@@ -29,9 +35,7 @@ function renderKeyFigureTextMacro(context: XP.MacroContext) {
   const municipality = getMunicipality({ code: keyFigure?.data.default } as RequestWithCode)
   const language: string = page.language ? page.language : 'nb'
   const keyFigureData = parseKeyFigure(keyFigure as Content<KeyFigure>, municipality, DATASET_BRANCH, language)
-  const sourceText = forceArray(keyFigure?.data.source).length
-    ? forceArray(keyFigure?.data.source).map(({ title }) => title)[0]
-    : undefined
+  const sourceText = getKeyFigureSourceText(keyFigure as Content<KeyFigure>)
 
   const keyFigureText = new React4xp('site/macros/keyFigureText/keyFigureText')
     .setProps({
