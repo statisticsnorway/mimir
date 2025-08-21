@@ -87,6 +87,22 @@ function getLocalizedChangeDirection(
   return changeDirection
 }
 
+function getChangeText(changes: KeyFigureChanges | undefined): string | undefined {
+  let changeText
+  if (changes?.changeText) {
+    if (changes?.changeDirection === 'same') {
+      changeText = ''
+    } else {
+      changeText = changes.changeText.replace('-', '')
+    }
+  }
+  return changeText
+}
+
+// We have to manually strip away 'endring' for change periods to be able to piece these words together in a sentence
+const getChangePeriod = (changes: KeyFigureChanges | undefined): string | undefined =>
+  changes?.changePeriod ? changes.changePeriod.toLowerCase().replace('endring ', '') : undefined
+
 function handleTextVariables(
   keyFigureData: KeyFigureView,
   changeDirection: string | undefined,
@@ -97,6 +113,7 @@ function handleTextVariables(
   sourceText: string | undefined
 ) {
   const { title, time, number, numberDescription } = keyFigureData
+  const localizedChangePeriod = language !== 'en' && changePeriod ? changePeriod?.toLowerCase() : changePeriod
 
   return ingress
     .replace(/\$tittel/g, title ?? '<mangler tittel>')
@@ -105,10 +122,7 @@ function handleTextVariables(
     .replace(/\$benevning/g, numberDescription ?? '<mangler benevning>')
     .replace(/\$endringstekst/g, changeDirection ?? '<mangler endringstekst>')
     .replace(/\$endringstall/g, changeText ?? '<mangler endringstall>')
-    .replace(
-      /\$endringsperiode/g,
-      language !== 'en' && changePeriod ? changePeriod?.toLowerCase() : (changePeriod ?? '<mangler endringsperiode>')
-    )
+    .replace(/\$endringsperiode/g, localizedChangePeriod ?? '<mangler endringsperiode>')
     .replace(/\$kildetekst/g, sourceText ?? '<mangler kildetekst>')
 }
 
@@ -119,7 +133,6 @@ function parseText(
   language: string
 ) {
   const { title, time, number, numberDescription, changes } = keyFigureData
-
   const { text, overwriteIncrease, overwriteDecrease, overwriteNoChange } = context?.params ?? {}
 
   const changeDirection = getLocalizedChangeDirection(
@@ -129,12 +142,9 @@ function parseText(
     overwriteDecrease,
     overwriteNoChange
   )
-  const changeText =
-    changes?.changeText && changes.changeDirection !== 'same' ? changes.changeText.replace('-', '') : ''
-  // We have to manually strip away 'endring' for change periods to be able to piece these words together in a sentence
-  const changePeriod = changes?.changePeriod ? changes.changePeriod.toLowerCase().replace('endring ', '') : undefined
+  const changeText = getChangeText(changes)
+  const changePeriod = getChangePeriod(changes)
 
-  // These should be resolved in Content Studio so we might not need to translate these
   const manualText = context?.params?.text
     ? handleTextVariables(keyFigureData, changeDirection, changePeriod, changeText, text, language, sourceText)
     : undefined
