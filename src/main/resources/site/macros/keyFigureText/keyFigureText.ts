@@ -104,7 +104,7 @@ function getChangeText(changes: KeyFigureChanges | undefined): string | undefine
   return changeText
 }
 
-// We have to manually strip away 'endring' for change periods to be able to piece these words together in a sentence
+// We have to manually strip away 'endring' for some change periods; sometimes a change period is prefixed with 'endring' e.g. 'endring fra året før'
 const getChangePeriod = (changes: KeyFigureChanges | undefined): string | undefined =>
   changes?.changePeriod ? changes.changePeriod.toLowerCase().replace('endring ', '') : undefined
 
