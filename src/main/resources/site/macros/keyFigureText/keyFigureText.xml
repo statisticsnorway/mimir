@@ -3,7 +3,7 @@
   <form>
     <input name="keyFigure" type="ContentSelector">
       <label>Nøkkeltall</label>
-      <occurrences minimum="0" maximum="1" />
+      <occurrences minimum="1" maximum="1" />
       <config>
         <allowPath>${site}</allowPath>
         <allowContentType>keyFigure</allowContentType>

@@ -6,11 +6,12 @@ import { React4xp } from '/lib/enonic/react4xp'
 import { parseKeyFigure } from '/lib/ssb/parts/keyFigure'
 import { renderError } from '/lib/ssb/error/error'
 import { getMunicipality } from '/lib/ssb/dataset/klass/municipalities'
-import { RequestWithCode } from '/lib/types/municipalities'
+import { type RequestWithCode } from '/lib/types/municipalities'
 import { DATASET_BRANCH } from '/lib/ssb/repo/dataset'
 import { type KeyFigureChanges, type KeyFigureView } from '/lib/types/partTypes/keyFigure'
 import { forceArray } from '/lib/ssb/utils/arrayUtils'
-import { KeyFigure } from '/site/content-types'
+import { type KeyFigureTextContext } from '/lib/types/keyFigureText'
+import { type KeyFigure } from '/site/content-types'
 
 export function macro(context: XP.MacroContext) {
   try {
@@ -39,7 +40,7 @@ function renderKeyFigureTextMacro(context: XP.MacroContext) {
 
   const keyFigureText = new React4xp('site/macros/keyFigureText/keyFigureText')
     .setProps({
-      text: parseText(keyFigureData, context, sourceText, language),
+      text: parseKeyFigureText(keyFigureData, context.params, language, sourceText),
     })
     .uniqueId()
 
@@ -107,37 +108,14 @@ function getChangeText(changes: KeyFigureChanges | undefined): string | undefine
 const getChangePeriod = (changes: KeyFigureChanges | undefined): string | undefined =>
   changes?.changePeriod ? changes.changePeriod.toLowerCase().replace('endring ', '') : undefined
 
-function handleTextVariables(
+function parseKeyFigureText(
   keyFigureData: KeyFigureView,
-  changeDirection: string | undefined,
-  changePeriod: string | undefined,
-  changeText: string | undefined,
-  ingress: string,
+  keyFigureTextMacroInput: KeyFigureTextContext | undefined,
   language: string,
   sourceText: string | undefined
 ) {
-  const { title, time, number, numberDescription } = keyFigureData
-  const localizedChangePeriod = language !== 'en' && changePeriod ? changePeriod?.toLowerCase() : changePeriod
-
-  return ingress
-    .replace(/\$tittel/g, title ?? '<mangler tittel>')
-    .replace(/\$tid/g, time ?? '<mangler tid>')
-    .replace(/\$tall/g, number ?? '<mangler tall>')
-    .replace(/\$benevning/g, numberDescription ?? '<mangler benevning>')
-    .replace(/\$endringstekst/g, changeDirection ?? '<mangler endringstekst>')
-    .replace(/\$endringstall/g, changeText ?? '<mangler endringstall>')
-    .replace(/\$endringsperiode/g, localizedChangePeriod ?? '<mangler endringsperiode>')
-    .replace(/\$kildetekst/g, sourceText ?? '<mangler kildetekst>')
-}
-
-function parseText(
-  keyFigureData: KeyFigureView,
-  context: XP.MacroContext,
-  sourceText: string | undefined,
-  language: string
-) {
   const { title, time, number, numberDescription, changes } = keyFigureData
-  const { text, overwriteIncrease, overwriteDecrease, overwriteNoChange } = context?.params ?? {}
+  const { overwriteIncrease, overwriteDecrease, overwriteNoChange, text } = keyFigureTextMacroInput ?? {}
 
   const changeDirection = getLocalizedChangeDirection(
     changes?.changeDirection,
@@ -148,11 +126,17 @@ function parseText(
   )
   const changeText = getChangeText(changes)
   const changePeriod = getChangePeriod(changes)
+  const localizedChangePeriod = language !== 'en' && changePeriod ? changePeriod?.toLowerCase() : changePeriod
 
-  const manualText = context?.params?.text
-    ? handleTextVariables(keyFigureData, changeDirection, changePeriod, changeText, text, language, sourceText)
-    : undefined
-  const defaultText = [title, time, number, numberDescription, changeDirection, changeText, changePeriod].join(' ')
-
-  return manualText ?? defaultText
+  return text
+    ? text
+        .replace(/\$tittel/g, title ?? '<mangler tittel>')
+        .replace(/\$tid/g, time ?? '<mangler tid>')
+        .replace(/\$tall/g, number ?? '<mangler tall>')
+        .replace(/\$benevning/g, numberDescription ?? '<mangler benevning>')
+        .replace(/\$endringstekst/g, changeDirection ?? '<mangler endringstekst>')
+        .replace(/\$endringstall/g, changeText ?? '<mangler endringstall>')
+        .replace(/\$endringsperiode/g, localizedChangePeriod ?? '<mangler endringsperiode>')
+        .replace(/\$kildetekst/g, sourceText ?? '<mangler kildetekst>')
+    : [title, time, number, numberDescription, changeDirection, changeText, localizedChangePeriod, sourceText].join(' ')
 }
