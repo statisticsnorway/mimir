@@ -23,7 +23,6 @@ function RelatedBoxes(props: RelatedFactPageProps) {
   const [loading, setLoading] = useState(false)
 
   const { handleKeyboardNavigation, getCurrentElementRef, handleOnClick } = usePagination({
-    cardList: true,
     list: relatedFactPages,
     listItemsPerPage: 4,
     onLoadMore: () => handleButtonOnClick(),
