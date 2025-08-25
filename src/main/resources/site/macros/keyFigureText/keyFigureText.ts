@@ -6,11 +6,12 @@ import { React4xp } from '/lib/enonic/react4xp'
 import { parseKeyFigure } from '/lib/ssb/parts/keyFigure'
 import { renderError } from '/lib/ssb/error/error'
 import { getMunicipality } from '/lib/ssb/dataset/klass/municipalities'
-import { RequestWithCode } from '/lib/types/municipalities'
+import { type RequestWithCode } from '/lib/types/municipalities'
 import { DATASET_BRANCH } from '/lib/ssb/repo/dataset'
 import { type KeyFigureChanges, type KeyFigureView } from '/lib/types/partTypes/keyFigure'
 import { forceArray } from '/lib/ssb/utils/arrayUtils'
-import { KeyFigure } from '/site/content-types'
+import { type KeyFigureTextContext } from '/lib/types/keyFigureText'
+import { type KeyFigure } from '/site/content-types'
 
 export function macro(context: XP.MacroContext) {
   try {
@@ -18,6 +19,12 @@ export function macro(context: XP.MacroContext) {
   } catch (e) {
     return renderError(context.request as XP.Request, 'Error in macro', e)
   }
+}
+
+const getKeyFigureSourceText = (keyFigure: Content<KeyFigure> | undefined): string | undefined => {
+  return forceArray(keyFigure?.data.source).length
+    ? forceArray(keyFigure?.data.source).map(({ title }) => title)[0]
+    : undefined
 }
 
 function renderKeyFigureTextMacro(context: XP.MacroContext) {
@@ -29,13 +36,11 @@ function renderKeyFigureTextMacro(context: XP.MacroContext) {
   const municipality = getMunicipality({ code: keyFigure?.data.default } as RequestWithCode)
   const language: string = page.language ? page.language : 'nb'
   const keyFigureData = parseKeyFigure(keyFigure as Content<KeyFigure>, municipality, DATASET_BRANCH, language)
-  const sourceText = forceArray(keyFigure?.data.source).length
-    ? forceArray(keyFigure?.data.source).map(({ title }) => title)[0]
-    : undefined
+  const sourceText = getKeyFigureSourceText(keyFigure as Content<KeyFigure>)
 
   const keyFigureText = new React4xp('site/macros/keyFigureText/keyFigureText')
     .setProps({
-      text: parseText(keyFigureData, context, sourceText, language),
+      text: parseKeyFigureText(keyFigureData, context.params, language, sourceText),
     })
     .uniqueId()
 
@@ -49,60 +54,92 @@ function renderKeyFigureTextMacro(context: XP.MacroContext) {
 
 function getLocalizedChangeDirection(
   changeDirection: KeyFigureChanges['changeDirection'] | undefined,
-  language: string
+  language: string,
+  overwriteIncrease: string | undefined,
+  overwriteDecrease: string | undefined,
+  overwriteNoChange: string | undefined
 ) {
   if (changeDirection === 'up') {
-    return localize({
-      key: 'keyFigure.increase',
-      locale: language,
-    }).toLowerCase()
+    return (
+      overwriteIncrease ??
+      localize({
+        key: 'keyFigureText.increase',
+        locale: language,
+      })
+    )
   }
 
   if (changeDirection === 'down') {
-    return localize({
-      key: 'keyFigure.decrease',
-      locale: language,
-    }).toLowerCase()
+    return (
+      overwriteDecrease ??
+      localize({
+        key: 'keyFigureText.decrease',
+        locale: language,
+      })
+    )
   }
 
   if (changeDirection === 'same') {
-    return localize({
-      key: 'keyFigure.noChange',
-      locale: language,
-    }).toLowerCase()
+    return (
+      overwriteNoChange ??
+      localize({
+        key: 'keyFigure.noChange',
+        locale: language,
+      }).toLowerCase()
+    )
   }
 
   return changeDirection
 }
 
-function parseText(
+function getChangeValue(changes: KeyFigureChanges | undefined): string | undefined {
+  let changeValue
+  if (changes?.changeText) {
+    // When there are no changes, the change period for 'same' is displayed (e.g. "Ingen endring") as the change value. It should be displayed as empty string instead
+    if (changes?.changeDirection === 'same') {
+      changeValue = ''
+    } else {
+      changeValue = changes.changeText.replace('-', '') // Remove '-' for negative numbers as it's covered by the change direction
+    }
+  }
+  return changeValue
+}
+
+// We have to manually strip away 'endring' for some change periods; sometimes a change period is prefixed with 'endring' e.g. 'endring fra året før'
+const getChangePeriod = (changes: KeyFigureChanges | undefined): string | undefined =>
+  changes?.changePeriod ? changes.changePeriod.toLowerCase().replace('endring ', '') : undefined
+
+function parseKeyFigureText(
   keyFigureData: KeyFigureView,
-  context: XP.MacroContext,
-  sourceText: string | undefined,
-  language: string
+  keyFigureTextMacroInput: KeyFigureTextContext | undefined,
+  language: string,
+  sourceText: string | undefined
 ) {
   const { title, time, number, numberDescription, changes } = keyFigureData
+  const { overwriteIncrease, overwriteDecrease, overwriteNoChange, text } = keyFigureTextMacroInput ?? {}
 
-  const changeDirection = changes?.changeDirection
-    ? getLocalizedChangeDirection(changes.changeDirection, language)
-    : undefined
-  const changeText = changes?.changeDirection !== 'same' ? changes?.changeText : ''
-  // We have to manually strip away 'endring' for change periods to be able to piece these words together in a sentence
-  const changePeriod = changes?.changePeriod ? changes.changePeriod.toLowerCase().replace('endring ', '') : undefined
+  const changeDirection = getLocalizedChangeDirection(
+    changes?.changeDirection,
+    language,
+    overwriteIncrease,
+    overwriteDecrease,
+    overwriteNoChange
+  )
+  const changeValue = getChangeValue(changes)
+  const changePeriod = getChangePeriod(changes)
+  const localizedChangePeriod = language !== 'en' && changePeriod ? changePeriod?.toLowerCase() : changePeriod
 
-  // These should be resolved in Content Studio so we might not need to translate these
-  const manualText = context?.params?.text
-    ? context.params.text
+  return text
+    ? text
         .replace(/\$tittel/g, title ?? '<mangler tittel>')
         .replace(/\$tid/g, time ?? '<mangler tid>')
         .replace(/\$tall/g, number ?? '<mangler tall>')
         .replace(/\$benevning/g, numberDescription ?? '<mangler benevning>')
         .replace(/\$endringstekst/g, changeDirection ?? '<mangler endringstekst>')
-        .replace(/\$endringstall/g, changeText ?? '<mangler endringstall>')
-        .replace(/\$endringsperiode/g, changePeriod ?? '<mangler endringsperiode>')
+        .replace(/\$endringstall/g, changeValue ?? '<mangler endringstall>')
+        .replace(/\$endringsperiode/g, localizedChangePeriod ?? '<mangler endringsperiode>')
         .replace(/\$kildetekst/g, sourceText ?? '<mangler kildetekst>')
-    : undefined
-  const defaultText = [title, time, number, numberDescription, changeDirection, changeText, changePeriod].join(' ')
-
-  return manualText ?? defaultText
+    : [title, time, number, numberDescription, changeDirection, changeValue, localizedChangePeriod, sourceText].join(
+        ' '
+      )
 }
