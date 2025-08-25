@@ -17,8 +17,9 @@ export default function buildServerConfig(): Options {
     dts: false, // d.ts files are use useless at runtime
     entry: FILES_SERVER,
     ignoreWatch: [
-      'build/**', 
-      '**/node_modules/**'
+      '**/node_modules/**',
+      '!**/node_modules/@statisticsnorway/**',
+      'build/**'
     ],
     env: {
       BROWSER_SYNC_PORT: '3000',
