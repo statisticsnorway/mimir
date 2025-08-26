@@ -118,6 +118,7 @@ function parseKeyFigureText(
   const { title, time, number, numberDescription, changes } = keyFigureData
   const { overwriteIncrease, overwriteDecrease, overwriteNoChange, text } = keyFigureTextMacroInput ?? {}
 
+  const localizedTime = language !== 'en' && time ? time?.toLowerCase() : time
   const changeDirection = getLocalizedChangeDirection(
     changes?.changeDirection,
     language,
@@ -127,19 +128,18 @@ function parseKeyFigureText(
   )
   const changeValue = getChangeValue(changes)
   const changePeriod = getChangePeriod(changes)
-  const localizedChangePeriod = language !== 'en' && changePeriod ? changePeriod?.toLowerCase() : changePeriod
 
   return text
     ? text
         .replace(/\$tittel/g, title ?? '<mangler tittel>')
-        .replace(/\$tid/g, time ?? '<mangler tid>')
+        .replace(/\$tid/g, localizedTime ?? '<mangler tid>')
         .replace(/\$tall/g, number ?? '<mangler tall>')
         .replace(/\$benevning/g, numberDescription ?? '<mangler benevning>')
         .replace(/\$endringstekst/g, changeDirection ?? '<mangler endringstekst>')
         .replace(/\$endringstall/g, changeValue ?? '<mangler endringstall>')
-        .replace(/\$endringsperiode/g, localizedChangePeriod ?? '<mangler endringsperiode>')
+        .replace(/\$endringsperiode/g, changePeriod ?? '<mangler endringsperiode>')
         .replace(/\$kildetekst/g, sourceText ?? '<mangler kildetekst>')
-    : [title, time, number, numberDescription, changeDirection, changeValue, localizedChangePeriod, sourceText].join(
+    : [title, localizedTime, number, numberDescription, changeDirection, changeValue, changePeriod, sourceText].join(
         ' '
       )
 }
