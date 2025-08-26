@@ -10,6 +10,7 @@ import { xmlEscape } from '/lib/text-encoding'
 import { type SubjectItem } from '/lib/types/subject'
 import { type Statistic } from '/site/mixins/statistic'
 import { type Article, type Statistics } from '/site/content-types'
+import { getIngressWithKeyFigureText } from '../parts/keyFigureText'
 
 const dummyReq: Partial<XP.Request> = {
   branch: 'master',
@@ -75,12 +76,12 @@ function getArticles(mainSubjects: SubjectItem[], days: number): NewsItem[] {
         : undefined
       if (pubDate) {
         const link = getLinkByPath(article._path)
+        const preface = getIngressWithKeyFigureText(article.data.ingress)
         news.push({
           guid: article._id,
           title: article.displayName,
           link,
-          description:
-            article?.x['com-enonic-app-metafields']?.['meta-data']?.seoDescription || article?.data.ingress || '',
+          description: article?.x['com-enonic-app-metafields']?.['meta-data']?.seoDescription || preface || '',
           category: mainSubject.title,
           subject: mainSubject.name,
           language: article.language === 'en' ? 'en' : 'no',
