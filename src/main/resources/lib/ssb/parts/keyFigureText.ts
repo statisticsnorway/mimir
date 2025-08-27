@@ -100,20 +100,33 @@ export const getKeyFigureSourceText = (keyFigure: Content<KeyFigure> | undefined
 }
 
 export function getIngressWithKeyFigureText(ingress: string | undefined) {
-  const keyFigureTextValues = getKeyFigureTextValuesFromString(ingress)
+  if (!ingress) return
 
-  if (keyFigureTextValues) {
-    const { keyFigureData, text, overwriteIncrease, overwriteDecrease, overwriteNoChange, language, sourceText } =
-      keyFigureTextValues
+  const keyFigureTextMacroMatches = ingress.match(/\[keyFigureText\b[^]*?\/\]/g)
+  if (!keyFigureTextMacroMatches?.length) return ingress
 
-    const ingressWithKeyFigureText = parseKeyFigureText(
-      keyFigureData as KeyFigureView,
-      { text, overwriteIncrease, overwriteDecrease, overwriteNoChange } as KeyFigureTextContext,
-      language as string,
-      sourceText
-    )
-    return ingress?.replace(/\[keyFigureText\b[^]*?\/\]/g, ingressWithKeyFigureText)
-  }
+  let ingressWithKeyFigureText = ingress
+
+  keyFigureTextMacroMatches.forEach((macro) => {
+    const keyFigureTextValues = getKeyFigureTextValuesFromString(macro)
+
+    if (keyFigureTextValues) {
+      const { keyFigureData, text, overwriteIncrease, overwriteDecrease, overwriteNoChange, language, sourceText } =
+        keyFigureTextValues
+
+      const keyFigureText = parseKeyFigureText(
+        keyFigureData as KeyFigureView,
+        { text, overwriteIncrease, overwriteDecrease, overwriteNoChange } as KeyFigureTextContext,
+        language as string,
+        sourceText
+      )
+
+      // Replace only the current macro with its processed text
+      ingressWithKeyFigureText = ingressWithKeyFigureText.replace(macro, keyFigureText)
+    }
+  })
+
+  return ingressWithKeyFigureText
 }
 
 export function parseKeyFigureText(
