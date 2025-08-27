@@ -7,6 +7,7 @@ import { getMunicipality } from '/lib/ssb/dataset/klass/municipalities'
 import { forceArray } from '/lib/ssb/utils/arrayUtils'
 import { parseKeyFigure } from '/lib/ssb/parts/keyFigure'
 import { type RequestWithCode } from '/lib/types/municipalities'
+import { DATASET_BRANCH } from '/lib/ssb/repo/dataset'
 import { type KeyFigure } from '/site/content-types'
 
 function getLocalizedChangeDirection(
@@ -88,8 +89,9 @@ function getKeyFigureTextValuesFromString(ingress: string | undefined): KeyFigur
   }
 }
 
-export function fetchKeyFigureData(keyFigureId: string | undefined, DATASET_BRANCH = 'master') {
+export function fetchKeyFigureData(keyFigureId: string | undefined) {
   const keyFigure = keyFigureId ? get({ key: keyFigureId }) : undefined
+
   const municipality = getMunicipality({ code: keyFigure?.data.default } as RequestWithCode)
   const language: string = keyFigure?.language ? keyFigure.language : 'nb'
   const keyFigureData = parseKeyFigure(keyFigure as Content<KeyFigure>, municipality, DATASET_BRANCH, language)

@@ -5,12 +5,12 @@ import { subDays, format, parseISO } from '/lib/vendor/dateFns'
 import { fetchStatisticsWithReleaseToday, fetchStatisticsDaysBack } from '/lib/ssb/statreg/statistics'
 import { getMainSubjects } from '/lib/ssb/utils/subjectUtils'
 import { nextReleasedPassed } from '/lib/ssb/utils/variantUtils'
+import { getIngressWithKeyFigureText } from '/lib/ssb/utils/keyFigureTextUtils'
 // @ts-ignore
 import { xmlEscape } from '/lib/text-encoding'
 import { type SubjectItem } from '/lib/types/subject'
 import { type Statistic } from '/site/mixins/statistic'
 import { type Article, type Statistics } from '/site/content-types'
-import { getIngressWithKeyFigureText } from '../parts/keyFigureText'
 
 const dummyReq: Partial<XP.Request> = {
   branch: 'master',

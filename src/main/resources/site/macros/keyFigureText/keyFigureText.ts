@@ -2,8 +2,7 @@ import { getContent } from '/lib/xp/portal'
 import { React4xp } from '/lib/enonic/react4xp'
 
 import { renderError } from '/lib/ssb/error/error'
-import { DATASET_BRANCH } from '/lib/ssb/repo/dataset'
-import { fetchKeyFigureData, parseKeyFigureText } from '/lib/ssb/parts/keyFigureText'
+import { fetchKeyFigureData, parseKeyFigureText } from '/lib/ssb/utils/keyFigureTextUtils'
 
 export function macro(context: XP.MacroContext) {
   try {
@@ -17,7 +16,7 @@ function renderKeyFigureTextMacro(context: XP.MacroContext) {
   const page = getContent()
   if (!page) throw Error('No page found')
 
-  const { keyFigureData, language, sourceText } = fetchKeyFigureData(context?.params?.keyFigure, DATASET_BRANCH)
+  const { keyFigureData, language, sourceText } = fetchKeyFigureData(context?.params?.keyFigure)
   const keyFigureText = new React4xp('site/macros/keyFigureText/keyFigureText')
     .setProps({
       text: parseKeyFigureText(keyFigureData, context.params, language, sourceText),
