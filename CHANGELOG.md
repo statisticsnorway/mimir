@@ -1,5 +1,26 @@
 # Changelog
 
+## [2.33.0](https://github.com/statisticsnorway/mimir/compare/v2.32.0...v2.33.0) (2025-08-27)
+
+
+### Features
+
+* Improve change text phrasing for Key Figure Text macro [MIM-2368] ([#3407](https://github.com/statisticsnorway/mimir/issues/3407)) ([586bb69](https://github.com/statisticsnorway/mimir/commit/586bb69a1493887032239ec7e2d1ca5e344a9ae0))
+* SolrArchive (url service) [MIM-2333] ([#3348](https://github.com/statisticsnorway/mimir/issues/3348)) ([be1d294](https://github.com/statisticsnorway/mimir/commit/be1d294e4efef525aac79c7a7ad59c837fdcfe50))
+
+
+### Bug Fixes
+
+* npm run dev [MIM-2371] ([#3409](https://github.com/statisticsnorway/mimir/issues/3409)) ([fda51f7](https://github.com/statisticsnorway/mimir/commit/fda51f74ae2e5e2c95f9c1a5e63f692f99eaf88c))
+* Set lowercase to time not change period for keyFigureText macro ([e92906e](https://github.com/statisticsnorway/mimir/commit/e92906e0c91bcfdc66508eaabde8ceaf351f0588))
+* Set lowercase to time not change period for keyFigureText macro [MIM-2368] ([#3411](https://github.com/statisticsnorway/mimir/issues/3411)) ([e92906e](https://github.com/statisticsnorway/mimir/commit/e92906e0c91bcfdc66508eaabde8ceaf351f0588))
+
+
+### Build System and dependencies
+
+* Adjustments to release-please after first deploy [MIM-2227] ([#3396](https://github.com/statisticsnorway/mimir/issues/3396)) ([2c2de01](https://github.com/statisticsnorway/mimir/commit/2c2de016299b597db4152c514252a9118e40b451))
+* Release please looking for wrong tag [MIM-2227] ([#3402](https://github.com/statisticsnorway/mimir/issues/3402)) ([ed9c413](https://github.com/statisticsnorway/mimir/commit/ed9c4130e1e247a8f23dd6c207519b38d12fa9e1))
+
 ## [2.32.0](https://github.com/statisticsnorway/mimir/compare/mimir-v2.31.0...mimir-v2.32.0) (2025-08-19)
 
 
