@@ -49,7 +49,7 @@ function getLocalizedChangeDirection(
   }
 }
 
-function getChangeValue(changes: KeyFigureChanges | undefined): string | undefined {
+function getChangeValue(changes: KeyFigureChanges | undefined) {
   let changeValue
   if (changes?.changeText) {
     // When there are no changes, the change period for 'same' is displayed (e.g. "Ingen endring") as the change value. It should be displayed as empty string instead
@@ -63,19 +63,14 @@ function getChangeValue(changes: KeyFigureChanges | undefined): string | undefin
 }
 
 // We have to manually strip away 'endring' for some change periods; sometimes a change period is prefixed with 'endring' e.g. 'endring fra året før'
-const getChangePeriod = (changes: KeyFigureChanges | undefined): string | undefined =>
+const getChangePeriod = (changes: KeyFigureChanges | undefined) =>
   changes?.changePeriod ? changes.changePeriod.toLowerCase().replace('endring ', '') : undefined
 
 function getKeyFigureTextValuesFromString(ingress: string | undefined): KeyFigureTextValues | undefined {
   if (!ingress) return
 
   const keyFigureId = ingress.match(/keyFigure="([^"]+)"/)
-  const keyFigure = keyFigureId ? get({ key: keyFigureId[1] }) : undefined
-
-  const municipality = getMunicipality({ code: keyFigure?.data.default } as RequestWithCode)
-  const language = keyFigure?.language ? keyFigure.language : 'nb'
-  const keyFigureData = parseKeyFigure(keyFigure as Content<KeyFigure>, municipality, 'master', language)
-  const sourceText = getKeyFigureSourceText(keyFigure as Content<KeyFigure>)
+  const { keyFigureData, sourceText, language } = fetchKeyFigureData(keyFigureId ? keyFigureId[1] : undefined)
 
   const text = ingress.match(/text="([^"]+)"/)
   const overwriteIncrease = ingress.match(/overwriteIncrease="([^"]+)"/)
@@ -93,10 +88,16 @@ function getKeyFigureTextValuesFromString(ingress: string | undefined): KeyFigur
   }
 }
 
-export const getKeyFigureSourceText = (keyFigure: Content<KeyFigure> | undefined): string | undefined => {
-  return forceArray(keyFigure?.data.source).length
+export function fetchKeyFigureData(keyFigureId: string | undefined, DATASET_BRANCH = 'master') {
+  const keyFigure = keyFigureId ? get({ key: keyFigureId }) : undefined
+  const municipality = getMunicipality({ code: keyFigure?.data.default } as RequestWithCode)
+  const language: string = keyFigure?.language ? keyFigure.language : 'nb'
+  const keyFigureData = parseKeyFigure(keyFigure as Content<KeyFigure>, municipality, DATASET_BRANCH, language)
+  const sourceText = forceArray(keyFigure?.data.source).length
     ? forceArray(keyFigure?.data.source).map(({ title }) => title)[0]
     : undefined
+
+  return { keyFigureData, sourceText, language }
 }
 
 export function getIngressWithKeyFigureText(ingress: string | undefined) {
@@ -107,8 +108,8 @@ export function getIngressWithKeyFigureText(ingress: string | undefined) {
 
   let ingressWithKeyFigureText = ingress
 
-  keyFigureTextMacroMatches.forEach((macro) => {
-    const keyFigureTextValues = getKeyFigureTextValuesFromString(macro)
+  keyFigureTextMacroMatches.forEach((keyFigureTextMacro) => {
+    const keyFigureTextValues = getKeyFigureTextValuesFromString(keyFigureTextMacro)
 
     if (keyFigureTextValues) {
       const { keyFigureData, text, overwriteIncrease, overwriteDecrease, overwriteNoChange, language, sourceText } =
@@ -121,8 +122,7 @@ export function getIngressWithKeyFigureText(ingress: string | undefined) {
         sourceText
       )
 
-      // Replace only the current macro with its processed text
-      ingressWithKeyFigureText = ingressWithKeyFigureText.replace(macro, keyFigureText)
+      ingressWithKeyFigureText = ingressWithKeyFigureText.replace(keyFigureTextMacro, keyFigureText)
     }
   })
 
@@ -132,7 +132,7 @@ export function getIngressWithKeyFigureText(ingress: string | undefined) {
 export function parseKeyFigureText(
   keyFigureData: KeyFigureView,
   keyFigureTextMacroInput: KeyFigureTextContext | undefined,
-  language: string,
+  language = 'nb',
   sourceText: string | undefined
 ) {
   const { title, time, number, numberDescription, changes } = keyFigureData
