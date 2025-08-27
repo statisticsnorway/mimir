@@ -92,6 +92,11 @@ function getKeyFigureTextValuesFromString(ingress: string | undefined): KeyFigur
 export function fetchKeyFigureData(keyFigureId: string | undefined) {
   const keyFigure = keyFigureId ? get({ key: keyFigureId }) : undefined
 
+  if (!keyFigureId || !keyFigure) {
+    log.error(!keyFigureId ? `Key Figure with id "${keyFigureId}" not found` : 'Missing keyFigureId')
+    return { keyFigureData: undefined, sourceText: undefined, language: undefined }
+  }
+
   const municipality = getMunicipality({ code: keyFigure?.data.default } as RequestWithCode)
   const language: string = keyFigure?.language ? keyFigure.language : 'nb'
   const keyFigureData = parseKeyFigure(keyFigure as Content<KeyFigure>, municipality, DATASET_BRANCH, language)
@@ -109,13 +114,17 @@ export function getIngressWithKeyFigureText(ingress: string | undefined) {
   if (!keyFigureTextMacroMatches?.length) return ingress
 
   let ingressWithKeyFigureText = ingress
-
   keyFigureTextMacroMatches.forEach((keyFigureTextMacro) => {
     const keyFigureTextValues = getKeyFigureTextValuesFromString(keyFigureTextMacro)
 
     if (keyFigureTextValues) {
       const { keyFigureData, text, overwriteIncrease, overwriteDecrease, overwriteNoChange, language, sourceText } =
         keyFigureTextValues
+
+      if (!keyFigureData) {
+        log.error('Cannot parse Key Figure Text macro, missing or invalid keyFigureId')
+        ingressWithKeyFigureText = ingressWithKeyFigureText.replace(keyFigureTextMacro, '')
+      }
 
       const keyFigureText = parseKeyFigureText(
         keyFigureData as KeyFigureView,
@@ -127,7 +136,6 @@ export function getIngressWithKeyFigureText(ingress: string | undefined) {
       ingressWithKeyFigureText = ingressWithKeyFigureText.replace(keyFigureTextMacro, keyFigureText)
     }
   })
-
   return ingressWithKeyFigureText
 }
 
