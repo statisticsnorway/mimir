@@ -16,6 +16,8 @@ function getLocalizedChangeDirection(
   overwriteDecrease: string | undefined,
   overwriteNoChange: string | undefined
 ) {
+  if (!changeDirection) return
+
   if (changeDirection === 'up') {
     return (
       overwriteIncrease ??
@@ -45,8 +47,6 @@ function getLocalizedChangeDirection(
       }).toLowerCase()
     )
   }
-
-  return changeDirection
 }
 
 function getChangeValue(changes: KeyFigureChanges | undefined): string | undefined {
@@ -67,29 +67,29 @@ const getChangePeriod = (changes: KeyFigureChanges | undefined): string | undefi
   changes?.changePeriod ? changes.changePeriod.toLowerCase().replace('endring ', '') : undefined
 
 function getKeyFigureTextValuesFromString(ingress: string | undefined): KeyFigureTextValues | undefined {
-  if (ingress) {
-    const keyFigureId = ingress.match(/keyFigure="([^"]+)"/)
-    const keyFigure = keyFigureId ? get({ key: keyFigureId[1] }) : undefined
+  if (!ingress) return
 
-    const municipality = getMunicipality({ code: keyFigure?.data.default } as RequestWithCode)
-    const language = keyFigure?.language ? keyFigure.language : 'nb'
-    const keyFigureData = parseKeyFigure(keyFigure as Content<KeyFigure>, municipality, 'master', language)
-    const sourceText = getKeyFigureSourceText(keyFigure as Content<KeyFigure>)
+  const keyFigureId = ingress.match(/keyFigure="([^"]+)"/)
+  const keyFigure = keyFigureId ? get({ key: keyFigureId[1] }) : undefined
 
-    const text = ingress.match(/text="([^"]+)"/)
-    const overwriteIncrease = ingress.match(/overwriteIncrease="([^"]+)"/)
-    const overwriteDecrease = ingress.match(/overwriteDecrease="([^"]+)"/)
-    const overwriteNoChange = ingress.match(/overwriteNoChange="([^"]+)"/)
+  const municipality = getMunicipality({ code: keyFigure?.data.default } as RequestWithCode)
+  const language = keyFigure?.language ? keyFigure.language : 'nb'
+  const keyFigureData = parseKeyFigure(keyFigure as Content<KeyFigure>, municipality, 'master', language)
+  const sourceText = getKeyFigureSourceText(keyFigure as Content<KeyFigure>)
 
-    return {
-      keyFigureData,
-      sourceText,
-      language,
-      text: text ? text[1] : undefined,
-      overwriteIncrease: overwriteIncrease ? overwriteIncrease[1] : undefined,
-      overwriteDecrease: overwriteDecrease ? overwriteDecrease[1] : undefined,
-      overwriteNoChange: overwriteNoChange ? overwriteNoChange[1] : undefined,
-    }
+  const text = ingress.match(/text="([^"]+)"/)
+  const overwriteIncrease = ingress.match(/overwriteIncrease="([^"]+)"/)
+  const overwriteDecrease = ingress.match(/overwriteDecrease="([^"]+)"/)
+  const overwriteNoChange = ingress.match(/overwriteNoChange="([^"]+)"/)
+
+  return {
+    keyFigureData,
+    sourceText,
+    language,
+    text: text ? text[1] : undefined,
+    overwriteIncrease: overwriteIncrease ? overwriteIncrease[1] : undefined,
+    overwriteDecrease: overwriteDecrease ? overwriteDecrease[1] : undefined,
+    overwriteNoChange: overwriteNoChange ? overwriteNoChange[1] : undefined,
   }
 }
 
