@@ -10,13 +10,15 @@ const errorView = resolve('./error.html')
 
 export function renderError(req: XP.Request, title: string, exception: Error): XP.Response {
   const model: ErrorInterface = {
-    errorBody: exception.message,
+    errorBody: exception?.message ?? '',
     errorTitle: title,
-    errorLog: log.error(exception.stack),
+    errorLog: log.error(exception?.stack ?? 'No exception stack to show'),
   }
 
   const body: string | undefined =
-    req.mode === 'edit' || req.mode === 'preview' || req.mode === 'inline' ? render(errorView, model) : undefined
+    req?.mode && (req.mode === 'edit' || req.mode === 'preview' || req.mode === 'inline')
+      ? render(errorView, model)
+      : undefined
 
   return {
     body,
