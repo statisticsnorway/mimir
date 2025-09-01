@@ -3,7 +3,6 @@ import { render } from '/lib/thymeleaf'
 export interface ErrorInterface {
   errorTitle: string
   errorBody: string
-  errorLog: void
 }
 
 const errorView = resolve('./error.html')
@@ -12,13 +11,14 @@ export function renderError(req: XP.Request, title: string, exception: Error): X
   const model: ErrorInterface = {
     errorBody: exception?.message ?? '',
     errorTitle: title,
-    errorLog: log.error(exception?.stack ?? 'No exception stack to show'),
   }
 
-  const body: string | undefined =
+  log.error(`${title}: ${exception?.stack}`)
+
+  const body: string =
     req?.mode && (req.mode === 'edit' || req.mode === 'preview' || req.mode === 'inline')
       ? render(errorView, model)
-      : undefined
+      : ''
 
   return {
     body,
