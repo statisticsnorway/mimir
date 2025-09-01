@@ -30,7 +30,7 @@ jobs:
           echo "Extracted version: ${VERSION}"
           echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
       - name: Extract release notes for current release
-        id: extract_current release notes
+        id: extract_current_release_notes
         if: ${{ steps.run_release_please.outputs.pr != '' }}
         run: |
           PR='${{ steps.run_release_please.outputs.pr }}'
