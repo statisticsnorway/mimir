@@ -31,8 +31,8 @@ import { type KeyFigure } from '/site/content-types'
 
 const contentTypeName = `${app.name}:keyFigure`
 
-export function get(keys: string | Array<string>): Array<Content<KeyFigure>> {
-  keys = util.data.forceArray(keys)
+export function get(inputKeys: string | Array<string>): Array<Content<KeyFigure>> {
+  const keys = util.data.forceArray(inputKeys)
   const content: ContentsResult<Content<KeyFigure>> = query({
     contentTypes: [contentTypeName],
     query: ``,
@@ -46,7 +46,7 @@ export function get(keys: string | Array<string>): Array<Content<KeyFigure>> {
   })
   const hits: Array<Content<KeyFigure>> = keys.reduce((keyfigures: Array<Content<KeyFigure>>, id: string) => {
     const found: Array<Content<KeyFigure>> = content.hits.filter((keyFigure) => keyFigure._id === id)
-    if (found.length === 1) {
+    if (found?.length === 1) {
       keyfigures.push(found[0])
     }
     return keyfigures

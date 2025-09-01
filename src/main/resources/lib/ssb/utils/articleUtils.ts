@@ -139,7 +139,9 @@ export function addSubjectToXData(article: Content<Article>, req: XP.Request) {
         })
       })
     } catch (error) {
-      log.error(`Error in editing content for subjectTags, error: ${JSON.stringify(error, null, 2)}. Tried edit article ${article._id} `).
+      log.error(
+        `Error in editing content for subjectTags, error: ${JSON.stringify(error, null, 2)}. Editing article ${article._id} with mainsubjects (${mainSubjects}) and subSubjects (${subSubjects}).`
+      )
     }
     return modified
   }
