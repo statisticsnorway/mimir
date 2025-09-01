@@ -1,5 +1,25 @@
 # Changelog
 
+## [2.34.0](https://github.com/statisticsnorway/mimir/compare/v2.33.0...v2.34.0) (2025-09-01)
+
+
+### Features
+
+* Support Key Figure Text macro for articles in RSS news [MIM-2355] ([#3412](https://github.com/statisticsnorway/mimir/issues/3412)) ([6bf4ff4](https://github.com/statisticsnorway/mimir/commit/6bf4ff4395883170420a640b30a226218fbb388e))
+
+
+### Bug Fixes
+
+* improve logging of errors in mimir app [MIM-2297] ([#3420](https://github.com/statisticsnorway/mimir/issues/3420)) ([756d028](https://github.com/statisticsnorway/mimir/commit/756d0283638c4b41b94f1d52e4e1125ebd00ae7b))
+
+
+### Build System and dependencies
+
+* bump actions/checkout from 4 to 5 ([#3390](https://github.com/statisticsnorway/mimir/issues/3390)) ([1be9751](https://github.com/statisticsnorway/mimir/commit/1be975135b802c6527cde40a4761401b7c71ab7b))
+* bump eslint-plugin-jsdoc from 52.0.4 to 54.1.0 ([#3389](https://github.com/statisticsnorway/mimir/issues/3389)) ([671779a](https://github.com/statisticsnorway/mimir/commit/671779ae12c1108a4f7afcf32c888cbfc40624fb))
+* Bump jsonstat-toolkit from 1.6.0 to 2.0.0 ([#3331](https://github.com/statisticsnorway/mimir/issues/3331)) ([8221fa8](https://github.com/statisticsnorway/mimir/commit/8221fa802bb7f334ea7a90329fe494005bff32e5))
+* bump the dependencies-minor-updates group across 1 directory with 3 updates ([#3410](https://github.com/statisticsnorway/mimir/issues/3410)) ([57244f5](https://github.com/statisticsnorway/mimir/commit/57244f53df3f636ca899096e6b2f0ac61f6ba5f8))
+
 ## [2.33.0](https://github.com/statisticsnorway/mimir/compare/v2.32.0...v2.33.0) (2025-08-27)
 
 
