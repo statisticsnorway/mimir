@@ -29,6 +29,13 @@ jobs:
           VERSION=$(echo "$TITLE" | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+' )
           echo "Extracted version: ${VERSION}"
           echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+      - name: Extract release notes for current release
+        id: extract_current release notes
+        if: ${{ steps.run_release_please.outputs.pr != '' }}
+        run: |
+          PR='${{ steps.run_release_please.outputs.pr }}'
+          PR_BODY=$(echo "$PR" | awk -F'"body":"' '{print $2}' | awk -F'","' '{print $1}')
+          echo "$PR_BODY" > CHANGELOG-LATEST.md
 
   create-develop-to-master-pr:
     needs: release-please
