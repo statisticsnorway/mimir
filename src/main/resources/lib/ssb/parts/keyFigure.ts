@@ -46,7 +46,7 @@ export function get(inputKeys: string | Array<string>): Array<Content<KeyFigure>
   })
   const hits: Array<Content<KeyFigure>> = keys.reduce((keyfigures: Array<Content<KeyFigure>>, id: string) => {
     const found: Array<Content<KeyFigure>> = content.hits.filter((keyFigure) => keyFigure._id === id)
-    if (found?.length === 1) {
+    if (found.length === 1) {
       keyfigures.push(found[0])
     }
     return keyfigures
