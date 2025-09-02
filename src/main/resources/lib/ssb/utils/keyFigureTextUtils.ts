@@ -145,7 +145,7 @@ export function parseKeyFigureText(
   language = 'nb',
   sourceText: string | undefined
 ) {
-  const { title, time, number, numberDescription, changes } = keyFigureData
+  const { title, time, number, numberDescription, changes } = keyFigureData ?? {}
   const { overwriteIncrease, overwriteDecrease, overwriteNoChange, text } = keyFigureTextMacroInput ?? {}
 
   const localizedTime = language !== 'en' && time ? time?.toLowerCase() : time
