@@ -195,7 +195,7 @@ export function setupCronJobs(): void {
       name: 'clearPartsCache',
       description: 'Clear part cache',
       descriptor: 'clearPartsCache',
-      cronValue: '01 08 * * *',
+      cronValue: app.config?.['ssb.task.clearPartsCache'] ?? '01 08 * * *',
       timeZone: timezone,
     })
 
