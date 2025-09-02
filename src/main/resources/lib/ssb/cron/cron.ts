@@ -192,10 +192,10 @@ export function setupCronJobs(): void {
 
     // clear specific cache once an hour
     scheduleJob({
-      name: 'clearCache',
-      description: 'Clear cache',
-      descriptor: 'clearCache',
-      cronValue: '01 * * * *',
+      name: 'clearPartsCache',
+      description: 'Clear part cache',
+      descriptor: 'clearPartsCache',
+      cronValue: '01 08 * * *',
       timeZone: timezone,
     })
 
