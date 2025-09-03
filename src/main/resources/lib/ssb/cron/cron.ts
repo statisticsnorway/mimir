@@ -190,7 +190,7 @@ export function setupCronJobs(): void {
       })
     }
 
-    // clear specific cache once an hour
+    // clear cache for parts that are expected to have updated data right after 08:00 when new data is published
     scheduleJob({
       name: 'clearPartsCache',
       description: 'Clear part cache',
