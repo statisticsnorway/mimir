@@ -213,26 +213,35 @@ export function getLinkTargetContent(
   return null
 }
 
-export function getSubtitleForContent(XPContent: Content<Article>, language: string): string {
+export function getSubtitleForContent(
+  XPContent: Content<Article>,
+  language: string,
+  overwriteType?: string | undefined,
+  overwriteDate?: string | undefined
+): string {
   const articleType = XPContent?.data.articleType ? `contentType.search.${XPContent.data.articleType}` : 'articleName'
   const articleNamePhrase: string = localize({
     key: articleType,
     locale: language,
   })
 
-  let type = ''
-  if (XPContent?.type === `${app.name}:article`) {
+  let type
+  if (overwriteType) {
+    type = overwriteType
+  } else if (XPContent?.type === `${app.name}:article`) {
     type = articleNamePhrase
   }
 
-  let prettyDate: string | undefined = ''
-  if (XPContent?.publish && XPContent?.publish.from) {
+  let prettyDate
+  if (overwriteDate) {
+    prettyDate = formatDate(overwriteDate, 'PPP', language)
+  } else if (XPContent?.publish && XPContent?.publish.from) {
     prettyDate = formatDate(XPContent.publish.from, 'PPP', language)
   } else {
     prettyDate = formatDate(XPContent?.createdTime, 'PPP', language)
   }
 
-  return `${type ? `${type} / ` : ''}${prettyDate ? prettyDate : ''}`
+  return [type, prettyDate].filter((string) => string !== undefined).join(' / ')
 }
 
 interface ContentSearchPageResult {
