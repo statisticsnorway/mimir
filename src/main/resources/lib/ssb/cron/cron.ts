@@ -193,7 +193,7 @@ export function setupCronJobs(): void {
     // clear cache for parts that are expected to have updated data right after 08:00 when new data is published
     scheduleJob({
       name: 'clearPartsCache',
-      description: 'Clear part cache',
+      description: `Clear selected parts cache after 08:00 data publication`,
       descriptor: 'clearPartsCache',
       cronValue: app?.config?.['ssb.task.clearPartsCache'] ?? '01 08 * * *',
       timeZone: timezone,
