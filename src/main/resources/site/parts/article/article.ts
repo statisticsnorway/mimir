@@ -37,9 +37,9 @@ function renderPart(req: XP.Request) {
   let modifiedDate: string | undefined
   let modifiedDateIso: string | undefined
   if (showModifiedDate?.dateOption?.modifiedDate) {
+    modifiedDateIso = setDateTimeAsOsloTimeZone(showModifiedDate.dateOption?.modifiedDate).toString()
     const dateFormat = showModifiedDate.dateOption?.showModifiedTime ? 'PPp' : 'PPP'
     modifiedDate = formatDate(showModifiedDate.dateOption?.modifiedDate, dateFormat, language)
-    modifiedDateIso = setDateTimeAsOsloTimeZone(showModifiedDate.dateOption?.modifiedDate).toString()
   }
 
   const authorConfig: Article['authorItemSet'] = page.data.authorItemSet
