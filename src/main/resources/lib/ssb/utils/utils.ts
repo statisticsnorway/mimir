@@ -216,8 +216,8 @@ export function getLinkTargetContent(
 export function getSubtitleForContent(
   XPContent: Content<Article>,
   language: string,
-  overwriteType?: string | undefined,
-  overwriteDate?: string | undefined
+  overwriteType?: string,
+  overwriteDate?: string
 ): string {
   const articleType = XPContent?.data.articleType ? `contentType.search.${XPContent.data.articleType}` : 'articleName'
   const articleNamePhrase: string = localize({
@@ -241,7 +241,7 @@ export function getSubtitleForContent(
     prettyDate = formatDate(XPContent?.createdTime, 'PPP', language)
   }
 
-  return [type, prettyDate].filter((string) => string !== undefined).join(' / ')
+  return [type, prettyDate].filter((string) => !!string).join(' / ')
 }
 
 interface ContentSearchPageResult {
