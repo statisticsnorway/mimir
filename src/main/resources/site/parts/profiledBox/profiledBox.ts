@@ -7,7 +7,6 @@ import {
   randomUnsafeString,
 } from '/lib/ssb/utils/utils'
 import { render as r4xpRender } from '/lib/enonic/react4xp'
-import { formatDate } from '/lib/ssb/utils/dateUtils'
 import { imageUrl, getImageAlt, getImageFromContent } from '/lib/ssb/utils/imageUtils'
 
 import { renderError } from '/lib/ssb/error/error'
@@ -44,18 +43,6 @@ function renderPart(req: XP.Request): XP.Response {
   })
 }
 
-function getSubtitleFromConfig(content: string | undefined, date: string | undefined, language: string): string {
-  if (content && date) {
-    return content + ' / ' + (formatDate(date, 'PPP', language) as string).toLowerCase()
-  } else if (content) {
-    return content
-  } else if (date) {
-    return (formatDate(date, 'PPP', language) as string).toLowerCase()
-  } else {
-    return ''
-  }
-}
-
 function getTitleSize(title: string): string {
   const titleLength: number = title.length
   let titleSize = 'sm'
@@ -77,9 +64,7 @@ function parseProfiledBoxProps(config: ProfiledBoxPartConfig, language: string):
 
   const title = config.title ?? linkTargetContent?.displayName ?? ''
   const subTitle =
-    config.content && config.date
-      ? getSubtitleFromConfig(config.content, config.date, language)
-      : (getSubtitleForContent(linkTargetContent as Content<Article>, language) ?? '')
+    getSubtitleForContent(linkTargetContent as Content<Article>, language, config.content, config.date) ?? ''
 
   const imageWidth = 315
   const imageHeight = 215
