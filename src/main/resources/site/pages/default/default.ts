@@ -37,6 +37,7 @@ import { isEnabled } from '/lib/featureToggle'
 import { ensureArray } from '/lib/ssb/utils/arrayUtils'
 import { type SubjectItem } from '/lib/types/subject'
 import { type MunicipalityWithCounty, type RequestWithCode } from '/lib/types/municipalities'
+import { setDateTimeAsOsloTimeZone } from '/lib/ssb/utils/dateUtils'
 import { type Default as DefaultPageConfig } from '/site/pages/default'
 import { type Page, type Statistics } from '/site/content-types'
 
@@ -402,7 +403,7 @@ function prepareStructuredData(metaInfo: MetaInfoData, page: DefaultPage): Artic
     headline: metaInfo.metaInfoTitle,
     datePublished: metaInfo.metaInfoSearchPublishFrom,
     dateModified: page.data.showModifiedDate?.dateOption?.modifiedDate
-      ? new Date(page.data.showModifiedDate.dateOption.modifiedDate).toISOString()
+      ? setDateTimeAsOsloTimeZone(page.data.showModifiedDate?.dateOption?.modifiedDate).toString()
       : undefined,
     author: page.data.authorItemSet
       ? ensureArray(page.data.authorItemSet).map((f) => {
