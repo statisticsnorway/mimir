@@ -9,6 +9,7 @@
     "build:asset": "npx tsup -d build/resources/main/assets",
     "build:server": "npx tsup -d build/resources/main",
     "build:react4xp": "cross-env WATCH=false R4X_APP_NAME=mimir R4X_DIR_PATH_ABSOLUTE_PROJECT=$INIT_CWD npm run compile:react4xp",
+    "check:types:react4xp": "npx tsc --noEmit -p src/tsconfig.react4xp.json",
     "watch:asset": "cross-env NODE_ENV=development npm run build:asset -- --watch",
     "watch:style": "cross-env NODE_ENV=development npx sass \"src/main/resources/assets/styles/main.scss\":\"build/resources/main/assets/styles/bundle.css\" \"src/main/resources/assets/styles/main_menu.scss\":\"build/resources/main/assets/styles/bundle_menu.css\" --load-path=node_modules --load-path=node_modules/bootstrap/scss --watch --style=expanded",
     "watch:server": "cross-env NODE_ENV=development npm run build:server -- --watch",
