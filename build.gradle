@@ -37,11 +37,13 @@ dependencies {
     include "com.enonic.xp:lib-cluster:${xpVersion}"
     include "com.enonic.xp:lib-mail:${xpVersion}"
     include "com.enonic.xp:lib-scheduler:${xpVersion}"
+    include "com.enonic.xp:lib-schema:${xpVersion}"
+    include 'com.enonic.lib:lib-asset:1.0.1'
     implementation 'commons-codec:commons-codec:1.19.0'
     include "no.item:wsutil-server:2.0.0"
     include "com.gravitondigital:featuretogglelib:0.3.0"
     include 'org.json:json:20250517'
-    include "com.enonic.lib:lib-react4xp:5.1.1"
+    include "com.enonic.lib:lib-react4xp:6.0.0"
     include 'com.enonic.lib:lib-text-encoding:2.1.1'
     include "com.enonic.xp:lib-value:${xpVersion}"
     include "no.item:lib-xp-cristin:1.3.2"
@@ -82,25 +84,62 @@ task compileServer( type: NpmTask, dependsOn: npmInstall) {
   description 'Compile server resources'
 }
 
-task react4xp(type: NpmTask, dependsOn: npmInstall) {
+tasks.register('npmCheck', NpmTask) {
+  dependsOn npmInstall
   args = [
     'run',
-    'compile:react4xp' // This script must exist in the package.json file
+    // 'check'
   ]
-  description 'Compile React4xp resources'
-  environment = [
-    'R4X_APP_NAME': "${appName}",
-    'R4X_BUILD_LOG_LEVEL': gradle.startParameter.logLevel.toString(),
-    'R4X_DIR_PATH_ABSOLUTE_PROJECT': project.projectDir.toString(),
-    'NODE_ENV': project.hasProperty('dev') || project.hasProperty('development') ? 'development' : 'production'
-  ]
-  group 'react4xp'
-  // It also watches package.json and package-lock.json :)
-  inputs.dir 'node_modules/@enonic/react4xp'
-  inputs.dir 'src/main/resources'
-  outputs.dir 'build/resources/main'
+  environment = ['FORCE_COLOR':'true']
 }
-jar.dependsOn 'react4xp'
+check.dependsOn npmCheck
+
+// task react4xp(type: NpmTask, dependsOn: npmInstall) {
+//   args = [
+//     'run',
+//     'compile:react4xp' // This script must exist in the package.json file
+//   ]
+//   description 'Compile React4xp resources'
+//   environment = [
+//     'R4X_APP_NAME': "${appName}",
+//     'R4X_BUILD_LOG_LEVEL': gradle.startParameter.logLevel.toString(),
+//     'R4X_DIR_PATH_ABSOLUTE_PROJECT': project.projectDir.toString(),
+//     'NODE_ENV': project.hasProperty('dev') || project.hasProperty('development') ? 'development' : 'production'
+//   ]
+//   group 'react4xp'
+//   // It also watches package.json and package-lock.json :)
+//   inputs.dir 'node_modules/@enonic/react4xp'
+//   inputs.dir 'src/main/resources'
+//   outputs.dir 'build/resources/main'
+// }
+// jar.dependsOn 'react4xp'
+
+tasks.register('react4xp', NpmTask) {
+    def envMode = project.hasProperty( 'env' ) ? ( project.property( 'env' ) == 'prod' ? 'production' : 'development' ) : 'production'
+    args = [
+        'run',
+        'build:react4xp'
+    ]
+    dependsOn( npmInstall )
+    description 'Compile react4xp resources'
+    environment = [
+      'R4X_APP_NAME': "${appName}",
+      'R4X_BUILD_LOG_LEVEL': gradle.startParameter.logLevel.toString(),
+      'R4X_DIR_PATH_ABSOLUTE_PROJECT': project.projectDir.toString(),
+      'NODE_ENV': envMode
+    ]
+    group 'react4xp'
+
+    println "Environment set to: $envMode"
+}
+
+tasks.register('dev', Exec) {
+    if (System.getProperty('os.name').toLowerCase().contains('windows')) {
+        commandLine 'gradlew.bat', 'deploy', '-Penv=dev', '-t'
+    } else {
+        commandLine './gradlew', 'deploy', '-Penv=dev', '-t'
+    }
+}
 
 processResources {
     include '**/*'
