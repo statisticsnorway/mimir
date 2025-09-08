@@ -10,9 +10,7 @@ module.exports = function (env, config) {
   config.resolve.alias['/react4xp'] = path.resolve(__dirname, './src/main/resources/react4xp/')
   config.resolve.symlinks = false
 
-  // config.plugins = [
-  //    new BundleAnalyzerPlugin(),
-  // ]
+  // config.plugins = [new BundleAnalyzerPlugin()]
 
   // Dont bundle all node_modules import into one file
   // config.optimization.splitChunks.chunks = 'all'
@@ -28,6 +26,10 @@ module.exports = function (env, config) {
     'react-bootstrap',
     'react-responsive',
     'react-number-format',
+    'xlsx',
+    '@reduxjs/toolkit',
+    '@redux-saga',
+    'axios',
   ]
 
   vendorSplits.forEach((package) => {
