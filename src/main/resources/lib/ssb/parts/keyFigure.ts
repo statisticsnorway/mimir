@@ -31,8 +31,8 @@ import { type KeyFigure } from '/site/content-types'
 
 const contentTypeName = `${app.name}:keyFigure`
 
-export function get(keys: string | Array<string>): Array<Content<KeyFigure>> {
-  keys = util.data.forceArray(keys)
+export function get(inputKeys: string | Array<string>): Array<Content<KeyFigure>> {
+  const keys = util.data.forceArray(inputKeys)
   const content: ContentsResult<Content<KeyFigure>> = query({
     contentTypes: [contentTypeName],
     query: ``,

@@ -66,7 +66,7 @@ function BkibolCalculator(props: BkibolCalculatorProps) {
     errorMsg: `${props.phrases.bkibolValidateYear} ${validMaxYear}`,
     value: '',
   })
-  const [errorMessage, setErrorMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [endValue, setEndValue] = useState<null | number>(null)
   const [change, setChange] = useState<null | string>(null)
@@ -184,7 +184,7 @@ function BkibolCalculator(props: BkibolCalculatorProps) {
         if (err && err.response && err.response.data && err.response.data.error) {
           setErrorMessage(err.response.data.error)
         } else {
-          setErrorMessage(err.toString())
+          setErrorMessage(props.phrases.GenericErrorMessage)
         }
       })
       .finally(() => {

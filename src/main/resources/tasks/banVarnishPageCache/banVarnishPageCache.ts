@@ -13,17 +13,20 @@ export function run(params: BanVarnishPageCacheConfig): void {
   })
 }
 
-export function purgePageFromVarnish(pageId: string): HttpResponse {
-  const baseUrl: string = app.config?.['ssb.internal.serverside.baseUrl'] ?? 'https://ext-i.ssb.no'
-  const response: HttpResponse = request({
-    url: `${baseUrl}/xp_page_clear`,
-    method: 'PURGE',
-    headers: {
-      'x-content-key': pageId,
-    },
-    connectionTimeout: 5000,
-    readTimeout: 5000,
-  })
-  log.info(`Cleared page ${pageId} from Varnish. Result code: ${response.status} - and message: ${response.message}`)
-  return response
+export function purgePageFromVarnish(pageId: string): void {
+  try {
+    const baseUrl: string = app.config?.['ssb.internal.serverside.baseUrl'] ?? 'https://ext-i.ssb.no'
+    const response: HttpResponse = request({
+      url: `${baseUrl}/xp_page_clear`,
+      method: 'PURGE',
+      headers: {
+        'x-content-key': pageId,
+      },
+      connectionTimeout: 5000,
+      readTimeout: 5000,
+    })
+    log.info(`Cleared page ${pageId} from Varnish. Result code: ${response.status} - and message: ${response.message}`)
+  } catch (error) {
+    log.error(`Failed to purge page ${pageId} from varnish with error: ${error}`)
+  }
 }
