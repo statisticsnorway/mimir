@@ -16,3 +16,4 @@ nashorn_code_cache
 .DS_Store
 .project
 .dccache
+*.tsbuildinfo
