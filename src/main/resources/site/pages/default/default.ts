@@ -403,7 +403,7 @@ function prepareStructuredData(metaInfo: MetaInfoData, page: DefaultPage): Artic
     headline: metaInfo.metaInfoTitle,
     datePublished: metaInfo.metaInfoSearchPublishFrom,
     dateModified: page.data.showModifiedDate?.dateOption?.modifiedDate
-      ? setDateTimeAsOsloTimeZone(page.data.showModifiedDate?.dateOption?.modifiedDate).toString()
+      ? setDateTimeAsOsloTimeZone(page.data.showModifiedDate?.dateOption?.modifiedDate)
       : undefined,
     author: page.data.authorItemSet
       ? ensureArray(page.data.authorItemSet).map((f) => {
