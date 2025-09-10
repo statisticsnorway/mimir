@@ -1,70 +1,70 @@
 import org.apache.tools.ant.taskdefs.condition.Os
 
 plugins {
-    id("com.github.node-gradle.node") version "7.1.0"
-    id 'com.enonic.xp.app' version '3.6.1'
-    id 'no.item.xp.codegen' version '2.7.0'
+  id("com.github.node-gradle.node") version "7.1.0"
+  id 'com.enonic.xp.app' version '3.6.1'
+  id 'no.item.xp.codegen' version '2.7.0'
 }
 
 app {
-    name = "${appName}"
-    displayName = "${appDisplayName}"
-    vendorName = "${vendorName}"
-    vendorUrl = "${vendorUrl}"
-    systemVersion = "${xpVersion}"}
+  name = "${appName}"
+  displayName = "${appDisplayName}"
+  vendorName = "${vendorName}"
+  vendorUrl = "${vendorUrl}"
+  systemVersion = "${xpVersion}"}
 
 dependencies {
-    include "com.enonic.lib:lib-thymeleaf:2.1.1"
-    implementation "com.enonic.xp:core-api:${xpVersion}"
-    implementation "com.enonic.xp:portal-api:${xpVersion}"
-    include "com.enonic.xp:lib-content:${xpVersion}"
-    include "com.enonic.xp:lib-portal:${xpVersion}"
-    include "com.enonic.xp:lib-common:${xpVersion}"
-    include "com.enonic.lib:lib-util:3.1.1"
-    include "com.enonic.xp:lib-task:${xpVersion}"
-    include "com.enonic.xp:lib-auth:${xpVersion}"
-    include "com.enonic.xp:lib-admin:${xpVersion}"
-    include "com.enonic.lib:lib-http-client:3.2.2"
-    include "com.enonic.xp:lib-i18n:${xpVersion}"
-    include "com.enonic.lib:lib-cron:1.1.4"
-    include "com.enonic.xp:lib-context:${xpVersion}"
-    include 'com.enonic.lib:lib-cache:2.2.1'
-    include "com.enonic.xp:lib-event:${xpVersion}"
-    include "com.enonic.xp:lib-node:${xpVersion}"
-    include "com.enonic.xp:lib-repo:${xpVersion}"
-    include "com.enonic.xp:lib-io:${xpVersion}"
-    include "com.enonic.xp:lib-websocket:${xpVersion}"
-    include "com.enonic.xp:lib-cluster:${xpVersion}"
-    include "com.enonic.xp:lib-mail:${xpVersion}"
-    include "com.enonic.xp:lib-scheduler:${xpVersion}"
-    include "com.enonic.xp:lib-schema:${xpVersion}"
-    include 'com.enonic.lib:lib-asset:1.0.1'
-    implementation 'commons-codec:commons-codec:1.19.0'
-    include "no.item:wsutil-server:2.0.0"
-    include "com.gravitondigital:featuretogglelib:0.3.0"
-    include 'org.json:json:20250517'
-    include "com.enonic.lib:lib-react4xp:6.0.0"
-    include 'com.enonic.lib:lib-text-encoding:2.1.1'
-    include "com.enonic.xp:lib-value:${xpVersion}"
-    include "no.item:lib-xp-cristin:1.3.2"
-    include "no.item:lib-xp-time:1.0.4"
+  include "com.enonic.lib:lib-thymeleaf:2.1.1"
+  implementation "com.enonic.xp:core-api:${xpVersion}"
+  implementation "com.enonic.xp:portal-api:${xpVersion}"
+  include "com.enonic.xp:lib-content:${xpVersion}"
+  include "com.enonic.xp:lib-portal:${xpVersion}"
+  include "com.enonic.xp:lib-common:${xpVersion}"
+  include "com.enonic.lib:lib-util:3.1.1"
+  include "com.enonic.xp:lib-task:${xpVersion}"
+  include "com.enonic.xp:lib-auth:${xpVersion}"
+  include "com.enonic.xp:lib-admin:${xpVersion}"
+  include "com.enonic.lib:lib-http-client:3.2.2"
+  include "com.enonic.xp:lib-i18n:${xpVersion}"
+  include "com.enonic.lib:lib-cron:1.1.4"
+  include "com.enonic.xp:lib-context:${xpVersion}"
+  include 'com.enonic.lib:lib-cache:2.2.1'
+  include "com.enonic.xp:lib-event:${xpVersion}"
+  include "com.enonic.xp:lib-node:${xpVersion}"
+  include "com.enonic.xp:lib-repo:${xpVersion}"
+  include "com.enonic.xp:lib-io:${xpVersion}"
+  include "com.enonic.xp:lib-websocket:${xpVersion}"
+  include "com.enonic.xp:lib-cluster:${xpVersion}"
+  include "com.enonic.xp:lib-mail:${xpVersion}"
+  include "com.enonic.xp:lib-scheduler:${xpVersion}"
+  include "com.enonic.xp:lib-schema:${xpVersion}"
+  include 'com.enonic.lib:lib-asset:1.0.1'
+  implementation 'commons-codec:commons-codec:1.19.0'
+  include "no.item:wsutil-server:2.0.0"
+  include "com.gravitondigital:featuretogglelib:0.3.0"
+  include 'org.json:json:20250517'
+  include "com.enonic.lib:lib-react4xp:6.0.0"
+  include 'com.enonic.lib:lib-text-encoding:2.1.1'
+  include "com.enonic.xp:lib-value:${xpVersion}"
+  include "no.item:lib-xp-cristin:1.3.2"
+  include "no.item:lib-xp-time:1.0.4"
 }
 
 repositories {
-    mavenLocal()
-    mavenCentral()
-    xp.enonicRepo()
-    maven {
-        url "https://repo1.maven.org/maven2/"
-    }
-    maven {
-        url 'https://jitpack.io'
-    }
+  mavenLocal()
+  mavenCentral()
+  xp.enonicRepo()
+  maven {
+      url "https://repo1.maven.org/maven2/"
+  }
+  maven {
+      url 'https://jitpack.io'
+  }
 }
 
 node {
-    download = true
-    version = '18.12.1'
+  download = true
+  version = '18.12.1'
 }
 
 task compileAssets(type: NpmTask, dependsOn: npmInstall) {
@@ -75,7 +75,6 @@ task compileAssets(type: NpmTask, dependsOn: npmInstall) {
   description 'Compile asset resources'
 }
 
-
 task compileServer(type: NpmTask, dependsOn: npmInstall) {
   args = [
     'run',
@@ -84,13 +83,11 @@ task compileServer(type: NpmTask, dependsOn: npmInstall) {
   description 'Compile server resources'
 }
 
-// TODO: Check commented out code from old react4xp task
 task react4xp(type: NpmTask, dependsOn: npmInstall) {
   def envMode = project.hasProperty( 'env' ) ? ( project.property( 'env' ) == 'prod' ? 'production' : 'development' ) : 'production'
   args = [
     'run',
-    'build:react4xp'
-    // 'compile:react4xp' // This script must exist in the package.json file
+    'compile:react4xp' // This script must exist in the package.json file
   ]
   description 'Compile React4xp resources'
   environment = [
@@ -101,13 +98,12 @@ task react4xp(type: NpmTask, dependsOn: npmInstall) {
   ]
   group 'react4xp'
   // It also watches package.json and package-lock.json :)
-  // inputs.dir 'node_modules/@enonic/react4xp'
-  // inputs.dir 'src/main/resources'
-  // outputs.dir 'build/resources/main'
+  inputs.dir 'node_modules/@enonic/react4xp'
+  inputs.dir 'src/main/resources'
+  outputs.dir 'build/resources/main'
 
   println "Environment set to: $envMode"
 }
-// jar.dependsOn react4xp
 
 task dev(type: Exec) {
   if (System.getProperty('os.name').toLowerCase().contains('windows')) {
@@ -118,40 +114,44 @@ task dev(type: Exec) {
 }
 
 processResources {
-    include '**/*'
-    exclude '**/.gitkeep'
-    exclude '**/tsconfig.*.json'
-    exclude '**/*.es'
-    exclude '**/*.es6'
-    exclude '**/*.ts'
-    exclude '**/*.test.js'
-    exclude 'assets/js/**/*.js'
-    include 'assets/js/bundle.js'
-    exclude 'assets/styles/**/*.less'
-    exclude 'assets/styles/**/*.sass'
-    exclude 'assets/styles/**/*.scss'
-    includeEmptyDirs false
+  include '**/*'
+  exclude '**/.gitkeep'
+  exclude '**/tsconfig.*.json'
+  exclude '**/*.es'
+  exclude '**/*.es6'
+  exclude '**/*.ts'
+  exclude '**/*.sass' // handled by @enonic/react4xp gradle files
+  exclude '**/*.scss' // handled by @enonic/react4xp gradle files
+  exclude '**/*.tsx' // handled by @enonic/react4xp gradle files
+  exclude '**/*.test.js'
+  exclude 'assets/js/**/*.js'
+  include 'assets/js/bundle.js'
+  exclude 'assets/styles/**/*.less'
+  exclude 'assets/styles/**/*.sass'
+  exclude 'assets/styles/**/*.scss'
+  includeEmptyDirs false
 }
 
 jar {
-    exclude 'assets/styles/**/*.less'
-    exclude 'assets/styles/**/*.sass'
-    exclude 'assets/styles/**/*.scss'
-    exclude 'assets/styles/**/*.js'
+  exclude 'assets/styles/**/*.less'
+  exclude 'assets/styles/**/*.sass'
+  exclude 'assets/styles/**/*.scss'
+  exclude 'assets/styles/**/*.js'
 
-    compileServer.dependsOn += generateTypeScript {
-      singleQuote = true
-      prependText = "/* eslint-disable prettier/prettier */ \n // WARNING: This file was automatically generated by no.item.xp.codegen. You may lose your changes if you edit it."
-    }
+  compileServer.dependsOn += generateTypeScript {
+    singleQuote = true
+    prependText = "/* eslint-disable prettier/prettier */ \n // WARNING: This file was automatically generated by no.item.xp.codegen. You may lose your changes if you edit it."
+  }
 
-    dependsOn += npmInstall
-    dependsOn += compileAssets
-    dependsOn += compileServer
+  dependsOn += npmInstall
+  dependsOn += compileAssets
+  dependsOn += compileServer
+  dependsOn += react4xp
 }
 
 def nodeEnvironment() {
-    def environments = [ prod : 'production', dev: 'development' ]
-    def nodeEnv = environments[hasProperty( 'env' ) ? env : 'prod']
-    return nodeEnv != null ? nodeEnv : 'production'
+  def environments = [ prod : 'production', dev: 'development' ]
+  def nodeEnv = environments[hasProperty( 'env' ) ? env : 'prod']
+  return nodeEnv != null ? nodeEnv : 'production'
 }
 
