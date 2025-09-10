@@ -311,7 +311,7 @@ export function get(req: XP.Request): XP.Response {
     tableView: page.type === 'mimir:table',
     popupBody: popupComponent?.body,
     dateModifiedMeta: page.data.showModifiedDate?.dateOption?.modifiedDate
-      ? new Date(page.data.showModifiedDate.dateOption.modifiedDate).toISOString()
+      ? setDateTimeAsOsloTimeZone(page.data.showModifiedDate?.dateOption?.modifiedDate)
       : undefined,
   }
 
