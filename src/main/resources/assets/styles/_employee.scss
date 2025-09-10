@@ -1,3 +1,7 @@
+@use 'bootstrap' as *;
+@use '@statisticsnorway/ssb-component-library/src/main.scss' as *;
+@use 'font';
+
 .employee {
   .container {
     padding-top: 0!important;
@@ -53,7 +57,7 @@
       }
 
       > div {
-        font-family: $font-open-sans;
+        font-family: font.$font-open-sans;
         font-size: 20px;
         line-height: 1.6;
 

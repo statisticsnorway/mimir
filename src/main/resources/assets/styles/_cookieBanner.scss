@@ -1,3 +1,6 @@
+@use 'bootstrap' as *;
+@use '@statisticsnorway/ssb-component-library/src/main.scss' as *;
+
 .cookie-banner {
   position: fixed;
   bottom: 1.56rem;

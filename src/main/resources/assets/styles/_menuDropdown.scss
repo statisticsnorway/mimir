@@ -1,3 +1,7 @@
+@use 'bootstrap' as *;
+@use '@statisticsnorway/ssb-component-library/src/main.scss' as *;
+@use 'font';
+
 .part-menu-dropdown {
   @include roboto;
   background-color: white;
@@ -59,7 +63,7 @@
       border: $ssb-green-4 1px solid;
     }
     svg {
-      color: $green4;
+      color: $ssb-green-4;
     }
   }
 

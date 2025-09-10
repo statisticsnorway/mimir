@@ -1,8 +1,11 @@
+@use 'bootstrap' as *;
+@use 'font';
+
 .part-om-statistikken {
   padding: 0;
 
   .title-wrapper {
-    font-family: $font-roboto-condensed-bold;
+    font-family: font.$font-roboto-condensed-bold;
     margin-bottom: $spacer * 2;
 
     @include media-breakpoint-down(md) {
