@@ -9,7 +9,6 @@ export interface EmployeeProps {
   projects: Array<Project>
   area: Area | null
   isResearcher: boolean
-  cristinId: string | null
   cvInformation: CVinformation
   emailPhrase: string
   phonePhrase: string

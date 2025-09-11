@@ -15,7 +15,6 @@ const Employee = (props: EmployeeProps) => {
     myCV,
     projects,
     isResearcher,
-    cristinId,
     area,
     cvInformation,
     emailPhrase,
@@ -241,16 +240,6 @@ const Employee = (props: EmployeeProps) => {
     )
   }
 
-  const renderPublications = () => {
-    return (
-      <div className='row justify-content-center'>
-        <div className='employee-publications'>
-          <h2>{publicationsPhrase}</h2>
-        </div>
-      </div>
-    )
-  }
-
   return (
     <section className='xp-part employee container p-0 mb-5'>
       <div className='row'>{renderEmployeeHead()}</div>
@@ -264,7 +253,6 @@ const Employee = (props: EmployeeProps) => {
         <div className='col-12 col-md-6 row-gutter-mobile mt-4'>
           {description ? renderEmployeeDescription() : null}
           {projects.length != 0 ? renderProjects() : null}
-          {cristinId ? renderPublications() : null}
         </div>
       </div>
     </section>

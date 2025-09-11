@@ -142,7 +142,6 @@ function renderPart(req: XP.Request) {
     projects,
     area,
     isResearcher: page.data.isResearcher,
-    cristinId: page.data.cristinId || null,
     cvInformation,
     emailPhrase,
     phonePhrase,

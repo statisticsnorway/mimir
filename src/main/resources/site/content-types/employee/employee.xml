@@ -59,10 +59,6 @@
         <field-set>
             <label>Fylles ut for forsker</label>
             <items>
-                <input type="TextLine" name="cristinId">
-                    <label>Ansatt id Cristin</label>
-                    <occurrences minimum="0" maximum="1"/>
-                </input>
                 <input name="myCV" type="AttachmentUploader">
                     <label>Min CV</label>
                     <occurrences minimum="0" maximum="1"/>
