@@ -53,13 +53,24 @@ function renderPart(req: XP.Request, simpleStatbankId: string | undefined): XP.R
 
   if (!simpleStatbankData) throw Error('No content found')
 
+  let statbankApiData
   if (req.mode === 'edit' || req.mode === 'inline') {
-    return renderSimpleStatbankComponent(req, simpleStatbankData)
+    statbankApiData = getStatbankApiData(
+      simpleStatbankData.data.code,
+      simpleStatbankData.data.urlOrId,
+      simpleStatbankData.data.json
+    )
   } else {
-    return fromPartCache(req, `${page._id}-simpleStatbank`, () => {
-      return renderSimpleStatbankComponent(req, simpleStatbankData)
+    statbankApiData = fromPartCache(req, `${simpleStatbankId}-simpleStatbank`, () => {
+      return getStatbankApiData(
+        simpleStatbankData.data.code,
+        simpleStatbankData.data.urlOrId,
+        simpleStatbankData.data.json
+      )
     })
   }
+
+  return renderSimpleStatbankComponent(req, simpleStatbankData, statbankApiData)
 }
 
 function getImageUrl(icon?: string) {
@@ -76,13 +87,11 @@ function getImageAltText(icon?: string) {
   return icon ? getImageAlt(icon) : 'No description found'
 }
 
-function renderSimpleStatbankComponent(req: XP.Request, simpleStatbankData: Content<SimpleStatbank>): XP.Response {
-  const statbankApiData: SimpleStatbankResult | undefined = getStatbankApiData(
-    simpleStatbankData.data.code,
-    simpleStatbankData.data.urlOrId,
-    simpleStatbankData.data.json
-  )
-
+function renderSimpleStatbankComponent(
+  req: XP.Request,
+  simpleStatbankData: Content<SimpleStatbank>,
+  statbankApiData: SimpleStatbankResult | undefined
+): XP.Response {
   const props: SimpleStatbankProps = {
     icon: getImageUrl(simpleStatbankData.data.icon),
     altText: getImageAltText(simpleStatbankData.data.icon),
