@@ -183,7 +183,7 @@ function BpiCalculator(props: BpiCalculatorProps) {
         if (err && err.response && err.response.data && err.response.data.error) {
           setErrorMessage(err.response.data.error)
         } else {
-          setErrorMessage(err.toString())
+          setErrorMessage(props.phrases.GenericErrorMessage)
         }
       })
       .finally(() => {

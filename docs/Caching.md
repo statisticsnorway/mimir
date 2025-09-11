@@ -54,32 +54,27 @@ listener({
 })
  ```
 
-### Clear Cache Cron
-Every hour, there is a clear cache cron job that is scheduled to run. The scheduled time can be adjusted in the `mimir.cfg` and fallbacks to every hour. Its purpose is to automatically clear part caches from draft and master so that when data is updated from the server, the changes will display on the affected parts correctly.
+### Clear Parts Cache Cron
+At 08:01, there is a clear parts cache cron job that is scheduled to run. The scheduled time can be adjusted in the `mimir.cfg` and fallbacks to 08:01. Its purpose is to automatically clear part caches from draft and master so that when data is updated from the server, the changes will display on the affected parts correctly.
 
-The following parts will clear all the entries from their respective part cache instances every hour ([cron.ts](src/main/resources/lib/ssb/cron/cron.ts)):
+The following parts will clear all the entries from their respective part cache ([clearPartsCache.ts](/src/main/resources/tasks/clearPartsCache/clearPartsCache.ts)):
 
 ```javascript
-  // clear specific cache once an hour
-  const clearCacheCron: string = app.config && app.config['ssb.cron.clearCacheCron'] ? app.config['ssb.cron.clearCacheCron'] : '01 * * * *'
-  schedule({
-    name: 'clear cache',
-    cron: clearCacheCron,
-    callback: () => {
-      clearPartFromPartCache('kpiCalculator')
-      clearPartFromPartCache('pifCalculator')
-      clearPartFromPartCache('bkibolCalculator')
-      clearPartFromPartCache('husleieCalculator')
-      clearPartFromPartCache('omStatistikken')
-      clearPartFromPartCache('releasedStatistics')
-      clearPartFromPartCache('upcomingReleases')
-      clearPartFromPartCache('articleList')
-      clearPartFromPartCache('archiveAllPublications-nb')
-      clearPartFromPartCache('archiveAllPublications-en')
-    },
-    context: cronContext
-  })
- ```
+export function run(): void {
+  clearPartFromPartCache('kpiCalculator')
+  clearPartFromPartCache('pifCalculator')
+  clearPartFromPartCache('bkibolCalculator')
+  clearPartFromPartCache('husleieCalculator')
+  clearPartFromPartCache('omStatistikken')
+  clearPartFromPartCache('releasedStatistics')
+  clearPartFromPartCache('upcomingReleases')
+  clearPartFromPartCache('articleList')
+  clearPartFromPartCache('relatedFactPage')
+  clearPartFromPartCache('archiveAllPublications-nb')
+  clearPartFromPartCache('archiveAllPublications-en')
+}
+```
+
 ## Creating cache
 Some parts are cached on first render, and always fetched from cache, while others are cached individually by language, or the page they are rendered on. For instance, in the get function of [Statbank Subject Tree controller](/src/main/resources/site/parts/statbankSubjectTree/statbankSubjectTree.ts), we check if the page is viewed in edit mode, and if not, return any existing cached version of the page, in the correct language. 
 

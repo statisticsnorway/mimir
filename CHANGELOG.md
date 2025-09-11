@@ -1,5 +1,52 @@
 # Changelog
 
+## [2.34.0](https://github.com/statisticsnorway/mimir/compare/v2.33.0...v2.34.0) (2025-09-08)
+
+
+### Features
+
+* Support Key Figure Text macro for articles in RSS news [MIM-2355] ([#3412](https://github.com/statisticsnorway/mimir/issues/3412)) ([6bf4ff4](https://github.com/statisticsnorway/mimir/commit/6bf4ff4395883170420a640b30a226218fbb388e))
+
+
+### Bug Fixes
+
+* Add fallback for empty keyFigureData ([20684ee](https://github.com/statisticsnorway/mimir/commit/20684ee7b6fd3aa235cb3d7f5d979f793c0bfaa2))
+* Add fallback for empty keyFigureData [MIM-2355] ([#3423](https://github.com/statisticsnorway/mimir/issues/3423)) ([20684ee](https://github.com/statisticsnorway/mimir/commit/20684ee7b6fd3aa235cb3d7f5d979f793c0bfaa2))
+* Fix sub title conditions for Profiled Box part [MIM-2379] ([#3424](https://github.com/statisticsnorway/mimir/issues/3424)) ([b44e1a4](https://github.com/statisticsnorway/mimir/commit/b44e1a4a4603bb6cb9456fbb10070d659eaf6b66))
+* improve logging of errors in mimir app [MIM-2297] ([#3420](https://github.com/statisticsnorway/mimir/issues/3420)) ([756d028](https://github.com/statisticsnorway/mimir/commit/756d0283638c4b41b94f1d52e4e1125ebd00ae7b))
+* set correct timezone in article metadata [MIM-2336] ([#3426](https://github.com/statisticsnorway/mimir/issues/3426)) ([2cb9608](https://github.com/statisticsnorway/mimir/commit/2cb9608085450df87398605ad10c9bc2c48c1cad))
+
+
+### Build System and dependencies
+
+* bump actions/checkout from 4 to 5 ([#3390](https://github.com/statisticsnorway/mimir/issues/3390)) ([1be9751](https://github.com/statisticsnorway/mimir/commit/1be975135b802c6527cde40a4761401b7c71ab7b))
+* bump eslint-plugin-jsdoc from 52.0.4 to 54.1.0 ([#3389](https://github.com/statisticsnorway/mimir/issues/3389)) ([671779a](https://github.com/statisticsnorway/mimir/commit/671779ae12c1108a4f7afcf32c888cbfc40624fb))
+* Bump jsonstat-toolkit from 1.6.0 to 2.0.0 ([#3331](https://github.com/statisticsnorway/mimir/issues/3331)) ([8221fa8](https://github.com/statisticsnorway/mimir/commit/8221fa802bb7f334ea7a90329fe494005bff32e5))
+* bump the dependencies-minor-updates group across 1 directory with 3 updates ([#3410](https://github.com/statisticsnorway/mimir/issues/3410)) ([57244f5](https://github.com/statisticsnorway/mimir/commit/57244f53df3f636ca899096e6b2f0ac61f6ba5f8))
+* Bump the dependencies-minor-updates group with 2 updates ([#3417](https://github.com/statisticsnorway/mimir/issues/3417)) ([fb23e04](https://github.com/statisticsnorway/mimir/commit/fb23e0490d66e2157c1f389282308b899b8db3bf))
+* Bump the dependencies-patch-updates group with 5 updates ([#3429](https://github.com/statisticsnorway/mimir/issues/3429)) ([f5cf24d](https://github.com/statisticsnorway/mimir/commit/f5cf24d09faf17cf27d1d1335c0bb6baab734a3c))
+
+## [2.33.0](https://github.com/statisticsnorway/mimir/compare/v2.32.0...v2.33.0) (2025-08-27)
+
+
+### Features
+
+* Improve change text phrasing for Key Figure Text macro [MIM-2368] ([#3407](https://github.com/statisticsnorway/mimir/issues/3407)) ([586bb69](https://github.com/statisticsnorway/mimir/commit/586bb69a1493887032239ec7e2d1ca5e344a9ae0))
+* SolrArchive (url service) [MIM-2333] ([#3348](https://github.com/statisticsnorway/mimir/issues/3348)) ([be1d294](https://github.com/statisticsnorway/mimir/commit/be1d294e4efef525aac79c7a7ad59c837fdcfe50))
+
+
+### Bug Fixes
+
+* npm run dev [MIM-2371] ([#3409](https://github.com/statisticsnorway/mimir/issues/3409)) ([fda51f7](https://github.com/statisticsnorway/mimir/commit/fda51f74ae2e5e2c95f9c1a5e63f692f99eaf88c))
+* Set lowercase to time not change period for keyFigureText macro ([e92906e](https://github.com/statisticsnorway/mimir/commit/e92906e0c91bcfdc66508eaabde8ceaf351f0588))
+* Set lowercase to time not change period for keyFigureText macro [MIM-2368] ([#3411](https://github.com/statisticsnorway/mimir/issues/3411)) ([e92906e](https://github.com/statisticsnorway/mimir/commit/e92906e0c91bcfdc66508eaabde8ceaf351f0588))
+
+
+### Build System and dependencies
+
+* Adjustments to release-please after first deploy [MIM-2227] ([#3396](https://github.com/statisticsnorway/mimir/issues/3396)) ([2c2de01](https://github.com/statisticsnorway/mimir/commit/2c2de016299b597db4152c514252a9118e40b451))
+* Release please looking for wrong tag [MIM-2227] ([#3402](https://github.com/statisticsnorway/mimir/issues/3402)) ([ed9c413](https://github.com/statisticsnorway/mimir/commit/ed9c4130e1e247a8f23dd6c207519b38d12fa9e1))
+
 ## [2.32.0](https://github.com/statisticsnorway/mimir/compare/mimir-v2.31.0...mimir-v2.32.0) (2025-08-19)
 
 

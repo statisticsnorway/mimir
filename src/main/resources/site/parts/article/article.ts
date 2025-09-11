@@ -1,7 +1,7 @@
 import { type Content } from '/lib/xp/content'
 import { processHtml, getContent } from '/lib/xp/portal'
 import { render } from '/lib/enonic/react4xp'
-import { formatDate } from '/lib/ssb/utils/dateUtils'
+import { formatDate, setDateTimeAsOsloTimeZone } from '/lib/ssb/utils/dateUtils'
 import { scriptAsset } from '/lib/ssb/utils/utils'
 import { getAssociatedStatisticsLinks, getAssociatedArticleArchiveLinks } from '/lib/ssb/utils/articleUtils'
 
@@ -37,9 +37,9 @@ function renderPart(req: XP.Request) {
   let modifiedDate: string | undefined
   let modifiedDateIso: string | undefined
   if (showModifiedDate?.dateOption?.modifiedDate) {
+    modifiedDateIso = setDateTimeAsOsloTimeZone(showModifiedDate.dateOption?.modifiedDate)
     const dateFormat = showModifiedDate.dateOption?.showModifiedTime ? 'PPp' : 'PPP'
     modifiedDate = formatDate(showModifiedDate.dateOption?.modifiedDate, dateFormat, language)
-    modifiedDateIso = new Date(showModifiedDate.dateOption.modifiedDate).toISOString()
   }
 
   const authorConfig: Article['authorItemSet'] = page.data.authorItemSet

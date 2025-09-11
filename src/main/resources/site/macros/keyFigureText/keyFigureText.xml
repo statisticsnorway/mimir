@@ -3,7 +3,7 @@
   <form>
     <input name="keyFigure" type="ContentSelector">
       <label>Nøkkeltall</label>
-      <occurrences minimum="0" maximum="1" />
+      <occurrences minimum="1" maximum="1" />
       <config>
         <allowPath>${site}</allowPath>
         <allowContentType>keyFigure</allowContentType>
@@ -14,5 +14,22 @@
       <help-text>Her kan man bruke variabler for å vise dynamisk data. De tilgjengelige variablene er $tittel, $tid, $tall, $benevning, $endringstekst, $endringstall, $endringsperiode og $kildetekst.</help-text>
       <occurrences minimum="0" maximum="1" />
     </input>
+    <field-set>
+      <label>Tekstvariasjoner for endringstekst</label>
+      <items>
+        <input name="overwriteIncrease" type="TextLine">
+          <label>Oppgang</label>
+          <occurrences minimum="0" maximum="1" />
+        </input>
+        <input name="overwriteDecrease" type="TextLine">
+          <label>Nedgang</label>
+          <occurrences minimum="0" maximum="1" />
+        </input>
+        <input name="overwriteNoChange" type="TextLine">
+          <label>Ingen endring</label>
+          <occurrences minimum="0" maximum="1" />
+        </input>
+      </items>
+    </field-set>
   </form>
 </macro>

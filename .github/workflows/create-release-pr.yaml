@@ -36,7 +36,7 @@ jobs:
     if: ${{ needs.release-please.outputs.new_version != '' }}
     steps:
       - name: Checkout develop branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           ref: develop
           token: '${{ secrets.GITHUB_TOKEN }}'
@@ -44,5 +44,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NEW_VERSION: ${{ needs.release-please.outputs.new_version }}
-        run:
-          gh pr create --title "Prod release v$NEW_VERSION" --body "PR to merge develop into master to initiate prod release v$NEW_VERSION" --base master --head develop
+        run: |
+          gh pr create --title "chore: Prod release v$NEW_VERSION" --body "PR to merge develop into master to initiate prod release v$NEW_VERSION" --base master --head develop

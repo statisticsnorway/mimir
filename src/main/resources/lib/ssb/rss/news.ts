@@ -5,6 +5,7 @@ import { subDays, format, parseISO } from '/lib/vendor/dateFns'
 import { fetchStatisticsWithReleaseToday, fetchStatisticsDaysBack } from '/lib/ssb/statreg/statistics'
 import { getMainSubjects } from '/lib/ssb/utils/subjectUtils'
 import { nextReleasedPassed } from '/lib/ssb/utils/variantUtils'
+import { getIngressWithKeyFigureText } from '/lib/ssb/utils/keyFigureTextUtils'
 // @ts-ignore
 import { xmlEscape } from '/lib/text-encoding'
 import { type SubjectItem } from '/lib/types/subject'
@@ -75,12 +76,12 @@ function getArticles(mainSubjects: SubjectItem[], days: number): NewsItem[] {
         : undefined
       if (pubDate) {
         const link = getLinkByPath(article._path)
+        const preface = getIngressWithKeyFigureText(article.data.ingress)
         news.push({
           guid: article._id,
           title: article.displayName,
           link,
-          description:
-            article?.x['com-enonic-app-metafields']?.['meta-data']?.seoDescription || article?.data.ingress || '',
+          description: article?.x['com-enonic-app-metafields']?.['meta-data']?.seoDescription || preface || '',
           category: mainSubject.title,
           subject: mainSubject.name,
           language: article.language === 'en' ? 'en' : 'no',

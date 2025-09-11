@@ -87,8 +87,11 @@ export function fetch(url: string, queryId?: string, processXml?: string, type?:
             response,
           })
         }
-        const message = `Failed with status ${response.status} while fetching tbml data from ${url}`
+        const message = `Failed with status ${response.status} while fetching tbml data from ${url} with error ${response.body}`
         log.error(message)
+        if (response.status <= 500) {
+          throw new Error(message)
+        }
       }
 
       return response
