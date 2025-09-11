@@ -9,6 +9,7 @@ import { getChildNodes, queryNodes, withConnection, getNode } from '/lib/ssb/rep
 import { EVENT_LOG_BRANCH, EVENT_LOG_REPO } from '/lib/ssb/repo/eventLog'
 
 import { cronJobLog } from '/lib/ssb/utils/serverLog'
+import { subDays } from '/lib/vendor/dateFns'
 
 type DeletedCount = { contentId: string; deletedCount: number }
 
@@ -17,10 +18,6 @@ export function deleteExpiredEventLogsForQueries(): void {
   const job: JobEventNode = startJobLog('Delete expired event logs for queries')
   const path = '/queries'
   const maxLogsBeforeDeleting = 10 // Have at least 10 logs left for each query to keep its log history
-  const monthsBeforeLogsExpire = 1
-
-  const expireDate: Date = new Date()
-  expireDate.setMonth(expireDate.getMonth() - monthsBeforeLogsExpire)
 
   let nodeTree: { [key: string]: Node[] } = {}
   let deleteResult: DeletedCount[] = []
@@ -62,9 +59,10 @@ export function deleteExpiredEventLogsForQueries(): void {
       const logCount = logs.length
 
       if (logCount > maxLogsBeforeDeleting) {
+        const daysBeforeLogsExpire = 30
         const toBeDeleted = logs.slice(0, logCount - maxLogsBeforeDeleting).filter((node) => {
           // Even if above 10, keep them if not expired yet
-          return new Date(node._ts) < expireDate
+          return subDays(new Date(node._ts), daysBeforeLogsExpire)
         })
 
         const deletedCount = withConnection(EVENT_LOG_REPO, EVENT_LOG_BRANCH, (conn) => {

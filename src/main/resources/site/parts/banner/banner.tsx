@@ -52,9 +52,9 @@ function Banner(props: BannerProps) {
               <h1 className='mt-0 pt-0 position-relative' aria-hidden='true'>
                 {factPageTitle}
               </h1>
-              <div className='sr-only' role='heading' aria-level='1'>
+              <h1 className='sr-only' role='heading'>
                 {fullFactPageTitle}
-              </div>
+              </h1>
             </div>
           )}
           {selectedPageType === 'general' && pageType !== 'municipality' && (
