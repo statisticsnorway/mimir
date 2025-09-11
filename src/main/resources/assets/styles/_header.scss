@@ -357,7 +357,7 @@ header.ssb-header-wrapper {
     }
 
     .subMenu {
-      color: #2d6975;
+      color: $ssb-dark-4;
       max-height: 0px;
       transition: max-height 0.3s ease-out;
       overflow: hidden;
