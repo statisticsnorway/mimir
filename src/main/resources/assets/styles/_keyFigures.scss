@@ -3,7 +3,7 @@
 
 .key-figures {
   h3 {
-    // @include roboto-condenced;
+    @include roboto-condenced;
     font-weight: bold;
     font-size: 28px !important;
   }

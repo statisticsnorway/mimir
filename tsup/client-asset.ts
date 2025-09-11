@@ -42,7 +42,7 @@ export default function buildAssetConfig(): Options {
         // These settings should match build:style in package.json somewhat
         style: isDev ? 'expanded' : 'compressed',
         loadPaths: ['node_modules', 'node_modules/bootstrap/scss', 'node_modules/@statisticsnorway'],
-        // Supress warnings from bootstrap using depricated @import
+        // Supress warnings from dependencies such as bootstrap still using @import (depicated)
         quietDeps: true,
         async transform(source) {
           const transformers: postcss.AcceptedPlugin[] = [autoprefixer]
