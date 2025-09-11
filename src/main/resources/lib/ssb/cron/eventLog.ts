@@ -60,9 +60,10 @@ export function deleteExpiredEventLogsForQueries(): void {
 
       if (logCount > maxLogsBeforeDeleting) {
         const daysBeforeLogsExpire = 30
+        const expireDate = subDays(new Date(), daysBeforeLogsExpire)
         const toBeDeleted = logs.slice(0, logCount - maxLogsBeforeDeleting).filter((node) => {
           // Even if above 10, keep them if not expired yet
-          return subDays(new Date(node._ts), daysBeforeLogsExpire)
+          return new Date(node._ts) < expireDate
         })
 
         const deletedCount = withConnection(EVENT_LOG_REPO, EVENT_LOG_BRANCH, (conn) => {
