@@ -1,6 +1,5 @@
 import { globSync } from 'glob'
 // import { polyfillNode } from 'esbuild-plugin-polyfill-node';
-// import { print } from 'q-i';
 import { DIR_SRC, DIR_SRC_ASSETS } from './constants'
 import { type Options } from '.'
 
@@ -16,11 +15,7 @@ export default function buildServerConfig(): Options {
     bundle: true, // Needed to bundle @enonic/js-utils
     dts: false, // d.ts files are use useless at runtime
     entry: FILES_SERVER,
-    ignoreWatch: [
-      '**/node_modules/**',
-      '!**/node_modules/@statisticsnorway/**',
-      'build/**'
-    ],
+    ignoreWatch: ['**/node_modules/**', '!**/node_modules/@statisticsnorway/**', 'build/**'],
     env: {
       BROWSER_SYNC_PORT: '3000',
     },

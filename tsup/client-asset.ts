@@ -3,7 +3,6 @@ import { sassPlugin } from 'esbuild-sass-plugin'
 import postcss from 'postcss'
 import autoprefixer from 'autoprefixer'
 import cssnanoPlugin from 'cssnano'
-// import { print } from 'q-i';
 import { DIR_SRC_ASSETS } from './constants'
 import { type Options } from '.'
 
