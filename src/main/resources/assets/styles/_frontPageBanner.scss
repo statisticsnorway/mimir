@@ -1,9 +1,8 @@
 @use 'bootstrap' as *;
-@use 'font';
+@use '@statisticsnorway/ssb-component-library/src/main.scss' as *;
 
 .part-frontpage-banner {
   h1 {
-    font-family: font.$font-roboto-condensed-bold !important;
     font-size: 28px;
     line-height: 40px;
   }
@@ -19,7 +18,7 @@
   
   @include media-breakpoint-down (sm) {
     h1 {
-      font-family: font.$font-roboto-bold !important;
+      @include roboto;
       font-weight: 700;
       font-size: 20px;
     }

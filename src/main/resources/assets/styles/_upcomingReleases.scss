@@ -1,6 +1,5 @@
 @use 'bootstrap' as *;
 @use '@statisticsnorway/ssb-component-library/src/main.scss' as *;
-@use 'font';
 
 .nextStatisticsReleases {
   padding-top: 0.5rem;
@@ -92,13 +91,14 @@
 
     .day {
       font-size: 16px;
-      font-family: font.$font-roboto-condensed-bold;
+      @include roboto-condenced;
+      font-weight: normal;
       line-height: 1.75;
     }
 
     .month {
       font-size: 16px;
-      font-family: font.$font-roboto-plain;
+      @include roboto;
       line-height: 1.75;
     }
   }
@@ -123,7 +123,8 @@
         .day {
           display: block;
           font-size: 40px;
-          font-family: font.$font-roboto-condensed-bold;
+          @include roboto-condenced;
+          font-weight: normal;
           line-height: 1;
         }
       }

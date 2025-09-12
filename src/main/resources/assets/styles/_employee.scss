@@ -1,6 +1,5 @@
 @use 'bootstrap' as *;
 @use '@statisticsnorway/ssb-component-library/src/main.scss' as *;
-@use 'font';
 
 .employee {
   .container {
@@ -57,7 +56,7 @@
       }
 
       > div {
-        font-family: font.$font-open-sans;
+        @include open-sans;
         font-size: 20px;
         line-height: 1.6;
 

@@ -1,6 +1,5 @@
 @use 'bootstrap' as *;
 @use '@statisticsnorway/ssb-component-library/src/main.scss' as *;
-@use 'font';
 
 .header-wrapper {
   background: white;
@@ -142,7 +141,7 @@ header.ssb-header-wrapper {
     border: 0 none;
     background: transparent;
     height: 24px;
-    font-family: font.$font-roboto-plain;
+    @include roboto;
     font-size: 20px;
     font-weight: bold;
     font-stretch: normal;
