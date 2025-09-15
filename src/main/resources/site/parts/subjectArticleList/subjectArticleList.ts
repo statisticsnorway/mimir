@@ -53,12 +53,17 @@ function renderPart(req: XP.Request) {
     key: 'publicationArchive.showing',
     locale: language === 'nb' ? 'no' : language,
   })
+  const articlePluralName: string = localize({
+    key: 'articlePluralName',
+    locale: language === 'nb' ? 'no' : language,
+  })
 
   const props: SubjectArticleListProps = {
     title: headerText,
     showMore,
     showLess,
     showCount,
+    articlePluralName,
     articleServiceUrl: articleServiceUrl,
     currentPath: currentPath,
     start: 0,
