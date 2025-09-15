@@ -96,7 +96,7 @@ function SubjectArticleList(props: SubjectArticleListProps) {
 
   function renderArticles() {
     return (
-      <ol className='list-unstyled' aria-label={`${showCountLabel} ${articlePluralName.toLowerCase()}.`}>
+      <ol className='list-unstyled' aria-label={`${showCountLabel} ${articlePluralName.toLowerCase()}`}>
         {articleList.map(({ title, url, preface, publishDate, publishDateHuman }, i) => {
           return (
             <li key={`${title}-${i}`}>
