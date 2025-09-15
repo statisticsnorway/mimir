@@ -1,3 +1,6 @@
+@use 'bootstrap' as *;
+@use '@statisticsnorway/ssb-component-library/src/main.scss' as *;
+
 .search-result {
   .search-result-head {
     background-color: $ssb-dark-2;
@@ -17,7 +20,7 @@
     .limit-result {
       display: block;
       font-size: 16px;
-      font-family: $font-roboto-bold;
+      @include roboto;
       font-weight: bold;
     }
 

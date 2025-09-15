@@ -6,7 +6,7 @@ import { getLanguage } from '/lib/ssb/utils/language'
 import { type Language } from '/lib/types/language'
 import { randomUnsafeString } from '/lib/ssb/utils/utils'
 
-const fourOFourView = resolve('./404.html')
+const fourOFourView = resolve('./pageNotFound.html')
 const mainErrorView = resolve('./error.html')
 const genericErrorView = resolve('./generic.html')
 
