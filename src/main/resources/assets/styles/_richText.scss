@@ -1,3 +1,5 @@
+@use '@statisticsnorway/ssb-component-library/src/main.scss' as *;
+
 .xp-part.rich-text {
   .rich-text-lead-paragraph {
     @include open-sans;

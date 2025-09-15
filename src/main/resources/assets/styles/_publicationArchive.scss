@@ -1,3 +1,6 @@
+@use 'bootstrap' as *;
+@use '@statisticsnorway/ssb-component-library/src/main.scss' as *;
+
 .publication-archive {
   .publication-archive-head {
     background-color: $ssb-dark-1;
