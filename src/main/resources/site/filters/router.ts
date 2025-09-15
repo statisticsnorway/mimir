@@ -56,8 +56,11 @@ export function filter(req: XP.Request, next: (req: XP.Request) => XP.Response):
     })
   })
 
+  log.debug(`PageTitle: ${JSON.stringify(pageTitle)}`)
   if (pageTitle) {
     const site = getSite()
+    log.debug(`Site: ${JSON.stringify(site)}`)
+    log.debug(`targetResponse: ${JSON.stringify(targetResponse)}`)
     if (site) {
       targetResponse.body = (targetResponse.body as string).replace(
         /(<title>)(.*?)(<\/title>)/i,
