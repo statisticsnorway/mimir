@@ -75,7 +75,7 @@
     "@reduxjs/toolkit": "~2.9.0",
     "@statisticsnorway/ssb-component-library": "~2.5.0",
     "@types/grecaptcha": "^3.0.9",
-    "@types/ramda": "~0.31.0",
+    "@types/ramda": "~0.31.1",
     "@types/react": "~18.3.20",
     "@types/react-mathjax": "^1.0.4",
     "@types/react-router-dom": "^5.3.3",
