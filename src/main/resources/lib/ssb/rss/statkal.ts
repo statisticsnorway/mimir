@@ -126,12 +126,6 @@ function getMainSubject(mainSubjectName: string, allMainSubjects: SubjectItem[],
   return null
 }
 
-function createTitle(release: RssRelease): string {
-  const pattern = release.language === 'en' ? 'dd/MM/yyyy' : 'dd.MM.yyyy'
-  const dateFormattet = formatDate(release.pubDate, pattern, release.language)
-  return `${dateFormattet}: ${release.title}, ${release.periode}`
-}
-
 interface RssRelease {
   guid: string
   title: string
