@@ -86,7 +86,7 @@
     "@types/validator": "~13.15.3",
     "@types/zipcelx": "~1.5.2",
     "autoprefixer": "~10.4.21",
-    "axios": "^1.11.0",
+    "axios": "^1.12.2",
     "babel-loader": "~10.0.0",
     "babel-preset-env": "~1.7.0",
     "browser-sync": "^3.0.4",
