@@ -9,9 +9,10 @@ exports.responseProcessor = (req: XP.Request, res: XP.Response) => {
     const titleRegex = /<title>(.*?)<\/title>/
 
     res.body = (res.body as string).replace(headRegex, (match, headContent) => {
-      const modifiedHeadContent = headContent.replace(titleRegex, (match: string, titleText: string) => {
+      const modifiedHeadContent: string = headContent.replace(titleRegex, (match: string, titleText: string) => {
         return match.replace(titleText, `${environment}: ${titleText}`)
       })
+      log.error(modifiedHeadContent.match(/<title>(.*?)<\/title>/))
       return match.replace(headContent, modifiedHeadContent)
     })
   }

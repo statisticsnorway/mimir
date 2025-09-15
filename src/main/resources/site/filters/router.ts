@@ -16,7 +16,9 @@ export function filter(req: XP.Request, next: (req: XP.Request) => XP.Response):
   if (!municipality && region !== 'kommune') {
     return next(req)
   }
+  log.warning(JSON.stringify(municipality))
   const pageTitle = createPageTitle(req.path, municipality)
+  log.warning(pageTitle)
 
   if (paramKommune) {
     req.params = {
@@ -56,16 +58,14 @@ export function filter(req: XP.Request, next: (req: XP.Request) => XP.Response):
     })
   })
 
-  log.info(`PageTitle: ${JSON.stringify(pageTitle)}`)
   if (pageTitle) {
     const site = getSite()
-    log.info(`Site: ${JSON.stringify(site)}`)
-    log.info(`targetResponse: ${JSON.stringify(targetResponse)}`)
     if (site) {
       targetResponse.body = (targetResponse.body as string).replace(
-        /(<title>)(.*?)(<\/title>)/i,
+        /<title>(.*?)<\/title>/,
         `<title>${pageTitle} – ${site.displayName}</title>`
       )
+      log.warning(targetResponse.body.match(/<title>(.*?)<\/title>/))
     }
   }
 
