@@ -1,3 +1,5 @@
+@use '@statisticsnorway/ssb-component-library/src/main.scss' as *;
+
 .popup-container {
   background-color: $ssb-green-4;
   overflow: hidden;

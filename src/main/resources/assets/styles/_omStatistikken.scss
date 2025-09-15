@@ -1,8 +1,12 @@
+@use 'bootstrap' as *;
+@use '@statisticsnorway/ssb-component-library/src/main.scss' as *;
+
 .part-om-statistikken {
   padding: 0;
 
   .title-wrapper {
-    font-family: $font-roboto-condensed-bold;
+    @include roboto-condenced;
+    font-weight: normal;
     margin-bottom: $spacer * 2;
 
     @include media-breakpoint-down(md) {

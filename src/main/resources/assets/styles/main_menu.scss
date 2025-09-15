@@ -23,10 +23,10 @@ $container-max-widths: (
   xxl: 1400px
 );
 
-@import "bootstrap";
-@import "@statisticsnorway/ssb-component-library/src/main.scss";
-@import "./font";
-@import "./header";
-@import "./footer";
+@use "bootstrap";
+@use "@statisticsnorway/ssb-component-library/src/main.scss";
+@use "./font";
+@use "./header";
+@use "./footer";
 
 

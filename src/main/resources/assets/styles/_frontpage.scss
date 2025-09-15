@@ -1,3 +1,6 @@
+@use 'bootstrap' as *;
+@use '@statisticsnorway/ssb-component-library/src/main.scss' as *;
+
 .part-frontpage-keyfigures {
   background: $ssb-dark-5;
   padding: 60px 0px 60px 0px;
