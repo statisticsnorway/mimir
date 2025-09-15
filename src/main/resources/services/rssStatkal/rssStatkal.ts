@@ -1,10 +1,8 @@
-import { getRssReleasesStatkal, getRssItemsStatkal } from '/lib/ssb/rss/statkal'
+import { getRssReleasesStatkal } from '/lib/ssb/rss/statkal'
 
-export function get(req: XP.Request): XP.Response {
-  const format: string = req.params.format ?? 'json'
-  const isXml = format === 'xml'
+export function get(): XP.Response {
   return {
-    body: isXml ? getRssItemsStatkal() : getRssReleasesStatkal(),
-    contentType: isXml ? 'text/xml' : 'application/json',
+    body: getRssReleasesStatkal(),
+    contentType: 'application/json',
   }
 }
