@@ -236,8 +236,10 @@ export function get(req: XP.Request): XP.Response {
   }
 
   let municipality: MunicipalityWithCounty | undefined
+  let pageTitle
   if (req.params.selfRequest) {
     municipality = getMunicipality(req as RequestWithCode)
+    pageTitle = req.params.pageTitle
   }
 
   let municipalPageType: string | undefined
@@ -284,7 +286,7 @@ export function get(req: XP.Request): XP.Response {
 
   const model: DefaultModel = {
     isFragment,
-    pageTitle: 'SSB', // not really used on normal pages because of SEO app (404 still uses this)
+    pageTitle: pageTitle ?? 'SSB', // not really used on normal pages because of SEO app (404 still uses this)
     canonicalUrl,
     page: page as unknown as Content,
     ...regions,
