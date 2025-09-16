@@ -19,6 +19,7 @@ export function filter(req: XP.Request, next: (req: XP.Request) => XP.Response):
   log.warning(JSON.stringify(municipality))
   const pageTitle = createPageTitle(req.path, municipality)
   log.warning(pageTitle)
+  log.info('paramkommune = ' + paramKommune)
 
   if (paramKommune) {
     req.params = {
@@ -30,6 +31,7 @@ export function filter(req: XP.Request, next: (req: XP.Request) => XP.Response):
   }
 
   const targetId: string | null = getTargetId(req.path)
+  log.info('targetId = ' + targetId)
 
   if (!targetId) {
     return next(req)
@@ -60,6 +62,7 @@ export function filter(req: XP.Request, next: (req: XP.Request) => XP.Response):
 
   if (pageTitle) {
     const site = getSite()
+    log.info('site = ' + site)
     if (site) {
       targetResponse.body = (targetResponse.body as string).replace(
         /<title>(.*?)<\/title>/,
