@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
-import React from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import PropTypes from 'prop-types'
-import { Link, Text } from '@statisticsnorway/ssb-component-library'
+import { Link, Text, Tabs, Divider } from '@statisticsnorway/ssb-component-library'
 import { Col, Row } from 'react-bootstrap'
 import { useMediaQuery } from 'react-responsive'
 
@@ -230,6 +230,7 @@ const exporting = (sourceList, phrases, title) => {
         onclick: downloadAsXLSX(title),
       },
     },
+    showTable: true
   }
 }
 
@@ -251,6 +252,27 @@ const plotOptions = (hasThreshhold, hideTitle, language, legendTitle, numberDeci
 }
 
 function Highmap(props) {
+  const [showTable, setShowTable] = useState(false)
+  const highmapsRef = useRef(null)
+
+  useEffect(() => {
+    const highmapWrapperElement = highmapsRef?.current?.children
+    if (highmapWrapperElement) {
+      const highmapElement = highmapWrapperElement[0]
+      const tableElement = highmapWrapperElement[1]
+
+      if (highmapElement && tableElement) {
+        if (showTable) {
+          tableElement?.classList.remove('d-none')
+          highmapElement?.classList.add('d-none')
+        } else {
+          highmapElement?.classList.remove('d-none')
+          tableElement?.classList.add('d-none')
+        }
+      }
+    }
+  }, [showTable])
+
   const {
     heightAspectRatio,
     mapFile,
@@ -309,6 +331,30 @@ function Highmap(props) {
     },
   }
 
+  function handleTabOnClick(item) {
+    if (item === 'show-as-chart') {
+      setShowTable(false)
+    }
+
+    if (item === 'show-as-table') {
+      setShowTable(true)
+    }
+  }
+
+  function renderShowAsFigureOrTableTab () {
+    return (
+      <>
+        <Tabs activeOnInit="show-as-chart" items={[
+          {title: phrases['highcharts.showAsChart'], path: 'show-as-chart'},
+          {title: phrases['highcharts.showAsTable'], path: 'show-as-table'}
+        ]}
+        onClick={handleTabOnClick}
+        />
+        <Divider className='mb-3' />
+      </>
+    )
+  }
+
   function renderHighchartsSource(sourceLink, index) {
     return (
       <div key={index} className='mt-3'>
@@ -325,7 +371,10 @@ function Highmap(props) {
         <figure className='highcharts-figure mb-0 hide-title'>
           {mapOptions.title?.text && <figcaption className='figure-title'>{mapOptions.title.text}</figcaption>}
           {mapOptions.subtitle?.text && <p className='figure-subtitle'>{mapOptions.subtitle.text}</p>}
-          <HighchartsReact highcharts={Highcharts} constructorType={'mapChart'} options={mapOptions} />
+          {renderShowAsFigureOrTableTab()}
+          <div ref={highmapsRef}>
+            <HighchartsReact highcharts={Highcharts} constructorType={'mapChart'} options={mapOptions} containerProps= {{ref: highmapsRef}} />
+          </div>
         </figure>
         {footnoteText?.map((footnote) => (
           <Col className='footnote col-12' key={`footnote-${footnote}`}>
