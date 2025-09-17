@@ -6,37 +6,12 @@ import { fetchStatisticsWithReleaseToday, fetchStatisticsDaysBack } from '/lib/s
 import { getMainSubjects } from '/lib/ssb/utils/subjectUtils'
 import { nextReleasedPassed } from '/lib/ssb/utils/variantUtils'
 import { getIngressWithKeyFigureText } from '/lib/ssb/utils/keyFigureTextUtils'
-// @ts-ignore
-import { xmlEscape } from '/lib/text-encoding'
 import { type SubjectItem } from '/lib/types/subject'
 import { type Statistic } from '/site/mixins/statistic'
 import { type Article, type Statistics } from '/site/content-types'
 
 const dummyReq: Partial<XP.Request> = {
   branch: 'master',
-}
-
-export function getRssItemsNews(days: number = 1): string | null {
-  const news: NewsItem[] = getNews(days)
-  const xml = `<?xml version="1.0" encoding="utf-8"?>
-    <rssitems count="${news.length}">
-      ${news
-        .map(
-          (n: NewsItem) => `<rssitem>
-        <guid isPermalink="false">${n.guid}</guid>
-        <title>${xmlEscape(n.title)}</title>
-        <link>${n.link}</link>
-        <description>${xmlEscape(n.description)}</description>
-        <category>${xmlEscape(n.category)}</category>
-        <subject>${n.subject}</subject>
-        <language>${n.language}</language>
-        <pubDate>${n.pubDate}</pubDate>
-        <shortname>${n.shortname}</shortname>
-      </rssitem>`
-        )
-        .join('')}
-    </rssitems>`
-  return xml
 }
 
 export function getNews(days: number = 1): NewsItem[] {
