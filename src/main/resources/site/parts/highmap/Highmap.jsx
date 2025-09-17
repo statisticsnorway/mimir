@@ -254,30 +254,23 @@ const plotOptions = (hasThreshhold, hideTitle, language, legendTitle, numberDeci
 
 function Highmap(props) {
   const [showTable, setShowTable] = useState(false)
-  const highmapsRef = useRef(null)
+  const highmapsWrapperRef = useRef(null)
 
   useEffect(() => {
-    const highmapWrapperElement = highmapsRef?.current?.children
-    if (highmapWrapperElement) {
-      const highmapElement = highmapWrapperElement[0]
-      const tableWrapperElement = highmapWrapperElement[1]
+    const highmapWrapperElement = highmapsWrapperRef.current?.children
+    if (!highmapWrapperElement) return
 
-      if (highmapElement && tableWrapperElement) {
-        tableWrapperElement?.classList.add('ssb-table-wrapper')
+    const [highmapElement, tableWrapperElement] = highmapWrapperElement
+    if (!highmapElement || !tableWrapperElement) return
 
-        const tableElement = tableWrapperElement?.children[0]
-        tableElement.classList.add('statistics')
-        tableElement.classList.add('ssb-table')
-
-        if (showTable) {
-          tableWrapperElement?.classList.remove('d-none')
-          highmapElement?.classList.add('d-none')
-        } else {
-          highmapElement?.classList.remove('d-none')
-          tableWrapperElement?.classList.add('d-none')
-        }
-      }
+    tableWrapperElement.classList.add('ssb-table-wrapper')
+    const tableElement = tableWrapperElement.children[0]
+    if (tableElement) {
+      tableElement.classList.add('statistics', 'ssb-table')
     }
+
+    tableWrapperElement.classList.toggle('d-none', !showTable)
+    highmapElement.classList.toggle('d-none', showTable)
   }, [showTable])
 
   const {
@@ -339,13 +332,7 @@ function Highmap(props) {
   }
 
   function handleTabOnClick(item) {
-    if (item === 'show-as-chart') {
-      setShowTable(false)
-    }
-
-    if (item === 'show-as-table') {
-      setShowTable(true)
-    }
+    setShowTable(item === 'show-as-table')
   }
 
   function renderShowAsFigureOrTableTab () {
@@ -379,7 +366,7 @@ function Highmap(props) {
           {mapOptions.title?.text && <figcaption className='figure-title'>{mapOptions.title.text}</figcaption>}
           {mapOptions.subtitle?.text && <p className='figure-subtitle'>{mapOptions.subtitle.text}</p>}
           {renderShowAsFigureOrTableTab()}
-          <div ref={highmapsRef}>
+          <div ref={highmapsWrapperRef}>
             <HighchartsReact highcharts={Highcharts} constructorType={'mapChart'} options={mapOptions} />
           </div>
         </figure>
