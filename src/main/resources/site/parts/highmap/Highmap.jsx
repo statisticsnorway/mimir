@@ -373,7 +373,7 @@ function Highmap(props) {
           {mapOptions.subtitle?.text && <p className='figure-subtitle'>{mapOptions.subtitle.text}</p>}
           {renderShowAsFigureOrTableTab()}
           <div ref={highmapsRef}>
-            <HighchartsReact highcharts={Highcharts} constructorType={'mapChart'} options={mapOptions} containerProps= {{ref: highmapsRef}} />
+            <HighchartsReact highcharts={Highcharts} constructorType={'mapChart'} options={mapOptions} />
           </div>
         </figure>
         {footnoteText?.map((footnote) => (
