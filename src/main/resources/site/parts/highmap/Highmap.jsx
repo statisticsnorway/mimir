@@ -230,7 +230,8 @@ const exporting = (sourceList, phrases, title) => {
         onclick: downloadAsXLSX(title),
       },
     },
-    showTable: true
+    showTable: true,
+    allowTableSorting: false
   }
 }
 
@@ -259,15 +260,21 @@ function Highmap(props) {
     const highmapWrapperElement = highmapsRef?.current?.children
     if (highmapWrapperElement) {
       const highmapElement = highmapWrapperElement[0]
-      const tableElement = highmapWrapperElement[1]
+      const tableWrapperElement = highmapWrapperElement[1]
 
-      if (highmapElement && tableElement) {
+      if (highmapElement && tableWrapperElement) {
+        tableWrapperElement?.classList.add('ssb-table-wrapper')
+
+        const tableElement = tableWrapperElement?.children[0]
+        tableElement.classList.add('statistics')
+        tableElement.classList.add('ssb-table')
+
         if (showTable) {
-          tableElement?.classList.remove('d-none')
+          tableWrapperElement?.classList.remove('d-none')
           highmapElement?.classList.add('d-none')
         } else {
           highmapElement?.classList.remove('d-none')
-          tableElement?.classList.add('d-none')
+          tableWrapperElement?.classList.add('d-none')
         }
       }
     }
