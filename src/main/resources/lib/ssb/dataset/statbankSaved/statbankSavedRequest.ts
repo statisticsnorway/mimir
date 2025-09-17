@@ -50,7 +50,7 @@ export function get(url: string, queryId?: string): object | null {
   if (response.status === 200 && response.body) {
     return {
       html: response.body,
-      json: xmlParser.parse(response.body.replace('&', '&amp;')),
+      json: xmlParser.parse(response.body.replace(/&/g, '&amp;')),
     }
   }
   return null
