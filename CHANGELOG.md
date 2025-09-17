@@ -1,5 +1,36 @@
 # Changelog
 
+## [2.35.0](https://github.com/statisticsnorway/mimir/compare/v2.34.0...v2.35.0) (2025-09-17)
+
+
+### Features
+
+* Add "Show less" functionality to Pagination Hooks [MIM-2312] ([#3309](https://github.com/statisticsnorway/mimir/issues/3309)) ([f99b67d](https://github.com/statisticsnorway/mimir/commit/f99b67d34b216f66fdded3d91f411fe3e4cee689))
+
+
+### Bug Fixes
+
+* Fix simpleStatbank part bug introduced by part cache ([9a797e3](https://github.com/statisticsnorway/mimir/commit/9a797e34e728a488d7714b17b94a037eb9c31cb7))
+* Fix simpleStatbank part bug introduced by part cache [MIM-2396] ([#3442](https://github.com/statisticsnorway/mimir/issues/3442)) ([9a797e3](https://github.com/statisticsnorway/mimir/commit/9a797e34e728a488d7714b17b94a037eb9c31cb7))
+* format article modified date without "oslo/europe" [MIM-2336] ([#3437](https://github.com/statisticsnorway/mimir/issues/3437)) ([1155ac1](https://github.com/statisticsnorway/mimir/commit/1155ac12dde5bbb8249d0c224971f45dfe3c8e1a))
+* format modified date without "oslo/europe" ([1155ac1](https://github.com/statisticsnorway/mimir/commit/1155ac12dde5bbb8249d0c224971f45dfe3c8e1a))
+* set date as iso in article modified date ([50a30af](https://github.com/statisticsnorway/mimir/commit/50a30af356711bdeb4c5b0eabd62d77ca36da4dd))
+* set date as iso in article modified date [MIM-2336] ([#3436](https://github.com/statisticsnorway/mimir/issues/3436)) ([50a30af](https://github.com/statisticsnorway/mimir/commit/50a30af356711bdeb4c5b0eabd62d77ca36da4dd))
+* Use date-fns lib instead of manually subtracting the dates ourselves for delete expired event log logic [MIM-2376] ([#3440](https://github.com/statisticsnorway/mimir/issues/3440)) ([d8c4b42](https://github.com/statisticsnorway/mimir/commit/d8c4b42a889c3715201c0406d9795c07bc1f9bc9))
+
+
+### Build System and dependencies
+
+* Bump @types/ramda from 0.31.0 to 0.31.1 in the dependencies-patch-updates group ([#3443](https://github.com/statisticsnorway/mimir/issues/3443)) ([4a46390](https://github.com/statisticsnorway/mimir/commit/4a463901ddf496cf13d3e0fc961433618a693c7a))
+* Bump @types/ramda in the dependencies-patch-updates group ([4a46390](https://github.com/statisticsnorway/mimir/commit/4a463901ddf496cf13d3e0fc961433618a693c7a))
+* Bump actions/setup-node from 4 to 5 ([#3428](https://github.com/statisticsnorway/mimir/issues/3428)) ([f2ecd10](https://github.com/statisticsnorway/mimir/commit/f2ecd10026ae6b084eff9085e18ce778e8a3198c))
+* Bump google-github-actions/auth from 2.1.12 to 3.0.0 ([#3416](https://github.com/statisticsnorway/mimir/issues/3416)) ([b1cfc63](https://github.com/statisticsnorway/mimir/commit/b1cfc63743cb876b941558160a60fd1715f56767))
+* Bump the dependencies-minor-updates group with 6 updates ([#3430](https://github.com/statisticsnorway/mimir/issues/3430)) ([ce6c3ba](https://github.com/statisticsnorway/mimir/commit/ce6c3ba06180f92d0af5bccdd9a63baf8941af29))
+* Bump uuid from 11.1.0 to 12.0.0 ([#3431](https://github.com/statisticsnorway/mimir/issues/3431)) ([60fe0fd](https://github.com/statisticsnorway/mimir/commit/60fe0fde09584847de12bc8cbfd68d0407d307c8))
+* remove unused dependencies ([229c1d7](https://github.com/statisticsnorway/mimir/commit/229c1d7f170e703460a9ce2250780b7fd9ad2902))
+* remove unused dependencies [MIM-2378] ([#3435](https://github.com/statisticsnorway/mimir/issues/3435)) ([229c1d7](https://github.com/statisticsnorway/mimir/commit/229c1d7f170e703460a9ce2250780b7fd9ad2902))
+* remove unused npm packages ([#3447](https://github.com/statisticsnorway/mimir/issues/3447)) ([065821d](https://github.com/statisticsnorway/mimir/commit/065821deb13455085e9fff05bd46e050d6d888e8))
+
 ## [2.34.0](https://github.com/statisticsnorway/mimir/compare/v2.33.0...v2.34.0) (2025-09-08)
 
 

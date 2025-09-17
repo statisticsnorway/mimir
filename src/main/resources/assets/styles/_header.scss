@@ -1,3 +1,6 @@
+@use 'bootstrap' as *;
+@use '@statisticsnorway/ssb-component-library/src/main.scss' as *;
+
 .header-wrapper {
   background: white;
 
@@ -138,7 +141,7 @@ header.ssb-header-wrapper {
     border: 0 none;
     background: transparent;
     height: 24px;
-    font-family: $font-roboto-plain;
+    @include roboto;
     font-size: 20px;
     font-weight: bold;
     font-stretch: normal;
@@ -357,7 +360,7 @@ header.ssb-header-wrapper {
     }
 
     .subMenu {
-      color: #2d6975;
+      color: $ssb-dark-4;
       max-height: 0px;
       transition: max-height 0.3s ease-out;
       overflow: hidden;

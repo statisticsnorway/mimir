@@ -1,3 +1,6 @@
+@use 'bootstrap' as *;
+@use '@statisticsnorway/ssb-component-library/src/main.scss' as *;
+
 .container {
   padding: 0;
   @include media-breakpoint-down(md) {
@@ -13,7 +16,7 @@
 
 .border-top-green {
   position: relative;
-  border-top: 4px solid $green3;
+  border-top: 4px solid $ssb-green-3;
   background: #ffffff;
   box-shadow: 0 2px 4px 1px rgba(200, 200, 200, 0.5);
   margin-top: 60px;

@@ -1,3 +1,6 @@
+@use 'bootstrap' as *;
+@use '@statisticsnorway/ssb-component-library/src/main.scss' as *;
+
 .page-dashboard {
   background: $ssb-dark-1;
 
@@ -277,7 +280,7 @@
         }
 
         .sort-icon.active {
-          color: #1a9d49;
+          color: $ssb-green-3;
         }
 
         .sort-icon.inactive {

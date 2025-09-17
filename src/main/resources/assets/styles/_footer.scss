@@ -1,3 +1,6 @@
+@use 'bootstrap' as *;
+@use '@statisticsnorway/ssb-component-library/src/main.scss' as *;
+
 footer {
   margin-top: 40px;
 
@@ -118,7 +121,7 @@ footer {
 
       .ssb-title {
         font-size: 16px;
-        font-family: $font-roboto-plain;
+        @include roboto;
       }
     }
 

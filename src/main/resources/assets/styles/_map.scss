@@ -1,7 +1,7 @@
+@use 'bootstrap' as *;
+
 #map {
   height: 100%;
-  .highcharts-container {
-  }
   @include media-breakpoint-down(md) {
     height: 80vh;
   }

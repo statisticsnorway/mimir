@@ -1,3 +1,6 @@
+@use 'bootstrap' as *;
+@use '@statisticsnorway/ssb-component-library/src/main.scss' as *;
+
 .simple-statbank {
   display: inline-block;
   border: 1px solid $ssb-green-5;

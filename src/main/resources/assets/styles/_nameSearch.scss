@@ -1,3 +1,6 @@
+@use 'bootstrap' as *;
+@use '@statisticsnorway/ssb-component-library/src/main.scss' as *;
+
 .name-search {
   margin-top: 2.5rem;
 
@@ -35,7 +38,7 @@
 
   .result-highlight {
     font-size: 1.25rem;
-    font-family: $font-roboto-bold;
+    @include roboto;
 
     .details {
       font-weight: 700;

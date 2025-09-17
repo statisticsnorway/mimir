@@ -37,7 +37,7 @@ function renderPart(req: XP.Request) {
   let modifiedDate: string | undefined
   let modifiedDateIso: string | undefined
   if (showModifiedDate?.dateOption?.modifiedDate) {
-    modifiedDateIso = setDateTimeAsOsloTimeZone(showModifiedDate.dateOption?.modifiedDate).toString()
+    modifiedDateIso = setDateTimeAsOsloTimeZone(showModifiedDate.dateOption?.modifiedDate)
     const dateFormat = showModifiedDate.dateOption?.showModifiedTime ? 'PPp' : 'PPP'
     modifiedDate = formatDate(showModifiedDate.dateOption?.modifiedDate, dateFormat, language)
   }
