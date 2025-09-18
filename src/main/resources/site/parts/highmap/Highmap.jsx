@@ -257,16 +257,11 @@ function Highmap(props) {
 
   useEffect(() => {
     const highmapWrapperElement = highmapsWrapperRef.current?.children
-    if (!highmapWrapperElement) return
+    const tableWrapperElement = highmapWrapperElement?.[1]
+    const tableElement = tableWrapperElement?.children[0]
 
-    const [highmapElement, tableWrapperElement] = highmapWrapperElement
-    if (!highmapElement || !tableWrapperElement) return
-
-    tableWrapperElement.classList.add('ssb-table-wrapper', 'd-none')
-    const tableElement = tableWrapperElement.children[0]
-    if (tableElement) {
-      tableElement.classList.add('statistics', 'ssb-table')
-    }
+    tableWrapperElement?.classList.add('ssb-table-wrapper', 'd-none')
+    tableElement?.classList.add('statistics', 'ssb-table')
   }, [])
 
   const {
