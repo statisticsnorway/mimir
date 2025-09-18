@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
-import React, { useCallback, useState, useEffect, useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import PropTypes from 'prop-types'
@@ -253,7 +253,6 @@ const plotOptions = (hasThreshhold, hideTitle, language, legendTitle, numberDeci
 }
 
 function Highmap(props) {
-  const [showTable, setShowTable] = useState(false)
   const highmapsWrapperRef = useRef(null)
 
   useEffect(() => {
@@ -263,18 +262,12 @@ function Highmap(props) {
     const [highmapElement, tableWrapperElement] = highmapWrapperElement
     if (!highmapElement || !tableWrapperElement) return
 
-    tableWrapperElement.classList.add('ssb-table-wrapper')
+    tableWrapperElement.classList.add('ssb-table-wrapper', 'd-none')
     const tableElement = tableWrapperElement.children[0]
     if (tableElement) {
       tableElement.classList.add('statistics', 'ssb-table')
     }
-
-    tableWrapperElement.classList.toggle('d-none', !showTable)
-    tableWrapperElement.setAttribute('aria-hidden', !showTable)
-    highmapElement.classList.toggle('d-none', showTable)
-    highmapElement.setAttribute('aria-hidden', showTable)
-
-  }, [showTable])
+  }, [])
 
   const {
     heightAspectRatio,
@@ -334,9 +327,20 @@ function Highmap(props) {
     },
   }
 
-  const handleTabOnClick = useCallback((item) => {
-    setShowTable(item === 'show-as-table')
-  }, [])
+  const handleTabOnClick = (item) => {
+    const showTable = item === 'show-as-table'
+
+    const highmapWrapperElement = highmapsWrapperRef.current?.children
+    if (!highmapWrapperElement) return
+
+    const [highmapElement, tableWrapperElement] = highmapWrapperElement
+    if (!highmapElement || !tableWrapperElement) return
+
+    tableWrapperElement.classList.toggle('d-none', !showTable)
+    tableWrapperElement.setAttribute('aria-hidden', !showTable)
+    highmapElement.classList.toggle('d-none', showTable)
+    highmapElement.setAttribute('aria-hidden', showTable)
+  }
 
   function renderShowAsFigureOrTableTab() {
     return (
