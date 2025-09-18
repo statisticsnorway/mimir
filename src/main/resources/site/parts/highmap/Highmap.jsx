@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useCallback, useState, useEffect, useRef } from 'react'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import PropTypes from 'prop-types'
@@ -270,7 +270,10 @@ function Highmap(props) {
     }
 
     tableWrapperElement.classList.toggle('d-none', !showTable)
+    tableWrapperElement.setAttribute('aria-hidden', !showTable)
     highmapElement.classList.toggle('d-none', showTable)
+    highmapElement.setAttribute('aria-hidden', showTable)
+
   }, [showTable])
 
   const {
@@ -331,11 +334,11 @@ function Highmap(props) {
     },
   }
 
-  function handleTabOnClick(item) {
+  const handleTabOnClick = useCallback((item) => {
     setShowTable(item === 'show-as-table')
-  }
+  }, [])
 
-  function renderShowAsFigureOrTableTab () {
+  function renderShowAsFigureOrTableTab() {
     return (
       <>
         <Tabs activeOnInit="show-as-chart" items={[
@@ -367,7 +370,11 @@ function Highmap(props) {
           {mapOptions.subtitle?.text && <p className='figure-subtitle'>{mapOptions.subtitle.text}</p>}
           {renderShowAsFigureOrTableTab()}
           <div ref={highmapsWrapperRef}>
-            <HighchartsReact highcharts={Highcharts} constructorType={'mapChart'} options={mapOptions} />
+            <HighchartsReact
+              highcharts={Highcharts}
+              constructorType='mapChart'
+              options={mapOptions}
+            />
           </div>
         </figure>
         {footnoteText?.map((footnote) => (
