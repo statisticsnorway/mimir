@@ -331,15 +331,12 @@ function Highmap(props) {
     const showTable = item === 'show-as-table'
 
     const highmapWrapperElement = highmapsWrapperRef.current?.children
-    if (!highmapWrapperElement) return
+    const [highmapElement, tableWrapperElement] = highmapWrapperElement ?? []
 
-    const [highmapElement, tableWrapperElement] = highmapWrapperElement
-    if (!highmapElement || !tableWrapperElement) return
-
-    tableWrapperElement.classList.toggle('d-none', !showTable)
-    tableWrapperElement.setAttribute('aria-hidden', !showTable)
-    highmapElement.classList.toggle('d-none', showTable)
-    highmapElement.setAttribute('aria-hidden', showTable)
+    tableWrapperElement?.classList.toggle('d-none', !showTable)
+    tableWrapperElement?.setAttribute('aria-hidden', !showTable)
+    highmapElement?.classList.toggle('d-none', showTable)
+    highmapElement?.setAttribute('aria-hidden', showTable)
   }
 
   function renderShowAsFigureOrTableTab() {
