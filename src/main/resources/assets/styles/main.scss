@@ -1,6 +1,6 @@
-$grid-gutter-width: 20px;
+$custom-grid-gutter-width: 20px;
 
-$grid-breakpoints: (
+$custom-grid-breakpoints: (
   // Extra small screen / phone
   xs: 0,
   // Small screen / phone
@@ -15,14 +15,19 @@ $grid-breakpoints: (
   xxl: 2000px
 );
 
-$container-max-widths: (
+$custom-container-max-widths: (
   sm: 540px,
   md: 720px,
   lg: 960px,
   xl: 1180px,
 );
 
-@use 'bootstrap' as bootstrap;
+@use "bootstrap" as bootstrap with (
+  $container-max-widths: $custom-container-max-widths,
+  $grid-gutter-width:$custom-grid-gutter-width,
+  $grid-breakpoints:$custom-grid-breakpoints
+);
+
 @use '@statisticsnorway/ssb-component-library/src/main.scss' as component-lib;
 
 @use 'map';
