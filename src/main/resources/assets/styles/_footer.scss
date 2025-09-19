@@ -1,5 +1,5 @@
 @use 'bootstrap' as *;
-@use '@statisticsnorway/ssb-component-library/src/main.scss' as *;
+@use '@statisticsnorway/ssb-component-library/src/main.scss' as component-lib;
 
 footer {
   margin-top: 40px;
@@ -73,20 +73,20 @@ footer {
 
     .ssb-accordion {
       .expand-icon * {
-        color: $ssb-green-2;
+        color: component-lib.$ssb-green-2;
         font-size: 20px;
       }
 
       .header-text {
-        color: $ssb-white;
+        color: component-lib.$ssb-white;
       }
 
       .sub-header {
-        color: $ssb-white;
+        color: component-lib.$ssb-white;
       }
 
       .accordion-body {
-        color: $ssb-white;
+        color: component-lib.$ssb-white;
 
         .ssb-link {
           min-width: 44px;
@@ -101,7 +101,7 @@ footer {
       &:hover {
         .header-text,
         .sub-header {
-          color: $ssb-green-2;
+          color: component-lib.$ssb-green-2;
         }
       }
     }
@@ -121,7 +121,7 @@ footer {
 
       .ssb-title {
         font-size: 16px;
-        @include roboto;
+        @include component-lib.roboto;
       }
     }
 
@@ -173,7 +173,7 @@ footer {
         border: none;
 
         .link-text {
-          border-bottom: 1px solid $ssb-green-2;
+          border-bottom: 1px solid component-lib.$ssb-green-2;
           padding-bottom: 2px;
         }
       }
@@ -201,7 +201,7 @@ footer {
         border: none;
 
         .link-text {
-          border-bottom: 1px solid $ssb-green-2;
+          border-bottom: 1px solid component-lib.$ssb-green-2;
           padding-bottom: 2px;
         }
       }
@@ -254,7 +254,7 @@ footer {
         border: none;
 
         .link-text {
-          border-bottom: 1px solid $ssb-green-2;
+          border-bottom: 1px solid component-lib.$ssb-green-2;
           padding-bottom: 2px;
         }
       }
@@ -264,12 +264,12 @@ footer {
       margin-top: 1rem;
 
       button {
-        @include reset-button;
+        @include component-lib.reset-button;
         text-decoration: none;
 
         .link-text {
           line-height: 1.7;
-          border-bottom: 1px solid $ssb-green-2;
+          border-bottom: 1px solid component-lib.$ssb-green-2;
         }
       }
     }

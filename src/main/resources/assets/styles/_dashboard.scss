@@ -1,8 +1,8 @@
 @use 'bootstrap' as *;
-@use '@statisticsnorway/ssb-component-library/src/main.scss' as *;
+@use '@statisticsnorway/ssb-component-library/src/main.scss' as component-lib;
 
 .page-dashboard {
-  background: $ssb-dark-1;
+  background: component-lib.$ssb-dark-1;
 
   header {
     margin-bottom: 30px;
@@ -74,7 +74,7 @@
 
   h1 {
     font-size: 36px;
-    border-left: 2px solid $ssb-green-3;
+    border-left: 2px solid component-lib.$ssb-green-3;
     line-height: 1;
 
     padding-left: $spacer * .5;
@@ -110,7 +110,7 @@
           bottom: 0;
 
           font-weight: bold;
-          color: $ssb-red-3;
+          color: component-lib.$ssb-red-3;
         }
       }
     }
@@ -131,18 +131,18 @@
   }
 
   .connected-wrapper {
-    background-color: $ssb-blue-3;
-    color: $ssb-white;
+    background-color: component-lib.$ssb-blue-3;
+    color: component-lib.$ssb-white;
   }
 
   .disconnected-wrapper {
-    background-color: $ssb-red-3;
-    color: $ssb-white;
+    background-color: component-lib.$ssb-red-3;
+    color: component-lib.$ssb-white;
   }
 
   .server-time {
-    background-color: $ssb-white;
-    border: 1px solid $ssb-dark-6;
+    background-color: component-lib.$ssb-white;
+    border: 1px solid component-lib.$ssb-dark-6;
     margin-right: 1rem;
   }
 
@@ -158,15 +158,15 @@
       font-size: 1.5rem;
 
       svg {
-        color: $ssb-white;
-        background-color: $ssb-red-3;
+        color: component-lib.$ssb-white;
+        background-color: component-lib.$ssb-red-3;
         margin-right: .5rem;
       }
     }
   }
 
   .tables-wrapper {
-    border: 2px solid $ssb-green-5;
+    border: 2px solid component-lib.$ssb-green-5;
     background: white;
     margin-bottom: $spacer * 3;
 
@@ -195,7 +195,7 @@
         border: 2px solid #dee2e6;
       }
       tbody tr {
-        background-color: $ssb-white;
+        background-color: component-lib.$ssb-white;
 
         &:nth-child(4n+1), &:nth-child(4n+2) {
           background: #F2F2F2;
@@ -217,25 +217,25 @@
     display: block;
   }
   .ok:before {
-    color: $ssb-green-4
+    color: component-lib.$ssb-green-4
   }
   .error:before {
-    color: $ssb-red-3
+    color: component-lib.$ssb-red-3
   }
 
   .nav {
     border-bottom: none;
     .nav-link {
       color: black;
-      background: $ssb-green-1;
-      border-color: $ssb-green-5 $ssb-green-5 transparent;
+      background: component-lib.$ssb-green-1;
+      border-color: component-lib.$ssb-green-5 component-lib.$ssb-green-5 transparent;
 
       &:hover {
         border-color: black black transparent;
       }
       &.active {
-        background: $ssb-white;
-        border-bottom: 2px solid $ssb-white;
+        background: component-lib.$ssb-white;
+        border-bottom: 2px solid component-lib.$ssb-white;
         margin-bottom: -2px;
       }
     }
@@ -280,7 +280,7 @@
         }
 
         .sort-icon.active {
-          color: $ssb-green-3;
+          color: component-lib.$ssb-green-3;
         }
 
         .sort-icon.inactive {
@@ -319,7 +319,7 @@
         }
 
         .error {
-          color: $ssb-red-3
+          color: component-lib.$ssb-red-3
         }
       }
     }
@@ -330,7 +330,7 @@
   }
 
   .ssb-accordion.warning .accordion-header .sub-header {
-    color: $ssb-red-3;
+    color: component-lib.$ssb-red-3;
   }
 
   .ssb-dropdown label, .dropdown-update-statistics svg {
@@ -374,7 +374,7 @@
   //     background-color: black;
   //     margin: auto;
   //     padding: 2px 4px;
-  //     font-family: 'Roboto Condensed';
+  //     font-family: 'component-lib.roboto Condensed';
   //     font-style: oblique;
   //   }
   //   background: repeating-linear-gradient(

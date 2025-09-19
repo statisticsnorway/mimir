@@ -1,17 +1,17 @@
-$font-roboto-plain: 'Roboto', sans-serif;
-$font-roboto-condensed: 'Roboto Condensed', sans-serif;
+$font-roboto-plain: 'roboto', sans-serif;
+$font-roboto-condensed: 'roboto Condensed', sans-serif;
 
-.roboto-bold {
+.component-lib.roboto-bold {
   font-family: $font-roboto-plain;
   font-weight: 700;
 }
 
-.roboto-condensed-bold {
+.component-lib.roboto-condensed-bold {
   font-family: $font-roboto-condensed;
   font-weight: 700;
 }
 
-.roboto-plain {
+.component-lib.roboto-plain {
   font-family: $font-roboto-plain;
   font-weight: 400;
 }

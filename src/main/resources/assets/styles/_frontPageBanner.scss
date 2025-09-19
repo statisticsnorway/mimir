@@ -1,5 +1,5 @@
 @use 'bootstrap' as *;
-@use '@statisticsnorway/ssb-component-library/src/main.scss' as *;
+@use '@statisticsnorway/ssb-component-library/src/main.scss' as component-lib;
 
 .part-frontpage-banner {
   h1 {
@@ -18,7 +18,7 @@
   
   @include media-breakpoint-down (sm) {
     h1 {
-      @include roboto;
+      @include component-lib.roboto;
       font-weight: 700;
       font-size: 20px;
     }

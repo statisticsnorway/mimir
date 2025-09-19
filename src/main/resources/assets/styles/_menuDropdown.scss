@@ -1,8 +1,8 @@
 @use 'bootstrap' as *;
-@use '@statisticsnorway/ssb-component-library/src/main.scss' as *;
+@use '@statisticsnorway/ssb-component-library/src/main.scss' as component-lib;
 
 .part-menu-dropdown {
-  @include roboto;
+  @include component-lib.roboto;
   background-color: white;
 
   .container {
@@ -59,10 +59,10 @@
     text-decoration: none;
     color: #030303;
     &:focus {
-      border: $ssb-green-4 1px solid;
+      border: component-lib.$ssb-green-4 1px solid;
     }
     svg {
-      color: $ssb-green-4;
+      color: component-lib.$ssb-green-4;
     }
   }
 

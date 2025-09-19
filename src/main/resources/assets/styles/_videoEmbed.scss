@@ -1,4 +1,4 @@
-@use '@statisticsnorway/ssb-component-library/src/main.scss' as *;
+@use '@statisticsnorway/ssb-component-library/src/main.scss' as component-lib;
 
 .xp-part.video-embed {
   width: 100%;
@@ -26,6 +26,6 @@
     display: block;
     height: 80%;
     width: 90%;
-    background-color: $ssb-dark-5;
+    background-color: component-lib.$ssb-dark-5;
   }
 }

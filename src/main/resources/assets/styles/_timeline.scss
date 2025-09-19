@@ -1,5 +1,5 @@
 @use 'bootstrap' as *;
-@use '@statisticsnorway/ssb-component-library/src/main.scss' as *;
+@use '@statisticsnorway/ssb-component-library/src/main.scss' as component-lib;
 
 .ssb-timeline {
   .title-container {
@@ -37,9 +37,9 @@
 
       .ssb-tag {
         &.active {
-          background: $ssb-dark-5;
-          border: 2px solid $ssb-dark-5;
-          color: $ssb-white;
+          background: component-lib.$ssb-dark-5;
+          border: 2px solid component-lib.$ssb-dark-5;
+          color: component-lib.$ssb-white;
         }
       }
     }
@@ -58,7 +58,7 @@
     .circle {
       width: 16px;
       height: 16px;
-      background-color: $ssb-dark-5;
+      background-color: component-lib.$ssb-dark-5;
       border-radius: 50%;
       position: absolute;
       top: -10px;
@@ -69,7 +69,7 @@
       content: '';
       width: 4px;
       height: 100%;
-      background: $ssb-dark-5;
+      background: component-lib.$ssb-dark-5;
       position: absolute;
       top: 0;
     }
@@ -94,7 +94,7 @@
       .year {
         width: 180px;
         height: 80px;
-        background: $ssb-dark-5;
+        background: component-lib.$ssb-dark-5;
         border-radius: 4px;
         position: absolute;
         align-content: center;
@@ -150,7 +150,7 @@
           .ssb-category-link {
             &:hover, &:focus {
               .ssb-title {
-                color: $ssb-white !important;
+                color: component-lib.$ssb-white !important;
               }
             }
           }
@@ -159,7 +159,7 @@
 
       .event-box {
         background: #fff;
-        border: 1px solid $ssb-dark-5;
+        border: 1px solid component-lib.$ssb-dark-5;
         border-radius: 8px;
         display: grid;
         padding: 20px 40px;

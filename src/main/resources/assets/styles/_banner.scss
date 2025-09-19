@@ -1,5 +1,6 @@
 @use 'bootstrap' as *;
-@use '@statisticsnorway/ssb-component-library/src/main.scss' as *;
+@use '@statisticsnorway/ssb-component-library/src/main.scss' as component-lib;
+@use 'globalStyles';
 
 .part-banner {
   min-height: 272px;
@@ -31,7 +32,7 @@
 
   .subtitle {
     text-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
-    font-size: $header-font-size;
+    font-size: globalStyles.$header-font-size;
   }
 
   h1 {
@@ -49,7 +50,7 @@
   }
 
   &.fact-page-banner {
-    background-color: $ssb-green-3;
+    background-color: component-lib.$ssb-green-3;
   }
 
   &.landing-page-banner {
