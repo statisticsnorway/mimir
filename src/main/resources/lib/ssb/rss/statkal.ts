@@ -8,50 +8,12 @@ import { getMainSubjects } from '/lib/ssb/utils/subjectUtils'
 import { calculatePeriod } from '/lib/ssb/utils/variantUtils'
 import { addDays, isWithinInterval } from '/lib/vendor/dateFns'
 import { formatDate, getTimeZoneIso } from '/lib/ssb/utils/dateUtils'
-
-// @ts-ignore
-import { xmlEscape } from '/lib/text-encoding'
 import * as util from '/lib/util'
 import { getContactsFromRepo } from '/lib/ssb/statreg/contacts'
 import { type SubjectItem } from '/lib/types/subject'
 
 const dummyReq: Partial<XP.Request> = {
   branch: 'master',
-}
-
-export function getRssItemsStatkal(): string | null {
-  const rssReleases: RssRelease[] = getRssReleasesStatkal()
-
-  const xml = rssReleases
-    ? `<?xml version="1.0" encoding="utf-8"?>
-	<rssitems count="${rssReleases.length}">
-	  ${[...rssReleases]
-      .map(
-        (r: RssRelease) => `<rssitem>
-		<guid isPermalink="false">release-${r.guid}-${r.language}</guid>
-		<title>${xmlEscape(createTitle(r))}</title>
-		<link>${r.link}</link>
-		<description>${xmlEscape(r.description)}</description>
-		<category>${xmlEscape(r.category)}</category>
-		<subject>${r.subject}</subject>
-		<language>${r.language}</language>
-		${r.contacts
-      .map(
-        (c: Contact) => `<contact>
-			<name>${c.name}</name>
-			<email>${c.email}</email>
-			<phone>${c.telephone}</phone>
-		</contact>`
-      )
-      .join('')}
-	  	<pubDate>${r.pubDate}</pubDate>
-	  	<shortname>${r.shortname}</shortname>
-	  </rssitem>`
-      )
-      .join('')}
-	</rssitems>`
-    : null
-  return xml
 }
 
 export function getRssReleasesStatkal(): RssRelease[] {
@@ -162,12 +124,6 @@ function getMainSubject(mainSubjectName: string, allMainSubjects: SubjectItem[],
   }
 
   return null
-}
-
-function createTitle(release: RssRelease): string {
-  const pattern = release.language === 'en' ? 'dd/MM/yyyy' : 'dd.MM.yyyy'
-  const dateFormattet = formatDate(release.pubDate, pattern, release.language)
-  return `${dateFormattet}: ${release.title}, ${release.periode}`
 }
 
 interface RssRelease {
