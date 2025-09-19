@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.35.1](https://github.com/statisticsnorway/mimir/compare/v2.35.0...v2.35.1) (2025-09-19)
+
+
+### Bug Fixes
+
+* fix bootstrap overrides ([#3454](https://github.com/statisticsnorway/mimir/issues/3454)) ([35f25f6](https://github.com/statisticsnorway/mimir/commit/35f25f6f1077de3fd4983bd5b9172d2cdbf38027))
+* Replace all & with &amp; for statbankSavedRequest ([818cd11](https://github.com/statisticsnorway/mimir/commit/818cd118402dc31f12df63f8cf669ba8047b21a7))
+* Replace all & with &amp; for statbankSavedRequest [MIM-2136] ([#3449](https://github.com/statisticsnorway/mimir/issues/3449)) ([818cd11](https://github.com/statisticsnorway/mimir/commit/818cd118402dc31f12df63f8cf669ba8047b21a7))
+
 ## [2.35.0](https://github.com/statisticsnorway/mimir/compare/v2.34.0...v2.35.0) (2025-09-17)
 
 
