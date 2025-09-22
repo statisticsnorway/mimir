@@ -415,6 +415,7 @@ Highmap.propTypes = {
   footnoteText: PropTypes.array,
   phrases: PropTypes.object,
   language: PropTypes.string,
+  highmapId: PropTypes.string
 }
 
 export default (props) => <Highmap {...props} />
