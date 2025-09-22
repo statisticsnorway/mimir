@@ -290,7 +290,6 @@ function Highmap(props) {
 
     tableWrapperElement?.setAttribute('id', 'tabpanel-1-' + highmapId)
     tableWrapperElement?.setAttribute('role', 'tabpanel')
-    tableWrapperElement?.setAttribute('aria-labelledby', 'tabpanel-1-' + highmapId)
   }, [])
 
   const desktop = useMediaQuery({
