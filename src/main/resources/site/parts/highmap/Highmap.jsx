@@ -253,18 +253,7 @@ const plotOptions = (hasThreshhold, hideTitle, language, legendTitle, numberDeci
 }
 
 function Highmap(props) {
-  const highmapsWrapperRef = useRef(null)
-
-  useEffect(() => {
-    const highmapWrapperElement = highmapsWrapperRef.current?.children
-    const tableWrapperElement = highmapWrapperElement?.[1]
-    const tableElement = tableWrapperElement?.children[0]
-
-    tableWrapperElement?.classList.add('ssb-table-wrapper', 'd-none')
-    tableElement?.classList.add('statistics', 'ssb-table')
-  }, [])
-
-  const {
+    const {
     heightAspectRatio,
     mapFile,
     legendAlign,
@@ -282,7 +271,27 @@ function Highmap(props) {
     sourceList,
     phrases,
     footnoteText,
+    highmapId
   } = props
+
+  const highmapsWrapperRef = useRef(null)
+
+  useEffect(() => {
+    const highmapWrapperElement = highmapsWrapperRef.current?.children
+    const [highmapElement, tableWrapperElement] = highmapWrapperElement ?? []
+    const tableElement = tableWrapperElement?.children[0]
+
+    tableWrapperElement?.classList.add('ssb-table-wrapper', 'd-none')
+    tableElement?.classList.add('statistics', 'ssb-table')
+
+    // Add Tab component accessibility tags for Highmaps and table
+    highmapElement?.setAttribute('id', 'tabpanel-0-' + highmapId)
+    highmapElement?.setAttribute('role', 'tabpanel')
+
+    tableWrapperElement?.setAttribute('id', 'tabpanel-1-' + highmapId)
+    tableWrapperElement?.setAttribute('role', 'tabpanel')
+    tableWrapperElement?.setAttribute('aria-labelledby', 'tabpanel-1-' + highmapId)
+  }, [])
 
   const desktop = useMediaQuery({
     minWidth: 992,
@@ -337,7 +346,10 @@ function Highmap(props) {
   function renderShowAsFigureOrTableTab() {
     return (
       <>
-        <Tabs activeOnInit="show-as-chart" items={[
+        <Tabs
+        id={highmapId}
+        activeOnInit="show-as-chart"
+        items={[
           {title: phrases['highcharts.showAsChart'], path: 'show-as-chart'},
           {title: phrases['highcharts.showAsTable'], path: 'show-as-table'}
         ]}
@@ -361,7 +373,7 @@ function Highmap(props) {
   return (
     <Row>
       <Col className='col-12'>
-        <figure className='highcharts-figure mb-0 hide-title'>
+        <figure id={`figure-${highmapId}`} className='highcharts-figure mb-0 hide-title'>
           {mapOptions.title?.text && <figcaption className='figure-title'>{mapOptions.title.text}</figcaption>}
           {mapOptions.subtitle?.text && <p className='figure-subtitle'>{mapOptions.subtitle.text}</p>}
           {renderShowAsFigureOrTableTab()}
