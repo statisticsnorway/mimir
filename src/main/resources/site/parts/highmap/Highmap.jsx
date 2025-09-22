@@ -253,7 +253,7 @@ const plotOptions = (hasThreshhold, hideTitle, language, legendTitle, numberDeci
 }
 
 function Highmap(props) {
-    const {
+  const {
     heightAspectRatio,
     mapFile,
     legendAlign,
