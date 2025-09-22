@@ -1,15 +1,21 @@
 import React from 'react'
-import MathJax from 'react-mathjax'
+import { MathJaxContext, MathJax } from 'better-react-mathjax'
 
 interface MathsProps {
   mathsFormula: string
 }
 
 const Maths: React.FC<MathsProps> = ({ mathsFormula }) => {
+  const config = {
+    loader: {
+      load: ['a11y/semantic-enrich'], // v3.0
+    },
+  }
+
   return (
-    <MathJax.Provider>
-      <MathJax.Node formula={mathsFormula} />
-    </MathJax.Provider>
+    <MathJaxContext config={config}>
+      <MathJax dynamic>{`\\(${mathsFormula}\\)`}</MathJax>
+    </MathJaxContext>
   )
 }
 
