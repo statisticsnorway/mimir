@@ -14,7 +14,9 @@ const Maths: React.FC<MathsProps> = ({ mathsFormula }) => {
 
   return (
     <MathJaxContext config={config}>
-      <MathJax dynamic>{`\\(${mathsFormula}\\)`}</MathJax>
+      <MathJax>
+        <span className='d-flex justify-content-center'>{`\\(${mathsFormula}\\)`}</span>
+      </MathJax>
     </MathJaxContext>
   )
 }
