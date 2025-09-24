@@ -1,3 +1,5 @@
+// Processor to add municipality name to html title for "kommunefakta" after SEO-app has modified title
+
 exports.responseProcessor = (req: XP.Request, res: XP.Response) => {
   const paramKommune: string | undefined = req.params.kommune
 
