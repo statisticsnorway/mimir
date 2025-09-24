@@ -40,7 +40,14 @@ function Banner(props: BannerProps) {
           {selectedPageType === 'kommunefakta' && (
             <div className='col-12'>
               <div className='subtitle mb-3 roboto-plain position-relative'>{pageDisplayName}</div>
-              {municipalityTitle && <h1 className='mt-0 pt-0 position-relative'>{municipalityTitle}</h1>}
+              {municipalityTitle && (
+                <h1 className='mt-0 pt-0 position-relative'>
+                  {municipalityTitle}
+                  <span hidden aria-hidden>
+                    {pageDisplayName}
+                  </span>
+                </h1>
+              )}
             </div>
           )}
 
