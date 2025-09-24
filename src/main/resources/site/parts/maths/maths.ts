@@ -45,7 +45,7 @@ function renderPart(req: XP.Request, config: string) {
 
   if (req.mode === 'edit') {
     return render('site/parts/maths/maths', props, req, {
-      body: `<div class="info-text"><span>NB!! Formel vises ikke i edit mode, se i forhåndsvisningsmodus</span></div>`,
+      body: `<div class="info-text"><span>NB!! Formelen vises i LaTeX format i redigeringsmodus. Se formelen i rendret format i forhåndsvisningsmodus.</span></div>`,
     })
   }
 
