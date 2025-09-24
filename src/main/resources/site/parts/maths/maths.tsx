@@ -6,8 +6,14 @@ interface MathsProps {
 }
 
 const Maths: React.FC<MathsProps> = ({ mathsFormula }) => {
+  const config = {
+    loader: {
+      load: ['a11y/semantic-enrich'], // v.3.0
+    },
+  }
+
   return (
-    <MathJaxContext>
+    <MathJaxContext config={config}>
       <MathJax>
         <span className='d-flex justify-content-center'>{`\\(${mathsFormula}\\)`}</span>
       </MathJax>
