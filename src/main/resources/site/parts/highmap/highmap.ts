@@ -111,6 +111,7 @@ function renderPart(req: XP.Request, highmapId: string | undefined): XP.Response
       footnoteText: highmapContent.data.footnoteText ? util.data.forceArray(highmapContent.data.footnoteText) : [],
       phrases: getPhrases(page),
       language: page.language,
+      highmapId,
     }
     // R4xp disables hydration in edit mode, but highmap need hydration to show
     // we sneaky swap mode since we want a render of highmap in edit mode
