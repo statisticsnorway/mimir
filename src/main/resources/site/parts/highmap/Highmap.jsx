@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import PropTypes from 'prop-types'
-import { Link, Text } from '@statisticsnorway/ssb-component-library'
+import { Link, Text, Tabs, Divider } from '@statisticsnorway/ssb-component-library'
 import { Col, Row } from 'react-bootstrap'
 import { useMediaQuery } from 'react-responsive'
 
@@ -230,6 +230,8 @@ const exporting = (sourceList, phrases, title) => {
         onclick: downloadAsXLSX(title),
       },
     },
+    showTable: true,
+    allowTableSorting: false
   }
 }
 
@@ -269,7 +271,26 @@ function Highmap(props) {
     sourceList,
     phrases,
     footnoteText,
+    highmapId
   } = props
+
+  const highmapsWrapperRef = useRef(null)
+
+  useEffect(() => {
+    const highmapWrapperElement = highmapsWrapperRef.current?.children
+    const [highmapElement, tableWrapperElement] = highmapWrapperElement ?? []
+    const tableElement = tableWrapperElement?.children[0]
+
+    tableWrapperElement?.classList.add('ssb-table-wrapper', 'd-none')
+    tableElement?.classList.add('statistics', 'ssb-table')
+
+    // Add Tab component accessibility tags for Highmaps and table
+    highmapElement?.setAttribute('id', 'tabpanel-0-' + highmapId)
+    highmapElement?.setAttribute('role', 'tabpanel')
+
+    tableWrapperElement?.setAttribute('id', 'tabpanel-1-' + highmapId)
+    tableWrapperElement?.setAttribute('role', 'tabpanel')
+  }, [])
 
   const desktop = useMediaQuery({
     minWidth: 992,
@@ -309,6 +330,35 @@ function Highmap(props) {
     },
   }
 
+  const handleTabOnClick = (item) => {
+    const showTable = item === 'show-as-table'
+
+    const highmapWrapperElement = highmapsWrapperRef.current?.children
+    const [highmapElement, tableWrapperElement] = highmapWrapperElement ?? []
+
+    tableWrapperElement?.classList.toggle('d-none', !showTable)
+    tableWrapperElement?.setAttribute('aria-hidden', !showTable)
+    highmapElement?.classList.toggle('d-none', showTable)
+    highmapElement?.setAttribute('aria-hidden', showTable)
+  }
+
+  function renderShowAsFigureOrTableTab() {
+    return (
+      <>
+        <Tabs
+        id={highmapId}
+        activeOnInit="show-as-chart"
+        items={[
+          {title: phrases['highcharts.showAsChart'], path: 'show-as-chart'},
+          {title: phrases['highcharts.showAsTable'], path: 'show-as-table'}
+        ]}
+        onClick={handleTabOnClick}
+        />
+        <Divider className='mb-3' />
+      </>
+    )
+  }
+
   function renderHighchartsSource(sourceLink, index) {
     return (
       <div key={index} className='mt-3'>
@@ -322,10 +372,17 @@ function Highmap(props) {
   return (
     <Row>
       <Col className='col-12'>
-        <figure className='highcharts-figure mb-0 hide-title'>
+        <figure id={`figure-${highmapId}`} className='highcharts-figure mb-0 hide-title'>
           {mapOptions.title?.text && <figcaption className='figure-title'>{mapOptions.title.text}</figcaption>}
           {mapOptions.subtitle?.text && <p className='figure-subtitle'>{mapOptions.subtitle.text}</p>}
-          <HighchartsReact highcharts={Highcharts} constructorType={'mapChart'} options={mapOptions} />
+          {renderShowAsFigureOrTableTab()}
+          <div ref={highmapsWrapperRef}>
+            <HighchartsReact
+              highcharts={Highcharts}
+              constructorType='mapChart'
+              options={mapOptions}
+            />
+          </div>
         </figure>
         {footnoteText?.map((footnote) => (
           <Col className='footnote col-12' key={`footnote-${footnote}`}>
@@ -358,6 +415,7 @@ Highmap.propTypes = {
   footnoteText: PropTypes.array,
   phrases: PropTypes.object,
   language: PropTypes.string,
+  highmapId: PropTypes.string
 }
 
 export default (props) => <Highmap {...props} />
