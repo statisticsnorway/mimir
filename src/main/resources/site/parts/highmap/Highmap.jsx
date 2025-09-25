@@ -283,6 +283,7 @@ function Highmap(props) {
 
     tableWrapperElement?.classList.add('ssb-table-wrapper', 'd-none')
     tableElement?.classList.add('statistics', 'ssb-table')
+    tableElement?.setAttribute('tabindex', '0')
 
     // Add Tab component accessibility tags for Highmaps and table
     highmapElement?.setAttribute('id', 'tabpanel-0-' + highmapId)
