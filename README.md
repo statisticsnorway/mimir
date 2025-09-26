@@ -4,7 +4,7 @@ This is the abbreviated documentation. For details, see our [more complete docum
 
 ## Getting started
 
-Download and install Node version **18.12.1** from https://nodejs.org/en/
+Download and install Node version **22.20.0** from https://nodejs.org/en/
 Make sure to keep the version synced to the one used by gradle, found in `build.gradle` under `node { version: ... }`.
 
 Install latest Enonic CLI according to [docs for you platform](https://developer.enonic.com/start)

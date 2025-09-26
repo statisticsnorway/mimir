@@ -61,7 +61,7 @@ repositories {
 
 node {
     download = true
-    version = '18.12.1'
+    version = '22.20.0'
 }
 
 task compileAssets( type: NpmTask, dependsOn: npmInstall) {
