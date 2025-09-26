@@ -299,7 +299,6 @@ function Highmap(props) {
 
   const hasThreshhold = thresholdValues.length > 0
   const series = generateSeries(tableData, mapDataSecondColumn, color)
-  console.log(JSON.stringify(series, null, 2))
 
   const mapOptions = {
     chart: chart(desktop, heightAspectRatio, mapFile),
