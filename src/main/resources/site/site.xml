@@ -149,5 +149,6 @@
     <response-processor name="react4xpAssetSource" order="11"/>
     <response-processor name="browserSync" order="12"/>
     <response-processor name="prependEnvironment" order="13"/>
+    <response-processor name="addMunicipalityToPageTitle" order="14"/>
   </processors>
 </site>
