@@ -125,13 +125,6 @@ jobs:
                       "text": "Run by: *${{ github.actor }}* on: *${{ github.ref_name }}*"
                     }
                   ]
-                },
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "❌ Mabl tests failed for build ${{ github.run_number }}\nCommit message: *${{ github.event.head_commit.message }}*\nPlease check the <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|workflow output> for details"
-                  }
                 }
               ]
             }
