@@ -70,7 +70,27 @@ function formatTbProcessorType(type: string): string {
   }
 }
 
-// eslint-disable-next-line complexity
+// If this is true, it's most likely an internal table (unpublised data only)
+// We pass this as a status 200, add an empty table to presentation,
+// and fetch source list, so it's possible to import unpublished data from dashboard
+export const isInternalTable = (tbmlParsedResponse: TbprocessorParsedResponse<TbmlDataUniform> | null) =>
+  !!(
+    tbmlParsedResponse &&
+    tbmlParsedResponse.status === 500 &&
+    tbmlParsedResponse.body &&
+    tbmlParsedResponse.body.includes('code: 401') &&
+    tbmlParsedResponse.body.includes('StatbankService.svc')
+  )
+
+export const isNewPublicTable = (tbmlParsedResponse: TbprocessorParsedResponse<TbmlDataUniform> | null) =>
+  !!(
+    tbmlParsedResponse &&
+    tbmlParsedResponse.status === 400 &&
+    tbmlParsedResponse.body &&
+    tbmlParsedResponse.body.includes('<error>') &&
+    tbmlParsedResponse.body.includes('inneholder ikke data')
+  )
+
 function getDataAndMetaData(
   content: Content<DataSource>,
   processXml?: string
@@ -102,26 +122,12 @@ function getDataAndMetaData(
     processXml,
     TbProcessorTypes.DATA_SET
   )
-  // If this is true, it's most likely an internal table (unpublised data only)
-  // We pass this as a status 200, add an empty table to presentation,
-  // and fetch source list, so it's possible to import unpublished data from dashboard
-  const isInternal = !!(
-    tbmlParsedResponse &&
-    tbmlParsedResponse.status === 500 &&
-    tbmlParsedResponse.body &&
-    tbmlParsedResponse.body.includes('code: 401') &&
-    tbmlParsedResponse.body.includes('StatbankService.svc')
-  )
-  const isNewPublic = !!(
-    tbmlParsedResponse &&
-    tbmlParsedResponse.status === 400 &&
-    tbmlParsedResponse.body &&
-    tbmlParsedResponse.body.includes('<error>') &&
-    tbmlParsedResponse.body.includes('inneholder ikke data')
-  )
 
-  if (tbmlParsedResponse && (tbmlParsedResponse.status === 200 || isInternal || isNewPublic)) {
-    if (isInternal || isNewPublic) {
+  if (
+    tbmlParsedResponse &&
+    (tbmlParsedResponse.status === 200 || isInternalTable(tbmlParsedResponse) || isNewPublicTable(tbmlParsedResponse))
+  ) {
+    if (isInternalTable(tbmlParsedResponse) || isNewPublicTable(tbmlParsedResponse)) {
       tbmlParsedResponse.status = 200
 
       const datasetRepo: DatasetRepoNode<TbmlDataUniform> | null = getDataset(
