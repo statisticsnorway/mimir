@@ -48,6 +48,8 @@ function renderPart(req: XP.Request, config: string) {
       body: `<div class="info-text"><span>NB! Formelen vises i LaTeX-format i redigeringsmodus. Forhåndsvisning viser formel riktig.</span></div>`,
     })
   }
-
-  return render('site/parts/maths/maths', props, req)
+  return render('site/parts/maths/maths', {}, req, {
+    body: `<div class="info-text"><span>Feil, mangler content!</span></div>`,
+  })
+  // return render('site/parts/maths/maths', props, req)
 }
