@@ -22,6 +22,14 @@ export function getTbmlMock(url: string): HttpResponse | null {
     } else if (url.includes('document/sourceList/-3')) {
       return getSourceListMock3()
     }
+
+    if (url.includes('process/tbmldata/-4')) {
+      return getTbmlMockInternalTable()
+    }
+
+    if (url.includes('process/tbmldata/-5')) {
+      return getTbmlMockNewPublicTable()
+    }
   }
   return null
 }
@@ -387,6 +395,28 @@ function getSourceListMock3(): HttpResponse {
         <source id="ID2001885" owner="241" table="mimir30000" tableId="-30000" tableApproved="internet"/>
       </tbml>
     </sourceList>`,
+    contentType: 'text/xml; charset=utf-8',
+    headers: {},
+    bodyStream: {} as unknown as ByteSource,
+  }
+}
+
+function getTbmlMockInternalTable(): HttpResponse {
+  return {
+    status: 500,
+    message: '',
+    body: `<error>The server encountered an error processing the request. Error message: [Server returned HTTP response code: 401 for URL: https://i.ssb.no/StatbankService/rest/StatbankService.svc/xdf] See server logs for more details. </error>`,
+    contentType: 'text/xml; charset=utf-8',
+    headers: {},
+    bodyStream: {} as unknown as ByteSource,
+  }
+}
+
+function getTbmlMockNewPublicTable(): HttpResponse {
+  return {
+    status: 400,
+    message: '',
+    body: `<error>inneholder ikke data</error>`,
     contentType: 'text/xml; charset=utf-8',
     headers: {},
     bodyStream: {} as unknown as ByteSource,
