@@ -206,7 +206,7 @@ function addSourceList(
         }
 
   return tbmlParsedResponse && tbmlParsedResponse.parsedBody && sourceListObject
-    ? mergeDeepLeft(tbmlParsedResponse.parsedBody, sourceListObject)
+    ? (mergeDeepLeft(tbmlParsedResponse.parsedBody, sourceListObject) as TbmlDataUniform)
     : null
 }
 
