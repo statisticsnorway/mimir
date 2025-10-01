@@ -3,7 +3,7 @@ import { ByteSource } from '/lib/xp/content'
 import { HttpResponse } from '/lib/http-client'
 import { format } from '/lib/vendor/dateFns'
 
-export function getTbmlMock(url: string): HttpResponse | null {
+export function getTbmlMock(url: string): HttpResponse | undefined | null {
   if (app.config && app.config['ssb.mock.enable'] === 'true') {
     if (url.includes('process/tbmldata/-1')) {
       return getTbmlMock1()
@@ -25,20 +25,24 @@ export function getTbmlMock(url: string): HttpResponse | null {
 
     if (url.includes('process/tbmldata/-4')) {
       return getTbmlMockInternalTable()
+    } else if (url.includes('document/sourceList/-4')) {
+      return getSourceListMockInternalTable()
     }
 
     if (url.includes('process/tbmldata/-5')) {
       return getTbmlMockNewPublicTable()
+    } else if (url.includes('document/sourceList/-5')) {
+      return getSourceListMockNewPublicTable()
     }
-  }
-  return null
-}
 
-function getTbmlMock1(): HttpResponse {
-  return {
-    status: 200,
-    message: '',
-    body: `<?xml version="1.0" encoding="utf-8"?>
+    return null
+  }
+
+  function getTbmlMock1(): HttpResponse {
+    return {
+      status: 200,
+      message: '',
+      body: `<?xml version="1.0" encoding="utf-8"?>
     <tbml>
         <metadata>
             <instance definitionId="-1" xml:lang="no" relatedTableIds="-1" publicRelatedTableIds="-1"/>
@@ -62,33 +66,33 @@ function getTbmlMock1(): HttpResponse {
             </table>
         </presentation>
     </tbml>`,
-    contentType: 'text/xml; charset=utf-8',
-    headers: {},
-    bodyStream: {} as unknown as ByteSource,
+      contentType: 'text/xml; charset=utf-8',
+      headers: {},
+      bodyStream: {} as unknown as ByteSource,
+    }
   }
-}
 
-function getSourceListMock1(): HttpResponse {
-  return {
-    status: 200,
-    message: '',
-    body: `<?xml version="1.0" encoding="utf-8"?>
+  function getSourceListMock1(): HttpResponse {
+    return {
+      status: 200,
+      message: '',
+      body: `<?xml version="1.0" encoding="utf-8"?>
     <sourceList>
       <tbml id="-1">
         <source id="ID2001882" owner="241" table="dagensdato" tableId="-1" tableApproved="internet"/>
       </tbml>
     </sourceList>`,
-    contentType: 'text/xml; charset=utf-8',
-    headers: {},
-    bodyStream: {} as unknown as ByteSource,
+      contentType: 'text/xml; charset=utf-8',
+      headers: {},
+      bodyStream: {} as unknown as ByteSource,
+    }
   }
-}
 
-function getTbmlMock2(): HttpResponse {
-  return {
-    status: 200,
-    message: '',
-    body: `<?xml version="1.0" encoding="utf-8"?>
+  function getTbmlMock2(): HttpResponse {
+    return {
+      status: 200,
+      message: '',
+      body: `<?xml version="1.0" encoding="utf-8"?>
     <tbml>
       <metadata>
         <instance definitionId="-2" xml:lang="no" relatedTableIds="-2" publicRelatedTableIds="-2"/>
@@ -269,33 +273,33 @@ function getTbmlMock2(): HttpResponse {
         </table>
       </presentation>
     </tbml>`,
-    contentType: 'text/xml; charset=utf-8',
-    headers: {},
-    bodyStream: {} as unknown as ByteSource,
+      contentType: 'text/xml; charset=utf-8',
+      headers: {},
+      bodyStream: {} as unknown as ByteSource,
+    }
   }
-}
 
-function getSourceListMock2(): HttpResponse {
-  return {
-    status: 200,
-    message: '',
-    body: `<?xml version="1.0" encoding="utf-8"?>
+  function getSourceListMock2(): HttpResponse {
+    return {
+      status: 200,
+      message: '',
+      body: `<?xml version="1.0" encoding="utf-8"?>
     <sourceList>
       <tbml id="-2">
         <source id="ID2001882" owner="241" table="mimir2" tableId="-2" tableApproved="internet"/>
       </tbml>
     </sourceList>`,
-    contentType: 'text/xml; charset=utf-8',
-    headers: {},
-    bodyStream: {} as unknown as ByteSource,
+      contentType: 'text/xml; charset=utf-8',
+      headers: {},
+      bodyStream: {} as unknown as ByteSource,
+    }
   }
-}
 
-function getTbmlMock3(): HttpResponse {
-  return {
-    status: 200,
-    message: '',
-    body: `<?xml version="1.0" encoding="utf-8"?>
+  function getTbmlMock3(): HttpResponse {
+    return {
+      status: 200,
+      message: '',
+      body: `<?xml version="1.0" encoding="utf-8"?>
     <tbml>
       <metadata>
         <instance definitionId="-3" xml:lang="no" relatedTableIds="-3 -3000 -30000" publicRelatedTableIds="-3 -3000 -30000"/>
@@ -376,17 +380,17 @@ function getTbmlMock3(): HttpResponse {
         </table>
       </presentation>
     </tbml>`,
-    contentType: 'text/xml; charset=utf-8',
-    headers: {},
-    bodyStream: {} as unknown as ByteSource,
+      contentType: 'text/xml; charset=utf-8',
+      headers: {},
+      bodyStream: {} as unknown as ByteSource,
+    }
   }
-}
 
-function getSourceListMock3(): HttpResponse {
-  return {
-    status: 200,
-    message: '',
-    body: `<?xml version="1.0" encoding="utf-8"?>
+  function getSourceListMock3(): HttpResponse {
+    return {
+      status: 200,
+      message: '',
+      body: `<?xml version="1.0" encoding="utf-8"?>
     <sourceList>
       <tbml id="-3">
         <source id="ID2001882" owner="241" table="mimir3" tableId="-3" tableApproved="internet"/>
@@ -395,30 +399,63 @@ function getSourceListMock3(): HttpResponse {
         <source id="ID2001885" owner="241" table="mimir30000" tableId="-30000" tableApproved="internet"/>
       </tbml>
     </sourceList>`,
-    contentType: 'text/xml; charset=utf-8',
-    headers: {},
-    bodyStream: {} as unknown as ByteSource,
+      contentType: 'text/xml; charset=utf-8',
+      headers: {},
+      bodyStream: {} as unknown as ByteSource,
+    }
   }
-}
 
-function getTbmlMockInternalTable(): HttpResponse {
-  return {
-    status: 500,
-    message: '',
-    body: `<error>The server encountered an error processing the request. Error message: [Server returned HTTP response code: 401 for URL: https://i.ssb.no/StatbankService/rest/StatbankService.svc/xdf] See server logs for more details. </error>`,
-    contentType: 'text/xml; charset=utf-8',
-    headers: {},
-    bodyStream: {} as unknown as ByteSource,
+  function getTbmlMockInternalTable(): HttpResponse {
+    return {
+      status: 500,
+      message: '',
+      body: `<error>The server encountered an error processing the request. Error message: [Server returned HTTP response code: 401 for URL: https://i.ssb.no/StatbankService/rest/StatbankService.svc/xdf] See server logs for more details. </error>`,
+      contentType: 'text/xml; charset=utf-8',
+      headers: {},
+      bodyStream: {} as unknown as ByteSource,
+    }
   }
-}
 
-function getTbmlMockNewPublicTable(): HttpResponse {
-  return {
-    status: 400,
-    message: '',
-    body: `<error>inneholder ikke data</error>`,
-    contentType: 'text/xml; charset=utf-8',
-    headers: {},
-    bodyStream: {} as unknown as ByteSource,
+  function getSourceListMockInternalTable(): HttpResponse {
+    return {
+      status: 200,
+      message: '',
+      body: `<?xml version="1.0" encoding="utf-8"?>
+    <sourceList>
+      <tbml id="-4">
+        <source id="ID2001887" owner="241" table="mimir4" tableId="-4" tableApproved="internal"/>
+      </tbml>
+    </sourceList>`,
+      contentType: 'text/xml; charset=utf-8',
+      headers: {},
+      bodyStream: {} as unknown as ByteSource,
+    }
+  }
+
+  function getTbmlMockNewPublicTable(): HttpResponse {
+    return {
+      status: 400,
+      message: '',
+      body: `<error>inneholder ikke data</error>`,
+      contentType: 'text/xml; charset=utf-8',
+      headers: {},
+      bodyStream: {} as unknown as ByteSource,
+    }
+  }
+
+  function getSourceListMockNewPublicTable(): HttpResponse {
+    return {
+      status: 200,
+      message: '',
+      body: `<?xml version="1.0" encoding="utf-8"?>
+    <sourceList>
+      <tbml id="-5">
+        <source id="ID2001888" owner="241" table="mimir5" tableId="-5" tableApproved="internet"/>
+      </tbml>
+    </sourceList>`,
+      contentType: 'text/xml; charset=utf-8',
+      headers: {},
+      bodyStream: {} as unknown as ByteSource,
+    }
   }
 }
