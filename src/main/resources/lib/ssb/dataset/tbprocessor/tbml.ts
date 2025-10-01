@@ -63,6 +63,8 @@ export const isInternalTable = (tbmlParsedResponse: TbprocessorParsedResponse<Tb
     tbmlParsedResponse.body.includes('StatbankService.svc')
   )
 
+// A newly created public table needs a similar workaround as internal table (read the documentation above)
+// The response is passed with a status 200 in getDataAndMetaData function, and an empty table is added for presentation
 export const isNewPublicTable = (tbmlParsedResponse: TbprocessorParsedResponse<TbmlDataUniform> | null) =>
   !!(
     tbmlParsedResponse &&
@@ -71,6 +73,21 @@ export const isNewPublicTable = (tbmlParsedResponse: TbprocessorParsedResponse<T
     tbmlParsedResponse.body.includes('<error>') &&
     tbmlParsedResponse.body.includes('inneholder ikke data')
   )
+
+function getFetchTbmlDataErrorMessage(
+  response: HttpResponse,
+  url: string,
+  isInternalTableResponse: boolean,
+  isNewPublicTableResponse: boolean
+): string {
+  let message = `Failed with status ${response.status} while fetching tbml data from ${url} with error ${response.body}.`
+
+  if (isInternalTableResponse || isNewPublicTableResponse) {
+    message += `\nThis is likely data from ${isInternalTableResponse ? 'an internal' : 'a new public'} table. Creating an empty table for dataset as prep work...`
+  }
+
+  return message
+}
 
 export function fetch(
   url: string,
@@ -113,14 +130,14 @@ export function fetch(
             response,
           })
         }
-        const message = `Failed with status ${response.status} while fetching tbml data from ${url} with error ${response.body}`
+
+        const isInternalTableResponse = isInternalTable(response)
+        const isNewPublicTableResponse = isNewPublicTable(response)
+
+        const message = getFetchTbmlDataErrorMessage(response, url, isInternalTableResponse, isNewPublicTableResponse)
         log.error(message)
 
-        if (!isInternalTable(response) || !isNewPublicTable(response)) {
-          return response
-        }
-
-        if (response.status <= 500) {
+        if (response.status >= 500 && !isInternalTableResponse) {
           throw new Error(message)
         }
       }
