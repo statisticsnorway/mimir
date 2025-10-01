@@ -113,6 +113,9 @@ function getDataAndMetaData(
     (tbmlParsedResponse.status === 200 || isInternalTable(tbmlParsedResponse) || isNewPublicTable(tbmlParsedResponse))
   ) {
     if (isInternalTable(tbmlParsedResponse) || isNewPublicTable(tbmlParsedResponse)) {
+      // Internal and newly created public table data responses will return status 500 and 400 respectively.
+      // As a workaround we need to pass the response as a status 200 after fetching tbml data to add an empty table to the dataset for presentation,
+      // and fetch source list, so it's possible to import unpublished data from dashboard
       tbmlParsedResponse.status = 200
 
       const datasetRepo: DatasetRepoNode<TbmlDataUniform> | null = getDataset(
