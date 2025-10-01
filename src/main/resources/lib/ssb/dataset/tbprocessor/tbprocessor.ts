@@ -2,7 +2,13 @@ import '/lib/ssb/polyfills/nashorn'
 import { Content } from '/lib/xp/content'
 import { DatasetRepoNode, DataSource as dataSourceType, getDataset, DATASET_BRANCH } from '/lib/ssb/repo/dataset'
 import { type TbmlDataUniform, type TbmlSourceListUniform } from '/lib/types/xmlParser'
-import { TbprocessorParsedResponse, getTbmlData, TbProcessorTypes } from '/lib/ssb/dataset/tbprocessor/tbml'
+import {
+  TbprocessorParsedResponse,
+  getTbmlData,
+  TbProcessorTypes,
+  isInternalTable,
+  isNewPublicTable,
+} from '/lib/ssb/dataset/tbprocessor/tbml'
 import { mergeDeepLeft } from '/lib/vendor/ramda'
 
 import { logUserDataQuery, Events } from '/lib/ssb/repo/query'
@@ -69,27 +75,6 @@ function formatTbProcessorType(type: string): string {
       return 'data'
   }
 }
-
-// If this is true, it's most likely an internal table (unpublised data only)
-// We pass this as a status 200, add an empty table to presentation,
-// and fetch source list, so it's possible to import unpublished data from dashboard
-export const isInternalTable = (tbmlParsedResponse: TbprocessorParsedResponse<TbmlDataUniform> | null) =>
-  !!(
-    tbmlParsedResponse &&
-    tbmlParsedResponse.status === 500 &&
-    tbmlParsedResponse.body &&
-    tbmlParsedResponse.body.includes('code: 401') &&
-    tbmlParsedResponse.body.includes('StatbankService.svc')
-  )
-
-export const isNewPublicTable = (tbmlParsedResponse: TbprocessorParsedResponse<TbmlDataUniform> | null) =>
-  !!(
-    tbmlParsedResponse &&
-    tbmlParsedResponse.status === 400 &&
-    tbmlParsedResponse.body &&
-    tbmlParsedResponse.body.includes('<error>') &&
-    tbmlParsedResponse.body.includes('inneholder ikke data')
-  )
 
 function getDataAndMetaData(
   content: Content<DataSource>,
