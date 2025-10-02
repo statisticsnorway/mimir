@@ -52,11 +52,11 @@ function generateColors(color, thresholdValues) {
   return obj
 }
 
-function generateSeries(tableData, mapDataSecondColumn, color) {  
-  const mapUsingDescreteValues = color?._selected === 'defined'
+function generateSeries(tableData, mapDataSecondColumn, color, mapUsingDefinedValues) {
   let plotSeriesForDescreteValues = {}
-let definedColors;
-  if (mapUsingDescreteValues) {
+  let definedColors
+
+  if (mapUsingDefinedValues) {
     if (!Array.isArray(color.defined.colorSerie)) color.defined.colorSerie = [color.defined.colorSerie]
 
     definedColors = color.defined.colorSerie.reduce((acc, color) => {
@@ -67,28 +67,23 @@ let definedColors;
     }, {})
 
     plotSeriesForDescreteValues = tableData.reduce((acc, [name, value]) => {
-    if (!acc[name]) {
-      acc[name] = [value]
-    } else {
-      acc[name].push(value)
-    }
-    return acc
-  }, {})
+      if (!acc[name]) {
+        acc[name] = [value]
+      } else {
+        acc[name].push(value)
+      }
+      return acc
+    }, {})
   }
 
-  // const getLabelsForDescreteValues = Object.keys(definedColors).map((key, index)=> {[key]=index})
- 
   let dataPoints = tableData.map(([name, value]) => {
     return {
-        capitalName: mapDataSecondColumn ? String(value).toUpperCase() : String(name).toUpperCase(),
-        color: definedColors ? definedColors[name] : undefined,
-        name: name,
-        value: mapDataSecondColumn ? name : value
+      capitalName: mapDataSecondColumn ? String(value).toUpperCase() : String(name).toUpperCase(),
+      color: definedColors ? definedColors[name] : undefined,
+      name: name,
+      value: mapDataSecondColumn ? name : value,
     }
   })
-    
- console.log(dataPoints)
- console.log(plotSeriesForDescreteValues)
 
   const series = [
     {
@@ -96,39 +91,45 @@ let definedColors;
       allAreas: true,
       showInLegend: false,
       opacity: 1,
-      includeInDataExport: false
+      includeInDataExport: false,
     },
-    // 
-    ...Object.keys(plotSeriesForDescreteValues).map((values) => {
+     {
+      // For datasets with defined colors (not numeric values) is this series only used for table
+      data: dataPoints,
+      joinBy: 'capitalName',
+      name: 'Data',
+      showInLegend: false,
+      opacity: !mapUsingDefinedValues ? 1:0
+    },
+    // For datasets with defined colors (not numeric values) is these series plot the values as series
+    ...Object.keys(plotSeriesForDescreteValues).map((key) => {
       return {
         showInLegend: true,
-        color: definedColors ? definedColors[name] : undefined,
-        data: values.map((value) => ({
-          capitalName: mapDataSecondColumn ? String(value).toUpperCase() : String(name).toUpperCase(),
+        includeInDataExport: false,
+        name: key,
+        color: definedColors ? definedColors[key] : undefined,
+        data: plotSeriesForDescreteValues[key].map((value) => ({
+          capitalName: mapDataSecondColumn ? String(value).toUpperCase() : String(key).toUpperCase(),
           code: value,
-          value: isNumeric(value) ? value : undefined,
+          value: '',
         })),
       }
     }),
-    {
-        data: dataPoints,
-        joinBy: "capitalName",
-        name: "Data",
-        showInLegend: true
-      }
-  
-    ]
-    console.log(series)
+   
+  ]
   return series
 }
 
-const getPointFormatter = (language, hasThreshhold, legendTitle) =>
+const getTooltipFormatter = (language, hasThreshhold, legendTitle, mapUsingDefinedValues) =>
   function () {
-    const value = language !== 'en' ? String(this.value).replace('.', ',') : this.value
-    if (!hasThreshhold) {
-      return `${this.properties.name}+ ': '}${value}`
+    if(mapUsingDefinedValues){
+      return `${this.point.capitalName}</br>${this.series.name}`
     }
-    return `${legendTitle ? legendTitle + ': ' : ''}${value}`
+    const value = language !== 'en' ? String(this.point.value).replace('.', ',') : this.point.value
+    if (hasThreshhold) {
+      return `${this.point.capitalName} </br>${legendTitle ? legendTitle + ': ' : ''}${value}`
+    }
+    return `${this.point.capitalName} </br>${value}`
   }
 
 const chart = (desktop, heightAspectRatio, mapFile) => {
@@ -170,7 +171,6 @@ const legend = (desktop, legendTitle, legendAlign, numberDecimals) => {
     valueDecimals: numberDecimals,
     backgroundColor: Highcharts.theme?.legendBackgroundColor || 'rgba(255, 255, 255, 0.85)',
     symbolRadius: 0,
-    // labelFormatter: ()=>{this.to}
   }
 }
 
@@ -249,11 +249,11 @@ const exporting = (sourceList, phrases, title) => {
       },
     },
     showTable: true,
-    allowTableSorting: false
+    allowTableSorting: false,
   }
 }
 
-const plotOptions = (hasThreshhold, hideTitle, language, legendTitle, numberDecimals) => {
+const plotOptions = (hasThreshhold, hideTitle, language, legendTitle, numberDecimals, mapUsingDefinedValues) => {
   return {
     map: {
       allAreas: false,
@@ -262,13 +262,7 @@ const plotOptions = (hasThreshhold, hideTitle, language, legendTitle, numberDeci
         enabled: !hideTitle,
         format: '{point.properties.name}',
       },
-      tooltip: {
-        enabled: true,
-        // pointFormatter: getPointFormatter(language, hasThreshhold, legendTitle),
-        // valueDecimals: numberDecimals,
-        // headerFormat: '{point.name}'
-        pointFormat: '{point.name}: <b>{point.value:.1f} </b>',   
-      },
+      
     },
   }
 }
@@ -292,7 +286,7 @@ function Highmap(props) {
     sourceList,
     phrases,
     footnoteText,
-    highmapId
+    highmapId,
   } = props
 
   const highmapsWrapperRef = useRef(null)
@@ -319,7 +313,8 @@ function Highmap(props) {
   })
 
   const hasThreshhold = thresholdValues.length > 0
-  const series = generateSeries(tableData, mapDataSecondColumn, color)
+  const mapUsingDefinedValues = color?._selected === 'defined'
+  const series = generateSeries(tableData, mapDataSecondColumn, color, mapUsingDefinedValues)
 
   const mapOptions = {
     chart: chart(desktop, heightAspectRatio, mapFile),
@@ -343,6 +338,13 @@ function Highmap(props) {
     legend: legend(desktop, legendTitle, legendAlign, numberDecimals),
     plotOptions: plotOptions(hasThreshhold, hideTitle, language, legendTitle, numberDecimals),
     series,
+    tooltip: {
+        enabled: true,
+        formatter: getTooltipFormatter(language, hasThreshhold, legendTitle, mapUsingDefinedValues),
+        valueDecimals: numberDecimals,
+        // headerFormat: '{point.name}'
+        // pointFormat: '{point.name}: <b>{point.value:.1f} </b>',
+      },
     credits: {
       enabled: false,
     },
@@ -368,13 +370,13 @@ function Highmap(props) {
     return (
       <>
         <Tabs
-        id={highmapId}
-        activeOnInit="show-as-chart"
-        items={[
-          {title: phrases['highcharts.showAsChart'], path: 'show-as-chart'},
-          {title: phrases['highcharts.showAsTable'], path: 'show-as-table'}
-        ]}
-        onClick={handleTabOnClick}
+          id={highmapId}
+          activeOnInit='show-as-chart'
+          items={[
+            { title: phrases['highcharts.showAsChart'], path: 'show-as-chart' },
+            { title: phrases['highcharts.showAsTable'], path: 'show-as-table' },
+          ]}
+          onClick={handleTabOnClick}
         />
         <Divider className='mb-3' />
       </>
@@ -399,11 +401,7 @@ function Highmap(props) {
           {mapOptions.subtitle?.text && <p className='figure-subtitle'>{mapOptions.subtitle.text}</p>}
           {renderShowAsFigureOrTableTab()}
           <div ref={highmapsWrapperRef}>
-            <HighchartsReact
-              highcharts={Highcharts}
-              constructorType='mapChart'
-              options={mapOptions}
-            />
+            <HighchartsReact highcharts={Highcharts} constructorType='mapChart' options={mapOptions} />
           </div>
         </figure>
         {footnoteText?.map((footnote) => (
@@ -437,7 +435,7 @@ Highmap.propTypes = {
   footnoteText: PropTypes.array,
   phrases: PropTypes.object,
   language: PropTypes.string,
-  highmapId: PropTypes.string
+  highmapId: PropTypes.string,
 }
 
 export default (props) => <Highmap {...props} />
