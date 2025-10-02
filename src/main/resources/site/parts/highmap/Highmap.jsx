@@ -101,7 +101,7 @@ function generateSeries(tableData, mapDataSecondColumn, color, mapUsingDefinedVa
       showInLegend: false,
       opacity: !mapUsingDefinedValues ? 1 : 0,
     },
-    // For datasets with defined colors (ie. not numeric values) these series plot the series
+    // For datasets with defined colors (ie. not numeric values) these series are plotted
     ...Object.keys(plotSeriesForDescreteValues).map((key) => {
       return {
         showInLegend: true,
