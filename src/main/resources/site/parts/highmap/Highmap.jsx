@@ -57,15 +57,6 @@ function generateSeries(tableData, mapDataSecondColumn, color, mapUsingDefinedVa
   let definedColors
 
   if (mapUsingDefinedValues) {
-    if (!Array.isArray(color.defined.colorSerie)) color.defined.colorSerie = [color.defined.colorSerie]
-
-    definedColors = color.defined.colorSerie.reduce((acc, color) => {
-      if (!color.serie || !color.color) return acc
-
-      acc[color.serie] = color.color
-      return acc
-    }, {})
-
     plotSeriesForDescreteValues = tableData.reduce((acc, [name, value]) => {
       if (!acc[name]) {
         acc[name] = [value]
@@ -74,9 +65,18 @@ function generateSeries(tableData, mapDataSecondColumn, color, mapUsingDefinedVa
       }
       return acc
     }, {})
+
+    if (!Array.isArray(color.defined.colorSerie)) color.defined.colorSerie = [color.defined.colorSerie]
+
+    definedColors = color.defined.colorSerie.reduce((acc, color) => {
+      if (!color.serie || !color.color) return acc
+
+      acc[color.serie] = color.color
+      return acc
+    }, {})
   }
 
-  let dataPoints = tableData.map(([name, value]) => {
+  let dataSeries = tableData.map(([name, value]) => {
     return {
       capitalName: mapDataSecondColumn ? String(value).toUpperCase() : String(name).toUpperCase(),
       color: definedColors ? definedColors[name] : undefined,
@@ -93,15 +93,15 @@ function generateSeries(tableData, mapDataSecondColumn, color, mapUsingDefinedVa
       opacity: 1,
       includeInDataExport: false,
     },
-     {
-      // For datasets with defined colors (not numeric values) is this series only used for table
-      data: dataPoints,
+    // For datasets with defined colors (ie. not numeric values) this series is only used for exporting/table
+    {
+      data: dataSeries,
       joinBy: 'capitalName',
       name: 'Data',
       showInLegend: false,
-      opacity: !mapUsingDefinedValues ? 1:0
+      opacity: !mapUsingDefinedValues ? 1 : 0,
     },
-    // For datasets with defined colors (not numeric values) is these series plot the values as series
+    // For datasets with defined colors (ie. not numeric values) these series plot the series
     ...Object.keys(plotSeriesForDescreteValues).map((key) => {
       return {
         showInLegend: true,
@@ -115,21 +115,21 @@ function generateSeries(tableData, mapDataSecondColumn, color, mapUsingDefinedVa
         })),
       }
     }),
-   
   ]
   return series
 }
 
 const getTooltipFormatter = (language, hasThreshhold, legendTitle, mapUsingDefinedValues) =>
   function () {
-    if(mapUsingDefinedValues){
+    if (mapUsingDefinedValues) {
       return `${this.point.capitalName}</br>${this.series.name}`
     }
     const value = language !== 'en' ? String(this.point.value).replace('.', ',') : this.point.value
     if (hasThreshhold) {
-      return `${this.point.capitalName} </br>${legendTitle ? legendTitle + ': ' : ''}${value}`
+      return `${this.point.capitalName}</br>${legendTitle ? legendTitle + ': ' : ''}${value}`
     }
-    return `${this.point.capitalName} </br>${value}`
+
+    return `${this.point.capitalName}</br>${value}`
   }
 
 const chart = (desktop, heightAspectRatio, mapFile) => {
@@ -253,7 +253,7 @@ const exporting = (sourceList, phrases, title) => {
   }
 }
 
-const plotOptions = (hasThreshhold, hideTitle, language, legendTitle, numberDecimals, mapUsingDefinedValues) => {
+const plotOptions = (hideTitle) => {
   return {
     map: {
       allAreas: false,
@@ -262,7 +262,6 @@ const plotOptions = (hasThreshhold, hideTitle, language, legendTitle, numberDeci
         enabled: !hideTitle,
         format: '{point.properties.name}',
       },
-      
     },
   }
 }
@@ -314,7 +313,6 @@ function Highmap(props) {
 
   const hasThreshhold = thresholdValues.length > 0
   const mapUsingDefinedValues = color?._selected === 'defined'
-  const series = generateSeries(tableData, mapDataSecondColumn, color, mapUsingDefinedValues)
 
   const mapOptions = {
     chart: chart(desktop, heightAspectRatio, mapFile),
@@ -336,15 +334,13 @@ function Highmap(props) {
     },
     ...generateColors(color, thresholdValues),
     legend: legend(desktop, legendTitle, legendAlign, numberDecimals),
-    plotOptions: plotOptions(hasThreshhold, hideTitle, language, legendTitle, numberDecimals),
-    series,
+    plotOptions: plotOptions(hideTitle),
+    series: generateSeries(tableData, mapDataSecondColumn, color, mapUsingDefinedValues),
     tooltip: {
-        enabled: true,
-        formatter: getTooltipFormatter(language, hasThreshhold, legendTitle, mapUsingDefinedValues),
-        valueDecimals: numberDecimals,
-        // headerFormat: '{point.name}'
-        // pointFormat: '{point.name}: <b>{point.value:.1f} </b>',
-      },
+      enabled: true,
+      formatter: getTooltipFormatter(language, hasThreshhold, legendTitle, mapUsingDefinedValues),
+      valueDecimals: numberDecimals,
+    },
     credits: {
       enabled: false,
     },
