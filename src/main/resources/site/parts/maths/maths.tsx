@@ -8,11 +8,13 @@ interface MathsProps {
 const Maths: React.FC<MathsProps> = ({ mathsFormula }) => {
   const config = {
     loader: {
-      load: ['output/svg'], // v.3.0
+      load: ['output/svg'], // v3.0
     },
     options: {
+      // Since the MathJax formula output is SVG, it will be accessible for screen readers, so we don't need the extra fluff
       renderActions: {
         addMenu: [0, '', ''], // Disable context menu
+        assistiveMml: [], // Overriding this option, which is on by default, prevents mjx-assistive-mml from rendering in the DOM.
       },
     },
   }
