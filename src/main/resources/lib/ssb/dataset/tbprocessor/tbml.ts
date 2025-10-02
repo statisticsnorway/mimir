@@ -50,10 +50,7 @@ function processBody(body: string, queryId?: string): TbmlDataUniform | TbmlSour
     return getTbmlDataUniform(tbmlDataRaw as TbmlDataRaw)
   }
 }
-
-// If this is true, it's most likely an internal table (unpublised data only)
-// We pass this as a status 200, add an empty table to presentation,
-// and fetch source list, so it's possible to import unpublished data from dashboard
+// Internal table responses will return status 500 and need to be identified as a legit response in order to import unpublished data
 export const isInternalTable = (tbmlParsedResponse: TbprocessorParsedResponse<TbmlDataUniform> | null) =>
   !!(
     tbmlParsedResponse &&
@@ -63,8 +60,7 @@ export const isInternalTable = (tbmlParsedResponse: TbprocessorParsedResponse<Tb
     tbmlParsedResponse.body.includes('StatbankService.svc')
   )
 
-// A newly created public table needs a similar workaround as internal table (read the documentation above)
-// The response is passed with a status 200 in getDataAndMetaData function, and an empty table is added for presentation
+// A newly created public table will return status 400 and need to be identified as a legit response in order to import unpublished data
 export const isNewPublicTable = (tbmlParsedResponse: TbprocessorParsedResponse<TbmlDataUniform> | null) =>
   !!(
     tbmlParsedResponse &&
@@ -73,21 +69,6 @@ export const isNewPublicTable = (tbmlParsedResponse: TbprocessorParsedResponse<T
     tbmlParsedResponse.body.includes('<error>') &&
     tbmlParsedResponse.body.includes('inneholder ikke data')
   )
-
-function getFetchTbmlDataErrorMessage(
-  response: HttpResponse,
-  url: string,
-  isInternalTableResponse: boolean,
-  isNewPublicTableResponse: boolean
-): string {
-  let message = `Failed with status ${response.status} while fetching tbml data from ${url} with error ${response.body}.`
-
-  if (isInternalTableResponse || isNewPublicTableResponse) {
-    message += `\nThis is likely data from ${isInternalTableResponse ? 'an internal' : 'a new public'} table. Creating an empty table for dataset as prep work...`
-  }
-
-  return message
-}
 
 export function fetch(
   url: string,
@@ -134,10 +115,13 @@ export function fetch(
         const isInternalTableResponse = isInternalTable(response)
         const isNewPublicTableResponse = isNewPublicTable(response)
 
-        const message = getFetchTbmlDataErrorMessage(response, url, isInternalTableResponse, isNewPublicTableResponse)
+        let message = `Failed with status ${response.status} while fetching tbml data from ${url} with error ${response.body}.`
+        if (isInternalTableResponse || isNewPublicTableResponse) {
+          message += `\nThis is likely data from ${isInternalTableResponse ? 'an internal' : 'a new public'} table. Creating an empty table for dataset as prep work...`
+        }
         log.error(message)
 
-        if (response.status >= 500 && !isInternalTableResponse) {
+        if (response.status >= 500 && !isInternalTableResponse && !isNewPublicTableResponse) {
           throw new Error(message)
         }
       }
