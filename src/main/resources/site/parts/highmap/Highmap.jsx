@@ -52,27 +52,11 @@ function generateColors(color, thresholdValues) {
   return obj
 }
 
-function isNumeric(value) {
-  if (typeof value === 'number') return true
-  if (typeof value != 'string') return false
-  return (
-    !isNaN(value) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
-    !isNaN(parseFloat(value))
-  ) // ...and ensure strings of whitespace fail
-}
-
-function generateSeries(tableData, mapDataSecondColumn, color) {
-  const dataSeries = tableData.reduce((acc, [name, value]) => {
-    if (!acc[name]) {
-      acc[name] = [value]
-    } else {
-      acc[name].push(value)
-    }
-    return acc
-  }, {})
-
-  let definedColors
-  if (color?._selected === 'defined') {
+function generateSeries(tableData, mapDataSecondColumn, color) {  
+  const mapUsingDescreteValues = color?._selected === 'defined'
+  let plotSeriesForDescreteValues = {}
+let definedColors;
+  if (mapUsingDescreteValues) {
     if (!Array.isArray(color.defined.colorSerie)) color.defined.colorSerie = [color.defined.colorSerie]
 
     definedColors = color.defined.colorSerie.reduce((acc, color) => {
@@ -81,7 +65,30 @@ function generateSeries(tableData, mapDataSecondColumn, color) {
       acc[color.serie] = color.color
       return acc
     }, {})
+
+    plotSeriesForDescreteValues = tableData.reduce((acc, [name, value]) => {
+    if (!acc[name]) {
+      acc[name] = [value]
+    } else {
+      acc[name].push(value)
+    }
+    return acc
+  }, {})
   }
+
+  // const getLabelsForDescreteValues = Object.keys(definedColors).map((key, index)=> {[key]=index})
+ 
+  let dataPoints = tableData.map(([name, value]) => {
+    return {
+        capitalName: mapDataSecondColumn ? String(value).toUpperCase() : String(name).toUpperCase(),
+        color: definedColors ? definedColors[name] : undefined,
+        name: name,
+        value: mapDataSecondColumn ? name : value
+    }
+  })
+    
+ console.log(dataPoints)
+ console.log(plotSeriesForDescreteValues)
 
   const series = [
     {
@@ -89,10 +96,12 @@ function generateSeries(tableData, mapDataSecondColumn, color) {
       allAreas: true,
       showInLegend: false,
       opacity: 1,
+      includeInDataExport: false
     },
-    ...Object.entries(dataSeries).map(([name, values]) => {
+    // 
+    ...Object.keys(plotSeriesForDescreteValues).map((values) => {
       return {
-        name: String(name),
+        showInLegend: true,
         color: definedColors ? definedColors[name] : undefined,
         data: values.map((value) => ({
           capitalName: mapDataSecondColumn ? String(value).toUpperCase() : String(name).toUpperCase(),
@@ -100,8 +109,16 @@ function generateSeries(tableData, mapDataSecondColumn, color) {
           value: isNumeric(value) ? value : undefined,
         })),
       }
-    }).filter(({ name }) => name !== 'null'),
-  ]
+    }),
+    {
+        data: dataPoints,
+        joinBy: "capitalName",
+        name: "Data",
+        showInLegend: true
+      }
+  
+    ]
+    console.log(series)
   return series
 }
 
@@ -109,7 +126,7 @@ const getPointFormatter = (language, hasThreshhold, legendTitle) =>
   function () {
     const value = language !== 'en' ? String(this.value).replace('.', ',') : this.value
     if (!hasThreshhold) {
-      return this.properties.name
+      return `${this.properties.name}+ ': '}${value}`
     }
     return `${legendTitle ? legendTitle + ': ' : ''}${value}`
   }
@@ -153,6 +170,7 @@ const legend = (desktop, legendTitle, legendAlign, numberDecimals) => {
     valueDecimals: numberDecimals,
     backgroundColor: Highcharts.theme?.legendBackgroundColor || 'rgba(255, 255, 255, 0.85)',
     symbolRadius: 0,
+    // labelFormatter: ()=>{this.to}
   }
 }
 
@@ -245,8 +263,11 @@ const plotOptions = (hasThreshhold, hideTitle, language, legendTitle, numberDeci
         format: '{point.properties.name}',
       },
       tooltip: {
-        pointFormatter: getPointFormatter(language, hasThreshhold, legendTitle),
-        valueDecimals: numberDecimals,
+        enabled: true,
+        // pointFormatter: getPointFormatter(language, hasThreshhold, legendTitle),
+        // valueDecimals: numberDecimals,
+        // headerFormat: '{point.name}'
+        pointFormat: '{point.name}: <b>{point.value:.1f} </b>',   
       },
     },
   }
