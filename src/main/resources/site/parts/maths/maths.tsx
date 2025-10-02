@@ -8,7 +8,12 @@ interface MathsProps {
 const Maths: React.FC<MathsProps> = ({ mathsFormula }) => {
   const config = {
     loader: {
-      load: ['a11y/semantic-enrich'], // v.3.0
+      load: ['output/svg'], // v.3.0
+    },
+    options: {
+      renderActions: {
+        addMenu: [0, '', ''], // Disable context menu
+      },
     },
   }
 
