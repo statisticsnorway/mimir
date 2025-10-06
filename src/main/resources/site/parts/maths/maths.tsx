@@ -11,11 +11,19 @@ const Maths: React.FC<MathsProps> = ({ mathsFormula }) => {
       load: ['output/svg'], // v3.0
     },
     options: {
-      // Since the MathJax formula output is SVG, it will be accessible for screen readers, so we don't need the extra fluff
+      // Since the MathJax formula output is SVG, it will already be accessible for screen readers, so we can disable these to reduce imported scripts:
+      enableMenu: false,
       renderActions: {
-        addMenu: [0, '', ''], // Disable context menu
         assistiveMml: [], // Overriding this option, which is on by default, prevents mjx-assistive-mml from rendering in the DOM.
       },
+      menuOptions: {
+        settings: {
+          renderer: 'SVG',
+        },
+      },
+    },
+    svg: {
+      fontCache: 'local',
     },
   }
 
