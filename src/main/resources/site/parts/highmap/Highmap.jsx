@@ -53,11 +53,11 @@ function generateColors(color, thresholdValues) {
 }
 
 function generateSeries(tableData, mapDataSecondColumn, color, mapUsingDefinedValues) {
-  let plotSeriesForDescreteValues = {}
+  let plotSeriesForDiscreteValues = {}
   let definedColors
 
   if (mapUsingDefinedValues) {
-    plotSeriesForDescreteValues = tableData.reduce((acc, [name, value]) => {
+    plotSeriesForDiscreteValues = tableData.reduce((acc, [name, value]) => {
       if (!acc[name]) {
         acc[name] = [value]
       } else {
@@ -79,8 +79,8 @@ function generateSeries(tableData, mapDataSecondColumn, color, mapUsingDefinedVa
   let dataSeries = tableData.map(([name, value]) => {
     return {
       capitalName: mapDataSecondColumn ? String(value).toUpperCase() : String(name).toUpperCase(),
-      color: definedColors ? definedColors[name] : undefined,
-      name: name,
+      color: definedColors?.[name],
+      name,
       value: mapDataSecondColumn ? name : value,
     }
   })
@@ -102,16 +102,16 @@ function generateSeries(tableData, mapDataSecondColumn, color, mapUsingDefinedVa
       opacity: !mapUsingDefinedValues ? 1 : 0,
     },
     // For datasets with defined colors (ie. not numeric values) these series are plotted
-    ...Object.keys(plotSeriesForDescreteValues).map((key) => {
+    ...Object.keys(plotSeriesForDiscreteValues).map((key) => {
       return {
         showInLegend: true,
         includeInDataExport: false,
         name: key,
-        color: definedColors ? definedColors[key] : undefined,
-        data: plotSeriesForDescreteValues[key].map((value) => ({
+        color: definedColors?.[key],
+        data: plotSeriesForDiscreteValues[key].map((value) => ({
           capitalName: mapDataSecondColumn ? String(value).toUpperCase() : String(key).toUpperCase(),
           code: value,
-          value: '',
+          value: '', // value is requered even though this series only does coloring areas
         })),
       }
     }),
