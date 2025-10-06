@@ -111,7 +111,7 @@ function generateSeries(tableData, mapDataSecondColumn, color, mapUsingDefinedVa
         data: plotSeriesForDiscreteValues[key].map((value) => ({
           capitalName: mapDataSecondColumn ? String(value).toUpperCase() : String(key).toUpperCase(),
           code: value,
-          value: '', // value is requered even though this series only does coloring areas
+          value: '', // value is required even though this series only does coloring areas
         })),
       }
     }),
