@@ -16,11 +16,9 @@ const Maths: React.FC<MathsProps> = ({ mathsFormula }) => {
       renderActions: {
         assistiveMml: [], // Overriding this option, which is on by default, prevents mjx-assistive-mml from rendering in the DOM.
       },
-      menuOptions: {
-        settings: {
-          renderer: 'SVG',
-        },
-      },
+    },
+    startup: {
+      output: 'svg',
     },
     svg: {
       fontCache: 'local',
