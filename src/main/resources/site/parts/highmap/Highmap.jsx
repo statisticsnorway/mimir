@@ -52,27 +52,20 @@ function generateColors(color, thresholdValues) {
   return obj
 }
 
-function isNumeric(value) {
-  if (typeof value === 'number') return true
-  if (typeof value != 'string') return false
-  return (
-    !isNaN(value) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
-    !isNaN(parseFloat(value))
-  ) // ...and ensure strings of whitespace fail
-}
-
-function generateSeries(tableData, mapDataSecondColumn, color) {
-  const dataSeries = tableData.reduce((acc, [name, value]) => {
-    if (!acc[name]) {
-      acc[name] = [value]
-    } else {
-      acc[name].push(value)
-    }
-    return acc
-  }, {})
-
+function generateSeries(tableData, mapDataSecondColumn, color, mapUsingDefinedValues) {
+  let plotSeriesForDiscreteValues = {}
   let definedColors
-  if (color?._selected === 'defined') {
+
+  if (mapUsingDefinedValues) {
+    plotSeriesForDiscreteValues = tableData.reduce((acc, [name, value]) => {
+      if (!acc[name]) {
+        acc[name] = [value]
+      } else {
+        acc[name].push(value)
+      }
+      return acc
+    }, {})
+
     if (!Array.isArray(color.defined.colorSerie)) color.defined.colorSerie = [color.defined.colorSerie]
 
     definedColors = color.defined.colorSerie.reduce((acc, color) => {
@@ -83,21 +76,42 @@ function generateSeries(tableData, mapDataSecondColumn, color) {
     }, {})
   }
 
+  let dataSeries = tableData.map(([name, value]) => {
+    return {
+      capitalName: mapDataSecondColumn ? String(value).toUpperCase() : String(name).toUpperCase(),
+      color: definedColors?.[name],
+      name,
+      value: mapDataSecondColumn ? name : value,
+    }
+  })
+
   const series = [
     {
       // dummy series to show outline of all areas
       allAreas: true,
       showInLegend: false,
       opacity: 1,
+      includeInDataExport: false,
     },
-    ...Object.entries(dataSeries).map(([name, values]) => {
+    // For datasets with defined colors (ie. not numeric values) this series is only used for exporting/table
+    {
+      data: dataSeries,
+      joinBy: 'capitalName',
+      name: 'Data',
+      showInLegend: false,
+      opacity: !mapUsingDefinedValues ? 1 : 0,
+    },
+    // For datasets with defined colors (ie. not numeric values) these series are plotted
+    ...Object.keys(plotSeriesForDiscreteValues).map((key) => {
       return {
-        name: String(name),
-        color: definedColors ? definedColors[name] : undefined,
-        data: values.map((value) => ({
-          capitalName: mapDataSecondColumn ? String(value).toUpperCase() : String(name).toUpperCase(),
+        showInLegend: true,
+        includeInDataExport: false,
+        name: key,
+        color: definedColors?.[key],
+        data: plotSeriesForDiscreteValues[key].map((value) => ({
+          capitalName: mapDataSecondColumn ? String(value).toUpperCase() : String(key).toUpperCase(),
           code: value,
-          value: isNumeric(value) ? value : undefined,
+          value: '', // value is required even though this series only does coloring areas
         })),
       }
     }),
@@ -105,13 +119,17 @@ function generateSeries(tableData, mapDataSecondColumn, color) {
   return series
 }
 
-const getPointFormatter = (language, hasThreshhold, legendTitle) =>
+const getTooltipFormatter = (language, hasThreshhold, legendTitle, mapUsingDefinedValues) =>
   function () {
-    const value = language !== 'en' ? String(this.value).replace('.', ',') : this.value
-    if (!hasThreshhold) {
-      return this.properties.name
+    if (mapUsingDefinedValues) {
+      return `${this.point.capitalName}</br>${this.series.name}`
     }
-    return `${legendTitle ? legendTitle + ': ' : ''}${value}`
+    const value = language !== 'en' ? String(this.point.value).replace('.', ',') : this.point.value
+    if (hasThreshhold) {
+      return `${this.point.capitalName}</br>${legendTitle ? legendTitle + ': ' : ''}${value}`
+    }
+
+    return `${this.point.capitalName}</br>${value}`
   }
 
 const chart = (desktop, heightAspectRatio, mapFile) => {
@@ -231,11 +249,11 @@ const exporting = (sourceList, phrases, title) => {
       },
     },
     showTable: true,
-    allowTableSorting: false
+    allowTableSorting: false,
   }
 }
 
-const plotOptions = (hasThreshhold, hideTitle, language, legendTitle, numberDecimals) => {
+const plotOptions = (hideTitle) => {
   return {
     map: {
       allAreas: false,
@@ -243,10 +261,6 @@ const plotOptions = (hasThreshhold, hideTitle, language, legendTitle, numberDeci
       dataLabels: {
         enabled: !hideTitle,
         format: '{point.properties.name}',
-      },
-      tooltip: {
-        pointFormatter: getPointFormatter(language, hasThreshhold, legendTitle),
-        valueDecimals: numberDecimals,
       },
     },
   }
@@ -271,7 +285,7 @@ function Highmap(props) {
     sourceList,
     phrases,
     footnoteText,
-    highmapId
+    highmapId,
   } = props
 
   const highmapsWrapperRef = useRef(null)
@@ -298,7 +312,7 @@ function Highmap(props) {
   })
 
   const hasThreshhold = thresholdValues.length > 0
-  const series = generateSeries(tableData, mapDataSecondColumn, color)
+  const mapUsingDefinedValues = color?._selected === 'defined'
 
   const mapOptions = {
     chart: chart(desktop, heightAspectRatio, mapFile),
@@ -320,8 +334,13 @@ function Highmap(props) {
     },
     ...generateColors(color, thresholdValues),
     legend: legend(desktop, legendTitle, legendAlign, numberDecimals),
-    plotOptions: plotOptions(hasThreshhold, hideTitle, language, legendTitle, numberDecimals),
-    series,
+    plotOptions: plotOptions(hideTitle),
+    series: generateSeries(tableData, mapDataSecondColumn, color, mapUsingDefinedValues),
+    tooltip: {
+      enabled: true,
+      formatter: getTooltipFormatter(language, hasThreshhold, legendTitle, mapUsingDefinedValues),
+      valueDecimals: numberDecimals,
+    },
     credits: {
       enabled: false,
     },
@@ -347,13 +366,13 @@ function Highmap(props) {
     return (
       <>
         <Tabs
-        id={highmapId}
-        activeOnInit="show-as-chart"
-        items={[
-          {title: phrases['highcharts.showAsChart'], path: 'show-as-chart'},
-          {title: phrases['highcharts.showAsTable'], path: 'show-as-table'}
-        ]}
-        onClick={handleTabOnClick}
+          id={highmapId}
+          activeOnInit='show-as-chart'
+          items={[
+            { title: phrases['highcharts.showAsChart'], path: 'show-as-chart' },
+            { title: phrases['highcharts.showAsTable'], path: 'show-as-table' },
+          ]}
+          onClick={handleTabOnClick}
         />
         <Divider className='mb-3' />
       </>
@@ -378,11 +397,7 @@ function Highmap(props) {
           {mapOptions.subtitle?.text && <p className='figure-subtitle'>{mapOptions.subtitle.text}</p>}
           {renderShowAsFigureOrTableTab()}
           <div ref={highmapsWrapperRef}>
-            <HighchartsReact
-              highcharts={Highcharts}
-              constructorType='mapChart'
-              options={mapOptions}
-            />
+            <HighchartsReact highcharts={Highcharts} constructorType='mapChart' options={mapOptions} />
           </div>
         </figure>
         {footnoteText?.map((footnote) => (
@@ -416,7 +431,7 @@ Highmap.propTypes = {
   footnoteText: PropTypes.array,
   phrases: PropTypes.object,
   language: PropTypes.string,
-  highmapId: PropTypes.string
+  highmapId: PropTypes.string,
 }
 
 export default (props) => <Highmap {...props} />
