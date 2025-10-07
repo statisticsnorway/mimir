@@ -354,7 +354,7 @@ function Highmap(props) {
     },
     xAxis: {
       title: {
-        text:  geographicalCategoryResolved = geographicalCategory ?? phrases['highmaps.geographicalCategory']
+        text:  geographicalCategoryResolved ?? phrases['highmaps.geographicalCategory']
       }
     }
   }
