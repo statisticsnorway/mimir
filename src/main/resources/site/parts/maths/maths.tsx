@@ -25,9 +25,7 @@ const Maths: React.FC<MathsProps> = ({ mathsFormula }) => {
 
   return (
     <MathJaxContext config={config}>
-      <MathJax className='text-center'>
-        <span tabIndex={0}>{`\\(${mathsFormula}\\)`}</span>
-      </MathJax>
+      <MathJax className='text-center'>{`\\(${mathsFormula}\\)`}</MathJax>
     </MathJaxContext>
   )
 }
