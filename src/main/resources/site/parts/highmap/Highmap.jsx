@@ -238,7 +238,26 @@ const exporting = (sourceList, phrases, title) => {
     },
     enabled: true,
     menuItemDefinitions: {
+      printChart: {
+        text: phrases['highcharts.printChart'],
+      },
+      downloadPNG: {
+        text: phrases['highcharts.downloadPNG'],
+      },
+      downloadJPEG: {
+        text: phrases['highcharts.downloadJPEG'],
+      },
+      downloadPDF: {
+        text: phrases['highcharts.downloadPDF'],
+      },
+      downloadSVG: {
+        text: phrases['highcharts.downloadSVG'],
+      },
+      downloadCSV: {
+        text: phrases['highcharts.downloadCSV'],
+      },
       downloadXLS: {
+        text: phrases['highcharts.downloadXLS'],
         onclick: downloadAsXLSX(title),
       },
     },
