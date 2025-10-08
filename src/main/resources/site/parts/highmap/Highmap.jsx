@@ -52,7 +52,7 @@ function generateColors(color, thresholdValues) {
   return obj
 }
 
-function generateSeries(tableData, mapDataSecondColumn, color, mapUsingDefinedValues) {
+function generateSeries(tableData, mapDataSecondColumn, color, mapUsingDefinedValues, valueType) {
   let plotSeriesForDiscreteValues = {}
   let definedColors
 
@@ -97,7 +97,7 @@ function generateSeries(tableData, mapDataSecondColumn, color, mapUsingDefinedVa
     {
       data: dataSeries,
       joinBy: 'capitalName',
-      name: 'Data',
+      name: valueType,
       showInLegend: false,
       opacity: !mapUsingDefinedValues ? 1 : 0,
     },
@@ -286,6 +286,8 @@ function Highmap(props) {
     phrases,
     footnoteText,
     highmapId,
+    geographicalCategory,
+    valueType
   } = props
 
   const highmapsWrapperRef = useRef(null)
@@ -313,6 +315,8 @@ function Highmap(props) {
 
   const hasThreshhold = thresholdValues.length > 0
   const mapUsingDefinedValues = color?._selected === 'defined'
+  const geographicalCategoryResolved = geographicalCategory ?? phrases['highmaps.geographicalCategory']
+  const valueTypeResolved = valueType ?? phrases['highmaps.valueType']
 
   const mapOptions = {
     chart: chart(desktop, heightAspectRatio, mapFile),
@@ -335,7 +339,7 @@ function Highmap(props) {
     ...generateColors(color, thresholdValues),
     legend: legend(desktop, legendTitle, legendAlign, numberDecimals),
     plotOptions: plotOptions(hideTitle),
-    series: generateSeries(tableData, mapDataSecondColumn, color, mapUsingDefinedValues),
+    series: generateSeries(tableData, mapDataSecondColumn, color, mapUsingDefinedValues, valueTypeResolved),
     tooltip: {
       enabled: true,
       formatter: getTooltipFormatter(language, hasThreshhold, legendTitle, mapUsingDefinedValues),
@@ -348,6 +352,11 @@ function Highmap(props) {
     csv: {
       itemDelimiter: ';',
     },
+    xAxis: {
+      title: {
+        text:  geographicalCategoryResolved ?? phrases['highmaps.geographicalCategory']
+      }
+    }
   }
 
   const handleTabOnClick = (item) => {

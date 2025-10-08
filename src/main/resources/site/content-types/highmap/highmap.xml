@@ -201,6 +201,20 @@
         </field-set>
 
         <field-set>
+            <label>Kolonneheader for tabellvisning</label>
+            <items>
+                <input name="geographicalCategory" type="TextLine">
+                    <label>Geografisk område</label>
+                    <help-text>F.eks. kommune, fylke, land</help-text>
+                </input>
+                <input name="valueType" type="TextLine">
+                    <label>Verdi</label>
+                    <help-text>Verdien som vises i kartet, f.eks. prosent</help-text>
+                </input>
+            </items>
+        </field-set>
+
+        <field-set>
             <label>Kilder</label>
             <items>
               <item-set name="sourceList">
