@@ -8,13 +8,17 @@ interface MathsProps {
 const Maths: React.FC<MathsProps> = ({ mathsFormula }) => {
   const config = {
     loader: {
-      load: ['a11y/sre', 'a11y/semantic-enrich'], // v3.0
+      load: ['a11y/explorer'], // v3.0
     },
     options: {
       enableMenu: false,
       a11y: {
-        speech: true,
-        assistiveMml: true,
+        explorer: true,
+      },
+      options: {
+        renderActions: {
+          assistiveMML: [],
+        },
       },
     },
   }
