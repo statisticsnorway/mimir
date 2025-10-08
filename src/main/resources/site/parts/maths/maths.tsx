@@ -16,7 +16,7 @@ const Maths: React.FC<MathsProps> = ({ mathsFormula }) => {
         speech: true,
       },
       renderActions: {
-        assistiveMML: [],
+        assistiveMml: [],
       },
     },
   }
