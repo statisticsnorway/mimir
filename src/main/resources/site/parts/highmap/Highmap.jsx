@@ -52,7 +52,7 @@ function generateColors(color, thresholdValues) {
   return obj
 }
 
-function generateSeries(tableData, mapDataSecondColumn, color, mapUsingDefinedValues, valueType) {
+function generateSeries(tableData, mapDataSecondColumn, color, mapUsingDefinedValues, seriesTitle) {
   let plotSeriesForDiscreteValues = {}
   let definedColors
 
@@ -97,7 +97,7 @@ function generateSeries(tableData, mapDataSecondColumn, color, mapUsingDefinedVa
     {
       data: dataSeries,
       joinBy: 'capitalName',
-      name: valueType,
+      name: seriesTitle,
       showInLegend: false,
       opacity: !mapUsingDefinedValues ? 1 : 0,
     },
@@ -122,17 +122,17 @@ function generateSeries(tableData, mapDataSecondColumn, color, mapUsingDefinedVa
 const getTooltipFormatter = (language, hasThreshhold, legendTitle, mapUsingDefinedValues) =>
   function () {
     if (mapUsingDefinedValues) {
-      return `${this.point.capitalName}</br>${this.series.name}`
+      return `${this.capitalName}`
     }
-    const value = language !== 'en' ? String(this.point.value).replace('.', ',') : this.point.value
+    const value = language !== 'en' ? String(this.value).replace('.', ',') : this.value
     if (hasThreshhold) {
-      return `${this.point.capitalName}</br>${legendTitle ? legendTitle + ': ' : ''}${value}`
+      return `${this.capitalName}</br>${legendTitle ? legendTitle + ': ' : ''}${value}`
     }
 
-    return `${this.point.capitalName}</br>${value}`
+    return `${this.capitalName}</br>${value}`
   }
 
-const chart = (desktop, heightAspectRatio, mapFile) => {
+const chart = (desktop, heightAspectRatio, mapFile, language, highmapId) => {
   return {
     height: desktop && heightAspectRatio && `${heightAspectRatio}%`,
     style: {
@@ -142,6 +142,19 @@ const chart = (desktop, heightAspectRatio, mapFile) => {
       fontFamily: '"Open Sans Regular", "Arial", "DejaVu Sans", sans-serif',
     },
     map: mapFile,
+    events: {
+      render: function () {
+        // Workaround to get correct decimalpoint in Norwegian
+        const table = document.querySelector(`#figure-${highmapId} .highcharts-data-table table`);
+        if (table && language !== "en") {
+          for(const td of table.querySelectorAll('td')) {
+            if(Number.parseFloat(td.textContent)){
+              td.textContent = td.textContent.replace('.', ','); // replace decimalpoint in Norwegian
+            }
+          };
+        }
+      }
+    }
   }
 }
 
@@ -287,7 +300,7 @@ function Highmap(props) {
     footnoteText,
     highmapId,
     geographicalCategory,
-    valueType
+    seriesTitle
   } = props
 
   const highmapsWrapperRef = useRef(null)
@@ -315,16 +328,20 @@ function Highmap(props) {
 
   const hasThreshhold = thresholdValues.length > 0
   const mapUsingDefinedValues = color?._selected === 'defined'
-  const geographicalCategoryResolved = geographicalCategory ?? phrases['highmaps.geographicalCategory']
-  const valueTypeResolved = valueType ?? phrases['highmaps.valueType']
+  const seriesTitleResolved = seriesTitle ?? phrases['highmaps.seriesTitle']
 
   const mapOptions = {
-    chart: chart(desktop, heightAspectRatio, mapFile),
+    chart: chart(desktop, heightAspectRatio, mapFile, language, highmapId),
     accessibility: {
       enabled: true,
       description,
     },
     ...accessibilityLang,
+    lang: {
+      exportData: {
+        categoryHeader: geographicalCategory ?? phrases['highmaps.geographicalCategory']
+      },
+    },
     title: {
       text: title,
       align: 'left',
@@ -339,10 +356,10 @@ function Highmap(props) {
     ...generateColors(color, thresholdValues),
     legend: legend(desktop, legendTitle, legendAlign, numberDecimals),
     plotOptions: plotOptions(hideTitle),
-    series: generateSeries(tableData, mapDataSecondColumn, color, mapUsingDefinedValues, valueTypeResolved),
+    series: generateSeries(tableData, mapDataSecondColumn, color, mapUsingDefinedValues, seriesTitleResolved),
     tooltip: {
       enabled: true,
-      formatter: getTooltipFormatter(language, hasThreshhold, legendTitle, mapUsingDefinedValues),
+      pointFormatter: getTooltipFormatter(language, hasThreshhold, legendTitle, mapUsingDefinedValues),
       valueDecimals: numberDecimals,
     },
     credits: {
@@ -351,11 +368,6 @@ function Highmap(props) {
     exporting: exporting(sourceList, phrases, title),
     csv: {
       itemDelimiter: ';',
-    },
-    xAxis: {
-      title: {
-        text:  geographicalCategoryResolved ?? phrases['highmaps.geographicalCategory']
-      }
     }
   }
 
@@ -441,6 +453,7 @@ Highmap.propTypes = {
   phrases: PropTypes.object,
   language: PropTypes.string,
   highmapId: PropTypes.string,
+  geographicalCategory: PropTypes.String
 }
 
 export default (props) => <Highmap {...props} />

@@ -1,5 +1,6 @@
 {
   "lang": {
+    "locale": "nb-NO",
     "accessibility": {
       "chartContainerLabel": "{title} Interaktiv graf",
       "defaultChartTitle": "Graf",
@@ -28,7 +29,7 @@
         "emptyChart": "Tom datavisualisering",
         "lineMultiple": "Linjediagram med {numSeries} linjer.",
         "lineSingle": "Linjediagram med {numPoints} datapunkter {#plural(numPoints, punkter, punkt)}.",
-        "mapTypeDescription": "Kart over {mapTitle} med {numSeries} dataserier.",
+        "mapTypeDescription": "Kart over {mapTitle} med en dataserie.",
         "pieMultiple": "Sektordiagram med {numSeries} sektorer.",
         "pieSingle": "Sektordiagram med {numPoints} {#plural(numPoints, sektorer, sektor)}.",
         "scatterMultiple": "Spredningsplott diagram med {numSeries} dataserier.",
