@@ -132,7 +132,7 @@ const getTooltipFormatter = (language, hasThreshhold, legendTitle, mapUsingDefin
     return `${this.capitalName}</br>${value}`
   }
 
-const chart = (desktop, heightAspectRatio, mapFile, language) => {
+const chart = (desktop, heightAspectRatio, mapFile, language, highmapId) => {
   return {
     height: desktop && heightAspectRatio && `${heightAspectRatio}%`,
     style: {
@@ -145,7 +145,7 @@ const chart = (desktop, heightAspectRatio, mapFile, language) => {
     events: {
       render: function () {
         // Workaround to get correct decimalpoint in Norwegian
-        const table = document.querySelector('.highcharts-data-table table');
+        const table = document.querySelector(`#figure-${highmapId} .highcharts-data-table table`);
         if (table && language !== "en") {
           table.querySelectorAll('td').forEach(td => {
             if(parseFloat(td.textContent)){
@@ -331,7 +331,7 @@ function Highmap(props) {
   const seriesTitleResolved = seriesTitle ?? phrases['highmaps.seriesTitle']
 
   const mapOptions = {
-    chart: chart(desktop, heightAspectRatio, mapFile, language),
+    chart: chart(desktop, heightAspectRatio, mapFile, language, highmapId),
     accessibility: {
       enabled: true,
       description,
