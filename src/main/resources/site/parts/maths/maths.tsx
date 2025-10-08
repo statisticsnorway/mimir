@@ -15,6 +15,7 @@ const Maths: React.FC<MathsProps> = ({ mathsFormula }) => {
       a11y: {
         speech: true,
       },
+      // The mjx-assitive-mml tag is rendered by default and we don't need it since explorer, which adds aria-label for screen readers, is enough.
       renderActions: {
         assistiveMml: [],
       },
@@ -23,7 +24,9 @@ const Maths: React.FC<MathsProps> = ({ mathsFormula }) => {
 
   return (
     <MathJaxContext config={config}>
-      <MathJax tabIndex={0} className='text-center'>{`\\(${mathsFormula}\\)`}</MathJax>
+      <MathJax className='text-center'>
+        <span tabIndex={0}>{`\\(${mathsFormula}\\)`}</span>
+      </MathJax>
     </MathJaxContext>
   )
 }
