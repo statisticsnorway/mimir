@@ -13,12 +13,10 @@ const Maths: React.FC<MathsProps> = ({ mathsFormula }) => {
     options: {
       enableMenu: false,
       a11y: {
-        explorer: true,
+        speech: true,
       },
-      options: {
-        renderActions: {
-          assistiveMML: [],
-        },
+      renderActions: {
+        assistiveMML: [],
       },
     },
   }
