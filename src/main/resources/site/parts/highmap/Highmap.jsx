@@ -147,11 +147,11 @@ const chart = (desktop, heightAspectRatio, mapFile, language, highmapId) => {
         // Workaround to get correct decimalpoint in Norwegian
         const table = document.querySelector(`#figure-${highmapId} .highcharts-data-table table`);
         if (table && language !== "en") {
-          table.querySelectorAll('td').forEach(td => {
-            if(parseFloat(td.textContent)){
+          for(const td of table.querySelectorAll('td')) {
+            if(Number.parseFloat(td.textContent)){
               td.textContent = td.textContent.replace('.', ','); // replace decimalpoint in Norwegian
             }
-          });
+          };
         }
       }
     }
