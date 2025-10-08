@@ -23,8 +23,7 @@ export interface HighmapProps {
   phrases: Phrases | undefined
   language: string | undefined
   highmapId: string | undefined
-  geographicalCategory: string | undefined
-  valueType: string | undefined
+  geographicalCategory: Highmap['geographicalCategory']
 }
 
 export interface HighmapFormattedTableData {

@@ -113,7 +113,6 @@ function renderPart(req: XP.Request, highmapId: string | undefined): XP.Response
       language: page.language,
       highmapId,
       geographicalCategory: highmapContent.data.geographicalCategory,
-      valueType: highmapContent.data.valueType,
     }
     // R4xp disables hydration in edit mode, but highmap need hydration to show
     // we sneaky swap mode since we want a render of highmap in edit mode
