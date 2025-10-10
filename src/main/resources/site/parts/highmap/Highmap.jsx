@@ -122,14 +122,14 @@ function generateSeries(tableData, mapDataSecondColumn, color, mapUsingDefinedVa
 const getTooltipFormatter = (language, hasThreshhold, legendTitle, mapUsingDefinedValues) =>
   function () {
     if (mapUsingDefinedValues) {
-      return `${this.capitalName}`
+      return `${this.name}`
     }
     const value = language !== 'en' ? String(this.value).replace('.', ',') : this.value
     if (hasThreshhold) {
-      return `${this.capitalName}</br>${legendTitle ? legendTitle + ': ' : ''}${value}`
+      return `${this.name}</br>${legendTitle ? legendTitle + ': ' : ''}${value}`
     }
 
-    return `${this.capitalName}</br>${value}`
+    return `${this.name}</br>${value}`
   }
 
 const chart = (desktop, heightAspectRatio, mapFile, language, highmapId) => {
