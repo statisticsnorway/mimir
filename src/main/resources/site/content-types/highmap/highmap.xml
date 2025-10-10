@@ -173,13 +173,13 @@
                     </config>
                     <help-text>Et heltall større enn 0. Anbefalt er 133. 100 er kvadrat (1:1), 162 er det gylne snitt stående.</help-text>
                 </input>
-                <input name="seriesTitle" type="TextLine">
-                    <label>Serietittel</label>
-                    <help-text>Her skal det skrives inn tittel for serie som vises over verdier ved hover og som kolonneheader i tabellvisning</help-text>
-                </input>
                 <input name="geographicalCategory" type="TextLine">
                     <label>Geografisk område</label>
                     <help-text>Vises som kolonneheader i tabellvisning, f.eks. kommune </help-text>
+                </input>
+                <input name="seriesTitle" type="TextLine">
+                    <label>Serietittel</label>
+                    <help-text>Her skal det skrives inn tittel for serie som vises over verdier ved hover og som kolonneheader i tabellvisning</help-text>
                 </input>
             </items>
         </field-set>
