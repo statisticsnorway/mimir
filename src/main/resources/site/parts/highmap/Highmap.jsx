@@ -52,7 +52,9 @@ function generateColors(color, thresholdValues) {
   return obj
 }
 
-function generateSeries(tableData, mapDataSecondColumn, color, mapUsingDefinedValues, seriesTitle) {
+function generateSeries(tableData, mapDataSecondColumn, color, seriesTitle, phrases) {
+  const mapUsingDefinedValues = color?._selected === 'defined'
+  const dataSeriesTitle = seriesTitle ?? phrases['highmaps.seriesTitle']
   let plotSeriesForDiscreteValues = {}
   let definedColors
 
@@ -97,7 +99,7 @@ function generateSeries(tableData, mapDataSecondColumn, color, mapUsingDefinedVa
     {
       data: dataSeries,
       joinBy: 'capitalName',
-      name: seriesTitle,
+      name: dataSeriesTitle,
       showInLegend: false,
       opacity: !mapUsingDefinedValues ? 1 : 0,
     },
@@ -119,17 +121,13 @@ function generateSeries(tableData, mapDataSecondColumn, color, mapUsingDefinedVa
   return series
 }
 
-const getTooltipFormatter = (language, hasThreshhold, legendTitle, mapUsingDefinedValues) =>
+const getTooltipFormatter = (language, seriesTitle) =>
   function () {
-    if (mapUsingDefinedValues) {
-      return `${this.name}`
+    if (this.point.value) {
+      const value = language !== 'en' ? String(this.point.value).replace('.', ',') : this.point.value
+      return `${this.point.name}</br>${seriesTitle ? seriesTitle + ': ' : ''}${value}`
     }
-    const value = language !== 'en' ? String(this.value).replace('.', ',') : this.value
-    if (hasThreshhold) {
-      return `${this.name}</br>${legendTitle ? legendTitle + ': ' : ''}${value}`
-    }
-
-    return `${this.name}</br>${value}`
+    return `${this.point.name}</br>${this.series.name}`
   }
 
 const chart = (desktop, heightAspectRatio, mapFile, language, highmapId) => {
@@ -326,10 +324,6 @@ function Highmap(props) {
     minWidth: 992,
   })
 
-  const hasThreshhold = thresholdValues.length > 0
-  const mapUsingDefinedValues = color?._selected === 'defined'
-  const seriesTitleResolved = seriesTitle ?? phrases['highmaps.seriesTitle']
-
   const mapOptions = {
     chart: chart(desktop, heightAspectRatio, mapFile, language, highmapId),
     accessibility: {
@@ -356,10 +350,10 @@ function Highmap(props) {
     ...generateColors(color, thresholdValues),
     legend: legend(desktop, legendTitle, legendAlign, numberDecimals),
     plotOptions: plotOptions(hideTitle),
-    series: generateSeries(tableData, mapDataSecondColumn, color, mapUsingDefinedValues, seriesTitleResolved),
+    series: generateSeries(tableData, mapDataSecondColumn, color, seriesTitleResolved),
     tooltip: {
       enabled: true,
-      pointFormatter: getTooltipFormatter(language, hasThreshhold, legendTitle, mapUsingDefinedValues),
+      formatter: getTooltipFormatter(language, seriesTitle),
       valueDecimals: numberDecimals,
     },
     credits: {

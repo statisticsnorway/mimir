@@ -178,8 +178,8 @@
                     <help-text>Vises som kolonneheader i tabellvisning, f.eks. kommune </help-text>
                 </input>
                 <input name="seriesTitle" type="TextLine">
-                    <label>Serietittel</label>
-                    <help-text>Her skal det skrives inn tittel for serie som vises over verdier ved hover og som kolonneheader i tabellvisning</help-text>
+                    <label>Måleenhet</label>
+                    <help-text>Måleenhet vises foran verdier ved hover og som kolonneheader i tabellvisning, f.eks. prosent eller kroner</help-text>
                 </input>
             </items>
         </field-set>
