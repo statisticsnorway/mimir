@@ -350,7 +350,7 @@ function Highmap(props) {
     ...generateColors(color, thresholdValues),
     legend: legend(desktop, legendTitle, legendAlign, numberDecimals),
     plotOptions: plotOptions(hideTitle),
-    series: generateSeries(tableData, mapDataSecondColumn, color, seriesTitleResolved),
+    series: generateSeries(tableData, mapDataSecondColumn, color, seriesTitle, phrases),
     tooltip: {
       enabled: true,
       formatter: getTooltipFormatter(language, seriesTitle),
