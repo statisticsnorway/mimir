@@ -31,11 +31,13 @@ function StatisticFigures(props: Readonly<StatisticFiguresProps>) {
   return (
     <div className='content-wrapper'>
       {accordions?.length ? (
-        <div className='title-wrapper'>
-          <Title size={2}>{selectedFigures}</Title>
-        </div>
+        <>
+          <div className='title-wrapper'>
+            <Title size={2}>{selectedFigures}</Title>
+          </div>
+          <AttachmentTablesFigures {...props} />
+        </>
       ) : null}
-      <AttachmentTablesFigures {...props} />
       {renderStatbankBox()}
     </div>
   )
