@@ -7,7 +7,7 @@ import { type StatisticFiguresProps } from '/lib/types/partTypes/statisticFigure
 import AttachmentTablesFigures from '../attachmentTablesFigures/AttachmentTablesFigures'
 
 function StatisticFigures(props: Readonly<StatisticFiguresProps>) {
-  const { selectedFigures, statbankBoxTitle, statbankBoxText, iconStatbankBox, statbankHref } = props
+  const { selectedFigures, statbankBoxTitle, statbankBoxText, iconStatbankBox, statbankHref, accordions } = props
 
   function renderStatbankBox() {
     return (
@@ -30,9 +30,11 @@ function StatisticFigures(props: Readonly<StatisticFiguresProps>) {
 
   return (
     <div className='content-wrapper'>
-      <div className='title-wrapper'>
-        <Title size={2}>{selectedFigures}</Title>
-      </div>
+      {accordions?.length ? (
+        <div className='title-wrapper'>
+          <Title size={2}>{selectedFigures}</Title>
+        </div>
+      ) : null}
       <AttachmentTablesFigures {...props} />
       {renderStatbankBox()}
     </div>
