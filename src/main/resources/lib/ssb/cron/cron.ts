@@ -4,8 +4,7 @@ import { run, type ContextParams } from '/lib/xp/context'
 import { create, get as getScheduledJob, modify, delete as deleteScheduledJob } from '/lib/xp/scheduler'
 import { isMaster } from '/lib/xp/cluster'
 // import { list, schedule, type TaskMapper } from '/lib/cron'
-import { list, type TaskMapper } from '/lib/cron'
-import { cronJobLog } from '/lib/ssb/utils/serverLog'
+// import { cronJobLog } from '/lib/ssb/utils/serverLog'
 import { ENONIC_CMS_DEFAULT_REPO } from '/lib/ssb/repo/common'
 // import { publishDataset } from '/lib/ssb/dataset/publishOld'
 
@@ -244,9 +243,9 @@ export function setupCronJobs(): void {
     })
   }
 
-  const cronList: Array<TaskMapper> = list() as Array<TaskMapper>
-  cronJobLog('All cron jobs registered')
-  cronJobLog(JSON.stringify(cronList, null, 2))
+  // const cronList: Array<TaskMapper> = list() as Array<TaskMapper>
+  // cronJobLog('All cron jobs registered')
+  // cronJobLog(JSON.stringify(cronList, null, 2))
 }
 
 type ScheduleJobParams = {
