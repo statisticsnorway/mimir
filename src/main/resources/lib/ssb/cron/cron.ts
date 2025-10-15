@@ -132,8 +132,7 @@ export function setupCronJobs(): void {
         name: 'publishStatisticsDatasetJob',
         description: 'Publish datasets for statistics',
         descriptor: 'publishStatisticsDatasetJob',
-        cronValue: app?.config?.['ssb.cron.publishDataset'] ?? '50 7 * * *', // TODO: Use old publishDataset config while testing
-        //cronValue: app?.config?.['ssb.task.publishStatisticsDataset'] ?? '50 7 * * *',
+        cronValue: app?.config?.['ssb.task.publishStatisticsDataset'] ?? '50 7 * * *',
         timeZone: timezone,
       })
     }
