@@ -67,6 +67,10 @@ try {
           feature: 'show-cookie-banner',
           enabled: false,
         },
+        {
+          feature: 'test-publish-statisctics-dataset-job-task',
+          enabled: false,
+        },
       ],
     },
   ])

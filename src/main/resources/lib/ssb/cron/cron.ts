@@ -3,10 +3,12 @@ import { createUser, findUsers } from '/lib/xp/auth'
 import { run, type ContextParams } from '/lib/xp/context'
 import { create, get as getScheduledJob, modify, delete as deleteScheduledJob } from '/lib/xp/scheduler'
 import { isMaster } from '/lib/xp/cluster'
-// import { list, schedule, type TaskMapper } from '/lib/cron'
-// import { cronJobLog } from '/lib/ssb/utils/serverLog'
+import { list, schedule, type TaskMapper } from '/lib/cron'
+import { cronJobLog } from '/lib/ssb/utils/serverLog'
 import { ENONIC_CMS_DEFAULT_REPO } from '/lib/ssb/repo/common'
-// import { publishDataset } from '/lib/ssb/dataset/publishOld'
+import { publishDataset } from '/lib/ssb/dataset/publishOld'
+
+import { isEnabled } from '/lib/featureToggle'
 
 const createUserContext: ContextParams = {
   // Master context (XP)
@@ -92,35 +94,49 @@ export function runOnMasterOnly(task: () => void): void {
 export function setupCronJobs(): void {
   run(createUserContext, setupCronJobUser)
 
-  // const datasetPublishCron: string =
-  //   app.config && app.config['ssb.cron.publishDataset'] ? app.config['ssb.cron.publishDataset'] : '50 06 * * *'
+  const testPublishStatisticsDatasetJobTaskEnabled = isEnabled(
+    'test-publish-statisctics-dataset-job-task',
+    false,
+    'ssb'
+  )
 
-  // log.info('Run old datasetPublishCron cron-library')
-  // // publish dataset cron job
-  // schedule({
-  //   name: 'Dataset publish',
-  //   cron: datasetPublishCron,
-  //   callback: () => {
-  //     libScheduleTestLog('datasetPublishCronTest', datasetPublishCron)
-  //     runOnMasterOnly(publishDataset)
-  //   },
-  //   context: cronContext,
-  // })
-  // libScheduleTest({ name: 'datasetPublishCronTest', cron: '50 07 * * *', timeZone: 'Europe/Oslo' }, datasetPublishCron)
+  if (!testPublishStatisticsDatasetJobTaskEnabled) {
+    const datasetPublishCron: string =
+      app.config && app.config['ssb.cron.publishDataset'] ? app.config['ssb.cron.publishDataset'] : '50 06 * * *'
+
+    log.info('Run old datasetPublishCron cron-library')
+    // publish dataset cron job
+    schedule({
+      name: 'Dataset publish',
+      cron: datasetPublishCron,
+      callback: () => {
+        libScheduleTestLog('datasetPublishCronTest', datasetPublishCron)
+        runOnMasterOnly(publishDataset)
+      },
+      context: cronContext,
+    })
+    libScheduleTest(
+      { name: 'datasetPublishCronTest', cron: '50 07 * * *', timeZone: 'Europe/Oslo' },
+      datasetPublishCron
+    )
+  }
 
   // Task
   if (isMaster()) {
     const timezone: string =
       app.config && app.config['ssb.cron.timezone'] ? app.config['ssb.cron.timezone'] : 'Europe/Oslo'
 
-    // Publish dataset
-    scheduleJob({
-      name: 'publishStatisticsDatasetJob',
-      description: 'Publish datasets for statistics',
-      descriptor: 'publishStatisticsDatasetJob',
-      cronValue: app?.config?.['ssb.task.publishStatisticsDataset'] ?? '50 7 * * *',
-      timeZone: timezone,
-    })
+    if (testPublishStatisticsDatasetJobTaskEnabled) {
+      // Publish dataset
+      scheduleJob({
+        name: 'publishStatisticsDatasetJob',
+        description: 'Publish datasets for statistics',
+        descriptor: 'publishStatisticsDatasetJob',
+        cronValue: app?.config?.['ssb.cron.publishDataset'] ?? '50 7 * * *', // TODO: Use old publishDataset config while testing
+        //cronValue: app?.config?.['ssb.task.publishStatisticsDataset'] ?? '50 7 * * *',
+        timeZone: timezone,
+      })
+    }
 
     // Update calculators
     scheduleJob({
@@ -243,9 +259,10 @@ export function setupCronJobs(): void {
     })
   }
 
-  // const cronList: Array<TaskMapper> = list() as Array<TaskMapper>
-  // cronJobLog('All cron jobs registered')
-  // cronJobLog(JSON.stringify(cronList, null, 2))
+  // TODO: Remove once all lib-cron jobs are using lib-scheduler
+  const cronList: Array<TaskMapper> = list() as Array<TaskMapper>
+  cronJobLog('All cron jobs registered')
+  cronJobLog(JSON.stringify(cronList, null, 2))
 }
 
 type ScheduleJobParams = {
