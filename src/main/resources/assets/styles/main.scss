@@ -96,6 +96,9 @@ $custom-container-max-widths: (
 @use 'timeline';
 @use 'cookieBanner';
 
+@import '~@digdir/designsystemet-css';
+@import '~@digdir/designsystemet-theme';
+
 body {
   -moz-osx-font-smoothing: grayscale;
   font-size: 16px;

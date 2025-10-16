@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { Form, Container, Row, Col } from 'react-bootstrap'
-import { Input, Button, Dropdown, TextArea, Divider, Title, FormError } from '@statisticsnorway/ssb-component-library'
+import { Divider, Title, FormError } from '@statisticsnorway/ssb-component-library'
 import axios from 'axios'
+import { Button, Label, Textfield, Select, Field } from '@digdir/designsystemet-react'
 import { type Phrases } from '/lib/types/language'
 
 interface ContactFormProps {
@@ -261,61 +262,55 @@ function ContactForm(props: ContactFormProps) {
               <Container>
                 <Row>
                   <Col className='input-amount py-2'>
-                    <Dropdown
-                      className='receiver'
-                      id='receiver'
-                      onSelect={(value: object) => {
-                        onChange('receiver', value)
-                      }}
-                      header={props.phrases.contactFormChooseReceiver}
-                      selectedItem={receiver.value}
-                      error={receiver.error}
-                      errorMessage={receiver.errorMsg}
-                      items={items}
-                      ariaLabel={props.phrases.contactFormChooseReceiver}
-                    />
+                    <Field>
+                      <Label htmlFor='receiver'>{props.phrases.contactFormChooseReceiver}</Label>
+                      <Select id='receiver'>
+                        {items.map((item) => (
+                          <Select.Option key={item.id} value={item.id}>
+                            {item.title}
+                          </Select.Option>
+                        ))}
+                      </Select>
+                    </Field>
                   </Col>
                 </Row>
                 <Row>
                   <Col className='name py-2'>
-                    <Input
+                    <Textfield
                       className='input-name'
                       label={props.phrases.contactFormLabelName}
-                      handleChange={(value: string) => onChange('name', value)}
+                      onChange={(event) => onChange('name', event.target.value)}
                       onBlur={() => onBlur('name')}
-                      error={name.error}
-                      errorMessage={name.errorMsg}
+                      error={name.error ? name.errorMsg : undefined}
                     />
                   </Col>
                 </Row>
                 <Row>
                   <Col className='email py-2'>
-                    <Input
+                    <Textfield
                       className='email'
                       type='email'
                       label={props.phrases.contactFormLabelEmail}
-                      handleChange={(value: string) => onChange('email', value)}
+                      onChange={(event) => onChange('email', event.target.value)}
                       onBlur={() => onBlur('email')}
-                      error={email.error}
-                      errorMessage={email.errorMsg}
+                      error={email.error ? email.errorMsg : undefined}
                     />
                   </Col>
                 </Row>
                 <Row>
                   <Col className='text py-2'>
-                    <TextArea
-                      rows={7}
-                      handleChange={(value: string) => onChange('text', value)}
-                      onBlur={() => onBlur('text')}
+                    <Textfield
                       label={props.phrases.contactFormLabelText}
-                      error={text.error}
-                      errorMessage={text.errorMsg}
+                      multiline
+                      onChange={(event) => onChange('text', event.target.value)}
+                      onBlur={() => onBlur('text')}
+                      error={text.error ? text.errorMsg : undefined}
                     />
                   </Col>
                 </Row>
                 <Row className='submit pt-2 pb-4'>
                   <Col>
-                    <Button className='submit-button' primary type='submit' disabled={loading}>
+                    <Button variant='primary' loading={loading} type='submit'>
                       {props.phrases.contactFormSubmitText}
                     </Button>
                   </Col>
