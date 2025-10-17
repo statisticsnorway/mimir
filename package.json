@@ -108,7 +108,7 @@
     "postcss-loader": "~8.2.0",
     "prettier": "~3.6.2",
     "prop-types": "~15.8.1",
-    "ramda": "~0.31.3",
+    "ramda": "~0.32.0",
     "react": "~18.3.1",
     "react-dom": "~18.3.1",
     "react-feather": "~2.0.10",
