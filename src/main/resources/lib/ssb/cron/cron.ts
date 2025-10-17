@@ -32,7 +32,8 @@ export const cronContext: ContextParams = {
   },
 }
 
-export function libScheduleTest(params: { name: string; cron: string; timeZone: string }, cronLibCron: string) {
+// TODO: Remove libScheduleTest and libScheduleTestLog during lib-cron cleanup once every task is using lib-scheduler
+function libScheduleTest(params: { name: string; cron: string; timeZone: string }, cronLibCron: string) {
   if (!isMaster()) return
   try {
     log.info(
@@ -66,7 +67,8 @@ export function libScheduleTest(params: { name: string; cron: string; timeZone: 
     log.error('Error in libScheduleTest', e)
   }
 }
-export function libScheduleTestLog(name: string, cron: string): void {
+
+function libScheduleTestLog(name: string, cron: string): void {
   log.info(`libSchedulerTester - cron - ${name} was set to run at ${cron} and is running at ${new Date()}`)
 }
 
