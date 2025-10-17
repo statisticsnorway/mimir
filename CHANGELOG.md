@@ -1,37 +1,5 @@
 # Changelog
 
-## [2.36.0](https://github.com/statisticsnorway/mimir/compare/v2.35.1...v2.36.0) (2025-10-15)
-
-
-### Features
-
-* Add Show As Table feature to Highmaps [MIM-1831] ([#3453](https://github.com/statisticsnorway/mimir/issues/3453)) ([2502078](https://github.com/statisticsnorway/mimir/commit/25020788f1fb915a317b31ad5b1b93b1c73b7ef3))
-* Enable MathJax accessibility plugin [MIM-2187] ([#3461](https://github.com/statisticsnorway/mimir/issues/3461)) ([c56ab61](https://github.com/statisticsnorway/mimir/commit/c56ab61690cabb31c8dbb5a4c694626ddf664143))
-
-
-### Bug Fixes
-
-* add column header fields for highmap table ([#3473](https://github.com/statisticsnorway/mimir/issues/3473)) ([aece443](https://github.com/statisticsnorway/mimir/commit/aece443abeede0640a632147836ee9e9ca27a9c8))
-* add municipality to html title for kommunefakta [MIM-2325] ([#3462](https://github.com/statisticsnorway/mimir/issues/3462)) ([5692e6e](https://github.com/statisticsnorway/mimir/commit/5692e6e5a587cfd822a7daeb8fd2c65dd3bf36a4))
-* Adjust tabindex to scrollable region (table) for Highmap [MIM-1831] ([#3463](https://github.com/statisticsnorway/mimir/issues/3463)) ([b9793c9](https://github.com/statisticsnorway/mimir/commit/b9793c9feaf1ceb6b532a0d59f74d73ac2b48bf9))
-* capitalize first letter in municipality title ([ffd6ae4](https://github.com/statisticsnorway/mimir/commit/ffd6ae4147b2290b3c4ee588d0efa0f270a43f52))
-* capitalize first letter in municipality title [MIM-2325] ([#3477](https://github.com/statisticsnorway/mimir/issues/3477)) ([ffd6ae4](https://github.com/statisticsnorway/mimir/commit/ffd6ae4147b2290b3c4ee588d0efa0f270a43f52))
-* Disable context menu for MathJax [MIM-2187] ([#3472](https://github.com/statisticsnorway/mimir/issues/3472)) ([d3e1772](https://github.com/statisticsnorway/mimir/commit/d3e1772a282095bc1abe68b6b8a7cb122319701c))
-* Fix fetch tbml data try catch for internal and new public tables [MIM-2431] ([#3469](https://github.com/statisticsnorway/mimir/issues/3469)) ([eb391cc](https://github.com/statisticsnorway/mimir/commit/eb391cc80b365294944f257a542e55e7eb98e51d))
-* Highmap shows correct decimal point and some code cleanup [MIM-1831] ([#3476](https://github.com/statisticsnorway/mimir/issues/3476)) ([956e2be](https://github.com/statisticsnorway/mimir/commit/956e2beb5c5261b99e903fe7e3c8178c78d86aff))
-* higmap small adjustment after testing [MIM-1831] ([#3479](https://github.com/statisticsnorway/mimir/issues/3479)) ([eb81dc2](https://github.com/statisticsnorway/mimir/commit/eb81dc29ee2e3a7e70c69355901198c40e57a3e3))
-* remove commit message from slack on mabl fail ([#3466](https://github.com/statisticsnorway/mimir/issues/3466)) ([9626174](https://github.com/statisticsnorway/mimir/commit/9626174198104d617863f53e61699488951efda3))
-
-
-### Build System and dependencies
-
-* Bump @eslint/js from 9.35.0 to 9.36.0 ([#3457](https://github.com/statisticsnorway/mimir/issues/3457)) ([c9fe3f1](https://github.com/statisticsnorway/mimir/commit/c9fe3f1df4c9594d76868c1696acae0442e6f491))
-* Bump com.enonic.xp.app from 3.6.1 to 3.6.2 ([#3481](https://github.com/statisticsnorway/mimir/issues/3481)) ([0aff7ce](https://github.com/statisticsnorway/mimir/commit/0aff7ce68f44ca255c8270931bd80fceb9498ad5))
-* Bump eslint from 9.35.0 to 9.36.0 ([#3458](https://github.com/statisticsnorway/mimir/issues/3458)) ([64a7555](https://github.com/statisticsnorway/mimir/commit/64a755545316cee832e14fea0d8a72198838e427))
-* Bump eslint-plugin-jsdoc from 54.6.0 to 60.1.0 ([#3460](https://github.com/statisticsnorway/mimir/issues/3460)) ([9c7d13c](https://github.com/statisticsnorway/mimir/commit/9c7d13c03956d1435e7fa678331475752703fc8f))
-* Bump node to v22 in build.gradle and testOnPr workflow [MIM-2419] ([#3464](https://github.com/statisticsnorway/mimir/issues/3464)) ([6a3968e](https://github.com/statisticsnorway/mimir/commit/6a3968e8ac42d6063168d2e9b9805b0ea5edda05))
-* Bump sass from 1.92.1 to 1.93.0 ([#3459](https://github.com/statisticsnorway/mimir/issues/3459)) ([6d0b2b9](https://github.com/statisticsnorway/mimir/commit/6d0b2b9ace18742b034aa6bb8cadc7b3109e38d9))
-
 ## [2.35.1](https://github.com/statisticsnorway/mimir/compare/v2.35.0...v2.35.1) (2025-09-19)
 
 
