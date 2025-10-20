@@ -3,7 +3,7 @@ import { getContent, getComponent, pageUrl } from '/lib/xp/portal'
 import { render } from '/lib/thymeleaf'
 import { parseTable } from '/lib/ssb/parts/table'
 import { type SourceList, type SourcesConfig } from '/lib/types/sources'
-import { scriptAsset, getSources } from '/lib/ssb/utils/utils'
+import { getSources } from '/lib/ssb/utils/utils'
 import {
   type DropdownItem as TableDownloadDropdownItem,
   type DropdownItems as TableDownloadDropdownItems,
