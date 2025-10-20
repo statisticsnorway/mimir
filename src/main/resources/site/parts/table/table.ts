@@ -146,11 +146,7 @@ function renderPart(req: XP.Request, tableId?: string): XP.Response {
     }
   }
 
-  return r4xpRender('Table', getProps(req, tableId), req, {
-    pageContributions: {
-      bodyEnd: [scriptAsset('js/tableExport.js')],
-    },
-  })
+  return r4xpRender('Table', getProps(req, tableId), req)
 }
 
 function getDownloadTableOptions(): TableDownloadDropdownItems {
