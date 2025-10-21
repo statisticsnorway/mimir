@@ -2,7 +2,13 @@ import '/lib/ssb/polyfills/nashorn'
 import { Content } from '/lib/xp/content'
 import { DatasetRepoNode, DataSource as dataSourceType, getDataset, DATASET_BRANCH } from '/lib/ssb/repo/dataset'
 import { type TbmlDataUniform, type TbmlSourceListUniform } from '/lib/types/xmlParser'
-import { TbprocessorParsedResponse, getTbmlData, TbProcessorTypes } from '/lib/ssb/dataset/tbprocessor/tbml'
+import {
+  TbprocessorParsedResponse,
+  getTbmlData,
+  TbProcessorTypes,
+  isInternalTable,
+  isNewPublicTable,
+} from '/lib/ssb/dataset/tbprocessor/tbml'
 import { mergeDeepLeft } from '/lib/vendor/ramda'
 
 import { logUserDataQuery, Events } from '/lib/ssb/repo/query'
@@ -70,7 +76,6 @@ function formatTbProcessorType(type: string): string {
   }
 }
 
-// eslint-disable-next-line complexity
 function getDataAndMetaData(
   content: Content<DataSource>,
   processXml?: string
@@ -102,26 +107,15 @@ function getDataAndMetaData(
     processXml,
     TbProcessorTypes.DATA_SET
   )
-  // If this is true, it's most likely an internal table (unpublised data only)
-  // We pass this as a status 200, add an empty table to presentation,
-  // and fetch source list, so it's possible to import unpublished data from dashboard
-  const isInternal = !!(
-    tbmlParsedResponse &&
-    tbmlParsedResponse.status === 500 &&
-    tbmlParsedResponse.body &&
-    tbmlParsedResponse.body.includes('code: 401') &&
-    tbmlParsedResponse.body.includes('StatbankService.svc')
-  )
-  const isNewPublic = !!(
-    tbmlParsedResponse &&
-    tbmlParsedResponse.status === 400 &&
-    tbmlParsedResponse.body &&
-    tbmlParsedResponse.body.includes('<error>') &&
-    tbmlParsedResponse.body.includes('inneholder ikke data')
-  )
 
-  if (tbmlParsedResponse && (tbmlParsedResponse.status === 200 || isInternal || isNewPublic)) {
-    if (isInternal || isNewPublic) {
+  if (
+    tbmlParsedResponse &&
+    (tbmlParsedResponse.status === 200 || isInternalTable(tbmlParsedResponse) || isNewPublicTable(tbmlParsedResponse))
+  ) {
+    if (isInternalTable(tbmlParsedResponse) || isNewPublicTable(tbmlParsedResponse)) {
+      // Internal and newly created public table data responses will return status 500 and 400 respectively.
+      // As a workaround we need to pass the response as a status 200 after fetching tbml data
+      // to add an empty table to the dataset for presentation and fetch source list
       tbmlParsedResponse.status = 200
 
       const datasetRepo: DatasetRepoNode<TbmlDataUniform> | null = getDataset(
@@ -215,7 +209,7 @@ function addSourceList(
         }
 
   return tbmlParsedResponse && tbmlParsedResponse.parsedBody && sourceListObject
-    ? mergeDeepLeft(tbmlParsedResponse.parsedBody, sourceListObject)
+    ? (mergeDeepLeft(tbmlParsedResponse.parsedBody, sourceListObject) as TbmlDataUniform)
     : null
 }
 

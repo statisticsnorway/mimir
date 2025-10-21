@@ -33,7 +33,7 @@ export function getTbmlData(
   type?: string
 ): TbprocessorParsedResponse<TbmlDataUniform | TbmlSourceListUniform> {
   //
-  const response: HttpResponse = fetch(url, queryId, processXml, type)
+  const response = fetch(url, queryId, processXml, type) as HttpResponse
   return {
     body: response.body,
     status: response.status,
@@ -50,9 +50,33 @@ function processBody(body: string, queryId?: string): TbmlDataUniform | TbmlSour
     return getTbmlDataUniform(tbmlDataRaw as TbmlDataRaw)
   }
 }
+// Internal table responses will return status 500 and need to be identified as a legit response in order to import unpublished data
+export const isInternalTable = (tbmlParsedResponse: TbprocessorParsedResponse<TbmlDataUniform> | null) =>
+  !!(
+    tbmlParsedResponse &&
+    tbmlParsedResponse.status === 500 &&
+    tbmlParsedResponse.body &&
+    tbmlParsedResponse.body.includes('code: 401') &&
+    tbmlParsedResponse.body.includes('StatbankService.svc')
+  )
 
-export function fetch(url: string, queryId?: string, processXml?: string, type?: string): HttpResponse {
-  const mock: HttpResponse | null = getTbmlMock(url)
+// A newly created public table will return status 400 and need to be identified as a legit response in order to import unpublished data
+export const isNewPublicTable = (tbmlParsedResponse: TbprocessorParsedResponse<TbmlDataUniform> | null) =>
+  !!(
+    tbmlParsedResponse &&
+    tbmlParsedResponse.status === 400 &&
+    tbmlParsedResponse.body &&
+    tbmlParsedResponse.body.includes('<error>') &&
+    tbmlParsedResponse.body.includes('inneholder ikke data')
+  )
+
+export function fetch(
+  url: string,
+  queryId?: string,
+  processXml?: string,
+  type?: string
+): HttpResponse | undefined | null {
+  const mock = getTbmlMock(url)
   const requestParams: HttpRequestParams = {
     url,
     body: processXml,
@@ -87,9 +111,17 @@ export function fetch(url: string, queryId?: string, processXml?: string, type?:
             response,
           })
         }
-        const message = `Failed with status ${response.status} while fetching tbml data from ${url} with error ${response.body}`
+
+        const isInternalTableResponse = isInternalTable(response)
+        const isNewPublicTableResponse = isNewPublicTable(response)
+
+        let message = `Failed with status ${response.status} while fetching tbml data from ${url} with error ${response.body}.`
+        if (isInternalTableResponse || isNewPublicTableResponse) {
+          message += `\nThis is likely data from ${isInternalTableResponse ? 'an internal' : 'a new public'} table. Creating an empty table for dataset as prep work...`
+        }
         log.error(message)
-        if (response.status <= 500) {
+
+        if (response.status >= 500 && !isInternalTableResponse && !isNewPublicTableResponse) {
           throw new Error(message)
         }
       }

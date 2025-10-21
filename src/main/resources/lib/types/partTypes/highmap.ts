@@ -22,6 +22,8 @@ export interface HighmapProps {
   footnoteText: Highmap['footnoteText']
   phrases: Phrases | undefined
   language: string | undefined
+  highmapId: string | undefined
+  geographicalCategory: Highmap['geographicalCategory']
 }
 
 export interface HighmapFormattedTableData {
