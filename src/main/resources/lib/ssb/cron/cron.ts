@@ -96,11 +96,7 @@ export function runOnMasterOnly(task: () => void): void {
 export function setupCronJobs(): void {
   run(createUserContext, setupCronJobUser)
 
-  const testPublishStatisticsDatasetJobTaskEnabled = isEnabled(
-    'test-publish-statisctics-dataset-job-task',
-    false,
-    'ssb'
-  )
+  const testPublishStatisticsDatasetJobTaskEnabled = isEnabled('test-publish-statistics-dataset-job-task', false, 'ssb')
 
   if (!testPublishStatisticsDatasetJobTaskEnabled) {
     const datasetPublishCron: string =

@@ -68,7 +68,7 @@ try {
           enabled: false,
         },
         {
-          feature: 'test-publish-statisctics-dataset-job-task',
+          feature: 'test-publish-statistics-dataset-job-task',
           enabled: false,
         },
       ],
