@@ -1,7 +1,7 @@
 /* eslint-disable complexity */
 import { createUser, findUsers } from '/lib/xp/auth'
 import { run, type ContextParams } from '/lib/xp/context'
-import { create, get as getScheduledJob, modify, delete as deleteScheduledJob } from '/lib/xp/scheduler'
+import { create, get as getScheduledJob, modify } from '/lib/xp/scheduler'
 import { isMaster } from '/lib/xp/cluster'
 import { list, schedule, type TaskMapper } from '/lib/cron'
 import { cronJobLog } from '/lib/ssb/utils/serverLog'
@@ -33,44 +33,44 @@ export const cronContext: ContextParams = {
 }
 
 // TODO: Remove libScheduleTest and libScheduleTestLog during lib-cron cleanup once every task is using lib-scheduler
-function libScheduleTest(params: { name: string; cron: string; timeZone: string }, cronLibCron: string) {
-  if (!isMaster()) return
-  try {
-    log.info(
-      `Scheduling lib-sheduler test for ${params.name} at ${params.cron} with timezone ${params.timeZone}, libCron was scheduled with ${cronLibCron}`
-    )
+// function libScheduleTest(params: { name: string; cron: string; timeZone: string }, cronLibCron: string) {
+//   if (!isMaster()) return
+//   try {
+//     log.info(
+//       `Scheduling lib-sheduler test for ${params.name} at ${params.cron} with timezone ${params.timeZone}, libCron was scheduled with ${cronLibCron}`
+//     )
 
-    run(cronContext, () => {
-      deleteScheduledJob({
-        name: params.name!,
-      })
+//     run(cronContext, () => {
+//       deleteScheduledJob({
+//         name: params.name!,
+//       })
 
-      create({
-        name: params.name!,
-        descriptor: 'mimir:libSchedulerTester',
-        user: `user:system:cronjob`,
-        enabled: true,
-        schedule: {
-          type: 'CRON',
-          value: params.cron,
-          timeZone: params.timeZone,
-        },
-        config: {
-          name: params.name,
-          cronLibCron,
-          cron: params.cron,
-          timeZone: params.timeZone,
-        },
-      })
-    })
-  } catch (e) {
-    log.error('Error in libScheduleTest', e)
-  }
-}
+//       create({
+//         name: params.name!,
+//         descriptor: 'mimir:libSchedulerTester',
+//         user: `user:system:cronjob`,
+//         enabled: true,
+//         schedule: {
+//           type: 'CRON',
+//           value: params.cron,
+//           timeZone: params.timeZone,
+//         },
+//         config: {
+//           name: params.name,
+//           cronLibCron,
+//           cron: params.cron,
+//           timeZone: params.timeZone,
+//         },
+//       })
+//     })
+//   } catch (e) {
+//     log.error('Error in libScheduleTest', e)
+//   }
+// }
 
-function libScheduleTestLog(name: string, cron: string): void {
-  log.info(`libSchedulerTester - cron - ${name} was set to run at ${cron} and is running at ${new Date()}`)
-}
+// function libScheduleTestLog(name: string, cron: string): void {
+//   log.info(`libSchedulerTester - cron - ${name} was set to run at ${cron} and is running at ${new Date()}`)
+// }
 
 function setupCronJobUser(): void {
   const findUsersResult = findUsers({
@@ -108,15 +108,15 @@ export function setupCronJobs(): void {
       name: 'Dataset publish',
       cron: datasetPublishCron,
       callback: () => {
-        libScheduleTestLog('datasetPublishCronTest', datasetPublishCron)
+        // libScheduleTestLog('datasetPublishCronTest', datasetPublishCron)
         runOnMasterOnly(publishDataset)
       },
       context: cronContext,
     })
-    libScheduleTest(
-      { name: 'datasetPublishCronTest', cron: '50 07 * * *', timeZone: 'Europe/Oslo' },
-      datasetPublishCron
-    )
+    // libScheduleTest(
+    //   { name: 'datasetPublishCronTest', cron: '50 07 * * *', timeZone: 'Europe/Oslo' },
+    //   datasetPublishCron
+    // )
   }
 
   // Task
@@ -152,7 +152,7 @@ export function setupCronJobs(): void {
         description: 'Update next release Mimir QA',
         descriptor: 'updateMimirMockRelease',
         cronValue:
-          app.config && app.config['ssb.task.updateMimirReleasedMock']
+          app.config && app.config['ssb.task.updateUnpublishedMock']
             ? app.config['ssb.task.updateMimirReleasedMock']
             : '01 8 * * *',
         timeZone: timezone,
