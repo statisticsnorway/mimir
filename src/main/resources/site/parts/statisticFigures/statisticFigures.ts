@@ -1,3 +1,4 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { type Content } from '/lib/xp/content'
 import { getContent, processHtml, assetUrl } from '/lib/xp/portal'
 import { type Phrases } from '/lib/types/language'
@@ -14,7 +15,7 @@ import { type Statistics } from '/site/content-types'
 
 const STATBANKWEB_URL: string = app.config?.['ssb.statbankweb.baseUrl'] ?? 'https://www.ssb.no/statbank'
 
-export function get(req: XP.Request): XP.Response {
+export function get(req: Request): Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -22,11 +23,11 @@ export function get(req: XP.Request): XP.Response {
   }
 }
 
-export function preview(req: XP.Request): XP.Response {
+export function preview(req: Request): Response {
   return renderPart(req)
 }
 
-function renderPart(req: XP.Request): XP.Response {
+function renderPart(req: Request): Response {
   const page = getContent<Content<Statistics>>()
   if (!page) throw Error('No page found')
 
@@ -61,16 +62,10 @@ function renderPart(req: XP.Request): XP.Response {
     attachmentTableAndFigureView
   )
 
-  if (!attachmentTablesAndFigures.length && !(req.mode === 'edit' && page.type !== `${app.name}:statistics`)) {
-    return {
-      body: null,
-    }
-  } else {
-    return {
-      body: statisticFiguresBody,
-      pageContributions,
-      contentType: 'text/html',
-    }
+  return {
+    body: statisticFiguresBody,
+    pageContributions,
+    contentType: 'text/html',
   }
 }
 

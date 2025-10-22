@@ -5,7 +5,7 @@
   "draft": true,
   "always-update": true,
   "include-component-in-tag": false,
-  "label": "mimir-release",
+  "label": "",
   "pull-request-title-pattern": "chore: bump version and create changelog for v${version}",
   "packages": {
     ".": {

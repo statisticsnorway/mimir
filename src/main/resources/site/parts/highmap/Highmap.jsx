@@ -123,7 +123,7 @@ function generateSeries(tableData, mapDataSecondColumn, color, seriesTitle, phra
 
 const getTooltipFormatter = (language, seriesTitle) =>
   function () {
-    if (this.point.value) {
+    if (this.point.value || this.point.value === 0) {
       const value = language !== 'en' ? String(this.point.value).replace('.', ',') : this.point.value
       return `${this.point.name}</br>${seriesTitle ? seriesTitle + ': ' : ''}${value}`
     }
