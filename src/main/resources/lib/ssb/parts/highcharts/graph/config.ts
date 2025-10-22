@@ -215,7 +215,14 @@ export const createDefaultConfig = (highchartData, displayName, language) => ({
       format: `{value:,.${highchartData.yAxisDecimalPlaces || 0}f}`,
     },
     max: highchartData.yAxisMax ? parseFloat(highchartData.yAxisMax.replace(/,/g, '.')) : null,
-    min: highchartData.yAxisMin ? parseFloat(highchartData.yAxisMin.replace(/,/g, '.')) : null,
+    min: 0,
+    // Breaks makes sure we can render min != 0 correctly with axis break symbol
+    breaks: [
+      {
+        from: 0,
+        to: highchartData.yAxisMin ? parseFloat(highchartData.yAxisMin.replace(/,/g, '.')) : null,
+      },
+    ],
     stackLabels: {
       enabled: false,
       // HC sets x or y := 0 by default, leaving no breathing space between the bar and the label

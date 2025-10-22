@@ -9,6 +9,7 @@ import highchartsModuleExporting from 'highcharts/modules/exporting'
 import highchartsModuleOfflineExporting from 'highcharts/modules/offline-exporting'
 import highchartsModuleNoDataToDisplay from 'highcharts/modules/no-data-to-display'
 import highchartsModuleExportData from 'highcharts/modules/export-data'
+import highchartsBrokenAxis from 'highcharts/modules/broken-axis';
 import zipcelx from 'zipcelx/lib/legacy'
 
 import accessibilityLang from '../highchart-lang.json'
@@ -20,6 +21,7 @@ highchartsModuleNoDataToDisplay(Highcharts)
 highchartsModuleExporting(Highcharts)
 highchartsModuleOfflineExporting(Highcharts)
 highchartsModuleExportData(Highcharts)
+highchartsBrokenAxis(Highcharts)
 
 const EMPTY_CONFIG = {
   title: {
@@ -204,6 +206,43 @@ export function init() {
             return config.xAxis.title.text ? config.xAxis.title.text : 'Category'
           } else {
             return item.name
+          }
+        }
+
+        // Drawing yAxis break symbol when y-axis not starting at 0
+        if (config?.yAxis?.breaks && config?.yAxis?.breaks[0].to > 0 ) {
+          if (!config.chart.events) config.chart.events = {}
+
+          const yMin = config?.yAxis?.breaks[0].to
+
+          config.chart.events.load = function () {
+            const chart = this
+            
+            // Remove label on first tick that is on top of 0 label
+            chart.yAxis[0].ticks[1].label.hide()
+            
+            // Determine position broken axis symbol
+            const x = chart.plotLeft - 10
+            const secondTick = yMin+chart.yAxis[0].tickInterval
+            const tickOffset = chart.yAxis[0].toPixels(secondTick);
+            const offsetFromBottom = (chart.plotHeight - (tickOffset - chart.plotTop))/2;
+            const y = chart.yAxis[0].toPixels(0)-offsetFromBottom
+
+            // Draw broken axis symbol
+            chart.renderer
+              .path(['M', x, y, 'l', 20, -5])
+              .attr({
+                'stroke-width': 1,
+                stroke: 'black',
+              })
+              .add()
+            chart.renderer
+              .path(['M', x, y + 5, 'l', 20, -5])
+              .attr({
+                'stroke-width': 1,
+                stroke: 'black',
+              })
+              .add()           
           }
         }
 
