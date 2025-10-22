@@ -14,6 +14,7 @@ if (typeof Highcharts === 'object') {
   require('highcharts/modules/data')(Highcharts)
   require('highcharts/modules/no-data-to-display')(Highcharts)
   require('highcharts/modules/accessibility')(Highcharts)
+  require('highcharts/modules/broken-axis')(Highcharts)
 }
 
 /* TODO list
@@ -137,6 +138,44 @@ function Highchart(props) {
         const config = {
           ...highchart.config,
           ...accessibilityLang,
+          chart: {
+            ...highchart.config.chart,
+            events: {
+              load: function() {
+                // Drawing yAxis break symbol when y-axis not starting at 0
+                if (highchart.config.yAxis.breaks && highchart.config.yAxis.breaks[0].to > 0 ) {
+                  const chart = this
+                  const yMin = highchart.config.yAxis.breaks[0].to
+              
+                  // Remove label on first tick that is on top of 0 label
+                  chart.yAxis[0].ticks[1].label.hide()
+                  
+                  // Determine position broken axis symbol
+                  const x = chart.plotLeft - 10
+                  const secondTick = yMin+chart.yAxis[0].tickInterval
+                  const tickOffset = chart.yAxis[0].toPixels(secondTick);
+                  const offsetFromBottom = (chart.plotHeight - (tickOffset - chart.plotTop))/2;
+                  const y = chart.yAxis[0].toPixels(0)-offsetFromBottom
+
+                  // Draw broken axis symbol
+                  chart.renderer
+                    .path(['M', x, y, 'l', 20, -5])
+                    .attr({
+                      'stroke-width': 1,
+                      stroke: 'black',
+                    })
+                    .add()
+                  chart.renderer
+                    .path(['M', x, y + 5, 'l', 20, -5])
+                    .attr({
+                      'stroke-width': 1,
+                      stroke: 'black',
+                    })
+                    .add()        
+                }   
+              }
+            }
+          },
           exporting: {
             ...highchart.config.exporting,
             showTable: showTable,
