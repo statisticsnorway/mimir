@@ -9,7 +9,7 @@ import highchartsModuleExporting from 'highcharts/modules/exporting'
 import highchartsModuleOfflineExporting from 'highcharts/modules/offline-exporting'
 import highchartsModuleNoDataToDisplay from 'highcharts/modules/no-data-to-display'
 import highchartsModuleExportData from 'highcharts/modules/export-data'
-import highchartsBrokenAxis from 'highcharts/modules/broken-axis';
+import highchartsBrokenAxis from 'highcharts/modules/broken-axis'
 import zipcelx from 'zipcelx/lib/legacy'
 
 import accessibilityLang from '../highchart-lang.json'
@@ -213,27 +213,28 @@ export function init() {
         if (!config.chart.events) config.chart.events = {}
         config.chart.events.load = function () {
           const chart = this
-          for (let i=0; i<chart.yAxis.length; i++){
+          for (let i = 0; i < chart.yAxis.length; i++) {
             // Natively highcharts resolves y axis not starting on 0 either with breaks or setting yMin
             if (chart.yAxis[i].min > 0 || chart.yAxis[i].brokenAxis?.hasBreaks) {
-
               // Replace first tick label with 0 since showing below broken axis symbol (for yMin > 0)
               const yAxisConfig = Array.isArray(config.yAxis) ? config.yAxis[i] : config.yAxis
-              const decimalsMatch = yAxisConfig.labels?.format[9] ?? 0;
-              const zeroFormatted = Highcharts.numberFormat(0, decimalsMatch);
+              const decimalsMatch = yAxisConfig.labels?.format[9] ?? 0
+              const zeroFormatted = Highcharts.numberFormat(0, decimalsMatch)
               const firstTickValue = chart.yAxis[i].tickPositions[0]
-              chart.yAxis[i].ticks[firstTickValue].label.attr({text: zeroFormatted})
+              chart.yAxis[i].ticks[firstTickValue].label.attr({ text: zeroFormatted })
 
               // Removes first tick label if rendered on top of 0 (for broken axis)
               const secondTickValue = chart.yAxis[i].tickPositions[1]
-              if(chart.yAxis[i].ticks[firstTickValue].label.xy.y  === chart.yAxis[i].ticks[secondTickValue].label.xy.y){
+              if (
+                chart.yAxis[i].ticks[firstTickValue].label.xy.y === chart.yAxis[i].ticks[secondTickValue].label.xy.y
+              ) {
                 chart.yAxis[i].ticks[secondTickValue].label.hide()
               }
-              
+
               // Determine position for broken axis symbol
               const offset = chart.yAxis[i].opposite ? chart.plotWidth : 0
-              const x = chart.plotLeft + offset-10
-              const y = chart.plotTop+chart.plotHeight-10
+              const x = chart.plotLeft + offset - 10
+              const y = chart.plotTop + chart.plotHeight - 10
 
               // Draw broken axis symbol
               chart.renderer
@@ -249,8 +250,8 @@ export function init() {
                   'stroke-width': 1,
                   stroke: 'black',
                 })
-                .add()        
-            }   
+                .add()
+            }
           }
         }
 
