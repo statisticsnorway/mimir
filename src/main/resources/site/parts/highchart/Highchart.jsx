@@ -148,7 +148,7 @@ function Highchart(props) {
                   // Natively highcharts resolves y axis not starting on 0 either with breaks or setting yMin
                   if (chart.yAxis[i].min > 0 || chart.yAxis[i].brokenAxis?.hasBreaks) {
 
-                    // Replace first tick label with 0 sicne showing below broken axis symbol (for yMin > 0)
+                    // Replace first tick label with 0 since showing below broken axis symbol (for yMin > 0)
                     const yAxisConfig = Array.isArray(config.yAxis) ? config.yAxis[i] : config.yAxis
                     const decimalsMatch = yAxisConfig.labels?.format[9] ?? 0;
                     const zeroFormatted = Highcharts.numberFormat(0, decimalsMatch);
