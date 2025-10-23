@@ -143,24 +143,25 @@ function Highchart(props) {
             events: {
               load: function() {
                 // Drawing yAxis break symbol when y-axis not starting at 0
-                // TODO oppdater siste endring med broken axis
                 const chart = this
-                for (const i=0; i<chart.yAxis.length; i++){
-                  if (chart.yAxis[i].min > 0  || chart.yAxis[i].brokenAxis?.hasBreaks) {
-                    // If yMin > 0 first tick label is replaced with 0 (due to label showing below broken axis symbol)
+                for (let i=0; i<chart.yAxis.length; i++){
+                  // Natively highcharts resolves y axis not starting on 0 either with breaks or setting yMin
+                  if (chart.yAxis[i].min > 0 || chart.yAxis[i].brokenAxis?.hasBreaks) {
+
+                    // Replace first tick label with 0 sicne showing below broken axis symbol (for yMin > 0)
                     const yAxisConfig = Array.isArray(config.yAxis) ? config.yAxis[i] : config.yAxis
                     const decimalsMatch = yAxisConfig.labels?.format[9] ?? 0;
                     const zeroFormatted = Highcharts.numberFormat(0, decimalsMatch);
                     const firstTickValue = chart.yAxis[i].tickPositions[0]
                     chart.yAxis[i].ticks[firstTickValue].label.attr({text: zeroFormatted})
 
-                    // If brokenAxis then first and second tick is rendered on top of one another
+                    // Removes first tick label if rendered on top of 0 (for broken axis)
                     const secondTickValue = chart.yAxis[i].tickPositions[1]
                     if(chart.yAxis[i].ticks[firstTickValue].label.xy.y  === chart.yAxis[i].ticks[secondTickValue].label.xy.y){
                       chart.yAxis[i].ticks[secondTickValue].label.hide()
                     }
                     
-                    // Determine position broken axis symbol
+                    // Determine position for broken axis symbol
                     const offset = chart.yAxis[i].opposite ? chart.plotWidth : 0
                     const x = chart.plotLeft + offset-10
                     const y = chart.plotTop+chart.plotHeight-10
