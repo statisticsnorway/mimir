@@ -215,7 +215,7 @@ export const createDefaultConfig = (highchartData, displayName, language) => ({
       format: `{value:,.${highchartData.yAxisDecimalPlaces || 0}f}`,
     },
     max: highchartData.yAxisMax ? parseFloat(highchartData.yAxisMax.replace(/,/g, '.')) : null,
-    ...handleYminAndBrokenAxis(highchartData.yAxisMin),
+    min: highchartData.yAxisMin ? parseFloat(highchartData.yAxisMin.replace(/,/g, '.')) : null,
     stackLabels: {
       enabled: false,
       // HC sets x or y := 0 by default, leaving no breathing space between the bar and the label
@@ -347,21 +347,3 @@ export const createDefaultConfig = (highchartData, displayName, language) => ({
     ],
   },
 })
-
-function handleYminAndBrokenAxis(yMinConfig: string) {
-  const yMin = yMinConfig ? parseFloat(yMinConfig.replace(/,/g, '.')) : null
-
-  // if yMin > 0 add break to be able to plot yAxis correct showing 0 and broken axis symbol
-  if (yMin > 0) {
-    return {
-      min: 0,
-      breaks: [
-        {
-          from: 0,
-          to: yMin,
-        },
-      ],
-    }
-  }
-  return { min: yMin }
-}

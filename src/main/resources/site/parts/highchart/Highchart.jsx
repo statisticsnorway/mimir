@@ -143,36 +143,45 @@ function Highchart(props) {
             events: {
               load: function() {
                 // Drawing yAxis break symbol when y-axis not starting at 0
-                if (highchart.config.yAxis.breaks && highchart.config.yAxis.breaks[0].to > 0 ) {
-                  const chart = this
-                  const yMin = highchart.config.yAxis.breaks[0].to
-              
-                  // Remove label on first tick that is on top of 0 label
-                  chart.yAxis[0].ticks[1].label.hide()
-                  
-                  // Determine position broken axis symbol
-                  const x = chart.plotLeft - 10
-                  const secondTick = yMin+chart.yAxis[0].tickInterval
-                  const tickOffset = chart.yAxis[0].toPixels(secondTick);
-                  const offsetFromBottom = (chart.plotHeight - (tickOffset - chart.plotTop))/2;
-                  const y = chart.yAxis[0].toPixels(0)-offsetFromBottom
+                // TODO oppdater siste endring med broken axis
+                const chart = this
+                for (const i=0; i<chart.yAxis.length; i++){
+                  if (chart.yAxis[i].min > 0  || chart.yAxis[i].brokenAxis?.hasBreaks) {
+                    // If yMin > 0 first tick label is replaced with 0 (due to label showing below broken axis symbol)
+                    const yAxisConfig = Array.isArray(config.yAxis) ? config.yAxis[i] : config.yAxis
+                    const decimalsMatch = yAxisConfig.labels?.format[9] ?? 0;
+                    const zeroFormatted = Highcharts.numberFormat(0, decimalsMatch);
+                    const firstTickValue = chart.yAxis[i].tickPositions[0]
+                    chart.yAxis[i].ticks[firstTickValue].label.attr({text: zeroFormatted})
 
-                  // Draw broken axis symbol
-                  chart.renderer
-                    .path(['M', x, y, 'l', 20, -5])
-                    .attr({
-                      'stroke-width': 1,
-                      stroke: 'black',
-                    })
-                    .add()
-                  chart.renderer
-                    .path(['M', x, y + 5, 'l', 20, -5])
-                    .attr({
-                      'stroke-width': 1,
-                      stroke: 'black',
-                    })
-                    .add()        
-                }   
+                    // If brokenAxis then first and second tick is rendered on top of one another
+                    const secondTickValue = chart.yAxis[i].tickPositions[1]
+                    if(chart.yAxis[i].ticks[firstTickValue].label.xy.y  === chart.yAxis[i].ticks[secondTickValue].label.xy.y){
+                      chart.yAxis[i].ticks[secondTickValue].label.hide()
+                    }
+                    
+                    // Determine position broken axis symbol
+                    const offset = chart.yAxis[i].opposite ? chart.plotWidth : 0
+                    const x = chart.plotLeft + offset-10
+                    const y = chart.plotTop+chart.plotHeight-10
+
+                    // Draw broken axis symbol
+                    chart.renderer
+                      .path(['M', x, y, 'l', 20, -5])
+                      .attr({
+                        'stroke-width': 1,
+                        stroke: 'black',
+                      })
+                      .add()
+                    chart.renderer
+                      .path(['M', x, y + 5, 'l', 20, -5])
+                      .attr({
+                        'stroke-width': 1,
+                        stroke: 'black',
+                      })
+                      .add()        
+                  }   
+                }
               }
             }
           },
