@@ -22,18 +22,30 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
-      - name: Extract version from PR title
+          target-branch: "ci-fix-label-and-release-notes-for-release-please"
+      - name: Extract version and body from generated PR
         id: retrieve_new_version
         if: ${{ steps.run_release_please.outputs.pr != '' }}
         run: |
           PR='${{ steps.run_release_please.outputs.pr }}'
-          TITLE=$(echo "$PR" | awk -F'"title":"' '{print $2}' | awk -F'","' '{print $1}')
-          BODY=$(echo "$PR" | awk -F'"body":"' '{print $2}' | awk -F'","' '{print $1}')
+          TITLE=$(echo "$PR" | jq -r '.title')
+          BODY=$(echo "$PR" | jq -r '.body')
+          PR_NUMBER=$(echo "$PR" | jq -r '.number')
           VERSION=$(echo "$TITLE" | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+' )
           echo "Extracted version: ${VERSION}"
           echo "Extracted PR body: ${BODY}"
+          echo "Extracted PR number: ${PR_NUMBER}"
           echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
           echo "pr_body=${BODY}" >> "$GITHUB_OUTPUT"
+          echo "pr_number=${PR_NUMBER}" >> "$GITHUB_OUTPUT"
+      # Release please assumes label is removed after deploy in order to create next release
+      - name: Remove mimir-release label if release was created
+        if: ${{ steps.run_release_please.outputs.pr != '' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Removing mimir-release label from PR #${PR_NUMBER}"
+          gh pr edit $PR_NUMBER --remove-label "mimir-release" || echo "Label mimir-release not found or already removed"
 
   create-develop-to-master-pr:
     needs: release-please
