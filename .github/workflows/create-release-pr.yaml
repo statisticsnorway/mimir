@@ -13,8 +13,9 @@ jobs:
     runs-on: ubuntu-latest
     continue-on-error: true # Relase-please action fails when label is empty string, but we need to enforce no labeling
     outputs:
-      new_version: ${{ steps.retrieve_new_version.outputs.version }}
+      new_version: ${{ steps.retrieve_new_version.outputs.new_version }}
       pr_body: ${{ steps.retrieve_new_version.outputs.pr_body }}
+      pr_number: ${{ steps.retrieve_new_version.outputs.pr_number }}
     steps:
       - uses: googleapis/release-please-action@v4
         id: run_release_please
@@ -23,7 +24,7 @@ jobs:
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
           target-branch: "ci-fix-label-and-release-notes-for-release-please" # Remove after testing
-      - name: Extract version and body from generated PR
+      - name: Extract version, body and PR number from generated PR
         id: retrieve_new_version
         if: ${{ steps.run_release_please.outputs.pr != '' }}
         run: |
@@ -32,23 +33,11 @@ jobs:
           BODY=$(echo "$PR" | jq -r '.body')
           PR_NUMBER=$(echo "$PR" | jq -r '.number')
           VERSION=$(echo "$TITLE" | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+' )
-          echo "Extracted version: ${VERSION}"
-          echo "Extracted PR number: ${PR_NUMBER}"
-          echo "Extracted PR body: ${BODY}"
           echo "new_version=${VERSION}" >> "$GITHUB_OUTPUT"
           echo "pr_number=${PR_NUMBER}" >> "$GITHUB_OUTPUT"
           echo "pr_body<<EOF" >> "$GITHUB_OUTPUT"
           echo "$BODY" >> "$GITHUB_OUTPUT"
           echo "EOF" >> "$GITHUB_OUTPUT"
-      # Release please assumes label is removed after deploy in order to create next release
-      - name: Remove mimir-release label if release was created
-        if: ${{ steps.retrieve_new_version.outputs.pr_number != '' }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PR_NUMBER: ${{ steps.retrieve_new_version.outputs.pr_number }}
-        run: |
-          echo "Removing mimir-release label from PR #${PR_NUMBER}"
-          gh pr edit $PR_NUMBER --remove-label "mimir-release" || echo "Label mimir-release not found or already removed"
 
   create-develop-to-master-pr:
     needs: release-please
@@ -60,6 +49,15 @@ jobs:
         with:
           ref: develop
           token: '${{ secrets.GITHUB_TOKEN }}'
+      # Release please assumes label is removed after deploy in order to create next release
+      - name: Remove mimir-release label if PR to update version was created
+        if: ${{ needs.release-please.outputs.pr_number != '' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ needs.release-please.outputs.pr_number }}
+        run: |
+          echo "Removing mimir-release label from PR #${PR_NUMBER}"
+          gh pr edit $PR_NUMBER --remove-label "mimir-release" || echo "Label mimir-release not found or already removed"
       - name: Create PR from develop to master with version in title
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
