@@ -11,7 +11,6 @@ permissions:
 jobs:
   release-please:
     runs-on: ubuntu-latest
-    continue-on-error: true # Relase-please action fails when label is empty string, but we need to enforce no labeling
     outputs:
       new_version: ${{ steps.retrieve_new_version.outputs.new_version }}
       pr_body: ${{ steps.retrieve_new_version.outputs.pr_body }}
@@ -23,7 +22,6 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
-          target-branch: "ci-fix-label-and-release-notes-for-release-please" # Remove after testing
       - name: Extract version, body and PR number from generated PR
         id: retrieve_new_version
         if: ${{ steps.run_release_please.outputs.pr != '' }}
