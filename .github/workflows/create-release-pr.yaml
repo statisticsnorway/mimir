@@ -22,7 +22,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
-          target-branch: "ci-fix-label-and-release-notes-for-release-please"
+          target-branch: "ci-fix-label-and-release-notes-for-release-please" # Remove after testing
       - name: Extract version and body from generated PR
         id: retrieve_new_version
         if: ${{ steps.run_release_please.outputs.pr != '' }}
@@ -35,7 +35,7 @@ jobs:
           echo "Extracted version: ${VERSION}"
           echo "Extracted PR body: ${BODY}"
           echo "Extracted PR number: ${PR_NUMBER}"
-          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "new_version=${VERSION}" >> "$GITHUB_OUTPUT"
           echo "pr_body=${BODY}" >> "$GITHUB_OUTPUT"
           echo "pr_number=${PR_NUMBER}" >> "$GITHUB_OUTPUT"
       # Release please assumes label is removed after deploy in order to create next release
