@@ -43,6 +43,7 @@ jobs:
         if: ${{ steps.run_release_please.outputs.pr != '' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ steps.retrieve_new_version.outputs.pr_number }}
         run: |
           echo "Removing mimir-release label from PR #${PR_NUMBER}"
           gh pr edit $PR_NUMBER --remove-label "mimir-release" || echo "Label mimir-release not found or already removed"
@@ -63,4 +64,4 @@ jobs:
           NEW_VERSION: ${{ needs.release-please.outputs.new_version }}
           PR_BODY: ${{ needs.release-please.outputs.pr_body }}
         run: |
-          gh pr create --title "chore: Prod release v$NEW_VERSION" --body PR_BODY --base master --head develop
+          gh pr create --title "chore: Prod release v$NEW_VERSION" --body $PR_BODY --base master --head develop
