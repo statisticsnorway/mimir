@@ -99,13 +99,17 @@ export function publishDataset(): void {
   statistics.forEach((stat) => {
     const nextRelease: string | null = getNextRelease(stat)
     if (nextRelease) {
+      log.info(`Stat ${stat._name} (${stat.data.statistic}) has next release: ${nextRelease}`)
       const releaseDate: Date = new Date(nextRelease)
+      log.info(`releaseDate: ${releaseDate}`)
       const serverOffsetInMs: number =
         app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
       const now: Date = new Date(new Date().getTime() + serverOffsetInMs)
+      log.info(`now (with serverOffset): ${now}`)
       const oneHourFromNow: Date = new Date(now.getTime() + 1000 * 60 * 60)
+      log.info(`oneHourFromNow: ${oneHourFromNow}`)
       if (releaseDate > now && releaseDate < oneHourFromNow) {
-        log.info(`Stat ${stat.data.statistic} releases today`)
+        log.info(`Stat ${stat._name} (${stat.data.statistic}) releases today`)
         const statJobInfo: StatisticsPublishResult = {
           statistic: stat._id,
           shortNameId: stat.data.statistic ? stat.data.statistic : '',
