@@ -1,6 +1,6 @@
 # Changelog
 
-## [2.36.0](https://github.com/statisticsnorway/mimir/compare/v2.35.1...v2.36.0) (2025-10-15)
+## [2.36.0](https://github.com/statisticsnorway/mimir/compare/v2.35.1...v2.36.0) (2025-10-21)
 
 
 ### Features
@@ -21,6 +21,11 @@
 * Highmap shows correct decimal point and some code cleanup [MIM-1831] ([#3476](https://github.com/statisticsnorway/mimir/issues/3476)) ([956e2be](https://github.com/statisticsnorway/mimir/commit/956e2beb5c5261b99e903fe7e3c8178c78d86aff))
 * higmap small adjustment after testing [MIM-1831] ([#3479](https://github.com/statisticsnorway/mimir/issues/3479)) ([eb81dc2](https://github.com/statisticsnorway/mimir/commit/eb81dc29ee2e3a7e70c69355901198c40e57a3e3))
 * remove commit message from slack on mabl fail ([#3466](https://github.com/statisticsnorway/mimir/issues/3466)) ([9626174](https://github.com/statisticsnorway/mimir/commit/9626174198104d617863f53e61699488951efda3))
+* remove old pageContributions for tableExport ([#3499](https://github.com/statisticsnorway/mimir/issues/3499)) ([e12b36f](https://github.com/statisticsnorway/mimir/commit/e12b36fceb34367247ef60dcf8a50725f7419f7d))
+* Show 0 value correct in highmap tooltip ([#3486](https://github.com/statisticsnorway/mimir/issues/3486)) ([b1db3c5](https://github.com/statisticsnorway/mimir/commit/b1db3c5b540399ffed645ba0abdd466a62b056d8))
+* show highmap table when on same page as highchart ([e770468](https://github.com/statisticsnorway/mimir/commit/e770468f319c5a04b13b404441584b768126d833))
+* show highmap table when on same page as highchart [MIM-1831] ([#3497](https://github.com/statisticsnorway/mimir/issues/3497)) ([e770468](https://github.com/statisticsnorway/mimir/commit/e770468f319c5a04b13b404441584b768126d833))
+* Show Statbank Box component for StatisticsFigure part even if there are no tables [MIM-2334] ([#3483](https://github.com/statisticsnorway/mimir/issues/3483)) ([15c9a47](https://github.com/statisticsnorway/mimir/commit/15c9a472e8dcf502e718f34c836bcec79e1232e1))
 
 
 ### Build System and dependencies
@@ -30,7 +35,11 @@
 * Bump eslint from 9.35.0 to 9.36.0 ([#3458](https://github.com/statisticsnorway/mimir/issues/3458)) ([64a7555](https://github.com/statisticsnorway/mimir/commit/64a755545316cee832e14fea0d8a72198838e427))
 * Bump eslint-plugin-jsdoc from 54.6.0 to 60.1.0 ([#3460](https://github.com/statisticsnorway/mimir/issues/3460)) ([9c7d13c](https://github.com/statisticsnorway/mimir/commit/9c7d13c03956d1435e7fa678331475752703fc8f))
 * Bump node to v22 in build.gradle and testOnPr workflow [MIM-2419] ([#3464](https://github.com/statisticsnorway/mimir/issues/3464)) ([6a3968e](https://github.com/statisticsnorway/mimir/commit/6a3968e8ac42d6063168d2e9b9805b0ea5edda05))
+* Bump ramda ([9478863](https://github.com/statisticsnorway/mimir/commit/9478863dca931b3b616ac483794a507d2dbe6c8a))
+* Bump ramda from 0.31.3 to 0.32.0 in the dependencies-minor-updates group across 1 directory ([#3492](https://github.com/statisticsnorway/mimir/issues/3492)) ([9478863](https://github.com/statisticsnorway/mimir/commit/9478863dca931b3b616ac483794a507d2dbe6c8a))
 * Bump sass from 1.92.1 to 1.93.0 ([#3459](https://github.com/statisticsnorway/mimir/issues/3459)) ([6d0b2b9](https://github.com/statisticsnorway/mimir/commit/6d0b2b9ace18742b034aa6bb8cadc7b3109e38d9))
+* Bump the dependencies-patch-updates group with 2 updates ([#3494](https://github.com/statisticsnorway/mimir/issues/3494)) ([e916a4b](https://github.com/statisticsnorway/mimir/commit/e916a4b33aec39b2d3fe18f4a48fcdd971cf9380))
+* remove label on release-please ([#3490](https://github.com/statisticsnorway/mimir/issues/3490)) ([a139bbe](https://github.com/statisticsnorway/mimir/commit/a139bbedf36b6748f51894b67bd020ca7569ff21))
 
 ## [2.35.1](https://github.com/statisticsnorway/mimir/compare/v2.35.0...v2.35.1) (2025-09-19)
 
