@@ -1,5 +1,22 @@
 # Changelog
 
+## [2.36.1](https://github.com/statisticsnorway/mimir/compare/v2.36.0...v2.36.1) (2025-10-24)
+
+
+### Bug Fixes
+
+* fixing syntax issues ([9ec1e17](https://github.com/statisticsnorway/mimir/commit/9ec1e17918dd3a528dff1055f0b138a243bf0120))
+* handle body correctly ([ec11b72](https://github.com/statisticsnorway/mimir/commit/ec11b7230c504da0022fc6fa443afad75a4c699a))
+* re-adding label ([839ed63](https://github.com/statisticsnorway/mimir/commit/839ed634e6fd36c6dfc33c79db36c3def729eac0))
+
+
+### Build System and dependencies
+
+* add relase-please body to deploy-PR ([25b8fd3](https://github.com/statisticsnorway/mimir/commit/25b8fd3f6e3ba29348c7f14220c798297b6f01d2))
+* adjustments and debugging ([494d3d8](https://github.com/statisticsnorway/mimir/commit/494d3d812e38c54d8a3002e64894780ad9e35388))
+* Bump actions/setup-node from 5 to 6 ([#3493](https://github.com/statisticsnorway/mimir/issues/3493)) ([a290a7f](https://github.com/statisticsnorway/mimir/commit/a290a7fa793d56361b6e71fdd19bd813b7234fbf))
+* small adustments ([4918507](https://github.com/statisticsnorway/mimir/commit/4918507819200f91f9dbdb992db0d3fe4ec3a916))
+
 ## [2.36.0](https://github.com/statisticsnorway/mimir/compare/v2.35.1...v2.36.0) (2025-10-21)
 
 
