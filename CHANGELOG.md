@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.36.1](https://github.com/statisticsnorway/mimir/compare/v2.36.0...v2.36.1) (2025-10-24)
+
+
+### Build System and dependencies
+
+* Bump actions/setup-node from 5 to 6 ([#3493](https://github.com/statisticsnorway/mimir/issues/3493)) ([a290a7f](https://github.com/statisticsnorway/mimir/commit/a290a7fa793d56361b6e71fdd19bd813b7234fbf))
+
 ## [2.36.0](https://github.com/statisticsnorway/mimir/compare/v2.35.1...v2.36.0) (2025-10-21)
 
 
