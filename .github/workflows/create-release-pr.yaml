@@ -64,4 +64,4 @@ jobs:
           NEW_VERSION: ${{ needs.release-please.outputs.new_version }}
           PR_BODY: ${{ needs.release-please.outputs.pr_body }}
         run: |
-          gh pr create --title "chore: Prod release v$NEW_VERSION" --body $PR_BODY --base master --head develop
+          gh pr create --title "chore: Prod release v$NEW_VERSION" --body "$PR_BODY" --base master --head develop
