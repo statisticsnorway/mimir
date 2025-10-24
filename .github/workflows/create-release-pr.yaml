@@ -33,14 +33,16 @@ jobs:
           PR_NUMBER=$(echo "$PR" | jq -r '.number')
           VERSION=$(echo "$TITLE" | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+' )
           echo "Extracted version: ${VERSION}"
-          echo "Extracted PR body: ${BODY}"
           echo "Extracted PR number: ${PR_NUMBER}"
+          echo "Extracted PR body: ${BODY}"
           echo "new_version=${VERSION}" >> "$GITHUB_OUTPUT"
-          echo "pr_body=${BODY}" >> "$GITHUB_OUTPUT"
           echo "pr_number=${PR_NUMBER}" >> "$GITHUB_OUTPUT"
+          echo "pr_body<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$BODY" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
       # Release please assumes label is removed after deploy in order to create next release
       - name: Remove mimir-release label if release was created
-        if: ${{ steps.run_release_please.outputs.pr != '' }}
+        if: ${{ steps.retrieve_new_version.outputs.pr_number != '' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ steps.retrieve_new_version.outputs.pr_number }}
