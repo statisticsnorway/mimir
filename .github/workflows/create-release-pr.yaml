@@ -12,7 +12,9 @@ jobs:
   release-please:
     runs-on: ubuntu-latest
     outputs:
-      new_version: ${{ steps.retrieve_new_version.outputs.version }}
+      new_version: ${{ steps.retrieve_new_version.outputs.new_version }}
+      pr_body: ${{ steps.retrieve_new_version.outputs.pr_body }}
+      pr_number: ${{ steps.retrieve_new_version.outputs.pr_number }}
     steps:
       - uses: googleapis/release-please-action@v4
         id: run_release_please
@@ -20,15 +22,20 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
-      - name: Extract version from PR title
+      - name: Extract version, body and PR number from generated PR
         id: retrieve_new_version
         if: ${{ steps.run_release_please.outputs.pr != '' }}
         run: |
           PR='${{ steps.run_release_please.outputs.pr }}'
-          TITLE=$(echo "$PR" | awk -F'"title":"' '{print $2}' | awk -F'","' '{print $1}')
+          TITLE=$(echo "$PR" | jq -r '.title')
+          BODY=$(echo "$PR" | jq -r '.body')
+          PR_NUMBER=$(echo "$PR" | jq -r '.number')
           VERSION=$(echo "$TITLE" | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+' )
-          echo "Extracted version: ${VERSION}"
-          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "new_version=${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "pr_number=${PR_NUMBER}" >> "$GITHUB_OUTPUT"
+          echo "pr_body<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$BODY" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
 
   create-develop-to-master-pr:
     needs: release-please
@@ -40,9 +47,19 @@ jobs:
         with:
           ref: develop
           token: '${{ secrets.GITHUB_TOKEN }}'
+      # Release please assumes label is removed after deploy in order to create next release
+      - name: Remove mimir-release label if PR to update version was created
+        if: ${{ needs.release-please.outputs.pr_number != '' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ needs.release-please.outputs.pr_number }}
+        run: |
+          echo "Removing mimir-release label from PR #${PR_NUMBER}"
+          gh pr edit $PR_NUMBER --remove-label "mimir-release" || echo "Label mimir-release not found or already removed"
       - name: Create PR from develop to master with version in title
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NEW_VERSION: ${{ needs.release-please.outputs.new_version }}
+          PR_BODY: ${{ needs.release-please.outputs.pr_body }}
         run: |
-          gh pr create --title "chore: Prod release v$NEW_VERSION" --body "PR to merge develop into master to initiate prod release v$NEW_VERSION" --base master --head develop
+          gh pr create --title "chore: Prod release v$NEW_VERSION" --body "$PR_BODY" --base master --head develop
