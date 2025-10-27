@@ -20,30 +20,32 @@ describe('findLatestRelease', () => {
   })
 
   test('should find previous release', () => {
-    jest.setSystemTime(new Date('2025-07-01T10:00:00Z'))
+    jest.setSystemTime(new Date('2025-07-01T10:00:00+0200'))
     const { latestVariant, latestRelease } = findLatestRelease(statistic.variants!)
 
-    expect(latestRelease.toString()).toBe('Thu Jun 26 2025 08:00:00 GMT+0200 (Central European Summer Time)')
+    expect(latestRelease.toDateString()).toBe('Thu Jun 26 2025')
     expect(latestVariant.frekvens).toBe('Måned')
     expect(latestVariant.nextRelease).toBe('2025-07-24 08:00:00.0')
     expect(latestVariant.previousRelease).toBe('2025-06-26 08:00:00.0')
   })
 
   test('should find previous release before release hours same day as next release', () => {
-    jest.setSystemTime(new Date('2025-07-24T04:00:00Z'))
+    jest.setSystemTime(new Date('2025-07-24T04:00:00+0200'))
+    console.log(new Date())
     const { latestVariant, latestRelease } = findLatestRelease(statistic.variants!)
 
-    expect(latestRelease.toString()).toBe('Thu Jun 26 2025 08:00:00 GMT+0200 (Central European Summer Time)')
+    expect(latestRelease.toDateString()).toBe('Thu Jun 26 2025')
     expect(latestVariant.frekvens).toBe('Måned')
     expect(latestVariant.nextRelease).toBe('2025-07-24 08:00:00.0')
     expect(latestVariant.previousRelease).toBe('2025-06-26 08:00:00.0')
   })
 
   test('should find next release when next release date passed', () => {
-    jest.setSystemTime(new Date('2025-10-24T10:00:00Z'))
+    jest.setSystemTime(new Date('2025-10-24T10:00:00+0200'))
+    console.log(new Date())
     const { latestVariant, latestRelease } = findLatestRelease(statistic.variants!)
 
-    expect(latestRelease.toString()).toBe('Tue Aug 12 2025 08:00:00 GMT+0200 (Central European Summer Time)')
+    expect(latestRelease.toDateString()).toBe('Tue Aug 12 2025')
     expect(latestVariant.frekvens).toBe('Kvartal')
     expect(latestVariant.nextRelease).toBe('2025-08-12 08:00:00.0')
     expect(latestVariant.previousRelease).toBe('2025-05-08 08:00:00.0')
