@@ -15,7 +15,7 @@ const dummyReq: Partial<XP.Request> = {
   branch: 'master',
 }
 
-export function getNews(days: number = 1): NewsItem[] {
+export function getNews(days: number): NewsItem[] {
   const mainSubjects: SubjectItem[] = getMainSubjects(dummyReq as XP.Request)
   const articles: NewsItem[] = getArticles(mainSubjects, days)
   const statistics: NewsItem[] = getStatistics(mainSubjects, days)
@@ -76,7 +76,6 @@ function getStatistics(mainSubjects: SubjectItem[], days: number): NewsItem[] {
   const statistics: Array<StatisticInListing> = getAllStatisticsFromRepo()
   const statregStatistics = statistics.reduce((statsWithRelease: Array<StatisticInListing>, stat) => {
     const { latestVariant, latestRelease } = findLatestRelease(ensureArray<VariantInListing>(stat.variants))
-
     if (isAfter(latestRelease, from)) {
       stat.variants = [latestVariant]
       statsWithRelease.push(stat)
@@ -129,15 +128,15 @@ function findLatestRelease(variants: Array<VariantInListing>): {
   latestVariant: VariantInListing
   latestRelease: Date
 } {
-  let latestRelease = new Date(0)
+  let latestRelease = new Date('1970-01-01')
   let latestVariant: VariantInListing = variants[0]
   for (const variant of variants) {
-    if (isAfter(new Date(variant.previousRelease), latestRelease) || nextReleasedPassed(variant)) {
+    if (isAfter(new Date(variant.previousRelease), latestRelease)) {
       latestRelease = new Date(variant.previousRelease)
       latestVariant = variant
     }
     // to catch if nextRelease time is in the past, but data not updated
-    if (nextReleasedPassed(variant)) {
+    if (nextReleasedPassed(variant) && isAfter(new Date(variant.nextRelease), latestRelease)) {
       latestRelease = new Date(variant.nextRelease)
       latestVariant = variant
     }
