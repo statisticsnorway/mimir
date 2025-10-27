@@ -188,16 +188,25 @@ export function getReleaseDatesByVariants(variants: Array<VariantInListing>): Re
   }
   const nextReleases: Array<string> = []
   const previousReleases: Array<string> = []
+
   variants.forEach((variant) => {
     const upcomingReleases: Array<ReleasesInListing> = variant.upcomingReleases
       ? ensureArray(variant.upcomingReleases)
       : []
-    upcomingReleases.forEach((release) => nextReleases.push(release.publishTime))
+
+    if (upcomingReleases?.length) {
+      upcomingReleases.forEach((release) => nextReleases.push(release.publishTime))
+    } else if (variant.nextRelease !== '') {
+      // TODO: Remove fallback when upcomingReleases exist for all statistics in all enviroments
+      log.info(
+        `Statistic variant ${variant.id} is missing upcomingReleases, using nextRelease (${variant.nextRelease}) as fallback`
+      )
+      nextReleases.push(variant.nextRelease)
+    }
+
     if (variant.previousRelease !== '') {
       previousReleases.push(variant.previousRelease)
     }
-    // TODO:Remove next line when upcomingReleases exist in all enviroments
-    if (upcomingReleases.length === 0 && variant.nextRelease !== '') nextReleases.push(variant.nextRelease)
   })
 
   const nextReleasesSorted: Array<string> = nextReleases.sort(
@@ -210,8 +219,14 @@ export function getReleaseDatesByVariants(variants: Array<VariantInListing>): Re
   )
   const nextReleaseIndex: number = nextReleasesSorted.indexOf(nextReleaseFiltered[0])
 
+  if (nextReleaseFiltered?.length)
+    log.info(
+      `Filtered next releases by date (later than today) for variant ${variants[nextReleaseIndex]?.id}: ${JSON.stringify(nextReleaseFiltered)}`
+    )
+
   // If Statregdata is old, get date before nextRelease as previous date
   if (nextReleaseFiltered.length > 0 && nextReleaseIndex > 0) {
+    log.info('Statregdata is old, getting previous release date before next release as previous date')
     previousReleases.push(nextReleasesSorted[nextReleaseIndex - 1])
   }
   if (nextReleasesSorted.length === 1 && nextReleaseFiltered.length === 0) {
