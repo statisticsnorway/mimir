@@ -1,20 +1,21 @@
 import { query, type Content } from '/lib/xp/content'
 import { StatisticInListing, VariantInListing } from '/lib/ssb/dashboard/statreg/types'
 import { getTimeZoneIso } from '/lib/ssb/utils/dateUtils'
-import { subDays, format, parseISO } from '/lib/vendor/dateFns'
-import { fetchStatisticsWithReleaseToday, fetchStatisticsDaysBack } from '/lib/ssb/statreg/statistics'
+import { subDays, format, parseISO, isAfter } from '/lib/vendor/dateFns'
+import { getAllStatisticsFromRepo } from '/lib/ssb/statreg/statistics'
 import { getMainSubjects } from '/lib/ssb/utils/subjectUtils'
 import { nextReleasedPassed } from '/lib/ssb/utils/variantUtils'
 import { getIngressWithKeyFigureText } from '/lib/ssb/utils/keyFigureTextUtils'
 import { type SubjectItem } from '/lib/types/subject'
 import { type Statistic } from '/site/mixins/statistic'
 import { type Article, type Statistics } from '/site/content-types'
+import { ensureArray } from '../utils/arrayUtils'
 
 const dummyReq: Partial<XP.Request> = {
   branch: 'master',
 }
 
-export function getNews(days: number = 1): NewsItem[] {
+export function getNews(days: number): NewsItem[] {
   const mainSubjects: SubjectItem[] = getMainSubjects(dummyReq as XP.Request)
   const articles: NewsItem[] = getArticles(mainSubjects, days)
   const statistics: NewsItem[] = getStatistics(mainSubjects, days)
@@ -71,8 +72,16 @@ function getArticles(mainSubjects: SubjectItem[], days: number): NewsItem[] {
 }
 
 function getStatistics(mainSubjects: SubjectItem[], days: number): NewsItem[] {
-  const statregStatistics: Array<StatisticInListing> =
-    days > 1 ? fetchStatisticsDaysBack(days) : fetchStatisticsWithReleaseToday()
+  const from = new Date(subDays(new Date(), days).setHours(0, 0, 0, 0))
+  const statistics: Array<StatisticInListing> = getAllStatisticsFromRepo()
+  const statregStatistics = statistics.reduce((statsWithRelease: Array<StatisticInListing>, stat) => {
+    const { latestVariant, latestRelease } = findLatestRelease(ensureArray<VariantInListing>(stat.variants))
+    if (isAfter(latestRelease, from)) {
+      stat.variants = [latestVariant]
+      statsWithRelease.push(stat)
+    }
+    return statsWithRelease
+  }, [])
   const serverOffsetInMS: number = parseInt(app.config?.['serverOffsetInMs']) || 0
   const timeZoneIso: string = getTimeZoneIso(serverOffsetInMS)
 
@@ -94,6 +103,7 @@ function getStatistics(mainSubjects: SubjectItem[], days: number): NewsItem[] {
         const pubDate: string | undefined = variant ? getPubDateStatistic(variant, timeZoneIso) : undefined
 
         const link = getLinkByPath(statistic._path)
+
         if (pubDate) {
           statisticsNews.push({
             guid: statistic._id,
@@ -112,6 +122,26 @@ function getStatistics(mainSubjects: SubjectItem[], days: number): NewsItem[] {
   }
 
   return statisticsNews
+}
+
+function findLatestRelease(variants: Array<VariantInListing>): {
+  latestVariant: VariantInListing
+  latestRelease: Date
+} {
+  let latestRelease = new Date('1970-01-01')
+  let latestVariant: VariantInListing = variants[0]
+  for (const variant of variants) {
+    if (isAfter(new Date(variant.previousRelease), latestRelease)) {
+      latestRelease = new Date(variant.previousRelease)
+      latestVariant = variant
+    }
+    // to catch if nextRelease time is in the past, but data not updated
+    if (nextReleasedPassed(variant) && isAfter(new Date(variant.nextRelease), latestRelease)) {
+      latestRelease = new Date(variant.nextRelease)
+      latestVariant = variant
+    }
+  }
+  return { latestVariant, latestRelease }
 }
 
 function getPubDateStatistic(variant: VariantInListing, timeZoneIso: string): string | undefined {

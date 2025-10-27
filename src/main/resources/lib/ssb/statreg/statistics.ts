@@ -7,7 +7,7 @@ import {
   ReleaseDatesVariant,
 } from '/lib/ssb/dashboard/statreg/types'
 import { HttpResponse } from '/lib/http-client'
-import { format, isSameDay, isAfter, subDays, isBefore } from '/lib/vendor/dateFns'
+import { format, isAfter } from '/lib/vendor/dateFns'
 import { isDateBetween } from '/lib/ssb/utils/dateUtils'
 
 import { ensureArray } from '/lib/ssb/utils/arrayUtils'
@@ -93,60 +93,6 @@ export function fetchStatisticsWithRelease(before: Date): Array<StatisticInListi
         })
       : []
     if (variants[0] && isDateBetween(variants[0].nextRelease, new Date().toDateString(), before.toDateString())) {
-      statsWithRelease.push(stat)
-    }
-    return statsWithRelease
-  }, [])
-}
-
-export function fetchStatisticsWithReleaseToday(): Array<StatisticInListing> {
-  const statistics: Array<StatisticInListing> = getAllStatisticsFromRepo()
-  return statistics.reduce((statsWithRelease: Array<StatisticInListing>, stat) => {
-    const variants: Array<VariantInListing> = ensureArray<VariantInListing>(stat.variants).filter(
-      (variant) =>
-        isSameDay(new Date(variant.nextRelease), new Date()) || isSameDay(new Date(variant.previousRelease), new Date())
-    )
-    if (variants.length > 0) {
-      stat.variants = variants
-      statsWithRelease.push(stat)
-    }
-    return statsWithRelease
-  }, [])
-}
-
-export function fetchStatisticsDaysBack(days: number): Array<StatisticInListing> {
-  const statistics: Array<StatisticInListing> = getAllStatisticsFromRepo()
-  const serverOffsetInMs: number = app.config?.['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
-  const now: Date = new Date(new Date().getTime() + serverOffsetInMs)
-  const from = subDays(new Date(), days).setHours(0, 0, 0, 0)
-  return statistics.reduce((statsWithRelease: Array<StatisticInListing>, stat) => {
-    const variants: Array<VariantInListing> = ensureArray<VariantInListing>(stat.variants).filter(
-      (variant) =>
-        (isAfter(new Date(variant.nextRelease), new Date(from)) && isBefore(new Date(variant.nextRelease), now)) ||
-        isAfter(new Date(variant.previousRelease), from)
-    )
-
-    if (variants.length > 0) {
-      stat.variants = variants
-      statsWithRelease.push(stat)
-    }
-    return statsWithRelease
-  }, [])
-}
-
-//TODO: Remove possibly unused code
-export function fetchStatisticsWithPreviousReleaseBetween(from: Date, to: Date): Array<StatisticInListing> {
-  const statistics: Array<StatisticInListing> = getAllStatisticsFromRepo()
-  return statistics.reduce((statsWithRelease: Array<StatisticInListing>, stat) => {
-    const variants: Array<VariantInListing> = ensureArray<VariantInListing>(stat.variants).sort(
-      (a: VariantInListing, b: VariantInListing) => {
-        const aDate: Date = a.previousRelease ? new Date(a.previousRelease) : new Date('01.01.1970')
-        const bDate: Date = b.previousRelease ? new Date(b.previousRelease) : new Date('01.01.1970')
-        return bDate.getTime() - aDate.getTime()
-      }
-    )
-    if (variants[0] && isDateBetween(variants[0].previousRelease, from.toDateString(), to.toDateString())) {
-      stat.variants = variants
       statsWithRelease.push(stat)
     }
     return statsWithRelease
