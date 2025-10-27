@@ -22,10 +22,10 @@ $custom-container-max-widths: (
   xl: 1180px,
 );
 
-@use "bootstrap" as bootstrap with (
+@use 'bootstrap' as bootstrap with (
   $container-max-widths: $custom-container-max-widths,
-  $grid-gutter-width:$custom-grid-gutter-width,
-  $grid-breakpoints:$custom-grid-breakpoints
+  $grid-gutter-width: $custom-grid-gutter-width,
+  $grid-breakpoints: $custom-grid-breakpoints
 );
 
 @use '@statisticsnorway/ssb-component-library/src/main.scss' as component-lib;
@@ -96,8 +96,9 @@ $custom-container-max-widths: (
 @use 'timeline';
 @use 'cookieBanner';
 
-@import '~@digdir/designsystemet-css';
-@import '~@digdir/designsystemet-theme';
+/* Etter DS-importene */
+@import url('@digdir/designsystemet-css/index.css');
+@import url('@digdir/designsystemet-theme/altinn.css');
 
 body {
   -moz-osx-font-smoothing: grayscale;
