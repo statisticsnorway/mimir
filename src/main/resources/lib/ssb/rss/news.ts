@@ -1,15 +1,15 @@
 import { query, type Content } from '/lib/xp/content'
 import { StatisticInListing, VariantInListing } from '/lib/ssb/dashboard/statreg/types'
 import { getTimeZoneIso } from '/lib/ssb/utils/dateUtils'
-import { subDays, format, parseISO, isAfter } from '/lib/vendor/dateFns'
+import { subDays, isAfter } from '/lib/vendor/dateFns'
 import { getAllStatisticsFromRepo } from '/lib/ssb/statreg/statistics'
 import { getMainSubjects } from '/lib/ssb/utils/subjectUtils'
-import { nextReleasedPassed } from '/lib/ssb/utils/variantUtils'
 import { getIngressWithKeyFigureText } from '/lib/ssb/utils/keyFigureTextUtils'
 import { type SubjectItem } from '/lib/types/subject'
 import { type Statistic } from '/site/mixins/statistic'
 import { type Article, type Statistics } from '/site/content-types'
 import { ensureArray } from '../utils/arrayUtils'
+import { findLatestRelease, formatPubDateArticle, getLinkByPath, getPubDateStatistic } from './news-helpers'
 
 const dummyReq: Partial<XP.Request> = {
   branch: 'master',
@@ -122,49 +122,6 @@ function getStatistics(mainSubjects: SubjectItem[], days: number): NewsItem[] {
   }
 
   return statisticsNews
-}
-
-function findLatestRelease(variants: Array<VariantInListing>): {
-  latestVariant: VariantInListing
-  latestRelease: Date
-} {
-  let latestRelease = new Date('1970-01-01')
-  let latestVariant: VariantInListing = variants[0]
-  for (const variant of variants) {
-    if (isAfter(new Date(variant.previousRelease), latestRelease)) {
-      latestRelease = new Date(variant.previousRelease)
-      latestVariant = variant
-    }
-    // to catch if nextRelease time is in the past, but data not updated
-    if (nextReleasedPassed(variant) && isAfter(new Date(variant.nextRelease), latestRelease)) {
-      latestRelease = new Date(variant.nextRelease)
-      latestVariant = variant
-    }
-  }
-  return { latestVariant, latestRelease }
-}
-
-function getPubDateStatistic(variant: VariantInListing, timeZoneIso: string): string | undefined {
-  const nextReleaseDatePassed: boolean = variant.nextRelease ? nextReleasedPassed(variant) : false
-  const pubDate: string | undefined = nextReleaseDatePassed ? variant.nextRelease : variant.previousRelease
-  return pubDate ? formatPubDateStatistic(pubDate, timeZoneIso) : undefined
-}
-
-function formatPubDateArticle(date: string, serverOffsetInMS: number, timeZoneIso: string): string {
-  const dateWithOffset = new Date(new Date(date).getTime() + serverOffsetInMS)
-  const pubDate: string = format(dateWithOffset, "yyyy-MM-dd'T'HH:mm:ss")
-  return `${pubDate}${timeZoneIso}`
-}
-
-function formatPubDateStatistic(date: string, timeZoneIso: string): string {
-  const pubDate: string = format(parseISO(date), "yyyy-MM-dd'T'HH:mm:ss")
-  return `${pubDate}${timeZoneIso}`
-}
-
-function getLinkByPath(path: string) {
-  const baseUrl: string = app.config?.['ssb.baseUrl'] || 'https://www.ssb.no'
-  const site = '/ssb'
-  return baseUrl + path.substring(site.length)
 }
 
 interface NewsItem {
