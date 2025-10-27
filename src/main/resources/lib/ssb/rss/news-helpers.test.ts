@@ -19,31 +19,45 @@ describe('findLatestRelease', () => {
     global.Date = realDate
   })
 
-  test('should find previous release', () => {
-    jest.setSystemTime(new Date('2025-07-01T10:00:00+0200'))
-    const { latestVariant, latestRelease } = findLatestRelease(statistic.variants!)
+  const testCases = [
+    {
+      name: 'should find previous release',
+      systemTime: '2025-07-01T10:00:00+0200',
+      expectedDate: 'Thu Jun 26 2025',
+      expectedFrekvens: 'Måned',
+      expectedNextRelease: '2025-07-24 08:00:00.0',
+      expectedPreviousRelease: '2025-06-26 08:00:00.0',
+    },
+    {
+      name: 'should find previous release before release hours same day as next release',
+      systemTime: '2025-07-24T04:00:00+0200',
+      expectedDate: 'Thu Jun 26 2025',
+      expectedFrekvens: 'Måned',
+      expectedNextRelease: '2025-07-24 08:00:00.0',
+      expectedPreviousRelease: '2025-06-26 08:00:00.0',
+    },
+    {
+      name: 'should find next release when next release date passed',
+      systemTime: '2025-10-24T10:00:00+0200',
+      expectedDate: 'Tue Aug 12 2025',
+      expectedFrekvens: 'Kvartal',
+      expectedNextRelease: '2025-08-12 08:00:00.0',
+      expectedPreviousRelease: '2025-05-08 08:00:00.0',
+    },
+  ]
 
-    expect(latestRelease.toDateString()).toBe('Thu Jun 26 2025')
-    expect(latestVariant.frekvens).toBe('Måned')
-  })
+  test.each(testCases)(
+    '$name',
+    ({ systemTime, expectedDate, expectedFrekvens, expectedNextRelease, expectedPreviousRelease }) => {
+      jest.setSystemTime(new Date(systemTime))
+      const { latestVariant, latestRelease } = findLatestRelease(statistic.variants!)
 
-  test('should find previous release before release hours same day as next release', () => {
-    jest.setSystemTime(new Date('2025-07-24T04:00:00+0200'))
-    console.log(new Date())
-    const { latestVariant, latestRelease } = findLatestRelease(statistic.variants!)
-
-    expect(latestRelease.toDateString()).toBe('Thu Jun 26 2025')
-    expect(latestVariant.frekvens).toBe('Måned')
-  })
-
-  test('should find next release when next release date passed', () => {
-    jest.setSystemTime(new Date('2025-10-24T10:00:00+0200'))
-    console.log(new Date())
-    const { latestVariant, latestRelease } = findLatestRelease(statistic.variants!)
-
-    expect(latestRelease.toDateString()).toBe('Tue Aug 12 2025')
-    expect(latestVariant.frekvens).toBe('Kvartal')
-  })
+      expect(latestRelease.toDateString()).toBe(expectedDate)
+      expect(latestVariant.frekvens).toBe(expectedFrekvens)
+      expect(latestVariant.nextRelease).toBe(expectedNextRelease)
+      expect(latestVariant.previousRelease).toBe(expectedPreviousRelease)
+    }
+  )
 })
 
 // MOCK DATA
