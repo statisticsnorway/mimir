@@ -144,9 +144,9 @@
     ]
   },
   "dependencies": {
-    "@digdir/designsystemet-css": "^1.6.0",
-    "@digdir/designsystemet-react": "^1.6.0",
-    "@digdir/designsystemet-theme": "^1.6.0",
+    "@digdir/designsystemet-css": "^1.7.1",
+    "@digdir/designsystemet-react": "^1.7.1",
+    "@digdir/designsystemet-theme": "^1.7.1",
     "bootstrap": "~5.3.4",
     "date-fns": "~4.1.0",
     "highcharts-react-official": "~3.2.2",
