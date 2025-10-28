@@ -152,7 +152,7 @@ export function setupCronJobs(): void {
         description: 'Update next release Mimir QA',
         descriptor: 'updateMimirMockRelease',
         cronValue:
-          app.config && app.config['ssb.task.updateUnpublishedMock']
+          app.config && app.config['ssb.task.updateMimirReleasedMock']
             ? app.config['ssb.task.updateMimirReleasedMock']
             : '01 8 * * *',
         timeZone: timezone,
