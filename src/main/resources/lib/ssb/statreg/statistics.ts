@@ -15,6 +15,7 @@ import { fetchStatRegData } from '/lib/ssb/dashboard/statreg/common'
 import { getStatRegBaseUrl, STATISTICS_URL, STATREG_BRANCH, STATREG_REPO } from '/lib/ssb/dashboard/statreg/config'
 import { getNode } from '/lib/ssb/repo/common'
 import { Events, logUserDataQuery } from '/lib/ssb/repo/query'
+import { cronJobLog } from '../utils/serverLog'
 
 export const STATREG_REPO_STATISTICS_KEY = 'statistics'
 
@@ -198,7 +199,7 @@ export function getReleaseDatesByVariants(variants: Array<VariantInListing>): Re
       upcomingReleases.forEach((release) => nextReleases.push(release.publishTime))
     } else if (variant.nextRelease !== '') {
       // TODO: Remove fallback when upcomingReleases exist for all statistics in all enviroments
-      log.info(
+      cronJobLog(
         `Statistic variant ${variant.id} is missing upcomingReleases, using nextRelease (${variant.nextRelease}) as fallback`
       )
       nextReleases.push(variant.nextRelease)
@@ -219,14 +220,14 @@ export function getReleaseDatesByVariants(variants: Array<VariantInListing>): Re
   )
   const nextReleaseIndex: number = nextReleasesSorted.indexOf(nextReleaseFiltered[0])
 
+  // TODO: Can be removed after publication statistics data is tested thoroughly
   if (nextReleaseFiltered?.length)
-    log.info(
+    cronJobLog(
       `Filtered next releases by date (later than today) for variant ${variants[nextReleaseIndex]?.id}: ${JSON.stringify(nextReleaseFiltered)}`
     )
 
   // If Statregdata is old, get date before nextRelease as previous date
   if (nextReleaseFiltered.length > 0 && nextReleaseIndex > 0) {
-    log.info('Statregdata is old, getting previous release date before next release as previous date')
     previousReleases.push(nextReleasesSorted[nextReleaseIndex - 1])
   }
   if (nextReleasesSorted.length === 1 && nextReleaseFiltered.length === 0) {

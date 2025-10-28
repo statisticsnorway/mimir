@@ -358,7 +358,7 @@ function getNextRelease(statistic: Content<Statistics & Statistic>): string | nu
   if (statistic.data.statistic) {
     const statisticStatreg: StatisticInListing | undefined = getStatisticByIdFromRepo(statistic.data.statistic)
     if (statisticStatreg && statisticStatreg.variants) {
-      log.info(`Fetching next release from StatReg for stat ${statistic._name} (${statistic.data.statistic}) ...`)
+      cronJobLog(`Fetching next release from StatReg for stat ${statistic._name} (${statistic.data.statistic}) ...`)
       const releaseDates: ReleaseDatesVariant = getReleaseDatesByVariants(
         util.data.forceArray(statisticStatreg.variants)
       )
