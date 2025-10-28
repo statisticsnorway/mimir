@@ -173,9 +173,13 @@
                     </config>
                     <help-text>Et heltall større enn 0. Anbefalt er 133. 100 er kvadrat (1:1), 162 er det gylne snitt stående.</help-text>
                 </input>
+                <input name="geographicalCategory" type="TextLine">
+                    <label>Geografisk område</label>
+                    <help-text>Vises som kolonneheader i tabellvisning, f.eks. kommune </help-text>
+                </input>
                 <input name="seriesTitle" type="TextLine">
-                    <label>Serietittel</label>
-                    <help-text>Her skal det skrives inn tittel for serie som vises over verdier ved hover</help-text>
+                    <label>Måleenhet</label>
+                    <help-text>Måleenhet vises foran verdier ved hover og som kolonneheader i tabellvisning, f.eks. prosent eller kroner</help-text>
                 </input>
             </items>
         </field-set>
@@ -196,20 +200,6 @@
                         <option value="bottomRight">Høyrestilt bunn</option>
                     </config>
                     <default>topLeft</default>
-                </input>
-            </items>
-        </field-set>
-
-        <field-set>
-            <label>Kolonneheader for tabellvisning</label>
-            <items>
-                <input name="geographicalCategory" type="TextLine">
-                    <label>Geografisk område</label>
-                    <help-text>F.eks. kommune, fylke, land</help-text>
-                </input>
-                <input name="valueType" type="TextLine">
-                    <label>Verdi</label>
-                    <help-text>Verdien som vises i kartet, f.eks. prosent</help-text>
                 </input>
             </items>
         </field-set>
