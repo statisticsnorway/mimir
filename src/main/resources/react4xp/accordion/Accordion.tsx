@@ -1,5 +1,5 @@
 import React from 'react'
-import { Accordion as AccordionComponent, NestedAccordion } from '@statisticsnorway/ssb-component-library'
+//import { Accordion as AccordionComponent, NestedAccordion } from '@statisticsnorway/ssb-component-library'
 
 import { Details } from '@digdir/designsystemet-react'
 import { type AccordionData, type AccordionItems, type AccordionProps } from '/lib/types/partTypes/accordion'
@@ -8,13 +8,13 @@ import { sanitize } from '/lib/ssb/utils/htmlUtils'
 const Accordion = (props: AccordionProps) => {
   const { accordions } = props
 
-  function renderNestedAccordions(items: AccordionData['items']) {
+  /* function renderNestedAccordions(items: AccordionData['items']) {
     return (items as AccordionProps['accordions'])!.map((item, i) => (
       <NestedAccordion key={`accordion-${(item as AccordionItems).title}-${i}`} header={(item as AccordionItems).title}>
         {item.body && <div dangerouslySetInnerHTML={createMarkup(item.body)} />}
       </NestedAccordion>
     ))
-  }
+  } */
 
   function renderNestedDetails(items: AccordionData['items']) {
     return (items as AccordionProps['accordions'])!.map((item, i) => (

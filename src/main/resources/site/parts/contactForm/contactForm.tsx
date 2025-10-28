@@ -277,6 +277,7 @@ function ContactForm(props: ContactFormProps) {
                 <Row>
                   <Col className='name py-2'>
                     <Textfield
+                      id='name'
                       className='input-name'
                       label={props.phrases.contactFormLabelName}
                       onChange={(event) => onChange('name', event.target.value)}
@@ -288,6 +289,7 @@ function ContactForm(props: ContactFormProps) {
                 <Row>
                   <Col className='email py-2'>
                     <Textfield
+                      id='email'
                       className='email'
                       type='email'
                       label={props.phrases.contactFormLabelEmail}
@@ -300,6 +302,7 @@ function ContactForm(props: ContactFormProps) {
                 <Row>
                   <Col className='text py-2'>
                     <Textfield
+                      id='text'
                       label={props.phrases.contactFormLabelText}
                       multiline
                       onChange={(event) => onChange('text', event.target.value)}

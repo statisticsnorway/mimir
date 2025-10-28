@@ -22,7 +22,7 @@ $custom-container-max-widths: (
   xl: 1180px,
 );
 
-
+$enable-reboot: false;
 
  @use 'bootstrap' as bootstrap with (
   $container-max-widths: $custom-container-max-widths,
