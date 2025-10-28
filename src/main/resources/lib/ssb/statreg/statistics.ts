@@ -15,7 +15,7 @@ import { fetchStatRegData } from '/lib/ssb/dashboard/statreg/common'
 import { getStatRegBaseUrl, STATISTICS_URL, STATREG_BRANCH, STATREG_REPO } from '/lib/ssb/dashboard/statreg/config'
 import { getNode } from '/lib/ssb/repo/common'
 import { Events, logUserDataQuery } from '/lib/ssb/repo/query'
-import { cronJobLog } from '../utils/serverLog'
+import { cronJobLog } from '/lib/ssb/utils/serverLog'
 
 export const STATREG_REPO_STATISTICS_KEY = 'statistics'
 
