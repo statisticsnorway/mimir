@@ -15,6 +15,7 @@ import { fetchStatRegData } from '/lib/ssb/dashboard/statreg/common'
 import { getStatRegBaseUrl, STATISTICS_URL, STATREG_BRANCH, STATREG_REPO } from '/lib/ssb/dashboard/statreg/config'
 import { getNode } from '/lib/ssb/repo/common'
 import { Events, logUserDataQuery } from '/lib/ssb/repo/query'
+import { cronJobLog } from '/lib/ssb/utils/serverLog'
 
 export const STATREG_REPO_STATISTICS_KEY = 'statistics'
 
@@ -134,16 +135,25 @@ export function getReleaseDatesByVariants(variants: Array<VariantInListing>): Re
   }
   const nextReleases: Array<string> = []
   const previousReleases: Array<string> = []
+
   variants.forEach((variant) => {
     const upcomingReleases: Array<ReleasesInListing> = variant.upcomingReleases
       ? ensureArray(variant.upcomingReleases)
       : []
-    upcomingReleases.forEach((release) => nextReleases.push(release.publishTime))
+
+    if (upcomingReleases?.length) {
+      upcomingReleases.forEach((release) => nextReleases.push(release.publishTime))
+    } else if (variant.nextRelease !== '') {
+      // TODO: Remove fallback when upcomingReleases exist for all statistics in all enviroments
+      cronJobLog(
+        `Statistic variant ${variant.id} is missing upcomingReleases, using nextRelease (${variant.nextRelease}) as fallback`
+      )
+      nextReleases.push(variant.nextRelease)
+    }
+
     if (variant.previousRelease !== '') {
       previousReleases.push(variant.previousRelease)
     }
-    // TODO:Remove next line when upcomingReleases exist in all enviroments
-    if (upcomingReleases.length === 0 && variant.nextRelease !== '') nextReleases.push(variant.nextRelease)
   })
 
   const nextReleasesSorted: Array<string> = nextReleases.sort(
@@ -155,6 +165,12 @@ export function getReleaseDatesByVariants(variants: Array<VariantInListing>): Re
     isAfter(new Date(release), serverTime)
   )
   const nextReleaseIndex: number = nextReleasesSorted.indexOf(nextReleaseFiltered[0])
+
+  // TODO: Can be removed after publication statistics data is tested thoroughly
+  if (nextReleaseFiltered?.length)
+    cronJobLog(
+      `Filtered next releases by date (later than today) for variant ${variants[nextReleaseIndex]?.id}: ${JSON.stringify(nextReleaseFiltered)}`
+    )
 
   // If Statregdata is old, get date before nextRelease as previous date
   if (nextReleaseFiltered.length > 0 && nextReleaseIndex > 0) {
