@@ -2,26 +2,16 @@ import $ from 'jquery'
 // only used in part Highcharts when not doing react4xp render
 
 import Highcharts from 'highcharts'
-// Load the exporting module.
-import highchartsModuleData from 'highcharts/modules/data'
-import highchartsModuleAccessibility from 'highcharts/modules/accessibility'
-import highchartsModuleExporting from 'highcharts/modules/exporting'
-import highchartsModuleOfflineExporting from 'highcharts/modules/offline-exporting'
-import highchartsModuleNoDataToDisplay from 'highcharts/modules/no-data-to-display'
-import highchartsModuleExportData from 'highcharts/modules/export-data'
-import highchartsBrokenAxis from 'highcharts/modules/broken-axis'
+import 'highcharts/modules/data'
+import 'highcharts/modules/accessibility'
+import 'highcharts/modules/exporting'
+import 'highcharts/modules/offline-exporting'
+import 'highcharts/modules/no-data-to-display'
+import 'highcharts/modules/export-data'
+import 'highcharts/modules/broken-axis'
 import zipcelx from 'zipcelx/lib/legacy'
 
 import accessibilityLang from '../highchart-lang.json'
-
-// Initialize exporting module.
-highchartsModuleData(Highcharts)
-highchartsModuleAccessibility(Highcharts)
-highchartsModuleNoDataToDisplay(Highcharts)
-highchartsModuleExporting(Highcharts)
-highchartsModuleOfflineExporting(Highcharts)
-highchartsModuleExportData(Highcharts)
-highchartsBrokenAxis(Highcharts)
 
 const EMPTY_CONFIG = {
   title: {

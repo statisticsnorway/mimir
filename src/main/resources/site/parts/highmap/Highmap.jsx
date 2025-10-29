@@ -6,17 +6,15 @@ import PropTypes from 'prop-types'
 import { Link, Text, Tabs, Divider } from '@statisticsnorway/ssb-component-library'
 import { Col, Row } from 'react-bootstrap'
 import { useMediaQuery } from 'react-responsive'
+import 'highcharts/modules/accessibility'
+import 'highcharts/modules/exporting'
+import 'highcharts/modules/offline-exporting'
+import 'highcharts/modules/export-data'
+import 'highcharts/modules/map'
 
 import { exportHighchartsToExcel } from '/lib/ssb/utils/tableExportUtils'
 import accessibilityLang from './../../../assets/js/highchart-lang.json'
 
-if (typeof Highcharts === 'object') {
-  require('highcharts/modules/accessibility')(Highcharts)
-  require('highcharts/modules/exporting')(Highcharts)
-  require('highcharts/modules/offline-exporting')(Highcharts)
-  require('highcharts/modules/export-data')(Highcharts)
-  require('highcharts/modules/map')(Highcharts)
-}
 
 function generateColors(color, thresholdValues) {
   const obj = {}
@@ -330,8 +328,8 @@ function Highmap(props) {
       enabled: true,
       description,
     },
-    ...accessibilityLang,
     lang: {
+      ...accessibilityLang.lang,
       exportData: {
         categoryHeader: geographicalCategory ?? phrases['highmaps.geographicalCategory']
       },

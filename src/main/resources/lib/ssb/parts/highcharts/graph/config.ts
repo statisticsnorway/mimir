@@ -204,7 +204,7 @@ export const createDefaultConfig = (highchartData, displayName, language) => ({
     text: displayName,
     x: 0,
     y: 18,
-    widthAdjust: -150 - (highchartData.titleCenter == 'center' ? 90 : 0),
+    widthAdjust: -150 - (highchartData.titleCenter == 'center' ? 90 : 0), // TODO: Denne er fjernet i highcharts v12: The title.widthAdjust option is removed. Instead, use contextButton.buttonSpacing to make space for non-default context button.
   },
 
   yAxis: {
