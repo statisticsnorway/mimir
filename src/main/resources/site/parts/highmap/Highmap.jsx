@@ -142,7 +142,7 @@ const chart = (desktop, heightAspectRatio, mapFile, language, highmapId) => {
     map: mapFile,
     events: {
       render: function () {
-        // Workaround to get correct decimalpoint in Norwegian
+        // Workaround to get correct decimalpoint in table in Norwegian
         const table = document.querySelector(`#figure-${highmapId} .highcharts-data-table table`);
         if (table && language !== "en") {
           for(const td of table.querySelectorAll('td')) {

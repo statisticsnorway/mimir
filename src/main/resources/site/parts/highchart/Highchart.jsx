@@ -14,6 +14,7 @@ if (typeof Highcharts === 'object') {
   require('highcharts/modules/data')(Highcharts)
   require('highcharts/modules/no-data-to-display')(Highcharts)
   require('highcharts/modules/accessibility')(Highcharts)
+  require('highcharts/modules/broken-axis')(Highcharts)
 }
 
 /* TODO list
@@ -137,6 +138,54 @@ function Highchart(props) {
         const config = {
           ...highchart.config,
           ...accessibilityLang,
+          chart: {
+            ...highchart.config.chart,
+            events: {
+              load: function() {
+                // Drawing yAxis break symbol when y-axis not starting at 0
+                const chart = this
+                for (let i=0; i<chart.yAxis.length; i++){
+                  // Natively highcharts resolves y axis not starting on 0 either with breaks or setting yMin
+                  if (chart.yAxis[i].min > 0 || chart.yAxis[i].brokenAxis?.hasBreaks) {
+
+                    // Replace first tick label with 0 since showing below broken axis symbol (for yMin > 0)
+                    const yAxisConfig = Array.isArray(config.yAxis) ? config.yAxis[i] : config.yAxis
+                    const decimalsMatch = yAxisConfig.labels?.format[9] ?? 0;
+                    const zeroFormatted = Highcharts.numberFormat(0, decimalsMatch);
+                    const firstTickValue = chart.yAxis[i].tickPositions[0]
+                    chart.yAxis[i].ticks[firstTickValue].label.attr({text: zeroFormatted})
+
+                    // Removes first tick label if rendered on top of 0 (for broken axis)
+                    const secondTickValue = chart.yAxis[i].tickPositions[1]
+                    if(chart.yAxis[i].ticks[firstTickValue].label.xy.y  === chart.yAxis[i].ticks[secondTickValue].label.xy.y){
+                      chart.yAxis[i].ticks[secondTickValue].label.hide()
+                    }
+                    
+                    // Determine position for broken axis symbol
+                    const offset = chart.yAxis[i].opposite ? chart.plotWidth : 0
+                    const x = chart.plotLeft + offset-10
+                    const y = chart.plotTop+chart.plotHeight-10
+
+                    // Draw broken axis symbol
+                    chart.renderer
+                      .path(['M', x, y, 'l', 20, -5])
+                      .attr({
+                        'stroke-width': 1,
+                        stroke: 'black',
+                      })
+                      .add()
+                    chart.renderer
+                      .path(['M', x, y + 5, 'l', 20, -5])
+                      .attr({
+                        'stroke-width': 1,
+                        stroke: 'black',
+                      })
+                      .add()        
+                  }   
+                }
+              }
+            }
+          },
           exporting: {
             ...highchart.config.exporting,
             showTable: showTable,
