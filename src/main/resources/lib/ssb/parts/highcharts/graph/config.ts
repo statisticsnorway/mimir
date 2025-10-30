@@ -1,5 +1,4 @@
 /* eslint-disable complexity */
-// @ts-nocheck
 
 import { localize } from '/lib/xp/i18n'
 import { ensureArray } from '/lib/ssb/utils/arrayUtils'
@@ -32,7 +31,8 @@ export const X_AXIS_TITLE_POSITION = {
  * @param {string} language
  * @return {object} config
  */
-export const createDefaultConfig = (highchartData, displayName, language) => ({
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const createDefaultConfig = (highchartData: any, displayName: string, language: string) => ({
   accessibility: {
     enabled: true,
     description: highchartData.description,
@@ -129,10 +129,12 @@ export const createDefaultConfig = (highchartData, displayName, language) => ({
     },
     csv: {
       itemDelimiter: ';',
+      decimalPoint: language === 'en' ? '.' : ',',
     },
     // Sett denne til false når man vil erstatte hamburgermeny med egen
     enabled: true,
     showTable: true,
+    allowTableSorting: false,
   },
   legend: {
     enabled: !highchartData.noLegend,
