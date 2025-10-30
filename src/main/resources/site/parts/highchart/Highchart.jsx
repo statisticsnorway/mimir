@@ -141,10 +141,9 @@ function Highchart(props) {
                   for (const row of chart.dataRows) {
                     for (const [i, cell] of row.entries()) {
                       if (typeof cell === 'number') {
-                        // Convert thousand separator to space
-                        row[i] = cell.toString().replace(',', ' ')
-                        // Convert decimal point to comma
-                        row[i] = cell.toString().replace('.', ',')
+                        // First convert thousand separator to space, then decimal point to comma
+                        row[i] = cell.toString().replace(',', ' ').replace('.', ',')
+
                       }
                     }
                   }
