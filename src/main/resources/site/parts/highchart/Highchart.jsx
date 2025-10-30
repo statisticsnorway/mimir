@@ -123,20 +123,20 @@ function Highchart(props) {
     const highcharts = props.highcharts
     if (highcharts && highcharts.length) {
       return highcharts.map((highchart) => {
-        const lang = language !== 'en' ? accessibilityLang.lang : {}
+        const lang = highcharts.language !== 'en' ? accessibilityLang.lang : {}
 
         const config = {
           ...highchart.config,
           lang: {
             ...lang,
-            categoryHeader: highchart.xAxis.title.text ? highchart.xAxis.title.text : 'Category',
+            categoryHeader: highcharts.xAxis?.title?.text ? highchart.xAxis.title.text : 'Category',
           },
           chart: {
             ...highchart.config.chart,
             events: {
               exportData: function (chart) {
                 // Workaround to get correct number formatting in table in Norwegian
-                if (language !== 'en') {
+                if (highcharts.language !== 'en') {
                   const rows = chart.dataRows
                   for (const row of chart.dataRows) {
                     for (const [i, cell] of row.entries()) {
