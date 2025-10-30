@@ -1,6 +1,13 @@
 import { exportHighchartsToExcel } from '/lib/ssb/utils/tableExportUtils'
 import { downloadAsXLSX } from './Highmap'
 
+jest.mock('highcharts', () => ({}))
+jest.mock('highcharts/modules/accessibility', () => jest.fn())
+jest.mock('highcharts/modules/exporting', () => jest.fn())
+jest.mock('highcharts/modules/offline-exporting', () => jest.fn())
+jest.mock('highcharts/modules/export-data', () => jest.fn())
+jest.mock('highcharts/modules/map', () => jest.fn())
+
 jest.mock('/lib/ssb/utils/tableExportUtils', () => ({
   exportHighchartsToExcel: jest.fn(),
 }))
