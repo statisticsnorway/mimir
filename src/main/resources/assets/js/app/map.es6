@@ -4,14 +4,11 @@ import $ from 'jquery'
 import axios from 'axios'
 
 import Highcharts from 'highcharts'
-import A11y from 'highcharts/modules/accessibility'
-import Map from 'highcharts/modules/map'
-import DrillDown from 'highcharts/modules/drilldown'
+import 'highcharts/modules/accessibility'
+import 'highcharts/modules/map'
+import 'highcharts/modules/drilldown'
 
-// Initialize exporting module.
-A11y(Highcharts) // eslint-disable-line new-cap
-Map(Highcharts) // eslint-disable-line new-cap
-DrillDown(Highcharts) // eslint-disable-line new-cap
+// TODO: Etter valgt fylke må man interagere med kartet før man får tooltip eller kan velge kommune
 
 // Related to map content type and map part
 // Draws a map with highchart on json files located in assets/mapdata - static files for map
@@ -33,8 +30,7 @@ function init() {
       // Set drilldown pointers
       $.each(data, setDrilldownPointer)
 
-      // Instanciate the map
-      Highcharts.mapChart('map', {
+      const config = {
         accessibility: {
           enabled: false,
         },
@@ -124,8 +120,7 @@ function init() {
           },
         },
         tooltip: {
-          headerFormat: '{point.key}',
-          pointFormat: '{point.properties.NAVN}',
+          format: '{point.properties.NAVN}',
         },
         lang: {
           drillUpText: 'Se hele landet',
@@ -176,10 +171,6 @@ function init() {
               enabled: false,
               format: '',
             },
-            tooltip: {
-              headerFormat: '{point.key}',
-              pointFormat: '{point.properties.NAVN}',
-            },
           },
         ],
 
@@ -202,7 +193,10 @@ function init() {
             },
           },
         },
-      })
+      }
+      console.log(config)
+      // Instanciate the map
+      Highcharts.mapChart('map', config)
       $(map).attr('aria-hidden', 'true')
     })
   }

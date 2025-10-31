@@ -50,8 +50,8 @@
   }
 }
 
+// TODO: Avklare styling knapp
 .btn-highchart-export {
-  z-index: 200;
   bottom: 60px;
   right: 10px;
   background-color: transparent;
@@ -60,16 +60,9 @@
   @include media-breakpoint-down(sm) {
     bottom: 55px;
   }
-
-  i {
-    color: $ssb-green-4;
-    pointer-events: none;
-  }
-  span {
-    pointer-events: none;
-  }
 }
-.hc-container {
+
+.highchart-wrapper{
   .footnote {
     font-size: 12px;
     padding-left: 16px;
@@ -84,6 +77,7 @@
     }
   }
 }
+
 .highcharts-canvas {
   min-height: 500px;
   height: auto;
@@ -107,7 +101,6 @@
 }
 
 .highcharts-figure {
-
   .figure-title {
     font-size: 20px;
     @include roboto;
@@ -120,17 +113,17 @@
   }
 }
 
- .highcharts-data-table {
-    overflow-x: auto;
-    margin-top: 50px;
+.highcharts-data-table {
+  overflow-x: auto;
+  margin-top: 50px;
 
-   thead th:first-child {
-     text-align: left;
-   }
+  thead th:first-child {
+    text-align: left;
+  }
 
-   caption {
-     display: none;
-   }
+  caption {
+    display: none;
+  }
 }
 
 .hide-div {

@@ -6,20 +6,14 @@ import axios from 'axios'
 import { X } from 'react-feather'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
-import highchartsExporting from 'highcharts/modules/exporting'
-import highchartsExportingOffline from 'highcharts/modules/offline-exporting'
-import highchartsExportData from 'highcharts/modules/export-data'
-import highchartsAccessibility from 'highcharts/modules/accessibility'
+import 'highcharts/modules/exporting'
+import 'highcharts/modules/offline-exporting'
+import 'highcharts/modules/export-data'
+import 'highcharts/modules/accessibility'
 import { useMediaQuery } from 'react-responsive'
 import { sanitize } from '/lib/ssb/utils/htmlUtils'
+import { exportHighchartsToExcel } from '/lib/ssb/utils/tableExportUtils'
 import accessibilityLang from './../../../assets/js/highchart-lang.json'
-
-if (typeof window !== 'undefined' && typeof Highcharts === 'object') {
-  highchartsExporting(Highcharts)
-  highchartsExportingOffline(Highcharts)
-  highchartsExportData(Highcharts)
-  highchartsAccessibility(Highcharts)
-}
 
 /* TODO
 - Etternavn må få rett visning av beste-treff
@@ -269,33 +263,29 @@ function NameSearch(props) {
     const lineColor = '#21383a'
 
     // Highchart language checker
-    if (language !== 'en') {
-      Highcharts.setOptions({
-        lang: {
-          ...accessibilityLang.lang,
-          accessibility: {
-            ...accessibilityLang.lang.accessibility,
-            chartContainerLabel: props.phrases.chartContainerLabel,
-            exporting: {
-              ...accessibilityLang.lang.accessibility.exporting,
-              chartMenuLabel: props.phrases.chartMenuLabel,
-              menuButtonLabel: props.phrases.menuButtonLabel,
-            },
-            screenReaderSection: {
-              ...accessibilityLang.lang.accessibility.screenReaderSection,
-              beforeRegionLabel: props.phrases.beforeRegionLabel,
-              endOfChartMarker: '',
-            },
-            legend: {
-              ...accessibilityLang.lang.accessibility.legend,
-              legendItem: props.phrases.legendItem,
-              legendLabel: props.phrases.legendLabel,
-              legendLabelNoTitle: props.phrases.legendLabelNoTitle,
-            },
-          },
-          decimalPoint: accessibilityLang.lang.decimalPoint,
+    const lang = language === 'en' ?{} :{
+      ...accessibilityLang.lang,
+      accessibility: {
+        ...accessibilityLang.lang.accessibility,
+        chartContainerLabel: props.phrases.chartContainerLabel,
+        exporting: {
+          ...accessibilityLang.lang.accessibility.exporting,
+          chartMenuLabel: props.phrases.chartMenuLabel,
+          menuButtonLabel: props.phrases.menuButtonLabel,
         },
-      })
+        screenReaderSection: {
+          ...accessibilityLang.lang.accessibility.screenReaderSection,
+          beforeRegionLabel: props.phrases.beforeRegionLabel,
+          endOfChartMarker: '',
+        },
+        legend: {
+          ...accessibilityLang.lang.accessibility.legend,
+          legendItem: props.phrases.legendItem,
+          legendLabel: props.phrases.legendLabel,
+          legendLabelNoTitle: props.phrases.legendLabelNoTitle,
+        },
+      },
+      decimalPoint: accessibilityLang.lang.decimalPoint,
     }
 
     if (nameGraphData) {
@@ -322,6 +312,7 @@ function NameSearch(props) {
           '#83c1e9',
           '#b59924',
         ],
+        lang: {...lang},
         title: {
           style: {
             color: 'transparent',
@@ -388,32 +379,14 @@ function NameSearch(props) {
           },
           enabled: true,
           menuItemDefinitions: {
-            printChart: {
-              text: props.phrases.printChart,
-            },
-            downloadPNG: {
-              text: props.phrases.downloadPNG,
-            },
-            downloadJPEG: {
-              text: props.phrases.downloadJPEG,
-            },
-            downloadPDF: {
-              text: props.phrases.downloadPDF,
-            },
-            downloadSVG: {
-              text: props.phrases.downloadSVG,
-            },
-            downloadCSV: {
-              text: props.phrases.downloadCSV,
-            },
             downloadXLS: {
-              text: props.phrases.downloadXLS,
+              onclick: downloadAsXLSX(nameGraphData.graphHeader),
             },
           },
-        },
-        csv: {
-          itemDelimiter: ';',
-        },
+          csv: {
+            itemDelimiter: ';',
+          },
+        }
       }
 
       return (
@@ -482,6 +455,15 @@ function NameSearch(props) {
   )
 }
 
+export const downloadAsXLSX = (title) =>
+  function () {
+    const rows = this.getDataRows(true)
+    exportHighchartsToExcel({
+      rows: rows.slice(1),
+      fileName: title ? `${title}.xlsx` : 'graf.xlsx',
+    })
+  }
+
 NameSearch.propTypes = {
   urlToService: PropTypes.string,
   urlToGraphService: PropTypes.string,
@@ -519,13 +501,6 @@ NameSearch.propTypes = {
       onlygivenandfamily: PropTypes.string,
       firstgiven: PropTypes.string,
     }),
-    printChart: PropTypes.string,
-    downloadPNG: PropTypes.string,
-    downloadJPEG: PropTypes.string,
-    downloadPDF: PropTypes.string,
-    downloadSVG: PropTypes.string,
-    downloadCSV: PropTypes.string,
-    downloadXLS: PropTypes.string,
     chartContainerLabel: PropTypes.string,
     chartMenuLabel: PropTypes.string,
     menuButtonLabel: PropTypes.string,
