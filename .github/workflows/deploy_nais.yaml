@@ -54,7 +54,7 @@ jobs:
           path: 'ssbno-xp-docker'
           repository: 'statisticsnorway/ssbno-xp-docker'
       - name: Download artifacts
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: mimir-nais-${{ github.run_number }}
           path: './ssbno-xp-docker'
