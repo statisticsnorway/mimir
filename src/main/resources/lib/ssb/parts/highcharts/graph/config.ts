@@ -7,7 +7,7 @@ export const style = {
   color: '#21383a',
   fontSize: '13px',
   fontWeight: 'normal',
-  fontFamily: '"Open Sans Regular", "Arial", "DejaVu Sans", sans-serif',
+  fontFamily: '"Open Sans Regular", sans-serif',
 }
 export const lineColor = '#21383a'
 
