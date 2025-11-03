@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { Tag, NestedAccordion, ExpansionBox, Title } from '@statisticsnorway/ssb-component-library'
+import { ExpansionBox, Title } from '@statisticsnorway/ssb-component-library'
+import { Tag, Details } from '@digdir/designsystemet-react'
 
 import { sanitize } from '/lib/ssb/utils/htmlUtils'
 import { type AccordionData, AccordionItems } from '/lib/types/partTypes/accordion'
@@ -22,15 +23,18 @@ function StatisticDescription(props: Readonly<AboutTheStatisticsProps>) {
         )}
         {items.map((item: AccordionItems) => {
           return (
-            <NestedAccordion key={item.title} header={item.title} openByDefault>
-              {item.body && (
-                <div
-                  dangerouslySetInnerHTML={{
-                    __html: sanitize(item.body.replace(/&nbsp;/g, ' ')),
-                  }}
-                />
-              )}
-            </NestedAccordion>
+            <Details key={item.title} defaultOpen>
+              <Details.Summary data-size='lg'>{item.title}</Details.Summary>
+              <Details.Content>
+                {item.body && (
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: sanitize(item.body.replace(/&nbsp;/g, ' ')),
+                    }}
+                  />
+                )}
+              </Details.Content>
+            </Details>
           )
         })}
       </div>

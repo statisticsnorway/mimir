@@ -24,11 +24,11 @@ $custom-container-max-widths: (
 
 $enable-reboot: false;
 
- @use 'bootstrap' as bootstrap with (
+@use 'bootstrap' as bootstrap with (
   $container-max-widths: $custom-container-max-widths,
   $grid-gutter-width: $custom-grid-gutter-width,
   $grid-breakpoints: $custom-grid-breakpoints
-); 
+);
 
 @use '@statisticsnorway/ssb-component-library/src/main.scss' as component-lib;
 
@@ -98,9 +98,9 @@ $enable-reboot: false;
 @use 'timeline';
 @use 'cookieBanner';
 
-
 @use '@digdir/designsystemet-css/dist/src/index.css';
-@use '@digdir/designsystemet-theme/brand/digdir.css';
+//@use '@digdir/designsystemet-theme/brand/digdir.css';
+@use 'ssbtheme.css';
 
 body {
   -moz-osx-font-smoothing: grayscale;

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { Accordion, Button } from '@statisticsnorway/ssb-component-library'
+import { Button, Details } from '@digdir/designsystemet-react'
 import { ChevronDown, ChevronUp } from 'react-feather'
 
 import { sanitize } from '/lib/ssb/utils/htmlUtils'
@@ -102,31 +102,25 @@ function AttachmentTableFigures(props: Readonly<AttachmentTablesFiguresProps>) {
     <>
       {accordions && (
         <div className='xp-part part-accordion container'>
-          <div className='row'>
-            <ul>
-              {accordions.map((accordion, index) => {
-                return (
-                  <li key={accordion.id} ref={index === 4 ? currentElement : null}>
-                    <Accordion
-                      className={`col-12 ${getBreakpoint(index)}`}
-                      id={accordion.id}
-                      header={accordion.open}
-                      subHeader={accordion.subHeader}
-                      openByDefault={
-                        (firstItemOpen && index === 0) || (anchor && accordion.id && accordion.id === anchor)
-                      }
-                      onToggle={() => {
-                        // Check for Table overflow when toggling accordion
-                        setCheckOverflow((prev) => !prev)
-                      }}
-                    >
-                      {renderAccordionBody(accordion)}
-                    </Accordion>
-                  </li>
-                )
-              })}
-            </ul>
-          </div>
+          {accordions.map((accordion, index) => {
+            return (
+              <Details
+                className={`col-12 ${getBreakpoint(index)}`}
+                key={accordion.id}
+                id={accordion.id}
+                defaultOpen={!!((firstItemOpen && index === 0) || (anchor && accordion.id && accordion.id === anchor))}
+                onToggle={() => {
+                  setCheckOverflow((prev) => !prev)
+                }}
+              >
+                <Details.Summary data-size='lg'>
+                  <strong>{accordion.subHeader}</strong>
+                  {accordion.subHeader && ' – '} {accordion.open}
+                </Details.Summary>
+                <Details.Content>{renderAccordionBody(accordion)}</Details.Content>
+              </Details>
+            )
+          })}
           <div className={`row free-text-wrapper ${getFreeTextBreakpoint()}`}>
             <div className='col-12 col-lg-6' dangerouslySetInnerHTML={{ __html: sanitize(freeText!) }}></div>
           </div>
