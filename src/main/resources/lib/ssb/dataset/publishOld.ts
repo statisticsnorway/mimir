@@ -3,7 +3,7 @@ import { get as getContent, Content } from '/lib/xp/content'
 import { NodeQueryResultHit } from '/lib/xp/node'
 import { send } from '/lib/xp/event'
 import { executeFunction, sleep } from '/lib/xp/task'
-import { run, get as getContext, type ContextParams } from '/lib/xp/context'
+import { run, type ContextParams } from '/lib/xp/context'
 import { isSameOrBefore } from '/lib/ssb/utils/dateUtils'
 import { isSameDay } from '/lib/vendor/dateFns'
 
@@ -93,8 +93,6 @@ export function publishDataset(): void {
   cronJobLog('Start publish job')
   const jobLogNode: JobEventNode = startJobLog(JobNames.PUBLISH_JOB)
   jobs[jobLogNode._id] = jobLogNode
-  const context = getContext()
-  log.info(`Lister ut context: \n ${JSON.stringify(context, null, 2)}`)
   const statistics: Array<Content<Statistics & Statistic>> = getStatisticsContent()
   const publishedDatasetIds: Array<string> = []
   const jobResult: Array<StatisticsPublishResult> = []
@@ -360,7 +358,6 @@ function getNextRelease(statistic: Content<Statistics & Statistic>): string | nu
   if (statistic.data.statistic) {
     const statisticStatreg: StatisticInListing | undefined = getStatisticByIdFromRepo(statistic.data.statistic)
     if (statisticStatreg && statisticStatreg.variants) {
-      cronJobLog(`Fetching next release from StatReg for stat ${statistic._name} (${statistic.data.statistic}) ...`)
       const releaseDates: ReleaseDatesVariant = getReleaseDatesByVariants(
         util.data.forceArray(statisticStatreg.variants)
       )
