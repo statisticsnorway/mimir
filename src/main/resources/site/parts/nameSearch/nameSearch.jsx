@@ -263,30 +263,33 @@ function NameSearch(props) {
     const lineColor = '#21383a'
 
     // Highchart language checker
-    const lang = language === 'en' ?{} :{
-      ...accessibilityLang.lang,
-      accessibility: {
-        ...accessibilityLang.lang.accessibility,
-        chartContainerLabel: props.phrases.chartContainerLabel,
-        exporting: {
-          ...accessibilityLang.lang.accessibility.exporting,
-          chartMenuLabel: props.phrases.chartMenuLabel,
-          menuButtonLabel: props.phrases.menuButtonLabel,
-        },
-        screenReaderSection: {
-          ...accessibilityLang.lang.accessibility.screenReaderSection,
-          beforeRegionLabel: props.phrases.beforeRegionLabel,
-          endOfChartMarker: '',
-        },
-        legend: {
-          ...accessibilityLang.lang.accessibility.legend,
-          legendItem: props.phrases.legendItem,
-          legendLabel: props.phrases.legendLabel,
-          legendLabelNoTitle: props.phrases.legendLabelNoTitle,
-        },
-      },
-      decimalPoint: accessibilityLang.lang.decimalPoint,
-    }
+    const lang =
+      language === 'en'
+        ? {}
+        : {
+            ...accessibilityLang.lang,
+            accessibility: {
+              ...accessibilityLang.lang.accessibility,
+              chartContainerLabel: props.phrases.chartContainerLabel,
+              exporting: {
+                ...accessibilityLang.lang.accessibility.exporting,
+                chartMenuLabel: props.phrases.chartMenuLabel,
+                menuButtonLabel: props.phrases.menuButtonLabel,
+              },
+              screenReaderSection: {
+                ...accessibilityLang.lang.accessibility.screenReaderSection,
+                beforeRegionLabel: props.phrases.beforeRegionLabel,
+                endOfChartMarker: '',
+              },
+              legend: {
+                ...accessibilityLang.lang.accessibility.legend,
+                legendItem: props.phrases.legendItem,
+                legendLabel: props.phrases.legendLabel,
+                legendLabelNoTitle: props.phrases.legendLabelNoTitle,
+              },
+            },
+            decimalPoint: accessibilityLang.lang.decimalPoint,
+          }
 
     if (nameGraphData) {
       const options = {
@@ -312,7 +315,7 @@ function NameSearch(props) {
           '#83c1e9',
           '#b59924',
         ],
-        lang: {...lang},
+        lang: { ...lang },
         title: {
           style: {
             color: 'transparent',
@@ -386,7 +389,7 @@ function NameSearch(props) {
           csv: {
             itemDelimiter: ';',
           },
-        }
+        },
       }
 
       return (

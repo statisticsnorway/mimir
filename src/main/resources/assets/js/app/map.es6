@@ -196,7 +196,7 @@ function init() {
           },
         },
       }
-      console.log(config)
+      
       // Instanciate the map
       Highcharts.mapChart('map', config)
       $(map).attr('aria-hidden', 'true')
