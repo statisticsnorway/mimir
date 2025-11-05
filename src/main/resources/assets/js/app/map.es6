@@ -1,5 +1,4 @@
 // Only used in map and menuDropdown parts
-
 import $ from 'jquery'
 import axios from 'axios'
 
@@ -7,8 +6,6 @@ import Highcharts from 'highcharts'
 import 'highcharts/modules/accessibility'
 import 'highcharts/modules/map'
 import 'highcharts/modules/drilldown'
-
-// TODO: Etter valgt fylke må man interagere med kartet før man får tooltip eller kan velge kommune
 
 // Related to map content type and map part
 // Draws a map with highchart on json files located in assets/mapdata - static files for map
@@ -40,6 +37,11 @@ function init() {
           borderWidth,
           backgroundColor: '#f0f7f9',
           events: {
+            // Workaround to get pointer events after drilldown: https://github.com/highcharts/highcharts/issues/20886
+            redraw() {
+                	this.series[0]._hasTracking = false;
+                	this.series[0].drawTracker();
+                },
             drilldown: function (e) {
               if (!e.seriesOptions) {
                 // eslint-disable-next-line @typescript-eslint/no-this-alias
