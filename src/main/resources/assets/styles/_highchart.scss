@@ -50,18 +50,6 @@
   }
 }
 
-// TODO: Avklare styling knapp
-.btn-highchart-export {
-  bottom: 60px;
-  right: 10px;
-  background-color: transparent;
-  font-size: 14px;
-
-  @include media-breakpoint-down(sm) {
-    bottom: 55px;
-  }
-}
-
 .highchart-wrapper{
   .footnote {
     font-size: 12px;

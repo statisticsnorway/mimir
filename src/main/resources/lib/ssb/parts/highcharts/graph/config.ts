@@ -261,6 +261,8 @@ export const createDefaultConfig = (highchartData: any, displayName: string, lan
     backgroundColor: 'white',
     valueDecimals: highchartData.numberDecimals,
     shared: highchartData.combineInfo,
+    borderColor: '#00824D', // ssb-green-4
+    borderWidth: '1px',
   },
   noData: {
     style: {
