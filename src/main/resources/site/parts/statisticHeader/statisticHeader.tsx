@@ -1,5 +1,6 @@
 import React from 'react'
-import { Button, Glossary, Title } from '@statisticsnorway/ssb-component-library'
+import { Glossary, Title } from '@statisticsnorway/ssb-component-library'
+import { Button } from '@digdir/designsystemet-react'
 import { type StatisticHeader } from '/lib/types/partTypes/statisticHeader'
 import { sanitize } from '/lib/ssb/utils/htmlUtils'
 
@@ -24,7 +25,7 @@ function StatisticHeader(props: Readonly<StatisticHeader>) {
     if (showPreviewDraft) {
       return (
         <div className='show-draft col-12'>
-          <Button className='float-end' primary onClick={() => (window.location.href = previewButtonUrl)}>
+          <Button className='float-end' variant='primary' onClick={() => (window.location.href = previewButtonUrl)}>
             {previewButtonText}
           </Button>
         </div>

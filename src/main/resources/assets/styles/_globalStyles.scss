@@ -322,3 +322,10 @@ table {
 .ssb-divider {
   opacity: 1;
 }
+
+a.ds-link {
+  color: var(--ds-link-color, var(--ds-color-accent-text-subtle));
+}
+a.ds-link:hover {
+  color: var(--ds-link-color-hover, var(--ds-color-accent-text-hover));
+}

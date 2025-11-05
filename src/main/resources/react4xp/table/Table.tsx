@@ -1,8 +1,5 @@
 import React, { useState, useRef } from 'react'
 import {
-  Dropdown,
-  Link,
-  Button,
   Table as SSBTable,
   TableHead,
   TableBody,
@@ -10,6 +7,7 @@ import {
   TableRow,
   TableCell,
 } from '@statisticsnorway/ssb-component-library'
+import { Button, Dropdown, Link } from '@digdir/designsystemet-react'
 import { default as isEmpty } from 'ramda/es/isEmpty'
 import { NumericFormat } from 'react-number-format'
 import { Alert } from 'react-bootstrap'
@@ -73,19 +71,25 @@ function Table(props: TableProps) {
       return null
     }
 
-    const downloadTable = (item: { id: string }) => {
-      if (item.id === 'downloadTableAsCSV') downloadTableAsCSV()
-      if (item.id === 'downloadTableAsXLSX') downloadTableAsExcel()
+    const downloadTable = (id: string) => {
+      if (id === 'downloadTableAsCSV') downloadTableAsCSV()
+      if (id === 'downloadTableAsXLSX') downloadTableAsExcel()
     }
 
     return (
       <div className={`download-table-container ${mobile ? 'd-flex d-lg-none' : 'd-none d-lg-flex'}`}>
-        <Dropdown
-          selectedItem={downloadTableTitle}
-          items={downloadTableOptions}
-          ariaLabel={downloadTableLabel}
-          onSelect={downloadTable}
-        />
+        <Dropdown.TriggerContext>
+          <Dropdown.Trigger>{downloadTableLabel}</Dropdown.Trigger>
+          <Dropdown>
+            <Dropdown.List>
+              {downloadTableOptions.map((option) => (
+                <Dropdown.Item key={option.id}>
+                  <Dropdown.Button onClick={() => downloadTable(option.id)}>{option.title}</Dropdown.Button>
+                </Dropdown.Item>
+              ))}
+            </Dropdown.List>
+          </Dropdown>
+        </Dropdown.TriggerContext>
       </div>
     )
   }
@@ -327,9 +331,9 @@ function Table(props: TableProps) {
   function addStandardSymbols() {
     if (standardSymbol && standardSymbol.href && standardSymbol.text) {
       return (
-        <Link href={standardSymbol.href} standAlone>
-          {standardSymbol.text}
-        </Link>
+        <div className='mt-4'>
+          <Link href={standardSymbol.href}>{standardSymbol.text}</Link>
+        </div>
       )
     }
     return null
@@ -338,7 +342,7 @@ function Table(props: TableProps) {
   function addPreviewButton() {
     if (showPreviewToggle && !pageTypeStatistic) {
       return (
-        <Button primary onClick={toggleDraft} className='mb-2'>
+        <Button variant='primary' onClick={toggleDraft} className='mb-2'>
           {!fetchUnPublished ? 'Vis upubliserte tall' : 'Vis publiserte tall'}
         </Button>
       )
@@ -373,18 +377,12 @@ function Table(props: TableProps) {
           </div>
           {sourceListTables.map((tableId) => (
             <div key={tableId} className='source-link col-lg-3 col-12'>
-              <Link href={`${statBankWebUrl}/table/${tableId}`} standAlone>
-                {`${sourceTableLabel} ${tableId}`}
-              </Link>
+              <Link href={`${statBankWebUrl}/table/${tableId}`}>{`${sourceTableLabel} ${tableId}`}</Link>
             </div>
           ))}
           {sources.map((source) => (
             <div key={source.url} className='source-link col-lg-3 col-12'>
-              {source.url && source.urlText && (
-                <Link href={source.url} standAlone>
-                  {source.urlText}
-                </Link>
-              )}
+              {source.url && source.urlText && <Link href={source.url}>{source.urlText}</Link>}
             </div>
           ))}
         </div>
