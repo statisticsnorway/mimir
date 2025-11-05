@@ -39,9 +39,9 @@ function init() {
           events: {
             // Workaround to get pointer events after drilldown: https://github.com/highcharts/highcharts/issues/20886
             redraw() {
-                	this.series[0]._hasTracking = false;
-                	this.series[0].drawTracker();
-                },
+              this.series[0]._hasTracking = false
+              this.series[0].drawTracker()
+            },
             drilldown: function (e) {
               if (!e.seriesOptions) {
                 // eslint-disable-next-line @typescript-eslint/no-this-alias
