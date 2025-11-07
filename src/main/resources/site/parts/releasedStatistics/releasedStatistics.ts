@@ -1,5 +1,6 @@
 import '/lib/ssb/polyfills/nashorn'
 
+import { type Request, type Response } from '@enonic-types/core'
 import { type QueryDsl } from '/lib/xp/content'
 import { getComponent, getContent } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
@@ -12,14 +13,12 @@ import {
 } from '/lib/ssb/repo/statisticVariant'
 import { stringToServerTime } from '/lib/ssb/utils/dateUtils'
 import { parseISO } from '/lib/vendor/dateFns'
-import { fromPartCache } from '/lib/ssb/cache/partCache'
 import { renderError } from '/lib/ssb/error/error'
-import { isEnabled } from '/lib/featureToggle'
 import { type PreparedStatistics, type YearReleases } from '/lib/types/variants'
 import { type GroupedBy, type ReleasedStatisticsProps } from '/lib/types/partTypes/releasedStatistics'
 import { type ReleasedStatistics as ReleasedStatisticsPartConfig } from '.'
 
-export function get(req: XP.Request): XP.Response {
+export function get(req: Request): Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -27,11 +26,11 @@ export function get(req: XP.Request): XP.Response {
   }
 }
 
-export function preview(req: XP.Request) {
+export function preview(req: Request) {
   return renderPart(req)
 }
 
-export function renderPart(req: XP.Request) {
+export function renderPart(req: Request) {
   const content = getContent()
   if (!content) throw Error('No page found')
 
@@ -39,12 +38,7 @@ export function renderPart(req: XP.Request) {
   const config = getComponent<XP.PartComponent.ReleasedStatistics>()?.config
   if (!config) throw Error('No part found')
 
-  const deactivatePartCacheEnabled: boolean = isEnabled('deactivate-partcache-released-statistics', true, 'ssb')
-  const groupedWithMonthNames: Array<YearReleases> = !deactivatePartCacheEnabled
-    ? fromPartCache(req, `${content._id}-releasedStatistics`, () => {
-        return getGroupedWithMonthNames(config, currentLanguage)
-      })
-    : getGroupedWithMonthNames(config, currentLanguage)
+  const groupedWithMonthNames: Array<YearReleases> = getGroupedWithMonthNames(config, currentLanguage)
 
   const props: ReleasedStatisticsProps = {
     releases: groupedWithMonthNames,
