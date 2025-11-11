@@ -36,10 +36,6 @@ try {
           enabled: false,
         },
         {
-          feature: 'deactivate-partcache-released-statistics',
-          enabled: true,
-        },
-        {
           feature: 'deactivate-part-cache-article-list',
           enabled: true,
         },
@@ -65,6 +61,10 @@ try {
         },
         {
           feature: 'show-cookie-banner',
+          enabled: false,
+        },
+        {
+          feature: 'test-publish-statistics-dataset-job-task',
           enabled: false,
         },
       ],

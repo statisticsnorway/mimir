@@ -1,12 +1,14 @@
 /* eslint-disable complexity */
 import { createUser, findUsers } from '/lib/xp/auth'
 import { run, type ContextParams } from '/lib/xp/context'
-import { create, get as getScheduledJob, modify, delete as deleteScheduledJob } from '/lib/xp/scheduler'
+import { create, get as getScheduledJob, modify } from '/lib/xp/scheduler'
 import { isMaster } from '/lib/xp/cluster'
 import { list, schedule, type TaskMapper } from '/lib/cron'
 import { cronJobLog } from '/lib/ssb/utils/serverLog'
 import { ENONIC_CMS_DEFAULT_REPO } from '/lib/ssb/repo/common'
 import { publishDataset } from '/lib/ssb/dataset/publishOld'
+
+import { isEnabled } from '/lib/featureToggle'
 
 const createUserContext: ContextParams = {
   // Master context (XP)
@@ -30,43 +32,45 @@ export const cronContext: ContextParams = {
   },
 }
 
-export function libScheduleTest(params: { name: string; cron: string; timeZone: string }, cronLibCron: string) {
-  if (!isMaster()) return
-  try {
-    log.info(
-      `Scheduling lib-sheduler test for ${params.name} at ${params.cron} with timezone ${params.timeZone}, libCron was scheduled with ${cronLibCron}`
-    )
+// TODO: Remove libScheduleTest and libScheduleTestLog during lib-cron cleanup once every task is using lib-scheduler
+// function libScheduleTest(params: { name: string; cron: string; timeZone: string }, cronLibCron: string) {
+//   if (!isMaster()) return
+//   try {
+//     log.info(
+//       `Scheduling lib-sheduler test for ${params.name} at ${params.cron} with timezone ${params.timeZone}, libCron was scheduled with ${cronLibCron}`
+//     )
 
-    run(cronContext, () => {
-      deleteScheduledJob({
-        name: params.name!,
-      })
+//     run(cronContext, () => {
+//       deleteScheduledJob({
+//         name: params.name!,
+//       })
 
-      create({
-        name: params.name!,
-        descriptor: 'mimir:libSchedulerTester',
-        user: `user:system:cronjob`,
-        enabled: true,
-        schedule: {
-          type: 'CRON',
-          value: params.cron,
-          timeZone: params.timeZone,
-        },
-        config: {
-          name: params.name,
-          cronLibCron,
-          cron: params.cron,
-          timeZone: params.timeZone,
-        },
-      })
-    })
-  } catch (e) {
-    log.error('Error in libScheduleTest', e)
-  }
-}
-export function libScheduleTestLog(name: string, cron: string): void {
-  log.info(`libSchedulerTester - cron - ${name} was set to run at ${cron} and is running at ${new Date()}`)
-}
+//       create({
+//         name: params.name!,
+//         descriptor: 'mimir:libSchedulerTester',
+//         user: `user:system:cronjob`,
+//         enabled: true,
+//         schedule: {
+//           type: 'CRON',
+//           value: params.cron,
+//           timeZone: params.timeZone,
+//         },
+//         config: {
+//           name: params.name,
+//           cronLibCron,
+//           cron: params.cron,
+//           timeZone: params.timeZone,
+//         },
+//       })
+//     })
+//   } catch (e) {
+//     log.error('Error in libScheduleTest', e)
+//   }
+// }
+
+// function libScheduleTestLog(name: string, cron: string): void {
+//   log.info(`libSchedulerTester - cron - ${name} was set to run at ${cron} and is running at ${new Date()}`)
+// }
 
 function setupCronJobUser(): void {
   const findUsersResult = findUsers({
@@ -92,26 +96,44 @@ export function runOnMasterOnly(task: () => void): void {
 export function setupCronJobs(): void {
   run(createUserContext, setupCronJobUser)
 
-  const datasetPublishCron: string =
-    app.config && app.config['ssb.cron.publishDataset'] ? app.config['ssb.cron.publishDataset'] : '50 06 * * *'
+  const testPublishStatisticsDatasetJobTaskEnabled = isEnabled('test-publish-statistics-dataset-job-task', false, 'ssb')
 
-  log.info('Run old datasetPublishCron cron-library')
-  // publish dataset cron job
-  schedule({
-    name: 'Dataset publish',
-    cron: datasetPublishCron,
-    callback: () => {
-      libScheduleTestLog('datasetPublishCronTest', datasetPublishCron)
-      runOnMasterOnly(publishDataset)
-    },
-    context: cronContext,
-  })
-  libScheduleTest({ name: 'datasetPublishCronTest', cron: '50 07 * * *', timeZone: 'Europe/Oslo' }, datasetPublishCron)
+  if (!testPublishStatisticsDatasetJobTaskEnabled) {
+    const datasetPublishCron: string =
+      app.config && app.config['ssb.cron.publishDataset'] ? app.config['ssb.cron.publishDataset'] : '50 06 * * *'
+
+    log.info('Run old datasetPublishCron cron-library')
+    // publish dataset cron job
+    schedule({
+      name: 'Dataset publish',
+      cron: datasetPublishCron,
+      callback: () => {
+        // libScheduleTestLog('datasetPublishCronTest', datasetPublishCron)
+        runOnMasterOnly(publishDataset)
+      },
+      context: cronContext,
+    })
+    // libScheduleTest(
+    //   { name: 'datasetPublishCronTest', cron: '50 07 * * *', timeZone: 'Europe/Oslo' },
+    //   datasetPublishCron
+    // )
+  }
 
   // Task
   if (isMaster()) {
     const timezone: string =
       app.config && app.config['ssb.cron.timezone'] ? app.config['ssb.cron.timezone'] : 'Europe/Oslo'
+
+    if (testPublishStatisticsDatasetJobTaskEnabled) {
+      // Publish dataset
+      scheduleJob({
+        name: 'publishStatisticsDatasetJob',
+        description: 'Publish datasets for statistics',
+        descriptor: 'publishStatisticsDatasetJob',
+        cronValue: app?.config?.['ssb.task.publishStatisticsDataset'] ?? '50 7 * * *',
+        timeZone: timezone,
+      })
+    }
 
     // Update calculators
     scheduleJob({
@@ -234,6 +256,7 @@ export function setupCronJobs(): void {
     })
   }
 
+  // TODO: Remove once all lib-cron jobs are using lib-scheduler
   const cronList: Array<TaskMapper> = list() as Array<TaskMapper>
   cronJobLog('All cron jobs registered')
   cronJobLog(JSON.stringify(cronList, null, 2))

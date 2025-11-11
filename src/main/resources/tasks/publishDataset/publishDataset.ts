@@ -10,6 +10,7 @@ import { cronContext } from '/lib/ssb/cron/cron'
 import { createOrUpdateDataset, DATASET_BRANCH } from '/lib/ssb/repo/dataset'
 import { extractKey } from '/lib/ssb/dataset/dataset'
 
+// TODO: This task is unused at the moment. Check if it can replace createTask for publishOld once we pick up refactoring again
 export function run(props: PublishDatasetConfig): void {
   const { jobId, statisticsContentId, publicationItem, statisticsId, datasetIndex } = props
   const { dataSource, dataset } = JSON.parse(publicationItem)

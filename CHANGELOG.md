@@ -1,5 +1,32 @@
 # Changelog
 
+## [2.37.0](https://github.com/statisticsnorway/mimir/compare/v2.36.0...v2.37.0) (2025-11-11)
+
+
+### Features
+
+* add axis markings for broken y axis on highcharts [MIM-1957] ([#3502](https://github.com/statisticsnorway/mimir/issues/3502)) ([61431a3](https://github.com/statisticsnorway/mimir/commit/61431a3cfad12f24776a146ba25178eb182bfaed))
+* Update Popup.tsx with new url [MIM-2457] ([#3530](https://github.com/statisticsnorway/mimir/issues/3530)) ([3286569](https://github.com/statisticsnorway/mimir/commit/32865699b82007183b054a36b6a35d7ad0d60846))
+
+
+### Bug Fixes
+
+* get latest release from correct variant [MIM-2445] ([#3517](https://github.com/statisticsnorway/mimir/issues/3517)) ([056be77](https://github.com/statisticsnorway/mimir/commit/056be77223744a12488410cc48fbcfdc9081ee78))
+* Revert removal of fetchStatisticsWithReleaseToday (function in use) ([#3521](https://github.com/statisticsnorway/mimir/issues/3521)) ([21bcfea](https://github.com/statisticsnorway/mimir/commit/21bcfea30213b864f29cd4f19b967307fe0262cb))
+* Revert removal of fetchStatisticsWithReleaseToday. Function in use ([21bcfea](https://github.com/statisticsnorway/mimir/commit/21bcfea30213b864f29cd4f19b967307fe0262cb))
+
+
+### Build System and dependencies
+
+* Bump actions/download-artifact from 5 to 6 ([#3515](https://github.com/statisticsnorway/mimir/issues/3515)) ([a894415](https://github.com/statisticsnorway/mimir/commit/a8944150814709049689b466e496f4551c224639))
+* Bump actions/setup-node from 5 to 6 ([#3493](https://github.com/statisticsnorway/mimir/issues/3493)) ([a290a7f](https://github.com/statisticsnorway/mimir/commit/a290a7fa793d56361b6e71fdd19bd813b7234fbf))
+* Bump actions/upload-artifact from 4 to 5 ([#3516](https://github.com/statisticsnorway/mimir/issues/3516)) ([947d426](https://github.com/statisticsnorway/mimir/commit/947d4268ee8fb99b5ef1e206cc3f51689bee794f))
+* Bump eslint-plugin-jsdoc from 60.4.0 to 61.1.4 ([#3496](https://github.com/statisticsnorway/mimir/issues/3496)) ([8631291](https://github.com/statisticsnorway/mimir/commit/86312919cc2f7d553247d291cd7c78a765aca8c1))
+* Bump the dependencies-minor-updates group across 1 directory with 6 updates ([#3520](https://github.com/statisticsnorway/mimir/issues/3520)) ([5bed0ea](https://github.com/statisticsnorway/mimir/commit/5bed0eae8ac69fbf121f086e0c5849f854e1f555))
+* Bump the dependencies-patch-updates group with 9 updates ([#3523](https://github.com/statisticsnorway/mimir/issues/3523)) ([0bffd42](https://github.com/statisticsnorway/mimir/commit/0bffd4200ee845ef3dcb200fed180ab30bf31e76))
+* Bump validator from 13.15.15 to 13.15.20 ([#3519](https://github.com/statisticsnorway/mimir/issues/3519)) ([c84cd3d](https://github.com/statisticsnorway/mimir/commit/c84cd3db41efb2546ccd06759bc748dd7fb22fa6))
+* fix label and release notes for release please ([#3513](https://github.com/statisticsnorway/mimir/issues/3513)) ([bf05d4a](https://github.com/statisticsnorway/mimir/commit/bf05d4ad6f984bb61cfa52b419b2f2539143276a))
+
 ## [2.36.0](https://github.com/statisticsnorway/mimir/compare/v2.35.1...v2.36.0) (2025-10-21)
 
 
