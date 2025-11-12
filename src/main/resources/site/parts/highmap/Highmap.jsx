@@ -78,7 +78,7 @@ function generateSeries(tableData, mapDataSecondColumn, color, seriesTitle, phra
     return {
       capitalName: mapDataSecondColumn ? String(value).toUpperCase() : String(name).toUpperCase(),
       color: definedColors?.[name],
-      name,
+      name: mapDataSecondColumn ? value : name,
       value: mapDataSecondColumn ? name : value,
     }
   })
