@@ -172,7 +172,7 @@ export function init() {
               for (const [i, cell] of row.entries()) {
                 if (typeof cell === 'number') {
                   // First convert thousand separator to space, then decimal point to comma
-                  row[i] = cell.toString().replace(',', ' ').replace('.', ',')
+                  row[i] = cell.toString().replace(',', ' ').replace('.', ',').replace('NaN', '')
                 }
               }
             }
