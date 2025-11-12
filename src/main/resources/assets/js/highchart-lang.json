@@ -1,6 +1,5 @@
 {
   "lang": {
-    "locale": "nb-NO",
     "accessibility": {
       "chartContainerLabel": "{title} Interaktiv graf",
       "defaultChartTitle": "Graf",

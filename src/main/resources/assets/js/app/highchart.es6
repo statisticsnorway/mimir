@@ -93,6 +93,7 @@ export function init() {
           })
         }
         config.lang = lang !== 'en' ? accessibilityLang.lang : {}
+        config.lang.locale = lang
         config.exporting.menuItemDefinitions = {
           downloadXLS: {
             onclick: function () {
