@@ -24,7 +24,7 @@ function StatisticDescription(props: Readonly<AboutTheStatisticsProps>) {
         {items.map((item: AccordionItems) => {
           return (
             <Details key={item.title} defaultOpen>
-              <Details.Summary data-size='lg'>{item.title}</Details.Summary>
+              <Details.Summary data-size='md'>{item.title}</Details.Summary>
               <Details.Content>
                 {item.body && (
                   <div
