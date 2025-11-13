@@ -4,16 +4,14 @@ import HighchartsReact from 'highcharts-react-official'
 import PropTypes from 'prop-types'
 import { Row, Col, Container } from 'react-bootstrap'
 
-import accessibilityLang from '../../../assets/js/highchart-lang.json'
+import 'highcharts/modules/accessibility'
+import 'highcharts/modules/exporting'
+import 'highcharts/modules/offline-exporting'
+import 'highcharts/modules/export-data'
+import 'highcharts/modules/data'
+import 'highcharts/modules/no-data-to-display'
 
-if (typeof Highcharts === 'object') {
-  require('highcharts/modules/exporting')(Highcharts)
-  require('highcharts/modules/offline-exporting')(Highcharts)
-  require('highcharts/modules/export-data')(Highcharts)
-  require('highcharts/modules/data')(Highcharts)
-  require('highcharts/modules/no-data-to-display')(Highcharts)
-  require('highcharts/modules/accessibility')(Highcharts)
-}
+import accessibilityLang from '../../../assets/js/highchart-lang.json'
 
 function Highchart(props) {
   const configProp = JSON.parse(props.config)

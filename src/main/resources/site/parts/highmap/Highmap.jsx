@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-require-imports */
 import React, { useEffect, useRef } from 'react'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
@@ -6,17 +5,14 @@ import PropTypes from 'prop-types'
 import { Link, Text, Tabs, Divider } from '@statisticsnorway/ssb-component-library'
 import { Col, Row } from 'react-bootstrap'
 import { useMediaQuery } from 'react-responsive'
+import 'highcharts/modules/accessibility'
+import 'highcharts/modules/exporting'
+import 'highcharts/modules/offline-exporting'
+import 'highcharts/modules/export-data'
+import 'highcharts/modules/map'
 
 import { exportHighchartsToExcel } from '/lib/ssb/utils/tableExportUtils'
 import accessibilityLang from './../../../assets/js/highchart-lang.json'
-
-if (typeof Highcharts === 'object') {
-  require('highcharts/modules/accessibility')(Highcharts)
-  require('highcharts/modules/exporting')(Highcharts)
-  require('highcharts/modules/offline-exporting')(Highcharts)
-  require('highcharts/modules/export-data')(Highcharts)
-  require('highcharts/modules/map')(Highcharts)
-}
 
 function generateColors(color, thresholdValues) {
   const obj = {}
@@ -82,7 +78,7 @@ function generateSeries(tableData, mapDataSecondColumn, color, seriesTitle, phra
     return {
       capitalName: mapDataSecondColumn ? String(value).toUpperCase() : String(name).toUpperCase(),
       color: definedColors?.[name],
-      name,
+      name: mapDataSecondColumn ? value : name,
       value: mapDataSecondColumn ? name : value,
     }
   })
@@ -123,14 +119,14 @@ function generateSeries(tableData, mapDataSecondColumn, color, seriesTitle, phra
 
 const getTooltipFormatter = (language, seriesTitle) =>
   function () {
-    if (this.point.value || this.point.value === 0) {
+    if (this.point.value || this.point.value === 0) {
       const value = language !== 'en' ? String(this.point.value).replace('.', ',') : this.point.value
       return `${this.point.name}</br>${seriesTitle ? seriesTitle + ': ' : ''}${value}`
     }
     return `${this.point.name}</br>${this.series.name}`
   }
 
-const chart = (desktop, heightAspectRatio, mapFile, language, highmapId) => {
+const chart = (desktop, heightAspectRatio, mapFile, language) => {
   return {
     height: desktop && heightAspectRatio && `${heightAspectRatio}%`,
     style: {
@@ -141,18 +137,21 @@ const chart = (desktop, heightAspectRatio, mapFile, language, highmapId) => {
     },
     map: mapFile,
     events: {
-      render: function () {
-        // Workaround to get correct decimalpoint in table in Norwegian
-        const table = document.querySelector(`#figure-${highmapId} .highcharts-data-table table`);
-        if (table && language !== "en") {
-          for(const td of table.querySelectorAll('td')) {
-            if(Number.parseFloat(td.textContent)){
-              td.textContent = td.textContent.replace('.', ','); // replace decimalpoint in Norwegian
+      // Workaround to get correct number formatting in table in Norwegian
+      exportData: function (chart) {
+        if (language !== 'en') {
+          const rows = chart.dataRows
+          for (const row of chart.dataRows) {
+            for (const [i, cell] of row.entries()) {
+              if (typeof cell === 'number') {
+                // First convert thousand separator to space, then decimal point to comma
+                        row[i] = cell.toString().replace(',', ' ').replace('.', ',')
+              }
             }
-          };
+          }
         }
-      }
-    }
+      },
+    },
   }
 }
 
@@ -169,9 +168,10 @@ const legend = (desktop, legendTitle, legendAlign, numberDecimals) => {
   return {
     title: {
       text: legendTitle,
-      style: {
-        color: Highcharts.theme?.textColor || 'black',
-      },
+    },
+    itemStyle: {
+      fontWeight: "bold", 
+      color: Highcharts.theme?.textColor || 'black',
     },
     align: legendAlign === 'topLeft' || legendAlign === 'bottomLeft' ? 'left' : 'right',
     verticalAlign: legendAlign === 'topLeft' || legendAlign === 'topRight' ? 'top' : 'bottom',
@@ -236,26 +236,7 @@ const exporting = (sourceList, phrases, title) => {
     },
     enabled: true,
     menuItemDefinitions: {
-      printChart: {
-        text: phrases['highcharts.printChart'],
-      },
-      downloadPNG: {
-        text: phrases['highcharts.downloadPNG'],
-      },
-      downloadJPEG: {
-        text: phrases['highcharts.downloadJPEG'],
-      },
-      downloadPDF: {
-        text: phrases['highcharts.downloadPDF'],
-      },
-      downloadSVG: {
-        text: phrases['highcharts.downloadSVG'],
-      },
-      downloadCSV: {
-        text: phrases['highcharts.downloadCSV'],
-      },
       downloadXLS: {
-        text: phrases['highcharts.downloadXLS'],
         onclick: downloadAsXLSX(title),
       },
     },
@@ -298,7 +279,7 @@ function Highmap(props) {
     footnoteText,
     highmapId,
     geographicalCategory,
-    seriesTitle
+    seriesTitle,
   } = props
 
   const highmapsWrapperRef = useRef(null)
@@ -324,16 +305,18 @@ function Highmap(props) {
     minWidth: 992,
   })
 
+  const lang = language !== 'en' ? accessibilityLang.lang : {}
+
   const mapOptions = {
-    chart: chart(desktop, heightAspectRatio, mapFile, language, highmapId),
+    chart: chart(desktop, heightAspectRatio, mapFile, language),
     accessibility: {
       enabled: true,
       description,
     },
-    ...accessibilityLang,
     lang: {
+      ...lang,
       exportData: {
-        categoryHeader: geographicalCategory ?? phrases['highmaps.geographicalCategory']
+        categoryHeader: geographicalCategory ?? phrases['highmaps.geographicalCategory'],
       },
     },
     title: {
@@ -362,7 +345,8 @@ function Highmap(props) {
     exporting: exporting(sourceList, phrases, title),
     csv: {
       itemDelimiter: ';',
-    }
+      decimalPoint: language === 'en' ? '.' : ',',
+    },
   }
 
   const handleTabOnClick = (item) => {
@@ -417,7 +401,7 @@ function Highmap(props) {
         </figure>
         {footnoteText?.map((footnote) => (
           <Col className='footnote col-12' key={`footnote-${footnote}`}>
-            {footnote && <Text>{footnote}</Text>}
+            {footnote && <Text small="true">{footnote}</Text>}
           </Col>
         ))}
         {sourceList?.map(renderHighchartsSource)}
@@ -447,7 +431,7 @@ Highmap.propTypes = {
   phrases: PropTypes.object,
   language: PropTypes.string,
   highmapId: PropTypes.string,
-  geographicalCategory: PropTypes.String
+  geographicalCategory: PropTypes.String,
 }
 
 export default (props) => <Highmap {...props} />

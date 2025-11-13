@@ -1,5 +1,4 @@
 /* eslint-disable complexity */
-// @ts-nocheck
 
 import { localize } from '/lib/xp/i18n'
 import { ensureArray } from '/lib/ssb/utils/arrayUtils'
@@ -8,7 +7,7 @@ export const style = {
   color: '#21383a',
   fontSize: '13px',
   fontWeight: 'normal',
-  fontFamily: '"Open Sans Regular", "Arial", "DejaVu Sans", sans-serif',
+  fontFamily: '"Open Sans Regular", sans-serif',
 }
 export const lineColor = '#21383a'
 
@@ -32,7 +31,8 @@ export const X_AXIS_TITLE_POSITION = {
  * @param {string} language
  * @return {object} config
  */
-export const createDefaultConfig = (highchartData, displayName, language) => ({
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const createDefaultConfig = (highchartData: any, displayName: string, language: string) => ({
   accessibility: {
     enabled: true,
     description: highchartData.description,
@@ -129,10 +129,12 @@ export const createDefaultConfig = (highchartData, displayName, language) => ({
     },
     csv: {
       itemDelimiter: ';',
+      decimalPoint: language === 'en' ? '.' : ',',
     },
     // Sett denne til false når man vil erstatte hamburgermeny med egen
     enabled: true,
     showTable: true,
+    allowTableSorting: false,
   },
   legend: {
     enabled: !highchartData.noLegend,
@@ -204,7 +206,6 @@ export const createDefaultConfig = (highchartData, displayName, language) => ({
     text: displayName,
     x: 0,
     y: 18,
-    widthAdjust: -150 - (highchartData.titleCenter == 'center' ? 90 : 0),
   },
 
   yAxis: {
@@ -259,6 +260,8 @@ export const createDefaultConfig = (highchartData, displayName, language) => ({
     backgroundColor: 'white',
     valueDecimals: highchartData.numberDecimals,
     shared: highchartData.combineInfo,
+    borderColor: '#00824D', // ssb-green-4
+    borderWidth: '1px',
   },
   noData: {
     style: {
