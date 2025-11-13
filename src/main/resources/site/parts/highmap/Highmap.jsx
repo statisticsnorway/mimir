@@ -139,14 +139,13 @@ const chart = (desktop, heightAspectRatio, mapFile, language) => {
     events: {
       // Workaround to get correct number formatting in table in Norwegian
       exportData: function (chart) {
-        if (language !== 'en') {
-          const rows = chart.dataRows
-          for (const row of chart.dataRows) {
-            for (const [i, cell] of row.entries()) {
-              if (typeof cell === 'number') {
-                // First convert thousand separator to space, then decimal point to comma
-                        row[i] = cell.toString().replace(',', ' ').replace('.', ',')
-              }
+        const rows = chart.dataRows
+        for (const row of chart.dataRows) {
+          // Escaping first vaule not to format category ie. year
+          for (const [i, cell] of row.entries()) {
+            if (i > 0 && typeof cell === 'number') {
+              const cellValue = cell.toLocaleString(language === 'en' ? 'en-EN' : 'no-NO').replace('NaN', '')
+              row[i] = language === 'en' ? cellValue.replace(/,/g, ' ') : cellValue
             }
           }
         }
@@ -170,7 +169,7 @@ const legend = (desktop, legendTitle, legendAlign, numberDecimals) => {
       text: legendTitle,
     },
     itemStyle: {
-      fontWeight: "bold", 
+      fontWeight: 'bold',
       color: Highcharts.theme?.textColor || 'black',
     },
     align: legendAlign === 'topLeft' || legendAlign === 'bottomLeft' ? 'left' : 'right',
@@ -401,7 +400,7 @@ function Highmap(props) {
         </figure>
         {footnoteText?.map((footnote) => (
           <Col className='footnote col-12' key={`footnote-${footnote}`}>
-            {footnote && <Text small="true">{footnote}</Text>}
+            {footnote && <Text small='true'>{footnote}</Text>}
           </Col>
         ))}
         {sourceList?.map(renderHighchartsSource)}
