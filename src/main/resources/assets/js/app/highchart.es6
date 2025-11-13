@@ -2,24 +2,16 @@ import $ from 'jquery'
 // only used in part Highcharts when not doing react4xp render
 
 import Highcharts from 'highcharts'
-// Load the exporting module.
-import highchartsModuleData from 'highcharts/modules/data'
-import highchartsModuleAccessibility from 'highcharts/modules/accessibility'
-import highchartsModuleExporting from 'highcharts/modules/exporting'
-import highchartsModuleOfflineExporting from 'highcharts/modules/offline-exporting'
-import highchartsModuleNoDataToDisplay from 'highcharts/modules/no-data-to-display'
-import highchartsModuleExportData from 'highcharts/modules/export-data'
+import 'highcharts/modules/data'
+import 'highcharts/modules/accessibility'
+import 'highcharts/modules/exporting'
+import 'highcharts/modules/offline-exporting'
+import 'highcharts/modules/no-data-to-display'
+import 'highcharts/modules/export-data'
+import 'highcharts/modules/broken-axis'
 import zipcelx from 'zipcelx/lib/legacy'
 
 import accessibilityLang from '../highchart-lang.json'
-
-// Initialize exporting module.
-highchartsModuleData(Highcharts)
-highchartsModuleAccessibility(Highcharts)
-highchartsModuleNoDataToDisplay(Highcharts)
-highchartsModuleExporting(Highcharts)
-highchartsModuleOfflineExporting(Highcharts)
-highchartsModuleExportData(Highcharts)
 
 const EMPTY_CONFIG = {
   title: {
@@ -35,51 +27,12 @@ const EMPTY_CONFIG = {
 export function init() {
   //Highchart language checker
   const lang = $('html').attr('lang')
-  if (lang !== 'en') {
-    Highcharts.setOptions(accessibilityLang)
-  }
-
-  // Workaround for table ascending/descending sort.
-  // There is a feature request in github, so a config option to disable the feature is being implemented.
-  Highcharts.addEvent(
-    Highcharts.Chart,
-    'afterViewData',
-    function () {
-      this.dataTableDiv2 = this.dataTableDiv
-      this.dataTableDiv = null
-    },
-    {
-      order: 0,
-    }
-  )
-  Highcharts.addEvent(Highcharts.Chart, 'afterViewData', function () {
-    this.dataTableDiv = this.dataTableDiv2
-    this.dataTableDiv2 = null
-  })
-
-  Highcharts.addEvent(Highcharts.Chart, 'aftergetTableAST', function (e) {
-    e.tree.children[2].children.forEach(function (row) {
-      row.children.forEach(function (cell, i) {
-        if (i !== 0) {
-          const cellValue = parseFloat(cell.textContent)
-            .toLocaleString(lang === 'en' ? 'en-EN' : 'no-NO')
-            .replace('NaN', '')
-          row.children[i].textContent = lang === 'en' ? cellValue.replace(/,/g, ' ') : cellValue
-        }
-      })
-    })
-  })
 
   $(function () {
     const w = {
       height: $(window).height().toFixed(0),
       width: $(window).width().toFixed(0),
     }
-
-    $('.hc-container').each(function (i, container) {
-      const height = $(container).height()
-      $(container).find('svg').attr('height', height)
-    })
 
     const h1Size = w.width < 768 ? '14px' : '16px'
 
@@ -139,39 +92,9 @@ export function init() {
             }))
           })
         }
-
+        config.lang = lang !== 'en' ? accessibilityLang.lang : {}
+        config.lang.locale = lang
         config.exporting.menuItemDefinitions = {
-          printChart: {
-            onclick: function () {
-              this.print()
-            },
-          },
-          downloadPNG: {
-            onclick: function () {
-              this.exportChartLocal() //png is default
-            },
-          },
-          downloadJPEG: {
-            onclick: function () {
-              this.exportChartLocal({
-                type: 'image/jpeg',
-              })
-            },
-          },
-          downloadPDF: {
-            onclick: function () {
-              this.exportChartLocal({
-                type: 'application/pdf',
-              })
-            },
-          },
-          downloadSVG: {
-            onclick: function () {
-              this.exportChartLocal({
-                type: 'image/svg+xml',
-              })
-            },
-          },
           downloadXLS: {
             onclick: function () {
               const rows = this.getDataRows(true)
@@ -191,19 +114,69 @@ export function init() {
               })
             },
           },
-          downloadCSV: {
-            onclick: function () {
-              this.downloadCSV()
-            },
-          },
+        }
+        config.lang.exportData = {
+          categoryHeader: config.xAxis.title.text ? config.xAxis.title.text : 'Category',
         }
 
-        // Replace table header from Category with xAxis.title.text
-        config.exporting.csv.columnHeaderFormatter = function (item) {
-          if (!item || item instanceof Highcharts.Axis) {
-            return config.xAxis.title.text ? config.xAxis.title.text : 'Category'
-          } else {
-            return item.name
+        // Drawing yAxis break symbol when y-axis not starting at 0
+        if (!config.chart.events) config.chart.events = {}
+        config.chart.events.load = function () {
+          const chart = this
+          for (let i = 0; i < chart.yAxis.length; i++) {
+            // Natively highcharts resolves y axis not starting on 0 either with breaks or setting yMin
+            if (chart.yAxis[i].min > 0 || chart.yAxis[i].brokenAxis?.hasBreaks) {
+              // Replace first tick label with 0 since showing below broken axis symbol (for yMin > 0)
+              const yAxisConfig = Array.isArray(config.yAxis) ? config.yAxis[i] : config.yAxis
+              const decimalsMatch = yAxisConfig.labels?.format[9] ?? 0
+              const zeroFormatted = Highcharts.numberFormat(0, decimalsMatch)
+              const firstTickValue = chart.yAxis[i].tickPositions[0]
+              chart.yAxis[i].ticks[firstTickValue].label.attr({ text: zeroFormatted })
+
+              // Removes first tick label if rendered on top of 0 (for broken axis)
+              const secondTickValue = chart.yAxis[i].tickPositions[1]
+              if (
+                chart.yAxis[i].ticks[firstTickValue].label.xy.y === chart.yAxis[i].ticks[secondTickValue].label.xy.y
+              ) {
+                chart.yAxis[i].ticks[secondTickValue].label.hide()
+              }
+
+              // Determine position for broken axis symbol
+              const offset = chart.yAxis[i].opposite ? chart.plotWidth : 0
+              const x = chart.plotLeft + offset - 10
+              const y = chart.plotTop + chart.plotHeight - 10
+
+              // Draw broken axis symbol
+              chart.renderer
+                .path(['M', x, y, 'l', 20, -5])
+                .attr({
+                  'stroke-width': 1,
+                  stroke: 'black',
+                })
+                .add()
+              chart.renderer
+                .path(['M', x, y + 5, 'l', 20, -5])
+                .attr({
+                  'stroke-width': 1,
+                  stroke: 'black',
+                })
+                .add()
+            }
+          }
+        }
+
+        // Workaround to get correct decimalpoint in table in Norwegian
+        config.chart.events.exportData = function (chart) {
+          if (lang !== 'en') {
+            const rows = chart.dataRows
+            for (const row of chart.dataRows) {
+              for (const [i, cell] of row.entries()) {
+                if (typeof cell === 'number') {
+                  // First convert thousand separator to space, then decimal point to comma
+                  row[i] = cell.toString().replace(',', ' ').replace('.', ',').replace('NaN', '')
+                }
+              }
+            }
           }
         }
 

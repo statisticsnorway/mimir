@@ -1,20 +1,18 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import PropTypes from 'prop-types'
 import { Row, Col, Container } from 'react-bootstrap'
 import { Title, Button, Tabs, Divider, Link } from '@statisticsnorway/ssb-component-library'
+import 'highcharts/modules/accessibility'
+import 'highcharts/modules/exporting'
+import 'highcharts/modules/offline-exporting'
+import 'highcharts/modules/export-data'
+import 'highcharts/modules/data'
+import 'highcharts/modules/no-data-to-display'
+import 'highcharts/modules/broken-axis'
 
 import accessibilityLang from './../../../assets/js/highchart-lang.json'
-
-if (typeof Highcharts === 'object') {
-  require('highcharts/modules/exporting')(Highcharts)
-  require('highcharts/modules/offline-exporting')(Highcharts)
-  require('highcharts/modules/export-data')(Highcharts)
-  require('highcharts/modules/data')(Highcharts)
-  require('highcharts/modules/no-data-to-display')(Highcharts)
-  require('highcharts/modules/accessibility')(Highcharts)
-}
 
 /* TODO list
  * Display highcharts in edit mode
@@ -23,7 +21,6 @@ if (typeof Highcharts === 'object') {
  * --- UU improvements ---
  * Show figure as highchart table functionality
  * Fix open xls exported file without dangerous file popup
- * Thousand seperator and decimal point corrections to highchart table
  * Option to replace Category in highchart table row
  * Show last point symbol for line graphs
  * ...etc
@@ -33,11 +30,6 @@ if (typeof Highcharts === 'object') {
 function Highchart(props) {
   const [showDraft, setShowDraft] = useState(false)
   const [showTable, setShowTable] = useState(false)
-
-  useEffect(() => {
-    // Set options before highcharts react is rendered
-    Highcharts.setOptions(accessibilityLang)
-  }, [])
 
   function renderHighchartToggleDraft(highchart) {
     // TODO: Reimplement functionality; currently only changes name on button
@@ -131,63 +123,76 @@ function Highchart(props) {
     const highcharts = props.highcharts
     if (highcharts && highcharts.length) {
       return highcharts.map((highchart) => {
-        const category = 'Highcharts'
-        const action = 'Lastet ned highcharts'
+        const lang = highcharts.language !== 'en' ? accessibilityLang.lang : {}
 
         const config = {
           ...highchart.config,
-          ...accessibilityLang,
-          exporting: {
-            ...highchart.config.exporting,
-            showTable: showTable,
-            menuItemDefinitions: {
-              printChart: {
-                text: props.phrases['highcharts.printChart'],
-                onclick: function () {
-                  this.print()
-                },
+          lang: {
+            ...lang,
+            categoryHeader: highcharts.xAxis?.title?.text ? highchart.xAxis.title.text : 'Category',
+          },
+          chart: {
+            ...highchart.config.chart,
+            events: {
+              exportData: function (chart) {
+                // Workaround to get correct number formatting in table in Norwegian
+                if (highcharts.language !== 'en') {
+                  const rows = chart.dataRows
+                  for (const row of chart.dataRows) {
+                    for (const [i, cell] of row.entries()) {
+                      if (typeof cell === 'number') {
+                        // First convert thousand separator to space, then decimal point to comma
+                        row[i] = cell.toString().replace(',', ' ').replace('.', ',').replace('NaN', '')
+
+                      }
+                    }
+                  }
+                }
               },
-              downloadPNG: {
-                text: props.phrases['highcharts.downloadPNG'],
-                onclick: function () {
-                  this.exportChartLocal() // png is default
-                },
-              },
-              downloadJPEG: {
-                text: props.phrases['highcharts.downloadJPEG'],
-                onclick: function () {
-                  this.exportChartLocal({
-                    type: 'image/jpeg',
-                  })
-                },
-              },
-              downloadPDF: {
-                text: props.phrases['highcharts.downloadPDF'],
-                onclick: function () {
-                  this.exportChartLocal({
-                    type: 'application/pdf',
-                  })
-                },
-              },
-              downloadSVG: {
-                text: props.phrases['highcharts.downloadSVG'],
-                onclick: function () {
-                  this.exportChartLocal({
-                    type: 'image/svg+xml',
-                  })
-                },
-              },
-              downloadXLS: {
-                text: props.phrases['highcharts.downloadXLS'],
-                onclick: function () {
-                  this.downloadXLS()
-                },
-              },
-              downloadCSV: {
-                text: props.phrases['highcharts.downloadCSV'],
-                onclick: function () {
-                  this.downloadCSV()
-                },
+              load: function () {
+                // Drawing yAxis break symbol when y-axis not starting at 0
+                const chart = this
+                for (let i = 0; i < chart.yAxis.length; i++) {
+                  // Natively highcharts resolves y axis not starting on 0 either with breaks or setting yMin
+                  if (chart.yAxis[i].min > 0 || chart.yAxis[i].brokenAxis?.hasBreaks) {
+                    // Replace first tick label with 0 since showing below broken axis symbol (for yMin > 0)
+                    const yAxisConfig = Array.isArray(config.yAxis) ? config.yAxis[i] : config.yAxis
+                    const decimalsMatch = yAxisConfig.labels?.format[9] ?? 0
+                    const zeroFormatted = Highcharts.numberFormat(0, decimalsMatch)
+                    const firstTickValue = chart.yAxis[i].tickPositions[0]
+                    chart.yAxis[i].ticks[firstTickValue].label.attr({ text: zeroFormatted })
+
+                    // Removes first tick label if rendered on top of 0 (for broken axis)
+                    const secondTickValue = chart.yAxis[i].tickPositions[1]
+                    if (
+                      chart.yAxis[i].ticks[firstTickValue].label.xy.y ===
+                      chart.yAxis[i].ticks[secondTickValue].label.xy.y
+                    ) {
+                      chart.yAxis[i].ticks[secondTickValue].label.hide()
+                    }
+
+                    // Determine position for broken axis symbol
+                    const offset = chart.yAxis[i].opposite ? chart.plotWidth : 0
+                    const x = chart.plotLeft + offset - 10
+                    const y = chart.plotTop + chart.plotHeight - 10
+
+                    // Draw broken axis symbol
+                    chart.renderer
+                      .path(['M', x, y, 'l', 20, -5])
+                      .attr({
+                        'stroke-width': 1,
+                        stroke: 'black',
+                      })
+                      .add()
+                    chart.renderer
+                      .path(['M', x, y + 5, 'l', 20, -5])
+                      .attr({
+                        'stroke-width': 1,
+                        stroke: 'black',
+                      })
+                      .add()
+                  }
+                }
               },
             },
           },

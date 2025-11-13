@@ -1,17 +1,11 @@
 // Only used in map and menuDropdown parts
-
 import $ from 'jquery'
 import axios from 'axios'
 
 import Highcharts from 'highcharts'
-import A11y from 'highcharts/modules/accessibility'
-import Map from 'highcharts/modules/map'
-import DrillDown from 'highcharts/modules/drilldown'
-
-// Initialize exporting module.
-A11y(Highcharts) // eslint-disable-line new-cap
-Map(Highcharts) // eslint-disable-line new-cap
-DrillDown(Highcharts) // eslint-disable-line new-cap
+import 'highcharts/modules/accessibility'
+import 'highcharts/modules/map'
+import 'highcharts/modules/drilldown'
 
 // Related to map content type and map part
 // Draws a map with highchart on json files located in assets/mapdata - static files for map
@@ -33,8 +27,7 @@ function init() {
       // Set drilldown pointers
       $.each(data, setDrilldownPointer)
 
-      // Instanciate the map
-      Highcharts.mapChart('map', {
+      const config = {
         accessibility: {
           enabled: false,
         },
@@ -44,6 +37,11 @@ function init() {
           borderWidth,
           backgroundColor: '#f0f7f9',
           events: {
+            // Workaround to get pointer events after drilldown: https://github.com/highcharts/highcharts/issues/20886
+            redraw() {
+              this.series[0]._hasTracking = false
+              this.series[0].drawTracker()
+            },
             drilldown: function (e) {
               if (!e.seriesOptions) {
                 // eslint-disable-next-line @typescript-eslint/no-this-alias
@@ -124,8 +122,7 @@ function init() {
           },
         },
         tooltip: {
-          headerFormat: '{point.key}',
-          pointFormat: '{point.properties.NAVN}',
+          format: '{point.properties.NAVN}',
         },
         lang: {
           drillUpText: 'Se hele landet',
@@ -176,10 +173,6 @@ function init() {
               enabled: false,
               format: '',
             },
-            tooltip: {
-              headerFormat: '{point.key}',
-              pointFormat: '{point.properties.NAVN}',
-            },
           },
         ],
 
@@ -202,7 +195,10 @@ function init() {
             },
           },
         },
-      })
+      }
+      
+      // Instanciate the map
+      Highcharts.mapChart('map', config)
       $(map).attr('aria-hidden', 'true')
     })
   }

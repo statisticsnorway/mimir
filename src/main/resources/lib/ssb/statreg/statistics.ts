@@ -7,7 +7,7 @@ import {
   ReleaseDatesVariant,
 } from '/lib/ssb/dashboard/statreg/types'
 import { HttpResponse } from '/lib/http-client'
-import { format, isAfter } from '/lib/vendor/dateFns'
+import { format, isAfter, isSameDay } from '/lib/vendor/dateFns'
 import { isDateBetween } from '/lib/ssb/utils/dateUtils'
 
 import { ensureArray } from '/lib/ssb/utils/arrayUtils'
@@ -94,6 +94,21 @@ export function fetchStatisticsWithRelease(before: Date): Array<StatisticInListi
         })
       : []
     if (variants[0] && isDateBetween(variants[0].nextRelease, new Date().toDateString(), before.toDateString())) {
+      statsWithRelease.push(stat)
+    }
+    return statsWithRelease
+  }, [])
+}
+
+export function fetchStatisticsWithReleaseToday(): Array<StatisticInListing> {
+  const statistics: Array<StatisticInListing> = getAllStatisticsFromRepo()
+  return statistics.reduce((statsWithRelease: Array<StatisticInListing>, stat) => {
+    const variants: Array<VariantInListing> = ensureArray<VariantInListing>(stat.variants).filter(
+      (variant) =>
+        isSameDay(new Date(variant.nextRelease), new Date()) || isSameDay(new Date(variant.previousRelease), new Date())
+    )
+    if (variants.length > 0) {
+      stat.variants = variants
       statsWithRelease.push(stat)
     }
     return statsWithRelease
