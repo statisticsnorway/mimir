@@ -27,6 +27,8 @@ const EMPTY_CONFIG = {
 export function init() {
   //Highchart language checker
   const lang = $('html').attr('lang')
+ 
+  // Highcharts.setOptions({ lang: { thousandsSep: lang === 'en' ? ',' : ' ' } })
 
   $(function () {
     const w = {
@@ -165,7 +167,7 @@ export function init() {
           }
         }
 
-        // Workaround to get correct number formatting in table
+        // Workaround to get correct decimalpoint in table in Norwegian
         config.chart.events.exportData = function (chart) {
           for (const row of chart.dataRows) {
             for (const [i, cell] of row.entries()) {
