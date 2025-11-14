@@ -27,9 +27,7 @@ const EMPTY_CONFIG = {
 export function init() {
   //Highchart language checker
   const lang = $('html').attr('lang')
- 
-  // Highcharts.setOptions({ lang: { thousandsSep: lang === 'en' ? ',' : ' ' } })
-
+  
   $(function () {
     const w = {
       height: $(window).height().toFixed(0),
