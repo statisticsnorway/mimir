@@ -34,20 +34,7 @@ function generateColors(color, thresholdValues) {
     obj.colorAxis = obj.colorAxis || {}
     obj.colorAxis.minColor = color.gradient.startColor
     obj.colorAxis.maxColor = color.gradient.endColor
-    if (color.gradient.stops) {const getTooltipFormatter = (language, seriesTitle) =>
-  function () {
-    if (this.point.value || this.point.value === 0) {
-      const v = this.point.value
-      const formatted =
-        language === 'en'
-          ? v.toLocaleString('en-US')
-          : v.toLocaleString('no-NO')
-
-      return `${this.point.name}\n${seriesTitle ? seriesTitle + ': ' : ''}${formatted}`
-    }
-    return `${this.point.name}\n${this.series.name}`
-  }
-
+    if (color.gradient.stops) {
       if (!Array.isArray(color.gradient.stops)) color.gradient.stops = [color.gradient.stops]
 
       obj.colorAxis.stops = [
@@ -136,12 +123,12 @@ const getTooltipFormatter = (language, seriesTitle) =>
       const v = this.point.value
       const formatted =
         language === 'en'
-          ? v.toLocaleString('en-US')
-          : v.toLocaleString('no-NO')
+          ? v.toLocaleString('en-US')     // commas
+          : v.toLocaleString('no-NO')     // spaces
 
-      return `${this.point.name}\n${seriesTitle ? seriesTitle + ': ' : ''}${formatted}`
+      return `${this.point.name}</br>${seriesTitle ? seriesTitle + ': ' : ''}${formatted}`
     }
-    return `${this.point.name}\n${this.series.name}`
+    return `${this.point.name}</br>${this.series.name}`
   }
 
 const chart = (desktop, heightAspectRatio, mapFile, language) => {
@@ -157,19 +144,16 @@ const chart = (desktop, heightAspectRatio, mapFile, language) => {
     events: {
       // Workaround to get correct number formatting in table in Norwegian
       exportData: function (chart) {
-      const rows = chart.dataRows
-        for (const row of rows) {
-          for (const [i, cell] of row.entries()) {
-
-            // skip category column (year, region, etc)
-            if (i === 0) continue
-
-            // format only real numbers
-            if (typeof cell === 'number') {
-              row[i] =
-                language === 'en'
-                  ? cell.toLocaleString('en-US')   // 12,345
-                  : cell.toLocaleString('no-NO')   // 12 345
+        if (language !== 'en') {
+          const rows = chart.dataRows
+          for (const row of rows) {
+            for (const [i, cell] of row.entries()) {
+              if (typeof cell === 'number') {
+                row[i] =
+                  language === 'en'
+                    ? cell.toLocaleString('en-US')    // commas
+                    : cell.toLocaleString('no-NO')    // spaces
+              }
             }
           }
         }
