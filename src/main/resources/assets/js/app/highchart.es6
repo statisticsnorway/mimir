@@ -165,7 +165,7 @@ export function init() {
           }
         }
 
-        // Workaround to get correct decimalpoint in table in Norwegian
+        // Workaround to get correct number formatting in table
         config.chart.events.exportData = function (chart) {
           for (const row of chart.dataRows) {
             for (const [i, cell] of row.entries()) {
