@@ -120,8 +120,13 @@ function generateSeries(tableData, mapDataSecondColumn, color, seriesTitle, phra
 const getTooltipFormatter = (language, seriesTitle) =>
   function () {
     if (this.point.value || this.point.value === 0) {
-      const value = language !== 'en' ? String(this.point.value).replace('.', ',') : this.point.value
-      return `${this.point.name}</br>${seriesTitle ? seriesTitle + ': ' : ''}${value}`
+      const v = this.point.value
+      const formatted =
+        language === 'en'
+          ? v.toLocaleString('en-US')     // commas
+          : v.toLocaleString('no-NO')     // spaces
+
+      return `${this.point.name}</br>${seriesTitle ? seriesTitle + ': ' : ''}${formatted}`
     }
     return `${this.point.name}</br>${this.series.name}`
   }
@@ -139,13 +144,16 @@ const chart = (desktop, heightAspectRatio, mapFile, language) => {
     events: {
       // Workaround to get correct number formatting in table in Norwegian
       exportData: function (chart) {
-        const rows = chart.dataRows
-        for (const row of chart.dataRows) {
-          // Escaping first vaule not to format category ie. year
-          for (const [i, cell] of row.entries()) {
-            if (i > 0 && typeof cell === 'number') {
-              const cellValue = cell.toLocaleString(language === 'en' ? 'en-EN' : 'no-NO').replace('NaN', '')
-              row[i] = language === 'en' ? cellValue.replace(/,/g, ' ') : cellValue
+        if (language !== 'en') {
+          const rows = chart.dataRows
+          for (const row of rows) {
+            for (const [i, cell] of row.entries()) {
+              if (typeof cell === 'number') {
+                row[i] =
+                  language === 'en'
+                    ? cell.toLocaleString('en-US')    // commas
+                    : cell.toLocaleString('no-NO')    // spaces
+              }
             }
           }
         }

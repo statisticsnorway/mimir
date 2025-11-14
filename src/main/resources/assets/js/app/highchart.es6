@@ -26,7 +26,7 @@ const EMPTY_CONFIG = {
 // HIGHCHART
 export function init() {
   //Highchart language checker
-  const lang = $('html').attr('lang')
+  const lang = document.documentElement.lang   // ← SINGLE SOURCE OF TRUTH for language
 
   $(function () {
     const w = {
@@ -171,8 +171,10 @@ export function init() {
             for (const [i, cell] of row.entries()) {
               // Escaping first vaule not to format category ie. year
               if (i > 0 && typeof cell === 'number') {
-                const cellValue = cell.toLocaleString(lang === 'en' ? 'en-EN' : 'no-NO').replace('NaN', '')
-                row[i] = lang === 'en' ? cellValue.replace(/,/g, ' ') : cellValue
+                const formatted = lang === 'en'
+                  ? cell.toLocaleString('en-US')     // commas
+                  : cell.toLocaleString('no-NO')     // spaces
+                row[i] = formatted
               }
             }
           }
