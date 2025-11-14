@@ -169,10 +169,13 @@ export function init() {
         config.chart.events.exportData = function (chart) {
           for (const row of chart.dataRows) {
             for (const [i, cell] of row.entries()) {
-              // Escaping first vaule not to format category ie. year
               if (i > 0 && typeof cell === 'number') {
-                const cellValue = cell.toLocaleString(lang === 'en' ? 'en-EN' : 'no-NO').replace('NaN', '')
-                row[i] = lang === 'en' ? cellValue.replace(/,/g, ' ') : cellValue
+                const cellValue = cell
+                  .toLocaleString(lang === 'en' ? 'en-US' : 'no-NO')
+                  .replace('NaN', '')
+
+                // FIX: EN should keep commas, NO should keep spaces. No replace needed.
+                row[i] = cellValue
               }
             }
           }
