@@ -137,7 +137,7 @@ const chart = (desktop, heightAspectRatio, mapFile, language) => {
     },
     map: mapFile,
     events: {
-      // Workaround to get correct number formatting in table in Norwegian
+      // Workaround to get correct number formatting in table
       exportData: function (chart) {
         const rows = chart.dataRows
         for (const row of chart.dataRows) {
