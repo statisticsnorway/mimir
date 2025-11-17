@@ -111,20 +111,14 @@ function generateSeries(tableData, mapDataSecondColumn, color, seriesTitle, phra
           code: value,
           value: '', // value is required even though this series only does coloring areas
         })),
+        tooltip: {
+          pointFormat: key,
+        },
       }
     }),
   ]
   return series
 }
-
-const getTooltipFormatter = (language, seriesTitle) =>
-  function () {
-    if (this.point.value || this.point.value === 0) {
-      const value = language !== 'en' ? String(this.point.value).replace('.', ',') : this.point.value
-      return `${this.point.name}</br>${seriesTitle ? seriesTitle + ': ' : ''}${value}`
-    }
-    return `${this.point.name}</br>${this.series.name}`
-  }
 
 const chart = (desktop, heightAspectRatio, mapFile, language) => {
   return {
@@ -304,6 +298,7 @@ function Highmap(props) {
   })
 
   const lang = language !== 'en' ? accessibilityLang.lang : {}
+  const tooltipPrefix = seriesTitle ? `${seriesTitle}: ` : ''
 
   const mapOptions = {
     chart: chart(desktop, heightAspectRatio, mapFile, language),
@@ -312,6 +307,7 @@ function Highmap(props) {
       description,
     },
     lang: {
+      locale: 'en-EN',
       ...lang,
       exportData: {
         categoryHeader: geographicalCategory ?? phrases['highmaps.geographicalCategory'],
@@ -334,7 +330,8 @@ function Highmap(props) {
     series: generateSeries(tableData, mapDataSecondColumn, color, seriesTitle, phrases),
     tooltip: {
       enabled: true,
-      formatter: getTooltipFormatter(language, seriesTitle),
+      headerFormat: '{point.name}</br>',
+      pointFormat: tooltipPrefix + '{point.value}',
       valueDecimals: numberDecimals,
     },
     credits: {
