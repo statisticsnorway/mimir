@@ -111,20 +111,14 @@ function generateSeries(tableData, mapDataSecondColumn, color, seriesTitle, phra
           code: value,
           value: '', // value is required even though this series only does coloring areas
         })),
+        tooltip: {
+          pointFormat: key,
+        },
       }
     }),
   ]
   return series
 }
-
-const getTooltipFormatter = (language, seriesTitle) =>
-  function () {
-    if (this.point.value || this.point.value === 0) {
-      const value = language !== 'en' ? String(this.point.value).replace('.', ',') : this.point.value
-      return `${this.point.name}</br>${seriesTitle ? seriesTitle + ': ' : ''}${value}`
-    }
-    return `${this.point.name}</br>${this.series.name}`
-  }
 
 const chart = (desktop, heightAspectRatio, mapFile, language) => {
   return {
@@ -137,16 +131,14 @@ const chart = (desktop, heightAspectRatio, mapFile, language) => {
     },
     map: mapFile,
     events: {
-      // Workaround to get correct number formatting in table in Norwegian
+      // Workaround to get correct number formatting in table
       exportData: function (chart) {
-        if (language !== 'en') {
-          const rows = chart.dataRows
-          for (const row of chart.dataRows) {
-            for (const [i, cell] of row.entries()) {
-              if (typeof cell === 'number') {
-                // First convert thousand separator to space, then decimal point to comma
-                        row[i] = cell.toString().replace(',', ' ').replace('.', ',')
-              }
+        const rows = chart.dataRows
+        for (const row of chart.dataRows) {
+          // Escaping first vaule not to format category ie. year
+          for (const [i, cell] of row.entries()) {
+            if (i > 0 && typeof cell === 'number') {
+              row[i] = cell.toLocaleString(language === 'en' ? 'en-EN' : 'no-NO').replace('NaN', '')
             }
           }
         }
@@ -170,7 +162,7 @@ const legend = (desktop, legendTitle, legendAlign, numberDecimals) => {
       text: legendTitle,
     },
     itemStyle: {
-      fontWeight: "bold", 
+      fontWeight: 'bold',
       color: Highcharts.theme?.textColor || 'black',
     },
     align: legendAlign === 'topLeft' || legendAlign === 'bottomLeft' ? 'left' : 'right',
@@ -306,6 +298,7 @@ function Highmap(props) {
   })
 
   const lang = language !== 'en' ? accessibilityLang.lang : {}
+  const tooltipPrefix = seriesTitle ? `${seriesTitle}: ` : ''
 
   const mapOptions = {
     chart: chart(desktop, heightAspectRatio, mapFile, language),
@@ -314,6 +307,7 @@ function Highmap(props) {
       description,
     },
     lang: {
+      locale: 'en-EN',
       ...lang,
       exportData: {
         categoryHeader: geographicalCategory ?? phrases['highmaps.geographicalCategory'],
@@ -336,7 +330,8 @@ function Highmap(props) {
     series: generateSeries(tableData, mapDataSecondColumn, color, seriesTitle, phrases),
     tooltip: {
       enabled: true,
-      formatter: getTooltipFormatter(language, seriesTitle),
+      headerFormat: '{point.name}</br>',
+      pointFormat: tooltipPrefix + '{point.value}',
       valueDecimals: numberDecimals,
     },
     credits: {
@@ -401,7 +396,7 @@ function Highmap(props) {
         </figure>
         {footnoteText?.map((footnote) => (
           <Col className='footnote col-12' key={`footnote-${footnote}`}>
-            {footnote && <Text small="true">{footnote}</Text>}
+            {footnote && <Text small='true'>{footnote}</Text>}
           </Col>
         ))}
         {sourceList?.map(renderHighchartsSource)}

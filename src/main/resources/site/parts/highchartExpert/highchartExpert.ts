@@ -1,4 +1,3 @@
-// @ts-ignore
 import { getComponent } from '/lib/xp/portal'
 import { render as r4XpRender } from '/lib/enonic/react4xp'
 import { renderError } from '/lib/ssb/error/error'
