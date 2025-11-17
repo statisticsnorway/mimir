@@ -140,8 +140,7 @@ function Highchart(props) {
                   for (const [i, cell] of row.entries()) {
                     // Escaping first vaule not to format category ie. year
                     if (i > 0 && typeof cell === 'number') {
-                      const cellValue = cell.toLocaleString(language === 'en' ? 'en-EN' : 'no-NO').replace('NaN', '')
-                      row[i] = language === 'en' ? cellValue.replace(/,/g, ' ') : cellValue
+                      row[i] = cell.toLocaleString(language === 'en' ? 'en-EN' : 'no-NO').replace('NaN', '')
                     }
                   }
                 }

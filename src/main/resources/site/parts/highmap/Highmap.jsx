@@ -144,8 +144,7 @@ const chart = (desktop, heightAspectRatio, mapFile, language) => {
           // Escaping first vaule not to format category ie. year
           for (const [i, cell] of row.entries()) {
             if (i > 0 && typeof cell === 'number') {
-              const cellValue = cell.toLocaleString(language === 'en' ? 'en-EN' : 'no-NO').replace('NaN', '')
-              row[i] = language === 'en' ? cellValue.replace(/,/g, ' ') : cellValue
+              row[i] = cell.toLocaleString(language === 'en' ? 'en-EN' : 'no-NO').replace('NaN', '')
             }
           }
         }
