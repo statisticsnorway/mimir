@@ -92,8 +92,7 @@ export function init() {
             }))
           })
         }
-        config.lang = lang !== 'en' ? accessibilityLang.lang : {}
-        config.lang.locale = lang
+        config.lang = lang !== 'en' ? accessibilityLang.lang : {locale: "en-GB"}
         config.exporting.menuItemDefinitions = {
           downloadXLS: {
             onclick: function () {

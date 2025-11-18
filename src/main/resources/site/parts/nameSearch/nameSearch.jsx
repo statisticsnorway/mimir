@@ -265,7 +265,7 @@ function NameSearch(props) {
     // Highchart language checker
     const lang =
       language === 'en'
-        ? {}
+        ? {locale: "en-GB"}
         : {
             ...accessibilityLang.lang,
             accessibility: {
