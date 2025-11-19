@@ -297,7 +297,7 @@ function Highmap(props) {
     minWidth: 992,
   })
 
-  const lang = language !== 'en' ? accessibilityLang.lang : {}
+  const lang = language !== 'en' ? accessibilityLang.lang : {locale: "en-GB"}
   const tooltipPrefix = seriesTitle ? `${seriesTitle}: ` : ''
 
   const mapOptions = {
@@ -307,7 +307,6 @@ function Highmap(props) {
       description,
     },
     lang: {
-      locale: 'en-EN',
       ...lang,
       exportData: {
         categoryHeader: geographicalCategory ?? phrases['highmaps.geographicalCategory'],
