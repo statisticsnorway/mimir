@@ -135,16 +135,12 @@ function Highchart(props) {
             ...highchart.config.chart,
             events: {
               exportData: function (chart) {
-                // Workaround to get correct number formatting in table in Norwegian
-                if (highcharts.language !== 'en') {
-                  const rows = chart.dataRows
-                  for (const row of chart.dataRows) {
-                    for (const [i, cell] of row.entries()) {
-                      if (typeof cell === 'number') {
-                        // First convert thousand separator to space, then decimal point to comma
-                        row[i] = cell.toString().replace(',', ' ').replace('.', ',').replace('NaN', '')
-
-                      }
+                // Workaround to get correct number formatting in table
+                for (const row of chart.dataRows) {
+                  for (const [i, cell] of row.entries()) {
+                    // Escaping first vaule not to format category ie. year
+                    if (i > 0 && typeof cell === 'number') {
+                      row[i] = cell.toLocaleString(language === 'en' ? 'en-EN' : 'no-NO').replace('NaN', '')
                     }
                   }
                 }
