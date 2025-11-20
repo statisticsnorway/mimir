@@ -38,7 +38,7 @@ function StatisticDescription(props: Readonly<AboutTheStatisticsProps>) {
     )
   }
 
-  function renderExpansionBox(category: AccordionData) {
+  /* function renderExpansionBox(category: AccordionData) {
     const items: AccordionItems[] = Array.isArray(category.items) ? category.items : []
     return (
       <div className='expansionBoxes'>
@@ -74,7 +74,7 @@ function StatisticDescription(props: Readonly<AboutTheStatisticsProps>) {
         })}
       </div>
     )
-  }
+  } */
 
   // Because macros in htmlArea can't be rendered clientside we have to render all accordions and hide those that aren't selected
   function renderCategories(accordions: AccordionData[]) {
