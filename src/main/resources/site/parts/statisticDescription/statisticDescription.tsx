@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { ExpansionBox, Title } from '@statisticsnorway/ssb-component-library'
-import { Tag, Details } from '@digdir/designsystemet-react'
+import { ExpansionBox, NestedAccordion, Title } from '@statisticsnorway/ssb-component-library'
+import { Tag } from '@digdir/designsystemet-react'
 
 import { sanitize } from '/lib/ssb/utils/htmlUtils'
 import { type AccordionData, AccordionItems } from '/lib/types/partTypes/accordion'
@@ -23,18 +23,53 @@ function StatisticDescription(props: Readonly<AboutTheStatisticsProps>) {
         )}
         {items.map((item: AccordionItems) => {
           return (
-            <Details key={item.title} defaultOpen>
-              <Details.Summary data-size='md'>{item.title}</Details.Summary>
-              <Details.Content>
-                {item.body && (
+            <NestedAccordion key={item.title} header={item.title} openByDefault>
+              {item.body && (
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: sanitize(item.body.replace(/&nbsp;/g, ' ')),
+                  }}
+                />
+              )}
+            </NestedAccordion>
+          )
+        })}
+      </div>
+    )
+  }
+
+  function renderExpansionBox(category: AccordionData) {
+    const items: AccordionItems[] = Array.isArray(category.items) ? category.items : []
+    return (
+      <div className='expansionBoxes'>
+        {category.body && (
+          <ExpansionBox
+            header={category.subHeader}
+            text={
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: sanitize(category.body.replace(/&nbsp;/g, ' ')),
+                }}
+              />
+            }
+            sneakPeek
+          />
+        )}
+        {items.map((item: AccordionItems) => {
+          return (
+            <ExpansionBox
+              header={item.title}
+              text={
+                item.body && (
                   <div
                     dangerouslySetInnerHTML={{
                       __html: sanitize(item.body.replace(/&nbsp;/g, ' ')),
                     }}
                   />
-                )}
-              </Details.Content>
-            </Details>
+                )
+              }
+              sneakPeek
+            />
           )
         })}
       </div>

@@ -118,7 +118,7 @@ $icon-padding: 8px;
 
 p > a,
 p > strong > a,
-ul > li > a,
+//ul > li > a,
 ol > li > a,
 table a,
 .rich-text span a {
@@ -323,10 +323,20 @@ table {
   opacity: 1;
 }
 
-a.ds-link {
+/* a.ds-link {
   color: var(--ds-link-color, var(--ds-color-accent-text-subtle));
   text-decoration: underline;
 }
 a.ds-link:hover {
   color: var(--ds-link-color-hover, var(--ds-color-accent-text-hover));
+} */
+
+a.ds-link {
+  color: var(--ds-link-color, var(--ds-color-accent-text-subtle));
+  text-decoration: underline;
+}
+
+/* Invertert variant (lys på mørk bakgrunn) */
+a.ds-link[data-color="inverted"] {
+  color: var(--ds-link-color, var(--ds-color-inverted-text-subtle));
 }

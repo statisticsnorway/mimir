@@ -50,4 +50,10 @@
       margin-top: 1rem;
     }
   }
+
+  .expansionBoxes {
+    display: flex;
+    flex-direction: column;
+    gap: 12px; 
+  }
 }

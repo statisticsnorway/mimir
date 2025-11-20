@@ -68,7 +68,7 @@ const Footer = (props: FooterContent) => {
         if (menuItem && menuItem.path && menuItem.title) {
           return (
             <li key={itemIndex}>
-              <Link href={menuItem.path} data-size='lg'>
+              <Link href={menuItem.path} data-color='inverted'>
                 <ArrowRight size='20' />
                 <span>{menuItem.title}</span>
               </Link>
@@ -83,23 +83,23 @@ const Footer = (props: FooterContent) => {
     return (
       <div className='social-links'>
         {facebookUrl && (
-          <Link aria-label='Facebook' href={facebookUrl}>
+          <Link aria-label='Facebook' href={facebookUrl} data-color='inverted'>
             <Facebook size={24} />
           </Link>
         )}
         {linkedinUrl && (
-          <Link aria-label='Linkedin' href={linkedinUrl}>
+          <Link aria-label='Linkedin' href={linkedinUrl} data-color='inverted'>
             {' '}
             <Linkedin size={24}></Linkedin>
           </Link>
         )}
         {instagramUrl && (
-          <Link aria-label='Instagram' href={instagramUrl}>
+          <Link aria-label='Instagram' href={instagramUrl} data-color='inverted'>
             <Instagram size={24} />
           </Link>
         )}
         {rssUrl && (
-          <Link aria-label='Rss' href={rssUrl}>
+          <Link aria-label='Rss' href={rssUrl} data-color='inverted'>
             <Rss size={24} />
           </Link>
         )}
@@ -114,7 +114,7 @@ const Footer = (props: FooterContent) => {
           {globalLinks.map((globalLink, index) => {
             if (globalLink && globalLink.path && globalLink.title) {
               return (
-                <Link key={'link_' + index} href={globalLink.path}>
+                <Link key={'link_' + index} href={globalLink.path} data-color='inverted'>
                   {globalLink.title}
                 </Link>
               )
@@ -129,7 +129,9 @@ const Footer = (props: FooterContent) => {
     if (copyrightUrl && copyrightText) {
       return (
         <div className='copyright'>
-          <Link href={copyrightUrl}>{copyrightText}</Link>
+          <Link href={copyrightUrl} data-color='inverted'>
+            {copyrightText}
+          </Link>
         </div>
       )
     }
@@ -142,7 +144,9 @@ const Footer = (props: FooterContent) => {
       return (
         <div className='cookie-links'>
           <div className='cookie-link'>
-            <Link href={link}>{phrases.cookiePrivacyLink}</Link>
+            <Link href={link} data-color='inverted'>
+              {phrases.cookiePrivacyLink}
+            </Link>
           </div>
           <div className='cookie-reset'>
             <button onClick={handleCookieResetClick} className='ds-link stand-alone'>
@@ -180,7 +184,7 @@ const Footer = (props: FooterContent) => {
 
   if (logoUrl && footerNavigation && topButtonText) {
     return (
-      <div className='ssb-footer-wrapper' data-color-scheme='dark'>
+      <div className='ssb-footer-wrapper'>
         <div className='container'>
           <h2 className='sr-only'>{hiddenFooterText}</h2>
           <div className='footer-top-row'>
