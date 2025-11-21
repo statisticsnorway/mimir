@@ -1,11 +1,6 @@
 import { App, LibContent, LibPortal, Server } from '@enonic/mock-xp'
-import { Content, type Log } from '@enonic-types/core'
-import {
-  type assetUrl as assetUrlType,
-  type getContent as getContentType,
-  type imageUrl as imageUrlType,
-  type imagePlaceholder as imagePlaceholderType,
-} from '@enonic-types/lib-portal'
+import { type Log } from '@enonic-types/core'
+import { type getContent as getContentType, type imageUrl as imageUrlType } from '@enonic-types/lib-portal'
 import { type get as getType } from '@enonic-types/lib-content'
 import { jest } from '@jest/globals'
 
@@ -55,10 +50,8 @@ jest.mock(
   '/lib/xp/portal',
   () => {
     return {
-      assetUrl: jest.fn<typeof assetUrlType>((params) => mockLibPortal.assetUrl(params)),
       getContent: jest.fn<typeof getContentType>(() => mockLibPortal.getContent()),
       imageUrl: jest.fn<typeof imageUrlType>((params) => mockLibPortal.imageUrl(params)),
-      // imagePlaceholder: jest.fn<typeof imagePlaceholderType>((params) => libPortal.imagePlaceholder(params)),
     }
   },
   { virtual: true }
