@@ -331,12 +331,40 @@ a.ds-link:hover {
   color: var(--ds-link-color-hover, var(--ds-color-accent-text-hover));
 } */
 
-a.ds-link {
+/* a.ds-link {
   color: var(--ds-link-color, var(--ds-color-accent-text-subtle));
   text-decoration: underline;
 }
-
+ */
 /* Invertert variant (lys på mørk bakgrunn) */
 a.ds-link[data-color="inverted"] {
   color: var(--ds-link-color, var(--ds-color-inverted-text-subtle));
 }
+
+a.ds-link {
+  color: var(--ds-color-text-link-default);
+  text-decoration: underline;
+}
+
+a.ds-link:hover {
+  color: var(--ds-color-text-link-hover);
+}
+
+a.ds-link:visited {
+  color: var(--ds-color-text-link-visited);
+}
+
+/* Alle lenker inni Digdir Card skal bruke DS-link-farger, ikke Bootstrap-blå */
+.ds-card a {
+  color: var(--ds-color-text-link-default);
+  text-decoration: underline;
+}
+
+.ds-card a:hover {
+  color: var(--ds-color-text-link-hover);
+}
+
+.ds-card a:visited {
+  color: var(--ds-color-text-link-visited);
+}
+

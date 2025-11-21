@@ -2,7 +2,7 @@
 
 .menu-box {
   & > div {
-    @include make-row();
+    //@include make-row();
     
     & > .ssb-card {
       @include make-col-ready();
@@ -46,6 +46,38 @@
         }
       }
       
-    }
+    } 
+  }
+
+  .menu-boxes{
+    display: grid;
+    gap: var(--ds-size-4);
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+
+  .menu-box__card-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;          // ikke bruk blå lenkefarge, arve vanlig tekstfarge
+}
+
+  .ds-card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .ds-card__block:first-child {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--ds-size-4);
+  }
+
+  /* Selve bildet – fast, lik størrelse på alle */
+  .ds-card__block:first-child img {
+    max-height: 150px;
+    object-fit: contain; 
+    display: block;
   }
 }

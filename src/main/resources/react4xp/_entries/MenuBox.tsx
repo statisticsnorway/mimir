@@ -1,5 +1,5 @@
 import React from 'react'
-import { Card, Text } from '@statisticsnorway/ssb-component-library'
+import { Card, Heading, Paragraph } from '@digdir/designsystemet-react'
 import { MenuBoxProps } from '/lib/types/partTypes/menuBox'
 
 const MenuBox = ({ boxes, height }: MenuBoxProps) => {
@@ -9,18 +9,22 @@ const MenuBox = ({ boxes, height }: MenuBoxProps) => {
         {boxes.map((box, index) => {
           return (
             <Card
-              className={`${height == 'fixed' && box.titleSize ? `fixed-height title-size-${box.titleSize}` : ''}`}
               key={`box_${index}`}
-              title={box.title}
-              href={box.href}
-              icon={
-                box.icon ? (
-                  <img src={box.icon.src} alt={box.icon.alt ? box.icon.alt : ''} loading='lazy'></img>
-                ) : undefined
-              }
-              profiled
+              asChild
+              className={`${height == 'fixed' && box.titleSize ? `fixed-height title-size-${box.titleSize}` : ''}`}
             >
-              {box.subtitle ? <Text>{box.subtitle}</Text> : undefined}
+              <a href={box.href} target='_blank' rel='noopener noreferrer' className='menu-box__card-link'>
+                {box.icon && (
+                  <Card.Block>
+                    <img alt={box.icon.alt ? box.icon.alt : ''} src={box.icon.src} loading='lazy' />
+                  </Card.Block>
+                )}
+
+                <Card.Block>
+                  <Heading>{box.title}</Heading>
+                  {box.subtitle && <Paragraph>{box.subtitle}</Paragraph>}
+                </Card.Block>
+              </a>
             </Card>
           )
         })}
