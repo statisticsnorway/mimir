@@ -70,7 +70,7 @@ export function parseKeyFigure(
 ): KeyFigureView {
   const keyFigureViewData: KeyFigureView = {
     iconUrl: getIconUrl(keyFigure),
-    iconAltText: keyFigure.data.icon ? getImageCaption(keyFigure.data.icon) : '',
+    iconAltText: getImageCaption(keyFigure.data.icon),
     number: undefined,
     numberDescription: keyFigure.data.denomination,
     noNumberText: localize({

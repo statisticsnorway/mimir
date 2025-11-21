@@ -82,7 +82,7 @@ function createImageUrls(pictureCardLink: PictureCardLink, listLength: number, i
       imageUrls.portraitSrcSet = imageUrls.imageSrc.replace('block-580-400', 'block-280-400')
     }
 
-    imageUrls.imageAlt = getImageAlt(pictureCardLink.image) || ''
+    imageUrls.imageAlt = getImageAlt(pictureCardLink.image)
   } else {
     imageUrls.imageSrc = imagePlaceholder({
       width: 580,
