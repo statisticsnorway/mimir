@@ -66,11 +66,13 @@ describe('imageUrl ', () => {
     const response = imageUrl({ path: image1._path, scale: 'block(100,100)' })
     expect(response).toContain('.svg')
   })
+  // TODO: Add an actual jpg file to test against
   it('returns correct format for jpg image', async () => {
     const { imageUrl } = await import('/lib/ssb/utils/imageUtils')
-    const response = imageUrl({ path: 'dummy/path', scale: 'block(100,100)' })
-    expect(response).toEqual('')
+    const response = imageUrl({ path: image2._path, scale: 'block(200,200)' })
+    expect(response).toContain('/block-200-200/favicon-96x96.jpg')
   })
+  // TODO: Fix test
   it('returns url without format for media:vector images', async () => {
     const { imageUrl } = await import('/lib/ssb/utils/imageUtils')
     const response = imageUrl({ path: 'dummy/path', scale: 'block(100,100)' })
