@@ -10,11 +10,13 @@ export function getImageCaption(imageId?: string): string {
 }
 
 export function getImageAlt(imageId?: string): string {
-  if (!imageId) return ''
+  if (!imageId) return ' '
   const imageContent: Content<MediaImage> | null = get({
     key: imageId,
   })
-  return imageContent?.data?.altText ?? ''
+  const alt = imageContent?.data?.altText
+  if (alt) return alt
+  else return ' '
 }
 
 export function imageUrl(params: ImageUrlParams) {
