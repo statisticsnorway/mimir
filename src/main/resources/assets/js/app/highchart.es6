@@ -2,26 +2,16 @@ import $ from 'jquery'
 // only used in part Highcharts when not doing react4xp render
 
 import Highcharts from 'highcharts'
-// Load the exporting module.
-import highchartsModuleData from 'highcharts/modules/data'
-import highchartsModuleAccessibility from 'highcharts/modules/accessibility'
-import highchartsModuleExporting from 'highcharts/modules/exporting'
-import highchartsModuleOfflineExporting from 'highcharts/modules/offline-exporting'
-import highchartsModuleNoDataToDisplay from 'highcharts/modules/no-data-to-display'
-import highchartsModuleExportData from 'highcharts/modules/export-data'
-import highchartsBrokenAxis from 'highcharts/modules/broken-axis'
+import 'highcharts/modules/data'
+import 'highcharts/modules/accessibility'
+import 'highcharts/modules/exporting'
+import 'highcharts/modules/offline-exporting'
+import 'highcharts/modules/no-data-to-display'
+import 'highcharts/modules/export-data'
+import 'highcharts/modules/broken-axis'
 import zipcelx from 'zipcelx/lib/legacy'
 
 import accessibilityLang from '../highchart-lang.json'
-
-// Initialize exporting module.
-highchartsModuleData(Highcharts)
-highchartsModuleAccessibility(Highcharts)
-highchartsModuleNoDataToDisplay(Highcharts)
-highchartsModuleExporting(Highcharts)
-highchartsModuleOfflineExporting(Highcharts)
-highchartsModuleExportData(Highcharts)
-highchartsBrokenAxis(Highcharts)
 
 const EMPTY_CONFIG = {
   title: {
@@ -37,51 +27,12 @@ const EMPTY_CONFIG = {
 export function init() {
   //Highchart language checker
   const lang = $('html').attr('lang')
-  if (lang !== 'en') {
-    Highcharts.setOptions(accessibilityLang)
-  }
-
-  // Workaround for table ascending/descending sort.
-  // There is a feature request in github, so a config option to disable the feature is being implemented.
-  Highcharts.addEvent(
-    Highcharts.Chart,
-    'afterViewData',
-    function () {
-      this.dataTableDiv2 = this.dataTableDiv
-      this.dataTableDiv = null
-    },
-    {
-      order: 0,
-    }
-  )
-  Highcharts.addEvent(Highcharts.Chart, 'afterViewData', function () {
-    this.dataTableDiv = this.dataTableDiv2
-    this.dataTableDiv2 = null
-  })
-
-  Highcharts.addEvent(Highcharts.Chart, 'aftergetTableAST', function (e) {
-    e.tree.children[2].children.forEach(function (row) {
-      row.children.forEach(function (cell, i) {
-        if (i !== 0) {
-          const cellValue = parseFloat(cell.textContent)
-            .toLocaleString(lang === 'en' ? 'en-EN' : 'no-NO')
-            .replace('NaN', '')
-          row.children[i].textContent = lang === 'en' ? cellValue.replace(/,/g, ' ') : cellValue
-        }
-      })
-    })
-  })
 
   $(function () {
     const w = {
       height: $(window).height().toFixed(0),
       width: $(window).width().toFixed(0),
     }
-
-    $('.hc-container').each(function (i, container) {
-      const height = $(container).height()
-      $(container).find('svg').attr('height', height)
-    })
 
     const h1Size = w.width < 768 ? '14px' : '16px'
 
@@ -141,39 +92,9 @@ export function init() {
             }))
           })
         }
-
+        config.lang = lang !== 'en' ? accessibilityLang.lang : {}
+        config.lang.locale = lang
         config.exporting.menuItemDefinitions = {
-          printChart: {
-            onclick: function () {
-              this.print()
-            },
-          },
-          downloadPNG: {
-            onclick: function () {
-              this.exportChartLocal() //png is default
-            },
-          },
-          downloadJPEG: {
-            onclick: function () {
-              this.exportChartLocal({
-                type: 'image/jpeg',
-              })
-            },
-          },
-          downloadPDF: {
-            onclick: function () {
-              this.exportChartLocal({
-                type: 'application/pdf',
-              })
-            },
-          },
-          downloadSVG: {
-            onclick: function () {
-              this.exportChartLocal({
-                type: 'image/svg+xml',
-              })
-            },
-          },
           downloadXLS: {
             onclick: function () {
               const rows = this.getDataRows(true)
@@ -193,20 +114,9 @@ export function init() {
               })
             },
           },
-          downloadCSV: {
-            onclick: function () {
-              this.downloadCSV()
-            },
-          },
         }
-
-        // Replace table header from Category with xAxis.title.text
-        config.exporting.csv.columnHeaderFormatter = function (item) {
-          if (!item || item instanceof Highcharts.Axis) {
-            return config.xAxis.title.text ? config.xAxis.title.text : 'Category'
-          } else {
-            return item.name
-          }
+        config.lang.exportData = {
+          categoryHeader: config.xAxis.title.text ? config.xAxis.title.text : 'Category',
         }
 
         // Drawing yAxis break symbol when y-axis not starting at 0
@@ -251,6 +161,18 @@ export function init() {
                   stroke: 'black',
                 })
                 .add()
+            }
+          }
+        }
+
+        // Workaround to get correct number formatting in table
+        config.chart.events.exportData = function (chart) {
+          for (const row of chart.dataRows) {
+            for (const [i, cell] of row.entries()) {
+              // Escaping first vaule not to format category ie. year
+              if (i > 0 && typeof cell === 'number') {
+                row[i] = cell.toLocaleString(lang === 'en' ? 'en-EN' : 'no-NO').replace('NaN', '')
+              }
             }
           }
         }
