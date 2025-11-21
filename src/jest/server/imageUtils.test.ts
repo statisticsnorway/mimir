@@ -26,15 +26,21 @@ describe('getImageAlt ', () => {
     expect(response).toEqual('Alt text image 1')
   })
 
-  it('returns empty string for non existing image', async () => {
+  it('returns whitespace string for non existing image', async () => {
     const { getImageAlt } = await import('/lib/ssb/utils/imageUtils')
     const response = getImageAlt('non_existing_image_id')
     expect(response).toBe(' ')
   })
 
-  it('returns empty string for undefined id', async () => {
+  it('returns whitespace string for undefined id', async () => {
     const { getImageAlt } = await import('/lib/ssb/utils/imageUtils')
     const response = getImageAlt(null)
+    expect(response).toBe(' ')
+  })
+
+  it('returns whitespace string for image with defined alt text as empty string', async () => {
+    const { getImageAlt } = await import('/lib/ssb/utils/imageUtils')
+    const response = getImageAlt(mediaImage2._id)
     expect(response).toBe(' ')
   })
 })
@@ -96,7 +102,7 @@ const image1 = mockLibContent.createMedia({
   focalY: 0.5,
 })
 
-mockLibContent.createMedia({
+const image2 = mockLibContent.createMedia({
   data: readFileSync(
     join(__dirname, '../../main/resources/assets/favicon/', IMAGE_FILENAME_2)
   ) as unknown as ByteSource,
@@ -116,5 +122,16 @@ const mediaImage = mockLibContent.create({
     caption: 'Caption image 1',
   },
   name: IMAGE_FILENAME_1 + '_media',
+  parentPath: imageArchive._path,
+})
+
+const mediaImage2 = mockLibContent.create({
+  contentType: 'mimir:MediaImage',
+  data: {
+    altText: '',
+    media: image2._id,
+    caption: '',
+  },
+  name: IMAGE_FILENAME_2 + '_media',
   parentPath: imageArchive._path,
 })
