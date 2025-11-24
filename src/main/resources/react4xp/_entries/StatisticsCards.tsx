@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, Card, Text } from '@statisticsnorway/ssb-component-library'
+import { Button, Card, Heading, Paragraph } from '@digdir/designsystemet-react'
 import { Col, Container, Row } from 'react-bootstrap'
 
 interface RelatedStatisticsProps {
@@ -70,13 +70,20 @@ const RelatedStatistics = (props: RelatedStatisticsProps) => {
         {statistics.map(({ icon, iconAlt, href, title, preamble }, index) => {
           return (
             <Col key={title + index} className={`mb-3 col-12 col-lg-4${getBreakpoints(index, !!hasButton)}`}>
-              <Card
-                href={href}
-                title={title}
-                ariaDescribedBy='text'
-                icon={icon && <img src={icon} alt={iconAlt ?? ''} loading='lazy' />}
-              >
-                <Text>{preamble}</Text>
+              <Card aria-describedBy='text' variant='tinted'>
+                {icon && (
+                  <Card.Block>
+                    <img alt={iconAlt ?? ''} src={icon} loading='lazy' />
+                  </Card.Block>
+                )}
+                <Card.Block>
+                  <Heading>
+                    <a href={href} target='_blank' rel='noopener noreferrer'>
+                      {title}
+                    </a>
+                  </Heading>
+                  <Paragraph>{preamble}</Paragraph>
+                </Card.Block>
               </Card>
             </Col>
           )

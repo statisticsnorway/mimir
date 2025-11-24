@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { ExpansionBox, NestedAccordion, Title } from '@statisticsnorway/ssb-component-library'
-import { Tag } from '@digdir/designsystemet-react'
+import { Chip } from '@digdir/designsystemet-react'
 
 import { sanitize } from '/lib/ssb/utils/htmlUtils'
 import { type AccordionData, AccordionItems } from '/lib/types/partTypes/accordion'
@@ -38,44 +38,6 @@ function StatisticDescription(props: Readonly<AboutTheStatisticsProps>) {
     )
   }
 
-  /* function renderExpansionBox(category: AccordionData) {
-    const items: AccordionItems[] = Array.isArray(category.items) ? category.items : []
-    return (
-      <div className='expansionBoxes'>
-        {category.body && (
-          <ExpansionBox
-            header={category.subHeader}
-            text={
-              <div
-                dangerouslySetInnerHTML={{
-                  __html: sanitize(category.body.replace(/&nbsp;/g, ' ')),
-                }}
-              />
-            }
-            sneakPeek
-          />
-        )}
-        {items.map((item: AccordionItems) => {
-          return (
-            <ExpansionBox
-              header={item.title}
-              text={
-                item.body && (
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: sanitize(item.body.replace(/&nbsp;/g, ' ')),
-                    }}
-                  />
-                )
-              }
-              sneakPeek
-            />
-          )
-        })}
-      </div>
-    )
-  } */
-
   // Because macros in htmlArea can't be rendered clientside we have to render all accordions and hide those that aren't selected
   function renderCategories(accordions: AccordionData[]) {
     return (
@@ -105,19 +67,31 @@ function StatisticDescription(props: Readonly<AboutTheStatisticsProps>) {
       )}
       <div className='om-statistikken-tags'>
         {accordions.map((accordion) => (
-          <Tag
-            className={accordion.id === selectedTag ? 'active' : undefined}
+          <Chip.Radio
             key={accordion.id}
-            onClick={() => setSelectedTag(accordion.id as string)}
+            name='category'
+            value={accordion.id}
+            checked={selectedTag === accordion.id}
+            onChange={(event) => setSelectedTag(event.target.value as string)}
           >
             {accordion.open}
-          </Tag>
+          </Chip.Radio>
         ))}
       </div>
 
       {renderCategories(accordions)}
     </div>
   )
+}
+
+{
+  /* <Tag
+  className={accordion.id === selectedTag ? 'active' : undefined}
+  key={accordion.id}
+  onClick={() => setSelectedTag(accordion.id as string)}
+>
+  {accordion.open}
+</Tag> */
 }
 
 export default (props: AboutTheStatisticsProps) => <StatisticDescription {...props} />
