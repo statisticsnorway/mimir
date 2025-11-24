@@ -266,6 +266,7 @@ footer {
       button {
         @include reset-button;
         text-decoration: none;
+        color: #b6e8b8;
 
         .link-text {
           line-height: 1.7;

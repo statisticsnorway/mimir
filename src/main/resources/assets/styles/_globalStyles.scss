@@ -350,12 +350,12 @@ a.ds-link:hover {
   color: var(--ds-color-text-link-hover);
 }
 
-a.ds-link:visited {
+/* a.ds-link:visited {
   color: var(--ds-color-text-link-visited);
-}
+} */
 
 /* Alle lenker inni Digdir Card skal bruke DS-link-farger, ikke Bootstrap-blå */
-.ds-card a {
+.ds-card a, a.ds-card {
   color: var(--ds-color-text-link-default);
   text-decoration: underline;
 }
@@ -364,7 +364,7 @@ a.ds-link:visited {
   color: var(--ds-color-text-link-hover);
 }
 
-.ds-card a:visited {
+/* .ds-card a:visited {
   color: var(--ds-color-text-link-visited);
-}
+} */
 
