@@ -57,7 +57,7 @@ function Timeline(props: TimelineProps) {
     }
   }, [timelineCount])
 
-  const ShowMoreYears = () => {
+  const showMoreYears = () => {
     setTimeLineCount((prevCount) => Number(prevCount) + Number(countYear))
   }
 
@@ -67,12 +67,12 @@ function Timeline(props: TimelineProps) {
 
   const handleOnClick = () => {
     setKeyboardNavigation(false)
-    ShowMoreYears()
+    showMoreYears()
   }
 
   const handleKeyboardNavigation = usePaginationKeyboardNavigation(() => {
     setKeyboardNavigation(true)
-    ShowMoreYears()
+    showMoreYears()
   })
 
   function isExternalUrl(url?: string): boolean {
