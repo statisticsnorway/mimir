@@ -246,7 +246,6 @@ function Timeline(props: TimelineProps) {
               return addTimelineYear(timeline, i)
             })}
           </div>
-
           {filteredElements.length > timelineCount && renderShowMoreButton()}
         </div>
       </div>
