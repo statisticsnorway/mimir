@@ -57,7 +57,7 @@ function Timeline(props: TimelineProps) {
     }
   }, [timelineCount])
 
-  const fetchMoreYear = () => {
+  const ShowMoreYears = () => {
     setTimeLineCount((prevCount) => Number(prevCount) + Number(countYear))
   }
 
@@ -67,12 +67,12 @@ function Timeline(props: TimelineProps) {
 
   const handleOnClick = () => {
     setKeyboardNavigation(false)
-    fetchMoreYear()
+    ShowMoreYears()
   }
 
   const handleKeyboardNavigation = usePaginationKeyboardNavigation(() => {
     setKeyboardNavigation(true)
-    fetchMoreYear()
+    ShowMoreYears()
   })
 
   function isExternalUrl(url?: string): boolean {
@@ -86,7 +86,7 @@ function Timeline(props: TimelineProps) {
       <Button
         primary
         className='button-more'
-        disabled={timelineCount === timelineElements.length}
+        disabled={timelineCount >= filteredElements.length}
         onClick={handleOnClick}
         onKeyDown={handleKeyboardNavigation}
       >
@@ -184,13 +184,15 @@ function Timeline(props: TimelineProps) {
   function addTimelineYear(timeline: TimelineElement, i: number) {
     const events = timeline.event ? (Array.isArray(timeline.event) ? timeline.event : [timeline.event]) : []
     if (events.length === 0) {
-      return null
+      return <></>
     }
     return (
       <div
         className='timeline-content'
         key={timeline.year}
         ref={i === timelineCount - countYear ? firstNewTimelineRef : null}
+        hidden={i + 1 > timelineCount}
+        aria-hidden={i + 1 > timelineCount}
       >
         <div className='year'>
           <Title size={2}>{timeline.year}</Title>
@@ -240,11 +242,12 @@ function Timeline(props: TimelineProps) {
         <div className='timeline'>
           <div className='circle' />
           <div className='timeline-elements'>
-            {filteredElements?.slice(0, timelineCount).map((timeline, i) => {
-              return <>{addTimelineYear(timeline, i)}</>
+            {filteredElements?.map((timeline, i) => {
+              return addTimelineYear(timeline, i)
             })}
           </div>
-          {filteredElements.length > countYear && filteredElements.length > timelineCount && renderShowMoreButton()}
+
+          {filteredElements.length > timelineCount && renderShowMoreButton()}
         </div>
       </div>
     )
