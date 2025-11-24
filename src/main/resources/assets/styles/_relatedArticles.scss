@@ -5,6 +5,41 @@
     margin-top: $spacer * 1.5;
   }
 
+  .related-articles {
+    display: grid;
+    gap: var(--ds-size-4);
+    grid-template-columns: repeat(3, minmax(0, 380px));
+    justify-content: start;
+
+    @include media-breakpoint-down(lg) {
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      justify-content: stretch;
+    }
+  }
+
+  .related-articles > li {
+    height: 100%;
+    list-style: none; 
+    display: flex;
+  }
+
+  .related-articles > li > .ds-card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .related-articles > li > .ds-card .ds-card__block:first-child {
+    flex: 0 0 auto;
+  }
+
+  .related-articles > li > .ds-card .ds-card__block:last-child {
+    flex: 1 0 auto; 
+    display: flex;
+    flex-direction: column;
+    margin-top: auto;
+  }
+
   ul {
     list-style: none;
     padding-left: 0;

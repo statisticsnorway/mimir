@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { Card, Text, Button } from '@statisticsnorway/ssb-component-library'
+import { Card, Button, Heading, Paragraph } from '@digdir/designsystemet-react'
 import { useMediaQuery } from 'react-responsive'
 import { type RelatedArticlesContent } from '/lib/types/partTypes/relatedArticles'
 import { usePaginationKeyboardNavigation } from '/lib/ssb/utils/customHooks/paginationHooks'
@@ -81,7 +81,7 @@ function RelatedArticles(props: RelatedArticlesProps) {
           <Button
             onClick={() => toggleBox(false)}
             onKeyDown={handleKeyboardNavigation}
-            ariaLabel={isHidden ? `${showAllAriaLabel} - ${relatedArticles.length} ${articlePluralName}` : ''}
+            aria-label={isHidden ? `${showAllAriaLabel} - ${relatedArticles.length} ${articlePluralName}` : ''}
           >
             {shownArticles.length < relatedArticles.length ? showAll + ` (${relatedArticles.length})` : showLess}
           </Button>
@@ -96,7 +96,7 @@ function RelatedArticles(props: RelatedArticlesProps) {
         <h2 className='col mt-4 mb-5'>{heading}</h2>
       </div>
       <ul
-        className='row mb-5'
+        className='related-articles mb-5'
         aria-label={`${props.showingPhrase.replace('{0}', shownArticles.length.toString())} ${
           relatedArticles.length
         } ${articlePluralName}`}
@@ -104,18 +104,22 @@ function RelatedArticles(props: RelatedArticlesProps) {
         {shownArticles.map((article, index) => {
           const { href, imageSrc, imageAlt, title, subTitle, preface, ariaLabel } = article
           return (
-            <li key={index} className={`col-auto col-12 col-lg-4 mb-3`} ref={index === count ? currentElement : null}>
-              <Card
-                href={href}
-                imagePlacement='top'
-                image={<img src={imageSrc} alt={imageAlt ?? ''} loading='lazy' />}
-                title={title}
-                subTitle={subTitle}
-                ariaLabel={ariaLabel}
-              >
-                <Text>
-                  <span dangerouslySetInnerHTML={{ __html: preface }} />
-                </Text>
+            <li key={index} className='mb-3' ref={index === count ? currentElement : null}>
+              <Card aria-label={ariaLabel}>
+                <Card.Block>
+                  <img src={imageSrc} alt={imageAlt ?? ''} loading='lazy' />
+                </Card.Block>
+                <Card.Block>
+                  {subTitle && <Paragraph data-size='sm'>{subTitle}</Paragraph>}
+                  <Heading>
+                    <a href={href} target='_blank' rel='noopener noreferrer'>
+                      {title}
+                    </a>
+                  </Heading>
+                  <Paragraph>
+                    <span dangerouslySetInnerHTML={{ __html: preface }} />
+                  </Paragraph>
+                </Card.Block>
               </Card>
             </li>
           )
@@ -124,6 +128,21 @@ function RelatedArticles(props: RelatedArticlesProps) {
       {firstShownArticles.length < relatedArticles.length && renderShowMoreButton()}
     </div>
   )
+}
+
+{
+  /* <Card
+  href={href}
+  imagePlacement='top'
+  image={<img src={imageSrc} alt={imageAlt ?? ''} loading='lazy' />}
+  title={title}
+  subTitle={subTitle}
+  ariaLabel={ariaLabel}
+>
+  <Text>
+    <span dangerouslySetInnerHTML={{ __html: preface }} />
+  </Text>
+</Card> */
 }
 
 export default (props: RelatedArticlesProps) => <RelatedArticles {...props} />
