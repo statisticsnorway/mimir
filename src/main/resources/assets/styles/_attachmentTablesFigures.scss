@@ -43,4 +43,14 @@
       padding-right: $spacer * 1;
     }
   }
+
 }
+
+ .about-statistics-summary.has-subheader .subheader {
+    display: inline-block;
+    font-weight: bold;
+    width: 4rem;               
+    margin-right: var(--ds-size-1);
+    white-space: nowrap;
+    overflow: hidden;
+  } 

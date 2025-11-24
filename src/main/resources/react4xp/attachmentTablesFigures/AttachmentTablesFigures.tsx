@@ -113,9 +113,9 @@ function AttachmentTableFigures(props: Readonly<AttachmentTablesFiguresProps>) {
                   setCheckOverflow((prev) => !prev)
                 }}
               >
-                <Details.Summary data-size='lg'>
-                  <strong>{accordion.subHeader}</strong>
-                  {accordion.subHeader && ' – '} {accordion.open}
+                <Details.Summary className={`about-statistics-summary ${accordion.subHeader ? 'has-subheader' : ''}`}>
+                  {accordion.subHeader && <span className='subheader'>{accordion.subHeader}</span>}
+                  <span className='header'>{accordion.open}</span>
                 </Details.Summary>
                 <Details.Content>{renderAccordionBody(accordion)}</Details.Content>
               </Details>
