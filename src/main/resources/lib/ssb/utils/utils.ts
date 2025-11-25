@@ -235,6 +235,8 @@ export function getSubtitleForContent(
   let prettyDate
   if (overwriteDate) {
     prettyDate = formatDate(overwriteDate, 'PPP', language)
+  } else if (XPContent?.data?.showModifiedDate?.dateOption?.modifiedDate) {
+    prettyDate = formatDate(XPContent.data.showModifiedDate.dateOption.modifiedDate, 'PPP', language)
   } else if (XPContent?.publish && XPContent?.publish.from) {
     prettyDate = formatDate(XPContent.publish.from, 'PPP', language)
   } else {
