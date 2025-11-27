@@ -17,12 +17,13 @@
         { "type": "fix", "section": "Bug Fixes" },
         { "type": "perf", "section": "Performance Improvements" },
         { "type": "revert", "section": "Reverts" },
-        { "type": "docs", "section": "Documentation", "hidden": true },
-        { "type": "style", "section": "Styles", "hidden": true },
-        { "type": "refactor", "section": "Code Refactoring", "hidden": true },
-        { "type": "test", "section": "Tests", "hidden": true },
+        { "type": "docs", "section": "Documentation"},
+        { "type": "style", "section": "Styles" },
+        { "type": "refactor", "section": "Code Refactoring"},
+        { "type": "test", "section": "Tests"},
         { "type": "build", "section": "Build System and dependencies" },
-        { "type": "ci", "section": "Build System and dependencies" }
+        { "type": "ci", "section": "Build System and dependencies" },
+        { "type": "chore", "section": "Chores", "hidden": true }
       ],
       "extra-files": [
         "gradle.properties"
