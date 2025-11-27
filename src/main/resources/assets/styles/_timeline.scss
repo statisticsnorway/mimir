@@ -91,6 +91,10 @@
       position: relative;
       margin-bottom: 30px;
 
+      .ssb-expansion-box.open .content {
+        overflow: visible;
+      }
+
       .year {
         width: 180px;
         height: 80px;
