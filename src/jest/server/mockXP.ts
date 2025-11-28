@@ -38,6 +38,8 @@ export const mockLibPortal = new LibPortal({
   server,
 })
 
+export { Request } from '@enonic/mock-xp'
+
 mockLibPortal.request = {
   host: 'localhost',
   path: '/',
