@@ -91,9 +91,8 @@
       position: relative;
       margin-bottom: 30px;
 
-      .ssb-expansion-box.open .content {
-        overflow: hidden;
-        animation: showOverflow 0.5s forwards;
+      .ssb-expansion-box.open .macro-glossary {
+        position: absolute
       }
 
       .year {
