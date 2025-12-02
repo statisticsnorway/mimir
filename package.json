@@ -68,7 +68,6 @@
     "@eslint/js": "^9.39.1",
     "@item-enonic-types/global": "~7.15.0",
     "@item-enonic-types/lib-cache": "~2.2.1",
-    "@item-enonic-types/lib-cron": "~1.1.4",
     "@item-enonic-types/lib-http-client": "~3.2.2",
     "@item-enonic-types/lib-thymeleaf": "~2.1.0",
     "@item-enonic-types/lib-time": "~1.2.1",
