@@ -19,3 +19,10 @@ spec:
   system: SSBNO
   owner: ssbno-developers
   lifecycle: production
+  consumesApis:
+    - api:klass-api
+  dependsOn:
+    - component:ssbno-varnish
+    - component:ssbno-solr-home
+    - component:ssbno-statistikkregisteret
+    - component:ssbno-tb-processor

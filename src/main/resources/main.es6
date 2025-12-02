@@ -36,10 +36,6 @@ try {
           enabled: false,
         },
         {
-          feature: 'deactivate-partcache-released-statistics',
-          enabled: true,
-        },
-        {
           feature: 'deactivate-part-cache-article-list',
           enabled: true,
         },
