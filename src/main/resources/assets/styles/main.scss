@@ -29,6 +29,7 @@ $custom-container-max-widths: (
 );
 
 @use '@statisticsnorway/ssb-component-library/src/style/_variables' as component-lib;
+@use '@statisticsnorway/ssb-component-library/src/main';
 
 @use 'map';
 @use 'font';
@@ -95,9 +96,6 @@ $custom-container-max-widths: (
 @use 'print';
 @use 'timeline';
 @use 'cookieBanner';
-
-@import "@statisticsnorway/ssb-component-library/src/main";
-
 
 body {
   -moz-osx-font-smoothing: grayscale;

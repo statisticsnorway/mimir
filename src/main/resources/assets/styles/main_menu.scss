@@ -29,8 +29,7 @@ $custom-container-max-widths: (
   $grid-breakpoints:$custom-grid-breakpoints
 );
 
+@use '@statisticsnorway/ssb-component-library/src/main';
 @use "./font";
 @use "./header";
 @use "./footer";
-
-@import "@statisticsnorway/ssb-component-library/src/main";
