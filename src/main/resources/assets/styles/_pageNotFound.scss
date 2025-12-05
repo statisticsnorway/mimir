@@ -1,5 +1,5 @@
 @use 'bootstrap' as *;
-@use '@statisticsnorway/ssb-component-library' as component-lib;
+@use '@statisticsnorway/ssb-component-library/src/style/_variables' as component-lib;
 
 .error-page {
   h1 {

@@ -1,5 +1,5 @@
 @use 'bootstrap' as *;
-@use '@statisticsnorway/ssb-component-library' as component-lib;
+@use '@statisticsnorway/ssb-component-library/src/style/_variables' as component-lib;
 
 .page-bestbet {
     background-color: component-lib.$ssb-dark-1;
