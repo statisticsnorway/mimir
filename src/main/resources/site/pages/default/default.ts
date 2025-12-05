@@ -141,12 +141,13 @@ export function get(req: XP.Request): XP.Response {
     pageContributions = preview.pageContributions
   }
   const language: Language = getLanguage(page) as Language
+  const useAnniversary = isEnabled('use-jubileumslogo-150-years', false, 'ssb')
   const menuCacheLanguage: string = language.code === 'en' ? 'en' : 'nb'
   const hideHeader = isEnabled('hide-header-in-qa', false, 'ssb') ? pageConfig?.hideHeader : false
   let header
   if (!hideHeader) {
-    const headerContent: MenuContent | unknown = fromMenuCache(req, `header_${menuCacheLanguage}`, () => {
-      return getHeaderContent(language)
+    const headerContent: MenuContent | unknown = fromMenuCache(req, `header_${menuCacheLanguage}_${useAnniversary ? 'jubileumslogo' : 'standardlogo'}`, () => {
+      return getHeaderContent(language, useAnniversary)
     })
     header = r4xpRender(
       'Header',
@@ -154,6 +155,7 @@ export function get(req: XP.Request): XP.Response {
         ...(headerContent as object),
         language: language,
         searchResult: req.params.sok,
+        useAnniversary,
       },
       req,
       {

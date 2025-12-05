@@ -7,7 +7,7 @@ import { type Language } from '/lib/types/language'
 import { type HeaderContent } from '/lib/types/header'
 import { type Header } from '/site/content-types'
 
-export function getHeaderContent(language: Language): HeaderContent | undefined {
+export function getHeaderContent(language: Language, useAnniversary: boolean): HeaderContent | undefined {
   if (language.headerId === undefined || language.headerId === null) {
     return undefined
   } else {
@@ -20,12 +20,22 @@ export function getHeaderContent(language: Language): HeaderContent | undefined 
     return {
       logoUrl: language.link as string,
       logoSrc: assetUrl({
-        path: 'SSB_logo_black.svg',
+        path: useAnniversary
+          ? (language.code === 'en'
+              ? 'jubileumslogo/SSB_150_år_logo_engelsk_dark.svg'
+              : 'jubileumslogo/SSB_150_år_logo_norsk_dark.svg')
+          : 'SSB_logo_black.svg',
       }),
-      logoAltText: localize({
-        key: 'logoAltText',
-        locale: language.code,
-      }),
+
+      logoAltText: useAnniversary
+        ? (language.code === 'en'
+            ? 'SSB 150 Years Anniversary'
+            : 'SSB 150 år jubileumslogo')
+        : localize({
+            key: 'logoAltText',
+            locale: language.code,
+          }),
+
       environmentText: getEnvironmentString(),
       searchResultPageUrl: headerContent.data.searchResultPage
         ? pathFromStringOrContent(headerContent.data.searchResultPage)
