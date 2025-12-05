@@ -1,5 +1,5 @@
 @use 'bootstrap' as *;
-@use '@statisticsnorway/ssb-component-library/src/main.scss' as *;
+@use '@statisticsnorway/ssb-component-library' as component-lib;
 
 .kpi-calculator,
 .pif-calculator,
@@ -7,9 +7,9 @@
 .husleie-calculator,
 .bpi-calculator {
   .calculator-content {
-    border: solid 1px $ssb-dark-5;
-    border-top: 4px solid $ssb-green-3;
-    background: $ssb-white;
+    border: solid 1px component-lib.$ssb-dark-5;
+    border-top: 4px solid component-lib.$ssb-green-3;
+    background: component-lib.$ssb-white;
   }
 
   .calculator-form {
@@ -55,21 +55,21 @@
 
   .calculator-result {
     padding: 3.75rem 6.25rem;
-    border-top: solid 1px $ssb-dark-5;
-    background-color: $ssb-dark-1;
+    border-top: solid 1px component-lib.$ssb-dark-5;
+    background-color: component-lib.$ssb-dark-1;
 
     .amount-equal {
-      @include roboto;
+      @include component-lib.roboto;
       font-size: 1.25rem;
     }
 
     .end-value {
-      @include roboto-condenced;
+      @include component-lib.roboto-condenced;
       font-size: 56px;
     }
 
     .info-title {
-      @include roboto;
+      @include component-lib.roboto;
       font-weight: bold;
     }
 
@@ -127,16 +127,16 @@
 
   .calculator-result-frontpage {
     padding: 2.5rem 3.75rem;
-    border-top: solid 1px $ssb-dark-5;
-    background-color: $ssb-dark-1;
+    border-top: solid 1px component-lib.$ssb-dark-5;
+    background-color: component-lib.$ssb-dark-1;
 
     .amount-equal {
-      @include roboto;
+      @include component-lib.roboto;
       font-size: 1.25rem;
     }
 
     .end-value {
-      @include roboto-condenced;
+      @include component-lib.roboto-condenced;
       font-size: 1.75rem;
     }
 

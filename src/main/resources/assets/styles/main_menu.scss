@@ -28,7 +28,7 @@ $custom-container-max-widths: (
   $grid-gutter-width:$custom-grid-gutter-width,
   $grid-breakpoints:$custom-grid-breakpoints
 );
-@use "@statisticsnorway/ssb-component-library/src/main.scss";
+@use "@statisticsnorway/ssb-component-library/src/main.scss" as component-lib;
 @use "./font";
 @use "./header";
 @use "./footer";

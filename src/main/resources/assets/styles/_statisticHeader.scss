@@ -1,5 +1,5 @@
 @use 'bootstrap' as *;
-@use '@statisticsnorway/ssb-component-library/src/main.scss' as *;
+@use '@statisticsnorway/ssb-component-library' as component-lib;
 
 .statistic-header {
   margin-bottom: 8rem;
@@ -27,7 +27,7 @@
     }
 
     .introTitle {
-      @include roboto;
+      @include component-lib.roboto;
       font-size: 1.25rem;
       line-height: 1.6;
       margin-bottom: 0.25rem;
@@ -50,7 +50,7 @@
       background-image: none;
       &:hover,
       &:focus {
-        background-image: linear-gradient(to right, $ssb-green-2 50%, #fff 50%);
+        background-image: linear-gradient(to right, component-lib.$ssb-green-2 50%, #fff 50%);
       }
     }
 

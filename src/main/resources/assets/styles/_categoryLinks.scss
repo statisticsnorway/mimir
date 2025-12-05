@@ -1,17 +1,17 @@
-@use '@statisticsnorway/ssb-component-library/src/main.scss' as *;
+@use '@statisticsnorway/ssb-component-library' as component-lib;
 
 .part-category-link {
 
   .ssb-category-link {
     &.method-and-documentation {
       background-color: transparent;
-      border: solid 1px $ssb-blue-3;
-      border-bottom: 3px solid $ssb-blue-3;
-      color: $ssb-blue-3;
-      background-image: linear-gradient(120deg, $ssb-blue-3 0%, $ssb-blue-3 100%);
+      border: solid 1px component-lib.$ssb-blue-3;
+      border-bottom: 3px solid component-lib.$ssb-blue-3;
+      color: component-lib.$ssb-blue-3;
+      background-image: linear-gradient(120deg, component-lib.$ssb-blue-3 0%, component-lib.$ssb-blue-3 100%);
 
       &:hover, &:focus {
-        color: $ssb-white;
+        color: component-lib.$ssb-white;
       }
     }
   }

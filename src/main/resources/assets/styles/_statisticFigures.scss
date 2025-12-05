@@ -1,5 +1,5 @@
 @use 'bootstrap' as *;
-@use '@statisticsnorway/ssb-component-library/src/main.scss' as *;
+@use '@statisticsnorway/ssb-component-library' as component-lib;
 
 .statistic-figures {
   .content-wrapper {
@@ -65,9 +65,9 @@
 
     .content {
       align-items: center;
-      background: $ssb-white;
-      border: 1px solid $ssb-dark-2;
-      border-top: 5px solid $ssb-green-3;
+      background: component-lib.$ssb-white;
+      border: 1px solid component-lib.$ssb-dark-2;
+      border-top: 5px solid component-lib.$ssb-green-3;
       display: flex;
       padding: 1.5rem;
       width: 100%;
@@ -88,7 +88,7 @@
         margin-left: 2.5rem;
 
         .title {
-          color: $ssb-dark-6;
+          color: component-lib.$ssb-dark-6;
           display: block;
           font-family: 'Roboto', sans-serif;
           font-weight: bold;
@@ -99,12 +99,12 @@
 
       &:focus,
       &:hover {
-        outline: $ssb-purple-3 solid 2px;
+        outline: component-lib.$ssb-purple-3 solid 2px;
         outline-offset: 1px;
       }
 
       .arrow-icon {
-        color: $ssb-green-3;
+        color: component-lib.$ssb-green-3;
         margin-left: auto;
 
         @include media-breakpoint-down(md) {

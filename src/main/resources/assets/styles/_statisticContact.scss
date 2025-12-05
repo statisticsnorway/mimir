@@ -1,5 +1,5 @@
 @use 'bootstrap' as *;
-@use '@statisticsnorway/ssb-component-library/src/main.scss' as *;
+@use '@statisticsnorway/ssb-component-library' as component-lib;
 
 .statistic-contacts {
   margin-top: 4.5rem;
@@ -25,7 +25,7 @@
   .contact-wrapper {
     display: flex;
     flex-wrap: wrap;
-    border: 1px solid $ssb-green-4;
+    border: 1px solid component-lib.$ssb-green-4;
     border-radius: 8px;
     padding: 2rem 2rem 0;
 

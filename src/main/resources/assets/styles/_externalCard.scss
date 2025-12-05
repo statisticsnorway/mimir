@@ -1,18 +1,18 @@
-@use '@statisticsnorway/ssb-component-library/src/main.scss' as *;
+@use '@statisticsnorway/ssb-component-library' as component-lib;
 
 .external-card {
 
   &.ssb-card {
 
   .card-content {
-    border-top: 1px solid $ssb-dark-2;
+    border-top: 1px solid component-lib.$ssb-dark-2;
   }
 
   .clickable {
 
     &:hover {
       .card-content {
-        border-top: 1px solid $ssb-green-4;
+        border-top: 1px solid component-lib.$ssb-green-4;
       }
     }
   }

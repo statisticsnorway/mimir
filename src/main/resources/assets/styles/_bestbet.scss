@@ -1,8 +1,8 @@
 @use 'bootstrap' as *;
-@use '@statisticsnorway/ssb-component-library/src/main.scss' as *;
+@use '@statisticsnorway/ssb-component-library' as component-lib;
 
 .page-bestbet {
-    background-color: $ssb-dark-1;
+    background-color: component-lib.$ssb-dark-1;
     padding-top: $spacer * 1.5;
     margin-right: $spacer * 3.5;
     margin-left: $spacer * 3.5;
@@ -24,12 +24,12 @@
             bottom: 0;
 
             font-weight: bold;
-            color: $ssb-red-3;
+            color: component-lib.$ssb-red-3;
           }
         }
 
         h1 {
-            border-left: 2px solid $ssb-green-3;
+            border-left: 2px solid component-lib.$ssb-green-3;
             font-size: 36px;
             line-height: 1;
             margin-left: $spacer;
@@ -39,8 +39,8 @@
     }
 
     .bestbet-list {
-        background-color: $ssb-white;
-        border: 2px solid $ssb-green-5;
+        background-color: component-lib.$ssb-white;
+        border: 2px solid component-lib.$ssb-green-5;
         margin-bottom: $spacer;
         padding: $spacer * 3;
 
@@ -60,11 +60,11 @@
         .search-words {
             display: flex;
             align-items: center;
-            background: $ssb-dark-3;
+            background: component-lib.$ssb-dark-3;
             padding: 8px 16px;
-            color: $ssb-white;
+            color: component-lib.$ssb-white;
             font-weight: 700;
-            border-color: 1px solid $ssb-dark-3;
+            border-color: 1px solid component-lib.$ssb-dark-3;
             border-radius: 20px;
         }
     }

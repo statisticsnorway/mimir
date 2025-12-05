@@ -1,9 +1,9 @@
 @use 'bootstrap' as *;
-@use '@statisticsnorway/ssb-component-library/src/main.scss' as *;
+@use '@statisticsnorway/ssb-component-library' as component-lib;
 
 .error-page {
   h1 {
-    color: $ssb-green-3;
+    color: component-lib.$ssb-green-3;
   }
   ul {
     list-style-type: none;

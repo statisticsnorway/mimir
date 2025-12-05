@@ -28,7 +28,7 @@ $custom-container-max-widths: (
   $grid-breakpoints:$custom-grid-breakpoints
 );
 
-@use '@statisticsnorway/ssb-component-library/src/main.scss' as component-lib;
+@use '@statisticsnorway/ssb-component-library' as component-lib;
 
 @use 'map';
 @use 'font';
@@ -95,6 +95,9 @@ $custom-container-max-widths: (
 @use 'print';
 @use 'timeline';
 @use 'cookieBanner';
+
+@import "@statisticsnorway/ssb-component-library/src/main";
+
 
 body {
   -moz-osx-font-smoothing: grayscale;

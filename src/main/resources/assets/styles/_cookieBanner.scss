@@ -1,5 +1,5 @@
 @use 'bootstrap' as *;
-@use '@statisticsnorway/ssb-component-library/src/main.scss' as *;
+@use '@statisticsnorway/ssb-component-library' as component-lib;
 
 .cookie-banner {
   position: fixed;
@@ -8,7 +8,7 @@
   width: 41.5rem;
   max-width: calc(100vw - 3.2rem);
   padding: 1.75rem;
-  background: $ssb-green-4;
+  background: component-lib.$ssb-green-4;
   border-radius: 0.5rem;
   z-index: 2147483647;
 
@@ -18,7 +18,7 @@
 
   &-title,
   &-text {
-    color: $ssb-white;
+    color: component-lib.$ssb-white;
   }
 
   &-title {
@@ -37,26 +37,26 @@
 
     .cookie-button-accept,
     .cookie-button-decline {
-      background: $ssb-white;
-      color: $ssb-green-4;
+      background: component-lib.$ssb-white;
+      color: component-lib.$ssb-green-4;
       margin: .12rem .12rem .12rem 0;
       border: none;
       font-size: 1rem;
       min-height: 2.5rem;
 
       &:hover, &:focus {
-        outline-color: $ssb-white;
+        outline-color: component-lib.$ssb-white;
       }
     }
   }
 
   .ssb-link.negative {
-    border-bottom-color: $ssb-white !important;
-    background-image: linear-gradient(120deg, $ssb-white 0%, $ssb-white 100%) !important;
+    border-bottom-color: component-lib.$ssb-white !important;
+    background-image: linear-gradient(120deg, component-lib.$ssb-white 0%, component-lib.$ssb-white 100%) !important;
 
     .link-text {
       font-size: 1rem;
-      color: $ssb-white !important;
+      color: component-lib.$ssb-white !important;
     }
 
     &:hover,
@@ -64,7 +64,7 @@
       border-bottom-color: transparent;
 
       .link-text {
-        color: $ssb-green-4 !important;
+        color: component-lib.$ssb-green-4 !important;
       }
     }
   }
