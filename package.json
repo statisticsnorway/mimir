@@ -63,7 +63,7 @@
     "@enonic/react-components": "5.0.1",
     "@enonic/react4xp": "5.0.4",
     "@enonic/tsup-plugin-manifest": "^0.0.1",
-    "@eslint/compat": "^1.4.1",
+    "@eslint/compat": "^2.0.0",
     "@eslint/eslintrc": "^3.3.1",
     "@eslint/js": "^9.39.1",
     "@item-enonic-types/global": "~7.15.0",
