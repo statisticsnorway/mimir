@@ -7,7 +7,7 @@ import { type MunicipalityWithCounty } from '/lib/types/municipalities'
 
 export function filter(req: XP.Request, next: (req: XP.Request) => XP.Response): XP.Response {
   if (req.params.selfRequest) return next(req)
-  const paramKommune: string | undefined = req.params.kommune
+  const paramKommune: string | undefined = req.params.kommune || req.params.Kommune
   const region: string | undefined = paramKommune ?? req.path.split('/').pop()
   const municipality: MunicipalityWithCounty | undefined = getMunicipalityByName(
     municipalsWithCounties(),
