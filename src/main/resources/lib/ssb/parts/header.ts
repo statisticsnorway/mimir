@@ -19,6 +19,7 @@ export function getHeaderContent(language: Language, useAnniversary: boolean): H
 
     return {
       logoUrl: language.link as string,
+      
       logoSrc: assetUrl({
         path: useAnniversary
           ? (language.code === 'en'
@@ -26,21 +27,17 @@ export function getHeaderContent(language: Language, useAnniversary: boolean): H
               : 'jubileumslogo/SSB_150_år_logo_norsk_dark.svg')
           : 'SSB_logo_black.svg',
       }),
-
-      logoAltText: useAnniversary
-        ? (language.code === 'en'
-            ? 'SSB 150 Years Anniversary'
-            : 'SSB 150 år jubileumslogo')
-        : localize({
-            key: 'logoAltText',
-            locale: language.code,
-          }),
+      logoAltText: localize({
+        key: 'logoAltText',
+        locale: language.code,
+      }),
 
       environmentText: getEnvironmentString(),
       searchResultPageUrl: headerContent.data.searchResultPage
         ? pathFromStringOrContent(headerContent.data.searchResultPage)
         : undefined,
-      searchText: localize({
+      
+        searchText: localize({
         key: 'menuSearch',
         locale: language.code,
       }),
