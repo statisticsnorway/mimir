@@ -181,12 +181,6 @@ export function getReleaseDatesByVariants(variants: Array<VariantInListing>): Re
   )
   const nextReleaseIndex: number = nextReleasesSorted.indexOf(nextReleaseFiltered[0])
 
-  // TODO: Can be removed after publication statistics data is tested thoroughly
-  if (nextReleaseFiltered?.length)
-    cronJobLog(
-      `Filtered next releases by date (later than today) for variant ${variants[nextReleaseIndex]?.id}: ${JSON.stringify(nextReleaseFiltered)}`
-    )
-
   // If Statregdata is old, get date before nextRelease as previous date
   if (nextReleaseFiltered.length > 0 && nextReleaseIndex > 0) {
     previousReleases.push(nextReleasesSorted[nextReleaseIndex - 1])
