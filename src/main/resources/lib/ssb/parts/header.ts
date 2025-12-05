@@ -19,12 +19,12 @@ export function getHeaderContent(language: Language, useAnniversary: boolean): H
 
     return {
       logoUrl: language.link as string,
-      
+
       logoSrc: assetUrl({
         path: useAnniversary
-          ? (language.code === 'en'
-              ? 'jubileumslogo/SSB_150_år_logo_engelsk_dark.svg'
-              : 'jubileumslogo/SSB_150_år_logo_norsk_dark.svg')
+          ? language.code === 'en'
+            ? 'jubileumslogo/SSB_150_år_logo_engelsk_dark.svg'
+            : 'jubileumslogo/SSB_150_år_logo_norsk_dark.svg'
           : 'SSB_logo_black.svg',
       }),
       logoAltText: localize({
@@ -36,8 +36,8 @@ export function getHeaderContent(language: Language, useAnniversary: boolean): H
       searchResultPageUrl: headerContent.data.searchResultPage
         ? pathFromStringOrContent(headerContent.data.searchResultPage)
         : undefined,
-      
-        searchText: localize({
+
+      searchText: localize({
         key: 'menuSearch',
         locale: language.code,
       }),

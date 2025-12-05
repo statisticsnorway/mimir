@@ -146,9 +146,13 @@ export function get(req: XP.Request): XP.Response {
   const hideHeader = isEnabled('hide-header-in-qa', false, 'ssb') ? pageConfig?.hideHeader : false
   let header
   if (!hideHeader) {
-    const headerContent: MenuContent | unknown = fromMenuCache(req, `header_${menuCacheLanguage}_${useAnniversary ? 'jubileumslogo' : 'standardlogo'}`, () => {
-      return getHeaderContent(language, useAnniversary)
-    })
+    const headerContent: MenuContent | unknown = fromMenuCache(
+      req,
+      `header_${menuCacheLanguage}_${useAnniversary ? 'jubileumslogo' : 'standardlogo'}`,
+      () => {
+        return getHeaderContent(language, useAnniversary)
+      }
+    )
     header = r4xpRender(
       'Header',
       {
