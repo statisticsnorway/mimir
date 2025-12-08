@@ -28,12 +28,14 @@ import accessibilityLang from './../../../assets/js/highchart-lang.json'
  * Cleanup - are there any files and lines of code we can delete after full conversion?
  */
 function Highchart(props) {
+  const { highcharts, language, pageType, appName, phrases } = props
+
   const [showDraft, setShowDraft] = useState(false)
   const [showTable, setShowTable] = useState(false)
 
   function renderHighchartToggleDraft(highchart) {
     // TODO: Reimplement functionality; currently only changes name on button
-    if (props.pageType === `${props.appName}:highchart`) {
+    if (pageType === `${appName}:highchart`) {
       return (
         <Col className='col-12 mb-3'>
           {highchart.config.draft && (
@@ -79,11 +81,11 @@ function Highchart(props) {
           activeOnInit='highcharts-figure/'
           items={[
             {
-              title: props.phrases['highcharts.showAsGraph'],
+              title: phrases['highcharts.showAsGraph'],
               path: 'highcharts-figure/',
             },
             {
-              title: props.phrases['highcharts.showAsTable'],
+              title: phrases['highcharts.showAsTable'],
               path: 'highcharts-table/',
             },
           ]}
@@ -99,7 +101,7 @@ function Highchart(props) {
       <Row key={index}>
         <Col>
           <Link href={sourceLink.sourceHref}>
-            {props.phrases.source}: {sourceLink.sourceText}
+            {phrases.source}: {sourceLink.sourceText}
           </Link>
         </Col>
       </Row>
@@ -120,10 +122,9 @@ function Highchart(props) {
   }
 
   function renderHighcharts() {
-    const highcharts = props.highcharts
     if (highcharts?.length) {
       return highcharts.map((highchart) => {
-        const lang = props.language !== 'en' ? accessibilityLang.lang : {
+        const lang = language !== 'en' ? accessibilityLang.lang : {
           locale: "en-GB"
         }
 
@@ -142,7 +143,7 @@ function Highchart(props) {
                   // Escaping first vaule not to format category ie. year
                   for (const [i, cell] of row.entries()) {
                     if (i > 0 && typeof cell === 'number') {
-                      row[i] = cell.toLocaleString(props.language === 'en' ? 'en-EN' : 'no-NO').replace('NaN', '')
+                      row[i] = cell.toLocaleString(language === 'en' ? 'en-EN' : 'no-NO').replace('NaN', '')
                     }
                   }
                 }
