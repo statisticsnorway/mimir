@@ -8,7 +8,11 @@ import { type FooterContent } from '/lib/types/footer'
 import { isEnabled } from '/lib/featureToggle'
 import { type Footer } from '/site/content-types'
 
-export function getFooterContent(language: Language, baseUrl: string, useAnniversary: boolean): FooterContent | undefined {
+export function getFooterContent(
+  language: Language,
+  baseUrl: string,
+  useAnniversary: boolean
+): FooterContent | undefined {
   if (language.footerId === undefined || language.footerId === null) {
     return undefined
   } else {

@@ -220,13 +220,15 @@ export function get(req: XP.Request): XP.Response {
       }
     : {}
 
-  const useAnniversaryFooter = isEnabled('use-anniversary-logo', false, 'ssb')  
-  const footerContent: FooterContent | unknown = fromMenuCache(req,
-    `footer_${menuCacheLanguage}_${useAnniversaryFooter ? 'anniversarylogo' : 'standardlogo'}`, () => {
+  const useAnniversaryFooter = isEnabled('use-anniversary-logo', false, 'ssb')
+  const footerContent: FooterContent | unknown = fromMenuCache(
+    req,
+    `footer_${menuCacheLanguage}_${useAnniversaryFooter ? 'anniversarylogo' : 'standardlogo'}`,
+    () => {
       return getFooterContent(language, baseUrl, useAnniversaryFooter)
     }
   )
-  
+
   const footer = r4xpRender(
     'Footer',
     {
