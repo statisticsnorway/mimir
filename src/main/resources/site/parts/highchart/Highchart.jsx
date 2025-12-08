@@ -121,9 +121,11 @@ function Highchart(props) {
 
   function renderHighcharts() {
     const highcharts = props.highcharts
-    if (highcharts && highcharts.length) {
+    if (highcharts?.length) {
       return highcharts.map((highchart) => {
-        const lang = highcharts.language !== 'en' ? accessibilityLang.lang : {}
+        const lang = props.language !== 'en' ? accessibilityLang.lang : {
+          locale: "en-GB"
+        }
 
         const config = {
           ...highchart.config,
@@ -134,13 +136,13 @@ function Highchart(props) {
           chart: {
             ...highchart.config.chart,
             events: {
+              // Workaround to get correct number formatting in table
               exportData: function (chart) {
-                // Workaround to get correct number formatting in table
                 for (const row of chart.dataRows) {
+                  // Escaping first vaule not to format category ie. year
                   for (const [i, cell] of row.entries()) {
-                    // Escaping first vaule not to format category ie. year
                     if (i > 0 && typeof cell === 'number') {
-                      row[i] = cell.toLocaleString(language === 'en' ? 'en-EN' : 'no-NO').replace('NaN', '')
+                      row[i] = cell.toLocaleString(props.language === 'en' ? 'en-EN' : 'no-NO').replace('NaN', '')
                     }
                   }
                 }
