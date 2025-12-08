@@ -8,7 +8,7 @@ import { type FooterContent } from '/lib/types/footer'
 import { isEnabled } from '/lib/featureToggle'
 import { type Footer } from '/site/content-types'
 
-export function getFooterContent(language: Language, baseUrl: string): FooterContent | undefined {
+export function getFooterContent(language: Language, baseUrl: string, useAnniversary: boolean): FooterContent | undefined {
   if (language.footerId === undefined || language.footerId === null) {
     return undefined
   } else {
@@ -21,7 +21,11 @@ export function getFooterContent(language: Language, baseUrl: string): FooterCon
 
     return {
       logoUrl: assetUrl({
-        path: 'SSB_logo_white.svg',
+        path: useAnniversary
+          ? language.code === 'en'
+            ? 'SSB_logo_anniversary_en_white.svg'
+            : 'SSB_logo_anniversary_no_white.svg'
+          : 'SSB_logo_black.svg',
       }),
       copyrightUrl: footerContent.data.copyrightUrl,
       copyrightText: localize({
