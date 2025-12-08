@@ -23,8 +23,8 @@ export function getHeaderContent(language: Language, useAnniversary: boolean): H
       logoSrc: assetUrl({
         path: useAnniversary
           ? language.code === 'en'
-            ? 'jubileumslogo/SSB_150_år_logo_engelsk_dark.svg'
-            : 'jubileumslogo/SSB_150_år_logo_norsk_dark.svg'
+            ? 'SSB_logo_anniversary_en.svg'
+            : 'SSB_logo_anniversary_no.svg'
           : 'SSB_logo_black.svg',
       }),
       logoAltText: localize({

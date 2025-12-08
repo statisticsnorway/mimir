@@ -64,11 +64,7 @@ try {
           enabled: false,
         },
         {
-          feature: 'test-publish-statistics-dataset-job-task',
-          enabled: false,
-        },
-        {
-          feature: 'use-jubileumslogo-150-years',
+          feature: 'use-anniversary-logo',
           enabled: false,
         },
       ],
