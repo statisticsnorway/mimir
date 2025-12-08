@@ -1,5 +1,5 @@
 @use 'bootstrap' as *;
-@use '@statisticsnorway/ssb-component-library/src/main.scss' as *;
+@use '@statisticsnorway/ssb-component-library/src/style/_variables' as component-lib;
 
 .part-static-visualization {
   .footnote {
@@ -31,7 +31,7 @@
 
   .navigation-item {
     &:focus {
-      outline: $ssb-purple-3 solid 2px;
+      outline: component-lib.$ssb-purple-3 solid 2px;
       outline-offset: 1px;
     }
   }
@@ -41,7 +41,7 @@
   }
 
   figcaption {
-    @include roboto;
+    @include component-lib.roboto;
     font-weight: bold;
     font-size: 1.25rem;
     line-height: 2rem;

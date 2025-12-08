@@ -1,5 +1,5 @@
 @use 'bootstrap' as *;
-@use '@statisticsnorway/ssb-component-library/src/main.scss' as *;
+@use '@statisticsnorway/ssb-component-library/src/style/_variables' as component-lib;
 
 .employees-list {
   .row .container {
@@ -54,9 +54,9 @@
           display: flex;
           justify-content: center;
           align-items: center;
-          border: 2px solid $ssb-dark-5;
+          border: 2px solid component-lib.$ssb-dark-5;
           background: white;
-          color: $ssb-dark-5;
+          color: component-lib.$ssb-dark-5;
 
           h2 {
             font-size: 2.5rem;
@@ -138,8 +138,8 @@
           line-height: 1.75;
           display: flex;
           color: white;
-          background: $ssb-dark-5;
-          border: 2px solid $ssb-dark-5;
+          background: component-lib.$ssb-dark-5;
+          border: 2px solid component-lib.$ssb-dark-5;
 
           h2 {
             font-size: 1rem;

@@ -1,5 +1,5 @@
 @use 'bootstrap' as *;
-@use '@statisticsnorway/ssb-component-library/src/main.scss' as *;
+@use '@statisticsnorway/ssb-component-library/src/style/_variables' as component-lib;
 
 .attachment-tables-figures {
   .part-accordion {
@@ -31,7 +31,7 @@
   }
 
   .free-text-wrapper {
-    background: $ssb-dark-1;
+    background: component-lib.$ssb-dark-1;
     margin-left: auto;
     margin-right: auto;
     padding: $spacer * 3;

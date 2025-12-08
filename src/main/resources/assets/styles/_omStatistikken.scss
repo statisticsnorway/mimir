@@ -1,11 +1,11 @@
 @use 'bootstrap' as *;
-@use '@statisticsnorway/ssb-component-library/src/main.scss' as *;
+@use '@statisticsnorway/ssb-component-library/src/style/_variables' as component-lib;
 
 .part-om-statistikken {
   padding: 0;
 
   .title-wrapper {
-    @include roboto-condenced;
+    @include component-lib.roboto-condenced;
     font-weight: normal;
     margin-bottom: $spacer * 2;
 

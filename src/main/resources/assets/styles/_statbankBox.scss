@@ -1,5 +1,5 @@
 @use 'bootstrap' as *;
-@use '@statisticsnorway/ssb-component-library/src/main.scss' as *;
+@use '@statisticsnorway/ssb-component-library/src/style/_variables' as component-lib;
 
 .part-statbank-box {
   margin-bottom: 40px;
@@ -10,16 +10,16 @@
     width: 100%;
 
     &:focus {
-      outline: $ssb-purple-3 solid 2px;
+      outline: component-lib.$ssb-purple-3 solid 2px;
       outline-offset: 1px;
     }
 
     &:hover {
 
       .title {
-        background-color: $ssb-green-4;
+        background-color: component-lib.$ssb-green-4;
         border-bottom: none;
-        color: $ssb-white;
+        color: component-lib.$ssb-white;
         margin-bottom: 10px;
       }
     }
@@ -30,9 +30,9 @@
   }
 
   .content {
-    background: $ssb-white;
-    border: 1px solid $ssb-dark-2;
-    border-top: 5px solid $ssb-green-3;
+    background: component-lib.$ssb-white;
+    border: 1px solid component-lib.$ssb-dark-2;
+    border-top: 5px solid component-lib.$ssb-green-3;
     display: flex;
     padding: 20px 10px 25px 40px;
     width: 100%;
@@ -43,7 +43,7 @@
     
     .arrow-icon {
       display: block;
-      color: $ssb-green-3;
+      color: component-lib.$ssb-green-3;
       margin-left: auto;
       margin-top: $spacer * 1.5;
       margin-right: $spacer;
@@ -68,12 +68,12 @@
 
   .title {
     display: inline;
-    border-bottom: 2px solid $ssb-green-4;
+    border-bottom: 2px solid component-lib.$ssb-green-4;
     font-size: 1.25rem;
     line-height: 2rem;
-    @include roboto; 
+    @include component-lib.roboto; 
     font-weight: bold;
-    color: $ssb-dark-6;
+    color: component-lib.$ssb-dark-6;
   }
 
     @include media-breakpoint-down(sm) {

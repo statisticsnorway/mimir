@@ -1,5 +1,5 @@
 @use 'bootstrap' as *;
-@use '@statisticsnorway/ssb-component-library/src/main.scss' as *;
+@use '@statisticsnorway/ssb-component-library/src/style/_variables' as component-lib;
 
 .part-table {
   .download-table-container {
@@ -32,7 +32,7 @@
     margin-top: 1.5rem;
 
     .source-title {
-      color: $ssb-dark-6;
+      color: component-lib.$ssb-dark-6;
     }
 
     .source-link {

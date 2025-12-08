@@ -72,7 +72,7 @@
     "@item-enonic-types/lib-thymeleaf": "~2.1.0",
     "@item-enonic-types/lib-time": "~1.2.1",
     "@reduxjs/toolkit": "~2.11.0",
-    "@statisticsnorway/ssb-component-library": "~2.5.4",
+    "@statisticsnorway/ssb-component-library": "~3.0.1",
     "@types/grecaptcha": "^3.0.9",
     "@types/ramda": "~0.31.1",
     "@types/react": "~18.3.20",
