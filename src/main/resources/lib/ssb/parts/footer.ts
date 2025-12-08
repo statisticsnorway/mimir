@@ -29,7 +29,7 @@ export function getFooterContent(
           ? language.code === 'en'
             ? 'SSB_logo_anniversary_en_white.svg'
             : 'SSB_logo_anniversary_no_white.svg'
-          : 'SSB_logo_black.svg',
+          : 'SSB_logo_white.svg',
       }),
       copyrightUrl: footerContent.data.copyrightUrl,
       copyrightText: localize({
