@@ -74,26 +74,20 @@ function Highchart(props) {
 
   function renderHighchartsSource(sourceLink, index) {
     return (
-      <Row key={index}>
-        <Col>
-          <Link href={sourceLink.sourceHref}>
-            {phrases.source}: {sourceLink.sourceText}
-          </Link>
-        </Col>
-      </Row>
+      <Col key={index} className='highcharts-source col-12 mt-3'>
+        <Link href={sourceLink.sourceHref} standAlone>
+          {phrases.source}: {sourceLink.sourceText}
+        </Link>
+      </Col>
     )
   }
 
   function renderHighchartsFooter(highchart) {
     return (
-      <Col>
-        {highchart.footnoteText ? (
-          <Row className='footnote mb-4 mb-md-5'>
-            <Col>{highchart.footnoteText}</Col>
-          </Row>
-        ) : null}
+      <Row>
+        {highchart.footnoteText ? <Col className='footnote col-12'>{highchart.footnoteText}</Col> : null}
         {highchart.creditsEnabled ? highchart.sourceList.map((source, i) => renderHighchartsSource(source, i)) : null}
-      </Col>
+      </Row>
     )
   }
 
