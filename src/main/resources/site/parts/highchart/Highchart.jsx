@@ -15,10 +15,6 @@ import 'highcharts/modules/broken-axis'
 import accessibilityLang from './../../../assets/js/highchart-lang.json'
 
 /* TODO list
- * --- UU improvements ---
- * Option to replace Category in highchart table row
- * Show last point symbol for line graphs
- * ...etc
  * --- Rest ---
  * Cleanup - are there any files and lines of code we can delete after full conversion?
  */
@@ -124,7 +120,7 @@ function Highchart(props) {
           ...highchart.config,
           lang: {
             ...lang,
-            categoryHeader: highcharts.xAxis?.title?.text ? highchart.xAxis.title.text : 'Category',
+            categoryHeader: highcharts.config?.xAxis?.title?.text ? highchart.config?.xAxis.title.text : 'Category',
           },
           chart: {
             ...highchart.config.chart,
