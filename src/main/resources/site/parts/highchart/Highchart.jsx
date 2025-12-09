@@ -191,7 +191,11 @@ function Highchart(props) {
                 onclick: downloadAsXLSX(highchart.config.title?.text),
               },
             },
-          }
+          },
+          yAxis: {
+            ...highchart.config.yAxis,
+            reversedStacks: !(highchart.config.chart?.type === 'bar' || highchart.config.chart?.type === 'column'),
+          },
         }
 
         return (
