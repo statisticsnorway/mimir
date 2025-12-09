@@ -1,9 +1,9 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import PropTypes from 'prop-types'
 import { Row, Col, Container } from 'react-bootstrap'
-import { Button, Tabs, Divider, Link } from '@statisticsnorway/ssb-component-library'
+import { Tabs, Divider, Link } from '@statisticsnorway/ssb-component-library'
 import 'highcharts/modules/accessibility'
 import 'highcharts/modules/exporting'
 import 'highcharts/modules/offline-exporting'
@@ -195,16 +195,42 @@ function Highchart(props) {
               },
             },
           },
-          legend: {
-            ...highchart.config.legend,
-            labelFormatter: highchart.config.chart?.type === 'pie' ? function name() {
-              return Array.isArray(this.name) ? this.name[0] : this.name
-            } : highchart.config.legend?.labelFormatter,
-          },
           yAxis: {
             ...highchart.config.yAxis,
             reversedStacks: !(highchart.config.chart?.type === 'bar' || highchart.config.chart?.type === 'column'),
           },
+        }
+
+        if (highchart.config.chart?.type === 'pie') {
+          config.legend.labelFormatter = function name() {
+            return Array.isArray(this.name) ? this.name[0] : this.name
+          }
+        }
+
+        if (highchart.config.chart?.type === 'barNegative') {
+          config.yAxis.labels.formatter = function (a) {
+            return Math.abs(a.value)
+          }
+          config.tooltip.formatter = function () {
+            return (
+              `<b>${this.series.name} ${this.point.category}:</b> ` + Highcharts.numberFormat(Math.abs(this.point.y), 0)
+            )
+          }
+        }
+
+        // Only show plotOption marker on last data element / single data point series
+        if (highchart.config.chart?.type === 'line') {
+          config.series.forEach((series) => {
+            const indices = series.data.map((element) => element !== null)
+            const lastIndex = indices.lastIndexOf(true)
+
+            series.data = series.data.map((data, index) => ({
+              y: parseFloat(data),
+              marker: {
+                enabled: index === lastIndex,
+              },
+            }))
+          })
         }
 
         return (
