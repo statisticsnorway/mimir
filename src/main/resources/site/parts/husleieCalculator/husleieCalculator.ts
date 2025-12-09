@@ -60,7 +60,7 @@ function getHusleiekalkulator(req: XP.Request, page: Content) {
     nextReleaseMonth,
   })
   const lastNumberText: string = localize({
-    key: 'calculatorLastNumber',
+    key: 'husleieLastNumber',
     locale: language?.code,
     values: [monthLabel(months, language?.code, lastUpdated.month), lastUpdated.year as string],
   })

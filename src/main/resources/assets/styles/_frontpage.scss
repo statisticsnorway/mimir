@@ -1,35 +1,35 @@
 @use 'bootstrap' as *;
-@use '@statisticsnorway/ssb-component-library/src/main.scss' as *;
+@use '@statisticsnorway/ssb-component-library/src/style/_variables' as component-lib;
 
 .part-frontpage-keyfigures {
-  background: $ssb-dark-5;
+  background: component-lib.$ssb-dark-5;
   padding: 60px 0px 60px 0px;
 
 
   .keyfigure-wrapper {
-    color: $ssb-dark-6;
+    color: component-lib.$ssb-dark-6;
 
     &:hover, &:focus {
       text-decoration: none;
-      color: $ssb-dark-6;
+      color: component-lib.$ssb-dark-6;
 
       .ssb-link {
         background-size: 100% 100%;
         outline: 0;
 
         .link-text {
-          color: $ssb-white;
+          color: component-lib.$ssb-white;
         }
       }
     }
 
     .keyfigure {
-      background: $ssb-white;
+      background: component-lib.$ssb-white;
       padding: 20px;
       min-height: 176px;
 
       .number-section {
-        @include roboto;
+        @include component-lib.roboto;
         margin-top: 4px;
 
         .number-description {
@@ -37,7 +37,7 @@
         }
 
         .no-number {
-          color: $ssb-dark-3;
+          color: component-lib.$ssb-dark-3;
           font-size: 20px;
           font-weight: bold;
         }
@@ -118,7 +118,7 @@
           grid-row: 2;
         }
         .icon-wrapper {
-          color: $ssb-green-4;
+          color: component-lib.$ssb-green-4;
           grid-column: 2;
           grid-row-start: 1;
           grid-row-end: 3;
@@ -141,7 +141,7 @@
 }
 
 .part-pubarchive-link {
-  background: $ssb-white;
+  background: component-lib.$ssb-white;
 
   @include media-breakpoint-down(md) {
     border: none;

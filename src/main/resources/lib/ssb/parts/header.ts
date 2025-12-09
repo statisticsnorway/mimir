@@ -7,7 +7,7 @@ import { type Language } from '/lib/types/language'
 import { type HeaderContent } from '/lib/types/header'
 import { type Header } from '/site/content-types'
 
-export function getHeaderContent(language: Language): HeaderContent | undefined {
+export function getHeaderContent(language: Language, useAnniversary: boolean): HeaderContent | undefined {
   if (language.headerId === undefined || language.headerId === null) {
     return undefined
   } else {
@@ -19,17 +19,24 @@ export function getHeaderContent(language: Language): HeaderContent | undefined 
 
     return {
       logoUrl: language.link as string,
+
       logoSrc: assetUrl({
-        path: 'SSB_logo_black.svg',
+        path: useAnniversary
+          ? language.code === 'en'
+            ? 'SSB_logo_anniversary_en_dark.svg'
+            : 'SSB_logo_anniversary_no_dark.svg'
+          : 'SSB_logo_black.svg',
       }),
       logoAltText: localize({
         key: 'logoAltText',
         locale: language.code,
       }),
+
       environmentText: getEnvironmentString(),
       searchResultPageUrl: headerContent.data.searchResultPage
         ? pathFromStringOrContent(headerContent.data.searchResultPage)
         : undefined,
+
       searchText: localize({
         key: 'menuSearch',
         locale: language.code,

@@ -1,10 +1,10 @@
 @use 'bootstrap' as *;
-@use '@statisticsnorway/ssb-component-library/src/main.scss' as *;
+@use '@statisticsnorway/ssb-component-library/src/style/_variables' as component-lib;
 
 .simple-statbank {
   display: inline-block;
-  border: 1px solid $ssb-green-5;
-  border-top: 4px solid $ssb-green-3;
+  border: 1px solid component-lib.$ssb-green-5;
+  border-top: 4px solid component-lib.$ssb-green-3;
   width: 100%;
 
   .simple-statbank-input {
@@ -22,15 +22,15 @@
 
   .simple-statbank-result {
     padding: 40px;
-    border-top: 1px solid $ssb-green-5;
-    background-color: $ssb-dark-1;
+    border-top: 1px solid component-lib.$ssb-green-5;
+    background-color: component-lib.$ssb-dark-1;
 
     .periode {
       font-size: 1rem;
     }
 
     .result {
-      @include roboto-condenced;
+      @include component-lib.roboto-condenced;
       margin-top: 10px;
       margin-bottom: 10px;
 
@@ -45,7 +45,7 @@
       }
 
       .no-number {
-        color: $ssb-dark-3;
+        color: component-lib.$ssb-dark-3;
         font-size: 1.25rem;
         font-weight: bold;
       }

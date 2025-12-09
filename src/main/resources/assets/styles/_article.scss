@@ -1,5 +1,5 @@
 @use 'bootstrap' as *;
-@use '@statisticsnorway/ssb-component-library/src/main.scss' as *;
+@use '@statisticsnorway/ssb-component-library/src/style/_variables' as component-lib;
 
 .article {
   .title-ingress-wrapper {
@@ -22,7 +22,7 @@
     }
 
     .introTitle {
-      @include roboto;
+      @include component-lib.roboto;
       font-size: 1.25rem;
       line-height: 1.6;
       margin-bottom: 0.25rem;
@@ -119,7 +119,7 @@
     }
 
     @include media-breakpoint-up(lg) {
-      border-left: 1px solid $ssb-dark-2;
+      border-left: 1px solid component-lib.$ssb-dark-2;
       padding-left: $spacer;
 
       .mt-lg-0 {

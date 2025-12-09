@@ -14,13 +14,12 @@ app {
     systemVersion = "${xpVersion}"}
 
 dependencies {
-    implementation 'commons-codec:commons-codec:1.19.0'
+    implementation 'commons-codec:commons-codec:1.20.0'
     implementation "com.enonic.xp:core-api:${xpVersion}"
     implementation "com.enonic.xp:portal-api:${xpVersion}"
     include 'com.enonic.lib:lib-cache:2.2.1'
     include 'com.enonic.lib:lib-text-encoding:2.1.1'
     include 'org.json:json:20250517'
-    include "com.enonic.lib:lib-cron:1.1.4"
     include "com.enonic.lib:lib-http-client:3.2.2"
     include "com.enonic.lib:lib-react4xp:5.1.1"
     include "com.enonic.lib:lib-thymeleaf:2.1.1"

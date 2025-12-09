@@ -64,7 +64,7 @@ try {
           enabled: false,
         },
         {
-          feature: 'test-publish-statistics-dataset-job-task',
+          feature: 'use-anniversary-logo',
           enabled: false,
         },
       ],

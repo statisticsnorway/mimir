@@ -1,14 +1,14 @@
-@use '@statisticsnorway/ssb-component-library/src/main.scss' as *;
+@use '@statisticsnorway/ssb-component-library/src/style/_variables' as component-lib;
 
 .popup-container {
-  background-color: $ssb-green-4;
+  background-color: component-lib.$ssb-green-4;
   overflow: hidden;
   z-index: 9999;
   position: fixed;
   bottom: 25px;
   right: clamp(25px, calc(400px - (3500px - 100vw) / 2), 400px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  border: 1px solid $ssb-green-4;
+  border: 1px solid component-lib.$ssb-green-4;
 
   &.open {
     width: 358px;
@@ -84,7 +84,7 @@
 
 .popup-closed {
   height: 44px;
-  background-color: $ssb-green-4;
+  background-color: component-lib.$ssb-green-4;
   color: white;
   display: flex;
   align-items: center;
@@ -113,7 +113,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 0 20px;
-  background-color: $ssb-green-4;
+  background-color: component-lib.$ssb-green-4;
 
   .header-text {
     font-family: Roboto, sans-serif !important;
@@ -144,7 +144,7 @@
 
 .close-icon-wrapper:hover,
 .close-icon-wrapper:focus-visible {
-  background-color: $ssb-green-1;
+  background-color: component-lib.$ssb-green-1;
 }
 
 .close-icon {
@@ -153,11 +153,11 @@
 
 .close-icon-wrapper:hover .close-icon,
 .close-icon-wrapper:focus-visible .close-icon {
-  stroke: $ssb-green-4;
+  stroke: component-lib.$ssb-green-4;
 }
 
 .popup-content {
-  background-color: $ssb-green-1;
+  background-color: component-lib.$ssb-green-1;
   padding: 16px 20px;
   border: none;
 }
@@ -165,7 +165,7 @@
 .popup-content p {
   font-family: 'Open Sans', sans-serif;
   font-size: 14px;
-  color: $ssb-green-4;
+  color: component-lib.$ssb-green-4;
   font-weight: 100;
   margin: 0;
   line-height: 24px;
@@ -176,8 +176,8 @@
   padding: 16px 20px;
   display: flex;
   justify-content: space-between;
-  background-color: $ssb-green-1;
-  border-top: 1px solid $ssb-green-4;
+  background-color: component-lib.$ssb-green-1;
+  border-top: 1px solid component-lib.$ssb-green-4;
 
   .ssb-primary-button,
   .ssb-secondary-button {
@@ -190,19 +190,19 @@
 
   .ssb-secondary-button {
     width: 126px;
-    background-color: $ssb-green-1;
-    color: $ssb-green-4;
+    background-color: component-lib.$ssb-green-1;
+    color: component-lib.$ssb-green-4;
 
     &:hover,
     &:focus {
       background-color: transparent;
-      color: $ssb-green-4;
+      color: component-lib.$ssb-green-4;
     }
   }
 }
 
 .popup-container:focus-visible {
-  outline: 2px solid $ssb-purple-3;
+  outline: 2px solid component-lib.$ssb-purple-3;
   outline-offset: 2px;
   border-radius: 2px;
 }

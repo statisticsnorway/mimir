@@ -1,5 +1,5 @@
 @use 'bootstrap' as *;
-@use '@statisticsnorway/ssb-component-library/src/main.scss' as *;
+@use '@statisticsnorway/ssb-component-library/src/style/_variables' as component-lib;
 
 .highchart-wrapper {
   .highcharts-credits {
@@ -38,7 +38,7 @@
       }
 
       &:focus {
-        outline: $ssb-purple-3 solid 2px;
+        outline: component-lib.$ssb-purple-3 solid 2px;
         outline-offset: 1px;
       }
     }
@@ -91,7 +91,7 @@
 .highcharts-figure {
   .figure-title {
     font-size: 20px;
-    @include roboto;
+    @include component-lib.roboto;
     font-weight: bold;
     margin-bottom: 10px;
   }
