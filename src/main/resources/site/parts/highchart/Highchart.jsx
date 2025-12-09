@@ -51,32 +51,29 @@ function Highchart(props) {
     }
   }, [highcharts])
 
+  function renderHighchartDraftAlert(highchart) {
+    if (!showDraft) return
+
+    return (
+      <div className='alert alert-info mt-4' role='alert'>
+        {highchart.config?.draft ? 'Tallet i figuren nedenfor er upublisert' : 'Det finnes ingen upubliserte tall for denne figuren'}
+      </div>
+    )
+  }
+
+  const handleHighchartToggleDraft = () => {
+    setShowDraft((prevState) => !prevState)
+  }
 
   function renderHighchartToggleDraft(highchart) {
-    // TODO: Reimplement functionality; currently only changes name on button
+    // TODO: Implement logic that loads draft highchart config when toggled
     if (pageType === `${appName}:highchart`) {
       return (
         <Col className='col-12 mb-3'>
-          {highchart.config.draft && (
-            <div className='alert alert-info mb-4' role='alert'>
-              Tallet i figuren nedenfor er upublisert
-            </div>
-          )}
-          {highchart.config.noDraftAvailable && (
-            <div className='alert alert-warning mb-4' role='alert'>
-              Det finnes ingen upubliserte tall for denne figuren
-            </div>
-          )}
-          {!showDraft && (
-            <Button primary onClick={() => setShowDraft(true)}>
-              Vis upubliserte tall
-            </Button>
-          )}
-          {showDraft && (
-            <Button primary onClick={() => setShowDraft(false)}>
-              Vis publiserte tall
-            </Button>
-          )}
+          <Button primary onClick={handleHighchartToggleDraft}>
+            {!showDraft ? 'Vis upubliserte tall' : 'Vis publiserte tall'}
+          </Button>
+          {renderHighchartDraftAlert(highchart)}
         </Col>
       )
     }
