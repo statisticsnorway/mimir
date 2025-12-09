@@ -221,12 +221,23 @@ function Highchart(props) {
                   display: 'block',
                 },
               },
+              subtitle: {
+                style: {
+                  display: 'block',
+                },
+              },
             },
           },
           title: {
             ...highchart.config.title,
             style: {
               display: 'none', // TODO: Remove highchart.hideTitle config if not in use
+            },
+          },
+          subtitle: {
+            ...highchart.config.subtitle,
+            style: {
+              display: 'none',
             },
           },
         }
