@@ -195,6 +195,12 @@ function Highchart(props) {
               },
             },
           },
+          legend: {
+            ...highchart.config.legend,
+            labelFormatter: highchart.config.chart?.type === 'pie' ? function name() {
+              return Array.isArray(this.name) ? this.name[0] : this.name
+            } : highchart.config.legend?.labelFormatter,
+          },
           yAxis: {
             ...highchart.config.yAxis,
             reversedStacks: !(highchart.config.chart?.type === 'bar' || highchart.config.chart?.type === 'column'),
