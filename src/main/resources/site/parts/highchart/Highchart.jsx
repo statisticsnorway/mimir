@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import PropTypes from 'prop-types'
@@ -31,7 +31,29 @@ function Highchart(props) {
   const { highcharts, language, pageType, appName, phrases } = props
 
   const [showDraft, setShowDraft] = useState(false)
-  const [showTable, setShowTable] = useState(false)
+  const highchartsWrapperRef = useRef(null)
+
+  useEffect(() => {
+    if (highcharts?.length) {
+      const highchartWrapperElement = highchartsWrapperRef.current?.children
+      const [highchartElement, tableWrapperElement] = highchartWrapperElement ?? []
+      const tableElement = tableWrapperElement?.children[0]
+
+      tableWrapperElement?.classList.add('ssb-table-wrapper', 'd-none')
+      tableElement?.classList.add('statistics', 'ssb-table')
+      tableElement?.setAttribute('tabindex', '0') // Scrollable region must have keyboard access
+
+      highcharts.map(({ contentKey }) => {
+        // Add Tab component accessibility tags for Highcharts and table
+        highchartElement?.setAttribute('id', 'tabpanel-0-' + contentKey)
+        highchartElement?.setAttribute('role', 'tabpanel')
+
+        tableWrapperElement?.setAttribute('id', 'tabpanel-1-' + contentKey)
+        tableWrapperElement?.setAttribute('role', 'tabpanel')
+      })
+    }
+  }, [highcharts])
+
 
   function renderHighchartToggleDraft(highchart) {
     // TODO: Reimplement functionality; currently only changes name on button
@@ -63,35 +85,31 @@ function Highchart(props) {
     }
   }
 
-  function handleHighchartsTabOnClick(item) {
-    if (item === 'highcharts-table/') {
-      setShowTable(true)
-    }
+  const handleTabOnClick = (item) => {
+    const showTable = item === 'show-as-table'
 
-    if (item === 'highcharts-figure/') {
-      setShowTable(false)
-    }
+    const highchartWrapperElement = highchartsWrapperRef.current?.children
+    const [highchartElement, tableWrapperElement] = highchartWrapperElement ?? []
+
+    tableWrapperElement?.classList.toggle('d-none', !showTable)
+    tableWrapperElement?.setAttribute('aria-hidden', !showTable)
+    highchartElement?.classList.toggle('d-none', showTable)
+    highchartElement?.setAttribute('aria-hidden', showTable)
   }
 
-  function renderHighchartsTab() {
+  function renderShowAsFigureOrTableTab(highchartId) {
     return (
       <Col className='col-12 mb-3'>
         <Tabs
-          className='pl-4'
-          activeOnInit='highcharts-figure/'
+          id={highchartId}
+          activeOnInit='show-as-chart'
           items={[
-            {
-              title: phrases['highcharts.showAsGraph'],
-              path: 'highcharts-figure/',
-            },
-            {
-              title: phrases['highcharts.showAsTable'],
-              path: 'highcharts-table/',
-            },
+            { title: phrases['highcharts.showAsChart'], path: 'show-as-chart' },
+            { title: phrases['highcharts.showAsTable'], path: 'show-as-table' },
           ]}
-          onClick={handleHighchartsTabOnClick}
+          onClick={handleTabOnClick}
         />
-        <Divider light={false} className='mb-3' />
+        <Divider className='mb-3' />
       </Col>
     )
   }
@@ -204,9 +222,11 @@ function Highchart(props) {
               <Title size={3}>{config.title.text}</Title>
               {config.subtitle.text ? <p className='highchart-subtitle mb-1'>{config.subtitle.text}</p> : null}
             </Col>
-            {renderHighchartsTab()}
+            {renderShowAsFigureOrTableTab(highchart.contentKey)}
             <Col className='col-12'>
+            <div ref={highchartsWrapperRef}>
               <HighchartsReact highcharts={Highcharts} options={config} />
+            </div>
             </Col>
             {renderHighchartsFooter(highchart)}
           </Row>
