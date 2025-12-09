@@ -3,7 +3,7 @@ import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import PropTypes from 'prop-types'
 import { Row, Col, Container } from 'react-bootstrap'
-import { Title, Button, Tabs, Divider, Link } from '@statisticsnorway/ssb-component-library'
+import { Button, Tabs, Divider, Link } from '@statisticsnorway/ssb-component-library'
 import 'highcharts/modules/accessibility'
 import 'highcharts/modules/exporting'
 import 'highcharts/modules/offline-exporting'
@@ -17,7 +17,6 @@ import accessibilityLang from './../../../assets/js/highchart-lang.json'
 /* TODO list
  * Show highcharts draft in content type edit mode button
  * --- UU improvements ---
- * Fix open xls exported file without dangerous file popup
  * Option to replace Category in highchart table row
  * Show last point symbol for line graphs
  * ...etc
@@ -133,6 +132,15 @@ function Highchart(props) {
     )
   }
 
+  const downloadAsXLSX = (title) =>
+  function () {
+    const rows = this.getDataRows(true)
+    exportHighchartsToExcel({
+      rows: rows.slice(1),
+      fileName: title ? `${title}.xlsx` : 'graf.xlsx',
+    })
+  }
+
   function renderHighcharts() {
     if (highcharts?.length) {
       return highcharts.map((highchart) => {
@@ -207,6 +215,14 @@ function Highchart(props) {
               },
             },
           },
+          exporting: {
+            ...highchart.config.exporting,
+            menuItemDefinitions: {
+              downloadXLS: {
+                onclick: downloadAsXLSX(highchart.config.title?.text),
+              },
+            },
+          }
         }
 
         return (
