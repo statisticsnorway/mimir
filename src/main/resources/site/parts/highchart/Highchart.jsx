@@ -15,9 +15,7 @@ import 'highcharts/modules/broken-axis'
 import accessibilityLang from './../../../assets/js/highchart-lang.json'
 
 /* TODO list
- * Display highcharts in edit mode
  * Show highcharts draft in content type edit mode button
- * Perfomance - highcharts react takes a bit longer to load
  * --- UU improvements ---
  * Fix open xls exported file without dangerous file popup
  * Option to replace Category in highchart table row
