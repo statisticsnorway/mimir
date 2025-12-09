@@ -63,6 +63,10 @@ try {
           feature: 'show-cookie-banner',
           enabled: false,
         },
+        {
+          feature: 'use-anniversary-logo',
+          enabled: false,
+        },
       ],
     },
   ])
