@@ -207,50 +207,22 @@ function Highchart(props) {
               },
             },
           },
-          exporting: {
-            ...highchart.config.exporting,
-            chartOptions: {
-              ...highchart.config.exporting?.chartOptions,
-              title: {
-                style: {
-                  display: 'block',
-                },
-              },
-              subtitle: {
-                style: {
-                  display: 'block',
-                },
-              },
-            },
-          },
-          title: {
-            ...highchart.config.title,
-            style: {
-              display: 'none', // TODO: Remove highchart.hideTitle config if not in use
-            },
-          },
-          subtitle: {
-            ...highchart.config.subtitle,
-            style: {
-              display: 'none',
-            },
-          },
         }
 
         return (
           <Row key={`highchart-${highchart.contentKey}`}>
-            {renderHighchartToggleDraft(highchart)}
             <Col className='col-12'>
-              <Title size={3}>{config.title.text}</Title>
-              {config.subtitle.text ? <p className='highchart-subtitle mb-1'>{config.subtitle.text}</p> : null}
+              {renderHighchartToggleDraft(highchart)}
+              <figure id={`figure-${highchart.contentKey}`} className='highcharts-figure mb-0 hide-title'>
+                <figcaption className='figure-title'>{config.title.text}</figcaption>
+                {config.subtitle.text ? <p className='figure-subtitle'>{config.subtitle.text}</p> : null}
+                {renderShowAsFigureOrTableTab(highchart.contentKey)}
+                <div ref={(el) => highchartsWrapperRefs.current[highchart.contentKey] = el }>
+                  <HighchartsReact highcharts={Highcharts} options={config} />
+                </div>
+              </figure>
+              {renderHighchartsFooter(highchart)}
             </Col>
-            {renderShowAsFigureOrTableTab(highchart.contentKey)}
-            <Col className='col-12'>
-            <div ref={(el) => highchartsWrapperRefs.current[highchart.contentKey] = el }>
-              <HighchartsReact highcharts={Highcharts} options={config} />
-            </div>
-            </Col>
-            {renderHighchartsFooter(highchart)}
           </Row>
         )
       })
