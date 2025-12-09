@@ -47,7 +47,7 @@ function Highchart(props) {
     }
   }, [highcharts])
 
-  const handleTabOnClick = (contentKey) => ((item) => {
+  const handleTabOnClick = (contentKey) => (item) => {
     const showTable = item === 'show-as-table'
 
     const highchartWrapperElement = highchartsWrapperRefs.current[contentKey]?.children
@@ -57,7 +57,7 @@ function Highchart(props) {
     tableWrapperElement?.setAttribute('aria-hidden', !showTable)
     highchartElement?.classList.toggle('d-none', showTable)
     highchartElement?.setAttribute('aria-hidden', showTable)
-  })
+  }
 
   function renderShowAsFigureOrTableTab(highchartId) {
     return (
@@ -102,20 +102,23 @@ function Highchart(props) {
   }
 
   const downloadAsXLSX = (title) =>
-  function () {
-    const rows = this.getDataRows(true)
-    exportHighchartsToExcel({
-      rows: rows.slice(1),
-      fileName: title ? `${title}.xlsx` : 'graf.xlsx',
-    })
-  }
+    function () {
+      const rows = this.getDataRows(true)
+      exportHighchartsToExcel({
+        rows: rows.slice(1),
+        fileName: title ? `${title}.xlsx` : 'graf.xlsx',
+      })
+    }
 
   function renderHighcharts() {
     if (highcharts?.length) {
       return highcharts.map((highchart) => {
-        const lang = language !== 'en' ? accessibilityLang.lang : {
-          locale: "en-GB"
-        }
+        const lang =
+          language !== 'en'
+            ? accessibilityLang.lang
+            : {
+                locale: 'en-GB',
+              }
 
         const config = {
           ...highchart.config,
@@ -205,7 +208,7 @@ function Highchart(props) {
                 <figcaption className='figure-title'>{config.title.text}</figcaption>
                 {config.subtitle.text ? <p className='figure-subtitle'>{config.subtitle.text}</p> : null}
                 {renderShowAsFigureOrTableTab(highchart.contentKey)}
-                <div ref={(el) => highchartsWrapperRefs.current[highchart.contentKey] = el }>
+                <div ref={(el) => (highchartsWrapperRefs.current[highchart.contentKey] = el)}>
                   <HighchartsReact highcharts={Highcharts} options={config} />
                 </div>
               </figure>
