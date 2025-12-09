@@ -212,6 +212,23 @@ function Highchart(props) {
               },
             },
           },
+          exporting: {
+            ...highchart.config.exporting,
+            chartOptions: {
+              ...highchart.config.exporting?.chartOptions,
+              title: {
+                style: {
+                  display: 'block',
+                },
+              },
+            },
+          },
+          title: {
+            ...highchart.config.title,
+            style: {
+              display: 'none', // TODO: Remove highchart.hideTitle config if not in use
+            },
+          },
         }
 
         return (
