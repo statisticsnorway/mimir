@@ -19,7 +19,6 @@ import accessibilityLang from './../../../assets/js/highchart-lang.json'
  * Show highcharts draft in content type edit mode button
  * Perfomance - highcharts react takes a bit longer to load
  * --- UU improvements ---
- * Show figure as highchart table functionality
  * Fix open xls exported file without dangerous file popup
  * Option to replace Category in highchart table row
  * Show last point symbol for line graphs
@@ -31,19 +30,19 @@ function Highchart(props) {
   const { highcharts, language, pageType, appName, phrases } = props
 
   const [showDraft, setShowDraft] = useState(false)
-  const highchartsWrapperRef = useRef(null)
+  const highchartsWrapperRefs = useRef({})
 
   useEffect(() => {
     if (highcharts?.length) {
-      const highchartWrapperElement = highchartsWrapperRef.current?.children
-      const [highchartElement, tableWrapperElement] = highchartWrapperElement ?? []
-      const tableElement = tableWrapperElement?.children[0]
+      highcharts.forEach(({ contentKey }) => {
+        const highchartWrapperElement = highchartsWrapperRefs.current[contentKey]?.children
+        const [highchartElement, tableWrapperElement] = highchartWrapperElement ?? []
+        const tableElement = tableWrapperElement?.children[0]
 
-      tableWrapperElement?.classList.add('ssb-table-wrapper', 'd-none')
-      tableElement?.classList.add('statistics', 'ssb-table')
-      tableElement?.setAttribute('tabindex', '0') // Scrollable region must have keyboard access
+        tableWrapperElement?.classList.add('ssb-table-wrapper', 'd-none')
+        tableElement?.classList.add('statistics', 'ssb-table')
+        tableElement?.setAttribute('tabindex', '0') // Scrollable region must have keyboard access
 
-      highcharts.map(({ contentKey }) => {
         // Add Tab component accessibility tags for Highcharts and table
         highchartElement?.setAttribute('id', 'tabpanel-0-' + contentKey)
         highchartElement?.setAttribute('role', 'tabpanel')
@@ -85,17 +84,17 @@ function Highchart(props) {
     }
   }
 
-  const handleTabOnClick = (item) => {
+  const handleTabOnClick = (contentKey) => ((item) => {
     const showTable = item === 'show-as-table'
 
-    const highchartWrapperElement = highchartsWrapperRef.current?.children
+    const highchartWrapperElement = highchartsWrapperRefs.current[contentKey]?.children
     const [highchartElement, tableWrapperElement] = highchartWrapperElement ?? []
 
     tableWrapperElement?.classList.toggle('d-none', !showTable)
     tableWrapperElement?.setAttribute('aria-hidden', !showTable)
     highchartElement?.classList.toggle('d-none', showTable)
     highchartElement?.setAttribute('aria-hidden', showTable)
-  }
+  })
 
   function renderShowAsFigureOrTableTab(highchartId) {
     return (
@@ -107,7 +106,7 @@ function Highchart(props) {
             { title: phrases['highcharts.showAsChart'], path: 'show-as-chart' },
             { title: phrases['highcharts.showAsTable'], path: 'show-as-table' },
           ]}
-          onClick={handleTabOnClick}
+          onClick={handleTabOnClick(highchartId)}
         />
         <Divider className='mb-3' />
       </Col>
@@ -224,7 +223,7 @@ function Highchart(props) {
             </Col>
             {renderShowAsFigureOrTableTab(highchart.contentKey)}
             <Col className='col-12'>
-            <div ref={highchartsWrapperRef}>
+            <div ref={(el) => highchartsWrapperRefs.current[highchart.contentKey] = el }>
               <HighchartsReact highcharts={Highcharts} options={config} />
             </div>
             </Col>
