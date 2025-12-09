@@ -125,7 +125,7 @@ function parseDirector(event: DirectorBox): TimelineEvent {
           format: 'jpg',
         })
       : undefined,
-    directorImageAltText: event.directorImage ? getImageAlt(event.directorImage) : '',
+    directorImageAltText: getImageAlt(event.directorImage),
     timelineCategory: 'director',
     targetUrl: event.urlContentSelector ? getLinkTargetUrl(event) : '',
   }
