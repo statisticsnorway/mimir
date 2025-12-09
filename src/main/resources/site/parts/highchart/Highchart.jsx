@@ -15,7 +15,6 @@ import 'highcharts/modules/broken-axis'
 import accessibilityLang from './../../../assets/js/highchart-lang.json'
 
 /* TODO list
- * Show highcharts draft in content type edit mode button
  * --- UU improvements ---
  * Option to replace Category in highchart table row
  * Show last point symbol for line graphs
@@ -24,9 +23,7 @@ import accessibilityLang from './../../../assets/js/highchart-lang.json'
  * Cleanup - are there any files and lines of code we can delete after full conversion?
  */
 function Highchart(props) {
-  const { highcharts, language, pageType, appName, phrases } = props
-
-  const [showDraft, setShowDraft] = useState(false)
+  const { highcharts, language, phrases } = props
   const highchartsWrapperRefs = useRef({})
 
   useEffect(() => {
@@ -49,34 +46,6 @@ function Highchart(props) {
       })
     }
   }, [highcharts])
-
-  function renderHighchartDraftAlert(highchart) {
-    if (!showDraft) return
-
-    return (
-      <div className='alert alert-info mt-4' role='alert'>
-        {highchart.config?.draft ? 'Tallet i figuren nedenfor er upublisert' : 'Det finnes ingen upubliserte tall for denne figuren'}
-      </div>
-    )
-  }
-
-  const handleHighchartToggleDraft = () => {
-    setShowDraft((prevState) => !prevState)
-  }
-
-  function renderHighchartToggleDraft(highchart) {
-    // TODO: Implement logic that loads draft highchart config when toggled
-    if (pageType === `${appName}:highchart`) {
-      return (
-        <Col className='col-12 mb-3'>
-          <Button primary onClick={handleHighchartToggleDraft}>
-            {!showDraft ? 'Vis upubliserte tall' : 'Vis publiserte tall'}
-          </Button>
-          {renderHighchartDraftAlert(highchart)}
-        </Col>
-      )
-    }
-  }
 
   const handleTabOnClick = (contentKey) => ((item) => {
     const showTable = item === 'show-as-table'
@@ -228,7 +197,6 @@ function Highchart(props) {
         return (
           <Row key={`highchart-${highchart.contentKey}`}>
             <Col className='col-12'>
-              {renderHighchartToggleDraft(highchart)}
               <figure id={`figure-${highchart.contentKey}`} className='highcharts-figure mb-0 hide-title'>
                 <figcaption className='figure-title'>{config.title.text}</figcaption>
                 {config.subtitle.text ? <p className='figure-subtitle'>{config.subtitle.text}</p> : null}
