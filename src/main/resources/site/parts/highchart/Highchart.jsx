@@ -14,10 +14,6 @@ import 'highcharts/modules/broken-axis'
 
 import accessibilityLang from './../../../assets/js/highchart-lang.json'
 
-/* TODO list
- * --- Rest ---
- * Cleanup - are there any files and lines of code we can delete after full conversion?
- */
 function Highchart(props) {
   const { highcharts, language, phrases } = props
   const highchartsWrapperRefs = useRef({})
@@ -259,8 +255,6 @@ Highchart.propTypes = {
     })
   ),
   phrases: PropTypes.object,
-  appName: PropTypes.string,
-  pageType: PropTypes.string,
 }
 
 export default (props) => <Highchart {...props} />
