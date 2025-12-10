@@ -41,14 +41,14 @@ jobs:
         run: echo ${{ env.REGISTRY }} && echo ${{ env.IMAGE }} && echo ${{ env.TAG }}
 
       - name: Checkout mimir
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Give GitHub Actions acces to docker repo
         uses: webfactory/ssh-agent@v0.9.1
         with:
           ssh-private-key: ${{ secrets.DOCKER_REPO_READ_KEY }}
       - name: Checkout docker
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           ref: 'main'
           path: 'ssbno-xp-docker'
@@ -118,7 +118,7 @@ jobs:
       pull-requests: write
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: 'Get JIRA issue number'
         id: jira_issue_number
         run: |

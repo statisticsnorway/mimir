@@ -1,9 +1,9 @@
 @use 'bootstrap' as *;
-@use '@statisticsnorway/ssb-component-library/src/main.scss' as *;
+@use '@statisticsnorway/ssb-component-library/src/style/_variables' as component-lib;
 
 .search-result {
   .search-result-head {
-    background-color: $ssb-dark-2;
+    background-color: component-lib.$ssb-dark-2;
     width: 100vw;
     position: relative;
     left: 50%;
@@ -20,7 +20,7 @@
     .limit-result {
       display: block;
       font-size: 16px;
-      @include roboto;
+      @include component-lib.roboto;
       font-weight: bold;
     }
 

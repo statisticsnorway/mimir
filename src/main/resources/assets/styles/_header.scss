@@ -1,5 +1,5 @@
 @use 'bootstrap' as *;
-@use '@statisticsnorway/ssb-component-library/src/main.scss' as *;
+@use '@statisticsnorway/ssb-component-library/src/style/_variables' as component-lib;
 
 .header-wrapper {
   background: white;
@@ -74,7 +74,7 @@ header.ssb-header-wrapper {
   }
 
   .mobileMenuDivider {
-    color: $ssb-dark-2;
+    color: component-lib.$ssb-dark-2;
     @include media-breakpoint-up(lg) {
       display: none;
     }
@@ -107,7 +107,7 @@ header.ssb-header-wrapper {
     position: relative;
 
     &:focus {
-      outline: $ssb-purple-3 solid 2px;
+      outline: component-lib.$ssb-purple-3 solid 2px;
       outline-offset: 2px;
     }
 
@@ -127,7 +127,7 @@ header.ssb-header-wrapper {
       bottom: 0.2rem;
 
       font-weight: bold;
-      color: $ssb-red-3;
+      color: component-lib.$ssb-red-3;
 
       @include media-breakpoint-down(md) {
         bottom: 0;
@@ -141,7 +141,7 @@ header.ssb-header-wrapper {
     border: 0 none;
     background: transparent;
     height: 24px;
-    @include roboto;
+    @include component-lib.roboto;
     font-size: 20px;
     font-weight: bold;
     font-stretch: normal;
@@ -155,14 +155,14 @@ header.ssb-header-wrapper {
       display: block;
 
       &:focus {
-        outline: $ssb-purple-3 solid 2px;
+        outline: component-lib.$ssb-purple-3 solid 2px;
         outline-offset: 2px;
       }
     }
 
     span svg {
       margin-bottom: 2px;
-      stroke: $ssb-green-4;
+      stroke: component-lib.$ssb-green-4;
     }
   }
 
@@ -192,7 +192,7 @@ header.ssb-header-wrapper {
 
       // Focus marker gets cut out in the mobile version; this is a workaround
       .icon-wrapper:focus {
-        outline: $ssb-purple-3 solid 2px;
+        outline: component-lib.$ssb-purple-3 solid 2px;
         outline-offset: -2px;
         border: white solid 3px;
       }
@@ -227,7 +227,7 @@ header.ssb-header-wrapper {
     &.activeTab {
       .subMenu li a.ssb-link.with-icon {
         .link-text {
-          color: $ssb-dark-6;
+          color: component-lib.$ssb-dark-6;
           font-weight: bold;
 
           @include media-breakpoint-down(lg) {
@@ -235,12 +235,12 @@ header.ssb-header-wrapper {
           }
         }
         .icon-wrapper svg * {
-          stroke: $ssb-green-4;
+          stroke: component-lib.$ssb-green-4;
         }
         &:hover,
         &:focus {
           svg * {
-            stroke: $ssb-white;
+            stroke: component-lib.$ssb-white;
           }
         }
       }
@@ -276,20 +276,20 @@ header.ssb-header-wrapper {
       }
 
       &:before {
-        border-top: 1px solid $ssb-dark-2;
+        border-top: 1px solid component-lib.$ssb-dark-2;
         content: '';
         height: 2px;
       }
 
       &:after {
-        border-bottom: 1px solid $ssb-dark-2;
+        border-bottom: 1px solid component-lib.$ssb-dark-2;
         content: '';
         height: 2px;
         margin-bottom: -1px;
       }
 
       &:last-child {
-        border-bottom: $ssb-dark-2 1px solid;
+        border-bottom: component-lib.$ssb-dark-2 1px solid;
       }
     }
 
@@ -307,7 +307,7 @@ header.ssb-header-wrapper {
         margin: 0 2px 1px;
 
         &:focus {
-          outline: $ssb-purple-3 solid 2px;
+          outline: component-lib.$ssb-purple-3 solid 2px;
         }
       }
 
@@ -346,7 +346,7 @@ header.ssb-header-wrapper {
 
         svg {
           display: inline;
-          color: $ssb-green-3;
+          color: component-lib.$ssb-green-3;
         }
       }
 
@@ -360,7 +360,7 @@ header.ssb-header-wrapper {
     }
 
     .subMenu {
-      color: $ssb-dark-4;
+      color: component-lib.$ssb-dark-4;
       max-height: 0px;
       transition: max-height 0.3s ease-out;
       overflow: hidden;
@@ -400,7 +400,7 @@ header.ssb-header-wrapper {
           }
 
           .link-text {
-            color: $ssb-dark-4;
+            color: component-lib.$ssb-dark-4;
             margin: 2px 0 0;
           }
 

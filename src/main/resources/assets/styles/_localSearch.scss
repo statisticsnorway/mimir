@@ -1,7 +1,7 @@
-@use '@statisticsnorway/ssb-component-library/src/main.scss' as *;
+@use '@statisticsnorway/ssb-component-library/src/style/_variables' as component-lib;
 
 .part-local-search {
-  background-color: $ssb-dark-2;
+  background-color: component-lib.$ssb-dark-2;
   width: 100%;
   max-width: none;
 

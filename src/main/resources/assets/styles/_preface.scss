@@ -1,5 +1,5 @@
 @use 'bootstrap' as *;
-@use '@statisticsnorway/ssb-component-library/src/main.scss' as *;
+@use '@statisticsnorway/ssb-component-library/src/style/_variables' as component-lib;
 
 .preface-container + .container {
   margin-top: -50px;
@@ -12,14 +12,14 @@
 }
 .layout-preface {
   position: relative;
-  background-color: $ssb-dark-5;
+  background-color: component-lib.$ssb-dark-5;
   height: 230px;
   width: 100%;
   margin: 0;
-  @include roboto;
+  @include component-lib.roboto;
 
   p {
-    color: $ssb-white;
+    color: component-lib.$ssb-white;
     font-size: 22px;
   }
   &:after {
@@ -30,7 +30,7 @@
       top: 230px;
       border-width: 33vw 49.6vw;
       border-style: solid;
-      border-color: $ssb-dark-5 rgba(0,0,0,0) rgba(0,0,0,0) $ssb-dark-5;
+      border-color: component-lib.$ssb-dark-5 rgba(0,0,0,0) rgba(0,0,0,0) component-lib.$ssb-dark-5;
 
   }
 

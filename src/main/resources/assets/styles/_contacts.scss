@@ -1,11 +1,11 @@
 @use 'bootstrap' as *;
-@use '@statisticsnorway/ssb-component-library/src/main.scss' as *;
+@use '@statisticsnorway/ssb-component-library/src/style/_variables' as component-lib;
 
 .part-contacts {
   .contacts {
     .part-contact-name {
       font-weight: bold;
-      color: $ssb-dark-6;
+      color: component-lib.$ssb-dark-6;
       font-size: 20px;
       line-height: 32px;
     }

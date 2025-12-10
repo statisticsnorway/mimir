@@ -116,7 +116,7 @@ function parseContent(
 
           return {
             icon: iconPath,
-            iconAlt: iconId && iconData ? (iconData.data.caption ? getImageCaption(iconId) : getImageAlt(iconId)) : '',
+            iconAlt: iconData?.data?.caption ? getImageCaption(iconId) : getImageAlt(iconId),
             title: pageContent && pageContent.displayName,
             preamble: preamble,
             href: pageUrl({
@@ -127,7 +127,7 @@ function parseContent(
 
         return {
           icon: iconPath,
-          iconAlt: iconId && iconData ? (iconData.data.caption ? getImageCaption(iconId) : getImageAlt(iconId)) : '',
+          iconAlt: iconData?.data?.caption ? getImageCaption(iconId) : getImageAlt(iconId),
           title: standardCard.title,
           preamble: standardCard.profiledText,
           href: standardCard.href,

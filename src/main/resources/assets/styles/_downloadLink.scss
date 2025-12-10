@@ -1,5 +1,5 @@
 @use 'bootstrap' as *;
-@use '@statisticsnorway/ssb-component-library/src/main.scss' as *;
+@use '@statisticsnorway/ssb-component-library/src/style/_variables' as component-lib;
 
 .part-download-link {
   @include make-row();
@@ -13,7 +13,7 @@
     margin-bottom: $spacer * 1;
 
     .download-icon {
-      color: $ssb-white;
+      color: component-lib.$ssb-white;
       margin-right: 5px;
     }
 

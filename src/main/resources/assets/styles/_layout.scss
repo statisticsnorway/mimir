@@ -1,5 +1,5 @@
 @use 'bootstrap' as *;
-@use '@statisticsnorway/ssb-component-library/src/main.scss' as *;
+@use '@statisticsnorway/ssb-component-library/src/style/_variables' as component-lib;
 
 .container {
   padding: 0;
@@ -16,7 +16,7 @@
 
 .border-top-green {
   position: relative;
-  border-top: 4px solid $ssb-green-3;
+  border-top: 4px solid component-lib.$ssb-green-3;
   background: #ffffff;
   box-shadow: 0 2px 4px 1px rgba(200, 200, 200, 0.5);
   margin-top: 60px;
@@ -35,12 +35,12 @@
   & > h2 {
     font-size: 56px;
     padding-left: 15px;
-    border-left: 4px solid $ssb-green-3;
+    border-left: 4px solid component-lib.$ssb-green-3;
     line-height: 80px;
   }
 
   h3.layout-title {
-    @include roboto-condenced;
+    @include component-lib.roboto-condenced;
     font-weight: bold;
     font-size: 28px;
   }
@@ -48,7 +48,7 @@
 
 .grey-triangle {
   position: relative;
-  background-color: $ssb-dark-5;
+  background-color: component-lib.$ssb-dark-5;
   height: 100px;
   width: 100%;
   margin: 0;
@@ -61,7 +61,7 @@
     right: 0px;
     border-width: 33vw 49.6vw;
     border-style: solid;
-    border-color: $ssb-dark-5 rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) $ssb-dark-5;
+    border-color: component-lib.$ssb-dark-5 rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) component-lib.$ssb-dark-5;
   }
 
   @include media-breakpoint-down(md) {
@@ -86,12 +86,12 @@
 }
 
 .border-columns {
-  border-top: 1px solid $ssb-dark-2;
+  border-top: 1px solid component-lib.$ssb-dark-2;
 
   @include media-breakpoint-up(md) {
     [data-portal-region='left'] {
       padding-right: 100px;
-      border-right: 1px solid $ssb-dark-2;
+      border-right: 1px solid component-lib.$ssb-dark-2;
     }
 
     [data-portal-region='right'] {

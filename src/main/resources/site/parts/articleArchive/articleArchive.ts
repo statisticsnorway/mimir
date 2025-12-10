@@ -49,7 +49,7 @@ function renderPart(req: XP.Request) {
       })
     : undefined
 
-  const imageAltText: string | undefined = page.data.image ? getImageAlt(page.data.image) : ' '
+  const imageAltText = getImageAlt(page.data.image)
 
   const freeText: string | undefined = page.data.freeText
     ? processHtml({
