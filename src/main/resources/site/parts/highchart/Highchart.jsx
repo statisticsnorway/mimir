@@ -13,6 +13,7 @@ import 'highcharts/modules/no-data-to-display'
 import 'highcharts/modules/broken-axis'
 
 import accessibilityLang from './../../../assets/js/highchart-lang.json'
+import { exportHighchartsToExcel } from '/lib/ssb/utils/tableExportUtils'
 
 function Highchart(props) {
   const { highcharts, language, phrases } = props
