@@ -78,11 +78,11 @@ function Highchart(props) {
     )
   }
 
-  function renderHighchartsFooter(highchart) {
+  function renderHighchartsFooter(footnoteText, creditsEnabled, sourceList) {
     return (
       <Row>
-        {highchart.footnoteText ? <Col className='footnote col-12'>{highchart.footnoteText}</Col> : null}
-        {highchart.creditsEnabled ? highchart.sourceList.map((source, i) => renderHighchartsSource(source, i)) : null}
+        {footnoteText ? <Col className='footnote col-12'>{footnoteText}</Col> : null}
+        {creditsEnabled ? sourceList.map((source, i) => renderHighchartsSource(source, i)) : null}
       </Row>
     )
   }
@@ -98,7 +98,7 @@ function Highchart(props) {
 
   function renderHighcharts() {
     if (highcharts?.length) {
-      return highcharts.map((highchart) => {
+      return highcharts.map((highchart, index) => {
         const lang =
           language !== 'en'
             ? accessibilityLang.lang
@@ -220,7 +220,7 @@ function Highchart(props) {
         }
 
         return (
-          <Row key={`highchart-${highchart.contentKey}`}>
+          <Row key={`highchart-${highchart.contentKey}`} className={`${highcharts.length !== index + 1 && 'mb-5'}`}>
             <Col className='col-12'>
               <figure id={`figure-${highchart.contentKey}`} className='highcharts-figure mb-0 hide-title'>
                 <figcaption className='figure-title'>{config.title.text}</figcaption>
@@ -230,7 +230,7 @@ function Highchart(props) {
                   <HighchartsReact highcharts={Highcharts} options={config} />
                 </div>
               </figure>
-              {renderHighchartsFooter(highchart)}
+              {renderHighchartsFooter(highchart.footnoteText, highchart.creditsEnabled, highchart.sourceList)}
             </Col>
           </Row>
         )
