@@ -183,10 +183,6 @@ function Highchart(props) {
               },
             },
           },
-          yAxis: {
-            ...(highchart.config.yAxis || {}),
-            reversedStacks: !(highchart.config.chart?.type === 'bar' || highchart.config.chart?.type === 'column'),
-          },
         }
 
         if (highchart.config.chart?.type === 'pie') {
@@ -219,6 +215,10 @@ function Highchart(props) {
               },
             }))
           })
+        }
+
+        if (highchart.config.chart?.type === 'bar' || highchart.config.chart?.type === 'column') {
+          config.yAxis.reversedStacks = false
         }
 
         return (
