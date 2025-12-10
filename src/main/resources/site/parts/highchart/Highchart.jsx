@@ -101,11 +101,11 @@ function Highchart(props) {
     if (highcharts?.length) {
       return highcharts.map((highchart, index) => {
         const lang =
-          language !== 'en'
-            ? accessibilityLang.lang
-            : {
+          language === 'en'
+            ? {
                 locale: 'en-GB',
               }
+            : accessibilityLang.lang
 
         const config = {
           ...highchart.config,
@@ -209,7 +209,7 @@ function Highchart(props) {
             const lastIndex = indices.lastIndexOf(true)
 
             series.data = series.data.map((data, index) => ({
-              y: parseFloat(data),
+              y: Number.parseFloat(data),
               marker: {
                 enabled: index === lastIndex,
               },
