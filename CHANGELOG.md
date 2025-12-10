@@ -1,5 +1,52 @@
 # Changelog
 
+## [2.38.0](https://github.com/statisticsnorway/mimir/compare/v2.37.0...v2.38.0) (2025-12-10)
+
+
+### Features
+
+* Jubileumslogo feature toggle  ([#3562](https://github.com/statisticsnorway/mimir/issues/3562)) ([305e680](https://github.com/statisticsnorway/mimir/commit/305e680e3133081760c0456f30905eca13ddee1b))
+* upgrade highcharts to v12 [MIM-796] ([#3527](https://github.com/statisticsnorway/mimir/issues/3527)) ([4d90554](https://github.com/statisticsnorway/mimir/commit/4d905546be0bb9eb7e308fbc8b675243f2768f93))
+
+
+### Bug Fixes
+
+* adjust translations to husleie calculator ([#3540](https://github.com/statisticsnorway/mimir/issues/3540)) ([4ed15b3](https://github.com/statisticsnorway/mimir/commit/4ed15b31677ecc06e4c9b301f391f92b02a1e1a0))
+* change release notes settings ([#3548](https://github.com/statisticsnorway/mimir/issues/3548)) ([bef291d](https://github.com/statisticsnorway/mimir/commit/bef291d539453b7065851e8153892637493532b7))
+* corrected language codes for highcharts ([f49128d](https://github.com/statisticsnorway/mimir/commit/f49128db8e933d45d068ec2f67e02c78e63aa747))
+* corrected language codes for highcharts [MIM-796] ([#3542](https://github.com/statisticsnorway/mimir/issues/3542)) ([f49128d](https://github.com/statisticsnorway/mimir/commit/f49128db8e933d45d068ec2f67e02c78e63aa747))
+* Fixed &lt;sup&gt; styling and containd to table-part ([c1966ff](https://github.com/statisticsnorway/mimir/commit/c1966ff8b1e0f45b399dcd4a1a13bd9d95efaef5))
+* Fixed &lt;sup&gt; styling and contained to table-part [MIM-2441] ([#3560](https://github.com/statisticsnorway/mimir/issues/3560)) ([c1966ff](https://github.com/statisticsnorway/mimir/commit/c1966ff8b1e0f45b399dcd4a1a13bd9d95efaef5))
+* Getting display name in page title [MIM-2465] ([#3551](https://github.com/statisticsnorway/mimir/issues/3551)) ([ba841c4](https://github.com/statisticsnorway/mimir/commit/ba841c48a4a308075cc9bec20e74abcf78af45c5))
+* Getting disply name in page title ([ba841c4](https://github.com/statisticsnorway/mimir/commit/ba841c48a4a308075cc9bec20e74abcf78af45c5))
+* Remove overflow styling override for Expansion Box in Timeline component [MIM-2400] ([#3565](https://github.com/statisticsnorway/mimir/issues/3565)) ([654fe95](https://github.com/statisticsnorway/mimir/commit/654fe95180ec7c0019bdd169fd800fae7bef16b8))
+* render macros in timeline component [MIM-2400] ([#3547](https://github.com/statisticsnorway/mimir/issues/3547)) ([b4f9e05](https://github.com/statisticsnorway/mimir/commit/b4f9e0560af1db664b0b7f08e5fffc916099eefa))
+* show correct modifiedDate on relatedArticles cards ([ce384e4](https://github.com/statisticsnorway/mimir/commit/ce384e4ba1761db11a1686654d3d5aa90bb3563d))
+* show correct modifiedDate on relatedArticles cards [MIM-2461] ([#3538](https://github.com/statisticsnorway/mimir/issues/3538)) ([ce384e4](https://github.com/statisticsnorway/mimir/commit/ce384e4ba1761db11a1686654d3d5aa90bb3563d))
+* showing decimal point and thousand separator correct in table [MIM-796] ([#3535](https://github.com/statisticsnorway/mimir/issues/3535)) ([1d272aa](https://github.com/statisticsnorway/mimir/commit/1d272aac3d1fe6e50937feb6117aa425af59e87c))
+* use component-library v3.0.1 and fix breaking changes ([#3561](https://github.com/statisticsnorway/mimir/issues/3561)) ([04203c9](https://github.com/statisticsnorway/mimir/commit/04203c90d5f67a2d2eb4517426a2725031729d66))
+
+
+### Code Refactoring
+
+* refactored getImageCaption and getImageAlt in imageUtils ([#3543](https://github.com/statisticsnorway/mimir/issues/3543)) ([e94ec52](https://github.com/statisticsnorway/mimir/commit/e94ec52df6ae5d5d31f2a2ab750f6040ed9b824f))
+* Remove lib-cron and feature toggle [MIM-2464] ([#3559](https://github.com/statisticsnorway/mimir/issues/3559)) ([984361f](https://github.com/statisticsnorway/mimir/commit/984361f76a47dc90f23caf246dba2ab2cdaf7d47))
+
+
+### Build System and dependencies
+
+* Add cooldown of 7 days by default to dependabot setup ([#3550](https://github.com/statisticsnorway/mimir/issues/3550)) ([90b72ad](https://github.com/statisticsnorway/mimir/commit/90b72ad9346dd82a71669e7254b7926f6b39a5a6))
+* Bump @eslint/compat from 1.4.1 to 2.0.0 ([#3555](https://github.com/statisticsnorway/mimir/issues/3555)) ([8a323e0](https://github.com/statisticsnorway/mimir/commit/8a323e0c63f6f0acc6f526ced19a7e721cf70afb))
+* Bump actions/checkout from 5 to 6 ([#3545](https://github.com/statisticsnorway/mimir/issues/3545)) ([4f7f307](https://github.com/statisticsnorway/mimir/commit/4f7f307e483d006aeb614f070d9ad03728b5e8ce))
+* Bump commons-codec:commons-codec from 1.19.0 to 1.20.0 ([#3528](https://github.com/statisticsnorway/mimir/issues/3528)) ([52dd37b](https://github.com/statisticsnorway/mimir/commit/52dd37b10fb06fe59cbc0674650d036f921b679e))
+* Bump glob from 11.0.3 to 11.1.0 ([#3541](https://github.com/statisticsnorway/mimir/issues/3541)) ([e702314](https://github.com/statisticsnorway/mimir/commit/e702314c5657af00e1a5ed20f3f1af0cde180f97))
+* Bump glob from 11.1.0 to 13.0.0 ([#3556](https://github.com/statisticsnorway/mimir/issues/3556)) ([45734f7](https://github.com/statisticsnorway/mimir/commit/45734f77eb036e25fb616cdd7251077c5bf31126))
+* Bump js-yaml from 3.14.1 to 3.14.2 ([#3539](https://github.com/statisticsnorway/mimir/issues/3539)) ([42b0c4a](https://github.com/statisticsnorway/mimir/commit/42b0c4ab469d61b6483c4a8b2a1d6492dc5ffaf3))
+* Bump the dependencies-minor-updates group across 1 directory with 7 updates ([#3552](https://github.com/statisticsnorway/mimir/issues/3552)) ([fb39e77](https://github.com/statisticsnorway/mimir/commit/fb39e77aa22b49ec7b80612dffe54cc6ef854587))
+* Bump the dependencies-patch-updates group with 6 updates ([#3554](https://github.com/statisticsnorway/mimir/issues/3554)) ([776a092](https://github.com/statisticsnorway/mimir/commit/776a092f597dca75ea04d8a87ffb56681d6e3028))
+* Bump webpack-bundle-analyzer from 4.10.2 to 5.0.1 ([#3557](https://github.com/statisticsnorway/mimir/issues/3557)) ([215d637](https://github.com/statisticsnorway/mimir/commit/215d6376f324c6d55146c3250749cd7770bc7478))
+* Remove dependabot workflow, preventing auto merging ([#3549](https://github.com/statisticsnorway/mimir/issues/3549)) ([e16aa40](https://github.com/statisticsnorway/mimir/commit/e16aa403d1d73116637fcf8d30186cbbf727191f))
+
 ## [2.37.0](https://github.com/statisticsnorway/mimir/compare/v2.36.0...v2.37.0) (2025-11-11)
 
 
