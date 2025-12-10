@@ -108,14 +108,15 @@ function Highchart(props) {
               }
 
         const config = {
-          ...highchart.config,
+          ...(highchart.config || {}),
           lang: {
             ...lang,
             categoryHeader: highcharts.config?.xAxis?.title?.text ? highchart.config?.xAxis.title.text : 'Category',
           },
           chart: {
-            ...highchart.config.chart,
+            ...(highchart.config.chart || {}),
             events: {
+              ...(highchart.config.chart?.events || {}),
               // Workaround to get correct number formatting in table
               exportData: function (chart) {
                 for (const row of chart.dataRows) {
@@ -175,7 +176,7 @@ function Highchart(props) {
             },
           },
           exporting: {
-            ...highchart.config.exporting,
+            ...(highchart.config.exporting || {}),
             menuItemDefinitions: {
               downloadXLS: {
                 onclick: downloadAsXLSX(highchart.config.title?.text),
@@ -183,7 +184,7 @@ function Highchart(props) {
             },
           },
           yAxis: {
-            ...highchart.config.yAxis,
+            ...(highchart.config.yAxis || {}),
             reversedStacks: !(highchart.config.chart?.type === 'bar' || highchart.config.chart?.type === 'column'),
           },
         }
