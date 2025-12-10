@@ -85,7 +85,7 @@ function parseProfiledBoxProps(config: ProfiledBoxPartConfig, language: string):
           format: 'jpg',
         })
       : (imageSrc ?? ''),
-    imageAltText: config.image ? getImageAlt(config.image) : (imageAlt ?? ''),
+    imageAltText: config.image ? getImageAlt(config.image) : imageAlt,
     imagePlacement: config.cardOrientation == 'horizontal' ? 'left' : 'top',
     href: getLinkTargetUrl(urlContentSelector),
     subTitle,

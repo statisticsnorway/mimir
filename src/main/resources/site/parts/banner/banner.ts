@@ -48,8 +48,7 @@ function renderPart(req: XP.Request): XP.Response {
 
   // Remove uppercase for page title when accompanied by "Fakta om"
   const factPageTitle = `${subTitleFactPage} ${page.displayName}`.toLowerCase()
-  const imageAlt = part.config.image ? getImageAlt(part.config.image) : undefined
-
+  const imageAlt = getImageAlt(part.config.image)
   const props: BannerProps = {
     ...imgSrcSet,
     pageDisplayName: page.displayName,

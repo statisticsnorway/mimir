@@ -2,7 +2,7 @@ export interface ArticleArchiveProps {
   title: string | undefined
   preamble: string | undefined
   image: string | undefined
-  imageAltText: string | undefined
+  imageAltText: string
   freeText: string | undefined
   issnNumber: string | undefined
   listOfArticlesSectionTitle: string

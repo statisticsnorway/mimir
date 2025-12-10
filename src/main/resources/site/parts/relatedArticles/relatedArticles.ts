@@ -118,7 +118,7 @@ function renderPart(req: XP.Request, relatedArticles: RelatedArticles['relatedAr
               scale: 'block(320, 180)', // 16:9
               format: 'jpg',
             })
-            const imageAlt: string | undefined = getImageAlt(article.externalArticle.image)
+            const imageAlt = getImageAlt(article.externalArticle.image)
             let subTitle = ''
             if (article.externalArticle.type) {
               subTitle = article.externalArticle.type

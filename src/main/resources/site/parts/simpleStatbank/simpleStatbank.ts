@@ -84,7 +84,7 @@ function getImageUrl(icon?: string) {
 }
 
 function getImageAltText(icon?: string) {
-  return icon ? getImageAlt(icon) : 'No description found'
+  return getImageAlt(icon) ?? 'No description found'
 }
 
 function renderSimpleStatbankComponent(
