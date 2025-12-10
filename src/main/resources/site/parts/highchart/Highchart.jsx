@@ -111,7 +111,7 @@ function Highchart(props) {
           ...(highchart.config || {}),
           lang: {
             ...lang,
-            categoryHeader: highcharts.config?.xAxis?.title?.text ? highchart.config?.xAxis.title.text : 'Category',
+            categoryHeader: highchart.config?.xAxis?.title?.text ? highchart.config?.xAxis.title.text : 'Category',
           },
           chart: {
             ...(highchart.config.chart || {}),
