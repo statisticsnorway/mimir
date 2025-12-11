@@ -15,7 +15,7 @@ jobs:
     permissions:
       contents: write
     runs-on: 'ubuntu-latest'
-    environment: 'QA_mimir'
+    environment: 'QA'
     steps:
       - id: build_app
         uses: enonic/release-tools/build-and-publish@master
