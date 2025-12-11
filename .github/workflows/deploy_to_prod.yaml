@@ -105,7 +105,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "🛠 Build $RUN_NUMBER is a *${{ job.status }}*, well done!\n<${{ env.$PR_URL || env.$COMMIT_URL }}|Commit or PR>"
+                    "text": "🛠 Build $RUN_NUMBER is a *${{ job.status }}*, well done!\n<${{ env.PR_URL || env.COMMIT_URL }}|Commit or PR>"
                   }
                 }
               ]
