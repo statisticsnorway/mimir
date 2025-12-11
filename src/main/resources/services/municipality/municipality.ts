@@ -1,11 +1,13 @@
+import { type Request } from '@enonic-types/core'
 import { getMunicipality } from '/lib/ssb/dataset/klass/municipalities'
+import { type RequestWithCode } from '/lib/types/municipalities'
 
 const contentType = 'application/json'
 
-export function get(req: XP.Request) {
+export function get(req: Request) {
   const municipality = getMunicipality({
-    code: req.params.postalCode,
-  })
+    code: req.params.postalCode as string,
+  } as RequestWithCode)
   const body = {
     municipality,
   }

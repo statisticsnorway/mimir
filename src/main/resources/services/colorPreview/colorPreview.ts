@@ -1,11 +1,13 @@
-export function get(req: XP.Request) {
+import { type Request } from '@enonic-types/core'
+
+export function get(req: Request) {
   const hexColorRegex = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/
   let { query } = req.params
   const { ids } = req.params
 
   if (ids) query = ids
 
-  if (!query?.match(hexColorRegex)) {
+  if (!(query as string | undefined)?.match(hexColorRegex)) {
     return {
       body: {
         hits: [],
@@ -20,7 +22,7 @@ export function get(req: XP.Request) {
     displayName: query,
     description: '←',
     icon: {
-      data: generateColorPreview(query),
+      data: generateColorPreview(query as string),
       type: 'image/svg+xml',
     },
   }
