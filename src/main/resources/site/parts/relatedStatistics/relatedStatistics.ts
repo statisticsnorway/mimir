@@ -1,3 +1,4 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { get as getContentByKey, type Content } from '/lib/xp/content'
 import { getContent, pageUrl } from '/lib/xp/portal'
 import { render } from '/lib/thymeleaf'
@@ -12,7 +13,7 @@ import { type Statistics } from '/site/content-types'
 
 const view = resolve('./relatedStatistics.html')
 
-export function get(req: XP.Request): XP.Response {
+export function get(req: Request): Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -20,11 +21,11 @@ export function get(req: XP.Request): XP.Response {
   }
 }
 
-export function preview(req: XP.Request): XP.Response {
+export function preview(req: Request): Response {
   return renderPart(req)
 }
 
-function renderPart(req: XP.Request): XP.Response {
+function renderPart(req: Request): Response {
   const page = getContent<Content<Statistics>>()
   if (!page) throw Error('No page found')
 
@@ -51,11 +52,11 @@ function renderPart(req: XP.Request): XP.Response {
 }
 
 function renderRelatedStatistics(
-  req: XP.Request,
+  req: Request,
   statisticsTitle: string,
   relatedStatisticsContent: Array<RelatedStatisticsContent>,
   phrases: Phrases
-): XP.Response {
+): Response {
   if (relatedStatisticsContent && relatedStatisticsContent.length) {
     const id = 'related-statistics'
     const body: string = render(view, {

@@ -1,8 +1,9 @@
-// Processor to add municipality name to html title for "kommunefakta" after SEO-app has modified title. The check for req.params.kommune is an easy way to check if a municipality is chosen
+import { type Request, type Response } from '@enonic-types/core'
 
-exports.responseProcessor = (req: XP.Request, res: XP.Response) => {
-  const paramKommune: string | undefined = req.params.kommune || req.params.Kommune
-  const title = req.params.pageTitle
+// Processor to add municipality name to html title for "kommunefakta" after SEO-app has modified title. The check for req.params.kommune is an easy way to check if a municipality is chosen
+exports.responseProcessor = (req: Request, res: Response) => {
+  const paramKommune = (req.params.kommune as string | undefined) || (req.params.Kommune as string | undefined)
+  const title = req.params.pageTitle as string
 
   if (paramKommune && title) {
     const headRegex = /<head>([\s\S]*?)<\/head>/

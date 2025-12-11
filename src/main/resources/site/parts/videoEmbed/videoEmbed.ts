@@ -1,7 +1,8 @@
+import { type Response } from '@enonic-types/core'
 import { getComponent, getContent } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 
-export function get(): XP.Response {
+export function get(): Response {
   const currentContent = getContent()
   if (!currentContent) throw Error('No page found')
 
