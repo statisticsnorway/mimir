@@ -25,7 +25,7 @@ export function get(req: Request): Response {
       }
 
   return {
-    body: result,
+    body: JSON.stringify(result),
     contentType: 'application/json',
   }
 }

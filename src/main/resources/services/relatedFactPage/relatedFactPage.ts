@@ -18,6 +18,6 @@ export const get = (req: Request): Response => {
   return {
     status: 200,
     contentType: 'application/json',
-    body: result,
+    body: JSON.stringify(result),
   }
 }
