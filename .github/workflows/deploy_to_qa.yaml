@@ -25,8 +25,10 @@ jobs:
         id: upload_artifacts
         if: success()
         uses: actions/upload-artifact@v5
+        env:
+          RUN_NUMBER: ${{ github.run_number }}
         with:
-          name: mimir-qa-${{ github.run_number }}
+          name: mimir-qa-$RUN_NUMBER
           path: './build/libs/*.jar'
       - id: deploy_app_to_XP
         uses: 'enonic/action-app-deploy@main'
@@ -41,6 +43,14 @@ jobs:
         id: slack_failure
         if: steps.deploy_app_to_XP.outcome == 'failure'
         uses: slackapi/slack-github-action@v2
+        env:
+          ACTOR: ${{ github.actor }}
+          REF: ${{ github.ref_name }}
+          RUN_NUMBER: ${{ github.run_number }}
+          WORKFLOW: ${{ github.workflow }}
+          REPO: ${{ github.repository }}
+          RUN_ID: ${{ github.run_id }}
+          COMMIT_MSG: ${{ github.event.head_commit.message }}
         with:
           webhook: ${{ secrets.SLACK_MIMIR_UTV }}
           webhook-type: incoming-webhook
@@ -51,7 +61,7 @@ jobs:
                   "type": "header",
                   "text": {
                     "type": "plain_text",
-                    "text": "${{ github.workflow }} in ${{ github.repository }}"
+                    "text": "$WORKFLOW in $REPO"
                   }
                 },
                 {
@@ -64,7 +74,7 @@ jobs:
                     },
                     {
                       "type": "mrkdwn",
-                      "text": "Run by: *${{ github.actor }}* on: *${{ github.ref_name }}*"
+                      "text": "Run by: *$ACTOR* on: *$REF*"
                     }
                   ]
                 },
@@ -72,7 +82,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "💣 Build ${{ github.run_number }} is a *${{ job.status }}*, and that's cool!\nCommit message: *${{ github.event.head_commit.message }}*\nIf you want to fix it, start by looking at the <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|workflow output>"
+                    "text": "💣 Build $RUN_NUMBER is a *${{ job.status }}*, and that's cool!\nCommit message: *$COMMIT_MSG*\nIf you want to fix it, start by looking at the <https://github.com/$REPO/actions/runs/$RUN_ID|workflow output>"
                   }
                 }
               ]
@@ -99,6 +109,12 @@ jobs:
       - name: Send mabl test failure message to Slack
         if: failure()
         uses: slackapi/slack-github-action@v2
+        env:
+          ACTOR: ${{ github.actor }}
+          REF: ${{ github.ref_name }}
+          RUN_NUMBER: ${{ github.run_number }}
+          REPO: ${{ github.repository }}
+          RUN_ID: ${{ github.run_id }}
         with:
           webhook: ${{ secrets.SLACK_MIMIR_MABL }}
           webhook-type: incoming-webhook
@@ -109,7 +125,7 @@ jobs:
                   "type": "header",
                   "text": {
                     "type": "plain_text",
-                    "text": "Mabl Tests Failed in QA ${{ github.repository }}"
+                    "text": "Mabl Tests Failed in QA $REPO"
                   }
                 },
                 {
@@ -122,7 +138,7 @@ jobs:
                     },
                     {
                       "type": "mrkdwn",
-                      "text": "Run by: *${{ github.actor }}* on: *${{ github.ref_name }}*"
+                      "text": "Run by: *$ACTOR* on: *$REF*"
                     }
                   ]
                 },
@@ -130,7 +146,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "❌ Mabl tests failed for build ${{ github.run_number }}\nPlease check the <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|workflow output> for details"
+                    "text": "❌ Mabl tests failed for build $RUN_NUMBER\nPlease check the <https://github.com/$REPO/actions/runs/$RUN_ID|workflow output> for details"
                   }
                 }
               ]
