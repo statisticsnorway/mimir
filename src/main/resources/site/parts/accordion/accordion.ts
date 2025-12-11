@@ -1,3 +1,4 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { get as getContentByKey, type Content } from '/lib/xp/content'
 import { getComponent, getContent, processHtml } from '/lib/xp/portal'
 import { sanitize } from '/lib/xp/common'
@@ -8,7 +9,7 @@ import { renderError } from '/lib/ssb/error/error'
 import { type AccordionData, type AccordionProps } from '/lib/types/partTypes/accordion'
 import { type Accordion } from '/site/content-types'
 
-export function get(req: XP.Request): XP.Response {
+export function get(req: Request): Response {
   try {
     const config = getComponent<XP.PartComponent.Accordion>()?.config
 
@@ -19,7 +20,7 @@ export function get(req: XP.Request): XP.Response {
   }
 }
 
-export function preview(req: XP.Request, accordionIds: Array<string> | string): XP.Response {
+export function preview(req: Request, accordionIds: Array<string> | string): Response {
   try {
     const page = getContent<Content<Accordion>>()
     if (!page) throw Error('No page found')
@@ -32,7 +33,7 @@ export function preview(req: XP.Request, accordionIds: Array<string> | string): 
   }
 }
 
-function renderPart(req: XP.Request, accordionIds: Array<string>) {
+function renderPart(req: Request, accordionIds: Array<string>) {
   const accordions: Array<AccordionData> = []
 
   accordionIds.forEach((key) => {

@@ -1,5 +1,6 @@
 // @ts-ignore
 import JSONstat from 'jsonstat-toolkit/import.mjs'
+import { type Request, type Response } from '@enonic-types/core'
 import { get as getContentByKey, type Content } from '/lib/xp/content'
 import { getComponent, getContent } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
@@ -29,7 +30,7 @@ import { type CombinedGraph, type Highchart } from '/site/content-types'
 
 const view = resolve('./highchart.html')
 
-export function get(req: XP.Request): XP.Response {
+export function get(req: Request): Response {
   try {
     const part = getComponent<XP.PartComponent.Highchart>()
     if (!part) throw Error('No part found')
@@ -41,7 +42,7 @@ export function get(req: XP.Request): XP.Response {
   }
 }
 
-export function preview(req: XP.Request, id: string): XP.Response {
+export function preview(req: Request, id: string): Response {
   try {
     return renderPart(req, [id])
   } catch (e) {
@@ -49,7 +50,7 @@ export function preview(req: XP.Request, id: string): XP.Response {
   }
 }
 
-function renderPart(req: XP.Request, highchartIds: Array<string>): XP.Response {
+function renderPart(req: Request, highchartIds: Array<string>): Response {
   const page = getContent()
   if (!page) throw Error('No page found')
 
@@ -127,7 +128,7 @@ function renderPart(req: XP.Request, highchartIds: Array<string>): XP.Response {
 }
 
 function determinConfigType(
-  req: XP.Request,
+  req: Request,
   highchart: Content<Highchart & DataSource> | Content<CombinedGraph> | null,
   isCombinedGraph: boolean
 ): HighchartsExtendedProps | undefined {
@@ -143,7 +144,7 @@ function determinConfigType(
 }
 
 function createDataFromHtmlTable(
-  req: XP.Request,
+  req: Request,
   highchart: Content<Highchart & DataSource> | Content<CombinedGraph>
 ): HighchartsExtendedProps {
   return {
@@ -152,7 +153,7 @@ function createDataFromHtmlTable(
 }
 
 function createDataFromDataSource(
-  req: XP.Request,
+  req: Request,
   highchart: Content<Highchart & DataSource>
 ): HighchartsExtendedProps | undefined {
   if (highchart && highchart.data && highchart.data.dataSource) {
