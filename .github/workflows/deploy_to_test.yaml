@@ -22,8 +22,10 @@ jobs:
         id: upload_artifacts
         if: success()
         uses: actions/upload-artifact@v5
+        env:
+          RUN_NUMBER: ${{ github.run_number }}
         with:
-          name: mimir-test-${{ github.run_number }}
+          name: mimir-test-$RUN_NUMBER
           path: "./build/libs/*.jar"
       - id: deploy_app_to_XP
         uses: 'enonic/action-app-deploy@main'
@@ -39,6 +41,13 @@ jobs:
         id: slack_failure
         if: steps.deploy_app_to_XP.outcome == 'failure'
         uses: slackapi/slack-github-action@v2
+        env:
+          ACTOR: ${{ github.actor }}
+          REF: ${{ github.ref_name }}
+          RUN_NUMBER: ${{ github.run_number }}
+          REPO: ${{ github.repository }}
+          RUN_ID: ${{ github.run_id }}
+          WORKFLOW: ${{ github.workflow }}
         with:
           webhook: ${{ secrets.SLACK_MIMIR_UTV }}
           webhook-type: incoming-webhook
@@ -49,7 +58,7 @@ jobs:
                   "type": "header",
                   "text": {
                     "type": "plain_text",
-                    "text": "${{ github.workflow }} in ${{ github.repository }}"
+                    "text": "$WORKFLOW in $REPO"
                   }
                 },
                 {
@@ -62,7 +71,7 @@ jobs:
                     },
                     {
                       "type": "mrkdwn",
-                      "text": "Run by: *${{ github.actor }}* on: *${{ github.ref_name }}*"
+                      "text": "Run by: *$ACTOR* on: *$REF*"
                     }
                   ]
                 },
@@ -70,7 +79,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "💣 Build ${{ github.run_number }} is a *${{ job.status }}*, and that's cool!\nIf you want to fix it, start by looking at the <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|workflow output>"
+                    "text": "💣 Build $RUN_NUMBER is a *${{ job.status }}*, and that's cool!\nIf you want to fix it, start by looking at the <https://github.com/$REPO/actions/runs/$RUN_ID|workflow output>"
                   }
                 }
               ]
@@ -93,4 +102,6 @@ jobs:
       - name: install mabl
         run: npm install -g @mablhq/mabl-cli
       - name: mabl end-to-end test - TEST
-        run: mabl deployments create --api-key ${{ secrets.MABLAPIKEY }} --application-id ${{ secrets.MABLAPPID }} --environment-id ${{ secrets.MABLENVTEST }} --labels MIMIR --revision ${{ github.sha }} --await-completion
+        env:
+          GITHUB_SHA: ${{ github.sha }}
+        run: mabl deployments create --api-key ${{ secrets.MABLAPIKEY }} --application-id ${{ secrets.MABLAPPID }} --environment-id ${{ secrets.MABLENVTEST }} --labels MIMIR --revision $GITHUB_SHA --await-completion
