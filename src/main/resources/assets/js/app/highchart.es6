@@ -71,6 +71,9 @@ export function init() {
           config.yAxis.reversedStacks = false
         }
 
+        // From Highcharts API Documentation (https://api.highcharts.com/highcharts/plotOptions.series.events.legendItemClick):
+        // Note: This option is deprecated in favor of legend.events.itemClick.
+        // So there's no need to re-implement this functionality in Highcharts React.
         config.plotOptions.series.events = {
           legendItemClick: function (e) {
             // Possible bug: untested browser support for browserEvent (but works in IE8, chrome, FF...)
