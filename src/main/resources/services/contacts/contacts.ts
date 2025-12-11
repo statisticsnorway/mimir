@@ -1,4 +1,5 @@
 import '/lib/ssb/polyfills/nashorn'
+import { type Request, type Response } from '@enonic-types/core'
 import { handleRepoGet } from '/lib/ssb/dashboard/statreg/repoUtils'
 import { getContactsFromRepo } from '/lib/ssb/statreg/contacts'
 
@@ -29,7 +30,7 @@ const filterByIds = (contacts, filters) => {
   )
 }
 
-export function get(req: XP.Request): XP.Response {
+export function get(req: Request): Response {
   return handleRepoGet(
     req,
     'Contacts',
