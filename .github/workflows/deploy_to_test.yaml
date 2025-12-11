@@ -1,7 +1,7 @@
 name: 'Deploy to Test'
 on:
   pull_request:
-  workflow_dispatch:  # Allows the workflow to be manually triggered.
+  workflow_dispatch: # Allows the workflow to be manually triggered.
 
 concurrency:
   group: mimir-test
@@ -13,6 +13,7 @@ jobs:
     permissions:
       contents: write
     runs-on: 'ubuntu-latest'
+    environment: 'test'
     steps:
       - id: build_app
         uses: enonic/release-tools/build-and-publish@master
@@ -26,7 +27,7 @@ jobs:
           RUN_NUMBER: ${{ github.run_number }}
         with:
           name: mimir-test-$RUN_NUMBER
-          path: "./build/libs/*.jar"
+          path: './build/libs/*.jar'
       - id: deploy_app_to_XP
         uses: 'enonic/action-app-deploy@main'
         with:
@@ -36,7 +37,7 @@ jobs:
           password: ${{ secrets.ENONIC_TEST_PASS }}
           client_cert: ${{ secrets.ENONIC_DEPLOY_CERT }}
           client_key: ${{ secrets.ENONIC_DEPLOY_KEY }}
-          app_jar: "./build/libs/*.jar"
+          app_jar: './build/libs/*.jar'
       - name: Send failure message to Slack
         id: slack_failure
         if: steps.deploy_app_to_XP.outcome == 'failure'
@@ -97,8 +98,8 @@ jobs:
         uses: actions/checkout@v6
       - name: Branch name and commit hash
         run: |
-              echo running on branch ${GITHUB_HEAD_REF##*/} or ${GITHUB_REF##*/}
-              echo running $(echo $GITHUB_SHA | cut -c1-8) and ${GITHUB_SHA}
+          echo running on branch ${GITHUB_HEAD_REF##*/} or ${GITHUB_REF##*/}
+          echo running $(echo $GITHUB_SHA | cut -c1-8) and ${GITHUB_SHA}
       - name: install mabl
         run: npm install -g @mablhq/mabl-cli
       - name: mabl end-to-end test - TEST
