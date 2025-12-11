@@ -1,3 +1,4 @@
+import { type Request } from '@enonic-types/core'
 import { query, type Content } from '/lib/xp/content'
 import { getContent, getComponent, processHtml, serviceUrl, sanitizeHtml } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
@@ -27,15 +28,15 @@ import { type UpcomingReleasesProps } from '/lib/types/partTypes/upcomingRelease
 import { type SubjectItem } from '/lib/types/subject'
 import { type UpcomingRelease } from '/site/content-types'
 
-export function get(req: XP.Request) {
+export function get(req: Request) {
   return renderPart(req)
 }
 
-export function preview(req: XP.Request) {
+export function preview(req: Request) {
   return renderPart(req)
 }
 
-function renderPart(req: XP.Request) {
+function renderPart(req: Request) {
   const content = getContent()
   if (!content) throw Error('No page found')
 

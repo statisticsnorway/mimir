@@ -1,3 +1,4 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { getChildren, query, type Content } from '/lib/xp/content'
 import { attachmentUrl, getContent, pageUrl, processHtml } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
@@ -9,7 +10,7 @@ import { renderError } from '/lib/ssb/error/error'
 import { type VariablesProps, type Variables } from '/lib/types/partTypes/variables'
 import { type Article } from '/site/content-types'
 
-export function get(req: XP.Request): XP.Response {
+export function get(req: Request): Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -17,17 +18,17 @@ export function get(req: XP.Request): XP.Response {
   }
 }
 
-export function preview(req: XP.Request): XP.Response {
+export function preview(req: Request): Response {
   return renderPart(req)
 }
 
 const MAX_VARIABLES = 9999
-const NO_VARIABLES_FOUND: XP.Response = {
+const NO_VARIABLES_FOUND: Response = {
   body: '',
   contentType: 'text/html',
 }
 
-function renderPart(req: XP.Request): XP.Response {
+function renderPart(req: Request): Response {
   const page = getContent()
   if (!page) throw Error('No page found')
 
@@ -41,7 +42,7 @@ function renderPart(req: XP.Request): XP.Response {
   return renderVariables(req, contentArrayToVariables(hits ? data.forceArray(hits) : [], language))
 }
 
-function renderVariables(req: XP.Request, variables: Array<Variables>): XP.Response {
+function renderVariables(req: Request, variables: Array<Variables>): Response {
   if (variables && variables.length) {
     const download: string = localize({
       key: 'variables.download',

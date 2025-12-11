@@ -1,3 +1,4 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { getContent, getComponent, Content, type ImageUrlParams, processHtml } from '/lib/xp/portal'
 import {
   getLinkTargetUrl,
@@ -14,7 +15,7 @@ import { type ProfiledBoxProps } from '/lib/types/partTypes/profiledBox'
 import { type Article } from '/site/content-types'
 import { type ProfiledBox as ProfiledBoxPartConfig } from '.'
 
-export function get(req: XP.Request): XP.Response {
+export function get(req: Request): Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -22,11 +23,11 @@ export function get(req: XP.Request): XP.Response {
   }
 }
 
-export function preview(req: XP.Request): XP.Response {
+export function preview(req: Request): Response {
   return renderPart(req)
 }
 
-function renderPart(req: XP.Request): XP.Response {
+function renderPart(req: Request): Response {
   const page = getContent()
   if (!page) throw Error('No page found')
 

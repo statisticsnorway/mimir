@@ -1,3 +1,4 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { getTableViewData } from '/lib/ssb/parts/table'
 import { getTbmlData, type TbprocessorParsedResponse } from '/lib/ssb/dataset/tbprocessor/tbml'
 import { type TbmlDataUniform } from '/lib/types/xmlParser'
@@ -9,7 +10,7 @@ import { type TableView } from '/lib/types/partTypes/table'
 
 const view = resolve('./tbmlPreview.html')
 
-export function get(req: XP.Request): XP.Response {
+export function get(req: Request): Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -17,7 +18,7 @@ export function get(req: XP.Request): XP.Response {
   }
 }
 
-function renderPart(req: XP.Request): XP.Response {
+function renderPart(req: Request): Response {
   const tbmlId = req.params.tbmlid
   const language = req.params.sprak ?? 'no'
   const baseUrl: string = app.config?.['ssb.tbprocessor.serverside.baseUrl'] ?? 'https://ext-i.ssb.no/tbprocessor'

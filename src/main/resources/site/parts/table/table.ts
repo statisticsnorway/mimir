@@ -1,3 +1,4 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { get as getContentByKey, type Content } from '/lib/xp/content'
 import { getContent, getComponent, pageUrl } from '/lib/xp/portal'
 import { render } from '/lib/thymeleaf'
@@ -26,7 +27,7 @@ import { type Statistics, type Table } from '/site/content-types'
 
 const view = resolve('./table.html')
 
-export function get(req: XP.Request): XP.Response {
+export function get(req: Request): Response {
   try {
     const config = getComponent<XP.PartComponent.Table>()?.config
     if (!config) throw Error('No part found')
@@ -41,11 +42,11 @@ export function get(req: XP.Request): XP.Response {
   }
 }
 
-export function preview(req: XP.Request, id?: string): XP.Response {
+export function preview(req: Request, id?: string): Response {
   return renderPart(req, id)
 }
 
-export function getProps(req: XP.Request, tableId?: string): TableProps {
+export function getProps(req: Request, tableId?: string): TableProps {
   const page = getContent<Content<Table>>()
   if (!page) throw Error('No page found')
 
@@ -126,7 +127,7 @@ export function getProps(req: XP.Request, tableId?: string): TableProps {
     hiddenTitle: table.caption ? table.caption.content : undefined,
   }
 }
-function renderPart(req: XP.Request, tableId?: string): XP.Response {
+function renderPart(req: Request, tableId?: string): Response {
   const page = getContent<Content<Table>>()
   if (!page) throw Error('No page found')
 

@@ -1,3 +1,4 @@
+import { type Request } from '@enonic-types/core'
 import { list, query } from '/lib/ssb/dataset/klass/municipalities'
 
 /**
@@ -11,9 +12,9 @@ import { list, query } from '/lib/ssb/dataset/klass/municipalities'
  *  count: number}
  * }}
  */
-export function get(req: XP.Request) {
+export function get(req: Request) {
   // deepcode ignore Sqli: This is not SQL, simply string regex matching
-  const municipals = req.params.query ? query(req.params.query) : list()
+  const municipals = req.params.query ? query(req.params.query as string) : list()
 
   return {
     body: {

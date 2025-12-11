@@ -1,3 +1,4 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { type Content, get as getContentByKey } from '/lib/xp/content'
 import { getContent, pageUrl } from '/lib/xp/portal'
 import { sleep } from '/lib/xp/task'
@@ -16,7 +17,7 @@ import { currentlyWaitingForPublish as currentlyWaitingForPublishOld } from '/li
 import { type StatisticHeader } from '/lib/types/partTypes/statisticHeader'
 import { type Statistics, type OmStatistikken } from '/site/content-types'
 
-export function get(req: XP.Request): XP.Response {
+export function get(req: Request): Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -24,11 +25,11 @@ export function get(req: XP.Request): XP.Response {
   }
 }
 
-export function preview(req: XP.Request): XP.Response {
+export function preview(req: Request): Response {
   return renderPart(req)
 }
 
-function renderPart(req: XP.Request): XP.Response {
+function renderPart(req: Request): Response {
   const page = getContent<Content<Statistics>>()
   if (!page) throw Error('No page found')
 
