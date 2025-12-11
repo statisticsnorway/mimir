@@ -1,6 +1,7 @@
 import '/lib/ssb/polyfills/nashorn'
 // @ts-ignore
 import striptags from 'striptags'
+import { type Request } from '@enonic-types/core'
 import { Content } from '/lib/xp/content'
 import {
   type TbmlDataUniform,
@@ -42,7 +43,7 @@ import { type Table } from '/site/content-types'
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser') as XmlParser
 
 export function parseTable(
-  req: XP.Request,
+  req: Request,
   table: Content<Table & DataSource>,
   branch: string = DATASET_BRANCH
 ): TableView {

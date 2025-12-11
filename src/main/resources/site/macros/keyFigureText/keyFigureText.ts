@@ -1,3 +1,4 @@
+import { type Request } from '@enonic-types/core'
 import { getContent } from '/lib/xp/portal'
 import { React4xp } from '/lib/enonic/react4xp'
 
@@ -8,7 +9,7 @@ export function macro(context: XP.MacroContext) {
   try {
     return renderKeyFigureTextMacro(context)
   } catch (e) {
-    return renderError(context.request as XP.Request, 'Error in macro', e)
+    return renderError(context.request as Request, 'Error in macro', e)
   }
 }
 
