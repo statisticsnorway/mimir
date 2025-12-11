@@ -66,7 +66,7 @@ jobs:
       # turn 'MIM-9876_new_feature' into 'mim-9876' so it can be used in URL, it can be found in env.ISSUE_NUMBER
       - name: 'Get JIRA issue number'
         id: jira_issue_number
-        env: 
+        env:
           BRANCH: ${{ github.head_ref }}
         run: |
           ISSUE_NUMBER=${BRANCH:0:8}
@@ -129,7 +129,7 @@ jobs:
       - name: 'Get JIRA issue number'
         id: jira_issue_number
         env:
-          BRANCH="${{ github.head_ref }}"
+          BRANCH: '${{ github.head_ref }}'
         run: |
           ISSUE_NUMBER=${BRANCH:0:8}
           ISSUE_NUMBER=$(echo $ISSUE_NUMBER | tr '[:upper:]' '[:lower:]')
@@ -147,10 +147,10 @@ jobs:
       - name: Add comment to PR
         uses: the-wright-jamie/update-pr-info-action@v1
         with:
-          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          repo-token: '${{ secrets.GITHUB_TOKEN }}'
           head-branch-regex: 'mim-\d{2,4}'
           body-template: |
             ### Branch Deployment to NAIS!
             [🗄️ Link to branch admin interface!](https://ssbno-${{ env.ISSUE_NUMBER }}.intern.test.ssb.no/admin)
             [📰 Front page can be found here!](https://ssbno-${{ env.ISSUE_NUMBER }}.intern.test.ssb.no/)
-          body-update-action: "suffix"
+          body-update-action: 'suffix'
