@@ -1,7 +1,8 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { getBrowserSyncScript, isRunning } from '/lib/browserSync'
 import { XP_RUN_MODE } from '/lib/ssb/utils/utils'
 
-export function responseProcessor(request: XP.Request, res: XP.Response) {
+export function responseProcessor(request: Request, res: Response) {
   // log.info('req:%s', toStr(req));
   // log.info('res:%s', toStr(res));
 

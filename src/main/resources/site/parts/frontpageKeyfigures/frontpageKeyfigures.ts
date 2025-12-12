@@ -1,3 +1,4 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { getComponent } from '/lib/xp/portal'
 import { type Content, get as getContentByKey } from '/lib/xp/content'
 import { render as r4XpRender } from '/lib/enonic/react4xp'
@@ -13,7 +14,7 @@ import { type KeyFigure } from '/site/content-types'
 
 const view = resolve('./frontpageKeyfigures.html')
 
-export function get(req: XP.Request) {
+export function get(req: Request) {
   try {
     return renderPart(req)
   } catch (e) {
@@ -21,7 +22,7 @@ export function get(req: XP.Request) {
   }
 }
 
-export function preview(req: XP.Request) {
+export function preview(req: Request) {
   return renderPart(req)
 }
 
@@ -29,7 +30,7 @@ const isKeyfigureData = (data: FrontPageKeyFigureData | undefined): data is Fron
   return !!data
 } // user-defined type guards <3
 
-function renderPart(req: XP.Request): XP.Response {
+function renderPart(req: Request): Response {
   const part = getComponent<XP.PartComponent.FrontpageKeyfigures>()
   if (!part) throw Error('No part found')
 
@@ -70,7 +71,7 @@ function renderPart(req: XP.Request): XP.Response {
       }
 }
 
-function renderFrontpageKeyfigures(req: XP.Request, frontpageKeyfigures: Array<FrontPageKeyFigureData>) {
+function renderFrontpageKeyfigures(req: Request, frontpageKeyfigures: Array<FrontPageKeyFigureData>) {
   return r4XpRender(
     'FrontpageKeyfigures',
     {

@@ -14,9 +14,10 @@ the part content and rendering in the try part, and a error rendering
 function in the catch part.
 
 ```&typescript
-import { renderError } from '/lib/error/error' 
+import { renderError } from '/lib/error/error'
+import { type Request, type Response } from '@enonic-types/core'
 
-export function get(req: XP.Request): XP.Response {
+export function get(req: Request): Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -24,7 +25,7 @@ export function get(req: XP.Request): XP.Response {
   }
 }
 
-function renderPart(req: XP.Request): XP.Response {
+function renderPart(req: Request): Response {
 
   ... part logic ...
 }

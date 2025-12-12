@@ -1,3 +1,4 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { type Content } from '/lib/xp/content'
 import { processHtml, getContent } from '/lib/xp/portal'
 import { render } from '/lib/enonic/react4xp'
@@ -11,7 +12,7 @@ import { renderError } from '/lib/ssb/error/error'
 import { type ArticleProps } from '/lib/types/partTypes/article'
 import { type Article } from '/site/content-types'
 
-export function get(req: XP.Request): XP.Response {
+export function get(req: Request): Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -19,7 +20,7 @@ export function get(req: XP.Request): XP.Response {
   }
 }
 
-function renderPart(req: XP.Request) {
+function renderPart(req: Request) {
   const page = getContent<Content<Article>>()
   if (!page) throw Error('No page found')
 

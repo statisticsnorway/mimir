@@ -1,5 +1,7 @@
-import { getSite, assetUrl } from '/lib/xp/portal'
+import { type Request } from '@enonic-types/core'
+import { getSite } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
+import { assetUrl } from '/lib/enonic/asset'
 import { render } from '/lib/thymeleaf'
 import { render as r4xpRender } from '/lib/enonic/react4xp'
 import { getLanguage } from '/lib/ssb/utils/language'
@@ -11,7 +13,7 @@ const mainErrorView = resolve('./error.html')
 const genericErrorView = resolve('./generic.html')
 
 type Error = {
-  request: XP.Request
+  request: Request
   status: number
 }
 

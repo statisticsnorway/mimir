@@ -1,6 +1,8 @@
+import { type Request } from '@enonic-types/core'
+
 export interface React4xp {
   new (entry: string): React4xpObject
-  render: (entry: string, props?: object, request?: XP.Request | XP.MacroContext, options?: object) => React4xpResponse
+  render: (entry: string, props?: object, request?: Request | XP.MacroContext, options?: object) => React4xpResponse
 }
 
 export interface React4xpObject {

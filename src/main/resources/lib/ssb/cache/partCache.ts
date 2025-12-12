@@ -1,4 +1,5 @@
 import '/lib/ssb/polyfills/nashorn'
+import { type Request } from '@enonic-types/core'
 import { Content } from '/lib/xp/content'
 import { newCache, Cache } from '/lib/cache'
 import { cacheLog } from '/lib/ssb/utils/serverLog'
@@ -12,7 +13,7 @@ const draftPartCache: Cache = newCache({
   size: 1000,
 })
 
-export function fromPartCache<T>(req: XP.Request, key: string, fallback: () => T): T {
+export function fromPartCache<T>(req: Request, key: string, fallback: () => T): T {
   const partCache: Cache = req.branch === 'master' ? masterPartCache : draftPartCache
   const _key = key + `-${req.mode}`
   return partCache.get(_key, () => {

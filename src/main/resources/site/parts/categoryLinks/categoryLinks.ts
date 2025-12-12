@@ -1,3 +1,4 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { getComponent, getContent, pageUrl } from '/lib/xp/portal'
 import { render } from '/lib/enonic/react4xp'
 import { type Phrases } from '/lib/types/language'
@@ -8,7 +9,7 @@ import { renderError } from '/lib/ssb/error/error'
 import { getLanguage } from '/lib/ssb/utils/language'
 import { type CategoryLink, type DocumentationContent, type DocumentationUrl } from '/lib/types/partTypes/categoryLinks'
 
-export function get(req: XP.Request): XP.Response {
+export function get(req: Request): Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -16,7 +17,7 @@ export function get(req: XP.Request): XP.Response {
   }
 }
 
-export function preview(req: XP.Request): XP.Response {
+export function preview(req: Request): Response {
   return renderPart(req)
 }
 
@@ -25,7 +26,7 @@ const NO_LINKS_FOUND = {
   contentType: 'text/html',
 }
 
-function renderPart(req: XP.Request): XP.Response {
+function renderPart(req: Request): Response {
   const part = getComponent<XP.PartComponent.CategoryLinks>()
   const page = getContent()
   if (!part || !page) throw new Error('No page or part')

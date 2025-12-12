@@ -28,8 +28,8 @@ export interface KontaktXML {
 }
 
 export interface Contact extends StatRegBase {
-  telephone: number | string
-  mobile: number | string
+  telephone?: number | string
+  mobile?: number | string
   email: string
   name: string
 }

@@ -1,3 +1,4 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { getComponent, getContent, pageUrl, processHtml } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 import { render } from '/lib/enonic/react4xp'
@@ -14,7 +15,7 @@ import {
 import { forceArray } from '/lib/ssb/utils/arrayUtils'
 import { type Timeline as TimelinePartConfig } from '/site/parts/timeline'
 
-export function get(req: XP.Request): XP.Response {
+export function get(req: Request): Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -22,7 +23,7 @@ export function get(req: XP.Request): XP.Response {
   }
 }
 
-function renderPart(req: XP.Request) {
+function renderPart(req: Request) {
   const part = getComponent<XP.PartComponent.Timeline>()
   const page = getContent()
   if (!part || !page) throw new Error('No page or part')

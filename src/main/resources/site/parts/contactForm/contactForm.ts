@@ -1,3 +1,4 @@
+import { type Request } from '@enonic-types/core'
 import { getContent, serviceUrl } from '/lib/xp/portal'
 import { render } from '/lib/enonic/react4xp'
 import { type Language, type Phrases } from '/lib/types/language'
@@ -5,7 +6,7 @@ import { type Language, type Phrases } from '/lib/types/language'
 import { renderError } from '/lib/ssb/error/error'
 import { getLanguage } from '/lib/ssb/utils/language'
 
-export function get(req: XP.Request) {
+export function get(req: Request) {
   try {
     return renderPart(req)
   } catch (e) {
@@ -13,11 +14,11 @@ export function get(req: XP.Request) {
   }
 }
 
-export function preview(req: XP.Request) {
+export function preview(req: Request) {
   return renderPart(req)
 }
 
-function renderPart(req: XP.Request) {
+function renderPart(req: Request) {
   const page = getContent()
   if (!page) throw new Error('No page found')
 

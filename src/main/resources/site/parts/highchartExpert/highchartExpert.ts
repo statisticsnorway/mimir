@@ -1,9 +1,10 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { getComponent } from '/lib/xp/portal'
 import { render as r4XpRender } from '/lib/enonic/react4xp'
 import { renderError } from '/lib/ssb/error/error'
 import { isEnabled } from '/lib/featureToggle'
 
-export function get(req: XP.Request): XP.Response {
+export function get(req: Request): Response {
   try {
     const part = getComponent<XP.PartComponent.Highchart>()
     if (!part) throw Error('No part found')
@@ -14,7 +15,7 @@ export function get(req: XP.Request): XP.Response {
   }
 }
 
-export function preview(req: XP.Request): XP.Response {
+export function preview(req: Request): Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -22,7 +23,7 @@ export function preview(req: XP.Request): XP.Response {
   }
 }
 
-function renderPart(req: XP.Request): XP.Response {
+function renderPart(req: Request): Response {
   if (!isEnabled('highchart-expert', false, 'ssb')) return { body: '' }
 
   const component = getComponent<XP.PartComponent.HighchartExpert>()

@@ -1,3 +1,4 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { type Content } from '/lib/xp/content'
 import { getContent, getComponent } from '/lib/xp/portal'
 import { type Phrases } from '/lib/types/language'
@@ -11,7 +12,7 @@ import { getPhrases } from '/lib/ssb/utils/language'
 import { type StatisticContactProps } from '/lib/types/partTypes/statisticContact'
 import { type Statistics } from '/site/content-types'
 
-export function get(req: XP.Request) {
+export function get(req: Request) {
   try {
     return renderPart(req)
   } catch (e) {
@@ -19,11 +20,11 @@ export function get(req: XP.Request) {
   }
 }
 
-export function preview(req: XP.Request) {
+export function preview(req: Request) {
   return renderPart(req)
 }
 
-function renderPart(req: XP.Request): XP.Response {
+function renderPart(req: Request): Response {
   const page = getContent<Content<Statistics>>()
   if (!page) throw Error('No page found')
 

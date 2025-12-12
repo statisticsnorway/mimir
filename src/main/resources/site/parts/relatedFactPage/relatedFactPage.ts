@@ -1,3 +1,4 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { get as getContentByKey, query, type Content } from '/lib/xp/content'
 import { getComponent, getContent, pageUrl, serviceUrl, type ImageUrlParams } from '/lib/xp/portal'
 import { render } from '/lib/enonic/react4xp'
@@ -16,7 +17,7 @@ import {
 import { getImageFromContent } from '/lib/ssb/utils/imageUtils'
 import { type Article, type ContentList } from '/site/content-types'
 
-export function get(req: XP.Request): XP.Response {
+export function get(req: Request): Response {
   try {
     const page = getContent<Content<Article>>()
     if (!page) throw Error('No page found')
@@ -51,11 +52,11 @@ export function get(req: XP.Request): XP.Response {
   }
 }
 
-export function preview(req: XP.Request, relatedFactPageConfig: RelatedFactPageConfig | undefined): XP.Response {
+export function preview(req: Request, relatedFactPageConfig: RelatedFactPageConfig | undefined): Response {
   return renderPart(req, relatedFactPageConfig)
 }
 
-function renderPart(req: XP.Request, relatedFactPageConfig: RelatedFactPageConfig | undefined): XP.Response {
+function renderPart(req: Request, relatedFactPageConfig: RelatedFactPageConfig | undefined): Response {
   const page = getContent()
   if (!page) throw Error('No page found')
 
@@ -69,10 +70,10 @@ function renderPart(req: XP.Request, relatedFactPageConfig: RelatedFactPageConfi
 }
 
 function renderRelatedFactPage(
-  req: XP.Request,
+  req: Request,
   page: Content,
   relatedFactPageConfig: RelatedFactPageConfig | undefined
-): XP.Response {
+): Response {
   const phrases = getPhrases(page) as Phrases
   const config = getComponent<XP.PartComponent.RelatedFactPage>()?.config
   if (!config) throw Error('No part found')

@@ -1,3 +1,4 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { type Content } from '/lib/xp/content'
 import { getContent } from '/lib/xp/portal'
 import { getAboutTheStatisticsProps } from '/lib/ssb/parts/statisticDescription'
@@ -7,7 +8,7 @@ import { fromPartCache } from '/lib/ssb/cache/partCache'
 import { type AboutTheStatisticsProps } from '/lib/types/partTypes/omStatistikken'
 import { type Statistics } from '/site/content-types'
 
-export function get(req: XP.Request): XP.Response {
+export function get(req: Request): Response {
   try {
     const statisticPage = getContent<Content<Statistics>>()
     if (!statisticPage) throw Error('No page found')
@@ -18,11 +19,11 @@ export function get(req: XP.Request): XP.Response {
   }
 }
 
-export function preview(req: XP.Request, id: string | undefined): XP.Response {
+export function preview(req: Request, id: string | undefined): Response {
   return renderPart(req, id)
 }
 
-function renderPart(req: XP.Request, aboutTheStatisticsId: string | undefined): XP.Response {
+function renderPart(req: Request, aboutTheStatisticsId: string | undefined): Response {
   const page = getContent()
   if (!page) throw Error('No page found')
 
@@ -58,7 +59,7 @@ function renderPart(req: XP.Request, aboutTheStatisticsId: string | undefined): 
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function getOmStatistikken(req: XP.Request, page: Content<any>, aboutTheStatisticsId: string | undefined): XP.Response {
+function getOmStatistikken(req: Request, page: Content<any>, aboutTheStatisticsId: string | undefined): Response {
   const props: AboutTheStatisticsProps = getAboutTheStatisticsProps(req, page, aboutTheStatisticsId)
 
   return render('site/parts/omStatistikken/omStatistikken', props, req, {

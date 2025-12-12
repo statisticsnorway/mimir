@@ -1,3 +1,4 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { get as getContentByKey, type Content } from '/lib/xp/content'
 import { getComponent, getContent, pageUrl } from '/lib/xp/portal'
 import { type Phrases } from '/lib/types/language'
@@ -10,7 +11,7 @@ import { type EndedStatistic } from '/lib/types/partTypes/endedStatistics'
 import { type Statistics } from '/site/content-types'
 import { type EndedStatistics as EndedStatisticsPartConfig } from '.'
 
-export function get(req: XP.Request) {
+export function get(req: Request) {
   try {
     return renderPart(req)
   } catch (e) {
@@ -18,11 +19,11 @@ export function get(req: XP.Request) {
   }
 }
 
-export function preview(req: XP.Request) {
+export function preview(req: Request) {
   return renderPart(req)
 }
 
-function renderPart(req: XP.Request): XP.Response {
+function renderPart(req: Request): Response {
   const page = getContent()
   if (!page) throw Error('No page found')
 
@@ -39,7 +40,7 @@ function renderPart(req: XP.Request): XP.Response {
 }
 
 function renderEndedStatistics(
-  req: XP.Request,
+  req: Request,
   endedStatisticsContent: Array<EndedStatistic | undefined>,
   phrases: Phrases
 ) {
@@ -71,7 +72,7 @@ function renderEndedStatistics(
 function parseContent(
   endedStatistics: EndedStatisticsPartConfig['relatedStatisticsOptions']
 ): Array<EndedStatistic | undefined> {
-  if (endedStatistics && endedStatistics.length) {
+  if (endedStatistics?.length) {
     return endedStatistics
       .map((statistics) => {
         if (statistics._selected === 'xp' && statistics.xp.contentId) {

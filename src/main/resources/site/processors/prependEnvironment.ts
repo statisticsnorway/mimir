@@ -1,6 +1,7 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { getEnvironmentString } from '/lib/ssb/utils/utils'
 
-exports.responseProcessor = (req: XP.Request, res: XP.Response) => {
+exports.responseProcessor = (req: Request, res: Response) => {
   const environment = getEnvironmentString()
 
   if (environment) {

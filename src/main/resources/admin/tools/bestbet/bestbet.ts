@@ -1,7 +1,8 @@
-import { type ResourceKey } from '@enonic-types/core'
-import { assetUrl, serviceUrl } from '/lib/xp/portal'
+import { type ResourceKey, type Request, type Response } from '@enonic-types/core'
+import { serviceUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 import { getToolUrl } from '/lib/xp/admin'
+import { assetUrl } from '/lib/enonic/asset'
 import { render } from '/lib/thymeleaf'
 import { getMainSubjects } from '/lib/ssb/utils/subjectUtils'
 import { getEnvironmentString, parseContributions } from '/lib/ssb/utils/utils'
@@ -13,7 +14,7 @@ import { type SubjectItem } from '/lib/types/subject'
 
 const view: ResourceKey = resolve('./bestbet.html')
 
-export function get(req: XP.Request): XP.Response {
+export function get(req: Request): Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -21,7 +22,7 @@ export function get(req: XP.Request): XP.Response {
   }
 }
 
-export const preview = (req: XP.Request): XP.Response => {
+export const preview = (req: Request): Response => {
   try {
     return renderPart(req)
   } catch (e) {
@@ -29,7 +30,7 @@ export const preview = (req: XP.Request): XP.Response => {
   }
 }
 
-function renderPart(req: XP.Request): XP.Response {
+function renderPart(req: Request): Response {
   const DEFAULT_CONTENTSTUDIO_URL = getToolUrl('com.enonic.app.contentstudio', 'main')
   const ENONIC_PROJECT_ID: string =
     app.config && app.config['ssb.project.id'] ? app.config['ssb.project.id'] : 'default'

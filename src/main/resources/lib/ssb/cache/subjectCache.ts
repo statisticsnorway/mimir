@@ -1,4 +1,5 @@
 import '/lib/ssb/polyfills/nashorn'
+import { type Request } from '@enonic-types/core'
 import { Content } from '/lib/xp/content'
 import { newCache, Cache } from '/lib/cache'
 import { cacheLog } from '/lib/ssb/utils/serverLog'
@@ -12,7 +13,7 @@ const draftSubjectCache: Cache = newCache({
   size: 25,
 })
 
-export function fromSubjectCache<T>(req: XP.Request, key: string, fallback: () => Array<T>): Array<T> {
+export function fromSubjectCache<T>(req: Request, key: string, fallback: () => Array<T>): Array<T> {
   const subjectCache: Cache = req.branch === 'master' ? masterSubjectCache : draftSubjectCache
   return subjectCache.get(key, () => {
     cacheLog(`added ${key} to subject cache (${req.branch})`)

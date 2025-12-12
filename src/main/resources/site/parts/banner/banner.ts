@@ -1,5 +1,7 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { type Content } from '/lib/xp/content'
-import { assetUrl, getContent, getComponent } from '/lib/xp/portal'
+import { getContent, getComponent } from '/lib/xp/portal'
+import { assetUrl } from '/lib/enonic/asset'
 import { getMunicipality, removeCountyFromMunicipalityName } from '/lib/ssb/dataset/klass/municipalities'
 import { imageUrl, getImageAlt } from '/lib/ssb/utils/imageUtils'
 
@@ -14,7 +16,7 @@ import { type RequestWithCode } from '/lib/types/municipalities'
 import { type Page } from '/site/content-types'
 import { type Default } from '/site/pages/default'
 
-export function get(req: XP.Request): XP.Response {
+export function get(req: Request): Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -22,11 +24,11 @@ export function get(req: XP.Request): XP.Response {
   }
 }
 
-export function preview(req: XP.Request): XP.Response {
+export function preview(req: Request): Response {
   return renderPart(req)
 }
 
-function renderPart(req: XP.Request): XP.Response {
+function renderPart(req: Request): Response {
   const page = getContent<Content<Page>>()
   if (!page) throw Error('No page found')
 
@@ -85,7 +87,7 @@ function renderPart(req: XP.Request): XP.Response {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function getMunicipalityTitle(pageType: any, req: XP.Request) {
+function getMunicipalityTitle(pageType: any, req: Request) {
   const municipality = pageType._selected === 'kommunefakta' ? getMunicipality(req as RequestWithCode) : undefined
   const municipalityName = municipality ? removeCountyFromMunicipalityName(municipality.displayName) : undefined
   return municipality ? municipalityName + ' (' + municipality.county.name + ')' : undefined

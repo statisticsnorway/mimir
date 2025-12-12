@@ -1,5 +1,6 @@
 // source: https://raw.githubusercontent.com/enonic/starter-tsup/2d08bf54ef3d3b4a037e579c0ed3a7c7c1f9272c/src/main/resources/lib/browserSync.ts
 
+import { type Request } from '@enonic-types/core'
 import { newCache } from '/lib/cache'
 import { request as httpClientRequest } from '/lib/http-client'
 
@@ -8,12 +9,12 @@ const isRunningCache = newCache({
   expire: 10,
 })
 
-export function getBrowserSyncUrl({ request }: { request: XP.Request }): string {
+export function getBrowserSyncUrl({ request }: { request: Request }): string {
   const { host, scheme } = request
   return `${scheme}://${host}:${process.env.BROWSER_SYNC_PORT}/browser-sync/browser-sync-client.js`
 }
 
-export function isRunning({ request }: { request: XP.Request }): boolean {
+export function isRunning({ request }: { request: Request }): boolean {
   return isRunningCache.get('hardcoded-cache-key', () => {
     try {
       const requestParameters = {
@@ -42,6 +43,6 @@ export function isRunning({ request }: { request: XP.Request }): boolean {
   })
 }
 
-export function getBrowserSyncScript({ request }: { request: XP.Request }): string {
+export function getBrowserSyncScript({ request }: { request: Request }): string {
   return `<script src="${getBrowserSyncUrl({ request })}"></script>`
 }

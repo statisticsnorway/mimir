@@ -1,3 +1,4 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { getComponent, getContent, serviceUrl, pageUrl } from '/lib/xp/portal'
 import { type Content } from '/lib/xp/content'
 import { localize } from '/lib/xp/i18n'
@@ -17,7 +18,7 @@ import { allMonths, monthLabel } from '/lib/ssb/utils/calculatorLocalizationUtil
 import { type CalculatorConfig } from '/site/content-types'
 import { type BkibolCalculator as BkibolCalculatorPartConfig } from '.'
 
-export function get(req: XP.Request): XP.Response {
+export function get(req: Request): Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -25,11 +26,11 @@ export function get(req: XP.Request): XP.Response {
   }
 }
 
-export function preview(req: XP.Request): XP.Response {
+export function preview(req: Request): Response {
   return renderPart(req)
 }
 
-function renderPart(req: XP.Request) {
+function renderPart(req: Request) {
   const page = getContent<Content<BkibolCalculatorPartConfig>>()
   if (!page) throw Error('No page found')
 
@@ -46,7 +47,7 @@ function renderPart(req: XP.Request) {
   return bkibolCalculator
 }
 
-function getBkibolCalculatorComponent(req: XP.Request, page: Content<BkibolCalculatorPartConfig>) {
+function getBkibolCalculatorComponent(req: Request, page: Content<BkibolCalculatorPartConfig>) {
   const part = getComponent<XP.PartComponent.BkibolCalculator>()
   if (!part) throw Error('No part found')
 
@@ -58,22 +59,25 @@ function getBkibolCalculatorComponent(req: XP.Request, page: Content<BkibolCalcu
   const config: Content<CalculatorConfig> | undefined = getCalculatorConfig()
   const bkibolDataEnebolig: Dataset | null = config ? getBkibolDatasetEnebolig(config) : null
   const lastUpdated: CalculatorPeriod = lastPeriod(bkibolDataEnebolig)
-  const nextUpdate: CalculatorPeriod = nextPeriod(lastUpdated.month.toString(), lastUpdated.year.toString())
-  const nextReleaseMonth: number = +nextUpdate.month === 12 ? 1 : +nextUpdate.month + 1
+  const nextUpdate: CalculatorPeriod = nextPeriod(
+    (lastUpdated.month as string | number).toString(),
+    lastUpdated.year.toString()
+  )
+  const nextReleaseMonth: number = +(nextUpdate.month as number) === 12 ? 1 : +(nextUpdate.month as number) + 1
   const nextPublishText: string = localize({
     key: 'bkibolNextPublishText',
     locale: language.code,
     values: [
-      monthLabel(months, code, +lastUpdated.month),
+      monthLabel(months, code, +(lastUpdated.month as number)),
       lastUpdated.year.toString(),
-      monthLabel(months, code, +nextUpdate.month),
+      monthLabel(months, code, +(nextUpdate.month as number)),
       monthLabel(months, code, nextReleaseMonth),
     ],
   })
   const lastNumberText: string = localize({
     key: 'calculatorLastNumber',
     locale: code,
-    values: [monthLabel(months, code, +lastUpdated.month), lastUpdated.year.toString()],
+    values: [monthLabel(months, code, +(lastUpdated.month as number)), lastUpdated.year.toString()],
   })
   const calculatorArticleUrl: string | undefined =
     part.config.bkibolCalculatorArticle &&

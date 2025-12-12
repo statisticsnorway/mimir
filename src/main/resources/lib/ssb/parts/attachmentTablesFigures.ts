@@ -1,3 +1,4 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { query, type Content } from '/lib/xp/content'
 import { type DatasetRepoNode } from '/lib/ssb/repo/dataset'
 import { type JSONstat } from '/lib/types/jsonstat-toolkit'
@@ -11,7 +12,7 @@ import { preview as highchartPreview } from '/site/parts/highchart/highchart'
 
 export function getTablesAndFigures(
   attachmentTablesAndFigures: Array<string>,
-  req: XP.Request,
+  req: Request,
   phrases: { [key: string]: string }
 ): Array<AttachmentTablesFiguresData> {
   let figureIndex = 0
@@ -68,7 +69,7 @@ function getTableReturnObject(
 
 function getFigureReturnObject(
   content: Content,
-  preview: XP.Response,
+  preview: Response,
   subHeader: string,
   index: number
 ): AttachmentTablesFiguresData {

@@ -1,3 +1,4 @@
+import { type Request } from '@enonic-types/core'
 import { type Content, type ContentsResult } from '/lib/xp/content'
 import { getContent, serviceUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
@@ -8,19 +9,19 @@ import { type SubjectArticleListProps } from '/lib/types/partTypes/subjectArticl
 import { type PreparedArticles } from '/lib/types/article'
 import { type Article, type Page } from '/site/content-types'
 
-export function get(req: XP.Request) {
+export function get(req: Request) {
   return renderPart(req)
 }
 
-export function preview(req: XP.Request) {
+export function preview(req: Request) {
   return renderPart(req)
 }
 
-function renderPart(req: XP.Request) {
+function renderPart(req: Request) {
   const content = getContent<Content<Page>>()
   if (!content) throw Error('No page found')
 
-  const sort: string = req.params.sort ? req.params.sort : 'DESC'
+  const sort: string = req.params.sort ? (req.params.sort as string) : 'DESC'
   const language: string = content.language ? content.language : 'nb'
   const filterAndSortEnabled: boolean = isEnabled('articlelist-sorting', false)
   const currentPath: string = content._path

@@ -1,3 +1,4 @@
+import { type Request } from '@enonic-types/core'
 import { getContent, getComponent, serviceUrl } from '/lib/xp/portal'
 import { render } from '/lib/enonic/react4xp'
 import { getPublications } from '/lib/ssb/parts/publicationArchive'
@@ -7,15 +8,15 @@ import { type Phrases } from '/lib/types/language'
 import { type Dropdown, type PublicationArchiveProps } from '/lib/types/partTypes/publicationArchive'
 import { type SubjectItem } from '/lib/types/subject'
 
-export function get(req: XP.Request) {
+export function get(req: Request) {
   return renderPart(req)
 }
 
-export function preview(req: XP.Request) {
+export function preview(req: Request) {
   return renderPart(req)
 }
 
-function renderPart(req: XP.Request) {
+function renderPart(req: Request) {
   const content = getContent()
   if (!content) throw Error('No content found')
 

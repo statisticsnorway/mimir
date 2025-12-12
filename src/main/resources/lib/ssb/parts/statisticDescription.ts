@@ -1,3 +1,4 @@
+import { type Request } from '@enonic-types/core'
 import { getContent, processHtml } from '/lib/xp/portal'
 import { get as getContentByKey, type Content } from '/lib/xp/content'
 import {
@@ -15,7 +16,7 @@ import { type AboutTheStatisticsProps, type Category, type Items } from '/lib/ty
 import { type Statistics, type OmStatistikken } from '/site/content-types'
 
 export function getAboutTheStatisticsProps(
-  req: XP.Request,
+  req: Request,
   page: Content<OmStatistikken>,
   aboutTheStatisticsId: string | undefined
 ): AboutTheStatisticsProps {

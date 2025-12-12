@@ -1,3 +1,4 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
 import {
   addMonthNames,
@@ -10,11 +11,11 @@ import { filterOnComingReleases } from '/lib/ssb/utils/filterReleasesUtils'
 import { getAllStatisticsFromRepo } from '/lib/ssb/statreg/statistics'
 import { type GroupedBy, type PreparedStatistics, type Release, type YearReleases } from '/lib/types/variants'
 
-export const get = (req: XP.Request): XP.Response => {
+export const get = (req: Request): Response => {
   // Get statistics
   const statistics: Array<StatisticInListing> = getAllStatisticsFromRepo()
   const allReleases: Array<Release> = getAllReleases(statistics)
-  const count: number = req.params.count ? parseInt(req.params.count) : 2
+  const count: number = req.params.count ? parseInt(req.params.count as string) : 2
   const showAll = !!(req.params.showAll && req.params.showAll === 'true')
 
   const language = req.params.language ? req.params.language : 'nb'
@@ -26,12 +27,12 @@ export const get = (req: XP.Request): XP.Response => {
     allReleases,
     serverOffsetInMs,
     numberOfDays,
-    req.params.start
+    req.params.start as string
   )
 
   // Choose the right variant and prepare the date in a way it works with the groupBy function
   const releasesPrepped: Array<PreparedStatistics | null> = releasesFiltered.map((release: Release) =>
-    prepareRelease(release, language)
+    prepareRelease(release, language as string)
   )
 
   // group by year, then month, then day

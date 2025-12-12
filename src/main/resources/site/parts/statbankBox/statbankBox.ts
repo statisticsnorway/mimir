@@ -1,5 +1,7 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { type Content } from '/lib/xp/content'
-import { getComponent, getContent, assetUrl } from '/lib/xp/portal'
+import { getComponent, getContent } from '/lib/xp/portal'
+import { assetUrl } from '/lib/enonic/asset'
 import { type Phrases } from '/lib/types/language'
 import { render } from '/lib/enonic/react4xp'
 import { type StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
@@ -16,7 +18,7 @@ const STATBANKWEB_URL: string =
     ? app.config['ssb.statbankweb.baseUrl']
     : 'https://www.ssb.no/statbank'
 
-export function get(req: XP.Request): XP.Response {
+export function get(req: Request): Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -24,11 +26,11 @@ export function get(req: XP.Request): XP.Response {
   }
 }
 
-export function preview(req: XP.Request): XP.Response {
+export function preview(req: Request): Response {
   return renderPart(req)
 }
 
-function renderPart(req: XP.Request): XP.Response {
+function renderPart(req: Request): Response {
   const page = getContent<Content<Statistics>>()
   if (!page) throw Error('No page found')
   const config = getComponent<XP.PartComponent.StatbankBox>()?.config
@@ -39,7 +41,7 @@ function renderPart(req: XP.Request): XP.Response {
   return renderStatbankBox(req, parseStatbankBoxContent(page, config, phrases))
 }
 
-function renderStatbankBox(req: XP.Request, statbankBoxContent: StatbankBoxProps): XP.Response {
+function renderStatbankBox(req: Request, statbankBoxContent: StatbankBoxProps): Response {
   return render(
     'StatbankBox',
     {

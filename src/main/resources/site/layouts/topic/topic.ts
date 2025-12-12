@@ -1,10 +1,11 @@
+import { type Request } from '@enonic-types/core'
 import { getComponent } from '/lib/xp/portal'
 import { render } from '/lib/thymeleaf'
 import { pageMode } from '/lib/ssb/utils/utils'
 
 const view = resolve('topic.html')
 
-export function get(req: XP.Request) {
+export function get(req: Request) {
   const component = getComponent<XP.LayoutComponent.Topic>()!
   const mode = pageMode(req)
   const { title, hideTitle } = component.config

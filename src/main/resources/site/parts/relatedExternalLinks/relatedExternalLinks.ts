@@ -1,3 +1,4 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { type Content } from '/lib/xp/content'
 import { getContent } from '/lib/xp/portal'
 import { render } from '/lib/thymeleaf'
@@ -11,7 +12,7 @@ import { type RelatedExternalLinks } from '/site/mixins/relatedExternalLinks'
 
 const view = resolve('./relatedExternalLinks.html')
 
-export function get(req: XP.Request): XP.Response {
+export function get(req: Request): Response {
   try {
     const page = getContent<Content<Article | Statistics>>()
     if (!page) throw Error('No page found')
@@ -30,14 +31,11 @@ export function get(req: XP.Request): XP.Response {
   }
 }
 
-export function preview(
-  req: XP.Request,
-  externalLinks: RelatedExternalLinks['relatedExternalLinkItemSet']
-): XP.Response {
+export function preview(req: Request, externalLinks: RelatedExternalLinks['relatedExternalLinkItemSet']): Response {
   return renderPart(req, externalLinks)
 }
 
-function renderPart(req: XP.Request, externalLinks: RelatedExternalLinks['relatedExternalLinkItemSet']): XP.Response {
+function renderPart(req: Request, externalLinks: RelatedExternalLinks['relatedExternalLinkItemSet']): Response {
   const page = getContent()
   if (!page) throw Error('No page found')
 

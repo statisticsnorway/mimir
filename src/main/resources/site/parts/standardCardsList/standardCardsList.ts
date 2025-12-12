@@ -1,3 +1,4 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { get as getContentByKey, type Content } from '/lib/xp/content'
 import { getComponent, pageUrl } from '/lib/xp/portal'
 import { render } from '/lib/thymeleaf'
@@ -13,7 +14,7 @@ import { type StandardCardsList as StandardCardsListPartConfig } from '.'
 
 const view = resolve('standardCardsList.html')
 
-export function get(req: XP.Request): XP.Response {
+export function get(req: Request): Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -21,11 +22,11 @@ export function get(req: XP.Request): XP.Response {
   }
 }
 
-export function preview(req: XP.Request): XP.Response {
+export function preview(req: Request): Response {
   return renderPart(req)
 }
 
-function renderPart(req: XP.Request): XP.Response {
+function renderPart(req: Request): Response {
   const config = getComponent<XP.PartComponent.StandardCardsList>()?.config
   if (!config) throw Error('No part found')
 
@@ -48,10 +49,10 @@ function renderPart(req: XP.Request): XP.Response {
 }
 
 function renderStandardCardsList(
-  req: XP.Request,
+  req: Request,
   statisticsTitle: string | undefined,
   standardCardsListContent: StandardCardsListPartConfig['statisticsItemSet']
-): XP.Response {
+): Response {
   if (standardCardsListContent && standardCardsListContent.length) {
     const id: string = 'standard-card-list-' + randomUnsafeString()
     const body: string = render(view, {

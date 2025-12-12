@@ -1,3 +1,4 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { getComponent, getContent } from '/lib/xp/portal'
 import { render } from '/lib/enonic/react4xp'
 
@@ -14,7 +15,7 @@ import { getPhrases } from '/lib/ssb/utils/language'
 
 import { fetchWebcruiterAdvertisementListRSSFeed } from '/lib/ssb/parts/webcruiterAdvertisementList'
 
-export function get(req: XP.Request): XP.Response {
+export function get(req: Request): Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -22,11 +23,11 @@ export function get(req: XP.Request): XP.Response {
   }
 }
 
-export function preview(req: XP.Request): XP.Response {
+export function preview(req: Request): Response {
   return renderPart(req)
 }
 
-function renderPart(req: XP.Request) {
+function renderPart(req: Request) {
   const content = getContent()
   if (!content) throw Error('No page found')
 

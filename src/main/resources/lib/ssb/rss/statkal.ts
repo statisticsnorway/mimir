@@ -1,3 +1,4 @@
+import { type Request } from '@enonic-types/core'
 import {
   type ContentLight,
   type Release as ReleaseVariant,
@@ -12,13 +13,13 @@ import * as util from '/lib/util'
 import { getContactsFromRepo } from '/lib/ssb/statreg/contacts'
 import { type SubjectItem } from '/lib/types/subject'
 
-const dummyReq: Partial<XP.Request> = {
+const dummyReq: Partial<Request> = {
   branch: 'master',
 }
 
 export function getRssReleasesStatkal(): RssRelease[] {
   const statisticVariants: ContentLight<ReleaseVariant>[] = getUpcompingStatisticVariantsFromRepo()
-  const allMainSubjects: SubjectItem[] = getMainSubjects(dummyReq as XP.Request)
+  const allMainSubjects: SubjectItem[] = getMainSubjects(dummyReq as Request)
   const upcomingVariants: StatkalVariant[] = getUpcomingVariants(statisticVariants, allMainSubjects)
   const upcomingReleases: StatkalRelease[] = getUpcomingReleases(statisticVariants)
   return getRssReleases(upcomingVariants, upcomingReleases)

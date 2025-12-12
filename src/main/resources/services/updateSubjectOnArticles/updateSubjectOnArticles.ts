@@ -1,3 +1,4 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { get as getContent, publish, query, type Content, PublishContentResult } from '/lib/xp/content'
 import { run, type ContextParams } from '/lib/xp/context'
 
@@ -17,7 +18,7 @@ const INTERNAL_BASE_URL =
     ? app.config['ssb.internal.serverside.baseUrl']
     : 'https://ext-i.ssb.no'
 
-export function get(req: XP.Request): XP.Response {
+export function get(req: Request): Response {
   const contentToFix = query<Content<Article>>({
     count: 500,
     filters: {
@@ -69,8 +70,10 @@ export function get(req: XP.Request): XP.Response {
         publishResult.push(
           publish({
             keys: [hit._id],
-            sourceBranch: 'draft',
-            targetBranch: 'master',
+            // TODO: These params are not supported by the current publish function.
+            // Is this service in use at all?
+            // sourceBranch: 'draft',
+            // targetBranch: 'master',
             includeDependencies: false,
           })
         )

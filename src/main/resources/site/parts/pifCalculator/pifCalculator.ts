@@ -1,3 +1,4 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { type Content } from '/lib/xp/content'
 import { getContent, getComponent, serviceUrl, pageUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
@@ -16,7 +17,7 @@ import { type PifCalculatorProps } from '/lib/types/partTypes/pifCalculaor'
 import { allMonths, getNextPublishText, monthLabel } from '/lib/ssb/utils/calculatorLocalizationUtils'
 import { type CalculatorConfig } from '/site/content-types'
 
-export function get(req: XP.Request): XP.Response {
+export function get(req: Request): Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -24,15 +25,15 @@ export function get(req: XP.Request): XP.Response {
   }
 }
 
-export function preview(req: XP.Request) {
+export function preview(req: Request) {
   return renderPart(req)
 }
 
-function renderPart(req: XP.Request): XP.Response {
+function renderPart(req: Request): Response {
   const page = getContent()
   if (!page) throw Error('No page found')
 
-  let pifCalculator: XP.Response
+  let pifCalculator: Response
   if (req.mode === 'edit' || req.mode === 'inline') {
     pifCalculator = getPifCalculatorComponent(req, page)
   } else {
@@ -44,7 +45,7 @@ function renderPart(req: XP.Request): XP.Response {
   return pifCalculator
 }
 
-function getPifCalculatorComponent(req: XP.Request, page: Content) {
+function getPifCalculatorComponent(req: Request, page: Content) {
   const partConfig = getComponent<XP.PartComponent.PifCalculator>()?.config
   if (!partConfig) throw Error('No part config found')
 
@@ -67,7 +68,7 @@ function getPifCalculatorComponent(req: XP.Request, page: Content) {
   const lastNumberText: string = localize({
     key: 'calculatorLastNumber',
     locale: language?.code,
-    values: [monthLabel(months, language?.code, lastUpdated.month), lastUpdated.year as string],
+    values: [monthLabel(months, language?.code, lastUpdated.month as string | number), lastUpdated.year as string],
   })
   const calculatorArticleUrl: string | undefined = partConfig.pifCalculatorArticle
     ? pageUrl({

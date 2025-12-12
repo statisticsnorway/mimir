@@ -1,6 +1,7 @@
+import { type Response } from '@enonic-types/core'
 import { query } from '/lib/xp/content'
 
-export const get = (): XP.Response => {
+export const get = (): Response => {
   const mainSubjects = query({
     count: 500,
     filters: {

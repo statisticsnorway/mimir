@@ -1,10 +1,11 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { getAllArticles } from '/lib/ssb/utils/articleUtils'
 import { getPublications } from '/lib/ssb/parts/publicationArchive'
 import { type ArticleResult, type PreparedArticles } from '/lib/types/article'
 import { type PublicationItem } from '/lib/types/partTypes/publicationArchive'
 import { collectUrls } from '/lib/ssb/utils/solrUtils'
 
-export const get = (req: XP.Request): XP.Response => {
+export const get = (req: Request): Response => {
   const articleLanguage: 'en' | 'no' = req.params.language === 'en' ? 'en' : 'no'
   const publicationLanguage: 'en' | 'nb' = articleLanguage === 'en' ? 'en' : 'nb'
   const pageSize = 1000

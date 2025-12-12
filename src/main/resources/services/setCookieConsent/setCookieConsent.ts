@@ -1,5 +1,7 @@
-export function get(req: XP.Request): XP.Response {
-  const value = req.params.value
+import { type Request, type Response } from '@enonic-types/core'
+
+export function get(req: Request): Response {
+  const value = req.params.value as string
 
   if (!value || !['all', 'necessary', 'unidentified'].includes(value)) {
     return {

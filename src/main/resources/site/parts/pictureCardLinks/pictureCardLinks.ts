@@ -1,3 +1,4 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { getComponent, imagePlaceholder } from '/lib/xp/portal'
 import { render } from '/lib/enonic/react4xp'
 import { imageUrl, getImageAlt } from '/lib/ssb/utils/imageUtils'
@@ -11,7 +12,7 @@ import {
 import { getLinkTargetUrl } from '/lib/ssb/utils/utils'
 import { type PictureCardLinks as PictureCardLinksPartConfig } from '.'
 
-export function get(req: XP.Request): XP.Response {
+export function get(req: Request): Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -19,11 +20,11 @@ export function get(req: XP.Request): XP.Response {
   }
 }
 
-export function preview(req: XP.Request) {
+export function preview(req: Request) {
   return renderPart(req)
 }
 
-function renderPart(req: XP.Request): XP.Response {
+function renderPart(req: Request): Response {
   const config = getComponent<XP.PartComponent.PictureCardLinks>()?.config
   if (!config) throw Error('No part found')
 

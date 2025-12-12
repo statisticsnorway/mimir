@@ -1,7 +1,8 @@
+import { type Response } from '@enonic-types/core'
 import { query, Content } from '/lib/xp/content'
 import { type RewriteVarnish } from '/site/content-types'
 
-function get(): XP.Response {
+function get(): Response {
   const varnishContent: Content<RewriteVarnish> = query({
     contentTypes: [`${app.name}:rewriteVarnish`],
     count: 1,

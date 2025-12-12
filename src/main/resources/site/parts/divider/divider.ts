@@ -1,3 +1,4 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { getComponent } from '/lib/xp/portal'
 import { render } from '/lib/enonic/react4xp'
 import { scriptAsset } from '/lib/ssb/utils/utils'
@@ -6,7 +7,7 @@ import { renderError } from '/lib/ssb/error/error'
 import { fromPartCache } from '/lib/ssb/cache/partCache'
 import { type Divider as DividerPartConfig } from '.'
 
-export function get(req: XP.Request): XP.Response {
+export function get(req: Request): Response {
   try {
     const component = getComponent<XP.PartComponent.Divider>()
     if (!component) throw Error('No component found')
@@ -17,11 +18,11 @@ export function get(req: XP.Request): XP.Response {
   }
 }
 
-export function preview(req: XP.Request, config = {}): XP.Response {
+export function preview(req: Request, config = {}): Response {
   return renderPart(req, config)
 }
 
-function renderPart(req: XP.Request, config: DividerPartConfig): XP.Response {
+function renderPart(req: Request, config: DividerPartConfig): Response {
   const dividerColor: string = config.dividerColor ?? 'light'
 
   return fromPartCache(req, `divider${dividerColor}`, () => {

@@ -1,3 +1,4 @@
+import { type Request } from '@enonic-types/core'
 import { Content, getComponent, getContent } from '/lib/xp/portal'
 import { render as r4XpRender } from '/lib/enonic/react4xp'
 import { type Phrases } from '/lib/types/language'
@@ -5,7 +6,7 @@ import { type Phrases } from '/lib/types/language'
 import { getPhrases } from '/lib/ssb/utils/language'
 import { type MailChimpFormProps } from '/lib/types/partTypes/mailChimpForm'
 
-export function get(req: XP.Request) {
+export function get(req: Request) {
   const config = getComponent<XP.PartComponent.MailChimpForm>()?.config
   if (!config) throw Error('No part found')
 

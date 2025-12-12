@@ -1,3 +1,4 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { getContent, getComponent, pageUrl, serviceUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 import { renderError } from '/lib/ssb/error/error'
@@ -5,7 +6,7 @@ import { render } from '/lib/enonic/react4xp'
 import { type NameSearchProps } from '/lib/types/partTypes/nameSearch'
 import { type NameSearch as NameSearchPartConfig } from '.'
 
-export const get = (req: XP.Request): XP.Response => {
+export const get = (req: Request): Response => {
   try {
     return renderPart(req)
   } catch (e) {
@@ -13,11 +14,11 @@ export const get = (req: XP.Request): XP.Response => {
   }
 }
 
-export function preview(req: XP.Request) {
+export function preview(req: Request) {
   return renderPart(req)
 }
 
-function renderPart(req: XP.Request) {
+function renderPart(req: Request) {
   const component = getComponent<XP.PartComponent.NameSearch>()
   if (!component) throw Error('No part found')
 

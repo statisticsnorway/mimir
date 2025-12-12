@@ -1,3 +1,4 @@
+import { type Request } from '@enonic-types/core'
 import { query, type Content } from '/lib/xp/content'
 import { StatisticInListing, VariantInListing } from '/lib/ssb/dashboard/statreg/types'
 import { getTimeZoneIso } from '/lib/ssb/utils/dateUtils'
@@ -11,12 +12,12 @@ import { type Article, type Statistics } from '/site/content-types'
 import { ensureArray } from '../utils/arrayUtils'
 import { findLatestRelease, formatPubDateArticle, getLinkByPath, getPubDateStatistic } from './news-helpers'
 
-const dummyReq: Partial<XP.Request> = {
+const dummyReq: Partial<Request> = {
   branch: 'master',
 }
 
 export function getNews(days: number): NewsItem[] {
-  const mainSubjects: SubjectItem[] = getMainSubjects(dummyReq as XP.Request)
+  const mainSubjects: SubjectItem[] = getMainSubjects(dummyReq as Request)
   const articles: NewsItem[] = getArticles(mainSubjects, days)
   const statistics: NewsItem[] = getStatistics(mainSubjects, days)
   return articles.concat(statistics)

@@ -1,4 +1,6 @@
-import { assetUrl, getSiteConfig, serviceUrl } from '/lib/xp/portal'
+import { type Request, type Response } from '@enonic-types/core'
+import { getSiteConfig, serviceUrl } from '/lib/xp/portal'
+import { assetUrl } from '/lib/enonic/asset'
 import { render } from '/lib/thymeleaf'
 import { scriptAsset } from '/lib/ssb/utils/utils'
 
@@ -6,7 +8,7 @@ import { renderError } from '/lib/ssb/error/error'
 
 const view = resolve('./map.html')
 
-export function get(req: XP.Request): XP.Response {
+export function get(req: Request): Response {
   try {
     return renderPart()
   } catch (e) {
@@ -14,11 +16,11 @@ export function get(req: XP.Request): XP.Response {
   }
 }
 
-export function preview(): XP.Response {
+export function preview(): Response {
   return renderPart()
 }
 
-function renderPart(): XP.Response {
+function renderPart(): Response {
   const siteConfig = getSiteConfig<XP.SiteConfig>()
   if (!siteConfig) throw Error('No site config found')
 

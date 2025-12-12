@@ -1,3 +1,4 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { get as getContentByKey, query, type Content } from '/lib/xp/content'
 import { getComponent, pageUrl } from '/lib/xp/portal'
 import { render } from '/lib/enonic/react4xp'
@@ -5,7 +6,7 @@ import { render } from '/lib/enonic/react4xp'
 import { renderError } from '/lib/ssb/error/error'
 import { type LocalSearchProps, type SearchFolderItem, type SearchItem } from '/lib/types/partTypes/localSearch'
 
-export function get(req: XP.Request): XP.Response {
+export function get(req: Request): Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -13,11 +14,11 @@ export function get(req: XP.Request): XP.Response {
   }
 }
 
-export function preview(req: XP.Request) {
+export function preview(req: Request) {
   return renderPart(req)
 }
 
-function renderPart(req: XP.Request) {
+function renderPart(req: Request) {
   const config = getComponent<XP.PartComponent.LocalSearch>()?.config
   if (!config) throw Error('No part found')
 

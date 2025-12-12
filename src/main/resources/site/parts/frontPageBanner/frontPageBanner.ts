@@ -1,3 +1,4 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { getComponent } from '/lib/xp/portal'
 import { render } from '/lib/thymeleaf'
 import { imageUrl } from '/lib/ssb/utils/imageUtils'
@@ -6,7 +7,7 @@ import { renderError } from '/lib/ssb/error/error'
 
 const view = resolve('./frontPageBanner.html')
 
-export function get(req: XP.Request) {
+export function get(req: Request) {
   try {
     return renderPart()
   } catch (e) {
@@ -18,7 +19,7 @@ export function preview() {
   return renderPart()
 }
 
-function renderPart(): XP.Response {
+function renderPart(): Response {
   const part = getComponent<XP.PartComponent.FrontPageBanner>()
   if (!part) throw Error('No part found')
 

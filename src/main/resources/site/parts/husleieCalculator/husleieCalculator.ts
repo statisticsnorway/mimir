@@ -1,3 +1,4 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { type Content } from '/lib/xp/content'
 import { getComponent, getContent, serviceUrl, pageUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
@@ -14,7 +15,7 @@ import { getCalculatorConfig, getKpiDatasetMonth } from '/lib/ssb/dataset/calcul
 import { fromPartCache } from '/lib/ssb/cache/partCache'
 import { allMonths, getNextPublishText, monthLabel } from '/lib/ssb/utils/calculatorLocalizationUtils'
 
-export function get(req: XP.Request): XP.Response {
+export function get(req: Request): Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -22,11 +23,11 @@ export function get(req: XP.Request): XP.Response {
   }
 }
 
-export function preview(req: XP.Request) {
+export function preview(req: Request) {
   return renderPart(req)
 }
 
-function renderPart(req: XP.Request) {
+function renderPart(req: Request) {
   const page = getContent()
   if (!page) throw Error('No page found')
 
@@ -39,7 +40,7 @@ function renderPart(req: XP.Request) {
   }
 }
 
-function getHusleiekalkulator(req: XP.Request, page: Content) {
+function getHusleiekalkulator(req: Request, page: Content) {
   const config = getComponent<XP.PartComponent.HusleieCalculator>()?.config
   if (!config) throw Error('No part found')
 
@@ -62,7 +63,7 @@ function getHusleiekalkulator(req: XP.Request, page: Content) {
   const lastNumberText: string = localize({
     key: 'husleieLastNumber',
     locale: language?.code,
-    values: [monthLabel(months, language?.code, lastUpdated.month), lastUpdated.year as string],
+    values: [monthLabel(months, language?.code, lastUpdated.month as string | number), lastUpdated.year as string],
   })
   const calculatorArticleUrl: string | null | undefined =
     config.husleieCalculatorArticle &&

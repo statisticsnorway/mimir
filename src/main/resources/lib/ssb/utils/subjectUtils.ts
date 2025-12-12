@@ -1,3 +1,4 @@
+import { type Request } from '@enonic-types/core'
 import { type Content, query } from '/lib/xp/content'
 import { type StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
 import { type DefaultPage } from '/lib/types/defaultPage'
@@ -18,7 +19,7 @@ import { type Subtopic } from '/site/mixins/subtopic'
 import { type Statistic } from '/site/mixins/statistic'
 import { type Article, type EndedStatisticList, type Statistics } from '/site/content-types'
 
-export function getMainSubjects(request: XP.Request, language?: string): Array<SubjectItem> {
+export function getMainSubjects(request: Request, language?: string): Array<SubjectItem> {
   return fromSubjectCache<SubjectItem>(request, `mainsubject-${language ?? 'all'}`, () =>
     queryForSubjects({
       language,
@@ -91,7 +92,7 @@ export function getMainSubjectById(mainSubjects: Array<SubjectItem>, id: string)
   return null
 }
 
-export function getSubSubjects(request: XP.Request, language?: string): Array<SubjectItem> {
+export function getSubSubjects(request: Request, language?: string): Array<SubjectItem> {
   return fromSubjectCache<SubjectItem>(request, `subsubject-${language ? language : 'all'}`, () => {
     const lang: string = language ? (language !== 'en' ? 'AND language != "en"' : 'AND language = "en"') : ''
     const subSubjectsContent: Array<DefaultPage> = query({
@@ -365,7 +366,7 @@ export function getSecondaryStatisticsBySubject(
     })
 }
 
-export function getSubjectStructur(request: XP.Request, language: string): Array<MainSubject> {
+export function getSubjectStructur(request: Request, language: string): Array<MainSubject> {
   const mainSubjectsAll: Array<SubjectItem> = getMainSubjects(request)
   const subSubjectsAll: Array<SubjectItem> = getSubSubjects(request)
   const statregStatistics: Array<StatisticInListing> = ensureArray(getAllStatisticsFromRepo())

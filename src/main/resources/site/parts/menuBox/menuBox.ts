@@ -1,3 +1,4 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { get as getContentByKey, type Content } from '/lib/xp/content'
 import { pageUrl, getComponent } from '/lib/xp/portal'
 import { render } from '/lib/thymeleaf'
@@ -11,7 +12,7 @@ import { type MenuBox } from '/site/content-types'
 
 const view = resolve('./menuBox.html')
 
-export function get(req: XP.Request): XP.Response | string {
+export function get(req: Request): Response | string {
   try {
     return renderPart(req)
   } catch (e) {
@@ -19,11 +20,11 @@ export function get(req: XP.Request): XP.Response | string {
   }
 }
 
-export function preview(req: XP.Request) {
+export function preview(req: Request) {
   return renderPart(req)
 }
 
-function renderPart(req: XP.Request): XP.Response | string {
+function renderPart(req: Request): Response | string {
   const part = getComponent<XP.PartComponent.MenuBox>()
   if (!part) throw Error('No part found')
 

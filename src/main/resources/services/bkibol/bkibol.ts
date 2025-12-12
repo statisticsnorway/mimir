@@ -1,3 +1,4 @@
+import { type Response } from '@enonic-types/core'
 import { type Content } from '/lib/xp/content'
 import { getContent } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
@@ -12,7 +13,7 @@ import { allMonths, monthLabel, serieLocalization, SeriesKey } from '/lib/ssb/ut
 import { type CalculatorConfig } from '/site/content-types'
 
 // eslint-disable-next-line complexity
-function get(req: HttpRequestParams): XP.Response {
+function get(req: HttpRequestParams): Response {
   const domene: string | undefined = req.params?.domene || 'ENEBOLIG'
   const scope: string | undefined = req.params?.scope || 'IALT'
   const serie: string | undefined = req.params?.serie || '04'

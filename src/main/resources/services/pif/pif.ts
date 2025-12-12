@@ -1,3 +1,4 @@
+import { type Response } from '@enonic-types/core'
 import { Content } from '/lib/xp/content'
 import { localize } from '/lib/xp/i18n'
 import { HttpRequestParams } from '/lib/http-client'
@@ -7,7 +8,7 @@ import { isChronological, getChangeValue } from '/lib/ssb/utils/calculatorUtils'
 import { type CalculatorConfig } from '/site/content-types'
 
 // eslint-disable-next-line complexity
-function get(req: HttpRequestParams): XP.Response {
+function get(req: HttpRequestParams): Response {
   // Scope code for radio button group option pif-choose-home-import, which is set as default in frontend.
   const scopeCode: string | undefined = req.params?.scopeCode ?? '3'
   const productGroup: string | undefined = req.params?.productGroup || 'SITCT'

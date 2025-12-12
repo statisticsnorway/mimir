@@ -1,3 +1,4 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { get as getContentByKey, type Content } from '/lib/xp/content'
 import { getComponent, attachmentUrl, pageUrl } from '/lib/xp/portal'
 import { render } from '/lib/enonic/react4xp'
@@ -5,7 +6,7 @@ import { renderError } from '/lib/ssb/error/error'
 import { type LinksProps } from '/lib/types/partTypes/links'
 import { type Links as LinksPartConfig } from '.'
 
-export function get(req: XP.Request): XP.Response {
+export function get(req: Request): Response {
   try {
     const part = getComponent<XP.PartComponent.Links>()
     if (!part) throw Error('No part found')
@@ -17,14 +18,14 @@ export function get(req: XP.Request): XP.Response {
   }
 }
 
-export function preview(req: XP.Request, config: LinksPartConfig): XP.Response {
+export function preview(req: Request, config: LinksPartConfig): Response {
   try {
     return renderPart(req, config)
   } catch (e) {
     return renderError(req, 'Error in part', e)
   }
 }
-function renderPart(req: XP.Request, config: LinksPartConfig) {
+function renderPart(req: Request, config: LinksPartConfig) {
   const linkTypes: LinksPartConfig['linkTypes'] = config.linkTypes
 
   let props: LinksProps | object = {}

@@ -1,8 +1,9 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { type SendMessageParams, send } from '/lib/xp/mail'
 import { type HttpRequestParams, type HttpResponse, request } from '/lib/http-client'
 
-export const post = (req: XP.Request): XP.Response => {
-  const formData: ContactFormData = JSON.parse(req.body)
+export const post = (req: Request): Response => {
+  const formData: ContactFormData = JSON.parse(req.body as string)
 
   const siteKey = app.config && app.config['GCP_RECAPTCHA_SITE_KEY'] ? app.config['GCP_RECAPTCHA_SITE_KEY'] : null
   const secret = app.config && app.config['GCP_API_KEY'] ? app.config['GCP_API_KEY'] : null
@@ -62,7 +63,7 @@ interface RecaptchaResponse {
   }
 }
 
-function postMail(formData: ContactFormData): XP.Response {
+function postMail(formData: ContactFormData): Response {
   const emailParams: SendMessageParams = {
     from: 'noreply@ssb.no',
     to: getReceiverEmail(formData.receiver.id),

@@ -1,3 +1,4 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { get as getContentByKey, type Content } from '/lib/xp/content'
 import { getContent, getComponent } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
@@ -15,7 +16,7 @@ import { type DefaultPage, type StaticVisualizationProps } from '/lib/types/part
 import { type HtmlTable } from '/lib/types/partTypes/table'
 import { type StaticVisualization } from '/site/content-types'
 
-export function get(req: XP.Request): XP.Response {
+export function get(req: Request): Response {
   try {
     const config = getComponent<XP.PartComponent.StaticVisualization>()?.config
     if (!config) throw Error('No part found')
@@ -27,7 +28,7 @@ export function get(req: XP.Request): XP.Response {
   }
 }
 
-export function preview(req: XP.Request, contentId: string | undefined): XP.Response {
+export function preview(req: Request, contentId: string | undefined): Response {
   try {
     return renderPart(req, contentId)
   } catch (e) {
@@ -35,7 +36,7 @@ export function preview(req: XP.Request, contentId: string | undefined): XP.Resp
   }
 }
 
-function renderPart(req: XP.Request, contentId: string | undefined): XP.Response {
+function renderPart(req: Request, contentId: string | undefined): Response {
   const content = getContent<Content<DefaultPage>>()
   if (!content?.page) throw Error('No content found')
   const phrases = getPhrases(content as unknown as Content) as Phrases

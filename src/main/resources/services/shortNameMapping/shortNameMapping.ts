@@ -1,3 +1,4 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { query, Content } from '/lib/xp/content'
 import { pageUrl } from '/lib/xp/portal'
 import { getAllStatisticsFromRepo } from '/lib/ssb/statreg/statistics'
@@ -6,7 +7,7 @@ import { Statistics } from '/site/content-types'
 
 type Lang = 'no' | 'en' | undefined
 
-function get(req: XP.Request): XP.Response {
+function get(req: Request): Response {
   const { lang } = req.params as { lang: Lang }
 
   const statistics = getAllStatisticsFromRepo()

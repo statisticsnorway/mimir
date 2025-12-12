@@ -1,3 +1,4 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { getContent, getComponent } from '/lib/xp/portal'
 import { query, type Content } from '/lib/xp/content'
 import { localize } from '/lib/xp/i18n'
@@ -10,7 +11,7 @@ import { isEnabled } from '/lib/featureToggle'
 import { prepareArticles } from '/lib/ssb/utils/articleUtils'
 import { type Article } from '/site/content-types'
 
-export function get(req: XP.Request): XP.Response {
+export function get(req: Request): Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -18,11 +19,11 @@ export function get(req: XP.Request): XP.Response {
   }
 }
 
-export function preview(req: XP.Request) {
+export function preview(req: Request) {
   return renderPart(req)
 }
 
-function renderPart(req: XP.Request) {
+function renderPart(req: Request) {
   const content = getContent()
   if (!content) throw Error('No page found')
 
@@ -34,7 +35,7 @@ function renderPart(req: XP.Request) {
   }
 }
 
-function getArticleList(req: XP.Request, content: Content) {
+function getArticleList(req: Request, content: Content) {
   const component = getComponent<XP.PartComponent.ArticleList>()
   if (!component) throw Error('No component found')
 
@@ -60,7 +61,7 @@ function getArticleList(req: XP.Request, content: Content) {
   return render('site/parts/articleList/articleList', props, req, { hydrate: false })
 }
 
-function getArticles(req: XP.Request, language: string) {
+function getArticles(req: Request, language: string) {
   const subjectItems = getSubSubjects(req, language)
   const pagePaths = subjectItems.map((sub) => `_parentPath LIKE "/content${sub.path}/*"`)
 

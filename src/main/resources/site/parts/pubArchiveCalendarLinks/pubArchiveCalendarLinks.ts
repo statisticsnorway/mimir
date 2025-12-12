@@ -1,3 +1,4 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { getContent, getComponent } from '/lib/xp/portal'
 import { type Phrases } from '/lib/types/language'
 import { render } from '/lib/enonic/react4xp'
@@ -5,7 +6,7 @@ import { render } from '/lib/enonic/react4xp'
 import { renderError } from '/lib/ssb/error/error'
 import { getPhrases } from '/lib/ssb/utils/language'
 
-export function get(req: XP.Request): XP.Response {
+export function get(req: Request): Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -13,7 +14,7 @@ export function get(req: XP.Request): XP.Response {
   }
 }
 
-export function preview(req: XP.Request): XP.Response {
+export function preview(req: Request): Response {
   return renderPart(req)
 }
 
@@ -22,7 +23,7 @@ const NO_LINKS_FOUND: object = {
   contentType: 'text/html',
 }
 
-function renderPart(req: XP.Request): XP.Response {
+function renderPart(req: Request): Response {
   const config = getComponent<XP.PartComponent.PubArchiveCalendarLinks>()?.config
   if (!config) throw Error('No part found')
 

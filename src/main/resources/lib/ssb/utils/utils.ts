@@ -1,8 +1,10 @@
+import { type Request } from '@enonic-types/core'
 import { localize } from '/lib/xp/i18n'
 import { get, getAttachmentStream, ByteSource, Content } from '/lib/xp/content'
 
-import { getContent, pageUrl, assetUrl } from '/lib/xp/portal'
+import { getContent, pageUrl } from '/lib/xp/portal'
 import { readLines } from '/lib/xp/io'
+import { assetUrl } from '/lib/enonic/asset'
 import { type PreliminaryData } from '/lib/types/xmlParser'
 import { formatDate, fromNow } from '/lib/ssb/utils/dateUtils'
 import { type SourceList, type SourcesConfig } from '/lib/types/sources'
@@ -64,7 +66,7 @@ export function getRowValue(
 }
 
 // Returns page mode for Kommunefakta page based on request mode or request path
-export function pageMode(req: XP.Request): string {
+export function pageMode(req: Request): string {
   return req.params.municipality ? 'municipality' : 'map'
 }
 

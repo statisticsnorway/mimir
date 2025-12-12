@@ -1,3 +1,4 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { render } from '/lib/thymeleaf'
 
 export interface ErrorInterface {
@@ -7,7 +8,7 @@ export interface ErrorInterface {
 
 const errorView = resolve('./error.html')
 
-export function renderError(req: XP.Request, title: string, exception: Error): XP.Response {
+export function renderError(req: Request, title: string, exception: Error): Response {
   const model: ErrorInterface = {
     errorBody: exception?.message ?? '',
     errorTitle: title,

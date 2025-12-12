@@ -1,3 +1,5 @@
+import { type Request, type Response } from '@enonic-types/core'
+
 import '/lib/ssb/polyfills/nashorn'
 import { listener, send, EnonicEvent, EnonicEventData } from '/lib/xp/event'
 import { query, get, Content } from '/lib/xp/content'
@@ -347,12 +349,7 @@ function getFilterCache(branch: string, filterKey: string): Cache {
   return filterCache
 }
 
-export function fromFilterCache(
-  req: XP.Request,
-  filterKey: string,
-  key: string,
-  fallback: () => XP.Response
-): XP.Response {
+export function fromFilterCache(req: Request, filterKey: string, key: string, fallback: () => Response): Response {
   if (req.mode === 'live' || req.mode === 'preview') {
     const branch: string = req.mode === 'live' ? 'master' : 'draft'
     const filterCache: Cache = getFilterCache(branch, filterKey)
@@ -364,7 +361,7 @@ export function fromFilterCache(
   return fallback()
 }
 
-export function fromMenuCache(req: XP.Request, key: string, fallback: () => unknown): unknown {
+export function fromMenuCache(req: Request, key: string, fallback: () => unknown): unknown {
   if (req.mode === 'live') {
     const branch: string = req.mode === 'live' ? 'master' : 'draft'
     const menuCache: Cache = branch === 'master' ? masterMenuCache : draftMenuCache
@@ -376,7 +373,7 @@ export function fromMenuCache(req: XP.Request, key: string, fallback: () => unkn
   return fallback()
 }
 
-export function fromRelatedArticlesCache(req: XP.Request, key: string, fallback: () => unknown): unknown {
+export function fromRelatedArticlesCache(req: Request, key: string, fallback: () => unknown): unknown {
   if (req.mode === 'live') {
     const branch: string = req.mode === 'live' ? 'master' : 'draft'
     const relatedArticlesCache: Cache = branch === 'master' ? masterRelatedArticlesCache : draftRelatedArticlesCache

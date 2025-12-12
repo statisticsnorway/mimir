@@ -1,3 +1,5 @@
+import { type Request } from '@enonic-types/core'
+
 export interface MunicipalityChangeList {
   codeChanges: Array<MunicipalityChange>
 }
@@ -12,7 +14,7 @@ export interface MunicipalityChange {
   changeOccurred: string
 }
 
-export interface RequestWithCode extends XP.Request {
+export interface RequestWithCode extends Request {
   code: string
 }
 

@@ -1,8 +1,9 @@
 import '/lib/ssb/polyfills/nashorn'
+import { type Request } from '@enonic-types/core'
 import { getPermissions } from '/lib/xp/content'
 import { get as getContext, PrincipalKey } from '/lib/xp/context'
 
-export function hasWritePermissionsAndPreview(req: XP.Request, key: string): boolean {
+export function hasWritePermissionsAndPreview(req: Request, key: string): boolean {
   if (req.mode === 'preview') {
     return hasWritePermissions(key)
   }

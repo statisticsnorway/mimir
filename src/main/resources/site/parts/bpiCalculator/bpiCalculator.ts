@@ -1,3 +1,4 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { type Content } from '/lib/xp/content'
 import { getContent, getComponent, serviceUrl } from '/lib/xp/portal'
 import { type Dataset } from '/lib/types/jsonstat-toolkit'
@@ -20,7 +21,7 @@ import {
 import { fromPartCache } from '/lib/ssb/cache/partCache'
 import { type CalculatorConfig } from '/site/content-types'
 
-export function get(req: XP.Request): XP.Response {
+export function get(req: Request): Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -28,15 +29,15 @@ export function get(req: XP.Request): XP.Response {
   }
 }
 
-export function preview(req: XP.Request) {
+export function preview(req: Request) {
   return renderPart(req)
 }
 
-function renderPart(req: XP.Request): XP.Response {
+function renderPart(req: Request): Response {
   const page = getContent()
   if (!page) throw Error('No page found')
 
-  let bpiCalculator: XP.Response
+  let bpiCalculator: Response
   if (req.mode === 'edit' || req.mode === 'inline') {
     bpiCalculator = getBpiCalculatorComponent(req, page)
   } else {
@@ -47,7 +48,7 @@ function renderPart(req: XP.Request): XP.Response {
   return bpiCalculator
 }
 
-function getBpiCalculatorComponent(req: XP.Request, page: Content<CalculatorConfig>): XP.Response {
+function getBpiCalculatorComponent(req: Request, page: Content<CalculatorConfig>): Response {
   const config = getComponent<XP.PartComponent.BpiCalculator>()?.config
   if (!config) throw Error('No part found')
 

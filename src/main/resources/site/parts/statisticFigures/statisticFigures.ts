@@ -1,6 +1,7 @@
 import { type Request, type Response } from '@enonic-types/core'
 import { type Content } from '/lib/xp/content'
-import { getContent, processHtml, assetUrl } from '/lib/xp/portal'
+import { getContent, processHtml } from '/lib/xp/portal'
+import { assetUrl } from '/lib/enonic/asset'
 import { type Phrases } from '/lib/types/language'
 import { render as r4XpRender } from '/lib/enonic/react4xp'
 import { type StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
