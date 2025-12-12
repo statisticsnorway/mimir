@@ -61,7 +61,7 @@ jobs:
                   "type": "header",
                   "text": {
                     "type": "plain_text",
-                    "text": "$WORKFLOW in $REPO"
+                      "text": "${{ env.WORKFLOW }} in ${{ env.REPO }}"
                   }
                 },
                 {
@@ -73,8 +73,8 @@ jobs:
                       "alt_text" : "Github logo"
                     },
                     {
-                      "type": "mrkdwn",
-                      "text": "Run by: *$ACTOR* on: *$REF*"
+                    "type": "mrkdwn",
+                    "text": "Run by: *${{ env.ACTOR }}* on: *${{ env.REF }}*"
                     }
                   ]
                 },
@@ -82,7 +82,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "💣 Build $RUN_NUMBER is a *${{ job.status }}*, and that's cool!\nCommit message: *$COMMIT_MSG*\nIf you want to fix it, start by looking at the <https://github.com/$REPO/actions/runs/$RUN_ID|workflow output>"
+                    "text": "💣 Build ${{ env.RUN_NUMBER }} is a *${{ job.status }}*, and that's cool!\nCommit message: *${{ env.COMMIT_MSG }}*\nIf you want to fix it, start by looking at the <https://github.com/${{ env.REPO }}/actions/runs/${{ env.RUN_ID }}|workflow output>"
                   }
                 }
               ]
@@ -125,7 +125,7 @@ jobs:
                   "type": "header",
                   "text": {
                     "type": "plain_text",
-                    "text": "Mabl Tests Failed in QA $REPO"
+                      "text": "Mabl Tests Failed in QA ${{ env.REPO }}"
                   }
                 },
                 {
@@ -137,8 +137,8 @@ jobs:
                       "alt_text" : "Github logo"
                     },
                     {
-                      "type": "mrkdwn",
-                      "text": "Run by: *$ACTOR* on: *$REF*"
+                    "type": "mrkdwn",
+                    "text": "Run by: *${{ env.ACTOR }}* on: *${{ env.REF }}*"
                     }
                   ]
                 },
@@ -146,7 +146,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "❌ Mabl tests failed for build $RUN_NUMBER\nPlease check the <https://github.com/$REPO/actions/runs/$RUN_ID|workflow output> for details"
+                    "text": "❌ Mabl tests failed for build ${{ env.RUN_NUMBER }}\nPlease check the <https://github.com/${{ env.REPO }}/actions/runs/${{ env.RUN_ID }}|workflow output> for details"
                   }
                 }
               ]

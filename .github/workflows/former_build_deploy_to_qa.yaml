@@ -48,7 +48,6 @@ jobs:
           WORKFLOW: ${{ github.workflow }}
           RUN_NUMBER: ${{ github.event.inputs.gh_run_number }}
         with:
-        with:
           webhook: ${{ secrets.SLACK_MIMIR_UTV }}
           webhook-type: incoming-webhook
           payload: |
@@ -58,7 +57,7 @@ jobs:
                   "type": "header",
                   "text": {
                     "type": "plain_text",
-                    "text": "$WORKFLOW in $REPO"
+                      "text": "${{ env.WORKFLOW }} in ${{ env.REPO }}"
                   }
                 },
                 {
@@ -70,8 +69,8 @@ jobs:
                       "alt_text" : "Github logo"
                     },
                     {
-                      "type": "mrkdwn",
-                      "text": "Run by: *$ACTOR* on: *$REF*"
+                    "type": "mrkdwn",
+                    "text": "Run by: *${{ env.ACTOR }}* on: *${{ env.REF }}*"
                     }
                   ]
                 },
@@ -79,7 +78,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "💣 Build $RUN_NUMBER is a *${{ job.status }}*, and that's cool!\nIf you want to fix it, start by looking at the <https://github.com/$REPO/actions/runs/$RUN_ID|workflow output>"
+                    "text": "💣 Build ${{ env.RUN_NUMBER }} is a *${{ job.status }}*, and that's cool!\nIf you want to fix it, start by looking at the <https://github.com/${{ env.REPO }}/actions/runs/${{ env.RUN_ID }}|workflow output>"
                   }
                 }
               ]
