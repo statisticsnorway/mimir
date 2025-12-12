@@ -67,8 +67,8 @@ jobs:
           ACTOR: ${{ github.actor }}
           REF: ${{ github.ref_name }}
           RUN_NUMBER: ${{ github.run_number }}
-          PR_URL: ${{ github.event.pull_request.html_url }}
-          COMMIT_URL: $ {{github.event.head_commit.url}}
+          PR_URL: ${{ github.event.pull_request.html_url || "" }}
+          COMMIT_URL: $ {{github.event.head_commit.url || ""}}
           WORKFLOW: ${{ github.workflow }}
           REPO: ${{ github.repository }}
         uses: slackapi/slack-github-action@v2
