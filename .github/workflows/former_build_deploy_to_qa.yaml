@@ -48,7 +48,6 @@ jobs:
           WORKFLOW: ${{ github.workflow }}
           RUN_NUMBER: ${{ github.event.inputs.gh_run_number }}
         with:
-        with:
           webhook: ${{ secrets.SLACK_MIMIR_UTV }}
           webhook-type: incoming-webhook
           payload: |
