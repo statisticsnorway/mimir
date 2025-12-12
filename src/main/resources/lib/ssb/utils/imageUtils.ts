@@ -1,4 +1,4 @@
-import { get, Content } from '/lib/xp/content'
+import { get, type Content } from '/lib/xp/content'
 import { imageUrl as xpImageUrl, type ImageUrlParams, imagePlaceholder } from '/lib/xp/portal'
 
 export function getImageCaption(imageId?: string): string {
@@ -21,7 +21,6 @@ export function getImageAlt(imageId?: string): string {
 
 export function imageUrl(params: ImageUrlParams) {
   if (!(params.path || params.id)) return ''
-
   const image = get<Content<MediaImage>>({ key: (params.path as string) || (params.id as string) })
   if (!image) return ''
 

@@ -1,0 +1,31 @@
+{
+  "extends": "../../main/resources/tsconfig.json",
+
+  // Specifies an array of filenames or patterns to include in the program.
+  // These filenames are resolved relative to the directory containing the
+  // tsconfig.json file.
+  "include": [
+    "./**/*.spec.ts",
+    "./**/*.spec.tsx",
+    "./**/*.test.ts",
+    "./**/*.test.tsx",
+  ],
+
+  "compilerOptions": {
+    // Import CommonJS modules in compliance with es6 modules spec
+    "esModuleInterop": true,
+
+    // A series of entries which re-map imports to lookup locations relative
+    // to the baseUrl if set, or to the tsconfig file itself otherwise.
+    "paths": {
+      "/lib/xp/*": ["../../../node_modules/@enonic-types/lib-*"],
+      "/*": ["../../main/resources/*"],
+    },
+    "sourceMap": true, // Important to get correct line numbers when running coverage tests
+    "types": [
+      "@enonic-types/global",
+      "jest", 
+      "node", // console
+    ],
+  }, // compilerOptions
+}
