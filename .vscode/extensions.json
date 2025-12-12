@@ -1,0 +1,9 @@
+{
+    "recommendations": [
+      "dbaeumer.vscode-eslint",
+      "EditorConfig.EditorConfig",
+      "GitHub.vscode-pull-request-github",
+      "redhat.vscode-xml",
+      "redhat.vscode-yaml",
+    ]
+}
