@@ -1,8 +1,8 @@
 /* eslint-disable complexity */
-import { type Request, type Response } from '@enonic-types/core'
-import { Article } from 'schema-dts'
+import { type Request, type Response, type PageComponent } from '@enonic-types/core'
+import { type Article, type WithContext } from 'schema-dts'
 import { type Content, query } from '/lib/xp/content'
-import { type Component, getContent, getSiteConfig, pageUrl, processHtml } from '/lib/xp/portal'
+import { getContent, getSiteConfig, pageUrl, processHtml } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 import { assetUrl } from '/lib/enonic/asset'
 import { render } from '/lib/thymeleaf'
@@ -114,11 +114,12 @@ export function get(req: Request): Response {
 
   const isFragment: boolean = page.type === 'portal:fragment'
   const regions: RegionsContent = prepareRegions(isFragment, page)
+  const pageFragment = page.fragment as DefaultPage['fragment']
   let config: DefaultPageConfig | undefined
   if (!isFragment && pageConfig) {
     config = pageConfig
-  } else if (isFragment && page.fragment && page.fragment.config) {
-    config = page.fragment.config
+  } else if (isFragment && pageFragment?.config) {
+    config = pageFragment.config
   }
 
   const bodyClasses: Array<string> = []
@@ -397,7 +398,8 @@ function prepareRegions(isFragment: boolean, page: DefaultPage): RegionsContent 
   configRegions.forEach((configRegion) => {
     // @ts-ignore
     configRegion.components = regions[configRegion.region]
-      ? util.data.forceArray(regions[configRegion.region].components)
+      ? // @ts-ignore
+        util.data.forceArray(regions[configRegion.region].components)
       : []
   })
 
@@ -410,7 +412,7 @@ function prepareRegions(isFragment: boolean, page: DefaultPage): RegionsContent 
   }
 }
 
-function prepareStructuredData(metaInfo: MetaInfoData, page: DefaultPage): Article {
+function prepareStructuredData(metaInfo: MetaInfoData, page: DefaultPage): WithContext<Article> {
   return {
     '@context': 'https://schema.org',
     '@type': 'Article',
@@ -594,7 +596,7 @@ function parseStatbankFrameContent(statbankFane: boolean, req: Request, page: De
       // rather than the language from the xp frame fallback page
       pageLanguage = statisticInXP ? statisticInXP.language : nynorskStatisticInXP?.language
     } else {
-      filteredStatistics = getStatisticByShortNameFromRepo(req.params.shortname)
+      filteredStatistics = getStatisticByShortNameFromRepo(req.params?.shortname?.toString())
     }
   }
 
@@ -665,7 +667,7 @@ function addAlerts(
   )
 }
 
-interface DefaultPage extends Content {
+interface DefaultPage extends Omit<Content, 'fragment'> {
   fragment?: {
     regions: Regions
     config: DefaultPageConfig
@@ -692,7 +694,7 @@ interface DefaultPage extends Content {
   page: ExtendedPage
 }
 
-interface ExtendedPage extends Component<object> {
+interface ExtendedPage extends PageComponent {
   config: DefaultPageConfig
 }
 
