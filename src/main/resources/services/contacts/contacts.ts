@@ -2,9 +2,9 @@ import '/lib/ssb/polyfills/nashorn'
 import { type Request, type Response } from '@enonic-types/core'
 import { handleRepoGet } from '/lib/ssb/dashboard/statreg/repoUtils'
 import { getContactsFromRepo } from '/lib/ssb/statreg/contacts'
-import { type Contact as StatRegContacts } from '/lib/ssb/dashboard/statreg/types'
+import { type Contact as StatRegContact } from '/lib/ssb/dashboard/statreg/types'
 
-const toOption = ({ id, name, email, mobile, telephone }: StatRegContacts) => ({
+const toOption = ({ id, name, email, mobile, telephone }: StatRegContact) => ({
   id,
   displayName: name,
   description: email,
@@ -14,7 +14,7 @@ const toOption = ({ id, name, email, mobile, telephone }: StatRegContacts) => ({
   telephone,
 })
 
-const filterByDisplayName = (contacts: StatRegContacts[], filters: Request['params']) => {
+const filterByDisplayName = (contacts: StatRegContact[], filters: Request['params']) => {
   log.info(`searching ${filters.query} in ${contacts?.length}`)
   return (
     contacts?.filter((c) =>
@@ -23,13 +23,13 @@ const filterByDisplayName = (contacts: StatRegContacts[], filters: Request['para
   )
 }
 
-const filterByIds = (contacts: StatRegContacts[], filters: Request['params']) => {
+const filterByIds = (contacts: StatRegContact[], filters: Request['params']) => {
   return (
-    (filters?.ids as string | undefined)?.split(',').reduce((acc: StatRegContacts[], id) => {
+    (filters?.ids as string | undefined)?.split(',').reduce((acc: StatRegContact[], id) => {
       const found = contacts.find((c) => `${c.id}` === id)
       return found
         ? acc.concat(found)
-        : acc.concat({ id: id as unknown as number, name: 'Slettet kontakt', email: '' } as StatRegContacts)
+        : acc.concat({ id: id as unknown as number, name: 'Slettet kontakt', email: '' } as StatRegContact)
     }, []) || []
   )
 }
