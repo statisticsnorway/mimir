@@ -131,7 +131,7 @@ function renderKeyFigure(
       source: config?.source,
       columns: !!config?.columns,
       showPreviewDraft,
-      paramShowDraft: req.params.showDraft as string | undefined,
+      paramShowDraft: req.params?.showDraft?.toString(),
       draftExist,
       pageTypeKeyFigure: page.type === `${app.name}:keyFigure`,
       hiddenTitle: hiddenTitle.toString().replace(/[\[\]']+/g, ''),

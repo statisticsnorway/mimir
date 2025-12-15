@@ -21,7 +21,7 @@ function renderPart(req: Request) {
   const content = getContent<Content<Page>>()
   if (!content) throw Error('No page found')
 
-  const sort: string = req.params.sort ? (req.params.sort as string) : 'DESC'
+  const sort: string = req.params.sort ? req.params.sort.toString() : 'DESC'
   const language: string = content.language ? content.language : 'nb'
   const filterAndSortEnabled: boolean = isEnabled('articlelist-sorting', false)
   const currentPath: string = content._path

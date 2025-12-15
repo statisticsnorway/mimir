@@ -11,7 +11,7 @@ export function get(req: Request): Response {
       contentType: 'application/json',
     }
   }
-  const name = (req.params.name as string).trim()
+  const name = req.params.name.toString().trim()
   const includeGraphData = req.params.includeGraphData === 'true'
   const nameResult: SolrResponse = getNameSearchResult(name, includeGraphData)
 

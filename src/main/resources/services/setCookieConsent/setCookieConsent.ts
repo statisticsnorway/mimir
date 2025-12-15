@@ -1,7 +1,7 @@
 import { type Request, type Response } from '@enonic-types/core'
 
 export function get(req: Request): Response {
-  const value = req.params.value as string
+  const value = req.params?.value?.toString()
 
   if (!value || !['all', 'necessary', 'unidentified'].includes(value)) {
     return {

@@ -38,7 +38,7 @@ export function renderPart(req: Request) {
   const part = getComponent<XP.PartComponent.SearchResult>()
   if (!part) throw Error('No part found')
 
-  const sanitizedTerm: string = req.params.sok ? sanitizeForSolr(req.params.sok as string) : ''
+  const sanitizedTerm: string = req.params.sok ? sanitizeForSolr(req.params.sok.toString()) : ''
   const searchPageUrl: string = part.config.searchResultPage
     ? pageUrl({
         id: part.config.searchResultPage,
@@ -225,8 +225,8 @@ export function renderPart(req: Request) {
         language,
         parseInt(part.config.numberOfHits),
         0,
-        req.params.emne as string | undefined,
-        req.params.innholdstype as string | undefined
+        req.params?.emne?.toString(),
+        req.params?.innholdstype?.toString()
       )
     : {
         total: 0,
@@ -376,8 +376,8 @@ export function renderPart(req: Request) {
     contentTypePhrases: contentTypePhrases,
     contentTypes: solrResult.contentTypes,
     subjects: solrResult.subjects,
-    contentTypeUrlParam: req.params.innholdstype as string | undefined,
-    subjectUrlParam: req.params.emne as string | undefined,
+    contentTypeUrlParam: req.params?.innholdstype?.toString(),
+    subjectUrlParam: req.params?.emne?.toString(),
     searchResultSRText: localize({
       key: 'searchResult.screenReader.result',
       locale: language,

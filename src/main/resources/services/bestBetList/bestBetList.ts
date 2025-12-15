@@ -44,6 +44,6 @@ export function post(req: Request) {
   return response
 }
 function del(req: Request) {
-  return deleteBestBet(req.params.key as string)
+  return deleteBestBet(req.params?.key?.toString())
 }
 export { del as delete }

@@ -8,11 +8,11 @@ import { type MunicipalityWithCounty } from '/lib/types/municipalities'
 
 export function filter(req: Request, next: (req: Request) => Response): Response {
   if (req.params.selfRequest) return next(req)
-  const paramKommune = (req.params.kommune as string) || (req.params.Kommune as string)
+  const paramKommune = req.params?.kommune?.toString() || req.params?.Kommune?.toString()
   const region = paramKommune ?? req.path.split('/').pop()
   const municipality: MunicipalityWithCounty | undefined = getMunicipalityByName(
     municipalsWithCounties(),
-    region as string
+    region.toString()
   )
   if (!municipality && region !== 'kommune') {
     return next(req)
@@ -60,10 +60,9 @@ export function filter(req: Request, next: (req: Request) => Response): Response
   if (pageTitle) {
     const site = getSite()
     if (site) {
-      targetResponse.body = (targetResponse.body as string).replace(
-        /(<title>)(.*?)(<\/title>)/i,
-        `<title>${pageTitle} – ${site.displayName}</title>`
-      )
+      targetResponse.body = (targetResponse.body as Response)
+        .toString()
+        .replace(/(<title>)(.*?)(<\/title>)/i, `<title>${pageTitle} – ${site.displayName}</title>`)
     }
   }
 

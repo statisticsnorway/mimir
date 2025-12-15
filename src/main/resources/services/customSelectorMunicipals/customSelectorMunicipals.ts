@@ -14,7 +14,7 @@ import { list, query } from '/lib/ssb/dataset/klass/municipalities'
  */
 export function get(req: Request) {
   // deepcode ignore Sqli: This is not SQL, simply string regex matching
-  const municipals = req.params.query ? query(req.params.query as string) : list()
+  const municipals = req.params.query ? query(req.params.query.toString()) : list()
 
   return {
     body: {

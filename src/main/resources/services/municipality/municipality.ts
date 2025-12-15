@@ -6,7 +6,7 @@ const contentType = 'application/json'
 
 export function get(req: Request) {
   const municipality = getMunicipality({
-    code: req.params.postalCode as string,
+    code: req.params?.postalCode?.toString(),
   } as RequestWithCode)
   const body = {
     municipality,

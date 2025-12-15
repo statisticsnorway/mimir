@@ -13,7 +13,7 @@ export function get(req: Request): Response {
   }
 
   try {
-    const preparedBody: string = prepareNameGraphResult(sanitizeQuery(req.params.name as string))
+    const preparedBody: string = prepareNameGraphResult(sanitizeQuery(req.params.name.toString()))
 
     return {
       body: preparedBody,

@@ -7,7 +7,7 @@ export function get(req: Request) {
 
   if (ids) query = ids
 
-  if (!(query as string | undefined)?.match(hexColorRegex)) {
+  if (!query?.toString().match(hexColorRegex)) {
     return {
       body: {
         hits: [],

@@ -6,7 +6,7 @@ export const get = (req: Request): Response => {
   const start = Number(req.params.start) || 0
   const count = Number(req.params.count) || 10
 
-  const contentIdList = req.params.contentIdList ? JSON.parse(req.params.contentIdList as string) : []
+  const contentIdList = req.params.contentIdList ? JSON.parse(req.params.contentIdList.toString()) : []
 
   const partConfig: RelatedFactPageConfig = {
     inputType: req.params?.inputType as string | undefined,
