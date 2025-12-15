@@ -1,10 +1,11 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { getComponent } from '/lib/xp/portal'
 import { render } from '/lib/thymeleaf'
 import { React4xp } from '/lib/enonic/react4xp'
 
 const view = resolve('columns.html')
 
-export function get(req: XP.Request): XP.Response {
+export function get(req: Request): Response {
   const component = getComponent<XP.LayoutComponent.Columns>()!
   const { size, title, hideTitle } = component.config
   const isGrid = component.config.isGrid && req.mode !== 'edit'

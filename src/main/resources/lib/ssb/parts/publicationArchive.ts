@@ -1,3 +1,4 @@
+import { type Request } from '@enonic-types/core'
 import { type Content, get, query, QueryDsl, ContentsResult } from '/lib/xp/content'
 import { pageUrl, processHtml } from '/lib/xp/portal'
 import { type StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
@@ -20,7 +21,7 @@ import { type SubjectItem } from '/lib/types/subject'
 import { type Article, type OmStatistikken, type Statistics } from '/site/content-types'
 
 export function getPublications(
-  req: XP.Request,
+  req: Request,
   start = 0,
   count = 10,
   language: string,
@@ -65,7 +66,7 @@ function filterPublications(
   return publications
 }
 
-function getPublicationsAndStatistics(req: XP.Request, language: string): Array<PublicationItem> {
+function getPublicationsAndStatistics(req: Request, language: string): Array<PublicationItem> {
   const mainSubjects: Array<SubjectItem> = getMainSubjects(req, language)
   const subSubjects: Array<SubjectItem> = getSubSubjects(req, language)
 

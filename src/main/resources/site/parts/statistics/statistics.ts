@@ -1,3 +1,4 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { type Content } from '/lib/xp/content'
 import { getContent, pageUrl } from '/lib/xp/portal'
 import { sleep } from '/lib/xp/task'
@@ -25,7 +26,7 @@ import { preview as keyFigurePreview } from '/site/parts/keyFigure/keyFigure'
 
 const view = resolve('./statistics.html')
 
-export function get(req: XP.Request): XP.Response {
+export function get(req: Request): Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -33,14 +34,14 @@ export function get(req: XP.Request): XP.Response {
   }
 }
 
-export function preview(req: XP.Request): XP.Response {
+export function preview(req: Request): Response {
   return renderPart(req)
 }
 
 //TODO Use statisticsUtils.ts like statisticHeader
 
 // eslint-disable-next-line complexity
-function renderPart(req: XP.Request): XP.Response {
+function renderPart(req: Request): Response {
   const page = getContent<Content<Statistics>>()
   if (!page) throw Error('No page found')
 
@@ -74,7 +75,7 @@ function renderPart(req: XP.Request): XP.Response {
   let previousRelease: string | undefined = phrases.notAvailable
   let nextRelease: string | undefined = phrases.notYetDetermined
   let previewNextRelease: string | undefined = phrases.notYetDetermined
-  let statisticsKeyFigure: XP.Response | undefined
+  let statisticsKeyFigure: Response | undefined
   let changeDate: string | undefined
   let nextReleaseDate: string | undefined
   let previousReleaseDate: string | undefined
@@ -138,7 +139,7 @@ function renderPart(req: XP.Request): XP.Response {
     previousRelease: paramShowDraft && showPreviewDraft ? nextRelease : previousRelease,
     nextRelease: paramShowDraft && showPreviewDraft ? previewNextRelease : nextRelease,
     modifiedDateId: id,
-    statisticsKeyFigure: statisticsKeyFigure?.body || null,
+    statisticsKeyFigure: (statisticsKeyFigure?.body as string | undefined) || null,
     showPreviewDraft,
     draftUrl,
     draftButtonText,

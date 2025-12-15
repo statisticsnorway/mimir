@@ -1,3 +1,4 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { get as getContentByKey, getAttachmentStream, type ByteSource, type Content } from '/lib/xp/content'
 import { getComponent, getContent } from '/lib/xp/portal'
 import { readText } from '/lib/xp/io'
@@ -20,7 +21,7 @@ import { type Highmap } from '/site/content-types'
 
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
 
-export function get(req: XP.Request): XP.Response {
+export function get(req: Request): Response {
   try {
     const config = getComponent<XP.PartComponent.Highmap>()?.config
     if (!config) throw Error('No page found')
@@ -35,7 +36,7 @@ export function get(req: XP.Request): XP.Response {
   }
 }
 
-export function preview(req: XP.Request, highmapId: string | undefined): XP.Response {
+export function preview(req: Request, highmapId: string | undefined): Response {
   try {
     return renderPart(req, highmapId)
   } catch (e) {
@@ -43,7 +44,7 @@ export function preview(req: XP.Request, highmapId: string | undefined): XP.Resp
   }
 }
 
-function renderEditPlaceholder(): XP.Response {
+function renderEditPlaceholder(): Response {
   return {
     contentType: 'text/html',
     body: `
@@ -54,7 +55,7 @@ function renderEditPlaceholder(): XP.Response {
   }
 }
 
-function renderPart(req: XP.Request, highmapId: string | undefined): XP.Response {
+function renderPart(req: Request, highmapId: string | undefined): Response {
   const page = getContent()
   if (!page) throw new Error('No page found')
 

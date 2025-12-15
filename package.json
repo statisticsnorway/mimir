@@ -1,6 +1,6 @@
 {
   "name": "mimir",
-  "version": "2.37.0",
+  "version": "2.38.0",
   "description": "New cms for ssb.no",
   "main": "index.js",
   "scripts": {
@@ -43,6 +43,7 @@
     "@babel/register": "~7.28.3",
     "@babel/runtime": "~7.28.4",
     "@enonic-types/lib-admin": "7.15.3",
+    "@enonic-types/lib-asset": "^1.0.3",
     "@enonic-types/lib-auth": "7.15.3",
     "@enonic-types/lib-cluster": "7.15.3",
     "@enonic-types/lib-common": "7.15.3",
@@ -60,6 +61,7 @@
     "@enonic-types/lib-task": "7.15.3",
     "@enonic-types/lib-value": "7.15.3",
     "@enonic-types/lib-websocket": "7.15.3",
+    "@enonic/mock-xp": "^1.1.0-B4",
     "@enonic/react-components": "5.0.1",
     "@enonic/react4xp": "5.0.4",
     "@enonic/tsup-plugin-manifest": "^0.0.1",

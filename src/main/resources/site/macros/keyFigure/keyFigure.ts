@@ -1,8 +1,9 @@
+import { type Response } from '@enonic-types/core'
 import { renderError } from '/lib/ssb/error/error'
 import { type KeyFigure as KeyFigureConfig } from '/site/macros/keyFigure'
 import { macroPreview } from '/site/parts/keyFigure/keyFigure'
 
-export function macro(context: XP.MacroContext<KeyFigureConfig>): XP.Response {
+export function macro(context: XP.MacroContext<KeyFigureConfig>): Response {
   try {
     const config = context.params
     const keyFigure = macroPreview(context.request, config.keyFigure)

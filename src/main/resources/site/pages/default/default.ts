@@ -1,8 +1,10 @@
 /* eslint-disable complexity */
+import { type Request, type Response } from '@enonic-types/core'
 import { Article } from 'schema-dts'
 import { type Content, query } from '/lib/xp/content'
-import { assetUrl, type Component, getContent, getSiteConfig, pageUrl, processHtml } from '/lib/xp/portal'
+import { type Component, getContent, getSiteConfig, pageUrl, processHtml } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
+import { assetUrl } from '/lib/enonic/asset'
 import { render } from '/lib/thymeleaf'
 import {
   type ReleaseDatesVariant,
@@ -73,7 +75,7 @@ export const GTM_AUTH: string | null = app.config?.GTM_AUTH || null
 
 const view = resolve('default.html')
 
-export function get(req: XP.Request): XP.Response {
+export function get(req: Request): Response {
   const page = getContent<Content<Page> & DefaultPage>()
   if (!page) return { status: 404 }
 
@@ -92,7 +94,7 @@ export function get(req: XP.Request): XP.Response {
   const showIngress: string | boolean | undefined = ingress && page.type === 'mimir:page'
 
   // Create preview if available
-  let preview: XP.Response | undefined
+  let preview: Response | undefined
   if (partsWithPreview.includes(page.type)) {
     let name: string = page.type.replace(/^.*:/, '')
     // @ts-ignore
@@ -363,12 +365,12 @@ export function get(req: XP.Request): XP.Response {
 
   const alerts: AlertType = alertsForContext(pageConfig, alertOptions)
   const body: string = bodyWithBreadCrumbs ? breadcrumbComponent.body : thymeleafRenderBody
-  const bodyWithAlerts: XP.Response = alerts.length
+  const bodyWithAlerts: Response = alerts.length
     ? addAlerts(alerts, body, pageContributions, req)
     : ({
         body,
         pageContributions,
-      } as XP.Response)
+      } as Response)
 
   return {
     body: `<!DOCTYPE html>${bodyWithAlerts.body}`,
@@ -377,7 +379,7 @@ export function get(req: XP.Request): XP.Response {
       'x-content-key': page._id,
     },
     cookies,
-  } as XP.Response
+  } as Response
 }
 
 function prepareRegions(isFragment: boolean, page: DefaultPage): RegionsContent {
@@ -448,7 +450,7 @@ function parseMetaInfoData(
   pageType: string,
   page: DefaultPage,
   language: Language,
-  req: XP.Request
+  req: Request
 ): MetaInfoData {
   let addMetaInfoSearch = true
   let metaInfoSearchId: string | undefined = page._id
@@ -517,7 +519,7 @@ function parseMetaInfoData(
   }
 }
 
-function getSubjectsPage(page: DefaultPage, req: XP.Request, language: string): Array<string> {
+function getSubjectsPage(page: DefaultPage, req: Request, language: string): Array<string> {
   const allMainSubjects: Array<SubjectItem> = getMainSubjects(req, language === 'en' ? 'en' : 'nb')
   const allSubSubjects: Array<SubjectItem> = getSubSubjects(req, language === 'en' ? 'en' : 'nb')
   const subjects: Array<string> = []
@@ -560,7 +562,7 @@ function getSecondaryMainSubject(
   return secondaryMainSubjects
 }
 
-function parseStatbankFrameContent(statbankFane: boolean, req: XP.Request, page: DefaultPage): StatbankFrameData {
+function parseStatbankFrameContent(statbankFane: boolean, req: Request, page: DefaultPage): StatbankFrameData {
   const baseUrl: string = app.config && app.config['ssb.baseUrl'] ? app.config['ssb.baseUrl'] : 'https://www.ssb.no'
   let pageLanguage: string | undefined = page.language ? page.language : 'nb'
 
@@ -647,8 +649,8 @@ function addAlerts(
   alerts: AlertType,
   body: string,
   pageContributions: XP.PageContributions | undefined,
-  req: XP.Request
-): XP.Response {
+  req: Request
+): Response {
   return r4xpRender(
     'Alerts',
     {
@@ -709,12 +711,12 @@ interface RegionData {
 }
 
 interface Controller {
-  preview: (req: XP.Request, id: string) => XP.Response
+  preview: (req: Request, id: string) => Response
 }
 
 interface MenuContent {
   body: string
-  component: XP.Response
+  component: Response
 }
 
 interface RegionsContent {
@@ -752,7 +754,7 @@ interface DefaultModel {
   page: Content
   ingress: string | undefined
   showIngress: string | boolean | undefined
-  preview: XP.Response | undefined
+  preview: Response | undefined
   bodyClasses: string
   stylesUrl: string
   jsLibsUrl: string

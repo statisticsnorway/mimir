@@ -1,3 +1,4 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { get as getContentByKey, type Content } from '/lib/xp/content'
 import { sanitizeHtml, getContent, getComponent, pageUrl, serviceUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
@@ -17,7 +18,7 @@ import {
   type SearchResultProps,
 } from '/lib/types/partTypes/searchResult'
 
-export function get(req: XP.Request): XP.Response {
+export function get(req: Request): Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -25,11 +26,11 @@ export function get(req: XP.Request): XP.Response {
   }
 }
 
-export function preview(req: XP.Request) {
+export function preview(req: Request) {
   return renderPart(req)
 }
 
-export function renderPart(req: XP.Request) {
+export function renderPart(req: Request) {
   /* collect data */
   const content = getContent()
   if (!content) throw Error('No page found')
@@ -37,7 +38,7 @@ export function renderPart(req: XP.Request) {
   const part = getComponent<XP.PartComponent.SearchResult>()
   if (!part) throw Error('No part found')
 
-  const sanitizedTerm: string = req.params.sok ? sanitizeForSolr(req.params.sok) : ''
+  const sanitizedTerm: string = req.params.sok ? sanitizeForSolr(req.params.sok.toString()) : ''
   const searchPageUrl: string = part.config.searchResultPage
     ? pageUrl({
         id: part.config.searchResultPage,
@@ -224,8 +225,8 @@ export function renderPart(req: XP.Request) {
         language,
         parseInt(part.config.numberOfHits),
         0,
-        req.params.emne,
-        req.params.innholdstype
+        req.params?.emne?.toString(),
+        req.params?.innholdstype?.toString()
       )
     : {
         total: 0,
@@ -375,8 +376,8 @@ export function renderPart(req: XP.Request) {
     contentTypePhrases: contentTypePhrases,
     contentTypes: solrResult.contentTypes,
     subjects: solrResult.subjects,
-    contentTypeUrlParam: req.params.innholdstype,
-    subjectUrlParam: req.params.emne,
+    contentTypeUrlParam: req.params?.innholdstype?.toString(),
+    subjectUrlParam: req.params?.emne?.toString(),
     searchResultSRText: localize({
       key: 'searchResult.screenReader.result',
       locale: language,

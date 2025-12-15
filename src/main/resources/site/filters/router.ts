@@ -1,3 +1,4 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { get, Content } from '/lib/xp/content'
 import { pageUrl, getSite } from '/lib/xp/portal'
 import { request } from '/lib/http-client'
@@ -5,13 +6,13 @@ import { getMunicipalityByName, municipalsWithCounties } from '/lib/ssb/dataset/
 import { fromFilterCache } from '/lib/ssb/cache/cache'
 import { type MunicipalityWithCounty } from '/lib/types/municipalities'
 
-export function filter(req: XP.Request, next: (req: XP.Request) => XP.Response): XP.Response {
+export function filter(req: Request, next: (req: Request) => Response): Response {
   if (req.params.selfRequest) return next(req)
-  const paramKommune: string | undefined = req.params.kommune || req.params.Kommune
-  const region: string | undefined = paramKommune ?? req.path.split('/').pop()
+  const paramKommune = req.params?.kommune?.toString() || req.params?.Kommune?.toString()
+  const region = paramKommune ?? req.path.split('/').pop()
   const municipality: MunicipalityWithCounty | undefined = getMunicipalityByName(
     municipalsWithCounties(),
-    region as string
+    region.toString()
   )
   if (!municipality && region !== 'kommune') {
     return next(req)
@@ -37,7 +38,7 @@ export function filter(req: XP.Request, next: (req: XP.Request) => XP.Response):
     id: targetId,
   })
 
-  const targetResponse: XP.Response = fromFilterCache(req, targetId, req.path, () => {
+  const targetResponse: Response = fromFilterCache(req, targetId, req.path, () => {
     const headers: Headers = req.headers
     delete headers['Accept-Encoding']
     delete headers['Connection'] // forbidden header name for http/2 and http/3
@@ -59,10 +60,9 @@ export function filter(req: XP.Request, next: (req: XP.Request) => XP.Response):
   if (pageTitle) {
     const site = getSite()
     if (site) {
-      targetResponse.body = (targetResponse.body as string).replace(
-        /(<title>)(.*?)(<\/title>)/i,
-        `<title>${pageTitle} – ${site.displayName}</title>`
-      )
+      targetResponse.body = (targetResponse.body as Response)
+        .toString()
+        .replace(/(<title>)(.*?)(<\/title>)/i, `<title>${pageTitle} – ${site.displayName}</title>`)
     }
   }
 
@@ -119,7 +119,7 @@ function getTargetId(path: string): string | null {
   return targetId
 }
 
-// XP.Request.headers type is set as readonly; we have to define our own type to delete the desired properties
+// Request.headers type is set as readonly; we have to define our own type to delete the desired properties
 type Headers = {
   [key: string]: string | undefined
 }
