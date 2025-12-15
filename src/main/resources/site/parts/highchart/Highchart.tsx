@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
-import PropTypes from 'prop-types'
 import { Row, Col, Container } from 'react-bootstrap'
 import { Tabs, Divider, Link } from '@statisticsnorway/ssb-component-library'
 import 'highcharts/modules/accessibility'
@@ -12,10 +11,12 @@ import 'highcharts/modules/data'
 import 'highcharts/modules/no-data-to-display'
 import 'highcharts/modules/broken-axis'
 
-import accessibilityLang from './../../../assets/js/highchart-lang.json'
 import { exportHighchartsToExcel } from '/lib/ssb/utils/tableExportUtils'
+import { type HighchartProps, type HighchartsReactProps } from '/lib/types/partTypes/highchartsReact'
+import { HighchartsGraphConfig } from '/lib/types/highcharts'
+import accessibilityLang from '../../../assets/js/highchart-lang.json'
 
-function Highchart(props) {
+function Highchart(props: HighchartProps) {
   const { highcharts, language, phrases } = props
   const highchartsWrapperRefs = useRef({})
 
@@ -40,7 +41,7 @@ function Highchart(props) {
     }
   }, [highcharts])
 
-  const handleTabOnClick = (contentKey) => (item) => {
+  const handleTabOnClick = (contentKey: string) => (item: string) => {
     const showTable = item === 'show-as-table'
 
     const highchartWrapperElement = highchartsWrapperRefs.current[contentKey]?.children
@@ -52,15 +53,15 @@ function Highchart(props) {
     highchartElement?.setAttribute('aria-hidden', showTable)
   }
 
-  function renderShowAsFigureOrTableTab(highchartId) {
+  function renderShowAsFigureOrTableTab(highchartId: string) {
     return (
       <Col className='col-12 mb-3'>
         <Tabs
           id={highchartId}
           activeOnInit='show-as-chart'
           items={[
-            { title: phrases['highcharts.showAsChart'], path: 'show-as-chart' },
-            { title: phrases['highcharts.showAsTable'], path: 'show-as-table' },
+            { title: phrases?.['highcharts.showAsChart'], path: 'show-as-chart' },
+            { title: phrases?.['highcharts.showAsTable'], path: 'show-as-table' },
           ]}
           onClick={handleTabOnClick(highchartId)}
         />
@@ -69,26 +70,30 @@ function Highchart(props) {
     )
   }
 
-  function renderHighchartsSource(sourceLink, index) {
+  function renderHighchartsSource(sourceLink: HighchartsReactProps['sourceList'], index: number) {
     return (
       <Col key={index} className='highcharts-source col-12 mt-3'>
-        <Link href={sourceLink.sourceHref} standAlone>
-          {phrases.source}: {sourceLink.sourceText}
+        <Link href={sourceLink?.sourceHref} standAlone>
+          {phrases?.source}: {sourceLink?.sourceText}
         </Link>
       </Col>
     )
   }
 
-  function renderHighchartsFooter(footnoteText, creditsEnabled, sourceList) {
+  function renderHighchartsFooter(
+    footnoteText: HighchartsReactProps['footnoteText'],
+    creditsEnabled: HighchartsReactProps['creditsEnabled'],
+    sourceList: HighchartsReactProps['sourceList']
+  ) {
     return (
       <Row>
         {footnoteText ? <Col className='footnote col-12'>{footnoteText}</Col> : null}
-        {creditsEnabled ? sourceList.map((source, i) => renderHighchartsSource(source, i)) : null}
+        {creditsEnabled ? sourceList?.map((source, i) => renderHighchartsSource(source, i)) : null}
       </Row>
     )
   }
 
-  const downloadAsXLSX = (title) =>
+  const downloadAsXLSX = (title: string | undefined) =>
     function () {
       const rows = this.getDataRows(true)
       exportHighchartsToExcel({
@@ -97,9 +102,23 @@ function Highchart(props) {
       })
     }
 
+  // Workaround to get correct number formatting in table
+  const formatNumbersInTable = () =>
+    function (chart: HighchartsGraphConfig['chart']) {
+      for (const row of chart.dataRows) {
+        // Escaping first vaule not to format category ie. year
+        for (const [i, cell] of row.entries()) {
+          if (i > 0 && typeof cell === 'number') {
+            row[i] = cell.toLocaleString(language === 'en' ? 'en-EN' : 'no-NO').replace('NaN', '')
+          }
+        }
+      }
+    }
+
   function renderHighcharts() {
     if (highcharts?.length) {
       return highcharts.map((highchart, index) => {
+        if (!highchart.config) return
         const lang =
           language === 'en'
             ? {
@@ -117,19 +136,10 @@ function Highchart(props) {
             ...highchart.config.chart,
             events: {
               ...highchart.config.chart?.events,
-              // Workaround to get correct number formatting in table
-              exportData: function (chart) {
-                for (const row of chart.dataRows) {
-                  // Escaping first vaule not to format category ie. year
-                  for (const [i, cell] of row.entries()) {
-                    if (i > 0 && typeof cell === 'number') {
-                      row[i] = cell.toLocaleString(language === 'en' ? 'en-EN' : 'no-NO').replace('NaN', '')
-                    }
-                  }
-                }
-              },
+              exportData: formatNumbersInTable(),
               load: function () {
                 // Drawing yAxis break symbol when y-axis not starting at 0
+                // eslint-disable-next-line @typescript-eslint/no-this-alias
                 const chart = this
                 for (let i = 0; i < chart.yAxis.length; i++) {
                   // Natively highcharts resolves y axis not starting on 0 either with breaks or setting yMin
@@ -227,8 +237,8 @@ function Highchart(props) {
               <figure id={`figure-${highchart.contentKey}`} className='highcharts-figure mb-0 hide-title'>
                 <figcaption className='figure-title'>{config.title.text}</figcaption>
                 {config.subtitle.text ? <p className='figure-subtitle'>{config.subtitle.text}</p> : null}
-                {renderShowAsFigureOrTableTab(highchart.contentKey)}
-                <div ref={(el) => (highchartsWrapperRefs.current[highchart.contentKey] = el)}>
+                {renderShowAsFigureOrTableTab(highchart.contentKey as string)}
+                <div ref={(el) => (highchartsWrapperRefs.current[highchart.contentKey as string] = el)}>
                   <HighchartsReact highcharts={Highcharts} options={config} />
                 </div>
               </figure>
@@ -243,20 +253,4 @@ function Highchart(props) {
   return <Container>{renderHighcharts()}</Container>
 }
 
-Highchart.propTypes = {
-  highcharts: PropTypes.arrayOf(
-    PropTypes.shape({
-      config: PropTypes.object,
-      description: PropTypes.string,
-      type: PropTypes.string,
-      contentKey: PropTypes.string,
-      footnoteText: PropTypes.string,
-      creditsEnabled: PropTypes.boolean,
-      sourceList: Highchart['sourceList'],
-      hideTitle: PropTypes.boolean,
-    })
-  ),
-  phrases: PropTypes.object,
-}
-
-export default (props) => <Highchart {...props} />
+export default (props: HighchartProps) => <Highchart {...props} />
