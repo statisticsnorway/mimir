@@ -22,9 +22,8 @@
     ],
     "paths": {
       "/admin/*": ["./src/main/resources/admin/*"],
-      "/lib/enonic/*": ["./node_modules/@enonic-types/lib-*"],
       "/lib/xp/*": ["./node_modules/@enonic-types/lib-*"],
-      "/lib/enonic/react4xp": ["./node_modules/@enonic-types/lib-react4xp"],
+      "/lib/enonic/*": ["./node_modules/@enonic-types/lib-*"],
       "/lib/*": [ "./node_modules/@item-enonic-types/lib-*" ,"./src/main/resources/lib/*", "./src/main/resources/lib/types/*"],
       "/react4xp/*": ["./src/main/resources/react4xp/*"],
       "/services/*": ["./src/main/resources/services/*"],
