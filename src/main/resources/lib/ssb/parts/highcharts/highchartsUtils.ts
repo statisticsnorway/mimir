@@ -1,3 +1,4 @@
+import { type Request } from '@enonic-types/core'
 import { Content } from '/lib/xp/content'
 import { type JSONstat } from '/lib/types/jsonstat-toolkit'
 import { type TbmlDataUniform } from '/lib/types/xmlParser'
@@ -13,7 +14,7 @@ import { type DataSource } from '/site/mixins/dataSource'
 import { type CombinedGraph, type Highchart } from '/site/content-types'
 
 export function createHighchartObject(
-  req: XP.Request,
+  req: Request,
   highchart: Content<Highchart | CombinedGraph>,
   data: JSONstat | TbmlDataUniform | object | string | undefined,
   dataSource: DataSource['dataSource']

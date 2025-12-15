@@ -1,10 +1,11 @@
+import { type Response } from '@enonic-types/core'
 import { Content, query } from '/lib/xp/content'
 import { pageUrl } from '/lib/xp/portal'
 import { render } from '/lib/thymeleaf'
 import { subDays, format } from '/lib/vendor/dateFns'
 import { Article, Page, Statistics } from '/site/content-types'
 
-export const get = (): XP.Response => {
+export const get = (): Response => {
   const yesterday: string = subDays(new Date(), 1).toISOString()
   const changedContent = query<Content<Statistics | Article | Page>>({
     start: 0,

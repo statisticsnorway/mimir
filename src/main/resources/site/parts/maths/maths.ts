@@ -1,3 +1,4 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { getComponent } from '/lib/xp/portal'
 import { Content, get as getContent } from '/lib/xp/content'
 import { render } from '/lib/enonic/react4xp'
@@ -5,7 +6,7 @@ import { renderError } from '/lib/ssb/error/error'
 import { type MathsProps } from '/lib/types/partTypes/maths'
 import { Maths } from '/site/content-types/maths'
 
-export function get(req: XP.Request): XP.Response {
+export function get(req: Request): Response {
   try {
     const part = getComponent<XP.PartComponent.Maths>()
     if (!part) throw Error('No part found')
@@ -18,11 +19,11 @@ export function get(req: XP.Request): XP.Response {
   }
 }
 
-export function preview(req: XP.Request, config: string) {
+export function preview(req: Request, config: string) {
   return renderPart(req, config)
 }
 
-function renderPart(req: XP.Request, config: string) {
+function renderPart(req: Request, config: string) {
   if (!config) {
     return render('site/parts/maths/maths', {}, req, {
       body: `<div class="info-text"><span>Feil, mangler config!</span></div>`,

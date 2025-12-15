@@ -1,8 +1,9 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { getComponent, processHtml, sanitizeHtml } from '/lib/xp/portal'
 import { render as r4xpRender } from '/lib/enonic/react4xp'
 import { renderError } from '/lib/ssb/error/error'
 
-export function get(req: XP.Request) {
+export function get(req: Request) {
   try {
     return renderPart(req)
   } catch (e) {
@@ -10,7 +11,7 @@ export function get(req: XP.Request) {
   }
 }
 
-export function renderPart(req: XP.Request): XP.Response {
+export function renderPart(req: Request): Response {
   try {
     const part = getComponent<XP.PartComponent.RichText>()
     if (!part) throw Error('No part found')

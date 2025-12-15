@@ -1,3 +1,4 @@
+import { type Response } from '@enonic-types/core'
 import { renderError } from '/lib/ssb/error/error'
 
 import { preview } from '/site/parts/highmap/highmap'
@@ -6,7 +7,7 @@ import { Highmap } from '.'
 
 export function macro(context: XP.MacroContext<Highmap>) {
   try {
-    const divider: XP.Response = dividerControllerPreview(context.request, {
+    const divider: Response = dividerControllerPreview(context.request, {
       dark: false,
     })
 
