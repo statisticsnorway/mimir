@@ -1,6 +1,8 @@
+import { type Response } from '@enonic-types/core'
 import { type Content } from '/lib/xp/content'
-import { assetUrl, getContent, getComponent, pageUrl, getSiteConfig, serviceUrl } from '/lib/xp/portal'
+import { getContent, getComponent, pageUrl, getSiteConfig, serviceUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
+import { assetUrl } from '/lib/enonic/asset'
 import { render } from '/lib/enonic/react4xp'
 import { randomUnsafeString, scriptAsset } from '/lib/ssb/utils/utils'
 import {
@@ -14,7 +16,7 @@ import { type MenuDropdownProps, type Municipality } from '/lib/types/partTypes/
 import { type MunicipalityWithCounty, type RequestWithCode } from '/lib/types/municipalities'
 import { type MenuDropdown } from '/site/content-types'
 
-export function get(req: RequestWithCode): XP.Response {
+export function get(req: RequestWithCode): Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -26,7 +28,7 @@ export function preview(req: RequestWithCode) {
   return renderPart(req)
 }
 
-function renderPart(req: RequestWithCode): XP.Response {
+function renderPart(req: RequestWithCode): Response {
   const parsedMunicipalities: Array<MunicipalityWithCounty> = municipalsWithCounties()
   const municipality: MunicipalityWithCounty | undefined = getMunicipality(req)
   const component = getComponent<XP.PartComponent.MenuDropdown>()

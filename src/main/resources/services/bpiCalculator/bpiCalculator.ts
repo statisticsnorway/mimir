@@ -1,4 +1,5 @@
 /* eslint-disable complexity */
+import { type Response } from '@enonic-types/core'
 import { type Content } from '/lib/xp/content'
 import { localize } from '/lib/xp/i18n'
 import { type Dataset } from '/lib/types/jsonstat-toolkit'
@@ -39,7 +40,7 @@ interface FetchBpiResults {
   indexResult: IndexResult
 }
 
-function get(req: HttpRequestParams): XP.Response {
+function get(req: HttpRequestParams): Response {
   const dwellingType: string | undefined = req.params?.dwellingType ?? '00'
   const region: string | undefined = req.params?.region ?? 'TOTAL'
   const startValue: string | undefined = req.params?.startValue

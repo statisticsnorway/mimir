@@ -1,3 +1,4 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { type Content, query, get as getContentByKey } from '/lib/xp/content'
 import { getContent, getComponent, pageUrl } from '/lib/xp/portal'
 import { renderError } from '/lib/ssb/error/error'
@@ -12,7 +13,7 @@ import {
 import { type Employee, type Page } from '/site/content-types'
 import { type Default as DefaultPageConfig } from '/site/pages/default'
 
-export function get(req: XP.Request): XP.Response {
+export function get(req: Request): Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -20,11 +21,11 @@ export function get(req: XP.Request): XP.Response {
   }
 }
 
-export function preview(req: XP.Request) {
+export function preview(req: Request) {
   return renderPart(req)
 }
 
-function renderPart(req: XP.Request) {
+function renderPart(req: Request) {
   const content = getContent<Content<Page>>()
   if (!content) throw Error('No page found')
 

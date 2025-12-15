@@ -1,3 +1,4 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { type Content } from '/lib/xp/content'
 import { getContent, getComponent } from '/lib/xp/portal'
 import { render } from '/lib/thymeleaf'
@@ -13,7 +14,7 @@ import { type Article, type Statistics } from '/site/content-types'
 
 const view = resolve('./contact.html')
 
-export function get(req: XP.Request) {
+export function get(req: Request) {
   try {
     return renderPart(req)
   } catch (e) {
@@ -21,11 +22,11 @@ export function get(req: XP.Request) {
   }
 }
 
-export function preview(req: XP.Request) {
+export function preview(req: Request) {
   return renderPart(req)
 }
 
-function renderPart(req: XP.Request): XP.Response {
+function renderPart(req: Request): Response {
   const WIDTH = 4 // how many boxes in a row
   const page = getContent<Content<Article | Statistics>>()
   if (!page) throw Error('No page found')

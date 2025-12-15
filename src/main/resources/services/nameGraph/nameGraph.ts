@@ -1,7 +1,8 @@
+import { type Request, type Response } from '@enonic-types/core'
 import whitelist from 'validator/es/lib/whitelist'
 import { prepareNameGraphResult } from '/lib/ssb/utils/nameSearchUtils'
 
-export function get(req: XP.Request): XP.Response {
+export function get(req: Request): Response {
   if (!req.params.name) {
     return {
       body: {
@@ -12,7 +13,7 @@ export function get(req: XP.Request): XP.Response {
   }
 
   try {
-    const preparedBody: string = prepareNameGraphResult(sanitizeQuery(req.params.name))
+    const preparedBody: string = prepareNameGraphResult(sanitizeQuery(req.params.name.toString()))
 
     return {
       body: preparedBody,
