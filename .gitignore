@@ -6,7 +6,7 @@ build_tsup_jsx
 .xp-codegen
 *.swp
 .gradle
-.vscode
+.vscode/settings.json
 .settings
 .classpath
 node_modules

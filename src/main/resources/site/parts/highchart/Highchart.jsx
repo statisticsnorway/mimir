@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef } from 'react'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import PropTypes from 'prop-types'
 import { Row, Col, Container } from 'react-bootstrap'
-import { Title, Button, Tabs, Divider, Link } from '@statisticsnorway/ssb-component-library'
+import { Tabs, Divider, Link } from '@statisticsnorway/ssb-component-library'
 import 'highcharts/modules/accessibility'
 import 'highcharts/modules/exporting'
 import 'highcharts/modules/offline-exporting'
@@ -13,132 +13,115 @@ import 'highcharts/modules/no-data-to-display'
 import 'highcharts/modules/broken-axis'
 
 import accessibilityLang from './../../../assets/js/highchart-lang.json'
+import { exportHighchartsToExcel } from '/lib/ssb/utils/tableExportUtils'
 
-/* TODO list
- * Display highcharts in edit mode
- * Show highcharts draft in content type edit mode button
- * Perfomance - highcharts react takes a bit longer to load
- * --- UU improvements ---
- * Show figure as highchart table functionality
- * Fix open xls exported file without dangerous file popup
- * Option to replace Category in highchart table row
- * Show last point symbol for line graphs
- * ...etc
- * --- Rest ---
- * Cleanup - are there any files and lines of code we can delete after full conversion?
- */
 function Highchart(props) {
-  const [showDraft, setShowDraft] = useState(false)
-  const [showTable, setShowTable] = useState(false)
+  const { highcharts, language, phrases } = props
+  const highchartsWrapperRefs = useRef({})
 
-  function renderHighchartToggleDraft(highchart) {
-    // TODO: Reimplement functionality; currently only changes name on button
-    if (props.pageType === `${props.appName}:highchart`) {
-      return (
-        <Col className='col-12 mb-3'>
-          {highchart.config.draft && (
-            <div className='alert alert-info mb-4' role='alert'>
-              Tallet i figuren nedenfor er upublisert
-            </div>
-          )}
-          {highchart.config.noDraftAvailable && (
-            <div className='alert alert-warning mb-4' role='alert'>
-              Det finnes ingen upubliserte tall for denne figuren
-            </div>
-          )}
-          {!showDraft && (
-            <Button primary onClick={() => setShowDraft(true)}>
-              Vis upubliserte tall
-            </Button>
-          )}
-          {showDraft && (
-            <Button primary onClick={() => setShowDraft(false)}>
-              Vis publiserte tall
-            </Button>
-          )}
-        </Col>
-      )
+  useEffect(() => {
+    if (highcharts?.length) {
+      highcharts.forEach(({ contentKey }) => {
+        const highchartWrapperElement = highchartsWrapperRefs.current[contentKey]?.children
+        const [highchartElement, tableWrapperElement] = highchartWrapperElement ?? []
+        const tableElement = tableWrapperElement?.children[0]
+
+        tableWrapperElement?.classList.add('ssb-table-wrapper', 'd-none')
+        tableElement?.classList.add('statistics', 'ssb-table')
+        tableElement?.setAttribute('tabindex', '0') // Scrollable region must have keyboard access
+
+        // Add Tab component accessibility tags for Highcharts and table
+        highchartElement?.setAttribute('id', 'tabpanel-0-' + contentKey)
+        highchartElement?.setAttribute('role', 'tabpanel')
+
+        tableWrapperElement?.setAttribute('id', 'tabpanel-1-' + contentKey)
+        tableWrapperElement?.setAttribute('role', 'tabpanel')
+      })
     }
+  }, [highcharts])
+
+  const handleTabOnClick = (contentKey) => (item) => {
+    const showTable = item === 'show-as-table'
+
+    const highchartWrapperElement = highchartsWrapperRefs.current[contentKey]?.children
+    const [highchartElement, tableWrapperElement] = highchartWrapperElement ?? []
+
+    tableWrapperElement?.classList.toggle('d-none', !showTable)
+    tableWrapperElement?.setAttribute('aria-hidden', !showTable)
+    highchartElement?.classList.toggle('d-none', showTable)
+    highchartElement?.setAttribute('aria-hidden', showTable)
   }
 
-  function handleHighchartsTabOnClick(item) {
-    if (item === 'highcharts-table/') {
-      setShowTable(true)
-    }
-
-    if (item === 'highcharts-figure/') {
-      setShowTable(false)
-    }
-  }
-
-  function renderHighchartsTab() {
+  function renderShowAsFigureOrTableTab(highchartId) {
     return (
       <Col className='col-12 mb-3'>
         <Tabs
-          className='pl-4'
-          activeOnInit='highcharts-figure/'
+          id={highchartId}
+          activeOnInit='show-as-chart'
           items={[
-            {
-              title: props.phrases['highcharts.showAsGraph'],
-              path: 'highcharts-figure/',
-            },
-            {
-              title: props.phrases['highcharts.showAsTable'],
-              path: 'highcharts-table/',
-            },
+            { title: phrases['highcharts.showAsChart'], path: 'show-as-chart' },
+            { title: phrases['highcharts.showAsTable'], path: 'show-as-table' },
           ]}
-          onClick={handleHighchartsTabOnClick}
+          onClick={handleTabOnClick(highchartId)}
         />
-        <Divider light={false} className='mb-3' />
+        <Divider className='mb-3' />
       </Col>
     )
   }
 
   function renderHighchartsSource(sourceLink, index) {
     return (
-      <Row key={index}>
-        <Col>
-          <Link href={sourceLink.sourceHref}>
-            {props.phrases.source}: {sourceLink.sourceText}
-          </Link>
-        </Col>
-      </Row>
-    )
-  }
-
-  function renderHighchartsFooter(highchart) {
-    return (
-      <Col>
-        {highchart.footnoteText ? (
-          <Row className='footnote mb-4 mb-md-5'>
-            <Col>{highchart.footnoteText}</Col>
-          </Row>
-        ) : null}
-        {highchart.creditsEnabled ? highchart.sourceList.map((source, i) => renderHighchartsSource(source, i)) : null}
+      <Col key={index} className='highcharts-source col-12 mt-3'>
+        <Link href={sourceLink.sourceHref} standAlone>
+          {phrases.source}: {sourceLink.sourceText}
+        </Link>
       </Col>
     )
   }
 
+  function renderHighchartsFooter(footnoteText, creditsEnabled, sourceList) {
+    return (
+      <Row>
+        {footnoteText ? <Col className='footnote col-12'>{footnoteText}</Col> : null}
+        {creditsEnabled ? sourceList.map((source, i) => renderHighchartsSource(source, i)) : null}
+      </Row>
+    )
+  }
+
+  const downloadAsXLSX = (title) =>
+    function () {
+      const rows = this.getDataRows(true)
+      exportHighchartsToExcel({
+        rows: rows.slice(1),
+        fileName: title ? `${title}.xlsx` : 'graf.xlsx',
+      })
+    }
+
   function renderHighcharts() {
-    const highcharts = props.highcharts
-    if (highcharts && highcharts.length) {
-      return highcharts.map((highchart) => {
-        const lang = highcharts.language !== 'en' ? accessibilityLang.lang : {}
+    if (highcharts?.length) {
+      return highcharts.map((highchart, index) => {
+        const lang =
+          language === 'en'
+            ? {
+                locale: 'en-GB',
+              }
+            : accessibilityLang.lang
 
         const config = {
           ...highchart.config,
           lang: {
             ...lang,
-            categoryHeader: highcharts.xAxis?.title?.text ? highchart.xAxis.title.text : 'Category',
+            categoryHeader: highchart.config?.xAxis?.title?.text ? highchart.config?.xAxis.title.text : 'Category',
           },
           chart: {
             ...highchart.config.chart,
             events: {
+              ...highchart.config.chart?.events,
+              // Workaround to get correct number formatting in table
               exportData: function (chart) {
-                // Workaround to get correct number formatting in table
                 for (const row of chart.dataRows) {
+                  // Escaping first vaule not to format category ie. year
                   for (const [i, cell] of row.entries()) {
-                    // Escaping first vaule not to format category ie. year
                     if (i > 0 && typeof cell === 'number') {
                       row[i] = cell.toLocaleString(language === 'en' ? 'en-EN' : 'no-NO').replace('NaN', '')
                     }
@@ -192,20 +175,65 @@ function Highchart(props) {
               },
             },
           },
+          exporting: {
+            ...highchart.config.exporting,
+            menuItemDefinitions: {
+              downloadXLS: {
+                onclick: downloadAsXLSX(highchart.config.title?.text),
+              },
+            },
+          },
+        }
+
+        if (highchart.config.chart?.type === 'pie') {
+          config.legend.labelFormatter = function name() {
+            return Array.isArray(this.name) ? this.name[0] : this.name
+          }
+        }
+
+        if (highchart.config.chart?.type === 'barNegative') {
+          config.yAxis.labels.formatter = function (a) {
+            return Math.abs(a.value)
+          }
+          config.tooltip.formatter = function () {
+            return (
+              `<b>${this.series.name} ${this.point.category}:</b> ` + Highcharts.numberFormat(Math.abs(this.point.y), 0)
+            )
+          }
+        }
+
+        // Only show plotOption marker on last data element / single data point series
+        if (highchart.config.chart?.type === 'line') {
+          config.series.forEach((series) => {
+            const indices = series.data.map((element) => element !== null)
+            const lastIndex = indices.lastIndexOf(true)
+
+            series.data = series.data.map((data, index) => ({
+              y: Number.parseFloat(data),
+              marker: {
+                enabled: index === lastIndex,
+              },
+            }))
+          })
+        }
+
+        if (highchart.config.chart?.type === 'bar' || highchart.config.chart?.type === 'column') {
+          config.yAxis.reversedStacks = false
         }
 
         return (
-          <Row key={`highchart-${highchart.contentKey}`}>
-            {renderHighchartToggleDraft(highchart)}
+          <Row key={`highchart-${highchart.contentKey}`} className={`${highcharts.length !== index + 1 && 'mb-5'}`}>
             <Col className='col-12'>
-              <Title size={3}>{config.title.text}</Title>
-              {config.subtitle.text ? <p className='highchart-subtitle mb-1'>{config.subtitle.text}</p> : null}
+              <figure id={`figure-${highchart.contentKey}`} className='highcharts-figure mb-0 hide-title'>
+                <figcaption className='figure-title'>{config.title.text}</figcaption>
+                {config.subtitle.text ? <p className='figure-subtitle'>{config.subtitle.text}</p> : null}
+                {renderShowAsFigureOrTableTab(highchart.contentKey)}
+                <div ref={(el) => (highchartsWrapperRefs.current[highchart.contentKey] = el)}>
+                  <HighchartsReact highcharts={Highcharts} options={config} />
+                </div>
+              </figure>
+              {renderHighchartsFooter(highchart.footnoteText, highchart.creditsEnabled, highchart.sourceList)}
             </Col>
-            {renderHighchartsTab()}
-            <Col className='col-12'>
-              <HighchartsReact highcharts={Highcharts} options={config} />
-            </Col>
-            {renderHighchartsFooter(highchart)}
           </Row>
         )
       })
@@ -229,8 +257,6 @@ Highchart.propTypes = {
     })
   ),
   phrases: PropTypes.object,
-  appName: PropTypes.string,
-  pageType: PropTypes.string,
 }
 
 export default (props) => <Highchart {...props} />

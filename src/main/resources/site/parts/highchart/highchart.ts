@@ -95,9 +95,8 @@ function renderPart(req: Request, highchartIds: Array<string>): Response {
 
   const HighchartProps: object = {
     highcharts: highcharts,
+    language,
     phrases: getPhrases(page),
-    appName: app.name,
-    pageType: page.type,
   }
 
   if (isEnabled('highchart-react', true, 'ssb')) {
