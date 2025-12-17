@@ -1,3 +1,4 @@
+// eslint-disable @typescript-eslint/no-this-alias
 import React, { useEffect, useRef } from 'react'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
@@ -13,18 +14,18 @@ import 'highcharts/modules/broken-axis'
 
 import { exportHighchartsToExcel } from '/lib/ssb/utils/tableExportUtils'
 import { type HighchartProps, type HighchartsReactProps } from '/lib/types/partTypes/highchartsReact'
-import { HighchartsGraphConfig } from '/lib/types/highcharts'
+
 import accessibilityLang from '../../../assets/js/highchart-lang.json'
 
 function Highchart(props: HighchartProps) {
   const { highcharts, language, phrases } = props
-  const highchartsWrapperRefs = useRef({})
+  const highchartsWrapperRefs = useRef<Record<string, HTMLDivElement | null>>({})
 
   useEffect(() => {
     if (highcharts?.length) {
       highcharts.forEach(({ contentKey }) => {
-        const highchartWrapperElement = highchartsWrapperRefs.current[contentKey]?.children
-        const [highchartElement, tableWrapperElement] = highchartWrapperElement ?? []
+        const highchartWrapperElement = highchartsWrapperRefs.current[contentKey as string]?.children
+        const [highchartElement, tableWrapperElement] = Array.from(highchartWrapperElement as HTMLCollection) ?? []
         const tableElement = tableWrapperElement?.children[0]
 
         tableWrapperElement?.classList.add('ssb-table-wrapper', 'd-none')
@@ -45,12 +46,12 @@ function Highchart(props: HighchartProps) {
     const showTable = item === 'show-as-table'
 
     const highchartWrapperElement = highchartsWrapperRefs.current[contentKey]?.children
-    const [highchartElement, tableWrapperElement] = highchartWrapperElement ?? []
+    const [highchartElement, tableWrapperElement] = Array.from(highchartWrapperElement as HTMLCollection) ?? []
 
     tableWrapperElement?.classList.toggle('d-none', !showTable)
-    tableWrapperElement?.setAttribute('aria-hidden', !showTable)
+    tableWrapperElement?.setAttribute('aria-hidden', (!showTable)?.toString())
     highchartElement?.classList.toggle('d-none', showTable)
-    highchartElement?.setAttribute('aria-hidden', showTable)
+    highchartElement?.setAttribute('aria-hidden', showTable?.toString())
   }
 
   function renderShowAsFigureOrTableTab(highchartId: string) {
@@ -70,14 +71,14 @@ function Highchart(props: HighchartProps) {
     )
   }
 
-  function renderHighchartsSource(sourceLink: HighchartsReactProps['sourceList'], index: number) {
-    return (
+  function renderHighchartsSource(sourceList: HighchartsReactProps['sourceList']) {
+    return sourceList?.map(({ sourceHref, sourceText }, index) => (
       <Col key={index} className='highcharts-source col-12 mt-3'>
-        <Link href={sourceLink?.sourceHref} standAlone>
-          {phrases?.source}: {sourceLink?.sourceText}
+        <Link href={sourceHref} standAlone>
+          {phrases?.source}: {sourceText}
         </Link>
       </Col>
-    )
+    ))
   }
 
   function renderHighchartsFooter(
@@ -88,7 +89,7 @@ function Highchart(props: HighchartProps) {
     return (
       <Row>
         {footnoteText ? <Col className='footnote col-12'>{footnoteText}</Col> : null}
-        {creditsEnabled ? sourceList?.map((source, i) => renderHighchartsSource(source, i)) : null}
+        {creditsEnabled ? renderHighchartsSource(sourceList) : null}
       </Row>
     )
   }
@@ -102,15 +103,59 @@ function Highchart(props: HighchartProps) {
       })
     }
 
-  // Workaround to get correct number formatting in table
   const formatNumbersInTable = () =>
-    function (chart: HighchartsGraphConfig['chart']) {
+    // Workaround to get correct number formatting in table
+    function (chart: Highcharts.Chart) {
       for (const row of chart.dataRows) {
         // Escaping first vaule not to format category ie. year
         for (const [i, cell] of row.entries()) {
           if (i > 0 && typeof cell === 'number') {
             row[i] = cell.toLocaleString(language === 'en' ? 'en-EN' : 'no-NO').replace('NaN', '')
           }
+        }
+      }
+    }
+
+  const loadyAxisBreakSymbol = () =>
+    function (this: Highcharts.Chart) {
+      // Drawing yAxis break symbol when y-axis not starting at 0
+      const chart = this
+      for (let i = 0; i < chart.yAxis.length; i++) {
+        // Natively highcharts resolves y axis not starting on 0 either with breaks or setting yMin
+        if (chart.yAxis[i].min > 0 || chart.yAxis[i].brokenAxis?.hasBreaks) {
+          // Replace first tick label with 0 since showing below broken axis symbol (for yMin > 0)
+          const yAxisConfig = Array.isArray(config.yAxis) ? config.yAxis[i] : config.yAxis
+          const decimalsMatch = yAxisConfig.labels?.format[9] ?? 0
+          const zeroFormatted = Highcharts.numberFormat(0, decimalsMatch)
+          const firstTickValue = chart.yAxis[i].tickPositions[0]
+          chart.yAxis[i].ticks[firstTickValue].label.attr({ text: zeroFormatted })
+
+          // Removes first tick label if rendered on top of 0 (for broken axis)
+          const secondTickValue = chart.yAxis[i].tickPositions[1]
+          if (chart.yAxis[i].ticks[firstTickValue].label.xy.y === chart.yAxis[i].ticks[secondTickValue].label.xy.y) {
+            chart.yAxis[i].ticks[secondTickValue].label.hide()
+          }
+
+          // Determine position for broken axis symbol
+          const offset = chart.yAxis[i].opposite ? chart.plotWidth : 0
+          const x = chart.plotLeft + offset - 10
+          const y = chart.plotTop + chart.plotHeight - 10
+
+          // Draw broken axis symbol
+          chart.renderer
+            .path(['M', x, y, 'l', 20, -5])
+            .attr({
+              'stroke-width': 1,
+              stroke: 'black',
+            })
+            .add()
+          chart.renderer
+            .path(['M', x, y + 5, 'l', 20, -5])
+            .attr({
+              'stroke-width': 1,
+              stroke: 'black',
+            })
+            .add()
         }
       }
     }
@@ -137,52 +182,7 @@ function Highchart(props: HighchartProps) {
             events: {
               ...highchart.config.chart?.events,
               exportData: formatNumbersInTable(),
-              load: function () {
-                // Drawing yAxis break symbol when y-axis not starting at 0
-                // eslint-disable-next-line @typescript-eslint/no-this-alias
-                const chart = this
-                for (let i = 0; i < chart.yAxis.length; i++) {
-                  // Natively highcharts resolves y axis not starting on 0 either with breaks or setting yMin
-                  if (chart.yAxis[i].min > 0 || chart.yAxis[i].brokenAxis?.hasBreaks) {
-                    // Replace first tick label with 0 since showing below broken axis symbol (for yMin > 0)
-                    const yAxisConfig = Array.isArray(config.yAxis) ? config.yAxis[i] : config.yAxis
-                    const decimalsMatch = yAxisConfig.labels?.format[9] ?? 0
-                    const zeroFormatted = Highcharts.numberFormat(0, decimalsMatch)
-                    const firstTickValue = chart.yAxis[i].tickPositions[0]
-                    chart.yAxis[i].ticks[firstTickValue].label.attr({ text: zeroFormatted })
-
-                    // Removes first tick label if rendered on top of 0 (for broken axis)
-                    const secondTickValue = chart.yAxis[i].tickPositions[1]
-                    if (
-                      chart.yAxis[i].ticks[firstTickValue].label.xy.y ===
-                      chart.yAxis[i].ticks[secondTickValue].label.xy.y
-                    ) {
-                      chart.yAxis[i].ticks[secondTickValue].label.hide()
-                    }
-
-                    // Determine position for broken axis symbol
-                    const offset = chart.yAxis[i].opposite ? chart.plotWidth : 0
-                    const x = chart.plotLeft + offset - 10
-                    const y = chart.plotTop + chart.plotHeight - 10
-
-                    // Draw broken axis symbol
-                    chart.renderer
-                      .path(['M', x, y, 'l', 20, -5])
-                      .attr({
-                        'stroke-width': 1,
-                        stroke: 'black',
-                      })
-                      .add()
-                    chart.renderer
-                      .path(['M', x, y + 5, 'l', 20, -5])
-                      .attr({
-                        'stroke-width': 1,
-                        stroke: 'black',
-                      })
-                      .add()
-                  }
-                }
-              },
+              load: loadyAxisBreakSymbol(),
             },
           },
           exporting: {
@@ -195,7 +195,7 @@ function Highchart(props: HighchartProps) {
           },
         }
 
-        if (highchart.config.chart?.type === 'pie') {
+        if (highchart.config.chart?.type === 'pie' && config.legend) {
           config.legend.labelFormatter = function name() {
             return Array.isArray(this.name) ? this.name[0] : this.name
           }
