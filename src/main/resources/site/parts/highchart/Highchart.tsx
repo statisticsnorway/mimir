@@ -1,4 +1,4 @@
-// eslint-disable @typescript-eslint/no-this-alias
+/* eslint-disable @typescript-eslint/no-this-alias */
 import React, { useEffect, useRef } from 'react'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
@@ -95,7 +95,7 @@ function Highchart(props: HighchartProps) {
   }
 
   const downloadAsXLSX = (title: string | undefined) =>
-    function () {
+    function (this: Highcharts.Chart) {
       const rows = this.getDataRows(true)
       exportHighchartsToExcel({
         rows: rows.slice(1),
@@ -116,7 +116,7 @@ function Highchart(props: HighchartProps) {
       }
     }
 
-  const loadyAxisBreakSymbol = () =>
+  const renderyAxisBreakSymbol = () =>
     function (this: Highcharts.Chart) {
       // Drawing yAxis break symbol when y-axis not starting at 0
       const chart = this
@@ -160,29 +160,86 @@ function Highchart(props: HighchartProps) {
       }
     }
 
+  const setPieChartLegend = (config: Highcharts.Options) => {
+    if (config.chart?.type === 'pie' && config.legend) {
+      config.legend.labelFormatter = function name() {
+        return Array.isArray(this.name) ? this.name[0] : this.name
+      }
+    }
+  }
+
+  const setReversedStacksBarAndColumn = (config: Highcharts.Options) => {
+    if (config.chart?.type === 'bar' || config.chart?.type === 'column') {
+      const yAxisConfig = config.yAxis as Highcharts.YAxisOptions
+      if (yAxisConfig) {
+        return (yAxisConfig.reversedStacks = false)
+      }
+    }
+  }
+
+  const setBarNegativeFormattingOptions = (config: Highcharts.Options) => {
+    if (config.chart?.type === 'barNegative') {
+      const yAxisConfig = config.yAxis as Highcharts.YAxisOptions
+      if (yAxisConfig?.labels) {
+        yAxisConfig.labels.formatter = function (a) {
+          return Math.abs(a.value as number).toString()
+        }
+      }
+
+      if (config.tooltip) {
+        config.tooltip.formatter = function () {
+          return (
+            `<b>${this.series.name} ${this.point.category}:</b> ` + Highcharts.numberFormat(Math.abs(this.point.y), 0)
+          )
+        }
+      }
+    }
+  }
+
+  const setPlotPointMartker = (config: Highcharts.Options) => {
+    // Only show plotOption marker on last data element / single data point series
+    if (config.chart?.type === 'line') {
+      if (config.series) {
+        config.series.forEach((series) => {
+          const indices = series.data.map((element) => element !== null)
+          const lastIndex = indices.lastIndexOf(true)
+
+          series.data = series.data.map((data, index) => ({
+            y: Number.parseFloat(data),
+            marker: {
+              enabled: index === lastIndex,
+            },
+          }))
+        })
+      }
+    }
+  }
+
   function renderHighcharts() {
     if (highcharts?.length) {
       return highcharts.map((highchart, index) => {
         if (!highchart.config) return
+        const highchartConfig = highchart.config as Highcharts.Options
         const lang =
           language === 'en'
             ? {
                 locale: 'en-GB',
               }
             : accessibilityLang.lang
+        const yAxisOptions = highchart.config.yAxis as Highcharts.YAxisOptions
 
         const config = {
           ...highchart.config,
           lang: {
             ...lang,
-            categoryHeader: highchart.config?.xAxis?.title?.text ? highchart.config?.xAxis.title.text : 'Category',
+            categoryHeader: yAxisOptions.title?.text ?? 'Category',
           },
           chart: {
             ...highchart.config.chart,
             events: {
               ...highchart.config.chart?.events,
               exportData: formatNumbersInTable(),
-              load: loadyAxisBreakSymbol(),
+              load: renderyAxisBreakSymbol(),
             },
           },
           exporting: {
@@ -195,48 +252,17 @@ function Highchart(props: HighchartProps) {
           },
         }
 
-        if (highchart.config.chart?.type === 'pie' && config.legend) {
-          config.legend.labelFormatter = function name() {
-            return Array.isArray(this.name) ? this.name[0] : this.name
-          }
-        }
-
-        if (highchart.config.chart?.type === 'barNegative') {
-          config.yAxis.labels.formatter = function (a) {
-            return Math.abs(a.value)
-          }
-          config.tooltip.formatter = function () {
-            return (
-              `<b>${this.series.name} ${this.point.category}:</b> ` + Highcharts.numberFormat(Math.abs(this.point.y), 0)
-            )
-          }
-        }
-
-        // Only show plotOption marker on last data element / single data point series
-        if (highchart.config.chart?.type === 'line') {
-          config.series.forEach((series) => {
-            const indices = series.data.map((element) => element !== null)
-            const lastIndex = indices.lastIndexOf(true)
-
-            series.data = series.data.map((data, index) => ({
-              y: Number.parseFloat(data),
-              marker: {
-                enabled: index === lastIndex,
-              },
-            }))
-          })
-        }
-
-        if (highchart.config.chart?.type === 'bar' || highchart.config.chart?.type === 'column') {
-          config.yAxis.reversedStacks = false
-        }
+        setPieChartLegend(highchartConfig)
+        setReversedStacksBarAndColumn(highchartConfig)
+        setBarNegativeFormattingOptions(highchartConfig)
+        setPlotPointMartker(highchartConfig)
 
         return (
           <Row key={`highchart-${highchart.contentKey}`} className={`${highcharts.length !== index + 1 && 'mb-5'}`}>
             <Col className='col-12'>
               <figure id={`figure-${highchart.contentKey}`} className='highcharts-figure mb-0 hide-title'>
-                <figcaption className='figure-title'>{config.title.text}</figcaption>
-                {config.subtitle.text ? <p className='figure-subtitle'>{config.subtitle.text}</p> : null}
+                <figcaption className='figure-title'>{config.title?.text}</figcaption>
+                {config.subtitle?.text ? <p className='figure-subtitle'>{config.subtitle.text}</p> : null}
                 {renderShowAsFigureOrTableTab(highchart.contentKey as string)}
                 <div ref={(el) => (highchartsWrapperRefs.current[highchart.contentKey as string] = el)}>
                   <HighchartsReact highcharts={Highcharts} options={config} />
