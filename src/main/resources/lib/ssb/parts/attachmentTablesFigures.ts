@@ -9,6 +9,7 @@ import { datasetOrUndefined } from '/lib/ssb/cache/cache'
 import { type AttachmentTablesFiguresData } from '/lib/types/partTypes/attachmentTablesFigures'
 import { getProps } from '/site/parts/table/table'
 import { preview as highchartPreview } from '/site/parts/highchart/highchart'
+import { preview as combinedGraphPreview } from '/site/parts/combinedGraph/combinedGraph'
 
 export function getTablesAndFigures(
   attachmentTablesAndFigures: Array<string>,
@@ -42,6 +43,14 @@ export function getTablesAndFigures(
         return getFigureReturnObject(
           attachmentTablesFiguresMap[id],
           highchartPreview(req, id),
+          `${phrases.figure} ${figureIndex}`,
+          index
+        )
+      } else if (attachmentTablesFiguresMap[id].type === `${app.name}:combinedGraph`) {
+        ++figureIndex
+        return getFigureReturnObject(
+          attachmentTablesFiguresMap[id],
+          combinedGraphPreview(req, id),
           `${phrases.figure} ${figureIndex}`,
           index
         )

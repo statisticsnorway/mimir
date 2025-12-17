@@ -53,6 +53,7 @@
 					<config>
 						<allowType>table</allowType>
 						<allowType>highchart</allowType>
+						<allowType>combinedGraph</allowType>
 						<description>Legg til Vedleggstabell</description>
 					</config>
 				</input>
