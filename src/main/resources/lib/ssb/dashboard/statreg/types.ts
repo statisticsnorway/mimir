@@ -79,8 +79,6 @@ export interface StatisticInListing extends StatRegBase {
   status: string
   modifiedTime: string
   variants?: Array<VariantInListing>
-  nextRelease?: string
-  previousRelease?: string
 }
 
 export interface Statistics {
