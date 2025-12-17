@@ -19,6 +19,9 @@
     // to the baseUrl if set, or to the tsconfig file itself otherwise.
     "paths": {
       "/lib/xp/*": ["../../../node_modules/@enonic-types/lib-*"],
+      "/lib/*": [ "../../../node_modules/@item-enonic-types/lib-*" ,"../../main/resources/lib/*", "../../main/resources/lib/types/*"],
+      "/react4xp/*": ["./src/main/resources/react4xp/*"],
+      "/services/*": ["./src/main/resources/services/*"],
       "/*": ["../../main/resources/*"],
     },
     "sourceMap": true, // Important to get correct line numbers when running coverage tests
