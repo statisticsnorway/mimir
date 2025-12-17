@@ -24,7 +24,7 @@ jobs:
       - name: Upload artifacts
         id: upload_artifacts
         if: success()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         env:
           RUN_NUMBER: ${{ github.run_number }}
         with:
