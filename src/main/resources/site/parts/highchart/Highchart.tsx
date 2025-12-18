@@ -95,7 +95,9 @@ function Highchart(props: HighchartProps) {
   }
 
   const downloadAsXLSX = (title: string | undefined) =>
-    function (this: Highcharts.Chart) {
+    function (this: Highcharts.Exporting) {
+      // @ts-ignore: The getDataRows function belongs to the Highcharts.Exporting class (https://api.highcharts.com/class-reference/Highcharts.Exporting#getDataRows),
+      // but is not exported as a type.
       const rows = this.getDataRows(true)
       exportHighchartsToExcel({
         rows: rows.slice(1),
@@ -105,39 +107,42 @@ function Highchart(props: HighchartProps) {
 
   const formatNumbersInTable = () =>
     // Workaround to get correct number formatting in table
-    function (chart: Highcharts.Chart) {
+    function (chart: Highcharts.ExportDataEventObject) {
       for (const row of chart.dataRows) {
-        // Escaping first vaule not to format category ie. year
-        for (const [i, cell] of row.entries()) {
-          if (i > 0 && typeof cell === 'number') {
-            row[i] = cell.toLocaleString(language === 'en' ? 'en-EN' : 'no-NO').replace('NaN', '')
+        // Escaping first value not to format category ie. year
+        for (const [i, cell] of Object.entries(row)) {
+          if (Number(i) > 0 && typeof cell === 'number') {
+            row[Number(i)] = Number(cell)
+              .toLocaleString(language === 'en' ? 'en-EN' : 'no-NO')
+              .replace('NaN', '')
           }
         }
       }
     }
 
-  const renderyAxisBreakSymbol = () =>
+  const renderYAxisBreakSymbol = (config: Highcharts.Options) =>
     function (this: Highcharts.Chart) {
       // Drawing yAxis break symbol when y-axis not starting at 0
       const chart = this
-      for (let i = 0; i < chart.yAxis.length; i++) {
+      const chartYAxis = chart.yAxis as Highcharts.Axis[]
+      for (let i = 0; i < chartYAxis.length; i++) {
         // Natively highcharts resolves y axis not starting on 0 either with breaks or setting yMin
-        if (chart.yAxis[i].min > 0 || chart.yAxis[i].brokenAxis?.hasBreaks) {
+        if (chartYAxis[i].min > 0 || chartYAxis[i].brokenAxis.hasBreaks) {
           // Replace first tick label with 0 since showing below broken axis symbol (for yMin > 0)
           const yAxisConfig = Array.isArray(config.yAxis) ? config.yAxis[i] : config.yAxis
           const decimalsMatch = yAxisConfig.labels?.format[9] ?? 0
           const zeroFormatted = Highcharts.numberFormat(0, decimalsMatch)
-          const firstTickValue = chart.yAxis[i].tickPositions[0]
-          chart.yAxis[i].ticks[firstTickValue].label.attr({ text: zeroFormatted })
+          const firstTickValue = chartYAxis[i].tickPositions[0]
+          chartYAxis[i].ticks[firstTickValue].label.attr({ text: zeroFormatted })
 
           // Removes first tick label if rendered on top of 0 (for broken axis)
-          const secondTickValue = chart.yAxis[i].tickPositions[1]
-          if (chart.yAxis[i].ticks[firstTickValue].label.xy.y === chart.yAxis[i].ticks[secondTickValue].label.xy.y) {
-            chart.yAxis[i].ticks[secondTickValue].label.hide()
+          const secondTickValue = chartYAxis[i].tickPositions[1]
+          if (chartYAxis[i].ticks[firstTickValue].label.xy.y === chartYAxis[i].ticks[secondTickValue].label.xy.y) {
+            chartYAxis[i].ticks[secondTickValue].label.hide()
           }
 
           // Determine position for broken axis symbol
-          const offset = chart.yAxis[i].opposite ? chart.plotWidth : 0
+          const offset = chartYAxis[i].opposite ? chart.plotWidth : 0
           const x = chart.plotLeft + offset - 10
           const y = chart.plotTop + chart.plotHeight - 10
 
@@ -199,13 +204,14 @@ function Highchart(props: HighchartProps) {
   const setPlotPointMartker = (config: Highcharts.Options) => {
     // Only show plotOption marker on last data element / single data point series
     if (config.chart?.type === 'line') {
-      if (config.series) {
-        config.series.forEach((series) => {
-          const indices = series.data.map((element) => element !== null)
-          const lastIndex = indices.lastIndexOf(true)
+      const seriesConfig = config.series as Highcharts.SeriesLineOptions[]
+      if (seriesConfig) {
+        seriesConfig.forEach((series) => {
+          const indices = series.data?.map((element) => element !== null)
+          const lastIndex = indices?.lastIndexOf(true)
 
-          series.data = series.data.map((data, index) => ({
-            y: Number.parseFloat(data),
+          series.data = series.data?.map((data, index) => ({
+            y: Number.parseFloat(data as string),
             marker: {
               enabled: index === lastIndex,
             },
@@ -216,64 +222,64 @@ function Highchart(props: HighchartProps) {
   }
 
   function renderHighcharts() {
-    if (highcharts?.length) {
-      return highcharts.map((highchart, index) => {
-        if (!highchart.config) return
-        const highchartConfig = highchart.config as Highcharts.Options
-        const lang =
-          language === 'en'
-            ? {
-                locale: 'en-GB',
-              }
-            : accessibilityLang.lang
-        const yAxisOptions = highchart.config.yAxis as Highcharts.YAxisOptions
+    if (!highcharts?.length) return null
 
-        const config = {
-          ...highchart.config,
-          lang: {
-            ...lang,
-            categoryHeader: yAxisOptions.title?.text ?? 'Category',
+    return highcharts.map((highchart, index) => {
+      if (!highchart.config) return
+      const highchartConfig = highchart.config as Highcharts.Options
+      const lang =
+        language === 'en'
+          ? {
+              locale: 'en-GB',
+            }
+          : accessibilityLang.lang
+      const yAxisOptions = highchart.config.yAxis as Highcharts.YAxisOptions
+
+      const config = {
+        ...highchart.config,
+        lang: {
+          ...lang,
+          categoryHeader: yAxisOptions.title?.text ?? 'Category',
+        },
+        chart: {
+          ...highchart.config.chart,
+          events: {
+            ...highchart.config.chart?.events,
+            exportData: formatNumbersInTable(),
+            load: renderYAxisBreakSymbol(highchartConfig),
           },
-          chart: {
-            ...highchart.config.chart,
-            events: {
-              ...highchart.config.chart?.events,
-              exportData: formatNumbersInTable(),
-              load: renderyAxisBreakSymbol(),
+        },
+        exporting: {
+          ...highchart.config.exporting,
+          menuItemDefinitions: {
+            downloadXLS: {
+              onclick: downloadAsXLSX(highchart.config.title?.text),
             },
           },
-          exporting: {
-            ...highchart.config.exporting,
-            menuItemDefinitions: {
-              downloadXLS: {
-                onclick: downloadAsXLSX(highchart.config.title?.text),
-              },
-            },
-          },
-        }
+        },
+      }
 
-        setPieChartLegend(highchartConfig)
-        setReversedStacksBarAndColumn(highchartConfig)
-        setBarNegativeFormattingOptions(highchartConfig)
-        setPlotPointMartker(highchartConfig)
+      setPieChartLegend(highchartConfig)
+      setReversedStacksBarAndColumn(highchartConfig)
+      setBarNegativeFormattingOptions(highchartConfig)
+      setPlotPointMartker(highchartConfig)
 
-        return (
-          <Row key={`highchart-${highchart.contentKey}`} className={`${highcharts.length !== index + 1 && 'mb-5'}`}>
-            <Col className='col-12'>
-              <figure id={`figure-${highchart.contentKey}`} className='highcharts-figure mb-0 hide-title'>
-                <figcaption className='figure-title'>{config.title?.text}</figcaption>
-                {config.subtitle?.text ? <p className='figure-subtitle'>{config.subtitle.text}</p> : null}
-                {renderShowAsFigureOrTableTab(highchart.contentKey as string)}
-                <div ref={(el) => (highchartsWrapperRefs.current[highchart.contentKey as string] = el)}>
-                  <HighchartsReact highcharts={Highcharts} options={config} />
-                </div>
-              </figure>
-              {renderHighchartsFooter(highchart.footnoteText, highchart.creditsEnabled, highchart.sourceList)}
-            </Col>
-          </Row>
-        )
-      })
-    }
+      return (
+        <Row key={`highchart-${highchart.contentKey}`} className={`${highcharts.length !== index + 1 && 'mb-5'}`}>
+          <Col className='col-12'>
+            <figure id={`figure-${highchart.contentKey}`} className='highcharts-figure mb-0 hide-title'>
+              <figcaption className='figure-title'>{config.title?.text}</figcaption>
+              {config.subtitle?.text ? <p className='figure-subtitle'>{config.subtitle.text}</p> : null}
+              {renderShowAsFigureOrTableTab(highchart.contentKey as string)}
+              <div ref={(el) => (highchartsWrapperRefs.current[highchart.contentKey as string] = el)}>
+                <HighchartsReact highcharts={Highcharts} options={config} />
+              </div>
+            </figure>
+            {renderHighchartsFooter(highchart.footnoteText, highchart.creditsEnabled, highchart.sourceList)}
+          </Col>
+        </Row>
+      )
+    })
   }
 
   return <Container>{renderHighcharts()}</Container>
