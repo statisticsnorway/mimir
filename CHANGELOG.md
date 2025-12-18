@@ -1,5 +1,28 @@
 # Changelog
 
+## [2.38.1](https://github.com/statisticsnorway/mimir/compare/v2.38.0...v2.38.1) (2025-12-18)
+
+
+### Code Refactoring
+
+* Fix remaining enonic-types changes in default.ts ([965a06c](https://github.com/statisticsnorway/mimir/commit/965a06cfebf8dcd95b57d5c891dcb73ddc31bb48))
+* Fix remaining enonic-types changes in default.ts [MIM-2423] ([#3578](https://github.com/statisticsnorway/mimir/issues/3578)) ([965a06c](https://github.com/statisticsnorway/mimir/commit/965a06cfebf8dcd95b57d5c891dcb73ddc31bb48))
+* Update deprecated XP Enonic types [MIM-2423] ([#3572](https://github.com/statisticsnorway/mimir/issues/3572)) ([bae91bb](https://github.com/statisticsnorway/mimir/commit/bae91bb35e793a11075daa7471c67d8e07808ee2))
+* Update Highcharts React component to prep for use  [MIM-2444] ([#3568](https://github.com/statisticsnorway/mimir/issues/3568)) ([07b3382](https://github.com/statisticsnorway/mimir/commit/07b338261f9e1609df4c256dbae72c4651cccb7a))
+
+
+### Tests
+
+* Test setup xp mock server for xp and added tests for imageUtils ([#3544](https://github.com/statisticsnorway/mimir/issues/3544)) ([ec102f9](https://github.com/statisticsnorway/mimir/commit/ec102f9e348cb6a45ba9f4a4dc318bc0f2ccad60))
+
+
+### Build System and dependencies
+
+* Add recommended extensions for VSCode ([#3571](https://github.com/statisticsnorway/mimir/issues/3571)) ([d88ecfd](https://github.com/statisticsnorway/mimir/commit/d88ecfd276d1312d2cc6a8f8bcc049be0a3158f6))
+* Fix syntax slack messages ([#3573](https://github.com/statisticsnorway/mimir/issues/3573)) ([5c8a750](https://github.com/statisticsnorway/mimir/commit/5c8a750c7c5b31118f50cb00276d45464337144d))
+* set correct environment in workflows ([#3570](https://github.com/statisticsnorway/mimir/issues/3570)) ([6751306](https://github.com/statisticsnorway/mimir/commit/67513060779cedd3f365470b0c8b3e7fb80ef9fd))
+* updates to env in workflows ([#3569](https://github.com/statisticsnorway/mimir/issues/3569)) ([042d3c8](https://github.com/statisticsnorway/mimir/commit/042d3c800d3db80ad8f7eb9a7524428310769ffa))
+
 ## [2.38.0](https://github.com/statisticsnorway/mimir/compare/v2.37.0...v2.38.0) (2025-12-10)
 
 
