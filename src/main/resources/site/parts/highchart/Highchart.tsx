@@ -166,7 +166,8 @@ function Highchart(props: HighchartProps) {
     }
 
   const setPieChartLegend = (config: Highcharts.Options) => {
-    if (config.chart?.type === 'pie' && config.legend) {
+    if (config.chart?.type === 'pie') {
+      if (!config.legend) return
       config.legend.labelFormatter = function name() {
         return Array.isArray(this.name) ? this.name[0] : this.name
       }
@@ -176,9 +177,9 @@ function Highchart(props: HighchartProps) {
   const setReversedStacksBarAndColumn = (config: Highcharts.Options) => {
     if (config.chart?.type === 'bar' || config.chart?.type === 'column') {
       const yAxisConfig = config.yAxis as Highcharts.YAxisOptions
-      if (yAxisConfig) {
-        return (yAxisConfig.reversedStacks = false)
-      }
+
+      if (!yAxisConfig) return
+      return (yAxisConfig.reversedStacks = false)
     }
   }
 

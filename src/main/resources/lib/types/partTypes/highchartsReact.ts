@@ -1,4 +1,4 @@
-import { type HighchartsGraphConfig } from '/lib/types/highcharts'
+import { Options as HighchartsGraphConfig } from 'highcharts'
 import { type Phrases } from '/lib/types/language'
 import { type Highchart } from '/site/content-types/highchart'
 
