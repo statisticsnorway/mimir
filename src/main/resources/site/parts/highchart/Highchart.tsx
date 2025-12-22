@@ -54,46 +54,6 @@ function Highchart(props: HighchartProps) {
     highchartElement?.setAttribute('aria-hidden', showTable?.toString())
   }
 
-  function renderShowAsFigureOrTableTab(highchartId: string) {
-    return (
-      <Col className='col-12 mb-3'>
-        <Tabs
-          id={highchartId}
-          activeOnInit='show-as-chart'
-          items={[
-            { title: phrases?.['highcharts.showAsChart'], path: 'show-as-chart' },
-            { title: phrases?.['highcharts.showAsTable'], path: 'show-as-table' },
-          ]}
-          onClick={handleTabOnClick(highchartId)}
-        />
-        <Divider className='mb-3' />
-      </Col>
-    )
-  }
-
-  function renderHighchartsSource(sourceList: HighchartsReactProps['sourceList']) {
-    return sourceList?.map(({ sourceHref, sourceText }, index) => (
-      <Col key={index} className='highcharts-source col-12 mt-3'>
-        <Link href={sourceHref} standAlone>
-          {phrases?.source}: {sourceText}
-        </Link>
-      </Col>
-    ))
-  }
-
-  function renderHighchartsFooter(
-    footnoteText: HighchartsReactProps['footnoteText'],
-    creditsEnabled: HighchartsReactProps['creditsEnabled'],
-    sourceList: HighchartsReactProps['sourceList']
-  ) {
-    return (
-      <Row>
-        {footnoteText ? <Col className='footnote col-12'>{footnoteText}</Col> : null}
-        {creditsEnabled ? renderHighchartsSource(sourceList) : null}
-      </Row>
-    )
-  }
-
   const downloadAsXLSX = (title: string | undefined) =>
     function (this: Highcharts.Exporting) {
       // @ts-ignore: The getDataRows function belongs to the Highcharts.Exporting class (https://api.highcharts.com/class-reference/Highcharts.Exporting#getDataRows),
@@ -127,35 +87,51 @@ function Highchart(props: HighchartProps) {
       const chartYAxis = chart.yAxis as Highcharts.Axis[]
       for (let i = 0; i < chartYAxis.length; i++) {
         // Natively highcharts resolves y axis not starting on 0 either with breaks or setting yMin
-        if (chartYAxis[i].min > 0 || chartYAxis[i].brokenAxis.hasBreaks) {
+        // @ts-ignore: brokenAxis is neither in Highcharts.YAxisOptions or Highcharts.Axis types
+        if ((chartYAxis[i].min as number) > 0 || chartYAxis[i].brokenAxis.hasBreaks) {
           // Replace first tick label with 0 since showing below broken axis symbol (for yMin > 0)
-          const yAxisConfig = Array.isArray(config.yAxis) ? config.yAxis[i] : config.yAxis
-          const decimalsMatch = yAxisConfig.labels?.format[9] ?? 0
-          const zeroFormatted = Highcharts.numberFormat(0, decimalsMatch)
-          const firstTickValue = chartYAxis[i].tickPositions[0]
-          chartYAxis[i].ticks[firstTickValue].label.attr({ text: zeroFormatted })
+          const yAxisConfig = Array.isArray(config.yAxis)
+            ? (config.yAxis[i] as Highcharts.YAxisOptions)
+            : (config.yAxis as Highcharts.YAxisOptions)
+          const decimalsMatch = ((yAxisConfig.labels as Highcharts.YAxisLabelsOptions).format as string)[9] ?? 0
+          const zeroFormatted = Highcharts.numberFormat(0, Number(decimalsMatch))
+          const tickPositions = chartYAxis[i].tickPositions as Highcharts.AxisTickPositionsArray
+          const firstTickValue = tickPositions[0]
+          const firstTickLabel = chartYAxis[i].ticks[firstTickValue].label as Highcharts.SVGElement
+          firstTickLabel.attr({
+            text: zeroFormatted,
+          })
 
           // Removes first tick label if rendered on top of 0 (for broken axis)
-          const secondTickValue = chartYAxis[i].tickPositions[1]
-          if (chartYAxis[i].ticks[firstTickValue].label.xy.y === chartYAxis[i].ticks[secondTickValue].label.xy.y) {
-            chartYAxis[i].ticks[secondTickValue].label.hide()
+          const secondTickValue = tickPositions[1]
+          const secondTickLabel = chartYAxis[i].ticks[secondTickValue].label as Highcharts.SVGElement
+
+          // @ts-ignore: Property 'xy' does not exist on type 'SVGElement'.
+          if (firstTickLabel.xy.y === secondTickLabel.xy.y) {
+            secondTickLabel.hide()
           }
 
           // Determine position for broken axis symbol
-          const offset = chartYAxis[i].opposite ? chart.plotWidth : 0
+          const offset = yAxisConfig?.opposite ? chart.plotWidth : 0
           const x = chart.plotLeft + offset - 10
           const y = chart.plotTop + chart.plotHeight - 10
 
           // Draw broken axis symbol
           chart.renderer
-            .path(['M', x, y, 'l', 20, -5])
+            .path([
+              ['M', x, y],
+              ['l', 20, -5],
+            ])
             .attr({
               'stroke-width': 1,
               stroke: 'black',
             })
             .add()
           chart.renderer
-            .path(['M', x, y + 5, 'l', 20, -5])
+            .path([
+              ['M', x, y + 5],
+              ['l', 20, -5],
+            ])
             .attr({
               'stroke-width': 1,
               stroke: 'black',
@@ -222,6 +198,46 @@ function Highchart(props: HighchartProps) {
     }
   }
 
+  function renderShowAsFigureOrTableTab(highchartId: string) {
+    return (
+      <Col className='col-12 mb-3'>
+        <Tabs
+          id={highchartId}
+          activeOnInit='show-as-chart'
+          items={[
+            { title: phrases?.['highcharts.showAsChart'], path: 'show-as-chart' },
+            { title: phrases?.['highcharts.showAsTable'], path: 'show-as-table' },
+          ]}
+          onClick={handleTabOnClick(highchartId)}
+        />
+        <Divider className='mb-3' />
+      </Col>
+    )
+  }
+
+  function renderHighchartsSource(sourceList: HighchartsReactProps['sourceList']) {
+    return sourceList?.map(({ sourceHref, sourceText }, index) => (
+      <Col key={index} className='highcharts-source col-12 mt-3'>
+        <Link href={sourceHref} standAlone>
+          {phrases?.source}: {sourceText}
+        </Link>
+      </Col>
+    ))
+  }
+
+  function renderHighchartsFooter(
+    footnoteText: HighchartsReactProps['footnoteText'],
+    creditsEnabled: HighchartsReactProps['creditsEnabled'],
+    sourceList: HighchartsReactProps['sourceList']
+  ) {
+    return (
+      <Row>
+        {footnoteText ? <Col className='footnote col-12'>{footnoteText}</Col> : null}
+        {creditsEnabled ? renderHighchartsSource(sourceList) : null}
+      </Row>
+    )
+  }
+
   function renderHighcharts() {
     if (!highcharts?.length) return null
 
@@ -267,24 +283,29 @@ function Highchart(props: HighchartProps) {
       setPlotPointMartker(highchartConfig)
 
       return (
-        <Row key={`highchart-${highchart.contentKey}`} className={`${highcharts.length !== index + 1 && 'mb-5'}`}>
-          <Col className='col-12'>
-            <figure id={`figure-${highchart.contentKey}`} className='highcharts-figure mb-0 hide-title'>
-              <figcaption className='figure-title'>{config.title?.text}</figcaption>
-              {config.subtitle?.text ? <p className='figure-subtitle'>{config.subtitle.text}</p> : null}
-              {renderShowAsFigureOrTableTab(highchart.contentKey as string)}
-              <div ref={(el) => (highchartsWrapperRefs.current[highchart.contentKey as string] = el)}>
-                <HighchartsReact highcharts={Highcharts} options={config} />
-              </div>
-            </figure>
-            {renderHighchartsFooter(highchart.footnoteText, highchart.creditsEnabled, highchart.sourceList)}
-          </Col>
-        </Row>
+        <Col
+          key={`highchart-${highchart.contentKey}`}
+          className={`col-12${highcharts.length !== index + 1 && ' mb-5'}`}
+        >
+          <figure id={`figure-${highchart.contentKey}`} className='highcharts-figure mb-0 hide-title'>
+            <figcaption className='figure-title'>{config.title?.text}</figcaption>
+            {config.subtitle?.text ? <p className='figure-subtitle'>{config.subtitle.text}</p> : null}
+            {renderShowAsFigureOrTableTab(highchart.contentKey as string)}
+            <div ref={(el) => (highchartsWrapperRefs.current[highchart.contentKey as string] = el)}>
+              <HighchartsReact highcharts={Highcharts} options={config} />
+            </div>
+          </figure>
+          {renderHighchartsFooter(highchart.footnoteText, highchart.creditsEnabled, highchart.sourceList)}
+        </Col>
       )
     })
   }
 
-  return <Container>{renderHighcharts()}</Container>
+  return (
+    <Container>
+      <Row>{renderHighcharts()}</Row>
+    </Container>
+  )
 }
 
 export default (props: HighchartProps) => <Highchart {...props} />
