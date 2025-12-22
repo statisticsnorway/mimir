@@ -105,8 +105,8 @@ function Highchart(props: HighchartProps) {
       })
     }
 
+  // Workaround to get correct number formatting in table
   const formatNumbersInTable = () =>
-    // Workaround to get correct number formatting in table
     function (chart: Highcharts.ExportDataEventObject) {
       for (const row of chart.dataRows) {
         // Escaping first value not to format category ie. year
@@ -177,48 +177,48 @@ function Highchart(props: HighchartProps) {
   const setReversedStacksBarAndColumn = (config: Highcharts.Options) => {
     if (config.chart?.type === 'bar' || config.chart?.type === 'column') {
       const yAxisConfig = config.yAxis as Highcharts.YAxisOptions
-
       if (!yAxisConfig) return
       return (yAxisConfig.reversedStacks = false)
     }
   }
 
-  const setBarNegativeFormattingOptions = (config: Highcharts.Options) => {
-    if (config.chart?.type === 'barNegative') {
+  // Show absolute values on yAxis labels for bar charts with negative values
+  const formatBarNegativeYAxisValues = (config: Highcharts.Options) => {
+    if (config.chart?.type === 'bar') {
       const yAxisConfig = config.yAxis as Highcharts.YAxisOptions
-      if (yAxisConfig?.labels) {
-        yAxisConfig.labels.formatter = function (a) {
-          return Math.abs(a.value as number).toString()
-        }
-      }
+      if (!yAxisConfig?.labels) return
+      return (yAxisConfig.labels.formatter = function (a) {
+        return Math.abs(a.value as number).toString()
+      })
+    }
+  }
 
-      if (config.tooltip) {
-        config.tooltip.formatter = function () {
-          return (
-            `<b>${this.series.name} ${this.point.category}:</b> ` + Highcharts.numberFormat(Math.abs(this.point.y), 0)
-          )
-        }
+  // Show absolute values on tooltip for bar charts with negative values
+  const formatBarNegativeTooltipValues = (config: Highcharts.Options) => {
+    if (config.chart?.type === 'bar') {
+      if (!config.tooltip) return
+      config.tooltip.formatter = function (this: Highcharts.Point) {
+        return `<b>${this.series.name} ${this.category}:</b> ` + Highcharts.numberFormat(Math.abs(this.y as number), 0)
       }
     }
   }
 
+  // Only show plotOption marker on last data element / single data point series
   const setPlotPointMartker = (config: Highcharts.Options) => {
-    // Only show plotOption marker on last data element / single data point series
     if (config.chart?.type === 'line') {
       const seriesConfig = config.series as Highcharts.SeriesLineOptions[]
-      if (seriesConfig) {
-        seriesConfig.forEach((series) => {
-          const indices = series.data?.map((element) => element !== null)
-          const lastIndex = indices?.lastIndexOf(true)
+      if (!seriesConfig) return
+      return seriesConfig.map((series) => {
+        const indices = series.data?.map((element) => element !== null)
+        const lastIndex = indices?.lastIndexOf(true)
 
-          series.data = series.data?.map((data, index) => ({
-            y: Number.parseFloat(data as string),
-            marker: {
-              enabled: index === lastIndex,
-            },
-          }))
-        })
-      }
+        series.data = series.data?.map((data, index) => ({
+          y: Number.parseFloat(data as string),
+          marker: {
+            enabled: index === lastIndex,
+          },
+        }))
+      })
     }
   }
 
@@ -262,7 +262,8 @@ function Highchart(props: HighchartProps) {
 
       setPieChartLegend(highchartConfig)
       setReversedStacksBarAndColumn(highchartConfig)
-      setBarNegativeFormattingOptions(highchartConfig)
+      formatBarNegativeYAxisValues(highchartConfig)
+      formatBarNegativeTooltipValues(highchartConfig)
       setPlotPointMartker(highchartConfig)
 
       return (
