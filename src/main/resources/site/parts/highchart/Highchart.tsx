@@ -66,14 +66,14 @@ function Highchart(props: HighchartsReactProps) {
     }
 
   // Workaround to get correct number formatting in table
-  const formatNumbersInTable = (config: Highcharts.Options) =>
+  const formatNumbersInTable = (config: Highcharts.Options, type: string) =>
     function (chart: Highcharts.ExportDataEventObject) {
       for (const row of chart.dataRows) {
         // Escaping first value not to format category ie. year
         for (const [i, cell] of Object.entries(row)) {
           if (Number(i) > 0 && typeof cell === 'number') {
             // Format absolute values for bar negative charts
-            const value = config.chart?.type === 'bar' ? Math.abs(Number(cell)) : Number(cell)
+            const value = type === 'barNegative' ? Math.abs(Number(cell)) : Number(cell)
             row[Number(i)] = value.toLocaleString(language === 'en' ? 'en-EN' : 'no-NO').replace('NaN', '')
           }
         }
@@ -178,8 +178,8 @@ function Highchart(props: HighchartsReactProps) {
   }
 
   // Show absolute values on yAxis labels for bar charts with negative values
-  const formatBarNegativeYAxisValues = (config: Highcharts.Options) => {
-    if (config.chart?.type === 'bar') {
+  const formatBarNegativeYAxisValues = (config: Highcharts.Options, type: string) => {
+    if (type === 'barNegative') {
       const yAxisConfig = config.yAxis as Highcharts.YAxisOptions
       if (!yAxisConfig?.labels) return
       return (yAxisConfig.labels.formatter = function (a) {
@@ -189,8 +189,8 @@ function Highchart(props: HighchartsReactProps) {
   }
 
   // Show absolute values on tooltip for bar charts with negative values
-  const formatBarNegativeTooltipValues = (config: Highcharts.Options) => {
-    if (config.chart?.type === 'bar') {
+  const formatBarNegativeTooltipValues = (config: Highcharts.Options, type: string) => {
+    if (type === 'barNegative') {
       if (!config.tooltip) return
       config.tooltip.formatter = function (this: Highcharts.Point) {
         return `<b>${this.series.name} ${this.category}:</b> ` + Highcharts.numberFormat(Math.abs(this.y as number), 0)
@@ -281,7 +281,7 @@ function Highchart(props: HighchartsReactProps) {
           ...highchart.config.chart,
           events: {
             ...highchart.config.chart?.events,
-            exportData: formatNumbersInTable(highchartConfig),
+            exportData: formatNumbersInTable(highchartConfig, highchart.type as string),
             load: renderYAxisBreakSymbol(highchartConfig),
           },
         },
@@ -297,8 +297,8 @@ function Highchart(props: HighchartsReactProps) {
 
       setPieChartLegend(highchartConfig)
       setReversedStacksBarAndColumn(highchartConfig)
-      formatBarNegativeYAxisValues(highchartConfig)
-      formatBarNegativeTooltipValues(highchartConfig)
+      formatBarNegativeYAxisValues(highchartConfig, highchart.type as string)
+      formatBarNegativeTooltipValues(highchartConfig, highchart.type as string)
       setPlotPointMartker(highchartConfig)
 
       return (
