@@ -2,13 +2,13 @@ import { Options as HighchartsGraphConfig } from 'highcharts'
 import { type Phrases } from '/lib/types/language'
 import { type Highchart } from '/site/content-types/highchart'
 
-export interface HighchartProps {
-  highcharts: HighchartsReactProps[]
+export interface HighchartsReactProps {
+  highcharts: HighchartsPartProps[]
   language: string
   phrases: Phrases | undefined
 }
 
-export interface HighchartsReactProps {
+export interface HighchartsPartProps {
   config?: HighchartsExtendedProps
   description?: string
   type?: string
@@ -19,9 +19,9 @@ export interface HighchartsReactProps {
   hideTitle?: boolean
 }
 
-export interface HighchartsReactExtraProps {
+export interface HighchartsExtraPartProps {
   draft?: boolean
   noDraftAvailable?: boolean
 }
 
-export type HighchartsExtendedProps = HighchartsGraphConfig & HighchartsReactExtraProps
+export type HighchartsExtendedProps = HighchartsGraphConfig & HighchartsExtraPartProps

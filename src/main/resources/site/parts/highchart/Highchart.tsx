@@ -13,11 +13,11 @@ import 'highcharts/modules/no-data-to-display'
 import 'highcharts/modules/broken-axis'
 
 import { exportHighchartsToExcel } from '/lib/ssb/utils/tableExportUtils'
-import { type HighchartProps, type HighchartsReactProps } from '/lib/types/partTypes/highchartsReact'
+import { type HighchartsReactProps, type HighchartsPartProps } from '/lib/types/partTypes/highchartsReact'
 
 import accessibilityLang from '../../../assets/js/highchart-lang.json'
 
-function Highchart(props: HighchartProps) {
+function Highchart(props: HighchartsReactProps) {
   const { highcharts, language, phrases } = props
   const highchartsWrapperRefs = useRef<Record<string, HTMLDivElement | null>>({})
 
@@ -234,7 +234,7 @@ function Highchart(props: HighchartProps) {
     )
   }
 
-  function renderHighchartsSource(sourceList: HighchartsReactProps['sourceList']) {
+  function renderHighchartsSource(sourceList: HighchartsPartProps['sourceList']) {
     return sourceList?.map(({ sourceHref, sourceText }, index) => (
       <Col key={index} className='highcharts-source col-12 mt-3'>
         <Link href={sourceHref} standAlone>
@@ -245,9 +245,9 @@ function Highchart(props: HighchartProps) {
   }
 
   function renderHighchartsFooter(
-    footnoteText: HighchartsReactProps['footnoteText'],
-    creditsEnabled: HighchartsReactProps['creditsEnabled'],
-    sourceList: HighchartsReactProps['sourceList']
+    footnoteText: HighchartsPartProps['footnoteText'],
+    creditsEnabled: HighchartsPartProps['creditsEnabled'],
+    sourceList: HighchartsPartProps['sourceList']
   ) {
     return (
       <Row>
@@ -327,4 +327,4 @@ function Highchart(props: HighchartProps) {
   )
 }
 
-export default (props: HighchartProps) => <Highchart {...props} />
+export default (props: HighchartsReactProps) => <Highchart {...props} />
