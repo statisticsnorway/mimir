@@ -72,7 +72,7 @@ function Highchart(props: HighchartProps) {
         // Escaping first value not to format category ie. year
         for (const [i, cell] of Object.entries(row)) {
           if (Number(i) > 0 && typeof cell === 'number') {
-            row[Number(i)] = Number(cell)
+            row[Number(i)] = Math.abs(Number(cell))
               .toLocaleString(language === 'en' ? 'en-EN' : 'no-NO')
               .replace('NaN', '')
           }
