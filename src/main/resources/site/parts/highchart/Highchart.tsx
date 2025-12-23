@@ -66,19 +66,31 @@ function Highchart(props: HighchartProps) {
     }
 
   // Workaround to get correct number formatting in table
-  const formatNumbersInTable = () =>
+  const formatNumbersInTable = (config: Highcharts.Options) =>
     function (chart: Highcharts.ExportDataEventObject) {
       for (const row of chart.dataRows) {
         // Escaping first value not to format category ie. year
         for (const [i, cell] of Object.entries(row)) {
           if (Number(i) > 0 && typeof cell === 'number') {
-            row[Number(i)] = Math.abs(Number(cell))
-              .toLocaleString(language === 'en' ? 'en-EN' : 'no-NO')
-              .replace('NaN', '')
+            // Format absolute values for bar negative charts
+            const value = config.chart?.type === 'bar' ? Math.abs(Number(cell)) : Number(cell)
+            row[Number(i)] = value.toLocaleString(language === 'en' ? 'en-EN' : 'no-NO').replace('NaN', '')
           }
         }
       }
     }
+
+  const getYLabel = (el: Highcharts.SVGElement | undefined) => {
+    if (!el) return undefined
+
+    const yAttr = el.attr('y')
+    if (typeof yAttr === 'number') return yAttr
+    if (typeof yAttr === 'string') {
+      const n = Number(yAttr)
+      if (!Number.isNaN(n)) return n
+    }
+    return undefined
+  }
 
   const renderYAxisBreakSymbol = (config: Highcharts.Options) =>
     function (this: Highcharts.Chart) {
@@ -87,28 +99,35 @@ function Highchart(props: HighchartProps) {
       const chartYAxis = chart.yAxis as Highcharts.Axis[]
       for (let i = 0; i < chartYAxis.length; i++) {
         // Natively highcharts resolves y axis not starting on 0 either with breaks or setting yMin
-        // @ts-ignore: brokenAxis is neither in Highcharts.YAxisOptions or Highcharts.Axis types
-        if ((chartYAxis[i].min as number) > 0 || chartYAxis[i].brokenAxis.hasBreaks) {
+        if ((chartYAxis[i].min as number) > 0) {
           // Replace first tick label with 0 since showing below broken axis symbol (for yMin > 0)
           const yAxisConfig = Array.isArray(config.yAxis)
             ? (config.yAxis[i] as Highcharts.YAxisOptions)
             : (config.yAxis as Highcharts.YAxisOptions)
           const decimalsMatch = ((yAxisConfig.labels as Highcharts.YAxisLabelsOptions).format as string)[9] ?? 0
           const zeroFormatted = Highcharts.numberFormat(0, Number(decimalsMatch))
+
           const tickPositions = chartYAxis[i].tickPositions as Highcharts.AxisTickPositionsArray
           const firstTickValue = tickPositions[0]
           const firstTickLabel = chartYAxis[i].ticks[firstTickValue].label as Highcharts.SVGElement
-          firstTickLabel.attr({
-            text: zeroFormatted,
-          })
+
+          if (firstTickLabel) {
+            firstTickLabel.attr({
+              text: zeroFormatted,
+            })
+          }
 
           // Removes first tick label if rendered on top of 0 (for broken axis)
           const secondTickValue = tickPositions[1]
           const secondTickLabel = chartYAxis[i].ticks[secondTickValue].label as Highcharts.SVGElement
 
-          // @ts-ignore: Property 'xy' does not exist on type 'SVGElement'.
-          if (firstTickLabel.xy.y === secondTickLabel.xy.y) {
-            secondTickLabel.hide()
+          if (firstTickLabel && secondTickLabel) {
+            const firstY = getYLabel(firstTickLabel)
+            const secondY = getYLabel(secondTickLabel)
+
+            if (firstY && secondY && firstY === secondY) {
+              secondTickLabel.hide()
+            }
           }
 
           // Determine position for broken axis symbol
@@ -262,7 +281,7 @@ function Highchart(props: HighchartProps) {
           ...highchart.config.chart,
           events: {
             ...highchart.config.chart?.events,
-            exportData: formatNumbersInTable(),
+            exportData: formatNumbersInTable(highchartConfig),
             load: renderYAxisBreakSymbol(highchartConfig),
           },
         },
