@@ -1,8 +1,8 @@
 import { type Request } from '@enonic-types/core'
+import { Options as HighchartsGraphConfig } from 'highcharts'
 import { Content } from '/lib/xp/content'
 import { type JSONstat } from '/lib/types/jsonstat-toolkit'
 import { type TbmlDataUniform } from '/lib/types/xmlParser'
-import { type HighchartsGraphConfig } from '/lib/types/highcharts'
 import { SeriesAndCategories, prepareHighchartsData } from '/lib/ssb/parts/highcharts/highchartsData'
 import { mergeDeepRight } from '/lib/vendor/ramda'
 

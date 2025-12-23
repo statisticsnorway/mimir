@@ -12,6 +12,7 @@
     "strictNullChecks": true,
     "esModuleInterop": true,
     "skipLibCheck": false,
+    "resolveJsonModule": true,
     "jsx": "react",
     "lib": ["es2021", "dom", "ES2021.String"],
     "types": [
@@ -48,7 +49,7 @@
     "main/resources/lib/ssb/utils/htmlUtils.ts",
     "main/resources/lib/ssb/utils/generateImageUrlUtils.ts",
     "main/resources/lib/ssb/utils/tableExportUtils.ts",
-    "main/**/*.d.ts", "main/resources/site/parts/highchartExpert/HighchartExpert.jsx", "main/resources/site/parts/highchart/Highchart.jsx", "main/resources/site/parts/highmap/Highmap.jsx", "main/resources/site/parts/nameSearch/nameSearch.jsx",
+    "main/**/*.d.ts", "main/resources/site/parts/highchartExpert/HighchartExpert.jsx", "main/resources/site/parts/highmap/Highmap.jsx", "main/resources/site/parts/nameSearch/nameSearch.jsx",
   ],
   "exclude": [
     "main/**/*.js",
