@@ -66,7 +66,7 @@ function Highchart(props: HighchartsReactProps) {
     }
 
   // Workaround to get correct number formatting in table
-  const formatNumbersInTable = (config: Highcharts.Options, type: string) =>
+  const formatNumbersInTable = (type: string) =>
     function (chart: Highcharts.ExportDataEventObject) {
       for (const row of chart.dataRows) {
         // Escaping first value not to format category ie. year
@@ -281,7 +281,7 @@ function Highchart(props: HighchartsReactProps) {
           ...highchart.config.chart,
           events: {
             ...highchart.config.chart?.events,
-            exportData: formatNumbersInTable(highchartConfig, highchart.type as string),
+            exportData: formatNumbersInTable(highchart.type as string),
             load: renderYAxisBreakSymbol(highchartConfig),
           },
         },
