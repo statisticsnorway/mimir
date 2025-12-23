@@ -32,10 +32,6 @@ try {
           enabled: false,
         },
         {
-          feature: 'highchart-react',
-          enabled: false,
-        },
-        {
           feature: 'deactivate-part-cache-article-list',
           enabled: true,
         },
