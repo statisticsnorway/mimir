@@ -9,6 +9,7 @@ import { datasetOrUndefined } from '/lib/ssb/cache/cache'
 import { type AttachmentTablesFiguresData } from '/lib/types/partTypes/attachmentTablesFigures'
 import { getProps } from '/site/parts/table/table'
 import { preview as highchartPreview } from '/site/parts/highchart/highchart'
+import { preview as highmapPreview } from '/site/parts/highmap/highmap'
 import { preview as combinedGraphPreview } from '/site/parts/combinedGraph/combinedGraph'
 
 export function getTablesAndFigures(
@@ -51,6 +52,14 @@ export function getTablesAndFigures(
         return getFigureReturnObject(
           attachmentTablesFiguresMap[id],
           combinedGraphPreview(req, id),
+          `${phrases.figure} ${figureIndex}`,
+          index
+        )
+      } else if (attachmentTablesFiguresMap[id].type === `${app.name}:highmap`) {
+        ++figureIndex
+        return getFigureReturnObject(
+          attachmentTablesFiguresMap[id],
+          highmapPreview(req, id),
           `${phrases.figure} ${figureIndex}`,
           index
         )
@@ -103,24 +112,28 @@ export function getFinalPageContributions(
   accordionPageContributions: XP.PageContributions,
   attachmentTableAndFigure: Array<AttachmentTablesFiguresData>
 ): XP.PageContributions {
-  const pageContributions: Array<XP.PageContributions> = attachmentTableAndFigure.reduce((acc, attachment) => {
-    if (attachment.pageContributions?.bodyEnd) {
-      acc = acc.concat(attachment.pageContributions.bodyEnd as unknown as ConcatArray<never>)
-    }
+  const attachmentsHeadEnd = attachmentTableAndFigure.reduce<string[]>((acc, attachment) => {
+    const pc = attachment.pageContributions
+    if (pc?.headEnd) acc.push(...pc.headEnd)
     return acc
   }, [])
 
-  if (pageContributions.length > 0 && accordionPageContributions) {
+  const attachmentsBodyEnd = attachmentTableAndFigure.reduce<string[]>((acc, attachment) => {
+    const pc = attachment.pageContributions
+    if (pc?.bodyEnd) acc.push(...pc.bodyEnd)
+    return acc
+  }, [])
+
+  if (!accordionPageContributions) {
     return {
-      headEnd: [].concat(
-        accordionPageContributions.headEnd as unknown as ConcatArray<never>,
-        pageContributions as unknown as ConcatArray<never>
-      ),
-      bodyEnd: [].concat(
-        accordionPageContributions.bodyEnd as unknown as ConcatArray<never>,
-        pageContributions as unknown as ConcatArray<never>
-      ),
+      headEnd: attachmentsHeadEnd,
+      bodyEnd: attachmentsBodyEnd,
     }
   }
-  return accordionPageContributions
+
+  return {
+    ...accordionPageContributions,
+    headEnd: [...(accordionPageContributions.headEnd ?? []), ...attachmentsHeadEnd],
+    bodyEnd: [...(accordionPageContributions.bodyEnd ?? []), ...attachmentsBodyEnd],
+  }
 }
