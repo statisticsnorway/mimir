@@ -110,30 +110,32 @@ function getTitleFromDataset(content: Content): string | TbmlDataUniform['tbml']
 
 export function getFinalPageContributions(
   accordionPageContributions: XP.PageContributions,
-  attachmentTableAndFigure: Array<AttachmentTablesFiguresData>
+  attachments: Array<AttachmentTablesFiguresData>
 ): XP.PageContributions {
-  const attachmentsHeadEnd = attachmentTableAndFigure.reduce<string[]>((acc, attachment) => {
-    const pc = attachment.pageContributions
-    if (pc?.headEnd) acc.push(...pc.headEnd)
+  const attachmentHeadEnd = attachments.reduce<string[]>((acc, { pageContributions: attachmentContributions }) => {
+    if (attachmentContributions?.headEnd) {
+      acc.push(...attachmentContributions.headEnd)
+    }
     return acc
   }, [])
 
-  const attachmentsBodyEnd = attachmentTableAndFigure.reduce<string[]>((acc, attachment) => {
-    const pc = attachment.pageContributions
-    if (pc?.bodyEnd) acc.push(...pc.bodyEnd)
+  const attachmentBodyEnd = attachments.reduce<string[]>((acc, { pageContributions: attachmentContributions }) => {
+    if (attachmentContributions?.bodyEnd) {
+      acc.push(...attachmentContributions.bodyEnd)
+    }
     return acc
   }, [])
 
   if (!accordionPageContributions) {
     return {
-      headEnd: attachmentsHeadEnd,
-      bodyEnd: attachmentsBodyEnd,
+      headEnd: attachmentHeadEnd,
+      bodyEnd: attachmentBodyEnd,
     }
   }
 
   return {
     ...accordionPageContributions,
-    headEnd: [...(accordionPageContributions.headEnd ?? []), ...attachmentsHeadEnd],
-    bodyEnd: [...(accordionPageContributions.bodyEnd ?? []), ...attachmentsBodyEnd],
+    headEnd: (accordionPageContributions.headEnd ?? []).concat(attachmentHeadEnd),
+    bodyEnd: (accordionPageContributions.bodyEnd ?? []).concat(attachmentBodyEnd),
   }
 }
