@@ -294,11 +294,13 @@ function Highchart(props: HighchartsReactProps) {
         },
       }
 
-      setPieChartLegend(highchartConfig)
-      setReversedStacksBarAndColumn(highchartConfig)
+      setPieChartLegend(highchartConfig) // Overwrite config.legend.labelFormatter for pie charts
+      setReversedStacksBarAndColumn(highchartConfig) // Overwrite config.yAxis.reversedStacks for bar and column charts
+      setPlotPointMarker(highchartConfig) // Overwrite config.series.data to show marker only on last data point for line charts
+
+      // Overwrite config.yAxis.labels.formatter and config.tooltip.formatter for bar negative charts
       formatBarNegativeYAxisValues(highchartConfig, highchart.type as string)
       formatBarNegativeTooltipValues(highchartConfig, highchart.type as string)
-      setPlotPointMarker(highchartConfig)
 
       return (
         <Col
