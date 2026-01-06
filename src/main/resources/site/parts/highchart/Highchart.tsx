@@ -171,6 +171,7 @@ function Highchart(props: HighchartsReactProps) {
       if (!yAxisConfig) return
       return (yAxisConfig.reversedStacks = false)
     }
+    return
   }
 
   // Show absolute values on yAxis labels for bar charts with negative values
@@ -182,6 +183,7 @@ function Highchart(props: HighchartsReactProps) {
         return Math.abs(a.value as number).toString()
       })
     }
+    return
   }
 
   // Show absolute values on tooltip for bar charts with negative values
@@ -211,6 +213,7 @@ function Highchart(props: HighchartsReactProps) {
         }))
       })
     }
+    return
   }
 
   function renderShowAsFigureOrTableTab(highchartId: string) {
