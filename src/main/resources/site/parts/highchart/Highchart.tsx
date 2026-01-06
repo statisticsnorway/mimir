@@ -99,15 +99,13 @@ function Highchart(props: HighchartsReactProps) {
         // Natively highcharts resolves y axis not starting on 0 either with breaks or setting yMin
         if ((chartYAxis[i].min as number) > 0) {
           // Replace first tick label with 0 since showing below broken axis symbol (for yMin > 0)
-          const yAxisConfig = Array.isArray(config.yAxis)
-            ? (config.yAxis[i] as Highcharts.YAxisOptions)
-            : (config.yAxis as Highcharts.YAxisOptions)
-          const decimalsMatch = ((yAxisConfig.labels as Highcharts.YAxisLabelsOptions).format as string)[9] ?? 0
+          const yAxisConfig = Array.isArray(config.yAxis) ? config.yAxis[i] : config.yAxis
+          const decimalsMatch = (yAxisConfig?.labels?.format as string[9]) ?? 0
           const zeroFormatted = Highcharts.numberFormat(0, Number(decimalsMatch))
 
-          const tickPositions = chartYAxis[i].tickPositions as Highcharts.AxisTickPositionsArray
+          const tickPositions = chartYAxis[i].tickPositions ?? []
           const firstTickValue = tickPositions[0]
-          const firstTickLabel = chartYAxis[i].ticks[firstTickValue].label as Highcharts.SVGElement
+          const firstTickLabel = chartYAxis[i].ticks[firstTickValue].label
 
           if (firstTickLabel) {
             firstTickLabel.attr({
@@ -117,7 +115,7 @@ function Highchart(props: HighchartsReactProps) {
 
           // Removes first tick label if rendered on top of 0 (for broken axis)
           const secondTickValue = tickPositions[1]
-          const secondTickLabel = chartYAxis[i].ticks[secondTickValue].label as Highcharts.SVGElement
+          const secondTickLabel = chartYAxis[i].ticks[secondTickValue].label
 
           if (firstTickLabel && secondTickLabel) {
             const firstY = getYLabel(firstTickLabel)
