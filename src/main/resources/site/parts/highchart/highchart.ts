@@ -24,7 +24,11 @@ import { hasWritePermissionsAndPreview } from '/lib/ssb/parts/permissions'
 import { isEnabled } from '/lib/featureToggle'
 import { getPhrases } from '/lib/ssb/utils/language'
 import { getTbprocessorKey } from '/lib/ssb/dataset/tbprocessor/tbprocessor'
-import { type HighchartsExtendedProps, type HighchartsPartProps } from '/lib/types/partTypes/highchartsReact'
+import {
+  type HighchartsExtendedProps,
+  type HighchartsPartProps,
+  type HighchartsReactProps,
+} from '/lib/types/partTypes/highchartsReact'
 import { type DataSource } from '/site/mixins/dataSource'
 import { type CombinedGraph, type Highchart } from '/site/content-types'
 
@@ -89,11 +93,11 @@ function renderPart(req: Request, highchartIds: Array<string>): Response {
 
   const inlineScript: Array<string> = highcharts.map(
     (highchart) => `<script type="text/javascript">
-   window['highchart' + '${highchart.contentKey}'] = ${JSON.stringify(highchart.config)}
-   </script>`
+    window['highchart' + '${highchart.contentKey}'] = ${JSON.stringify(highchart.config)}
+    </script>`
   )
 
-  const HighchartsReactProps: object = {
+  const highchartsReactProps: HighchartsReactProps = {
     highcharts: highcharts,
     language,
     phrases: getPhrases(page),
@@ -106,7 +110,7 @@ function renderPart(req: Request, highchartIds: Array<string>): Response {
     const _req = req
     if (req.mode === 'edit') _req.mode = 'preview'
 
-    return r4XpRender('site/parts/highchart/Highchart', HighchartsReactProps, _req, {
+    return r4XpRender('site/parts/highchart/Highchart', highchartsReactProps, _req, {
       body: '<section class="xp-part highchart-wrapper"></section>',
     })
   } else {

@@ -5,7 +5,7 @@ import { type Highchart } from '/site/content-types/highchart'
 export interface HighchartsReactProps {
   highcharts: HighchartsPartProps[]
   language: string
-  phrases: Phrases | undefined
+  phrases?: Phrases
 }
 
 export interface HighchartsPartProps {

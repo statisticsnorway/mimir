@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-this-alias */
 import React, { useEffect, useRef } from 'react'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
@@ -95,8 +94,7 @@ function Highchart(props: HighchartsReactProps) {
   const renderYAxisBreakSymbol = (config: Highcharts.Options) =>
     function (this: Highcharts.Chart) {
       // Drawing yAxis break symbol when y-axis not starting at 0
-      const chart = this
-      const chartYAxis = chart.yAxis as Highcharts.Axis[]
+      const chartYAxis = this.yAxis as Highcharts.Axis[]
       for (let i = 0; i < chartYAxis.length; i++) {
         // Natively highcharts resolves y axis not starting on 0 either with breaks or setting yMin
         if ((chartYAxis[i].min as number) > 0) {
@@ -131,12 +129,12 @@ function Highchart(props: HighchartsReactProps) {
           }
 
           // Determine position for broken axis symbol
-          const offset = yAxisConfig?.opposite ? chart.plotWidth : 0
-          const x = chart.plotLeft + offset - 10
-          const y = chart.plotTop + chart.plotHeight - 10
+          const offset = yAxisConfig?.opposite ? this.plotWidth : 0
+          const x = this.plotLeft + offset - 10
+          const y = this.plotTop + this.plotHeight - 10
 
           // Draw broken axis symbol
-          chart.renderer
+          this.renderer
             .path([
               ['M', x, y],
               ['l', 20, -5],
@@ -146,7 +144,7 @@ function Highchart(props: HighchartsReactProps) {
               stroke: 'black',
             })
             .add()
-          chart.renderer
+          this.renderer
             .path([
               ['M', x, y + 5],
               ['l', 20, -5],
@@ -199,7 +197,7 @@ function Highchart(props: HighchartsReactProps) {
   }
 
   // Only show plotOption marker on last data element / single data point series
-  const setPlotPointMartker = (config: Highcharts.Options) => {
+  const setPlotPointMarker = (config: Highcharts.Options) => {
     if (config.chart?.type === 'line') {
       const seriesConfig = config.series as Highcharts.SeriesLineOptions[]
       if (!seriesConfig) return
@@ -269,27 +267,27 @@ function Highchart(props: HighchartsReactProps) {
               locale: 'en-GB',
             }
           : accessibilityLang.lang
-      const yAxisOptions = highchart.config.yAxis as Highcharts.YAxisOptions
+      const xAxisOptions = highchartConfig.xAxis as Highcharts.XAxisOptions
 
       const config = {
-        ...highchart.config,
+        ...highchartConfig,
         lang: {
           ...lang,
-          categoryHeader: yAxisOptions.title?.text ?? 'Category',
+          categoryHeader: xAxisOptions.title?.text ?? 'Category',
         },
         chart: {
-          ...highchart.config.chart,
+          ...highchartConfig.chart,
           events: {
-            ...highchart.config.chart?.events,
+            ...highchartConfig.chart?.events,
             exportData: formatNumbersInTable(highchart.type as string),
             load: renderYAxisBreakSymbol(highchartConfig),
           },
         },
         exporting: {
-          ...highchart.config.exporting,
+          ...highchartConfig.exporting,
           menuItemDefinitions: {
             downloadXLS: {
-              onclick: downloadAsXLSX(highchart.config.title?.text),
+              onclick: downloadAsXLSX(highchartConfig.title?.text),
             },
           },
         },
@@ -299,7 +297,7 @@ function Highchart(props: HighchartsReactProps) {
       setReversedStacksBarAndColumn(highchartConfig)
       formatBarNegativeYAxisValues(highchartConfig, highchart.type as string)
       formatBarNegativeTooltipValues(highchartConfig, highchart.type as string)
-      setPlotPointMartker(highchartConfig)
+      setPlotPointMarker(highchartConfig)
 
       return (
         <Col
