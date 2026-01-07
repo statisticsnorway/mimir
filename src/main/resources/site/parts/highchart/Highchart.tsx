@@ -216,6 +216,25 @@ function Highchart(props: HighchartsReactProps) {
     return
   }
 
+  function renderHighchartDraftAlert(config: HighchartsPartProps['config']) {
+    if (config?.draft) {
+      return (
+        <div className='mt-4 alert alert-info' role='alert'>
+          Tallet i figuren nedenfor er upublisert
+        </div>
+      )
+    }
+
+    if (config?.noDraftAvailable) {
+      return (
+        <div className='mt-4 alert alert-warning' role='alert'>
+          Det finnes ingen upubliserte tall for denne figuren
+        </div>
+      )
+    }
+    return
+  }
+
   function renderShowAsFigureOrTableTab(highchartId: string) {
     return (
       <Col className='col-12 mb-3'>
@@ -307,6 +326,7 @@ function Highchart(props: HighchartsReactProps) {
           key={`highchart-${highchart.contentKey}`}
           className={`col-12${highcharts.length !== index + 1 && ' mb-5'}`}
         >
+          {renderHighchartDraftAlert(highchartConfig)}
           <figure id={`figure-${highchart.contentKey}`} className='highcharts-figure mb-0 hide-title'>
             <figcaption className='figure-title'>{config.title?.text}</figcaption>
             {config.subtitle?.text ? <p className='figure-subtitle'>{config.subtitle.text}</p> : null}
