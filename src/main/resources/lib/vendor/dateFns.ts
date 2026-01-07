@@ -20,3 +20,6 @@ export { isSameSecond } from 'date-fns/isSameSecond'
 export { formatDistanceToNowStrict } from 'date-fns/formatDistanceToNowStrict'
 export { getISOWeek } from 'date-fns/getISOWeek'
 export { getISOWeekYear } from 'date-fns/getISOWeekYear'
+
+// date-fns-tz
+export { getTimezoneOffset } from 'date-fns-tz'
