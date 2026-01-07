@@ -1,5 +1,5 @@
+import { Options as HighchartsGraphConfig } from 'highcharts'
 import { Content } from '/lib/xp/content'
-import { type HighchartsGraphConfig } from '/lib/types/highcharts'
 import { type PreliminaryData } from '/lib/types/xmlParser'
 import * as util from '/lib/util'
 import { createDefaultConfig } from '/lib/ssb/parts/highcharts/graph/config'

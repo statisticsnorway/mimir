@@ -24,7 +24,11 @@ import { hasWritePermissionsAndPreview } from '/lib/ssb/parts/permissions'
 import { isEnabled } from '/lib/featureToggle'
 import { getPhrases } from '/lib/ssb/utils/language'
 import { getTbprocessorKey } from '/lib/ssb/dataset/tbprocessor/tbprocessor'
-import { type HighchartsExtendedProps, type HighchartsReactProps } from '/lib/types/partTypes/highchartsReact'
+import {
+  type HighchartsExtendedProps,
+  type HighchartsPartProps,
+  type HighchartsReactProps,
+} from '/lib/types/partTypes/highchartsReact'
 import { type DataSource } from '/site/mixins/dataSource'
 import { type CombinedGraph, type Highchart } from '/site/content-types'
 
@@ -76,24 +80,24 @@ function renderPart(req: Request, highchartIds: Array<string>): Response {
     locale: language === 'nb' ? 'no' : language,
   })
 
-  const highcharts: Array<HighchartsReactProps> = highchartIds
+  const highcharts: Array<HighchartsPartProps> = highchartIds
     .map((key) => {
       const highchart: Content<Highchart & DataSource> | Content<CombinedGraph> | null = getContentByKey({
         key,
       })
       const isCombinedGraph: boolean = highchart?.type === `${app.name}:combinedGraph`
       const config: HighchartsExtendedProps | undefined = determinConfigType(req, highchart, isCombinedGraph)
-      return highchart && config ? createHighchartsReactProps(highchart as Content<Highchart>, config) : {}
+      return highchart && config ? createHighchartsPartProps(highchart as Content<Highchart>, config) : {}
     })
     .filter((key) => !!key)
 
   const inlineScript: Array<string> = highcharts.map(
     (highchart) => `<script type="text/javascript">
-   window['highchart' + '${highchart.contentKey}'] = ${JSON.stringify(highchart.config)}
-   </script>`
+    window['highchart' + '${highchart.contentKey}'] = ${JSON.stringify(highchart.config)}
+    </script>`
   )
 
-  const HighchartProps: object = {
+  const highchartsReactProps: HighchartsReactProps = {
     highcharts: highcharts,
     language,
     phrases: getPhrases(page),
@@ -106,7 +110,7 @@ function renderPart(req: Request, highchartIds: Array<string>): Response {
     const _req = req
     if (req.mode === 'edit') _req.mode = 'preview'
 
-    return r4XpRender('site/parts/highchart/Highchart', HighchartProps, _req, {
+    return r4XpRender('site/parts/highchart/Highchart', highchartsReactProps, _req, {
       body: '<section class="xp-part highchart-wrapper"></section>',
     })
   } else {
@@ -189,10 +193,10 @@ function createDataFromDataSource(
   }
 }
 
-function createHighchartsReactProps(
+function createHighchartsPartProps(
   highchart: Content<Highchart>,
   config: HighchartsExtendedProps
-): HighchartsReactProps {
+): HighchartsPartProps {
   return {
     config: config,
     type: highchart.type === 'mimir:combinedGraph' ? 'combined' : highchart.data.graphType,
