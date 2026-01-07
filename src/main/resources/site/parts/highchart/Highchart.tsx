@@ -218,7 +218,7 @@ function Highchart(props: HighchartsReactProps) {
     if (config.chart?.type === 'line') {
       const seriesConfig = config.series as Highcharts.SeriesLineOptions[]
       if (!seriesConfig) return
-      return seriesConfig.forEach((series) => {
+      return seriesConfig.map((series) => {
         const indices = series.data?.map((element) => element !== null)
         const lastIndex = indices?.lastIndexOf(true)
 
