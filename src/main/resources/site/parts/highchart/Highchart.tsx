@@ -171,7 +171,7 @@ function Highchart(props: HighchartsReactProps) {
       if (!yAxisConfig) return
 
       if (Array.isArray(yAxisConfig)) {
-        return yAxisConfig.map((yAxis) => {
+        return yAxisConfig.forEach((yAxis) => {
           yAxis.reversedStacks = false
         })
       } else {
@@ -193,7 +193,7 @@ function Highchart(props: HighchartsReactProps) {
       if (!yAxisConfig) return
 
       if (Array.isArray(yAxisConfig)) {
-        return yAxisConfig.map((yAxis) => {
+        return yAxisConfig.forEach((yAxis) => {
           formatYAxisLabelsToAbsoluteValue(yAxis)
         })
       } else {
@@ -218,7 +218,7 @@ function Highchart(props: HighchartsReactProps) {
     if (config.chart?.type === 'line') {
       const seriesConfig = config.series as Highcharts.SeriesLineOptions[]
       if (!seriesConfig) return
-      return seriesConfig.map((series) => {
+      return seriesConfig.forEach((series) => {
         const indices = series.data?.map((element) => element !== null)
         const lastIndex = indices?.lastIndexOf(true)
 
