@@ -224,7 +224,7 @@ function Highchart(props: HighchartsReactProps) {
     )
   }
 
-  // This alert will only be visible in preview mode and for Highcharts with tbprocessor as source
+  // This alert will only be visible in preview mode with showDraft param, and for Highcharts with tbprocessor as source
   function renderHighchartDraftAlert(config: HighchartsPartProps['config']) {
     if (config?.draft) return renderAlert('info', 'Tallet i figuren nedenfor er upublisert')
     if (config?.noDraftAvailable) return renderAlert('warning', 'Det finnes ingen upubliserte tall for denne figuren')
