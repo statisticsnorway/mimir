@@ -167,21 +167,40 @@ function Highchart(props: HighchartsReactProps) {
 
   const setReversedStacksBarAndColumn = (config: Highcharts.Options) => {
     if (config.chart?.type === 'bar' || config.chart?.type === 'column') {
-      const yAxisConfig = config.yAxis as Highcharts.YAxisOptions
+      const yAxisConfig = config.yAxis
       if (!yAxisConfig) return
-      return (yAxisConfig.reversedStacks = false)
+
+      if (Array.isArray(yAxisConfig)) {
+        return yAxisConfig.map((yAxis) => {
+          return (yAxis.reversedStacks = false)
+        })
+      } else {
+        return (yAxisConfig.reversedStacks = false)
+      }
     }
     return
+  }
+
+  const formatYAxisLabelsToAbsoluteValue = (yAxisConfig: Highcharts.YAxisOptions) => {
+    if (!yAxisConfig.labels) return
+    return (yAxisConfig.labels.formatter = function (a) {
+      return Math.abs(a.value as number).toString()
+    })
   }
 
   // Show absolute values on yAxis labels for bar charts with negative values
   const formatBarNegativeYAxisValues = (config: Highcharts.Options, type: string) => {
     if (type === 'barNegative') {
-      const yAxisConfig = config.yAxis as Highcharts.YAxisOptions
-      if (!yAxisConfig?.labels) return
-      return (yAxisConfig.labels.formatter = function (a) {
-        return Math.abs(a.value as number).toString()
-      })
+      const yAxisConfig = config.yAxis
+      if (!yAxisConfig) return
+
+      if (Array.isArray(yAxisConfig)) {
+        return yAxisConfig.map((yAxis) => {
+          formatYAxisLabelsToAbsoluteValue(yAxis)
+        })
+      } else {
+        formatYAxisLabelsToAbsoluteValue(yAxisConfig)
+      }
     }
     return
   }
