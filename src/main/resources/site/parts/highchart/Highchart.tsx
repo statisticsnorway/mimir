@@ -216,6 +216,7 @@ function Highchart(props: HighchartsReactProps) {
     return
   }
 
+  // This alert will only be visible for Highcharts with tbprocessor as source, and only in statistics and articles with showDraft param
   function renderHighchartDraftAlert(config: HighchartsPartProps['config']) {
     if (config?.draft) {
       return (
