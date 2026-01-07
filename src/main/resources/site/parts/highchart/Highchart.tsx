@@ -216,24 +216,19 @@ function Highchart(props: HighchartsReactProps) {
     return
   }
 
+  function renderAlert(variant: 'info' | 'warning', text: string) {
+    return (
+      <div className={`mt-4 alert alert-${variant}`} role='alert'>
+        {text}
+      </div>
+    )
+  }
+
   // This alert will only be visible in preview mode and for Highcharts with tbprocessor as source
   function renderHighchartDraftAlert(config: HighchartsPartProps['config']) {
-    if (config?.draft) {
-      return (
-        <div className='mt-4 alert alert-info' role='alert'>
-          Tallet i figuren nedenfor er upublisert
-        </div>
-      )
-    }
-
-    if (config?.noDraftAvailable) {
-      return (
-        <div className='mt-4 alert alert-warning' role='alert'>
-          Det finnes ingen upubliserte tall for denne figuren
-        </div>
-      )
-    }
-    return
+    if (config?.draft) return renderAlert('info', 'Tallet i figuren nedenfor er upublisert')
+    if (config?.noDraftAvailable) return renderAlert('warning', 'Det finnes ingen upubliserte tall for denne figuren')
+    return null
   }
 
   function renderShowAsFigureOrTableTab(highchartId: string) {
