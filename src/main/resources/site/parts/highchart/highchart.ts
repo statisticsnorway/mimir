@@ -3,10 +3,8 @@ import JSONstat from 'jsonstat-toolkit/import.mjs'
 import { type Request, type Response } from '@enonic-types/core'
 import { get as getContentByKey, type Content } from '/lib/xp/content'
 import { getComponent, getContent } from '/lib/xp/portal'
-import { localize } from '/lib/xp/i18n'
 import { JSONstat as JSONstatType } from '/lib/types/jsonstat-toolkit'
 import { type TbmlDataUniform } from '/lib/types/xmlParser'
-import { render } from '/lib/thymeleaf'
 import { render as r4XpRender } from '/lib/enonic/react4xp'
 import {
   type DatasetRepoNode,
@@ -14,14 +12,12 @@ import {
   getDataset,
   UNPUBLISHED_DATASET_BRANCH,
 } from '/lib/ssb/repo/dataset'
-import { scriptAsset } from '/lib/ssb/utils/utils'
 
 import * as util from '/lib/util'
 import { createHighchartObject } from '/lib/ssb/parts/highcharts/highchartsUtils'
 import { renderError } from '/lib/ssb/error/error'
 import { datasetOrUndefined } from '/lib/ssb/cache/cache'
 import { hasWritePermissionsAndPreview } from '/lib/ssb/parts/permissions'
-import { isEnabled } from '/lib/featureToggle'
 import { getPhrases } from '/lib/ssb/utils/language'
 import { getTbprocessorKey } from '/lib/ssb/dataset/tbprocessor/tbprocessor'
 import {
@@ -31,8 +27,6 @@ import {
 } from '/lib/types/partTypes/highchartsReact'
 import { type DataSource } from '/site/mixins/dataSource'
 import { type CombinedGraph, type Highchart } from '/site/content-types'
-
-const view = resolve('./highchart.html')
 
 export function get(req: Request): Response {
   try {
@@ -60,26 +54,6 @@ function renderPart(req: Request, highchartIds: Array<string>): Response {
 
   const language: string = page.language ? page.language : 'nb'
 
-  //  Must be set to nb instead of no for localization
-  const sourceText: string = localize({
-    key: 'highcharts.source',
-    locale: language === 'nb' ? 'no' : language,
-  })
-  const downloadText: string = localize({
-    key: 'highcharts.download',
-    locale: language === 'nb' ? 'no' : language,
-  })
-
-  const showAsGraphText: string = localize({
-    key: 'highcharts.showAsChart',
-    locale: language === 'nb' ? 'no' : language,
-  })
-
-  const showAsTableText: string = localize({
-    key: 'highcharts.showAsTable',
-    locale: language === 'nb' ? 'no' : language,
-  })
-
   const highcharts: Array<HighchartsPartProps> = highchartIds
     .map((key) => {
       const highchart: Content<Highchart & DataSource> | Content<CombinedGraph> | null = getContentByKey({
@@ -91,43 +65,21 @@ function renderPart(req: Request, highchartIds: Array<string>): Response {
     })
     .filter((key) => !!key)
 
-  const inlineScript: Array<string> = highcharts.map(
-    (highchart) => `<script type="text/javascript">
-    window['highchart' + '${highchart.contentKey}'] = ${JSON.stringify(highchart.config)}
-    </script>`
-  )
-
   const highchartsReactProps: HighchartsReactProps = {
     highcharts: highcharts,
     language,
     phrases: getPhrases(page),
   }
 
-  if (isEnabled('highchart-react', true, 'ssb')) {
-    // R4xp disables hydration in edit mode, but highcharts need hydration to show
-    // we sneaky swap mode since we want a render of higchart in edit mode
-    // Works good for highchart macro, not so much when part
-    const _req = req
-    if (req.mode === 'edit') _req.mode = 'preview'
+  // R4xp disables hydration in edit mode, but highcharts need hydration to show
+  // we sneaky swap mode since we want a render of higchart in edit mode
+  // Works good for highchart macro, not so much when part
+  const _req = req
+  if (req.mode === 'edit') _req.mode = 'preview'
 
-    return r4XpRender('site/parts/highchart/Highchart', highchartsReactProps, _req, {
-      body: '<section class="xp-part highchart-wrapper"></section>',
-    })
-  } else {
-    return {
-      body: render(view, {
-        highcharts,
-        downloadText,
-        sourceText,
-        showAsGraphText,
-        showAsTableText,
-      }),
-      pageContributions: {
-        bodyEnd: [...inlineScript, scriptAsset('js/highchart.js')],
-      },
-      contentType: 'text/html',
-    }
-  }
+  return r4XpRender('site/parts/highchart/Highchart', highchartsReactProps, _req, {
+    body: '<section class="xp-part highchart-wrapper"></section>',
+  })
 }
 
 function determinConfigType(
