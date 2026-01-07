@@ -172,10 +172,10 @@ function Highchart(props: HighchartsReactProps) {
 
       if (Array.isArray(yAxisConfig)) {
         return yAxisConfig.map((yAxis) => {
-          return (yAxis.reversedStacks = false)
+          yAxis.reversedStacks = false
         })
       } else {
-        return (yAxisConfig.reversedStacks = false)
+        yAxisConfig.reversedStacks = false
       }
     }
     return
@@ -183,9 +183,7 @@ function Highchart(props: HighchartsReactProps) {
 
   const formatYAxisLabelsToAbsoluteValue = (yAxisConfig: Highcharts.YAxisOptions) => {
     if (!yAxisConfig.labels) return
-    return (yAxisConfig.labels.formatter = function (a) {
-      return Math.abs(a.value as number).toString()
-    })
+    yAxisConfig.labels.formatter = (a) => Math.abs(a.value as number).toString()
   }
 
   // Show absolute values on yAxis labels for bar charts with negative values
