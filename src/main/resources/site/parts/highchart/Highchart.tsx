@@ -167,21 +167,38 @@ function Highchart(props: HighchartsReactProps) {
 
   const setReversedStacksBarAndColumn = (config: Highcharts.Options) => {
     if (config.chart?.type === 'bar' || config.chart?.type === 'column') {
-      const yAxisConfig = config.yAxis as Highcharts.YAxisOptions
+      const yAxisConfig = config.yAxis
       if (!yAxisConfig) return
-      return (yAxisConfig.reversedStacks = false)
+
+      if (Array.isArray(yAxisConfig)) {
+        return yAxisConfig.forEach((yAxis) => {
+          yAxis.reversedStacks = false
+        })
+      } else {
+        yAxisConfig.reversedStacks = false
+      }
     }
     return
+  }
+
+  const formatYAxisLabelsToAbsoluteValue = (yAxisConfig: Highcharts.YAxisOptions) => {
+    if (!yAxisConfig.labels) return
+    yAxisConfig.labels.formatter = (a) => Math.abs(a.value as number).toString()
   }
 
   // Show absolute values on yAxis labels for bar charts with negative values
   const formatBarNegativeYAxisValues = (config: Highcharts.Options, type: string) => {
     if (type === 'barNegative') {
-      const yAxisConfig = config.yAxis as Highcharts.YAxisOptions
-      if (!yAxisConfig?.labels) return
-      return (yAxisConfig.labels.formatter = function (a) {
-        return Math.abs(a.value as number).toString()
-      })
+      const yAxisConfig = config.yAxis
+      if (!yAxisConfig) return
+
+      if (Array.isArray(yAxisConfig)) {
+        return yAxisConfig.forEach((yAxis) => {
+          formatYAxisLabelsToAbsoluteValue(yAxis)
+        })
+      } else {
+        formatYAxisLabelsToAbsoluteValue(yAxisConfig)
+      }
     }
     return
   }
@@ -214,6 +231,21 @@ function Highchart(props: HighchartsReactProps) {
       })
     }
     return
+  }
+
+  function renderAlert(variant: 'info' | 'warning', text: string) {
+    return (
+      <div className={`mt-4 alert alert-${variant}`} role='alert'>
+        {text}
+      </div>
+    )
+  }
+
+  // This alert will only be visible in preview mode with showDraft param, and for Highcharts with tbprocessor as source
+  function renderHighchartDraftAlert(config: HighchartsPartProps['config']) {
+    if (config?.draft) return renderAlert('info', 'Tallet i figuren nedenfor er upublisert')
+    if (config?.noDraftAvailable) return renderAlert('warning', 'Det finnes ingen upubliserte tall for denne figuren')
+    return null
   }
 
   function renderShowAsFigureOrTableTab(highchartId: string) {
@@ -305,8 +337,9 @@ function Highchart(props: HighchartsReactProps) {
       return (
         <Col
           key={`highchart-${highchart.contentKey}`}
-          className={`col-12${highcharts.length !== index + 1 && ' mb-5'}`}
+          className={`col-12${highcharts.length !== index + 1 ? ' mb-5' : ''}`}
         >
+          {renderHighchartDraftAlert(highchartConfig)}
           <figure id={`figure-${highchart.contentKey}`} className='highcharts-figure mb-0 hide-title'>
             <figcaption className='figure-title'>{config.title?.text}</figcaption>
             {config.subtitle?.text ? <p className='figure-subtitle'>{config.subtitle.text}</p> : null}
