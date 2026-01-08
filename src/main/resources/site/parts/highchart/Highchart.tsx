@@ -337,7 +337,7 @@ function Highchart(props: HighchartsReactProps) {
       return (
         <Col
           key={`highchart-${highchart.contentKey}`}
-          className={`col-12${highcharts.length !== index + 1 && ' mb-5'}`}
+          className={`col-12${highcharts.length !== index + 1 ? ' mb-5' : ''}`}
         >
           {renderHighchartDraftAlert(highchartConfig)}
           <figure id={`figure-${highchart.contentKey}`} className='highcharts-figure mb-0 hide-title'>
