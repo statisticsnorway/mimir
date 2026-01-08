@@ -1,3 +1,4 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { type Content } from '/lib/xp/content'
 import { getContent, getComponent, getSiteConfig } from '/lib/xp/portal'
 import { render } from '/lib/enonic/react4xp'
@@ -13,7 +14,7 @@ import { type KeyFigureView, type KeyFigureData, type KeyFigureProps } from '/li
 import { type MunicipalityWithCounty, type RequestWithCode } from '/lib/types/municipalities'
 import { type KeyFigure as KeyFigurePartConfig } from '.'
 
-export function get(req: XP.Request): XP.Response {
+export function get(req: Request): Response {
   try {
     const config = getComponent<XP.PartComponent.KeyFigure>()?.config
     if (!config) throw Error('No part found')
@@ -26,7 +27,7 @@ export function get(req: XP.Request): XP.Response {
   }
 }
 
-export function macroPreview(req: XP.Request, id: string): XP.Response {
+export function macroPreview(req: Request, id: string): Response {
   try {
     const municipality = getSiteConfigAndMunicipality()
     return renderPart(req, municipality, [id], true)
@@ -35,7 +36,7 @@ export function macroPreview(req: XP.Request, id: string): XP.Response {
   }
 }
 
-export function preview(req: XP.Request, id: string): XP.Response {
+export function preview(req: Request, id: string): Response {
   try {
     const municipality = getSiteConfigAndMunicipality()
     return renderPart(req, municipality, [id], false)
@@ -56,11 +57,11 @@ function getSiteConfigAndMunicipality() {
 }
 
 function renderPart(
-  req: XP.Request,
+  req: Request,
   municipality: MunicipalityWithCounty | undefined,
   keyFigureIds: Array<string>,
   isMacro: boolean
-): XP.Response {
+): Response {
   const page = getContent()
   if (!page) throw Error('No page found')
 
@@ -99,10 +100,10 @@ function renderKeyFigure(
   parsedKeyFigures: Array<KeyFigureData>,
   parsedKeyFiguresDraft: Array<KeyFigureData> | null,
   showPreviewDraft: boolean,
-  req: XP.Request,
+  req: Request,
   isMacro: boolean,
   config?: KeyFigurePartConfig
-): XP.Response {
+): Response {
   const draftExist = !!parsedKeyFiguresDraft
 
   if ((parsedKeyFigures && parsedKeyFigures.length > 0) || draftExist) {
@@ -130,7 +131,7 @@ function renderKeyFigure(
       source: config?.source,
       columns: !!config?.columns,
       showPreviewDraft,
-      paramShowDraft: req.params.showDraft,
+      paramShowDraft: req.params?.showDraft?.toString(),
       draftExist,
       pageTypeKeyFigure: page.type === `${app.name}:keyFigure`,
       hiddenTitle: hiddenTitle.toString().replace(/[\[\]']+/g, ''),

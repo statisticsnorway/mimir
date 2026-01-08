@@ -1,4 +1,5 @@
 import '/lib/ssb/polyfills/nashorn'
+import { type Request } from '@enonic-types/core'
 import { run } from '/lib/xp/context'
 import { getAllStatisticsFromRepo } from '/lib/ssb/statreg/statistics'
 import { handleRepoGet } from '/lib/ssb/dashboard/statreg/repoUtils'
@@ -30,7 +31,7 @@ const filterByIds = (stats, filters) => {
   )
 }
 
-export function get(req: XP.Request) {
+export function get(req: Request) {
   return handleRepoGet(
     req,
     'Statistics',
@@ -40,7 +41,7 @@ export function get(req: XP.Request) {
   )
 }
 
-export function post(req: XP.Request) {
+export function post(req: Request) {
   if (req.params.runPublishDataset === 'OK') {
     run(cronContext, publishDataset)
     return {

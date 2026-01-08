@@ -1,3 +1,4 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { getComponent } from '/lib/xp/portal'
 import { render } from '/lib/enonic/react4xp'
 import { imageUrl } from '/lib/ssb/utils/imageUtils'
@@ -6,7 +7,7 @@ import { renderError } from '/lib/ssb/error/error'
 import { data } from '/lib/util'
 import { type ExternalCard } from '/lib/types/partTypes/externalCard'
 
-export function get(req: XP.Request) {
+export function get(req: Request) {
   try {
     return renderPart(req)
   } catch (e) {
@@ -14,7 +15,7 @@ export function get(req: XP.Request) {
   }
 }
 
-export function preview(req: XP.Request) {
+export function preview(req: Request) {
   return renderPart(req)
 }
 
@@ -23,14 +24,14 @@ const NO_LINKS_FOUND = {
   contentType: 'text/html',
 }
 
-function renderPart(req: XP.Request): XP.Response {
+function renderPart(req: Request): Response {
   const part = getComponent<XP.PartComponent.ExternalCard>()
   if (!part) throw Error('No part found')
 
   return renderExternalCard(req, part.config.externalCards ? data.forceArray(part.config.externalCards) : [])
 }
 
-const renderExternalCard = (req: XP.Request, links: Array<ExternalCard>) => {
+const renderExternalCard = (req: Request, links: Array<ExternalCard>) => {
   if (links && links.length) {
     return render(
       'ExternalCards',

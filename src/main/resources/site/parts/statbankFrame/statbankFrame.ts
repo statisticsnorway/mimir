@@ -1,17 +1,18 @@
+import { type Request } from '@enonic-types/core'
 import { getContent, getSiteConfig } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 import { render } from '/lib/enonic/react4xp'
 import { type StatbankFrameProps } from '/lib/types/partTypes/statbankFrame'
 
-export function get(req: XP.Request) {
+export function get(req: Request) {
   return renderPart(req)
 }
 
-export function preview(req: XP.Request) {
+export function preview(req: Request) {
   return renderPart(req)
 }
 
-function renderPart(req: XP.Request) {
+function renderPart(req: Request) {
   const page = getContent()
   if (!page) throw Error('No page found')
 

@@ -1,3 +1,4 @@
+import { type Request } from '@enonic-types/core'
 import { Content } from '/lib/xp/content'
 import { type PreliminaryData, type TbmlDataUniform } from '/lib/types/xmlParser'
 import { type JSONstat } from '/lib/types/jsonstat-toolkit'
@@ -12,7 +13,7 @@ import { type CombinedGraph, type Highchart } from '/site/content-types'
 import { type DataSource } from '/site/mixins/dataSource'
 
 export function prepareHighchartsData(
-  req: XP.Request,
+  req: Request,
   highchartsContent: Content<Highchart | CombinedGraph>,
   data: JSONstat | TbmlDataUniform | object | string | undefined,
   dataSource: DataSource['dataSource']
@@ -37,7 +38,7 @@ export function prepareHighchartsData(
 }
 
 export function getSeriesAndCategories(
-  req: XP.Request,
+  req: Request,
   highchart: Content<Highchart | CombinedGraph>,
   data: JSONstat | TbmlDataUniform | object | string | undefined,
   dataSource: DataSource['dataSource']

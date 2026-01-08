@@ -1,7 +1,8 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { query } from '/lib/xp/content'
 
-export const get = (req: XP.Request): XP.Response | object => {
-  const queryString: string = req.params.query ? req.params.query : ''
+export const get = (req: Request): Response | object => {
+  const queryString: string = req.params.query ? req.params.query.toString() : ''
   const result = query({
     start: 0,
     count: 10,

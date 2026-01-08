@@ -1,3 +1,4 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { getComponent, processHtml } from '/lib/xp/portal'
 import { get as getContentByKey, type Content } from '/lib/xp/content'
 import { render as r4XpRender } from '/lib/enonic/react4xp'
@@ -7,7 +8,7 @@ import { type FactBox } from '/site/content-types'
 
 const view = resolve('./factBox.html')
 
-export function get(req: XP.Request): XP.Response {
+export function get(req: Request): Response {
   try {
     const part = getComponent<XP.PartComponent.FactBox>()
     if (!part) throw Error('No part found')
@@ -18,7 +19,7 @@ export function get(req: XP.Request): XP.Response {
   }
 }
 
-export function preview(req: XP.Request, id: string) {
+export function preview(req: Request, id: string) {
   try {
     return renderPart(req, id)
   } catch (e) {
@@ -26,7 +27,7 @@ export function preview(req: XP.Request, id: string) {
   }
 }
 
-function renderPart(req: XP.Request, factBoxId: string): XP.Response {
+function renderPart(req: Request, factBoxId: string): Response {
   // throw an error if there is no selected factbox, or an empty section for edit mode
   if (!factBoxId) {
     if (req.mode === 'edit') {

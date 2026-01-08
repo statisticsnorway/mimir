@@ -1,3 +1,4 @@
+import { type Request } from '@enonic-types/core'
 import { get, modify, query, type Content, ContentsResult } from '/lib/xp/content'
 import { pageUrl, processHtml } from '/lib/xp/portal'
 import { listener, EnonicEvent } from '/lib/xp/event'
@@ -16,7 +17,7 @@ import { type ArticleResult, type AssociatedLink, type CMS, type PreparedArticle
 import { type SubjectItem } from '/lib/types/subject'
 import { Page, type Article } from '/site/content-types'
 
-const dummyReq: Partial<XP.Request> = {
+const dummyReq: Partial<Request> = {
   branch: 'master',
 }
 
@@ -62,7 +63,7 @@ export function getChildArticles(
   })
 }
 
-export function getAllArticles(req: XP.Request, language: string, start: number, count: number): ArticleResult {
+export function getAllArticles(req: Request, language: string, start: number, count: number): ArticleResult {
   const mainSubjects: Array<SubjectItem> = getMainSubjects(req, language)
   const languageQuery: string = language !== 'en' ? 'AND language != "en"' : 'AND language = "en"'
   const now: string = new Date().toISOString()
@@ -104,7 +105,7 @@ export function prepareArticles(articles: Array<Content<Article>>, language: str
   })
 }
 
-export function addSubjectToXData(article: Content<Article>, req: XP.Request) {
+export function addSubjectToXData(article: Content<Article>, req: Request) {
   const allMainSubjects: SubjectItem[] = getMainSubjects(req, 'nb')
   const allSubSubjects: SubjectItem[] = getSubSubjects(req, 'nb')
 
@@ -233,7 +234,7 @@ export function getAssociatedArticleArchiveLinks(
 export function getSubtopics(
   content: Content<Page>,
   currentPath: string,
-  req: XP.Request,
+  req: Request,
   language: string
 ): string | string[] {
   const isMainSubject: boolean = content.page?.config?.subjectType === 'mainSubject'

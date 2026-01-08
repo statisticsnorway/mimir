@@ -63,6 +63,14 @@ jobs:
       - name: Send success message to Slack
         id: slack_success
         if: steps.deploy_app_to_XP.outcome == 'success'
+        env:
+          ACTOR: ${{ github.actor }}
+          REF: ${{ github.ref_name }}
+          RUN_NUMBER: ${{ github.run_number }}
+          PR_URL: ${{ github.event.pull_request.html_url || '' }}
+          COMMIT_URL: $ {{github.event.head_commit.url || '' }}
+          WORKFLOW: ${{ github.workflow }}
+          REPO: ${{ github.repository }}
         uses: slackapi/slack-github-action@v2
         with:
           webhook: ${{ secrets.SLACK_ALERTS_PROD }}
@@ -76,7 +84,7 @@ jobs:
                   "type": "header",
                   "text": {
                     "type": "plain_text",
-                    "text": "${{ github.workflow }}  in ${{ github.repository }}"
+                      "text": "${{ env.WORKFLOW }}  in ${{ env.REPO }}"
                   }
                 },
                 {
@@ -88,8 +96,8 @@ jobs:
                       "alt_text" : "Github logo"
                     },
                     {
-                      "type": "mrkdwn",
-                      "text": "Run by: *${{ github.actor }}* on: *${{ github.ref_name }}*"
+                    "type": "mrkdwn",
+                    "text": "Run by: *${{ env.ACTOR }}* on: *${{ env.REF }}*"
                     }
                   ]
                 },
@@ -97,7 +105,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "🛠 Build ${{ github.run_number }} is a *${{ job.status }}*, well done!\n<${{ github.event.pull_request.html_url || github.event.head_commit.url }}|Commit or PR>"
+                    "text": "🛠 Build ${{ env.RUN_NUMBER }} is a *${{ job.status }}*, well done!\n<${{ env.PR_URL || env.COMMIT_URL }}|Commit or PR>"
                   }
                 }
               ]
@@ -106,6 +114,13 @@ jobs:
         id: slack_failure
         if: steps.deploy_app_to_XP.outcome == 'failure'
         uses: slackapi/slack-github-action@v2
+        env:
+          ACTOR: ${{ github.actor }}
+          REF: ${{ github.ref_name }}
+          RUN_NUMBER: ${{ github.run_number }}
+          WORKFLOW: ${{ github.workflow }}
+          REPO: ${{ github.repository }}
+          RUN_ID: ${{ github.run_id }}
         with:
           webhook: ${{ secrets.SLACK_MIMIR_UTV }}
           webhook-type: incoming-webhook
@@ -116,7 +131,7 @@ jobs:
                   "type": "header",
                   "text": {
                     "type": "plain_text",
-                    "text": "${{ github.workflow }} in ${{ github.repository }}"
+                      "text": "${{ env.WORKFLOW }} in ${{ env.REPO }}"
                   }
                 },
                 {
@@ -128,8 +143,8 @@ jobs:
                       "alt_text" : "Github logo"
                     },
                     {
-                      "type": "mrkdwn",
-                      "text": "Run by: *${{ github.actor }}* on: *${{ github.ref_name }}*"
+                    "type": "mrkdwn",
+                    "text": "Run by: *${{ env.ACTOR }}* on: *${{ env.REF }}*"
                     }
                   ]
                 },
@@ -137,7 +152,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "💣 Build ${{ github.run_number }} is a *${{ job.status }}*, and that's cool!\nIf you want to fix it, start by looking at the <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|workflow output>"
+                    "text": "💣 Build ${{ env.RUN_NUMBER }} is a *${{ job.status }}*, and that's cool!\nIf you want to fix it, start by looking at the <https://github.com/${{ env.REPO }}/actions/runs/${{ env.RUN_ID }}|workflow output>"
                   }
                 }
               ]

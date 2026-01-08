@@ -1,3 +1,4 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { query, type Content } from '/lib/xp/content'
 import { type DatasetRepoNode } from '/lib/ssb/repo/dataset'
 import { type JSONstat } from '/lib/types/jsonstat-toolkit'
@@ -8,10 +9,12 @@ import { datasetOrUndefined } from '/lib/ssb/cache/cache'
 import { type AttachmentTablesFiguresData } from '/lib/types/partTypes/attachmentTablesFigures'
 import { getProps } from '/site/parts/table/table'
 import { preview as highchartPreview } from '/site/parts/highchart/highchart'
+import { preview as highmapPreview } from '/site/parts/highmap/highmap'
+import { preview as combinedGraphPreview } from '/site/parts/combinedGraph/combinedGraph'
 
 export function getTablesAndFigures(
   attachmentTablesAndFigures: Array<string>,
-  req: XP.Request,
+  req: Request,
   phrases: { [key: string]: string }
 ): Array<AttachmentTablesFiguresData> {
   let figureIndex = 0
@@ -44,6 +47,22 @@ export function getTablesAndFigures(
           `${phrases.figure} ${figureIndex}`,
           index
         )
+      } else if (attachmentTablesFiguresMap[id].type === `${app.name}:combinedGraph`) {
+        ++figureIndex
+        return getFigureReturnObject(
+          attachmentTablesFiguresMap[id],
+          combinedGraphPreview(req, id),
+          `${phrases.figure} ${figureIndex}`,
+          index
+        )
+      } else if (attachmentTablesFiguresMap[id].type === `${app.name}:highmap`) {
+        ++figureIndex
+        return getFigureReturnObject(
+          attachmentTablesFiguresMap[id],
+          highmapPreview(req, id),
+          `${phrases.figure} ${figureIndex}`,
+          index
+        )
       }
     }) as Array<AttachmentTablesFiguresData>
   }
@@ -68,7 +87,7 @@ function getTableReturnObject(
 
 function getFigureReturnObject(
   content: Content,
-  preview: XP.Response,
+  preview: Response,
   subHeader: string,
   index: number
 ): AttachmentTablesFiguresData {
@@ -91,26 +110,32 @@ function getTitleFromDataset(content: Content): string | TbmlDataUniform['tbml']
 
 export function getFinalPageContributions(
   accordionPageContributions: XP.PageContributions,
-  attachmentTableAndFigure: Array<AttachmentTablesFiguresData>
+  attachments: Array<AttachmentTablesFiguresData>
 ): XP.PageContributions {
-  const pageContributions: Array<XP.PageContributions> = attachmentTableAndFigure.reduce((acc, attachment) => {
-    if (attachment.pageContributions?.bodyEnd) {
-      acc = acc.concat(attachment.pageContributions.bodyEnd as unknown as ConcatArray<never>)
+  const attachmentHeadEnd = attachments.reduce<string[]>((acc, { pageContributions: attachmentContributions }) => {
+    if (attachmentContributions?.headEnd) {
+      acc.push(...attachmentContributions.headEnd)
     }
     return acc
   }, [])
 
-  if (pageContributions.length > 0 && accordionPageContributions) {
+  const attachmentBodyEnd = attachments.reduce<string[]>((acc, { pageContributions: attachmentContributions }) => {
+    if (attachmentContributions?.bodyEnd) {
+      acc.push(...attachmentContributions.bodyEnd)
+    }
+    return acc
+  }, [])
+
+  if (!accordionPageContributions) {
     return {
-      headEnd: [].concat(
-        accordionPageContributions.headEnd as unknown as ConcatArray<never>,
-        pageContributions as unknown as ConcatArray<never>
-      ),
-      bodyEnd: [].concat(
-        accordionPageContributions.bodyEnd as unknown as ConcatArray<never>,
-        pageContributions as unknown as ConcatArray<never>
-      ),
+      headEnd: attachmentHeadEnd,
+      bodyEnd: attachmentBodyEnd,
     }
   }
-  return accordionPageContributions
+
+  return {
+    ...accordionPageContributions,
+    headEnd: (accordionPageContributions.headEnd ?? []).concat(attachmentHeadEnd),
+    bodyEnd: (accordionPageContributions.bodyEnd ?? []).concat(attachmentBodyEnd),
+  }
 }

@@ -1,7 +1,7 @@
 name: 'Deploy to Test'
 on:
   pull_request:
-  workflow_dispatch:  # Allows the workflow to be manually triggered.
+  workflow_dispatch: # Allows the workflow to be manually triggered.
 
 concurrency:
   group: mimir-test
@@ -13,6 +13,7 @@ jobs:
     permissions:
       contents: write
     runs-on: 'ubuntu-latest'
+    environment: 'test'
     steps:
       - id: build_app
         uses: enonic/release-tools/build-and-publish@master
@@ -22,9 +23,11 @@ jobs:
         id: upload_artifacts
         if: success()
         uses: actions/upload-artifact@v5
+        env:
+          RUN_NUMBER: ${{ github.run_number }}
         with:
-          name: mimir-test-${{ github.run_number }}
-          path: "./build/libs/*.jar"
+          name: mimir-test-$RUN_NUMBER
+          path: './build/libs/*.jar'
       - id: deploy_app_to_XP
         uses: 'enonic/action-app-deploy@main'
         with:
@@ -34,11 +37,18 @@ jobs:
           password: ${{ secrets.ENONIC_TEST_PASS }}
           client_cert: ${{ secrets.ENONIC_DEPLOY_CERT }}
           client_key: ${{ secrets.ENONIC_DEPLOY_KEY }}
-          app_jar: "./build/libs/*.jar"
+          app_jar: './build/libs/*.jar'
       - name: Send failure message to Slack
         id: slack_failure
         if: steps.deploy_app_to_XP.outcome == 'failure'
         uses: slackapi/slack-github-action@v2
+        env:
+          ACTOR: ${{ github.actor }}
+          REF: ${{ github.ref_name }}
+          RUN_NUMBER: ${{ github.run_number }}
+          REPO: ${{ github.repository }}
+          RUN_ID: ${{ github.run_id }}
+          WORKFLOW: ${{ github.workflow }}
         with:
           webhook: ${{ secrets.SLACK_MIMIR_UTV }}
           webhook-type: incoming-webhook
@@ -49,7 +59,7 @@ jobs:
                   "type": "header",
                   "text": {
                     "type": "plain_text",
-                    "text": "${{ github.workflow }} in ${{ github.repository }}"
+                      "text": "${{ env.WORKFLOW }} in ${{ env.REPO }}"
                   }
                 },
                 {
@@ -61,8 +71,8 @@ jobs:
                       "alt_text" : "Github logo"
                     },
                     {
-                      "type": "mrkdwn",
-                      "text": "Run by: *${{ github.actor }}* on: *${{ github.ref_name }}*"
+                    "type": "mrkdwn",
+                    "text": "Run by: *${{ env.ACTOR }}* on: *${{ env.REF }}*"
                     }
                   ]
                 },
@@ -70,7 +80,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "💣 Build ${{ github.run_number }} is a *${{ job.status }}*, and that's cool!\nIf you want to fix it, start by looking at the <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|workflow output>"
+                    "text": "💣 Build ${{ env.RUN_NUMBER }} is a *${{ job.status }}*, and that's cool!\nIf you want to fix it, start by looking at the <https://github.com/${{ env.REPO }}/actions/runs/${{ env.RUN_ID }}|workflow output>"
                   }
                 }
               ]
@@ -88,9 +98,11 @@ jobs:
         uses: actions/checkout@v6
       - name: Branch name and commit hash
         run: |
-              echo running on branch ${GITHUB_HEAD_REF##*/} or ${GITHUB_REF##*/}
-              echo running $(echo $GITHUB_SHA | cut -c1-8) and ${GITHUB_SHA}
+          echo running on branch ${GITHUB_HEAD_REF##*/} or ${GITHUB_REF##*/}
+          echo running $(echo $GITHUB_SHA | cut -c1-8) and ${GITHUB_SHA}
       - name: install mabl
         run: npm install -g @mablhq/mabl-cli
       - name: mabl end-to-end test - TEST
-        run: mabl deployments create --api-key ${{ secrets.MABLAPIKEY }} --application-id ${{ secrets.MABLAPPID }} --environment-id ${{ secrets.MABLENVTEST }} --labels MIMIR --revision ${{ github.sha }} --await-completion
+        env:
+          GITHUB_SHA: ${{ github.sha }}
+        run: mabl deployments create --api-key ${{ secrets.MABLAPIKEY }} --application-id ${{ secrets.MABLAPPID }} --environment-id ${{ secrets.MABLENVTEST }} --labels MIMIR --revision $GITHUB_SHA --await-completion

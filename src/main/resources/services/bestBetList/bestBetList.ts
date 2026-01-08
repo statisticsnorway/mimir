@@ -1,3 +1,4 @@
+import { type Request } from '@enonic-types/core'
 import { sanitize } from '/lib/xp/common'
 import { listBestBets, createBestBet, deleteBestBet } from '/lib/ssb/repo/bestbet'
 import { ensureArray } from '/lib/ssb/utils/arrayUtils'
@@ -25,8 +26,8 @@ export function get() {
     }
   } else return {}
 }
-export function post(req: XP.Request) {
-  const body = JSON.parse(req.body)
+export function post(req: Request) {
+  const body = JSON.parse(req.body as string)
 
   const response = createBestBet({
     id: body.id,
@@ -42,7 +43,7 @@ export function post(req: XP.Request) {
   })
   return response
 }
-function del(req: XP.Request) {
-  return deleteBestBet(req.params.key)
+function del(req: Request) {
+  return deleteBestBet(req.params?.key?.toString())
 }
 export { del as delete }

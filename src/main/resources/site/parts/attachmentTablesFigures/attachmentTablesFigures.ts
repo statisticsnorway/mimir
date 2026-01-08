@@ -1,3 +1,4 @@
+import { type Request, type Response } from '@enonic-types/core'
 import { type Content } from '/lib/xp/content'
 import { getContent, processHtml } from '/lib/xp/portal'
 import { type Phrases } from '/lib/types/language'
@@ -13,7 +14,7 @@ import {
 } from '/lib/types/partTypes/attachmentTablesFigures'
 import { type Statistics } from '/site/content-types'
 
-export function get(req: XP.Request): XP.Response {
+export function get(req: Request): Response {
   try {
     return renderPart(req)
   } catch (e) {
@@ -21,18 +22,18 @@ export function get(req: XP.Request): XP.Response {
   }
 }
 
-export function preview(req: XP.Request): XP.Response {
+export function preview(req: Request): Response {
   return renderPart(req)
 }
 
-function renderPart(req: XP.Request): XP.Response {
+function renderPart(req: Request): Response {
   const page = getContent<Content<Statistics>>()
   if (!page) throw Error('No page found')
 
   return getTablesAndFiguresComponent(page, req)
 }
 
-function getTablesAndFiguresComponent(page: Content<Statistics>, req: XP.Request): XP.Response {
+function getTablesAndFiguresComponent(page: Content<Statistics>, req: Request): Response {
   const phrases: Phrases = getPhrases(page) as Phrases
 
   const title: string = phrases.attachmentTablesFigures

@@ -1,5 +1,6 @@
 // @ts-ignore
 import JSONstat from 'jsonstat-toolkit/import.mjs'
+import { type Request, type Response } from '@enonic-types/core'
 import { get as getContentByKey, type Content } from '/lib/xp/content'
 import { getComponent, getContent } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
@@ -23,13 +24,17 @@ import { hasWritePermissionsAndPreview } from '/lib/ssb/parts/permissions'
 import { isEnabled } from '/lib/featureToggle'
 import { getPhrases } from '/lib/ssb/utils/language'
 import { getTbprocessorKey } from '/lib/ssb/dataset/tbprocessor/tbprocessor'
-import { type HighchartsExtendedProps, type HighchartsReactProps } from '/lib/types/partTypes/highchartsReact'
+import {
+  type HighchartsExtendedProps,
+  type HighchartsPartProps,
+  type HighchartsReactProps,
+} from '/lib/types/partTypes/highchartsReact'
 import { type DataSource } from '/site/mixins/dataSource'
 import { type CombinedGraph, type Highchart } from '/site/content-types'
 
 const view = resolve('./highchart.html')
 
-export function get(req: XP.Request): XP.Response {
+export function get(req: Request): Response {
   try {
     const part = getComponent<XP.PartComponent.Highchart>()
     if (!part) throw Error('No part found')
@@ -41,7 +46,7 @@ export function get(req: XP.Request): XP.Response {
   }
 }
 
-export function preview(req: XP.Request, id: string): XP.Response {
+export function preview(req: Request, id: string): Response {
   try {
     return renderPart(req, [id])
   } catch (e) {
@@ -49,7 +54,7 @@ export function preview(req: XP.Request, id: string): XP.Response {
   }
 }
 
-function renderPart(req: XP.Request, highchartIds: Array<string>): XP.Response {
+function renderPart(req: Request, highchartIds: Array<string>): Response {
   const page = getContent()
   if (!page) throw Error('No page found')
 
@@ -75,28 +80,27 @@ function renderPart(req: XP.Request, highchartIds: Array<string>): XP.Response {
     locale: language === 'nb' ? 'no' : language,
   })
 
-  const highcharts: Array<HighchartsReactProps> = highchartIds
+  const highcharts: Array<HighchartsPartProps> = highchartIds
     .map((key) => {
       const highchart: Content<Highchart & DataSource> | Content<CombinedGraph> | null = getContentByKey({
         key,
       })
       const isCombinedGraph: boolean = highchart?.type === `${app.name}:combinedGraph`
       const config: HighchartsExtendedProps | undefined = determinConfigType(req, highchart, isCombinedGraph)
-      return highchart && config ? createHighchartsReactProps(highchart as Content<Highchart>, config) : {}
+      return highchart && config ? createHighchartsPartProps(highchart as Content<Highchart>, config) : {}
     })
     .filter((key) => !!key)
 
   const inlineScript: Array<string> = highcharts.map(
     (highchart) => `<script type="text/javascript">
-   window['highchart' + '${highchart.contentKey}'] = ${JSON.stringify(highchart.config)}
-   </script>`
+    window['highchart' + '${highchart.contentKey}'] = ${JSON.stringify(highchart.config)}
+    </script>`
   )
 
-  const HighchartProps: object = {
+  const highchartsReactProps: HighchartsReactProps = {
     highcharts: highcharts,
+    language,
     phrases: getPhrases(page),
-    appName: app.name,
-    pageType: page.type,
   }
 
   if (isEnabled('highchart-react', true, 'ssb')) {
@@ -106,7 +110,7 @@ function renderPart(req: XP.Request, highchartIds: Array<string>): XP.Response {
     const _req = req
     if (req.mode === 'edit') _req.mode = 'preview'
 
-    return r4XpRender('site/parts/highchart/Highchart', HighchartProps, _req, {
+    return r4XpRender('site/parts/highchart/Highchart', highchartsReactProps, _req, {
       body: '<section class="xp-part highchart-wrapper"></section>',
     })
   } else {
@@ -127,7 +131,7 @@ function renderPart(req: XP.Request, highchartIds: Array<string>): XP.Response {
 }
 
 function determinConfigType(
-  req: XP.Request,
+  req: Request,
   highchart: Content<Highchart & DataSource> | Content<CombinedGraph> | null,
   isCombinedGraph: boolean
 ): HighchartsExtendedProps | undefined {
@@ -143,7 +147,7 @@ function determinConfigType(
 }
 
 function createDataFromHtmlTable(
-  req: XP.Request,
+  req: Request,
   highchart: Content<Highchart & DataSource> | Content<CombinedGraph>
 ): HighchartsExtendedProps {
   return {
@@ -152,7 +156,7 @@ function createDataFromHtmlTable(
 }
 
 function createDataFromDataSource(
-  req: XP.Request,
+  req: Request,
   highchart: Content<Highchart & DataSource>
 ): HighchartsExtendedProps | undefined {
   if (highchart && highchart.data && highchart.data.dataSource) {
@@ -189,10 +193,10 @@ function createDataFromDataSource(
   }
 }
 
-function createHighchartsReactProps(
+function createHighchartsPartProps(
   highchart: Content<Highchart>,
   config: HighchartsExtendedProps
-): HighchartsReactProps {
+): HighchartsPartProps {
   return {
     config: config,
     type: highchart.type === 'mimir:combinedGraph' ? 'combined' : highchart.data.graphType,

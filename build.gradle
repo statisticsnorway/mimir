@@ -25,6 +25,7 @@ dependencies {
     include "com.enonic.lib:lib-thymeleaf:2.1.1"
     include "com.enonic.lib:lib-util:3.1.1"
     include "com.enonic.xp:lib-admin:${xpVersion}"
+    include "com.enonic.lib:lib-asset:1.0.3"
     include "com.enonic.xp:lib-auth:${xpVersion}"
     include "com.enonic.xp:lib-cluster:${xpVersion}"
     include "com.enonic.xp:lib-common:${xpVersion}"

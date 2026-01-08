@@ -1,6 +1,6 @@
 import { get, Content } from '/lib/xp/content'
-import { assetUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
+import { assetUrl } from '/lib/enonic/asset'
 import { createMenuTree, parseTopLinks } from '/lib/ssb/parts/menu'
 import { getEnvironmentString, pathFromStringOrContent } from '/lib/ssb/utils/utils'
 import { type Language } from '/lib/types/language'

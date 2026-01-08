@@ -6,7 +6,7 @@ import { groupBy } from '/lib/vendor/ramda'
 
 import { getMainSubject, getMainSubjectStatistic } from '/lib/ssb/utils/parentUtils'
 import { sameDay, createMonthName, formatDate, isSameOrBefore } from '/lib/ssb/utils/dateUtils'
-import { parseISO, getMonth, getYear, getDate, getISOWeek } from '/lib/vendor/dateFns'
+import { parseISO, getMonth, getYear, getDate, getISOWeek, getISOWeekYear } from '/lib/vendor/dateFns'
 import * as util from '/lib/util'
 import {
   type DayReleases,
@@ -191,7 +191,7 @@ function calculateWeek(previousFrom: string, language: string): string {
   return localize({
     key: 'period.week',
     locale: language,
-    values: [getISOWeek(date).toString(), date.getFullYear().toString()],
+    values: [getISOWeek(date).toString(), getISOWeekYear(date).toString()],
   })
 }
 

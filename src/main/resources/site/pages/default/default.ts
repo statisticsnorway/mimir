@@ -1,8 +1,10 @@
 /* eslint-disable complexity */
-import { Article } from 'schema-dts'
+import { type Request, type Response, type PageComponent } from '@enonic-types/core'
+import { type Article, type WithContext } from 'schema-dts'
 import { type Content, query } from '/lib/xp/content'
-import { assetUrl, type Component, getContent, getSiteConfig, pageUrl, processHtml } from '/lib/xp/portal'
+import { getContent, getSiteConfig, pageUrl, processHtml } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
+import { assetUrl } from '/lib/enonic/asset'
 import { render } from '/lib/thymeleaf'
 import {
   type ReleaseDatesVariant,
@@ -73,7 +75,7 @@ export const GTM_AUTH: string | null = app.config?.GTM_AUTH || null
 
 const view = resolve('default.html')
 
-export function get(req: XP.Request): XP.Response {
+export function get(req: Request): Response {
   const page = getContent<Content<Page> & DefaultPage>()
   if (!page) return { status: 404 }
 
@@ -92,7 +94,7 @@ export function get(req: XP.Request): XP.Response {
   const showIngress: string | boolean | undefined = ingress && page.type === 'mimir:page'
 
   // Create preview if available
-  let preview: XP.Response | undefined
+  let preview: Response | undefined
   if (partsWithPreview.includes(page.type)) {
     let name: string = page.type.replace(/^.*:/, '')
     // @ts-ignore
@@ -112,11 +114,12 @@ export function get(req: XP.Request): XP.Response {
 
   const isFragment: boolean = page.type === 'portal:fragment'
   const regions: RegionsContent = prepareRegions(isFragment, page)
+  const pageFragment = page.fragment as DefaultPage['fragment']
   let config: DefaultPageConfig | undefined
   if (!isFragment && pageConfig) {
     config = pageConfig
-  } else if (isFragment && page.fragment && page.fragment.config) {
-    config = page.fragment.config
+  } else if (isFragment && pageFragment?.config) {
+    config = pageFragment.config
   }
 
   const bodyClasses: Array<string> = []
@@ -363,12 +366,12 @@ export function get(req: XP.Request): XP.Response {
 
   const alerts: AlertType = alertsForContext(pageConfig, alertOptions)
   const body: string = bodyWithBreadCrumbs ? breadcrumbComponent.body : thymeleafRenderBody
-  const bodyWithAlerts: XP.Response = alerts.length
+  const bodyWithAlerts: Response = alerts.length
     ? addAlerts(alerts, body, pageContributions, req)
     : ({
         body,
         pageContributions,
-      } as XP.Response)
+      } as Response)
 
   return {
     body: `<!DOCTYPE html>${bodyWithAlerts.body}`,
@@ -377,7 +380,7 @@ export function get(req: XP.Request): XP.Response {
       'x-content-key': page._id,
     },
     cookies,
-  } as XP.Response
+  } as Response
 }
 
 function prepareRegions(isFragment: boolean, page: DefaultPage): RegionsContent {
@@ -395,7 +398,8 @@ function prepareRegions(isFragment: boolean, page: DefaultPage): RegionsContent 
   configRegions.forEach((configRegion) => {
     // @ts-ignore
     configRegion.components = regions[configRegion.region]
-      ? util.data.forceArray(regions[configRegion.region].components)
+      ? // @ts-ignore
+        util.data.forceArray(regions[configRegion.region].components)
       : []
   })
 
@@ -408,7 +412,7 @@ function prepareRegions(isFragment: boolean, page: DefaultPage): RegionsContent 
   }
 }
 
-function prepareStructuredData(metaInfo: MetaInfoData, page: DefaultPage): Article {
+function prepareStructuredData(metaInfo: MetaInfoData, page: DefaultPage): WithContext<Article> {
   return {
     '@context': 'https://schema.org',
     '@type': 'Article',
@@ -448,7 +452,7 @@ function parseMetaInfoData(
   pageType: string,
   page: DefaultPage,
   language: Language,
-  req: XP.Request
+  req: Request
 ): MetaInfoData {
   let addMetaInfoSearch = true
   let metaInfoSearchId: string | undefined = page._id
@@ -517,7 +521,7 @@ function parseMetaInfoData(
   }
 }
 
-function getSubjectsPage(page: DefaultPage, req: XP.Request, language: string): Array<string> {
+function getSubjectsPage(page: DefaultPage, req: Request, language: string): Array<string> {
   const allMainSubjects: Array<SubjectItem> = getMainSubjects(req, language === 'en' ? 'en' : 'nb')
   const allSubSubjects: Array<SubjectItem> = getSubSubjects(req, language === 'en' ? 'en' : 'nb')
   const subjects: Array<string> = []
@@ -560,7 +564,7 @@ function getSecondaryMainSubject(
   return secondaryMainSubjects
 }
 
-function parseStatbankFrameContent(statbankFane: boolean, req: XP.Request, page: DefaultPage): StatbankFrameData {
+function parseStatbankFrameContent(statbankFane: boolean, req: Request, page: DefaultPage): StatbankFrameData {
   const baseUrl: string = app.config && app.config['ssb.baseUrl'] ? app.config['ssb.baseUrl'] : 'https://www.ssb.no'
   let pageLanguage: string | undefined = page.language ? page.language : 'nb'
 
@@ -592,7 +596,7 @@ function parseStatbankFrameContent(statbankFane: boolean, req: XP.Request, page:
       // rather than the language from the xp frame fallback page
       pageLanguage = statisticInXP ? statisticInXP.language : nynorskStatisticInXP?.language
     } else {
-      filteredStatistics = getStatisticByShortNameFromRepo(req.params.shortname)
+      filteredStatistics = getStatisticByShortNameFromRepo(req.params?.shortname?.toString())
     }
   }
 
@@ -647,8 +651,8 @@ function addAlerts(
   alerts: AlertType,
   body: string,
   pageContributions: XP.PageContributions | undefined,
-  req: XP.Request
-): XP.Response {
+  req: Request
+): Response {
   return r4xpRender(
     'Alerts',
     {
@@ -663,7 +667,7 @@ function addAlerts(
   )
 }
 
-interface DefaultPage extends Content {
+interface DefaultPage extends Omit<Content, 'fragment'> {
   fragment?: {
     regions: Regions
     config: DefaultPageConfig
@@ -690,7 +694,7 @@ interface DefaultPage extends Content {
   page: ExtendedPage
 }
 
-interface ExtendedPage extends Component<object> {
+interface ExtendedPage extends PageComponent {
   config: DefaultPageConfig
 }
 
@@ -709,12 +713,12 @@ interface RegionData {
 }
 
 interface Controller {
-  preview: (req: XP.Request, id: string) => XP.Response
+  preview: (req: Request, id: string) => Response
 }
 
 interface MenuContent {
   body: string
-  component: XP.Response
+  component: Response
 }
 
 interface RegionsContent {
@@ -752,7 +756,7 @@ interface DefaultModel {
   page: Content
   ingress: string | undefined
   showIngress: string | boolean | undefined
-  preview: XP.Response | undefined
+  preview: Response | undefined
   bodyClasses: string
   stylesUrl: string
   jsLibsUrl: string
