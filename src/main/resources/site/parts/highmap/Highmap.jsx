@@ -12,7 +12,7 @@ import 'highcharts/modules/export-data'
 import 'highcharts/modules/map'
 
 import { exportHighchartsToExcel } from '/lib/ssb/utils/tableExportUtils'
-import accessibilityLang from './../../../assets/js/highchart-lang.json'
+import accessibilityLang from  '/lib/ssb/parts/highcharts/highchart-lang.json'
 
 function generateColors(color, thresholdValues) {
   const obj = {}
