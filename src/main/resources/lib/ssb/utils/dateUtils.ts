@@ -10,7 +10,6 @@ import {
   isSameSecond,
   isWithinInterval,
   formatDistanceToNowStrict,
-  getTimezoneOffset,
 } from '/lib/vendor/dateFns'
 import { DateTimeFormatter, formatDate as libTimeFormatDate, LocalDateTime, ZonedDateTime, ZoneId } from '/lib/time'
 
@@ -128,19 +127,3 @@ export function fromNow(date: string, language?: string): string {
 }
 
 export type DateUtilsLib = typeof import('./dateUtils')
-
-/**
- * Calculates serverOffsetInMs so server-local timestamps behave as if the server was running in the target time zone.
- *
- * Winter (Oslo):  3600000
- * Summer (Oslo):  7200000
- */
-export function getServerOffsetInMs(targetTimeZone: string = 'Europe/Oslo', referenceDate: Date = new Date()): number {
-  // Offset from UTC for the target time zone (ms)
-  const targetOffsetMs = getTimezoneOffset(targetTimeZone, referenceDate)
-
-  // Offset from UTC for the server's local time zone (ms)
-  const serverLocalOffsetMs = -referenceDate.getTimezoneOffset() * 60_000
-
-  return targetOffsetMs - serverLocalOffsetMs
-}
