@@ -1,8 +1,5 @@
-import { readFileSync } from 'fs'
-import { join } from 'path'
-import { ByteSource } from '@enonic-types/core'
 import { describe, expect, test as it } from '@jest/globals'
-import { mockLibContent } from './mockXP'
+import { image1, image2, image3, vector1, mediaImage, mediaImage2 } from './defult-mimir-mocks/content-bildearkiv-mocks'
 
 // tests
 describe('getImageCaption ', () => {
@@ -81,78 +78,4 @@ describe('imageUrl ', () => {
     const response = imageUrl({ path: vector1._path, scale: 'block(100,100)', format: 'png' })
     expect(response).toContain('/block-100-100/favicon-for-testing-1')
   })
-})
-
-////////////////////// MOCKING ///////////////////////////////////////////
-
-// Adding images
-const IMAGE_1 = 'favicon-for-testing-1'
-const IMAGE_2 = 'favicon-for-testing-2'
-const IMAGE_3 = 'favicon-for-testing-3'
-const IMAGE_FILENAME_1 = `${IMAGE_1}.svg`
-const IMAGE_FILENAME_2 = `${IMAGE_2}.png`
-const IMAGE_FILENAME_3 = `${IMAGE_3}.jpg`
-
-const imageArchive = mockLibContent.create({
-  contentType: 'base:folder',
-  data: {},
-  name: 'bildearkiv',
-  parentPath: '/',
-})
-
-const image1 = mockLibContent.createMedia({
-  data: readFileSync(join(__dirname, '../assets/', IMAGE_FILENAME_1)) as unknown as ByteSource,
-  name: IMAGE_FILENAME_1,
-  parentPath: imageArchive._path,
-  mimeType: 'image/svg+xml',
-  focalX: 0.5,
-  focalY: 0.5,
-})
-
-const image2 = mockLibContent.createMedia({
-  data: readFileSync(join(__dirname, '../assets/', IMAGE_FILENAME_2)) as unknown as ByteSource,
-  name: IMAGE_2,
-  parentPath: imageArchive._path,
-  mimeType: 'image/png',
-  focalX: 0,
-  focalY: 0,
-})
-
-const image3 = mockLibContent.createMedia({
-  data: readFileSync(join(__dirname, '../assets/', IMAGE_FILENAME_3)) as unknown as ByteSource,
-  name: IMAGE_3,
-  parentPath: imageArchive._path,
-  mimeType: 'image/jpg',
-  focalX: 0,
-  focalY: 0,
-})
-
-const vector1 = mockLibContent.create({
-  data: readFileSync(join(__dirname, '../assets/', IMAGE_FILENAME_1)) as unknown as ByteSource,
-  name: IMAGE_1,
-  parentPath: imageArchive._path,
-  contentType: 'media:vector',
-})
-
-// Create content
-const mediaImage = mockLibContent.create({
-  contentType: 'mimir:MediaImage',
-  data: {
-    altText: 'Alt text image 1',
-    media: image1._id,
-    caption: 'Caption image 1',
-  },
-  name: IMAGE_FILENAME_1 + '_media',
-  parentPath: imageArchive._path,
-})
-
-const mediaImage2 = mockLibContent.create({
-  contentType: 'mimir:MediaImage',
-  data: {
-    altText: '',
-    media: image2._id,
-    caption: '',
-  },
-  name: IMAGE_FILENAME_2 + '_media',
-  parentPath: imageArchive._path,
 })

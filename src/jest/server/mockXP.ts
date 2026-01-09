@@ -93,4 +93,4 @@ jest.mock(
 
 export const mockLibNode = new LibNode({ server })
 
-export const mockConn = mockLibNode.connect({ repoId: 'no.ssb.statreg', branch: 'master' })
+export const mockStatregConn = mockLibNode.connect({ repoId: 'no.ssb.statreg', branch: 'master' })
