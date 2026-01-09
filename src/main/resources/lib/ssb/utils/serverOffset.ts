@@ -1,17 +1,10 @@
-import { getTimezoneOffset } from '/lib/vendor/dateFns'
+import { Instant, ZoneId, ZonedDateTime } from '/lib/time'
 
-/**
- * Calculates serverOffsetInMs so server-local timestamps behave as if the server was running in the target time zone.
- *
- * Winter (Oslo):  3600000
- * Summer (Oslo):  7200000
- */
 export function getServerOffsetInMs(targetTimeZone: string = 'Europe/Oslo', referenceDate: Date = new Date()): number {
-  // Offset from UTC for the target time zone (ms)
-  const targetOffsetMs = getTimezoneOffset(targetTimeZone, referenceDate)
-
-  const serverLocalOffsetMinutes = referenceDate.getTimezoneOffset()
-  // getTimezoneOffset returns (UTC - local) in minutes
-  const serverLocalOffsetMs = -serverLocalOffsetMinutes * 60_000
-  return targetOffsetMs - serverLocalOffsetMs
+  const instant = Instant.ofEpochMilli(referenceDate.getTime())
+  const zoneId = ZoneId.of(targetTimeZone)
+  const zonedDateTime = ZonedDateTime.ofInstant(instant, zoneId)
+  const targetOffsetMs = zonedDateTime.getOffset().getTotalSeconds() * 1000
+  const runtimeLocalOffsetMs = -referenceDate.getTimezoneOffset() * 60_000
+  return targetOffsetMs - runtimeLocalOffsetMs
 }
