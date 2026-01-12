@@ -24,6 +24,8 @@ function Highchart(props: HighchartsReactProps) {
     if (highcharts?.length) {
       highcharts.forEach(({ contentKey }) => {
         const highchartWrapperElement = highchartsWrapperRefs.current[contentKey as string]?.children
+        if (!highchartWrapperElement) return
+
         const [highchartElement, tableWrapperElement] = Array.from(highchartWrapperElement as HTMLCollection) ?? []
         const tableElement = tableWrapperElement?.children[0]
 
@@ -45,6 +47,8 @@ function Highchart(props: HighchartsReactProps) {
     const showTable = item === 'show-as-table'
 
     const highchartWrapperElement = highchartsWrapperRefs.current[contentKey]?.children
+    if (!highchartWrapperElement) return
+
     const [highchartElement, tableWrapperElement] = Array.from(highchartWrapperElement as HTMLCollection) ?? []
 
     tableWrapperElement?.classList.toggle('d-none', !showTable)
