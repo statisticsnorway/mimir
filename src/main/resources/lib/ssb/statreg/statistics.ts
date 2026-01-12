@@ -9,6 +9,7 @@ import {
 import { HttpResponse } from '/lib/http-client'
 import { format, isAfter, isSameDay } from '/lib/vendor/dateFns'
 import { isDateBetween } from '/lib/ssb/utils/dateUtils'
+import { getServerOffsetInMs } from '/lib/ssb/utils/serverOffset'
 
 import { ensureArray } from '/lib/ssb/utils/arrayUtils'
 import { fetchStatRegData } from '/lib/ssb/dashboard/statreg/common'
@@ -46,10 +47,10 @@ export function fetchStatistics(): Array<StatisticInListing> | null {
 
 export function createMimirMockReleaseStatreg(): StatisticInListing {
   // use todays date for next release if its before 0800 in the morning
-  const serverOffsetInMs: number = app.config?.['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
+  const serverOffsetInMs: number = getServerOffsetInMs('Europe/Oslo')
   const midnight: number = new Date().setHours(0, 0, 0, 0)
   const eight: number = new Date().setHours(8, 0, 0, 0)
-  const withServerOffset = new Date(new Date().getTime() + serverOffsetInMs).getTime()
+  const withServerOffset = new Date(Date.now() + serverOffsetInMs).getTime()
   const isBeforeEight: boolean = withServerOffset >= midnight && withServerOffset <= eight
   const previousRelease = isBeforeEight ? new Date(eight).getTime() - 86400000 : eight
   const nextRelease = isBeforeEight ? eight : new Date(eight).getTime() + 86400000
@@ -174,8 +175,8 @@ export function getReleaseDatesByVariants(variants: Array<VariantInListing>): Re
   const nextReleasesSorted: Array<string> = nextReleases.sort(
     (a: string, b: string) => new Date(a).getTime() - new Date(b).getTime()
   )
-  const serverOffsetInMs: number = app.config?.['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
-  const serverTime: Date = new Date(new Date().getTime() + serverOffsetInMs)
+  const serverOffsetInMs: number = getServerOffsetInMs('Europe/Oslo')
+  const serverTime: Date = new Date(Date.now() + serverOffsetInMs)
   const nextReleaseFiltered: Array<string> = nextReleasesSorted.filter((release) =>
     isAfter(new Date(release), serverTime)
   )

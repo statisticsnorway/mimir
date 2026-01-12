@@ -11,6 +11,7 @@ import {
 } from '/lib/types/variants'
 import { getMainSubjects, getMainSubjectById } from '/lib/ssb/utils/subjectUtils'
 import { formatDate } from '/lib/ssb/utils/dateUtils'
+import { getServerOffsetInMs } from '/lib/ssb/utils/serverOffset'
 import { format } from '/lib/vendor/dateFns'
 import {
   addMonthNames,
@@ -45,8 +46,7 @@ function renderPart(req: Request) {
 
   const currentLanguage: string = content.language ? content.language : 'nb'
   const count: number = parseInt(component.config.numberOfDays)
-  const serverOffsetInMs: number =
-    app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
+  const serverOffsetInMs: number = getServerOffsetInMs('Europe/Oslo')
 
   const buttonTitle: string = localize({
     key: 'button.showAll',

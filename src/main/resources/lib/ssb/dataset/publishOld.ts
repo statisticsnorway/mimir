@@ -6,7 +6,7 @@ import { executeFunction, sleep } from '/lib/xp/task'
 import { run, type ContextParams } from '/lib/xp/context'
 import { isSameOrBefore } from '/lib/ssb/utils/dateUtils'
 import { isSameDay } from '/lib/vendor/dateFns'
-
+import { getServerOffsetInMs } from '/lib/ssb/utils/serverOffset'
 import { Events, logUserDataQuery } from '/lib/ssb/repo/query'
 import { getDataSourceIdsFromStatistics, getStatisticsContent } from '/lib/ssb/dashboard/statistic'
 import { getStatisticByIdFromRepo, getReleaseDatesByVariants } from '/lib/ssb/statreg/statistics'
@@ -68,9 +68,9 @@ export function currentlyWaitingForPublish(statistic: Content<Statistics>): bool
       ) {
         const nextRelease: string | null = getNextRelease(statistic)
         const previousRelease: string | null = getPreviousRelease(statistic)
-        const serverOffsetInMs: number =
-          app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
-        const now: Date = new Date(new Date().getTime() + serverOffsetInMs + 1000)
+        const serverOffsetInMs: number = getServerOffsetInMs('Europe/Oslo')
+        const now: Date = new Date(Date.now() + serverOffsetInMs + 1000)
+
         const nextReleaseSameOrBeforeNow: boolean = nextRelease ? isSameOrBefore(new Date(nextRelease), now) : false
         const previousReleaseSameDayNow: boolean = previousRelease ? isSameDay(new Date(previousRelease), now) : false
         const previousReleaseSameOrBeforeNow: boolean = previousRelease
@@ -102,9 +102,8 @@ export function publishDataset(): void {
     if (nextRelease) {
       log.info(`Stat ${stat._name} (${stat.data.statistic}) has next release: ${nextRelease}`)
       const releaseDate: Date = new Date(nextRelease)
-      const serverOffsetInMs: number =
-        app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
-      const now: Date = new Date(new Date().getTime() + serverOffsetInMs)
+      const serverOffsetInMs: number = getServerOffsetInMs('Europe/Oslo')
+      const now: Date = new Date(Date.now() + serverOffsetInMs)
       const oneHourFromNow: Date = new Date(now.getTime() + 1000 * 60 * 60)
       if (releaseDate > now && releaseDate < oneHourFromNow) {
         log.info(`Stat ${stat._name} (${stat.data.statistic}) releases today`)
@@ -231,9 +230,8 @@ function createTask(
           total: null,
         }
         const key: string | null = extractKey(dataSource)
-        const serverOffsetInMs: number =
-          app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
-        const now: Date = new Date(new Date().getTime() + serverOffsetInMs)
+        const serverOffsetInMs: number = getServerOffsetInMs('Europe/Oslo')
+        const now: Date = new Date(Date.now() + serverOffsetInMs)
         const sleepFor: number = releaseDate.getTime() - now.getTime()
 
         log.info(
