@@ -297,7 +297,7 @@ function Highmap(props) {
     minWidth: 992,
   })
 
-  const lang = language !== 'en' ? accessibilityLang.lang : {locale: "en-GB"}
+  const lang = language !== 'en' ? accessibilityLang.lang : { locale: 'en-GB' }
   const tooltipPrefix = seriesTitle ? `${seriesTitle}: ` : ''
 
   const mapOptions = {
