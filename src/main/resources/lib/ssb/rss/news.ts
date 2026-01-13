@@ -27,7 +27,7 @@ export function getNews(days: number): NewsItem[] {
 function getArticles(mainSubjects: SubjectItem[], days: number): NewsItem[] {
   const from: string = subDays(new Date(), days).toISOString()
   const to: string = new Date().toISOString()
-  const serverOffsetInMs: number = getServerOffsetInMs('Europe/Oslo')
+  const serverOffsetInMs: number = getServerOffsetInMs()
   const timeZoneIso: string = getTimeZoneIso(serverOffsetInMs)
 
   const news: Array<NewsItem> = []
@@ -84,7 +84,7 @@ function getStatistics(mainSubjects: SubjectItem[], days: number): NewsItem[] {
     }
     return statsWithRelease
   }, [])
-  const serverOffsetInMs: number = getServerOffsetInMs('Europe/Oslo')
+  const serverOffsetInMs: number = getServerOffsetInMs()
   const timeZoneIso: string = getTimeZoneIso(serverOffsetInMs)
 
   const statisticsNews: NewsItem[] = []

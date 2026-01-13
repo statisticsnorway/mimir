@@ -88,7 +88,7 @@ export function formatDate(date: string | undefined, formatType: string, languag
 }
 
 export function stringToServerTime(): Date {
-  const serverOffsetInMs: number = getServerOffsetInMs('Europe/Oslo')
+  const serverOffsetInMs: number = getServerOffsetInMs()
   return new Date(Date.now() + serverOffsetInMs)
 }
 

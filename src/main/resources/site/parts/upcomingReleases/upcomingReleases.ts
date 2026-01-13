@@ -46,7 +46,7 @@ function renderPart(req: Request) {
 
   const currentLanguage: string = content.language ? content.language : 'nb'
   const count: number = parseInt(component.config.numberOfDays)
-  const serverOffsetInMs: number = getServerOffsetInMs('Europe/Oslo')
+  const serverOffsetInMs: number = getServerOffsetInMs()
 
   const buttonTitle: string = localize({
     key: 'button.showAll',

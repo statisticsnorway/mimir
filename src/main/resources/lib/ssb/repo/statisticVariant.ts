@@ -231,7 +231,7 @@ function createContentStatisticVariant(
   params: CreateContentStatisticVariantParams
 ): ContentLight<Release> & CreateNodeParams {
   const { statistic, variant, prevRelease, language } = params
-  const serverOffsetInMs: number = getServerOffsetInMs('Europe/Oslo')
+  const serverOffsetInMs: number = getServerOffsetInMs()
   const prevReleaseServerOffset: Date = new Date(new Date(prevRelease.publishTime).getTime() - serverOffsetInMs)
 
   return {

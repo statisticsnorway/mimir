@@ -20,7 +20,7 @@ export const get = (req: Request): Response => {
 
   const language = req.params.language ? req.params.language.toString() : 'nb'
   const numberOfDays = showAll ? undefined : count
-  const serverOffsetInMs: number = getServerOffsetInMs('Europe/Oslo')
+  const serverOffsetInMs: number = getServerOffsetInMs()
   // All statistics from today and a number of days
   const releasesFiltered: Array<Release> = filterOnComingReleases(
     allReleases,

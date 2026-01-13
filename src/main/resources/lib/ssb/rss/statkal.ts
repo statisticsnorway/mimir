@@ -92,7 +92,7 @@ function getUpcomingReleases(statisticVariants: ContentLight<ReleaseVariant>[]):
 function getRssReleases(variants: StatkalVariant[], releases: StatkalRelease[]): RssRelease[] {
   const rssReleases: RssRelease[] = []
   const contacts: Contact[] = getContactsFromRepo()
-  const serverOffsetInMs: number = getServerOffsetInMs('Europe/Oslo')
+  const serverOffsetInMs: number = getServerOffsetInMs()
   const timeZoneIso: string = getTimeZoneIso(serverOffsetInMs)
   releases.forEach((release: StatkalRelease) => {
     const variant: StatkalVariant = variants.filter(
