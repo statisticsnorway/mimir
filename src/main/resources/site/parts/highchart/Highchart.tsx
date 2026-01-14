@@ -34,7 +34,7 @@ function Highchart(props: HighchartsReactProps) {
         tableElement?.setAttribute('tabindex', '0') // Scrollable region must have keyboard access
 
         // Add Tab component accessibility tags for Highcharts and table
-        highchartElement?.setAttribute('id', 'tabpanel-0-' + contentKey)
+        // id is set in containerProps of the HighchartsReact component, while role can't be overwritten in the same way
         highchartElement?.setAttribute('role', 'tabpanel')
 
         tableWrapperElement?.setAttribute('id', 'tabpanel-1-' + contentKey)
@@ -101,7 +101,8 @@ function Highchart(props: HighchartsReactProps) {
       const chartYAxis = this.yAxis as Highcharts.Axis[]
       for (let i = 0; i < chartYAxis.length; i++) {
         // Natively highcharts resolves y axis not starting on 0 either with breaks or setting yMin
-        if ((chartYAxis[i].min as number) > 0) {
+        // @ts-ignore: brokenAxis object exists but not in type definition. It can be found in the highcharts source code.
+        if ((chartYAxis[i].min as number) > 0 || chartYAxis[i].brokenAxis?.hasBreaks) {
           // Replace first tick label with 0 since showing below broken axis symbol (for yMin > 0)
           const yAxisConfig = Array.isArray(config.yAxis) ? config.yAxis[i] : config.yAxis
           const decimalsMatch = (yAxisConfig?.labels?.format as string[9]) ?? 0
@@ -349,7 +350,14 @@ function Highchart(props: HighchartsReactProps) {
             {config.subtitle?.text ? <p className='figure-subtitle'>{config.subtitle.text}</p> : null}
             {renderShowAsFigureOrTableTab(highchart.contentKey as string)}
             <div ref={(el) => (highchartsWrapperRefs.current[highchart.contentKey as string] = el)}>
-              <HighchartsReact highcharts={Highcharts} options={config} />
+              <HighchartsReact
+                containerProps={{
+                  id: `tabpanel-0-${highchart.contentKey}`,
+                  className: 'highcharts-canvas',
+                }}
+                highcharts={Highcharts}
+                options={config}
+              />
             </div>
           </figure>
           {renderHighchartsFooter(highchart.footnoteText, highchart.creditsEnabled, highchart.sourceList)}
