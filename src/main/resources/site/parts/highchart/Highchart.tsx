@@ -105,7 +105,7 @@ function Highchart(props: HighchartsReactProps) {
         if ((chartYAxis[i].min as number) > 0 || chartYAxis[i].brokenAxis?.hasBreaks) {
           // Replace first tick label with 0 since showing below broken axis symbol (for yMin > 0)
           const yAxisConfig = Array.isArray(config.yAxis) ? config.yAxis[i] : config.yAxis
-          const decimalsMatch = (yAxisConfig?.labels?.format as string[9]) ?? 0
+          const decimalsMatch = (yAxisConfig?.labels?.format?.[9] as string) ?? 0
           const zeroFormatted = Highcharts.numberFormat(0, Number(decimalsMatch))
 
           const tickPositions = chartYAxis[i].tickPositions ?? []
