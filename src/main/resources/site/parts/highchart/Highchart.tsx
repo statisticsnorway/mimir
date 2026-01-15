@@ -318,7 +318,7 @@ function Highchart(props: HighchartsReactProps) {
           events: {
             ...highchartConfig.chart?.events,
             exportData: formatNumbersInTable(highchart.type as string),
-            load: renderYAxisBreakSymbol(highchartConfig),
+            render: renderYAxisBreakSymbol(highchartConfig),
           },
         },
         exporting: {
