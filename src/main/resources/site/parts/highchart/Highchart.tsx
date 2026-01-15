@@ -83,6 +83,47 @@ function Highchart(props: HighchartsReactProps) {
       }
     }
 
+  const renderYAxisBreakSymbol = (config: Highcharts.Options) =>
+    function (this: Highcharts.Chart) {
+      // Drawing yAxis break symbol when y-axis not starting at 0
+      const chartYAxis = this.yAxis as Highcharts.Axis[]
+      for (let i = 0; i < chartYAxis.length; i++) {
+        // Natively highcharts resolves y axis not starting on 0 either with breaks or setting yMin
+        // @ts-ignore: brokenAxis object exists but not in type definition. It can be found in the highcharts source code.
+        if ((chartYAxis[i].min as number) > 0 || chartYAxis[i].brokenAxis?.hasBreaks) {
+          // Replace first tick label with 0 since showing below broken axis symbol (for yMin > 0)
+          const yAxisConfig = Array.isArray(config.yAxis) ? config.yAxis[i] : config.yAxis
+
+          // Determine position for broken axis symbol
+          const offset = yAxisConfig?.opposite ? this.plotWidth : 0
+          const x = this.plotLeft + offset - 10
+          const y = this.plotTop + this.plotHeight - 10
+
+          // Draw broken axis symbol
+          this.renderer
+            .path([
+              ['M', x, y],
+              ['l', 20, -5],
+            ])
+            .attr({
+              'stroke-width': 1,
+              stroke: 'black',
+            })
+            .add()
+          this.renderer
+            .path([
+              ['M', x, y + 5],
+              ['l', 20, -5],
+            ])
+            .attr({
+              'stroke-width': 1,
+              stroke: 'black',
+            })
+            .add()
+        }
+      }
+    }
+
   const getYLabel = (el: Highcharts.SVGElement | undefined) => {
     if (!el) return undefined
 
@@ -95,7 +136,7 @@ function Highchart(props: HighchartsReactProps) {
     return undefined
   }
 
-  const renderYAxisBreakSymbol = (config: Highcharts.Options) =>
+  const renderTickLableBrokenYAxis = (config: Highcharts.Options) =>
     function (this: Highcharts.Chart) {
       // Drawing yAxis break symbol when y-axis not starting at 0
       const chartYAxis = this.yAxis as Highcharts.Axis[]
@@ -130,33 +171,6 @@ function Highchart(props: HighchartsReactProps) {
               secondTickLabel.hide()
             }
           }
-
-          // Determine position for broken axis symbol
-          const offset = yAxisConfig?.opposite ? this.plotWidth : 0
-          const x = this.plotLeft + offset - 10
-          const y = this.plotTop + this.plotHeight - 10
-
-          // Draw broken axis symbol
-          this.renderer
-            .path([
-              ['M', x, y],
-              ['l', 20, -5],
-            ])
-            .attr({
-              'stroke-width': 1,
-              stroke: 'black',
-            })
-            .add()
-          this.renderer
-            .path([
-              ['M', x, y + 5],
-              ['l', 20, -5],
-            ])
-            .attr({
-              'stroke-width': 1,
-              stroke: 'black',
-            })
-            .add()
         }
       }
     }
@@ -318,7 +332,8 @@ function Highchart(props: HighchartsReactProps) {
           events: {
             ...highchartConfig.chart?.events,
             exportData: formatNumbersInTable(highchart.type as string),
-            render: renderYAxisBreakSymbol(highchartConfig),
+            load: renderYAxisBreakSymbol(highchartConfig),
+            render: renderTickLableBrokenYAxis(highchartConfig),
           },
         },
         exporting: {
