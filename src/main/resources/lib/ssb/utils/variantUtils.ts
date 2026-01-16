@@ -423,8 +423,10 @@ function concatReleaseTimes(
 }
 
 // If import from statreg failed use nextRelease instead of previousRelease
-export function nextReleasedPassed(variant: VariantInListing): boolean {
-  const serverOffsetInMs: number = getServerOffsetInMs()
+export function nextReleasedPassed(
+  variant: VariantInListing,
+  serverOffsetInMs: number = getServerOffsetInMs()
+): boolean {
   const serverTime: Date = new Date(Date.now() + serverOffsetInMs)
   const nextRelease: Date = new Date(variant.nextRelease)
   return isSameOrBefore(new Date(nextRelease), serverTime)

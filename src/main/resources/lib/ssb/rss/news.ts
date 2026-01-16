@@ -76,15 +76,18 @@ function getArticles(mainSubjects: SubjectItem[], days: number): NewsItem[] {
 function getStatistics(mainSubjects: SubjectItem[], days: number): NewsItem[] {
   const from = new Date(subDays(new Date(), days).setHours(0, 0, 0, 0))
   const statistics: Array<StatisticInListing> = getAllStatisticsFromRepo()
+  const serverOffsetInMs: number = getServerOffsetInMs()
   const statregStatistics = statistics.reduce((statsWithRelease: Array<StatisticInListing>, stat) => {
-    const { latestVariant, latestRelease } = findLatestRelease(ensureArray<VariantInListing>(stat.variants))
+    const { latestVariant, latestRelease } = findLatestRelease(
+      ensureArray<VariantInListing>(stat.variants),
+      serverOffsetInMs
+    )
     if (isAfter(latestRelease, from)) {
       stat.variants = [latestVariant]
       statsWithRelease.push(stat)
     }
     return statsWithRelease
   }, [])
-  const serverOffsetInMs: number = getServerOffsetInMs()
   const timeZoneIso: string = getTimeZoneIso(serverOffsetInMs)
 
   const statisticsNews: NewsItem[] = []
@@ -102,7 +105,9 @@ function getStatistics(mainSubjects: SubjectItem[], days: number): NewsItem[] {
           (s) => s.id.toString() === statistic.data.statistic
         )
         const variant: VariantInListing | undefined = statreg?.variants?.[0] || undefined
-        const pubDate: string | undefined = variant ? getPubDateStatistic(variant, timeZoneIso) : undefined
+        const pubDate: string | undefined = variant
+          ? getPubDateStatistic(variant, timeZoneIso, serverOffsetInMs)
+          : undefined
 
         const link = getLinkByPath(statistic._path)
 
