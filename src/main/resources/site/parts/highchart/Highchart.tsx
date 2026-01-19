@@ -19,7 +19,7 @@ import accessibilityLang from '../../../assets/js/highchart-lang.json'
 function Highchart(props: HighchartsReactProps) {
   const { highcharts, language, phrases } = props
   const highchartsWrapperRefs = useRef<Record<string, HTMLDivElement | null>>({})
-  let brokenLinesElementRef: Highcharts.SVGElement
+  const brokenLinesElementRefs = useRef<Record<string, Highcharts.SVGElement>>({})
 
   useEffect(() => {
     if (highcharts?.length) {
@@ -131,26 +131,26 @@ function Highchart(props: HighchartsReactProps) {
     return element
   }
 
-  const setBrokenYAxisOptions = (config: Highcharts.Options) =>
+  const setBrokenYAxisOptions = (config: Highcharts.Options, contentKey: string) =>
     function (this: Highcharts.Chart) {
       const chartYAxis = this.yAxis as Highcharts.Axis[]
       for (let i = 0; i < chartYAxis.length; i++) {
-        if (brokenLinesElementRef) {
-          brokenLinesElementRef.destroy()
+        if (brokenLinesElementRefs.current[contentKey]) {
+          brokenLinesElementRefs.current[contentKey].destroy()
         }
         // Natively highcharts resolves y axis not starting on 0 either with breaks or setting yMin
         // @ts-ignore: brokenAxis object exists but not in type definition. It can be found in the highcharts source code.
         if ((chartYAxis[i].min as number) <= 0 && !chartYAxis[i].brokenAxis?.hasBreaks) return
 
         const yAxisConfig = Array.isArray(config.yAxis) ? config.yAxis[i] : config.yAxis
-        brokenLinesElementRef = drawBrokenAxisSymbolForAxis(chartYAxis[i], this)
+        brokenLinesElementRefs.current[contentKey] = drawBrokenAxisSymbolForAxis(chartYAxis[i], this)
 
         const decimalsMatch = (yAxisConfig?.labels?.format?.[9] as string) ?? 0
         const zeroFormatted = Highcharts.numberFormat(0, Number(decimalsMatch))
 
         const tickPositions = chartYAxis[i].tickPositions ?? []
         const firstTickValue = tickPositions[0]
-        const firstTickLabel = chartYAxis[i].ticks[firstTickValue].label
+        const firstTickLabel = chartYAxis[i].ticks[firstTickValue]?.label
 
         // Replace first tick label with 0 since the label is displayed below the broken axis symbol (for yMin > 0)
         if (firstTickLabel) {
@@ -160,7 +160,7 @@ function Highchart(props: HighchartsReactProps) {
         }
 
         const secondTickValue = tickPositions[1]
-        const secondTickLabel = chartYAxis[i].ticks[secondTickValue].label
+        const secondTickLabel = chartYAxis[i].ticks[secondTickValue]?.label
 
         if (firstTickLabel && secondTickLabel) {
           const firstY = getYLabel(firstTickLabel)
@@ -331,7 +331,7 @@ function Highchart(props: HighchartsReactProps) {
           events: {
             ...highchartConfig.chart?.events,
             exportData: formatNumbersInTable(highchart.type as string),
-            render: setBrokenYAxisOptions(highchartConfig),
+            render: setBrokenYAxisOptions(highchartConfig, highchart.contentKey as string),
           },
         },
         exporting: {
