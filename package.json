@@ -22,8 +22,6 @@
     "lint": "eslint --fix './src/**/*.{es6,ts,tsx}'",
     "lint-dry": "eslint './src/**/*.{es6,ts,tsx}'",
     "test": "jest",
-    "test:utc": "TZ=UTC jest serverOffset.test.js",
-    "test:local": "TZ=Europe/Oslo jest serverOffset.test.js",
     "prepare": "husky"
   },
   "repository": {

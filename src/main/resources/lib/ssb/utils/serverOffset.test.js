@@ -22,9 +22,21 @@ jest.mock(
   { virtual: true }
 )
 
-// run npm run test:utc to run these tests with TZ=UTC
-describe('getServerOffsetInMs (UTC server)', () => {
-  if (process.env.TZ === 'UTC') {
+describe('getServerOffsetInMs', () => {
+  let timezoneOffsetSpy
+
+  afterEach(() => {
+    if (timezoneOffsetSpy) {
+      timezoneOffsetSpy.mockRestore()
+      timezoneOffsetSpy = undefined
+    }
+  })
+
+  describe('UTC runtime', () => {
+    beforeEach(() => {
+      timezoneOffsetSpy = jest.spyOn(Date.prototype, 'getTimezoneOffset').mockReturnValue(0)
+    })
+
     test('winter returns 3600000', () => {
       const winterDay = new Date('2026-01-15T12:00:00Z')
       expect(getServerOffsetInMs(winterDay)).toBe(3600000)
@@ -34,24 +46,24 @@ describe('getServerOffsetInMs (UTC server)', () => {
       const summerDay = new Date('2026-07-15T12:00:00Z')
       expect(getServerOffsetInMs(summerDay)).toBe(7200000)
     })
-  } else {
-    test.skip('serverOffset UTC tests (run with TZ=UTC)', () => {})
-  }
-})
+  })
 
-// run npm run test:local to run these tests with TZ=Europe/Oslo
-describe('getServerOffsetInMs (local Europe/Oslo runtime)', () => {
-  if (process.env.TZ === 'Europe/Oslo') {
+  describe('Europe/Oslo runtime', () => {
+    beforeEach(() => {
+      timezoneOffsetSpy = jest.spyOn(Date.prototype, 'getTimezoneOffset').mockImplementation(function () {
+        const m = this.getUTCMonth() + 1
+        return m >= 4 && m <= 9 ? -120 : -60
+      })
+    })
+
     test('returns 0 in winter', () => {
-      const winterDay = new Date('2026-01-15T12:00:00')
+      const winterDay = new Date('2026-01-15T12:00:00Z')
       expect(getServerOffsetInMs(winterDay)).toBe(0)
     })
 
     test('returns 0 in summer', () => {
-      const summerDay = new Date('2026-07-15T12:00:00')
+      const summerDay = new Date('2026-07-15T12:00:00Z')
       expect(getServerOffsetInMs(summerDay)).toBe(0)
     })
-  } else {
-    test.skip('local offset tests (run with TZ=Europe/Oslo)', () => {})
-  }
+  })
 })
