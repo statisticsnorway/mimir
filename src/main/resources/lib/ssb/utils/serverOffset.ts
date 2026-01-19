@@ -15,7 +15,8 @@ export function getServerOffsetInMs(referenceDate: Date = new Date()): number {
 
   const targetOffsetMs = zonedDateTime.getOffset().getTotalSeconds() * 1000
 
-  // getTimezoneOffset(): minutes = (UTC - local), hence the leading minus
+  // getTimezoneOffset() returns UTC relative to local time (UTC - local) in minutes, so negate it to get (local - UTC),
+  // then convert from minutes to milliseconds
   const runtimeLocalOffsetMs = -referenceDate.getTimezoneOffset() * 60_000
 
   return targetOffsetMs - runtimeLocalOffsetMs
