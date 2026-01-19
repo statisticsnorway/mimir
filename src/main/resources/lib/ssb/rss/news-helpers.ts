@@ -1,8 +1,12 @@
 import { format, isAfter, parseISO } from '/lib/vendor/dateFns'
+import { getServerOffsetInMs } from '/lib/ssb/utils/serverOffset'
 import { VariantInListing } from '../dashboard/statreg/types'
 import { nextReleasedPassed } from '../utils/variantUtils'
 
-export function findLatestRelease(variants: Array<VariantInListing>): {
+export function findLatestRelease(
+  variants: Array<VariantInListing>,
+  serverOffsetInMs: number = getServerOffsetInMs()
+): {
   latestVariant: VariantInListing
   latestRelease: Date
 } {
@@ -14,7 +18,7 @@ export function findLatestRelease(variants: Array<VariantInListing>): {
       latestVariant = variant
     }
     // to catch if nextRelease time is in the past, but data not updated
-    if (nextReleasedPassed(variant) && isAfter(new Date(variant.nextRelease), latestRelease)) {
+    if (nextReleasedPassed(variant, serverOffsetInMs) && isAfter(new Date(variant.nextRelease), latestRelease)) {
       latestRelease = new Date(variant.nextRelease)
       latestVariant = variant
     }
@@ -22,8 +26,12 @@ export function findLatestRelease(variants: Array<VariantInListing>): {
   return { latestVariant, latestRelease }
 }
 
-export function getPubDateStatistic(variant: VariantInListing, timeZoneIso: string): string | undefined {
-  const nextReleaseDatePassed: boolean = variant.nextRelease ? nextReleasedPassed(variant) : false
+export function getPubDateStatistic(
+  variant: VariantInListing,
+  timeZoneIso: string,
+  serverOffsetInMs: number = getServerOffsetInMs()
+): string | undefined {
+  const nextReleaseDatePassed: boolean = variant.nextRelease ? nextReleasedPassed(variant, serverOffsetInMs) : false
   const pubDate: string | undefined = nextReleaseDatePassed ? variant.nextRelease : variant.previousRelease
   return pubDate ? formatPubDateStatistic(pubDate, timeZoneIso) : undefined
 }

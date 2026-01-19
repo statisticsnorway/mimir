@@ -9,6 +9,7 @@ import { getMainSubjects } from '/lib/ssb/utils/subjectUtils'
 import { calculatePeriod } from '/lib/ssb/utils/variantUtils'
 import { addDays, isWithinInterval } from '/lib/vendor/dateFns'
 import { formatDate, getTimeZoneIso } from '/lib/ssb/utils/dateUtils'
+import { getServerOffsetInMs } from '/lib/ssb/utils/serverOffset'
 import * as util from '/lib/util'
 import { getContactsFromRepo } from '/lib/ssb/statreg/contacts'
 import { type SubjectItem } from '/lib/types/subject'
@@ -91,8 +92,8 @@ function getUpcomingReleases(statisticVariants: ContentLight<ReleaseVariant>[]):
 function getRssReleases(variants: StatkalVariant[], releases: StatkalRelease[]): RssRelease[] {
   const rssReleases: RssRelease[] = []
   const contacts: Contact[] = getContactsFromRepo()
-  const serverOffsetInMilliSeconds: number = parseInt(app.config?.['serverOffsetInMs']) || 0
-  const timeZoneIso: string = getTimeZoneIso(serverOffsetInMilliSeconds)
+  const serverOffsetInMs: number = getServerOffsetInMs()
+  const timeZoneIso: string = getTimeZoneIso(serverOffsetInMs)
   releases.forEach((release: StatkalRelease) => {
     const variant: StatkalVariant = variants.filter(
       (variant) => variant.statisticId == release.statisticId && variant.language === release.language

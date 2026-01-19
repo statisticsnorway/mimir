@@ -3,6 +3,7 @@ import { query, type Content } from '/lib/xp/content'
 import { StatisticInListing, VariantInListing } from '/lib/ssb/dashboard/statreg/types'
 import { getTimeZoneIso } from '/lib/ssb/utils/dateUtils'
 import { subDays, isAfter } from '/lib/vendor/dateFns'
+import { getServerOffsetInMs } from '/lib/ssb/utils/serverOffset'
 import { getAllStatisticsFromRepo } from '/lib/ssb/statreg/statistics'
 import { getMainSubjects } from '/lib/ssb/utils/subjectUtils'
 import { getIngressWithKeyFigureText } from '/lib/ssb/utils/keyFigureTextUtils'
@@ -26,8 +27,8 @@ export function getNews(days: number): NewsItem[] {
 function getArticles(mainSubjects: SubjectItem[], days: number): NewsItem[] {
   const from: string = subDays(new Date(), days).toISOString()
   const to: string = new Date().toISOString()
-  const serverOffsetInMilliSeconds: number = parseInt(app.config?.['serverOffsetInMs']) || 0
-  const timeZoneIso: string = getTimeZoneIso(serverOffsetInMilliSeconds)
+  const serverOffsetInMs: number = getServerOffsetInMs()
+  const timeZoneIso: string = getTimeZoneIso(serverOffsetInMs)
 
   const news: Array<NewsItem> = []
   mainSubjects.forEach((mainSubject) => {
@@ -49,7 +50,7 @@ function getArticles(mainSubjects: SubjectItem[], days: number): NewsItem[] {
     }).hits as unknown as Array<Content<Article>>
     articles.forEach((article) => {
       const pubDate: string | undefined = article.publish?.from
-        ? formatPubDateArticle(article.publish.from, serverOffsetInMilliSeconds, timeZoneIso)
+        ? formatPubDateArticle(article.publish.from, serverOffsetInMs, timeZoneIso)
         : undefined
       if (pubDate) {
         const link = getLinkByPath(article._path)
@@ -75,16 +76,19 @@ function getArticles(mainSubjects: SubjectItem[], days: number): NewsItem[] {
 function getStatistics(mainSubjects: SubjectItem[], days: number): NewsItem[] {
   const from = new Date(subDays(new Date(), days).setHours(0, 0, 0, 0))
   const statistics: Array<StatisticInListing> = getAllStatisticsFromRepo()
+  const serverOffsetInMs: number = getServerOffsetInMs()
   const statregStatistics = statistics.reduce((statsWithRelease: Array<StatisticInListing>, stat) => {
-    const { latestVariant, latestRelease } = findLatestRelease(ensureArray<VariantInListing>(stat.variants))
+    const { latestVariant, latestRelease } = findLatestRelease(
+      ensureArray<VariantInListing>(stat.variants),
+      serverOffsetInMs
+    )
     if (isAfter(latestRelease, from)) {
       stat.variants = [latestVariant]
       statsWithRelease.push(stat)
     }
     return statsWithRelease
   }, [])
-  const serverOffsetInMS: number = parseInt(app.config?.['serverOffsetInMs']) || 0
-  const timeZoneIso: string = getTimeZoneIso(serverOffsetInMS)
+  const timeZoneIso: string = getTimeZoneIso(serverOffsetInMs)
 
   const statisticsNews: NewsItem[] = []
   if (statregStatistics.length > 0) {
@@ -101,7 +105,9 @@ function getStatistics(mainSubjects: SubjectItem[], days: number): NewsItem[] {
           (s) => s.id.toString() === statistic.data.statistic
         )
         const variant: VariantInListing | undefined = statreg?.variants?.[0] || undefined
-        const pubDate: string | undefined = variant ? getPubDateStatistic(variant, timeZoneIso) : undefined
+        const pubDate: string | undefined = variant
+          ? getPubDateStatistic(variant, timeZoneIso, serverOffsetInMs)
+          : undefined
 
         const link = getLinkByPath(statistic._path)
 

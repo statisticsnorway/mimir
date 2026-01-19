@@ -7,6 +7,7 @@ import { groupBy } from '/lib/vendor/ramda'
 import { getMainSubject, getMainSubjectStatistic } from '/lib/ssb/utils/parentUtils'
 import { sameDay, createMonthName, formatDate, isSameOrBefore } from '/lib/ssb/utils/dateUtils'
 import { parseISO, getMonth, getYear, getDate, getISOWeek, getISOWeekYear } from '/lib/vendor/dateFns'
+import { getServerOffsetInMs } from '/lib/ssb/utils/serverOffset'
 import * as util from '/lib/util'
 import {
   type DayReleases,
@@ -422,10 +423,11 @@ function concatReleaseTimes(
 }
 
 // If import from statreg failed use nextRelease instead of previousRelease
-export function nextReleasedPassed(variant: VariantInListing): boolean {
-  const serverOffsetInMs: number =
-    app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
-  const serverTime: Date = new Date(new Date().getTime() + serverOffsetInMs)
+export function nextReleasedPassed(
+  variant: VariantInListing,
+  serverOffsetInMs: number = getServerOffsetInMs()
+): boolean {
+  const serverTime: Date = new Date(Date.now() + serverOffsetInMs)
   const nextRelease: Date = new Date(variant.nextRelease)
   return isSameOrBefore(new Date(nextRelease), serverTime)
 }
