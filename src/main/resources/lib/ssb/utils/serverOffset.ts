@@ -18,11 +18,5 @@ export function getServerOffsetInMs(referenceDate: Date = new Date()): number {
   // getTimezoneOffset(): minutes = (UTC - local), hence the leading minus
   const runtimeLocalOffsetMs = -referenceDate.getTimezoneOffset() * 60_000
 
-  const result = targetOffsetMs - runtimeLocalOffsetMs
-
-  log.info(
-    `getServerOffsetInMs(${TARGET_TIME_ZONE}) = ${result} ms (Expected on enonic servers: winter=3600000, summer=7200000)`
-  )
-
-  return result
+  return targetOffsetMs - runtimeLocalOffsetMs
 }

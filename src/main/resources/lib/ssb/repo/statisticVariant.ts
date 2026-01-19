@@ -121,6 +121,7 @@ export function fillRepo(statistics: Array<StatisticInListing>) {
   })
 
   const serverOffsetInMs: number = getServerOffsetInMs()
+  log.info(`Server offset calculated: ${serverOffsetInMs} ms ` + `(expected winter=3600000, summer=7200000)`)
 
   LANGUAGES.forEach((language) => {
     const allMainSubjects: SubjectItem[] = queryForSubjects({

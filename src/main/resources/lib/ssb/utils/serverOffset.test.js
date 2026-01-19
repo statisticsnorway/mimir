@@ -22,8 +22,6 @@ jest.mock(
   { virtual: true }
 )
 
-global.log = { info: () => {} }
-
 // run npm run test:utc to run these tests with TZ=UTC
 describe('getServerOffsetInMs (UTC server)', () => {
   if (process.env.TZ === 'UTC') {
