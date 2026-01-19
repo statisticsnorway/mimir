@@ -33,6 +33,14 @@ jest.mock(
   { virtual: true }
 )
 
+describe('default usage', () => {
+  test('returns a number for current date', () => {
+    jest.spyOn(Date.prototype, 'getTimezoneOffset').mockReturnValue(0)
+    const result = getServerOffsetInMs()
+    expect(typeof result).toBe('number')
+  })
+})
+
 describe('getServerOffsetInMs', () => {
   let timezoneOffsetSpy
 
