@@ -22,7 +22,7 @@
       display: block;
       height: auto;
       width: auto;
-      object-fit: cover
+      object-fit: cover;
     }
 
     @include media-breakpoint-down(md) {
