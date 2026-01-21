@@ -52,7 +52,7 @@
           <help-text>Vise forklaringer til alle linjer i en mouseoverboksen</help-text>
         </input>
         <input name="defaultShowAsTable" type="CheckBox">
-          <label>Vis som tabell som første visning</label>
+          <label>Vis tabell som standard førstevisning</label>
         </input>
         <input name="numberDecimals" type="RadioButton">
           <label>Antall desimaler som skal vises på verdiene ved mouseover:</label>
