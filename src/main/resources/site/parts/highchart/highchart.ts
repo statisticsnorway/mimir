@@ -98,7 +98,7 @@ function renderPart(req: Request, highchartIds: Array<string>): Response {
   )
 
   const highchartsReactProps: HighchartsReactProps = {
-    highcharts: highcharts,
+    highcharts,
     language,
     phrases: getPhrases(page),
   }
@@ -204,5 +204,6 @@ function createHighchartsPartProps(
     footnoteText: highchart.data.footnoteText ? util.data.forceArray(highchart.data.footnoteText) : undefined,
     creditsEnabled: highchart.data.sourceList ? true : false,
     sourceList: highchart.data.sourceList ? util.data.forceArray(highchart.data.sourceList) : undefined,
+    defaultShowAsTable: highchart.data.defaultShowAsTable || false,
   }
 }

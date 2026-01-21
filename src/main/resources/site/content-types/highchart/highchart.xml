@@ -51,6 +51,9 @@
           <label>Kombinere forklaringer</label>
           <help-text>Vise forklaringer til alle linjer i en mouseoverboksen</help-text>
         </input>
+        <input name="defaultShowAsTable" type="CheckBox">
+          <label>Vis som tabell som første visning</label>
+        </input>
         <input name="numberDecimals" type="RadioButton">
           <label>Antall desimaler som skal vises på verdiene ved mouseover:</label>
           <config>
@@ -221,7 +224,7 @@
             </input>
           </items>
         </item-set>
-      </items>  
+      </items>
     </field-set>
 
     <field-set>
