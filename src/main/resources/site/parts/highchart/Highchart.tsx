@@ -39,7 +39,12 @@ function Highchart(props: HighchartsReactProps) {
 
         tableWrapperElement?.classList.add('ssb-table-wrapper')
         tableElement?.classList.add('statistics', 'ssb-table')
-        tableElement?.setAttribute('tabindex', '0') // Scrollable region must have keyboard access
+
+        // Workaround to prevent auto-focus on table on initial render by removing tabindex, then re-enable after a delay
+        if (defaultShowAsTable) tableElement?.removeAttribute('tabindex')
+        setTimeout(() => {
+          tableElement?.setAttribute('tabindex', '0')
+        }, 1000)
 
         // Add Tab component accessibility tags for Highcharts and table
         // id is set in containerProps of the HighchartsReact component, while role can't be overwritten in the same way
