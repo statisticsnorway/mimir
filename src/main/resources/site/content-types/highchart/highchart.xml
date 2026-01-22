@@ -41,15 +41,15 @@
           <label>Bytt rader og kolonner</label>
           <help-text>Bytt mellom å tolke tabelldataene horisontalt eller vertikalt før grafen tegnes, med hensyn til gruppering</help-text>
         </input>
+        <input name="defaultShowAsTable" type="CheckBox">
+          <label>Vis tabell som standard førstevisning</label>
+        </input>
       </items>
     </field-set>
 
     <field-set>
       <label>Bearbeide visningen</label>
       <items>
-        <input name="defaultShowAsTable" type="CheckBox">
-          <label>Vis tabell som standard førstevisning</label>
-        </input>
         <input name="combineInfo" type="CheckBox">
           <label>Kombinere forklaringer</label>
           <help-text>Vise forklaringer til alle linjer i en mouseoverboksen</help-text>
