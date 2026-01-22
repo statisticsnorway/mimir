@@ -376,7 +376,7 @@ function Highchart(props: HighchartsReactProps) {
               <HighchartsReact
                 containerProps={{
                   id: `tabpanel-0-${highchart.contentKey}`,
-                  className: 'highcharts-canvas',
+                  className: `highcharts-canvas${highchart.defaultShowAsTable ? ' d-none' : ''}`,
                 }}
                 highcharts={Highcharts}
                 options={config}
