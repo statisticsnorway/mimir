@@ -138,42 +138,40 @@ function Highchart(props: HighchartsReactProps) {
         // Clean up existing symbols for this chart
         if (brokenLinesElementRefs.current[contentKey]) {
           brokenLinesElementRefs.current[contentKey].destroy()
-          delete brokenLinesElementRefs.current[contentKey]
         }
 
         // Natively highcharts resolves y axis not starting on 0 either with breaks or setting yMin
         // @ts-ignore: brokenAxis object exists but not in type definition. It can be found in the highcharts source code.
-        const shouldDrawSymbol = (chartYAxis[i].min as number) > 0 || chartYAxis[i].brokenAxis?.hasBreaks
+        const drawBrokenSymbol = (chartYAxis[i].min as number) > 0 || chartYAxis[i].brokenAxis?.hasBreaks
+        if (!drawBrokenSymbol) return
 
-        if (shouldDrawSymbol) {
-          const yAxisConfig = Array.isArray(config.yAxis) ? config.yAxis[i] : config.yAxis
-          brokenLinesElementRefs.current[`${contentKey}-axis-${i}`] = drawBrokenAxisSymbolForAxis(chartYAxis[i], this)
+        const yAxisConfig = Array.isArray(config.yAxis) ? config.yAxis[i] : config.yAxis
+        brokenLinesElementRefs.current[contentKey] = drawBrokenAxisSymbolForAxis(chartYAxis[i], this)
 
-          const decimalsMatch = (yAxisConfig?.labels?.format?.[9] as string) ?? 0
-          const zeroFormatted = Highcharts.numberFormat(0, Number(decimalsMatch))
+        const decimalsMatch = (yAxisConfig?.labels?.format?.[9] as string) ?? 0
+        const zeroFormatted = Highcharts.numberFormat(0, Number(decimalsMatch))
 
-          const tickPositions = chartYAxis[i].tickPositions ?? []
-          const firstTickValue = tickPositions[0]
-          const firstTickLabel = chartYAxis[i].ticks[firstTickValue]?.label
+        const tickPositions = chartYAxis[i].tickPositions ?? []
+        const firstTickValue = tickPositions[0]
+        const firstTickLabel = chartYAxis[i].ticks[firstTickValue]?.label
 
-          // Replace first tick label with 0 since the label is displayed below the broken axis symbol (for yMin > 0)
-          if (firstTickLabel) {
-            firstTickLabel.attr({
-              text: zeroFormatted,
-            })
-          }
+        // Replace first tick label with 0 since the label is displayed below the broken axis symbol (for yMin > 0)
+        if (firstTickLabel) {
+          firstTickLabel.attr({
+            text: zeroFormatted,
+          })
+        }
 
-          const secondTickValue = tickPositions[1]
-          const secondTickLabel = chartYAxis[i].ticks[secondTickValue]?.label
+        const secondTickValue = tickPositions[1]
+        const secondTickLabel = chartYAxis[i].ticks[secondTickValue]?.label
 
-          if (firstTickLabel && secondTickLabel) {
-            const firstY = getYLabel(firstTickLabel)
-            const secondY = getYLabel(secondTickLabel)
+        if (firstTickLabel && secondTickLabel) {
+          const firstY = getYLabel(firstTickLabel)
+          const secondY = getYLabel(secondTickLabel)
 
-            // Hides second tick label if rendered on top of 0 (for broken axis)
-            if (firstY && secondY && firstY === secondY) {
-              secondTickLabel.hide()
-            }
+          // Hides second tick label if rendered on top of 0 (for broken axis)
+          if (firstY && secondY && firstY === secondY) {
+            secondTickLabel.hide()
           }
         }
       }
