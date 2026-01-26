@@ -113,7 +113,8 @@ export interface HighchartsData {
 export interface SeriesAndCategories {
   categories: Array<string | number | PreliminaryData>
   series: Array<Series>
-  title?: string | object | undefined
+  title?: string | object
+  timePeriod?: string
   data?: {
     switchRowsAndColumns: boolean
     decimalPoint: string

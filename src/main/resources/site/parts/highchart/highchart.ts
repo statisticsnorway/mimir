@@ -197,8 +197,11 @@ function createHighchartsPartProps(
   highchart: Content<Highchart>,
   config: HighchartsExtendedProps
 ): HighchartsPartProps {
+  type ConfigWithTimePeriod = HighchartsExtendedProps & { timePeriod?: string }
+  const { timePeriod, ...configWithoutTimePeriod } = config as ConfigWithTimePeriod
   return {
-    config: config,
+    config: configWithoutTimePeriod,
+    timePeriod,
     type: highchart.type === 'mimir:combinedGraph' ? 'combined' : highchart.data.graphType,
     contentKey: highchart._id,
     footnoteText: highchart.data.footnoteText ? util.data.forceArray(highchart.data.footnoteText) : undefined,

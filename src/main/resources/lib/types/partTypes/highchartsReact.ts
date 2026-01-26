@@ -13,6 +13,7 @@ export interface HighchartsPartProps {
   description?: string
   type?: string
   contentKey?: string
+  timePeriod?: string
   footnoteText?: string[]
   creditsEnabled?: boolean
   sourceList?: Highchart['sourceList']

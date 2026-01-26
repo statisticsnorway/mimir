@@ -19,24 +19,61 @@ export function seriesAndCategoriesFromTbml(
   const thead: Array<TableRowUniform> = data.tbml.presentation.table.thead
   const rows: TableRowUniform['tr'] = tbody[0].tr
   const headerRows: Array<TableCellUniform> = thead[0].tr
-  const headers: TableCellUniform['th'] = getHeaders(headerRows[0], tbody)
+  const columnHeaderRow = getColumnHeaderRow(headerRows)
+  const headers: TableCellUniform['th'] = columnHeaderRow ? getHeaders(columnHeaderRow, tbody) : []
   const categories: TableCellUniform['th'] = determineCategories(graphType, headers, rows, xAxisType)
   const series: Array<Series> = determineSeries(graphType, headers, categories, rows, xAxisType)
+
+  const timePeriod = getHeaderSubtitle(thead[0].tr)
 
   return {
     categories,
     series,
     title: data.tbml.metadata.title,
+    timePeriod: timePeriod,
   }
 }
 
-function getHeaders(headerRows: TableCellUniform, body: Array<TableRowUniform>): TableCellUniform['th'] {
-  //Table without td i thead, feks table from Dapla
-  if ((!headerRows.td || headerRows.td.length == 0) && headerRows.th.length > 1) {
-    const bodyFirstRowItemCount = Object.keys(body[0].tr[0]).length
-    return headerRows.th.length == bodyFirstRowItemCount ? headerRows.th.slice(1) : headerRows.th
+function getColumnHeaderRow(headerRows: TableCellUniform[]): TableCellUniform | undefined {
+  // Use the second header row if the first one only contains a grouped header (colspan),
+  // otherwise fall back to the first row (default case).
+  if (!headerRows?.length) return undefined
+
+  const first = headerRows[0]
+  const second = headerRows[1]
+
+  if (second && rowHasColspanGroupHeader(first)) {
+    return second
   }
-  return headerRows.th
+
+  return first
+}
+
+function rowHasColspanGroupHeader(row: TableCellUniform): boolean {
+  if (!Array.isArray(row.th)) return false
+  return row.th.some((cell) => isPreliminaryDataCell(cell) && Number(cell.colspan) > 1)
+}
+
+function isPreliminaryDataCell(cell: unknown): cell is PreliminaryData {
+  return typeof cell === 'object' && cell !== null && 'content' in cell
+}
+
+function getHeaders(headerRow: TableCellUniform, body: Array<TableRowUniform>): TableCellUniform['th'] {
+  const th = util.data.forceArray(headerRow.th)
+  const td = util.data.forceArray(headerRow.td)
+
+  // Table without td in thead (e.g. some Dapla tables).
+  // If the header row includes an extra first column (row-label header), drop it.
+  if ((!td || td.length === 0) && th.length > 1) {
+    const firstBodyRow = body?.[0]?.tr?.[0]
+    const bodyTdCount = firstBodyRow ? util.data.forceArray(firstBodyRow.td).length : 0
+
+    if (bodyTdCount > 0 && th.length === bodyTdCount + 1) {
+      return th.slice(1)
+    }
+  }
+
+  return th
 }
 
 function determineSeries(
@@ -95,4 +132,26 @@ function determineCategories(
   } else {
     return rows.map((row) => row.th[0])
   }
+}
+
+function getHeaderSubtitle(rows: TableCellUniform[]): string | undefined {
+  for (const row of rows) {
+    if (!hasHeaderObjects(row)) continue
+
+    for (const cell of row.th) {
+      const colspan = Number(cell.colspan)
+      if (colspan > 1) {
+        const text = cell.content == null ? '' : String(cell.content).trim()
+        return text || undefined
+      }
+    }
+  }
+  return undefined
+}
+
+function hasHeaderObjects(row: TableCellUniform): row is TableCellUniform & { th: PreliminaryData[] } {
+  return (
+    Array.isArray(row.th) &&
+    row.th.some((cell): cell is PreliminaryData => typeof cell === 'object' && cell !== null && 'content' in cell)
+  )
 }
