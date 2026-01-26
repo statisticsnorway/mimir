@@ -27,7 +27,3 @@ export interface StatRegLatestFetchInfo {
 export interface StatRegLatestFetchInfoNode extends Node {
   data: StatRegLatestFetchInfo
 }
-
-export interface StatRegEventLog {
-  StatRegFetchStatus: typeof StatRegFetchStatus
-}

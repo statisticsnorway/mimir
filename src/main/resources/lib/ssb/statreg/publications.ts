@@ -1,11 +1,8 @@
-import { StatRegNode } from '/lib/ssb/repo/statreg'
 import { Publication, Publisering, PubliseringXML } from '/lib/ssb/dashboard/statreg/types'
 import { type XmlParser } from '/lib/types/xmlParser'
 import { HttpResponse } from '/lib/http-client'
 
-import { ensureArray } from '/lib/ssb/utils/arrayUtils'
-import { getNode } from '/lib/ssb/repo/common'
-import { STATREG_BRANCH, STATREG_REPO, getStatRegBaseUrl, PUBLICATIONS_URL } from '/lib/ssb/dashboard/statreg/config'
+import { getStatRegBaseUrl, PUBLICATIONS_URL } from '/lib/ssb/dashboard/statreg/config'
 import { fetchStatRegData } from '/lib/ssb/dashboard/statreg/common'
 import { Events, logUserDataQuery } from '/lib/ssb/repo/query'
 
@@ -48,18 +45,4 @@ function transformPublication(pub: Publisering): Publication {
     status: deskFlyt,
     modifiedTime: endret,
   }
-}
-
-function getAllPublicationsFromRepo(): Array<Publication> {
-  const node: StatRegNode[] = getNode(
-    STATREG_REPO,
-    STATREG_BRANCH,
-    `/${STATREG_REPO_PUBLICATIONS_KEY}`
-  ) as StatRegNode[]
-  const publicationsNode: StatRegNode | null = Array.isArray(node) ? node[0] : node
-  return publicationsNode ? (publicationsNode.data as Array<Publication>) : []
-}
-
-export function getPublicationsForStatistic(shortName: string): Array<Publication> {
-  return ensureArray(getAllPublicationsFromRepo()).filter((pub: Publication) => pub.statisticsKey === shortName)
 }
