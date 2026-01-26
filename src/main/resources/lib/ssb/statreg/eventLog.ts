@@ -23,7 +23,3 @@ export interface StatRegLatestFetchInfo {
   latestEvent: string
   latestEventInfo: StatRegFetchInfo
 }
-
-export interface StatRegLatestFetchInfoNode extends Node {
-  data: StatRegLatestFetchInfo
-}
