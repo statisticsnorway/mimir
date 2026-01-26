@@ -27,6 +27,28 @@ function Highchart(props: HighchartsReactProps) {
     highchartElement?.classList.toggle('d-none', showTable)
     highchartElement?.setAttribute('aria-hidden', showTable?.toString())
   }
+
+  // Formats the Highcharts-generated data table to match SSB styling
+  // and adds a grouped header for the time period when present.
+  function formatHighchartsTable(
+    tableWrapperElement: Element | undefined,
+    timePeriod?: string,
+    defaultShowAsTable?: boolean
+  ) {
+    const tableElement = tableWrapperElement?.children[0]
+
+    tableWrapperElement?.classList.add('ssb-table-wrapper')
+    tableElement?.classList.add('statistics', 'ssb-table')
+
+    addTimePeriodHeader(tableElement, timePeriod)
+
+    // Workaround to prevent auto-focus on table on initial render by removing tabindex, then re-enable after a delay
+    if (defaultShowAsTable) tableElement?.removeAttribute('tabindex')
+    setTimeout(() => {
+      tableElement?.setAttribute('tabindex', '0')
+    }, 1000)
+  }
+
   function addTimePeriodHeader(tableElement: Element | undefined, timePeriod?: string) {
     if (!tableElement || !timePeriod) return
 
@@ -76,18 +98,8 @@ function Highchart(props: HighchartsReactProps) {
         if (!highchartWrapperElement) return
 
         const [highchartElement, tableWrapperElement] = Array.from(highchartWrapperElement as HTMLCollection) ?? []
-        const tableElement = tableWrapperElement?.children[0]
 
-        tableWrapperElement?.classList.add('ssb-table-wrapper')
-        tableElement?.classList.add('statistics', 'ssb-table')
-
-        addTimePeriodHeader(tableElement, timePeriod)
-
-        // Workaround to prevent auto-focus on table on initial render by removing tabindex, then re-enable after a delay
-        if (defaultShowAsTable) tableElement?.removeAttribute('tabindex')
-        setTimeout(() => {
-          tableElement?.setAttribute('tabindex', '0')
-        }, 1000)
+        formatHighchartsTable(tableWrapperElement, timePeriod, defaultShowAsTable)
 
         // Add Tab component accessibility tags for Highcharts and table
         // id is set in containerProps of the HighchartsReact component, while role can't be overwritten in the same way
@@ -109,6 +121,12 @@ function Highchart(props: HighchartsReactProps) {
 
     const [highchartElement, tableWrapperElement] = Array.from(highchartWrapperElement as HTMLCollection) ?? []
     handleShowAsTable(tableWrapperElement, highchartElement, showTable)
+
+    if (showTable) {
+      const current = highcharts.find((h) => h.contentKey === contentKey)
+      // Format after toggle to ensure the table DOM exists
+      formatHighchartsTable(tableWrapperElement, current?.timePeriod, current?.defaultShowAsTable)
+    }
   }
 
   const downloadAsXLSX = (title: string | undefined) =>
