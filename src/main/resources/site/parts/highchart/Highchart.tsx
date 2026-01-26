@@ -95,33 +95,28 @@ function Highchart(props: HighchartsReactProps) {
     return undefined
   }
 
+  // Draws the broken y-axis symbol based on current plot dimensions
   const renderBrokenYAxisSymbol = (chart: Highcharts.Chart, yAxisConfig?: Highcharts.YAxisOptions) => {
-    // Determine position for broken axis symbol
+    const group = ensureBrokenAxisGroup(chart)
     const offset = yAxisConfig?.opposite ? chart.plotWidth : 0
     const x = chart.plotLeft + offset - 10
     const y = chart.plotTop + chart.plotHeight - 10
 
-    // Draw broken axis symbol
     chart.renderer
       .path([
         ['M', x, y],
         ['l', 20, -5],
       ])
-      .attr({
-        'stroke-width': 1,
-        stroke: 'black',
-      })
-      .add()
+      .attr({ 'stroke-width': 1, stroke: 'black' })
+      .add(group)
+
     chart.renderer
       .path([
         ['M', x, y + 5],
         ['l', 20, -5],
       ])
-      .attr({
-        'stroke-width': 1,
-        stroke: 'black',
-      })
-      .add()
+      .attr({ 'stroke-width': 1, stroke: 'black' })
+      .add(group)
   }
 
   const renderBrokenYAxisTickLabel = (chartYAxis: Highcharts.Axis, yAxisConfig?: Highcharts.YAxisOptions) => {
@@ -147,31 +142,60 @@ function Highchart(props: HighchartsReactProps) {
       const secondY = getYLabel(secondTickLabel)
 
       // Hides second tick label if rendered on top of 0 (for broken axis)
-      if (firstY && secondY && firstY === secondY) {
+      if (firstY != null && secondY != null && firstY === secondY) {
         secondTickLabel.hide()
       }
     }
   }
 
-  const setBrokenYAxisOptions = (config: Highcharts.Options, onLoad?: boolean) =>
-    function (this: Highcharts.Chart) {
-      const chartYAxis = this.yAxis as Highcharts.Axis[]
-      if (!chartYAxis?.length) return
+  // Render broken y-axis symbols and labels
+  const renderBrokenYAxis = (chart: Highcharts.Chart, config: Highcharts.Options) => {
+    const chartYAxis = chart.yAxis
+    if (!chartYAxis?.length) return
 
-      for (let i = 0; i < chartYAxis.length; i++) {
-        // Natively highcharts resolves y axis not starting on 0 either with breaks or setting yMin
-        // @ts-ignore: brokenAxis object exists but not in type definition. It can be found in the highcharts source code.
-        const hasBrokenYAxis = (chartYAxis[i].min as number) > 0 || chartYAxis[i].brokenAxis?.hasBreaks
-        if (!hasBrokenYAxis) return
+    // Clear previous symbols before redraw to avoid duplicates and keep position in sync
+    const group = ensureBrokenAxisGroup(chart)
+    clearGroup(group)
 
-        const yAxisConfig = Array.isArray(config.yAxis) ? config.yAxis[i] : config.yAxis
-        if (onLoad) {
-          renderBrokenYAxisSymbol(this, yAxisConfig)
-        } else {
-          renderBrokenYAxisTickLabel(chartYAxis[i], yAxisConfig)
-        }
-      }
+    for (let i = 0; i < chartYAxis.length; i++) {
+      // @ts-ignore: added by highcharts/modules/broken-axis at runtime
+      const hasBrokenYAxis = (chartYAxis[i].min as number) > 0 || chartYAxis[i].brokenAxis?.hasBreaks
+      if (!hasBrokenYAxis) continue
+
+      const yAxisConfig = Array.isArray(config.yAxis) ? config.yAxis[i] : config.yAxis
+      renderBrokenYAxisTickLabel(chartYAxis[i], yAxisConfig)
+      renderBrokenYAxisSymbol(chart, yAxisConfig)
     }
+  }
+
+  // Highcharts render callback wrapper
+  const setBrokenYAxisOptions = (config: Highcharts.Options) => {
+    return function (this: Highcharts.Chart) {
+      renderBrokenYAxis(this, config)
+    }
+  }
+
+  type ChartWithCustom = Highcharts.Chart & {
+    custom?: {
+      brokenAxisGroup?: Highcharts.SVGElement
+    }
+  }
+
+  // Ensures a single SVG group for broken y-axis symbols (no duplicates)
+  const ensureBrokenAxisGroup = (chart: Highcharts.Chart): Highcharts.SVGElement => {
+    const c = chart as ChartWithCustom
+    c.custom ??= {}
+    c.custom.brokenAxisGroup ??= chart.renderer.g('broken-axis-symbols').add()
+
+    return c.custom.brokenAxisGroup
+  }
+
+  // Clear SVG group before redraw to avoid duplicate broken-axis symbols
+  const clearGroup = (group: Highcharts.SVGElement) => {
+    while (group.element.firstChild) {
+      group.element.firstChild.remove()
+    }
+  }
 
   const setPieChartLegend = (config: Highcharts.Options) => {
     if (config.chart?.type === 'pie') {
@@ -330,7 +354,6 @@ function Highchart(props: HighchartsReactProps) {
           events: {
             ...highchartConfig.chart?.events,
             exportData: formatNumbersInTable(highchart.type as string),
-            load: setBrokenYAxisOptions(highchartConfig, true),
             render: setBrokenYAxisOptions(highchartConfig),
           },
         },
