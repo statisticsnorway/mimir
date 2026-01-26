@@ -1,5 +1,4 @@
 import { query, Content, ContentsResult } from '/lib/xp/content'
-import { run, ContextParams } from '/lib/xp/context'
 import { getUser, User } from '/lib/xp/auth'
 import { type JSONstat } from '/lib/types/jsonstat-toolkit'
 import { type StatbankSavedRaw, type TbmlDataUniform } from '/lib/types/xmlParser'
@@ -17,7 +16,6 @@ import { getStatbankApi, fetchStatbankApiData, getStatbankApiKey } from '/lib/ss
 import { getStatbankSaved, fetchStatbankSavedData } from '/lib/ssb/dataset/statbankSaved/statbankSaved'
 import { getTbprocessor, getTbprocessorKey, fetchTbprocessorData } from '/lib/ssb/dataset/tbprocessor/tbprocessor'
 import { getKlass, getKlassKey, fetchKlassData } from '/lib/ssb/dataset/klass/klass'
-import { ENONIC_CMS_DEFAULT_REPO } from '/lib/ssb/repo/common'
 import { type GenericDataImport } from '/site/content-types'
 import { type DataSource } from '/site/mixins/dataSource'
 
@@ -175,23 +173,6 @@ function determineIfTbprocessorParsedResponse(
     return true
   }
   return false
-}
-
-export function refreshDatasetWithUserKey(
-  content: Content<DataSource>,
-  userLogin: string,
-  branch: string = DATASET_BRANCH
-): CreateOrUpdateStatus {
-  const context: ContextParams = {
-    branch: 'master',
-    repository: ENONIC_CMS_DEFAULT_REPO,
-    principals: ['role:system.admin'],
-    user: {
-      login: userLogin,
-      idProvider: 'system',
-    },
-  }
-  return run(context, () => refreshDataset(content, branch))
 }
 
 export function deleteDataset(content: Content<DataSource>, branch: string = DATASET_BRANCH): boolean {
