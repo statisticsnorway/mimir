@@ -197,8 +197,8 @@ function createHighchartsPartProps(
   highchart: Content<Highchart>,
   config: HighchartsExtendedProps
 ): HighchartsPartProps {
-  type ConfigWithTimePeriod = HighchartsExtendedProps & { timePeriod?: string }
-  const { timePeriod, ...configWithoutTimePeriod } = config as ConfigWithTimePeriod
+  // timePeriod is figure metadata (derived from TBML), not a Highcharts option
+  const { timePeriod, ...configWithoutTimePeriod } = config
   return {
     config: configWithoutTimePeriod,
     timePeriod,

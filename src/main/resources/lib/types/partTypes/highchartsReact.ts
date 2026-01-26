@@ -23,6 +23,7 @@ export interface HighchartsPartProps {
 export interface HighchartsExtraPartProps {
   draft?: boolean
   noDraftAvailable?: boolean
+  timePeriod?: string
 }
 
 export type HighchartsExtendedProps = HighchartsGraphConfig & HighchartsExtraPartProps
