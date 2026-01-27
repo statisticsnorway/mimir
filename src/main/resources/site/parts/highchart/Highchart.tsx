@@ -142,7 +142,7 @@ function Highchart(props: HighchartsReactProps) {
       const secondY = getYLabel(secondTickLabel)
 
       // Hides second tick label if rendered on top of 0 (for broken axis)
-      if (firstY && secondY && firstY === secondY) {
+      if (firstY !== null && secondY !== null && firstY === secondY) {
         secondTickLabel.hide()
       }
     }
