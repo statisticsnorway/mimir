@@ -159,7 +159,7 @@ function Highchart(props: HighchartsReactProps) {
   }
 
   // Render broken y-axis symbols and labels
-  const renderBrokenYAxisOptions = (config: Highcharts.Options) =>
+  const setBrokenYAxisOptions = (config: Highcharts.Options) =>
     function (this: Highcharts.Chart) {
       const chartYAxis = this.yAxis
       if (!chartYAxis?.length) return
@@ -338,7 +338,7 @@ function Highchart(props: HighchartsReactProps) {
           events: {
             ...highchartConfig.chart?.events,
             exportData: formatNumbersInTable(highchart.type as string),
-            render: renderBrokenYAxisOptions(highchartConfig),
+            render: setBrokenYAxisOptions(highchartConfig),
           },
         },
         exporting: {
