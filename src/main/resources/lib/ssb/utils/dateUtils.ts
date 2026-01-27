@@ -14,10 +14,6 @@ import {
 import { DateTimeFormatter, formatDate as libTimeFormatDate, LocalDateTime, ZonedDateTime, ZoneId } from '/lib/time'
 import { getServerOffsetInMs } from '/lib/ssb/utils/serverOffset'
 
-export function sameDay(d1: Date, d2: Date): boolean {
-  return d1.getDate() === d2.getDate() && d1.getMonth() === d2.getMonth() && d1.getFullYear() === d2.getFullYear()
-}
-
 export function setDateTimeAsOsloTimeZone(date: string) {
   const localDateTime = LocalDateTime.parse(date)
   const timezone = ZoneId.of('Europe/Oslo')
