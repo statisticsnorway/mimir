@@ -7,6 +7,7 @@ import {
 } from '/lib/types/xmlParser'
 import { type RowValue } from '/lib/types/util'
 import { getRowValue } from '/lib/ssb/utils/utils'
+import { getColumnHeaderRowFromThead, getTimePeriodFromThead } from '/lib/ssb/parts/highcharts/data/theadUtils'
 import * as util from '/lib/util'
 
 export function seriesAndCategoriesFromTbml(
@@ -18,13 +19,12 @@ export function seriesAndCategoriesFromTbml(
   const tbody: Array<TableRowUniform> = data.tbml.presentation.table.tbody
   const thead: Array<TableRowUniform> = data.tbml.presentation.table.thead
   const rows: TableRowUniform['tr'] = tbody[0].tr
-  const headerRows: Array<TableCellUniform> = thead[0].tr
-  const columnHeaderRow = getColumnHeaderRow(headerRows)
+  const columnHeaderRow = getColumnHeaderRowFromThead(thead)
   const headers: TableCellUniform['th'] = columnHeaderRow ? getHeaders(columnHeaderRow, tbody) : []
   const categories: TableCellUniform['th'] = determineCategories(graphType, headers, rows, xAxisType)
   const series: Array<Series> = determineSeries(graphType, headers, categories, rows, xAxisType)
 
-  const timePeriod = getHeaderSubtitle(thead[0].tr)
+  const timePeriod = getTimePeriodFromThead(thead)
 
   return {
     categories,
@@ -32,30 +32,6 @@ export function seriesAndCategoriesFromTbml(
     title: data.tbml.metadata.title,
     timePeriod: timePeriod,
   }
-}
-
-function getColumnHeaderRow(headerRows: TableCellUniform[]): TableCellUniform | undefined {
-  // Use the second header row if the first one only contains a grouped header (colspan),
-  // otherwise fall back to the first row (default case).
-  if (!headerRows?.length) return undefined
-
-  const first = headerRows[0]
-  const second = headerRows[1]
-
-  if (second && rowHasColspanGroupHeader(first)) {
-    return second
-  }
-
-  return first
-}
-
-function rowHasColspanGroupHeader(row: TableCellUniform): boolean {
-  if (!Array.isArray(row.th)) return false
-  return row.th.some((cell) => isPreliminaryDataCell(cell) && Number(cell.colspan) > 1)
-}
-
-function isPreliminaryDataCell(cell: unknown): cell is PreliminaryData {
-  return typeof cell === 'object' && cell !== null && 'content' in cell
 }
 
 function getHeaders(headerRow: TableCellUniform, body: Array<TableRowUniform>): TableCellUniform['th'] {
@@ -132,26 +108,4 @@ function determineCategories(
   } else {
     return rows.map((row) => row.th[0])
   }
-}
-
-function getHeaderSubtitle(rows: TableCellUniform[]): string | undefined {
-  for (const row of rows) {
-    if (!hasHeaderObjects(row)) continue
-
-    for (const cell of row.th) {
-      const colspan = Number(cell.colspan)
-      if (colspan > 1) {
-        const text = cell.content == null ? '' : String(cell.content).trim()
-        return text || undefined
-      }
-    }
-  }
-  return undefined
-}
-
-function hasHeaderObjects(row: TableCellUniform): row is TableCellUniform & { th: PreliminaryData[] } {
-  return (
-    Array.isArray(row.th) &&
-    row.th.some((cell): cell is PreliminaryData => typeof cell === 'object' && cell !== null && 'content' in cell)
-  )
 }

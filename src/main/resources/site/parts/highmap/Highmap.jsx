@@ -134,7 +134,7 @@ const chart = (desktop, heightAspectRatio, mapFile, language) => {
       // Workaround to get correct number formatting in table
       exportData: function (chart) {
         const rows = chart.dataRows
-        for (const row of chart.dataRows) {
+        for (const row of rows) {
           // Escaping first vaule not to format category ie. year
           for (const [i, cell] of row.entries()) {
             if (i > 0 && typeof cell === 'number') {
@@ -272,6 +272,7 @@ function Highmap(props) {
     highmapId,
     geographicalCategory,
     seriesTitle,
+    timePeriod,
   } = props
 
   const highmapsWrapperRef = useRef(null)
@@ -388,6 +389,7 @@ function Highmap(props) {
         <figure id={`figure-${highmapId}`} className='highcharts-figure mb-0 hide-title'>
           {mapOptions.title?.text && <figcaption className='figure-title'>{mapOptions.title.text}</figcaption>}
           {mapOptions.subtitle?.text && <p className='figure-subtitle'>{mapOptions.subtitle.text}</p>}
+          {timePeriod && <p className='figure-subtitle'>{timePeriod}</p>}
           {renderShowAsFigureOrTableTab()}
           <div ref={highmapsWrapperRef}>
             <HighchartsReact highcharts={Highcharts} constructorType='mapChart' options={mapOptions} />
