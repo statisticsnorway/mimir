@@ -17,10 +17,12 @@
     overflow: hidden;
     height: 100%;
     width: 100%;
+
     img {
       display: block;
       height: auto;
       width: auto;
+      object-fit: cover;
     }
 
     @include media-breakpoint-down(md) {
@@ -121,6 +123,7 @@
       min-height: 182px;
       padding-right: 10px;
       padding-left: 10px;
+
       h1 {
         font-size: 36px;
       }

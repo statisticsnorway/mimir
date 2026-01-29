@@ -26,11 +26,6 @@ export interface HighmapProps {
   geographicalCategory: Highmap['geographicalCategory']
 }
 
-export interface HighmapFormattedTableData {
-  capitalName: string
-  value: number
-}
-
 export interface ThresholdValues {
   to: number | undefined
   from: number | undefined

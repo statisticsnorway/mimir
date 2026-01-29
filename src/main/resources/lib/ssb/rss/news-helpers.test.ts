@@ -7,6 +7,10 @@ jest.mock('/lib/ssb/utils/variantUtils', () => ({
   nextReleasedPassed: jest.fn((variant: VariantInListing) => new Date(variant.nextRelease) <= new Date()),
 }))
 
+jest.mock('/lib/ssb/utils/serverOffset', () => ({
+  getServerOffsetInMs: jest.fn(() => 0),
+}))
+
 describe('findLatestRelease', () => {
   const realDate = Date
 

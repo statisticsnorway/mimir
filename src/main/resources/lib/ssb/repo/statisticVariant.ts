@@ -15,6 +15,7 @@ import { capitalize } from '/lib/ssb/utils/stringUtils'
 import { calculatePeriod, getNextRelease, getPreviousRelease, nextReleasedPassed } from '/lib/ssb/utils/variantUtils'
 import { queryForSubjects, getAllMainSubjectByContent, getAllSubSubjectByContent } from '/lib/ssb/utils/subjectUtils'
 import { type SubjectItem } from '/lib/types/subject'
+import { getServerOffsetInMs } from '/lib/ssb/utils/serverOffset'
 import { type OmStatistikken, type Statistics } from '/site/content-types'
 
 export const REPO_ID_STATREG_STATISTICS: 'no.ssb.statreg.statistics.variants' =
@@ -119,6 +120,9 @@ export function fillRepo(statistics: Array<StatisticInListing>) {
     branch: 'master',
   })
 
+  const serverOffsetInMs: number = getServerOffsetInMs()
+  log.info(`Server offset calculated: ${serverOffsetInMs} ms ` + `(expected winter=3600000, summer=7200000)`)
+
   LANGUAGES.forEach((language) => {
     const allMainSubjects: SubjectItem[] = queryForSubjects({
       language,
@@ -161,20 +165,23 @@ export function fillRepo(statistics: Array<StatisticInListing>) {
       forceArray(statistic.variants).forEach((variant) => {
         const path = `/${statistic.shortName}-${variant.id}-${language}`
         const exists = connection.exists(path)
-        const nextReleasePassed: boolean = nextReleasedPassed(variant)
+        const nextReleasePassed: boolean = nextReleasedPassed(variant, serverOffsetInMs)
         const prevRelease: ReleasesInListing = getPreviousRelease(nextReleasePassed, variant)
         const nextRelease: ReleasesInListing | undefined = getNextRelease(nextReleasePassed, variant)
-        const content: ContentLight<Release> = createContentStatisticVariant({
-          statistic,
-          variant,
-          prevRelease,
-          nextRelease,
-          language,
-          statisticsContent,
-          aboutTheStatisticsContent,
-          allMainSubjectsStatistic,
-          allSubSubjectsStatistic,
-        })
+        const content: ContentLight<Release> = createContentStatisticVariant(
+          {
+            statistic,
+            variant,
+            prevRelease,
+            nextRelease,
+            language,
+            statisticsContent,
+            aboutTheStatisticsContent,
+            allMainSubjectsStatistic,
+            allSubSubjectsStatistic,
+          },
+          serverOffsetInMs
+        )
 
         // Check if exists, and then do update instead if changed
         if (!exists) {
@@ -227,11 +234,10 @@ function getStatisticsContentByRegStatId(statisticsIds: string[], language: stri
 }
 
 function createContentStatisticVariant(
-  params: CreateContentStatisticVariantParams
+  params: CreateContentStatisticVariantParams,
+  serverOffsetInMs: number = getServerOffsetInMs()
 ): ContentLight<Release> & CreateNodeParams {
   const { statistic, variant, prevRelease, language } = params
-  const serverOffsetInMs: number =
-    app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
   const prevReleaseServerOffset: Date = new Date(new Date(prevRelease.publishTime).getTime() - serverOffsetInMs)
 
   return {

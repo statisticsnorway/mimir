@@ -16,7 +16,7 @@ export interface HighchartsPartProps {
   footnoteText?: string[]
   creditsEnabled?: boolean
   sourceList?: Highchart['sourceList']
-  hideTitle?: boolean
+  defaultShowAsTable?: boolean
 }
 
 export interface HighchartsExtraPartProps {
