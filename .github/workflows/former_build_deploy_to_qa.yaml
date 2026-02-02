@@ -17,7 +17,7 @@ jobs:
     environment: 'QA'
     steps:
       - name: Download workflow artifact
-        uses: dawidd6/action-download-artifact@v12
+        uses: dawidd6/action-download-artifact@v14
         env:
           RUN_NUMBER: ${{ github.event.inputs.gh_run_number }}
         with:
