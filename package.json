@@ -1,6 +1,6 @@
 {
   "name": "mimir",
-  "version": "2.39.0",
+  "version": "2.40.0",
   "description": "New cms for ssb.no",
   "main": "index.js",
   "scripts": {
