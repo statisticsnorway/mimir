@@ -12,6 +12,7 @@ import 'highcharts/modules/export-data'
 import 'highcharts/modules/map'
 
 import { exportHighchartsToExcel } from '/lib/ssb/utils/tableExportUtils'
+import { formatHighchartsTable } from '/lib/ssb/utils/highchartsTableUtils'
 import accessibilityLang from './../../../assets/js/highchart-lang.json'
 
 function generateColors(color, thresholdValues) {
@@ -280,11 +281,13 @@ function Highmap(props) {
   useEffect(() => {
     const highmapWrapperElement = highmapsWrapperRef.current?.children
     const [highmapElement, tableWrapperElement] = highmapWrapperElement ?? []
-    const tableElement = tableWrapperElement?.children[0]
 
-    tableWrapperElement?.classList.add('ssb-table-wrapper', 'd-none')
-    tableElement?.classList.add('statistics', 'ssb-table')
-    tableElement?.setAttribute('tabindex', '0') // Scrollable region must have keyboard access
+    formatHighchartsTable(tableWrapperElement, { timePeriod })
+
+    tableWrapperElement?.classList.add('d-none')
+    tableWrapperElement?.setAttribute('aria-hidden', 'true')
+
+    // tableElement?.setAttribute('tabindex', '0') // Scrollable region must have keyboard access
 
     // Add Tab component accessibility tags for Highmaps and table
     highmapElement?.setAttribute('id', 'tabpanel-0-' + highmapId)
@@ -427,7 +430,8 @@ Highmap.propTypes = {
   phrases: PropTypes.object,
   language: PropTypes.string,
   highmapId: PropTypes.string,
-  geographicalCategory: PropTypes.String,
+  geographicalCategory: PropTypes.string,
+  timePeriod: PropTypes.string,
 }
 
 export default (props) => <Highmap {...props} />

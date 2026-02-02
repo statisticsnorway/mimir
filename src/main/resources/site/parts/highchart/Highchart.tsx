@@ -12,6 +12,7 @@ import 'highcharts/modules/no-data-to-display'
 import 'highcharts/modules/broken-axis'
 
 import { exportHighchartsToExcel } from '/lib/ssb/utils/tableExportUtils'
+import { formatHighchartsTable } from '/lib/ssb/utils/highchartsTableUtils'
 import { type HighchartsReactProps, type HighchartsPartProps } from '/lib/types/partTypes/highchartsReact'
 
 import accessibilityLang from '../../../assets/js/highchart-lang.json'
@@ -27,78 +28,15 @@ function Highchart(props: HighchartsReactProps) {
     highchartElement?.setAttribute('aria-hidden', showTable?.toString())
   }
 
-  // Formats the Highcharts-generated data table to match SSB styling
-  // and adds a grouped header for the time period when present.
-  function formatHighchartsTable(
-    tableWrapperElement: Element | undefined,
-    timePeriod?: string,
-    defaultShowAsTable?: boolean
-  ) {
-    const tableElement = tableWrapperElement?.children[0]
-
-    tableWrapperElement?.classList.add('ssb-table-wrapper')
-    tableElement?.classList.add('statistics', 'ssb-table')
-
-    addTimePeriodHeader(tableElement, timePeriod)
-
-    // Workaround to prevent auto-focus on table on initial render by removing tabindex, then re-enable after a delay
-    if (defaultShowAsTable) tableElement?.removeAttribute('tabindex')
-    setTimeout(() => {
-      tableElement?.setAttribute('tabindex', '0')
-    }, 1000)
-  }
-
-  function addTimePeriodHeader(tableElement: Element | undefined, timePeriod?: string) {
-    if (!tableElement || !timePeriod) return
-
-    const thead = tableElement.querySelector('thead')
-    if (!thead) return
-
-    const rows = thead.querySelectorAll('tr')
-    const headerRow = rows[0] as HTMLTableRowElement | undefined
-    if (!headerRow) return
-
-    // Avoid duplicating if already patched
-    const alreadyHasGroupRow =
-      rows.length >= 2 && rows[0].children.length === 2 && rows[0].children[1]?.textContent?.trim() === timePeriod
-
-    if (alreadyHasGroupRow) return
-
-    const headerCells = Array.from(headerRow.children) as HTMLTableCellElement[]
-    if (headerCells.length < 3) return // needs Category + at least 2 series columns
-
-    const categoryText = headerCells[0].textContent ?? ''
-    const seriesCount = headerCells.length - 1 // excluding Category
-
-    // Create new top row (group header)
-    const groupRow = document.createElement('tr')
-
-    const categoryTh = document.createElement('th')
-    categoryTh.textContent = categoryText
-    categoryTh.setAttribute('rowspan', '2')
-    groupRow.appendChild(categoryTh)
-
-    const periodTh = document.createElement('th')
-    periodTh.textContent = timePeriod
-    periodTh.setAttribute('colspan', String(seriesCount))
-    groupRow.appendChild(periodTh)
-
-    // Insert groupRow before current headerRow
-    thead.insertBefore(groupRow, headerRow)
-
-    // Remove "Category" cell from the original header row (now second row)
-    headerRow.removeChild(headerCells[0])
-  }
-
   useEffect(() => {
     if (highcharts?.length) {
       highcharts.forEach(({ contentKey, defaultShowAsTable, timePeriod }) => {
         const highchartWrapperElement = highchartsWrapperRefs.current[contentKey as string]?.children
         if (!highchartWrapperElement) return
 
-        const [highchartElement, tableWrapperElement] = Array.from(highchartWrapperElement as HTMLCollection) ?? []
+        const [highchartElement, tableWrapperElement] = Array.from(highchartWrapperElement) as HTMLElement[]
 
-        formatHighchartsTable(tableWrapperElement, timePeriod, defaultShowAsTable)
+        formatHighchartsTable(tableWrapperElement, { timePeriod, defaultShowAsTable })
 
         // Add Tab component accessibility tags for Highcharts and table
         // id is set in containerProps of the HighchartsReact component, while role can't be overwritten in the same way
@@ -118,13 +56,16 @@ function Highchart(props: HighchartsReactProps) {
     const highchartWrapperElement = highchartsWrapperRefs.current[contentKey]?.children
     if (!highchartWrapperElement) return
 
-    const [highchartElement, tableWrapperElement] = Array.from(highchartWrapperElement as HTMLCollection) ?? []
+    const [highchartElement, tableWrapperElement] = Array.from(highchartWrapperElement) as HTMLElement[]
     handleShowAsTable(tableWrapperElement, highchartElement, showTable)
 
     if (showTable) {
       const current = highcharts.find((h) => h.contentKey === contentKey)
       // Format after toggle to ensure the table DOM exists
-      formatHighchartsTable(tableWrapperElement, current?.timePeriod, current?.defaultShowAsTable)
+      formatHighchartsTable(tableWrapperElement, {
+        timePeriod: current?.timePeriod,
+        defaultShowAsTable: current?.defaultShowAsTable,
+      })
     }
   }
 
