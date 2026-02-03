@@ -16,6 +16,12 @@ function rowHasColspanGroupHeader(row: TableCellUniform): boolean {
   return ths.some((cell) => isPreliminaryDataCell(cell) && Number(cell.colspan) > 1)
 }
 
+function looksLikeTimePeriod(text?: string): boolean {
+  if (!text) return false
+  // Matches 19xx or 20xx anywhere in the string
+  return /\b(19|20)\d{2}\b/.test(text)
+}
+
 export function getColumnHeaderRowFromThead(thead: TableRowUniform[]): TableCellUniform | undefined {
   const headerRows = thead?.[0]?.tr
   if (!headerRows?.length) return undefined
@@ -36,14 +42,20 @@ export function getTimePeriodFromThead(thead: Array<TableRowUniform>): string | 
   const firstThs = firstRow?.th ? util.data.forceArray(firstRow.th) : []
   if (!firstThs.length) return undefined
 
-  // If there are multiple header rows, the first row represents the time period (typically a colspan group header)
+  // If there are multiple header rows, treat the first row as a time period only
+  // when it contains a grouped header (colspan > 1) that looks like a time period.
   if (rows.length > 1) {
     const colspanCell = firstThs.find((c) => isPreliminaryDataCell(c) && Number(c.colspan) > 1)
-    return readCellText(colspanCell ?? firstThs[0])
+
+    const text = readCellText(colspanCell)
+    return looksLikeTimePeriod(text) ? text : undefined
   }
 
-  // Single header row: treat as time period only when it is the only header cell
-  if (firstThs.length === 1) return readCellText(firstThs[0])
+  // Single header row: treat as time period only when it looks like a time period
+  if (firstThs.length === 1) {
+    const text = readCellText(firstThs[0])
+    return looksLikeTimePeriod(text) ? text : undefined
+  }
 
   return undefined
 }
