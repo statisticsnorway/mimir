@@ -49,6 +49,7 @@
     "main/resources/lib/ssb/utils/htmlUtils.ts",
     "main/resources/lib/ssb/utils/generateImageUrlUtils.ts",
     "main/resources/lib/ssb/utils/tableExportUtils.ts",
+    "main/resources/lib/ssb/utils/highchartsTableUtils.ts",
     "main/**/*.d.ts",
     "main/resources/site/parts/highchartExpert/HighchartExpert.jsx",
     "main/resources/site/parts/highmap/Highmap.jsx",
