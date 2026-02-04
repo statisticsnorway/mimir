@@ -392,7 +392,7 @@ function Highmap(props) {
         <figure id={`figure-${highmapId}`} className='highcharts-figure mb-0 hide-title'>
           {mapOptions.title?.text && <figcaption className='figure-title'>{mapOptions.title.text}</figcaption>}
           {mapOptions.subtitle?.text && <p className='figure-subtitle'>{mapOptions.subtitle.text}</p>}
-          {timePeriod && <p className='figure-subtitle'>{timePeriod}</p>}
+          {timePeriod && <p className='figure-time-period'>{timePeriod}</p>}
           {renderShowAsFigureOrTableTab()}
           <div ref={highmapsWrapperRef}>
             <HighchartsReact highcharts={Highcharts} constructorType='mapChart' options={mapOptions} />

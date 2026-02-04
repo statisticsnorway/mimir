@@ -380,7 +380,7 @@ function Highchart(props: HighchartsReactProps) {
           <figure id={`figure-${highchart.contentKey}`} className='highcharts-figure mb-0 hide-title'>
             <figcaption className='figure-title'>{config.title?.text}</figcaption>
             {config.subtitle?.text ? <p className='figure-subtitle'>{config.subtitle.text}</p> : null}
-            {highchart.timePeriod ? <p className='figure-subtitle'>{highchart.timePeriod}</p> : null}
+            {highchart.timePeriod ? <p className='figure-time-period'>{highchart.timePeriod}</p> : null}
             {renderShowAsFigureOrTableTab(highchart.contentKey as string, highchart.defaultShowAsTable)}
             <div ref={(el) => (highchartsWrapperRefs.current[highchart.contentKey as string] = el)}>
               <HighchartsReact
