@@ -12,10 +12,7 @@ import {
   formatDistanceToNowStrict,
 } from '/lib/vendor/dateFns'
 import { DateTimeFormatter, formatDate as libTimeFormatDate, LocalDateTime, ZonedDateTime, ZoneId } from '/lib/time'
-
-export function sameDay(d1: Date, d2: Date): boolean {
-  return d1.getDate() === d2.getDate() && d1.getMonth() === d2.getMonth() && d1.getFullYear() === d2.getFullYear()
-}
+import { getServerOffsetInMs } from '/lib/ssb/utils/serverOffset'
 
 export function setDateTimeAsOsloTimeZone(date: string) {
   const localDateTime = LocalDateTime.parse(date)
@@ -87,9 +84,8 @@ export function formatDate(date: string | undefined, formatType: string, languag
 }
 
 export function stringToServerTime(): Date {
-  const serverOffsetInMs: number =
-    app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
-  return new Date(new Date().getTime() + serverOffsetInMs)
+  const serverOffsetInMs: number = getServerOffsetInMs()
+  return new Date(Date.now() + serverOffsetInMs)
 }
 
 export function getTimeZoneIso(serverOffsetInMs: number): string {

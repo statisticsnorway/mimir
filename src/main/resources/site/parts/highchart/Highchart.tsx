@@ -20,25 +20,39 @@ function Highchart(props: HighchartsReactProps) {
   const { highcharts, language, phrases } = props
   const highchartsWrapperRefs = useRef<Record<string, HTMLDivElement | null>>({})
 
+  const handleShowAsTable = (tableWrapperElement: Element, highchartElement: Element, showTable = false) => {
+    tableWrapperElement?.classList.toggle('d-none', !showTable)
+    tableWrapperElement?.setAttribute('aria-hidden', (!showTable)?.toString())
+    highchartElement?.classList.toggle('d-none', showTable)
+    highchartElement?.setAttribute('aria-hidden', showTable?.toString())
+  }
+
   useEffect(() => {
     if (highcharts?.length) {
-      highcharts.forEach(({ contentKey }) => {
+      highcharts.forEach(({ contentKey, defaultShowAsTable }) => {
         const highchartWrapperElement = highchartsWrapperRefs.current[contentKey as string]?.children
         if (!highchartWrapperElement) return
 
         const [highchartElement, tableWrapperElement] = Array.from(highchartWrapperElement as HTMLCollection) ?? []
         const tableElement = tableWrapperElement?.children[0]
 
-        tableWrapperElement?.classList.add('ssb-table-wrapper', 'd-none')
+        tableWrapperElement?.classList.add('ssb-table-wrapper')
         tableElement?.classList.add('statistics', 'ssb-table')
-        tableElement?.setAttribute('tabindex', '0') // Scrollable region must have keyboard access
+
+        // Workaround to prevent auto-focus on table on initial render by removing tabindex, then re-enable after a delay
+        if (defaultShowAsTable) tableElement?.removeAttribute('tabindex')
+        setTimeout(() => {
+          tableElement?.setAttribute('tabindex', '0')
+        }, 1000)
 
         // Add Tab component accessibility tags for Highcharts and table
         // id is set in containerProps of the HighchartsReact component, while role can't be overwritten in the same way
         highchartElement?.setAttribute('role', 'tabpanel')
-
         tableWrapperElement?.setAttribute('id', 'tabpanel-1-' + contentKey)
         tableWrapperElement?.setAttribute('role', 'tabpanel')
+
+        // Apply default show as table on initial render
+        handleShowAsTable(tableWrapperElement, highchartElement, defaultShowAsTable)
       })
     }
   }, [highcharts])
@@ -50,11 +64,7 @@ function Highchart(props: HighchartsReactProps) {
     if (!highchartWrapperElement) return
 
     const [highchartElement, tableWrapperElement] = Array.from(highchartWrapperElement as HTMLCollection) ?? []
-
-    tableWrapperElement?.classList.toggle('d-none', !showTable)
-    tableWrapperElement?.setAttribute('aria-hidden', (!showTable)?.toString())
-    highchartElement?.classList.toggle('d-none', showTable)
-    highchartElement?.setAttribute('aria-hidden', showTable?.toString())
+    handleShowAsTable(tableWrapperElement, highchartElement, showTable)
   }
 
   const downloadAsXLSX = (title: string | undefined) =>
@@ -95,69 +105,89 @@ function Highchart(props: HighchartsReactProps) {
     return undefined
   }
 
-  const renderYAxisBreakSymbol = (config: Highcharts.Options) =>
+  // Draws the broken y-axis symbol based on current plot dimensions
+  const renderBrokenYAxisSymbol = (chart: Highcharts.Chart, yAxisConfig?: Highcharts.YAxisOptions) => {
+    const group = ensureBrokenAxisGroup(chart)
+    const offset = yAxisConfig?.opposite ? chart.plotWidth : 0
+    const x = chart.plotLeft + offset - 10
+    const y = chart.plotTop + chart.plotHeight - 10
+
+    chart.renderer
+      .path([
+        ['M', x, y],
+        ['l', 20, -5],
+      ])
+      .attr({ 'stroke-width': 1, stroke: 'black' })
+      .add(group)
+
+    chart.renderer
+      .path([
+        ['M', x, y + 5],
+        ['l', 20, -5],
+      ])
+      .attr({ 'stroke-width': 1, stroke: 'black' })
+      .add(group)
+  }
+
+  const renderBrokenYAxisTickLabel = (chartYAxis: Highcharts.Axis, yAxisConfig?: Highcharts.YAxisOptions) => {
+    const decimalsMatch = (yAxisConfig?.labels?.format?.[9] as string) ?? 0
+    const zeroFormatted = Highcharts.numberFormat(0, Number(decimalsMatch))
+
+    const tickPositions = chartYAxis.tickPositions ?? []
+    const firstTickValue = tickPositions[0]
+    const firstTickLabel = chartYAxis.ticks[firstTickValue]?.label
+
+    // Replace first tick label with 0 since the label is displayed below the broken axis symbol (for yMin > 0)
+    if (firstTickLabel) {
+      firstTickLabel.attr({
+        text: zeroFormatted,
+      })
+    }
+
+    const secondTickValue = tickPositions[1]
+    const secondTickLabel = chartYAxis.ticks[secondTickValue]?.label
+
+    if (firstTickLabel && secondTickLabel) {
+      const firstY = getYLabel(firstTickLabel)
+      const secondY = getYLabel(secondTickLabel)
+
+      // Hides second tick label if rendered on top of 0 (for broken axis)
+      if (firstY !== null && secondY !== null && firstY === secondY) {
+        secondTickLabel.hide()
+      }
+    }
+  }
+
+  // Ensures a single SVG group for broken y-axis symbols (no duplicates)
+  const ensureBrokenAxisGroup = (chart: Highcharts.Chart): Highcharts.SVGElement => {
+    const chartWithBrokenAxisGroup = chart as Highcharts.Chart & {
+      brokenAxisGroup?: Highcharts.SVGElement
+    }
+    chartWithBrokenAxisGroup.brokenAxisGroup ??= chart.renderer.g('broken-axis-symbols').add()
+
+    return chartWithBrokenAxisGroup.brokenAxisGroup
+  }
+
+  // Render broken y-axis symbols and labels
+  const setBrokenYAxisOptions = (config: Highcharts.Options) =>
     function (this: Highcharts.Chart) {
-      // Drawing yAxis break symbol when y-axis not starting at 0
-      const chartYAxis = this.yAxis as Highcharts.Axis[]
+      const chartYAxis = this.yAxis
+      if (!chartYAxis?.length) return
+
+      // Clear previous symbols before redraw to avoid duplicates and keep position in sync
+      const group = ensureBrokenAxisGroup(this)
+      while (group.element.firstChild) {
+        group.element.firstChild.remove()
+      }
+
       for (let i = 0; i < chartYAxis.length; i++) {
-        // Natively highcharts resolves y axis not starting on 0 either with breaks or setting yMin
-        // @ts-ignore: brokenAxis object exists but not in type definition. It can be found in the highcharts source code.
-        if ((chartYAxis[i].min as number) > 0 || chartYAxis[i].brokenAxis?.hasBreaks) {
-          // Replace first tick label with 0 since showing below broken axis symbol (for yMin > 0)
-          const yAxisConfig = Array.isArray(config.yAxis) ? config.yAxis[i] : config.yAxis
-          const decimalsMatch = (yAxisConfig?.labels?.format?.[9] as string) ?? 0
-          const zeroFormatted = Highcharts.numberFormat(0, Number(decimalsMatch))
+        // @ts-ignore: added by highcharts/modules/broken-axis at runtime
+        const hasBrokenYAxis = (chartYAxis[i].min as number) > 0 || chartYAxis[i].brokenAxis?.hasBreaks
+        if (!hasBrokenYAxis) continue
 
-          const tickPositions = chartYAxis[i].tickPositions ?? []
-          const firstTickValue = tickPositions[0]
-          const firstTickLabel = chartYAxis[i].ticks[firstTickValue].label
-
-          if (firstTickLabel) {
-            firstTickLabel.attr({
-              text: zeroFormatted,
-            })
-          }
-
-          // Removes first tick label if rendered on top of 0 (for broken axis)
-          const secondTickValue = tickPositions[1]
-          const secondTickLabel = chartYAxis[i].ticks[secondTickValue].label
-
-          if (firstTickLabel && secondTickLabel) {
-            const firstY = getYLabel(firstTickLabel)
-            const secondY = getYLabel(secondTickLabel)
-
-            if (firstY && secondY && firstY === secondY) {
-              secondTickLabel.hide()
-            }
-          }
-
-          // Determine position for broken axis symbol
-          const offset = yAxisConfig?.opposite ? this.plotWidth : 0
-          const x = this.plotLeft + offset - 10
-          const y = this.plotTop + this.plotHeight - 10
-
-          // Draw broken axis symbol
-          this.renderer
-            .path([
-              ['M', x, y],
-              ['l', 20, -5],
-            ])
-            .attr({
-              'stroke-width': 1,
-              stroke: 'black',
-            })
-            .add()
-          this.renderer
-            .path([
-              ['M', x, y + 5],
-              ['l', 20, -5],
-            ])
-            .attr({
-              'stroke-width': 1,
-              stroke: 'black',
-            })
-            .add()
-        }
+        const yAxisConfig = Array.isArray(config.yAxis) ? config.yAxis[i] : config.yAxis
+        renderBrokenYAxisTickLabel(chartYAxis[i], yAxisConfig)
+        renderBrokenYAxisSymbol(this, yAxisConfig)
       }
     }
 
@@ -253,12 +283,12 @@ function Highchart(props: HighchartsReactProps) {
     return null
   }
 
-  function renderShowAsFigureOrTableTab(highchartId: string) {
+  function renderShowAsFigureOrTableTab(highchartId: string, defaultShowAsTable?: boolean) {
     return (
       <Col className='col-12 mb-3'>
         <Tabs
           id={highchartId}
-          activeOnInit='show-as-chart'
+          activeOnInit={defaultShowAsTable ? 'show-as-table' : 'show-as-chart'}
           items={[
             { title: phrases?.['highcharts.showAsChart'], path: 'show-as-chart' },
             { title: phrases?.['highcharts.showAsTable'], path: 'show-as-table' },
@@ -318,7 +348,7 @@ function Highchart(props: HighchartsReactProps) {
           events: {
             ...highchartConfig.chart?.events,
             exportData: formatNumbersInTable(highchart.type as string),
-            load: renderYAxisBreakSymbol(highchartConfig),
+            render: setBrokenYAxisOptions(highchartConfig),
           },
         },
         exporting: {
@@ -348,12 +378,12 @@ function Highchart(props: HighchartsReactProps) {
           <figure id={`figure-${highchart.contentKey}`} className='highcharts-figure mb-0 hide-title'>
             <figcaption className='figure-title'>{config.title?.text}</figcaption>
             {config.subtitle?.text ? <p className='figure-subtitle'>{config.subtitle.text}</p> : null}
-            {renderShowAsFigureOrTableTab(highchart.contentKey as string)}
+            {renderShowAsFigureOrTableTab(highchart.contentKey as string, highchart.defaultShowAsTable)}
             <div ref={(el) => (highchartsWrapperRefs.current[highchart.contentKey as string] = el)}>
               <HighchartsReact
                 containerProps={{
                   id: `tabpanel-0-${highchart.contentKey}`,
-                  className: 'highcharts-canvas',
+                  className: `highcharts-canvas${highchart.defaultShowAsTable ? ' d-none' : ''}`,
                 }}
                 highcharts={Highcharts}
                 options={config}

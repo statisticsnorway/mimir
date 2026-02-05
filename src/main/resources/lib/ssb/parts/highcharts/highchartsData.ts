@@ -102,14 +102,6 @@ export function addDataProperties(
   }
 }
 
-export interface HighchartsData {
-  series: Array<{
-    data: object
-    name: string
-  }>
-  categories: object
-}
-
 export interface SeriesAndCategories {
   categories: Array<string | number | PreliminaryData>
   series: Array<Series>

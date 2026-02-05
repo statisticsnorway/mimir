@@ -7,7 +7,7 @@ import {
   getAllReleases,
 } from '/lib/ssb/utils/variantUtils'
 import { filterOnComingReleases } from '/lib/ssb/utils/filterReleasesUtils'
-
+import { getServerOffsetInMs } from '/lib/ssb/utils/serverOffset'
 import { getAllStatisticsFromRepo } from '/lib/ssb/statreg/statistics'
 import { type GroupedBy, type PreparedStatistics, type Release, type YearReleases } from '/lib/types/variants'
 
@@ -20,8 +20,7 @@ export const get = (req: Request): Response => {
 
   const language = req.params.language ? req.params.language.toString() : 'nb'
   const numberOfDays = showAll ? undefined : count
-  const serverOffsetInMs: number =
-    app.config && app.config['serverOffsetInMs'] ? parseInt(app.config['serverOffsetInMs']) : 0
+  const serverOffsetInMs: number = getServerOffsetInMs()
   // All statistics from today and a number of days
   const releasesFiltered: Array<Release> = filterOnComingReleases(
     allReleases,
