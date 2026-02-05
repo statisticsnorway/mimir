@@ -356,6 +356,11 @@ function Highmap(props) {
     tableWrapperElement?.setAttribute('aria-hidden', !showTable)
     highmapElement?.classList.toggle('d-none', showTable)
     highmapElement?.setAttribute('aria-hidden', showTable)
+
+    if (showTable) {
+      // Re-apply table formatting after toggle, since Highcharts may recreate the table DOM.
+      formatHighchartsTable(tableWrapperElement, timePeriod)
+    }
   }
 
   function renderShowAsFigureOrTableTab() {

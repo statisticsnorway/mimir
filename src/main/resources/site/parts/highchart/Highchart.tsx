@@ -65,6 +65,7 @@ function Highchart(props: HighchartsReactProps) {
     handleShowAsTable(tableWrapperElement, highchartElement, showTable)
 
     if (showTable) {
+      // Re-apply table formatting after toggle (table DOM may be recreated by Highcharts)
       const current = highcharts.find((h) => h.contentKey === contentKey)
       // Format after toggle to ensure the table DOM exists
       formatHighchartsTable(tableWrapperElement, current?.timePeriod)
