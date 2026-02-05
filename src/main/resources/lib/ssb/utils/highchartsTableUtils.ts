@@ -1,12 +1,7 @@
-type HighchartsTableOptions = {
-  timePeriod?: string
-  defaultShowAsTable?: boolean
-}
-
 export function formatHighchartsTable(
   tableWrapperElement: HTMLElement | null | undefined,
-  opts?: HighchartsTableOptions
-) {
+  timePeriod?: string
+): HTMLTableElement | undefined {
   if (!tableWrapperElement) return
 
   const tableElement = tableWrapperElement.firstElementChild
@@ -15,17 +10,9 @@ export function formatHighchartsTable(
   tableWrapperElement.classList.add('ssb-table-wrapper')
   tableElement.classList.add('statistics', 'ssb-table')
 
-  addTimePeriodHeaderToTable(tableElement, opts?.timePeriod)
+  addTimePeriodHeaderToTable(tableElement, timePeriod)
 
-  tableElement.setAttribute('tabindex', '0')
-
-  if (opts?.defaultShowAsTable) {
-    tableElement.removeAttribute('tabindex')
-  }
-
-  setTimeout(() => {
-    tableElement.setAttribute('tabindex', '0')
-  }, 1000)
+  return tableElement
 }
 
 function addTimePeriodHeaderToTable(tableElement: HTMLElement, timePeriod?: string) {

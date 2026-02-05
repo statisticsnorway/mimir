@@ -35,8 +35,13 @@ function Highchart(props: HighchartsReactProps) {
         if (!highchartWrapperElement) return
 
         const [highchartElement, tableWrapperElement] = Array.from(highchartWrapperElement) as HTMLElement[]
+        const tableElement = formatHighchartsTable(tableWrapperElement, timePeriod)
 
-        formatHighchartsTable(tableWrapperElement, { timePeriod, defaultShowAsTable })
+        // Workaround to prevent auto-focus on table on initial render by removing tabindex, then re-enable after a delay
+        if (defaultShowAsTable) tableElement?.removeAttribute('tabindex')
+        setTimeout(() => {
+          tableElement?.setAttribute('tabindex', '0')
+        }, 1000)
 
         // Add Tab component accessibility tags for Highcharts and table
         // id is set in containerProps of the HighchartsReact component, while role can't be overwritten in the same way
@@ -62,10 +67,7 @@ function Highchart(props: HighchartsReactProps) {
     if (showTable) {
       const current = highcharts.find((h) => h.contentKey === contentKey)
       // Format after toggle to ensure the table DOM exists
-      formatHighchartsTable(tableWrapperElement, {
-        timePeriod: current?.timePeriod,
-        defaultShowAsTable: current?.defaultShowAsTable,
-      })
+      formatHighchartsTable(tableWrapperElement, current?.timePeriod)
     }
   }
 

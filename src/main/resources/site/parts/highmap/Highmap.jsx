@@ -281,13 +281,12 @@ function Highmap(props) {
   useEffect(() => {
     const highmapWrapperElement = highmapsWrapperRef.current?.children
     const [highmapElement, tableWrapperElement] = highmapWrapperElement ?? []
-
-    formatHighchartsTable(tableWrapperElement, { timePeriod })
+    const tableElement = formatHighchartsTable(tableWrapperElement, timePeriod)
 
     tableWrapperElement?.classList.add('d-none')
     tableWrapperElement?.setAttribute('aria-hidden', 'true')
 
-    // tableElement?.setAttribute('tabindex', '0') // Scrollable region must have keyboard access
+    tableElement?.setAttribute('tabindex', '0') // Scrollable region must have keyboard access
 
     // Add Tab component accessibility tags for Highmaps and table
     highmapElement?.setAttribute('id', 'tabpanel-0-' + highmapId)
