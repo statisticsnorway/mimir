@@ -1,4 +1,4 @@
-import { type PreliminaryData, type TableRowUniform, type TableCellUniform } from '/lib/types/xmlParser'
+import { type PreliminaryData, type TableRowUniform } from '/lib/types/xmlParser'
 import * as util from '/lib/util'
 
 export function isPreliminaryDataCell(cell: unknown): cell is PreliminaryData {
@@ -11,27 +11,10 @@ function readCellText(cell: unknown): string | undefined {
   return undefined
 }
 
-function rowHasColspanGroupHeader(row: TableCellUniform): boolean {
-  const ths = row?.th ? util.data.forceArray(row.th) : []
-  return ths.some((cell) => isPreliminaryDataCell(cell) && Number(cell.colspan) > 1)
-}
-
 function looksLikeTimePeriod(text?: string): boolean {
   if (!text) return false
   // Matches 19xx or 20xx anywhere in the string
   return /\b(19|20)\d{2}\b/.test(text)
-}
-
-export function getColumnHeaderRowFromThead(thead: TableRowUniform[]): TableCellUniform | undefined {
-  const headerRows = thead?.[0]?.tr
-  if (!headerRows?.length) return undefined
-
-  const first = headerRows[0]
-  const second = headerRows[1]
-
-  // Use the second header row if the first one only contains a grouped header (colspan),
-  // otherwise fall back to the first row (default case).
-  return second && rowHasColspanGroupHeader(first) ? second : first
 }
 
 export function getTimePeriodFromThead(thead: Array<TableRowUniform>): string | undefined {

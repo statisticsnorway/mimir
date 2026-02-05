@@ -7,7 +7,7 @@ import {
 } from '/lib/types/xmlParser'
 import { type RowValue } from '/lib/types/util'
 import { getRowValue } from '/lib/ssb/utils/utils'
-import { getColumnHeaderRowFromThead, getTimePeriodFromThead } from '/lib/ssb/parts/highcharts/data/theadUtils'
+import { getTimePeriodFromThead } from '/lib/ssb/parts/highcharts/data/theadUtils'
 import * as util from '/lib/util'
 
 export function seriesAndCategoriesFromTbml(
@@ -19,12 +19,14 @@ export function seriesAndCategoriesFromTbml(
   const tbody: Array<TableRowUniform> = data.tbml.presentation.table.tbody
   const thead: Array<TableRowUniform> = data.tbml.presentation.table.thead
   const rows: TableRowUniform['tr'] = tbody[0].tr
-  const columnHeaderRow = getColumnHeaderRowFromThead(thead)
+
+  const timePeriod = getTimePeriodFromThead(thead)
+  const columnHeaderRow = getColumnHeaderRowFromThead(thead, timePeriod)
   const headers: TableCellUniform['th'] = columnHeaderRow ? getHeaders(columnHeaderRow, tbody) : []
   const categories: TableCellUniform['th'] = determineCategories(graphType, headers, rows, xAxisType)
   const series: Array<Series> = determineSeries(graphType, headers, categories, rows, xAxisType)
 
-  const timePeriod = getTimePeriodFromThead(thead)
+  log.info('TimePeriod extracted from thead:', timePeriod)
 
   return {
     categories,
@@ -32,6 +34,19 @@ export function seriesAndCategoriesFromTbml(
     title: data.tbml.metadata.title,
     timePeriod: timePeriod,
   }
+}
+
+function getColumnHeaderRowFromThead(thead: Array<TableRowUniform>, timePeriod?: string): TableCellUniform | undefined {
+  const headerRows = thead?.[0]?.tr
+  if (!headerRows?.length) return undefined
+
+  const first = headerRows[0]
+  const second = headerRows[1]
+
+  if (!second) return first
+
+  // Only use the second header row when the first row is a timePeriod group header.
+  return timePeriod ? second : first
 }
 
 function getHeaders(headerRow: TableCellUniform, body: Array<TableRowUniform>): TableCellUniform['th'] {
