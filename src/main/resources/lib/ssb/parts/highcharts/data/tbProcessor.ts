@@ -26,8 +26,6 @@ export function seriesAndCategoriesFromTbml(
   const categories: TableCellUniform['th'] = determineCategories(graphType, headers, rows, xAxisType)
   const series: Array<Series> = determineSeries(graphType, headers, categories, rows, xAxisType)
 
-  log.info('TimePeriod extracted from thead:', timePeriod)
-
   return {
     categories,
     series,
