@@ -21,9 +21,9 @@ export function fetchStatbankSavedData(content: Content<DataSource>): object | n
     const format = '.html5_table'
     const basePath = '/sq/'
     const baseUrl: string =
-      app.config && app.config['ssb.statbankweb.baseUrl']
-        ? app.config['ssb.statbankweb.baseUrl']
-        : 'https://www.ssb.no/statbank'
+      app.config && app.config['ssb.statbankweb.oldBaseUrl']
+        ? app.config['ssb.statbankweb.oldBaseUrl']
+        : 'https://www.ssb.no/statbank1'
     const dataSource: DataSource['dataSource'] = content.data.dataSource
     let url: string | null = null
     if (
