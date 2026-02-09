@@ -14,7 +14,7 @@ import 'highcharts/modules/broken-axis'
 import { exportHighchartsToExcel } from '/lib/ssb/utils/tableExportUtils'
 import { type HighchartsReactProps, type HighchartsPartProps } from '/lib/types/partTypes/highchartsReact'
 
-import accessibilityLang from '../../../assets/js/highchart-lang.json'
+import accessibilityLang from '/lib/ssb/parts/highcharts/highchart-lang.json'
 
 function Highchart(props: HighchartsReactProps) {
   const { highcharts, language, phrases } = props
