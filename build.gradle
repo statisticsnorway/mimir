@@ -52,10 +52,10 @@ repositories {
     mavenCentral()
     xp.enonicRepo()
     maven {
-        url "https://repo1.maven.org/maven2/"
+        url = "https://repo1.maven.org/maven2/"
     }
     maven {
-        url 'https://jitpack.io'
+        url = 'https://jitpack.io'
     }
 }
 
@@ -69,7 +69,7 @@ task compileAssets( type: NpmTask, dependsOn: npmInstall) {
     'run',
     'build:asset' // This script must exist in the package.json file
   ]
-  description 'Compile asset resources'
+  description = 'Compile asset resources'
 }
 
 
@@ -78,7 +78,7 @@ task compileServer( type: NpmTask, dependsOn: npmInstall) {
     'run',
     'build:server' // This script must exist in the package.json file
   ]
-  description 'Compile server resources'
+  description = 'Compile server resources'
 }
 
 task react4xp(type: NpmTask, dependsOn: npmInstall) {
@@ -86,14 +86,14 @@ task react4xp(type: NpmTask, dependsOn: npmInstall) {
     'run',
     'compile:react4xp' // This script must exist in the package.json file
   ]
-  description 'Compile React4xp resources'
+  description = 'Compile React4xp resources'
   environment = [
     'R4X_APP_NAME': "${appName}",
     'R4X_BUILD_LOG_LEVEL': gradle.startParameter.logLevel.toString(),
     'R4X_DIR_PATH_ABSOLUTE_PROJECT': project.projectDir.toString(),
     'NODE_ENV': project.hasProperty('dev') || project.hasProperty('development') ? 'development' : 'production'
   ]
-  group 'react4xp'
+  group = 'react4xp'
   // It also watches package.json and package-lock.json :)
   inputs.dir 'node_modules/@enonic/react4xp'
   inputs.dir 'src/main/resources'
@@ -114,7 +114,7 @@ processResources {
     exclude 'assets/styles/**/*.less'
     exclude 'assets/styles/**/*.sass'
     exclude 'assets/styles/**/*.scss'
-    includeEmptyDirs false
+    includeEmptyDirs = false
 }
 
 jar {
