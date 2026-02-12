@@ -30,7 +30,7 @@ export function seriesAndCategoriesFromTbml(
     categories,
     series,
     title: data.tbml.metadata.title,
-    timePeriod: timePeriod,
+    timePeriod,
   }
 }
 

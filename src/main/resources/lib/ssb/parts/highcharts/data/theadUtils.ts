@@ -5,7 +5,7 @@ export function isPreliminaryDataCell(cell: unknown): cell is PreliminaryData {
   return typeof cell === 'object' && cell !== null && 'content' in cell
 }
 
-function readCellText(cell: unknown): string | undefined {
+function getCellText(cell: unknown): string | undefined {
   if (typeof cell === 'string') return cell.trim() || undefined
   if (isPreliminaryDataCell(cell)) return String(cell.content ?? '').trim() || undefined
   return undefined
@@ -30,13 +30,13 @@ export function getTimePeriodFromThead(thead: Array<TableRowUniform>): string | 
   if (rows.length > 1) {
     const colspanCell = firstThs.find((c) => isPreliminaryDataCell(c) && Number(c.colspan) > 1)
 
-    const text = readCellText(colspanCell)
+    const text = getCellText(colspanCell)
     return looksLikeTimePeriod(text) ? text : undefined
   }
 
   // Single header row: treat as time period only when it looks like a time period
   if (firstThs.length === 1) {
-    const text = readCellText(firstThs[0])
+    const text = getCellText(firstThs[0])
     return looksLikeTimePeriod(text) ? text : undefined
   }
 
