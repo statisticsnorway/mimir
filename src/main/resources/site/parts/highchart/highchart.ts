@@ -149,8 +149,11 @@ function createHighchartsPartProps(
   highchart: Content<Highchart>,
   config: HighchartsExtendedProps
 ): HighchartsPartProps {
+  // timePeriod is figure metadata (derived from TBML), not a Highcharts option
+  const { timePeriod, ...configWithoutTimePeriod } = config
   return {
-    config: config,
+    config: configWithoutTimePeriod,
+    timePeriod,
     type: highchart.type === 'mimir:combinedGraph' ? 'combined' : highchart.data.graphType,
     contentKey: highchart._id,
     footnoteText: highchart.data.footnoteText ? util.data.forceArray(highchart.data.footnoteText) : undefined,

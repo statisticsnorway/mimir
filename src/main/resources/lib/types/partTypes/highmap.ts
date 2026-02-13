@@ -24,6 +24,7 @@ export interface HighmapProps {
   language: string | undefined
   highmapId: string | undefined
   geographicalCategory: Highmap['geographicalCategory']
+  timePeriod?: string
 }
 
 export interface ThresholdValues {

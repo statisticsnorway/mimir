@@ -12,7 +12,8 @@ import 'highcharts/modules/export-data'
 import 'highcharts/modules/map'
 
 import { exportHighchartsToExcel } from '/lib/ssb/utils/tableExportUtils'
-import accessibilityLang from  '/lib/ssb/parts/highcharts/highchart-lang.json'
+import { formatHighchartsTable } from '/lib/ssb/utils/highchartsTableUtils'
+import accessibilityLang from '/lib/ssb/parts/highcharts/highchart-lang.json'
 
 function generateColors(color, thresholdValues) {
   const obj = {}
@@ -134,7 +135,7 @@ const chart = (desktop, heightAspectRatio, mapFile, language) => {
       // Workaround to get correct number formatting in table
       exportData: function (chart) {
         const rows = chart.dataRows
-        for (const row of chart.dataRows) {
+        for (const row of rows) {
           // Escaping first vaule not to format category ie. year
           for (const [i, cell] of row.entries()) {
             if (i > 0 && typeof cell === 'number') {
@@ -272,6 +273,7 @@ function Highmap(props) {
     highmapId,
     geographicalCategory,
     seriesTitle,
+    timePeriod,
   } = props
 
   const highmapsWrapperRef = useRef(null)
@@ -279,10 +281,11 @@ function Highmap(props) {
   useEffect(() => {
     const highmapWrapperElement = highmapsWrapperRef.current?.children
     const [highmapElement, tableWrapperElement] = highmapWrapperElement ?? []
-    const tableElement = tableWrapperElement?.children[0]
+    const tableElement = formatHighchartsTable(tableWrapperElement, timePeriod)
 
-    tableWrapperElement?.classList.add('ssb-table-wrapper', 'd-none')
-    tableElement?.classList.add('statistics', 'ssb-table')
+    tableWrapperElement?.classList.add('d-none')
+    tableWrapperElement?.setAttribute('aria-hidden', 'true')
+
     tableElement?.setAttribute('tabindex', '0') // Scrollable region must have keyboard access
 
     // Add Tab component accessibility tags for Highmaps and table
@@ -353,6 +356,11 @@ function Highmap(props) {
     tableWrapperElement?.setAttribute('aria-hidden', !showTable)
     highmapElement?.classList.toggle('d-none', showTable)
     highmapElement?.setAttribute('aria-hidden', showTable)
+
+    if (showTable) {
+      // Re-apply table formatting after toggle, since Highcharts may recreate the table DOM.
+      formatHighchartsTable(tableWrapperElement, timePeriod)
+    }
   }
 
   function renderShowAsFigureOrTableTab() {
@@ -388,6 +396,7 @@ function Highmap(props) {
         <figure id={`figure-${highmapId}`} className='highcharts-figure mb-0 hide-title'>
           {mapOptions.title?.text && <figcaption className='figure-title'>{mapOptions.title.text}</figcaption>}
           {mapOptions.subtitle?.text && <p className='figure-subtitle'>{mapOptions.subtitle.text}</p>}
+          {timePeriod && <p className='figure-time-period'>{timePeriod}</p>}
           {renderShowAsFigureOrTableTab()}
           <div ref={highmapsWrapperRef}>
             <HighchartsReact highcharts={Highcharts} constructorType='mapChart' options={mapOptions} />
@@ -425,7 +434,8 @@ Highmap.propTypes = {
   phrases: PropTypes.object,
   language: PropTypes.string,
   highmapId: PropTypes.string,
-  geographicalCategory: PropTypes.String,
+  geographicalCategory: PropTypes.string,
+  timePeriod: PropTypes.string,
 }
 
 export default (props) => <Highmap {...props} />
