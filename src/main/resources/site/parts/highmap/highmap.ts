@@ -17,6 +17,7 @@ import {
 } from '/lib/types/partTypes/highmap'
 import { datasetOrUndefined } from '/lib/ssb/cache/cache'
 import { type DatasetRepoNode, DataSource as DataSourceType } from '/lib/ssb/repo/dataset'
+import { getTimePeriodFromThead } from '/lib/ssb/parts/highcharts/data/theadUtils'
 import { type Highmap } from '/site/content-types'
 
 const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser')
@@ -88,7 +89,7 @@ function renderPart(req: Request, highmapId: string | undefined): Response {
   })
 
   if (highmapContent) {
-    const tableData: Array<RowValue[]> = getTableData(highmapContent)
+    const { tableData, timePeriod } = getTableData(highmapContent)
     const thresholdValues: Highmap['thresholdValues'] = highmapContent.data.thresholdValues
       ? util.data.forceArray(highmapContent.data.thresholdValues)
       : []
@@ -114,6 +115,7 @@ function renderPart(req: Request, highmapId: string | undefined): Response {
       language: page.language,
       highmapId,
       geographicalCategory: highmapContent.data.geographicalCategory,
+      timePeriod,
     }
     // R4xp disables hydration in edit mode, but highmap need hydration to show
     // we sneaky swap mode since we want a render of highmap in edit mode
@@ -129,15 +131,20 @@ function renderPart(req: Request, highmapId: string | undefined): Response {
   }
 }
 
-function getTableData(highmap: Content<Highmap>): Array<RowValue[]> {
+type TableDataResult = {
+  tableData: Array<RowValue[]>
+  timePeriod?: string
+}
+
+function getTableData(highmap: Content<Highmap>): TableDataResult {
   if (highmap?.data.dataSource) {
     if (highmap.data.dataSource._selected === DataSourceType.HTMLTABLE) {
-      return getHtmlTableData(highmap.data.dataSource.htmlTable.html)
+      return { tableData: getHtmlTableData(highmap.data.dataSource.htmlTable.html) }
     } else if (highmap.data.dataSource?._selected === DataSourceType.TBPROCESSOR) {
       return getTBMLData(highmap)
     }
   }
-  return []
+  return { tableData: [] }
 }
 
 function getHtmlTableData(htmlTable: string | undefined): Array<RowValue[]> {
@@ -159,15 +166,18 @@ function getHtmlTableData(htmlTable: string | undefined): Array<RowValue[]> {
   return tableData
 }
 
-function getTBMLData(highmap: Content<Highmap>): Array<RowValue[]> {
+function getTBMLData(highmap: Content<Highmap>): TableDataResult {
   const datasetFromRepo: DatasetRepoNode<TbmlDataUniform | object> | undefined = datasetOrUndefined(highmap)
   const parsedData: TbmlDataUniform | object | string | undefined = datasetFromRepo && datasetFromRepo.data
+
   if (parsedData) {
     const tbmlData: TbmlDataUniform = parsedData as TbmlDataUniform
     const tbody: Array<TableRowUniform> = tbmlData.tbml.presentation.table.tbody
+    const thead: Array<TableRowUniform> = tbmlData.tbml.presentation.table.thead
+    const timePeriod = getTimePeriodFromThead(thead)
     const rows: TableRowUniform['tr'] = tbody[0].tr
 
-    return rows
+    const tableData = rows
       ? rows.map((row) => {
           const capitalName: RowValue = highmap.data.removePartOfName
             ? firstPartOfCapitalName(getRowValue(row.th[0]))
@@ -175,8 +185,11 @@ function getTBMLData(highmap: Content<Highmap>): Array<RowValue[]> {
           return [capitalName, getRowValue(row.td[0])]
         })
       : []
+
+    return { tableData, timePeriod }
   }
-  return []
+
+  return { tableData: [] }
 }
 
 function firstPartOfCapitalName(name: RowValue): RowValue {

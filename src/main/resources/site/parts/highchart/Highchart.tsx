@@ -12,9 +12,10 @@ import 'highcharts/modules/no-data-to-display'
 import 'highcharts/modules/broken-axis'
 
 import { exportHighchartsToExcel } from '/lib/ssb/utils/tableExportUtils'
+import { formatHighchartsTable } from '/lib/ssb/utils/highchartsTableUtils'
 import { type HighchartsReactProps, type HighchartsPartProps } from '/lib/types/partTypes/highchartsReact'
 
-import accessibilityLang from '../../../assets/js/highchart-lang.json'
+import accessibilityLang from '/lib/ssb/parts/highcharts/highchart-lang.json'
 
 function Highchart(props: HighchartsReactProps) {
   const { highcharts, language, phrases } = props
@@ -29,15 +30,12 @@ function Highchart(props: HighchartsReactProps) {
 
   useEffect(() => {
     if (highcharts?.length) {
-      highcharts.forEach(({ contentKey, defaultShowAsTable }) => {
+      highcharts.forEach(({ contentKey, defaultShowAsTable, timePeriod }) => {
         const highchartWrapperElement = highchartsWrapperRefs.current[contentKey as string]?.children
         if (!highchartWrapperElement) return
 
-        const [highchartElement, tableWrapperElement] = Array.from(highchartWrapperElement as HTMLCollection) ?? []
-        const tableElement = tableWrapperElement?.children[0]
-
-        tableWrapperElement?.classList.add('ssb-table-wrapper')
-        tableElement?.classList.add('statistics', 'ssb-table')
+        const [highchartElement, tableWrapperElement] = Array.from(highchartWrapperElement) as HTMLElement[]
+        const tableElement = formatHighchartsTable(tableWrapperElement, timePeriod)
 
         // Workaround to prevent auto-focus on table on initial render by removing tabindex, then re-enable after a delay
         if (defaultShowAsTable) tableElement?.removeAttribute('tabindex')
@@ -63,8 +61,15 @@ function Highchart(props: HighchartsReactProps) {
     const highchartWrapperElement = highchartsWrapperRefs.current[contentKey]?.children
     if (!highchartWrapperElement) return
 
-    const [highchartElement, tableWrapperElement] = Array.from(highchartWrapperElement as HTMLCollection) ?? []
+    const [highchartElement, tableWrapperElement] = Array.from(highchartWrapperElement) as HTMLElement[]
     handleShowAsTable(tableWrapperElement, highchartElement, showTable)
+
+    if (showTable) {
+      // Re-apply table formatting after toggle (table DOM may be recreated by Highcharts)
+      const current = highcharts.find((h) => h.contentKey === contentKey)
+      // Format after toggle to ensure the table DOM exists
+      formatHighchartsTable(tableWrapperElement, current?.timePeriod)
+    }
   }
 
   const downloadAsXLSX = (title: string | undefined) =>
@@ -378,6 +383,7 @@ function Highchart(props: HighchartsReactProps) {
           <figure id={`figure-${highchart.contentKey}`} className='highcharts-figure mb-0 hide-title'>
             <figcaption className='figure-title'>{config.title?.text}</figcaption>
             {config.subtitle?.text ? <p className='figure-subtitle'>{config.subtitle.text}</p> : null}
+            {highchart.timePeriod ? <p className='figure-time-period'>{highchart.timePeriod}</p> : null}
             {renderShowAsFigureOrTableTab(highchart.contentKey as string, highchart.defaultShowAsTable)}
             <div ref={(el) => (highchartsWrapperRefs.current[highchart.contentKey as string] = el)}>
               <HighchartsReact
