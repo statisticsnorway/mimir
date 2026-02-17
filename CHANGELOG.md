@@ -1,5 +1,22 @@
 # Changelog
 
+## [2.41.0](https://github.com/statisticsnorway/mimir/compare/v2.40.0...v2.41.0) (2026-02-17)
+
+
+### Features
+
+* **charts:** show time period for Highchart and Highmap [MIM-2196] ([#3623](https://github.com/statisticsnorway/mimir/issues/3623)) ([c5c7736](https://github.com/statisticsnorway/mimir/commit/c5c7736080d5e94f80abc8e031959d6453a6ffae))
+
+
+### Bug Fixes
+
+* Use new config for old statbank url [MIM-2530] ([#3622](https://github.com/statisticsnorway/mimir/issues/3622)) ([1e42e5a](https://github.com/statisticsnorway/mimir/commit/1e42e5aa121f21cde28e98f801f6ba68e53ab761))
+
+
+### Code Refactoring
+
+* Mim 2506 remove highcharts jquery [MIM-2506] ([#3626](https://github.com/statisticsnorway/mimir/issues/3626)) ([9836bc5](https://github.com/statisticsnorway/mimir/commit/9836bc53f286b14bfa75e7d01c150833c20f348e))
+
 ## [2.40.0](https://github.com/statisticsnorway/mimir/compare/v2.39.0...v2.40.0) (2026-01-29)
 
 
