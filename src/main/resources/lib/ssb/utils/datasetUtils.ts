@@ -10,7 +10,7 @@ const defaultSelectionFilter: SelectionFilter = {
 
 export function get(
   url: string,
-  json: DataqueryRequestData | undefined,
+  json: StatbankPostBody | undefined,
   selection: SelectionFilter = defaultSelectionFilter,
   queryId?: string,
   noDefaultFilterRegion?: boolean
@@ -22,7 +22,8 @@ export function get(
       }
     }
   }
-  const method = json?.query ? 'POST' : 'GET'
+  //const method = json?.query ? 'POST' : 'GET'
+  const method = json ? 'POST' : 'GET'
   const requestParams: HttpRequestParams = {
     url,
     method,
@@ -80,14 +81,26 @@ export interface SelectionFilter {
   values: Array<string>
 }
 
-export interface DataqueryRequestData {
+export interface Dimension {
+  code: string
+  selection: SelectionFilter
+}
+
+export type VariableSelection = {
+  variableCode: string
+  codelist?: string | null
+  valueCodes?: Array<string>
+}
+
+export interface StatbankV1PostBody {
   query: Array<Dimension>
   response: {
     format: string
   }
 }
 
-export interface Dimension {
-  code: string
-  selection: SelectionFilter
+export interface StatbankV2PostBody {
+  selection: Array<VariableSelection>
 }
+
+export type StatbankPostBody = StatbankV1PostBody | StatbankV2PostBody
