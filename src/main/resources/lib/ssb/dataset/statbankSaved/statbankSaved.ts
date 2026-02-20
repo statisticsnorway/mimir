@@ -6,22 +6,18 @@ import { logUserDataQuery, Events } from '/lib/ssb/repo/query'
 import { type DataSource } from '/site/mixins/dataSource'
 
 export function getStatbankSaved(content: Content<DataSource>, branch: string): DatasetRepoNode<JSONstat> | null {
-  if (content.data.dataSource && content.data.dataSource._selected === DataSourceType.STATBANK_SAVED) {
-    const dataSource: DataSource['dataSource'] = content.data.dataSource
-    if (dataSource.statbankSaved && dataSource.statbankSaved.urlOrId) {
-      return getDataset(content.data.dataSource?._selected, branch, content._id)
-    }
-  }
-  return null
+  const dataSource: DataSource['dataSource'] | undefined = content.data.dataSource
+  if (dataSource?._selected !== DataSourceType.STATBANK_SAVED) return null
+  if (!dataSource.statbankSaved?.urlOrId?.trim()) return null
+
+  return getDataset(DataSourceType.STATBANK_SAVED, branch, content._id)
 }
 
 export function fetchStatbankSavedData(content: Content<DataSource>): object | null {
-  const dataSource: DataSource['dataSource'] = content.data.dataSource
-  if (!dataSource || dataSource._selected !== DataSourceType.STATBANK_SAVED || !dataSource.statbankSaved?.urlOrId) {
-    return null
-  }
-
-  const urlOrId = dataSource.statbankSaved.urlOrId.trim()
+  const dataSource: DataSource['dataSource'] | undefined = content.data.dataSource
+  if (dataSource?._selected !== DataSourceType.STATBANK_SAVED) return null
+  const urlOrId = dataSource.statbankSaved?.urlOrId?.trim()
+  if (!urlOrId) return null
 
   const savedQueryId = extractSavedQueryId(urlOrId)
   if (!savedQueryId) return null
@@ -37,32 +33,34 @@ export function fetchStatbankSavedData(content: Content<DataSource>): object | n
       file: '/lib/ssb/dataset/statbankSaved.ts',
       function: 'fetchStatbankSavedData',
       message: Events.REQUEST_COULD_NOT_CONNECT,
-      status: e,
+      status: e instanceof Error ? e.message : String(e),
     })
     return null
   }
 }
 
 function extractSavedQueryId(urlOrId: string): string | null {
-  urlOrId = urlOrId.trim()
+  const value = urlOrId.trim()
 
   // Plain numeric id (e.g. "30114755")
-  if (/^\d+$/.test(urlOrId)) return urlOrId
+  if (/^\d+$/.test(value)) return value
 
   // New Statbank table URL: ...?sq=<id>
-  const sq = urlOrId.match(/[?&]sq=(\d+)/)?.[1]
-  if (sq) return sq
+  const sqMatch = /[?&]sq=(\d+)/.exec(value)
+  if (sqMatch) return sqMatch[1]
 
   // Legacy Statbank URL: /sq/<id>
-  const legacy = urlOrId.match(/\/sq\/(\d+)/)?.[1]
-  if (legacy) return legacy
+  const legacyMatch = /\/sq\/(\d+)/.exec(value)
+  if (legacyMatch) return legacyMatch[1]
 
   return null
 }
 
 function resolveSavedQueryBaseUrl(urlOrId: string): string {
   const pxWebApiBase = app.config?.['ssb.pxwebapi.v2.baseUrl'] ?? 'https://data.ssb.no/api/pxwebapi/v2'
-  const host = urlOrId.match(/^https?:\/\/([^/]+)/i)?.[1]
+  const hostMatch = /^https?:\/\/([^/]+)/i.exec(urlOrId)
+  const host = hostMatch?.[1]?.toLowerCase()
+
   if (host === 'www.qa.ssb.no') return 'https://data.qa.ssb.no/api/pxwebapi/v2'
   if (host === 'www.ssb.no') return 'https://data.ssb.no/api/pxwebapi/v2'
 
