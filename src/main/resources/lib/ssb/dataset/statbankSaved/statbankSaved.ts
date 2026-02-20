@@ -3,7 +3,6 @@ import { DatasetRepoNode, DataSource as DataSourceType, getDataset } from '/lib/
 import { type JSONstat } from '/lib/types/jsonstat-toolkit'
 import { get as fetchData } from '/lib/ssb/dataset/statbankSaved/statbankSavedRequest'
 import { logUserDataQuery, Events } from '/lib/ssb/repo/query'
-import { isUrl } from '/lib/ssb/utils/utils'
 import { type DataSource } from '/site/mixins/dataSource'
 
 export function getStatbankSaved(content: Content<DataSource>, branch: string): DatasetRepoNode<JSONstat> | null {
@@ -24,12 +23,6 @@ export function fetchStatbankSavedData(content: Content<DataSource>): object | n
 
   const urlOrId = dataSource.statbankSaved.urlOrId.trim()
 
-  // Transitional phase: plain numeric ids still use the legacy html5_table endpoint.
-  // This can be removed once all saved queries are updated to use the new Statbank URLs.
-  if (/^\d+$/.test(urlOrId)) {
-    return fetchStatbankSavedDataLegacy(content)
-  }
-
   const savedQueryId = extractSavedQueryId(urlOrId)
   if (!savedQueryId) return null
 
@@ -46,48 +39,6 @@ export function fetchStatbankSavedData(content: Content<DataSource>): object | n
       message: Events.REQUEST_COULD_NOT_CONNECT,
       status: e,
     })
-    return null
-  }
-}
-
-/**
- * Legacy html5_table implementation used during migration to the new saved query format.
- * Remove when all saved queries are migrated to v2.
- */
-function fetchStatbankSavedDataLegacy(content: Content<DataSource>): object | null {
-  if (content.data.dataSource) {
-    const format = '.html5_table'
-    const basePath = '/sq/'
-    const baseUrl: string =
-      app.config && app.config['ssb.statbankweb.oldBaseUrl']
-        ? app.config['ssb.statbankweb.oldBaseUrl']
-        : 'https://www.ssb.no/statbank1'
-    const dataSource: DataSource['dataSource'] = content.data.dataSource
-    let url: string | null = null
-    if (
-      dataSource._selected === DataSourceType.STATBANK_SAVED &&
-      dataSource.statbankSaved &&
-      dataSource.statbankSaved.urlOrId
-    ) {
-      url = isUrl(dataSource.statbankSaved.urlOrId)
-        ? `${dataSource.statbankSaved.urlOrId}${format}`
-        : `${baseUrl}${basePath}${dataSource.statbankSaved.urlOrId}${format}`
-    }
-    try {
-      if (url) {
-        return fetchData(url)
-      }
-    } catch (e) {
-      log.error(`Failed to fetch data from statbankweb: ${content._id}. ${url}. (${e})`)
-      logUserDataQuery(content._id, {
-        file: '/lib/ssb/dataset/statbankSaved.ts',
-        function: 'fetchStatbankSavedData',
-        message: Events.REQUEST_COULD_NOT_CONNECT,
-        status: e,
-      })
-    }
-    return null
-  } else {
     return null
   }
 }
