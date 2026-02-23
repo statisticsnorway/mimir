@@ -60,9 +60,15 @@ function resolveSavedQueryBaseUrl(urlOrId: string): string {
   const pxWebApiBase = app.config?.['ssb.pxwebapi.v2.baseUrl'] ?? 'https://data.ssb.no/api/pxwebapi/v2'
   const hostMatch = /^https?:\/\/([^/]+)/i.exec(urlOrId)
   const host = hostMatch?.[1]?.toLowerCase()
+  if (!host) return pxWebApiBase
 
-  if (host === 'www.qa.ssb.no') return 'https://data.qa.ssb.no/api/pxwebapi/v2'
-  if (host === 'www.ssb.no') return 'https://data.ssb.no/api/pxwebapi/v2'
+  // URL decides environment: www.<env>.ssb.no -> data.<env>.ssb.no
+  const envHostMatch = /^www\.(?:(qa|utv|test)\.)?ssb\.no$/.exec(host)
+  if (envHostMatch) {
+    const env = envHostMatch[1] // qa | utv | test | undefined (prod)
+    const dataHost = env ? `data.${env}.ssb.no` : 'data.ssb.no'
+    return `https://${dataHost}/api/pxwebapi/v2`
+  }
 
   return pxWebApiBase
 }
