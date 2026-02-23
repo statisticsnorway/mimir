@@ -3,53 +3,77 @@ import { DatasetRepoNode, DataSource as DataSourceType, getDataset } from '/lib/
 import { type JSONstat } from '/lib/types/jsonstat-toolkit'
 import { get as fetchData } from '/lib/ssb/dataset/statbankSaved/statbankSavedRequest'
 import { logUserDataQuery, Events } from '/lib/ssb/repo/query'
-import { isUrl } from '/lib/ssb/utils/utils'
 import { type DataSource } from '/site/mixins/dataSource'
 
 export function getStatbankSaved(content: Content<DataSource>, branch: string): DatasetRepoNode<JSONstat> | null {
-  if (content.data.dataSource && content.data.dataSource._selected === DataSourceType.STATBANK_SAVED) {
-    const dataSource: DataSource['dataSource'] = content.data.dataSource
-    if (dataSource.statbankSaved && dataSource.statbankSaved.urlOrId) {
-      return getDataset(content.data.dataSource?._selected, branch, content._id)
-    }
-  }
-  return null
+  const dataSource: DataSource['dataSource'] | undefined = content.data.dataSource
+  if (dataSource?._selected !== DataSourceType.STATBANK_SAVED) return null
+  if (!dataSource.statbankSaved?.urlOrId?.trim()) return null
+
+  return getDataset(DataSourceType.STATBANK_SAVED, branch, content._id)
 }
 
 export function fetchStatbankSavedData(content: Content<DataSource>): object | null {
-  if (content.data.dataSource) {
-    const format = '.html5_table'
-    const basePath = '/sq/'
-    const baseUrl: string =
-      app.config && app.config['ssb.statbankweb.oldBaseUrl']
-        ? app.config['ssb.statbankweb.oldBaseUrl']
-        : 'https://www.ssb.no/statbank1'
-    const dataSource: DataSource['dataSource'] = content.data.dataSource
-    let url: string | null = null
-    if (
-      dataSource._selected === DataSourceType.STATBANK_SAVED &&
-      dataSource.statbankSaved &&
-      dataSource.statbankSaved.urlOrId
-    ) {
-      url = isUrl(dataSource.statbankSaved.urlOrId)
-        ? `${dataSource.statbankSaved.urlOrId}${format}`
-        : `${baseUrl}${basePath}${dataSource.statbankSaved.urlOrId}${format}`
-    }
-    try {
-      if (url) {
-        return fetchData(url)
-      }
-    } catch (e) {
-      log.error(`Failed to fetch data from statbankweb: ${content._id}. ${url}. (${e})`)
-      logUserDataQuery(content._id, {
-        file: '/lib/ssb/dataset/statbankSaved.ts',
-        function: 'fetchStatbankSavedData',
-        message: Events.REQUEST_COULD_NOT_CONNECT,
-        status: e,
-      })
-    }
-    return null
-  } else {
+  const dataSource: DataSource['dataSource'] | undefined = content.data.dataSource
+  if (dataSource?._selected !== DataSourceType.STATBANK_SAVED) return null
+  const urlOrId = dataSource.statbankSaved?.urlOrId?.trim()
+  if (!urlOrId) return null
+
+  const savedQueryId = extractSavedQueryId(urlOrId)
+  if (!savedQueryId) return null
+
+  const baseUrl = resolveSavedQueryBaseUrl(urlOrId)
+  const url = buildSavedQueryHtmlUrl(baseUrl, savedQueryId)
+
+  try {
+    return fetchData(url, content._id)
+  } catch (e) {
+    log.error(`Failed to fetch data from pxweb v2 savedqueries: ${content._id}. ${url}. (${e})`)
+    logUserDataQuery(content._id, {
+      file: '/lib/ssb/dataset/statbankSaved.ts',
+      function: 'fetchStatbankSavedData',
+      message: Events.REQUEST_COULD_NOT_CONNECT,
+      status: e instanceof Error ? e.message : String(e),
+    })
     return null
   }
+}
+
+function extractSavedQueryId(urlOrId: string): string | null {
+  const value = urlOrId.trim()
+
+  // Plain numeric id (e.g. "30114755")
+  if (/^\d+$/.test(value)) return value
+
+  // New Statbank table URL: ...?sq=<id>
+  const sqMatch = /[?&]sq=(\d+)/.exec(value)
+  if (sqMatch) return sqMatch[1]
+
+  // Legacy Statbank URL: /sq/<id>
+  const legacyMatch = /\/sq\/(\d+)/.exec(value)
+  if (legacyMatch) return legacyMatch[1]
+
+  return null
+}
+
+function resolveSavedQueryBaseUrl(urlOrId: string): string {
+  const pxWebApiBase = app.config?.['ssb.pxwebapi.v2.baseUrl'] ?? 'https://data.ssb.no/api/pxwebapi/v2'
+  const hostMatch = /^https?:\/\/([^/]+)/i.exec(urlOrId)
+  const host = hostMatch?.[1]?.toLowerCase()
+  if (!host) return pxWebApiBase
+
+  // URL decides environment: www.<env>.ssb.no -> data.<env>.ssb.no
+  const envHostMatch = /^www\.(?:(qa|utv|test)\.)?ssb\.no$/.exec(host)
+  if (envHostMatch) {
+    const env = envHostMatch[1] // qa | utv | test | undefined (prod)
+    const dataHost = env ? `data.${env}.ssb.no` : 'data.ssb.no'
+    return `https://${dataHost}/api/pxwebapi/v2`
+  }
+
+  return pxWebApiBase
+}
+
+function buildSavedQueryHtmlUrl(baseUrl: string, savedQueryId: string): string {
+  const b = baseUrl.replace(/\/$/, '')
+  return `${b}/savedqueries/${savedQueryId}/data?outputFormat=html`
 }
