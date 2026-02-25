@@ -14,20 +14,6 @@ export function macro(context: XP.MacroContext<LinksConfig>) {
 
   let props: LinksProps | object = {}
   if (linkType) {
-    if (linkType === 'tableLink') {
-      const href: string | undefined = config.relatedContent
-        ? pageUrl({
-            id: config.relatedContent,
-          })
-        : config.url
-
-      props = {
-        href,
-        description: config.description,
-        text: config.title,
-      }
-    }
-
     if (linkType === 'headerLink') {
       const linkedContent: string | undefined = config.linkedContent
       const linkText: string | undefined = config.linkText
@@ -64,9 +50,7 @@ export function macro(context: XP.MacroContext<LinksConfig>) {
         isPDFAttachment,
         attachmentTitle,
       }
-    }
-
-    if (linkType === 'profiledLink') {
+    } else if (linkType === 'profiledLink') {
       props = {
         children: config.text,
         href: config.contentUrl
@@ -76,6 +60,18 @@ export function macro(context: XP.MacroContext<LinksConfig>) {
           : config.profiledLinkHref,
         withIcon: config.withIcon,
         linkType: 'profiled',
+      }
+    } else {
+      const href: string | undefined = config.relatedContent
+        ? pageUrl({
+            id: config.relatedContent,
+          })
+        : config.url
+
+      props = {
+        href,
+        description: config.description,
+        text: config.title,
       }
     }
   }
