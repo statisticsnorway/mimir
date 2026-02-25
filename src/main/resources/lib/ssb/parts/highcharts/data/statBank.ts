@@ -1,14 +1,15 @@
 // @ts-nocheck
 
 import { getMunicipality } from '/lib/ssb/dataset/klass/municipalities'
+
 import { DataSource as DataSourceType } from '/lib/ssb/repo/dataset'
 
 export function seriesAndCategoriesFromJsonStat(req, highchart, dataset, datasetFormat) {
-  if (datasetFormat && datasetFormat._selected === DataSourceType.PXAPI) {
-    return seriesAndCategoriesFromJsonStatPxApi(req, highchart, dataset)
+  if (datasetFormat?._selected === DataSourceType.PXAPI) {
+    return seriesAndCategoriesFromPxApi(req, highchart, dataset, datasetFormat)
   }
-
-  const jsonStatConfig = datasetFormat.jsonStat || datasetFormat[DataSourceType.STATBANK_API]
+  const jsonStatConfig =
+    datasetFormat.jsonStat || datasetFormat[DataSourceType.STATBANK_API] || datasetFormat[DataSourceType.PXAPI]
   const filterOptions = jsonStatConfig.datasetFilterOptions
   const xAxisLabel = jsonStatConfig.xAxisLabel
   const yAxisLabel = jsonStatConfig.yAxisLabel
@@ -31,58 +32,19 @@ export function seriesAndCategoriesFromJsonStat(req, highchart, dataset, dataset
   }
 }
 
-function seriesAndCategoriesFromJsonStatPxApi(req, highchart, dataset) {
-  if (dataset && typeof dataset.Dimension !== 'function') {
-    const jsonstat = JSONstat(dataset)
-    const converted = jsonstat && jsonstat.Dataset(0)
-    if (!converted || Array.isArray(converted)) {
-      log.error('JSONstat conversion failed')
-      return undefined
-    }
-    dataset = converted
-  }
+function seriesAndCategoriesFromPxApi(req, highchart, dataset, datasetFormat) {
+  const config = datasetFormat[DataSourceType.PXAPI] || {}
 
-  const dimensions = dataset.id.map((id) => ({
-    id,
-    size: dataset.Dimension(id).Category().length,
-  }))
+  const dimensions = dataset.id
 
-  const multiDimensions = dimensions.filter((d) => d.size > 1).sort((a, b) => b.size - a.size)
+  const xAxis = config.xAxisLabel && dimensions.includes(config.xAxisLabel) ? config.xAxisLabel : dimensions[0]
 
-  const xAxisLabel = multiDimensions[0]?.id || dataset.id[0]
-  const yAxisLabel = multiDimensions[1]?.id || dataset.id[1]
+  const yAxis =
+    config.yAxisLabel && dimensions.includes(config.yAxisLabel) ? config.yAxisLabel : dimensions[1] || dimensions[0]
 
-  const dimensionFilter = dataset.id.map(() => 0)
+  const dimensionFilter = dimensions.map(() => 0)
 
-  if (highchart.data.graphType === 'barNegative') {
-    return barNegativeFormat(dataset, dimensionFilter, xAxisLabel, yAxisLabel)
-  } else if (highchart.data.graphType === 'pie') {
-    return pieFormat(dataset, dimensionFilter, xAxisLabel, yAxisLabel)
-  } else {
-    return pxDefaultFormat(dataset, dimensionFilter, xAxisLabel, yAxisLabel)
-  }
-}
-
-const pxDefaultFormat = (ds, dimensionFilter, xAxis, yAxis) => {
-  const xAxisIndex = ds.id.indexOf(xAxis)
-  const yAxisIndex = ds.id.indexOf(yAxis)
-
-  const xCategories = ds.Dimension(xAxis).Category()
-  const yCategories = ds.Dimension(yAxis).Category()
-
-  const series = yCategories.map((yCategory) => {
-    const data = xCategories.map((xCategory) => {
-      dimensionFilter[yAxisIndex] = yCategory.index
-      dimensionFilter[xAxisIndex] = xCategory.index
-      return ds.Data(dimensionFilter, false)
-    })
-
-    return { name: yCategory.label, data }
-  })
-
-  const categories = xCategories.map((c) => c.label)
-
-  return { series, categories }
+  return pxFormat(dataset, dimensionFilter, xAxis, yAxis, highchart.data.graphType)
 }
 
 const defaultFormat = (ds, dimensionFilter, xAxis, yAxisLabel) => {
@@ -104,6 +66,55 @@ const defaultFormat = (ds, dimensionFilter, xAxis, yAxisLabel) => {
   return {
     series,
     categories: yCategories.map((category) => category.label),
+  }
+}
+
+function pxFormat(ds, dimensionFilter, xAxis, yAxis, graphType) {
+  const xAxisIndex = ds.id.indexOf(xAxis)
+  const yAxisIndex = ds.id.indexOf(yAxis)
+
+  const xCategories = ds.Dimension(xAxis).Category()
+  const yCategories = ds.Dimension(yAxis).Category()
+
+  // PIE
+  if (graphType === 'pie') {
+    const data = xCategories.map((xCategory) => {
+      dimensionFilter[xAxisIndex] = xCategory.index
+      const value = ds.Data(dimensionFilter, false)
+
+      return {
+        name: xCategory.label,
+        y: value,
+      }
+    })
+
+    return {
+      series: [
+        {
+          data,
+        },
+      ],
+    }
+  }
+
+  // OTHER GRAPH TYPES
+  const series = yCategories.map((yCategory) => {
+    dimensionFilter[yAxisIndex] = yCategory.index
+
+    const data = xCategories.map((xCategory) => {
+      dimensionFilter[xAxisIndex] = xCategory.index
+      return ds.Data(dimensionFilter, false)
+    })
+
+    return {
+      name: yCategory.label,
+      data,
+    }
+  })
+
+  return {
+    series,
+    categories: xCategories.map((c) => c.label),
   }
 }
 
