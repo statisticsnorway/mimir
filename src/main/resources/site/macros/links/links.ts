@@ -61,11 +61,7 @@ export function macro(context: XP.MacroContext<LinksConfig>) {
         withIcon: config.withIcon,
         linkType: 'profiled',
       }
-    }
-
-    // if (linkType === 'tableLink') {
-    // tableLink should be default, we may have some corrupt data so instead of the above if statement, we default to this behaviour.
-    else {
+    } else {
       const href: string | undefined = config.relatedContent
         ? pageUrl({
             id: config.relatedContent,
