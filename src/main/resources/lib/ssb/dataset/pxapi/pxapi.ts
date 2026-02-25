@@ -56,8 +56,20 @@ export function fetchPxApiData(content: Content<DataSource>): PxApiDataset | nul
 
       let url = `${baseUrl}/${urlOrId}/data?lang=${language}&outputFormat=json-stat2`
 
-      if (urlOrId.includes(baseUrl)) {
-        url = urlOrId
+      if (urlOrId.startsWith('http')) {
+        try {
+          const parsed = new URL(urlOrId)
+
+          const allowedHost = new URL(baseUrl).host
+
+          if (parsed.host === allowedHost) {
+            url = urlOrId
+          } else {
+            throw new Error(`Invalid PXAPI host: ${parsed.host}`)
+          }
+        } catch {
+          throw new Error('Invalid PXAPI URL')
+        }
       }
 
       return fetchData(url, JSON.parse(dataSource.pxapi.json), undefined, content._id) as PxApiDataset
