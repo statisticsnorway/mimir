@@ -43,7 +43,10 @@ export function getSeriesAndCategories(
   data: JSONstat | TbmlDataUniform | object | string | undefined,
   dataSource: DataSource['dataSource']
 ): SeriesAndCategories | undefined {
-  if (dataSource && dataSource._selected === DataSourceType.STATBANK_API) {
+  if (
+    dataSource &&
+    (dataSource._selected === DataSourceType.STATBANK_API || dataSource._selected === DataSourceType.PXAPI)
+  ) {
     return seriesAndCategoriesFromJsonStat(req, highchart, data, dataSource)
   } else if (dataSource && dataSource._selected === DataSourceType.TBPROCESSOR) {
     return seriesAndCategoriesFromTbml(

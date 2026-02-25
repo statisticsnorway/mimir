@@ -16,8 +16,21 @@
 						</input>
 					</items>
 				</option>
+				<option name="pxapi">
+					<label>pxwebapi v2</label>
+					<items>
+						<input name="urlOrId" type="TextLine">
+							<label>POST URL eller Tabell ID</label>
+							<occurrences minimum="0" maximum="1" />
+						</input>
+						<input name="json" type="TextLine">
+							<label>POST BODY - API-spørring (må være JSON-stat2)</label>
+							<occurrences minimum="0" maximum="1" />
+						</input>
+					</items>
+				</option>
 				<option name="statbankApi">
-					<label>Api-spørring mot statistikkbanken</label>
+					<label>Api-spørring mot statistikkbanken (old)</label>
 					<items>
 						<input name="urlOrId" type="TextLine">
 							<label>URL eller tabell-id</label>
