@@ -10,19 +10,19 @@ const defaultSelectionFilter: SelectionFilter = {
 
 export function get(
   url: string,
-  json: DataqueryRequestData | undefined,
+  json: DataqueryRequestData | PxwebPostBody | undefined,
   selection: SelectionFilter = defaultSelectionFilter,
   queryId?: string,
   noDefaultFilterRegion?: boolean
 ): JSONstat | object | null {
-  if (json?.query && !noDefaultFilterRegion) {
+  if (json && 'query' in json && !noDefaultFilterRegion) {
     for (const query of json.query) {
       if (query.code === 'KOKkommuneregion0000' || query.code === 'Region') {
         query.selection = selection
       }
     }
   }
-  const method = json?.query ? 'POST' : 'GET'
+  const method = json && ('query' in json || 'selection' in json) ? 'POST' : 'GET'
   const requestParams: HttpRequestParams = {
     url,
     method,
@@ -90,4 +90,21 @@ export interface DataqueryRequestData {
 export interface Dimension {
   code: string
   selection: SelectionFilter
+}
+
+//pxwebapi v2 types
+export interface PxwebSelectionItem {
+  variableCode: string
+  valueCodes: string[]
+  codelist?: string
+}
+
+export interface PxwebPlacement {
+  heading?: string[]
+  stub?: string[]
+}
+
+export interface PxwebPostBody {
+  selection: PxwebSelectionItem[]
+  placement?: PxwebPlacement
 }

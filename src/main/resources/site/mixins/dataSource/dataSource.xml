@@ -16,8 +16,45 @@
 						</input>
 					</items>
 				</option>
+				<option name="pxapi">
+					<label>pxwebapi v2</label>
+					<items>
+						<input name="urlOrId" type="TextLine">
+							<label>POST URL eller Tabell ID</label>
+							<occurrences minimum="0" maximum="1" />
+						</input>
+						<input name="json" type="TextLine">
+							<label>POST BODY - API-spørring (må være JSON-stat2)</label>
+							<occurrences minimum="0" maximum="1" />
+						</input>
+						<input name="xAxisLabel" type="TextLine">
+							<label>Navn på x-akse dimensjon</label>
+							<occurrences minimum="0" maximum="1" />
+						</input>
+						<input name="yAxisLabel" type="TextLine">
+							<label>Navn på y-akse dimensjon</label>
+							<occurrences minimum="0" maximum="1" />
+						</input>
+						<option-set name="datasetFilterOptions">
+							<label>Filtrering på dataset</label>
+							<expanded>false</expanded>
+							<occurrences minimum="0" maximum="1" />
+							<options minimum="0" maximum="1">
+								<option name="municipalityFilter">
+									<label>Filtrer på kommune</label>
+									<items>
+										<input type="TextLine" name="municipalityDimension">
+											<label>Hvilken dimensjon skal filtreres på kommunenummer</label>
+											<occurrences minimum="1" maximum="1" />
+										</input>
+									</items>
+								</option>
+							</options>
+						</option-set>
+					</items>
+				</option>
 				<option name="statbankApi">
-					<label>Api-spørring mot statistikkbanken</label>
+					<label>Api-spørring mot statistikkbanken (old)</label>
 					<items>
 						<input name="urlOrId" type="TextLine">
 							<label>URL eller tabell-id</label>

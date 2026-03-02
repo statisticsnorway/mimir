@@ -91,8 +91,123 @@ export function parseTable(
         tableViewData = getTableViewDataStatbankSaved(parsedStatbankSavedData)
       }
     }
+    if (dataSource && dataSource._selected === DataSourceType.PXAPI) {
+      const parsed = typeof data === 'string' ? JSON.parse(data) : data
+      tableViewData = parsePxApiTable(parsed as object, table)
+    }
   }
   return tableViewData
+}
+
+function parsePxApiTable(json: object, table?: Content<Table>): TableView {
+  const empty: TableView = {
+    caption: undefined,
+    thead: [],
+    tbody: [],
+    tfoot: { footnotes: [], correctionNotice: '' },
+    tableClass: '',
+    noteRefs: [],
+    sourceList: [],
+  }
+
+  const d = json as {
+    id: string[]
+    size: number[]
+    value: (number | null)[]
+    dimension: {
+      [key: string]: {
+        category: {
+          index: { [key: string]: number }
+          label?: { [key: string]: string }
+        }
+      }
+    }
+    extension?: {
+      px?: {
+        stub?: string[]
+        heading?: string[]
+      }
+    }
+  }
+
+  if (!d.id || !d.size || !d.value || !d.dimension) return empty
+  if (!d.extension || !d.extension.px) return empty
+
+  const stub = d.extension.px.stub || []
+  const heading = d.extension.px.heading || []
+
+  if (stub.length === 0 || heading.length === 0) return empty
+
+  const rowDimId = stub[0]
+  const colDimId = heading[heading.length - 1]
+
+  const rowDim = d.dimension[rowDimId]
+  const colDim = d.dimension[colDimId]
+
+  if (!rowDim || !colDim) return empty
+
+  const rowIndex = rowDim.category.index
+  const colIndex = colDim.category.index
+
+  const rowKeys = Object.keys(rowIndex).sort((a, b) => rowIndex[a] - rowIndex[b])
+  const colKeys = Object.keys(colIndex).sort((a, b) => colIndex[a] - colIndex[b])
+
+  const dimPos: { [key: string]: number } = {}
+  for (let i = 0; i < d.id.length; i++) dimPos[d.id[i]] = i
+
+  const filter: number[] = []
+  for (let i = 0; i < d.id.length; i++) filter.push(0)
+
+  const headerCells: Array<number | string | PreliminaryData> = ['']
+  for (let i = 0; i < colKeys.length; i++) {
+    const k = colKeys[i]
+    headerCells.push((colDim.category.label && colDim.category.label[k]) || k)
+  }
+
+  const thead: TableRowUniform[] = [{ tr: [{ th: headerCells, td: [] }] }]
+
+  const bodyRows: TableCellUniform[] = []
+
+  for (let r = 0; r < rowKeys.length; r++) {
+    const rowKey = rowKeys[r]
+    filter[dimPos[rowDimId]] = rowIndex[rowKey]
+
+    const rowValues: Array<number | string | PreliminaryData> = []
+
+    for (let c = 0; c < colKeys.length; c++) {
+      const colKey = colKeys[c]
+      filter[dimPos[colDimId]] = colIndex[colKey]
+
+      let idx = 0
+      let mult = 1
+
+      for (let s = d.size.length - 1; s >= 0; s--) {
+        idx += filter[s] * mult
+        mult *= d.size[s]
+      }
+
+      const v = d.value[idx]
+      rowValues.push(typeof v === 'number' ? v : '')
+    }
+
+    bodyRows.push({
+      th: [(rowDim.category.label && rowDim.category.label[rowKey]) || rowKey],
+      td: rowValues,
+    })
+  }
+
+  return {
+    caption: { content: table?.displayName || '', noterefs: '' },
+    thead,
+    tbody: [{ tr: bodyRows }],
+    tableClass: 'statistics',
+    tfoot: {
+      footnotes: [],
+      correctionNotice: table?.data.correctionNotice || '',
+    },
+    noteRefs: [],
+    sourceList: [],
+  }
 }
 
 function parseHtmlTable(table: Content<Table & DataSource>): TableView {
