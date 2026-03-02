@@ -68,22 +68,22 @@ describe('news-helpers ', () => {
     console.log(new Date())
     test('get correct pubdate for dates day wintertime pubdate', () => {
       const pubdate = formatPubDateStatistic('2026-01-01 08:00:00.0')
-      expect(pubdate).toBe('2026-01-01T08:00:00+0100')
+      expect(pubdate).toBe('2026-01-01T08:00:00+01:00')
     })
     test('get correct pubdate for dates summertime pubdate', () => {
       const pubdate = formatPubDateStatistic('2025-08-12 08:00:00.0')
-      expect(pubdate).toBe('2025-08-12T08:00:00+0200')
+      expect(pubdate).toBe('2025-08-12T08:00:00+02:00')
     })
   })
 
   describe('formatPubDateArticle ', () => {
     test('get correct pubdate for dates wintertime pubdate', () => {
       const pubdate = formatPubDateArticle('2025-12-17T07:00:00Z')
-      expect(pubdate).toBe('2025-12-17T08:00:00+0100')
+      expect(pubdate).toBe('2025-12-17T08:00:00+01:00')
     })
     test('get correct pubdate for dates day summertime pubdate', () => {
       const pubdate = formatPubDateArticle('2025-06-06T06:00:00Z')
-      expect(pubdate).toBe('2025-06-06T08:00:00+0200')
+      expect(pubdate).toBe('2025-06-06T08:00:00+02:00')
     })
   })
 })

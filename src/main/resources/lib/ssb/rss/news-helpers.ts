@@ -3,7 +3,7 @@ import { getServerOffsetInMs } from '/lib/ssb/utils/serverOffset'
 import { VariantInListing } from '../dashboard/statreg/types'
 import { nextReleasedPassed } from '../utils/variantUtils'
 
-export const rssDateFormat = "yyyy-MM-dd'T'HH:mm:ssxx"
+export const rssDateFormat = "yyyy-MM-dd'T'HH:mm:ssxxx"
 
 export function findLatestRelease(
   variants: Array<VariantInListing>,
