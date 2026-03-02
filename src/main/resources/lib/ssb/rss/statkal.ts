@@ -8,8 +8,7 @@ import { Contact, ReleasesInListing } from '/lib/ssb/dashboard/statreg/types'
 import { getMainSubjects } from '/lib/ssb/utils/subjectUtils'
 import { calculatePeriod } from '/lib/ssb/utils/variantUtils'
 import { addDays, isWithinInterval } from '/lib/vendor/dateFns'
-import { formatDate, getTimeZoneIso } from '/lib/ssb/utils/dateUtils'
-import { getServerOffsetInMs } from '/lib/ssb/utils/serverOffset'
+import { formatDate } from '/lib/ssb/utils/dateUtils'
 import * as util from '/lib/util'
 import { getContactsFromRepo } from '/lib/ssb/statreg/contacts'
 import { type SubjectItem } from '/lib/types/subject'
@@ -92,14 +91,12 @@ function getUpcomingReleases(statisticVariants: ContentLight<ReleaseVariant>[]):
 function getRssReleases(variants: StatkalVariant[], releases: StatkalRelease[]): RssRelease[] {
   const rssReleases: RssRelease[] = []
   const contacts: Contact[] = getContactsFromRepo()
-  const serverOffsetInMs: number = getServerOffsetInMs()
-  const timeZoneIso: string = getTimeZoneIso(serverOffsetInMs)
   releases.forEach((release: StatkalRelease) => {
     const variant: StatkalVariant = variants.filter(
       (variant) => variant.statisticId == release.statisticId && variant.language === release.language
     )[0]
     const contactsStatistic = contacts.filter((contact) => variant.contacts.includes(contact.id.toString()))
-    const pubDate: string | undefined = formatDate(release.pubDate, "yyyy-MM-dd'T'HH:mm:ss") // Slenge på xx på slutten her og??
+    const pubDate: string | undefined = formatDate(release.pubDate, "yyyy-MM-dd'T'HH:mm:ssxxx")
     rssReleases.push({
       guid: release.guid,
       title: variant.title,
@@ -108,7 +105,7 @@ function getRssReleases(variants: StatkalVariant[], releases: StatkalRelease[]):
       category: variant.category,
       subject: variant.subject,
       language: variant.language === 'en' ? 'en' : 'no',
-      pubDate: `${pubDate}${timeZoneIso}`, // TODO: Her rer samme bug...
+      pubDate: `${pubDate}`,
       periode: release.periode,
       shortname: variant.shortname,
       contacts: util.data.forceArray(contactsStatistic),

@@ -39,13 +39,11 @@ export function getPubDateStatistic(
 
 export function formatPubDateArticle(date: string): string {
   const dateWithOffset = new Date(date)
-  const pubDate: string = format(dateWithOffset, rssDateFormat)
-  return pubDate
+  return format(dateWithOffset, rssDateFormat)
 }
 
 export function formatPubDateStatistic(date: string): string {
-  const pubDate: string = format(parseISO(date), rssDateFormat)
-  return pubDate
+  return format(parseISO(date), rssDateFormat)
 }
 
 export function getLinkByPath(path: string) {
