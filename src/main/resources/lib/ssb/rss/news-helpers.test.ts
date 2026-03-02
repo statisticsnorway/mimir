@@ -1,6 +1,7 @@
 import { afterAll, beforeAll, describe, expect, jest, test } from '@jest/globals'
+import { escape } from 'validator'
 import { StatisticInListing, VariantInListing } from '../dashboard/statreg/types'
-import { findLatestRelease } from './news-helpers'
+import { findLatestRelease, formatPubDateArticle, getPubDateStatistic } from './news-helpers'
 
 // Mock nextReleasedPassed due to lots of dependencies and this simple implementation suffice for these tests
 jest.mock('/lib/ssb/utils/variantUtils', () => ({
@@ -10,58 +11,80 @@ jest.mock('/lib/ssb/utils/variantUtils', () => ({
 jest.mock('/lib/ssb/utils/serverOffset', () => ({
   getServerOffsetInMs: jest.fn(() => 0),
 }))
+describe('news-helpers ', () => {
+  describe('findLatestRelease', () => {
+    const realDate = Date
 
-describe('findLatestRelease', () => {
-  const realDate = Date
+    beforeAll(() => {
+      jest.useFakeTimers() // Enable fake timers
+    })
 
-  beforeAll(() => {
-    jest.useFakeTimers() // Enable fake timers
+    afterAll(() => {
+      jest.useRealTimers()
+      global.Date = realDate
+    })
+    const testCases = [
+      {
+        name: 'should find previous release',
+        systemTime: '2025-07-01T10:00:00+0200',
+        expectedDate: 'Thu Jun 26 2025',
+        expectedFrekvens: 'Måned',
+        expectedNextRelease: '2025-07-24 08:00:00.0',
+        expectedPreviousRelease: '2025-06-26 08:00:00.0',
+      },
+      {
+        name: 'should find previous release before release hours same day as next release',
+        systemTime: '2025-07-24T04:00:00+0200',
+        expectedDate: 'Thu Jun 26 2025',
+        expectedFrekvens: 'Måned',
+        expectedNextRelease: '2025-07-24 08:00:00.0',
+        expectedPreviousRelease: '2025-06-26 08:00:00.0',
+      },
+      {
+        name: 'should find next release when next release date passed',
+        systemTime: '2025-10-24T10:00:00+0200',
+        expectedDate: 'Tue Aug 12 2025',
+        expectedFrekvens: 'Kvartal',
+        expectedNextRelease: '2025-08-12 08:00:00.0',
+        expectedPreviousRelease: '2025-05-08 08:00:00.0',
+      },
+    ]
+
+    test.each(testCases)(
+      '$name',
+      ({ systemTime, expectedDate, expectedFrekvens, expectedNextRelease, expectedPreviousRelease }) => {
+        jest.setSystemTime(new Date(systemTime))
+        const { latestVariant, latestRelease } = findLatestRelease(statistic.variants!)
+
+        expect(latestRelease.toDateString()).toBe(expectedDate)
+        expect(latestVariant.frekvens).toBe(expectedFrekvens)
+        expect(latestVariant.nextRelease).toBe(expectedNextRelease)
+        expect(latestVariant.previousRelease).toBe(expectedPreviousRelease)
+      }
+    )
   })
 
-  afterAll(() => {
-    jest.useRealTimers()
-    global.Date = realDate
+  describe('getPubDateStatistic ', () => {
+    test('get correct pubdate for dates day wintertime pubdate', () => {
+      const pubdate = getPubDateStatistic(statistic.variants![2], '+0100', 60 * 60 * 1000)
+      expect(pubdate).toBe('2026-01-01T08:00:00+0100')
+    })
+    test('get correct pubdate for dates summertime pubdate', () => {
+      const pubdate = getPubDateStatistic(statistic.variants![0], '+0100', 60 * 60 * 1000)
+      expect(pubdate).toBe('2025-08-12T08:00:00+0200')
+    })
   })
 
-  const testCases = [
-    {
-      name: 'should find previous release',
-      systemTime: '2025-07-01T10:00:00+0200',
-      expectedDate: 'Thu Jun 26 2025',
-      expectedFrekvens: 'Måned',
-      expectedNextRelease: '2025-07-24 08:00:00.0',
-      expectedPreviousRelease: '2025-06-26 08:00:00.0',
-    },
-    {
-      name: 'should find previous release before release hours same day as next release',
-      systemTime: '2025-07-24T04:00:00+0200',
-      expectedDate: 'Thu Jun 26 2025',
-      expectedFrekvens: 'Måned',
-      expectedNextRelease: '2025-07-24 08:00:00.0',
-      expectedPreviousRelease: '2025-06-26 08:00:00.0',
-    },
-    {
-      name: 'should find next release when next release date passed',
-      systemTime: '2025-10-24T10:00:00+0200',
-      expectedDate: 'Tue Aug 12 2025',
-      expectedFrekvens: 'Kvartal',
-      expectedNextRelease: '2025-08-12 08:00:00.0',
-      expectedPreviousRelease: '2025-05-08 08:00:00.0',
-    },
-  ]
-
-  test.each(testCases)(
-    '$name',
-    ({ systemTime, expectedDate, expectedFrekvens, expectedNextRelease, expectedPreviousRelease }) => {
-      jest.setSystemTime(new Date(systemTime))
-      const { latestVariant, latestRelease } = findLatestRelease(statistic.variants!)
-
-      expect(latestRelease.toDateString()).toBe(expectedDate)
-      expect(latestVariant.frekvens).toBe(expectedFrekvens)
-      expect(latestVariant.nextRelease).toBe(expectedNextRelease)
-      expect(latestVariant.previousRelease).toBe(expectedPreviousRelease)
-    }
-  )
+  describe('formatPubDateArticle ', () => {
+    test('get correct pubdate for dates wintertime pubdate', () => {
+      const pubdate = formatPubDateArticle('2025-12-17T07:00:00Z', 0, '+0100')
+      expect(pubdate).toBe('2025-12-17T08:00:00+0100')
+    })
+    test('get correct pubdate for dates day summertime pubdate', () => {
+      const pubdate = formatPubDateArticle('2025-06-06T06:00:00Z', 0, '+0100')
+      expect(pubdate).toBe('2025-06-06T08:00:00+0200')
+    })
+  })
 })
 
 // MOCK DATA
@@ -91,6 +114,16 @@ const statistic: StatisticInListing = {
       previousTo: '2025-05-31 00:00:00.0',
       nextRelease: '2025-07-24 08:00:00.0',
       nextReleaseId: '200532',
+      upcomingReleases: [],
+    },
+    {
+      id: '10005',
+      frekvens: 'År',
+      previousRelease: '2025-01-01 08:00:00.0',
+      previousFrom: '2024-01-01 00:00:00.0',
+      previousTo: '2024-12-31 00:00:00.0',
+      nextRelease: '2026-01-01 08:00:00.0',
+      nextReleaseId: '23433',
       upcomingReleases: [],
     },
   ],
