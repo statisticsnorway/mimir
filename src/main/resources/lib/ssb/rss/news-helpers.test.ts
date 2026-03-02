@@ -11,7 +11,7 @@ jest.mock('/lib/ssb/utils/serverOffset', () => ({
   getServerOffsetInMs: jest.fn(() => 0),
 }))
 
-describe('news-helpers ', () => {
+describe('rss/news-helpers ', () => {
   describe('findLatestRelease', () => {
     const realDate = Date
 
