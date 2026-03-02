@@ -59,14 +59,22 @@ export function fetchPxApiData(content: Content<DataSource>): PxApiDataset | nul
       if (urlOrId.startsWith('http')) {
         try {
           const parsed = new URL(urlOrId)
+          const base = new URL(baseUrl)
 
-          const allowedHost = new URL(baseUrl).host
-
-          if (parsed.host === allowedHost) {
-            url = urlOrId
-          } else {
+          if (parsed.host !== base.host) {
             throw new Error(`Invalid PXAPI host: ${parsed.host}`)
           }
+
+          if (!parsed.pathname.startsWith(base.pathname)) {
+            throw new Error(`Invalid PXAPI path: ${parsed.pathname}`)
+          }
+
+          const tableId = parsed.pathname
+            .replace(base.pathname, '')
+            .replace(/^\/+/, '')
+            .replace(/\/data$/, '')
+
+          url = `${baseUrl}/${tableId}/data?lang=${language}&outputFormat=json-stat2`
         } catch {
           throw new Error('Invalid PXAPI URL')
         }
