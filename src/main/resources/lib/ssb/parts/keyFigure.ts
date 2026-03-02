@@ -120,6 +120,8 @@ export function parseKeyFigure(
       if (dataSource?.tbprocessor?.urlOrId === '-1' && branch === 'master') {
         log.info('MIMIR mocked Keyfigure, value:' + keyFigureViewData.number)
       }
+    } else if (dataSource && dataSource._selected === DataSourceType.PXAPI) {
+      applyPxApiKeyFigure(keyFigureViewData, data)
     }
     return keyFigureViewData
   } else if (keyFigure.data.manualSource) {
@@ -130,6 +132,31 @@ export function parseKeyFigure(
     }
     return keyFigureViewData
   }
+  return keyFigureViewData
+}
+
+function applyPxApiKeyFigure(
+  keyFigureViewData: KeyFigureView,
+  data: string | JSONstatType | TbmlDataUniform | object | undefined
+): KeyFigureView {
+  if (!data) return keyFigureViewData
+
+  const parsed = typeof data === 'string' ? JSON.parse(data) : data
+
+  const ds = JSONstat(parsed).Dataset(0) as unknown as {
+    id: string[]
+    Data: (filter: Array<number>, includeStatus?: boolean) => number | null
+  }
+
+  if (!ds || !ds.id || typeof ds.Data !== 'function') return keyFigureViewData
+
+  const dimensionFilter: Array<number> = ds.id.map(() => 0)
+
+  const value = ds.Data(dimensionFilter, false)
+  if (value !== null) {
+    keyFigureViewData.number = parseValueZeroSafe(value)
+  }
+
   return keyFigureViewData
 }
 

@@ -56,27 +56,19 @@ export function fetchPxApiData(content: Content<DataSource>): PxApiDataset | nul
 
       let url = `${baseUrl}/${urlOrId}/data?lang=${language}&outputFormat=json-stat2`
 
-      if (urlOrId.startsWith('http')) {
-        try {
-          const parsed = new URL(urlOrId)
-          const base = new URL(baseUrl)
-
-          if (parsed.host !== base.host) {
-            throw new Error(`Invalid PXAPI host: ${parsed.host}`)
-          }
-
-          if (!parsed.pathname.startsWith(base.pathname)) {
-            throw new Error(`Invalid PXAPI path: ${parsed.pathname}`)
-          }
-
-          const tableId = parsed.pathname
-            .replace(base.pathname, '')
-            .replace(/^\/+/, '')
-            .replace(/\/data$/, '')
-
-          url = `${baseUrl}/${tableId}/data?lang=${language}&outputFormat=json-stat2`
-        } catch {
+      if (!urlOrId.startsWith('http')) {
+        url = `${baseUrl}/${urlOrId}/data?lang=${language}&outputFormat=json-stat2`
+      } else {
+        if (!urlOrId.startsWith(baseUrl)) {
           throw new Error('Invalid PXAPI URL')
+        }
+
+        if (urlOrId.includes('/data')) {
+          url = urlOrId
+        } else {
+          const cleaned = urlOrId.replace(/\/+$/, '')
+          const tableId = cleaned.substring(baseUrl.length + 1)
+          url = `${baseUrl}/${tableId}/data?lang=${language}&outputFormat=json-stat2`
         }
       }
 
