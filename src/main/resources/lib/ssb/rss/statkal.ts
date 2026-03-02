@@ -99,7 +99,7 @@ function getRssReleases(variants: StatkalVariant[], releases: StatkalRelease[]):
       (variant) => variant.statisticId == release.statisticId && variant.language === release.language
     )[0]
     const contactsStatistic = contacts.filter((contact) => variant.contacts.includes(contact.id.toString()))
-    const pubDate: string | undefined = formatDate(release.pubDate, "yyyy-MM-dd'T'HH:mm:ss")
+    const pubDate: string | undefined = formatDate(release.pubDate, "yyyy-MM-dd'T'HH:mm:ss") // Slenge på xx på slutten her og??
     rssReleases.push({
       guid: release.guid,
       title: variant.title,
@@ -108,7 +108,7 @@ function getRssReleases(variants: StatkalVariant[], releases: StatkalRelease[]):
       category: variant.category,
       subject: variant.subject,
       language: variant.language === 'en' ? 'en' : 'no',
-      pubDate: `${pubDate}${timeZoneIso}`,
+      pubDate: `${pubDate}${timeZoneIso}`, // TODO: Her rer samme bug...
       periode: release.periode,
       shortname: variant.shortname,
       contacts: util.data.forceArray(contactsStatistic),

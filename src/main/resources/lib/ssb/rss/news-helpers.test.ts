@@ -1,7 +1,6 @@
 import { afterAll, beforeAll, describe, expect, jest, test } from '@jest/globals'
-import { escape } from 'validator'
 import { StatisticInListing, VariantInListing } from '../dashboard/statreg/types'
-import { findLatestRelease, formatPubDateArticle, getPubDateStatistic } from './news-helpers'
+import { findLatestRelease, formatPubDateArticle, formatPubDateStatistic } from './news-helpers'
 
 // Mock nextReleasedPassed due to lots of dependencies and this simple implementation suffice for these tests
 jest.mock('/lib/ssb/utils/variantUtils', () => ({
@@ -11,6 +10,7 @@ jest.mock('/lib/ssb/utils/variantUtils', () => ({
 jest.mock('/lib/ssb/utils/serverOffset', () => ({
   getServerOffsetInMs: jest.fn(() => 0),
 }))
+
 describe('news-helpers ', () => {
   describe('findLatestRelease', () => {
     const realDate = Date
@@ -64,24 +64,25 @@ describe('news-helpers ', () => {
     )
   })
 
-  describe('getPubDateStatistic ', () => {
+  describe('formatPubDateStatistic ', () => {
+    console.log(new Date())
     test('get correct pubdate for dates day wintertime pubdate', () => {
-      const pubdate = getPubDateStatistic(statistic.variants![2], '+0100', 60 * 60 * 1000)
+      const pubdate = formatPubDateStatistic('2026-01-01 08:00:00.0')
       expect(pubdate).toBe('2026-01-01T08:00:00+0100')
     })
     test('get correct pubdate for dates summertime pubdate', () => {
-      const pubdate = getPubDateStatistic(statistic.variants![0], '+0100', 60 * 60 * 1000)
+      const pubdate = formatPubDateStatistic('2025-08-12 08:00:00.0')
       expect(pubdate).toBe('2025-08-12T08:00:00+0200')
     })
   })
 
   describe('formatPubDateArticle ', () => {
     test('get correct pubdate for dates wintertime pubdate', () => {
-      const pubdate = formatPubDateArticle('2025-12-17T07:00:00Z', 0, '+0100')
+      const pubdate = formatPubDateArticle('2025-12-17T07:00:00Z')
       expect(pubdate).toBe('2025-12-17T08:00:00+0100')
     })
     test('get correct pubdate for dates day summertime pubdate', () => {
-      const pubdate = formatPubDateArticle('2025-06-06T06:00:00Z', 0, '+0100')
+      const pubdate = formatPubDateArticle('2025-06-06T06:00:00Z')
       expect(pubdate).toBe('2025-06-06T08:00:00+0200')
     })
   })
@@ -114,16 +115,6 @@ const statistic: StatisticInListing = {
       previousTo: '2025-05-31 00:00:00.0',
       nextRelease: '2025-07-24 08:00:00.0',
       nextReleaseId: '200532',
-      upcomingReleases: [],
-    },
-    {
-      id: '10005',
-      frekvens: 'År',
-      previousRelease: '2025-01-01 08:00:00.0',
-      previousFrom: '2024-01-01 00:00:00.0',
-      previousTo: '2024-12-31 00:00:00.0',
-      nextRelease: '2026-01-01 08:00:00.0',
-      nextReleaseId: '23433',
       upcomingReleases: [],
     },
   ],

@@ -3,6 +3,8 @@ import { getServerOffsetInMs } from '/lib/ssb/utils/serverOffset'
 import { VariantInListing } from '../dashboard/statreg/types'
 import { nextReleasedPassed } from '../utils/variantUtils'
 
+export const rssDateFormat = "yyyy-MM-dd'T'HH:mm:ssxx"
+
 export function findLatestRelease(
   variants: Array<VariantInListing>,
   serverOffsetInMs: number = getServerOffsetInMs()
@@ -28,23 +30,22 @@ export function findLatestRelease(
 
 export function getPubDateStatistic(
   variant: VariantInListing,
-  timeZoneIso: string,
   serverOffsetInMs: number = getServerOffsetInMs()
 ): string | undefined {
   const nextReleaseDatePassed: boolean = variant.nextRelease ? nextReleasedPassed(variant, serverOffsetInMs) : false
   const pubDate: string | undefined = nextReleaseDatePassed ? variant.nextRelease : variant.previousRelease
-  return pubDate ? formatPubDateStatistic(pubDate, timeZoneIso) : undefined
+  return pubDate ? formatPubDateStatistic(pubDate) : undefined
 }
 
-export function formatPubDateArticle(date: string, serverOffsetInMS: number, timeZoneIso: string): string {
-  const dateWithOffset = new Date(new Date(date).getTime() + serverOffsetInMS)
-  const pubDate: string = format(dateWithOffset, "yyyy-MM-dd'T'HH:mm:ss")
-  return `${pubDate}${timeZoneIso}`
+export function formatPubDateArticle(date: string): string {
+  const dateWithOffset = new Date(date)
+  const pubDate: string = format(dateWithOffset, rssDateFormat)
+  return pubDate
 }
 
-export function formatPubDateStatistic(date: string, timeZoneIso: string): string {
-  const pubDate: string = format(parseISO(date), "yyyy-MM-dd'T'HH:mm:ss")
-  return `${pubDate}${timeZoneIso}`
+export function formatPubDateStatistic(date: string): string {
+  const pubDate: string = format(parseISO(date), rssDateFormat)
+  return pubDate
 }
 
 export function getLinkByPath(path: string) {

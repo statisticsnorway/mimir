@@ -1,7 +1,6 @@
 import { type Request } from '@enonic-types/core'
 import { query, type Content } from '/lib/xp/content'
 import { StatisticInListing, VariantInListing } from '/lib/ssb/dashboard/statreg/types'
-import { getTimeZoneIso } from '/lib/ssb/utils/dateUtils'
 import { subDays, isAfter } from '/lib/vendor/dateFns'
 import { getServerOffsetInMs } from '/lib/ssb/utils/serverOffset'
 import { getAllStatisticsFromRepo } from '/lib/ssb/statreg/statistics'
@@ -27,8 +26,6 @@ export function getNews(days: number): NewsItem[] {
 function getArticles(mainSubjects: SubjectItem[], days: number): NewsItem[] {
   const from: string = subDays(new Date(), days).toISOString()
   const to: string = new Date().toISOString()
-  const serverOffsetInMs: number = getServerOffsetInMs()
-  const timeZoneIso: string = getTimeZoneIso(serverOffsetInMs)
 
   const news: Array<NewsItem> = []
   mainSubjects.forEach((mainSubject) => {
@@ -49,9 +46,7 @@ function getArticles(mainSubjects: SubjectItem[], days: number): NewsItem[] {
       },
     }).hits as unknown as Array<Content<Article>>
     articles.forEach((article) => {
-      const pubDate: string | undefined = article.publish?.from
-        ? formatPubDateArticle(article.publish.from, serverOffsetInMs, timeZoneIso)
-        : undefined
+      const pubDate: string | undefined = article.publish?.from ? formatPubDateArticle(article.publish.from) : undefined
       if (pubDate) {
         const link = getLinkByPath(article._path)
         const preface = getIngressWithKeyFigureText(article.data.ingress)
@@ -88,7 +83,6 @@ function getStatistics(mainSubjects: SubjectItem[], days: number): NewsItem[] {
     }
     return statsWithRelease
   }, [])
-  const timeZoneIso: string = getTimeZoneIso(serverOffsetInMs)
 
   const statisticsNews: NewsItem[] = []
   if (statregStatistics.length > 0) {
@@ -105,9 +99,7 @@ function getStatistics(mainSubjects: SubjectItem[], days: number): NewsItem[] {
           (s) => s.id.toString() === statistic.data.statistic
         )
         const variant: VariantInListing | undefined = statreg?.variants?.[0] || undefined
-        const pubDate: string | undefined = variant
-          ? getPubDateStatistic(variant, timeZoneIso, serverOffsetInMs)
-          : undefined
+        const pubDate: string | undefined = variant ? getPubDateStatistic(variant, serverOffsetInMs) : undefined
 
         const link = getLinkByPath(statistic._path)
 
