@@ -98,7 +98,7 @@ export function parseTable(
   }
   return tableViewData
 }
-
+// eslint-disable-next-line complexity
 function parsePxApiTable(json: object, table?: Content<Table>): TableView {
   const empty: TableView = {
     caption: undefined,
