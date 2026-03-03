@@ -1,3 +1,4 @@
+import { TZDate, tz } from '@date-fns/tz'
 import { format, isAfter, parseISO } from '/lib/vendor/dateFns'
 import { getServerOffsetInMs } from '/lib/ssb/utils/serverOffset'
 import { VariantInListing } from '../dashboard/statreg/types'
@@ -38,12 +39,14 @@ export function getPubDateStatistic(
 }
 
 export function formatPubDateArticle(date: string): string {
-  const dateWithOffset = new Date(date)
+  const dateWithOffset = new TZDate(date, 'Europe/Oslo')
   return format(dateWithOffset, rssDateFormat)
 }
 
 export function formatPubDateStatistic(date: string): string {
-  return format(parseISO(date), rssDateFormat)
+  return format(parseISO(date), rssDateFormat, {
+    in: tz('Europe/Oslo'),
+  })
 }
 
 export function getLinkByPath(path: string) {
