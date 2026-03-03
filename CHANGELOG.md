@@ -1,5 +1,25 @@
 # Changelog
 
+## [2.42.0](https://github.com/statisticsnorway/mimir/compare/v2.41.0...v2.42.0) (2026-03-03)
+
+
+### Features
+
+* **statbankSaved:** fetch saved queries via pxweb v2 API [MIM-2530] ([#3634](https://github.com/statisticsnorway/mimir/issues/3634)) ([d4d787d](https://github.com/statisticsnorway/mimir/commit/d4d787da8a8a13185f8744efd2529cb955b34f45))
+
+
+### Bug Fixes
+
+* Corrected default value in schema, improved default logic. [MIM-2526] ([#3636](https://github.com/statisticsnorway/mimir/issues/3636)) ([1ff82de](https://github.com/statisticsnorway/mimir/commit/1ff82dea241d8049ecf6a3f52c1a367781ec4918))
+* correctly handle multiple variants for same statistic on same day [MIM-2523] ([#3629](https://github.com/statisticsnorway/mimir/issues/3629)) ([b1053dd](https://github.com/statisticsnorway/mimir/commit/b1053dd058044679b2130bd7fd8e5bcb92467946))
+* preserve multiple variants per statistic and ensure unique day keys ([b1053dd](https://github.com/statisticsnorway/mimir/commit/b1053dd058044679b2130bd7fd8e5bcb92467946))
+
+
+### Build System and dependencies
+
+* Bump commons-codec:commons-codec from 1.20.0 to 1.21.0 ([#3618](https://github.com/statisticsnorway/mimir/issues/3618)) ([e8be79e](https://github.com/statisticsnorway/mimir/commit/e8be79e85a3d72de6ed5a08667eb1622a6fcfef0))
+* Bump dawidd6/action-download-artifact from 12 to 14 ([#3617](https://github.com/statisticsnorway/mimir/issues/3617)) ([fed95e0](https://github.com/statisticsnorway/mimir/commit/fed95e0f0458b8f365c20a5cc779b10b66175902))
+
 ## [2.41.0](https://github.com/statisticsnorway/mimir/compare/v2.40.0...v2.41.0) (2026-02-17)
 
 
