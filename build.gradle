@@ -14,7 +14,7 @@ app {
     systemVersion = "${xpVersion}"}
 
 dependencies {
-    implementation 'commons-codec:commons-codec:1.20.0'
+    implementation 'commons-codec:commons-codec:1.21.0'
     implementation "com.enonic.xp:core-api:${xpVersion}"
     implementation "com.enonic.xp:portal-api:${xpVersion}"
     include 'com.enonic.lib:lib-cache:2.2.1'

@@ -12,7 +12,7 @@
                     <option value="headerLink">Uthevet lenke</option>
                     <option value="profiledLink">Profilert lenke</option>
                 </config>
-                <default>one</default>
+                <default>tableLink</default>
                 </input>
             </items>
         </field-set>
