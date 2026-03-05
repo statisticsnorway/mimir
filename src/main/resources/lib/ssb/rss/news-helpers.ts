@@ -1,10 +1,11 @@
-import { TZDate, tz } from '@date-fns/tz'
 import { format, isAfter, parseISO } from '/lib/vendor/dateFns'
 import { getServerOffsetInMs } from '/lib/ssb/utils/serverOffset'
+import { formatDate } from '/lib/time'
 import { VariantInListing } from '../dashboard/statreg/types'
 import { nextReleasedPassed } from '../utils/variantUtils'
 
-export const rssDateFormat = "yyyy-MM-dd'T'HH:mm:ssxxx"
+const OSLO_ZONE = 'Europe/Oslo'
+const FORMATTER = "yyyy-MM-dd'T'HH:mm:ssXXX"
 
 export function findLatestRelease(
   variants: Array<VariantInListing>,
@@ -39,14 +40,16 @@ export function getPubDateStatistic(
 }
 
 export function formatPubDateArticle(date: string): string {
-  const dateWithOffset = new TZDate(date, 'Europe/Oslo')
-  return format(dateWithOffset, rssDateFormat)
+  return formatDate({
+    date, // your ISO UTC string
+    pattern: FORMATTER,
+    timezoneId: OSLO_ZONE,
+  })!
 }
 
 export function formatPubDateStatistic(date: string): string {
-  return format(parseISO(date), rssDateFormat, {
-    in: tz('Europe/Oslo'),
-  })
+  // TODO: test implementation
+  return formatDate({ date: parseISO(date), pattern: FORMATTER, timezoneId: OSLO_ZONE })
 }
 
 export function getLinkByPath(path: string) {
