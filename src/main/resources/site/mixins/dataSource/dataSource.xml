@@ -23,7 +23,7 @@
 							<label>POST URL eller Tabell ID</label>
 							<occurrences minimum="0" maximum="1" />
 						</input>
-						<input name="json" type="TextLine">
+						<input name="json" type="TextArea">
 							<label>POST BODY - API-spørring (må være JSON-stat2)</label>
 							<occurrences minimum="0" maximum="1" />
 						</input>

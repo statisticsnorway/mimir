@@ -54,7 +54,7 @@ export function fetchPxApiData(content: Content<DataSource>): PxApiDataset | nul
 
       const urlOrId = dataSource.pxapi.urlOrId.trim()
 
-      let url = `${baseUrl}/${urlOrId}/data?lang=${language}&outputFormat=json-stat2`
+      let url
 
       if (!urlOrId.startsWith('http')) {
         url = `${baseUrl}/${urlOrId}/data?lang=${language}&outputFormat=json-stat2`
