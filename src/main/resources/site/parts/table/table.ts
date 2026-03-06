@@ -1,327 +1,186 @@
-import '/lib/ssb/polyfills/nashorn'
-// @ts-ignore
-import striptags from 'striptags'
-import { type Request } from '@enonic-types/core'
-import { Content } from '/lib/xp/content'
+import { type Request, type Response } from '@enonic-types/core'
+import { get as getContentByKey, type Content } from '/lib/xp/content'
+import { getContent, getComponent, pageUrl } from '/lib/xp/portal'
+import { render } from '/lib/thymeleaf'
+import { parseTable } from '/lib/ssb/parts/table'
+import { type SourceList, type SourcesConfig } from '/lib/types/sources'
+import { getSources } from '/lib/ssb/utils/utils'
 import {
-  type TbmlDataUniform,
-  type TableRowUniform,
-  type TableCellUniform,
-  type Note,
-  type NotesUniform,
-  type PreliminaryData,
-  type Title,
-  type Source,
-  type Thead,
-  type StatbankSavedRaw,
-  type StatbankSavedUniform,
-  type TableCellRaw,
-  type XmlParser,
-} from '/lib/types/xmlParser'
-import {
-  DatasetRepoNode,
-  DataSource as DataSourceType,
-  DATASET_BRANCH,
-  UNPUBLISHED_DATASET_BRANCH,
-} from '/lib/ssb/repo/dataset'
+  type DropdownItem as TableDownloadDropdownItem,
+  type DropdownItems as TableDownloadDropdownItems,
+} from '/lib/types/components'
+import { type Language, type Phrases } from '/lib/types/language'
+import { render as r4xpRender } from '/lib/enonic/react4xp'
+import { DataSource as DataSourceType, DATASET_BRANCH, UNPUBLISHED_DATASET_BRANCH } from '/lib/ssb/repo/dataset'
 
+import { renderError } from '/lib/ssb/error/error'
 import * as util from '/lib/util'
-import { getDataset } from '/lib/ssb/dataset/dataset'
-import { datasetOrUndefined } from '/lib/ssb/cache/cache'
-import { getRowValue } from '/lib/ssb/utils/utils'
+import { getLanguage, getPhrases } from '/lib/ssb/utils/language'
+import { hasWritePermissionsAndPreview } from '/lib/ssb/parts/permissions'
 import {
-  type DatasourceHtmlTable,
-  type HtmlTable,
-  type HtmlTableRaw,
-  type HtmlTableRowRaw,
-  type BodyCell,
   type TableView,
+  type TableProps,
+  type TableStandardSymbolLink,
+  type TableSourceList,
 } from '/lib/types/partTypes/table'
-import { type DataSource } from '/site/mixins/dataSource'
-import { type Table } from '/site/content-types'
+import { type Statistics, type Table } from '/site/content-types'
 
-const xmlParser: XmlParser = __.newBean('no.ssb.xp.xmlparser.XmlParser') as XmlParser
+const view = resolve('./table.html')
 
-export function parseTable(
-  req: Request,
-  table: Content<Table & DataSource>,
-  branch: string = DATASET_BRANCH
-): TableView {
-  let tableViewData: TableView = {
-    caption: undefined,
-    thead: [],
-    tbody: [],
-    tfoot: {
-      footnotes: [],
-      correctionNotice: '',
-    },
-    tableClass: '',
-    noteRefs: [],
-    sourceList: [],
+export function get(req: Request): Response {
+  try {
+    const config = getComponent<XP.PartComponent.Table>()?.config
+    if (!config) throw Error('No part found')
+
+    const page = getContent<Content<Statistics>>()
+    if (!page) throw Error('No page found')
+
+    const tableId: string = config.table ? config.table : (page.data.mainTable as string)
+    return renderPart(req, tableId)
+  } catch (e) {
+    return renderError(req, 'Error in part', e)
   }
-  const dataSource: DataSource['dataSource'] | undefined = table.data.dataSource
-
-  if (dataSource && dataSource._selected === DataSourceType.HTMLTABLE) {
-    return parseHtmlTable(table)
-  }
-
-  let datasetRepo: DatasetRepoNode<TbmlDataUniform | StatbankSavedRaw | object> | undefined | null
-  if (branch === UNPUBLISHED_DATASET_BRANCH) {
-    datasetRepo = getDataset(table, UNPUBLISHED_DATASET_BRANCH)
-  } else {
-    datasetRepo = datasetOrUndefined(table)
-  }
-
-  if (datasetRepo) {
-    const data: string | TbmlDataUniform | StatbankSavedRaw | object | undefined = datasetRepo.data
-
-    if (dataSource && dataSource._selected === DataSourceType.TBPROCESSOR) {
-      const tbmlData: TbmlDataUniform = data as TbmlDataUniform
-      if (tbmlData?.tbml?.metadata && tbmlData?.tbml?.presentation) {
-        tableViewData = getTableViewData(tbmlData, table)
-      }
-    }
-
-    if (dataSource && dataSource._selected === DataSourceType.STATBANK_SAVED) {
-      const statbankSavedData: StatbankSavedRaw | null = data as StatbankSavedRaw
-      const parsedStatbankSavedData: StatbankSavedUniform = statbankSavedData
-        ? JSON.parse(statbankSavedData.json)
-        : null
-      if (parsedStatbankSavedData) {
-        tableViewData = getTableViewDataStatbankSaved(parsedStatbankSavedData)
-      }
-    }
-  }
-  return tableViewData
 }
 
-function parseHtmlTable(table: Content<Table & DataSource>): TableView {
-  const dataSource: DataSource['dataSource'] | undefined = table.data.dataSource
-  const datasourceHtmlTable: DatasourceHtmlTable | undefined =
-    dataSource && dataSource._selected === DataSourceType.HTMLTABLE
-      ? (dataSource.htmlTable as DatasourceHtmlTable)
-      : undefined
-  const tableData: string | undefined = datasourceHtmlTable ? datasourceHtmlTable.html : undefined
-  const jsonTable: HtmlTableRaw | undefined = tableData
-    ? parseStringToJson(tableData.replace(/&nbsp;/g, ' '))
-    : undefined
-  const tableRows: Array<HtmlTableRowRaw> = jsonTable ? util.data.forceArray(jsonTable.table.tbody.tr) : []
-  const numberHeadRows: number =
-    datasourceHtmlTable && datasourceHtmlTable.numberHeadRows ? Number(datasourceHtmlTable.numberHeadRows) : 1
-  const theadRows: Array<HtmlTableRowRaw> = tableRows.slice(0, numberHeadRows)
-  const tbodyRows: Array<HtmlTableRowRaw> = tableRows.slice(numberHeadRows)
-  const footNotes: Array<string> = datasourceHtmlTable?.footnoteText
-    ? util.data.forceArray(datasourceHtmlTable.footnoteText)
-    : []
-  const correctionText: string = table.data.correctionNotice || ''
-  const noteRefs: Array<string> = footNotes ? footNotes.map((_note: string, index: number) => `note:${index + 1}`) : []
-  const notes: Array<Note> = footNotes
-    ? footNotes.map((note: string, index: number) => {
-        return {
-          noteid: `note:${index + 1}`,
-          content: note,
-        }
-      })
-    : []
+export function preview(req: Request, id?: string): Response {
+  return renderPart(req, id)
+}
 
-  const thead: Array<TableRowUniform> = [
-    {
-      tr: theadRows.map((row) => {
-        return {
-          th: getHtmlTableCells(row),
-          td: [],
-        }
-      }),
-    },
-  ]
+export function getProps(req: Request, tableId?: string): TableProps {
+  const page = getContent<Content<Table>>()
+  if (!page) throw Error('No page found')
 
-  const tbody: Array<TableRowUniform> = [
-    {
-      tr: tbodyRows.map((row) => {
-        const cells: Array<number | string | PreliminaryData> = getHtmlTableCells(row)
-        return {
-          th: util.data.forceArray(cells[0]),
-          td: cells.slice(1),
-        }
-      }),
-    },
-  ]
+  const language: Language = getLanguage(page) as Language
+  const phrases: Phrases = getPhrases(page) as Phrases
+
+  const tableContent: Content<Table> | null = getContentByKey({
+    key: tableId as string,
+  }) as Content<Table>
+
+  const datasourceHtmlTable: boolean = tableContent.data.dataSource?._selected === DataSourceType.HTMLTABLE
+
+  const showPreviewDraft: boolean = hasWritePermissionsAndPreview(req, tableId as string)
+  const table: TableView = parseTable(req, tableContent, DATASET_BRANCH)
+  let tableDraft: TableView | undefined
+  if (!datasourceHtmlTable && showPreviewDraft) {
+    tableDraft = parseTable(req, tableContent, UNPUBLISHED_DATASET_BRANCH)
+  }
+  const draftExist: boolean | undefined = tableDraft && tableDraft.thead.length > 0
+  const pageTypeStatistic: boolean = page.type === `${app.name}:statistics`
+
+  // sources
+  const sourceConfig: Table['sources'] | Array<SourcesConfig> = tableContent.data.sources
+    ? util.data.forceArray(tableContent.data.sources)
+    : []
+  const sourceLabel: string = phrases.source
+  const sourceTableLabel: string = phrases.statbankTableSource
+  const sources: SourceList = getSources(sourceConfig as Array<SourcesConfig>)
+
+  const standardSymbol: TableStandardSymbolLink | undefined = getStandardSymbolPage(
+    language.standardSymbolPage,
+    phrases.tableStandardSymbols
+  )
+  const baseUrl: string = app.config?.['ssb.baseUrl'] ? `${app.config['ssb.baseUrl'] as string}` : 'https://www.ssb.no'
+  const statBankWebUrl: string = tableContent.language === 'en' ? baseUrl + '/en/statbank' : baseUrl + '/statbank'
+  const sourceList: TableSourceList = table.sourceList ? util.data.forceArray(table.sourceList) : []
+  const sourceListExternal: TableSourceList =
+    sourceList.length > 0 ? sourceList.filter((s) => s.tableApproved === 'internet') : []
+  const uniqueTableIds: Array<string> =
+    sourceListExternal.length > 0
+      ? sourceListExternal
+          .map((item) => item.tableId.toString())
+          .filter((value, index, self) => self.indexOf(value) === index)
+      : []
 
   return {
-    caption: {
-      noterefs: '',
-      content: table.displayName,
+    downloadTableLabel: phrases.tableDownloadAs,
+    downloadTableTitle: {
+      title: phrases.tableDownloadAs,
     },
-    thead: thead,
-    tbody: tbody,
-    tfoot: {
-      footnotes: notes,
-      correctionNotice: correctionText,
+    downloadTableOptions: getDownloadTableOptions(),
+    table: {
+      caption: table.caption,
+      thead: table.thead,
+      tbody: table.tbody,
+      tfoot: table.tfoot,
+      tableClass: table.tableClass,
+      language: language.code,
+      noteRefs: table.noteRefs,
     },
-    tableClass: 'statistics',
-    noteRefs: noteRefs,
-    sourceList: [],
+    tableDraft: {
+      caption: tableDraft ? tableDraft.caption : undefined,
+      thead: tableDraft ? tableDraft.thead : undefined,
+      tbody: tableDraft ? tableDraft.tbody : undefined,
+      tfoot: tableDraft ? tableDraft.tfoot : undefined,
+      noteRefs: tableDraft ? tableDraft.noteRefs : undefined,
+    },
+    standardSymbol: standardSymbol,
+    sources,
+    sourceLabel,
+    showPreviewDraft,
+    paramShowDraft: req.params.showDraft ? true : false,
+    draftExist,
+    pageTypeStatistic,
+    sourceListTables: uniqueTableIds,
+    sourceTableLabel,
+    statBankWebUrl,
+    hiddenTitle: table.caption ? table.caption.content : undefined,
   }
 }
+function renderPart(req: Request, tableId?: string): Response {
+  const page = getContent<Content<Table>>()
+  if (!page) throw Error('No page found')
 
-function getHtmlTableCells(row: HtmlTableRowRaw): Array<number | string | PreliminaryData> {
-  const tablecells: Array<number | string | PreliminaryData> = util.data.forceArray(row.td)
-  return tablecells.map((cell) => {
-    return typeof cell === 'object' && cell.strong
-      ? {
-          ...cell,
-          content: cell.strong,
-          class: 'title',
-        }
-      : cell
-  })
-}
+  const phrases: Phrases = getPhrases(page) as Phrases
 
-export function getTableViewData(dataContent: TbmlDataUniform, table?: Content<Table>): TableView {
-  const title: Title = dataContent.tbml.metadata.title
-  const notes: NotesUniform = dataContent.tbml.metadata.notes
-  const sourceList: Array<Source> = dataContent?.tbml?.metadata?.sourceList || []
-  const headRows: Array<TableRowUniform> = util.data.forceArray(dataContent.tbml.presentation.table.thead)
-  const bodyRows: Array<TableRowUniform> = util.data.forceArray(dataContent.tbml.presentation.table.tbody)
-
-  const headNoteRefs: Array<string> = headRows.reduce((acc: Array<string>, row: TableRowUniform) => {
-    const tableCells: Array<TableCellUniform> = row.tr
-    tableCells.forEach((cell: TableCellUniform) => {
-      if (cell) acc.push(...getNoterefsHeader(cell))
-    })
-    return acc
-  }, [])
-
-  const bodyNoteRefs: Array<string> = bodyRows.reduce((acc: Array<string>, row: TableRowUniform) => {
-    const tableCells: Array<TableCellUniform> = row.tr
-    tableCells.forEach((cell: TableCellUniform) => {
-      if (cell) acc.push(...getNoterefsHeader(cell))
-    })
-    return acc
-  }, [])
-
-  const noteRefs: Array<string> = title?.noterefs
-    ? [...title.noterefs.split(' '), ...headNoteRefs, ...bodyNoteRefs]
-    : [...headNoteRefs, ...bodyNoteRefs]
-
-  const uniqueNoteRefs: Array<string> = noteRefs.filter((v, i, a) => a.indexOf(v) === i)
-
-  return {
-    caption: title,
-    thead: headRows,
-    tbody: bodyRows,
-    tableClass: dataContent.tbml.presentation.table.class ? dataContent.tbml.presentation.table.class : 'statistics',
-    tfoot: {
-      footnotes: notes ? notes.note : [],
-      correctionNotice: table?.data.correctionNotice ?? '',
-    },
-    noteRefs: uniqueNoteRefs,
-    sourceList,
-  }
-}
-
-export function parseHtmlString(tableData: string): HtmlTable {
-  const jsonTable: HtmlTableRaw | undefined = parseStringToJson(tableData)
-  const tableRows: Array<HtmlTableRowRaw> = jsonTable ? jsonTable.table.tbody.tr : []
-  const theadRows: Array<HtmlTableRowRaw> = []
-  const tbodyRows: Array<HtmlTableRowRaw> = []
-
-  tableRows.forEach((row: HtmlTableRowRaw, index: number) => {
-    if (index > 0) {
-      tbodyRows.push(row)
+  if (!tableId) {
+    if (req.mode === 'edit' && page.type !== `${app.name}:statistics`) {
+      return {
+        body: render(view, {
+          label: phrases.table,
+        }),
+      }
     } else {
-      theadRows.push(row)
+      return {
+        body: null,
+      }
     }
-  })
+  }
 
-  const headCell: Array<number | string> = theadRows[0].td.map((dataCell) => {
-    const value: number | string = getRowValue(dataCell)
-    return typeof value === 'string' ? value.replace(/&nbsp;/g, '') : value
-  })
+  return r4xpRender('Table', getProps(req, tableId), req)
+}
 
-  const bodyCells: Array<BodyCell> = tbodyRows.map((row) => {
-    const dataCellValues: Array<number | string> = row.td.map((dataCell) => {
-      const value: number | string = getRowValue(dataCell)
-      return typeof value === 'string' ? value.replace(/&nbsp;/g, '') : value
+function getDownloadTableOptions(): TableDownloadDropdownItems {
+  const downloadTable: TableDownloadDropdownItems = []
+
+  const XLS: TableDownloadDropdownItem = {
+    title: '.xlsx (Excel)',
+    id: 'downloadTableAsXLSX',
+  }
+  downloadTable.push(XLS)
+
+  const CSV: TableDownloadDropdownItem = {
+    title: '.CSV',
+    id: 'downloadTableAsCSV',
+  }
+  downloadTable.push(CSV)
+
+  return downloadTable
+}
+
+function getStandardSymbolPage(
+  standardSymbolPage: Language['standardSymbolPage'],
+  standardSymbolText: string
+): TableStandardSymbolLink | undefined {
+  if (standardSymbolPage) {
+    const standardSymbolHref: string = pageUrl({
+      id: standardSymbolPage,
     })
 
     return {
-      td: dataCellValues,
+      href: standardSymbolHref,
+      text: standardSymbolText,
     }
-  })
-
-  return {
-    table: {
-      thead: {
-        tr: {
-          th: headCell,
-        },
-      },
-      tbody: {
-        tr: bodyCells,
-      },
-    },
   }
-}
-
-function parseStringToJson(tableData: string): HtmlTableRaw | undefined {
-  const sanitized = striptags(tableData, ['table', 'thead', 'tbody', 'tr', 'th', 'td', 'strong'])
-  const tableRaw: string = __.toNativeObject(xmlParser.parse(sanitized)) as string
-  const jsonTable: HtmlTableRaw | undefined = tableRaw ? (JSON.parse(tableRaw) as HtmlTableRaw) : undefined
-  return jsonTable
-}
-
-function getTableViewDataStatbankSaved(dataContent: StatbankSavedUniform): TableView {
-  const title: Title = dataContent.table.caption
-  const headRows: Array<TableRowUniform> = util.data.forceArray(dataContent.table.thead).map((thead: Thead) => ({
-    tr: getTableCellHeader(util.data.forceArray(thead.tr)),
-  }))
-  const bodyRows: Array<TableRowUniform> = util.data.forceArray(dataContent.table.tbody).map((tbody: Thead) => ({
-    tr: getTableCellBody(util.data.forceArray(tbody.tr)),
-  }))
-
-  return {
-    caption: title,
-    thead: headRows,
-    tbody: bodyRows,
-    tableClass: 'statistics',
-    tfoot: {
-      footnotes: [],
-      correctionNotice: '',
-    },
-    noteRefs: [],
-    sourceList: [],
-  }
-}
-
-function getTableCellHeader(tableCell: Array<TableCellRaw>): Array<TableCellUniform> {
-  return util.data.forceArray(tableCell).map((cell) => ({
-    td: typeof cell.td != 'undefined' ? util.data.forceArray(cell.td) : [],
-    th: typeof cell.th != 'undefined' ? util.data.forceArray(cell.th) : [],
-  }))
-}
-
-function getTableCellBody(tableCell: Array<TableCellRaw>): Array<TableCellUniform> {
-  return util.data.forceArray(tableCell).map((cell) => ({
-    th: typeof cell.th != 'undefined' ? util.data.forceArray(cell.th) : [],
-    td: typeof cell.td != 'undefined' ? util.data.forceArray(cell.td) : [],
-  }))
-}
-
-function getNoterefsHeader(row: TableCellUniform): Array<string> {
-  const values: Array<number | string | PreliminaryData> = util.data.forceArray(row.th)
-  const noteRefs: Array<string> = values.reduce((acc: Array<string>, cell: number | string | PreliminaryData) => {
-    if (typeof cell === 'object') {
-      if (cell.noterefs) {
-        const noteRefs: Array<string> = cell.noterefs.split(' ')
-        noteRefs.forEach((noteRef) => {
-          if (!acc.includes(noteRef)) {
-            acc.push(noteRef)
-          }
-        })
-      }
-    }
-    return acc
-  }, [])
-  return noteRefs
+  return
 }
