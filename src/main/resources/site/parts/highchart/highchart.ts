@@ -130,7 +130,7 @@ function createDataFromDataSource(
       : datasetOrUndefined(highchart)
     let parsedData: JSONstatType | TbmlDataUniform | object | string | undefined =
       datasetFromRepo && datasetFromRepo.data
-    if (parsedData !== undefined && type === DataSourceType.STATBANK_API) {
+    if (parsedData !== undefined && (type === DataSourceType.STATBANK_API || type === DataSourceType.PXAPI)) {
       parsedData = JSONstat(parsedData).Dataset(0)
     }
     // create config
