@@ -2,6 +2,9 @@ import { afterAll, beforeAll, describe, expect, jest, test } from '@jest/globals
 import { StatisticInListing, VariantInListing } from '../dashboard/statreg/types'
 import { findLatestRelease, formatPubDateArticle, formatPubDateStatistic } from './news-helpers'
 
+const SUMMER_MONTH_START = 4 // April
+const SUMMER_MONTH_END = 9 // September
+
 // Mock nextReleasedPassed due to lots of dependencies and this simple implementation suffice for these tests
 jest.mock('/lib/ssb/utils/variantUtils', () => ({
   nextReleasedPassed: jest.fn((variant: VariantInListing) => new Date(variant.nextRelease) <= new Date()),
@@ -10,6 +13,33 @@ jest.mock('/lib/ssb/utils/variantUtils', () => ({
 jest.mock('/lib/ssb/utils/serverOffset', () => ({
   getServerOffsetInMs: jest.fn(() => 0),
 }))
+
+jest.mock(
+  '/lib/time',
+  () => ({
+    // An simplified mock implementation of formatDate from /lib/time
+    formatDate: ({ date, timezoneId }: { date: string; pattern: string; timezoneId: string }) => {
+      const date2 = new Date(date)
+      if (timezoneId !== 'Europe/Oslo') {
+        return date2.toISOString()
+      }
+
+      const month = date2.getMonth() + 1
+      // Tests assumes daylight saving time is from 1. April until 30. Sept
+      const isSummer = month >= SUMMER_MONTH_START && month <= SUMMER_MONTH_END
+
+      const offsetHours = isSummer ? 2 : 1
+
+      const shifted = new Date(date2.getTime() + offsetHours * 3600 * 1000)
+      const isoDatetime = shifted.toISOString()
+      const dateTime = isoDatetime.slice(0, 19)
+      const dateTimeWithOffset = `${dateTime}+0${offsetHours}:00`
+
+      return dateTimeWithOffset
+    },
+  }),
+  { virtual: true }
+)
 
 describe('rss/news-helpers ', () => {
   describe('findLatestRelease', () => {
@@ -65,7 +95,6 @@ describe('rss/news-helpers ', () => {
   })
 
   describe('formatPubDateStatistic ', () => {
-    console.log(new Date())
     test('get correct pubdate for dates day wintertime pubdate', () => {
       const pubdate = formatPubDateStatistic('2026-01-01 08:00:00.0')
       expect(pubdate).toBe('2026-01-01T08:00:00+01:00')

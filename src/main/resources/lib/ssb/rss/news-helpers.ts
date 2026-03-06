@@ -1,4 +1,4 @@
-import { format, isAfter, parseISO } from '/lib/vendor/dateFns'
+import { isAfter, parseISO } from '/lib/vendor/dateFns'
 import { getServerOffsetInMs } from '/lib/ssb/utils/serverOffset'
 import { formatDate } from '/lib/time'
 import { VariantInListing } from '../dashboard/statreg/types'
@@ -41,15 +41,15 @@ export function getPubDateStatistic(
 
 export function formatPubDateArticle(date: string): string {
   return formatDate({
-    date, // your ISO UTC string
+    date,
     pattern: FORMATTER,
     timezoneId: OSLO_ZONE,
   })!
 }
 
 export function formatPubDateStatistic(date: string): string {
-  // TODO: test implementation
-  return formatDate({ date: parseISO(date), pattern: FORMATTER, timezoneId: OSLO_ZONE })
+  const isoDate = parseISO(date)
+  return formatDate({ date: isoDate, pattern: FORMATTER, timezoneId: OSLO_ZONE })
 }
 
 export function getLinkByPath(path: string) {
