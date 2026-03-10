@@ -39,9 +39,9 @@ jest.mock(
 jest.mock(
   '../utils/dateUtils',
   () => ({
-    // An simplified mock implementation for test purposes. For these testes expecting input on form "2026-01-01 08:00:00.0"
+    // An simplified mock implementation for test purposes. For these testes expecting input on form "2026-01-01T08:00"
     setDateTimeAsOsloTimeZone: (dateTime: string) => {
-      const [date, time] = dateTime.split(' ')
+      const [date, time] = dateTime.split('T')
       const [year, month, day] = date.split('-')
       const [hour, minutes] = time.split(':')
       const isSummer = Number.parseInt(month) >= SUMMER_MONTH_START && Number.parseInt(month) <= SUMMER_MONTH_END

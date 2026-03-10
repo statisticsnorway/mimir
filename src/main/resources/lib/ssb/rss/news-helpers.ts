@@ -49,7 +49,9 @@ export function formatPubDateArticle(dateStringWithTimezone: string): string {
 }
 
 export function formatPubDateStatistic(dateStringWithoutTimezone: string): string {
-  const isoDate = setDateTimeAsOsloTimeZone(dateStringWithoutTimezone)
+  const [date, time] = dateStringWithoutTimezone.split(' ')
+  const dateTime = `${date}T${time}`
+  const isoDate = setDateTimeAsOsloTimeZone(dateTime)
   return formatDate({ date: isoDate, pattern: FORMATTER, timezoneId: OSLO_ZONE })
 }
 
