@@ -25,6 +25,7 @@ export function setupFetchDataOnCreateListener(): void {
             query: `_id IN(${nodes.map((n) => `'${n.id}'`).join(',')}) AND
                 (
                   data.dataSource._selected = '${DataSourceType.STATBANK_API}' OR
+                  data.dataSource._selected = '${DataSourceType.PXAPI}' OR
                   data.dataSource._selected = '${DataSourceType.TBPROCESSOR}' OR
                   data.dataSource._selected = '${DataSourceType.STATBANK_SAVED}' OR
                   data.dataSource._selected = '${DataSourceType.KLASS}'
