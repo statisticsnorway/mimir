@@ -1,8 +1,9 @@
-import { isAfter, parseISO } from '/lib/vendor/dateFns'
+import { isAfter } from '/lib/vendor/dateFns'
 import { getServerOffsetInMs } from '/lib/ssb/utils/serverOffset'
 import { formatDate } from '/lib/time'
 import { VariantInListing } from '../dashboard/statreg/types'
 import { nextReleasedPassed } from '../utils/variantUtils'
+import { setDateTimeAsOsloTimeZone } from '../utils/dateUtils'
 
 const OSLO_ZONE = 'Europe/Oslo'
 const FORMATTER = "yyyy-MM-dd'T'HH:mm:ssXXX"
@@ -39,16 +40,16 @@ export function getPubDateStatistic(
   return pubDate ? formatPubDateStatistic(pubDate) : undefined
 }
 
-export function formatPubDateArticle(date: string): string {
+export function formatPubDateArticle(dateStringWithTimezone: string): string {
   return formatDate({
-    date,
+    date: dateStringWithTimezone,
     pattern: FORMATTER,
     timezoneId: OSLO_ZONE,
   })!
 }
 
-export function formatPubDateStatistic(date: string): string {
-  const isoDate = parseISO(date)
+export function formatPubDateStatistic(dateStringWithoutTimezone: string): string {
+  const isoDate = setDateTimeAsOsloTimeZone(dateStringWithoutTimezone)
   return formatDate({ date: isoDate, pattern: FORMATTER, timezoneId: OSLO_ZONE })
 }
 

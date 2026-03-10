@@ -18,12 +18,8 @@ jest.mock(
   '/lib/time',
   () => ({
     // An simplified mock implementation of formatDate from /lib/time
-    formatDate: ({ date, timezoneId }: { date: string; pattern: string; timezoneId: string }) => {
+    formatDate: ({ date }: { date: string; pattern: string; timezoneId: string }) => {
       const date2 = new Date(date)
-      if (timezoneId !== 'Europe/Oslo') {
-        return date2.toISOString()
-      }
-
       const month = date2.getMonth() + 1
       // Tests assumes daylight saving time is from 1. April until 30. Sept
       const isSummer = month >= SUMMER_MONTH_START && month <= SUMMER_MONTH_END
@@ -31,11 +27,28 @@ jest.mock(
       const offsetHours = isSummer ? 2 : 1
 
       const shifted = new Date(date2.getTime() + offsetHours * 3600 * 1000)
+
       const isoDatetime = shifted.toISOString()
       const dateTime = isoDatetime.slice(0, 19)
-      const dateTimeWithOffset = `${dateTime}+0${offsetHours}:00`
+      return `${dateTime}+0${offsetHours}:00`
+    },
+  }),
+  { virtual: true }
+)
 
-      return dateTimeWithOffset
+jest.mock(
+  '../utils/dateUtils',
+  () => ({
+    // An simplified mock implementation for test purposes. For these testes expecting input on form "2026-01-01 08:00:00.0"
+    setDateTimeAsOsloTimeZone: (dateTime: string) => {
+      const [date, time] = dateTime.split(' ')
+      const [year, month, day] = date.split('-')
+      const [hour, minutes] = time.split(':')
+      const isSummer = Number.parseInt(month) >= SUMMER_MONTH_START && Number.parseInt(month) <= SUMMER_MONTH_END
+      const hoursOffset = isSummer ? 2 : 1
+      const isoHours = (Number.parseInt(hour) - hoursOffset).toString()
+      const isoHoursTwoDigit = isoHours.length == 2 ? isoHours : `0${isoHours}`
+      return `${year}-${month}-${day}T${isoHoursTwoDigit}:${minutes}:00Z`
     },
   }),
   { virtual: true }
