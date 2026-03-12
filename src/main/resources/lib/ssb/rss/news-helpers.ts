@@ -1,7 +1,12 @@
-import { format, isAfter, parseISO } from '/lib/vendor/dateFns'
+import { isAfter } from '/lib/vendor/dateFns'
 import { getServerOffsetInMs } from '/lib/ssb/utils/serverOffset'
+import { formatDate } from '/lib/time'
 import { VariantInListing } from '../dashboard/statreg/types'
 import { nextReleasedPassed } from '../utils/variantUtils'
+import { setDateTimeAsOsloTimeZone } from '../utils/dateUtils'
+
+const OSLO_ZONE = 'Europe/Oslo'
+const FORMATTER = "yyyy-MM-dd'T'HH:mm:ssXXX"
 
 export function findLatestRelease(
   variants: Array<VariantInListing>,
@@ -28,23 +33,26 @@ export function findLatestRelease(
 
 export function getPubDateStatistic(
   variant: VariantInListing,
-  timeZoneIso: string,
   serverOffsetInMs: number = getServerOffsetInMs()
 ): string | undefined {
   const nextReleaseDatePassed: boolean = variant.nextRelease ? nextReleasedPassed(variant, serverOffsetInMs) : false
   const pubDate: string | undefined = nextReleaseDatePassed ? variant.nextRelease : variant.previousRelease
-  return pubDate ? formatPubDateStatistic(pubDate, timeZoneIso) : undefined
+  return pubDate ? formatPubDateStatistic(pubDate) : undefined
 }
 
-export function formatPubDateArticle(date: string, serverOffsetInMS: number, timeZoneIso: string): string {
-  const dateWithOffset = new Date(new Date(date).getTime() + serverOffsetInMS)
-  const pubDate: string = format(dateWithOffset, "yyyy-MM-dd'T'HH:mm:ss")
-  return `${pubDate}${timeZoneIso}`
+export function formatPubDateArticle(dateStringWithTimezone: string): string {
+  return formatDate({
+    date: dateStringWithTimezone,
+    pattern: FORMATTER,
+    timezoneId: OSLO_ZONE,
+  })!
 }
 
-export function formatPubDateStatistic(date: string, timeZoneIso: string): string {
-  const pubDate: string = format(parseISO(date), "yyyy-MM-dd'T'HH:mm:ss")
-  return `${pubDate}${timeZoneIso}`
+export function formatPubDateStatistic(dateStringWithoutTimezone: string): string {
+  const [date, time] = dateStringWithoutTimezone.split(' ')
+  const dateTime = `${date}T${time}`
+  const isoDate = setDateTimeAsOsloTimeZone(dateTime)
+  return formatDate({ date: isoDate, pattern: FORMATTER, timezoneId: OSLO_ZONE })
 }
 
 export function getLinkByPath(path: string) {
