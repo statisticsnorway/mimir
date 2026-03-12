@@ -17,7 +17,7 @@ jest.mock('/lib/ssb/utils/serverOffset', () => ({
 jest.mock(
   '/lib/time',
   () => ({
-    // An simplified mock implementation of formatDate from /lib/time
+    // A simplified mock implementation of formatDate from /lib/time
     formatDate: ({ date }: { date: string; pattern: string; timezoneId: string }) => {
       const date2 = new Date(date)
       const month = date2.getMonth() + 1
@@ -39,7 +39,7 @@ jest.mock(
 jest.mock(
   '../utils/dateUtils',
   () => ({
-    // An simplified mock implementation for test purposes. For these testes expecting input on form "2026-01-01T08:00"
+    // A simplified mock implementation for test purposes. For these tests expected format is "2026-01-01T08:00" for input"
     setDateTimeAsOsloTimeZone: (dateTime: string) => {
       const [date, time] = dateTime.split('T')
       const [year, month, day] = date.split('-')
