@@ -17,14 +17,14 @@
 					</items>
 				</option>
 				<option name="pxapi">
-					<label>pxwebapi v2</label>
+					<label>API-spørring mot statistikkbanken</label>
 					<items>
 						<input name="urlOrId" type="TextLine">
-							<label>POST URL eller Tabell ID</label>
+							<label>Tabell nummer eller POST URL</label>
 							<occurrences minimum="0" maximum="1" />
 						</input>
 						<input name="json" type="TextArea">
-							<label>POST BODY - API-spørring (må være JSON-stat2)</label>
+							<label>API-spørring POST BODY (må være JSON-stat2)</label>
 							<occurrences minimum="0" maximum="1" />
 						</input>
 						<input name="xAxisLabel" type="TextLine">
