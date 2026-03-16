@@ -42,7 +42,7 @@ jobs:
       - name: Send failure message to Slack
         id: slack_failure
         if: steps.deploy_app_to_XP.outcome == 'failure'
-        uses: slackapi/slack-github-action@v2
+        uses: slackapi/slack-github-action@v3
         env:
           ACTOR: ${{ github.actor }}
           REF: ${{ github.ref_name }}
@@ -108,7 +108,7 @@ jobs:
         run: mabl deployments create --api-key ${{ secrets.MABLAPIKEY }} --application-id ${{ secrets.MABLAPPID }} --environment-id ${{ secrets.MABLENVQA }} --labels MIMIR --await-completion
       - name: Send mabl test failure message to Slack
         if: failure()
-        uses: slackapi/slack-github-action@v2
+        uses: slackapi/slack-github-action@v3
         env:
           ACTOR: ${{ github.actor }}
           REF: ${{ github.ref_name }}

@@ -50,7 +50,7 @@ jobs:
       - name: Send success message to Slack
         id: slack_success
         if: steps.deploy_app_to_XP.outcome == 'success'
-        uses: slackapi/slack-github-action@v2
+        uses: slackapi/slack-github-action@v3
         env:
           ACTOR: ${{ github.actor }}
           REF: ${{ github.ref_name }}
@@ -99,7 +99,7 @@ jobs:
       - name: Send failure message to Slack
         id: slack_failure
         if: steps.deploy_app_to_XP.outcome == 'failure'
-        uses: slackapi/slack-github-action@v2
+        uses: slackapi/slack-github-action@v3
         env:
           ACTOR: ${{ github.actor }}
           REF: ${{ github.ref_name }}
