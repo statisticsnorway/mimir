@@ -46,7 +46,7 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Give GitHub Actions acces to docker repo
-        uses: webfactory/ssh-agent@v0.9.1
+        uses: webfactory/ssh-agent@v0.10.0
         with:
           ssh-private-key: ${{ secrets.DOCKER_REPO_READ_KEY }}
       - name: Checkout docker
