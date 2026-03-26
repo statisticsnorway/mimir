@@ -18,7 +18,6 @@ import { getTbprocessor, getTbprocessorKey, fetchTbprocessorData } from '/lib/ss
 import { getKlass, getKlassKey, fetchKlassData } from '/lib/ssb/dataset/klass/klass'
 import { type GenericDataImport } from '/site/content-types'
 import { type DataSource } from '/site/mixins/dataSource'
-import { fetchPxApiData, getPxApiKey, getPxApi } from './pxapi/pxapi'
 
 export function getDataset(
   content: Content<DataSource>,
@@ -27,9 +26,6 @@ export function getDataset(
   switch (content.data.dataSource?._selected) {
     case DataSourceType.STATBANK_API: {
       return getStatbankApi(content, branch)
-    }
-    case DataSourceType.PXAPI: {
-      return getPxApi(content, branch)
     }
     case DataSourceType.STATBANK_SAVED: {
       return getStatbankSaved(content, branch)
@@ -50,8 +46,6 @@ export function extractKey(content: Content<DataSource>): string | null {
   switch (content.data.dataSource?._selected) {
     case DataSourceType.STATBANK_API:
       return getStatbankApiKey(content)
-    case DataSourceType.PXAPI:
-      return getPxApiKey(content)
     case DataSourceType.TBPROCESSOR:
       const language: string = content.language || ''
       return `${getTbprocessorKey(content)}${language === 'en' ? language : ''}`
@@ -71,8 +65,6 @@ function fetchData(
   switch (content.data.dataSource?._selected) {
     case DataSourceType.STATBANK_API:
       return fetchStatbankApiData(content)
-    case DataSourceType.PXAPI:
-      return fetchPxApiData(content)
     case DataSourceType.TBPROCESSOR:
       return fetchTbprocessorData(content, processXml)
     case DataSourceType.STATBANK_SAVED:
