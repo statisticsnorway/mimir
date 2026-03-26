@@ -346,7 +346,7 @@ function Highchart(props: HighchartsReactProps) {
         ...highchartConfig,
         lang: {
           ...lang,
-          categoryHeader: xAxisOptions.title?.text ?? 'Category',
+          exportData: { categoryHeader: xAxisOptions.title?.text ? xAxisOptions.title?.text : 'Category' },
         },
         chart: {
           ...highchartConfig.chart,

@@ -23,7 +23,8 @@ export function fetchStatbankSavedData(content: Content<DataSource>): object | n
   if (!savedQueryId) return null
 
   const baseUrl = resolveSavedQueryBaseUrl(urlOrId)
-  const url = buildSavedQueryHtmlUrl(baseUrl, savedQueryId)
+  const isEnglish = /\/en\//.test(urlOrId)
+  const url = buildSavedQueryHtmlUrl(baseUrl, savedQueryId, isEnglish)
 
   try {
     return fetchData(url, content._id)
@@ -73,7 +74,7 @@ function resolveSavedQueryBaseUrl(urlOrId: string): string {
   return pxWebApiBase
 }
 
-function buildSavedQueryHtmlUrl(baseUrl: string, savedQueryId: string): string {
+function buildSavedQueryHtmlUrl(baseUrl: string, savedQueryId: string, isEnglish: boolean): string {
   const b = baseUrl.replace(/\/$/, '')
-  return `${b}/savedqueries/${savedQueryId}/data?outputFormat=html`
+  return `${b}/savedqueries/${savedQueryId}/data?outputFormat=html${isEnglish ? '&lang=en' : ''}`
 }
