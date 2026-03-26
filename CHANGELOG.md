@@ -1,5 +1,41 @@
 # Changelog
 
+## [2.43.0](https://github.com/statisticsnorway/mimir/compare/v2.42.0...v2.43.0) (2026-03-26)
+
+
+### Features
+
+* PXAPI V2 Support – KeyFigure, Table and Highcharts ([#3637](https://github.com/statisticsnorway/mimir/issues/3637)) ([1c54e02](https://github.com/statisticsnorway/mimir/commit/1c54e02b18b94b5771ef76766ec1fa714e51a543))
+
+
+### Bug Fixes
+
+* bug in rss news and statkal pubdate offset calculation [Mim-2447 ] ([#3644](https://github.com/statisticsnorway/mimir/issues/3644)) ([f5f5314](https://github.com/statisticsnorway/mimir/commit/f5f5314371cb2131a8d087af83bc98767f0fa7a6))
+* Fix typing error on cookie-banner [MIM-2588] ([#3675](https://github.com/statisticsnorway/mimir/issues/3675)) ([c78e9d0](https://github.com/statisticsnorway/mimir/commit/c78e9d04cc54aa6a287a0ce4f7db071318d52ba4))
+* Fixed correct table header override in highcharts ([341041d](https://github.com/statisticsnorway/mimir/commit/341041d7cdfd77cf691d99ccb50ab65b8f917a11))
+* Fixed correct table header override in highcharts [MIM-2562] ([#3662](https://github.com/statisticsnorway/mimir/issues/3662)) ([341041d](https://github.com/statisticsnorway/mimir/commit/341041d7cdfd77cf691d99ccb50ab65b8f917a11))
+* **statbankSaved:** ensure English URLs return English tables [MIM-2567] ([#3650](https://github.com/statisticsnorway/mimir/issues/3650)) ([c370ea0](https://github.com/statisticsnorway/mimir/commit/c370ea0cf3aee1dded29e589c2778f525bd40dd7))
+* **statbankSaved:** return English data for /en/ saved query URLs ([c370ea0](https://github.com/statisticsnorway/mimir/commit/c370ea0cf3aee1dded29e589c2778f525bd40dd7))
+
+
+### Code Refactoring
+
+* dataSource.xml navn endringerer [MIM-2472] ([#3656](https://github.com/statisticsnorway/mimir/issues/3656)) ([4368d49](https://github.com/statisticsnorway/mimir/commit/4368d4928d08943d5de7df676621b80c87b16417))
+* Revert Px api  ([#3679](https://github.com/statisticsnorway/mimir/issues/3679)) ([0272e2c](https://github.com/statisticsnorway/mimir/commit/0272e2cd027130a98f4f65683c27833eaeed9b9b))
+
+
+### Build System and dependencies
+
+* Bump actions/download-artifact from 7 to 8 ([#3642](https://github.com/statisticsnorway/mimir/issues/3642)) ([87ab5b4](https://github.com/statisticsnorway/mimir/commit/87ab5b4e31cdccf112882f66e3fc09d8f27f28cc))
+* Bump actions/upload-artifact from 6 to 7 ([#3643](https://github.com/statisticsnorway/mimir/issues/3643)) ([32640fb](https://github.com/statisticsnorway/mimir/commit/32640fb5a7fdf10b7e44c2b3efea8348d9cd7a2f))
+* Bump dawidd6/action-download-artifact from 14 to 18 ([#3658](https://github.com/statisticsnorway/mimir/issues/3658)) ([c2ffb9e](https://github.com/statisticsnorway/mimir/commit/c2ffb9ed9738cb1f6f08cd247dde62295e18e543))
+* Bump fast-xml-parser from 5.3.0 to 5.5.7 ([#3664](https://github.com/statisticsnorway/mimir/issues/3664)) ([aed4b5b](https://github.com/statisticsnorway/mimir/commit/aed4b5b760dbdc33fedc19fde25d6c19eee53d2d))
+* Bump flatted from 3.3.3 to 3.4.2 ([#3665](https://github.com/statisticsnorway/mimir/issues/3665)) ([8f90771](https://github.com/statisticsnorway/mimir/commit/8f907713d153a033c2a0ad4b5df8c624bd7a155f))
+* Bump no.item:lib-xp-time from 1.2.1 to 1.5.0 ([#3660](https://github.com/statisticsnorway/mimir/issues/3660)) ([2929430](https://github.com/statisticsnorway/mimir/commit/2929430109d71c0df1a641c9f4f26cc943120c3c))
+* Bump rollup from 4.48.0 to 4.59.0 ([#3639](https://github.com/statisticsnorway/mimir/issues/3639)) ([b76eeb3](https://github.com/statisticsnorway/mimir/commit/b76eeb3c97bed65dfb7e09ab5544759d8c2bc1d8))
+* Bump the dependencies-minor-updates group across 1 directory with 8 updates ([#3661](https://github.com/statisticsnorway/mimir/issues/3661)) ([d353629](https://github.com/statisticsnorway/mimir/commit/d3536290d58814de7171185370a5b68c66dfad8a))
+* Bump webfactory/ssh-agent from 0.9.1 to 0.10.0 ([#3659](https://github.com/statisticsnorway/mimir/issues/3659)) ([e7375bb](https://github.com/statisticsnorway/mimir/commit/e7375bb0e6dad54d54bca62fc8b8baeace42c755))
+
 ## [2.42.0](https://github.com/statisticsnorway/mimir/compare/v2.41.0...v2.42.0) (2026-03-03)
 
 
