@@ -11,7 +11,6 @@ export const UNPUBLISHED_DATASET_BRANCH = 'draft'
 
 export enum DataSource {
   STATBANK_API = 'statbankApi',
-  PXAPI = 'pxapi',
   TBPROCESSOR = 'tbprocessor',
   STATBANK_SAVED = 'statbankSaved',
   DATASET = 'dataset',
@@ -32,8 +31,6 @@ export function setupDatasetRepo(): void {
   }
   createSourceNode(DataSource.STATBANK_API, DATASET_BRANCH)
   createSourceNode(DataSource.STATBANK_API, UNPUBLISHED_DATASET_BRANCH)
-  createSourceNode(DataSource.PXAPI, DATASET_BRANCH)
-  createSourceNode(DataSource.PXAPI, UNPUBLISHED_DATASET_BRANCH)
   createSourceNode(DataSource.TBPROCESSOR, DATASET_BRANCH)
   createSourceNode(DataSource.TBPROCESSOR, UNPUBLISHED_DATASET_BRANCH)
   createSourceNode(DataSource.STATBANK_SAVED, DATASET_BRANCH)
