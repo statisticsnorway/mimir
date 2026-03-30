@@ -56,10 +56,10 @@ export function formatDate(date: string | undefined, formatType: string, languag
     let libTimeResult
     try {
       libTimeResult = libTimeFormatDate({
-        date: parsedDateWithTimezone,
+        date: parsedDateWithTimezone.toISOString(),
         pattern: libTimePattern,
         locale: language,
-        timezoneId: missingTimezone ? 'GMT+00:00' : 'Europe/Oslo',
+        timezoneId: missingTimezone ? 'GMT+0000' : 'Europe/Oslo',
       })
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
