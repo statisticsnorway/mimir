@@ -28,8 +28,6 @@ export function formatDate(date: string | undefined, formatType: string, languag
     let parsedDateWithTimezone = parsedDate
     let missingTimezone = false
 
-    log.info('parsed date: ' + JSON.stringify(parsedDate))
-
     // If date has no specified timezone, add Z to the end of the string to make it UTC.
     // We want the formated date to show the excact same time as the input, we need to trick both libs to not care about timezones
     if (!date.match(/(?:Z|[+-](?:2[0-3]|[01][0-9]):[0-5][0-9])$/gm)) {
@@ -44,7 +42,6 @@ export function formatDate(date: string | undefined, formatType: string, languag
 
     let dateFnsResult
     try {
-      log.info('missing timezone: ' + missingTimezone)
       dateFnsResult = format(parsedDate, formatType, locale)
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
@@ -58,16 +55,12 @@ export function formatDate(date: string | undefined, formatType: string, languag
 
     let libTimeResult
     try {
-      log.info('parsed date with timezone: ' + JSON.stringify(parsedDateWithTimezone.toISOString()))
-      log.info('libTimePattern: ' + JSON.stringify(libTimePattern))
       libTimeResult = libTimeFormatDate({
         date: parsedDateWithTimezone,
         pattern: libTimePattern,
         locale: language,
         timezoneId: missingTimezone ? 'GMT+00:00' : 'Europe/Oslo',
       })
-      log.info('libTimeResult: ' + JSON.stringify(libTimeResult))
-      log.info('dateFnsResult: ' + JSON.stringify(dateFnsResult))
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
       log.error(`Error in formatDate with Lib time, tried to format ${parsedDate} to ${libTimePattern}`)
