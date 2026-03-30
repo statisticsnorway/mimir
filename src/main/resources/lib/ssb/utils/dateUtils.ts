@@ -64,7 +64,8 @@ export function formatDate(date: string | undefined, formatType: string, languag
         date: parsedDateWithTimezone,
         pattern: libTimePattern,
         locale: language,
-        timezoneId: missingTimezone ? 'GMT+0000' : 'Europe/Oslo',
+        timezoneId: 'Europe/Oslo',
+        // timezoneId: missingTimezone ? 'GMT+0000' : 'Europe/Oslo',
       })
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
