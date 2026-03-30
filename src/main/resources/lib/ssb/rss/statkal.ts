@@ -96,7 +96,7 @@ function getRssReleases(variants: StatkalVariant[], releases: StatkalRelease[]):
       (variant) => variant.statisticId == release.statisticId && variant.language === release.language
     )[0]
     const contactsStatistic = contacts.filter((contact) => variant.contacts.includes(contact.id.toString()))
-    const pubDate: string | undefined = formatDate(release.pubDate, "yyyy-MM-dd'T'HH:mm:ssxxx")
+    const pubDate: string | undefined = formatDate(release.pubDate, "yyyy-MM-dd'T'HH:mm:ssXXX")
     rssReleases.push({
       guid: release.guid,
       title: variant.title,
