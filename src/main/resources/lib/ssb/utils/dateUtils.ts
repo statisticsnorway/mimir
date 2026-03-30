@@ -66,6 +66,8 @@ export function formatDate(date: string | undefined, formatType: string, languag
         locale: language,
         timezoneId: missingTimezone ? 'GMT+00:00' : 'Europe/Oslo',
       })
+      log.info('libTimeResult: ' + JSON.stringify(libTimeResult))
+      log.info('dateFnsResult: ' + JSON.stringify(dateFnsResult))
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
       log.error(`Error in formatDate with Lib time, tried to format ${parsedDate} to ${libTimePattern}`)

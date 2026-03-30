@@ -8,10 +8,11 @@ import { Contact, ReleasesInListing } from '/lib/ssb/dashboard/statreg/types'
 import { getMainSubjects } from '/lib/ssb/utils/subjectUtils'
 import { calculatePeriod } from '/lib/ssb/utils/variantUtils'
 import { addDays, isWithinInterval } from '/lib/vendor/dateFns'
-import { formatDate } from '/lib/ssb/utils/dateUtils'
+// import { formatDate } from '/lib/ssb/utils/dateUtils'
 import * as util from '/lib/util'
 import { getContactsFromRepo } from '/lib/ssb/statreg/contacts'
 import { type SubjectItem } from '/lib/types/subject'
+import { formatPubDateStatistic } from './news-helpers'
 
 const dummyReq: Partial<Request> = {
   branch: 'master',
@@ -96,7 +97,7 @@ function getRssReleases(variants: StatkalVariant[], releases: StatkalRelease[]):
       (variant) => variant.statisticId == release.statisticId && variant.language === release.language
     )[0]
     const contactsStatistic = contacts.filter((contact) => variant.contacts.includes(contact.id.toString()))
-    const pubDate: string | undefined = formatDate(release.pubDate, "yyyy-MM-dd'T'HH:mm:ssXXX")
+    const pubDate: string | undefined = formatPubDateStatistic(release.pubDate)
     rssReleases.push({
       guid: release.guid,
       title: variant.title,
