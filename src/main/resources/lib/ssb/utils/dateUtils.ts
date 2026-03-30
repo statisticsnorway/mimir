@@ -61,7 +61,7 @@ export function formatDate(date: string | undefined, formatType: string, languag
       log.info('parsed date with timezone: ' + JSON.stringify(parsedDateWithTimezone.toISOString()))
       log.info('libTimePattern: ' + JSON.stringify(libTimePattern))
       libTimeResult = libTimeFormatDate({
-        date: parsedDateWithTimezone.toISOString(),
+        date: parsedDateWithTimezone,
         pattern: libTimePattern,
         locale: language,
         timezoneId: missingTimezone ? 'GMT+0000' : 'Europe/Oslo',

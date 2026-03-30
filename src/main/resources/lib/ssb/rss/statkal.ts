@@ -105,7 +105,7 @@ function getRssReleases(variants: StatkalVariant[], releases: StatkalRelease[]):
       category: variant.category,
       subject: variant.subject,
       language: variant.language === 'en' ? 'en' : 'no',
-      pubDate: `${pubDate}`,
+      pubDate: pubDate ?? '',
       periode: release.periode,
       shortname: variant.shortname,
       contacts: util.data.forceArray(contactsStatistic),
