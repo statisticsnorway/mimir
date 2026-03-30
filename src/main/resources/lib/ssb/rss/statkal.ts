@@ -11,7 +11,6 @@ import { addDays, isWithinInterval } from '/lib/vendor/dateFns'
 import * as util from '/lib/util'
 import { getContactsFromRepo } from '/lib/ssb/statreg/contacts'
 import { type SubjectItem } from '/lib/types/subject'
-import { formatDate } from '/lib/ssb/utils/dateUtils'
 import { formatPubDateStatistic } from './news-helpers'
 
 const dummyReq: Partial<Request> = {
