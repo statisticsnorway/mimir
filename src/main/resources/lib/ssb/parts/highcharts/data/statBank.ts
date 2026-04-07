@@ -5,7 +5,11 @@ import { getMunicipality } from '/lib/ssb/dataset/klass/municipalities'
 import { DataSource as DataSourceType } from '/lib/ssb/repo/dataset'
 
 export function seriesAndCategoriesFromJsonStat(req, highchart, dataset, datasetFormat) {
-  const jsonStatConfig = datasetFormat.jsonStat || datasetFormat[DataSourceType.STATBANK_API]
+  if (datasetFormat?._selected === DataSourceType.PXAPI) {
+    return seriesAndCategoriesFromPxApi(req, highchart, dataset, datasetFormat)
+  }
+  const jsonStatConfig =
+    datasetFormat.jsonStat || datasetFormat[DataSourceType.STATBANK_API] || datasetFormat[DataSourceType.PXAPI]
   const filterOptions = jsonStatConfig.datasetFilterOptions
   const xAxisLabel = jsonStatConfig.xAxisLabel
   const yAxisLabel = jsonStatConfig.yAxisLabel
@@ -28,6 +32,21 @@ export function seriesAndCategoriesFromJsonStat(req, highchart, dataset, dataset
   }
 }
 
+function seriesAndCategoriesFromPxApi(req, highchart, dataset, datasetFormat) {
+  const config = datasetFormat[DataSourceType.PXAPI] || {}
+
+  const dimensions = dataset.id
+
+  const xAxis = config.xAxisLabel && dimensions.includes(config.xAxisLabel) ? config.xAxisLabel : dimensions[0]
+
+  const yAxis =
+    config.yAxisLabel && dimensions.includes(config.yAxisLabel) ? config.yAxisLabel : dimensions[1] || dimensions[0]
+
+  const dimensionFilter = dimensions.map(() => 0)
+
+  return pxFormat(dataset, dimensionFilter, xAxis, yAxis, highchart.data.graphType)
+}
+
 const defaultFormat = (ds, dimensionFilter, xAxis, yAxisLabel) => {
   const xAxisIndex = ds.id.indexOf(xAxis)
   const xCategories = ds.Dimension(xAxis).Category()
@@ -47,6 +66,55 @@ const defaultFormat = (ds, dimensionFilter, xAxis, yAxisLabel) => {
   return {
     series,
     categories: yCategories.map((category) => category.label),
+  }
+}
+
+function pxFormat(ds, dimensionFilter, xAxis, yAxis, graphType) {
+  const xAxisIndex = ds.id.indexOf(xAxis)
+  const yAxisIndex = ds.id.indexOf(yAxis)
+
+  const xCategories = ds.Dimension(xAxis).Category()
+  const yCategories = ds.Dimension(yAxis).Category()
+
+  // PIE
+  if (graphType === 'pie') {
+    const data = xCategories.map((xCategory) => {
+      dimensionFilter[xAxisIndex] = xCategory.index
+      const value = ds.Data(dimensionFilter, false)
+
+      return {
+        name: xCategory.label,
+        y: value,
+      }
+    })
+
+    return {
+      series: [
+        {
+          data,
+        },
+      ],
+    }
+  }
+
+  // OTHER GRAPH TYPES
+  const series = yCategories.map((yCategory) => {
+    dimensionFilter[yAxisIndex] = yCategory.index
+
+    const data = xCategories.map((xCategory) => {
+      dimensionFilter[xAxisIndex] = xCategory.index
+      return ds.Data(dimensionFilter, false)
+    })
+
+    return {
+      name: yCategory.label,
+      data,
+    }
+  })
+
+  return {
+    series,
+    categories: xCategories.map((c) => c.label),
   }
 }
 
