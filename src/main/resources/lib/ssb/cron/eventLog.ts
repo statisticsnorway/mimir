@@ -147,5 +147,5 @@ export function deleteExpiredEventLogsForJobs(): void {
     return node
   })
 
-  cronJobLog(`Ferdit å slette gamle eventlogs for Jobs. Antall slettet: ${totalExpiredLogsDeleted}`)
+  cronJobLog(`Ferdig å slette gamle eventlogs for Jobs. Antall slettet: ${totalExpiredLogsDeleted}`)
 }
