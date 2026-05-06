@@ -5,7 +5,7 @@ export function run(): void {
   log.info(`Run Task: deleteExpiredEventLog ${new Date()}`)
   deleteExpiredEventLogsForQueries()
 
-  if (isEnabled('delete-joblog-jobs', false, 'ssb')) {
+  if (isEnabled('delete-joblog-cron', false, 'ssb')) {
     deleteExpiredEventLogsForJobs()
   }
 }

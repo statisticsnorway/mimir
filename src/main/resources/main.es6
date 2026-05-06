@@ -64,7 +64,7 @@ try {
           enabled: false,
         },
         {
-          feature: 'delete-joblog-jobs',
+          feature: 'delete-joblog-cron',
           enabled: false,
         },
       ],
