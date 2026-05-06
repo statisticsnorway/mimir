@@ -14,9 +14,9 @@ import { subDays } from '/lib/vendor/dateFns'
 type DeletedCount = { contentId: string; deletedCount: number }
 
 export function deleteExpiredEventLogsForQueries(): void {
-  cronJobLog('Deleting expired event logs for queries')
+  cronJobLog('Sletter utdaterte event logs for queries')
 
-  const job: JobEventNode = startJobLog('Delete expired event logs for queries')
+  const job: JobEventNode = startJobLog('Sletter utdaterte event logs for queries')
   const path = '/queries'
   const maxLogsBeforeDeleting = 10 // Have at least 10 logs left for each query to keep its log history
 
@@ -100,7 +100,7 @@ export function deleteExpiredEventLogsForQueries(): void {
     return node
   })
 
-  cronJobLog(`Delete expired logs for queries complete. Total expired logs deleted: ${totalExpiredLogsDeleted}`)
+  cronJobLog(`Ferdig med sletting av utdaterte event logs. Totalt antall logger slettet: ${totalExpiredLogsDeleted}`)
 }
 
 export function deleteExpiredEventLogsForJobs(): void {
