@@ -104,17 +104,16 @@ export function deleteExpiredEventLogsForQueries(): void {
 }
 
 export function deleteExpiredEventLogsForJobs(): void {
-  cronJobLog('Deleting expired event logs for jobs')
+  cronJobLog('Sletter gamle eventlog for Jobs')
 
-  const job: JobEventNode = startJobLog('Delete expired event logs for jobs')
+  const job: JobEventNode = startJobLog('Sletter gamle eventlog for Jobs')
   const path = '/jobs'
 
-  const deleteResult: DeletedCount[] = []
   let totalExpiredLogsDeleted = 0
   let total = 999999999
 
   const count = 1000 // Delete 1000 contents at a time
-  const daysBeforeLogsExpire = 700
+  const daysBeforeLogsExpire = 90
 
   const cutoff = subDays(new Date(), daysBeforeLogsExpire)
 
@@ -136,20 +135,17 @@ export function deleteExpiredEventLogsForJobs(): void {
     totalExpiredLogsDeleted += deletedCount
   }
 
-  log.info(`Finished deleting joblogs for jobs, removed ${totalExpiredLogsDeleted} old logs!`)
-
   updateJobLog(job._id, (node) => {
     node.data = {
       ...node.data,
-      refreshDataResult: deleteResult,
       status: JOB_STATUS_COMPLETE,
       message:
         totalExpiredLogsDeleted == 0
-          ? 'Ingen utdaterte event logs ble slettet'
-          : `Slettet ${totalExpiredLogsDeleted} utdaterte event logs`,
+          ? 'Ingen utdaterte job logs ble slettet'
+          : `Slettet ${totalExpiredLogsDeleted} utdaterte job logs`,
     }
     return node
   })
 
-  cronJobLog(`Delete expired logs for jobs complete. Total expired logs deleted: ${totalExpiredLogsDeleted}`)
+  cronJobLog(`Ferdit å slette gamle eventlogs for Jobs. Antall slettet: ${totalExpiredLogsDeleted}`)
 }
