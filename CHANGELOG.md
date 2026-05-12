@@ -1,5 +1,30 @@
 # Changelog
 
+## [2.43.1](https://github.com/statisticsnorway/mimir/compare/v2.43.0...v2.43.1) (2026-05-12)
+
+
+### Bug Fixes
+
+* Add function for deleting joblogs for jobs, and ensure it runs daily.  [MIM-2669] ([#3709](https://github.com/statisticsnorway/mimir/issues/3709)) ([b51b2cf](https://github.com/statisticsnorway/mimir/commit/b51b2cf7ccd11df91593905415b145212862128a))
+* Fix pubDate format for rss statkal service [MIM-2603] ([#3685](https://github.com/statisticsnorway/mimir/issues/3685)) ([570f959](https://github.com/statisticsnorway/mimir/commit/570f9596f965599dd0937728742879e2a6b74afb))
+
+
+### Build System and dependencies
+
+* Bump axios from 1.13.2 to 1.15.0 ([#3692](https://github.com/statisticsnorway/mimir/issues/3692)) ([fab7792](https://github.com/statisticsnorway/mimir/commit/fab77920f7489ba806125208c844f853c41556ec))
+* Bump dawidd6/action-download-artifact from 18 to 19 ([#3666](https://github.com/statisticsnorway/mimir/issues/3666)) ([260f0d0](https://github.com/statisticsnorway/mimir/commit/260f0d0d80c8698dd01c83b4709037df318f7def))
+* Bump docker/login-action from 3 to 4 ([#3654](https://github.com/statisticsnorway/mimir/issues/3654)) ([8740af7](https://github.com/statisticsnorway/mimir/commit/8740af7f842c76372f8e5a811532a60fdd70da2c))
+* Bump docker/metadata-action from 5 to 6 ([#3652](https://github.com/statisticsnorway/mimir/issues/3652)) ([028bc23](https://github.com/statisticsnorway/mimir/commit/028bc23b74ada96ef6191e2eecfa4d0b1045bf05))
+* Bump docker/setup-buildx-action from 3 to 4 ([#3651](https://github.com/statisticsnorway/mimir/issues/3651)) ([8c4600e](https://github.com/statisticsnorway/mimir/commit/8c4600e4b6fe574c6c3e93ac9b677a034a85ebe3))
+* Bump immutable ([#3691](https://github.com/statisticsnorway/mimir/issues/3691)) ([66d95fc](https://github.com/statisticsnorway/mimir/commit/66d95fc7b225e20d25dabfe6509b67f2f8c07c6e))
+* Bump lodash from 4.17.23 to 4.18.1 ([#3689](https://github.com/statisticsnorway/mimir/issues/3689)) ([0c9f14c](https://github.com/statisticsnorway/mimir/commit/0c9f14c3b3ad8467d1bca31b0a40faae3b9cb85b))
+* Bump picomatch from 2.3.1 to 2.3.2 ([#3677](https://github.com/statisticsnorway/mimir/issues/3677)) ([b83c104](https://github.com/statisticsnorway/mimir/commit/b83c104efc63027982a024e1f8dd46db8ce0fada))
+* Bump slackapi/slack-github-action from 2 to 3 ([#3657](https://github.com/statisticsnorway/mimir/issues/3657)) ([660215c](https://github.com/statisticsnorway/mimir/commit/660215cf86078acf9bc0d1f83c08b2513b7b6a47))
+* Bump svgo from 4.0.0 to 4.0.1 ([#3649](https://github.com/statisticsnorway/mimir/issues/3649)) ([1ce3c2d](https://github.com/statisticsnorway/mimir/commit/1ce3c2d67eee2a4d3bb6837a3b15b8da353bbf0f))
+* Bump the dependencies-minor-updates group with 3 updates ([#3669](https://github.com/statisticsnorway/mimir/issues/3669)) ([deb7fc0](https://github.com/statisticsnorway/mimir/commit/deb7fc0023b93fbe79996aa23e801f14b4c8a6ae))
+* Bump the dependencies-patch-updates group across 1 directory with 10 updates ([#3687](https://github.com/statisticsnorway/mimir/issues/3687)) ([ac0e8f9](https://github.com/statisticsnorway/mimir/commit/ac0e8f97a36fd05133e6a9a90337c524a990c0c7))
+* Bump yaml ([#3676](https://github.com/statisticsnorway/mimir/issues/3676)) ([baa404a](https://github.com/statisticsnorway/mimir/commit/baa404adcb52766342a7f3f252dcd886f3f39041))
+
 ## [2.43.0](https://github.com/statisticsnorway/mimir/compare/v2.42.0...v2.43.0) (2026-03-26)
 
 
