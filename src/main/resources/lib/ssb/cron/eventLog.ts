@@ -1,4 +1,4 @@
-import { type Node } from '/lib/xp/node'
+import { NodeQueryResult, type Node } from '/lib/xp/node'
 import { sleep } from '/lib/xp/task'
 import { JobEventNode, startJobLog, updateJobLog, JOB_STATUS_COMPLETE } from '/lib/ssb/repo/job'
 
@@ -14,8 +14,9 @@ import { subDays } from '/lib/vendor/dateFns'
 type DeletedCount = { contentId: string; deletedCount: number }
 
 export function deleteExpiredEventLogsForQueries(): void {
-  cronJobLog('Deleting expired event logs for queries')
-  const job: JobEventNode = startJobLog('Delete expired event logs for queries')
+  cronJobLog('Sletter utdaterte event logs for queries')
+
+  const job: JobEventNode = startJobLog('Sletter utdaterte event logs for queries')
   const path = '/queries'
   const maxLogsBeforeDeleting = 10 // Have at least 10 logs left for each query to keep its log history
 
@@ -99,5 +100,52 @@ export function deleteExpiredEventLogsForQueries(): void {
     return node
   })
 
-  cronJobLog(`Delete expired logs for queries complete. Total expired logs deleted: ${totalExpiredLogsDeleted}`)
+  cronJobLog(`Ferdig med sletting av utdaterte event logs. Totalt antall logger slettet: ${totalExpiredLogsDeleted}`)
+}
+
+export function deleteExpiredEventLogsForJobs(): void {
+  cronJobLog('Sletter gamle eventlog for Jobs')
+
+  const job: JobEventNode = startJobLog('Sletter gamle eventlog for Jobs')
+  const path = '/jobs'
+
+  let totalExpiredLogsDeleted = 0
+  let total = 999999999
+
+  const count = 1000 // Delete 1000 contents at a time
+  const daysBeforeLogsExpire = 90
+
+  const cutoff = subDays(new Date(), daysBeforeLogsExpire)
+
+  while (total > 0) {
+    sleep(1000)
+    const resultsToBeDeleted: NodeQueryResult = queryNodes(EVENT_LOG_REPO, EVENT_LOG_BRANCH, {
+      query: `_parentPath = "${path}" AND _ts < "${cutoff.toISOString()}" `,
+      start: 0,
+      count,
+    })
+
+    const deletedCount = withConnection(EVENT_LOG_REPO, EVENT_LOG_BRANCH, (conn) => {
+      if (resultsToBeDeleted.count === 0) return 0
+
+      return conn.delete(resultsToBeDeleted.hits.map((n) => n.id)).length
+    })
+
+    total = resultsToBeDeleted.total
+    totalExpiredLogsDeleted += deletedCount
+  }
+
+  updateJobLog(job._id, (node) => {
+    node.data = {
+      ...node.data,
+      status: JOB_STATUS_COMPLETE,
+      message:
+        totalExpiredLogsDeleted == 0
+          ? 'Ingen utdaterte job logs ble slettet'
+          : `Slettet ${totalExpiredLogsDeleted} utdaterte job logs`,
+    }
+    return node
+  })
+
+  cronJobLog(`Ferdig å slette gamle eventlogs for Jobs. Antall slettet: ${totalExpiredLogsDeleted}`)
 }
