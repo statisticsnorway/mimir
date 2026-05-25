@@ -85,7 +85,7 @@
     "axios": "^1.16.1",
     "babel-loader": "~10.1.1",
     "babel-preset-env": "~1.7.0",
-    "better-react-mathjax": "^2.3.0",
+    "better-react-mathjax": "^3.0.1",
     "browser-sync": "^3.0.4",
     "cross-env": "~10.1.0",
     "cssnano": "~7.1.3",
