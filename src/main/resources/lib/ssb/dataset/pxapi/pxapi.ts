@@ -59,10 +59,6 @@ export function fetchPxApiData(content: Content<DataSource>): PxApiDataset | nul
       if (!urlOrId.startsWith('http')) {
         url = `${baseUrl}/${urlOrId}/data?lang=${language}&outputFormat=json-stat2`
       } else {
-        if (!urlOrId.startsWith(baseUrl)) {
-          throw new Error('Invalid PXAPI URL')
-        }
-
         if (urlOrId.includes('/data')) {
           url = urlOrId
         } else {
