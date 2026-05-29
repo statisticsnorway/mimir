@@ -51,7 +51,7 @@ export function fetchPxApiData(content: Content<DataSource>): PxApiDataset | nul
     const dataSource: DataSource['dataSource'] = content.data.dataSource
 
     if (dataSource?._selected === DataSourceType.PXAPI && dataSource.pxapi?.urlOrId && dataSource.pxapi?.json) {
-      const language = content.language === 'nb' ? 'no' : content.language || 'no'
+      const language = content.language === 'en' ? content.language : 'no'
 
       const urlOrId = dataSource.pxapi.urlOrId.trim()
 
@@ -73,8 +73,7 @@ export function fetchPxApiData(content: Content<DataSource>): PxApiDataset | nul
       info: `Failed to fetch data from pxApi: ${content._id} (${e})`,
       status: e,
     })
-
-    log.error(`PXAPI fetch failed: ${content._id} (${e})`)
+    log.error(`PXAPI fetch failed for ${content._id}: (${e})`)
   }
 
   return null
