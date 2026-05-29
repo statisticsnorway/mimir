@@ -71,7 +71,7 @@ export function fetchPxApiData(content: Content<DataSource>): PxApiDataset | nul
       function: 'fetchPxApiData',
       message: Events.REQUEST_COULD_NOT_CONNECT,
       info: `Failed to fetch data from pxApi: ${content._id} (${e})`,
-      status: e,
+      status: e as string | undefined,
     })
     log.error(`PXAPI fetch failed for ${content._id}: (${e})`)
   }

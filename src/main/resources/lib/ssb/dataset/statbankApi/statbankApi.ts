@@ -62,7 +62,7 @@ export function fetchStatbankApiData(content: Content<DataSource>) {
         function: 'fetchStatbankApiData',
         message: Events.REQUEST_COULD_NOT_CONNECT,
         info: message,
-        status: e,
+        status: e as string | undefined,
       })
       log.error(message)
     }
