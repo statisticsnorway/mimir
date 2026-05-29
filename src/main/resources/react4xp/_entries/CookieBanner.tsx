@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Button, Link } from '@statisticsnorway/ssb-component-library'
 import { type CookieBannerProps } from '/lib/types/cookieBanner'
 
-const COOKIE_NAME = 'cookie-consent'
+const COOKIE_NAME = 'ssbno-consent'
 const SERVICE_URL = '/_/service/mimir/setCookieConsent'
 const MAX_FETCH_FAILURES = 3
 let failureCount = 0
