@@ -2,6 +2,7 @@ import { Content } from '/lib/xp/content'
 import { DataSource as DataSourceType, DatasetRepoNode, getDataset } from '/lib/ssb/repo/dataset'
 import { get as fetchData } from '/lib/ssb/utils/datasetUtils'
 import { logUserDataQuery, Events } from '/lib/ssb/repo/query'
+import { isUrl } from '/lib/ssb/utils/utils'
 import { type DataSource } from '/site/mixins/dataSource'
 
 export interface PxApiCategory {
@@ -55,19 +56,13 @@ export function fetchPxApiData(content: Content<DataSource>): PxApiDataset | nul
       const urlOrId = dataSource.pxapi.urlOrId.trim()
 
       let url
-
-      if (!urlOrId.startsWith('http')) {
-        url = `${baseUrl}/${urlOrId}/data?lang=${language}&outputFormat=json-stat2`
+      if (isUrl(urlOrId)) {
+        url = urlOrId
       } else {
-        if (urlOrId.includes('/data')) {
-          url = urlOrId
-        } else {
-          const cleaned = urlOrId.replace(/\/+$/, '')
-          const tableId = cleaned.substring(baseUrl.length + 1)
-          url = `${baseUrl}/${tableId}/data?lang=${language}&outputFormat=json-stat2`
-        }
+        url = `${baseUrl}/${urlOrId}/data?lang=${language}&outputFormat=json-stat2`
       }
 
+      log.info(`Fetching PXAPI data: ${content._id} (${urlOrId})`)
       return fetchData(url, JSON.parse(dataSource.pxapi.json), undefined, content._id) as PxApiDataset
     }
   } catch (e) {

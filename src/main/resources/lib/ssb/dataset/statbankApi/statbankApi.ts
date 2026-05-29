@@ -41,10 +41,13 @@ export function fetchStatbankApiData(content: Content<DataSource>) {
         dataSource.statbankApi &&
         dataSource.statbankApi.json
       ) {
-        let url = `${baseUrl}/table/${dataSource.statbankApi.urlOrId}`
+        let url
         if (isUrl(dataSource.statbankApi.urlOrId)) {
           url = dataSource.statbankApi.urlOrId as string
+        } else {
+          url = `${baseUrl}/table/${dataSource.statbankApi.urlOrId}`
         }
+
         data = fetchData(
           url,
           dataSource.statbankApi.json && JSON.parse(dataSource.statbankApi.json),
