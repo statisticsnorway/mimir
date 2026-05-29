@@ -63,6 +63,10 @@ try {
           feature: 'use-anniversary-logo',
           enabled: false,
         },
+        {
+          feature: 'delete-joblog-cron',
+          enabled: false,
+        },
       ],
     },
   ])
