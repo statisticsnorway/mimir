@@ -95,51 +95,60 @@ export function parseKeyFigure(
     const dataSource = keyFigure.data.dataSource
     const data = datasetRepo.data
 
-    if (dataSource && dataSource._selected === DataSourceType.STATBANK_API) {
-      const ds = JSONstat(data).Dataset(0)
-      const xAxisLabel = dataSource.statbankApi.xAxisLabel
-      const yAxisLabel = dataSource.statbankApi.yAxisLabel
+    if (dataSource) {
+      if (dataSource._selected === DataSourceType.STATBANK_API) {
+        const ds = JSONstat(data).Dataset(0)
+        const xAxisLabel = dataSource.statbankApi.xAxisLabel
+        const yAxisLabel = dataSource.statbankApi.yAxisLabel
 
-      // if filter get data with filter
-      if (
-        dataSource.statbankApi &&
-        dataSource.statbankApi.datasetFilterOptions &&
-        dataSource.statbankApi.datasetFilterOptions._selected
-      ) {
-        const filterOptions: DatasetFilterOptions = dataSource.statbankApi.datasetFilterOptions
-        return getDataWithFilterStatbankApi(keyFigureViewData, municipality, filterOptions, ds, yAxisLabel)
-      } else if (xAxisLabel && ds && !(ds instanceof Array)) {
-        return keyFigureViewData
+        // if filter get data with filter
+        if (
+          dataSource.statbankApi &&
+          dataSource.statbankApi.datasetFilterOptions &&
+          dataSource.statbankApi.datasetFilterOptions._selected
+        ) {
+          const filterOptions: DatasetFilterOptions = dataSource.statbankApi.datasetFilterOptions
+          return getDataWithFilterStatbankApi(keyFigureViewData, municipality, filterOptions, ds, yAxisLabel)
+        } else if (xAxisLabel && ds && !(ds instanceof Array)) {
+          return keyFigureViewData
+        }
       }
-    } else if (dataSource && dataSource._selected === DataSourceType.PXAPI) {
-      const parsedDs = typeof data === 'string' ? JSON.parse(data) : data
-      const ds = JSONstat(parsedDs).Dataset(0)
-      const xAxisLabel = dataSource.pxapi.xAxisLabel
-      const yAxisLabel = dataSource.pxapi.yAxisLabel
 
-      // PxApi data with filter on municipality option
-      if (
-        dataSource.pxapi &&
-        dataSource.pxapi.datasetFilterOptions &&
-        dataSource.pxapi.datasetFilterOptions._selected
-      ) {
-        const filterOptions: DatasetFilterOptions = dataSource.pxapi.datasetFilterOptions
-        return getDataWithFilterStatbankApi(keyFigureViewData, municipality, filterOptions, ds, yAxisLabel)
-      } else if (xAxisLabel && ds && !(ds instanceof Array)) {
-        return getDataPxApiWithoutFilter(keyFigureViewData, ds)
-      }
-    } else if (dataSource && dataSource._selected === DataSourceType.TBPROCESSOR) {
-      const tbmlData: TbmlDataUniform = data as TbmlDataUniform
-      if (tbmlData !== null && tbmlData.tbml.presentation)
-        return getDataTbProcessor(keyFigureViewData, tbmlData, keyFigure, language)
+      if (dataSource._selected === DataSourceType.PXAPI) {
+        const parsedDs = typeof data === 'string' ? JSON.parse(data) : data
+        const ds = JSONstat(parsedDs).Dataset(0)
+        const xAxisLabel = dataSource.pxapi.xAxisLabel
+        const yAxisLabel = dataSource.pxapi.yAxisLabel
 
-      // Logging Mocked keyFigure
-      if (dataSource?.tbprocessor?.urlOrId === '-1' && branch === 'master') {
-        log.info('MIMIR mocked Keyfigure, value:' + keyFigureViewData.number)
+        // PxApi data with filter on municipality option
+        if (
+          dataSource.pxapi &&
+          dataSource.pxapi.datasetFilterOptions &&
+          dataSource.pxapi.datasetFilterOptions._selected
+        ) {
+          const filterOptions: DatasetFilterOptions = dataSource.pxapi.datasetFilterOptions
+          return getDataWithFilterStatbankApi(keyFigureViewData, municipality, filterOptions, ds, yAxisLabel)
+        } else if (xAxisLabel && ds && !(ds instanceof Array)) {
+          return getDataPxApiWithoutFilter(keyFigureViewData, ds)
+        }
       }
+
+      if (dataSource._selected === DataSourceType.TBPROCESSOR) {
+        const tbmlData: TbmlDataUniform = data as TbmlDataUniform
+        if (tbmlData !== null && tbmlData.tbml.presentation)
+          return getDataTbProcessor(keyFigureViewData, tbmlData, keyFigure, language)
+
+        // Logging Mocked keyFigure
+        if (dataSource?.tbprocessor?.urlOrId === '-1' && branch === 'master') {
+          log.info('MIMIR mocked Keyfigure, value:' + keyFigureViewData.number)
+        }
+      }
+
+      return keyFigureViewData
     }
-    return keyFigureViewData
-  } else if (keyFigure.data.manualSource) {
+  }
+
+  if (keyFigure.data.manualSource) {
     if (isNaN(parseFloat(keyFigure.data.manualSource))) {
       keyFigureViewData.number = keyFigure.data.manualSource
     } else {
@@ -147,6 +156,7 @@ export function parseKeyFigure(
     }
     return keyFigureViewData
   }
+
   return keyFigureViewData
 }
 
