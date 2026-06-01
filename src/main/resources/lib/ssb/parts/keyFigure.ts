@@ -107,21 +107,40 @@ export function parseKeyFigure(
         dataSource.statbankApi.datasetFilterOptions._selected
       ) {
         const filterOptions: DatasetFilterOptions = dataSource.statbankApi.datasetFilterOptions
-        getDataWithFilterStatbankApi(keyFigureViewData, municipality, filterOptions, ds, yAxisLabel)
+        return getDataWithFilterStatbankApi(keyFigureViewData, municipality, filterOptions, ds, yAxisLabel)
       } else if (xAxisLabel && ds && !(ds instanceof Array)) {
         // get all data without filter
       }
     } else if (dataSource && dataSource._selected === DataSourceType.TBPROCESSOR) {
       const tbmlData: TbmlDataUniform = data as TbmlDataUniform
       if (tbmlData !== null && tbmlData.tbml.presentation)
-        getDataTbProcessor(keyFigureViewData, tbmlData, keyFigure, language)
+        return getDataTbProcessor(keyFigureViewData, tbmlData, keyFigure, language)
 
       // Logging Mocked keyFigure
       if (dataSource?.tbprocessor?.urlOrId === '-1' && branch === 'master') {
         log.info('MIMIR mocked Keyfigure, value:' + keyFigureViewData.number)
       }
     } else if (dataSource && dataSource._selected === DataSourceType.PXAPI) {
-      applyPxApiKeyFigure(keyFigureViewData, data)
+      const parsed = typeof data === 'string' ? JSON.parse(data) : data
+      const ds = JSONstat(parsed).Dataset(0) as unknown as {
+        id: string[]
+        Data: (filter: Array<number>, includeStatus?: boolean) => number | null
+      }
+      const xAxisLabel = dataSource.pxapi.xAxisLabel
+      const yAxisLabel = dataSource.pxapi.yAxisLabel
+
+      // PxApi data with filter on municipality option
+      if (
+        dataSource.pxapi &&
+        dataSource.pxapi.datasetFilterOptions &&
+        dataSource.pxapi.datasetFilterOptions._selected
+      ) {
+        const filterOptions: DatasetFilterOptions = dataSource.pxapi.datasetFilterOptions
+        return getDataWithFilterStatbankApi(keyFigureViewData, municipality, filterOptions, ds, yAxisLabel)
+      } else if (xAxisLabel && ds && !(ds instanceof Array)) {
+        // get all data without filter
+        return getDataPxApi(keyFigureViewData, data)
+      }
     }
     return keyFigureViewData
   } else if (keyFigure.data.manualSource) {
@@ -135,7 +154,7 @@ export function parseKeyFigure(
   return keyFigureViewData
 }
 
-function applyPxApiKeyFigure(
+function getDataPxApi(
   keyFigureViewData: KeyFigureView,
   data: string | JSONstatType | TbmlDataUniform | object | undefined
 ): KeyFigureView {
