@@ -92,13 +92,13 @@ export function parseKeyFigure(
   }
 
   if (datasetRepo) {
-    const dataSource: DataSource['dataSource'] | undefined = keyFigure.data.dataSource
-    const data: string | JSONstatType | TbmlDataUniform | object | undefined = datasetRepo.data
+    const dataSource = keyFigure.data.dataSource
+    const data = datasetRepo.data
 
     if (dataSource && dataSource._selected === DataSourceType.STATBANK_API) {
-      const ds: JSONstatType | null = JSONstat(data).Dataset(0)
-      const xAxisLabel: string | undefined = dataSource.statbankApi ? dataSource.statbankApi.xAxisLabel : undefined
-      const yAxisLabel: string | undefined = dataSource.statbankApi ? dataSource.statbankApi.yAxisLabel : undefined
+      const ds = JSONstat(data).Dataset(0)
+      const xAxisLabel = dataSource.statbankApi.xAxisLabel
+      const yAxisLabel = dataSource.statbankApi.yAxisLabel
 
       // if filter get data with filter
       if (
@@ -109,23 +109,11 @@ export function parseKeyFigure(
         const filterOptions: DatasetFilterOptions = dataSource.statbankApi.datasetFilterOptions
         return getDataWithFilterStatbankApi(keyFigureViewData, municipality, filterOptions, ds, yAxisLabel)
       } else if (xAxisLabel && ds && !(ds instanceof Array)) {
-        // get all data without filter
-      }
-    } else if (dataSource && dataSource._selected === DataSourceType.TBPROCESSOR) {
-      const tbmlData: TbmlDataUniform = data as TbmlDataUniform
-      if (tbmlData !== null && tbmlData.tbml.presentation)
-        return getDataTbProcessor(keyFigureViewData, tbmlData, keyFigure, language)
-
-      // Logging Mocked keyFigure
-      if (dataSource?.tbprocessor?.urlOrId === '-1' && branch === 'master') {
-        log.info('MIMIR mocked Keyfigure, value:' + keyFigureViewData.number)
+        return keyFigureViewData
       }
     } else if (dataSource && dataSource._selected === DataSourceType.PXAPI) {
-      const parsed = typeof data === 'string' ? JSON.parse(data) : data
-      const ds = JSONstat(parsed).Dataset(0) as unknown as {
-        id: string[]
-        Data: (filter: Array<number>, includeStatus?: boolean) => number | null
-      }
+      const parsedDs = typeof data === 'string' ? JSON.parse(data) : data
+      const ds = JSONstat(parsedDs).Dataset(0)
       const xAxisLabel = dataSource.pxapi.xAxisLabel
       const yAxisLabel = dataSource.pxapi.yAxisLabel
 
@@ -138,8 +126,16 @@ export function parseKeyFigure(
         const filterOptions: DatasetFilterOptions = dataSource.pxapi.datasetFilterOptions
         return getDataWithFilterStatbankApi(keyFigureViewData, municipality, filterOptions, ds, yAxisLabel)
       } else if (xAxisLabel && ds && !(ds instanceof Array)) {
-        // get all data without filter
-        return getDataPxApi(keyFigureViewData, data)
+        return getDataPxApiWithoutFilter(keyFigureViewData, ds)
+      }
+    } else if (dataSource && dataSource._selected === DataSourceType.TBPROCESSOR) {
+      const tbmlData: TbmlDataUniform = data as TbmlDataUniform
+      if (tbmlData !== null && tbmlData.tbml.presentation)
+        return getDataTbProcessor(keyFigureViewData, tbmlData, keyFigure, language)
+
+      // Logging Mocked keyFigure
+      if (dataSource?.tbprocessor?.urlOrId === '-1' && branch === 'master') {
+        log.info('MIMIR mocked Keyfigure, value:' + keyFigureViewData.number)
       }
     }
     return keyFigureViewData
@@ -154,24 +150,10 @@ export function parseKeyFigure(
   return keyFigureViewData
 }
 
-function getDataPxApi(
-  keyFigureViewData: KeyFigureView,
-  data: string | JSONstatType | TbmlDataUniform | object | undefined
-): KeyFigureView {
-  if (!data) return keyFigureViewData
+function getDataPxApiWithoutFilter(keyFigureViewData: KeyFigureView, ds: JSONstat): KeyFigureView {
+  const defaultDimensionFilter: Array<number> = ds.id.map(() => 0)
+  const value = ds.Data(defaultDimensionFilter, false)
 
-  const parsed = typeof data === 'string' ? JSON.parse(data) : data
-
-  const ds = JSONstat(parsed).Dataset(0) as unknown as {
-    id: string[]
-    Data: (filter: Array<number>, includeStatus?: boolean) => number | null
-  }
-
-  if (!ds || !ds.id || typeof ds.Data !== 'function') return keyFigureViewData
-
-  const dimensionFilter: Array<number> = ds.id.map(() => 0)
-
-  const value = ds.Data(dimensionFilter, false)
   if (value !== null) {
     keyFigureViewData.number = parseValueZeroSafe(value)
   }
