@@ -10,7 +10,7 @@ import {
   type TableCellUniform,
   type PreliminaryData,
 } from '/lib/types/xmlParser'
-import { type Category, type Dimension } from '/lib/types/jsonstat-toolkit'
+import { type Category, type Dimension, type JSONstat as JSONStatType } from '/lib/types/jsonstat-toolkit'
 import {
   DatasetRepoNode,
   DataSource as DataSourceType,
@@ -72,7 +72,6 @@ function getDatasetRepo(
   }
 }
 
-// eslint-disable-next-line complexity
 export function parseKeyFigure(
   keyFigure: Content<KeyFigure & DataSource>,
   municipality?: MunicipalityWithCounty,
@@ -102,40 +101,14 @@ export function parseKeyFigure(
 
     if (dataSource) {
       if (dataSource._selected === DataSourceType.STATBANK_API) {
-        const ds = JSONstat(data).Dataset(0)
-        const xAxisLabel = dataSource.statbankApi.xAxisLabel
-        const yAxisLabel = dataSource.statbankApi.yAxisLabel
-
-        // if filter get data with filter
-        if (
-          dataSource.statbankApi &&
-          dataSource.statbankApi.datasetFilterOptions &&
-          dataSource.statbankApi.datasetFilterOptions._selected
-        ) {
-          const filterOptions: DatasetFilterOptions = dataSource.statbankApi.datasetFilterOptions
-          return getDataWithFilterStatbankApi(keyFigureViewData, municipality, filterOptions, ds, yAxisLabel)
-        } else if (xAxisLabel && ds && !(ds instanceof Array)) {
+        return getDatafromApi(keyFigureViewData, municipality, data, dataSource.statbankApi, () => {
           return keyFigureViewData
-        }
+        })
       }
 
       if (dataSource._selected === DataSourceType.PXAPI) {
-        const parsedDs = typeof data === 'string' ? JSON.parse(data) : data
-        const ds = JSONstat(parsedDs).Dataset(0)
-        const xAxisLabel = dataSource.pxapi.xAxisLabel
-        const yAxisLabel = dataSource.pxapi.yAxisLabel
-
-        // PxApi data with filter on municipality option
-        if (
-          dataSource.pxapi &&
-          dataSource.pxapi.datasetFilterOptions &&
-          dataSource.pxapi.datasetFilterOptions._selected
-        ) {
-          const filterOptions: DatasetFilterOptions = dataSource.pxapi.datasetFilterOptions
-          return getDataWithFilterStatbankApi(keyFigureViewData, municipality, filterOptions, ds, yAxisLabel)
-        } else if (xAxisLabel && ds && !(ds instanceof Array)) {
-          return getDataPxApiWithoutFilter(keyFigureViewData, ds)
-        }
+        const parsedDs = typeof data === 'string' ? JSON.parse(data) : data // TODO: Double check if this parsing is necessary
+        return getDatafromApi(keyFigureViewData, municipality, parsedDs, dataSource.pxapi, getDataPxApiWithoutFilter)
       }
 
       if (dataSource._selected === DataSourceType.TBPROCESSOR) {
@@ -148,29 +121,12 @@ export function parseKeyFigure(
           log.info('MIMIR mocked Keyfigure, value:' + keyFigureViewData.number)
         }
       }
-
       return keyFigureViewData
     }
   }
 
   if (keyFigure.data.manualSource) {
-    if (isNaN(parseFloat(keyFigure.data.manualSource))) {
-      keyFigureViewData.number = keyFigure.data.manualSource
-    } else {
-      keyFigureViewData.number = parseValue(keyFigure.data.manualSource.replace(/,/g, '.'))
-    }
-    return keyFigureViewData
-  }
-
-  return keyFigureViewData
-}
-
-function getDataPxApiWithoutFilter(keyFigureViewData: KeyFigureView, ds: JSONstat): KeyFigureView {
-  const defaultDimensionFilter: Array<number> = ds.id.map(() => 0)
-  const value = ds.Data(defaultDimensionFilter, false)
-
-  if (value !== null) {
-    keyFigureViewData.number = parseValueZeroSafe(value)
+    return getManualSource(keyFigure.data.manualSource, keyFigureViewData)
   }
 
   return keyFigureViewData
@@ -251,6 +207,32 @@ function getDataTbProcessor(
   return keyFigureViewData
 }
 
+function getDatafromApi(
+  keyFigureView: KeyFigureView,
+  municipality: MunicipalityWithCounty | undefined,
+  data: JSONStatType,
+  dataSource:
+    | Extract<KeyFigure['dataSource'], { _selected: 'statbankApi' }>['statbankApi']
+    | Extract<KeyFigure['dataSource'], { _selected: 'pxapi' }>['pxapi'],
+  getDataWithNoFilter: (view: KeyFigureView, ds: JSONStatType) => KeyFigureView
+): KeyFigureView {
+  const ds = JSONstat(data).Dataset(0)
+  const xAxisLabel = dataSource?.xAxisLabel
+  const yAxisLabel = dataSource?.yAxisLabel
+
+  // if filter get data with filter
+  if (dataSource && dataSource.datasetFilterOptions && dataSource.datasetFilterOptions._selected) {
+    const filterOptions: DatasetFilterOptions = dataSource.datasetFilterOptions
+    return getDataWithFilterStatbankApi(keyFigureView, municipality, filterOptions, ds, yAxisLabel)
+  }
+
+  if (xAxisLabel && ds && !Array.isArray(ds)) {
+    return getDataWithNoFilter(keyFigureView, ds)
+  }
+
+  return keyFigureView
+}
+
 function getDataWithFilterStatbankApi(
   keyFigureViewData: KeyFigureView,
   municipality: MunicipalityWithCounty | undefined,
@@ -286,6 +268,28 @@ function getDataWithFilterStatbankApi(
     }
   }
 
+  return keyFigureViewData
+}
+
+function getDataPxApiWithoutFilter(keyFigureViewData: KeyFigureView, ds: JSONstat): KeyFigureView {
+  const defaultDimensionFilter: Array<number> = ds.id.map(() => 0)
+  const value = ds.Data(defaultDimensionFilter, false)
+
+  if (value !== null) {
+    keyFigureViewData.number = parseValueZeroSafe(value)
+  }
+
+  return keyFigureViewData
+}
+
+function getManualSource(manualSource: KeyFigure['manualSource'], keyFigureViewData: KeyFigureView): KeyFigureView {
+  if (!manualSource) return keyFigureViewData
+
+  if (isNaN(parseFloat(manualSource))) {
+    keyFigureViewData.number = manualSource
+  } else {
+    keyFigureViewData.number = parseValue(manualSource.replace(/,/g, '.'))
+  }
   return keyFigureViewData
 }
 
