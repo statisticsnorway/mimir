@@ -2,6 +2,7 @@ import { Content } from '/lib/xp/content'
 import { DataSource as DataSourceType, DatasetRepoNode, getDataset } from '/lib/ssb/repo/dataset'
 import { get as fetchData } from '/lib/ssb/utils/datasetUtils'
 import { logUserDataQuery, Events } from '/lib/ssb/repo/query'
+import { isUrl } from '/lib/ssb/utils/utils'
 import { type DataSource } from '/site/mixins/dataSource'
 
 export interface PxApiCategory {
@@ -50,28 +51,18 @@ export function fetchPxApiData(content: Content<DataSource>): PxApiDataset | nul
     const dataSource: DataSource['dataSource'] = content.data.dataSource
 
     if (dataSource?._selected === DataSourceType.PXAPI && dataSource.pxapi?.urlOrId && dataSource.pxapi?.json) {
-      const language = content.language === 'nb' ? 'no' : content.language || 'no'
+      const language = content.language === 'en' ? content.language : 'no'
 
       const urlOrId = dataSource.pxapi.urlOrId.trim()
 
       let url
-
-      if (!urlOrId.startsWith('http')) {
-        url = `${baseUrl}/${urlOrId}/data?lang=${language}&outputFormat=json-stat2`
+      if (isUrl(urlOrId)) {
+        url = urlOrId
       } else {
-        if (!urlOrId.startsWith(baseUrl)) {
-          throw new Error('Invalid PXAPI URL')
-        }
-
-        if (urlOrId.includes('/data')) {
-          url = urlOrId
-        } else {
-          const cleaned = urlOrId.replace(/\/+$/, '')
-          const tableId = cleaned.substring(baseUrl.length + 1)
-          url = `${baseUrl}/${tableId}/data?lang=${language}&outputFormat=json-stat2`
-        }
+        url = `${baseUrl}/${urlOrId}/data?lang=${language}&outputFormat=json-stat2`
       }
 
+      log.info(`Fetching PXAPI data: ${content._id} (${urlOrId})`)
       return fetchData(url, JSON.parse(dataSource.pxapi.json), undefined, content._id) as PxApiDataset
     }
   } catch (e) {
@@ -80,10 +71,9 @@ export function fetchPxApiData(content: Content<DataSource>): PxApiDataset | nul
       function: 'fetchPxApiData',
       message: Events.REQUEST_COULD_NOT_CONNECT,
       info: `Failed to fetch data from pxApi: ${content._id} (${e})`,
-      status: e,
+      status: e as string | undefined,
     })
-
-    log.error(`PXAPI fetch failed: ${content._id} (${e})`)
+    log.error(`PXAPI fetch failed for ${content._id}: (${e})`)
   }
 
   return null
