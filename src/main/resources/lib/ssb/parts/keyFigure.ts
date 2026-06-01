@@ -10,7 +10,7 @@ import {
   type TableCellUniform,
   type PreliminaryData,
 } from '/lib/types/xmlParser'
-import { type Category, type Dimension, type JSONstat as JSONstatType } from '/lib/types/jsonstat-toolkit'
+import { type Category, type Dimension } from '/lib/types/jsonstat-toolkit'
 import {
   DatasetRepoNode,
   DataSource as DataSourceType,
@@ -61,6 +61,17 @@ interface DatasetFilterOptions {
   }
 }
 
+function getDatasetRepo(
+  keyFigure: Content<KeyFigure & DataSource>,
+  branch: string
+): DatasetRepoNode<JSONstat | TbmlDataUniform | object> | undefined | null {
+  if (branch === UNPUBLISHED_DATASET_BRANCH) {
+    return getDataset(keyFigure, UNPUBLISHED_DATASET_BRANCH)
+  } else {
+    return datasetOrUndefined(keyFigure)
+  }
+}
+
 // eslint-disable-next-line complexity
 export function parseKeyFigure(
   keyFigure: Content<KeyFigure & DataSource>,
@@ -84,13 +95,7 @@ export function parseKeyFigure(
     glossaryText: keyFigure.data.glossaryText,
   }
 
-  let datasetRepo: DatasetRepoNode<JSONstatType | TbmlDataUniform | object> | undefined | null
-  if (branch === UNPUBLISHED_DATASET_BRANCH) {
-    datasetRepo = getDataset(keyFigure, UNPUBLISHED_DATASET_BRANCH)
-  } else {
-    datasetRepo = datasetOrUndefined(keyFigure)
-  }
-
+  const datasetRepo = getDatasetRepo(keyFigure, branch)
   if (datasetRepo) {
     const dataSource = keyFigure.data.dataSource
     const data = datasetRepo.data
