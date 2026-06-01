@@ -2,14 +2,9 @@ import '/lib/ssb/polyfills/nashorn'
 
 // @ts-ignore
 import JSONstat from 'jsonstat-toolkit/import.mjs'
-import { query, Content, ContentsResult } from '/lib/xp/content'
+import { query, type Content } from '/lib/xp/content'
 import { localize } from '/lib/xp/i18n'
-import {
-  type TbmlDataUniform,
-  type TableRowUniform,
-  type TableCellUniform,
-  type PreliminaryData,
-} from '/lib/types/xmlParser'
+import { type TbmlDataUniform, type TableCellUniform, type PreliminaryData } from '/lib/types/xmlParser'
 import { type Category, type Dimension, type JSONstat as JSONStatType } from '/lib/types/jsonstat-toolkit'
 import {
   DatasetRepoNode,
@@ -29,11 +24,17 @@ import { type MunicipalityWithCounty } from '/lib/types/municipalities'
 import { type DataSource } from '/site/mixins/dataSource'
 import { type KeyFigure } from '/site/content-types'
 
-const contentTypeName = `${app.name}:keyFigure`
+interface DatasetFilterOptions {
+  _selected: 'municipalityFilter'
+  municipalityFilter: {
+    municipalityDimension: string
+  }
+}
 
 export function get(inputKeys: string | Array<string>): Array<Content<KeyFigure>> {
+  const contentTypeName = `${app.name}:keyFigure`
   const keys = util.data.forceArray(inputKeys)
-  const content: ContentsResult<Content<KeyFigure>> = query({
+  const content = query({
     contentTypes: [contentTypeName],
     query: ``,
     count: keys.length,
@@ -44,21 +45,14 @@ export function get(inputKeys: string | Array<string>): Array<Content<KeyFigure>
       },
     },
   })
-  const hits: Array<Content<KeyFigure>> = keys.reduce((keyfigures: Array<Content<KeyFigure>>, id: string) => {
-    const found: Array<Content<KeyFigure>> = content.hits.filter((keyFigure) => keyFigure._id === id)
+  const hits = keys.reduce((keyfigures: Array<Content<KeyFigure>>, id: string) => {
+    const found = content.hits.filter((keyFigure) => keyFigure._id === id)
     if (found.length === 1) {
-      keyfigures.push(found[0])
+      keyfigures.push(found[0] as Content<KeyFigure>)
     }
     return keyfigures
   }, [])
   return hits
-}
-
-interface DatasetFilterOptions {
-  _selected: 'municipalityFilter'
-  municipalityFilter: {
-    municipalityDimension: string
-  }
 }
 
 function getDatasetRepo(
@@ -101,14 +95,13 @@ export function parseKeyFigure(
 
     if (dataSource) {
       if (dataSource._selected === DataSourceType.STATBANK_API) {
-        return getDatafromApi(keyFigureViewData, municipality, data, dataSource.statbankApi, () => {
+        return getDataApi(keyFigureViewData, municipality, data, dataSource.statbankApi, () => {
           return keyFigureViewData
         })
       }
 
       if (dataSource._selected === DataSourceType.PXAPI) {
-        const parsedDs = typeof data === 'string' ? JSON.parse(data) : data // TODO: Double check if this parsing is necessary
-        return getDatafromApi(keyFigureViewData, municipality, parsedDs, dataSource.pxapi, getDataPxApiWithoutFilter)
+        return getDataApi(keyFigureViewData, municipality, data, dataSource.pxapi, getDataPxApiWithoutFilter)
       }
 
       if (dataSource._selected === DataSourceType.TBPROCESSOR) {
@@ -138,31 +131,31 @@ function getDataTbProcessor(
   keyFigure: Content<KeyFigure>,
   language?: string
 ): KeyFigureView {
-  const bodyRows: Array<TableRowUniform> = tbmlData.tbml.presentation.table.tbody
-  const head: Array<TableRowUniform> = tbmlData.tbml.presentation.table.thead
+  const bodyRows = tbmlData.tbml.presentation.table.tbody
+  const head = tbmlData.tbml.presentation.table.thead
   const [row1, row2] = bodyRows[0].tr
 
   if (row1) {
-    const td: Array<number | string | PreliminaryData> = row1.td
-    const value: number | string | PreliminaryData = td[0]
+    const td = row1.td
+    const value = td[0]
 
     keyFigureViewData.number = typeof value === 'object' ? parseValueZeroSafe(value.content) : parseValueZeroSafe(value)
   }
   if (row2 && keyFigure.data.changes) {
-    const td: Array<number | string | PreliminaryData> = row2.td
-    const value: number | string | PreliminaryData = td[0]
+    const td = row2.td
+    const value = td[0]
 
-    let change: number | string | undefined
+    let change
     if (typeof value === 'object') {
       change = value.content
     } else {
       change = value
     }
-    let changeText: string | undefined = parseValue(change)
+    let changeText = parseValue(change)
 
     // add denomination if there is any change
     if (changeText && keyFigure.data.changes) {
-      const denomination: string | undefined = (keyFigure.data.changes as { denomination?: string }).denomination
+      const denomination = (keyFigure.data.changes as { denomination?: string }).denomination
       if (denomination) {
         changeText += ` ${denomination}`
       }
@@ -207,7 +200,7 @@ function getDataTbProcessor(
   return keyFigureViewData
 }
 
-function getDatafromApi(
+function getDataApi(
   keyFigureView: KeyFigureView,
   municipality: MunicipalityWithCounty | undefined,
   data: JSONStatType,
@@ -216,7 +209,8 @@ function getDatafromApi(
     | Extract<KeyFigure['dataSource'], { _selected: 'pxapi' }>['pxapi'],
   getDataWithNoFilter: (view: KeyFigureView, ds: JSONStatType) => KeyFigureView
 ): KeyFigureView {
-  const ds = JSONstat(data).Dataset(0)
+  const parsedDs = typeof data === 'string' ? JSON.parse(data) : data
+  const ds = JSONstat(parsedDs).Dataset(0)
   const xAxisLabel = dataSource?.xAxisLabel
   const yAxisLabel = dataSource?.yAxisLabel
 
@@ -247,14 +241,9 @@ function getDataWithFilterStatbankApi(
       filterOptions._selected === 'municipalityFilter' &&
       municipality
     ) {
-      const filterTarget: string = filterOptions.municipalityFilter.municipalityDimension
+      const filterTarget = filterOptions.municipalityFilter.municipalityDimension
       // get value and label from json-stat data, filtering on municipality
-      let municipalData: MunicipalData | null = getDataFromMunicipalityCode(
-        ds,
-        municipality.code,
-        yAxisLabel,
-        filterTarget
-      )
+      let municipalData = getDataFromMunicipalityCode(ds, municipality.code, yAxisLabel, filterTarget)
 
       // not all municipals have data, so if its missing, try the old one
       if (!municipalData && municipality.changes && municipality.changes.length > 0) {
@@ -293,6 +282,44 @@ function getManualSource(manualSource: KeyFigure['manualSource'], keyFigureViewD
   return keyFigureViewData
 }
 
+function getDataFromMunicipalityCode(
+  ds: JSONstat,
+  municipalityCode: string,
+  yAxisLabel: string,
+  filterTarget: string
+): MunicipalData | null {
+  const filterTargetIndex = ds.id.indexOf(filterTarget)
+  const filterDimension = ds.Dimension(filterTarget) as Dimension | null
+  if (!filterDimension) {
+    return null
+  }
+  const filterCategory = filterDimension.Category(municipalityCode) as Category | null
+  const filterCategoryIndex = filterCategory ? filterCategory.index : undefined
+  const dimensionFilter = ds.id.map(() => 0)
+
+  if (filterCategoryIndex !== undefined && filterCategoryIndex >= 0) {
+    dimensionFilter[filterTargetIndex] = filterCategoryIndex
+  } else {
+    return null
+  }
+
+  const yAxisIndex = ds.id.indexOf(yAxisLabel)
+  const yDimension = ds.Dimension(yAxisLabel)
+  const yCategories = yDimension && !(yDimension instanceof Array) ? yDimension.Category() : null
+  if (yCategories && Array.isArray(yCategories) && yCategories.length > 0) {
+    const yCategory = yCategories.shift()
+    if (yCategory) {
+      dimensionFilter[yAxisIndex] = yCategory.index
+      const d = ds.Data(dimensionFilter, false) as number | null
+      return {
+        value: d,
+        label: yCategory.label,
+      }
+    }
+  }
+  return null
+}
+
 function getIconUrl(keyFigure: Content<KeyFigure>): string {
   let iconUrl = ''
   if (keyFigure.data.icon) {
@@ -305,45 +332,6 @@ function getIconUrl(keyFigure: Content<KeyFigure>): string {
   return iconUrl
 }
 
-function getDataFromMunicipalityCode(
-  ds: JSONstat,
-  municipalityCode: string,
-  yAxisLabel: string,
-  filterTarget: string
-): MunicipalData | null {
-  const filterTargetIndex: number = ds.id.indexOf(filterTarget)
-  const filterDimension: Dimension | null = ds.Dimension(filterTarget) as Dimension | null
-  if (!filterDimension) {
-    return null
-  }
-  const filterCategory: Category | null = filterDimension.Category(municipalityCode) as Category | null
-  const filterCategoryIndex: number | undefined = filterCategory ? filterCategory.index : undefined
-  const dimensionFilter: Array<number | string> = ds.id.map(() => 0)
-
-  if (filterCategoryIndex !== undefined && filterCategoryIndex >= 0) {
-    dimensionFilter[filterTargetIndex] = filterCategoryIndex
-  } else {
-    return null
-  }
-
-  const yAxisIndex: number = ds.id.indexOf(yAxisLabel)
-  const yDimension: Dimension | Array<Dimension> | null = ds.Dimension(yAxisLabel)
-  const yCategories: Category | Array<Category> | null =
-    yDimension && !(yDimension instanceof Array) ? yDimension.Category() : null
-  if (yCategories && Array.isArray(yCategories) && yCategories.length > 0) {
-    const yCategory: Category | undefined = yCategories.shift()
-    if (yCategory) {
-      dimensionFilter[yAxisIndex] = yCategory.index
-      const d: number | null = ds.Data(dimensionFilter, false) as number | null
-      return {
-        value: d,
-        label: yCategory.label,
-      }
-    }
-  }
-  return null
-}
-
 function parseValueZeroSafe(value: number | string | null): string | undefined {
   if (value === 0) {
     return value.toString()
@@ -352,8 +340,9 @@ function parseValueZeroSafe(value: number | string | null): string | undefined {
   }
 }
 
-const notFoundValues: Array<string> = ['.', '..', '...', ':', '-']
 function parseValue(value: number | string | null): string | undefined {
+  const notFoundValues: Array<string> = ['.', '..', '...', ':', '-']
+
   let hasValue = true
   if (!value || notFoundValues.includes(value.toString())) {
     hasValue = false
