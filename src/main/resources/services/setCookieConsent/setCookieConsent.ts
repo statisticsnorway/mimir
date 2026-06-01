@@ -6,7 +6,7 @@ export function get(req: Request): Response {
   if (!value || !['all', 'necessary', 'unidentified'].includes(value)) {
     return {
       status: 400,
-      body: 'Invalid cookie-consent value',
+      body: 'Invalid ssbno-consent value',
     }
   }
 
@@ -15,7 +15,7 @@ export function get(req: Request): Response {
     body: JSON.stringify({ success: true, value }),
     contentType: 'application/json',
     cookies: {
-      'cookie-consent': {
+      'ssbno-consent': {
         value,
         path: '/',
         maxAge: 7776000, // 90 dager

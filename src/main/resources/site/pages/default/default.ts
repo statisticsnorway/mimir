@@ -213,7 +213,7 @@ export function get(req: Request): Response {
   }
   const cookies = !isCookieBannerEnabled
     ? {
-        'cookie-consent': {
+        'ssbno-consent': {
           value: '',
           path: '/',
           maxAge: 0,
