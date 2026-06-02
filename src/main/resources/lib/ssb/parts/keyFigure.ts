@@ -217,7 +217,7 @@ function getDataApi(
   }
 
   if (ds && !Array.isArray(ds)) {
-    return getDataWithoutFilterApi(keyFigureView, ds)
+    return getDataWithoutFilterApi(keyFigureView, ds, yAxisLabel)
   }
 
   return keyFigureView
@@ -255,7 +255,11 @@ function getDataWithFilterStatbankApi(
   return keyFigureViewData
 }
 
-function getDataWithoutFilterApi(keyFigureViewData: KeyFigureView, ds: JSONstat): KeyFigureView {
+function getDataWithoutFilterApi(
+  keyFigureViewData: KeyFigureView,
+  ds: JSONstat,
+  yAxisLabel: string | undefined
+): KeyFigureView {
   const getFirstDimension: Array<number> = ds.id.map(() => 0)
   const value = ds.Data(getFirstDimension, false)
 
@@ -263,6 +267,16 @@ function getDataWithoutFilterApi(keyFigureViewData: KeyFigureView, ds: JSONstat)
     keyFigureViewData.number = parseValueZeroSafe(value)
   }
 
+  const yAxisIndex = ds.id.indexOf(yAxisLabel)
+  const yDimension = ds.Dimension(yAxisLabel)
+  const yCategories = yDimension && !(yDimension instanceof Array) ? yDimension.Category() : null
+  if (yCategories && Array.isArray(yCategories) && yCategories.length > 0) {
+    const yCategory = yCategories.shift()
+    if (yCategory) {
+      getFirstDimension[yAxisIndex] = yCategory.index
+      keyFigureViewData.time = yCategory.label
+    }
+  }
   return keyFigureViewData
 }
 
