@@ -1,5 +1,26 @@
 # Changelog
 
+## [2.43.2](https://github.com/statisticsnorway/mimir/compare/v2.43.1...v2.43.2) (2026-06-02)
+
+
+### Build System and dependencies
+
+* Bump @reduxjs/toolkit from 2.11.2 to 2.12.0 in the dependencies-minor-updates group ([#3723](https://github.com/statisticsnorway/mimir/issues/3723)) ([91e8ae2](https://github.com/statisticsnorway/mimir/commit/91e8ae247cac8f958299e0be4b6a00145fa4158d))
+* Bump @reduxjs/toolkit in the dependencies-minor-updates group ([91e8ae2](https://github.com/statisticsnorway/mimir/commit/91e8ae247cac8f958299e0be4b6a00145fa4158d))
+* Bump @xmldom/xmldom and speech-rule-engine ([#3701](https://github.com/statisticsnorway/mimir/issues/3701)) ([768b05e](https://github.com/statisticsnorway/mimir/commit/768b05e38edd9100c40dce767a933e21c6360a3c))
+* Bump commons-codec:commons-codec from 1.21.0 to 1.22.0 ([#3704](https://github.com/statisticsnorway/mimir/issues/3704)) ([f3c2b85](https://github.com/statisticsnorway/mimir/commit/f3c2b85dd3c90aaa7eaed1616c97c312418b8cf2))
+* Bump dawidd6/action-download-artifact from 19 to 21 ([#3707](https://github.com/statisticsnorway/mimir/issues/3707)) ([41c3dee](https://github.com/statisticsnorway/mimir/commit/41c3dee6291e7ccf9f66b4fa6ec5e4f100456ff2))
+* Bump fast-uri from 3.0.6 to 3.1.2 ([#3712](https://github.com/statisticsnorway/mimir/issues/3712)) ([0eab548](https://github.com/statisticsnorway/mimir/commit/0eab5486db1350f8f4b9a6b577b795b2685b147a))
+* Bump fast-xml-builder from 1.1.4 to 1.2.0 ([#3711](https://github.com/statisticsnorway/mimir/issues/3711)) ([d101eb9](https://github.com/statisticsnorway/mimir/commit/d101eb96ca1f64c8ca0e96902b3a87722ffc2413))
+* Bump fast-xml-parser from 5.5.7 to 5.8.0 ([#3702](https://github.com/statisticsnorway/mimir/issues/3702)) ([e409edd](https://github.com/statisticsnorway/mimir/commit/e409edd8a9e0c5d09baff2a43b08e9f08a5973ac))
+* Bump follow-redirects from 1.15.11 to 1.16.0 ([#3698](https://github.com/statisticsnorway/mimir/issues/3698)) ([56cfb82](https://github.com/statisticsnorway/mimir/commit/56cfb82b793eebf6cfd4566cb4633c62f2e0050b))
+* Bump no.item:lib-xp-time from 1.5.0 to 1.6.1 ([#3684](https://github.com/statisticsnorway/mimir/issues/3684)) ([4913392](https://github.com/statisticsnorway/mimir/commit/4913392b374927f9caad07de2f231af81dd334b2))
+* Bump node-forge from 1.3.3 to 1.4.0 ([#3682](https://github.com/statisticsnorway/mimir/issues/3682)) ([1562bbc](https://github.com/statisticsnorway/mimir/commit/1562bbce317e5d0ca3f67dd18c3c45a6f14b254e))
+* Bump the dependencies-minor-updates group across 1 directory with 11 updates ([#3721](https://github.com/statisticsnorway/mimir/issues/3721)) ([c42c9fc](https://github.com/statisticsnorway/mimir/commit/c42c9fc9d3924d12bb3ce60cd9666a17b0318bdd))
+* Bump the dependencies-patch-updates group across 1 directory with 6 updates ([#3720](https://github.com/statisticsnorway/mimir/issues/3720)) ([58a1a9d](https://github.com/statisticsnorway/mimir/commit/58a1a9dcbcc391a6ef69430e8d3e6a2c9e26fa79))
+* update enonic mock ([9751d3d](https://github.com/statisticsnorway/mimir/commit/9751d3d19e6ed347b141a97d72144fbc1e45cddc))
+* update enonic mock lib ([#3731](https://github.com/statisticsnorway/mimir/issues/3731)) ([9751d3d](https://github.com/statisticsnorway/mimir/commit/9751d3d19e6ed347b141a97d72144fbc1e45cddc))
+
 ## [2.43.1](https://github.com/statisticsnorway/mimir/compare/v2.43.0...v2.43.1) (2026-05-12)
 
 
