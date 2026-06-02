@@ -95,13 +95,11 @@ export function parseKeyFigure(
 
     if (dataSource) {
       if (dataSource._selected === DataSourceType.STATBANK_API) {
-        return getDataApi(keyFigureViewData, municipality, data, dataSource.statbankApi, () => {
-          return keyFigureViewData
-        })
+        return getDataApi(keyFigureViewData, municipality, data, dataSource.statbankApi)
       }
 
       if (dataSource._selected === DataSourceType.PXAPI) {
-        return getDataApi(keyFigureViewData, municipality, data, dataSource.pxapi, getDataPxApiWithoutFilter)
+        return getDataApi(keyFigureViewData, municipality, data, dataSource.pxapi)
       }
 
       if (dataSource._selected === DataSourceType.TBPROCESSOR) {
@@ -206,8 +204,7 @@ function getDataApi(
   data: JSONStatType,
   dataSource:
     | Extract<KeyFigure['dataSource'], { _selected: 'statbankApi' }>['statbankApi']
-    | Extract<KeyFigure['dataSource'], { _selected: 'pxapi' }>['pxapi'],
-  getDataWithNoFilter: (view: KeyFigureView, ds: JSONStatType) => KeyFigureView
+    | Extract<KeyFigure['dataSource'], { _selected: 'pxapi' }>['pxapi']
 ): KeyFigureView {
   const parsedDs = typeof data === 'string' ? JSON.parse(data) : data
   const ds = JSONstat(parsedDs).Dataset(0)
@@ -221,7 +218,7 @@ function getDataApi(
   }
 
   if (xAxisLabel && ds && !Array.isArray(ds)) {
-    return getDataWithNoFilter(keyFigureView, ds)
+    return getDataWithoutFilterApi(keyFigureView, ds)
   }
 
   return keyFigureView
@@ -256,13 +253,12 @@ function getDataWithFilterStatbankApi(
       }
     }
   }
-
   return keyFigureViewData
 }
 
-function getDataPxApiWithoutFilter(keyFigureViewData: KeyFigureView, ds: JSONstat): KeyFigureView {
-  const defaultDimensionFilter: Array<number> = ds.id.map(() => 0)
-  const value = ds.Data(defaultDimensionFilter, false)
+function getDataWithoutFilterApi(keyFigureViewData: KeyFigureView, ds: JSONstat): KeyFigureView {
+  const getFirstDimension: Array<number> = ds.id.map(() => 0)
+  const value = ds.Data(getFirstDimension, false)
 
   if (value !== null) {
     keyFigureViewData.number = parseValueZeroSafe(value)
