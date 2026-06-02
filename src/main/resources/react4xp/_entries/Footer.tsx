@@ -165,7 +165,7 @@ const Footer = (props: FooterContent) => {
     try {
       await fetch(`${COOKIE_SERVICE_URL}?value=unidentified`, { credentials: 'include' })
     } catch (e) {
-      console.error('Failed to reset cookie-consent via service', e)
+      console.error('Failed to reset ssbno-consent via service', e)
     }
   }
 
