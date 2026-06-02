@@ -208,7 +208,6 @@ function getDataApi(
 ): KeyFigureView {
   const parsedDs = typeof data === 'string' ? JSON.parse(data) : data
   const ds = JSONstat(parsedDs).Dataset(0)
-  const xAxisLabel = dataSource?.xAxisLabel
   const yAxisLabel = dataSource?.yAxisLabel
 
   // if filter get data with filter
@@ -217,7 +216,7 @@ function getDataApi(
     return getDataWithFilterStatbankApi(keyFigureView, municipality, filterOptions, ds, yAxisLabel)
   }
 
-  if (xAxisLabel && ds && !Array.isArray(ds)) {
+  if (ds && !Array.isArray(ds)) {
     return getDataWithoutFilterApi(keyFigureView, ds)
   }
 
