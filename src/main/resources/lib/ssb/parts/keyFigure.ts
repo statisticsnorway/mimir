@@ -210,7 +210,6 @@ function getDataApi(
   const ds = JSONstat(parsedDs).Dataset(0)
   const yAxisLabel = dataSource?.yAxisLabel
 
-  // if filter get data with filter
   if (dataSource && dataSource.datasetFilterOptions && dataSource.datasetFilterOptions._selected) {
     const filterOptions: DatasetFilterOptions = dataSource.datasetFilterOptions
     return getDataWithFilterStatbankApi(keyFigureView, municipality, filterOptions, ds, yAxisLabel)
