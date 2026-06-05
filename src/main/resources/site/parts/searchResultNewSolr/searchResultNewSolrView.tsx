@@ -48,9 +48,9 @@ function SearchResult(props: SearchResultProps) {
 
   const preselectedContentTypeDropdownItem = preselectedContentType
     ? {
-      id: props.contentTypeUrlParam,
-      title: preselectedContentType.title,
-    }
+        id: props.contentTypeUrlParam,
+        title: preselectedContentType.title,
+      }
     : allContentTypeItem
   const allSubjectsItem = {
     id: 'allSubjects',
@@ -58,9 +58,9 @@ function SearchResult(props: SearchResultProps) {
   }
   const preselectedSubjectDropdownItem = props.subjectUrlParam
     ? {
-      id: props.subjectUrlParam,
-      title: props.subjectUrlParam,
-    }
+        id: props.subjectUrlParam,
+        title: props.subjectUrlParam,
+      }
     : allSubjectsItem
   const [selectedContentType, setSelectedContentType] = useState(preselectedContentTypeDropdownItem)
   const [selectedMainSubject, setSelectedMainSubject] = useState(preselectedSubjectDropdownItem)
@@ -79,7 +79,7 @@ function SearchResult(props: SearchResultProps) {
 
   useEffect(() => {
     if (searchTerm && inputSearchElement.current) {
-      ; (inputSearchElement.current.firstChild as HTMLInputElement)?.focus()
+      ;(inputSearchElement.current.firstChild as HTMLInputElement)?.focus()
     }
 
     const announceSearchResultScreenReader = setTimeout(() => {
