@@ -62,8 +62,8 @@ export interface SolrResult {
 }
 
 export interface SolrHighlighting {
-  tittel: Array<string>
-  innhold: Array<string>
+  tittel?: Array<string>
+  innhold?: Array<string>
 }
 
 export interface SolrGroup {
@@ -87,6 +87,66 @@ export interface SolrDoc {
   'om-statistikken': string
   undertittel: string
   hovedemner: string
+  sprak: string
+  rom: string
+}
+
+export interface SolrSelectResponse {
+  responseHeader: {
+    status: number
+    QTime: number
+    params: {
+      q: string
+      indent?: string
+      'q.op'?: string
+      rows?: string
+      useParams?: string
+    }
+  }
+  response: {
+    numFound: number
+    start: number
+    numFoundExact: boolean
+    docs: Array<SolrSelectDoc>
+  }
+  facet_counts: {
+    facet_queries: {
+      uke: number
+      maned: number
+      ar: number
+      '5ar': number
+      udatert: number
+    }
+    facet_fields: {
+      innholdstype: Array<string | number>
+      hovedemner: Array<string | number>
+      rom: Array<string | number>
+    }
+    facet_ranges: Record<string, unknown>
+    facet_intervals: Record<string, unknown>
+    facet_heatmaps: Record<string, unknown>
+  }
+  highlighting: {
+    [docId: string]: {
+      innhold?: Array<string>
+      tittel?: Array<string>
+    }
+  }
+  spellcheck: {
+    suggestions: Array<unknown>
+    correctlySpelled: boolean
+  }
+}
+
+export interface SolrSelectDoc {
+  url: string
+  id: string
+  tittel: string
+  innholdstype: string
+  publiseringsdato: string
+  'om-statistikken': string
+  undertittel: string
+  hovedemner: Array<string>
   sprak: string
   rom: string
 }
