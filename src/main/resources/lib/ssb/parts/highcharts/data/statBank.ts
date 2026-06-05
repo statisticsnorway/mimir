@@ -20,8 +20,7 @@ export function seriesAndCategoriesFromJsonStat(req, highchart, dataset, dataset
   }
 
   if (datasetFormat?._selected === DataSourceType.PXAPI) {
-    // return seriesAndCategoriesFromPxApi(req, highchart, dataset, datasetFormat)
-    return seriesAndCategoriesFromPxApi(req, highchart, dataset, datasetFormat, dimensionFilter)
+    return seriesAndCategoriesFromPxApi(req, highchart, dataset, datasetFormat)
   }
 
   if (highchart.data.graphType === 'barNegative') {
@@ -33,7 +32,7 @@ export function seriesAndCategoriesFromJsonStat(req, highchart, dataset, dataset
   }
 }
 
-function seriesAndCategoriesFromPxApi(req, highchart, dataset, datasetFormat, dimensionFilter) {
+function seriesAndCategoriesFromPxApi(req, highchart, dataset, datasetFormat) {
   log.info('in seriesAndCategoriesFromPxApi function')
   const config = datasetFormat[DataSourceType.PXAPI] || {}
 
@@ -44,7 +43,7 @@ function seriesAndCategoriesFromPxApi(req, highchart, dataset, datasetFormat, di
   const yAxis =
     config.yAxisLabel && dimensions.includes(config.yAxisLabel) ? config.yAxisLabel : dimensions[1] || dimensions[0]
 
-  // const dimensionFilter = dimensions.map(() => 0)
+  const dimensionFilter = dimensions.map(() => 0)
 
   return pxFormat(dataset, dimensionFilter, xAxis, yAxis, highchart.data.graphType)
 }
@@ -176,14 +175,14 @@ const getCategoryByMunicipalityCode = (dimension, code) => {
   const category = dimension.Category(code)
 
   if (category) {
+    log.info(`Found category for municipality code ${code}: ${category.label}`)
     return category
   }
 
+  log.info('category: ' + JSON.stringify(dimension.Category(), null, 2)) // TODO:
+
   // Support PxAPI format for combined municipalities e.g. K_0301 or K-0302
-  return dimension.Category().find((c) => {
-    const id = c.id || c.value
-    return typeof id === 'string' && (id === code || id.endsWith(`_${code}`) || id.endsWith(`-${code}`))
-  })
+  return
 }
 
 const parseDataWithMunicipality = (dataset, filterTarget, municipality, xAxis) => {
@@ -192,10 +191,11 @@ const parseDataWithMunicipality = (dataset, filterTarget, municipality, xAxis) =
 
   let category = getCategoryByMunicipalityCode(dataset.Dimension(filterTarget), code)
   let hasData = category && hasFilterData(dataset, filterTarget, code, xAxis)
-  log.info(`Checking for data with municipality code ${code}: ${hasData}`)
+  log.info(`Checking for data with municipality code ${code}: category: ${category}, ${hasData}`)
 
   const getDataFromOldMunicipalityCode = municipality.changes.length > 0
   if (!hasData && getDataFromOldMunicipalityCode) {
+    log.info('in getDataFromOldMunicipalityCode')
     code = municipality.changes[0].oldCode
     category = getCategoryByMunicipalityCode(dataset.Dimension(filterTarget), code)
     hasData = category && hasFilterData(dataset, filterTarget, code, xAxis)
@@ -207,26 +207,6 @@ const parseDataWithMunicipality = (dataset, filterTarget, municipality, xAxis) =
 
   log.info(`category index for municipality code ${code}: ${category.index}`)
   return category.index
-
-  // let hasData = hasFilterData(dataset, filterTarget, code, xAxis)
-  // log.info(`Checking for data with municipality code ${code}: ${hasData}`)
-
-  // if (!hasData) {
-  //   const getDataFromOldMunicipalityCode = municipality.changes.length > 0
-  //   log.info(`is in !hasData conditional`)
-  //   if (getDataFromOldMunicipalityCode) {
-  //     log.info(
-  //       `No data found for municipality ${municipality.name} (${code}). Checking for old municipality code ${municipality.changes[0].oldCode}.`
-  //     )
-  //     code = municipality.changes[0].oldCode
-  //     hasData = hasFilterData(dataset, filterTarget, code, xAxis)
-  //   }
-  // }
-  // if (hasData) {
-  //   log.info(`hasData fallback: ${dataset.Dimension(filterTarget).Category().index[`K_${code}`]}`)
-  //   return dataset.Dimension(filterTarget).Category(code).index
-  // }
-  // return -1
 }
 
 const hasFilterData = (dataset, filterTarget, filter, xAxis) => {
