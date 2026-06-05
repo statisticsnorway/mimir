@@ -3,16 +3,11 @@ import { getContent, getComponent, pageUrl, serviceUrl } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
 import { render } from '/lib/enonic/react4xp'
 import { getNameSearchResult } from '/lib/ssb/utils/nameSearchUtils'
-import { type SolrResponse, type PreparedSearchResult, type SolrPrepResultAndTotal } from '/lib/types/solr'
+import { type SolrResponse, type SolrPrepResultAndTotal } from '/lib/types/solr'
 
 import { renderError } from '/lib/ssb/error/error'
 import { sanitizeForSolr } from '/lib/ssb/utils/textUtils'
-import {
-  NameSearchData,
-  type BestBet,
-  type ContentTypePhrase,
-  type SearchResultProps,
-} from '/lib/types/partTypes/searchResult'
+import { NameSearchData, type ContentTypePhrase, type SearchResultProps } from '/lib/types/partTypes/searchResult'
 import { solrTestNewSearch } from '/lib/ssb/utils/solrUtils'
 
 export function get(req: Request): Response {
