@@ -29,7 +29,6 @@ export function seriesAndCategoriesFromJsonStat(
   }
 
   if (datasetFormat?._selected === DataSourceType.PXAPI) {
-    log.info(JSON.stringify(dimensionFilter))
     return pxFormat(dataset, dimensionFilter, xAxisLabel, yAxisLabel, highchart.data.graphType)
   }
 
