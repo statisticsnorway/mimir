@@ -181,12 +181,18 @@ const getCategoryByMunicipalityCode = (dataset, filterTarget, code) => {
     return category
   }
 
-  // log.info('category (k-kommune): ' + JSON.stringify(dimension.Category('K_0301'), null, 2)) // TODO: Try to remove K_ or K- instead of inserting
-  // log.info('dimension: ' + JSON.stringify(dimension, null, 2))
-  log.info('category: ' + JSON.stringify(category, null, 2))
-
   // Support PxAPI format for combined municipalities e.g. K_0301 or K-0302
-  return
+  let getCategoryIndexPxApi = dimension.id.indexOf(`K_${code}`)
+  if (getCategoryIndexPxApi === -1) {
+    getCategoryIndexPxApi = dimension.id.indexOf(`K-${code}`)
+  }
+
+  const getCategoryPxApi = dimension.Category(getCategoryIndexPxApi)
+  log.info(`category (k-kommune) code: K_${code}`)
+  log.info('category (k-kommune) index: ' + JSON.stringify(getCategoryIndexPxApi, null, 2))
+  log.info('category (k-kommune) category: ' + JSON.stringify(getCategoryPxApi, null, 2))
+
+  return getCategoryPxApi
 }
 
 const parseDataWithMunicipality = (dataset, filterTarget, municipality, xAxis) => {
