@@ -20,9 +20,11 @@ export function seriesAndCategoriesFromJsonStat(req, highchart, dataset, dataset
   }
 
   if (datasetFormat?._selected === DataSourceType.PXAPI) {
-    return seriesAndCategoriesFromPxApi(req, highchart, dataset, datasetFormat)
+    log.info(`dimensionFilter before pxFormat: ${JSON.stringify(dimensionFilter, null, 2)}`)
+    return seriesAndCategoriesFromPxApi(highchart, dataset, datasetFormat)
   }
 
+  log.info(`dimensionFilter before defaultFormat (statbankApi): ${JSON.stringify(dimensionFilter, null, 2)}`)
   if (highchart.data.graphType === 'barNegative') {
     return barNegativeFormat(dataset, dimensionFilter, xAxisLabel, yAxisLabel)
   } else if (highchart.data.graphType === 'pie') {
@@ -32,10 +34,9 @@ export function seriesAndCategoriesFromJsonStat(req, highchart, dataset, dataset
   }
 }
 
-function seriesAndCategoriesFromPxApi(req, highchart, dataset, datasetFormat) {
+function seriesAndCategoriesFromPxApi(highchart, dataset, datasetFormat) {
   log.info('in seriesAndCategoriesFromPxApi function')
   const config = datasetFormat[DataSourceType.PXAPI] || {}
-
   const dimensions = dataset.id
 
   const xAxis = config.xAxisLabel && dimensions.includes(config.xAxisLabel) ? config.xAxisLabel : dimensions[0]
@@ -169,7 +170,8 @@ const barNegativeFormat = (ds, dimensionFilter, xAxis, yAxis) => {
   }
 }
 
-const getCategoryByMunicipalityCode = (dimension, code) => {
+const getCategoryByMunicipalityCode = (dataset, filterTarget, code) => {
+  const dimension = dataset.Dimension(filterTarget)
   if (!code) return null
 
   const category = dimension.Category(code)
@@ -179,7 +181,9 @@ const getCategoryByMunicipalityCode = (dimension, code) => {
     return category
   }
 
-  log.info('category: ' + JSON.stringify(dimension.Category(), null, 2)) // TODO:
+  // log.info('category (k-kommune): ' + JSON.stringify(dimension.Category('K_0301'), null, 2)) // TODO: Try to remove K_ or K- instead of inserting
+  // log.info('dimension: ' + JSON.stringify(dimension, null, 2))
+  log.info('category: ' + JSON.stringify(category, null, 2))
 
   // Support PxAPI format for combined municipalities e.g. K_0301 or K-0302
   return
@@ -189,15 +193,17 @@ const parseDataWithMunicipality = (dataset, filterTarget, municipality, xAxis) =
   let code = municipality?.code
   if (!code) return -1
 
-  let category = getCategoryByMunicipalityCode(dataset.Dimension(filterTarget), code)
+  let category = getCategoryByMunicipalityCode(dataset, filterTarget, code)
   let hasData = category && hasFilterData(dataset, filterTarget, code, xAxis)
-  log.info(`Checking for data with municipality code ${code}: category: ${category}, ${hasData}`)
+  log.info(
+    `Checking for data with municipality code ${code}: category: ${JSON.stringify(category, null, 2)}, ${hasData}`
+  )
 
   const getDataFromOldMunicipalityCode = municipality.changes.length > 0
   if (!hasData && getDataFromOldMunicipalityCode) {
     log.info('in getDataFromOldMunicipalityCode')
     code = municipality.changes[0].oldCode
-    category = getCategoryByMunicipalityCode(dataset.Dimension(filterTarget), code)
+    category = getCategoryByMunicipalityCode(dataset, filterTarget, code)
     hasData = category && hasFilterData(dataset, filterTarget, code, xAxis)
   }
 
