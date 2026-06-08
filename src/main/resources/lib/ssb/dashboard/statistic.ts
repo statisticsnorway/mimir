@@ -651,9 +651,3 @@ interface Tbml {
   sourceTableIds: Array<string>
   statbankTableIds: Array<string>
 }
-
-export interface StatisticLib {
-  setupHandlers: (socket: Socket, socketEmitter: SocketEmitter) => void
-  getDataSourceIdsFromStatistics: (statistic: Content<Statistics>) => Array<string>
-  getStatisticsContent: () => Array<Content<Statistics>>
-}

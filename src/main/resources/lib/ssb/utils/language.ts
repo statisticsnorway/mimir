@@ -159,12 +159,3 @@ function parseTimeInterval(time: string): string {
   }
   return parsedTime
 }
-
-export function getLanguageShortName(content: Content): string {
-  const norwegianPhrasesSuffix = 'no'
-  if (!content || !content.language) {
-    return norwegianPhrasesSuffix
-  } else {
-    return content.language === 'nb' ? norwegianPhrasesSuffix : content.language
-  }
-}

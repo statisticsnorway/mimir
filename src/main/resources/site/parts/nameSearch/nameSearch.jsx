@@ -13,7 +13,7 @@ import 'highcharts/modules/accessibility'
 import { useMediaQuery } from 'react-responsive'
 import { sanitize } from '/lib/ssb/utils/htmlUtils'
 import { exportHighchartsToExcel } from '/lib/ssb/utils/tableExportUtils'
-import accessibilityLang from './../../../assets/js/highchart-lang.json'
+import accessibilityLang from  '/lib/ssb/parts/highcharts/highchart-lang.json'
 
 /* TODO
 - Etternavn må få rett visning av beste-treff

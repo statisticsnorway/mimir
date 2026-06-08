@@ -5,15 +5,18 @@
   .highcharts-credits {
     display: none;
   }
+
   .highcharts-figure {
     margin: 0;
   }
+
   @include media-breakpoint-down(sm) {
     .col-12 {
       padding-left: 0;
       padding-right: 0;
     }
   }
+
   .ssb-tabs {
     padding-left: $spacer * 1.5;
     margin-top: 40px;
@@ -50,7 +53,7 @@
   }
 }
 
-.highchart-wrapper{
+.highchart-wrapper {
   .footnote {
     font-size: 12px;
     padding-left: 16px;
@@ -75,13 +78,18 @@
     height: auto;
     width: 100%;
 
-    .highcharts-container, .highcharts-root, .highcharts-background {
+    .highcharts-container,
+    .highcharts-root,
+    .highcharts-background {
       min-height: 300px !important;
     }
   }
 }
+
 .highcharts-figure.hide-title {
-  .highcharts-title, .highcharts-subtitle {
+
+  .highcharts-title,
+  .highcharts-subtitle {
     display: none !important;
   }
 }
@@ -95,6 +103,10 @@
   }
 
   .figure-subtitle {
+    font-size: 14px;
+  }
+
+  .figure-time-period {
     font-size: 14px;
   }
 }
@@ -113,14 +125,14 @@
 }
 
 .hide-div {
-  display: none!important;
+  display: none !important;
 }
 
 .show-div {
-  display: block!important;
+  display: block !important;
 }
 
 // Highcharts Keyboard navigation tab fix (accessibility elements fix)
-.highcharts-a11y-proxy-button.highcharts-no-tooltip{
-  top:0!important;
+.highcharts-a11y-proxy-button.highcharts-no-tooltip {
+  top: 0 !important;
 }

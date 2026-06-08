@@ -32,10 +32,6 @@ try {
           enabled: false,
         },
         {
-          feature: 'highchart-react',
-          enabled: false,
-        },
-        {
           feature: 'deactivate-part-cache-article-list',
           enabled: true,
         },
@@ -65,6 +61,10 @@ try {
         },
         {
           feature: 'use-anniversary-logo',
+          enabled: false,
+        },
+        {
+          feature: 'delete-joblog-cron',
           enabled: false,
         },
       ],

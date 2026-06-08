@@ -14,12 +14,12 @@ app {
     systemVersion = "${xpVersion}"}
 
 dependencies {
-    implementation 'commons-codec:commons-codec:1.20.0'
+    implementation 'commons-codec:commons-codec:1.22.0'
     implementation "com.enonic.xp:core-api:${xpVersion}"
     implementation "com.enonic.xp:portal-api:${xpVersion}"
     include 'com.enonic.lib:lib-cache:2.2.1'
     include 'com.enonic.lib:lib-text-encoding:2.1.1'
-    include 'org.json:json:20251224'
+    include 'org.json:json:20260522'
     include "com.enonic.lib:lib-http-client:3.2.2"
     include "com.enonic.lib:lib-react4xp:5.1.2"
     include "com.enonic.lib:lib-thymeleaf:2.1.1"
@@ -43,7 +43,7 @@ dependencies {
     include "com.enonic.xp:lib-value:${xpVersion}"
     include "com.enonic.xp:lib-websocket:${xpVersion}"
     include "com.gravitondigital:featuretogglelib:0.3.0"
-    include "no.item:lib-xp-time:1.0.4"
+    include "no.item:lib-xp-time:1.6.1"
     include "no.item:wsutil-server:2.0.0"
 }
 
@@ -52,10 +52,13 @@ repositories {
     mavenCentral()
     xp.enonicRepo()
     maven {
-        url "https://repo1.maven.org/maven2/"
+        url = "https://repo1.maven.org/maven2/"
     }
     maven {
-        url 'https://jitpack.io'
+        url = 'https://jitpack.io'
+    }
+    maven {
+      url = "https://repo.itemtest.no/releases"
     }
 }
 
@@ -69,7 +72,7 @@ task compileAssets( type: NpmTask, dependsOn: npmInstall) {
     'run',
     'build:asset' // This script must exist in the package.json file
   ]
-  description 'Compile asset resources'
+  description = 'Compile asset resources'
 }
 
 
@@ -78,7 +81,7 @@ task compileServer( type: NpmTask, dependsOn: npmInstall) {
     'run',
     'build:server' // This script must exist in the package.json file
   ]
-  description 'Compile server resources'
+  description = 'Compile server resources'
 }
 
 task react4xp(type: NpmTask, dependsOn: npmInstall) {
@@ -86,14 +89,14 @@ task react4xp(type: NpmTask, dependsOn: npmInstall) {
     'run',
     'compile:react4xp' // This script must exist in the package.json file
   ]
-  description 'Compile React4xp resources'
+  description = 'Compile React4xp resources'
   environment = [
     'R4X_APP_NAME': "${appName}",
     'R4X_BUILD_LOG_LEVEL': gradle.startParameter.logLevel.toString(),
     'R4X_DIR_PATH_ABSOLUTE_PROJECT': project.projectDir.toString(),
     'NODE_ENV': project.hasProperty('dev') || project.hasProperty('development') ? 'development' : 'production'
   ]
-  group 'react4xp'
+  group = 'react4xp'
   // It also watches package.json and package-lock.json :)
   inputs.dir 'node_modules/@enonic/react4xp'
   inputs.dir 'src/main/resources'
@@ -114,7 +117,7 @@ processResources {
     exclude 'assets/styles/**/*.less'
     exclude 'assets/styles/**/*.sass'
     exclude 'assets/styles/**/*.scss'
-    includeEmptyDirs false
+    includeEmptyDirs = false
 }
 
 jar {

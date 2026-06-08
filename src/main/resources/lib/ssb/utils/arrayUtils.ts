@@ -1,5 +1,3 @@
-import { type StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
-
 export function forceArray<A>(data: A | Array<A> | undefined): Array<A>
 export function forceArray<A>(data: A | ReadonlyArray<A> | undefined): ReadonlyArray<A>
 export function forceArray<A>(data: A | Array<A> | undefined): ReadonlyArray<A> {
@@ -31,18 +29,6 @@ export function contentArrayToRecord<Hit extends { _id: string }>(
 
 export function flatMap<T, U>(arr: T[], f: (t: T, i?: number, all?: T[]) => U[]): U[] {
   return arr.reduce<U[]>((res, value, i, all) => res.concat(f(value, i, all)), [])
-}
-
-export function checkLimitAndTrim(
-  releases: Array<StatisticInListing>,
-  releasesOnThisDay: Array<StatisticInListing>,
-  count: number
-): Array<StatisticInListing> {
-  if (releases.length + releasesOnThisDay.length > count) {
-    const whereToSlice: number = count - releases.length
-    return releasesOnThisDay.slice(0, whereToSlice)
-  }
-  return releasesOnThisDay
 }
 
 export function arraysEqual<T>(a: T[], b: T[]): boolean {

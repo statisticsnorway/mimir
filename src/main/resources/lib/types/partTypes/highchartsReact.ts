@@ -13,14 +13,17 @@ export interface HighchartsPartProps {
   description?: string
   type?: string
   contentKey?: string
+  timePeriod?: string
   footnoteText?: string[]
   creditsEnabled?: boolean
   sourceList?: Highchart['sourceList']
+  defaultShowAsTable?: boolean
 }
 
 export interface HighchartsExtraPartProps {
   draft?: boolean
   noDraftAvailable?: boolean
+  timePeriod?: string
 }
 
 export type HighchartsExtendedProps = HighchartsGraphConfig & HighchartsExtraPartProps

@@ -29,7 +29,7 @@ jobs:
       - name: Upload artifacts
         id: upload_artifacts
         if: success()
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: mimir-prod-${{ github.run_number }}
           path: "./build/libs/*.jar"
@@ -71,7 +71,7 @@ jobs:
           COMMIT_URL: $ {{github.event.head_commit.url || '' }}
           WORKFLOW: ${{ github.workflow }}
           REPO: ${{ github.repository }}
-        uses: slackapi/slack-github-action@v2
+        uses: slackapi/slack-github-action@v3
         with:
           webhook: ${{ secrets.SLACK_ALERTS_PROD }}
           webhook-type: incoming-webhook
@@ -113,7 +113,7 @@ jobs:
       - name: Send failure message to Slack
         id: slack_failure
         if: steps.deploy_app_to_XP.outcome == 'failure'
-        uses: slackapi/slack-github-action@v2
+        uses: slackapi/slack-github-action@v3
         env:
           ACTOR: ${{ github.actor }}
           REF: ${{ github.ref_name }}

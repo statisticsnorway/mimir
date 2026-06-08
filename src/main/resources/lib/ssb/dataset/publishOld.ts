@@ -378,11 +378,6 @@ function getPreviousRelease(statistic: Content<Statistics & Statistic>): string 
   return null
 }
 
-export interface PublishDatasetLib {
-  publishDataset: () => void
-  currentlyWaitingForPublish: (statistic: Content<Statistic>) => boolean
-}
-
 interface PublicationItem {
   dataset: DatasetRepoNode<object> | null
   dataSource: Content<DataSource>

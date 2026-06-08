@@ -45,12 +45,14 @@ export const mergeAndSortReleases = (
   addToMap(releases1 as FlattenedUpcomingReleases[])
   addToMap(releases2)
 
-  // Remove duplicate releases
+  // Deduplicate by statistic + variant (not only statisticId)
   merged.forEach((value) => {
     const uniqueReleases = new Set()
     value.releases = value.releases.filter((release: PreparedUpcomingRelease) => {
-      const isDuplicate = uniqueReleases.has(release.id)
-      uniqueReleases.add(release.id)
+      const variantId = release.variant?.id
+      const key = variantId ? `${release.id}-${variantId}` : `${release.id}`
+      const isDuplicate = uniqueReleases.has(key)
+      uniqueReleases.add(key)
       return !isDuplicate
     })
   })
@@ -252,18 +254,19 @@ function UpcomingReleases(props: UpcomingReleasesProps) {
     const month = date.getMonth()
 
     return (
-      <div className={`calendar-day ${isFirst ? 'first' : ''}`} key={day}>
+      <div className={`calendar-day ${isFirst ? 'first' : ''}`} key={dayWithReleases.date}>
         <div className='time-wrapper'>
           <time aria-hidden='true' dateTime={date.toISOString()}>
             <span className='day'>{day}</span>
             <span className='month'>{getShortMonthName(month, language)}</span>
           </time>
         </div>
-        <span id={`datemonth-${day}`} className='sr-only' aria-hidden='true'>{`${day}. ${getShortMonthName(
-          month,
-          language
-        )}`}</span>
-        <ol className='releaseList' aria-labelledby={`heading-upcoming-releases datemonth-${day}`}>
+        <span
+          id={`release-date-${dayWithReleases.date}`}
+          className='sr-only'
+          aria-hidden='true'
+        >{`${day}. ${getShortMonthName(month, language)}`}</span>
+        <ol className='releaseList' aria-labelledby={`heading-upcoming-releases release-date-${dayWithReleases.date}`}>
           {dayWithReleases.releases.map((release, releaseIndex) => renderRelease(release, releaseIndex, releaseDate))}
         </ol>
       </div>

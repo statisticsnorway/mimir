@@ -1,5 +1,171 @@
 # Changelog
 
+## [2.43.2](https://github.com/statisticsnorway/mimir/compare/v2.43.1...v2.43.2) (2026-06-02)
+
+
+### Build System and dependencies
+
+* Bump @reduxjs/toolkit from 2.11.2 to 2.12.0 in the dependencies-minor-updates group ([#3723](https://github.com/statisticsnorway/mimir/issues/3723)) ([91e8ae2](https://github.com/statisticsnorway/mimir/commit/91e8ae247cac8f958299e0be4b6a00145fa4158d))
+* Bump @reduxjs/toolkit in the dependencies-minor-updates group ([91e8ae2](https://github.com/statisticsnorway/mimir/commit/91e8ae247cac8f958299e0be4b6a00145fa4158d))
+* Bump @xmldom/xmldom and speech-rule-engine ([#3701](https://github.com/statisticsnorway/mimir/issues/3701)) ([768b05e](https://github.com/statisticsnorway/mimir/commit/768b05e38edd9100c40dce767a933e21c6360a3c))
+* Bump commons-codec:commons-codec from 1.21.0 to 1.22.0 ([#3704](https://github.com/statisticsnorway/mimir/issues/3704)) ([f3c2b85](https://github.com/statisticsnorway/mimir/commit/f3c2b85dd3c90aaa7eaed1616c97c312418b8cf2))
+* Bump dawidd6/action-download-artifact from 19 to 21 ([#3707](https://github.com/statisticsnorway/mimir/issues/3707)) ([41c3dee](https://github.com/statisticsnorway/mimir/commit/41c3dee6291e7ccf9f66b4fa6ec5e4f100456ff2))
+* Bump fast-uri from 3.0.6 to 3.1.2 ([#3712](https://github.com/statisticsnorway/mimir/issues/3712)) ([0eab548](https://github.com/statisticsnorway/mimir/commit/0eab5486db1350f8f4b9a6b577b795b2685b147a))
+* Bump fast-xml-builder from 1.1.4 to 1.2.0 ([#3711](https://github.com/statisticsnorway/mimir/issues/3711)) ([d101eb9](https://github.com/statisticsnorway/mimir/commit/d101eb96ca1f64c8ca0e96902b3a87722ffc2413))
+* Bump fast-xml-parser from 5.5.7 to 5.8.0 ([#3702](https://github.com/statisticsnorway/mimir/issues/3702)) ([e409edd](https://github.com/statisticsnorway/mimir/commit/e409edd8a9e0c5d09baff2a43b08e9f08a5973ac))
+* Bump follow-redirects from 1.15.11 to 1.16.0 ([#3698](https://github.com/statisticsnorway/mimir/issues/3698)) ([56cfb82](https://github.com/statisticsnorway/mimir/commit/56cfb82b793eebf6cfd4566cb4633c62f2e0050b))
+* Bump no.item:lib-xp-time from 1.5.0 to 1.6.1 ([#3684](https://github.com/statisticsnorway/mimir/issues/3684)) ([4913392](https://github.com/statisticsnorway/mimir/commit/4913392b374927f9caad07de2f231af81dd334b2))
+* Bump node-forge from 1.3.3 to 1.4.0 ([#3682](https://github.com/statisticsnorway/mimir/issues/3682)) ([1562bbc](https://github.com/statisticsnorway/mimir/commit/1562bbce317e5d0ca3f67dd18c3c45a6f14b254e))
+* Bump the dependencies-minor-updates group across 1 directory with 11 updates ([#3721](https://github.com/statisticsnorway/mimir/issues/3721)) ([c42c9fc](https://github.com/statisticsnorway/mimir/commit/c42c9fc9d3924d12bb3ce60cd9666a17b0318bdd))
+* Bump the dependencies-patch-updates group across 1 directory with 6 updates ([#3720](https://github.com/statisticsnorway/mimir/issues/3720)) ([58a1a9d](https://github.com/statisticsnorway/mimir/commit/58a1a9dcbcc391a6ef69430e8d3e6a2c9e26fa79))
+* update enonic mock ([9751d3d](https://github.com/statisticsnorway/mimir/commit/9751d3d19e6ed347b141a97d72144fbc1e45cddc))
+* update enonic mock lib ([#3731](https://github.com/statisticsnorway/mimir/issues/3731)) ([9751d3d](https://github.com/statisticsnorway/mimir/commit/9751d3d19e6ed347b141a97d72144fbc1e45cddc))
+
+## [2.43.1](https://github.com/statisticsnorway/mimir/compare/v2.43.0...v2.43.1) (2026-05-12)
+
+
+### Bug Fixes
+
+* Add function for deleting joblogs for jobs, and ensure it runs daily.  [MIM-2669] ([#3709](https://github.com/statisticsnorway/mimir/issues/3709)) ([b51b2cf](https://github.com/statisticsnorway/mimir/commit/b51b2cf7ccd11df91593905415b145212862128a))
+* Fix pubDate format for rss statkal service [MIM-2603] ([#3685](https://github.com/statisticsnorway/mimir/issues/3685)) ([570f959](https://github.com/statisticsnorway/mimir/commit/570f9596f965599dd0937728742879e2a6b74afb))
+
+
+### Build System and dependencies
+
+* Bump axios from 1.13.2 to 1.15.0 ([#3692](https://github.com/statisticsnorway/mimir/issues/3692)) ([fab7792](https://github.com/statisticsnorway/mimir/commit/fab77920f7489ba806125208c844f853c41556ec))
+* Bump dawidd6/action-download-artifact from 18 to 19 ([#3666](https://github.com/statisticsnorway/mimir/issues/3666)) ([260f0d0](https://github.com/statisticsnorway/mimir/commit/260f0d0d80c8698dd01c83b4709037df318f7def))
+* Bump docker/login-action from 3 to 4 ([#3654](https://github.com/statisticsnorway/mimir/issues/3654)) ([8740af7](https://github.com/statisticsnorway/mimir/commit/8740af7f842c76372f8e5a811532a60fdd70da2c))
+* Bump docker/metadata-action from 5 to 6 ([#3652](https://github.com/statisticsnorway/mimir/issues/3652)) ([028bc23](https://github.com/statisticsnorway/mimir/commit/028bc23b74ada96ef6191e2eecfa4d0b1045bf05))
+* Bump docker/setup-buildx-action from 3 to 4 ([#3651](https://github.com/statisticsnorway/mimir/issues/3651)) ([8c4600e](https://github.com/statisticsnorway/mimir/commit/8c4600e4b6fe574c6c3e93ac9b677a034a85ebe3))
+* Bump immutable ([#3691](https://github.com/statisticsnorway/mimir/issues/3691)) ([66d95fc](https://github.com/statisticsnorway/mimir/commit/66d95fc7b225e20d25dabfe6509b67f2f8c07c6e))
+* Bump lodash from 4.17.23 to 4.18.1 ([#3689](https://github.com/statisticsnorway/mimir/issues/3689)) ([0c9f14c](https://github.com/statisticsnorway/mimir/commit/0c9f14c3b3ad8467d1bca31b0a40faae3b9cb85b))
+* Bump picomatch from 2.3.1 to 2.3.2 ([#3677](https://github.com/statisticsnorway/mimir/issues/3677)) ([b83c104](https://github.com/statisticsnorway/mimir/commit/b83c104efc63027982a024e1f8dd46db8ce0fada))
+* Bump slackapi/slack-github-action from 2 to 3 ([#3657](https://github.com/statisticsnorway/mimir/issues/3657)) ([660215c](https://github.com/statisticsnorway/mimir/commit/660215cf86078acf9bc0d1f83c08b2513b7b6a47))
+* Bump svgo from 4.0.0 to 4.0.1 ([#3649](https://github.com/statisticsnorway/mimir/issues/3649)) ([1ce3c2d](https://github.com/statisticsnorway/mimir/commit/1ce3c2d67eee2a4d3bb6837a3b15b8da353bbf0f))
+* Bump the dependencies-minor-updates group with 3 updates ([#3669](https://github.com/statisticsnorway/mimir/issues/3669)) ([deb7fc0](https://github.com/statisticsnorway/mimir/commit/deb7fc0023b93fbe79996aa23e801f14b4c8a6ae))
+* Bump the dependencies-patch-updates group across 1 directory with 10 updates ([#3687](https://github.com/statisticsnorway/mimir/issues/3687)) ([ac0e8f9](https://github.com/statisticsnorway/mimir/commit/ac0e8f97a36fd05133e6a9a90337c524a990c0c7))
+* Bump yaml ([#3676](https://github.com/statisticsnorway/mimir/issues/3676)) ([baa404a](https://github.com/statisticsnorway/mimir/commit/baa404adcb52766342a7f3f252dcd886f3f39041))
+
+## [2.43.0](https://github.com/statisticsnorway/mimir/compare/v2.42.0...v2.43.0) (2026-03-26)
+
+
+### Features
+
+* PXAPI V2 Support – KeyFigure, Table and Highcharts ([#3637](https://github.com/statisticsnorway/mimir/issues/3637)) ([1c54e02](https://github.com/statisticsnorway/mimir/commit/1c54e02b18b94b5771ef76766ec1fa714e51a543))
+
+
+### Bug Fixes
+
+* bug in rss news and statkal pubdate offset calculation [Mim-2447 ] ([#3644](https://github.com/statisticsnorway/mimir/issues/3644)) ([f5f5314](https://github.com/statisticsnorway/mimir/commit/f5f5314371cb2131a8d087af83bc98767f0fa7a6))
+* Fix typing error on cookie-banner [MIM-2588] ([#3675](https://github.com/statisticsnorway/mimir/issues/3675)) ([c78e9d0](https://github.com/statisticsnorway/mimir/commit/c78e9d04cc54aa6a287a0ce4f7db071318d52ba4))
+* Fixed correct table header override in highcharts ([341041d](https://github.com/statisticsnorway/mimir/commit/341041d7cdfd77cf691d99ccb50ab65b8f917a11))
+* Fixed correct table header override in highcharts [MIM-2562] ([#3662](https://github.com/statisticsnorway/mimir/issues/3662)) ([341041d](https://github.com/statisticsnorway/mimir/commit/341041d7cdfd77cf691d99ccb50ab65b8f917a11))
+* **statbankSaved:** ensure English URLs return English tables [MIM-2567] ([#3650](https://github.com/statisticsnorway/mimir/issues/3650)) ([c370ea0](https://github.com/statisticsnorway/mimir/commit/c370ea0cf3aee1dded29e589c2778f525bd40dd7))
+* **statbankSaved:** return English data for /en/ saved query URLs ([c370ea0](https://github.com/statisticsnorway/mimir/commit/c370ea0cf3aee1dded29e589c2778f525bd40dd7))
+
+
+### Code Refactoring
+
+* dataSource.xml navn endringerer [MIM-2472] ([#3656](https://github.com/statisticsnorway/mimir/issues/3656)) ([4368d49](https://github.com/statisticsnorway/mimir/commit/4368d4928d08943d5de7df676621b80c87b16417))
+* Revert Px api  ([#3679](https://github.com/statisticsnorway/mimir/issues/3679)) ([0272e2c](https://github.com/statisticsnorway/mimir/commit/0272e2cd027130a98f4f65683c27833eaeed9b9b))
+
+
+### Build System and dependencies
+
+* Bump actions/download-artifact from 7 to 8 ([#3642](https://github.com/statisticsnorway/mimir/issues/3642)) ([87ab5b4](https://github.com/statisticsnorway/mimir/commit/87ab5b4e31cdccf112882f66e3fc09d8f27f28cc))
+* Bump actions/upload-artifact from 6 to 7 ([#3643](https://github.com/statisticsnorway/mimir/issues/3643)) ([32640fb](https://github.com/statisticsnorway/mimir/commit/32640fb5a7fdf10b7e44c2b3efea8348d9cd7a2f))
+* Bump dawidd6/action-download-artifact from 14 to 18 ([#3658](https://github.com/statisticsnorway/mimir/issues/3658)) ([c2ffb9e](https://github.com/statisticsnorway/mimir/commit/c2ffb9ed9738cb1f6f08cd247dde62295e18e543))
+* Bump fast-xml-parser from 5.3.0 to 5.5.7 ([#3664](https://github.com/statisticsnorway/mimir/issues/3664)) ([aed4b5b](https://github.com/statisticsnorway/mimir/commit/aed4b5b760dbdc33fedc19fde25d6c19eee53d2d))
+* Bump flatted from 3.3.3 to 3.4.2 ([#3665](https://github.com/statisticsnorway/mimir/issues/3665)) ([8f90771](https://github.com/statisticsnorway/mimir/commit/8f907713d153a033c2a0ad4b5df8c624bd7a155f))
+* Bump no.item:lib-xp-time from 1.2.1 to 1.5.0 ([#3660](https://github.com/statisticsnorway/mimir/issues/3660)) ([2929430](https://github.com/statisticsnorway/mimir/commit/2929430109d71c0df1a641c9f4f26cc943120c3c))
+* Bump rollup from 4.48.0 to 4.59.0 ([#3639](https://github.com/statisticsnorway/mimir/issues/3639)) ([b76eeb3](https://github.com/statisticsnorway/mimir/commit/b76eeb3c97bed65dfb7e09ab5544759d8c2bc1d8))
+* Bump the dependencies-minor-updates group across 1 directory with 8 updates ([#3661](https://github.com/statisticsnorway/mimir/issues/3661)) ([d353629](https://github.com/statisticsnorway/mimir/commit/d3536290d58814de7171185370a5b68c66dfad8a))
+* Bump webfactory/ssh-agent from 0.9.1 to 0.10.0 ([#3659](https://github.com/statisticsnorway/mimir/issues/3659)) ([e7375bb](https://github.com/statisticsnorway/mimir/commit/e7375bb0e6dad54d54bca62fc8b8baeace42c755))
+
+## [2.42.0](https://github.com/statisticsnorway/mimir/compare/v2.41.0...v2.42.0) (2026-03-03)
+
+
+### Features
+
+* **statbankSaved:** fetch saved queries via pxweb v2 API [MIM-2530] ([#3634](https://github.com/statisticsnorway/mimir/issues/3634)) ([d4d787d](https://github.com/statisticsnorway/mimir/commit/d4d787da8a8a13185f8744efd2529cb955b34f45))
+
+
+### Bug Fixes
+
+* Corrected default value in schema, improved default logic. [MIM-2526] ([#3636](https://github.com/statisticsnorway/mimir/issues/3636)) ([1ff82de](https://github.com/statisticsnorway/mimir/commit/1ff82dea241d8049ecf6a3f52c1a367781ec4918))
+* correctly handle multiple variants for same statistic on same day [MIM-2523] ([#3629](https://github.com/statisticsnorway/mimir/issues/3629)) ([b1053dd](https://github.com/statisticsnorway/mimir/commit/b1053dd058044679b2130bd7fd8e5bcb92467946))
+* preserve multiple variants per statistic and ensure unique day keys ([b1053dd](https://github.com/statisticsnorway/mimir/commit/b1053dd058044679b2130bd7fd8e5bcb92467946))
+
+
+### Build System and dependencies
+
+* Bump commons-codec:commons-codec from 1.20.0 to 1.21.0 ([#3618](https://github.com/statisticsnorway/mimir/issues/3618)) ([e8be79e](https://github.com/statisticsnorway/mimir/commit/e8be79e85a3d72de6ed5a08667eb1622a6fcfef0))
+* Bump dawidd6/action-download-artifact from 12 to 14 ([#3617](https://github.com/statisticsnorway/mimir/issues/3617)) ([fed95e0](https://github.com/statisticsnorway/mimir/commit/fed95e0f0458b8f365c20a5cc779b10b66175902))
+
+## [2.41.0](https://github.com/statisticsnorway/mimir/compare/v2.40.0...v2.41.0) (2026-02-17)
+
+
+### Features
+
+* **charts:** show time period for Highchart and Highmap [MIM-2196] ([#3623](https://github.com/statisticsnorway/mimir/issues/3623)) ([c5c7736](https://github.com/statisticsnorway/mimir/commit/c5c7736080d5e94f80abc8e031959d6453a6ffae))
+
+
+### Bug Fixes
+
+* Use new config for old statbank url [MIM-2530] ([#3622](https://github.com/statisticsnorway/mimir/issues/3622)) ([1e42e5a](https://github.com/statisticsnorway/mimir/commit/1e42e5aa121f21cde28e98f801f6ba68e53ab761))
+
+
+### Code Refactoring
+
+* Mim 2506 remove highcharts jquery [MIM-2506] ([#3626](https://github.com/statisticsnorway/mimir/issues/3626)) ([9836bc5](https://github.com/statisticsnorway/mimir/commit/9836bc53f286b14bfa75e7d01c150833c20f348e))
+
+## [2.40.0](https://github.com/statisticsnorway/mimir/compare/v2.39.0...v2.40.0) (2026-01-29)
+
+
+### Features
+
+* Add option to show table as default for Highcharts React [MIM-2399] ([#3606](https://github.com/statisticsnorway/mimir/issues/3606)) ([ea31fd6](https://github.com/statisticsnorway/mimir/commit/ea31fd6367f0c499d99277ee0cd74ca8e80e918a))
+* Change url to be used for making the Statbank url list ([13c3796](https://github.com/statisticsnorway/mimir/commit/13c3796d7a27d75957fafcb557708c4c9405e469))
+
+
+### Bug Fixes
+
+* **banner:** prevent image distortion in Safari [MIM-2503] ([#3604](https://github.com/statisticsnorway/mimir/issues/3604)) ([d312863](https://github.com/statisticsnorway/mimir/commit/d3128636fa6ebf38db40b2d1cb7b71447a0ba3a1))
+* Fix broken axis bugs for Highcharts React [MIM-2444] ([#3596](https://github.com/statisticsnorway/mimir/issues/3596)) ([c91b459](https://github.com/statisticsnorway/mimir/commit/c91b459c645e6d6251f52c93bd412144449c5efd))
+* Fix broken yAxis tick label for Highcharts React during resize [MIM-2444] ([#3598](https://github.com/statisticsnorway/mimir/issues/3598)) ([4b989b5](https://github.com/statisticsnorway/mimir/commit/4b989b5c8109ee60aa1d1feed3adf33d616b9179))
+* Fix bugs for Highcharts React [MIM-2444] ([#3593](https://github.com/statisticsnorway/mimir/issues/3593)) ([95bc199](https://github.com/statisticsnorway/mimir/commit/95bc1992fa926d2fe2db6062431fe7cb608f7532))
+* Fix show draft for Highcharts (React component) with tbprocessor as source ([#3589](https://github.com/statisticsnorway/mimir/issues/3589)) ([1ec4c1e](https://github.com/statisticsnorway/mimir/commit/1ec4c1e7afd77403c1c81bff74f0e40ffe09aadc))
+* remove faulty toggle to hide title in highcharts ([f34014f](https://github.com/statisticsnorway/mimir/commit/f34014f1ae46dd8140c0dfd89118e5fb61850310))
+* remove faulty toggle to hide title in highcharts [MIM-2161] ([#3597](https://github.com/statisticsnorway/mimir/issues/3597)) ([f34014f](https://github.com/statisticsnorway/mimir/commit/f34014f1ae46dd8140c0dfd89118e5fb61850310))
+* Return when highchartWrapperElement is undefined to prevent undefined is not iterable errors ([95bc199](https://github.com/statisticsnorway/mimir/commit/95bc1992fa926d2fe2db6062431fe7cb608f7532))
+* Revert broken y-axis symbol destroy changes and refactor [MIM-2444] ([#3607](https://github.com/statisticsnorway/mimir/issues/3607)) ([367457e](https://github.com/statisticsnorway/mimir/commit/367457e7e287e7fe04ff0d9ef5b3b932b6cb14b5))
+
+
+### Code Refactoring
+
+* remove unused functions and types ([#3613](https://github.com/statisticsnorway/mimir/issues/3613)) ([9beb913](https://github.com/statisticsnorway/mimir/commit/9beb91366382b956572303644ea89d411c02f1f3))
+* **time:** compute server offset dynamically instead of config [MIM-2383] ([#3595](https://github.com/statisticsnorway/mimir/issues/3595)) ([07644d4](https://github.com/statisticsnorway/mimir/commit/07644d411fad7735aa10b7725adcc189524def15))
+
+
+### Tests
+
+* setup xp mock for repos and nodes ([#3579](https://github.com/statisticsnorway/mimir/issues/3579)) ([bda5000](https://github.com/statisticsnorway/mimir/commit/bda5000a3f61016e1ab4ce9c6804b567f9e8cc63))
+
+
+### Build System and dependencies
+
+* Bump actions/download-artifact from 6 to 7 ([#3575](https://github.com/statisticsnorway/mimir/issues/3575)) ([2ad65c4](https://github.com/statisticsnorway/mimir/commit/2ad65c4a91fc86229a354686641bcc06729277a2))
+* Bump actions/upload-artifact from 5 to 6 ([#3574](https://github.com/statisticsnorway/mimir/issues/3574)) ([110ce16](https://github.com/statisticsnorway/mimir/commit/110ce1690b744ce7cac9e620ba204f4cdc9246a7))
+* Bump com.enonic.lib:lib-react4xp from 5.1.1 to 5.1.2 ([#3599](https://github.com/statisticsnorway/mimir/issues/3599)) ([0c9fa7b](https://github.com/statisticsnorway/mimir/commit/0c9fa7bda4df723759f4134b5d4d9849a2f50b9b))
+* Bump dawidd6/action-download-artifact from 11 to 12 ([#3584](https://github.com/statisticsnorway/mimir/issues/3584)) ([96e72e8](https://github.com/statisticsnorway/mimir/commit/96e72e8693bf89a71513a886ee2aece65c278080))
+* Bump eslint-plugin-jsdoc from 61.5.0 to 62.0.0 ([#3602](https://github.com/statisticsnorway/mimir/issues/3602)) ([ebd9fcc](https://github.com/statisticsnorway/mimir/commit/ebd9fcccee9fb7528d978e0ebcc03e0b5b3d9031))
+* Bump lodash from 4.17.21 to 4.17.23 ([#3605](https://github.com/statisticsnorway/mimir/issues/3605)) ([5b9a2e6](https://github.com/statisticsnorway/mimir/commit/5b9a2e6875c576280a7191df157d6f71f3bb6782))
+* Bump node-forge from 1.3.1 to 1.3.3 ([#3577](https://github.com/statisticsnorway/mimir/issues/3577)) ([f43dac3](https://github.com/statisticsnorway/mimir/commit/f43dac30685f7c125757b94f4b49c34822f0924a))
+* Bump org.json:json from 20250517 to 20251224 ([#3585](https://github.com/statisticsnorway/mimir/issues/3585)) ([cfda42d](https://github.com/statisticsnorway/mimir/commit/cfda42d64d188f91768d55e5ae6dc5ea5d46c6bc))
+* Bump the dependencies-minor-updates group across 1 directory with 3 updates ([#3608](https://github.com/statisticsnorway/mimir/issues/3608)) ([d04a04f](https://github.com/statisticsnorway/mimir/commit/d04a04f2f9eeafaac2666ae71b5649c48ec015e2))
+* Bump the dependencies-minor-updates group across 1 directory with 5 updates ([#3586](https://github.com/statisticsnorway/mimir/issues/3586)) ([8499984](https://github.com/statisticsnorway/mimir/commit/8499984a7efd7c0ebf8a75770ca798cbba0cc04c))
+* Bump the dependencies-patch-updates group across 1 directory with 13 updates ([#3609](https://github.com/statisticsnorway/mimir/issues/3609)) ([e8762b4](https://github.com/statisticsnorway/mimir/commit/e8762b47670393514ecd81a2f636c7c6f55829c2))
+
 ## [2.39.0](https://github.com/statisticsnorway/mimir/compare/v2.38.0...v2.39.0) (2026-01-08)
 
 

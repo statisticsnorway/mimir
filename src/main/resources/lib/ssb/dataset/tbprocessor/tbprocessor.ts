@@ -264,8 +264,3 @@ export function getTableIdFromTbprocessor(data: TbmlDataUniform): Array<string> 
   }
   return []
 }
-
-export interface FetchTbProcessorData {
-  status: number
-  body: string
-}

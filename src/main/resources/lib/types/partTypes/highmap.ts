@@ -24,11 +24,7 @@ export interface HighmapProps {
   language: string | undefined
   highmapId: string | undefined
   geographicalCategory: Highmap['geographicalCategory']
-}
-
-export interface HighmapFormattedTableData {
-  capitalName: string
-  value: number
+  timePeriod?: string
 }
 
 export interface ThresholdValues {

@@ -7,6 +7,7 @@ import {
 } from '/lib/types/xmlParser'
 import { type RowValue } from '/lib/types/util'
 import { getRowValue } from '/lib/ssb/utils/utils'
+import { getTimePeriodFromThead } from '/lib/ssb/parts/highcharts/data/theadUtils'
 import * as util from '/lib/util'
 
 export function seriesAndCategoriesFromTbml(
@@ -18,8 +19,10 @@ export function seriesAndCategoriesFromTbml(
   const tbody: Array<TableRowUniform> = data.tbml.presentation.table.tbody
   const thead: Array<TableRowUniform> = data.tbml.presentation.table.thead
   const rows: TableRowUniform['tr'] = tbody[0].tr
-  const headerRows: Array<TableCellUniform> = thead[0].tr
-  const headers: TableCellUniform['th'] = getHeaders(headerRows[0], tbody)
+
+  const timePeriod = getTimePeriodFromThead(thead)
+  const columnHeaderRow = getColumnHeaderRowFromThead(thead, timePeriod)
+  const headers: TableCellUniform['th'] = columnHeaderRow ? getHeaders(columnHeaderRow, tbody) : []
   const categories: TableCellUniform['th'] = determineCategories(graphType, headers, rows, xAxisType)
   const series: Array<Series> = determineSeries(graphType, headers, categories, rows, xAxisType)
 
@@ -27,16 +30,39 @@ export function seriesAndCategoriesFromTbml(
     categories,
     series,
     title: data.tbml.metadata.title,
+    timePeriod,
   }
 }
 
-function getHeaders(headerRows: TableCellUniform, body: Array<TableRowUniform>): TableCellUniform['th'] {
-  //Table without td i thead, feks table from Dapla
-  if ((!headerRows.td || headerRows.td.length == 0) && headerRows.th.length > 1) {
-    const bodyFirstRowItemCount = Object.keys(body[0].tr[0]).length
-    return headerRows.th.length == bodyFirstRowItemCount ? headerRows.th.slice(1) : headerRows.th
+function getColumnHeaderRowFromThead(thead: Array<TableRowUniform>, timePeriod?: string): TableCellUniform | undefined {
+  const headerRows = thead?.[0]?.tr
+  if (!headerRows?.length) return undefined
+
+  const first = headerRows[0]
+  const second = headerRows[1]
+
+  if (!second) return first
+
+  // Only use the second header row when the first row is a timePeriod group header.
+  return timePeriod ? second : first
+}
+
+function getHeaders(headerRow: TableCellUniform, body: Array<TableRowUniform>): TableCellUniform['th'] {
+  const th = util.data.forceArray(headerRow.th)
+  const td = util.data.forceArray(headerRow.td)
+
+  // Table without td in thead (e.g. some Dapla tables).
+  // If the header row includes an extra first column (row-label header), drop it.
+  if ((!td || td.length === 0) && th.length > 1) {
+    const firstBodyRow = body?.[0]?.tr?.[0]
+    const bodyTdCount = firstBodyRow ? util.data.forceArray(firstBodyRow.td).length : 0
+
+    if (bodyTdCount > 0 && th.length === bodyTdCount + 1) {
+      return th.slice(1)
+    }
   }
-  return headerRows.th
+
+  return th
 }
 
 function determineSeries(

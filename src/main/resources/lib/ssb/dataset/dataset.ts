@@ -1,5 +1,4 @@
 import { query, Content, ContentsResult } from '/lib/xp/content'
-import { run, ContextParams } from '/lib/xp/context'
 import { getUser, User } from '/lib/xp/auth'
 import { type JSONstat } from '/lib/types/jsonstat-toolkit'
 import { type StatbankSavedRaw, type TbmlDataUniform } from '/lib/types/xmlParser'
@@ -17,9 +16,9 @@ import { getStatbankApi, fetchStatbankApiData, getStatbankApiKey } from '/lib/ss
 import { getStatbankSaved, fetchStatbankSavedData } from '/lib/ssb/dataset/statbankSaved/statbankSaved'
 import { getTbprocessor, getTbprocessorKey, fetchTbprocessorData } from '/lib/ssb/dataset/tbprocessor/tbprocessor'
 import { getKlass, getKlassKey, fetchKlassData } from '/lib/ssb/dataset/klass/klass'
-import { ENONIC_CMS_DEFAULT_REPO } from '/lib/ssb/repo/common'
 import { type GenericDataImport } from '/site/content-types'
 import { type DataSource } from '/site/mixins/dataSource'
+import { fetchPxApiData, getPxApiKey, getPxApi } from './pxapi/pxapi'
 
 export function getDataset(
   content: Content<DataSource>,
@@ -28,6 +27,9 @@ export function getDataset(
   switch (content.data.dataSource?._selected) {
     case DataSourceType.STATBANK_API: {
       return getStatbankApi(content, branch)
+    }
+    case DataSourceType.PXAPI: {
+      return getPxApi(content, branch)
     }
     case DataSourceType.STATBANK_SAVED: {
       return getStatbankSaved(content, branch)
@@ -48,6 +50,8 @@ export function extractKey(content: Content<DataSource>): string | null {
   switch (content.data.dataSource?._selected) {
     case DataSourceType.STATBANK_API:
       return getStatbankApiKey(content)
+    case DataSourceType.PXAPI:
+      return getPxApiKey(content)
     case DataSourceType.TBPROCESSOR:
       const language: string = content.language || ''
       return `${getTbprocessorKey(content)}${language === 'en' ? language : ''}`
@@ -67,6 +71,8 @@ function fetchData(
   switch (content.data.dataSource?._selected) {
     case DataSourceType.STATBANK_API:
       return fetchStatbankApiData(content)
+    case DataSourceType.PXAPI:
+      return fetchPxApiData(content)
     case DataSourceType.TBPROCESSOR:
       return fetchTbprocessorData(content, processXml)
     case DataSourceType.STATBANK_SAVED:
@@ -175,23 +181,6 @@ function determineIfTbprocessorParsedResponse(
     return true
   }
   return false
-}
-
-export function refreshDatasetWithUserKey(
-  content: Content<DataSource>,
-  userLogin: string,
-  branch: string = DATASET_BRANCH
-): CreateOrUpdateStatus {
-  const context: ContextParams = {
-    branch: 'master',
-    repository: ENONIC_CMS_DEFAULT_REPO,
-    principals: ['role:system.admin'],
-    user: {
-      login: userLogin,
-      idProvider: 'system',
-    },
-  }
-  return run(context, () => refreshDataset(content, branch))
 }
 
 export function deleteDataset(content: Content<DataSource>, branch: string = DATASET_BRANCH): boolean {

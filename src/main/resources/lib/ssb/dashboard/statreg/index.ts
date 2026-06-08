@@ -8,7 +8,6 @@ import {
   getStatRegNode,
 } from '/lib/ssb/repo/statreg'
 import { type Socket, type SocketEmitter } from '/lib/wsUtil'
-import { StatRegLatestFetchInfoNode } from '/lib/ssb/statreg/eventLog'
 import { LogSummary, EVENT_LOG_BRANCH, EVENT_LOG_REPO, getQueryChildNodesStatus } from '/lib/ssb/repo/eventLog'
 import { Events, QueryInfo } from '/lib/ssb/repo/query'
 import { DashboardRefreshResultLogData } from '/lib/ssb/dashboard/dashboard'
@@ -20,8 +19,6 @@ import { showWarningIcon, users } from '/lib/ssb/dashboard/dashboardUtils'
 import { dateToReadable, dateToFormat } from '/lib/ssb/utils/utils'
 import { getNode, ENONIC_CMS_DEFAULT_REPO } from '/lib/ssb/repo/common'
 import { createOrUpdateStatisticsRepo } from '/lib/ssb/repo/statisticVariant'
-
-export type StatRegLatestFetchInfoNodeType = StatRegLatestFetchInfoNode | readonly StatRegLatestFetchInfoNode[] | null
 
 export function getStatRegFetchStatuses(): Array<StatRegStatus> {
   return [STATREG_REPO_CONTACTS_KEY, STATREG_REPO_STATISTICS_KEY, STATREG_REPO_PUBLICATIONS_KEY].map(getStatRegStatus)

@@ -264,7 +264,3 @@ export interface TbprocessorParsedResponse<T extends TbmlDataUniform | TbmlSourc
   status: number
   parsedBody?: T
 }
-
-export interface Authorization {
-  Authorization: string
-}

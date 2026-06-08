@@ -11,7 +11,7 @@ import 'highcharts/modules/export-data'
 import 'highcharts/modules/data'
 import 'highcharts/modules/no-data-to-display'
 
-import accessibilityLang from '../../../assets/js/highchart-lang.json'
+import accessibilityLang from  '/lib/ssb/parts/highcharts/highchart-lang.json'
 
 function Highchart(props) {
   const configProp = JSON.parse(props.config)

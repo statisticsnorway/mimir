@@ -54,7 +54,7 @@ function getStatbankSubjectTree(req: Request, content: Content) {
   })
   const baseUrl: string = app.config && app.config['ssb.baseUrl'] ? app.config['ssb.baseUrl'] : 'https://www.ssb.no'
   const statbankBaseUrl: string =
-    content.language && content.language === 'en' ? baseUrl + '/en/statbank/list/' : baseUrl + '/statbank/list/'
+    content.language && content.language === 'en' ? baseUrl + '/en/statbank1/list/' : baseUrl + '/statbank1/list/'
   const props: StatbankSubjectTreeProps = {
     statbankBaseUrl,
     mainSubjects,
