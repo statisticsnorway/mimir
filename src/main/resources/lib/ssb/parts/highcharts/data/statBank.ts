@@ -1,26 +1,36 @@
-// @ts-nocheck
-
+import { Content } from '@enonic-types/lib-portal'
+import { type Request } from '@enonic-types/core'
 import { getMunicipality } from '/lib/ssb/dataset/klass/municipalities'
 import { DataSource as DataSourceType } from '/lib/ssb/repo/dataset'
+import { type Dimension, type JSONstat } from '/lib/types/jsonstat-toolkit'
+import { MunicipalityWithCounty } from '/lib/types/municipalities'
+import { type CombinedGraph, type Highchart } from '/site/content-types'
+import { DataSource } from '/site/mixins/dataSource'
 
-export function seriesAndCategoriesFromJsonStat(req, highchart, dataset, datasetFormat) {
+export function seriesAndCategoriesFromJsonStat(
+  req: Request,
+  highchart: Content<Highchart | CombinedGraph>,
+  dataset: JSONstat,
+  datasetFormat: DataSource['dataSource']
+) {
   const jsonStatConfig =
     datasetFormat.jsonStat || datasetFormat[DataSourceType.STATBANK_API] || datasetFormat[DataSourceType.PXAPI]
   const filterOptions = jsonStatConfig.datasetFilterOptions
-  const xAxisLabel = jsonStatConfig.xAxisLabel
-  const yAxisLabel = jsonStatConfig.yAxisLabel
+  const xAxisLabel = jsonStatConfig.xAxisLabel as string
+  const yAxisLabel = jsonStatConfig.yAxisLabel as string
   const dimensionFilter = dataset && dataset.id.map(() => 0)
 
   if (filterOptions && filterOptions._selected && filterOptions._selected === 'municipalityFilter') {
     const municipality = getMunicipality(req)
     if (!municipality) return undefined
-    const filterTarget = filterOptions.municipalityFilter.municipalityDimension
+    const filterTarget = filterOptions.municipalityFilter.municipalityDimension as string
     const filterTargetIndex = dataset && dataset.id.indexOf(filterTarget)
     dimensionFilter[filterTargetIndex] = parseDataWithMunicipality(dataset, filterTarget, municipality, xAxisLabel)
   }
 
   if (datasetFormat?._selected === DataSourceType.PXAPI) {
-    return seriesAndCategoriesFromPxApi(req, highchart, dataset, datasetFormat)
+    log.info(JSON.stringify(dimensionFilter))
+    return pxFormat(dataset, dimensionFilter, xAxisLabel, yAxisLabel, highchart.data.graphType)
   }
 
   if (highchart.data.graphType === 'barNegative') {
@@ -32,27 +42,11 @@ export function seriesAndCategoriesFromJsonStat(req, highchart, dataset, dataset
   }
 }
 
-function seriesAndCategoriesFromPxApi(req, highchart, dataset, datasetFormat) {
-  log.info('in seriesAndCategoriesFromPxApi function')
-  const config = datasetFormat[DataSourceType.PXAPI] || {}
-
-  const dimensions = dataset.id
-
-  const xAxis = config.xAxisLabel && dimensions.includes(config.xAxisLabel) ? config.xAxisLabel : dimensions[0]
-
-  const yAxis =
-    config.yAxisLabel && dimensions.includes(config.yAxisLabel) ? config.yAxisLabel : dimensions[1] || dimensions[0]
-
-  const dimensionFilter = dimensions.map(() => 0)
-
-  return pxFormat(dataset, dimensionFilter, xAxis, yAxis, highchart.data.graphType)
-}
-
-const defaultFormat = (ds, dimensionFilter, xAxis, yAxisLabel) => {
-  const xAxisIndex = ds.id.indexOf(xAxis)
-  const xCategories = ds.Dimension(xAxis).Category()
+const defaultFormat = (ds: JSONstat, dimensionFilter: number[], xAxisLabel: string, yAxisLabel: string) => {
+  const xAxisIndex = ds.id.indexOf(xAxisLabel)
+  const xCategories = ds.Dimension(xAxisLabel)?.Category()
   const yAxis = !yAxisLabel || yAxisLabel === 'Region' ? 'ContentsCode' : yAxisLabel
-  const yCategories = ds.Dimension(yAxis).Category()
+  const yCategories = ds.Dimension(yAxis)?.Category()
 
   const series = xCategories.map((xCategory) => {
     dimensionFilter[xAxisIndex] = xCategory.index
@@ -70,7 +64,7 @@ const defaultFormat = (ds, dimensionFilter, xAxis, yAxisLabel) => {
   }
 }
 
-function pxFormat(ds, dimensionFilter, xAxis, yAxis, graphType) {
+function pxFormat(ds: JSONstat, dimensionFilter: number[], xAxis: string, yAxis: string, graphType: string) {
   const xAxisIndex = ds.id.indexOf(xAxis)
   const yAxisIndex = ds.id.indexOf(yAxis)
 
@@ -119,11 +113,11 @@ function pxFormat(ds, dimensionFilter, xAxis, yAxis, graphType) {
   }
 }
 
-function pieFormat(ds, dimensionFilter, xAxis, yAxisLabel) {
+function pieFormat(ds: JSONstat, dimensionFilter: number[], xAxis: string, yAxisLabel: string) {
   const xAxisIndex = ds.id.indexOf(xAxis)
-  const xCategories = ds.Dimension(xAxis).Category()
+  const xCategories = ds.Dimension(xAxis)?.Category()
   const yAxis = !yAxisLabel || yAxisLabel === 'Region' ? 'ContentsCode' : yAxisLabel
-  const yCategories = ds.Dimension(yAxis).Category()
+  const yCategories = ds.Dimension(yAxis)?.Category()
 
   const series = [
     {
@@ -146,7 +140,7 @@ function pieFormat(ds, dimensionFilter, xAxis, yAxisLabel) {
   }
 }
 
-const barNegativeFormat = (ds, dimensionFilter, xAxis, yAxis) => {
+const barNegativeFormat = (ds: JSONstat, dimensionFilter: number[], xAxis: string, yAxis: string) => {
   const xAxisIndex = ds.id.indexOf(xAxis)
   const yAxisIndex = ds.id.indexOf(yAxis)
 
@@ -169,23 +163,29 @@ const barNegativeFormat = (ds, dimensionFilter, xAxis, yAxis) => {
   }
 }
 
-const getCategoryByMunicipalityCode = (dimension, code) => {
+const getCategoryByMunicipalityCode = (dimension: Dimension, code: string) => {
   if (!code) return null
 
   const category = dimension.Category(code)
 
   if (category) {
-    log.info(`Found category for municipality code ${code}: ${category.label}`)
     return category
   }
 
-  log.info('category: ' + JSON.stringify(dimension.Category(), null, 2)) // TODO:
+  const getCategoryIndexPxApi = dimension?.id?.indexOf(code)
 
-  // Support PxAPI format for combined municipalities e.g. K_0301 or K-0302
+  const getCategoryPxApi = dimension.Category(getCategoryIndexPxApi)
+
+  return getCategoryPxApi
   return
 }
 
-const parseDataWithMunicipality = (dataset, filterTarget, municipality, xAxis) => {
+const parseDataWithMunicipality = (
+  dataset: JSONstat,
+  filterTarget: string,
+  municipality: MunicipalityWithCounty | undefined,
+  xAxis: string
+) => {
   let code = municipality?.code
   if (!code) return -1
 
@@ -193,10 +193,10 @@ const parseDataWithMunicipality = (dataset, filterTarget, municipality, xAxis) =
   let hasData = category && hasFilterData(dataset, filterTarget, code, xAxis)
   log.info(`Checking for data with municipality code ${code}: category: ${category}, ${hasData}`)
 
-  const getDataFromOldMunicipalityCode = municipality.changes.length > 0
+  const getDataFromOldMunicipalityCode = municipality?.changes && municipality.changes.length > 0
   if (!hasData && getDataFromOldMunicipalityCode) {
     log.info('in getDataFromOldMunicipalityCode')
-    code = municipality.changes[0].oldCode
+    code = municipality!.changes![0].oldCode
     category = getCategoryByMunicipalityCode(dataset.Dimension(filterTarget), code)
     hasData = category && hasFilterData(dataset, filterTarget, code, xAxis)
   }
@@ -205,11 +205,10 @@ const parseDataWithMunicipality = (dataset, filterTarget, municipality, xAxis) =
     return -1
   }
 
-  log.info(`category index for municipality code ${code}: ${category.index}`)
   return category.index
 }
 
-const hasFilterData = (dataset, filterTarget, filter, xAxis) => {
+const hasFilterData = (dataset: JSONstat, filterTarget: string, filter: string, xAxis: string) => {
   const filterIndex = dataset.id.indexOf(filterTarget)
   const filterTargetCategory = getCategoryByMunicipalityCode(dataset.Dimension(filterTarget), filter)
 
