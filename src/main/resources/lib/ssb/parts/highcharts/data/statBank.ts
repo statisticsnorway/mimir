@@ -21,7 +21,7 @@ export function seriesAndCategoriesFromJsonStat(req, highchart, dataset, dataset
 
   if (datasetFormat?._selected === DataSourceType.PXAPI) {
     log.info(`dimensionFilter before pxFormat: ${JSON.stringify(dimensionFilter, null, 2)}`)
-    return seriesAndCategoriesFromPxApi(highchart, dataset, datasetFormat)
+    return pxFormat(dataset, dimensionFilter, xAxisLabel, yAxisLabel, highchart.data.graphType)
   }
 
   log.info(`dimensionFilter before defaultFormat (statbankApi): ${JSON.stringify(dimensionFilter, null, 2)}`)
@@ -32,21 +32,6 @@ export function seriesAndCategoriesFromJsonStat(req, highchart, dataset, dataset
   } else {
     return defaultFormat(dataset, dimensionFilter, xAxisLabel, yAxisLabel)
   }
-}
-
-function seriesAndCategoriesFromPxApi(highchart, dataset, datasetFormat) {
-  log.info('in seriesAndCategoriesFromPxApi function')
-  const config = datasetFormat[DataSourceType.PXAPI] || {}
-  const dimensions = dataset.id
-
-  const xAxis = config.xAxisLabel && dimensions.includes(config.xAxisLabel) ? config.xAxisLabel : dimensions[0]
-
-  const yAxis =
-    config.yAxisLabel && dimensions.includes(config.yAxisLabel) ? config.yAxisLabel : dimensions[1] || dimensions[0]
-
-  const dimensionFilter = dimensions.map(() => 0)
-
-  return pxFormat(dataset, dimensionFilter, xAxis, yAxis, highchart.data.graphType)
 }
 
 const defaultFormat = (ds, dimensionFilter, xAxis, yAxisLabel) => {
@@ -170,8 +155,7 @@ const barNegativeFormat = (ds, dimensionFilter, xAxis, yAxis) => {
   }
 }
 
-const getCategoryByMunicipalityCode = (dataset, filterTarget, code) => {
-  const dimension = dataset.Dimension(filterTarget)
+const getCategoryByMunicipalityCode = (dimension, code) => {
   if (!code) return null
 
   const category = dimension.Category(code)
@@ -182,34 +166,34 @@ const getCategoryByMunicipalityCode = (dataset, filterTarget, code) => {
   }
 
   // Support PxAPI format for combined municipalities e.g. K_0301 or K-0302
-  let getCategoryIndexPxApi = dimension.id.indexOf(`K_${code}`)
+  let getCategoryIndexPxApi = dimension.id.indexOf(code)
+
+  if (getCategoryIndexPxApi === -1) {
+    getCategoryIndexPxApi = dimension.id.indexOf(`K_${code}`)
+  }
+
   if (getCategoryIndexPxApi === -1) {
     getCategoryIndexPxApi = dimension.id.indexOf(`K-${code}`)
   }
 
-  const getCategoryPxApi = dimension.Category(getCategoryIndexPxApi)
-  log.info(`category (k-kommune) code: K_${code}`)
-  log.info('category (k-kommune) index: ' + JSON.stringify(getCategoryIndexPxApi, null, 2))
-  log.info('category (k-kommune) category: ' + JSON.stringify(getCategoryPxApi, null, 2))
-
-  return getCategoryPxApi
+  return dimension.Category(getCategoryIndexPxApi)
 }
 
 const parseDataWithMunicipality = (dataset, filterTarget, municipality, xAxis) => {
   let code = municipality?.code
   if (!code) return -1
 
-  let category = getCategoryByMunicipalityCode(dataset, filterTarget, code)
+  let category = getCategoryByMunicipalityCode(dataset.Dimension(filterTarget), code)
   let hasData = category && hasFilterData(dataset, filterTarget, code, xAxis)
   log.info(
     `Checking for data with municipality code ${code}: category: ${JSON.stringify(category, null, 2)}, ${hasData}`
   )
 
-  const getDataFromOldMunicipalityCode = municipality.changes.length > 0
+  const getDataFromOldMunicipalityCode = municipality?.changes?.length
   if (!hasData && getDataFromOldMunicipalityCode) {
     log.info('in getDataFromOldMunicipalityCode')
     code = municipality.changes[0].oldCode
-    category = getCategoryByMunicipalityCode(dataset, filterTarget, code)
+    category = getCategoryByMunicipalityCode(dataset.Dimension(filterTarget), code)
     hasData = category && hasFilterData(dataset, filterTarget, code, xAxis)
   }
 
