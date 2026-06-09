@@ -1,20 +1,18 @@
 import { type Content } from '@enonic-types/lib-portal'
-import { type Request } from '@enonic-types/core'
 import { getMunicipality } from '/lib/ssb/dataset/klass/municipalities'
 import { DataSource as DataSourceType } from '/lib/ssb/repo/dataset'
-import { type Dimension, type Dataset } from '/lib/types/jsonstat-toolkit'
-import { type MunicipalityWithCounty } from '/lib/types/municipalities'
-import { type CombinedGraph, type Highchart } from '/site/content-types'
-import { DataSource } from '/site/mixins/dataSource'
+import { type Dimension, type Dataset, type Category } from '/lib/types/jsonstat-toolkit'
+import { type RequestWithCode, type MunicipalityWithCounty } from '/lib/types/municipalities'
+import { type Highchart, type CombinedGraph } from '/site/content-types'
+import { type DataSource } from '/site/mixins/dataSource'
 
 export function seriesAndCategoriesFromJsonStat(
-  req: Request,
+  req: RequestWithCode,
   highchart: Content<Highchart | CombinedGraph>,
   dataset: Dataset,
   datasetFormat: DataSource['dataSource']
 ) {
-  const jsonStatConfig =
-    datasetFormat.jsonStat || datasetFormat[DataSourceType.STATBANK_API] || datasetFormat[DataSourceType.PXAPI]
+  const jsonStatConfig = datasetFormat[DataSourceType.STATBANK_API] || datasetFormat[DataSourceType.PXAPI]
   const filterOptions = jsonStatConfig.datasetFilterOptions
   const xAxisLabel = jsonStatConfig.xAxisLabel as string
   const yAxisLabel = jsonStatConfig.yAxisLabel as string
@@ -172,14 +170,14 @@ const getCategoryByMunicipalityCode = (dimension: Dimension, code: string) => {
   }
 
   // Support PxAPI format for combined municipalities e.g. K_0301 or K-0302
-  let getCategoryIndexPxApi = dimension.id.indexOf(code)
+  let getCategoryIndexPxApi = dimension.id?.indexOf(code)
 
   if (getCategoryIndexPxApi === -1) {
-    getCategoryIndexPxApi = dimension.id.indexOf(`K_${code}`)
+    getCategoryIndexPxApi = dimension.id?.indexOf(`K_${code}`)
   }
 
   if (getCategoryIndexPxApi === -1) {
-    getCategoryIndexPxApi = dimension.id.indexOf(`K-${code}`)
+    getCategoryIndexPxApi = dimension.id?.indexOf(`K-${code}`)
   }
 
   return dimension.Category(getCategoryIndexPxApi)
@@ -208,7 +206,7 @@ const parseDataWithMunicipality = (
     return -1
   }
 
-  return category.index
+  return (category as Category).index
 }
 
 const hasFilterData = (dataset: Dataset, filterTarget: string, filter: string, xAxis: string) => {
