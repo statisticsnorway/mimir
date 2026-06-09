@@ -1,16 +1,16 @@
-import { Content } from '@enonic-types/lib-portal'
+import { type Content } from '@enonic-types/lib-portal'
 import { type Request } from '@enonic-types/core'
 import { getMunicipality } from '/lib/ssb/dataset/klass/municipalities'
 import { DataSource as DataSourceType } from '/lib/ssb/repo/dataset'
-import { type Dimension, type JSONstat } from '/lib/types/jsonstat-toolkit'
-import { MunicipalityWithCounty } from '/lib/types/municipalities'
+import { type Dimension, type Dataset } from '/lib/types/jsonstat-toolkit'
+import { type MunicipalityWithCounty } from '/lib/types/municipalities'
 import { type CombinedGraph, type Highchart } from '/site/content-types'
 import { DataSource } from '/site/mixins/dataSource'
 
 export function seriesAndCategoriesFromJsonStat(
   req: Request,
   highchart: Content<Highchart | CombinedGraph>,
-  dataset: JSONstat,
+  dataset: Dataset,
   datasetFormat: DataSource['dataSource']
 ) {
   const jsonStatConfig =
@@ -41,7 +41,7 @@ export function seriesAndCategoriesFromJsonStat(
   }
 }
 
-const defaultFormat = (ds: JSONstat, dimensionFilter: number[], xAxisLabel: string, yAxisLabel: string) => {
+const defaultFormat = (ds: Dataset, dimensionFilter: number[], xAxisLabel: string, yAxisLabel: string) => {
   const xAxisIndex = ds.id.indexOf(xAxisLabel)
   const xCategories = ds.Dimension(xAxisLabel)?.Category()
   const yAxis = !yAxisLabel || yAxisLabel === 'Region' ? 'ContentsCode' : yAxisLabel
@@ -63,7 +63,7 @@ const defaultFormat = (ds: JSONstat, dimensionFilter: number[], xAxisLabel: stri
   }
 }
 
-function pxFormat(ds: JSONstat, dimensionFilter: number[], xAxis: string, yAxis: string, graphType: string) {
+function pxFormat(ds: Dataset, dimensionFilter: number[], xAxis: string, yAxis: string, graphType: string) {
   const xAxisIndex = ds.id.indexOf(xAxis)
   const yAxisIndex = ds.id.indexOf(yAxis)
 
@@ -112,7 +112,7 @@ function pxFormat(ds: JSONstat, dimensionFilter: number[], xAxis: string, yAxis:
   }
 }
 
-function pieFormat(ds: JSONstat, dimensionFilter: number[], xAxis: string, yAxisLabel: string) {
+function pieFormat(ds: Dataset, dimensionFilter: number[], xAxis: string, yAxisLabel: string) {
   const xAxisIndex = ds.id.indexOf(xAxis)
   const xCategories = ds.Dimension(xAxis)?.Category()
   const yAxis = !yAxisLabel || yAxisLabel === 'Region' ? 'ContentsCode' : yAxisLabel
@@ -139,7 +139,7 @@ function pieFormat(ds: JSONstat, dimensionFilter: number[], xAxis: string, yAxis
   }
 }
 
-const barNegativeFormat = (ds: JSONstat, dimensionFilter: number[], xAxis: string, yAxis: string) => {
+const barNegativeFormat = (ds: Dataset, dimensionFilter: number[], xAxis: string, yAxis: string) => {
   const xAxisIndex = ds.id.indexOf(xAxis)
   const yAxisIndex = ds.id.indexOf(yAxis)
 
@@ -186,7 +186,7 @@ const getCategoryByMunicipalityCode = (dimension: Dimension, code: string) => {
 }
 
 const parseDataWithMunicipality = (
-  dataset: JSONstat,
+  dataset: Dataset,
   filterTarget: string,
   municipality: MunicipalityWithCounty | undefined,
   xAxis: string
@@ -211,7 +211,7 @@ const parseDataWithMunicipality = (
   return category.index
 }
 
-const hasFilterData = (dataset: JSONstat, filterTarget: string, filter: string, xAxis: string) => {
+const hasFilterData = (dataset: Dataset, filterTarget: string, filter: string, xAxis: string) => {
   const filterIndex = dataset.id.indexOf(filterTarget)
   const filterTargetCategory = getCategoryByMunicipalityCode(dataset.Dimension(filterTarget), filter)
 
