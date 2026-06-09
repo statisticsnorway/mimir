@@ -20,11 +20,9 @@ export function seriesAndCategoriesFromJsonStat(req, highchart, dataset, dataset
   }
 
   if (datasetFormat?._selected === DataSourceType.PXAPI) {
-    log.info(`dimensionFilter before pxFormat: ${JSON.stringify(dimensionFilter, null, 2)}`)
     return pxFormat(dataset, dimensionFilter, xAxisLabel, yAxisLabel, highchart.data.graphType)
   }
 
-  log.info(`dimensionFilter before defaultFormat (statbankApi): ${JSON.stringify(dimensionFilter, null, 2)}`)
   if (highchart.data.graphType === 'barNegative') {
     return barNegativeFormat(dataset, dimensionFilter, xAxisLabel, yAxisLabel)
   } else if (highchart.data.graphType === 'pie') {
@@ -161,7 +159,6 @@ const getCategoryByMunicipalityCode = (dimension, code) => {
   const category = dimension.Category(code)
 
   if (category) {
-    log.info(`Found category for municipality code ${code}: ${category.label}`)
     return category
   }
 
@@ -185,13 +182,9 @@ const parseDataWithMunicipality = (dataset, filterTarget, municipality, xAxis) =
 
   let category = getCategoryByMunicipalityCode(dataset.Dimension(filterTarget), code)
   let hasData = category && hasFilterData(dataset, filterTarget, code, xAxis)
-  log.info(
-    `Checking for data with municipality code ${code}: category: ${JSON.stringify(category, null, 2)}, ${hasData}`
-  )
 
   const getDataFromOldMunicipalityCode = municipality?.changes?.length
   if (!hasData && getDataFromOldMunicipalityCode) {
-    log.info('in getDataFromOldMunicipalityCode')
     code = municipality.changes[0].oldCode
     category = getCategoryByMunicipalityCode(dataset.Dimension(filterTarget), code)
     hasData = category && hasFilterData(dataset, filterTarget, code, xAxis)
@@ -201,7 +194,6 @@ const parseDataWithMunicipality = (dataset, filterTarget, municipality, xAxis) =
     return -1
   }
 
-  log.info(`category index for municipality code ${code}: ${category.index}`)
   return category.index
 }
 
