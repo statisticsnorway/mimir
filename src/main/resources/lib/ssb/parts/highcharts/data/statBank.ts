@@ -27,12 +27,12 @@ export function seriesAndCategoriesFromJsonStat(
   }
 
   if (datasetFormat?._selected === DataSourceType.PXAPI) {
-    return pxFormat(dataset, dimensionFilter, xAxisLabel, yAxisLabel, highchart.data.graphType)
+    return pxFormat(dataset, dimensionFilter, xAxisLabel, yAxisLabel, (highchart.data as Highchart).graphType)
   }
 
-  if (highchart.data.graphType === 'barNegative') {
+  if ((highchart.data as Highchart).graphType === 'barNegative') {
     return barNegativeFormat(dataset, dimensionFilter, xAxisLabel, yAxisLabel)
-  } else if (highchart.data.graphType === 'pie') {
+  } else if ((highchart.data as Highchart).graphType === 'pie') {
     return pieFormat(dataset, dimensionFilter, xAxisLabel, yAxisLabel)
   } else {
     return defaultFormat(dataset, dimensionFilter, xAxisLabel, yAxisLabel)
@@ -41,9 +41,9 @@ export function seriesAndCategoriesFromJsonStat(
 
 const defaultFormat = (ds: Dataset, dimensionFilter: number[], xAxisLabel: string, yAxisLabel: string) => {
   const xAxisIndex = ds.id.indexOf(xAxisLabel)
-  const xCategories = ds.Dimension(xAxisLabel)?.Category()
+  const xCategories = (ds.Dimension(xAxisLabel) as Dimension).Category() as Category[]
   const yAxis = !yAxisLabel || yAxisLabel === 'Region' ? 'ContentsCode' : yAxisLabel
-  const yCategories = ds.Dimension(yAxis)?.Category()
+  const yCategories = (ds.Dimension(yAxis) as Dimension).Category() as Category[]
 
   const series = xCategories.map((xCategory) => {
     dimensionFilter[xAxisIndex] = xCategory.index
@@ -65,8 +65,8 @@ function pxFormat(ds: Dataset, dimensionFilter: number[], xAxis: string, yAxis: 
   const xAxisIndex = ds.id.indexOf(xAxis)
   const yAxisIndex = ds.id.indexOf(yAxis)
 
-  const xCategories = ds.Dimension(xAxis).Category()
-  const yCategories = ds.Dimension(yAxis).Category()
+  const xCategories = (ds.Dimension(xAxis) as Dimension).Category() as Category[]
+  const yCategories = (ds.Dimension(yAxis) as Dimension).Category() as Category[]
 
   // PIE
   if (graphType === 'pie') {
@@ -112,9 +112,9 @@ function pxFormat(ds: Dataset, dimensionFilter: number[], xAxis: string, yAxis: 
 
 function pieFormat(ds: Dataset, dimensionFilter: number[], xAxis: string, yAxisLabel: string) {
   const xAxisIndex = ds.id.indexOf(xAxis)
-  const xCategories = ds.Dimension(xAxis)?.Category()
+  const xCategories = (ds.Dimension(xAxis) as Dimension).Category() as Category[]
   const yAxis = !yAxisLabel || yAxisLabel === 'Region' ? 'ContentsCode' : yAxisLabel
-  const yCategories = ds.Dimension(yAxis)?.Category()
+  const yCategories = (ds.Dimension(yAxis) as Dimension).Category() as Category[]
 
   const series = [
     {
@@ -141,8 +141,8 @@ const barNegativeFormat = (ds: Dataset, dimensionFilter: number[], xAxis: string
   const xAxisIndex = ds.id.indexOf(xAxis)
   const yAxisIndex = ds.id.indexOf(yAxis)
 
-  const xCategories = ds.Dimension(xAxis).Category()
-  const yCategories = ds.Dimension(yAxis).Category()
+  const xCategories = (ds.Dimension(xAxis) as Dimension).Category() as Category[]
+  const yCategories = (ds.Dimension(yAxis) as Dimension).Category() as Category[]
 
   const series = yCategories.map((yCategory) => ({
     name: yCategory.label,
@@ -192,13 +192,13 @@ const parseDataWithMunicipality = (
   let code = municipality?.code
   if (!code) return -1
 
-  let category = getCategoryByMunicipalityCode(dataset.Dimension(filterTarget), code)
+  let category = getCategoryByMunicipalityCode(dataset.Dimension(filterTarget) as Dimension, code)
   let hasData = category && hasFilterData(dataset, filterTarget, code, xAxis)
 
   const getDataFromOldMunicipalityCode = municipality?.changes?.length
   if (!hasData && getDataFromOldMunicipalityCode) {
     code = municipality!.changes![0].oldCode
-    category = getCategoryByMunicipalityCode(dataset.Dimension(filterTarget), code)
+    category = getCategoryByMunicipalityCode(dataset.Dimension(filterTarget) as Dimension, code)
     hasData = category && hasFilterData(dataset, filterTarget, code, xAxis)
   }
 
@@ -211,15 +211,15 @@ const parseDataWithMunicipality = (
 
 const hasFilterData = (dataset: Dataset, filterTarget: string, filter: string, xAxis: string) => {
   const filterIndex = dataset.id.indexOf(filterTarget)
-  const filterTargetCategory = getCategoryByMunicipalityCode(dataset.Dimension(filterTarget), filter)
+  const filterTargetCategory = getCategoryByMunicipalityCode(dataset.Dimension(filterTarget) as Dimension, filter)
 
   if (!filterTargetCategory) {
     return false
   }
-  const filterTargetCategoryIndex = filterTargetCategory.index
+  const filterTargetCategoryIndex = (filterTargetCategory as Category).index
 
   const xAxisIndex = dataset.id.indexOf(xAxis)
-  const xCategories = dataset.Dimension(xAxis).Category()
+  const xCategories = (dataset.Dimension(xAxis) as Dimension).Category() as Category[]
 
   return xCategories.reduce((hasData, xCategory) => {
     if (hasData) {
