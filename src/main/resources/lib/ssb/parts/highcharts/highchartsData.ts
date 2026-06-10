@@ -1,6 +1,6 @@
 import { Content } from '/lib/xp/content'
 import { type PreliminaryData, type TbmlDataUniform } from '/lib/types/xmlParser'
-import { type JSONstat } from '/lib/types/jsonstat-toolkit'
+import { type Dataset } from '/lib/types/jsonstat-toolkit'
 import { type RowValue } from '/lib/types/util'
 import { getRowValue } from '/lib/ssb/utils/utils'
 import { seriesAndCategoriesFromHtmlTable } from '/lib/ssb/parts/highcharts/data/htmlTable'
@@ -15,7 +15,7 @@ import { type DataSource } from '/site/mixins/dataSource'
 export function prepareHighchartsData(
   req: RequestWithCode,
   highchartsContent: Content<Highchart | CombinedGraph>,
-  data: JSONstat | TbmlDataUniform | object | string | undefined,
+  data: Dataset | TbmlDataUniform | object | string | undefined,
   dataSource: DataSource['dataSource']
 ): SeriesAndCategories | undefined {
   const seriesAndCategories: SeriesAndCategories | undefined = getSeriesAndCategories(
@@ -40,14 +40,14 @@ export function prepareHighchartsData(
 export function getSeriesAndCategories(
   req: RequestWithCode,
   highchart: Content<Highchart | CombinedGraph>,
-  data: JSONstat | TbmlDataUniform | object | string | undefined,
+  data: Dataset | TbmlDataUniform | object | string | undefined,
   dataSource: DataSource['dataSource']
 ): SeriesAndCategories | undefined {
   if (
     dataSource &&
     (dataSource._selected === DataSourceType.STATBANK_API || dataSource._selected === DataSourceType.PXAPI)
   ) {
-    return seriesAndCategoriesFromJsonStat(req, highchart, data, dataSource)
+    return seriesAndCategoriesFromJsonStat(req, highchart, data as Dataset, dataSource)
   } else if (dataSource && dataSource._selected === DataSourceType.TBPROCESSOR) {
     return seriesAndCategoriesFromTbml(
       data as TbmlDataUniform,
@@ -124,6 +124,6 @@ export interface Series {
 export type AreaLineLinearData = [number | string | Array<string | number | PreliminaryData>, RowValue]
 
 export interface PieData {
-  name: Array<string | number | PreliminaryData> | number | string
+  name: Array<string | number | PreliminaryData | null> | number | string | null
   y: Array<number> | number | string
 }

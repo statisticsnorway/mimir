@@ -5,6 +5,7 @@ import { type Dimension, type Dataset, type Category } from '/lib/types/jsonstat
 import { type RequestWithCode, type MunicipalityWithCounty } from '/lib/types/municipalities'
 import { type Highchart, type CombinedGraph } from '/site/content-types'
 import { type DataSource } from '/site/mixins/dataSource'
+import { SeriesAndCategories } from '../highchartsData'
 
 const getDimension = (dataset: Dataset, dimensionId: string): Dimension | null => {
   const dimension = dataset.Dimension(dimensionId)
@@ -60,7 +61,7 @@ export function seriesAndCategoriesFromJsonStat(
   highchart: Content<Highchart | CombinedGraph>,
   dataset: Dataset,
   datasetFormat: DataSource['dataSource']
-) {
+): SeriesAndCategories | undefined {
   const jsonStatConfig = getDataSourceConfig(datasetFormat)
   const filterOptions = jsonStatConfig?.datasetFilterOptions
   const xAxisLabel = jsonStatConfig?.xAxisLabel ?? ''
@@ -89,7 +90,12 @@ export function seriesAndCategoriesFromJsonStat(
   }
 }
 
-const defaultFormat = (ds: Dataset, dimensionFilter: number[], xAxisLabel: string, yAxisLabel: string) => {
+const defaultFormat = (
+  ds: Dataset,
+  dimensionFilter: number[],
+  xAxisLabel: string,
+  yAxisLabel: string
+): SeriesAndCategories | undefined => {
   const xAxisIndex = ds.id.indexOf(xAxisLabel)
   const xCategories = getCategories(ds, xAxisLabel)
   const yAxis = !yAxisLabel || yAxisLabel === 'Region' ? 'ContentsCode' : yAxisLabel
@@ -111,7 +117,13 @@ const defaultFormat = (ds: Dataset, dimensionFilter: number[], xAxisLabel: strin
   }
 }
 
-function pxFormat(ds: Dataset, dimensionFilter: number[], xAxis: string, yAxis: string, graphType: string | undefined) {
+function pxFormat(
+  ds: Dataset,
+  dimensionFilter: number[],
+  xAxis: string,
+  yAxis: string,
+  graphType: string | undefined
+): SeriesAndCategories | undefined {
   const xAxisIndex = ds.id.indexOf(xAxis)
   const yAxisIndex = ds.id.indexOf(yAxis)
 
@@ -160,7 +172,12 @@ function pxFormat(ds: Dataset, dimensionFilter: number[], xAxis: string, yAxis: 
   }
 }
 
-function pieFormat(ds: Dataset, dimensionFilter: number[], xAxis: string, yAxisLabel: string) {
+function pieFormat(
+  ds: Dataset,
+  dimensionFilter: number[],
+  xAxis: string,
+  yAxisLabel: string
+): SeriesAndCategories | undefined {
   const xAxisIndex = ds.id.indexOf(xAxis)
   const xCategories = getCategories(ds, xAxis)
   const yAxis = !yAxisLabel || yAxisLabel === 'Region' ? 'ContentsCode' : yAxisLabel
@@ -187,7 +204,12 @@ function pieFormat(ds: Dataset, dimensionFilter: number[], xAxis: string, yAxisL
   }
 }
 
-const barNegativeFormat = (ds: Dataset, dimensionFilter: number[], xAxis: string, yAxis: string) => {
+const barNegativeFormat = (
+  ds: Dataset,
+  dimensionFilter: number[],
+  xAxis: string,
+  yAxis: string
+): SeriesAndCategories | undefined => {
   const xAxisIndex = ds.id.indexOf(xAxis)
   const yAxisIndex = ds.id.indexOf(yAxis)
 
