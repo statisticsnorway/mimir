@@ -10,10 +10,6 @@ import { SeriesAndCategories } from '../highchartsData'
 type HighchartsValue = number | string | null
 
 const getHighchartsValue = (value: ReturnType<Dataset['Data']>): HighchartsValue => {
-  if (!value) {
-    return null
-  }
-
   if (typeof value === 'number' || typeof value === 'string') {
     return value
   }
