@@ -118,12 +118,12 @@ export interface SeriesAndCategories {
 }
 export interface Series {
   name: string | number | PreliminaryData
-  data: Array<AreaLineLinearData | PieData | string | number>
+  data: Array<AreaLineLinearData | PieData | string | number | null>
 }
 
 export type AreaLineLinearData = [number | string | Array<string | number | PreliminaryData>, RowValue]
 
 export interface PieData {
   name: Array<string | number | PreliminaryData | null> | number | string | null
-  y: Array<number> | number | string
+  y: Array<number | null> | number | string | null
 }

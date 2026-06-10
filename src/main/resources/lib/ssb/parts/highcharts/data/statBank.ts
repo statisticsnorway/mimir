@@ -1,11 +1,26 @@
 import { type Content } from '@enonic-types/lib-portal'
 import { getMunicipality } from '/lib/ssb/dataset/klass/municipalities'
 import { DataSource as DataSourceType } from '/lib/ssb/repo/dataset'
-import { type Dimension, type Dataset, type Category } from '/lib/types/jsonstat-toolkit'
+import { type Dimension, type Dataset, type Category, type Data } from '/lib/types/jsonstat-toolkit'
 import { type RequestWithCode, type MunicipalityWithCounty } from '/lib/types/municipalities'
 import { type Highchart, type CombinedGraph } from '/site/content-types'
 import { type DataSource } from '/site/mixins/dataSource'
 import { SeriesAndCategories } from '../highchartsData'
+
+type HighchartsValue = number | string | null
+
+const getHighchartsValue = (value: ReturnType<Dataset['Data']>): HighchartsValue => {
+  if (!value) {
+    return null
+  }
+
+  if (typeof value === 'number' || typeof value === 'string') {
+    return value
+  }
+
+  const data = value as Data
+  return Array.isArray(data.value) ? (data.value[0] ?? null) : null
+}
 
 const getDimension = (dataset: Dataset, dimensionId: string): Dimension | null => {
   const dimension = dataset.Dimension(dimensionId)
@@ -29,7 +44,7 @@ const getCategories = (dataset: Dataset, dimensionId: string): Category[] => {
   return Array.isArray(categories) ? categories : [categories]
 }
 
-const asCategory = (category: Array<Category> | Category | null): Category | null => {
+const getCategory = (category: Array<Category> | Category | null): Category | null => {
   if (!category) {
     return null
   }
@@ -103,7 +118,7 @@ const defaultFormat = (
 
   const series = xCategories.map((xCategory) => {
     dimensionFilter[xAxisIndex] = xCategory.index
-    const data = ds.Data(dimensionFilter, false)
+    const data = getHighchartsValue(ds.Data(dimensionFilter, false))
     return {
       name: xCategory.label,
       y: data,
@@ -134,7 +149,7 @@ function pxFormat(
   if (graphType === 'pie') {
     const data = xCategories.map((xCategory) => {
       dimensionFilter[xAxisIndex] = xCategory.index
-      const value = ds.Data(dimensionFilter, false)
+      const value = getHighchartsValue(ds.Data(dimensionFilter, false))
 
       return {
         name: xCategory.label,
@@ -145,9 +160,11 @@ function pxFormat(
     return {
       series: [
         {
+          name: yCategories[0]?.label ?? 'Antall',
           data,
         },
       ],
+      categories: xCategories.map((category) => category.label),
     }
   }
 
@@ -157,7 +174,7 @@ function pxFormat(
 
     const data = xCategories.map((xCategory) => {
       dimensionFilter[xAxisIndex] = xCategory.index
-      return ds.Data(dimensionFilter, false)
+      return getHighchartsValue(ds.Data(dimensionFilter, false))
     })
 
     return {
@@ -188,7 +205,7 @@ function pieFormat(
       name: yCategories.length === 1 ? yCategories[0].label : 'Antall',
       data: xCategories.map((xCategory) => {
         dimensionFilter[xAxisIndex] = xCategory.index
-        const data = ds.Data(dimensionFilter, false)
+        const data = getHighchartsValue(ds.Data(dimensionFilter, false))
         return {
           name: xCategory.label,
           y: data,
@@ -221,7 +238,7 @@ const barNegativeFormat = (
     data: xCategories.map((xCategory) => {
       dimensionFilter[yAxisIndex] = yCategory.index
       dimensionFilter[xAxisIndex] = xCategory.index
-      const value = ds.Data(dimensionFilter, false)
+      const value = getHighchartsValue(ds.Data(dimensionFilter, false))
       if (typeof value === 'number') {
         return yCategory.index === 0 ? value * -1 : value
       }
@@ -239,7 +256,7 @@ const barNegativeFormat = (
 const getCategoryByMunicipalityCode = (dimension: Dimension, code: string): Category | null => {
   if (!code) return null
 
-  const category = asCategory(dimension.Category(code))
+  const category = getCategory(dimension.Category(code))
 
   if (category) {
     return category
@@ -256,7 +273,7 @@ const getCategoryByMunicipalityCode = (dimension: Dimension, code: string): Cate
     getCategoryIndexPxApi = dimension.id?.indexOf(`K-${code}`)
   }
 
-  return asCategory(dimension.Category(getCategoryIndexPxApi))
+  return getCategory(dimension.Category(getCategoryIndexPxApi))
 }
 
 const parseDataWithMunicipality = (
