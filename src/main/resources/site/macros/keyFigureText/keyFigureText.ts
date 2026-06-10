@@ -21,7 +21,7 @@ function renderKeyFigureTextMacro(context: XP.MacroContext) {
 
   const keyFigureText = new React4xp('site/macros/keyFigureText/keyFigureText')
     .setProps({
-      text: parseKeyFigureText(keyFigureData, context.params, page?.language, sourceText),
+      text: parseKeyFigureText(keyFigureData, context.params, page.language, sourceText),
     })
     .uniqueId()
 
