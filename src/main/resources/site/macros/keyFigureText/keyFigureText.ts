@@ -17,10 +17,11 @@ function renderKeyFigureTextMacro(context: XP.MacroContext) {
   const page = getContent()
   if (!page) throw Error('No page found')
 
-  const { keyFigureData, language, sourceText } = fetchKeyFigureData(context?.params?.keyFigure)
+  const { keyFigureData, sourceText } = fetchKeyFigureData(context?.params?.keyFigure)
+
   const keyFigureText = new React4xp('site/macros/keyFigureText/keyFigureText')
     .setProps({
-      text: parseKeyFigureText(keyFigureData, context.params, language, sourceText),
+      text: parseKeyFigureText(keyFigureData, context.params, page.language, sourceText),
     })
     .uniqueId()
 
