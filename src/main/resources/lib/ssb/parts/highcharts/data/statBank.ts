@@ -83,7 +83,7 @@ export function seriesAndCategoriesFromJsonStat(
   if (filterOptions && filterOptions._selected && filterOptions._selected === 'municipalityFilter') {
     const municipality = getMunicipality(req)
     if (!municipality) return undefined
-    const filterTarget = filterOptions.municipalityFilter.municipalityDimension
+    const filterTarget = filterOptions.municipalityFilter.municipalityDimension as string
     const filterTargetIndex = dataset && dataset.id.indexOf(filterTarget)
     dimensionFilter[filterTargetIndex] = getMunicipalityDataIndex(dataset, filterTarget, municipality, xAxisLabel)
   }
