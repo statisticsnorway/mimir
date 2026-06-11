@@ -1,4 +1,3 @@
-import { type Request } from '@enonic-types/core'
 import { Content } from '/lib/xp/content'
 import { type PreliminaryData, type TbmlDataUniform } from '/lib/types/xmlParser'
 import { type JSONstat } from '/lib/types/jsonstat-toolkit'
@@ -9,11 +8,12 @@ import { seriesAndCategoriesFromJsonStat } from '/lib/ssb/parts/highcharts/data/
 import { seriesAndCategoriesFromTbml } from '/lib/ssb/parts/highcharts/data/tbProcessor'
 import { DataSource as DataSourceType } from '/lib/ssb/repo/dataset'
 import * as util from '/lib/util'
+import { type RequestWithCode } from '/lib/types/municipalities'
 import { type CombinedGraph, type Highchart } from '/site/content-types'
 import { type DataSource } from '/site/mixins/dataSource'
 
 export function prepareHighchartsData(
-  req: Request,
+  req: RequestWithCode,
   highchartsContent: Content<Highchart | CombinedGraph>,
   data: JSONstat | TbmlDataUniform | object | string | undefined,
   dataSource: DataSource['dataSource']
@@ -38,7 +38,7 @@ export function prepareHighchartsData(
 }
 
 export function getSeriesAndCategories(
-  req: Request,
+  req: RequestWithCode,
   highchart: Content<Highchart | CombinedGraph>,
   data: JSONstat | TbmlDataUniform | object | string | undefined,
   dataSource: DataSource['dataSource']
