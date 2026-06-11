@@ -180,10 +180,6 @@ const getCategoryByMunicipalityCode = (dimension: Dimension, code: string) => {
     getCategoryIndexPxApi = dimension.id?.indexOf(`K-${code}`)
   }
 
-  if (dimension.Category(getCategoryIndexPxApi) === -1) {
-    return null
-  }
-
   return dimension.Category(getCategoryIndexPxApi)
 }
 
