@@ -23,7 +23,7 @@ export function seriesAndCategoriesFromJsonStat(
     if (!municipality) return undefined
     const filterTarget = filterOptions.municipalityFilter.municipalityDimension as string
     const filterTargetIndex = dataset && dataset.id.indexOf(filterTarget)
-    dimensionFilter[filterTargetIndex] = parseDataWithMunicipality(dataset, filterTarget, municipality, xAxisLabel)
+    dimensionFilter[filterTargetIndex] = getMunicipalityDataIndex(dataset, filterTarget, municipality, xAxisLabel)
   }
 
   if (datasetFormat?._selected === DataSourceType.PXAPI) {
@@ -180,10 +180,14 @@ const getCategoryByMunicipalityCode = (dimension: Dimension, code: string) => {
     getCategoryIndexPxApi = dimension.id?.indexOf(`K-${code}`)
   }
 
+  if (dimension.Category(getCategoryIndexPxApi) === -1) {
+    return null
+  }
+
   return dimension.Category(getCategoryIndexPxApi)
 }
 
-const parseDataWithMunicipality = (
+const getMunicipalityDataIndex = (
   dataset: Dataset,
   filterTarget: string,
   municipality: MunicipalityWithCounty | undefined,
