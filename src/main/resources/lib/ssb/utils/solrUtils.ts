@@ -74,7 +74,7 @@ export function solrSearch(
 
 export function solrTestNewSearch(searchTerm: string) {
   const query: HttpResponse = request({
-    url: `https://ssbno-search.intern.test.ssb.no/solr/fritekstsok/select?indent=true&q.op=OR&q=${encodeURI(searchTerm ?? '')}`,
+    url: `https://www.qa.ssb.no/test-search/fritekstsok/select?indent=true&q.op=OR&q=${encodeURI(searchTerm ?? '')}`,
     connectionTimeout: 60000,
   })
 
