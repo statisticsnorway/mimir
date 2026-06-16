@@ -2,7 +2,7 @@ import { type Request, type Response } from '@enonic-types/core'
 import { solrTestNewSearch } from '/lib/ssb/utils/solrUtils'
 
 import { sanitizeForSolr } from '/lib/ssb/utils/textUtils'
-import { isEnabled } from '/lib/types/featureToggle'
+import { isEnabled } from '/lib/featureToggle'
 
 export function get(req: Request): Response {
   if (!isEnabled('delete-joblog-cron', false, 'ssb')) {
