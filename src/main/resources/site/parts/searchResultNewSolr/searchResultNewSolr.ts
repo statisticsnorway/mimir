@@ -280,7 +280,7 @@ export function renderPart(req: Request) {
     },
     searchPageUrl,
     language,
-    contentTypePhrases: contentTypePhrases,
+    contentTypePhrases,
     contentTypes: solrResult.contentTypes,
     subjects: solrResult.subjects,
     contentTypeUrlParam: req.params?.innholdstype?.toString(),
