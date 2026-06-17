@@ -11,8 +11,11 @@ import {
   mockPxApi2DatasetFormatStandalone,
   mockHighchartContent,
   mockOsloMunicipality,
-  resultingDataSeries,
-  resultingCategories,
+  mockStatbankResponseOslo,
+  mockStatbankDatasetFormatWithMunicipalityfilter,
+  mockStatbankDatasetFormatStandalone,
+  expectedResultPxApi2,
+  expectedResultStatbankApi,
 } from './mockData'
 
 const mockHighchart = mockHighchartContent as unknown as Content<Highchart>
@@ -44,7 +47,8 @@ jest.mock(
 )
 
 const mockReq = {} as RequestWithCode
-const dataset = createMockDataset(mockPxApi2ResponseOslo)
+const pxapi2Dataset = createMockDataset(mockPxApi2ResponseOslo)
+const statbankDataset = createMockDataset(mockStatbankResponseOslo)
 
 // ==================== TESTS ====================
 
@@ -55,92 +59,78 @@ describe('parts -> highcharts -> data -> statbank', () => {
     })
 
     describe('with pxapi2 as source', () => {
-      describe('standalone highchart (no municipality filter)', () => {
-        it('returns one series with correct name from yAxis (Tid)', async () => {
-          const result = seriesAndCategoriesFromJsonStat(
-            mockReq,
-            mockHighchart,
-            dataset,
-            mockPxApi2DatasetFormatStandalone
-          )
+      it('returns correct result for standalone highchart (no municipality filter)', async () => {
+        const result = seriesAndCategoriesFromJsonStat(
+          mockReq,
+          mockHighchart,
+          pxapi2Dataset,
+          mockPxApi2DatasetFormatStandalone
+        )
 
-          expect(result?.series).toHaveLength(1)
-          expect(result?.series[0].name).toBe('2024')
-        })
-
-        it('returns one data series with correct values', async () => {
-          const result = seriesAndCategoriesFromJsonStat(
-            mockReq,
-            mockHighchart,
-            dataset,
-            mockPxApi2DatasetFormatStandalone
-          )
-
-          expect(result?.series[0].data).toEqual(resultingDataSeries)
-        })
-
-        it('returns correct categories from xAxis (KOKfunksjon0000)', async () => {
-          const result = seriesAndCategoriesFromJsonStat(
-            mockReq,
-            mockHighchart,
-            dataset,
-            mockPxApi2DatasetFormatStandalone
-          )
-
-          expect(result?.categories).toHaveLength(8)
-          expect(result?.categories).toEqual(resultingCategories)
-        })
+        expect(result).toEqual(expectedResultPxApi2)
       })
 
-      describe('highchart with municipality filter for Oslo', () => {
-        it('returns undefined when getMunicipality returns undefined', async () => {
-          const { getMunicipality } = await import('/lib/ssb/dataset/klass/municipalities')
-          jest.mocked(getMunicipality).mockReturnValueOnce(undefined)
+      it('returns undefined when getMunicipality returns undefined', async () => {
+        const { getMunicipality } = await import('/lib/ssb/dataset/klass/municipalities')
+        jest.mocked(getMunicipality).mockReturnValueOnce(undefined)
 
-          const result = seriesAndCategoriesFromJsonStat(
-            mockReq,
-            mockHighchart,
-            dataset,
-            mockPxApi2DatasetFormatWithMunicipalityfilter
-          )
+        const result = seriesAndCategoriesFromJsonStat(
+          mockReq,
+          mockHighchart,
+          pxapi2Dataset,
+          mockPxApi2DatasetFormatWithMunicipalityfilter
+        )
 
-          expect(result).toBeUndefined()
-        })
+        expect(result).toBeUndefined()
+      })
 
-        it('returns one series with correct name from yAxis (Tid)', async () => {
-          const result = seriesAndCategoriesFromJsonStat(
-            mockReq,
-            mockHighchart,
-            dataset,
-            mockPxApi2DatasetFormatStandalone
-          )
+      it('returns correct result for highchart with municipality filter', async () => {
+        const result = seriesAndCategoriesFromJsonStat(
+          mockReq,
+          mockHighchart,
+          pxapi2Dataset,
+          mockPxApi2DatasetFormatWithMunicipalityfilter
+        )
 
-          expect(result?.series).toHaveLength(1)
-          expect(result?.series[0].name).toBe('2024')
-        })
+        expect(result).toEqual(expectedResultPxApi2)
+      })
+    })
 
-        it('returns one data series with correct values', async () => {
-          const result = seriesAndCategoriesFromJsonStat(
-            mockReq,
-            mockHighchart,
-            dataset,
-            mockPxApi2DatasetFormatStandalone
-          )
+    describe('with statbankApi as source', () => {
+      it('returns correct result for standalone highchart (no municipality filter)', async () => {
+        const result = seriesAndCategoriesFromJsonStat(
+          mockReq,
+          mockHighchart,
+          statbankDataset,
+          mockStatbankDatasetFormatStandalone
+        )
 
-          expect(result?.series[0].data).toEqual(resultingDataSeries)
-        })
+        expect(result).toEqual(expectedResultStatbankApi)
+      })
 
-        it('returns correct categories from xAxis (KOKfunksjon0000)', async () => {
-          const result = seriesAndCategoriesFromJsonStat(
-            mockReq,
-            mockHighchart,
-            dataset,
-            mockPxApi2DatasetFormatStandalone
-          )
+      it('returns undefined when getMunicipality returns undefined', async () => {
+        const { getMunicipality } = await import('/lib/ssb/dataset/klass/municipalities')
+        jest.mocked(getMunicipality).mockReturnValueOnce(undefined)
 
-          expect(result?.categories).toHaveLength(8)
-          expect(result?.categories).toEqual(resultingCategories)
-        })
+        const result = seriesAndCategoriesFromJsonStat(
+          mockReq,
+          mockHighchart,
+          statbankDataset,
+          mockStatbankDatasetFormatWithMunicipalityfilter
+        )
+
+        expect(result).toBeUndefined()
+      })
+
+      it('returns correct result for highchart with municipality filter', async () => {
+        const result = seriesAndCategoriesFromJsonStat(
+          mockReq,
+          mockHighchart,
+          statbankDataset,
+          mockStatbankDatasetFormatWithMunicipalityfilter
+        )
+
+        expect(result).toEqual(expectedResultStatbankApi)
       })
     })
   })
