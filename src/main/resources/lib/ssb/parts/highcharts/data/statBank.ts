@@ -5,7 +5,7 @@ import { type Dimension, type Dataset, type Category, type Data } from '/lib/typ
 import { type RequestWithCode, type MunicipalityWithCounty } from '/lib/types/municipalities'
 import { type Highchart, type CombinedGraph } from '/site/content-types'
 import { type DataSource } from '/site/mixins/dataSource'
-import { type SeriesAndCategories } from '../highchartsData'
+import { type SeriesAndCategories } from '/lib/ssb/parts/highcharts/highchartsData'
 
 type HighchartsValue = number | string | null
 
