@@ -3,7 +3,7 @@ import { describe, expect, test as it, jest, beforeEach } from '@jest/globals'
 import { type Content } from '@enonic-types/lib-portal'
 import { type RequestWithCode } from '/lib/types/municipalities'
 import { seriesAndCategoriesFromJsonStat } from '/lib/ssb/parts/highcharts/data/statBank'
-import { type Highchart } from '../../../../../../site/content-types'
+import { type Highchart } from '/site/content-types'
 import {
   createMockDataset,
   mockPxApi2ResponseOslo,
