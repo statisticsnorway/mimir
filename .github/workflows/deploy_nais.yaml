@@ -18,6 +18,7 @@ jobs:
     runs-on: "ubuntu-latest"
     if: (github.event.label.name == 'nais' && contains(fromJSON('["annesiri", "ssb-cgn", "Glenruben", "johnnadeluy", "Carl-OW"]'), github.actor))
     steps:
+      - uses: actions/checkout@v4
       - id: build_app
         uses: enonic/action-app-build@846cdd20beec1404b7672baa8d85ee2ea228b380 # v1.0.0
       - name: Upload artifacts
