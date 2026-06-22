@@ -17,9 +17,10 @@ jobs:
     runs-on: "ubuntu-latest"
     environment: "QA"
     steps:
-      - uses: actions/checkout@v4
       - id: build_app
-        uses: enonic/action-app-build@1ba16aae913a2637bfea0a1f8fcb51b3cb1afa2f # v2.0.0
+        uses: enonic/release-tools/build-and-publish@master
+        with:
+          skipPublishing: true
       - name: Upload artifacts
         id: upload_artifacts
         if: success()
