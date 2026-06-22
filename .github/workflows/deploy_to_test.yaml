@@ -1,4 +1,4 @@
-name: 'Deploy to Test'
+name: "Deploy to Test"
 on:
   pull_request:
   workflow_dispatch: # Allows the workflow to be manually triggered.
@@ -9,27 +9,25 @@ concurrency:
 
 jobs:
   deploy_to_test:
-    name: 'Deploy to Test'
+    name: "Deploy to Test"
     permissions:
       contents: write
-    runs-on: 'ubuntu-latest'
-    environment: 'test'
+    runs-on: "ubuntu-latest"
+    environment: "test"
     steps:
       - id: build_app
-        uses: enonic/release-tools/build-and-publish@master
-        with:
-          skipPublishing: true
+        uses: enonic/action-app-build@1ba16aae913a2637bfea0a1f8fcb51b3cb1afa2f # v2.0.0
       - name: Upload artifacts
         id: upload_artifacts
         if: success()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         env:
           RUN_NUMBER: ${{ github.run_number }}
         with:
           name: mimir-test-$RUN_NUMBER
-          path: './build/libs/*.jar'
+          path: "./build/libs/*.jar"
       - id: deploy_app_to_XP
-        uses: 'enonic/action-app-deploy@main'
+        uses: "enonic/action-app-deploy@8ce05302b29df139a74241eaf59506b5043f8122" # v1.0.1
         with:
           # Secrets from Github repository
           url: ${{ secrets.ENONIC_TEST_URL }}
@@ -37,11 +35,11 @@ jobs:
           password: ${{ secrets.ENONIC_TEST_PASS }}
           client_cert: ${{ secrets.ENONIC_DEPLOY_CERT }}
           client_key: ${{ secrets.ENONIC_DEPLOY_KEY }}
-          app_jar: './build/libs/*.jar'
+          app_jar: "./build/libs/*.jar"
       - name: Send failure message to Slack
         id: slack_failure
         if: steps.deploy_app_to_XP.outcome == 'failure'
-        uses: slackapi/slack-github-action@v3
+        uses: slackapi/slack-github-action@45a88b9581bfab2566dc881e2cd66d334e621e2c # v3.0.3
         env:
           ACTOR: ${{ github.actor }}
           REF: ${{ github.ref_name }}
@@ -95,7 +93,7 @@ jobs:
     container: node:lts
     steps:
       - name: Git checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
       - name: Branch name and commit hash
         run: |
           echo running on branch ${GITHUB_HEAD_REF##*/} or ${GITHUB_REF##*/}

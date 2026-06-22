@@ -1,23 +1,23 @@
-name: 'Deploy former build to QA'
+name: "Deploy former build to QA"
 # Action that will download previously created artifact and deploy it to the QA environment
 on:
   workflow_dispatch:
-   # We need the Github Action Run number to select which artifact to download
+    # We need the Github Action Run number to select which artifact to download
     inputs:
       gh_run_number:
-        description: 'The Github Action run number to deploy'
+        description: "The Github Action run number to deploy"
         required: true
 
 jobs:
   deploy-artifact:
-    name: 'Deploy artifact'
+    name: "Deploy artifact"
     permissions:
       contents: write
     runs-on: ubuntu-latest
-    environment: 'QA'
+    environment: "QA"
     steps:
       - name: Download workflow artifact
-        uses: dawidd6/action-download-artifact@v21
+        uses: dawidd6/action-download-artifact@b6e2e70617bc3265edd6dab6c906732b2f1ae151 # v21
         env:
           RUN_NUMBER: ${{ github.event.inputs.gh_run_number }}
         with:
@@ -27,7 +27,7 @@ jobs:
       - name: display downloads
         run: ls -R
       - id: deploy_app_to_XP
-        uses: 'enonic/action-app-deploy@main'
+        uses: "enonic/action-app-deploy@8ce05302b29df139a74241eaf59506b5043f8122" # v1.0.1
         with:
           # Secrets from Github repository
           url: ${{ secrets.ENONIC_QA_URL }}
@@ -39,7 +39,7 @@ jobs:
       - name: Send failure message to Slack
         id: slack_failure
         if: steps.deploy_app_to_XP.outcome == 'failure'
-        uses: slackapi/slack-github-action@v3
+        uses: slackapi/slack-github-action@45a88b9581bfab2566dc881e2cd66d334e621e2c # v3.0.3
         env:
           ACTOR: ${{ github.actor }}
           REF: ${{ github.ref_name }}
@@ -93,11 +93,11 @@ jobs:
     container: node:lts
     steps:
       - name: Git checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
       - name: Branch name and commit hash
         run: |
-              echo running on branch ${GITHUB_HEAD_REF##*/} or ${GITHUB_REF##*/}
-              echo running $(echo $GITHUB_SHA | cut -c1-8) and ${GITHUB_SHA}
+          echo running on branch ${GITHUB_HEAD_REF##*/} or ${GITHUB_REF##*/}
+          echo running $(echo $GITHUB_SHA | cut -c1-8) and ${GITHUB_SHA}
       - name: install mabl
         run: npm install -g @mablhq/mabl-cli
       - name: mabl end-to-end test - TEST
