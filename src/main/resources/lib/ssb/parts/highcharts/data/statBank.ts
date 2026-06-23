@@ -3,9 +3,9 @@ import { getMunicipality } from '/lib/ssb/dataset/klass/municipalities'
 import { DataSource as DataSourceType } from '/lib/ssb/repo/dataset'
 import { type Dimension, type Dataset, type Category, type Data } from '/lib/types/jsonstat-toolkit'
 import { type RequestWithCode, type MunicipalityWithCounty } from '/lib/types/municipalities'
+import { type SeriesAndCategories } from '/lib/ssb/parts/highcharts/highchartsData'
 import { type Highchart, type CombinedGraph } from '/site/content-types'
 import { type DataSource } from '/site/mixins/dataSource'
-import { type SeriesAndCategories } from '/lib/ssb/parts/highcharts/highchartsData'
 
 type HighchartsValue = number | string | null
 
