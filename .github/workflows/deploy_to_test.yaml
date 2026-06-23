@@ -1,4 +1,4 @@
-name: "Deploy to Test"
+name: 'Deploy to Test'
 on:
   pull_request:
   workflow_dispatch: # Allows the workflow to be manually triggered.
@@ -9,16 +9,21 @@ concurrency:
 
 jobs:
   deploy_to_test:
-    name: "Deploy to Test"
+    name: 'Deploy to Test'
     permissions:
       contents: write
-    runs-on: "ubuntu-latest"
-    environment: "test"
+    runs-on: 'ubuntu-latest'
+    environment: 'test'
     steps:
-      - id: build_app
-        uses: enonic/release-tools/build-and-publish@master
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v5
         with:
-          skipPublishing: true
+          distribution: temurin
+          java-version: 21
+      - uses: gradle/actions/setup-gradle@v6
+      - id: build_app
+        run: ./gradlew build
+        shell: bash
       - name: Upload artifacts
         id: upload_artifacts
         if: success()
@@ -27,9 +32,9 @@ jobs:
           RUN_NUMBER: ${{ github.run_number }}
         with:
           name: mimir-test-$RUN_NUMBER
-          path: "./build/libs/*.jar"
+          path: './build/libs/*.jar'
       - id: deploy_app_to_XP
-        uses: "enonic/action-app-deploy@8ce05302b29df139a74241eaf59506b5043f8122" # v1.0.1
+        uses: 'enonic/action-app-deploy@8ce05302b29df139a74241eaf59506b5043f8122' # v1.0.1
         with:
           # Secrets from Github repository
           url: ${{ secrets.ENONIC_TEST_URL }}
@@ -37,7 +42,7 @@ jobs:
           password: ${{ secrets.ENONIC_TEST_PASS }}
           client_cert: ${{ secrets.ENONIC_DEPLOY_CERT }}
           client_key: ${{ secrets.ENONIC_DEPLOY_KEY }}
-          app_jar: "./build/libs/*.jar"
+          app_jar: './build/libs/*.jar'
       - name: Send failure message to Slack
         id: slack_failure
         if: steps.deploy_app_to_XP.outcome == 'failure'
