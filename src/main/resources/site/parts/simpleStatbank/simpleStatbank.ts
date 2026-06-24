@@ -18,7 +18,7 @@ export function get(req: Request): Response {
     const simpleStatbankId: string | undefined = config?.simpleStatbank
     return renderPart(req, simpleStatbankId)
   } catch (e) {
-    return renderError(req, 'Error in part', e)
+    return renderError(req, 'Error in part', e as Error)
   }
 }
 
@@ -26,7 +26,7 @@ export function preview(req: Request, simpleStatbankId: string | undefined): Res
   try {
     return renderPart(req, simpleStatbankId)
   } catch (e) {
-    return renderError(req, 'Error in part', e)
+    return renderError(req, 'Error in part', e as Error)
   }
 }
 

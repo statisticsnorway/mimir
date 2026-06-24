@@ -16,7 +16,7 @@ export interface Dataset {
   readonly id: Array<string>
   readonly class: 'collection' | 'bundle' | 'dataset' | 'dimension'
   Dimension: (dimid: string | number | undefined) => Array<Dimension> | Dimension | null
-  Data: (dataid: Array<number | string> | object, status?: boolean) => Data | null
+  Data: (dataid: Array<number | string> | object | number, status?: boolean) => Data | null
 }
 
 export interface Data {
