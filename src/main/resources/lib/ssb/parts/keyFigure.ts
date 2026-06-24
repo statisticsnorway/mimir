@@ -5,7 +5,7 @@ import JSONstat from 'jsonstat-toolkit/import.mjs'
 import { query, type Content } from '/lib/xp/content'
 import { localize } from '/lib/xp/i18n'
 import { type TbmlDataUniform, type TableCellUniform, type PreliminaryData } from '/lib/types/xmlParser'
-import { type Category, type Dimension, type JSONstat as JSONStatType } from '/lib/types/jsonstat-toolkit'
+import { type Dimension, type JSONstat as JSONStatType } from '/lib/types/jsonstat-toolkit'
 import {
   DatasetRepoNode,
   DataSource as DataSourceType,
@@ -23,6 +23,7 @@ import { type KeyFigureChanges, type KeyFigureView, type MunicipalData } from '/
 import { type MunicipalityWithCounty } from '/lib/types/municipalities'
 import { type DataSource } from '/site/mixins/dataSource'
 import { type KeyFigure } from '/site/content-types'
+import { getCategoryByMunicipalityCode } from './highcharts/data/statBank'
 
 interface DatasetFilterOptions {
   _selected: 'municipalityFilter'
@@ -301,7 +302,7 @@ function getDataFromMunicipalityCode(
   if (!filterDimension) {
     return null
   }
-  const filterCategory = filterDimension.Category(municipalityCode) as Category | null
+  const filterCategory = getCategoryByMunicipalityCode(filterDimension, municipalityCode)
   const filterCategoryIndex = filterCategory ? filterCategory.index : undefined
   const dimensionFilter = ds.id.map(() => 0)
 

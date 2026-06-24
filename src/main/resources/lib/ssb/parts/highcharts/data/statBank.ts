@@ -249,7 +249,7 @@ const barNegativeFormat = (
   }
 }
 
-const getCategoryByMunicipalityCode = (dimension: Dimension, code: string): Category | null => {
+export const getCategoryByMunicipalityCode = (dimension: Dimension, code: string): Category | null => {
   if (!code) return null
 
   const category = getCategory(dimension.Category(code))
