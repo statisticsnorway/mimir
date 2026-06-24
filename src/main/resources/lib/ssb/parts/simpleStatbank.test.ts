@@ -70,7 +70,8 @@ describe('parts -> simpleStatbank', () => {
   describe('getStatbankApiData()', () => {
     it('returns correct result for pxapi v2', () => {
       jest.mocked(fetchStatbankApiDataQuery).mockReturnValue(mockPxApi2Dataset)
-      const result = getStatbankApiData('Alder', '05375', mockPxApi2Query.query)
+      const url = 'https://data.ssb.no/api/pxwebapi/v2/tables/05375/data?lang=no&outputFormat=json-stat2'
+      const result = getStatbankApiData('Alder', url, mockPxApi2Query.query)
 
       expect(result).toEqual({
         data: [
@@ -87,7 +88,7 @@ describe('parts -> simpleStatbank', () => {
         ],
       })
 
-      expect(fetchStatbankApiDataQuery).toHaveBeenCalledWith('05375', mockPxApi2Query.query)
+      expect(fetchStatbankApiDataQuery).toHaveBeenCalledWith(url, mockPxApi2Query.query)
     })
 
     it('returns correct result for statbank api', () => {
@@ -114,13 +115,14 @@ describe('parts -> simpleStatbank', () => {
 
     it('returns correct result for pxapi v2 with municipality filter', () => {
       jest.mocked(fetchStatbankApiDataQuery).mockReturnValue(mockPxApi2DatasetWithMunicipality)
-      const result = getStatbankApiData('Region', '03174', mockPxApi2QueryWithMunicipality.query)
+      const url = 'https://data.ssb.no/api/pxwebapi/v2/tables/03174/data?lang=no&outputFormat=json-stat2'
+      const result = getStatbankApiData('Region', url, mockPxApi2QueryWithMunicipality.query)
 
       expect(result).toEqual({
         data: [{ displayName: 'Oslo - Oslove', dataCode: 'K-0301', value: '7', time: '2026' }],
       })
 
-      expect(fetchStatbankApiDataQuery).toHaveBeenCalledWith('03174', mockPxApi2QueryWithMunicipality.query)
+      expect(fetchStatbankApiDataQuery).toHaveBeenCalledWith(url, mockPxApi2QueryWithMunicipality.query)
     })
 
     it('returns correct result for statbank api with municipality filter', () => {
