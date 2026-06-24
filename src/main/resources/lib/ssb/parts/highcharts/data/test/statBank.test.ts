@@ -1,4 +1,4 @@
-import { describe, expect, test as it, jest, beforeEach } from '@jest/globals'
+import { describe, expect, test, jest, beforeEach } from '@jest/globals'
 
 import { type Content } from '@enonic-types/lib-portal'
 import { type RequestWithCode } from '/lib/types/municipalities'
@@ -59,7 +59,7 @@ describe('parts -> highcharts -> data -> statbank', () => {
     })
 
     describe('with pxapi2 as source', () => {
-      it('returns correct result for standalone highchart (no municipality filter)', async () => {
+      test('returns correct result for standalone highchart (no municipality filter)', async () => {
         const result = seriesAndCategoriesFromJsonStat(
           mockReq,
           mockHighchart,
@@ -70,7 +70,7 @@ describe('parts -> highcharts -> data -> statbank', () => {
         expect(result).toEqual(expectedResultPxApi2)
       })
 
-      it('returns undefined when getMunicipality returns undefined', async () => {
+      test('returns undefined when getMunicipality returns undefined', async () => {
         const { getMunicipality } = await import('/lib/ssb/dataset/klass/municipalities')
         jest.mocked(getMunicipality).mockReturnValueOnce(undefined)
 
@@ -84,7 +84,7 @@ describe('parts -> highcharts -> data -> statbank', () => {
         expect(result).toBeUndefined()
       })
 
-      it('returns correct result for highchart with municipality filter', async () => {
+      test('returns correct result for highchart with municipality filter', async () => {
         const result = seriesAndCategoriesFromJsonStat(
           mockReq,
           mockHighchart,
@@ -97,7 +97,7 @@ describe('parts -> highcharts -> data -> statbank', () => {
     })
 
     describe('with statbankApi as source', () => {
-      it('returns correct result for standalone highchart (no municipality filter)', async () => {
+      test('returns correct result for standalone highchart (no municipality filter)', async () => {
         const result = seriesAndCategoriesFromJsonStat(
           mockReq,
           mockHighchart,
@@ -108,7 +108,7 @@ describe('parts -> highcharts -> data -> statbank', () => {
         expect(result).toEqual(expectedResultStatbankApi)
       })
 
-      it('returns undefined when getMunicipality returns undefined', async () => {
+      test('returns undefined when getMunicipality returns undefined', async () => {
         const { getMunicipality } = await import('/lib/ssb/dataset/klass/municipalities')
         jest.mocked(getMunicipality).mockReturnValueOnce(undefined)
 
@@ -122,7 +122,7 @@ describe('parts -> highcharts -> data -> statbank', () => {
         expect(result).toBeUndefined()
       })
 
-      it('returns correct result for highchart with municipality filter', async () => {
+      test('returns correct result for highchart with municipality filter', async () => {
         const result = seriesAndCategoriesFromJsonStat(
           mockReq,
           mockHighchart,

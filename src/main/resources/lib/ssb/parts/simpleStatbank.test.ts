@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, jest, test as it } from '@jest/globals'
+import { beforeEach, describe, expect, jest, test } from '@jest/globals'
 import { getStatbankApiData } from '/lib/ssb/parts/simpleStatbank'
 import { fetchStatbankApiDataQuery } from '/lib/ssb/dataset/statbankApi/statbankApi'
 
@@ -68,7 +68,7 @@ describe('parts -> simpleStatbank', () => {
     ;(globalThis as any).log = mockLog
   })
   describe('getStatbankApiData()', () => {
-    it('returns correct result for pxapi v2', () => {
+    test('returns correct result for pxapi v2', () => {
       jest.mocked(fetchStatbankApiDataQuery).mockReturnValue(mockPxApi2Dataset)
       const url = 'https://data.ssb.no/api/pxwebapi/v2/tables/05375/data?lang=no&outputFormat=json-stat2'
       const result = getStatbankApiData('Alder', url, mockPxApi2Query.query)
@@ -91,7 +91,7 @@ describe('parts -> simpleStatbank', () => {
       expect(fetchStatbankApiDataQuery).toHaveBeenCalledWith(url, mockPxApi2Query.query)
     })
 
-    it('returns correct result for statbank api', () => {
+    test('returns correct result for statbank api', () => {
       jest.mocked(fetchStatbankApiDataQuery).mockReturnValue(mockStatbankApiData)
       const result = getStatbankApiData('Alder', '05375', mockStatbankQuery.query)
 
@@ -113,7 +113,7 @@ describe('parts -> simpleStatbank', () => {
       expect(fetchStatbankApiDataQuery).toHaveBeenCalledWith('05375', mockStatbankQuery.query)
     })
 
-    it('returns correct result for pxapi v2 with municipality filter', () => {
+    test('returns correct result for pxapi v2 with municipality filter', () => {
       jest.mocked(fetchStatbankApiDataQuery).mockReturnValue(mockPxApi2DatasetWithMunicipality)
       const url = 'https://data.ssb.no/api/pxwebapi/v2/tables/03174/data?lang=no&outputFormat=json-stat2'
       const result = getStatbankApiData('Region', url, mockPxApi2QueryWithMunicipality.query)
@@ -125,7 +125,7 @@ describe('parts -> simpleStatbank', () => {
       expect(fetchStatbankApiDataQuery).toHaveBeenCalledWith(url, mockPxApi2QueryWithMunicipality.query)
     })
 
-    it('returns correct result for statbank api with municipality filter', () => {
+    test('returns correct result for statbank api with municipality filter', () => {
       jest.mocked(fetchStatbankApiDataQuery).mockReturnValue(mockStatbankDatasetWithMunicipality)
       const result = getStatbankApiData('Region', '03174', mockStatbankQueryWithMunicipality.query)
 
