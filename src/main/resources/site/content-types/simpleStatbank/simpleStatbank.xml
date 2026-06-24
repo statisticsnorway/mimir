@@ -85,7 +85,9 @@
                 <input name="urlOrId" type="TextLine">
                     <label>URL eller tabell-id</label>
                     <occurrences minimum="1" maximum="1" />
-                    <help-text>Velg tabellId eller full url til tabell, feks https://data.utv.ssb.no/api/v0/no/table/[TabellId]</help-text>
+                    <help-text>
+                      Velg tabellId eller full url til tabell, f.eks. "https://data.ssb.no/api/pxwebapi/v2/tables/[tabellId]/data?lang=no&amp;outputFormat=json-stat2". Her kan man skrive inn full url for både det gamle og nye api-et. Hvis man kun skriver inn tabellId så vil det gå mot det gamle api-et.
+                    </help-text>
                 </input>
                 <input name="json" type="TextArea">
                     <label>Spørring i JSON-format</label>
