@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     if: contains(github.head_ref, 'MIM-')
     steps:
-      - uses: the-wright-jamie/update-pr-info-action@v1
+      - uses: the-wright-jamie/update-pr-info-action@3372c9a8262df9b267774d11accd1a4b5da1e2fd # v1
         with:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
           head-branch-regex: 'mim-\d{2,4}'

@@ -3,7 +3,7 @@ on:
   push:
     branches:
       - 'master'
-  workflow_dispatch:  # Allows the workflow to be manually triggered.
+  workflow_dispatch: # Allows the workflow to be manually triggered.
 
 concurrency:
   group: mimir-prod
@@ -17,10 +17,9 @@ jobs:
     runs-on: 'ubuntu-latest'
     environment: 'production'
     steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
       - id: build_app
-        uses: enonic/release-tools/build-and-publish@master
-        with:
-          skipPublishing: true
+        uses: 'enonic/action-app-build@846cdd20beec1404b7672baa8d85ee2ea228b380' # v1.0.0
       - name: Get Version Number
         id: get_version_number
         run: |
@@ -29,19 +28,19 @@ jobs:
       - name: Upload artifacts
         id: upload_artifacts
         if: success()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: mimir-prod-${{ github.run_number }}
-          path: "./build/libs/*.jar"
+          path: './build/libs/*.jar'
       - id: deploy_app_to_XP
-        uses: 'enonic/action-app-deploy@main'
+        uses: 'enonic/action-app-deploy@8ce05302b29df139a74241eaf59506b5043f8122' # v1.0.1
         with:
           url: ${{ secrets.ENONIC_PROD_URL }}
           username: ${{ secrets.ENONIC_USER }}
           password: ${{ secrets.ENONIC_PROD_PASS }}
           client_cert: ${{ secrets.ENONIC_DEPLOY_CERT }}
           client_key: ${{ secrets.ENONIC_DEPLOY_KEY }}
-          app_jar: "./build/libs/*.jar"
+          app_jar: './build/libs/*.jar'
       # Merge to master PR should have release notes as PR body
       - name: Get PR body from latest merged PR
         id: get_pr_body
@@ -71,7 +70,7 @@ jobs:
           COMMIT_URL: $ {{github.event.head_commit.url || '' }}
           WORKFLOW: ${{ github.workflow }}
           REPO: ${{ github.repository }}
-        uses: slackapi/slack-github-action@v3
+        uses: slackapi/slack-github-action@45a88b9581bfab2566dc881e2cd66d334e621e2c # v3.0.3
         with:
           webhook: ${{ secrets.SLACK_ALERTS_PROD }}
           webhook-type: incoming-webhook
@@ -113,7 +112,7 @@ jobs:
       - name: Send failure message to Slack
         id: slack_failure
         if: steps.deploy_app_to_XP.outcome == 'failure'
-        uses: slackapi/slack-github-action@v3
+        uses: slackapi/slack-github-action@45a88b9581bfab2566dc881e2cd66d334e621e2c # v3.0.3
         env:
           ACTOR: ${{ github.actor }}
           REF: ${{ github.ref_name }}

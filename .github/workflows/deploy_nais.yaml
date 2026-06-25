@@ -18,14 +18,13 @@ jobs:
     runs-on: 'ubuntu-latest'
     if: (github.event.label.name == 'nais' && contains(fromJSON('["annesiri", "ssb-cgn", "Glenruben", "johnnadeluy", "Carl-OW"]'), github.actor))
     steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
       - id: build_app
-        uses: enonic/release-tools/build-and-publish@master
-        with:
-          skipPublishing: true
+        uses: 'enonic/action-app-build@846cdd20beec1404b7672baa8d85ee2ea228b380' # v1.0.0
       - name: Upload artifacts
         id: upload_artifacts
         if: success()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         env:
           RUN_NUMBER: ${{ github.run_number }}
         with:
@@ -43,20 +42,20 @@ jobs:
         run: echo ${{ env.REGISTRY }} && echo ${{ env.IMAGE }} && echo ${{ env.TAG }}
 
       - name: Checkout mimir
-        uses: actions/checkout@v6
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
 
       - name: Give GitHub Actions acces to docker repo
-        uses: webfactory/ssh-agent@v0.10.0
+        uses: webfactory/ssh-agent@e83874834305fe9a4a2997156cb26c5de65a8555 # v0.10.0
         with:
           ssh-private-key: ${{ secrets.DOCKER_REPO_READ_KEY }}
       - name: Checkout docker
-        uses: actions/checkout@v6
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           ref: 'main'
           path: 'ssbno-xp-docker'
           repository: 'statisticsnorway/ssbno-xp-docker'
       - name: Download artifacts
-        uses: actions/download-artifact@v8
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         env:
           RUN_NUMBER: ${{ github.run_number }}
         with:
@@ -76,23 +75,23 @@ jobs:
 
       - id: 'auth'
         name: 'Authenticate to Google Cloud'
-        uses: 'google-github-actions/auth@v3.0.0'
+        uses: 'google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093' # v3.0.0
         with:
           workload_identity_provider: 'projects/906675412832/locations/global/workloadIdentityPools/ssb-identity-pool/providers/github-oidc-provider'
           service_account: 'gh-ssb@nais-management-b3a7.iam.gserviceaccount.com'
           token_format: 'access_token'
       - name: Set up Docker Buildx
         id: buildx
-        uses: docker/setup-buildx-action@v4
+        uses: docker/setup-buildx-action@d7f5e7f509e45cec5c76c4d5afdd7de93d0b3df5 # v4.1.0
       - name: Login to registry
-        uses: docker/login-action@v4
+        uses: docker/login-action@650006c6eb7dba73a995cc03b0b2d7f5ca915bee # v4.2.0
         with:
           registry: ${{ env.REGISTRY }}
           username: 'oauth2accesstoken'
           password: '${{ steps.auth.outputs.access_token }}'
       - name: Docker meta
         id: metadata
-        uses: docker/metadata-action@v6
+        uses: docker/metadata-action@80c7e94dd9b9319bd5eb7a0e0fe9291e23a2a2e9 # v6.1.0
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE }}
           # Docker tags based on the following events/attributes
@@ -106,7 +105,7 @@ jobs:
             type=sha
             type=raw,value=${{ env.TAG }}, enable=true
       - name: Build and push
-        uses: docker/build-push-action@v7
+        uses: docker/build-push-action@f9f3042f7e2789586610d6e8b85c8f03e5195baf # v7.2.0
         env:
           BRANCH: ${{ github.head_ref }}
         with:
@@ -125,7 +124,7 @@ jobs:
       pull-requests: write
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
       - name: 'Get JIRA issue number'
         id: jira_issue_number
         env:
@@ -137,7 +136,7 @@ jobs:
           echo "Issue number: $ISSUE_NUMBER";
       - name: 'Store image tag'
         run: echo "IMAGE_TAG=${{ env.TAG }}" >> $GITHUB_ENV
-      - uses: nais/deploy/actions/deploy@v2
+      - uses: nais/deploy/actions/deploy@5fdd91aaf69bb0d6dd5e5118cdacb639f487b93b # v2
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: test
@@ -145,7 +144,7 @@ jobs:
           VAR: image=${{ env.REGISTRY }}/${{env.IMAGE}}:${{ env.TAG }},branch=${{ env.ISSUE_NUMBER }}
           DEPLOY_SERVER: deploy.ssb.cloud.nais.io:443
       - name: Add comment to PR
-        uses: the-wright-jamie/update-pr-info-action@v1
+        uses: the-wright-jamie/update-pr-info-action@3372c9a8262df9b267774d11accd1a4b5da1e2fd # v1
         with:
           repo-token: '${{ secrets.GITHUB_TOKEN }}'
           head-branch-regex: 'mim-\d{2,4}'
