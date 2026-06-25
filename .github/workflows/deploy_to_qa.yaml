@@ -1,8 +1,8 @@
-name: "Deploy to QA"
+name: 'Deploy to QA'
 on:
   push:
     branches:
-      - "develop"
+      - 'develop'
   workflow_dispatch: # Allows the workflow to be manually triggered.
 
 concurrency:
@@ -11,16 +11,15 @@ concurrency:
 
 jobs:
   deploy_to_qa:
-    name: "Deploy to QA"
+    name: 'Deploy to QA'
     permissions:
       contents: write
-    runs-on: "ubuntu-latest"
-    environment: "QA"
+    runs-on: 'ubuntu-latest'
+    environment: 'QA'
     steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
       - id: build_app
-        uses: enonic/release-tools/build-and-publish@master
-        with:
-          skipPublishing: true
+        uses: 'enonic/action-app-build@846cdd20beec1404b7672baa8d85ee2ea228b380' # v1.0.0
       - name: Upload artifacts
         id: upload_artifacts
         if: success()
@@ -29,16 +28,16 @@ jobs:
           RUN_NUMBER: ${{ github.run_number }}
         with:
           name: mimir-qa-$RUN_NUMBER
-          path: "./build/libs/*.jar"
+          path: './build/libs/*.jar'
       - id: deploy_app_to_XP
-        uses: "enonic/action-app-deploy@8ce05302b29df139a74241eaf59506b5043f8122" # v1.0.1
+        uses: 'enonic/action-app-deploy@8ce05302b29df139a74241eaf59506b5043f8122' # v1.0.1
         with:
           url: ${{ secrets.ENONIC_QA_URL }}
           username: ${{ secrets.ENONIC_USER }}
           password: ${{ secrets.ENONIC_QA_PASS }}
           client_cert: ${{ secrets.ENONIC_DEPLOY_CERT }}
           client_key: ${{ secrets.ENONIC_DEPLOY_KEY }}
-          app_jar: "./build/libs/*.jar"
+          app_jar: './build/libs/*.jar'
       - name: Send failure message to Slack
         id: slack_failure
         if: steps.deploy_app_to_XP.outcome == 'failure'
