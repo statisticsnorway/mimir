@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react'
-import Highcharts, { Palette } from 'highcharts'
+import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import PropTypes from 'prop-types'
 import { Link, Text, Tabs, Divider } from '@statisticsnorway/ssb-component-library'
