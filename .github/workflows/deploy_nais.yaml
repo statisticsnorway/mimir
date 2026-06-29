@@ -136,7 +136,7 @@ jobs:
           echo "Issue number: $ISSUE_NUMBER";
       - name: 'Store image tag'
         run: echo "IMAGE_TAG=${{ env.TAG }}" >> $GITHUB_ENV
-      - uses: nais/deploy/actions/deploy@5fdd91aaf69bb0d6dd5e5118cdacb639f487b93b # v2
+      - uses: nais/deploy/actions/deploy@2d18f050f07b6a007864c6a57070ed915d571beb # v2
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: test
