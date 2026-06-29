@@ -19,7 +19,7 @@ jobs:
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       - id: build_app
-        uses: 'enonic/action-app-build@846cdd20beec1404b7672baa8d85ee2ea228b380' # v1.0.0
+        uses: 'enonic/action-app-build@1ba16aae913a2637bfea0a1f8fcb51b3cb1afa2f' # v2.0.0
       - name: Upload artifacts
         id: upload_artifacts
         if: success()
