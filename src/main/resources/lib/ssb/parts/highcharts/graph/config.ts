@@ -58,18 +58,21 @@ export const createDefaultConfig = (highchartData: any, displayName: string, lan
     marginTop: 50,
   },
   // SSB color palette:
-  colors: [
-    '#1A9D49',
-    '#274247',
-    '#1D9DE2',
-    '#0F2080',
-    '#C78800',
-    '#471F00',
-    '#C775A7',
-    '#A3136C',
-    '#909090',
-    '#000000',
-  ],
+  palette: {
+    colors: [
+      '#1A9D49',
+      '#274247',
+      '#1D9DE2',
+      '#0F2080',
+      '#C78800',
+      '#471F00',
+      '#C775A7',
+      '#A3136C',
+      '#909090',
+      '#000000',
+    ],
+    colorScheme: 'light',
+  },
   credits: {
     enabled: !!highchartData.sourceList,
   },

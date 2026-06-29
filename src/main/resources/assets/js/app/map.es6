@@ -35,7 +35,6 @@ function init() {
           margin: 40,
           borderColor: '#FFFFFF',
           borderWidth,
-          backgroundColor: '#f0f7f9',
           events: {
             // Workaround to get pointer events after drilldown: https://github.com/highcharts/highcharts/issues/20886
             redraw() {
@@ -144,6 +143,7 @@ function init() {
           minColor: '#FFFFFF',
           maxColor: '#FFFFFF',
         },
+        palette: {colorScheme: 'light', light: {backgroundColor: '#f0f7f9'}},
         mapNavigation: {
           enabled: true,
           buttonOptions: {
