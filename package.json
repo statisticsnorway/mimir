@@ -67,7 +67,7 @@
     "@enonic/tsup-plugin-manifest": "^0.0.1",
     "@eslint/compat": "^2.1.0",
     "@eslint/eslintrc": "^3.3.5",
-    "@eslint/js": "^9.39.2",
+    "@eslint/js": "^10.0.1",
     "@item-enonic-types/global": "~7.15.0",
     "@item-enonic-types/lib-cache": "~2.2.1",
     "@item-enonic-types/lib-http-client": "~3.2.2",
