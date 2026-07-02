@@ -3,6 +3,7 @@ import { localize } from '/lib/xp/i18n'
 import { request, HttpResponse } from '/lib/http-client'
 import { formatDate } from '/lib/ssb/utils/dateUtils'
 import {
+  SolrSelectResponse,
   type Facet,
   type PreparedSearchResult,
   type SolrDoc,
@@ -69,6 +70,47 @@ export function solrSearch(
         contentTypes: [],
         subjects: [],
       }
+}
+
+export function solrTestNewSearch(searchTerm: string) {
+  const query: HttpResponse = request({
+    url: `https://ext-i.qa.ssb.no/test-search/fritekstsok/select?indent=true&q.op=OR&q=${encodeURI(searchTerm ?? '')}`,
+    connectionTimeout: 60000,
+  })
+
+  function resultMapper(result: SolrSelectResponse): SolrPrepResultAndTotal {
+    const docs: PreparedSearchResult[] = result.response.docs.map((doc) => {
+      const highlight: SolrHighlighting | undefined = result.highlighting[doc.id]
+      return {
+        id: doc.id,
+        title: doc.tittel,
+        preface: sanitizeHtml(highlight.innhold ? highlight.innhold[0] : doc.tittel),
+        contentType: doc.innholdstype,
+        url: doc.url,
+        mainSubject: doc.hovedemner.toString(),
+        secondaryMainSubject: '',
+        publishDate: doc.publiseringsdato,
+        publishDateHuman: doc.publiseringsdato,
+      }
+    })
+    return {
+      hits: docs,
+      contentTypes: createFacetsArray(result.facet_counts.facet_fields.innholdstype),
+      subjects: createFacetsArray(result.facet_counts.facet_fields.hovedemner),
+      total: result.response.numFound,
+    }
+  }
+
+  const result: SolrPrepResultAndTotal =
+    query.status === 200 && query.body
+      ? resultMapper(JSON.parse(query.body) as SolrSelectResponse)
+      : {
+          total: 0,
+          hits: [],
+          contentTypes: [],
+          subjects: [],
+        }
+  return result
 }
 
 function nerfSearchResult(solrResult: SolrResult, language: string): Array<PreparedSearchResult> {
@@ -153,7 +195,7 @@ function createQuery(
   )}&${languageQuery}${contentTypeQuery}${subjectQuery}&wt=${SOLR_FORMAT}&start=${start}&rows=${numberOfHits}${sortQuery}`
 }
 
-function createFacetsArray(solrResults: Array<string | number>): Array<Facet> {
+export function createFacetsArray(solrResults: Array<string | number>): Array<Facet> {
   const facets: Array<Facet> = []
   solrResults.forEach((facet, i) => {
     if (typeof facet == 'string') {

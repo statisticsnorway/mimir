@@ -67,6 +67,10 @@ try {
           feature: 'delete-joblog-cron',
           enabled: false,
         },
+        {
+          feature: 'new-search-test',
+          enabled: false,
+        },
       ],
     },
   ])

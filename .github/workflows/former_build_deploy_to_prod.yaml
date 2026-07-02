@@ -1,24 +1,24 @@
-name: 'Deploy former build to PROD'
+name: "Deploy former build to PROD"
 # Action that will download previously created artifact and deploy it to the production environment
 on:
   workflow_dispatch:
-   # We need the Github Action Run number to select which artifact to download
+    # We need the Github Action Run number to select which artifact to download
     inputs:
       gh_run_number:
-        description: 'The Github Action run number to deploy'
+        description: "The Github Action run number to deploy"
         required: true
 
 jobs:
   deploy-artifact:
-    name: 'Deploy artifact'
+    name: "Deploy artifact"
     permissions:
       contents: write
     runs-on: ubuntu-latest
-    environment: 'production'
+    environment: "production"
     steps:
       - name: Download workflow artifact
-        uses: dawidd6/action-download-artifact@v21
-        env: 
+        uses: dawidd6/action-download-artifact@b6e2e70617bc3265edd6dab6c906732b2f1ae151 # v21
+        env:
           RUN_NUMBER: ${{ github.event.inputs.gh_run_number }}
         with:
           workflow: deploy_to_prod.yaml
@@ -27,7 +27,7 @@ jobs:
       - name: display downloads
         run: ls -R
       - id: deploy_app_to_XP
-        uses: 'enonic/action-app-deploy@main'
+        uses: "enonic/action-app-deploy@8ce05302b29df139a74241eaf59506b5043f8122" # v1.0.1
         with:
           # Secrets from Github repository
           url: ${{ secrets.ENONIC_PROD_URL }}
@@ -50,7 +50,7 @@ jobs:
       - name: Send success message to Slack
         id: slack_success
         if: steps.deploy_app_to_XP.outcome == 'success'
-        uses: slackapi/slack-github-action@v3
+        uses: slackapi/slack-github-action@45a88b9581bfab2566dc881e2cd66d334e621e2c # v3.0.3
         env:
           ACTOR: ${{ github.actor }}
           REF: ${{ github.ref_name }}
@@ -99,7 +99,7 @@ jobs:
       - name: Send failure message to Slack
         id: slack_failure
         if: steps.deploy_app_to_XP.outcome == 'failure'
-        uses: slackapi/slack-github-action@v3
+        uses: slackapi/slack-github-action@45a88b9581bfab2566dc881e2cd66d334e621e2c # v3.0.3
         env:
           ACTOR: ${{ github.actor }}
           REF: ${{ github.ref_name }}

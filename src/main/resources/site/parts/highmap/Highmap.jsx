@@ -344,6 +344,7 @@ function Highmap(props) {
       itemDelimiter: ';',
       decimalPoint: language === 'en' ? '.' : ',',
     },
+    palette: {colorScheme: 'light'},
   }
 
   const handleTabOnClick = (item) => {

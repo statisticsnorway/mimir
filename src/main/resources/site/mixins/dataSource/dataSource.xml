@@ -16,8 +16,53 @@
 						</input>
 					</items>
 				</option>
+				<option name="pxapi">
+					<label>API-spørring mot statistikkbanken</label>
+					<items>
+						<input name="urlOrId" type="TextLine">
+							<label>Tabell nummer eller POST URL</label>
+							<occurrences minimum="0" maximum="1" />
+						</input>
+						<input name="json" type="TextArea">
+							<label>API-spørring POST BODY (JSON-stat 2 format)</label>
+							<occurrences minimum="0" maximum="1" />
+						</input>
+						<input name="xAxisLabel" type="TextLine">
+              <help-text>
+                Hvis du lager nøkkeltall til kommunefakta, skal det stå "ContentsCode" her.
+                Hvis du lager highcharts til kommunefakta, skal det stå "Tid" her.
+              </help-text>
+							<label>Navn på x-akse dimensjon</label>
+							<occurrences minimum="0" maximum="1" />
+						</input>
+						<input name="yAxisLabel" type="TextLine">
+              <help-text>
+                Hvis du lager nøkkeltall til kommunefakta, skal det stå "Tid" her.
+                Hvis du lager highcharts til kommunefakta, skal det "ContentsCode" her.
+              </help-text>
+							<label>Navn på y-akse dimensjon</label>
+							<occurrences minimum="0" maximum="1" />
+						</input>
+						<option-set name="datasetFilterOptions">
+							<label>Filtrering på dataset</label>
+							<expanded>false</expanded>
+							<occurrences minimum="0" maximum="1" />
+							<options minimum="0" maximum="1">
+								<option name="municipalityFilter">
+									<label>Filtrer på kommune</label>
+									<items>
+										<input type="TextLine" name="municipalityDimension">
+											<label>Hvilken dimensjon skal filtreres på kommunenummer</label>
+											<occurrences minimum="1" maximum="1" />
+										</input>
+									</items>
+								</option>
+							</options>
+						</option-set>
+					</items>
+				</option>
 				<option name="statbankApi">
-					<label>Api-spørring mot statistikkbanken</label>
+					<label>Api-spørring mot statistikkbanken (old)</label>
 					<items>
 						<input name="urlOrId" type="TextLine">
 							<label>URL eller tabell-id</label>
@@ -77,7 +122,7 @@
 							<help-text>Lim inn (Ctrl-V) en tabell rett fra Excel. Tabeller bør være så enkle som mulig (Overskrifter i første rad/kolonne og ellers bare tall, ingen spesialformatering, manglende tall må være tomme celler)</help-text>
 						</input>
 						<input name="numberHeadRows" type="TextLine">
-							<label>Antall rader tabellhode</label>							
+							<label>Antall rader tabellhode</label>
 							<help-text>Må være et heltall. Hvis ikke utfylt er det første rad som er tabellhode.</help-text>
 							<occurrences minimum="0" maximum="1" />
 							<config>
@@ -93,7 +138,7 @@
 									<occurrences minimum="0" maximum="3" />
 								</input>
 							</items>
-						</field-set>						
+						</field-set>
 					</items>
 				</option>
 				<option name="dataset">

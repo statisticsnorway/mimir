@@ -37,7 +37,7 @@ export function dateToReadable(dateString: string | undefined): string {
 }
 
 export function isUrl(urlOrId: string | undefined): boolean | undefined {
-  if (urlOrId) return urlOrId.includes('http')
+  if (urlOrId) return urlOrId.startsWith('http')
   return
 }
 

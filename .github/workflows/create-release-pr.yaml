@@ -16,7 +16,7 @@ jobs:
       pr_body: ${{ steps.retrieve_new_version.outputs.pr_body }}
       pr_number: ${{ steps.retrieve_new_version.outputs.pr_number }}
     steps:
-      - uses: googleapis/release-please-action@v4
+      - uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0
         id: run_release_please
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -43,7 +43,7 @@ jobs:
     if: ${{ needs.release-please.outputs.new_version != '' }}
     steps:
       - name: Checkout develop branch
-        uses: actions/checkout@v6
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           ref: develop
           token: '${{ secrets.GITHUB_TOKEN }}'
