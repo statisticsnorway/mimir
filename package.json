@@ -126,7 +126,7 @@
     "sass": "~1.101.0",
     "ts-loader": "~9.6.2",
     "tsup": "^8.5.1",
-    "typescript": "~5.9.3",
+    "typescript": "~6.0.3",
     "typescript-eslint": "^8.46.0",
     "validator": "~13.15.35",
     "webpack": "~5.108.1",
