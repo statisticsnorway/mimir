@@ -17,7 +17,7 @@ dependencies {
     implementation 'commons-codec:commons-codec:1.22.0'
     implementation "com.enonic.xp:core-api:${xpVersion}"
     implementation "com.enonic.xp:portal-api:${xpVersion}"
-    include 'com.enonic.lib:lib-cache:2.2.1'
+    include 'com.enonic.lib:lib-cache:3.0.0'
     include 'com.enonic.lib:lib-text-encoding:2.1.1'
     include 'org.json:json:20260522'
     include "com.enonic.lib:lib-http-client:3.2.2"
