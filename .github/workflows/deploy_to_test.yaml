@@ -91,7 +91,7 @@ jobs:
       contents: read
     if: ${{ always() && contains(join(needs.*.result, ','), 'success') }}
     runs-on: ubuntu-latest
-    container: node:22
+    container: node:lts
     steps:
       - name: Git checkout
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
@@ -101,6 +101,12 @@ jobs:
           echo running $(echo $GITHUB_SHA | cut -c1-8) and ${GITHUB_SHA}
       - name: install mabl
         run: npm install -g @mablhq/mabl-cli
+      - name: debug mabl installation
+        run: |
+          node --version
+          npm --version
+          npm list -g @mablhq/mabl-cli
+          mabl --version
       - name: mabl end-to-end test - TEST
         env:
           GITHUB_SHA: ${{ github.sha }}
