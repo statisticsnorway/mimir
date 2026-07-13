@@ -100,13 +100,7 @@ jobs:
           echo running on branch ${GITHUB_HEAD_REF##*/} or ${GITHUB_REF##*/}
           echo running $(echo $GITHUB_SHA | cut -c1-8) and ${GITHUB_SHA}
       - name: install mabl
-        run: npm install -g @mablhq/mabl-cli@2.120.4
-      - name: debug mabl installation
-        run: |
-          node --version
-          npm --version
-          npm list -g @mablhq/mabl-cli
-          mabl --version
+        run: npm install -g @mablhq/mabl-cli
       - name: mabl end-to-end test - TEST
         env:
           GITHUB_SHA: ${{ github.sha }}
