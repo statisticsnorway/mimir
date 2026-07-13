@@ -63,7 +63,7 @@
     "@enonic-types/lib-websocket": "7.15.3",
     "@enonic/mock-xp": "^2.0.0",
     "@enonic/react-components": "5.0.1",
-    "@enonic/react4xp": "5.0.4",
+    "@enonic/react4xp": "7.0.0",
     "@enonic/tsup-plugin-manifest": "^0.0.1",
     "@eslint/compat": "^2.1.0",
     "@eslint/eslintrc": "^3.3.5",
