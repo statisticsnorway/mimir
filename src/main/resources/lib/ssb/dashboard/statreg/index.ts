@@ -91,8 +91,7 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
 
   socket.on('get-statreg-eventlog-node', (key) => {
     let status: Array<LogSummary> | undefined = getQueryChildNodesStatus(`/queries/${key}`) as
-      | Array<LogSummary>
-      | undefined
+      Array<LogSummary> | undefined
     if (!status) {
       status = []
     }
