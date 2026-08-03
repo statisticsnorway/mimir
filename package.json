@@ -158,13 +158,15 @@
     "zipcelx": "~1.6.2"
   },
   "overrides": {
+    "brace-expression": "~5.0.8",
+    "glob": "$glob",
+    "immutable": "~5.1.8",
     "react-mathjax": {
       "react": "$react"
     },
     "redux-injectors": {
       "react": "$react",
       "react-dom": "$react-dom"
-    },
-    "glob": "$glob"
+    }
   }
 }
