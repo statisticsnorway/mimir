@@ -133,8 +133,7 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
 
   socket.on('get-eventlog-node', (dataQueryId) => {
     let status: Array<LogSummary> | undefined = getQueryChildNodesStatus(`/queries/${dataQueryId}`) as
-      | Array<LogSummary>
-      | undefined
+      Array<LogSummary> | undefined
     if (!status) {
       status = []
     }

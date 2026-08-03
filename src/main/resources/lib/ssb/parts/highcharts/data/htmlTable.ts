@@ -147,12 +147,10 @@ function dataFormatPie(seriesAndCategories: SeriesAndCategoriesRaw): Series {
   if (seriesAndCategories.categories.length === 1) {
     return {
       name: seriesAndCategories.categories[0],
-      data: seriesAndCategories.series.map(
-        (serie): PieData => ({
-          ...serie,
-          y: serie.data[0],
-        })
-      ),
+      data: seriesAndCategories.series.map((serie): PieData => ({
+        ...serie,
+        y: serie.data[0],
+      })),
     }
   } else {
     return {

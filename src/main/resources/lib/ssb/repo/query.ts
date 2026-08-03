@@ -97,9 +97,7 @@ function addEventToQueryLog(queryId: string, user: User, status: QueryStatus): E
 function startQuery(queryId: string, user: User, status: QueryStatus): QueryInfoNode {
   return withConnection(EVENT_LOG_REPO, EVENT_LOG_BRANCH, () => {
     const queryLogNode = getNode(EVENT_LOG_REPO, EVENT_LOG_BRANCH, `/queries/${queryId}`) as
-      | ReadonlyArray<QueryInfoNode>
-      | QueryInfoNode
-      | null
+      ReadonlyArray<QueryInfoNode> | QueryInfoNode | null
     if (queryLogNode !== undefined && queryLogNode !== null) {
       return Array.isArray(queryLogNode) ? queryLogNode[0] : queryLogNode
     } else {
