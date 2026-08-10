@@ -41,7 +41,7 @@
     "@babel/preset-react": "7.29.7",
     "@babel/preset-typescript": "7.29.7",
     "@babel/register": "7.29.7",
-    "@babel/runtime": "7.29.7",
+    "@babel/runtime": "8.0.0",
     "@enonic-types/lib-admin": "7.15.3",
     "@enonic-types/lib-asset": "1.0.3",
     "@enonic-types/lib-auth": "7.15.3",
