@@ -161,6 +161,7 @@
     "brace-expansion": "2.1.2",
     "glob": "$glob",
     "immutable": "5.1.8",
+    "nanoid": "6.0.1",
     "react-mathjax": {
       "react": "$react"
     },
