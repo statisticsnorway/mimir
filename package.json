@@ -158,6 +158,9 @@
     "zipcelx": "1.6.2"
   },
   "overrides": {
+    "@enonic/mock-xp": {
+      "adm-zip": "0.6.0"
+    },
     "brace-expansion": "2.1.2",
     "glob": "$glob",
     "immutable": "5.1.8",
