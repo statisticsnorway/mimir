@@ -4,7 +4,7 @@ import { request, HttpResponse } from '/lib/http-client'
 export function get(): Response {
   try {
     const response: HttpResponse = request({
-      url: 'https://ssbno-statreg.intern.test.ssb.no/statistikkregisteret/api/releases',
+      url: 'https://ext-i.test.ssb.no/statistikkregisteret/api/releases',
       method: 'GET',
     })
 
