@@ -51,24 +51,23 @@ export function fetchStatistics(): Array<StatisticInListing> | null {
   return null
 }
 
-export function fetchStatisticsFromStatregApi(): Array<StatisticInListing> | null {
+export function fetchReleasesFromStatregApi({ start = 0, count = 1000, publishTimeAfter, publishTimeBefore }) {
   try {
     const STATREG_API_BASE_URL =
       app.config?.['ssb.statregapi.serverside.baseUrl'] || 'https://i.qa.ssb.no/statistikkregisteret/api'
 
     const response = request({
-      url: STATREG_API_BASE_URL + `/statistics`,
+      url:
+        STATREG_API_BASE_URL +
+        `/releases?start=${start}&count=${count}${
+          publishTimeAfter ? `&publish_time_after=${publishTimeAfter}` : ''
+        }${publishTimeBefore ? `&publish_time_before=${publishTimeBefore}` : ''}`,
     })
-    const statistics = response.body ? JSON.parse(response.body) : []
+    const body = response.body ? JSON.parse(response.body) : {}
 
-    // TODO: Missing id, modifiedTime, and variants (frequency, previousRelease, nextRelease). Do we even use id and modifiedTime?
-    return statistics.map(({ shortname, name, name_en }) => ({
-      shortName: shortname,
-      name: name,
-      nameEN: name_en,
-    }))
+    return body?.releases
   } catch (error) {
-    log.error(`Failed to fetch statistics from statreg API: ${error}`)
+    log.error(`Failed to fetch releases from statreg API: ${error}`)
   }
   return null
 }
