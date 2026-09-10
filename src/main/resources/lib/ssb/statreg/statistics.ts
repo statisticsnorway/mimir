@@ -6,7 +6,7 @@ import {
   ReleasesInListing,
   ReleaseDatesVariant,
 } from '/lib/ssb/dashboard/statreg/types'
-import { HttpResponse } from '/lib/http-client'
+import { HttpResponse, request } from '/lib/http-client'
 import { format, isAfter, isSameDay } from '/lib/vendor/dateFns'
 import { isDateBetween } from '/lib/ssb/utils/dateUtils'
 import { getServerOffsetInMs } from '/lib/ssb/utils/serverOffset'
@@ -41,6 +41,28 @@ export function fetchStatistics(): Array<StatisticInListing> | null {
       info: message,
       status: error,
     })
+  }
+  return null
+}
+
+export function fetchStatisticsFromStatregApi(): Array<StatisticInListing> | null {
+  try {
+    const STATREG_API_BASE_URL =
+      app.config?.['ssb.statregapi.serverside.baseUrl'] || 'https://i.qa.ssb.no/statistikkregisteret/api'
+
+    const response = request({
+      url: STATREG_API_BASE_URL + `/statistics`,
+    })
+    const statistics = response.body ? JSON.parse(response.body) : []
+
+    // TODO: Missing id, modifiedTime, and variants (frequency, previousRelease, nextRelease). Do we even use id and modifiedTime?
+    return statistics.map(({ shortname, name, name_en }) => ({
+      shortName: shortname,
+      name: name,
+      nameEN: name_en,
+    }))
+  } catch (error) {
+    log.error(`Failed to fetch statistics from statreg API: ${error}`)
   }
   return null
 }
