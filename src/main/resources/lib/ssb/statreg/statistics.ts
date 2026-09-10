@@ -23,6 +23,7 @@ export const STATREG_REPO_STATISTICS_KEY = 'statistics'
 
 const useNewStatreg = isEnabled('new-statreg-as-source', false, 'ssb')
 
+// TODO: Remove this when new Statreg as data source is implemented
 useNewStatreg ?? log.info('We are using the new Statreg!')
 
 export function fetchStatistics(): Array<StatisticInListing> | null {
