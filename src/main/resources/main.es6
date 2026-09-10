@@ -71,6 +71,10 @@ try {
           feature: 'new-search-test',
           enabled: false,
         },
+        {
+          feature: 'new-statreg-as-source',
+          enabled: false,
+        },
       ],
     },
   ])

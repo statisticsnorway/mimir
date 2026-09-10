@@ -1,4 +1,5 @@
 import '/lib/ssb/polyfills/nashorn'
+import { isEnabled } from '/lib/featureToggle'
 import { StatRegNode } from '/lib/ssb/repo/statreg'
 import {
   StatisticInListing,
@@ -19,6 +20,11 @@ import { Events, logUserDataQuery } from '/lib/ssb/repo/query'
 import { cronJobLog } from '/lib/ssb/utils/serverLog'
 
 export const STATREG_REPO_STATISTICS_KEY = 'statistics'
+
+const useNewStatreg = isEnabled('new-statreg-as-source', false, 'ssb')
+
+// TODO: Remove this when new Statreg as data source is implemented
+useNewStatreg ?? log.info('We are using the new Statreg!')
 
 export function fetchStatistics(): Array<StatisticInListing> | null {
   try {
