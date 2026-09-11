@@ -24,11 +24,6 @@ export function getNews(days: number): NewsItem[] {
   return articles.concat(statistics)
 }
 
-interface StatregApiRelease {
-  shortname: string
-  publish_time: string
-}
-
 function getArticles(mainSubjects: SubjectItem[], days: number): NewsItem[] {
   const from: string = subDays(new Date(), days).toISOString()
   const to: string = new Date().toISOString()
@@ -83,27 +78,27 @@ function getStatistics(mainSubjects: SubjectItem[], days: number): NewsItem[] {
 }
 
 function getReleasesFromApi(mainSubjects: SubjectItem[], days: number): NewsItem[] {
-  const from = new Date(subDays(new Date(), days).setHours(0, 0, 0, 0))
-  const releases: Array<StatregApiRelease> =
+  const from = new Date(subDays(new Date(), days).setHours(8, 0, 0, 0))
+  const releases =
     fetchReleasesFromStatregApi({
       publishTimeAfter: from.toISOString(),
       publishTimeBefore: new Date().toISOString(),
     }) || []
 
   const statisticsNews: NewsItem[] = []
-  if (releases.length > 0) {
+  if (releases.length) {
     mainSubjects.forEach((mainSubject) => {
       const statistics: Array<Content<Statistics & Statistic>> = query({
         start: 0,
         count: 100,
         query: `_path LIKE "/content${mainSubject.path}/*" AND data.statistic IN(${releases
-          .map((release) => `"${release.statistic.id}"`) // TODO
+          .map((release) => `"${release.statistic.id}"`)
           .join(',')})`,
       }).hits as unknown as Array<Content<Statistics & Statistic>>
+
       statistics.forEach((statistic) => {
-        const release: StatregApiRelease | undefined = releases.find(
-          (release) => release.statistic.id === statistic.data.statistic
-        )
+        const release = releases.find((release) => release.statistic.id?.toString() === statistic.data.statistic)
+
         const pubDate: string | undefined = release?.publish_time
           ? formatPubDateArticle(release.publish_time)
           : undefined
