@@ -7,7 +7,7 @@ import {
   ReleasesInListing,
   ReleaseDatesVariant,
 } from '/lib/ssb/dashboard/statreg/types'
-import { HttpResponse } from '/lib/http-client'
+import { HttpResponse, request } from '/lib/http-client'
 import { format, isAfter, isSameDay } from '/lib/vendor/dateFns'
 import { isDateBetween } from '/lib/ssb/utils/dateUtils'
 import { getServerOffsetInMs } from '/lib/ssb/utils/serverOffset'
@@ -47,6 +47,27 @@ export function fetchStatistics(): Array<StatisticInListing> | null {
       info: message,
       status: error,
     })
+  }
+  return null
+}
+
+export function fetchReleasesFromStatregApi({ start = 0, count = 1000, publishTimeAfter, publishTimeBefore }) {
+  try {
+    const STATREG_API_BASE_URL =
+      app.config?.['ssb.statregapi.serverside.baseUrl'] || 'https://i.qa.ssb.no/statistikkregisteret/api'
+
+    const response = request({
+      url:
+        STATREG_API_BASE_URL +
+        `/releases?start=${start}&count=${count}${
+          publishTimeAfter ? `&publish_time_after=${publishTimeAfter}` : ''
+        }${publishTimeBefore ? `&publish_time_before=${publishTimeBefore}` : ''}`,
+    })
+    const body = response.body ? JSON.parse(response.body) : {}
+
+    return body?.releases
+  } catch (error) {
+    log.error(`Failed to fetch releases from statreg API: ${error}`)
   }
   return null
 }
