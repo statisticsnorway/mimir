@@ -102,7 +102,7 @@ function getReleasesFromApi(mainSubjects: SubjectItem[], days: number): NewsItem
       }).hits as unknown as Array<Content<Statistics & Statistic>>
       statistics.forEach((statistic) => {
         const release: StatregApiRelease | undefined = releases.find(
-          (release) => release.id === statistic.data.statistic
+          (release) => release.statistic.id === statistic.data.statistic
         )
         const pubDate: string | undefined = release?.publish_time
           ? formatPubDateArticle(release.publish_time)
