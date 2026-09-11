@@ -78,49 +78,58 @@ function getStatistics(mainSubjects: SubjectItem[], days: number): NewsItem[] {
 }
 
 function getReleasesFromApi(mainSubjects: SubjectItem[], days: number): NewsItem[] {
-  const from = new Date(subDays(new Date(), days).setHours(8, 0, 0, 0))
+  const from = new Date(subDays(new Date(), days).setHours(8, 0, 0, 0)).toISOString()
+  const to = new Date().toISOString()
+
   const releases =
     fetchReleasesFromStatregApi({
-      publishTimeAfter: from.toISOString(),
-      publishTimeBefore: new Date().toISOString(),
+      publishTimeAfter: from,
+      publishTimeBefore: to,
     }) || []
 
+  if (!releases.length) return []
+
+  const releaseByStatisticId = {}
+  releases.forEach((release) => {
+    const statisticId = release.statistic.id?.toString()
+    if (statisticId) {
+      releaseByStatisticId[statisticId] = release
+    }
+  })
+
   const statisticsNews: NewsItem[] = []
-  if (releases.length) {
-    mainSubjects.forEach((mainSubject) => {
-      const statistics: Array<Content<Statistics & Statistic>> = query({
-        start: 0,
-        count: 100,
-        query: `_path LIKE "/content${mainSubject.path}/*" AND data.statistic IN(${releases
-          .map((release) => `"${release.statistic.id}"`)
-          .join(',')})`,
-      }).hits as unknown as Array<Content<Statistics & Statistic>>
 
-      statistics.forEach((statistic) => {
-        const release = releases.find((release) => release.statistic.id?.toString() === statistic.data.statistic)
+  mainSubjects.forEach((mainSubject) => {
+    const statistics = query({
+      start: 0,
+      count: 100,
+      query:
+        '_path LIKE "/content' +
+        mainSubject.path +
+        '/*" AND data.statistic IN(' +
+        releases.map(({ statistic }) => '"' + statistic.id + '"').join(',') +
+        ')',
+    }).hits as unknown as Array<Content<Statistics & Statistic>>
 
-        const pubDate: string | undefined = release?.publish_time
-          ? formatPubDateArticle(release.publish_time)
-          : undefined
+    statistics.forEach((statistic) => {
+      const statisticId = statistic.data.statistic
+      const release = statisticId ? releaseByStatisticId[statisticId] : undefined
 
-        const link = getLinkByPath(statistic._path)
+      if (!release?.publish_time) return
 
-        if (pubDate) {
-          statisticsNews.push({
-            guid: statistic._id,
-            title: statistic.displayName, // displayName, frequency
-            link,
-            description: statistic.x['com-enonic-app-metafields']?.['meta-data']?.seoDescription || '',
-            category: mainSubject.title,
-            subject: mainSubject.name,
-            language: statistic.language === 'en' ? 'en' : 'no',
-            pubDate: pubDate,
-            shortname: release?.statistic?.shortname || '',
-          })
-        }
+      statisticsNews.push({
+        guid: statistic._id,
+        title: statistic.displayName,
+        link: getLinkByPath(statistic._path),
+        description: statistic.x['com-enonic-app-metafields']?.['meta-data']?.seoDescription || '',
+        category: mainSubject.title,
+        subject: mainSubject.name,
+        language: statistic.language === 'en' ? 'en' : 'no',
+        pubDate: formatPubDateArticle(release.publish_time),
+        shortname: release.statistic.shortname || '',
       })
     })
-  }
+  })
 
   return statisticsNews
 }
