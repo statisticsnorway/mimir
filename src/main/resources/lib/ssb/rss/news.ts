@@ -3,10 +3,11 @@ import { query, type Content } from '/lib/xp/content'
 import { StatisticInListing, VariantInListing } from '/lib/ssb/dashboard/statreg/types'
 import { subDays, isAfter } from '/lib/vendor/dateFns'
 import { getServerOffsetInMs } from '/lib/ssb/utils/serverOffset'
-import { getAllStatisticsFromRepo } from '/lib/ssb/statreg/statistics'
+import { getAllStatisticsFromRepo, fetchReleasesFromStatregApi } from '/lib/ssb/statreg/statistics'
 import { getMainSubjects } from '/lib/ssb/utils/subjectUtils'
 import { getIngressWithKeyFigureText } from '/lib/ssb/utils/keyFigureTextUtils'
 import { type SubjectItem } from '/lib/types/subject'
+import { isEnabled } from '/lib/featureToggle'
 import { type Statistic } from '/site/mixins/statistic'
 import { type Article, type Statistics } from '/site/content-types'
 import { ensureArray } from '../utils/arrayUtils'
@@ -21,6 +22,11 @@ export function getNews(days: number): NewsItem[] {
   const articles: NewsItem[] = getArticles(mainSubjects, days)
   const statistics: NewsItem[] = getStatistics(mainSubjects, days)
   return articles.concat(statistics)
+}
+
+interface StatregApiRelease {
+  shortname: string
+  publish_time: string
 }
 
 function getArticles(mainSubjects: SubjectItem[], days: number): NewsItem[] {
@@ -69,6 +75,62 @@ function getArticles(mainSubjects: SubjectItem[], days: number): NewsItem[] {
 }
 
 function getStatistics(mainSubjects: SubjectItem[], days: number): NewsItem[] {
+  if (isEnabled('new-statreg-as-source', false, 'ssb')) {
+    return getReleasesFromApi(mainSubjects, days)
+  }
+
+  return getStatisticsFromRepo(mainSubjects, days)
+}
+
+function getReleasesFromApi(mainSubjects: SubjectItem[], days: number): NewsItem[] {
+  const from = new Date(subDays(new Date(), days).setHours(0, 0, 0, 0))
+  const releases: Array<StatregApiRelease> =
+    fetchReleasesFromStatregApi({
+      publishTimeAfter: from.toISOString(),
+      publishTimeBefore: new Date().toISOString(),
+    }) || []
+
+  const statisticsNews: NewsItem[] = []
+  if (releases.length > 0) {
+    mainSubjects.forEach((mainSubject) => {
+      const statistics: Array<Content<Statistics & Statistic>> = query({
+        start: 0,
+        count: 100,
+        query: `_path LIKE "/content${mainSubject.path}/*" AND data.statistic IN(${releases
+          .map((release) => `"${release.statistic.id}"`) // TODO
+          .join(',')})`,
+      }).hits as unknown as Array<Content<Statistics & Statistic>>
+      statistics.forEach((statistic) => {
+        const release: StatregApiRelease | undefined = releases.find(
+          (release) => release.id === statistic.data.statistic
+        )
+        const pubDate: string | undefined = release?.publish_time
+          ? formatPubDateArticle(release.publish_time)
+          : undefined
+
+        const link = getLinkByPath(statistic._path)
+
+        if (pubDate) {
+          statisticsNews.push({
+            guid: statistic._id,
+            title: statistic.displayName, // displayName, frequency
+            link,
+            description: statistic.x['com-enonic-app-metafields']?.['meta-data']?.seoDescription || '',
+            category: mainSubject.title,
+            subject: mainSubject.name,
+            language: statistic.language === 'en' ? 'en' : 'no',
+            pubDate: pubDate,
+            shortname: release?.statistic?.shortname || '',
+          })
+        }
+      })
+    })
+  }
+
+  return statisticsNews
+}
+
+function getStatisticsFromRepo(mainSubjects: SubjectItem[], days: number): NewsItem[] {
   const from = new Date(subDays(new Date(), days).setHours(0, 0, 0, 0))
   const statistics: Array<StatisticInListing> = getAllStatisticsFromRepo()
   const serverOffsetInMs: number = getServerOffsetInMs()
