@@ -78,13 +78,13 @@ function getStatistics(mainSubjects: SubjectItem[], days: number): NewsItem[] {
 }
 
 function getReleasesFromApi(mainSubjects: SubjectItem[], days: number): NewsItem[] {
-  const from = new Date(subDays(new Date(), days).setHours(8, 0, 0, 0)).toISOString()
-  const to = new Date().toISOString()
+  const from = new Date(subDays(new Date(), days).setHours(8, 0, 0, 0)).toISOString() // e.g. Date for 90 days ago
+  const today = new Date().toISOString()
 
   const releases =
     fetchReleasesFromStatregApi({
       publishTimeAfter: from,
-      publishTimeBefore: to,
+      publishTimeBefore: today,
     }) || []
 
   if (!releases.length) return []
@@ -107,7 +107,7 @@ function getReleasesFromApi(mainSubjects: SubjectItem[], days: number): NewsItem
         '_path LIKE "/content' +
         mainSubject.path +
         '/*" AND data.statistic IN(' +
-        releases.map(({ statistic }) => '"' + statistic.id + '"').join(',') +
+        releases.map(({ statistic }) => `"${statistic.id}"`).join(',') +
         ')',
     }).hits as unknown as Array<Content<Statistics & Statistic>>
 
