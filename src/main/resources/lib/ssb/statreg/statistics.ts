@@ -1,4 +1,5 @@
 import '/lib/ssb/polyfills/nashorn'
+import { type paths } from '@statisticsnorway/statreg-api-types'
 import { isEnabled } from '/lib/featureToggle'
 import { StatRegNode } from '/lib/ssb/repo/statreg'
 import {
@@ -51,7 +52,14 @@ export function fetchStatistics(): Array<StatisticInListing> | null {
   return null
 }
 
-export function fetchReleasesFromStatregApi({ start = 0, count = 1000, publishTimeAfter, publishTimeBefore }) {
+type ReleaseListingResponse = paths['/releases']['get']['responses']['200']['content']['application/json']
+
+export function fetchReleasesFromStatregApi({
+  start = 0,
+  count = 1000,
+  publishTimeAfter,
+  publishTimeBefore,
+}): ReleaseListingResponse['releases'] {
   try {
     const STATREG_API_BASE_URL =
       app.config?.['ssb.statregapi.serverside.baseUrl'] || 'https://i.qa.ssb.no/statistikkregisteret/api'
@@ -63,13 +71,13 @@ export function fetchReleasesFromStatregApi({ start = 0, count = 1000, publishTi
           publishTimeAfter ? `&publish_time_after=${publishTimeAfter}` : ''
         }${publishTimeBefore ? `&publish_time_before=${publishTimeBefore}` : ''}`,
     })
-    const body = response.body ? JSON.parse(response.body) : {}
+    const body: ReleaseListingResponse | undefined = response.body ? JSON.parse(response.body) : undefined
 
     return body?.releases
   } catch (error) {
     log.error(`Failed to fetch releases from statreg API: ${error}`)
+    return []
   }
-  return null
 }
 
 export function createMimirMockReleaseStatreg(): StatisticInListing {
