@@ -91,7 +91,7 @@ function getReleasesFromApi(mainSubjects: SubjectItem[], days: number): NewsItem
 
   const releaseByStatisticId = {}
   releases.forEach((release) => {
-    const statisticId = release.statistic.id?.toString()
+    const statisticId = release.statistic?.id?.toString()
     if (statisticId) {
       releaseByStatisticId[statisticId] = release
     }
@@ -107,7 +107,7 @@ function getReleasesFromApi(mainSubjects: SubjectItem[], days: number): NewsItem
         '_path LIKE "/content' +
         mainSubject.path +
         '/*" AND data.statistic IN(' +
-        releases.map(({ statistic }) => `"${statistic.id}"`).join(',') +
+        releases.map(({ statistic }) => `"${statistic?.id}"`).join(',') +
         ')',
     }).hits as unknown as Array<Content<Statistics & Statistic>>
 
