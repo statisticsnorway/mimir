@@ -22,6 +22,10 @@ import { cronJobLog } from '/lib/ssb/utils/serverLog'
 
 export const STATREG_REPO_STATISTICS_KEY = 'statistics'
 
+type ReleasesQuery = NonNullable<paths['/releases']['get']['parameters']['query']>
+type ReleasesResponse = paths['/releases']['get']['responses'][200]['content']['application/json']
+export type StatregApiRelease = NonNullable<ReleasesResponse['releases']>[number]
+
 const useNewStatreg = isEnabled('new-statreg-as-source', false, 'ssb')
 
 // TODO: Remove this when new Statreg as data source is implemented
@@ -52,28 +56,40 @@ export function fetchStatistics(): Array<StatisticInListing> | null {
   return null
 }
 
-type ReleaseListingResponse = paths['/releases']['get']['responses']['200']['content']['application/json']
-
 export function fetchReleasesFromStatregApi({
   start = 0,
   count = 1000,
+  sort,
+  shortname,
+  approval_status,
+  publish_time_after,
+  publish_time_before,
   publishTimeAfter,
   publishTimeBefore,
-}): ReleaseListingResponse['releases'] {
+}: ReleasesQuery & {
+  publishTimeAfter?: string
+  publishTimeBefore?: string
+} = {}): ReleasesResponse['releases'] {
   try {
     const STATREG_API_BASE_URL =
       app.config?.['ssb.statregapi.serverside.baseUrl'] || 'https://i.qa.ssb.no/statistikkregisteret/api'
 
+    const after = publish_time_after || publishTimeAfter
+    const before = publish_time_before || publishTimeBefore
+
     const response = request({
       url:
         STATREG_API_BASE_URL +
-        `/releases?start=${start}&count=${count}${
-          publishTimeAfter ? `&publish_time_after=${publishTimeAfter}` : ''
-        }${publishTimeBefore ? `&publish_time_before=${publishTimeBefore}` : ''}`,
+        `/releases?start=${start}&count=${count}` +
+        (sort ? `&sort=${sort}` : '') +
+        (shortname ? `&shortname=${shortname}` : '') +
+        (approval_status ? `&approval_status=${approval_status}` : '') +
+        (after ? `&publish_time_after=${after}` : '') +
+        (before ? `&publish_time_before=${before}` : ''),
     })
-    const body: ReleaseListingResponse | undefined = response.body ? JSON.parse(response.body) : undefined
+    const body: ReleasesResponse = response.body ? JSON.parse(response.body) : {}
 
-    return body?.releases
+    return body.releases
   } catch (error) {
     log.error(`Failed to fetch releases from statreg API: ${error}`)
     return []
