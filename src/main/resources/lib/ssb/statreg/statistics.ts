@@ -69,7 +69,7 @@ export function fetchReleasesFromStatregApi({
 }: ReleasesQuery & {
   publishTimeAfter?: string
   publishTimeBefore?: string
-} = {}) {
+} = {}): ReleasesResponse['releases'] {
   try {
     const STATREG_API_BASE_URL =
       app.config?.['ssb.statregapi.serverside.baseUrl'] || 'https://i.qa.ssb.no/statistikkregisteret/api'
@@ -92,8 +92,8 @@ export function fetchReleasesFromStatregApi({
     return body.releases
   } catch (error) {
     log.error(`Failed to fetch releases from statreg API: ${error}`)
+    return []
   }
-  return null
 }
 
 export function createMimirMockReleaseStatreg(): StatisticInListing {
