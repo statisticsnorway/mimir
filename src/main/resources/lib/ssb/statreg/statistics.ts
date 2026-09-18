@@ -52,7 +52,7 @@ export function fetchStatistics(): Array<StatisticInListing> | null {
   return null
 }
 
-type ReleaseListingResponse = paths['/releases']['get']['responses']['200']['content']['application/json']
+export type ReleaseListingResponse = paths['/releases']['get']['responses']['200']['content']['application/json']
 
 export function fetchReleasesFromStatregApi({
   start = 0,
@@ -76,6 +76,26 @@ export function fetchReleasesFromStatregApi({
     return body?.releases
   } catch (error) {
     log.error(`Failed to fetch releases from statreg API: ${error}`)
+    return []
+  }
+}
+
+export type StatisticListingResponse = paths['/statistics']['get']['responses']['200']['content']['application/json']
+export type StatisticListingQueryParams = paths['/statistics']['get']['parameters']['query']
+export function fetchStatisticsFromStatregAPI({ start = 0, count = 1000 }): StatisticListingResponse['statistics'] {
+  try {
+    const STATREG_API_BASE_URL =
+      app.config?.['ssb.statregapi.serverside.baseUrl'] || 'https://i.qa.ssb.no/statistikkregisteret/api'
+
+    const response = request({
+      url: STATREG_API_BASE_URL + `/statistics?start=${start}&count=${count}`,
+    })
+
+    const body: StatisticListingResponse | undefined = response.body ? JSON.parse(response.body) : undefined
+
+    return body?.statistics
+  } catch (error) {
+    log.error(`Failed to fetch statistics from statreg API: ${error}`)
     return []
   }
 }

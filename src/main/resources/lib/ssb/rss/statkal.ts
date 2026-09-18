@@ -11,18 +11,64 @@ import { addDays, isWithinInterval } from '/lib/vendor/dateFns'
 import * as util from '/lib/util'
 import { getContactsFromRepo } from '/lib/ssb/statreg/contacts'
 import { type SubjectItem } from '/lib/types/subject'
+import { isEnabled } from '/lib/featureToggle'
+import {
+  fetchReleasesFromStatregApi,
+  fetchStatisticsFromStatregAPI,
+  ReleaseListingResponse,
+} from '../statreg/statistics'
 import { formatPubDateStatistic } from './news-helpers'
 
 const dummyReq: Partial<Request> = {
   branch: 'master',
 }
 
+export function firstReleaseOfEach(releases: ReleaseListingResponse['releases']) {}
+
+// const now = new Date()
+// const in90days =
+// TODO: Extract from API as a function, make it either-or in a top level codepath
+// TODO: Get the right number of days from config
+
 export function getRssReleasesStatkal(): RssRelease[] {
-  const statisticVariants: ContentLight<ReleaseVariant>[] = getUpcompingStatisticVariantsFromRepo()
+  const useNewStatreg = isEnabled('new-statreg-as-source', false, 'ssb')
   const allMainSubjects: SubjectItem[] = getMainSubjects(dummyReq as Request)
-  const upcomingVariants: StatkalVariant[] = getUpcomingVariants(statisticVariants, allMainSubjects)
-  const upcomingReleases: StatkalRelease[] = getUpcomingReleases(statisticVariants)
-  return getRssReleases(upcomingVariants, upcomingReleases)
+  if (useNewStatreg) {
+    const futureReleases = fetchReleasesFromStatregApi({
+      start: 0,
+      count: 1000,
+      publishTimeAfter: '2026-09-11T06:00:00Z',
+      publishTimeBefore: '2026-11-30T06:00:00Z',
+    })
+    // const filtered = fetchStatisticsFromStatregAPI({})
+
+    if (!futureReleases) return []
+    else {
+      // TODO Bare returnere en av hver statistikk? Er det sånn det er meningen å funke?
+      return futureReleases?.map((release) => {
+        const shortname = getMainSubject(release.statistic?.shortname || 'unknown', allMainSubjects, 'no')
+        return {
+          guid: release.id?.toString() || '0',
+          title: release.statistic?.name || 'en tittel', // THIS IS WRONG BUT FOR NOW
+          link: 'There will be a link here ok',
+          description: 'a description, we will have that',
+          category: 'ok a category too',
+          subject: shortname?.title || 'unknown',
+          language: 'no',
+          pubDate: release.publish_time,
+          periode: release.measuring_period?.title,
+          shortname: release.statistic?.shortname,
+          contacts: [],
+        }
+      })
+    }
+  } else {
+    const statisticVariants: ContentLight<ReleaseVariant>[] = getUpcompingStatisticVariantsFromRepo()
+
+    const upcomingVariants: StatkalVariant[] = getUpcomingVariants(statisticVariants, allMainSubjects)
+    const upcomingReleases: StatkalRelease[] = getUpcomingReleases(statisticVariants)
+    return getRssReleases(upcomingVariants, upcomingReleases)
+  }
 }
 
 function getUpcomingVariants(
