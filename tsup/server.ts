@@ -5,9 +5,10 @@ import { type Options } from '.'
 
 export default function buildServerConfig(): Options {
   const GLOB_EXTENSIONS_SERVER = '{ts,js,es6}'
+  const TEST_FILES_SERVER = globSync(`${DIR_SRC}/**/*.test.{ts,js,es6}`)
   const FILES_SERVER = globSync(`${DIR_SRC}/**/*.${GLOB_EXTENSIONS_SERVER}`, {
     absolute: false,
-    ignore: [...globSync(`${DIR_SRC_ASSETS}/**/*.${GLOB_EXTENSIONS_SERVER}`), ...globSync(`${DIR_SRC}/**/*.test.js`)],
+    ignore: [...globSync(`${DIR_SRC_ASSETS}/**/*.${GLOB_EXTENSIONS_SERVER}`), ...TEST_FILES_SERVER],
   }).map((s) => s.replaceAll('\\', '/')) // Windows OS fix
   // print(FILES_SERVER, { maxItems: Infinity });
 

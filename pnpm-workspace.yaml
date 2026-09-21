@@ -4,6 +4,7 @@ allowBuilds:
   core-js: false
   esbuild: false
   unrs-resolver: false
+nodeLinker: hoisted
 minimumReleaseAge: 4320 # 3 days
 overrides:
   '@enonic/mock-xp>adm-zip': 0.6.0
