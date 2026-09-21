@@ -1,4 +1,5 @@
 import { type Request, type Response } from '@enonic-types/core'
+import { localize } from '/lib/xp/i18n'
 import { StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
 import {
   addMonthNames,
@@ -11,11 +12,13 @@ import { getServerOffsetInMs } from '/lib/ssb/utils/serverOffset'
 import {
   fetchReleasesFromStatregApi,
   getAllStatisticsFromRepo,
-  type StatregApiRelease,
+  type ReleasesResponse,
 } from '/lib/ssb/statreg/statistics'
 import { type GroupedBy, type PreparedStatistics, type Release, type YearReleases } from '/lib/types/variants'
 import { isEnabled } from '/lib/featureToggle'
 import { addDays } from '/lib/vendor/dateFns'
+
+export type StatregApiRelease = NonNullable<ReleasesResponse['releases']>[number]
 
 export const get = (req: Request): Response => {
   const count: number = req.params.count ? parseInt(req.params.count.toString()) : 2
@@ -34,10 +37,13 @@ export const get = (req: Request): Response => {
       }) || []
 
     const releasesPrepped: Array<PreparedStatistics> = releases
-      .map((release: StatregApiRelease) => prepareApiRelease(release, language))
+      .map((release: StatregApiRelease) => prepareApiUpcomingReleases(release, language))
       .filter((release: PreparedStatistics | null): release is PreparedStatistics => release !== null)
 
-    groupedWithMonthNames = addMonthNames(groupStatisticsByYearMonthAndDay(releasesPrepped), language)
+    const groupedByYearMonthAndDay: GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>> =
+      groupStatisticsByYearMonthAndDay(releasesPrepped as Array<PreparedStatistics>)
+
+    groupedWithMonthNames = addMonthNames(groupedByYearMonthAndDay, language)
   } else {
     // Get statistics
     const statistics: Array<StatisticInListing> = getAllStatisticsFromRepo()
@@ -75,53 +81,47 @@ export const get = (req: Request): Response => {
   }
 }
 
-function prepareApiRelease(release: StatregApiRelease, language: string): PreparedStatistics | null {
-  if (
-    release.id == null ||
-    !release.publish_time ||
-    !release.period_from ||
-    !release.period_to ||
-    !release.statistic ||
-    release.statistic.id == null ||
-    !release.statistic.shortname ||
-    !release.statistic.name ||
-    !release.frequency ||
-    !release.frequency.name
-  ) {
+export function prepareApiUpcomingReleases(release: StatregApiRelease, language: string): PreparedStatistics | null {
+  if (!release?.id || !release.statistic?.id) {
     return null
   }
 
-  const preparedRelease = prepareRelease(
-    {
-      publishTime: release.publish_time,
-      periodFrom: release.period_from,
-      periodTo: release.period_to,
-      frequency: release.frequency.name,
-      variantId: release.id.toString(),
-      statisticId: release.statistic.id,
-      shortName: release.statistic.shortname,
-      statisticName: release.statistic.name,
-      statisticNameEn: release.statistic.name_en || release.statistic.name,
-      status: release.approval_status || '',
-    },
-    language
-  )
-
-  if (!preparedRelease) {
-    return null
-  }
+  const periodPrefix = localize({
+    key: 'period.generic',
+    locale: language,
+  })
 
   const period =
     language === 'en'
-      ? release.measuring_period?.title_en || release.measuring_period?.title
-      : release.measuring_period?.title || release.measuring_period?.title_en
+      ? (release.measuring_period?.title_en && periodPrefix.replace('{0}', release.measuring_period.title_en)) || ''
+      : (release.measuring_period?.title && periodPrefix.replace('{0}', release.measuring_period.title)) || ''
 
-  if (period) {
-    preparedRelease.variant.period = period
-  }
+  const preparedRelease = prepareRelease(
+    {
+      publishTime: release.publish_time || '',
+      periodFrom: release.period_from || '',
+      periodTo: release.period_to || '',
+      frequency: release.frequency?.name || '',
+      variantId: release.id.toString(),
+      statisticId: release.statistic.id,
+      shortName: release.statistic.shortname || '',
+      statisticName: release.statistic.name || '',
+      statisticNameEn: release.statistic.name_en || '',
+      status: release.approval_status || '',
+    },
+    language,
+    period || undefined
+  )
+
+  if (!preparedRelease) return null
+
+  const revision = localize({
+    key: 'revision',
+    locale: language,
+  })
 
   if (release.revision?.code === 'R') {
-    preparedRelease.variant.period += language === 'en' ? ', revision' : ', revisjon'
+    preparedRelease.variant.period += `, ${revision.toLowerCase()}`
   }
 
   return preparedRelease

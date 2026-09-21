@@ -23,8 +23,7 @@ import { cronJobLog } from '/lib/ssb/utils/serverLog'
 export const STATREG_REPO_STATISTICS_KEY = 'statistics'
 
 type ReleasesQuery = NonNullable<paths['/releases']['get']['parameters']['query']>
-type ReleasesResponse = paths['/releases']['get']['responses'][200]['content']['application/json']
-export type StatregApiRelease = NonNullable<ReleasesResponse['releases']>[number]
+export type ReleasesResponse = paths['/releases']['get']['responses'][200]['content']['application/json']
 
 const useNewStatreg = isEnabled('new-statreg-as-source', false, 'ssb')
 
@@ -64,18 +63,10 @@ export function fetchReleasesFromStatregApi({
   approval_status,
   publish_time_after,
   publish_time_before,
-  publishTimeAfter,
-  publishTimeBefore,
-}: ReleasesQuery & {
-  publishTimeAfter?: string
-  publishTimeBefore?: string
-} = {}): ReleasesResponse['releases'] {
+}: ReleasesQuery): ReleasesResponse['releases'] {
   try {
     const STATREG_API_BASE_URL =
       app.config?.['ssb.statregapi.serverside.baseUrl'] || 'https://i.qa.ssb.no/statistikkregisteret/api'
-
-    const after = publish_time_after || publishTimeAfter
-    const before = publish_time_before || publishTimeBefore
 
     const response = request({
       url:
@@ -84,8 +75,8 @@ export function fetchReleasesFromStatregApi({
         (sort ? `&sort=${sort}` : '') +
         (shortname ? `&shortname=${shortname}` : '') +
         (approval_status ? `&approval_status=${approval_status}` : '') +
-        (after ? `&publish_time_after=${after}` : '') +
-        (before ? `&publish_time_before=${before}` : ''),
+        (publish_time_after ? `&publish_time_after=${publish_time_after}` : '') +
+        (publish_time_before ? `&publish_time_before=${publish_time_before}` : ''),
     })
     const body: ReleasesResponse = response.body ? JSON.parse(response.body) : {}
 

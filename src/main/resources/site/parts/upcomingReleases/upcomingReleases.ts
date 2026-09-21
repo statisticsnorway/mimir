@@ -24,15 +24,12 @@ import { type StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
 import { render } from '/lib/enonic/react4xp'
 import { isEnabled } from '/lib/featureToggle'
 
-import {
-  fetchReleasesFromStatregApi,
-  getAllStatisticsFromRepo,
-  type StatregApiRelease,
-} from '/lib/ssb/statreg/statistics'
+import { fetchReleasesFromStatregApi, getAllStatisticsFromRepo } from '/lib/ssb/statreg/statistics'
 import { fromPartCache } from '/lib/ssb/cache/partCache'
 import { type UpcomingReleasesProps } from '/lib/types/partTypes/upcomingReleases'
 import { type SubjectItem } from '/lib/types/subject'
 import { type UpcomingRelease } from '/site/content-types'
+import { prepareApiUpcomingReleases, type StatregApiRelease } from '/services/upcomingReleases/upcomingReleases'
 
 export function get(req: Request) {
   return renderPart(req)
@@ -64,20 +61,25 @@ function renderPart(req: Request) {
 
   let groupedWithMonthNames: Array<YearReleases>
   if (isEnabled('new-statreg-as-source', false, 'ssb')) {
-    const from = new Date()
-    const releases =
-      fetchReleasesFromStatregApi({
-        sort: 'publish_time',
-        approval_status: 'GODKJENT',
-        publish_time_after: from.toISOString(),
-        publish_time_before: addDays(from, count).toISOString(),
-      }) || []
+    groupedWithMonthNames = fromPartCache(req, `${content._id}-upcomingReleases`, () => {
+      const from = new Date()
+      const releases =
+        fetchReleasesFromStatregApi({
+          sort: 'publish_time',
+          approval_status: 'GODKJENT',
+          publish_time_after: from.toISOString(),
+          publish_time_before: addDays(from, count).toISOString(),
+        }) || []
 
-    const releasesPrepped: Array<PreparedStatistics> = releases
-      .map((release: StatregApiRelease) => prepareApiRelease(release, currentLanguage))
-      .filter((release: PreparedStatistics | null): release is PreparedStatistics => release !== null)
+      const releasesPrepped: Array<PreparedStatistics> = releases
+        .map((release: StatregApiRelease) => prepareApiUpcomingReleases(release, currentLanguage))
+        .filter((release: PreparedStatistics | null): release is PreparedStatistics => release !== null)
 
-    groupedWithMonthNames = addMonthNames(groupStatisticsByYearMonthAndDay(releasesPrepped), currentLanguage)
+      const groupedByYearMonthAndDay: GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>> =
+        groupStatisticsByYearMonthAndDay(releasesPrepped as Array<PreparedStatistics>)
+
+      return addMonthNames(groupedByYearMonthAndDay, currentLanguage)
+    })
   } else {
     groupedWithMonthNames = fromPartCache(req, `${content._id}-upcomingReleases`, () => {
       // Get statistics
@@ -155,56 +157,4 @@ function renderPart(req: Request) {
   }
 
   return render('site/parts/upcomingReleases/upcomingReleases', props, req)
-}
-
-function prepareApiRelease(release: StatregApiRelease, language: string): PreparedStatistics | null {
-  if (
-    release.id == null ||
-    !release.publish_time ||
-    !release.period_from ||
-    !release.period_to ||
-    !release.statistic ||
-    release.statistic.id == null ||
-    !release.statistic.shortname ||
-    !release.statistic.name ||
-    !release.frequency ||
-    !release.frequency.name
-  ) {
-    return null
-  }
-
-  const preparedRelease = prepareRelease(
-    {
-      publishTime: release.publish_time,
-      periodFrom: release.period_from,
-      periodTo: release.period_to,
-      frequency: release.frequency.name,
-      variantId: release.id.toString(),
-      statisticId: release.statistic.id,
-      shortName: release.statistic.shortname,
-      statisticName: release.statistic.name,
-      statisticNameEn: release.statistic.name_en || release.statistic.name,
-      status: release.approval_status || '',
-    },
-    language
-  )
-
-  if (!preparedRelease) {
-    return null
-  }
-
-  const period =
-    language === 'en'
-      ? release.measuring_period?.title_en || release.measuring_period?.title
-      : release.measuring_period?.title || release.measuring_period?.title_en
-
-  if (period) {
-    preparedRelease.variant.period = period
-  }
-
-  if (release.revision?.code === 'R') {
-    preparedRelease.variant.period += language === 'en' ? ', revision' : ', revisjon'
-  }
-
-  return preparedRelease
 }

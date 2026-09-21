@@ -83,8 +83,8 @@ function getReleasesFromApi(mainSubjects: SubjectItem[], days: number): NewsItem
 
   const releases =
     fetchReleasesFromStatregApi({
-      publishTimeAfter: from,
-      publishTimeBefore: today,
+      publish_time_after: from,
+      publish_time_before: today,
     }) || []
 
   if (!releases.length) return []
