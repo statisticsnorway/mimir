@@ -1,6 +1,7 @@
 {
   "name": "mimir",
   "version": "2.44.0",
+  "packageManager": "pnpm@12.4.1",
   "description": "New cms for ssb.no",
   "main": "index.js",
   "scripts": {
