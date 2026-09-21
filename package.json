@@ -4,21 +4,22 @@
   "description": "New cms for ssb.no",
   "main": "index.js",
   "scripts": {
+    "preinstall": "npx only-allow pnpm",
     "dev": "run-p watch:asset watch:server watch:style watch:browserSync watch:react4xp",
     "build": "run-p -c build:* --mode:production",
     "build:asset": "npx tsup -d build/resources/main/assets",
     "build:server": "npx tsup -d build/resources/main",
-    "build:react4xp": "cross-env WATCH=false R4X_APP_NAME=mimir R4X_DIR_PATH_ABSOLUTE_PROJECT=$INIT_CWD npm run compile:react4xp",
-    "watch:asset": "cross-env NODE_ENV=development npm run build:asset -- --watch",
-    "watch:style": "cross-env NODE_ENV=development npx sass \"src/main/resources/assets/styles/main.scss\":\"build/resources/main/assets/styles/bundle.css\" \"src/main/resources/assets/styles/main_menu.scss\":\"build/resources/main/assets/styles/bundle_menu.css\" --load-path=node_modules --load-path=node_modules/bootstrap/scss --watch --style=expanded",
-    "watch:server": "cross-env NODE_ENV=development npm run build:server -- --watch",
-    "watch:react4xp": "cross-env WATCH=true NODE_ENV=development R4X_APP_NAME=mimir R4X_DIR_PATH_ABSOLUTE_PROJECT=$INIT_CWD npm run components:react4xp",
+    "build:react4xp": "cross-env WATCH=false R4X_APP_NAME=mimir R4X_DIR_PATH_ABSOLUTE_PROJECT=$INIT_CWD pnpm compile:react4xp",
+    "watch:asset": "cross-env NODE_ENV=development pnpm build:asset -- --watch",
+    "watch:style": "cross-env NODE_ENV=development pnpm sass \"src/main/resources/assets/styles/main.scss\":\"build/resources/main/assets/styles/bundle.css\" \"src/main/resources/assets/styles/main_menu.scss\":\"build/resources/main/assets/styles/bundle_menu.css\" --load-path=node_modules --load-path=node_modules/bootstrap/scss --watch --style=expanded",
+    "watch:server": "cross-env NODE_ENV=development pnpm build:server -- --watch",
+    "watch:react4xp": "cross-env WATCH=true NODE_ENV=development R4X_APP_NAME=mimir R4X_DIR_PATH_ABSOLUTE_PROJECT=$INIT_CWD pnpm components:react4xp",
     "watch:browserSync": "npx browser-sync start --files \"src/main/resources/**/*.html\" \"src/main/resources/**/*.xml\" \"src/main/resources/**/*.tsx\" \"src/main/resources/**/*.scss\" \"build/resources/main\" --reload-delay 0 --no-snippet --watch",
-    "components:react4xp": "npm explore @enonic/react4xp -- npm run webpack:components",
-    "compile:react4xp": "npm explore @enonic/react4xp -- npm run build:react4xp",
+    "components:react4xp": "pnpm explore @enonic/react4xp -- pnpm webpack:components",
+    "compile:react4xp": "pnpm explore @enonic/react4xp -- pnpm build:react4xp",
     "start": "enonic project deploy --dev",
     "install:dev": "nsi",
-    "install:prod": "npm install",
+    "install:prod": "pnpm install",
     "lint": "eslint --fix './src/**/*.{es6,ts,tsx}'",
     "lint-dry": "eslint './src/**/*.{es6,ts,tsx}'",
     "test": "jest",
@@ -157,22 +158,5 @@
     "striptags": "3.2.0",
     "xss": "1.0.15",
     "zipcelx": "1.6.2"
-  },
-  "overrides": {
-    "@enonic/mock-xp": {
-      "adm-zip": "0.6.0"
-    },
-    "brace-expansion": "2.1.4",
-    "glob": "$glob",
-    "immutable": "5.1.8",
-    "nanoid": "6.0.1",
-    "fast-uri": "4.1.4",
-    "react-mathjax": {
-      "react": "$react"
-    },
-    "redux-injectors": {
-      "react": "$react",
-      "react-dom": "$react-dom"
-    }
   }
 }
