@@ -106,4 +106,7 @@ jobs:
       - name: mabl end-to-end test - TEST
         env:
           GITHUB_SHA: ${{ github.sha }}
-        run: pnpm dlx @mablhq/mabl-cli deployments create --api-key ${{ secrets.MABLAPIKEY }} --application-id ${{ secrets.MABLAPPID }} --environment-id ${{ secrets.MABLENVTEST }} --labels MIMIR --revision $GITHUB_SHA --await-completion
+        run: >-
+          pnpm --ignore-scripts
+          dlx @mablhq/mabl-cli deployments create --api-key ${{ secrets.MABLAPIKEY }} --application-id ${{ secrets.MABLAPPID }}
+          --environment-id ${{ secrets.MABLENVTEST }} --labels MIMIR --revision $GITHUB_SHA --await-completion

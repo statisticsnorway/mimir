@@ -106,7 +106,10 @@ jobs:
           echo running on branch ${GITHUB_HEAD_REF##*/} or ${GITHUB_REF##*/}
           echo running $(echo $GITHUB_SHA | cut -c1-8) and ${GITHUB_SHA}
       - name: mabl end-to-end test - TEST
-        run: pnpm dlx @mablhq/mabl-cli deployments create --api-key ${{ secrets.MABLAPIKEY }} --application-id ${{ secrets.MABLAPPID }} --environment-id ${{ secrets.MABLENVQA }} --labels MIMIR --await-completion
+        run: >-
+          pnpm --ignore-scripts
+          dlx @mablhq/mabl-cli deployments create --api-key ${{ secrets.MABLAPIKEY }} --application-id ${{ secrets.MABLAPPID }}
+          --environment-id ${{ secrets.MABLENVQA }} --labels MIMIR --await-completion
       - name: Send mabl test failure message to Slack
         if: failure()
         uses: slackapi/slack-github-action@45a88b9581bfab2566dc881e2cd66d334e621e2c # v3.0.3
