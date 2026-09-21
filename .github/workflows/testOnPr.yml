@@ -28,5 +28,6 @@ jobs:
           runtime: node@${{ matrix.node-version }}
           cache: true
       - run: pnpm ci
-      - run: pnpm run build
-      - run: pnpm run ci-test
+      - run: pnpm build
+      - run: pnpm test
+      - run: pnpm lint
