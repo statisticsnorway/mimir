@@ -7,7 +7,7 @@
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "dev": "run-p watch:asset watch:server watch:style watch:browserSync watch:react4xp",
-    "build": "run-p -c build:* --mode:production",
+    "build": "cross-env NODE_ENV=production run-p -c build:*",
     "build:asset": "pnpm exec tsup -d build/resources/main/assets",
     "build:server": "pnpm exec tsup -d build/resources/main",
     "build:react4xp": "cross-env WATCH=false R4X_APP_NAME=mimir R4X_DIR_PATH_ABSOLUTE_PROJECT=$INIT_CWD pnpm compile:react4xp",
