@@ -16,7 +16,7 @@ import { findLatestRelease, formatPubDateArticle, getLinkByPath, getPubDateStati
 const dummyReq: Partial<Request> = {
   branch: 'master',
 }
-
+//s
 export function getNews(days: number): NewsItem[] {
   const mainSubjects: SubjectItem[] = getMainSubjects(dummyReq as Request)
   const articles: NewsItem[] = getArticles(mainSubjects, days)
