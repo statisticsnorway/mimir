@@ -264,9 +264,13 @@ export function groupStatisticsByYearMonthAndDay(
   return groupedByYearMonthAndDay
 }
 
-export function prepareRelease(release: Release, language: string): PreparedStatistics | null {
+export function prepareRelease(
+  release: Release,
+  language: string,
+  variantPeriodOverride?: string
+): PreparedStatistics | null {
   if (release) {
-    const preparedVariant: PreparedVariant = formatRelease(release, language)
+    const preparedVariant: PreparedVariant = formatRelease(release, language, variantPeriodOverride)
 
     const statisticsPagesXP = query<Content<Statistics>>({
       count: 1,
@@ -437,7 +441,7 @@ function formatVariant(variant: VariantInListing, language: string, property: ke
   }
 }
 
-function formatRelease(release: Release, language: string): PreparedVariant {
+function formatRelease(release: Release, language: string, periodOverride?: string): PreparedVariant {
   const date: Date = parseISO(release.publishTime)
   return {
     id: release.variantId,
@@ -445,7 +449,7 @@ function formatRelease(release: Release, language: string): PreparedVariant {
     monthNumber: getMonth(date),
     year: getYear(date),
     frequency: release.frequency,
-    period: calculatePeriodRelease(release, language),
+    period: periodOverride ?? calculatePeriodRelease(release, language),
   }
 }
 
