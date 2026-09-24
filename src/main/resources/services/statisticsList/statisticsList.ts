@@ -1,12 +1,11 @@
 import '/lib/ssb/polyfills/nashorn'
-import { type Request } from '@enonic-types/core'
 import { fetchStatisticsFromStatregApi } from '/lib/ssb/statreg/statistics'
 
 // TODO: Filter by shortname
 
 // TODO: Filter by name
 
-export function get(req: Request) {
+export function get() {
   const response = fetchStatisticsFromStatregApi({ start: 0, count: 1000 })
 
   if (!response) {

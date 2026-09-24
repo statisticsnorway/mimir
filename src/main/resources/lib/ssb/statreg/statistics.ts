@@ -93,7 +93,7 @@ export function fetchReleasesFromStatregApi({
 export function fetchStatisticsFromStatregApi({
   start = 0,
   count = 1000,
-}: StatisticsQuery): StatisticResponse | { error: any } {
+}: StatisticsQuery): StatisticResponse | { error: unknown } {
   try {
     const STATREG_API_BASE_URL =
       app.config?.['ssb.statregapi.serverside.baseUrl'] || 'https://i.qa.ssb.no/statistikkregisteret/api'
