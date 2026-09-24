@@ -23,7 +23,10 @@ import { cronJobLog } from '/lib/ssb/utils/serverLog'
 export const STATREG_REPO_STATISTICS_KEY = 'statistics'
 
 type ReleasesQuery = NonNullable<paths['/releases']['get']['parameters']['query']>
+type StatisticsQuery = NonNullable<paths['/statistics']['get']['parameters']['query']>
+
 export type ReleasesResponse = paths['/releases']['get']['responses'][200]['content']['application/json']
+export type StatisticResponse = paths['/statistics']['get']['responses'][200]['content']['application/json']
 
 const useNewStatreg = isEnabled('new-statreg-as-source', false, 'ssb')
 
@@ -84,6 +87,23 @@ export function fetchReleasesFromStatregApi({
   } catch (error) {
     log.error(`Failed to fetch releases from statreg API: ${error}`)
     return []
+  }
+}
+
+export function fetchStatisticsFromStatregApi({ start = 0, count = 1000 }: StatisticsQuery): StatisticResponse {
+  try {
+    const STATREG_API_BASE_URL =
+      app.config?.['ssb.statregapi.serverside.baseUrl'] || 'https://i.qa.ssb.no/statistikkregisteret/api'
+
+    const response = request({
+      url: STATREG_API_BASE_URL + `/statistics?start=${start}&count=${count}`,
+    })
+    const body: StatisticResponse = response.body ? JSON.parse(response.body) : {}
+
+    return body
+  } catch (error) {
+    log.error(`Failed to fetch statistics from statreg API: ${error}`)
+    return {}
   }
 }
 
