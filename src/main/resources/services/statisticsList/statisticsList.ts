@@ -19,21 +19,30 @@ function fetchStatisticsList() {
   return statisticsList
 }
 
-function filterStatistics(statistics, query) {
-  const hits = statistics
-    ?.filter((statistic) => (query ? query === statistic.shortname || query === statistic.name : true))
-    .map(({ shortname, name }) => ({
-      id: shortname,
-      displayName: shortname,
-      description: name,
-    }))
+function filterStatistics(statistics, query, start, count) {
+  const filteredStatistics =
+    statistics?.filter((statistic) => {
+      if (!query) return true
 
-  return { hits, count: hits.length, total: statistics.length }
+      const shortname = statistic.shortname?.toLowerCase() || ''
+      const name = statistic.name?.toLowerCase() || ''
+      return shortname.includes(query) || name.includes(query)
+    }) || []
+
+  const hits = filteredStatistics.slice(start, start + count).map(({ shortname, name }) => ({
+    id: shortname,
+    displayName: shortname,
+    description: name,
+  }))
+
+  return { hits, count: hits.length, total: filteredStatistics.length }
 }
 
 export function get(req: Request) {
   const statistics = fetchStatisticsList()
-  const query = req.params?.query || ''
+  const query = `${req.params?.query || ''}`.toLowerCase()
+  const start = parseInt(`${req.params?.start || 0}`, 10) || 0
+  const count = parseInt(`${req.params?.count || 1000}`, 10) || 1000
 
   if (!statistics) {
     return {
@@ -45,7 +54,7 @@ export function get(req: Request) {
 
   return {
     status: 200,
-    body: filterStatistics(statistics, query),
+    body: filterStatistics(statistics, query, start, count),
     contentType: 'application/json',
   }
 }
