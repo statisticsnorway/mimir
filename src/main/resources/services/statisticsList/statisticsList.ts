@@ -1,17 +1,10 @@
 import { type Request, type Response } from '@enonic-types/core'
 import '/lib/ssb/polyfills/nashorn'
 import { type StatisticListingResponse, fetchStatisticsFromStatregAPI } from '/lib/ssb/statreg/statistics'
-import { newCache, type Cache } from '/lib/cache'
+import { fromStatisticsListCache } from '/lib/ssb/cache/cache'
 import { forceArray } from '/lib/ssb/utils/arrayUtils'
 
-const statisticsListCache: Cache = newCache({
-  expire: 3600,
-  size: 2000,
-})
-const statisticsListCacheKey = 'statisticsList_statreg_api'
-
 type StatisticsList = StatisticListingResponse['statistics']
-type StatisticsListResult = StatisticsList | { error: unknown }
 type StatisticsListRequest = Request & {
   params?: {
     query?: string
@@ -19,19 +12,6 @@ type StatisticsListRequest = Request & {
     start?: number
     count?: number
   }
-}
-
-function fetchStatisticsList(): StatisticsListResult {
-  const cachedStatisticsList = statisticsListCache.getIfPresent(statisticsListCacheKey) as StatisticsList | null
-  if (cachedStatisticsList) return cachedStatisticsList
-
-  const statisticsList = fetchStatisticsFromStatregAPI({ start: 0, count: 1000 })
-
-  if (statisticsList && !('error' in statisticsList)) {
-    statisticsListCache.put(statisticsListCacheKey, statisticsList)
-  }
-
-  return statisticsList
 }
 
 function filterStatistics(
@@ -79,7 +59,9 @@ export function get(req: StatisticsListRequest): Response {
   const start = req.params?.start ? req.params.start : 0
   const count = req.params?.count ? req.params.count : 1000
 
-  const statistics = fetchStatisticsList()
+  const statistics = fromStatisticsListCache('statregAPI_statisticsListing', () =>
+    fetchStatisticsFromStatregAPI({ start: 0, count: 1000 })
+  )
 
   if (statistics && 'error' in statistics) {
     return {

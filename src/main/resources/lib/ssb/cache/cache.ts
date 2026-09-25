@@ -17,6 +17,7 @@ import { completelyClearSubjectCache, clearSubjectCache } from '/lib/ssb/cache/s
 import { completelyClearPartCache, clearPartCache } from '/lib/ssb/cache/partCache'
 import { ENONIC_CMS_DEFAULT_REPO } from '/lib/ssb/repo/common'
 import { type MunicipalityWithCounty } from '/lib/types/municipalities'
+import { type StatisticListingResponse } from '/lib/ssb/statreg/statistics'
 import { type DataSource } from '/site/mixins/dataSource'
 
 const masterFilterCaches: Map<string, Cache> = new Map()
@@ -60,6 +61,10 @@ const municipalityWithCodeCache: Cache = newCache({
 const municipalityWithNameCache: Cache = newCache({
   expire: 3600,
   size: 1000,
+})
+const statisticsListCache: Cache = newCache({
+  expire: 3600,
+  size: 2000,
 })
 const parentTypeCache: Cache = newCache({
   expire: 3600,
@@ -182,6 +187,7 @@ function addClearTask(): void {
               clearParsedMunicipalityCache: true,
               clearMunicipalityWithCodeCache: true,
               clearMunicipalityWithNameCache: true,
+              clearStatisticsListCache: true,
               clearParentTypeCache: true,
               clearSubjectCache: true,
               clearPartCache: true,
@@ -435,6 +441,24 @@ export function fromMunicipalityWithNameCache(
   })
 }
 
+export function fromStatisticsListCache(
+  key: string,
+  fallback: () => StatisticListingResponse['statistics'] | { error: unknown }
+): StatisticListingResponse['statistics'] | { error: unknown } {
+  const cachedStatisticsList: StatisticListingResponse['statistics'] | null = statisticsListCache.getIfPresent(key)
+  if (cachedStatisticsList) {
+    return cachedStatisticsList
+  }
+
+  const data = fallback()
+  if (data && !('error' in data)) {
+    cacheLog(`added ${key} to statistics list cache`)
+    statisticsListCache.put(key, data)
+  }
+
+  return data
+}
+
 export function fromParentTypeCache(key: string, fallback: () => string | undefined): string | undefined {
   return parentTypeCache.get(key, () => {
     return fallback()
@@ -488,6 +512,11 @@ function completelyClearMunicipalityWithNameCache(): void {
   municipalityWithNameCache.clear()
 }
 
+function completelyClearStatisticsListCache(): void {
+  cacheLog(`clear statistics list cache`)
+  statisticsListCache.clear()
+}
+
 function completelyClearParentTypeCache(): void {
   cacheLog(`clear parent type cache`)
   parentTypeCache.clear()
@@ -530,6 +559,10 @@ function completelyClearCache(options: CompletelyClearCacheOptions): void {
     completelyClearMunicipalityWithNameCache()
   }
 
+  if (options.clearStatisticsListCache) {
+    completelyClearStatisticsListCache()
+  }
+
   if (options.clearParentTypeCache) {
     completelyClearParentTypeCache()
   }
@@ -560,6 +593,7 @@ export function setupHandlers(socket: Socket): void {
         clearParsedMunicipalityCache: true,
         clearMunicipalityWithCodeCache: true,
         clearMunicipalityWithNameCache: true,
+        clearStatisticsListCache: true,
         clearSubjectCache: true,
         clearPartCache: true,
       },
@@ -605,6 +639,7 @@ export interface CompletelyClearCacheOptions {
   clearParsedMunicipalityCache: boolean
   clearMunicipalityWithCodeCache: boolean
   clearMunicipalityWithNameCache: boolean
+  clearStatisticsListCache: boolean
   clearParentTypeCache: boolean
   clearSubjectCache: boolean
   clearPartCache: boolean
