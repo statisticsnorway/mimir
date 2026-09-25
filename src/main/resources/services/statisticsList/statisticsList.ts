@@ -21,18 +21,13 @@ type StatisticsListRequest = Request & {
   }
 }
 
-function hasError(result: StatisticsListResult): result is { error: unknown } {
-  if (!result) return false
-  return 'error' in result
-}
-
 function fetchStatisticsList(): StatisticsListResult {
   const cachedStatisticsList = statisticsListCache.getIfPresent(statisticsListCacheKey) as StatisticsList | null
   if (cachedStatisticsList) return cachedStatisticsList
 
   const statisticsList = fetchStatisticsFromStatregAPI({ start: 0, count: 1000 })
 
-  if (!hasError(statisticsList)) {
+  if (statisticsList && !('error' in statisticsList)) {
     statisticsListCache.put(statisticsListCacheKey, statisticsList)
   }
 
@@ -48,6 +43,14 @@ function filterStatistics(
 ) {
   if (!statistics?.length) return { hits: [], count: 0, total: 0 }
 
+  const selectedHits = statistics
+    .filter((statistic) => ids.includes(statistic.shortname || ''))
+    .map(({ shortname, name }) => ({
+      id: shortname,
+      displayName: shortname,
+      description: name,
+    }))
+
   const filteredStatistics =
     statistics.filter((statistic) => {
       if (!query) return true
@@ -56,14 +59,6 @@ function filterStatistics(
       const name = statistic.name?.toLowerCase() || ''
       return shortname.includes(query) || name.includes(query)
     }) || []
-
-  const selectedHits = statistics
-    .filter((statistic) => ids.includes(statistic.shortname || ''))
-    .map(({ shortname, name }) => ({
-      id: shortname,
-      displayName: shortname,
-      description: name,
-    }))
 
   const pagedHits = filteredStatistics.slice(start, start + count).map(({ shortname, name }) => ({
     id: shortname,
@@ -86,7 +81,7 @@ export function get(req: StatisticsListRequest): Response {
 
   const statistics = fetchStatisticsList()
 
-  if (hasError(statistics)) {
+  if (statistics && 'error' in statistics) {
     return {
       status: 400,
       body: statistics.error as string,
