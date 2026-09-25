@@ -32,7 +32,7 @@ export function migrateStatisticsContentTypeWithShortname(): StatisticsShortname
     failed: 0,
   }
 
-  log.info('Found %s content items', result.total)
+  log.info('Found %s content items', `${Math.trunc(result.total)}`)
 
   result.hits.forEach((content) => {
     const statisticsContent = content as Content<StatisticsContentData>
@@ -79,12 +79,12 @@ export function migrateStatisticsContentTypeWithShortname(): StatisticsShortname
 
   log.info(
     'Statistics shortname migration finished. Total: %s, migrated: %s, skipped missing statistic: %s, skipped missing shortname: %s, skipped already updated: %s, failed: %s',
-    summary.total,
-    summary.migrated,
-    summary.skippedMissingStatistic,
-    summary.skippedMissingShortname,
-    summary.skippedAlreadyUpdated,
-    summary.failed
+    `${Math.trunc(summary.total)}`,
+    `${Math.trunc(summary.migrated)}`,
+    `${Math.trunc(summary.skippedMissingStatistic)}`,
+    `${Math.trunc(summary.skippedMissingShortname)}`,
+    `${Math.trunc(summary.skippedAlreadyUpdated)}`,
+    `${Math.trunc(summary.failed)}`
   )
 
   return summary
