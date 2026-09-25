@@ -115,14 +115,5 @@ export function prepareApiUpcomingReleases(release: StatregApiRelease, language:
 
   if (!preparedRelease) return null
 
-  const revision = localize({
-    key: 'revision',
-    locale: language,
-  })
-
-  if (release.revision?.code === 'R') {
-    preparedRelease.variant.period += `, ${revision.toLowerCase()}`
-  }
-
   return preparedRelease
 }
