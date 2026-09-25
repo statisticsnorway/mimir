@@ -1,8 +1,8 @@
 <mixin>
-    <display-name>Statistikk (Old)</display-name>
+    <display-name>Statistikk</display-name>
     <form>
         <field-set>
-            <label>Statistikk</label>
+            <label>Statistikk (Old)</label>
             <items>
                 <input name="statistic" type="CustomSelector">
                     <occurrences minimum="0" maximum="1" />
