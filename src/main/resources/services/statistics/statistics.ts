@@ -6,10 +6,10 @@ import { handleRepoGet } from '/lib/ssb/dashboard/statreg/repoUtils'
 import { publishDataset } from '/lib/ssb/dataset/publishOld'
 import { cronContext } from '/lib/ssb/cron/cron'
 
-const toOption = (stats) => ({
-  ...stats,
-  displayName: stats.shortName,
-  description: stats.name,
+const toOption = (stat) => ({
+  ...stat,
+  displayName: stat.shortName,
+  description: stat.name,
 })
 
 const filterByShortName = (stats, filters) => {
@@ -17,7 +17,7 @@ const filterByShortName = (stats, filters) => {
     return stats
   }
 
-  log.info(`searching ${filters.query} in ${stats.length} statistics`)
+  log.info(`searching ${filters.query} in ${stats.length} stats`)
   return stats.filter((s) => s.shortName.toLowerCase().includes(filters.query.toLowerCase()))
 }
 
