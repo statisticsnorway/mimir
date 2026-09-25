@@ -6,26 +6,26 @@ import { handleRepoGet } from '/lib/ssb/dashboard/statreg/repoUtils'
 import { publishDataset } from '/lib/ssb/dataset/publishOld'
 import { cronContext } from '/lib/ssb/cron/cron'
 
-const toOption = (stat) => ({
-  ...stat,
-  displayName: stat.shortName,
-  description: stat.name,
+const toOption = (stats) => ({
+  ...stats,
+  displayName: stats.shortName,
+  description: stats.name,
 })
 
-const filterByShortName = (stat, filters) => {
+const filterByShortName = (stats, filters) => {
   if (!filters.query) {
-    return stat
+    return stats
   }
 
-  log.info(`searching ${filters.query} in ${stat.length} statistics`)
-  return stat.filter((s) => s.shortName.toLowerCase().includes(filters.query.toLowerCase()))
+  log.info(`searching ${filters.query} in ${stats.length} statistics`)
+  return stats.filter((s) => s.shortName.toLowerCase().includes(filters.query.toLowerCase()))
 }
 
-const filterByIds = (stat, filters) => {
+const filterByIds = (stats, filters) => {
   return (
     filters.ids &&
     filters.ids.split(',').reduce((acc, id) => {
-      const found = stat.find((s) => `${s.id}` === id)
+      const found = stats.find((s) => `${s.id}` === id)
       return found ? acc.concat(found) : acc
     }, [])
   )
