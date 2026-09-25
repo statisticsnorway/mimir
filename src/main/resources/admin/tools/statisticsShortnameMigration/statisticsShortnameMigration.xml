@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<tool xmlns="urn:enonic:xp:model:1.0">
+  <display-name>Statistics Shortname Migration</display-name>
+  <description>Run one-off migration for statistics data.shortname</description>
+  <allow>
+    <principal>role:system.admin</principal>
+  </allow>
+</tool>
