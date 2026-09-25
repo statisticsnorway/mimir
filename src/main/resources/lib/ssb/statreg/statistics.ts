@@ -93,7 +93,7 @@ export function fetchReleasesFromStatregApi({
 export function fetchStatisticsFromStatregApi({
   start = 0,
   count = 1000,
-}: StatisticsQuery): StatisticResponse | { error: unknown } {
+}: StatisticsQuery): StatisticResponse['statistics'] | { error: unknown } {
   try {
     const STATREG_API_BASE_URL =
       app.config?.['ssb.statregapi.serverside.baseUrl'] || 'https://i.qa.ssb.no/statistikkregisteret/api'
@@ -103,7 +103,7 @@ export function fetchStatisticsFromStatregApi({
     })
     const body: StatisticResponse = response.body ? JSON.parse(response.body) : {}
 
-    return body
+    return body.statistics
   } catch (error) {
     log.error(`Failed to fetch statistics from statreg API: ${error}`)
     return {

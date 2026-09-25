@@ -1,32 +1,35 @@
 import '/lib/ssb/polyfills/nashorn'
 import { fetchStatisticsFromStatregApi } from '/lib/ssb/statreg/statistics'
 
-// TODO: Filter by shortname
+function filterStatisticsByName(statistics, query) {
+  const hits = statistics
+    ?.filter((statistic) =>
+      query ? statistic.shortname.toLowerCase().indexOf(statistic.shortname.toLowerCase()) > -1 : true
+    )
+    .map(({ shortname, name }) => ({
+      id: shortname,
+      displayName: shortname,
+      description: name,
+    }))
 
-// TODO: Filter by name
+  return { hits, count: hits.length, total: statistics.length }
+}
 
-export function get() {
-  const response = fetchStatisticsFromStatregApi({ start: 0, count: 1000 })
+export function get(req: Request) {
+  const statistics = fetchStatisticsFromStatregApi({ start: 0, count: 1000 })
+  const query = req.params?.query || ''
 
-  if (!response) {
+  if (!statistics) {
     return {
       contentType: 'application/json',
-      body: response?.error,
+      body: statistics?.error,
       status: 400, //TODO: Fetch status from API
     }
   }
 
   return {
     status: 200,
-    body: {
-      hits: response.statistics?.map(({ shortname, name }) => ({
-        id: shortname,
-        displayName: shortname,
-        description: name,
-      })),
-      count: response.statistics?.length,
-      total: response.total,
-    },
+    body: filterStatisticsByName(statistics, query),
     contentType: 'application/json',
   }
 }
