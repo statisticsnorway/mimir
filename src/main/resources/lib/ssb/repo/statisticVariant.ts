@@ -208,7 +208,7 @@ export function fillRepo(statistics: Array<StatisticInListing>) {
   })
 }
 
-function getStatisticsContentByRegStatId(statisticsIds: string[], language: string) {
+export function getStatisticsContentByRegStatId(statisticsIds: string[], language: string) {
   return query<Content<Statistics>>({
     count: statisticsIds.length,
     contentTypes: [`${app.name}:statistics`],
