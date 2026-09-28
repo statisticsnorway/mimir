@@ -56,13 +56,13 @@ export function getRssReleasesStatkal(): RssRelease[] {
 
 function getRssFromApi(lang: string = 'nb'): RssRelease[] {
   const now = new Date()
-  const in90days = new Date(new Date(now).setDate(now.getDate() + 90))
+  const date90DaysAgo = new Date(new Date(now).setDate(now.getDate() - 90))
 
   const futureReleases = fetchReleasesFromStatregApi({
     start: 0,
     count: 1000,
-    publishTimeAfter: now.toISOString(),
-    publishTimeBefore: in90days.toISOString(),
+    publishTimeAfter: date90DaysAgo.toISOString(),
+    publishTimeBefore: now.toISOString(),
   })
 
   const allStatistics = fetchStatisticsFromStatregAPI({ start: 0, count: 1000 })
@@ -70,7 +70,11 @@ function getRssFromApi(lang: string = 'nb'): RssRelease[] {
   allStatistics?.forEach((stat) => {
     const currentContacts: Array<components['schemas']['Contact'] | undefined> | undefined = stat.contacts || []
     const shortName = stat.shortname
-    if (shortName && currentContacts && currentContacts) contacts[shortName] = {currentContacts.map((c: components['schemas']['Contact']) => ({name: c.name, email: c.principalName}))}
+    if (shortName && currentContacts && currentContacts)
+      contacts[shortName] = currentContacts.map((c: components['schemas']['Contact']) => ({
+        name: c.name,
+        email: c.principalName,
+      }))
   })
 
   if (!futureReleases) {
