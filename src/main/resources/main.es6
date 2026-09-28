@@ -9,6 +9,8 @@ try {
   const { create } = require('/lib/featureToggle')
   const { setupTaskListener } = require('/lib/ssb/dataset/publish')
   const { setupArticleListener } = require('/lib/ssb/utils/articleUtils')
+  const { isEnabled } = require('/lib/featureToggle')
+  const { migrateStatisticsContentTypeWithShortname } = require('/lib/ssb/statreg/migrateStatisticsContentTypeWithShortname')
 
   log.info('Application ' + app.name + ' started') // Log application started
   __.disposer(() => log.info('Application ' + app.name + ' stopped')) // Log application stoppped
@@ -78,6 +80,8 @@ try {
       ],
     },
   ])
+
+  if (isEnabled('new-statreg-as-source', false, 'ssb')) migrateStatisticsContentTypeWithShortname()
 
   const now = new Date()
   log.info(`Startup script complete: ${now.toISOString()}`)
