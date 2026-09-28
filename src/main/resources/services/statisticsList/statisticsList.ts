@@ -1,7 +1,6 @@
 import { type Request, type Response } from '@enonic-types/core'
 import '/lib/ssb/polyfills/nashorn'
 import { type StatisticListingResponse, fetchStatisticsFromStatregAPI } from '/lib/ssb/statreg/statistics'
-import { fromStatisticsListCache } from '/lib/ssb/cache/cache'
 import { forceArray } from '/lib/ssb/utils/arrayUtils'
 
 type StatisticsList = StatisticListingResponse['statistics']
@@ -59,9 +58,7 @@ export function get(req: StatisticsListRequest): Response {
   const start = req.params?.start ? req.params.start : 0
   const count = req.params?.count ? req.params.count : 1000
 
-  const statistics = fromStatisticsListCache('statregAPI_statisticsListing', () =>
-    fetchStatisticsFromStatregAPI({ start: 0, count: 1000 })
-  )
+  const statistics = fetchStatisticsFromStatregAPI({ start: 0, count: 1000 })
 
   if (statistics && 'error' in statistics) {
     return {

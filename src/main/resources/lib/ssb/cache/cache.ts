@@ -62,7 +62,7 @@ const municipalityWithNameCache: Cache = newCache({
   expire: 3600,
   size: 1000,
 })
-const statisticsListCache: Cache = newCache({
+const statisticsListingCache: Cache = newCache({
   expire: 3600,
   size: 2000,
 })
@@ -441,11 +441,11 @@ export function fromMunicipalityWithNameCache(
   })
 }
 
-export function fromStatisticsListCache(
+export function fromStatisticsListingCache(
   key: string,
   fallback: () => StatisticListingResponse['statistics'] | { error: unknown }
 ): StatisticListingResponse['statistics'] | { error: unknown } {
-  const cachedStatisticsList: StatisticListingResponse['statistics'] | null = statisticsListCache.getIfPresent(key)
+  const cachedStatisticsList: StatisticListingResponse['statistics'] | null = statisticsListingCache.getIfPresent(key)
   if (cachedStatisticsList) {
     return cachedStatisticsList
   }
@@ -453,7 +453,7 @@ export function fromStatisticsListCache(
   const data = fallback()
   if (data && !('error' in data)) {
     cacheLog(`added ${key} to statistics list cache`)
-    statisticsListCache.put(key, data)
+    statisticsListingCache.put(key, data)
   }
 
   return data
@@ -514,7 +514,7 @@ function completelyClearMunicipalityWithNameCache(): void {
 
 function completelyClearStatisticsListCache(): void {
   cacheLog(`clear statistics list cache`)
-  statisticsListCache.clear()
+  statisticsListingCache.clear()
 }
 
 function completelyClearParentTypeCache(): void {
