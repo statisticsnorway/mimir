@@ -1,14 +1,12 @@
 import { query, modify, type Content } from '/lib/xp/content'
 import { getStatisticByIdFromRepo } from '/lib/ssb/statreg/statistics'
 
-const CONTENT_TYPE = `${app.name}:statistics`
-
 type StatisticsContentData = {
   statistic?: string
   shortname?: string
 }
 
-export type StatisticsShortnameMigrationSummary = {
+type StatisticsShortnameMigrationSummary = {
   total: number
   migrated: number
   skippedMissingStatistic: number
@@ -20,7 +18,7 @@ export type StatisticsShortnameMigrationSummary = {
 export function migrateStatisticsContentTypeWithShortname(): StatisticsShortnameMigrationSummary {
   const result = query({
     count: -1,
-    contentTypes: [CONTENT_TYPE],
+    contentTypes: [`${app.name}:statistics`],
   })
 
   const summary: StatisticsShortnameMigrationSummary = {
