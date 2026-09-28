@@ -2,7 +2,7 @@
     <display-name>Statistikk</display-name>
     <form>
         <field-set>
-            <label>Statistikk (Old)</label>
+            <label>Statistikk (Ikke bruk)</label>
             <items>
                 <input name="statistic" type="CustomSelector">
                     <occurrences minimum="0" maximum="1" />
