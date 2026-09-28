@@ -19,6 +19,7 @@ import { getStatRegBaseUrl, STATISTICS_URL, STATREG_BRANCH, STATREG_REPO } from 
 import { getNode } from '/lib/ssb/repo/common'
 import { Events, logUserDataQuery } from '/lib/ssb/repo/query'
 import { cronJobLog } from '/lib/ssb/utils/serverLog'
+import { fromStatisticsListingCache } from '../cache/cache'
 
 export const STATREG_REPO_STATISTICS_KEY = 'statistics'
 
@@ -55,6 +56,8 @@ export function fetchStatistics(): Array<StatisticInListing> | null {
   return null
 }
 
+export type ReleaseListingResponse = paths['/releases']['get']['responses']['200']['content']['application/json']
+
 export function fetchReleasesFromStatregApi({
   start = 0,
   count = 1000,
@@ -85,6 +88,33 @@ export function fetchReleasesFromStatregApi({
     log.error(`Failed to fetch releases from statreg API: ${error}`)
     return []
   }
+}
+
+export type StatisticListingResponse = paths['/statistics']['get']['responses']['200']['content']['application/json']
+export type StatisticListingQueryParams = paths['/statistics']['get']['parameters']['query']
+export function fetchStatisticsFromStatregAPI({
+  start = 0,
+  count = 1000,
+}): StatisticListingResponse['statistics'] | { error: unknown } {
+  return fromStatisticsListingCache('statregAPI_statisticsListing', () => {
+    try {
+      const STATREG_API_BASE_URL =
+        app.config?.['ssb.statregapi.serverside.baseUrl'] || 'https://i.qa.ssb.no/statistikkregisteret/api'
+
+      const response = request({
+        url: STATREG_API_BASE_URL + `/statistics?start=${start}&count=${count}`,
+      })
+
+      const body: StatisticListingResponse | undefined = response.body ? JSON.parse(response.body) : undefined
+
+      return body?.statistics
+    } catch (error) {
+      log.error(`Failed to fetch statistics from statreg API: ${error}`)
+      return {
+        error,
+      }
+    }
+  })
 }
 
 export function createMimirMockReleaseStatreg(): StatisticInListing {
