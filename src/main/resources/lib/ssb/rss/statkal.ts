@@ -1,7 +1,6 @@
 import { type Request } from '@enonic-types/core'
 import { type components } from '@statisticsnorway/statreg-api-types'
 import { type Content, query } from '/lib/xp/content'
-
 import {
   type ContentLight,
   type Release as ReleaseVariant,
