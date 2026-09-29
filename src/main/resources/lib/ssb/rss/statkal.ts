@@ -17,7 +17,7 @@ import { getContactsFromRepo } from '/lib/ssb/statreg/contacts'
 import { type SubjectItem } from '/lib/types/subject'
 import { isEnabled } from '/lib/featureToggle'
 import { OmStatistikken, type Statistics } from '/site/content-types'
-import { fetchReleasesFromStatregApi, fetchStatisticsFromStatregAPI } from '../statreg/statistics'
+import { fetchReleasesFromStatregApi } from '../statreg/statistics'
 import { notNullOrUndefined } from '../utils/coreUtils'
 import { contentArrayToRecord } from '../utils/arrayUtils'
 import { formatPubDateStatistic } from './news-helpers'
@@ -63,18 +63,6 @@ function getRssFromApi(lang: string = 'nb'): RssRelease[] {
     count: 1000,
     publishTimeAfter: date90DaysAgo.toISOString(),
     publishTimeBefore: now.toISOString(),
-  })
-
-  const allStatistics = fetchStatisticsFromStatregAPI({ start: 0, count: 1000 })
-  const contacts: Record<string, Array<Contact>> = {}
-  allStatistics?.forEach((stat) => {
-    const currentContacts: Array<components['schemas']['Contact'] | undefined> | undefined = stat.contacts || []
-    const shortName = stat.shortname
-    if (shortName && currentContacts && currentContacts)
-      contacts[shortName] = currentContacts.map((c: components['schemas']['Contact']) => ({
-        name: c.name,
-        email: c.principalName,
-      }))
   })
 
   if (!futureReleases) {
@@ -130,7 +118,7 @@ function getRssFromApi(lang: string = 'nb'): RssRelease[] {
         pubDate: release.publish_time || '',
         periode: 'Tall for ' + release.measuring_period?.title || '',
         shortname,
-        contacts: contacts[shortname],
+        contacts: [],
       })
     })
     return rssReleases
