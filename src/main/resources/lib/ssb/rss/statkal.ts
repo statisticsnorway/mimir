@@ -18,7 +18,7 @@ import { isEnabled } from '/lib/featureToggle'
 import { OmStatistikken, type Statistics } from '/site/content-types'
 import { fetchReleasesFromStatregApi } from '/lib/ssb/statreg/statistics'
 import { notNullOrUndefined } from '/lib/ssb/utils/coreUtils'
-import { contentArrayToRecord } from '../utils/arrayUtils'
+import { contentArrayToRecord } from '/lib/ssb/utils/arrayUtils'
 import { formatPubDateStatistic } from './news-helpers'
 
 const dummyReq: Partial<Request> = {
