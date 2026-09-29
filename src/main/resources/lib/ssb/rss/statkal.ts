@@ -41,13 +41,11 @@ function getByIds<Data extends object>(ids: Array<string>, language: 'en' | 'nb'
     }).hits
   )
 }
-// TODO: Get the right number of days from config
-// TODO: Caching! bling bling!
 
 export function getRssReleasesStatkal(): RssRelease[] {
   const useNewStatreg = isEnabled('new-statreg-as-source', false, 'ssb')
   if (useNewStatreg) {
-    return getRssFromApi('no').concat(getRssFromApi('en')) // TODO: Fix this travesty gosh darn it
+    return getRssFromApi('no').concat(getRssFromApi('en'))
   } else {
     return getRssFromRepo()
   }
@@ -60,8 +58,8 @@ function getRssFromApi(lang: string = 'nb'): RssRelease[] {
   const futureReleases = fetchReleasesFromStatregApi({
     start: 0,
     count: 1000,
-    publishTimeAfter: date90DaysAgo.toISOString(),
-    publishTimeBefore: now.toISOString(),
+    publish_time_after: date90DaysAgo.toISOString(),
+    publish_time_before: now.toISOString(),
   })
 
   if (!futureReleases) {
