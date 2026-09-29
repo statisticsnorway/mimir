@@ -83,8 +83,7 @@ function getRssFromApi(lang: string = 'nb'): RssRelease[] {
       aboutTheStatisticsKeys,
       'nb'
     )
-    log.info(JSON.stringify(aboutTheStatistics[Object.keys(aboutTheStatistics)[0]], null, 2))
-    log.info('VI LOGGER HER OK')
+
     const rssReleases: RssRelease[] = []
     futureReleases?.forEach((release) => {
       const content = statisticsContents.hits.find(
