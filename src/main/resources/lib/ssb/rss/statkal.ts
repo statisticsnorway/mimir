@@ -103,7 +103,7 @@ function getRssFromApi(lang: string = 'nb'): RssRelease[] {
 
       rssReleases.push({
         guid: release.id?.toString() || '0',
-        title: content?.displayName || 'en tittel',
+        title: content?.displayName || '',
         link: statisticUrl,
         description:
           aboutTheStatisticsContent?.data.ingress ??
