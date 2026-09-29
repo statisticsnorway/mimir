@@ -72,6 +72,7 @@ export function migrateStatisticsContentTypeWithShortname(): void {
         try {
           const updated = modify({
             key: content._id,
+            requireValid: true,
             editor: (currentContent: Content<StatisticsContentData>) => {
               currentContent.data.shortname = statistic.shortName
               return currentContent
