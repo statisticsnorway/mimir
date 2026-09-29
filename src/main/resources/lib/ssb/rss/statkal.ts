@@ -109,7 +109,7 @@ function getRssFromApi(lang: string = 'nb'): RssRelease[] {
           aboutTheStatisticsContent?.data.ingress ??
           content?.x?.['com-enonic-app-metafields']?.['meta-data'].seoDescription,
         category: myMainSubject[0].title,
-        subject: myMainSubject[0].name || 'unknown',
+        subject: myMainSubject[0].name || '',
         language: content.language || 'nb',
         pubDate: release.publish_time || '',
         periode: 'Tall for ' + release.measuring_period?.title || '',
