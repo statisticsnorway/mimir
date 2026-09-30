@@ -15,10 +15,10 @@ import * as util from '/lib/util'
 import { getContactsFromRepo } from '/lib/ssb/statreg/contacts'
 import { type SubjectItem } from '/lib/types/subject'
 import { isEnabled } from '/lib/featureToggle'
-import { OmStatistikken, type Statistics } from '/site/content-types'
 import { fetchReleasesFromStatregApi } from '/lib/ssb/statreg/statistics'
 import { notNullOrUndefined } from '/lib/ssb/utils/coreUtils'
 import { contentArrayToRecord } from '/lib/ssb/utils/arrayUtils'
+import { OmStatistikken, type Statistics } from '/site/content-types'
 import { formatPubDateStatistic } from './news-helpers'
 
 const dummyReq: Partial<Request> = {
@@ -53,17 +53,17 @@ export function getRssReleasesStatkal(): RssRelease[] {
 
 function getRssFromApi(lang: string = 'nb'): RssRelease[] {
   const now = new Date()
-  const date90DaysAgo = new Date(new Date(now).setDate(now.getDate() - 90))
+  const dateIn90Days = new Date(new Date(now).setDate(now.getDate() + 90))
 
   const futureReleases = fetchReleasesFromStatregApi({
     start: 0,
     count: 1000,
-    publish_time_after: date90DaysAgo.toISOString(),
-    publish_time_before: now.toISOString(),
+    publish_time_after: now.toISOString(),
+    publish_time_before: dateIn90Days.toISOString(),
   })
 
-  if (!futureReleases) {
-    log.error('Could not get Releases from Statreg!')
+  if (!futureReleases || 'error' in futureReleases) {
+    log.error('Could not get Releases from Statreg!' + JSON.stringify(futureReleases?.error, null, 2))
     return []
   } else {
     const allMainSubjects: SubjectItem[] = getMainSubjects(dummyReq as Request)

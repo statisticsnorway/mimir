@@ -50,7 +50,7 @@ export function fetchStatistics(): Array<StatisticInListing> | null {
       function: 'fetchStatistics',
       message: Events.REQUEST_COULD_NOT_CONNECT,
       info: message,
-      status: error,
+      status: error as string,
     })
   }
   return null
@@ -87,7 +87,7 @@ export function fetchReleasesFromStatregApi({
       return body.releases
     } catch (error) {
       log.error(`Failed to fetch releases from statreg API: ${error}`)
-      return []
+      return { error }
     }
   })
 }
