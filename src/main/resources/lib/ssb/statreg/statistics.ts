@@ -19,7 +19,7 @@ import { getStatRegBaseUrl, STATISTICS_URL, STATREG_BRANCH, STATREG_REPO } from 
 import { getNode } from '/lib/ssb/repo/common'
 import { Events, logUserDataQuery } from '/lib/ssb/repo/query'
 import { cronJobLog } from '/lib/ssb/utils/serverLog'
-import { fromStatisticsListingCache } from '../cache/cache'
+import { fromStatisticsListingCache, fromReleasesListCache } from '../cache/cache'
 
 export const STATREG_REPO_STATISTICS_KEY = 'statistics'
 
@@ -47,7 +47,7 @@ export function fetchStatistics(): Array<StatisticInListing> | null {
       function: 'fetchStatistics',
       message: Events.REQUEST_COULD_NOT_CONNECT,
       info: message,
-      status: error,
+      status: error as string,
     })
   }
   return null
@@ -67,25 +67,27 @@ export function fetchReleasesFromStatregApi({
   approval_status,
   publish_time_after,
   publish_time_before,
-}: ReleasesQuery): ReleasesResponse['releases'] {
-  try {
-    const response = request({
-      url:
-        STATREG_API_BASE_URL +
-        `/releases?start=${start}&count=${count}` +
-        (sort ? `&sort=${sort}` : '') +
-        (shortname ? `&shortname=${shortname}` : '') +
-        (approval_status ? `&approval_status=${approval_status}` : '') +
-        (publish_time_after ? `&publish_time_after=${publish_time_after}` : '') +
-        (publish_time_before ? `&publish_time_before=${publish_time_before}` : ''),
-    })
-    const body: ReleasesResponse = response.body ? JSON.parse(response.body) : {}
+}: ReleasesQuery): ReleasesResponse['releases'] | { error: unknown } {
+  return fromReleasesListCache('statregAPI_releasesListing', () => {
+    try {
+      const response = request({
+        url:
+          STATREG_API_BASE_URL +
+          `/releases?start=${start}&count=${count}` +
+          (sort ? `&sort=${sort}` : '') +
+          (shortname ? `&shortname=${shortname}` : '') +
+          (approval_status ? `&approval_status=${approval_status}` : '') +
+          (publish_time_after ? `&publish_time_after=${publish_time_after}` : '') +
+          (publish_time_before ? `&publish_time_before=${publish_time_before}` : ''),
+      })
+      const body: ReleasesResponse = response.body ? JSON.parse(response.body) : {}
 
-    return body.releases
-  } catch (error) {
-    log.error(`Failed to fetch releases from statreg API: ${error}`)
-    return []
-  }
+      return body.releases
+    } catch (error) {
+      log.error(`Failed to fetch releases from statreg API: ${error}`)
+      return { error }
+    }
+  })
 }
 
 export type StatisticListingResponse = paths['/statistics']['get']['responses']['200']['content']['application/json']
