@@ -1,4 +1,5 @@
 import { type Request } from '@enonic-types/core'
+import { type components } from '@statisticsnorway/statreg-api-types'
 import { query, type Content } from '/lib/xp/content'
 import { StatisticInListing, VariantInListing } from '/lib/ssb/dashboard/statreg/types'
 import { subDays, isAfter } from '/lib/vendor/dateFns'
@@ -89,7 +90,7 @@ function getReleasesFromApi(mainSubjects: SubjectItem[], days: number): NewsItem
 
   if (!releases.length) return []
 
-  const releaseByStatisticId = {}
+  const releaseByStatisticId: Record<string, components['schemas']['Release_listing']> = {}
   releases.forEach((release) => {
     const statisticId = release.statistic?.id?.toString()
     if (statisticId) {
@@ -126,7 +127,7 @@ function getReleasesFromApi(mainSubjects: SubjectItem[], days: number): NewsItem
         subject: mainSubject.name,
         language: statistic.language === 'en' ? 'en' : 'no',
         pubDate: formatPubDateArticle(release.publish_time),
-        shortname: release.statistic.shortname || '',
+        shortname: release.statistic?.shortname || '',
       })
     })
   })
