@@ -11,6 +11,7 @@ type StatisticsContentData = {
 type StatisticsShortnameMigrationSummary = {
   total: number
   migrated: number
+  published: number
   skippedMissingStatistic: number
   skippedMissingShortname: number
   skippedAlreadyUpdated: number
@@ -45,6 +46,7 @@ export function migrateStatisticsContentTypeWithShortname(): void {
       const summary: StatisticsShortnameMigrationSummary = {
         total: result.total,
         migrated: 0,
+        published: 0,
         skippedMissingStatistic: 0,
         skippedMissingShortname: 0,
         skippedAlreadyUpdated: 0,
@@ -95,6 +97,7 @@ export function migrateStatisticsContentTypeWithShortname(): void {
                 keys: [content._id],
                 includeDependencies: false,
               })
+              summary.published += 1
             }
 
             summary.migrated += 1
@@ -107,9 +110,10 @@ export function migrateStatisticsContentTypeWithShortname(): void {
       })
 
       log.info(
-        'Statistics shortname migration finished. Total: %s, migrated: %s, skipped missing statistic: %s, skipped missing shortname: %s, skipped already updated: %s, failed: %s',
+        'Statistics shortname migration finished. Total: %s, migrated: %s, published: %s, skipped missing statistic: %s, skipped missing shortname: %s, skipped already updated: %s, failed: %s',
         `${Math.trunc(summary.total)}`,
         `${Math.trunc(summary.migrated)}`,
+        `${Math.trunc(summary.published)}`,
         `${Math.trunc(summary.skippedMissingStatistic)}`,
         `${Math.trunc(summary.skippedMissingShortname)}`,
         `${Math.trunc(summary.skippedAlreadyUpdated)}`,
