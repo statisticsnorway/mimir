@@ -1,4 +1,4 @@
-import { query, modify, type Content } from '/lib/xp/content'
+import { get as getContent, modify, publish, query, type Content } from '/lib/xp/content'
 import { run, type ContextParams } from '/lib/xp/context'
 import { getStatisticByIdFromRepo } from '/lib/ssb/statreg/statistics'
 import { ENONIC_CMS_DEFAULT_REPO } from '/lib/ssb/repo/common'
@@ -23,7 +23,7 @@ export function migrateStatisticsContentTypeWithShortname(): void {
     contentTypes: [`${app.name}:statistics`],
   })
 
-  const context: ContextParams = {
+  const draftContext: ContextParams = {
     branch: 'draft',
     repository: ENONIC_CMS_DEFAULT_REPO,
     principals: ['role:system.admin'],
@@ -33,10 +33,15 @@ export function migrateStatisticsContentTypeWithShortname(): void {
     },
   }
 
+  const masterContext: ContextParams = {
+    ...draftContext,
+    branch: 'master',
+  }
+
   if (result.hits.length) {
     log.info('Found %s content items', `${Math.trunc(result.total)}`)
 
-    run(context, () => {
+    run(draftContext, () => {
       const summary: StatisticsShortnameMigrationSummary = {
         total: result.total,
         migrated: 0,
@@ -70,6 +75,11 @@ export function migrateStatisticsContentTypeWithShortname(): void {
         }
 
         try {
+          const masterVersion = run(masterContext, () => {
+            return getContent<Content<StatisticsContentData>>({ key: content._id })
+          })
+          const wasPublished = masterVersion?.modifiedTime === content.modifiedTime
+
           const updated = modify({
             key: content._id,
             requireValid: true,
@@ -80,6 +90,13 @@ export function migrateStatisticsContentTypeWithShortname(): void {
           })
 
           if (updated) {
+            if (wasPublished) {
+              publish({
+                keys: [content._id],
+                includeDependencies: false,
+              })
+            }
+
             summary.migrated += 1
             log.info('Migrated %s -> %s', content._path, statistic.shortName)
           }
