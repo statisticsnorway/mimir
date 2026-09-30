@@ -12,6 +12,8 @@ type StatisticsShortnameMigrationSummary = {
   total: number
   migrated: number
   published: number
+  notPublished: Array<string>
+  publishFailed: Array<string>
   skippedMissingStatistic: number
   skippedMissingShortname: number
   skippedAlreadyUpdated: number
@@ -47,6 +49,8 @@ export function migrateStatisticsContentTypeWithShortname(): void {
         total: result.total,
         migrated: 0,
         published: 0,
+        notPublished: [],
+        publishFailed: [],
         skippedMissingStatistic: 0,
         skippedMissingShortname: 0,
         skippedAlreadyUpdated: 0,
@@ -59,20 +63,17 @@ export function migrateStatisticsContentTypeWithShortname(): void {
 
         if (!statisticId) {
           summary.skippedMissingStatistic += 1
-          log.info('Skipping %s - data.statistic is empty', content._path)
           return
         }
 
         const statistic = getStatisticByIdFromRepo(statisticId)
         if (!statistic?.shortName) {
           summary.skippedMissingShortname += 1
-          log.info('Skipping %s - no shortName found for statistic id %s', content._path, statisticId)
           return
         }
 
         if (statisticsContent.data.shortname === statistic.shortName) {
           summary.skippedAlreadyUpdated += 1
-          log.info('Skipping %s - data.shortname is already up to date', content._path)
           return
         }
 
@@ -93,15 +94,23 @@ export function migrateStatisticsContentTypeWithShortname(): void {
 
           if (updated) {
             if (wasPublished) {
-              publish({
-                keys: [content._id],
-                includeDependencies: false,
-              })
-              summary.published += 1
+              try {
+                run(masterContext, () => {
+                  publish({
+                    keys: [content._id],
+                    includeDependencies: false,
+                  })
+                })
+                summary.published += 1
+              } catch (publishError) {
+                summary.notPublished.push(content._path)
+                summary.publishFailed.push(content._path)
+                log.error('Failed publishing migrated content %s: %s', content._path, String(publishError))
+              }
+            } else {
+              summary.notPublished.push(content._path)
             }
-
             summary.migrated += 1
-            log.info('Migrated %s -> %s', content._path, statistic.shortName)
           }
         } catch (error) {
           summary.failed += 1
@@ -119,6 +128,8 @@ export function migrateStatisticsContentTypeWithShortname(): void {
         `${Math.trunc(summary.skippedAlreadyUpdated)}`,
         `${Math.trunc(summary.failed)}`
       )
+      log.info('Migrated but not published: %s', JSON.stringify(summary.notPublished))
+      log.info('Failed to publish after migration: %s', JSON.stringify(summary.publishFailed))
     })
   }
 }
