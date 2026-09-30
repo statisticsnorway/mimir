@@ -1,5 +1,6 @@
 import { type Request } from '@enonic-types/core'
 import { type components } from '@statisticsnorway/statreg-api-types'
+import { localize } from '/lib/xp/i18n'
 import { type Content, query } from '/lib/xp/content'
 import {
   type ContentLight,
@@ -100,6 +101,13 @@ function getRssFromApi(lang: string = 'nb'): RssRelease[] {
       const baseUrl: string = app.config && app.config['ssb.baseUrl'] ? app.config['ssb.baseUrl'] : 'https://www.ssb.no'
       const statisticUrl = `${baseUrl}/${content._path.split('/').slice(2).join('/')}`
       const shortname = release.statistic?.shortname || ''
+      const periode = localize({
+        key: 'period.generic',
+        locale: content.language || 'nb',
+        values: [
+          content.language === 'en' ? release.measuring_period?.title_en || '' : release.measuring_period?.title || '',
+        ],
+      })
 
       rssReleases.push({
         guid: release.id?.toString() || '0',
@@ -112,7 +120,7 @@ function getRssFromApi(lang: string = 'nb'): RssRelease[] {
         subject: myMainSubject[0].name || '',
         language: content.language || 'nb',
         pubDate: release.publish_time || '',
-        periode: 'Tall for ' + release.measuring_period?.title || '',
+        periode,
         shortname,
         contacts: [],
       })
