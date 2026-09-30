@@ -77,11 +77,15 @@ try {
           feature: 'new-statreg-as-source',
           enabled: false,
         },
+        {
+          feature: 'migrate-statistics-content-type-with-shortname',
+          enabled: false,
+        },
       ],
     },
   ])
 
-  if (isEnabled('new-statreg-as-source', false, 'ssb')) migrateStatisticsContentTypeWithShortname()
+  if (isEnabled('migrate-statistics-content-type-with-shortname', false, 'ssb')) migrateStatisticsContentTypeWithShortname()
 
   const now = new Date()
   log.info(`Startup script complete: ${now.toISOString()}`)
