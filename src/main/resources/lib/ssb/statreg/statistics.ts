@@ -23,9 +23,6 @@ import { fromStatisticsListingCache } from '../cache/cache'
 
 export const STATREG_REPO_STATISTICS_KEY = 'statistics'
 
-type ReleasesQuery = NonNullable<paths['/releases']['get']['parameters']['query']>
-export type ReleasesResponse = paths['/releases']['get']['responses'][200]['content']['application/json']
-
 const useNewStatreg = isEnabled('new-statreg-as-source', false, 'ssb')
 
 // TODO: Remove this when new Statreg as data source is implemented
@@ -56,8 +53,12 @@ export function fetchStatistics(): Array<StatisticInListing> | null {
   return null
 }
 
-export type ReleaseListingResponse = paths['/releases']['get']['responses']['200']['content']['application/json']
+const STATREG_API_BASE_URL =
+  app.config?.['ssb.statregapi.serverside.baseUrl'] || 'https://i.qa.ssb.no/statistikkregisteret/api'
 
+type ReleasesQuery = NonNullable<paths['/releases']['get']['parameters']['query']>
+export type ReleaseListingResponse = paths['/releases']['get']['responses']['200']['content']['application/json']
+export type ReleasesResponse = paths['/releases']['get']['responses'][200]['content']['application/json']
 export function fetchReleasesFromStatregApi({
   start = 0,
   count = 1000,
@@ -68,9 +69,6 @@ export function fetchReleasesFromStatregApi({
   publish_time_before,
 }: ReleasesQuery): ReleasesResponse['releases'] {
   try {
-    const STATREG_API_BASE_URL =
-      app.config?.['ssb.statregapi.serverside.baseUrl'] || 'https://i.qa.ssb.no/statistikkregisteret/api'
-
     const response = request({
       url:
         STATREG_API_BASE_URL +
@@ -98,9 +96,6 @@ export function fetchStatisticsFromStatregAPI({
 }): StatisticListingResponse['statistics'] | { error: unknown } {
   return fromStatisticsListingCache('statregAPI_statisticsListing', () => {
     try {
-      const STATREG_API_BASE_URL =
-        app.config?.['ssb.statregapi.serverside.baseUrl'] || 'https://i.qa.ssb.no/statistikkregisteret/api'
-
       const response = request({
         url: STATREG_API_BASE_URL + `/statistics?start=${start}&count=${count}`,
       })
@@ -115,6 +110,26 @@ export function fetchStatisticsFromStatregAPI({
       }
     }
   })
+}
+
+export type StatisticDetailsResponse =
+  paths['/statistics/{shortname}']['get']['responses']['200']['content']['application/json']
+export function fetchStatisticByShortnameFromStatregAPI(
+  shortname: string
+): StatisticDetailsResponse | { error: unknown } {
+  try {
+    const response = request({
+      url: STATREG_API_BASE_URL + `/statistics/${shortname}`,
+    })
+
+    const body: StatisticDetailsResponse = response.body ? JSON.parse(response.body) : undefined
+    return body
+  } catch (error) {
+    log.error(`Failed to fetch statistic from statreg API: ${error}`)
+    return {
+      error,
+    }
+  }
 }
 
 export function createMimirMockReleaseStatreg(): StatisticInListing {
