@@ -6,10 +6,9 @@ try {
   const cache = require('/lib/ssb/cache/cache')
   const { setupFetchDataOnCreateListener } = require('/lib/ssb/dataset/listeners')
   const { setupCronJobs } = require('/lib/ssb/cron/cron')
-  const { create } = require('/lib/featureToggle')
+  const { create, isEnabled } = require('/lib/featureToggle')
   const { setupTaskListener } = require('/lib/ssb/dataset/publish')
   const { setupArticleListener } = require('/lib/ssb/utils/articleUtils')
-  const { isEnabled } = require('/lib/featureToggle')
   const { migrateStatisticsContentTypeWithShortname } = require('/lib/ssb/statreg/migrateStatisticsContentTypeWithShortname')
 
   log.info('Application ' + app.name + ' started') // Log application started
