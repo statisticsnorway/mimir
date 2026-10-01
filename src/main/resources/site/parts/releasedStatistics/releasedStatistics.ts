@@ -60,22 +60,41 @@ function getGroupedWithMonthNames(config: ReleasedStatisticsPartConfig, currentL
   const numberOfReleases: number = config.numberOfStatistics ? parseInt(config.numberOfStatistics) : 8
 
   if (isEnabled('new-statreg-as-source', false, 'ssb')) {
-    const from = new Date()
-    const releases =
+    const startOfToday = stringToServerTime()
+    startOfToday.setHours(0, 0, 0, 0)
+
+    const nextReleaseToday: Array<StatregApiRelease> = latestPerStatistic(
       fetchReleasesFromStatregApi({
-        count: numberOfReleases,
         sort: '-publish_time',
         approval_status: 'GODKJENT',
-        publish_time_before: from.toISOString(),
-      }) || []
+        publish_time_after: startOfToday.toISOString(),
+        publish_time_before: stringToServerTime().toISOString(),
+      }) || [],
+      numberOfReleases
+    )
 
-    const releasesPrepped: Array<PreparedStatistics> = releases
+    const numberPreviousReleases: number =
+      nextReleaseToday.length !== 0 ? numberOfReleases - nextReleaseToday.length : numberOfReleases
+
+    const previousReleases: Array<StatregApiRelease> =
+      numberPreviousReleases > 0
+        ? latestPerStatistic(
+            fetchReleasesFromStatregApi({
+              sort: '-publish_time',
+              approval_status: 'GODKJENT',
+              publish_time_before: startOfToday.toISOString(),
+            }) || [],
+            numberPreviousReleases
+          )
+        : []
+
+    const releasedStatistics: PreparedStatistics[] = nextReleaseToday
+      .concat(previousReleases)
       .map((release: StatregApiRelease) => prepareApiUpcomingReleases(release, currentLanguage))
       .filter((release: PreparedStatistics | null): release is PreparedStatistics => release !== null)
 
     const groupedByYearMonthAndDay: GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>> =
-      groupStatisticsByYearMonthAndDay(releasesPrepped)
-
+      groupStatisticsByYearMonthAndDay(releasedStatistics)
     return addMonthNames(groupedByYearMonthAndDay, currentLanguage)
   }
 
@@ -125,6 +144,18 @@ function getGroupedWithMonthNames(config: ReleasedStatisticsPartConfig, currentL
   const groupedByYearMonthAndDay: GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>> =
     groupStatisticsByYearMonthAndDay(releasedStatistics)
   return addMonthNames(groupedByYearMonthAndDay, currentLanguage)
+}
+
+function latestPerStatistic(releases: Array<StatregApiRelease>, count: number): Array<StatregApiRelease> {
+  const seen: Record<string, boolean> = {}
+  const unique: Array<StatregApiRelease> = []
+  releases.forEach((release) => {
+    const key = release.statistic?.shortname || (release.statistic?.id != null ? String(release.statistic.id) : '')
+    if (!key || seen[key] || unique.length >= count) return
+    seen[key] = true
+    unique.push(release)
+  })
+  return unique
 }
 
 function prepReleases(variant: ContentLight<ReleaseVariant>, date: Date, periodRelease: string): PreparedStatistics {
