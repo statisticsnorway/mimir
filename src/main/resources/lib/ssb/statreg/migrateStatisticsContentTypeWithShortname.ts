@@ -1,7 +1,7 @@
-import { get as getContent, modify, publish, query, type Content } from '/lib/xp/content'
+import { get as getContent, publish, query, type Content } from '/lib/xp/content'
 import { run, type ContextParams } from '/lib/xp/context'
 import { getStatisticByIdFromRepo } from '/lib/ssb/statreg/statistics'
-import { ENONIC_CMS_DEFAULT_REPO } from '/lib/ssb/repo/common'
+import { ENONIC_CMS_DEFAULT_REPO, modifyNode } from '/lib/ssb/repo/common'
 
 type StatisticsContentData = {
   statistic?: string
@@ -83,14 +83,15 @@ export function migrateStatisticsContentTypeWithShortname(): void {
           })
           const wasPublished = masterVersion?.modifiedTime === content.modifiedTime
 
-          const updated = modify({
-            key: content._id,
-            requireValid: true,
-            editor: (currentContent: Content<StatisticsContentData>) => {
+          const updated = modifyNode<Content<StatisticsContentData>>(
+            ENONIC_CMS_DEFAULT_REPO,
+            'draft',
+            content._id,
+            (currentContent) => {
               currentContent.data.shortname = statistic.shortName
               return currentContent
-            },
-          })
+            }
+          )
 
           if (updated) {
             if (wasPublished) {
