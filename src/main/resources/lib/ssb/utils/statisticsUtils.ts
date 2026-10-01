@@ -6,7 +6,7 @@ import { isAfter } from '/lib/vendor/dateFns'
 import { ensureArray } from '/lib/ssb/utils/arrayUtils'
 import { type StatisticsDates } from '/lib/types/partTypes/statisticHeader'
 import { Phrases } from '/lib/types/language'
-import { getReleaseDatesByVariants } from '/lib/ssb/statreg/statistics'
+import { fetchReleasesFromStatregApi, getReleaseDatesByVariants } from '/lib/ssb/statreg/statistics'
 import { type Statistics } from '/site/content-types'
 
 export function getStatisticTitle(statisticsContent: Content<Statistics>, statistic?: StatisticInListing): string {
@@ -86,4 +86,18 @@ function getChangeDate(
   }
 
   return undefined
+}
+
+export function getNextReleaseDateFromStatregAPI(shortname: string): string {
+  const now = new Date()
+  now.setHours(8, 0, 0, 0)
+
+  const publish_time_after = new Date(now).toISOString()
+  const releases = fetchReleasesFromStatregApi({ shortname, publish_time_after })
+
+  if (!releases || 'error' in releases) return ''
+
+  const nextReleaseDate = releases.map(({ publish_time }) => publish_time)[0]
+
+  return nextReleaseDate || ''
 }
