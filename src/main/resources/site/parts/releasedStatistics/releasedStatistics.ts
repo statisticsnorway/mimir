@@ -44,6 +44,8 @@ export function renderPart(req: Request) {
   let groupedWithMonthNames: Array<YearReleases>
   if (isEnabled('new-statreg-as-source', false, 'ssb')) {
     const numberOfReleases: number = config.numberOfStatistics ? parseInt(config.numberOfStatistics) : 8
+    const now = new Date()
+    now.setHours(8, 0, 0, 0)
     const releases =
       fetchReleasesFromStatregApi({
         count: numberOfReleases,
