@@ -21,6 +21,8 @@ import { hasWritePermissionsAndPreview } from '/lib/ssb/parts/permissions'
 import { currentlyWaitingForPublish as currentlyWaitingForPublishOld } from '/lib/ssb/dataset/publishOld'
 import * as util from '/lib/util'
 import { type StatisticsProps } from '/lib/types/partTypes/statistics'
+import { isEnabled } from '/lib/types/featureToggle'
+import { getReleaseDatesFromStatregAPI } from '/lib/ssb/utils/statisticsUtils'
 import { type Statistics } from '/site/content-types'
 import { preview as keyFigurePreview } from '/site/parts/keyFigure/keyFigure'
 
@@ -30,7 +32,7 @@ export function get(req: Request): Response {
   try {
     return renderPart(req)
   } catch (e) {
-    return renderError(req, 'Error in part: ', e)
+    return renderError(req, 'Error in part: ', e as Error)
   }
 }
 
@@ -95,8 +97,9 @@ function renderPart(req: Request): Response {
   const draftButtonText: string = paramShowDraft ? 'Vis publiserte tall' : 'Vis upubliserte tall'
   const language: string = page.language === 'en' || page.language === 'nn' ? page.language : 'nb'
 
+  const statregAPI = isEnabled('new-statreg-as-source', false, 'ssb')
   const statistic: StatisticInListing | undefined = getStatisticByIdFromRepo(page.data.statistic)
-  if (statistic) {
+  if (statistic && !statregAPI) {
     title = page.language === 'en' && statistic.nameEN && statistic.nameEN !== null ? statistic.nameEN : statistic.name
     const variants: Array<VariantInListing | undefined> = util.data.forceArray(statistic.variants)
     const releaseDates: ReleaseDatesVariant = getReleaseDatesByVariants(variants as Array<VariantInListing>)
@@ -105,6 +108,22 @@ function renderPart(req: Request): Response {
 
     if (releaseDates.nextRelease.length > 1 && releaseDates.nextRelease[1] !== '') {
       previewNextRelease = formatDate(releaseDates.nextRelease[1], 'PPP', language)
+    }
+
+    if (previousReleaseDate && previousReleaseDate !== '') {
+      previousRelease = formatDate(previousReleaseDate, 'PPP', language)
+    }
+
+    if (nextReleaseDate && nextReleaseDate !== '') {
+      nextRelease = formatDate(nextReleaseDate, 'PPP', language)
+    }
+  } else if (page.data.shortname && statregAPI) {
+    const statregReleaseDates = getReleaseDatesFromStatregAPI(page.data.shortname)
+    nextReleaseDate = statregReleaseDates.nextReleaseDate
+    previousReleaseDate = statregReleaseDates.previousReleaseDate
+
+    if (statregReleaseDates.previewNextReleaseDate && statregReleaseDates.previewNextReleaseDate !== '') {
+      previewNextRelease = formatDate(statregReleaseDates.previewNextReleaseDate, 'PPP', language)
     }
 
     if (previousReleaseDate && previousReleaseDate !== '') {

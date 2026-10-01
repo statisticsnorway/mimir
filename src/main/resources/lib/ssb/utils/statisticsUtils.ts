@@ -9,6 +9,12 @@ import { Phrases } from '/lib/types/language'
 import { fetchReleasesFromStatregApi, getReleaseDatesByVariants } from '/lib/ssb/statreg/statistics'
 import { type Statistics } from '/site/content-types'
 
+export type StatregApiReleaseDates = {
+  nextReleaseDate?: string
+  previousReleaseDate?: string
+  previewNextReleaseDate?: string
+}
+
 export function getStatisticTitle(statisticsContent: Content<Statistics>, statistic?: StatisticInListing): string {
   if (!statistic) {
     return statisticsContent.displayName
@@ -88,16 +94,26 @@ function getChangeDate(
   return undefined
 }
 
-export function getNextReleaseDateFromStatregAPI(shortname: string): string {
+export function getReleaseDatesFromStatregAPI(shortname: string): StatregApiReleaseDates {
   const now = new Date()
   now.setHours(8, 0, 0, 0)
 
-  const publish_time_after = new Date(now).toISOString()
-  const releases = fetchReleasesFromStatregApi({ shortname, publish_time_after })
+  const releases = fetchReleasesFromStatregApi({
+    shortname,
+    sort: 'publish_time',
+    approval_status: 'GODKJENT',
+  })
 
-  if (!releases || 'error' in releases) return ''
+  if (!releases || 'error' in releases) {
+    return {}
+  }
 
-  const nextReleaseDate = releases.map(({ publish_time }) => publish_time)[0]
+  const previousReleases = releases.filter(({ publish_time }) => publish_time && isAfter(now, new Date(publish_time)))
+  const nextReleases = releases.filter(({ publish_time }) => publish_time && !isAfter(now, new Date(publish_time)))
 
-  return nextReleaseDate || ''
+  return {
+    previousReleaseDate: previousReleases.length ? previousReleases[previousReleases.length - 1].publish_time : '',
+    nextReleaseDate: nextReleases.length ? nextReleases[0].publish_time : '',
+    previewNextReleaseDate: nextReleases.length > 1 ? nextReleases[1].publish_time : '',
+  }
 }
