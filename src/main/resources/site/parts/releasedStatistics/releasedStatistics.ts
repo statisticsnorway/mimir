@@ -41,7 +41,28 @@ export function renderPart(req: Request) {
   const config = getComponent<XP.PartComponent.ReleasedStatistics>()?.config
   if (!config) throw Error('No part found')
 
-  const groupedWithMonthNames: Array<YearReleases> = getGroupedWithMonthNames(config, currentLanguage)
+  let groupedWithMonthNames: Array<YearReleases>
+  if (isEnabled('new-statreg-as-source', false, 'ssb')) {
+    const numberOfReleases: number = config.numberOfStatistics ? parseInt(config.numberOfStatistics) : 8
+    const releases =
+      fetchReleasesFromStatregApi({
+        count: numberOfReleases,
+        sort: '-publish_time',
+        approval_status: 'GODKJENT',
+        publish_time_before: new Date().toISOString(),
+      }) || []
+
+    const releasesPrepped: Array<PreparedStatistics> = releases
+      .map((release: StatregApiRelease) => prepareApiUpcomingReleases(release, currentLanguage))
+      .filter((release: PreparedStatistics | null): release is PreparedStatistics => release !== null)
+
+    const groupedByYearMonthAndDay: GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>> =
+      groupStatisticsByYearMonthAndDay(releasesPrepped as Array<PreparedStatistics>)
+
+    groupedWithMonthNames = addMonthNames(groupedByYearMonthAndDay, currentLanguage)
+  } else {
+    groupedWithMonthNames = getGroupedWithMonthNames(config, currentLanguage)
+  }
 
   const props: ReleasedStatisticsProps = {
     releases: groupedWithMonthNames,
@@ -58,45 +79,6 @@ export function renderPart(req: Request) {
 
 function getGroupedWithMonthNames(config: ReleasedStatisticsPartConfig, currentLanguage: string): Array<YearReleases> {
   const numberOfReleases: number = config.numberOfStatistics ? parseInt(config.numberOfStatistics) : 8
-
-  if (isEnabled('new-statreg-as-source', false, 'ssb')) {
-    const startOfToday = stringToServerTime()
-    startOfToday.setHours(0, 0, 0, 0)
-
-    const nextReleaseToday: Array<StatregApiRelease> = latestPerStatistic(
-      fetchReleasesFromStatregApi({
-        sort: '-publish_time',
-        approval_status: 'GODKJENT',
-        publish_time_after: startOfToday.toISOString(),
-        publish_time_before: stringToServerTime().toISOString(),
-      }) || [],
-      numberOfReleases
-    )
-
-    const numberPreviousReleases: number =
-      nextReleaseToday.length !== 0 ? numberOfReleases - nextReleaseToday.length : numberOfReleases
-
-    const previousReleases: Array<StatregApiRelease> =
-      numberPreviousReleases > 0
-        ? latestPerStatistic(
-            fetchReleasesFromStatregApi({
-              sort: '-publish_time',
-              approval_status: 'GODKJENT',
-              publish_time_before: startOfToday.toISOString(),
-            }) || [],
-            numberPreviousReleases
-          )
-        : []
-
-    const releasedStatistics: PreparedStatistics[] = nextReleaseToday
-      .concat(previousReleases)
-      .map((release: StatregApiRelease) => prepareApiUpcomingReleases(release, currentLanguage))
-      .filter((release: PreparedStatistics | null): release is PreparedStatistics => release !== null)
-
-    const groupedByYearMonthAndDay: GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>> =
-      groupStatisticsByYearMonthAndDay(releasedStatistics)
-    return addMonthNames(groupedByYearMonthAndDay, currentLanguage)
-  }
 
   //To get releases 08.00 before data from statreg is updated
   const nextReleaseToday: ContentLight<ReleaseVariant>[] = getStatisticVariantsFromRepo(
@@ -144,18 +126,6 @@ function getGroupedWithMonthNames(config: ReleasedStatisticsPartConfig, currentL
   const groupedByYearMonthAndDay: GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>> =
     groupStatisticsByYearMonthAndDay(releasedStatistics)
   return addMonthNames(groupedByYearMonthAndDay, currentLanguage)
-}
-
-function latestPerStatistic(releases: Array<StatregApiRelease>, count: number): Array<StatregApiRelease> {
-  const seen: Record<string, boolean> = {}
-  const unique: Array<StatregApiRelease> = []
-  releases.forEach((release) => {
-    const key = release.statistic?.shortname || (release.statistic?.id != null ? String(release.statistic.id) : '')
-    if (!key || seen[key] || unique.length >= count) return
-    seen[key] = true
-    unique.push(release)
-  })
-  return unique
 }
 
 function prepReleases(variant: ContentLight<ReleaseVariant>, date: Date, periodRelease: string): PreparedStatistics {
