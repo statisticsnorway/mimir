@@ -1,7 +1,6 @@
 import { get as getContent, publish, query, type Content } from '/lib/xp/content'
-import { run, type ContextParams } from '/lib/xp/context'
 import { getStatisticByIdFromRepo } from '/lib/ssb/statreg/statistics'
-import { ENONIC_CMS_DEFAULT_REPO, modifyNode } from '/lib/ssb/repo/common'
+import { ENONIC_CMS_DEFAULT_REPO, modifyNode, withSuperUserContext } from '/lib/ssb/repo/common'
 
 type StatisticsContentData = {
   statistic?: string
@@ -26,25 +25,10 @@ export function migrateStatisticsContentTypeWithShortname(): void {
     contentTypes: [`${app.name}:statistics`],
   })
 
-  const draftContext: ContextParams = {
-    branch: 'draft',
-    repository: ENONIC_CMS_DEFAULT_REPO,
-    principals: ['role:system.admin'],
-    user: {
-      login: 'su',
-      idProvider: 'system',
-    },
-  }
-
-  const masterContext: ContextParams = {
-    ...draftContext,
-    branch: 'master',
-  }
-
   if (result.hits.length) {
     log.info('Found %s content items', `${Math.trunc(result.total)}`)
 
-    run(draftContext, () => {
+    withSuperUserContext(ENONIC_CMS_DEFAULT_REPO, 'draft', () => {
       const summary: StatisticsShortnameMigrationSummary = {
         total: result.total,
         migrated: 0,
@@ -78,7 +62,7 @@ export function migrateStatisticsContentTypeWithShortname(): void {
         }
 
         try {
-          const masterVersion = run(masterContext, () => {
+          const masterVersion = withSuperUserContext(ENONIC_CMS_DEFAULT_REPO, 'master', () => {
             return getContent<Content<StatisticsContentData>>({ key: content._id })
           })
           const wasPublished = masterVersion?.modifiedTime === content.modifiedTime
@@ -96,7 +80,7 @@ export function migrateStatisticsContentTypeWithShortname(): void {
           if (updated) {
             if (wasPublished) {
               try {
-                run(masterContext, () => {
+                withSuperUserContext(ENONIC_CMS_DEFAULT_REPO, 'master', () => {
                   publish({
                     keys: [content._id],
                     includeDependencies: false,
