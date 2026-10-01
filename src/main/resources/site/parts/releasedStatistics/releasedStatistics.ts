@@ -49,7 +49,7 @@ export function renderPart(req: Request) {
         count: numberOfReleases,
         sort: '-publish_time',
         approval_status: 'GODKJENT',
-        publish_time_before: new Date().toISOString(),
+        publish_time_before: new Date(now).toISOString(),
       }) || []
 
     const releasesPrepped: Array<PreparedStatistics> = releases
