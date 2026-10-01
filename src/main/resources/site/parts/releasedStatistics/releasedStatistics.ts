@@ -4,7 +4,7 @@ import { type Request, type Response } from '@enonic-types/core'
 import { type QueryDsl } from '/lib/xp/content'
 import { getComponent, getContent } from '/lib/xp/portal'
 import { localize } from '/lib/xp/i18n'
-import { addMonthNames, calculatePeriod, groupStatisticsByYearMonthAndDay } from '/lib/ssb/utils/variantUtils'
+import { addMonthNames, groupStatisticsByYearMonthAndDay } from '/lib/ssb/utils/variantUtils'
 import { render } from '/lib/enonic/react4xp'
 import {
   type ContentLight,
@@ -12,16 +12,14 @@ import {
   getStatisticVariantsFromRepo,
 } from '/lib/ssb/repo/statisticVariant'
 import { stringToServerTime } from '/lib/ssb/utils/dateUtils'
-import { capitalize } from '/lib/ssb/utils/stringUtils'
 import { parseISO } from '/lib/vendor/dateFns'
 import { renderError } from '/lib/ssb/error/error'
 import { type PreparedStatistics, type YearReleases } from '/lib/types/variants'
 import { type GroupedBy, type ReleasedStatisticsProps } from '/lib/types/partTypes/releasedStatistics'
 import { isEnabled } from '/lib/featureToggle'
-import { fetchReleasesFromStatregApi, type ReleasesResponse } from '/lib/ssb/statreg/statistics'
+import { fetchReleasesFromStatregApi } from '/lib/ssb/statreg/statistics'
+import { prepareApiUpcomingReleases, type StatregApiRelease } from '/services/upcomingReleases/upcomingReleases'
 import { type ReleasedStatistics as ReleasedStatisticsPartConfig } from '.'
-
-type StatregApiRelease = NonNullable<ReleasesResponse['releases']>[number]
 
 export function get(req: Request): Response {
   try {
@@ -62,32 +60,22 @@ function getGroupedWithMonthNames(config: ReleasedStatisticsPartConfig, currentL
   const numberOfReleases: number = config.numberOfStatistics ? parseInt(config.numberOfStatistics) : 8
 
   if (isEnabled('new-statreg-as-source', false, 'ssb')) {
-    const nextReleaseToday: StatregApiRelease[] =
+    const from = new Date()
+    const releases =
       fetchReleasesFromStatregApi({
         count: numberOfReleases,
         sort: '-publish_time',
-        publish_time_before: stringToServerTime().toISOString(),
+        approval_status: 'GODKJENT',
+        publish_time_before: from.toISOString(),
       }) || []
 
-    const numberPreviousReleases: number =
-      nextReleaseToday.length !== 0 ? numberOfReleases - nextReleaseToday.length : numberOfReleases
-
-    const previousReleases: StatregApiRelease[] =
-      numberPreviousReleases > 0
-        ? fetchReleasesFromStatregApi({
-            count: numberPreviousReleases,
-            sort: '-publish_time',
-            publish_time_before: new Date().toISOString(),
-          }) || []
-        : []
-
-    const releasedStatistics: PreparedStatistics[] = nextReleaseToday
-      .concat(previousReleases)
-      .map((release: StatregApiRelease) => prepApiRelease(release, currentLanguage))
+    const releasesPrepped: Array<PreparedStatistics> = releases
+      .map((release: StatregApiRelease) => prepareApiUpcomingReleases(release, currentLanguage))
       .filter((release: PreparedStatistics | null): release is PreparedStatistics => release !== null)
 
     const groupedByYearMonthAndDay: GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>> =
-      groupStatisticsByYearMonthAndDay(releasedStatistics)
+      groupStatisticsByYearMonthAndDay(releasesPrepped)
+
     return addMonthNames(groupedByYearMonthAndDay, currentLanguage)
   }
 
@@ -137,29 +125,6 @@ function getGroupedWithMonthNames(config: ReleasedStatisticsPartConfig, currentL
   const groupedByYearMonthAndDay: GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>> =
     groupStatisticsByYearMonthAndDay(releasedStatistics)
   return addMonthNames(groupedByYearMonthAndDay, currentLanguage)
-}
-
-function prepApiRelease(release: StatregApiRelease, language: string): PreparedStatistics | null {
-  if (!release.publish_time || !release.statistic) return null
-
-  const date = parseISO(release.publish_time)
-  const period = capitalize(
-    calculatePeriod(release.frequency?.name || '', release.period_from || '', release.period_to || '', language)
-  )
-
-  return {
-    id: Number(release.statistic.id),
-    name: language === 'en' ? release.statistic.name_en || release.statistic.name || '' : release.statistic.name || '',
-    shortName: release.statistic.shortname || '',
-    variant: {
-      id: String(release.id || ''),
-      day: date.getDate(),
-      monthNumber: date.getMonth(),
-      year: date.getFullYear(),
-      frequency: release.frequency?.name || '',
-      period,
-    },
-  }
 }
 
 function prepReleases(variant: ContentLight<ReleaseVariant>, date: Date, periodRelease: string): PreparedStatistics {
