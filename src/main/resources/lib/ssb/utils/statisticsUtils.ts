@@ -130,6 +130,7 @@ export function getReleaseDatesFromStatregAPI(shortname: string): StatregApiRele
 
   const releases = fetchReleasesFromStatregApi({
     shortname,
+    sort: 'publish_time',
     approval_status: 'GODKJENT',
   })
 

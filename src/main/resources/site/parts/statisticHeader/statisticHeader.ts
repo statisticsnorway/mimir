@@ -15,6 +15,7 @@ import { renderError } from '/lib/ssb/error/error'
 import { hasWritePermissionsAndPreview } from '/lib/ssb/parts/permissions'
 import { currentlyWaitingForPublish as currentlyWaitingForPublishOld } from '/lib/ssb/dataset/publishOld'
 import { type StatisticHeader } from '/lib/types/partTypes/statisticHeader'
+import { isEnabled } from '/lib/featureToggle'
 import { type Statistics, type OmStatistikken } from '/site/content-types'
 
 export function get(req: Request): Response {
@@ -63,9 +64,10 @@ function renderPart(req: Request): Response {
 
   const modifiedText: string | undefined = page.data.showModifiedDate?.modifiedOption?.modifiedText
 
+  const statregAPI = isEnabled('new-statreg-as-source', false, 'ssb')
   const statistic: StatisticInListing | undefined = getStatisticByIdFromRepo(page.data.statistic)
   const title: string = getStatisticTitle(page, statistic)
-  const statisticDates = getStatisticsDates(page, phrases, paramShowDraft && showPreviewDraft, statistic)
+  const statisticDates = getStatisticsDates(page, phrases, paramShowDraft && showPreviewDraft, statistic, statregAPI)
 
   const props: StatisticHeader = {
     title,
