@@ -5,8 +5,9 @@ import { type Phrases } from '/lib/types/language'
 import { type Contact as StatRegContacts } from '/lib/ssb/dashboard/statreg/types'
 import { render } from '/lib/enonic/react4xp'
 import { renderError } from '/lib/ssb/error/error'
+import { isEnabled } from '/lib/featureToggle'
 import { getContactsFromRepo } from '/lib/ssb/statreg/contacts'
-import { getSelectedContacts } from '/lib/ssb/parts/contact'
+import { getContactsFromStatisticApi, getSelectedContacts } from '/lib/ssb/parts/contact'
 import { ensureArray } from '/lib/ssb/utils/arrayUtils'
 import { getPhrases } from '/lib/ssb/utils/language'
 import { type StatisticContactProps } from '/lib/types/partTypes/statisticContact'
@@ -34,14 +35,19 @@ function renderPart(req: Request): Response {
 
   const phrases: Phrases = getPhrases(page) as Phrases
 
-  const statRegContacts: Array<StatRegContacts> = getContactsFromRepo()
-  let contactIds: Array<string> = []
+  let selectedContacts
+  if (isEnabled('new-statreg-as-source', false, 'ssb') && page.data.shortname) {
+    selectedContacts = getContactsFromStatisticApi(page.data.shortname, pageLanguage)
+  } else {
+    const statRegContacts: Array<StatRegContacts> = getContactsFromRepo()
+    let contactIds: Array<string> = []
 
-  if (page.data.contacts) {
-    contactIds = contactIds.concat(ensureArray(page.data.contacts))
+    if (page.data.contacts) {
+      contactIds = contactIds.concat(ensureArray(page.data.contacts))
+    }
+
+    selectedContacts = getSelectedContacts(contactIds, statRegContacts, pageLanguage)
   }
-
-  const selectedContacts = getSelectedContacts(contactIds, statRegContacts, pageLanguage)
 
   const props: StatisticContactProps = {
     label: phrases.contact,
