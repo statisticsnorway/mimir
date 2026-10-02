@@ -98,28 +98,23 @@ export function getReleaseDatesFromStatregAPI(shortname: string): StatregApiRele
   const now = new Date()
   now.setHours(8, 0, 0, 0)
 
-  const previousReleases = fetchReleasesFromStatregApi({
+  const releases = fetchReleasesFromStatregApi({
     shortname,
     approval_status: 'GODKJENT',
-    publish_time_before: now.toISOString(),
   })
 
-  if (!previousReleases || 'error' in previousReleases) return {}
+  if (!releases || 'error' in releases || releases.length === 0) return {}
 
-  const nextReleases = fetchReleasesFromStatregApi({
-    shortname,
-    approval_status: 'GODKJENT',
-    publish_time_after: now.toISOString(),
-  })
-
-  if (!nextReleases || 'error' in nextReleases) return {}
-
-  const previousReleasesDates = previousReleases.map((release) => release.publish_time)
-  const nextReleasesDates = nextReleases.map((release) => release.publish_time)
+  const previousReleaseDates = releases
+    .filter(({ publish_time }) => isAfter(now, new Date(publish_time!)))
+    .map(({ publish_time }) => publish_time)
+  const nextReleaseDates = releases
+    .filter(({ publish_time }) => !isAfter(now, new Date(publish_time!)))
+    .map(({ publish_time }) => publish_time)
 
   return {
-    previousReleaseDate: previousReleasesDates.length ? previousReleasesDates[previousReleasesDates.length - 1] : '',
-    nextReleaseDate: nextReleasesDates.length ? nextReleasesDates[0] : '',
-    previewNextReleaseDate: nextReleasesDates.length > 1 ? nextReleasesDates[1] : '',
+    previousReleaseDate: previousReleaseDates.length ? previousReleaseDates[previousReleaseDates.length - 1] : '',
+    nextReleaseDate: nextReleaseDates.length ? nextReleaseDates[0] : '',
+    previewNextReleaseDate: nextReleaseDates.length > 1 ? nextReleaseDates[1] : '',
   }
 }
