@@ -73,6 +73,7 @@ describe('getReleaseDatesFromStatregAPI', () => {
     })
     expect(mockFetchReleasesFromStatregApi).toHaveBeenCalledWith({
       shortname: 'aku',
+      sort: 'publish_time',
       approval_status: 'GODKJENT',
     })
   })
