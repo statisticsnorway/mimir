@@ -5,7 +5,7 @@ import { type Content, query } from '/lib/xp/content'
 import {
   type ContentLight,
   type Release as ReleaseVariant,
-  getStatisticsContentByRegStatId,
+  getStatisticsContentByShortname,
   getUpcompingStatisticVariantsFromRepo,
 } from '/lib/ssb/repo/statisticVariant'
 import { Contact, ReleasesInListing } from '/lib/ssb/dashboard/statreg/types'
@@ -71,11 +71,11 @@ function getRssFromApi(lang: string = 'nb'): RssRelease[] {
     const allSubSubjects: SubjectItem[] = getSubSubjects(dummyReq as Request)
 
     const statisticsWithReleases: string[] = []
-    futureReleases.forEach((s) => {
-      s.statistic?.id && statisticsWithReleases.push(s.statistic?.id?.toString())
+    futureReleases.forEach((r) => {
+      r.statistic?.shortname && statisticsWithReleases.push(r.statistic?.shortname)
     })
 
-    const statisticsContents = getStatisticsContentByRegStatId(statisticsWithReleases, lang)
+    const statisticsContents = getStatisticsContentByShortname(statisticsWithReleases, lang)
     const aboutTheStatisticsKeys: Array<string> = statisticsContents.hits
       .map((stat) => stat.data.aboutTheStatistics)
       .filter(notNullOrUndefined)
@@ -88,7 +88,7 @@ function getRssFromApi(lang: string = 'nb'): RssRelease[] {
     const rssReleases: RssRelease[] = []
     futureReleases?.forEach((release) => {
       const content = statisticsContents.hits.find(
-        (stat) => stat.data.statistic === release.statistic?.id?.toString()
+        (stat) => stat.data.shortname === release.statistic?.shortname
       ) as Content<Statistics>
       if (!content) {
         log.error('Content not found with release ID: ' + release.id)

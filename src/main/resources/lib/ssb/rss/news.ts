@@ -90,31 +90,31 @@ function getReleasesFromApi(mainSubjects: SubjectItem[], days: number): NewsItem
 
   if (!releases || 'error' in releases || releases.length === 0) return []
 
-  const releaseByStatisticId: Record<string, components['schemas']['Release_listing']> = {}
+  const releaseByStatisticShortname: Record<string, components['schemas']['Release_listing']> = {}
   releases.forEach((release) => {
-    const statisticId = release.statistic?.id?.toString()
-    if (statisticId) {
-      releaseByStatisticId[statisticId] = release
+    const shortname = release.statistic?.shortname
+    if (shortname) {
+      releaseByStatisticShortname[shortname] = release
     }
   })
 
   const statisticsNews: NewsItem[] = []
 
   mainSubjects.forEach((mainSubject) => {
-    const statistics = query({
+    const statisticsContent = query({
       start: 0,
       count: 100,
       query:
         '_path LIKE "/content' +
         mainSubject.path +
-        '/*" AND data.statistic IN(' +
-        releases.map(({ statistic }) => `"${statistic?.id}"`).join(',') +
+        '/*" AND data.shortname IN(' +
+        releases.map(({ statistic }) => `"${statistic?.shortname}"`).join(',') +
         ')',
     }).hits as unknown as Array<Content<Statistics & Statistic>>
 
-    statistics.forEach((statistic) => {
-      const statisticId = statistic.data.statistic
-      const release = statisticId ? releaseByStatisticId[statisticId] : undefined
+    statisticsContent.forEach((statistic) => {
+      const statisticContentShortname = statistic.data.shortname
+      const release = statisticContentShortname ? releaseByStatisticShortname[statisticContentShortname] : undefined
 
       if (!release?.publish_time) return
 
