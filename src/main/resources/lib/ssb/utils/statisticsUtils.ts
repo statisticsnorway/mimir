@@ -1,7 +1,7 @@
 import '/lib/ssb/polyfills/nashorn'
 import { type Content } from '/lib/xp/content'
 import { StatisticInListing, VariantInListing, ReleaseDatesVariant } from '/lib/ssb/dashboard/statreg/types'
-import { formatDate } from '/lib/ssb/utils/dateUtils'
+import { formatDate, isSameOrBefore, stringToServerTime } from '/lib/ssb/utils/dateUtils'
 import { isAfter } from '/lib/vendor/dateFns'
 import { ensureArray } from '/lib/ssb/utils/arrayUtils'
 import { type StatisticsDates } from '/lib/types/partTypes/statisticHeader'
@@ -95,8 +95,7 @@ function getChangeDate(
 }
 
 export function getReleaseDatesFromStatregAPI(shortname: string): StatregApiReleaseDates {
-  const now = new Date()
-  now.setHours(8, 0, 0, 0)
+  const now = stringToServerTime()
 
   const releases = fetchReleasesFromStatregApi({
     shortname,
@@ -106,10 +105,10 @@ export function getReleaseDatesFromStatregAPI(shortname: string): StatregApiRele
   if (!releases || 'error' in releases || releases.length === 0) return {}
 
   const previousReleaseDates = releases
-    .filter(({ publish_time }) => isAfter(now, new Date(publish_time!)))
+    .filter(({ publish_time }) => (publish_time ? isSameOrBefore(new Date(publish_time), now) : false))
     .map(({ publish_time }) => publish_time)
   const nextReleaseDates = releases
-    .filter(({ publish_time }) => !isAfter(now, new Date(publish_time!)))
+    .filter(({ publish_time }) => (publish_time ? !isSameOrBefore(new Date(publish_time), now) : false))
     .map(({ publish_time }) => publish_time)
 
   return {
