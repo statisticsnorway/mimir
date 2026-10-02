@@ -122,15 +122,15 @@ function renderPart(req: Request): Response {
     nextReleaseDate = statregReleaseDates.nextReleaseDate
     previousReleaseDate = statregReleaseDates.previousReleaseDate
 
-    if (statregReleaseDates.previewNextReleaseDate && statregReleaseDates.previewNextReleaseDate !== '') {
+    if (statregReleaseDates.previewNextReleaseDate) {
       previewNextRelease = formatDate(statregReleaseDates.previewNextReleaseDate, 'PPP', language)
     }
 
-    if (previousReleaseDate && previousReleaseDate !== '') {
+    if (previousReleaseDate) {
       previousRelease = formatDate(previousReleaseDate, 'PPP', language)
     }
 
-    if (nextReleaseDate && nextReleaseDate !== '') {
+    if (nextReleaseDate) {
       nextRelease = formatDate(nextReleaseDate, 'PPP', language)
     }
   }
