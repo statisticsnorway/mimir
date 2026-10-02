@@ -6,9 +6,10 @@ try {
   const cache = require('/lib/ssb/cache/cache')
   const { setupFetchDataOnCreateListener } = require('/lib/ssb/dataset/listeners')
   const { setupCronJobs } = require('/lib/ssb/cron/cron')
-  const { create } = require('/lib/featureToggle')
+  const { create, isEnabled } = require('/lib/featureToggle')
   const { setupTaskListener } = require('/lib/ssb/dataset/publish')
   const { setupArticleListener } = require('/lib/ssb/utils/articleUtils')
+  const { migrateStatisticsContentTypeWithShortname } = require('/lib/ssb/statreg/migrateStatisticsContentTypeWithShortname')
 
   log.info('Application ' + app.name + ' started') // Log application started
   __.disposer(() => log.info('Application ' + app.name + ' stopped')) // Log application stoppped
@@ -75,9 +76,15 @@ try {
           feature: 'new-statreg-as-source',
           enabled: false,
         },
+        {
+          feature: 'migrate-statistics-content-type-with-shortname',
+          enabled: false,
+        },
       ],
     },
   ])
+
+  if (isEnabled('migrate-statistics-content-type-with-shortname', false, 'ssb')) migrateStatisticsContentTypeWithShortname()
 
   const now = new Date()
   log.info(`Startup script complete: ${now.toISOString()}`)
