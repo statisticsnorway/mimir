@@ -63,7 +63,7 @@ export function fetchReleasesFromStatregApi({
   count = 1000,
   sort,
   shortname,
-  approval_status,
+  approval_status = 'GODKJENT',
   publish_time_after,
   publish_time_before,
 }: ReleasesQuery): ReleasesResponse['releases'] | { error: unknown } {
