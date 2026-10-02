@@ -117,8 +117,8 @@ function renderPart(req: Request): Response {
     if (nextReleaseDate && nextReleaseDate !== '') {
       nextRelease = formatDate(nextReleaseDate, 'PPP', language)
     }
-  } else if (page.data.shortname && statregAPI) {
-    const statregReleaseDates = getReleaseDatesFromStatregAPI(page.data.shortname)
+  } else if (statregAPI) {
+    const statregReleaseDates = getReleaseDatesFromStatregAPI(page.data.shortname || '')
     nextReleaseDate = statregReleaseDates.nextReleaseDate
     previousReleaseDate = statregReleaseDates.previousReleaseDate
 
