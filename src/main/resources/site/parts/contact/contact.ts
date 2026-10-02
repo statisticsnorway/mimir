@@ -5,8 +5,9 @@ import { render } from '/lib/thymeleaf'
 import { type Phrases } from '/lib/types/language'
 import { type Contact as StatRegContacts } from '/lib/ssb/dashboard/statreg/types'
 import { renderError } from '/lib/ssb/error/error'
+import { isEnabled } from '/lib/featureToggle'
 import { getContactsFromRepo } from '/lib/ssb/statreg/contacts'
-import { getSelectedContacts } from '/lib/ssb/parts/contact'
+import { getContactsFromStatisticApi, getSelectedContacts } from '/lib/ssb/parts/contact'
 import { ensureArray, chunkArray } from '/lib/ssb/utils/arrayUtils'
 import { getPhrases } from '/lib/ssb/utils/language'
 import { type ContactModel, type Contact } from '/lib/types/partTypes/contact'
@@ -37,17 +38,23 @@ function renderPart(req: Request): Response {
 
   const phrases: Phrases = getPhrases(page) as Phrases
 
-  const statRegContacts: Array<StatRegContacts> = getContactsFromRepo()
-  let contactIds: Array<string> = []
+  const shortname = page.type === `${app.name}:statistics` ? (page.data as Statistics).shortname : undefined
+  let selectedContacts
+  if (isEnabled('new-statreg-as-source', false, 'ssb') && shortname) {
+    selectedContacts = getContactsFromStatisticApi(shortname, pageLanguage)
+  } else {
+    const statRegContacts: Array<StatRegContacts> = getContactsFromRepo()
+    let contactIds: Array<string> = []
 
-  if (part.config.contacts) {
-    contactIds = contactIds.concat(ensureArray(part.config.contacts))
-  }
-  if (page.data.contacts) {
-    contactIds = contactIds.concat(ensureArray(page.data.contacts))
-  }
+    if (part.config.contacts) {
+      contactIds = contactIds.concat(ensureArray(part.config.contacts))
+    }
+    if (page.data.contacts) {
+      contactIds = contactIds.concat(ensureArray(page.data.contacts))
+    }
 
-  const selectedContacts = getSelectedContacts(contactIds, statRegContacts, pageLanguage)
+    selectedContacts = getSelectedContacts(contactIds, statRegContacts, pageLanguage)
+  }
   const contacts: Array<Array<Contact>> = chunkArray(selectedContacts, WIDTH)
 
   const contactTitle: string = phrases.contact
