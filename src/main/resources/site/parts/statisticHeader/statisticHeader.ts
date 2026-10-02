@@ -22,7 +22,7 @@ export function get(req: Request): Response {
   try {
     return renderPart(req)
   } catch (e) {
-    return renderError(req, 'Error in part: ', e)
+    return renderError(req, 'Error in part: ', e as Error)
   }
 }
 
