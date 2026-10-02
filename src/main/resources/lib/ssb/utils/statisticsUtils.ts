@@ -1,6 +1,10 @@
 import '/lib/ssb/polyfills/nashorn'
 import { type Content } from '/lib/xp/content'
-import { StatisticInListing, VariantInListing, ReleaseDatesVariant } from '/lib/ssb/dashboard/statreg/types'
+import {
+  type StatisticInListing,
+  type VariantInListing,
+  type ReleaseDatesVariant,
+} from '/lib/ssb/dashboard/statreg/types'
 import { formatDate, isSameOrBefore, stringToServerTime } from '/lib/ssb/utils/dateUtils'
 import { isAfter } from '/lib/vendor/dateFns'
 import { ensureArray } from '/lib/ssb/utils/arrayUtils'
