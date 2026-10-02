@@ -31,15 +31,14 @@ export function getStatisticsDates(
   statisticsContent: Content<Statistics>,
   phrases: Phrases,
   showDraft: boolean,
-  statistic?: StatisticInListing
+  statistic?: StatisticInListing,
+  useStatregAPI = false
 ): StatisticsDates {
-  const language = statisticsContent.language === 'en' ? 'en' : 'nb'
+  const language =
+    statisticsContent.language === 'en' || statisticsContent.language === 'nn' ? statisticsContent.language : 'nb'
   const showModifiedTime: boolean = statisticsContent.data.showModifiedDate?.modifiedOption.showModifiedTime ?? false
   const modifiedDate: string | undefined = statisticsContent.data.showModifiedDate?.modifiedOption?.lastModified
-  const variants: Array<VariantInListing | undefined> = statistic ? ensureArray(statistic.variants) : []
-  const releaseDates: ReleaseDatesVariant = getReleaseDatesByVariants(variants as Array<VariantInListing>)
-  const nextReleases = releaseDates.nextRelease ?? []
-  const previousReleases = releaseDates.previousRelease ?? []
+  const { nextReleases, previousReleases } = getReleaseDates(statisticsContent, statistic, useStatregAPI)
   const previousReleaseDate = previousReleases.length ? previousReleases[0] : undefined
 
   const changeDate: string | undefined = getChangeDate(previousReleaseDate, modifiedDate, language, showModifiedTime)
@@ -56,6 +55,34 @@ export function getStatisticsDates(
     changeDate,
     previousRelease: showDraft ? nextRelease : previousRelease,
     nextRelease: showDraft ? previewNextRelease : nextRelease,
+  }
+}
+
+function getReleaseDates(
+  statisticsContent: Content<Statistics>,
+  statistic?: StatisticInListing,
+  useStatregAPI = false
+): {
+  nextReleases: string[]
+  previousReleases: string[]
+} {
+  if (useStatregAPI) {
+    const statregReleaseDates = getReleaseDatesFromStatregAPI(statisticsContent.data.shortname || '')
+
+    return {
+      previousReleases: statregReleaseDates.previousReleaseDate ? [statregReleaseDates.previousReleaseDate] : [],
+      nextReleases: [statregReleaseDates.nextReleaseDate, statregReleaseDates.previewNextReleaseDate].filter(
+        (releaseDate): releaseDate is string => !!releaseDate
+      ),
+    }
+  }
+
+  const variants: Array<VariantInListing | undefined> = statistic ? ensureArray(statistic.variants) : []
+  const releaseDates: ReleaseDatesVariant = getReleaseDatesByVariants(variants as Array<VariantInListing>)
+
+  return {
+    nextReleases: releaseDates.nextRelease ?? [],
+    previousReleases: releaseDates.previousRelease ?? [],
   }
 }
 
