@@ -35,11 +35,11 @@ afterAll(() => {
 
 beforeEach(() => {
   mockFetchReleasesFromStatregApi.mockReset()
-  mockFetchReleasesFromStatregApi.mockReturnValue(releases)
+  mockFetchReleasesFromStatregApi.mockReturnValue(mockedReleases)
   ;(globalThis as { app?: { config?: Record<string, string> } }).app = { config: {} }
 })
 
-const releases = [
+const mockedReleases = [
   { publish_time: '2026-10-02T08:00:00.000Z' },
   { publish_time: '2026-11-02T08:00:00.000Z' },
   { publish_time: '2026-12-02T08:00:00.000Z' },
@@ -74,8 +74,8 @@ describe('getReleaseDatesFromStatregAPI', () => {
 
 describe('getStatisticsDates', () => {
   const mockedPhrases = {
-    notAvailable: 'Not available',
-    notYetDetermined: 'Not yet determined',
+    notAvailable: 'Ikke tilgjengelig',
+    notYetDetermined: 'Foreløpig ikke fastsatt',
   }
 
   const mockedStatisticsContent = {
@@ -83,6 +83,11 @@ describe('getStatisticsDates', () => {
     data: {
       shortname: 'aku',
     },
+  }
+
+  const mockedPhrasesEn = {
+    notAvailable: 'Not available',
+    notYetDetermined: 'Not yet determined',
   }
 
   const mockedStatisticsContentEn = {
@@ -112,7 +117,7 @@ describe('getStatisticsDates', () => {
     expect(
       statisticsUtils.getStatisticsDates(
         mockedStatisticsContentEn as never,
-        mockedPhrases as never,
+        mockedPhrasesEn as never,
         true,
         undefined,
         true

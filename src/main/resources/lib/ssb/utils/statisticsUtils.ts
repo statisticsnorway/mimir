@@ -36,8 +36,10 @@ export function getStatisticsDates(
 ): StatisticsDates {
   const language =
     statisticsContent.language === 'en' || statisticsContent.language === 'nn' ? statisticsContent.language : 'nb'
+
   const showModifiedTime: boolean = statisticsContent.data.showModifiedDate?.modifiedOption.showModifiedTime ?? false
   const modifiedDate: string | undefined = statisticsContent.data.showModifiedDate?.modifiedOption?.lastModified
+
   const { nextReleases, previousReleases } = getReleaseDates(statisticsContent, statistic, useStatregAPI)
   const previousReleaseDate = previousReleases.length ? previousReleases[0] : undefined
 
@@ -67,11 +69,13 @@ function getReleaseDates(
   previousReleases: string[]
 } {
   if (useStatregAPI) {
-    const statregReleaseDates = getReleaseDatesFromStatregAPI(statisticsContent.data.shortname || '')
+    const { previousReleaseDate, nextReleaseDate, previewNextReleaseDate } = getReleaseDatesFromStatregAPI(
+      statisticsContent.data.shortname || ''
+    )
 
     return {
-      previousReleases: statregReleaseDates.previousReleaseDate ? [statregReleaseDates.previousReleaseDate] : [],
-      nextReleases: [statregReleaseDates.nextReleaseDate, statregReleaseDates.previewNextReleaseDate].filter(
+      previousReleases: previousReleaseDate ? [previousReleaseDate] : [],
+      nextReleases: [nextReleaseDate, previewNextReleaseDate].filter(
         (releaseDate): releaseDate is string => !!releaseDate
       ),
     }
