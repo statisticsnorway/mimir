@@ -1,11 +1,6 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, jest, test } from '@jest/globals'
 
 const mockFetchReleasesFromStatregApi = jest.fn()
-const mockLog = {
-  info: jest.fn(),
-  error: jest.fn(),
-  warning: jest.fn(),
-}
 
 jest.mock(
   '/lib/time',
@@ -24,7 +19,6 @@ jest.mock('/lib/ssb/utils/serverOffset', () => ({
 }))
 
 jest.mock('/lib/ssb/statreg/statistics', () => ({
-  __esModule: true,
   fetchReleasesFromStatregApi: (...args: unknown[]) => mockFetchReleasesFromStatregApi(...args),
   getReleaseDatesByVariants: jest.fn(),
 }))
@@ -43,7 +37,6 @@ beforeEach(() => {
   mockFetchReleasesFromStatregApi.mockReset()
   mockFetchReleasesFromStatregApi.mockReturnValue(releases)
   ;(globalThis as { app?: { config?: Record<string, string> } }).app = { config: {} }
-  ;(globalThis as { log?: typeof mockLog }).log = mockLog
 })
 
 const releases = [
@@ -80,12 +73,19 @@ describe('getReleaseDatesFromStatregAPI', () => {
 })
 
 describe('getStatisticsDates', () => {
-  const phrases = {
+  const mockedPhrases = {
     notAvailable: 'Not available',
     notYetDetermined: 'Not yet determined',
   }
 
-  const statisticsContent = {
+  const mockedStatisticsContent = {
+    language: 'nb',
+    data: {
+      shortname: 'aku',
+    },
+  }
+
+  const mockedStatisticsContentEn = {
     language: 'en',
     data: {
       shortname: 'aku',
@@ -96,15 +96,27 @@ describe('getStatisticsDates', () => {
     jest.setSystemTime(new Date('2026-10-02T08:00:00.000Z'))
 
     expect(
-      statisticsUtils.getStatisticsDates(statisticsContent as never, phrases as never, false, undefined, true)
+      statisticsUtils.getStatisticsDates(
+        mockedStatisticsContent as never,
+        mockedPhrases as never,
+        false,
+        undefined,
+        true
+      )
     ).toEqual({
       changeDate: undefined,
-      previousRelease: '2 October 2026',
-      nextRelease: '2 November 2026',
+      previousRelease: '2. oktober 2026',
+      nextRelease: '2. november 2026',
     })
 
     expect(
-      statisticsUtils.getStatisticsDates(statisticsContent as never, phrases as never, true, undefined, true)
+      statisticsUtils.getStatisticsDates(
+        mockedStatisticsContentEn as never,
+        mockedPhrases as never,
+        true,
+        undefined,
+        true
+      )
     ).toEqual({
       changeDate: undefined,
       previousRelease: '2 November 2026',
