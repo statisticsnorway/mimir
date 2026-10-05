@@ -35,7 +35,6 @@ afterAll(() => {
 
 beforeEach(() => {
   mockFetchReleasesFromStatregApi.mockReset()
-  mockFetchReleasesFromStatregApi.mockReturnValue(mockedReleases)
   ;(globalThis as { app?: { config?: Record<string, string> } }).app = { config: {} }
 })
 
@@ -49,6 +48,8 @@ describe('getReleaseDatesFromStatregAPI', () => {
   test('keeps the 08:00 release as upcoming one second before publish time', () => {
     jest.setSystemTime(new Date('2026-10-02T07:59:59.000Z'))
 
+    mockFetchReleasesFromStatregApi.mockReturnValueOnce([]).mockReturnValueOnce([mockedReleases[0], mockedReleases[1]])
+
     expect(statisticsUtils.getReleaseDatesFromStatregAPI('aku')).toEqual({
       previousReleaseDate: '',
       nextReleaseDate: '2026-10-02T08:00:00.000Z',
@@ -59,15 +60,33 @@ describe('getReleaseDatesFromStatregAPI', () => {
   test('moves the 08:00 release to previous exactly at publish time', () => {
     jest.setSystemTime(new Date('2026-10-02T08:00:00.000Z'))
 
+    mockFetchReleasesFromStatregApi
+      .mockReturnValueOnce([mockedReleases[0]])
+      .mockReturnValueOnce([mockedReleases[1], mockedReleases[2]])
+
     expect(statisticsUtils.getReleaseDatesFromStatregAPI('aku')).toEqual({
       previousReleaseDate: '2026-10-02T08:00:00.000Z',
       nextReleaseDate: '2026-11-02T08:00:00.000Z',
       previewNextReleaseDate: '2026-12-02T08:00:00.000Z',
     })
-    expect(mockFetchReleasesFromStatregApi).toHaveBeenCalledWith({
+    expect(mockFetchReleasesFromStatregApi).toHaveBeenNthCalledWith(2, {
+      count: 2,
       shortname: 'aku',
       sort: 'publish_time',
       approval_status: 'GODKJENT',
+      publish_time_after: '2026-10-02T08:00:00.000Z',
+    })
+  })
+
+  test('returns previous release even when there are no upcoming releases', () => {
+    jest.setSystemTime(new Date('2026-12-03T08:00:00.000Z'))
+
+    mockFetchReleasesFromStatregApi.mockReturnValueOnce([mockedReleases[2]]).mockReturnValueOnce([])
+
+    expect(statisticsUtils.getReleaseDatesFromStatregAPI('aku')).toEqual({
+      previousReleaseDate: '2026-12-02T08:00:00.000Z',
+      nextReleaseDate: '',
+      previewNextReleaseDate: '',
     })
   })
 })
@@ -100,6 +119,10 @@ describe('getStatisticsDates', () => {
   test('formats StatReg API dates through the shared helper at the 08:00 boundary', () => {
     jest.setSystemTime(new Date('2026-10-02T08:00:00.000Z'))
 
+    mockFetchReleasesFromStatregApi
+      .mockReturnValueOnce([mockedReleases[0]])
+      .mockReturnValueOnce([mockedReleases[1], mockedReleases[2]])
+
     expect(
       statisticsUtils.getStatisticsDates(
         mockedStatisticsContent as never,
@@ -113,6 +136,10 @@ describe('getStatisticsDates', () => {
       previousRelease: '2. oktober 2026',
       nextRelease: '2. november 2026',
     })
+
+    mockFetchReleasesFromStatregApi
+      .mockReturnValueOnce([mockedReleases[0]])
+      .mockReturnValueOnce([mockedReleases[1], mockedReleases[2]])
 
     expect(
       statisticsUtils.getStatisticsDates(
