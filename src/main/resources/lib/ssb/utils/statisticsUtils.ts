@@ -5,7 +5,7 @@ import {
   type VariantInListing,
   type ReleaseDatesVariant,
 } from '/lib/ssb/dashboard/statreg/types'
-import { formatDate, isSameOrBefore, stringToServerTime } from '/lib/ssb/utils/dateUtils'
+import { formatDate, stringToServerTime } from '/lib/ssb/utils/dateUtils'
 import { isAfter } from '/lib/vendor/dateFns'
 import { ensureArray } from '/lib/ssb/utils/arrayUtils'
 import { type StatisticsDates } from '/lib/types/partTypes/statisticHeader'
@@ -132,23 +132,31 @@ function getChangeDate(
 export function getReleaseDatesFromStatregAPI(shortname: string): StatregApiReleaseDates {
   const now = stringToServerTime()
 
-  const releases = fetchReleasesFromStatregApi({
+  const previousReleases = fetchReleasesFromStatregApi({
+    count: 1,
+    shortname,
+    sort: '-publish_time',
+    approval_status: 'GODKJENT',
+    publish_time_before: now.toISOString(),
+  })
+
+  if (!previousReleases || 'error' in previousReleases) return {}
+
+  const nextReleases = fetchReleasesFromStatregApi({
+    count: 2, // needed for next release preview
     shortname,
     sort: 'publish_time',
     approval_status: 'GODKJENT',
+    publish_time_after: now.toISOString(),
   })
 
-  if (!releases || 'error' in releases || releases.length === 0) return {}
+  if (!nextReleases || 'error' in nextReleases) return {}
 
-  const previousReleaseDates = releases
-    .filter(({ publish_time }) => (publish_time ? isSameOrBefore(new Date(publish_time), now) : false))
-    .map(({ publish_time }) => publish_time)
-  const nextReleaseDates = releases
-    .filter(({ publish_time }) => (publish_time ? !isSameOrBefore(new Date(publish_time), now) : false))
-    .map(({ publish_time }) => publish_time)
+  const previousReleaseDates = previousReleases?.map(({ publish_time }) => publish_time)
+  const nextReleaseDates = nextReleases?.map(({ publish_time }) => publish_time)
 
   return {
-    previousReleaseDate: previousReleaseDates.length ? previousReleaseDates[previousReleaseDates.length - 1] : '',
+    previousReleaseDate: previousReleaseDates.length ? previousReleaseDates[0] : '',
     nextReleaseDate: nextReleaseDates.length ? nextReleaseDates[0] : '',
     previewNextReleaseDate: nextReleaseDates.length > 1 ? nextReleaseDates[1] : '',
   }
