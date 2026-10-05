@@ -19,7 +19,6 @@ import { getStatRegBaseUrl, STATISTICS_URL, STATREG_BRANCH, STATREG_REPO } from 
 import { getNode } from '/lib/ssb/repo/common'
 import { Events, logUserDataQuery } from '/lib/ssb/repo/query'
 import { cronJobLog } from '/lib/ssb/utils/serverLog'
-import { fromStatisticsListingCache, fromReleasesListCache } from '../cache/cache'
 
 export const STATREG_REPO_STATISTICS_KEY = 'statistics'
 
@@ -64,30 +63,28 @@ export function fetchReleasesFromStatregApi({
   count = 1000,
   sort,
   shortname,
-  approval_status,
+  approval_status = 'GODKJENT',
   publish_time_after,
   publish_time_before,
 }: ReleasesQuery): ReleasesResponse['releases'] | { error: unknown } {
-  return fromReleasesListCache('statregAPI_releasesListing', () => {
-    try {
-      const response = request({
-        url:
-          STATREG_API_BASE_URL +
-          `/releases?start=${start}&count=${count}` +
-          (sort ? `&sort=${sort}` : '') +
-          (shortname ? `&shortname=${shortname}` : '') +
-          (approval_status ? `&approval_status=${approval_status}` : '') +
-          (publish_time_after ? `&publish_time_after=${publish_time_after}` : '') +
-          (publish_time_before ? `&publish_time_before=${publish_time_before}` : ''),
-      })
-      const body: ReleasesResponse = response.body ? JSON.parse(response.body) : {}
+  try {
+    const response = request({
+      url:
+        STATREG_API_BASE_URL +
+        `/releases?start=${start}&count=${count}` +
+        (sort ? `&sort=${sort}` : '') +
+        (shortname ? `&shortname=${shortname}` : '') +
+        (approval_status ? `&approval_status=${approval_status}` : '') +
+        (publish_time_after ? `&publish_time_after=${publish_time_after}` : '') +
+        (publish_time_before ? `&publish_time_before=${publish_time_before}` : ''),
+    })
+    const body: ReleasesResponse = response.body ? JSON.parse(response.body) : {}
 
-      return body.releases
-    } catch (error) {
-      log.error(`Failed to fetch releases from statreg API: ${error}`)
-      return { error }
-    }
-  })
+    return body.releases
+  } catch (error) {
+    log.error(`Failed to fetch releases from statreg API: ${error}`)
+    return { error }
+  }
 }
 
 export type StatisticListingResponse = paths['/statistics']['get']['responses']['200']['content']['application/json']
@@ -96,22 +93,20 @@ export function fetchStatisticsFromStatregAPI({
   start = 0,
   count = 1000,
 }): StatisticListingResponse['statistics'] | { error: unknown } {
-  return fromStatisticsListingCache('statregAPI_statisticsListing', () => {
-    try {
-      const response = request({
-        url: STATREG_API_BASE_URL + `/statistics?start=${start}&count=${count}`,
-      })
+  try {
+    const response = request({
+      url: STATREG_API_BASE_URL + `/statistics?start=${start}&count=${count}`,
+    })
 
-      const body: StatisticListingResponse | undefined = response.body ? JSON.parse(response.body) : undefined
+    const body: StatisticListingResponse | undefined = response.body ? JSON.parse(response.body) : undefined
 
-      return body?.statistics
-    } catch (error) {
-      log.error(`Failed to fetch statistics from statreg API: ${error}`)
-      return {
-        error,
-      }
+    return body?.statistics
+  } catch (error) {
+    log.error(`Failed to fetch statistics from statreg API: ${error}`)
+    return {
+      error,
     }
-  })
+  }
 }
 
 export type StatisticDetailsResponse =

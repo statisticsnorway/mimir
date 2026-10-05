@@ -88,7 +88,7 @@ function getReleasesFromApi(mainSubjects: SubjectItem[], days: number): NewsItem
       publish_time_before: today,
     }) || []
 
-  if (!releases.length) return []
+  if (!releases || 'error' in releases || releases.length === 0) return []
 
   const releaseByStatisticId: Record<string, components['schemas']['Release_listing']> = {}
   releases.forEach((release) => {
