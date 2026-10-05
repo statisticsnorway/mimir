@@ -36,8 +36,8 @@ export function getContactsFromStatisticApi(shortname: string, language: string)
     transformContact(
       {
         id: index,
-        name: contact.name || '',
-        email: contact.email || '',
+        name: contact.name || contact.principalName || '',
+        email: contact.email || contact.principalName || '',
         telephone: contact.phone || '',
       },
       language
