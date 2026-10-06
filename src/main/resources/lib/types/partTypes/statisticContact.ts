@@ -4,7 +4,7 @@ export interface StatisticContactProps {
 }
 
 export interface Contact {
-  id: number
+  id: number | string
   name: string
   email?: string
   phone?: string

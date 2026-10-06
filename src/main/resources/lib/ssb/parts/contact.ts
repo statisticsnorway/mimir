@@ -8,6 +8,8 @@ type StatregApiContact = NonNullable<StatisticDetailsResponse['contacts']>[numbe
   phone?: string
 }
 
+type ContactInput = Omit<StatRegContacts, 'id'> & { id: number | string }
+
 function splitPhoneNumber(number: string): string {
   return number?.match(/.{1,2}/g)?.join(' ') || ''
 }
@@ -15,7 +17,7 @@ function splitPhoneNumber(number: string): string {
 const landCodeVisual = '(+47) '
 const landCode = '+47'
 
-export function transformContact(contact: StatRegContacts, language: string): Contact {
+export function transformContact(contact: ContactInput, language: string): Contact {
   return {
     id: contact.id,
     name: contact.name,
@@ -32,10 +34,10 @@ export function getContactsFromStatisticApi(shortname: string, language: string)
   const statistic = fetchStatisticByShortnameFromStatregAPI(shortname)
   if (!statistic || 'error' in statistic) return []
 
-  return ((statistic.contacts || []) as Array<StatregApiContact>).map((contact, index) =>
+  return ((statistic.contacts || []) as Array<StatregApiContact>).map((contact) =>
     transformContact(
       {
-        id: index,
+        id: contact.principalName,
         name: contact.name || contact.principalName || '',
         email: contact.email || contact.principalName || '',
         telephone: contact.phone || '',
