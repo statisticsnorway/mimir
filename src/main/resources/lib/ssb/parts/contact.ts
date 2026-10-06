@@ -1,6 +1,14 @@
 import { type Contact as StatRegContacts } from '/lib/ssb/dashboard/statreg/types'
 import { type Contact } from '/lib/types/partTypes/statisticContact'
 import { find } from '/lib/vendor/ramda'
+import { fetchStatisticByShortnameFromStatregAPI, type StatisticDetailsResponse } from '/lib/ssb/statreg/statistics'
+
+type StatregApiContact = NonNullable<StatisticDetailsResponse['contacts']>[number] & {
+  email?: string
+  phone?: string
+}
+
+type ContactInput = Omit<StatRegContacts, 'id'> & { id: number | string }
 
 function splitPhoneNumber(number: string): string {
   return number?.match(/.{1,2}/g)?.join(' ') || ''
@@ -9,7 +17,7 @@ function splitPhoneNumber(number: string): string {
 const landCodeVisual = '(+47) '
 const landCode = '+47'
 
-export function transformContact(contact: StatRegContacts, language: string): Contact {
+export function transformContact(contact: ContactInput, language: string): Contact {
   return {
     id: contact.id,
     name: contact.name,
@@ -20,6 +28,23 @@ export function transformContact(contact: StatRegContacts, language: string): Co
         : splitPhoneNumber(contact.telephone as string),
     phoneLink: landCode.concat(contact.telephone as string),
   }
+}
+
+export function getContactsFromStatisticApi(shortname: string, language: string): Contact[] {
+  const statistic = fetchStatisticByShortnameFromStatregAPI(shortname)
+  if (!statistic || 'error' in statistic) return []
+
+  return ((statistic.contacts || []) as Array<StatregApiContact>).map((contact) =>
+    transformContact(
+      {
+        id: contact.principalName,
+        name: contact.name || contact.principalName || '',
+        email: contact.email || contact.principalName || '',
+        telephone: contact.phone || '',
+      },
+      language
+    )
+  )
 }
 
 export function getSelectedContacts(
