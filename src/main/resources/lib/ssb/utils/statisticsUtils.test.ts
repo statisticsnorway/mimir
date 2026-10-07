@@ -1,6 +1,5 @@
-import { afterAll, beforeAll, beforeEach, describe, expect, jest, test } from '@jest/globals'
-
-const mockFetchReleasesFromStatregApi = jest.fn()
+import { beforeAll, beforeEach, describe, expect, jest, test } from '@jest/globals'
+import * as statisticsUtils from './statisticsUtils'
 
 jest.mock(
   '/lib/time',
@@ -14,23 +13,18 @@ jest.mock(
   { virtual: true }
 )
 
+const mockFetchReleasesFromStatregApi = jest.fn()
+
+jest.mock('/lib/ssb/statreg/statistics', () => ({
+  fetchReleasesFromStatregApi: (...args: unknown[]) => mockFetchReleasesFromStatregApi(...args),
+}))
+
 jest.mock('/lib/ssb/utils/serverOffset', () => ({
   getServerOffsetInMs: jest.fn(() => 0),
 }))
 
-jest.mock('/lib/ssb/statreg/statistics', () => ({
-  fetchReleasesFromStatregApi: (...args: unknown[]) => mockFetchReleasesFromStatregApi(...args),
-  getReleaseDatesByVariants: jest.fn(),
-}))
-
-import * as statisticsUtils from './statisticsUtils'
-
 beforeAll(() => {
   jest.useFakeTimers()
-})
-
-afterAll(() => {
-  jest.useRealTimers()
 })
 
 beforeEach(() => {
@@ -136,7 +130,9 @@ describe('getStatisticsDates', () => {
       previousRelease: '2. oktober 2026',
       nextRelease: '2. november 2026',
     })
+  })
 
+  test('formats StatReg API dates eng loc through the shared helper at the 08:00 boundary', () => {
     mockFetchReleasesFromStatregApi
       .mockReturnValueOnce([mockedReleases[0]])
       .mockReturnValueOnce([mockedReleases[1], mockedReleases[2]])
