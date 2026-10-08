@@ -53,6 +53,8 @@ export function clearPartCache(content: Content, branch: string): void {
     partCache.removePattern(`${content._id}-webcruiterAdvertisementList.*`)
     cacheLog(`try to clear ${content._id}-simpleStatbank from part cache (${branch})`)
     partCache.removePattern(`${content._id}-simpleStatbank.*`)
+    cacheLog(`try to clear ${content._id}-statisticContact from part cache (${branch})`)
+    partCache.removePattern(`${content._id}-statisticContact.*`)
   }
 
   if (content.type === `${app.name}:article`) {
