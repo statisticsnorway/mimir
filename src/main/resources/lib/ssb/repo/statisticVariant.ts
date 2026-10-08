@@ -233,6 +233,31 @@ export function getStatisticsContentByRegStatId(statisticsIds: string[], languag
   })
 }
 
+export function getStatisticsContentByShortname(statisticShortnames: string[], language: string) {
+  return query<Content<Statistics>>({
+    count: statisticShortnames.length,
+    contentTypes: [`${app.name}:statistics`],
+    filters: {
+      boolean: {
+        must: [
+          {
+            hasValue: {
+              field: 'language',
+              values: language === 'en' ? ['en'] : ['nb', 'nn'],
+            },
+          },
+          {
+            hasValue: {
+              field: 'data.shortname',
+              values: statisticShortnames,
+            },
+          },
+        ],
+      },
+    },
+  })
+}
+
 function createContentStatisticVariant(
   params: CreateContentStatisticVariantParams,
   serverOffsetInMs: number = getServerOffsetInMs()
