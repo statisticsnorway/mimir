@@ -38,7 +38,7 @@ function renderPart(req: Request): Response {
 
   let selectedContacts
   if (isEnabled('new-statreg-as-source', false, 'ssb') && page.data.shortname) {
-    selectedContacts = fromPartCache(req, `${page.data.shortname}-statisticContact`, () =>
+    selectedContacts = fromPartCache(req, `${page._id}-statisticContact`, () =>
       getContactsFromStatisticApi(page.data.shortname as string, pageLanguage)
     )
   } else {
