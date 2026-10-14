@@ -11,6 +11,4 @@ export function run(): void {
   clearPartFromPartCache('relatedFactPage')
   clearPartFromPartCache('archiveAllPublications-nb')
   clearPartFromPartCache('archiveAllPublications-en')
-  clearPartFromPartCache('statisticHeader')
-  clearPartFromPartCache('statisticContact')
 }

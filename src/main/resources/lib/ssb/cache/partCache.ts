@@ -65,6 +65,14 @@ export function clearPartCache(content: Content, branch: string): void {
   }
 }
 
+export function clearStatisticPartsCache(contentId: string, branch: string): void {
+  const partCache: Cache = branch === 'master' ? masterPartCache : draftPartCache
+  cacheLog(`try to clear ${contentId}-statisticHeader from part cache (${branch})`)
+  partCache.removePattern(`${contentId}-statisticHeader.*`)
+  cacheLog(`try to clear ${contentId}-statisticContact from part cache (${branch})`)
+  partCache.removePattern(`${contentId}-statisticContact.*`)
+}
+
 export function completelyClearPartCache(branch: string): void {
   cacheLog(`clear part cache (${branch})`)
   const partCache: Cache = branch === 'master' ? masterPartCache : draftPartCache
