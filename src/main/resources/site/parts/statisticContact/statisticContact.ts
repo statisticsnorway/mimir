@@ -11,13 +11,14 @@ import { getContactsFromStatisticApi, getSelectedContacts } from '/lib/ssb/parts
 import { ensureArray } from '/lib/ssb/utils/arrayUtils'
 import { getPhrases } from '/lib/ssb/utils/language'
 import { type StatisticContactProps } from '/lib/types/partTypes/statisticContact'
+import { fromPartCache } from '/lib/ssb/cache/partCache'
 import { type Statistics } from '/site/content-types'
 
 export function get(req: Request) {
   try {
     return renderPart(req)
   } catch (e) {
-    return renderError(req, 'Error in part', e)
+    return renderError(req, 'Error in part', e as Error)
   }
 }
 
@@ -37,7 +38,9 @@ function renderPart(req: Request): Response {
 
   let selectedContacts
   if (isEnabled('new-statreg-as-source', false, 'ssb') && page.data.shortname) {
-    selectedContacts = getContactsFromStatisticApi(page.data.shortname, pageLanguage)
+    selectedContacts = fromPartCache(req, `${page._id}-statisticContact`, () =>
+      getContactsFromStatisticApi(page.data.shortname as string, pageLanguage)
+    )
   } else {
     const statRegContacts: Array<StatRegContacts> = getContactsFromRepo()
     let contactIds: Array<string> = []
