@@ -34,7 +34,7 @@ import { getParentType } from '/lib/ssb/utils/parentUtils'
 import { fromDatasetRepoCache } from '/lib/ssb/cache/cache'
 import { CreateOrUpdateStatus, refreshDataset, extractKey, getDataset } from '/lib/ssb/dataset/dataset'
 import * as util from '/lib/util'
-import { getStatisticByIdFromRepo } from '/lib/ssb/statreg/statistics'
+import { getStatisticByIdFromRepo, getStatisticByShortNameFromRepo } from '/lib/ssb/statreg/statistics'
 import { createOrUpdateNameGraphRepo } from '/lib/ssb/repo/nameGraph'
 import { getNameSearchGraphDatasetId } from '/lib/ssb/dataset/calculator'
 import { type Page, type Statistics } from '/site/content-types'
@@ -422,7 +422,8 @@ function parseResult(
 
 function getPublishJobParsedResult(refreshDataResult: Array<StatisticsPublishResult>) {
   return refreshDataResult.map((statResult) => {
-    const statregData: StatisticInListing | undefined = getStatisticByIdFromRepo(statResult.shortNameId)
+    const statregData: StatisticInListing | undefined =
+      getStatisticByIdFromRepo(statResult.shortNameId) || getStatisticByShortNameFromRepo(statResult.shortNameId)
     const statId: string = statResult.statistic
     const shortName: string = statregData ? statregData.shortName : statResult.shortNameId // get name from shortNameId
     const dataSources: DashboardPublishJobResult['dataSources'] = util.data
