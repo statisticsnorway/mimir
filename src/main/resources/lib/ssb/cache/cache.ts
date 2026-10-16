@@ -14,7 +14,7 @@ import { DATASET_REPO, DatasetRepoNode } from '/lib/ssb/repo/dataset'
 import { getDataset, extractKey } from '/lib/ssb/dataset/dataset'
 import { cacheLog } from '/lib/ssb/utils/serverLog'
 import { completelyClearSubjectCache, clearSubjectCache } from '/lib/ssb/cache/subjectCache'
-import { completelyClearPartCache, clearPartCache } from '/lib/ssb/cache/partCache'
+import { completelyClearPartCache, clearPartCache, clearStatisticPartsCache } from '/lib/ssb/cache/partCache'
 import { ENONIC_CMS_DEFAULT_REPO } from '/lib/ssb/repo/common'
 import { type MunicipalityWithCounty } from '/lib/types/municipalities'
 import { type DataSource } from '/site/mixins/dataSource'
@@ -101,6 +101,13 @@ export function setup(): void {
     type: 'custom.clearDatasetCache',
     callback: (e: EnonicEvent<{ path: string }>) => {
       clearCacheRepo(e.data.path)
+    },
+  })
+
+  listener({
+    type: 'custom.clearStatisticPartsCache',
+    callback: (e: EnonicEvent<ClearStatisticPartsCacheOptions>) => {
+      clearStatisticPartsCache(e.data.contentId, e.data.branch)
     },
   })
 }
@@ -608,4 +615,9 @@ export interface CompletelyClearCacheOptions {
   clearParentTypeCache: boolean
   clearSubjectCache: boolean
   clearPartCache: boolean
+}
+
+export interface ClearStatisticPartsCacheOptions {
+  contentId: string
+  branch: string
 }

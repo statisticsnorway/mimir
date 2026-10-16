@@ -68,9 +68,12 @@ function renderPart(req: Request): Response {
   const statregAPI = isEnabled('new-statreg-as-source', false, 'ssb')
   const statistic: StatisticInListing | undefined = getStatisticByIdFromRepo(page.data.statistic)
   const title: string = getStatisticTitle(page, statistic)
-  const statisticDates = fromPartCache(req, `${page._id}-statisticHeader`, () =>
-    getStatisticsDates(page, phrases, paramShowDraft && showPreviewDraft, statistic, statregAPI)
-  )
+  const statisticDates =
+    req.mode === 'live'
+      ? fromPartCache(req, `${page._id}-statisticHeader`, () =>
+          getStatisticsDates(page, phrases, paramShowDraft && showPreviewDraft, statistic, statregAPI)
+        )
+      : getStatisticsDates(page, phrases, paramShowDraft && showPreviewDraft, statistic, statregAPI)
 
   const props: StatisticHeader = {
     title,

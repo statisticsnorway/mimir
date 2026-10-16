@@ -318,6 +318,14 @@ function createTask(
           if (allDataSourcesComplete) {
             log.info(`finished publishing statistic ${statisticIdentifier}`)
             statRefreshResult.status = JobStatus.COMPLETE
+            send({
+              type: 'clearStatisticPartsCache',
+              distributed: true,
+              data: {
+                contentId: statistic._id,
+                branch: 'master',
+              },
+            })
             const allComplete: boolean =
               jobRefreshResult.filter((s) => {
                 return s.status === JobStatus.COMPLETE || s.status === JobStatus.ERROR || s.status === JobStatus.SKIPPED
