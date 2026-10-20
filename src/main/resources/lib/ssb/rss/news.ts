@@ -79,13 +79,14 @@ function getStatistics(mainSubjects: SubjectItem[], days: number): NewsItem[] {
 }
 
 function getReleasesFromApi(mainSubjects: SubjectItem[], days: number): NewsItem[] {
-  const from = new Date(subDays(new Date(), days).setHours(8, 0, 0, 0)).toISOString() // e.g. Date for 90 days ago
+  const from = subDays(new Date(), days).toISOString() // e.g. Date for 90 days ago
   const today = new Date().toISOString()
 
   const releases =
     fetchReleasesFromStatregApi({
       publish_time_after: from,
       publish_time_before: today,
+      sort: 'publish_time',
     }) || []
 
   if (!releases || 'error' in releases || releases.length === 0) return []
