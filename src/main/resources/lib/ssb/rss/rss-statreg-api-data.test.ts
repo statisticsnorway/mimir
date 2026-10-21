@@ -1,5 +1,5 @@
 
-import { beforeAll, describe, expect, test } from '@jest/globals'
+import { describe, expect, test } from '@jest/globals'
 
 const baseUrl = 'https://www.qa.ssb.no/_/service/mimir'
 
@@ -48,16 +48,6 @@ function expectCommonFields(item: StatkalItem | NewsItem) {
 }
 
 describe('RSS services with new Statreg source enabled', () => {
-  beforeAll(async () => {
-    const { features } = await get<{
-      features: Array<{ _name: string; enabled: boolean }>
-    }>('features?space=ssb&branch=master')
-
-    expect(
-      features.find((feature) => feature._name === 'new-statreg-as-source')?.enabled
-    ).toBe(true)
-  })
-
   // rssStatkal: upcoming statistical releases
   test('rssStatkal returns the expected data structure', async () => {
     const items = await get<StatkalItem[]>('rssStatkal')
