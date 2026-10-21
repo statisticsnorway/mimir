@@ -50,11 +50,7 @@ describe('RSS services with new Statreg source enabled', () => {
       features: { _name: string; enabled: boolean }[]
     }>('features?space=ssb&branch=master')
 
-    expect(
-      features.some(feature =>
-        feature._name === 'new-statreg-as-source' && feature.enabled
-      )
-    ).toBe(true)
+    expect(features.some((feature) => feature._name === 'new-statreg-as-source' && feature.enabled)).toBe(true)
   })
 
   // rssStatkal: upcoming statistical releases
