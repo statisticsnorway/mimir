@@ -1,4 +1,5 @@
-import { beforeAll, describe, expect, test } from '@jest/globals'
+import { describe, expect, test } from '@jest/globals'
+import { execFileSync } from 'node:child_process'
 
 type StatkalItem = {
   guid: string
@@ -104,26 +105,45 @@ function expectMockData<T extends StatkalItem | NewsItem>(
   }
 }
 
+// Check the toggle before Jest registers tests, using Node's built-in fetch.
+const statregEnabled = execFileSync(
+  process.execPath,
+  [
+    '-e',
+    `
+      (async () => {
+        const response = await fetch(process.argv[1])
+        if (!response.ok) {
+          throw new Error('Feature toggle request failed: ' + response.status)
+        }
+
+        const { features } = await response.json()
+        const enabled = features.some(
+          feature =>
+            feature._name === 'new-statreg-as-source' &&
+            feature.enabled
+        )
+
+        process.stdout.write(String(enabled))
+      })().catch(error => {
+        console.error(error)
+        process.exit(1)
+      })
+    `,
+    `${baseUrl}/_/service/mimir/features?space=ssb&branch=master`,
+  ],
+  { encoding: 'utf8', timeout: 10000 }
+).trim() === 'true'
+
+const rssTest = statregEnabled ? test : test.skip
+const skipReason = statregEnabled
+  ? ''
+  : ' (SKIPPED: new-statreg-as-source feature toggle is OFF)'
+
 describe('RSS services with new Statreg source enabled', () => {
-  let statregEnabled = false
-
-  // Checks whether the new Statreg source is enabled before running RSS validations.
-  beforeAll(async () => {
-    const { features } = await getService<{
-      features: { _name: string; enabled: boolean }[]
-    }>('features?space=ssb&branch=master')
-
-    statregEnabled = features.some(
-      feature =>
-        feature._name === 'new-statreg-as-source' &&
-        feature.enabled
-    )
-  })
 
   // rssStatkal: validates upcoming releases and compares them with known Statreg data.
-  test('rssStatkal returns the expected data structure', async () => {
-    if (!statregEnabled) return
-
+  rssTest(`rssStatkal returns the expected data structure${skipReason}`, async () => {
     const items = await getService<StatkalItem[]>('rssStatkal')
 
     expect(Array.isArray(items)).toBe(true)
@@ -139,9 +159,7 @@ describe('RSS services with new Statreg source enabled', () => {
   })
 
   // rssNews: validates recent news and compares them with known reference data.
-  test('rssNews returns the expected data structure', async () => {
-    if (!statregEnabled) return
-
+  rssTest(`rssNews returns the expected data structure${skipReason}`, async () => {
     const items = await getService<NewsItem[]>('rssNews?days=90')
 
     expect(Array.isArray(items)).toBe(true)
