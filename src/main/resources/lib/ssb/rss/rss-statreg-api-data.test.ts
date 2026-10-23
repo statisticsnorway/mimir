@@ -1,5 +1,5 @@
-import { describe, expect, test } from '@jest/globals'
 import { execFileSync } from 'node:child_process'
+import { describe, expect, test } from '@jest/globals'
 
 type StatkalItem = {
   guid: string
@@ -65,9 +65,7 @@ const mockNews = [
   },
 ] satisfies Partial<NewsItem>[]
 
-const baseUrl =
-  (typeof app !== 'undefined' && app.config?.['ssb.internal.baseUrl']) ||
-  'http://localhost:8080'
+const baseUrl = (typeof app !== 'undefined' && app.config?.['ssb.internal.baseUrl']) || 'http://localhost:8080'
 
 // Fetches JSON from a Mimir service and verifies that the request succeeds.
 async function getService<ResponseType>(service: string): Promise<ResponseType> {
@@ -78,9 +76,7 @@ async function getService<ResponseType>(service: string): Promise<ResponseType> 
 
 // Validates shared RSS field types, supported languages, and publication dates.
 function expectCommonFields(item: StatkalItem | NewsItem) {
-  for (const field of [
-    'guid', 'title', 'link', 'category', 'subject', 'pubDate', 'shortname'
-  ] as const) {
+  for (const field of ['guid', 'title', 'link', 'category', 'subject', 'pubDate', 'shortname'] as const) {
     expect(typeof item[field]).toBe('string')
   }
 
@@ -89,15 +85,9 @@ function expectCommonFields(item: StatkalItem | NewsItem) {
 }
 
 // Finds matching RSS items by GUID and language and compares them with reference data.
-function expectMockData<T extends StatkalItem | NewsItem>(
-  items: T[],
-  mocks: Partial<T>[]
-) {
+function expectMockData<T extends StatkalItem | NewsItem>(items: T[], mocks: Partial<T>[]) {
   for (const expected of mocks) {
-    const actual = items.find(
-      item => item.guid === expected.guid &&
-        item.language === expected.language
-    )
+    const actual = items.find((item) => item.guid === expected.guid && item.language === expected.language)
 
     if (actual) {
       expect(actual).toMatchObject(expected)
@@ -106,11 +96,12 @@ function expectMockData<T extends StatkalItem | NewsItem>(
 }
 
 // Check the toggle before Jest registers tests, using Node's built-in fetch.
-const statregEnabled = execFileSync(
-  process.execPath,
-  [
-    '-e',
-    `
+const statregEnabled =
+  execFileSync(
+    process.execPath,
+    [
+      '-e',
+      `
       (async () => {
         const response = await fetch(process.argv[1])
         if (!response.ok) {
@@ -130,18 +121,15 @@ const statregEnabled = execFileSync(
         process.exit(1)
       })
     `,
-    `${baseUrl}/_/service/mimir/features?space=ssb&branch=master`,
-  ],
-  { encoding: 'utf8', timeout: 10000 }
-).trim() === 'true'
+      `${baseUrl}/_/service/mimir/features?space=ssb&branch=master`,
+    ],
+    { encoding: 'utf8', timeout: 10000 }
+  ).trim() === 'true'
 
 const rssTest = statregEnabled ? test : test.skip
-const skipReason = statregEnabled
-  ? ''
-  : ' (SKIPPED: new-statreg-as-source feature toggle is OFF)'
+const skipReason = statregEnabled ? '' : ' (SKIPPED: new-statreg-as-source feature toggle is OFF)'
 
 describe('RSS services with new Statreg source enabled', () => {
-
   // rssStatkal: validates upcoming releases and compares them with known Statreg data.
   rssTest(`rssStatkal returns the expected data structure${skipReason}`, async () => {
     const items = await getService<StatkalItem[]>('rssStatkal')
