@@ -100,27 +100,12 @@ const statregEnabled =
   execFileSync(
     process.execPath,
     [
+      '--input-type=module',
       '-e',
-      `
-      (async () => {
-        const response = await fetch(process.argv[1])
-        if (!response.ok) {
-          throw new Error('Feature toggle request failed: ' + response.status)
-        }
-
-        const { features } = await response.json()
-        const enabled = features.some(
-          feature =>
-            feature._name === 'new-statreg-as-source' &&
-            feature.enabled
-        )
-
-        process.stdout.write(String(enabled))
-      })().catch(error => {
-        console.error(error)
-        process.exit(1)
-      })
-    `,
+      `const response = await fetch(process.argv[1])
+      if (!response.ok) throw new Error('Feature toggle request failed: ' + response.status)
+      const { features } = await response.json()
+      console.log(features.some((feature) => feature._name === 'new-statreg-as-source' && feature.enabled))`,
       `${baseUrl}/_/service/mimir/features?space=ssb&branch=master`,
     ],
     { encoding: 'utf8', timeout: 10000 }
