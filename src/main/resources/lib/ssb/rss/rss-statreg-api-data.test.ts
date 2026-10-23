@@ -102,9 +102,8 @@ const statregEnabled =
     [
       '--input-type=module',
       '-e',
-      `const response = await fetch(process.argv[1])
-      if (!response.ok) throw new Error('Feature toggle request failed: ' + response.status)
-      const { features } = await response.json()
+      `const response = await fetch(process.argv[1]).catch(() => undefined)
+      const { features = [] } = response?.ok ? await response.json() : {}
       console.log(features.some((feature) => feature._name === 'new-statreg-as-source' && feature.enabled))`,
       `${baseUrl}/_/service/mimir/features?space=ssb&branch=master`,
     ],
