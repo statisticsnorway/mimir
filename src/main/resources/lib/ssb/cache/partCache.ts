@@ -53,12 +53,24 @@ export function clearPartCache(content: Content, branch: string): void {
     partCache.removePattern(`${content._id}-webcruiterAdvertisementList.*`)
     cacheLog(`try to clear ${content._id}-simpleStatbank from part cache (${branch})`)
     partCache.removePattern(`${content._id}-simpleStatbank.*`)
+    cacheLog(`try to clear ${content._id}-statisticHeader from part cache (${branch})`)
+    partCache.removePattern(`${content._id}-statisticHeader.*`)
+    cacheLog(`try to clear ${content._id}-statisticContact from part cache (${branch})`)
+    partCache.removePattern(`${content._id}-statisticContact.*`)
   }
 
   if (content.type === `${app.name}:article`) {
     cacheLog(`try to clear ${content._id}-relatedFactPage from part cache (${branch})`)
     partCache.removePattern(`${content._id}-relatedFactPage.*`)
   }
+}
+
+export function clearStatisticPartsCache(contentId: string, branch: string): void {
+  const partCache: Cache = branch === 'master' ? masterPartCache : draftPartCache
+  cacheLog(`try to clear ${contentId}-statisticHeader from part cache (${branch})`)
+  partCache.removePattern(`${contentId}-statisticHeader.*`)
+  cacheLog(`try to clear ${contentId}-statisticContact from part cache (${branch})`)
+  partCache.removePattern(`${contentId}-statisticContact.*`)
 }
 
 export function completelyClearPartCache(branch: string): void {

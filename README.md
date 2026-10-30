@@ -14,13 +14,13 @@ Do **not** run `npm install` because this might install the incorrect versions o
 
 Gradle will do this for you when you run `enonic project deploy`.
 This command does all the steps necessary to get a finished artifact which can be installed on XP.
-It will install dependencies and compile, bundle etc. a production ready JAR file. 
+It will install dependencies and compile, bundle etc. a production ready JAR file.
 
 ## Starting Enonic XP locally in development mode
 ### Sandbox
 Create a sandbox with the same version as our QA server is running, or as specified by `xpVersion` in `gradle.properties`.
 
-Open your preferred terminal and run: 
+Open your preferred terminal and run:
 ```
 enonic sandbox start
 ```
@@ -44,21 +44,21 @@ enonic sandbox start --dev
 ```
 <br>
 
-Run 
+Run
 ```
 enonic project deploy
 ```
-if you haven't already. The first time this is done it creates a connection between your local code repository and the XP server and will enable a better dev mode. 
+if you haven't already. The first time this is done it creates a connection between your local code repository and the XP server and will enable a better dev mode.
 
 <br> 
 
 Run
 ```
-npm run dev
+pnpm dev
 ```
 to start multiple watches in parallel that will watch for changes in TypeScript, JavaScript and SCSS files.
 A browserSync instace will also be started. If you have a page open (edit or preview mode) it should reload automatically on save.
-If not, most changes to files should be ready after page refresh after a few seconds. 
+If not, most changes to files should be ready after page refresh after a few seconds.
 
 #### Typescript interfaces Code-Gen
 We're using the `enonic-ts-codegen` library. This reads through all .xml config files and automatically creates interface files for all parts, layouts, pages, site-config, and content-types. This is a part of the gradle.build pipeline. So they will be regenerated and overwritten on every build. To change the interface you'll have to change the .xml, not the .ts interface files.
@@ -86,8 +86,8 @@ Try to start the branchname with the related JIRA task if there is one.
 
 ## Deploying builds to environments
 ### Setup
-Upon creating and updating pull requests, Github actions builds and deploys your code to the TEST server where *mabl* runs automatic tests.   
-This build and tests must pass in order for you to be able to merge your pull request.   
+Upon creating and updating pull requests, Github actions builds and deploys your code to the TEST server where *mabl* runs automatic tests.
+This build and tests must pass in order for you to be able to merge your pull request.
 Tests will run again on subsequent commits to the same branch.
 
 Upon merging a branch to Master, it is built and deployed to QA where *mabl* tests it again.

@@ -4,12 +4,14 @@ import { NodeQueryResultHit } from '/lib/xp/node'
 import { send } from '/lib/xp/event'
 import { executeFunction, sleep } from '/lib/xp/task'
 import { run, type ContextParams } from '/lib/xp/context'
+import { isEnabled } from '/lib/featureToggle'
 import { isSameOrBefore } from '/lib/ssb/utils/dateUtils'
 import { isSameDay } from '/lib/vendor/dateFns'
 import { getServerOffsetInMs } from '/lib/ssb/utils/serverOffset'
 import { Events, logUserDataQuery } from '/lib/ssb/repo/query'
 import { getDataSourceIdsFromStatistics, getStatisticsContent } from '/lib/ssb/dashboard/statistic'
 import { getStatisticByIdFromRepo, getReleaseDatesByVariants } from '/lib/ssb/statreg/statistics'
+import { getReleaseDatesFromStatregAPI } from '/lib/ssb/utils/statisticsUtils'
 import * as util from '/lib/util'
 import {
   JobEventNode,
@@ -38,6 +40,7 @@ import { type DataSource } from '/site/mixins/dataSource'
 import { type Statistics } from '/site/content-types'
 
 const jobs: { [key: string]: JobEventNode | JobInfoNode } = {}
+const useStatregApi = isEnabled('new-statreg-as-source', false, 'ssb')
 
 export function currentlyWaitingForPublish(statistic: Content<Statistics>): boolean {
   const from: string = new Date(Date.now() - 1800000).toISOString()
@@ -66,8 +69,7 @@ export function currentlyWaitingForPublish(statistic: Content<Statistics>): bool
         statRefreshResult.status !== JobStatus.COMPLETE &&
         statRefreshResult.status !== JobStatus.SKIPPED
       ) {
-        const nextRelease: string | null = getNextRelease(statistic)
-        const previousRelease: string | null = getPreviousRelease(statistic)
+        const { nextRelease, previousRelease } = getReleaseDates(statistic)
         const serverOffsetInMs: number = getServerOffsetInMs()
         const now: Date = new Date(Date.now() + serverOffsetInMs + 1000)
 
@@ -97,19 +99,22 @@ export function publishDataset(): void {
   const publishedDatasetIds: Array<string> = []
   const jobResult: Array<StatisticsPublishResult> = []
   log.info(`Found ${statistics.length} statistics to process for publishing datasets`)
-  statistics.forEach((stat) => {
-    const nextRelease: string | null = getNextRelease(stat)
+  statistics.forEach((statisticContent) => {
+    const statistic: string = useStatregApi
+      ? statisticContent.data.shortname || ''
+      : statisticContent.data.statistic || ''
+    const { nextRelease } = getReleaseDates(statisticContent)
     if (nextRelease) {
-      log.info(`Stat ${stat._name} (${stat.data.statistic}) has next release: ${nextRelease}`)
+      log.info(`Stat ${statisticContent._name} (${statistic}) has next release: ${nextRelease}`)
       const releaseDate: Date = new Date(nextRelease)
       const serverOffsetInMs: number = getServerOffsetInMs()
       const now: Date = new Date(Date.now() + serverOffsetInMs)
       const oneHourFromNow: Date = new Date(now.getTime() + 1000 * 60 * 60)
       if (releaseDate > now && releaseDate < oneHourFromNow) {
-        log.info(`Stat ${stat._name} (${stat.data.statistic}) releases today`)
+        log.info(`Stat ${statisticContent._name} (${statistic}) releases today`)
         const statJobInfo: StatisticsPublishResult = {
-          statistic: stat._id,
-          shortNameId: stat.data.statistic ? stat.data.statistic : '',
+          statistic: statisticContent._id,
+          shortNameId: statistic,
           status: JobStatus.STARTED,
           dataSources: [],
         }
@@ -117,9 +122,9 @@ export function publishDataset(): void {
           branch: 'draft',
         }
         const statisticDraft: Content<Statistics> | null = run(draftContext, () => {
-          return getContent({ key: stat._id })
+          return getContent({ key: statisticContent._id })
         })
-        const dataSourceIdsMaster: Array<string> = getDataSourceIdsFromStatistics(stat)
+        const dataSourceIdsMaster: Array<string> = getDataSourceIdsFromStatistics(statisticContent)
         const dataSourceIdsDraft: Array<string> = statisticDraft ? getDataSourceIdsFromStatistics(statisticDraft) : []
         const uniqueDatasourceDraft: Array<string> = dataSourceIdsDraft.filter(
           (item) => !dataSourceIdsMaster.includes(item)
@@ -166,11 +171,11 @@ export function publishDataset(): void {
         }) as Array<PublicationItem>
         if (validPublications.length > 0) {
           validPublications.forEach((validPublication) => {
-            createTask(jobLogNode._id, stat, releaseDate, validPublication)
+            createTask(jobLogNode._id, statisticContent, releaseDate, validPublication)
           })
         } else {
           statJobInfo.status = JobStatus.SKIPPED
-          log.info(`No unpublished dataset to publish for ${stat.data.statistic}`)
+          log.info(`No unpublished dataset to publish for ${statistic}`)
         }
         jobResult.push(statJobInfo)
       }
@@ -207,8 +212,10 @@ function createTask(
   releaseDate: Date,
   publication: PublicationItem
 ): void {
+  const statisticIdentifier: string = useStatregApi ? statistic.data.shortname || '' : statistic.data.statistic || ''
+
   executeFunction({
-    description: `Publish statistic (${statistic.data.statistic})`,
+    description: `Publish statistic (${statistic})`,
     func: () => {
       /*
        * Iterate this statistics related datasources, and check if they have unpublished data
@@ -235,9 +242,7 @@ function createTask(
         const sleepFor: number = releaseDate.getTime() - now.getTime()
 
         log.info(
-          `Publish dataset (${key}) for statistic ${
-            statistic.data.statistic
-          } in ${sleepFor}ms (${releaseDate.toISOString()})`
+          `Publish dataset (${key}) for statistic ${statisticIdentifier} in ${sleepFor}ms (${releaseDate.toISOString()})`
         )
         timings.preSleepPrep = Date.now() - ts
 
@@ -257,12 +262,10 @@ function createTask(
         ts = Date.now()
 
         if (key) {
-          log.info(
-            `publishing dataset ${dataSource.data.dataSource?._selected} - ${key} for ${statistic.data.statistic}`
-          )
+          log.info(`publishing dataset ${dataSource.data.dataSource?._selected} - ${key} for ${statisticIdentifier}`)
           createOrUpdateDataset(dataSource.data.dataSource?._selected, DATASET_BRANCH, key, dataset.data)
           log.info(
-            `finished publish of dataset ${dataSource.data.dataSource?._selected} - ${key} for ${statistic.data.statistic}`
+            `finished publish of dataset ${dataSource.data.dataSource?._selected} - ${key} for ${statisticIdentifier}`
           )
 
           timings.publish = Date.now() - ts
@@ -313,8 +316,16 @@ function createTask(
               )
             }).length === util.data.forceArray(statRefreshResult.dataSources).length
           if (allDataSourcesComplete) {
-            log.info(`finished publishing statistic ${statistic.data.statistic}`)
+            log.info(`finished publishing statistic ${statisticIdentifier}`)
             statRefreshResult.status = JobStatus.COMPLETE
+            send({
+              type: 'clearStatisticPartsCache',
+              distributed: true,
+              data: {
+                contentId: statistic._id,
+                branch: 'master',
+              },
+            })
             const allComplete: boolean =
               jobRefreshResult.filter((s) => {
                 return s.status === JobStatus.COMPLETE || s.status === JobStatus.ERROR || s.status === JobStatus.SKIPPED
@@ -352,30 +363,35 @@ function createTask(
   })
 }
 
-function getNextRelease(statistic: Content<Statistics & Statistic>): string | null {
-  if (statistic.data.statistic) {
-    const statisticStatreg: StatisticInListing | undefined = getStatisticByIdFromRepo(statistic.data.statistic)
-    if (statisticStatreg && statisticStatreg.variants) {
-      const releaseDates: ReleaseDatesVariant = getReleaseDatesByVariants(
-        util.data.forceArray(statisticStatreg.variants)
-      )
-      return releaseDates.nextRelease[0]
+function getReleaseDates(statistic: Content<Statistics>): {
+  nextRelease: string | null
+  previousRelease: string | null
+} {
+  if (useStatregApi) {
+    const releaseDates = getReleaseDatesFromStatregAPI(statistic.data.shortname || '')
+    return {
+      nextRelease: releaseDates.nextReleaseDate || null,
+      previousRelease: releaseDates.previousReleaseDate || null,
     }
   }
-  return null
-}
 
-function getPreviousRelease(statistic: Content<Statistics & Statistic>): string | null {
   if (statistic.data.statistic) {
     const statisticStatreg: StatisticInListing | undefined = getStatisticByIdFromRepo(statistic.data.statistic)
     if (statisticStatreg && statisticStatreg.variants) {
       const releaseDates: ReleaseDatesVariant = getReleaseDatesByVariants(
         util.data.forceArray(statisticStatreg.variants)
       )
-      return releaseDates.previousRelease[0]
+      return {
+        nextRelease: releaseDates.nextRelease[0] || null,
+        previousRelease: releaseDates.previousRelease[0] || null,
+      }
     }
   }
-  return null
+
+  return {
+    nextRelease: null,
+    previousRelease: null,
+  }
 }
 
 interface PublicationItem {

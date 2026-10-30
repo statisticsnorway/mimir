@@ -1,0 +1,18 @@
+allowBuilds:
+  '@parcel/watcher': false
+  '@swc/core': false
+  core-js: false
+  esbuild: false
+  unrs-resolver: false
+nodeLinker: hoisted
+minimumReleaseAge: 4320 # 3 days
+overrides:
+  '@enonic/mock-xp>adm-zip': 0.6.0
+  brace-expansion: 2.1.4
+  glob: 13.0.6
+  immutable: 5.1.8
+  nanoid: 6.0.1
+  fast-uri: 4.1.4
+  'react-mathjax>react': 18.3.1
+  'redux-injectors>react': 18.3.1
+  'redux-injectors>react-dom': 18.3.1

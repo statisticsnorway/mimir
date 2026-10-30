@@ -82,7 +82,7 @@ const Popup = () => {
   const handlePrimaryButtonClick = () => {
     closePopup()
     window.open(
-      'https://forms.office.com/Pages/ResponsePage.aspx?id=knAhx0CyHU69YfqXupdcvJkAFGNmKDFCsjsXHsjRxlJUMTlHVlA3R1JLTTIzRzROVEJZR1FSMUMwRi4u&embed=true',
+      'https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=knAhx0CyHU69YfqXupdcvJkAFGNmKDFCsjsXHsjRxlJURTI5VVQzWFBGUlI3VlpENzBONDQ4VkI3Wi4u&embed=true',
       '_blank',
       'noopener,noreferrer'
     )
@@ -110,7 +110,7 @@ const Popup = () => {
       {!isOpen ? (
         <button className='popup-closed' tabIndex={-1} onClick={toggleOpen} onKeyDown={handleClosedButtonKeyDown}>
           <Clipboard className='clipboard-icon' size={20} focusable='false' />
-          <span className='closed-text'>Undersøkelse ssb.no</span>
+          <span className='closed-text'>Undersøkelse om ssb.no</span>
         </button>
       ) : (
         <>

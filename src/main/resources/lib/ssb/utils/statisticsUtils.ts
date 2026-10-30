@@ -1,13 +1,23 @@
 import '/lib/ssb/polyfills/nashorn'
 import { type Content } from '/lib/xp/content'
-import { StatisticInListing, VariantInListing, ReleaseDatesVariant } from '/lib/ssb/dashboard/statreg/types'
-import { formatDate } from '/lib/ssb/utils/dateUtils'
+import {
+  type StatisticInListing,
+  type VariantInListing,
+  type ReleaseDatesVariant,
+} from '/lib/ssb/dashboard/statreg/types'
+import { formatDate, stringToServerTime } from '/lib/ssb/utils/dateUtils'
 import { isAfter } from '/lib/vendor/dateFns'
 import { ensureArray } from '/lib/ssb/utils/arrayUtils'
 import { type StatisticsDates } from '/lib/types/partTypes/statisticHeader'
-import { Phrases } from '/lib/types/language'
-import { getReleaseDatesByVariants } from '/lib/ssb/statreg/statistics'
+import { type Phrases } from '/lib/types/language'
+import { fetchReleasesFromStatregApi, getReleaseDatesByVariants } from '/lib/ssb/statreg/statistics'
 import { type Statistics } from '/site/content-types'
+
+export type StatregApiReleaseDates = {
+  nextReleaseDate?: string
+  previousReleaseDate?: string
+  previewNextReleaseDate?: string
+}
 
 export function getStatisticTitle(statisticsContent: Content<Statistics>, statistic?: StatisticInListing): string {
   if (!statistic) {
@@ -21,15 +31,16 @@ export function getStatisticsDates(
   statisticsContent: Content<Statistics>,
   phrases: Phrases,
   showDraft: boolean,
-  statistic?: StatisticInListing
+  statistic?: StatisticInListing,
+  useStatregAPI = false
 ): StatisticsDates {
-  const language = statisticsContent.language === 'en' ? 'en' : 'nb'
+  const language =
+    statisticsContent.language === 'en' || statisticsContent.language === 'nn' ? statisticsContent.language : 'nb'
+
   const showModifiedTime: boolean = statisticsContent.data.showModifiedDate?.modifiedOption.showModifiedTime ?? false
   const modifiedDate: string | undefined = statisticsContent.data.showModifiedDate?.modifiedOption?.lastModified
-  const variants: Array<VariantInListing | undefined> = statistic ? ensureArray(statistic.variants) : []
-  const releaseDates: ReleaseDatesVariant = getReleaseDatesByVariants(variants as Array<VariantInListing>)
-  const nextReleases = releaseDates.nextRelease ?? []
-  const previousReleases = releaseDates.previousRelease ?? []
+
+  const { nextReleases, previousReleases } = getReleaseDates(statisticsContent, statistic, useStatregAPI)
   const previousReleaseDate = previousReleases.length ? previousReleases[0] : undefined
 
   const changeDate: string | undefined = getChangeDate(previousReleaseDate, modifiedDate, language, showModifiedTime)
@@ -46,6 +57,36 @@ export function getStatisticsDates(
     changeDate,
     previousRelease: showDraft ? nextRelease : previousRelease,
     nextRelease: showDraft ? previewNextRelease : nextRelease,
+  }
+}
+
+function getReleaseDates(
+  statisticsContent: Content<Statistics>,
+  statistic?: StatisticInListing,
+  useStatregAPI = false
+): {
+  nextReleases: string[]
+  previousReleases: string[]
+} {
+  if (useStatregAPI) {
+    const { previousReleaseDate, nextReleaseDate, previewNextReleaseDate } = getReleaseDatesFromStatregAPI(
+      statisticsContent.data.shortname || ''
+    )
+
+    return {
+      previousReleases: previousReleaseDate ? [previousReleaseDate] : [],
+      nextReleases: [nextReleaseDate, previewNextReleaseDate].filter(
+        (releaseDate): releaseDate is string => !!releaseDate
+      ),
+    }
+  }
+
+  const variants: Array<VariantInListing | undefined> = statistic ? ensureArray(statistic.variants) : []
+  const releaseDates: ReleaseDatesVariant = getReleaseDatesByVariants(variants as Array<VariantInListing>)
+
+  return {
+    nextReleases: releaseDates.nextRelease ?? [],
+    previousReleases: releaseDates.previousRelease ?? [],
   }
 }
 
@@ -86,4 +127,37 @@ function getChangeDate(
   }
 
   return undefined
+}
+
+export function getReleaseDatesFromStatregAPI(shortname: string): StatregApiReleaseDates {
+  const now = stringToServerTime()
+
+  const previousReleases = fetchReleasesFromStatregApi({
+    count: 1,
+    shortname,
+    sort: '-publish_time',
+    approval_status: 'GODKJENT',
+    publish_time_before: now.toISOString(),
+  })
+
+  if (!previousReleases || 'error' in previousReleases) return {}
+
+  const nextReleases = fetchReleasesFromStatregApi({
+    count: 2, // needed for next release preview
+    shortname,
+    sort: 'publish_time',
+    approval_status: 'GODKJENT',
+    publish_time_after: now.toISOString(),
+  })
+
+  if (!nextReleases || 'error' in nextReleases) return {}
+
+  const previousReleaseDates = previousReleases?.map(({ publish_time }) => publish_time)
+  const nextReleaseDates = nextReleases?.map(({ publish_time }) => publish_time)
+
+  return {
+    previousReleaseDate: previousReleaseDates.length ? previousReleaseDates[0] : '',
+    nextReleaseDate: nextReleaseDates.length ? nextReleaseDates[0] : '',
+    previewNextReleaseDate: nextReleaseDates.length > 1 ? nextReleaseDates[1] : '',
+  }
 }

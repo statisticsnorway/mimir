@@ -6,10 +6,10 @@ addAssignees: true
 
 # A list of assignees, overrides reviewers if set
 assignees:
-  - ssb-cgn
+  # - ssb-cgn
   - Glenruben
   - johnnadeluy
-  - annesiri
+  # - annesiri
   - Carl-OW
 
 # A number of assignees to add to the pull request

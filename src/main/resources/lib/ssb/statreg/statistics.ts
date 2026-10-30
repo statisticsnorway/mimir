@@ -1,4 +1,6 @@
 import '/lib/ssb/polyfills/nashorn'
+import { type paths } from '@statisticsnorway/statreg-api-types'
+import { isEnabled } from '/lib/featureToggle'
 import { StatRegNode } from '/lib/ssb/repo/statreg'
 import {
   StatisticInListing,
@@ -6,7 +8,7 @@ import {
   ReleasesInListing,
   ReleaseDatesVariant,
 } from '/lib/ssb/dashboard/statreg/types'
-import { HttpResponse } from '/lib/http-client'
+import { HttpResponse, request } from '/lib/http-client'
 import { format, isAfter, isSameDay } from '/lib/vendor/dateFns'
 import { isDateBetween } from '/lib/ssb/utils/dateUtils'
 import { getServerOffsetInMs } from '/lib/ssb/utils/serverOffset'
@@ -19,6 +21,11 @@ import { Events, logUserDataQuery } from '/lib/ssb/repo/query'
 import { cronJobLog } from '/lib/ssb/utils/serverLog'
 
 export const STATREG_REPO_STATISTICS_KEY = 'statistics'
+
+const useNewStatreg = isEnabled('new-statreg-as-source', false, 'ssb')
+
+// TODO: Remove this when new Statreg as data source is implemented
+useNewStatreg ?? log.info('We are using the new Statreg!')
 
 export function fetchStatistics(): Array<StatisticInListing> | null {
   try {
@@ -39,10 +46,87 @@ export function fetchStatistics(): Array<StatisticInListing> | null {
       function: 'fetchStatistics',
       message: Events.REQUEST_COULD_NOT_CONNECT,
       info: message,
-      status: error,
+      status: error as string,
     })
   }
   return null
+}
+
+const STATREG_API_BASE_URL =
+  app.config?.['ssb.statregapi.serverside.baseUrl'] || 'https://i.qa.ssb.no/statistikkregisteret/api'
+
+type ReleasesQuery = NonNullable<paths['/releases']['get']['parameters']['query']>
+export type ReleaseListingResponse = paths['/releases']['get']['responses']['200']['content']['application/json']
+export type ReleasesResponse = paths['/releases']['get']['responses'][200]['content']['application/json']
+export function fetchReleasesFromStatregApi({
+  start = 0,
+  count = 1000,
+  sort,
+  shortname,
+  approval_status = 'GODKJENT',
+  publish_time_after,
+  publish_time_before,
+}: ReleasesQuery): ReleasesResponse['releases'] | { error: unknown } {
+  try {
+    const response = request({
+      url:
+        STATREG_API_BASE_URL +
+        `/releases?start=${start}&count=${count}` +
+        (sort ? `&sort=${sort}` : '') +
+        (shortname ? `&shortname=${shortname}` : '') +
+        (approval_status ? `&approval_status=${approval_status}` : '') +
+        (publish_time_after ? `&publish_time_after=${publish_time_after}` : '') +
+        (publish_time_before ? `&publish_time_before=${publish_time_before}` : ''),
+    })
+    const body: ReleasesResponse = response.body ? JSON.parse(response.body) : {}
+
+    return body.releases
+  } catch (error) {
+    log.error(`Failed to fetch releases from statreg API: ${error}`)
+    return { error }
+  }
+}
+
+export type StatisticListingResponse = paths['/statistics']['get']['responses']['200']['content']['application/json']
+export type StatisticListingQueryParams = paths['/statistics']['get']['parameters']['query']
+export function fetchStatisticsFromStatregAPI({
+  start = 0,
+  count = 1000,
+}): StatisticListingResponse['statistics'] | { error: unknown } {
+  try {
+    const response = request({
+      url: STATREG_API_BASE_URL + `/statistics?start=${start}&count=${count}`,
+    })
+
+    const body: StatisticListingResponse | undefined = response.body ? JSON.parse(response.body) : undefined
+
+    return body?.statistics
+  } catch (error) {
+    log.error(`Failed to fetch statistics from statreg API: ${error}`)
+    return {
+      error,
+    }
+  }
+}
+
+export type StatisticDetailsResponse =
+  paths['/statistics/{shortname}']['get']['responses']['200']['content']['application/json']
+export function fetchStatisticByShortnameFromStatregAPI(
+  shortname: string
+): StatisticDetailsResponse | { error: unknown } {
+  try {
+    const response = request({
+      url: STATREG_API_BASE_URL + `/statistics/${shortname}`,
+    })
+
+    const body: StatisticDetailsResponse = response.body ? JSON.parse(response.body) : undefined
+    return body
+  } catch (error) {
+    log.error(`Failed to fetch statistic from statreg API: ${error}`)
+    return {
+      error,
+    }
+  }
 }
 
 export function createMimirMockReleaseStatreg(): StatisticInListing {

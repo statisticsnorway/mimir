@@ -15,13 +15,15 @@ import { renderError } from '/lib/ssb/error/error'
 import { hasWritePermissionsAndPreview } from '/lib/ssb/parts/permissions'
 import { currentlyWaitingForPublish as currentlyWaitingForPublishOld } from '/lib/ssb/dataset/publishOld'
 import { type StatisticHeader } from '/lib/types/partTypes/statisticHeader'
+import { isEnabled } from '/lib/featureToggle'
+import { fromPartCache } from '/lib/ssb/cache/partCache'
 import { type Statistics, type OmStatistikken } from '/site/content-types'
 
 export function get(req: Request): Response {
   try {
     return renderPart(req)
   } catch (e) {
-    return renderError(req, 'Error in part: ', e)
+    return renderError(req, 'Error in part: ', e as Error)
   }
 }
 
@@ -63,9 +65,15 @@ function renderPart(req: Request): Response {
 
   const modifiedText: string | undefined = page.data.showModifiedDate?.modifiedOption?.modifiedText
 
+  const statregAPI = isEnabled('new-statreg-as-source', false, 'ssb')
   const statistic: StatisticInListing | undefined = getStatisticByIdFromRepo(page.data.statistic)
   const title: string = getStatisticTitle(page, statistic)
-  const statisticDates = getStatisticsDates(page, phrases, paramShowDraft && showPreviewDraft, statistic)
+  const statisticDates =
+    req.mode === 'live'
+      ? fromPartCache(req, `${page._id}-statisticHeader`, () =>
+          getStatisticsDates(page, phrases, paramShowDraft && showPreviewDraft, statistic, statregAPI)
+        )
+      : getStatisticsDates(page, phrases, paramShowDraft && showPreviewDraft, statistic, statregAPI)
 
   const props: StatisticHeader = {
     title,

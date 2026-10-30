@@ -14,11 +14,10 @@ Then you have most likely installed npm packages outside of gradle<br>
 Fix:<br>
 Delete your node_modules folder, and run `enonic project deploy`
 
-## NSI
+## Broken local Node cache
 
 ```> Configure project :
 react4xp.properties#buildEnv is set to 'development':
-OVERRIDING VANILLA npmInstall IN FAVOR OF node-safe-install (nsi).
 > Task :clientWebpack FAILED
 internal/modules/cjs/loader.js:638
     throw err;

@@ -208,7 +208,7 @@ export function fillRepo(statistics: Array<StatisticInListing>) {
   })
 }
 
-function getStatisticsContentByRegStatId(statisticsIds: string[], language: string) {
+export function getStatisticsContentByRegStatId(statisticsIds: string[], language: string) {
   return query<Content<Statistics>>({
     count: statisticsIds.length,
     contentTypes: [`${app.name}:statistics`],
@@ -225,6 +225,31 @@ function getStatisticsContentByRegStatId(statisticsIds: string[], language: stri
             hasValue: {
               field: 'data.statistic',
               values: statisticsIds,
+            },
+          },
+        ],
+      },
+    },
+  })
+}
+
+export function getStatisticsContentByShortname(statisticShortnames: string[], language: string) {
+  return query<Content<Statistics>>({
+    count: statisticShortnames.length,
+    contentTypes: [`${app.name}:statistics`],
+    filters: {
+      boolean: {
+        must: [
+          {
+            hasValue: {
+              field: 'language',
+              values: language === 'en' ? ['en'] : ['nb', 'nn'],
+            },
+          },
+          {
+            hasValue: {
+              field: 'data.shortname',
+              values: statisticShortnames,
             },
           },
         ],

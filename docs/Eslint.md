@@ -4,11 +4,11 @@
 
 Tries to automaticly fix all .es6|.ts|.jsx files based on .eslintrc
 
-`npm run lint`
+`pnpm lint`
 
 Same as lint, but doesn't fix the files, just creates the error/warning dump in console
 
-`npm run lint-dry`
+`pnpm lint-dry`
 
 ## Setup
 

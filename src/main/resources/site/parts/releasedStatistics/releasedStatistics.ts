@@ -16,6 +16,9 @@ import { parseISO } from '/lib/vendor/dateFns'
 import { renderError } from '/lib/ssb/error/error'
 import { type PreparedStatistics, type YearReleases } from '/lib/types/variants'
 import { type GroupedBy, type ReleasedStatisticsProps } from '/lib/types/partTypes/releasedStatistics'
+import { isEnabled } from '/lib/featureToggle'
+import { fetchReleasesFromStatregApi } from '/lib/ssb/statreg/statistics'
+import { prepareApiUpcomingReleases, type StatregApiRelease } from '/services/upcomingReleases/upcomingReleases'
 import { type ReleasedStatistics as ReleasedStatisticsPartConfig } from '.'
 
 export function get(req: Request): Response {
@@ -38,7 +41,30 @@ export function renderPart(req: Request) {
   const config = getComponent<XP.PartComponent.ReleasedStatistics>()?.config
   if (!config) throw Error('No part found')
 
-  const groupedWithMonthNames: Array<YearReleases> = getGroupedWithMonthNames(config, currentLanguage)
+  let groupedWithMonthNames: Array<YearReleases>
+  if (isEnabled('new-statreg-as-source', false, 'ssb')) {
+    const numberOfReleases: number = config.numberOfStatistics ? parseInt(config.numberOfStatistics) : 8
+    const now = new Date()
+    now.setHours(8, 0, 0, 0)
+    const releases =
+      fetchReleasesFromStatregApi({
+        count: numberOfReleases,
+        sort: '-publish_time',
+        approval_status: 'GODKJENT',
+        publish_time_before: new Date(now).toISOString(),
+      }) || []
+
+    const releasesPrepped: Array<PreparedStatistics> = releases
+      .map((release: StatregApiRelease) => prepareApiUpcomingReleases(release, currentLanguage))
+      .filter((release: PreparedStatistics | null): release is PreparedStatistics => release !== null)
+
+    const groupedByYearMonthAndDay: GroupedBy<GroupedBy<GroupedBy<PreparedStatistics>>> =
+      groupStatisticsByYearMonthAndDay(releasesPrepped as Array<PreparedStatistics>)
+
+    groupedWithMonthNames = addMonthNames(groupedByYearMonthAndDay, currentLanguage)
+  } else {
+    groupedWithMonthNames = getGroupedWithMonthNames(config, currentLanguage)
+  }
 
   const props: ReleasedStatisticsProps = {
     releases: groupedWithMonthNames,
