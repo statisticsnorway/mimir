@@ -558,7 +558,7 @@ function prepDashboardStatistics(
   statisticContent: Content<Statistics & Statistic>,
   statregData: StatregData = getStatregInfo(undefined)
 ): StatisticDashboard {
-  const prefix: string = app.config && app.config['admin-prefix'] ? app.config['admin-prefix'] : '/admin'
+  const prefix: string = app.config && app.config['admin-prefix'] ? app.config['admin-prefix'] : '/xp/admin'
   const relatedTables: Array<RelatedTbml> = getRelatedTables(statisticContent)
   return {
     id: statisticContent._id,
