@@ -414,8 +414,10 @@ function checkIfUserIsAdmin(): boolean {
 }
 
 const ONE_MONTH = 31 // TODO: put in config?
-const STATREG_FRONTEND_URL: string = app.config?.['ssb.statreg.frontend.baseUrl'] || 'http://localhost:5173'
-const STATREG_API_BASE_URL: string = app.config?.['ssb.statregapi.serverside.baseUrl'] || 'http://localhost:5173/api'
+const STATREG_FRONTEND_URL: string =
+  app.config?.['ssb.statreg.frontend.baseUrl'] || 'https://statistikkregisteret.intern.ssb.no'
+const STATREG_API_BASE_URL: string =
+  app.config?.['ssb.statregapi.serverside.baseUrl'] || 'https://statistikkregisteret.intern.ssb.no/api'
 function getStatistics(): Array<StatisticDashboard> {
   const userIsAdmin: boolean = checkIfUserIsAdmin()
   const statistic: Array<StatisticDashboard> = userIsAdmin ? getAdminStatistics() : getUserStatistics()
@@ -504,7 +506,6 @@ function getUserStatisticsContent(statisticQuery: string): Array<Content<Statist
   return userStatisticsResult.hits.filter((statistic: Content<Statistics>) => hasWritePermissions(statistic._id))
 }
 
-// Next approved release per shortname. Returns undefined when intern.test is down, so the list falls back to the repo.
 function getStatregDataFromApi(before?: Date, shortnames?: Array<string>): Record<string, StatregData> | undefined {
   const releases = fetchDashboardReleases(before, shortnames)
   if (!releases) return undefined
