@@ -17,8 +17,8 @@ import { withConnection, ENONIC_CMS_DEFAULT_REPO, getNode, queryNodes } from '/l
 import { getTbprocessor, getTbprocessorKey } from '/lib/ssb/dataset/tbprocessor/tbprocessor'
 import { users } from '/lib/ssb/dashboard/dashboardUtils'
 import { isEnabled } from '/lib/featureToggle'
-import { request } from '/lib/http-client'
 import {
+  fetchReleasesFromStatregApi,
   fetchStatisticsWithRelease,
   getAllStatisticsFromRepo,
   getStatisticByIdFromRepo,
@@ -416,8 +416,7 @@ function checkIfUserIsAdmin(): boolean {
 const ONE_MONTH = 31 // TODO: put in config?
 const STATREG_FRONTEND_URL: string =
   app.config?.['ssb.statreg.frontend.baseUrl'] || 'https://statistikkregisteret.intern.ssb.no'
-const STATREG_API_BASE_URL: string =
-  app.config?.['ssb.statregapi.serverside.baseUrl'] || 'https://statistikkregisteret.intern.ssb.no/api'
+
 function getStatistics(): Array<StatisticDashboard> {
   const userIsAdmin: boolean = checkIfUserIsAdmin()
   const statistic: Array<StatisticDashboard> = userIsAdmin ? getAdminStatistics() : getUserStatistics()
@@ -452,7 +451,10 @@ function getAdminStatistics(): Array<StatisticDashboard> {
       filters: { hasValue: { field: 'data.shortname', values: shortnames } },
     }).hits as unknown as Array<Content<Statistics>>
     return statisticsContent.map((statisticContent) =>
-      prepDashboardStatistics(statisticContent, statregData[statisticContent.data.shortname ?? ''])
+      prepDashboardStatistics(
+        statisticContent,
+        statregData[statisticContent.data.shortname ?? ''] || getStatregInfo(undefined)
+      )
     )
   }
 
@@ -475,7 +477,10 @@ function getUserStatistics(): Array<StatisticDashboard> {
       shortnames.length > 0 ? getStatregDataFromApi(undefined, shortnames) : {}
     if (statregData) {
       return statisticsContent.map((statisticContent) =>
-        prepDashboardStatistics(statisticContent, statregData[statisticContent.data.shortname ?? ''])
+        prepDashboardStatistics(
+          statisticContent,
+          statregData[statisticContent.data.shortname ?? ''] || getStatregInfo(undefined)
+        )
       )
     }
   }
@@ -507,8 +512,16 @@ function getUserStatisticsContent(statisticQuery: string): Array<Content<Statist
 }
 
 function getStatregDataFromApi(before?: Date, shortnames?: Array<string>): Record<string, StatregData> | undefined {
-  const releases = fetchDashboardReleases(before, shortnames)
-  if (!releases) return undefined
+  const releases = fetchReleasesFromStatregApi({
+    start: 0,
+    count: 1000,
+    sort: 'publish_time',
+    approval_status: 'GODKJENT',
+    publish_time_after: new Date(new Date().setHours(0, 0, 0, 0)).toISOString(),
+    publish_time_before: before?.toISOString(),
+    shortname: shortnames?.length ? shortnames.join(',') : undefined,
+  })
+  if (!releases || 'error' in releases || !Array.isArray(releases)) return undefined
 
   return releases.reduce((statregData: Record<string, StatregData>, release) => {
     const shortname: string | undefined = release.statistic?.shortname
@@ -517,33 +530,6 @@ function getStatregDataFromApi(before?: Date, shortnames?: Array<string>): Recor
     }
     return statregData
   }, {})
-}
-
-function fetchDashboardReleases(
-  before?: Date,
-  shortnames?: Array<string>
-): Array<components['schemas']['Release_listing']> | undefined {
-  try {
-    const response = request({
-      url:
-        STATREG_API_BASE_URL +
-        '/releases?start=0&count=1000&sort=publish_time&approval_status=GODKJENT' +
-        `&publish_time_after=${new Date(new Date().setHours(0, 0, 0, 0)).toISOString()}` +
-        (before ? `&publish_time_before=${before.toISOString()}` : '') +
-        (shortnames?.length ? `&shortname=${shortnames.join(',')}` : ''),
-      connectionTimeout: 10000,
-      readTimeout: 15000,
-    })
-    const body = response.body ? JSON.parse(response.body) : {}
-    if (response.status !== 200 || !Array.isArray(body.releases)) {
-      log.error(`Dashboard: Statreg /releases failed (${response.status}), falling back to repo data`)
-      return undefined
-    }
-    return body.releases
-  } catch (error) {
-    log.error(`Dashboard: Statreg /releases failed, falling back to repo data: ${error}`)
-    return undefined
-  }
 }
 
 function getStatregDataFromRelease(shortname: string, release: components['schemas']['Release_listing']): StatregData {
