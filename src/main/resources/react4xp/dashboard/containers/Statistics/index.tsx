@@ -35,6 +35,10 @@ export function Statistics() {
         statisticsFinal.push({
           shortName: statistic.shortName,
           language: 'en',
+          statisticUrl: statistic.statisticUrl,
+          editReleaseUrl: statistic.editReleaseUrl,
+          nextRelease: statistic.nextRelease,
+          nextReleaseId: statistic.nextReleaseId,
         })
       }
     })
@@ -126,8 +130,10 @@ export function Statistics() {
   }
 
   function editLink(statistic) {
-    if (statistic.nextReleaseId) {
-      const editUrl = internalBaseUrl + '/statistikkregisteret/publisering/edit/' + statistic.nextReleaseId
+    if (statistic.editReleaseUrl || statistic.nextReleaseId) {
+      const editUrl =
+        statistic.editReleaseUrl ||
+        internalBaseUrl + '/statistikkregisteret/publisering/edit/' + statistic.nextReleaseId
       return (
         <Link isExternal href={editUrl} title='Endre publisering i statistikkregisteret' className='ms-2'>
           [Endre]
@@ -138,9 +144,10 @@ export function Statistics() {
   }
 
   function createLink(statistic) {
-    if (statistic.statisticId && statistic.variantId) {
-      const createUrl =
-        statistic.activeVariants > 1
+    if (statistic.statisticUrl || (statistic.statisticId && statistic.variantId)) {
+      const createUrl = statistic.statisticUrl
+        ? statistic.statisticUrl
+        : statistic.activeVariants > 1
           ? internalBaseUrl + '/statistikkregisteret/statistikk/show/' + statistic.statisticId
           : internalBaseUrl +
             '/statistikkregisteret/publisering/create?statistikk.id=' +
