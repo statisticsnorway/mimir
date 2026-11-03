@@ -318,7 +318,6 @@ function getOwnersWithSources(dataSourceIds: Array<string>): Array<OwnerWithSour
 
 function getStatisticsJobLogInfo(id: string, count = 1): Array<DashboardJobInfo> {
   return withConnection(EVENT_LOG_REPO, EVENT_LOG_BRANCH, (connection) => {
-    // deepcode ignore Sqli: NoQL. query is an xp function that queries one or across repositories in xp
     const statisticsJobLog = connection.query({
       query: `_path LIKE "/jobs/*" AND data.task = "${JobNames.STATISTICS_REFRESH_JOB}" AND data.queryIds = "${sanitize(
         id
@@ -413,7 +412,7 @@ function checkIfUserIsAdmin(): boolean {
   return hasRole('system.admin')
 }
 
-const ONE_MONTH = 31
+const ONE_MONTH = 31 // TODO: put in config?
 const SSB_BASE_URL: string = app.config?.['ssb.baseUrl'] || ''
 const STATREG_FRONTEND_URL: string = `https://statistikkregisteret.intern${
   SSB_BASE_URL === 'https://www.ssb.no' ? '' : '.test'
@@ -426,7 +425,6 @@ function getPreviewAdminPrefix(): string {
 function getStatistics(): Array<StatisticDashboard> {
   const userIsAdmin: boolean = checkIfUserIsAdmin()
   const statistic: Array<StatisticDashboard> = userIsAdmin ? getAdminStatistics() : getUserStatistics()
-  // Meld → /statistikk/{kortnavn}. Endre → /publisering/{id}/rediger.
   if (isEnabled('new-statreg-as-source', false, 'ssb')) {
     statistic.forEach((stat) => {
       if (stat.shortName) {
@@ -443,7 +441,6 @@ function getStatistics(): Array<StatisticDashboard> {
   })
 }
 
-// Today through +31 days.
 function getUpcomingReleaseWindow(): Date {
   const statsBeforeDate: Date = new Date()
   statsBeforeDate.setDate(statsBeforeDate.getDate() + ONE_MONTH)
@@ -452,10 +449,8 @@ function getUpcomingReleaseWindow(): Date {
 
 function getAdminStatistics(): Array<StatisticDashboard> {
   const statsBeforeDate: Date = getUpcomingReleaseWindow()
-  // Live /releases calendar; on fail use the old repo path below.
   if (isEnabled('new-statreg-as-source', false, 'ssb')) {
-    const fromApi: Array<StatisticDashboard> | undefined = getDashboardStatisticsFromApi(statsBeforeDate)
-    if (fromApi) return fromApi
+    return getDashboardStatisticsFromApi(statsBeforeDate)
   }
 
   const statregStatistics: Array<StatisticInListing> = fetchStatisticsWithRelease(statsBeforeDate)
@@ -469,13 +464,8 @@ function getAdminStatistics(): Array<StatisticDashboard> {
 }
 
 function getUserStatistics(): Array<StatisticDashboard> {
-  // Same /releases calendar as admin, then keep only pages this user can edit.
   if (isEnabled('new-statreg-as-source', false, 'ssb')) {
-    const fromApi: Array<StatisticDashboard> | undefined = getDashboardStatisticsFromApi(
-      getUpcomingReleaseWindow(),
-      true
-    )
-    if (fromApi) return fromApi
+    return getDashboardStatisticsFromApi(getUpcomingReleaseWindow(), true)
   }
 
   const userStatisticContent: Array<Content<Statistics & Statistic>> =
@@ -495,7 +485,6 @@ function getUserStatistics(): Array<StatisticDashboard> {
   )
 }
 
-// Enonic statistics the user may MODIFY (toggle-off user list).
 function getUserStatisticsContent(statisticQuery: string): Array<Content<Statistics & Statistic>> {
   const userStatisticsResult: ContentsResult<Content<Statistics & DefaultPageConfig>> = query({
     query: statisticQuery,
@@ -505,10 +494,9 @@ function getUserStatisticsContent(statisticQuery: string): Array<Content<Statist
   return userStatisticsResult.hits.filter((statistic: Content<Statistics>) => hasWritePermissions(statistic._id))
 }
 
-// Join Statreg kortnavn to Enonic pages. onlyWritable = non-admin write filter.
-function getDashboardStatisticsFromApi(before: Date, onlyWritable = false): Array<StatisticDashboard> | undefined {
+function getDashboardStatisticsFromApi(before: Date, onlyWritable = false): Array<StatisticDashboard> {
   const statregData: Record<string, StatregData> | undefined = getStatregDataFromApi(before)
-  if (!statregData) return undefined
+  if (!statregData) return []
 
   const shortnames: Array<string> = Object.keys(statregData)
   if (shortnames.length === 0) return []
@@ -531,7 +519,6 @@ function getDashboardStatisticsFromApi(before: Date, onlyWritable = false): Arra
   )
 }
 
-// GODKJENT /releases today..before, first per kortnavn. Fail → undefined (repo fallback).
 function getStatregDataFromApi(before: Date): Record<string, StatregData> | undefined {
   const releases = fetchReleasesFromStatregApi({
     start: 0,
@@ -541,7 +528,14 @@ function getStatregDataFromApi(before: Date): Record<string, StatregData> | unde
     publish_time_after: new Date(new Date().setHours(0, 0, 0, 0)).toISOString(),
     publish_time_before: before.toISOString(),
   })
-  if (!releases || 'error' in releases || !Array.isArray(releases)) return undefined
+  if (releases && typeof releases === 'object' && 'error' in releases) {
+    log.error(`Failed to fetch kommende publiseringer from Statreg: ${releases.error}`)
+    return undefined
+  }
+  if (!Array.isArray(releases)) {
+    log.error('Failed to fetch kommende publiseringer from Statreg: no releases')
+    return undefined
+  }
 
   return releases.reduce((statregData: Record<string, StatregData>, release) => {
     const shortname: string | undefined = release.statistic?.shortname
@@ -552,7 +546,6 @@ function getStatregDataFromApi(before: Date): Record<string, StatregData> | unde
   }, {})
 }
 
-// kortnavn, publish_time and release id from one API row.
 function getStatregDataFromRelease(shortname: string, release: components['schemas']['Release_listing']): StatregData {
   const releaseId: string = release.id?.toString() ?? ''
   return {
@@ -567,7 +560,6 @@ function getStatregDataFromRelease(shortname: string, release: components['schem
   }
 }
 
-// Old path: match Enonic data.statistic to repo listing id.
 function getStatregInfoById(
   statisticContent: Content<Statistics & Statistic>,
   statregStatistics: Array<StatisticInListing>
