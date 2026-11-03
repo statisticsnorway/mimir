@@ -180,12 +180,22 @@ export function Statistics() {
     return (
       <React.Fragment>
         {statistic.editReleaseUrl && (
-          <Link isExternal href={statistic.editReleaseUrl} title='Endre publisering i statistikkregisteret' className='ms-2'>
+          <Link
+            isExternal
+            href={statistic.editReleaseUrl}
+            title='Endre publisering i statistikkregisteret'
+            className='ms-2'
+          >
             [Endre]
           </Link>
         )}
         {statistic.statisticUrl && (
-          <Link isExternal href={statistic.statisticUrl} title='Melde ny publisering i statistikkregisteret' className='ms-2'>
+          <Link
+            isExternal
+            href={statistic.statisticUrl}
+            title='Melde ny publisering i statistikkregisteret'
+            className='ms-2'
+          >
             [Meld]
           </Link>
         )}
