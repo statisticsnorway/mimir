@@ -414,9 +414,11 @@ function checkIfUserIsAdmin(): boolean {
 }
 
 const ONE_MONTH = 31 // TODO: put in config?
-// New Statreg frontend host for Meld/Endre.
+// Prod (ssb.baseUrl = www.ssb.no) → intern.ssb.no. QA/test/local → intern.test.ssb.no.
 const STATREG_FRONTEND_URL: string =
-  app.config?.['ssb.statreg.frontend.baseUrl'] || 'https://statistikkregisteret.intern.ssb.no'
+  app.config?.['ssb.baseUrl'] === 'https://www.ssb.no'
+    ? 'https://statistikkregisteret.intern.ssb.no'
+    : 'https://statistikkregisteret.intern.test.ssb.no'
 
 function getStatistics(): Array<StatisticDashboard> {
   const userIsAdmin: boolean = checkIfUserIsAdmin()
