@@ -413,12 +413,15 @@ function checkIfUserIsAdmin(): boolean {
   return hasRole('system.admin')
 }
 
-const ONE_MONTH = 31 // TODO: put in config?
-// Prod (ssb.baseUrl = www.ssb.no) → intern.ssb.no. QA/test/local → intern.test.ssb.no.
-const STATREG_FRONTEND_URL: string =
-  app.config?.['ssb.baseUrl'] === 'https://www.ssb.no'
-    ? 'https://statistikkregisteret.intern.ssb.no'
-    : 'https://statistikkregisteret.intern.test.ssb.no'
+const ONE_MONTH = 31
+const SSB_BASE_URL: string = app.config?.['ssb.baseUrl'] || ''
+const STATREG_FRONTEND_URL: string = `https://statistikkregisteret.intern${
+  SSB_BASE_URL === 'https://www.ssb.no' ? '' : '.test'
+}.ssb.no`
+
+function getPreviewAdminPrefix(): string {
+  return SSB_BASE_URL ? '/xp/admin' : '/admin'
+}
 
 function getStatistics(): Array<StatisticDashboard> {
   const userIsAdmin: boolean = checkIfUserIsAdmin()
@@ -577,7 +580,7 @@ function prepDashboardStatistics(
   statisticContent: Content<Statistics & Statistic>,
   statregData: StatregData = getStatregInfo(undefined)
 ): StatisticDashboard {
-  const prefix: string = app.config && app.config['admin-prefix'] ? app.config['admin-prefix'] : '/xp/admin'
+  const prefix: string = getPreviewAdminPrefix()
   const relatedTables: Array<RelatedTbml> = getRelatedTables(statisticContent)
   return {
     id: statisticContent._id,
