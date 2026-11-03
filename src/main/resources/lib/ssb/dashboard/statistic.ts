@@ -630,7 +630,8 @@ function prepDashboardRowFromStatregApi(
 ): StatisticDashboard {
   const shortName: string = statisticContent.data.shortname ?? release?.statistic?.shortname ?? ''
   const nextReleaseId: string = release?.id?.toString() ?? ''
-  const statregFrontendUrl = app.config?.['ssb.statreg.frontend.baseUrl'] ?? 'https://statistikkregisteret.intern.ssb.no'
+  const statregFrontendUrl =
+    app.config?.['ssb.statreg.frontend.baseUrl'] ?? 'https://statistikkregisteret.intern.ssb.no'
   const prefix: string = app.config?.['ssb.baseUrl'] ? '/xp/admin' : '/admin'
   return {
     id: statisticContent._id,
