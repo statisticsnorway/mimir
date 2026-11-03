@@ -650,7 +650,7 @@ function prepDashboardRowFromStatregApi(
     activeVariants: -1,
     relatedTables: getRelatedTables(statisticContent),
     aboutTheStatistics: statisticContent.data.aboutTheStatistics,
-    logData: [],
+    logData: getStatisticsJobLogInfo(statisticContent._id),
     previewUrl: statisticContent._path ? `${prefix}/site/preview/default/draft${statisticContent._path}` : '',
     statisticUrl: shortName ? `${statregFrontendUrl}/statistikk/${shortName}` : undefined,
     editReleaseUrl: nextReleaseId ? `${statregFrontendUrl}/publisering/${nextReleaseId}/rediger` : undefined,
