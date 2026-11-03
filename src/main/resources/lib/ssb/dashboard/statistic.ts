@@ -56,7 +56,9 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
             idProvider: users[parseInt(socket.id)].idProvider ? users[parseInt(socket.id)].idProvider : 'system',
           },
         }
-        const statisticData: Array<StatisticDashboard> = run(context, () => getStatistics())
+        const statisticData = run(context, () =>
+          isEnabled('new-statreg-as-source', false, 'ssb') ? getStatisticsFromStatregApi() : getStatistics()
+        )
         socket.emit('statistics-result', statisticData)
       },
     })
@@ -318,6 +320,7 @@ function getOwnersWithSources(dataSourceIds: Array<string>): Array<OwnerWithSour
 
 function getStatisticsJobLogInfo(id: string, count = 1): Array<DashboardJobInfo> {
   return withConnection(EVENT_LOG_REPO, EVENT_LOG_BRANCH, (connection) => {
+    // deepcode ignore Sqli: NoQL. query is an xp function that queries one or across repositories in xp
     const statisticsJobLog = connection.query({
       query: `_path LIKE "/jobs/*" AND data.task = "${JobNames.STATISTICS_REFRESH_JOB}" AND data.queryIds = "${sanitize(
         id
@@ -413,63 +416,34 @@ function checkIfUserIsAdmin(): boolean {
 }
 
 const ONE_MONTH = 31 // TODO: put in config?
-const SSB_BASE_URL: string = app.config?.['ssb.baseUrl'] || ''
-const STATREG_FRONTEND_URL: string = `https://statistikkregisteret.intern${
-  SSB_BASE_URL === 'https://www.ssb.no' ? '' : '.test'
-}.ssb.no`
-
-function getPreviewAdminPrefix(): string {
-  return SSB_BASE_URL ? '/xp/admin' : '/admin'
-}
-
 function getStatistics(): Array<StatisticDashboard> {
   const userIsAdmin: boolean = checkIfUserIsAdmin()
   const statistic: Array<StatisticDashboard> = userIsAdmin ? getAdminStatistics() : getUserStatistics()
-  if (isEnabled('new-statreg-as-source', false, 'ssb')) {
-    statistic.forEach((stat) => {
-      if (stat.shortName) {
-        const statisticPage = `${STATREG_FRONTEND_URL}/statistikk/${stat.shortName}`
-        stat.statisticUrl = statisticPage
-        if (stat.nextReleaseId) {
-          stat.editReleaseUrl = `${STATREG_FRONTEND_URL}/publisering/${stat.nextReleaseId}/rediger`
-        }
-      }
-    })
-  }
   return statistic.sort((a, b) => {
     return new Date(a.nextRelease || '01.01.3000').getTime() - new Date(b.nextRelease || '01.01.3000').getTime()
   })
 }
 
-function getUpcomingReleaseWindow(): Date {
+function getAdminStatistics(): Array<StatisticDashboard> {
   const statsBeforeDate: Date = new Date()
   statsBeforeDate.setDate(statsBeforeDate.getDate() + ONE_MONTH)
-  return statsBeforeDate
-}
-
-function getAdminStatistics(): Array<StatisticDashboard> {
-  const statsBeforeDate: Date = getUpcomingReleaseWindow()
-  if (isEnabled('new-statreg-as-source', false, 'ssb')) {
-    return getDashboardStatisticsFromApi(statsBeforeDate)
-  }
-
   const statregStatistics: Array<StatisticInListing> = fetchStatisticsWithRelease(statsBeforeDate)
   const statisticsContent: Array<Content<Statistics>> = query({
     query: `data.statistic IN(${statregStatistics.map((s) => `"${s.id}"`).join(',')})`,
     count: 1000,
   }).hits as unknown as Array<Content<Statistics>>
-  return statisticsContent.map((statisticContent) =>
-    prepDashboardStatistics(statisticContent, getStatregInfoById(statisticContent, statregStatistics))
-  )
+  return statisticsContent.map((statisticContent) => prepDashboardStatistics(statisticContent, statregStatistics))
 }
 
 function getUserStatistics(): Array<StatisticDashboard> {
-  if (isEnabled('new-statreg-as-source', false, 'ssb')) {
-    return getDashboardStatisticsFromApi(getUpcomingReleaseWindow(), true)
-  }
-
-  const userStatisticContent: Array<Content<Statistics & Statistic>> =
-    getUserStatisticsContent(`data.statistic LIKE '*'`)
+  const userStatisticsResult: ContentsResult<Content<Statistics & DefaultPageConfig>> = query({
+    query: `data.statistic LIKE '*'`,
+    contentTypes: [`${app.name}:statistics`],
+    count: 1000,
+  })
+  const userStatisticContent: Array<Content<Statistics & Statistic>> = userStatisticsResult.hits.filter(
+    (statistic: Content<Statistics>) => hasWritePermissions(statistic._id)
+  )
   const userStatistic: Array<StatisticInListing> = userStatisticContent.reduce(
     (acc: Array<StatisticInListing>, statistic) => {
       if (statistic.data.statistic) {
@@ -480,99 +454,18 @@ function getUserStatistics(): Array<StatisticDashboard> {
     },
     []
   )
-  return userStatisticContent.map((statisticContent) =>
-    prepDashboardStatistics(statisticContent, getStatregInfoById(statisticContent, userStatistic))
-  )
-}
-
-function getUserStatisticsContent(statisticQuery: string): Array<Content<Statistics & Statistic>> {
-  const userStatisticsResult: ContentsResult<Content<Statistics & DefaultPageConfig>> = query({
-    query: statisticQuery,
-    contentTypes: [`${app.name}:statistics`],
-    count: 1000,
-  })
-  return userStatisticsResult.hits.filter((statistic: Content<Statistics>) => hasWritePermissions(statistic._id))
-}
-
-function getDashboardStatisticsFromApi(before: Date, onlyWritable = false): Array<StatisticDashboard> {
-  const statregData: Record<string, StatregData> | undefined = getStatregDataFromApi(before)
-  if (!statregData) return []
-
-  const shortnames: Array<string> = Object.keys(statregData)
-  if (shortnames.length === 0) return []
-
-  let statisticsContent: Array<Content<Statistics>> = query({
-    contentTypes: [`${app.name}:statistics`],
-    count: 1000,
-    filters: { hasValue: { field: 'data.shortname', values: shortnames } },
-  }).hits as unknown as Array<Content<Statistics>>
-
-  if (onlyWritable) {
-    statisticsContent = statisticsContent.filter((statisticContent) => hasWritePermissions(statisticContent._id))
-  }
-
-  return statisticsContent.map((statisticContent) =>
-    prepDashboardStatistics(
-      statisticContent,
-      statregData[statisticContent.data.shortname ?? ''] || getStatregInfo(undefined)
-    )
-  )
-}
-
-function getStatregDataFromApi(before: Date): Record<string, StatregData> | undefined {
-  const releases = fetchReleasesFromStatregApi({
-    start: 0,
-    count: 1000,
-    sort: 'publish_time',
-    approval_status: 'GODKJENT',
-    publish_time_after: new Date(new Date().setHours(0, 0, 0, 0)).toISOString(),
-    publish_time_before: before.toISOString(),
-  })
-  if (releases && typeof releases === 'object' && 'error' in releases) {
-    log.error(`Failed to fetch kommende publiseringer from Statreg: ${releases.error}`)
-    return undefined
-  }
-  if (!Array.isArray(releases)) {
-    log.error('Failed to fetch kommende publiseringer from Statreg: no releases')
-    return undefined
-  }
-
-  return releases.reduce((statregData: Record<string, StatregData>, release) => {
-    const shortname: string | undefined = release.statistic?.shortname
-    if (shortname && !statregData[shortname]) {
-      statregData[shortname] = getStatregDataFromRelease(shortname, release)
-    }
-    return statregData
-  }, {})
-}
-
-function getStatregDataFromRelease(shortname: string, release: components['schemas']['Release_listing']): StatregData {
-  const releaseId: string = release.id?.toString() ?? ''
-  return {
-    statisticId: release.statistic?.id ?? -1,
-    shortName: shortname,
-    status: 'A',
-    frequency: release.frequency?.name ?? '',
-    nextRelease: release.publish_time ?? '',
-    nextReleaseId: releaseId,
-    variantId: '',
-    activeVariants: -1,
-  }
-}
-
-function getStatregInfoById(
-  statisticContent: Content<Statistics & Statistic>,
-  statregStatistics: Array<StatisticInListing>
-): StatregData {
-  const statregStat = statregStatistics.find((stat) => `${stat.id}` === statisticContent.data.statistic)
-  return getStatregInfo(statregStat)
+  return userStatisticContent.map((statisticContent) => prepDashboardStatistics(statisticContent, userStatistic))
 }
 
 function prepDashboardStatistics(
   statisticContent: Content<Statistics & Statistic>,
-  statregData: StatregData = getStatregInfo(undefined)
+  statregStatistics: Array<StatisticInListing>
 ): StatisticDashboard {
-  const prefix: string = getPreviewAdminPrefix()
+  const prefix: string = app.config && app.config['admin-prefix'] ? app.config['admin-prefix'] : '/xp/admin'
+  const statregStat: StatisticInListing | undefined = statregStatistics.find((statregStat) => {
+    return `${statregStat.id}` === statisticContent.data.statistic
+  })
+  const statregData: StatregData = getStatregInfo(statregStat)
   const relatedTables: Array<RelatedTbml> = getRelatedTables(statisticContent)
   return {
     id: statisticContent._id,
@@ -586,8 +479,6 @@ function prepDashboardStatistics(
     nextRelease: statregData.nextRelease,
     nextReleaseId: statregData.nextReleaseId,
     activeVariants: statregData.activeVariants,
-    editReleaseUrl: statregData.editReleaseUrl,
-    statisticUrl: statregData.statisticUrl,
     ownersWithSources: undefined,
     relatedTables: relatedTables,
     aboutTheStatistics: statisticContent.data.aboutTheStatistics,
@@ -677,6 +568,95 @@ export function getStatisticsContent(): Array<Content<Statistics>> {
   return hits
 }
 
+type Release = components['schemas']['Release_listing']
+
+function getStatisticsFromStatregApi(): Array<StatisticDashboard> {
+  const before: Date = new Date()
+  before.setDate(before.getDate() + ONE_MONTH)
+
+  const releasesByShortname: Record<string, Release> = fetchUpcomingReleases(before)
+  const shortnames: Array<string> = Object.keys(releasesByShortname)
+  if (shortnames.length === 0) return []
+
+  let statisticsContent: Array<Content<Statistics>> = query({
+    contentTypes: [`${app.name}:statistics`],
+    count: 1000,
+    filters: { hasValue: { field: 'data.shortname', values: shortnames } },
+  }).hits as unknown as Array<Content<Statistics>>
+
+  if (!checkIfUserIsAdmin()) {
+    statisticsContent = statisticsContent.filter((statisticContent) => hasWritePermissions(statisticContent._id))
+  }
+
+  return statisticsContent
+    .map((statisticContent) =>
+      prepDashboardRowFromStatregApi(statisticContent, releasesByShortname[statisticContent.data.shortname ?? ''])
+    )
+    .sort(
+      (a, b) => new Date(a.nextRelease || '01.01.3000').getTime() - new Date(b.nextRelease || '01.01.3000').getTime()
+    )
+}
+
+function fetchUpcomingReleases(before: Date): Record<string, Release> {
+  const releases = fetchReleasesFromStatregApi({
+    start: 0,
+    count: 1000,
+    sort: 'publish_time',
+    approval_status: 'GODKJENT',
+    publish_time_after: new Date(new Date().setHours(0, 0, 0, 0)).toISOString(),
+    publish_time_before: before.toISOString(),
+  })
+  if (!Array.isArray(releases)) {
+    log.error(
+      `Failed to fetch kommende publiseringer from Statreg: ${
+        releases && typeof releases === 'object' && 'error' in releases ? releases.error : 'no releases'
+      }`
+    )
+    return {}
+  }
+
+  const byShortname: Record<string, Release> = {}
+  releases.forEach((release) => {
+    const shortname: string | undefined = release.statistic?.shortname
+    if (shortname && !byShortname[shortname]) byShortname[shortname] = release
+  })
+  return byShortname
+}
+
+function getStatregFrontendUrl(): string {
+  const ssbBaseUrl: string = app.config?.['ssb.baseUrl'] || ''
+  return `https://statistikkregisteret.intern${ssbBaseUrl === 'https://www.ssb.no' ? '' : '.test'}.ssb.no`
+}
+
+function prepDashboardRowFromStatregApi(
+  statisticContent: Content<Statistics & Statistic>,
+  release: Release | undefined
+): StatisticDashboard {
+  const shortName: string = statisticContent.data.shortname ?? release?.statistic?.shortname ?? ''
+  const nextReleaseId: string = release?.id?.toString() ?? ''
+  const statregFrontendUrl: string = getStatregFrontendUrl()
+  const prefix: string = app.config?.['ssb.baseUrl'] ? '/xp/admin' : '/admin'
+  return {
+    id: statisticContent._id,
+    language: statisticContent.language || '',
+    name: statisticContent.displayName || '',
+    statisticId: release?.statistic?.id ?? -1,
+    shortName,
+    frequency: release?.frequency?.name ?? '',
+    status: 'A',
+    variantId: '',
+    nextRelease: release?.publish_time ?? '',
+    nextReleaseId,
+    activeVariants: -1,
+    relatedTables: getRelatedTables(statisticContent),
+    aboutTheStatistics: statisticContent.data.aboutTheStatistics,
+    logData: [],
+    previewUrl: statisticContent._path ? `${prefix}/site/preview/default/draft${statisticContent._path}` : '',
+    statisticUrl: shortName ? `${statregFrontendUrl}/statistikk/${shortName}` : undefined,
+    editReleaseUrl: nextReleaseId ? `${statregFrontendUrl}/publisering/${nextReleaseId}/rediger` : undefined,
+  } as StatisticDashboard
+}
+
 interface SourceNodeRender {
   tbmlId: string
   sourceNodeStrings: Array<string>
@@ -727,8 +707,6 @@ interface StatisticDashboard {
   nextRelease: string
   nextReleaseId: string
   activeVariants: number
-  editReleaseUrl?: string
-  statisticUrl?: string
   relatedTables?: Array<RelatedTbml>
   ownersWithSources?: Array<OwnerWithSources>
   aboutTheStatistics?: string
@@ -750,8 +728,6 @@ interface StatregData {
   nextReleaseId: string
   variantId: string
   activeVariants: number
-  editReleaseUrl?: string
-  statisticUrl?: string
 }
 
 interface RelatedTbml {

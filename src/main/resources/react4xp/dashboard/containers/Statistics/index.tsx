@@ -35,10 +35,14 @@ export function Statistics() {
         statisticsFinal.push({
           shortName: statistic.shortName,
           language: 'en',
-          statisticUrl: statistic.statisticUrl,
-          editReleaseUrl: statistic.editReleaseUrl,
-          nextRelease: statistic.nextRelease,
-          nextReleaseId: statistic.nextReleaseId,
+          ...(statistic.statisticUrl || statistic.editReleaseUrl
+            ? {
+                statisticUrl: statistic.statisticUrl,
+                editReleaseUrl: statistic.editReleaseUrl,
+                nextRelease: statistic.nextRelease,
+                nextReleaseId: statistic.nextReleaseId,
+              }
+            : {}),
         })
       }
     })
@@ -130,10 +134,8 @@ export function Statistics() {
   }
 
   function editLink(statistic) {
-    if (statistic.editReleaseUrl || statistic.nextReleaseId) {
-      const editUrl =
-        statistic.editReleaseUrl ||
-        internalBaseUrl + '/statistikkregisteret/publisering/edit/' + statistic.nextReleaseId
+    if (statistic.nextReleaseId) {
+      const editUrl = internalBaseUrl + '/statistikkregisteret/publisering/edit/' + statistic.nextReleaseId
       return (
         <Link isExternal href={editUrl} title='Endre publisering i statistikkregisteret' className='ms-2'>
           [Endre]
@@ -144,10 +146,9 @@ export function Statistics() {
   }
 
   function createLink(statistic) {
-    if (statistic.statisticUrl || (statistic.statisticId && statistic.variantId)) {
-      const createUrl = statistic.statisticUrl
-        ? statistic.statisticUrl
-        : statistic.activeVariants > 1
+    if (statistic.statisticId && statistic.variantId) {
+      const createUrl =
+        statistic.activeVariants > 1
           ? internalBaseUrl + '/statistikkregisteret/statistikk/show/' + statistic.statisticId
           : internalBaseUrl +
             '/statistikkregisteret/publisering/create?statistikk.id=' +
@@ -164,10 +165,30 @@ export function Statistics() {
   }
 
   function getStatregLinks(statistic) {
+    if (statistic.statisticUrl || statistic.editReleaseUrl) {
+      return statregApiLinks(statistic)
+    }
     return (
       <React.Fragment>
         {editLink(statistic)}
         {createLink(statistic)}
+      </React.Fragment>
+    )
+  }
+
+  function statregApiLinks(statistic) {
+    return (
+      <React.Fragment>
+        {statistic.editReleaseUrl && (
+          <Link isExternal href={statistic.editReleaseUrl} title='Endre publisering i statistikkregisteret' className='ms-2'>
+            [Endre]
+          </Link>
+        )}
+        {statistic.statisticUrl && (
+          <Link isExternal href={statistic.statisticUrl} title='Melde ny publisering i statistikkregisteret' className='ms-2'>
+            [Meld]
+          </Link>
+        )}
       </React.Fragment>
     )
   }
