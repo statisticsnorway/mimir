@@ -24,6 +24,7 @@ import {
   getStatisticByIdFromRepo,
 } from '/lib/ssb/statreg/statistics'
 import { hasWritePermissions } from '/lib/ssb/parts/permissions'
+import { stringToServerTime } from '/lib/ssb/utils/dateUtils'
 import {
   JobEventNode,
   JobInfoNode,
@@ -571,10 +572,10 @@ export function getStatisticsContent(): Array<Content<Statistics>> {
 type Release = components['schemas']['Release_listing']
 
 function getStatisticsFromStatregApi(): Array<StatisticDashboard> {
-  const before: Date = new Date()
-  before.setDate(before.getDate() + ONE_MONTH)
+  const oneMonthFromNow: Date = new Date()
+  oneMonthFromNow.setDate(oneMonthFromNow.getDate() + ONE_MONTH)
 
-  const releasesByShortname: Record<string, Release> = fetchUpcomingReleases(before)
+  const releasesByShortname: Record<string, Release> = fetchUpcomingReleases(oneMonthFromNow)
   const shortnames: Array<string> = Object.keys(releasesByShortname)
   if (shortnames.length === 0) return []
 
@@ -603,7 +604,7 @@ function fetchUpcomingReleases(before: Date): Record<string, Release> {
     count: 1000,
     sort: 'publish_time',
     approval_status: 'GODKJENT',
-    publish_time_after: new Date(new Date().setHours(0, 0, 0, 0)).toISOString(),
+    publish_time_after: stringToServerTime().toISOString(),
     publish_time_before: before.toISOString(),
   })
   if (!Array.isArray(releases)) {
@@ -623,18 +624,13 @@ function fetchUpcomingReleases(before: Date): Record<string, Release> {
   return byShortname
 }
 
-function getStatregFrontendUrl(): string {
-  const ssbBaseUrl: string = app.config?.['ssb.baseUrl'] || ''
-  return `https://statistikkregisteret.intern${ssbBaseUrl === 'https://www.ssb.no' ? '' : '.test'}.ssb.no`
-}
-
 function prepDashboardRowFromStatregApi(
   statisticContent: Content<Statistics & Statistic>,
   release: Release | undefined
 ): StatisticDashboard {
   const shortName: string = statisticContent.data.shortname ?? release?.statistic?.shortname ?? ''
   const nextReleaseId: string = release?.id?.toString() ?? ''
-  const statregFrontendUrl: string = getStatregFrontendUrl()
+  const statregFrontendUrl = app.config?.['ssb.statreg.frontend.baseUrl']
   const prefix: string = app.config?.['ssb.baseUrl'] ? '/xp/admin' : '/admin'
   return {
     id: statisticContent._id,
@@ -652,8 +648,8 @@ function prepDashboardRowFromStatregApi(
     aboutTheStatistics: statisticContent.data.aboutTheStatistics,
     logData: getStatisticsJobLogInfo(statisticContent._id),
     previewUrl: statisticContent._path ? `${prefix}/site/preview/default/draft${statisticContent._path}` : '',
-    statisticUrl: shortName ? `${statregFrontendUrl}/statistikk/${shortName}` : undefined,
-    editReleaseUrl: nextReleaseId ? `${statregFrontendUrl}/publisering/${nextReleaseId}/rediger` : undefined,
+    statisticUrl: statregFrontendUrl && `${statregFrontendUrl}/statistikk/${shortName}`,
+    editReleaseUrl: statregFrontendUrl && `${statregFrontendUrl}/publisering/${nextReleaseId}/rediger`,
   } as StatisticDashboard
 }
 
