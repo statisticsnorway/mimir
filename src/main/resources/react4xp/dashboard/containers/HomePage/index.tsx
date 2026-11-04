@@ -27,7 +27,7 @@ export function HomePage() {
       return (
         <Tab eventKey='queries' title='Spørringer'>
           {dashboardOptions.dataSources && <DataSources />}
-          {dashboardOptions.statisticRegister && <StatRegDashboard />}
+          {dashboardOptions.statregRefresh && dashboardOptions.statisticRegister && <StatRegDashboard />}
         </Tab>
       )
     }
