@@ -217,21 +217,23 @@ export function DashboardTools() {
     <div className='p-4 tables-wrapper'>
       <h2 className='mb-4'>Verktøy</h2>
       <Container>
-        <Row className='mb-4'>
-          <Col className='d-inline-flex align-content-center justify-content-between'>
-            {renderStatisticsSearch()}
-            <Button
-              className='m-0'
-              onClick={() => {
-                setOpenStatistic(dispatch, io, selectedStat)
-                setOpenModal(dispatch, true)
-              }}
-              disabled={hasLoadingStatistic || loadingStatisticsSearchList || !selectedStat}
-            >
-              {hasLoadingStatistic ? <span className='spinner-border spinner-border-sm' /> : <RefreshCw size={18} />}
-            </Button>
-          </Col>
-        </Row>
+        {dashboardOptions.statregRefresh ? (
+          <Row className='mb-4'>
+            <Col className='d-inline-flex align-content-center justify-content-between'>
+              {renderStatisticsSearch()}
+              <Button
+                className='m-0'
+                onClick={() => {
+                  setOpenStatistic(dispatch, io, selectedStat)
+                  setOpenModal(dispatch, true)
+                }}
+                disabled={hasLoadingStatistic || loadingStatisticsSearchList || !selectedStat}
+              >
+                {hasLoadingStatistic ? <span className='spinner-border spinner-border-sm' /> : <RefreshCw size={18} />}
+              </Button>
+            </Col>
+          </Row>
+        ) : null}
         {dashboardOptions.statregRefresh
           ? statuses.map((statRegStatus, index) => {
               return (
