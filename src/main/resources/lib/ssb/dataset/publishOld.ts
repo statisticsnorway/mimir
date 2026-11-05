@@ -71,7 +71,7 @@ export function currentlyWaitingForPublish(statistic: Content<Statistics>): bool
       ) {
         const { nextRelease, previousRelease } = getReleaseDates(statistic)
         const serverOffsetInMs: number = getServerOffsetInMs()
-        const now: Date = useStatregApi ? new Date() : new Date(Date.now() + serverOffsetInMs + 1000)
+        const now: Date = useStatregApi ? new Date(Date.now() + 1000) : new Date(Date.now() + serverOffsetInMs + 1000)
 
         const nextReleaseSameOrBeforeNow: boolean = nextRelease ? isSameOrBefore(new Date(nextRelease), now) : false
         const previousReleaseSameDayNow: boolean = previousRelease ? isSameDay(new Date(previousRelease), now) : false
