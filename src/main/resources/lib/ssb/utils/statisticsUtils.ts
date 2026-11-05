@@ -137,7 +137,7 @@ export function getReleaseDatesFromStatregAPI(shortname: string): StatregApiRele
     shortname,
     sort: '-publish_time',
     approval_status: 'GODKJENT',
-    publish_time_before: new Date(now).toISOString(),
+    publish_time_before: now.toISOString(),
   })
 
   if (!previousReleases || 'error' in previousReleases) return {}
@@ -147,7 +147,7 @@ export function getReleaseDatesFromStatregAPI(shortname: string): StatregApiRele
     shortname,
     sort: 'publish_time',
     approval_status: 'GODKJENT',
-    publish_time_after: new Date(now).toISOString(),
+    publish_time_after: now.toISOString(),
   })
 
   if (!nextReleases || 'error' in nextReleases) return {}
