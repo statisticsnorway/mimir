@@ -43,6 +43,8 @@ import { type Statistic } from '/site/mixins/statistic'
 import { type DataSource } from '/site/mixins/dataSource'
 import { type Statistics, type Highchart, type Table, type KeyFigure } from '/site/content-types'
 
+const useNewStatreg = isEnabled('new-statreg-as-source', false, 'ssb')
+
 export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): void {
   socket.on('get-statistics', () => {
     executeFunction({
@@ -57,9 +59,7 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
             idProvider: users[parseInt(socket.id)].idProvider ? users[parseInt(socket.id)].idProvider : 'system',
           },
         }
-        const statisticData = run(context, () =>
-          isEnabled('new-statreg-as-source', false, 'ssb') ? getStatisticsFromStatregApi() : getStatistics()
-        )
+        const statisticData = run(context, () => (useNewStatreg ? getStatisticsFromStatregApi() : getStatistics()))
         socket.emit('statistics-result', statisticData)
       },
     })
@@ -69,7 +69,7 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
     executeFunction({
       description: 'get-statistics-search-list',
       func: () => {
-        const statisticsSearchData: Array<StatisticSearch> = getStatisticsSearchList()
+        const statisticsSearchData: Array<StatisticSearch> = useNewStatreg ? [] : getStatisticsSearchList()
         socket.emit('statistics-search-list-result', statisticsSearchData)
       },
     })
