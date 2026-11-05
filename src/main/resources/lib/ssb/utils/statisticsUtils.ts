@@ -5,7 +5,8 @@ import {
   type VariantInListing,
   type ReleaseDatesVariant,
 } from '/lib/ssb/dashboard/statreg/types'
-import { formatDate, stringToServerTime } from '/lib/ssb/utils/dateUtils'
+import { formatDate as formatInTimeZone } from '/lib/time'
+import { formatDate, setDateTimeAsOsloTimeZone } from '/lib/ssb/utils/dateUtils'
 import { isAfter } from '/lib/vendor/dateFns'
 import { ensureArray } from '/lib/ssb/utils/arrayUtils'
 import { type StatisticsDates } from '/lib/types/partTypes/statisticHeader'
@@ -130,7 +131,7 @@ function getChangeDate(
 }
 
 export function getReleaseDatesFromStatregAPI(shortname: string): StatregApiReleaseDates {
-  const now = stringToServerTime()
+  const now = new Date()
 
   const previousReleases = fetchReleasesFromStatregApi({
     count: 1,
@@ -156,8 +157,20 @@ export function getReleaseDatesFromStatregAPI(shortname: string): StatregApiRele
   const nextReleaseDates = nextReleases?.map(({ publish_time }) => publish_time)
 
   return {
-    previousReleaseDate: previousReleaseDates.length ? previousReleaseDates[0] : '',
-    nextReleaseDate: nextReleaseDates.length ? nextReleaseDates[0] : '',
-    previewNextReleaseDate: nextReleaseDates.length > 1 ? nextReleaseDates[1] : '',
+    previousReleaseDate: toOsloPublishTime(previousReleaseDates[0]),
+    nextReleaseDate: toOsloPublishTime(nextReleaseDates[0]),
+    previewNextReleaseDate: toOsloPublishTime(nextReleaseDates[1]),
   }
+}
+
+function toOsloPublishTime(iso: string | undefined): string {
+  if (!iso) return ''
+  const osloLocal = formatInTimeZone({
+    date: new Date(iso).toISOString(),
+    pattern: "yyyy-MM-dd'T'HH:mm:ss",
+    timezoneId: 'Europe/Oslo',
+  })
+  if (!osloLocal) return ''
+  const osloWithOffset = setDateTimeAsOsloTimeZone(osloLocal)
+  return `${osloWithOffset.substring(0, 19).replace('T', ' ')}.0`
 }
