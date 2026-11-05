@@ -53,6 +53,7 @@ interface DashboardRouterProps {
     jobLogs?: boolean
     dataSources?: boolean
     statisticRegister?: boolean
+    statregRefresh?: boolean
   }
   contentStudioBaseUrl?: string
   dataToolBoxBaseUrl?: string
