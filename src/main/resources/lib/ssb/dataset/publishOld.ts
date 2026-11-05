@@ -5,7 +5,7 @@ import { send } from '/lib/xp/event'
 import { executeFunction, sleep } from '/lib/xp/task'
 import { run, type ContextParams } from '/lib/xp/context'
 import { isEnabled } from '/lib/featureToggle'
-import { isSameOrBefore } from '/lib/ssb/utils/dateUtils'
+import { isSameOrBefore, setDateTimeAsOsloTimeZone } from '/lib/ssb/utils/dateUtils'
 import { isSameDay } from '/lib/vendor/dateFns'
 import { getServerOffsetInMs } from '/lib/ssb/utils/serverOffset'
 import { Events, logUserDataQuery } from '/lib/ssb/repo/query'
@@ -71,7 +71,9 @@ export function currentlyWaitingForPublish(statistic: Content<Statistics>): bool
       ) {
         const { nextRelease, previousRelease } = getReleaseDates(statistic)
         const serverOffsetInMs: number = getServerOffsetInMs()
-        const now: Date = new Date(Date.now() + serverOffsetInMs + 1000)
+        const now: Date = useStatregApi
+          ? new Date(setDateTimeAsOsloTimeZone(new Date().toISOString()))
+          : new Date(Date.now() + serverOffsetInMs + 1000)
 
         const nextReleaseSameOrBeforeNow: boolean = nextRelease ? isSameOrBefore(new Date(nextRelease), now) : false
         const previousReleaseSameDayNow: boolean = previousRelease ? isSameDay(new Date(previousRelease), now) : false
@@ -108,7 +110,9 @@ export function publishDataset(): void {
       log.info(`Stat ${statisticContent._name} (${statistic}) has next release: ${nextRelease}`)
       const releaseDate: Date = new Date(nextRelease)
       const serverOffsetInMs: number = getServerOffsetInMs()
-      const now: Date = new Date(Date.now() + serverOffsetInMs)
+      const now: Date = useStatregApi
+        ? new Date(setDateTimeAsOsloTimeZone(new Date().toISOString()))
+        : new Date(Date.now() + serverOffsetInMs)
       const oneHourFromNow: Date = new Date(now.getTime() + 1000 * 60 * 60)
       if (releaseDate > now && releaseDate < oneHourFromNow) {
         log.info(`Stat ${statisticContent._name} (${statistic}) releases today`)
