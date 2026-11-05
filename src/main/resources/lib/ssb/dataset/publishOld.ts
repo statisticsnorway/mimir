@@ -71,9 +71,7 @@ export function currentlyWaitingForPublish(statistic: Content<Statistics>): bool
       ) {
         const { nextRelease, previousRelease } = getReleaseDates(statistic)
         const serverOffsetInMs: number = getServerOffsetInMs()
-        const now: Date = useStatregApi
-          ? new Date(setDateTimeAsOsloTimeZone(new Date().toISOString()))
-          : new Date(Date.now() + serverOffsetInMs + 1000)
+        const now: Date = useStatregApi ? new Date() : new Date(Date.now() + serverOffsetInMs + 1000)
 
         const nextReleaseSameOrBeforeNow: boolean = nextRelease ? isSameOrBefore(new Date(nextRelease), now) : false
         const previousReleaseSameDayNow: boolean = previousRelease ? isSameDay(new Date(previousRelease), now) : false
@@ -110,9 +108,7 @@ export function publishDataset(): void {
       log.info(`Stat ${statisticContent._name} (${statistic}) has next release: ${nextRelease}`)
       const releaseDate: Date = new Date(nextRelease)
       const serverOffsetInMs: number = getServerOffsetInMs()
-      const now: Date = useStatregApi
-        ? new Date(setDateTimeAsOsloTimeZone(new Date().toISOString()))
-        : new Date(Date.now() + serverOffsetInMs)
+      const now: Date = useStatregApi ? new Date() : new Date(Date.now() + serverOffsetInMs)
       const oneHourFromNow: Date = new Date(now.getTime() + 1000 * 60 * 60)
       if (releaseDate > now && releaseDate < oneHourFromNow) {
         log.info(`Stat ${statisticContent._name} (${statistic}) releases today`)
@@ -242,7 +238,7 @@ function createTask(
         }
         const key: string | null = extractKey(dataSource)
         const serverOffsetInMs: number = getServerOffsetInMs()
-        const now: Date = new Date(Date.now() + serverOffsetInMs)
+        const now: Date = useStatregApi ? new Date() : new Date(Date.now() + serverOffsetInMs)
         const sleepFor: number = releaseDate.getTime() - now.getTime()
 
         log.info(

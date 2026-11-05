@@ -5,7 +5,7 @@ import {
   type VariantInListing,
   type ReleaseDatesVariant,
 } from '/lib/ssb/dashboard/statreg/types'
-import { formatDate, setDateTimeAsOsloTimeZone } from '/lib/ssb/utils/dateUtils'
+import { formatDate, stringToServerTime } from '/lib/ssb/utils/dateUtils'
 import { isAfter } from '/lib/vendor/dateFns'
 import { ensureArray } from '/lib/ssb/utils/arrayUtils'
 import { type StatisticsDates } from '/lib/types/partTypes/statisticHeader'
@@ -130,7 +130,7 @@ function getChangeDate(
 }
 
 export function getReleaseDatesFromStatregAPI(shortname: string): StatregApiReleaseDates {
-  const now = setDateTimeAsOsloTimeZone(new Date().toISOString())
+  const now = stringToServerTime()
 
   const previousReleases = fetchReleasesFromStatregApi({
     count: 1,
