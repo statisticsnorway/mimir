@@ -88,7 +88,7 @@
     "better-react-mathjax": "2.3.0",
     "browser-sync": "3.0.4",
     "cross-env": "10.1.0",
-    "cssnano": "8.0.2",
+    "cssnano": "9.1.0",
     "esbuild-sass-plugin": "3.7.0",
     "eslint": "9.39.2",
     "eslint-config-prettier": "10.1.8",
