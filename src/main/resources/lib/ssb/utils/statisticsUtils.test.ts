@@ -19,8 +19,9 @@ jest.mock('/lib/ssb/statreg/statistics', () => ({
   fetchReleasesFromStatregApi: (...args: unknown[]) => mockFetchReleasesFromStatregApi(...args),
 }))
 
+// Simulates a UTC server in Oslo winter time, where serverOffset would be +1h
 jest.mock('/lib/ssb/utils/serverOffset', () => ({
-  getServerOffsetInMs: jest.fn(() => 0),
+  getServerOffsetInMs: jest.fn(() => 60 * 60 * 1000),
 }))
 
 beforeAll(() => {

@@ -6,6 +6,7 @@ import { parseContributions, getEnvironmentString } from '/lib/ssb/utils/utils'
 import { render } from '/lib/thymeleaf'
 import { renderError } from '/lib/ssb/error/error'
 import { React4xp } from '/lib/enonic/react4xp'
+import { isEnabled } from '/lib/featureToggle'
 
 const view = resolve('./dashboard.html')
 const DEFAULT_CONTENTSTUDIO_URL = getToolUrl('com.enonic.app.contentstudio', 'main')
@@ -50,6 +51,8 @@ function renderPart(req) {
     jobLogs: userHasAdmin,
     dataSources: userHasAdmin,
     statisticRegister: userHasAdmin,
+    statregRefresh: userHasAdmin && !isEnabled('new-statreg-as-source', false, 'ssb'),
+    showAlert: isEnabled('show-dashboard-alert', false, 'ssb'),
   }
 
   const environmentString = getEnvironmentString()

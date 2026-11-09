@@ -9,6 +9,7 @@ import {
   selectLoadingRefreshNameGraph,
   selectRefreshNameGraphResult,
   selectStatregRapportUrl,
+  selectDashboardOptions,
 } from '/react4xp/dashboard/containers/HomePage/selectors'
 import { WebSocketContext } from '/react4xp/dashboard/utils/websocket/WebsocketProvider'
 import {
@@ -47,6 +48,7 @@ export function DashboardTools() {
   const internalBaseUrl = useSelector(selectInternalBaseUrl)
   const internalStatbankUrl = useSelector(selectInternalStatbankUrl)
   const statregRapportUrl = useSelector(selectStatregRapportUrl)
+  const dashboardOptions = useSelector(selectDashboardOptions)
 
   const [selectedStatRegKey, setSelectStatRegKey] = useState(null)
   const [modalShow, setModalShow] = useState(false)
@@ -215,28 +217,32 @@ export function DashboardTools() {
     <div className='p-4 tables-wrapper'>
       <h2 className='mb-4'>Verktøy</h2>
       <Container>
-        <Row className='mb-4'>
-          <Col className='d-inline-flex align-content-center justify-content-between'>
-            {renderStatisticsSearch()}
-            <Button
-              className='m-0'
-              onClick={() => {
-                setOpenStatistic(dispatch, io, selectedStat)
-                setOpenModal(dispatch, true)
-              }}
-              disabled={hasLoadingStatistic || loadingStatisticsSearchList || !selectedStat}
-            >
-              {hasLoadingStatistic ? <span className='spinner-border spinner-border-sm' /> : <RefreshCw size={18} />}
-            </Button>
-          </Col>
-        </Row>
-        {statuses.map((statRegStatus, index) => {
-          return (
-            <Row className='mb-4' key={index}>
-              <Col>{makeStatRegRefreshOptions(statRegStatus)}</Col>
-            </Row>
-          )
-        })}
+        {dashboardOptions.statregRefresh ? (
+          <Row className='mb-4'>
+            <Col className='d-inline-flex align-content-center justify-content-between'>
+              {renderStatisticsSearch()}
+              <Button
+                className='m-0'
+                onClick={() => {
+                  setOpenStatistic(dispatch, io, selectedStat)
+                  setOpenModal(dispatch, true)
+                }}
+                disabled={hasLoadingStatistic || loadingStatisticsSearchList || !selectedStat}
+              >
+                {hasLoadingStatistic ? <span className='spinner-border spinner-border-sm' /> : <RefreshCw size={18} />}
+              </Button>
+            </Col>
+          </Row>
+        ) : null}
+        {dashboardOptions.statregRefresh
+          ? statuses.map((statRegStatus, index) => {
+              return (
+                <Row className='mb-4' key={index}>
+                  <Col>{makeStatRegRefreshOptions(statRegStatus)}</Col>
+                </Row>
+              )
+            })
+          : null}
         {modalShow && <RefreshStatRegModal statRegKey={selectedStatRegKey} handleClose={() => setModalShow(false)} />}
         <Row className='mb-5'>{renderTbmlDefinitionsStatbankTable()}</Row>
         <fieldset className='safe-zone d-flex flex-column justify-content-center mb-3 p-2'>

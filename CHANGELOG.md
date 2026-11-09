@@ -1,5 +1,26 @@
 # Changelog
 
+## [2.46.0](https://github.com/statisticsnorway/mimir/compare/v2.45.0...v2.46.0) (2026-11-09)
+
+
+### Features
+
+* Add toggable Dashboard alert [MIM-3258] ([#3922](https://github.com/statisticsnorway/mimir/issues/3922)) ([28062ca](https://github.com/statisticsnorway/mimir/commit/28062ca3506ebb83562a63cebaad83cccd8d9eea))
+* Mim 3227 dashboard uses statreg upcoming pub [MIM-3227] ([#3909](https://github.com/statisticsnorway/mimir/issues/3909)) ([09f74e2](https://github.com/statisticsnorway/mimir/commit/09f74e269b975483d6c1e8d24cf8fe0c866a91ae))
+
+
+### Bug Fixes
+
+* Disable refresh statreg task ([748eab7](https://github.com/statisticsnorway/mimir/commit/748eab7d8143db909657bf161b6d9043b3991441))
+* Disable refresh statreg task [MIM-3226] ([#3913](https://github.com/statisticsnorway/mimir/issues/3913)) ([748eab7](https://github.com/statisticsnorway/mimir/commit/748eab7d8143db909657bf161b6d9043b3991441))
+* Fix color typo for dashboard alert ([#3923](https://github.com/statisticsnorway/mimir/issues/3923)) ([558609a](https://github.com/statisticsnorway/mimir/commit/558609a39b3aaaf36cfc9121e1db5ed8f8e12321))
+* Hide statistic search list ([1f9c174](https://github.com/statisticsnorway/mimir/commit/1f9c1748c7f3d558576b6dc7203a0a4f8f075ec0))
+* Hide statistic search list [MIM-3224] ([#3914](https://github.com/statisticsnorway/mimir/issues/3914)) ([1f9c174](https://github.com/statisticsnorway/mimir/commit/1f9c1748c7f3d558576b6dc7203a0a4f8f075ec0))
+* Hide statreg refresh options for new statreg [MIM-3224][MIM-3225] ([#3910](https://github.com/statisticsnorway/mimir/issues/3910)) ([accecdb](https://github.com/statisticsnorway/mimir/commit/accecdb1d14d07c3caac1544b283ac44b7f114ac))
+* Remove serverOffset for getReleaseDatesFromStatregAPI ([5f108ac](https://github.com/statisticsnorway/mimir/commit/5f108aca8b8043ff2f082969eeb41d3f68430be4))
+* Remove serverOffset for getReleaseDatesFromStatregAPI [MIM-3255] ([#3915](https://github.com/statisticsnorway/mimir/issues/3915)) ([5f108ac](https://github.com/statisticsnorway/mimir/commit/5f108aca8b8043ff2f082969eeb41d3f68430be4))
+* Remove serverOffset for publish job for new statreg [MIM-3255] ([#3912](https://github.com/statisticsnorway/mimir/issues/3912)) ([a3f1164](https://github.com/statisticsnorway/mimir/commit/a3f1164c84be313f49c306a121fea2017574178e))
+
 ## [2.45.0](https://github.com/statisticsnorway/mimir/compare/v2.44.0...v2.45.0) (2026-10-30)
 
 

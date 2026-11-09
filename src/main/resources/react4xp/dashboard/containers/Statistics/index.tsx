@@ -35,6 +35,14 @@ export function Statistics() {
         statisticsFinal.push({
           shortName: statistic.shortName,
           language: 'en',
+          ...(statistic.statisticUrl || statistic.editReleaseUrl
+            ? {
+                statisticUrl: statistic.statisticUrl,
+                editReleaseUrl: statistic.editReleaseUrl,
+                nextRelease: statistic.nextRelease,
+                nextReleaseId: statistic.nextReleaseId,
+              }
+            : {}),
         })
       }
     })
@@ -157,10 +165,40 @@ export function Statistics() {
   }
 
   function getStatregLinks(statistic) {
+    if (statistic.statisticUrl || statistic.editReleaseUrl) {
+      return statregApiLinks(statistic)
+    }
     return (
       <React.Fragment>
         {editLink(statistic)}
         {createLink(statistic)}
+      </React.Fragment>
+    )
+  }
+
+  function statregApiLinks(statistic) {
+    return (
+      <React.Fragment>
+        {statistic.editReleaseUrl && (
+          <Link
+            isExternal
+            href={statistic.editReleaseUrl}
+            title='Endre publisering i statistikkregisteret'
+            className='ms-2'
+          >
+            [Endre]
+          </Link>
+        )}
+        {statistic.statisticUrl && (
+          <Link
+            isExternal
+            href={statistic.statisticUrl}
+            title='Melde ny publisering i statistikkregisteret'
+            className='ms-2'
+          >
+            [Meld]
+          </Link>
+        )}
       </React.Fragment>
     )
   }

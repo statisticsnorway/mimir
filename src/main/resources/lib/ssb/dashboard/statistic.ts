@@ -1,5 +1,6 @@
 import '/lib/ssb/polyfills/nashorn'
 
+import { type components } from '@statisticsnorway/statreg-api-types'
 import { query, get as getContent, Content, ContentsResult } from '/lib/xp/content'
 import { run, type ContextParams } from '/lib/xp/context'
 import { sanitize } from '/lib/xp/common'
@@ -15,12 +16,15 @@ import { EVENT_LOG_BRANCH, EVENT_LOG_REPO } from '/lib/ssb/repo/eventLog'
 import { withConnection, ENONIC_CMS_DEFAULT_REPO, getNode, queryNodes } from '/lib/ssb/repo/common'
 import { getTbprocessor, getTbprocessorKey } from '/lib/ssb/dataset/tbprocessor/tbprocessor'
 import { users } from '/lib/ssb/dashboard/dashboardUtils'
+import { isEnabled } from '/lib/featureToggle'
 import {
+  fetchReleasesFromStatregApi,
   fetchStatisticsWithRelease,
   getAllStatisticsFromRepo,
   getStatisticByIdFromRepo,
 } from '/lib/ssb/statreg/statistics'
 import { hasWritePermissions } from '/lib/ssb/parts/permissions'
+import { stringToServerTime } from '/lib/ssb/utils/dateUtils'
 import {
   JobEventNode,
   JobInfoNode,
@@ -39,6 +43,8 @@ import { type Statistic } from '/site/mixins/statistic'
 import { type DataSource } from '/site/mixins/dataSource'
 import { type Statistics, type Highchart, type Table, type KeyFigure } from '/site/content-types'
 
+const useNewStatreg = isEnabled('new-statreg-as-source', false, 'ssb')
+
 export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): void {
   socket.on('get-statistics', () => {
     executeFunction({
@@ -53,7 +59,7 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
             idProvider: users[parseInt(socket.id)].idProvider ? users[parseInt(socket.id)].idProvider : 'system',
           },
         }
-        const statisticData: Array<StatisticDashboard> = run(context, () => getStatistics())
+        const statisticData = run(context, () => (useNewStatreg ? getStatisticsFromStatregApi() : getStatistics()))
         socket.emit('statistics-result', statisticData)
       },
     })
@@ -63,7 +69,7 @@ export function setupHandlers(socket: Socket, socketEmitter: SocketEmitter): voi
     executeFunction({
       description: 'get-statistics-search-list',
       func: () => {
-        const statisticsSearchData: Array<StatisticSearch> = getStatisticsSearchList()
+        const statisticsSearchData: Array<StatisticSearch> = useNewStatreg ? [] : getStatisticsSearchList()
         socket.emit('statistics-search-list-result', statisticsSearchData)
       },
     })
@@ -561,6 +567,91 @@ export function getStatisticsContent(): Array<Content<Statistics>> {
   })
   hits = hits.concat(result.hits)
   return hits
+}
+
+type Release = components['schemas']['Release_listing']
+
+function getStatisticsFromStatregApi(): Array<StatisticDashboard> {
+  const oneMonthFromNow: Date = new Date()
+  oneMonthFromNow.setDate(oneMonthFromNow.getDate() + ONE_MONTH)
+
+  const releasesByShortname: Record<string, Release> = fetchUpcomingReleases(oneMonthFromNow)
+  const shortnames: Array<string> = Object.keys(releasesByShortname)
+  if (shortnames.length === 0) return []
+
+  let statisticsContent: Array<Content<Statistics>> = query({
+    contentTypes: [`${app.name}:statistics`],
+    count: 1000,
+    filters: { hasValue: { field: 'data.shortname', values: shortnames } },
+  }).hits as unknown as Array<Content<Statistics>>
+
+  if (!checkIfUserIsAdmin()) {
+    statisticsContent = statisticsContent.filter((statisticContent) => hasWritePermissions(statisticContent._id))
+  }
+
+  return statisticsContent
+    .map((statisticContent) =>
+      prepDashboardRowFromStatregApi(statisticContent, releasesByShortname[statisticContent.data.shortname ?? ''])
+    )
+    .sort(
+      (a, b) => new Date(a.nextRelease || '01.01.3000').getTime() - new Date(b.nextRelease || '01.01.3000').getTime()
+    )
+}
+
+function fetchUpcomingReleases(before: Date): Record<string, Release> {
+  const releases = fetchReleasesFromStatregApi({
+    start: 0,
+    count: 1000,
+    sort: 'publish_time',
+    approval_status: 'GODKJENT',
+    publish_time_after: stringToServerTime().toISOString(),
+    publish_time_before: before.toISOString(),
+  })
+  if (!Array.isArray(releases)) {
+    log.error(
+      `Failed to fetch kommende publiseringer from Statreg: ${
+        releases && typeof releases === 'object' && 'error' in releases ? releases.error : 'no releases'
+      }`
+    )
+    return {}
+  }
+
+  const byShortname: Record<string, Release> = {}
+  releases.forEach((release) => {
+    const shortname: string | undefined = release.statistic?.shortname
+    if (shortname && !byShortname[shortname]) byShortname[shortname] = release
+  })
+  return byShortname
+}
+
+function prepDashboardRowFromStatregApi(
+  statisticContent: Content<Statistics & Statistic>,
+  release: Release | undefined
+): StatisticDashboard {
+  const shortName: string = statisticContent.data.shortname ?? release?.statistic?.shortname ?? ''
+  const nextReleaseId: string = release?.id?.toString() ?? ''
+  const statregFrontendUrl =
+    app.config?.['ssb.statreg.frontend.baseUrl'] ?? 'https://statistikkregisteret.intern.ssb.no'
+  const prefix: string = app.config?.['ssb.baseUrl'] ? '/xp/admin' : '/admin'
+  return {
+    id: statisticContent._id,
+    language: statisticContent.language || '',
+    name: statisticContent.displayName || '',
+    statisticId: release?.statistic?.id ?? -1,
+    shortName,
+    frequency: release?.frequency?.name ?? '',
+    status: 'A',
+    variantId: '',
+    nextRelease: release?.publish_time ?? '',
+    nextReleaseId,
+    activeVariants: -1,
+    relatedTables: getRelatedTables(statisticContent),
+    aboutTheStatistics: statisticContent.data.aboutTheStatistics,
+    logData: getStatisticsJobLogInfo(statisticContent._id),
+    previewUrl: statisticContent._path ? `${prefix}/site/preview/default/draft${statisticContent._path}` : '',
+    statisticUrl: statregFrontendUrl && `${statregFrontendUrl}/statistikk/${shortName}`,
+    editReleaseUrl: statregFrontendUrl && `${statregFrontendUrl}/publisering/${nextReleaseId}/rediger`,
+  } as StatisticDashboard
 }
 
 interface SourceNodeRender {
