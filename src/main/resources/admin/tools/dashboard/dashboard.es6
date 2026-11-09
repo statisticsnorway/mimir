@@ -52,6 +52,7 @@ function renderPart(req) {
     dataSources: userHasAdmin,
     statisticRegister: userHasAdmin,
     statregRefresh: userHasAdmin && !isEnabled('new-statreg-as-source', false, 'ssb'),
+    showAlert: isEnabled('show-dashboard-alert', false, 'ssb'),
   }
 
   const environmentString = getEnvironmentString()

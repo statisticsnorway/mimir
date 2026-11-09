@@ -58,6 +58,13 @@ export function HomePage() {
         <ConnectionBadge isConnected={isConnected} />
         <ConnectionTimeoutModal isConnected={isConnected} />
       </div>
+      {dashboardOptions.showAlert && (
+        <div className='pb-4'>
+          <div className='p-4 text-center align-items-center fs-4 border border-dark rounded-3 bg-danger text-white'>
+            Vedlikehold på gang. Tjenesten kan ikke brukes mellom kl 12-13 tirsdag 10. november 2026.
+          </div>
+        </div>
+      )}
       <Tabs defaultActiveKey='statistics'>
         <Tab eventKey='statistics' title='Statistikker'>
           <Container fluid className='p-0'>

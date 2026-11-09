@@ -54,6 +54,7 @@ interface DashboardRouterProps {
     dataSources?: boolean
     statisticRegister?: boolean
     statregRefresh?: boolean
+    showAlert?: boolean
   }
   contentStudioBaseUrl?: string
   dataToolBoxBaseUrl?: string
