@@ -80,6 +80,10 @@ try {
           feature: 'migrate-statistics-content-type-with-shortname',
           enabled: false,
         },
+        {
+          feature: 'show-dashboard-alert',
+          enabled: false,
+        },
       ],
     },
   ])
