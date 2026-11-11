@@ -24,7 +24,6 @@ import {
   getStatisticByIdFromRepo,
 } from '/lib/ssb/statreg/statistics'
 import { hasWritePermissions } from '/lib/ssb/parts/permissions'
-import { stringToServerTime } from '/lib/ssb/utils/dateUtils'
 import {
   JobEventNode,
   JobInfoNode,
@@ -604,7 +603,7 @@ function fetchUpcomingReleases(before: Date): Record<string, Release> {
     count: 1000,
     sort: 'publish_time',
     approval_status: 'GODKJENT',
-    publish_time_after: stringToServerTime().toISOString(),
+    publish_time_after: new Date().toISOString(),
     publish_time_before: before.toISOString(),
   })
   if (!Array.isArray(releases)) {
