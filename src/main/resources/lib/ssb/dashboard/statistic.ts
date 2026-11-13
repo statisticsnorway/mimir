@@ -558,10 +558,11 @@ function getStatisticsSearchList(): Array<StatisticSearch> {
 }
 
 export function getStatisticsContent(): Array<Content<Statistics>> {
+  const useStatregApi = isEnabled('new-statreg-as-source', false, 'ssb')
   let hits: Array<Content<Statistics>> = []
   const result: ContentsResult<Content<Statistics & DefaultPageConfig>> = query({
     contentTypes: [`${app.name}:statistics`],
-    query: `data.statistic LIKE "*"`,
+    query: useStatregApi ? `data.shortname LIKE "*"` : `data.statistic LIKE "*"`,
     count: 1000,
   })
   hits = hits.concat(result.hits)
