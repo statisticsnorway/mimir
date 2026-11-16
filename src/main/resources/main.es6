@@ -10,6 +10,7 @@ try {
   const { setupTaskListener } = require('/lib/ssb/dataset/publish')
   const { setupArticleListener } = require('/lib/ssb/utils/articleUtils')
   const { migrateStatisticsContentTypeWithShortname } = require('/lib/ssb/statreg/migrateStatisticsContentTypeWithShortname')
+  const { findAuditlogDuringMigration } = require('/lib/auditLog')
 
   log.info('Application ' + app.name + ' started') // Log application started
   __.disposer(() => log.info('Application ' + app.name + ' stopped')) // Log application stoppped
@@ -23,6 +24,7 @@ try {
   setupCronJobs()
   setupTaskListener()
   setupArticleListener()
+  findAuditlogDuringMigration()
 
   create([
     {
