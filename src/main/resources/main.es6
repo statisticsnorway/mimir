@@ -24,7 +24,6 @@ try {
   setupCronJobs()
   setupTaskListener()
   setupArticleListener()
-  findAuditlogDuringMigration()
 
   create([
     {
@@ -86,11 +85,16 @@ try {
           feature: 'show-dashboard-alert',
           enabled: false,
         },
+        {
+          feature: 'show-migrate-shortname-audit-log',
+          enabled: false,
+        },
       ],
     },
   ])
 
   if (isEnabled('migrate-statistics-content-type-with-shortname', false, 'ssb')) migrateStatisticsContentTypeWithShortname()
+  if (isEnabled('show-migrate-shortname-audit-log', false, 'ssb')) findAuditlogDuringMigration()
 
   const now = new Date()
   log.info(`Startup script complete: ${now.toISOString()}`)

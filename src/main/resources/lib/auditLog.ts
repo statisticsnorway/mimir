@@ -1,8 +1,34 @@
 import { find } from '/lib/xp/auditlog'
+import { get as getContent } from '/lib/xp/content'
 import { run } from '/lib/xp/context'
+import { ENONIC_CMS_DEFAULT_REPO } from '/lib/ssb/repo/common'
+
+interface PublishLogEntry {
+  time: string
+  user: string
+  data: {
+    params?: { contentIds?: string | string[] }
+    result?: { pushedContents?: string | string[]; failedContents?: string | string[] }
+  }
+}
+
+function toArray(value?: string | string[]): string[] {
+  if (!value) return []
+  return Array.isArray(value) ? value : [value]
+}
+
+function describeContent(id: string): string {
+  const content = run({ repository: ENONIC_CMS_DEFAULT_REPO, branch: 'draft', principals: ['role:system.admin'] }, () =>
+    getContent({ key: id })
+  )
+  return content ? `${content.displayName} (${content._path}) [${id}]` : `<not found> [${id}]`
+}
+
+function formatList(label: string, ids: string[]): string {
+  return `  ${label} (${ids.length}):${ids.map((id) => `\n    - ${describeContent(id)}`).join('')}`
+}
 
 export function findAuditlogDuringMigration() {
-  // The system.auditlog repo is only readable by admins, and main.js runs as anonymous
   const result = run({ principals: ['role:system.admin'] }, () =>
     find({
       count: 10000,
@@ -14,5 +40,25 @@ export function findAuditlogDuringMigration() {
       users: ['user:system:su'],
     })
   )
-  log.info(`Auditlog: found ${result.total} entries: ${JSON.stringify(result.hits, null, 2)}`)
+
+  let totalPushed = 0
+  let totalFailed = 0
+  const entries = (result.hits as PublishLogEntry[]).map((entry) => {
+    const { data } = entry
+    const requested = toArray(data.params?.contentIds)
+    const pushed = toArray(data.result?.pushedContents)
+    const failed = toArray(data.result?.failedContents)
+    totalPushed += pushed.length
+    totalFailed += failed.length
+    return [
+      `${entry.time} ${entry.user} — pushed: ${pushed.length}, failed: ${failed.length}`,
+      formatList('Requested', requested),
+      formatList('Pushed', pushed),
+      formatList('Failed', failed),
+    ].join('\n')
+  })
+
+  log.info(
+    `Auditlog: ${result.total} publish entries, ${totalPushed} pushed, ${totalFailed} failed\n${entries.join('\n\n')}`
+  )
 }
