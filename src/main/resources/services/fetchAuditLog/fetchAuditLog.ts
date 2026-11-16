@@ -37,14 +37,16 @@ function describeContent(id: string) {
 export function get(req: AuditLogRequest): Response {
   const from = req.params?.from || '2026-11-10T11:00:00.000Z'
   const to = req.params?.to || '2026-11-10T11:15:00.000Z'
+  const type = req.params?.type || 'system.content.publish'
+  const users = req.params?.users || ['user:system:su']
 
   const result = run({ principals: ['role:system.admin'] }, () =>
     find({
       count: 10000,
       from,
       to,
-      type: 'system.content.publish',
-      users: ['user:system:su'],
+      type,
+      users,
     })
   )
 
