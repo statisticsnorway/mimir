@@ -32,10 +32,8 @@ export function findAuditlogDuringMigration() {
   const result = run({ principals: ['role:system.admin'] }, () =>
     find({
       count: 10000,
-      // from: '2026-11-10T11:00:00.000Z',
-      // to: '2026-11-10T11:15:00.000Z',
-      from: '2026-11-16T13:10:00.000Z',
-      to: '2026-11-16T13:17:00.000Z',
+      from: '2026-11-10T11:00:00.000Z',
+      to: '2026-11-10T11:15:00.000Z',
       type: 'system.content.publish',
       users: ['user:system:su'],
     })
@@ -58,7 +56,6 @@ export function findAuditlogDuringMigration() {
     ].join('\n')
   })
 
-  log.info(
-    `Auditlog: ${result.total} publish entries, ${totalPushed} pushed, ${totalFailed} failed\n${entries.join('\n\n')}`
-  )
+  const details = entries.join('\n\n------------------------------------------------------------\n\n')
+  log.info(`Auditlog: ${result.total} publish entries, ${totalPushed} pushed, ${totalFailed} failed\n\n${details}`)
 }
