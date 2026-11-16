@@ -10,7 +10,6 @@ try {
   const { setupTaskListener } = require('/lib/ssb/dataset/publish')
   const { setupArticleListener } = require('/lib/ssb/utils/articleUtils')
   const { migrateStatisticsContentTypeWithShortname } = require('/lib/ssb/statreg/migrateStatisticsContentTypeWithShortname')
-  const { findAuditlogDuringMigration } = require('/lib/auditLog')
 
   log.info('Application ' + app.name + ' started') // Log application started
   __.disposer(() => log.info('Application ' + app.name + ' stopped')) // Log application stoppped
@@ -85,16 +84,11 @@ try {
           feature: 'show-dashboard-alert',
           enabled: false,
         },
-        {
-          feature: 'show-migrate-shortname-audit-log',
-          enabled: false,
-        },
       ],
     },
   ])
 
   if (isEnabled('migrate-statistics-content-type-with-shortname', false, 'ssb')) migrateStatisticsContentTypeWithShortname()
-  if (isEnabled('show-migrate-shortname-audit-log', false, 'ssb')) findAuditlogDuringMigration()
 
   const now = new Date()
   log.info(`Startup script complete: ${now.toISOString()}`)
