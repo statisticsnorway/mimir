@@ -51,23 +51,15 @@ export function get(req: AuditLogRequest): Response {
   )
 
   let totalPushed = 0
-  let totalFailed = 0
   const entries = (result.hits as PublishLogEntry[]).map((entry) => {
     const requested = toArray(entry.data.params?.contentIds)
     const pushed = toArray(entry.data.result?.pushedContents)
-    const failed = toArray(entry.data.result?.failedContents)
     totalPushed += pushed.length
-    totalFailed += failed.length
 
     return {
-      id: entry._id,
-      time: entry.time,
-      user: entry.user,
       requested: requested.map(describeContent),
       pushed: pushed.map(describeContent),
-      failed: failed.map(describeContent),
       pushedCount: pushed.length,
-      failedCount: failed.length,
     }
   })
 
@@ -78,7 +70,6 @@ export function get(req: AuditLogRequest): Response {
       to,
       entryCount: result.total,
       pushedCount: totalPushed,
-      failedCount: totalFailed,
       entries,
     },
     contentType: 'application/json',
