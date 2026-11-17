@@ -5,12 +5,8 @@ import { run } from '/lib/xp/context'
 import { ENONIC_CMS_DEFAULT_REPO } from '/lib/ssb/repo/common'
 
 interface PublishLogEntry {
-  _id: string
-  time: string
-  user: string
   data: {
-    params?: { contentIds?: string | string[] }
-    result?: { pushedContents?: string | string[]; failedContents?: string | string[] }
+    result?: { publishedContents?: string | string[] }
   }
 }
 
@@ -18,6 +14,8 @@ interface AuditLogRequest extends Request {
   params?: Request['params'] & {
     from?: string
     to?: string
+    type?: string
+    users?: string[]
   }
 }
 
@@ -51,25 +49,25 @@ export function get(req: AuditLogRequest): Response {
   )
 
   let totalPushed = 0
-  const entries = (result.hits as PublishLogEntry[]).map((entry) => {
-    const requested = toArray(entry.data.params?.contentIds)
-    const pushed = toArray(entry.data.result?.pushedContents)
-    totalPushed += pushed.length
+  const entries = (result.hits as PublishLogEntry[])
+    .map((entry) => {
+      const published = toArray(entry.data.result?.publishedContents)
+      totalPushed += published.length
 
-    return {
-      requested: requested.map(describeContent),
-      pushed: pushed.map(describeContent),
-      pushedCount: pushed.length,
-    }
-  })
+      return {
+        published: published.map(describeContent),
+        publishedCount: published.length,
+      }
+    })
+    .filter((entry) => entry.publishedCount > 0)
 
   return {
     status: 200,
     body: {
       from,
       to,
-      entryCount: result.total,
-      pushedCount: totalPushed,
+      totalEntries: result.total,
+      publishedCount: totalPushed,
       entries,
     },
     contentType: 'application/json',
