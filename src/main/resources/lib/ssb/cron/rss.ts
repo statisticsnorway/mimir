@@ -14,6 +14,7 @@ import { getDataset } from '/lib/ssb/dataset/dataset'
 import { cronJobLog } from '/lib/ssb/utils/serverLog'
 import { getParentType, getParentContent } from '/lib/ssb/utils/parentUtils'
 import { ensureArray } from '/lib/ssb/utils/arrayUtils'
+import { isEnabled } from '/lib/featureToggle'
 
 import { fetchStatisticsWithReleaseToday } from '/lib/ssb/statreg/statistics'
 import { type Statistic } from '/site/mixins/statistic'
@@ -49,16 +50,18 @@ function isValidType(dataSource: Content<DataSource>): boolean {
   return false
 }
 
-function isSavedQuerysStatistic(statisticsWithReleaseToday: Array<string>, dataSource: Content<DataSource>): boolean {
+function isSavedQuerysStatistic(
+  statisticsWithReleaseToday: Array<string>,
+  dataSource: Content<DataSource>,
+  useStatregApi: boolean
+): boolean {
   const isSavedQuery: boolean = dataSource.data.dataSource?._selected === 'statbankSaved'
   if (isSavedQuery) {
     const parentContent = getParentContent(dataSource._path)
     if (parentContent && parentContent.type === `${app.name}:statistics`) {
       const statisticContent: Content<Statistics & Statistic> = parentContent as Content<Statistics>
-      if (
-        statisticContent.data.statistic &&
-        statisticsWithReleaseToday.includes(statisticContent.data.statistic.toString())
-      ) {
+      const statisticIdentifier = useStatregApi ? statisticContent.data.shortname : statisticContent.data.statistic
+      if (statisticIdentifier && statisticsWithReleaseToday.includes(statisticIdentifier.toString())) {
         return true
       }
     }
@@ -133,8 +136,9 @@ export function dataSourceRSSFilter(dataSources: Array<Content<DataSource>>): RS
     })
   })
 
+  const useStatregApi = isEnabled('new-statreg-as-source', false, 'ssb')
   const statisticsWithReleaseToday: Array<string> = fetchStatisticsWithReleaseToday().map((s: StatisticInListing) =>
-    s.id.toString()
+    useStatregApi ? s.shortName : s.id.toString()
   )
 
   const filteredDatasourcesRSS: Array<Content<DataSource>> = dataSources.reduce(
@@ -142,7 +146,7 @@ export function dataSourceRSSFilter(dataSources: Array<Content<DataSource>>): RS
       const parentType: string | undefined = getParentType(dataSource._path)
       if (parentType === `${app.name}:statistics`) {
         // only keep datasources from statistics if they are saved queries with release today
-        if (isSavedQuerysStatistic(statisticsWithReleaseToday, dataSource)) {
+        if (isSavedQuerysStatistic(statisticsWithReleaseToday, dataSource, useStatregApi)) {
           logData.savedQueryStatistics.push(dataSource._id)
           t.push(dataSource)
         }
