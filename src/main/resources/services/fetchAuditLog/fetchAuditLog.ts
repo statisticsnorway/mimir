@@ -6,7 +6,7 @@ import { ENONIC_CMS_DEFAULT_REPO } from '/lib/ssb/repo/common'
 
 interface PublishLogEntry {
   data: {
-    result?: { publishedContents?: string | string[] }
+    result?: { pushedContents?: string | string[] }
   }
 }
 
@@ -48,18 +48,10 @@ export function get(req: AuditLogRequest): Response {
     })
   )
 
-  let totalPushed = 0
-  const entries = (result.hits as PublishLogEntry[])
-    .map((entry) => {
-      const published = toArray(entry.data.result?.publishedContents)
-      totalPushed += published.length
-
-      return {
-        published: published.map(describeContent),
-        publishedCount: published.length,
-      }
-    })
-    .filter((entry) => entry.publishedCount > 0)
+  const publishedIds = (result.hits as PublishLogEntry[]).reduce<string[]>(
+    (ids, entry) => ids.concat(toArray(entry.data.result?.pushedContents)),
+    []
+  )
 
   return {
     status: 200,
@@ -67,8 +59,8 @@ export function get(req: AuditLogRequest): Response {
       from,
       to,
       totalEntries: result.total,
-      publishedCount: totalPushed,
-      entries,
+      publishedCount: publishedIds.length,
+      entries: publishedIds.map(describeContent),
     },
     contentType: 'application/json',
   }
