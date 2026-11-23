@@ -323,11 +323,8 @@ export function getEndedStatisticsByPath(
 
   if (endedStatisticsFiltered.length > 0 && statregStatistics.length > 0) {
     endedStatisticsFiltered.forEach((endedStatistic: EndedStatistic) => {
-      const statreg = statregStatistics.find((s) =>
-        useStatreg
-          ? 'shortname' in s && s.shortname === endedStatistic.statistic
-          : 'id' in s && s.id.toString() === endedStatistic.statistic
-      )
+      // TODO: MIM-3294: Fix shortname for endedStatistic content type and parts
+      const statreg = statregStatistics.find((s) => 'id' in s && s.id.toString() === endedStatistic.statistic)
       if (statreg) {
         statistics.push({
           path: path,
