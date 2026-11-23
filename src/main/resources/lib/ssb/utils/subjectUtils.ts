@@ -391,7 +391,7 @@ export function getSubjectStructur(request: Request, language: string): Array<Ma
       throw new Error(message)
     }
     if (!apiStatistics.every((statistic): statistic is StatregApiStatistic => Boolean(statistic.shortname))) {
-      const message = 'Statreg API returned a subject structure statistic without a shortname'
+      const message = 'Statreg API returned a subject structure statistic without a data.shortname'
       log.error(message)
       throw new Error(message)
     }
