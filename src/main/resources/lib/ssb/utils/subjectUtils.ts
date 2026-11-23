@@ -5,7 +5,7 @@ import { type DefaultPage } from '/lib/types/defaultPage'
 import { fromSubjectCache } from '/lib/ssb/cache/subjectCache'
 import { forceArray, ensureArray } from '/lib/ssb/utils/arrayUtils'
 
-import { getAllStatisticsFromRepo } from '/lib/ssb/statreg/statistics'
+import { fetchStatisticsFromStatregAPI, getAllStatisticsFromRepo } from '/lib/ssb/statreg/statistics'
 import { parentPath } from '/lib/ssb/utils/parentUtils'
 import {
   type EndedStatistic,
@@ -15,6 +15,7 @@ import {
   type SubjectItem,
   type Title,
 } from '/lib/types/subject'
+import { isEnabled } from '/lib/featureToggle'
 import { type Subtopic } from '/site/mixins/subtopic'
 import { type Statistic } from '/site/mixins/statistic'
 import { type Article, type EndedStatisticList, type Statistics } from '/site/content-types'
@@ -254,6 +255,8 @@ function getSubSubjectsByMainSubjectPath(
   })
 }
 
+const useStatregApi = isEnabled('new-statreg-as-source', false, 'ssb')
+
 export function getStatistics(statregStatistics: Array<StatisticInListing>): Array<StatisticItem> {
   const statistics: Array<StatisticItem> = []
   const statisticContent: Array<Content<Statistics>> = query({
@@ -261,7 +264,7 @@ export function getStatistics(statregStatistics: Array<StatisticInListing>): Arr
     count: 2000,
     contentTypes: [`${app.name}:statistics`],
     sort: 'displayName ASC',
-    query: `data.statistic LIKE '*'`,
+    query: useStatregApi ? `data.shortname LIKE '*'` : `data.statistic LIKE '*'`,
   }).hits as unknown as Array<Content<Statistics>>
 
   if (statregStatistics.length > 0) {
@@ -369,7 +372,9 @@ export function getSecondaryStatisticsBySubject(
 export function getSubjectStructur(request: Request, language: string): Array<MainSubject> {
   const mainSubjectsAll: Array<SubjectItem> = getMainSubjects(request)
   const subSubjectsAll: Array<SubjectItem> = getSubSubjects(request)
-  const statregStatistics: Array<StatisticInListing> = ensureArray(getAllStatisticsFromRepo())
+  const statregStatistics: Array<StatisticInListing> = useStatregApi
+    ? fetchStatisticsFromStatregAPI()
+    : ensureArray(getAllStatisticsFromRepo())
   const statistics: Array<StatisticItem> = getStatistics(statregStatistics)
   const mainSubjectsLanguage: Array<SubjectItem> = getSubjectsByLanguage(mainSubjectsAll, language)
 
