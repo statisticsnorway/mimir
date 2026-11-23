@@ -2,12 +2,10 @@ import { type Request, type Response } from '@enonic-types/core'
 import { type MainSubject, type SubSubject, type Title, type StatisticItem } from '/lib/types/subject'
 import { getSubjectStructur } from '/lib/ssb/utils/subjectUtils'
 import { xmlEscape } from '/lib/text-encoding'
-import { isEnabled } from '/lib/featureToggle'
 
 function get(req: Request): Response {
   const mainSubjects: Array<MainSubject> = getSubjectStructur(req, 'no')
 
-  const useStatregApi = isEnabled('new-statreg-as-source', false, 'ssb')
   const xml = `<?xml version="1.0" encoding="utf-8"?>
   <result>
     <emnestruktur>
@@ -20,7 +18,7 @@ function get(req: Request): Response {
                     `<delemne emnekode="${s.subjectCode}">${getXmlTitle(s.titles)} ${s.statistics
                       .map(
                         (stat: StatisticItem) =>
-                          `<Statistikk kortnavn="${useStatregApi ? stat.shortname : stat.shortName}" isPrimaerPlassering="${
+                          `<Statistikk kortnavn="${stat.shortName}" isPrimaerPlassering="${
                             stat.isPrimaryLocated
                           }">${getXmlTitle(stat.titles)}</Statistikk>`
                       )
