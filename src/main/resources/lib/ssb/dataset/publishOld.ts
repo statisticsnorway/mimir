@@ -40,6 +40,7 @@ import { type DataSource } from '/site/mixins/dataSource'
 import { type Statistics } from '/site/content-types'
 
 const jobs: { [key: string]: JobEventNode | JobInfoNode } = {}
+const useStatregApi = isEnabled('new-statreg-as-source', false, 'ssb')
 
 export function currentlyWaitingForPublish(statistic: Content<Statistics>): boolean {
   const from: string = new Date(Date.now() - 1800000).toISOString()
@@ -91,11 +92,10 @@ export function currentlyWaitingForPublish(statistic: Content<Statistics>): bool
 }
 
 export function publishDataset(): void {
-  const useStatregApi = isEnabled('new-statreg-as-source', false, 'ssb')
   cronJobLog('Start publish job')
   const jobLogNode: JobEventNode = startJobLog(JobNames.PUBLISH_JOB)
   jobs[jobLogNode._id] = jobLogNode
-  const statistics: Array<Content<Statistics & Statistic>> = getStatisticsContent(useStatregApi)
+  const statistics: Array<Content<Statistics & Statistic>> = getStatisticsContent()
   const publishedDatasetIds: Array<string> = []
   const jobResult: Array<StatisticsPublishResult> = []
   log.info(`Found ${statistics.length} statistics to process for publishing datasets`)
@@ -103,7 +103,7 @@ export function publishDataset(): void {
     const statistic: string = useStatregApi
       ? statisticContent.data.shortname || ''
       : statisticContent.data.statistic || ''
-    const { nextRelease } = getReleaseDates(statisticContent, useStatregApi)
+    const { nextRelease } = getReleaseDates(statisticContent)
     if (nextRelease) {
       log.info(`Stat ${statisticContent._name} (${statistic}) has next release: ${nextRelease}`)
       const releaseDate: Date = new Date(nextRelease)
@@ -171,7 +171,7 @@ export function publishDataset(): void {
         }) as Array<PublicationItem>
         if (validPublications.length > 0) {
           validPublications.forEach((validPublication) => {
-            createTask(jobLogNode._id, statisticContent, releaseDate, validPublication, useStatregApi)
+            createTask(jobLogNode._id, statisticContent, releaseDate, validPublication)
           })
         } else {
           statJobInfo.status = JobStatus.SKIPPED
@@ -210,8 +210,7 @@ function createTask(
   jobId: string,
   statistic: Content<Statistics & Statistic>,
   releaseDate: Date,
-  publication: PublicationItem,
-  useStatregApi: boolean
+  publication: PublicationItem
 ): void {
   const statisticIdentifier: string = useStatregApi ? statistic.data.shortname || '' : statistic.data.statistic || ''
 
@@ -364,10 +363,7 @@ function createTask(
   })
 }
 
-function getReleaseDates(
-  statistic: Content<Statistics>,
-  useStatregApi = isEnabled('new-statreg-as-source', false, 'ssb')
-): {
+function getReleaseDates(statistic: Content<Statistics>): {
   nextRelease: string | null
   previousRelease: string | null
 } {

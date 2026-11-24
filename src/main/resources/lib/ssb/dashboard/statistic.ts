@@ -558,9 +558,8 @@ function getStatisticsSearchList(): Array<StatisticSearch> {
   })
 }
 
-export function getStatisticsContent(
-  useStatregApi = isEnabled('new-statreg-as-source', false, 'ssb')
-): Array<Content<Statistics>> {
+export function getStatisticsContent(): Array<Content<Statistics>> {
+  const useStatregApi = isEnabled('new-statreg-as-source', false, 'ssb')
   let hits: Array<Content<Statistics>> = []
   const result: ContentsResult<Content<Statistics & DefaultPageConfig>> = query({
     contentTypes: [`${app.name}:statistics`],
