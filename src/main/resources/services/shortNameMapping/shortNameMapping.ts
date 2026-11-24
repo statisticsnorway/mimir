@@ -1,19 +1,25 @@
 import { type Request, type Response } from '@enonic-types/core'
 import { query, type Content } from '/lib/xp/content'
 import { pageUrl } from '/lib/xp/portal'
-import { getAllStatisticsFromRepo, fetchStatisticsFromStatregAPI } from '/lib/ssb/statreg/statistics'
+import {
+  getAllStatisticsFromRepo,
+  fetchStatisticsFromStatregAPI,
+  type StatisticListingResponse,
+} from '/lib/ssb/statreg/statistics'
 import { type StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
 import { isEnabled } from '/lib/featureToggle'
 import { type Statistics } from '/site/content-types'
 
 type Lang = 'no' | 'en' | undefined
+type StatisticFromApi = NonNullable<StatisticListingResponse['statistics']>[number]
+type Statistic = StatisticInListing | StatisticFromApi
 
 const useStatregApi = isEnabled('new-statreg-as-source', false, 'ssb')
 
 function get(req: Request): Response {
   const { lang } = req.params as { lang: Lang }
 
-  const statistics = []
+  const statistics: Statistic[] = []
   if (useStatregApi) {
     const statisticsFromApi = fetchStatisticsFromStatregAPI({ start: 0, count: 1000 })
 
@@ -45,34 +51,42 @@ function get(req: Request): Response {
   }
 }
 
-function fetchAndMap(lang: Lang, statistics: StatisticInListing[]) {
+function fetchAndMap(lang: Lang, statistics: Statistic[]): string {
   let queryString = useStatregApi ? "data.shortname LIKE '*'" : "data.statistic LIKE '*'"
   if (lang) {
     const languages = lang === 'en' ? ['en'] : ['no', 'nb', 'nn']
     queryString += ` AND language IN ('${languages.join("', '")}')`
   }
 
-  const statisticsContent = query({
+  const statisticsContent = query<Content<Statistics>>({
     contentTypes: [`${app.name}:statistics`],
     count: 9999,
     sort: 'language DESC',
     query: queryString,
-  }).hits as unknown as Content<Statistics>[]
+  }).hits
 
   const shortNameMapping = statisticsContent
     .map((content) => {
       const { statistic, shortname } = content.data
-      const statisticContent = statistics.find((statisticData) =>
-        useStatregApi ? statisticData.shortname === shortname : statisticData.id.toString() === statistic
-      )
+      const statisticContent = statistics.find((statisticData) => {
+        if (useStatregApi) {
+          return !('shortName' in statisticData) && statisticData.shortname === shortname
+        }
+        return 'shortName' in statisticData && statisticData.id.toString() === statistic
+      })
 
       if (!statisticContent) {
         return null
       }
 
-      return `${useStatregApi ? statisticContent.shortname : statisticContent.shortName} ${pageUrl({ path: content._path })}`
+      const mappedShortName = 'shortName' in statisticContent ? statisticContent.shortName : statisticContent.shortname
+      if (!mappedShortName) {
+        return null
+      }
+
+      return `${mappedShortName} ${pageUrl({ path: content._path })}`
     })
-    .filter(Boolean)
+    .filter((mapping): mapping is string => mapping !== null)
     .join('\n')
 
   return shortNameMapping
