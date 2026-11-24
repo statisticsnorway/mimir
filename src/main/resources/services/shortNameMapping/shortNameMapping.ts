@@ -19,6 +19,7 @@ function get(req: Request): Response {
 
     if (statisticsFromApi) {
       if ('error' in statisticsFromApi) {
+        log.error(`Error fetching statistics from Statreg API: ${statisticsFromApi.error}`)
       } else {
         statistics.push(...statisticsFromApi)
       }
