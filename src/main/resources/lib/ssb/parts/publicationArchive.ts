@@ -1,16 +1,13 @@
 import { type Request } from '@enonic-types/core'
 import { type Content, get, query, QueryDsl, ContentsResult } from '/lib/xp/content'
 import { pageUrl, processHtml } from '/lib/xp/portal'
+import { getApiArchiveVariants } from '/lib/ssb/parts/publicationArchiveStatreg'
 import { type StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
 import { getAllStatisticsFromRepo } from '/lib/ssb/statreg/statistics'
 import { calculatePeriodRelease, getPreviousReleases } from '/lib/ssb/utils/variantUtils'
 import { getMainSubjects, getSubSubjects, getMainSubjectBySubSubject } from '/lib/ssb/utils/subjectUtils'
 import { formatDate, stringToServerTime } from '/lib/ssb/utils/dateUtils'
-import {
-  type ContentLight,
-  type Release as ReleaseVariant,
-  getStatisticVariantsFromRepo,
-} from '/lib/ssb/repo/statisticVariant'
+import { getStatisticVariantsFromRepo } from '/lib/ssb/repo/statisticVariant'
 
 import { fromPartCache } from '/lib/ssb/cache/partCache'
 import { isEnabled } from '/lib/featureToggle'
@@ -28,9 +25,9 @@ export function getPublications(
   articleType?: string,
   subject?: string
 ): PublicationResult {
-  const allPublications: Array<PublicationItem> = fromPartCache(req, `archiveAllPublications-${language}`, () => {
-    return getPublicationsAndStatistics(req, language)
-  })
+  const allPublications = isEnabled('new-statreg-as-source', false, 'ssb')
+    ? getPublicationsAndStatistics(req, language, true)
+    : fromPartCache(req, `archiveAllPublications-${language}`, () => getPublicationsAndStatistics(req, language))
 
   const type: string | undefined = articleType && articleType !== '' ? articleType : undefined
   const mainSubject: string | undefined = subject && subject !== '' ? subject : undefined
@@ -66,21 +63,25 @@ function filterPublications(
   return publications
 }
 
-function getPublicationsAndStatistics(req: Request, language: string): Array<PublicationItem> {
+function getPublicationsAndStatistics(req: Request, language: string, useApi = false): Array<PublicationItem> {
   const mainSubjects: Array<SubjectItem> = getMainSubjects(req, language)
   const subSubjects: Array<SubjectItem> = getSubSubjects(req, language)
 
-  const articlesContent: ContentsResult<Content<Article>> = getArticlesContent(language, mainSubjects)
-
-  const publications: Array<PublicationItem> = articlesContent.hits.map((article) => {
-    return prepareArticle(article, mainSubjects, subSubjects, language)
-  })
+  const getArticles = () =>
+    getArticlesContent(language, mainSubjects).hits.map((article) =>
+      prepareArticle(article, mainSubjects, subSubjects, language)
+    )
+  const publications = useApi
+    ? fromPartCache(req, `archiveAllPublications-${language}-articles`, getArticles)
+    : getArticles()
 
   const newPublicationArchiveEnabled: boolean = isEnabled('new-publication-archive', false, 'ssb')
 
-  const statistics: Array<PublicationItem> = newPublicationArchiveEnabled
-    ? getStatisticsRepo(language, mainSubjects)
-    : getStatistics(language, mainSubjects, subSubjects)
+  const statistics: Array<PublicationItem> = useApi
+    ? getStatisticsRepo(language, mainSubjects, req)
+    : newPublicationArchiveEnabled
+      ? getStatisticsRepo(language, mainSubjects)
+      : getStatistics(language, mainSubjects, subSubjects)
 
   const statisticsWithMainSubject: Array<PublicationItem> = statistics.filter(
     (statistic) => statistic.mainSubject !== ''
@@ -203,7 +204,11 @@ function getArticlesContent(language: string, mainSubjects: Array<SubjectItem>) 
   return res
 }
 
-function getStatisticsRepo(language: string, mainSubjects: Array<SubjectItem>): Array<PublicationItem> {
+function getStatisticsRepo(
+  language: string,
+  mainSubjects: Array<SubjectItem>,
+  apiRequest?: Request
+): Array<PublicationItem> {
   const query: QueryDsl = {
     range: {
       field: 'publish.from',
@@ -212,10 +217,11 @@ function getStatisticsRepo(language: string, mainSubjects: Array<SubjectItem>): 
     },
   }
 
-  const allPreviousStatisticVariantsFromRepo: ContentLight<ReleaseVariant>[] = getStatisticVariantsFromRepo(
-    language,
-    query
-  )
+  const allPreviousStatisticVariantsFromRepo = apiRequest
+    ? fromPartCache(apiRequest, `archiveAllPublications-${language}-apiVariants`, () =>
+        getApiArchiveVariants(getStatisticVariantsFromRepo(language, query), language)
+      )
+    : getStatisticVariantsFromRepo(language, query)
   const previousReleases: PublicationItem[] = allPreviousStatisticVariantsFromRepo.map((release) => {
     const mainSubjectsStatistic: string[] = release.data.mainSubjects
       ? util.data.forceArray(release.data.mainSubjects)
