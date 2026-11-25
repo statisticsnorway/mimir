@@ -5,7 +5,11 @@ import { type DefaultPage } from '/lib/types/defaultPage'
 import { fromSubjectCache } from '/lib/ssb/cache/subjectCache'
 import { forceArray, ensureArray } from '/lib/ssb/utils/arrayUtils'
 
-import { getAllStatisticsFromRepo } from '/lib/ssb/statreg/statistics'
+import {
+  fetchStatisticsFromStatregAPI,
+  getAllStatisticsFromRepo,
+  type StatisticListingResponse,
+} from '/lib/ssb/statreg/statistics'
 import { parentPath } from '/lib/ssb/utils/parentUtils'
 import {
   type EndedStatistic,
@@ -15,9 +19,13 @@ import {
   type SubjectItem,
   type Title,
 } from '/lib/types/subject'
+import { isEnabled } from '/lib/featureToggle'
 import { type Subtopic } from '/site/mixins/subtopic'
 import { type Statistic } from '/site/mixins/statistic'
 import { type Article, type EndedStatisticList, type Statistics } from '/site/content-types'
+
+type StatregApiStatistic = NonNullable<StatisticListingResponse['statistics']>[number] & { shortname: string }
+type SubjectStatistic = StatisticInListing | StatregApiStatistic
 
 export function getMainSubjects(request: Request, language?: string): Array<SubjectItem> {
   return fromSubjectCache<SubjectItem>(request, `mainsubject-${language ?? 'all'}`, () =>
@@ -229,13 +237,14 @@ export function getSubSubjectsByPath(subjects: Array<SubjectItem>, path: string)
 function getSubSubjectsByMainSubjectPath(
   subjects: Array<SubjectItem>,
   statistics: Array<StatisticItem>,
-  statregStatistics: Array<StatisticInListing>,
-  path: string
+  statregStatistics: Array<SubjectStatistic>,
+  path: string,
+  useStatreg: boolean
 ): Array<SubSubject> {
   const subSubjectsPath: Array<SubjectItem> = getSubSubjectsByPath(subjects, path)
 
   return subSubjectsPath.map((s) => {
-    const endedStatistics: Array<StatisticItem> = getEndedStatisticsByPath(s.path, statregStatistics, false)
+    const endedStatistics: Array<StatisticItem> = getEndedStatisticsByPath(s.path, statregStatistics, false, useStatreg)
     const secondaryStatistics: Array<StatisticItem> = getSecondaryStatisticsBySubject(statistics, s)
     const allStatistics: Array<StatisticItem> = [
       ...getStatisticsByPath(statistics, s.path),
@@ -254,39 +263,35 @@ function getSubSubjectsByMainSubjectPath(
   })
 }
 
-export function getStatistics(statregStatistics: Array<StatisticInListing>): Array<StatisticItem> {
+const useStatregApi = isEnabled('new-statreg-as-source', false, 'ssb')
+
+export function getStatistics(
+  statregStatistics: Array<SubjectStatistic>,
+  useStatreg: boolean = false
+): Array<StatisticItem> {
   const statistics: Array<StatisticItem> = []
   const statisticContent: Array<Content<Statistics>> = query({
     start: 0,
     count: 2000,
     contentTypes: [`${app.name}:statistics`],
     sort: 'displayName ASC',
-    query: `data.statistic LIKE '*'`,
+    query: useStatreg ? `data.shortname LIKE '*'` : `data.statistic LIKE '*'`,
   }).hits as unknown as Array<Content<Statistics>>
 
   if (statregStatistics.length > 0) {
     statisticContent.forEach((statistic: Content<Statistics & Statistic & Subtopic>) => {
-      const statreg: StatisticInListing | undefined = statregStatistics.find(
-        (s) => s.id.toString() === statistic.data.statistic
+      const statreg = statregStatistics.find((s) =>
+        useStatreg
+          ? 'shortname' in s && s.shortname === statistic.data.shortname
+          : 'id' in s && s.id.toString() === statistic.data.statistic
       )
       if (statreg) {
-        const titles: Array<Title> = [
-          {
-            title: statreg.name,
-            language: 'no',
-          },
-          {
-            title: statreg.nameEN,
-            language: 'en',
-          },
-        ]
-
         statistics.push({
           path: statistic._path,
           language: statistic.language === 'en' ? 'en' : 'no',
-          shortName: statreg.shortName,
+          shortName: 'shortName' in statreg ? statreg.shortName : statreg.shortname,
           isPrimaryLocated: true,
-          titles,
+          titles: getStatisticTitles(statreg),
           hideFromList: statistic.data.hideFromList ? statistic.data.hideFromList : false,
           secondarySubject: statistic.data.subtopic ? ensureArray(statistic.data.subtopic) : [],
         })
@@ -299,8 +304,9 @@ export function getStatistics(statregStatistics: Array<StatisticInListing>): Arr
 
 export function getEndedStatisticsByPath(
   path: string,
-  statregStatistics: Array<StatisticInListing>,
-  hideStatistics: boolean
+  statregStatistics: Array<SubjectStatistic>,
+  hideStatistics: boolean,
+  useStatreg: boolean = false
 ): Array<StatisticItem> {
   const statistics: Array<StatisticItem> = []
   const statisticList: Content<EndedStatisticList> = query({
@@ -317,35 +323,41 @@ export function getEndedStatisticsByPath(
 
   if (endedStatisticsFiltered.length > 0 && statregStatistics.length > 0) {
     endedStatisticsFiltered.forEach((endedStatistic: EndedStatistic) => {
-      const statreg: StatisticInListing | undefined = statregStatistics.find(
-        (s) => s.id.toString() === endedStatistic.statistic
-      )
+      // TODO: MIM-3294: Fix shortname for endedStatistic content type and parts
+      const statreg = statregStatistics.find((s) => 'id' in s && s.id.toString() === endedStatistic.statistic)
       if (statreg) {
-        const titles: Array<Title> = [
-          {
-            title: statreg.name,
-            language: 'no',
-          },
-          {
-            title: statreg.nameEN,
-            language: 'en',
-          },
-        ]
-
         statistics.push({
           path: path,
           language: 'no',
-          shortName: statreg.shortName,
+          shortName: 'shortName' in statreg ? statreg.shortName : statreg.shortname,
           isPrimaryLocated: true,
-          titles: titles,
+          titles: getStatisticTitles(statreg),
           hideFromList: hideStatistics,
           secondarySubject: [],
         })
+      } else if (useStatreg) {
+        log.warning(
+          'No Statreg API statistic found for ended statistic "%s" under "%s"',
+          endedStatistic.statistic,
+          path
+        )
       }
     })
   }
 
   return statistics
+}
+
+function getStatisticTitles(statistic: SubjectStatistic): Array<Title> {
+  const titles: Array<Title> = []
+  const nameEN = 'shortName' in statistic ? statistic.nameEN : statistic.name_en
+  if (statistic.name !== undefined) {
+    titles.push({ title: statistic.name, language: 'no' })
+  }
+  if (nameEN !== undefined) {
+    titles.push({ title: nameEN, language: 'en' })
+  }
+  return titles
 }
 
 export function getStatisticsByPath(statistics: Array<StatisticItem>, path: string): Array<StatisticItem> {
@@ -369,8 +381,25 @@ export function getSecondaryStatisticsBySubject(
 export function getSubjectStructur(request: Request, language: string): Array<MainSubject> {
   const mainSubjectsAll: Array<SubjectItem> = getMainSubjects(request)
   const subSubjectsAll: Array<SubjectItem> = getSubSubjects(request)
-  const statregStatistics: Array<StatisticInListing> = ensureArray(getAllStatisticsFromRepo())
-  const statistics: Array<StatisticItem> = getStatistics(statregStatistics)
+
+  let statregStatistics: Array<SubjectStatistic>
+  if (useStatregApi) {
+    const apiStatistics = fetchStatisticsFromStatregAPI({ start: 0, count: 1000 })
+    if (!Array.isArray(apiStatistics)) {
+      const message = 'Failed to fetch subject structure statistics from Statreg API'
+      log.error(message)
+      throw new Error(message)
+    }
+    if (!apiStatistics.every((statistic): statistic is StatregApiStatistic => Boolean(statistic.shortname))) {
+      const message = 'Statreg API returned a subject structure statistic without a data.shortname'
+      log.error(message)
+      throw new Error(message)
+    }
+    statregStatistics = apiStatistics
+  } else {
+    statregStatistics = ensureArray(getAllStatisticsFromRepo())
+  }
+  const statistics: Array<StatisticItem> = getStatistics(statregStatistics, useStatregApi)
   const mainSubjectsLanguage: Array<SubjectItem> = getSubjectsByLanguage(mainSubjectsAll, language)
 
   const mainSubjects: Array<MainSubject> = mainSubjectsLanguage.map((m) => {
@@ -379,7 +408,8 @@ export function getSubjectStructur(request: Request, language: string): Array<Ma
       subSubjectsAll,
       statistics,
       statregStatistics,
-      m.path
+      m.path,
+      useStatregApi
     )
 
     return {
