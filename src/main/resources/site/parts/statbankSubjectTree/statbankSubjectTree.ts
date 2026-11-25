@@ -10,11 +10,9 @@ import {
   getStatisticsByPath,
   getEndedStatisticsByPath,
   getSecondaryStatisticsBySubject,
+  getStatregStatistics,
   type SubjectStatistic,
-  type StatregApiStatistic,
 } from '/lib/ssb/utils/subjectUtils'
-import { fetchStatisticsFromStatregAPI, getAllStatisticsFromRepo } from '/lib/ssb/statreg/statistics'
-import { ensureArray } from '/lib/ssb/utils/arrayUtils'
 import { fromPartCache } from '/lib/ssb/cache/partCache'
 import {
   type MainSubjectWithSubs,
@@ -45,23 +43,7 @@ function getStatbankSubjectTree(req: Request, content: Content) {
   const allMainSubjects: Array<SubjectItem> = getMainSubjects(req, lang)
   const allSubSubjects: Array<SubjectItem> = getSubSubjects(req, lang)
 
-  let statregStatistics: Array<SubjectStatistic>
-  if (useStatregApi) {
-    const apiStatistics = fetchStatisticsFromStatregAPI({ start: 0, count: 1000 })
-    if (!Array.isArray(apiStatistics)) {
-      const message = 'Failed to fetch statbank subject tree statistics from Statreg API'
-      log.error(message)
-      throw new Error(message)
-    }
-    if (!apiStatistics.every((statistic): statistic is StatregApiStatistic => Boolean(statistic.shortname))) {
-      const message = 'Statreg API returned a subject structure statistic without a data.shortname'
-      log.error(message)
-      throw new Error(message)
-    }
-    statregStatistics = apiStatistics
-  } else {
-    statregStatistics = ensureArray(getAllStatisticsFromRepo())
-  }
+  const statregStatistics = getStatregStatistics(useStatregApi)
 
   const statistics: Array<StatisticItem> = getStatistics(statregStatistics, useStatregApi)
 

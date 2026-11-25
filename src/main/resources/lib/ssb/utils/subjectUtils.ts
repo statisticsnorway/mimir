@@ -265,6 +265,25 @@ function getSubSubjectsByMainSubjectPath(
 
 const useStatregApi = isEnabled('new-statreg-as-source', false, 'ssb')
 
+export function getStatregStatistics(useStatreg: boolean): Array<SubjectStatistic> {
+  if (!useStatreg) {
+    return ensureArray(getAllStatisticsFromRepo())
+  }
+
+  const apiStatistics = fetchStatisticsFromStatregAPI({ start: 0, count: 1000 })
+  if (!Array.isArray(apiStatistics)) {
+    const message = 'Failed to fetch subject structure statistics from Statreg API'
+    log.error(message)
+    throw new Error(message)
+  }
+  if (!apiStatistics.every((statistic): statistic is StatregApiStatistic => Boolean(statistic.shortname))) {
+    const message = 'Statreg API returned a subject structure statistic without a data.shortname'
+    log.error(message)
+    throw new Error(message)
+  }
+  return apiStatistics
+}
+
 export function getStatistics(
   statregStatistics: Array<SubjectStatistic>,
   useStatreg: boolean = false
@@ -382,23 +401,7 @@ export function getSubjectStructur(request: Request, language: string): Array<Ma
   const mainSubjectsAll: Array<SubjectItem> = getMainSubjects(request)
   const subSubjectsAll: Array<SubjectItem> = getSubSubjects(request)
 
-  let statregStatistics: Array<SubjectStatistic>
-  if (useStatregApi) {
-    const apiStatistics = fetchStatisticsFromStatregAPI({ start: 0, count: 1000 })
-    if (!Array.isArray(apiStatistics)) {
-      const message = 'Failed to fetch subject structure statistics from Statreg API'
-      log.error(message)
-      throw new Error(message)
-    }
-    if (!apiStatistics.every((statistic): statistic is StatregApiStatistic => Boolean(statistic.shortname))) {
-      const message = 'Statreg API returned a subject structure statistic without a data.shortname'
-      log.error(message)
-      throw new Error(message)
-    }
-    statregStatistics = apiStatistics
-  } else {
-    statregStatistics = ensureArray(getAllStatisticsFromRepo())
-  }
+  const statregStatistics = getStatregStatistics(useStatregApi)
   const statistics: Array<StatisticItem> = getStatistics(statregStatistics, useStatregApi)
   const mainSubjectsLanguage: Array<SubjectItem> = getSubjectsByLanguage(mainSubjectsAll, language)
 
