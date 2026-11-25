@@ -36,13 +36,12 @@ export function get(req: Request) {
   }
 }
 
-const useStatregApi = isEnabled('new-statreg-as-source', false, 'ssb')
-
 function getStatbankSubjectTree(req: Request, content: Content) {
   const lang: string = content.language === 'en' ? 'en' : 'no'
   const allMainSubjects: Array<SubjectItem> = getMainSubjects(req, lang)
   const allSubSubjects: Array<SubjectItem> = getSubSubjects(req, lang)
 
+  const useStatregApi = isEnabled('new-statreg-as-source', false, 'ssb')
   const statregStatistics = getStatregStatistics(useStatregApi)
   const statistics: Array<StatisticItem> = getStatistics(statregStatistics, useStatregApi)
 

@@ -19,7 +19,6 @@ import {
   type SubjectItem,
   type Title,
 } from '/lib/types/subject'
-import { isEnabled } from '/lib/featureToggle'
 import { type Subtopic } from '/site/mixins/subtopic'
 import { type Statistic } from '/site/mixins/statistic'
 import { type Article, type EndedStatisticList, type Statistics } from '/site/content-types'
@@ -239,12 +238,17 @@ function getSubSubjectsByMainSubjectPath(
   statistics: Array<StatisticItem>,
   statregStatistics: Array<SubjectStatistic>,
   path: string,
-  useStatreg: boolean
+  useStatregApi: boolean
 ): Array<SubSubject> {
   const subSubjectsPath: Array<SubjectItem> = getSubSubjectsByPath(subjects, path)
 
   return subSubjectsPath.map((s) => {
-    const endedStatistics: Array<StatisticItem> = getEndedStatisticsByPath(s.path, statregStatistics, false, useStatreg)
+    const endedStatistics: Array<StatisticItem> = getEndedStatisticsByPath(
+      s.path,
+      statregStatistics,
+      false,
+      useStatregApi
+    )
     const secondaryStatistics: Array<StatisticItem> = getSecondaryStatisticsBySubject(statistics, s)
     const allStatistics: Array<StatisticItem> = [
       ...getStatisticsByPath(statistics, s.path),
@@ -263,10 +267,8 @@ function getSubSubjectsByMainSubjectPath(
   })
 }
 
-const useStatregApi = isEnabled('new-statreg-as-source', false, 'ssb')
-
-export function getStatregStatistics(useStatreg: boolean): Array<SubjectStatistic> {
-  if (!useStatreg) {
+export function getStatregStatistics(useStatregApi: boolean): Array<SubjectStatistic> {
+  if (!useStatregApi) {
     return ensureArray(getAllStatisticsFromRepo())
   }
 
@@ -286,7 +288,7 @@ export function getStatregStatistics(useStatreg: boolean): Array<SubjectStatisti
 
 export function getStatistics(
   statregStatistics: Array<SubjectStatistic>,
-  useStatreg: boolean = false
+  useStatregApi: boolean = false
 ): Array<StatisticItem> {
   const statistics: Array<StatisticItem> = []
   const statisticContent: Array<Content<Statistics>> = query({
@@ -294,13 +296,13 @@ export function getStatistics(
     count: 2000,
     contentTypes: [`${app.name}:statistics`],
     sort: 'displayName ASC',
-    query: useStatreg ? `data.shortname LIKE '*'` : `data.statistic LIKE '*'`,
+    query: useStatregApi ? `data.shortname LIKE '*'` : `data.statistic LIKE '*'`,
   }).hits as unknown as Array<Content<Statistics>>
 
   if (statregStatistics.length > 0) {
     statisticContent.forEach((statistic: Content<Statistics & Statistic & Subtopic>) => {
       const statreg = statregStatistics.find((s) =>
-        useStatreg
+        useStatregApi
           ? 'shortname' in s && s.shortname === statistic.data.shortname
           : 'id' in s && s.id.toString() === statistic.data.statistic
       )
@@ -325,7 +327,7 @@ export function getEndedStatisticsByPath(
   path: string,
   statregStatistics: Array<SubjectStatistic>,
   hideStatistics: boolean,
-  useStatreg: boolean = false
+  useStatregApi: boolean = false
 ): Array<StatisticItem> {
   const statistics: Array<StatisticItem> = []
   const statisticList: Content<EndedStatisticList> = query({
@@ -354,7 +356,7 @@ export function getEndedStatisticsByPath(
           hideFromList: hideStatistics,
           secondarySubject: [],
         })
-      } else if (useStatreg) {
+      } else if (useStatregApi) {
         log.warning(
           'No Statreg API statistic found for ended statistic "%s" under "%s"',
           endedStatistic.statistic,
@@ -397,7 +399,7 @@ export function getSecondaryStatisticsBySubject(
     })
 }
 
-export function getSubjectStructur(request: Request, language: string): Array<MainSubject> {
+export function getSubjectStructur(request: Request, language: string, useStatregApi: boolean): Array<MainSubject> {
   const mainSubjectsAll: Array<SubjectItem> = getMainSubjects(request)
   const subSubjectsAll: Array<SubjectItem> = getSubSubjects(request)
 
