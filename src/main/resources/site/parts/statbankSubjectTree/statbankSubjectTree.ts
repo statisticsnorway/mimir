@@ -83,7 +83,7 @@ function prepareSubSubjects(
     const title: string = s.titles.filter((t) => t.language === lang)[0].title
     preparedStatistics.push({
       title: title,
-      url: 'shortName' in s ? s.shortName : s.shortname,
+      url: s.shortName,
     })
   })
 
@@ -96,7 +96,7 @@ function prepareSubSubjects(
           const title: string = e.titles.filter((t) => t.language === lang)[0].title
           return {
             title: title,
-            url: 'shortName' in e ? e.shortName : e.shortname,
+            url: e.shortName,
           }
         })
       : []
