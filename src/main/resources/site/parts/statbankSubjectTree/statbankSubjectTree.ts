@@ -10,10 +10,9 @@ import {
   getStatisticsByPath,
   getEndedStatisticsByPath,
   getSecondaryStatisticsBySubject,
+  getStatregStatistics,
+  type SubjectStatistic,
 } from '/lib/ssb/utils/subjectUtils'
-import { type StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
-import { getAllStatisticsFromRepo } from '/lib/ssb/statreg/statistics'
-import { ensureArray } from '/lib/ssb/utils/arrayUtils'
 import { fromPartCache } from '/lib/ssb/cache/partCache'
 import {
   type MainSubjectWithSubs,
@@ -22,6 +21,7 @@ import {
   type SubSubjectsWithStatistics,
 } from '/lib/types/partTypes/statbankSubjectTree'
 import { type StatisticItem, type SubjectItem } from '/lib/types/subject'
+import { isEnabled } from '/lib/featureToggle'
 
 export function get(req: Request) {
   const content = getContent()
@@ -40,8 +40,11 @@ function getStatbankSubjectTree(req: Request, content: Content) {
   const lang: string = content.language === 'en' ? 'en' : 'no'
   const allMainSubjects: Array<SubjectItem> = getMainSubjects(req, lang)
   const allSubSubjects: Array<SubjectItem> = getSubSubjects(req, lang)
-  const statregStatistics: Array<StatisticInListing> = ensureArray(getAllStatisticsFromRepo())
-  const statistics: Array<StatisticItem> = getStatistics(statregStatistics)
+
+  const useStatregApi = isEnabled('new-statreg-as-source', false, 'ssb')
+  const statregStatistics = getStatregStatistics(useStatregApi)
+  const statistics: Array<StatisticItem> = getStatistics(statregStatistics, useStatregApi)
+
   const mainSubjects: Array<MainSubjectWithSubs> = allMainSubjects.map((subjectItem) => {
     const subSubjectsFromPath: Array<SubjectItem> = getSubSubjectsByPath(allSubSubjects, subjectItem.path)
     const preparedSubSubjects: Array<SubSubjectsWithStatistics> = subSubjectsFromPath.map((subSubject) =>
@@ -64,7 +67,7 @@ function getStatbankSubjectTree(req: Request, content: Content) {
 
 function prepareSubSubjects(
   subSubject: SubjectItem,
-  statregStatistics: Array<StatisticInListing>,
+  statregStatistics: Array<SubjectStatistic>,
   statistics: Array<StatisticItem>,
   language: string
 ): SubSubjectsWithStatistics {

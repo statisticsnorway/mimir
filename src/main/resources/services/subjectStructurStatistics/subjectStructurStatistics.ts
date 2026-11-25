@@ -2,9 +2,11 @@ import { type Request, type Response } from '@enonic-types/core'
 import { type MainSubject, type SubSubject, type Title, type StatisticItem } from '/lib/types/subject'
 import { getSubjectStructur } from '/lib/ssb/utils/subjectUtils'
 import { xmlEscape } from '/lib/text-encoding'
+import { isEnabled } from '/lib/featureToggle'
 
 function get(req: Request): Response {
-  const mainSubjects: Array<MainSubject> = getSubjectStructur(req, 'no')
+  const useStatregApi = isEnabled('new-statreg-as-source', false, 'ssb')
+  const mainSubjects: Array<MainSubject> = getSubjectStructur(req, 'no', useStatregApi)
 
   const xml = `<?xml version="1.0" encoding="utf-8"?>
   <result>
