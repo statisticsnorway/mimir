@@ -44,7 +44,6 @@ function getStatbankSubjectTree(req: Request, content: Content) {
   const allSubSubjects: Array<SubjectItem> = getSubSubjects(req, lang)
 
   const statregStatistics = getStatregStatistics(useStatregApi)
-
   const statistics: Array<StatisticItem> = getStatistics(statregStatistics, useStatregApi)
 
   const mainSubjects: Array<MainSubjectWithSubs> = allMainSubjects.map((subjectItem) => {
