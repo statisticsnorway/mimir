@@ -10,9 +10,10 @@ import {
   getStatisticsByPath,
   getEndedStatisticsByPath,
   getSecondaryStatisticsBySubject,
+  type SubjectStatistic,
+  type StatregApiStatistic,
 } from '/lib/ssb/utils/subjectUtils'
-import { type StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
-import { getAllStatisticsFromRepo } from '/lib/ssb/statreg/statistics'
+import { fetchStatisticsFromStatregAPI, getAllStatisticsFromRepo } from '/lib/ssb/statreg/statistics'
 import { ensureArray } from '/lib/ssb/utils/arrayUtils'
 import { fromPartCache } from '/lib/ssb/cache/partCache'
 import {
@@ -22,6 +23,7 @@ import {
   type SubSubjectsWithStatistics,
 } from '/lib/types/partTypes/statbankSubjectTree'
 import { type StatisticItem, type SubjectItem } from '/lib/types/subject'
+import { isEnabled } from '/lib/featureToggle'
 
 export function get(req: Request) {
   const content = getContent()
@@ -36,12 +38,33 @@ export function get(req: Request) {
   }
 }
 
+const useStatregApi = isEnabled('new-statreg-as-source', false, 'ssb')
+
 function getStatbankSubjectTree(req: Request, content: Content) {
   const lang: string = content.language === 'en' ? 'en' : 'no'
   const allMainSubjects: Array<SubjectItem> = getMainSubjects(req, lang)
   const allSubSubjects: Array<SubjectItem> = getSubSubjects(req, lang)
-  const statregStatistics: Array<StatisticInListing> = ensureArray(getAllStatisticsFromRepo())
-  const statistics: Array<StatisticItem> = getStatistics(statregStatistics)
+
+  let statregStatistics: Array<SubjectStatistic>
+  if (useStatregApi) {
+    const apiStatistics = fetchStatisticsFromStatregAPI({ start: 0, count: 1000 })
+    if (!Array.isArray(apiStatistics)) {
+      const message = 'Failed to fetch statbank subject tree statistics from Statreg API'
+      log.error(message)
+      throw new Error(message)
+    }
+    if (!apiStatistics.every((statistic): statistic is StatregApiStatistic => Boolean(statistic.shortname))) {
+      const message = 'Statreg API returned a subject structure statistic without a data.shortname'
+      log.error(message)
+      throw new Error(message)
+    }
+    statregStatistics = apiStatistics
+  } else {
+    statregStatistics = ensureArray(getAllStatisticsFromRepo())
+  }
+
+  const statistics: Array<StatisticItem> = getStatistics(statregStatistics, useStatregApi)
+
   const mainSubjects: Array<MainSubjectWithSubs> = allMainSubjects.map((subjectItem) => {
     const subSubjectsFromPath: Array<SubjectItem> = getSubSubjectsByPath(allSubSubjects, subjectItem.path)
     const preparedSubSubjects: Array<SubSubjectsWithStatistics> = subSubjectsFromPath.map((subSubject) =>
@@ -64,7 +87,7 @@ function getStatbankSubjectTree(req: Request, content: Content) {
 
 function prepareSubSubjects(
   subSubject: SubjectItem,
-  statregStatistics: Array<StatisticInListing>,
+  statregStatistics: Array<SubjectStatistic>,
   statistics: Array<StatisticItem>,
   language: string
 ): SubSubjectsWithStatistics {
@@ -78,7 +101,7 @@ function prepareSubSubjects(
     const title: string = s.titles.filter((t) => t.language === lang)[0].title
     preparedStatistics.push({
       title: title,
-      url: s.shortName,
+      url: 'shortName' in s ? s.shortName : s.shortname,
     })
   })
 
@@ -91,7 +114,7 @@ function prepareSubSubjects(
           const title: string = e.titles.filter((t) => t.language === lang)[0].title
           return {
             title: title,
-            url: e.shortName,
+            url: 'shortName' in e ? e.shortName : e.shortname,
           }
         })
       : []

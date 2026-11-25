@@ -24,8 +24,8 @@ import { type Subtopic } from '/site/mixins/subtopic'
 import { type Statistic } from '/site/mixins/statistic'
 import { type Article, type EndedStatisticList, type Statistics } from '/site/content-types'
 
-type StatregApiStatistic = NonNullable<StatisticListingResponse['statistics']>[number] & { shortname: string }
-type SubjectStatistic = StatisticInListing | StatregApiStatistic
+export type StatregApiStatistic = NonNullable<StatisticListingResponse['statistics']>[number] & { shortname: string }
+export type SubjectStatistic = StatisticInListing | StatregApiStatistic
 
 export function getMainSubjects(request: Request, language?: string): Array<SubjectItem> {
   return fromSubjectCache<SubjectItem>(request, `mainsubject-${language ?? 'all'}`, () =>
