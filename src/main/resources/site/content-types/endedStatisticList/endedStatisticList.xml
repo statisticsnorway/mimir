@@ -26,12 +26,15 @@
           <label>Statistikk</label>
           <occurrences minimum="0" maximum="0" />
           <items>
-            <input name="shortname" type="CustomSelector">
+            <input name="statistic" type="CustomSelector">
               <occurrences minimum="0" maximum="1" />
               <label>Statistikk</label>
               <config>
                 <service>statisticsList</service>
               </config>
+            </input>
+            <input name="hideFromList" type="CheckBox">
+              <label>Skjul statistikk fra statbank inngang</label>
             </input>
           </items>
         </item-set>
