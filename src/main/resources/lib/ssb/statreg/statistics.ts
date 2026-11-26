@@ -87,34 +87,6 @@ export function fetchReleasesFromStatregApi({
   }
 }
 
-type VariantReleases =
-  paths['/statistics/{shortname}/variants/{id}/releases']['get']['responses']['200']['content']['application/json']
-export type VariantRelease = NonNullable<VariantReleases['releases']>[number]
-
-export function fetchArchiveReleasePair(shortname: string, variantId: string, previousTime: number, nextTime: number) {
-  const url = STATREG_API_BASE_URL + `/statistics/${shortname}/variants/${variantId}/releases`
-  let previous: VariantRelease | undefined
-  let next: VariantRelease | undefined
-  let start = 0
-  while (true) {
-    const response = request({ url: `${url}?start=${start}&count=1000` })
-    if (response.status === 404) return { previous, next }
-    if (response.status !== 200 || !response.body) throw new Error(`Failed to fetch ${shortname}/${variantId}`)
-    const page: VariantReleases = JSON.parse(response.body)
-    if (!Array.isArray(page.releases) || typeof page.total !== 'number')
-      throw new Error('Invalid Statreg release listing')
-    for (const release of page.releases) {
-      if (release.approval_status !== 'GODKJENT' || !release.publish_time) continue
-      const time = Date.parse(release.publish_time)
-      if (time === previousTime) previous = release
-      if (time === nextTime) next = release
-    }
-    start += page.releases.length
-    if (start >= page.total || (previous && (next || isNaN(nextTime)))) return { previous, next }
-    if (!page.releases.length) throw new Error('Incomplete Statreg release listing')
-  }
-}
-
 export type StatisticListingResponse = paths['/statistics']['get']['responses']['200']['content']['application/json']
 export type StatisticListingQueryParams = paths['/statistics']['get']['parameters']['query']
 export function fetchStatisticsFromStatregAPI({
