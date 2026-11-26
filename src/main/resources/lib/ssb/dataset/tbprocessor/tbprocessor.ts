@@ -48,6 +48,8 @@ function tryRequestTbmlData<T extends TbmlDataUniform | TbmlSourceListUniform>(
   try {
     return getTbmlData(url, contentId, processXml, type) as TbprocessorParsedResponse<T>
   } catch (e) {
+    // Error "Padding is invalid and cannot be removed." is likely from an invalid encryption key.
+    // Check if our SSB_ENCRYPTION_KEY is correctly set in the environment variables and in sync with StatbankService.
     const message = `Failed to fetch ${
       type ? formatTbProcessorType(type) : 'data'
     } from tbprocessor${url ? ` (${url})` : ''}: ${contentId}. (${e === 'java.io.EOFException' ? 'java.io.EOFException: Connection closed prematurely' : e})`
