@@ -8,7 +8,6 @@ import { forceArray, ensureArray } from '/lib/ssb/utils/arrayUtils'
 import {
   fetchStatisticsFromStatregAPI,
   getAllStatisticsFromRepo,
-  getStatisticByShortNameFromRepo,
   type StatisticListingResponse,
 } from '/lib/ssb/statreg/statistics'
 import { parentPath } from '/lib/ssb/utils/parentUtils'
