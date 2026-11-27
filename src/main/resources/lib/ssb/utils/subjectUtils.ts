@@ -330,22 +330,36 @@ export function getEndedStatisticsByPath(
   useStatregApi: boolean = false
 ): Array<StatisticItem> {
   const statistics: Array<StatisticItem> = []
+  let endedStatistics: Array<EndedStatistic> = []
   const statisticList: Content<EndedStatisticList> = query({
     start: 0,
     count: 1,
     query: `_path LIKE "/content${path}*"`,
     contentTypes: [`${app.name}:endedStatisticList`],
   }).hits[0]
-  const endedStatistics: Array<EndedStatistic> =
-    statisticList && statisticList.data.endedStatistics ? ensureArray(statisticList.data.endedStatistics) : []
+
+  if (useStatregApi) {
+    if (statisticList && !statisticList.data.endedStatisticsAPI) {
+      log.warning(
+        'No StatregAPI data added to ended statistic "%s" on path "%s"',
+        statisticList.data.endedStatistics,
+        path
+      )
+    }
+    endedStatistics =
+      statisticList && statisticList.data.endedStatisticsAPI ? ensureArray(statisticList.data.endedStatisticsAPI) : []
+  } else {
+    endedStatistics =
+      statisticList && statisticList.data.endedStatistics ? ensureArray(statisticList.data.endedStatistics) : []
+  }
   const endedStatisticsFiltered: Array<EndedStatistic> = hideStatistics
     ? endedStatistics.filter((e) => e.hideFromList === false)
     : endedStatistics
-
   if (endedStatisticsFiltered.length > 0 && statregStatistics.length > 0) {
     endedStatisticsFiltered.forEach((endedStatistic: EndedStatistic) => {
-      // TODO: MIM-3294: Fix shortname for endedStatistic content type and parts
-      const statreg = statregStatistics.find((s) => 'id' in s && s.id.toString() === endedStatistic.statistic)
+      const statreg = useStatregApi
+        ? statregStatistics.find((s) => 'shortname' in s && s.shortname === endedStatistic.statistic)
+        : statregStatistics.find((s) => 'id' in s && s.id.toString() === endedStatistic.statistic)
       if (statreg) {
         statistics.push({
           path: path,
