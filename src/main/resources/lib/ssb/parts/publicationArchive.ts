@@ -310,7 +310,30 @@ function transformStatregApiReleases(
     const releases = fetchReleasesFromStatregApi({ publish_time_before: new Date().toISOString() })
     if (!Array.isArray(releases)) return []
 
-    return releases
+    const releasesByVariant: { [key: string]: any } = {}
+    
+    releases.forEach((release: any) => {
+      const shortname = release.statistic?.shortname
+      const frequency = release.frequency?.name || ''
+      const variantKey = `${shortname}|${frequency}`
+      
+      if (!releasesByVariant[variantKey]) {
+        releasesByVariant[variantKey] = release
+      } else {
+        const existingTime = new Date(releasesByVariant[variantKey].publish_time).getTime()
+        const newTime = new Date(release.publish_time).getTime()
+        if (newTime > existingTime) {
+          releasesByVariant[variantKey] = release
+        }
+      }
+    })
+
+    const selectedReleases: any[] = []
+    for (const key in releasesByVariant) {
+      selectedReleases.push(releasesByVariant[key])
+    }
+
+    return selectedReleases
       .map((release) => {
         const statistic = release.statistic as { shortname?: string; name?: string; name_en?: string } | undefined
         if (!statistic?.shortname) return null
@@ -319,9 +342,9 @@ function transformStatregApiReleases(
           publishTime: release.publish_time || '',
           periodFrom: release.period_from || '',
           periodTo: release.period_to || '',
-          frequency: '',
+          frequency: release.frequency?.name || '',
           variantId: '',
-          statisticId: 0,
+          statisticId: release.statistic?.id || 0,
           shortName: statistic.shortname,
           statisticName: statistic.name || '',
           statisticNameEn: statistic.name_en || '',
