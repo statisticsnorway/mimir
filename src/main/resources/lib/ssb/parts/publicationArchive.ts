@@ -2,7 +2,7 @@ import { type Request } from '@enonic-types/core'
 import { type Content, get, query, QueryDsl, ContentsResult } from '/lib/xp/content'
 import { pageUrl, processHtml } from '/lib/xp/portal'
 import { type StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
-import { getAllStatisticsFromRepo, fetchReleasesFromStatregApi } from '/lib/ssb/statreg/statistics'
+import { getAllStatisticsFromRepo, fetchReleasesFromStatregApi, type ReleasesResponse } from '/lib/ssb/statreg/statistics'
 import { calculatePeriodRelease, getPreviousReleases } from '/lib/ssb/utils/variantUtils'
 import { getMainSubjects, getSubSubjects, getMainSubjectBySubSubject } from '/lib/ssb/utils/subjectUtils'
 import { formatDate, stringToServerTime } from '/lib/ssb/utils/dateUtils'
@@ -310,9 +310,9 @@ function transformStatregApiReleases(
     const releases = fetchReleasesFromStatregApi({ publish_time_before: new Date().toISOString() })
     if (!Array.isArray(releases)) return []
 
-    const releasesByVariant: { [key: string]: any } = {}
+    const releasesByVariant: { [key: string]: (typeof releases)[number] } = {}
 
-    releases.forEach((release: any) => {
+    releases.forEach((release) => {
       const shortname = release.statistic?.shortname
       const frequency = release.frequency?.name || ''
       const variantKey = `${shortname}|${frequency}`
@@ -320,22 +320,26 @@ function transformStatregApiReleases(
       if (!releasesByVariant[variantKey]) {
         releasesByVariant[variantKey] = release
       } else {
-        const existingTime = new Date(releasesByVariant[variantKey].publish_time).getTime()
-        const newTime = new Date(release.publish_time).getTime()
+        const existingTime = new Date(releasesByVariant[variantKey].publish_time ?? '').getTime()
+        const newTime = new Date(release.publish_time ?? '').getTime()
         if (newTime > existingTime) {
           releasesByVariant[variantKey] = release
         }
       }
     })
 
-    const selectedReleases: any[] = []
+    const selectedReleases: (typeof releases)[number][] = []
     for (const key in releasesByVariant) {
-      selectedReleases.push(releasesByVariant[key])
+      if (Object.prototype.hasOwnProperty.call(releasesByVariant, key)) {
+        selectedReleases.push(releasesByVariant[key])
+      }
     }
 
     return selectedReleases
       .map((release) => {
-        const statistic = release.statistic as { shortname?: string; name?: string; name_en?: string } | undefined
+        const statistic = release.statistic as
+          | { shortname: string; name?: string; name_en?: string }
+          | undefined
         if (!statistic?.shortname) return null
 
         const releaseVariant: Release = {
