@@ -311,12 +311,12 @@ function transformStatregApiReleases(
     if (!Array.isArray(releases)) return []
 
     const releasesByVariant: { [key: string]: any } = {}
-    
+
     releases.forEach((release: any) => {
       const shortname = release.statistic?.shortname
       const frequency = release.frequency?.name || ''
       const variantKey = `${shortname}|${frequency}`
-      
+
       if (!releasesByVariant[variantKey]) {
         releasesByVariant[variantKey] = release
       } else {
