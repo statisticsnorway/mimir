@@ -29,8 +29,8 @@ export function getPublications(
   subject?: string
 ): PublicationResult {
   const allPublications: Array<PublicationItem> = fromPartCache(req, `archiveAllPublications-${language}`, () =>
-    getPublicationsAndStatistics(req, language, { useStatregApi: isEnabled('new-statreg-as-source', false, 'ssb') 
-  }))
+    getPublicationsAndStatistics(req, language, { useStatregApi: isEnabled('new-statreg-as-source', false, 'ssb') })
+  )
 
   const type: string | undefined = articleType && articleType !== '' ? articleType : undefined
   const mainSubject: string | undefined = subject && subject !== '' ? subject : undefined
@@ -66,7 +66,11 @@ function filterPublications(
   return publications
 }
 
-function getPublicationsAndStatistics(req: Request, language: string, { useStatregApi = false } = {}): Array<PublicationItem> {
+function getPublicationsAndStatistics(
+  req: Request,
+  language: string,
+  { useStatregApi = false } = {}
+): Array<PublicationItem> {
   const mainSubjects: Array<SubjectItem> = getMainSubjects(req, language)
   const subSubjects: Array<SubjectItem> = getSubSubjects(req, language)
 
@@ -108,9 +112,7 @@ function prepareStatisticRelease(
 
   const statisticsPagesXP: Content<Statistics> | undefined = query({
     count: 1,
-    query: `${statisticQuery} AND language IN (${
-      language === 'nb' ? '"nb", "nn"' : '"en"'
-    })`,
+    query: `${statisticQuery} AND language IN (${language === 'nb' ? '"nb", "nn"' : '"en"'})`,
     contentTypes: [`${app.name}:statistics`],
   }).hits[0] as unknown as Content<Statistics>
 
