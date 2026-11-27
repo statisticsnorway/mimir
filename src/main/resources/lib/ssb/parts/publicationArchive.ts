@@ -1,5 +1,5 @@
 import { type Request } from '@enonic-types/core'
-import { type Content, get, query, ContentsResult } from '/lib/xp/content'
+import { type Content, get, query, QueryDsl, ContentsResult } from '/lib/xp/content'
 import { pageUrl, processHtml } from '/lib/xp/portal'
 import { type StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
 import { getAllStatisticsFromRepo, fetchReleasesFromStatregApi } from '/lib/ssb/statreg/statistics'
