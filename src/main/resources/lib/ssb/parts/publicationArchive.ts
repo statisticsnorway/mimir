@@ -2,7 +2,10 @@ import { type Request } from '@enonic-types/core'
 import { type Content, get, query, QueryDsl, ContentsResult } from '/lib/xp/content'
 import { pageUrl, processHtml } from '/lib/xp/portal'
 import { type StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
-import { getAllStatisticsFromRepo } from '/lib/ssb/statreg/statistics'
+import {
+  getAllStatisticsFromRepo,
+  fetchReleasesFromStatregApi,
+} from '/lib/ssb/statreg/statistics'
 import { calculatePeriodRelease, getPreviousReleases } from '/lib/ssb/utils/variantUtils'
 import { getMainSubjects, getSubSubjects, getMainSubjectBySubSubject } from '/lib/ssb/utils/subjectUtils'
 import { formatDate, stringToServerTime } from '/lib/ssb/utils/dateUtils'
@@ -28,9 +31,9 @@ export function getPublications(
   articleType?: string,
   subject?: string
 ): PublicationResult {
-  const allPublications: Array<PublicationItem> = fromPartCache(req, `archiveAllPublications-${language}`, () => {
-    return getPublicationsAndStatistics(req, language)
-  })
+  const allPublications: Array<PublicationItem> = fromPartCache(req, `archiveAllPublications-${language}`, () =>
+    getPublicationsAndStatistics(req, language, { useStatregApi: isEnabled('new-statreg-as-source', false, 'ssb') })
+  )
 
   const type: string | undefined = articleType && articleType !== '' ? articleType : undefined
   const mainSubject: string | undefined = subject && subject !== '' ? subject : undefined
@@ -66,7 +69,11 @@ function filterPublications(
   return publications
 }
 
-function getPublicationsAndStatistics(req: Request, language: string): Array<PublicationItem> {
+function getPublicationsAndStatistics(
+  req: Request,
+  language: string,
+  { useStatregApi = false } = {}
+): Array<PublicationItem> {
   const mainSubjects: Array<SubjectItem> = getMainSubjects(req, language)
   const subSubjects: Array<SubjectItem> = getSubSubjects(req, language)
 
@@ -78,9 +85,11 @@ function getPublicationsAndStatistics(req: Request, language: string): Array<Pub
 
   const newPublicationArchiveEnabled: boolean = isEnabled('new-publication-archive', false, 'ssb')
 
-  const statistics: Array<PublicationItem> = newPublicationArchiveEnabled
-    ? getStatisticsRepo(language, mainSubjects)
-    : getStatistics(language, mainSubjects, subSubjects)
+  const statistics: Array<PublicationItem> = useStatregApi
+    ? transformStatregApiReleases(language, mainSubjects, subSubjects)
+    : newPublicationArchiveEnabled
+      ? getStatisticsRepo(language, mainSubjects)
+      : getStatistics(language, mainSubjects, subSubjects)
 
   const statisticsWithMainSubject: Array<PublicationItem> = statistics.filter(
     (statistic) => statistic.mainSubject !== ''
@@ -102,9 +111,11 @@ function prepareStatisticRelease(
 ): PublicationItem | null {
   const statisticsPagesXP: Content<Statistics> | undefined = query({
     count: 1,
-    query: `data.statistic LIKE "${release.statisticId}" AND language IN (${
-      language === 'nb' ? '"nb", "nn"' : '"en"'
-    })`,
+    query: `${
+      release.statisticId
+        ? `data.statistic LIKE "${release.statisticId}"`
+        : `data.shortname LIKE "${release.shortName}"`
+    } AND language IN (${language === 'nb' ? '"nb", "nn"' : '"en"'})`,
     contentTypes: [`${app.name}:statistics`],
   }).hits[0] as unknown as Content<Statistics>
 
@@ -291,4 +302,65 @@ function getSecondaryMainSubject(
     return acc
   }, [])
   return secondaryMainSubjects
+}
+
+function transformStatregApiReleases(
+  language: string,
+  mainSubjects: SubjectItem[],
+  subSubjects: SubjectItem[]
+): PublicationItem[] {
+  try {
+    const releases = fetchReleasesFromStatregApi({ publish_time_before: new Date().toISOString() })
+    if (!Array.isArray(releases)) return []
+
+    const releasesByVariant: { [key: string]: (typeof releases)[number] } = {}
+
+    releases.forEach((release) => {
+      const shortname = release.statistic?.shortname
+      const frequency = release.frequency?.name || ''
+      const variantKey = `${shortname}|${frequency}`
+
+      if (!releasesByVariant[variantKey]) {
+        releasesByVariant[variantKey] = release
+      } else {
+        const existingTime = new Date(releasesByVariant[variantKey].publish_time ?? '').getTime()
+        const newTime = new Date(release.publish_time ?? '').getTime()
+        if (newTime > existingTime) {
+          releasesByVariant[variantKey] = release
+        }
+      }
+    })
+
+    const selectedReleases: (typeof releases)[number][] = []
+    for (const key in releasesByVariant) {
+      if (Object.prototype.hasOwnProperty.call(releasesByVariant, key)) {
+        selectedReleases.push(releasesByVariant[key])
+      }
+    }
+
+    return selectedReleases
+      .map((release) => {
+        const statistic = release.statistic as { shortname: string; name?: string; name_en?: string } | undefined
+        if (!statistic?.shortname) return null
+
+        const releaseVariant: Release = {
+          publishTime: release.publish_time || '',
+          periodFrom: release.period_from || '',
+          periodTo: release.period_to || '',
+          frequency: release.frequency?.name || '',
+          variantId: '',
+          statisticId: release.statistic?.id || 0,
+          shortName: statistic.shortname,
+          statisticName: statistic.name || '',
+          statisticNameEn: statistic.name_en || '',
+          status: '',
+        }
+
+        return prepareStatisticRelease(mainSubjects, subSubjects, releaseVariant, language)
+      })
+      .filter((item): item is PublicationItem => item !== null)
+  } catch (error) {
+    log.error(`Failed to load statistics from StatReg API: ${error}`)
+    return []
+  }
 }
