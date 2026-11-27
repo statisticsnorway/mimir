@@ -2,7 +2,10 @@ import { type Request } from '@enonic-types/core'
 import { type Content, get, query, QueryDsl, ContentsResult } from '/lib/xp/content'
 import { pageUrl, processHtml } from '/lib/xp/portal'
 import { type StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
-import { getAllStatisticsFromRepo, fetchReleasesFromStatregApi, type ReleasesResponse } from '/lib/ssb/statreg/statistics'
+import {
+  getAllStatisticsFromRepo,
+  fetchReleasesFromStatregApi,
+} from '/lib/ssb/statreg/statistics'
 import { calculatePeriodRelease, getPreviousReleases } from '/lib/ssb/utils/variantUtils'
 import { getMainSubjects, getSubSubjects, getMainSubjectBySubSubject } from '/lib/ssb/utils/subjectUtils'
 import { formatDate, stringToServerTime } from '/lib/ssb/utils/dateUtils'
@@ -337,9 +340,7 @@ function transformStatregApiReleases(
 
     return selectedReleases
       .map((release) => {
-        const statistic = release.statistic as
-          | { shortname: string; name?: string; name_en?: string }
-          | undefined
+        const statistic = release.statistic as { shortname: string; name?: string; name_en?: string } | undefined
         if (!statistic?.shortname) return null
 
         const releaseVariant: Release = {
