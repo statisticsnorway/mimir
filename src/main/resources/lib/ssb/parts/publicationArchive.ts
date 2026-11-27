@@ -1,8 +1,8 @@
 import { type Request } from '@enonic-types/core'
-import { type Content, get, query, QueryDsl, ContentsResult } from '/lib/xp/content'
+import { type Content, get, query, ContentsResult } from '/lib/xp/content'
 import { pageUrl, processHtml } from '/lib/xp/portal'
 import { type StatisticInListing } from '/lib/ssb/dashboard/statreg/types'
-import { getAllStatisticsFromRepo } from '/lib/ssb/statreg/statistics'
+import { getAllStatisticsFromRepo, fetchReleasesFromStatregApi } from '/lib/ssb/statreg/statistics'
 import { calculatePeriodRelease, getPreviousReleases } from '/lib/ssb/utils/variantUtils'
 import { getMainSubjects, getSubSubjects, getMainSubjectBySubSubject } from '/lib/ssb/utils/subjectUtils'
 import { formatDate, stringToServerTime } from '/lib/ssb/utils/dateUtils'
@@ -28,9 +28,9 @@ export function getPublications(
   articleType?: string,
   subject?: string
 ): PublicationResult {
-  const allPublications: Array<PublicationItem> = fromPartCache(req, `archiveAllPublications-${language}`, () => {
-    return getPublicationsAndStatistics(req, language)
-  })
+  const allPublications: Array<PublicationItem> = fromPartCache(req, `archiveAllPublications-${language}`, () =>
+    getPublicationsAndStatistics(req, language, { useStatregApi: isEnabled('new-statreg-as-source', false, 'ssb') 
+  }))
 
   const type: string | undefined = articleType && articleType !== '' ? articleType : undefined
   const mainSubject: string | undefined = subject && subject !== '' ? subject : undefined
@@ -66,7 +66,7 @@ function filterPublications(
   return publications
 }
 
-function getPublicationsAndStatistics(req: Request, language: string): Array<PublicationItem> {
+function getPublicationsAndStatistics(req: Request, language: string, { useStatregApi = false } = {}): Array<PublicationItem> {
   const mainSubjects: Array<SubjectItem> = getMainSubjects(req, language)
   const subSubjects: Array<SubjectItem> = getSubSubjects(req, language)
 
@@ -78,9 +78,11 @@ function getPublicationsAndStatistics(req: Request, language: string): Array<Pub
 
   const newPublicationArchiveEnabled: boolean = isEnabled('new-publication-archive', false, 'ssb')
 
-  const statistics: Array<PublicationItem> = newPublicationArchiveEnabled
-    ? getStatisticsRepo(language, mainSubjects)
-    : getStatistics(language, mainSubjects, subSubjects)
+  const statistics: Array<PublicationItem> = useStatregApi
+    ? transformStatregApiReleases(language, mainSubjects, subSubjects)
+    : newPublicationArchiveEnabled
+      ? getStatisticsRepo(language, mainSubjects)
+      : getStatistics(language, mainSubjects, subSubjects)
 
   const statisticsWithMainSubject: Array<PublicationItem> = statistics.filter(
     (statistic) => statistic.mainSubject !== ''
@@ -100,9 +102,13 @@ function prepareStatisticRelease(
   release: Release,
   language: string
 ): PublicationItem | null {
+  const statisticQuery = release.statisticId
+    ? `data.statistic LIKE "${release.statisticId}"`
+    : `data.shortname LIKE "${release.shortName}"`
+
   const statisticsPagesXP: Content<Statistics> | undefined = query({
     count: 1,
-    query: `data.statistic LIKE "${release.statisticId}" AND language IN (${
+    query: `${statisticQuery} AND language IN (${
       language === 'nb' ? '"nb", "nn"' : '"en"'
     })`,
     contentTypes: [`${app.name}:statistics`],
@@ -291,4 +297,40 @@ function getSecondaryMainSubject(
     return acc
   }, [])
   return secondaryMainSubjects
+}
+
+function transformStatregApiReleases(
+  language: string,
+  mainSubjects: SubjectItem[],
+  subSubjects: SubjectItem[]
+): PublicationItem[] {
+  try {
+    const releases = fetchReleasesFromStatregApi({ publish_time_before: new Date().toISOString() })
+    if (!Array.isArray(releases)) return []
+
+    return releases
+      .map((release) => {
+        const statistic = release.statistic as { shortname?: string; name?: string; name_en?: string } | undefined
+        if (!statistic?.shortname) return null
+
+        const releaseVariant: Release = {
+          publishTime: release.publish_time || '',
+          periodFrom: release.period_from || '',
+          periodTo: release.period_to || '',
+          frequency: '',
+          variantId: '',
+          statisticId: 0,
+          shortName: statistic.shortname,
+          statisticName: statistic.name || '',
+          statisticNameEn: statistic.name_en || '',
+          status: '',
+        }
+
+        return prepareStatisticRelease(mainSubjects, subSubjects, releaseVariant, language)
+      })
+      .filter((item): item is PublicationItem => item !== null)
+  } catch (error) {
+    log.error(`Failed to load statistics from StatReg API: ${error}`)
+    return []
+  }
 }
