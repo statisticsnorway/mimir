@@ -106,13 +106,13 @@ function prepareStatisticRelease(
   release: Release,
   language: string
 ): PublicationItem | null {
-  const statisticQuery = release.statisticId
-    ? `data.statistic LIKE "${release.statisticId}"`
-    : `data.shortname LIKE "${release.shortName}"`
-
   const statisticsPagesXP: Content<Statistics> | undefined = query({
     count: 1,
-    query: `${statisticQuery} AND language IN (${language === 'nb' ? '"nb", "nn"' : '"en"'})`,
+    query: `${
+      release.statisticId
+        ? `data.statistic LIKE "${release.statisticId}"`
+        : `data.shortname LIKE "${release.shortName}"`
+    } AND language IN (${language === 'nb' ? '"nb", "nn"' : '"en"'})`,
     contentTypes: [`${app.name}:statistics`],
   }).hits[0] as unknown as Content<Statistics>
 
